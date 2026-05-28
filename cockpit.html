@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Guardian · Cobalt Cockpit v8</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080b10;--bg1:#0d1117;--bg2:#111620;--bg3:#161d2e;--panel:#0f1520;
+  --b:rgba(56,189,248,.08);--b2:rgba(56,189,248,.18);--b3:rgba(56,189,248,.35);
+  --sky:#38bdf8;--sky2:#7dd3fc;--mint:#34d399;--amber:#fbbf24;--coral:#f87171;
+  --violet:#a78bfa;--cobalt:#60a5fa;--text:#c9d8f0;--text2:#6b82a8;--text3:#384d6b;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100vh;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px)}
+.topbar{height:40px;background:var(--bg1);border-bottom:1px solid var(--b2);display:flex;align-items:center;padding:0 14px;gap:10px;z-index:100;flex-shrink:0}
+.logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--sky);letter-spacing:.15em;display:flex;align-items:center;gap:6px}
+.logo-v{font-size:8px;color:var(--violet);letter-spacing:.1em;align-self:flex-end;padding-bottom:2px}
+.logo-hex{animation:hpulse 8s linear infinite}@keyframes hpulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tsep{width:1px;height:20px;background:var(--b2)}
+.modes{display:flex;gap:2px}
+.mbtn{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid var(--b);background:none;color:var(--text3);cursor:pointer;transition:all .15s}
+.mbtn:hover{color:var(--text2);border-color:var(--b2)}.mbtn.on{color:var(--bg);font-weight:600;border-color:transparent}
+.mbtn[data-m=DEEP].on{background:var(--sky)}.mbtn[data-m=FAST].on{background:var(--mint)}
+.mbtn[data-m=AUDIT].on{background:var(--coral)}.mbtn[data-m=CREATIVE].on{background:var(--violet)}
+.mbtn[data-m=EMERGENCY].on{background:var(--amber)}.mbtn[data-m=SILENT].on{background:var(--text3)}
+.tr{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tstat{font-family:var(--mono);font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px}
+.tstat .v{color:var(--sky2);font-weight:500}
+.pill{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 8px;border-radius:2px;border:1px solid var(--b2);letter-spacing:.08em;transition:all .3s}
+.pill-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.pill.online{border-color:rgba(52,211,153,.4);color:var(--mint)}.pill.offline{border-color:rgba(248,113,113,.3);color:var(--coral)}
+.pill.degraded{border-color:rgba(251,191,36,.3);color:var(--amber);animation:blink 1.2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.sigma-ring{width:28px;height:28px;border-radius:50%;border:2px solid var(--mint);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--mint);position:relative;cursor:pointer}
+.sigma-ring::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--mint);opacity:.2;animation:spulse 3s ease-in-out infinite}
+@keyframes spulse{0%,100%{transform:scale(1);opacity:.2}50%{transform:scale(1.15);opacity:.05}}
+.tbtn{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:2px;border:1px solid var(--b2);background:none;color:var(--text2);cursor:pointer;transition:all .15s}
+.tbtn:hover{border-color:var(--b3);color:var(--text)}
+.cockpit{height:calc(100vh - 40px);display:grid;gap:1px;background:var(--b);grid-template-columns:1.2fr 1fr 300px;grid-template-rows:1fr 1fr 200px;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1),grid-template-columns .4s cubic-bezier(.4,0,.2,1)}
+.cockpit[data-m=DEEP]{grid-template-rows:2fr 1fr 160px}.cockpit[data-m=FAST]{grid-template-rows:0fr 1fr 280px;grid-template-columns:1.2fr 1fr 280px}
+.cockpit[data-m=AUDIT]{grid-template-rows:1fr 1.5fr 160px}.cockpit[data-m=CREATIVE]{grid-template-rows:1fr 1fr 220px;grid-template-columns:1.5fr 1fr 260px}
+.cockpit[data-m=EMERGENCY]{grid-template-rows:0fr 0fr 1fr}.cockpit[data-m=SILENT]{grid-template-rows:0fr 0fr 1fr}
+.cockpit[data-m=FAST] .p-cog,.cockpit[data-m=EMERGENCY] .p-cog,.cockpit[data-m=SILENT] .p-cog,
+.cockpit[data-m=EMERGENCY] .p-health,.cockpit[data-m=SILENT] .p-health{overflow:hidden;min-height:0}
+.panel{background:var(--panel);overflow:hidden;position:relative;transition:all .4s;display:flex;flex-direction:column}
+.panel.span3{grid-column:span 3}
+.ph{height:32px;background:var(--bg2);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0}
+.ph-title{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text2)}
+.ph-badge{margin-left:auto;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:2px;border:1px solid var(--b2);color:var(--text3)}
+.ph-badge.live{border-color:rgba(52,211,153,.3);color:var(--mint)}.ph-badge.live::before{content:'● ';font-size:7px}
+.ph-badge.warn{border-color:rgba(251,191,36,.3);color:var(--amber)}.ph-badge.err{border-color:rgba(248,113,113,.3);color:var(--coral)}.ph-badge.cobalt{border-color:rgba(96,165,250,.35);color:var(--cobalt)}
+.cog-canvas{flex:1;position:relative;overflow:hidden}.cog-canvas svg{width:100%;height:100%;display:block}
+.hbody{flex:1;overflow-y:auto;padding:8px 12px;display:flex;flex-direction:column;gap:4px}
+.hbody::-webkit-scrollbar{width:2px}.hbody::-webkit-scrollbar-thumb{background:var(--b2)}
+.metric{display:flex;flex-direction:column;gap:2px}
+.mrow{display:flex;align-items:center;gap:8px;height:22px}
+.mlabel{font-family:var(--mono);font-size:10px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;width:80px;flex-shrink:0}
+.mbar{flex:1;height:3px;background:var(--b);border-radius:1px;overflow:hidden}
+.mfill{height:100%;transition:width .8s ease,background .3s;border-radius:1px}
+.mval{font-family:var(--mono);font-size:10px;color:var(--text2);width:56px;text-align:right;flex-shrink:0}
+.mval.good{color:var(--mint)}.mval.warn{color:var(--amber)}.mval.crit{color:var(--coral)}
+.hsep{height:1px;background:var(--b2);margin:5px 0}.hsec{font-family:var(--mono);font-size:10px;color:var(--text2);letter-spacing:.1em;text-transform:uppercase}
+.nodelist{flex:1;overflow-y:auto;padding:4px 10px;display:flex;flex-direction:column;gap:2px;min-height:0}
+.nodelist::-webkit-scrollbar{width:2px}.nodelist::-webkit-scrollbar-thumb{background:var(--b2)}
+.noderow{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:3px;border:1px solid var(--b);background:var(--bg2)}
+.node-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.node-dot.ok{background:var(--mint);box-shadow:0 0 5px var(--mint)}.node-dot.warn{background:var(--amber)}.node-dot.dead{background:var(--coral)}
+.node-id{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--sky2);flex:1}
+.node-caps{font-family:var(--mono);font-size:8px;color:var(--text3)}
+.node-h{font-family:var(--mono);font-size:9px;font-weight:600}
+.node-h.ok{color:var(--mint)}.node-h.warn{color:var(--amber)}.node-h.crit{color:var(--coral)}
+.node-age{font-family:var(--mono);font-size:8px;color:var(--text3);flex-shrink:0}
+.node-empty{font-family:var(--mono);font-size:9px;color:var(--text3);padding:12px;text-align:center}
+.stream{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0}
+.stream::-webkit-scrollbar{width:2px}.stream::-webkit-scrollbar-thumb{background:var(--b2)}
+.sline{display:flex;align-items:baseline;gap:6px;font-family:var(--mono);font-size:9.5px;padding:2px 12px;border-bottom:1px solid rgba(0,0,0,.15)}
+.sl-ts{color:var(--text3);flex-shrink:0;font-size:8px}
+.sl-type{font-size:8px;padding:0 4px;border-radius:2px;flex-shrink:0;text-transform:uppercase;letter-spacing:.06em}
+.sl-type.kernel{background:rgba(107,130,168,.1);color:#5a7a9a}.sl-type.agent{background:rgba(52,211,153,.08);color:var(--mint)}
+.sl-type.guardian{background:rgba(56,189,248,.08);color:var(--sky)}.sl-type.gap{background:rgba(248,113,113,.08);color:var(--coral)}
+.sl-type.cobalt{background:rgba(96,165,250,.08);color:var(--cobalt)}.sl-type.tool{background:rgba(251,191,36,.08);color:#b89020}
+.sl-msg{color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arts-list{flex:1;overflow-y:auto;padding:6px 12px;display:flex;flex-direction:column;gap:3px}
+.arts-list::-webkit-scrollbar{width:2px}.arts-list::-webkit-scrollbar-thumb{background:var(--b2)}
+.art-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:3px;border:1px solid var(--b);background:var(--bg2);cursor:pointer}
+.art-row:hover{border-color:var(--b2)}
+.art-lang{font-family:var(--mono);font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(56,189,248,.08);color:var(--sky2);border:1px solid rgba(56,189,248,.15);flex-shrink:0}
+.art-name{font-family:var(--mono);font-size:9px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.art-tags{display:flex;gap:3px;flex-shrink:0}
+.art-tag{font-family:var(--mono);font-size:8px;padding:0 4px;border-radius:2px;background:rgba(167,139,250,.08);color:var(--violet);border:1px solid rgba(167,139,250,.18)}
+.art-ts{font-family:var(--mono);font-size:8px;color:var(--text3);flex-shrink:0}
+.gaps-body{flex:1;overflow-y:auto;padding:6px 12px;display:flex;flex-direction:column;gap:3px}
+.gaps-body::-webkit-scrollbar{width:2px}.gaps-body::-webkit-scrollbar-thumb{background:var(--b2)}
+.gap-row{display:flex;align-items:baseline;gap:8px;padding:5px 8px;border-radius:3px;border:1px solid var(--b);background:var(--bg2)}
+.gap-sev{font-family:var(--mono);font-size:8px;padding:1px 5px;border-radius:2px;flex-shrink:0}
+.gap-sev.high{background:rgba(248,113,113,.1);color:var(--coral);border:1px solid rgba(248,113,113,.2)}
+.gap-sev.medium{background:rgba(251,191,36,.08);color:var(--amber);border:1px solid rgba(251,191,36,.18)}
+.gap-sev.low{background:rgba(107,130,168,.1);color:var(--text2);border:1px solid var(--b)}
+.gap-body{font-family:var(--mono);font-size:9px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gap-age{font-family:var(--mono);font-size:8px;color:var(--text3);flex-shrink:0}
+.rlog-inner{display:flex;flex-direction:column;padding:6px 12px;flex:1;overflow:hidden}
+.rlog-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-shrink:0}
+.rlog-title{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--text2);text-transform:uppercase}
+.rlog-clear{font-family:var(--mono);font-size:8px;padding:1px 5px;border-radius:2px;border:1px solid var(--b);background:none;color:var(--text3);cursor:pointer}
+.rlog-clear:hover{border-color:var(--coral);color:var(--coral)}
+.rlist{display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex:1}
+.rlist::-webkit-scrollbar{width:2px}.rlist::-webkit-scrollbar-thumb{background:var(--b2)}
+.rentry{border-radius:2px;overflow:hidden;border:1px solid var(--b)}
+.rentry-hd{display:flex;align-items:center;gap:5px;padding:3px 6px;cursor:pointer;background:var(--bg2)}
+.rentry-hd:hover{background:var(--bg3)}
+.rstatus{font-family:var(--mono);font-size:8px;font-weight:600;padding:1px 4px;border-radius:2px;flex-shrink:0}
+.rstatus.pending,.rstatus.routed,.rstatus.processing{background:rgba(251,191,36,.12);color:var(--amber);border:1px solid rgba(251,191,36,.25)}
+.rstatus.complete{background:rgba(52,211,153,.1);color:var(--mint);border:1px solid rgba(52,211,153,.2)}
+.rstatus.failed{background:rgba(248,113,113,.1);color:var(--coral);border:1px solid rgba(248,113,113,.2)}
+.ragent{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--sky2)}
+.rprev{font-family:var(--mono);font-size:9px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rts{font-family:var(--mono);font-size:8px;color:var(--text3);flex-shrink:0}
+.rentry-body{display:none;padding:5px 8px;background:var(--bg1);border-top:1px solid var(--b)}
+.rentry.open .rentry-body{display:block}
+.rbody-label{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:2px}
+.rbody-text{font-family:var(--mono);font-size:9px;color:var(--text2);white-space:pre-wrap;word-break:break-word;max-height:80px;overflow-y:auto;line-height:1.4}
+.resp-label{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--mint);text-transform:uppercase;margin:4px 0 2px}
+.resp-text{font-family:var(--mono);font-size:9px;color:var(--text);white-space:pre-wrap;word-break:break-word;max-height:100px;overflow-y:auto;line-height:1.4}
+.rlog-empty{font-family:var(--mono);font-size:9px;color:var(--text3);padding:4px 0;text-align:center}
+.dbar{background:var(--bg2);border-top:1px solid var(--b2);padding:8px 12px;display:flex;gap:8px;align-items:center;flex-shrink:0}
+.dbar select{font-family:var(--mono);font-size:10px;background:var(--bg1);border:1px solid var(--b2);color:var(--text);padding:4px 8px;border-radius:2px;cursor:pointer;outline:none}
+.dbar select:focus{border-color:var(--sky)}
+.dbar input{flex:1;font-family:var(--mono);font-size:10px;background:var(--bg1);border:1px solid var(--b2);color:var(--text);padding:4px 10px;border-radius:2px;outline:none}
+.dbar input::placeholder{color:var(--text3)}.dbar input:focus{border-color:var(--sky)}
+.dbar button{font-family:var(--mono);font-size:10px;padding:4px 12px;border-radius:2px;border:1px solid var(--sky);background:none;color:var(--sky);cursor:pointer;transition:all .15s;white-space:nowrap}
+.dbar button:hover{background:rgba(56,189,248,.08)}.dbar button:disabled{opacity:.4;cursor:not-allowed}
+.ipc-bar{display:flex;align-items:center;gap:10px;padding:0 12px;height:20px;font-family:var(--mono);font-size:8px;color:var(--text3);flex-shrink:0;border-top:1px solid var(--b)}
+.ipc-item{display:flex;align-items:center;gap:4px}.ipc-dot{width:4px;height:4px;border-radius:50%;background:var(--text3)}
+.ipc-dot.up{background:var(--mint)}.ipc-dot.down{background:var(--coral)}.ipc-dot.mid{background:var(--amber)}
+.toast-wrap{position:fixed;bottom:16px;right:16px;z-index:10000;display:flex;flex-direction:column;gap:6px;max-width:340px}
+.toast{font-family:var(--mono);font-size:10px;padding:8px 12px;border-radius:3px;border:1px solid var(--b2);background:var(--bg1);color:var(--text);animation:tslide .2s ease}
+.toast.ok{border-color:rgba(52,211,153,.35);color:var(--mint)}.toast.warn{border-color:rgba(251,191,36,.35);color:var(--amber)}.toast.err{border-color:rgba(248,113,113,.35);color:var(--coral)}
+@keyframes tslide{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="logo-hex">⬡</span>GUARDIAN<span class="logo-v">COBALT v8</span></div>
+  <div class="tsep"></div>
+  <div class="modes" id="modes">
+    <button class="mbtn on" data-m="DEEP">DEEP</button>
+    <button class="mbtn" data-m="FAST">FAST</button>
+    <button class="mbtn" data-m="AUDIT">AUDIT</button>
+    <button class="mbtn" data-m="CREATIVE">CREATIVE</button>
+    <button class="mbtn" data-m="EMERGENCY">EMERGENCY</button>
+    <button class="mbtn" data-m="SILENT">SILENT</button>
+  </div>
+  <div class="tr">
+    <div class="tstat"><span>ARTS</span><span class="v" id="tv-arts">—</span></div>
+    <div class="tstat"><span>GAPS</span><span class="v" id="tv-gaps">—</span></div>
+    <div class="tstat"><span>CALLS</span><span class="v" id="tv-calls">—</span></div>
+    <div class="sigma-ring" id="sigma" title="Event diversity index">Σ</div>
+    <div class="tsep"></div>
+    <div class="pill offline" id="pill-nexus"><span class="pill-dot"></span>NEXUS :3748</div>
+    <div class="pill offline" id="pill-guardian"><span class="pill-dot"></span>GUARDIAN :7820</div>
+    <button class="tbtn" onclick="refreshAll()">↻</button>
+  </div>
+</div>
+
+<div class="cockpit" id="cockpit" data-m="DEEP">
+  <!-- R1C1 Causal lattice -->
+  <div class="panel p-cog">
+    <div class="ph"><span class="ph-title">Cognition · Event Lattice</span><span class="ph-badge live" id="badge-graph">LIVE</span></div>
+    <div class="cog-canvas"><svg id="causal-svg" preserveAspectRatio="xMidYMid meet"></svg></div>
+  </div>
+  <!-- R1C2 Guardian mesh + health bars -->
+  <div class="panel p-health" style="display:flex;flex-direction:column">
+    <div class="ph"><span class="ph-title">Guardian · Mesh Topology</span><span class="ph-badge" id="badge-nodes">—</span></div>
+    <div class="nodelist" id="nodelist"><div class="node-empty">No Guardian instances</div></div>
+    <div class="hbody" style="flex:0 0 auto;max-height:140px">
+      <div class="hsec">IPC Bridge</div><div class="hsep"></div>
+      <div class="metric">
+        <div class="mrow"><span class="mlabel">G·Health</span><div class="mbar"><div class="mfill" id="bar-g" style="width:0%;background:var(--mint)"></div></div><span class="mval" id="lbl-g">—</span></div>
+        <div class="mrow"><span class="mlabel">Artifacts</span><div class="mbar"><div class="mfill" id="bar-arts" style="width:0%;background:var(--cobalt)"></div></div><span class="mval" id="lbl-arts">—</span></div>
+        <div class="mrow"><span class="mlabel">Dispatches</span><div class="mbar"><div class="mfill" id="bar-calls" style="width:0%;background:var(--violet)"></div></div><span class="mval" id="lbl-calls">—</span></div>
+        <div class="mrow"><span class="mlabel">Open Gaps</span><div class="mbar"><div class="mfill" id="bar-gaps" style="width:0%;background:var(--coral)"></div></div><span class="mval" id="lbl-gaps">—</span></div>
+      </div>
+    </div>
+  </div>
+  <!-- R1C3 Gaps -->
+  <div class="panel">
+    <div class="ph"><span class="ph-title">Gaps · Open</span><span class="ph-badge" id="badge-gaps">—</span></div>
+    <div class="gaps-body" id="gaps-body"><div class="rlog-empty">No open gaps</div></div>
+  </div>
+  <!-- R2C1 Artifacts -->
+  <div class="panel">
+    <div class="ph"><span class="ph-title">Artifacts · Tagged</span><span class="ph-badge cobalt" id="badge-arts">—</span></div>
+    <div class="arts-list" id="arts-list"><div class="rlog-empty">No artifacts</div></div>
+  </div>
+  <!-- R2C2 Stream + IPC status -->
+  <div class="panel" style="display:flex;flex-direction:column">
+    <div class="ph"><span class="ph-title">Event Stream</span><span class="ph-badge live" id="badge-stream">0</span></div>
+    <div class="stream" id="stream" style="flex:1;min-height:0"></div>
+    <div class="ipc-bar">
+      <div class="ipc-item"><span class="ipc-dot" id="dot-g-sse"></span>Guardian SSE</div>
+      <div class="ipc-item"><span class="ipc-dot" id="dot-n-sse"></span>Nexus SSE</div>
+      <div class="ipc-item"><span class="ipc-dot up"></span>Poll 4s</div>
+      <div class="ipc-item"><span class="ipc-dot up"></span>IPC bridge active</div>
+    </div>
+  </div>
+  <!-- R2C3 Request log -->
+  <div class="panel">
+    <div class="ph"><span class="ph-title">Agent Requests</span><span class="ph-badge" id="badge-reqs">—</span></div>
+    <div class="rlog-inner">
+      <div class="rlog-hd"><span class="rlog-title">Dispatch log</span><button class="rlog-clear" onclick="clearReqs()">clear</button></div>
+      <div class="rlist" id="rlist"><div class="rlog-empty">No requests yet</div></div>
+    </div>
+  </div>
+  <!-- R3 Dispatch bar -->
+  <div class="panel span3">
+    <div class="dbar">
+      <select id="disp-agent"><option value="claude">claude</option><option value="chatgpt">chatgpt</option><option value="gemini">gemini</option><option value="ollama">ollama</option></select>
+      <select id="disp-via"><option value="guardian">→ Guardian /api/complete</option><option value="nexus">→ Nexus Callto-executor</option></select>
+      <input id="disp-in" type="text" placeholder="Prompt — Enter to dispatch" autocomplete="off"/>
+      <button id="disp-btn" onclick="doDispatch()">DISPATCH</button>
+      <button onclick="runStatus()" style="border-color:var(--violet);color:var(--violet)">STATUS</button>
+      <button onclick="refreshAll()" style="border-color:var(--text2);color:var(--text2)">↻ SYNC</button>
+    </div>
+  </div>
+</div>
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+'use strict';
+const G=location.hostname==='localhost'||location.hostname==='127.0.0.1';
+const G_URL='http://127.0.0.1:7820';
+const L_URL='http://127.0.0.1:7823';
+const N_URL='http://127.0.0.1:3748';
+const POLL_MS=4000;const MAX_STREAM=100;
+let gOnline=false,nOnline=false,reqLog=[],_sseG=null,_sseN=null;
+
+document.querySelectorAll('.mbtn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.mbtn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');el('cockpit').dataset.m=b.dataset.m;
+}));
+
+async function gf(p){try{const r=await fetch(G_URL+p,{signal:AbortSignal.timeout(4000)});return r.ok?r.json():null}catch{return null}}
+async function lf(p){try{const r=await fetch(L_URL+p,{signal:AbortSignal.timeout(4000)});return r.ok?r.json():null}catch{return null}}
+async function nf(p){try{const r=await fetch(N_URL+p,{signal:AbortSignal.timeout(4000)});return r.ok?r.json():null}catch{return null}}
+async function xpost(url,b){try{const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b),signal:AbortSignal.timeout(90000)});return r.ok?r.json():null}catch{return null}}
+
+function connectG(){
+  try{_sseG=new EventSource(G_URL+'/events');
+    _sseG.onopen=()=>{gOnline=true;pill('pill-guardian','online');dot('dot-g-sse','up');addStream('guardian','Guardian SSE :7820 connected')};
+    _sseG.onmessage=(e)=>{try{const d=JSON.parse(e.data);if(!d.type||d.type==='connected')return;
+      const tc=d.type.startsWith('guardian')?'guardian':d.type.startsWith('cobalt')?'cobalt':'kernel';
+      addStream(tc,`${d.type} — ${JSON.stringify(d.data||d.payload||{}).slice(0,80)}`);
+      if(d.type==='cobalt.resonance.guardian')applyRes(d.data||d.payload||{});
+    }catch{}};
+    _sseG.onerror=()=>{gOnline=false;pill('pill-guardian','offline');dot('dot-g-sse','down');setTimeout(connectG,6000)};
+  }catch{setTimeout(connectG,6000)}}
+function connectN(){
+  try{_sseN=new EventSource(N_URL+'/sse');
+    _sseN.onopen=()=>{nOnline=true;pill('pill-nexus','online');dot('dot-n-sse','up');addStream('cobalt','Nexus SSE :3748 connected')};
+    _sseN.onmessage=(e)=>{try{const d=JSON.parse(e.data);if(!d.type)return;
+      const tc=d.type.startsWith('guardian')?'guardian':d.type.startsWith('cobalt')?'cobalt':d.type.startsWith('gap')?'gap':d.type.startsWith('agent')?'agent':'kernel';
+      addStream(tc,`${d.type} — ${JSON.stringify(d.payload||{}).slice(0,80)}`);
+      if(d.type==='cobalt.resonance.guardian')applyRes(d.payload||{});
+    }catch{}};
+    _sseN.onerror=()=>{nOnline=false;pill('pill-nexus','offline');dot('dot-n-sse','down');setTimeout(connectN,6000)};
+  }catch{setTimeout(connectN,6000)}}
+
+function applyRes(d){
+  const s=d.state||(d.connected?'healthy':'critical');
+  const score=d.healthScore??0;
+  pill('pill-guardian',s==='healthy'?'online':s==='degraded'?'degraded':'offline');
+  bar('bar-g',score*100,score>.6?'var(--mint)':score>.3?'var(--amber)':'var(--coral)');
+  lbl('lbl-g',score.toFixed(2),score>.6?'good':score>.3?'warn':'crit');
+}
+
+async function pollStats(){
+  const d=await lf('/stats')||await gf('/memory/stats');
+  if(!d)return;const s=d.stats||d;
+  lbl('lbl-arts',s.artifacts??'—');bar('bar-arts',Math.min(100,(s.artifacts||0)/5),'var(--cobalt)');
+  lbl('lbl-calls',s.jobs??'—');bar('bar-calls',Math.min(100,(s.jobs||0)),'var(--violet)');
+  lbl('lbl-gaps',s.gaps??'—');bar('bar-gaps',Math.min(100,(s.gaps||0)*10),'var(--coral)');
+  set('tv-arts',s.artifacts??'—');set('tv-gaps',s.gaps??'—');
+}
+
+async function pollNodes(){
+  const nodes=[];
+  const gh=await gf('/health');
+  if(gh){gOnline=true;pill('pill-guardian','online');
+    nodes.push({instanceId:'guardian-v8',healthScore:1,tabCount:gh.artifacts??0,listenerCount:gh.gaps??0,capabilities:['wss','api','siso','tags'],lastSeen:Date.now()});}
+  const nd=await nf('/api/memory?table=guardian_nodes&n=20');
+  if(Array.isArray(nd)){for(const n of nd)if(n.instanceId&&!nodes.find(x=>x.instanceId===n.instanceId))nodes.push(n);}
+  renderNodes(nodes);if(!nodes.length&&!gOnline)pill('pill-guardian','offline');
+}
+
+async function pollNexus(){
+  const h=await nf('/health');
+  if(h){nOnline=true;pill('pill-nexus','online')}else{nOnline=false;pill('pill-nexus','offline')}
+}
+
+async function pollArts(){
+  const d=await lf('/artifacts?limit=30')||await gf('/artifacts?limit=30');
+  if(!d?.artifacts)return;
+  renderArts(d.artifacts);el('badge-arts').textContent=`${d.count||d.artifacts.length}`;set('tv-arts',d.count||d.artifacts.length);
+}
+
+async function pollGaps(){
+  const d=await lf('/gaps?status=open&limit=30')||await gf('/gaps?status=open&limit=30');
+  if(!d?.gaps)return;
+  renderGaps(d.gaps);
+  const c=d.gaps.filter(g=>g.status==='open'||!g.status).length;
+  el('badge-gaps').textContent=`${c}`;el('badge-gaps').className=`ph-badge ${c>0?'err':'live'}`;set('tv-gaps',c);
+}
+
+async function pollReqs(){
+  const d=await gf('/jobs?limit=20');
+  if(!d?.jobs)return;
+  reqLog=d.jobs.slice(0,20);renderReqs();el('badge-reqs').textContent=`${d.jobs.length}`;
+  set('tv-calls',d.jobs.filter(j=>j.status==='complete').length);
+}
+
+async function pollEvents(){
+  const nd=await nf('/api/events?n=40');
+  if(Array.isArray(nd)&&nd.length){renderCausal(nd);return;}
+  const gd=await gf('/ledger?limit=40');
+  if(gd?.ledger)renderCausal(gd.ledger.map(l=>({type:l.category?.toLowerCase()||'event',uuid:l.id,ts:l.ts,payload:{msg:l.msg}})));
+}
+
+async function refreshAll(){
+  await Promise.allSettled([pollStats(),pollNexus(),pollNodes(),pollArts(),pollGaps(),pollReqs(),pollEvents()]);
+}
+
+function renderNodes(nodes){
+  const e=el('nodelist');const now=Date.now();
+  if(!nodes.length){e.innerHTML='<div class="node-empty">No Guardian instances connected</div>';el('badge-nodes').textContent='—';return;}
+  e.innerHTML=nodes.map(n=>{
+    const sc=n.healthScore??0;const cls=sc>.6?'ok':sc>.3?'warn':'dead';
+    const age=n.lastSeen?fmtAge(now-n.lastSeen):'—';
+    const caps=(n.capabilities||[]).slice(0,4).join('·')||'—';
+    return`<div class="noderow"><span class="node-dot ${cls}"></span><span class="node-id">${esc(n.instanceId||'?')}</span><span class="node-caps">${esc(caps)}</span><span class="node-h ${cls}">${sc.toFixed(2)}</span><span class="node-age">${age}</span></div>`;
+  }).join('');
+  const active=nodes.filter(n=>(n.healthScore??0)>.3).length;
+  el('badge-nodes').textContent=`${active}/${nodes.length}`;el('badge-nodes').className=`ph-badge ${active>0?'live':'err'}`;
+}
+
+function renderArts(arts){
+  const e=el('arts-list');
+  if(!arts.length){e.innerHTML='<div class="rlog-empty">No artifacts captured</div>';return;}
+  e.innerHTML=arts.slice(0,25).map(a=>{
+    let tags=[];try{tags=JSON.parse(a.tags||'[]')}catch{}
+    const show=tags.filter(t=>t.startsWith('intent:')||t.startsWith('type:')||t.startsWith('project:')).slice(0,3);
+    return`<div class="art-row"><span class="art-lang">${esc(a.lang||'txt')}</span><span class="art-name">${esc(a.name||'artifact')}</span><div class="art-tags">${show.map(t=>`<span class="art-tag">${esc(t)}</span>`).join('')}</div><span class="art-ts">${fmtAge(Date.now()-(a.ts||0))}</span></div>`;
+  }).join('');
+}
+
+function renderGaps(gaps){
+  const e=el('gaps-body');const open=gaps.filter(g=>g.status==='open'||!g.status);
+  if(!open.length){e.innerHTML='<div class="rlog-empty">No open gaps</div>';return;}
+  e.innerHTML=open.slice(0,20).map(g=>{
+    const sev=g.severity||'low';
+    return`<div class="gap-row"><span class="gap-sev ${sev}">${sev}</span><span class="gap-body">${esc(g.description||g.body||'—')}</span><span class="gap-age">${g.opened_ts?fmtAge(Date.now()-g.opened_ts):'—'}</span></div>`;
+  }).join('');
+}
+
+function renderReqs(){
+  const e=el('rlist');
+  if(!reqLog.length){e.innerHTML='<div class="rlog-empty">No requests yet</div>';return;}
+  e.innerHTML=reqLog.map((r,i)=>{
+    const st=r.status||'pending';const ts=fmtAge(Date.now()-(r.started_ts||r.ts||0));
+    return`<div class="rentry" id="re${i}"><div class="rentry-hd" onclick="this.closest('.rentry').classList.toggle('open')"><span class="rstatus ${st}">${st}</span><span class="ragent">${esc(r.provider||r.command||'?')}</span><span class="rprev">${esc((r.prompt||r.command||'').slice(0,60))}</span><span class="rts">${ts}</span></div><div class="rentry-body"><div class="rbody-label">Prompt</div><div class="rbody-text">${esc((r.prompt||r.command||'').slice(0,300))}</div>${r.response||r.result?`<div class="resp-label">Response</div><div class="resp-text">${esc((r.response||r.result||'').slice(0,600))}</div>`:''}</div></div>`;
+  }).join('');
+}
+
+function renderCausal(events){
+  const svg=el('causal-svg');const rect=svg.parentElement.getBoundingClientRect();
+  const w=Math.max(rect.width||400,400),h=Math.max(rect.height||200,200);
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+  const recent=events.slice(-22);if(!recent.length)return;
+  const tc=t=>t?.startsWith('guardian')?'#38bdf8':t?.startsWith('cobalt')?'#60a5fa':t?.startsWith('agent')?'#34d399':t?.startsWith('gap')?'#f87171':t?.startsWith('delta')?'#fbbf24':'#384d6b';
+  const nodes=recent.map((e,i)=>({x:30+(i/(recent.length-1||1))*(w-60),y:h/2+Math.sin(i*.7)*(h*.28),type:e.type}));
+  let m='';
+  for(let i=1;i<nodes.length;i++)m+=`<line x1="${nodes[i-1].x.toFixed(1)}" y1="${nodes[i-1].y.toFixed(1)}" x2="${nodes[i].x.toFixed(1)}" y2="${nodes[i].y.toFixed(1)}" stroke="${tc(nodes[i].type)}" stroke-width="0.5" opacity="0.22"/>`;
+  for(const n of nodes){const c=tc(n.type);const label=(n.type||'?').split('.').slice(-1)[0].slice(0,10);m+=`<circle cx="${n.x.toFixed(1)}" cy="${n.y.toFixed(1)}" r="5" fill="${c}" opacity="0.75"/><text x="${n.x.toFixed(1)}" y="${(n.y-9).toFixed(1)}" text-anchor="middle" fill="${c}" font-family="IBM Plex Mono" font-size="8" opacity="0.85">${esc(label)}</text>`;}
+  svg.innerHTML=m;
+  const uniq=new Set(recent.map(e=>e.type?.split('.')[0])).size;
+  el('sigma').textContent=uniq>9?`${uniq}`:`Σ${uniq}`;
+}
+
+async function doDispatch(){
+  const agent=el('disp-agent').value;const via=el('disp-via').value;
+  const prompt=el('disp-in').value.trim();if(!prompt)return;
+  const btn=el('disp-btn');btn.disabled=true;btn.textContent='…';el('disp-in').value='';
+  addStream('agent',`→ ${agent} via ${via}: ${prompt.slice(0,60)}`);
+  try{
+    let res;
+    if(via==='guardian'){res=await xpost(G_URL+'/api/complete',{service:agent,prompt,temperature:0.15,maxTokens:2048});}
+    else{res=await xpost(N_URL+'/api/event',{type:'GUARDIAN_EXECUTE_INTENT',payload:{service:agent,prompt,callUuid:crypto.randomUUID()},source:'cockpit'});}
+    const text=res?.content||res?.text||(res?.ok?'dispatched':'no response');
+    addStream('agent',`← ${agent}: ${text.slice(0,100)}`);
+    reqLog.unshift({status:res?.content?'complete':'pending',provider:agent,prompt,response:text,ts:Date.now()});
+    renderReqs();toast(`${agent} ↓ ${text.length}ch`,'ok');
+  }catch(e){addStream('gap',`← ${agent} error: ${e.message}`);toast(`${agent} failed: ${e.message}`,'err');}
+  btn.disabled=false;btn.textContent='DISPATCH';
+}
+
+async function runStatus(){
+  const [gd,nd]=await Promise.all([gf('/health'),nf('/health')]);
+  if(gd)addStream('guardian',`Guardian: arts=${gd.artifacts} gaps=${gd.gaps} uptime=${Math.round(process?.uptime?.()??0)}s`);
+  if(nd)addStream('cobalt',`Nexus: uptime=${Math.round(nd.uptime||0)}s`);
+  if(!gd&&!nd){addStream('gap','Both systems unreachable');toast('Both systems unreachable','err');}
+  else toast(`G:${gd?'ok':'×'} N:${nd?'ok':'×'}`,'ok');
+}
+
+function clearReqs(){reqLog=[];renderReqs();}
+
+function addStream(type,msg){
+  const d=new Date();const ts=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+  const se=el('stream');const line=document.createElement('div');line.className='sline';
+  line.innerHTML=`<span class="sl-ts">${ts}</span><span class="sl-type ${type}">${type}</span><span class="sl-msg">${esc(msg.slice(0,120))}</span>`;
+  se.prepend(line);if(se.children.length>MAX_STREAM)se.lastChild?.remove();
+  el('badge-stream').textContent=`${se.children.length}`;
+}
+
+const el=id=>document.getElementById(id);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmtAge=ms=>{if(ms<0)return'—';if(ms<60000)return`${Math.round(ms/1000)}s`;if(ms<3600000)return`${Math.round(ms/60000)}m`;return`${Math.round(ms/3600000)}h`};
+const set=(id,v)=>{const e=el(id);if(e)e.textContent=v};
+const pill=(id,cls)=>{const e=el(id);if(e)e.className=`pill ${cls}`};
+const dot=(id,cls)=>{const e=el(id);if(e)e.className=`ipc-dot ${cls}`};
+const bar=(id,pct,color)=>{const e=el(id);if(e){e.style.width=`${Math.min(100,Math.max(0,pct))}%`;e.style.background=color}};
+const lbl=(id,val,cls='')=>{const e=el(id);if(e){e.textContent=val;if(cls)e.className=`mval ${cls}`}};
+function toast(msg,type='ok',dur=3500){const e=document.createElement('div');e.className=`toast ${type}`;e.textContent=msg;el('toasts').appendChild(e);setTimeout(()=>e.remove(),dur)}
+
+el('disp-in').addEventListener('keydown',e=>{if(e.key==='Enter')doDispatch()});
+connectG();connectN();refreshAll();setInterval(refreshAll,POLL_MS);
+setInterval(()=>{if(!gOnline)connectG();if(!nOnline)connectN()},15000);
+addStream('cobalt','Cockpit v8 booted — Guardian :7820/:7823 · Nexus :3748 · IPC polling bridge active');
+</script>
+</body>
+</html>
