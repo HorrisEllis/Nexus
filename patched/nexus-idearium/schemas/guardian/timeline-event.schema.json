@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "guardian-timeline-event",
+  "title": "Guardian Timeline Event",
+  "description": "Every SISO event recorded as a timeline entry. The audit trail of everything that happened. Single writer: server.js timeline gate. Read by: cockpit sessions panel, sigma trajectory, pressure analysis.",
+  "$comment": "VERSION: 1.0.0 — §5.4. Mirrors schema.sql timeline_events table.",
+  "type": "object",
+  "required": ["id", "channel", "payload", "ts"],
+  "additionalProperties": false,
+  "properties": {
+    "id":         { "type": "string" },
+    "channel":    { "type": "string", "description": "SISO channel name (e.g. guardian.artifact, guardian.job.complete)" },
+    "person_id":  { "type": ["string", "null"], "description": "Account email or session_id — who this event belongs to" },
+    "pair_id":    { "type": ["string", "null"], "description": "For relational events — the other party" },
+    "chat_id":    { "type": ["string", "null"] },
+    "session_id": { "type": ["string", "null"] },
+    "payload":    { "type": "object", "default": {}, "description": "Full event payload (varies by channel)" },
+    "ts":         { "type": "integer" }
+  }
+}

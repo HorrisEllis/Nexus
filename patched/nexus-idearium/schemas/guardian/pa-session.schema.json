@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "guardian-pa-session",
+  "title": "Guardian PA Session",
+  "description": "Prompt Archaeology session. Captures the cognitive fingerprint of an AI response: tok/s waveform, pause zones, burst zones, entropy trajectory, structural events. Single writer: server.js PA gate (GUARDIAN_PA_SESSION WS message).",
+  "$comment": "VERSION: 1.0.0 — §5.4. Mirrors schema.sql pa_sessions table.",
+  "type": "object",
+  "required": ["id", "ts"],
+  "additionalProperties": false,
+  "properties": {
+    "id":             { "type": "string" },
+    "job_id":         { "type": ["string", "null"] },
+    "chat_id":        { "type": ["string", "null"] },
+    "session_id":     { "type": ["string", "null"] },
+    "account":        { "type": ["string", "null"] },
+    "provider":       { "type": ["string", "null"] },
+    "total_tokens":   { "type": "integer", "minimum": 0, "default": 0 },
+    "tps_avg":        { "type": "number",  "minimum": 0, "default": 0, "description": "Average tokens per second" },
+    "pause_count":    { "type": "integer", "minimum": 0, "default": 0, "description": "Number of hesitation pauses detected" },
+    "entropy_avg":    { "type": "number",  "minimum": 0, "default": 0, "description": "Average lexical entropy (0=predictable, 1=high diversity)" },
+    "burst_count":    { "type": "integer", "minimum": 0, "default": 0, "description": "Number of pre-planned content bursts detected" },
+    "hypotheses": {
+      "type": "array",
+      "default": [],
+      "description": "Inferred structural hypotheses (what the AI was planning)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type":        { "type": "string" },
+          "confidence":  { "type": "number", "minimum": 0, "maximum": 1 },
+          "evidence":    { "type": "string" }
+        }
+      }
+    },
+    "structure_events": {
+      "type": "array",
+      "default": [],
+      "description": "Detected mode shifts: section_header, code_block, list_start, reasoning_chain, etc.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type":  { "type": "string" },
+          "ts":    { "type": "integer" },
+          "pos":   { "type": "integer" }
+        }
+      }
+    },
+    "raw_chunks": {
+      "type": "array",
+      "default": [],
+      "description": "Raw streaming chunks (capped at 1000 for storage). Each: { text, ts, tps }",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "ts":   { "type": "integer" },
+          "tps":  { "type": "number" }
+        }
+      }
+    },
+    "ts": { "type": "integer" }
+  }
+}

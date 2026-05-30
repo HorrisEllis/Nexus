@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "guardian-settings",
+  "title": "Guardian Settings",
+  "description": "Runtime configuration. All settings are hot-reloadable — changing a setting takes effect on the next poll cycle without restart. Defaults are bootstrapped from schema.sql INSERT OR IGNORE.",
+  "$comment": "VERSION: 1.0.0 — §5.4.",
+  "type": "object",
+  "required": ["key", "value", "updated_ts"],
+  "additionalProperties": false,
+  "properties": {
+    "key":        { "type": "string", "minLength": 1, "description": "Setting key (primary key)" },
+    "value":      { "type": "string", "description": "Always stored as string. Cast to correct type on read." },
+    "updated_ts": { "type": "integer" }
+  },
+  "definitions": {
+    "all_settings": {
+      "description": "Complete settings vocabulary with types and defaults",
+      "properties": {
+        "session_greeting_enabled":  { "type": "boolean", "default": true },
+        "session_greeting_text":     { "type": "string" },
+        "scan_debounce_ms":          { "type": "integer", "minimum": 200, "maximum": 5000, "default": 1500 },
+        "artifact_max":              { "type": "integer", "minimum": 100, "maximum": 5000, "default": 500 },
+        "gap_min_score":             { "type": "number",  "minimum": 0, "maximum": 1, "default": 0.25 },
+        "gap_taxonomy_version":      { "type": "string",  "default": "3.0.0" },
+        "pa_enabled":                { "type": "boolean", "default": true },
+        "memory_auto_push":          { "type": "boolean", "default": true },
+        "dropzone_auto_upload":      { "type": "boolean", "default": true },
+        "stream_log_level":          { "type": "string",  "enum": ["OFF", "EVENTS", "DEEP", "DATA"], "default": "EVENTS" },
+        "lan_host":                  { "type": "string",  "enum": ["0.0.0.0", "127.0.0.1"], "default": "0.0.0.0" },
+        "greeting_delay_ms":         { "type": "integer", "minimum": 500, "maximum": 5000, "default": 1200 },
+        "poll_interval_ms":          { "type": "integer", "minimum": 100, "maximum": 2000, "default": 500 },
+        "stable_count_threshold":    { "type": "integer", "minimum": 2,   "maximum": 10,   "default": 5 }
+      }
+    }
+  }
+}

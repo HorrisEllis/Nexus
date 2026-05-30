@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NEXUS BEP Pattern",
+  "type": "object",
+  "required": ["uuid","intent","layer"],
+  "properties": {
+    "uuid":           { "type": "string" },
+    "version":        { "type": "integer", "minimum": 1 },
+    "intent":         { "type": "string", "minLength": 1 },
+    "intentHash":     { "type": "string" },
+    "tags":           { "type": "array", "items": { "type": "string" } },
+    "layer":          { "type": "string", "enum": ["gate","healer","manifest","translation","foundation"] },
+    "inputContract":  { "type": "object" },
+    "outputContract": { "type": "object" },
+    "behaviorGraph": {
+      "type": "object",
+      "properties": {
+        "steps":      { "type": "array" },
+        "invariants": { "type": "array" }
+      }
+    },
+    "constraints":    { "type": "array", "items": { "type": "string" } },
+    "failureModes":   { "type": "array", "items": { "type": "string" } },
+    "implementations":{ "type": "array" },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "useCount":        { "type": "integer" },
+        "successRate":     { "type": "number", "minimum": 0, "maximum": 1 },
+        "avgLatencyMs":    { "type": "number" },
+        "regressionCount": { "type": "integer" },
+        "lastUsed":        { "type": ["number","null"] }
+      }
+    }
+  }
+}

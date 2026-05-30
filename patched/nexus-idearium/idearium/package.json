@@ -1,0 +1,17 @@
+{
+  "name": "idearium",
+  "version": "1.0.0",
+  "description": "The Idea OS — CLI-first idea management with spec building, tension scoring, and Guardian integration",
+  "main": "api/index.js",
+  "scripts": {
+    "start":  "node api/index.js",
+    "cli":    "node cli/index.js",
+    "vortex": "node ../vortex/cli.js"
+  },
+  "bin": {
+    "idearium": "./cli/index.js",
+    "vortex":   "../vortex/cli.js"
+  },
+  "dependencies": {},
+  "engines": { "node": ">=18" }
+}

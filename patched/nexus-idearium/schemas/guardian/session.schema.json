@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "guardian-session",
+  "title": "Guardian Session",
+  "description": "An AI conversation session tracked by Guardian. One row per chat URL visited. Single writer: guardian/siphon. Read by: timeline, PA, memory.",
+  "$comment": "VERSION: 1.0.0 — §5.4. Mirrors schema.sql sessions table.",
+  "type": "object",
+  "required": ["id", "chat_id", "chat_url", "provider", "started_ts", "updated_ts"],
+  "additionalProperties": false,
+  "properties": {
+    "id":           { "type": "string", "description": "UUID" },
+    "chat_id":      { "type": "string", "description": "Extracted from URL path (e.g. /chat/<uuid>)" },
+    "chat_url":     { "type": "string", "description": "Full URL of the conversation" },
+    "provider":     { "type": "string", "enum": ["claude", "chatgpt", "gemini", "unknown"] },
+    "account":      { "type": ["string", "null"], "description": "Email or hostname identity of the account" },
+    "name":         { "type": ["string", "null"], "description": "User-assigned session name (from greeting response)" },
+    "token_total":  { "type": "integer", "minimum": 0, "default": 0, "description": "Estimated total token count for this session" },
+    "started_ts":   { "type": "integer", "description": "Unix ms — first activity in this session" },
+    "updated_ts":   { "type": "integer", "description": "Unix ms — last activity" },
+    "meta":         { "type": "object",  "default": {}, "description": "Extension blob" }
+  }
+}

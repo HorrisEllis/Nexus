@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "guardian-ledger-entry",
+  "title": "Guardian Ledger Entry",
+  "description": "Dual-ledger architecture (§7.1): upgrade entries are authoritative state-mutating events. Idea entries are speculative cognition. Event entries are observational. Single writer: server.js ledger gate + POST /ledger. Read by: cockpit ledger panel, metrics, Nexus Cobalt.",
+  "$comment": "VERSION: 1.0.0 — §5.4. Mirrors schema.sql ledger_entries table.",
+  "type": "object",
+  "required": ["id", "ledger_type", "category", "msg", "ts"],
+  "additionalProperties": false,
+  "properties": {
+    "id":          { "type": "string" },
+    "ledger_type": { "type": "string", "enum": ["upgrade", "idea", "event"], "description": "upgrade=authoritative, idea=speculative, event=observational (§7.0)" },
+    "category":    { "type": "string", "enum": ["UPGRADE", "IDEA", "EVENT", "GAP", "SYSTEM", "INPUT", "OUTPUT"], "description": "Display category for cockpit" },
+    "msg":         { "type": "string", "minLength": 1 },
+    "chat_url":    { "type": ["string", "null"] },
+    "chat_id":     { "type": ["string", "null"] },
+    "account":     { "type": ["string", "null"] },
+    "provider":    { "type": ["string", "null"] },
+    "job_id":      { "type": ["string", "null"] },
+    "session_id":  { "type": ["string", "null"] },
+    "source":      { "type": "string", "enum": ["guardian-ws", "guardian-userscript", "cli", "api"], "default": "guardian" },
+    "meta":        { "type": "object",  "default": {} },
+    "proof":       { "type": ["object", "null"], "description": "For upgrade entries: measurable proof object { metric, diff, result }" },
+    "ts":          { "type": "integer" }
+  }
+}

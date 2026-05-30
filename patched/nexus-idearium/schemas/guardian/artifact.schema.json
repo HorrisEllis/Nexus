@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "guardian-artifact",
+  "title": "Guardian Artifact",
+  "description": "A captured code block, file, or output from an AI provider session. Single writer: guardian/siphon (ingested from GUARDIAN_ARTIFACT WS message). Read by: Dropzone, memory server, Nexus Cobalt.",
+  "$comment": "VERSION: 1.0.0 — §5.4. Mirrors schema.sql artifacts table.",
+  "type": "object",
+  "required": ["id", "hash", "content", "chat_url", "chat_id", "provider", "ts"],
+  "additionalProperties": false,
+  "properties": {
+    "id":          { "type": "string", "minLength": 1, "description": "UUID — permanent, never reuse" },
+    "hash":        { "type": "string", "minLength": 1, "description": "SHA-256 of content — dedup key" },
+    "name":        { "type": "string",  "default": "artifact", "description": "Human-readable name, often filename" },
+    "type":        { "type": "string",  "default": "code_block", "enum": ["code_block", "file", "document", "image", "data", "output"], "description": "Artifact type classification" },
+    "lang":        { "type": ["string", "null"], "description": "Programming language or format (ts, py, js, md, sql, json, ...)" },
+    "content":     { "type": "string",  "minLength": 1, "description": "Full artifact content — never truncated" },
+    "context":     { "type": ["string", "null"], "description": "Surrounding message snippet (< 500 chars) for human context" },
+    "chat_url":    { "type": "string",  "description": "Full URL of the AI chat where this was captured" },
+    "chat_id":     { "type": "string",  "description": "Chat session UUID extracted from URL" },
+    "account":     { "type": ["string", "null"], "description": "Account email or hostname" },
+    "job_id":      { "type": ["string", "null"], "description": "Guardian job UUID that produced this artifact, if orchestrated" },
+    "session_id":  { "type": ["string", "null"], "description": "Guardian session UUID" },
+    "direction":   { "type": "string",  "enum": ["output", "input"], "default": "output", "description": "output = AI produced it. input = user sent it." },
+    "provider":    { "type": "string",  "enum": ["claude", "chatgpt", "gemini", "unknown"], "default": "claude" },
+    "seen_count":  { "type": "integer", "minimum": 1, "default": 1, "description": "Incremented each time the same hash appears" },
+    "ts":          { "type": "integer", "description": "Unix milliseconds — wall time captured" },
+    "last_seen":   { "type": "integer", "description": "Unix milliseconds — most recent capture of this hash" },
+    "tags":        { "type": "array",   "items": { "type": "string" }, "default": [], "description": "User-assigned + auto-detected tags (lang:ts, intent:build, project:nexus, ...)" },
+    "meta":        { "type": "object",  "default": {}, "description": "Extension blob — unstructured extra fields" }
+  }
+}

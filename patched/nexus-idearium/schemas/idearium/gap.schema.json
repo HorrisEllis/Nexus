@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "idearium-gap",
+  "title": "Idearium Gap",
+  "description": "An unresolved incompleteness between an idea and its declared intent, between two resonant ideas, or between an idea and the code that implements its spec. The system's honest accounting of what it doesn't know. §M1: gaps are never deleted, only resolved or archived.",
+  "$comment": "VERSION: 1.0.0 — §5.4.",
+  "type": "object",
+  "required": ["uuid", "type", "description", "status", "severity", "source", "ts"],
+  "additionalProperties": false,
+  "properties": {
+    "uuid":        { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": ["unresolved", "contradiction", "missing_link", "boundary_gap", "file_friction", "spec_incomplete", "ci_fail", "schema_violation", "wiring_missing"],
+      "description": "Gap classification"
+    },
+    "description": { "type": "string", "minLength": 5, "description": "What is unresolved — specific, not generic" },
+    "ideaUuid":    { "type": ["string", "null"] },
+    "specUuid":    { "type": ["string", "null"] },
+    "status":      { "type": "string", "enum": ["open", "resolved", "ignored", "archived"], "default": "open" },
+    "severity":    { "type": "string", "enum": ["fatal", "high", "medium", "low"], "default": "medium" },
+    "resolution":  { "type": ["string", "null"], "description": "Human-provided resolution description" },
+    "resolvedAt":  { "type": ["integer", "null"] },
+    "ignoreReason":{ "type": ["string", "null"] },
+    "causedBy":    { "type": ["string", "null"] },
+    "source":      { "type": "string" },
+    "ts":          { "type": "integer" },
+    "createdAt":   { "type": "integer", "default": 0 }
+  }
+}

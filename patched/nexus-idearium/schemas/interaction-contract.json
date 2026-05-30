@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Idearium Interaction Contract",
+  "description": "The relational field. Every UI that can read this schema can render itself. Change this file to hotswap the UI without touching the backend.",
+  "$comment": "VERSION: 1.0.0 — §5.4. This is the source of truth for all UI/API interactions. LAW IV: code implements this schema, not the reverse.",
+
+  "contract": {
+    "id": "idearium-v1",
+    "version": "1.0.0",
+    "namespace": "idearium",
+    "port": 4800,
+    "transport": {
+      "http":    { "base": "http://127.0.0.1:4800" },
+      "sse":     { "path": "/sse",     "events": ["idea.*", "spec.*", "gap.*", "push.*", "ci.*"] },
+      "nexus":   { "base": "http://127.0.0.1:3748" },
+      "guardian":{ "base": "http://127.0.0.1:7820" }
+    }
+  },
+
+  "resources": {
+    "idea": {
+      "description": "A named unit of thought. The atomic input to the idea OS.",
+      "schema": "schemas/idea.schema.json",
+      "table": "ideas",
+      "lifecycle": ["seed", "expanding", "tensioned", "specced", "building", "complete", "archived"],
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/ideas",                "query": ["phase", "tag", "sort", "limit"], "response": "idea[]" },
+        "create":  { "method": "POST",   "path": "/api/ideas",                "body": "idea-input",   "response": "idea",   "event": "idea.created" },
+        "show":    { "method": "GET",    "path": "/api/ideas/:uuid",          "response": "idea" },
+        "update":  { "method": "PATCH",  "path": "/api/ideas/:uuid",          "body": "idea-patch",   "response": "idea",   "event": "idea.updated" },
+        "tension": { "method": "POST",   "path": "/api/ideas/:uuid/tension",  "response": "tension",  "event": "idea.tensioned" },
+        "link":    { "method": "POST",   "path": "/api/ideas/:uuid/link",     "body": "link-input",   "response": "idea",   "event": "idea.linked" },
+        "spec":    { "method": "POST",   "path": "/api/ideas/:uuid/spec",     "response": "spec",     "event": "spec.created" },
+        "archive": { "method": "DELETE", "path": "/api/ideas/:uuid",          "response": "ok",       "event": "idea.archived" }
+      }
+    },
+    "spec": {
+      "description": "A structured specification generated from an idea. The gate between thinking and building.",
+      "schema": "schemas/spec.schema.json",
+      "table": "specs",
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/specs",                "response": "spec[]" },
+        "show":    { "method": "GET",    "path": "/api/specs/:uuid",          "response": "spec" },
+        "update":  { "method": "PATCH",  "path": "/api/specs/:uuid",          "body": "spec-patch",   "response": "spec",   "event": "spec.updated" },
+        "check":   { "method": "POST",   "path": "/api/specs/:uuid/check",    "response": "check-result", "event": "spec.checked" },
+        "build":   { "method": "POST",   "path": "/api/specs/:uuid/build",    "response": "build-result", "event": "spec.built" },
+        "export":  { "method": "GET",    "path": "/api/specs/:uuid/export",   "response": "markdown" }
+      }
+    },
+    "gap": {
+      "description": "An unresolved incompleteness. The system's honesty about what it doesn't know.",
+      "schema": "schemas/gap.schema.json",
+      "table": "gaps",
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/gaps",                 "query": ["status", "severity", "type"], "response": "gap[]" },
+        "show":    { "method": "GET",    "path": "/api/gaps/:uuid",           "response": "gap" },
+        "resolve": { "method": "POST",   "path": "/api/gaps/:uuid/resolve",   "body": "resolve-input", "event": "gap.resolved" },
+        "ignore":  { "method": "POST",   "path": "/api/gaps/:uuid/ignore",    "body": "reason",        "event": "gap.ignored" }
+      }
+    },
+    "snapshot": {
+      "description": "A full system state at a moment in time. The Vortex commit unit.",
+      "schema": "schemas/snapshot.schema.json",
+      "table": "snapshots",
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/snapshots",            "response": "snapshot[]" },
+        "show":    { "method": "GET",    "path": "/api/snapshots/:uuid",      "response": "snapshot" },
+        "diff":    { "method": "GET",    "path": "/api/snapshots/:a/diff/:b", "response": "diff" }
+      }
+    },
+    "agent": {
+      "description": "A connected Guardian agent instance available for dispatch.",
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/agents",               "response": "agent[]",  "proxy": "guardian:/health" },
+        "dispatch":{ "method": "POST",   "path": "/api/agents/:id/dispatch",  "body": "dispatch-input","response": "job", "proxy": "guardian:/api/complete" }
+      }
+    },
+    "ci": {
+      "description": "Spec compliance gate. Checks whether built artifacts match their spec.",
+      "endpoints": {
+        "run":     { "method": "POST",   "path": "/api/ci/run",               "body": "ci-input",     "response": "ci-result", "event": "ci.run" },
+        "status":  { "method": "GET",    "path": "/api/ci/status",            "response": "ci-status" },
+        "history": { "method": "GET",    "path": "/api/ci/history",           "response": "ci-run[]" }
+      }
+    }
+  },
+
+  "events": {
+    "idea.created":    { "payload": "idea",        "description": "New idea created" },
+    "idea.updated":    { "payload": "idea",        "description": "Idea fields changed" },
+    "idea.tensioned":  { "payload": "tension",     "description": "Tension score recomputed" },
+    "idea.linked":     { "payload": "link",        "description": "Two ideas linked" },
+    "idea.archived":   { "payload": "uuid",        "description": "Idea archived (§M1 — not deleted)" },
+    "spec.created":    { "payload": "spec",        "description": "Spec generated from idea" },
+    "spec.updated":    { "payload": "spec",        "description": "Spec section edited" },
+    "spec.checked":    { "payload": "check-result","description": "Checklist run" },
+    "spec.built":      { "payload": "build-result","description": "Gate runner triggered" },
+    "gap.created":     { "payload": "gap",         "description": "New gap detected" },
+    "gap.resolved":    { "payload": "gap",         "description": "Gap marked resolved" },
+    "push.complete":   { "payload": "snapshot",    "description": "Vortex push complete" },
+    "pull.complete":   { "payload": "snapshot",    "description": "Vortex pull applied" },
+    "ci.run":          { "payload": "ci-result",   "description": "CI gate completed" },
+    "snr.update":      { "payload": "snr",         "description": "Signal/noise ratio updated" },
+    "guardian.health": { "payload": "health",      "description": "Guardian connection status" }
+  },
+
+  "components": {
+    "IdeaList":     { "data": "idea.list",       "actions": ["idea.create", "idea.tension"],  "events": ["idea.created", "idea.tensioned"] },
+    "IdeaDetail":   { "data": "idea.show",       "actions": ["idea.update", "idea.link", "idea.spec"], "events": ["idea.updated"] },
+    "SpecEditor":   { "data": "spec.show",       "actions": ["spec.update", "spec.check", "spec.build"], "events": ["spec.updated", "spec.checked"] },
+    "GapPanel":     { "data": "gap.list",        "actions": ["gap.resolve", "gap.ignore"],   "events": ["gap.created", "gap.resolved"] },
+    "TensionMeter": { "data": "idea.tension",    "actions": [],                              "events": ["idea.tensioned"] },
+    "SNRMeter":     { "data": "snr.current",     "actions": [],                              "events": ["snr.update"] },
+    "AgentDropdown":{ "data": "agent.list",      "actions": ["agent.dispatch"],             "events": ["guardian.health"] },
+    "PushPull":     { "data": "snapshot.list",   "actions": ["vortex.push", "vortex.pull"], "events": ["push.complete", "pull.complete"] },
+    "CIPanel":      { "data": "ci.status",       "actions": ["ci.run"],                     "events": ["ci.run"] },
+    "EventStream":  { "data": "sse",             "actions": [],                              "events": ["*"] }
+  },
+
+  "views": {
+    "dashboard": {
+      "description": "Main overview — ideas by tension, gap summary, system health",
+      "layout": "three-column",
+      "left":   ["IdeaList", "TensionMeter"],
+      "center": ["EventStream", "SNRMeter"],
+      "right":  ["GapPanel", "AgentDropdown"]
+    },
+    "specEditor": {
+      "description": "Spec-focused — full spec editor with checklist, CI gate, SNR meter",
+      "layout": "two-column",
+      "left":   ["SpecEditor"],
+      "right":  ["GapPanel", "CIPanel", "SNRMeter"]
+    },
+    "vortex": {
+      "description": "Push/pull — version history, diff viewer, CI runs",
+      "layout": "full",
+      "main":   ["PushPull", "CIPanel"]
+    }
+  },
+
+  "snr_translation": {
+    "description": "Signal-to-noise translation layer. Maps raw event types to signal quality scores.",
+    "signal_events": {
+      "idea.created":     0.9,
+      "spec.created":     0.95,
+      "spec.built":       1.0,
+      "gap.resolved":     0.85,
+      "ci.run":           0.9,
+      "push.complete":    0.95,
+      "idea.tensioned":   0.7,
+      "spec.updated":     0.6,
+      "idea.updated":     0.5,
+      "idea.linked":      0.65
+    },
+    "noise_events": {
+      "snr.update":       0.1,
+      "guardian.health":  0.15,
+      "idea.archived":    0.2,
+      "gap.ignored":      0.3
+    },
+    "window_size": 50,
+    "threshold_signal": 0.5,
+    "threshold_noise":  0.3
+  }
+}

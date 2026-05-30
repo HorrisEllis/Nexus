@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "nexus-event",
+  "title": "NEXUS Event",
+  "description": "Every event that flows through NEXUS. The atomic unit of the SISO bus and the JAA event_log. Immutable after construction (§K1). Carries causedBy for full causal chain reconstruction (§A3).",
+  "$comment": "VERSION: 1.0.0 — §5.4.",
+  "type": "object",
+  "required": ["uuid", "type", "source", "ts"],
+  "additionalProperties": true,
+  "properties": {
+    "uuid":     { "type": "string", "description": "UUID — permanent, assigned on construction" },
+    "type":     { "type": "string", "description": "Dot-namespaced event type (e.g. guardian.heartbeat, spec.checked, gap.resolved)" },
+    "payload":  { "type": "object", "default": {}, "description": "Event-specific data — varies by type" },
+    "source":   { "type": "string", "description": "Module ID that emitted this event" },
+    "causedBy": { "type": ["string", "null"], "description": "UUID of the event or JAA row that caused this event (§A3)" },
+    "_rowId":   { "type": "integer", "description": "Monotone row ID assigned by JAA on insert — the logical ordering axis (§3.2)" },
+    "ts":       { "type": "integer", "description": "Wall timestamp (Unix ms) — display metadata only, never used for ordering (§3.2)" }
+  }
+}

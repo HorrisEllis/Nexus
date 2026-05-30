@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "nex-file",
+  "title": "NEX File Format",
+  "description": "Container format for system state snapshots, blueprints, and execution clips. Three magic header types: NEX-SNAP (full system state), NEX-BP (structural blueprint/spec), NEX-CLIP (bounded temporal execution slice). Used by Vortex for push/pull, by Causal Nexus for pause/rewind/reconstruct, by Idearium for repo archival.",
+  "$comment": "VERSION: 1.0.0 — §5.4. File extension: .nex",
+
+  "definitions": {
+    "nex_header": {
+      "type": "object",
+      "required": ["magic", "version", "uuid", "ts"],
+      "properties": {
+        "magic":    { "type": "string", "enum": ["NEX-SNAP", "NEX-BP", "NEX-CLIP"], "description": "File type identifier" },
+        "version":  { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "default": "1.0.0" },
+        "uuid":     { "type": "string", "description": "Unique file identifier" },
+        "name":     { "type": ["string", "null"], "description": "Human-readable name (e.g. 'rheon.world v1.2.0')" },
+        "source":   { "type": "string", "description": "System that created this file (e.g. vortex, causal-nexus, idearium)" },
+        "hash":     { "type": "string", "description": "SHA-256 of payload (integrity check)" },
+        "size":     { "type": "integer", "description": "Payload bytes before compression" },
+        "compressed": { "type": "boolean", "default": false, "description": "Whether payload is zlib-compressed" },
+        "encoding": { "type": "string", "enum": ["json", "base64", "base64-zlib"], "default": "json" },
+        "ts":       { "type": "integer" }
+      }
+    },
+
+    "snap_payload": {
+      "description": "NEX-SNAP payload — complete system state for pause/rewind/restore",
+      "type": "object",
+      "required": ["ideas", "specs", "gaps", "snapshots"],
+      "properties": {
+        "ideas":      { "type": "array", "description": "All idea rows" },
+        "specs":      { "type": "array", "description": "All spec rows" },
+        "gaps":       { "type": "array", "description": "All gap rows" },
+        "links":      { "type": "array", "description": "All link rows (resonance/tension/causal)" },
+        "snapshots":  { "type": "array", "description": "Versionium snapshot history" },
+        "repos":      { "type": "array", "description": "Repo definitions" },
+        "ciRuns":     { "type": "array", "description": "CI run history" },
+        "snrSamples": { "type": "array", "description": "SNR sample history" },
+        "eventLog":   { "type": "array", "description": "Last N events (bounded — default 1000)" },
+        "guardianArtifacts": { "type": "array", "description": "Guardian artifacts linked to this repo" },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "ideaCount":   { "type": "integer" },
+            "specCount":   { "type": "integer" },
+            "openGapCount":{ "type": "integer" },
+            "snr":         { "type": "number" },
+            "sigma":       { "type": "number" },
+            "headHash":    { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+
+    "bp_payload": {
+      "description": "NEX-BP payload — structural blueprint (spec + architecture). What the system IS, not what it has done.",
+      "type": "object",
+      "required": ["spec"],
+      "properties": {
+        "spec":           { "type": "object", "description": "Full spec record (idearium-spec.schema.json)" },
+        "modules":        { "type": "array",  "description": "Module declarations (cobalt-module.schema.json)" },
+        "schemaRefs":     { "type": "array",  "items": { "type": "string" }, "description": "Schema file paths this BP depends on" },
+        "vocabulary": {
+          "type": "object",
+          "description": "Causal Nexus: event types with frequency, successors, parents",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "frequency":  { "type": "integer" },
+              "successors": { "type": "array" },
+              "parents":    { "type": "array" },
+              "isRoot":     { "type": "boolean" }
+            }
+          }
+        },
+        "macroPatterns":  { "type": "array",  "description": "Recurring causal chains" },
+        "invariants":     { "type": "array",  "description": "System invariants (§C-1 through §C-N)" },
+        "compiledModule": { "type": ["string", "null"], "description": "Optional: compiled ESM/CJS module code" }
+      }
+    },
+
+    "clip_payload": {
+      "description": "NEX-CLIP payload — a bounded temporal execution slice. From seqStart to seqEnd. Used for debugging, replay, and incident analysis.",
+      "type": "object",
+      "required": ["events", "seqStart", "seqEnd"],
+      "properties": {
+        "events":    { "type": "array", "description": "Events in this clip window (primary events only)" },
+        "seqStart":  { "type": "integer", "description": "Ring buffer sequence number at clip start" },
+        "seqEnd":    { "type": "integer", "description": "Ring buffer sequence number at clip end" },
+        "tsStart":   { "type": "integer", "description": "Wall time at clip start" },
+        "tsEnd":     { "type": "integer", "description": "Wall time at clip end" },
+        "durationMs":{ "type": "integer" },
+        "parentSnapHash": { "type": ["string", "null"], "description": "Hash of the SNAP this clip was taken from" },
+        "baseline":  { "type": ["object", "null"], "description": "Invariant baseline state at clip start" },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "eventCount":    { "type": "integer" },
+            "eventTypes":    { "type": "array" },
+            "gapsOpened":    { "type": "integer" },
+            "gapsClosed":    { "type": "integer" },
+            "artifactCount": { "type": "integer" },
+            "sigmaAtStart":  { "type": "number" },
+            "sigmaAtEnd":    { "type": "number" }
+          }
+        }
+      }
+    }
+  },
+
+  "type": "object",
+  "required": ["header"],
+  "properties": {
+    "header":  { "$ref": "#/definitions/nex_header" },
+    "payload": {
+      "oneOf": [
+        { "$ref": "#/definitions/snap_payload" },
+        { "$ref": "#/definitions/bp_payload" },
+        { "$ref": "#/definitions/clip_payload" }
+      ]
+    }
+  }
+}

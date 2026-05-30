@@ -1,0 +1,413 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "nexus/schemas/module.schema.json",
+  "title": "NEXUS Module Definition",
+  "description": "Drop this file to declare a module. Runtime reads it to know what to expect, what to wire, and what gaps look like. \u00a71.1: if behavior diverges from this schema, it is a gap.",
+  "type": "object",
+  "required": [
+    "name",
+    "uuid",
+    "version",
+    "layer",
+    "axioms",
+    "subscribes",
+    "publishes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Dot-namespaced. e.g. 'gate.runner', 'crystalball.bep'"
+    },
+    "uuid": {
+      "type": "string",
+      "description": "Permanent. Never reuse. Format: nexus-mod-<name>-0000-4000-0000-<N>"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "SemVer. Bump minor on new events. Bump major on breaking contract change."
+    },
+    "layer": {
+      "type": "string",
+      "enum": [
+        "foundation",
+        "core",
+        "gate",
+        "healer",
+        "agent",
+        "guardian",
+        "memory",
+        "automation",
+        "canvas",
+        "ui"
+      ],
+      "description": "Load order layer. foundation loads first. Law III: no cross-layer direct calls."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "disabled",
+        "experimental",
+        "deprecated"
+      ],
+      "default": "active"
+    },
+    "axioms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^\u00a7"
+      },
+      "description": "Axioms this module is bound by. Must include at least \u00a71.1 and \u00a71.2.",
+      "examples": [
+        [
+          "\u00a71.1",
+          "\u00a71.2",
+          "\u00a75.1",
+          "\u00a7M1"
+        ]
+      ]
+    },
+    "subscribes": {
+      "type": "array",
+      "description": "Events this module listens to. Law III: only way to receive input.",
+      "items": {
+        "type": "object",
+        "required": [
+          "channel",
+          "handler"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "Event type or wildcard. e.g. 'gate.failed' or 'gap.*'"
+          },
+          "handler": {
+            "type": "string",
+            "description": "Method name on the module class. Must exist."
+          },
+          "required": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, gap.found emitted if this event never arrives within boot window."
+          },
+          "maxLatencyMs": {
+            "type": "integer",
+            "description": "If set, behavioral gap emitted if handler takes longer than this."
+          }
+        }
+      }
+    },
+    "publishes": {
+      "type": "array",
+      "description": "Events this module emits. Law II: all output is events.",
+      "items": {
+        "type": "object",
+        "required": [
+          "channel"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "type": "string",
+            "description": "Event type this module emits."
+          },
+          "schema": {
+            "type": "string",
+            "description": "Path to JSON schema that validates this event's payload. e.g. 'schemas/gap.schema.json'"
+          },
+          "guaranteed": {
+            "type": "boolean",
+            "default": false,
+            "description": "If true, runtime expects this to fire on every successful run. Absence is a gap."
+          },
+          "triggeredBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Which subscribed channels trigger this emission."
+          }
+        }
+      }
+    },
+    "invariants": {
+      "type": "array",
+      "description": "Hard rules. If any invariant is violated, it is a \u00a71.2 loud failure \u2014 not a warning.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "description",
+          "rule"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Short ID. e.g. 'CI-1', 'INV-persist-before-emit'"
+          },
+          "description": {
+            "type": "string"
+          },
+          "rule": {
+            "type": "string",
+            "enum": [
+              "persist_before_emit",
+              "emit_before_return",
+              "no_direct_module_call",
+              "uuid_on_every_event",
+              "temp_zero_always",
+              "no_state_mutation_without_event",
+              "single_responsibility",
+              "custom"
+            ]
+          },
+          "customRule": {
+            "type": "string",
+            "description": "If rule is 'custom', describe the invariant precisely."
+          },
+          "enforcedBy": {
+            "type": "string",
+            "description": "How this is enforced: 'kernel', 'schema', 'test', 'runtime_check'"
+          }
+        }
+      }
+    },
+    "behavior": {
+      "type": "object",
+      "description": "Expected runtime behavior. Gaps here are behavioral gaps, not just missing execution.",
+      "additionalProperties": false,
+      "properties": {
+        "initEvent": {
+          "type": "string",
+          "description": "Event this module emits when ready. e.g. 'crystalball.ready'"
+        },
+        "bootOrder": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Relative boot position within layer. Lower = earlier."
+        },
+        "idempotent": {
+          "type": "boolean",
+          "description": "If true, running twice produces same result. Runtime can safely replay."
+        },
+        "stateful": {
+          "type": "boolean",
+          "description": "If true, module maintains internal state across events. Must persist to JAA."
+        },
+        "expectedFlows": {
+          "type": "array",
+          "description": "Named event sequences that should occur. Runtime checks these against the ring.",
+          "items": {
+            "$ref": "#/definitions/expectedFlow"
+          }
+        },
+        "slaMs": {
+          "type": "object",
+          "description": "Expected latency SLAs. Exceeded = behavioral gap.",
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "examples": [
+            {
+              "gate.passed": 5000,
+              "manifest.ready": 10000
+            }
+          ]
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "description": "Configurable parameters with types and defaults. Admin panel renders these automatically.",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "type",
+          "default"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "number",
+              "string",
+              "boolean",
+              "array"
+            ]
+          },
+          "default": {},
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          },
+          "restartRequired": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "cli": {
+      "type": "array",
+      "description": "CLI commands this module contributes. Registered at boot.",
+      "items": {
+        "type": "object",
+        "required": [
+          "command",
+          "emits"
+        ],
+        "properties": {
+          "command": {
+            "type": "string"
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "flags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emits": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "help": {
+            "type": "string"
+          },
+          "example": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Other NEXUS modules this depends on. Runtime validates they are loaded first."
+        },
+        "external": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "npm packages required. e.g. ['ajv', 'ws']"
+        }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "suite": {
+          "type": "string",
+          "description": "Path to test file."
+        },
+        "coverage": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "requiredPassRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1.0
+        }
+      }
+    }
+  },
+  "definitions": {
+    "expectedFlow": {
+      "type": "object",
+      "required": [
+        "id",
+        "trigger",
+        "expects"
+      ],
+      "description": "A named causal chain that should always occur when trigger fires.",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "e.g. 'gap-to-heal'"
+        },
+        "description": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "Event type that starts the flow."
+        },
+        "expects": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Ordered list of events that must follow the trigger.",
+          "items": {
+            "type": "object",
+            "required": [
+              "channel"
+            ],
+            "properties": {
+              "channel": {
+                "type": "string"
+              },
+              "withinMs": {
+                "type": "integer",
+                "description": "Must arrive within N ms of previous event."
+              },
+              "optional": {
+                "type": "boolean",
+                "default": false
+              },
+              "condition": {
+                "type": "string",
+                "description": "JSONPath expression on payload that must be true."
+              }
+            }
+          }
+        },
+        "onViolation": {
+          "type": "string",
+          "enum": [
+            "gap.found",
+            "gap.found.fatal",
+            "warn",
+            "log"
+          ],
+          "default": "gap.found",
+          "description": "What happens when this flow is violated."
+        },
+        "withinMs": {
+          "type": "integer",
+          "description": "Entire flow must complete within this window."
+        }
+      }
+    }
+  }
+}

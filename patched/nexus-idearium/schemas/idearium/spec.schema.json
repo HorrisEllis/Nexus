@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "idearium-spec",
+  "title": "Idearium Spec",
+  "description": "A structured specification generated from an idea. The gate between thinking and building. Every required section must be complete before entering the gate runner. Checklist items are the compliance surface for CI. Single writer: idearium.core. Read by: gate runner, CI gate, spec-builder UI, vortex.",
+  "$comment": "VERSION: 1.0.0 — §5.4.",
+  "type": "object",
+  "required": ["uuid", "name", "version", "ideaUuid", "sections", "source", "createdAt"],
+  "additionalProperties": false,
+  "properties": {
+    "uuid":      { "type": "string" },
+    "name":      { "type": "string", "minLength": 1 },
+    "version":   { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "default": "1.0.0" },
+    "ideaUuid":  { "type": ["string", "null"], "description": "Source idea UUID" },
+    "phase":     { "type": "string", "enum": ["seed", "expanding", "specced", "building", "complete"], "default": "seed" },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Spec sections. Each required section must be complete before the spec can enter the gate runner.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "complete", "required", "checklist"],
+        "properties": {
+          "id":       { "type": "string", "enum": ["intent", "api_callto", "module_hooks", "cli_spec", "schemas", "gap_contract", "failure_modes", "tests", "phase_map"] },
+          "title":    { "type": "string" },
+          "complete": { "type": "boolean", "default": false },
+          "required": { "type": "boolean", "default": true },
+          "content":  { "type": "string",  "default": "" },
+          "checklist": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "done"],
+              "properties": {
+                "id":    { "type": "string" },
+                "label": { "type": "string" },
+                "done":  { "type": "boolean", "default": false }
+              }
+            }
+          }
+        }
+      }
+    },
+    "modules": {
+      "type": "array",
+      "default": [],
+      "description": "Module files this spec will produce",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name":   { "type": "string" },
+          "file":   { "type": "string" },
+          "intent": { "type": "string" },
+          "status": { "type": "string", "enum": ["planned", "building", "complete"] }
+        }
+      }
+    },
+    "wired": {
+      "type": "object",
+      "default": { "eventBus": false, "cli": false, "jaa": false, "toast": false, "schemaValidated": false },
+      "description": "Module wiring checklist — all must be true before spec.phase=complete",
+      "properties": {
+        "eventBus":        { "type": "boolean" },
+        "cli":             { "type": "boolean" },
+        "jaa":             { "type": "boolean" },
+        "toast":           { "type": "boolean" },
+        "schemaValidated": { "type": "boolean" }
+      }
+    },
+    "buildOrder":        { "type": "array", "items": { "type": "integer" }, "default": [] },
+    "agentAssignments":  { "type": "object", "default": {}, "description": "gate-id → agent-id routing for build" },
+    "causedBy":  { "type": ["string", "null"] },
+    "source":    { "type": "string" },
+    "createdAt": { "type": "integer" },
+    "updatedAt": { "type": "integer", "default": 0 }
+  }
+}

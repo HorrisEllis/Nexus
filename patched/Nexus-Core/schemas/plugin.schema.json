@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NEXUS Plugin Manifest",
+  "type": "object",
+  "required": ["name","uuid","version","layer"],
+  "properties": {
+    "name":       { "type": "string", "minLength": 1 },
+    "uuid":       { "type": "string" },
+    "version":    { "type": "string" },
+    "hook":       { "type": "string" },
+    "intent":     { "type": "string" },
+    "layer":      { "type": "string", "enum": ["foundation","core","gate","healer","agent","ui"] },
+    "status":     { "type": "string", "enum": ["active","disabled","error"] },
+    "axioms":     { "type": "array", "items": { "type": "string" } },
+    "subscribes": { "type": "array" },
+    "publishes":  { "type": "array" },
+    "cli":        { "type": "array" },
+    "ui":         { "type": "object" },
+    "tests":      { "type": "object" },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "external": { "type": "array", "items": { "type": "string" } },
+        "internal": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "guardian-job",
+  "title": "Guardian Job",
+  "description": "An orchestrated AI dispatch. Created by POST /command. Tracked through pending → delivered → streaming → complete | failed. Single writer: server.js job lifecycle. Read by: Callto-executor (Nexus), cockpit, CLI.",
+  "$comment": "VERSION: 1.0.0 — §5.4. Mirrors schema.sql jobs table.",
+  "type": "object",
+  "required": ["id", "provider", "status", "started_ts"],
+  "additionalProperties": false,
+  "properties": {
+    "id":           { "type": "string",  "description": "UUID" },
+    "provider":     { "type": "string",  "enum": ["claude", "chatgpt", "gemini", "ollama", "unknown"] },
+    "command":      { "type": ["string", "null"], "description": "Parsed command name from prompt (e.g. 'build', 'debug', 'review')" },
+    "prompt":       { "type": ["string", "null"], "description": "Full prompt text sent to provider" },
+    "response":     { "type": ["string", "null"], "description": "Full response text (populated on completion)" },
+    "status":       { "type": "string",  "enum": ["pending", "delivered", "streaming", "complete", "failed"], "description": "LAW II: status persisted before behavior changes" },
+    "chat_url":     { "type": ["string", "null"] },
+    "chat_id":      { "type": ["string", "null"] },
+    "account":      { "type": ["string", "null"] },
+    "session_id":   { "type": ["string", "null"] },
+    "chars":        { "type": "integer", "minimum": 0, "default": 0, "description": "Response character count" },
+    "gap_count":    { "type": "integer", "minimum": 0, "default": 0, "description": "GapHunter gaps found in response" },
+    "token_est":    { "type": "integer", "minimum": 0, "default": 0, "description": "Estimated token count" },
+    "source":       { "type": "string",  "enum": ["guardian", "nexus-callto", "cli", "api"], "default": "guardian" },
+    "callto_uuid":  { "type": ["string", "null"], "description": "Nexus agent_calls UUID — set when job was dispatched via Callto-executor" },
+    "started_ts":   { "type": "integer" },
+    "completed_ts": { "type": ["integer", "null"] },
+    "meta":         { "type": "object",  "default": {} }
+  }
+}

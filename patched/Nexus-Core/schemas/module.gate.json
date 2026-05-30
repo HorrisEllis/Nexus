@@ -1,0 +1,132 @@
+{
+  "name": "gate.runner",
+  "uuid": "nexus-mod-gate-0000-4000-0000-000000000001",
+  "version": "1.0.0",
+  "layer": "gate",
+  "status": "active",
+  "axioms": ["§1.1", "§1.2", "§1.3", "§2.1", "§5.1", "§M1"],
+
+  "subscribes": [
+    {
+      "channel": "manifest.ready",
+      "handler": "_onManifestReady",
+      "required": true,
+      "maxLatencyMs": 100
+    },
+    {
+      "channel": "admin.gate.run",
+      "handler": "_onAdminGateRun",
+      "required": false
+    }
+  ],
+
+  "publishes": [
+    {
+      "channel": "gate.running",
+      "schema": "schemas/gate.schema.json",
+      "guaranteed": true,
+      "triggeredBy": ["manifest.ready"]
+    },
+    {
+      "channel": "gate.passed",
+      "schema": "schemas/gate.schema.json",
+      "guaranteed": false,
+      "triggeredBy": ["gate.running"]
+    },
+    {
+      "channel": "gate.failed",
+      "schema": "schemas/gate.schema.json",
+      "guaranteed": false,
+      "triggeredBy": ["gate.running"]
+    },
+    {
+      "channel": "gap.found",
+      "schema": "schemas/gap.schema.json",
+      "guaranteed": false,
+      "triggeredBy": ["gate.failed"]
+    }
+  ],
+
+  "invariants": [
+    {
+      "id": "CI-1",
+      "description": "Every gap.found must be persisted to JAA before the event is emitted",
+      "rule": "persist_before_emit",
+      "enforcedBy": "test"
+    },
+    {
+      "id": "CI-2",
+      "description": "Every gate event must carry a UUID",
+      "rule": "uuid_on_every_event",
+      "enforcedBy": "schema"
+    },
+    {
+      "id": "CI-3",
+      "description": "Gate runner has one job: run tests against manifest nodes. No healing, no routing.",
+      "rule": "single_responsibility",
+      "enforcedBy": "kernel"
+    }
+  ],
+
+  "behavior": {
+    "initEvent": null,
+    "bootOrder": 1,
+    "idempotent": false,
+    "stateful": false,
+    "expectedFlows": [
+      {
+        "id": "manifest-to-gate",
+        "description": "manifest.ready always triggers gate.running",
+        "trigger": "manifest.ready",
+        "expects": [
+          { "channel": "gate.running", "withinMs": 200, "optional": false }
+        ],
+        "onViolation": "gap.found.fatal",
+        "withinMs": 200
+      },
+      {
+        "id": "gate-to-outcome",
+        "description": "gate.running always produces gate.passed or gate.failed",
+        "trigger": "gate.running",
+        "expects": [
+          { "channel": "gate.passed", "withinMs": 30000, "optional": true },
+          { "channel": "gate.failed", "withinMs": 30000, "optional": true }
+        ],
+        "onViolation": "gap.found.fatal",
+        "withinMs": 30000
+      }
+    ],
+    "slaMs": {
+      "gate.running": 200,
+      "gate.passed": 30000,
+      "gate.failed": 30000
+    }
+  },
+
+  "settings": {
+    "maxDepth": { "type": "number", "default": 5, "min": 1, "max": 20, "description": "Max recursion before escalation" },
+    "timeoutMs": { "type": "number", "default": 30000, "description": "Gate execution timeout" }
+  },
+
+  "cli": [
+    {
+      "command": "gate.run",
+      "args": ["target"],
+      "flags": ["--manifest", "--depth"],
+      "emits": ["gate.running", "gate.passed", "gate.failed"],
+      "help": "Run gate verification on a target node or manifest.",
+      "example": "nexus gate.run auth --manifest mf-123"
+    }
+  ],
+
+  "dependencies": {
+    "modules": ["foundation.kernel", "core.manifest"],
+    "external": ["ajv"]
+  },
+
+  "tests": {
+    "suite": "gate/tests/gate.test.js",
+    "coverage": ["runner", "gap-finder", "recursion", "timeout"],
+    "requiredPassRate": 1.0
+  }
+}

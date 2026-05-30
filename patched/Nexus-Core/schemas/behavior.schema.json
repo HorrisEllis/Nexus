@@ -1,0 +1,247 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "nexus/schemas/behavior.schema.json",
+  "title": "NEXUS Behavioral Expectation",
+  "description": "Declares what event sequences, timing, and causal chains are expected at runtime. The gap-finder checks the live ring against these. Divergence = behavioral gap. \u00a71.2: loud.",
+  "type": "object",
+  "required": [
+    "id",
+    "module",
+    "version",
+    "flows"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique ID. e.g. 'gate-heal-flow-v1'"
+    },
+    "module": {
+      "type": "string",
+      "description": "Module this behavior belongs to."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "description": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "flows": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Each flow is a named expected event sequence.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "trigger",
+          "expects"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "object",
+            "required": [
+              "channel"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "channel": {
+                "type": "string",
+                "description": "Event that starts this flow."
+              },
+              "condition": {
+                "type": "string",
+                "description": "Optional JSONPath filter on payload. e.g. '$.severity == \"fatal\"'"
+              },
+              "rateLimit": {
+                "type": "object",
+                "description": "Only check this flow N times per window to avoid noise.",
+                "properties": {
+                  "maxPerMinute": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "expects": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Ordered sequence of events that must follow the trigger.",
+            "items": {
+              "type": "object",
+              "required": [
+                "channel"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "channel": {
+                  "type": "string"
+                },
+                "withinMs": {
+                  "type": "integer",
+                  "description": "Must arrive within N ms of the previous step. Gap if not."
+                },
+                "optional": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "causallyLinked": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "If true, this event must have causedBy pointing to the trigger event."
+                },
+                "payloadMatch": {
+                  "type": "object",
+                  "description": "Key-value pairs that must match in the event payload.",
+                  "additionalProperties": true
+                },
+                "count": {
+                  "type": "object",
+                  "description": "Expected occurrence count before next step.",
+                  "properties": {
+                    "min": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "max": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "totalWindowMs": {
+            "type": "integer",
+            "description": "Entire flow must complete within this window. Gap if not."
+          },
+          "onViolation": {
+            "type": "object",
+            "required": [
+              "emit"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "emit": {
+                "type": "string",
+                "enum": [
+                  "gap.found",
+                  "gap.found.fatal",
+                  "behavior.gap.warn",
+                  "behavior.gap.log"
+                ],
+                "description": "Event emitted when flow is violated. \u00a71.2: use gap.found for real gaps."
+              },
+              "severity": {
+                "type": "string",
+                "enum": [
+                  "fatal",
+                  "high",
+                  "medium",
+                  "low"
+                ],
+                "default": "high"
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable gap description."
+              },
+              "suppress": {
+                "type": "object",
+                "description": "Suppress repeated violations.",
+                "properties": {
+                  "afterN": {
+                    "type": "integer",
+                    "description": "Stop emitting after N consecutive violations."
+                  },
+                  "resetOnSuccess": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "e.g. ['law-ii', 'causal', 'timing', 'persistence']"
+          }
+        }
+      }
+    },
+    "invariantChecks": {
+      "type": "array",
+      "description": "Point-in-time checks run on every event of the given type. Not sequences \u2014 spot checks.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "on",
+          "check",
+          "onFail"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "on": {
+            "type": "string",
+            "description": "Event type to check."
+          },
+          "check": {
+            "type": "string",
+            "enum": [
+              "payload.has_uuid",
+              "payload.has_required_fields",
+              "causedBy.exists",
+              "causedBy.in_ring",
+              "tick.monotonic",
+              "temp.is_zero",
+              "schema.valid",
+              "custom"
+            ]
+          },
+          "schemaRef": {
+            "type": "string",
+            "description": "If check is schema.valid, path to schema."
+          },
+          "customCheck": {
+            "type": "string",
+            "description": "If check is custom, JSONPath expression."
+          },
+          "onFail": {
+            "type": "string",
+            "enum": [
+              "gap.found",
+              "gap.found.fatal",
+              "warn",
+              "log"
+            ],
+            "default": "gap.found"
+          }
+        }
+      }
+    }
+  }
+}
