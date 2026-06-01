@@ -9,8 +9,8 @@
 const path   = require('path');
 const fs     = require('fs');
 const http   = require('http');
-const { Bus, Event, Gate } = require('./src/siso');
-const ollama = require('./src/ollama-runtime');
+const { Bus, Event, Gate } = require('./emerge/siso');
+const ollama = require('./emerge/ollama-runtime');
 
 // ── Locate kernel & Load Spec ──────────────────────────────────────────────
 const kernelPath = [

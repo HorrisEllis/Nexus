@@ -81,7 +81,7 @@ function loadSpec(specPath) {
     if (lw) { next.laws.push(lw[1]); next.keywords.add('law'); continue; }
 
     // keyword = definition (any line with = is a keyword definition)
-    const kw = line.match(/^(\w+)\s*=/);
+    const kw = line.match(/^([\w.:()+<>\-*→<>]+)\s*=/);
     if (kw) {
       const k = kw[1];
       next.keywords.add(k);
@@ -198,6 +198,11 @@ function tokenize(src) {
       else if (p === '{')  type = 'OPEN';
       else if (p === '}')  type = 'CLOSE';
       else if (p === '|')  type = 'OR';
+      else if (/^[+\-*\/]$/.test(p))            type = 'OP';
+      else if (/^(==|!=|<=|>=|<->|=>)$/.test(p)) type = 'OP';
+      else if (/^[<>]$/.test(p))                 type = 'OP';
+      else if (/^→$/.test(p))                    type = 'OP';
+      else if (/^[A-Z][A-Z_]+:$/.test(p))        type = 'LABEL';
       else if (/^"/.test(p)) type = 'STRING';
       else if (/^\d/.test(p)) type = 'NUMBER';
       else if (/^\[/.test(p)) type = 'RANGE';
