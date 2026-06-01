@@ -1,0 +1,13 @@
+// file-store.eg — Content-addressed SHA-256 blob store
+// UUID: file-store-v1-0-0 | source: foundation/store/FileStore.js
+compartment "file-store" {
+  id = file-store-001
+  uuid = file-store-001-xxxx
+  intent = content_addressed_sha256_blobs_same_content_same_hash
+  component "store" {
+    on write { input buffer sha256 = hash(buffer) if not exists(sha256) { write_blob sha256 buffer } output sha256 record }
+    on read  { input sha256 output read_blob(sha256) record }
+    on exists { input sha256 output fs.exists(sha256) record }
+    on delete { input sha256 delete_blob sha256 record }
+  }
+}

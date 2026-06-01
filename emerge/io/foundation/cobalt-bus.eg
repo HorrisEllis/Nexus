@@ -1,0 +1,19 @@
+// cobalt-bus.eg — Cobalt event bus
+// UUID: cobalt-bus-v1-0-0 | source: foundation/cobalt-core.js
+compartment "cobalt-bus" {
+  id = cobalt-bus-001
+  uuid = cobalt-bus-001-xxxx
+  intent = pattern_matching_pub_sub_ring_buffer_10000
+  component "bus" {
+    state { subs = [] ring = Ring(10000) tick = 0 }
+    on subscribe { input pattern fn subs.push { pattern fn } record }
+    on ingest {
+      input type payload source causedBy
+      event = freeze { type payload source causedBy tick = tick++ ts = now }
+      ring.push event
+      for each sub in subs { if sub.pattern == ** or sub.pattern == type { sub.fn(event) } }
+      record
+    }
+    on ring { input n output ring.last(n) record }
+  }
+}

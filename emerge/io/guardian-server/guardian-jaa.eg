@@ -1,0 +1,25 @@
+// guardian-jaa.eg — Guardian JaaStore (guardian-final/jaa-store.js)
+// UUID: guardian-jaa-v1-0-0 | source: guardian-final/jaa-store.js
+compartment "guardian-jaa" {
+  id = guardian-jaa-001
+  uuid = guardian-jaa-001-xxxx
+  intent = guardian_layer_jaa_store_15_tables_file_backed
+  tables {
+    sessions        = id chat_id chat_url provider account name token_total started_ts updated_ts meta
+    artifacts       = id hash name type lang content context chat_url chat_id account job_id session_id direction provider seen_count ts last_seen tags meta
+    gaps            = id type domain reason description score status job_id chat_id session_id account provider evidence opened_ts closed_ts meta
+    ledger_entries  = id ledger_type category msg meta chat_url account job_id ts
+    timeline_events = id channel person_id event_type payload ts
+    jobs            = id provider command prompt content status response error ts updated_ts
+    downloads       = id filename href chat_url chat_id account job_id ts
+    pa_sessions     = id job_id chat_id tokens pauses entropy hypotheses ts
+    settings        = key value updated_ts
+    gap_questions   = id gap_uuid gap_type gap_severity subject question context_block priority hint status injected_at answer answered_at resolved_at source caused_by ts
+    chat_sessions   = id session_uuid provider instance_id started_at ended_at source caused_by
+    chat_messages   = id session_uuid role text provider complete ts source caused_by
+    chat_completions = id session_uuid text provider complete caused_by_callto ts
+    guardian_nodes  = id instance_id last_seen capabilities tab_count listener_count health_score
+    guardian_health = id connected listener_count session_count stale_nodes lost_listeners health_score ts
+  }
+  persist { backend = json_file dir = memory_store dedup = hash archive = soft_delete }
+}

@@ -447,3 +447,353 @@ matches     = pattern_match
 sorted_by   = collection_sort_operator
 descending  = sort_direction_descending
 ascending   = sort_direction_ascending
+
+// ════════════════════════════════════════════════════════════════════════════
+// NEXUS SYSTEM SPEC EXTENSION v1.2.0
+// All primitives for Guardian + Nexus-Core + Idearium + Versionium
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── Domain 24 — Network / Protocol ───────────────────────────────────────────
+domain "network"
+port        = network_port_binding
+bind        = address_binding
+protocol    = transport_protocol
+http        = http_protocol
+wss         = websocket_secure_protocol
+sse         = server_sent_events_protocol
+lan         = local_area_network_binding
+route       = http_route_declaration
+method      = http_method
+endpoint    = api_endpoint
+handshake   = connection_establishment_signal
+register    = provider_registration_signal
+heartbeat   = keepalive_signal
+channel     = persistent_connection
+open        = channel_open_signal
+close       = channel_close_signal
+ping        = health_check_signal
+pong        = health_check_response
+connect     = establish_connection
+disconnect  = terminate_connection
+reconnect   = re_establish_connection
+middleware  = request_processing_layer
+cors        = cross_origin_policy
+auth        = authentication_gate
+token       = authentication_token
+
+// ── Domain 25 — JAA / Persistence ────────────────────────────────────────────
+domain "jaa"
+jaa         = json_append_array_store
+table       = jaa_table_declaration
+row         = jaa_row
+insert      = jaa_insert_operation
+update      = jaa_update_operation
+delete      = jaa_delete_operation
+query       = jaa_query_operation
+get         = jaa_get_single
+all         = jaa_get_all
+where       = jaa_filter_clause
+orderby     = jaa_sort_clause
+limit       = jaa_limit_clause
+hash        = content_hash
+dedup       = deduplication_gate
+schema      = row_schema_declaration
+validate    = schema_validation_gate
+migrate     = schema_migration
+archive     = soft_delete_record
+ledger      = append_only_event_log
+artifact    = stored_binary_or_text_output
+memory      = persistent_knowledge_store
+crystal     = distilled_memory_pattern
+seam_record = seam_verification_record
+job         = queued_execution_unit
+gap_record  = gap_table_entry
+gap_question = gap_triggered_context_question
+setting     = persistent_configuration_value
+download    = detected_file_download
+
+// ── Domain 26 — Agent / Provider ─────────────────────────────────────────────
+domain "agent"
+provider    = ai_provider_declaration
+agent       = execution_agent
+job_dispatch = route_job_to_provider
+job_result  = agent_job_output
+inject      = inject_text_into_provider_ui
+submit      = submit_injected_text
+dom_map     = dom_element_registry
+dom_watch   = dom_mutation_observer
+selector    = dom_css_selector
+contenteditable = text_input_target
+claim       = tab_ownership_signal
+release     = tab_release_signal
+tab         = browser_tab_agent
+userscript  = browser_extension_script
+pending     = job_awaiting_execution
+generating  = job_in_progress
+complete    = job_finished_signal
+chunk       = streaming_response_unit
+stable      = response_stability_signal
+truncated   = incomplete_response_signal
+verdict     = seam_evaluation_result
+
+// ── Domain 27 — Memory / Cortex ───────────────────────────────────────────────
+domain "memory"
+ingest      = store_memory_record
+search      = query_memory_store
+forget      = soft_delete_memory
+tier        = memory_tier_classification
+hot         = active_memory_tier
+warm        = recent_memory_tier
+cold        = archived_memory_tier
+forgotten   = deleted_memory_tier
+index       = memory_search_index
+cortex      = deep_memory_store
+pattern     = detected_behavioral_pattern
+distill     = compress_memory_to_crystal
+recall      = retrieve_memory_record
+context_build = assemble_agent_context
+upload      = file_upload_signal
+drag_drop   = file_drag_drop_signal
+tag         = metadata_label
+mime        = file_mime_type
+size        = file_size_bytes
+
+// ── Domain 28 — Idearium ──────────────────────────────────────────────────────
+domain "idearium"
+idea        = cognitive_unit
+phase       = idea_lifecycle_phase
+tension     = idea_pressure_score
+link        = idea_relationship
+spec_node   = idea_specification
+gap_node    = idea_gap_record
+seed        = idea_phase_seed
+expanding   = idea_phase_expanding
+tensioned   = idea_phase_tensioned
+specced     = idea_phase_specced
+building    = idea_phase_building
+compartment = idea_compartment_label
+resonance   = link_type_resonance
+causal_link = link_type_causal
+temporal_link = link_type_temporal
+semantic_link = link_type_semantic
+tension_engine = tension_calculation_system
+gap_density = tension_component_gap_density
+contradiction_score = tension_component_contradiction
+novelty_score = tension_component_novelty
+
+// ── Domain 29 — Versionium ────────────────────────────────────────────────────
+domain "versionium"
+version_chain = ordered_version_history
+commit      = version_commit_record
+branch      = version_branch
+diff        = version_difference
+merge       = version_merge_operation
+rollback    = version_revert_operation
+snapshot_version = point_in_time_version
+semver      = semantic_version_string
+changelog   = human_readable_version_notes
+tag_version = version_tag_label
+
+// ── Domain 30 — UI Interaction Contract ──────────────────────────────────────
+domain "contract"
+contract    = interface_boundary_declaration
+hotswap     = live_component_replacement
+projection  = cli_to_ui_projection
+sync        = state_synchronization_signal
+console_sync = console_to_chat_synchronization
+live_tail   = real_time_log_stream
+drag_zone   = file_drop_target
+upload_zone = file_upload_target
+page        = dedicated_record_view
+tab_view    = tabbed_panel_view
+dynamic     = runtime_rendered_content
+fluid       = responsive_layout_signal
+
+// ════════════════════════════════════════════════════════════════════════════
+// NEXUS FULL SYSTEM SPEC EXTENSION v2.0.0
+// Cortex + Cobalt + RAID + ORION + Forge + Versionium + Guardian bridge
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── Domain 31 — Cobalt Core ───────────────────────────────────────────────────
+domain "cobalt"
+cobalt      = nexus_central_event_bus_and_registry
+cobalt_bus  = pattern_matching_publish_subscribe_bus
+cobalt_node = registered_module_in_cobalt_registry
+cobalt_ledger = append_only_deduplicated_event_log
+watchdog    = continuous_silence_detector
+ring_buffer = last_N_events_circular_store
+tick        = cobalt_bus_monotonic_event_counter
+ingest      = publish_event_to_cobalt_bus
+sealed      = immutable_after_construction
+project     = cobalt_manifest_declaration
+manifest    = module_identity_and_intent_declaration
+heartbeat   = periodic_liveness_signal
+pulse       = liveness_channel_broadcast
+
+// ── Domain 32 — RAID ──────────────────────────────────────────────────────────
+domain "raid"
+raid        = routing_and_agent_intelligence_dispatcher
+route       = select_agent_for_call
+agent_call  = queued_inference_request
+routed_to   = selected_agent_name
+route_reason = routing_decision_explanation
+local_first = ollama_before_cloud_law
+claim       = atomic_ownership_of_agent_call
+agent_priority = ordered_agent_preference_list
+
+// ── Domain 33 — ORION ────────────────────────────────────────────────────────
+domain "orion"
+orion       = observation_record_and_inference_system
+sensor      = bridge_message_accumulator
+orion_session = accumulated_bridge_message_set
+regime      = behavioral_classification
+measure     = quantify_session_features
+policy      = evaluate_session_against_rules
+verify      = confirm_policy_verdict
+buffering   = session_still_accumulating
+measured    = session_feature_extraction_complete
+evaluated   = policy_applied_to_session
+verified    = verdict_confirmed
+shape_sample = captured_behavioral_fingerprint
+callto_id   = routing_identifier_for_session
+
+// ── Domain 34 — Cortex (CLI + memory) ────────────────────────────────────────
+domain "cortex"
+cortex      = interactive_cli_and_memory_query_tool
+cortex_memory = distilled_long_term_memory_store
+memory_index = searchable_memory_index
+recall      = retrieve_from_cortex_memory
+forget      = soft_delete_memory_tier
+conditioning_log = agent_conditioning_history
+feedback_score = agent_response_quality_score
+fix_map     = healer_resolution_record
+bep_pattern = behavioral_encoding_pattern
+active_trace = live_causal_execution_trace
+agent_signature = agent_behavioral_fingerprint
+
+// ── Domain 35 — Forge Engine ─────────────────────────────────────────────────
+domain "forge_engine"
+forge_module  = full_module_rewrite_operation
+forge_patch   = minimal_targeted_patch_operation
+forge_gate    = generate_siso_gate_function
+forge_hook    = add_exported_function_with_uuid
+patch_record  = forge_patch_audit_record
+system_nucleus = ai_system_prompt_for_self_modification
+constraint_field = structured_meaning_substrate
+hook_uuid     = unique_hook_identifier
+hook_comment  = uuid_annotation_on_symbol
+forge_timeout = maximum_inference_duration_ms
+
+// ── Domain 36 — Forge Pipeline ───────────────────────────────────────────────
+domain "forge_pipeline"
+pipeline    = ordered_node_graph_execution
+pipeline_node = single_execution_unit_in_pipeline
+node_type   = pipeline_node_category
+trigger_node = pipeline_activation_node
+condition_node = if_then_else_gate_node
+transform_node = pure_data_transformation
+api_call_node = http_fetch_execution_node
+agent_call_node = guardian_inference_dispatch
+store_node  = jaa_write_operation
+emit_node   = siso_bus_event_emission
+loop_node   = array_iteration_node
+delay_node  = wait_n_milliseconds
+seam_compile_node = run_seam_compiler
+gap_node    = declare_gap_node
+notify_node = toast_log_output_node
+merge_node  = join_parallel_branches
+fork_node   = parallel_branch_execution
+pipeline_run = single_pipeline_execution_instance
+arm         = enable_pipeline_scheduler
+disarm      = disable_pipeline_scheduler
+condition_evaluator = safe_expression_parser_no_eval
+
+// ── Domain 37 — Seam Language ────────────────────────────────────────────────
+domain "seam_lang"
+seam_web    = constraint_language_type_system
+ring1       = primitive_seam_type_layer
+ring2       = composite_seam_type_layer
+sealed_core = immutable_siso_jaa_foundation
+web_path    = type_navigation_through_seam_web
+bridge_keyword = non_adjacent_type_jump_resolver
+web_type_violation = gap_for_invalid_web_path
+seam_pass0  = tokenise_and_classify
+seam_pass1  = build_constraint_field
+seam_pass2  = resolve_gaps_and_bridges
+seam_pass3  = emit_executable_js
+seam_compile = run_all_seam_passes
+seam_validate = check_seam_source_for_violations
+nex_file    = bootable_sandbox_archive
+nex_envelope = nex_file_header_with_sha256
+shadow_layer = mutable_overlay_on_nex_sandbox
+cos_compartment = container_operating_system_sandbox
+
+// ── Domain 38 — Forge IDE ─────────────────────────────────────────────────────
+domain "forge_ide"
+forge_ide   = constraint_first_authoring_environment
+spec_container = spec_file_that_instantiates_ide
+spec_hook   = siso_bus_registration_from_spec
+surface     = fs_watcher_registration_from_spec
+gate_chain  = compiler_as_constraint_field_sequence
+clip        = replayable_authoring_process_segment
+gtci_loop   = gap_taxonomy_question_agent_fix_cycle
+word_lattice = session_derived_shared_language_graph
+prose_editor = block_based_contenteditable
+code_editor = syntax_highlight_overlay_editor
+field_pane  = constraint_field_gap_bep_display
+preview_pane = html_field_spec_build_preview
+console_pane = bus_event_stream_cli_repl
+debug_overlay = per_component_isolation_4_states
+null_bus    = isolated_component_event_sink
+swirl_engine = van_gogh_flow_field_particle_system
+
+// ── Domain 39 — Userscript Bridge ─────────────────────────────────────────────
+domain "userscript"
+browser_bridge = userscript_to_guardian_server_channel
+dom_observer  = mutation_observer_wrapping_agent_ui
+agent_tab     = claimed_browser_tab_for_job_execution
+tab_discovery = find_or_open_agent_tab
+tab_lock      = exclusive_tab_ownership_for_job
+job_queue     = ordered_pending_job_list
+queue_compartment = single_job_in_queue_with_state
+detector      = sigma_delta_truncation_evaluator
+sigma_detect  = response_distribution_divergence_check
+delta_score   = weighted_diff_between_request_response
+truncation_detect = incomplete_response_identifier
+retry_protocol = failure_context_injection_for_retry
+escalate_gap  = create_gap_record_after_max_retries
+prompt_archaeology = streaming_token_behavioral_analysis
+pa_session    = single_pa_measurement_window
+burst_zone    = high_token_velocity_cluster
+pause_zone    = inter_token_gap_above_threshold
+waveform      = token_velocity_over_time_canvas
+
+// ── Domain 40 — .spec Parser ────────────────────────────────────────────────
+domain "spec_parser"
+spec_file   = yaml_structured_specification_document
+spec_block  = named_section_in_spec_file
+spec_chunk  = parsed_deliverable_unit_of_spec
+chunk_parser = split_spec_into_deliverable_chunks
+split_on    = chunk_split_strategy_selector
+heading_split = split_on_markdown_headings
+divider_split = split_on_horizontal_rules
+phase_split  = split_on_phase_or_step_markers
+custom_split = split_on_user_defined_regex
+chunk_profile = expected_response_characteristics_of_chunk
+seam_contract = auto_generated_test_contract_for_chunk
+chunk_verdict = pass_fail_result_from_agent_for_chunk
+auto_inject  = automatic_sequential_chunk_delivery
+
+// ── Domain 41 — Versionium ───────────────────────────────────────────────────
+domain "versionium_full"
+versionium  = content_addressable_version_control
+versionium_commit = content_addressed_snapshot
+versionium_branch = named_pointer_to_commit_chain
+versionium_calendar = time_indexed_commit_history
+versionium_file_index = file_path_to_object_hash_map
+versionium_object = content_addressed_stored_object
+file_refs   = named_reference_to_file_store_hash
+file_store  = content_addressable_blob_storage
+sha256      = content_hash_algorithm
+fork_version = create_divergent_version_chain
+rewind      = restore_to_prior_versionium_commit

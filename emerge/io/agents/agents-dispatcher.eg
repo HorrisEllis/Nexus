@@ -1,0 +1,23 @@
+// agents-dispatcher.eg — routes agent_calls to sub-agents
+// UUID: agents-dispatcher-v1-0-0 | source: agents/index.js
+compartment "agents-dispatcher" {
+  id = agents-dispatcher-001
+  uuid = agents-dispatcher-001-xxxx
+  intent = dispatch_routed_calls_to_correct_sub_agent_low_coupling
+  reads  = [ agent_calls bridge_messages ]
+  writes = [ agent_calls ]
+  component "dispatcher" {
+    interval = 2000
+    query jaa.agent_calls where status == routed limit 10
+    for each call in routed
+      claim call
+      agent = sub_agents[call.routedTo]
+      if not agent
+        update jaa.agent_calls set status = failed error = "no sub-agent for " + call.routedTo
+        insert jaa.failures { source = agents error = "no agent" }
+        record
+      else
+        agent.handle(call)
+        record
+  }
+}

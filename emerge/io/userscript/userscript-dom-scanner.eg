@@ -1,0 +1,36 @@
+// userscript-dom-scanner.eg — DOM scanner + MutationObserver
+// UUID: userscript-dom-scanner-v1-0-0
+compartment "userscript-dom-scanner" {
+  id = userscript-dom-scanner-001
+  uuid = userscript-dom-scanner-001-xxxx
+  intent = mutation_observer_scans_dom_emits_systems_map
+  selectors {
+    assistant_turn = [data-testid=assistant-message]
+    human_turn     = [data-testid=human-message]
+    font_claude    = .font-claude-message
+    tool_use       = [class*=tool-use]
+    thinking       = [class*=thinking]
+    artifact       = [class*=artifact]
+    code_block     = pre code
+  }
+  component "observer" {
+    dom_watch document.body { childList = true subtree = true }
+    on mutation { debounce(scan CFG.scan_debounce_ms) detectFileChips record }
+  }
+  component "scan" {
+    for each selector in selectors
+      els = querySelectorAll selector
+      if els.length
+        systems[type] = { type count = els.length lastSeen = now }
+        if type == artifact or code_block
+          for each el in els
+            content = el.innerText.trim()
+            hash = simpleHash(content)
+            if hash not_in seenHashes
+              seenHashes.add hash
+              artifactSave { hash lang = detectLang(el) name = detectName(el) content }
+              record
+    sendToServerAndCortex { type = GUARDIAN_DOM_SYSTEMS systems chatId chatUrl account }
+    record
+  }
+}

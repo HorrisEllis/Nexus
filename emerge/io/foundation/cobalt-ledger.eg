@@ -1,0 +1,11 @@
+// cobalt-ledger.eg — Append-only deduped ledger
+// UUID: cobalt-ledger-v1-0-0 | source: foundation/cobalt-core.js
+compartment "cobalt-ledger" {
+  id = cobalt-ledger-001
+  uuid = cobalt-ledger-001-xxxx
+  intent = content_hash_deduped_append_only_event_log
+  component "ledger" {
+    on write { input type payload dedup = contentHash(type payload) if not exists(dedup) { append { type payload hash = dedup ts = now } } record }
+    on read  { input n output ledger.tail(n) record }
+  }
+}

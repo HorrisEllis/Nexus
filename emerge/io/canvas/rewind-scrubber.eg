@@ -1,0 +1,13 @@
+// rewind-scrubber.eg — timeline scrub UI
+// UUID: rewind-scrubber-v1-0-0 | source: canvas/spec-a/rewind-scrubber.js
+compartment "rewind-scrubber" {
+  id = rewind-scrubber-001
+  uuid = rewind-scrubber-001-xxxx
+  intent = timeline_ui_scrub_rewind_play_pause
+  component "scrubber" {
+    layout { timeline = horizontal_slider play_pause = button frame_count = label }
+    on drag  { input t emit "rewind.scrub" { t } record }
+    on play  { emit "rewind.play" record }
+    on pause { emit "rewind.pause" record }
+  }
+}

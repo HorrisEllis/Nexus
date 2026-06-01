@@ -1,0 +1,19 @@
+// guardian-siphon.eg — bridge events → chat tables
+// UUID: guardian-siphon-v1-0-0
+compartment "guardian-siphon" {
+  id = guardian-siphon-001
+  uuid = guardian-siphon-001-xxxx
+  intent = normalize_bridge_messages_to_structured_chat_session_tables
+  reads  = [ event_log ]
+  writes = [ chat_sessions chat_messages chat_completions ]
+  component "ingestor" {
+    interval = 2000
+    for each ev in jaa.event_log.query(type starts_with guardian.)
+      if ev.type == guardian.chat.response
+        session = get_or_create(ev.instanceId ev.provider)
+        insert jaa.chat_messages { sessionUuid = session.uuid role = assistant text = ev.payload.text provider = ev.payload.provider complete = ev.payload.complete causedBy = ev.uuid ts = now }
+        if ev.payload.complete
+          insert jaa.chat_completions { sessionUuid = session.uuid text = ev.payload.text causedByCallto = ev.payload.calltoId ts = now }
+        record
+  }
+}

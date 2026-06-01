@@ -1,0 +1,13 @@
+// file-refs.eg — Named references to FileStore hashes
+// UUID: file-refs-v1-0-0 | source: foundation/store/FileRefs.js
+compartment "file-refs" {
+  id = file-refs-001
+  uuid = file-refs-001-xxxx
+  intent = named_pointer_to_content_hash_ref_file_not_blob
+  component "refs" {
+    on set    { input name sha256 write_ref name = sha256 record }
+    on get    { input name output read_ref(name) record }
+    on list   { output all_refs record }
+    on delete { input name delete_ref name record }
+  }
+}

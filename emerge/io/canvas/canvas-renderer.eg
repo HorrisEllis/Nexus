@@ -1,0 +1,44 @@
+// canvas-renderer.eg — WebGL2 tier1 + Canvas2D tier2
+// UUID: canvas-renderer-v1-0-0 | source: canvas/spec-a/renderer.js
+compartment "canvas-renderer" {
+  id = canvas-renderer-001
+  uuid = canvas-renderer-001-xxxx
+  intent = webgl2_80k_particles_tier1_canvas2d_10k_fallback_same_api
+  api {
+    upsertAttractor   = id x y z mass
+    removeAttractor   = id
+    injectStress      = x y z strength radius
+    setField          = delta
+    setAccumulation   = opts
+    step              = dt
+    draw              = void
+    resize            = w h
+    destroy           = void
+    health            = status
+    tier              = webgl2 or canvas2d
+  }
+  component "tier-selector" {
+    on init
+      if webgl2.available
+        tier = webgl2
+        init_alk_gl(80000 particles)
+        record
+      else
+        tier = canvas2d
+        emit "toast.warn" { msg = "WebGL2 unavailable — Canvas2D fallback active" }
+        init_cfr_kernel(10000 particles)
+        record
+  }
+  component "webgl2-tier" {
+    particles = 80000
+    pingpong  = RGBA32F textures
+    attractor_gravity = true
+    curl_noise = true
+    ingestCodecAudio = audio_signal → field_driver
+  }
+  component "canvas2d-tier" {
+    particles = 10000
+    perspective_projection = true
+    cfr_physics = inline
+  }
+}

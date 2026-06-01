@@ -1,0 +1,12 @@
+// siso-event.eg — SISOEvent primitive
+// UUID: siso-event-v1-0-0 | source: foundation/siso/Event.js
+compartment "siso-event" {
+  id = siso-event-001
+  uuid = siso-event-001-xxxx
+  intent = immutable_typed_event_with_causal_ancestry
+  invariant { axiom NO_SILENT_DROP axiom EXECUTION_IS_TRACEABLE }
+  component "event" {
+    fields { id = uid type = string payload = object causedBy = uuid source = string ts = epoch tick = monotonic }
+    on construct { tick = SISOKernel._tick++ ts = now id = uid output frozen_event record }
+  }
+}

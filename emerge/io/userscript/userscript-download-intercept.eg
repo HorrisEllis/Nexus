@@ -1,0 +1,24 @@
+// userscript-download-intercept.eg — download detection + auto-upload
+// UUID: userscript-download-intercept-v1-0-0
+compartment "userscript-download-intercept" {
+  id = userscript-download-intercept-001
+  uuid = userscript-download-intercept-001-xxxx
+  intent = intercept_a_download_blob_data_links_auto_upload_to_dropzone
+  component "interceptor" {
+    document.addEventListener click { capture = true }
+    on click {
+      a = event.target.closest a[download] or a[href*=blob:] or a[href*=data:]
+      if not a { return }
+      filename = a.getAttribute(download) or a.href.split(/).pop or download
+      entry = { id filename href chatUrl chatId account jobId type = download ts = now }
+      detectedDownloads.unshift entry
+      addLog in "Download: " + filename
+      toast "Download: " + filename
+      sendToMemory { type = DOWNLOAD payload = entry }
+      sendToServerAndCortex { type = GUARDIAN_DOWNLOAD ...entry provider }
+      if CFG.dropzone_auto_upload
+        POST 7822/api/upload { filename dataBase64 = blobToBase64(a.href) }
+        record
+    }
+  }
+}

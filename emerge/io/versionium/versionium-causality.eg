@@ -1,0 +1,12 @@
+// versionium-causality.eg — causal chain traversal
+// UUID: versionium-causality-v1-0-0 | source: versionium/causality.js
+compartment "versionium-causality" {
+  id = versionium-causality-001
+  uuid = versionium-causality-001-xxxx
+  intent = traverse_commit_chain_build_causal_ancestry_diff_two_commits
+  component "chain" {
+    on chain    { input commitId depth output traverse_parents(commitId depth) record }
+    on diff     { input commit_a commit_b output diff_objects(commit_a commit_b) record }
+    on rollback { input commitId insert jaa.versionium_commits { message = "rollback to " + commitId parentHash = head } emit "versionium.rolled_back" record }
+  }
+}

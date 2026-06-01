@@ -1,0 +1,25 @@
+// userscript-gap-hunter.eg — GapHunter v3 full 16-type taxonomy
+// UUID: userscript-gap-hunter-v1-0-0
+compartment "userscript-gap-hunter" {
+  id = userscript-gap-hunter-001
+  uuid = userscript-gap-hunter-001-xxxx
+  intent = detect_16_gap_types_from_response_text_using_statistical_signals
+  gap_types { logical evidential temporal definitional reference obligation assumption contradiction identity_attack consent boundary hierarchy coercion isolation oscillatory condition }
+  gap_reasons { compression avoidance compatibility attention emotional_occlusion narrative_soothing identity_reflection deferred_variable structural_limit }
+  domains { code ai_ml software_arch epistemological logic communication interpersonal psychological research lang_javascript lang_typescript lang_python security database api_design system_design }
+  component "analyze" {
+    input text
+    if text.length < 50 { output [] }
+    bd = bulletDensity(text) ld = lexicalDiversity(text) H = entropy(text) hedgeRate = hedges/wc
+    if bd > 0.5           { emit ASSUMPTION domain=COMMUNICATION reason=COMPRESSION }
+    if ld < 0.35          { emit OBLIGATION domain=COMMUNICATION reason=STRUCTURAL_LIMIT }
+    if H < 3.2 and wc>80  { emit TEMPORAL domain=AI_ML reason=COMPRESSION }
+    if hedgeRate > 0.04   { emit ASSUMPTION domain=EPISTEMOLOGICAL reason=AVOIDANCE }
+    if truncation_signal  { emit OBLIGATION domain=COMMUNICATION reason=STRUCTURAL_LIMIT }
+    if high_assertion and no_evidence { emit EVIDENTIAL domain=EPISTEMOLOGICAL }
+    if code_block and TODOs > 0 { emit OBLIGATION domain=CODE reason=DEFERRED_VARIABLE }
+    if stubs > 0          { emit OBLIGATION domain=CODE reason=DEFERRED_VARIABLE }
+    output gaps.filter(g => g.score >= CFG.gap_min_score)
+    record
+  }
+}

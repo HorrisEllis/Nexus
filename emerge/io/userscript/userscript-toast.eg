@@ -1,0 +1,13 @@
+// userscript-toast.eg — toast notification system
+// UUID: userscript-toast-v1-0-0
+compartment "userscript-toast" {
+  id = userscript-toast-001
+  uuid = userscript-toast-001-xxxx
+  intent = single_toast_element_typed_styled_auto_dismiss
+  types { success error warn info job }
+  styles { success = { bg = rgba(34,197,94,.13) icon = "✓" } error = { bg = rgba(239,68,68,.13) icon = "✗" } warn = { bg = rgba(245,158,11,.13) icon = "⚠" } info = { bg = rgba(96,165,250,.1) icon = "·" } job = { bg = rgba(167,139,250,.1) icon = "⚡" } }
+  component "toast" {
+    on show { input msg type = info duration = 3000 get_or_create_el apply_style show fade_after duration record }
+    on hide { transition opacity = 0 transform = translateY(6px) record }
+  }
+}

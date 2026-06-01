@@ -1,0 +1,18 @@
+// orion-policy.eg — regime evaluation against rules
+// UUID: orion-policy-v1-0-0 | source: orion/policy.js
+compartment "orion-policy" {
+  id = orion-policy-001
+  uuid = orion-policy-001-xxxx
+  intent = evaluate_session_regime_against_policy_rules
+  reads  = [ orion_sessions ]
+  writes = [ orion_sessions event_log ]
+  component "evaluator" {
+    interval = 2000
+    query jaa.orion_sessions where status == recorded limit 10
+    for each session in recorded
+      verdict = apply_rules(session.features session.regime)
+      update jaa.orion_sessions set status = evaluated verdict = verdict
+      emit "orion.session.evaluated" { uuid = session.uuid verdict }
+      record
+  }
+}

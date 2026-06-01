@@ -1,0 +1,25 @@
+// userscript-gates.eg — gate system, every operation through gate(name, fn)
+// UUID: userscript-gates-v1-0-0
+compartment "userscript-gates" {
+  id = userscript-gates-001
+  uuid = userscript-gates-001-xxxx
+  intent = every_op_through_gate_returns_ok_error_logs_toasts_sends
+  component "gate" {
+    on gate(name fn opts) {
+      toastOnFail = opts.toastOnFail or true
+      try
+        result = await fn()
+        evLog "gate.pass" { gate = name }
+        output { ok = true result }
+        record
+      else
+        msg = name + ": " + err.message
+        addLog(opts.logLevel or err name err.message)
+        evLog "gate.fail" { gate = name error = err.message }
+        if toastOnFail { toast msg error 4000 }
+        if opts.jobId { sendToServerAndCortex { type = GUARDIAN_ERROR jobId gate = name error = msg } }
+        output { ok = false error = msg }
+        record
+    }
+  }
+}
