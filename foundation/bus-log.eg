@@ -1,0 +1,20 @@
+// bus-log.eg — Bus event log polling module
+// UUID: bus-log-v1-0-0 | source: foundation/bus-log.js
+compartment "bus-log" {
+  id = bus-log-001
+  uuid = bus-log-001-xxxx
+  intent = m1_poll_module_writes_cobalt_ring_to_jaa_event_log
+  invariant { axiom NO_SILENT_DROP }
+  component "logger" {
+    interval = 1000
+    reads    = [ ]
+    writes   = [ event_log ]
+    on tick {
+      new_events = cobalt_bus.ring_since(last_tick)
+      for each ev in new_events
+        insert jaa.event_log { uuid = uid type = ev.type payload = ev.payload source = ev.source ts = ev.ts }
+        record
+      last_tick = now
+    }
+  }
+}

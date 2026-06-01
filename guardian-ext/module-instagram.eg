@@ -1,0 +1,17 @@
+// module-instagram.eg — Instagram site module
+// UUID: module-instagram-v1-0-0 | source: modules/instagram.js
+compartment "module-instagram" {
+  id = module-instagram-001
+  uuid = module-instagram-001-xxxx
+  intent = capture_instagram_dm_and_post_content_for_siphon
+  targets = [ instagram.com ]
+  selectors {
+    dm_input    = [contenteditable=true][placeholder]
+    dm_message  = [class*=message-container]
+    post_caption = [class*=caption]
+  }
+  component "observer" {
+    dom_watch document.body
+    on mutation { capture_visible_content emit "guardian.instagram.content" record }
+  }
+}

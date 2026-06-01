@@ -1,0 +1,18 @@
+// userscript-queue.eg — QueueCompartment + JobQueue + Detector
+// UUID: userscript-queue-v1-0-0
+compartment "userscript-queue" {
+  id = userscript-queue-001
+  uuid = userscript-queue-001-xxxx
+  intent = stateful_chunk_queue_with_snr_gated_verification_and_retry
+  compartment_states { QUEUED INJECTING GENERATING DETECTING VERIFIED FAILED RETRYING ESCALATED }
+  component "queue-compartment" {
+    fields { id queueId chunkIdx chunkContent chunkTitle prompt provider axioms state retries maxRetries = 3 jobId response detection failureLog }
+    on build-retry-prompt { include failure_report + failed_response + retry_request record }
+  }
+  component "job-queue" {
+    on createQueue { input title chunks provider axioms comps = chunks.map(QueueCompartment) queues.set push to pending emit "queue.created" record }
+    on next { if not running or active.size > 0 { return } comp = pending.shift inject(comp.prompt) gate(comp GENERATING) record }
+    on onResponse { input jobId responseText comp = active.find(jobId) gate(comp DETECTING) result = Detector.evaluate(responseText) if result.passed { gate(comp VERIFIED) next } else { fail(comp) } record }
+    on fail { if retries < maxRetries { gate(comp RETRYING) pending.unshift comp after 1800ms next } else { gate(comp ESCALATED) POST 4800/api/gaps escalateGap record } }
+  }
+}

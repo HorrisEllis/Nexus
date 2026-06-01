@@ -1,0 +1,34 @@
+// agent-claude.eg — Guardian HTTP dispatch to Claude via userscript
+// UUID: agent-claude-v1-0-0 | source: agents/claude/index.js
+compartment "agent-claude" {
+  id = agent-claude-001
+  uuid = agent-claude-001-xxxx
+  intent = dispatch_via_guardian_http_7820_poll_until_complete
+  reads  = [ agent_calls ]
+  writes = [ agent_calls event_log failures ]
+  url = http://127.0.0.1:7820
+  component "runner" {
+    input call
+    update jaa.agent_calls set status = processing
+    job = POST 7820/command { command = code provider = claude prompt = call.prompt }
+    jobId = job.jobId
+    deadline = now + 60000
+    while now < deadline
+      wait 1500
+      status = GET 7820/status/jobId
+      if status.job.status == complete
+        response = GET 7820/response/jobId
+        update jaa.agent_calls set status = complete response = response.response
+        emit "agent.call.complete" { callUuid = call.uuid chars = response.response.length }
+        record
+        break
+      if status.job.status == failed
+        update jaa.agent_calls set status = failed
+        emit "agent.call.failed"
+        record
+        break
+    if timeout
+      gap "agent-claude-timeout" { pressure = 0.8 }
+      record
+  }
+}

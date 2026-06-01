@@ -1,0 +1,28 @@
+// manifest-generator.eg — intent IR → task graph → spec
+// UUID: manifest-generator-v1-0-0 | source: core/manifest/index.js
+compartment "manifest-generator" {
+  id = manifest-generator-001
+  uuid = manifest-generator-001-xxxx
+  intent = temp0_schema_constrained_nl_to_task_graph
+  reads  = [ agent_calls ]
+  writes = [ project_registry event_log failures ]
+  component "generator" {
+    input intent_ir context
+    max_retry = 3
+    prompt = build_system_prompt + intent_ir
+    for attempt in 1..max_retry
+      result = agent.complete(prompt temperature = 0)
+      if schema.validate(result manifest_schema)
+        insert jaa.project_registry result
+        gap_hunter.analyze(result)
+        emit "manifest.generated" { nodes = result.nodes }
+        record
+        break
+      else
+        insert jaa.failures { source = manifest-generator error = schema_violation }
+        record
+    if all_failed
+      gap "manifest-generation-failed" { pressure = 0.9 }
+      record
+  }
+}

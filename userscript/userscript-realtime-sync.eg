@@ -1,0 +1,25 @@
+// userscript-realtime-sync.eg — cortex + forge real-time sync
+// UUID: userscript-realtime-sync-v1-0-0
+compartment "userscript-realtime-sync" {
+  id = userscript-realtime-sync-001
+  uuid = userscript-realtime-sync-001-xxxx
+  intent = every_event_synced_to_cortex_3748_and_forge_4800_in_realtime
+  component "cortex-sync" {
+    on any_event { POST 3748/guardian/event { type payload source = guardian.userscript ts = now } record }
+  }
+  component "forge-sync" {
+    on seam.chunk.verified { POST 4800/api/queue/queueId/progress { state = VERIFIED } record }
+    on seam.chunk.failed   { POST 4800/api/queue/queueId/progress { state = FAILED } record }
+    on queue.escalated     { POST 4800/api/gaps record }
+  }
+  component "console-sse" {
+    cortexSSE = EventSource(3748/sse)
+    on message {
+      if agent.call.routed   { addLog job "RAID -> " + agent record }
+      if gap.found           { addLog gap type currentGaps.unshift record }
+      if gap.resolved        { addLog ok "GAP resolved" record }
+      if gap.question.created { addLog gap "GTCI: question" record }
+      record
+    }
+  }
+}

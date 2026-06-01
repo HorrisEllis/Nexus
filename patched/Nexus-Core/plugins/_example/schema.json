@@ -1,1 +1,0 @@
-{"name":"example/plugin","uuid":"nexus-example-plugin-0001","version":"1.0.0","subscribes":["agent.response.received"],"publishes":["gate.running","gate.passed","gate.failed"],"commands":[{"path":"gate.run","args":["target"],"emits":["gate.running"]}],"settings":{"maxDepth":{"type":"number","default":5},"timeout":{"type":"number","default":30000}},"requires":["LAW_II","LAW_III"]}

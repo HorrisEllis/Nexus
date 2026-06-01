@@ -1,0 +1,29 @@
+// guardian-handshake.eg — AppID + session tokens + instance registry
+// UUID: guardian-handshake-v1-0-0 | source: Guardian-v5/handshake.js
+compartment "guardian-handshake" {
+  id = guardian-handshake-001
+  uuid = guardian-handshake-001-xxxx
+  intent = appid_validation_session_token_5min_ttl_instance_registry
+  session_ttl    = 300000
+  appid_ttl      = 604800000
+  prune_interval = 120000
+  bus_log_max    = 200
+  component "routes" {
+    route POST /guardian/handshake  { validate_appid issue_session_token register_instance output { token registered = true } record }
+    route POST /guardian/register   { alias /guardian/handshake record }
+    route POST /guardian/heartbeat  { validate_token update_last_seen output { ok = true nodes = live_nodes } record }
+    route GET  /guardian/status     { output { instances = registry.list } record }
+    route POST /guardian/appid/create { new_id = uid write_appids output { id = new_id } record }
+    route GET  /guardian/appid/list   { output read_appids() record }
+    route DELETE /guardian/appid/:id  { revoke_appid(id) record }
+    route POST /guardian/bus        { insert bus_log emit "bus.event" record }
+    route GET  /guardian/bus-events { output bus_log.last(50) record }
+    route GET  /guardian/listeners  { output listeners.list record }
+    record
+  }
+  component "pruner" {
+    interval = 120000
+    stale = sessions where now - lastSeen > session_ttl
+    for each s in stale { sessions.delete s.token } record
+  }
+}

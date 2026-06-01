@@ -1,0 +1,11 @@
+// idearium-event.eg — Idearium event primitive
+// UUID: idearium-event-v1-0-0 | source: idearium/Event.js
+compartment "idearium-event" {
+  id = idearium-event-001
+  uuid = idearium-event-001-xxxx
+  intent = typed_immutable_event_for_idearium_siso_bus
+  component "event" {
+    fields { uuid type payload ts source causedBy }
+    on construct { uuid = uid ts = now output frozen_event record }
+  }
+}

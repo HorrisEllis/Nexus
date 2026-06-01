@@ -1,0 +1,53 @@
+// nexus-data-flows.eg — request + SEAM + cortex sync data flows
+// UUID: nexus-data-flows-v1-0-0
+compartment "nexus-data-flows" {
+  id = nexus-data-flows-001
+  uuid = nexus-data-flows-001-xxxx
+  intent = authoritative_data_flow_maps_for_all_three_primary_flows
+  flow REQUEST_FLOW {
+    forge.pipeline.run
+      -> POST 7820/command
+      -> wss.GUARDIAN_JOB
+      -> userscript.tab_discovery.discoverOrOpenTab
+      -> userscript.gtci_inject.build_context
+      -> userscript.explicitInject (GUARDIAN_INPUT -> ACK -> channel_open)
+      -> agent.response
+      -> userscript.snr_detector.evaluate
+      -> if passed
+           userscript.realtime_sync.cortex -> POST 3748/guardian/event
+           userscript.realtime_sync.forge  -> POST 4800/api/queue/progress
+           wss.GUARDIAN_COMPLETE
+           sse.job.complete -> cockpit_ui + nexus_cli
+         if failed
+           build_retry_prompt
+           re_inject
+      -> channel_close (GUARDIAN_DONE)
+    record
+  }
+  flow SEAM_FLOW {
+    forge.spec_parser.chunker(spec_text) -> chunks
+      -> guardian.job_queue.createQueue
+      -> for each chunk
+           userscript.seam_delivery.deliver(chunk_idx)
+           agent.response
+           userscript.seam_verdict_detector.detect
+           if pass
+             POST 3748/api/event { type = seam.chunk.verified }
+             POST 4800/api/queue/progress { state = VERIFIED }
+             sse -> cockpit + cli
+           if fail
+             retry -> escalate -> POST 4800/api/gaps
+    record
+  }
+  flow CORTEX_SYNC_FLOW {
+    any_event (any layer)
+      -> userscript.realtime_sync.cortex_sync -> POST 3748/guardian/event
+      -> jaa.event_log
+      -> cobalt_bus.ingest
+      -> sse 3748/sse -> all_connected_clients
+         forge.console_pane (live tail)
+         cockpit_ui (event viewer)
+         nexus_cli (watch command)
+    record
+  }
+}

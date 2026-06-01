@@ -1,0 +1,20 @@
+// agent-chatgpt.eg — ChatGPT limits and selectors
+// UUID: agent-chatgpt-v1-0-0 | source: Nexus-Core agents/chatgpt/limits.js
+compartment "agent-chatgpt" {
+  id = agent-chatgpt-001
+  uuid = agent-chatgpt-001-xxxx
+  intent = chatgpt_context_window_limits_and_selector_map
+  limits {
+    gpt4o       = { context = 128000 output = 4096 }
+    gpt4        = { context = 8192   output = 4096 }
+    gpt35_turbo = { context = 16385  output = 4096 }
+  }
+  selectors {
+    input    = #prompt-textarea
+    submit   = [data-testid=send-button]
+    output   = [data-message-author-role=assistant] .markdown
+    streaming = [data-is-streaming]
+    complete = [data-is-streaming=false]
+    stop     = [data-testid=stop-button]
+  }
+}

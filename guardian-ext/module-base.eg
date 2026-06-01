@@ -1,0 +1,19 @@
+// module-base.eg — GuardianModule base class
+// UUID: module-base-v1-0-0 | source: Guardian-v5/modules/base-module.js
+compartment "module-base" {
+  id = module-base-001
+  uuid = module-base-001-xxxx
+  intent = base_module_interface_activate_deactivate_emit_via_runtime
+  component "interface" {
+    fields { name = string domains = string[] urck = object active = false }
+    on activate   { active = true record }
+    on deactivate { active = false record }
+    on emit {
+      if not active { return }
+      browser.runtime.sendMessage { type = URCK_EVENT eventType = type payload source = name url }
+      record
+    }
+    on attach { abstract record }
+    on detach { abstract record }
+  }
+}

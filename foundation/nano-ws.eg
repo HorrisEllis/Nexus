@@ -1,0 +1,14 @@
+// nano-ws.eg — Zero-dependency WS server
+// UUID: nano-ws-v1-0-0 | source: foundation/nano-ws.js
+compartment "nano-ws" {
+  id = nano-ws-001
+  uuid = nano-ws-001-xxxx
+  intent = zero_dep_websocket_server_raw_net_plus_frame_parser
+  component "server" {
+    on connection { perform ws_handshake emit "ws.connected" record }
+    on data       { parse_frame emit "ws.message" record }
+    on close      { emit "ws.disconnected" record }
+    on send       { input socket obj build_frame(obj) socket.write frame record }
+    on broadcast  { input obj for each socket in sockets { send socket obj } record }
+  }
+}

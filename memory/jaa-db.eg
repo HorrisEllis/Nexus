@@ -1,0 +1,52 @@
+// jaa-db.eg — 28-table JSONL append-only store
+// UUID: jaa-db-v1-0-0 | source: memory/jaa-db.js
+// The only shared surface in NEXUS. Every module reads/writes through here.
+compartment "jaa-db" {
+  id = jaa-db-001
+  uuid = jaa-db-001-xxxx
+  intent = 28_table_jsonl_append_only_zero_deps_m2_enforced
+  invariant {
+    axiom NO_SILENT_DROP
+    axiom RECORD_IS_TRUTH
+    if schema.validate fails { gap "schema-violation" { pressure = 0.9 } }
+    if jaa.open fails { gap "jaa-failed" { pressure = 1.0 } }
+  }
+  tables {
+    event_log          = uuid type payload source causedBy ts
+    bridge_messages    = uuid callto instanceId provider ts
+    agent_calls        = uuid prompt preferredAgent status claimedBy routedTo startedAt ts
+    agent_signatures   = uuid agentId pattern confidence ts
+    artifacts          = uuid hash name ext lang confidence content chatId sessionUuid ts
+    gaps               = uuid path type severity body status claimedBy resolvedAt ts
+    failures           = uuid source error stack ts
+    fix_map            = uuid gapUuid gapType strategy action automated status ts
+    memory_index       = uuid content tags source sourceEventUuid retrievalWeight ts
+    memory_queries     = uuid query result recallTrace ts
+    conditioning_log   = uuid agentId instruction ts
+    feedback_scores    = uuid agentId score source traceId ts
+    crystals           = uuid content pattern_type source_ids confidence state ts
+    bep_patterns       = uuid pattern confidence behaviorGraph calltoId ts
+    active_traces      = uuid traceId source causedBy ts
+    orion_sessions     = uuid calltoId service events regime features status ts
+    versionium_commits = uuid message branch parentHash objects ts
+    versionium_branches = uuid name head ts
+    versionium_file_index = uuid path hash branch ts
+    versionium_calendar = uuid commitUuid ts label
+    versionium_objects = uuid hash type content ts
+    schedules          = uuid pipelineId cron enabled ts
+    workflow_runs      = uuid pipelineId status steps startedAt completedAt ts
+    project_registry   = uuid name status lastSeenAt meta ts
+    shape_samples      = uuid calltoId features regime sigma committed ts
+    poll_log           = uuid moduleId action ts
+    requests           = uuid type path status claimedBy routedTo ts
+    cortex_memory      = uuid content source tier recalled_at ts
+  }
+  persist { backend = jsonl dir = data dedup = none archive = never }
+  component "writer" {
+    on insert { input table row validate row insert jaa[table] append_to_file row record }
+    on update { input table uuid set update jaa[table][uuid] set record }
+    on get    { input table uuid output jaa[table].find(uuid) record }
+    on query  { input table fn n output jaa[table].filter(fn).slice(0 n) record }
+    on tail   { input table n output jaa[table].slice(-n) record }
+  }
+}

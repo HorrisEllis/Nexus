@@ -1,0 +1,22 @@
+// usage.eg — token budget tracker
+// UUID: usage-v1-0-0 | source: core/usage/index.js
+compartment "usage" {
+  id = usage-001
+  uuid = usage-001-xxxx
+  intent = track_token_budget_warn_at_90pct_error_at_100pct
+  reads  = [ agent_calls ]
+  writes = [ event_log ]
+  component "tracker" {
+    on agent.call.complete {
+      input tokens
+      session_total += tokens
+      if session_total / budget > 0.90
+        emit "toast.warn" { msg = "Token budget 90%" }
+        record
+      if session_total / budget >= 1.0
+        emit "toast.error" { msg = "Token budget exhausted" }
+        gap "token-exhausted" { pressure = 0.95 }
+        record
+    }
+  }
+}
