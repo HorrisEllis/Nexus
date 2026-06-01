@@ -1,0 +1,89 @@
+// ════════════════════════════════════════════════════════════════════════════
+// emerge-ollama.eg
+// UUID: emerge-ollama-seam-v1-0-0
+// SEAM: OLLAMA_CONTRACT
+// between: AI assist compartment ↔ Ollama local inference runtime
+// All LLM traffic through this seam. No component calls Ollama directly.
+// Supports continuous token streaming on the SISO bus.
+// ════════════════════════════════════════════════════════════════════════════
+
+compartment "ollama-seam" {
+  id      = emerge-ollama-001
+  uuid    = emerge-ollama-001-xxxx
+  intent  = local_inference_seam_for_all_ai_calls
+
+  ollama {
+    endpoint    = http://localhost:11434
+    ping        = /api/tags
+    stream_path = /api/generate
+    timeout_ms  = 30000
+  }
+
+  invariant OLLAMA_CONTRACT {
+    axiom NO_SILENT_DROP
+    axiom EXECUTION_IS_TRACEABLE
+    if ollama.ping fails
+      gap "ollama-offline" {
+        pressure    = 0.9
+        uncertainty = 1.0
+        omission    = 1.0
+      }
+    if model is missing
+      gap "no-model-selected" {
+        pressure = 0.8
+      }
+  }
+}
+
+compartment "ollama-router" {
+  id   = emerge-ollama-router-001
+  uuid = emerge-ollama-router-001-xxxx
+  intent = route_task_to_best_model
+
+  component "model-selector" {
+    input task
+    sigma observe task
+
+    if task == completion
+      model = catalog.best_for(completion)
+    if task == code_gen
+      model = catalog.best_for(code_gen)
+    if task == explanation
+      model = catalog.best_for(explanation)
+    if task == chat
+      model = catalog.best_for(chat)
+    if task == voice_response
+      model = catalog.best_for(voice_response)
+
+    output model
+    record
+  }
+
+  component "stream-runner" {
+    input prompt model
+    sigma observe prompt
+
+    try
+      stream ollama.run {
+        model       = model.ollama_id
+        prompt      = prompt
+        stream      = true
+        temperature = 0.2
+        max_tokens  = 2048
+      }
+      on chunk
+        emit "llm.token" { text = chunk.text model = model.id }
+        record
+      on stop
+        emit "llm.complete" { model = model.id }
+        record
+    else
+      gap "inference-failed" {
+        pressure = 0.85
+        omission = 1.0
+      }
+      emit "llm.error" { reason = gap.inference-failed }
+      log gap
+      record
+  }
+}

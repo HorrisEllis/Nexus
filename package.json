@@ -1,1 +1,18 @@
-{"name":"nexus-system","version":"5.1.0","description":"NEXUS System — 115 Emergence files","scripts":{"watch":"node emerge-cli.js watch","check":"for f in **/*.eg; do node emerge-cli.js check $f; done"}}
+{
+  "name": "nexus",
+  "version": "1.0.0",
+  "description": "Nexus system \u2014 SISO \u2192 JAA \u2192 Cortex \u2192 Guardian \u2192 Cockpit",
+  "type": "commonjs",
+  "scripts": {
+    "cortex": "node cortex/boot.js",
+    "guardian": "node guardian/server.js",
+    "idearium": "node idearium/index.js",
+    "emerge": "node emerge/emerge-ide.js",
+    "cli": "node cortex/cortex.js",
+    "guardian-cli": "node guardian/cli.js",
+    "start": "npm run cortex & npm run guardian & npm run idearium & npm run emerge"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

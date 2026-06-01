@@ -1,0 +1,371 @@
+// ════════════════════════════════════════════════════════════════════════════
+// emerge-ide.eg
+// UUID: emerge-ide-v1-0-0
+// THE IDE — declared entirely in Emerge grammar
+// CLI first. Every panel action has a CLI command.
+// Voice-native. AI-assisted. SISO bus for all comms.
+// Panels: editor · compiler · test · snapshot · ai-chat · spec · seam-view
+// ════════════════════════════════════════════════════════════════════════════
+
+compartment "ide" {
+  id      = emerge-ide-001
+  uuid    = emerge-ide-001-xxxx
+  version = 1.0.0
+  intent  = sovereign_emerge_development_environment
+
+  invariant IDE_AXIOMS {
+    axiom NO_SILENT_DROP
+    axiom EXECUTION_IS_TRACEABLE
+    axiom GAP_IS_FIRST_CLASS
+    axiom GRAMMAR_APPLIES_TO_ITSELF
+    if voice.seam is missing
+      gap "no-voice-seam"    { pressure = 0.6 }
+    if lsp.seam is missing
+      gap "no-lsp-seam"      { pressure = 0.7 }
+    if ollama.seam is missing
+      gap "no-ollama-seam"   { pressure = 0.7 }
+  }
+
+  layout IDE_LAYOUT {
+    split vertical {
+      panel "sidebar"    { width = 220  }
+      split horizontal {
+        panel "editor"   { flex = 1     }
+        panel "ai-chat"  { width = 340  }
+      }
+    }
+    panel "statusbar"    { height = 28  }
+    panel "bottom-tabs"  { height = 280 }
+  }
+}
+
+// ── SIDEBAR ───────────────────────────────────────────────────────────────────
+compartment "ide-sidebar" {
+  id   = emerge-ide-sidebar-001
+  uuid = emerge-ide-sidebar-001-xxxx
+  intent = file_tree_model_catalog_seam_view
+
+  component "file-tree" {
+    input workspace.files
+    sigma observe workspace.files
+    output panel "sidebar" tab "files"
+    record
+  }
+
+  component "model-catalog-view" {
+    input catalog.EMERGE_MODEL_CATALOG
+    sigma observe catalog
+
+    for each model in catalog sorted_by fitness descending
+      render model_row {
+        name    = model.id
+        fitness = model.fitness
+        vram    = model.vram_gb
+        best    = model.best_for
+        active  = model.id == session.active_model
+      }
+
+    output panel "sidebar" tab "models"
+    record
+  }
+
+  component "seam-viewer" {
+    input compiler.ir
+    sigma observe compiler.ir.seams
+
+    for each seam in compiler.ir.seams
+      render seam_card {
+        name      = seam.name
+        between   = seam.between
+        snr       = seam.snr
+        gaps      = seam.gaps
+      }
+
+    output panel "sidebar" tab "seams"
+    record
+  }
+}
+
+// ── EDITOR PANEL ──────────────────────────────────────────────────────────────
+compartment "ide-editor" {
+  id   = emerge-ide-editor-001
+  uuid = emerge-ide-editor-001-xxxx
+  intent = primary_code_editing_surface
+
+  component "buffer-manager" {
+    input keydown file.open file.drop
+    sigma observe buffer
+
+    on keydown
+      buffer.mutate(keydown)
+      emit "buffer.change" { buffer = buffer cursor = cursor }
+
+    on file.open
+      buffer.load(file)
+      emit "buffer.loaded" { filename = file.name }
+
+    on file.drop
+      if file.ext == eg
+        buffer.load(file)
+        emit "io.compile" { source = file.content filename = file.name }
+      if file.ext == spec
+        emit "io.spec" { source = file.content }
+
+    output buffer
+    record
+  }
+
+  component "syntax-highlighter" {
+    input buffer.change
+    sigma observe tokens
+
+    for each token in buffer.tokens
+      span token {
+        color = spec.color_for(token.type)
+      }
+
+    output decorations
+    record
+  }
+
+  component "gap-inline-renderer" {
+    input lsp.diagnostic
+    sigma observe diagnostics
+
+    for each diagnostic in diagnostics
+      decoration {
+        line    = diagnostic.line
+        gutter  = pressure_bar(diagnostic.pressure)
+        tooltip = diagnostic.message
+        color   = if diagnostic.severity == error   then noise_red
+                  if diagnostic.severity == warning  then warn_amber
+                  else signal_green
+      }
+
+    output decorations
+    record
+  }
+
+  component "ai-inline-complete" {
+    input ai.complete cursor
+    sigma observe ai.complete
+
+    if ai.complete exists
+      decoration {
+        line  = cursor.line
+        ghost = ai.complete.text
+        key   = Tab to accept
+      }
+
+    on Tab
+      buffer.accept(ai.complete)
+      emit "completion.accepted" { text = ai.complete.text }
+      record
+
+    record
+  }
+}
+
+// ── AI CHAT PANEL ─────────────────────────────────────────────────────────────
+compartment "ide-ai-chat" {
+  id   = emerge-ide-ai-001
+  uuid = emerge-ide-ai-001-xxxx
+  intent = streaming_ai_assistant_with_voice
+
+  component "chat-input" {
+    input keydown stt.final
+    sigma observe input
+
+    // Accept text or voice
+    on Enter
+      emit "ai.chat" {
+        prompt  = input.text
+        context = editor.buffer
+        model   = session.active_model
+      }
+
+    on stt.final
+      emit "ai.chat" {
+        prompt  = utterance
+        context = editor.buffer
+        model   = session.active_model
+      }
+
+    record
+  }
+
+  component "stream-renderer" {
+    // Renders LLM tokens as they arrive — no wait
+    input llm.token llm.complete
+    sigma observe token_stream
+
+    pipe token_stream {
+      buffer_stream chunks
+      flush on chunk
+    }
+
+    on llm.token
+      render chunk { text = token.text }
+      record
+
+    on llm.complete
+      render message_end {}
+      record
+  }
+
+  component "action-extractor" {
+    // Detects when AI suggests a code action
+    input llm.complete
+    sigma observe response
+
+    if response contains emerge_code_block
+      emit "ai.suggestion" {
+        code    = response.code_block
+        context = editor.buffer
+      }
+
+    record
+  }
+}
+
+// ── BOTTOM TABS: compiler · test · snapshot · voice ──────────────────────────
+compartment "ide-bottom" {
+  id   = emerge-ide-bottom-001
+  uuid = emerge-ide-bottom-001-xxxx
+
+  component "compiler-tab" {
+    input compiler.result
+    sigma observe compiler.result
+
+    render snr_bar   { value = compiler.result.snr }
+    render regime    { value = compiler.result.regime }
+    render gap_list  { gaps  = compiler.result.gaps }
+    render noise_log { noise = compiler.result.noise }
+
+    output panel "bottom-tabs" tab "compiler"
+    record
+  }
+
+  component "test-tab" {
+    input compiler.check
+    sigma observe axioms
+
+    for each axiom in AXIOMS
+      render axiom_row {
+        name  = axiom
+        pass  = not axiom in compiler.check.violations
+      }
+
+    output panel "bottom-tabs" tab "axioms"
+    record
+  }
+
+  component "snapshot-tab" {
+    input compiler.snapshot.result
+    sigma observe snapshots
+
+    for each snap in snapshots
+      render snapshot_row {
+        ts     = snap.ts
+        regime = snap.regime
+        gaps   = snap.gaps.length
+      }
+
+    output panel "bottom-tabs" tab "snapshots"
+    record
+  }
+
+  component "voice-tab" {
+    input stt.interim stt.final tts.speaking
+    sigma observe voice_state
+
+    render voice_status {
+      listening  = voice.active
+      transcript = stt.interim
+      speaking   = tts.speaking
+      model      = session.active_model
+    }
+
+    output panel "bottom-tabs" tab "voice"
+    record
+  }
+}
+
+// ── STATUSBAR ─────────────────────────────────────────────────────────────────
+compartment "ide-statusbar" {
+  id   = emerge-ide-status-001
+  uuid = emerge-ide-status-001-xxxx
+
+  component "status-renderer" {
+    input compiler.result session voice
+
+    render statusbar {
+      left  = [ regime_badge snr_pct filename cursor_pos ]
+      right = [ active_model voice_indicator ollama_status ]
+    }
+
+    record
+  }
+}
+
+// ── SPEC EDITOR ───────────────────────────────────────────────────────────────
+// CLI first: emerge spec-edit → opens spec in editor panel
+// Changes to spec hot-reload the compiler immediately
+compartment "ide-spec-editor" {
+  id   = emerge-ide-spec-001
+  uuid = emerge-ide-spec-001-xxxx
+  intent = live_grammar_editing_with_hot_reload
+
+  component "spec-buffer" {
+    input spec.open buffer.change
+    sigma observe spec_buffer
+
+    on buffer.change
+      emit "io.spec" { source = spec_buffer }
+      record
+
+    on spec.updated
+      emit "lsp.refresh" {}
+      render toast { message = "spec updated — " + spec.keywords + " keywords" }
+      record
+  }
+}
+
+// ── MAIN LOOP ─────────────────────────────────────────────────────────────────
+loop IDE_MAIN_LOOP {
+  interval = 0
+
+  on buffer.change {
+    signal -> compartment "ide-editor"
+    signal -> compartment "lsp-core"
+    record
+  }
+
+  on stt.final {
+    signal -> compartment "voice-commands"
+    signal -> compartment "ide-ai-chat"
+    record
+  }
+
+  on llm.token {
+    signal -> compartment "ide-ai-chat"
+    signal -> compartment "voice-output"
+    record
+  }
+
+  on compiler.result {
+    signal -> compartment "ide-bottom"
+    signal -> compartment "ide-statusbar"
+    record
+  }
+
+  on ai.suggestion {
+    signal -> compartment "ide-editor"
+    record
+  }
+
+  on keydown {
+    signal -> compartment "ide-editor"
+    record
+  }
+}

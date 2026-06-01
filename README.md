@@ -1,89 +1,131 @@
-# NEXUS SYSTEM — v5.1.0
-## Complete Architecture in Emergence
-
-**Author:** James Brooks (Erosmancer)  
-**Language:** Emergence (.eg) — exclusively  
-**Files:** 115  
-**SNR:** 98.4%–100% across all files  
-**Axiom violations:** 0  
-
----
-
-> The spec is the container. The .eg file runs the system. No coding syntax exists in this session.
-
----
-
-## Structure
+# NEXUS
+## Boot order (bottom up)
 
 ```
-nexus-eg/
-├── foundation/          14 files — SISO primitives, Cobalt bus, FileStore, poll registry, admin server
-├── memory/               6 files — JAA-DB (28 tables), agent-memory, continuous-stream, feedback-weighter, fix-map, lattice-index
-├── core/                 7 files — RAID (4 files), translation, manifest-generator, usage
-├── crystalball/          5 files — CrystalBall wiring, BEP engine, lattice-bridge, MCL, MQL (5-lane)
-├── gate/                 3 files — gap-finder, gate-runner, healer
-├── agents/               6 files — dispatcher, ollama, claude, base, chatgpt, gemini
-├── orion/                4 files — sensor, record, policy, verify
-├── versionium/           2 files — core, causality
-├── automation/           2 files — engine, queue-manager
-├── canvas/               9 files — renderer, cfr-physics, cfr-render, cfr-rewind, image-analyzer, node-inspector, rewind-scrubber, nas-router, tauri-ws
-├── guardian-ext/        12 files — app, background, cfr, ir-layer, handshake, content, popup, module-base, claude, chatgpt, instagram, threads
-├── guardian-server/      9 files — server, api-7820, wss-7821, jaa, memory-7823, dropzone-7822, cli, agents, cobalt-bridge
-├── userscript/          16 files — toast, gates, tab-claim, siso-bus, dom-scanner, artifact-store, download-intercept, seam-tab, queue, snr-detector, pa, gap-hunter, greeting, gtci-inject, realtime-sync, tab-discovery
-├── cockpit/              5 files — core (SISOKernel+JAA+Bayesian), pipeline (14 nodes+evaluator), forge (self-mod), cli, ui (v10)
-├── idearium/             5 files — core (IdeaOS+tension+SNR), cli, api, event, gate
-├── siphon/               3 files — siphon, pulse, watchman
-├── seam/                 3 files — spec-parser, verdict-detector, seam-delivery
-└── system/               4 files — boot, topology, data-flows, seam-contracts
+npm run cortex      # port 3748 — source of truth (boot first)
+npm run guardian    # port 7820/7821/7822/7823 — agent orchestration
+npm run idearium    # port 4800 — idea OS
+npm run emerge      # port 4242 — Emerge IDE
 ```
 
----
+## File system
+
+```
+nexus/
+├── package.json
+│
+├── siso/                    ← LAYER 0: Event bus primitives
+│   ├── Event.js
+│   ├── Gate.js
+│   ├── Stream.js
+│   ├── StreamLog.js
+│   └── index.js
+│
+├── jaa/                     ← LAYER 1: Persistence
+│   ├── jaa-store.js         ← Node.js JAA store (guardian uses this)
+│   └── schema.sql           ← Guardian SQL schema (15 tables)
+│
+├── cortex/                  ← LAYER 2: Source of truth (port 3748)
+│   ├── boot.js              ← START HERE: node cortex/boot.js
+│   ├── cortex.js            ← REPL CLI: node cortex/cortex.js
+│   ├── cobalt.manifest.json
+│   ├── foundation/
+│   │   ├── cobalt-core.js   ← CobaltBus + LEDGER + WATCHDOG + REGISTRY
+│   │   ├── admin-server.js  ← HTTP + SSE on 3748
+│   │   ├── poll-registry.js ← §M3 single poll declaration
+│   │   ├── bus-log.js
+│   │   └── siso/            ← SISO primitives (Cortex copy)
+│   │       └── store/       ← FileStore + FileRefs (SHA-256 blobs)
+│   ├── memory/
+│   │   ├── jaa-db.js        ← 28 JSONL tables, append-only
+│   │   └── agent-memory.js  ← event_log → memory_index distiller
+│   ├── core/raid/           ← Local-first agent routing (Ollama before cloud)
+│   ├── agents/
+│   │   ├── index.js         ← Dispatcher
+│   │   ├── ollama/          ← Local inference
+│   │   └── claude/          ← Guardian HTTP dispatch
+│   ├── gate/gap-finder.js   ← Stale/stuck/recurring gap detection
+│   ├── healer/              ← Gap → fix_map resolution
+│   ├── orion/               ← Sensor → Record → Policy → Verify
+│   ├── versionium/          ← Sigma-triggered auto-commit
+│   ├── automation/          ← Workflow engine
+│   └── nas/                 ← File routing
+│
+├── guardian/                ← LAYER 3: Agent orchestration (7820/7821/7822/7823)
+│   ├── server.js            ← node guardian/server.js
+│   ├── cli.js               ← node guardian/cli.js
+│   ├── jaa-store.js         ← Guardian JAA (15 tables, JSON file)
+│   ├── memory.js            ← Memory server (port 7823)
+│   ├── dropzone.js          ← Dropzone (port 7822)
+│   ├── agents/index.js      ← Guardian agent dispatcher
+│   ├── userscript-chatgpt.js ← Tampermonkey: chatgpt.com (PRIMARY)
+│   └── userscript-claude.js  ← Tampermonkey: claude.ai
+│
+├── cockpit/                 ← LAYER 4: Control panel (served from 7820/cockpit)
+│   ├── core.js              ← SISOKernel + JAA IndexedDB + Bayesian trust
+│   ├── cli.js               ← CLI interaction contract (hotswappable)
+│   ├── pipeline.js          ← 15 node types + SEAM evaluator
+│   ├── forge.js             ← AI self-modification engine
+│   └── cockpit.spec         ← Full system specification
+│
+├── idearium/                ← LAYER 5: Idea OS (port 4800)
+│   ├── index.js
+│   ├── core/index.js        ← IdeaOS + tension engine + SNR
+│   ├── cli/index.js         ← CLI is truth
+│   └── api/index.js         ← API is projection
+│
+├── emerge/                  ← LAYER 6: Emergence compiler (port 4242)
+│   ├── emerge-kernel.js     ← JS seed — compiles .eg files
+│   ├── emerge-ide.js        ← IDE server
+│   ├── emerge.spec          ← SNR gate schema
+│   ├── siso.js
+│   ├── ollama-runtime.js
+│   └── io/                  ← Drop .eg files here — kernel compiles automatically
+│       ├── cortex.eg
+│       ├── guardian-server.eg
+│       ├── guardian-userscript.eg
+│       ├── cockpit.eg
+│       ├── idearium.eg
+│       ├── versionium.eg
+│       ├── gcanvas.eg
+│       ├── emerge-ide.eg
+│       ├── emerge-lsp.eg
+│       ├── emerge-ollama.eg
+│       └── emerge-voice.eg
+│
+├── gcanvas/                 ← ALK particle field engine
+│   ├── alk-kernel.js        ← ALK event bus
+│   ├── alk-gl.js            ← WebGL2 80k particles (tier 1)
+│   ├── cfr-mesh-bridge.js   ← 34-attractor skeleton + cue→field
+│   ├── cfr-physics.js       ← CPU particles (tier 2 fallback)
+│   ├── cfr-render.js
+│   ├── cfr-rewind.js
+│   └── alk-devtools.html
+│
+├── ui/                      ← All HTML UIs
+│   ├── cockpit.html         ← Guardian control panel (SEAM/Pipeline/Brain)
+│   └── emerge-ide.html      ← Emerge IDE
+│
+└── data/                    ← Runtime data (gitignore this)
+```
+
+## Providers (ChatGPT is primary)
+
+| Provider | How |
+|----------|-----|
+| ChatGPT  | Tampermonkey `guardian/userscript-chatgpt.js` → WSS 7821 |
+| Claude   | Tampermonkey `guardian/userscript-claude.js` → WSS 7821 |
+| Ollama   | Direct HTTP 11434 → RAID router local-first |
 
 ## Ports
 
-| Port | Layer | Purpose |
-|------|-------|---------|
-| 3748 | Cortex | Source of truth — JAA + Cobalt + RAID + ORION |
-| 4800 | Forge/Idearium | IDE + pipeline + spec parser |
-| 7800 | Rheon IDE | Seam language IDE |
-| 7771 | Tauri WS | Desktop Rust bridge |
-| 7820 | Guardian HTTP | Agent API + Cockpit |
-| 7821 | Guardian WSS | Browser userscript bridge |
-| 7822 | Dropzone | File server (LAN) |
-| 7823 | Memory server | JAA query surface (LAN) |
-| 11434 | Ollama | Local LLM |
-
----
-
-## Laws
-
-```
-LAW_I    Local first — Ollama before cloud
-LAW_II   JAA write before behavior
-LAW_III  No module imports another — JAA only
-LAW_IV   Schema over code
-LAW_V    CLI first — UI is a skin
-LAW_VI   Toast on every failure
-
-§1.1  Nothing exists until proven
-§1.2  Nothing silently fails
-§2.1  Persistence is the golden rule
-§M1   Every module: init(cfg) + stop() only
-§M2   Modules only read/write declared tables
-§M3   Poll interval is module configuration
-§A3   Every row carries causedBy or source
-```
-
----
-
-## Using the Emerge compiler
-
-```bash
-node emerge-cli.js check foundation/siso-event.eg
-node emerge-cli.js compile foundation/siso-event.eg
-node emerge-cli.js watch          # watch all .eg files
-```
-
----
-
-*NEXUS SYSTEM v5.1.0 · All Emergence · James Brooks · Portland, Oregon · 2026*
+| Port | Service |
+|------|---------|
+| 3748 | Cortex — source of truth |
+| 4242 | Emerge IDE |
+| 4800 | Idearium |
+| 7820 | Guardian HTTP API + Cockpit UI |
+| 7821 | Guardian WSS (providers connect here) |
+| 7822 | Dropzone (LAN) |
+| 7823 | Memory server (LAN) |
+| 11434 | Ollama |

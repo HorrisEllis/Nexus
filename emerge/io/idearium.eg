@@ -1,0 +1,42 @@
+// idearium.eg — Idea OS. Port 4800. CLI is truth. API is projection.
+// UUID: idearium-v1-0-0
+// node idearium/cli/index.js  OR  node idearium/index.js (starts HTTP)
+
+compartment "idearium" {
+  id      = idearium-001
+  uuid    = idearium-001-xxxx
+  version = 2.0.0
+  port    = 4800
+  intent  = idea_os_cli_truth_api_projection
+
+  tension_weights {
+    gap_density      = 0.30
+    contradiction    = 0.25
+    novelty          = 0.20
+    resource_cost    = 0.15
+    dependency_depth = 0.10
+  }
+
+  cli {
+    on "idea add <text>"       { insert emit idea.created record }
+    on "idea list"             { query output table record }
+    on "idea tension <uuid>"   { compute output score record }
+    on "spec build <uuid>"     { build emit spec.built → versionium.snapshot record }
+    on "gap list"              { query output table record }
+    on "gap resolve <uuid>"    { update emit gap.resolved record }
+    on "push"                  { snapshot emit push.complete record }
+    on "status"                { output ideas + specs + gaps + snr record }
+  }
+
+  api {
+    route GET  /api/ideas            { query record }
+    route POST /api/ideas            { insert emit record }
+    route POST /api/specs/:uuid/build { build emit record }
+    route GET  /api/gaps             { query record }
+    route POST /api/gaps/:uuid/resolve { update record }
+    route GET  /api/snr              { compute record }
+    route GET  /sse                  { live_tail events record }
+    route POST /api/queue/:id/progress { update_queue record }
+    route POST /api/guardian/event   { insert event_log record }
+  }
+}

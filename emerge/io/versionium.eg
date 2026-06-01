@@ -1,0 +1,30 @@
+// versionium.eg — Causal version chain. Sigma-triggered auto-commit.
+// UUID: versionium-v1-0-0
+// Source: cortex/versionium/
+
+compartment "versionium" {
+  id      = versionium-001
+  uuid    = versionium-001-xxxx
+  version = 1.0.0
+  intent  = sigma_triggered_auto_commit_causal_chain
+
+  sigma_threshold = 0.7
+  poll_interval   = 3000
+
+  on sigma_spike {
+    insert versionium_commits { message branch parentHash objects }
+    insert versionium_calendar
+    update versionium_branches set head
+    update shape_samples set committed = true
+    emit "versionium.committed"
+    record
+  }
+
+  on spec.built { snapshot emit push.complete record }
+
+  chain {
+    on ancestors(commitId depth) { traverse parents output chain record }
+    on diff(a b)                 { delta objects output record }
+    on rollback(commitId)        { insert new_commit emit record }
+  }
+}

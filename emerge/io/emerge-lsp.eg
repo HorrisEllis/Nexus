@@ -1,0 +1,145 @@
+// ════════════════════════════════════════════════════════════════════════════
+// emerge-lsp.eg
+// UUID: emerge-lsp-v1-0-0
+// SEAM: LSP_CONTRACT
+// Emerge language server — completions, hover, diagnostics, gap inline view
+// All powered by the kernel SNR gate. AI-assisted where gap pressure > 0.6.
+// ════════════════════════════════════════════════════════════════════════════
+
+compartment "lsp-core" {
+  id   = emerge-lsp-001
+  uuid = emerge-lsp-001-xxxx
+  intent = serve_language_intelligence_for_editor
+
+  fidelity {
+    default      = 0.8
+    reinforce_on = completion.accepted
+    erode_on     = completion.rejected
+  }
+
+  invariant LSP_CONTRACT {
+    axiom NO_SILENT_DROP
+    axiom EXECUTION_IS_TRACEABLE
+    if diagnostics.stale
+      gap "stale-diagnostics" { pressure = 0.6 }
+  }
+}
+
+compartment "lsp-completion" {
+  id   = emerge-lsp-complete-001
+  uuid = emerge-lsp-complete-001-xxxx
+  intent = provide_autocomplete_for_emerge_grammar
+
+  component "keyword-complete" {
+    input cursor buffer
+    sigma observe cursor
+
+    // Pull candidates from spec schema
+    context = spec.keywords_at(cursor.line, cursor.col)
+    output complete {
+      items = context.candidates
+      kind  = keyword
+    }
+    record
+  }
+
+  component "ai-complete" {
+    // Fires when keyword completion has < 3 candidates
+    // Uses fastest model from catalog (qwen2.5-coder:1.5b)
+    input cursor buffer
+    sigma observe buffer.change
+
+    if complete.items.length < 3
+      prompt = build_completion_prompt(buffer, cursor)
+      emit "ai.complete" {
+        prompt  = prompt
+        model   = catalog.best_for(completion)
+        context = buffer.slice(cursor.line - 20 cursor.line)
+      }
+      record
+  }
+}
+
+compartment "lsp-hover" {
+  id   = emerge-lsp-hover-001
+  uuid = emerge-lsp-hover-001-xxxx
+  intent = show_token_documentation_on_hover
+
+  component "spec-lookup" {
+    input hover token
+    sigma observe token
+
+    lookup = spec.describe(token.value)
+
+    if lookup exists
+      output hover_info {
+        title   = token.value
+        domain  = lookup.domain
+        meaning = lookup.definition
+        example = lookup.example
+      }
+    else
+      // Unknown token — ask AI to explain it in Emerge context
+      emit "ai.explain" {
+        token   = token.value
+        context = buffer.line(token.line)
+        model   = catalog.best_for(explanation)
+      }
+
+    record
+  }
+}
+
+compartment "lsp-diagnostics" {
+  id   = emerge-lsp-diag-001
+  uuid = emerge-lsp-diag-001-xxxx
+  intent = show_gaps_and_axiom_violations_inline
+
+  component "gap-annotator" {
+    input compiler.check
+    sigma observe compiler.check.gaps
+
+    for each gap in compiler.check.gaps
+      diagnostic {
+        line     = gap.line
+        col      = gap.col
+        message  = gap.message
+        type     = gap.type
+        pressure = gap.pressure
+        severity = if gap.pressure >= 0.9 then error
+                   if gap.pressure >= 0.6 then warning
+                   else info
+      }
+      emit "lsp.diagnostic" { gap = gap }
+
+    record
+  }
+
+  component "ai-gap-resolver" {
+    // When a gap has pressure > 0.7, suggest a fix via AI
+    input lsp.diagnostic
+    sigma observe gap.pressure
+
+    if gap.pressure > 0.7
+      emit "ai.fix_suggest" {
+        gap     = gap
+        context = buffer.slice(gap.line - 5 gap.line + 5)
+        model   = catalog.best_for(code_gen)
+        prompt  = "Suggest a fix for this Emerge gap: " + gap.message
+      }
+      record
+  }
+}
+
+loop LSP_LOOP {
+  interval = 0
+  on buffer.change {
+    signal -> compartment "lsp-completion"
+    signal -> compartment "lsp-diagnostics"
+    record
+  }
+  on cursor.hover {
+    signal -> compartment "lsp-hover"
+    record
+  }
+}

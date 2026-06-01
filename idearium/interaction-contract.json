@@ -1,0 +1,143 @@
+{
+  "id": "idearium-v1",
+  "version": "2.0.0",
+  "namespace": "idearium",
+  "port": 4800,
+  "transport": {
+    "http":     "http://127.0.0.1:4800",
+    "sse":      "http://127.0.0.1:4800/sse",
+    "guardian": "http://127.0.0.1:7820"
+  },
+
+  "resources": {
+    "idea": {
+      "table": "ideas",
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/ideas",                  "params": ["phase","tag","sort","limit","search"] },
+        "create":  { "method": "POST",   "path": "/api/ideas",                  "body": ["text","tags","compartment"] },
+        "show":    { "method": "GET",    "path": "/api/ideas/:uuid" },
+        "update":  { "method": "PATCH",  "path": "/api/ideas/:uuid",            "body": ["text","tags","compartment","stability"] },
+        "tension": { "method": "POST",   "path": "/api/ideas/:uuid/tension" },
+        "link":    { "method": "POST",   "path": "/api/ideas/:uuid/link",       "body": ["toUuid","linkType"] },
+        "spec":    { "method": "POST",   "path": "/api/ideas/:uuid/spec",       "body": ["name"] },
+        "phase":   { "method": "POST",   "path": "/api/ideas/:uuid/phase",      "body": ["phase"] },
+        "archive": { "method": "DELETE", "path": "/api/ideas/:uuid",            "body": ["reason"] }
+      }
+    },
+    "spec": {
+      "table": "specs",
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/specs",                  "params": ["phase"] },
+        "show":    { "method": "GET",    "path": "/api/specs/:uuid" },
+        "update":  { "method": "PATCH",  "path": "/api/specs/:uuid",            "body": ["name","phase","sections","modules","wired"] },
+        "check":   { "method": "POST",   "path": "/api/specs/:uuid/check" },
+        "build":   { "method": "POST",   "path": "/api/specs/:uuid/build" },
+        "export":  { "method": "GET",    "path": "/api/specs/:uuid/export" }
+      }
+    },
+    "gap": {
+      "table": "gaps",
+      "endpoints": {
+        "list":    { "method": "GET",    "path": "/api/gaps",                   "params": ["status","severity","type"] },
+        "show":    { "method": "GET",    "path": "/api/gaps/:uuid" },
+        "open":    { "method": "POST",   "path": "/api/gaps",                   "body": ["type","description","severity","ideaUuid"] },
+        "resolve": { "method": "POST",   "path": "/api/gaps/:uuid/resolve",     "body": ["resolution"] },
+        "ignore":  { "method": "POST",   "path": "/api/gaps/:uuid/ignore",      "body": ["reason"] }
+      }
+    },
+    "snapshot": {
+      "table": "snapshots",
+      "endpoints": {
+        "list": { "method": "GET", "path": "/api/snapshots" },
+        "show": { "method": "GET", "path": "/api/snapshots/:uuid" },
+        "diff": { "method": "GET", "path": "/api/snapshots/:a/diff/:b" },
+        "push": { "method": "POST","path": "/api/snapshots",                    "body": ["message","branch"] }
+      }
+    },
+    "events": {
+      "endpoints": {
+        "log": { "method": "GET", "path": "/api/events", "params": ["n"] }
+      }
+    },
+    "snr": {
+      "endpoints": {
+        "current": { "method": "GET", "path": "/api/snr" },
+        "history": { "method": "GET", "path": "/api/snr/history", "params": ["n"] }
+      }
+    },
+    "stats": {
+      "endpoints": {
+        "get": { "method": "GET", "path": "/api/stats" }
+      }
+    },
+    "contract": {
+      "endpoints": {
+        "get": { "method": "GET", "path": "/api/contract" }
+      }
+    }
+  },
+
+  "sse": {
+    "path":   "/sse",
+    "events": ["idea.created","idea.updated","idea.linked","idea.tensioned","idea.archived","spec.created","spec.updated","spec.checked","gap.created","gap.resolved","gap.ignored","push.complete","snr.update","idearium.error"]
+  },
+
+  "snr_translation": {
+    "window_size":       50,
+    "threshold_signal":  0.5,
+    "threshold_noise":   0.3,
+    "weights": {
+      "idea.created":    0.9,
+      "spec.created":    0.95,
+      "spec.built":      1.0,
+      "gap.resolved":    0.85,
+      "ci.run":          0.9,
+      "push.complete":   0.95,
+      "idea.tensioned":  0.7,
+      "spec.updated":    0.6,
+      "idea.updated":    0.5,
+      "idea.linked":     0.65,
+      "snr.update":      0.1,
+      "guardian.health": 0.15,
+      "idea.archived":   0.2,
+      "gap.ignored":     0.3
+    }
+  },
+
+  "tension_engine": {
+    "range": [0.0, 1.0],
+    "components": {
+      "gap_density":      0.30,
+      "contradiction":    0.25,
+      "novelty":          0.20,
+      "resource_cost":    0.15,
+      "dependency_depth": 0.10
+    }
+  },
+
+  "compartments": ["nexus","guardian","idearium","forge","versionium","cortex","causal","orchestrator"],
+  "link_types":   ["resonance","tension","causal","temporal","semantic"],
+  "idea_phases":  ["seed","expanding","tensioned","specced","building","complete","archived"],
+  "gap_types":    ["unresolved","contradiction","missing_link","boundary_gap","file_friction","spec_incomplete","ci_fail","schema_violation","wiring_missing"],
+  "gap_severities": ["fatal","high","medium","low"],
+
+  "views": {
+    "dashboard": {
+      "layout": "three-column",
+      "left":   ["IdeaList","TensionMeter"],
+      "center": ["EventStream","SNRMeter"],
+      "right":  ["GapPanel","SpecPanel"]
+    }
+  },
+
+  "components": {
+    "IdeaList":     { "data": "idea.list",    "actions": ["idea.create","idea.tension"],     "events": ["idea.created","idea.updated","idea.tensioned"] },
+    "IdeaDetail":   { "data": "idea.show",    "actions": ["idea.update","idea.link","idea.spec","idea.phase","idea.archive"] },
+    "SpecPanel":    { "data": "spec.list",    "actions": ["spec.check","spec.build"] },
+    "GapPanel":     { "data": "gap.list",     "actions": ["gap.open","gap.resolve","gap.ignore"] },
+    "TensionMeter": { "data": "idea.tension", "live": true },
+    "SNRMeter":     { "data": "snr.current",  "live": true },
+    "PushPull":     { "data": "snapshot.list","actions": ["snapshot.push","snapshot.pull"] },
+    "EventStream":  { "data": "sse",          "events": ["*"] }
+  }
+}

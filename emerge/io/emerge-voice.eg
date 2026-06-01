@@ -1,0 +1,158 @@
+// ════════════════════════════════════════════════════════════════════════════
+// emerge-voice.eg
+// UUID: emerge-voice-v1-0-0
+// SEAM: VOICE_CONTRACT
+// between: user ↔ IDE
+// Voice input → STT → SISO bus → LLM → TTS → speaker
+// Continuous stream both directions. VAD gates the microphone.
+// ════════════════════════════════════════════════════════════════════════════
+
+compartment "voice-input" {
+  id   = emerge-voice-input-001
+  uuid = emerge-voice-input-001-xxxx
+  intent = capture_and_transcribe_voice
+
+  fidelity {
+    default      = 0.9
+    reinforce_on = final.transcription
+    erode_on     = silence.timeout
+  }
+
+  component "vad" {
+    listen microphone
+    sigma observe audio_level
+
+    if audio_level > silence.threshold
+      emit "voice.active" {}
+      record
+    if audio_level <= silence.threshold
+      emit "voice.silent" {}
+      record
+  }
+
+  component "transcriber" {
+    input voice.active
+    sigma observe audio_stream
+
+    // Web Speech API as the STT engine (browser-native, no install)
+    // Falls back to whisper via Ollama if browser API unavailable
+    try
+      transcribe audio_stream {
+        engine      = web_speech_api
+        interim     = true
+        language    = en-US
+        continuous  = true
+      }
+      on interim
+        emit "stt.interim" { text = phrase }
+        record
+      on final
+        emit "stt.final"   { text = utterance }
+        record
+    else
+      transcribe audio_stream {
+        engine  = whisper
+        model   = whisper:base
+        via     = ollama
+      }
+      on final
+        emit "stt.final" { text = utterance }
+        record
+
+    output utterance
+    record
+  }
+}
+
+compartment "voice-output" {
+  id   = emerge-voice-output-001
+  uuid = emerge-voice-output-001-xxxx
+  intent = speak_llm_output_as_continuous_stream
+
+  component "tts-streamer" {
+    // Subscribes to llm.token stream
+    // Speaks each chunk as it arrives — no wait for full response
+    input llm.token
+
+    pipe token_stream {
+      buffer_stream chunks
+      window = 8_tokens        // speak every 8 tokens for natural cadence
+      flush on sentence_boundary
+      flush on stop
+    }
+
+    speak chunks {
+      engine   = web_speech_synthesis
+      voice_id = auto
+      rate     = 1.1
+      pitch    = 1.0
+      volume   = 1.0
+    }
+
+    record
+  }
+
+  component "tts-controller" {
+    input voice.command
+
+    if voice.command == stop
+      abort tts_streamer
+      emit "tts.stopped" {}
+      record
+    if voice.command == pause
+      throttle tts_streamer
+      emit "tts.paused" {}
+      record
+    if voice.command == resume
+      flush tts_streamer
+      emit "tts.resumed" {}
+      record
+
+    record
+  }
+}
+
+// Voice command routing
+// User speaks → STT → command router → action
+compartment "voice-commands" {
+  id   = emerge-voice-cmd-001
+  uuid = emerge-voice-cmd-001-xxxx
+  intent = route_spoken_commands_to_ide_actions
+
+  component "command-parser" {
+    input stt.final
+    sigma observe utterance
+
+    if utterance starts_with "compile"
+      emit "ide.compile"  { source = editor.buffer }
+    if utterance starts_with "check"
+      emit "ide.check"    { source = editor.buffer }
+    if utterance starts_with "explain"
+      emit "ide.explain"  { source = editor.selection context = utterance }
+    if utterance starts_with "generate"
+      emit "ide.generate" { prompt = utterance context = editor.buffer }
+    if utterance starts_with "fix"
+      emit "ide.fix"      { gap = editor.active_gap prompt = utterance }
+    if utterance starts_with "snapshot"
+      emit "compiler.snapshot" {}
+    if utterance starts_with "stop"
+      emit "voice.command" { type = stop }
+    else
+      // Free-form → route to AI chat
+      emit "ai.chat" { prompt = utterance context = editor.buffer }
+
+    record
+  }
+}
+
+loop VOICE_LOOP {
+  interval = 0
+  on stt.final {
+    signal -> compartment "voice-commands"
+    record
+  }
+  on llm.token {
+    signal -> compartment "voice-output"
+    record
+  }
+}
