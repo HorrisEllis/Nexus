@@ -233,9 +233,23 @@ async function testOrchestrator() {
   }, ['orchestrator']);
 
   await test('GET /ports.js → canonical port map JS', async () => {
-    const r = await GET(9000, '/ports.js');
-    assert(r.ok, 'ports.js');
-    assert(typeof r.data === 'string' || r.status === 200, 'ports.js served');
+    // ports.js is served as text/javascript — check via raw HTTP, not JSON parse
+    await new Promise((resolve, reject) => {
+      const r = http.request({ hostname:'127.0.0.1', port:9000, path:'/ports.js', method:'GET' }, res => {
+        let data = '';
+        res.on('data', c => data += c);
+        res.on('end', () => {
+          try {
+            assert(res.statusCode === 200, `ports.js status ${res.statusCode}`);
+            assert(data.includes('9000') || data.includes('NEXUS'), 'ports.js contains port data');
+            resolve();
+          } catch(e) { reject(e); }
+        });
+      });
+      r.setTimeout(3000, () => { r.destroy(); reject(new Error('timeout')); });
+      r.on('error', reject);
+      r.end();
+    });
   }, ['orchestrator']);
 
   await test('GET /ui/idearium → serves idearium UI HTML', async () => {

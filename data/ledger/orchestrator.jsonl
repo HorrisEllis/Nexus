@@ -19,3 +19,29 @@
 {"_system":"orchestrator","_ts":1780397834494,"type":"system.registered","payload":{"systemId":"idearium","port":4800,"meta":{"role":"idea-os","version":"2.0.0"},"registeredAt":1780397834494}}
 {"_system":"idearium","_ts":1780397834499,"type":"idearium.booted","payload":{"version":"2.0.0","port":4800}}
 {"_system":"orchestrator","_ts":1780397834925,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780398314436,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780398314551,"type":"system.registered","payload":{"systemId":"idearium","port":4800,"meta":{"role":"idea-os","version":"2.0.0"},"registeredAt":1780398314551}}
+{"_system":"idearium","_ts":1780398314560,"type":"idearium.booted","payload":{"version":"2.0.0","port":4800}}
+{"_system":"orchestrator","_ts":1780398314945,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780398329648,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780398329704,"type":"system.registered","payload":{"systemId":"idearium","port":4800,"meta":{"role":"idea-os","version":"2.0.0"},"registeredAt":1780398329704}}
+{"_system":"idearium","_ts":1780398329709,"type":"idearium.booted","payload":{"version":"2.0.0","port":4800}}
+{"_system":"orchestrator","_ts":1780398330151,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780398339369,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780398339872,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780398363917,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780398364419,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780398376716,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780398376770,"type":"system.registered","payload":{"systemId":"idearium","port":4800,"meta":{"role":"idea-os","version":"2.0.0"},"registeredAt":1780398376769}}
+{"_system":"idearium","_ts":1780398376776,"type":"idearium.booted","payload":{"version":"2.0.0","port":4800}}
+{"_system":"orchestrator","_ts":1780398377218,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780398378739,"type":"orchestrator.bridge.registered","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780398382844,"type":"system.registered","payload":{"systemId":"test-probe","port":9876,"meta":{"role":"test"},"registeredAt":1780398382844}}
+{"_system":"orchestrator","_ts":1780398382853,"type":"test.ledger.1780398382852","payload":{"test":true}}
+{"_system":"orchestrator","_ts":1780398382880,"type":"exec","payload":{"cmd":"node --version","exit":0,"output":"v22.22.2\n","ts":1780398382880}}
+{"_system":"idearium","_ts":1780398382916,"type":"idearium.idea.created","payload":{"uuid":"c0806cc7-c6f7-4564-86c3-48487f52914c","text":"Integration test idea 1780398382910","tags":["integration","test"]}}
+{"_system":"idearium","_ts":1780398382969,"type":"idearium.idea.created","payload":{"uuid":"f5b69cd9-94cb-484c-a2c4-f1a204162b28","text":"Proxy test idea 1780398382966","tags":["proxy","test"]}}
+{"_system":"idearium","_ts":1780398382977,"type":"idearium.idea.created","payload":{"uuid":"87b3383b-e08c-4741-b1f6-7bb788b7dcd2","text":"SISO test idea 1780398382974","tags":["siso"]}}
+{"_system":"orchestrator","_ts":1780398383488,"type":"recall.filter.test.1780398383486","payload":{}}
+{"_system":"orchestrator","_ts":1780398388865,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780398389367,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}

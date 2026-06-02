@@ -100,12 +100,18 @@ async function cmdStatus() {
     const d = await GET(PORTS.orchestrator, '/api/status');
     if (!d.ok) { console.log(err('Orchestrator offline')); return; }
     const systems = d.data.systems || {};
+    // Also get registry for heartbeat data
+    const reg = await GET(PORTS.orchestrator, '/api/registry').catch(()=>null);
+    const registry = reg?.data?.registry || {};
     console.log(`\n${$(C.bold+C.cyan, '⬡  NEXUS')}  ${$(C.dim, 'system status')}\n`);
     for (const [name, info] of Object.entries(systems)) {
       const dot  = info.online ? $(C.green, '●') : $(C.red, '○');
       const col  = sys_color[name] || C.dim;
       const ms   = info.ms ? $(C.dim, `${info.ms}ms`) : '';
-      console.log(`  ${dot}  ${$(C.bold+col, name.padEnd(14))}  :${info.port||'?'}  ${info.online?$(C.dim,'online'):$(C.red,'OFFLINE')}  ${ms}`);
+      const regEntry = registry[name] || {};
+      const lastSeen = regEntry.lastSeen ? $(C.dim, `hb:${Math.round((Date.now()-regEntry.lastSeen)/1000)}s`) : '';
+      const statusStr = info.online ? $(C.dim,'online') : $(C.red,'OFFLINE') + (regEntry.lastSeen ? $(C.dim, ` (last seen ${Math.round((Date.now()-regEntry.lastSeen)/1000)}s ago)`) : '');
+      console.log(`  ${dot}  ${$(C.bold+col, name.padEnd(14))}  :${info.port||'?'}  ${statusStr}  ${ms}  ${lastSeen}`);
       if (info.online && info.data) {
         const d2 = info.data;
         if (name==='cortex'   && d2.jaa?.counts) {
@@ -323,6 +329,53 @@ ${$(C.bold, 'SISO BUS LOG')} ${$(C.dim, '('+entries.length+' events · '+gates.l
   });
 }
 
+async function cmdWatchdog() {
+  // Subscribe to orchestrator SSE and print live system state
+  console.log(`${$(C.bold+C.cyan, 'WATCHDOG')}  ${$(C.dim, 'live system monitor — Ctrl+C to stop')}\n`);
+  let lastTick = null;
+  const r = require('http').request({
+    hostname:'127.0.0.1', port:PORTS.orchestrator,
+    path:'/sse', method:'GET',
+    headers:{ Accept:'text/event-stream' },
+  }, res => {
+    let buf = '';
+    res.on('data', c => {
+      buf += c.toString();
+      const lines = buf.split('\n'); buf = lines.pop();
+      for (const l of lines) {
+        if (!l.startsWith('data:')) continue;
+        try {
+          const d = JSON.parse(l.slice(5).trim());
+          if (d.type === 'orchestrator.watchdog.tick' && d.systems) {
+            // Clear and reprint
+            process.stdout.write('\x1b[2J\x1b[H'); // clear screen
+            console.log(`${$(C.bold+C.cyan, '⬡  NEXUS WATCHDOG')}  ${$(C.dim, new Date().toTimeString().slice(0,8))}\n`);
+            for (const [name, info] of Object.entries(d.systems)) {
+              const dot = info.online ? $(C.green,'●') : $(C.red,'○');
+              const col = sys_color[name] || C.dim;
+              const ms  = info.ms ? $(C.dim, info.ms+'ms') : '';
+              console.log(`  ${dot}  ${$(C.bold+col, name.padEnd(14))}  ${info.online?$(C.dim,'online'):$(C.red,'OFFLINE')}  ${ms}`);
+            }
+            const offline = Object.values(d.systems).filter(s=>!s?.online).length;
+            console.log('');
+            if (offline > 0) console.log($(C.red, `  ⚠ ${offline} system(s) offline`));
+            else console.log($(C.green, '  ✓ all required systems online'));
+            console.log($(C.dim, '\n  Ctrl+C to exit'));
+          }
+          if (d.type === 'orchestrator.system.online' || d.type === 'orchestrator.system.offline') {
+            const on = d.type.endsWith('.online');
+            console.log(`  ${on?$(C.green,'▲'):$(C.red,'▼')}  ${d.systemId} → ${on?$(C.green,'ONLINE'):$(C.red,'OFFLINE')}`);
+          }
+        } catch(_) {}
+      }
+    });
+    res.on('end', () => process.exit(0));
+  });
+  r.on('error', e => { console.log(err('Orchestrator offline: '+e.message)); process.exit(1); });
+  r.end();
+  process.on('SIGINT', () => { r.destroy(); console.log('\n'); process.exit(0); });
+}
+
 function cmdHelp() {
   console.log(`
 ${$(C.bold+C.green, '⬡  NEXUS REPL')}  v1.0  — NEXUS CLI console
@@ -338,6 +391,7 @@ ${$(C.bold, 'Commands')}
   requests [status]   Bridge request queue (default: pending)
   ledger [sys] [n]    System event ledger
   snr                 Idearium SNR
+  watchdog / wd        Live system monitor (Ctrl+C to stop)
   bus [sys] [n]        SISO bus log (all systems)
   watch               Live event stream (Ctrl+C to stop)
   ui                  Open orchestrator UI in browser
@@ -391,6 +445,7 @@ async function dispatch(line) {
       case 'ledger': case 'log':   await cmdLedger(args); break;
       case 'snr':                  await cmdSNR(); break;
       case 'bus':                  await cmdBus(args); break;
+      case 'watchdog': case 'wd':  await cmdWatchdog(); break;
       case 'watch':                await cmdWatch(); return; // stays alive
       case 'ui':                   await cmdUI(); break;
       case 'help': case '?':       cmdHelp(); break;

@@ -1,88 +1,75 @@
 {
-  "ts": 1780397838538,
-  "pass": 32,
-  "fail": 0,
-  "skip": 42,
+  "ts": 1780398383592,
+  "pass": 53,
+  "fail": 1,
+  "skip": 20,
   "total": 74,
   "online": [
+    "orchestrator",
     "bridge",
     "idearium"
   ],
   "results": [
     {
       "name": "GET /health → {ok,online,total,uptime}",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/status → systems map",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "POST /api/register → registers system, returns registry",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/registry → live system map",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "POST /api/heartbeat → ok",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "POST /api/ledger → persists entry",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/ledger → returns entries with counts",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/recall → full ledger replay",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/recall?system=orchestrator → filtered",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/bus → unified bus log",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/channels → 22 SISO channels",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/cli → CLI reference object",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "POST /api/exec → executes command, returns output",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /ports.js → canonical port map JS",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "FAIL",
+      "error": "ports.js"
     },
     {
       "name": "GET /ui/idearium → serves idearium UI HTML",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /bridge/health → {ok,bridge,sessions,pendingRequests}",
@@ -285,33 +272,30 @@
     },
     {
       "name": "GET /api/bridge/health → proxied from bridge",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/idearium/health → proxied from idearium",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/cortex/health → proxied from cortex",
       "status": "SKIP",
-      "reason": "orchestrator offline"
+      "reason": "cortex offline"
     },
     {
       "name": "GET /api/guardian/health → proxied from guardian",
       "status": "SKIP",
-      "reason": "orchestrator offline"
+      "reason": "guardian offline"
     },
     {
       "name": "POST /api/idearium/ideas → proxied idea creation",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /api/guardian/bus → proxied guardian bus",
       "status": "SKIP",
-      "reason": "orchestrator offline"
+      "reason": "guardian offline"
     },
     {
       "name": "Guardian bus.emit → event appears in guardian bus log",
@@ -324,23 +308,19 @@
     },
     {
       "name": "Idearium idea.create → orchestrator ledger updated",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "Orchestrator recall includes events from all online systems",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "nexus-connect recall() → reads from orchestrator",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "recall?type=filter → type-filtered results",
-      "status": "SKIP",
-      "reason": "orchestrator offline"
+      "status": "PASS"
     },
     {
       "name": "GET /status → emerge status",

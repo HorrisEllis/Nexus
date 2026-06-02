@@ -263,7 +263,7 @@ const HEALTH_PATHS = {
   bridge:   '/bridge/health',
   cortex:   '/health',
   guardian: '/health',
-  idearium: '/',
+  idearium: '/health',
   emerge:   '/status',
   ollama:   '/api/tags',
 };
@@ -271,8 +271,12 @@ const HEALTH_PATHS = {
 async function allHealth() {
   return Promise.all(Object.entries(SYS).map(async ([id, sys]) => {
     const start = Date.now();
-    const d = await GET(id, HEALTH_PATHS[id], 3000);
-    return { id, sys, d, ms: Date.now() - start, online: !d.error };
+    const d     = await GET(id, HEALTH_PATHS[id], 3000);
+    const online = !d.error && (d.ok !== false);
+    // Merge with registry (last seen ≤ 15s = online even if health check missed)
+    const reg = SYSTEM_REGISTRY.get(id) || {};
+    const regOnline = reg.lastSeen && (Date.now() - reg.lastSeen) < 15000;
+    return { id, sys, d, ms: Date.now() - start, online: online || regOnline, port: sys.port };
   }));
 }
 
@@ -381,6 +385,57 @@ function connectBridgeSSE() {
   r.on('error', () => { bridgeSse=null; setTimeout(connectBridgeSSE, 5000); });
   r.end();
   bridgeSse = r;
+}
+
+// ── §AXIOM: System watchdog — pauses bridge relay until core systems online ────
+// Orchestrator knows the required boot order. If bridge/cortex are down it
+// retries every 5s and logs to ledger. Forge UI will show red dots until they come up.
+const REQUIRED_SYSTEMS   = ['bridge','cortex','guardian','idearium']; // must be online for full operation
+const WATCHDOG_INTERVAL  = 10000; // ms
+const _prevSystemState   = {}; // track transitions: online ↔ offline
+
+async function systemWatchdog() {
+  const systems = await allHealth();
+  const now     = Date.now();
+  let   allRequired = true;
+
+  for (const { id, online, ms } of systems) {
+    const prev    = _prevSystemState[id];
+    const changed = prev !== undefined && prev !== online;
+
+    if (changed) {
+      const evType = online ? 'system.online' : 'system.offline';
+      ledgerWrite('orchestrator', evType, { systemId:id, ms });
+      broadcast(JSON.stringify({ type:`orchestrator.${evType}`, systemId:id, online, ms, ts:now }));
+      console.log(`\x1b[${online?'32':'31'}m[watchdog] ${id} → ${online?'ONLINE':'OFFLINE'}\x1b[0m`);
+    }
+
+    _prevSystemState[id] = online;
+    if (REQUIRED_SYSTEMS.includes(id) && !online) allRequired = false;
+  }
+
+  // If bridge is offline, try to reconnect SSE relay
+  const bridgeOnline = systems.find(s=>s.id==='bridge')?.online;
+  if (bridgeOnline && !bridgeSse) {
+    console.log('[watchdog] bridge came online — reconnecting SSE relay');
+    connectBridgeSSE();
+  }
+
+  // Broadcast current health to all SSE clients
+  broadcast(JSON.stringify({
+    type: 'orchestrator.watchdog.tick',
+    systems: Object.fromEntries(systems.map(s=>[s.id,{ online:s.online, ms:s.ms }])),
+    allRequired, ts: now,
+  }));
+}
+
+// Start watchdog after server is ready
+function startWatchdog() {
+  // Initial check after 2s (let systems start)
+  setTimeout(async () => {
+    await systemWatchdog();
+    setInterval(systemWatchdog, WATCHDOG_INTERVAL);
+  }, 2000);
 }
 
 // ── UI hotswap watcher ────────────────────────────────────────────────────────
@@ -876,8 +931,8 @@ const server = http.createServer(async (req, res) => {
     const uuid   = seg[3] || '';
     const op     = seg[4] || '';
 
-    if (M==='GET'  && !action)               return json(res,200,await GET('idearium','/'));
-    if (M==='GET'  && action==='health')     return json(res,200,await GET('idearium','/'));
+    if (M==='GET'  && !action)               return json(res,200,await GET('idearium','/health'));
+    if (M==='GET'  && action==='health')     return json(res,200,await GET('idearium','/health'));
     if (M==='GET'  && action==='snr' && !uuid)    return json(res,200,await GET('idearium','/api/snr'));
     if (M==='GET'  && action==='snr' && uuid==='history') return json(res,200,await GET('idearium','/api/snr/history'));
     if (M==='GET'  && action==='events')     return json(res,200,await GET('idearium','/api/events'));
@@ -1227,6 +1282,7 @@ else {
             detached: true, stdio: 'ignore',
             windowsHide: false,
           });
+          proc.on('error', () => {}); // suppress unhandled ENOENT
           proc.unref();
           launched = true;
           console.log(`\x1b[90m[cli] terminal opened: ${bin}\x1b[0m`);
@@ -1276,5 +1332,8 @@ else {
 
     // Record own boot to ledger
     ledgerWrite('orchestrator','orchestrator.booted',{ version:VERSION, port:PORT });
+
+    // §AXIOM: Start system watchdog — monitors all systems, warns on offline
+    startWatchdog();
   });
 }
