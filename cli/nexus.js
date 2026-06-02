@@ -524,6 +524,7 @@ Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
     if (sub === 'health') {
       const d = await GET('bridge', '/bridge/health');
       if (d.error) return fail(d.error);
+      if (JSON_) return console.log(JSON.stringify(d, null, 2));
       hdr('BRIDGE');
       row('status',   '● online', C.green);
       row('sessions', String(d.sessions));
