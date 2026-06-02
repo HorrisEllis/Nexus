@@ -109,6 +109,18 @@ button.p:hover{opacity:.85;}
 .snr-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
 .snr-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
 .snr-fill{height:100%;border-radius:3px;transition:width .3s,background .3s;}
+.ir-compartment{border:1px solid var(--border);border-radius:3px;margin-bottom:4px;overflow:hidden;}
+.ir-comp-header{background:var(--bg3);padding:3px 8px;display:flex;align-items:center;gap:8px;cursor:pointer;}
+.ir-comp-name{color:var(--teal);font-weight:600;font-size:11px;}
+.ir-comp-kind{color:var(--muted);font-size:10px;}
+.ir-comp-body{padding:4px 8px 6px;display:none;}
+.ir-compartment.open .ir-comp-body{display:block;}
+.ir-field{display:flex;gap:6px;font-size:10px;padding:1px 0;}
+.ir-fkey{color:var(--purple);min-width:80px;flex-shrink:0;}
+.ir-fval{color:var(--text);}
+.ir-section{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:4px 0 2px;}
+.ir-body-token{display:inline-block;background:var(--bg4);border-radius:2px;padding:0 4px;margin:1px;font-size:10px;color:var(--blue);}
+.ir-summary{font-size:10px;color:var(--muted);padding:2px 0;}
 .snr-label{font-size:11px;min-width:34px;text-align:right;}
 
 /* Gap item */
@@ -217,6 +229,7 @@ button.p:hover{opacity:.85;}
 <div id="bottom">
   <div class="btabs">
     <div class="btab active" onclick="showBTab('compiler')">compiler</div>
+    <div class="btab" onclick="showBTab('ir')">IR</div>
     <div class="btab" onclick="showBTab('axioms')">axioms</div>
     <div class="btab" onclick="showBTab('voice')">voice</div>
     <div class="btab" onclick="showBTab('snapshots')">snapshots</div>
@@ -231,6 +244,7 @@ button.p:hover{opacity:.85;}
       </div>
       <div id="gap-list"></div>
     </div>
+    <div class="bpanel" id="bp-ir"><div id="ir-tree" style="font-size:11px;color:var(--muted);padding:4px">compile to decompress IR</div></div>
     <div class="bpanel" id="bp-axioms">
       <div style="color:var(--muted);font-size:11px">compile to check axioms</div>
     </div>
@@ -343,7 +357,7 @@ function handleBusEvent(ev) {
   const t = ev.type;
   log(t, t.includes('error')||t.includes('noise')?'n':t.includes('gap')?'w':'s');
 
-  if (t==='compiler.result'||t==='compiler.check') { renderCompiler(ev.data); renderAxioms(ev.data); }
+  if (t==='compiler.result'||t==='compiler.check') { renderCompiler(ev.data); renderAxioms(ev.data); renderIR(ev.data); }
   if (t==='spec.updated')  log(`spec updated — ${ev.data.keywords} keywords`,'s');
   if (t==='llm.token')     appendAiToken(ev.data.text);
   if (t==='llm.complete')  finalizeAiMsg();
@@ -390,6 +404,40 @@ function renderAxioms(d) {
       <div class="ax-dot ${bad.has(a)?'f':'p'}"></div>
       <span style="color:${bad.has(a)?'var(--noise)':'var(--text)'}">${a}</span>
     </div>`).join('');
+}
+
+// ── IR decompressor ───────────────────────────────────────────────────────────
+function renderIR(d) {
+  const container = document.getElementById('ir-tree');
+  if (!d || !d.ir) { container.innerHTML = '<div style="color:var(--muted);padding:4px">no IR — compile first</div>'; return; }
+  const ir = d.ir;
+  const total = (ir.compartments||[]).length + (ir.loops||[]).length + (ir.signals||[]).length + (ir.gaps||[]).length + (ir.laws||[]).length;
+  let html = `<div class="ir-summary">${total} nodes · ${(ir.compartments||[]).length} compartments · ${(ir.loops||[]).length} loops · ${(ir.gaps||[]).length} gaps · ${(ir.signals||[]).length} signals · ${(ir.laws||[]).length} laws · SNR ${d.snr?Math.round(d.snr*100)+'%':'—'}</div>`;
+
+  const renderBlock = (b, kind) => {
+    const fields = Object.entries(b.fields||{});
+    const body   = (b.body||[]).filter(Boolean);
+    const id     = `ir-${kind}-${b.name||Math.random().toString(36).slice(2)}`;
+    return `<div class="ir-compartment" id="${id}">
+      <div class="ir-comp-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="ir-comp-kind">${kind}</span>
+        <span class="ir-comp-name">${b.name||'(unnamed)'}</span>
+        <span style="color:var(--muted);font-size:10px;margin-left:auto">${fields.length} fields · ${body.length} tokens</span>
+      </div>
+      <div class="ir-comp-body">
+        ${fields.length ? `<div class="ir-section">fields</div>${fields.map(([k,v])=>`<div class="ir-field"><span class="ir-fkey">${k}</span><span class="ir-fval">${v}</span></div>`).join('')}` : ''}
+        ${body.length  ? `<div class="ir-section">body</div><div>${body.slice(0,60).map(t=>`<span class="ir-body-token">${t}</span>`).join('')}${body.length>60?`<span style="color:var(--muted);font-size:10px"> +${body.length-60} more</span>`:''}</div>` : ''}
+      </div>
+    </div>`;
+  };
+
+  if (ir.compartments?.length) { html += `<div class="ir-section">compartments</div>`; html += ir.compartments.map(b=>renderBlock(b,'compartment')).join(''); }
+  if (ir.loops?.length)        { html += `<div class="ir-section">loops</div>`;        html += ir.loops.map(b=>renderBlock(b,'loop')).join(''); }
+  if (ir.signals?.length)      { html += `<div class="ir-section">signals</div>`;      html += ir.signals.map(b=>renderBlock(b,'signal')).join(''); }
+  if (ir.gaps?.length)         { html += `<div class="ir-section">gaps</div>`;         html += ir.gaps.map(b=>renderBlock(b,'gap')).join(''); }
+  if (ir.laws?.length)         { html += `<div class="ir-section">laws</div>`;         html += ir.laws.map(b=>renderBlock(b,'law')).join(''); }
+
+  container.innerHTML = html;
 }
 
 // ── AI chat ───────────────────────────────────────────────────────────────────

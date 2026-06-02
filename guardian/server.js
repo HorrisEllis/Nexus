@@ -21,6 +21,8 @@
  */
 
 'use strict';
+const bridge = (() => { try { return require('../bridge/nexus-bridge'); } catch(_) { return null; } })();
+
 
 const http       = require('http');
 const https      = require('https');
@@ -583,6 +585,14 @@ function runTest(){
   res.writeHead(404); res.end('Not found');
 });
 
+if (bridge) {
+  bridge.mount(server, 'guardian');
+  // Wire job complete → cortex sync
+  bus.on('guardian.job.complete', job => bridge.crossSync.onJobComplete(job).catch(()=>{}));
+  // Wire artifacts → cortex sync
+  bus.on('guardian.artifact',     art => bridge.crossSync.onArtifact(art).catch(()=>{}));
+  console.log('[guardian] bridge mounted');
+}
 server.listen(HTTP_PORT, '127.0.0.1', () => {
   console.log(`[guardian] HTTP API on http://127.0.0.1:${HTTP_PORT}`);
   console.log(`[guardian] Ready.\n`);
@@ -1581,7 +1591,22 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // Cockpit
   if (method==='GET' && (url.pathname==='/'||url.pathname==='/cockpit'||url.pathname==='/cockpit/')) {
-    res.writeHead(200,{'Content-Type':'text/html','Access-Control-Allow-Origin':'*'}); res.end(buildCockpitHTML()); return true;
+    const cockpitPath = require('path').join(__dirname, '..', 'ui', 'cockpit.html');
+    const cockpitHtml = require('fs').existsSync(cockpitPath)
+      ? require('fs').readFileSync(cockpitPath, 'utf8')
+      : buildCockpitHTML();
+    res.writeHead(200,{'Content-Type':'text/html','Access-Control-Allow-Origin':'*'}); res.end(cockpitHtml); return true;
+  }
+
+  // Static UI assets
+  if (method==='GET' && url.pathname.startsWith('/ui/')) {
+    const assetPath = require('path').join(__dirname, '..', url.pathname);
+    try {
+      const data = require('fs').readFileSync(assetPath);
+      const ext = require('path').extname(url.pathname);
+      const mime = {'.js':'application/javascript','.css':'text/css','.html':'text/html','.json':'application/json'}[ext]||'text/plain';
+      res.writeHead(200,{'Content-Type':mime,'Access-Control-Allow-Origin':'*'}); res.end(data); return true;
+    } catch(e) { pRes(res,404,{error:'not found'}); return true; }
   }
 
   // SSE events

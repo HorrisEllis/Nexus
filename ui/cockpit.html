@@ -305,6 +305,11 @@ select.fi option{background:var(--surface);}
       <div class="tb-tab" data-panel="compiler">🔮 Compiler</div>
       <div class="tb-tab" data-panel="automation">⚡ Automation</div>
       <div class="tb-tab" data-panel="brain">◆ Brain</div>
+      <div class="tb-tab" data-panel="forge">⚙ Forge</div>
+      <div class="tb-tab" data-panel="providers">⬡ Providers</div>
+      <div class="tb-tab" data-panel="bridge">⇄ Bridge</div>
+      <div class="tb-tab" data-panel="forge">⚙ Forge</div>
+      <div class="tb-tab" data-panel="providers">⬡ Providers</div>
     </div>
     <div class="tb-right">
       <div class="tb-status"><div class="tb-dot" id="dot-idearium"></div><span>Idearium :4800</span></div>
@@ -586,6 +591,165 @@ select.fi option{background:var(--surface);}
     <input class="cli-input" id="cli-input" placeholder="pipeline list | seam compile 'make x=1' | idea create 'title' | gap list | jaa stats ..." autocomplete="off" spellcheck="false">
   </div>
 </div>
+<!-- FORGE PANEL -->
+<div class="panel" id="panel-forge">
+  <div class="ph"><span class="pt">⚙ Forge — AI Self-Modification</span>
+    <span style="font-size:9px;color:var(--muted);margin-left:auto">guardian 7820 → ollama 11434</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;flex:1;overflow:hidden">
+    <div style="display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden">
+      <div class="pb" style="flex:1;overflow-y:auto">
+        <select id="forge-type" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 8px;font:inherit;font-size:11px;margin-bottom:8px;outline:none">
+          <option value="module">forgeModule — rewrite component</option>
+          <option value="gate">forgeGate — new SISO gate</option>
+          <option value="patch">forgePatch — targeted fix</option>
+          <option value="hook">forgeHook — inject hook</option>
+        </select>
+        <div style="font-size:9px;color:var(--muted);margin-bottom:3px">source</div>
+        <textarea id="forge-src" placeholder="paste source to modify…" style="width:100%;height:120px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font:11px/1.6 var(--mono);resize:none;outline:none;display:block;margin-bottom:8px"></textarea>
+        <div style="font-size:9px;color:var(--muted);margin-bottom:3px">instruction</div>
+        <textarea id="forge-instruction" placeholder="what should change?" style="width:100%;height:70px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font:11px/1.6 var(--mono);resize:none;outline:none;display:block;margin-bottom:8px"></textarea>
+        <button onclick="runForge()" style="width:100%;background:var(--amber);border:none;color:#000;padding:7px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">▶ run forge</button>
+        <div id="forge-status" style="font-size:10px;color:var(--muted);margin-top:6px">idle</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;overflow:hidden">
+      <div class="pb" style="flex:1;overflow-y:auto">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:9px;color:var(--muted);text-transform:uppercase">output</span>
+          <div style="display:flex;gap:4px">
+            <button onclick="navigator.clipboard.writeText(document.getElementById('forge-output').textContent)" style="background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:10px;cursor:pointer">⎘</button>
+            <button onclick="document.getElementById('forge-output').textContent='';document.getElementById('forge-status').textContent='idle'" style="background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:10px;cursor:pointer">✕</button>
+          </div>
+        </div>
+        <pre id="forge-output" style="background:var(--bg);border:1px solid var(--border);padding:10px;font:11px/1.6 var(--mono);overflow-y:auto;color:var(--text);white-space:pre-wrap;word-break:break-all;min-height:200px">// forge output</pre>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin:8px 0 4px">session log</div>
+        <div id="forge-log"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROVIDERS PANEL -->
+<div class="panel" id="panel-providers">
+  <div class="ph"><span class="pt">⬡ Providers — Agent Connections</span>
+    <span style="font-size:9px;color:var(--muted);margin-left:auto">WSS :7821 · ChatGPT primary</span></div>
+  <div class="pb">
+    <div id="provider-status" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:16px"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">dispatch job</div>
+        <div style="display:flex;gap:4px;margin-bottom:6px">
+          <select id="job-provider" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:11px;outline:none">
+            <option value="chatgpt">ChatGPT</option>
+            <option value="claude">Claude</option>
+            <option value="ollama">Ollama</option>
+          </select>
+          <select id="job-command" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:11px;outline:none">
+            <option value="code">code</option><option value="chat">chat</option><option value="spec">spec</option>
+          </select>
+        </div>
+        <textarea id="job-prompt" placeholder="prompt…" style="width:100%;height:80px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font:11px/1.6 var(--mono);resize:none;outline:none;display:block;margin-bottom:6px"></textarea>
+        <button onclick="sendJob()" style="background:var(--signal);border:none;color:#000;padding:6px 16px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">▶ send</button>
+        <div id="job-result" style="margin-top:8px;font-size:11px;color:var(--muted)"></div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">active jobs</div>
+        <div id="job-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE PANEL -->
+<div class="panel" id="panel-bridge">
+  <div class="ph">
+    <span class="pt">⇄ Nexus Bridge — tag · queue · push/pull · handshake</span>
+    <span style="font-size:9px;color:var(--muted);margin-left:auto">port 9999 · mounted on all systems</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;height:100%;overflow:hidden;border-top:1px solid var(--border)">
+
+    <!-- Tags -->
+    <div style="display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Tag System</div>
+      <div class="pb" style="flex:1;overflow-y:auto">
+        <div style="display:flex;gap:4px;margin-bottom:8px">
+          <input id="tag-entity-id" placeholder="entityId" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
+          <button onclick="lookupTags()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;font:inherit;font-size:10px;cursor:pointer">lookup</button>
+        </div>
+        <div id="tag-result" style="font-size:10px;color:var(--muted);margin-bottom:10px"></div>
+        <div style="font-size:9px;color:var(--muted);margin-bottom:4px;text-transform:uppercase">add tags</div>
+        <input id="tag-type" placeholder="entityType (idea/job/artifact…)" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;display:block;margin-bottom:4px">
+        <input id="tag-tags" placeholder="tags (comma-sep)" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;display:block;margin-bottom:4px">
+        <button onclick="addTags()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 10px;font:inherit;font-size:10px;cursor:pointer;width:100%">tag entity</button>
+        <div style="font-size:9px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase">find by tag</div>
+        <div style="display:flex;gap:4px">
+          <input id="find-tag" placeholder="tag value" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
+          <button onclick="findByTag()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;font:inherit;font-size:10px;cursor:pointer">find</button>
+        </div>
+        <div id="find-tag-result" style="font-size:10px;color:var(--muted);margin-top:6px;max-height:120px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <!-- Request Queue -->
+    <div style="display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Request Queue</div>
+      <div class="pb" style="flex:1;overflow-y:auto">
+        <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">
+          <button onclick="loadBridgeRequests('pending')"  style="background:var(--bg3);border:1px solid var(--border);color:var(--amber);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">pending</button>
+          <button onclick="loadBridgeRequests('accepted')" style="background:var(--bg3);border:1px solid var(--border);color:var(--signal);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">accepted</button>
+          <button onclick="loadBridgeRequests('complete')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">complete</button>
+          <button onclick="loadBridgeRequests()"           style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">all</button>
+        </div>
+        <div id="bridge-request-list"></div>
+        <div style="font-size:9px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase">submit request</div>
+        <select id="req-type" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;margin-bottom:4px;display:block">
+          <option value="job.dispatch">job.dispatch</option>
+          <option value="idea.create">idea.create</option>
+          <option value="memory.ingest">memory.ingest</option>
+          <option value="gap.open">gap.open</option>
+          <option value="artifact.store">artifact.store</option>
+          <option value="forge.run">forge.run</option>
+          <option value="seam.deliver">seam.deliver</option>
+          <option value="bridge.sync">bridge.sync</option>
+        </select>
+        <div style="display:flex;gap:4px;margin-bottom:4px">
+          <input id="req-from" placeholder="from" value="cockpit" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
+          <input id="req-to"   placeholder="to"   value="guardian" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
+        </div>
+        <textarea id="req-payload" placeholder='{"prompt":"…"}' style="width:100%;height:50px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px;font:10px/1.5 var(--mono);resize:none;outline:none;display:block;margin-bottom:4px"></textarea>
+        <button onclick="submitRequest()" style="width:100%;background:var(--signal);border:none;color:#000;padding:5px;font:inherit;font-size:10px;font-weight:700;cursor:pointer">submit request</button>
+        <div id="req-result" style="font-size:10px;color:var(--muted);margin-top:4px"></div>
+      </div>
+    </div>
+
+    <!-- Push/Pull + Handshake + Health -->
+    <div style="display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Push/Pull · Handshake · Health</div>
+      <div class="pb" style="flex:1;overflow-y:auto">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">subscribe channel</div>
+        <div style="display:flex;gap:4px;margin-bottom:6px">
+          <input id="sub-channel" placeholder="channel (e.g. guardian.job.*)" value="*" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
+          <button onclick="startSubscription()" style="background:var(--bg3);border:1px solid var(--border);color:var(--signal);padding:3px 7px;font:inherit;font-size:10px;cursor:pointer">sub</button>
+        </div>
+        <div id="sub-log" style="max-height:100px;overflow-y:auto;font-size:10px;color:var(--muted);margin-bottom:10px;border:1px solid var(--border);padding:4px"></div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">handshake</div>
+        <select id="hs-system" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;margin-bottom:4px;display:block">
+          <option value="cortex">cortex</option>
+          <option value="guardian">guardian</option>
+          <option value="idearium">idearium</option>
+          <option value="cockpit">cockpit</option>
+        </select>
+        <button onclick="doHandshake()" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:4px;font:inherit;font-size:10px;cursor:pointer;margin-bottom:4px">handshake</button>
+        <div id="hs-result" style="font-size:10px;color:var(--muted);margin-bottom:10px"></div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">bridge health</div>
+        <div id="bridge-health" style="font-size:10px;color:var(--muted)">loading…</div>
+        <button onclick="loadBridgeHealth()" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:3px;font:inherit;font-size:9px;cursor:pointer;margin-top:4px">refresh</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
 'use strict';
@@ -1622,7 +1786,190 @@ function _wireUI(){
   }
 }
 
-window.addEventListener('DOMContentLoaded',boot);
+window.addEventListener('DOMContentLoaded',()=>{
+  boot();
+  loadProviders();
+  setInterval(loadProviders, 10000);
+});
+
+// ── Forge ────────────────────────────────────────────────────────────────────
+async function runForge() {
+  const type = document.getElementById('forge-type').value;
+  const src  = document.getElementById('forge-src').value;
+  const inst = document.getElementById('forge-instruction').value;
+  if(!inst.trim()) { toast('instruction required','warn'); return; }
+  const st = document.getElementById('forge-status');
+  st.textContent = '⚡ running…'; st.style.color = 'var(--amber)';
+  const res = await gapi.req('/command', 'POST', {provider:'ollama', command:type, prompt:inst, content:src}).catch(()=>null);
+  if(res?.jobId) {
+    const logEl = document.getElementById('forge-log');
+    const row = document.createElement('div');
+    row.style = 'font-size:10px;color:var(--muted);padding:2px 0;border-bottom:1px solid var(--border)';
+    row.textContent = new Date().toTimeString().slice(0,8) + ' · ' + type + ' · ' + inst.slice(0,50) + ' · #' + res.jobId.slice(0,8);
+    logEl.prepend(row);
+    let n = 0;
+    const poll = setInterval(async () => {
+      n++;
+      const r = await gapi.req('/response/'+res.jobId).catch(()=>null);
+      if(r?.response || n > 40) {
+        clearInterval(poll);
+        document.getElementById('forge-output').textContent = r?.response || 'no response';
+        st.textContent = r?.response ? '✓ complete' : '✗ timeout';
+        st.style.color = r?.response ? 'var(--signal)' : 'var(--err)';
+      }
+    }, 1500);
+  } else {
+    st.textContent = '✗ failed — guardian offline?'; st.style.color = 'var(--err)';
+  }
+}
+
+// ── Providers ────────────────────────────────────────────────────────────────
+async function loadProviders() {
+  const d = await gapi.req('/providers').catch(()=>null);
+  const p = d?.providers || {};
+  document.getElementById('provider-status').innerHTML = Object.keys(p).length
+    ? Object.entries(p).map(([name,info])=>`
+        <div style="background:var(--bg);border:1px solid ${info.connected?'var(--signal)':'var(--border)'};border-left:3px solid ${info.connected?'var(--signal)':'var(--border)'};padding:10px;border-radius:2px">
+          <div style="font-size:12px;font-weight:600;color:${info.connected?'var(--signal)':'var(--muted)'}">${name}</div>
+          <div style="font-size:10px;color:var(--muted)">${info.connected?'● connected':'○ offline'}</div>
+          ${info.tabId?'<div style="font-size:9px;color:var(--muted)">tab: '+info.tabId.slice(-8)+'</div>':''}
+        </div>`).join('')
+    : '<div style="color:var(--muted);font-size:11px;padding:8px">no providers — install Tampermonkey userscript on chatgpt.com or claude.ai</div>';
+
+  const jobs = await gapi.req('/jobs?limit=10').catch(()=>null);
+  document.getElementById('job-list').innerHTML = (jobs?.jobs||[]).map(j=>`
+    <div style="display:flex;gap:8px;font-size:10px;padding:4px 6px;background:var(--bg);border:1px solid var(--border);border-radius:2px;margin-bottom:2px">
+      <span style="color:var(--muted);width:65px">${j.id?.slice(0,8)||'—'}</span>
+      <span style="color:var(--text);width:70px">${j.provider||'—'}</span>
+      <span style="color:${j.status==='complete'?'var(--signal)':j.status==='error'?'var(--err)':'var(--amber)'}">${j.status||'—'}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)">${(j.prompt||'').slice(0,50)}</span>
+    </div>`).join('') || '<div style="color:var(--muted);font-size:10px">no jobs</div>';
+}
+
+async function sendJob() {
+  const provider = document.getElementById('job-provider').value;
+  const command  = document.getElementById('job-command').value;
+  const prompt   = document.getElementById('job-prompt').value;
+  if(!prompt.trim()) { toast('prompt required','warn'); return; }
+  const res = await gapi.req('/command', 'POST', {provider, command, prompt}).catch(()=>null);
+  const el = document.getElementById('job-result');
+  el.textContent = res?.jobId ? '✓ job #' + res.jobId.slice(0,8) : '✗ failed';
+  el.style.color = res?.jobId ? 'var(--signal)' : 'var(--err)';
+  setTimeout(loadProviders, 1200);
+}
+
+// ── Bridge ───────────────────────────────────────────────────────────────────
+const BRIDGE = 'http://localhost:9999';
+
+async function bapi(path, opts={}) {
+  try { const r=await fetch(BRIDGE+path,opts); return r.ok?r.json():null; } catch(e){return null;}
+}
+
+async function lookupTags() {
+  const id = document.getElementById('tag-entity-id').value.trim();
+  if(!id) return;
+  const d = await bapi('/bridge/tags/'+encodeURIComponent(id));
+  document.getElementById('tag-result').innerHTML = d?.tags?.length
+    ? d.tags.map(t=>`<span style="display:inline-block;background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:1px 5px;margin:1px;font-size:9px">${t}</span>`).join('')
+    : '<span style="color:var(--muted)">no tags</span>';
+}
+
+async function addTags() {
+  const id   = document.getElementById('tag-entity-id').value.trim();
+  const type = document.getElementById('tag-type').value.trim();
+  const tags = document.getElementById('tag-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  if(!id||!tags.length) return;
+  const d = await bapi('/bridge/tags', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({entityId:id,entityType:type||'unknown',system:'cockpit',tags,addedBy:'cockpit'})});
+  lookupTags();
+}
+
+async function findByTag() {
+  const tag = document.getElementById('find-tag').value.trim();
+  if(!tag) return;
+  const d = await bapi('/bridge/tags?tag='+encodeURIComponent(tag));
+  document.getElementById('find-tag-result').innerHTML = (d?.entities||[]).map(e=>`
+    <div style="padding:3px 0;border-bottom:1px solid var(--border)">
+      <span style="color:var(--text)">${e.entityId?.slice(0,16)||'—'}</span>
+      <span style="color:var(--muted);margin-left:6px">${e.entityType||'—'} · ${e.system||'—'}</span>
+    </div>`).join('') || '<span style="color:var(--muted)">none found</span>';
+}
+
+async function loadBridgeRequests(status='') {
+  const d = await bapi('/bridge/requests' + (status?'?status='+status:''));
+  document.getElementById('bridge-request-list').innerHTML = (d?.requests||[]).slice(-20).reverse().map(r=>`
+    <div style="background:var(--bg);border:1px solid var(--border);border-left:3px solid ${r.status==='pending'?'var(--amber)':r.status==='complete'?'var(--signal)':r.status==='rejected'?'var(--err)':'var(--border)'};padding:5px 7px;margin-bottom:3px;border-radius:2px">
+      <div style="display:flex;justify-content:space-between;font-size:10px">
+        <span style="color:var(--text)">${r.type}</span>
+        <span style="color:${r.status==='pending'?'var(--amber)':r.status==='complete'?'var(--signal)':'var(--err)'}">${r.status}</span>
+      </div>
+      <div style="font-size:9px;color:var(--muted)">${r.from} → ${r.to} · ${r.uuid?.slice(0,8)}</div>
+      ${r.status==='pending'?`<div style="display:flex;gap:3px;margin-top:3px">
+        <button onclick="actRequest('${r.uuid}','accept')" style="background:var(--signal);border:none;color:#000;padding:1px 6px;font:inherit;font-size:9px;cursor:pointer">accept</button>
+        <button onclick="actRequest('${r.uuid}','reject')" style="background:var(--err);border:none;color:#fff;padding:1px 6px;font:inherit;font-size:9px;cursor:pointer">reject</button>
+      </div>`:''}
+    </div>`).join('') || '<div style="color:var(--muted);font-size:10px">no requests</div>';
+}
+
+async function actRequest(uuid, action) {
+  await bapi('/bridge/requests/'+uuid+'/'+action, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({by:'cockpit'})});
+  loadBridgeRequests();
+}
+
+async function submitRequest() {
+  const type    = document.getElementById('req-type').value;
+  const from    = document.getElementById('req-from').value||'cockpit';
+  const to      = document.getElementById('req-to').value||'guardian';
+  let   payload = {};
+  try { payload = JSON.parse(document.getElementById('req-payload').value||'{}'); } catch(_){}
+  const d = await bapi('/bridge/requests', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,from,to,payload})});
+  const el = document.getElementById('req-result');
+  el.textContent = d?.ok ? '✓ submitted: '+d.request?.uuid?.slice(0,8) : '✗ failed';
+  el.style.color = d?.ok ? 'var(--signal)' : 'var(--err)';
+  setTimeout(() => loadBridgeRequests('pending'), 500);
+}
+
+let bridgeSse = null;
+function startSubscription() {
+  const channel = document.getElementById('sub-channel').value || '*';
+  if(bridgeSse) { bridgeSse.close(); bridgeSse=null; }
+  bridgeSse = new EventSource(BRIDGE+'/bridge/subscribe?channel='+encodeURIComponent(channel));
+  const log = document.getElementById('sub-log');
+  bridgeSse.onmessage = e => {
+    try {
+      const d = JSON.parse(e.data);
+      const row = document.createElement('div');
+      row.style = 'padding:1px 0;border-bottom:1px solid rgba(37,37,48,.3)';
+      row.textContent = new Date().toTimeString().slice(0,8)+' '+d.type;
+      log.prepend(row);
+      if(log.children.length>30) log.lastChild.remove();
+    } catch(_){}
+  };
+}
+
+async function doHandshake() {
+  const systemId = document.getElementById('hs-system').value;
+  const secrets  = {cortex:'nexus-cortex-internal-v1',guardian:'nexus-guardian-internal-v1',idearium:'nexus-idearium-internal-v1',cockpit:'nexus-cockpit-internal-v1'};
+  const d = await bapi('/bridge/handshake', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemId,appId:systemId,secret:secrets[systemId]||''})});
+  const el = document.getElementById('hs-result');
+  el.textContent = d?.ok ? '✓ token: '+d.token?.slice(0,16)+'… exp: '+new Date(d.expiresAt).toTimeString().slice(0,8) : '✗ failed: '+(d?.error||'bridge offline');
+  el.style.color = d?.ok ? 'var(--signal)' : 'var(--err)';
+}
+
+async function loadBridgeHealth() {
+  const d = await bapi('/bridge/health');
+  const el = document.getElementById('bridge-health');
+  if(!d) { el.textContent = '✗ bridge offline — node bridge/nexus-bridge.js'; el.style.color='var(--err)'; return; }
+  el.innerHTML = `<div style="color:var(--signal)">● online</div>
+    <div>sessions: ${d.sessions} · pending: ${d.pendingRequests}</div>
+    <div>events ring: ${d.recentEvents}</div>
+    <div style="margin-top:4px">${(d.systems||[]).map(s=>`<span style="display:inline-block;background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:1px 5px;margin:1px;font-size:9px">${s}</span>`).join('')}</div>`;
+}
+
+// Init bridge panel
+loadBridgeHealth();
+loadBridgeRequests('pending');
+setInterval(loadBridgeHealth, 15000);
+setInterval(() => loadBridgeRequests('pending'), 8000);
 </script>
 </body>
 </html>

@@ -75,9 +75,12 @@ ioStream.register(new Gate('io.compile', (ev) => {
       gaps: result.gaps, noise: result.noise.length,
       regime: result.kernel.status().regime,
       ir: {
-        compartments: result.ir.compartments.length,
-        loops: result.ir.loops.length,
-        gaps: result.ir.gaps.length,
+        compartments: result.ir.compartments,
+        loops:        result.ir.loops,
+        signals:      result.ir.signals,
+        gaps:         result.ir.gaps,
+        laws:         result.ir.laws,
+        meta:         { keywords_used: [...(result.ir.meta.keywords_used||[])] },
       },
     }));
   } catch(err) {
@@ -95,6 +98,13 @@ ioStream.register(new Gate('io.check', (ev) => {
     compilerStream.emit(new Event('compiler.check', {
       filename, snr, valid: validation.valid,
       gaps: validation.gaps, noise: noise.length, passed: passed.length,
+      ir: {
+        compartments: ir.compartments,
+        loops:        ir.loops,
+        signals:      ir.signals,
+        gaps:         ir.gaps,
+        laws:         ir.laws,
+      },
     }));
   } catch(err) {
     compilerStream.emit(new Event('compiler.error', { filename, error: err.message }));

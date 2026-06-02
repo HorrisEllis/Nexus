@@ -8,7 +8,8 @@
 //
 // No kernel bus bridging in v5.0. JAA is the source of truth.
 
-const http = require('http');
+const http   = require('http');
+const bridge = (() => { try { return require('../../bridge/nexus-bridge'); } catch(_) { return null; } })();
 const { jaaDB, uid } = require('../memory/jaa-db');
 const { core }       = require('./cobalt-core');
 
@@ -27,7 +28,8 @@ class AdminServer {
     this._server = http.createServer((req, res) => this._handle(req, res));
 
     await new Promise((resolve, reject) => {
-      this._server.listen(this._port, '127.0.0.1', (err) => {
+      if (bridge) bridge.mount(this._server, 'cortex');
+    this._server.listen(this._port, '127.0.0.1', (err) => {
         if (err) reject(err);
         else resolve();
       });
@@ -85,6 +87,45 @@ class AdminServer {
     try {
       switch (true) {
         // ── GET /health ──────────────────────────────────────────────────────
+        case route === 'GET /' || route === 'GET /cortex' || route === 'GET /cortex/': {
+          const uiPath = require('path').join(__dirname, '..', '..', 'ui', 'cortex.html');
+          const fs2 = require('fs');
+          if (fs2.existsSync(uiPath)) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(fs2.readFileSync(uiPath, 'utf8'));
+          } else {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end('<html><body style="background:#0d0d0f;color:#e4e4ea;font-family:monospace;padding:40px"><h2>⬡ CORTEX</h2><p>UI not found at ' + uiPath + '</p></body></html>');
+          }
+          break;
+        }
+        // ── Bridge proxy routes ────────────────────────────────────────────
+        case route === 'GET /api/bridge/health': {
+          const b = bridge ? { ok:true, bridge:'mounted' } : { ok:false, bridge:'not loaded' };
+          this._json(res, 200, b); break;
+        }
+        case route === 'GET /api/tags': {
+          const entityId = url.searchParams.get('entityId');
+          const tag      = url.searchParams.get('tag');
+          if (entityId && bridge) { this._json(res, 200, { ok:true, tags: bridge.getTags(entityId) }); }
+          else if (tag && bridge) { this._json(res, 200, { ok:true, entities: bridge.findByTag(tag) }); }
+          else { this._json(res, 400, { ok:false, error:'entityId or tag required' }); }
+          break;
+        }
+        case route === 'POST /api/tags': {
+          const b = await this._body(req);
+          if (bridge) bridge.tag(b.entityId, b.entityType, b.system, b.tags, b.addedBy);
+          this._json(res, 200, { ok:true }); break;
+        }
+        case route === 'GET /api/bridge/requests': {
+          const filter = Object.fromEntries(url.searchParams);
+          this._json(res, 200, { ok:true, requests: bridge ? bridge.listRequests(filter) : [] }); break;
+        }
+        case route === 'POST /api/bridge/broadcast': {
+          const b = await this._body(req);
+          if (bridge) bridge.broadcast(b);
+          this._json(res, 200, { ok:true }); break;
+        }
         case route === 'GET /health': {
           const last = jaaDB.tail('event_log', 1);
           res.writeHead(200, { 'Content-Type': 'application/json' });

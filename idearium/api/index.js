@@ -14,6 +14,9 @@
  */
 
 import http         from 'http';
+import { createRequire } from 'module';
+const _require = createRequire(import.meta.url);
+const bridge   = (() => { try { return _require('../../bridge/nexus-bridge'); } catch(_) { return null; } })();
 import { getIdeaOS, VERSION } from '../core/index.js';
 
 const PORT    = 4800;
@@ -89,6 +92,11 @@ function matchRoute(method, url) {
     }
     if (match) return { action, params };
   }
+
+  // Bridge routes
+  if (method === 'GET' && clean === '/api/bridge/health') return { action: 'bridge.health', params: {} };
+  if (method === 'GET' && clean === '/api/bridge/requests') return { action: 'bridge.requests', params: {} };
+  if (method === 'POST' && clean === '/api/bridge/request') return { action: 'bridge.request', params: {} };
 
   // Dynamic routes
   const dynRoutes = [
@@ -166,6 +174,7 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ideas: os.ideas(query) });
 
     case 'idea.create': {
+        // bridge sync happens after idea is created — see below
       const { text, tags, compartment } = body;
       if (!text) return err(res, 400, 'text required');
       const ev = os.emit('idearium.idea.create', { text, tags: tags||[], compartment: compartment||null, source: 'api' });
@@ -301,6 +310,7 @@ async function handle(req, res, route, query, body) {
       return ok(res, { snapshots: os.snapshots().slice(0, 50) });
 
     case 'snapshot.push': {
+        // bridge: sync to cortex versionium
       os.emit('idearium.snapshot.commit', { message: body.message||'snapshot', branch: body.branch||'main', author:'api' });
       return ok(res, { snapshot: os.snapshots()[0] });
     }
@@ -358,6 +368,24 @@ export function startAPI() {
       os.addSSEClient(res);
       // Send current state immediately on connect
       res.write(`data: ${JSON.stringify({ type:'idearium.ready', payload: os.stats(), ts: Date.now() })}\n\n`);
+      return;
+    }
+
+    // Serve UI
+    const cleanUrl = req.url.split('?')[0];
+    if (req.method === 'GET' && (cleanUrl === '/' || cleanUrl === '/idearium' || cleanUrl === '/ui')) {
+      const { readFileSync, existsSync } = await import('fs');
+      const { join, dirname } = await import('path');
+      const { fileURLToPath } = await import('url');
+      const __d = dirname(fileURLToPath(import.meta.url));
+      const uiPath = join(__d, '..', '..', 'ui', 'idearium.html');
+      if (existsSync(uiPath)) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(readFileSync(uiPath, 'utf8'));
+      } else {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<html><body style="background:#0a0a0c;color:#e2e2ea;font-family:monospace;padding:40px"><h2>◈ IDEARIUM</h2><p>UI not built yet</p></body></html>');
+      }
       return;
     }
 

@@ -10,9 +10,11 @@
     "emerge": "node emerge/emerge-ide.js",
     "cli": "node cortex/cortex.js",
     "guardian-cli": "node guardian/cli.js",
-    "start": "npm run cortex & npm run guardian & npm run idearium & npm run emerge",
+    "start": "npm run bridge & npm run cortex & npm run guardian & npm run idearium & npm run emerge",
     "test": "node tests/kernel.test.js",
-    "test:watch": "node --watch tests/kernel.test.js"
+    "test:watch": "node --watch tests/kernel.test.js",
+    "bridge": "node bridge/nexus-bridge.js",
+    "start:core": "npm run bridge & npm run cortex & npm run guardian"
   },
   "engines": {
     "node": ">=18"
