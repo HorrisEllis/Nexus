@@ -39,7 +39,7 @@ class AdminServer {
     this._sseTimer = setInterval(() => this._pushSSE(), 1000);
     this._sseTimer.unref();
 
-    console.log(`[AdminServer] listening on http://127.0.0.1:${this._port}`);
+    // url printed by boot.js
   }
 
   async stop() {

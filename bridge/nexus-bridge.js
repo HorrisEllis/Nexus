@@ -595,7 +595,7 @@ function mount(server, systemId) {
     }
     if (orig) orig(req, res);
   });
-  console.log(`[bridge] mounted on ${systemId} — /bridge/* routes active`);
+  console.log(`[90m[bridge][0m mounted on ${systemId}`);
 
   // Auto-register system with bridge
   broadcastAll({ type: 'bridge.system.mounted', systemId, ts: Date.now() });
@@ -614,8 +614,18 @@ function start(port = BRIDGE_PORT) {
 
   _server = http.createServer(buildBridgeHandler);
   _server.listen(port, '127.0.0.1', () => {
-    console.log(`[bridge] standalone server on http://127.0.0.1:${port}`);
-    console.log(`[bridge] endpoints: handshake, tags, requests, subscribe, pull, broadcast, forward, health, stats`);
+    console.log('');
+    console.log('\x1b[1m\x1b[33m⬡  NEXUS BRIDGE\x1b[0m  v1.0');
+    console.log('');
+    console.log(`   \x1b[90mHTTP      \x1b[0m  http://127.0.0.1:${port}`);
+    console.log(`   \x1b[90mHealth    \x1b[0m  http://127.0.0.1:${port}/bridge/health`);
+    console.log(`   \x1b[90mRequests  \x1b[0m  http://127.0.0.1:${port}/bridge/requests`);
+    console.log(`   \x1b[90mSubscribe \x1b[0m  http://127.0.0.1:${port}/bridge/subscribe?channel=*`);
+    console.log('');
+    console.log(`   \x1b[90mEndpoints \x1b[0m  handshake  tags  requests  subscribe  pull  broadcast  forward`);
+    console.log('');
+    console.log(`   \x1b[90mCLI       \x1b[0m  nexus bridge health`);
+    console.log('');
   });
   return bridge;
 }

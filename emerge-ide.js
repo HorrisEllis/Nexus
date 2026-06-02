@@ -237,12 +237,15 @@ const server = http.createServer((req, res) => {
 
 // 1. Start the server
 server.listen(PORT, () => {
-  console.log(`\n⬡  EMERGE IDE\n`);
-  console.log(`   http://localhost:${PORT}`);
-  console.log(`   model: ${DEF_MODEL}`);
-  console.log(`   spec:  ${kernel.SCHEMA.keywords.size} keywords, ${kernel.SCHEMA.axioms.size} axioms`);
-  console.log(`\n   voice: press V in the IDE to toggle`);
-  console.log(`   drop .eg / .emerge / .spec onto the editor\n`);
+  console.log('');
+  console.log('\x1b[1m\x1b[32m⬡  EMERGE IDE\x1b[0m  v1.0');
+  console.log('');
+  console.log(`   \x1b[90mIDE       \x1b[0m  http://localhost:${PORT}`);
+  console.log(`   \x1b[90mSpec      \x1b[0m  ${kernel.SCHEMA.keywords.size} keywords · ${kernel.SCHEMA.axioms.size} axioms · ${kernel.SCHEMA.gap_types ? kernel.SCHEMA.gap_types.size : 0} gap types`);
+  console.log(`   \x1b[90mModel     \x1b[0m  ${DEF_MODEL}`);
+  console.log(`   \x1b[90mVoice     \x1b[0m  press V in IDE to toggle`);
+  console.log(`   \x1b[90mDrop      \x1b[0m  .eg / .emerge / .spec onto the editor`);
+  console.log('');
   uiStream.emit(new Event('eidolon.ready', { port: PORT }));
 });
 

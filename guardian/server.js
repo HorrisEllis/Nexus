@@ -410,8 +410,7 @@ wss.on('connection', (ws, req) => {
 });
 
 httpsServer.listen(WSS_PORT, '127.0.0.1', () => {
-  console.log(`[guardian] WSS server on wss://127.0.0.1:${WSS_PORT}`);
-  console.log(`[guardian] ⚠  FIRST RUN: visit https://127.0.0.1:${WSS_PORT}/ in your browser and accept the cert warning`);
+  // WSS up — print full banner when HTTP also up
 });
 
 // ── SSE clients ───────────────────────────────────────────────────────────────
@@ -607,8 +606,33 @@ function runTest(){
 });
 
 server.listen(HTTP_PORT, '127.0.0.1', () => {
-  console.log(`[guardian] HTTP API on http://127.0.0.1:${HTTP_PORT}`);
-  console.log(`[guardian] Ready.\n`);
+  const _lip = (() => {
+    try {
+      const ifaces = require('os').networkInterfaces();
+      for (const [,addrs] of Object.entries(ifaces)) {
+        for (const a of addrs) { if (a.family==='IPv4' && !a.internal) return a.address; }
+      }
+    } catch(_) {}
+    return null;
+  })();
+  console.log('');
+  console.log('\x1b[1m\x1b[35m⬡  NEXUS GUARDIAN\x1b[0m  v9.0');
+  console.log('');
+  console.log(`   \x1b[90mHTTP API  \x1b[0m  http://127.0.0.1:${HTTP_PORT}`);
+  console.log(`   \x1b[90mCockpit   \x1b[0m  http://127.0.0.1:${HTTP_PORT}/cockpit`);
+  console.log(`   \x1b[90mSSE       \x1b[0m  http://127.0.0.1:${HTTP_PORT}/events`);
+  console.log(`   \x1b[90mWSS       \x1b[0m  wss://127.0.0.1:${WSS_PORT}   \x1b[33m← userscripts connect here\x1b[0m`);
+  console.log(`   \x1b[90mDropzone  \x1b[0m  http://127.0.0.1:${DROPZONE_PORT}${_lip ? `  (LAN: http://${_lip}:${DROPZONE_PORT})` : ''}`);
+  console.log(`   \x1b[90mMemory    \x1b[0m  http://127.0.0.1:${process.env.MEMORY_PORT||7823}`);
+  console.log('');
+  console.log(`   \x1b[90mUserscript\x1b[0m  \x1b[33minstall guardian/userscript-chatgpt.js in Tampermonkey on chatgpt.com\x1b[0m`);
+  console.log(`              \x1b[33minstall guardian/userscript-claude.js in Tampermonkey on claude.ai\x1b[0m`);
+  console.log('');
+  console.log(`   \x1b[33m⚠  WSS cert\x1b[0m  visit https://127.0.0.1:${WSS_PORT}/ once to accept self-signed cert`);
+  console.log('');
+  console.log(`   \x1b[90mCLI       \x1b[0m  nexus guardian dispatch --prompt="..." --provider=chatgpt`);
+  console.log(`              nexus guardian providers`);
+  console.log('');
 });
 
 // ── DROPZONE server ───────────────────────────────────────────────────────────
@@ -2564,10 +2588,7 @@ setInterval(()=>{load();tick()},10000);load();tick();
 
   memServer.listen(MEMORY_PORT, MEMORY_HOST, () => {
     const ips = getLocalIPs();
-    console.log(`[memory]   Dashboard: http://127.0.0.1:${MEMORY_PORT}`);
-    ips.forEach(ip => console.log(`[memory]   LAN:       http://${ip.address}:${MEMORY_PORT}  (${ip.name})`));
-    console.log(`[memory]   Store:     ${STORE_DIR}`);
-    console.log(`[memory]   Loaded:    ${memArtifacts.length} artifacts, ${memLedger.length} events`);
+
   });
 
   memServer.on('error', err => {

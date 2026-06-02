@@ -1,622 +1,619 @@
 #!/usr/bin/env node
 'use strict';
 // ════════════════════════════════════════════════════════════════════════════
-// nexus — Unified CLI
-// UUID: nexus-cli-v1-0-0
-// Routes all commands to the right system via HTTP.
-// Every feature exists here before it exists in any UI.
+// nexus — Unified CLI  v2.0
+// UUID: nexus-cli-v2-0-0
+//
+// One entry point. Every system reachable two ways:
+//
+//   nexus <command>          — unified commands (nexus status, nexus jobs, ...)
+//   nexus /guardian <args>   — pass-through to guardian/cli.js directly
+//   nexus /cockpit <args>    — pass-through to cockpit/cli.js (forge commands)
+//   nexus /cortex <args>     — pass-through to cortex/cortex.js
+//   nexus /idearium <args>   — pass-through to idearium/cli/index.js
+//   nexus /ollama <args>     — ollama direct commands
+//   nexus /bridge <args>     — bridge direct commands
+//
 // ════════════════════════════════════════════════════════════════════════════
 
-const http = require('http');
-const https = require('https');
-const fs   = require('fs');
-const path = require('path');
+const http  = require('http');
+const fs    = require('fs');
+const path  = require('path');
+const { spawnSync } = require('child_process');
 
-const SYSTEMS = {
-  bridge:   { port: 9999, host: '127.0.0.1', label: 'Bridge' },
-  cortex:   { port: 3748, host: '127.0.0.1', label: 'Cortex' },
-  guardian: { port: 7820, host: '127.0.0.1', label: 'Guardian' },
-  idearium: { port: 4800, host: '127.0.0.1', label: 'Idearium' },
-  emerge:   { port: 4242, host: '127.0.0.1', label: 'Emerge IDE' },
-  ollama:   { port: 11434, host: '127.0.0.1', label: 'Ollama' },
-};
+const ROOT   = path.join(__dirname, '..');
+const args   = process.argv.slice(2);
+const JSON_  = args.includes('--json');
 
+// ── Color palette ─────────────────────────────────────────────────────────────
 const C = {
   reset:  '\x1b[0m',  bold:   '\x1b[1m',
   green:  '\x1b[32m', red:    '\x1b[31m', yellow: '\x1b[33m',
   cyan:   '\x1b[36m', muted:  '\x1b[90m', white:  '\x1b[37m',
-  blue:   '\x1b[34m', purple: '\x1b[35m',
+  blue:   '\x1b[34m', purple: '\x1b[35m', teal:   '\x1b[36m',
 };
 
-const args = process.argv.slice(2);
-const jsonMode = args.includes('--json');
-const arg = (i) => args[i];
+const SYSTEMS = {
+  bridge:   { port: 9999,  label: 'Bridge',    color: C.yellow },
+  cortex:   { port: 3748,  label: 'Cortex',    color: C.cyan   },
+  guardian: { port: 7820,  label: 'Guardian',  color: C.purple },
+  idearium: { port: 4800,  label: 'Idearium',  color: C.blue   },
+  emerge:   { port: 4242,  label: 'Emerge',    color: C.green  },
+  ollama:   { port: 11434, label: 'Ollama',    color: C.green  },
+};
 
 // ── HTTP helpers ──────────────────────────────────────────────────────────────
-function req(system, method, urlPath, body, timeout = 5000) {
-  return new Promise((resolve) => {
-    const sys = SYSTEMS[system];
-    if (!sys) return resolve({ ok: false, error: `Unknown system: ${system}` });
-    const payload = body ? JSON.stringify(body) : null;
-    const options = {
-      hostname: sys.host, port: sys.port, path: urlPath, method,
-      headers: { 'Content-Type': 'application/json', ...(payload ? { 'Content-Length': Buffer.byteLength(payload) } : {}) },
+function req(sys, method, p, body, timeout = 5000) {
+  return new Promise(resolve => {
+    const s = SYSTEMS[sys];
+    if (!s) return resolve({ ok: false, error: `unknown: ${sys}` });
+    const pl = body ? JSON.stringify(body) : null;
+    const opts = {
+      hostname: '127.0.0.1', port: s.port, path: p, method,
+      headers: { 'Content-Type': 'application/json', ...(pl ? { 'Content-Length': Buffer.byteLength(pl) } : {}) },
     };
-    const r = http.request(options, (res) => {
-      let data = '';
-      res.on('data', c => data += c);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch(_) { resolve({ ok: res.statusCode < 400, raw: data }); }
-      });
+    const r = http.request(opts, res => {
+      let d = ''; res.on('data', c => d += c);
+      res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve({ ok: res.statusCode < 400, raw: d }); } });
     });
-    r.setTimeout(timeout, () => { r.destroy(); resolve({ ok: false, error: `${system} timeout` }); });
-    r.on('error', e => resolve({ ok: false, error: `${sys.label} offline: ${e.message}` }));
-    if (payload) r.write(payload);
+    r.setTimeout(timeout, () => { r.destroy(); resolve({ ok: false, error: `${s.label} timeout` }); });
+    r.on('error', e => resolve({ ok: false, error: `${s.label} offline: ${e.message}` }));
+    if (pl) r.write(pl);
     r.end();
   });
 }
+const GET  = (s, p)    => req(s, 'GET',  p);
+const POST = (s, p, b) => req(s, 'POST', p, b);
 
-const get  = (sys, path)       => req(sys, 'GET',  path);
-const post = (sys, path, body) => req(sys, 'POST', path, body);
+// ── Output ────────────────────────────────────────────────────────────────────
+const out   = d  => JSON_ ? console.log(JSON.stringify(d, null, 2)) : (typeof d === 'string' ? console.log(d) : console.log(JSON.stringify(d, null, 2)));
+const ok    = m  => console.log(`${C.green}✓${C.reset} ${m}`);
+const fail  = m  => console.log(`${C.red}✗${C.reset} ${m}`);
+const info  = m  => console.log(`${C.muted}·${C.reset} ${m}`);
+const hdr   = m  => console.log(`\n${C.bold}${C.cyan}${m}${C.reset}`);
+const row   = (k, v, col = C.white) => console.log(`  ${C.muted}${k.padEnd(18)}${C.reset}${col}${v}${C.reset}`);
+const arg   = i  => args[i];
+const flag  = f  => args.find(a => a.startsWith(`--${f}=`))?.slice(f.length + 3);
+const rest  = () => args.filter(a => !a.startsWith('--')).slice(1).join(' ');
 
-// ── Output helpers ────────────────────────────────────────────────────────────
-function out(data) {
-  if (jsonMode) { console.log(JSON.stringify(data, null, 2)); return; }
-  if (typeof data === 'string') { console.log(data); return; }
-  console.log(JSON.stringify(data, null, 2));
+// ── /module pass-through ──────────────────────────────────────────────────────
+// nexus /guardian status  →  node guardian/cli.js status
+// nexus /cockpit pipeline list  →  node cockpit/cli.js pipeline list
+// nexus /cortex gaps  →  node cortex/cortex.js gaps
+// nexus /idearium idea list  →  node idearium/cli/index.js idea list
+
+const MODULE_CLI = {
+  '/guardian': path.join(ROOT, 'guardian/cli.js'),
+  '/cockpit':  path.join(ROOT, 'cockpit/cli.js'),
+  '/forge':    path.join(ROOT, 'cockpit/cli.js'),   // alias
+  '/cortex':   path.join(ROOT, 'cortex/cortex.js'),
+  '/idearium': path.join(ROOT, 'idearium/cli/index.js'),
+};
+
+function passthrough(cliPath, restArgs) {
+  if (!fs.existsSync(cliPath)) {
+    fail(`CLI not found: ${cliPath}`);
+    process.exit(1);
+  }
+  const result = spawnSync(process.execPath, [cliPath, ...restArgs], {
+    stdio: 'inherit',
+    env: { ...process.env },
+  });
+  process.exit(result.status ?? 0);
 }
 
-function ok(msg)   { console.log(`${C.green}✓${C.reset} ${msg}`); }
-function err(msg)  { console.log(`${C.red}✗${C.reset} ${msg}`); }
-function info(msg) { console.log(`${C.muted}·${C.reset} ${msg}`); }
-function hdr(msg)  { console.log(`\n${C.bold}${C.cyan}${msg}${C.reset}`); }
-function row(k, v, color = C.white) { console.log(`  ${C.muted}${k.padEnd(18)}${C.reset}${color}${v}${C.reset}`); }
-
 // ── Commands ──────────────────────────────────────────────────────────────────
+const CMDS = {
 
-const COMMANDS = {
-
-  // ── STATUS ─────────────────────────────────────────────────────────────────
+  // ── STATUS — all systems at a glance ───────────────────────────────────────
   async status() {
-    hdr('NEXUS STATUS');
-    const checks = [
-      ['bridge',   get('bridge',   '/bridge/health')],
-      ['cortex',   get('cortex',   '/health')],
-      ['guardian', get('guardian', '/health')],
-      ['idearium', get('idearium', '/')],
-      ['emerge',   get('emerge',   '/status')],
-      ['ollama',   get('ollama',   '/api/tags')],
-    ];
-    const results = await Promise.all(checks.map(async ([name, p]) => ({ name, d: await p })));
-    for (const { name, d } of results) {
-      const sys = SYSTEMS[name];
-      const live = d && !d.error;
-      const status = live ? `${C.green}● ONLINE${C.reset}` : `${C.red}○ OFFLINE${C.reset}`;
-      console.log(`  ${status}  ${C.bold}${sys.label.padEnd(12)}${C.reset} ${C.muted}localhost:${sys.port}${C.reset}`);
-      if (live && name === 'cortex' && d.jaa) {
-        const total = Object.values(d.jaa.counts || {}).reduce((a,b) => a+b, 0);
-        info(`         ${total} records across 28 tables`);
+    hdr('NEXUS');
+    const checks = await Promise.all(
+      Object.entries(SYSTEMS).map(async ([name, sys]) => {
+        const start = Date.now();
+        const health = name === 'bridge'  ? '/bridge/health'
+                     : name === 'ollama'  ? '/api/tags'
+                     : '/health';
+        const d = await GET(name, health);
+        return { name, sys, d, ms: Date.now() - start, live: !d.error };
+      })
+    );
+    for (const { name, sys, d, ms, live } of checks) {
+      const dot    = live ? `${C.green}●${C.reset}` : `${C.red}○${C.reset}`;
+      const label  = `${C.bold}${sys.label.padEnd(10)}${C.reset}`;
+      const port   = `${C.muted}:${sys.port}${C.reset}`;
+      const ping   = `${C.muted}${ms}ms${C.reset}`;
+      console.log(`  ${dot}  ${label}  ${port}  ${ping}`);
+      if (live) {
+        if (name === 'cortex' && d.jaa?.counts) {
+          const n = Object.values(d.jaa.counts).reduce((a,b) => a+b, 0);
+          if (n) info(`         ${n} records, ${Object.values(d.jaa.counts).filter(v=>v>0).length} active tables`);
+        }
+        if (name === 'guardian') {
+          const conn = Object.entries(d.providers||{}).filter(([,v]) => v==='connected').map(([k])=>k);
+          if (conn.length) info(`         providers: ${conn.join(', ')}`);
+          const total_queued = Object.values(d.queued||{}).reduce((a,b)=>a+b,0);
+          if (total_queued) info(`         ${C.yellow}${total_queued} jobs queued (waiting for provider)${C.reset}`);
+        }
+        if (name === 'ollama') {
+          const models = (d.models||[]).map(m => m.name);
+          if (models.length) info(`         ${models.join(', ')}`);
+          else info(`         no models — run: nexus /ollama pull qwen2.5-coder:1.5b`);
+        }
+        if (name === 'bridge' && d.pendingRequests > 0) {
+          info(`         ${C.yellow}${d.pendingRequests} pending requests${C.reset}`);
+        }
+      } else {
+        info(`         ${C.red}${d.error}${C.reset}`);
       }
-      if (live && name === 'guardian' && d.providers) {
-        const connected = Object.entries(d.providers).filter(([,v]) => v === 'connected').map(([k]) => k);
-        if (connected.length) info(`         providers: ${connected.join(', ')}`);
-      }
-      if (live && name === 'ollama' && d.models) {
-        info(`         models: ${d.models?.map(m => m.name).join(', ') || '—'}`);
-      }
-      if (!live) info(`         ${d.error || 'not responding'}`);
     }
+    console.log('');
+    info(`nexus help  ·  nexus /guardian  ·  nexus /cockpit  ·  nexus /cortex  ·  nexus /idearium`);
   },
 
-  // ── BRIDGE ─────────────────────────────────────────────────────────────────
-  async 'bridge:health'() {
-    const d = await get('bridge', '/bridge/health');
-    if (d.error) return err(d.error);
-    hdr('BRIDGE HEALTH');
-    row('status',   '● online', C.green);
-    row('sessions', String(d.sessions));
-    row('pending',  String(d.pendingRequests));
-    row('events',   String(d.recentEvents));
-    row('systems',  (d.systems || []).join(', '));
+  // ── HELP ───────────────────────────────────────────────────────────────────
+  help() {
+    console.log(`
+${C.bold}${C.cyan}NEXUS  v2.0${C.reset}  unified CLI
+
+${C.bold}One command, two ways in:${C.reset}
+
+  ${C.bold}nexus <command>${C.reset}          unified commands
+  ${C.bold}nexus /<module> <args>${C.reset}   pass directly to a module's own CLI
+
+${C.bold}Module pass-through (slash prefix):${C.reset}
+
+  nexus ${C.yellow}/guardian${C.reset} [args]       guardian/cli.js — /code /chat /spec jobs watch
+  nexus ${C.purple}/cockpit${C.reset}  [args]       cockpit/cli.js  — pipeline seam idea gap jaa bus
+  nexus ${C.purple}/forge${C.reset}    [args]       alias for /cockpit
+  nexus ${C.cyan}/cortex${C.reset}   [args]       cortex/cortex.js — ask status gaps tail
+  nexus ${C.blue}/idearium${C.reset} [args]       idearium/cli    — idea spec gap push snr
+  nexus ${C.green}/ollama${C.reset}   [args]       ollama direct   — status models pull run
+  nexus ${C.yellow}/bridge${C.reset}   [args]       bridge direct   — health requests tags find
+
+${C.bold}Unified commands:${C.reset}
+
+  nexus status                  all systems health + connection info
+  nexus jobs                    guardian job list
+  nexus dispatch "prompt"       dispatch to chatgpt (default)
+  nexus events [--n=20]         cortex event log tail
+  nexus gaps                    all open gaps
+  nexus stream                  cortex live SSE
+  nexus watch <jobId>           stream guardian job tokens
+  nexus watchdog                live dashboard (all systems, 5s refresh)
+
+  nexus idea "text"             create idea
+  nexus ideas                   list ideas
+  nexus push "message"          snapshot + versionium commit
+  nexus snr                     system SNR
+
+  nexus tag <entityId> --tags=t1,t2
+  nexus tags <entityId>
+  nexus request <type> --from=x --to=x --payload=json
+  nexus requests [--status=pending]
+  nexus accept <uuid>
+  nexus reject <uuid>
+
+${C.bold}Examples:${C.reset}
+
+  nexus /guardian /code chatgpt "refactor this function"
+  nexus /guardian jobs
+  nexus /cockpit pipeline list
+  nexus /cockpit seam compile spec.md
+  nexus /cortex ask "what gaps are open?"
+  nexus /idearium idea add "build something new"
+  nexus /ollama pull qwen2.5-coder:7b
+  nexus /ollama run "explain this code"
+  nexus /bridge requests --status=pending
+
+Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
+`);
   },
 
-  async 'bridge:request'() {
-    const type    = args.find(a => a.startsWith('--type='))?.slice(7) || arg(2);
-    const from    = args.find(a => a.startsWith('--from='))?.slice(7) || 'cli';
-    const to      = args.find(a => a.startsWith('--to='))?.slice(5) || 'guardian';
-    const payRaw  = args.find(a => a.startsWith('--payload='))?.slice(10) || '{}';
-    if (!type) return err('Usage: nexus bridge request <type> --from=<s> --to=<s> --payload=<json>');
-    let payload;
-    try { payload = JSON.parse(payRaw); } catch(_) { return err('Invalid JSON in --payload'); }
-    const d = await post('bridge', '/bridge/requests', { type, from, to, payload });
-    if (d.error) return err(d.error);
-    ok(`Request created: ${d.request?.uuid?.slice(0,8)} status: ${d.request?.status}`);
-    out(d.request);
-  },
-
-  async 'bridge:requests'() {
-    const status = args.find(a => a.startsWith('--status='))?.slice(9) || '';
-    const d = await get('bridge', `/bridge/requests${status ? '?status='+status : ''}`);
-    if (d.error) return err(d.error);
-    const reqs = d.requests || [];
-    hdr(`BRIDGE REQUESTS (${reqs.length})`);
-    for (const r of reqs.slice(-20).reverse()) {
-      const statusColor = r.status === 'pending' ? C.yellow : r.status === 'complete' ? C.green : r.status === 'failed' ? C.red : C.muted;
-      console.log(`  ${C.muted}${r.uuid?.slice(0,8)}${C.reset}  ${statusColor}${r.status.padEnd(10)}${C.reset}  ${r.type.padEnd(20)}  ${C.muted}${r.from} → ${r.to}${C.reset}`);
+  // ── JOBS ───────────────────────────────────────────────────────────────────
+  async jobs() {
+    const status = flag('status') || '';
+    const d = await GET('guardian', `/jobs${status ? '?status='+status : ''}`);
+    if (d.error) return fail(d.error);
+    const jobs = d.jobs || [];
+    hdr(`JOBS (${jobs.length})`);
+    for (const j of jobs.slice(0, 30)) {
+      const sc = j.status==='complete'?C.green : j.status==='failed'?C.red : j.status==='queued'?C.yellow : C.muted;
+      console.log(`  ${C.muted}${(j.id||'').slice(0,8)}${C.reset}  ${sc}${(j.status||'—').padEnd(12)}${C.reset}  ${C.purple}${(j.provider||'—').padEnd(10)}${C.reset}  ${C.muted}${(j.command||'—').padEnd(6)}${C.reset}  ${(j.prompt||'').slice(0,50)}`);
     }
+    if (!jobs.length) info('no jobs — dispatch one: nexus dispatch "your prompt"');
   },
 
-  async 'bridge:accept'() {
-    const uuid = arg(2);
-    if (!uuid) return err('Usage: nexus bridge accept <uuid>');
-    const d = await post('bridge', `/bridge/requests/${uuid}/accept`, { by: 'cli' });
-    if (d.error || !d.ok) return err(d.error || 'failed');
-    ok(`Accepted: ${uuid.slice(0,8)} → ${d.request?.status}`);
+  // ── DISPATCH ───────────────────────────────────────────────────────────────
+  async dispatch() {
+    const provider = flag('provider') || flag('p') || 'chatgpt';
+    const command  = flag('command')  || flag('c') || 'code';
+    const prompt   = flag('prompt') || args.filter(a => !a.startsWith('--') && a !== 'dispatch').join(' ');
+    if (!prompt.trim()) return fail('Usage: nexus dispatch "prompt" [--provider=chatgpt] [--command=code]');
+    const d = await POST('guardian', '/command', { provider, command, prompt });
+    if (d.error) return fail(d.error);
+    ok(`Job created  #${(d.jobId||'').slice(0,8)}  status: ${d.status}`);
+    if (d.status === 'queued') info(`Waiting for ${provider} userscript — install & open chatgpt.com`);
+    else info(`Watch: nexus watch ${d.jobId}`);
   },
 
-  async 'bridge:reject'() {
-    const uuid   = arg(2);
-    const reason = args.find(a => a.startsWith('--reason='))?.slice(9) || '';
-    if (!uuid) return err('Usage: nexus bridge reject <uuid> [--reason=text]');
-    const d = await post('bridge', `/bridge/requests/${uuid}/reject`, { by: 'cli', reason });
-    if (d.error || !d.ok) return err(d.error || 'failed');
-    ok(`Rejected: ${uuid.slice(0,8)}`);
-  },
-
-  async 'bridge:tag'() {
-    const entityId = arg(2);
-    const tagsRaw  = args.find(a => a.startsWith('--tags='))?.slice(7) || '';
-    if (!entityId || !tagsRaw) return err('Usage: nexus bridge tag <entityId> --tags=tag1,tag2');
-    const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
-    const d = await post('bridge', '/bridge/tags', { entityId, entityType: 'entity', system: 'cli', tags, addedBy: 'cli' });
-    if (!d.ok) return err(d.error || 'failed');
-    ok(`Tagged ${entityId}: ${tags.join(', ')}`);
-  },
-
-  async 'bridge:tags'() {
-    const entityId = arg(2);
-    if (!entityId) return err('Usage: nexus bridge tags <entityId>');
-    const d = await get('bridge', `/bridge/tags/${encodeURIComponent(entityId)}`);
-    if (d.error) return err(d.error);
-    hdr(`TAGS: ${entityId}`);
-    (d.tags || []).forEach(t => console.log(`  ${C.cyan}${t}${C.reset}`));
-    if (!d.tags?.length) info('no tags');
-  },
-
-  async 'bridge:find'() {
-    const tag = args.find(a => a.startsWith('--tag='))?.slice(6) || arg(2);
-    if (!tag) return err('Usage: nexus bridge find --tag=<tag>');
-    const d = await get('bridge', `/bridge/tags?tag=${encodeURIComponent(tag)}`);
-    if (d.error) return err(d.error);
-    hdr(`ENTITIES WITH TAG: ${tag}`);
-    (d.entities || []).forEach(e => console.log(`  ${C.muted}${e.entityId?.slice(0,20)}${C.reset}  ${e.entityType}  ${e.system}`));
-    if (!d.entities?.length) info('none found');
-  },
-
-  // ── CORTEX ─────────────────────────────────────────────────────────────────
-  async 'cortex:status'() {
-    const d = await get('cortex', '/health');
-    if (d.error) return err(d.error);
-    hdr('CORTEX STATUS');
-    row('status',  d.status);
-    row('uptime',  Math.round(d.uptime || 0) + 's');
-    row('jaa',     d.jaa?.ready ? 'ready' : 'loading');
-    const total = Object.values(d.jaa?.counts || {}).reduce((a,b) => a+b, 0);
-    row('records', String(total) + ' across 28 tables');
-    if (d.cobalt) {
-      row('bus tick', String(d.cobalt.bus?.tick || 0));
-      row('registry', d.cobalt.registry?.total + ' nodes');
-    }
-  },
-
-  async 'cortex:events'() {
-    const n = args.find(a => a.startsWith('--n='))?.slice(4) || '20';
-    const d = await get('cortex', `/api/events?n=${n}`);
-    if (d.error) return err(d.error);
-    const rows = d.rows || d;
-    if (!Array.isArray(rows)) return err('Unexpected response');
+  // ── EVENTS ─────────────────────────────────────────────────────────────────
+  async events() {
+    const n = flag('n') || '20';
+    const d = await GET('cortex', `/api/events?n=${n}`);
+    if (d.error) return fail(d.error);
+    const rows = Array.isArray(d) ? d : (d.rows || []);
     hdr(`CORTEX EVENTS (${rows.length})`);
     for (const e of rows) {
-      const ts = new Date(e.ts).toTimeString().slice(0,8);
-      console.log(`  ${C.muted}${ts}${C.reset}  ${C.cyan}${e.type?.padEnd(35) || '—'}${C.reset}  ${C.muted}${JSON.stringify(e.payload||{}).slice(0,60)}${C.reset}`);
+      const ts = new Date(e.ts||0).toTimeString().slice(0,8);
+      console.log(`  ${C.muted}${ts}${C.reset}  ${C.cyan}${(e.type||'—').padEnd(36)}${C.reset}  ${C.muted}${JSON.stringify(e.payload||{}).slice(0,60)}${C.reset}`);
     }
   },
 
-  async 'cortex:post'() {
-    const type    = args.find(a => a.startsWith('--type='))?.slice(7);
-    const payRaw  = args.find(a => a.startsWith('--payload='))?.slice(10) || '{}';
-    if (!type) return err('Usage: nexus cortex post --type=x [--payload=json]');
-    let payload;
-    try { payload = JSON.parse(payRaw); } catch(_) { return err('Invalid JSON'); }
-    const d = await post('cortex', '/api/event', { type, payload });
-    if (d.error) return err(d.error);
-    ok(`Event stored: ${d.uuid?.slice(0,8)} type: ${d.type}`);
-  },
-
-  async 'cortex:gaps'() {
-    const status = args.find(a => a.startsWith('--status='))?.slice(9) || '';
-    const d = await get('cortex', `/api/gaps${status ? '?status='+status : ''}`);
-    if (d.error) return err(d.error);
-    const rows = d.rows || d;
-    hdr(`CORTEX GAPS (${rows.length})`);
-    for (const g of rows) {
-      const pressureColor = (g.pressure || 0) > 0.7 ? C.red : (g.pressure || 0) > 0.4 ? C.yellow : C.muted;
-      console.log(`  ${pressureColor}${String((g.pressure||0)*100).slice(0,3)}%${C.reset}  ${C.cyan}${(g.type||'—').padEnd(15)}${C.reset}  ${g.body?.slice(0,60) || g.message?.slice(0,60) || '—'}`);
-    }
-    if (!rows.length) info('no gaps');
-  },
-
-  async 'cortex:memory'() {
-    const query = args.slice(2).filter(a => !a.startsWith('--')).join(' ');
-    if (!query) return err('Usage: nexus cortex memory <query>');
-    const d = await post('cortex', '/api/memory/search', { q: query });
-    if (d.error) return err(d.error);
-    hdr(`MEMORY SEARCH: "${query}"`);
-    (d.results || []).forEach(r => {
-      console.log(`  ${C.white}${r.content?.slice(0,80) || '—'}${C.reset}`);
-      console.log(`  ${C.muted}${r.source} · ${new Date(r.ts||0).toTimeString().slice(0,8)}${C.reset}`);
+  // ── STREAM ─────────────────────────────────────────────────────────────────
+  stream() {
+    hdr('CORTEX LIVE STREAM  (ctrl+c to stop)');
+    const r = http.request({ hostname:'127.0.0.1', port:3748, path:'/sse', method:'GET', headers:{Accept:'text/event-stream'} }, res => {
+      let buf = '';
+      res.on('data', c => {
+        buf += c.toString();
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data:')) continue;
+          try {
+            const d = JSON.parse(line.slice(5).trim());
+            const ts = new Date(d.ts||Date.now()).toTimeString().slice(0,8);
+            console.log(`  ${C.muted}${ts}${C.reset}  ${C.cyan}${(d.type||'event').padEnd(36)}${C.reset}  ${C.muted}${JSON.stringify(d.payload||{}).slice(0,60)}${C.reset}`);
+          } catch(_) {}
+        }
+      });
     });
-    if (!d.results?.length) info('no results');
+    r.on('error', e => { fail(`Cortex: ${e.message}`); process.exit(1); });
+    r.end();
   },
 
-  async 'cortex:tail'() {
-    const table = arg(2) || 'event_log';
-    const n     = arg(3) || '20';
-    const d     = await get('cortex', `/api/memory?table=${table}&n=${n}`);
-    if (d.error) return err(d.error);
-    const rows = d.rows || d;
-    hdr(`CORTEX TABLE: ${table} (${rows.length})`);
-    out(rows);
-  },
-
-  // ── GUARDIAN ───────────────────────────────────────────────────────────────
-  async 'guardian:dispatch'() {
-    const provider = args.find(a => a.startsWith('--provider='))?.slice(11) || 'chatgpt';
-    const command  = args.find(a => a.startsWith('--command='))?.slice(10) || 'code';
-    const prompt   = args.find(a => a.startsWith('--prompt='))?.slice(9) ||
-                     args.filter(a => !a.startsWith('--') && !['dispatch','guardian'].includes(a)).join(' ');
-    if (!prompt) return err('Usage: nexus guardian dispatch --prompt="..." [--provider=chatgpt] [--command=code]');
-    const d = await post('guardian', '/command', { provider, command, prompt });
-    if (d.error) return err(d.error);
-    if (!d.ok && d.error) return err(d.error);
-    ok(`Job created: ${d.jobId?.slice(0,8)} status: ${d.status || d.ok}`);
-    info(`Watch: nexus guardian watch ${d.jobId}`);
-  },
-
-  async 'guardian:jobs'() {
-    const status = args.find(a => a.startsWith('--status='))?.slice(9) || '';
-    const d = await get('guardian', `/jobs${status ? '?status='+status : ''}`);
-    if (d.error) return err(d.error);
-    const jobs = d.jobs || [];
-    hdr(`GUARDIAN JOBS (${jobs.length})`);
-    for (const j of jobs.slice(0,20)) {
-      const sc = j.status === 'complete' ? C.green : j.status === 'failed' ? C.red : C.yellow;
-      console.log(`  ${C.muted}${j.id?.slice(0,8)}${C.reset}  ${sc}${j.status?.padEnd(12)}${C.reset}  ${C.cyan}${j.provider?.padEnd(10)}${C.reset}  ${j.command?.padEnd(6)}  ${C.muted}${(j.prompt||'').slice(0,50)}${C.reset}`);
-    }
-    if (!jobs.length) info('no jobs');
-  },
-
-  async 'guardian:status'() {
-    const jobId = arg(2);
-    if (!jobId) return err('Usage: nexus guardian status <jobId>');
-    const d = await get('guardian', `/status/${jobId}`);
-    if (d.error) return err(d.error);
-    hdr('JOB STATUS');
-    row('id',       d.job?.id?.slice(0,8) || jobId.slice(0,8));
-    row('status',   d.job?.status || '—');
-    row('provider', d.job?.provider || '—');
-    row('command',  d.job?.command || '—');
-  },
-
-  async 'guardian:response'() {
-    const jobId = arg(2);
-    if (!jobId) return err('Usage: nexus guardian response <jobId>');
-    const d = await get('guardian', `/response/${jobId}`);
-    if (d.error) return err(d.error);
-    hdr('JOB RESPONSE');
-    row('status',   d.status || '—');
-    row('complete', String(d.complete));
-    if (d.response) console.log('\n' + d.response + '\n');
-    else info('no response yet');
-  },
-
-  async 'guardian:watch'() {
-    const jobId = arg(2);
-    if (!jobId) return err('Usage: nexus guardian watch <jobId>');
-    const sys = SYSTEMS.guardian;
-    hdr(`WATCHING JOB ${jobId.slice(0,8)}`);
-    info('streaming response... (ctrl+c to stop)');
-    console.log('');
-
-    const options = {
-      hostname: sys.host, port: sys.port,
-      path: `/stream/${jobId}`, method: 'GET',
-      headers: { Accept: 'text/event-stream', 'Cache-Control': 'no-cache' },
-    };
-    const req = http.request(options, (res) => {
-      let buffer = '';
-      res.on('data', chunk => {
-        buffer += chunk.toString();
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
+  // ── WATCH ──────────────────────────────────────────────────────────────────
+  watch() {
+    const jobId = args.find(a => !a.startsWith('--') && a !== 'watch');
+    if (!jobId) return fail('Usage: nexus watch <jobId>');
+    hdr(`WATCHING JOB ${jobId.slice(0,8)}  (ctrl+c to stop)`);
+    const r = http.request({ hostname:'127.0.0.1', port:7820, path:`/stream/${jobId}`, method:'GET', headers:{Accept:'text/event-stream'} }, res => {
+      let buf = '';
+      res.on('data', c => {
+        buf += c.toString();
+        const lines = buf.split('\n'); buf = lines.pop();
         for (const line of lines) {
           if (!line.startsWith('data:')) continue;
           try {
             const d = JSON.parse(line.slice(5).trim());
             if (d.text) process.stdout.write(d.text);
-            if (d.complete) { console.log('\n'); ok('Job complete'); process.exit(0); }
-            if (d.status === 'complete') { console.log('\n'); ok('Done'); process.exit(0); }
+            if (d.complete || d.status === 'complete') { console.log('\n'); ok('complete'); process.exit(0); }
           } catch(_) {}
         }
       });
-      res.on('end', () => { console.log(''); ok('Stream ended'); process.exit(0); });
+      res.on('end', () => { console.log(''); ok('stream ended'); process.exit(0); });
     });
-    req.on('error', e => err(e.message));
-    req.end();
+    r.on('error', e => { fail(`Guardian: ${e.message}`); process.exit(1); });
+    r.end();
   },
 
-  async 'cortex:stream'() {
-    const sys = SYSTEMS.cortex;
-    hdr('CORTEX LIVE STREAM');
-    info('streaming events... (ctrl+c to stop)');
-    const options = {
-      hostname: sys.host, port: sys.port,
-      path: '/sse', method: 'GET',
-      headers: { Accept: 'text/event-stream' },
-    };
-    const req = http.request(options, (res) => {
-      let buffer = '';
-      res.on('data', chunk => {
-        buffer += chunk.toString();
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data:')) continue;
-          try {
-            const d = JSON.parse(line.slice(5).trim());
-            const ts  = new Date(d.ts||Date.now()).toTimeString().slice(0,8);
-            const type = (d.type||'event').padEnd(35);
-            console.log(`  ${C.muted}${ts}${C.reset}  ${C.cyan}${type}${C.reset}  ${C.muted}${JSON.stringify(d.payload||{}).slice(0,60)}${C.reset}`);
-          } catch(_) {}
-        }
-      });
-    });
-    req.on('error', e => { err(e.message); process.exit(1); });
-    req.end();
-  },
-
-  async 'bridge:stream'() {
-    const sys = SYSTEMS.bridge;
-    const channel = args.find(a => a.startsWith('--channel='))?.slice(10) || '*';
-    hdr(`BRIDGE STREAM: ${channel}`);
-    info('subscribing... (ctrl+c to stop)');
-    const options = {
-      hostname: sys.host, port: sys.port,
-      path: `/bridge/subscribe?channel=${encodeURIComponent(channel)}`,
-      method: 'GET',
-      headers: { Accept: 'text/event-stream' },
-    };
-    const req = http.request(options, (res) => {
-      let buffer = '';
-      res.on('data', chunk => {
-        buffer += chunk.toString();
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data:')) continue;
-          try {
-            const d = JSON.parse(line.slice(5).trim());
-            const ts = new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8);
-            console.log(`  ${C.muted}${ts}${C.reset}  ${C.purple}${(d.type||'event').padEnd(35)}${C.reset}  ${C.muted}${JSON.stringify(d).slice(0,60)}${C.reset}`);
-          } catch(_) {}
-        }
-      });
-    });
-    req.on('error', e => { err(e.message); process.exit(1); });
-    req.end();
-  },
-
-  async 'guardian:providers'() {
-    const d = await get('guardian', '/providers');
-    if (d.error) return err(d.error);
-    hdr('GUARDIAN PROVIDERS');
-    for (const [name, status] of Object.entries(d.providers || {})) {
-      const c = status === 'connected' ? C.green : C.muted;
-      console.log(`  ${c}${status === 'connected' ? '●' : '○'}${C.reset}  ${name}`);
+  // ── WATCHDOG ───────────────────────────────────────────────────────────────
+  async watchdog() {
+    process.stdout.write('\x1b[?25l'); // hide cursor
+    process.on('exit', () => process.stdout.write('\x1b[?25h'));
+    hdr('NEXUS WATCHDOG  (ctrl+c to stop)');
+    async function tick() {
+      const results = await Promise.all(
+        Object.entries(SYSTEMS).map(async ([name, sys]) => {
+          const start = Date.now();
+          const p = name==='bridge' ? '/bridge/health' : name==='ollama' ? '/api/tags' : '/health';
+          const d = await GET(name, p);
+          return { name, sys, live: !d.error, ms: Date.now() - start };
+        })
+      );
+      const line = results.map(({name, sys, live, ms}) =>
+        `${live ? C.green+'●'+C.reset : C.red+'○'+C.reset} ${sys.color}${name}${C.reset}${C.muted}(${ms}ms)${C.reset}`
+      ).join('  ');
+      process.stdout.write(`\r  ${C.muted}${new Date().toTimeString().slice(0,8)}${C.reset}  ${line}          `);
     }
+    await tick();
+    setInterval(tick, 5000);
   },
 
-  // ── IDEARIUM ───────────────────────────────────────────────────────────────
-  async 'idea:add'() {
-    const text = args.slice(2).filter(a => !a.startsWith('--')).join(' ');
-    if (!text) return err('Usage: nexus idea add <text>');
-    const d = await post('idearium', '/api/ideas', { text });
-    if (d.error) return err(d.error);
-    ok(`Idea created: ${(d.idea?.uuid || d.uuid)?.slice(0,8)} "${text.slice(0,40)}"`);
-  },
-
-  async 'idea:list'() {
-    const d = await get('idearium', '/api/ideas');
-    if (d.error) return err(d.error);
-    const ideas = d.ideas || d || [];
-    hdr(`IDEAS (${ideas.length})`);
-    for (const idea of ideas.slice(-20).reverse()) {
-      const phaseColor = idea.phase === 'complete' ? C.green : idea.phase === 'building' ? C.cyan : C.muted;
-      console.log(`  ${C.muted}${idea.uuid?.slice(0,8)}${C.reset}  ${phaseColor}${(idea.phase||'seed').padEnd(12)}${C.reset}  ${idea.text?.slice(0,60) || '—'}`);
+  // ── GAPS ───────────────────────────────────────────────────────────────────
+  async gaps() {
+    const d = await GET('idearium', '/api/gaps');
+    if (d.error) {
+      // fallback to cortex
+      const cd = await GET('cortex', '/api/gaps');
+      if (cd.error) return fail('Both idearium and cortex offline');
+      const rows = cd.rows || [];
+      hdr(`GAPS (${rows.length})  [cortex]`);
+      for (const g of rows) {
+        const pc = (g.pressure||0) > 0.7 ? C.red : C.yellow;
+        console.log(`  ${pc}${((g.pressure||0)*100).toFixed(0)}%${C.reset}  ${C.cyan}${(g.type||'—').padEnd(20)}${C.reset}  ${(g.body||g.message||'—').slice(0,60)}`);
+      }
+      return;
     }
-    if (!ideas.length) info('no ideas yet');
-  },
-
-  async 'gap:open'() {
-    const description = args.slice(2).filter(a => !a.startsWith('--')).join(' ');
-    if (!description) return err('Usage: nexus gap open <description>');
-    const d = await post('idearium', '/api/gaps', { description });
-    if (d.error) return err(d.error);
-    ok(`Gap opened: ${(d.gap?.uuid || d.uuid)?.slice(0,8)}`);
-  },
-
-  async 'gap:list'() {
-    const d = await get('idearium', '/api/gaps');
-    if (d.error) return err(d.error);
     const gaps = d.gaps || d || [];
-    hdr(`GAPS (${gaps.length})`);
+    hdr(`GAPS (${gaps.length})  [idearium]`);
     for (const g of gaps) {
-      const sc = g.status === 'resolved' ? C.green : g.status === 'open' ? C.yellow : C.muted;
-      console.log(`  ${C.muted}${g.uuid?.slice(0,8)}${C.reset}  ${sc}${(g.status||'open').padEnd(10)}${C.reset}  ${g.description?.slice(0,60) || '—'}`);
+      const sc = g.status==='resolved' ? C.green : C.yellow;
+      console.log(`  ${C.muted}${(g.uuid||'').slice(0,8)}${C.reset}  ${sc}${(g.status||'open').padEnd(10)}${C.reset}  ${(g.description||g.text||'—').slice(0,60)}`);
     }
     if (!gaps.length) info('no gaps');
   },
 
-  async 'push'() {
-    const message = args.slice(1).filter(a => !a.startsWith('--')).join(' ') || 'snapshot';
-    const d = await post('idearium', '/api/snapshots', { message });
-    if (d.error) return err(d.error);
-    ok(`Pushed: ${(d.snapshot?.uuid || d.uuid)?.slice(0,8)} "${message}"`);
+  // ── IDEA / IDEAS ───────────────────────────────────────────────────────────
+  async idea() {
+    const text = args.filter(a => !a.startsWith('--') && a !== 'idea').join(' ');
+    if (!text) return fail('Usage: nexus idea "text"');
+    const d = await POST('idearium', '/api/ideas', { text });
+    if (d.error) return fail(d.error);
+    ok(`Idea: ${(d.idea?.uuid || d.uuid || '').slice(0,8)}  "${text.slice(0,40)}"`);
   },
 
-  async 'snr'() {
-    const d = await get('idearium', '/api/snr');
-    if (d.error) return err(d.error);
-    const snr = d.snr || 0;
-    const color = snr > 0.8 ? C.green : snr > 0.5 ? C.yellow : C.red;
-    const bar = '█'.repeat(Math.round(snr * 20)) + '░'.repeat(20 - Math.round(snr * 20));
-    console.log(`\n  ${color}${bar}${C.reset}  ${color}${(snr * 100).toFixed(1)}% SNR${C.reset}\n`);
-  },
-
-  // ── HELP ───────────────────────────────────────────────────────────────────
-  async watchdog() {
-    hdr('NEXUS WATCHDOG');
-    info('checking all systems every 5s — ctrl+c to stop');
-    let iteration = 0;
-    async function check() {
-      iteration++;
-      process.stdout.write(`\r[${new Date().toTimeString().slice(0,8)}] `);
-      const checks = await Promise.all(Object.entries(SYSTEMS).map(async ([name, sys]) => {
-        const start = Date.now();
-        const d = await get(name, name === 'bridge' ? '/bridge/health' : '/health');
-        const ms = Date.now() - start;
-        return { name, sys, online: !d.error, ms, d };
-      }));
-      const line = checks.map(({name, sys, online, ms}) =>
-        `${online ? C.green+'●'+C.reset : C.red+'○'+C.reset} ${name}(${ms}ms)`
-      ).join('  ');
-      process.stdout.write(line + '          ');
-      const offline = checks.filter(c => !c.online);
-      if (offline.length) {
-        process.stdout.write('\n');
-        offline.forEach(({name, d}) => info(`  ${name}: ${d.error}`));
-      }
+  async ideas() {
+    const d = await GET('idearium', '/api/ideas');
+    if (d.error) return fail(d.error);
+    const list = d.ideas || d || [];
+    hdr(`IDEAS (${list.length})`);
+    for (const i of [...list].reverse().slice(0, 30)) {
+      const pc = i.phase==='complete'?C.green : i.phase==='building'?C.cyan : C.muted;
+      console.log(`  ${C.muted}${(i.uuid||'').slice(0,8)}${C.reset}  ${pc}${(i.phase||'seed').padEnd(12)}${C.reset}  ${(i.text||i.title||'—').slice(0,60)}`);
     }
-    await check();
-    setInterval(check, 5000);
+    if (!list.length) info('no ideas — nexus idea "start here"');
   },
 
-  help() {
-    console.log(`
-${C.bold}${C.cyan}NEXUS — Unified CLI${C.reset}
+  // ── PUSH ───────────────────────────────────────────────────────────────────
+  async push() {
+    const msg = args.filter(a => !a.startsWith('--') && a !== 'push').join(' ') || 'snapshot';
+    const d = await POST('idearium', '/api/snapshots', { message: msg });
+    if (d.error) return fail(d.error);
+    ok(`Pushed: ${(d.snapshot?.uuid || d.uuid || '').slice(0,8)}  "${msg}"`);
+  },
 
-${C.bold}System status${C.reset}
-  nexus status                         all systems health check
+  // ── SNR ────────────────────────────────────────────────────────────────────
+  async snr() {
+    const d = await GET('idearium', '/api/snr');
+    if (d.error) return fail(d.error);
+    const v = d.snr || 0;
+    const col = v > 0.8 ? C.green : v > 0.5 ? C.yellow : C.red;
+    const bar = '█'.repeat(Math.round(v*20)) + '░'.repeat(20-Math.round(v*20));
+    console.log(`\n  ${col}${bar}${C.reset}  ${col}${(v*100).toFixed(1)}% SNR${C.reset}\n`);
+  },
 
-${C.bold}Quick commands${C.reset}
-  nexus dispatch "prompt"              dispatch to chatgpt (default)
-  nexus jobs                           list recent jobs
-  nexus events                         tail cortex event log
-  nexus gaps                           all open gaps
-  nexus idea "text"                    create idea in idearium
-  nexus push "message"                 snapshot + versionium commit
-  nexus snr                            system SNR score
+  // ── BRIDGE ops ─────────────────────────────────────────────────────────────
+  async tag() {
+    const id   = args.find(a => !a.startsWith('--') && a !== 'tag');
+    const tags = flag('tags')?.split(',').map(t=>t.trim()).filter(Boolean);
+    if (!id || !tags?.length) return fail('Usage: nexus tag <entityId> --tags=tag1,tag2');
+    await POST('bridge', '/bridge/tags', { entityId:id, entityType:'entity', system:'cli', tags, addedBy:'cli' });
+    ok(`Tagged ${id}: ${tags.join(', ')}`);
+  },
 
-${C.bold}Bridge (port 9999)${C.reset}
-  nexus bridge health
-  nexus bridge requests [--status=pending]
-  nexus bridge request <type> --from=x --to=x --payload=json
-  nexus bridge accept <uuid>
-  nexus bridge reject <uuid> [--reason=text]
-  nexus bridge tag <entityId> --tags=tag1,tag2
-  nexus bridge tags <entityId>
-  nexus bridge find --tag=status:pending
+  async tags() {
+    const id = args.find(a => !a.startsWith('--') && a !== 'tags');
+    if (!id) return fail('Usage: nexus tags <entityId>');
+    const d = await GET('bridge', `/bridge/tags/${encodeURIComponent(id)}`);
+    if (d.error) return fail(d.error);
+    hdr(`TAGS: ${id}`);
+    (d.tags||[]).forEach(t => console.log(`  ${C.cyan}${t}${C.reset}`));
+    if (!d.tags?.length) info('no tags');
+  },
 
-${C.bold}Cortex (port 3748)${C.reset}
-  nexus cortex status
-  nexus cortex events [--n=20]
-  nexus cortex post --type=x [--payload=json]
-  nexus cortex gaps [--status=open]
-  nexus cortex memory <query>
-  nexus cortex tail <table> [n]
+  async request() {
+    const type = args.find(a => !a.startsWith('--') && a !== 'request');
+    const from = flag('from') || 'cli';
+    const to   = flag('to')   || 'guardian';
+    let   pl   = {};
+    try { pl = JSON.parse(flag('payload') || '{}'); } catch(_) {}
+    if (!type) return fail('Usage: nexus request <type> --from=x --to=x [--payload=json]');
+    const d = await POST('bridge', '/bridge/requests', { type, from, to, payload: pl });
+    if (!d?.ok) return fail(d?.error || 'failed');
+    ok(`Request ${d.request?.uuid?.slice(0,8)}  ${d.request?.status}`);
+  },
 
-${C.bold}Guardian (port 7820)${C.reset}
-  nexus guardian dispatch --prompt="..." [--provider=chatgpt] [--command=code]
-  nexus guardian jobs [--status=pending]
-  nexus guardian status <jobId>
-  nexus guardian response <jobId>
-  nexus guardian providers
+  async requests() {
+    const status = flag('status') || '';
+    const d = await GET('bridge', `/bridge/requests${status?'?status='+status:''}`);
+    if (d.error) return fail(d.error);
+    const list = d.requests || [];
+    hdr(`REQUESTS (${list.length})`);
+    for (const r of [...list].reverse().slice(0,20)) {
+      const sc = r.status==='pending'?C.yellow : r.status==='complete'?C.green : r.status==='failed'?C.red : C.muted;
+      console.log(`  ${C.muted}${(r.uuid||'').slice(0,8)}${C.reset}  ${sc}${(r.status||'—').padEnd(10)}${C.reset}  ${C.cyan}${(r.type||'—').padEnd(22)}${C.reset}  ${C.muted}${r.from} → ${r.to}${C.reset}`);
+    }
+    if (!list.length) info('no requests');
+  },
 
-${C.bold}Idearium (port 4800)${C.reset}
-  nexus idea add "text"
-  nexus idea list
-  nexus gap open "description"
-  nexus gap list
-  nexus push "message"
-  nexus snr
+  async accept() {
+    const id = args.find(a => !a.startsWith('--') && a !== 'accept');
+    if (!id) return fail('Usage: nexus accept <uuid>');
+    const d = await POST('bridge', `/bridge/requests/${id}/accept`, { by:'cli' });
+    if (!d?.ok) return fail(d?.error || 'failed');
+    ok(`Accepted ${id.slice(0,8)}  →  ${d.request?.status}`);
+  },
 
-${C.bold}Streaming${C.reset}
-  nexus stream                         live cortex event stream
-  nexus watch <jobId>                  stream a guardian job response
-  nexus bridge:stream [--channel=x]    subscribe to bridge channel
-  nexus watchdog                       watch all systems every 5s
+  async reject() {
+    const id     = args.find(a => !a.startsWith('--') && a !== 'reject');
+    const reason = flag('reason') || '';
+    if (!id) return fail('Usage: nexus reject <uuid> [--reason=text]');
+    const d = await POST('bridge', `/bridge/requests/${id}/reject`, { by:'cli', reason });
+    if (!d?.ok) return fail(d?.error || 'failed');
+    ok(`Rejected ${id.slice(0,8)}`);
+  },
 
-Flags: --json (output raw JSON)
-`);
+  // ── /ollama direct commands ────────────────────────────────────────────────
+  async ollama() {
+    const sub = args[1]?.replace(/^\//, '') || 'status';
+
+    if (sub === 'status' || sub === 'models') {
+      const d = await GET('ollama', '/api/tags');
+      if (d.error) { fail(`Ollama offline: ${d.error}`); info('Start it: ollama serve'); return; }
+      hdr('OLLAMA');
+      const models = d.models || [];
+      if (!models.length) { info('no models  —  nexus /ollama pull qwen2.5-coder:1.5b'); return; }
+      for (const m of models) {
+        const gb = m.size ? `${(m.size/1e9).toFixed(1)}GB` : '—';
+        console.log(`  ${C.green}●${C.reset}  ${C.bold}${(m.name||'').padEnd(36)}${C.reset}  ${C.muted}${gb}${C.reset}`);
+      }
+      return;
+    }
+
+    if (sub === 'pull') {
+      const model = args.slice(2).find(a => !a.startsWith('--'));
+      if (!model) return fail('Usage: nexus /ollama pull <model>');
+      hdr(`PULLING: ${model}`);
+      const r = http.request({ hostname:'127.0.0.1', port:11434, path:'/api/pull', method:'POST', headers:{'Content-Type':'application/json'} }, res => {
+        let buf = '';
+        res.on('data', c => {
+          buf += c.toString();
+          const lines = buf.split('\n'); buf = lines.pop();
+          for (const line of lines) {
+            try {
+              const d = JSON.parse(line);
+              const pct = d.completed && d.total ? ` ${Math.round(d.completed/d.total*100)}%` : '';
+              if (d.status) process.stdout.write(`\r  ${C.cyan}${d.status}${C.reset}${pct}                    `);
+              if (d.status === 'success') { console.log(''); ok(`${model} pulled`); process.exit(0); }
+            } catch(_) {}
+          }
+        });
+        res.on('end', () => { console.log(''); process.exit(0); });
+      });
+      r.on('error', e => { fail(`Ollama: ${e.message}`); process.exit(1); });
+      r.write(JSON.stringify({ name: model, stream: true }));
+      r.end();
+      return;
+    }
+
+    if (sub === 'run') {
+      const model  = flag('model') || 'qwen2.5-coder:1.5b';
+      const prompt = args.slice(2).filter(a => !a.startsWith('--')).join(' ');
+      if (!prompt) return fail('Usage: nexus /ollama run "prompt" [--model=qwen2.5-coder:1.5b]');
+      hdr(`OLLAMA: ${model}`);
+      process.stdout.write('  ');
+      const r = http.request({ hostname:'127.0.0.1', port:11434, path:'/api/generate', method:'POST', headers:{'Content-Type':'application/json'} }, res => {
+        let buf = '';
+        res.on('data', c => {
+          buf += c.toString();
+          const lines = buf.split('\n'); buf = lines.pop();
+          for (const line of lines) {
+            try {
+              const d = JSON.parse(line);
+              if (d.response) process.stdout.write(d.response);
+              if (d.done) { console.log('\n'); process.exit(0); }
+            } catch(_) {}
+          }
+        });
+      });
+      r.on('error', e => { fail(`Ollama: ${e.message}`); process.exit(1); });
+      r.write(JSON.stringify({ model, prompt, stream: true }));
+      r.end();
+      return;
+    }
+
+    fail(`Unknown ollama command: ${sub}`);
+    info('Commands: status  pull <model>  run "prompt"');
+  },
+
+  // ── /bridge direct commands ────────────────────────────────────────────────
+  async bridge() {
+    const sub = args[1]?.replace(/^\//, '') || 'health';
+
+    if (sub === 'health') {
+      const d = await GET('bridge', '/bridge/health');
+      if (d.error) return fail(d.error);
+      hdr('BRIDGE');
+      row('status',   '● online', C.green);
+      row('sessions', String(d.sessions));
+      row('pending',  String(d.pendingRequests));
+      row('ring',     String(d.recentEvents));
+      return;
+    }
+
+    if (sub === 'requests') {
+      const status = flag('status') || args[2] || '';
+      const d = await GET('bridge', `/bridge/requests${status?'?status='+status:''}`);
+      if (d.error) return fail(d.error);
+      return CMDS.requests.call(this);
+    }
+
+    if (sub === 'find') {
+      const tag = flag('tag') || args[2];
+      if (!tag) return fail('Usage: nexus /bridge find --tag=x');
+      const d = await GET('bridge', `/bridge/tags?tag=${encodeURIComponent(tag)}`);
+      if (d.error) return fail(d.error);
+      hdr(`WITH TAG: ${tag}`);
+      (d.entities||[]).forEach(e => console.log(`  ${C.muted}${(e.entityId||'').slice(0,20)}${C.reset}  ${e.entityType}  ${e.system}`));
+      if (!d.entities?.length) info('none');
+      return;
+    }
+
+    if (sub === 'subscribe') {
+      const channel = flag('channel') || args[2] || '*';
+      hdr(`BRIDGE STREAM: ${channel}  (ctrl+c to stop)`);
+      const r = http.request({ hostname:'127.0.0.1', port:9999, path:`/bridge/subscribe?channel=${encodeURIComponent(channel)}`, method:'GET', headers:{Accept:'text/event-stream'} }, res => {
+        let buf = '';
+        res.on('data', c => {
+          buf += c.toString();
+          const lines = buf.split('\n'); buf = lines.pop();
+          for (const line of lines) {
+            if (!line.startsWith('data:')) continue;
+            try {
+              const d = JSON.parse(line.slice(5).trim());
+              const ts = new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8);
+              console.log(`  ${C.muted}${ts}${C.reset}  ${C.yellow}${(d.type||'event').padEnd(36)}${C.reset}  ${C.muted}${JSON.stringify(d).slice(0,60)}${C.reset}`);
+            } catch(_) {}
+          }
+        });
+      });
+      r.on('error', e => { fail(e.message); process.exit(1); });
+      r.end();
+      return;
+    }
+
+    fail(`Unknown bridge command: ${sub}`);
+    info('Commands: health  requests  find --tag=x  subscribe [--channel=x]');
   },
 };
 
-// ── Shorthands ────────────────────────────────────────────────────────────────
-const SHORTHANDS = {
-  status:   'status',
-  dispatch: 'guardian:dispatch',
-  jobs:     'guardian:jobs',
-  events:   'cortex:events',
-  stream:   'cortex:stream',
-  watch:    'guardian:watch',
-  watchdog: 'watchdog',
-  gaps:     'gap:list',
-  push:     'push',
-  snr:      'snr',
-  idea:     'idea:add',
-  help:     'help',
-  '--help': 'help',
-  '-h':     'help',
-};
-
-// ── Route ─────────────────────────────────────────────────────────────────────
+// ── Router ────────────────────────────────────────────────────────────────────
 async function main() {
-  if (!args.length) return COMMANDS.help();
+  if (!args.length) { CMDS.help(); return; }
 
-  const rawCmd = args.slice(0, 3).join(':').replace(/^nexus:/, '');
+  const first = args[0];
 
-  // Try progressively shorter command keys
-  const keys = [
-    args.slice(0,3).join(':'),
-    args.slice(0,2).join(':'),
-    args[0],
-  ];
+  // Slash prefix — pass directly to module CLI
+  if (first.startsWith('/')) {
+    const modKey  = first.toLowerCase();
+    const cliPath = MODULE_CLI[modKey];
 
-  for (const key of keys) {
-    if (COMMANDS[key]) return COMMANDS[key]();
-    if (SHORTHANDS[key]) return COMMANDS[SHORTHANDS[key]]?.();
+    // /ollama and /bridge handled inline
+    if (modKey === '/ollama')  return CMDS.ollama();
+    if (modKey === '/bridge')  return CMDS.bridge();
+
+    if (cliPath) {
+      passthrough(cliPath, args.slice(1));
+      return;
+    }
+    fail(`Unknown module: ${first}`);
+    info('Available: /guardian  /cockpit  /forge  /cortex  /idearium  /ollama  /bridge');
+    process.exit(1);
+    return;
   }
 
-  // Alias: `nexus idea list` → COMMANDS['idea:list']
-  // Already handled by keys above
+  // Unified commands — try progressively shorter keys
+  for (let len = Math.min(args.length, 3); len >= 1; len--) {
+    const key = args.slice(0, len).join(':');
+    if (CMDS[key]) { await CMDS[key](); return; }
+  }
+  // Single-word commands
+  if (CMDS[first]) { await CMDS[first](); return; }
 
-  err(`Unknown command: nexus ${args.join(' ')}`);
-  info('Run nexus help to see all commands');
+  fail(`Unknown command: ${args.join(' ')}`);
+  info('Run nexus help');
   process.exit(1);
 }
 
-main().catch(e => {
-  console.error(`${C.red}Fatal:${C.reset}`, e.message);
-  process.exit(1);
-});
+main().catch(e => { console.error(`${C.red}Fatal:${C.reset}`, e.message); process.exit(1); });

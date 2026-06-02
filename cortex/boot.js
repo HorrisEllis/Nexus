@@ -34,11 +34,7 @@ const PORT      = parseInt(process.env.NEXUS_PORT || '3748');
 let jaaDB, fileStore, fileRefs, adminServer;
 
 async function bootAsync() {
-  console.log('');
-  console.log('╔══════════════════════════════════════════════════╗');
-  console.log('║  NEXUS v5.0  ·  memory-first  ·  CORTEX booting ║');
-  console.log('╚══════════════════════════════════════════════════╝');
-  console.log('');
+  // boot banner handled at end
 
   // ── 1. Storage ─────────────────────────────────────────────────────────────
   jaaDB     = new JaaDB({ dir: DATA_DIR });
@@ -46,7 +42,6 @@ async function bootAsync() {
   fileRefs  = new FileRefs({ store: fileStore, dir: path.join(STORE_DIR, 'refs') });
 
   await jaaDB.open();
-  console.log(`[boot] jaaDB open — ${DATA_DIR}`);
 
   // Share jaaDB singleton with all modules
   // (they already require('../memory/jaa-db').jaaDB — same singleton)
@@ -58,8 +53,7 @@ async function bootAsync() {
   try {
     const projectSchema = require('./cobalt.manifest.json');
     core.load(projectSchema);
-    console.log(`[boot] cobalt core open — project: ${projectSchema.name || 'nexus'}`);
-  } catch {
+    } catch {
     // Schema file optional — register minimal node
     core.connect({
       uuid:    'nexus-project-0000-4000-0000-000000000001',
@@ -68,8 +62,7 @@ async function bootAsync() {
       version: '5.0.0',
       meta:    { intent: 'NEXUS v5.0 memory-first orchestration' },
     });
-    console.log('[boot] cobalt core open — minimal registration');
-  }
+    }
 
   // ── 3. setDeps ─────────────────────────────────────────────────────────────
   versionium.setDeps({ fileStore, fileRefs });
@@ -81,7 +74,6 @@ async function bootAsync() {
     gemini:  null,
   });
 
-  console.log('[boot] deps injected');
 
   // ── 4. Poll registry ───────────────────────────────────────────────────────
   pollRegistry.start();
@@ -107,11 +99,44 @@ async function bootAsync() {
   // Seed project registry
   _seedProjectRegistry(jaaDB);
 
+  const ollamaHost = process.env.OLLAMA_HOST || '127.0.0.1';
+  const ollamaPort = process.env.OLLAMA_PORT || '11434';
+  // Check ollama
+  let ollamaStatus = '✗ offline';
+  let ollamaModels = '';
+  try {
+    const http2 = require('http');
+    await new Promise(resolve => {
+      const r = http2.get(`http://${ollamaHost}:${ollamaPort}/api/tags`, res => {
+        let d = ''; res.on('data', c => d += c);
+        res.on('end', () => {
+          try {
+            const j = JSON.parse(d);
+            const models = (j.models||[]).map(m => m.name).join(', ');
+            ollamaStatus = '✓ online';
+            ollamaModels = models ? `  models: ${models}` : '';
+          } catch(_) {}
+          resolve();
+        });
+      });
+      r.setTimeout(2000, () => { r.destroy(); resolve(); });
+      r.on('error', resolve);
+    });
+  } catch(_) {}
+
   console.log('');
-  console.log(`[boot] ✓ NEXUS v5.0 online`);
-  console.log(`[boot]   admin:  http://127.0.0.1:${PORT}/health`);
-  console.log(`[boot]   events: http://127.0.0.1:${PORT}/sse`);
-  console.log(`[boot]   ollama: ${process.env.OLLAMA_HOST || '127.0.0.1'}:${process.env.OLLAMA_PORT || '11434'}`);
+  console.log('\x1b[1m\x1b[36m⬡  NEXUS CORTEX\x1b[0m  v5.0');
+  console.log('');
+  console.log(`   \x1b[90mHTTP API  \x1b[0m  http://127.0.0.1:${PORT}`);
+  console.log(`   \x1b[90mHealth    \x1b[0m  http://127.0.0.1:${PORT}/health`);
+  console.log(`   \x1b[90mSSE       \x1b[0m  http://127.0.0.1:${PORT}/sse`);
+  console.log(`   \x1b[90mMemory UI \x1b[0m  http://127.0.0.1:${PORT}/cortex`);
+  console.log(`   \x1b[90mData      \x1b[0m  ${DATA_DIR}`);
+  console.log('');
+  console.log(`   \x1b[90mOllama    \x1b[0m  ${ollamaStatus === '✓ online' ? '\x1b[32m' : '\x1b[31m'}${ollamaStatus}\x1b[0m  ${ollamaHost}:${ollamaPort}`);
+  if (ollamaModels) console.log(`              ${ollamaModels}`);
+  console.log('');
+  console.log(`   \x1b[90mCLI       \x1b[0m  nexus cortex status`);
   console.log('');
 
   // ── Graceful shutdown ───────────────────────────────────────────────────────

@@ -44,7 +44,7 @@ function start(overrides = {}) {
       console.error(`[PollRegistry] failed to start '${entry.id}':`, err.message);
     }
   }
-  console.log(`[PollRegistry] started ${modules.length} modules`);
+  // boot output handled by boot.js
 }
 
 function stop() {
