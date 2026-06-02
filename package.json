@@ -14,9 +14,16 @@
     "test": "node tests/kernel.test.js",
     "test:watch": "node --watch tests/kernel.test.js",
     "bridge": "node bridge/nexus-bridge.js",
-    "start:core": "npm run bridge & npm run cortex & npm run guardian"
+    "start:core": "npm run bridge & npm run cortex & npm run guardian",
+    "nexus": "node cli/nexus.js"
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.21.0"
+  },
+  "bin": {
+    "nexus": "./cli/nexus.js"
   }
 }

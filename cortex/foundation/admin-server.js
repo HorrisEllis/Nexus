@@ -72,7 +72,7 @@ class AdminServer {
     for (const c of dead) this._sseClients.delete(c);
   }
 
-  _handle(req, res) {
+  async _handle(req, res) {
     const url    = new URL(req.url, `http://127.0.0.1:${this._port}`);
     const route  = `${req.method} ${url.pathname}`;
 
@@ -155,7 +155,7 @@ class AdminServer {
             200
           );
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(rows));
+          res.end(JSON.stringify({ok:true,rows}));
           break;
         }
 
@@ -163,7 +163,7 @@ class AdminServer {
         case route === 'GET /api/failures': {
           const rows = jaaDB.tail('failures', 100);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(rows));
+          res.end(JSON.stringify({ok:true,rows}));
           break;
         }
 
@@ -172,7 +172,7 @@ class AdminServer {
           const n    = parseInt(url.searchParams.get('n') || '50');
           const rows = jaaDB.tail('event_log', n);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(rows));
+          res.end(JSON.stringify({ok:true,rows}));
           break;
         }
 
@@ -182,7 +182,7 @@ class AdminServer {
           const n     = parseInt(url.searchParams.get('n') || '40');
           const rows  = jaaDB.tail(table, n);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(rows));
+          res.end(JSON.stringify({ok:true,rows}));
           break;
         }
 
@@ -195,7 +195,7 @@ class AdminServer {
               100
             );
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(rows));
+            res.end(JSON.stringify({ok:true,rows}));
           });
           return;
         }
@@ -228,7 +228,7 @@ class AdminServer {
         case route === 'GET /api/requests': {
           const rows = jaaDB.tail('requests', 100);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(rows));
+          res.end(JSON.stringify({ok:true,rows}));
           break;
         }
 
@@ -236,7 +236,7 @@ class AdminServer {
         case route === 'GET /api/modules': {
           const rows = jaaDB.query('project_registry', () => true, 50);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(rows));
+          res.end(JSON.stringify({ok:true,rows}));
           break;
         }
 

@@ -585,14 +585,6 @@ function runTest(){
   res.writeHead(404); res.end('Not found');
 });
 
-if (bridge) {
-  bridge.mount(server, 'guardian');
-  // Wire job complete → cortex sync
-  bus.on('guardian.job.complete', job => bridge.crossSync.onJobComplete(job).catch(()=>{}));
-  // Wire artifacts → cortex sync
-  bus.on('guardian.artifact',     art => bridge.crossSync.onArtifact(art).catch(()=>{}));
-  console.log('[guardian] bridge mounted');
-}
 server.listen(HTTP_PORT, '127.0.0.1', () => {
   console.log(`[guardian] HTTP API on http://127.0.0.1:${HTTP_PORT}`);
   console.log(`[guardian] Ready.\n`);
@@ -1377,6 +1369,9 @@ class SISOStream {
 }
 const bus = new SISOStream();
 
+// Bridge wired after bus — mounted at server request time
+// Cross-sync gates registered below with other SISOGates
+
 // ══════════════════════════════════════════════════════════════════════════════
 //  SQLITE / JAA PERSISTENCE
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1573,6 +1568,26 @@ bus.register(new SISOGate('guardian.timeline', (data) => {
     payload: JSON.stringify(data.payload||{}), ts: data.ts||Date.now(),
   });
 }));
+
+// Bridge cross-sync gates
+if (bridge) {
+  bus.register(new SISOGate('guardian.job.complete.bridge', (data) => {
+    bridge.crossSync.onJobComplete(data).catch(() => {});
+  }));
+  bus.register(new SISOGate('guardian.artifact.bridge', (data) => {
+    bridge.crossSync.onArtifact(data).catch(() => {});
+  }));
+  // Mount bridge routes on the HTTP server
+  const origListeners = server.listeners('request').slice();
+  server.removeAllListeners('request');
+  server.on('request', (req, res) => {
+    if (req.url && req.url.startsWith('/bridge')) {
+      return bridge._handler ? bridge._handler(req, res) : res.end('bridge not ready');
+    }
+    for (const l of origListeners) l(req, res);
+  });
+  console.log('[guardian] bridge cross-sync gates registered');
+}
 
 bus.register(new SISOGate('guardian.setting.update', (data) => {
   // Already persisted by setSetting() — just broadcast
