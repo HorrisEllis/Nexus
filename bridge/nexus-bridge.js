@@ -531,6 +531,19 @@ function buildBridgeHandler(req, res) {
   }
 
   // ── Health ─────────────────────────────────────────────────────────────────
+  if (req.method === 'GET' && action === 'contract') {
+    const { readFileSync, existsSync } = require('fs');
+    const { join } = require('path');
+    const contractPath = join(__dirname, 'interaction-contract.json');
+    if (!existsSync(contractPath)) {
+      res.writeHead(404, {'Content-Type':'application/json'});
+      return res.end(JSON.stringify({ ok:false, error:'contract not found' }));
+    }
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Content-Type','application/json');
+    res.writeHead(200);
+    return res.end(readFileSync(contractPath, 'utf8'));
+  }
   if (req.method === 'GET' && action === 'health') {
     const sessionCount = SESSIONS.size;
     const pending = requestQueue.list({ status: 'pending' }).length;

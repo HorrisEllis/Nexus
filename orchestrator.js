@@ -1199,10 +1199,10 @@ else {
     }, 2000);
 
     // ── §3.1 Gate: Open CLI terminal ─────────────────────────────────────────
-    // Opens a second terminal window dedicated to interactive CLI commands.
-    // §1.2 — failure is logged, not swallowed
+    // §1.2 — failure is logged, not swallowed; server always starts regardless
     const { spawn } = require('child_process');
     function openCliTerminal() {
+      try {
       const cliScript = path.join(ROOT, 'cli', 'nexus-repl.js');
       const args      = [cliScript, '--repl', `--port=${PORT}`];
 
@@ -1238,6 +1238,9 @@ else {
         console.warn('\x1b[33m[cli] no terminal emulator found — run manually:\x1b[0m');
         console.warn(`  node cli/nexus-repl.js --repl`);
         ledgerWrite('orchestrator','orchestrator.cli.terminal.failed',{ reason:'no terminal emulator' });
+      }
+      } catch(e) {
+        console.warn('[cli] terminal open failed:', e.message);
       }
     }
     setTimeout(openCliTerminal, 500);

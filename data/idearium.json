@@ -1,6 +1,6 @@
 {
   "_version": "2.0.0",
-  "_savedAt": 1780381250279,
+  "_savedAt": 1780397838531,
   "ideas": [
     {
       "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
@@ -9,7 +9,38 @@
       "tags": [],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": null,
+      "tensionUpdatedAt": 1780397838530,
+      "parentIdea": null,
+      "linkedSpec": "20cd6aa9-8b04-460c-9777-7aea3cfd2478",
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780381250279,
+      "updatedAt": 1780397838516
+    },
+    {
+      "uuid": "64a72499-a425-48fa-a287-627a8732d218",
+      "slug": "integration-test-idea-1780397707448",
+      "text": "Integration test idea 1780397707448",
+      "tags": [
+        "integration",
+        "test"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": 1780397838530,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -27,14 +58,676 @@
       "archivedAt": null,
       "causedBy": null,
       "source": "api",
-      "createdAt": 1780381250279,
-      "updatedAt": 1780381250279
+      "createdAt": 1780397707451,
+      "updatedAt": 1780397707451
+    },
+    {
+      "uuid": "dad8489d-a2b6-41ec-bb1e-54cf4ef6031b",
+      "slug": "integration-test-idea-1780397734800",
+      "text": "Integration test idea 1780397734800",
+      "tags": [
+        "integration",
+        "test"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": 1780397838530,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780397734803,
+      "updatedAt": 1780397734803
+    },
+    {
+      "uuid": "c12a2a94-933d-4466-97be-7b95aed151fb",
+      "slug": "integration-test-idea-1780397797448",
+      "text": "Integration test idea 1780397797448",
+      "tags": [
+        "integration",
+        "test"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": 1780397838530,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780397797450,
+      "updatedAt": 1780397797450
+    },
+    {
+      "uuid": "96063763-9ad2-4ff8-bda7-4db18e478f71",
+      "slug": "integration-test-idea-1780397838490",
+      "text": "Integration test idea 1780397838490",
+      "tags": [
+        "integration",
+        "test"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": 1780397838530,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780397838492,
+      "updatedAt": 1780397838492
     }
   ],
-  "specs": [],
-  "gaps": [],
+  "specs": [
+    {
+      "uuid": "36ee0cee-f401-461d-8e86-22f628470139",
+      "name": "Integration test spec",
+      "version": "1.0.0",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "phase": "seed",
+      "sections": [
+        {
+          "id": "intent",
+          "title": "intent",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "api_callto",
+          "title": "api callto",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "module_hooks",
+          "title": "module hooks",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "cli_spec",
+          "title": "cli spec",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "schemas",
+          "title": "schemas",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "gap_contract",
+          "title": "gap contract",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "failure_modes",
+          "title": "failure modes",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "tests",
+          "title": "tests",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "phase_map",
+          "title": "phase map",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        }
+      ],
+      "modules": [],
+      "wired": {
+        "eventBus": false,
+        "cli": false,
+        "jaa": false,
+        "toast": false,
+        "schemaValidated": false
+      },
+      "buildOrder": [],
+      "agentAssignments": {},
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780397707471,
+      "updatedAt": 1780397838524
+    },
+    {
+      "uuid": "f02f0abc-7243-4688-a46b-b93ae9f02a7e",
+      "name": "Integration test spec",
+      "version": "1.0.0",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "phase": "seed",
+      "sections": [
+        {
+          "id": "intent",
+          "title": "intent",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "api_callto",
+          "title": "api callto",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "module_hooks",
+          "title": "module hooks",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "cli_spec",
+          "title": "cli spec",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "schemas",
+          "title": "schemas",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "gap_contract",
+          "title": "gap contract",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "failure_modes",
+          "title": "failure modes",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "tests",
+          "title": "tests",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "phase_map",
+          "title": "phase map",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        }
+      ],
+      "modules": [],
+      "wired": {
+        "eventBus": false,
+        "cli": false,
+        "jaa": false,
+        "toast": false,
+        "schemaValidated": false
+      },
+      "buildOrder": [],
+      "agentAssignments": {},
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780397734819,
+      "updatedAt": 1780397734819
+    },
+    {
+      "uuid": "bb4ad2a1-9f18-4c67-b07a-ac7c7599567b",
+      "name": "Integration test spec",
+      "version": "1.0.0",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "phase": "seed",
+      "sections": [
+        {
+          "id": "intent",
+          "title": "intent",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "api_callto",
+          "title": "api callto",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "module_hooks",
+          "title": "module hooks",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "cli_spec",
+          "title": "cli spec",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "schemas",
+          "title": "schemas",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "gap_contract",
+          "title": "gap contract",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "failure_modes",
+          "title": "failure modes",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "tests",
+          "title": "tests",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "phase_map",
+          "title": "phase map",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        }
+      ],
+      "modules": [],
+      "wired": {
+        "eventBus": false,
+        "cli": false,
+        "jaa": false,
+        "toast": false,
+        "schemaValidated": false
+      },
+      "buildOrder": [],
+      "agentAssignments": {},
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780397797464,
+      "updatedAt": 1780397797464
+    },
+    {
+      "uuid": "20cd6aa9-8b04-460c-9777-7aea3cfd2478",
+      "name": "Integration test spec",
+      "version": "1.0.0",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "phase": "seed",
+      "sections": [
+        {
+          "id": "intent",
+          "title": "intent",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "api_callto",
+          "title": "api callto",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "module_hooks",
+          "title": "module hooks",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "cli_spec",
+          "title": "cli spec",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "schemas",
+          "title": "schemas",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "gap_contract",
+          "title": "gap contract",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "failure_modes",
+          "title": "failure modes",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "tests",
+          "title": "tests",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "phase_map",
+          "title": "phase map",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        }
+      ],
+      "modules": [],
+      "wired": {
+        "eventBus": false,
+        "cli": false,
+        "jaa": false,
+        "toast": false,
+        "schemaValidated": false
+      },
+      "buildOrder": [],
+      "agentAssignments": {},
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780397838516,
+      "updatedAt": 1780397838516
+    }
+  ],
+  "gaps": [
+    {
+      "uuid": "163f2911-b79b-42b7-be34-022b227801f2",
+      "type": "integration",
+      "description": "Integration test gap — auto-generated",
+      "ideaUuid": null,
+      "specUuid": null,
+      "between": [],
+      "status": "resolved",
+      "severity": "low",
+      "resolution": "resolved by integration test",
+      "resolvedAt": 1780397707489,
+      "ignoreReason": null,
+      "causedBy": null,
+      "source": "api",
+      "ts": 1780397707481,
+      "createdAt": 1780397707481
+    },
+    {
+      "uuid": "cae65dc0-f64d-4dae-ae60-1284f8daf0df",
+      "type": "integration",
+      "description": "Integration test gap — auto-generated",
+      "ideaUuid": null,
+      "specUuid": null,
+      "between": [],
+      "status": "resolved",
+      "severity": "low",
+      "resolution": "resolved by integration test",
+      "resolvedAt": 1780397734832,
+      "ignoreReason": null,
+      "causedBy": null,
+      "source": "api",
+      "ts": 1780397734829,
+      "createdAt": 1780397734829
+    },
+    {
+      "uuid": "943669fd-b78b-48ee-8e74-d0f36af6ed00",
+      "type": "integration",
+      "description": "Integration test gap — auto-generated",
+      "ideaUuid": null,
+      "specUuid": null,
+      "between": [],
+      "status": "resolved",
+      "severity": "low",
+      "resolution": "resolved by integration test",
+      "resolvedAt": 1780397797476,
+      "ignoreReason": null,
+      "causedBy": null,
+      "source": "api",
+      "ts": 1780397797472,
+      "createdAt": 1780397797472
+    },
+    {
+      "uuid": "f367f2d2-e049-455f-902a-6e922bf9ccd4",
+      "type": "integration",
+      "description": "Integration test gap — auto-generated",
+      "ideaUuid": null,
+      "specUuid": null,
+      "between": [],
+      "status": "resolved",
+      "severity": "low",
+      "resolution": "resolved by integration test",
+      "resolvedAt": 1780397838529,
+      "ignoreReason": null,
+      "causedBy": null,
+      "source": "api",
+      "ts": 1780397838526,
+      "createdAt": 1780397838526
+    }
+  ],
   "links": [],
-  "snapshots": [],
+  "snapshots": [
+    {
+      "uuid": "89a170d6-15b7-447d-9b34-a8aad2c0232f",
+      "commitId": "vtm-000000000003",
+      "parentId": "5b59a706-2a4d-4d37-8269-19ca6e7f2fbf",
+      "branch": "test",
+      "message": "integration test snapshot",
+      "author": "api",
+      "ts": 1780397838531,
+      "ideasCount": 5,
+      "gapCount": 0,
+      "specCount": 4,
+      "snr": 0.5,
+      "snrDelta": 0,
+      "tensionMap": {
+        "7afd024d-4fd1-4855-b4cc-6cbad96206b9": 0,
+        "64a72499-a425-48fa-a287-627a8732d218": 0,
+        "dad8489d-a2b6-41ec-bb1e-54cf4ef6031b": 0,
+        "c12a2a94-933d-4466-97be-7b95aed151fb": 0,
+        "96063763-9ad2-4ff8-bda7-4db18e478f71": 0
+      },
+      "phaseMap": {
+        "seed": 5,
+        "expanding": 0,
+        "tensioned": 0,
+        "specced": 0,
+        "building": 0,
+        "complete": 0,
+        "archived": 0
+      },
+      "causedBy": null
+    },
+    {
+      "uuid": "5b59a706-2a4d-4d37-8269-19ca6e7f2fbf",
+      "commitId": "vtm-000000000002",
+      "parentId": "848f90e1-8680-4286-a783-9c7ed4e75b04",
+      "branch": "test",
+      "message": "integration test snapshot",
+      "author": "api",
+      "ts": 1780397797477,
+      "ideasCount": 4,
+      "gapCount": 0,
+      "specCount": 3,
+      "snr": 0.5,
+      "snrDelta": 0,
+      "tensionMap": {
+        "7afd024d-4fd1-4855-b4cc-6cbad96206b9": 0,
+        "64a72499-a425-48fa-a287-627a8732d218": 0,
+        "dad8489d-a2b6-41ec-bb1e-54cf4ef6031b": 0,
+        "c12a2a94-933d-4466-97be-7b95aed151fb": 0
+      },
+      "phaseMap": {
+        "seed": 4,
+        "expanding": 0,
+        "tensioned": 0,
+        "specced": 0,
+        "building": 0,
+        "complete": 0,
+        "archived": 0
+      },
+      "causedBy": null
+    },
+    {
+      "uuid": "848f90e1-8680-4286-a783-9c7ed4e75b04",
+      "commitId": "vtm-000000000001",
+      "parentId": "7657d1de-66fe-4011-8616-dc08b28ed84f",
+      "branch": "test",
+      "message": "integration test snapshot",
+      "author": "api",
+      "ts": 1780397734834,
+      "ideasCount": 3,
+      "gapCount": 0,
+      "specCount": 2,
+      "snr": 0.5,
+      "snrDelta": 0,
+      "tensionMap": {
+        "7afd024d-4fd1-4855-b4cc-6cbad96206b9": 0,
+        "64a72499-a425-48fa-a287-627a8732d218": 0,
+        "dad8489d-a2b6-41ec-bb1e-54cf4ef6031b": 0
+      },
+      "phaseMap": {
+        "seed": 3,
+        "expanding": 0,
+        "tensioned": 0,
+        "specced": 0,
+        "building": 0,
+        "complete": 0,
+        "archived": 0
+      },
+      "causedBy": null
+    },
+    {
+      "uuid": "7657d1de-66fe-4011-8616-dc08b28ed84f",
+      "commitId": "vtm-000000000000",
+      "parentId": null,
+      "branch": "test",
+      "message": "integration test snapshot",
+      "author": "api",
+      "ts": 1780397707492,
+      "ideasCount": 2,
+      "gapCount": 0,
+      "specCount": 1,
+      "snr": 0.5,
+      "snrDelta": 0,
+      "tensionMap": {
+        "7afd024d-4fd1-4855-b4cc-6cbad96206b9": 0,
+        "64a72499-a425-48fa-a287-627a8732d218": 0
+      },
+      "phaseMap": {
+        "seed": 2,
+        "expanding": 0,
+        "tensioned": 0,
+        "specced": 0,
+        "building": 0,
+        "complete": 0,
+        "archived": 0
+      },
+      "causedBy": null
+    }
+  ],
   "events": [
     {
       "uuid": "167513d5-4318-4b4e-8d93-c4e57f63f7b6",
@@ -48,8 +741,533 @@
       "causedBy": null,
       "source": "idearium.core",
       "ts": 1780381250279
+    },
+    {
+      "uuid": "40c43817-67b7-4351-abfc-db1ecb01169d",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Integration test idea 1780397707448",
+        "tags": [
+          "integration",
+          "test"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707450
+    },
+    {
+      "uuid": "e28f7896-3abb-4fd4-a0f2-8764ba7507dd",
+      "type": "idearium.idea.tension",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707462
+    },
+    {
+      "uuid": "089d0e73-ad24-4617-9ce4-01d888895399",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "expanding",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707465
+    },
+    {
+      "uuid": "1b32b3c5-608c-4db4-8ee5-a9be4d2b11e1",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "seed",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707467
+    },
+    {
+      "uuid": "e76c7adf-efcc-431b-becc-4fffb20ca953",
+      "type": "idearium.spec.create",
+      "payload": {
+        "name": "Integration test spec",
+        "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707469
+    },
+    {
+      "uuid": "e8347067-e171-48b3-9e0d-e0c14acb3e77",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707475
+    },
+    {
+      "uuid": "048a7ab8-746e-4157-8474-43a66b7ab48f",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707479
+    },
+    {
+      "uuid": "bedf9bed-e572-408a-8fc0-eb7f2ad79b69",
+      "type": "idearium.gap.open",
+      "payload": {
+        "description": "Integration test gap — auto-generated",
+        "type": "integration",
+        "severity": "low",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707481
+    },
+    {
+      "uuid": "78b9fc85-0c6e-451a-beda-7c01f078d4ce",
+      "type": "idearium.gap.resolve",
+      "payload": {
+        "uuid": "163f2911-b79b-42b7-be34-022b227801f2",
+        "resolution": "resolved by integration test"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707489
+    },
+    {
+      "uuid": "948efc6d-b6b5-434e-ac6d-bc17927cebf8",
+      "type": "idearium.snapshot.commit",
+      "payload": {
+        "message": "integration test snapshot",
+        "branch": "test",
+        "author": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397707491
+    },
+    {
+      "uuid": "87e03e09-40c4-421e-9904-f8fd80509f26",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Integration test idea 1780397734800",
+        "tags": [
+          "integration",
+          "test"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734802
+    },
+    {
+      "uuid": "c90fa21c-c830-4385-9aaa-23def350ae20",
+      "type": "idearium.idea.tension",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734811
+    },
+    {
+      "uuid": "c8fb2d4e-0f6c-4668-af03-4bfc3626192d",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "expanding",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734815
+    },
+    {
+      "uuid": "22a8d7a8-35f2-449b-9619-d64b22e1f5cd",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "seed",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734816
+    },
+    {
+      "uuid": "8985fee0-224d-499c-8c72-49581b9e963c",
+      "type": "idearium.spec.create",
+      "payload": {
+        "name": "Integration test spec",
+        "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734818
+    },
+    {
+      "uuid": "1612ce38-efab-44a5-8c45-bf182dda738f",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734824
+    },
+    {
+      "uuid": "e52929ea-db6b-47f0-bbc3-05eb2cacfec3",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734827
+    },
+    {
+      "uuid": "e9d97a5d-62de-4d2b-ab8b-e55b5b9d05ad",
+      "type": "idearium.gap.open",
+      "payload": {
+        "description": "Integration test gap — auto-generated",
+        "type": "integration",
+        "severity": "low",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734829
+    },
+    {
+      "uuid": "e9609729-bb64-492d-9d92-3156bf1a99e4",
+      "type": "idearium.gap.resolve",
+      "payload": {
+        "uuid": "cae65dc0-f64d-4dae-ae60-1284f8daf0df",
+        "resolution": "resolved by integration test"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734832
+    },
+    {
+      "uuid": "7ce019b1-8ebc-4a58-8c2b-1969b4dd69b7",
+      "type": "idearium.snapshot.commit",
+      "payload": {
+        "message": "integration test snapshot",
+        "branch": "test",
+        "author": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397734833
+    },
+    {
+      "uuid": "9767e629-67b3-4458-9777-0cacf9f0bfe6",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Integration test idea 1780397797448",
+        "tags": [
+          "integration",
+          "test"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797450
+    },
+    {
+      "uuid": "1685c88d-7046-4e2e-a0ab-b87255d92ca9",
+      "type": "idearium.idea.tension",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797457
+    },
+    {
+      "uuid": "9f5b360b-3ff5-4ff7-9815-8f34f507e3b5",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "expanding",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797459
+    },
+    {
+      "uuid": "622c1e05-a8e4-45ca-af26-4a48e5a72dfa",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "seed",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797461
+    },
+    {
+      "uuid": "912cc65e-db1a-41d4-9241-c17cca9cdce7",
+      "type": "idearium.spec.create",
+      "payload": {
+        "name": "Integration test spec",
+        "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797463
+    },
+    {
+      "uuid": "339ffa4c-9544-48a7-9c26-40bd82c1d3b7",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797468
+    },
+    {
+      "uuid": "7bfc1539-cb23-46e2-bcca-3ea30e70d35e",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797470
+    },
+    {
+      "uuid": "e932fe4c-6d26-4211-8baf-0f06cb007618",
+      "type": "idearium.gap.open",
+      "payload": {
+        "description": "Integration test gap — auto-generated",
+        "type": "integration",
+        "severity": "low",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797472
+    },
+    {
+      "uuid": "8c78deb2-25fe-4ea6-b6fe-8280a924b10b",
+      "type": "idearium.gap.resolve",
+      "payload": {
+        "uuid": "943669fd-b78b-48ee-8e74-d0f36af6ed00",
+        "resolution": "resolved by integration test"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797476
+    },
+    {
+      "uuid": "57ec5814-0e85-410e-b76a-d2018b5c91c3",
+      "type": "idearium.snapshot.commit",
+      "payload": {
+        "message": "integration test snapshot",
+        "branch": "test",
+        "author": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397797477
+    },
+    {
+      "uuid": "0032c402-4407-4d73-b960-7114abd31da6",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Integration test idea 1780397838490",
+        "tags": [
+          "integration",
+          "test"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838492
+    },
+    {
+      "uuid": "ab7a49ed-f011-4a6a-8e46-e39012565701",
+      "type": "idearium.idea.tension",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838504
+    },
+    {
+      "uuid": "83125f6e-902e-4178-88c7-f567198813b5",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "expanding",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838507
+    },
+    {
+      "uuid": "25c06237-4d90-488f-a2fb-bef7754cd89f",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "seed",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838509
+    },
+    {
+      "uuid": "47b51a02-185e-485e-bcd4-ecb472028115",
+      "type": "idearium.spec.create",
+      "payload": {
+        "name": "Integration test spec",
+        "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838515
+    },
+    {
+      "uuid": "6b96b861-cb48-4cf9-b5a8-d5a0d136b020",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838520
+    },
+    {
+      "uuid": "4c7db937-470b-41ed-8b06-35d2a145a4f9",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "36ee0cee-f401-461d-8e86-22f628470139"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838524
+    },
+    {
+      "uuid": "3ca94c62-c028-4bca-9942-26d6bb88a99b",
+      "type": "idearium.gap.open",
+      "payload": {
+        "description": "Integration test gap — auto-generated",
+        "type": "integration",
+        "severity": "low",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838526
+    },
+    {
+      "uuid": "45b3eebe-509a-4e6b-aed6-567e937ab393",
+      "type": "idearium.gap.resolve",
+      "payload": {
+        "uuid": "f367f2d2-e049-455f-902a-6e922bf9ccd4",
+        "resolution": "resolved by integration test"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838529
+    },
+    {
+      "uuid": "f9ac98d7-f5d1-4c14-8baa-0931f203cf95",
+      "type": "idearium.snapshot.commit",
+      "payload": {
+        "message": "integration test snapshot",
+        "branch": "test",
+        "author": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780397838530
     }
   ],
   "snr": [],
-  "tensions": []
+  "tensions": [
+    {
+      "uuid": "c1ca0ff0-495f-414e-990c-88cbc6cb71cf",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "score": 0,
+      "components": {
+        "gap_density": 0,
+        "contradiction": 0,
+        "novelty": 0,
+        "resource_cost": 0,
+        "dependency_depth": 0
+      },
+      "ts": 1780397707462
+    },
+    {
+      "uuid": "60baa7ef-1a05-4b76-871a-a24775be496d",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "score": 0,
+      "components": {
+        "gap_density": 0,
+        "contradiction": 0,
+        "novelty": 0,
+        "resource_cost": 0,
+        "dependency_depth": 0
+      },
+      "ts": 1780397734812
+    },
+    {
+      "uuid": "60ae490a-7978-48df-8369-4f7270cd46d9",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "score": 0,
+      "components": {
+        "gap_density": 0,
+        "contradiction": 0,
+        "novelty": 0,
+        "resource_cost": 0,
+        "dependency_depth": 0
+      },
+      "ts": 1780397797457
+    },
+    {
+      "uuid": "f1dea16f-857b-4be7-ab90-99890c66ece9",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "score": 0,
+      "components": {
+        "gap_density": 0,
+        "contradiction": 0,
+        "novelty": 0,
+        "resource_cost": 0,
+        "dependency_depth": 0
+      },
+      "ts": 1780397838504
+    }
+  ]
 }
