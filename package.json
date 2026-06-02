@@ -7,7 +7,7 @@
     "cortex": "node cortex/boot.js",
     "guardian": "node guardian/server.js",
     "idearium": "node idearium/index.js",
-    "emerge": "node emerge/emerge-ide.js",
+    "emerge": "node emerge-ide.js",
     "cli": "node cortex/cortex.js",
     "guardian-cli": "node guardian/cli.js",
     "start": "npm run bridge & npm run cortex & npm run guardian & npm run idearium & npm run emerge",
@@ -15,7 +15,8 @@
     "test:watch": "node --watch tests/kernel.test.js",
     "bridge": "node bridge/nexus-bridge.js",
     "start:core": "npm run bridge & npm run cortex & npm run guardian",
-    "nexus": "node cli/nexus.js"
+    "nexus": "node cli/nexus.js",
+    "install_check": "node -e \"require(\"ws\"); console.log(\"deps ok\")\""
   },
   "engines": {
     "node": ">=18"
@@ -25,5 +26,9 @@
   },
   "bin": {
     "nexus": "./cli/nexus.js"
+  },
+  "optionalDependencies": {
+    "multer": "^1.4.5",
+    "express": "^4.18.0"
   }
 }
