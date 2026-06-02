@@ -1,205 +1,285 @@
 'use strict';
 // ════════════════════════════════════════════════════════════════════════════
-// NEXUS ORCHESTRATOR — v1.0.0
-// UUID: nexus-orchestrator-v1-0-0
+// NEXUS ORCHESTRATOR — v2.0.0
+// UUID: nexus-orchestrator-v2-0-0
 //
-// The unified root. Connects all systems, exposes one API, one CLI entry,
-// one event stream. Watches ui/ subdirs and hotswaps HTML on file change.
+// Root orchestrator. One process that:
+//   • Executes commands against every system API
+//   • Exposes a unified /api/* surface covering all systems
+//   • Streams all live events through one SSE endpoint
+//   • Serves each system's UI from ui/<system>/index.html (hotswapped)
+//   • Provides a full CLI: node orchestrator.js <command> [args]
 //
 // Port: 9000
 //
-// Boot: node orchestrator.js
-//       npm run orchestrator
+// ── API surface ───────────────────────────────────────────────────────────────
+//   GET  /                        Orchestrator UI
+//   GET  /health                  All systems health (parallel)
+//   GET  /api/status              Full status JSON
+//   GET  /api/channels            SISO channel map (22 channels)
+//   GET  /api/api-map             All routes across all systems
+//   GET  /api/cli                 CLI reference
+//   GET  /api/ui                  UI file status
+//   GET  /sse                     Unified SSE (all bridge events)
+//   GET  /ui/:system              System UI (hotswapped from disk)
 //
-// ── Architecture ──────────────────────────────────────────────────────────────
+//   ── Bridge ───────────────────────────────────────────────────────────────
+//   POST /api/bridge/handshake    { systemId, appId, secret }
+//   GET  /api/bridge/health
+//   GET  /api/bridge/stats
+//   GET  /api/bridge/tags/:id
+//   POST /api/bridge/tags         { entityId, entityType, system, tags[], addedBy }
+//   GET  /api/bridge/tags?tag=x
+//   GET  /api/bridge/requests     ?status=&from=&to=&type=
+//   POST /api/bridge/requests     { type, from, to, payload }
+//   GET  /api/bridge/requests/:uuid
+//   POST /api/bridge/requests/:uuid/accept   { by }
+//   POST /api/bridge/requests/:uuid/reject   { by, reason }
+//   POST /api/bridge/requests/:uuid/complete { result }
+//   POST /api/bridge/requests/:uuid/fail     { error }
+//   GET  /api/bridge/subscribe    ?channel=x  → SSE
+//   GET  /api/bridge/pull         ?channel=x&since=ts
+//   POST /api/bridge/broadcast    { type, ...data }
+//   POST /api/bridge/forward      { to, path, payload }
+//   POST /api/bridge/purge
 //
-//   orchestrator.js (port 9000)
-//     ├── serves ui/orchestrator/index.html  at /
-//     ├── hotswaps ui/bridge/     on change  → served at /ui/bridge
-//     ├── hotswaps ui/cortex/     on change  → served at /ui/cortex
-//     ├── hotswaps ui/guardian/   on change  → served at /ui/guardian
-//     ├── hotswaps ui/idearium/   on change  → served at /ui/idearium
-//     ├── hotswaps ui/emerge/     on change  → served at /ui/emerge
-//     ├── /api/status             → all systems health (parallel)
-//     ├── /api/channels           → channel map JSON
-//     ├── /api/api-map            → full API surface JSON
-//     ├── /api/cli                → CLI command reference JSON
-//     ├── /api/dispatch           → forward command to any system
-//     ├── /sse                    → unified live stream (all systems merged)
-//     └── /health                 → orchestrator self-check
+//   ── Cortex ───────────────────────────────────────────────────────────────
+//   GET  /api/cortex/health
+//   GET  /api/cortex/events       ?n=20
+//   POST /api/cortex/event        { type, payload, causedBy? }
+//   GET  /api/cortex/gaps         ?status=open
+//   GET  /api/cortex/failures
+//   GET  /api/cortex/memory       ?table=event_log&n=50
+//   POST /api/cortex/memory/search { q }
+//   POST /api/cortex/memory/forget { uuid }
+//   GET  /api/cortex/files
+//   GET  /api/cortex/tags         ?entityId=x
+//   POST /api/cortex/tags         { entityId, entityType, system, tags[] }
+//   GET  /api/cortex/ring
+//   GET  /api/cortex/modules
+//
+//   ── Guardian ─────────────────────────────────────────────────────────────
+//   POST /api/guardian/dispatch   { provider, command, prompt, content? }
+//   GET  /api/guardian/status/:jobId
+//   GET  /api/guardian/response/:jobId
+//   GET  /api/guardian/jobs       ?status=&limit=20
+//   GET  /api/guardian/providers
+//   GET  /api/guardian/health
+//   GET  /api/guardian/log
+//   GET  /api/guardian/artifacts  ?lang=&q=
+//   POST /api/guardian/artifacts  { hash, name, type, lang, content, context }
+//   GET  /api/guardian/artifacts/:hash
+//   DELETE /api/guardian/artifacts/:hash
+//   POST /api/guardian/memory/ingest { type, payload, source }
+//   GET  /api/guardian/memory/query  ?q=
+//   GET  /api/guardian/memory/artifacts
+//   GET  /api/guardian/memory/ledger
+//   GET  /api/guardian/memory/context
+//   GET  /api/guardian/memory/stats
+//   GET  /api/guardian/memory/downloads
+//   POST /api/guardian/ledger     { level, category, msg, meta }
+//   GET  /api/guardian/ledger
+//
+//   ── Idearium ─────────────────────────────────────────────────────────────
+//   GET  /api/idearium/health
+//   GET  /api/idearium/snr
+//   GET  /api/idearium/snr/history
+//   GET  /api/idearium/events
+//   GET  /api/idearium/ideas
+//   POST /api/idearium/ideas      { text, tags?, compartment? }
+//   GET  /api/idearium/ideas/:uuid
+//   PATCH /api/idearium/ideas/:uuid { text?, phase? }
+//   POST /api/idearium/ideas/:uuid/tension
+//   POST /api/idearium/ideas/:uuid/phase { phase }
+//   POST /api/idearium/ideas/:uuid/link  { toUuid, linkType? }
+//   POST /api/idearium/ideas/:uuid/spec
+//   GET  /api/idearium/specs
+//   GET  /api/idearium/specs/:uuid
+//   POST /api/idearium/specs/:uuid/build
+//   GET  /api/idearium/gaps
+//   POST /api/idearium/gaps       { description }
+//   POST /api/idearium/gaps/:uuid/resolve { resolution }
+//   GET  /api/idearium/snapshots
+//   POST /api/idearium/snapshots  { message }
+//   GET  /api/idearium/contract
+//   GET  /api/idearium/stats
 //
 // ── CLI ───────────────────────────────────────────────────────────────────────
-//   node orchestrator.js status        — all systems
-//   node orchestrator.js dispatch      — dispatch to system
-//   node orchestrator.js watch         — live event stream
-//   node orchestrator.js ui            — list UI files with hotswap status
-//   node orchestrator.js health        — self health
+//   node orchestrator.js                start server
+//   node orchestrator.js status         all systems health
+//   node orchestrator.js watch          live event stream
+//   node orchestrator.js ui             UI file status
+//   node orchestrator.js dispatch       dispatch job to guardian
+//   node orchestrator.js jobs           list guardian jobs
+//   node orchestrator.js events         tail cortex events
+//   node orchestrator.js gaps           list all gaps
+//   node orchestrator.js ideas          list idearium ideas
+//   node orchestrator.js idea <text>    create idea
+//   node orchestrator.js requests       list bridge requests
+//   node orchestrator.js tag <id> <tags> tag entity
+//   node orchestrator.js push <msg>     snapshot + versionium
+//   node orchestrator.js snr            idearium SNR
+//   node orchestrator.js help
 //
 // ════════════════════════════════════════════════════════════════════════════
 
 const http   = require('http');
 const fs     = require('fs');
 const path   = require('path');
-const url    = require('url');
-const { randomUUID } = require('crypto');
+const { URL } = require('url');
 
-const PORT    = process.env.ORCHESTRATOR_PORT || 9000;
+const PORT    = parseInt(process.env.ORCHESTRATOR_PORT || '9000');
 const ROOT    = __dirname;
 const UI_ROOT = path.join(ROOT, 'ui');
 
 // ── System registry ───────────────────────────────────────────────────────────
-const SYSTEMS = {
-  bridge:   { port: 9999, host: '127.0.0.1', label: 'Bridge',      color: '#f0a500', healthPath: '/bridge/health' },
-  cortex:   { port: 3748, host: '127.0.0.1', label: 'Cortex',      color: '#2dd4bf', healthPath: '/health' },
-  guardian: { port: 7820, host: '127.0.0.1', label: 'Guardian',    color: '#9b7fe8', healthPath: '/health' },
-  idearium: { port: 4800, host: '127.0.0.1', label: 'Idearium',    color: '#4a9eff', healthPath: '/health' },
-  emerge:   { port: 4242, host: '127.0.0.1', label: 'Emerge IDE',  color: '#3ecf8e', healthPath: '/status' },
-  ollama:   { port: 11434,host: '127.0.0.1', label: 'Ollama',      color: '#e85d3c', healthPath: '/api/tags' },
+const SYS = {
+  bridge:   { port:9999,  host:'127.0.0.1', label:'Bridge',     color:'#f0a500' },
+  cortex:   { port:3748,  host:'127.0.0.1', label:'Cortex',     color:'#2dd4bf' },
+  guardian: { port:7820,  host:'127.0.0.1', label:'Guardian',   color:'#9b7fe8' },
+  idearium: { port:4800,  host:'127.0.0.1', label:'Idearium',   color:'#4a9eff' },
+  emerge:   { port:4242,  host:'127.0.0.1', label:'Emerge IDE', color:'#3ecf8e' },
+  ollama:   { port:11434, host:'127.0.0.1', label:'Ollama',     color:'#e85d3c' },
 };
 
 // ── Channel map ───────────────────────────────────────────────────────────────
 const CHANNELS = [
-  { from:'guardian', channel:'guardian.job.complete',    to:['cortex','bridge'],   desc:'Job finished — syncs to cortex, memory.ingest to bridge' },
-  { from:'guardian', channel:'guardian.artifact',        to:['cortex','bridge'],   desc:'Code artifact — stored in cortex, tagged in bridge' },
-  { from:'guardian', channel:'guardian.gaps',            to:['cortex'],            desc:'Gaps detected in AI output' },
-  { from:'guardian', channel:'guardian.ledger',          to:['jaa'],               desc:'Ledger entry written to JAA' },
-  { from:'guardian', channel:'guardian.session.named',   to:['jaa'],               desc:'Chat session named by AI agent' },
-  { from:'guardian', channel:'guardian.timeline',        to:['jaa'],               desc:'Timeline event recorded' },
-  { from:'guardian', channel:'guardian.job.queued',      to:['bridge'],            desc:'Job queued waiting for provider' },
-  { from:'guardian', channel:'guardian.job.dispatched',  to:['bridge'],            desc:'Job dispatched to AI provider' },
-  { from:'guardian', channel:'guardian.setting.update',  to:['jaa'],               desc:'Setting changed' },
-  { from:'cortex',   channel:'cortex.gap.found',         to:['guardian','bridge'], desc:'Gap detected — notifies guardian ledger' },
-  { from:'cortex',   channel:'cortex.gap.resolved',      to:['bridge'],            desc:'Gap resolved — broadcasts to all subscribers' },
-  { from:'idearium', channel:'idearium.idea.created',    to:['cortex','bridge'],   desc:'New idea — synced to cortex, tagged in bridge' },
-  { from:'idearium', channel:'idearium.snapshot.pushed', to:['cortex'],            desc:'Snapshot — triggers versionium commit' },
-  { from:'bridge',   channel:'bridge.request.created',   to:['*'],                 desc:'New request — broadcast to all subscribers' },
-  { from:'bridge',   channel:'bridge.request.accepted',  to:['*'],                 desc:'Request accepted' },
-  { from:'bridge',   channel:'bridge.request.complete',  to:['*'],                 desc:'Request complete' },
-  { from:'bridge',   channel:'bridge.request.expired',   to:['*'],                 desc:'Stale request purged (30min TTL)' },
-  { from:'bridge',   channel:'bridge.handshake',         to:['audit'],             desc:'System handshake — audit logged' },
-  { from:'bridge',   channel:'bridge.tag.added',         to:['*'],                 desc:'Entity tagged' },
-  { from:'alk',      channel:'alk.video.landmarks.face', to:['gcanvas'],           desc:'Face landmarks → CFR attractor positions' },
-  { from:'alk',      channel:'alk.behavior.cue.detected',to:['gcanvas','cortex'],  desc:'Behavioral cue → field delta + cortex event' },
-  { from:'alk',      channel:'alk.signal.composite',     to:['cortex'],            desc:'Composite ALK signal → cortex event_log' },
+  { from:'guardian', ch:'guardian.job.complete',    to:['cortex','bridge'],   desc:'Job finished → memory.ingest' },
+  { from:'guardian', ch:'guardian.artifact',        to:['cortex','bridge'],   desc:'Code artifact → cortex + tagged' },
+  { from:'guardian', ch:'guardian.gaps',            to:['cortex'],            desc:'Gaps detected in AI output' },
+  { from:'guardian', ch:'guardian.ledger',          to:['jaa'],               desc:'Ledger entry' },
+  { from:'guardian', ch:'guardian.session.named',   to:['jaa'],               desc:'Chat session named' },
+  { from:'guardian', ch:'guardian.timeline',        to:['jaa'],               desc:'Timeline event' },
+  { from:'guardian', ch:'guardian.job.queued',      to:['bridge'],            desc:'Job queued waiting for provider' },
+  { from:'guardian', ch:'guardian.job.dispatched',  to:['bridge'],            desc:'Job dispatched to provider' },
+  { from:'guardian', ch:'guardian.setting.update',  to:['jaa'],               desc:'Setting changed' },
+  { from:'cortex',   ch:'cortex.gap.found',         to:['guardian','bridge'], desc:'Gap → guardian ledger' },
+  { from:'cortex',   ch:'cortex.gap.resolved',      to:['bridge'],            desc:'Gap resolved broadcast' },
+  { from:'idearium', ch:'idearium.idea.created',    to:['cortex','bridge'],   desc:'Idea → cortex + tagged' },
+  { from:'idearium', ch:'idearium.snapshot.pushed', to:['cortex'],            desc:'Snapshot → versionium' },
+  { from:'bridge',   ch:'bridge.request.created',   to:['*'],                 desc:'Request queued → all' },
+  { from:'bridge',   ch:'bridge.request.accepted',  to:['*'],                 desc:'Request accepted' },
+  { from:'bridge',   ch:'bridge.request.complete',  to:['*'],                 desc:'Request complete' },
+  { from:'bridge',   ch:'bridge.request.expired',   to:['*'],                 desc:'Stale request purged' },
+  { from:'bridge',   ch:'bridge.handshake',         to:['audit'],             desc:'Handshake logged' },
+  { from:'bridge',   ch:'bridge.tag.added',         to:['*'],                 desc:'Entity tagged' },
+  { from:'alk',      ch:'alk.video.landmarks.face', to:['gcanvas'],           desc:'Face → CFR attractors' },
+  { from:'alk',      ch:'alk.behavior.cue.detected',to:['gcanvas','cortex'],  desc:'Behavior → field delta' },
+  { from:'alk',      ch:'alk.signal.composite',     to:['cortex'],            desc:'ALK composite → event_log' },
 ];
 
-// ── CLI commands reference ────────────────────────────────────────────────────
+// ── CLI reference ─────────────────────────────────────────────────────────────
 const CLI_REF = {
-  unified: [
+  orchestrator: [
+    { cmd:'node orchestrator.js',              desc:'Start server (port 9000)' },
+    { cmd:'node orchestrator.js status',       desc:'All systems health' },
+    { cmd:'node orchestrator.js watch',        desc:'Live unified event stream' },
+    { cmd:'node orchestrator.js ui',           desc:'UI file status + hotswap' },
+    { cmd:'node orchestrator.js dispatch "prompt" [provider] [command]', desc:'Dispatch to guardian' },
+    { cmd:'node orchestrator.js jobs [status]',desc:'Guardian job list' },
+    { cmd:'node orchestrator.js events [n]',   desc:'Cortex event log tail' },
+    { cmd:'node orchestrator.js gaps',         desc:'All gaps (idearium + cortex)' },
+    { cmd:'node orchestrator.js ideas',        desc:'Idearium ideas' },
+    { cmd:'node orchestrator.js idea "text"',  desc:'Create idea' },
+    { cmd:'node orchestrator.js requests [status]', desc:'Bridge request queue' },
+    { cmd:'node orchestrator.js tag <id> <t1,t2>', desc:'Tag entity in bridge' },
+    { cmd:'node orchestrator.js push "msg"',   desc:'Idearium snapshot' },
+    { cmd:'node orchestrator.js snr',          desc:'Idearium SNR' },
+    { cmd:'node orchestrator.js help',         desc:'This message' },
+  ],
+  nexus_unified: [
     { cmd:'nexus status',              desc:'All systems health' },
-    { cmd:'nexus dispatch "prompt"',   desc:'Dispatch to chatgpt (default)' },
-    { cmd:'nexus jobs',                desc:'Guardian job list' },
-    { cmd:'nexus events --n=20',       desc:'Cortex event log' },
-    { cmd:'nexus gaps',                desc:'All open gaps (idearium + cortex)' },
-    { cmd:'nexus ideas',               desc:'Idearium idea list' },
+    { cmd:'nexus dispatch "prompt"',   desc:'Dispatch to chatgpt' },
+    { cmd:'nexus jobs',                desc:'Guardian jobs' },
+    { cmd:'nexus events --n=20',       desc:'Cortex events' },
+    { cmd:'nexus gaps',                desc:'All gaps' },
+    { cmd:'nexus ideas',               desc:'Idearium ideas' },
     { cmd:'nexus idea "text"',         desc:'Create idea' },
-    { cmd:'nexus push "message"',      desc:'Snapshot + versionium commit' },
-    { cmd:'nexus snr',                 desc:'System SNR score' },
+    { cmd:'nexus push "message"',      desc:'Snapshot + versionium' },
+    { cmd:'nexus snr',                 desc:'System SNR' },
     { cmd:'nexus stream',              desc:'Live cortex SSE' },
-    { cmd:'nexus watch <jobId>',       desc:'Stream guardian job tokens' },
+    { cmd:'nexus watch <jobId>',       desc:'Stream job tokens' },
     { cmd:'nexus watchdog',            desc:'Live all-systems dashboard' },
     { cmd:'nexus requests',            desc:'Bridge request queue' },
     { cmd:'nexus accept <uuid>',       desc:'Accept bridge request' },
     { cmd:'nexus reject <uuid>',       desc:'Reject bridge request' },
-    { cmd:'nexus tag <id> --tags=x,y', desc:'Tag entity in bridge' },
-    { cmd:'nexus tags <id>',           desc:'Get entity tags' },
+    { cmd:'nexus tag <id> --tags=x,y', desc:'Tag entity' },
     { cmd:'nexus bridge health',       desc:'Bridge health' },
-    { cmd:'nexus cortex status',       desc:'Cortex status + JAA counts' },
-    { cmd:'nexus cortex post --type=x',desc:'Write cortex event' },
-    { cmd:'nexus cortex memory <q>',   desc:'Search memory' },
-    { cmd:'nexus guardian dispatch',   desc:'Dispatch job' },
-    { cmd:'nexus guardian providers',  desc:'Provider connection status' },
+    { cmd:'nexus cortex status',       desc:'Cortex status' },
+    { cmd:'nexus guardian providers',  desc:'Provider status' },
   ],
   passthrough: [
-    { cmd:'nexus /guardian /code chatgpt "prompt"', desc:'Guardian code command' },
-    { cmd:'nexus /guardian jobs',                   desc:'Guardian jobs' },
-    { cmd:'nexus /cockpit pipeline list',           desc:'Pipeline list' },
+    { cmd:'nexus /guardian /code chatgpt "prompt"', desc:'Guardian code' },
+    { cmd:'nexus /guardian jobs',                   desc:'Jobs' },
+    { cmd:'nexus /cockpit pipeline list',           desc:'Pipelines' },
     { cmd:'nexus /cockpit seam compile <file>',     desc:'Compile SEAM' },
-    { cmd:'nexus /cockpit forge gap create "title"',desc:'Create gap' },
-    { cmd:'nexus /cockpit jaa stats',               desc:'JAA statistics' },
+    { cmd:'nexus /cockpit forge gap create "t"',    desc:'Create gap' },
+    { cmd:'nexus /cockpit jaa stats',               desc:'JAA stats' },
     { cmd:'nexus /cortex ask "question"',           desc:'Ask cortex' },
-    { cmd:'nexus /cortex gaps',                     desc:'Cortex gaps' },
     { cmd:'nexus /idearium idea add "text"',        desc:'Add idea' },
     { cmd:'nexus /idearium spec new <uuid>',        desc:'Create spec' },
-    { cmd:'nexus /ollama status',                   desc:'Ollama models' },
     { cmd:'nexus /ollama pull qwen2.5-coder:7b',    desc:'Pull model' },
     { cmd:'nexus /ollama run "prompt"',             desc:'Run inference' },
-    { cmd:'nexus /bridge health',                   desc:'Bridge health' },
-    { cmd:'nexus /bridge requests',                 desc:'Bridge requests' },
     { cmd:'nexus /bridge subscribe guardian.job.*', desc:'Subscribe channel' },
   ],
 };
 
-// ── HTTP helpers ──────────────────────────────────────────────────────────────
-function sysReq(systemId, method, p, body, timeout = 4000) {
+// ── HTTP proxy helpers ────────────────────────────────────────────────────────
+function sysReq(systemId, method, p, body, timeout = 5000) {
   return new Promise(resolve => {
-    const sys = SYSTEMS[systemId];
-    if (!sys) return resolve({ ok: false, error: `unknown system: ${systemId}` });
-    const pl   = body ? JSON.stringify(body) : null;
+    const sys = SYS[systemId];
+    if (!sys) return resolve({ ok:false, error:`unknown system: ${systemId}` });
+    const pl = body !== undefined ? JSON.stringify(body) : null;
     const opts = {
       hostname: sys.host, port: sys.port, path: p, method,
-      headers: { 'Content-Type': 'application/json', ...(pl ? { 'Content-Length': Buffer.byteLength(pl) } : {}) },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Orchestrator': 'nexus-orchestrator-v2',
+        ...(pl ? { 'Content-Length': Buffer.byteLength(pl) } : {}),
+      },
     };
     const r = http.request(opts, res => {
       let d = '';
       res.on('data', c => d += c);
-      res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve({ ok: res.statusCode < 400, raw: d }); } });
+      res.on('end', () => {
+        try { resolve(JSON.parse(d)); }
+        catch { resolve({ ok: res.statusCode < 400, raw: d, status: res.statusCode }); }
+      });
     });
-    r.setTimeout(timeout, () => { r.destroy(); resolve({ ok: false, error: `${sys.label} timeout` }); });
-    r.on('error', e => resolve({ ok: false, error: `${sys.label} offline: ${e.message}` }));
+    r.setTimeout(timeout, () => { r.destroy(); resolve({ ok:false, error:`${sys.label} timeout` }); });
+    r.on('error', e => resolve({ ok:false, error:`${sys.label} offline: ${e.message}` }));
     if (pl) r.write(pl);
     r.end();
   });
 }
 
-// ── System health (parallel) ──────────────────────────────────────────────────
-async function getAllHealth() {
-  const results = await Promise.all(
-    Object.entries(SYSTEMS).map(async ([id, sys]) => {
-      const start = Date.now();
-      const d     = await sysReq(id, 'GET', sys.healthPath);
-      return { id, sys, d, ms: Date.now() - start, online: !d.error };
-    })
-  );
-  return results;
+const GET  = (sys, p, timeout)    => sysReq(sys, 'GET',    p, undefined, timeout);
+const POST = (sys, p, b, timeout) => sysReq(sys, 'POST',   p, b, timeout);
+const DEL  = (sys, p, timeout)    => sysReq(sys, 'DELETE', p, undefined, timeout);
+const PATCH= (sys, p, b, timeout) => sysReq(sys, 'PATCH',  p, b, timeout);
+
+// ── All systems health ────────────────────────────────────────────────────────
+const HEALTH_PATHS = {
+  bridge:   '/bridge/health',
+  cortex:   '/health',
+  guardian: '/health',
+  idearium: '/',
+  emerge:   '/status',
+  ollama:   '/api/tags',
+};
+
+async function allHealth() {
+  return Promise.all(Object.entries(SYS).map(async ([id, sys]) => {
+    const start = Date.now();
+    const d = await GET(id, HEALTH_PATHS[id], 3000);
+    return { id, sys, d, ms: Date.now() - start, online: !d.error };
+  }));
 }
 
-// ── UI hotswap watcher ────────────────────────────────────────────────────────
-// Each system has its own ui/<system>/ folder.
-// When any .html/.js/.css file in those folders changes,
-// we reload it from disk on the next request — zero restart needed.
-//
-// Watched dirs: ui/bridge  ui/cortex  ui/guardian  ui/idearium  ui/emerge  ui/orchestrator
+// ── SSE unified stream ────────────────────────────────────────────────────────
+const sseClients = new Set();
+let bridgeSse    = null;
 
-const UI_SYSTEMS = ['bridge', 'cortex', 'guardian', 'idearium', 'emerge', 'orchestrator'];
-const sseClients = new Set(); // unified SSE subscribers
-
-function watchUIDirs() {
-  for (const sys of UI_SYSTEMS) {
-    const dir = path.join(UI_ROOT, sys);
-    if (!fs.existsSync(dir)) { fs.mkdirSync(dir, { recursive: true }); continue; }
-    try {
-      fs.watch(dir, { recursive: true }, (event, filename) => {
-        if (!filename) return;
-        const ext = path.extname(filename).toLowerCase();
-        if (!['.html','.js','.css','.json'].includes(ext)) return;
-        const msg = JSON.stringify({
-          type: 'orchestrator.ui.hotswap',
-          system: sys, file: filename, event,
-          ts: Date.now(),
-        });
-        broadcast(msg);
-        console.log(`[hotswap] ${sys}/${filename} ${event}`);
-      });
-      console.log(`[ui] watching ui/${sys}/`);
-    } catch(e) {
-      console.log(`[ui] watch failed for ui/${sys}: ${e.message}`);
-    }
-  }
-}
-
-// ── Unified SSE broadcast ─────────────────────────────────────────────────────
-// Also subscribes to bridge SSE and re-emits everything here
 function broadcast(data) {
   const msg = `data: ${data}\n\n`;
   for (const res of sseClients) {
@@ -207,366 +287,671 @@ function broadcast(data) {
   }
 }
 
-let bridgeSseConn = null;
 function connectBridgeSSE() {
-  if (bridgeSseConn) return;
-  const opts = {
-    hostname: '127.0.0.1', port: 9999,
-    path: '/bridge/subscribe?channel=*', method: 'GET',
-    headers: { Accept: 'text/event-stream' },
-  };
-  const req = http.request(opts, res => {
+  const r = http.request({
+    hostname:'127.0.0.1', port:9999,
+    path:'/bridge/subscribe?channel=*', method:'GET',
+    headers:{Accept:'text/event-stream'},
+  }, res => {
     let buf = '';
     res.on('data', c => {
       buf += c.toString();
       const lines = buf.split('\n'); buf = lines.pop();
-      for (const line of lines) {
-        if (line.startsWith('data:')) {
-          broadcast(line.slice(5).trim());
-        }
+      for (const l of lines) {
+        if (l.startsWith('data:')) broadcast(l.slice(5).trim());
       }
     });
-    res.on('end', () => {
-      bridgeSseConn = null;
-      setTimeout(connectBridgeSSE, 3000); // reconnect
-    });
+    res.on('end', () => { bridgeSse=null; setTimeout(connectBridgeSSE, 3000); });
   });
-  req.on('error', () => {
-    bridgeSseConn = null;
-    setTimeout(connectBridgeSSE, 5000);
-  });
-  req.end();
-  bridgeSseConn = req;
+  r.on('error', () => { bridgeSse=null; setTimeout(connectBridgeSSE, 5000); });
+  r.end();
+  bridgeSse = r;
 }
 
-// ── MIME types ─────────────────────────────────────────────────────────────────
-const MIME = {
-  '.html': 'text/html', '.js': 'application/javascript',
-  '.css': 'text/css', '.json': 'application/json',
-  '.svg': 'image/svg+xml', '.png': 'image/png',
-  '.ico': 'image/x-icon',
-};
+// ── UI hotswap watcher ────────────────────────────────────────────────────────
+const UI_SYSTEMS = ['bridge','cortex','guardian','idearium','emerge','orchestrator'];
 
-// ── HTTP server ───────────────────────────────────────────────────────────────
-function json(res, code, body) {
-  res.writeHead(code, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-  res.end(JSON.stringify(body));
+function watchUIDirs() {
+  for (const sys of UI_SYSTEMS) {
+    const dir = path.join(UI_ROOT, sys);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    try {
+      fs.watch(dir, { recursive:true }, (event, filename) => {
+        if (!filename) return;
+        if (!['.html','.js','.css','.json'].includes(path.extname(filename).toLowerCase())) return;
+        const msg = JSON.stringify({ type:'orchestrator.ui.hotswap', system:sys, file:filename, event, ts:Date.now() });
+        broadcast(msg);
+        console.log(`[hotswap] ui/${sys}/${filename} → ${event}`);
+      });
+    } catch(e) { console.error(`[hotswap] watch failed ui/${sys}: ${e.message}`); }
+  }
 }
 
-function serveFile(res, filePath) {
-  fs.readFile(filePath, (err, data) => {
+// ── MIME ──────────────────────────────────────────────────────────────────────
+const MIME = { '.html':'text/html', '.js':'application/javascript', '.css':'text/css',
+               '.json':'application/json', '.svg':'image/svg+xml', '.png':'image/png' };
+
+function serveFile(res, fp) {
+  fs.readFile(fp, (err, data) => {
     if (err) { res.writeHead(404); return res.end('not found'); }
-    const ext  = path.extname(filePath).toLowerCase();
-    const mime = MIME[ext] || 'text/plain';
-    res.writeHead(200, { 'Content-Type': mime, 'Access-Control-Allow-Origin': '*' });
+    res.writeHead(200, { 'Content-Type': MIME[path.extname(fp).toLowerCase()] || 'text/plain', 'Access-Control-Allow-Origin':'*' });
     res.end(data);
   });
 }
 
+// ── JSON response helpers ─────────────────────────────────────────────────────
+function json(res, code, body) {
+  res.writeHead(code, { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' });
+  res.end(JSON.stringify(body));
+}
+
+function readBody(req) {
+  return new Promise(resolve => {
+    let d = '';
+    req.on('data', c => d += c);
+    req.on('end', () => { try { resolve(JSON.parse(d || '{}')); } catch(_) { resolve({}); } });
+  });
+}
+
+// ── HTTP server ───────────────────────────────────────────────────────────────
 const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Bridge-Token');
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
 
   const u     = new URL(req.url, `http://localhost:${PORT}`);
-  const parts = u.pathname.replace(/^\/+|\/+$/g, '').split('/').filter(Boolean);
-  const first = parts[0] || '';
+  const seg   = u.pathname.replace(/^\/+|\/+$/g,'').split('/').filter(Boolean);
+  const top   = seg[0] || '';
+  const sub   = seg[1] || '';
+  const rest  = seg.slice(2).join('/');
+  const M     = req.method;
+  const QS    = u.searchParams;
 
-  // ── Root → orchestrator UI ─────────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/') {
-    return serveFile(res, path.join(UI_ROOT, 'orchestrator', 'index.html'));
+  // ── Root UI ──────────────────────────────────────────────────────────────
+  if (M==='GET' && u.pathname==='/') {
+    return serveFile(res, path.join(UI_ROOT,'orchestrator','index.html'));
   }
 
-  // ── System UIs: /ui/<system>[/file] ──────────────────────────────────────
-  if (req.method === 'GET' && first === 'ui' && parts[1]) {
-    const sys      = parts[1];
-    const rest     = parts.slice(2).join('/') || 'index.html';
-    const filePath = path.join(UI_ROOT, sys, rest);
-    if (fs.existsSync(filePath)) return serveFile(res, filePath);
-    // Fallback to index.html of that system
-    const idx = path.join(UI_ROOT, sys, 'index.html');
+  // ── System UIs ───────────────────────────────────────────────────────────
+  if (M==='GET' && top==='ui' && sub) {
+    const fp = rest
+      ? path.join(UI_ROOT, sub, rest)
+      : path.join(UI_ROOT, sub, 'index.html');
+    if (fs.existsSync(fp)) return serveFile(res, fp);
+    const idx = path.join(UI_ROOT, sub, 'index.html');
     if (fs.existsSync(idx)) return serveFile(res, idx);
-    res.writeHead(404); return res.end(`UI not found: ${sys}`);
+    return json(res, 404, { ok:false, error:`UI not found: ${sub}` });
   }
 
-  // ── SSE — unified event stream ─────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/sse') {
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-      'Access-Control-Allow-Origin': '*',
-    });
-    res.write(`data: ${JSON.stringify({ type: 'orchestrator.connected', ts: Date.now() })}\n\n`);
+  // ── SSE unified ──────────────────────────────────────────────────────────
+  if (M==='GET' && u.pathname==='/sse') {
+    res.writeHead(200, { 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache',
+      'Connection':'keep-alive', 'Access-Control-Allow-Origin':'*' });
+    res.write(`data: ${JSON.stringify({ type:'orchestrator.connected', ts:Date.now() })}\n\n`);
     sseClients.add(res);
     req.on('close', () => sseClients.delete(res));
     return;
   }
 
-  // ── Health ────────────────────────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/health') {
-    const systems = await getAllHealth();
-    const online  = systems.filter(s => s.online).length;
+  // ── /health ──────────────────────────────────────────────────────────────
+  if (M==='GET' && u.pathname==='/health') {
+    const systems = await allHealth();
+    const online  = systems.filter(s=>s.online).length;
     return json(res, 200, {
-      ok: true, orchestrator: 'nexus-orchestrator-v1',
-      port: PORT, uptime: process.uptime(),
-      online, total: systems.length,
-      systems: Object.fromEntries(systems.map(s => [s.id, { online: s.online, ms: s.ms }])),
-      uiDirs: UI_SYSTEMS.map(s => ({
-        system: s,
-        path: `ui/${s}/`,
-        url: `http://localhost:${PORT}/ui/${s}`,
-        exists: fs.existsSync(path.join(UI_ROOT, s, 'index.html')),
-      })),
+      ok:true, orchestrator:'nexus-orchestrator-v2', port:PORT,
+      uptime:process.uptime(), online, total:systems.length,
+      systems: Object.fromEntries(systems.map(s=>[s.id,{online:s.online,ms:s.ms}])),
     });
   }
 
-  // ── API: all systems status ───────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/api/status') {
-    const systems = await getAllHealth();
-    return json(res, 200, {
-      ok: true, ts: Date.now(),
-      systems: Object.fromEntries(systems.map(s => [s.id, {
-        online: s.online, ms: s.ms, label: s.sys.label,
-        port: s.sys.port, color: s.sys.color,
-        data: s.d,
+  // ────────────────────────────────────────────────────────────────────────
+  // All orchestrated routes under /api/*
+  // ────────────────────────────────────────────────────────────────────────
+  if (top !== 'api') {
+    return json(res, 404, { ok:false, error:`route not found: ${M} ${u.pathname}` });
+  }
+
+  // ── Meta routes ───────────────────────────────────────────────────────────
+  if (M==='GET' && sub==='status') {
+    const systems = await allHealth();
+    return json(res, 200, { ok:true, ts:Date.now(),
+      systems: Object.fromEntries(systems.map(s=>[s.id,{
+        online:s.online, ms:s.ms, label:s.sys.label,
+        port:s.sys.port, color:s.sys.color, data:s.d,
       }])),
     });
   }
 
-  // ── API: channel map ─────────────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/api/channels') {
-    return json(res, 200, { ok: true, channels: CHANNELS });
+  if (M==='GET' && sub==='channels')  return json(res, 200, { ok:true, channels:CHANNELS });
+  if (M==='GET' && sub==='cli')       return json(res, 200, { ok:true, cli:CLI_REF });
+  if (M==='GET' && sub==='ui') {
+    return json(res, 200, { ok:true, uis: UI_SYSTEMS.map(s => {
+      const fp = path.join(UI_ROOT,s,'index.html');
+      const st = fs.existsSync(fp) ? fs.statSync(fp) : null;
+      return { system:s, url:`/ui/${s}`, exists:!!st, size:st?.size||0, modified:st?.mtime?.toISOString()||null };
+    })});
   }
 
-  // ── API: full API surface ─────────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/api/api-map') {
-    return json(res, 200, {
-      ok: true,
-      systems: {
-        bridge:   { port: 9999, routes: [
-          { m:'POST', p:'/bridge/handshake'            },{ m:'GET',  p:'/bridge/health'             },
-          { m:'GET',  p:'/bridge/stats'                },{ m:'GET',  p:'/bridge/tags/:id'            },
-          { m:'POST', p:'/bridge/tags'                 },{ m:'GET',  p:'/bridge/tags?tag=x'          },
-          { m:'GET',  p:'/bridge/requests'             },{ m:'POST', p:'/bridge/requests'            },
-          { m:'POST', p:'/bridge/requests/:uuid/accept'},{ m:'POST', p:'/bridge/requests/:uuid/reject'},
-          { m:'POST', p:'/bridge/requests/:uuid/complete'},{ m:'GET', p:'/bridge/subscribe?channel=x'},
-          { m:'GET',  p:'/bridge/pull?channel=x&since=ts'},{ m:'POST',p:'/bridge/broadcast'          },
-          { m:'POST', p:'/bridge/forward'              },{ m:'POST', p:'/bridge/purge'               },
-        ]},
-        cortex:   { port: 3748, routes: [
-          { m:'GET',  p:'/health'                      },{ m:'GET',  p:'/sse'                        },
-          { m:'GET',  p:'/api/events?n=N'              },{ m:'POST', p:'/api/event'                  },
-          { m:'GET',  p:'/api/gaps'                    },{ m:'GET',  p:'/api/failures'               },
-          { m:'GET',  p:'/api/memory?table=x&n=N'      },{ m:'POST', p:'/api/memory/search'          },
-          { m:'GET',  p:'/api/files'                   },{ m:'POST', p:'/api/files'                  },
-          { m:'GET',  p:'/api/tags?entityId=x'         },{ m:'POST', p:'/api/tags'                   },
-        ]},
-        guardian: { port: 7820, routes: [
-          { m:'POST', p:'/command'                     },{ m:'GET',  p:'/status/:jobId'              },
-          { m:'GET',  p:'/response/:jobId'             },{ m:'GET',  p:'/stream/:jobId'              },
-          { m:'GET',  p:'/jobs'                        },{ m:'GET',  p:'/providers'                  },
-          { m:'GET',  p:'/health'                      },{ m:'GET',  p:'/events'                     },
-          { m:'GET',  p:'/cockpit'                     },{ m:'GET',  p:'/artifacts'                  },
-          { m:'POST', p:'/artifacts'                   },{ m:'GET',  p:'/ledger'                     },
-        ]},
-        idearium: { port: 4800, routes: [
-          { m:'GET',  p:'/api/ideas'                   },{ m:'POST', p:'/api/ideas'                  },
-          { m:'PATCH',p:'/api/ideas/:uuid'             },{ m:'POST', p:'/api/ideas/:uuid/tension'    },
-          { m:'GET',  p:'/api/specs'                   },{ m:'GET',  p:'/api/gaps'                   },
-          { m:'POST', p:'/api/gaps'                    },{ m:'GET',  p:'/api/snr'                    },
-          { m:'POST', p:'/api/snapshots'               },{ m:'GET',  p:'/sse'                        },
-        ]},
-        orchestrator: { port: PORT, routes: [
-          { m:'GET',  p:'/'                            },{ m:'GET',  p:'/health'                     },
-          { m:'GET',  p:'/api/status'                  },{ m:'GET',  p:'/api/channels'               },
-          { m:'GET',  p:'/api/api-map'                 },{ m:'GET',  p:'/api/cli'                    },
-          { m:'POST', p:'/api/dispatch'                },{ m:'GET',  p:'/sse'                        },
-          { m:'GET',  p:'/ui/:system'                  },
-        ]},
-      },
-    });
+  if (M==='GET' && sub==='api-map') {
+    return json(res, 200, { ok:true, generated: new Date().toISOString(), systems: {
+      bridge:{ port:9999, routes:[
+        { m:'POST',p:'/bridge/handshake' },{ m:'GET',p:'/bridge/health' },{ m:'GET',p:'/bridge/stats' },
+        { m:'GET',p:'/bridge/tags/:id' },{ m:'POST',p:'/bridge/tags' },{ m:'GET',p:'/bridge/tags?tag=x' },
+        { m:'GET',p:'/bridge/requests' },{ m:'POST',p:'/bridge/requests' },{ m:'GET',p:'/bridge/requests/:uuid' },
+        { m:'POST',p:'/bridge/requests/:uuid/accept' },{ m:'POST',p:'/bridge/requests/:uuid/reject' },
+        { m:'POST',p:'/bridge/requests/:uuid/complete' },{ m:'POST',p:'/bridge/requests/:uuid/fail' },
+        { m:'GET',p:'/bridge/subscribe?channel=x' },{ m:'GET',p:'/bridge/pull?channel=x&since=ts' },
+        { m:'POST',p:'/bridge/broadcast' },{ m:'POST',p:'/bridge/forward' },{ m:'POST',p:'/bridge/purge' },
+      ]},
+      cortex:{ port:3748, routes:[
+        { m:'GET',p:'/health' },{ m:'GET',p:'/sse' },{ m:'GET',p:'/api/events?n=N' },
+        { m:'POST',p:'/api/event' },{ m:'GET',p:'/api/gaps' },{ m:'GET',p:'/api/failures' },
+        { m:'GET',p:'/api/memory?table=x&n=N' },{ m:'POST',p:'/api/memory/search' },
+        { m:'POST',p:'/api/memory/forget' },{ m:'GET',p:'/api/files' },
+        { m:'GET',p:'/api/tags?entityId=x' },{ m:'POST',p:'/api/tags' },
+        { m:'GET',p:'/api/ring' },{ m:'GET',p:'/api/modules' },
+      ]},
+      guardian:{ port:7820, routes:[
+        { m:'POST',p:'/command' },{ m:'GET',p:'/status/:jobId' },{ m:'GET',p:'/response/:jobId' },
+        { m:'GET',p:'/stream/:jobId' },{ m:'GET',p:'/jobs' },{ m:'GET',p:'/providers' },
+        { m:'GET',p:'/health' },{ m:'GET',p:'/events' },{ m:'GET',p:'/log' },
+        { m:'GET',p:'/artifacts' },{ m:'POST',p:'/artifacts' },{ m:'DELETE',p:'/artifacts/:hash' },
+        { m:'POST',p:'/memory/ingest' },{ m:'GET',p:'/memory/query' },{ m:'GET',p:'/memory/artifacts' },
+        { m:'GET',p:'/memory/ledger' },{ m:'GET',p:'/memory/context' },{ m:'GET',p:'/memory/stats' },
+        { m:'GET',p:'/memory/downloads' },{ m:'POST',p:'/ledger' },{ m:'GET',p:'/ledger' },
+        { m:'GET',p:'/cockpit' },
+      ]},
+      idearium:{ port:4800, routes:[
+        { m:'GET',p:'/' },{ m:'GET',p:'/api/snr' },{ m:'GET',p:'/api/snr/history' },
+        { m:'GET',p:'/api/events' },{ m:'GET',p:'/api/ideas' },{ m:'POST',p:'/api/ideas' },
+        { m:'GET',p:'/api/ideas/:uuid' },{ m:'PATCH',p:'/api/ideas/:uuid' },
+        { m:'POST',p:'/api/ideas/:uuid/tension' },{ m:'POST',p:'/api/ideas/:uuid/phase' },
+        { m:'POST',p:'/api/ideas/:uuid/link' },{ m:'POST',p:'/api/ideas/:uuid/spec' },
+        { m:'GET',p:'/api/specs' },{ m:'GET',p:'/api/specs/:uuid' },{ m:'POST',p:'/api/specs/:uuid/build' },
+        { m:'GET',p:'/api/gaps' },{ m:'POST',p:'/api/gaps' },
+        { m:'POST',p:'/api/gaps/:uuid/resolve' },{ m:'GET',p:'/api/snapshots' },
+        { m:'POST',p:'/api/snapshots' },{ m:'GET',p:'/api/contract' },{ m:'GET',p:'/api/stats' },
+      ]},
+      orchestrator:{ port:PORT, routes:[
+        { m:'GET',p:'/' },{ m:'GET',p:'/health' },{ m:'GET',p:'/sse' },
+        { m:'GET',p:'/ui/:system' },{ m:'GET',p:'/api/status' },{ m:'GET',p:'/api/channels' },
+        { m:'GET',p:'/api/cli' },{ m:'GET',p:'/api/ui' },{ m:'GET',p:'/api/api-map' },
+        ...Object.entries({bridge:17,cortex:14,guardian:22,idearium:22}).map(([s,n])=>
+          ({ m:'*',p:`/api/${s}/*`,desc:`${n} routes proxied to ${s}` })),
+      ]},
+    }});
   }
 
-  // ── API: CLI reference ────────────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/api/cli') {
-    return json(res, 200, { ok: true, cli: CLI_REF });
+  // ── Bridge proxy ──────────────────────────────────────────────────────────
+  if (sub==='bridge') {
+    const action = seg[2] || '';
+    const uuid   = seg[3] || '';
+    const op     = seg[4] || '';
+
+    // SSE subscribe — stream from bridge directly
+    if (M==='GET' && action==='subscribe') {
+      const channel = QS.get('channel') || '*';
+      res.writeHead(200, { 'Content-Type':'text/event-stream','Cache-Control':'no-cache',
+        'Connection':'keep-alive','Access-Control-Allow-Origin':'*' });
+      const r = http.request({
+        hostname:'127.0.0.1', port:9999,
+        path:`/bridge/subscribe?channel=${encodeURIComponent(channel)}`, method:'GET',
+        headers:{Accept:'text/event-stream'},
+      }, rs => {
+        rs.on('data', c => res.write(c));
+        rs.on('end',  () => res.end());
+      });
+      r.on('error', () => res.end());
+      r.end();
+      req.on('close', () => r.destroy());
+      return;
+    }
+
+    if (M==='POST' && action==='handshake') return json(res,200,await POST('bridge','/bridge/handshake',await readBody(req)));
+    if (M==='GET'  && action==='health')    return json(res,200,await GET('bridge','/bridge/health'));
+    if (M==='GET'  && action==='stats')     return json(res,200,await GET('bridge','/bridge/stats'));
+    if (M==='POST' && action==='purge')     return json(res,200,await POST('bridge','/bridge/purge',{}));
+    if (M==='POST' && action==='broadcast') return json(res,200,await POST('bridge','/bridge/broadcast',await readBody(req)));
+    if (M==='POST' && action==='forward')   return json(res,200,await POST('bridge','/bridge/forward',await readBody(req)));
+    if (M==='GET'  && action==='pull')      return json(res,200,await GET('bridge',`/bridge/pull?channel=${QS.get('channel')||'*'}&since=${QS.get('since')||0}`));
+
+    if (action==='tags') {
+      if (M==='GET' && uuid)          return json(res,200,await GET('bridge',`/bridge/tags/${encodeURIComponent(uuid)}`));
+      if (M==='GET' && QS.get('tag')) return json(res,200,await GET('bridge',`/bridge/tags?tag=${encodeURIComponent(QS.get('tag'))}`));
+      if (M==='POST')                 return json(res,200,await POST('bridge','/bridge/tags',await readBody(req)));
+      if (M==='DELETE' && uuid)       return json(res,200,await sysReq('bridge','DELETE',`/bridge/tags/${uuid}`,await readBody(req)));
+    }
+
+    if (action==='requests') {
+      if (M==='GET' && !uuid) {
+        const q = new URLSearchParams();
+        for (const k of ['status','from','to','type','tag']) { const v=QS.get(k); if(v) q.set(k,v); }
+        return json(res,200,await GET('bridge',`/bridge/requests${q.toString()?'?'+q:''}`));
+      }
+      if (M==='POST' && !uuid)        return json(res,202,await POST('bridge','/bridge/requests',await readBody(req)));
+      if (M==='GET' && uuid && !op)   return json(res,200,await GET('bridge',`/bridge/requests/${uuid}`));
+      if (M==='POST' && uuid && op)   return json(res,200,await POST('bridge',`/bridge/requests/${uuid}/${op}`,await readBody(req)));
+    }
+
+    return json(res,404,{ok:false,error:`bridge route not found: ${M} ${u.pathname}`});
   }
 
-  // ── API: dispatch to any system ───────────────────────────────────────────
-  if (req.method === 'POST' && u.pathname === '/api/dispatch') {
-    let body = {};
-    await new Promise(r => { let d=''; req.on('data',c=>d+=c); req.on('end',()=>{try{body=JSON.parse(d);}catch(_){}r();}); });
-    const { system, path: p, payload, method = 'POST' } = body;
-    if (!system || !p) return json(res, 400, { ok: false, error: 'system and path required' });
-    const result = await sysReq(system, method, p, payload);
-    return json(res, result.ok !== false ? 200 : 502, { ok: true, result });
+  // ── Cortex proxy ──────────────────────────────────────────────────────────
+  if (sub==='cortex') {
+    const action = seg[2] || '';
+    const action2= seg[3] || '';
+
+    if (M==='GET'  && action==='health')           return json(res,200,await GET('cortex','/health'));
+    if (M==='GET'  && action==='events')           return json(res,200,await GET('cortex',`/api/events?n=${QS.get('n')||20}`));
+    if (M==='POST' && action==='event')            return json(res,200,await POST('cortex','/api/event',await readBody(req)));
+    if (M==='GET'  && action==='gaps')             return json(res,200,await GET('cortex',`/api/gaps${QS.get('status')?'?status='+QS.get('status'):''}`));
+    if (M==='GET'  && action==='failures')         return json(res,200,await GET('cortex','/api/failures'));
+    if (M==='GET'  && action==='ring')             return json(res,200,await GET('cortex','/api/ring'));
+    if (M==='GET'  && action==='modules')          return json(res,200,await GET('cortex','/api/modules'));
+    if (M==='GET'  && action==='files')            return json(res,200,await GET('cortex','/api/files'));
+    if (M==='GET'  && action==='tags')             return json(res,200,await GET('cortex',`/api/tags?entityId=${QS.get('entityId')||''}`));
+    if (M==='POST' && action==='tags')             return json(res,200,await POST('cortex','/api/tags',await readBody(req)));
+    if (M==='GET'  && action==='memory' && !action2) return json(res,200,await GET('cortex',`/api/memory?table=${QS.get('table')||'event_log'}&n=${QS.get('n')||50}`));
+    if (M==='POST' && action==='memory' && action2==='search') return json(res,200,await POST('cortex','/api/memory/search',await readBody(req)));
+    if (M==='POST' && action==='memory' && action2==='forget') return json(res,200,await POST('cortex','/api/memory/forget',await readBody(req)));
+    if (M==='GET'  && action==='requests')         return json(res,200,await GET('cortex','/api/requests'));
+    if (M==='GET'  && !action)                     return json(res,200,await GET('cortex','/health'));
+
+    // SSE proxy
+    if (M==='GET' && action==='sse') {
+      res.writeHead(200, { 'Content-Type':'text/event-stream','Cache-Control':'no-cache','Access-Control-Allow-Origin':'*' });
+      const r = http.request({ hostname:'127.0.0.1',port:3748,path:'/sse',method:'GET',headers:{Accept:'text/event-stream'} }, rs => {
+        rs.on('data', c => res.write(c)); rs.on('end', () => res.end());
+      });
+      r.on('error', () => res.end()); r.end();
+      req.on('close', () => r.destroy());
+      return;
+    }
+
+    return json(res,404,{ok:false,error:`cortex route not found: ${M} /api/cortex/${action}`});
   }
 
-  // ── UI list ───────────────────────────────────────────────────────────────
-  if (req.method === 'GET' && u.pathname === '/api/ui') {
-    const uis = UI_SYSTEMS.map(s => {
-      const dir  = path.join(UI_ROOT, s);
-      const idx  = path.join(dir, 'index.html');
-      const stat = fs.existsSync(idx) ? fs.statSync(idx) : null;
-      return {
-        system: s, url: `/ui/${s}`,
-        exists: !!stat,
-        size: stat?.size || 0,
-        modified: stat?.mtime?.toISOString() || null,
-      };
-    });
-    return json(res, 200, { ok: true, uis });
+  // ── Guardian proxy ────────────────────────────────────────────────────────
+  if (sub==='guardian') {
+    const action = seg[2] || '';
+    const uuid   = seg[3] || '';
+    const op     = seg[4] || '';
+
+    if (M==='GET'  && !action)                      return json(res,200,await GET('guardian','/health'));
+    if (M==='GET'  && action==='health')             return json(res,200,await GET('guardian','/health'));
+    if (M==='GET'  && action==='providers')          return json(res,200,await GET('guardian','/providers'));
+    if (M==='GET'  && action==='jobs')               return json(res,200,await GET('guardian',`/jobs?status=${QS.get('status')||''}&limit=${QS.get('limit')||20}`));
+    if (M==='GET'  && action==='log')                return json(res,200,await GET('guardian',`/log?limit=${QS.get('limit')||20}`));
+    if (M==='POST' && action==='dispatch')           return json(res,202,await POST('guardian','/command',await readBody(req)));
+    if (M==='GET'  && action==='status' && uuid)     return json(res,200,await GET('guardian',`/status/${uuid}`));
+    if (M==='GET'  && action==='response' && uuid)   return json(res,200,await GET('guardian',`/response/${uuid}`));
+    if (M==='GET'  && action==='artifacts' && !uuid) return json(res,200,await GET('guardian',`/artifacts?lang=${QS.get('lang')||''}&q=${QS.get('q')||''}`));
+    if (M==='GET'  && action==='artifacts' && uuid)  return json(res,200,await GET('guardian',`/artifacts/${uuid}`));
+    if (M==='POST' && action==='artifacts')          return json(res,200,await POST('guardian','/artifacts',await readBody(req)));
+    if (M==='DELETE'&&action==='artifacts' && uuid)  return json(res,200,await DEL('guardian',`/artifacts/${uuid}`));
+    if (M==='POST' && action==='ledger')             return json(res,200,await POST('guardian','/ledger',await readBody(req)));
+    if (M==='GET'  && action==='ledger')             return json(res,200,await GET('guardian',`/ledger?category=${QS.get('category')||''}`));
+
+    // Memory sub-routes
+    if (action==='memory') {
+      if (M==='POST' && uuid==='ingest')   return json(res,200,await POST('guardian','/memory/ingest',await readBody(req)));
+      if (M==='GET'  && uuid==='query')    return json(res,200,await GET('guardian',`/memory/query?q=${encodeURIComponent(QS.get('q')||'')}`));
+      if (M==='GET'  && uuid==='artifacts')return json(res,200,await GET('guardian','/memory/artifacts'));
+      if (M==='GET'  && uuid==='ledger')   return json(res,200,await GET('guardian',`/memory/ledger?limit=${QS.get('limit')||50}`));
+      if (M==='GET'  && uuid==='context')  return json(res,200,await GET('guardian',`/memory/context?q=${encodeURIComponent(QS.get('q')||'')}`));
+      if (M==='GET'  && uuid==='stats')    return json(res,200,await GET('guardian','/memory/stats'));
+      if (M==='GET'  && uuid==='downloads')return json(res,200,await GET('guardian','/memory/downloads'));
+    }
+
+    // Stream proxy (SSE)
+    if (M==='GET' && action==='stream' && uuid) {
+      res.writeHead(200, { 'Content-Type':'text/event-stream','Cache-Control':'no-cache','Access-Control-Allow-Origin':'*' });
+      const r = http.request({ hostname:'127.0.0.1',port:7820,path:`/stream/${uuid}`,method:'GET',headers:{Accept:'text/event-stream'} }, rs => {
+        rs.on('data', c => res.write(c)); rs.on('end', () => res.end());
+      });
+      r.on('error', () => res.end()); r.end();
+      req.on('close', () => r.destroy());
+      return;
+    }
+
+    // Events SSE proxy
+    if (M==='GET' && action==='events') {
+      res.writeHead(200, { 'Content-Type':'text/event-stream','Cache-Control':'no-cache','Access-Control-Allow-Origin':'*' });
+      const r = http.request({ hostname:'127.0.0.1',port:7820,path:'/events',method:'GET',headers:{Accept:'text/event-stream'} }, rs => {
+        rs.on('data', c => res.write(c)); rs.on('end', () => res.end());
+      });
+      r.on('error', () => res.end()); r.end();
+      req.on('close', () => r.destroy());
+      return;
+    }
+
+    return json(res,404,{ok:false,error:`guardian route not found: ${M} /api/guardian/${action}`});
   }
 
-  // ── 404 ───────────────────────────────────────────────────────────────────
-  json(res, 404, { ok: false, error: `route not found: ${req.method} ${u.pathname}` });
+  // ── Idearium proxy ────────────────────────────────────────────────────────
+  if (sub==='idearium') {
+    const action = seg[2] || '';
+    const uuid   = seg[3] || '';
+    const op     = seg[4] || '';
+
+    if (M==='GET'  && !action)               return json(res,200,await GET('idearium','/'));
+    if (M==='GET'  && action==='health')     return json(res,200,await GET('idearium','/'));
+    if (M==='GET'  && action==='snr' && !uuid)    return json(res,200,await GET('idearium','/api/snr'));
+    if (M==='GET'  && action==='snr' && uuid==='history') return json(res,200,await GET('idearium','/api/snr/history'));
+    if (M==='GET'  && action==='events')     return json(res,200,await GET('idearium','/api/events'));
+    if (M==='GET'  && action==='stats')      return json(res,200,await GET('idearium','/api/stats'));
+    if (M==='GET'  && action==='contract')   return json(res,200,await GET('idearium','/api/contract'));
+
+    if (action==='ideas') {
+      if (M==='GET'  && !uuid)               return json(res,200,await GET('idearium','/api/ideas'));
+      if (M==='POST' && !uuid)               return json(res,200,await POST('idearium','/api/ideas',await readBody(req)));
+      if (M==='GET'  && uuid && !op)         return json(res,200,await GET('idearium',`/api/ideas/${uuid}`));
+      if (M==='PATCH'&& uuid && !op)         return json(res,200,await PATCH('idearium',`/api/ideas/${uuid}`,await readBody(req)));
+      if (M==='DELETE'&& uuid && !op)        return json(res,200,await DEL('idearium',`/api/ideas/${uuid}`));
+      if (M==='POST' && uuid && op)          return json(res,200,await POST('idearium',`/api/ideas/${uuid}/${op}`,await readBody(req)));
+    }
+
+    if (action==='specs') {
+      if (M==='GET'  && !uuid)               return json(res,200,await GET('idearium','/api/specs'));
+      if (M==='GET'  && uuid && !op)         return json(res,200,await GET('idearium',`/api/specs/${uuid}`));
+      if (M==='POST' && uuid && op==='build')return json(res,200,await POST('idearium',`/api/specs/${uuid}/build`,await readBody(req)));
+    }
+
+    if (action==='gaps') {
+      if (M==='GET'  && !uuid)               return json(res,200,await GET('idearium','/api/gaps'));
+      if (M==='POST' && !uuid)               return json(res,200,await POST('idearium','/api/gaps',await readBody(req)));
+      if (M==='POST' && uuid && op==='resolve') return json(res,200,await POST('idearium',`/api/gaps/${uuid}/resolve`,await readBody(req)));
+    }
+
+    if (action==='snapshots') {
+      if (M==='GET')                         return json(res,200,await GET('idearium','/api/snapshots'));
+      if (M==='POST')                        return json(res,200,await POST('idearium','/api/snapshots',await readBody(req)));
+    }
+
+    // SSE proxy
+    if (M==='GET' && action==='sse') {
+      res.writeHead(200, { 'Content-Type':'text/event-stream','Cache-Control':'no-cache','Access-Control-Allow-Origin':'*' });
+      const r = http.request({ hostname:'127.0.0.1',port:4800,path:'/sse',method:'GET',headers:{Accept:'text/event-stream'} }, rs => {
+        rs.on('data', c => res.write(c)); rs.on('end', () => res.end());
+      });
+      r.on('error', () => res.end()); r.end();
+      req.on('close', () => r.destroy());
+      return;
+    }
+
+    return json(res,404,{ok:false,error:`idearium route not found: ${M} /api/idearium/${action}`});
+  }
+
+  return json(res,404,{ok:false,error:`route not found: ${M} ${u.pathname}`});
 });
 
-// ── CLI mode ──────────────────────────────────────────────────────────────────
-const C = { r:'\x1b[0m', bold:'\x1b[1m', g:'\x1b[32m', red:'\x1b[31m', y:'\x1b[33m',
-            c:'\x1b[36m', m:'\x1b[35m', dim:'\x1b[90m', blue:'\x1b[34m' };
+// ── CLI ───────────────────────────────────────────────────────────────────────
+const C = { r:'\x1b[0m',b:'\x1b[1m',g:'\x1b[32m',red:'\x1b[31m',y:'\x1b[33m',
+            c:'\x1b[36m',m:'\x1b[35m',d:'\x1b[90m',blue:'\x1b[34m' };
 
-function sysColor(id) {
-  const colors = { bridge:'y', cortex:'c', guardian:'m', idearium:'blue', emerge:'g', ollama:'red' };
-  return C[colors[id]||'dim'];
+function sysDot(online) { return online ? `${C.g}●${C.r}` : `${C.red}○${C.r}`; }
+function sysCol(id) {
+  return { bridge:C.y, cortex:C.c, guardian:C.m, idearium:C.blue, emerge:C.g, ollama:C.red }[id] || C.d;
 }
 
 async function cliStatus() {
-  const results = await getAllHealth();
-  console.log(`\n${C.bold}${C.c}NEXUS${C.r}  ${C.dim}orchestrator${C.r}\n`);
-  for (const { id, sys, online, ms, d } of results) {
-    const dot = online ? `${C.g}●${C.r}` : `${C.red}○${C.r}`;
-    const sc  = sysColor(id);
-    console.log(`  ${dot}  ${C.bold}${sc}${sys.label.padEnd(14)}${C.r}  ${C.dim}:${sys.port}  ${ms}ms${C.r}`);
-    if (online && id === 'cortex') {
-      const n = Object.values(d.jaa?.counts||{}).reduce((a,b)=>a+b,0);
-      if (n) console.log(`     ${C.dim}${n} records · 28 tables${C.r}`);
-    }
-    if (online && id === 'guardian') {
-      const conn = Object.entries(d.providers||{}).filter(([,v])=>v==='connected').map(([k])=>k);
-      if (conn.length) console.log(`     ${C.dim}providers: ${conn.join(', ')}${C.r}`);
-      const q = Object.values(d.queued||{}).reduce((a,b)=>a+b,0);
-      if (q) console.log(`     ${C.y}${q} jobs queued (waiting for provider)${C.r}`);
-    }
-    if (online && id === 'ollama') {
-      const models = (d.models||[]).map(m=>m.name);
-      if (models.length) console.log(`     ${C.dim}${models.join(', ')}${C.r}`);
-    }
-    if (!online) console.log(`     ${C.red}${d.error}${C.r}`);
+  const systems = await allHealth();
+  const online  = systems.filter(s=>s.online).length;
+  console.log(`\n${C.b}${C.c}⬡  NEXUS${C.r}  ${C.d}orchestrator v2${C.r}  ${online}/${systems.length} online\n`);
+  for (const { id, sys, online, ms, d } of systems) {
+    const sc = sysCol(id);
+    console.log(`  ${sysDot(online)}  ${C.b}${sc}${sys.label.padEnd(12)}${C.r}  ${C.d}:${sys.port}  ${ms}ms${C.r}`);
+    if (online) {
+      if (id==='cortex'  ) { const n=Object.values(d.jaa?.counts||{}).reduce((a,b)=>a+b,0); if(n) console.log(`     ${C.d}${n} records · 28 tables${C.r}`); }
+      if (id==='guardian') {
+        const conn=Object.entries(d.providers||{}).filter(([,v])=>v==='connected').map(([k])=>k);
+        if(conn.length) console.log(`     ${C.d}providers: ${conn.join(', ')}${C.r}`);
+        const q=Object.values(d.queued||{}).reduce((a,b)=>a+b,0);
+        if(q) console.log(`     ${C.y}${q} jobs queued${C.r}`);
+      }
+      if (id==='bridge'  ) { if(d.pendingRequests>0) console.log(`     ${C.y}${d.pendingRequests} pending requests${C.r}`); }
+      if (id==='ollama'  ) { const m=(d.models||[]).map(x=>x.name); if(m.length) console.log(`     ${C.d}${m.join(', ')}${C.r}`); }
+    } else { console.log(`     ${C.red}${d.error}${C.r}`); }
   }
-  console.log(`\n${C.dim}UI:  http://localhost:${PORT}${C.r}`);
-  console.log(`${C.dim}SSE: http://localhost:${PORT}/sse${C.r}\n`);
+  console.log(`\n${C.d}UI:  http://localhost:${PORT}${C.r}`);
+  console.log(`${C.d}SSE: http://localhost:${PORT}/sse${C.r}\n`);
 }
 
 function cliWatch() {
-  console.log(`${C.bold}${C.c}NEXUS LIVE${C.r}  ${C.dim}connecting to bridge…${C.r}\n`);
-  const opts = { hostname:'127.0.0.1', port:9999, path:'/bridge/subscribe?channel=*', method:'GET', headers:{Accept:'text/event-stream'} };
-  const r = http.request(opts, res => {
-    let buf = '';
+  console.log(`\n${C.b}${C.c}NEXUS LIVE${C.r}  ${C.d}connecting to bridge…${C.r}\n`);
+  const r = http.request({ hostname:'127.0.0.1',port:9999,path:'/bridge/subscribe?channel=*',method:'GET',headers:{Accept:'text/event-stream'} }, res => {
+    let buf='';
     res.on('data', c => {
-      buf += c.toString();
-      const lines = buf.split('\n'); buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data:')) continue;
+      buf+=c.toString();
+      const lines=buf.split('\n'); buf=lines.pop();
+      for (const l of lines) {
+        if (!l.startsWith('data:')) continue;
         try {
-          const d = JSON.parse(line.slice(5).trim());
-          const ts  = new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8);
-          const sys = (d.type||'').split('.')[0];
-          const sc  = sysColor(sys);
-          console.log(`  ${C.dim}${ts}${C.r}  ${sc}${sys.padEnd(10)}${C.r}  ${C.c}${(d.type||'event').padEnd(36)}${C.r}  ${C.dim}${JSON.stringify(d).slice(0,60)}${C.r}`);
+          const d=JSON.parse(l.slice(5).trim());
+          const ts=new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8);
+          const sys=(d.type||'').split('.')[0];
+          console.log(`  ${C.d}${ts}${C.r}  ${sysCol(sys)}${sys.padEnd(10)}${C.r}  ${C.c}${(d.type||'event').padEnd(34)}${C.r}  ${C.d}${JSON.stringify(d).slice(0,60)}${C.r}`);
         } catch(_) {}
       }
     });
-    res.on('end', () => { console.log('\nstream ended'); process.exit(0); });
+    res.on('end', () => { console.log('stream ended'); process.exit(0); });
   });
   r.on('error', e => { console.log(`${C.red}bridge offline: ${e.message}${C.r}`); process.exit(1); });
   r.end();
 }
 
 function cliUI() {
-  console.log(`\n${C.bold}${C.c}NEXUS UI${C.r}  ${C.dim}hotswap watcher active${C.r}\n`);
+  console.log(`\n${C.b}${C.c}NEXUS UI${C.r}  ${C.d}hotswap watcher — edit ui/<system>/ to reload${C.r}\n`);
   for (const sys of UI_SYSTEMS) {
-    const idx   = path.join(UI_ROOT, sys, 'index.html');
-    const exist = fs.existsSync(idx);
-    const stat  = exist ? fs.statSync(idx) : null;
-    const sc    = sysColor(sys);
-    const dot   = exist ? `${C.g}●${C.r}` : `${C.red}○${C.r}`;
-    console.log(`  ${dot}  ${sc}${sys.padEnd(14)}${C.r}  ${C.dim}ui/${sys}/index.html${C.r}  ${exist ? stat.size+'B' : 'missing'}  →  http://localhost:${PORT}/ui/${sys}`);
+    const fp=path.join(UI_ROOT,sys,'index.html');
+    const exists=fs.existsSync(fp);
+    const st=exists?fs.statSync(fp):null;
+    console.log(`  ${sysDot(exists)}  ${sysCol(sys)}${sys.padEnd(14)}${C.r}  ${C.d}ui/${sys}/index.html${C.r}  ${exists?(st.size/1024).toFixed(1)+'KB':'MISSING'}  →  http://localhost:${PORT}/ui/${sys}`);
   }
-  console.log(`\n${C.dim}Orchestrator UI: http://localhost:${PORT}${C.r}\n`);
+  console.log(`\n${C.d}Orchestrator: http://localhost:${PORT}${C.r}\n`);
+}
+
+async function cliJobs(statusFilter) {
+  const d=await GET('guardian',`/jobs?status=${statusFilter||''}&limit=20`);
+  if(d.error){console.log(`${C.red}✗${C.r} Guardian offline: ${d.error}`);return;}
+  const jobs=d.jobs||[];
+  console.log(`\n${C.b}${C.c}JOBS (${jobs.length})${C.r}\n`);
+  for (const j of jobs.slice(0,20)) {
+    const sc=j.status==='complete'?C.g:j.status==='failed'?C.red:j.status==='queued'?C.y:C.d;
+    console.log(`  ${C.d}${(j.id||'').slice(0,8)}${C.r}  ${sc}${(j.status||'—').padEnd(12)}${C.r}  ${C.m}${(j.provider||'—').padEnd(10)}${C.r}  ${C.d}${(j.command||'').padEnd(6)}${C.r}  ${(j.prompt||'').slice(0,50)}`);
+  }
+  console.log('');
+}
+
+async function cliEvents(n) {
+  const d=await GET('cortex',`/api/events?n=${n||20}`);
+  if(d.error){console.log(`${C.red}✗${C.r} Cortex offline: ${d.error}`);return;}
+  const rows=d.rows||d||[];
+  console.log(`\n${C.b}${C.c}EVENTS (${rows.length})${C.r}\n`);
+  for (const e of rows) {
+    const ts=new Date(e.ts||0).toTimeString().slice(0,8);
+    console.log(`  ${C.d}${ts}${C.r}  ${C.c}${(e.type||'—').padEnd(36)}${C.r}  ${C.d}${JSON.stringify(e.payload||{}).slice(0,60)}${C.r}`);
+  }
+  console.log('');
+}
+
+async function cliGaps() {
+  const [ig,cg]=await Promise.all([GET('idearium','/api/gaps'),GET('cortex','/api/gaps')]);
+  console.log(`\n${C.b}${C.c}GAPS${C.r}\n`);
+  const ig_list=ig.gaps||ig||[];
+  if(ig_list.length) {
+    console.log(`  ${C.d}idearium${C.r}`);
+    for (const g of ig_list) console.log(`    ${C.y}○${C.r}  ${C.d}${(g.uuid||'').slice(0,8)}${C.r}  ${g.description?.slice(0,60)||'—'}`);
+  }
+  const cg_list=(cg.rows||cg||[]).filter(g=>g.status!=='resolved');
+  if(cg_list.length) {
+    console.log(`  ${C.d}cortex${C.r}`);
+    for (const g of cg_list) {
+      const pc=(g.pressure||0)>0.7?C.red:C.y;
+      console.log(`    ${pc}○${C.r}  ${C.d}${(g.uuid||'').slice(0,8)}${C.r}  ${(g.body||g.message||'—').slice(0,60)}`);
+    }
+  }
+  if(!ig_list.length&&!cg_list.length) console.log(`  ${C.d}no open gaps${C.r}`);
+  console.log('');
+}
+
+async function cliIdeas() {
+  const d=await GET('idearium','/api/ideas');
+  if(d.error){console.log(`${C.red}✗${C.r} Idearium offline: ${d.error}`);return;}
+  const list=d.ideas||d||[];
+  console.log(`\n${C.b}${C.c}IDEAS (${list.length})${C.r}\n`);
+  for (const i of [...list].reverse().slice(0,20)) {
+    const pc=i.phase==='complete'?C.g:i.phase==='building'?C.c:C.d;
+    console.log(`  ${C.d}${(i.uuid||'').slice(0,8)}${C.r}  ${pc}${(i.phase||'seed').padEnd(12)}${C.r}  ${(i.text||i.title||'—').slice(0,60)}`);
+  }
+  console.log('');
+}
+
+async function cliIdea(text) {
+  if(!text){console.log(`Usage: node orchestrator.js idea "text"`);return;}
+  const d=await POST('idearium','/api/ideas',{text});
+  if(d.error){console.log(`${C.red}✗${C.r} ${d.error}`);return;}
+  console.log(`${C.g}✓${C.r} Idea: ${(d.idea?.uuid||d.uuid||'').slice(0,8)}  "${text.slice(0,50)}"`);
+}
+
+async function cliDispatch(prompt, provider='chatgpt', command='code') {
+  if(!prompt){console.log(`Usage: node orchestrator.js dispatch "prompt" [provider] [command]`);return;}
+  const d=await POST('guardian','/command',{provider,command,prompt});
+  if(d.error){console.log(`${C.red}✗${C.r} Guardian offline: ${d.error}`);return;}
+  console.log(`${C.g}✓${C.r} Job ${(d.jobId||'').slice(0,8)}  status: ${d.status}`);
+  if(d.status==='queued') console.log(`  ${C.d}waiting for ${provider} userscript — install in Tampermonkey${C.r}`);
+  else console.log(`  ${C.d}watch: node cli/nexus.js watch ${d.jobId}${C.r}`);
+}
+
+async function cliRequests(statusFilter) {
+  const d=await GET('bridge',`/bridge/requests${statusFilter?'?status='+statusFilter:''}`);
+  if(d.error){console.log(`${C.red}✗${C.r} Bridge offline: ${d.error}`);return;}
+  const list=[...(d.requests||[])].reverse().slice(0,20);
+  console.log(`\n${C.b}${C.c}REQUESTS (${list.length})${C.r}\n`);
+  for (const r of list) {
+    const sc=r.status==='pending'?C.y:r.status==='complete'?C.g:C.red;
+    console.log(`  ${C.d}${(r.uuid||'').slice(0,8)}${C.r}  ${sc}${(r.status||'—').padEnd(10)}${C.r}  ${C.c}${(r.type||'—').padEnd(22)}${C.r}  ${C.d}${r.from} → ${r.to}${C.r}`);
+  }
+  console.log('');
+}
+
+async function cliTag(entityId, tagsRaw) {
+  if(!entityId||!tagsRaw){console.log(`Usage: node orchestrator.js tag <entityId> <tag1,tag2>`);return;}
+  const tags=tagsRaw.split(',').map(t=>t.trim()).filter(Boolean);
+  const d=await POST('bridge','/bridge/tags',{entityId,entityType:'entity',system:'orchestrator',tags,addedBy:'orchestrator-cli'});
+  if(!d.ok){console.log(`${C.red}✗${C.r} ${d.error||'failed'}`);return;}
+  console.log(`${C.g}✓${C.r} Tagged ${entityId}: ${tags.join(', ')}`);
+}
+
+async function cliPush(message) {
+  const d=await POST('idearium','/api/snapshots',{message:message||'orchestrator snapshot'});
+  if(d.error){console.log(`${C.red}✗${C.r} Idearium offline: ${d.error}`);return;}
+  console.log(`${C.g}✓${C.r} Pushed: ${(d.snapshot?.uuid||d.uuid||'').slice(0,8)}  "${message}"`);
+}
+
+async function cliSNR() {
+  const d=await GET('idearium','/api/snr');
+  if(d.error){console.log(`${C.red}✗${C.r} Idearium offline: ${d.error}`);return;}
+  const v=d.snr||0;
+  const col=v>0.8?C.g:v>0.5?C.y:C.red;
+  const bar='█'.repeat(Math.round(v*30))+'░'.repeat(30-Math.round(v*30));
+  console.log(`\n  ${col}${bar}${C.r}  ${col}${(v*100).toFixed(1)}% SNR${C.r}\n`);
 }
 
 function cliHelp() {
   console.log(`
-${C.bold}${C.c}nexus orchestrator${C.r}  v1.0
+${C.b}${C.c}NEXUS ORCHESTRATOR${C.r}  v2.0  port ${PORT}
 
-${C.bold}CLI commands${C.r}
-  node orchestrator.js               start server (port ${PORT})
-  node orchestrator.js status        all systems health
-  node orchestrator.js watch         live bridge event stream
-  node orchestrator.js ui            list UI files + hotswap status
-  node orchestrator.js health        self health check
-  node orchestrator.js help          this message
+${C.b}Server mode${C.r}
+  node orchestrator.js                  start (port ${PORT})
 
-${C.bold}Server endpoints${C.r}
+${C.b}CLI commands${C.r}
+  node orchestrator.js status           all systems health
+  node orchestrator.js watch            live event stream (bridge SSE)
+  node orchestrator.js ui               UI file status + hotswap dirs
+  node orchestrator.js jobs [status]    guardian jobs
+  node orchestrator.js events [n]       cortex event log
+  node orchestrator.js gaps             all gaps (idearium + cortex)
+  node orchestrator.js ideas            idearium ideas
+  node orchestrator.js idea "text"      create idea
+  node orchestrator.js dispatch "prompt" [provider] [command]
+  node orchestrator.js requests [status] bridge request queue
+  node orchestrator.js tag <id> <tags>  tag entity in bridge
+  node orchestrator.js push "message"   idearium snapshot
+  node orchestrator.js snr              idearium SNR
+  node orchestrator.js help             this message
+
+${C.b}Endpoints${C.r}
   GET  /                    orchestrator UI
   GET  /health              all systems health
-  GET  /api/status          full system status JSON
-  GET  /api/channels        channel map JSON (${CHANNELS.length} channels)
-  GET  /api/api-map         full API surface JSON
-  GET  /api/cli             CLI command reference JSON
+  GET  /sse                 unified event stream
+  GET  /ui/:system          system UI (hotswapped)
+  GET  /api/status          full status JSON
+  GET  /api/channels        ${CHANNELS.length} SISO channels
+  GET  /api/api-map         all routes across all systems
+  GET  /api/cli             CLI reference
   GET  /api/ui              UI file status
-  POST /api/dispatch        forward to any system
-  GET  /sse                 unified live stream (all bridge events)
-  GET  /ui/:system          serve system UI (hotswapped)
+  *    /api/bridge/*        full bridge API (${19} routes)
+  *    /api/cortex/*        full cortex API (${14} routes)
+  *    /api/guardian/*      full guardian API (${22} routes)
+  *    /api/idearium/*      full idearium API (${22} routes)
 
-${C.bold}UI hotswap${C.r}
-  edit any file in ui/<system>/  →  served immediately on next request
-  ${C.dim}ui/bridge/      → /ui/bridge
-  ui/cortex/      → /ui/cortex
-  ui/guardian/    → /ui/guardian
-  ui/idearium/    → /ui/idearium
-  ui/emerge/      → /ui/emerge
-  ui/orchestrator/ → /${C.r}
+${C.b}UI hotswap${C.r}
+  Edit any file in ui/<system>/  →  served on next request, no restart
+  ui/bridge/      → http://localhost:${PORT}/ui/bridge
+  ui/cortex/      → http://localhost:${PORT}/ui/cortex
+  ui/guardian/    → http://localhost:${PORT}/ui/guardian
+  ui/idearium/    → http://localhost:${PORT}/ui/idearium
+  ui/emerge/      → http://localhost:${PORT}/ui/emerge
+  ui/orchestrator/ → http://localhost:${PORT}/
 `);
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-const cliArg = process.argv[2];
+// ── Boot ──────────────────────────────────────────────────────────────────────
+const argv = process.argv.slice(2);
+const cmd  = argv[0];
 
-if (cliArg === 'status')  { cliStatus().then(() => process.exit(0)); }
-else if (cliArg === 'watch')  { cliWatch(); }
-else if (cliArg === 'ui')     { cliUI(); process.exit(0); }
-else if (cliArg === 'health') { sysReq('bridge','GET','/bridge/health').then(d=>console.log(JSON.stringify({ok:true,self:'orchestrator',bridge:d},null,2))).then(()=>process.exit(0)); }
-else if (cliArg === 'help' || cliArg === '--help') { cliHelp(); process.exit(0); }
+if      (cmd==='status')   allHealth().then(cliStatus).then(()=>process.exit(0));
+else if (cmd==='watch')    cliWatch();
+else if (cmd==='ui')     { cliUI(); process.exit(0); }
+else if (cmd==='jobs')     cliJobs(argv[1]).then(()=>process.exit(0));
+else if (cmd==='events')   cliEvents(argv[1]).then(()=>process.exit(0));
+else if (cmd==='gaps')     cliGaps().then(()=>process.exit(0));
+else if (cmd==='ideas')    cliIdeas().then(()=>process.exit(0));
+else if (cmd==='idea')     cliIdea(argv.slice(1).join(' ')).then(()=>process.exit(0));
+else if (cmd==='dispatch') cliDispatch(argv[1],argv[2],argv[3]).then(()=>process.exit(0));
+else if (cmd==='requests') cliRequests(argv[1]).then(()=>process.exit(0));
+else if (cmd==='tag')      cliTag(argv[1],argv[2]).then(()=>process.exit(0));
+else if (cmd==='push')     cliPush(argv.slice(1).join(' ')).then(()=>process.exit(0));
+else if (cmd==='snr')      cliSNR().then(()=>process.exit(0));
+else if (cmd==='help'||cmd==='--help'||cmd==='-h') { cliHelp(); process.exit(0); }
 else {
   // Start server
   server.listen(PORT, '127.0.0.1', () => {
     console.log('');
-    console.log('\x1b[1m\x1b[32m⬡  NEXUS ORCHESTRATOR\x1b[0m  v1.0');
+    console.log('\x1b[1m\x1b[32m⬡  NEXUS ORCHESTRATOR\x1b[0m  v2.0');
     console.log('');
-    console.log(`   \x1b[90mUI        \x1b[0m  http://localhost:${PORT}`);
-    console.log(`   \x1b[90mHealth    \x1b[0m  http://localhost:${PORT}/health`);
-    console.log(`   \x1b[90mSSE       \x1b[0m  http://localhost:${PORT}/sse`);
-    console.log(`   \x1b[90mChannels  \x1b[0m  http://localhost:${PORT}/api/channels`);
-    console.log(`   \x1b[90mAPI map   \x1b[0m  http://localhost:${PORT}/api/api-map`);
+    console.log(`   \x1b[90mUI          \x1b[0m  http://localhost:${PORT}`);
+    console.log(`   \x1b[90mHealth      \x1b[0m  http://localhost:${PORT}/health`);
+    console.log(`   \x1b[90mSSE         \x1b[0m  http://localhost:${PORT}/sse`);
+    console.log(`   \x1b[90mAPI surface \x1b[0m  ${19+14+22+22} routes across bridge+cortex+guardian+idearium`);
     console.log('');
-    console.log(`   \x1b[90mSystem UIs\x1b[0m`);
+    console.log(`   \x1b[90mBridge      \x1b[0m  /api/bridge/*   (proxies :9999)`);
+    console.log(`   \x1b[90mCortex      \x1b[0m  /api/cortex/*   (proxies :3748)`);
+    console.log(`   \x1b[90mGuardian    \x1b[0m  /api/guardian/* (proxies :7820)`);
+    console.log(`   \x1b[90mIdearium    \x1b[0m  /api/idearium/* (proxies :4800)`);
+    console.log('');
+    console.log(`   \x1b[90mSystem UIs  \x1b[0m`);
     for (const sys of UI_SYSTEMS) {
-      const exists = fs.existsSync(path.join(UI_ROOT, sys, 'index.html'));
-      const dot = exists ? '\x1b[32m●\x1b[0m' : '\x1b[31m○\x1b[0m';
-      console.log(`              ${dot}  http://localhost:${PORT}/ui/${sys}  \x1b[90m(ui/${sys}/)\x1b[0m`);
+      const exists=fs.existsSync(path.join(UI_ROOT,sys,'index.html'));
+      const dot=exists?'\x1b[32m●\x1b[0m':'\x1b[31m○\x1b[0m';
+      console.log(`              ${dot}  http://localhost:${PORT}/ui/${sys}`);
     }
     console.log('');
-    console.log(`   \x1b[90mCLI       \x1b[0m  node orchestrator.js status | watch | ui`);
+    console.log(`   \x1b[90mCLI         \x1b[0m  node orchestrator.js status | watch | jobs | events | gaps | help`);
     console.log('');
-
-    // Start UI watchers
     watchUIDirs();
-
-    // Connect to bridge SSE (relay to our SSE clients)
     setTimeout(connectBridgeSSE, 1000);
-    console.log('\x1b[90m[orchestrator] hotswap active — edit ui/<system>/ files to reload\x1b[0m');
+    console.log('\x1b[90m[orchestrator] hotswap active · SSE relay connecting to bridge\x1b[0m');
   });
 }
