@@ -44,7 +44,11 @@ function getArg(flag, fallback) {
 const PORT = Number(getArg('--port', process.env.EMERGE_PORT || 4242));
 const DEF_MODEL = getArg('--model', 'qwen2.5-coder:1.5b');
 const UI_DIR = path.join(__dirname, 'ui');
-const IO_DIR = path.join(__dirname, 'io');
+const IO_DIR = (() => {
+  const preferred = path.join(__dirname, 'emerge', 'io');
+  const fallback  = path.join(__dirname, 'io');
+  return fs.existsSync(preferred) ? preferred : fallback;
+})();
 
 // ── SISO Bus ──────────────────────────────────────────────────────────────────
 const bus            = new Bus();

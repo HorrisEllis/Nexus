@@ -12,7 +12,12 @@ const path = require('path');
 
 // ── Paths ─────────────────────────────────────────────────────────────────────
 const ROOT   = __dirname;
-const IO     = path.join(ROOT, 'io');
+// IO: prefer emerge/io/ (the .eg source tree), fall back to ./io
+const IO     = (() => {
+  const preferred = path.join(ROOT, 'emerge', 'io');
+  const fallback  = path.join(ROOT, 'io');
+  return require('fs').existsSync(preferred) ? preferred : fallback;
+})();
 const SPEC   = path.join(ROOT, 'emerge.spec');
 
 fs.mkdirSync(IO, { recursive: true });
