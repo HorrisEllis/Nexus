@@ -6,7 +6,7 @@
   "scripts": {
     "cortex": "node cortex/boot.js",
     "guardian": "node guardian/server.js",
-    "idearium": "node idearium/index.js",
+    "idearium": "node idearium/api/index.js",
     "emerge": "node emerge-ide.js",
     "cli": "node cortex/cortex.js",
     "guardian-cli": "node guardian/cli.js",
@@ -18,7 +18,8 @@
     "nexus": "node cli/nexus.js",
     "install_check": "node -e \"require(\"ws\"); console.log(\"deps ok\")\"",
     "orchestrator": "node orchestrator.js",
-    "start:all": "npm run bridge & npm run cortex & npm run guardian & npm run idearium & npm run emerge & npm run orchestrator"
+    "start:all": "npm run bridge & npm run cortex & npm run guardian & npm run idearium & npm run emerge & npm run orchestrator",
+    "sync-ui": "node -e \"const fs=require(\"fs\"),path=require(\"path\");const pairs=[[\"guardian/ui\",\"ui/guardian\"],[\"cortex/ui\",\"ui/cortex\"],[\"idearium/ui\",\"ui/idearium\"],[\"bridge/ui\",\"ui/bridge\"],[\"emerge/ui\",\"ui/emerge\"]];for(const[s,d]of pairs){const f=path.join(s,\"index.html\");if(fs.existsSync(f)){fs.mkdirSync(d,{recursive:true});fs.copyFileSync(f,path.join(d,\"index.html\"));console.log(f,\"→\",d);}}\""
   },
   "engines": {
     "node": ">=18"

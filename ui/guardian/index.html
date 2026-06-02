@@ -313,7 +313,11 @@ select.fi option{background:var(--surface);}
       <div class="tb-tab" data-panel="providers">⬡ Providers</div>
     </div>
     <div class="tb-right">
+      <div class="tb-status"><div class="tb-dot" id="dot-bridge"></div><span>Bridge :9999</span></div>
+      <div class="tb-status"><div class="tb-dot" id="dot-cortex"></div><span>Cortex :3748</span></div>
+      <div class="tb-status"><div class="tb-dot" id="dot-guardian"></div><span>Guardian :7820</span></div>
       <div class="tb-status"><div class="tb-dot" id="dot-idearium"></div><span>Idearium :4800</span></div>
+      <div class="tb-status"><div class="tb-dot" id="dot-orch"></div><span>Orch :9000</span></div>
       <div class="sep"></div>
       <div class="tb-status"><div class="tb-dot" id="dot-guardian"></div><span>Guardian :7820</span></div>
       <div class="sep"></div>
@@ -539,7 +543,7 @@ select.fi option{background:var(--surface);}
         <div class="brain-sec-hdr">Connections</div>
         <div class="brain-stat"><span>Idearium :4800</span><span class="brain-stat-val" id="brain-idearium-st">—</span></div>
         <div class="brain-stat"><span>Guardian :7820</span><span class="brain-stat-val" id="brain-guardian-st">—</span></div>
-        <div class="brain-stat"><span>Nexus :3001</span><span class="brain-stat-val" id="brain-nexus-st">—</span></div>
+        <div class="brain-stat"><span>Cortex :3748</span><span class="brain-stat-val" id="brain-nexus-st">—</span></div>
       </div>
     </div>
     <div class="brain-main">
@@ -875,7 +879,18 @@ class IdeiarumClient {
   async snr()                 { return this.req('/api/snr'); }
   async stats()               { return this.req('/api/stats'); }
   async dispatch(prov,prompt) { return this.req('/api/agents/dispatch','POST',{provider:prov,prompt}); }
-  subscribeSSE(onEv){ if(typeof EventSource==='undefined')return; const es=new EventSource(this.base+'/sse'); es.onmessage=e=>{try{onEv(JSON.parse(e.data));}catch(_){}}; return ()=>es.close(); }
+  subscribeSSE(onEv){
+    if(typeof EventSource==='undefined')return;
+    let es, retries=0;
+    const connect=()=>{
+      es=new EventSource(this.base+'/sse');
+      es.onopen=()=>{retries=0;};
+      es.onmessage=e=>{try{onEv(JSON.parse(e.data));}catch(_){}};
+      es.onerror=()=>{es.close();setTimeout(connect,Math.min(10000,1000*++retries));};
+    };
+    connect();
+    return ()=>es?.close();
+  }
 }
 
 class GuardianClient {
@@ -909,7 +924,7 @@ class GuardianClient {
 }
 
 class NexusClient {
-  constructor(){ this.base='http://127.0.0.1:3001'; }
+  constructor(){ this.base='http://127.0.0.1:3748'; }
   async req(path,method='GET',body=null,timeout=5000){
     const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);
     try{const r=await fetch(this.base+path,{method,headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:body?JSON.stringify(body):undefined});clearTimeout(timer);return await r.json();}
@@ -1012,14 +1027,79 @@ async function boot(){
 }
 
 async function _checkConns(){
-  const[ih,gh,nh]=await Promise.all([idearium.health(),guardian.health(),nexus.health()]);
+  // §5.2 — check all systems, gate each check
+  const [bh, ih, gh, nh, oi] = await Promise.all([
+    fetch('http://localhost:9999/bridge/health').then(r=>r.json()).catch(()=>null),
+    idearium.health(),
+    guardian.health(),
+    nexus.health(),
+    fetch('http://localhost:9000/health').then(r=>r.json()).catch(()=>null),
+  ]);
   $get('dot-idearium')?.classList.toggle('on',!!ih);
   $get('dot-guardian')?.classList.toggle('on',!!gh);
   const bi=$get('brain-idearium-st'),bg=$get('brain-guardian-st'),bn=$get('brain-nexus-st');
+  // Update connection indicator dots for all systems
+  const setDot = (id, online) => {
+    const el = $get(id);
+    if (!el) return;
+    el.style.background = online ? 'var(--signal)' : 'var(--err)';
+    el.title = online ? 'online' : 'offline';
+  };
+  setDot('dot-bridge',   !!bh?.ok);
+  setDot('dot-idearium', !!ih);
+  setDot('dot-guardian', !!gh?.ok);
+  setDot('dot-cortex',   !!nh);
+  setDot('dot-orch',     !!oi?.ok);
   if(bi)bi.textContent=ih?'✓ online':'✗ offline';
   if(bg)bg.textContent=gh?'✓ online':'✗ offline';
   if(bn)bn.textContent=nh?'✓ online':'✗ offline';
-  if(ih)idearium.subscribeSSE(ev=>bus.emit('idearium.sse',ev));
+  // §5.2 — subscribe to ALL system SSEs and route through local bus
+  if(ih) idearium.subscribeSSE(ev=>bus.emit('idearium.sse',ev));
+
+  // Subscribe to guardian's own cockpit SSE (bus events)
+  if(gh?.ok) {
+    const gSSE = new EventSource('http://127.0.0.1:7820/events');
+    gSSE.onmessage = e => {
+      try { const d=JSON.parse(e.data); bus.emit('guardian.bus.event', d); } catch(_) {}
+    };
+    gSSE.onerror = () => {};
+  }
+
+  // Subscribe to bridge SSE (all cross-system events)
+  const bridgeSSE = new EventSource('http://localhost:9999/bridge/subscribe?channel=*');
+  bridgeSSE.onmessage = e => {
+    try {
+      const d = JSON.parse(e.data);
+      if (d.type) bus.emit('bridge.event', d);
+      // Update bus log in brain panel
+      if (d.type && !d.type.startsWith('dom.')) {
+        const log = $get('brain-bus-log');
+        if (log) {
+          const row = document.createElement('div');
+          row.style.cssText = 'display:flex;gap:8px;font-size:9px;padding:2px 0;border-bottom:1px solid var(--border);';
+          const sys = (d.type||'').split('.')[0];
+          const sysColors = {guardian:'var(--purple)',cortex:'var(--teal)',idearium:'var(--blue,#4a9eff)',bridge:'var(--amber)',emerge:'var(--signal)'};
+          row.innerHTML = `<span style="color:var(--muted);flex-shrink:0">${new Date().toTimeString().slice(0,8)}</span><span style="color:${sysColors[sys]||'var(--muted)'};width:80px;flex-shrink:0">${sys}</span><span style="color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.type}</span>`;
+          log.prepend(row);
+          if (log.children.length > 100) log.lastChild?.remove();
+        }
+      }
+    } catch(_) {}
+  };
+  bridgeSSE.onerror = () => {};
+
+  // Subscribe to orchestrator SSE (hotswap + ledger events)
+  const orchSSE = new EventSource('http://localhost:9000/sse');
+  orchSSE.onmessage = e => {
+    try {
+      const d = JSON.parse(e.data);
+      if (d.type === 'orchestrator.ui.hotswap' && d.system === 'guardian') {
+        console.log('[hotswap] guardian UI reloading'); setTimeout(()=>location.reload(), 150);
+      }
+      if (d.type === 'ledger.entry') bus.emit('orchestrator.ledger', d);
+    } catch(_) {}
+  };
+  orchSSE.onerror = () => {};
   setTimeout(_checkConns,30000);
 }
 
@@ -1538,7 +1618,7 @@ async function _cliRoute(cmd,src){
 
     // ── CORTEX ───────────────────────────────────────────────────
     case 'cortex': switch(sub){
-      case 'health': { const h=await nexus.health(); cliPrint(h?'Nexus online':'Nexus offline (check :3001)',h?'ok':'err'); return; }
+      case 'health': { const h=await nexus.health(); cliPrint(h?'Nexus online':'Nexus offline (check :3748)',h?'ok':'err'); return; }
       case 'status': { try{const r=await nexus.status();cliPrint(JSON.stringify(r).slice(0,300),'ok');}catch(e){cliPrint('Nexus offline: '+e.message,'err');} return; }
       case 'diag':{
         cliPrint('=== FORGE DIAGNOSTICS ===','info');

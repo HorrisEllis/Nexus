@@ -18,9 +18,14 @@
 'use strict';
 
 // ── Constants ────────────────────────────────────────────────────────────────
-const WS_URL      = 'wss://127.0.0.1:7821';
-const API_URL     = 'http://127.0.0.1:7820';
-const MEMORY_URL  = 'http://127.0.0.1:7823';
+const WS_URL         = 'wss://127.0.0.1:7821';    // Guardian WSS  (userscript ↔ guardian)
+const API_URL        = 'http://127.0.0.1:7820';   // Guardian HTTP (jobs, providers, cockpit)
+const MEMORY_URL     = 'http://127.0.0.1:7823';   // Guardian Memory (LAN artifact store)
+const BRIDGE_URL     = 'http://127.0.0.1:9999';   // Bridge (tag engine, request queue)
+const CORTEX_URL     = 'http://127.0.0.1:3748';   // Cortex (source of truth, event log)
+const IDEARIUM_URL   = 'http://127.0.0.1:4800';   // Idearium (idea OS)
+const ORCH_URL       = 'http://127.0.0.1:9000';   // Orchestrator (unified root)
+const OLLAMA_URL_US  = 'http://127.0.0.1:11434';  // Ollama (local LLM)
 const RECONNECT_MS = 3000, HB_INTERVAL = 8000, LOG_MAX = 200, LEDGER_MAX = 200, ARTIFACT_MAX = 500;
 const PROVIDER = 'claude', VERSION = '8.3.0';
 
@@ -709,6 +714,12 @@ function startWatch(jobId, prompt) {
 
         sendToServer({ type:'GUARDIAN_DONE', jobId, chatUrl:location.href, account:getAccount(), requestId:jobId });
         sendToMemory({ type:'JOB_COMPLETE', payload:{ jobId, chars:lastText.length, gaps:gaps.length } });
+        // Sync to bridge (tag job as complete)
+        fetch(BRIDGE_URL+'/bridge/broadcast', { method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ type:'guardian.job.complete', jobId, chars:lastText.length, gaps:gaps.length, provider:PROVIDER, ts:Date.now() }) }).catch(()=>{});
+        // Sync to cortex (write event)
+        fetch(CORTEX_URL+'/api/event', { method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ type:'guardian.job.complete', payload:{ jobId, chars:lastText.length, gaps:gaps.length, provider:PROVIDER }, source:'userscript' }) }).catch(()=>{});
         sisoEmit('guardian.job.complete', { jobId, chars:lastText.length, gaps:gaps.length });
 
         // SEAM auto-verdict check
@@ -1639,7 +1650,7 @@ class QueueCompartment {
 class JobQueue {
   constructor(){
     this.queues=new Map(); this.active=new Map(); this.pending=[];
-    this.running=false; this._IDEARIUM='http://127.0.0.1:4800';
+    this.running=false; this._IDEARIUM=IDEARIUM_URL;
   }
   createQueue({title,chunks,provider,axioms=[],ideaId=null}){
     const queueId=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
@@ -1746,10 +1757,10 @@ class JobQueue {
     const s=extraStats||this.stats(queueId)||{};
     const payload={queueId,state,title:q.title,...s,compartment:comp?comp.toJSON():null,ts:Date.now()};
     if(q.ideaId){fetch(`http://127.0.0.1:4800/api/ideas/${q.ideaId}/progress`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});}
-    fetch(`http://127.0.0.1:4800/api/queue/${queueId}/progress`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});
+    fetch(`'+IDEARIUM_URL+'/api/queue/${queueId}/progress`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});
   }
   async _escalateGap(comp){
-    fetch('http://127.0.0.1:4800/api/gaps',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:`[ESCALATED] Chunk ${comp.chunkIdx+1}: ${comp.chunkTitle}`,pressure:0.9,status:'open',tags:['queue-escalated','human-review'],description:[`Queue: ${comp.queueId}`,`Chunk ${comp.chunkIdx+1}/${comp.total}`,`Retries: ${comp.retries}/${comp.maxRetries}`,`Detection: ${comp.failureLog.at(-1)?.detection?.summary||'—'}`].join('\n')})}).catch(()=>{});
+    fetch(IDEARIUM_URL+'/api/gaps',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:`[ESCALATED] Chunk ${comp.chunkIdx+1}: ${comp.chunkTitle}`,pressure:0.9,status:'open',tags:['queue-escalated','human-review'],description:[`Queue: ${comp.queueId}`,`Chunk ${comp.chunkIdx+1}/${comp.total}`,`Retries: ${comp.retries}/${comp.maxRetries}`,`Detection: ${comp.failureLog.at(-1)?.detection?.summary||'—'}`].join('\n')})}).catch(()=>{});
   }
 }
 

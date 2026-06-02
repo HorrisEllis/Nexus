@@ -245,9 +245,10 @@ const APP_IDS  = new Map([
   ['cortex',   { secret: 'nexus-cortex-internal-v1'   }],
   ['guardian', { secret: 'nexus-guardian-internal-v1' }],
   ['idearium', { secret: 'nexus-idearium-internal-v1' }],
-  ['emerge',   { secret: 'nexus-emerge-internal-v1'   }],
-  ['cockpit',  { secret: 'nexus-cockpit-internal-v1'  }],
-  ['userscript', { secret: 'nexus-userscript-internal-v1' }],
+  ['emerge',        { secret: 'nexus-emerge-internal-v1'        }],
+  ['cockpit',       { secret: 'nexus-cockpit-internal-v1'       }],
+  ['userscript',    { secret: 'nexus-userscript-internal-v1'    }],
+  ['orchestrator',  { secret: 'nexus-orchestrator-internal-v1'  }],
 ]);
 
 const handshake = {

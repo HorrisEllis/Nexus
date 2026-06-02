@@ -128,9 +128,11 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#08080a;color:#e2
 <div id="center">
   <div class="tabs">
     <div class="tab active" onclick="showTab('stream')">▶ Live Stream</div>
+    <div class="tab" onclick="showTab('ledger')">📒 Ledger</div>
+    <div class="tab" onclick="showTab('console')">$ Console</div>
     <div class="tab" onclick="showTab('channels')">⇄ Channels</div>
     <div class="tab" onclick="showTab('api')">◉ API Map</div>
-    <div class="tab" onclick="showTab('cli')">$ CLI Reference</div>
+    <div class="tab" onclick="showTab('cli')">CLI Ref</div>
     <div class="tab" onclick="showTab('requests')">◈ Requests</div>
   </div>
 
@@ -161,6 +163,43 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#08080a;color:#e2
   <!-- CLI REFERENCE -->
   <div class="pane" id="pane-cli">
     <div class="pane-body" id="cli-body"></div>
+  </div>
+
+  <!-- LEDGER -->
+  <div class="pane" id="pane-ledger">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg2)">
+      <select id="ledger-system" onchange="loadLedger()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;font:inherit;font-size:10px;border-radius:2px;outline:none">
+        <option value="">all systems</option>
+        <option>bridge</option><option>cortex</option><option>guardian</option>
+        <option>idearium</option><option>emerge</option><option>orchestrator</option>
+      </select>
+      <button class="btn" onclick="loadLedger()">↺</button>
+      <span class="sp"></span>
+      <span id="ledger-count" style="font-size:10px;color:var(--muted)"></span>
+      <label style="font-size:10px;color:var(--muted);display:flex;align-items:center;gap:4px">
+        <input type="checkbox" id="ledger-live" onchange="toggleLedgerLive(this.checked)" checked> live
+      </label>
+    </div>
+    <div class="pane-body" style="padding:0" id="ledger-body">
+      <div style="color:var(--muted);font-size:10px;padding:20px;text-align:center">Loading ledger…</div>
+    </div>
+  </div>
+
+  <!-- CONSOLE -->
+  <div class="pane" id="pane-console">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg2)">
+      <span style="font-size:10px;color:var(--muted)">NEXUS CLI CONSOLE</span>
+      <span class="sp"></span>
+      <button class="btn" onclick="clearConsole()" style="font-size:9px">clear</button>
+    </div>
+    <div id="console-log" style="flex:1;overflow-y:auto;padding:8px 12px;font:11px/1.6 'Cascadia Code','Fira Mono',monospace;background:var(--bg)"></div>
+    <div style="border-top:1px solid var(--border);padding:8px 12px;flex-shrink:0;display:flex;gap:6px;background:var(--bg2)">
+      <span style="color:var(--signal);font-size:11px;align-self:center">$</span>
+      <input id="console-input" style="flex:1;background:transparent;border:none;color:var(--text);font:11px/1.6 'Cascadia Code','Fira Mono',monospace;outline:none"
+        placeholder="nexus status | nexus jobs | nexus gaps | node orchestrator.js watch"
+        onkeydown="if(event.key==='Enter')execConsole()">
+      <button class="btn primary" onclick="execConsole()" style="font-size:10px">run</button>
+    </div>
   </div>
 
   <!-- REQUESTS -->
@@ -427,9 +466,11 @@ function selectSystem(id) {
 function showTab(id) {
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
-  document.getElementById('pane-'+id).classList.add('active');
+  document.getElementById('pane-'+id)?.classList.add('active');
   event.currentTarget.classList.add('active');
   if(id==='requests') loadBridgeRequests('pending');
+  if(id==='ledger')   loadLedger();
+  if(id==='console')  focusConsole();
 }
 
 // ── Live stream (bridge subscribe *) ──────────────────────────────────────────
@@ -492,6 +533,197 @@ async function purgeReqs() {
   try{await fetch('http://localhost:9999/bridge/purge',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});}catch(_){}
   loadBridgeRequests('pending');
 }
+
+// ── LEDGER ───────────────────────────────────────────────────────────────────
+let ledgerLive = true;
+const SYS_COLOR = {bridge:'#f0a500',cortex:'#2dd4bf',guardian:'#9b7fe8',idearium:'#4a9eff',emerge:'#3ecf8e',orchestrator:'#3ecf8e'};
+
+async function loadLedger() {
+  const sys = document.getElementById('ledger-system')?.value || '';
+  try {
+    const url = 'http://localhost:9000/api/ledger' + (sys ? '?system='+sys+'&n=100' : '?n=100');
+    const d = await (await fetch(url)).json();
+    renderLedger(d.entries || [], d.counts || {});
+  } catch(e) {
+    document.getElementById('ledger-body').innerHTML = '<div style="color:var(--err);padding:16px;font-size:10px">Orchestrator offline</div>';
+  }
+}
+
+function renderLedger(entries, counts) {
+  const el = document.getElementById('ledger-body');
+  const countStr = Object.entries(counts).map(([s,n])=>`${s}:${n}`).join(' · ');
+  document.getElementById('ledger-count').textContent = entries.length + ' entries · ' + countStr;
+  if (!entries.length) { el.innerHTML = '<div style="color:var(--muted);padding:16px;font-size:10px;text-align:center">No entries yet</div>'; return; }
+  el.innerHTML = entries.map(e => {
+    const sys  = e._system || 'orchestrator';
+    const col  = SYS_COLOR[sys] || '#94a3b8';
+    const ts   = new Date(e._ts || Date.now()).toTimeString().slice(0,8);
+    const payload = JSON.stringify(e.payload || e.entry || {}).slice(0,80);
+    return `<div class="ledger-row">
+      <span class="lr-ts">${ts}</span>
+      <span class="lr-sys ${sys}" style="color:${col}">${sys}</span>
+      <span class="lr-type" style="color:var(--text)">${e.type || '—'}</span>
+      <span class="lr-payload">${payload}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleLedgerLive(on) {
+  ledgerLive = on;
+}
+
+// Live ledger updates from SSE
+function hookLedgerToSSE() {
+  // Already connected via startStream() — filter ledger.entry events
+  const origHandler = sse?.onmessage;
+}
+
+// ── CONSOLE ────────────────────────────────────────────────────────────────────
+const consoleHistory = [];
+let consoleHistIdx = -1;
+
+function focusConsole() {
+  setTimeout(() => document.getElementById('console-input')?.focus(), 50);
+}
+
+function clearConsole() {
+  document.getElementById('console-log').innerHTML = '';
+}
+
+function consolePrint(text, cls = 'out') {
+  const el = document.getElementById('console-log');
+  const line = document.createElement('div');
+  line.className = 'con-line ' + cls;
+  line.textContent = text;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+async function execConsole() {
+  const input = document.getElementById('console-input');
+  const raw = (input.value || '').trim();
+  if (!raw) return;
+  consoleHistory.unshift(raw);
+  consoleHistIdx = -1;
+  input.value = '';
+
+  consolePrint('$ ' + raw, 'cmd');
+
+  // Parse command
+  const parts = raw.split(/\s+/);
+  const bin   = parts[0];
+
+  // Handle nexus CLI shorthands inline (without exec)
+  if (bin === 'nexus' || bin === 'node') {
+    try {
+      // Map nexus commands to orchestrator API calls
+      const sub = parts[1] || '';
+      if (sub === 'status' || (bin === 'node' && raw.includes('status'))) {
+        const d = await fetch('http://localhost:9000/api/status').then(r=>r.json());
+        const systems = d.systems || {};
+        consolePrint('NEXUS STATUS', 'sys');
+        for (const [name, info] of Object.entries(systems)) {
+          const dot = info.online ? '●' : '○';
+          consolePrint(`  ${dot} ${name.padEnd(14)} :${(info.port||'?')}  ${info.online?'online':'OFFLINE'} ${info.ms||0}ms`, info.online?'out':'err');
+        }
+        return;
+      }
+      if (sub === 'jobs') {
+        const d = await fetch('http://localhost:9000/api/guardian/jobs').then(r=>r.json());
+        consolePrint(`JOBS (${(d.jobs||[]).length})`, 'sys');
+        (d.jobs||[]).slice(0,10).forEach(j=>consolePrint(`  ${j.status.padEnd(10)} ${j.provider.padEnd(10)} ${(j.prompt||'').slice(0,50)}`));
+        return;
+      }
+      if (sub === 'events') {
+        const d = await fetch('http://localhost:9000/api/cortex/events?n=20').then(r=>r.json());
+        consolePrint(`EVENTS (${(d.rows||[]).length})`, 'sys');
+        (d.rows||[]).forEach(e=>consolePrint(`  ${new Date(e.ts||0).toTimeString().slice(0,8)}  ${(e.type||'').padEnd(36)}  ${JSON.stringify(e.payload||{}).slice(0,50)}`));
+        return;
+      }
+      if (sub === 'gaps') {
+        const d = await fetch('http://localhost:9000/api/idearium/gaps').then(r=>r.json());
+        consolePrint(`GAPS (${(d.gaps||d||[]).length})`, 'sys');
+        (d.gaps||d||[]).forEach(g=>consolePrint(`  ${g.status.padEnd(10)} ${(g.description||'').slice(0,60)}`,'err'));
+        return;
+      }
+      if (sub === 'ideas') {
+        const d = await fetch('http://localhost:9000/api/idearium/ideas').then(r=>r.json());
+        consolePrint(`IDEAS (${(d.ideas||[]).length})`, 'sys');
+        (d.ideas||[]).slice(0,10).forEach(i=>consolePrint(`  ${(i.phase||'seed').padEnd(12)} ${(i.text||i.title||'').slice(0,60)}`));
+        return;
+      }
+      if (sub === 'ledger') {
+        const d = await fetch('http://localhost:9000/api/ledger').then(r=>r.json());
+        consolePrint(`LEDGER (${(d.entries||[]).length} entries)`, 'sys');
+        (d.entries||[]).slice(0,15).forEach(e=>consolePrint(`  ${(e._system||'?').padEnd(12)} ${(e.type||'').padEnd(30)} ${JSON.stringify(e.payload||{}).slice(0,40)}`));
+        return;
+      }
+      if (sub === 'help' || !sub) {
+        consolePrint('nexus status | nexus jobs | nexus events | nexus gaps | nexus ideas | nexus ledger', 'sys');
+        consolePrint('POST to /api/exec for arbitrary commands', 'sys');
+        return;
+      }
+    } catch(e) {
+      consolePrint('Error: ' + e.message, 'err');
+      return;
+    }
+  }
+
+  // Arbitrary exec via /api/exec
+  try {
+    consolePrint('executing…', 'sys');
+    const d = await fetch('http://localhost:9000/api/exec', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ cmd: parts[0], args: parts.slice(1) })
+    }).then(r=>r.json());
+    if (d.output) {
+      d.output.split('\n').forEach(line => consolePrint(line, d.ok ? 'out' : 'err'));
+    }
+    consolePrint('exit ' + (d.exit ?? '?'), d.ok ? 'sys' : 'err');
+  } catch(e) {
+    consolePrint('Exec failed: ' + e.message, 'err');
+  }
+}
+
+// Keyboard history in console input
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('console-input');
+  if (inp) {
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'ArrowUp') { consoleHistIdx = Math.min(consoleHistIdx+1, consoleHistory.length-1); inp.value = consoleHistory[consoleHistIdx]||''; e.preventDefault(); }
+      if (e.key === 'ArrowDown') { consoleHistIdx = Math.max(consoleHistIdx-1, -1); inp.value = consoleHistIdx>=0?consoleHistory[consoleHistIdx]:''; e.preventDefault(); }
+    });
+  }
+});
+
+// Hook ledger updates from live SSE stream
+const _origStartStream = startStream;
+startStream = function() {
+  _origStartStream();
+  // Patch SSE onmessage to also update ledger
+  const _origSSEMsg = sse?.onmessage;
+  if (sse) {
+    sse.onmessage = function(e) {
+      if (_origSSEMsg) _origSSEMsg.call(this, e);
+      try {
+        const d = JSON.parse(e.data);
+        if (d.type === 'ledger.entry' && ledgerLive) {
+          const el = document.getElementById('ledger-body');
+          if (el && document.getElementById('pane-ledger')?.classList.contains('active')) {
+            const sys = d.system || 'orchestrator';
+            const col = SYS_COLOR[sys] || '#94a3b8';
+            const ts  = new Date(d.ts||Date.now()).toTimeString().slice(0,8);
+            const row = document.createElement('div');
+            row.className = 'ledger-row';
+            row.innerHTML = `<span class="lr-ts">${ts}</span><span class="lr-sys ${sys}" style="color:${col}">${sys}</span><span class="lr-type" style="color:var(--text)">${d.entry?.type||'—'}</span><span class="lr-payload">${JSON.stringify(d.entry?.payload||{}).slice(0,80)}</span>`;
+            el.prepend(row);
+            if (el.children.length > 200) el.lastChild.remove();
+          }
+        }
+      } catch(_) {}
+    };
+  }
+};
 
 // Boot
 loadAll();

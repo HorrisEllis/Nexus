@@ -1,0 +1,5 @@
+{"_system":"orchestrator","_ts":1780384485861,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"idearium","_ts":1780384485936,"type":"idearium.booted","payload":{"version":"2.0.0","port":4800}}
+{"_system":"orchestrator","_ts":1780384486367,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780385483030,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780385483537,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}

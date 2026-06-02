@@ -66,6 +66,7 @@ function matchRoute(method, url) {
   // Static routes first
   const routes = [
     ['GET',    [],                        'health'],
+    ['GET',    ['health'],                 'health'],     // alias: GET /health → same as GET /
     ['GET',    ['api','contract'],        'contract.get'],
     ['GET',    ['api','stats'],           'stats.get'],
     ['GET',    ['api','snr'],             'snr.current'],
@@ -179,6 +180,12 @@ async function handle(req, res, route, query, body) {
       if (!text) return err(res, 400, 'text required');
       const ev = os.emit('idearium.idea.create', { text, tags: tags||[], compartment: compartment||null, source: 'api' });
       const idea = os.db.ideas[os.db.ideas.length - 1];
+      // Mirror to orchestrator ledger (fire-and-forget)
+      import('http').then(({ default: http }) => {
+        const body2 = JSON.stringify({ system:'idearium', type:'idearium.idea.created', payload:{ uuid:idea?.uuid, text:(text||'').slice(0,80), tags } });
+        const r = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/ledger', method:'POST', headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body2)} }, ()=>{});
+        r.on('error',()=>{}); r.write(body2); r.end();
+      }).catch(()=>{});
       return ok(res, { idea, eventId: ev.uuid });
     }
 
@@ -409,8 +416,25 @@ export function startAPI() {
     }
   });
 
-  server.listen(PORT, BINDING, () => {
+  server.listen(PORT, BINDING, async () => {
     console.log(`[Idearium API] v${VERSION} on http://${BINDING}:${PORT}`);
+    // §5.2 — register with bridge
+    import('http').then(({ default: http }) => {
+      const body = JSON.stringify({ systemId:'idearium', appId:'idearium', secret:'nexus-idearium-internal-v1' });
+      const r = http.request({ hostname:'127.0.0.1', port:9999, path:'/bridge/handshake', method:'POST',
+        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)} }, res => {
+        let d=''; res.on('data',c=>d+=c);
+        res.on('end',()=>{ try{const j=JSON.parse(d); if(j.ok) console.log('[idearium §5.2] bridge registered');}catch(_){} });
+      });
+      r.on('error',()=>{}); r.write(body); r.end();
+    }).catch(()=>{});
+    // Post booted event to orchestrator ledger
+    import('http').then(({ default: http }) => {
+      const body2 = JSON.stringify({ system:'idearium', type:'idearium.booted', payload:{ version:VERSION, port:PORT } });
+      const r2 = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/ledger', method:'POST',
+        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body2)} }, ()=>{});
+      r2.on('error',()=>{}); r2.write(body2); r2.end();
+    }).catch(()=>{});
     console.log(`[Idearium API] SSE: http://${BINDING}:${PORT}/sse`);
     console.log(`[Idearium API] Contract: http://${BINDING}:${PORT}/api/contract`);
   });
@@ -425,3 +449,6 @@ export function startAPI() {
 
   return server;
 }
+
+// ── Auto-start when run directly ────────────────────────────────────────────
+startAPI();

@@ -367,4 +367,31 @@ function clearStream() { document.getElementById('stream-log').innerHTML = ''; }
 loadAll();
 setInterval(loadAll, 10000);
 </script>
+
+<script>
+/* NEXUS hotswap listener — auto-reload on file change */
+(function(){
+  const SYS = document.documentElement.dataset.system || window.__NEXUS_SYSTEM__ || (()=>{
+    const p = location.port;
+    return p==="7820"?"guardian":p==="3748"?"cortex":p==="4800"?"idearium":
+           p==="9999"?"bridge":p==="4242"?"emerge":p==="9000"?"orchestrator":"unknown";
+  })();
+  let sse, n=0;
+  function connect(){
+    sse = new EventSource("http://localhost:9000/sse");
+    sse.onopen  = ()=>{ n=0; };
+    sse.onerror = ()=>{ sse.close(); setTimeout(connect, Math.min(10000, 1000*++n)); };
+    sse.onmessage = e=>{
+      try{
+        const d=JSON.parse(e.data);
+        if(d.type==="orchestrator.ui.hotswap"&&d.system===SYS){
+          console.log("[hotswap] reloading — "+d.file);
+          setTimeout(()=>location.reload(),150);
+        }
+      }catch(_){}
+    };
+  }
+  setTimeout(connect,1000);
+})();
+</script>
 </body></html>

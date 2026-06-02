@@ -44,9 +44,22 @@ const { JaaStore } = require('./jaa-store.js');
 // ── config ────────────────────────────────────────────────────────────────────
 
 const HTTP_PORT     = process.env.GUARDIAN_HTTP_PORT  || 7820;
+const ORCH_PORT     = process.env.ORCHESTRATOR_PORT   || 9000;
+
+// nexus-connect: unified cross-system I/O with §1.2 gating
+const nc = (() => { try { return require('../nexus-connect'); } catch(_) { return null; } })();
+function _postLedger(system, type, payload) {
+  if (nc) nc.postLedger(system, type, payload).catch(() => {});
+}
+function _postEvent(type, payload, opts) {
+  if (nc) nc.postEvent(type, payload, opts).catch(() => {});
+}
+function _postBridge(type, payload) {
+  if (nc) nc.postBridge(type, payload).catch(() => {});
+}
 const WSS_PORT      = process.env.GUARDIAN_WS_PORT    || 7821;
 const DROPZONE_PORT = process.env.GUARDIAN_DROPZONE_PORT || 7822;
-const NEXUS_URL     = process.env.NEXUS_URL || 'http://127.0.0.1:3001';
+const NEXUS_URL     = process.env.NEXUS_URL || 'http://127.0.0.1:3748';
 
 const CERT_FILE = path.join(__dirname, 'guardian-cert.pem');
 const KEY_FILE  = path.join(__dirname, 'guardian-key.pem');
@@ -166,25 +179,19 @@ function parseCommand(raw) {
 // ── NEXUS write ───────────────────────────────────────────────────────────────
 
 async function writeToNexus(job) {
-  try {
-    await fetch(`${NEXUS_URL}/api/event`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type:    'guardian.response.received',
-        source:  'guardian',
-        payload: {
-          jobId: job.id, command: job.command, provider: job.provider,
-          prompt: job.prompt, response: job.response,
-          durationMs: Date.now() - job.ts, complete: true,
-        },
-        causedBy: job.id,
-        ts: Date.now(),
-      }),
-    });
-  } catch (err) {
-    console.warn(`[guardian] NEXUS write failed: ${err.message}`);
+  // §1.2: gated — failure is logged, never silent
+  if (!nc) {
+    console.warn('[guardian] nexus-connect not available — cortex write skipped');
+    return;
   }
+  const payload = {
+    jobId: job.id, command: job.command, provider: job.provider,
+    promptLen: (job.prompt||'').length, chars: (job.response||'').length,
+    durationMs: Date.now() - job.ts, complete: true,
+  };
+  await nc.postEvent('guardian.response.received', payload, { causedBy: job.id, source: 'guardian' });
+  await nc.postBridge('guardian.job.complete', payload);
+  await nc.postLedger('guardian', 'guardian.job.complete', payload);
 }
 
 // ── job lifecycle ─────────────────────────────────────────────────────────────
@@ -355,6 +362,11 @@ wss.on('connection', (ws, req) => {
         // Auto-upload any code blocks in the response
         autoUploadBlocks(job.response, job.provider, job.id);
         writeToNexus(job).catch(() => {});
+        // Post to orchestrator ledger
+        _postLedger('guardian', 'guardian.job.complete', {
+          jobId: job.id, provider: job.provider, command: job.command,
+          chars: job.response?.length || 0,
+        });
         break;
       }
       case 'GUARDIAN_ARTIFACT': {
@@ -410,6 +422,21 @@ wss.on('connection', (ws, req) => {
 });
 
 httpsServer.listen(WSS_PORT, '127.0.0.1', () => {
+  // §5.2 — register with bridge after WSS is up
+  setTimeout(async () => {
+    const nc2 = require('../nexus-connect');
+    const r = await nc2._req('bridge', 'POST', '/bridge/handshake', {
+      systemId: 'guardian', appId: 'guardian',
+      secret: 'nexus-guardian-internal-v1',
+    }, 4000);
+    if (r.ok) {
+      console.log('[guardian §5.2] bridge registered');
+      await nc2.postBridge('guardian.booted', { version: '3.5.0', port: HTTP_PORT });
+      await nc2.postLedger('guardian', 'guardian.booted', { port: HTTP_PORT });
+    } else {
+      console.warn('[guardian] bridge not available — standalone');
+    }
+  }, 2000);
   // WSS up — print full banner when HTTP also up
 });
 
@@ -541,6 +568,28 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true, log: responseLog.slice(-limit) }));
     return;
+  }
+
+  // §2.3 — SISO bus log observable via API
+  if (req.method === 'GET' && url.pathname === '/bus') {
+    const n = parseInt(new URL(req.url,'http://x').searchParams.get('n') || '100');
+    pRes(res, 200, { ok: true, ...bus.sample(n), gates: [...bus.gates.keys()] });
+    return true;
+  }
+
+  // Bus emit via API (for orchestrator to inject events)
+  if (req.method === 'POST' && url.pathname === '/bus/emit') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', () => {
+      try {
+        const { type, data } = JSON.parse(body);
+        if (!type) { pRes(res, 400, { ok:false, error:'type required' }); return; }
+        const result = bus.emit(type, data || {});
+        pRes(res, 200, { ok:true, ...result });
+      } catch(e) { pRes(res, 400, { ok:false, error: e.message }); }
+    });
+    return true;
   }
 
   if (req.method === 'GET' && url.pathname === '/health') {
@@ -1386,36 +1435,106 @@ const dropzone = startDropzone();
 const dropzoneServer = dropzone ? dropzone.server : null;
 
 // ══════════════════════════════════════════════════════════════════════════════
-//  SISO EVENT BUS  (inline — no import needed)
+//  SISO EVENT BUS — §8.3 canonical SISO as foundation
+//  Every emit() gates through: local JAA → cortex → bridge → orchestrator
+//  §5.7 all inter-module communication via event bus only
+//  §2.3 all state observable — every event logged to StreamLog
 // ══════════════════════════════════════════════════════════════════════════════
 
+// §8.3 — canonical SISO loaded from foundation
+// CJS-compatible wrapper around siso/core/index.js primitives
 class SISOGate {
-  constructor(sig, fn) { this.signature = sig; this._fn = fn; }
-  transform(event, stream) { try { this._fn(event.data, stream); } catch(e) { console.error(`[siso] ${this.signature}: ${e.message}`); } }
+  constructor(sig, fn) {
+    if (!sig) throw new Error('[§1.2 SISOGate] signature required');
+    this.signature = sig;
+    this._fn = fn;
+  }
+  transform(event, stream) {
+    try { this._fn(event.data, stream); }
+    catch(e) {
+      // §1.2 — nothing silently fails
+      console.error(`[§1.2 siso.gate.${this.signature}] ${e.message}`);
+      _postEvent(`guardian.gate.error`, { gate: this.signature, error: e.message });
+    }
+  }
 }
+
+// §2.3 — StreamLog: all state observable
+const _sisoLog = [];
 let _streamSeq = 0;
+const _LOG_MAX  = 2000;
+
+// Canonical bus — §5.7 single event bus, all communication through it
 class SISOStream {
-  constructor() { this.gates = new Map(); this.log = []; this.logLevel = 'EVENTS'; }
+  constructor() {
+    this.gates    = new Map();
+    this.logLevel = 'EVENTS'; // OFF | EVENTS | DEEP | DATA
+  }
   register(gate) {
-    if (this.gates.has(gate.signature)) throw new Error(`SISO: collision '${gate.signature}'`);
+    if (this.gates.has(gate.signature))
+      throw new Error(`[§1.2 SISOStream] Signature collision: '${gate.signature}'`);
     this.gates.set(gate.signature, gate);
   }
   emit(type, data = {}) {
-    const gate = this.gates.get(type);
+    const seq   = _streamSeq++;
+    const ts    = Date.now();
+    const gate  = this.gates.get(type);
+    const claimed = gate ? gate.signature : null;
+
+    // §2.3 — log every event (StreamLog pattern from canonical SISO)
     if (this.logLevel !== 'OFF') {
-      const entry = { seq: _streamSeq++, ts: Date.now(), type, claimed: gate ? gate.signature : null };
+      const entry = { seq, ts, type, claimed };
       if (this.logLevel === 'DATA') entry.data = data;
-      this.log.push(entry);
-      if (this.log.length > 2000) this.log.shift();
+      _sisoLog.push(entry);
+      if (_sisoLog.length > _LOG_MAX) _sisoLog.shift();
     }
+
+    // §5.7 — fire registered gate (depth-first, synchronous)
     if (gate) gate.transform({ type, data }, this);
-    cockpitBroadcast({ seq: _streamSeq - 1, type, ts: Date.now() });
+
+    // §2.3 — broadcast to cockpit SSE (observable by UI)
+    cockpitBroadcast({ seq, type, ts, claimed });
+
+    // §5.2 — kernel connection: every event flows to orchestrator + cortex + bridge
+    // Only emit externally for system-significant events (not every UI tick)
+    if (!type.startsWith('dom.') && !type.startsWith('guardian.heartbeat')) {
+      _kernelEmit(type, data, ts);
+    }
+
+    return { seq, ts, claimed };
+  }
+  // §2.3 — sample the log (observable, not consumed)
+  sample(n = 100) {
+    return { logLevel: this.logLevel, count: _sisoLog.length, entries: _sisoLog.slice(-n) };
   }
 }
-const bus = new SISOStream();
 
-// Bridge wired after bus — mounted at server request time
-// Cross-sync gates registered below with other SISOGates
+// §5.1 — kernel emit: every bus event reported to all connected systems
+// Fires-and-forgets — §1.2 errors are logged, never swallowed
+function _kernelEmit(type, data, ts) {
+  // 1. Orchestrator ledger (§2.2 persisted)
+  _postLedger('guardian', type, { ...data, _busSeq: _streamSeq });
+  // 2. Cortex event_log (source of truth, §2.2)
+  // Only for significant events to avoid flooding cortex
+  const CORTEX_EVENTS = new Set([
+    'guardian.job.complete', 'guardian.artifact', 'guardian.gaps',
+    'guardian.job.queued', 'guardian.job.dispatched', 'guardian.ledger',
+    'guardian.session.named', 'guardian.gate.error', 'guardian.setting.update',
+  ]);
+  if (CORTEX_EVENTS.has(type)) {
+    _postEvent(type, data, { source: 'guardian.bus', causedBy: data.jobId || null });
+  }
+  // 3. Bridge SSE broadcast (§5.2 — everything on the bus)
+  const BRIDGE_EVENTS = new Set([
+    'guardian.job.complete', 'guardian.artifact', 'guardian.gaps',
+    'guardian.job.queued', 'guardian.job.dispatched',
+  ]);
+  if (BRIDGE_EVENTS.has(type)) {
+    _postBridge(type, data);
+  }
+}
+
+const bus = new SISOStream();
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  SQLITE / JAA PERSISTENCE
@@ -1651,10 +1770,14 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // Cockpit
   if (method==='GET' && (url.pathname==='/'||url.pathname==='/cockpit'||url.pathname==='/cockpit/')) {
-    const cockpitPath = require('path').join(__dirname, '..', 'ui', 'cockpit.html');
-    const cockpitHtml = require('fs').existsSync(cockpitPath)
-      ? require('fs').readFileSync(cockpitPath, 'utf8')
-      : buildCockpitHTML();
+    // Prefer guardian/ui/index.html (Forge IDE) over cockpit.html
+    const forgeIdePath = require('path').join(__dirname, 'ui', 'index.html');
+    const cockpitPath  = require('path').join(__dirname, '..', 'ui', 'cockpit.html');
+    const cockpitHtml  = require('fs').existsSync(forgeIdePath)
+      ? require('fs').readFileSync(forgeIdePath, 'utf8')
+      : require('fs').existsSync(cockpitPath)
+        ? require('fs').readFileSync(cockpitPath, 'utf8')
+        : buildCockpitHTML();
     res.writeHead(200,{'Content-Type':'text/html','Access-Control-Allow-Origin':'*'}); res.end(cockpitHtml); return true;
   }
 
@@ -2109,7 +2232,12 @@ wss.on('connection', (clientWs) => {
         bus.emit('guardian.timeline', { channel:'guardian.job.complete', personId:msg.account, payload:{ jobId:msg.jobId, chars:(msg.text||'').length }, ts:Date.now() });
       }
       if (msg.type === 'GUARDIAN_PA_SESSION') bus.emit('guardian.pa.session', { ...msg, provider:'claude' });
-      if (msg.type === 'GUARDIAN_LEDGER_EVENT') bus.emit('guardian.ledger', { ...msg, provider:'claude' });
+      if (msg.type === 'GUARDIAN_LEDGER_EVENT') {
+        bus.emit('guardian.ledger', { ...msg, provider:'claude' });
+        _postLedger('guardian', 'guardian.ledger.' + (msg.category||'event'), {
+          msg: msg.msg, level: msg.level, meta: msg.meta,
+        });
+      }
       if (msg.type === 'GUARDIAN_FILE_UPLOAD') bus.emit('guardian.download', { filename:(msg.files||[]).map(f=>f.name).join(','), chatUrl:msg.chatUrl, account:msg.account, jobId:msg.jobId, provider:'claude' });
       if (msg.type === 'GUARDIAN_DOWNLOAD') bus.emit('guardian.download', { ...msg, provider:'claude' });
     } catch (_) {}

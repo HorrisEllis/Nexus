@@ -1,0 +1,55 @@
+{
+  "_version": "2.0.0",
+  "_savedAt": 1780381250279,
+  "ideas": [
+    {
+      "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "slug": "test-ledger-idea",
+      "text": "test ledger idea",
+      "tags": [],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": null,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780381250279,
+      "updatedAt": 1780381250279
+    }
+  ],
+  "specs": [],
+  "gaps": [],
+  "links": [],
+  "snapshots": [],
+  "events": [
+    {
+      "uuid": "167513d5-4318-4b4e-8d93-c4e57f63f7b6",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "test ledger idea",
+        "tags": [],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780381250279
+    }
+  ],
+  "snr": [],
+  "tensions": []
+}

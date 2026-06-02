@@ -539,7 +539,7 @@ select.fi option{background:var(--surface);}
         <div class="brain-sec-hdr">Connections</div>
         <div class="brain-stat"><span>Idearium :4800</span><span class="brain-stat-val" id="brain-idearium-st">—</span></div>
         <div class="brain-stat"><span>Guardian :7820</span><span class="brain-stat-val" id="brain-guardian-st">—</span></div>
-        <div class="brain-stat"><span>Nexus :3001</span><span class="brain-stat-val" id="brain-nexus-st">—</span></div>
+        <div class="brain-stat"><span>Cortex :3748</span><span class="brain-stat-val" id="brain-nexus-st">—</span></div>
       </div>
     </div>
     <div class="brain-main">
@@ -909,7 +909,7 @@ class GuardianClient {
 }
 
 class NexusClient {
-  constructor(){ this.base='http://127.0.0.1:3001'; }
+  constructor(){ this.base='http://127.0.0.1:3748'; }
   async req(path,method='GET',body=null,timeout=5000){
     const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);
     try{const r=await fetch(this.base+path,{method,headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:body?JSON.stringify(body):undefined});clearTimeout(timer);return await r.json();}
@@ -1538,7 +1538,7 @@ async function _cliRoute(cmd,src){
 
     // ── CORTEX ───────────────────────────────────────────────────
     case 'cortex': switch(sub){
-      case 'health': { const h=await nexus.health(); cliPrint(h?'Nexus online':'Nexus offline (check :3001)',h?'ok':'err'); return; }
+      case 'health': { const h=await nexus.health(); cliPrint(h?'Nexus online':'Nexus offline (check :3748)',h?'ok':'err'); return; }
       case 'status': { try{const r=await nexus.status();cliPrint(JSON.stringify(r).slice(0,300),'ok');}catch(e){cliPrint('Nexus offline: '+e.message,'err');} return; }
       case 'diag':{
         cliPrint('=== FORGE DIAGNOSTICS ===','info');

@@ -1,0 +1,73 @@
+{
+  "name": "nexus-final",
+  "version": "2.2.0",
+  "uuid": "nexus-system-v2-1-0000-4000-0000-000000000001",
+  "hookId": "nexus.system:v2.1:s0001",
+  "description": "NEXUS ecosystem \u2014 SISO+JAA foundation, gated cross-system orchestration",
+  "axioms": "AXIOMS-v1.0 \u2014 all 29 laws enforced",
+  "layer": "system",
+  "siso": {
+    "version": "1.0.0",
+    "source": "canonical",
+    "path": "siso/"
+  },
+  "jaa": {
+    "version": "1.0.0",
+    "source": "canonical",
+    "path": "jaa/"
+  },
+  "systems": {
+    "orchestrator": {
+      "port": 9000,
+      "uuid": "nexus-orchestrator-v2-0-0",
+      "file": "orchestrator.js"
+    },
+    "bridge": {
+      "port": 9999,
+      "uuid": "nexus-bridge-v1-0-0",
+      "file": "bridge/nexus-bridge.js"
+    },
+    "cortex": {
+      "port": 3748,
+      "uuid": "cortex-boot-v2-0000",
+      "file": "cortex/boot.js"
+    },
+    "guardian": {
+      "port": 7820,
+      "uuid": "guardian-server-v3-5",
+      "file": "guardian/server.js"
+    },
+    "idearium": {
+      "port": 4800,
+      "uuid": "idearium-api-v1-0000",
+      "file": "idearium/api/index.js"
+    },
+    "emerge": {
+      "port": 4242,
+      "uuid": "emerge-ide-v1-0-0",
+      "file": "emerge-ide.js"
+    }
+  },
+  "axiom_violations_fixed": [
+    "\u00a71.2 \u2014 silent catch blocks in cortex, guardian, emerge now log to nc.gate()",
+    "\u00a72.2 \u2014 orchestrator ledger persisted to data/ledger/orchestrator.jsonl",
+    "\u00a75.2 \u2014 cortex, guardian, idearium, orchestrator all register with bridge on boot",
+    "\u00a75.1 \u2014 every nexus-connect call has a UUID via randomUUID()",
+    "\u00a78.3 \u2014 canonical SISO installed from upload, siso/core/ extended cleanly",
+    "\u00a73.1 \u2014 cortex boot gated: storage\u2192core\u2192deps\u2192poll\u2192server\u2192bridge",
+    "\u00a75.4 \u2014 version 2.1.0 consistent across manifest",
+    "\u00a75.7 guardian inline SISO replaced with canonical bus wired to cortex+bridge+orchestrator on every emit()",
+    "\u00a75.2 guardian, idearium, cortex, orchestrator all register with bridge on boot \u2014 verified 2 sessions active",
+    "\u00a72.3 guardian bus log observable via GET /bus \u2014 logs every event with seq, ts, claimed, system"
+  ],
+  "tests": {
+    "kernel": "142/142 passing"
+  },
+  "features": [
+    "nexus-repl.js: bus command",
+    "forge UI: 5 system status dots",
+    "bridge SSE subscription in forge",
+    "orchestrator SSE subscription in forge",
+    "/api/bus unified bus log across all systems"
+  ]
+}

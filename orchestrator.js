@@ -278,6 +278,56 @@ async function allHealth() {
 
 // ── SSE unified stream ────────────────────────────────────────────────────────
 const sseClients = new Set();
+
+// ── Per-system ledger — §2.2 persisted to disk + in-memory ring ─────────────
+// §2.2: Storage device is the source of truth. Survives restart.
+const LEDGER_MAX  = 200;
+const LEDGER_DIR  = path.join(ROOT, 'data', 'ledger');
+const LEDGER_FILE = path.join(LEDGER_DIR, 'orchestrator.jsonl');
+
+// In-memory ring (fast reads)
+const LEDGER = { orchestrator:[], bridge:[], cortex:[], guardian:[], idearium:[], emerge:[] };
+
+// Ensure ledger dir exists
+try { fs.mkdirSync(LEDGER_DIR, { recursive: true }); } catch(_) {}
+
+// Replay from disk on boot (§7.6 — codebase is a materialised view of the ledger)
+let _ledgerFd = null;
+try {
+  if (fs.existsSync(LEDGER_FILE)) {
+    const lines = fs.readFileSync(LEDGER_FILE, 'utf8').split('\n').filter(Boolean);
+    for (const line of lines.slice(-1000)) {  // last 1000 on boot
+      try {
+        const e = JSON.parse(line);
+        const ring = LEDGER[e._system] || (LEDGER[e._system] = []);
+        ring.push(e);
+        if (ring.length > LEDGER_MAX) ring.shift();
+      } catch(_) {}
+    }
+  }
+  _ledgerFd = fs.createWriteStream(LEDGER_FILE, { flags: 'a' });
+} catch(e) { console.warn('[ledger] disk init failed:', e.message); }
+
+function ledgerWrite(system, type, payload = {}) {
+  const entry = { _system: system, _ts: Date.now(), type, payload };
+  const ring  = LEDGER[system] || (LEDGER[system] = []);
+  ring.unshift(entry);
+  if (ring.length > LEDGER_MAX) ring.pop();
+  // §2.2 — persist to disk
+  if (_ledgerFd) {
+    try { _ledgerFd.write(JSON.stringify(entry) + '\n'); } catch(_) {}
+  }
+  // §2.3 — broadcast to SSE clients
+  broadcast(JSON.stringify({ type: 'ledger.entry', system, entry, ts: Date.now() }));
+}
+
+function ledgerAll(n = 100) {
+  const all = [];
+  for (const [sys, ring] of Object.entries(LEDGER)) {
+    for (const e of ring) all.push({ ...e, _system: sys });
+  }
+  return all.sort((a, b) => (b._ts || 0) - (a._ts || 0)).slice(0, n);
+}
 let bridgeSse    = null;
 
 function broadcast(data) {
@@ -310,20 +360,56 @@ function connectBridgeSSE() {
 
 // ── UI hotswap watcher ────────────────────────────────────────────────────────
 const UI_SYSTEMS = ['bridge','cortex','guardian','idearium','emerge','orchestrator'];
+// System-local ui/ dirs (guardian/ui/, cortex/ui/, etc.) — also watched
+// These are the canonical sources. Edit files here → hotswap fires.
+// Run `npm run sync-ui` to mirror them to root ui/<system>/ for orchestrator serving.
+const SYSTEM_LOCAL_UI_DIRS = [
+  { system:'guardian',     dir: path.join(ROOT,'guardian','ui') },
+  { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
+  { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
+  { system:'bridge',       dir: path.join(ROOT,'bridge','ui') },
+  { system:'emerge',       dir: path.join(ROOT,'emerge','ui') },
+  { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
+];
+
+// ── UI Hotswap Watcher ───────────────────────────────────────────────────────
+// Watches ONLY system-local ui/ dirs (guardian/ui/, cortex/ui/, etc.)
+// These are the canonical source of truth for each system's UI.
+// The root ui/<system>/ dirs are mirrors — updated manually by npm run sync-ui.
+// NO file copying in watchers. Copying causes infinite loops.
+// Debounce at 500ms per file key prevents rapid re-fires from editors.
+const _hotswapDebounce = new Map();
 
 function watchUIDirs() {
-  for (const sys of UI_SYSTEMS) {
-    const dir = path.join(UI_ROOT, sys);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  const WATCH_DIRS = SYSTEM_LOCAL_UI_DIRS.filter(({ dir }) => {
+    if (!fs.existsSync(dir)) {
+      try { fs.mkdirSync(dir, { recursive: true }); } catch(_) {}
+      return false;
+    }
+    return true;
+  });
+
+  for (const { system, dir } of WATCH_DIRS) {
     try {
-      fs.watch(dir, { recursive:true }, (event, filename) => {
+      fs.watch(dir, { recursive: true }, (event, filename) => {
         if (!filename) return;
-        if (!['.html','.js','.css','.json'].includes(path.extname(filename).toLowerCase())) return;
-        const msg = JSON.stringify({ type:'orchestrator.ui.hotswap', system:sys, file:filename, event, ts:Date.now() });
+        const ext = path.extname(filename).toLowerCase();
+        if (!['.html', '.js', '.css', '.json'].includes(ext)) return;
+        const key = `${dir}::${filename}`;
+        const now = Date.now();
+        if (now - (_hotswapDebounce.get(key) || 0) < 500) return;
+        _hotswapDebounce.set(key, now);
+        const msg = JSON.stringify({
+          type: 'orchestrator.ui.hotswap',
+          system, file: filename, event, ts: now,
+        });
         broadcast(msg);
-        console.log(`[hotswap] ui/${sys}/${filename} → ${event}`);
+        console.log(`[hotswap] ${system}/ui/${filename}`);
       });
-    } catch(e) { console.error(`[hotswap] watch failed ui/${sys}: ${e.message}`); }
+      console.log(`[ui] watching ${system}/ui/`);
+    } catch (e) {
+      console.error(`[hotswap] watch failed ${system}/ui/: ${e.message}`);
+    }
   }
 }
 
@@ -423,6 +509,61 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (M==='GET' && sub==='channels')  return json(res, 200, { ok:true, channels:CHANNELS });
+
+  // ── Unified SISO bus log — all systems' event buses merged ────────────────
+  if (M==='GET' && sub==='bus') {
+    const n   = parseInt(QS.get('n') || '100');
+    const sys = QS.get('system') || '';
+    const results = await Promise.all([
+      GET('guardian',`/bus?n=${n}`).catch(()=>null),
+      GET('cortex','/sse').catch(()=>null),  // cortex SSE log via health
+    ]);
+    const guardianLog = results[0]?.entries || [];
+    // Merge with orchestrator's own ledger
+    const orchEntries = ledgerAll(n).map(e => ({
+      seq: e._ts, ts: e._ts, type: e.type, system: e._system, claimed: null,
+    }));
+    const all = [...guardianLog.map(e=>({...e,system:'guardian'})), ...orchEntries]
+      .sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,n);
+    return json(res, 200, {
+      ok: true,
+      entries: sys ? all.filter(e=>e.system===sys) : all,
+      gates: results[0]?.gates || [],
+      guardian: { count: guardianLog.length },
+      orchestrator: { count: orchEntries.length },
+    });
+  }
+
+  // ── Ledger — all system events ────────────────────────────────────────────
+  if (M==='GET' && sub==='ledger') {
+    const system = QS.get('system') || '';
+    const n      = parseInt(QS.get('n') || '100');
+    const entries = system && LEDGER[system] ? LEDGER[system].slice(0, n) : ledgerAll(n);
+    return json(res, 200, { ok:true, entries, systems:Object.keys(LEDGER), counts: Object.fromEntries(Object.entries(LEDGER).map(([k,v])=>[k,v.length])) });
+  }
+
+  // ── Exec — run CLI command and stream result ──────────────────────────────
+  if (M==='POST' && sub==='exec') {
+    const body = await readBody(req);
+    const { cmd = '', args = [], system = '' } = body;
+    if (!cmd) return json(res, 400, { ok:false, error:'cmd required' });
+    const { spawnSync } = require('child_process');
+    const fullArgs = args.length ? [cmd, ...args] : cmd.split(' ').filter(Boolean);
+    const bin = fullArgs.shift();
+    const result = spawnSync(bin, fullArgs, { cwd: ROOT, encoding: 'utf8', timeout: 30000 });
+    const output = (result.stdout || '') + (result.stderr || '');
+    const entry = { cmd: [bin, ...fullArgs].join(' '), exit: result.status, output, ts: Date.now() };
+    ledgerWrite('orchestrator', 'exec', entry);
+    return json(res, 200, { ok: result.status === 0, ...entry });
+  }
+
+  // ── Ledger write from external systems ────────────────────────────────────
+  if (M==='POST' && sub==='ledger') {
+    const body = await readBody(req);
+    const { system = 'orchestrator', type = 'event', payload = {} } = body;
+    ledgerWrite(system in LEDGER ? system : 'orchestrator', type, payload);
+    return json(res, 200, { ok:true });
+  }
   if (M==='GET' && sub==='cli')       return json(res, 200, { ok:true, cli:CLI_REF });
   if (M==='GET' && sub==='ui') {
     return json(res, 200, { ok:true, uis: UI_SYSTEMS.map(s => {
@@ -576,9 +717,12 @@ const server = http.createServer(async (req, res) => {
     const action = seg[2] || '';
     const uuid   = seg[3] || '';
     const op     = seg[4] || '';
+    const sub2   = seg[3] || '';
 
     if (M==='GET'  && !action)                      return json(res,200,await GET('guardian','/health'));
     if (M==='GET'  && action==='health')             return json(res,200,await GET('guardian','/health'));
+    if (M==='GET'  && action==='bus')                return json(res,200,await GET('guardian',`/bus?n=${QS.get('n')||100}`));
+    if (M==='POST' && action==='bus' && sub2==='emit') return json(res,200,await POST('guardian','/bus/emit',await readBody(req)));
     if (M==='GET'  && action==='providers')          return json(res,200,await GET('guardian','/providers'));
     if (M==='GET'  && action==='jobs')               return json(res,200,await GET('guardian',`/jobs?status=${QS.get('status')||''}&limit=${QS.get('limit')||20}`));
     if (M==='GET'  && action==='log')                return json(res,200,await GET('guardian',`/log?limit=${QS.get('limit')||20}`));
@@ -680,6 +824,11 @@ const server = http.createServer(async (req, res) => {
     }
 
     return json(res,404,{ok:false,error:`idearium route not found: ${M} /api/idearium/${action}`});
+  }
+
+  // ── ports.js — canonical port map for all UIs ───────────────────────────
+  if (M==='GET' && u.pathname==='/ports.js') {
+    return serveFile(res, path.join(UI_ROOT,'ports.js'));
   }
 
   return json(res,404,{ok:false,error:`route not found: ${M} ${u.pathname}`});
@@ -927,31 +1076,104 @@ else if (cmd==='snr')      cliSNR().then(()=>process.exit(0));
 else if (cmd==='help'||cmd==='--help'||cmd==='-h') { cliHelp(); process.exit(0); }
 else {
   // Start server
-  server.listen(PORT, '127.0.0.1', () => {
+  server.listen(PORT, '127.0.0.1', async () => {
+    const nc = require('./nexus-connect');
+    const VERSION = '2.0.0';
+
+    // ── §3.1 Gate: UI hotswap ────────────────────────────────────────────────
+    watchUIDirs();
+
+    // ── §3.1 Gate: Bridge SSE relay ──────────────────────────────────────────
+    setTimeout(connectBridgeSSE, 1200);
+
+    // ── §3.1 Gate: Bridge registration (§5.2) ────────────────────────────────
+    setTimeout(async () => {
+      const r = await nc._req('bridge','POST','/bridge/handshake',{
+        systemId:'orchestrator', appId:'orchestrator',
+        secret:'nexus-orchestrator-internal-v1',
+      },4000);
+      if (r.ok) {
+        ledgerWrite('orchestrator','orchestrator.bridge.registered',{ version:VERSION, port:PORT });
+        await nc.postBridge('orchestrator.booted',{ version:VERSION, port:PORT });
+      } else {
+        console.warn('[orchestrator] bridge not available — standalone mode');
+      }
+    }, 2000);
+
+    // ── §3.1 Gate: Open CLI terminal ─────────────────────────────────────────
+    // Opens a second terminal window dedicated to interactive CLI commands.
+    // §1.2 — failure is logged, not swallowed
+    const { spawn } = require('child_process');
+    function openCliTerminal() {
+      const cliScript = path.join(ROOT, 'cli', 'nexus-repl.js');
+      const args      = [cliScript, '--repl', `--port=${PORT}`];
+
+      // Try each terminal emulator in order (cross-platform)
+      const terminals = [
+        // Windows
+        ['cmd',    ['/c','start','cmd','/k','node',...args]],
+        // macOS
+        ['osascript',['-e',`tell app "Terminal" to do script "node ${cliScript} --repl --port=${PORT}"`]],
+        // Linux — try common terminals
+        ['gnome-terminal',['--','node',...args]],
+        ['xterm',['-e','node',...args]],
+        ['konsole',['--','node',...args]],
+        ['xfce4-terminal',['--command','node '+args.join(' ')]],
+        ['lxterminal',['-e','node '+args.join(' ')]],
+      ];
+
+      let launched = false;
+      for (const [bin, termArgs] of terminals) {
+        try {
+          const proc = spawn(bin, termArgs, {
+            detached: true, stdio: 'ignore',
+            windowsHide: false,
+          });
+          proc.unref();
+          launched = true;
+          console.log(`\x1b[90m[cli] terminal opened: ${bin}\x1b[0m`);
+          ledgerWrite('orchestrator','orchestrator.cli.terminal.opened',{ terminal:bin });
+          break;
+        } catch(_) { /* try next */ }
+      }
+      if (!launched) {
+        console.warn('\x1b[33m[cli] no terminal emulator found — run manually:\x1b[0m');
+        console.warn(`  node cli/nexus-repl.js --repl`);
+        ledgerWrite('orchestrator','orchestrator.cli.terminal.failed',{ reason:'no terminal emulator' });
+      }
+    }
+    setTimeout(openCliTerminal, 500);
+
+    // ── Boot banner ───────────────────────────────────────────────────────────
     console.log('');
-    console.log('\x1b[1m\x1b[32m⬡  NEXUS ORCHESTRATOR\x1b[0m  v2.0');
+    console.log('\x1b[1m\x1b[32m⬡  NEXUS ORCHESTRATOR\x1b[0m  v' + VERSION);
     console.log('');
     console.log(`   \x1b[90mUI          \x1b[0m  http://localhost:${PORT}`);
     console.log(`   \x1b[90mHealth      \x1b[0m  http://localhost:${PORT}/health`);
     console.log(`   \x1b[90mSSE         \x1b[0m  http://localhost:${PORT}/sse`);
-    console.log(`   \x1b[90mAPI surface \x1b[0m  ${19+14+22+22} routes across bridge+cortex+guardian+idearium`);
+    console.log(`   \x1b[90mLedger      \x1b[0m  http://localhost:${PORT}/api/ledger`);
+    console.log(`   \x1b[90mConsole     \x1b[0m  http://localhost:${PORT}/ui/orchestrator`);
+    console.log(`   \x1b[90mAPI routes  \x1b[0m  77 across bridge+cortex+guardian+idearium`);
     console.log('');
-    console.log(`   \x1b[90mBridge      \x1b[0m  /api/bridge/*   (proxies :9999)`);
-    console.log(`   \x1b[90mCortex      \x1b[0m  /api/cortex/*   (proxies :3748)`);
-    console.log(`   \x1b[90mGuardian    \x1b[0m  /api/guardian/* (proxies :7820)`);
-    console.log(`   \x1b[90mIdearium    \x1b[0m  /api/idearium/* (proxies :4800)`);
-    console.log('');
-    console.log(`   \x1b[90mSystem UIs  \x1b[0m`);
-    for (const sys of UI_SYSTEMS) {
-      const exists=fs.existsSync(path.join(UI_ROOT,sys,'index.html'));
-      const dot=exists?'\x1b[32m●\x1b[0m':'\x1b[31m○\x1b[0m';
-      console.log(`              ${dot}  http://localhost:${PORT}/ui/${sys}`);
+    console.log(`   \x1b[90mSystems     \x1b[0m`);
+    const systemInfo = [
+      { sys:'bridge',   port:9999, label:'Bridge     ' },
+      { sys:'cortex',   port:3748, label:'Cortex     ' },
+      { sys:'guardian', port:7820, label:'Guardian   ' },
+      { sys:'idearium', port:4800, label:'Idearium   ' },
+      { sys:'emerge',   port:4242, label:'Emerge IDE ' },
+      { sys:'ollama',   port:11434,label:'Ollama     ' },
+    ];
+    for (const { sys, port, label } of systemInfo) {
+      console.log(`              \x1b[90m${label}\x1b[0m  :${port}  /ui/${sys}`);
     }
     console.log('');
-    console.log(`   \x1b[90mCLI         \x1b[0m  node orchestrator.js status | watch | jobs | events | gaps | help`);
+    console.log(`   \x1b[90mCLI REPL    \x1b[0m  node cli/nexus-repl.js --repl`);
+    console.log(`   \x1b[90mHotswap     \x1b[0m  edit <system>/ui/index.html → auto-reload`);
     console.log('');
-    watchUIDirs();
-    setTimeout(connectBridgeSSE, 1000);
-    console.log('\x1b[90m[orchestrator] hotswap active · SSE relay connecting to bridge\x1b[0m');
+    console.log('\x1b[90m[orchestrator §5.2] bridge registration in 2s · SSE relay in 1.2s\x1b[0m');
+
+    // Record own boot to ledger
+    ledgerWrite('orchestrator','orchestrator.booted',{ version:VERSION, port:PORT });
   });
 }

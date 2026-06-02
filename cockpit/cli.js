@@ -440,7 +440,7 @@ const INTERACTION_CONTRACT = {
   endpoints: {
     idearium: { host: '127.0.0.1', port: 4800, protocol: 'http' },
     guardian: { host: '127.0.0.1', port: 7820, protocol: 'http', wss: 7821 },
-    nexus:    { host: '127.0.0.1', port: 3001, protocol: 'http' },
+    nexus:    { host: '127.0.0.1', port: 3748, protocol: 'http' },
   },
 };
 
