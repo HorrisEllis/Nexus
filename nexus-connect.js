@@ -87,9 +87,14 @@ function _req(system, method, path, body, timeout = 5000) {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-/** POST event to cortex event_log (§5.2 bridge compliance) */
+/** POST event — orchestrator first (source of truth), cortex second */
 async function postEvent(type, payload, opts = {}) {
   const { causedBy = null, source = process.env.NEXUS_SYSTEM_ID || 'unknown' } = opts;
+  // Orchestrator is source of truth — always first
+  _req('orchestrator', 'POST', '/api/ledger', {
+    system: source, type, payload,
+  }).catch(() => {});
+  // Cortex event_log — detailed record
   const r = await _req('cortex', 'POST', '/api/event', { type, payload, causedBy, source, ts: Date.now() });
   if (!r.ok) console.warn(`[nexus-connect] postEvent failed: ${r.error || r.status} type=${type}`);
   return r;
@@ -148,21 +153,63 @@ async function gate(stepName, systemId, fn) {
     console.error(`[§1.2 GATE FAIL] ${systemId}.${stepName} — ${error?.message || 'returned false'} (${ms}ms) uuid=${uuid}`);
   }
 
-  // Log to cortex (fire-and-forget — §2.3 all state observable)
-  _req('cortex', 'POST', '/api/event', {
-    type:    success ? `${systemId}.step.complete` : `${systemId}.step.failed`,
-    payload, source: systemId, ts: Date.now(),
-  }).catch(() => {});
-
-  // Log to orchestrator ledger
+  // §AXIOM: orchestrator is source of truth — logs FIRST
   _req('orchestrator', 'POST', '/api/ledger', {
     system: systemId,
     type:   success ? `${systemId}.step.complete` : `${systemId}.step.failed`,
     payload,
   }).catch(() => {});
 
+  // Then cortex (secondary truth, event_log)
+  _req('cortex', 'POST', '/api/event', {
+    type:    success ? `${systemId}.step.complete` : `${systemId}.step.failed`,
+    payload, source: systemId, ts: Date.now(),
+  }).catch(() => {});
+
   if (error) throw error;
   return { ok: success, uuid, ms, result };
 }
 
-module.exports = { _req, postEvent, postLedger, postBridge, healthCheck, healthAll, gate, PORTS };
+// ── Recall — reads orchestrator ledger history (CLI replay, context restore) ──
+// §AXIOM: all CLIs can use recall. Orchestrator is source of truth.
+async function recall(opts = {}) {
+  const { system = '', n = 100, since = 0, type = '' } = opts;
+  const qs = new URLSearchParams();
+  if (system) qs.set('system', system);
+  if (n)      qs.set('n', n);
+  if (since)  qs.set('since', since);
+  if (type)   qs.set('type', type);
+  const r = await _req('orchestrator', 'GET', `/api/ledger?${qs}`, null, 6000);
+  if (!r.ok) {
+    console.warn(`[nexus-connect] recall failed: ${r.error || r.status}`);
+    return { ok: false, entries: [] };
+  }
+  return { ok: true, entries: r.data?.entries || [], counts: r.data?.counts || {} };
+}
+
+// ── Register with orchestrator (all systems call this on boot) ───────────────
+// §AXIOM: all systems connect to orchestrator first, then to bus/kernel
+async function registerWithOrchestrator(systemId, port, meta = {}) {
+  const r = await _req('orchestrator', 'POST', '/api/register', {
+    systemId, port, meta, ts: Date.now(),
+  }, 5000);
+  if (r.ok) {
+    console.log(`[nexus-connect §AXIOM] ${systemId} registered with orchestrator`);
+    // Then post to ledger
+    await postLedger(systemId, `${systemId}.registered`, { port, ...meta });
+  } else {
+    console.warn(`[nexus-connect] orchestrator registration failed for ${systemId}: ${r.error||r.status}`);
+  }
+  return r;
+}
+
+// ── Heartbeat — all systems ping orchestrator every 10s ───────────────────────
+function startHeartbeat(systemId, port) {
+  const ping = () => _req('orchestrator','POST','/api/heartbeat',{systemId,port,status:'online'},2000).catch(()=>{});
+  ping(); // immediate on call
+  const iv = setInterval(ping, 10000);
+  if (iv.unref) iv.unref();
+  return iv;
+}
+
+module.exports = { _req, postEvent, postLedger, postBridge, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, PORTS };

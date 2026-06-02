@@ -111,6 +111,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','specs',    ':uuid'],               'spec.show'],
     ['PATCH',  ['api','specs',    ':uuid'],               'spec.update'],
     ['POST',   ['api','specs',    ':uuid','check'],       'spec.check'],
+    ['POST',   ['api','ideas',    ':uuid','progress'],  'idea.progress'],
+    ['POST',   ['api','queue',    ':queueId','progress'],'queue.progress'],
+    ['GET',    ['api','queue',    ':queueId'],           'queue.show'],
     ['POST',   ['api','specs',    ':uuid','build'],       'spec.build'],
     ['GET',    ['api','specs',    ':uuid','export'],      'spec.export'],
     ['GET',    ['api','gaps',     ':uuid'],               'gap.show'],
@@ -268,8 +271,54 @@ async function handle(req, res, route, query, body) {
       return ok(res, { spec: os.spec(params.uuid) });
     }
 
-    case 'spec.build':
-      return ok(res, { status: 'build gate not yet implemented — Phase 8 (MOD-008)' });
+    case 'spec.build': {
+      const spec = os.spec(params.uuid);
+      if (!spec) return err(res, 404, `spec not found: ${params.uuid}`);
+
+      // Run spec check first
+      os.emit('idearium.spec.check', { uuid: params.uuid });
+      const checked = os.spec(params.uuid);
+
+      // Collect all sections with content
+      const built = [], missing = [];
+      for (const s of checked.sections) {
+        if (s.required && !s.complete && !s.content) missing.push(s.id);
+        else if (s.content) built.push(s.id);
+      }
+
+      if (missing.length > 0 && checked.phase !== 'specced') {
+        return ok(res, {
+          status: 'incomplete', spec: checked,
+          missing, built,
+          message: `${missing.length} required sections missing content before build`,
+        });
+      }
+
+      // Advance phase to building
+      os.emit('idearium.spec.update', { uuid: params.uuid, fields: { phase: 'building' } });
+
+      // Fire build event to bus — orchestrator + bridge pick this up
+      os.emit('idearium.spec.built', {
+        specUuid: params.uuid, name: spec.name,
+        sections: built.length, ts: Date.now(),
+      });
+
+      // Notify orchestrator
+      import('http').then(({ default: http }) => {
+        const payload = JSON.stringify({
+          system: 'idearium', type: 'idearium.spec.built',
+          payload: { specUuid: params.uuid, name: spec.name, sections: built.length },
+        });
+        const r = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/ledger',
+          method:'POST', headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(payload)} }, ()=>{});
+        r.on('error',()=>{}); r.write(payload); r.end();
+      }).catch(()=>{});
+
+      return ok(res, {
+        status: 'built', spec: os.spec(params.uuid),
+        built, missing, message: `spec ${params.uuid.slice(0,8)} → building`,
+      });
+    }
 
     case 'spec.export': {
       const spec = os.spec(params.uuid);
@@ -334,6 +383,36 @@ async function handle(req, res, route, query, body) {
       return ok(res, { diff });
     }
 
+    // ── Queue / progress push (from forge queue) ──────────────────────────
+    case 'idea.progress': {
+      const idea = os.idea(params.uuid);
+      if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      // Update idea phase based on progress if provided
+      if (body.state === 'VERIFIED') {
+        os.emit('idearium.idea.phase', { uuid: params.uuid, phase: 'building', source:'queue' });
+      }
+      if (body.state === 'COMPLETE' && body.pct === 100) {
+        os.emit('idearium.idea.phase', { uuid: params.uuid, phase: 'complete', source:'queue' });
+      }
+      const record = { ...body, ideaUuid: params.uuid, ts: Date.now() };
+      if (!os.db.tensions) os.db.tensions = [];
+      // Store as a tension record for timeline
+      os.db.tensions.push({ uuid: require('crypto').randomUUID(), ideaUuid: params.uuid,
+        score: (body.pct||0)/100, components: { queue_progress: body.pct||0 }, ts: Date.now() });
+      return ok(res, { ok: true, progress: record });
+    }
+
+    case 'queue.progress': {
+      // Forge queue progress — store in idearium event log
+      const ev = os.emit('idearium.queue.progress', body);
+      return ok(res, { ok: true, eventId: ev.uuid });
+    }
+
+    case 'queue.show': {
+      const events = os.db.events.filter(e => e.payload?.queueId === params.queueId);
+      return ok(res, { ok: true, queueId: params.queueId, events });
+    }
+
     default:
       return err(res, 404, `no handler for: ${action}`);
   }
@@ -385,10 +464,12 @@ export function startAPI() {
       const { join, dirname } = await import('path');
       const { fileURLToPath } = await import('url');
       const __d = dirname(fileURLToPath(import.meta.url));
-      const uiPath = join(__d, '..', '..', 'ui', 'idearium.html');
-      if (existsSync(uiPath)) {
+      const uiPath = join(__d, '..', 'ui', 'index.html');
+      const uiPath2 = join(__d, '..', '..', 'ui', 'idearium', 'index.html');
+      const finalPath = existsSync(uiPath) ? uiPath : uiPath2;
+      if (existsSync(finalPath)) {
         res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(readFileSync(uiPath, 'utf8'));
+        res.end(readFileSync(finalPath, 'utf8'));
       } else {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end('<html><body style="background:#0a0a0c;color:#e2e2ea;font-family:monospace;padding:40px"><h2>◈ IDEARIUM</h2><p>UI not built yet</p></body></html>');
@@ -418,6 +499,20 @@ export function startAPI() {
 
   server.listen(PORT, BINDING, async () => {
     console.log(`[Idearium API] v${VERSION} on http://${BINDING}:${PORT}`);
+    // §AXIOM: register with orchestrator FIRST
+    import('http').then(({ default: http }) => {
+      const orchBody = JSON.stringify({ systemId:'idearium', port:PORT, meta:{ role:'idea-os', version:VERSION } });
+      const rO = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/register', method:'POST',
+        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(orchBody)} }, ()=>{});
+      rO.on('error',()=>{}); rO.write(orchBody); rO.end();
+      // Heartbeat
+      setInterval(() => {
+        const hb = JSON.stringify({ systemId:'idearium', port:PORT, status:'online' });
+        const r = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/heartbeat', method:'POST',
+          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(hb)} }, ()=>{});
+        r.on('error',()=>{}); r.write(hb); r.end();
+      }, 10000);
+    }).catch(()=>{});
     // §5.2 — register with bridge
     import('http').then(({ default: http }) => {
       const body = JSON.stringify({ systemId:'idearium', appId:'idearium', secret:'nexus-idearium-internal-v1' });

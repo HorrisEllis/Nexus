@@ -422,19 +422,24 @@ wss.on('connection', (ws, req) => {
 });
 
 httpsServer.listen(WSS_PORT, '127.0.0.1', () => {
-  // §5.2 — register with bridge after WSS is up
+  // §AXIOM: register with orchestrator FIRST (source of truth), then bus+bridge
   setTimeout(async () => {
     const nc2 = require('../nexus-connect');
+    // 1. Orchestrator first
+    const rOrch = await nc2.registerWithOrchestrator('guardian', HTTP_PORT, { role:'ai-orchestrator', wss: WSS_PORT });
+    if (rOrch.ok) nc2.startHeartbeat('guardian', HTTP_PORT);
+    // 2. Bus: post to ledger (orchestrator already knows we're here)
+    await nc2.postLedger('guardian', 'guardian.booted', { port: HTTP_PORT, wss: WSS_PORT });
+    // 3. Bridge: handshake for cross-system event routing
     const r = await nc2._req('bridge', 'POST', '/bridge/handshake', {
       systemId: 'guardian', appId: 'guardian',
       secret: 'nexus-guardian-internal-v1',
     }, 4000);
     if (r.ok) {
-      console.log('[guardian §5.2] bridge registered');
+      console.log('[guardian §AXIOM] orch → bus → bridge registered');
       await nc2.postBridge('guardian.booted', { version: '3.5.0', port: HTTP_PORT });
-      await nc2.postLedger('guardian', 'guardian.booted', { port: HTTP_PORT });
     } else {
-      console.warn('[guardian] bridge not available — standalone');
+      console.warn('[guardian] bridge not available — standalone mode');
     }
   }, 2000);
   // WSS up — print full banner when HTTP also up

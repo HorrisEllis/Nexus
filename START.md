@@ -1,55 +1,31 @@
-# NEXUS — Start Here
+# NEXUS Start Guide
 
-## 1. Install dependencies (once)
-```
-npm install
-```
+## §AXIOM: Orchestrator is source of truth. Start it first.
 
-## 2. Boot order (each in its own terminal)
+### Boot order
+\`\`\`
+node orchestrator.js     # :9000 — starts first, opens CLI terminal
+node bridge/nexus-bridge.js  # :9999
+node cortex/boot.js      # :3748
+node guardian/server.js  # :7820
+node idearium/api/index.js   # :4800
+\`\`\`
 
-```
-node bridge/nexus-bridge.js     ← terminal 1  (port 9999)
-node cortex/boot.js             ← terminal 2  (port 3748)
-node guardian/server.js         ← terminal 3  (port 7820)
-node emerge-ide.js              ← terminal 4  (port 4242)
-```
+Or: `npm start` (orchestrator only) / `npm run start:all` (all systems)
 
-Or start core three together:
-```
-npm run start:core
-```
+### Recall (all CLIs)
+\`\`\`
+nexus> recall              # full ledger from orchestrator
+nexus> recall guardian 50  # last 50 guardian events
+\`\`\`
 
-## 3. URLs
+### Pipeline (forge → idearium)
+1. Create idea: `nexus> idea my idea text`
+2. Spec it: `POST /api/ideas/:uuid/spec`
+3. Run pipeline: Idearium UI → Pipeline tab → select spec → ▶ Run
+   - spec.check → ESS analysis → spec.build → push snapshot → system test
 
-| What | URL |
-|------|-----|
-| Emerge IDE | http://localhost:4242 |
-| Cortex | http://localhost:3748 |
-| Cockpit | http://localhost:7820/cockpit |
-| Bridge | http://localhost:9999/bridge/health |
-
-## 4. CLI
-
-```
-node cli/nexus.js help
-node cli/nexus.js status
-node cli/nexus.js /guardian --help
-node cli/nexus.js /cockpit help
-```
-
-Or `npm link` once → then just `nexus status`
-
-## 5. Userscripts (for AI providers)
-
-Install in Tampermonkey:
-- `guardian/userscript-chatgpt.js` on chatgpt.com  
-- `guardian/userscript-claude.js` on claude.ai
-
-Then visit https://127.0.0.1:7821/ once and accept the self-signed cert.
-
-## 6. Ollama (local AI)
-
-```
-ollama serve
-ollama pull qwen2.5-coder:1.5b
-```
+### Connection flow (ESS model)
+\`\`\`
+system boot → event bus (SISO) → kernel routing → orchestrator register → bridge handshake
+\`\`\`

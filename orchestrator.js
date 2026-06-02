@@ -279,6 +279,31 @@ async function allHealth() {
 // ── SSE unified stream ────────────────────────────────────────────────────────
 const sseClients = new Set();
 
+// ── §AXIOM: Orchestrator is source of truth ──────────────────────────────────
+// All systems register here on boot. CLI uses recall to read state.
+// Connection order: system → event bus → kernel → orchestrator
+const SYSTEM_REGISTRY = new Map();
+// { systemId → { port, registeredAt, lastSeen, meta, online } }
+
+function registryUpdate(systemId, data) {
+  const existing = SYSTEM_REGISTRY.get(systemId) || {};
+  SYSTEM_REGISTRY.set(systemId, {
+    ...existing, ...data,
+    systemId, lastSeen: Date.now(),
+  });
+  ledgerWrite('orchestrator', 'system.registered', { systemId, ...data });
+  broadcast(JSON.stringify({ type:'orchestrator.system.registered', systemId, ...data, ts:Date.now() }));
+}
+
+function registryAll() {
+  const now = Date.now();
+  const out = {};
+  for (const [id, s] of SYSTEM_REGISTRY) {
+    out[id] = { ...s, online: (now - (s.lastSeen||0)) < 30000 };
+  }
+  return out;
+}
+
 // ── Per-system ledger — §2.2 persisted to disk + in-memory ring ─────────────
 // §2.2: Storage device is the source of truth. Survives restart.
 const LEDGER_MAX  = 200;
@@ -509,6 +534,79 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (M==='GET' && sub==='channels')  return json(res, 200, { ok:true, channels:CHANNELS });
+
+  // ── §AXIOM: System registration — all systems call this on boot ───────────
+  // Flow: system boots → bus connects → kernel starts → registers here
+  if (M==='POST' && sub==='register') {
+    const body = await readBody(req);
+    const { systemId, port, meta = {} } = body;
+    if (!systemId) return json(res, 400, { ok:false, error:'systemId required' });
+    registryUpdate(systemId, { port, meta, registeredAt: Date.now() });
+    // Acknowledge with current orchestrator state for context
+    return json(res, 200, {
+      ok: true, systemId, ts: Date.now(),
+      orchestrator: { port: PORT, version: '2.0.0', uptime: process.uptime() },
+      registry: registryAll(),
+    });
+  }
+
+  // ── §AXIOM: Recall — read-only ledger replay for CLIs ─────────────────────
+  // All CLIs use recall to get context. Orchestrator is the source of truth.
+  if (M==='GET' && sub==='recall') {
+    const system  = QS.get('system') || '';
+    const type    = QS.get('type')   || '';
+    const n       = parseInt(QS.get('n') || '200');
+    const since   = parseInt(QS.get('since') || '0');
+    const before  = parseInt(QS.get('before') || '0');
+    // Read from persisted JSONL for full history
+    let entries = [];
+    try {
+      if (fs.existsSync(LEDGER_FILE)) {
+        const lines = fs.readFileSync(LEDGER_FILE, 'utf8').split('\n').filter(Boolean);
+        for (const line of lines) {
+          try {
+            const e = JSON.parse(line);
+            if (system && e._system !== system) continue;
+            if (type   && !e.type?.includes(type)) continue;
+            if (since  && (e._ts||0) < since)  continue;
+            if (before && (e._ts||0) > before) continue;
+            entries.push(e);
+          } catch(_) {}
+        }
+      }
+    } catch(e) { console.warn('[recall] read failed:', e.message); }
+    // Merge with in-memory ring (most recent)
+    const ringEntries = system && LEDGER[system] ? LEDGER[system] : ledgerAll(500);
+    const seen = new Set(entries.map(e => e._ts + ':' + e.type));
+    for (const e of ringEntries) {
+      const k = e._ts + ':' + e.type;
+      if (!seen.has(k)) { seen.add(k); entries.push(e); }
+    }
+    entries.sort((a,b) => (b._ts||0)-(a._ts||0));
+    entries = entries.slice(0, n);
+    return json(res, 200, {
+      ok: true, entries, n: entries.length,
+      systems: Object.keys(LEDGER),
+      registry: registryAll(),
+      counts: Object.fromEntries(Object.entries(LEDGER).map(([k,v])=>[k,v.length])),
+    });
+  }
+
+  // ── System registry read ──────────────────────────────────────────────────
+  if (M==='GET' && sub==='registry') {
+    return json(res, 200, { ok:true, registry: registryAll(), ts: Date.now() });
+  }
+
+  // ── Heartbeat from any system ─────────────────────────────────────────────
+  if (M==='POST' && sub==='heartbeat') {
+    const body = await readBody(req);
+    const { systemId, port, status = 'online' } = body;
+    if (systemId) {
+      const existing = SYSTEM_REGISTRY.get(systemId) || {};
+      SYSTEM_REGISTRY.set(systemId, { ...existing, systemId, port, status, lastSeen: Date.now() });
+    }
+    return json(res, 200, { ok:true, ts:Date.now() });
+  }
 
   // ── Unified SISO bus log — all systems' event buses merged ────────────────
   if (M==='GET' && sub==='bus') {

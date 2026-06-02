@@ -1,6 +1,6 @@
 {
   "name": "nexus-final",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "uuid": "nexus-system-v2-1-0000-4000-0000-000000000001",
   "hookId": "nexus.system:v2.1:s0001",
   "description": "NEXUS ecosystem \u2014 SISO+JAA foundation, gated cross-system orchestration",
@@ -69,5 +69,31 @@
     "bridge SSE subscription in forge",
     "orchestrator SSE subscription in forge",
     "/api/bus unified bus log across all systems"
-  ]
+  ],
+  "userscript": {
+    "version": "9.0.0",
+    "lines": 859,
+    "tabs": [
+      "Log",
+      "Usage",
+      "Gaps",
+      "Arts",
+      "SEAM",
+      "API"
+    ],
+    "removed": [
+      "PA tab (\u2192 CLI)",
+      "Queue tab (\u2192 CLI)",
+      "Settings tab (\u2192 API tab)",
+      "inline SEAM parser replaced with clean version"
+    ],
+    "added": [
+      "Auto-error detection (truncation, refusal, context limit, SEAM FAIL)",
+      "Auto-retry with forensic context (2 attempts)",
+      "Usage tracking (tokens/job/session + per-job history)",
+      "\u00a75.2 bus wiring: every significant event \u2192 orchestrator + bridge + cortex",
+      "Heartbeat-based tab claim (stale tab detection)",
+      "CLI hint panel in every tab"
+    ]
+  }
 }

@@ -1,290 +1,1135 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Idearium — Idea OS</title>
 <style>
-:root{--bg:#0a0a0c;--bg2:#111114;--bg3:#18181c;--border:#252530;
-  --text:#e2e2ea;--muted:#4a4a5a;--signal:#3ecf8e;--warn:#f0a500;--err:#e85d3c;
-  --purple:#9b7fe8;--amber:#f59e0b;}
+:root{
+  --bg:#09090c;--bg2:#111116;--bg3:#18181f;--bg4:#1e1e28;
+  --border:#252532;--border2:#2e2e3e;
+  --text:#e2e2ea;--muted:#4a4a5e;--dim:#2a2a38;
+  --signal:#3ecf8e;--warn:#f0a500;--err:#e85d3c;
+  --purple:#9b7fe8;--teal:#2dd4bf;--blue:#4a9eff;--amber:#f59e0b;
+}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font:12px/1.5 'Cascadia Code','Fira Mono',monospace;
+body{background:var(--bg);color:var(--text);font:11px/1.5 'Cascadia Code','Fira Mono',monospace;
   display:grid;grid-template-rows:44px 1fr;height:100vh;overflow:hidden;}
-#topbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 16px;}
-.logo{color:var(--purple);font-weight:700;font-size:14px;letter-spacing:.06em;}
-.pill{font-size:10px;padding:1px 8px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);}
+
+/* ── Topbar ── */
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 14px;flex-shrink:0;}
+.logo{color:var(--purple);font-weight:700;font-size:13px;letter-spacing:.06em;}
+.pill{font-size:9px;padding:1px 7px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);color:var(--muted);}
 .pill.live{border-color:var(--signal);color:var(--signal);}
-.snr-bar{height:3px;width:80px;background:var(--bg3);border-radius:2px;overflow:hidden;}
-.snr-fill{height:100%;background:var(--signal);border-radius:2px;transition:width .4s;}
+.pill.err{border-color:var(--err);color:var(--err);}
+.snr-bar{height:3px;width:72px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.snr-fill{height:100%;background:var(--signal);border-radius:2px;transition:width .5s;}
 .sp{flex:1;}
-.btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);
-  padding:3px 10px;border-radius:3px;cursor:pointer;font:inherit;font-size:11px;}
-.btn:hover{border-color:var(--purple);color:var(--purple);}
-.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff;}
-#body{display:grid;grid-template-columns:200px 1fr;overflow:hidden;}
-#nav{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;}
-.nav-section{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:12px 12px 4px;}
-.nav-item{padding:6px 14px;cursor:pointer;font-size:11px;color:var(--muted);border-left:2px solid transparent;transition:all .15s;}
+.btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);
+  padding:3px 9px;border-radius:3px;cursor:pointer;font:inherit;font-size:10px;transition:all .15s;}
+.btn:hover{border-color:var(--purple);color:var(--text);}
+.btn.primary{background:rgba(155,127,232,.15);border-color:var(--purple);color:var(--purple);}
+.btn.signal{background:rgba(62,207,142,.1);border-color:var(--signal);color:var(--signal);}
+.btn.danger{background:rgba(232,93,60,.1);border-color:var(--err);color:var(--err);}
+.sys-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:3px;transition:background .3s;}
+.sys-dot.on{background:var(--signal);}
+
+/* ── Layout ── */
+#body{display:grid;grid-template-columns:190px 1fr;overflow:hidden;min-height:0;}
+#nav{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
+.nav-section{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;padding:10px 12px 3px;}
+.nav-item{padding:5px 14px;cursor:pointer;font-size:11px;color:var(--muted);border-left:2px solid transparent;transition:all .12s;display:flex;align-items:center;gap:6px;}
 .nav-item:hover{color:var(--text);background:var(--bg3);}
 .nav-item.active{color:var(--purple);border-left-color:var(--purple);background:rgba(155,127,232,.06);}
-#main{overflow:hidden;display:flex;flex-direction:column;}
-.panel{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.nav-count{font-size:9px;background:var(--bg3);padding:0 5px;border-radius:8px;margin-left:auto;}
+.nav-systems{padding:10px 12px 6px;border-top:1px solid var(--border);margin-top:auto;}
+.sys-row{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted);padding:2px 0;}
+
+#main{overflow:hidden;display:flex;flex-direction:column;min-height:0;}
+.panel{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0;}
 .panel.active{display:flex;}
-.panel-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 16px;
-  font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);
+.panel-hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:7px 14px;
+  font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);
   display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.panel-body{flex:1;overflow-y:auto;padding:12px 16px;}
-/* Idea cards */
-.idea-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;
-  padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;}
-.idea-card:hover{border-color:var(--purple);}
-.idea-card.selected{border-color:var(--purple);background:rgba(155,127,232,.06);}
-.idea-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;}
-.idea-meta{font-size:10px;color:var(--muted);display:flex;gap:8px;}
-.phase-badge{font-size:9px;padding:1px 6px;border-radius:2px;}
-.phase-seed{background:rgba(245,158,11,.12);border:1px solid var(--amber);color:var(--amber);}
-.phase-building{background:rgba(62,207,142,.12);border:1px solid var(--signal);color:var(--signal);}
-.phase-complete{background:rgba(155,127,232,.12);border:1px solid var(--purple);color:var(--purple);}
-.tension-bar{height:2px;background:var(--bg3);border-radius:1px;margin-top:6px;overflow:hidden;}
-.tension-fill{height:100%;border-radius:1px;transition:width .4s;}
-/* Input */
-.input-row{display:flex;gap:6px;margin-bottom:12px;}
-.input-field{flex:1;background:var(--bg2);border:1px solid var(--border);color:var(--text);
-  padding:6px 10px;font:inherit;font-size:11px;outline:none;border-radius:3px;}
-.input-field:focus{border-color:var(--purple);}
-/* Tension gauge */
-.tension-gauge{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:12px;margin-bottom:12px;}
-.gauge-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
-.gauge-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;}
-.gauge-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--signal),var(--amber),var(--err));transition:width .6s;}
-/* Spec */
-.spec-block{background:var(--bg2);border:1px solid var(--border);border-radius:3px;
-  padding:10px;margin-bottom:8px;}
-.spec-status{font-size:9px;padding:1px 6px;border-radius:2px;border:1px solid var(--border);color:var(--muted);}
-.spec-status.built{border-color:var(--signal);color:var(--signal);}
-/* Gap */
-.gap-item{background:var(--bg2);border-left:3px solid var(--err);border-radius:3px;
-  padding:8px 10px;margin-bottom:6px;}
-.gap-type{font-size:9px;color:var(--err);margin-bottom:2px;}
-</style></head>
+.panel-body{flex:1;overflow-y:auto;padding:12px 14px;min-height:0;}
+.two-col{display:grid;grid-template-columns:1fr 320px;gap:0;flex:1;overflow:hidden;min-height:0;}
+.col-main{overflow-y:auto;padding:12px 14px;border-right:1px solid var(--border);}
+.col-side{overflow-y:auto;padding:12px;}
+
+/* ── Cards ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;
+  padding:9px 11px;margin-bottom:7px;cursor:pointer;transition:border-color .15s;}
+.card:hover{border-color:var(--border2);}
+.card.active{border-color:var(--purple);background:rgba(155,127,232,.04);}
+.card-title{font-size:11px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.card-meta{font-size:9px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.phase{font-size:8px;padding:1px 5px;border-radius:2px;}
+.phase-seed{background:rgba(245,158,11,.1);border:1px solid var(--amber);color:var(--amber);}
+.phase-expanding{background:rgba(74,158,255,.1);border:1px solid var(--blue);color:var(--blue);}
+.phase-tensioned{background:rgba(232,93,60,.1);border:1px solid var(--err);color:var(--err);}
+.phase-specced{background:rgba(45,212,191,.1);border:1px solid var(--teal);color:var(--teal);}
+.phase-building{background:rgba(62,207,142,.1);border:1px solid var(--signal);color:var(--signal);}
+.phase-complete{background:rgba(155,127,232,.1);border:1px solid var(--purple);color:var(--purple);}
+.phase-archived{background:rgba(74,74,90,.1);border:1px solid var(--muted);color:var(--muted);}
+.tbar{height:2px;background:var(--bg3);border-radius:1px;margin-top:5px;overflow:hidden;}
+.tfill{height:100%;border-radius:1px;transition:width .5s;}
+
+/* ── Detail pane ── */
+.detail-box{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 12px;margin-bottom:8px;}
+.detail-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.detail-value{font-size:11px;color:var(--text);}
+.gauge{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.gauge-fill{height:100%;border-radius:3px;transition:width .5s;background:linear-gradient(90deg,var(--signal),var(--amber),var(--err));}
+
+/* ── Spec sections ── */
+.section-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border);font-size:10px;}
+.section-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.section-id{color:var(--muted);width:120px;flex-shrink:0;}
+.section-content{color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.build-step{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:10px;}
+.step-status{width:60px;flex-shrink:0;font-weight:600;}
+.step-name{color:var(--text);flex:1;}
+.step-ms{color:var(--muted);font-size:9px;}
+
+/* ── Gaps ── */
+.gap-card{background:var(--bg2);border-left:3px solid var(--err);border-radius:0 3px 3px 0;
+  padding:8px 10px;margin-bottom:6px;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+.gap-card.ess{border-left-color:var(--amber);}
+.gap-card.resolved{border-left-color:var(--signal);}
+.gap-type{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--err);margin-bottom:2px;}
+.gap-desc{font-size:11px;color:var(--text);line-height:1.5;}
+.gap-meta{font-size:9px;color:var(--muted);margin-top:3px;display:flex;gap:8px;}
+.gap-weight-bar{height:2px;background:var(--bg3);border-radius:1px;margin-top:4px;overflow:hidden;}
+.gap-weight-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--err));border-radius:1px;transition:width .4s;}
+
+/* ── Pipeline ── */
+.pipeline-track{display:flex;align-items:center;gap:4px;padding:10px 0;flex-wrap:wrap;}
+.pipe-step{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.pipe-node{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .3s;}
+.pipe-node.done{border-color:var(--signal);background:rgba(62,207,142,.1);}
+.pipe-node.active{border-color:var(--purple);background:rgba(155,127,232,.1);animation:pulse 1.2s ease-in-out infinite;}
+.pipe-node.fail{border-color:var(--err);background:rgba(232,93,60,.1);}
+.pipe-label{font-size:8px;color:var(--muted);white-space:nowrap;}
+.pipe-arrow{color:var(--muted);font-size:10px;margin-top:-12px;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ── ESS variable view ── */
+.var-group{margin-bottom:10px;}
+.var-group-label{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:4px;}
+.var-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:10px;}
+.var-kind{font-size:8px;color:var(--muted);width:90px;flex-shrink:0;}
+.var-name{color:var(--text);font-weight:600;width:120px;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+.var-reason{color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.var-axiom{font-size:8px;color:var(--amber);width:36px;flex-shrink:0;text-align:right;}
+.var-score{font-size:9px;font-weight:600;width:36px;text-align:right;flex-shrink:0;}
+
+/* ── SNR ── */
+.snr-big{font-size:32px;font-weight:700;margin:10px 0 4px;}
+.snr-hist{display:flex;align-items:flex-end;gap:2px;height:40px;margin-top:8px;}
+.snr-bar-v{background:var(--border2);border-radius:1px;flex:1;transition:height .3s;}
+
+/* ── Input ── */
+.inp{background:var(--bg2);border:1px solid var(--border);color:var(--text);
+  padding:5px 9px;font:inherit;font-size:11px;outline:none;border-radius:3px;width:100%;}
+.inp:focus{border-color:var(--purple);}
+.input-row{display:flex;gap:6px;margin-bottom:10px;}
+.input-row .inp{flex:1;}
+textarea.inp{resize:vertical;min-height:60px;}
+
+/* ── Live stream ── */
+.stream-row{display:grid;grid-template-columns:58px 150px 1fr;gap:8px;
+  padding:3px 0;border-bottom:1px solid var(--border);font-size:9px;align-items:start;}
+.sr-ts{color:var(--muted);}
+.sr-type{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sr-data{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+</style>
+</head>
 <body>
+
 <div id="topbar">
   <span class="logo">◈ IDEARIUM</span>
   <span class="pill" id="conn-pill">connecting…</span>
   <div class="snr-bar"><div class="snr-fill" id="snr-fill" style="width:0%"></div></div>
   <span style="font-size:10px;color:var(--muted)" id="snr-label">SNR —</span>
   <span class="sp"></span>
-  <button class="btn primary" onclick="showAddIdea()">+ idea</button>
-  <span style="font-size:10px;color:var(--muted)">localhost:4800</span>
+  <!-- System status dots -->
+  <span title="Orchestrator :9000"><span class="sys-dot" id="dot-orch"></span></span>
+  <span title="Bridge :9999"><span class="sys-dot" id="dot-bridge"></span></span>
+  <span title="Cortex :3748"><span class="sys-dot" id="dot-cortex"></span></span>
+  <span title="Guardian :7820"><span class="sys-dot" id="dot-guardian"></span></span>
+  <button class="btn primary" onclick="toggleAdd()">+ idea</button>
+  <span style="font-size:9px;color:var(--muted)">:4800</span>
 </div>
+
 <div id="body">
   <div id="nav">
-    <div class="nav-section">ideas</div>
-    <div class="nav-item active" onclick="show('ideas')">💡 All Ideas</div>
-    <div class="nav-item" onclick="show('tension')">⚡ Tension Map</div>
-    <div class="nav-item" onclick="show('specs')">◉ Specs</div>
-    <div class="nav-section">system</div>
-    <div class="nav-item" onclick="show('gaps')">△ Gaps</div>
-    <div class="nav-item" onclick="show('snr')">◆ SNR</div>
-    <div class="nav-item" onclick="show('stream')">▶ Live</div>
+    <div class="nav-section">Ideas</div>
+    <div class="nav-item active" onclick="nav('ideas',this)">💡 All <span class="nav-count" id="nc-ideas">0</span></div>
+    <div class="nav-item" onclick="nav('tension',this)">⚡ Tension <span class="nav-count" id="nc-tension">0</span></div>
+    <div class="nav-item" onclick="nav('specs',this)">◉ Specs <span class="nav-count" id="nc-specs">0</span></div>
+
+    <div class="nav-section">System</div>
+    <div class="nav-item" onclick="nav('gaps',this)">△ Gaps <span class="nav-count" id="nc-gaps">0</span></div>
+    <div class="nav-item" onclick="nav('ess',this)">◈ ESS Analysis</div>
+    <div class="nav-item" onclick="nav('pipeline',this)">▶ Pipeline</div>
+    <div class="nav-item" onclick="nav('snr',this)">◆ SNR</div>
+    <div class="nav-item" onclick="nav('stream',this)">⇄ Live</div>
+    <div class="nav-item" onclick="nav('kernels',this)">⬡ Kernels</div>
+
+    <div class="nav-systems">
+      <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Systems</div>
+      <div class="sys-row"><span class="sys-dot" id="sys-orch"></span>Orchestrator :9000</div>
+      <div class="sys-row"><span class="sys-dot" id="sys-bridge"></span>Bridge :9999</div>
+      <div class="sys-row"><span class="sys-dot" id="sys-cortex"></span>Cortex :3748</div>
+      <div class="sys-row"><span class="sys-dot" id="sys-guardian"></span>Guardian :7820</div>
+    </div>
   </div>
+
   <div id="main">
 
-    <div class="panel active" id="panel-ideas">
-      <div class="panel-header">💡 Ideas — CLI truth, API projection</div>
-      <div class="panel-body">
-        <div class="input-row" id="add-row" style="display:none">
-          <input class="input-field" id="new-idea-text" placeholder="idea text…" onkeydown="if(event.key==='Enter')addIdea()">
-          <button class="btn primary" onclick="addIdea()">add</button>
-          <button class="btn" onclick="document.getElementById('add-row').style.display='none'">cancel</button>
-        </div>
-        <div id="idea-list"></div>
+    <!-- ── ADD IDEA BAR ── -->
+    <div id="add-bar" style="display:none;padding:8px 14px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+      <div class="input-row" style="margin-bottom:0">
+        <input class="inp" id="new-text" placeholder="idea text…" onkeydown="if(event.key==='Enter')addIdea()">
+        <input class="inp" id="new-tags" placeholder="tags (comma sep)" style="width:160px">
+        <button class="btn signal" onclick="addIdea()">add</button>
+        <button class="btn" onclick="toggleAdd()">×</button>
       </div>
     </div>
 
+    <!-- ── IDEAS ── -->
+    <div class="panel active" id="panel-ideas">
+      <div class="panel-hdr">💡 Ideas <span class="sp"></span>
+        <select id="sort-sel" onchange="loadIdeas()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);font:inherit;font-size:9px;padding:1px 4px;outline:none;">
+          <option value="tension">sort: tension</option>
+          <option value="updated">sort: updated</option>
+        </select>
+        <select id="phase-sel" onchange="loadIdeas()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);font:inherit;font-size:9px;padding:1px 4px;outline:none;">
+          <option value="">all phases</option>
+          <option>seed</option><option>expanding</option><option>tensioned</option>
+          <option>specced</option><option>building</option><option>complete</option>
+        </select>
+      </div>
+      <div class="two-col">
+        <div class="col-main" id="idea-list"></div>
+        <div class="col-side" id="idea-detail" style="color:var(--muted);font-size:10px;padding-top:20px">
+          Select an idea to view details
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TENSION MAP ── -->
     <div class="panel" id="panel-tension">
-      <div class="panel-header">⚡ Tension Map</div>
+      <div class="panel-hdr">⚡ Tension Map</div>
       <div class="panel-body" id="tension-body"></div>
     </div>
 
+    <!-- ── SPECS ── -->
     <div class="panel" id="panel-specs">
-      <div class="panel-header">◉ Specs</div>
-      <div class="panel-body" id="spec-list"></div>
+      <div class="panel-hdr">◉ Specs <span class="sp"></span>
+        <button class="btn" onclick="loadSpecs()">↺</button>
+      </div>
+      <div class="two-col">
+        <div class="col-main" id="spec-list"></div>
+        <div class="col-side" id="spec-detail" style="color:var(--muted);font-size:10px;padding-top:20px">
+          Select a spec to view sections
+        </div>
+      </div>
     </div>
 
+    <!-- ── GAPS ── -->
     <div class="panel" id="panel-gaps">
-      <div class="panel-header">△ Gaps</div>
-      <div class="panel-body" id="gap-list"></div>
+      <div class="panel-hdr">△ Gaps <span class="sp"></span>
+        <select id="gap-status" onchange="loadGaps()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);font:inherit;font-size:9px;padding:1px 4px;outline:none;">
+          <option>open</option><option>resolved</option><option value="">all</option>
+        </select>
+        <button class="btn danger" onclick="toggleOpenGap()">+ gap</button>
+      </div>
+      <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0">
+        <div id="open-gap-bar" style="display:none;padding:8px 14px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+          <div class="input-row" style="margin-bottom:4px">
+            <input class="inp" id="gap-desc" placeholder="gap description…">
+            <select id="gap-sev" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);font:inherit;font-size:10px;padding:4px;outline:none;">
+              <option>medium</option><option>high</option><option>fatal</option><option>low</option>
+            </select>
+            <button class="btn signal" onclick="openGap()">open</button>
+            <button class="btn" onclick="toggleOpenGap()">×</button>
+          </div>
+        </div>
+        <div class="panel-body" id="gap-list"></div>
+      </div>
     </div>
 
-    <div class="panel" id="panel-snr">
-      <div class="panel-header">◆ Signal-to-Noise Ratio</div>
+    <!-- ── ESS ANALYSIS ── -->
+    <div class="panel" id="panel-ess">
+      <div class="panel-hdr">◈ ESS Variable Analysis <span class="sp"></span>
+        <button class="btn signal" onclick="runESS()">↺ analyse</button>
+      </div>
       <div class="panel-body">
-        <div class="tension-gauge">
-          <div class="gauge-label">system SNR</div>
-          <div class="gauge-track"><div class="gauge-fill" id="snr-gauge" style="width:0%"></div></div>
-          <div style="font-size:11px;color:var(--text);margin-top:6px" id="snr-val">—</div>
+        <div style="margin-bottom:10px;font-size:10px;color:var(--muted);line-height:1.6">
+          ESS gap engine: expressed / inferred / omitted variables.<br>
+          Omitted variables carry <span style="color:var(--amber)">weight</span> · <span style="color:var(--err)">friction</span> · <span style="color:var(--purple)">tension</span> scores.
+        </div>
+        <div class="input-row" style="margin-bottom:12px">
+          <textarea class="inp" id="ess-input" rows="4" placeholder="paste spec text, callto references, signal routing description — or leave blank to analyse current system state…"></textarea>
+        </div>
+        <div id="ess-results"></div>
+      </div>
+    </div>
+
+    <!-- ── PIPELINE ── -->
+    <div class="panel" id="panel-pipeline">
+      <div class="panel-hdr">▶ Spec → Build Pipeline <span class="sp"></span>
+        <button class="btn" onclick="loadPipeline()">↺</button>
+      </div>
+      <div class="panel-body">
+        <div class="detail-box" style="margin-bottom:12px">
+          <div class="detail-label">Run full pipeline on spec</div>
+          <div class="input-row" style="margin-top:6px;margin-bottom:0">
+            <select id="pipe-spec" class="inp" style="flex:1"></select>
+            <button class="btn signal" onclick="runPipeline()">▶ Run</button>
+          </div>
+        </div>
+
+        <div id="pipeline-track" class="pipeline-track">
+          <!-- steps inserted by JS -->
+        </div>
+
+        <div id="pipeline-log" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- ── SNR ── -->
+    <div class="panel" id="panel-snr">
+      <div class="panel-hdr">◆ Signal-to-Noise Ratio</div>
+      <div class="panel-body">
+        <div style="display:flex;align-items:flex-end;gap:20px;margin-bottom:16px">
+          <div>
+            <div class="detail-label">current SNR</div>
+            <div class="snr-big" id="snr-big" style="color:var(--signal)">—</div>
+            <div class="gauge"><div class="gauge-fill" id="snr-gauge" style="width:0%"></div></div>
+          </div>
+          <div style="flex:1">
+            <div class="detail-label">recent history (50 events)</div>
+            <div class="snr-hist" id="snr-hist"></div>
+          </div>
         </div>
         <div id="snr-breakdown"></div>
       </div>
     </div>
 
+    <!-- ── LIVE STREAM ── -->
     <div class="panel" id="panel-stream">
-      <div class="panel-header">▶ Live Events <span class="sp"></span><button class="btn" onclick="clearStream()">clear</button></div>
-      <div class="panel-body" id="stream-log"></div>
+      <div class="panel-hdr">⇄ Live Events <span class="sp"></span>
+        <span id="stream-count" style="color:var(--muted);font-size:9px">0</span>
+        <button class="btn" onclick="clearStream()">clear</button>
+      </div>
+      <div class="panel-body" style="padding:6px 10px" id="stream-log"></div>
     </div>
 
-  </div>
-</div>
-<script>
-const BASE = 'http://localhost:4800';
-let ideas = [];
+    <!-- ── KERNELS ── -->
+    <div class="panel" id="panel-kernels">
+      <div class="panel-hdr">⬡ All System Kernels <span class="sp"></span>
+        <button class="btn signal" onclick="runAllKernels()">▶ Run all</button>
+        <button class="btn" onclick="loadKernels()">↺</button>
+      </div>
+      <div class="panel-body" id="kernels-body"></div>
+    </div>
 
-async function api(path, opts={}) {
-  try { const r = await fetch(BASE+path,opts); return r.ok?r.json():null; } catch(e){return null;}
+  </div><!-- /main -->
+</div><!-- /body -->
+
+<script>
+'use strict';
+
+const BASE  = 'http://localhost:4800';
+const ORCH  = 'http://localhost:9000';
+const BRIDGE= 'http://localhost:9999';
+const CORTEX= 'http://localhost:3748';
+const GUARD = 'http://localhost:7820';
+
+let _ideas=[], _specs=[], _gaps=[], _selectedIdea=null, _selectedSpec=null;
+let _pipeSteps=[], _sseConn=null, _streamCount=0;
+
+// ── API ────────────────────────────────────────────────────────────────────
+async function api(path, opts={}, base=BASE) {
+  try {
+    const r = await fetch(base+path, opts);
+    return r.ok ? r.json() : null;
+  } catch { return null; }
+}
+function post(path, body, base=BASE) {
+  return api(path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }, base);
 }
 
-function show(id) {
+// ── Navigation ─────────────────────────────────────────────────────────────
+function nav(id, el) {
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if(id==='ideas') loadIdeas();
-  if(id==='tension') loadTension();
-  if(id==='specs') loadSpecs();
-  if(id==='gaps') loadGaps();
-  if(id==='snr') loadSNR();
-  if(id==='stream') startStream();
+  document.getElementById('panel-'+id)?.classList.add('active');
+  el?.classList.add('active');
+  if(id==='ideas')    loadIdeas();
+  if(id==='tension')  loadTension();
+  if(id==='specs')    loadSpecs();
+  if(id==='gaps')     loadGaps();
+  if(id==='snr')      loadSNR();
+  if(id==='ess')      loadESS();
+  if(id==='pipeline') loadPipeline();
+  if(id==='stream')   startStream();
+  if(id==='kernels')  loadKernels();
 }
 
-function showAddIdea() {
-  const row = document.getElementById('add-row');
-  row.style.display = row.style.display==='none'?'flex':'none';
-  if(row.style.display!=='none') document.getElementById('new-idea-text').focus();
+// ── Topbar helpers ─────────────────────────────────────────────────────────
+function toggleAdd() {
+  const bar = document.getElementById('add-bar');
+  bar.style.display = bar.style.display==='none' ? 'block' : 'none';
+  if(bar.style.display!=='none') document.getElementById('new-text').focus();
+}
+function toggleOpenGap() {
+  const bar = document.getElementById('open-gap-bar');
+  bar.style.display = bar.style.display==='none' ? 'block' : 'none';
+  if(bar.style.display!=='none') document.getElementById('gap-desc').focus();
 }
 
+// ── System health ──────────────────────────────────────────────────────────
+async function checkSystems() {
+  const checks = [
+    { id:'orch',    url:ORCH+'/health' },
+    { id:'bridge',  url:BRIDGE+'/bridge/health' },
+    { id:'cortex',  url:CORTEX+'/health' },
+    { id:'guardian',url:GUARD+'/health' },
+  ];
+  for (const { id, url } of checks) {
+    const r = await fetch(url).then(r=>r.ok).catch(()=>false);
+    const dot1 = document.getElementById('dot-'+id);
+    const dot2 = document.getElementById('sys-'+id);
+    const on = r ? 'on' : '';
+    if(dot1) { dot1.classList.toggle('on',r); dot1.title = id+': '+(r?'online':'offline'); }
+    if(dot2) dot2.classList.toggle('on',r);
+  }
+}
+
+// ── Add idea ───────────────────────────────────────────────────────────────
 async function addIdea() {
-  const text = document.getElementById('new-idea-text').value.trim();
+  const text = document.getElementById('new-text').value.trim();
   if(!text) return;
-  await api('/api/ideas', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
-  document.getElementById('new-idea-text').value='';
-  document.getElementById('add-row').style.display='none';
-  loadIdeas();
+  const tags = document.getElementById('new-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const d = await post('/api/ideas', { text, tags });
+  if(d) {
+    document.getElementById('new-text').value='';
+    document.getElementById('new-tags').value='';
+    toggleAdd();
+    loadIdeas();
+  }
 }
 
-function tensionColor(t) {
-  if(t>=0.7) return 'var(--err)';
-  if(t>=0.4) return 'var(--warn)';
-  return 'var(--signal)';
-}
-
+// ── Idea list ──────────────────────────────────────────────────────────────
 async function loadIdeas() {
-  const d = await api('/api/ideas');
+  const phase = document.getElementById('phase-sel').value;
+  const sort  = document.getElementById('sort-sel').value;
+  const q     = '?sort='+sort+(phase?'&phase='+phase:'');
+  const d = await api('/api/ideas'+q);
   if(!d) return;
-  ideas = d.ideas||d||[];
+  _ideas = d.ideas || [];
+  document.getElementById('nc-ideas').textContent = _ideas.length;
+
+  // Update connection pill
   const pill = document.getElementById('conn-pill');
-  pill.textContent='● live'; pill.className='pill live';
-  document.getElementById('idea-list').innerHTML = ideas.map(idea=>`
-    <div class="idea-card">
-      <div style="display:flex;align-items:center;gap:8px">
-        <div class="idea-title" style="flex:1">${idea.text||idea.title||'—'}</div>
-        <span class="phase-badge phase-${idea.phase||'seed'}">${idea.phase||'seed'}</span>
+  pill.textContent = '● live'; pill.className = 'pill live';
+
+  // Render
+  const el = document.getElementById('idea-list');
+  if(!_ideas.length) { el.innerHTML='<div style="color:var(--muted);padding:20px">no ideas yet — add the first one</div>'; return; }
+  el.innerHTML = _ideas.map(idea => {
+    const t = idea.tension||0;
+    const tc = t>0.7?'var(--err)':t>0.4?'var(--warn)':'var(--signal)';
+    const tags = (idea.tags||[]).map(t=>`<span style="color:var(--purple);background:rgba(155,127,232,.08);border:1px solid rgba(155,127,232,.2);border-radius:2px;padding:0 4px;font-size:8px">#${t}</span>`).join(' ');
+    const gaps = (idea.openGaps||[]).length;
+    return `<div class="card ${_selectedIdea===idea.uuid?'active':''}" onclick="selectIdea('${idea.uuid}')">
+      <div style="display:flex;align-items:start;gap:6px">
+        <div class="card-title" style="flex:1">${idea.text||'—'}</div>
+        <span class="phase phase-${idea.phase||'seed'}">${idea.phase||'seed'}</span>
       </div>
-      <div class="idea-meta">
-        <span>${idea.uuid?.slice(0,8)||'—'}</span>
-        <span>${new Date(idea.ts||0).toLocaleDateString()}</span>
-        ${idea.tension!=null?`<span>tension: ${(idea.tension*100).toFixed(0)}%</span>`:''}
+      <div class="card-meta" style="margin-top:3px">
+        <span>${idea.uuid.slice(0,8)}</span>
+        ${tags}
+        ${gaps?`<span style="color:var(--err)">△${gaps}</span>`:''}
+        ${idea.linkedSpec?`<span style="color:var(--teal)">◉ spec</span>`:''}
       </div>
-      ${idea.tension!=null?`<div class="tension-bar"><div class="tension-fill" style="width:${idea.tension*100}%;background:${tensionColor(idea.tension)}"></div></div>`:''}
-    </div>`).join('') || '<div style="color:var(--muted);padding:20px">no ideas yet — add the first one</div>';
+      ${t>0?`<div class="tbar"><div class="tfill" style="width:${t*100}%;background:${tc}"></div></div>`:''}
+    </div>`;
+  }).join('');
 }
 
+async function selectIdea(uuid) {
+  _selectedIdea = uuid;
+  loadIdeas(); // re-render selection
+  const d = await api('/api/ideas/'+uuid);
+  if(!d) return;
+  const idea = d.idea;
+  const links = d.links||[];
+  const gaps  = d.openGaps||[];
+  const t = idea.tension||0;
+  const tc = t>0.7?'var(--err)':t>0.4?'var(--warn)':'var(--signal)';
+  const phasePick = ['seed','expanding','tensioned','specced','building','complete','archived']
+    .map(p=>`<button onclick="phaseIdea('${idea.uuid}','${p}')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:2px;padding:2px 6px;font:inherit;font-size:9px;cursor:pointer;margin:1px">${p}</button>`).join('');
+
+  document.getElementById('idea-detail').innerHTML = `
+    <div class="detail-box">
+      <div class="detail-label">Text</div>
+      <div class="detail-value" style="font-weight:600">${idea.text}</div>
+    </div>
+    <div class="detail-box">
+      <div class="detail-label">Tension</div>
+      <div style="font-size:18px;font-weight:700;color:${tc}">${(t*100).toFixed(0)}%</div>
+      <div class="gauge" style="margin-top:4px"><div class="gauge-fill" style="width:${t*100}%"></div></div>
+      <button onclick="recomputeTension('${idea.uuid}')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:2px;font:inherit;font-size:9px;cursor:pointer;margin-top:6px">recompute</button>
+    </div>
+    <div class="detail-box">
+      <div class="detail-label">Phase</div>
+      <div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:2px">${phasePick}</div>
+    </div>
+    ${idea.linkedSpec ? `<div class="detail-box">
+      <div class="detail-label">Linked Spec</div>
+      <button onclick="viewSpec('${idea.linkedSpec}')" style="background:none;border:1px solid var(--teal);color:var(--teal);padding:3px 9px;border-radius:2px;font:inherit;font-size:10px;cursor:pointer">◉ view spec</button>
+    </div>` : `<div class="detail-box">
+      <div class="detail-label">Spec</div>
+      <button onclick="createSpec('${idea.uuid}')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:3px 9px;border-radius:2px;font:inherit;font-size:10px;cursor:pointer">+ create spec</button>
+    </div>`}
+    ${gaps.length ? `<div class="detail-box">
+      <div class="detail-label">Open Gaps (${gaps.length})</div>
+      ${gaps.map(g=>`<div style="font-size:10px;color:var(--err);padding:3px 0">△ ${g.description?.slice(0,60)||'—'}</div>`).join('')}
+    </div>`:''}
+    ${links.length ? `<div class="detail-box">
+      <div class="detail-label">Links (${links.length})</div>
+      ${links.map(l=>{const other=_ideas.find(i=>i.uuid===(l.fromUuid===uuid?l.toUuid:l.fromUuid));return`<div style="font-size:9px;padding:2px 0;color:var(--muted)"><span style="color:var(--blue)">${l.linkType}</span> → ${other?.text?.slice(0,40)||l.toUuid?.slice(0,8)||'—'}</div>`;}).join('')}
+    </div>`:''}
+    <div class="detail-box">
+      <div class="detail-label">UUID</div>
+      <div style="font-size:9px;color:var(--muted)">${idea.uuid}</div>
+    </div>
+  `;
+}
+
+async function recomputeTension(uuid) {
+  await post('/api/ideas/'+uuid+'/tension', {});
+  selectIdea(uuid);
+}
+
+async function phaseIdea(uuid, phase) {
+  await post('/api/ideas/'+uuid+'/phase', { phase });
+  loadIdeas();
+  selectIdea(uuid);
+}
+
+async function createSpec(ideaUuid) {
+  const idea = _ideas.find(i=>i.uuid===ideaUuid);
+  const name = `Spec: ${(idea?.text||'').slice(0,40)}`;
+  await post('/api/ideas/'+ideaUuid+'/spec', { name });
+  loadIdeas();
+  selectIdea(ideaUuid);
+}
+
+async function viewSpec(specUuid) {
+  nav('specs', document.querySelector('[onclick*="specs"]'));
+  setTimeout(() => selectSpec(specUuid), 200);
+}
+
+// ── Tension map ────────────────────────────────────────────────────────────
 async function loadTension() {
-  const d = await api('/api/ideas');
-  const list = d?.ideas||d||[];
-  const sorted = [...list].filter(i=>i.tension!=null).sort((a,b)=>b.tension-a.tension);
-  document.getElementById('tension-body').innerHTML = sorted.map(idea=>`
-    <div class="tension-gauge" style="margin-bottom:8px">
-      <div class="gauge-label">${idea.text?.slice(0,50)||'—'}</div>
-      <div class="gauge-track"><div class="gauge-fill" style="width:${(idea.tension||0)*100}%"></div></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:2px">${((idea.tension||0)*100).toFixed(0)}% tension</div>
-    </div>`).join('') || '<div style="color:var(--muted)">no tension data</div>';
+  const d = await api('/api/ideas?sort=tension');
+  const list = d?.ideas||[];
+  document.getElementById('nc-tension').textContent = list.filter(i=>i.tension>0).length;
+  document.getElementById('tension-body').innerHTML = list.filter(i=>i.tension!=null).map(idea=>{
+    const t=idea.tension||0;
+    const tc=t>0.7?'var(--err)':t>0.4?'var(--warn)':'var(--signal)';
+    return `<div style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+        <div style="flex:1;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${idea.text?.slice(0,50)||'—'}</div>
+        <span style="color:${tc};font-size:11px;font-weight:700;width:36px;text-align:right">${(t*100).toFixed(0)}%</span>
+        <span class="phase phase-${idea.phase||'seed'}" style="flex-shrink:0">${idea.phase||'seed'}</span>
+      </div>
+      <div style="height:5px;background:var(--bg3);border-radius:2px;overflow:hidden">
+        <div style="width:${t*100}%;height:100%;background:${tc};border-radius:2px;transition:width .5s"></div>
+      </div>
+    </div>`;
+  }).join('') || '<div style="color:var(--muted)">no tension data yet</div>';
 }
 
+// ── Specs ──────────────────────────────────────────────────────────────────
 async function loadSpecs() {
   const d = await api('/api/specs');
-  const list = d?.specs||d||[];
-  document.getElementById('spec-list').innerHTML = list.map(s=>`
-    <div class="spec-block">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <span style="font-size:12px;color:var(--text)">${s.title||s.text||'—'}</span>
-        <span class="spec-status ${s.phase==='built'?'built':''}">${s.phase||'draft'}</span>
+  _specs = d?.specs||[];
+  document.getElementById('nc-specs').textContent = _specs.length;
+  const el = document.getElementById('spec-list');
+  if(!_specs.length) { el.innerHTML='<div style="color:var(--muted);padding:20px">no specs yet — create one from an idea</div>'; return; }
+  el.innerHTML = _specs.map(s=>{
+    const done = s.sections?.filter(x=>x.complete).length||0;
+    const total= s.sections?.length||0;
+    return `<div class="card ${_selectedSpec===s.uuid?'active':''}" onclick="selectSpec('${s.uuid}')">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="card-title" style="flex:1">${s.name||'—'}</div>
+        <span class="phase phase-${s.phase||'seed'}">${s.phase||'seed'}</span>
       </div>
-      <div style="font-size:10px;color:var(--muted)">${s.uuid?.slice(0,12)||'—'}</div>
-    </div>`).join('') || '<div style="color:var(--muted)">no specs yet</div>';
+      <div class="card-meta">
+        <span>${s.uuid.slice(0,8)}</span>
+        <span>${done}/${total} sections</span>
+        ${s.ideaUuid?`<span style="color:var(--blue)">idea: ${s.ideaUuid.slice(0,6)}</span>`:''}
+      </div>
+      <div class="tbar"><div class="tfill" style="width:${total?done/total*100:0}%;background:var(--teal)"></div></div>
+    </div>`;
+  }).join('');
 }
 
-async function loadGaps() {
-  const d = await api('/api/gaps');
-  const list = d?.gaps||d||[];
-  document.getElementById('gap-list').innerHTML = list.map(g=>`
-    <div class="gap-item">
-      <div class="gap-type">${g.type||'gap'}</div>
-      <div style="font-size:11px">${g.description||g.text||'—'}</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:2px">${g.status||'open'}</div>
-    </div>`).join('') || '<div style="color:var(--muted)">no gaps</div>';
-}
-
-async function loadSNR() {
-  const d = await api('/api/snr');
+async function selectSpec(uuid) {
+  _selectedSpec = uuid;
+  loadSpecs();
+  const d = await api('/api/specs/'+uuid);
   if(!d) return;
-  const snr = d.snr||0;
-  document.getElementById('snr-gauge').style.width = (snr*100)+'%';
-  document.getElementById('snr-val').textContent = 'SNR ' + (snr*100).toFixed(1) + '%';
-  document.getElementById('snr-fill').style.width = (snr*100)+'%';
-  document.getElementById('snr-label').textContent = 'SNR ' + (snr*100).toFixed(0)+'%';
+  const spec = d.spec;
+  const sections = spec.sections||[];
+  const done = sections.filter(s=>s.complete).length;
+  document.getElementById('spec-detail').innerHTML = `
+    <div class="detail-box">
+      <div class="detail-label">Name</div>
+      <div class="detail-value" style="font-weight:600">${spec.name}</div>
+    </div>
+    <div class="detail-box">
+      <div class="detail-label">Progress</div>
+      <div style="font-size:11px;color:var(--teal);margin-bottom:4px">${done}/${sections.length} sections complete</div>
+      <div class="gauge"><div class="gauge-fill" style="width:${sections.length?done/sections.length*100:0}%;background:var(--teal)"></div></div>
+    </div>
+    <div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap">
+      <button onclick="checkSpec('${spec.uuid}')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:3px 8px;border-radius:2px;font:inherit;font-size:9px;cursor:pointer">✓ check</button>
+      <button onclick="buildSpec('${spec.uuid}')" style="background:none;border:1px solid var(--signal);color:var(--signal);padding:3px 8px;border-radius:2px;font:inherit;font-size:9px;cursor:pointer">▶ build</button>
+      <button onclick="exportSpec('${spec.uuid}')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:3px 8px;border-radius:2px;font:inherit;font-size:9px;cursor:pointer">↓ export</button>
+    </div>
+    <div class="detail-label" style="margin-bottom:4px">Sections</div>
+    ${sections.map(s=>`
+      <div class="section-row">
+        <div class="section-dot" style="background:${s.complete?'var(--signal)':s.required?'var(--err)':'var(--border)'}"></div>
+        <div class="section-id">${s.id}</div>
+        <div class="section-content">${s.content?.slice(0,50)||'—'}</div>
+      </div>`).join('')}
+  `;
 }
 
-let sseConn = null;
+async function checkSpec(uuid) {
+  const d = await post('/api/specs/'+uuid+'/check', {});
+  loadSpecs();
+  selectSpec(uuid);
+}
+
+async function buildSpec(uuid) {
+  const d = await post('/api/specs/'+uuid+'/build', {});
+  loadSpecs();
+  selectSpec(uuid);
+  if(d?.status==='built') logPipeline({ step:'spec.build', status:'done', spec:uuid });
+  else if(d?.missing?.length) logPipeline({ step:'spec.build', status:'incomplete', missing:d.missing });
+}
+
+async function exportSpec(uuid) {
+  const r = await fetch(BASE+'/api/specs/'+uuid+'/export');
+  const md = await r.text();
+  const blob = new Blob([md],{type:'text/markdown'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=`spec-${uuid.slice(0,8)}.md`; a.click();
+}
+
+// ── Gaps ───────────────────────────────────────────────────────────────────
+async function loadGaps() {
+  const status = document.getElementById('gap-status').value;
+  const q = status ? '?status='+status : '';
+  const d = await api('/api/gaps'+q);
+  const list = d?.gaps||[];
+  document.getElementById('nc-gaps').textContent = list.filter(g=>g.status==='open').length;
+  const el = document.getElementById('gap-list');
+  if(!list.length) { el.innerHTML=`<div style="color:var(--muted);padding:20px">no ${status} gaps</div>`; return; }
+  el.innerHTML = list.map(g=>{
+    const col = g.severity==='fatal'||g.severity==='high' ? 'var(--err)' : g.severity==='medium'?'var(--warn)':'var(--muted)';
+    const isEss = g.source==='ess'||g.type?.startsWith('ess');
+    return `<div class="gap-card ${isEss?'ess':''} ${g.status==='resolved'?'resolved':''}">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="gap-type" style="color:${col};flex:1">${g.type||'gap'} · ${g.severity||'medium'}</div>
+        <span style="font-size:8px;color:${g.status==='open'?'var(--err)':'var(--signal)'}">${g.status}</span>
+      </div>
+      <div class="gap-desc">${g.description||'—'}</div>
+      <div class="gap-meta">
+        <span>${g.uuid.slice(0,8)}</span>
+        ${g.ideaUuid?`<span>idea:${g.ideaUuid.slice(0,6)}</span>`:''}
+        ${g.composite?`<span>composite:${(g.composite*100).toFixed(0)}%</span>`:''}
+      </div>
+      ${g.status==='open'?`<div style="display:flex;gap:4px;margin-top:5px">
+        <button onclick="resolveGap('${g.uuid}')" style="background:none;border:1px solid var(--signal);color:var(--signal);padding:1px 7px;border-radius:2px;font:inherit;font-size:9px;cursor:pointer">resolve</button>
+        <button onclick="ignoreGap('${g.uuid}')" style="background:none;border:1px solid var(--border);color:var(--muted);padding:1px 7px;border-radius:2px;font:inherit;font-size:9px;cursor:pointer">ignore</button>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+async function openGap() {
+  const desc = document.getElementById('gap-desc').value.trim();
+  const sev  = document.getElementById('gap-sev').value;
+  if(!desc) return;
+  await post('/api/gaps', { description:desc, severity:sev, type:'unresolved', source:'ui' });
+  document.getElementById('gap-desc').value='';
+  toggleOpenGap(); loadGaps();
+}
+
+async function resolveGap(uuid) {
+  await post('/api/gaps/'+uuid+'/resolve', { resolution:'resolved via UI' });
+  loadGaps();
+}
+
+async function ignoreGap(uuid) {
+  await post('/api/gaps/'+uuid+'/ignore', { reason:'ignored via UI' });
+  loadGaps();
+}
+
+// ── ESS Analysis ───────────────────────────────────────────────────────────
+function loadESS() {
+  document.getElementById('ess-results').innerHTML = '<div style="color:var(--muted);font-size:10px">paste text above and click "analyse" — or leave blank for current system state</div>';
+}
+
+async function runESS() {
+  let text = document.getElementById('ess-input').value.trim();
+
+  // If empty, build a system-state summary to analyse
+  if(!text) {
+    const stats  = await api('/api/stats');
+    const ideas  = await api('/api/ideas');
+    const gaps   = await api('/api/gaps?status=open');
+    const snr    = await api('/api/snr');
+    const parts  = [`ideas: ${stats?.stats?.ideasTotal||0}`, `open gaps: ${stats?.stats?.openGaps||0}`, `snr: ${snr?.snr||0}`];
+    if(ideas?.ideas?.length) parts.push('callto:idea.tension', 'BIND { phase: building }');
+    if(gaps?.gaps?.length) parts.push('UNRESOLVE { role: gap_handler }');
+    text = parts.join('\n');
+  }
+
+  // Client-side ESS analysis (mirrors cortex/ess-gap-engine.js logic)
+  const result = analyseESS(text);
+  renderESS(result);
+}
+
+function analyseESS(text) {
+  const expressed=[], inferred=[], omitted=[];
+
+  // Expressed: calltos, bindings, hashes, ESS bus events
+  const calltos = [...text.matchAll(/callto:([a-z0-9_@?.=]+)/gi)].map(m=>({name:m[1],kind:'callto',expressed:true}));
+  const bindings= [...text.matchAll(/\b([a-z][a-z0-9_]{1,30})\s*(?:=|:)\s*([0-9a-f]{6,8})\b/gi)].map(m=>({name:m[1],kind:'binding',value:m[2],expressed:true}));
+  const busEvents=['SIGNAL','RESOLVE','UNRESOLVE','BIND','WRITE','CONTRACT_UPDATE','KERNEL_SNAPSHOT','NOISE_ALERT'];
+  const foundEvents = busEvents.filter(e=>text.includes(e)).map(n=>({name:n,kind:'bus_event',expressed:true}));
+  const hashes = [...text.matchAll(/\b([0-9a-f]{6,8})\b/g)].map(m=>({name:m[1],kind:'hash',expressed:true}));
+  expressed.push(...calltos,...bindings,...foundEvents,...hashes);
+
+  // Inferred
+  if(text.match(/BIND|bind\s*:/i)){
+    if(!expressed.find(v=>v.name==='role'))  inferred.push({name:'role',kind:'binding_arg',reason:'BIND requires a role name',inferred:true});
+    if(!expressed.find(v=>v.name==='hash'))  inferred.push({name:'hash',kind:'binding_arg',reason:'BIND requires a hash target',inferred:true});
+  }
+  if(text.match(/callto:/i)&&!expressed.find(v=>v.name==='kernel'))
+    inferred.push({name:'kernel',kind:'runtime_dep',reason:'callto requires kernel routing table',inferred:true});
+  if(text.includes('RESOLVE')&&!expressed.find(v=>v.name==='bus'))
+    inferred.push({name:'bus',kind:'output_channel',reason:'RESOLVE emits to bus',inferred:true});
+  if(text.match(/filter/i)&&!expressed.find(v=>v.name==='weight_table'))
+    inferred.push({name:'weight_table',kind:'filter_state',reason:'SNR filter maintains adaptive weight table',inferred:true});
+
+  // Omitted
+  if(text.match(/callto:/i)&&!text.match(/UNRESOLVE|unresolved|fallback/i))
+    omitted.push({name:'UNRESOLVE_handler',kind:'ess_axiom',reason:'callto without UNRESOLVE handler — §1.2: nothing silently fails',weight:0.9,friction:0.7,tension:0.85,axiom:'§1.2'});
+  if(text.match(/BIND|bind\s*:/i)&&!text.match(/binding.log|log|history|replay/i))
+    omitted.push({name:'binding_log',kind:'kernel_invariant',reason:'BIND without binding log — ESS §3: kernel history',weight:0.75,friction:0.5,tension:0.7,axiom:'§3'});
+  if(hashes.length&&!text.match(/hash.store|registry|store/i))
+    omitted.push({name:'hash_store',kind:'registry_missing',reason:'hash referenced but no hash store — ESS §7',weight:0.8,friction:0.65,tension:0.75,axiom:'§7'});
+  if(text.match(/filter/i)&&!text.match(/weight|rate|update|adaptive/i))
+    omitted.push({name:'adaptive_weights',kind:'filter_missing',reason:'filter without adaptive weights — ESS §8',weight:0.65,friction:0.6,tension:0.55,axiom:'§8'});
+  if(text.match(/signal|route|dispatch/i)&&!text.match(/\bbus\b/i))
+    omitted.push({name:'bus',kind:'shared_state_missing',reason:'signal routing without bus — ESS §6: the bus is the only shared state',weight:0.85,friction:0.8,tension:0.9,axiom:'§6'});
+
+  // Score omitted
+  const scored = omitted.map(v=>({...v,composite:parseFloat(((v.weight||0)*0.4+(v.friction||0)*0.35+(v.tension||0)*0.25).toFixed(3))})).sort((a,b)=>b.composite-a.composite);
+  const critical = scored.filter(v=>v.composite>=0.35);
+  const totalPressure = scored.reduce((s,v)=>s+v.composite,0);
+
+  return { expressed, inferred, omitted:scored, critical:critical.length, totalPressure:parseFloat(totalPressure.toFixed(3)) };
+}
+
+function renderESS(r) {
+  const el = document.getElementById('ess-results');
+  const pass = r.critical===0;
+  el.innerHTML = `
+    <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="detail-box" style="flex:1;min-width:100px">
+        <div class="detail-label">Expressed</div>
+        <div style="font-size:22px;font-weight:700;color:var(--signal)">${r.expressed.length}</div>
+        <div style="font-size:9px;color:var(--muted)">explicitly named</div>
+      </div>
+      <div class="detail-box" style="flex:1;min-width:100px">
+        <div class="detail-label">Inferred</div>
+        <div style="font-size:22px;font-weight:700;color:var(--blue)">${r.inferred.length}</div>
+        <div style="font-size:9px;color:var(--muted)">context-implied</div>
+      </div>
+      <div class="detail-box" style="flex:1;min-width:100px">
+        <div class="detail-label">Omitted</div>
+        <div style="font-size:22px;font-weight:700;color:${r.critical>0?'var(--err)':'var(--signal)'}">${r.omitted.length}</div>
+        <div style="font-size:9px;color:var(--muted)">pressure: ${r.totalPressure.toFixed(2)}</div>
+      </div>
+      <div class="detail-box" style="flex:1;min-width:100px">
+        <div class="detail-label">Status</div>
+        <div style="font-size:16px;font-weight:700;color:${pass?'var(--signal)':'var(--err)'}">${pass?'CLEAN':'GAPS'}</div>
+        <div style="font-size:9px;color:var(--muted)">${r.critical} critical</div>
+      </div>
+    </div>
+
+    ${r.expressed.length ? `<div class="var-group">
+      <div class="var-group-label">Expressed — ${r.expressed.length} variables</div>
+      ${r.expressed.slice(0,20).map(v=>`<div class="var-row">
+        <div class="var-kind">${v.kind}</div>
+        <div class="var-name">${v.name}</div>
+        <div class="var-reason" style="color:var(--signal)">✓ present</div>
+      </div>`).join('')}
+    </div>`:''}
+
+    ${r.inferred.length ? `<div class="var-group">
+      <div class="var-group-label">Inferred — ${r.inferred.length} variables</div>
+      ${r.inferred.map(v=>`<div class="var-row">
+        <div class="var-kind">${v.kind}</div>
+        <div class="var-name">${v.name}</div>
+        <div class="var-reason">${v.reason}</div>
+      </div>`).join('')}
+    </div>`:''}
+
+    ${r.omitted.length ? `<div class="var-group">
+      <div class="var-group-label">Omitted — ${r.omitted.length} variables (weight · friction · tension)</div>
+      ${r.omitted.map(v=>{
+        const score = v.composite||0;
+        const col = score>0.6?'var(--err)':score>0.35?'var(--warn)':'var(--muted)';
+        return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:8px 10px;margin-bottom:5px">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+            <span style="color:${col};font-weight:700;font-size:11px">${v.name}</span>
+            ${v.axiom?`<span style="font-size:8px;color:var(--amber);border:1px solid rgba(245,158,11,.3);padding:0 4px;border-radius:2px">${v.axiom}</span>`:''}
+            <span style="margin-left:auto;font-size:11px;font-weight:700;color:${col}">${(score*100).toFixed(0)}%</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:5px">${v.reason}</div>
+          <div style="display:flex;gap:12px;font-size:9px">
+            <span>weight <span style="color:var(--amber)">${((v.weight||0)*100).toFixed(0)}%</span></span>
+            <span>friction <span style="color:var(--err)">${((v.friction||0)*100).toFixed(0)}%</span></span>
+            <span>tension <span style="color:var(--purple)">${((v.tension||0)*100).toFixed(0)}%</span></span>
+          </div>
+          <div class="gap-weight-bar" style="margin-top:5px">
+            <div class="gap-weight-fill" style="width:${score*100}%"></div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+
+    ${r.critical>0 ? `<div style="margin-top:8px">
+      <button onclick="pushESSGaps()" style="background:rgba(232,93,60,.1);border:1px solid var(--err);color:var(--err);padding:5px 12px;border-radius:3px;font:inherit;font-size:10px;cursor:pointer">△ push ${r.critical} critical gap(s) to idearium</button>
+    </div>`:''}
+  `;
+  window._essResult = r; // store for push
+}
+
+async function pushESSGaps() {
+  const r = window._essResult;
+  if(!r) return;
+  for(const v of r.omitted.filter(o=>o.composite>=0.35)) {
+    await post('/api/gaps', {
+      type: 'ess_omitted',
+      description: `[ESS] ${v.name}: ${v.reason}`,
+      severity: v.composite>0.6?'high':'medium',
+      source: 'ess',
+    });
+  }
+  nav('gaps', document.querySelector('[onclick*="gaps"]'));
+}
+
+// ── Pipeline ───────────────────────────────────────────────────────────────
+const PIPE_STEPS = [
+  { id:'spec_check', icon:'✓', label:'check' },
+  { id:'ess_scan',   icon:'◈', label:'ESS' },
+  { id:'spec_build', icon:'▶', label:'build' },
+  { id:'push',       icon:'⬆', label:'push' },
+  { id:'test',       icon:'⚑', label:'test' },
+];
+
+let _pipeLog = [];
+
+async function loadPipeline() {
+  // Populate spec selector
+  const d = await api('/api/specs');
+  _specs = d?.specs||[];
+  const sel = document.getElementById('pipe-spec');
+  sel.innerHTML = _specs.length
+    ? _specs.map(s=>`<option value="${s.uuid}">${s.name}</option>`).join('')
+    : '<option value="">no specs</option>';
+  renderPipelineTrack(PIPE_STEPS.map(s=>({...s,status:'pending'})));
+}
+
+function renderPipelineTrack(steps) {
+  document.getElementById('pipeline-track').innerHTML = steps.map((s,i)=>`
+    ${i>0?'<span class="pipe-arrow">→</span>':''}
+    <div class="pipe-step">
+      <div class="pipe-node ${s.status==='done'?'done':s.status==='active'?'active':s.status==='fail'?'fail':''}" id="pipe-${s.id}">${s.icon}</div>
+      <div class="pipe-label">${s.label}</div>
+    </div>`).join('');
+}
+
+function setPipeStatus(id, status) {
+  const node = document.getElementById('pipe-'+id);
+  if(!node) return;
+  node.className = 'pipe-node '+(status==='done'?'done':status==='active'?'active':status==='fail'?'fail':'');
+}
+
+function logPipeline(entry) {
+  _pipeLog.unshift({ ...entry, ts: Date.now() });
+  const el = document.getElementById('pipeline-log');
+  if(!el) return;
+  const col = entry.status==='done'?'var(--signal)':entry.status==='fail'?'var(--err)':'var(--muted)';
+  const row = document.createElement('div');
+  row.className='build-step';
+  row.innerHTML=`<span class="step-status" style="color:${col}">${entry.status||'info'}</span>
+    <span class="step-name">${entry.step||entry.message||'—'}</span>
+    <span class="step-ms" style="color:var(--muted)">${new Date().toTimeString().slice(0,8)}</span>`;
+  el.prepend(row);
+}
+
+async function runPipeline() {
+  const specUuid = document.getElementById('pipe-spec').value;
+  if(!specUuid) return;
+  document.getElementById('pipeline-log').innerHTML='';
+  const steps = PIPE_STEPS.map(s=>({...s,status:'pending'}));
+  renderPipelineTrack(steps);
+  logPipeline({step:'pipeline', status:'started', spec:specUuid});
+
+  // Post to orchestrator — it's source of truth for pipeline runs
+  post('/api/ledger', { system:'idearium', type:'idearium.pipeline.started', payload:{ specUuid } }, ORCH);
+
+  // Step 1: spec check
+  setPipeStatus('spec_check','active');
+  logPipeline({step:'spec.check', status:'running'});
+  const chk = await post('/api/specs/'+specUuid+'/check', {});
+  if(chk?.spec?.phase==='specced'||chk?.spec) {
+    setPipeStatus('spec_check','done');
+    logPipeline({step:'spec.check', status:'done', sections:`${chk.spec?.sections?.filter(s=>s.complete).length}/${chk.spec?.sections?.length}`});
+  } else {
+    setPipeStatus('spec_check','fail');
+    logPipeline({step:'spec.check', status:'fail'});
+  }
+  await sleep(300);
+
+  // Step 2: ESS scan on spec content
+  setPipeStatus('ess_scan','active');
+  logPipeline({step:'ess.scan', status:'running'});
+  const spec = await api('/api/specs/'+specUuid);
+  if(spec?.spec) {
+    const specText = spec.spec.sections?.map(s=>s.content||'').join('\n')||'';
+    const essResult = analyseESS(specText||spec.spec.name||'');
+    window._essResult = essResult;
+    if(essResult.critical===0) {
+      setPipeStatus('ess_scan','done');
+      logPipeline({step:'ess.scan', status:'done', expressed:essResult.expressed.length, omitted:essResult.omitted.length});
+    } else {
+      setPipeStatus('ess_scan','fail');
+      logPipeline({step:'ess.scan', status:'fail', critical:essResult.critical, pressure:essResult.totalPressure});
+      // Push ESS gaps to idearium
+      for(const v of essResult.omitted.filter(o=>o.composite>=0.35)) {
+        await post('/api/gaps', { type:'ess_omitted', description:`[ESS] ${v.name}: ${v.reason}`, severity:v.composite>0.6?'high':'medium', source:'ess' });
+      }
+    }
+  }
+  await sleep(300);
+
+  // Step 3: build
+  setPipeStatus('spec_build','active');
+  logPipeline({step:'spec.build', status:'running'});
+  const bld = await post('/api/specs/'+specUuid+'/build', {});
+  if(bld?.status==='built') {
+    setPipeStatus('spec_build','done');
+    logPipeline({step:'spec.build', status:'done', message:bld.message});
+  } else {
+    setPipeStatus('spec_build','fail');
+    logPipeline({step:'spec.build', status:'incomplete', missing:(bld?.missing||[]).join(',')});
+  }
+  await sleep(300);
+
+  // Step 4: push snapshot
+  setPipeStatus('push','active');
+  logPipeline({step:'snapshot.push', status:'running'});
+  const snap = await post('/api/snapshots', { message:`pipeline: ${spec?.spec?.name||specUuid.slice(0,8)}`, branch:'main' });
+  if(snap?.snapshot) {
+    setPipeStatus('push','done');
+    logPipeline({step:'snapshot.push', status:'done', commit:snap.snapshot.commitId, snr:snap.snapshot.snr});
+  } else {
+    setPipeStatus('push','fail');
+    logPipeline({step:'snapshot.push', status:'fail'});
+  }
+  await sleep(300);
+
+  // Step 5: test — hit all system health endpoints
+  setPipeStatus('test','active');
+  logPipeline({step:'system.test', status:'running'});
+  const healthResults = await Promise.all([
+    fetch(BASE+'/health').then(r=>r.ok).catch(()=>false),
+    fetch(ORCH+'/health').then(r=>r.ok).catch(()=>false),
+    fetch(BRIDGE+'/bridge/health').then(r=>r.ok).catch(()=>false),
+  ]);
+  const allHealthy = healthResults.every(Boolean);
+  if(allHealthy) {
+    setPipeStatus('test','done');
+    logPipeline({step:'system.test', status:'done', systems:`idearium:${healthResults[0]} orch:${healthResults[1]} bridge:${healthResults[2]}`});
+  } else {
+    setPipeStatus('test','fail');
+    logPipeline({step:'system.test', status:'fail', results:healthResults});
+  }
+
+  // Final — post to orchestrator ledger
+  const pipelineResult = {status:allHealthy?'passed':'failed', specUuid, steps:PIPE_STEPS.length};
+  post('/api/ledger', { system:'idearium', type:'idearium.pipeline.complete', payload:pipelineResult }, ORCH);
+  post('/bridge/broadcast', { type:'idearium.pipeline.complete', ...pipelineResult }, BRIDGE);
+  logPipeline({step:'pipeline', status:allHealthy?'done':'fail', message:`pipeline ${allHealthy?'PASSED':'FAILED'}`});
+}
+
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
+// ── SNR ────────────────────────────────────────────────────────────────────
+async function loadSNR() {
+  const [snrD, histD] = await Promise.all([api('/api/snr'), api('/api/snr/history?n=50')]);
+  const snr = snrD?.snr||0;
+  const col = snr>0.6?'var(--signal)':snr>0.3?'var(--warn)':'var(--err)';
+  document.getElementById('snr-big').textContent = (snr*100).toFixed(1)+'%';
+  document.getElementById('snr-big').style.color = col;
+  document.getElementById('snr-gauge').style.width = (snr*100)+'%';
+  document.getElementById('snr-fill').style.width  = (snr*100)+'%';
+  document.getElementById('snr-label').textContent = 'SNR '+(snr*100).toFixed(0)+'%';
+
+  const hist = histD?.samples||[];
+  const histEl = document.getElementById('snr-hist');
+  histEl.innerHTML = hist.map(s=>{
+    const h = Math.max(4, Math.round(s.snrValue*40));
+    const c = s.snrValue>0.6?'var(--signal)':s.snrValue>0.3?'var(--warn)':'var(--err)';
+    return `<div class="snr-bar-v" style="height:${h}px;background:${c};min-width:3px"></div>`;
+  }).join('');
+}
+
+// ── Live stream ─────────────────────────────────────────────────────────────
 function startStream() {
-  if(sseConn) return;
-  sseConn = new EventSource(BASE+'/sse');
-  sseConn.onmessage = e => {
+  if(_sseConn) return;
+  _sseConn = new EventSource(BASE+'/sse');
+  _sseConn.onmessage = e => {
     try {
       const d = JSON.parse(e.data);
+      _streamCount++;
+      document.getElementById('stream-count').textContent = _streamCount;
       const log = document.getElementById('stream-log');
       const row = document.createElement('div');
-      row.className = 'log-row';
-      row.style = 'display:flex;gap:10px;font-size:11px;padding:2px 0;border-bottom:1px solid rgba(37,37,48,.3)';
-      row.innerHTML = `<span style="color:var(--muted);width:80px">${new Date().toTimeString().slice(0,8)}</span>
-        <span style="color:var(--purple);width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.type||'event'}</span>
-        <span style="color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${JSON.stringify(d).slice(0,80)}</span>`;
+      row.className = 'stream-row';
+      const tc = d.type?.includes('error')?'var(--err)':d.type?.includes('created')?'var(--signal)':d.type?.includes('gap')?'var(--err)':'var(--purple)';
+      row.innerHTML = `<span class="sr-ts">${new Date().toTimeString().slice(0,8)}</span>
+        <span class="sr-type" style="color:${tc}">${d.type||'event'}</span>
+        <span class="sr-data">${JSON.stringify(d.payload||d).slice(0,80)}</span>`;
       log.prepend(row);
-      if(log.children.length>200) log.lastChild.remove();
+      if(log.children.length>300) log.lastChild.remove();
+      // Update SNR bar from stream
+      if(d.type==='snr.update'&&d.payload?.snr!=null){
+        const s=d.payload.snr;
+        document.getElementById('snr-fill').style.width=(s*100)+'%';
+        document.getElementById('snr-label').textContent='SNR '+(s*100).toFixed(0)+'%';
+      }
     } catch(_){}
   };
 }
-function clearStream() { document.getElementById('stream-log').innerHTML=''; }
+function clearStream() { document.getElementById('stream-log').innerHTML=''; _streamCount=0; document.getElementById('stream-count').textContent='0'; }
 
-loadIdeas();
-setInterval(loadIdeas, 15000);
+// ── Kernels ────────────────────────────────────────────────────────────────
+const KERNEL_SYSTEMS = [
+  { id:'idearium', name:'IdeaOS',       url:BASE+'/health',        desc:'Idea OS — SISO+JAA, SNR, tension engine' },
+  { id:'orch',     name:'Orchestrator', url:ORCH+'/health',        desc:'Source of truth, recall, system registry' },
+  { id:'bridge',   name:'Bridge',       url:BRIDGE+'/bridge/health',desc:'Tag engine, request queue, SSE relay' },
+  { id:'cortex',   name:'Cortex',       url:CORTEX+'/health',      desc:'28 JAA tables, event_log, gap engine' },
+  { id:'guardian', name:'Guardian',     url:GUARD+'/health',       desc:'AI orchestration, SISO bus, job queue' },
+];
+
+async function loadKernels() {
+  const el = document.getElementById('kernels-body');
+  el.innerHTML = '<div style="color:var(--muted);font-size:10px;padding:10px">pinging all kernels…</div>';
+  const results = await Promise.all(KERNEL_SYSTEMS.map(async sys=>{
+    const t0=Date.now();
+    try{
+      const r = await fetch(sys.url,{signal:AbortSignal.timeout(3000)});
+      const d = r.ok ? await r.json() : null;
+      return{...sys,ok:r.ok,ms:Date.now()-t0,data:d};
+    }catch(e){return{...sys,ok:false,ms:Date.now()-t0,error:e.message};}
+  }));
+  el.innerHTML = results.map(r=>{
+    const col=r.ok?'var(--signal)':'var(--err)';
+    const data=r.data||{};
+    const extras=[];
+    if(data.version)      extras.push(`v${data.version}`);
+    if(data.snr!=null)    extras.push(`SNR ${(data.snr*100).toFixed(0)}%`);
+    if(data.online!=null) extras.push(`${data.online}/${data.total} online`);
+    if(data.sessions!=null)extras.push(`${data.sessions} sessions`);
+    if(data.uptime!=null) extras.push(`up ${Math.round(data.uptime)}s`);
+    return `<div style="background:var(--bg2);border:1px solid ${r.ok?'rgba(62,207,142,.25)':r.ok===false?'rgba(232,93,60,.2)':'var(--border)'};border-radius:4px;padding:10px 12px;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="width:8px;height:8px;border-radius:50%;background:${col};display:inline-block;flex-shrink:0"></span>
+        <span style="font-size:12px;font-weight:700;color:${col}">${r.name}</span>
+        <span style="font-size:9px;color:var(--muted);flex:1">${r.desc}</span>
+        <span style="font-size:9px;color:var(--muted)">${r.ms}ms</span>
+      </div>
+      <div style="font-size:9px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap">
+        <span>${r.url.replace('http://localhost','')}</span>
+        ${extras.map(e=>`<span style="color:var(--text)">${e}</span>`).join('')}
+        ${r.error?`<span style="color:var(--err)">${r.error}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function runAllKernels() {
+  // Post to orchestrator that we're running all kernels
+  await post('/api/ledger', { system:'idearium', type:'idearium.kernels.ping', payload:{systems:KERNEL_SYSTEMS.map(s=>s.id)} }, ORCH);
+  loadKernels();
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+(async()=>{
+  // Check systems
+  await checkSystems();
+  setInterval(checkSystems, 15000);
+
+  // Load initial data
+  loadIdeas();
+  setInterval(loadIdeas, 20000);
+
+  // Start SSE for live updates
+  startStream();
+
+  // Load initial SNR
+  const snr = await api('/api/snr');
+  if(snr?.snr!=null){
+    const s=snr.snr;
+    document.getElementById('snr-fill').style.width=(s*100)+'%';
+    document.getElementById('snr-label').textContent='SNR '+(s*100).toFixed(0)+'%';
+  }
+})();
 </script>
 
 <script>
-/* NEXUS hotswap listener — auto-reload on file change */
+/* NEXUS hotswap */
 (function(){
-  const SYS = document.documentElement.dataset.system || window.__NEXUS_SYSTEM__ || (()=>{
-    const p = location.port;
-    return p==="7820"?"guardian":p==="3748"?"cortex":p==="4800"?"idearium":
-           p==="9999"?"bridge":p==="4242"?"emerge":p==="9000"?"orchestrator":"unknown";
-  })();
   let sse, n=0;
   function connect(){
-    sse = new EventSource("http://localhost:9000/sse");
-    sse.onopen  = ()=>{ n=0; };
-    sse.onerror = ()=>{ sse.close(); setTimeout(connect, Math.min(10000, 1000*++n)); };
-    sse.onmessage = e=>{
-      try{
-        const d=JSON.parse(e.data);
-        if(d.type==="orchestrator.ui.hotswap"&&d.system===SYS){
+    sse=new EventSource("http://localhost:9000/sse");
+    sse.onopen=()=>{n=0;};
+    sse.onerror=()=>{sse.close();setTimeout(connect,Math.min(10000,1000*++n));};
+    sse.onmessage=e=>{
+      try{const d=JSON.parse(e.data);
+        if(d.type==="orchestrator.ui.hotswap"&&d.system==="idearium"){
           console.log("[hotswap] reloading — "+d.file);
           setTimeout(()=>location.reload(),150);
         }

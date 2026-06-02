@@ -33,6 +33,15 @@ let jaaDB, fileStore, fileRefs, adminServer;
 
 async function bootAsync() {
 
+  // ── §AXIOM Gate 0: Register with orchestrator — it's the source of truth ───
+  // Connection order: event bus → kernel → orchestrator
+  // This gate is non-blocking: orchestrator may not be up yet, that's fine
+  await nc.gate('orchestrator.register', 'cortex', async () => {
+    const r = await nc.registerWithOrchestrator('cortex', PORT, { role:'source-of-truth', version:VERSION });
+    if (r.ok) nc.startHeartbeat('cortex', PORT);
+    // If orchestrator not up yet, continue — we'll heartbeat when it comes online
+  }).catch(() => {});  // non-fatal on boot
+
   // ── §3.1 Gate 1: Storage ───────────────────────────────────────────────────
   await nc.gate('storage.init', 'cortex', async () => {
     jaaDB     = new JaaDB({ dir: DATA_DIR });
@@ -89,9 +98,9 @@ async function bootAsync() {
     _seedProjectRegistry(jaaDB);
   });
 
-  // ── §3.1 Gate 7: Bridge registration ──────────────────────────────────────
-  // §5.2 — everything implements the bridge
-  await nc.gate('bridge.register', 'cortex', async () => {
+  // ── §3.1 Gate 7: Bus + bridge registration ──────────────────────────────────
+  // §5.2 — everything implements the bridge; orchestrator already registered (gate 0)
+  await nc.gate('bus.bridge.register', 'cortex', async () => {
     const r = await nc._req('bridge', 'POST', '/bridge/handshake', {
       systemId: 'cortex', appId: 'cortex',
       secret: 'nexus-cortex-internal-v1',
@@ -100,9 +109,9 @@ async function bootAsync() {
       console.warn('[cortex] bridge not available — running standalone');
       return; // non-fatal: bridge may start later
     }
-    // Announce to orchestrator
-    await nc.postBridge('cortex.booted', { version: VERSION, port: PORT });
+    // Announce to the full bus: orchestrator → bridge → all listeners
     await nc.postLedger('cortex', 'cortex.booted', { version: VERSION, port: PORT });
+    await nc.postBridge('cortex.booted', { version: VERSION, port: PORT });
   });
 
   // ── Boot banner ────────────────────────────────────────────────────────────
