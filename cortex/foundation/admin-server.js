@@ -20,7 +20,7 @@ class AdminServer {
     this._port       = port;
     this._server     = null;
     this._sseClients = new Set();
-    this._lastLogId  = 0;
+    this._lastLogId  = 0; // will be set to current tail on first push
     this._sseTimer   = null;
   }
 
@@ -53,6 +53,13 @@ class AdminServer {
 
   _pushSSE() {
     if (!this._sseClients.size) return;
+
+    // On first push, start from current tail (don't replay history)
+    if (this._lastLogId === 0) {
+      const all = jaaDB.tail('event_log', 1);
+      this._lastLogId = all.length ? (all[0]._rowId || 0) : 0;
+      return;
+    }
 
     const newRows = jaaDB.query('event_log', r => r._rowId > this._lastLogId, 100);
     if (!newRows.length) return;

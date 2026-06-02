@@ -113,6 +113,8 @@ const tagEngine = {
 };
 
 // ── Request queue ─────────────────────────────────────────────────────────────
+const REQUEST_TTL = 30 * 60 * 1000; // 30 min — pending requests expire
+
 // Typed requests with full lifecycle: created → pending → accepted/rejected → processing → complete/failed
 // Any system can submit a request to any other system.
 // Requests are persisted first (§2.1), then dispatched.
@@ -200,6 +202,22 @@ const requestQueue = {
     if (filter.type)   rows = rows.filter(r => r.type   === filter.type);
     if (filter.tag)    rows = rows.filter(r => (r.tags||[]).includes(filter.tag));
     return rows;
+  },
+
+  purgeExpired() {
+    const rows    = jaaRead('requests', 5000);
+    const cutoff  = Date.now() - REQUEST_TTL;
+    let purged    = 0;
+    for (const r of rows) {
+      if (r.status === 'pending' && (r.ts || r.createdAt || 0) < cutoff) {
+        jaaUpdate('requests', r.uuid, { status: 'expired', expiredAt: Date.now() });
+        tagEngine.untag(r.uuid, ['status:pending']);
+        tagEngine.tag(r.uuid, 'request', r.from, ['status:expired'], 'bridge.purge');
+        broadcastAll({ type: 'bridge.request.expired', uuid: r.uuid, age: Date.now() - (r.ts||0) });
+        purged++;
+      }
+    }
+    return purged;
   },
 
   get(uuid) {
@@ -524,6 +542,11 @@ function buildBridgeHandler(req, res) {
   }
 
   // ── Stats ──────────────────────────────────────────────────────────────────
+  if (req.method === 'POST' && action === 'purge') {
+    const n = requestQueue.purgeExpired();
+    return json(res, 200, { ok: true, purged: n });
+  }
+
   if (req.method === 'GET' && action === 'stats') {
     return json(res, 200, {
       ok: true,
@@ -583,6 +606,12 @@ function mount(server, systemId) {
 let _server = null;
 
 function start(port = BRIDGE_PORT) {
+  // Purge expired requests every 5 minutes
+  setInterval(() => {
+    const n = requestQueue.purgeExpired();
+    if (n > 0) console.log(`[bridge] purged ${n} expired requests`);
+  }, 5 * 60 * 1000).unref();
+
   _server = http.createServer(buildBridgeHandler);
   _server.listen(port, '127.0.0.1', () => {
     console.log(`[bridge] standalone server on http://127.0.0.1:${port}`);

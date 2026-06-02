@@ -321,6 +321,102 @@ const COMMANDS = {
     else info('no response yet');
   },
 
+  async 'guardian:watch'() {
+    const jobId = arg(2);
+    if (!jobId) return err('Usage: nexus guardian watch <jobId>');
+    const sys = SYSTEMS.guardian;
+    hdr(`WATCHING JOB ${jobId.slice(0,8)}`);
+    info('streaming response... (ctrl+c to stop)');
+    console.log('');
+
+    const options = {
+      hostname: sys.host, port: sys.port,
+      path: `/stream/${jobId}`, method: 'GET',
+      headers: { Accept: 'text/event-stream', 'Cache-Control': 'no-cache' },
+    };
+    const req = http.request(options, (res) => {
+      let buffer = '';
+      res.on('data', chunk => {
+        buffer += chunk.toString();
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data:')) continue;
+          try {
+            const d = JSON.parse(line.slice(5).trim());
+            if (d.text) process.stdout.write(d.text);
+            if (d.complete) { console.log('\n'); ok('Job complete'); process.exit(0); }
+            if (d.status === 'complete') { console.log('\n'); ok('Done'); process.exit(0); }
+          } catch(_) {}
+        }
+      });
+      res.on('end', () => { console.log(''); ok('Stream ended'); process.exit(0); });
+    });
+    req.on('error', e => err(e.message));
+    req.end();
+  },
+
+  async 'cortex:stream'() {
+    const sys = SYSTEMS.cortex;
+    hdr('CORTEX LIVE STREAM');
+    info('streaming events... (ctrl+c to stop)');
+    const options = {
+      hostname: sys.host, port: sys.port,
+      path: '/sse', method: 'GET',
+      headers: { Accept: 'text/event-stream' },
+    };
+    const req = http.request(options, (res) => {
+      let buffer = '';
+      res.on('data', chunk => {
+        buffer += chunk.toString();
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data:')) continue;
+          try {
+            const d = JSON.parse(line.slice(5).trim());
+            const ts  = new Date(d.ts||Date.now()).toTimeString().slice(0,8);
+            const type = (d.type||'event').padEnd(35);
+            console.log(`  ${C.muted}${ts}${C.reset}  ${C.cyan}${type}${C.reset}  ${C.muted}${JSON.stringify(d.payload||{}).slice(0,60)}${C.reset}`);
+          } catch(_) {}
+        }
+      });
+    });
+    req.on('error', e => { err(e.message); process.exit(1); });
+    req.end();
+  },
+
+  async 'bridge:stream'() {
+    const sys = SYSTEMS.bridge;
+    const channel = args.find(a => a.startsWith('--channel='))?.slice(10) || '*';
+    hdr(`BRIDGE STREAM: ${channel}`);
+    info('subscribing... (ctrl+c to stop)');
+    const options = {
+      hostname: sys.host, port: sys.port,
+      path: `/bridge/subscribe?channel=${encodeURIComponent(channel)}`,
+      method: 'GET',
+      headers: { Accept: 'text/event-stream' },
+    };
+    const req = http.request(options, (res) => {
+      let buffer = '';
+      res.on('data', chunk => {
+        buffer += chunk.toString();
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data:')) continue;
+          try {
+            const d = JSON.parse(line.slice(5).trim());
+            const ts = new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8);
+            console.log(`  ${C.muted}${ts}${C.reset}  ${C.purple}${(d.type||'event').padEnd(35)}${C.reset}  ${C.muted}${JSON.stringify(d).slice(0,60)}${C.reset}`);
+          } catch(_) {}
+        }
+      });
+    });
+    req.on('error', e => { err(e.message); process.exit(1); });
+    req.end();
+  },
+
   async 'guardian:providers'() {
     const d = await get('guardian', '/providers');
     if (d.error) return err(d.error);
@@ -389,6 +485,33 @@ const COMMANDS = {
   },
 
   // ── HELP ───────────────────────────────────────────────────────────────────
+  async watchdog() {
+    hdr('NEXUS WATCHDOG');
+    info('checking all systems every 5s — ctrl+c to stop');
+    let iteration = 0;
+    async function check() {
+      iteration++;
+      process.stdout.write(`\r[${new Date().toTimeString().slice(0,8)}] `);
+      const checks = await Promise.all(Object.entries(SYSTEMS).map(async ([name, sys]) => {
+        const start = Date.now();
+        const d = await get(name, name === 'bridge' ? '/bridge/health' : '/health');
+        const ms = Date.now() - start;
+        return { name, sys, online: !d.error, ms, d };
+      }));
+      const line = checks.map(({name, sys, online, ms}) =>
+        `${online ? C.green+'●'+C.reset : C.red+'○'+C.reset} ${name}(${ms}ms)`
+      ).join('  ');
+      process.stdout.write(line + '          ');
+      const offline = checks.filter(c => !c.online);
+      if (offline.length) {
+        process.stdout.write('\n');
+        offline.forEach(({name, d}) => info(`  ${name}: ${d.error}`));
+      }
+    }
+    await check();
+    setInterval(check, 5000);
+  },
+
   help() {
     console.log(`
 ${C.bold}${C.cyan}NEXUS — Unified CLI${C.reset}
@@ -438,6 +561,12 @@ ${C.bold}Idearium (port 4800)${C.reset}
   nexus push "message"
   nexus snr
 
+${C.bold}Streaming${C.reset}
+  nexus stream                         live cortex event stream
+  nexus watch <jobId>                  stream a guardian job response
+  nexus bridge:stream [--channel=x]    subscribe to bridge channel
+  nexus watchdog                       watch all systems every 5s
+
 Flags: --json (output raw JSON)
 `);
   },
@@ -449,6 +578,9 @@ const SHORTHANDS = {
   dispatch: 'guardian:dispatch',
   jobs:     'guardian:jobs',
   events:   'cortex:events',
+  stream:   'cortex:stream',
+  watch:    'guardian:watch',
+  watchdog: 'watchdog',
   gaps:     'gap:list',
   push:     'push',
   snr:      'snr',

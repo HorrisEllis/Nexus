@@ -205,19 +205,38 @@ function updateJob(id, patch) {
   return job;
 }
 
+// Jobs waiting for provider to connect
+const pendingQueue = new Map(); // provider → job[]
+
 function dispatchJob(job) {
   const ws = PROVIDERS[job.provider];
   if (!ws || ws.readyState !== WebSocket.OPEN) {
-    updateJob(job.id, { status: 'failed', error: `No connected userscript for: ${job.provider}` });
-    console.error(`[guardian] no userscript for ${job.provider}`);
-    writeToNexus({ ...job, response: '', status: 'failed' }).catch(() => {});
+    // Queue it — will retry when provider connects
+    if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
+    pendingQueue.get(job.provider).push(job);
+    updateJob(job.id, { status: 'queued', queuedAt: Date.now(),
+      queueReason: `waiting for ${job.provider} userscript` });
+    console.log(`[guardian] queued ${job.id} — waiting for ${job.provider}`);
+    bus.emit('guardian.job.queued', { jobId: job.id, provider: job.provider });
     return false;
   }
   send(ws, { type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
     provider: job.provider, prompt: job.prompt, content: job.content });
-  updateJob(job.id, { status: 'delivered' });
+  updateJob(job.id, { status: 'delivered', deliveredAt: Date.now() });
   console.log(`[guardian] dispatched ${job.id} → ${job.provider}`);
+  bus.emit('guardian.job.dispatched', { jobId: job.id, provider: job.provider });
   return true;
+}
+
+function flushQueuedJobs(provider) {
+  const queued = pendingQueue.get(provider) || [];
+  if (!queued.length) return;
+  pendingQueue.delete(provider);
+  console.log(`[guardian] flushing ${queued.length} queued jobs → ${provider}`);
+  for (const job of queued) {
+    const fresh = jobs.get(job.id);
+    if (fresh && fresh.status === 'queued') dispatchJob(fresh);
+  }
 }
 
 // ── artifact helpers ──────────────────────────────────────────────────────────
@@ -531,8 +550,10 @@ const server = http.createServer((req, res) => {
       providers[name] = ws && ws.readyState === WebSocket.OPEN ? 'connected' : 'disconnected';
     }
     res.writeHead(200, { 'Content-Type': 'application/json' });
+    const queuedCounts = {};
+    for (const [p, q] of pendingQueue) queuedCounts[p] = q.length;
     res.end(JSON.stringify({ ok: true, uptime: process.uptime(),
-      jobs: jobs.size, providers, wsClients: wss.clients.size }));
+      jobs: jobs.size, queued: queuedCounts, providers, wsClients: wss.clients.size }));
     return;
   }
 
@@ -1739,7 +1760,7 @@ function handleExtendedRoutes(req, res, url, method) {
       }); return true;
     }
     if (method==='POST' && parts.length===1) {
-      bodyJ(req).then(b=>{bus.emit('guardian.ledger',{...b,source:'api'});pRes(res,200,{ok:true});}).catch(e=>pRes(res,400,{ok:false,error:e.message})); return true;
+      bodyJ(req).then(b=>{bus.emit('guardian.ledger',{...b,source:'api'});pRes(res,200,{ok:true});}).catch(e=>{console.error('[guardian] ledger error:',e.message);pRes(res,400,{ok:false,error:e.message});}); return true;
     }
     if (method==='GET' && !parts[1]) {
       const limit  = Math.min(parseInt(url.searchParams.get('limit')||'100'),500);

@@ -53,7 +53,7 @@ async function _tick() {
         const route = _route(call, patterns, crystals);
 
         jaaDB.update('agent_calls', call.uuid, {
-          status:      'routed',
+          status:      'dispatched',
           routedTo:    route.agent,
           routeReason: route.reason,
           routedAt:    Date.now(),
@@ -61,11 +61,17 @@ async function _tick() {
 
         jaaDB.insert('event_log', {
           uuid:     uid(),
-          type:     'raid.routed',
+          type:     'raid.dispatched',
           payload:  { callUuid: call.uuid, agent: route.agent, reason: route.reason },
           source:   MODULE_ID,
           causedBy: call.uuid,
           ts:       Date.now(),
+        });
+
+        // Dispatch to agent module
+        _dispatch(call, route.agent).catch(err => {
+          jaaDB.update('agent_calls', call.uuid, { status: 'failed', error: err.message });
+          jaaDB.insert('failures', { uuid: uid(), source: MODULE_ID, error: err.message, stack: err.stack, ts: Date.now() });
         });
 
       } catch (err) {
@@ -112,6 +118,40 @@ function _route(call, patterns, crystals) {
   }
 
   return { agent: 'ollama', reason: 'default_local_first' };
+}
+
+async function _dispatch(call, agentName) {
+  // Lazy-load agent to avoid circular deps
+  let agent;
+  try {
+    agent = require(`../agents/${agentName}`);
+  } catch(_) {
+    // Agent not available — mark call as pending for external dispatch
+    jaaDB.update('agent_calls', call.uuid, { status: 'pending_external', routedTo: agentName });
+    return;
+  }
+
+  const result = await agent.dispatch({
+    uuid:   call.uuid,
+    prompt: call.prompt,
+    intent: call.intent,
+    context: call.context,
+  });
+
+  jaaDB.update('agent_calls', call.uuid, {
+    status:      'complete',
+    response:    result.text || result.response || '',
+    completedAt: Date.now(),
+  });
+
+  jaaDB.insert('event_log', {
+    uuid:     uid(),
+    type:     'raid.complete',
+    payload:  { callUuid: call.uuid, agent: agentName, chars: (result.text||'').length },
+    source:   MODULE_ID,
+    causedBy: call.uuid,
+    ts:       Date.now(),
+  });
 }
 
 module.exports = { init, stop };
