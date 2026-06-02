@@ -1,0 +1,500 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nexus Orchestrator</title>
+<style>
+html,body{margin:0;padding:0;width:100%;height:100%;background:#08080a;color:#e2e2ea;
+  font:12px/1.5 'Cascadia Code','Fira Mono',monospace;overflow:hidden;}
+*{box-sizing:border-box;}
+:root{--bg:#08080a;--bg2:#0e0e11;--bg3:#151518;--bg4:#1c1c20;--border:#222228;
+  --text:#e2e2ea;--muted:#484858;--signal:#3ecf8e;--warn:#f0a500;--err:#e85d3c;
+  --teal:#2dd4bf;--purple:#9b7fe8;--blue:#4a9eff;--amber:#f0a500;}
+#app{display:flex;flex-direction:column;width:100%;height:100%;}
+
+/* ── Topbar ── */
+#topbar{height:44px;min-height:44px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;padding:0 16px;flex-shrink:0;}
+.logo{color:var(--signal);font-weight:700;font-size:14px;letter-spacing:.06em;}
+.sp{flex:1;}
+.pill{font-size:10px;padding:1px 8px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);}
+.pill.ok{border-color:var(--signal);color:var(--signal);}
+.pill.warn{border-color:var(--warn);color:var(--warn);}
+.pill.err{border-color:var(--err);color:var(--err);}
+.btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 10px;
+  border-radius:3px;cursor:pointer;font:inherit;font-size:11px;}
+.btn:hover{border-color:var(--signal);color:var(--signal);}
+
+/* ── Body ── */
+#body{display:flex;flex:1;overflow:hidden;}
+
+/* ── Left: system grid ── */
+#systems{width:260px;min-width:260px;display:flex;flex-direction:column;
+  background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:10px;}
+.sys-hdr{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:6px 0 4px;}
+.sys-card{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:border-color .15s;}
+.sys-card:hover{border-color:var(--signal);}
+.sys-card.selected{border-color:var(--signal);}
+.sys-name{font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.sys-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);}
+.sys-dot.live{background:var(--signal);}
+.sys-dot.dead{background:var(--err);}
+.sys-urls{font-size:10px;color:var(--muted);}
+.sys-url{display:block;color:var(--teal);cursor:pointer;text-decoration:none;}
+.sys-url:hover{color:var(--signal);}
+.sys-stat{font-size:10px;color:var(--muted);margin-top:3px;}
+
+/* ── Center: channels map ── */
+#center{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;}
+.tab{padding:8px 14px;font-size:10px;cursor:pointer;color:var(--muted);
+  border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.06em;}
+.tab.active{color:var(--signal);border-bottom-color:var(--signal);}
+.pane{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.pane.active{display:flex;}
+.pane-body{flex:1;overflow-y:auto;padding:10px 14px;}
+
+/* ── Channels table ── */
+.ch-row{display:flex;gap:0;margin-bottom:3px;font-size:11px;align-items:stretch;}
+.ch-from{background:var(--bg3);border:1px solid var(--border);padding:4px 8px;
+  border-radius:3px 0 0 3px;color:var(--purple);min-width:120px;flex-shrink:0;}
+.ch-arrow{background:var(--bg4);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:4px 6px;color:var(--muted);flex-shrink:0;}
+.ch-to{background:var(--bg3);border:1px solid var(--border);border-left:none;padding:4px 8px;
+  border-radius:0 3px 3px 0;color:var(--teal);min-width:120px;flex-shrink:0;}
+.ch-desc{padding:4px 10px;color:var(--muted);flex:1;font-size:10px;display:flex;align-items:center;}
+.ch-active{border-left:3px solid var(--signal)!important;}
+
+/* ── Live stream ── */
+.log-row{display:flex;gap:8px;font-size:10px;padding:2px 0;border-bottom:1px solid rgba(34,34,40,.5);}
+.log-ts{color:var(--muted);width:72px;flex-shrink:0;}
+.log-sys{width:80px;flex-shrink:0;}
+.log-type{width:180px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.log-body{color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* ── API explorer ── */
+.api-section{margin-bottom:12px;}
+.api-sys{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;
+  padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.api-route{display:flex;gap:8px;padding:3px 6px;border-radius:2px;cursor:pointer;
+  font-size:11px;align-items:center;margin-bottom:2px;}
+.api-route:hover{background:var(--bg3);}
+.method{font-size:9px;font-weight:700;min-width:38px;text-align:center;padding:1px 0;border-radius:2px;}
+.GET{background:rgba(74,158,255,.12);color:var(--blue);}
+.POST{background:rgba(62,207,142,.12);color:var(--signal);}
+.PATCH{background:rgba(240,165,0,.12);color:var(--amber);}
+.DELETE{background:rgba(232,93,60,.12);color:var(--err);}
+.api-path{color:var(--text);flex:1;}
+.api-desc{color:var(--muted);font-size:10px;}
+
+/* ── CLI reference ── */
+.cli-group{margin-bottom:14px;}
+.cli-hdr{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;
+  padding:3px 0;border-bottom:1px solid var(--border);margin-bottom:5px;}
+.cli-cmd{font-size:11px;padding:3px 6px;color:var(--text);display:flex;gap:10px;align-items:baseline;}
+.cli-cmd:hover{background:var(--bg3);border-radius:2px;}
+.cli-name{color:var(--signal);min-width:240px;flex-shrink:0;}
+.cli-desc{color:var(--muted);font-size:10px;}
+</style></head>
+<body><div id="app">
+
+<div id="topbar">
+  <span class="logo">⬡ NEXUS</span>
+  <span style="font-size:11px;color:var(--muted)">orchestrator</span>
+  <span class="pill" id="sys-pill">checking…</span>
+  <div class="sp"></div>
+  <button class="btn" onclick="loadAll()">↺ refresh</button>
+  <button class="btn" onclick="document.getElementById('pane-stream').querySelector('button')?.click()">▶ stream</button>
+  <span style="font-size:10px;color:var(--muted)">:9000</span>
+</div>
+
+<div id="body">
+
+<!-- Systems sidebar -->
+<div id="systems">
+  <div class="sys-hdr">Systems</div>
+  <div id="sys-list"></div>
+  <div class="sys-hdr" style="margin-top:8px">Quick links</div>
+  <div style="font-size:11px">
+    <a class="sys-url" href="http://localhost:4242" target="_blank">Emerge IDE :4242</a>
+    <a class="sys-url" href="http://localhost:7820/cockpit" target="_blank">Cockpit :7820</a>
+    <a class="sys-url" href="http://localhost:3748/cortex" target="_blank">Cortex UI :3748</a>
+    <a class="sys-url" href="http://localhost:4800" target="_blank">Idearium :4800</a>
+    <a class="sys-url" href="http://localhost:9999/bridge/health" target="_blank">Bridge :9999</a>
+    <a class="sys-url" href="http://localhost:9000" target="_blank">Orchestrator :9000</a>
+  </div>
+</div>
+
+<!-- Center tabs -->
+<div id="center">
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('stream')">▶ Live Stream</div>
+    <div class="tab" onclick="showTab('channels')">⇄ Channels</div>
+    <div class="tab" onclick="showTab('api')">◉ API Map</div>
+    <div class="tab" onclick="showTab('cli')">$ CLI Reference</div>
+    <div class="tab" onclick="showTab('requests')">◈ Requests</div>
+  </div>
+
+  <!-- STREAM -->
+  <div class="pane active" id="pane-stream">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg2)">
+      <span style="font-size:10px;color:var(--muted)">channel</span>
+      <input id="stream-ch" value="*" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;font:inherit;font-size:10px;outline:none;border-radius:3px;width:160px">
+      <button class="btn" onclick="startStream()">connect</button>
+      <button class="btn" onclick="stopStream()" style="color:var(--err)">stop</button>
+      <span class="sp"></span>
+      <button class="btn" onclick="document.getElementById('stream-log').innerHTML=''">clear</button>
+      <span class="pill" id="stream-pill" style="font-size:9px">disconnected</span>
+    </div>
+    <div class="pane-body" style="padding:6px 10px" id="stream-log"></div>
+  </div>
+
+  <!-- CHANNELS -->
+  <div class="pane" id="pane-channels">
+    <div class="pane-body" id="channels-body"></div>
+  </div>
+
+  <!-- API MAP -->
+  <div class="pane" id="pane-api">
+    <div class="pane-body" id="api-body"></div>
+  </div>
+
+  <!-- CLI REFERENCE -->
+  <div class="pane" id="pane-cli">
+    <div class="pane-body" id="cli-body"></div>
+  </div>
+
+  <!-- REQUESTS -->
+  <div class="pane" id="pane-requests">
+    <div style="padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg2);display:flex;gap:6px">
+      <button class="btn" onclick="loadBridgeRequests('pending')">pending</button>
+      <button class="btn" onclick="loadBridgeRequests('accepted')">accepted</button>
+      <button class="btn" onclick="loadBridgeRequests('')">all</button>
+      <span class="sp"></span>
+      <button class="btn" onclick="purgeReqs()" style="color:var(--err)">purge</button>
+    </div>
+    <div class="pane-body" id="req-body"></div>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+const SYSTEMS = {
+  bridge:   { port:9999, label:'Bridge',   color:'#f0a500', health:'/bridge/health' },
+  cortex:   { port:3748, label:'Cortex',   color:'#2dd4bf', health:'/health' },
+  guardian: { port:7820, label:'Guardian', color:'#9b7fe8', health:'/health' },
+  idearium: { port:4800, label:'Idearium', color:'#4a9eff', health:'/' },
+  emerge:   { port:4242, label:'Emerge',   color:'#3ecf8e', health:'/status' },
+  orchestrator: { port:9000, label:'Orchestrator', color:'#3ecf8e', health:'/health' },
+};
+
+const CHANNELS = [
+  { from:'guardian', channel:'guardian.job.complete',    to:['cortex','bridge'],   desc:'Job finished — syncs to cortex, bridge memory.ingest' },
+  { from:'guardian', channel:'guardian.artifact',        to:['cortex','bridge'],   desc:'Code artifact received — stored and tagged' },
+  { from:'guardian', channel:'guardian.gaps',            to:['cortex'],            desc:'Gaps detected in AI output' },
+  { from:'guardian', channel:'guardian.ledger',          to:['jaa'],               desc:'Ledger entry written' },
+  { from:'guardian', channel:'guardian.session.named',   to:['jaa'],               desc:'Chat session named by agent' },
+  { from:'guardian', channel:'guardian.timeline',        to:['jaa'],               desc:'Timeline event recorded' },
+  { from:'guardian', channel:'guardian.job.queued',      to:['bridge'],            desc:'Job queued — waiting for provider' },
+  { from:'guardian', channel:'guardian.job.dispatched',  to:['bridge'],            desc:'Job dispatched to provider' },
+  { from:'cortex',   channel:'cortex.gap.found',         to:['guardian','bridge'], desc:'Gap detected — notifies guardian ledger' },
+  { from:'cortex',   channel:'cortex.gap.resolved',      to:['bridge'],            desc:'Gap resolved — broadcasts to all' },
+  { from:'idearium', channel:'idearium.idea.created',    to:['cortex','bridge'],   desc:'New idea — synced to cortex, tagged' },
+  { from:'idearium', channel:'idearium.snapshot.pushed', to:['cortex'],            desc:'Snapshot — triggers versionium commit' },
+  { from:'bridge',   channel:'bridge.request.created',   to:['all'],               desc:'New request in queue — broadcast' },
+  { from:'bridge',   channel:'bridge.request.accepted',  to:['all'],               desc:'Request accepted' },
+  { from:'bridge',   channel:'bridge.request.complete',  to:['all'],               desc:'Request complete' },
+  { from:'bridge',   channel:'bridge.request.expired',   to:['all'],               desc:'Stale request purged (30min TTL)' },
+  { from:'bridge',   channel:'bridge.handshake',         to:['audit'],             desc:'System handshake logged' },
+  { from:'alk',      channel:'alk.video.landmarks.face', to:['gcanvas'],           desc:'Face landmarks → CFR attractor positions' },
+  { from:'alk',      channel:'alk.behavior.cue.detected',to:['gcanvas','cortex'],  desc:'Behavioral signal → field delta' },
+];
+
+const API_MAP = {
+  bridge: [
+    {m:'POST',p:'/bridge/handshake',d:'Register system — get token'},
+    {m:'GET', p:'/bridge/health',d:'Health + session count'},
+    {m:'GET', p:'/bridge/stats',d:'Full statistics'},
+    {m:'GET', p:'/bridge/tags/:id',d:'Get tags for entity'},
+    {m:'POST',p:'/bridge/tags',d:'Tag an entity'},
+    {m:'GET', p:'/bridge/tags?tag=x',d:'Find entities by tag'},
+    {m:'GET', p:'/bridge/requests',d:'List requests (filter by status/from/to)'},
+    {m:'POST',p:'/bridge/requests',d:'Submit typed request'},
+    {m:'GET', p:'/bridge/requests/:uuid',d:'Get single request'},
+    {m:'POST',p:'/bridge/requests/:uuid/accept',d:'Accept pending request'},
+    {m:'POST',p:'/bridge/requests/:uuid/reject',d:'Reject with reason'},
+    {m:'POST',p:'/bridge/requests/:uuid/complete',d:'Mark complete + result'},
+    {m:'GET', p:'/bridge/subscribe?channel=x',d:'SSE subscription'},
+    {m:'GET', p:'/bridge/pull?channel=x&since=ts',d:'Pull buffered events'},
+    {m:'POST',p:'/bridge/broadcast',d:'Broadcast event to all subscribers'},
+    {m:'POST',p:'/bridge/forward',d:'Forward to specific system'},
+    {m:'POST',p:'/bridge/purge',d:'Expire stale pending requests'},
+  ],
+  cortex: [
+    {m:'GET', p:'/health',d:'System health + JAA counts'},
+    {m:'GET', p:'/sse',d:'Live event stream'},
+    {m:'GET', p:'/api/events?n=N',d:'Event log tail'},
+    {m:'POST',p:'/api/event',d:'Write event'},
+    {m:'GET', p:'/api/gaps',d:'Open gaps'},
+    {m:'GET', p:'/api/failures',d:'Failure log'},
+    {m:'GET', p:'/api/memory?table=x&n=N',d:'Read JAA table'},
+    {m:'POST',p:'/api/memory/search',d:'Semantic memory search'},
+    {m:'POST',p:'/api/memory/forget',d:'Forget memory entry'},
+    {m:'GET', p:'/api/files',d:'File store list'},
+    {m:'POST',p:'/api/files',d:'Upload file (multipart)'},
+    {m:'GET', p:'/api/tags?entityId=x',d:'Get entity tags'},
+    {m:'POST',p:'/api/tags',d:'Tag entity via cortex'},
+    {m:'GET', p:'/api/bridge/health',d:'Bridge health proxy'},
+    {m:'GET', p:'/api/bridge/requests',d:'Bridge requests proxy'},
+  ],
+  guardian: [
+    {m:'POST',p:'/command',d:'Dispatch job to provider'},
+    {m:'GET', p:'/status/:jobId',d:'Job status'},
+    {m:'GET', p:'/response/:jobId',d:'Job response'},
+    {m:'GET', p:'/stream/:jobId',d:'Job token stream (SSE)'},
+    {m:'GET', p:'/jobs?status=x',d:'List jobs'},
+    {m:'GET', p:'/providers',d:'Connected providers'},
+    {m:'GET', p:'/health',d:'Health + queued counts'},
+    {m:'GET', p:'/events',d:'Live SSE stream'},
+    {m:'GET', p:'/cockpit',d:'Cockpit control panel UI'},
+    {m:'GET', p:'/artifacts',d:'Stored artifacts'},
+    {m:'POST',p:'/artifacts',d:'Store artifact'},
+    {m:'GET', p:'/ledger',d:'Ledger entries'},
+    {m:'POST',p:'/ledger',d:'Write ledger entry'},
+    {m:'GET', p:'/log',d:'Guardian log'},
+  ],
+  idearium: [
+    {m:'GET', p:'/api/ideas',d:'List ideas'},
+    {m:'POST',p:'/api/ideas',d:'Create idea'},
+    {m:'GET', p:'/api/ideas/:uuid',d:'Get idea'},
+    {m:'PATCH',p:'/api/ideas/:uuid',d:'Update idea'},
+    {m:'POST',p:'/api/ideas/:uuid/tension',d:'Compute tension score'},
+    {m:'POST',p:'/api/ideas/:uuid/phase',d:'Set phase'},
+    {m:'POST',p:'/api/ideas/:uuid/link',d:'Link ideas'},
+    {m:'GET', p:'/api/specs',d:'List specs'},
+    {m:'POST',p:'/api/specs/:uuid/build',d:'Build spec'},
+    {m:'GET', p:'/api/gaps',d:'Open gaps'},
+    {m:'POST',p:'/api/gaps',d:'Open gap'},
+    {m:'GET', p:'/api/snr',d:'System SNR'},
+    {m:'POST',p:'/api/snapshots',d:'Push snapshot'},
+    {m:'GET', p:'/sse',d:'Live events'},
+  ],
+  orchestrator: [
+    {m:'GET', p:'/health',d:'All systems health'},
+    {m:'GET', p:'/api/status',d:'Full system status JSON'},
+    {m:'GET', p:'/api/channels',d:'Channel map'},
+    {m:'GET', p:'/api/api-map',d:'Full API surface'},
+    {m:'GET', p:'/api/cli',d:'CLI command reference'},
+    {m:'POST',p:'/api/dispatch',d:'Dispatch to any system'},
+    {m:'GET', p:'/sse',d:'Unified live stream (all systems)'},
+    {m:'GET', p:'/',d:'Orchestrator UI'},
+  ],
+};
+
+const CLI_CMDS = {
+  unified: [
+    {cmd:'nexus status',desc:'All systems health check'},
+    {cmd:'nexus dispatch "prompt"',desc:'Send to chatgpt (default)'},
+    {cmd:'nexus jobs',desc:'List recent guardian jobs'},
+    {cmd:'nexus events --n=20',desc:'Cortex event log tail'},
+    {cmd:'nexus gaps',desc:'All open gaps'},
+    {cmd:'nexus ideas',desc:'List idearium ideas'},
+    {cmd:'nexus idea "text"',desc:'Create idea'},
+    {cmd:'nexus push "message"',desc:'Snapshot + versionium commit'},
+    {cmd:'nexus snr',desc:'System SNR score'},
+    {cmd:'nexus stream',desc:'Live cortex SSE'},
+    {cmd:'nexus watch <jobId>',desc:'Stream guardian job tokens'},
+    {cmd:'nexus watchdog',desc:'Live dashboard all systems'},
+    {cmd:'nexus requests',desc:'Bridge request queue'},
+    {cmd:'nexus accept <uuid>',desc:'Accept bridge request'},
+    {cmd:'nexus reject <uuid>',desc:'Reject bridge request'},
+    {cmd:'nexus tag <id> --tags=x,y',desc:'Tag entity in bridge'},
+    {cmd:'nexus tags <id>',desc:'Get entity tags'},
+    {cmd:'nexus bridge health',desc:'Bridge health'},
+    {cmd:'nexus bridge find --tag=x',desc:'Find entities by tag'},
+    {cmd:'nexus cortex status',desc:'Cortex status + JAA counts'},
+    {cmd:'nexus cortex post --type=x',desc:'Write cortex event'},
+    {cmd:'nexus cortex memory <query>',desc:'Search memory'},
+    {cmd:'nexus guardian dispatch --prompt=x',desc:'Dispatch job'},
+    {cmd:'nexus guardian providers',desc:'Provider connection status'},
+  ],
+  passthrough: [
+    {cmd:'nexus /guardian --help',desc:'Guardian CLI full reference'},
+    {cmd:'nexus /guardian /code chatgpt "prompt"',desc:'Code command'},
+    {cmd:'nexus /guardian status',desc:'Guardian status'},
+    {cmd:'nexus /guardian jobs',desc:'Jobs list'},
+    {cmd:'nexus /cockpit pipeline list',desc:'Pipeline list'},
+    {cmd:'nexus /cockpit seam compile <file>',desc:'Compile SEAM file'},
+    {cmd:'nexus /cockpit forge gap create "title"',desc:'Create gap'},
+    {cmd:'nexus /cockpit jaa stats',desc:'JAA statistics'},
+    {cmd:'nexus /cortex ask "question"',desc:'Ask cortex'},
+    {cmd:'nexus /cortex gaps',desc:'Cortex gaps'},
+    {cmd:'nexus /cortex tail event_log 20',desc:'Tail event log'},
+    {cmd:'nexus /idearium idea add "text"',desc:'Add idea'},
+    {cmd:'nexus /idearium idea tension <uuid>',desc:'Compute tension'},
+    {cmd:'nexus /idearium spec new <uuid>',desc:'Create spec from idea'},
+    {cmd:'nexus /ollama status',desc:'Ollama model list'},
+    {cmd:'nexus /ollama pull qwen2.5-coder:7b',desc:'Pull model (streaming)'},
+    {cmd:'nexus /ollama run "prompt"',desc:'Run inference (streaming)'},
+    {cmd:'nexus /bridge health',desc:'Bridge health'},
+    {cmd:'nexus /bridge requests --status=pending',desc:'Pending requests'},
+    {cmd:'nexus /bridge subscribe guardian.job.*',desc:'Subscribe channel'},
+  ],
+};
+
+// ── Render channel map ─────────────────────────────────────────────────────────
+document.getElementById('channels-body').innerHTML =
+  '<div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">'+CHANNELS.length+' active channels</div>' +
+  CHANNELS.map(c => `
+    <div class="ch-row" id="ch-${c.channel.replace(/\./g,'-')}">
+      <div class="ch-from">${c.from}</div>
+      <div class="ch-arrow">→</div>
+      <div class="ch-to">${c.to.join(', ')}</div>
+      <div class="ch-desc">
+        <span style="color:var(--text);margin-right:8px">${c.channel}</span>
+        <span>${c.desc}</span>
+      </div>
+    </div>`).join('');
+
+// ── Render API map ─────────────────────────────────────────────────────────────
+document.getElementById('api-body').innerHTML = Object.entries(API_MAP).map(([sys,routes])=>`
+  <div class="api-section">
+    <div class="api-sys">${sys} — :${SYSTEMS[sys]?.port||'?'}</div>
+    ${routes.map(r=>`
+      <div class="api-route">
+        <span class="method ${r.m}">${r.m}</span>
+        <span class="api-path">${r.p}</span>
+        <span class="api-desc">${r.d}</span>
+      </div>`).join('')}
+  </div>`).join('');
+
+// ── Render CLI reference ───────────────────────────────────────────────────────
+document.getElementById('cli-body').innerHTML = `
+  <div class="cli-group">
+    <div class="cli-hdr">Unified commands (nexus &lt;cmd&gt;)</div>
+    ${CLI_CMDS.unified.map(c=>`
+      <div class="cli-cmd">
+        <span class="cli-name">${c.cmd}</span>
+        <span class="cli-desc">${c.desc}</span>
+      </div>`).join('')}
+  </div>
+  <div class="cli-group">
+    <div class="cli-hdr">Passthrough (nexus /module &lt;args&gt;)</div>
+    ${CLI_CMDS.passthrough.map(c=>`
+      <div class="cli-cmd">
+        <span class="cli-name">${c.cmd}</span>
+        <span class="cli-desc">${c.desc}</span>
+      </div>`).join('')}
+  </div>`;
+
+// ── System cards ───────────────────────────────────────────────────────────────
+async function loadAll() {
+  let online=0;
+  const cards = await Promise.all(Object.entries(SYSTEMS).map(async ([id,sys])=>{
+    const start=Date.now();
+    let d={},alive=false;
+    try{const r=await fetch('http://localhost:'+sys.port+sys.health,{signal:AbortSignal.timeout(2000)});d=await r.json();alive=true;online++;}catch(_){}
+    const ms=Date.now()-start;
+    let extra='';
+    if(alive&&id==='cortex') { const n=Object.values(d.jaa?.counts||{}).reduce((a,b)=>a+b,0); extra=`<div class="sys-stat">${n} records · 28 tables</div>`; }
+    if(alive&&id==='guardian') {
+      const conn=Object.entries(d.providers||{}).filter(([,v])=>v==='connected').map(([k])=>k);
+      const q=Object.values(d.queued||{}).reduce((a,b)=>a+b,0);
+      extra=`<div class="sys-stat">${conn.length?'providers: '+conn.join(', '):'no providers connected'}${q?'  ·  '+q+' queued':''}</div>`;
+    }
+    if(alive&&id==='bridge') { extra=`<div class="sys-stat">${d.sessions||0} sessions · ${d.pendingRequests||0} pending</div>`; }
+    if(alive&&id==='ollama') { const models=(d.models||[]).map(m=>m.name).join(', '); extra=`<div class="sys-stat">${models||'no models'}</div>`; }
+    return `<div class="sys-card" id="sc-${id}" onclick="selectSystem('${id}')">
+      <div class="sys-name" style="color:${sys.color}">
+        <div class="sys-dot ${alive?'live':'dead'}"></div>${sys.label}
+        <span style="color:var(--muted);font-size:10px;margin-left:auto">${alive?ms+'ms':'offline'}</span>
+      </div>
+      <a class="sys-url" href="http://localhost:${sys.port}" target="_blank">localhost:${sys.port}</a>
+      ${extra}
+    </div>`;
+  }));
+  document.getElementById('sys-list').innerHTML=cards.join('');
+  document.getElementById('sys-pill').textContent=online+'/'+Object.keys(SYSTEMS).length+' online';
+  document.getElementById('sys-pill').className='pill '+(online===Object.keys(SYSTEMS).length?'ok':online>0?'warn':'err');
+}
+
+function selectSystem(id) {
+  document.querySelectorAll('.sys-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('sc-'+id)?.classList.add('selected');
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(id==='requests') loadBridgeRequests('pending');
+}
+
+// ── Live stream (bridge subscribe *) ──────────────────────────────────────────
+let sse=null;
+function startStream() {
+  if(sse){sse.close();sse=null;}
+  const ch=document.getElementById('stream-ch').value||'*';
+  try {
+    sse=new EventSource('http://localhost:9999/bridge/subscribe?channel='+encodeURIComponent(ch));
+    sse.onopen=()=>{ document.getElementById('stream-pill').textContent='● connected'; document.getElementById('stream-pill').className='pill ok'; };
+    sse.onerror=()=>{ document.getElementById('stream-pill').textContent='✗ disconnected'; document.getElementById('stream-pill').className='pill err'; };
+    sse.onmessage=e=>{
+      try{
+        const d=JSON.parse(e.data);
+        const log=document.getElementById('stream-log');
+        const row=document.createElement('div'); row.className='log-row';
+        const sys=d.type?.split('.')?.[0]||'bridge';
+        const sysColor=SYSTEMS[sys]?.color||'#4a4a5a';
+        row.innerHTML=`<span class="log-ts">${new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8)}</span>
+          <span class="log-sys" style="color:${sysColor}">${sys}</span>
+          <span class="log-type" style="color:var(--text)">${d.type||'event'}</span>
+          <span class="log-body">${JSON.stringify(d).slice(0,100)}</span>`;
+        log.prepend(row);
+        if(log.children.length>300) log.lastChild.remove();
+        // Pulse matching channel row
+        const chEl=document.getElementById('ch-'+((d.type||'').replace(/\./g,'-')));
+        if(chEl){chEl.classList.add('ch-active');setTimeout(()=>chEl.classList.remove('ch-active'),800);}
+      }catch(_){}
+    };
+  } catch(e) { document.getElementById('stream-pill').textContent='bridge offline'; }
+}
+function stopStream(){if(sse){sse.close();sse=null;document.getElementById('stream-pill').textContent='disconnected';document.getElementById('stream-pill').className='pill';}}
+
+// ── Requests ──────────────────────────────────────────────────────────────────
+async function loadBridgeRequests(status='') {
+  try{
+    const d=await (await fetch('http://localhost:9999/bridge/requests'+(status?'?status='+status:''))).json();
+    const list=[...(d.requests||[])].reverse().slice(0,30);
+    document.getElementById('req-body').innerHTML=list.map(r=>`
+      <div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${r.status==='pending'?'var(--warn)':r.status==='complete'?'var(--signal)':'var(--err)'};border-radius:3px;padding:7px 10px;margin-bottom:5px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="color:var(--text);font-size:11px">${r.type}</span>
+          <span style="font-size:9px;padding:1px 5px;border-radius:2px;background:var(--bg4);color:${r.status==='pending'?'var(--warn)':r.status==='complete'?'var(--signal)':'var(--err)'}">${r.status}</span>
+          <span style="color:var(--muted);font-size:9px;margin-left:auto">${r.uuid?.slice(0,8)}</span>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px">${r.from} → ${r.to}</div>
+        ${r.status==='pending'?`<div style="display:flex;gap:4px;margin-top:5px">
+          <button class="btn" onclick="actReq('${r.uuid}','accept')" style="font-size:9px;color:var(--signal)">accept</button>
+          <button class="btn" onclick="actReq('${r.uuid}','reject')" style="font-size:9px;color:var(--err)">reject</button>
+        </div>`:''}
+      </div>`).join('')||'<div style="color:var(--muted)">no requests</div>';
+  }catch(e){document.getElementById('req-body').innerHTML='<div style="color:var(--err)">bridge offline</div>';}
+}
+
+async function actReq(uuid,action) {
+  try{await fetch('http://localhost:9999/bridge/requests/'+uuid+'/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({by:'orchestrator-ui'})});}catch(_){}
+  loadBridgeRequests();
+}
+async function purgeReqs() {
+  try{await fetch('http://localhost:9999/bridge/purge',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});}catch(_){}
+  loadBridgeRequests('pending');
+}
+
+// Boot
+loadAll();
+setInterval(loadAll,15000);
+startStream();
+</script></body></html>

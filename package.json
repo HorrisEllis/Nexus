@@ -14,9 +14,11 @@
     "test": "node tests/kernel.test.js",
     "test:watch": "node --watch tests/kernel.test.js",
     "bridge": "node bridge/nexus-bridge.js",
-    "start:core": "npm run bridge & npm run cortex & npm run guardian",
+    "start:core": "npm run bridge & npm run cortex & npm run guardian & npm run orchestrator",
     "nexus": "node cli/nexus.js",
-    "install_check": "node -e \"require(\"ws\"); console.log(\"deps ok\")\""
+    "install_check": "node -e \"require(\"ws\"); console.log(\"deps ok\")\"",
+    "orchestrator": "node orchestrator.js",
+    "start:all": "npm run bridge & npm run cortex & npm run guardian & npm run idearium & npm run emerge & npm run orchestrator"
   },
   "engines": {
     "node": ">=18"
