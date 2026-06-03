@@ -32,6 +32,14 @@ const tls        = require('tls');
 // See lib/ncp.js for protocol spec.
 const { createNCPServer }    = require('../lib/ncp');
 const { createEventLedger } = require('../lib/event-ledger');
+const { Detector }          = require('./lib/detector');
+const GapHunter             = require('./lib/gap-hunter');
+const { SEAMQueue, STATE }  = require('./lib/seam-queue');
+const { parseSpec, parseSpecFile, extractPrerequisite } = require('./lib/spec-parser');
+
+// Active SEAM queues — keyed by queueId
+// §LAW II — queue state persisted to JAA, this is a performance index only
+const _activeQueues = new Map();
 const { randomUUID } = require('crypto');
 const fs         = require('fs');
 const path       = require('path');
@@ -311,13 +319,62 @@ function _handleNCPMessage(msg) {
     case 'NCP_COMPLETE': {
       if (jobId) {
         const finalText = text || content || '';
-        updateJob(jobId, { status: 'complete', response: finalText, completedAt: Date.now() });
+        const job = jobs.get(jobId);
+
+        // §LAW II — write artifact files to disk before JAA insert
+        // Chunks and synthesized output written as real files
+        const codeBlocks = extractCodeBlocks(finalText, provider || 'ai');
+        if (codeBlocks.length > 0) {
+          const outDir = require('path').join(
+            __dirname, '..', 'data', 'output',
+            new Date().toISOString().slice(0, 10),
+            jobId.slice(0, 8)
+          );
+          require('fs').mkdirSync(outDir, { recursive: true });
+          for (const block of codeBlocks) {
+            const filepath = require('path').join(outDir, block.filename);
+            require('fs').writeFileSync(filepath, block.content, 'utf8');
+          }
+          bus.emit('guardian.artifacts.written', {
+            jobId, outDir, count: codeBlocks.length,
+            files: codeBlocks.map(b => b.filename),
+          });
+        }
+
+        // Server-side gap analysis — §LAW II: write before acting
+        const gaps = GapHunter.analyze(finalText);
+        const gapDrift = GapHunter.drift(gaps);
+        if (gaps.length > 0) {
+          for (const g of gaps) {
+            jaa.insert('gaps', { uuid: require('crypto').randomUUID(),
+              jobId, provider, type: g.type, domain: g.domain,
+              reason: g.reason, description: g.description,
+              score: g.score, evidence: g.evidence, ts: Date.now() });
+          }
+          bus.emit('guardian.gaps', { jobId, gaps, drift: gapDrift, provider });
+        }
+
+        // Server-side detector — only if we have a SEAM chunk to compare against
+        let detection = null;
+        if (job?.seam_chunk_content) {
+          const profile = Detector.profile(job.seam_chunk_content);
+          detection = Detector.evaluate(finalText, job.seam_chunk_content, profile, job.axioms || []);
+          bus.emit('guardian.detection', { jobId, ...detection });
+        }
+
+        updateJob(jobId, {
+          status: 'complete', response: finalText, completedAt: Date.now(),
+          gaps: gaps.length, gapDrift, detection,
+        });
         jaa.insert('artifacts', {
           uuid: require('crypto').randomUUID(), jobId, provider: provider || 'unknown',
           content: finalText.slice(0, 10000), ts: Date.now(), chatUrl, account,
+          gaps: gaps.length, gapDrift,
         });
-        bus.emit('guardian.job.complete', { jobId, provider, chars: finalText.length });
-        cockpitBroadcast({ type: 'job.complete', jobId, provider, chars: finalText.length, ts: Date.now() });
+        bus.emit('guardian.job.complete', { jobId, provider, chars: finalText.length,
+          gaps: gaps.length, gapDrift });
+        cockpitBroadcast({ type: 'job.complete', jobId, provider,
+          chars: finalText.length, gaps: gaps.length, gapDrift, ts: Date.now() });
       }
       break;
     }
@@ -380,6 +437,16 @@ function flushQueuedJobs(provider) {
   const queued = pendingQueue.get(provider) || [];
   if (!queued.length) return;
   pendingQueue.delete(provider);
+  // Start any pending SEAM queues for this provider
+  const seamItems = queued.filter(j => j._seamQueue);
+  const jobItems  = queued.filter(j => !j._seamQueue);
+  for (const item of seamItems) {
+    _activeQueues.set(item._seamQueue.uuid, item._seamQueue);
+    item._seamQueue.start();
+  }
+  // Re-add regular jobs
+  if (jobItems.length) pendingQueue.set(provider, jobItems);
+  const remaining = jobItems;
   console.log(`[guardian] flushing ${queued.length} queued jobs → ${provider}`);
   for (const job of queued) {
     const fresh = jobs.get(job.id);
@@ -1614,6 +1681,12 @@ bus.emit = function(type, data) {
 
 const STORE_DIR = process.env.MEMORY_STORE_DIR || path.join(__dirname, 'memory_store');
 const jaa = new JaaStore(STORE_DIR);
+// Ensure guardian-specific tables exist on first run
+['seam_sessions','queue_compartments','pa_sessions','jobs','artifacts',
+ 'gaps','failures','ledger','downloads','sessions','timeline_events',
+ 'ledger_entries'].forEach(t => {
+  try { jaa._ensureTable?.(t); } catch(_) {}
+});
 
 // Shutdown hook — flush all dirty tables before exit
 process.on('exit', () => jaa.flushAll());
@@ -1848,6 +1921,18 @@ function handleExtendedRoutes(req, res, url, method) {
     res.writeHead(200,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
     res.end(require('fs').readFileSync(cp,'utf8')); return true;
   }
+  // ── SEAM queue status ──────────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/seam/queues') {
+    const queues = [..._activeQueues.values()].map(q => q.toJSON());
+    pRes(res, 200, { ok:true, active: queues.length, queues }); return true;
+  }
+  if (method==='GET' && url.pathname.startsWith('/seam/queues/')) {
+    const qid = url.pathname.split('/')[3];
+    const q   = _activeQueues.get(qid);
+    if (!q) { pRes(res, 404, { ok:false, error:'queue not found' }); return true; }
+    pRes(res, 200, { ok:true, queue: q.toJSON() }); return true;
+  }
+
   if (method==='GET' && url.pathname==='/providers') {
     const connected = ncp.getProviders();
     const out = { claude:'null', chatgpt:'null', gemini:'null', ollama:'null' };
@@ -1867,6 +1952,279 @@ function handleExtendedRoutes(req, res, url, method) {
   if (method==='POST' && url.pathname==='/heartbeat') {
     ncp.handleHeartbeat(req, res, bodyJ); return true;
   }
+  // ── SEAM session endpoints ─────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/seam/sessions') {
+    const sessions = jaa.all('seam_sessions') || [];
+    pRes(res, 200, { ok:true, sessions }); return true;
+  }
+  if (method==='POST' && url.pathname==='/seam/sessions') {
+    bodyJ(req).then(body => {
+      const session = jaa.insert('seam_sessions', {
+        uuid: require('crypto').randomUUID(),
+        title: body.title || 'Untitled', specTitle: body.specTitle || '',
+        chunks: body.chunks || [], activeChunk: 0,
+        provider: body.provider || 'claude',
+        status: 'active', createdAt: Date.now(),
+      });
+      pRes(res, 200, { ok:true, session });
+    }).catch(e => pRes(res, 500, { ok:false, error:e.message }));
+    return true;
+  }
+  if (method==='PUT' && url.pathname.startsWith('/seam/sessions/')) {
+    const sid = url.pathname.split('/')[3];
+    bodyJ(req).then(body => {
+      const existing = jaa.get('seam_sessions', { uuid: sid });
+      if (!existing) { pRes(res, 404, { ok:false, error:'session not found' }); return; }
+      const updated = jaa.update('seam_sessions', { uuid: sid }, { ...body, updatedAt: Date.now() });
+      bus.emit('guardian.seam.updated', { sessionId: sid, ...body });
+      pRes(res, 200, { ok:true, session: updated });
+    }).catch(e => pRes(res, 500, { ok:false, error:e.message }));
+    return true;
+  }
+
+  // ── Queue state endpoints ────────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/queue/compartments') {
+    const queueId = url.searchParams.get('queueId');
+    const comps = (jaa.all('queue_compartments') || []).filter(c => !queueId || c.queueId === queueId).slice(0,100);
+    pRes(res, 200, { ok:true, compartments: comps }); return true;
+  }
+  if (method==='POST' && url.pathname==='/queue/compartments') {
+    bodyJ(req).then(body => {
+      const comp = jaa.insert('queue_compartments', {
+        uuid: body.id || require('crypto').randomUUID(),
+        queueId: body.queueId, chunkIdx: body.chunkIdx,
+        chunkTitle: body.chunkTitle, state: body.state || 'QUEUED',
+        provider: body.provider, retries: body.retries || 0,
+        detection: body.detection || null, ts: Date.now(),
+      });
+      bus.emit('guardian.queue.compartment', { ...comp });
+      pRes(res, 200, { ok:true, compartment: comp });
+    }).catch(e => pRes(res, 500, { ok:false, error:e.message }));
+    return true;
+  }
+  if (method==='PUT' && url.pathname.startsWith('/queue/compartments/')) {
+    const cid = url.pathname.split('/')[3];
+    bodyJ(req).then(body => {
+      const updated = jaa.update('queue_compartments', { uuid: cid }, { ...body, updatedAt: Date.now() });
+      if (updated) {
+        bus.emit('guardian.queue.compartment.updated', { uuid: cid, ...body });
+        pRes(res, 200, { ok:true, compartment: updated });
+      } else {
+        // Not found — insert new
+        const comp = jaa.insert('queue_compartments', { uuid: cid, ...body, ts: Date.now() });
+        pRes(res, 200, { ok:true, compartment: comp });
+      }
+    }).catch(e => pRes(res, 500, { ok:false, error:e.message }));
+    return true;
+  }
+
+  // ── Settings ────────────────────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/settings') {
+    const settings = jaa.all('settings') || [];
+    const out = {};
+    for (const s of settings) if (s.key) out[s.key] = s.value;
+    pRes(res, 200, { ok:true, settings: out }); return true;
+  }
+  if (method==='PUT' && url.pathname.startsWith('/settings/')) {
+    const key = decodeURIComponent(url.pathname.slice(10));
+    bodyJ(req).then(body => {
+      const existing = (jaa.all('settings') || []).filter(s => s.key === key);
+      if (existing.length) jaa.update('settings', { uuid: existing[0].uuid }, { value: body.value });
+      else jaa.insert('settings', { uuid: require('crypto').randomUUID(), key, value: body.value });
+      pRes(res, 200, { ok:true, key, value: body.value });
+    }).catch(e => pRes(res, 500, { ok:false, error:e.message }));
+    return true;
+  }
+  if (method==='POST' && url.pathname==='/settings/reset') {
+    // Reset all settings to default — clear the settings table
+    jaa.query('settings', () => true, 1000).forEach(s =>
+      jaa.update('settings', s.uuid, { value: null })
+    );
+    pRes(res, 200, { ok:true }); return true;
+  }
+
+  // ── Artifacts (paginated) ────────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/artifacts') {
+    const limit = parseInt(url.searchParams.get('limit')||'100');
+    const artifacts = jaa.all('artifacts') || [];
+    pRes(res, 200, { ok:true, artifacts }); return true;
+  }
+
+  // ── Gaps ────────────────────────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/gaps') {
+    const limit = parseInt(url.searchParams.get('limit')||'200');
+    const status = url.searchParams.get('status');
+    let gaps = (jaa.all('gaps') || []).slice(0, limit);
+    if (status) gaps = gaps.filter(g => g.status === status);
+    pRes(res, 200, { ok:true, gaps }); return true;
+  }
+  if (method==='GET' && url.pathname==='/gaps/summary') {
+    const gaps = jaa.query('gaps', () => true, 1000);
+    const byType = {};
+    for (const g of gaps) byType[g.type] = (byType[g.type] || 0) + 1;
+    const drift = gaps.length > 0
+      ? gaps.reduce((s,g) => s + (g.score||0), 0) / gaps.length : 0;
+    pRes(res, 200, { ok:true, total: gaps.length, byType,
+      drift: parseFloat(drift.toFixed(3)) }); return true;
+  }
+
+  // ── Sessions (chat sessions) ────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/sessions') {
+    const limit = parseInt(url.searchParams.get('limit')||'50');
+    const sessions = jaa.query('sessions', () => true, limit);
+    pRes(res, 200, { ok:true, sessions }); return true;
+  }
+  if (method==='POST' && /^\/sessions\/[^/]+\/name$/.test(url.pathname)) {
+    const chatId = url.pathname.split('/')[2];
+    bodyJ(req).then(body => {
+      const { name, account, provider, chatUrl } = body;
+      // Update or insert session record
+      const existing = jaa.query('sessions', s => s.chatId === chatId, 1);
+      if (existing.length) {
+        jaa.update('sessions', existing[0].uuid, { name, updatedAt: Date.now() });
+      } else {
+        jaa.insert('sessions', {
+          uuid: require('crypto').randomUUID(),
+          chatId, name, account, provider, chatUrl,
+          createdAt: Date.now(),
+        });
+      }
+      bus.emit('guardian.session.named', { chatId, name });
+      // Also broadcast via NCP so Forge Brain updates
+      ncp.broadcast({ type:'GUARDIAN_SESSION_NAMED', chatId, sessionName: name });
+      pRes(res, 200, { ok:true, chatId, name });
+    }).catch(e => pRes(res, 500, { ok:false, error:e.message }));
+    return true;
+  }
+
+  // ── Queue progress (from userscript QueueCompartment) ───────────────────────
+  if (method==='POST' && /^\/api\/queue\/[^/]+\/progress$/.test(url.pathname)) {
+    const queueId = url.pathname.split('/')[3];
+    bodyJ(req).then(body => {
+      // Upsert queue compartment state
+      if (body.compartment) {
+        const comp = body.compartment;
+        const existing = jaa.query('queue_compartments', c =>
+          c.queueId === queueId && c.chunkIdx === comp.chunkIdx, 1);
+        if (existing.length) {
+          jaa.update('queue_compartments', existing[0].uuid, {
+            state: comp.state, retries: comp.retries,
+            composite: comp.composite, failureCount: comp.failureCount,
+            updatedAt: Date.now(),
+          });
+        } else {
+          jaa.insert('queue_compartments', {
+            uuid: comp.id || require('crypto').randomUUID(),
+            queueId, chunkIdx: comp.chunkIdx,
+            chunkTitle: comp.chunkTitle, state: comp.state,
+            retries: comp.retries || 0, composite: comp.composite,
+            failureCount: comp.failureCount || 0, ts: Date.now(),
+          });
+        }
+      }
+      bus.emit('guardian.queue.progress', { queueId, ...body });
+      pRes(res, 200, { ok:true });
+    }).catch(e => pRes(res, 500, { ok:false, error:e.message }));
+    return true;
+  }
+
+  // ── POST /command — dispatch a job (raw) or SEAM queue (with spec) ──────────
+  if (method==='POST' && url.pathname==='/command') {
+    bodyJ(req).then(async body => {
+
+      // ── SEAM queue via .spec ────────────────────────────────────────────────
+      if (body.spec || body.specText || body.specFile) {
+        try {
+          const specText = body.specText
+            || (body.specFile ? require('fs').readFileSync(body.specFile, 'utf8') : null)
+            || body.spec;
+          if (!specText) throw new Error('spec content empty');
+
+          const plan = parseSpec(specText, {
+            splitOn:      body.splitOn      || 'heading',
+            maxChunkSize: body.maxChunkSize || 3000,
+          });
+
+          const provider = body.provider || 'chatgpt';
+
+          // §LAW II — SEAMQueue constructor writes seam_session to JAA
+          const queue = new SEAMQueue({
+            title:    plan.meta.name || body.title || 'Untitled Spec',
+            provider,
+            chunks: [
+              // Chunk 0: prerequisite — INTAKE, no implementation yet
+              {
+                title:       '§ Prerequisites',
+                content:     plan.prerequisiteBlock,
+                builtPrompt: plan.prerequisiteBlock,
+                axioms:      [],
+              },
+              // Chunks 1..N: actual spec content with SEAM contracts
+              ...plan.chunks.map(c => ({
+                title:       c.title,
+                content:     c.content,
+                builtPrompt: c.builtPrompt,
+                axioms:      plan.axioms,
+              })),
+            ],
+            jaa,
+            busEmit: (type, data) => {
+              bus.emit(type, data);
+              _evLedger?.record(type, data, { source: 'seam-queue' });
+            },
+            ncpPush: (prov, data) => ncp.push(prov, data),
+            onComplete: (stats) => {
+              _activeQueues.delete(queue.uuid);
+              bus.emit('guardian.seam.queue.complete', { queueId: queue.uuid, ...stats });
+            },
+          });
+
+          _activeQueues.set(queue.uuid, queue);
+
+          if (ncp.isConnected(provider)) {
+            queue.start();
+          } else {
+            // Queue waits — will start when provider connects via NCP
+            const pq = pendingQueue.get(provider) || [];
+            pq.push({ _seamQueue: queue });
+            pendingQueue.set(provider, pq);
+          }
+
+          pRes(res, 200, {
+            ok: true, type: 'seam',
+            queueId:  queue.uuid,
+            title:    queue.title,
+            provider,
+            total:    plan.totalChunks + 1,
+            meta:     plan.meta,
+            status:   ncp.isConnected(provider) ? 'dispatching' : 'queued_waiting_for_provider',
+          });
+        } catch (e) {
+          pRes(res, 400, { ok:false, error: 'spec parse failed: ' + e.message });
+        }
+        return;
+      }
+
+      // ── Raw job dispatch ────────────────────────────────────────────────────
+      const parsed = parseCommand(body.raw);
+      const provider = body.provider || parsed.provider || 'chatgpt';
+      const command  = body.command  || parsed.command  || 'code';
+      const prompt   = body.prompt   || parsed.prompt   || '';
+      const content  = body.content  || '';
+
+      if (!prompt && !content) {
+        pRes(res, 400, { ok:false, error:'prompt required' }); return;
+      }
+
+      // §LAW II — createJob writes to JAA
+      const job = createJob({ command, provider, prompt, content });
+      dispatchJob(job);
+      pRes(res, 200, { ok:true, jobId: job.id, status: job.status, provider });
+
+    }).catch(e => pRes(res, 400, { ok:false, error: e.message }));
+    return true;
+  }
+
   if (method==='GET' && (url.pathname==='/jobs'||url.pathname==='/jobs/')) {
     const limit = parseInt(url.searchParams.get('limit')||'50');
     const status = url.searchParams.get('status');

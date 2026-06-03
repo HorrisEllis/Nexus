@@ -530,231 +530,118 @@ select.fi option{background:var(--surface);}
 
   <!-- PANEL 5: BRAIN -->
   <div class="panel" id="panel-brain">
-    <div class="brain-left">
-      <div class="brain-sec">
-        <div class="brain-sec-hdr">JAA Store</div>
-        <div id="brain-jaa-stats"><div class="empty" style="height:60px;"><div class="empty-sub">No data</div></div></div>
-      </div>
-      <div class="brain-sec">
-        <div class="brain-sec-hdr">Trust (Beta Distribution)</div>
-        <div id="brain-trust-list" style="max-height:200px;overflow-y:auto;font-size:9px;"></div>
-      </div>
-      <div class="brain-sec">
-        <div class="brain-sec-hdr">Connections</div>
-        <div class="brain-stat"><span>Idearium :4800</span><span class="brain-stat-val" id="brain-idearium-st">—</span></div>
-        <div class="brain-stat"><span>Guardian :7820</span><span class="brain-stat-val" id="brain-guardian-st">—</span></div>
-        <div class="brain-stat"><span>Cortex :3748</span><span class="brain-stat-val" id="brain-nexus-st">—</span></div>
-      </div>
-    </div>
-    <div class="brain-main">
-      <!-- CFR Constraint Field canvas -->
-      <div style="position:relative;flex:1;overflow:hidden;background:#000;min-height:0;">
-        <canvas id="cfr-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
-        <div id="cfr-overlay" style="position:absolute;top:8px;left:10px;font-size:9px;color:rgba(62,207,142,.5);letter-spacing:.08em;pointer-events:none;"></div>
-        <div id="cfr-attractors-legend" style="position:absolute;bottom:8px;left:10px;font-size:9px;color:rgba(255,255,255,.3);pointer-events:none;"></div>
-      </div>
-      <!-- Query bar below canvas -->
-      <div style="padding:8px 10px;border-top:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center;">
-        <input class="fi" id="brain-q-input" placeholder="search memory / idearium…" style="flex:1;">
-        <button class="btn primary" id="brain-q-btn">query</button>
-        <button class="btn" id="brain-refresh-btn">↺</button>
-      </div>
-      <div class="brain-results" id="brain-results" style="max-height:120px;"></div>
-    </div>
-    <div class="brain-right">
-      <div class="brain-sec" style="flex:0 0 auto;">
-        <div class="brain-sec-hdr">SISO Bus Events</div>
-        <div id="brain-events" style="max-height:220px;overflow-y:auto;"></div>
-      </div>
-      <div class="brain-sec" style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
-        <div class="brain-sec-hdr">Open Gaps</div>
-        <div id="brain-gaps-list" style="flex:1;overflow-y:auto;font-size:9px;"></div>
-      </div>
-    </div>
-  </div>
-</div>
+    <!-- Brain: 3-column layout: JAA tables | Live feed | System map -->
+    <div class="brain-left" style="overflow-y:auto">
 
-<!-- CLI Drawer -->
-<div class="cli-drawer" id="cli-drawer">
-  <div class="cli-hdr">
-    <span class="cli-hdr-title">Forge CLI</span>
-        <div class="cli-sources">
-      <button class="cli-src-btn active" data-src="forge">forge</button>
-      <button class="cli-src-btn" data-src="idearium">idearium</button>
-      <button class="cli-src-btn" data-src="guardian">guardian</button>
-      <button class="cli-src-btn" data-src="vortex">vortex</button>
-      <button class="cli-src-btn" data-src="cortex">cortex</button>
-    </div>
-    <span class="cli-hint-txt" id="cli-hint">help</span>
-
-    <button class="cli-close" id="cli-close">✕</button>
-  </div>
-  <div class="cli-out" id="cli-out"></div>
-  <div class="cli-input-row">
-    <span class="cli-prompt" id="cli-prompt-label">forge›</span>
-    <input class="cli-input" id="cli-input" placeholder="pipeline list | seam compile 'make x=1' | idea create 'title' | gap list | jaa stats ..." autocomplete="off" spellcheck="false">
-  </div>
-</div>
-<!-- FORGE PANEL -->
-<div class="panel" id="panel-forge">
-  <div class="ph"><span class="pt">⚙ Forge — AI Self-Modification</span>
-    <span style="font-size:9px;color:var(--muted);margin-left:auto">guardian 7820 → ollama 11434</span></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;flex:1;overflow:hidden">
-    <div style="display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden">
-      <div class="pb" style="flex:1;overflow-y:auto">
-        <select id="forge-type" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 8px;font:inherit;font-size:11px;margin-bottom:8px;outline:none">
-          <option value="module">forgeModule — rewrite component</option>
-          <option value="gate">forgeGate — new SISO gate</option>
-          <option value="patch">forgePatch — targeted fix</option>
-          <option value="hook">forgeHook — inject hook</option>
-        </select>
-        <div style="font-size:9px;color:var(--muted);margin-bottom:3px">source</div>
-        <textarea id="forge-src" placeholder="paste source to modify…" style="width:100%;height:120px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font:11px/1.6 var(--mono);resize:none;outline:none;display:block;margin-bottom:8px"></textarea>
-        <div style="font-size:9px;color:var(--muted);margin-bottom:3px">instruction</div>
-        <textarea id="forge-instruction" placeholder="what should change?" style="width:100%;height:70px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font:11px/1.6 var(--mono);resize:none;outline:none;display:block;margin-bottom:8px"></textarea>
-        <button onclick="runForge()" style="width:100%;background:var(--amber);border:none;color:#000;padding:7px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">▶ run forge</button>
-        <div id="forge-status" style="font-size:10px;color:var(--muted);margin-top:6px">idle</div>
+      <!-- Memory Modules -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">Memory Modules</div>
+        <div id="brain-modules">
+          <div class="brain-stat"><span>crystals</span><span class="brain-stat-val" id="bm-crystals">—</span></div>
+          <div class="brain-stat"><span>bep_patterns</span><span class="brain-stat-val" id="bm-bep">—</span></div>
+          <div class="brain-stat"><span>memory_index</span><span class="brain-stat-val" id="bm-memory">—</span></div>
+          <div class="brain-stat"><span>cortex_memory</span><span class="brain-stat-val" id="bm-cortex">—</span></div>
+          <div class="brain-stat"><span>intent_nodes</span><span class="brain-stat-val" id="bm-intent">—</span></div>
+          <div class="brain-stat"><span>agent_calls</span><span class="brain-stat-val" id="bm-agent">—</span></div>
+          <div class="brain-stat"><span>artifacts</span><span class="brain-stat-val" id="bm-artifacts">—</span></div>
+          <div class="brain-stat"><span>gaps</span><span class="brain-stat-val" id="bm-gaps">—</span></div>
+        </div>
       </div>
+
+      <!-- Cortex Tables (all 41) -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">Cortex Tables <span id="brain-table-count" style="color:var(--amber)">0/41</span></div>
+        <div id="brain-tables" style="font-size:9px;color:var(--muted);line-height:1.8"></div>
+      </div>
+
+      <!-- Guardian Provider Channels -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">NCP Channels</div>
+        <div id="brain-providers" style="font-size:9px"></div>
+      </div>
+
+      <!-- Heartbeat / BPM -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">Heartbeat (BPM)</div>
+        <div id="brain-bpm" style="font-size:9px">
+          <div class="brain-stat"><span>orchestrator</span><span class="brain-stat-val" id="bpm-orch">—</span></div>
+          <div class="brain-stat"><span>bridge</span><span class="brain-stat-val" id="bpm-bridge">—</span></div>
+          <div class="brain-stat"><span>cortex</span><span class="brain-stat-val" id="bpm-cortex">—</span></div>
+          <div class="brain-stat"><span>guardian</span><span class="brain-stat-val" id="bpm-guardian">—</span></div>
+          <div class="brain-stat"><span>idearium</span><span class="brain-stat-val" id="bpm-idearium">—</span></div>
+        </div>
+      </div>
+
     </div>
-    <div style="display:flex;flex-direction:column;overflow:hidden">
-      <div class="pb" style="flex:1;overflow-y:auto">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:9px;color:var(--muted);text-transform:uppercase">output</span>
-          <div style="display:flex;gap:4px">
-            <button onclick="navigator.clipboard.writeText(document.getElementById('forge-output').textContent)" style="background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:10px;cursor:pointer">⎘</button>
-            <button onclick="document.getElementById('forge-output').textContent='';document.getElementById('forge-status').textContent='idle'" style="background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:10px;cursor:pointer">✕</button>
+
+    <!-- Centre: Live event feed -->
+    <div class="brain-main" style="flex-direction:column">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700">Live Bus</span>
+        <span id="brain-bus-count" style="font-size:9px;color:var(--amber)">0 events</span>
+        <button onclick="brainClearBus()" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:2px 7px;border-radius:3px;cursor:pointer;font-family:var(--mono)">Clear</button>
+        <button onclick="brainRefreshAll()" style="background:none;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:2px 7px;border-radius:3px;cursor:pointer;font-family:var(--mono)">Refresh</button>
+      </div>
+      <div id="brain-bus" style="flex:1;overflow-y:auto;padding:4px 0;font-size:9px;font-family:var(--mono)"></div>
+
+      <!-- Data flow diagram -->
+      <div style="flex-shrink:0;border-top:1px solid var(--border);padding:8px 12px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;margin-bottom:6px">Data Flow</div>
+        <div id="brain-flow" style="font-size:9px;color:var(--muted);line-height:1.8">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+            <span id="flow-userscript" style="padding:2px 6px;border:1px solid var(--border);border-radius:3px">userscript</span>
+            <span>→ POST /result →</span>
+            <span id="flow-guardian" style="padding:2px 6px;border:1px solid var(--border);border-radius:3px">guardian :7820</span>
+            <span>→ bus.emit →</span>
+            <span id="flow-cortex" style="padding:2px 6px;border:1px solid var(--border);border-radius:3px">cortex :3748</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span id="flow-idearium" style="padding:2px 6px;border:1px solid var(--border);border-radius:3px">idearium :4800</span>
+            <span>← POST /api/event ←</span>
+            <span id="flow-orch" style="padding:2px 6px;border:1px solid var(--border);border-radius:3px">orch :9000</span>
+            <span>← UDP :7777</span>
           </div>
         </div>
-        <pre id="forge-output" style="background:var(--bg);border:1px solid var(--border);padding:10px;font:11px/1.6 var(--mono);overflow-y:auto;color:var(--text);white-space:pre-wrap;word-break:break-all;min-height:200px">// forge output</pre>
-        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin:8px 0 4px">session log</div>
-        <div id="forge-log"></div>
       </div>
+    </div>
+
+    <!-- Right: SEAM sessions + Baselines -->
+    <div class="brain-right" style="overflow-y:auto">
+
+      <!-- SEAM sessions -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">SEAM Sessions</div>
+        <div id="brain-seam" style="font-size:9px">
+          <div style="color:var(--muted)">loading…</div>
+        </div>
+      </div>
+
+      <!-- Event baselines (learned invariants) -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">Event Baselines</div>
+        <div id="brain-baselines" style="font-size:9px"></div>
+        <button onclick="brainLoadBaselines()" style="margin-top:4px;background:none;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:2px 7px;border-radius:3px;cursor:pointer;font-family:var(--mono)">Load</button>
+      </div>
+
+      <!-- Queue compartments -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">Queue Compartments</div>
+        <div id="brain-queue" style="font-size:9px">
+          <div style="color:var(--muted)">loading…</div>
+        </div>
+      </div>
+
+      <!-- Node ledger -->
+      <div class="brain-sec">
+        <div class="brain-sec-hdr">Node Ledger</div>
+        <div id="brain-nodes" style="font-size:9px">
+          <div style="color:var(--muted)">loading…</div>
+        </div>
+      </div>
+
     </div>
   </div>
-</div>
 
-<!-- PROVIDERS PANEL -->
-<div class="panel" id="panel-providers">
-  <div class="ph"><span class="pt">⬡ Providers — Agent Connections</span>
-    <span style="font-size:9px;color:var(--muted);margin-left:auto">WSS :7821 · ChatGPT primary</span></div>
-  <div class="pb">
-    <div id="provider-status" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:16px"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div>
-        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">dispatch job</div>
-        <div style="display:flex;gap:4px;margin-bottom:6px">
-          <select id="job-provider" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:11px;outline:none">
-            <option value="chatgpt">ChatGPT</option>
-            <option value="claude">Claude</option>
-            <option value="ollama">Ollama</option>
-          </select>
-          <select id="job-command" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:11px;outline:none">
-            <option value="code">code</option><option value="chat">chat</option><option value="spec">spec</option>
-          </select>
-        </div>
-        <textarea id="job-prompt" placeholder="prompt…" style="width:100%;height:80px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px;font:11px/1.6 var(--mono);resize:none;outline:none;display:block;margin-bottom:6px"></textarea>
-        <button onclick="sendJob()" style="background:var(--signal);border:none;color:#000;padding:6px 16px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">▶ send</button>
-        <div id="job-result" style="margin-top:8px;font-size:11px;color:var(--muted)"></div>
-      </div>
-      <div>
-        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">active jobs</div>
-        <div id="job-list"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- BRIDGE PANEL -->
-<div class="panel" id="panel-bridge">
-  <div class="ph">
-    <span class="pt">⇄ Nexus Bridge — tag · queue · push/pull · handshake</span>
-    <span style="font-size:9px;color:var(--muted);margin-left:auto">port 9999 · mounted on all systems</span>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;height:100%;overflow:hidden;border-top:1px solid var(--border)">
-
-    <!-- Tags -->
-    <div style="display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden">
-      <div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Tag System</div>
-      <div class="pb" style="flex:1;overflow-y:auto">
-        <div style="display:flex;gap:4px;margin-bottom:8px">
-          <input id="tag-entity-id" placeholder="entityId" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
-          <button onclick="lookupTags()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;font:inherit;font-size:10px;cursor:pointer">lookup</button>
-        </div>
-        <div id="tag-result" style="font-size:10px;color:var(--muted);margin-bottom:10px"></div>
-        <div style="font-size:9px;color:var(--muted);margin-bottom:4px;text-transform:uppercase">add tags</div>
-        <input id="tag-type" placeholder="entityType (idea/job/artifact…)" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;display:block;margin-bottom:4px">
-        <input id="tag-tags" placeholder="tags (comma-sep)" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;display:block;margin-bottom:4px">
-        <button onclick="addTags()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 10px;font:inherit;font-size:10px;cursor:pointer;width:100%">tag entity</button>
-        <div style="font-size:9px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase">find by tag</div>
-        <div style="display:flex;gap:4px">
-          <input id="find-tag" placeholder="tag value" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
-          <button onclick="findByTag()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;font:inherit;font-size:10px;cursor:pointer">find</button>
-        </div>
-        <div id="find-tag-result" style="font-size:10px;color:var(--muted);margin-top:6px;max-height:120px;overflow-y:auto"></div>
-      </div>
-    </div>
-
-    <!-- Request Queue -->
-    <div style="display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden">
-      <div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Request Queue</div>
-      <div class="pb" style="flex:1;overflow-y:auto">
-        <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">
-          <button onclick="loadBridgeRequests('pending')"  style="background:var(--bg3);border:1px solid var(--border);color:var(--amber);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">pending</button>
-          <button onclick="loadBridgeRequests('accepted')" style="background:var(--bg3);border:1px solid var(--border);color:var(--signal);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">accepted</button>
-          <button onclick="loadBridgeRequests('complete')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">complete</button>
-          <button onclick="loadBridgeRequests()"           style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">all</button>
-        </div>
-        <div id="bridge-request-list"></div>
-        <div style="font-size:9px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase">submit request</div>
-        <select id="req-type" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;margin-bottom:4px;display:block">
-          <option value="job.dispatch">job.dispatch</option>
-          <option value="idea.create">idea.create</option>
-          <option value="memory.ingest">memory.ingest</option>
-          <option value="gap.open">gap.open</option>
-          <option value="artifact.store">artifact.store</option>
-          <option value="forge.run">forge.run</option>
-          <option value="seam.deliver">seam.deliver</option>
-          <option value="bridge.sync">bridge.sync</option>
-        </select>
-        <div style="display:flex;gap:4px;margin-bottom:4px">
-          <input id="req-from" placeholder="from" value="cockpit" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
-          <input id="req-to"   placeholder="to"   value="guardian" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
-        </div>
-        <textarea id="req-payload" placeholder='{"prompt":"…"}' style="width:100%;height:50px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px;font:10px/1.5 var(--mono);resize:none;outline:none;display:block;margin-bottom:4px"></textarea>
-        <button onclick="submitRequest()" style="width:100%;background:var(--signal);border:none;color:#000;padding:5px;font:inherit;font-size:10px;font-weight:700;cursor:pointer">submit request</button>
-        <div id="req-result" style="font-size:10px;color:var(--muted);margin-top:4px"></div>
-      </div>
-    </div>
-
-    <!-- Push/Pull + Handshake + Health -->
-    <div style="display:flex;flex-direction:column;overflow:hidden">
-      <div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Push/Pull · Handshake · Health</div>
-      <div class="pb" style="flex:1;overflow-y:auto">
-        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">subscribe channel</div>
-        <div style="display:flex;gap:4px;margin-bottom:6px">
-          <input id="sub-channel" placeholder="channel (e.g. guardian.job.*)" value="*" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
-          <button onclick="startSubscription()" style="background:var(--bg3);border:1px solid var(--border);color:var(--signal);padding:3px 7px;font:inherit;font-size:10px;cursor:pointer">sub</button>
-        </div>
-        <div id="sub-log" style="max-height:100px;overflow-y:auto;font-size:10px;color:var(--muted);margin-bottom:10px;border:1px solid var(--border);padding:4px"></div>
-        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">handshake</div>
-        <select id="hs-system" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;margin-bottom:4px;display:block">
-          <option value="cortex">cortex</option>
-          <option value="guardian">guardian</option>
-          <option value="idearium">idearium</option>
-          <option value="cockpit">cockpit</option>
-        </select>
-        <button onclick="doHandshake()" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:4px;font:inherit;font-size:10px;cursor:pointer;margin-bottom:4px">handshake</button>
-        <div id="hs-result" style="font-size:10px;color:var(--muted);margin-bottom:10px"></div>
-        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">bridge health</div>
-        <div id="bridge-health" style="font-size:10px;color:var(--muted)">loading…</div>
-        <button onclick="loadBridgeHealth()" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:3px;font:inherit;font-size:9px;cursor:pointer;margin-top:4px">refresh</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 <script>
 'use strict';
 // ══════════════════════════════════════════════════════════════════
@@ -1019,6 +906,10 @@ async function boot(){
   _loadCkState(); _loadWorkflows();
   _buildPalette(); _renderCkList(); _renderPlSelect(); _renderWorkflowList();
   _wireBus(); _wireUI(); _renderBrainJaa();
+  // Start brain live refresh
+  brainRefreshAll();
+  setInterval(brainRefreshAll, 5000);   // refresh every 5s
+  setInterval(brainPollBus, 2000);      // bus events every 2s
   if(ckState.chunks.length)_renderCkProgress();
   _checkConns();
   cliPrint('FORGE IDE v1.0 · JAA '+JAA_TABLES.length+' tables · SISO · Beta Trust','ok');
@@ -2366,6 +2257,236 @@ if (!_cfrOrigHandler) {
     }).observe(brainEvLog, { childList: true });
   }
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BRAIN — live server data
+// ══════════════════════════════════════════════════════════════════════════════
+
+const BRAIN_GUARDIAN = 'http://127.0.0.1:7820';
+const BRAIN_CORTEX   = 'http://127.0.0.1:3748';
+const BRAIN_ORCH     = 'http://127.0.0.1:9000';
+let _brainBusEvents = [];
+let _brainBusOffset = 0;
+
+async function brainFetch(url, opts={}) {
+  try { const r = await fetch(url, { ...opts, signal: AbortSignal.timeout(3000) });
+    if (!r.ok) return null; return r.json(); } catch(_) { return null; }
+}
+
+async function brainRefreshAll() {
+  brainRefreshMemoryModules();
+  brainRefreshCortexTables();
+  brainRefreshProviders();
+  brainRefreshSeam();
+  brainRefreshQueue();
+  brainRefreshNodes();
+  brainRefreshFlow();
+}
+
+async function brainRefreshMemoryModules() {
+  const data = await brainFetch(BRAIN_CORTEX + '/health');
+  if (!data) return;
+  const counts = data.jaa?.counts || {};
+  const map = {
+    'crystals':'bm-crystals','bep_patterns':'bm-bep','memory_index':'bm-memory',
+    'cortex_memory':'bm-cortex','intent_nodes':'bm-intent',
+    'agent_calls':'bm-agent','artifacts':'bm-artifacts','gaps':'bm-gaps',
+  };
+  for (const [table, elId] of Object.entries(map)) {
+    const el = document.getElementById(elId);
+    if (el) el.textContent = counts[table] ?? '0';
+  }
+}
+
+async function brainRefreshCortexTables() {
+  const data = await brainFetch(BRAIN_CORTEX + '/health');
+  if (!data) return;
+  const counts = data.jaa?.counts || {};
+  const tables = Object.keys(counts);
+  const el = document.getElementById('brain-tables');
+  const ct = document.getElementById('brain-table-count');
+  if (!el) return;
+  el.innerHTML = tables.map(t => {
+    const n = counts[t] || 0;
+    const col = n > 0 ? '#34d399' : '#334155';
+    return `<span style="color:${col};margin-right:6px">${t}(${n})</span>`;
+  }).join('');
+  if (ct) ct.textContent = `${tables.filter(t=>counts[t]>0).length}/${tables.length}`;
+}
+
+async function brainRefreshProviders() {
+  const data = await brainFetch(BRAIN_GUARDIAN + '/providers');
+  if (!data) return;
+  const el = document.getElementById('brain-providers');
+  if (!el) return;
+  const providers = data.channels || {};
+  if (!Object.keys(providers).length) {
+    el.innerHTML = '<span style="color:var(--muted)">No active channels</span>';
+    return;
+  }
+  el.innerHTML = Object.entries(providers).map(([p, info]) => {
+    const age = Math.round((Date.now() - info.connectedAt) / 1000);
+    const hbAge = Math.round((Date.now() - info.lastHeartbeat) / 1000);
+    return `<div class="brain-stat"><span>${p} (tab ${info.tabId?.slice(-6)})</span>
+      <span class="brain-stat-val" style="color:#22c55e">LIVE ${age}s · hb ${hbAge}s ago</span></div>`;
+  }).join('');
+}
+
+async function brainRefreshSeam() {
+  const data = await brainFetch(BRAIN_GUARDIAN + '/seam/sessions');
+  if (!data) return;
+  const el = document.getElementById('brain-seam');
+  if (!el) return;
+  const sessions = (data.sessions || []).slice(-5).reverse();
+  if (!sessions.length) { el.innerHTML = '<span style="color:var(--muted)">No sessions</span>'; return; }
+  el.innerHTML = sessions.map(s => {
+    const chunks = s.chunks || [];
+    const verified = chunks.filter(c => c.status === 'verified').length;
+    const total = chunks.length;
+    const pct = total ? Math.round(verified/total*100) : 0;
+    const col = pct === 100 ? '#22c55e' : pct > 0 ? '#f59e0b' : '#334155';
+    return `<div style="padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="color:var(--text);margin-bottom:2px">${s.title||'Untitled'}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="flex:1;height:3px;background:var(--border);border-radius:2px">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:2px"></div>
+        </div>
+        <span style="color:${col};font-weight:700">${verified}/${total}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function brainRefreshQueue() {
+  const data = await brainFetch(BRAIN_GUARDIAN + '/queue/compartments');
+  if (!data) return;
+  const el = document.getElementById('brain-queue');
+  if (!el) return;
+  const comps = (data.compartments || []).slice(-10).reverse();
+  if (!comps.length) { el.innerHTML = '<span style="color:var(--muted)">No compartments</span>'; return; }
+  const STATE_COL = { QUEUED:'#475569',INJECTING:'#60a5fa',GENERATING:'#fbbf24',
+    DETECTING:'#a78bfa',VERIFIED:'#22c55e',FAILED:'#ef4444',RETRYING:'#f59e0b',ESCALATED:'#f472b6' };
+  el.innerHTML = comps.map(c => {
+    const col = STATE_COL[c.state] || '#475569';
+    return `<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid var(--border)">
+      <span style="color:#334155;width:20px">${c.chunkIdx+1}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)">${c.chunkTitle||'—'}</span>
+      <span style="color:${col};font-weight:700;font-size:8px">${c.state}</span>
+    </div>`;
+  }).join('');
+}
+
+async function brainRefreshNodes() {
+  const data = await brainFetch(BRAIN_ORCH + '/api/registry');
+  if (!data) return;
+  const el = document.getElementById('brain-nodes');
+  if (!el) return;
+  const reg = data.registry || {};
+  const systems = Object.entries(reg);
+  if (!systems.length) { el.innerHTML = '<span style="color:var(--muted)">No registered nodes</span>'; return; }
+  el.innerHTML = systems.map(([id, s]) => {
+    const age = s.lastSeen ? Math.round((Date.now()-s.lastSeen)/1000) : null;
+    const online = age !== null && age < 30;
+    const col = online ? '#22c55e' : '#ef4444';
+    return `<div class="brain-stat">
+      <span>${id}</span>
+      <span class="brain-stat-val" style="color:${col}">:${s.port||'?'} ${online?`${age}s`:'OFFLINE'}</span>
+    </div>`;
+  }).join('');
+
+  // Update BPM display (use last seen as proxy — real BPM needs heartbeat module)
+  const bpmMap = { orchestrator:'bpm-orch', bridge:'bpm-bridge', cortex:'bpm-cortex',
+    guardian:'bpm-guardian', idearium:'bpm-idearium' };
+  for (const [sys, elId] of Object.entries(bpmMap)) {
+    const s = reg[sys];
+    const el2 = document.getElementById(elId);
+    if (!el2) continue;
+    if (!s?.lastSeen) { el2.textContent = '—'; continue; }
+    const age = Math.round((Date.now()-s.lastSeen)/1000);
+    el2.textContent = age < 30 ? `LIVE ${age}s` : 'STALE';
+    el2.style.color = age < 30 ? '#22c55e' : '#ef4444';
+  }
+}
+
+async function brainLoadBaselines() {
+  const data = await brainFetch(BRAIN_ORCH + '/api/baselines');
+  if (!data) return;
+  const el = document.getElementById('brain-baselines');
+  if (!el) return;
+  const baselines = data.baselines || {};
+  const entries = Object.entries(baselines).slice(0, 20);
+  if (!entries.length) { el.innerHTML = '<span style="color:var(--muted)">Accumulating…</span>'; return; }
+  el.innerHTML = entries.map(([type, b]) => {
+    const col = b.consistency > 0.8 ? '#22c55e' : b.consistency > 0.5 ? '#f59e0b' : '#ef4444';
+    return `<div style="padding:3px 0;border-bottom:1px solid var(--border)">
+      <div style="color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${type}</div>
+      <div style="display:flex;gap:8px;font-size:8px">
+        <span style="color:${col}">c=${b.consistency.toFixed(2)}</span>
+        <span>avg=${b.avgIntervalMs}ms</span>
+        <span>n=${b.count}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function brainPollBus() {
+  const data = await brainFetch(BRAIN_GUARDIAN + '/bus?n=20');
+  if (!data) return;
+  const entries = data.entries || [];
+  if (!entries.length) return;
+  const el = document.getElementById('brain-bus');
+  const ct = document.getElementById('brain-bus-count');
+  if (!el) return;
+  // Add new events to top
+  const newEntries = entries.filter(e => !_brainBusEvents.find(x => x.type === e.type && x.ts === e.ts));
+  if (!newEntries.length) return;
+  _brainBusEvents = [...newEntries, ..._brainBusEvents].slice(0, 200);
+  if (ct) ct.textContent = `${_brainBusEvents.length} events`;
+  const TC = { 'guardian.artifact':'#a78bfa','guardian.gaps':'#f472b6',
+    'guardian.job.complete':'#34d399','guardian.pa.session':'#f59e0b',
+    'guardian.ledger':'#94a3b8','GUARDIAN_COMPLETE':'#34d399',
+    'ncp.client.connected':'#22c55e','ncp.client.disconnected':'#ef4444',
+    'heartbeat:pulse':'#475569','node.discovered':'#f59e0b' };
+  el.innerHTML = _brainBusEvents.slice(0, 50).map(e => {
+    const col = TC[e.type] || '#475569';
+    const ts = e.ts ? new Date(e.ts).toTimeString().slice(0,8) : '';
+    return `<div style="display:flex;gap:8px;padding:2px 8px;border-bottom:1px solid rgba(255,255,255,.03)">
+      <span style="color:#1e293b;flex-shrink:0">${ts}</span>
+      <span style="color:${col};flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.type}</span>
+    </div>`;
+  }).join('');
+}
+
+function brainClearBus() {
+  _brainBusEvents = [];
+  const el = document.getElementById('brain-bus');
+  if (el) el.innerHTML = '';
+  const ct = document.getElementById('brain-bus-count');
+  if (ct) ct.textContent = '0 events';
+}
+
+async function brainRefreshFlow() {
+  // Color the flow nodes based on health
+  const systems = [
+    { id:'flow-guardian', url:BRAIN_GUARDIAN+'/health' },
+    { id:'flow-cortex',   url:BRAIN_CORTEX+'/health' },
+    { id:'flow-orch',     url:BRAIN_ORCH+'/health' },
+  ];
+  for (const s of systems) {
+    const el = document.getElementById(s.id);
+    if (!el) continue;
+    const data = await brainFetch(s.url);
+    el.style.borderColor = data?.ok ? 'rgba(34,197,94,.5)' : 'rgba(239,68,68,.4)';
+    el.style.color = data?.ok ? '#22c55e' : '#ef4444';
+  }
+}
+
+// Override _renderBrainJaa to use new brain functions
+function _renderBrainJaa() {
+  // Called on init — the new brain functions handle everything
+  brainRefreshAll();
+}
+
 </script>
 </body>
 </html>

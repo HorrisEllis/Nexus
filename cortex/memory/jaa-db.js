@@ -26,34 +26,58 @@ const uid = () => randomUUID();
 
 // ── All declared tables ───────────────────────────────────────────────────────
 const ALL_TABLES = [
-  'event_log',
-  'bridge_messages',
-  'agent_calls',
-  'agent_signatures',
-  'artifacts',
-  'gaps',
-  'failures',
-  'fix_map',
-  'memory_index',
-  'memory_queries',
-  'conditioning_log',
-  'feedback_scores',
-  'crystals',
-  'bep_patterns',
-  'active_traces',
-  'orion_sessions',
+  // ── Foundation ───────────────────────────────────────────────────────
+  'event_log',           // universal append-only log
+  'agent_signatures',    // cobalt registry
+  'shape_samples',       // sigma/delta/slope/snr per module per 100 ticks
+  'failures',            // all module errors
+  'toasts',              // all toast events
+  'cli_history',         // CLI command log
+  'law_violations',      // constitutional law violations
+  'boot_records',        // boot phase log
+  // ── Gate / Healer ────────────────────────────────────────────────────
+  'gaps',                // structural gaps
+  'artifacts',           // generated code/content
+  'healer_log',          // healer attempt records
+  'fix_map',             // gap→fix knowledge base
+  // ── Agents ───────────────────────────────────────────────────────────
+  'agent_calls',         // all agent dispatches
+  'bridge_messages',     // bridge event log
+  'active_traces',       // MCL trace records
+  // ── Memory / Cortex ──────────────────────────────────────────────────
+  'memory_index',        // all indexed agent content
+  'memory_queries',      // MQL query log
+  'crystals',            // stable crystallized beliefs
+  'bep_patterns',        // behavioral execution patterns
+  'cortex_memory',       // raw agent responses
+  'conditioning_log',    // feedback conditioning
+  'feedback_scores',     // feedback weights
+  // ── Signal / Causal ──────────────────────────────────────────────────
+  'snr_records',         // SNR gate evaluations
+  'trust_scores',        // Beta trust model per source
+  'delta_records',       // surprise scores between responses
+  'ime_profiles',        // behavioral profiles per UUID
+  'orion_sessions',      // 4-stage quality gate
+  'seam_records',        // multi-AI structural diffs
+  'sigma_records',       // regime classifier output
+  // ── Versionium ───────────────────────────────────────────────────────
   'versionium_commits',
   'versionium_branches',
   'versionium_file_index',
   'versionium_calendar',
   'versionium_objects',
+  'causality_nodes',     // per-file causality graph
+  // ── Cognition ────────────────────────────────────────────────────────
+  'intent_nodes',        // semantic intent graph
+  'self_model',          // hourly system portrait
+  // ── Automation / Idearium ────────────────────────────────────────────
   'schedules',
   'workflow_runs',
   'project_registry',
-  'shape_samples',
   'poll_log',
   'requests',
-  'cortex_memory',
+  // ── Backup ───────────────────────────────────────────────────────────
+  'backup_records',
 ];
 
 class JaaDB {

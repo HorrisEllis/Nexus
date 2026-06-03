@@ -19,7 +19,12 @@
 'use strict';
 
 // ── Constants ────────────────────────────────────────────────────────────────
-const WS_URL         = 'wss://127.0.0.1:7821';    // Guardian WSS  (userscript ↔ guardian)
+// NCP — replaces WebSocket entirely. No TLS. No ws package.
+const NCP_URL    = 'http://127.0.0.1:7820';
+const NCP_CH     = NCP_URL + '/channel';
+const NCP_RESULT = NCP_URL + '/result';
+const NCP_HB     = NCP_URL + '/heartbeat';
+const WS_URL     = NCP_CH; // alias so footer still shows something useful
 const API_URL        = 'http://127.0.0.1:7820';   // Guardian HTTP (jobs, providers, cockpit)
 const MEMORY_URL     = 'http://127.0.0.1:7823';   // Guardian Memory (LAN artifact store)
 const BRIDGE_URL     = 'http://127.0.0.1:9999';   // Bridge (tag engine, request queue)
@@ -979,7 +984,7 @@ function buildUI() {
   const apiArea      = el('div','__g8gptapi__',{display:'none'});
 
   const footer = el('div',null,{padding:'7px 14px',borderTop:'1px solid rgba(255,255,255,.05)',display:'flex',alignItems:'center',justifyContent:'space-between',flexShrink:'0'});
-  const fL = el('span','__g8gptfooter__',{color:'#334155',fontSize:'10px'}); fL.textContent='wss://127.0.0.1:7821 · chatgpt';
+  const fL = el('span','__g8gptfooter__',{color:'#334155',fontSize:'10px'}); fL.textContent='ncp://127.0.0.1:7820 · chatgpt';
   const fR = el('span',null,{color:'#1e293b',fontSize:'10px'}); fR.textContent=`v${VERSION}`;
   footer.append(fL,fR);
 
@@ -1469,68 +1474,8 @@ function renderApiTab() {
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function updateFooter() { const el=document.getElementById('__g8gptfooter__');if(!el)return;const e=Math.round((Date.now()-sessionStartTime)/1000);el.textContent=`${getAccount().slice(0,20)} · ${Math.floor(e/60)}m ${e%60}s · ~${sessionTokenTotal.toLocaleString()} tok`; }
-function sendToServer(obj) { if (ws&&ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify(obj)); }
+function sendToServer(obj) { ncpPost(obj); }
 
-function connect() {
-  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer=null; }
-  setConnState('connecting'); addLog('info','Connecting…',WS_URL);
-  ws = new WebSocket(WS_URL);
-  ws.onopen = () => {
-    setConnState('handshaking');
-    ws.send(JSON.stringify({ type:'GUARDIAN_REGISTER', provider:PROVIDER, host:location.hostname, tabId:MY_TAB_ID, claimed:amIClaimed() }));
-    hb = setInterval(() => sendToServer({ type:'GUARDIAN_HEARTBEAT', provider:PROVIDER, tabId:MY_TAB_ID, ts:Date.now() }), HB_INTERVAL);
-    evLog('ws.open', { url:WS_URL });
-  };
-  ws.onmessage = (e) => {
-    let msg; try { msg=JSON.parse(e.data); } catch { addLog('err','Invalid WS message'); return; }
-    evLog('ws.message', { type:msg.type });
-    switch (msg.type) {
-      case 'GUARDIAN_READY':
-        setConnState('ready');
-        addLog('ok', `Ready · ${msg.provider||PROVIDER}`);
-        toast('Guardian ready ✓', 'success', 2000);
-        ledgerRecord('EVENT', `Connected · ${msg.provider||PROVIDER}`);
-        evLog('guardian.ready', { provider:msg.provider });
-        tryAutoClaimIfNoneActive();
-        startDOMObserver(); interceptDownloads();
-        setTimeout(() => { getAccount(); updateFooter(); }, 500);
-        setInterval(updateFooter, 30000); setTimeout(scanDOM, 500);
-        setTimeout(() => { const id=chatIdFromUrl(); if(id&&id!=='home'&&isChatBlank()) sendGreeting(id); }, 2000);
-        break;
-      case 'GUARDIAN_CLAIM':
-        if (msg.tabId===MY_TAB_ID||msg.tabId==='any') { claimTab(); sendToServer({type:'GUARDIAN_CLAIM_ACK',tabId:MY_TAB_ID,provider:PROVIDER}); }
-        break;
-      case 'GUARDIAN_RELEASE':
-        if (msg.tabId===MY_TAB_ID||msg.tabId==='any') { releaseTab(); addLog('info','Tab released'); }
-        break;
-      case 'GUARDIAN_JOB':
-        evLog('ws.job.received', { jobId:msg.jobId, command:msg.command });
-        handleJob(msg);
-        break;
-      case 'GUARDIAN_SESSION_NAMED':
-        addLog('ok', `Session: ${msg.sessionName||'unnamed'}`);
-        break;
-      case 'GUARDIAN_HEARTBEAT_ACK':
-        break;
-      default:
-        addLog('in', `← ${msg.type}`, JSON.stringify(msg).slice(0,80));
-        evLog('ws.unhandled', { type:msg.type });
-    }
-  };
-  ws.onclose = (e) => {
-    clearInterval(hb); setConnState('disconnected');
-    addLog('err', `Disconnected (${e.code})`, `Reconnecting in ${RECONNECT_MS/1000}s…`);
-    toast(`WS disconnected (${e.code}) — reconnecting`, 'error', 4000);
-    evLog('ws.close', { code:e.code, reason:e.reason });
-    if (currentJobId) stopWatch();
-    reconnectTimer = setTimeout(connect, RECONNECT_MS);
-  };
-  ws.onerror = () => {
-    setConnState('disconnected'); addLog('err','WebSocket error');
-    toast('WebSocket error', 'error', 3000);
-    evLog('ws.error', {});
-  };
-}
 
 // SEAM BroadcastChannel listener
 seamChannel.onmessage = (e) => {
