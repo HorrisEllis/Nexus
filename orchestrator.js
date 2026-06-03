@@ -314,6 +314,15 @@ const LEDGER_MAX  = 200;
 const LEDGER_DIR  = path.join(ROOT, 'data', 'ledger');
 const LEDGER_FILE = path.join(LEDGER_DIR, 'orchestrator.jsonl');
 
+// §LAW II — module-scope event ledger: every ledgerWrite goes here first
+let _eventLedger = null;
+try {
+  const { createEventLedger } = require('./lib/event-ledger');
+  _eventLedger = createEventLedger({ ledgerDir: LEDGER_DIR, systemId:'orchestrator' });
+  _eventLedger.open();
+  _eventLedger.startAutoSave(60000);
+} catch(e) { console.warn('[orchestrator] event-ledger init failed:', e.message); }
+
 // In-memory ring (fast reads)
 const LEDGER = { orchestrator:[], bridge:[], cortex:[], guardian:[], idearium:[], emerge:[] };
 
@@ -338,6 +347,10 @@ try {
 } catch(e) { console.warn('[ledger] disk init failed:', e.message); }
 
 function ledgerWrite(system, type, payload = {}) {
+  // §LAW II — event-ledger writes first, before anything else sees this event
+  if (_eventLedger) {
+    _eventLedger.record(type, payload, { source: system, causedBy: payload.causedBy || null });
+  }
   const entry = { _system: system, _ts: Date.now(), type, payload };
   const ring  = LEDGER[system] || (LEDGER[system] = []);
   ring.unshift(entry);
@@ -729,6 +742,17 @@ const server = http.createServer(async (req, res) => {
       const st = fs.existsSync(fp) ? fs.statSync(fp) : null;
       return { system:s, url:`/ui/${s}`, exists:!!st, size:st?.size||0, modified:st?.mtime?.toISOString()||null };
     })});
+  }
+
+  if (M==='GET' && sub==='baselines') {
+    // What the ledger has learned: event baselines and invariants
+    if (!_eventLedger) return json(res, 503, { ok:false, error:'event ledger not started' });
+    const baselines  = _eventLedger.getAllBaselines();
+    const stats      = _eventLedger.getAllStats();
+    const invariants = _eventLedger.scanInvariants(5000);
+    return json(res, 200, { ok:true, baselines, stats: Object.fromEntries(
+      Object.entries(stats).map(([k,v]) => [k, { count: v.count, lastTs: v.lastTs }])
+    ), invariants, ts: Date.now() });
   }
 
   if (M==='GET' && sub==='api-map') {
@@ -1463,6 +1487,33 @@ async function _bootSystems() {
 
   // Connect bridge SSE relay now that bridge is up
   setTimeout(connectBridgeSSE, 1000);
+
+  // Hourly invariant scan — reads all ledgers, surfaces baselines and anomalies
+  // The ledger IS the learning system. This is where it learns.
+  setInterval(() => {
+    if (!_eventLedger) return;
+    try {
+      const invariants = _eventLedger.scanInvariants(5000);
+      const baselines  = _eventLedger.getAllBaselines();
+      const stats      = _eventLedger.getAllStats();
+
+      // Write the learned state to the ledger so it's visible in recall
+      ledgerWrite('orchestrator', 'orchestrator.invariants.scanned', {
+        eventTypes:       Object.keys(stats).length,
+        baselineTypes:    Object.keys(baselines).length,
+        topCoOccurrences: Object.entries(invariants.coOccurrences || {})
+          .sort(([,a],[,b]) => b-a).slice(0,10)
+          .map(([pair,count]) => ({ pair, count })),
+        failurePrecursors: Object.entries(invariants.failurePrecursors || {})
+          .sort(([,a],[,b]) => b-a).slice(0,5)
+          .map(([type,count]) => ({ type, count })),
+        eventCount: invariants.eventCount,
+        ts: Date.now(),
+      });
+    } catch(e) {
+      ledgerWrite('orchestrator', 'orchestrator.invariants.scan.error', { error: e.message });
+    }
+  }, 3600000).unref(); // every hour
 
   // Bridge registration
   setTimeout(async () => {

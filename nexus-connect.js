@@ -21,6 +21,43 @@ const http = require('http');
 const { randomUUID } = require('crypto');
 
 // ── Canonical port map ────────────────────────────────────────────────────────
+let _pulseEmitter = null;
+
+/**
+ * startPulse — every system calls this on boot.
+ * Replaces registerWithOrchestrator() + startHeartbeat().
+ * The orchestrator hears the UDP pulse and updates its ledger.
+ * No HTTP registration call needed. No hardcoded orchestrator URL required.
+ */
+function startPulse(systemId, port) {
+  try {
+    const { createPulseEmitter } = require('./lib/heartbeat');
+    const SYSTEM_UUIDS = {
+      bridge:       'nexus-bridge-0000-4000-0000-000000000001',
+      cortex:       'nexus-cortex-0000-4000-0000-000000000001',
+      guardian:     'nexus-guardian-0000-4000-0000-000000000001',
+      idearium:     'nexus-idearium-0000-4000-0000-000000000001',
+      emerge:       'nexus-emerge-0000-4000-0000-000000000001',
+      orchestrator: 'nexus-orchestrator-0000-4000-0000-000000000001',
+    };
+    const GROUP_HINTS = {
+      bridge: 'nexus:core', cortex: 'nexus:memory', guardian: 'nexus:agent',
+      idearium: 'nexus:ide', emerge: 'nexus:ide', orchestrator: 'nexus:core',
+    };
+    _pulseEmitter = createPulseEmitter({
+      uuid:      SYSTEM_UUIDS[systemId] || `nexus-${systemId}-unknown`,
+      groupHint: GROUP_HINTS[systemId]  || `nexus:${systemId}`,
+      port:      7777,
+    });
+    _pulseEmitter.start(10000);  // pulse every 10s
+    console.log(`\x1b[90m[nexus-connect] pulse started: ${systemId} every 10s on :7777\x1b[0m`);
+  } catch(e) {
+    // UDP unavailable — fall back to HTTP registration
+    console.warn(`[nexus-connect] pulse unavailable (${e.message}) — using HTTP registration`);
+    registerWithOrchestrator(systemId, port, {}).catch(() => {});
+  }
+}
+
 const PORTS = {
   orchestrator: parseInt(process.env.ORCHESTRATOR_PORT || '9000'),
   bridge:       parseInt(process.env.BRIDGE_PORT       || '9999'),
@@ -212,4 +249,4 @@ function startHeartbeat(systemId, port) {
   return iv;
 }
 
-module.exports = { _req, postEvent, postLedger, postBridge, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, PORTS };
+module.exports = { _req, postEvent, postLedger, postBridge, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, PORTS };

@@ -130,6 +130,18 @@ export class IdeaOS {
     this.stream = new Stream({ log: this.log });
     this.db     = loadDB();
     this._sseClients = new Set(); // HTTP SSE subscribers
+    // §LAW II — event ledger: every emit written before routing
+    try {
+      const _require = createRequire(import.meta.url);
+      const { createEventLedger } = _require('../../lib/event-ledger');
+      this._evLedger = createEventLedger({
+        ledgerDir: _require('path').join(_require('path').dirname(
+          _require('url').fileURLToPath(import.meta.url)), '../../data/idearium'),
+        systemId: 'idearium',
+      });
+      this._evLedger.open();
+      this._evLedger.startAutoSave(60000);
+    } catch(e) { this._evLedger = null; }
 
     this._registerGates();
     this._recalcSNR();
@@ -161,6 +173,10 @@ export class IdeaOS {
   // ─── Public emit (all mutations go through here) ────────────────────────────
 
   emit(type, data = {}, causedBy = null) {
+    // §LAW II — write to ledger before any subscriber sees this event
+    if (this._evLedger) {
+      this._evLedger.record(type, data, { causedBy, source: 'idearium' });
+    }
     const ev = {
       uuid:     randomUUID(),
       type,

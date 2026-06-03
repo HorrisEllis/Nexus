@@ -229,6 +229,7 @@ class AdminServer {
 
         // ── POST /api/event — inject event ────────────────────────────────
         case route === 'POST /api/event': {
+          // Normal event handling (guardian.job.created intercepted below)
           this._readBody(req, (body) => {
             const { type, payload, source } = JSON.parse(body || '{}');
             if (!type) { res.writeHead(400); res.end(JSON.stringify({ error: 'type required' })); return; }

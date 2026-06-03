@@ -27,7 +27,11 @@ const bridge = (() => { try { return require('../bridge/nexus-bridge'); } catch(
 const http       = require('http');
 const https      = require('https');
 const tls        = require('tls');
-const { WebSocketServer, WebSocket } = require('ws');
+// NCP — NEXUS Channel Protocol (replaces WebSocket entirely)
+// Zero external dependencies. SSE server→browser, fetch() browser→server.
+// See lib/ncp.js for protocol spec.
+const { createNCPServer }    = require('../lib/ncp');
+const { createEventLedger } = require('../lib/event-ledger');
 const { randomUUID } = require('crypto');
 const fs         = require('fs');
 const path       = require('path');
@@ -132,7 +136,7 @@ function loadTlsOpts() {
 
 // ── provider registry ─────────────────────────────────────────────────────────
 
-const PROVIDERS = { claude: null, chatgpt: null, gemini: null, ollama: null };
+
 const PROVIDER_ALIASES = {
   'claude.ai':         'claude',
   'chat.openai.com':   'chatgpt',
@@ -155,13 +159,17 @@ function logResponse(entry) {
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
+// send() — kept for any remaining legacy code; routes through NCP if provider present
 function send(ws, obj) {
-  if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj));
+  if (obj?.type && obj?.provider && ncp.isConnected(obj.provider)) {
+    ncp.push(obj.provider, obj);
+  }
+  // If ws is a real ws socket (shouldn't happen now) try direct send
+  try { if (ws?.readyState === 1) ws.send(JSON.stringify(obj)); } catch(_) {}
 }
 
 function broadcast(obj) {
-  if (!wss) return;
-  for (const ws of wss.clients) send(ws, obj);
+  ncp.broadcast(obj);
 }
 
 function normaliseProvider(raw) {
@@ -198,9 +206,25 @@ async function writeToNexus(job) {
     promptLen: (job.prompt||'').length, chars: (job.response||'').length,
     durationMs: Date.now() - job.ts, complete: true,
   };
+  // §LAW II — event-ledger writes first (already done via bus.emit intercept)
   await nc.postEvent('guardian.response.received', payload, { causedBy: job.id, source: 'guardian' });
   await nc.postBridge('guardian.job.complete', payload);
   await nc.postLedger('guardian', 'guardian.job.complete', payload);
+  // Write completed response to cortex_memory so Cortex recall can find it
+  try {
+    nc._req('cortex', 'POST', '/api/event', {
+      type:    'guardian.job.complete',
+      payload: { jobId: job.id, provider: job.provider,
+        chars: (job.response||'').length,
+        promptLen: (job.prompt||'').length,
+        completedAt: Date.now(),
+        // Store first 2000 chars of response for recall context
+        responsePreview: (job.response||'').slice(0, 2000),
+      },
+      source:  'guardian',
+      causedBy: job.id,
+    }, 3000).catch(() => {});
+  } catch(_) {}
 }
 
 // ── job lifecycle ─────────────────────────────────────────────────────────────
@@ -225,23 +249,131 @@ function updateJob(id, patch) {
 const pendingQueue = new Map(); // provider → job[]
 
 function dispatchJob(job) {
-  const ws = PROVIDERS[job.provider];
-  if (!ws || ws.readyState !== WebSocket.OPEN) {
-    // Queue it — will retry when provider connects
+  // NCP: push job via SSE channel instead of WebSocket
+  if (!ncp.isConnected(job.provider)) {
+    // Queue it — will flush when provider connects via GET /channel
     if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
     pendingQueue.get(job.provider).push(job);
     updateJob(job.id, { status: 'queued', queuedAt: Date.now(),
-      queueReason: `waiting for ${job.provider} userscript` });
-    console.log(`[guardian] queued ${job.id} — waiting for ${job.provider}`);
+      queueReason: `waiting for ${job.provider} NCP channel` });
+    console.log(`[guardian] queued ${job.id} — waiting for ${job.provider} userscript`);
     bus.emit('guardian.job.queued', { jobId: job.id, provider: job.provider });
     return false;
   }
-  send(ws, { type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
-    provider: job.provider, prompt: job.prompt, content: job.content });
+  // Push via SSE — userscript's EventSource.onmessage receives it
+  ncp.push(job.provider, {
+    type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
+    provider: job.provider, prompt: job.prompt, content: job.content,
+  });
   updateJob(job.id, { status: 'delivered', deliveredAt: Date.now() });
-  console.log(`[guardian] dispatched ${job.id} → ${job.provider}`);
+  console.log(`[guardian] dispatched ${job.id} → ${job.provider} via NCP`);
   bus.emit('guardian.job.dispatched', { jobId: job.id, provider: job.provider });
   return true;
+}
+
+// ── NCP message handler — replaces wss.on('connection', ws.on('message')) ────
+function _handleNCPMessage(msg) {
+  const { type, jobId, provider, tabId, text, content, lang, hash,
+          gaps, error, gate, chatUrl, account } = msg;
+
+  switch(type) {
+
+    case 'GUARDIAN_REGISTER':
+    case 'NCP_REGISTER': {
+      // Provider registered via GET /channel — already handled by NCP onConnect
+      // Just broadcast ready confirmation
+      ncp.push(provider, { type: 'GUARDIAN_READY', provider, ts: Date.now() });
+      bus.emit('guardian.provider.registered', { provider, tabId });
+      break;
+    }
+
+    case 'GUARDIAN_DELIVERED':
+    case 'NCP_DELIVERED': {
+      if (jobId) {
+        updateJob(jobId, { status: 'delivered_confirmed', confirmedAt: Date.now() });
+        bus.emit('guardian.job.confirmed', { jobId, provider });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_CHUNK':
+    case 'NCP_CHUNK': {
+      if (jobId && text) {
+        updateJob(jobId, { status: 'streaming', lastChunk: Date.now() });
+        bus.emit('guardian.job.chunk', { jobId, text, provider });
+        // Forward chunk via SSE to any cockpit listeners
+        cockpitBroadcast({ type: 'job.chunk', jobId, text, ts: Date.now() });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_COMPLETE':
+    case 'NCP_COMPLETE': {
+      if (jobId) {
+        const finalText = text || content || '';
+        updateJob(jobId, { status: 'complete', response: finalText, completedAt: Date.now() });
+        jaa.insert('artifacts', {
+          uuid: require('crypto').randomUUID(), jobId, provider: provider || 'unknown',
+          content: finalText.slice(0, 10000), ts: Date.now(), chatUrl, account,
+        });
+        bus.emit('guardian.job.complete', { jobId, provider, chars: finalText.length });
+        cockpitBroadcast({ type: 'job.complete', jobId, provider, chars: finalText.length, ts: Date.now() });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_ARTIFACT':
+    case 'NCP_ARTIFACT': {
+      if (jobId && content) {
+        const artId = require('crypto').randomUUID();
+        jaa.insert('artifacts', {
+          uuid: artId, jobId, provider: provider || 'unknown',
+          content: content.slice(0, 4000), lang: lang || 'text',
+          hash, ts: Date.now(), chatUrl,
+        });
+        // Confirm back to userscript
+        ncp.push(provider, { type: 'GUARDIAN_ARTIFACT_SAVED', jobId, artifactId: artId, ts: Date.now() });
+        bus.emit('guardian.artifact', { jobId, artifactId: artId, provider });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_GAPS':
+    case 'NCP_GAPS': {
+      if (gaps?.length) {
+        bus.emit('guardian.gaps', { jobId, gaps, provider });
+        cockpitBroadcast({ type: 'job.gaps', jobId, gaps, ts: Date.now() });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_ERROR':
+    case 'NCP_ERROR': {
+      if (jobId) {
+        updateJob(jobId, { status: 'error', error, errorGate: gate, errorAt: Date.now() });
+        bus.emit('guardian.job.error', { jobId, error, gate, provider });
+        cockpitBroadcast({ type: 'job.error', jobId, error, ts: Date.now() });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_LEDGER_EVENT':
+    case 'NCP_LEDGER': {
+      jaa.insert('ledger', { uuid: require('crypto').randomUUID(),
+        category: msg.level || 'EVENT', msg: msg.msg, meta: msg.meta,
+        provider, chatUrl, account, ts: Date.now() });
+      break;
+    }
+
+    case 'GUARDIAN_HEARTBEAT':
+    case 'NCP_HEARTBEAT': {
+      // Handled directly by ncp.handleHeartbeat() — ACK returned in response body
+      break;
+    }
+
+    default:
+      bus.emit('guardian.message.unknown', { type, provider, jobId });
+  }
 }
 
 function flushQueuedJobs(provider) {
@@ -301,27 +433,40 @@ function autoUploadBlocks(text, provider, jobId) {
 
 // ── WSS server (userscripts) ──────────────────────────────────────────────────
 
-// ── WSS server lives here — created lazily in startWSS() ────────────────────
-// wss is null until startWSS() succeeds. Code that uses wss must guard.
+// ── NCP server — replaces httpsServer + wss entirely ────────────────────────
+// Providers (browser tabs with userscripts) connect via SSE GET /channel
+// and send results via fetch() POST /result. No ws package. No TLS required.
+const ncp = createNCPServer({
+  onMessage: (msg) => _handleNCPMessage(msg),
+  onConnect: ({ provider, tabId }) => {
+    console.log(`[guardian] NCP connected: provider=${provider} tab=${tabId}`);
+    bus.emit('guardian.provider.connected', { provider, tabId });
+    flushQueuedJobs(provider);
+  },
+  onDisconnect: ({ provider, tabId }) => {
+    console.log(`[guardian] NCP disconnected: provider=${provider} tab=${tabId}`);
+    bus.emit('guardian.provider.disconnected', { provider, tabId });
+  },
+  busEmit: (type, data) => bus.emit(type, data),
+});
+
+// Compatibility shims — code that used PROVIDERS[x] now uses ncp.isConnected(x)
+const PROVIDERS = new Proxy({}, {
+  get: (_, provider) => ncp.isConnected(provider) ? { _ncp: true } : null,
+  set: () => true,  // ignore direct sets — NCP manages connections
+});
+
+// httpsServer + wss → null (no longer needed)
 let httpsServer = null;
-let wss         = null;
-const _wssHandlers = [];  // deferred wss.on registrations
+let wss         = null;  // kept for module.exports compatibility
 
-function onWss(event, handler) {
-  // Register a wss event handler — deferred if wss not yet started.
-  if (wss) { wss.on(event, handler); return; }
-  _wssHandlers.push({ event, handler });
-}
-
-function _flushWssHandlers() {
-  // Called by startWSS() after wss is created.
-  for (const { event, handler } of _wssHandlers) {
-    wss.on(event, handler);
-  }
-  _wssHandlers.length = 0;
-}
+function onWss() {}  // no-op shim
 
 function startWSS() {
+  // DEPRECATED: WSS replaced by NCP (lib/ncp.js).
+  // This function is kept for backwards compatibility but does nothing.
+  return { ok: true, note: 'WSS replaced by NCP — no action needed' };
+  // Original implementation below (dead code):
   // Attempt to start the WSS server on WSS_PORT.
   // Returns { ok, error } — never throws, never exits.
   // Called from the boot sequence as a SOFT phase.
@@ -500,14 +645,10 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
   // ── Phase 0 HARD: required npm packages ────────────────────────────────────
   // Check before touching any network or file I/O.
   seq.phase({ name:'packages.required', type:'HARD',
-    label:'Required npm packages present (ws)',
+    label:'Zero external dependencies (NCP/SSE — no npm packages needed)',
     fn: async () => {
-      const missing = [];
-      try { require('ws'); } catch(_) { missing.push('ws'); }
-      if (missing.length) throw new Error(
-        'Missing required packages: ' + missing.join(', ') +
-        ' — run: npm install ' + missing.join(' ')
-      );
+      // NCP uses zero external dependencies — no npm packages to check
+      // All transport is built on Node's built-in http module
     },
   });
 
@@ -537,29 +678,23 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     },
   });
 
-  // ── Phase 3 SOFT: WSS server (:7821, userscripts) ──────────────────────────
-  // TLS is required for WSS because userscripts run inside https:// pages.
-  // This is SOFT — guardian works fully without WSS; only userscript path needs it.
-  seq.phase({ name:'wss.start', type:'SOFT',
-    label:'WSS :' + WSS_PORT + ' for userscripts (requires TLS cert)',
+  // ── Phase 3 SOFT: NCP channel (replaces WSS) ───────────────────────────────
+  // Userscripts connect via SSE GET /channel — plain HTTP, no TLS, no ws package.
+  // If you need userscripts to work, just navigate to http://127.0.0.1:7820 and
+  // install the updated userscript. No cert acceptance needed.
+  seq.phase({ name:'ncp.ready', type:'SOFT',
+    label:'NCP channel :' + HTTP_PORT + '/channel (no TLS needed)',
     fn: async () => {
-      // Try to generate cert if missing
-      ensureCert();
-      // Load TLS
-      const opts = loadTlsOpts();
-      if (!opts) throw new Error(
-        'TLS cert not available — WSS disabled. ' +
-        'Fix: npm install selfsigned  OR  install openssl'
-      );
-      // Start WSS
-      const r = startWSS();
-      if (!r.ok) throw new Error(r.error);
-      // Bind httpsServer
       await new Promise((resolve, reject) => {
-        httpsServer.listen(WSS_PORT, '127.0.0.1', resolve);
-        httpsServer.on('error', reject);
+        const r = require('http').get(
+          'http://127.0.0.1:' + HTTP_PORT + '/providers',
+          res => { res.statusCode === 200 ? resolve()
+            : reject(new Error('/providers returned ' + res.statusCode)); }
+        );
+        r.setTimeout(2000, () => { r.destroy(); reject(new Error('timeout')); });
+        r.on('error', reject);
       });
-      console.log('  \x1b[90m[guardian] WSS :' + WSS_PORT + ' ready — userscripts can connect\x1b[0m');
+      console.log('  \x1b[90m[guardian NCP] userscript: new EventSource(\'http://127.0.0.1:' + HTTP_PORT + '/channel?provider=claude&tabId=X\')\x1b[0m');
     },
   });
 
@@ -1451,6 +1586,22 @@ function _kernelEmit(type, data, ts) {
 
 const bus = new SISOStream();
 
+// Event ledger — §LAW II: every bus emit written to ledger first
+const _evLedger = createEventLedger({
+  ledgerDir: require('path').join(__dirname, 'memory_store'),
+  systemId:  'guardian',
+  onEvent:   null, // baseline learning only — no side effects
+});
+_evLedger.open();
+_evLedger.startAutoSave(60000);
+
+// Intercept every bus emit — write to ledger before routing
+const _origEmit = bus.emit.bind(bus);
+bus.emit = function(type, data) {
+  _evLedger.record(type, data || {}, { source: 'guardian.bus' });
+  return _origEmit(type, data);
+};
+
 // ══════════════════════════════════════════════════════════════════════════════
 //  SQLITE / JAA PERSISTENCE
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1637,7 +1788,8 @@ bus.register(new SISOGate('guardian.session.named', (data) => {
     });
   }
   const ws = PROVIDERS[data.provider||'claude'];
-  if (ws && ws.readyState === WebSocket.OPEN) send(ws, { type:'GUARDIAN_SESSION_NAMED', ...data });
+  // Push session name to all connected providers via NCP
+  ncp.broadcast({ type:'GUARDIAN_SESSION_NAMED', ...data });
 }));
 
 bus.register(new SISOGate('guardian.timeline', (data) => {
@@ -1697,7 +1849,23 @@ function handleExtendedRoutes(req, res, url, method) {
     res.end(require('fs').readFileSync(cp,'utf8')); return true;
   }
   if (method==='GET' && url.pathname==='/providers') {
-    pRes(res, 200, { ok:true, providers:Object.fromEntries(Object.entries(PROVIDERS).map(([k,v])=>[k,v?'connected':'null'])) }); return true;
+    const connected = ncp.getProviders();
+    const out = { claude:'null', chatgpt:'null', gemini:'null', ollama:'null' };
+    for (const [p] of Object.entries(out)) {
+      if (ncp.isConnected(p)) out[p] = 'connected';
+    }
+    pRes(res, 200, { ok:true, providers:out, channels: connected }); return true;
+  }
+
+  // ── NCP channel endpoints (replace WSS) ─────────────────────────────────
+  if (method==='GET' && url.pathname==='/channel') {
+    ncp.handleChannel(req, res, url); return true;
+  }
+  if (method==='POST' && url.pathname==='/result') {
+    ncp.handleResult(req, res, bodyJ); return true;
+  }
+  if (method==='POST' && url.pathname==='/heartbeat') {
+    ncp.handleHeartbeat(req, res, bodyJ); return true;
   }
   if (method==='GET' && (url.pathname==='/jobs'||url.pathname==='/jobs/')) {
     const limit = parseInt(url.searchParams.get('limit')||'50');
@@ -2755,4 +2923,4 @@ onWss('connection', (ws) => {
   });
 });
 
-module.exports = { server, wss, jobs, PROVIDERS, dropzoneServer, dropzone, memoryServer };
+module.exports = { server, wss, ncp, jobs, PROVIDERS, dropzoneServer, dropzone, memoryServer };

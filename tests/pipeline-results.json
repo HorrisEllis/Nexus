@@ -1,5 +1,5 @@
 {
-  "ts": 1780481635124,
+  "ts": 1780490859073,
   "pass": 68,
   "fail": 0,
   "total": 68,
@@ -14,12 +14,12 @@
     {
       "name": "health returns ok=true with uptime + system counts",
       "status": "PASS",
-      "evidence": "uptime=35.2s online=5/6"
+      "evidence": "uptime=35.1s online=5/6"
     },
     {
       "name": "POST /api/register → system appears in registry",
       "status": "PASS",
-      "evidence": "systemId=test-38e1f3ab registered and visible"
+      "evidence": "systemId=test-41ec67a3 registered and visible"
     },
     {
       "name": "POST /api/heartbeat → lastSeen updates",
@@ -29,7 +29,7 @@
     {
       "name": "POST /api/ledger → entry written and readable",
       "status": "PASS",
-      "evidence": "wrote type=pipeline.test.1780481633488, found in ledger"
+      "evidence": "wrote type=pipeline.test.1780490857438, found in ledger"
     },
     {
       "name": "GET /api/recall → returns entries + registry + counts",
@@ -39,7 +39,7 @@
     {
       "name": "GET /api/recall?type=filter → sentinel type found in filtered results",
       "status": "PASS",
-      "evidence": "type filter matched pipeline.sentinel.1780481633552"
+      "evidence": "type filter matched pipeline.sentinel.1780490857498"
     },
     {
       "name": "GET /api/channels → ≥20 SISO channels declared",
@@ -59,7 +59,7 @@
     {
       "name": "health returns ok=true with session count",
       "status": "PASS",
-      "evidence": "sessions=4 pending=11"
+      "evidence": "sessions=4 pending=14"
     },
     {
       "name": "GET /bridge/contract → id=bridge-v1 with routes + valid_request_types",
@@ -69,7 +69,7 @@
     {
       "name": "POST /bridge/handshake → token issued",
       "status": "PASS",
-      "evidence": "token=ab117a9b-db79-48… sessionId=1be5c3bd"
+      "evidence": "token=8b78e443-cd74-42… sessionId=461b87b3"
     },
     {
       "name": "POST /bridge/handshake → bad secret rejected (401)",
@@ -79,22 +79,22 @@
     {
       "name": "POST /bridge/requests → creates request with uuid",
       "status": "PASS",
-      "evidence": "uuid=0ead6185 status=pending"
+      "evidence": "uuid=ea3a8b57 status=pending"
     },
     {
       "name": "GET /bridge/requests → request appears in queue",
       "status": "PASS",
-      "evidence": "23 requests in queue, created request visible"
+      "evidence": "26 requests in queue, created request visible"
     },
     {
       "name": "POST /bridge/broadcast → accepted, returns acknowledged",
       "status": "PASS",
-      "evidence": "broadcast type=pipeline.broadcast.1780481633772 accepted"
+      "evidence": "broadcast type=pipeline.broadcast.1780490857718 accepted"
     },
     {
       "name": "POST /bridge/tags → entity tagged, retrievable",
       "status": "PASS",
-      "evidence": "entity 5568e4f4 tagged with [pipeline, evidence]"
+      "evidence": "entity 6a3e7e2d tagged with [pipeline, evidence]"
     },
     {
       "name": "GET /bridge/subscribe → SSE channel opens",
@@ -104,7 +104,7 @@
     {
       "name": "health returns status=ok with jaa counts",
       "status": "PASS",
-      "evidence": "status=ok uptime=33.3s"
+      "evidence": "status=ok uptime=33.2s"
     },
     {
       "name": "GET /contract → id=cortex-v1 with 28 JAA tables listed",
@@ -114,7 +114,7 @@
     {
       "name": "POST /api/event → event stored, returns ok",
       "status": "PASS",
-      "evidence": "type=pipeline.cortex.test.1780481633783 written"
+      "evidence": "type=pipeline.cortex.test.1780490857726 written"
     },
     {
       "name": "GET /api/events → written event is readable",
@@ -134,7 +134,7 @@
     {
       "name": "health returns ok=true with uptime",
       "status": "PASS",
-      "evidence": "uptime=31.8s"
+      "evidence": "uptime=31.7s"
     },
     {
       "name": "GET /contract → id=guardian-v1 with forge_ide + siso + routes",
@@ -144,7 +144,7 @@
     {
       "name": "GET /providers → returns provider map",
       "status": "PASS",
-      "evidence": "providers: ok, providers"
+      "evidence": "providers: ok, providers, channels"
     },
     {
       "name": "GET /jobs → returns jobs array",
@@ -184,7 +184,7 @@
     {
       "name": "health returns ok=true with version + SNR in [0,1]",
       "status": "PASS",
-      "evidence": "v2.0.0 SNR=50% uptime=30.4s"
+      "evidence": "v2.0.0 SNR=50% uptime=30.3s"
     },
     {
       "name": "GET /api/contract → id=idearium-v1 with resources + sse + snr_translation",
@@ -204,12 +204,12 @@
     {
       "name": "POST /api/ideas → creates idea, returns uuid + phase=seed",
       "status": "PASS",
-      "evidence": "uuid=b25c322a phase=seed text=\"Pipeline test idea 17804816341\""
+      "evidence": "uuid=bc853a91 phase=seed text=\"Pipeline test idea 17804908580\""
     },
     {
       "name": "GET /api/ideas → idea appears in list",
       "status": "PASS",
-      "evidence": "idea visible in list (33 total)"
+      "evidence": "idea visible in list (45 total)"
     },
     {
       "name": "GET /api/ideas/:uuid → detail with links + openGaps",
@@ -229,7 +229,7 @@
     {
       "name": "POST /api/ideas/:uuid/spec → creates spec with ≥9 sections",
       "status": "PASS",
-      "evidence": "spec 69dca5fa with 9 sections"
+      "evidence": "spec 3ade3a15 with 9 sections"
     },
     {
       "name": "POST /api/specs/:uuid/check → CI run returns spec",
@@ -244,7 +244,7 @@
     {
       "name": "POST /api/gaps → gap created with status=open",
       "status": "PASS",
-      "evidence": "gap a89d42f2 created status=open"
+      "evidence": "gap bac83f6c created status=open"
     },
     {
       "name": "GET /api/gaps?status=open → gap is listed",
@@ -264,7 +264,7 @@
     {
       "name": "GET /api/snapshots → snapshot appears in history",
       "status": "PASS",
-      "evidence": "16 snapshots"
+      "evidence": "22 snapshots"
     },
     {
       "name": "GET /api/events → event log has entries from this session",
@@ -289,7 +289,7 @@
     {
       "name": "POST /api/idearium/ideas via orchestrator proxy → creates idea",
       "status": "PASS",
-      "evidence": "idea created via proxy: 394ef952"
+      "evidence": "idea created via proxy: b2c11081"
     },
     {
       "name": "idea.create → orchestrator ledger updated (event propagation)",
@@ -309,17 +309,17 @@
     {
       "name": "bridge broadcast → accepted (bus fabric live)",
       "status": "PASS",
-      "evidence": "bus fabric live — broadcast cross.system.test.1780481634796 accepted"
+      "evidence": "bus fabric live — broadcast cross.system.test.1780490858733 accepted"
     },
     {
       "name": "STEP 1: create idea",
       "status": "PASS",
-      "evidence": "idea=8ec9f64b phase=seed"
+      "evidence": "idea=37817acf phase=seed"
     },
     {
       "name": "STEP 2: create spec from idea",
       "status": "PASS",
-      "evidence": "spec=8fae07a9 sections=9"
+      "evidence": "spec=3051851d sections=9"
     },
     {
       "name": "STEP 3: run spec check (CI)",
@@ -334,12 +334,12 @@
     {
       "name": "STEP 5: push snapshot",
       "status": "PASS",
-      "evidence": "commitId=vtm-00000000 snr=0.50 ideas=36"
+      "evidence": "commitId=vtm-00000000 snr=0.50 ideas=48"
     },
     {
       "name": "STEP 6: verify snapshot appears in history",
       "status": "PASS",
-      "evidence": "snapshot visible in history (17 total)"
+      "evidence": "snapshot visible in history (23 total)"
     },
     {
       "name": "STEP 7: orchestrator ledger shows pipeline activity",

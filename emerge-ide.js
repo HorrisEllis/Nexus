@@ -52,6 +52,16 @@ const IO_DIR = (() => {
 
 // ── SISO Bus ──────────────────────────────────────────────────────────────────
 const bus            = new Bus();
+
+// Event ledger — every compile result, SNR score, gap written before routing
+const { createEventLedger } = require('./lib/event-ledger');
+const _evLedger = createEventLedger({
+  ledgerDir: require('path').join(__dirname, 'data', 'emerge'),
+  systemId:  'emerge',
+  onEvent:   null,
+});
+_evLedger.open();
+_evLedger.startAutoSave(60000);
 const compilerStream = bus.stream('compiler');
 const ioStream       = bus.stream('io');
 const llmStream      = bus.stream('llm');
@@ -68,12 +78,36 @@ function pushSSE(ev) {
 }
 bus.onAny(pushSSE);
 
+// §LAW II — write every emerge event to ledger before SSE push
+bus.onAny((ev) => {
+  if (ev && ev.type) {
+    _evLedger.record(ev.type, ev.data || {}, { source: 'emerge.bus', uuid: ev.id });
+  }
+});
+
 // ── SEAM: COMPILER_CONTRACT ───────────────────────────────────────────────────
 ioStream.register(new Gate('io.compile', (ev) => {
   const { source, filename } = ev.data;
   try {
     const result = kernel.compile(source, filename);
     result.kernel.boot();
+    // Log compile result to event ledger and cortex before emitting on bus
+    const compilePayload = {
+      filename, snr: result.snr, valid: result.valid,
+      gaps: result.gaps, noise: result.noise.length,
+      regime: result.kernel.status().regime,
+    };
+    _evLedger.record('emerge.compile.result', compilePayload, { source: 'emerge.compiler' });
+    // Post to orchestrator ledger so it's visible in recall
+    try {
+      require('http').request({
+        hostname:'127.0.0.1', port: parseInt(process.env.ORCHESTRATOR_PORT||'9000'),
+        path:'/api/ledger', method:'POST',
+        headers:{'Content-Type':'application/json'},
+      }, ()=>{}).on('error',()=>{}).end(JSON.stringify({
+        system:'emerge', type:'emerge.compile.result', payload: compilePayload
+      }));
+    } catch(_) {}
     compilerStream.emit(new Event('compiler.result', {
       filename, snr: result.snr, valid: result.valid,
       gaps: result.gaps, noise: result.noise.length,

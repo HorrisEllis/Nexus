@@ -17,7 +17,14 @@
 'use strict';
 
 // ── §5.1 Constants — all ports canonical ─────────────────────────────────────
-const WS_URL     = 'wss://127.0.0.1:7821';
+// NCP — NEXUS Channel Protocol (replaces WebSocket)
+// Plain HTTP — no TLS, no ws package, no port 7821
+const NCP_URL    = 'http://127.0.0.1:7820';
+const NCP_CHANNEL = `${NCP_URL}/channel`;
+const NCP_RESULT  = `${NCP_URL}/result`;
+const NCP_HB      = `${NCP_URL}/heartbeat`;
+// Keep WS_URL alias so any remaining code that reads it gets a useful value
+const WS_URL     = NCP_CHANNEL;
 const API_URL    = 'http://127.0.0.1:7820';
 const ORCH_URL   = 'http://127.0.0.1:9000';
 const BRIDGE_URL = 'http://127.0.0.1:9999';
@@ -120,7 +127,10 @@ function _toCortex(type, payload = {}) {
       body: JSON.stringify({ type, payload, source:'guardian-claude', causedBy:currentJobId, ts:Date.now() }) }).catch(()=>{});
   } catch(_) {}
 }
-function send(obj) { if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj)); }
+function send(obj) {
+  // NCP: all outbound messages go via fetch() POST /result
+  ncpPost(NCP_RESULT, obj).catch(() => {});
+}
 function sendLedger(category, msg, meta={}) {
   send({ type:'GUARDIAN_LEDGER_EVENT', level:category, category, msg, meta, chatUrl:location.href, account:getAccount(), requestId:currentJobId });
   _toOrc('guardian', `guardian.ledger.${category.toLowerCase()}`, { msg, meta });
@@ -399,6 +409,109 @@ setInterval(checkNavigate, 800);
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function connect() {
+  // NCP: SSE for server→browser push, fetch() for browser→server
+  // Replaces new WebSocket(WS_URL) entirely.
+  if (_es) { try { _es.close(); } catch(_) {} }
+
+  const tabParam = `tabId=${MY_TAB}&provider=${PROVIDER}`;
+  _log('info', 'NCP connecting…', `${NCP_CHANNEL}?${tabParam}`);
+  connState = 'CONNECTING';
+
+  _es = new EventSource(`${NCP_CHANNEL}?${tabParam}`);
+
+  _es.onmessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data);
+      _handleServerMessage(msg);
+    } catch(err) {
+      _log('err', 'NCP parse error', err.message);
+    }
+  };
+
+  _es.onopen = () => {
+    connState = 'OPEN';
+    _log('ok', `NCP connected · ${PROVIDER}`, NCP_CHANNEL);
+    // Register with server via POST (EventSource opened = we're live)
+    ncpPost(NCP_RESULT, {
+      type: 'GUARDIAN_REGISTER', provider: PROVIDER,
+      host: location.hostname, tabId: MY_TAB, claimed: amIClaimed(),
+    });
+    // Start heartbeat via POST /heartbeat
+    if (hb) clearInterval(hb);
+    hb = setInterval(async () => {
+      const res = await ncpPost(NCP_HB, {
+        type: 'GUARDIAN_HEARTBEAT', provider: PROVIDER,
+        tabId: MY_TAB, ts: Date.now(),
+      });
+      // ACK is in the response body — no separate message needed
+    }, HB_MS);
+  };
+
+  _es.onerror = (e) => {
+    connState = 'ERROR';
+    _log('err', 'NCP error — reconnecting in ' + RECONNECT_MS + 'ms');
+    _es.close();
+    clearInterval(hb);
+    setTimeout(connect, RECONNECT_MS);
+  };
+}
+
+// EventSource handle (replaces ws)
+let _es = null;
+
+// POST helper for NCP results
+async function ncpPost(url, data) {
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...data, chatUrl: location.href, account: getAccount() }),
+      keepalive: true,
+    });
+    return res.ok ? await res.json() : null;
+  } catch(_) { return null; }
+}
+
+// Unified server message handler (replaces ws.onmessage switch)
+function _handleServerMessage(msg) {
+  switch(msg.type) {
+    case 'NCP_READY':
+    case 'GUARDIAN_READY':
+      _log('ok', `NCP Ready · ${msg.provider||PROVIDER}`, NCP_CHANNEL);
+      connState = 'OPEN';
+      renderApi?.();
+      break;
+
+    case 'GUARDIAN_CLAIM':
+      if (msg.tabId===MY_TAB||msg.tabId==='any') {
+        claimTab();
+        ncpPost(NCP_RESULT, { type:'GUARDIAN_CLAIM_ACK', tabId:MY_TAB, provider:PROVIDER });
+        toast('Tab claimed — ACTIVE', 'success', 2000);
+      }
+      break;
+
+    case 'GUARDIAN_RELEASE':
+      releaseTab?.();
+      break;
+
+    case 'GUARDIAN_JOB':
+      currentJobId = msg.jobId;
+      runJob(msg);
+      break;
+
+    case 'GUARDIAN_SESSION_NAMED':
+      _log('info', 'Session named', msg.name);
+      break;
+
+    case 'GUARDIAN_ARTIFACT_SAVED':
+      _log('ok', 'Artifact saved', msg.artifactId);
+      break;
+
+    default:
+      _log('debug', `NCP msg: ${msg.type}`);
+  }
+}
+nect() {
   if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer=null; }
   setConnState('connecting');
   _log('info', 'Connecting…', WS_URL);
@@ -820,8 +933,8 @@ function renderApi() {
   btn(isClaimed?'Release tab (→ PASSIVE)':'Claim tab (→ ACTIVE)', isClaimed?'#f87171':'#22c55e', ()=>{ isClaimed?releaseTab():claimTab(); renderApi(); });
 
   sec('Connection');
-  row('WS URL', WS_URL); row('State', connState);
-  btn('Reconnect now', '#818cf8', ()=>{ if(ws)ws.close(); connect(); renderApi(); });
+  row('NCP Channel', NCP_CHANNEL); row('State', connState + ' (NCP/SSE)');
+  btn('Reconnect now', '#818cf8', ()=>{ connect(); renderApi(); });
 
   sec('SEAM state');
   row('Sys prompt', seamState.sysPrompt);
