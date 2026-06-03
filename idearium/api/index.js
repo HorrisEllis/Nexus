@@ -498,40 +498,158 @@ export function startAPI() {
   });
 
   server.listen(PORT, BINDING, async () => {
-    console.log(`[Idearium API] v${VERSION} on http://${BINDING}:${PORT}`);
-    // §AXIOM: register with orchestrator FIRST
-    import('http').then(({ default: http }) => {
-      const orchBody = JSON.stringify({ systemId:'idearium', port:PORT, meta:{ role:'idea-os', version:VERSION } });
-      const rO = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/register', method:'POST',
-        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(orchBody)} }, ()=>{});
-      rO.on('error',()=>{}); rO.write(orchBody); rO.end();
-      // Heartbeat
-      setInterval(() => {
-        const hb = JSON.stringify({ systemId:'idearium', port:PORT, status:'online' });
-        const r = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/heartbeat', method:'POST',
-          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(hb)} }, ()=>{});
-        r.on('error',()=>{}); r.write(hb); r.end();
-      }, 10000);
-    }).catch(()=>{});
-    // §5.2 — register with bridge
-    import('http').then(({ default: http }) => {
-      const body = JSON.stringify({ systemId:'idearium', appId:'idearium', secret:'nexus-idearium-internal-v1' });
-      const r = http.request({ hostname:'127.0.0.1', port:9999, path:'/bridge/handshake', method:'POST',
-        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)} }, res => {
-        let d=''; res.on('data',c=>d+=c);
-        res.on('end',()=>{ try{const j=JSON.parse(d); if(j.ok) console.log('[idearium §5.2] bridge registered');}catch(_){} });
-      });
-      r.on('error',()=>{}); r.write(body); r.end();
-    }).catch(()=>{});
-    // Post booted event to orchestrator ledger
-    import('http').then(({ default: http }) => {
-      const body2 = JSON.stringify({ system:'idearium', type:'idearium.booted', payload:{ version:VERSION, port:PORT } });
-      const r2 = http.request({ hostname:'127.0.0.1', port:9000, path:'/api/ledger', method:'POST',
-        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body2)} }, ()=>{});
-      r2.on('error',()=>{}); r2.write(body2); r2.end();
-    }).catch(()=>{});
-    console.log(`[Idearium API] SSE: http://${BINDING}:${PORT}/sse`);
-    console.log(`[Idearium API] Contract: http://${BINDING}:${PORT}/api/contract`);
+    // ESM: use createRequire for CJS modules
+    const _require = createRequire(import.meta.url);
+    const { BootSequence } = _require('../../lib/boot-sequence');
+
+    const seq = new BootSequence({
+      systemId: 'idearium', port: PORT, version: VERSION,
+      label: 'Idearium', maxRetries: 1,
+    });
+
+    // Phase 0 HARD: server bound
+    seq.phase({ name:'server.bound', type:'HARD',
+      label:'HTTP API bound :' + PORT,
+      fn: async () => { /* in listen callback = bound */ },
+    });
+
+    // Phase 1 HARD: IdeaOS runtime verify — use the actual API
+    seq.phase({ name:'ideaos.verify', type:'HARD',
+      label:'IdeaOS runtime verify via /api/stats',
+      fn: async () => {
+        await new Promise((resolve, reject) => {
+          let d = '';
+          const r = _require('http').get(
+            'http://127.0.0.1:' + PORT + '/api/stats',
+            res => {
+              res.on('data', c => { d += c; });
+              res.on('end', () => {
+                try {
+                  const j = JSON.parse(d);
+                  if (j.ok !== false) resolve();
+                  else reject(new Error('stats returned ok=false'));
+                } catch(e) { reject(e); }
+              });
+            }
+          );
+          r.setTimeout(2000, () => { r.destroy(); reject(new Error('stats timeout')); });
+          r.on('error', reject);
+        });
+      },
+    });
+
+    // Phase 2 HARD: health endpoint verify
+    seq.phase({ name:'health.verify', type:'HARD',
+      label:'Verify /health returns ok=true',
+      fn: async () => {
+        await new Promise((resolve, reject) => {
+          const r = _require('http').get(
+            'http://127.0.0.1:' + PORT + '/health',
+            res => { res.statusCode === 200 ? resolve()
+              : reject(new Error('health ' + res.statusCode)); }
+          );
+          r.setTimeout(2000, () => { r.destroy(); reject(new Error('timeout')); });
+          r.on('error', reject);
+        });
+      },
+    });
+
+    // Phase 3 HARD: contract verify
+    seq.phase({ name:'contract.verify', type:'HARD',
+      label:'Verify /api/contract returns id=idearium-v1',
+      fn: async () => {
+        await new Promise((resolve, reject) => {
+          let body = '';
+          const r = _require('http').get(
+            'http://127.0.0.1:' + PORT + '/api/contract',
+            res => {
+              res.on('data', c => { body += c; });
+              res.on('end', () => {
+                try {
+                  const j = JSON.parse(body);
+                  if (j.contract?.id === 'idearium-v1') resolve();
+                  else reject(new Error('contract id=' + j.contract?.id));
+                } catch(e) { reject(e); }
+              });
+            }
+          );
+          r.setTimeout(2000, () => { r.destroy(); reject(new Error('timeout')); });
+          r.on('error', reject);
+        });
+      },
+    });
+
+    // Phase 4 SOFT: orchestrator registration (§AXIOM)
+    seq.phase({ name:'orchestrator.register', type:'SOFT',
+      label:'Register with orchestrator (§AXIOM)',
+      fn: async () => {
+        const body = JSON.stringify({ systemId:'idearium', port:PORT,
+          meta:{ role:'idea-os', version:VERSION } });
+        const r = _require('http').request({
+          hostname:'127.0.0.1', port:9000, path:'/api/register', method:'POST',
+          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)},
+        });
+        r.setTimeout(2000, () => r.destroy()); r.on('error', () => {});
+        r.write(body); r.end();
+        setInterval(() => {
+          const hb = JSON.stringify({ systemId:'idearium', port:PORT, status:'online' });
+          const r2 = _require('http').request({
+            hostname:'127.0.0.1', port:9000, path:'/api/heartbeat', method:'POST',
+            headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(hb)},
+          });
+          r2.on('error', () => {}); r2.write(hb); r2.end();
+        }, 10000);
+      },
+    });
+
+    // Phase 5 SOFT: bridge handshake (§5.2)
+    seq.phase({ name:'bridge.register', type:'SOFT',
+      label:'Bridge handshake (§5.2)',
+      fn: async () => {
+        const bBody = JSON.stringify({ systemId:'idearium', appId:'idearium',
+          secret:'nexus-idearium-internal-v1' });
+        const r = _require('http').request({
+          hostname:'127.0.0.1', port:9999, path:'/bridge/handshake', method:'POST',
+          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(bBody)},
+        }, res => {
+          let d = ''; res.on('data', c => { d += c; });
+          res.on('end', () => {
+            try { const j = JSON.parse(d); if (j.ok) console.log('[idearium §5.2] bridge registered'); }
+            catch(_) {}
+          });
+        });
+        r.on('error', () => {}); r.write(bBody); r.end();
+        // Also post booted to ledger
+        const lb = JSON.stringify({ system:'idearium', type:'idearium.booted',
+          payload:{ version:VERSION, port:PORT } });
+        const r2 = _require('http').request({
+          hostname:'127.0.0.1', port:9000, path:'/api/ledger', method:'POST',
+          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(lb)},
+        });
+        r2.on('error', () => {}); r2.write(lb); r2.end();
+      },
+    });
+
+    // Phase 6 SOFT: SSE stream verify
+    seq.phase({ name:'sse.verify', type:'SOFT',
+      label:'Verify /sse stream opens',
+      fn: async () => {
+        await new Promise((resolve, reject) => {
+          const r = _require('http').request({
+            hostname:'127.0.0.1', port:PORT, path:'/sse',
+            headers:{ Accept:'text/event-stream' },
+          }, res => {
+            if (res.statusCode === 200) { r.destroy(); resolve(); }
+            else { r.destroy(); reject(new Error('SSE ' + res.statusCode)); }
+          });
+          r.setTimeout(2000, () => { r.destroy(); resolve(); }); // resolve on timeout = SSE streaming
+          r.on('error', reject); r.end();
+        });
+      },
+    });
+
+    await seq.run();
+    // Idearium never hard-exits — degrades gracefully
   });
 
   server.on('error', e => {

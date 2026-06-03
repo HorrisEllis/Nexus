@@ -1,6 +1,6 @@
 {
   "name": "nexus-final",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "uuid": "nexus-system-v2-1-0000-4000-0000-000000000001",
   "hookId": "nexus.system:v2.1:s0001",
   "description": "NEXUS ecosystem \u2014 SISO+JAA foundation, gated cross-system orchestration",
@@ -61,7 +61,8 @@
     "\u00a72.3 guardian bus log observable via GET /bus \u2014 logs every event with seq, ts, claimed, system"
   ],
   "tests": {
-    "kernel": "142/142 passing"
+    "kernel": "142/142 passing",
+    "pipeline": "68/68 passing"
   },
   "features": [
     "nexus-repl.js: bus command",
@@ -103,7 +104,8 @@
     "Day 1 S3: Idearium completion \u2014 spec.build, ESS gap engine, pipeline, kernels panel",
     "Day 1 S4: Contracts + integration tests \u2014 74 tests, /api/register, /api/recall",
     "Day 1 S5: Watchdog + indicators \u2014 live dots, spawn crash fixed, nexus> watchdog",
-    "Day 2 S1: Diagnostic sequencer \u2014 cli/diagnose.js, NEXUS-SPEC.md living spec"
+    "Day 2 S1: Diagnostic sequencer \u2014 cli/diagnose.js, NEXUS-SPEC.md living spec",
+    "Day 2 S6: Gated boot sequences \u2014 lib/boot-sequence.js, every system HARD/SOFT gates, orchestrator starts systems one by one, auto-diagnose on HALT"
   ],
   "open_gaps": [
     "guardian/dropzone-persist.js missing (optional)",

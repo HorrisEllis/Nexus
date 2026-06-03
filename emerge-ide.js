@@ -248,18 +248,86 @@ const server = http.createServer((req, res) => {
 // ── Boot sequence ────────────────────────────────────────────────────────────
 
 // 1. Start the server
-server.listen(PORT, () => {
-  console.log('');
-  console.log('\x1b[1m\x1b[32m⬡  EMERGE IDE\x1b[0m  v1.0');
-  console.log('');
-  console.log(`   \x1b[90mIDE       \x1b[0m  http://localhost:${PORT}`);
-  console.log(`   \x1b[90mSpec      \x1b[0m  ${kernel.SCHEMA.keywords.size} keywords · ${kernel.SCHEMA.axioms.size} axioms · ${kernel.SCHEMA.gap_types ? kernel.SCHEMA.gap_types.size : 0} gap types`);
-  console.log(`   \x1b[90mModel     \x1b[0m  ${DEF_MODEL}`);
-  console.log(`   \x1b[90mVoice     \x1b[0m  press V in IDE to toggle`);
-  console.log(`   \x1b[90mDrop      \x1b[0m  .eg / .emerge / .spec onto the editor`);
-  console.log('');
+server.listen(PORT, async () => {
+  const { BootSequence } = require('./lib/boot-sequence');
+
+  const seq = new BootSequence({
+    systemId: 'emerge', port: PORT, version: '1.0.0',
+    label: 'Emerge IDE', maxRetries: 1,
+  });
+
+  // Phase 0 HARD: server bound
+  seq.phase({ name:'server.bound', type:'HARD',
+    label:'HTTP server bound :' + PORT,
+    fn: async () => { /* in listen callback = bound */ },
+  });
+
+  // Phase 1 HARD: kernel loaded (595 keywords)
+  seq.phase({ name:'kernel.loaded', type:'HARD',
+    label:'Emerge kernel loads without error',
+    fn: async () => {
+      // Kernel is a class — just verify require() works and it's non-null
+      const EmKernel = require('./emerge-kernel');
+      if (!EmKernel) throw new Error('emerge-kernel module is null/undefined');
+    },
+  });
+
+  // Phase 2 HARD: spec file present
+  seq.phase({ name:'spec.present', type:'HARD',
+    label:'emerge.spec file present and parseable',
+    fn: async () => {
+      const fs = require('fs');
+      const path = require('path');
+      const specPath = path.join(__dirname, 'emerge.spec');
+      if (!fs.existsSync(specPath)) throw new Error('emerge.spec not found');
+      const content = fs.readFileSync(specPath, 'utf8');
+      if (content.length < 100) throw new Error('emerge.spec too short');
+    },
+  });
+
+  // Phase 3 SOFT: orchestrator registration (§AXIOM)
+  seq.phase({ name:'orchestrator.register', type:'SOFT',
+    label:'Register with orchestrator (§AXIOM)',
+    fn: async () => {
+      const body = JSON.stringify({ systemId:'emerge', port:PORT,
+        meta:{ role:'compiler-ide', version:'1.0.0' } });
+      const r = require('http').request({
+        hostname:'127.0.0.1', port:9000, path:'/api/register', method:'POST',
+        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)},
+      });
+      r.setTimeout(2000, () => r.destroy()); r.on('error', () => {});
+      r.write(body); r.end();
+      setInterval(() => {
+        const hb = JSON.stringify({ systemId:'emerge', port:PORT, status:'online' });
+        const r2 = require('http').request({
+          hostname:'127.0.0.1', port:9000, path:'/api/heartbeat', method:'POST',
+          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(hb)},
+        });
+        r2.on('error', () => {}); r2.write(hb); r2.end();
+      }, 10000);
+    },
+  });
+
+  // Phase 4 SOFT: Ollama presence check (LAW_I)
+  seq.phase({ name:'ollama.check', type:'SOFT',
+    label:'Ollama presence check :11434 (LAW_I)',
+    fn: async () => {
+      await new Promise((resolve, reject) => {
+        const r = require('http').get('http://127.0.0.1:11434/api/tags', res => {
+          res.statusCode === 200 ? resolve() : reject(new Error('ollama ' + res.statusCode));
+        });
+        r.setTimeout(2000, () => { r.destroy(); reject(new Error('ollama timeout')); });
+        r.on('error', reject);
+      });
+    },
+  });
+
+  const result = await seq.run();
+  console.log('   \x1b[90mIDE       \x1b[0m  http://localhost:' + PORT);
   uiStream.emit(new Event('eidolon.ready', { port: PORT }));
+  if (!result.ok) process.exit(1);
 });
+
 
 // 2. Check Ollama
 ollama.ping().then(online => {

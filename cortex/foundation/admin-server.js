@@ -133,6 +133,14 @@ class AdminServer {
           if (bridge) bridge.broadcast(b);
           this._json(res, 200, { ok:true }); break;
         }
+        case route === 'GET /contract': {
+          const { readFileSync, existsSync } = require('fs');
+          const cp = require('path').join(__dirname, '../interaction-contract.json');
+          if (!existsSync(cp)) { res.writeHead(404,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}); res.end(JSON.stringify({ok:false,error:'contract not found'})); break; }
+          try { res.writeHead(200,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'}); res.end(readFileSync(cp,'utf8')); }
+          catch(e) { res.writeHead(500); res.end(JSON.stringify({ok:false,error:e.message})); }
+          break;
+        }
         case route === 'GET /health': {
           const last = jaaDB.tail('event_log', 1);
           res.writeHead(200, { 'Content-Type': 'application/json' });

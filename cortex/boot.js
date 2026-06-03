@@ -32,138 +32,125 @@ const VERSION   = '2.0.0';
 let jaaDB, fileStore, fileRefs, adminServer;
 
 async function bootAsync() {
+  const { BootSequence } = require('../lib/boot-sequence');
 
-  // ── §AXIOM Gate 0: Register with orchestrator — it's the source of truth ───
-  // Connection order: event bus → kernel → orchestrator
-  // This gate is non-blocking: orchestrator may not be up yet, that's fine
-  await nc.gate('orchestrator.register', 'cortex', async () => {
-    const r = await nc.registerWithOrchestrator('cortex', PORT, { role:'source-of-truth', version:VERSION });
-    if (r.ok) nc.startHeartbeat('cortex', PORT);
-    // If orchestrator not up yet, continue — we'll heartbeat when it comes online
-  }).catch(() => {});  // non-fatal on boot
-
-  // ── §3.1 Gate 1: Storage ───────────────────────────────────────────────────
-  await nc.gate('storage.init', 'cortex', async () => {
-    jaaDB     = new JaaDB({ dir: DATA_DIR });
-    fileStore = new FileStore({ dir: STORE_DIR });
-    fileRefs  = new FileRefs({ store: fileStore, dir: path.join(STORE_DIR, 'refs') });
-    await jaaDB.open();
-    // §2.2 — verify persistence is real
-    jaaDB.insert('event_log', {
-      uuid: uid(), type: 'cortex.storage.opened', ts: Date.now(),
-      payload: { dataDir: DATA_DIR, tables: Object.keys(jaaDB._tables || {}).length },
-      source: 'boot', causedBy: null,
-    });
+  const seq = new BootSequence({
+    systemId: 'cortex', port: PORT, version: VERSION,
+    label: 'Nexus Cortex', maxRetries: 1,
   });
 
-  // ── §3.1 Gate 2: Core modules ─────────────────────────────────────────────
-  await nc.gate('core.init', 'cortex', async () => {
-    core.open();
-    try {
-      const projectSchema = require('./cobalt.manifest.json');
-      core.load(projectSchema);
-    } catch {
-      core.connect({
-        uuid: 'nexus-project-0000-4000-0000-000000000001',
-        name: 'nexus', type: 'core', version: VERSION,
-        meta: { intent: 'NEXUS cortex source-of-truth' },
+  // ── Phase 0 SOFT: orchestrator registration ──────────────────────────────
+  seq.phase({ name:'orchestrator.register', type:'SOFT',
+    label:'Register with orchestrator (§AXIOM)',
+    fn: async () => {
+      const r = await nc.registerWithOrchestrator('cortex', PORT,
+        { role:'source-of-truth', version:VERSION });
+      if (r.ok) nc.startHeartbeat('cortex', PORT);
+    },
+  });
+
+  // ── Phase 1 HARD: storage init ───────────────────────────────────────────
+  seq.phase({ name:'storage.init', type:'HARD',
+    label:'JAA database open + FileStore init (§2.1)',
+    fn: async () => {
+      jaaDB     = new JaaDB({ dir: DATA_DIR });
+      fileStore = new FileStore({ dir: STORE_DIR });
+      fileRefs  = new FileRefs({ store: fileStore,
+        dir: path.join(STORE_DIR, 'refs') });
+      await jaaDB.open();
+      jaaDB.insert('event_log', {
+        uuid: uid(), type: 'cortex.storage.opened', ts: Date.now(),
+        payload: { dataDir: DATA_DIR,
+          tables: Object.keys(jaaDB._tables || {}).length },
+        source: 'boot', causedBy: null,
       });
-    }
+    },
   });
 
-  // ── §3.1 Gate 3: Module dependencies ──────────────────────────────────────
-  await nc.gate('deps.init', 'cortex', async () => {
-    versionium.setDeps({ fileStore, fileRefs });
-    agentDispatch.setDeps({ ollama: ollamaAgent, claude: claudeAgent, chatgpt: null, gemini: null });
-  });
-
-  // ── §3.1 Gate 4: Poll registry ─────────────────────────────────────────────
-  await nc.gate('poll.start', 'cortex', async () => {
-    pollRegistry.start();
-  });
-
-  // ── §3.1 Gate 5: Admin server ──────────────────────────────────────────────
-  await nc.gate('server.start', 'cortex', async () => {
-    adminServer = new AdminServer({ port: PORT });
-    await adminServer.start();
-  });
-
-  // ── §3.1 Gate 6: Boot record ───────────────────────────────────────────────
-  await nc.gate('boot.record', 'cortex', async () => {
-    jaaDB.insert('event_log', {
-      uuid: uid(), type: 'system.booted', ts: Date.now(),
-      payload: { version: VERSION, modules: pollRegistry.modules.map(m => m.id), port: PORT },
-      source: 'boot', causedBy: null,
-    });
-    _seedProjectRegistry(jaaDB);
-  });
-
-  // ── §3.1 Gate 7: Bus + bridge registration ──────────────────────────────────
-  // §5.2 — everything implements the bridge; orchestrator already registered (gate 0)
-  await nc.gate('bus.bridge.register', 'cortex', async () => {
-    const r = await nc._req('bridge', 'POST', '/bridge/handshake', {
-      systemId: 'cortex', appId: 'cortex',
-      secret: 'nexus-cortex-internal-v1',
-    }, 4000);
-    if (!r.ok) {
-      console.warn('[cortex] bridge not available — running standalone');
-      return; // non-fatal: bridge may start later
-    }
-    // Announce to the full bus: orchestrator → bridge → all listeners
-    await nc.postLedger('cortex', 'cortex.booted', { version: VERSION, port: PORT });
-    await nc.postBridge('cortex.booted', { version: VERSION, port: PORT });
-  });
-
-  // ── Boot banner ────────────────────────────────────────────────────────────
-  const ollamaHost = process.env.OLLAMA_HOST || '127.0.0.1';
-  const ollamaPort = process.env.OLLAMA_PORT || '11434';
-  let ollamaStatus = '✗ offline';
-  try {
-    const http2 = require('http');
-    await new Promise(resolve => {
-      const r = http2.get(`http://${ollamaHost}:${ollamaPort}/api/tags`, res => {
-        let d = ''; res.on('data', c => d += c);
-        res.on('end', () => {
-          try {
-            const j = JSON.parse(d);
-            ollamaStatus = `✓ online (${(j.models||[]).length} models)`;
-          } catch(_) {}
-          resolve();
+  // ── Phase 2 HARD: cobalt core ────────────────────────────────────────────
+  seq.phase({ name:'core.init', type:'HARD',
+    label:'Cobalt core open + project connect',
+    fn: async () => {
+      core.open();
+      try {
+        const schema = require('./cobalt.manifest.json');
+        core.load(schema);
+      } catch {
+        core.connect({
+          uuid: 'nexus-project-0000-4000-0000-000000000001',
+          name: 'nexus', type: 'core', version: VERSION,
+          meta: { intent: 'NEXUS cortex source-of-truth' },
         });
+      }
+    },
+  });
+
+  // ── Phase 3 HARD: module dependencies ───────────────────────────────────
+  seq.phase({ name:'deps.init', type:'HARD',
+    label:'Wire Versionium + AgentDispatch deps',
+    fn: async () => {
+      versionium.setDeps({ fileStore, fileRefs });
+      agentDispatch.setDeps({
+        ollama: ollamaAgent, claude: claudeAgent,
+        chatgpt: null, gemini: null,
       });
-      r.setTimeout(2000, () => { r.destroy(); resolve(); });
-      r.on('error', resolve);
+    },
+  });
+
+  // ── Phase 4 HARD: poll registry ──────────────────────────────────────────
+  seq.phase({ name:'poll.start', type:'HARD',
+    label:'Start all module poll loops',
+    fn: async () => { pollRegistry.start(); },
+  });
+
+  // ── Phase 5 HARD: admin server ───────────────────────────────────────────
+  seq.phase({ name:'server.start', type:'HARD',
+    label:'HTTP admin server on :' + PORT,
+    fn: async () => {
+      adminServer = new AdminServer({ port: PORT });
+      await adminServer.start();
+    },
+  });
+
+  // ── Phase 6 SOFT: boot record ────────────────────────────────────────────
+  seq.phase({ name:'boot.record', type:'SOFT',
+    label:'Write boot record to event_log (§M1)',
+    fn: async () => {
+      jaaDB.insert('event_log', {
+        uuid: uid(), type: 'system.booted', ts: Date.now(),
+        payload: { version: VERSION,
+          modules: pollRegistry.modules.map(m => m.id), port: PORT },
+        source: 'boot', causedBy: null,
+      });
+      // seed project registry with known systems
+try {
+  const systems = ['bridge','cortex','guardian','idearium','emerge'];
+  for (const s of systems) {
+    jaaDB.insert('project_registry', {
+      uuid: require('crypto').randomUUID(), name: s, system: s,
+      ts: Date.now(), source: 'boot',
     });
-  } catch(_) {}
-
-  console.log('');
-  console.log('\x1b[1m\x1b[36m⬡  NEXUS CORTEX\x1b[0m  v' + VERSION);
-  console.log('');
-  console.log(`   \x1b[90mHTTP      \x1b[0m  http://127.0.0.1:${PORT}`);
-  console.log(`   \x1b[90mSSE       \x1b[0m  http://127.0.0.1:${PORT}/sse`);
-  console.log(`   \x1b[90mOllama    \x1b[0m  ${ollamaStatus}`);
-  console.log(`   \x1b[90mBridge    \x1b[0m  §5.2 registered`);
-  console.log('');
-}
-
-// ── Project registry seed ──────────────────────────────────────────────────────
-function _seedProjectRegistry(db) {
-  const systems = [
-    { name:'bridge',   port:9999, role:'message-router' },
-    { name:'cortex',   port:3748, role:'source-of-truth' },
-    { name:'guardian', port:7820, role:'ai-orchestrator' },
-    { name:'idearium', port:4800, role:'idea-os' },
-    { name:'emerge',   port:4242, role:'emergence-ide' },
-  ];
-  for (const sys of systems) {
-    const existing = db.query('project_registry', r => r.name === sys.name, 1);
-    if (!existing.length) {
-      db.insert('project_registry', {
-        uuid: uid(), name: sys.name, port: sys.port, role: sys.role,
-        status: 'registered', lastSeenAt: Date.now(), ts: Date.now(),
-      });
-    }
   }
+} catch(_) {}
+    },
+  });
+
+  // ── Phase 7 SOFT: bridge registration ───────────────────────────────────
+  seq.phase({ name:'bridge.register', type:'SOFT',
+    label:'Bridge handshake + bus announce (§5.2)',
+    fn: async () => {
+      const r = await nc._req('bridge', 'POST', '/bridge/handshake', {
+        systemId: 'cortex', appId: 'cortex',
+        secret: 'nexus-cortex-internal-v1',
+      }, 4000);
+      if (!r.ok) throw new Error('bridge unavailable');
+      await nc.postLedger('cortex', 'cortex.booted', { version:VERSION, port:PORT });
+      await nc.postBridge('cortex.booted', { version:VERSION, port:PORT });
+    },
+  });
+
+  const result = await seq.run();
+  if (!result.ok) process.exit(1);
 }
 
 bootAsync().catch(err => {

@@ -627,19 +627,74 @@ function start(port = BRIDGE_PORT) {
   }, 5 * 60 * 1000).unref();
 
   _server = http.createServer(buildBridgeHandler);
-  _server.listen(port, '127.0.0.1', () => {
-    console.log('');
-    console.log('\x1b[1m\x1b[33m⬡  NEXUS BRIDGE\x1b[0m  v1.0');
-    console.log('');
+  _server.listen(port, '127.0.0.1', async () => {
+    const { BootSequence } = require('../lib/boot-sequence');
+    const nc_b = require('../nexus-connect');
+
+    const seq = new BootSequence({
+      systemId: 'bridge', port, version: '1.0.0',
+      label: 'Nexus Bridge', maxRetries: 1,
+    });
+
+    // ── Phase 0 HARD: server bound ───────────────────────────────────────────
+    seq.phase({ name:'server.bound', type:'HARD',
+      label:`HTTP server bound on :${port}`,
+      fn: async () => {
+        // We are in the listen callback — server IS bound. Verify with a health check.
+        await new Promise((resolve, reject) => {
+          const r = require('http').get(
+            `http://127.0.0.1:${port}/bridge/health`, res => {
+            if (res.statusCode === 200) resolve();
+            else reject(new Error(`health returned ${res.statusCode}`));
+          });
+          r.setTimeout(2000, () => { r.destroy(); reject(new Error('health timeout')); });
+          r.on('error', reject);
+        });
+      },
+    });
+
+    // ── Phase 1 SOFT: orchestrator registration ──────────────────────────────
+    seq.phase({ name:'orchestrator.register', type:'SOFT',
+      label:'Register + heartbeat with orchestrator (§AXIOM)',
+      fn: async () => {
+        const body = JSON.stringify({
+          systemId:'bridge', port,
+          meta:{ role:'event-bus-fabric', version:'1.0.0' },
+        });
+        const r = require('http').request({
+          hostname:'127.0.0.1', port:9000, path:'/api/register', method:'POST',
+          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(body)},
+        });
+        r.setTimeout(2000, () => r.destroy());
+        r.on('error', () => {});
+        r.write(body); r.end();
+        // Start heartbeat loop
+        setInterval(() => {
+          const hb = JSON.stringify({ systemId:'bridge', port, status:'online' });
+          const r2 = require('http').request({
+            hostname:'127.0.0.1', port:9000, path:'/api/heartbeat', method:'POST',
+            headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(hb)},
+          });
+          r2.on('error', () => {}); r2.write(hb); r2.end();
+        }, 10000);
+      },
+    });
+
+    // ── Phase 2 SOFT: contract file present ─────────────────────────────────
+    seq.phase({ name:'contract.present', type:'SOFT',
+      label:'Verify interaction-contract.json is present',
+      fn: async () => {
+        const cp = require('path').join(__dirname, 'interaction-contract.json');
+        if (!require('fs').existsSync(cp))
+          throw new Error('interaction-contract.json missing');
+      },
+    });
+
+    const result = await seq.run();
     console.log(`   \x1b[90mHTTP      \x1b[0m  http://127.0.0.1:${port}`);
     console.log(`   \x1b[90mHealth    \x1b[0m  http://127.0.0.1:${port}/bridge/health`);
-    console.log(`   \x1b[90mRequests  \x1b[0m  http://127.0.0.1:${port}/bridge/requests`);
-    console.log(`   \x1b[90mSubscribe \x1b[0m  http://127.0.0.1:${port}/bridge/subscribe?channel=*`);
-    console.log('');
-    console.log(`   \x1b[90mEndpoints \x1b[0m  handshake  tags  requests  subscribe  pull  broadcast  forward`);
-    console.log('');
-    console.log(`   \x1b[90mCLI       \x1b[0m  nexus bridge health`);
-    console.log('');
+    console.log(`   \x1b[90mContract  \x1b[0m  http://127.0.0.1:${port}/bridge/contract`);
+    if (!result.ok) process.exit(1);
   });
   return bridge;
 }

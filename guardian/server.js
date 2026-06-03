@@ -421,264 +421,90 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-httpsServer.listen(WSS_PORT, '127.0.0.1', () => {
-  // §AXIOM: register with orchestrator FIRST (source of truth), then bus+bridge
+httpsServer.listen(WSS_PORT, '127.0.0.1', async () => {
   setTimeout(async () => {
     const nc2 = require('../nexus-connect');
-    // 1. Orchestrator first
-    const rOrch = await nc2.registerWithOrchestrator('guardian', HTTP_PORT, { role:'ai-orchestrator', wss: WSS_PORT });
-    if (rOrch.ok) nc2.startHeartbeat('guardian', HTTP_PORT);
-    // 2. Bus: post to ledger (orchestrator already knows we're here)
-    await nc2.postLedger('guardian', 'guardian.booted', { port: HTTP_PORT, wss: WSS_PORT });
-    // 3. Bridge: handshake for cross-system event routing
-    const r = await nc2._req('bridge', 'POST', '/bridge/handshake', {
-      systemId: 'guardian', appId: 'guardian',
-      secret: 'nexus-guardian-internal-v1',
-    }, 4000);
-    if (r.ok) {
-      console.log('[guardian §AXIOM] orch → bus → bridge registered');
-      await nc2.postBridge('guardian.booted', { version: '3.5.0', port: HTTP_PORT });
-    } else {
-      console.warn('[guardian] bridge not available — standalone mode');
-    }
-  }, 2000);
-  // WSS up — print full banner when HTTP also up
+    const { BootSequence } = require('../lib/boot-sequence');
+
+    const seq = new BootSequence({
+      systemId: 'guardian', port: HTTP_PORT, version: '3.5.0',
+      label: 'Nexus Guardian', maxRetries: 1,
+    });
+
+    // Phase 0 HARD: WSS server is bound (we are in listen callback)
+    seq.phase({ name:'wss.bound', type:'HARD',
+      label:'WSS :' + WSS_PORT + ' (TLS) bound',
+      fn: async () => { /* in listen callback = bound */ },
+    });
+
+    // Phase 1 HARD: HTTP server health verify
+    seq.phase({ name:'http.verify', type:'HARD',
+      label:'Verify HTTP :' + HTTP_PORT + ' /health responds 200',
+      fn: async () => {
+        await new Promise((resolve, reject) => {
+          const r = require('http').get(
+            'http://127.0.0.1:' + HTTP_PORT + '/health',
+            res => { res.statusCode === 200 ? resolve()
+              : reject(new Error('health ' + res.statusCode)); }
+          );
+          r.setTimeout(3000, () => { r.destroy(); reject(new Error('health timeout')); });
+          r.on('error', reject);
+        });
+      },
+    });
+
+    // Phase 2 SOFT: orchestrator registration (§AXIOM)
+    seq.phase({ name:'orchestrator.register', type:'SOFT',
+      label:'Register with orchestrator (§AXIOM)',
+      fn: async () => {
+        const r = await nc2.registerWithOrchestrator('guardian', HTTP_PORT,
+          { role:'ai-orchestrator', wss:WSS_PORT });
+        if (r.ok) nc2.startHeartbeat('guardian', HTTP_PORT);
+      },
+    });
+
+    // Phase 3 SOFT: ledger boot record
+    seq.phase({ name:'ledger.announce', type:'SOFT',
+      label:'Write boot record to ledger',
+      fn: async () => {
+        await nc2.postLedger('guardian', 'guardian.booted',
+          { port:HTTP_PORT, wss:WSS_PORT });
+      },
+    });
+
+    // Phase 4 SOFT: bridge handshake (§5.2)
+    seq.phase({ name:'bridge.register', type:'SOFT',
+      label:'Bridge handshake + bus announce (§5.2)',
+      fn: async () => {
+        const r = await nc2._req('bridge', 'POST', '/bridge/handshake', {
+          systemId:'guardian', appId:'guardian',
+          secret:'nexus-guardian-internal-v1',
+        }, 4000);
+        if (!r.ok) throw new Error('bridge unavailable');
+        await nc2.postBridge('guardian.booted', { version:'3.5.0', port:HTTP_PORT });
+      },
+    });
+
+    await seq.run();
+    // Guardian never hard-exits — degrades gracefully on SOFT failures
+  }, 1500);
 });
 
-// ── SSE clients ───────────────────────────────────────────────────────────────
 
-const sseClients = new Map();
+// ── Main HTTP server (:7820) ─────────────────────────────────────────────────
+const server = require('http').createServer();
 
-function broadcastChunk(jobId, text) {
-  const clients = sseClients.get(jobId);
-  if (!clients) return;
-  for (const res of clients) res.write(`data: ${JSON.stringify({ text })}\n\n`);
-}
-
-wss.on('connection', (ws) => {
-  ws.on('message', (raw) => {
-    try {
-      const msg = JSON.parse(raw);
-      if (msg.type === 'GUARDIAN_CHUNK' && msg.jobId && msg.text) broadcastChunk(msg.jobId, msg.text);
-      if (msg.type === 'GUARDIAN_COMPLETE' && msg.jobId) {
-        const clients = sseClients.get(msg.jobId);
-        if (clients) {
-          for (const res of clients) { res.write(`data: ${JSON.stringify({ done: true })}\n\n`); res.end(); }
-          sseClients.delete(msg.jobId);
-        }
-      }
-    } catch {}
-  });
-});
-
-// ── HTTP server (CLI + dashboard) ─────────────────────────────────────────────
-
-const server = http.createServer((req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-
-  const url = new URL(req.url, `http://127.0.0.1:${HTTP_PORT}`);
-
-  if (req.method === 'POST' && url.pathname === '/command') {
-    let body = '';
-    req.on('data', c => body += c);
-    req.on('end', () => {
-      try {
-        const data = JSON.parse(body);
-        let parsed;
-        if (data.raw) {
-          parsed = parseCommand(data.raw);
-          if (!parsed) {
-            res.writeHead(400, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ ok: false, error: 'Could not parse command' }));
-            return;
-          }
-        } else {
-          parsed = { command: data.command || 'code',
-            provider: normaliseProvider(data.provider),
-            prompt: data.prompt || '', content: data.content || null };
-        }
-        if (!parsed.provider) {
-          res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ ok: false, error: `Unknown provider: ${data.provider || '?'}` }));
-          return;
-        }
-        const job = createJob(parsed);
-        dispatchJob(job);
-        res.writeHead(202, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: true, jobId: job.id, status: job.status }));
-      } catch (err) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: false, error: err.message }));
-      }
-    });
-    return;
-  }
-
-  if (req.method === 'GET' && url.pathname.startsWith('/status/')) {
-    const job = jobs.get(url.pathname.split('/')[2]);
-    if (!job) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'Job not found' })); return; }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, job: { ...job, resolve: undefined } }));
-    return;
-  }
-
-  if (req.method === 'GET' && url.pathname.startsWith('/response/')) {
-    const job = jobs.get(url.pathname.split('/')[2]);
-    if (!job) { res.writeHead(404, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: 'Job not found' })); return; }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, complete: job.status === 'complete',
-      status: job.status, response: job.response, error: job.error || null }));
-    return;
-  }
-
-  if (req.method === 'GET' && url.pathname.startsWith('/stream/')) {
-    const jobId = url.pathname.split('/')[2];
-    const job   = jobs.get(jobId);
-    res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive' });
-    if (job && job.response) res.write(`data: ${JSON.stringify({ text: job.response, partial: true })}\n\n`);
-    if (!sseClients.has(jobId)) sseClients.set(jobId, new Set());
-    sseClients.get(jobId).add(res);
-    req.on('close', () => {
-      const clients = sseClients.get(jobId);
-      if (clients) { clients.delete(res); if (clients.size === 0) sseClients.delete(jobId); }
-    });
-    return;
-  }
-
-  if (req.method === 'GET' && url.pathname === '/providers') {
-    const status = {};
-    for (const [name, ws] of Object.entries(PROVIDERS)) {
-      status[name] = ws && ws.readyState === WebSocket.OPEN ? 'connected' : 'disconnected';
+const _lip = (() => {
+  try {
+    const ifaces = require('os').networkInterfaces();
+    for (const [,addrs] of Object.entries(ifaces)) {
+      for (const a of addrs) { if (a.family==='IPv4' && !a.internal) return a.address; }
     }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, providers: status }));
-    return;
-  }
-
-  if (req.method === 'GET' && url.pathname === '/jobs') {
-    const limit  = parseInt(url.searchParams.get('limit') || '20');
-    const filter = url.searchParams.get('status');
-    let list     = [...jobs.values()].reverse().slice(0, limit);
-    if (filter) list = list.filter(j => j.status === filter);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, jobs: list.map(j => ({ ...j, resolve: undefined })) }));
-    return;
-  }
-
-  if (req.method === 'GET' && url.pathname === '/log') {
-    const limit = parseInt(url.searchParams.get('limit') || '50');
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, log: responseLog.slice(-limit) }));
-    return;
-  }
-
-  // §2.3 — SISO bus log observable via API
-  if (req.method === 'GET' && url.pathname === '/bus') {
-    const n = parseInt(new URL(req.url,'http://x').searchParams.get('n') || '100');
-    pRes(res, 200, { ok: true, ...bus.sample(n), gates: [...bus.gates.keys()] });
-    return true;
-  }
-
-  // Bus emit via API (for orchestrator to inject events)
-  if (req.method === 'POST' && url.pathname === '/bus/emit') {
-    let body = '';
-    req.on('data', c => body += c);
-    req.on('end', () => {
-      try {
-        const { type, data } = JSON.parse(body);
-        if (!type) { pRes(res, 400, { ok:false, error:'type required' }); return; }
-        const result = bus.emit(type, data || {});
-        pRes(res, 200, { ok:true, ...result });
-      } catch(e) { pRes(res, 400, { ok:false, error: e.message }); }
-    });
-    return true;
-  }
-
-  if (req.method === 'GET' && url.pathname === '/contract') {
-    const contractPath = require('path').join(__dirname, 'interaction-contract.json');
-    if (!require('fs').existsSync(contractPath)) {
-      res.writeHead(404, {'Content-Type':'application/json'}); return res.end(JSON.stringify({ok:false,error:'contract not found'}));
-    }
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.writeHead(200, {'Content-Type':'application/json'});
-    return res.end(require('fs').readFileSync(contractPath,'utf8'));
-  }
-
-  if (req.method === 'GET' && url.pathname === '/health') {
-    const providers = {};
-    for (const [name, ws] of Object.entries(PROVIDERS)) {
-      providers[name] = ws && ws.readyState === WebSocket.OPEN ? 'connected' : 'disconnected';
-    }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    const queuedCounts = {};
-    for (const [p, q] of pendingQueue) queuedCounts[p] = q.length;
-    res.end(JSON.stringify({ ok: true, uptime: process.uptime(),
-      jobs: jobs.size, queued: queuedCounts, providers, wsClients: wss.clients.size }));
-    return;
-  }
-
-  if (req.method === 'GET' && url.pathname === '/test') {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(`<!DOCTYPE html><html><head><title>Guardian WSS Test</title>
-<style>body{background:#111;color:#eee;font-family:monospace;padding:20px}
-h2{color:#3498db}.ok{color:#2ecc71}.err{color:#e74c3c}.info{color:#aaa}.warn{color:#f39c12}
-div{margin:2px 0}</style></head><body>
-<h2>Guardian WSS Test</h2>
-<p class="info">Tests <strong>wss://127.0.0.1:${WSS_PORT}</strong> from this page.</p>
-<p class="warn">⚠ First: visit <a href="https://127.0.0.1:${WSS_PORT}/" target="_blank" style="color:#f39c12">https://127.0.0.1:${WSS_PORT}/</a> and accept the cert, then run test.</p>
-<button onclick="runTest()" style="padding:8px 18px;cursor:pointer;margin-top:8px">Run Test</button>
-<div id="log"></div>
-<script>
-function log(msg,cls){const d=document.createElement('div');d.className=cls||'info';
-d.textContent='['+new Date().toISOString().slice(11,23)+'] '+msg;document.getElementById('log').appendChild(d);}
-function runTest(){
-  document.getElementById('log').innerHTML='';
-  log('Opening wss://127.0.0.1:${WSS_PORT} ...','info');
-  let ws;
-  try{ws=new WebSocket('wss://127.0.0.1:${WSS_PORT}');}
-  catch(e){log('new WebSocket() threw: '+e.message,'err');return;}
-  log('WebSocket object created — waiting...','info');
-  ws.onopen=function(){
-    log('✓ WS OPEN — handshake succeeded!','ok');
-    ws.send(JSON.stringify({type:'GUARDIAN_REGISTER',provider:'test-browser',host:location.hostname}));
-    log('→ sent GUARDIAN_REGISTER','info');
-  };
-  ws.onmessage=function(e){
-    log('← received: '+e.data,'ok');
-    ws.close();
-  };
-  ws.onerror=function(){
-    log('✗ WS ERROR — cert not accepted yet? Visit https://127.0.0.1:${WSS_PORT}/ first','err');
-  };
-  ws.onclose=function(e){
-    log('WS CLOSED code:'+e.code+' wasClean:'+e.wasClean,e.wasClean?'info':'warn');
-  };
-  setTimeout(function(){
-    if(ws.readyState!==WebSocket.OPEN&&ws.readyState!==WebSocket.CLOSED){
-      log('✗ TIMEOUT','err');ws.close();
-    }
-  },5000);
-}
-<\/script></body></html>`);
-    return;
-  }
-
-  res.writeHead(404); res.end('Not found');
-});
+  } catch(_) {}
+  return null;
+})();
 
 server.listen(HTTP_PORT, '127.0.0.1', () => {
-  const _lip = (() => {
-    try {
-      const ifaces = require('os').networkInterfaces();
-      for (const [,addrs] of Object.entries(ifaces)) {
-        for (const a of addrs) { if (a.family==='IPv4' && !a.internal) return a.address; }
-      }
-    } catch(_) {}
-    return null;
-  })();
   console.log('');
   console.log('\x1b[1m\x1b[35m⬡  NEXUS GUARDIAN\x1b[0m  v9.0');
   console.log('');
@@ -693,9 +519,6 @@ server.listen(HTTP_PORT, '127.0.0.1', () => {
   console.log(`              \x1b[33minstall guardian/userscript-claude.js in Tampermonkey on claude.ai\x1b[0m`);
   console.log('');
   console.log(`   \x1b[33m⚠  WSS cert\x1b[0m  visit https://127.0.0.1:${WSS_PORT}/ once to accept self-signed cert`);
-  console.log('');
-  console.log(`   \x1b[90mCLI       \x1b[0m  nexus guardian dispatch --prompt="..." --provider=chatgpt`);
-  console.log(`              nexus guardian providers`);
   console.log('');
 });
 
@@ -1782,6 +1605,45 @@ function bodyJ(req) { return new Promise((resolve,reject) => { let b=''; req.on(
 
 function handleExtendedRoutes(req, res, url, method) {
   const parts = url.pathname.split('/').filter(Boolean);
+
+  // ── Core API routes ────────────────────────────────────────────────────────
+  if (method==='GET' && url.pathname==='/health') {
+    pRes(res, 200, { ok:true, uptime:process.uptime(), jobs:jobs.size,
+      providers:Object.fromEntries(Object.entries(PROVIDERS).map(([k,v])=>[k,v?'connected':'null'])),
+      queued:Object.fromEntries([...jobs.values()].filter(j=>j.status==='pending').map(j=>[j.id,j.provider])),
+    }); return true;
+  }
+  if (method==='GET' && url.pathname==='/contract') {
+    const cp = require('path').join(__dirname, 'interaction-contract.json');
+    if (!require('fs').existsSync(cp)) { pRes(res,404,{ok:false,error:'contract not found'}); return true; }
+    res.writeHead(200,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+    res.end(require('fs').readFileSync(cp,'utf8')); return true;
+  }
+  if (method==='GET' && url.pathname==='/providers') {
+    pRes(res, 200, { ok:true, providers:Object.fromEntries(Object.entries(PROVIDERS).map(([k,v])=>[k,v?'connected':'null'])) }); return true;
+  }
+  if (method==='GET' && (url.pathname==='/jobs'||url.pathname==='/jobs/')) {
+    const limit = parseInt(url.searchParams.get('limit')||'50');
+    const status = url.searchParams.get('status');
+    let list = [...jobs.values()];
+    if (status) list = list.filter(j=>j.status===status);
+    pRes(res, 200, { ok:true, jobs:list.slice(-limit) }); return true;
+  }
+  if (method==='GET' && url.pathname==='/bus') {
+    const n   = parseInt(url.searchParams.get('n') || '20');
+    const smp = bus.sample(n);          // { logLevel, count, entries }
+    const gts = [...bus.gates.keys()];
+    pRes(res, 200, { ok:true, gates:gts, ...smp }); return true;
+  }
+  if (method==='POST' && url.pathname==='/bus/emit') {
+    bodyJ(req).then(body => {
+      const { type, data } = body;
+      if (!type) { pRes(res,400,{ok:false,error:'type required'}); return; }
+      const r = bus.emit(type, data || {});
+      pRes(res, 200, { ok:true, type, seq: r.seq });
+    }).catch(e => pRes(res,500,{ok:false,error:e.message}));
+    return true;
+  }
 
   // Cockpit
   if (method==='GET' && (url.pathname==='/'||url.pathname==='/cockpit'||url.pathname==='/cockpit/')) {

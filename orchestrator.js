@@ -570,6 +570,11 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
+  // ── Top-level static routes (before /api check) ─────────────────────────
+  if (M==='GET' && u.pathname==='/ports.js') {
+    return serveFile(res, path.join(UI_ROOT,'ports.js'));
+  }
+
   // ────────────────────────────────────────────────────────────────────────
   // All orchestrated routes under /api/*
   // ────────────────────────────────────────────────────────────────────────
@@ -981,11 +986,6 @@ const server = http.createServer(async (req, res) => {
     return json(res,404,{ok:false,error:`idearium route not found: ${M} /api/idearium/${action}`});
   }
 
-  // ── ports.js — canonical port map for all UIs ───────────────────────────
-  if (M==='GET' && u.pathname==='/ports.js') {
-    return serveFile(res, path.join(UI_ROOT,'ports.js'));
-  }
-
   return json(res,404,{ok:false,error:`route not found: ${M} ${u.pathname}`});
 });
 
@@ -1231,111 +1231,251 @@ else if (cmd==='snr')      cliSNR().then(()=>process.exit(0));
 else if (cmd==='help'||cmd==='--help'||cmd==='-h') { cliHelp(); process.exit(0); }
 else {
   // Start server
-  server.listen(PORT, '127.0.0.1', async () => {
-    const nc = require('./nexus-connect');
-    const VERSION = '2.0.0';
+server.listen(PORT, '127.0.0.1', async () => {
+  const { BootSequence } = require('./lib/boot-sequence');
 
-    // ── §3.1 Gate: UI hotswap ────────────────────────────────────────────────
-    watchUIDirs();
+  // ════════════════════════════════════════════════════════════════════════════
+  // ORCHESTRATOR OWN BOOT SEQUENCE (§AXIOM — starts first)
+  // ════════════════════════════════════════════════════════════════════════════
+  const ownSeq = new BootSequence({
+    systemId: 'orchestrator', port: PORT, version: '2.0.0',
+    label: 'Nexus Orchestrator', maxRetries: 1,
+  });
 
-    // ── §3.1 Gate: Bridge SSE relay ──────────────────────────────────────────
-    setTimeout(connectBridgeSSE, 1200);
+  // Phase 0 HARD: HTTP server bound
+  ownSeq.phase({ name:'server.bound', type:'HARD',
+    label:'HTTP server bound :' + PORT,
+    fn: async () => { /* in listen callback = bound */ },
+  });
 
-    // ── §3.1 Gate: Bridge registration (§5.2) ────────────────────────────────
-    setTimeout(async () => {
-      const r = await nc._req('bridge','POST','/bridge/handshake',{
-        systemId:'orchestrator', appId:'orchestrator',
-        secret:'nexus-orchestrator-internal-v1',
-      },4000);
-      if (r.ok) {
-        ledgerWrite('orchestrator','orchestrator.bridge.registered',{ version:VERSION, port:PORT });
-        await nc.postBridge('orchestrator.booted',{ version:VERSION, port:PORT });
-      } else {
-        console.warn('[orchestrator] bridge not available — standalone mode');
-      }
-    }, 2000);
+  // Phase 1 HARD: ledger directory writable
+  ownSeq.phase({ name:'ledger.writable', type:'HARD',
+    label:'Ledger directory writable (§2.1)',
+    fn: async () => {
+      const ledgerDir = path.join(ROOT, 'data', 'ledger');
+      require('fs').mkdirSync(ledgerDir, { recursive: true });
+      const testFile = path.join(ledgerDir, '.boot-test');
+      require('fs').writeFileSync(testFile, String(Date.now()));
+      require('fs').unlinkSync(testFile);
+    },
+  });
 
-    // ── §3.1 Gate: Open CLI terminal ─────────────────────────────────────────
-    // §1.2 — failure is logged, not swallowed; server always starts regardless
-    const { spawn } = require('child_process');
-    function openCliTerminal() {
-      try {
+  // Phase 2 HARD: health endpoint responds
+  ownSeq.phase({ name:'health.verify', type:'HARD',
+    label:'Verify /health responds with ok=true',
+    fn: async () => {
+      await new Promise((resolve, reject) => {
+        const r = require('http').get(
+          'http://127.0.0.1:' + PORT + '/health',
+          res => { res.statusCode === 200 ? resolve()
+            : reject(new Error('health ' + res.statusCode)); }
+        );
+        r.setTimeout(2000, () => { r.destroy(); reject(new Error('timeout')); });
+        r.on('error', reject);
+      });
+    },
+  });
+
+  // Phase 3 HARD: recall endpoint readable
+  ownSeq.phase({ name:'recall.verify', type:'HARD',
+    label:'Verify /api/recall returns entries array',
+    fn: async () => {
+      const r = await new Promise((resolve, reject) => {
+        let d = '';
+        const req = require('http').get(
+          'http://127.0.0.1:' + PORT + '/api/recall',
+          res => {
+            res.on('data', c => { d += c; });
+            res.on('end', () => {
+              try { resolve(JSON.parse(d)); } catch(e) { reject(e); }
+            });
+          }
+        );
+        req.setTimeout(2000, () => { req.destroy(); reject(new Error('timeout')); });
+        req.on('error', reject);
+      });
+      if (!Array.isArray(r.entries)) throw new Error('entries not array');
+    },
+  });
+
+  // Phase 4 SOFT: UI hotswap watcher
+  ownSeq.phase({ name:'ui.hotswap', type:'SOFT',
+    label:'Start UI hotswap file watcher',
+    fn: async () => { watchUIDirs(); },
+  });
+
+  // Phase 5 SOFT: open CLI terminal
+  ownSeq.phase({ name:'cli.terminal', type:'SOFT',
+    label:'Open CLI terminal (nexus-repl.js)',
+    fn: async () => {
+      const VERSION = '2.0.0';
+      const { spawn } = require('child_process');
       const cliScript = path.join(ROOT, 'cli', 'nexus-repl.js');
-      const args      = [cliScript, '--repl', `--port=${PORT}`];
-
-      // Try each terminal emulator in order (cross-platform)
+      const args = [cliScript, '--repl', `--port=${PORT}`];
       const terminals = [
-        // Windows
         ['cmd',    ['/c','start','cmd','/k','node',...args]],
-        // macOS
         ['osascript',['-e',`tell app "Terminal" to do script "node ${cliScript} --repl --port=${PORT}"`]],
-        // Linux — try common terminals
         ['gnome-terminal',['--','node',...args]],
         ['xterm',['-e','node',...args]],
         ['konsole',['--','node',...args]],
-        ['xfce4-terminal',['--command','node '+args.join(' ')]],
-        ['lxterminal',['-e','node '+args.join(' ')]],
       ];
-
-      let launched = false;
       for (const [bin, termArgs] of terminals) {
         try {
-          const proc = spawn(bin, termArgs, {
-            detached: true, stdio: 'ignore',
-            windowsHide: false,
-          });
-          proc.on('error', () => {}); // suppress unhandled ENOENT
+          const proc = spawn(bin, termArgs, { detached:true, stdio:'ignore', windowsHide:false });
+          proc.on('error', () => {});
           proc.unref();
-          launched = true;
-          console.log(`\x1b[90m[cli] terminal opened: ${bin}\x1b[0m`);
           ledgerWrite('orchestrator','orchestrator.cli.terminal.opened',{ terminal:bin });
           break;
-        } catch(_) { /* try next */ }
+        } catch(_) {}
       }
-      if (!launched) {
-        console.warn('\x1b[33m[cli] no terminal emulator found — run manually:\x1b[0m');
-        console.warn(`  node cli/nexus-repl.js --repl`);
-        ledgerWrite('orchestrator','orchestrator.cli.terminal.failed',{ reason:'no terminal emulator' });
-      }
-      } catch(e) {
-        console.warn('[cli] terminal open failed:', e.message);
-      }
-    }
-    setTimeout(openCliTerminal, 500);
-
-    // ── Boot banner ───────────────────────────────────────────────────────────
-    console.log('');
-    console.log('\x1b[1m\x1b[32m⬡  NEXUS ORCHESTRATOR\x1b[0m  v' + VERSION);
-    console.log('');
-    console.log(`   \x1b[90mUI          \x1b[0m  http://localhost:${PORT}`);
-    console.log(`   \x1b[90mHealth      \x1b[0m  http://localhost:${PORT}/health`);
-    console.log(`   \x1b[90mSSE         \x1b[0m  http://localhost:${PORT}/sse`);
-    console.log(`   \x1b[90mLedger      \x1b[0m  http://localhost:${PORT}/api/ledger`);
-    console.log(`   \x1b[90mConsole     \x1b[0m  http://localhost:${PORT}/ui/orchestrator`);
-    console.log(`   \x1b[90mAPI routes  \x1b[0m  77 across bridge+cortex+guardian+idearium`);
-    console.log('');
-    console.log(`   \x1b[90mSystems     \x1b[0m`);
-    const systemInfo = [
-      { sys:'bridge',   port:9999, label:'Bridge     ' },
-      { sys:'cortex',   port:3748, label:'Cortex     ' },
-      { sys:'guardian', port:7820, label:'Guardian   ' },
-      { sys:'idearium', port:4800, label:'Idearium   ' },
-      { sys:'emerge',   port:4242, label:'Emerge IDE ' },
-      { sys:'ollama',   port:11434,label:'Ollama     ' },
-    ];
-    for (const { sys, port, label } of systemInfo) {
-      console.log(`              \x1b[90m${label}\x1b[0m  :${port}  /ui/${sys}`);
-    }
-    console.log('');
-    console.log(`   \x1b[90mCLI REPL    \x1b[0m  node cli/nexus-repl.js --repl`);
-    console.log(`   \x1b[90mHotswap     \x1b[0m  edit <system>/ui/index.html → auto-reload`);
-    console.log('');
-    console.log('\x1b[90m[orchestrator §5.2] bridge registration in 2s · SSE relay in 1.2s\x1b[0m');
-
-    // Record own boot to ledger
-    ledgerWrite('orchestrator','orchestrator.booted',{ version:VERSION, port:PORT });
-
-    // §AXIOM: Start system watchdog — monitors all systems, warns on offline
-    startWatchdog();
+    },
   });
+
+  const ownResult = await ownSeq.run();
+  if (!ownResult.ok) process.exit(1);
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // Record own boot to ledger
+  const VERSION = '2.0.0';
+  ledgerWrite('orchestrator','orchestrator.booted',{ version:VERSION, port:PORT });
+  startWatchdog();
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // START-SYSTEMS SEQUENCE
+  // Orchestrator boots each system one by one, waits for health, diagnoses on fail.
+  // ════════════════════════════════════════════════════════════════════════════
+  setTimeout(() => _bootSystems(), 500);
+});
+
+// ── Per-system boot management ────────────────────────────────────────────────
+async function _waitForHealth(systemId, port, healthPath, maxWaitMs = 15000) {
+  const start = Date.now();
+  while (Date.now() - start < maxWaitMs) {
+    try {
+      const ok = await new Promise(resolve => {
+        let d = '';
+        const r = require('http').get(`http://127.0.0.1:${port}${healthPath}`, res => {
+          res.on('data', c => d += c);
+          res.on('end', () => {
+            try { const j = JSON.parse(d); resolve(res.statusCode === 200 && (j.ok !== false)); }
+            catch(_) { resolve(res.statusCode === 200); }
+          });
+        });
+        r.setTimeout(2000, () => { r.destroy(); resolve(false); });
+        r.on('error', () => resolve(false));
+      });
+      if (ok) return true;
+    } catch(_) {}
+    await new Promise(r => setTimeout(r, 800));
+  }
+  return false;
+}
+
+async function _bootOneSys({ systemId, port, cmd, args, healthPath, label }) {
+  const DIAG = require('path').join(__dirname, 'cli', 'diagnose.js');
+  console.log(`\n\x1b[90m[orchestrator] starting ${label}…\x1b[0m`);
+  ledgerWrite('orchestrator', `orchestrator.system.starting`, { systemId, port, cmd });
+
+  const proc = require('child_process').spawn(process.execPath, [cmd, ...args], {
+    detached: false, stdio: 'inherit',
+    env: { ...process.env, ORCHESTRATOR_PORT: String(PORT) },
+  });
+  proc.on('error', err => {
+    ledgerWrite('orchestrator', `orchestrator.system.spawn.error`, { systemId, error: err.message });
+  });
+
+  const up = await _waitForHealth(systemId, port, healthPath);
+
+  if (up) {
+    console.log(`\x1b[32m  ✓ ${label} healthy on :${port}\x1b[0m`);
+    ledgerWrite('orchestrator', `${systemId}.system.online`, { systemId, port });
+    return { ok: true, proc };
+  }
+
+  // System failed to come up — notify and diagnose
+  console.error(`\x1b[31m  ✗ ${label} did not come up within 15s\x1b[0m`);
+  ledgerWrite('orchestrator', `orchestrator.system.failed`, { systemId, port });
+  console.log(`\x1b[36m  → running diagnose for ${systemId}…\x1b[0m`);
+
+  return new Promise(resolve => {
+    let diagOut = '';
+    const diag = require('child_process').spawn(process.execPath, [DIAG, systemId], {
+      detached: false, stdio: ['ignore','pipe','pipe'],
+    });
+    diag.stdout?.on('data', d => { diagOut += d; process.stdout.write(d); });
+    diag.stderr?.on('data', d => { diagOut += d; });
+    diag.on('close', code => {
+      const pass = (diagOut.match(/✓/g)||[]).length;
+      const fail = (diagOut.match(/✗/g)||[]).length;
+      ledgerWrite('orchestrator', `${systemId}.diagnose.result`, {
+        systemId, pass, fail, exitCode: code, fixed: fail===0, ts: Date.now(),
+      });
+      resolve({ ok: false, proc, diagPass: pass, diagFail: fail });
+    });
+  });
+}
+
+async function _bootSystems() {
+  const ROOT2 = require('path').join(__dirname);
+  const systems = [
+    {
+      systemId: 'bridge',   port: 9999, healthPath: '/bridge/health',
+      label: 'Bridge', cmd: require('path').join(ROOT2,'bridge','nexus-bridge.js'), args:[],
+    },
+    {
+      systemId: 'cortex',   port: 3748, healthPath: '/health',
+      label: 'Cortex', cmd: require('path').join(ROOT2,'cortex','boot.js'), args:[],
+    },
+    {
+      systemId: 'guardian', port: 7820, healthPath: '/health',
+      label: 'Guardian', cmd: require('path').join(ROOT2,'guardian','server.js'), args:[],
+    },
+    {
+      systemId: 'idearium', port: 4800, healthPath: '/health',
+      label: 'Idearium', cmd: require('path').join(ROOT2,'idearium','api','index.js'), args:[],
+    },
+    {
+      systemId: 'emerge',   port: 4242, healthPath: '/status',
+      label: 'Emerge IDE', cmd: require('path').join(ROOT2,'emerge-ide.js'), args:[],
+    },
+  ];
+
+  console.log('\n\x1b[1m\x1b[36m── Orchestrator: starting systems one by one ──\x1b[0m');
+  ledgerWrite('orchestrator','orchestrator.systems.sequence.started',
+    { systems: systems.map(s=>s.systemId), ts: Date.now() });
+
+  const results = [];
+  for (const sys of systems) {
+    const r = await _bootOneSys(sys);
+    results.push({ ...sys, ...r });
+    // Brief pause between systems
+    await new Promise(res => setTimeout(res, 800));
+  }
+
+  const up   = results.filter(r => r.ok).length;
+  const down = results.filter(r => !r.ok).length;
+  console.log(`\n\x1b[1m\x1b[36m── Systems sequence complete: ${up}/${results.length} online\x1b[0m`);
+  if (down > 0) {
+    console.log(`\x1b[33m  ${down} system(s) degraded — check diagnose output above\x1b[0m`);
+  }
+  ledgerWrite('orchestrator','orchestrator.systems.sequence.complete',
+    { up, down, total: results.length, ts: Date.now() });
+
+  // Connect bridge SSE relay now that bridge is up
+  setTimeout(connectBridgeSSE, 1000);
+
+  // Bridge registration
+  setTimeout(async () => {
+    const nc = require('./nexus-connect');
+    const r = await nc._req('bridge','POST','/bridge/handshake',{
+      systemId:'orchestrator', appId:'orchestrator',
+      secret:'nexus-orchestrator-internal-v1',
+    }, 4000);
+    if (r.ok) {
+      ledgerWrite('orchestrator','orchestrator.bridge.registered',{ version:'2.0.0', port:PORT });
+      await nc.postBridge('orchestrator.booted',{ version:'2.0.0', port:PORT });
+    }
+  }, 2000);
+}
+
 }
