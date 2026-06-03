@@ -1,6 +1,6 @@
 {
   "name": "nexus-final",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "uuid": "nexus-system-v2-1-0000-4000-0000-000000000001",
   "hookId": "nexus.system:v2.1:s0001",
   "description": "NEXUS ecosystem \u2014 SISO+JAA foundation, gated cross-system orchestration",
@@ -95,5 +95,21 @@
       "Heartbeat-based tab claim (stale tab detection)",
       "CLI hint panel in every tab"
     ]
-  }
+  },
+  "spec": "docs/NEXUS-SPEC.md",
+  "session_log": [
+    "Day 1 S1: First principles architecture \u2014 SISO+JAA canonical, 142/142 tests",
+    "Day 1 S2: Axiom audit \u2014 \u00a75.2 bridge registration, \u00a72.2 ledger persistence, \u00a78.3 SISO",
+    "Day 1 S3: Idearium completion \u2014 spec.build, ESS gap engine, pipeline, kernels panel",
+    "Day 1 S4: Contracts + integration tests \u2014 74 tests, /api/register, /api/recall",
+    "Day 1 S5: Watchdog + indicators \u2014 live dots, spawn crash fixed, nexus> watchdog",
+    "Day 2 S1: Diagnostic sequencer \u2014 cli/diagnose.js, NEXUS-SPEC.md living spec"
+  ],
+  "open_gaps": [
+    "guardian/dropzone-persist.js missing (optional)",
+    "guardian/spec-namer.js missing (optional)",
+    "cortex/guardian/emerge not tested live (need Windows TLS + native deps)",
+    "Run all 5 systems concurrently to verify 74/74 integration tests",
+    "Wire diagnose.js failures \u2192 idearium gaps (auto-create)"
+  ]
 }

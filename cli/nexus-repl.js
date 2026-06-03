@@ -391,6 +391,7 @@ ${$(C.bold, 'Commands')}
   requests [status]   Bridge request queue (default: pending)
   ledger [sys] [n]    System event ledger
   snr                 Idearium SNR
+  diagnose [sys]       Run full system diagnostic (all or one system)
   watchdog / wd        Live system monitor (Ctrl+C to stop)
   bus [sys] [n]        SISO bus log (all systems)
   watch               Live event stream (Ctrl+C to stop)
@@ -445,6 +446,13 @@ async function dispatch(line) {
       case 'ledger': case 'log':   await cmdLedger(args); break;
       case 'snr':                  await cmdSNR(); break;
       case 'bus':                  await cmdBus(args); break;
+      case 'diagnose': case 'diag': {
+        const sys = args[0] || '';
+        const { spawnSync } = require('child_process');
+        const r = spawnSync('node', ['cli/diagnose.js', ...(sys?[sys]:[])],
+          { cwd: require('path').join(__dirname,'..'), stdio:'inherit', encoding:'utf8' });
+        break;
+      }
       case 'watchdog': case 'wd':  await cmdWatchdog(); break;
       case 'watch':                await cmdWatch(); return; // stays alive
       case 'ui':                   await cmdUI(); break;

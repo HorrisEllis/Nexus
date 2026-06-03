@@ -1,0 +1,449 @@
+{
+  "ts": 1780469312514,
+  "pass": 56,
+  "fail": 1,
+  "warn": 6,
+  "results": [
+    {
+      "system": "orchestrator",
+      "checkName": "file: orchestrator.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469311987
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "file: nexus-connect.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469311987
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "file: cli/nexus-repl.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469311987
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "file: cli/diagnose.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469311987
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "file: ui/orchestrator/",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469311987
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "file: data/ledger/ (writable)",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469311988
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "syntax: orchestrator.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312067
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "port :9000 check",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312116
+    },
+    {
+      "system": "orchestrator",
+      "checkName": "live /health",
+      "status": "WARN",
+      "detail": "not running",
+      "ts": 1780469312124
+    },
+    {
+      "system": "bridge",
+      "checkName": "file: bridge/nexus-bridge.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312125
+    },
+    {
+      "system": "bridge",
+      "checkName": "file: bridge/interaction-contract.json",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312125
+    },
+    {
+      "system": "bridge",
+      "checkName": "syntax: bridge/nexus-bridge.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312152
+    },
+    {
+      "system": "bridge",
+      "checkName": "require: bridge loads without error",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312221
+    },
+    {
+      "system": "bridge",
+      "checkName": "contract: valid JSON",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312222
+    },
+    {
+      "system": "bridge",
+      "checkName": "live /bridge/health",
+      "status": "WARN",
+      "detail": "not running",
+      "ts": 1780469312225
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/boot.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312226
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/foundation/admin-server.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312226
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/foundation/cobalt-core.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312226
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/foundation/poll-registry.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312226
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/foundation/store/FileStore.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312226
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/foundation/store/FileRefs.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312227
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/memory/jaa-db.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312227
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/versionium/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312227
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/agents/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312227
+    },
+    {
+      "system": "cortex",
+      "checkName": "file: cortex/ess-gap-engine.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312227
+    },
+    {
+      "system": "cortex",
+      "checkName": "data/cortex dir writable",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312228
+    },
+    {
+      "system": "cortex",
+      "checkName": "cortex/versionium alias check",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312229
+    },
+    {
+      "system": "cortex",
+      "checkName": "syntax: cortex/boot.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312275
+    },
+    {
+      "system": "cortex",
+      "checkName": "live /health",
+      "status": "WARN",
+      "detail": "not running",
+      "ts": 1780469312277
+    },
+    {
+      "system": "guardian",
+      "checkName": "file: guardian/server.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312277
+    },
+    {
+      "system": "guardian",
+      "checkName": "npm: ws (WebSocket server)",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312278
+    },
+    {
+      "system": "guardian",
+      "checkName": "file: guardian/guardian-cert.pem",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312278
+    },
+    {
+      "system": "guardian",
+      "checkName": "file: guardian/guardian-key.pem",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312278
+    },
+    {
+      "system": "guardian",
+      "checkName": "file: guardian/userscript-claude.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312278
+    },
+    {
+      "system": "guardian",
+      "checkName": "file: guardian/userscript-chatgpt.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312279
+    },
+    {
+      "system": "guardian",
+      "checkName": "file: guardian/ui/index.html",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312279
+    },
+    {
+      "system": "guardian",
+      "checkName": "file: guardian/memory_store/ (writable)",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312279
+    },
+    {
+      "system": "guardian",
+      "checkName": "optional: guardian/dropzone-persist.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312279
+    },
+    {
+      "system": "guardian",
+      "checkName": "optional: guardian/spec-namer.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312279
+    },
+    {
+      "system": "guardian",
+      "checkName": "syntax: guardian/server.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312306
+    },
+    {
+      "system": "guardian",
+      "checkName": "live /health",
+      "status": "WARN",
+      "detail": "not running",
+      "ts": 1780469312308
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/api/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312309
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/core/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312309
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/schemas/interaction-contract.json",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312310
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/ui/index.html",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312310
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: siso/core/index.js (ESM)",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312311
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: siso/core/package.json type:module",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312311
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/package.json type:module",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312311
+    },
+    {
+      "system": "idearium",
+      "checkName": "ESM: idearium/core loads",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312364
+    },
+    {
+      "system": "idearium",
+      "checkName": "contract: idearium/schemas/ valid JSON",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312365
+    },
+    {
+      "system": "idearium",
+      "checkName": "startAPI: called at end of api/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312366
+    },
+    {
+      "system": "idearium",
+      "checkName": "live /health",
+      "status": "WARN",
+      "detail": "not running",
+      "ts": 1780469312368
+    },
+    {
+      "system": "emerge",
+      "checkName": "file: emerge-ide.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312369
+    },
+    {
+      "system": "emerge",
+      "checkName": "file: emerge-kernel.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312370
+    },
+    {
+      "system": "emerge",
+      "checkName": "file: emerge.spec",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312370
+    },
+    {
+      "system": "emerge",
+      "checkName": "file: emerge/siso.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312370
+    },
+    {
+      "system": "emerge",
+      "checkName": "file: emerge/ollama-runtime.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312370
+    },
+    {
+      "system": "emerge",
+      "checkName": "emerge.spec: valid (parseable)",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312370
+    },
+    {
+      "system": "emerge",
+      "checkName": "syntax: emerge-ide.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312394
+    },
+    {
+      "system": "emerge",
+      "checkName": "syntax: emerge-kernel.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312424
+    },
+    {
+      "system": "emerge",
+      "checkName": "kernel: loads spec without crash",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780469312464
+    },
+    {
+      "system": "emerge",
+      "checkName": "live /status",
+      "status": "WARN",
+      "detail": "not running",
+      "ts": 1780469312508
+    },
+    {
+      "system": "cross",
+      "checkName": "orchestrator §AXIOM",
+      "status": "FAIL",
+      "detail": "not running",
+      "ts": 1780469312513
+    }
+  ]
+}
