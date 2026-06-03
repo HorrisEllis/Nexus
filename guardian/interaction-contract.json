@@ -1,0 +1,60 @@
+{
+  "id": "guardian-v1",
+  "version": "3.5.0",
+  "namespace": "guardian",
+  "ports": { "http": 7820, "wss": 7821, "dropzone": 7822, "memory": 7823 },
+  "uuid": "guardian-contract-v1-0000-4000-0000-000000000001",
+  "role": "AI orchestration — job queue, WSS provider bridge, SISO bus, Forge IDE",
+  "forge_ide": { "path": "/cockpit", "description": "Forge IDE — SEAM chunker, pipeline, brain, providers" },
+  "health": {
+    "method": "GET",
+    "path": "/health",
+    "returns": { "ok": true, "uptime": 0, "jobs": 0, "providers": {}, "queued": {} }
+  },
+  "sse": { "path": "/events", "description": "live job stream" },
+  "siso": {
+    "bus": "/bus",
+    "emit": "/bus/emit",
+    "emits": [
+      "guardian.job.complete", "guardian.artifact", "guardian.gaps",
+      "guardian.job.queued", "guardian.job.dispatched",
+      "guardian.ledger", "guardian.session.named"
+    ],
+    "consumes": ["bridge.request.created"]
+  },
+  "routes": [
+    { "method": "GET",  "path": "/health" },
+    { "method": "GET",  "path": "/events" },
+    { "method": "GET",  "path": "/bus",             "params": ["n"], "description": "SISO bus log" },
+    { "method": "POST", "path": "/bus/emit",         "body": ["type", "data"] },
+    { "method": "POST", "path": "/command",          "body": ["provider", "command", "prompt", "content"] },
+    { "method": "GET",  "path": "/jobs",             "params": ["status", "limit"] },
+    { "method": "GET",  "path": "/status/:jobId" },
+    { "method": "GET",  "path": "/response/:jobId" },
+    { "method": "GET",  "path": "/providers" },
+    { "method": "GET",  "path": "/artifacts" },
+    { "method": "GET",  "path": "/ledger",           "params": ["category"] },
+    { "method": "POST", "path": "/ledger",           "body": ["category", "msg", "meta"] },
+    { "method": "GET",  "path": "/cockpit",          "description": "Forge IDE HTML" },
+    { "method": "GET",  "path": "/memory/ledger" },
+    { "method": "GET",  "path": "/memory/artifacts" },
+    { "method": "GET",  "path": "/memory/stats" }
+  ],
+  "cli": {
+    "entry": "guardian/cli.js",
+    "commands": [
+      "/code <provider> <prompt>",
+      "/spec <provider> <file>",
+      "status", "jobs", "providers", "watch <jobId>"
+    ]
+  },
+  "userscripts": [
+    { "file": "guardian/userscript-claude.js",   "target": "claude.ai",    "install": "Tampermonkey" },
+    { "file": "guardian/userscript-chatgpt.js",  "target": "chatgpt.com",  "install": "Tampermonkey" }
+  ],
+  "tls": {
+    "cert": "guardian/guardian-cert.pem",
+    "key":  "guardian/guardian-key.pem",
+    "note": "visit https://127.0.0.1:7821/ once to accept self-signed cert"
+  }
+}

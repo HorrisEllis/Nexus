@@ -850,6 +850,7 @@ const server = http.createServer(async (req, res) => {
     if (M==='POST' && action==='memory' && action2==='forget') return json(res,200,await POST('cortex','/api/memory/forget',await readBody(req)));
     if (M==='GET'  && action==='requests')         return json(res,200,await GET('cortex','/api/requests'));
     if (M==='GET'  && !action)                     return json(res,200,await GET('cortex','/health'));
+    if (M==='GET'  && action==='contract')         return json(res,200,await GET('cortex','/contract'));
 
     // SSE proxy
     if (M==='GET' && action==='sse') {
@@ -873,6 +874,7 @@ const server = http.createServer(async (req, res) => {
     const sub2   = seg[3] || '';
 
     if (M==='GET'  && !action)                      return json(res,200,await GET('guardian','/health'));
+    if (M==='GET'  && action==='contract')          return json(res,200,await GET('guardian','/contract'));
     if (M==='GET'  && action==='health')             return json(res,200,await GET('guardian','/health'));
     if (M==='GET'  && action==='bus')                return json(res,200,await GET('guardian',`/bus?n=${QS.get('n')||100}`));
     if (M==='POST' && action==='bus' && sub2==='emit') return json(res,200,await POST('guardian','/bus/emit',await readBody(req)));

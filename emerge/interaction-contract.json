@@ -1,0 +1,40 @@
+{
+  "id": "emerge-v1",
+  "version": "1.0.0",
+  "namespace": "emerge",
+  "port": 4242,
+  "uuid": "emerge-contract-v1-0000-4000-0000-000000000001",
+  "role": "compiler and IDE — .eg/.emerge language, SNR gate, Ollama AI assist",
+  "note": ".eg files are spec descriptions not executable programs. Use YAML .spec for new work.",
+  "health": {
+    "method": "GET",
+    "path": "/status",
+    "returns": { "streams": 0, "schema": { "keywords": 595, "axioms": 7 }, "ollama": { "online": false } }
+  },
+  "sse": { "path": "/events", "description": "live compile stream" },
+  "siso": {
+    "emits": ["emerge.compile.complete", "emerge.snr.update", "emerge.gap.detected"],
+    "consumes": []
+  },
+  "routes": [
+    { "method": "GET",  "path": "/status" },
+    { "method": "GET",  "path": "/events" },
+    { "method": "POST", "path": "/compile",   "body": ["source", "filename"] },
+    { "method": "POST", "path": "/check",     "body": ["source", "filename"] },
+    { "method": "POST", "path": "/spec",      "body": ["source", "filename"] },
+    { "method": "POST", "path": "/chat",      "body": ["prompt", "context", "model"] },
+    { "method": "POST", "path": "/snapshot" },
+    { "method": "GET",  "path": "/ollama-status" }
+  ],
+  "kernel": {
+    "file": "emerge-kernel.js",
+    "spec": "emerge.spec",
+    "keywords": 595,
+    "axioms": 7,
+    "gap_types": 8
+  },
+  "cli": {
+    "entry": "emerge-ide.js",
+    "note": "No standalone CLI yet — use via orchestrator or HTTP API"
+  }
+}

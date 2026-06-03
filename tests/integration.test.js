@@ -359,6 +359,15 @@ async function testCortex() {
     assert(r.data.status === 'ok' || r.data.ok, 'status ok');
   }, ['cortex']);
 
+  await test('GET /contract → cortex interaction contract', async () => {
+    const r = await GET(3748, '/contract');
+    assertOk(r, 'cortex contract');
+    assert(r.data.id === 'cortex-v1', `id=cortex-v1, got ${r.data.id}`);
+    assertField(r.data, 'routes');
+    assertField(r.data, 'jaa_tables');
+    assert(r.data.jaa_tables.length === 28, `28 tables, got ${r.data.jaa_tables.length}`);
+  }, ['cortex']);
+
   await test('GET /sse → SSE stream opens', async () => {
     await new Promise(resolve => {
       const r = http.request({ hostname:'127.0.0.1', port:3748, path:'/sse', method:'GET',
@@ -407,6 +416,15 @@ async function testGuardian() {
     assertOk(r, 'health');
     assert(r.data.ok, 'ok=true');
     assertField(r.data, 'uptime');
+  }, ['guardian']);
+
+  await test('GET /contract → guardian interaction contract', async () => {
+    const r = await GET(7820, '/contract');
+    assertOk(r, 'guardian contract');
+    assert(r.data.id === 'guardian-v1', `id=guardian-v1, got ${r.data.id}`);
+    assertField(r.data, 'forge_ide');
+    assertField(r.data, 'siso');
+    assertField(r.data, 'routes');
   }, ['guardian']);
 
   await test('GET /providers → provider list', async () => {
@@ -761,6 +779,14 @@ async function testSISOBus() {
 
 async function testEmergeCLI() {
   console.log(hdr('Emerge IDE — :4242 (optional)'));
+
+  await test('GET /contract → emerge interaction contract', async () => {
+    const r = await GET(4242, '/contract');
+    assertOk(r, 'emerge contract');
+    assert(r.data.id === 'emerge-v1', `id=emerge-v1, got ${r.data.id}`);
+    assertField(r.data, 'kernel');
+    assert(r.data.kernel.keywords === 595, `595 keywords, got ${r.data.kernel.keywords}`);
+  }, ['emerge']);
 
   await test('GET /status → emerge status', async () => {
     const r = await GET(4242, '/status');

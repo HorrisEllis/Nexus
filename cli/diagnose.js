@@ -206,7 +206,7 @@ async function diagBridge() {
     record('bridge','live /bridge/health','PASS');
     // Test handshake
     const hs = await probePost(9999, '/bridge/handshake',
-      { systemId:'diagnose', appId:'diagnose', secret:'nexus-orchestrator-internal-v1' });
+      { systemId:'orchestrator', appId:'orchestrator', secret:'nexus-orchestrator-internal-v1' });
     if (hs.ok) { console.log(ok(`    handshake: token=${hs.data.token?.slice(0,16)}…`)); record('bridge','handshake','PASS'); }
     else        { console.log(fail(`    handshake failed: ${JSON.stringify(hs.data).slice(0,60)}`)); record('bridge','handshake','FAIL'); }
     // Test broadcast

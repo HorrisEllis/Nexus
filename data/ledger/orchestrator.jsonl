@@ -47,3 +47,10 @@
 {"_system":"orchestrator","_ts":1780398389367,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
 {"_system":"orchestrator","_ts":1780469136894,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
 {"_system":"orchestrator","_ts":1780469137397,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780470806417,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780470806516,"type":"system.registered","payload":{"systemId":"idearium","port":4800,"meta":{"role":"idea-os","version":"2.0.0"},"registeredAt":1780470806515}}
+{"_system":"idearium","_ts":1780470806523,"type":"idearium.booted","payload":{"version":"2.0.0","port":4800}}
+{"_system":"orchestrator","_ts":1780470806926,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780470808414,"type":"orchestrator.bridge.registered","payload":{"version":"2.0.0","port":9000}}
+{"_system":"idearium","_ts":1780470810996,"type":"idearium.idea.created","payload":{"uuid":"a6c8f676-b71f-4d54-a528-513e84e2b2e3","text":"diagnose test idea","tags":["diagnose"]}}
+{"_system":"idearium","_ts":1780470811140,"type":"idearium.idea.created","payload":{"uuid":"46eefb9c-fdac-4037-adfe-8b6bc63087f9","text":"cross-system diag test","tags":["diag"]}}

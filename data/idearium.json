@@ -1,6 +1,6 @@
 {
   "_version": "2.0.0",
-  "_savedAt": 1780398382975,
+  "_savedAt": 1780470811137,
   "ideas": [
     {
       "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
@@ -11,7 +11,7 @@
       "tension": 0,
       "tensionUpdatedAt": 1780398382955,
       "parentIdea": null,
-      "linkedSpec": "5c85c575-f923-49ee-87e8-bdbadc2e0003",
+      "linkedSpec": "75337f8d-d90b-4f9f-bc7d-ef6e9c274557",
       "resonanceWith": [],
       "tensionWith": [],
       "openGaps": [],
@@ -28,7 +28,7 @@
       "causedBy": null,
       "source": "api",
       "createdAt": 1780381250279,
-      "updatedAt": 1780398382934
+      "updatedAt": 1780470811000
     },
     {
       "uuid": "64a72499-a425-48fa-a287-627a8732d218",
@@ -245,6 +245,66 @@
       "source": "api",
       "createdAt": 1780398382975,
       "updatedAt": 1780398382975
+    },
+    {
+      "uuid": "a6c8f676-b71f-4d54-a528-513e84e2b2e3",
+      "slug": "diagnose-test-idea",
+      "text": "diagnose test idea",
+      "tags": [
+        "diagnose"
+      ],
+      "phase": "archived",
+      "tension": 0,
+      "tensionUpdatedAt": null,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780470810990,
+      "updatedAt": 1780470810995
+    },
+    {
+      "uuid": "46eefb9c-fdac-4037-adfe-8b6bc63087f9",
+      "slug": "cross-system-diag-test",
+      "text": "cross-system diag test",
+      "tags": [
+        "diag"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": null,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780470811137,
+      "updatedAt": 1780470811137
     }
   ],
   "specs": [
@@ -722,6 +782,101 @@
       "source": "api",
       "createdAt": 1780398382934,
       "updatedAt": 1780398382934
+    },
+    {
+      "uuid": "75337f8d-d90b-4f9f-bc7d-ef6e9c274557",
+      "name": "diagnose spec",
+      "version": "1.0.0",
+      "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+      "phase": "seed",
+      "sections": [
+        {
+          "id": "intent",
+          "title": "intent",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "api_callto",
+          "title": "api callto",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "module_hooks",
+          "title": "module hooks",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "cli_spec",
+          "title": "cli spec",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "schemas",
+          "title": "schemas",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "gap_contract",
+          "title": "gap contract",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "failure_modes",
+          "title": "failure modes",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "tests",
+          "title": "tests",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "phase_map",
+          "title": "phase map",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        }
+      ],
+      "modules": [],
+      "wired": {
+        "eventBus": false,
+        "cli": false,
+        "jaa": false,
+        "toast": false,
+        "schemaValidated": false
+      },
+      "buildOrder": [],
+      "agentAssignments": {},
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780470811000,
+      "updatedAt": 1780470811004
     }
   ],
   "gaps": [
@@ -1598,6 +1753,70 @@
       "causedBy": null,
       "source": "idearium.core",
       "ts": 1780398382975
+    },
+    {
+      "uuid": "0e0b04ef-44f0-4758-a11f-db185d951546",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "diagnose test idea",
+        "tags": [
+          "diagnose"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780470810989
+    },
+    {
+      "uuid": "f3d6ee03-17fb-46ad-9216-4927ad4e02b1",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "a6c8f676-b71f-4d54-a528-513e84e2b2e3",
+        "phase": "archived",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780470810995
+    },
+    {
+      "uuid": "70ba4ea4-9405-411c-81c3-45f59dabeb1b",
+      "type": "idearium.spec.create",
+      "payload": {
+        "name": "diagnose spec",
+        "ideaUuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780470811000
+    },
+    {
+      "uuid": "fe76fffd-b479-4e2a-a490-225b0703c19f",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "75337f8d-d90b-4f9f-bc7d-ef6e9c274557"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780470811004
+    },
+    {
+      "uuid": "448957a6-ad81-4f0a-968b-0198a908dc14",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "cross-system diag test",
+        "tags": [
+          "diag"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780470811137
     }
   ],
   "snr": [],

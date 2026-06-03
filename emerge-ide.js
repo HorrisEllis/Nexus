@@ -209,6 +209,14 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (url==='/contract') {
+    const cp = require('path').join(__dirname, 'emerge', 'interaction-contract.json');
+    if (!require('fs').existsSync(cp)) { res.writeHead(404); return res.end(JSON.stringify({ok:false,error:'contract not found'})); }
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.writeHead(200,{'Content-Type':'application/json'});
+    return res.end(require('fs').readFileSync(cp,'utf8'));
+  }
+
   if (url==='/status') {
     res.writeHead(200,{'Content-Type':'application/json'});
     return res.end(JSON.stringify({ streams: bus.streams(), log: bus.log().tail(20) }));

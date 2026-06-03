@@ -597,6 +597,16 @@ const server = http.createServer((req, res) => {
     return true;
   }
 
+  if (req.method === 'GET' && url.pathname === '/contract') {
+    const contractPath = require('path').join(__dirname, 'interaction-contract.json');
+    if (!require('fs').existsSync(contractPath)) {
+      res.writeHead(404, {'Content-Type':'application/json'}); return res.end(JSON.stringify({ok:false,error:'contract not found'}));
+    }
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.writeHead(200, {'Content-Type':'application/json'});
+    return res.end(require('fs').readFileSync(contractPath,'utf8'));
+  }
+
   if (req.method === 'GET' && url.pathname === '/health') {
     const providers = {};
     for (const [name, ws] of Object.entries(PROVIDERS)) {
