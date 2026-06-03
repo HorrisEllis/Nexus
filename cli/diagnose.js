@@ -294,78 +294,198 @@ async function diagCortex() {
 
 async function diagGuardian() {
   console.log(hdr('guardian', C.magenta));
-  console.log(info('AI orchestration — SISO bus, job queue, userscript bridge, WSS :7821'));
-  console.log(info('Port :7820 (HTTP) :7821 (WSS) :7822 (dropzone) :7823 (memory)\n'));
+  console.log(info('HTTP :7820  WSS :7821 (userscripts, needs TLS)  Dropzone :7822  Memory :7823'));
+  console.log(info('WSS needs TLS because userscripts run on https:// pages (browser mixed-content rule).'));
+  console.log(info('HTTP server boots independently — WSS failure does not take down HTTP.\n'));
 
-  const checks = [
-    ['file: guardian/server.js',         () => fileExists('guardian/server.js')],
-    ['npm: ws (WebSocket server)',        () => checkNode('ws')],
-    ['file: guardian/guardian-cert.pem', () => fileExists('guardian/guardian-cert.pem')],
-    ['file: guardian/guardian-key.pem',  () => fileExists('guardian/guardian-key.pem')],
-    ['file: guardian/userscript-claude.js',  () => fileExists('guardian/userscript-claude.js')],
-    ['file: guardian/userscript-chatgpt.js', () => fileExists('guardian/userscript-chatgpt.js')],
-    ['file: guardian/ui/index.html',     () => fileExists('guardian/ui/index.html')],
-    ['file: guardian/memory_store/ (writable)', () => {
-      const dir = path.join(ROOT,'guardian','memory_store');
-      try { fs.mkdirSync(dir,{recursive:true}); return true; } catch { return false; }
-    }],
-    ['optional: guardian/dropzone-persist.js', () => {
-      const exists = fileExists('guardian/dropzone-persist.js');
-      if (!exists) console.log(info('    → OPTIONAL: dropzone-persist.js not present — dropzone will be disabled'));
-      return true; // non-fatal
-    }],
-    ['optional: guardian/spec-namer.js', () => {
-      const exists = fileExists('guardian/spec-namer.js');
-      if (!exists) console.log(info('    → OPTIONAL: spec-namer.js not present — auto-naming disabled'));
-      return true; // non-fatal
-    }],
-    ['syntax: guardian/server.js',       () => {
-      const r = spawnSync('node',['--check','guardian/server.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
-      if (r.status !== 0) console.log(info('    → '+r.stderr.split('\n').find(l=>l.trim())));
-      return r.status === 0;
-    }],
-  ];
+  const ledger = (phase, status, detail) =>
+    postLedger('guardian', `guardian.diagnose.${phase}`, { status, detail, ts: Date.now() });
 
-  for (const [i, [name, fn]] of checks.entries()) {
-    try {
-      const r = await fn();
-      if (r) { console.log(ok(step(i+1, checks.length, name))); record('guardian',name,'PASS'); }
-      else   { console.log(fail(step(i+1, checks.length, name))); record('guardian',name,'FAIL'); }
-    } catch(e) { console.log(fail(step(i+1, checks.length, name))); record('guardian',name,'FAIL',e.message); }
+  // ── HARD checks — these must pass or guardian cannot start ──────────────────
+  console.log(`${C.bold}  HARD (boot blockers):${C.reset}`);
+
+  // Package: ws (required)
+  const wsOk = checkNode('ws');
+  if (wsOk) {
+    console.log(ok(step(1, 13, 'npm: ws — required (WebSocket server)')));
+    await ledger('ws', 'PASS');
+  } else {
+    console.log(fail(step(1, 13, 'npm: ws — MISSING, guardian cannot start')));
+    await ledger('ws', 'FAIL', 'missing');
+    if (FIX) {
+      console.log(fix('  Auto-installing ws...'));
+      const r = spawnSync('npm', ['install', 'ws'], { cwd: ROOT, encoding:'utf8' });
+      if (r.status === 0) { console.log(ok('  ws installed ✓')); await ledger('ws.fix', 'PASS'); }
+      else { console.log(fail('  ws install failed: ' + r.stderr?.slice(0,100))); await ledger('ws.fix', 'FAIL'); }
+    } else {
+      console.log(info('  → Fix: cd ' + ROOT + ' && npm install ws'));
+    }
+    record('guardian', 'npm:ws', 'FAIL', 'missing');
   }
 
-  console.log('');
-  const r = await probe(7820, '/health');
-  if (r.ok) {
-    const d = r.data;
-    console.log(ok(`LIVE :7820  uptime=${d.uptime?.toFixed(0)||'?'}s`));
-    record('guardian','live /health','PASS');
-    // Test SISO bus
-    const bus = await probe(7820, '/bus?n=5');
-    if (bus.ok) {
-      console.log(ok(`    SISO bus: ${bus.data.gates?.length || 0} gates  ${bus.data.entries?.length || 0} events`));
-      record('guardian','SISO bus','PASS');
-    }
-    // Test bus emit
-    const emit = await probePost(7820, '/bus/emit', { type:'diagnose.test.emit', data:{ ts:Date.now() } });
-    if (emit.ok) { console.log(ok(`    bus emit: seq=${emit.data.seq}`)); record('guardian','bus emit','PASS'); }
-    else          { console.log(fail(`    bus emit failed`)); record('guardian','bus emit','FAIL'); }
-    // Test providers
-    const prov = await probe(7820, '/providers');
-    if (prov.ok) {
-      const connected = Object.entries(prov.data || {}).filter(([,v])=>v==='connected').map(([k])=>k);
-      if (connected.length) console.log(ok(`    providers: ${connected.join(', ')}`));
-      else console.log(warn(`    no providers connected (userscript not running?)`));
-      record('guardian','providers','PASS');
-    }
-    // Check WSS
-    console.log(info(`    WSS :7821 — connect via Tampermonkey userscript`));
-    console.log(info(`    visit https://127.0.0.1:7821/ in browser to accept self-signed cert`));
+  // File: server.js
+  const serverOk = fileExists('guardian/server.js');
+  serverOk
+    ? (console.log(ok(step(2, 13, 'file: guardian/server.js'))), await ledger('server.js', 'PASS'))
+    : (console.log(fail(step(2, 13, 'file: guardian/server.js — MISSING'))), await ledger('server.js', 'FAIL'));
+  record('guardian', 'file:server.js', serverOk ? 'PASS' : 'FAIL');
+
+  // File: jaa-store.js
+  const jaaOk = fileExists('guardian/jaa-store.js');
+  jaaOk
+    ? (console.log(ok(step(3, 13, 'file: guardian/jaa-store.js'))), await ledger('jaa-store.js', 'PASS'))
+    : (console.log(fail(step(3, 13, 'file: guardian/jaa-store.js — MISSING'))), await ledger('jaa-store.js', 'FAIL'));
+  record('guardian', 'file:jaa-store.js', jaaOk ? 'PASS' : 'FAIL');
+
+  // File: interaction-contract.json
+  const contractOk = fileExists('guardian/interaction-contract.json');
+  contractOk
+    ? (console.log(ok(step(4, 13, 'file: guardian/interaction-contract.json'))), await ledger('contract', 'PASS'))
+    : (console.log(fail(step(4, 13, 'guardian/interaction-contract.json — MISSING'))), await ledger('contract', 'FAIL'));
+  record('guardian', 'file:contract', contractOk ? 'PASS' : 'FAIL');
+
+  // Syntax check
+  const synR = spawnSync('node', ['--check', 'guardian/server.js'], { cwd:ROOT, encoding:'utf8', timeout:5000 });
+  const synOk = synR.status === 0;
+  if (synOk) {
+    console.log(ok(step(5, 13, 'syntax: guardian/server.js')));
+    await ledger('syntax', 'PASS');
   } else {
-    console.log(warn(`NOT RUNNING — start with: node guardian/server.js`));
-    record('guardian','live /health','WARN','not running');
+    const errLine = synR.stderr?.split('\n').find(l => l.trim()) || 'syntax error';
+    console.log(fail(step(5, 13, 'syntax: guardian/server.js — ' + errLine)));
+    await ledger('syntax', 'FAIL', errLine);
+  }
+  record('guardian', 'syntax', synOk ? 'PASS' : 'FAIL');
+
+  // memory_store directory writable
+  const msDir = path.join(ROOT, 'guardian', 'memory_store');
+  let msOk = false;
+  try { fs.mkdirSync(msDir, { recursive:true }); msOk = true; } catch(_) {}
+  msOk
+    ? (console.log(ok(step(6, 13, 'guardian/memory_store/ writable'))), await ledger('memory_store', 'PASS'))
+    : (console.log(fail(step(6, 13, 'guardian/memory_store/ not writable'))), await ledger('memory_store', 'FAIL'));
+  record('guardian', 'memory_store', msOk ? 'PASS' : 'FAIL');
+
+  // ui/index.html (Forge IDE)
+  const uiOk = fileExists('guardian/ui/index.html');
+  uiOk
+    ? (console.log(ok(step(7, 13, 'file: guardian/ui/index.html (Forge IDE)'))), await ledger('ui', 'PASS'))
+    : (console.log(fail(step(7, 13, 'guardian/ui/index.html — MISSING (Forge IDE will not serve)'))), await ledger('ui', 'FAIL'));
+  record('guardian', 'file:ui', uiOk ? 'PASS' : 'FAIL');
+
+  // ── SOFT checks — degraded if missing, but guardian still boots ────────────
+  console.log('');
+  console.log(C.bold + '  SOFT (degrade if missing):' + C.reset);
+
+  // TLS cert (WSS only — HTTP boots without it)
+  const certOk = fileExists('guardian/guardian-cert.pem') && fileExists('guardian/guardian-key.pem');
+  if (certOk) {
+    console.log(ok(step(8, 13, 'TLS cert present (WSS :7821 ready)')));
+    await ledger('tls.cert', 'PASS');
+  } else {
+    console.log(warn(step(8, 13, 'TLS cert missing — WSS :7821 disabled (HTTP :7820 unaffected)')));
+    console.log(info('  → Why: userscripts run on https:// pages, browser blocks plain ws://'));
+    console.log(info('  → Fix (option 1): npm install selfsigned  (guardian auto-generates)'));
+    console.log(info('  → Fix (option 2): openssl req -x509 -newkey rsa:2048 -keyout guardian-key.pem -out guardian-cert.pem -days 825 -nodes'));
+    await ledger('tls.cert', 'WARN', 'missing');
+    if (FIX) {
+      console.log(fix('  Auto-installing selfsigned for cert generation...'));
+      const r = spawnSync('npm', ['install', 'selfsigned'], { cwd: ROOT, encoding:'utf8' });
+      if (r.status === 0) { console.log(ok('  selfsigned installed — restart guardian to generate cert ✓')); await ledger('tls.fix', 'PASS'); }
+      else { console.log(warn('  selfsigned install failed — try: npm install selfsigned')); await ledger('tls.fix', 'FAIL'); }
+    }
+    record('guardian', 'tls.cert', 'WARN', 'missing — WSS disabled');
+  }
+
+  // Package: selfsigned (SOFT — only for cert generation)
+  const ssOk = checkNode('selfsigned');
+  if (ssOk) {
+    console.log(ok(step(9, 13, 'npm: selfsigned (cert generation)')));
+    await ledger('selfsigned', 'PASS');
+  } else {
+    console.log(warn(step(9, 13, 'npm: selfsigned missing — cert auto-generation unavailable')));
+    console.log(info('  → If cert already exists, this is fine. If not: npm install selfsigned'));
+    await ledger('selfsigned', 'WARN', 'missing');
+    record('guardian', 'npm:selfsigned', 'WARN', 'missing');
+  }
+
+  // Userscripts
+  const ucl = fileExists('guardian/userscript-claude.js');
+  const ugt = fileExists('guardian/userscript-chatgpt.js');
+  if (ucl && ugt) {
+    console.log(ok(step(10, 13, 'userscripts: claude + chatgpt (Tampermonkey install)')));
+  } else {
+    console.log(warn(step(10, 13, `userscripts: ${ucl?'':'claude MISSING '}${ugt?'':'chatgpt MISSING'}`)));
+    console.log(info('  → Install in Tampermonkey on claude.ai and chatgpt.com'));
+  }
+  record('guardian', 'userscripts', (ucl && ugt) ? 'PASS' : 'WARN');
+  await ledger('userscripts', (ucl && ugt) ? 'PASS' : 'WARN');
+
+  // Optional: dropzone-persist.js
+  const dpOk = fileExists('guardian/dropzone-persist.js');
+  dpOk
+    ? console.log(ok(step(11, 13, 'optional: guardian/dropzone-persist.js')))
+    : console.log(warn(step(11, 13, 'optional: guardian/dropzone-persist.js (dropzone disabled)')));
+
+  // Optional: spec-namer.js
+  const snOk = fileExists('guardian/spec-namer.js');
+  snOk
+    ? console.log(ok(step(12, 13, 'optional: guardian/spec-namer.js')))
+    : console.log(warn(step(12, 13, 'optional: guardian/spec-namer.js (auto-naming disabled)')));
+
+  // ── Live checks ─────────────────────────────────────────────────────────────
+  console.log('');
+  const hr = await probe(7820, '/health');
+  if (hr.ok) {
+    console.log(ok(step(13, 13, `LIVE :7820  uptime=${hr.data.uptime?.toFixed(0)||'?'}s`)));
+    await ledger('live.health', 'PASS');
+    record('guardian', 'live /health', 'PASS');
+
+    // Contract
+    const cr = await probe(7820, '/contract');
+    if (cr.ok && cr.data.id === 'guardian-v1') {
+      console.log(ok(`    contract: id=guardian-v1  ${cr.data.routes?.length||0} routes`));
+      await ledger('live.contract', 'PASS');
+    } else {
+      console.log(fail(`    contract: id=${cr.data?.id} (expected guardian-v1)`));
+      await ledger('live.contract', 'FAIL');
+    }
+
+    // SISO bus
+    const br = await probe(7820, '/bus?n=5');
+    if (br.ok) {
+      console.log(ok(`    SISO bus: ${br.data.gates?.length||0} gates  ${br.data.entries?.length||0} events`));
+      await ledger('live.bus', 'PASS');
+    }
+
+    // Bus emit
+    const er = await probePost(7820, '/bus/emit', { type:'diagnose.guardian.test', data:{ ts:Date.now() } });
+    if (er.ok) { console.log(ok(`    bus emit: seq=${er.data.seq}`)); await ledger('live.bus.emit', 'PASS'); }
+    else        { console.log(fail(`    bus emit failed: ${JSON.stringify(er.data).slice(0,60)}`)); await ledger('live.bus.emit', 'FAIL'); }
+
+    // Providers
+    const pr = await probe(7820, '/providers');
+    if (pr.ok) {
+      const connected = Object.entries(pr.data?.providers || {}).filter(([,v])=>v==='connected').map(([k])=>k);
+      connected.length
+        ? console.log(ok(`    providers connected: ${connected.join(', ')}`))
+        : console.log(warn(`    no providers connected — install userscripts in Tampermonkey`));
+      await ledger('live.providers', connected.length ? 'PASS' : 'WARN');
+    }
+
+    // WSS
+    const wssReady = fileExists('guardian/guardian-cert.pem');
+    wssReady
+      ? console.log(ok(`    WSS :7821 cert ready — visit https://127.0.0.1:7821/ once to accept`))
+      : console.log(warn(`    WSS :7821 not ready — TLS cert missing`));
+
+  } else {
+    console.log(warn(step(13, 13, 'NOT RUNNING — start with: node guardian/server.js')));
+    await ledger('live.health', 'WARN', 'not running');
+    record('guardian', 'live /health', 'WARN', 'not running');
   }
 }
+
 
 async function diagIdearium() {
   console.log(hdr('idearium', C.blue));

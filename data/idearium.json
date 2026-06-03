@@ -1,6 +1,6 @@
 {
   "_version": "2.0.0",
-  "_savedAt": 1780475076285,
+  "_savedAt": 1780481634817,
   "ideas": [
     {
       "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
@@ -9,7 +9,7 @@
       "tags": [],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": "8ccb60f8-694e-404f-986d-2a1486c83782",
       "resonanceWith": [],
@@ -40,7 +40,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -71,7 +71,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -102,7 +102,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -133,7 +133,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -164,7 +164,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -195,7 +195,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -225,7 +225,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -255,7 +255,7 @@
       ],
       "phase": "archived",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -285,7 +285,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -316,7 +316,7 @@
       ],
       "phase": "expanding",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": "e38100f8-7717-4697-af05-e871406018fc",
       "resonanceWith": [],
@@ -346,7 +346,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -376,7 +376,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -407,7 +407,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": "f093c8ce-3353-4bcd-9f90-a8253031b8e7",
       "resonanceWith": [],
@@ -438,7 +438,7 @@
       ],
       "phase": "expanding",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": "a6d3becb-1bea-4b62-9e88-56fecabfab51",
       "resonanceWith": [],
@@ -468,7 +468,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -498,7 +498,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -529,7 +529,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": "38bc04b9-bcd5-4bd0-be28-8227900e8781",
       "resonanceWith": [],
@@ -560,7 +560,7 @@
       ],
       "phase": "expanding",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": "d53ba986-4e5f-48ba-8fc2-bc8e5bd58313",
       "resonanceWith": [],
@@ -590,7 +590,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -620,7 +620,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -651,7 +651,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": "8a3025d8-063a-474c-8b72-8afe016ec204",
       "resonanceWith": [],
@@ -681,7 +681,7 @@
       ],
       "phase": "archived",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634816,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -711,7 +711,7 @@
       ],
       "phase": "archived",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -742,7 +742,7 @@
       ],
       "phase": "expanding",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": "ee1e5916-9a33-4aa2-b31b-627a0539f53b",
       "resonanceWith": [],
@@ -772,7 +772,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076284,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -802,7 +802,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076285,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -833,7 +833,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076285,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": "8750d4a0-3db3-4a08-9bc1-ca09f85a3360",
       "resonanceWith": [],
@@ -864,7 +864,7 @@
       ],
       "phase": "expanding",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076285,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": "c1ed12ba-8842-4726-8e30-3376b78e2b32",
       "resonanceWith": [],
@@ -894,7 +894,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076285,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -924,7 +924,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076285,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": null,
       "resonanceWith": [],
@@ -955,7 +955,7 @@
       ],
       "phase": "seed",
       "tension": 0,
-      "tensionUpdatedAt": 1780475076285,
+      "tensionUpdatedAt": 1780481634817,
       "parentIdea": null,
       "linkedSpec": "e60fb395-ce3e-4453-bec9-61de23a6b33f",
       "resonanceWith": [],
@@ -975,6 +975,128 @@
       "source": "api",
       "createdAt": 1780475076270,
       "updatedAt": 1780475076275
+    },
+    {
+      "uuid": "b25c322a-db78-47aa-a763-b0e7fa30af48",
+      "slug": "pipeline-test-idea-1780481634120",
+      "text": "Pipeline test idea 1780481634120",
+      "tags": [
+        "pipeline",
+        "evidence"
+      ],
+      "phase": "expanding",
+      "tension": 0,
+      "tensionUpdatedAt": 1780481634817,
+      "parentIdea": null,
+      "linkedSpec": "69dca5fa-76f3-4226-80d1-9c8d34c16455",
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780481634122,
+      "updatedAt": 1780481634145
+    },
+    {
+      "uuid": "394ef952-b76e-46d3-89a5-d09064d19621",
+      "slug": "cross-system-proxy-idea-1780481634176",
+      "text": "Cross-system proxy idea 1780481634176",
+      "tags": [
+        "proxy-test"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": 1780481634817,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780481634177,
+      "updatedAt": 1780481634177
+    },
+    {
+      "uuid": "08e8b789-875f-427d-9685-7b764a130bfc",
+      "slug": "propagation-test-idea-1780481634181",
+      "text": "Propagation test idea 1780481634181",
+      "tags": [
+        "propagation"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": 1780481634817,
+      "parentIdea": null,
+      "linkedSpec": null,
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780481634182,
+      "updatedAt": 1780481634182
+    },
+    {
+      "uuid": "8ec9f64b-43df-425e-a48e-1e39cd6f7a78",
+      "slug": "full-pipeline-test-pipeline-1780481634798",
+      "text": "Full pipeline test: pipeline-1780481634798",
+      "tags": [
+        "full-pipeline",
+        "evidence"
+      ],
+      "phase": "seed",
+      "tension": 0,
+      "tensionUpdatedAt": 1780481634817,
+      "parentIdea": null,
+      "linkedSpec": "8fae07a9-90fa-449d-90a7-fff4bfda829b",
+      "resonanceWith": [],
+      "tensionWith": [],
+      "openGaps": [],
+      "stability": {
+        "execution": 1,
+        "runtime": 1,
+        "effectiveness": 1,
+        "rigidity": 1,
+        "persistence": 1
+      },
+      "compartment": null,
+      "archiveReason": null,
+      "archivedAt": null,
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780481634799,
+      "updatedAt": 1780481634806
     }
   ],
   "specs": [
@@ -2687,6 +2809,196 @@
       "source": "api",
       "createdAt": 1780475076275,
       "updatedAt": 1780475076282
+    },
+    {
+      "uuid": "69dca5fa-76f3-4226-80d1-9c8d34c16455",
+      "name": "Pipeline test spec",
+      "version": "1.0.0",
+      "ideaUuid": "b25c322a-db78-47aa-a763-b0e7fa30af48",
+      "phase": "seed",
+      "sections": [
+        {
+          "id": "intent",
+          "title": "intent",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "api_callto",
+          "title": "api callto",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "module_hooks",
+          "title": "module hooks",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "cli_spec",
+          "title": "cli spec",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "schemas",
+          "title": "schemas",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "gap_contract",
+          "title": "gap contract",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "failure_modes",
+          "title": "failure modes",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "tests",
+          "title": "tests",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "phase_map",
+          "title": "phase map",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        }
+      ],
+      "modules": [],
+      "wired": {
+        "eventBus": false,
+        "cli": false,
+        "jaa": false,
+        "toast": false,
+        "schemaValidated": false
+      },
+      "buildOrder": [],
+      "agentAssignments": {},
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780481634145,
+      "updatedAt": 1780481634155
+    },
+    {
+      "uuid": "8fae07a9-90fa-449d-90a7-fff4bfda829b",
+      "name": "Full pipeline spec: pipeline-1780481634798",
+      "version": "1.0.0",
+      "ideaUuid": "8ec9f64b-43df-425e-a48e-1e39cd6f7a78",
+      "phase": "seed",
+      "sections": [
+        {
+          "id": "intent",
+          "title": "intent",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "api_callto",
+          "title": "api callto",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "module_hooks",
+          "title": "module hooks",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "cli_spec",
+          "title": "cli spec",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "schemas",
+          "title": "schemas",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "gap_contract",
+          "title": "gap contract",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "failure_modes",
+          "title": "failure modes",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "tests",
+          "title": "tests",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        },
+        {
+          "id": "phase_map",
+          "title": "phase map",
+          "complete": false,
+          "required": true,
+          "content": "",
+          "checklist": []
+        }
+      ],
+      "modules": [],
+      "wired": {
+        "eventBus": false,
+        "cli": false,
+        "jaa": false,
+        "toast": false,
+        "schemaValidated": false
+      },
+      "buildOrder": [],
+      "agentAssignments": {},
+      "causedBy": null,
+      "source": "api",
+      "createdAt": 1780481634806,
+      "updatedAt": 1780481634813
     }
   ],
   "gaps": [
@@ -2859,10 +3171,148 @@
       "source": "api",
       "ts": 1780475075626,
       "createdAt": 1780475075626
+    },
+    {
+      "uuid": "a89d42f2-a9a6-446b-a480-0d1c59762dc0",
+      "type": "pipeline",
+      "description": "Pipeline test gap — evidence required",
+      "ideaUuid": null,
+      "specUuid": null,
+      "between": [],
+      "status": "resolved",
+      "severity": "low",
+      "resolution": "resolved by pipeline test — evidence confirmed",
+      "resolvedAt": 1780481634161,
+      "ignoreReason": null,
+      "causedBy": null,
+      "source": "api",
+      "ts": 1780481634158,
+      "createdAt": 1780481634158
     }
   ],
   "links": [],
   "snapshots": [
+    {
+      "uuid": "73a43035-491f-4f41-bdaf-b5074e307c1a",
+      "commitId": "vtm-000000000010",
+      "parentId": "be7f2308-9c02-4ba3-9ffa-4aa5dca2475a",
+      "branch": "pipeline-test",
+      "message": "pipeline-pipeline-1780481634798",
+      "author": "api",
+      "ts": 1780481634817,
+      "ideasCount": 36,
+      "gapCount": 0,
+      "specCount": 20,
+      "snr": 0.5,
+      "snrDelta": 0,
+      "tensionMap": {
+        "7afd024d-4fd1-4855-b4cc-6cbad96206b9": 0,
+        "64a72499-a425-48fa-a287-627a8732d218": 0,
+        "dad8489d-a2b6-41ec-bb1e-54cf4ef6031b": 0,
+        "c12a2a94-933d-4466-97be-7b95aed151fb": 0,
+        "96063763-9ad2-4ff8-bda7-4db18e478f71": 0,
+        "c0806cc7-c6f7-4564-86c3-48487f52914c": 0,
+        "f5b69cd9-94cb-484c-a2c4-f1a204162b28": 0,
+        "87b3383b-e08c-4741-b1f6-7bb788b7dcd2": 0,
+        "a6c8f676-b71f-4d54-a528-513e84e2b2e3": 0,
+        "46eefb9c-fdac-4037-adfe-8b6bc63087f9": 0,
+        "5933059e-bdaa-41f8-8382-9f2fcbff733a": 0,
+        "3f4a7149-84f7-4ade-8b47-46378882cdd9": 0,
+        "88f74b76-50a3-48e3-88cf-a68fe7cf7581": 0,
+        "34c07dc9-f618-40f6-9c43-c034697bc1f7": 0,
+        "e70558ce-f3d8-4c8c-a1e5-2504f68c5a33": 0,
+        "0d28d127-be24-47b8-9772-a469a3152848": 0,
+        "368eca2f-9b04-42d7-bffe-31898f08da45": 0,
+        "360fff77-ebe7-437d-b79e-c6ec7bac5eb3": 0,
+        "1f71987b-0767-4e51-9f59-78b7bed38872": 0,
+        "3acdf0b9-fa31-4db3-bb52-38a272c70f04": 0,
+        "4a68050b-2782-451a-bf8d-93de75324a1b": 0,
+        "7246417e-1b81-4b05-83c0-c538943ac9c1": 0,
+        "c0a55b37-569d-4431-836b-4c6f5c547cab": 0,
+        "be08c4a0-acdc-4238-a93f-8e47b32ee850": 0,
+        "5b60c63f-dd6c-48c2-9543-6d04da8c2043": 0,
+        "aba15bc6-5008-49e3-8645-ebf8fbf1b8de": 0,
+        "afce7ed9-b557-41ce-8f24-2f92c1903245": 0,
+        "39082b1f-4716-4f12-a16c-af5ac041641f": 0,
+        "7812839a-a428-4ddb-b965-38a3b3f7f158": 0,
+        "15a32c99-d036-4579-9c8c-e15c4537a5a7": 0,
+        "755fef7c-f658-4388-8990-0706989429ee": 0,
+        "88a7d615-3186-4d30-94c6-1eb8ff32d4d4": 0,
+        "b25c322a-db78-47aa-a763-b0e7fa30af48": 0,
+        "394ef952-b76e-46d3-89a5-d09064d19621": 0,
+        "08e8b789-875f-427d-9685-7b764a130bfc": 0,
+        "8ec9f64b-43df-425e-a48e-1e39cd6f7a78": 0
+      },
+      "phaseMap": {
+        "seed": 27,
+        "expanding": 6,
+        "tensioned": 0,
+        "specced": 0,
+        "building": 0,
+        "complete": 0,
+        "archived": 3
+      },
+      "causedBy": null
+    },
+    {
+      "uuid": "be7f2308-9c02-4ba3-9ffa-4aa5dca2475a",
+      "commitId": "vtm-00000000000f",
+      "parentId": "03e97d1c-4769-4f54-ac6a-b780947c2ef0",
+      "branch": "pipeline-test",
+      "message": "pipeline test snapshot",
+      "author": "api",
+      "ts": 1780481634164,
+      "ideasCount": 33,
+      "gapCount": 0,
+      "specCount": 19,
+      "snr": 0.5,
+      "snrDelta": 0,
+      "tensionMap": {
+        "7afd024d-4fd1-4855-b4cc-6cbad96206b9": 0,
+        "64a72499-a425-48fa-a287-627a8732d218": 0,
+        "dad8489d-a2b6-41ec-bb1e-54cf4ef6031b": 0,
+        "c12a2a94-933d-4466-97be-7b95aed151fb": 0,
+        "96063763-9ad2-4ff8-bda7-4db18e478f71": 0,
+        "c0806cc7-c6f7-4564-86c3-48487f52914c": 0,
+        "f5b69cd9-94cb-484c-a2c4-f1a204162b28": 0,
+        "87b3383b-e08c-4741-b1f6-7bb788b7dcd2": 0,
+        "a6c8f676-b71f-4d54-a528-513e84e2b2e3": 0,
+        "46eefb9c-fdac-4037-adfe-8b6bc63087f9": 0,
+        "5933059e-bdaa-41f8-8382-9f2fcbff733a": 0,
+        "3f4a7149-84f7-4ade-8b47-46378882cdd9": 0,
+        "88f74b76-50a3-48e3-88cf-a68fe7cf7581": 0,
+        "34c07dc9-f618-40f6-9c43-c034697bc1f7": 0,
+        "e70558ce-f3d8-4c8c-a1e5-2504f68c5a33": 0,
+        "0d28d127-be24-47b8-9772-a469a3152848": 0,
+        "368eca2f-9b04-42d7-bffe-31898f08da45": 0,
+        "360fff77-ebe7-437d-b79e-c6ec7bac5eb3": 0,
+        "1f71987b-0767-4e51-9f59-78b7bed38872": 0,
+        "3acdf0b9-fa31-4db3-bb52-38a272c70f04": 0,
+        "4a68050b-2782-451a-bf8d-93de75324a1b": 0,
+        "7246417e-1b81-4b05-83c0-c538943ac9c1": 0,
+        "c0a55b37-569d-4431-836b-4c6f5c547cab": 0,
+        "be08c4a0-acdc-4238-a93f-8e47b32ee850": 0,
+        "5b60c63f-dd6c-48c2-9543-6d04da8c2043": 0,
+        "aba15bc6-5008-49e3-8645-ebf8fbf1b8de": 0,
+        "afce7ed9-b557-41ce-8f24-2f92c1903245": 0,
+        "39082b1f-4716-4f12-a16c-af5ac041641f": 0,
+        "7812839a-a428-4ddb-b965-38a3b3f7f158": 0,
+        "15a32c99-d036-4579-9c8c-e15c4537a5a7": 0,
+        "755fef7c-f658-4388-8990-0706989429ee": 0,
+        "88a7d615-3186-4d30-94c6-1eb8ff32d4d4": 0,
+        "b25c322a-db78-47aa-a763-b0e7fa30af48": 0
+      },
+      "phaseMap": {
+        "seed": 24,
+        "expanding": 6,
+        "tensioned": 0,
+        "specced": 0,
+        "building": 0,
+        "complete": 0,
+        "archived": 3
+      },
+      "causedBy": null
+    },
     {
       "uuid": "03e97d1c-4769-4f54-ac6a-b780947c2ef0",
       "commitId": "vtm-00000000000e",
@@ -5263,6 +5713,202 @@
       "causedBy": null,
       "source": "idearium.core",
       "ts": 1780475076284
+    },
+    {
+      "uuid": "3c782f2a-9bf2-428b-9a6e-003812ea3933",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Pipeline test idea 1780481634120",
+        "tags": [
+          "pipeline",
+          "evidence"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634121
+    },
+    {
+      "uuid": "8dba26a8-5668-413f-8be4-1f47034d7466",
+      "type": "idearium.idea.tension",
+      "payload": {
+        "uuid": "b25c322a-db78-47aa-a763-b0e7fa30af48"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634132
+    },
+    {
+      "uuid": "a6221a2d-9a5b-4643-9706-67fcbfffc761",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "b25c322a-db78-47aa-a763-b0e7fa30af48",
+        "phase": "expanding",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634141
+    },
+    {
+      "uuid": "9d7cfb48-6f56-49fd-a99d-982582984530",
+      "type": "idearium.spec.create",
+      "payload": {
+        "name": "Pipeline test spec",
+        "ideaUuid": "b25c322a-db78-47aa-a763-b0e7fa30af48",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634144
+    },
+    {
+      "uuid": "6a9abf5d-568c-435e-8dd7-fa28e95e8f55",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "69dca5fa-76f3-4226-80d1-9c8d34c16455"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634150
+    },
+    {
+      "uuid": "2f5caa89-4fb3-4e12-b805-a01be96a74e1",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "69dca5fa-76f3-4226-80d1-9c8d34c16455"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634154
+    },
+    {
+      "uuid": "88d983dd-115e-4ad7-84bc-66efb6bb5616",
+      "type": "idearium.gap.open",
+      "payload": {
+        "description": "Pipeline test gap — evidence required",
+        "type": "pipeline",
+        "severity": "low",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634157
+    },
+    {
+      "uuid": "edc1d903-ce68-4aee-abcd-ea757d20ff57",
+      "type": "idearium.gap.resolve",
+      "payload": {
+        "uuid": "a89d42f2-a9a6-446b-a480-0d1c59762dc0",
+        "resolution": "resolved by pipeline test — evidence confirmed"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634160
+    },
+    {
+      "uuid": "069e4bd3-549b-4774-a1d4-03417798e475",
+      "type": "idearium.snapshot.commit",
+      "payload": {
+        "message": "pipeline test snapshot",
+        "branch": "pipeline-test",
+        "author": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634164
+    },
+    {
+      "uuid": "9e5fa495-7b77-414f-9522-02ca4224ffdd",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Cross-system proxy idea 1780481634176",
+        "tags": [
+          "proxy-test"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634176
+    },
+    {
+      "uuid": "b0fb6172-341d-419d-9ec4-99e3f177d64b",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Propagation test idea 1780481634181",
+        "tags": [
+          "propagation"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634182
+    },
+    {
+      "uuid": "a648b028-cf5d-4aab-a2c5-900b31ff6845",
+      "type": "idearium.idea.create",
+      "payload": {
+        "text": "Full pipeline test: pipeline-1780481634798",
+        "tags": [
+          "full-pipeline",
+          "evidence"
+        ],
+        "compartment": null,
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634799
+    },
+    {
+      "uuid": "8422e671-7a61-4c80-be8f-c6bfe95b531f",
+      "type": "idearium.spec.create",
+      "payload": {
+        "name": "Full pipeline spec: pipeline-1780481634798",
+        "ideaUuid": "8ec9f64b-43df-425e-a48e-1e39cd6f7a78",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634806
+    },
+    {
+      "uuid": "52fcbf2d-92ef-4fbc-a969-9de1cd22c01a",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "8fae07a9-90fa-449d-90a7-fff4bfda829b"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634809
+    },
+    {
+      "uuid": "035066f8-a932-4dbc-ba5a-4844d7d14f53",
+      "type": "idearium.spec.check",
+      "payload": {
+        "uuid": "8fae07a9-90fa-449d-90a7-fff4bfda829b"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634813
+    },
+    {
+      "uuid": "778b4e94-a81b-4953-a906-492a4cdfeaf8",
+      "type": "idearium.snapshot.commit",
+      "payload": {
+        "message": "pipeline-pipeline-1780481634798",
+        "branch": "pipeline-test",
+        "author": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1780481634816
     }
   ],
   "snr": [],
@@ -5396,6 +6042,19 @@
         "dependency_depth": 0
       },
       "ts": 1780475075611
+    },
+    {
+      "uuid": "a54417ea-85f4-46ad-8e1d-0e94efdb5a7f",
+      "ideaUuid": "b25c322a-db78-47aa-a763-b0e7fa30af48",
+      "score": 0,
+      "components": {
+        "gap_density": 0,
+        "contradiction": 0,
+        "novelty": 0,
+        "resource_cost": 0,
+        "dependency_depth": 0
+      },
+      "ts": 1780481634132
     }
   ]
 }

@@ -69,11 +69,13 @@ const SCHEMA_FILE = path.join(__dirname, 'schema.sql');
 // ── self-signed cert generation ───────────────────────────────────────────────
 
 function ensureCert() {
+  // Tries to generate a TLS cert if one doesn't exist.
+  // Throws on failure — caller handles it.
   if (fs.existsSync(CERT_FILE) && fs.existsSync(KEY_FILE)) {
-    console.log('[guardian] Using existing TLS cert');
+    console.log('\x1b[90m[guardian] TLS cert exists\x1b[0m');
     return;
   }
-  console.log('[guardian] Generating self-signed TLS cert...');
+  console.log('\x1b[90m[guardian] Generating self-signed TLS cert...\x1b[0m');
   try {
     execSync(
       `openssl req -x509 -newkey rsa:2048 -keyout "${KEY_FILE}" -out "${CERT_FILE}" ` +
@@ -81,46 +83,52 @@ function ensureCert() {
       `-addext "subjectAltName=IP:127.0.0.1,DNS:localhost"`,
       { stdio: 'pipe' }
     );
-    console.log('[guardian] TLS cert generated ✓');
-  } catch (e) {
-    // openssl not available — generate with Node crypto (no external dep)
-    generateCertWithNode();
+    console.log('\x1b[32m[guardian] TLS cert generated via openssl ✓\x1b[0m');
+    return;
+  } catch(_) {
+    // openssl not available — try selfsigned npm package
   }
+  generateCertWithNode();  // throws if selfsigned not installed
 }
 
 function generateCertWithNode() {
-  // Use selfsigned npm package if available, otherwise instruct user
-  try {
-    const selfsigned = require('selfsigned');
-    const attrs = [{ name: 'commonName', value: '127.0.0.1' }];
-    const opts  = {
-      keySize: 2048,
-      days: 825,
-      extensions: [
-        { name: 'subjectAltName', altNames: [
-          { type: 7, ip: '127.0.0.1' },
-          { type: 2, value: 'localhost' },
-        ]},
-      ],
-    };
-    const pems = selfsigned.generate(attrs, opts);
-    fs.writeFileSync(KEY_FILE,  pems.private);
-    fs.writeFileSync(CERT_FILE, pems.cert);
-    console.log('[guardian] TLS cert generated via selfsigned ✓');
-  } catch (e) {
-    console.error('[guardian] Cannot generate TLS cert automatically.');
-    console.error('[guardian] Run: npm install selfsigned');
-    console.error('[guardian] Or install openssl and re-run.');
-    process.exit(1);
+  // Use selfsigned npm package if available — throws if it can't generate.
+  // Caller (ensureCert) catches and the WSS boot phase handles it.
+  let selfsigned;
+  try { selfsigned = require('selfsigned'); } catch(_) {
+    throw new Error('selfsigned package not installed — run: npm install selfsigned');
   }
+  const attrs = [{ name: 'commonName', value: '127.0.0.1' }];
+  const opts  = {
+    keySize: 2048, days: 825,
+    extensions: [{ name: 'subjectAltName', altNames: [
+      { type: 7, ip: '127.0.0.1' }, { type: 2, value: 'localhost' },
+    ]}],
+  };
+  const pems = selfsigned.generate(attrs, opts);
+  fs.writeFileSync(KEY_FILE,  pems.private);
+  fs.writeFileSync(CERT_FILE, pems.cert);
+  console.log('[guardian] TLS cert generated via selfsigned ✓');
 }
 
-ensureCert();
+// ── TLS cert is only needed for WSS (:7821, userscripts)
+// The HTTP server (:7820) boots without it.
+// ensureCert() is called lazily inside startWSS(), not at module scope.
+let tlsOpts = null;
 
-const tlsOpts = {
-  key:  fs.readFileSync(KEY_FILE),
-  cert: fs.readFileSync(CERT_FILE),
-};
+function loadTlsOpts() {
+  // Returns tlsOpts if cert exists, null otherwise.
+  // Never throws, never exits — caller decides what to do.
+  try {
+    if (fs.existsSync(CERT_FILE) && fs.existsSync(KEY_FILE)) {
+      return {
+        key:  fs.readFileSync(KEY_FILE),
+        cert: fs.readFileSync(CERT_FILE),
+      };
+    }
+  } catch(_) {}
+  return null;
+}
 
 // ── provider registry ─────────────────────────────────────────────────────────
 
@@ -152,6 +160,7 @@ function send(ws, obj) {
 }
 
 function broadcast(obj) {
+  if (!wss) return;
   for (const ws of wss.clients) send(ws, obj);
 }
 
@@ -292,21 +301,60 @@ function autoUploadBlocks(text, provider, jobId) {
 
 // ── WSS server (userscripts) ──────────────────────────────────────────────────
 
-const httpsServer = https.createServer(tlsOpts, (req, res) => {
-  // Cert-acceptance landing page
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.end(`<!DOCTYPE html><html><head><title>Guardian WSS</title>
+// ── WSS server lives here — created lazily in startWSS() ────────────────────
+// wss is null until startWSS() succeeds. Code that uses wss must guard.
+let httpsServer = null;
+let wss         = null;
+const _wssHandlers = [];  // deferred wss.on registrations
+
+function onWss(event, handler) {
+  // Register a wss event handler — deferred if wss not yet started.
+  if (wss) { wss.on(event, handler); return; }
+  _wssHandlers.push({ event, handler });
+}
+
+function _flushWssHandlers() {
+  // Called by startWSS() after wss is created.
+  for (const { event, handler } of _wssHandlers) {
+    wss.on(event, handler);
+  }
+  _wssHandlers.length = 0;
+}
+
+function startWSS() {
+  // Attempt to start the WSS server on WSS_PORT.
+  // Returns { ok, error } — never throws, never exits.
+  // Called from the boot sequence as a SOFT phase.
+  const opts = loadTlsOpts();
+  if (!opts) {
+    return { ok: false, error: 'TLS cert missing — run: node guardian/server.js --gen-cert, or: npm install selfsigned' };
+  }
+  try {
+    httpsServer = https.createServer(opts, (req, res) => {
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(`<!DOCTYPE html><html><head><title>Guardian WSS</title>
 <style>body{background:#111;color:#eee;font-family:monospace;padding:40px;text-align:center}</style>
 </head><body>
 <h2 style="color:#2ecc71">✓ Guardian TLS cert accepted</h2>
 <p>You can close this tab. The userscript will now connect successfully.</p>
 <p style="color:#888;font-size:12px">wss://127.0.0.1:${WSS_PORT} is ready</p>
 </body></html>`);
-});
+    });
+    wss = new WebSocketServer({ server: httpsServer });
+    _flushWssHandlers();
+    return { ok: true };
+  } catch(e) {
+    return { ok: false, error: e.message };
+  }
+}
 
-const wss = new WebSocketServer({ server: httpsServer });
+// Helper: safely broadcast to wss clients (wss may be null)
+function wssBroadcast(obj) {
+  if (!wss) return;
+  for (const ws of wss.clients) send(ws, obj);
+}
 
-wss.on('connection', (ws, req) => {
+  onWss('connection', (ws, req) => {
   let providerName = null;
   const clientIp     = req.socket.remoteAddress;
   const clientOrigin = req.headers['origin'] || '(no origin)';
@@ -421,74 +469,10 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-httpsServer.listen(WSS_PORT, '127.0.0.1', async () => {
-  setTimeout(async () => {
-    const nc2 = require('../nexus-connect');
-    const { BootSequence } = require('../lib/boot-sequence');
 
-    const seq = new BootSequence({
-      systemId: 'guardian', port: HTTP_PORT, version: '3.5.0',
-      label: 'Nexus Guardian', maxRetries: 1,
-    });
+// ── WSS boot happens inside the HTTP server's boot sequence (SOFT) ──────────
+// See server.listen(HTTP_PORT) callback below — startWSS() is called there.
 
-    // Phase 0 HARD: WSS server is bound (we are in listen callback)
-    seq.phase({ name:'wss.bound', type:'HARD',
-      label:'WSS :' + WSS_PORT + ' (TLS) bound',
-      fn: async () => { /* in listen callback = bound */ },
-    });
-
-    // Phase 1 HARD: HTTP server health verify
-    seq.phase({ name:'http.verify', type:'HARD',
-      label:'Verify HTTP :' + HTTP_PORT + ' /health responds 200',
-      fn: async () => {
-        await new Promise((resolve, reject) => {
-          const r = require('http').get(
-            'http://127.0.0.1:' + HTTP_PORT + '/health',
-            res => { res.statusCode === 200 ? resolve()
-              : reject(new Error('health ' + res.statusCode)); }
-          );
-          r.setTimeout(3000, () => { r.destroy(); reject(new Error('health timeout')); });
-          r.on('error', reject);
-        });
-      },
-    });
-
-    // Phase 2 SOFT: orchestrator registration (§AXIOM)
-    seq.phase({ name:'orchestrator.register', type:'SOFT',
-      label:'Register with orchestrator (§AXIOM)',
-      fn: async () => {
-        const r = await nc2.registerWithOrchestrator('guardian', HTTP_PORT,
-          { role:'ai-orchestrator', wss:WSS_PORT });
-        if (r.ok) nc2.startHeartbeat('guardian', HTTP_PORT);
-      },
-    });
-
-    // Phase 3 SOFT: ledger boot record
-    seq.phase({ name:'ledger.announce', type:'SOFT',
-      label:'Write boot record to ledger',
-      fn: async () => {
-        await nc2.postLedger('guardian', 'guardian.booted',
-          { port:HTTP_PORT, wss:WSS_PORT });
-      },
-    });
-
-    // Phase 4 SOFT: bridge handshake (§5.2)
-    seq.phase({ name:'bridge.register', type:'SOFT',
-      label:'Bridge handshake + bus announce (§5.2)',
-      fn: async () => {
-        const r = await nc2._req('bridge', 'POST', '/bridge/handshake', {
-          systemId:'guardian', appId:'guardian',
-          secret:'nexus-guardian-internal-v1',
-        }, 4000);
-        if (!r.ok) throw new Error('bridge unavailable');
-        await nc2.postBridge('guardian.booted', { version:'3.5.0', port:HTTP_PORT });
-      },
-    });
-
-    await seq.run();
-    // Guardian never hard-exits — degrades gracefully on SOFT failures
-  }, 1500);
-});
 
 
 // ── Main HTTP server (:7820) ─────────────────────────────────────────────────
@@ -504,23 +488,116 @@ const _lip = (() => {
   return null;
 })();
 
-server.listen(HTTP_PORT, '127.0.0.1', () => {
-  console.log('');
-  console.log('\x1b[1m\x1b[35m⬡  NEXUS GUARDIAN\x1b[0m  v9.0');
-  console.log('');
-  console.log(`   \x1b[90mHTTP API  \x1b[0m  http://127.0.0.1:${HTTP_PORT}`);
-  console.log(`   \x1b[90mCockpit   \x1b[0m  http://127.0.0.1:${HTTP_PORT}/cockpit`);
-  console.log(`   \x1b[90mSSE       \x1b[0m  http://127.0.0.1:${HTTP_PORT}/events`);
-  console.log(`   \x1b[90mWSS       \x1b[0m  wss://127.0.0.1:${WSS_PORT}   \x1b[33m← userscripts connect here\x1b[0m`);
-  console.log(`   \x1b[90mDropzone  \x1b[0m  http://127.0.0.1:${DROPZONE_PORT}${_lip ? `  (LAN: http://${_lip}:${DROPZONE_PORT})` : ''}`);
-  console.log(`   \x1b[90mMemory    \x1b[0m  http://127.0.0.1:${process.env.MEMORY_PORT||7823}`);
-  console.log('');
-  console.log(`   \x1b[90mUserscript\x1b[0m  \x1b[33minstall guardian/userscript-chatgpt.js in Tampermonkey on chatgpt.com\x1b[0m`);
-  console.log(`              \x1b[33minstall guardian/userscript-claude.js in Tampermonkey on claude.ai\x1b[0m`);
-  console.log('');
-  console.log(`   \x1b[33m⚠  WSS cert\x1b[0m  visit https://127.0.0.1:${WSS_PORT}/ once to accept self-signed cert`);
-  console.log('');
+server.listen(HTTP_PORT, '127.0.0.1', async () => {
+  const { BootSequence } = require('../lib/boot-sequence');
+  const nc2 = require('../nexus-connect');
+
+  const seq = new BootSequence({
+    systemId: 'guardian', port: HTTP_PORT, version: '3.5.0',
+    label: 'Nexus Guardian', maxRetries: 1,
+  });
+
+  // ── Phase 0 HARD: required npm packages ────────────────────────────────────
+  // Check before touching any network or file I/O.
+  seq.phase({ name:'packages.required', type:'HARD',
+    label:'Required npm packages present (ws)',
+    fn: async () => {
+      const missing = [];
+      try { require('ws'); } catch(_) { missing.push('ws'); }
+      if (missing.length) throw new Error(
+        'Missing required packages: ' + missing.join(', ') +
+        ' — run: npm install ' + missing.join(' ')
+      );
+    },
+  });
+
+  // ── Phase 1 HARD: HTTP server bound + health responds ──────────────────────
+  seq.phase({ name:'http.bound', type:'HARD',
+    label:'HTTP :' + HTTP_PORT + ' bound and /health responds',
+    fn: async () => {
+      await new Promise((resolve, reject) => {
+        const r = require('http').get(
+          'http://127.0.0.1:' + HTTP_PORT + '/health',
+          res => { res.statusCode === 200 ? resolve()
+            : reject(new Error('/health returned ' + res.statusCode)); }
+        );
+        r.setTimeout(3000, () => { r.destroy(); reject(new Error('health timeout')); });
+        r.on('error', reject);
+      });
+    },
+  });
+
+  // ── Phase 2 HARD: contract present ─────────────────────────────────────────
+  seq.phase({ name:'contract.present', type:'HARD',
+    label:'interaction-contract.json present',
+    fn: async () => {
+      const cp = require('path').join(__dirname, 'interaction-contract.json');
+      if (!require('fs').existsSync(cp))
+        throw new Error('interaction-contract.json missing — guardian cannot declare its API');
+    },
+  });
+
+  // ── Phase 3 SOFT: WSS server (:7821, userscripts) ──────────────────────────
+  // TLS is required for WSS because userscripts run inside https:// pages.
+  // This is SOFT — guardian works fully without WSS; only userscript path needs it.
+  seq.phase({ name:'wss.start', type:'SOFT',
+    label:'WSS :' + WSS_PORT + ' for userscripts (requires TLS cert)',
+    fn: async () => {
+      // Try to generate cert if missing
+      ensureCert();
+      // Load TLS
+      const opts = loadTlsOpts();
+      if (!opts) throw new Error(
+        'TLS cert not available — WSS disabled. ' +
+        'Fix: npm install selfsigned  OR  install openssl'
+      );
+      // Start WSS
+      const r = startWSS();
+      if (!r.ok) throw new Error(r.error);
+      // Bind httpsServer
+      await new Promise((resolve, reject) => {
+        httpsServer.listen(WSS_PORT, '127.0.0.1', resolve);
+        httpsServer.on('error', reject);
+      });
+      console.log('  \x1b[90m[guardian] WSS :' + WSS_PORT + ' ready — userscripts can connect\x1b[0m');
+    },
+  });
+
+  // ── Phase 4 SOFT: orchestrator registration ─────────────────────────────────
+  seq.phase({ name:'orchestrator.register', type:'SOFT',
+    label:'Register with orchestrator (§AXIOM)',
+    fn: async () => {
+      const r = await nc2.registerWithOrchestrator('guardian', HTTP_PORT,
+        { role:'ai-orchestrator', wss: WSS_PORT });
+      if (r.ok) nc2.startHeartbeat('guardian', HTTP_PORT);
+    },
+  });
+
+  // ── Phase 5 SOFT: ledger boot record ────────────────────────────────────────
+  seq.phase({ name:'ledger.announce', type:'SOFT',
+    label:'Write boot record to ledger',
+    fn: async () => {
+      await nc2.postLedger('guardian', 'guardian.booted', { port: HTTP_PORT, wss: WSS_PORT });
+    },
+  });
+
+  // ── Phase 6 SOFT: bridge handshake ──────────────────────────────────────────
+  seq.phase({ name:'bridge.register', type:'SOFT',
+    label:'Bridge handshake (§5.2)',
+    fn: async () => {
+      const r = await nc2._req('bridge', 'POST', '/bridge/handshake', {
+        systemId: 'guardian', appId: 'guardian',
+        secret: 'nexus-guardian-internal-v1',
+      }, 4000);
+      if (!r.ok) throw new Error('bridge unavailable');
+      await nc2.postBridge('guardian.booted', { version: '3.5.0', port: HTTP_PORT });
+    },
+  });
+
+  await seq.run();
+  // Guardian never hard-exits on SOFT failures — HTTP is the core, WSS is optional.
 });
+
 
 // ── DROPZONE server ───────────────────────────────────────────────────────────
 // Starts an Express file-sharing drop zone on DROPZONE_PORT alongside guardian.
@@ -2089,7 +2166,7 @@ loadPS();loadDB();updateSB();setInterval(loadPS,5000);setInterval(loadDB,15000);
 //  WIRE SISO GATES INTO WSS
 // ══════════════════════════════════════════════════════════════════════════════
 
-wss.on('connection', (clientWs) => {
+onWss('connection', (clientWs) => {
   clientWs.on('message', (raw) => {
     try {
       const msg = JSON.parse(raw);
@@ -2640,7 +2717,7 @@ const memoryServer = startMemoryServer();
 //  This means the userscript doesn't need to make a separate HTTP call —
 //  guardian already has the data, memory just indexes it.
 
-wss.on('connection', (ws) => {
+onWss('connection', (ws) => {
   ws.on('message', (raw) => {
     try {
       const msg = JSON.parse(raw);

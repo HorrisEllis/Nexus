@@ -612,3 +612,86 @@
 {"_system":"idearium","_ts":1780475075654,"type":"idearium.idea.created","payload":{"uuid":"15a32c99-d036-4579-9c8c-e15c4537a5a7","text":"Cross-system proxy idea 1780475075647","tags":["proxy-test"]}}
 {"_system":"idearium","_ts":1780475075656,"type":"idearium.idea.created","payload":{"uuid":"755fef7c-f658-4388-8990-0706989429ee","text":"Propagation test idea 1780475075651","tags":["propagation"]}}
 {"_system":"idearium","_ts":1780475076274,"type":"idearium.idea.created","payload":{"uuid":"88a7d615-3186-4d30-94c6-1eb8ff32d4d4","text":"Full pipeline test: pipeline-1780475076269","tags":["full-pipeline","evidence"]}}
+{"_system":"orchestrator","_ts":1780481598298,"type":"orchestrator.boot.started","payload":{"systemId":"orchestrator","port":9000,"version":"2.0.0","phases":6,"seqId":"6f341066","ts":1780481598284}}
+{"_system":"orchestrator","_ts":1780481598301,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"server.bound","type":"HARD","ms":2,"seqId":"6f341066"}}
+{"_system":"orchestrator","_ts":1780481598302,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"ledger.writable","type":"HARD","ms":0,"seqId":"6f341066"}}
+{"_system":"orchestrator","_ts":1780481598310,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"health.verify","type":"HARD","ms":19,"seqId":"6f341066"}}
+{"_system":"orchestrator","_ts":1780481598325,"type":"orchestrator.cli.terminal.opened","payload":{"terminal":"cmd"}}
+{"_system":"orchestrator","_ts":1780481598325,"type":"orchestrator.booted","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780481598326,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"recall.verify","type":"HARD","ms":8,"seqId":"6f341066"}}
+{"_system":"orchestrator","_ts":1780481598327,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"ui.hotswap","type":"SOFT","ms":5,"seqId":"6f341066"}}
+{"_system":"orchestrator","_ts":1780481598327,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"cli.terminal","type":"SOFT","ms":3,"seqId":"6f341066"}}
+{"_system":"orchestrator","_ts":1780481598329,"type":"orchestrator.boot.complete","payload":{"systemId":"orchestrator","port":9000,"version":"2.0.0","phases":6,"pass":6,"soft":0,"seqId":"6f341066","ts":1780481598325}}
+{"_system":"orchestrator","_ts":1780481598827,"type":"orchestrator.systems.sequence.started","payload":{"systems":["bridge","cortex","guardian","idearium","emerge"],"ts":1780481598827}}
+{"_system":"orchestrator","_ts":1780481598827,"type":"orchestrator.system.starting","payload":{"systemId":"bridge","port":9999,"cmd":"/tmp/organize/nexus-final/bridge/nexus-bridge.js"}}
+{"_system":"bridge","_ts":1780481598927,"type":"bridge.boot.started","payload":{"systemId":"bridge","port":9999,"version":"1.0.0","phases":3,"seqId":"8787453b","ts":1780481598916}}
+{"_system":"bridge","_ts":1780481598942,"type":"bridge.phase.ok","payload":{"systemId":"bridge","phase":"server.bound","type":"HARD","ms":16,"seqId":"8787453b"}}
+{"_system":"orchestrator","_ts":1780481598952,"type":"system.registered","payload":{"systemId":"bridge","port":9999,"meta":{"role":"event-bus-fabric","version":"1.0.0"},"registeredAt":1780481598952}}
+{"_system":"bridge","_ts":1780481598954,"type":"bridge.phase.ok","payload":{"systemId":"bridge","phase":"orchestrator.register","type":"SOFT","ms":1,"seqId":"8787453b"}}
+{"_system":"bridge","_ts":1780481598954,"type":"bridge.phase.ok","payload":{"systemId":"bridge","phase":"contract.present","type":"SOFT","ms":1,"seqId":"8787453b"}}
+{"_system":"bridge","_ts":1780481598955,"type":"bridge.boot.complete","payload":{"systemId":"bridge","port":9999,"version":"1.0.0","phases":3,"pass":3,"soft":0,"seqId":"8787453b","ts":1780481598941}}
+{"_system":"orchestrator","_ts":1780481599637,"type":"bridge.system.online","payload":{"systemId":"bridge","port":9999}}
+{"_system":"orchestrator","_ts":1780481600438,"type":"orchestrator.system.starting","payload":{"systemId":"cortex","port":3748,"cmd":"/tmp/organize/nexus-final/cortex/boot.js"}}
+{"_system":"cortex","_ts":1780481600618,"type":"cortex.boot.started","payload":{"systemId":"cortex","port":3748,"version":"2.0.0","phases":8,"seqId":"75100ac1","ts":1780481600587}}
+{"_system":"orchestrator","_ts":1780481600621,"type":"system.registered","payload":{"systemId":"cortex","port":3748,"meta":{"role":"source-of-truth","version":"2.0.0"},"registeredAt":1780481600621}}
+{"_system":"cortex","_ts":1780481600626,"type":"cortex.registered","payload":{"port":3748,"role":"source-of-truth","version":"2.0.0"}}
+{"_system":"cortex","_ts":1780481600650,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"orchestrator.register","type":"SOFT","ms":29,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600672,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"storage.init","type":"HARD","ms":8,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600674,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"core.init","type":"HARD","ms":3,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600675,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"deps.init","type":"HARD","ms":0,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600675,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"poll.start","type":"HARD","ms":1,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600675,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"server.start","type":"HARD","ms":21,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600675,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"boot.record","type":"SOFT","ms":0,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600678,"type":"cortex.booted","payload":{"version":"2.0.0","port":3748}}
+{"_system":"cortex","_ts":1780481600680,"type":"cortex.phase.ok","payload":{"systemId":"cortex","phase":"bridge.register","type":"SOFT","ms":11,"seqId":"75100ac1"}}
+{"_system":"cortex","_ts":1780481600680,"type":"cortex.boot.complete","payload":{"systemId":"cortex","port":3748,"version":"2.0.0","phases":8,"pass":8,"soft":0,"seqId":"75100ac1","ts":1780481600680}}
+{"_system":"orchestrator","_ts":1780481601248,"type":"cortex.system.online","payload":{"systemId":"cortex","port":3748}}
+{"_system":"orchestrator","_ts":1780481602049,"type":"orchestrator.system.starting","payload":{"systemId":"guardian","port":7820,"cmd":"/tmp/organize/nexus-final/guardian/server.js"}}
+{"_system":"guardian","_ts":1780481602304,"type":"guardian.boot.started","payload":{"systemId":"guardian","port":7820,"version":"3.5.0","phases":7,"seqId":"94bf4806","ts":1780481602295}}
+{"_system":"guardian","_ts":1780481602305,"type":"guardian.phase.ok","payload":{"systemId":"guardian","phase":"packages.required","type":"HARD","ms":2,"seqId":"94bf4806"}}
+{"_system":"guardian","_ts":1780481602315,"type":"guardian.phase.ok","payload":{"systemId":"guardian","phase":"http.bound","type":"HARD","ms":8,"seqId":"94bf4806"}}
+{"_system":"guardian","_ts":1780481602317,"type":"guardian.phase.ok","payload":{"systemId":"guardian","phase":"contract.present","type":"HARD","ms":0,"seqId":"94bf4806"}}
+{"_system":"guardian","_ts":1780481602320,"type":"guardian.phase.ok","payload":{"systemId":"guardian","phase":"wss.start","type":"SOFT","ms":5,"seqId":"94bf4806"}}
+{"_system":"orchestrator","_ts":1780481602321,"type":"system.registered","payload":{"systemId":"guardian","port":7820,"meta":{"role":"ai-orchestrator","wss":7821},"registeredAt":1780481602321}}
+{"_system":"guardian","_ts":1780481602323,"type":"guardian.registered","payload":{"port":7820,"role":"ai-orchestrator","wss":7821}}
+{"_system":"guardian","_ts":1780481602326,"type":"guardian.phase.ok","payload":{"systemId":"guardian","phase":"orchestrator.register","type":"SOFT","ms":8,"seqId":"94bf4806"}}
+{"_system":"guardian","_ts":1780481602327,"type":"guardian.booted","payload":{"port":7820,"wss":7821}}
+{"_system":"guardian","_ts":1780481602329,"type":"guardian.phase.ok","payload":{"systemId":"guardian","phase":"ledger.announce","type":"SOFT","ms":3,"seqId":"94bf4806"}}
+{"_system":"guardian","_ts":1780481602334,"type":"guardian.phase.ok","payload":{"systemId":"guardian","phase":"bridge.register","type":"SOFT","ms":5,"seqId":"94bf4806"}}
+{"_system":"guardian","_ts":1780481602336,"type":"guardian.boot.complete","payload":{"systemId":"guardian","port":7820,"version":"3.5.0","phases":7,"pass":7,"soft":0,"seqId":"94bf4806","ts":1780481602334}}
+{"_system":"orchestrator","_ts":1780481602860,"type":"guardian.system.online","payload":{"systemId":"guardian","port":7820}}
+{"_system":"orchestrator","_ts":1780481603661,"type":"orchestrator.system.starting","payload":{"systemId":"idearium","port":4800,"cmd":"/tmp/organize/nexus-final/idearium/api/index.js"}}
+{"_system":"idearium","_ts":1780481603887,"type":"idearium.boot.started","payload":{"systemId":"idearium","port":4800,"version":"2.0.0","phases":7,"seqId":"0433193e","ts":1780481603878}}
+{"_system":"idearium","_ts":1780481603889,"type":"idearium.phase.ok","payload":{"systemId":"idearium","phase":"server.bound","type":"HARD","ms":2,"seqId":"0433193e"}}
+{"_system":"idearium","_ts":1780481603897,"type":"idearium.phase.ok","payload":{"systemId":"idearium","phase":"ideaos.verify","type":"HARD","ms":13,"seqId":"0433193e"}}
+{"_system":"idearium","_ts":1780481603899,"type":"idearium.phase.ok","payload":{"systemId":"idearium","phase":"health.verify","type":"HARD","ms":2,"seqId":"0433193e"}}
+{"_system":"idearium","_ts":1780481603907,"type":"idearium.phase.ok","payload":{"systemId":"idearium","phase":"contract.verify","type":"HARD","ms":5,"seqId":"0433193e"}}
+{"_system":"orchestrator","_ts":1780481603908,"type":"system.registered","payload":{"systemId":"idearium","port":4800,"meta":{"role":"idea-os","version":"2.0.0"},"registeredAt":1780481603908}}
+{"_system":"idearium","_ts":1780481603912,"type":"idearium.phase.ok","payload":{"systemId":"idearium","phase":"orchestrator.register","type":"SOFT","ms":0,"seqId":"0433193e"}}
+{"_system":"idearium","_ts":1780481603912,"type":"idearium.booted","payload":{"version":"2.0.0","port":4800}}
+{"_system":"idearium","_ts":1780481603913,"type":"idearium.phase.ok","payload":{"systemId":"idearium","phase":"bridge.register","type":"SOFT","ms":1,"seqId":"0433193e"}}
+{"_system":"idearium","_ts":1780481603918,"type":"idearium.phase.ok","payload":{"systemId":"idearium","phase":"sse.verify","type":"SOFT","ms":10,"seqId":"0433193e"}}
+{"_system":"idearium","_ts":1780481603918,"type":"idearium.boot.complete","payload":{"systemId":"idearium","port":4800,"version":"2.0.0","phases":7,"pass":7,"soft":0,"seqId":"0433193e","ts":1780481603917}}
+{"_system":"orchestrator","_ts":1780481604468,"type":"idearium.system.online","payload":{"systemId":"idearium","port":4800}}
+{"_system":"orchestrator","_ts":1780481605269,"type":"orchestrator.system.starting","payload":{"systemId":"emerge","port":4242,"cmd":"/tmp/organize/nexus-final/emerge-ide.js"}}
+{"_system":"emerge","_ts":1780481605520,"type":"emerge.boot.started","payload":{"systemId":"emerge","port":4242,"version":"1.0.0","phases":5,"seqId":"ffad300c","ts":1780481605503}}
+{"_system":"emerge","_ts":1780481605520,"type":"emerge.phase.ok","payload":{"systemId":"emerge","phase":"server.bound","type":"HARD","ms":9,"seqId":"ffad300c"}}
+{"_system":"emerge","_ts":1780481605522,"type":"emerge.phase.ok","payload":{"systemId":"emerge","phase":"kernel.loaded","type":"HARD","ms":0,"seqId":"ffad300c"}}
+{"_system":"emerge","_ts":1780481605525,"type":"emerge.phase.ok","payload":{"systemId":"emerge","phase":"spec.present","type":"HARD","ms":0,"seqId":"ffad300c"}}
+{"_system":"orchestrator","_ts":1780481605526,"type":"system.registered","payload":{"systemId":"emerge","port":4242,"meta":{"role":"compiler-ide","version":"1.0.0"},"registeredAt":1780481605525}}
+{"_system":"emerge","_ts":1780481605526,"type":"emerge.phase.ok","payload":{"systemId":"emerge","phase":"orchestrator.register","type":"SOFT","ms":0,"seqId":"ffad300c"}}
+{"_system":"emerge","_ts":1780481605926,"type":"emerge.phase.failed","payload":{"systemId":"emerge","phase":"ollama.check","type":"SOFT","ms":409,"error":"connect ECONNREFUSED 127.0.0.1:11434","fatal":false,"seqId":"ffad300c"}}
+{"_system":"emerge","_ts":1780481605926,"type":"emerge.boot.complete","payload":{"systemId":"emerge","port":4242,"version":"1.0.0","phases":5,"pass":4,"soft":1,"seqId":"ffad300c","ts":1780481605924}}
+{"_system":"orchestrator","_ts":1780481606079,"type":"emerge.system.online","payload":{"systemId":"emerge","port":4242}}
+{"_system":"orchestrator","_ts":1780481606880,"type":"orchestrator.systems.sequence.complete","payload":{"up":5,"down":0,"total":5,"ts":1780481606880}}
+{"_system":"orchestrator","_ts":1780481608884,"type":"orchestrator.bridge.registered","payload":{"version":"2.0.0","port":9000}}
+{"_system":"orchestrator","_ts":1780481633461,"type":"system.registered","payload":{"systemId":"test-38e1f3ab","port":9876,"meta":{"role":"test"},"registeredAt":1780481633461}}
+{"_system":"orchestrator","_ts":1780481633489,"type":"pipeline.test.1780481633488","payload":{"sentinel":true}}
+{"_system":"orchestrator","_ts":1780481633552,"type":"pipeline.sentinel.1780481633552","payload":{}}
+{"_system":"guardian","_ts":1780481633900,"type":"pipeline.guardian.siso.1780481633897","payload":{"source":"pipeline-test","sentinel":true,"_busSeq":1}}
+{"_system":"guardian","_ts":1780481634006,"type":"guardian.ledger","payload":{"category":"EVENT","msg":"pipeline test ledger entry","meta":{"source":"pipeline-test","ts":1780481634003},"source":"api","_busSeq":2}}
+{"_system":"orchestrator","_ts":1780481634008,"type":"guardian.ledger","payload":{"category":"EVENT","msg":"pipeline test ledger entry","meta":{"source":"pipeline-test","ts":1780481634003},"source":"api"}}
+{"_system":"idearium","_ts":1780481634130,"type":"idearium.idea.created","payload":{"uuid":"b25c322a-db78-47aa-a763-b0e7fa30af48","text":"Pipeline test idea 1780481634120","tags":["pipeline","evidence"]}}
+{"_system":"idearium","_ts":1780481634182,"type":"idearium.idea.created","payload":{"uuid":"394ef952-b76e-46d3-89a5-d09064d19621","text":"Cross-system proxy idea 1780481634176","tags":["proxy-test"]}}
+{"_system":"idearium","_ts":1780481634188,"type":"idearium.idea.created","payload":{"uuid":"08e8b789-875f-427d-9685-7b764a130bfc","text":"Propagation test idea 1780481634181","tags":["propagation"]}}
+{"_system":"idearium","_ts":1780481634808,"type":"idearium.idea.created","payload":{"uuid":"8ec9f64b-43df-425e-a48e-1e39cd6f7a78","text":"Full pipeline test: pipeline-1780481634798","tags":["full-pipeline","evidence"]}}
