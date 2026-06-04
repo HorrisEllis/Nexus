@@ -1909,6 +1909,38 @@ function handleExtendedRoutes(req, res, url, method) {
   const parts = url.pathname.split('/').filter(Boolean);
 
   // ── Core API routes ────────────────────────────────────────────────────────
+  // ── Auto-update: /version returns component versions ─────────────────────
+  if (method==='GET' && url.pathname==='/version') {
+    const fs2 = require('fs');
+    const path2 = require('path');
+    const readVersion = (file) => {
+      try {
+        const content = fs2.readFileSync(path2.join(__dirname, '..', file), 'utf8');
+        const m = content.match(/version['":\s]+['"v]?(\d+\.\d+\.\d+)/i);
+        return m ? m[1] : null;
+      } catch(_) { return null; }
+    };
+    const userscriptVersion = (file) => {
+      try {
+        const content = fs2.readFileSync(path2.join(__dirname, file), 'utf8');
+        const m = content.match(/@version\s+([\d.]+)/);
+        return m ? m[1] : null;
+      } catch(_) { return null; }
+    };
+    pRes(res, 200, {
+      ok: true,
+      guardian:        '3.5.0',
+      userscript_claude:  userscriptVersion('userscript-claude.js'),
+      userscript_chatgpt: userscriptVersion('userscript-chatgpt.js'),
+      spec_parser:     '1.0.0',
+      seam_queue:      '1.0.0',
+      detector:        '1.0.0',
+      nexus_chat:      '4.0.0',
+      ts: Date.now(),
+    });
+    return true;
+  }
+
   if (method==='GET' && url.pathname==='/health') {
     pRes(res, 200, { ok:true, uptime:process.uptime(), jobs:jobs.size,
       providers:Object.fromEntries(Object.entries(PROVIDERS).map(([k,v])=>[k,v?'connected':'null'])),

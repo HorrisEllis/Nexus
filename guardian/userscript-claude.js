@@ -146,6 +146,15 @@ function _log(type, msg, detail) {
   if (logEntries.length > LOG_MAX) logEntries.shift();
   if (panelOpen && activeTab==='log') _appendLogRow(entry);
   else if (type !== 'hb') { unreadCount++; _setBadge(unreadCount); }
+  // Phase 3: sync significant events to server event-ledger (§LAW II)
+  if (type === 'err' || type === 'gap' || type === 'job' || type === 'ok') {
+    try {
+      fetch(NCP_RESULT, { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ type:'GUARDIAN_EVENT', event:entry,
+          provider:'claude', chatUrl:location.href, account:getAccount() }),
+        keepalive:true }).catch(function(){});
+    } catch(e) {}
+  }
 }
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
@@ -361,6 +370,8 @@ function _onJobComplete(jobId, text, ms, prompt, retryCount) {
     // Clean completion
     sendLedger('UPGRADE', `Job complete · #${jobId.slice(0,8)}`, { jobId, chars:text.length, ms });
     send({ type:'GUARDIAN_COMPLETE', jobId, text, chatUrl:location.href, account:getAccount(), requestId:jobId });
+        parseCortexCommands(lastText, jobId);
+        parseCortexCommands(lastText, jobId);
     _toBridge('guardian.job.complete', { jobId, chars:text.length, ms, provider:PROVIDER });
     _toCortex('guardian.job.complete', { jobId, chars:text.length, ms, usage });
     _toOrc('guardian','guardian.job.complete',{ jobId, chars:text.length, ms });
@@ -388,11 +399,54 @@ async function handleJob(msg) {
 
   await gate('handleJob', async () => {
     seenHashes.clear();
-    if (!injectText(text)) throw new Error('Input not found — no contenteditable');
+    // Phase 1: pull cortex context, prepend to prompt
+    const ctx = await pullCortexContext(text);
+    const finalText = ctx ? ctx + text : text;
+    if (!injectText(finalText)) throw new Error('Input not found — no contenteditable');
     send({ type:'GUARDIAN_DELIVERED', jobId, chatUrl:location.href, account:getAccount(), requestId:jobId });
     setTimeout(() => { submit(); startWatch(jobId, text, 0); }, 500);
     return true;
   }, { jobId });
+}
+
+// ── Cortex context pull ───────────────────────────────────────────────────────
+async function pullCortexContext(prompt) {
+  try {
+    var q = encodeURIComponent(prompt.slice(0, 120));
+    var r = await fetch(NCP_URL + '/memory/context?q=' + q, { signal: AbortSignal.timeout(2000) });
+    if (!r.ok) return '';
+    var d = await r.json();
+    var parts = [];
+    if (d.gaps && d.gaps.length) {
+      var gapLines = d.gaps.slice(0,3).map(function(g) { return '- ' + g.type + ': ' + (g.description||'').slice(0,80); });
+      parts.push('[OPEN GAPS]\n' + gapLines.join('\n'));
+    }
+    if (d.artifacts && d.artifacts.length) {
+      var artLines = d.artifacts.slice(0,2).map(function(a) { return '- ' + (a.name||a.lang||'artifact'); });
+      parts.push('[RECENT ARTIFACTS]\n' + artLines.join('\n'));
+    }
+    return parts.length ? '[NEXUS CONTEXT]\n' + parts.join('\n') + '\n\n' : '';
+  } catch(e) { return ''; }
+}
+
+// ── Post-response cortex command parser ──────────────────────────────────────
+// Scans completed response for ?CORTEX:query lines.
+// Executes against guardian memory API, posts result back for SEAM queue injection.
+async function parseCortexCommands(text, jobId) {
+  var cmds = text.split('\n').filter(function(l) { return /^\?CORTEX:/i.test(l.trim()); });
+  if (!cmds.length) return;
+  for (var i = 0; i < cmds.length; i++) {
+    var q = cmds[i].replace(/^\?CORTEX:/i,'').trim();
+    try {
+      var r = await fetch(NCP_URL + '/memory/query?q=' + encodeURIComponent(q),
+        { signal: AbortSignal.timeout(2000) });
+      if (!r.ok) continue;
+      var d = await r.json();
+      var result = (d.results||[]).slice(0,3).map(function(x) { return x.text||x.content||''; }).join('\n') || '(no results)';
+      send({ type:'GUARDIAN_CORTEX_RESULT', jobId:jobId, query:q, result:result });
+      _log('info', '?CORTEX: ' + q, (d.results||[]).length + ' results');
+    } catch(e) {}
+  }
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────────
@@ -415,7 +469,7 @@ function connect() {
 
   const tabParam = `tabId=${MY_TAB}&provider=${PROVIDER}`;
   _log('info', 'NCP connecting…', `${NCP_CHANNEL}?${tabParam}`);
-  connState = 'CONNECTING';
+  connState = 'connecting'; setConnState('connecting');
 
   _es = new EventSource(`${NCP_CHANNEL}?${tabParam}`);
 
@@ -429,7 +483,7 @@ function connect() {
   };
 
   _es.onopen = () => {
-    connState = 'OPEN';
+    connState = 'ready'; setConnState('ready');
     _log('ok', `NCP connected · ${PROVIDER}`, NCP_CHANNEL);
     // Register with server via POST (EventSource opened = we're live)
     ncpPost(NCP_RESULT, {
@@ -448,7 +502,7 @@ function connect() {
   };
 
   _es.onerror = (e) => {
-    connState = 'ERROR';
+    connState = 'disconnected'; setConnState('disconnected');
     _log('err', 'NCP error — reconnecting in ' + RECONNECT_MS + 'ms');
     _es.close();
     clearInterval(hb);
@@ -477,9 +531,12 @@ function _handleServerMessage(msg) {
   switch(msg.type) {
     case 'NCP_READY':
     case 'GUARDIAN_READY':
-      _log('ok', `NCP Ready · ${msg.provider||PROVIDER}`, NCP_CHANNEL);
-      connState = 'OPEN';
-      renderApi?.();
+      setConnState('ready');
+      _log('ok', `Ready · ${msg.provider||PROVIDER}`, NCP_CHANNEL);
+      toast('Guardian connected ✓', 'success', 2000);
+      autoClaimIfFree();
+      startObserver();
+      setTimeout(scanDOM, 800);
       break;
 
     case 'GUARDIAN_CLAIM':
@@ -510,60 +567,6 @@ function _handleServerMessage(msg) {
     default:
       _log('debug', `NCP msg: ${msg.type}`);
   }
-}
-nect() {
-  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer=null; }
-  setConnState('connecting');
-  _log('info', 'Connecting…', WS_URL);
-  ws = new WebSocket(WS_URL);
-
-  ws.onopen = () => {
-    setConnState('handshaking');
-    ws.send(JSON.stringify({ type:'GUARDIAN_REGISTER', provider:PROVIDER, host:location.hostname, tabId:MY_TAB, claimed:amIClaimed() }));
-    hb = setInterval(() => send({ type:'GUARDIAN_HEARTBEAT', provider:PROVIDER, tabId:MY_TAB, ts:Date.now() }), HB_MS);
-  };
-
-  ws.onmessage = (e) => {
-    let msg; try { msg = JSON.parse(e.data); } catch { _log('err','Bad WS msg'); return; }
-    switch (msg.type) {
-      case 'GUARDIAN_READY':
-        setConnState('ready');
-        _log('ok', `Ready · ${msg.provider||PROVIDER}`, WS_URL);
-        toast('Guardian connected ✓', 'success', 2000);
-        sendLedger('SYSTEM', 'Connected to Guardian');
-        _toOrc('guardian','guardian.userscript.connected',{ provider:PROVIDER, account:getAccount() });
-        _toBridge('guardian.userscript.connected',{ provider:PROVIDER });
-        autoClaimIfFree();
-        startObserver();
-        setTimeout(scanDOM, 800);
-        break;
-      case 'GUARDIAN_CLAIM':
-        if (msg.tabId===MY_TAB||msg.tabId==='any') { claimTab(); send({type:'GUARDIAN_CLAIM_ACK',tabId:MY_TAB,provider:PROVIDER}); toast('Tab claimed — ACTIVE','success',2000); }
-        break;
-      case 'GUARDIAN_RELEASE':
-        if (msg.tabId===MY_TAB||msg.tabId==='any') { releaseTab(); toast('Tab released — PASSIVE','warn',2000); }
-        break;
-      case 'GUARDIAN_JOB':
-        handleJob(msg);
-        break;
-      case 'GUARDIAN_HEARTBEAT_ACK':
-        break;
-      default:
-        _log('in', `← ${msg.type}`, JSON.stringify(msg).slice(0,80));
-    }
-  };
-
-  ws.onclose = (e) => {
-    clearInterval(hb); setConnState('disconnected');
-    _log('err', `WS closed (${e.code})`, `retry in ${RECONNECT_MS/1000}s`);
-    toast(`Guardian disconnected (${e.code})`, 'error', 4000);
-    if (currentJobId) stopWatch();
-    reconnectTimer = setTimeout(connect, RECONNECT_MS);
-  };
-  ws.onerror = () => {
-    setConnState('disconnected');
-    _log('err','WS error');
-  };
 }
 
 // ── UI — Styles ───────────────────────────────────────────────────────────────
@@ -968,5 +971,19 @@ buildUI();
 setConnState('disconnected');
 connect();
 _log('sys', `Guardian v${VERSION} loaded`, location.hostname);
+
+// Phase 6: version check — fire and forget, never blocks
+setTimeout(async function() {
+  try {
+    var r = await fetch(NCP_URL + '/version', { signal: AbortSignal.timeout(3000) });
+    if (!r.ok) return;
+    var d = await r.json();
+    var serverVer = d.userscript_claude;
+    if (serverVer && serverVer !== VERSION) {
+      _log('sys', 'Version mismatch — server expects v' + serverVer + ', running v' + VERSION, 'Reinstall userscript from Forge');
+      toast('Update available: userscript v' + serverVer + ' (running v' + VERSION + ')', 'warn', 8000);
+    }
+  } catch(e) {}
+}, 4000);
 
 })();

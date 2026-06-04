@@ -309,8 +309,6 @@ select.fi option{background:var(--surface);}
       <div class="tb-tab" data-panel="forge">⚙ Forge</div>
       <div class="tb-tab" data-panel="providers">⬡ Providers</div>
       <div class="tb-tab" data-panel="bridge">⇄ Bridge</div>
-      <div class="tb-tab" data-panel="forge">⚙ Forge</div>
-      <div class="tb-tab" data-panel="providers">⬡ Providers</div>
     </div>
     <div class="tb-right">
       <div class="tb-status"><div class="tb-dot" id="dot-orch"></div><span>Orch :9000</span></div>
@@ -797,7 +795,7 @@ class GuardianClient {
   async memQuery(q)     { return this.req(`/memory/query?q=${encodeURIComponent(q)}`); }
   async dispatch(provider,prompt,opts={}){
     const{timeout=90000}=opts;
-    const c=await this.req('/command','POST',{provider,prompt,command:'code'});
+    const c=await this.req('/command','POST',{provider,prompt,command:'code',spec:this._pendingSpec||undefined});
     if(!c.ok)throw new Error('Guardian: '+JSON.stringify(c));
     const jobId=c.jobId,deadline=Date.now()+timeout;let polls=0;
     while(Date.now()<deadline&&polls<this.pollMax){
@@ -1157,6 +1155,34 @@ function verifyCk(idx,result){
 }
 function toggleTest(cIdx,tIdx){const t=ckState.chunks[cIdx].tests[tIdx];t.pass=t.pass===true?null:true;_saveCkState();_renderCkViewer(cIdx);_renderCkList();}
 function copyPrompt(idx){const c=ckState.chunks[idx];const sysP=$val('system-prompt')==='custom'?ckState.customSysPrompt:ckState.systemPrompts[$val('system-prompt')]||'';navigator.clipboard.writeText(_buildPrompt(c,idx,sysP,$val('ck-provider'))).then(()=>toast('Copied','success'));}
+// ── Full SEAM queue dispatch ─────────────────────────────────────────────────
+// Sends the full .spec text to guardian POST /command { spec }
+// Guardian's spec-parser builds prerequisite + chunks, SEAMQueue handles delivery.
+async function queueFullSeam() {
+  const specText = (document.getElementById('ck-spec') || document.getElementById('spec-input'))?.value.trim();
+  if (!specText) { toast('Paste a spec first', 'error'); return; }
+  const prov = (document.getElementById('ck-provider')?.value || 'chatgpt').replace('-direct','');
+  const splitOn = document.getElementById('split-on')?.value || 'heading';
+  const maxSize = parseInt(document.getElementById('max-size')?.value || '3000');
+  toast('Queuing full spec → Guardian (' + prov + ')…', 'info');
+  try {
+    const r = await fetch('http://127.0.0.1:7820/command', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ spec: specText, provider: prov, splitOn, maxChunkSize: maxSize }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      toast('SEAM queue created: ' + d.total + ' chunks → ' + d.provider, 'success', 5000);
+      // Switch to Brain tab to watch progress
+      document.querySelector('[data-panel="brain"]')?.click();
+      setTimeout(brainRefreshSeam, 1000);
+    } else {
+      toast('Queue failed: ' + (d.error || 'unknown'), 'error');
+    }
+  } catch(e) { toast('Guardian unreachable: ' + e.message, 'error'); }
+}
+
 async function guardianDispatch(idx){
   const c=ckState.chunks[idx];const sysP=$val('system-prompt')==='custom'?ckState.customSysPrompt:ckState.systemPrompts[$val('system-prompt')]||'';
   const prompt=_buildPrompt(c,idx,sysP,'claude');const prov=$val('ck-provider').replace('-direct','');
@@ -2333,16 +2359,46 @@ async function brainRefreshProviders() {
 }
 
 async function brainRefreshSeam() {
-  const data = await brainFetch(BRAIN_GUARDIAN + '/seam/sessions');
+  // Both persistent sessions (JAA) and active in-memory queues
+  const [sessData, queueData] = await Promise.all([
+    brainFetch(BRAIN_GUARDIAN + '/seam/sessions'),
+    brainFetch(BRAIN_GUARDIAN + '/seam/queues'),
+  ]);
+  const data = sessData;
+  // Overlay active queue status on top
+  const activeQueues = queueData?.queues || [];
   if (!data) return;
   const el = document.getElementById('brain-seam');
   if (!el) return;
-  const sessions = (data.sessions || []).slice(-5).reverse();
-  if (!sessions.length) { el.innerHTML = '<span style="color:var(--muted)">No sessions</span>'; return; }
-  el.innerHTML = sessions.map(s => {
+
+  // Active (in-memory) queues first — these are live
+  const liveRows = activeQueues.map(q => {
+    const st = q.stats || {};
+    const pct = st.total ? Math.round(st.verified/st.total*100) : 0;
+    const col = pct === 100 ? '#22c55e' : st.escalated ? '#f472b6' : pct > 0 ? '#f59e0b' : '#60a5fa';
+    return `<div style="padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+        <span style="color:#60a5fa;font-weight:600">${q.title||'Active Queue'}</span>
+        <span style="color:${col};font-size:8px;font-weight:700">LIVE · ${q.provider||''}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="flex:1;height:3px;background:var(--border);border-radius:2px">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:2px;transition:width .4s"></div>
+        </div>
+        <span style="color:${col};font-weight:700">${st.verified||0}/${st.total||0}</span>
+      </div>
+      <div style="color:#334155;font-size:8px;margin-top:2px">
+        queued:${st.queued||0} retrying:${st.retrying||0} escalated:${st.escalated||0}
+      </div>
+    </div>`;
+  });
+
+  // JAA sessions (historical)
+  const sessions = (data?.sessions || []).slice(-5).reverse();
+  const sessRows = sessions.map(s => {
     const chunks = s.chunks || [];
     const verified = chunks.filter(c => c.status === 'verified').length;
-    const total = chunks.length;
+    const total = chunks.length || s.total || 0;
     const pct = total ? Math.round(verified/total*100) : 0;
     const col = pct === 100 ? '#22c55e' : pct > 0 ? '#f59e0b' : '#334155';
     return `<div style="padding:4px 0;border-bottom:1px solid var(--border)">
@@ -2354,7 +2410,11 @@ async function brainRefreshSeam() {
         <span style="color:${col};font-weight:700">${verified}/${total}</span>
       </div>
     </div>`;
-  }).join('');
+  });
+
+  const allRows = [...liveRows, ...sessRows];
+  if (!allRows.length) { el.innerHTML = '<span style="color:var(--muted)">No sessions</span>'; return; }
+  el.innerHTML = allRows.join('');
 }
 
 async function brainRefreshQueue() {
