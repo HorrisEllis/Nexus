@@ -255,8 +255,8 @@ select.fi option{background:var(--surface);}
 .brain-stat:last-child{border-bottom:none;}
 .brain-stat-val{font-weight:700;color:var(--amber);}
 .brain-results{overflow-y:auto;padding:6px;}
-.cfr-att-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle;}
 .brain-results::-webkit-scrollbar{width:3px;}
+.cfr-att-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle;}
 .brain-results::-webkit-scrollbar-thumb{background:var(--border2);}
 .brain-result-item{padding:6px 8px;border:1px solid var(--border);border-radius:3px;margin-bottom:4px;font-size:9px;color:var(--text);line-height:1.5;}
 .be-row{padding:2px 0;border-bottom:1px solid var(--border);font-size:9px;}
@@ -763,7 +763,7 @@ class IdeiarumClient {
   async snapshot(msg)         { return this.req('/api/snapshots','POST',{message:msg}); }
   async snr()                 { return this.req('/api/snr'); }
   async stats()               { return this.req('/api/stats'); }
-  async dispatch(prov,prompt) { return this.req('/api/agents/dispatch','POST',{provider:prov,prompt}); }
+  // dispatch moved to GuardianClient — use guardian.dispatch(provider, prompt)
   subscribeSSE(onEv){
     if(typeof EventSource==='undefined')return;
     let es, retries=0;
@@ -2018,159 +2018,79 @@ setInterval(() => loadBridgeRequests('pending'), 8000);
 // ══════════════════════════════════════════════════════════════════════════════
 // CFR — Constraint Field Runtime  (Brain panel particle canvas)
 // Uses cfr-physics.js API inlined for cockpit (no ESM imports needed here)
-// 10,000 particles · 8 system attractors · live event response
-// ══════════════════════════════════════════════════════════════════════════════
+// UUID: cfr-cockpit-v1-0000-4000-0000-000000000001
 
 const CFR = (() => {
-  'use strict';
-
   // ── Physics (inline port of cfr-physics.js) ───────────────────────────────
-  function h21(x, y) { const v = Math.sin(x*127.1+y*311.7)*43758.5453; return v-Math.floor(v); }
-  function sn(x, y) {
-    const ix=Math.floor(x),iy=Math.floor(y),fx=x-ix,fy=y-iy;
-    const u=fx*fx*(3-2*fx), v2=fy*fy*(3-2*fy);
-    return (h21(ix,iy)*(1-u)+h21(ix+1,iy)*u)*(1-v2)+(h21(ix,iy+1)*(1-u)+h21(ix+1,iy+1)*u)*v2;
-  }
-  function curl(x, y, z, t) {
-    const e=0.06, px=x+z*.18+t*.04, py=y+z*.22+t*.05;
-    return [(sn(px,py+e)-sn(px,py-e))/(2*e), -(sn(px+e,py)-sn(px-e,py))/(2*e)];
-  }
-
-  function createWorld(n=8000, bound=9) {
-    const px=new Float32Array(n), py=new Float32Array(n), pz=new Float32Array(n);
-    const vx=new Float32Array(n), vy=new Float32Array(n), vz=new Float32Array(n);
-    const en=new Float32Array(n);
-    for (let i=0;i<n;i++) {
-      const a=Math.random()*Math.PI*2, r=Math.random()*bound*.9;
-      px[i]=Math.cos(a)*r; py[i]=Math.sin(a)*r;
-      pz[i]=(Math.random()-.5)*5;
-      en[i]=Math.random();
-    }
-    return { n, bound, px, py, pz, vx, vy, vz, en,
-             attractors: new Map(), t: 0, entropy: 0.18, structure: 0.85, curl: 0.5 };
-  }
-
-  function stepWorld(w, dt) {
-    const { n, bound, px, py, pz, vx, vy, vz, en, attractors } = w;
-    const atts = [...attractors.values()];
-    w.t += dt;
-    const damp = 0.97, vmax = 0.18;
-    for (let i=0;i<n;i++) {
-      const [cx,cy] = curl(px[i], py[i], pz[i], w.t);
-      let ax = cx*w.curl*0.004, ay = cy*w.curl*0.004;
-      let az = (Math.random()-.5)*0.002*w.entropy;
-
-      // Attractor gravity
-      for (const att of atts) {
-        const dx=att.x-px[i], dy=att.y-py[i], dz=(att.z||0)-pz[i];
-        const d2=dx*dx+dy*dy+dz*dz+0.5;
-        const f=att.mass*0.006/d2;
-        ax+=dx*f; ay+=dy*f; az+=dz*f*0.3;
-      }
-
-      // Entropy jitter
-      ax += (Math.random()-.5)*w.entropy*0.012;
-      ay += (Math.random()-.5)*w.entropy*0.012;
-
-      // Soft wall
-      const r=Math.sqrt(px[i]*px[i]+py[i]*py[i]);
-      if (r>bound*.88) { ax -= px[i]*0.003; ay -= py[i]*0.003; }
-      if (Math.abs(pz[i])>4) az -= pz[i]*0.012;
-
-      vx[i]=(vx[i]+ax)*damp; vy[i]=(vy[i]+ay)*damp; vz[i]=(vz[i]+az)*damp;
-      const sp=Math.sqrt(vx[i]*vx[i]+vy[i]*vy[i]);
-      if(sp>vmax){const s=vmax/sp;vx[i]*=s;vy[i]*=s;}
-      px[i]+=vx[i]; py[i]+=vy[i]; pz[i]+=vz[i];
-      en[i]=Math.min(1,en[i]*0.99+sp*2);
-    }
-  }
-
-  // ── 8 System attractors ───────────────────────────────────────────────────
   const ATT_DEFS = [
-    { id:'bridge',   label:'Bridge',   color:'#f0a500', x:-5,  y: 3,  mass:2.2 },
-    { id:'cortex',   label:'Cortex',   color:'#2dd4bf', x: 5,  y: 3,  mass:3.0 },
-    { id:'guardian', label:'Guardian', color:'#9b7fe8', x: 0,  y:-5,  mass:2.8 },
-    { id:'idearium', label:'Idearium', color:'#4a9eff', x:-5,  y:-3,  mass:1.8 },
-    { id:'emerge',   label:'Emerge',   color:'#3ecf8e', x: 5,  y:-3,  mass:1.5 },
-    { id:'ollama',   label:'Ollama',   color:'#e85d3c', x:-3,  y: 6,  mass:1.2 },
-    { id:'jobs',     label:'Jobs',     color:'#ff6b6b', x: 3,  y: 6,  mass:1.0 },
-    { id:'gaps',     label:'Gaps',     color:'#ffd93d', x: 0,  y: 0,  mass:0.5 },
+    { id:'guardian', label:'Guardian',  color:'#f59e0b', x:0.5, y:0.3, strength:0.012 },
+    { id:'cortex',   label:'Cortex',    color:'#a78bfa', x:0.2, y:0.7, strength:0.010 },
+    { id:'bridge',   label:'Bridge',    color:'#34d399', x:0.8, y:0.7, strength:0.010 },
+    { id:'gaps',     label:'Gaps',      color:'#f472b6', x:0.5, y:0.8, strength:0.008 },
+    { id:'jobs',     label:'Jobs',      color:'#60a5fa', x:0.5, y:0.1, strength:0.015 },
   ];
+
+  function mkWorld(W, H) {
+    const particles = Array.from({ length: 80 }, (_, i) => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5,
+      life: 0.4 + Math.random()*0.6,
+      att: ATT_DEFS[i % ATT_DEFS.length].id,
+    }));
+    return { particles, attractors: ATT_DEFS.map(a=>({...a})), t:0, entropy:1.0, W, H };
+  }
+
+  function step(world) {
+    const { particles, attractors, W, H } = world;
+    world.t += 0.016;
+    let totalV = 0;
+    for (const p of particles) {
+      const att = attractors.find(a => a.id === p.att) || attractors[0];
+      const tx = att.x * W, ty = att.y * H;
+      p.vx += (tx - p.x) * att.strength;
+      p.vy += (ty - p.y) * att.strength;
+      p.vx *= 0.97; p.vy *= 0.97;
+      p.x += p.vx; p.y += p.vy;
+      p.x = Math.max(2, Math.min(W-2, p.x));
+      p.y = Math.max(2, Math.min(H-2, p.y));
+      totalV += Math.abs(p.vx) + Math.abs(p.vy);
+    }
+    world.entropy = Math.min(1, totalV / (particles.length * 2));
+  }
 
   // ── Canvas renderer ───────────────────────────────────────────────────────
   let world=null, canvas=null, ctx=null, raf=null;
-  let W=0, H=0, CX=0, CY=0, SCALE=0;
-  let frameN=0;
-
-  function toScreen(wx, wy) {
-    return [CX + wx*SCALE, CY - wy*SCALE];
-  }
+  let W=0, H=0;
 
   function draw() {
     if (!ctx || !world) return;
-    frameN++;
-
-    // Resize if needed
     const rect = canvas.getBoundingClientRect();
     if (canvas.width !== rect.width || canvas.height !== rect.height) {
       canvas.width  = rect.width  || canvas.offsetWidth;
       canvas.height = rect.height || canvas.offsetHeight;
       W=canvas.width; H=canvas.height;
-      CX=W/2; CY=H/2;
-      SCALE=Math.min(W,H)/22;
+      if (world) { world.W=W; world.H=H; }
     }
-
-    // Step physics
-    stepWorld(world, 0.016);
-
-    // Clear with fade trail
-    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    step(world);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='rgba(5,8,15,0.18)';
     ctx.fillRect(0,0,W,H);
-
-    // Draw particles
-    const { n, px, py, pz, en } = world;
-    for (let i=0;i<n;i++) {
-      const [sx,sy] = toScreen(px[i],py[i]);
-      if(sx<-2||sx>W+2||sy<-2||sy>H+2) continue;
-      const e = en[i];
-      const depth = (pz[i]+5)/10; // 0..1
-      const alpha = (0.15+e*0.55)*depth;
-      const size  = (0.6+e*1.2)*depth;
-      // Color shifts from teal→amber→red with entropy
-      const r = Math.round(45 + e*210);
-      const g = Math.round(207 - e*120);
-      const b = Math.round(142 - e*100);
-      ctx.fillStyle = `rgba(${r},${g},${b},${alpha.toFixed(2)})`;
-      ctx.fillRect(sx-size/2, sy-size/2, size, size);
+    const n = world.particles.length;
+    for (const p of world.particles) {
+      const att = ATT_DEFS.find(a=>a.id===p.att)||ATT_DEFS[0];
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
+      ctx.fillStyle = att.color + 'cc';
+      ctx.fill();
     }
-
     // Draw attractors
-    for (const att of world.attractors.values()) {
-      const def = ATT_DEFS.find(d=>d.id===att.id);
-      if (!def) continue;
-      const [sx,sy] = toScreen(att.x,att.y);
-      const pulse = 0.6+0.4*Math.sin(world.t*2+(ATT_DEFS.indexOf(def)));
-      const glow = att.mass * 4 * pulse;
-      const col = def.color;
-
-      // Glow ring
-      const gr = ctx.createRadialGradient(sx,sy,0,sx,sy,glow*3);
-      gr.addColorStop(0, col.replace(')',`,${(0.15*pulse).toFixed(2)})`).replace('rgb','rgba').replace('#','').replace(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/, (_,r,g,b)=>`rgba(${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},`)+`${(0.15*pulse).toFixed(2)})`);
-      gr.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = gr;
-      ctx.beginPath(); ctx.arc(sx,sy,glow*3,0,Math.PI*2); ctx.fill();
-
-      // Core dot
-      ctx.fillStyle = col;
-      ctx.beginPath(); ctx.arc(sx,sy,3+att.mass,0,Math.PI*2); ctx.fill();
-
-      // Label
-      ctx.fillStyle = `rgba(255,255,255,${(0.4+pulse*0.2).toFixed(2)})`;
-      ctx.font = '8px monospace';
-      ctx.fillText(def.label, sx+att.mass+5, sy+3);
+    for (const a of world.attractors) {
+      ctx.beginPath();
+      ctx.arc(a.x*W, a.y*H, 4+a.strength*200, 0, Math.PI*2);
+      ctx.strokeStyle = a.color + '55';
+      ctx.lineWidth = 1;
+      ctx.stroke();
     }
-
-    // Overlay
     document.getElementById('cfr-overlay').textContent =
       `⬡ CFR  ${n} particles  t=${world.t.toFixed(1)}  ε=${world.entropy.toFixed(2)}`;
 
@@ -2182,79 +2102,42 @@ const CFR = (() => {
     if (!canvas) return;
     ctx = canvas.getContext('2d');
     canvas.width  = canvas.offsetWidth  || 400;
-    canvas.height = canvas.offsetHeight || 300;
-    W=canvas.width; H=canvas.height; CX=W/2; CY=H/2; SCALE=Math.min(W,H)/22;
-
-    world = createWorld(8000);
-    // Register all 8 attractors
-    for (const def of ATT_DEFS) {
-      world.attractors.set(def.id, { ...def });
-    }
-
-    // Legend
+    canvas.height = canvas.offsetHeight || 200;
+    W = canvas.width; H = canvas.height;
+    world = mkWorld(W, H);
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(draw);
     document.getElementById('cfr-attractors-legend').innerHTML =
       ATT_DEFS.map(d=>`<span class="cfr-att-dot" style="background:${d.color}"></span>${d.label}`).join('  ');
-
-    raf = requestAnimationFrame(draw);
     console.log('[cfr] particle field online');
   }
 
-  // ── Public API ────────────────────────────────────────────────────────────
-  function pulse(systemId, intensity=1) {
+  function pulse(attId, boost=1) {
     if (!world) return;
-    const att = world.attractors.get(systemId);
-    if (!att) return;
-    // Spike mass temporarily, then decay
-    att.mass = Math.min(att.mass + intensity*2, 8);
-    setTimeout(() => { if(att) att.mass = Math.max(att.mass-intensity*1.5, 0.5); }, 800);
-    // Spike entropy
-    world.entropy = Math.min(world.entropy + intensity*0.3, 1.0);
-  }
-
-  function setEntropy(v) { if(world) world.entropy = Math.max(0,Math.min(1,v)); }
-
-  function onJob(status) {
-    if (status==='complete') pulse('jobs', 1.5);
-    else if (status==='queued') pulse('jobs', 0.5);
-    else if (status==='failed') { pulse('gaps', 2); setEntropy(0.7); }
+    const att = world.attractors.find(a=>a.id===attId);
+    if (att) { att.strength = Math.min(0.04, att.strength + 0.005 * boost); }
+    for (const p of world.particles) {
+      if (p.att === attId) { p.vx += (Math.random()-0.5)*2*boost; p.vy += (Math.random()-0.5)*2*boost; }
+    }
+    setTimeout(()=>{ if (world) { const a=world.attractors.find(a=>a.id===attId); if(a)a.strength=ATT_DEFS.find(d=>d.id===attId)?.strength||0.01; } }, 800);
   }
 
   function onEvent(type) {
-    if (type.startsWith('guardian')) pulse('guardian', 0.8);
-    else if (type.startsWith('cortex'))   pulse('cortex',   0.6);
-    else if (type.startsWith('idearium')) pulse('idearium', 0.7);
-    else if (type.startsWith('bridge'))   pulse('bridge',   0.5);
-    else if (type.startsWith('raid'))     pulse('ollama',   1.0);
-    else if (type.includes('gap'))        pulse('gaps',     1.2);
-    else if (type.includes('emerge'))     pulse('emerge',   0.6);
+    if (type.includes('guardian')) pulse('guardian', 0.5);
+    if (type.includes('cortex'))   pulse('cortex',   0.5);
+    if (type.includes('bridge'))   pulse('bridge',   0.5);
+    if (type.includes('gap'))      pulse('gaps',     1.2);
   }
 
-  function stop() { if(raf) cancelAnimationFrame(raf); }
+  function onJob(status) {
+    pulse('jobs', status==='complete' ? 1.5 : status==='failed' ? 2 : 0.8);
+  }
 
-  // Auto-init when brain panel becomes active
-  document.addEventListener('DOMContentLoaded', () => {
-    // Init immediately if brain panel visible, otherwise on first tab click
-    const brainTab = document.querySelector('[data-panel="brain"]');
-    if (brainTab) {
-      brainTab.addEventListener('click', () => {
-        if (!world) setTimeout(init, 50);
-      });
-    }
-    // Also init if brain is the active panel on load
-    if (document.getElementById('panel-brain')?.classList.contains('active')) {
-      setTimeout(init, 100);
-    }
-  });
-
-  return { init, pulse, setEntropy, onJob, onEvent, stop };
+  return { init, pulse, onEvent, onJob };
 })();
 
 // ── Wire CFR to live events ────────────────────────────────────────────────────
-// Hook into existing guardian SSE and cockpit event handlers
-
 // Patch existing guardian event handler to also drive CFR
-const _origCockpitBroadcast = typeof gapi !== 'undefined' ? gapi._onEvent : null;
-
 function _cfrHandleSSEEvent(ev) {
   if (!ev?.type) return;
   CFR.onEvent(ev.type);
@@ -2265,28 +2148,27 @@ function _cfrHandleSSEEvent(ev) {
   if (ev.type === 'bridge.request.created') CFR.pulse('bridge', 0.8);
 }
 
-// Hook into the existing SSE subscription that cockpit already has
 const _cfrOrigHandler = window._cfrHandlerInstalled;
 if (!_cfrOrigHandler) {
   window._cfrHandlerInstalled = true;
-  // The cockpit already subscribes to guardian SSE — patch the handler
-  const _origGapiSSE = typeof guardianSSE !== 'undefined' ? guardianSSE : null;
-  // Use MutationObserver to detect events appearing in brain-events log
-  const brainEvLog = document.getElementById('brain-events');
-  if (brainEvLog) {
-    new MutationObserver(() => {
-      const latest = brainEvLog.firstElementChild;
-      if (latest) {
-        const type = latest.textContent?.match(/^[\w.]+/)?.[0];
-        if (type) CFR.onEvent(type);
-      }
-    }).observe(brainEvLog, { childList: true });
-  }
+  const _origSSE = window._guardianSSEHandler;
+  window._guardianSSEHandler = function(ev) {
+    if (_origSSE) _origSSE(ev);
+    _cfrHandleSSEEvent(ev);
+  };
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// BRAIN — live server data
-// ══════════════════════════════════════════════════════════════════════════════
+// Init CFR when Brain panel becomes active
+document.querySelectorAll('.tb-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    if (tab.dataset.panel === 'brain') setTimeout(() => CFR.init(), 100);
+  });
+});
+// Also init on page load if brain is already active
+if (document.getElementById('panel-brain')?.classList.contains('active')) {
+  setTimeout(() => CFR.init(), 300);
+}
+
 
 const BRAIN_GUARDIAN = 'http://127.0.0.1:7820';
 const BRAIN_CORTEX   = 'http://127.0.0.1:3748';

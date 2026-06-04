@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-06-04T01:27:23.955Z",
+  "run_at": "2026-06-04T06:52:02.113Z",
   "total": 142,
   "passed": 142,
   "failed": 0,
@@ -388,7 +388,7 @@
     },
     {
       "status": "PASS",
-      "name": "real .eg files: found 125 files in emerge/io"
+      "name": "real .eg files: found 124 files in emerge/io"
     },
     {
       "status": "PASS",

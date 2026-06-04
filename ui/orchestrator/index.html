@@ -245,8 +245,6 @@ const CHANNELS = [
   { from:'bridge',   channel:'bridge.request.complete',  to:['all'],               desc:'Request complete' },
   { from:'bridge',   channel:'bridge.request.expired',   to:['all'],               desc:'Stale request purged (30min TTL)' },
   { from:'bridge',   channel:'bridge.handshake',         to:['audit'],             desc:'System handshake logged' },
-  { from:'alk',      channel:'alk.video.landmarks.face', to:['gcanvas'],           desc:'Face landmarks → CFR attractor positions' },
-  { from:'alk',      channel:'alk.behavior.cue.detected',to:['gcanvas','cortex'],  desc:'Behavioral signal → field delta' },
 ];
 
 const API_MAP = {

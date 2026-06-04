@@ -36,7 +36,7 @@ const HB_MS        = 8000;
 const LOG_MAX      = 300;
 
 // ── State ────────────────────────────────────────────────────────────────────
-let ws = null, hb = null, reconnectTimer = null;
+let _es = null, hb = null, reconnectTimer = null;
 let connState = 'disconnected';
 let currentJobId = null, jobActive = false;
 let panelOpen = false, activeTab = 'log';
@@ -265,26 +265,64 @@ function recordUsage(jobId, text, ms) {
 
 // ── DOM helpers — response finding ───────────────────────────────────────────
 function findResponseEl() {
-  return document.querySelector('.font-claude-message:last-of-type')
-    || document.querySelector('[data-testid="assistant-message"]:last-child')
-    || (()=>{ const all=document.querySelectorAll('[class*="assistant"]'); return all.length?all[all.length-1]:null; })()
-    || document.querySelector('.prose:last-of-type');
+  // Try most specific/stable selectors first
+  const all = document.querySelectorAll('[data-testid="assistant-message"]');
+  if (all.length) return all[all.length - 1];
+  // Claude artifact renderer
+  const arts = document.querySelectorAll('.font-claude-message');
+  if (arts.length) return arts[arts.length - 1];
+  // Prose fallback
+  const prose = document.querySelectorAll('.prose');
+  if (prose.length) return prose[prose.length - 1];
+  return null;
 }
 function injectText(text) {
-  const input = document.querySelector('[contenteditable="true"]');
+  // Claude uses a React-controlled contenteditable div
+  // Must trigger React's synthetic event system — not just set textContent
+  const SELECTORS = [
+    'div[contenteditable="true"].ProseMirror',
+    'div[contenteditable="true"][data-testid="chat-input"]',
+    'div[contenteditable="true"]',
+  ];
+  let input = null;
+  for (const sel of SELECTORS) {
+    const el = document.querySelector(sel);
+    if (el) { input = el; break; }
+  }
   if (!input) return false;
   input.focus();
+  // Use execCommand first — works in most cases
   document.execCommand('selectAll', false, null);
   document.execCommand('delete', false, null);
   const ok = document.execCommand('insertText', false, text);
-  if (!ok) { input.textContent = text; input.dispatchEvent(new InputEvent('input',{bubbles:true,data:text,inputType:'insertText'})); }
-  return true;
+  if (ok && input.textContent.trim() === text.trim()) return true;
+  // Fallback: React synthetic input event path
+  input.textContent = '';
+  const dataTransfer = new DataTransfer();
+  dataTransfer.setData('text/plain', text);
+  input.dispatchEvent(new ClipboardEvent('paste', { clipboardData: dataTransfer, bubbles: true }));
+  if (input.textContent.trim()) return true;
+  // Last resort: direct textContent + InputEvent
+  input.textContent = text;
+  input.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: text }));
+  return !!input.textContent.trim();
 }
 function submit() {
-  const btn = document.querySelector('button[data-testid="send-button"]:not([disabled])');
-  if (btn) { btn.click(); return; }
-  const input = document.querySelector('[contenteditable="true"]');
-  if (input) input.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',keyCode:13,bubbles:true}));
+  // Try send button first
+  const BTN_SELS = [
+    'button[data-testid="send-button"]:not([disabled])',
+    'button[aria-label="Send message"]:not([disabled])',
+    'button[aria-label="Send"]:not([disabled])',
+  ];
+  for (const sel of BTN_SELS) {
+    const btn = document.querySelector(sel);
+    if (btn) { btn.click(); return; }
+  }
+  // Fallback: Enter key on the input
+  const input = document.querySelector('div[contenteditable="true"]');
+  if (input) {
+    input.dispatchEvent(new KeyboardEvent('keydown', { key:'Enter', code:'Enter', keyCode:13, which:13, bubbles:true, cancelable:true }));
+  }
 }
 function isChatBlank() { return !document.querySelector('[data-testid="assistant-message"],[data-testid="human-message"]'); }
 
@@ -319,35 +357,74 @@ function startObserver() {
 }
 
 // ── Response watcher — the job execution loop ─────────────────────────────────
-let _watchInterval = null, _watchStart = 0;
+let _watchObs = null, _watchTimer = null, _watchStart = 0;
+
 function stopWatch() {
-  clearInterval(_watchInterval); _watchInterval = null;
+  if (_watchObs)   { _watchObs.disconnect(); _watchObs = null; }
+  if (_watchTimer) { clearTimeout(_watchTimer); _watchTimer = null; }
   currentJobId = null; jobActive = false;
   setJobBar(false);
 }
+
+// Is Claude currently generating? — checks for stop/streaming indicator
+function _isGenerating() {
+  return !!(
+    document.querySelector('button[aria-label="Stop generating"]') ||
+    document.querySelector('button[data-testid="stop-button"]') ||
+    document.querySelector('[data-testid="streaming-indicator"]') ||
+    document.querySelector('.text-streaming')
+  );
+}
+
 function startWatch(jobId, prompt, retryCount = 0) {
   stopWatch();
   currentJobId = jobId; jobActive = true; _watchStart = Date.now();
   setJobBar(true, prompt, jobId);
-  let lastText = '', stable = 0;
-  const STABLE_THRESH = 5;
-  _watchInterval = setInterval(() => {
-    if (!currentJobId) { clearInterval(_watchInterval); return; }
+
+  let lastText = '', stableCount = 0;
+  const STABLE_NEEDED = 3;   // 3 mutation-free cycles = done
+  const STABLE_MS     = 300; // ms between stable checks
+
+  function checkStable() {
+    if (!currentJobId || currentJobId !== jobId) return;
     const el = findResponseEl();
-    if (!el) return;
-    const text = (el.innerText||el.textContent||'').trim();
-    if (text === lastText) {
-      stable++;
-      if (stable >= STABLE_THRESH) {
+    if (!el) { _watchTimer = setTimeout(checkStable, 600); return; }
+    const text = (el.innerText || el.textContent || '').trim();
+    if (text === lastText && !_isGenerating()) {
+      stableCount++;
+      if (stableCount >= STABLE_NEEDED) {
         const ms = Date.now() - _watchStart;
-        clearInterval(_watchInterval);
+        stopWatch();
         _onJobComplete(jobId, text, ms, prompt, retryCount);
+        return;
       }
-    } else { lastText = text; stable = 0; scheduleScan(); }
-  }, 400);
+    } else {
+      lastText = text;
+      stableCount = 0;
+      scheduleScan();
+    }
+    _watchTimer = setTimeout(checkStable, STABLE_MS);
+  }
+
+  // MutationObserver — fires on every DOM change (token by token as Claude streams)
+  const target = document.querySelector('main') || document.body;
+  _watchObs = new MutationObserver(() => {
+    stableCount = 0; // any mutation resets stable counter
+    if (_watchTimer) { clearTimeout(_watchTimer); _watchTimer = null; }
+    _watchTimer = setTimeout(checkStable, STABLE_MS);
+  });
+  _watchObs.observe(target, { childList: true, subtree: true, characterData: true });
+
+  // Fallback timer in case observer misses something
+  _watchTimer = setTimeout(checkStable, 1500);
 }
 
 function _onJobComplete(jobId, text, ms, prompt, retryCount) {
+  // §LAW II — ledger write first
+  send({ type:'GUARDIAN_LEDGER_WRITE', jobId, category:'UPGRADE',
+    msg:`Complete · ${text.length}ch · ${Math.round(ms/1000)}s`,
+    meta:{ jobId, chars:text.length, ms, provider:PROVIDER, ts:Date.now() }
+  });
   _log('ok', `Complete · ${text.length}ch`, `${Math.round(ms/1000)}s · #${jobId.slice(0,8)}`);
   toast(`Done: ${text.length} chars in ${Math.round(ms/1000)}s`, 'success', 3500);
 
@@ -371,7 +448,6 @@ function _onJobComplete(jobId, text, ms, prompt, retryCount) {
     sendLedger('UPGRADE', `Job complete · #${jobId.slice(0,8)}`, { jobId, chars:text.length, ms });
     send({ type:'GUARDIAN_COMPLETE', jobId, text, chatUrl:location.href, account:getAccount(), requestId:jobId });
         parseCortexCommands(lastText, jobId);
-        parseCortexCommands(lastText, jobId);
     _toBridge('guardian.job.complete', { jobId, chars:text.length, ms, provider:PROVIDER });
     _toCortex('guardian.job.complete', { jobId, chars:text.length, ms, usage });
     _toOrc('guardian','guardian.job.complete',{ jobId, chars:text.length, ms });
@@ -391,18 +467,27 @@ async function handleJob(msg) {
   const text = content ? (prompt ? `${prompt}\n\n${content}` : content) : prompt;
   if (!text.trim()) { _log('err','Empty job','skipping'); return; }
 
+  // §LAW II — ledger write IS the state change. Write first, act second.
+  send({ type:'GUARDIAN_LEDGER_WRITE', jobId, category:'INPUT',
+    msg:`Job: ${command} #${jobId.slice(0,8)}`,
+    meta:{ jobId, command, chars:text.length, provider:PROVIDER, chatUrl:location.href, ts:Date.now() }
+  });
+
   _log('job', `Job: ${command}`, `${text.length}ch · #${jobId.slice(0,8)}`);
-  toast(`⚡ Job: ${command} · #${jobId.slice(0,8)}`, 'job', 3000);
-  sendLedger('INPUT', `Job: ${command} #${jobId.slice(0,8)}`, { jobId, command, chars:text.length });
-  _toOrc('guardian','guardian.job.received',{ jobId, command, chars:text.length });
+  toast(`⚡ ${command} · #${jobId.slice(0,8)}`, 'job', 3000);
+  _toOrc('guardian', 'guardian.job.received', { jobId, command, chars:text.length });
   _toBridge('guardian.job.dispatched', { jobId, command, provider:PROVIDER });
 
   await gate('handleJob', async () => {
     seenHashes.clear();
-    // Phase 1: pull cortex context, prepend to prompt
     const ctx = await pullCortexContext(text);
     const finalText = ctx ? ctx + text : text;
     if (!injectText(finalText)) throw new Error('Input not found — no contenteditable');
+    // Ledger write: DELIVERED — before submit fires
+    send({ type:'GUARDIAN_LEDGER_WRITE', jobId, category:'EVENT',
+      msg:`Delivered: ${command} #${jobId.slice(0,8)}`,
+      meta:{ jobId, command, provider:PROVIDER, ts:Date.now() }
+    });
     send({ type:'GUARDIAN_DELIVERED', jobId, chatUrl:location.href, account:getAccount(), requestId:jobId });
     setTimeout(() => { submit(); startWatch(jobId, text, 0); }, 500);
     return true;
@@ -464,7 +549,7 @@ setInterval(checkNavigate, 800);
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function connect() {
   // NCP: SSE for server→browser push, fetch() for browser→server
-  // Replaces new WebSocket(WS_URL) entirely.
+  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
   if (_es) { try { _es.close(); } catch(_) {} }
 
   const tabParam = `tabId=${MY_TAB}&provider=${PROVIDER}`;
@@ -506,12 +591,11 @@ function connect() {
     _log('err', 'NCP error — reconnecting in ' + RECONNECT_MS + 'ms');
     _es.close();
     clearInterval(hb);
-    setTimeout(connect, RECONNECT_MS);
+    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+    reconnectTimer = setTimeout(connect, RECONNECT_MS);
   };
 }
 
-// EventSource handle (replaces ws)
-let _es = null;
 
 // POST helper for NCP results
 async function ncpPost(url, data) {
@@ -553,7 +637,7 @@ function _handleServerMessage(msg) {
 
     case 'GUARDIAN_JOB':
       currentJobId = msg.jobId;
-      runJob(msg);
+      handleJob(msg);
       break;
 
     case 'GUARDIAN_SESSION_NAMED':

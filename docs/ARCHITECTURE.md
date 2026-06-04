@@ -119,7 +119,6 @@ nexus-final/
 │   ├── siso.js
 │   └── ollama-runtime.js
 │
-├── gcanvas/                  ← ALK particle field (CFR canvas)
 │   ├── alk-kernel.js
 │   ├── alk-gl.js
 │   ├── cfr-physics.js

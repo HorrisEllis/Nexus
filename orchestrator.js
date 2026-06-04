@@ -163,8 +163,6 @@ const CHANNELS = [
   { from:'bridge',   ch:'bridge.request.expired',   to:['*'],                 desc:'Stale request purged' },
   { from:'bridge',   ch:'bridge.handshake',         to:['audit'],             desc:'Handshake logged' },
   { from:'bridge',   ch:'bridge.tag.added',         to:['*'],                 desc:'Entity tagged' },
-  { from:'alk',      ch:'alk.video.landmarks.face', to:['gcanvas'],           desc:'Face → CFR attractors' },
-  { from:'alk',      ch:'alk.behavior.cue.detected',to:['gcanvas','cortex'],  desc:'Behavior → field delta' },
   { from:'alk',      ch:'alk.signal.composite',     to:['cortex'],            desc:'ALK composite → event_log' },
 ];
 

@@ -59,7 +59,6 @@ nexus/
 │   └── io/                   184 .eg files — full system in Emergence
 │       ├── agents/           6 files
 │       ├── automation/       2 files
-│       ├── canvas/           8 files + gcanvas/ (69 files)
 │       ├── cockpit/          5 files
 │       ├── foundation/       14 files
 │       ├── guardian-ext/     12 files
@@ -71,7 +70,6 @@ nexus/
 │       ├── system/           4 files
 │       ├── userscript/       16 files
 │       └── versionium/       2 files
-├── gcanvas/                  ALK particle field
 │   ├── alk-kernel.js
 │   ├── alk-gl.js             WebGL2 80k particles
 │   ├── cfr-mesh-bridge.js    34-attractor skeleton

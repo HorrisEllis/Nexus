@@ -191,8 +191,6 @@ channels:
   bridge.request.created:   { from: bridge,   to: [all_subscribers] }
   bridge.request.accepted:  { from: bridge,   to: [all_subscribers] }
   bridge.request.complete:  { from: bridge,   to: [all_subscribers] }
-  alk.video.landmarks.face: { from: gcanvas,  to: [cfr_mesh_bridge] }
-  alk.behavior.cue.detected:{ from: gcanvas,  to: [cfr_field_delta] }
 
 # ── Axioms (active laws) ──────────────────────────────────────────────────────
 

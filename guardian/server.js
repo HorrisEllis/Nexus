@@ -168,7 +168,7 @@ function logResponse(entry) {
 // ── helpers ───────────────────────────────────────────────────────────────────
 
 // send() — kept for any remaining legacy code; routes through NCP if provider present
-function send(ws, obj) {
+function _legacySend(ws, obj) {  // legacy WebSocket send — not used by NCP path
   if (obj?.type && obj?.provider && ncp.isConnected(obj.provider)) {
     ncp.push(obj.provider, obj);
   }
@@ -266,6 +266,20 @@ function dispatchJob(job) {
       queueReason: `waiting for ${job.provider} NCP channel` });
     console.log(`[guardian] queued ${job.id} — waiting for ${job.provider} userscript`);
     bus.emit('guardian.job.queued', { jobId: job.id, provider: job.provider });
+    // Emit tab.needed — Forge cockpit SSE listeners will open the tab
+    // CLI watcher will print the URL for the operator to open
+    const provUrls = {
+      claude:   'https://claude.ai/new',
+      chatgpt:  'https://chatgpt.com/',
+      ollama:   null,  // local — no tab needed
+    };
+    const url = provUrls[job.provider];
+    if (url) {
+      bus.emit('guardian.tab.needed', { provider: job.provider, url, jobId: job.id });
+      // Broadcast to all connected SSE clients (Forge, nexus-chat) so they can open it
+      cockpitBroadcast({ type: 'GUARDIAN_TAB_NEEDED', provider: job.provider, url, jobId: job.id });
+      console.log(`[guardian] tab needed: ${url} — job ${job.id} will flush when connected`);
+    }
     return false;
   }
   // Push via SSE — userscript's EventSource.onmessage receives it
@@ -320,6 +334,8 @@ function _handleNCPMessage(msg) {
       if (jobId) {
         const finalText = text || content || '';
         const job = jobs.get(jobId);
+        // Store response text on job so /response/:jobId can serve it
+        if (job) { job.responseText = finalText.slice(0, 100000); job.status = 'complete'; }
 
         // §LAW II — write artifact files to disk before JAA insert
         // Chunks and synthesized output written as real files
@@ -411,6 +427,25 @@ function _handleNCPMessage(msg) {
         bus.emit('guardian.job.error', { jobId, error, gate, provider });
         cockpitBroadcast({ type: 'job.error', jobId, error, ts: Date.now() });
       }
+      break;
+    }
+
+    case 'GUARDIAN_LEDGER_WRITE': {
+      // §LAW II — this is the ledger-as-source-of-truth write
+      // Comes BEFORE action in the userscript. Write to JAA immediately.
+      const entry = {
+        uuid:     require('crypto').randomUUID(),
+        jobId:    jobId || null,
+        category: msg.category || 'EVENT',
+        msg:      msg.msg || '',
+        meta:     JSON.stringify(msg.meta || {}),
+        provider: msg.meta?.provider || provider || 'unknown',
+        chatUrl:  msg.meta?.chatUrl || chatUrl || '',
+        ts:       msg.meta?.ts || Date.now(),
+      };
+      jaa.insert('ledger', entry);
+      bus.emit('guardian.ledger.write', entry);
+      _evLedger?.record('GUARDIAN_LEDGER_WRITE', entry, { source: 'userscript' });
       break;
     }
 
@@ -1910,6 +1945,16 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // ── Core API routes ────────────────────────────────────────────────────────
   // ── Auto-update: /version returns component versions ─────────────────────
+  // ── GET /open/:provider — redirect to provider URL (opens tab) ──────────────
+  if (method==='GET' && url.pathname.startsWith('/open/')) {
+    const prov = url.pathname.split('/')[2];
+    const provUrls = { claude:'https://claude.ai/new', chatgpt:'https://chatgpt.com/' };
+    const target = provUrls[prov];
+    if (!target) { pRes(res, 404, { ok:false, error:'unknown provider' }); return true; }
+    res.writeHead(302, { Location: target }); res.end();
+    return true;
+  }
+
   if (method==='GET' && url.pathname==='/version') {
     const fs2 = require('fs');
     const path2 = require('path');
@@ -1963,6 +2008,39 @@ function handleExtendedRoutes(req, res, url, method) {
     const q   = _activeQueues.get(qid);
     if (!q) { pRes(res, 404, { ok:false, error:'queue not found' }); return true; }
     pRes(res, 200, { ok:true, queue: q.toJSON() }); return true;
+  }
+
+  // ── /status/:jobId — Forge GuardianClient polls this ──────────────────────
+  if (method==='GET' && url.pathname.startsWith('/status/')) {
+    const jid = url.pathname.split('/')[2];
+    const job = jobs.get(jid) || jaa.get('jobs', { id: jid });
+    if (!job) { pRes(res, 404, { ok:false, error:'job not found' }); return true; }
+    pRes(res, 200, {
+      ok: true, jobId: jid,
+      status: job.status,
+      complete: job.status === 'complete' || job.status === 'done',
+      provider: job.provider, command: job.command,
+      ts: job.ts,
+    });
+    return true;
+  }
+
+  // ── /response/:jobId — Forge GuardianClient reads completed response ────────
+  if (method==='GET' && url.pathname.startsWith('/response/')) {
+    const jid = url.pathname.split('/')[2];
+    const job = jobs.get(jid) || jaa.get('jobs', { id: jid });
+    if (!job) { pRes(res, 404, { ok:false, error:'job not found' }); return true; }
+    // Look up stored response text
+    const art = (jaa.all('artifacts') || []).find(a => a.jobId === jid);
+    pRes(res, 200, {
+      ok:       true,
+      jobId:    jid,
+      status:   job.status,
+      response: job.responseText || job.text || art?.content || '',
+      provider: job.provider,
+      ts:       job.ts,
+    });
+    return true;
   }
 
   if (method==='GET' && url.pathname==='/providers') {

@@ -123,7 +123,6 @@ nexus-final/
 │   ├── siso.js, ollama-runtime.js
 │   └── io/                   ← 125 .eg spec files
 │
-├── gcanvas/                  ← ALK particle field engine
 │   ├── alk-kernel.js, alk-gl.js (WebGL2, 80k particles)
 │   ├── cfr-mesh-bridge.js    ← 34-attractor skeleton, cue→field
 │   └── cfr-physics/render/rewind.js
@@ -344,8 +343,6 @@ bridge.request.complete   → all subscribers
 bridge.handshake          → audit log
 bridge.tag.added          → audit log
 
-alk.video.landmarks.face  → gcanvas attractors
-alk.behavior.cue.detected → gcanvas field delta
 alk.signal.composite      → cortex event_log
 ```
 
@@ -419,7 +416,7 @@ Existing: emerge-kernel.js, emerge.spec, files-4.zip
   ↓
 Phase 1: Read all source zips (SISO, JAA, Nexus-Cortex, Guardian, Version_full, Spec_Editor)
   ↓
-Phase 2: Build file system bottom-up (SISO→JAA→Cortex→Guardian→Cockpit→Idearium→Emerge→gcanvas)
+Phase 2: Build file system bottom-up (SISO→JAA→Cortex→Guardian→Cockpit→Idearium→Emerge
   ↓ [first run attempt]
   ✗ emerge-ide.js: wrong siso path
   ✗ emerge-ide.js: no ui/index.html

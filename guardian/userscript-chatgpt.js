@@ -205,7 +205,7 @@ function sisoEmit(type, data = {}) {
 }
 
 // ── State ────────────────────────────────────────────────────────────────────
-let ws = null, hb = null, currentJobId = null, connState = 'disconnected', panelOpen = false, activeTab = 'log';
+let hb = null, currentJobId = null, connState = 'disconnected', panelOpen = false, activeTab = 'log';
 let logEntries = [], ledgerEntries = [], unreadCount = 0, reconnectTimer = null;
 let scanDebounceTimer = null, domSystems = {}, domObserver = null;
 let seenArtifactHashes = new Set(), accountState = null, sessionStartTime = Date.now(), sessionTokenTotal = 0;
@@ -1475,6 +1475,7 @@ function renderApiTab() {
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function updateFooter() { const el=document.getElementById('__g8gptfooter__');if(!el)return;const e=Math.round((Date.now()-sessionStartTime)/1000);el.textContent=`${getAccount().slice(0,20)} · ${Math.floor(e/60)}m ${e%60}s · ~${sessionTokenTotal.toLocaleString()} tok`; }
 function sendToServer(obj) { ncpPost(obj); }
+function send(obj) { ncpPost(obj); }  // canonical alias
 
 
 // SEAM BroadcastChannel listener
