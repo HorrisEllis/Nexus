@@ -385,6 +385,8 @@ function startWatch(jobId, prompt, retryCount = 0) {
   const STABLE_NEEDED = 3;   // 3 mutation-free cycles = done
   const STABLE_MS     = 300; // ms between stable checks
 
+  let _lastChunkLen = 0;  // track how much we've streamed
+
   function checkStable() {
     if (!currentJobId || currentJobId !== jobId) return;
     const el = findResponseEl();
@@ -399,6 +401,16 @@ function startWatch(jobId, prompt, retryCount = 0) {
         return;
       }
     } else {
+      // Text changed — stream the new portion to guardian
+      if (text.length > _lastChunkLen) {
+        const delta = text.slice(_lastChunkLen);
+        _lastChunkLen = text.length;
+        // Throttle: only send if delta is meaningful (>10 chars or ends a sentence)
+        if (delta.length > 10 || /[.!?\n]/.test(delta)) {
+          send({ type:'GUARDIAN_CHUNK', jobId, text: delta, full: text,
+            provider: PROVIDER, chatUrl: location.href, ts: Date.now() });
+        }
+      }
       lastText = text;
       stableCount = 0;
       scheduleScan();

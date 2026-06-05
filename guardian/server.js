@@ -340,10 +340,11 @@ function _handleNCPMessage(msg) {
     case 'GUARDIAN_CHUNK':
     case 'NCP_CHUNK': {
       if (jobId && text) {
+        const full = msg.full || null;
         updateJob(jobId, { status: 'streaming', lastChunk: Date.now() });
-        bus.emit('guardian.job.chunk', { jobId, text, provider });
-        // Forward chunk via SSE to any cockpit listeners
-        cockpitBroadcast({ type: 'job.chunk', jobId, text, ts: Date.now() });
+        bus.emit('guardian.job.chunk', { jobId, text, full, provider });
+        // Forward chunk via SSE — includes full accumulated text for Forge chat
+        cockpitBroadcast({ type: 'job.chunk', jobId, text, full, provider, ts: Date.now() });
       }
       break;
     }

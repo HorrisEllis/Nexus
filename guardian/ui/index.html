@@ -640,6 +640,32 @@ select.fi option{background:var(--surface);}
     </div>
   </div>
 
+
+  <!-- PANEL: CHAT — real-time agent conversation + CLI sync -->
+  <div class="panel" id="panel-chat" style="flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700;">&#9679; Live Chat</span>
+      <div id="chat-provider-badge" style="padding:2px 7px;border:1px solid var(--border);border-radius:2px;font-size:9px;color:var(--muted);">no provider</div>
+      <div id="chat-status-dot" style="width:6px;height:6px;border-radius:50%;background:var(--muted);"></div>
+      <span id="chat-status-label" style="font-size:9px;color:var(--muted);">idle</span>
+      <div style="flex:1;"></div>
+      <label style="font-size:9px;color:var(--muted);display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="chat-show-cli" checked style="accent-color:var(--amber);"> CLI</label>
+      <label style="font-size:9px;color:var(--muted);display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="checkbox" id="chat-show-sys" checked style="accent-color:var(--purple);"> System</label>
+      <button class="btn" id="chat-clear-btn">Clear</button>
+    </div>
+    <div id="chat-messages" style="flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px;"></div>
+    <div style="border-top:1px solid var(--border);padding:8px 12px;flex-shrink:0;">
+      <div style="display:flex;gap:6px;align-items:center;">
+        <select id="chat-send-provider" class="fi" style="width:110px;flex-shrink:0;">
+          <option value="claude">Claude</option>
+          <option value="chatgpt">ChatGPT</option>
+          <option value="ollama">Ollama</option>
+        </select>
+        <input id="chat-input" class="fi" style="flex:1;" placeholder="Send to agent (/gaps /jobs /health or freeform)..." type="text">
+        <button class="btn primary" id="chat-send-btn">Send</button>
+      </div>
+    </div>
+  </div>
 <script>
 'use strict';
 // ══════════════════════════════════════════════════════════════════
@@ -2168,6 +2194,420 @@ document.querySelectorAll('.tb-tab').forEach(tab => {
 if (document.getElementById('panel-brain')?.classList.contains('active')) {
   setTimeout(() => CFR.init(), 300);
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CHAT PANEL — real-time agent conversation + CLI sync
+// Subscribes to SSE: job.chunk, job.complete, job.error, CLI_RESULT
+// Sends via /cli/exec (CLI commands) or /command (agent dispatch)
+// ═══════════════════════════════════════════════════════════════════════════
+
+const CHAT = (() => {
+  const GUARDIAN = 'http://127.0.0.1:7820';
+  let _currentJobId = null;
+  let _streamBuffer  = {};  // jobId → accumulated text el
+
+  // ── Message factory ────────────────────────────────────────────────────────
+
+  function _msg(opts = {}) {
+    // opts: role ('user'|'assistant'|'system'|'cli'), content, provider, jobId, streaming
+    const el     = document.createElement('div');
+    const colors = { user:'var(--blue)', assistant:'var(--green)', system:'var(--muted)',
+                     cli:'var(--amber)', error:'var(--red)' };
+    const labels = { user:'YOU', assistant:(opts.provider||'agent').toUpperCase(),
+                     system:'SYS', cli:'CLI', error:'ERR' };
+    el.style.cssText = 'display:flex;flex-direction:column;gap:3px;';
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:9px;font-weight:700;color:${colors[opts.role]||'var(--muted)'};letter-spacing:.1em;">${labels[opts.role]||'?'}</span>
+        <span class="chat-ts" style="font-size:9px;color:var(--muted);">${new Date().toTimeString().slice(0,8)}</span>
+        ${opts.jobId ? `<span style="font-size:9px;color:var(--border3);">#${opts.jobId.slice(0,8)}</span>` : ''}
+        ${opts.streaming ? '<span id="chat-stream-ind" style="font-size:9px;color:var(--amber);">&#9679; streaming</span>' : ''}
+      </div>
+      <div class="chat-body" style="font-size:10px;line-height:1.7;color:${opts.role==='system'?'var(--muted)':'var(--text)'};white-space:pre-wrap;word-break:break-word;">${_esc(opts.content||'')}</div>`;
+    return el;
+  }
+
+  function _esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function _append(opts) {
+    const container = document.getElementById('chat-messages');
+    if (!container) return null;
+    // Filter by checkboxes
+    if (opts.role === 'cli'    && !document.getElementById('chat-show-cli')?.checked) return null;
+    if (opts.role === 'system' && !document.getElementById('chat-show-sys')?.checked) return null;
+    const el = _msg(opts);
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+    return el;
+  }
+
+  // ── Streaming: update in-progress response ────────────────────────────────
+
+  function _onChunk(jobId, text, full, provider) {
+    _currentJobId = jobId;
+    // Update provider badge
+    const badge = document.getElementById('chat-provider-badge');
+    if (badge) { badge.textContent = provider || 'agent'; badge.style.color = 'var(--amber)'; }
+    const dot   = document.getElementById('chat-status-dot');
+    const label = document.getElementById('chat-status-label');
+    if (dot)   { dot.style.background   = 'var(--amber)'; dot.style.boxShadow = '0 0 6px var(--amber)'; }
+    if (label) { label.textContent      = 'streaming'; label.style.color = 'var(--amber)'; }
+
+    if (_streamBuffer[jobId]) {
+      // Update existing streaming message body
+      const body = _streamBuffer[jobId].querySelector('.chat-body');
+      if (body) {
+        const display = full || (body.textContent + text);
+        body.textContent = display;
+        const container = document.getElementById('chat-messages');
+        if (container) container.scrollTop = container.scrollHeight;
+      }
+    } else {
+      // Create new streaming message
+      const el = _append({ role:'assistant', content: full || text, provider, jobId, streaming:true });
+      if (el) _streamBuffer[jobId] = el;
+    }
+  }
+
+  function _onComplete(jobId, text, provider) {
+    // Finalise the streaming message
+    if (_streamBuffer[jobId]) {
+      const body = _streamBuffer[jobId].querySelector('.chat-body');
+      if (body && text) body.textContent = text;
+      const ind = _streamBuffer[jobId].querySelector('#chat-stream-ind');
+      if (ind) ind.remove();
+      delete _streamBuffer[jobId];
+    } else {
+      _append({ role:'assistant', content: text, provider, jobId });
+    }
+    _currentJobId = null;
+    const dot   = document.getElementById('chat-status-dot');
+    const label = document.getElementById('chat-status-label');
+    if (dot)   { dot.style.background = 'var(--green)'; dot.style.boxShadow = '0 0 6px var(--green)'; }
+    if (label) { label.textContent = 'done'; label.style.color = 'var(--green)'; }
+    setTimeout(() => {
+      if (label) { label.textContent = 'idle'; label.style.color = 'var(--muted)'; }
+      if (dot)   { dot.style.background = 'var(--muted)'; dot.style.boxShadow = 'none'; }
+    }, 3000);
+  }
+
+  function _onError(jobId, error) {
+    if (_streamBuffer[jobId]) {
+      delete _streamBuffer[jobId];
+    }
+    _append({ role:'error', content: error, jobId });
+    const dot   = document.getElementById('chat-status-dot');
+    const label = document.getElementById('chat-status-label');
+    if (dot)   dot.style.background = 'var(--red)';
+    if (label) { label.textContent = 'error'; label.style.color = 'var(--red)'; }
+  }
+
+  // ── CLI result ─────────────────────────────────────────────────────────────
+
+  function _onCLI(command, result, error) {
+    if (!document.getElementById('chat-show-cli')?.checked) return;
+    // Show command
+    _append({ role:'cli', content: '> ' + command });
+    // Show result
+    if (error) {
+      _append({ role:'error', content: error });
+    } else if (result) {
+      // Format result concisely
+      let text = '';
+      if (result.jobs)      text = result.jobs.map(j => `${(j.id||'').slice(0,8)}  ${(j.status||'').padEnd(12)}  ${j.provider||''}  ${(j.prompt||'').slice(0,60)}`).join('\n');
+      else if (result.gaps)   text = result.gaps.map(g => `${g.severity||'med'}  ${(g.type||'').slice(0,20)}  ${(g.body||'').slice(0,60)}`).join('\n');
+      else if (result.artifacts) text = result.artifacts.map(a => `${(a.id||'').slice(0,8)}  ${a.lang||''}  ${(a.name||'').slice(0,50)}`).join('\n');
+      else if (result.ledger) text = result.ledger.map(l => `${l.category||''}  ${(l.msg||'').slice(0,80)}`).join('\n');
+      else if (result.providers) text = Object.entries(result.providers).map(([k,v]) => `${k}  ${v.tabId||''}`).join('\n');
+      else text = JSON.stringify(result, null, 2);
+      if (text) _append({ role:'system', content: text });
+    }
+  }
+
+  // ── Send ───────────────────────────────────────────────────────────────────
+
+  async function send(text) {
+    if (!text.trim()) return;
+    // CLI command?
+    if (text.startsWith('/')) {
+      const cmd = text.slice(1).trim();
+      _append({ role:'cli', content: '> /' + cmd });
+      try {
+        const r = await fetch(GUARDIAN + '/cli/exec', { method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ command:cmd, source:'chat' }) }).then(x=>x.json());
+        if (r.error) _append({ role:'error', content: r.error });
+        else if (r.result) _onCLI(cmd, r.result, null);
+      } catch(e) { _append({ role:'error', content: 'Guardian offline: '+e.message }); }
+      return;
+    }
+    // Agent dispatch
+    const provider = document.getElementById('chat-send-provider')?.value || 'claude';
+    _append({ role:'user', content: text });
+    try {
+      const r = await fetch(GUARDIAN + '/command', { method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ provider, command:'chat', prompt:text, source:'chat' }) }).then(x=>x.json());
+      if (!r.ok) _append({ role:'error', content: r.error || 'dispatch failed' });
+      else {
+        const dot   = document.getElementById('chat-status-dot');
+        const label = document.getElementById('chat-status-label');
+        if (dot)   { dot.style.background = 'var(--amber)'; dot.style.boxShadow = '0 0 6px var(--amber)'; }
+        if (label) { label.textContent = 'dispatched'; label.style.color = 'var(--amber)'; }
+      }
+    } catch(e) { _append({ role:'error', content: 'Guardian offline: '+e.message }); }
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+
+  function init() {
+    // Wire input
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send-btn');
+    if (input) {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input.value); input.value = ''; }
+      });
+    }
+    if (sendBtn) sendBtn.addEventListener('click', () => {
+      if (input) { send(input.value); input.value = ''; }
+    });
+    if (document.getElementById('chat-clear-btn')) {
+      document.getElementById('chat-clear-btn').addEventListener('click', () => {
+        const c = document.getElementById('chat-messages'); if (c) c.innerHTML = '';
+        Object.keys(_streamBuffer).forEach(k => delete _streamBuffer[k]);
+      });
+    }
+    // System message on boot
+    _append({ role:'system', content: 'Chat ready. Commands: /jobs /gaps /health /ledger /providers /seam queues\nAgent: type normally, dispatched to connected provider.' });
+  }
+
+  return { init, onChunk:_onChunk, onComplete:_onComplete, onError:_onError, onCLI:_onCLI };
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PILL — NCP + provider topology heartbeat
+// Projects: guardian reachable, provider tabs connected, latency, queue pressure
+// ═══════════════════════════════════════════════════════════════════════════
+
+const PILL = (() => {
+  const GUARDIAN = 'http://127.0.0.1:7820';
+  let _state = { online:false, providers:{}, friction:0, queuePressure:0 };
+
+  async function refresh() {
+    try {
+      const h = await fetch(GUARDIAN + '/health', { signal:AbortSignal.timeout(2000) }).then(x=>x.json());
+      _state.online        = true;
+      _state.providers     = h.providers || {};
+      _state.friction      = h.friction  || 0;
+      _state.physicalQueue = h.physicalQueue || null;
+      // Queue pressure = pending / (pending + processing + done) or 0
+      const q = h.physicalQueue;
+      if (q) {
+        const total = (q.pending||0) + (q.processing||0) + (q.done||0) + (q.failed||0);
+        _state.queuePressure = total > 0 ? (q.pending + q.processing) / total : 0;
+      }
+      _render();
+    } catch {
+      _state.online = false;
+      _render();
+    }
+  }
+
+  function _render() {
+    const dot    = document.getElementById('pill-dot');
+    const label  = document.getElementById('pill-label');
+    const provEl = document.getElementById('pill-providers');
+    if (!dot) return;
+
+    if (!_state.online) {
+      dot.style.background  = 'var(--muted)';
+      dot.style.boxShadow   = 'none';
+      if (label) label.style.color = 'var(--muted)';
+      if (provEl) provEl.textContent = '';
+      return;
+    }
+
+    // Color based on friction
+    const f = _state.friction;
+    const color = f > 0.5 ? 'var(--red)' : f > 0.2 ? 'var(--amber)' : 'var(--green)';
+    dot.style.background = color;
+    dot.style.boxShadow  = '0 0 6px ' + color;
+
+    const provNames = Object.keys(_state.providers);
+    if (label) {
+      label.textContent = 'GUARDIAN';
+      label.style.color = color;
+    }
+    if (provEl) {
+      if (provNames.length) {
+        provEl.textContent = provNames.join(',');
+        provEl.style.color = 'var(--text)';
+      } else {
+        provEl.textContent = 'no tabs';
+        provEl.style.color = 'var(--muted)';
+      }
+    }
+
+    // Update provider badge in chat panel
+    const badge = document.getElementById('chat-provider-badge');
+    if (badge && provNames.length) {
+      badge.textContent = provNames.join(', ');
+      badge.style.color = 'var(--green)';
+    }
+  }
+
+  function init() {
+    refresh();
+    setInterval(refresh, 4000);  // poll every 4s — lightweight
+
+    // Click pill to open providers tab
+    const pill = document.getElementById('ncp-pill');
+    if (pill) pill.addEventListener('click', () => {
+      document.querySelector('[data-panel="providers"]')?.click();
+    });
+  }
+
+  return { init, refresh, state:()=>_state };
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ENTROPY METER — system derivative metric
+// Components: NCP instability + ESS unresolve rate + queue pressure + gap density
+// Projected from: /health + /gaps + diagnostic :7825/friction
+// ═══════════════════════════════════════════════════════════════════════════
+
+const ENTROPY = (() => {
+  const GUARDIAN    = 'http://127.0.0.1:7820';
+  const DIAGNOSTIC  = 'http://127.0.0.1:7825';
+  let _components   = { ncp:0, queue:0, gaps:0, friction:0, providers:0 };
+
+  async function compute() {
+    const scores = { ncp:0, queue:0, gaps:0, friction:0 };
+
+    // Guardian health
+    try {
+      const h = await fetch(GUARDIAN + '/health', { signal:AbortSignal.timeout(2000) }).then(x=>x.json());
+      // Provider instability: 0 providers = 1.0, each provider reduces by 0.3
+      const provCount = Object.keys(h.providers||{}).length;
+      scores.ncp = Math.max(0, 1 - provCount * 0.4);
+      // Queue pressure
+      const q = h.physicalQueue;
+      if (q) {
+        const total = (q.pending||0)+(q.processing||0)+(q.done||0)+(q.failed||0);
+        scores.queue = total > 0 ? ((q.pending||0)+(q.processing||0)) / total : 0;
+      }
+      // Friction from baseline
+      scores.friction = Math.min(1, h.friction || 0);
+    } catch { scores.ncp = 0.5; }
+
+    // Guardian gaps
+    try {
+      const g = await fetch(GUARDIAN + '/gaps', { signal:AbortSignal.timeout(2000) }).then(x=>x.json());
+      const openGaps = (g.gaps||[]).filter(x=>x.status==='open').length;
+      scores.gaps = Math.min(1, openGaps / 10);  // 10 open gaps = max entropy
+    } catch {}
+
+    // Diagnostic friction (cross-system) if available
+    try {
+      const d = await fetch(DIAGNOSTIC + '/friction', { signal:AbortSignal.timeout(1000) }).then(x=>x.json());
+      const frictions = Object.values(d.friction||{}).map(f=>f.friction||0);
+      if (frictions.length) scores.friction = Math.max(scores.friction, frictions.reduce((a,b)=>a+b,0)/frictions.length);
+    } catch {}
+
+    _components = scores;
+
+    // Weighted entropy: friction(40%) + gaps(25%) + ncp(20%) + queue(15%)
+    const entropy = scores.friction * 0.40 + scores.gaps * 0.25 + scores.ncp * 0.20 + scores.queue * 0.15;
+    _render(Math.min(1, entropy));
+  }
+
+  function _render(score) {
+    const bar = document.getElementById('entropy-bar');
+    const val = document.getElementById('entropy-val');
+    if (!bar || !val) return;
+    const pct   = Math.round(score * 100);
+    const color = score > 0.6 ? 'var(--red)' : score > 0.3 ? 'var(--amber)' : 'var(--green)';
+    bar.style.width      = pct + '%';
+    bar.style.background = color;
+    val.textContent      = score.toFixed(2);
+    val.style.color      = color;
+
+    // Update the entropy meter tooltip with components
+    const meter = document.getElementById('entropy-meter');
+    if (meter) {
+      meter.title = `Entropy: ${score.toFixed(3)}\n` +
+        `  friction: ${_components.friction.toFixed(2)}\n` +
+        `  gaps:     ${_components.gaps.toFixed(2)}\n` +
+        `  ncp:      ${_components.ncp.toFixed(2)}\n` +
+        `  queue:    ${_components.queue.toFixed(2)}`;
+    }
+  }
+
+  function init() {
+    compute();
+    setInterval(compute, 8000);  // less frequent — heavier call
+  }
+
+  return { init, compute, components:()=>_components };
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SSE WIRING — connect Chat + Pill + Entropy to the live event stream
+// ═══════════════════════════════════════════════════════════════════════════
+
+(function wireSSE() {
+  // Subscribe to guardian SSE
+  let sse = null;
+  function connect() {
+    try {
+      sse = new EventSource('http://127.0.0.1:7820/events');
+      sse.onmessage = e => {
+        let d;
+        try { d = JSON.parse(e.data); } catch { return; }
+
+        // Chat: streaming chunks
+        if (d.type === 'job.chunk') {
+          CHAT.onChunk(d.jobId, d.text, d.full, d.provider);
+        }
+        // Chat: job complete
+        if (d.type === 'job.complete') {
+          CHAT.onComplete(d.jobId, d.response || d.text || '', d.provider);
+        }
+        // Chat: job error
+        if (d.type === 'job.error') {
+          CHAT.onError(d.jobId, d.error || 'error');
+        }
+        // Chat: CLI result (from any source — terminal, another Forge window, etc.)
+        if (d.type === 'CLI_RESULT' && d.source !== 'chat') {
+          CHAT.onCLI(d.command, d.result, d.error);
+        }
+        // Pill refresh on provider events
+        if (d.type === 'guardian.provider.connected' || d.type === 'guardian.provider.disconnected') {
+          PILL.refresh();
+          ENTROPY.compute();
+        }
+        // Entropy bump on gap found
+        if (d.type === 'guardian.baseline.deviation' || d.type === 'gap.found') {
+          ENTROPY.compute();
+        }
+      };
+      sse.onerror = () => {
+        PILL.refresh();  // pill will show offline
+        setTimeout(connect, 5000);
+      };
+    } catch {}
+  }
+  connect();
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BOOT — init all new systems
+// ═══════════════════════════════════════════════════════════════════════════
+CHAT.init();
+PILL.init();
+ENTROPY.init();
+
 
 
 const BRAIN_GUARDIAN = 'http://127.0.0.1:7820';
