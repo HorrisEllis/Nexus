@@ -79,6 +79,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','gaps'],            'gap.open'],
     ['GET',    ['api','snapshots'],       'snapshot.list'],
     ['POST',   ['api','snapshots'],       'snapshot.push'],
+    ['POST',   ['api','cli','exec'],      'cli.exec'],      // unified CLI axiom
     ['GET',    ['sse'],                   'sse'],
   ];
 

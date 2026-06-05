@@ -2238,6 +2238,202 @@ function handleExtendedRoutes(req, res, url, method) {
     return true;
   }
 
+  // ── POST /cli/exec — unified CLI execution endpoint ───────────────────────
+  // Both terminal REPL and UI cockpit call this.
+  // Every command is executed here, ledger-written (§LAW II), then broadcast
+  // via SSE /events so both terminal and UI see output in real-time.
+  //
+  // Supported commands (mirrors nexus-repl.js dispatch table):
+  //   jobs [--status pending|complete] [--limit N]
+  //   artifacts [--lang ts] [--limit N]
+  //   gaps [--status open] [--limit N]
+  //   sessions [--limit N]
+  //   providers
+  //   health
+  //   stats
+  //   ledger [--limit N]
+  //   settings
+  //   set <key> <value>
+  //   send <provider> <prompt...>
+  //   seam queues
+  //   seam sessions
+  //   version
+  //   bus [--limit N]
+
+  if (method === 'POST' && url.pathname === '/cli/exec') {
+    bodyJ(req).then(async body => {
+      const raw  = (body.command || '').trim();
+      const ts   = Date.now();
+      if (!raw) { pRes(res, 400, { ok:false, error:'command required' }); return; }
+
+      // §LAW II — write to ledger BEFORE executing
+      const ledgerEntry = {
+        uuid:     require('crypto').randomUUID(),
+        category: 'INPUT',
+        msg:      'cli: ' + raw.slice(0, 120),
+        meta:     JSON.stringify({ command: raw, source: body.source || 'cli', ts }),
+        ts,
+      };
+      try { jaa.insert('ledger', ledgerEntry); } catch(_) {}
+      bus.emit('guardian.cli.exec', { command: raw, ts });
+
+      // Execute the command
+      let result = null;
+      let error  = null;
+      const parts = raw.split(/\s+/);
+      const cmd   = parts[0].toLowerCase();
+      const flags = {};
+      for (let i = 1; i < parts.length; i++) {
+        if (parts[i].startsWith('--') && parts[i+1] && !parts[i+1].startsWith('--')) {
+          flags[parts[i].slice(2)] = parts[i+1]; i++;
+        } else if (parts[i].startsWith('--')) {
+          flags[parts[i].slice(2)] = true;
+        }
+      }
+
+      try {
+        switch (cmd) {
+          case 'jobs': {
+            const limit = parseInt(flags.limit || '20');
+            const all   = jaa.all('jobs') || [];
+            const filtered = flags.status ? all.filter(j => j.status === flags.status) : all;
+            result = { jobs: filtered.slice(0, limit) };
+            break;
+          }
+          case 'artifacts': {
+            const limit = parseInt(flags.limit || '20');
+            const all   = jaa.all('artifacts') || [];
+            const filtered = flags.lang ? all.filter(a => a.lang === flags.lang) : all;
+            result = { artifacts: filtered.slice(0, limit) };
+            break;
+          }
+          case 'gaps': {
+            const limit = parseInt(flags.limit || '50');
+            let all     = jaa.all('gaps') || [];
+            if (flags.status) all = all.filter(g => g.status === flags.status);
+            if (flags.type)   all = all.filter(g => g.type === flags.type);
+            result = { gaps: all.slice(0, limit) };
+            break;
+          }
+          case 'sessions': {
+            const limit = parseInt(flags.limit || '30');
+            const all   = jaa.all('sessions') || [];
+            result = { sessions: all.slice(0, limit) };
+            break;
+          }
+          case 'providers': {
+            const connected = {};
+            for (const [k, c] of ncp._clients || new Map()) {
+              connected[c.provider] = { tabId: c.tabId, connectedAt: c.connectedAt };
+            }
+            result = { providers: connected };
+            break;
+          }
+          case 'health': {
+            result = { ok: true, uptime: process.uptime(), jobs: jobs.size,
+              providers: ncp.connectedProviders?.() || {}, ts: Date.now() };
+            break;
+          }
+          case 'stats': {
+            const all = jaa.all;
+            result = {
+              artifacts: (jaa.all('artifacts') || []).length,
+              gaps:       (jaa.all('gaps')      || []).length,
+              sessions:   (jaa.all('sessions')  || []).length,
+              ledger:     (jaa.all('ledger')    || []).length,
+              jobs:       jobs.size,
+            };
+            break;
+          }
+          case 'ledger': {
+            const limit = parseInt(flags.limit || '20');
+            const all   = jaa.all('ledger') || [];
+            result = { ledger: all.slice(-limit).reverse() };
+            break;
+          }
+          case 'settings': {
+            result = { settings: jaa.getAllSettings ? jaa.getAllSettings() : {} };
+            break;
+          }
+          case 'set': {
+            const key = parts[1], val = parts.slice(2).join(' ');
+            if (!key || !val) { error = 'usage: set <key> <value>'; break; }
+            if (jaa.setSetting) jaa.setSetting(key, val);
+            result = { ok: true, key, value: val };
+            break;
+          }
+          case 'send': {
+            // send <provider> <prompt...>
+            const provider = parts[1];
+            const prompt   = parts.slice(2).join(' ');
+            if (!provider || !prompt) { error = 'usage: send <provider> <prompt>'; break; }
+            const job = createJob({ command:'code', provider, prompt });
+            dispatchJob(job);
+            result = { ok:true, jobId: job.id, provider, status: job.status };
+            break;
+          }
+          case 'seam': {
+            const sub = parts[1];
+            if (sub === 'queues') {
+              result = { queues: [..._activeQueues.values()].map(q => q.toJSON()) };
+            } else if (sub === 'sessions') {
+              result = { sessions: jaa.all('seam_sessions') || [] };
+            } else {
+              error = 'usage: seam queues | seam sessions';
+            }
+            break;
+          }
+          case 'version': {
+            const readVer = (f) => {
+              try {
+                const c = require('fs').readFileSync(require('path').join(__dirname, '..', f),'utf8');
+                const m = c.match(/@version\s+([\d.]+)/);
+                return m ? m[1] : null;
+              } catch { return null; }
+            };
+            result = {
+              guardian: '3.5.0',
+              userscript_claude:  readVer('guardian/userscript-claude.js'),
+              userscript_chatgpt: readVer('guardian/userscript-chatgpt.js'),
+            };
+            break;
+          }
+          case 'bus': {
+            const limit = parseInt(flags.limit || '20');
+            result = { events: (_evLedger?.recent?.(limit) || []) };
+            break;
+          }
+          default:
+            error = 'Unknown command: ' + cmd + '. Try: jobs, artifacts, gaps, sessions, providers, health, stats, ledger, settings, set, send, seam, version, bus';
+        }
+      } catch(e) {
+        error = e.message;
+      }
+
+      // §LAW II — write result to ledger
+      const resultEntry = {
+        uuid:     require('crypto').randomUUID(),
+        category: error ? 'GAP' : 'EVENT',
+        msg:      'cli result: ' + cmd + (error ? ' ERROR: ' + error.slice(0,80) : ' OK'),
+        meta:     JSON.stringify({ command: raw, ok: !error, ts: Date.now() }),
+        ts:       Date.now(),
+      };
+      try { jaa.insert('ledger', resultEntry); } catch(_) {}
+
+      // Broadcast to all SSE clients so UI + terminal see the same output
+      cockpitBroadcast({
+        type:    'CLI_RESULT',
+        command: raw,
+        result:  result || null,
+        error:   error  || null,
+        ts:      Date.now(),
+      });
+
+      pRes(res, 200, { ok: !error, command: raw, result, error, ts });
+    }).catch(e => pRes(res, 400, { ok:false, error: e.message }));
+    return true;
+  }
+
   // ── POST /command — dispatch a job (raw) or SEAM queue (with spec) ──────────
   if (method==='POST' && url.pathname==='/command') {
     bodyJ(req).then(async body => {
@@ -2770,6 +2966,20 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 function ft(ts){return new Date(ts).toLocaleTimeString()}
 document.querySelectorAll('.nav-item').forEach(n=>{n.onclick=()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));n.classList.add('active');document.getElementById('panel-'+n.dataset.p)?.classList.add('active');const p=n.dataset.p;if(p==='artifacts')loadArt();if(p==='gaps')loadGaps();if(p==='pa')loadPA();if(p==='sessions')loadSess();if(p==='agents')loadAgents();if(p==='settings')loadSettings();}});
 const es=new EventSource('/events');const sf=document.getElementById('stream-feed');
+es.onmessage=function(e){
+  try {
+    const msg=JSON.parse(e.data);
+    // CLI_RESULT: mirror to CLI panel if open
+    if(msg.type==='CLI_RESULT'){
+      const cout=document.getElementById('cli-out');
+      if(cout){
+        if(msg.error) cout.textContent+='[error] '+msg.error+'\n';
+        else if(msg.result) cout.textContent+=JSON.stringify(msg.result,null,2)+'\n';
+        cout.scrollTop=cout.scrollHeight;
+      }
+    }
+    // Stream feed: all events
+    if(!document.getElementById('sp')?.checked){
 es.onmessage=e=>{if(spsd)return;const d=JSON.parse(e.data);const row=document.createElement('div');row.className='sr';const col=TC[d.type]||'#2a4050';row.innerHTML='<span class="sts">'+ft(d.ts||Date.now())+'</span><span class="sty" style="color:'+col+'">'+esc(d.type||'event')+'</span><span class="sd">'+esc(JSON.stringify(d.data||{}).slice(0,100))+'</span>';sf.appendChild(row);if(sf.children.length>200)sf.firstChild.remove();sf.scrollTop=sf.scrollHeight;updateSB();};
 document.getElementById('sp').onchange=e=>spsd=e.target.checked;
 async function loadPS(){try{const r=await fetch('/providers').then(x=>x.json());document.getElementById('pstatus').innerHTML=Object.entries(r.providers||{}).map(([n,s])=>'<span style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:'+(s==='connected'?'var(--grn)':'var(--muted)')+'"><span style="width:5px;height:5px;border-radius:50%;background:'+(s==='connected'?'var(--grn)':'var(--muted)')+'"></span>'+n+'</span>').join('');}catch(_){}}
@@ -2785,11 +2995,34 @@ async function loadSettings(){const r=await fetch('/settings').then(x=>x.json())
 async function sv(key,value){await fetch('/settings/'+key,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({value})});}
 async function resetS(){if(!confirm('Reset all settings to defaults?'))return;await fetch('/settings/reset',{method:'POST'});loadSettings();}
 function fgtype(type){fetch('/gaps?type='+type+'&limit=50').then(x=>x.json()).then(r=>{document.getElementById('glist').innerHTML=(r.gaps||[]).map(g=>'<div class="grow"><span class="gtype">'+(g.type||'—')+'</span><span class="gdomain">'+(g.domain||'—')+'</span><span class="greason">'+(g.reason||'—')+'</span><span class="gdesc">'+esc(g.description||'')+'</span><span class="gscore">'+((g.score||0)*100).toFixed(0)+'%</span></div>').join('');});}
-const CMDS=[{l:'jobs',c:'jobs'},{l:'jobs pending',c:'jobs --status pending'},{l:'artifacts',c:'artifacts'},{l:'gaps',c:'gaps --status open'},{l:'gap summary',c:'gaps summary'},{l:'sessions',c:'sessions'},{l:'providers',c:'providers'},{l:'stats',c:'stats'},{l:'ledger',c:'ledger'},{l:'health',c:'health'}];
+const CMDS=[
+  {l:'jobs',c:'jobs'},{l:'jobs pending',c:'jobs --status pending'},
+  {l:'artifacts',c:'artifacts'},{l:'gaps open',c:'gaps --status open'},
+  {l:'sessions',c:'sessions'},{l:'providers',c:'providers'},
+  {l:'health',c:'health'},{l:'stats',c:'stats'},
+  {l:'ledger',c:'ledger'},{l:'settings',c:'settings'},
+  {l:'seam queues',c:'seam queues'},{l:'version',c:'version'},
+  {l:'bus',c:'bus'},{l:'send claude <prompt>',c:'send claude '},
+];
 document.getElementById('ccmds').innerHTML=CMDS.map(c=>'<button class="btn" onclick="runCLI(\''+c.c+'\')">'+c.l+'</button>').join('');
 const cin=document.getElementById('cli-in'),cout=document.getElementById('cli-out');
 cin.onkeydown=e=>{if(e.key==='Enter'){runCLI(cin.value);cin.value='';}if(e.key==='ArrowUp'){ci=Math.min(ci+1,ch.length-1);cin.value=ch[ci]||'';}if(e.key==='ArrowDown'){ci=Math.max(ci-1,-1);cin.value=ci>=0?ch[ci]:'';}};
-async function runCLI(cmd){if(!cmd.trim())return;ch.unshift(cmd);ci=-1;clog('> guardian '+cmd);const pts=cmd.trim().split(/\s+/),sc=pts[0],fl=parseFL(pts.slice(1));try{let r;if(sc==='jobs')r=await fetch('/jobs?'+new URLSearchParams(fl)).then(x=>x.json());else if(sc==='artifacts')r=await fetch('/artifacts?'+new URLSearchParams(fl)).then(x=>x.json());else if(sc==='gaps')r=fl.summary!=null?await fetch('/gaps/summary').then(x=>x.json()):await fetch('/gaps?'+new URLSearchParams(fl)).then(x=>x.json());else if(sc==='sessions')r=await fetch('/sessions?'+new URLSearchParams(fl)).then(x=>x.json());else if(sc==='providers')r=await fetch('/providers').then(x=>x.json());else if(sc==='health')r=await fetch('/health').then(x=>x.json());else if(sc==='stats')r=await fetch('/memory/stats').then(x=>x.json());else if(sc==='ledger')r=await fetch('/ledger?'+new URLSearchParams(fl)).then(x=>x.json());else if(sc==='settings')r=await fetch('/settings').then(x=>x.json());else if(sc==='set'&&pts[1]&&pts[2]){r=await fetch('/settings/'+pts[1],{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({value:pts[2]})}).then(x=>x.json());}else if(sc==='send'&&pts[1]&&pts[2]){r=await fetch('/command',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:pts[1],command:'code',prompt:pts.slice(2).join(' ')})}).then(x=>x.json());}else{clog('Unknown: '+sc+'. Try: jobs, artifacts, gaps, sessions, providers, health, stats, ledger, settings, set, send');return;}clog(JSON.stringify(r,null,2));}catch(e){clog('[error] '+e.message);}}
+async function runCLI(cmd){
+  if(!cmd.trim())return;
+  ch.unshift(cmd);ci=-1;
+  clog('> guardian ' + cmd);
+  try {
+    // All commands go through /cli/exec — single source of truth (§LAW II)
+    // Server writes to ledger, broadcasts via SSE
+    const r = await fetch('/cli/exec',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({command:cmd, source:'cockpit'})
+    }).then(x=>x.json());
+    if(r.error) { clog('[error] ' + r.error); return; }
+    if(r.result) clog(JSON.stringify(r.result, null, 2));
+    else clog(JSON.stringify(r, null, 2));
+  } catch(e) { clog('[error] ' + e.message); }
+}
 function parseFL(args){const fl={};for(let i=0;i<args.length;i+=2){const k=args[i]?.replace(/^--/,''),v=args[i+1];if(k&&v&&!v.startsWith('--'))fl[k]=v;else if(k&&(!v||v.startsWith('--'))){fl[k]='true';i--;}}return fl;}
 function clog(t){cout.textContent+=t+'\n';cout.scrollTop=cout.scrollHeight;}
 loadPS();loadDB();updateSB();setInterval(loadPS,5000);setInterval(loadDB,15000);
@@ -2841,11 +3074,16 @@ onWss('connection', (clientWs) => {
 const _origListeners = server.listeners('request');
 server.removeAllListeners('request');
 server.on('request', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin','*');
-  res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers','Content-Type');
-  if (req.method==='OPTIONS'){res.writeHead(204);res.end();return;}
-  const url = new URL(req.url,`http://127.0.0.1:${HTTP_PORT}`);
+  const url = new URL(req.url, `http://127.0.0.1:${HTTP_PORT}`);
+  // NCP SSE channel must NOT have CORS headers pre-set (they set their own)
+  // All other routes get CORS headers
+  const isNCP = url.pathname === '/channel' || url.pathname === '/result' || url.pathname === '/heartbeat';
+  if (!isNCP) {
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type');
+  }
+  if (req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET,POST,PUT,DELETE,OPTIONS','Access-Control-Allow-Headers':'Content-Type'});res.end();return;}
   if (handleExtendedRoutes(req,res,url,req.method)) return;
   for (const listener of _origListeners) listener.call(server,req,res);
 });

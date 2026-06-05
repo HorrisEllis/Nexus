@@ -165,8 +165,10 @@ button.primary { background:var(--signal); border-color:var(--signal); color:#00
 <div id="bottom">
   <div class="btabs">
     <div class="btab active" onclick="showBTab('compiler')">compiler</div>
-    <div class="btab" onclick="showBTab('ir')">IR</div>
+    <div class="btab" onclick="showBTab('ir')">IR tree</div>
+    <div class="btab" onclick="showBTab('laws')">laws</div>
     <div class="btab" onclick="showBTab('axioms')">axioms</div>
+    <div class="btab" onclick="showBTab('seam')">seam</div>
     <div class="btab" onclick="showBTab('log')">bus log</div>
   </div>
   <div class="bpanel active" id="bp-compiler">
@@ -179,6 +181,8 @@ button.primary { background:var(--signal); border-color:var(--signal); color:#00
   </div>
   <div class="bpanel" id="bp-ir"><div id="ir-tree" style="font-size:11px;color:var(--muted)">compile to decompress IR</div></div>
   <div class="bpanel" id="bp-axioms"><div style="color:var(--muted);font-size:11px">compile to check axioms</div></div>
+  <div class="bpanel" id="bp-laws"><div id="laws-list" style="padding:8px"></div></div>
+  <div class="bpanel" id="bp-seam"><div id="seam-list" style="padding:8px"></div></div>
   <div class="bpanel" id="bp-log"><div id="bus-log"></div></div>
 </div>
 
@@ -215,6 +219,26 @@ const AXIOMS = [
 ];
 
 // ── HTTP helpers ──────────────────────────────────────────────────────────────
+function dispatchToGuardian() {
+  const spec = document.getElementById('editor')?.value || '';
+  if (!spec.trim()) { alert('No spec content to dispatch'); return; }
+  fetch('http://127.0.0.1:7820/command', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ spec, provider: 'claude', splitOn: 'heading' }),
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.ok) {
+      addBusLog({ type: 'seam.dispatched', queueId: d.queueId, total: d.total, provider: d.provider });
+      alert('SEAM queue created: ' + d.total + ' chunks → ' + d.provider);
+    } else {
+      alert('Dispatch failed: ' + (d.error || JSON.stringify(d)));
+    }
+  })
+  .catch(e => alert('Guardian unreachable: ' + e.message));
+}
+
 function post(path, body) {
   return fetch(path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
 }
@@ -227,6 +251,7 @@ function showSTab(id) {
   });
 }
 
+// showBTab — show bottom panel by id
 function showBTab(id) {
   document.querySelectorAll('.btab').forEach((el,i) => {
     const names = ['compiler','ir','axioms','log'];

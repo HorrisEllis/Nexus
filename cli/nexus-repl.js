@@ -433,39 +433,146 @@ async function dispatch(line) {
   const cmd   = parts[0].toLowerCase();
   const args  = parts.slice(1);
 
-  try {
-    switch (cmd) {
-      case 'status':               await cmdStatus(); break;
-      case 'jobs':                 await cmdJobs(args); break;
-      case 'events': case 'ev':    await cmdEvents(args); break;
-      case 'gaps':                 await cmdGaps(); break;
-      case 'ideas':                await cmdIdeas(args); break;
-      case 'idea':                 await cmdIdea(args); break;
-      case 'dispatch': case 'dis': await cmdDispatch(args); break;
-      case 'requests': case 'req': await cmdRequests(args); break;
-      case 'ledger': case 'log':   await cmdLedger(args); break;
-      case 'snr':                  await cmdSNR(); break;
-      case 'bus':                  await cmdBus(args); break;
-      case 'diagnose': case 'diag': {
-        const sys = args[0] || '';
-        const { spawnSync } = require('child_process');
-        const r = spawnSync('node', ['cli/diagnose.js', ...(sys?[sys]:[])],
-          { cwd: require('path').join(__dirname,'..'), stdio:'inherit', encoding:'utf8' });
-        break;
-      }
-      case 'watchdog': case 'wd':  await cmdWatchdog(); break;
-      case 'watch':                await cmdWatch(); return; // stays alive
-      case 'ui':                   await cmdUI(); break;
-      case 'help': case '?':       cmdHelp(); break;
-      case 'exit': case 'quit': case 'q':
-        console.log($(C.dim, 'goodbye')); process.exit(0);
-      case '':                     break;
-      default:
-        console.log(`${$(C.red,'?')} unknown command: ${cmd}  — type ${$(C.cyan,'help')}`);
+  // Local-only commands that don't go through /cli/exec
+  switch (cmd) {
+    case 'diagnose': case 'diag': {
+      const sys = args[0] || '';
+      const { spawnSync } = require('child_process');
+      spawnSync('node', ['cli/diagnose.js', ...(sys?[sys]:[])],
+        { cwd: require('path').join(__dirname,'..'), stdio:'inherit', encoding:'utf8' });
+      return;
     }
-  } catch (e) {
-    console.log(`${$(C.red,'§1.2 ERROR')} ${e.message}`);
+    case 'watch': await cmdWatch(); return;
+    case 'watchdog': case 'wd': await cmdWatchdog(); return;
+    case 'ui': await cmdUI(); return;
+    case 'help': case '?': cmdHelp(); return;
+    case 'status': await cmdStatus(); return;  // multi-system, local
+    case 'exit': case 'quit': case 'q':
+      console.log($(C.dim, 'goodbye')); process.exit(0);
+    case '': return;
   }
+
+  // All other commands go through /cli/exec on guardian (:7820)
+  // This is the same endpoint the UI cockpit calls — same ledger, same output
+  try {
+    const r = await POST(7820, '/cli/exec', { command: line.trim(), source: 'repl' });
+    if (!r || r.error === undefined && r.ok === undefined) {
+      // Guardian not running — fall back to local handler
+      console.log($(C.yellow, '⚠') + ' Guardian offline — running locally');
+      await dispatchLocal(cmd, args);
+      return;
+    }
+    if (r.error) {
+      console.log($(C.red, '✗') + ' ' + r.error);
+      return;
+    }
+    if (r.result) {
+      // Pretty-print the result
+      const result = r.result;
+      if (Array.isArray(result.jobs))      { printTable('jobs',      result.jobs,      ['id','provider','command','status','ts']); }
+      else if (Array.isArray(result.artifacts)) { printTable('artifacts', result.artifacts, ['id','name','lang','ts']); }
+      else if (Array.isArray(result.gaps)) { printTable('gaps',      result.gaps,      ['type','domain','description','score']); }
+      else if (Array.isArray(result.sessions)) { printTable('sessions', result.sessions, ['name','provider','ts']); }
+      else if (Array.isArray(result.ledger))   { printTable('ledger',   result.ledger,   ['category','msg','ts']); }
+      else console.log(JSON.stringify(result, null, 2));
+    }
+  } catch(e) {
+    console.log($(C.red, '§1.2 ERROR') + ' ' + e.message);
+    // Fall back to local on network error
+    await dispatchLocal(cmd, args).catch(() => {});
+  }
+}
+
+// Print a table of objects with given columns
+function printTable(label, rows, cols) {
+  if (!rows || !rows.length) { console.log($(C.dim, '  (no ' + label + ')')); return; }
+  console.log('\n' + $(C.cyan + C.bold, '  ' + label.toUpperCase()) + $(C.dim, ' (' + rows.length + ')'));
+  for (const row of rows.slice(0, 30)) {
+    const parts = cols.map(c => {
+      const v = row[c];
+      if (v === undefined || v === null) return '';
+      if (c === 'ts') return $(C.dim, new Date(v).toLocaleTimeString());
+      if (c === 'id') return $(C.muted, String(v).slice(0,8));
+      if (c === 'score') return $(C.yellow, (parseFloat(v)*100||0).toFixed(0) + '%');
+      if (c === 'status') return v === 'complete' ? $(C.green, v) : v === 'pending' ? $(C.yellow, v) : $(C.red, v);
+      return String(v).slice(0, 50);
+    });
+    console.log('  ' + parts.filter(Boolean).join('  '));
+  }
+}
+
+// Route to a specific system's /cli/exec endpoint
+async function routeToSystem(system, command) {
+  const SYSTEM_PORTS = {
+    guardian: { port:7820, path:'/cli/exec' },
+    cortex:   { port:3748, path:'/api/cli/exec' },
+    idearium: { port:4800, path:'/api/cli/exec' },
+    emerge:   { port:4242, path:'/api/cli/exec' },
+  };
+  const s = SYSTEM_PORTS[system];
+  if (!s) return { ok:false, error:'unknown system: '+system };
+  try {
+    return await POST(s.port, s.path, { command, source:'repl' });
+  } catch(e) {
+    return { ok:false, error:system+' unreachable: '+e.message };
+  }
+}
+
+// Fallback: run command locally if guardian not reachable
+async function dispatchLocal(cmd, args) {
+  switch (cmd) {
+    case 'jobs':     return cmdJobs(args);
+    case 'gaps':     return cmdGaps();
+    case 'ledger': case 'log': return cmdLedger(args);
+    case 'events': case 'ev':  return cmdEvents(args);
+    case 'ideas':              return cmdIdeas(args);
+    case 'dispatch': case 'dis': return cmdDispatch(args);
+    case 'snr':                return cmdSNR();
+    case 'bus':                return cmdBus(args);
+    default:
+      console.log($(C.red, '?') + ' unknown: ' + cmd + ' — type help');
+  }
+}
+
+// Subscribe to guardian SSE stream in background
+// Prints guardian.job.*, guardian.cli.exec, guardian.seam.* events to terminal
+// This is what makes the terminal mirror the UI in real-time
+function startGuardianStream() {
+  const http = require('http');
+  const req  = http.get({
+    hostname: '127.0.0.1', port: 7820,
+    path: '/events', headers: { Accept: 'text/event-stream' }
+  }, res => {
+    if (res.statusCode !== 200) return;
+    let buf = '';
+    res.on('data', chunk => {
+      buf += chunk.toString();
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        try {
+          const msg = JSON.parse(line.slice(5).trim());
+          // Print relevant events to terminal without interfering with prompt
+          if (msg.type === 'CLI_RESULT' && msg.source !== 'repl') {
+            // Another client ran a command — show it
+            process.stdout.write('\r' + $(C.dim, '[ui] ') + $(C.cyan, msg.command) + '\n');
+            if (msg.result) process.stdout.write($(C.dim, JSON.stringify(msg.result).slice(0,120)) + '\n');
+          } else if (msg.type && msg.type.startsWith('guardian.job.')) {
+            const label = msg.type.replace('guardian.job.','');
+            process.stdout.write('\r' + $(C.dim, '[job] ') + $(C.yellow, label) + ' ' +
+              $(C.dim, (msg.jobId||'').slice(0,8) + ' ' + (msg.provider||'')) + '\n');
+          } else if (msg.type && msg.type.startsWith('guardian.seam.')) {
+            const label = msg.type.replace('guardian.seam.','');
+            process.stdout.write('\r' + $(C.dim, '[seam] ') + $(C.purple||C.blue, label) + '\n');
+          }
+        } catch(_) {}
+      }
+    });
+    res.on('error', () => {});
+  });
+  req.on('error', () => {});  // silent — guardian may not be running
+  req.setTimeout(0);  // no timeout for SSE stream
 }
 
 function startRepl() {
@@ -496,6 +603,7 @@ function startRepl() {
 
 // ── Entry ─────────────────────────────────────────────────────────────────────
 if (process.argv.includes('--repl') || process.stdin.isTTY) {
+  startGuardianStream();  // background SSE — mirrors guardian events to terminal
   startRepl();
 } else {
   // Single command mode: node nexus-repl.js status

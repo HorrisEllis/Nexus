@@ -7,7 +7,7 @@
 
 const crypto = require('crypto');
 const { Compartment, STATE, BIRTH_GATES } = require('./kernel');
-const { BusKernel } = require('./bus');
+const { BusKernel } = require('../siso');
 
 class CompartmentManager {
   constructor({ kernel, jaaDB }) {
@@ -43,7 +43,7 @@ class CompartmentManager {
     let ownJaaDB = this._jaaDB;
     if (jaaDbPath) {
       try {
-        const { JaaDB } = require('../memory/jaa-db');
+        const { JaaDB } = require('../cortex/memory/jaa-db');
         ownJaaDB = new JaaDB({ root: jaaDbPath });
         await ownJaaDB.open();
       } catch {

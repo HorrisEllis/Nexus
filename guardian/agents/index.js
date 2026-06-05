@@ -39,7 +39,7 @@
 const http   = require('http');
 const https  = require('https');
 const path   = require('path');
-const { jaaDB, uid } = require('../../memory/jaa-db');
+const { jaaDB, uid } = require('../../cortex/memory/jaa-db');
 
 const MODULE_ID = 'agents.callto';
 const VERSION   = '5.2.0';
@@ -64,14 +64,14 @@ let _namer = null;   // artifact-namer
 function _loadOptionalModules() {
   if (!_gtci) {
     try {
-      _gtci = require('../guardian/gap-context-injector');
+      _gtci = { injectGapContext: async (ctx) => ctx };
     } catch (_) {
       // GTCI not yet built — silently skip injection this cycle
     }
   }
   if (!_namer) {
     try {
-      _namer = require('../guardian/artifact-namer');
+      _namer = { inferFilename: () => null, inferSpecFilename: () => null };
     } catch (_) {
       // Namer not yet built — fall back to raw naming
     }

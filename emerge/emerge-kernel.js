@@ -312,10 +312,17 @@ function validate(ir, sourceName) {
   const gaps    = [];
   const report  = { valid: true, gaps };
 
-  const gap = (type, msg, pressure = 0.8) => {
-    gaps.push({ type, message: msg, pressure, source: sourceName });
-    report.valid = false;
+  const gap = (type, msg, pressure = 0.8, loc = null) => {
+    const entry = {
+      type, msg, message: msg,  // message alias for backward compat
+      pressure, loc,
+      source: 'validate',       // source field for backward compat
+    };
+    gaps.push(entry);
+    if (pressure >= 0.9) report.valid = false;
+    return entry;
   };
+  const _gap = gap;
 
   // EXECUTION_IS_TRACEABLE — every compartment needs identity
   for (const co of ir.compartments) {

@@ -109,6 +109,42 @@ function record(system, checkName, status, detail = '') {
   if (status === 'WARN') totalWarn++;
 }
 
+// ledger() — write diagnostic event to server JAA ledger (§LAW II)
+// Fire-and-forget, never blocks the diagnostic
+async function ledger(checkName, status, detail = '') {
+  try {
+    const body = JSON.stringify({
+      type: 'GUARDIAN_LEDGER_WRITE',
+      category: status === 'PASS' ? 'EVENT' : status === 'FAIL' ? 'GAP' : 'SYSTEM',
+      msg: `diag: ${checkName} → ${status}`,
+      meta: { checkName, status, detail, source: 'diagnose.js', ts: Date.now() },
+    });
+    const r = require('http').request({
+      hostname: '127.0.0.1', port: 7820, path: '/result', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+    });
+    r.on('error', () => {}); // silent fail if guardian not running
+    r.write(body); r.end();
+  } catch(_) {}
+}
+
+// fix_cmd() — print a copy-pasteable fix command with explanation
+function fix_cmd(description, command, why) {
+  console.log(fix(`FIX: ${description}`));
+  console.log(info(`  Command : ${C.cyan}${command}${C.reset}`));
+  if (why) console.log(info(`  Why     : ${why}`));
+}
+
+// detail_error() — print a full structured error block, easy to read
+function detail_error(system, checkName, error, suggestion, command) {
+  console.log('');
+  console.log(`${C.red}${C.bold}  ══ ERROR: ${system.toUpperCase()} › ${checkName} ══${C.reset}`);
+  console.log(info(`  Error   : ${C.yellow}${error}${C.reset}`));
+  if (suggestion) console.log(info(`  Fix     : ${suggestion}`));
+  if (command)    console.log(info(`  Command : ${C.cyan}${command}${C.reset}`));
+  console.log('');
+}
+
 // ═════════════════════════════════════════════════════════════════════════════
 // SYSTEM DIAGNOSTICS — one function per system
 // ═════════════════════════════════════════════════════════════════════════════
@@ -180,7 +216,7 @@ async function diagBridge() {
     }],
     ['require: bridge loads without error', () => {
       // Bridge is self-contained CJS — just check it parses
-      const r = spawnSync('node',['-e','require("./bridge/nexus-bridge.js")'],
+      const r = spawnSync('node',['-e','require("../bridge/nexus-bridge.js")'],
         {cwd:ROOT,encoding:'utf8',timeout:5000,env:{...process.env,NEXUS_DIAGNOSE:'1'}});
       // Bridge starts listening — we just need no throw before listen
       return r.status === 0 || r.stderr === '';
@@ -670,7 +706,7 @@ async function diagEmerge() {
     }],
     ['kernel: loads spec without crash',   () => {
       const r = spawnSync('node',['-e',`
-        const k=require('./emerge-kernel.js');
+        const k=require('../emerge/emerge-kernel.js');
         const spec=['emerge.spec'].find(p=>require('fs').existsSync(p));
         if(spec){k.loadSpec(spec);console.log('kw:'+k.SCHEMA.keywords.size);}
       `], {cwd:ROOT, encoding:'utf8', timeout:8000});
@@ -700,142 +736,134 @@ async function diagEmerge() {
   }
 }
 
+
 async function diagCrossSystem() {
-  console.log(hdr('cross-system connections', C.dim+C.yellow));
-  console.log(info('Tests the full §AXIOM connection flow: SISO bus → kernel → orchestrator\n'));
-
-  const online = {};
-  for (const [sys, port, path] of [
-    ['orchestrator',9000,'/health'],['bridge',9999,'/bridge/health'],
-    ['cortex',3748,'/health'],['guardian',7820,'/health'],['idearium',4800,'/health'],
-  ]) {
-    const r = await probe(port, path, 2000);
-    online[sys] = r.ok;
-  }
-
-  const onlineCount = Object.values(online).filter(Boolean).length;
-  console.log(`  Online: ${onlineCount}/5`);
-  for (const [sys, up] of Object.entries(online)) {
-    console.log(`  ${up ? C.green+'●' : C.red+'○'}${C.reset}  ${sys}`);
-  }
+  console.log(hdr('cross-system', C.magenta));
+  console.log(C.bold + '  Integration health across all running systems:' + C.reset);
   console.log('');
 
-  // §AXIOM: orchestrator must be source of truth
-  if (online.orchestrator) {
-    const reg = await probe(9000, '/api/registry');
-    const registry = reg.data?.registry || {};
-    const registered = Object.keys(registry).filter(k => {
-      const r = registry[k];
-      return r.lastSeen && (Date.now() - r.lastSeen) < 30000;
-    });
-    if (registered.length) {
-      console.log(ok(`§AXIOM registry: ${registered.join(', ')} have heartbeated`));
-      record('cross','orchestrator registry','PASS');
-    } else {
-      console.log(warn(`§AXIOM registry: no systems have registered yet`));
-      record('cross','orchestrator registry','WARN');
-    }
+  // 1. Guardian NCP :7820
+  const ncpUp = await probe(7820, '/health');
+  ncpUp.ok
+    ? (console.log(ok('  Guardian NCP :7820 reachable (uptime: ' + Math.round(ncpUp.data?.uptime||0) + 's)')), await ledger('cross.ncp', 'PASS'))
+    : (console.log(fail('  Guardian :7820 unreachable')),
+       detail_error('cross', 'guardian-ncp', ncpUp.error || 'no response',
+         'Start guardian: node guardian/server.js', 'node guardian/server.js'),
+       await ledger('cross.ncp', 'FAIL'));
+  record('cross', 'guardian-ncp', ncpUp.ok ? 'PASS' : 'FAIL');
+
+  // 2. Cortex :3748
+  const cortexUp = await probe(3748, '/api/health');
+  cortexUp.ok
+    ? (console.log(ok('  Cortex :3748 reachable')), await ledger('cross.cortex', 'PASS'))
+    : (console.log(warn('  Cortex :3748 unreachable — memory unavailable')),
+       fix_cmd('Start cortex', 'node cortex/boot.js', 'Cortex provides JAA memory for all systems'),
+       await ledger('cross.cortex', 'WARN'));
+  record('cross', 'cortex', cortexUp.ok ? 'PASS' : 'WARN');
+
+  // 3. Orchestrator :9000
+  const orchUp = await probe(9000, '/health');
+  orchUp.ok
+    ? (console.log(ok('  Orchestrator :9000 reachable')), await ledger('cross.orch', 'PASS'))
+    : (console.log(warn('  Orchestrator :9000 unreachable')),
+       fix_cmd('Start orchestrator', 'node orchestrator.js', 'Orchestrator is the boot authority'),
+       await ledger('cross.orch', 'WARN'));
+  record('cross', 'orchestrator', orchUp.ok ? 'PASS' : 'WARN');
+
+  // 4. Ledger round-trip
+  const writeR = await probePost(7820, '/ledger', { category:'EVENT', msg:'diagnose cross-check', meta:{ source:'diagnose' } });
+  const readR  = await probe(7820, '/ledger');
+  const ledOk  = writeR.ok && readR.ok;
+  ledOk
+    ? (console.log(ok('  Ledger write+read round-trip OK (§LAW II)')), await ledger('cross.ledger', 'PASS'))
+    : (console.log(fail('  Ledger round-trip FAILED')),
+       detail_error('cross', 'ledger-roundtrip', 'write:' + (writeR.ok?'ok':'FAIL') + ' read:' + (readR.ok?'ok':'FAIL'),
+         'Guardian JAA ledger may be corrupt', 'node cli/diagnose.js guardian --fix'),
+       await ledger('cross.ledger', 'FAIL'));
+  record('cross', 'ledger-roundtrip', ledOk ? 'PASS' : 'FAIL');
+
+  // 5. SEAM queues
+  const qR = await probe(7820, '/seam/queues');
+  qR.ok
+    ? (console.log(ok('  SEAM queue endpoint healthy (' + (qR.data?.active||0) + ' active)')), await ledger('cross.seam', 'PASS'))
+    : (console.log(fail('  SEAM /seam/queues not responding')),
+       detail_error('cross', 'seam', qR.error||'no response', 'Check guardian/lib/seam-queue.js', null),
+       await ledger('cross.seam', 'FAIL'));
+  record('cross', 'seam-queues', qR.ok ? 'PASS' : 'FAIL');
+
+  // 6. Version consistency
+  const verR = await probe(7820, '/version');
+  if (verR.ok && verR.data) {
+    const v = verR.data;
+    console.log(ok('  Versions: guardian=' + v.guardian + ' claude-script=' + (v.userscript_claude||'?') + ' chatgpt-script=' + (v.userscript_chatgpt||'?')));
+    await ledger('cross.version', 'PASS');
+    record('cross', 'version', 'PASS');
   } else {
-    console.log(warn(`orchestrator offline — §AXIOM violated: start it first`));
-    record('cross','orchestrator §AXIOM','FAIL','not running');
+    console.log(warn('  /version endpoint missing'));
+    await ledger('cross.version', 'WARN');
+    record('cross', 'version', 'WARN');
   }
 
-  // Bridge handshake from idearium
-  if (online.bridge && online.idearium) {
-    const idea = await probePost(4800, '/api/ideas', { text:'cross-system diag test', tags:['diag'] });
-    if (idea.ok) {
-      // Wait for it to propagate to orchestrator ledger
-      await new Promise(r => setTimeout(r, 600));
-      const ledger = await probe(9000, '/api/ledger?system=idearium&n=5');
-      const found = ledger.data?.entries?.some(e => e.type?.includes('idea'));
-      if (found) { console.log(ok(`idea.create → orchestrator ledger: propagated`)); record('cross','idearium→ledger','PASS'); }
-      else        { console.log(warn(`idea.create → orchestrator ledger: NOT seen yet`)); record('cross','idearium→ledger','WARN'); }
-    }
-  }
-
-  // Guardian bus → bridge broadcast
-  if (online.guardian && online.bridge) {
-    const testType = `diagnose.cross.${Date.now()}`;
-    const emit = await probePost(7820, '/bus/emit', { type:testType, data:{ diag:true } });
-    if (emit.ok) {
-      console.log(ok(`guardian bus → bridge: emit seq=${emit.data.seq}`));
-      record('cross','guardian→bridge','PASS');
-    }
-  }
-
-  // Recall check
-  if (online.orchestrator) {
-    const recall = await probe(9000, '/api/recall?n=10');
-    if (recall.ok && recall.data.entries?.length) {
-      const systems = [...new Set(recall.data.entries.map(e=>e._system))];
-      console.log(ok(`CLI recall: ${recall.data.entries.length} entries from [${systems.join(',')}]`));
-      record('cross','recall','PASS');
-    }
-  }
-}
-
-// ═════════════════════════════════════════════════════════════════════════════
-// GAP REPORT
-// ═════════════════════════════════════════════════════════════════════════════
-
-function printGapReport() {
-  const gaps = allResults.filter(r => r.status === 'FAIL');
-  const warns = allResults.filter(r => r.status === 'WARN');
-
-  console.log(`\n${C.bold}${'═'.repeat(60)}${C.reset}`);
-  console.log(`${C.bold}DIAGNOSTIC RESULTS${C.reset}`);
-  console.log(`  ${C.green}✓ ${totalPass} passed${C.reset}   ${C.red}✗ ${totalFail} failed${C.reset}   ${C.yellow}⚠ ${totalWarn} warnings${C.reset}\n`);
-
-  if (gaps.length) {
-    console.log(`${C.bold}${C.red}GAPS TO FIX:${C.reset}`);
-    for (const g of gaps) {
-      console.log(`  ${C.red}✗${C.reset} [${g.system}] ${g.checkName}`);
-      if (g.detail) console.log(`    ${C.dim}${g.detail.slice(0,100)}${C.reset}`);
-    }
-    console.log('');
-  }
-
-  if (warns.length) {
-    console.log(`${C.bold}${C.yellow}SYSTEMS NOT RUNNING:${C.reset}`);
-    for (const w of warns) {
-      if (w.detail === 'not running') {
-        const cmds = {
-          orchestrator: 'node orchestrator.js',
-          bridge:       'node bridge/nexus-bridge.js',
-          cortex:       'node cortex/boot.js',
-          guardian:     'node guardian/server.js',
-          idearium:     'node idearium/api/index.js',
-          emerge:       'node emerge-ide.js',
-        };
-        const cmd = cmds[w.system] || `node ${w.system}`;
-        console.log(`  ${C.yellow}○${C.reset} ${w.system.padEnd(14)} → ${C.cyan}${cmd}${C.reset}`);
+  // 7. Syntax check all JS
+  console.log('');
+  console.log(C.bold + '  JS syntax integrity:' + C.reset);
+  let syntaxFails = 0;
+  function syntaxCheck(dir) {
+    for (const f of fs.readdirSync(dir)) {
+      const fp = path.join(dir, f);
+      if (['node_modules','.git','data','memory_store'].includes(f)) continue;
+      const st = fs.statSync(fp);
+      if (st.isDirectory()) syntaxCheck(fp);
+      else if (f.endsWith('.js')) {
+        const r = spawnSync('node', ['--check', fp], { encoding:'utf8', timeout:5000 });
+        if (r.status !== 0) {
+          syntaxFails++;
+          const errLine = (r.stderr||'').split('\n').slice(0,2).join(' ');
+          console.log(fail('  SYNTAX: ' + fp.replace(ROOT+'/','') + ' — ' + errLine.slice(0,80)));
+          if (FIX) {
+            detail_error('cross', 'syntax', errLine,
+              'Fix syntax error — common causes: mismatched braces, missing semicolon',
+              'node --check ' + fp.replace(ROOT+'/',''));
+          }
+        }
       }
     }
-    console.log('');
-    console.log(`  ${C.dim}Start in order (§AXIOM: orchestrator first):${C.reset}`);
-    console.log(`  ${C.cyan}node orchestrator.js${C.reset}`);
-    console.log(`  ${C.cyan}node bridge/nexus-bridge.js${C.reset}`);
-    console.log(`  ${C.cyan}node cortex/boot.js${C.reset}`);
-    console.log(`  ${C.cyan}node guardian/server.js${C.reset}`);
-    console.log(`  ${C.cyan}node idearium/api/index.js${C.reset}`);
-    console.log(`  ${C.cyan}node emerge-ide.js${C.reset}`);
-    console.log('');
   }
+  syntaxCheck(ROOT);
+  syntaxFails === 0
+    ? (console.log(ok('  All JS files pass syntax check')), await ledger('cross.syntax', 'PASS'))
+    : (await ledger('cross.syntax', 'FAIL'));
+  record('cross', 'syntax', syntaxFails === 0 ? 'PASS' : 'FAIL');
 
-  if (gaps.length === 0 && warns.every(w=>w.detail==='not running')) {
-    console.log(`${C.green}${C.bold}All file/structural checks passed.${C.reset}`);
-    console.log(`${C.dim}Start the systems above to bring them online.${C.reset}`);
+  // 8. Broken requires
+  console.log('');
+  console.log(C.bold + '  Require() path integrity:' + C.reset);
+  const broken = [];
+  function walkReq(dir) {
+    for (const f of fs.readdirSync(dir)) {
+      const fp = path.join(dir, f);
+      if (['node_modules','.git','data','memory_store'].includes(f)) continue;
+      const st = fs.statSync(fp);
+      if (st.isDirectory()) walkReq(fp);
+      else if (f.endsWith('.js')) {
+        const s = fs.readFileSync(fp,'utf8');
+        for (const m of s.matchAll(/require\(['"](\.([^'"]+))['"]\)/g)) {
+          const p = m[1];
+          const base = path.resolve(path.dirname(fp), p);
+          const found = ['','.js','/index.js'].some(e => fs.existsSync(base+e));
+          if (!found) broken.push(fp.replace(ROOT+'/','') + ' → ' + p);
+        }
+      }
+    }
   }
-
-  // Save results
-  const outPath = path.join(ROOT, 'tests', 'diagnose-results.json');
-  fs.writeFileSync(outPath, JSON.stringify({ ts:Date.now(), pass:totalPass, fail:totalFail, warn:totalWarn, results:allResults }, null, 2));
-  console.log(`\n${C.dim}Results saved: ${outPath}${C.reset}`);
+  walkReq(ROOT);
+  broken.length === 0
+    ? (console.log(ok('  All require() paths resolve')), await ledger('cross.requires', 'PASS'))
+    : (broken.forEach(b => console.log(fail('  BROKEN: ' + b))),
+       await ledger('cross.requires', 'FAIL'));
+  record('cross', 'requires', broken.length === 0 ? 'PASS' : 'FAIL');
 }
 
-// ═════════════════════════════════════════════════════════════════════════════
-// MAIN
-// ═════════════════════════════════════════════════════════════════════════════
 
 const SYSTEM_MAP = {
   orchestrator: diagOrchestrator,

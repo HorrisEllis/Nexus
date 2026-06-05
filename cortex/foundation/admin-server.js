@@ -141,6 +141,69 @@ class AdminServer {
           catch(e) { res.writeHead(500); res.end(JSON.stringify({ok:false,error:e.message})); }
           break;
         }
+        // ── POST /api/cli/exec — unified CLI execution (axiom: CLI=UI=API) ──────
+        case route === 'POST /api/cli/exec': {
+          const body = await this._body(req);
+          const raw  = (body.command || '').trim();
+          if (!raw) { this._json(res, 400, { ok:false, error:'command required' }); break; }
+          const parts = raw.split(/\s+/);
+          const cmd   = parts[0].toLowerCase();
+          const flags = {};
+          for (let i=1;i<parts.length;i++) {
+            if (parts[i].startsWith('--') && parts[i+1] && !parts[i+1].startsWith('--')) {
+              flags[parts[i].slice(2)] = parts[i+1]; i++;
+            } else if (parts[i].startsWith('--')) { flags[parts[i].slice(2)] = true; }
+          }
+          const positional = parts.slice(1).filter(p => !p.startsWith('--'));
+
+          // §LAW II — write to ledger before executing
+          try { jaaDB.insert('event_log', { uuid: require('crypto').randomUUID(),
+            type:'cortex.cli.exec', payload:JSON.stringify({command:raw,source:body.source||'cli'}),
+            ts:Date.now() }); } catch(_) {}
+
+          let result = null, error = null;
+          try {
+            switch(cmd) {
+              case 'status': {
+                result = { ok:true, uptime:process.uptime(), stats: jaaDB.stats, ts:Date.now() }; break;
+              }
+              case 'gaps': {
+                const rows = jaaDB.query('gaps',
+                  flags.status ? r=>r.status===flags.status : ()=>true,
+                  parseInt(flags.limit||'50'));
+                result = { gaps:rows, total:rows.length }; break;
+              }
+              case 'memory': case 'events': {
+                const sub = positional[0] || 'tail';
+                const n   = parseInt(flags.n||positional[1]||'20');
+                if (sub==='search'||sub==='query') {
+                  const q = positional.slice(1).join(' ');
+                  const rows = jaaDB.query('event_log', r =>
+                    JSON.stringify(r).toLowerCase().includes(q.toLowerCase()), parseInt(flags.limit||'20'));
+                  result = { results:rows }; break;
+                }
+                const tbl = flags.table || 'event_log';
+                const rows = jaaDB.tail(tbl, n);
+                result = { table:tbl, rows }; break;
+              }
+              case 'crystals': {
+                const rows = jaaDB.query('crystals', ()=>true, parseInt(flags.limit||'20'));
+                result = { crystals:rows }; break;
+              }
+              case 'tables': {
+                result = { stats: jaaDB.stats }; break;
+              }
+              default:
+                error = 'Unknown: '+cmd+'. Try: status, gaps, memory, crystals, tables';
+            }
+          } catch(e) { error = e.message; }
+
+          // Broadcast to SSE clients so UI + terminal see output
+          this._broadcast({ type:'CLI_RESULT', command:raw, result, error, ts:Date.now() });
+          this._json(res, 200, { ok:!error, command:raw, result, error });
+          break;
+        }
+
         case route === 'GET /health': {
           const last = jaaDB.tail('event_log', 1);
           res.writeHead(200, { 'Content-Type': 'application/json' });

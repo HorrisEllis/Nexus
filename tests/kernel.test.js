@@ -14,7 +14,7 @@ const fs     = require('fs');
 const os     = require('os');
 
 // ── Load kernel ───────────────────────────────────────────────────────────────
-const KERNEL_PATH = path.resolve(__dirname, '../emerge-kernel.js');
+const KERNEL_PATH = path.resolve(__dirname, '../emerge/emerge-kernel.js');
 if (!fs.existsSync(KERNEL_PATH)) {
   console.error('[FATAL] emerge-kernel.js not found at', KERNEL_PATH);
   process.exit(1);
