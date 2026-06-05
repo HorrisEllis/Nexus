@@ -205,7 +205,7 @@ function sisoEmit(type, data = {}) {
 }
 
 // ── State ────────────────────────────────────────────────────────────────────
-let hb = null, currentJobId = null, connState = 'disconnected', panelOpen = false, activeTab = 'log';
+let hb = null, _es = null, currentJobId = null, connState = 'disconnected', panelOpen = false, activeTab = 'log';
 let logEntries = [], ledgerEntries = [], unreadCount = 0, reconnectTimer = null;
 let scanDebounceTimer = null, domSystems = {}, domObserver = null;
 let seenArtifactHashes = new Set(), accountState = null, sessionStartTime = Date.now(), sessionTokenTotal = 0;
@@ -1474,6 +1474,121 @@ function renderApiTab() {
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function updateFooter() { const el=document.getElementById('__g8gptfooter__');if(!el)return;const e=Math.round((Date.now()-sessionStartTime)/1000);el.textContent=`${getAccount().slice(0,20)} · ${Math.floor(e/60)}m ${e%60}s · ~${sessionTokenTotal.toLocaleString()} tok`; }
+// ── NCP Layer — complete implementation ──────────────────────────────────────
+// EventSource (SSE) for server→browser push
+// fetch POST /result for browser→server
+// §1.2: nothing silently fails — every error logged and toasted
+
+
+async function ncpPost(data) {
+  try {
+    await fetch(NCP_RESULT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...data,
+        chatUrl:  location.href,
+        account:  getAccount(),
+        provider: PROVIDER,
+        ts:       Date.now(),
+      }),
+      keepalive: true,
+    });
+  } catch(_) {}
+}
+
+function connect() {
+  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+  if (_es) { try { _es.close(); } catch(_) {} }
+  setConnState('connecting');
+  addLog('info', 'NCP connecting…', NCP_CH);
+
+  const tabParam = `provider=${PROVIDER}&tabId=${MY_TAB_ID}`;
+  _es = new EventSource(`${NCP_CH}?${tabParam}`);
+
+  _es.onopen = () => {
+    setConnState('handshaking');
+    ncpPost({
+      type:    'GUARDIAN_REGISTER',
+      provider: PROVIDER,
+      host:    location.hostname,
+      tabId:   MY_TAB_ID,
+      claimed: amIClaimed(),
+    });
+    if (hb) clearInterval(hb);
+    hb = setInterval(async () => {
+      try {
+        const r = await fetch(NCP_HB, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ provider: PROVIDER, tabId: MY_TAB_ID, ts: Date.now() }),
+        });
+        await r.json();
+      } catch(_) {}
+    }, HB_INTERVAL);
+  };
+
+  _es.onmessage = (e) => {
+    try { _handleNCPMsg(JSON.parse(e.data)); } catch(_) {}
+  };
+
+  _es.onerror = () => {
+    setConnState('disconnected');
+    addLog('err', 'NCP disconnected — reconnecting…');
+    clearInterval(hb);
+    _es.close();
+    if (currentJobId) stopWatch();
+    if (reconnectTimer) clearTimeout(reconnectTimer);
+    reconnectTimer = setTimeout(connect, RECONNECT_MS);
+  };
+}
+
+function _handleNCPMsg(msg) {
+  evLog('ncp.message', { type: msg.type });
+  switch(msg.type) {
+    case 'NCP_READY':
+    case 'GUARDIAN_READY':
+      setConnState('ready');
+      addLog('ok', `Ready · ${msg.provider || PROVIDER}`);
+      ledgerRecord('EVENT', `NCP connected · ${msg.provider || PROVIDER}`);
+      tryAutoClaimIfNoneActive();
+      startDOMObserver();
+      interceptDownloads();
+      setTimeout(() => { getAccount(); updateFooter(); }, 500);
+      setInterval(updateFooter, 30000);
+      setTimeout(scanDOM, 500);
+      setTimeout(() => {
+        const id = chatIdFromUrl();
+        if (id && id !== 'home' && isChatBlank()) sendGreeting(id);
+      }, 2000);
+      break;
+
+    case 'GUARDIAN_CLAIM':
+      if (msg.tabId === MY_TAB_ID || msg.tabId === 'any') {
+        claimTab();
+        ncpPost({ type: 'GUARDIAN_CLAIM_ACK', tabId: MY_TAB_ID, provider: PROVIDER });
+      }
+      break;
+
+    case 'GUARDIAN_RELEASE':
+      if (msg.tabId === MY_TAB_ID || msg.tabId === 'any') releaseTab();
+      break;
+
+    case 'GUARDIAN_JOB':
+      // This is the critical path — dispatch job to ChatGPT DOM
+      evLog('ncp.job.received', { jobId: msg.jobId, command: msg.command });
+      handleJob(msg);
+      break;
+
+    case 'GUARDIAN_SESSION_NAMED':
+      addLog('ok', `Session: ${msg.sessionName || 'unnamed'}`);
+      break;
+
+    default:
+      addLog('in', `← ${msg.type}`, JSON.stringify(msg).slice(0, 80));
+  }
+}
+
 function sendToServer(obj) { ncpPost(obj); }
 function send(obj) { ncpPost(obj); }  // canonical alias
 

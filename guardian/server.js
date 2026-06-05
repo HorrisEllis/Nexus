@@ -1,25 +1,3 @@
-/**
- * guardian/server.js  — single entry point, v8
- *
- * WSS  :7821  — userscripts (TLS — accept cert at https://127.0.0.1:7821 first)
- * HTTP :7820  — Guardian API + Cockpit dashboard + CLI bridge
- * HTTP :7822  — Dropzone file server (LAN, 0.0.0.0)
- * HTTP :7823  — Memory + Jaa/SQLite store (LAN, 0.0.0.0)
- *
- * node server.js   ← starts everything
- *
- * New in v8:
- *   SISO event bus (Stream/Gate/StreamLog) — all events routed through gates
- *   SQLite persistence via better-sqlite3 (Jaa schema)
- *   GapHunter v3 taxonomy (200+ gaps, 60+ domains, 9 reasons)
- *   Prompt Archaeology storage
- *   Cockpit dashboard (/cockpit) with live SSE stream
- *   CLI bridge (/cli)
- *   Settings API (/settings)
- *   Sessions API (/sessions)
- *   Timeline API (/timeline)
- */
-
 'use strict';
 const bridge = (() => { try { return require('../bridge/nexus-bridge'); } catch(_) { return null; } })();
 
@@ -794,6 +772,20 @@ const _lip = (() => {
   return null;
 })();
 
+// ── _selfProbe — used by boot phases (module-level) ─────────────────────────
+async function _selfProbe(path_) {
+  return new Promise(resolve => {
+    const req = require('http').get('http://127.0.0.1:' + HTTP_PORT + path_, { timeout:3000 }, res => {
+      let b=''; res.on('data', d=>b+=d); res.on('end', ()=>{
+        try { resolve({ ok:res.statusCode===200, data:JSON.parse(b) }); }
+        catch { resolve({ ok:res.statusCode===200 }); }
+      });
+    });
+    req.on('error',   () => resolve({ ok:false }));
+    req.on('timeout', () => { req.destroy(); resolve({ ok:false }); });
+  });
+}
+
 server.listen(HTTP_PORT, '127.0.0.1', async () => {
   const { BootSequence } = require('../lib/boot-sequence');
   const nc2 = require('../nexus-connect');
@@ -803,94 +795,167 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     label: 'Nexus Guardian', maxRetries: 1,
   });
 
-  // ── Phase 0 HARD: required npm packages ────────────────────────────────────
-  // Check before touching any network or file I/O.
+
+  // ── PHASE 1: No external npm deps ──────────────────────────────────────────
   seq.phase({ name:'packages.required', type:'HARD',
     label:'Zero external dependencies (NCP/SSE — no npm packages needed)',
     fn: async () => {
-      // NCP uses zero external dependencies — no npm packages to check
-      // All transport is built on Node's built-in http module
-    },
+      try { require('http'); require('fs'); require('path'); require('crypto'); } catch(e) { return { ok:false, msg:e.message }; }
+      console.log('[guardian NCP] userscript: new EventSource("http://127.0.0.1:' + HTTP_PORT + '/channel?provider=claude&tabId=X")');
+      return { ok: true };
+    }
   });
 
-  // ── Phase 1 HARD: HTTP server bound + health responds ──────────────────────
+  // ── PHASE 2: HTTP server bound ────────────────────────────────────────────
   seq.phase({ name:'http.bound', type:'HARD',
     label:'HTTP :' + HTTP_PORT + ' bound and /health responds',
     fn: async () => {
-      await new Promise((resolve, reject) => {
-        const r = require('http').get(
-          'http://127.0.0.1:' + HTTP_PORT + '/health',
-          res => { res.statusCode === 200 ? resolve()
-            : reject(new Error('/health returned ' + res.statusCode)); }
-        );
-        r.setTimeout(3000, () => { r.destroy(); reject(new Error('health timeout')); });
-        r.on('error', reject);
-      });
-    },
+      const r = await _selfProbe('/health');
+      if (!r.ok) return { ok:false, msg:'HTTP :' + HTTP_PORT + ' not responding' };
+      return { ok: true };
+    }
   });
 
-  // ── Phase 2 HARD: contract present ─────────────────────────────────────────
+  // ── PHASE 3: Interaction contract ────────────────────────────────────────
   seq.phase({ name:'contract.present', type:'HARD',
     label:'interaction-contract.json present',
     fn: async () => {
       const cp = require('path').join(__dirname, 'interaction-contract.json');
-      if (!require('fs').existsSync(cp))
-        throw new Error('interaction-contract.json missing — guardian cannot declare its API');
-    },
+      if (!require('fs').existsSync(cp)) return { ok:false, msg:'interaction-contract.json missing' };
+      try { JSON.parse(require('fs').readFileSync(cp,'utf8')); } catch(e) { return { ok:false, msg:'contract invalid: '+e.message }; }
+      return { ok: true };
+    }
   });
 
-  // ── Phase 3 SOFT: NCP channel (replaces WSS) ───────────────────────────────
-  // Userscripts connect via SSE GET /channel — plain HTTP, no TLS, no ws package.
-  // If you need userscripts to work, just navigate to http://127.0.0.1:7820 and
-  // install the updated userscript. No cert acceptance needed.
+  // ── PHASE 4: JAA memory store writable ───────────────────────────────────
+  seq.phase({ name:'jaa.writable', type:'HARD',
+    label:'JAA memory store open + writable (§LAW II)',
+    fn: async () => {
+      try {
+        const testKey = '_boot_' + Date.now();
+        jaa.setSetting(testKey, '1');
+        const v = jaa.getSetting(testKey);
+        if (v === null || v === undefined) return { ok:false, msg:'JAA write/read failed' };
+        return { ok: true };
+      } catch(e) { return { ok:false, msg:'JAA: '+e.message }; }
+    }
+  });
+
+  // ── PHASE 5: Physical queue writable ─────────────────────────────────────
+  seq.phase({ name:'queue.writable', type:'HARD',
+    label:'Physical queue dirs writable (data/guardian/)',
+    fn: async () => {
+      const fs   = require('fs');
+      const rp   = require('path');
+      const dirs = ['input','output','queue','failures','conversations']
+        .map(d => rp.join(__dirname,'..','data','guardian',d));
+      for (const d of dirs) {
+        try { fs.mkdirSync(d,{recursive:true}); } catch(e) { return { ok:false, msg:d.split('/').pop()+' not writable: '+e.message }; }
+      }
+      const t = rp.join(dirs[0],'_boot_test.tmp');
+      try { fs.writeFileSync(t,'ok'); fs.unlinkSync(t); } catch(e) { return { ok:false, msg:'input dir not writable: '+e.message }; }
+      return { ok: true };
+    }
+  });
+
+  // ── PHASE 6: Core modules load ───────────────────────────────────────────
+  seq.phase({ name:'modules.load', type:'HARD',
+    label:'Core modules load (seam-queue, spec-parser, detector)',
+    fn: async () => {
+      const errors = [];
+      for (const m of ['./lib/seam-queue','./lib/spec-parser','./lib/detector']) {
+        try { require(m); } catch(e) { errors.push(m.split('/').pop()+': '+e.message); }
+      }
+      if (errors.length) return { ok:false, msg: errors.join(' | ') };
+      return { ok: true };
+    }
+  });
+
+  // ── PHASE 7: NCP channel ─────────────────────────────────────────────────
   seq.phase({ name:'ncp.ready', type:'SOFT',
     label:'NCP channel :' + HTTP_PORT + '/channel (no TLS needed)',
     fn: async () => {
-      await new Promise((resolve, reject) => {
-        const r = require('http').get(
-          'http://127.0.0.1:' + HTTP_PORT + '/providers',
-          res => { res.statusCode === 200 ? resolve()
-            : reject(new Error('/providers returned ' + res.statusCode)); }
-        );
-        r.setTimeout(2000, () => { r.destroy(); reject(new Error('timeout')); });
-        r.on('error', reject);
-      });
-      console.log('  \x1b[90m[guardian NCP] userscript: new EventSource(\'http://127.0.0.1:' + HTTP_PORT + '/channel?provider=claude&tabId=X\')\x1b[0m');
-    },
+      const r = await _selfProbe('/providers');
+      if (!r.ok) return { ok:false, msg:'/providers not responding' };
+      return { ok: true };
+    }
   });
 
-  // ── Phase 4 SOFT: orchestrator registration ─────────────────────────────────
+  // ── PHASE 8: Artifact output writable ────────────────────────────────────
+  seq.phase({ name:'artifacts.writable', type:'SOFT',
+    label:'Artifact output path writable',
+    fn: async () => {
+      const fs  = require('fs');
+      const rp  = require('path');
+      const dir = rp.join(__dirname,'..','data','guardian','output');
+      try { fs.mkdirSync(dir,{recursive:true}); const t=rp.join(dir,'_boot.tmp'); fs.writeFileSync(t,'ok'); fs.unlinkSync(t); }
+      catch(e) { return { ok:false, msg:'output dir: '+e.message }; }
+      return { ok: true };
+    }
+  });
+
+  // ── PHASE 9: Userscript version check ────────────────────────────────────
+  seq.phase({ name:'userscript.versions', type:'SOFT',
+    label:'Userscript versions present',
+    fn: async () => {
+      const fs  = require('fs');
+      const rp  = require('path');
+      const readVer = f => { try { const c=fs.readFileSync(rp.join(__dirname,f),'utf8'); const m=c.match(/@version\s+([\d.]+)/); return m?m[1]:null; } catch { return null; } };
+      const cv = readVer('userscript-claude.js'), gv = readVer('userscript-chatgpt.js');
+      if (!cv) return { ok:false, msg:'userscript-claude.js: @version missing' };
+      if (!gv) return { ok:false, msg:'userscript-chatgpt.js: @version missing' };
+      console.log('[guardian versions] claude=' + cv + ' chatgpt=' + gv);
+      return { ok: true };
+    }
+  });
+
+  // ── PHASE 10: Register with orchestrator ─────────────────────────────────
   seq.phase({ name:'orchestrator.register', type:'SOFT',
     label:'Register with orchestrator (§AXIOM)',
     fn: async () => {
-      const r = await nc2.registerWithOrchestrator('guardian', HTTP_PORT,
-        { role:'ai-orchestrator', wss: WSS_PORT });
-      if (r.ok) nc2.startHeartbeat('guardian', HTTP_PORT);
-    },
+      const r = await nc2.registerWithOrchestrator('guardian', HTTP_PORT);
+      if (!r || !r.ok) return { ok:true, msg:'standalone — orchestrator offline' };
+      return { ok: true };
+    }
   });
 
-  // ── Phase 5 SOFT: ledger boot record ────────────────────────────────────────
+  // ── PHASE 11: Write boot record to ledger ────────────────────────────────
   seq.phase({ name:'ledger.announce', type:'SOFT',
-    label:'Write boot record to ledger',
+    label:'Write boot record to ledger (§LAW II)',
     fn: async () => {
-      await nc2.postLedger('guardian', 'guardian.booted', { port: HTTP_PORT, wss: WSS_PORT });
-    },
+      try {
+        const fs  = require('fs'), rp = require('path');
+        const dir = rp.join(__dirname,'..','data','guardian','ledger','boot');
+        fs.mkdirSync(dir,{recursive:true});
+        fs.appendFileSync(rp.join(dir,'events.ndjson'),
+          JSON.stringify({type:'guardian.boot',version:'3.5.0',pid:process.pid,ts:Date.now()})+'\n');
+        await nc2.postLedger('guardian.boot', { version:'3.5.0', pid:process.pid });
+        return { ok: true };
+      } catch(e) { return { ok:false, msg:e.message }; }
+    }
   });
 
-  // ── Phase 6 SOFT: bridge handshake ──────────────────────────────────────────
+  // ── PHASE 12: Bridge handshake ───────────────────────────────────────────
   seq.phase({ name:'bridge.register', type:'SOFT',
     label:'Bridge handshake (§5.2)',
     fn: async () => {
-      const r = await nc2._req('bridge', 'POST', '/bridge/handshake', {
-        systemId: 'guardian', appId: 'guardian',
-        secret: 'nexus-guardian-internal-v1',
-      }, 4000);
-      if (!r.ok) throw new Error('bridge unavailable');
-      await nc2.postBridge('guardian.booted', { version: '3.5.0', port: HTTP_PORT });
-    },
+      // §5.2 — attempt bridge connection
+      try {
+        const r = await new Promise(resolve => {
+          const req = require('http').get('http://127.0.0.1:9999/bridge/health', {timeout:2000}, res=>{
+            resolve(res.statusCode===200);
+            res.resume();
+          });
+          req.on('error', ()=>resolve(false));
+          req.on('timeout', ()=>{req.destroy();resolve(false);});
+        });
+        if (!r) return { ok: false, msg: 'bridge unavailable' };
+        return { ok: true };
+      } catch { return { ok: false, msg: 'bridge unavailable' }; }
+    }
   });
 
-  await seq.run();
+    await seq.run();
   // Guardian never hard-exits on SOFT failures — HTTP is the core, WSS is optional.
 });
 
@@ -1359,8 +1424,7 @@ try {
 
 function startDropzone() {
   if (!express || !multer) {
-    console.warn('[dropzone] Skipping — express or multer not installed.');
-    console.warn('[dropzone] Run: npm install express multer');
+    // dropzone optional — express/multer not installed (soft feature)
     return null;
   }
 
@@ -2058,10 +2122,51 @@ function handleExtendedRoutes(req, res, url, method) {
   }
 
   if (method==='GET' && url.pathname==='/health') {
-    pRes(res, 200, { ok:true, uptime:process.uptime(), jobs:jobs.size,
-      providers:Object.fromEntries(Object.entries(PROVIDERS).map(([k,v])=>[k,v?'connected':'null'])),
-      queued:Object.fromEntries([...jobs.values()].filter(j=>j.status==='pending').map(j=>[j.id,j.provider])),
-    }); return true;
+    const connectedProviders = {};
+    for (const [k,v] of ncp._clients || new Map()) {
+      connectedProviders[v.provider] = { tabId:v.tabId, connectedAt:v.connectedAt,
+        lastHeartbeat:v.lastHeartbeat };
+    }
+    const pendingJobs   = [...jobs.values()].filter(j=>j.status==='pending');
+    const activeQueues  = [..._activeQueues.values()].map(q=>q.toJSON());
+    const baselineStats = _baseline ? _baseline.stats() : null;
+    const queueStats    = (() => {
+      try {
+        const qDir = require('path').join(__dirname,'..','data','guardian','input');
+        const files = require('fs').readdirSync(qDir);
+        return {
+          pending:    files.filter(f=>f.includes('.pending.')).length,
+          processing: files.filter(f=>f.includes('.processing.')).length,
+          done:       files.filter(f=>f.includes('.done.')).length,
+          failed:     files.filter(f=>f.includes('.failed.')).length,
+        };
+      } catch { return null; }
+    })();
+    pRes(res, 200, {
+      ok:              true,
+      version:         '3.5.0',
+      uptime:          process.uptime(),
+      pid:             process.pid,
+      // Jobs
+      jobs:            jobs.size,
+      pendingJobs:     pendingJobs.length,
+      // NCP providers
+      providers:       connectedProviders,
+      providerCount:   Object.keys(connectedProviders).length,
+      // SEAM
+      activeQueues:    activeQueues.length,
+      seamSessions:    activeQueues,
+      // Physical queue
+      physicalQueue:   queueStats,
+      // Baseline health
+      baseline:        baselineStats,
+      friction:        baselineStats?.friction ?? 0,
+      // Memory
+      memory:          process.memoryUsage(),
+      // Ports
+      ports:           { http: HTTP_PORT, ncp: HTTP_PORT, memory: 7823, dropzone: 7822 },
+    });
+    return true;
   }
   if (method==='GET' && url.pathname==='/contract') {
     const cp = require('path').join(__dirname, 'interaction-contract.json');

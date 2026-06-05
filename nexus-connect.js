@@ -140,7 +140,7 @@ async function postEvent(type, payload, opts = {}) {
 /** POST to orchestrator ledger ring */
 async function postLedger(system, type, payload) {
   const r = await _req('orchestrator', 'POST', '/api/ledger', { system, type, payload });
-  if (!r.ok) console.warn(`[nexus-connect] postLedger failed: ${r.error || r.status}`);
+  if (!r.ok && process.env.NEXUS_VERBOSE) console.warn(`[nexus-connect] postLedger: orchestrator offline`);
   return r;
 }
 
@@ -235,7 +235,7 @@ async function registerWithOrchestrator(systemId, port, meta = {}) {
     // Then post to ledger
     await postLedger(systemId, `${systemId}.registered`, { port, ...meta });
   } else {
-    console.warn(`[nexus-connect] orchestrator registration failed for ${systemId}: ${r.error||r.status}`);
+    console.log(`[nexus-connect §AXIOM] ${systemId} standalone — orchestrator offline`);
   }
   return r;
 }

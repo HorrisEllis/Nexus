@@ -904,6 +904,31 @@ async function diagCrossSystem() {
     : (broken.forEach(b => console.log(fail('  BROKEN: ' + b))),
        await ledger('cross.requires', 'FAIL'));
   record('cross', 'requires', broken.length === 0 ? 'PASS' : 'FAIL');
+
+  // 10. Diagnostic service health (:7825)
+  console.log('');
+  console.log(C.bold + '  Diagnostic service:' + C.reset);
+  const diagR = await probe(7825, '/status');
+  if (diagR.ok && diagR.data) {
+    const d = diagR.data;
+    console.log(ok('  Diagnostic service :7825 running (uptime: ' + Math.round(d.uptime||0) + 's, open gaps: ' + (d.openGaps||0) + ')'));
+    const summary = d.summary || {};
+    for (const [sys, info] of Object.entries(summary)) {
+      const col = info.online ? C.green : C.red;
+      const frCol = info.friction > 0.5 ? C.red : info.friction > 0.2 ? C.yellow : C.green;
+      console.log(info('    ' + col + sys + C.reset + '  online=' + (info.online?'✓':'✗') +
+        '  friction=' + frCol + (info.friction||0).toFixed(3) + C.reset +
+        '  gaps=' + (info.openGaps||0)));
+    }
+    await ledger('cross.diagnostic', 'PASS');
+    record('cross', 'diagnostic-service', 'PASS');
+  } else {
+    console.log(warn('  Diagnostic service :7825 not running'));
+    fix_cmd('Start diagnostic service', 'node service/nexus-diagnostic.js',
+      'Provides continuous system monitoring, gap detection, friction scoring');
+    await ledger('cross.diagnostic', 'WARN');
+    record('cross', 'diagnostic-service', 'WARN');
+  }
 }
 
 
