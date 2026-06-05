@@ -1,6 +1,6 @@
 {
   "name": "nexus-final",
-  "version": "2.9.0",
+  "version": "3.0.0",
   "uuid": "nexus-system-v2-1-0000-4000-0000-000000000001",
   "hookId": "nexus.system:v2.1:s0001",
   "description": "NEXUS ecosystem \u2014 SISO+JAA foundation, gated cross-system orchestration",
@@ -110,7 +110,8 @@
     "Day 2 S8: Replaced ws/WebSocket with NCP (lib/ncp.js) \u2014 SSE+fetch, zero deps. Added lib/heartbeat.js (Bridge OS immune system), lib/node-ledger.js (UNKNOWN\u2192CANDIDATE\u2192MEMBER\u2192SUSPENDED\u2192DEAD trust state machine). Orchestrator now uses HeartbeatManager + PulseListener :7777 UDP. Every system announces itself via UDP pulse. No hardcoded registration. No TLS required for userscripts.",
     "Day 2 S9: Ledgers as learning system. lib/event-ledger.js \u2014 every bus.emit across all systems writes to event_log.jsonl before routing. Baseline learning (avgInterval, consistency per event type). Anomaly detection via sigma deviation. Invariant scanner (co-occurrence, failure precursors). Four pipeline gaps fixed: guardian writes agent_calls to cortex, emerge compile results logged to orchestrator, job.complete writes to cortex memory, RAID hook in cortex event handler.",
     "Day 2 S3 (session 3): SEAM pipeline. guardian/lib/seam-queue.js \u2014 state machine QUEUED\u2192VERIFIED, 3 retry strategies (context/shorter/forensic), \u00a7LAW II throughout. guardian/lib/spec-parser.js \u2014 .spec \u2192 prerequisite block + chunks with SEAM contracts. guardian/userscript-chatgpt.js \u2014 v8.3 full UI on NCP transport, ChatGPT DOM selectors. guardian/server.js \u2014 /command with SEAM queue dispatch, spec parsing, artifact file output to data/output/{date}/{jobId}/. Fixed jaa.query\u2192jaa.all throughout. 68/68 pipeline tests.",
-    "Day 3 S4 (session 4, this session): Pill fixed (WebSocket remnant removed, connState strings corrected). Cortex context pull before job dispatch. ?CORTEX: post-response command parser. _log syncs err/gap/job/ok to server event-ledger. Forge duplicate tabs removed, Brain SEAM panel shows live queues, Queue SEAM button added. nexus-chat-v4.html NCP edition. /version auto-update endpoint. diagnose.js adds seam-queue, spec-parser, detector, NCP, version, SEAM live checks. 142/142 kernel, 68/68 pipeline."
+    "Day 3 S4 (session 4, this session): Pill fixed (WebSocket remnant removed, connState strings corrected). Cortex context pull before job dispatch. ?CORTEX: post-response command parser. _log syncs err/gap/job/ok to server event-ledger. Forge duplicate tabs removed, Brain SEAM panel shows live queues, Queue SEAM button added. nexus-chat-v4.html NCP edition. /version auto-update endpoint. diagnose.js adds seam-queue, spec-parser, detector, NCP, version, SEAM live checks. 142/142 kernel, 68/68 pipeline.",
+    "Session test (Dusk PA continued): SEAM 1 \u2014 lib/ess.js (ESS kernel: hash store, callto, resolve, unresolve, binding log). lib/ico.js (ICO pipe: axioms, SNR+delta+sigma, compartment, invariant, ledger, crystal). 47 data folders. SEAM 2 \u2014 ESS wired into RAID (content-addressed dispatch, UNRESOLVE\u2192gap). SEAM 3 \u2014 lib/queue.js (physical file queue: uuid.pending.md, crash replay, tags, conversation log). SEAM 4 \u2014 lib/baseline.js (per-kernel baseline: sigma deviation\u2192gap, failure mode ledger with friction). All wired into guardian. diagnose.js baseline friction checks. 142/142 kernel, 61/61 pipeline."
   ],
   "open_gaps": [
     "guardian/dropzone-persist.js missing (optional)",

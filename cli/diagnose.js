@@ -561,6 +561,31 @@ async function diagGuardian() {
       await ledger('live.seam', 'PASS');
     }
 
+    // Baseline + friction check
+    const bR = await probe(7820, '/baseline');
+    if (bR.ok && bR.data) {
+      const b = bR.data;
+      const frictionCol = b.friction > 0.5 ? C.red : b.friction > 0.2 ? C.yellow : C.green;
+      console.log(ok('    /baseline: friction=' + frictionCol + b.friction + C.reset +
+        '  sigma=' + (b.stats?.sigma||0) +
+        '  established=' + !!b.baseline +
+        '  openGaps=' + (b.gaps?.length||0)));
+      if (b.gaps?.length > 0) {
+        for (const gap of b.gaps.slice(0,3)) {
+          console.log(warn('    BASELINE GAP: ' + gap.type + ' sigma=' + gap.sigma +
+            ' frictions=' + gap.frictions?.map(f=>f.axis).join(',') ));
+          detail_error('guardian', 'baseline-gap',
+            'Sigma deviation: ' + gap.sigma + ' on ' + gap.frictions?.map(f=>f.axis).join(', '),
+            'Check guardian data/guardian/ledger/baseline-events.ndjson for recent events',
+            null);
+        }
+      }
+      await ledger('live.baseline', b.friction < 0.5 ? 'PASS' : 'WARN');
+    } else {
+      console.log(warn('    /baseline: not responding — baseline not established'));
+      await ledger('live.baseline', 'WARN');
+    }
+
     // WSS (legacy — NCP is primary, WSS is secondary)
     const wssReady = fileExists('guardian/guardian-cert.pem');
     wssReady
@@ -790,6 +815,23 @@ async function diagCrossSystem() {
        detail_error('cross', 'seam', qR.error||'no response', 'Check guardian/lib/seam-queue.js', null),
        await ledger('cross.seam', 'FAIL'));
   record('cross', 'seam-queues', qR.ok ? 'PASS' : 'FAIL');
+
+  // 5b. Baseline friction across kernels
+  const baselineR = await probe(7820, '/baseline');
+  if (baselineR.ok && baselineR.data) {
+    const f = baselineR.data.friction || 0;
+    const col = f > 0.5 ? C.red : f > 0.2 ? C.yellow : C.green;
+    console.log(ok('  Guardian baseline friction: ' + col + f.toFixed(3) + C.reset +
+      (f > 0.5 ? ' ⚠ HIGH — check /baseline for details' : '')));
+    if (f > 0.5) {
+      detail_error('cross', 'baseline-friction',
+        'Guardian friction ' + f + ' exceeds threshold 0.5',
+        'Run: curl http://127.0.0.1:7820/baseline | jq .gaps',
+        null);
+    }
+    await ledger('cross.baseline', f < 0.5 ? 'PASS' : 'WARN');
+    record('cross', 'baseline', f < 0.5 ? 'PASS' : 'WARN');
+  }
 
   // 6. Version consistency
   const verR = await probe(7820, '/version');

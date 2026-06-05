@@ -36,6 +36,47 @@ const { Detector }          = require('./lib/detector');
 const GapHunter             = require('./lib/gap-hunter');
 const { SEAMQueue, STATE }  = require('./lib/seam-queue');
 const { parseSpec, parseSpecFile, extractPrerequisite } = require('./lib/spec-parser');
+const { createQueue }       = require('../lib/queue');
+const { createBaseline }    = require('../lib/baseline');
+
+// Per-kernel baseline monitor — establishes runtime baseline from first 20 events
+// Sigma deviations → gap.found in JAA
+const _baseline = createBaseline({
+  name:           'guardian',
+  ledgerDir:      require('path').join(__dirname, '../data/guardian/ledger'),
+  failuresDir:    require('path').join(__dirname, '../data/guardian/failures'),
+  invariantDir:   require('path').join(__dirname, '../data/guardian/invariant'),
+  baselineN:      20,
+  sigmaThreshold: 0.3,
+  onGap: (gap) => {
+    // Surface as JAA gap
+    try {
+      jaa.insert('gaps', {
+        uuid: gap.uuid, type: 'baseline_deviation', path: 'guardian/baseline',
+        body: `Guardian baseline deviation: sigma=${gap.sigma} frictions=${JSON.stringify(gap.frictions)}`,
+        severity: gap.sigma > 0.7 ? 'high' : 'medium',
+        status: 'open', source: 'guardian-baseline',
+        causedBy: null, createdAt: Date.now(), attempts: 0, ts: Date.now(),
+      });
+    } catch(_) {}
+    bus.emit('guardian.baseline.deviation', gap);
+  },
+});
+
+// Guardian's physical queue — survives restarts
+const _physQueue = createQueue({
+  inputDir:    require('path').join(__dirname, '../data/guardian/input'),
+  outputDir:   require('path').join(__dirname, '../data/guardian/output'),
+  failuresDir: require('path').join(__dirname, '../data/guardian/failures'),
+  logsDir:     require('path').join(__dirname, '../data/guardian/conversations'),
+  queueDir:    require('path').join(__dirname, '../data/guardian/queue'),
+});
+
+// Replay any pending items from before restart (§LAW II physical redundancy)
+const _replayed = _physQueue.replay();
+if (_replayed.length) {
+  console.log('[guardian] replayed', _replayed.length, 'interrupted queue items');
+}
 
 // Active SEAM queues — keyed by queueId
 // §LAW II — queue state persisted to JAA, this is a performance index only
@@ -336,6 +377,22 @@ function _handleNCPMessage(msg) {
         const job = jobs.get(jobId);
         // Store response text on job so /response/:jobId can serve it
         if (job) { job.responseText = finalText.slice(0, 100000); job.status = 'complete'; }
+
+        // Feed event to baseline monitor
+        const latencyMs = job?.startedAt ? Date.now() - job.startedAt : 0;
+        _baseline.observe({ type: 'GUARDIAN_COMPLETE', latencyMs, error: false, ts: Date.now() });
+
+        // §LAW II — log conversation turn before artifact processing
+        if (currentJobId || jobId) {
+          const sessionId = chatId || chatUrl || jobId || 'unknown';
+          _physQueue.logConversation(sessionId.slice(0, 40), {
+            role:      'assistant',
+            content:   (finalText || '').slice(0, 10000),
+            jobId,
+            provider:  provider || 'unknown',
+            ts:        Date.now(),
+          });
+        }
 
         // §LAW II — write artifact files to disk before JAA insert
         // Chunks and synthesized output written as real files
@@ -692,6 +749,8 @@ function wssBroadcast(obj) {
         break;
       }
       case 'GUARDIAN_ERROR': {
+      _baseline.observe({ type: 'GUARDIAN_ERROR', latencyMs: 0, error: true, ts: Date.now() });
+      _baseline.logFailure({ id: 'guardian-error', error: msg.error || 'unknown', friction: 0.7 });
         updateJob(msg.jobId, { status: 'failed', error: msg.error });
         console.error(`[guardian] error on ${msg.jobId}: ${msg.error}`);
         break;
@@ -1955,6 +2014,18 @@ function handleExtendedRoutes(req, res, url, method) {
     return true;
   }
 
+  // ── GET /baseline — current baseline stats + open deviations ──────────────
+  if (method==='GET' && url.pathname==='/baseline') {
+    pRes(res, 200, {
+      ok: true,
+      stats:    _baseline.stats(),
+      baseline: _baseline.baseline(),
+      gaps:     _baseline.gaps(),
+      friction: _baseline.friction(),
+    });
+    return true;
+  }
+
   if (method==='GET' && url.pathname==='/version') {
     const fs2 = require('fs');
     const path2 = require('path');
@@ -2486,6 +2557,18 @@ function handleExtendedRoutes(req, res, url, method) {
           });
 
           _activeQueues.set(queue.uuid, queue);
+
+          // §LAW II physical redundancy — write to disk queue before dispatch
+          _physQueue.enqueue({
+            uuid:     queue.uuid,
+            content:  specText,
+            ext:      'spec',
+            tags:     ['seam', provider, plan.meta.name || 'unnamed'],
+            priority: body.priority || 'normal',
+            source:   body.source   || 'api',
+            project:  body.project  || null,
+            meta:     { queueId: queue.uuid, totalChunks: plan.totalChunks },
+          });
 
           if (ncp.isConnected(provider)) {
             queue.start();
