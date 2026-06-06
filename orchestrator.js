@@ -544,9 +544,18 @@ const server = http.createServer(async (req, res) => {
   const M     = req.method;
   const QS    = u.searchParams;
 
-  // ── Root UI ──────────────────────────────────────────────────────────────
-  if (M==='GET' && u.pathname==='/') {
+  // ── Root UI — NEXUS Home (Phase 1: structure complete) ─────────────────
+  if (M==='GET' && (u.pathname==='/' || u.pathname==='/home')) {
+    const homePath = path.join(UI_ROOT,'home','index.html');
+    if (fs.existsSync(homePath)) return serveFile(res, homePath);
+    // fallback to orchestrator UI while home is being built
     return serveFile(res, path.join(UI_ROOT,'orchestrator','index.html'));
+  }
+
+  // ── Home static assets ───────────────────────────────────────────────────
+  if (M==='GET' && u.pathname.startsWith('/home/')) {
+    const asset = path.join(UI_ROOT, u.pathname.slice(1));
+    if (fs.existsSync(asset)) return serveFile(res, asset);
   }
 
   // ── System UIs ───────────────────────────────────────────────────────────

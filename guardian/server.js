@@ -56,6 +56,65 @@ if (_replayed.length) {
   console.log('[guardian] replayed', _replayed.length, 'interrupted queue items');
 }
 
+// ── Watch input/ folder — process .pending files as they arrive ───────────
+// .spec files  → SEAMQueue dispatch
+// .md/.txt     → simple job dispatch
+// .json        → structured dispatch (prompt or spec field)
+// File must exist before processing (§LAW II) — queue.watchInput atomically
+// renames .pending → .processing before running
+_physQueue.watchInput(async (data, filename) => {
+  const parts    = filename.split('.');
+  const ext      = parts[parts.length - 1];
+  const queueUid = parts[0];
+
+  // Spec files → SEAMQueue
+  if (ext === 'spec') {
+    const specText = typeof data === 'string' ? data :
+      (data._raw || data.content || JSON.stringify(data));
+    const provider = data._meta?.provider || data.provider || 'claude';
+    console.log('[guardian queue] spec arrived:', filename.slice(0, 40));
+    try {
+      const { SEAMQueue } = require('./lib/seam-queue');
+      const { parseSpec }  = require('./lib/spec-parser');
+      const plan = parseSpec(specText, { maxChunkSize: 3500 });
+      const queue = new SEAMQueue(queueUid, specText, {
+        provider, plan, source: 'file-queue',
+      });
+      _activeQueues.set(queue.uuid, queue);
+      if (ncp.isConnected(provider)) queue.start();
+      else bus.emit('guardian.tab.needed', { provider, jobId: queueUid });
+    } catch(e) {
+      console.error('[guardian queue] spec dispatch failed:', e.message);
+    }
+
+  // Text/markdown → simple job
+  } else if (ext === 'md' || ext === 'txt') {
+    const raw     = typeof data === 'string' ? data : (data._raw || data.content || '');
+    const prompt  = raw.replace(/^---[^]*?---\n/, '').trim();
+    if (!prompt) return;
+    const provider = 'claude';
+    console.log('[guardian queue] text job arrived:', filename.slice(0, 40));
+    const job = createJob(provider, 'queue', prompt);
+    jobs.set(job.id, job);
+    bus.emit('guardian.job.queued', { jobId: job.id, provider, filename });
+    if (ncp.isConnected(provider)) dispatchJob(job);
+    else bus.emit('guardian.tab.needed', { provider, url: null, jobId: job.id });
+
+  // JSON → route by content
+  } else if (ext === 'json') {
+    const body     = typeof data === 'object' ? (data.data || data) : {};
+    const provider = body.provider || 'claude';
+    if (body.spec) {
+      _physQueue.enqueue({ content: body.spec, ext: 'spec', provider,
+        uuid: queueUid + '-s', source: 'queue-json' });
+    } else if (body.prompt) {
+      const job = createJob(provider, body.command || 'queue', body.prompt);
+      jobs.set(job.id, job);
+      if (ncp.isConnected(provider)) dispatchJob(job);
+    }
+  }
+});
+
 // Active SEAM queues — keyed by queueId
 // §LAW II — queue state persisted to JAA, this is a performance index only
 const _activeQueues = new Map();
@@ -499,8 +558,44 @@ function _handleNCPMessage(msg) {
       break;
     }
 
+    case 'GUARDIAN_CORTEX_RESULT': {
+      // Cortex query result from userscript — store in job context
+      if (jobId) {
+        updateJob(jobId, { cortexResult: msg.result, cortexQuery: msg.query });
+        bus.emit('guardian.cortex.result', { jobId, query: msg.query, result: msg.result, provider });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_CLAIM_ACK': {
+      // Tab acknowledged a claim request — update provider registry
+      const key = `${provider}:${tabId}`;
+      if (_activeQueues.size) bus.emit('guardian.tab.claimed', { provider, tabId });
+      break;
+    }
+
+    case 'GUARDIAN_EVENT': {
+      // Generic event from userscript — log to ledger
+      if (msg.event) {
+        bus.emit('guardian.tab.event', { provider, tabId, event: msg.event, data: msg.data });
+      }
+      break;
+    }
+
+    case 'GUARDIAN_SESSION_NAMED': {
+      // Session got named by the AI — already handled via bus gate
+      // but may arrive via /result path too
+      if (msg.chatId && msg.sessionName) {
+        bus.emit('guardian.session.named', { chatId: msg.chatId, sessionName: msg.sessionName, provider });
+      }
+      break;
+    }
+
     default:
-      bus.emit('guardian.message.unknown', { type, provider, jobId });
+      // Unknown but don't spam the bus — log at debug level only
+      if (type && !type.startsWith('GUARDIAN_LEDGER')) {
+        console.log(`[guardian] unhandled message type: ${type} from ${provider}`);
+      }
   }
 }
 
@@ -2076,6 +2171,98 @@ function handleExtendedRoutes(req, res, url, method) {
     const target = provUrls[prov];
     if (!target) { pRes(res, 404, { ok:false, error:'unknown provider' }); return true; }
     res.writeHead(302, { Location: target }); res.end();
+    return true;
+  }
+
+  // ── GET /queue — physical file queue state ─────────────────────────────────
+  if (method==='GET' && url.pathname==='/queue') {
+    const qDir = require('path').join(__dirname, '..', 'data', 'guardian');
+    const fs2  = require('fs');
+    function listDir(sub) {
+      try {
+        return fs2.readdirSync(require('path').join(qDir, sub))
+          .filter(f => !f.startsWith('.') && !f.endsWith('.gitkeep'))
+          .map(f => {
+            const fp   = require('path').join(qDir, sub, f);
+            const stat = fs2.statSync(fp);
+            const meta = { name: f, sizeBytes: stat.size, mtime: stat.mtimeMs };
+            // Read state JSON if it exists
+            const stateFile = require('path').join(qDir, 'queue', f.split('.')[0] + '.json');
+            if (fs2.existsSync(stateFile)) {
+              try { Object.assign(meta, JSON.parse(fs2.readFileSync(stateFile, 'utf8'))); }
+              catch(_) {}
+            }
+            return meta;
+          });
+      } catch { return []; }
+    }
+    const pending    = listDir('input').filter(f => f.name.includes('.pending.'));
+    const processing = listDir('input').filter(f => f.name.includes('.processing.'));
+    const done       = listDir('input').filter(f => f.name.includes('.done.'));
+    const failed     = listDir('input').filter(f => f.name.includes('.failed.'));
+    pRes(res, 200, {
+      ok:       true,
+      counts:   { pending:pending.length, processing:processing.length, done:done.length, failed:failed.length },
+      pending, processing, failed,
+      done:     done.slice(-20),  // last 20 done items
+    });
+    return true;
+  }
+
+  // ── POST /queue/enqueue — add item to physical queue ────────────────────────
+  if (method==='POST' && url.pathname==='/queue/enqueue') {
+    bodyJ(req).then(body => {
+      const { content, ext, provider, priority, tags, source } = body;
+      if (!content) { pRes(res, 400, { ok:false, error:'content required' }); return; }
+      const item = _physQueue.enqueue({
+        content, ext: ext||'md',
+        tags:     tags || [provider||'claude'],
+        priority: priority || 'normal',
+        source:   source   || 'api',
+        meta:     { provider },
+      });
+      bus.emit('guardian.queue.enqueued', { uuid: item.uuid, ext: item.ext });
+      pRes(res, 200, { ok:true, uuid: item.uuid, filepath: item.filepath });
+    }).catch(e => pRes(res, 400, { ok:false, error:e.message }));
+    return true;
+  }
+
+  // ── POST /queue/retry/:uuid — re-enqueue a failed item ───────────────────
+  if (method==='POST' && /^\/queue\/retry\//.test(url.pathname)) {
+    const uuid = url.pathname.split('/').pop();
+    const state = _physQueue._readState(uuid);
+    if (!state) { pRes(res, 404, { ok:false, error:'item not found' }); return; }
+    // Find failed file and rename back to pending
+    const inputDir = require('path').join(__dirname, '..', 'data', 'guardian', 'input');
+    const files    = require('fs').readdirSync(inputDir).filter(f => f.startsWith(uuid) && f.includes('.failed.'));
+    if (files.length) {
+      const fp = require('path').join(inputDir, files[0]);
+      const ext = files[0].split('.').pop();
+      require('fs').renameSync(fp, require('path').join(inputDir, uuid + '.pending.' + ext));
+      _physQueue._updateState(uuid, { status: 'pending', retriedAt: Date.now() });
+      bus.emit('guardian.queue.retry', { uuid });
+    }
+    pRes(res, 200, { ok:true, uuid });
+    return true;
+  }
+
+  // ── POST /queue/cancel/:uuid — mark processing item as failed ────────────
+  if (method==='POST' && /^\/queue\/cancel\//.test(url.pathname)) {
+    const uuid = url.pathname.split('/').pop();
+    _physQueue.fail(uuid, 'cancelled by user', 0.3);
+    pRes(res, 200, { ok:true, uuid });
+    return true;
+  }
+
+  // ── GET /queue/conversation/:uuid — conversation log for completed item ──
+  if (method==='GET' && /^\/queue\/conversation\//.test(url.pathname)) {
+    const uuid  = url.pathname.split('/').pop();
+    const convDir = require('path').join(__dirname,'..','data','guardian','conversations',uuid.slice(0,40));
+    const convFile = require('path').join(convDir,'conversation.jsonl');
+    if (!require('fs').existsSync(convFile)) { pRes(res, 200, { ok:true, messages:[] }); return true; }
+    const messages = require('fs').readFileSync(convFile,'utf8').trim().split('\n').filter(Boolean)
+      .map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+    pRes(res, 200, { ok:true, uuid, messages });
     return true;
   }
 

@@ -1,0 +1,2472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS — Sovereign Cognitive Infrastructure</title>
+
+<!-- FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── DESIGN TOKENS ───────────────────────────────────────────────────────── */
+:root {
+  /* Base */
+  --bg:       #030509;
+  --bg2:      #07090f;
+  --bg3:      #0d1018;
+  --bg4:      #141821;
+  --bg5:      #1a2030;
+
+  /* Borders */
+  --border:   #131825;
+  --border2:  #1e2535;
+  --border3:  #273045;
+
+  /* Text */
+  --text:     #e2e4f0;
+  --text2:    #9298b0;
+  --text3:    #4e5470;
+  --text4:    #2e3450;
+
+  /* Signal colors */
+  --cyan:     #00d4ff;
+  --green:    #00ff88;
+  --magenta:  #cc44ff;
+  --amber:    #f59e0b;
+  --blue:     #60a5fa;
+  --pink:     #f472b6;
+  --red:      #ff2d55;
+  --teal:     #2dd4bf;
+  --orange:   #ff6b35;
+
+  /* System colors (match orchestrator) */
+  --c-guardian:  #9b7fe8;
+  --c-cortex:    #2dd4bf;
+  --c-idearium:  #4a9eff;
+  --c-bridge:    #f0a500;
+  --c-emerge:    #3ecf8e;
+  --c-ollama:    #e85d3c;
+
+  /* Typography */
+  --display: 'Bebas Neue', sans-serif;
+  --mono:    'DM Mono', monospace;
+  --body:    'Space Grotesk', sans-serif;
+
+  /* Motion */
+  --t-fast:  0.12s;
+  --t-mid:   0.25s;
+  --t-slow:  0.5s;
+}
+
+/* ── RESET ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── CANVAS LAYER — space background ────────────────────────────────────── */
+#nexus-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── NEBULA BLOBS ─────────────────────────────────────────────────────────── */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: blobDrift 20s ease-in-out infinite alternate;
+  filter: blur(60px);
+}
+@keyframes blobDrift {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(40px,30px) scale(1.08); }
+}
+
+/* ── SCANLINE ─────────────────────────────────────────────────────────────── */
+#scanline {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.04) 2px,
+    rgba(0,0,0,0.04) 4px
+  );
+}
+
+/* ── APP SHELL ────────────────────────────────────────────────────────────── */
+#app {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── TOPBAR ───────────────────────────────────────────────────────────────── */
+#topbar {
+  height: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+  background: rgba(7,9,15,0.92);
+  border-bottom: 1px solid var(--border2);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  position: relative;
+  z-index: 100;
+}
+
+.tb-logo {
+  font-family: var(--display);
+  font-size: 20px;
+  letter-spacing: .25em;
+  color: var(--cyan);
+  padding: 0 16px;
+  text-shadow: 0 0 30px rgba(0,212,255,.4);
+  cursor: pointer;
+  flex-shrink: 0;
+  animation: tbLogoCycle 8s ease-in-out infinite;
+  transition: letter-spacing .3s ease;
+}
+.tb-logo:hover { letter-spacing: .35em; }
+@keyframes tbLogoCycle {
+  0%,100% { color:var(--cyan);    text-shadow:0 0 30px rgba(0,212,255,.4); }
+  33%     { color:#60a5fa;        text-shadow:0 0 30px rgba(96,165,250,.4); }
+  66%     { color:var(--magenta); text-shadow:0 0 30px rgba(204,68,255,.3); }
+}
+
+.tb-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border2);
+  flex-shrink: 0;
+}
+
+/* System status dots */
+#sys-dots {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  flex-shrink: 0;
+}
+.sys-dot-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.sys-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text4);
+  transition: all .3s;
+}
+.sys-dot.online  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.sys-dot.offline { background: var(--text4); }
+.sys-dot.checking { background: var(--amber); animation: dotBlink .8s infinite; }
+@keyframes dotBlink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.sys-dot-label {
+  font-size: 8px;
+  font-family: var(--mono);
+  letter-spacing: .08em;
+  color: var(--text3);
+}
+
+/* NCP pill */
+#ncp-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all .2s;
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+#ncp-pill:hover { border-color: var(--cyan); }
+#ncp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text4);
+  transition: all .3s;
+}
+#ncp-label, #ncp-providers {
+  font-size: 9px;
+  font-family: var(--mono);
+  letter-spacing: .08em;
+  color: var(--text3);
+}
+
+/* Entropy meter */
+#entropy-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  flex-shrink: 0;
+}
+.ent-label { font-size: 9px; color: var(--text3); font-family: var(--mono); letter-spacing: .06em; }
+#entropy-track {
+  width: 44px;
+  height: 3px;
+  background: var(--border2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+#entropy-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width .5s, background .5s;
+}
+#entropy-val { font-size: 9px; color: var(--text3); font-family: var(--mono); min-width: 30px; }
+
+/* Spacer */
+.tb-flex { flex: 1; }
+
+/* Tab navigation */
+#nav-tabs {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  flex-shrink: 0;
+}
+.nav-tab {
+  height: 100%;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  white-space: nowrap;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  text-transform: uppercase;
+}
+.nav-tab:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.nav-tab[data-active] {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+  background: rgba(0,212,255,.04);
+}
+.nav-tab .tab-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .6;
+  flex-shrink: 0;
+}
+
+/* ── PANEL CONTAINER ─────────────────────────────────────────────────────── */
+#panels {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+.panel {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+.panel[data-active] { display: flex; }
+
+/* iframe panels */
+.panel-iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+/* ── HOME PANEL ───────────────────────────────────────────────────────────── */
+#panel-home {
+  overflow-y: auto;
+  background: transparent;
+}
+.home-scroll {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Welcome hero */
+#home-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px 60px;
+  text-align: center;
+  position: relative;
+}
+
+.hero-nexus {
+  font-family: var(--display);
+  font-size: clamp(64px, 10vw, 120px);
+  letter-spacing: .3em;
+  color: var(--cyan);
+  text-shadow:
+    0 0 60px rgba(0,212,255,.5),
+    0 0 120px rgba(0,212,255,.2),
+    0 0 200px rgba(0,212,255,.1);
+  line-height: 1;
+  margin-bottom: 8px;
+  animation: heroGlow 5s ease-in-out infinite;
+}
+@keyframes heroGlow {
+  0%,100% { text-shadow: 0 0 60px rgba(0,212,255,.4), 0 0 120px rgba(0,212,255,.15); }
+  50%      { text-shadow: 0 0 80px rgba(0,212,255,.7), 0 0 160px rgba(0,212,255,.3), 0 0 240px rgba(0,212,255,.1); }
+}
+
+.hero-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .25em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 48px;
+}
+
+/* Three entry points */
+#home-entries {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 60px;
+}
+.entry-card {
+  width: 220px;
+  padding: 24px 20px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  cursor: pointer;
+  background: rgba(13,16,24,.7);
+  backdrop-filter: blur(8px);
+  transition: all .2s;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+.entry-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(var(--entry-r),var(--entry-g),var(--entry-b),.05));
+  opacity: 0;
+  transition: opacity .2s;
+}
+.entry-card:hover {
+  border-color: var(--entry-color, var(--cyan));
+  background: rgba(13,16,24,.9);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.entry-card:hover::before { opacity: 1; }
+
+.entry-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+  display: block;
+}
+.entry-title {
+  font-family: var(--display);
+  font-size: 14px;
+  letter-spacing: .18em;
+  color: var(--entry-color, var(--cyan));
+  margin-bottom: 6px;
+}
+.entry-desc {
+  font-size: 10px;
+  color: var(--text3);
+  line-height: 1.7;
+}
+
+/* Continue banner */
+#continue-banner {
+  display: none;
+  margin: 0 auto 32px;
+  max-width: 680px;
+  width: 90%;
+  padding: 14px 18px;
+  background: rgba(0,212,255,.06);
+  border: 1px solid rgba(0,212,255,.2);
+  border-radius: 3px;
+}
+#continue-banner.visible { display: flex; align-items: center; gap: 12px; }
+
+/* Projects grid */
+#home-projects {
+  padding: 0 24px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+.section-head {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 48px;
+}
+.project-card {
+  padding: 14px 16px;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  cursor: pointer;
+  background: rgba(13,16,24,.6);
+  transition: all .15s;
+  position: relative;
+}
+.project-card:hover {
+  border-color: var(--border3);
+  background: rgba(20,24,33,.8);
+  transform: translateY(-1px);
+}
+.project-card.add-new {
+  border-style: dashed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: .1em;
+}
+.project-card.add-new:hover { color: var(--cyan); border-color: rgba(0,212,255,.3); }
+
+.pc-phase {
+  font-size: 8px;
+  font-family: var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.pc-title {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pc-meta {
+  font-size: 9px;
+  color: var(--text3);
+  font-family: var(--mono);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.pc-snr-bar {
+  width: 36px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.pc-snr-fill {
+  height: 100%;
+  border-radius: 1px;
+  background: var(--green);
+  transition: width .5s;
+}
+
+/* Phase colors */
+.phase-seed       { color: var(--text3); }
+.phase-expanding  { color: var(--blue); }
+.phase-tensioned  { color: var(--amber); }
+.phase-specced    { color: var(--cyan); }
+.phase-building   { color: var(--green); }
+.phase-complete   { color: var(--teal); }
+.phase-archived   { color: var(--text4); }
+
+/* Systems grid */
+#home-systems {
+  padding: 0 24px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+.systems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+.system-tile {
+  padding: 14px 16px;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  cursor: pointer;
+  background: rgba(10,12,18,.5);
+  transition: all .15s;
+}
+.system-tile:hover {
+  border-color: var(--sys-color);
+  background: rgba(var(--sys-r),var(--sys-g),var(--sys-b),.05);
+}
+.st-dot-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.st-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sys-color, var(--text4));
+}
+.st-dot.online { box-shadow: 0 0 6px var(--sys-color); }
+.st-name {
+  font-family: var(--display);
+  font-size: 12px;
+  letter-spacing: .16em;
+  color: var(--sys-color, var(--text2));
+}
+.st-port {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text4);
+  margin-left: auto;
+}
+.st-desc {
+  font-size: 9px;
+  color: var(--text3);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.st-badge {
+  display: inline-block;
+  font-size: 8px;
+  font-family: var(--mono);
+  padding: 1px 6px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  color: var(--sys-color, var(--text3));
+  opacity: .7;
+}
+
+/* ── SETUP OVERLAY ────────────────────────────────────────────────────────── */
+#setup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(3,5,9,.95);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+#setup-overlay.visible { display: flex; }
+#setup-box {
+  width: min(480px, 90vw);
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.setup-header {
+  padding: 20px 24px 0;
+  text-align: center;
+}
+.setup-logo {
+  font-family: var(--display);
+  font-size: 36px;
+  letter-spacing: .3em;
+  color: var(--cyan);
+  text-shadow: 0 0 40px rgba(0,212,255,.4);
+  margin-bottom: 4px;
+}
+.setup-sub {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.setup-step {
+  padding: 0 24px 24px;
+}
+.setup-question {
+  font-family: var(--display);
+  font-size: 16px;
+  letter-spacing: .15em;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.setup-hint {
+  font-size: 10px;
+  color: var(--text3);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+.setup-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color .15s;
+  margin-bottom: 16px;
+}
+.setup-input:focus { border-color: var(--cyan); }
+.setup-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.setup-option {
+  padding: 12px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.setup-option:hover { border-color: var(--border3); background: var(--bg4); }
+.setup-option.selected { border-color: var(--cyan); background: rgba(0,212,255,.06); }
+.so-icon { font-size: 20px; flex-shrink: 0; }
+.so-name { font-family: var(--display); font-size: 12px; letter-spacing: .12em; color: var(--text); }
+.so-desc { font-size: 9px; color: var(--text3); margin-top: 1px; }
+.setup-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+/* ── SPEC WIZARD ─────────────────────────────────────────────────────────── */
+#spec-wizard {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(3,5,9,.92);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+#spec-wizard.visible { display: flex; }
+#wizard-box {
+  width: min(560px, 94vw);
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.wiz-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.wiz-title {
+  font-family: var(--display);
+  font-size: 14px;
+  letter-spacing: .2em;
+  color: var(--cyan);
+}
+.wiz-steps {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+.wiz-step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border2);
+  transition: all .2s;
+}
+.wiz-step-dot.done   { background: var(--green); }
+.wiz-step-dot.active { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+.wiz-close {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+}
+.wiz-close:hover { color: var(--text); border-color: var(--border3); }
+.wiz-slide { padding: 24px; display: none; }
+.wiz-slide.active { display: block; }
+.wiz-q {
+  font-family: var(--display);
+  font-size: 18px;
+  letter-spacing: .15em;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.wiz-sub {
+  font-size: 10px;
+  color: var(--text3);
+  margin-bottom: 20px;
+}
+.wiz-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.wiz-opt {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 12px;
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+.wiz-opt:hover { border-color: var(--border3); background: var(--bg4); }
+.wiz-opt.selected { border-color: var(--cyan); background: rgba(0,212,255,.06); }
+.wiz-opt-icon { font-size: 24px; margin-bottom: 8px; }
+.wiz-opt-name { font-family: var(--display); font-size: 11px; letter-spacing: .14em; color: var(--text); margin-bottom: 3px; }
+.wiz-opt-desc { font-size: 9px; color: var(--text3); }
+.wiz-textarea {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 11px;
+  padding: 10px 12px;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  margin-bottom: 16px;
+  transition: border-color .15s;
+}
+.wiz-textarea:focus { border-color: var(--cyan); }
+.wiz-checks { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.wiz-check {
+  padding: 6px 12px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text3);
+  letter-spacing: .08em;
+  transition: all .15s;
+}
+.wiz-check:hover { border-color: var(--border3); color: var(--text); }
+.wiz-check.on { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,.06); }
+.wiz-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid var(--border); }
+
+/* ── BUTTONS ─────────────────────────────────────────────────────────────── */
+.btn {
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--border3); color: var(--text); }
+.btn.primary {
+  background: rgba(0,212,255,.08);
+  border-color: rgba(0,212,255,.4);
+  color: var(--cyan);
+}
+.btn.primary:hover { background: rgba(0,212,255,.15); }
+.btn.green {
+  background: rgba(0,255,136,.06);
+  border-color: rgba(0,255,136,.3);
+  color: var(--green);
+}
+.btn.green:hover { background: rgba(0,255,136,.12); }
+
+/* ── TOAST ────────────────────────────────────────────────────────────────── */
+#toast-root {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  padding: 10px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--text2);
+  animation: toastIn .2s ease;
+  max-width: 320px;
+}
+.toast.ok     { border-color: rgba(0,255,136,.3); color: var(--green); }
+.toast.warn   { border-color: rgba(245,158,11,.3); color: var(--amber); }
+.toast.err    { border-color: rgba(255,45,85,.3);  color: var(--red); }
+@keyframes toastIn { from { opacity:0; transform:translateX(16px); } to { opacity:1; transform:none; } }
+
+/* ── PHASE 3: VISUAL TREATMENT ──────────────────────────────────────────── */
+
+/* RGB animated logo text */
+@keyframes rgbText {
+  0%   { color: var(--cyan);    text-shadow: 0 0 40px rgba(0,212,255,.5); }
+  33%  { color: var(--magenta); text-shadow: 0 0 40px rgba(204,68,255,.5); }
+  66%  { color: var(--green);   text-shadow: 0 0 40px rgba(0,255,136,.5); }
+  100% { color: var(--cyan);    text-shadow: 0 0 40px rgba(0,212,255,.5); }
+}
+
+/* Entry cards — staggered entrance */
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(20px) scale(.97); }
+  to   { opacity:1; transform:none; }
+}
+.entry-card {
+  opacity: 0;
+  animation: cardIn .5s ease forwards;
+}
+.entry-card:nth-child(1) { animation-delay: .1s; }
+.entry-card:nth-child(2) { animation-delay: .2s; }
+.entry-card:nth-child(3) { animation-delay: .3s; }
+
+/* Hover shimmer on entry cards */
+.entry-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.04), transparent);
+  transform: skewX(-15deg);
+  transition: none;
+  pointer-events: none;
+  opacity: 0;
+}
+.entry-card:hover::after {
+  opacity: 1;
+  animation: shimmer .6s ease;
+}
+@keyframes shimmer {
+  from { left: -60%; }
+  to   { left: 140%; }
+}
+
+/* Hero entrance */
+@keyframes heroIn {
+  from { opacity:0; transform:translateY(-16px); letter-spacing:.5em; }
+  to   { opacity:1; transform:none; letter-spacing:.3em; }
+}
+.hero-nexus {
+  animation: heroIn .8s cubic-bezier(.16,1,.3,1) forwards, heroGlow 5s ease-in-out infinite 1s;
+  opacity: 0;
+}
+.hero-sub {
+  opacity: 0;
+  animation: cardIn .5s ease .5s forwards;
+}
+
+/* Section heads animate in */
+@keyframes slideIn {
+  from { opacity:0; transform:translateX(-10px); }
+  to   { opacity:1; transform:none; }
+}
+.section-head { opacity:0; animation: slideIn .4s ease forwards; }
+#home-projects .section-head { animation-delay:.6s; }
+#home-systems  .section-head { animation-delay:.8s; }
+
+/* Project cards stagger */
+.project-card {
+  opacity: 0;
+  animation: cardIn .35s ease forwards;
+}
+
+/* System tiles stagger */
+.system-tile {
+  opacity: 0;
+  animation: cardIn .3s ease forwards;
+}
+
+/* Continue banner pulse */
+#continue-banner.visible {
+  animation: cardIn .3s ease forwards;
+}
+
+/* Tab active indicator glow */
+.nav-tab[data-active] {
+  position: relative;
+}
+.nav-tab[data-active]::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+/* Panel slide-in transition */
+.panel[data-active] {
+  animation: panelIn .2s ease;
+}
+@keyframes panelIn {
+  from { opacity:0; transform:translateY(4px); }
+  to   { opacity:1; transform:none; }
+}
+
+/* Loading shimmer for project cards */
+.project-card.loading {
+  background: linear-gradient(90deg, var(--bg3) 25%, var(--bg4) 50%, var(--bg3) 75%);
+  background-size: 200% 100%;
+  animation: loadingShimmer 1.2s infinite;
+  pointer-events: none;
+}
+@keyframes loadingShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* System tile offline dim */
+.system-tile:has(.st-dot:not(.online)) {
+  opacity: .5;
+}
+
+/* NCP pill online glow */
+#ncp-pill:has(#ncp-dot[style*='green']) {
+  border-color: rgba(0,255,136,.3);
+}
+
+/* Topbar dots hover labels */
+.sys-dot-wrap { position: relative; }
+
+/* Stats bar at top of projects section */
+#home-project-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+}
+.stat-item { display: flex; align-items: center; gap: 5px; }
+.stat-val { color: var(--text2); font-size: 11px; font-weight: 500; }
+
+/* Beautiful empty state */
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  grid-column: 1/-1;
+}
+.empty-icon {
+  font-size: 36px;
+  opacity: .2;
+  margin-bottom: 12px;
+}
+.empty-title {
+  font-family: var(--display);
+  font-size: 14px;
+  letter-spacing: .15em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.empty-desc {
+  font-size: 10px;
+  color: var(--text4);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text4); }
+
+</style>
+</head>
+<body>
+
+<!-- ── ALIVE SPACE LAYER ──────────────────────────────────────────────────── -->
+<canvas id="nexus-canvas"></canvas>
+<div id="scanline"></div>
+
+<!-- Nebula blobs -->
+<div class="blob" style="width:700px;height:700px;left:-200px;top:-200px;
+  background:radial-gradient(circle,rgba(0,212,255,.06),transparent 70%);
+  animation-duration:18s;"></div>
+<div class="blob" style="width:600px;height:600px;right:-150px;bottom:-100px;
+  background:radial-gradient(circle,rgba(204,68,255,.05),transparent 70%);
+  animation-duration:14s;animation-delay:-6s;animation-direction:alternate-reverse;"></div>
+<div class="blob" style="width:400px;height:400px;left:40%;top:30%;
+  background:radial-gradient(circle,rgba(0,255,136,.03),transparent 70%);
+  animation-duration:22s;animation-delay:-10s;"></div>
+
+<!-- ── APP ───────────────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div id="topbar">
+    <span class="tb-logo" onclick="switchTab('home')">NEXUS</span>
+    <div class="tb-sep"></div>
+
+    <!-- System status dots -->
+    <div id="sys-dots">
+      <div class="sys-dot-wrap" onclick="switchTab('guardian')" title="Guardian :7820">
+        <div class="sys-dot checking" id="dot-guardian"></div>
+        <span class="sys-dot-label">GUARDIAN</span>
+      </div>
+      <div class="sys-dot-wrap" onclick="switchTab('cortex')" title="Cortex :3748">
+        <div class="sys-dot checking" id="dot-cortex"></div>
+        <span class="sys-dot-label">CORTEX</span>
+      </div>
+      <div class="sys-dot-wrap" onclick="switchTab('idearium')" title="Idearium :4800">
+        <div class="sys-dot checking" id="dot-idearium"></div>
+        <span class="sys-dot-label">IDEARIUM</span>
+      </div>
+      <div class="sys-dot-wrap" onclick="switchTab('bridge')" title="Bridge :9999">
+        <div class="sys-dot checking" id="dot-bridge"></div>
+        <span class="sys-dot-label">BRIDGE</span>
+      </div>
+      <div class="sys-dot-wrap" onclick="switchTab('emerge')" title="Emerge :4242">
+        <div class="sys-dot checking" id="dot-emerge"></div>
+        <span class="sys-dot-label">EMERGE</span>
+      </div>
+      <div class="sys-dot-wrap" title="Ollama :11434">
+        <div class="sys-dot checking" id="dot-ollama"></div>
+        <span class="sys-dot-label">OLLAMA</span>
+      </div>
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <!-- NCP pill -->
+    <div id="ncp-pill" onclick="switchTab('guardian')" title="Guardian NCP state">
+      <div id="ncp-dot"></div>
+      <span id="ncp-label">NCP</span>
+      <span id="ncp-providers"></span>
+    </div>
+
+    <!-- Entropy meter -->
+    <div id="entropy-wrap" title="System entropy">
+      <span class="ent-label">ENT</span>
+      <div id="entropy-track"><div id="entropy-bar"></div></div>
+      <span id="entropy-val">0.00</span>
+    </div>
+
+    <div class="tb-flex"></div>
+
+    <!-- Nav tabs -->
+    <nav id="nav-tabs">
+      <button class="nav-tab" data-tab="home" data-active onclick="switchTab('home')">
+        <span class="tab-dot"></span>HOME
+      </button>
+      <button class="nav-tab" data-tab="idearium" onclick="switchTab('idearium')">
+        <span class="tab-dot" style="background:var(--c-idearium)"></span>IDEARIUM
+      </button>
+      <button class="nav-tab" data-tab="guardian" onclick="switchTab('guardian')">
+        <span class="tab-dot" style="background:var(--c-guardian)"></span>FORGE
+      </button>
+      <button class="nav-tab" data-tab="cortex" onclick="switchTab('cortex')">
+        <span class="tab-dot" style="background:var(--c-cortex)"></span>CORTEX
+      </button>
+      <button class="nav-tab" data-tab="bridge" onclick="switchTab('bridge')">
+        <span class="tab-dot" style="background:var(--c-bridge)"></span>BRIDGE
+      </button>
+      <button class="nav-tab" data-tab="emerge" onclick="switchTab('emerge')">
+        <span class="tab-dot" style="background:var(--c-emerge)"></span>EMERGE
+      </button>
+    </nav>
+  </div>
+
+  <!-- PANELS -->
+  <div id="panels">
+
+    <!-- HOME PANEL -->
+    <div class="panel" id="panel-home" data-active>
+      <div class="home-scroll">
+
+        <!-- HERO + ENTRY POINTS -->
+        <div id="home-welcome">
+          <div class="hero-nexus">NEXUS</div>
+          <div class="hero-sub">Sovereign Cognitive Infrastructure · SISO Core · v3.3.0</div>
+
+          <!-- Continue banner (shown when session has active state) -->
+          <div id="continue-banner">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--cyan);
+              box-shadow:0 0 8px var(--cyan);flex-shrink:0;animation:dotBlink .8s infinite;"></div>
+            <div style="flex:1;">
+              <div style="font-family:var(--display);font-size:12px;letter-spacing:.14em;color:var(--cyan);"
+                id="continue-name">CONTINUE</div>
+              <div style="font-size:9px;color:var(--text3);margin-top:2px;" id="continue-meta">—</div>
+            </div>
+            <button class="btn primary" id="continue-btn" onclick="resumeSession()">↩ RESUME</button>
+            <button class="btn" onclick="dismissContinue()">DISMISS</button>
+          </div>
+
+          <!-- Three entry points -->
+          <div id="home-entries">
+            <div class="entry-card" style="--entry-color:var(--cyan);"
+              onclick="openSpecWizard()">
+              <span class="entry-icon" style="color:var(--cyan);">✦</span>
+              <div class="entry-title" style="color:var(--cyan);">NEW SPEC</div>
+              <div class="entry-desc">
+                Build a new spec. Define the vision, architecture, and constraints.
+                Architect-first. Bottom-up. SISO-gated.
+              </div>
+              <div style="margin-top:12px;font-size:8px;font-family:var(--mono);color:rgba(0,212,255,.4);letter-spacing:.1em;">
+                ARCHITECT → SISO → BUILD
+              </div>
+            </div>
+            <div class="entry-card" style="--entry-color:var(--green);"
+              onclick="resumeSession()">
+              <span class="entry-icon" style="color:var(--green);">↩</span>
+              <div class="entry-title" style="color:var(--green);">CONTINUE</div>
+              <div class="entry-desc">
+                Resume exactly where you left off. Event state is persisted.
+                Every step, every answer, every decision — intact.
+              </div>
+              <div style="margin-top:12px;font-size:8px;font-family:var(--mono);color:rgba(0,255,136,.4);letter-spacing:.1em;"
+                id="entry-continue-hint">CHECKING STATE…</div>
+            </div>
+            <div class="entry-card" style="--entry-color:var(--magenta);"
+              onclick="switchTab('idearium')">
+              <span class="entry-icon" style="color:var(--magenta);">◫</span>
+              <div class="entry-title" style="color:var(--magenta);">PROJECTS</div>
+              <div class="entry-desc">
+                Open Idearium — your sovereign project OS.
+                Ideas, specs, gaps, causal ancestry. Everything.
+              </div>
+              <div style="margin-top:12px;font-size:8px;font-family:var(--mono);color:rgba(204,68,255,.4);letter-spacing:.1em;"
+                id="entry-projects-hint">LOADING…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT PROJECTS -->
+        <div id="home-projects">
+          <div class="section-head">// RECENT PROJECTS</div>
+          <div id="home-project-stats">
+            <div class="stat-item">
+              <span>TOTAL</span><span class="stat-val" id="stat-total">—</span>
+            </div>
+            <div class="stat-item">
+              <span>ACTIVE</span><span class="stat-val" id="stat-active">—</span>
+            </div>
+            <div class="stat-item">
+              <span>COMPLETE</span><span class="stat-val" id="stat-complete">—</span>
+            </div>
+            <div class="stat-item">
+              <span>AVG SNR</span><span class="stat-val" id="stat-snr">—</span>
+            </div>
+          </div>
+          <div class="projects-grid" id="projects-grid">
+            <!-- Loading skeleton -->
+            <div class="project-card loading" style="height:88px;"></div>
+            <div class="project-card loading" style="height:88px;animation-delay:.1s;"></div>
+            <div class="project-card loading" style="height:88px;animation-delay:.2s;"></div>
+          </div>
+        </div>
+
+        <!-- SYSTEM TILES -->
+        <div id="home-systems">
+          <div class="section-head">// SYSTEM MAP</div>
+          <div class="systems-grid" id="systems-grid"></div>
+        </div>
+
+        <!-- LIVE ACTIVITY -->
+        <div style="padding:0 24px 60px;max-width:1200px;margin:0 auto;width:100%;">
+          <div class="section-head" style="animation-delay:1s;">// LIVE ACTIVITY</div>
+          <div id="activity-feed" style="display:flex;flex-direction:column;gap:4px;max-height:280px;overflow-y:auto;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- IDEARIUM TAB (projects OS) -->
+    <div class="panel" id="panel-idearium">
+      <iframe class="panel-iframe" id="iframe-idearium"
+        src="about:blank" title="Idearium"></iframe>
+    </div>
+
+    <!-- GUARDIAN / FORGE TAB -->
+    <div class="panel" id="panel-guardian">
+      <iframe class="panel-iframe" id="iframe-guardian"
+        src="about:blank" title="Guardian Forge"></iframe>
+    </div>
+
+    <!-- CORTEX TAB -->
+    <div class="panel" id="panel-cortex">
+      <iframe class="panel-iframe" id="iframe-cortex"
+        src="about:blank" title="Cortex"></iframe>
+    </div>
+
+    <!-- BRIDGE TAB -->
+    <div class="panel" id="panel-bridge">
+      <iframe class="panel-iframe" id="iframe-bridge"
+        src="about:blank" title="Bridge"></iframe>
+    </div>
+
+    <!-- EMERGE TAB -->
+    <div class="panel" id="panel-emerge">
+      <iframe class="panel-iframe" id="iframe-emerge"
+        src="about:blank" title="Emerge IDE"></iframe>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── FIRST-TIME SETUP OVERLAY ──────────────────────────────────────────── -->
+<div id="setup-overlay">
+  <div id="setup-box">
+    <div class="setup-header">
+      <div class="setup-logo">NEXUS</div>
+      <div class="setup-sub">First time setup · 2 steps</div>
+    </div>
+
+    <!-- Step 0: projects dir -->
+    <div class="setup-step" id="setup-step-0">
+      <div class="setup-question">WHERE DO PROJECTS LIVE?</div>
+      <div class="setup-hint">
+        NEXUS stores everything here — ideas, specs, event logs, artifacts.
+        Defaults to the Idearium data folder.
+      </div>
+      <input class="setup-input" id="setup-dir"
+        placeholder="data/idearium or absolute path…" value="data/idearium">
+      <div style="font-size:9px;color:var(--text3);" id="setup-dir-status"></div>
+    </div>
+
+    <!-- Step 1: provider -->
+    <div class="setup-step" id="setup-step-1" style="display:none;">
+      <div class="setup-question">PRIMARY AI PROVIDER</div>
+      <div class="setup-hint">How does NEXUS route work to agents?</div>
+      <div class="setup-options" id="setup-provider-opts">
+        <div class="setup-option selected" data-val="claude" onclick="setupSelectProvider(this)">
+          <span class="so-icon">⟁</span>
+          <div>
+            <div class="so-name">CLAUDE</div>
+            <div class="so-desc">Browser tab via Guardian NCP. No API key needed.</div>
+          </div>
+        </div>
+        <div class="setup-option" data-val="chatgpt" onclick="setupSelectProvider(this)">
+          <span class="so-icon">⊕</span>
+          <div>
+            <div class="so-name">CHATGPT</div>
+            <div class="so-desc">Browser tab via Guardian NCP. No API key needed.</div>
+          </div>
+        </div>
+        <div class="setup-option" data-val="ollama" onclick="setupSelectProvider(this)">
+          <span class="so-icon">⬡</span>
+          <div>
+            <div class="so-name">OLLAMA</div>
+            <div class="so-desc">Local LLM. Sovereign. Zero external calls.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-nav">
+      <button class="btn" id="setup-back" onclick="setupPrev()" style="display:none;">← BACK</button>
+      <div style="flex:1;"></div>
+      <button class="btn primary" id="setup-next" onclick="setupNext()">CONTINUE →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SPEC WIZARD OVERLAY ────────────────────────────────────────────────── -->
+<div id="spec-wizard">
+  <div id="wizard-box">
+    <div class="wiz-header">
+      <span class="wiz-title">NEW SPEC</span>
+      <div class="wiz-steps" id="wiz-steps-dots"></div>
+      <button class="wiz-close" onclick="closeWizard()">✕ CLOSE</button>
+    </div>
+
+    <!-- Step 0: WHO IS THIS FOR -->
+    <div class="wiz-slide active" data-step="0">
+      <div class="wiz-q">WHO IS THIS FOR?</div>
+      <div class="wiz-sub">This determines the entire direction of the build.</div>
+      <div class="wiz-options">
+        <div class="wiz-opt" data-val="personal" onclick="wizSelect(this,0)">
+          <div class="wiz-opt-icon">⚡</div>
+          <div class="wiz-opt-name">PERSONAL</div>
+          <div class="wiz-opt-desc">Maximum creative freedom.</div>
+        </div>
+        <div class="wiz-opt" data-val="team" onclick="wizSelect(this,0)">
+          <div class="wiz-opt-icon">⊕</div>
+          <div class="wiz-opt-name">TEAM</div>
+          <div class="wiz-opt-desc">Shared conventions and stability.</div>
+        </div>
+        <div class="wiz-opt" data-val="client" onclick="wizSelect(this,0)">
+          <div class="wiz-opt-icon">⟁</div>
+          <div class="wiz-opt-name">CLIENT</div>
+          <div class="wiz-opt-desc">Spec-driven. Handoff-ready.</div>
+        </div>
+      </div>
+      <div class="wiz-nav">
+        <span></span>
+        <button class="btn primary" onclick="wizNext()">CONTINUE →</button>
+      </div>
+    </div>
+
+    <!-- Step 1: WHAT ARE YOU BUILDING -->
+    <div class="wiz-slide" data-step="1">
+      <div class="wiz-q">WHAT ARE YOU BUILDING?</div>
+      <div class="wiz-sub">Name it. Describe it. One sentence is fine.</div>
+      <textarea class="wiz-textarea" id="wiz-name"
+        placeholder="Name…" rows="1" style="min-height:40px;margin-bottom:8px;"></textarea>
+      <textarea class="wiz-textarea" id="wiz-intent"
+        placeholder="What does it do? What problem does it solve?"></textarea>
+      <div class="wiz-nav">
+        <button class="btn" onclick="wizPrev()">← BACK</button>
+        <button class="btn primary" onclick="wizNext()">CONTINUE →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: WHAT INTERFACE -->
+    <div class="wiz-slide" data-step="2">
+      <div class="wiz-q">WHAT INTERFACE?</div>
+      <div class="wiz-sub">How will users interact with this?</div>
+      <div class="wiz-checks" id="wiz-interface-checks">
+        <div class="wiz-check" data-val="browser" onclick="wizToggle(this)">BROWSER</div>
+        <div class="wiz-check" data-val="desktop" onclick="wizToggle(this)">DESKTOP</div>
+        <div class="wiz-check" data-val="cli" onclick="wizToggle(this)">CLI</div>
+        <div class="wiz-check" data-val="mobile" onclick="wizToggle(this)">MOBILE</div>
+        <div class="wiz-check" data-val="api" onclick="wizToggle(this)">API</div>
+        <div class="wiz-check" data-val="no-ui" onclick="wizToggle(this)">NO UI</div>
+      </div>
+      <div class="wiz-nav">
+        <button class="btn" onclick="wizPrev()">← BACK</button>
+        <button class="btn primary" onclick="wizNext()">CONTINUE →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: ARCHITECTURE -->
+    <div class="wiz-slide" data-step="3">
+      <div class="wiz-q">ARCHITECTURE</div>
+      <div class="wiz-sub">How should the codebase be structured?</div>
+      <div class="wiz-options">
+        <div class="wiz-opt" data-val="single" onclick="wizSelect(this,3)">
+          <div class="wiz-opt-icon">◉</div>
+          <div class="wiz-opt-name">SINGLE FILE</div>
+          <div class="wiz-opt-desc">SISO. Maximum portability.</div>
+        </div>
+        <div class="wiz-opt" data-val="grouped" onclick="wizSelect(this,3)">
+          <div class="wiz-opt-icon">▤</div>
+          <div class="wiz-opt-name">GROUPED</div>
+          <div class="wiz-opt-desc">Clean modules. Not monolithic.</div>
+        </div>
+        <div class="wiz-opt" data-val="modular" onclick="wizSelect(this,3)">
+          <div class="wiz-opt-icon">⬡</div>
+          <div class="wiz-opt-name">FULL MODULAR</div>
+          <div class="wiz-opt-desc">Scales. Enterprise grade.</div>
+        </div>
+      </div>
+      <div class="wiz-nav">
+        <button class="btn" onclick="wizPrev()">← BACK</button>
+        <button class="btn primary" onclick="wizNext()">CONTINUE →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: AMBITION -->
+    <div class="wiz-slide" data-step="4">
+      <div class="wiz-q">LEVEL OF AMBITION</div>
+      <div class="wiz-sub">How far outside the box?</div>
+      <div class="wiz-options" style="flex-direction:column;">
+        <div class="wiz-opt" data-val="conventional" onclick="wizSelect(this,4)" style="min-width:100%;text-align:left;display:flex;align-items:center;gap:12px;">
+          <div class="wiz-opt-icon">◎</div>
+          <div><div class="wiz-opt-name">JUST A CLEAN BUILD</div><div class="wiz-opt-desc">Battle-tested patterns. Gets the job done.</div></div>
+        </div>
+        <div class="wiz-opt" data-val="unconventional" onclick="wizSelect(this,4)" style="min-width:100%;text-align:left;display:flex;align-items:center;gap:12px;">
+          <div class="wiz-opt-icon">⚡</div>
+          <div><div class="wiz-opt-name">LET'S GET WEIRD</div><div class="wiz-opt-desc">Challenge assumptions. Creative solutions that work in production.</div></div>
+        </div>
+        <div class="wiz-opt" data-val="outlier" onclick="wizSelect(this,4)" style="min-width:100%;text-align:left;display:flex;align-items:center;gap:12px;border-color:rgba(204,68,255,.2);">
+          <div class="wiz-opt-icon" style="color:var(--magenta)">∞</div>
+          <div><div class="wiz-opt-name" style="color:var(--magenta)">MAXIMUM AMBITION</div><div class="wiz-opt-desc">Highest leverage. Genuinely novel. Bleeding edge.</div></div>
+        </div>
+      </div>
+      <div class="wiz-nav">
+        <button class="btn" onclick="wizPrev()">← BACK</button>
+        <button class="btn primary" onclick="wizNext()">CONTINUE →</button>
+      </div>
+    </div>
+
+    <!-- Step 5: CONSTRAINTS -->
+    <div class="wiz-slide" data-step="5">
+      <div class="wiz-q">CONSTRAINTS</div>
+      <div class="wiz-sub">What does this need to be? Skip what doesn't apply.</div>
+      <div class="wiz-checks" id="wiz-constraint-checks">
+        <div class="wiz-check" data-val="offline" onclick="wizToggle(this)">OFFLINE FIRST</div>
+        <div class="wiz-check" data-val="no-deps" onclick="wizToggle(this)">NO EXTERNAL DEPS</div>
+        <div class="wiz-check" data-val="encrypted" onclick="wizToggle(this)">ENCRYPTED</div>
+        <div class="wiz-check" data-val="p2p" onclick="wizToggle(this)">P2P / NO SERVER</div>
+        <div class="wiz-check" data-val="siso" onclick="wizToggle(this)">SISO GATED</div>
+        <div class="wiz-check" data-val="sovereign" onclick="wizToggle(this)">SOVEREIGN</div>
+      </div>
+      <textarea class="wiz-textarea" id="wiz-additional"
+        placeholder="Anything else? The more context the better."></textarea>
+      <div class="wiz-nav">
+        <button class="btn" onclick="wizPrev()">← BACK</button>
+        <button class="btn green" onclick="wizFinish()">✦ BUILD SPEC →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ROOT ─────────────────────────────────────────────────────────── -->
+<div id="toast-root"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     JAVASCRIPT — PHASE 1: STATE MACHINE + DATA CONTRACTS
+     All logic is here. All data goes through Orchestrator :9000.
+     SISO law: no direct system calls.
+═══════════════════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── CONSTANTS ──────────────────────────────────────────────────────────────
+
+const ORC = 'http://127.0.0.1:9000';   // The only endpoint this page calls
+
+const SYSTEMS = {
+  guardian:  { id:'guardian',  port:7820,  label:'Guardian',   color:'#9b7fe8', desc:'Agent dispatch · NCP · Forge IDE',          badge:'FORGE',    tab:'guardian', url:'http://127.0.0.1:7820/cockpit' },
+  cortex:    { id:'cortex',    port:3748,  label:'Cortex',     color:'#2dd4bf', desc:'RAID · JAA memory · Gap detection · ICO',    badge:'MEMORY',   tab:'cortex',   url:'http://127.0.0.1:3748' },
+  idearium:  { id:'idearium',  port:4800,  label:'Idearium',   color:'#4a9eff', desc:'Projects · Ideas · Specs · Causal ancestry', badge:'PROJECTS', tab:'idearium', url:'http://127.0.0.1:4800' },
+  bridge:    { id:'bridge',    port:9999,  label:'Bridge',     color:'#f0a500', desc:'Relay · P2P · Phantom network',              badge:'RELAY',    tab:'bridge',   url:'http://127.0.0.1:9999' },
+  emerge:    { id:'emerge',    port:4242,  label:'Emerge',     color:'#3ecf8e', desc:'ESS compiler · .eg language · Kernel',       badge:'COMPILE',  tab:'emerge',   url:'http://127.0.0.1:4242' },
+  ollama:    { id:'ollama',    port:11434, label:'Ollama',     color:'#e85d3c', desc:'Local LLM · Sovereign · No cloud calls',     badge:'LLM',      tab:null,       url:null },
+};
+
+// ── SESSION STATE (localStorage) ──────────────────────────────────────────
+
+const SESSION_KEY = 'nexus_home_session';
+
+function loadSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+function saveSession(patch) {
+  try {
+    const s = loadSession() || {
+      version: '1.0.0',
+      firstRun: true,
+      setup: { complete: false, projectsDir: 'data/idearium', preferredProvider: 'claude', completedAt: null },
+      lastState: { tab: 'home', spec: { active: false, step: 0, answers: {} }, scrollY: 0 },
+      stats: { sessionCount: 0, lastSeen: Date.now() }
+    };
+    const merged = deepMerge(s, patch);
+    merged.stats.lastSeen = Date.now();
+    localStorage.setItem(SESSION_KEY, JSON.stringify(merged));
+    return merged;
+  } catch { return null; }
+}
+
+function deepMerge(a, b) {
+  const r = { ...a };
+  for (const k of Object.keys(b)) {
+    if (b[k] !== null && typeof b[k] === 'object' && !Array.isArray(b[k]) && typeof a[k] === 'object')
+      r[k] = deepMerge(a[k] || {}, b[k]);
+    else
+      r[k] = b[k];
+  }
+  return r;
+}
+
+// ── WIZARD STATE ───────────────────────────────────────────────────────────
+
+let _wizStep    = 0;
+const WIZ_STEPS = 6;
+let _wizAnswers = {};
+
+// ── SETUP STATE ────────────────────────────────────────────────────────────
+
+let _setupStep     = 0;
+let _setupProvider = 'claude';
+
+// ── SYSTEM HEALTH ──────────────────────────────────────────────────────────
+
+let _sysHealth = {};
+let _sseConn   = null;
+
+// ── TAB MANAGEMENT ─────────────────────────────────────────────────────────
+
+let _activeTab = 'home';
+const _iframeUrls = {
+  idearium: 'http://127.0.0.1:4800',
+  guardian: 'http://127.0.0.1:7820/cockpit',
+  cortex:   'http://127.0.0.1:3748',
+  bridge:   'http://127.0.0.1:9999',
+  emerge:   'http://127.0.0.1:4242',
+};
+
+function switchTab(tabId) {
+  if (!document.getElementById('panel-' + tabId)) return;
+
+  // Deactivate current
+  document.querySelector('[data-tab="' + _activeTab + '"]')?.removeAttribute('data-active');
+  document.getElementById('panel-' + _activeTab)?.removeAttribute('data-active');
+
+  // Activate new
+  _activeTab = tabId;
+  const tabBtn = document.querySelector('[data-tab="' + tabId + '"]');
+  const panel  = document.getElementById('panel-' + tabId);
+  if (tabBtn) tabBtn.setAttribute('data-active', '');
+  if (panel)  panel.setAttribute('data-active', '');
+
+  // Lazy-load iframes
+  const iframeId = 'iframe-' + tabId;
+  const iframe   = document.getElementById(iframeId);
+  const url      = _iframeUrls[tabId];
+  if (iframe && url && iframe.src === 'about:blank') {
+    iframe.src = url;
+  }
+
+  // Persist
+  saveSession({ lastState: { tab: tabId } });
+}
+
+// ── SPEC WIZARD ────────────────────────────────────────────────────────────
+
+function openSpecWizard() {
+  // Restore saved state
+  const s = loadSession();
+  if (s?.lastState?.spec?.active) {
+    _wizStep    = s.lastState.spec.step || 0;
+    _wizAnswers = s.lastState.spec.answers || {};
+  } else {
+    _wizStep    = 0;
+    _wizAnswers = {};
+  }
+  _renderWizard();
+  document.getElementById('spec-wizard').classList.add('visible');
+}
+
+function closeWizard() {
+  document.getElementById('spec-wizard').classList.remove('visible');
+  saveSession({ lastState: { spec: { active: false } } });
+}
+
+function _renderWizard() {
+  // Slides
+  document.querySelectorAll('.wiz-slide').forEach((el, i) => {
+    el.classList.toggle('active', i === _wizStep);
+  });
+  // Step dots
+  const dotsEl = document.getElementById('wiz-steps-dots');
+  dotsEl.innerHTML = Array.from({ length: WIZ_STEPS }, (_, i) =>
+    `<div class="wiz-step-dot ${i < _wizStep ? 'done' : i === _wizStep ? 'active' : ''}"></div>`
+  ).join('');
+  // Persist
+  saveSession({ lastState: { spec: { active: true, step: _wizStep, answers: _wizAnswers } } });
+}
+
+function wizSelect(el, step) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.wiz-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  _wizAnswers['step_' + step] = el.dataset.val;
+}
+
+function wizToggle(el) {
+  el.classList.toggle('on');
+  const key = el.closest('.wiz-slide').dataset.step;
+  const vals = [...el.closest('.wiz-checks').querySelectorAll('.wiz-check.on')].map(c => c.dataset.val);
+  _wizAnswers['step_' + key + '_multi'] = vals;
+}
+
+function wizNext() {
+  if (_wizStep < WIZ_STEPS - 1) { _wizStep++; _renderWizard(); }
+}
+
+function wizPrev() {
+  if (_wizStep > 0) { _wizStep--; _renderWizard(); }
+}
+
+async function wizFinish() {
+  const name    = document.getElementById('wiz-name')?.value?.trim()       || 'Untitled';
+  const intent  = document.getElementById('wiz-intent')?.value?.trim()     || '';
+  const extra   = document.getElementById('wiz-additional')?.value?.trim() || '';
+  const forStr  = _wizAnswers.step_0 || 'personal';
+  const arch    = _wizAnswers.step_3 || 'modular';
+  const ambition = _wizAnswers.step_4 || 'unconventional';
+  const ifaces  = _wizAnswers.step_2_multi || [];
+  const constraints = _wizAnswers.step_5_multi || [];
+
+  // ── Build an Architect-compatible spec seed ───────────────────────────
+  const uuid    = 'spec-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8);
+  const specSeed = {
+    meta: {
+      name,
+      version: '0.1.0',
+      status:  'seed',
+      uuid,
+      author:  'James Brooks',
+      created_at: new Date().toISOString(),
+      last_modified: new Date().toISOString(),
+      language_stack: [],
+      target_os: [],
+      execution_mode: arch === 'single' ? 'sync' : 'hybrid',
+      paradigm: ['event-driven', 'siso'],
+      notes: extra,
+    },
+    intent: {
+      purpose:           name,
+      problem_statement: intent,
+      non_goals:         [],
+      authorial_intent:  intent,
+      stakeholders: [{ name: 'James Brooks', role: forStr }],
+    },
+    constraints: constraints.map((c,i) => ({
+      id: 'CONS-00' + (i+1),
+      description: c,
+      type: 'hard',
+      source: 'wizard',
+      enforced_by: [],
+    })),
+    architecture: {
+      layers: [],
+      surfaces: [],
+      loadOrder: [],
+    },
+    hooks: [],
+    schemas: [],
+    gates: [],
+    events: [],
+    files: [],
+    gaps: [{
+      id: 'G-001',
+      severity: 'high',
+      description: 'Architecture not yet defined',
+      affects: ['all'],
+      status: 'open',
+    }],
+    risks: [],
+    delta: [{
+      version: '0.1.0',
+      date: new Date().toISOString().slice(0,10),
+      author: 'James Brooks',
+      causedBy: 'wizard',
+      changes: ['Founded via NEXUS spec wizard'],
+      status: 'seed',
+    }],
+    // NEXUS metadata (for Idearium)
+    _wizard: { for: forStr, architecture: arch, ambition, interfaces: ifaces, constraints, extra },
+  };
+
+  // ── POST to Idearium via Orchestrator ─────────────────────────────────
+  const payload = {
+    title:       name,
+    description: intent,
+    phase:       'seed',
+    tags:        ['nexus', forStr, ambition].filter(Boolean),
+    spec:        JSON.stringify(specSeed),
+    meta:        specSeed._wizard,
+  };
+
+  try {
+    const r = await fetch(ORC + '/api/idearium/ideas', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    const d = await r.json();
+    if (d.ok || d.uuid || d.idea?.uuid) {
+      toast('✦ Spec seeded: ' + name, 'ok');
+      FIELD?.pulse('idearium', 2);
+      addActivity('idearium.idea.created', name);
+      closeWizard();
+      // Clear saved wizard state
+      saveSession({ lastState: { spec: { active: false, step: 0, answers: {} } } });
+      loadProjects();
+      // Switch to idearium after brief delay
+      setTimeout(() => switchTab('idearium'), 600);
+    } else {
+      toast('Spec ready — Idearium offline, saved locally', 'warn');
+      closeWizard();
+    }
+  } catch {
+    toast('Spec saved locally — start Idearium to sync', 'warn');
+    closeWizard();
+  }
+}
+
+// ── CONTINUE / RESUME ──────────────────────────────────────────────────────
+
+function resumeSession() {
+  const s = loadSession();
+  if (!s) return;
+
+  if (s.lastState?.spec?.active && s.lastState.spec.step > 0) {
+    openSpecWizard();
+    return;
+  }
+  if (s.lastState?.tab && s.lastState.tab !== 'home') {
+    switchTab(s.lastState.tab);
+    return;
+  }
+  toast('Nothing to resume — start something new', 'ok');
+}
+
+function dismissContinue() {
+  document.getElementById('continue-banner').classList.remove('visible');
+  saveSession({ lastState: { spec: { active: false } } });
+}
+
+function _checkContinue() {
+  const s = loadSession();
+  if (!s) return;
+  const banner = document.getElementById('continue-banner');
+  const nameEl = document.getElementById('continue-name');
+  const metaEl = document.getElementById('continue-meta');
+
+  if (s.lastState?.spec?.active && s.lastState.spec.step > 0) {
+    const answers = s.lastState.spec.answers || {};
+    nameEl.textContent = 'CONTINUE SPEC' + (answers.step_1_name ? ': ' + answers.step_1_name : '');
+    metaEl.textContent = `Step ${s.lastState.spec.step + 1} of ${WIZ_STEPS} · ${new Date(s.stats?.lastSeen||0).toLocaleString()}`;
+    banner.classList.add('visible');
+    return;
+  }
+  if (s.lastState?.tab && s.lastState.tab !== 'home') {
+    nameEl.textContent = 'RETURN TO ' + s.lastState.tab.toUpperCase();
+    metaEl.textContent = 'Last session: ' + new Date(s.stats?.lastSeen||0).toLocaleString();
+    banner.classList.add('visible');
+    const hint = document.getElementById('entry-continue-hint');
+    if (hint) hint.textContent = s.lastState.tab.toUpperCase() + ' — LAST SESSION';
+    return;
+  }
+
+  // No resume state
+  const hint = document.getElementById('entry-continue-hint');
+  if (hint) hint.textContent = 'NO ACTIVE SESSION';
+}
+
+// ── FIRST-TIME SETUP ────────────────────────────────────────────────────────
+
+function _checkSetup() {
+  const s = loadSession();
+  if (!s || !s.setup.complete) {
+    document.getElementById('setup-overlay').classList.add('visible');
+  }
+}
+
+function setupSelectProvider(el) {
+  document.querySelectorAll('.setup-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  _setupProvider = el.dataset.val;
+}
+
+function setupNext() {
+  if (_setupStep === 0) {
+    const dir = document.getElementById('setup-dir').value.trim();
+    if (!dir) { document.getElementById('setup-dir-status').textContent = 'Enter a path'; return; }
+    _setupStep = 1;
+    document.getElementById('setup-step-0').style.display = 'none';
+    document.getElementById('setup-step-1').style.display = 'block';
+    document.getElementById('setup-back').style.display = 'inline-flex';
+    return;
+  }
+  if (_setupStep === 1) {
+    const dir = document.getElementById('setup-dir').value.trim();
+    saveSession({
+      firstRun: false,
+      setup: {
+        complete: true,
+        projectsDir: dir,
+        preferredProvider: _setupProvider,
+        completedAt: Date.now()
+      }
+    });
+    document.getElementById('setup-overlay').classList.remove('visible');
+    toast('Setup complete. Welcome to NEXUS.', 'ok');
+    loadProjects();
+    return;
+  }
+}
+
+function setupPrev() {
+  if (_setupStep === 1) {
+    _setupStep = 0;
+    document.getElementById('setup-step-0').style.display = 'block';
+    document.getElementById('setup-step-1').style.display = 'none';
+    document.getElementById('setup-back').style.display = 'none';
+  }
+}
+
+// ── SYSTEM HEALTH POLLING ──────────────────────────────────────────────────
+
+async function pollHealth() {
+  try {
+    const r = await fetch(ORC + '/health', { signal: AbortSignal.timeout(3000) });
+    const d = await r.json();
+    const systems = d.systems || {};
+    for (const [id, info] of Object.entries(systems)) {
+      const dot = document.getElementById('dot-' + id);
+      if (dot) {
+        dot.className = 'sys-dot ' + (info.online ? 'online' : 'offline');
+      }
+      _sysHealth[id] = info;
+      // Feed health to FIELD attractor
+      if (typeof FIELD !== 'undefined') {
+        const h = info.online ? (.5 + Math.min(.5, (1000 - Math.min(info.ms||500, 1000))/1000)) : 0;
+        FIELD.setHealth(id, h);
+      }
+    }
+    _renderSystemTiles();
+    _updateHeroColor();
+  } catch {
+    // orchestrator offline — mark all as offline
+    Object.keys(SYSTEMS).forEach(id => {
+      const dot = document.getElementById('dot-' + id);
+      if (dot) dot.className = 'sys-dot offline';
+    });
+    _updateHeroColor();
+  }
+}
+
+// Hero colour responds to system health — more systems online = brighter cyan
+function _updateHeroColor() {
+  const hero = document.querySelector('.hero-nexus');
+  if (!hero) return;
+  const onlineCount = Object.values(_sysHealth).filter(s => s.online).length;
+  const total = Object.keys(SYSTEMS).length;
+  const ratio = onlineCount / Math.max(1, total);
+
+  if (ratio > .8) {
+    // All systems nominal — full cyan glory
+    hero.style.color       = '#00d4ff';
+    hero.style.textShadow  = '0 0 80px rgba(0,212,255,.7), 0 0 160px rgba(0,212,255,.3)';
+  } else if (ratio > .4) {
+    // Partial — amber tinge
+    hero.style.color       = '#f59e0b';
+    hero.style.textShadow  = '0 0 60px rgba(245,158,11,.5)';
+  } else {
+    // Most offline — dim magenta
+    hero.style.color       = '#cc44ff';
+    hero.style.textShadow  = '0 0 40px rgba(204,68,255,.3)';
+  }
+}
+
+function _renderSystemTiles() {
+  const grid = document.getElementById('systems-grid');
+  if (!grid) return;
+  grid.innerHTML = Object.values(SYSTEMS).map((sys, idx) => {
+    const health = _sysHealth[sys.id] || {};
+    const online = health.online || false;
+    const ms     = health.ms;
+    const msStr  = ms != null ? (ms < 10 ? '<10ms' : ms + 'ms') : '';
+    const latColor = ms == null ? 'var(--text4)' : ms < 50 ? 'var(--green)' : ms < 200 ? 'var(--amber)' : 'var(--red)';
+    const delay  = (idx * .06).toFixed(2) + 's';
+    return `
+    <div class="system-tile" style="--sys-color:${sys.color};animation-delay:${delay};"
+      ${sys.tab ? `onclick="switchTab('${sys.tab}')"` : ''}
+      title="${sys.label} :${sys.port}">
+      <div class="st-dot-row">
+        <div class="st-dot ${online ? 'online' : ''}"
+          style="background:${online?sys.color:'var(--text4)'};${online?`box-shadow:0 0 6px ${sys.color};`:''}"></div>
+        <span class="st-name">${sys.label.toUpperCase()}</span>
+        <span class="st-port" style="color:${latColor}">${msStr || ':' + sys.port}</span>
+      </div>
+      <div class="st-desc">${sys.desc}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
+        <span class="st-badge">${sys.badge}</span>
+        ${online ? `<span style="font-size:8px;color:${sys.color};font-family:var(--mono);">ONLINE</span>`
+                 : `<span style="font-size:8px;color:var(--text4);font-family:var(--mono);">OFFLINE</span>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── NCP PILL (Guardian provider state) ────────────────────────────────────
+
+async function refreshPill() {
+  try {
+    const r = await fetch('http://127.0.0.1:7820/health', { signal: AbortSignal.timeout(2000) });
+    const d = await r.json();
+    const provs   = Object.keys(d.providers || {});
+    const friction = d.friction || 0;
+    const color   = friction > .5 ? 'var(--red)' : friction > .2 ? 'var(--amber)' : 'var(--green)';
+
+    document.getElementById('ncp-dot').style.background  = color;
+    document.getElementById('ncp-dot').style.boxShadow   = `0 0 6px ${color}`;
+    document.getElementById('ncp-label').style.color     = color;
+    document.getElementById('ncp-providers').textContent = provs.length ? provs.join(', ') : 'no tabs';
+  } catch {
+    document.getElementById('ncp-dot').style.background = 'var(--text4)';
+    document.getElementById('ncp-dot').style.boxShadow  = 'none';
+  }
+}
+
+// ── ENTROPY METER ──────────────────────────────────────────────────────────
+
+async function refreshEntropy() {
+  try {
+    const [h, g] = await Promise.allSettled([
+      fetch('http://127.0.0.1:7820/health',{signal:AbortSignal.timeout(1500)}).then(r=>r.json()),
+      fetch('http://127.0.0.1:7820/gaps',  {signal:AbortSignal.timeout(1500)}).then(r=>r.json()),
+    ]);
+    const health    = h.status==='fulfilled' ? h.value : {};
+    const gaps      = g.status==='fulfilled' ? g.value : {};
+    const provCount = Object.keys(health.providers||{}).length;
+    const openGaps  = (gaps.gaps||[]).filter(x=>x.status==='open').length;
+    const friction  = Math.min(1, health.friction || 0);
+
+    const ncp  = Math.max(0, 1 - provCount * 0.4);
+    const gapS = Math.min(1, openGaps / 10);
+    const ent  = (friction * .4 + gapS * .25 + ncp * .2).toFixed(2);
+
+    const color  = ent > .6 ? 'var(--red)' : ent > .3 ? 'var(--amber)' : 'var(--green)';
+    const pct    = Math.round(ent * 100);
+    document.getElementById('entropy-bar').style.width      = pct + '%';
+    document.getElementById('entropy-bar').style.background = color;
+    document.getElementById('entropy-val').textContent      = ent;
+    document.getElementById('entropy-val').style.color      = color;
+  } catch {}
+}
+
+// ── PROJECTS ───────────────────────────────────────────────────────────────
+
+async function loadProjects() {
+  try {
+    const r = await fetch(ORC + '/api/idearium/ideas', { signal: AbortSignal.timeout(3000) });
+    const d = await r.json();
+    const all   = d.ideas || d.data?.ideas || [];
+    const ideas = all.slice(0, 12);
+    renderProjectGrid(ideas);
+
+    // Update stats
+    const active   = all.filter(i => ['seed','expanding','tensioned','specced','building'].includes(i.phase)).length;
+    const complete = all.filter(i => i.phase === 'complete').length;
+    const avgSnr   = all.length ? (all.reduce((s,i) => s+(i.snr||0),0)/all.length*100).toFixed(0) : 0;
+    const _s = id => { const el=document.getElementById(id); if(el) el.textContent=el.dataset.v; };
+    const setS = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+    setS('stat-total',    all.length);
+    setS('stat-active',   active);
+    setS('stat-complete', complete);
+    setS('stat-snr',      avgSnr + '%');
+
+    // Pulse idearium attractor on load
+    if (all.length > 0) FIELD?.pulse('idearium', .6);
+
+    // Update entry card hints
+    const hint = document.getElementById('entry-projects-hint');
+    if (hint) hint.textContent = all.length + ' PROJECT' + (all.length !== 1 ? 'S' : '') + ' LOADED';
+  } catch {
+    renderProjectGrid([]);
+    ['stat-total','stat-active','stat-complete','stat-snr'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.textContent = '—';
+    });
+    const hint = document.getElementById('entry-projects-hint');
+    if (hint) hint.textContent = 'IDEARIUM OFFLINE';
+  }
+}
+
+function renderProjectGrid(ideas) {
+  const grid = document.getElementById('projects-grid');
+  if (!grid) return;
+
+  if (!ideas.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">◫</div>
+        <div class="empty-title">NO PROJECTS YET</div>
+        <div class="empty-desc">Start by building a new spec or<br>open Idearium to import existing work.</div>
+        <button class="btn primary" onclick="openSpecWizard()" style="margin-right:8px;">✦ NEW SPEC</button>
+        <button class="btn" onclick="switchTab('idearium')">OPEN IDEARIUM →</button>
+      </div>
+      <div class="project-card add-new" onclick="openSpecWizard()">
+        <span style="font-size:18px;opacity:.5;">+</span>NEW SPEC
+      </div>`;
+    return;
+  }
+
+  const cards = ideas.map((idea, idx) => {
+    const snrPct   = Math.round((idea.snr || 0) * 100);
+    const snrColor = snrPct > 80 ? 'var(--green)' : snrPct > 50 ? 'var(--amber)' : 'var(--text3)';
+    const agoDays  = Math.floor((Date.now() - (idea.updatedAt||idea.createdAt||0)) / 86400000);
+    const agoStr   = agoDays === 0 ? 'today' : agoDays === 1 ? 'yesterday' : agoDays + 'd ago';
+    const delay    = (idx * .05).toFixed(2) + 's';
+    return `
+    <div class="project-card" onclick="openProject('${idea.uuid}')"
+      style="animation-delay:${delay};">
+      <div class="pc-phase phase-${idea.phase || 'seed'}">${(idea.phase||'seed').toUpperCase()}</div>
+      <div class="pc-title" title="${esc(idea.title)}">${esc(idea.title)}</div>
+      <div class="pc-meta">
+        <span style="color:${snrColor}">SNR ${snrPct}%</span>
+        <span>${idea.gapCount||0} gaps</span>
+        <span style="margin-left:auto">${agoStr}</span>
+      </div>
+      <div class="pc-snr-bar">
+        <div class="pc-snr-fill" style="width:${snrPct}%;background:${snrColor};"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.innerHTML = cards + `
+    <div class="project-card add-new" onclick="openSpecWizard()" style="animation-delay:${(ideas.length*.05).toFixed(2)}s;">
+      <span style="font-size:18px;opacity:.5;">+</span>NEW
+    </div>`;
+}
+
+function openProject(uuid) {
+  switchTab('idearium');
+  // Post message to idearium iframe once loaded
+  const iframe = document.getElementById('iframe-idearium');
+  if (iframe && iframe.contentWindow) {
+    try { iframe.contentWindow.postMessage({ type:'NEXUS_OPEN_IDEA', uuid }, '*'); } catch {}
+  }
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── SSE ────────────────────────────────────────────────────────────────────
+
+function connectSSE() {
+  try {
+    _sseConn = new EventSource(ORC + '/sse');
+    _sseConn.onmessage = e => {
+      try {
+        const d = JSON.parse(e.data);
+        if (d.type === 'orchestrator.watchdog.tick') {
+          const sys = d.systems || {};
+          for (const [id, info] of Object.entries(sys)) {
+            const dot = document.getElementById('dot-' + id);
+            if (dot) dot.className = 'sys-dot ' + (info.online ? 'online' : 'offline');
+            _sysHealth[id] = info;
+            // Feed health to FIELD
+            if (FIELD && info.online !== undefined) {
+              FIELD.setHealth(id, info.online ? (.5 + Math.random()*.4) : 0);
+            }
+          }
+          _renderSystemTiles();
+        }
+        if (d.type === 'idearium.idea.created' || d.type === 'idearium.idea.updated') {
+          loadProjects();
+          FIELD?.pulse('idearium', 1.2);
+        }
+        if (d.type === 'guardian.provider.connected') {
+          refreshPill(); refreshEntropy();
+          FIELD?.pulse('guardian', 1.5);
+          FIELD?.setHealth('guardian', .9);
+        }
+        if (d.type === 'guardian.provider.disconnected') {
+          refreshPill(); refreshEntropy();
+          FIELD?.setHealth('guardian', .3);
+        }
+        if (d.type === 'guardian.job.complete' || d.type === 'orchestrator.guardian.job.complete') {
+          FIELD?.pulse('guardian', 1.2);
+        }
+        if (d.type === 'cortex.gap.found' || d.type === 'orchestrator.cortex.gap.found') {
+          FIELD?.pulse('cortex', .8);
+        }
+        if (d.type?.includes('bridge')) {
+          FIELD?.pulse('bridge', .6);
+        }
+        if (d.type?.includes('emerge')) {
+          FIELD?.pulse('emerge', .6);
+        }
+        // Activity feed — log all interesting events
+        const _skip = ['orchestrator.watchdog.tick','orchestrator.connected'];
+        if (!_skip.includes(d.type)) {
+          const detail = d.title || d.name || d.jobId?.slice(0,8) || d.provider || '';
+          addActivity(d.type, detail);
+        }
+      } catch {}
+    };
+    _sseConn.onerror = () => setTimeout(connectSSE, 5000);
+  } catch {}
+}
+
+// ── CANVAS — PARTICLE FIELD ────────────────────────────────────────────────
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NEXUS FIELD — living space canvas
+// Five system attractors. Particles flow toward active systems.
+// Attractor strength = live system health. Pulse on SSE events.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const FIELD = (() => {
+  const canvas = document.getElementById('nexus-canvas');
+  if (!canvas) return { pulse:()=>{}, setHealth:()=>{} };
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0;
+
+  // ── Attractor definitions — one per major system ─────────────────────────
+  const ATT_DEFS = [
+    { id:'guardian',  label:'GUARDIAN',  color:'#9b7fe8', x:.50, y:.22, base:.010 },
+    { id:'cortex',    label:'CORTEX',    color:'#2dd4bf', x:.18, y:.60, base:.009 },
+    { id:'idearium',  label:'IDEARIUM',  color:'#4a9eff', x:.82, y:.60, base:.009 },
+    { id:'bridge',    label:'BRIDGE',    color:'#f0a500', x:.35, y:.85, base:.007 },
+    { id:'emerge',    label:'EMERGE',    color:'#3ecf8e', x:.65, y:.85, base:.007 },
+  ];
+
+  // Live health per system (0..1)
+  const _health   = { guardian:.3, cortex:.3, idearium:.3, bridge:.2, emerge:.2 };
+  // Event rate per system (decays over time)
+  const _evRate   = { guardian:0, cortex:0, idearium:0, bridge:0, emerge:0 };
+
+  // ── World ─────────────────────────────────────────────────────────────────
+  let world = null;
+
+  function mkWorld(w, h) {
+    // Deep-space stars (static background layer)
+    const stars = Array.from({ length:260 }, () => ({
+      x: Math.random()*w, y: Math.random()*h,
+      r: Math.random()*.9+.15,
+      a: Math.random()*.5+.1,
+      da:(Math.random()-.5)*.002,
+      vx:(Math.random()-.5)*.05,
+      vy:(Math.random()-.5)*.04,
+    }));
+    // Particles — each assigned to an attractor
+    const particles = Array.from({ length:130 }, (_, i) => {
+      const def = ATT_DEFS[i % ATT_DEFS.length];
+      return {
+        x:  def.x*w + (Math.random()-.5)*w*.4,
+        y:  def.y*h + (Math.random()-.5)*h*.4,
+        vx: (Math.random()-.5)*.6,
+        vy: (Math.random()-.5)*.6,
+        att: def.id,
+        size: .9 + Math.random()*1.1,
+      };
+    });
+    // Attractors (live copies of ATT_DEFS with mutable strength)
+    const attractors = ATT_DEFS.map(a => ({ ...a, strength: a.base }));
+    return { stars, particles, attractors, t:0, W:w, H:h };
+  }
+
+  function step() {
+    const { particles, attractors, W: w, H: h } = world;
+    world.t += .016;
+
+    // Decay event rates
+    for (const k of Object.keys(_evRate)) _evRate[k] *= .97;
+
+    for (const p of particles) {
+      const att = attractors.find(a => a.id === p.att) || attractors[0];
+      const health = _health[att.id] ?? .3;
+      const tx = att.x * w, ty = att.y * h;
+      const effStr = att.strength * (.5 + health);
+      p.vx += (tx - p.x) * effStr;
+      p.vy += (ty - p.y) * effStr;
+      const damp = .93 + health * .04;
+      p.vx *= damp; p.vy *= damp;
+      p.x += p.vx; p.y += p.vy;
+      p.x = Math.max(2, Math.min(w-2, p.x));
+      p.y = Math.max(2, Math.min(h-2, p.y));
+      // Respawn at source when particle reaches attractor
+      const dist = Math.hypot(p.x - tx, p.y - ty);
+      if (dist < 4) {
+        const src = ATT_DEFS[Math.floor(Math.random()*ATT_DEFS.length)];
+        p.x = src.x*w + (Math.random()-.5)*80;
+        p.y = src.y*h + (Math.random()-.5)*80;
+        p.vx = (Math.random()-.5)*1.5;
+        p.vy = (Math.random()-.5)*1.5;
+      }
+    }
+  }
+
+  function draw() {
+    if (!world) return requestAnimationFrame(draw);
+    const { stars, particles, attractors, W: w, H: h } = world;
+
+    // Resize if needed
+    const rw = window.innerWidth, rh = window.innerHeight;
+    if (canvas.width !== rw || canvas.height !== rh) {
+      canvas.width = W = world.W = rw;
+      canvas.height = H = world.H = rh;
+    }
+
+    step();
+
+    // Trail fade
+    ctx.fillStyle = 'rgba(3,5,9,.22)';
+    ctx.fillRect(0, 0, w, h);
+
+    // Deep stars
+    for (const s of stars) {
+      s.x = (s.x + s.vx + w) % w;
+      s.y = (s.y + s.vy + h) % h;
+      s.a = Math.max(.05, Math.min(.6, s.a + s.da));
+      if (s.a <= .05 || s.a >= .6) s.da *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(190,200,255,${s.a})`;
+      ctx.fill();
+    }
+
+    // Connection lines between active attractors
+    for (let i = 0; i < ATT_DEFS.length; i++) {
+      for (let j = i+1; j < ATT_DEFS.length; j++) {
+        const a = attractors[i], b = attractors[j];
+        const rate = (_evRate[a.id]||0) + (_evRate[b.id]||0);
+        if (rate < .3) continue;
+        ctx.beginPath();
+        ctx.moveTo(a.x*w, a.y*h);
+        ctx.lineTo(b.x*w, b.y*h);
+        const alpha = Math.min(.12, rate * .04);
+        ctx.strokeStyle = a.color + Math.floor(alpha*255).toString(16).padStart(2,'0');
+        ctx.lineWidth = .5;
+        ctx.stroke();
+      }
+    }
+
+    // Particles
+    for (const p of particles) {
+      const def = ATT_DEFS.find(d => d.id === p.att) || ATT_DEFS[0];
+      const spd = Math.min(1, Math.hypot(p.vx, p.vy)/3);
+      const alpha = Math.floor((.3 + spd*.5)*255).toString(16).padStart(2,'0');
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size*(.7+spd*.5), 0, Math.PI*2);
+      ctx.fillStyle = def.color + alpha;
+      ctx.fill();
+    }
+
+    // Attractor nodes
+    for (const a of attractors) {
+      const h2 = _health[a.id] ?? .3;
+      const er  = _evRate[a.id] || 0;
+      const ax = a.x*w, ay = a.y*h;
+      const baseR = 5 + h2*7;
+      const pulseR = baseR + er*5;
+
+      // Outer glow on event
+      if (er > .3) {
+        ctx.beginPath();
+        ctx.arc(ax, ay, pulseR+7, 0, Math.PI*2);
+        ctx.strokeStyle = a.color + Math.floor(er*55).toString(16).padStart(2,'0');
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      // Health ring
+      ctx.beginPath();
+      ctx.arc(ax, ay, pulseR, 0, Math.PI*2);
+      ctx.strokeStyle = a.color + '66';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(ax, ay, baseR*.35, 0, Math.PI*2);
+      ctx.fillStyle = a.color;
+      ctx.fill();
+      // Label (very subtle — only on home panel)
+      if (document.getElementById('panel-home')?.hasAttribute('data-active')) {
+        ctx.font = 'bold 8px monospace';
+        ctx.fillStyle = a.color + '88';
+        ctx.textAlign = 'center';
+        ctx.fillText(a.label, ax, ay - pulseR - 4);
+        // Health %
+        ctx.font = '7px monospace';
+        ctx.fillStyle = 'rgba(180,190,220,.3)';
+        ctx.fillText(Math.round(h2*100)+'%', ax, ay + pulseR + 10);
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  function pulse(sysId, boost = 1) {
+    _evRate[sysId] = Math.min(5, (_evRate[sysId]||0) + boost);
+    const att = world?.attractors.find(a => a.id === sysId);
+    if (att) {
+      const def = ATT_DEFS.find(d => d.id === sysId);
+      att.strength = Math.min(.05, (def?.base||.009) + .005*boost);
+      setTimeout(() => {
+        if (world) {
+          const a2 = world.attractors.find(a => a.id === sysId);
+          if (a2) a2.strength = ATT_DEFS.find(d => d.id === sysId)?.base || .009;
+        }
+      }, 1200);
+    }
+    // Burst particles toward this attractor
+    if (world) {
+      const n = Math.floor(boost * 4);
+      for (let i = 0; i < n; i++) {
+        const src = world.particles[Math.floor(Math.random()*world.particles.length)];
+        if (src) { src.att = sysId; src.vx += (Math.random()-.5)*3*boost; src.vy += (Math.random()-.5)*3*boost; }
+      }
+    }
+  }
+
+  function setHealth(sysId, val) {
+    _health[sysId] = Math.max(0, Math.min(1, val));
+  }
+
+  // Init
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  world = mkWorld(W, H);
+  requestAnimationFrame(draw);
+  window.addEventListener('resize', () => {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    world = mkWorld(W, H);
+  });
+
+  return { pulse, setHealth };
+})();
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+
+function toast(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.getElementById('toast-root').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── ACTIVITY FEED ─────────────────────────────────────────────────────────
+
+const _ACTIVITY_MAX = 40;
+let _activityCount  = 0;
+
+const ACTIVITY_LABELS = {
+  'idearium.idea.created':      { label:'Idea created',          color:'var(--blue)' },
+  'idearium.idea.updated':      { label:'Idea updated',          color:'var(--blue)' },
+  'idearium.spec.built':        { label:'Spec built',            color:'var(--green)' },
+  'guardian.job.complete':      { label:'Job complete',          color:'var(--green)' },
+  'guardian.provider.connected':{ label:'Provider connected',    color:'var(--cyan)' },
+  'guardian.provider.disconnected':{ label:'Provider disconnected', color:'var(--amber)' },
+  'cortex.gap.found':           { label:'Gap detected',          color:'var(--pink)' },
+  'guardian.baseline.deviation':{ label:'Baseline deviation',    color:'var(--amber)' },
+  'orchestrator.watchdog.tick': { label:'Watchdog tick',         color:'var(--text4)' },
+};
+
+function addActivity(type, detail) {
+  const feed = document.getElementById('activity-feed');
+  if (!feed) return;
+
+  // Skip noise
+  if (type === 'orchestrator.watchdog.tick' && _activityCount > 5) return;
+  _activityCount++;
+
+  const meta   = ACTIVITY_LABELS[type] || { label: type.split('.').pop(), color: 'var(--text3)' };
+  const time   = new Date().toTimeString().slice(0, 8);
+  const sysId  = type.split('.')[0];
+  const sys    = SYSTEMS[sysId];
+
+  const el = document.createElement('div');
+  el.style.cssText = 'display:flex;align-items:center;gap:8px;padding:5px 8px;' +
+    'background:rgba(13,16,24,.5);border-radius:2px;font-size:9px;font-family:var(--mono);' +
+    'animation:cardIn .2s ease forwards;opacity:0;flex-shrink:0;';
+  el.innerHTML =
+    `<span style="color:var(--text4);flex-shrink:0;">${time}</span>` +
+    `<span style="width:6px;height:6px;border-radius:50%;background:${sys?.color||meta.color};flex-shrink:0;"></span>` +
+    `<span style="color:${meta.color};min-width:130px;flex-shrink:0;">${meta.label}</span>` +
+    `<span style="color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${detail||''}</span>`;
+
+  feed.insertBefore(el, feed.firstChild);
+  while (feed.children.length > _ACTIVITY_MAX) feed.lastChild?.remove();
+}
+
+// ── BOOT ───────────────────────────────────────────────────────────────────
+
+(function boot() {
+  // Increment session count
+  saveSession({ stats: { sessionCount: (loadSession()?.stats?.sessionCount || 0) + 1 } });
+
+  // Render static system tiles immediately
+  _renderSystemTiles();
+
+  // Check first-time setup
+  _checkSetup();
+
+  // Check continue banner
+  _checkContinue();
+
+  // Load data
+  pollHealth();
+  loadProjects();
+  refreshPill();
+  refreshEntropy();
+
+  // Connect SSE
+  connectSSE();
+
+  // Poll intervals
+  setInterval(pollHealth,      10000);
+  setInterval(refreshPill,      4000);
+  setInterval(refreshEntropy,  10000);
+})();
+</script>
+</body>
+</html>
