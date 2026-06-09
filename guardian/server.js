@@ -3,8 +3,6 @@ const bridge = (() => { try { return require('../bridge/nexus-bridge'); } catch(
 
 
 const http       = require('http');
-const https      = require('https');
-const tls        = require('tls');
 // NCP — NEXUS Channel Protocol (replaces WebSocket entirely)
 // Zero external dependencies. SSE server→browser, fetch() browser→server.
 // See lib/ncp.js for protocol spec.
@@ -147,39 +145,14 @@ function _postEvent(type, payload, opts) {
 function _postBridge(type, payload) {
   if (nc) nc.postBridge(type, payload).catch(() => {});
 }
-const WSS_PORT      = process.env.GUARDIAN_WS_PORT    || 7821;
 const DROPZONE_PORT = process.env.GUARDIAN_DROPZONE_PORT || 7822;
 const NEXUS_URL     = process.env.NEXUS_URL || 'http://127.0.0.1:3748';
 
-const CERT_FILE = path.join(__dirname, 'guardian-cert.pem');
-const KEY_FILE  = path.join(__dirname, 'guardian-key.pem');
 const DB_FILE   = path.join(__dirname, 'guardian.db');
 const SCHEMA_FILE = path.join(__dirname, 'schema.sql');
 
 // ── self-signed cert generation ───────────────────────────────────────────────
 
-function ensureCert() {
-  // Tries to generate a TLS cert if one doesn't exist.
-  // Throws on failure — caller handles it.
-  if (fs.existsSync(CERT_FILE) && fs.existsSync(KEY_FILE)) {
-    console.log('\x1b[90m[guardian] TLS cert exists\x1b[0m');
-    return;
-  }
-  console.log('\x1b[90m[guardian] Generating self-signed TLS cert...\x1b[0m');
-  try {
-    execSync(
-      `openssl req -x509 -newkey rsa:2048 -keyout "${KEY_FILE}" -out "${CERT_FILE}" ` +
-      `-days 825 -nodes -subj "/CN=127.0.0.1" ` +
-      `-addext "subjectAltName=IP:127.0.0.1,DNS:localhost"`,
-      { stdio: 'pipe' }
-    );
-    console.log('\x1b[32m[guardian] TLS cert generated via openssl ✓\x1b[0m');
-    return;
-  } catch(_) {
-    // openssl not available — try selfsigned npm package
-  }
-  generateCertWithNode();  // throws if selfsigned not installed
-}
 
 function generateCertWithNode() {
   // Use selfsigned npm package if available — throws if it can't generate.
@@ -206,19 +179,6 @@ function generateCertWithNode() {
 // ensureCert() is called lazily inside startWSS(), not at module scope.
 let tlsOpts = null;
 
-function loadTlsOpts() {
-  // Returns tlsOpts if cert exists, null otherwise.
-  // Never throws, never exits — caller decides what to do.
-  try {
-    if (fs.existsSync(CERT_FILE) && fs.existsSync(KEY_FILE)) {
-      return {
-        key:  fs.readFileSync(KEY_FILE),
-        cert: fs.readFileSync(CERT_FILE),
-      };
-    }
-  } catch(_) {}
-  return null;
-}
 
 // ── provider registry ─────────────────────────────────────────────────────────
 
@@ -484,6 +444,21 @@ function _handleNCPMessage(msg) {
         });
         bus.emit('guardian.job.complete', { jobId, provider, chars: finalText.length,
           gaps: gaps.length, gapDrift });
+        // §WM.1 — mirror completed job into Cortex working memory
+        if (global._guardianKernelClient) {
+          const completedJob = jobs.get(jobId) || {};
+          global._guardianKernelClient.mirrorJob({
+            ...completedJob,
+            id:          jobId,
+            provider:    provider || completedJob.provider,
+            status:      'complete',
+            response:    finalText,
+            completedAt: Date.now(),
+          });
+          if (completedJob._kernelJobId) {
+            global._guardianKernelClient.completeRelayed(completedJob._kernelJobId, finalText, null);
+          }
+        }
         cockpitBroadcast({ type: 'job.complete', jobId, provider,
           chars: finalText.length, gaps: gaps.length, gapDrift, ts: Date.now() });
       }
@@ -674,11 +649,15 @@ const ncp = createNCPServer({
   onConnect: ({ provider, tabId }) => {
     console.log(`[guardian] NCP connected: provider=${provider} tab=${tabId}`);
     bus.emit('guardian.provider.connected', { provider, tabId });
+    // §WM.1 — mirror into Cortex working memory
+    if (global._guardianKernelClient) global._guardianKernelClient.mirrorProvider(provider, true, { tabId });
     flushQueuedJobs(provider);
   },
   onDisconnect: ({ provider, tabId }) => {
     console.log(`[guardian] NCP disconnected: provider=${provider} tab=${tabId}`);
     bus.emit('guardian.provider.disconnected', { provider, tabId });
+    // §WM.1 — mirror into Cortex working memory
+    if (global._guardianKernelClient) global._guardianKernelClient.mirrorProvider(provider, false, { tabId });
   },
   busEmit: (type, data) => bus.emit(type, data),
 });
@@ -692,162 +671,11 @@ const PROVIDERS = new Proxy({}, {
 // httpsServer + wss → null (no longer needed)
 let httpsServer = null;
 let wss         = null;  // kept for module.exports compatibility
+function onWss() {}      // no-op shim — WSS replaced by NCP; calls are harmless
+function startWSS() { return { ok: true, note: 'WSS replaced by NCP' }; }
 
-function onWss() {}  // no-op shim
 
-function startWSS() {
-  // DEPRECATED: WSS replaced by NCP (lib/ncp.js).
-  // This function is kept for backwards compatibility but does nothing.
-  return { ok: true, note: 'WSS replaced by NCP — no action needed' };
-  // Original implementation below (dead code):
-  // Attempt to start the WSS server on WSS_PORT.
-  // Returns { ok, error } — never throws, never exits.
-  // Called from the boot sequence as a SOFT phase.
-  const opts = loadTlsOpts();
-  if (!opts) {
-    return { ok: false, error: 'TLS cert missing — run: node guardian/server.js --gen-cert, or: npm install selfsigned' };
-  }
-  try {
-    httpsServer = https.createServer(opts, (req, res) => {
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(`<!DOCTYPE html><html><head><title>Guardian WSS</title>
-<style>body{background:#111;color:#eee;font-family:monospace;padding:40px;text-align:center}</style>
-</head><body>
-<h2 style="color:#2ecc71">✓ Guardian TLS cert accepted</h2>
-<p>You can close this tab. The userscript will now connect successfully.</p>
-<p style="color:#888;font-size:12px">wss://127.0.0.1:${WSS_PORT} is ready</p>
-</body></html>`);
-    });
-    wss = new WebSocketServer({ server: httpsServer });
-    _flushWssHandlers();
-    return { ok: true };
-  } catch(e) {
-    return { ok: false, error: e.message };
-  }
-}
 
-// Helper: safely broadcast to wss clients (wss may be null)
-function wssBroadcast(obj) {
-  if (!wss) return;
-  for (const ws of wss.clients) send(ws, obj);
-}
-
-  onWss('connection', (ws, req) => {
-  let providerName = null;
-  const clientIp     = req.socket.remoteAddress;
-  const clientOrigin = req.headers['origin'] || '(no origin)';
-  console.log(`[guardian] WS CONNECTED  ip:${clientIp}  origin:${clientOrigin}`);
-
-  ws.on('message', (raw) => {
-    console.log(`[guardian] MSG (${providerName || 'unregistered'}): ${String(raw).slice(0, 200)}`);
-    let msg;
-    try { msg = JSON.parse(raw); }
-    catch (e) { console.error(`[guardian] JSON parse error: ${e.message}`); return; }
-
-    switch (msg.type) {
-      case 'GUARDIAN_REGISTER': {
-        console.log(`[guardian] REGISTER  provider:"${msg.provider}"  host:"${msg.host}"`);
-        const p = normaliseProvider(msg.provider || msg.host);
-        console.log(`[guardian] normaliseProvider → "${p}"`);
-        if (!p) {
-          console.error(`[guardian] REGISTER rejected — unknown: ${msg.provider || msg.host}`);
-          send(ws, { type: 'ERROR', error: `Unknown provider: ${msg.provider}` });
-          return;
-        }
-        providerName = p;
-        PROVIDERS[p] = ws;
-        console.log(`[guardian] registered: ${p} ✓`);
-        send(ws, { type: 'GUARDIAN_READY', provider: p });
-        for (const [, job] of jobs) {
-          if (job.provider === p && job.status === 'pending') dispatchJob(job);
-        }
-        break;
-      }
-      case 'GUARDIAN_DELIVERED': {
-        updateJob(msg.jobId, { status: 'delivered' });
-        console.log(`[guardian] delivered: ${msg.jobId}`);
-        break;
-      }
-      case 'GUARDIAN_CHUNK': {
-        const job = jobs.get(msg.jobId);
-        if (!job) return;
-        job.response += (msg.text || '');
-        job.status    = 'streaming';
-        job.updatedAt = Date.now();
-        broadcast({ type: 'GUARDIAN_CHUNK', jobId: msg.jobId, text: msg.text });
-        break;
-      }
-      case 'GUARDIAN_COMPLETE': {
-        const job = jobs.get(msg.jobId);
-        if (!job) return;
-        if (msg.text) job.response = msg.text;
-        updateJob(msg.jobId, { status: 'complete' });
-        logResponse({ jobId: job.id, provider: job.provider,
-          command: job.command, prompt: job.prompt, response: job.response });
-        console.log(`[guardian] complete: ${job.id} (${job.response.length} chars)`);
-        // Auto-upload any code blocks in the response
-        autoUploadBlocks(job.response, job.provider, job.id);
-        writeToNexus(job).catch(() => {});
-        // Post to orchestrator ledger
-        _postLedger('guardian', 'guardian.job.complete', {
-          jobId: job.id, provider: job.provider, command: job.command,
-          chars: job.response?.length || 0,
-        });
-        break;
-      }
-      case 'GUARDIAN_ARTIFACT': {
-        // Userscript sends: { type, jobId, filename, content, mimeType }
-        if (!msg.jobId || !msg.content) return;
-        const job = jobs.get(msg.jobId);
-        const provider = job?.provider || 'artifact';
-        const filename = msg.filename || `${provider}-artifact-${Date.now()}.txt`;
-        const result   = dropzone?.autoUpload(filename, msg.content);
-        if (result) {
-          // Echo URL back to userscript so it can display it
-          send(ws, { type: 'GUARDIAN_ARTIFACT_SAVED', jobId: msg.jobId,
-            url: result.url, filename: result.filename, size: result.size });
-        }
-        break;
-      }
-      case 'GUARDIAN_FILE_UPLOAD': {
-        // Userscript sends: { type, jobId, filename, dataBase64, mimeType }
-        if (!msg.filename || !msg.dataBase64) return;
-        const job      = jobs.get(msg.jobId);
-        const provider = job?.provider || 'upload';
-        const buf      = Buffer.from(msg.dataBase64, 'base64');
-        const result   = dropzone?.autoUpload(msg.filename, buf);
-        if (result) {
-          send(ws, { type: 'GUARDIAN_FILE_SAVED', jobId: msg.jobId,
-            url: result.url, filename: result.filename, size: result.size });
-        }
-        break;
-      }
-      case 'GUARDIAN_ERROR': {
-      _baseline.observe({ type: 'GUARDIAN_ERROR', latencyMs: 0, error: true, ts: Date.now() });
-      _baseline.logFailure({ id: 'guardian-error', error: msg.error || 'unknown', friction: 0.7 });
-        updateJob(msg.jobId, { status: 'failed', error: msg.error });
-        console.error(`[guardian] error on ${msg.jobId}: ${msg.error}`);
-        break;
-      }
-      case 'GUARDIAN_HEARTBEAT': {
-        send(ws, { type: 'GUARDIAN_HEARTBEAT_ACK', ts: Date.now() });
-        break;
-      }
-    }
-  });
-
-  ws.on('close', (code, reason) => {
-    console.log(`[guardian] WS CLOSED (${providerName || 'unregistered'}) code:${code}`);
-    if (providerName && PROVIDERS[providerName] === ws) {
-      PROVIDERS[providerName] = null;
-      console.log(`[guardian] disconnected: ${providerName}`);
-    }
-  });
-
-  ws.on('error', (err) => {
-    console.error(`[guardian] WS ERROR (${providerName || 'unregistered'}): ${err.message}`);
-  });
-});
 
 
 // ── WSS boot happens inside the HTTP server's boot sequence (SOFT) ──────────
@@ -1049,6 +877,44 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
         return { ok: true };
       } catch { return { ok: false, msg: 'bridge unavailable' }; }
     }
+  });
+
+  // ── PHASE 13: Cortex mind-bridge + Kernel sync ────────────────────────────
+  // §WM.1 — every Guardian event written to Cortex working memory via
+  //          kernel-client before anything else.
+  // §LAW_III — Cortex is the only write target; kernel gets peer mirrors.
+  seq.phase({ name: 'cortex.mind-bridge', type: 'SOFT',
+    label: 'Cortex working-memory sync + Kernel relay bridge',
+    fn: async () => {
+      const kernelClient = (() => {
+        try { return require('./kernel-client'); }
+        catch (_) {
+          console.warn('[guardian] kernel-client not found — Cortex/kernel sync disabled');
+          return { mirrorJob: () => {}, mirrorProvider: () => {}, mirrorEvent: () => {},
+                   startSync: () => {}, stopSync: () => {}, completeRelayed: () => {} };
+        }
+      })();
+
+      kernelClient.startSync({
+        getState: () => ({
+          version:   '3.5.1',
+          jobs:      jobs.size,
+          providers: Object.fromEntries(
+            ['claude', 'chatgpt', 'gemini', 'ollama'].map(p => [p, ncp.isConnected(p)])
+          ),
+        }),
+        dispatchFn: async ({ provider, command, prompt, _kernelJobId }) => {
+          const job = createJob(provider, command || 'chat', prompt);
+          job._kernelJobId = _kernelJobId;
+          jobs.set(job.id, job);
+          bus.emit('guardian.job.queued', { jobId: job.id, provider, source: 'kernel-relay' });
+          if (ncp.isConnected(provider)) dispatchJob(job);
+          else bus.emit('guardian.tab.needed', { provider, jobId: job.id });
+        },
+      });
+
+      global._guardianKernelClient = kernelClient;
+    },
   });
 
     await seq.run();
@@ -1894,6 +1760,8 @@ function _kernelEmit(type, data, ts) {
   ]);
   if (CORTEX_EVENTS.has(type)) {
     _postEvent(type, data, { source: 'guardian.bus', causedBy: data.jobId || null });
+    // §WM.1 — mirror into Cortex working memory via kernel-client
+    if (global._guardianKernelClient) global._guardianKernelClient.mirrorEvent(type, data);
   }
   // 3. Bridge SSE broadcast (§5.2 — everything on the bus)
   const BRIDGE_EVENTS = new Set([
@@ -3407,41 +3275,10 @@ loadPS();loadDB();updateSB();setInterval(loadPS,5000);setInterval(loadDB,15000);
 </html>`;
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-//  WIRE SISO GATES INTO WSS
-// ══════════════════════════════════════════════════════════════════════════════
-
-onWss('connection', (clientWs) => {
-  clientWs.on('message', (raw) => {
-    try {
-      const msg = JSON.parse(raw);
-      if (msg.type === 'GUARDIAN_ARTIFACT') {
-        bus.emit('guardian.artifact', { hash:msg.hash, name:msg.name, lang:msg.lang, content:msg.content, context:msg.context, type:msg.artifactType||'code_block', chatUrl:msg.chatUrl, chatId:msg.chatUrl?.split('/').pop()||'', account:msg.account, jobId:msg.jobId, direction:'output', provider:'claude' });
-      }
-      if (msg.type === 'GUARDIAN_GAPS') {
-        // Use full GapHunter analysis if response text available
-        const gapsToRecord = msg.gaps?.length ? msg.gaps : [];
-        bus.emit('guardian.gaps', { gaps:gapsToRecord, jobId:msg.jobId, chatId:null, account:msg.account, provider:'claude' });
-      }
-      if (msg.type === 'GUARDIAN_COMPLETE') {
-        // Run GapHunter v3 on completed response
-        const gaps = gaphunterAnalyze(msg.text||'', { minScore: parseFloat(getSetting('gap_min_score','0.25'))||0.25 });
-        if (gaps.length > 0) bus.emit('guardian.gaps', { gaps, jobId:msg.jobId, chatId:null, account:msg.account, provider:'claude' });
-        bus.emit('guardian.job.complete', { jobId:msg.jobId, text:msg.text, chatUrl:msg.chatUrl, account:msg.account, chars:(msg.text||'').length, provider:'claude', source:'guardian-ws', startedTs:Date.now()-10000 });
-        bus.emit('guardian.timeline', { channel:'guardian.job.complete', personId:msg.account, payload:{ jobId:msg.jobId, chars:(msg.text||'').length }, ts:Date.now() });
-      }
-      if (msg.type === 'GUARDIAN_PA_SESSION') bus.emit('guardian.pa.session', { ...msg, provider:'claude' });
-      if (msg.type === 'GUARDIAN_LEDGER_EVENT') {
-        bus.emit('guardian.ledger', { ...msg, provider:'claude' });
-        _postLedger('guardian', 'guardian.ledger.' + (msg.category||'event'), {
-          msg: msg.msg, level: msg.level, meta: msg.meta,
-        });
-      }
-      if (msg.type === 'GUARDIAN_FILE_UPLOAD') bus.emit('guardian.download', { filename:(msg.files||[]).map(f=>f.name).join(','), chatUrl:msg.chatUrl, account:msg.account, jobId:msg.jobId, provider:'claude' });
-      if (msg.type === 'GUARDIAN_DOWNLOAD') bus.emit('guardian.download', { ...msg, provider:'claude' });
-    } catch (_) {}
-  });
-});
+// ── SISO gate wiring moved to _handleNCPMessage (NCP is the transport — no WSS) ──
+// GUARDIAN_ARTIFACT, GUARDIAN_GAPS, GUARDIAN_COMPLETE, GUARDIAN_PA_SESSION,
+// GUARDIAN_LEDGER_EVENT, GUARDIAN_FILE_UPLOAD, GUARDIAN_DOWNLOAD
+// are all handled in the switch statement above via POST /result (NCP).
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  PATCH HTTP SERVER — inject extended routes
@@ -3967,42 +3804,6 @@ const memoryServer = startMemoryServer();
 //  This means the userscript doesn't need to make a separate HTTP call —
 //  guardian already has the data, memory just indexes it.
 
-onWss('connection', (ws) => {
-  ws.on('message', (raw) => {
-    try {
-      const msg = JSON.parse(raw);
-      if (msg.type === 'GUARDIAN_ARTIFACT') {
-        memoryServer.ingest({
-          type: 'ARTIFACT',
-          payload: { hash: msg.hash, name: msg.name || 'artifact', lang: msg.lang, content: msg.content, chatUrl: msg.chatUrl, account: msg.account, jobId: msg.jobId, direction: 'output' },
-          source: 'guardian-ws',
-          chatUrl: msg.chatUrl,
-          account: msg.account,
-        });
-      }
-      if (msg.type === 'GUARDIAN_LEDGER_EVENT') {
-        memoryServer.ingest({
-          type: 'LEDGER',
-          payload: { category: msg.category, msg: msg.msg, meta: msg.meta },
-          source: 'guardian-ws',
-          chatUrl: msg.chatUrl,
-          account: msg.account,
-        });
-      }
-      if (msg.type === 'GUARDIAN_FILE_UPLOAD') {
-        memoryServer.ingest({
-          type: 'FILE_UPLOAD',
-          payload: { files: msg.files, jobId: msg.jobId },
-          source: 'guardian-ws',
-          chatUrl: msg.chatUrl,
-          account: msg.account,
-        });
-      }
-      if (msg.type === 'GUARDIAN_DONE') {
-        memoryServer.ingest({ type: 'JOB_COMPLETE', payload: { jobId: msg.jobId }, source: 'guardian-ws', chatUrl: msg.chatUrl });
-      }
-    } catch (_) {}
-  });
-});
+// [WSS handler removed — NCP is the transport]
 
 module.exports = { server, wss, ncp, jobs, PROVIDERS, dropzoneServer, dropzone, memoryServer };

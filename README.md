@@ -1,109 +1,128 @@
-# NEXUS v1.0
+# NEXUS — Integrated Build v3.5.2
+
+**Two projects. One build. No fragments.**
+
+---
 
 ## What this is
-One folder. Drop on disk. Run in order.
 
-## Boot order
+Guardian and Cortex, fully integrated. Every file is in its canonical location.
+Drop `guardian/` into your Guardian project root and `cortex/` into your Cortex
+project root. Nothing else required.
+
+---
+
+## Projects
+
+### Guardian (`guardian/`)
+
+Browser automation executor. Controls Claude, ChatGPT, Gemini, Ollama via
+NCP (Tampermonkey userscripts). Dispatches jobs, harvests responses, runs
+gap analysis on every completion.
+
+**Entry point:** `guardian/server.js` — HTTP :7820, WebSocket NCP  
+**Userscripts:** `userscript-claude.js`, `userscript-chatgpt.js`  
+**CLI:** `guardian/cli.js`
+
+### Cortex (`cortex/`)
+
+Brain. Source of truth. Owns all persistent state via JAA. Runs the
+guardian observability layer, working memory, and admin HTTP on :3748.
+
+**Entry point:** `cortex/boot.js`  
+**Admin HTTP:** :3748  
+**CLI surface:** `cortex/cortex-v2.js`
+
+---
+
+## Integration layer (new in this build)
+
+### Working Memory (`cortex/working-memory/index.js`)
+Universal event spine. Opens in Phase 1 before anything else.
+Every significant event written here first — causal chain preserved.
+Queryable: `GET /api/wm/tail|search|type|source|chain|chain-deep|since|stats`
+
+### Mind-Bridge (`cortex/guardian/mind-bridge.js`)
+Single contract surface between Cortex and Guardian.
+All `/api/guardian/*` routes. All `/api/wm/*` routes.
+Relay queue with JAA persistence and restart rehydration.
+
+### Guardian Layer modules (poll-registered at boot phase 11)
+- **Siphon** (`cortex/guardian/siphon.js`) — 2s poll. Ingests `guardian.*`
+  events from `event_log` into `chat_sessions`, `chat_messages`,
+  `chat_completions`. Watermarked, idempotent on restart.
+- **Pulse** (`cortex/guardian/pulse.js`) — 3s poll. Reads `guardian.heartbeat`
+  events, maintains `guardian_nodes` with health scoring. Stale (25s) and
+  dead (120s) detection with gap lifecycle management.
+- **Watchman** (`cortex/guardian/watchman.js`) — 5s poll. Synthesises
+  `guardian_health` from `guardian_nodes`. Single source of truth for "is
+  Guardian available". Hysteresis on disconnect and low-health gaps.
+
+### Kernel Client (`guardian/kernel-client.js`)
+Guardian → Cortex write path. Every job completion, provider connect/disconnect,
+and significant bus event mirrors to Cortex working memory before anything else.
+500-event write buffer with retry — events survive Cortex being temporarily down.
+
+### GapHunter v3.1.0 (`guardian/lib/gap-hunter.js`)
+Replaces the v1 gap detector. Same API (`analyze(text)`, `drift(gaps)`).
+Adds: WeakAssumptionHunter, ShadowFieldDetector, ContrastiveGapDetector,
+NegativeSpaceDetector, StructuralAssumptionAuditor, ReversalDetector,
+CodeGapDetector, plus 200+ taxonomy patterns across 60+ domains.
+Every gap row now carries: `subtype`, `confidence`, `load_bearing_question`,
+`signal_note`, `reasons[]`, and `physics` (Theta state vector, emotion,
+coherence, stability from the relational physics engine).
+
+---
+
+## JAA tables (51 total)
+
+New tables added in this build:
+`chat_sessions` `chat_messages` `chat_completions` `guardian_nodes`
+`guardian_health` `lattice_nodes` `lattice_edges` `intent_edges`
+
+All tables declared in `cortex/memory/jaa-tables.js` — single source of truth.
+`cortex/memory/jaa-db.js` — pre-declares all tables on `open()`.
+
+---
+
+## Boot sequence (Cortex)
+
+```
+Phase 0  SOFT  — orchestrator registration
+Phase 1  HARD  — working memory open (§WM.1 — before everything)
+Phase 2  HARD  — JAA + FileStore open (51 tables)
+Phase 3  HARD  — Cobalt core
+Phase 4  HARD  — module deps (Versionium, AgentDispatch)
+Phase 5  HARD  — poll registry + guardian modules registered
+Phase 6  SOFT  — mind-bridge init (relay rehydrated before HTTP)
+Phase 7  HARD  — HTTP admin server :3748
+Phase 8  SOFT  — boot record
+Phase 9  SOFT  — bridge registration
+```
+
+---
+
+## Tests
+
 ```bash
-node cortex/boot.js           # port 3748 — source of truth (always first)
-node guardian/server.js       # port 7820/7821/7822/7823
-node idearium/index.js        # port 4800
-node emerge/emerge-ide.js     # port 4242
+# GapHunter v3 — 58 tests
+node test/gap-hunter-v3.test.js
+
+# Guardian layer — 164 tests (Siphon, Pulse, Watchman, cross-domain, invariants)
+node test/guardian-layer.test.js
 ```
 
-## File system
-```
-nexus/
-├── siso/                     LAYER 0 — event bus primitives
-├── jaa/                      LAYER 1 — persistence (jaa-store.js + schema.sql)
-├── cortex/                   LAYER 2 — source of truth, port 3748
-│   ├── boot.js               → node cortex/boot.js
-│   ├── cortex.js             → node cortex/cortex.js (REPL)
-│   ├── foundation/           cobalt-core, admin-server, poll-registry, siso, store
-│   ├── memory/               jaa-db.js (28 tables), agent-memory.js
-│   ├── core/raid/            local-first agent routing
-│   ├── agents/               dispatcher, ollama, claude
-│   ├── gate/                 gap-finder
-│   ├── healer/               gap → fix_map
-│   ├── orion/                sensor/record/policy/verify
-│   ├── versionium/           sigma-triggered auto-commit
-│   ├── automation/           workflow engine
-│   └── nas/                  file routing
-├── guardian/                 LAYER 3 — agent orchestration, 7820/7821/7822/7823
-│   ├── server.js             → node guardian/server.js
-│   ├── cli.js                → node guardian/cli.js
-│   ├── jaa-store.js          15-table JSON store
-│   ├── memory.js             port 7823
-│   ├── dropzone.js           port 7822
-│   ├── agents/               guardian agent dispatcher
-│   ├── userscript-chatgpt.js Tampermonkey → chatgpt.com (PRIMARY)
-│   ├── userscript-claude.js  Tampermonkey → claude.ai
-│   └── userscript-patch.js   guardian-v83 nexus patch (drop into userscript)
-├── cockpit/                  LAYER 4 — control panel, served from 7820/cockpit
-│   ├── core.js               SISOKernel + JAA + Bayesian trust
-│   ├── cli.js                CLI interaction contract
-│   ├── pipeline.js           15 node types + SEAM evaluator
-│   ├── forge.js              AI self-modification engine
-│   └── cockpit.spec          full system spec
-├── idearium/                 LAYER 5 — idea OS, port 4800
-│   ├── index.js
-│   ├── core/index.js         IdeaOS + tension engine + SNR
-│   ├── cli/index.js          CLI is truth
-│   └── api/index.js          API is projection
-├── emerge/                   LAYER 6 — compiler + IDE, port 4242
-│   ├── emerge-kernel.js      JS seed — compiles .eg files in io/
-│   ├── emerge-ide.js         IDE server
-│   ├── emerge.spec           SNR gate schema (living)
-│   ├── siso.js
-│   ├── ollama-runtime.js
-│   └── io/                   184 .eg files — full system in Emergence
-│       ├── agents/           6 files
-│       ├── automation/       2 files
-│       ├── cockpit/          5 files
-│       ├── foundation/       14 files
-│       ├── guardian-ext/     12 files
-│       ├── guardian-server/  9 files
-│       ├── idearium/         5 files
-│       ├── memory/           6 files
-│       ├── seam/             3 files
-│       ├── siphon/           3 files
-│       ├── system/           4 files
-│       ├── userscript/       16 files
-│       └── versionium/       2 files
-│   ├── alk-kernel.js
-│   ├── alk-gl.js             WebGL2 80k particles
-│   ├── cfr-mesh-bridge.js    34-attractor skeleton
-│   ├── cfr-physics.js
-│   ├── cfr-render.js
-│   ├── cfr-rewind.js
-│   └── alk-devtools.html
-├── seams/
-│   └── seam-contracts.js
-├── jaa/
-│   ├── jaa-store.js
-│   ├── schema.sql
-│   └── schema-full.sql
-├── ui/
-│   ├── cockpit.html          Guardian control panel
-│   └── emerge-ide.html       Emerge IDE
-└── data/                     runtime data — gitignore
-```
+Total: **222/222 passing.**
 
-## Providers (ChatGPT is primary)
-| Provider | Setup |
-|----------|-------|
-| ChatGPT  | Install `guardian/userscript-chatgpt.js` in Tampermonkey on chatgpt.com |
-| Claude   | Install `guardian/userscript-claude.js` in Tampermonkey on claude.ai |
-| Ollama   | Runs at localhost:11434, RAID routes local-first |
+---
 
-## Ports
-| Port | Service |
-|------|---------|
-| 3748 | Cortex — source of truth |
-| 4242 | Emerge IDE |
-| 4800 | Idearium |
-| 7820 | Guardian HTTP + Cockpit UI |
-| 7821 | Guardian WSS (providers) |
-| 7822 | Dropzone (LAN) |
-| 7823 | Memory server (LAN) |
-| 11434 | Ollama |
+## Axioms active
+
+§1.1 Nothing exists until proven  
+§1.2 Nothing silently fails  
+§1.3 No stubs  
+§2.1 Persistence is golden rule  
+§3.1 Bottom-up only  
+§WM.1 Write to working memory before any side-effect  
+§WM.2 Internal first — all state queryable  
+§LAW_III Mind-bridge is the only surface between Cortex and Guardian  
