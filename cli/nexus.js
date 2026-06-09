@@ -579,6 +579,245 @@ Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
   },
 };
 
+// ── Snapshot commands ─────────────────────────────────────────────────────────
+CMDS['snap'] = CMDS['snapshot'] = async function() {
+  const sub = args[1] || 'list';
+
+  if (sub === 'list' || sub === 'ls') {
+    const n   = parseInt(flag('n') || args[2] || '10');
+    const d   = await GET('cortex', `/api/snapshots?n=${n}`);
+    if (!d.ok) return fail(d.error || 'snapshots unavailable');
+    if (!d.snapshots?.length) return info('no snapshots yet');
+    hdr('SNAPSHOTS');
+    d.snapshots.forEach(s => {
+      const age = Math.round((Date.now() - s.ts) / 1000);
+      console.log(`  ${C.cyan}${s.snapId}${C.reset}  ${C.muted}${s.type.padEnd(12)}${C.reset}  ${C.white}${(s.message || '—').slice(0, 40).padEnd(42)}${C.reset}  ${C.muted}${s.totalRows} rows  ${age}s ago  rb=${s.rollback_count}${C.reset}`);
+    });
+    return;
+  }
+
+  if (sub === 'create' || sub === 'take') {
+    const msg = rest() || flag('message') || 'manual snapshot';
+    const d   = await POST('cortex', '/api/snapshots/create', { message: msg });
+    if (!d.ok) return fail(d.error || 'snapshot failed');
+    ok(`snapshot created: ${d.snapId} (${d.totalRows} rows)`);
+    return;
+  }
+
+  if (sub === 'diff') {
+    const a = args[2], b = args[3];
+    if (!a || !b) return fail('Usage: nexus snap diff <snapId-a> <snapId-b>');
+    const d = await GET('cortex', `/api/snapshots/diff?a=${a}&b=${b}`);
+    if (!d.ok) return fail(d.error || 'diff failed');
+    hdr(`DIFF  ${a}  →  ${b}`);
+    const tables = Object.entries(d.tables || {});
+    if (!tables.length) { ok('no differences'); return; }
+    tables.forEach(([t, v]) => {
+      const sign = v.delta > 0 ? `${C.green}+${v.delta}` : `${C.red}${v.delta}`;
+      console.log(`  ${C.muted}${t.padEnd(28)}${C.reset}  ${v.a} → ${v.b}  ${sign}${C.reset}`);
+    });
+    return;
+  }
+
+  if (sub === 'rollback') {
+    const snapId = args[2];
+    const apply  = args.includes('--apply');
+    if (!snapId) return fail('Usage: nexus snap rollback <snapId> [--apply]');
+    if (apply) {
+      console.log(`${C.yellow}⚠  Rolling back to ${snapId} — this will modify JAA state${C.reset}`);
+    }
+    const d = await POST('cortex', '/api/snapshots/rollback', { snapId, apply });
+    if (!d.ok) return fail(d.error);
+    if (d.dry_run) {
+      hdr(`DRY RUN — would change ${d.tables?.length || 0} tables`);
+      Object.entries(d.changes || {}).forEach(([t, v]) =>
+        console.log(`  ${C.muted}${t.padEnd(28)}${C.reset}  current=${v.current}  snap=${v.snapshot}  delta=${v.delta}`)
+      );
+      info('Pass --apply to execute');
+    } else {
+      ok(`rolled back to ${snapId} — ${d.tablesRestored} tables restored`);
+      info(`safety snapshot: ${d.safetySnapId}`);
+    }
+    return;
+  }
+
+  fail(`Unknown snapshot command: ${sub}`);
+  info('Commands: list  create [message]  diff <a> <b>  rollback <id> [--apply]');
+};
+
+// ── Replay commands ─────────────────────────────────────────────────────────────
+CMDS['replay'] = async function() {
+  const sub = args[1] || 'verify';
+
+  if (sub === 'verify') {
+    info('Running replay verification...');
+    const d = await POST('cortex', '/api/replay/verify', {});
+    if (!d.ok && d.error) return fail(d.error);
+    const divs = d.divergences || [];
+    if (!divs.length) {
+      ok(`replay verified — ${d.eventCount} events, no divergences`);
+    } else {
+      console.log(`${C.yellow}⚠  ${divs.length} divergence(s) found${C.reset}`);
+      divs.forEach(dv => console.log(`  ${C.red}${dv.field}${C.reset}  live=${dv.live}  replay=${dv.replay}`));
+    }
+    return;
+  }
+
+  if (sub === 'inspect') {
+    const fromTs = parseInt(flag('from') || '0');
+    const d = await POST('cortex', '/api/replay/inspect', { fromTs });
+    if (!d.ok && d.error) return fail(d.error);
+    hdr('REPLAY INSPECT');
+    const s = d.state || {};
+    row('events',    d.eventCount);
+    row('gaps found',  s.gaps?.length || 0);
+    row('patches',   s.patches?.length || 0);
+    row('dispatches', s.dispatches?.length || 0);
+    row('snapshots', s.snapshots?.length || 0);
+    row('boots',     s.boots?.length || 0);
+    if (s.lastHeartbeat) row('last heartbeat', Math.round((Date.now() - s.lastHeartbeat) / 1000) + 's ago');
+    return;
+  }
+
+  if (sub === 'simulate') {
+    const eventType = args[2];
+    if (!eventType) return fail('Usage: nexus replay simulate <event-type> [--inject=before|after]');
+    const inject = flag('inject') || 'after';
+    const faults = [{ uuid: require('crypto').randomUUID(), type: eventType, payload: {}, source: 'cli/simulate', ts: Date.now(), _inject: inject }];
+    const d = await POST('cortex', '/api/replay/simulate', { events: faults });
+    hdr('REPLAY SIMULATE');
+    info(`injected: ${eventType} (${inject})`);
+    row('total events', d.eventCount);
+    const s = d.state || {};
+    row('gaps', s.gaps?.length || 0);
+    return;
+  }
+
+  fail(`Unknown replay command: ${sub}`);
+  info('Commands: verify  inspect [--from=ts]  simulate <event-type>');
+};
+
+// ── Agent-tools commands ────────────────────────────────────────────────────────
+CMDS['tools'] = CMDS['tool'] = async function() {
+  const sub = args[1] || 'list';
+
+  if (sub === 'list' || sub === 'ls') {
+    const d = await GET('cortex', '/api/tools');
+    if (!d.ok) return fail(d.error || 'tools unavailable');
+    hdr('AGENT TOOLS');
+    d.tools.forEach(t => console.log(`  ${C.cyan}${t.name.padEnd(32)}${C.reset}  ${C.muted}${t.description}${C.reset}`));
+    return;
+  }
+
+  if (sub === 'exec' || sub === 'run') {
+    const toolName = args[2];
+    if (!toolName) return fail('Usage: nexus tools exec <tool-name> [--input=<json>]');
+    const inputStr = flag('input') || '{}';
+    let input;
+    try { input = JSON.parse(inputStr); } catch { return fail(`invalid JSON: ${inputStr}`); }
+    info(`running ${toolName}...`);
+    const d = await POST('cortex', '/api/tools/exec', { tool: toolName, input });
+    if (JSON_) return out(d);
+    if (!d.ok) return fail(d.error || 'tool failed');
+    out(d);
+    return;
+  }
+
+  fail(`Unknown tools command: ${sub}`);
+  info('Commands: list  exec <tool> [--input=json]');
+};
+
+// ── Self-heal commands ─────────────────────────────────────────────────────────
+CMDS['heal'] = CMDS['self-heal'] = async function() {
+  const sub = args[1] || 'status';
+
+  if (sub === 'status') {
+    const d = await GET('cortex', '/api/self-heal/status');
+    if (!d.ok) return fail(d.error || 'self-heal unavailable');
+    hdr('SELF-HEAL STATUS');
+    row('pending (needs_manual)',  d.pending);
+    row('forge_patch_ready',       d.ready);
+    row('forge_applied',           d.patched);
+    row('human_required',          d.human_required);
+    if (d.recentPatches?.length) {
+      console.log(`
+  ${C.muted}Recent patches:${C.reset}`);
+      d.recentPatches.forEach(p => {
+        const applied = p.applied ? `${C.green}applied${C.reset}` : `${C.yellow}audit${C.reset}`;
+        console.log(`  ${C.muted}${(p.module||'?').slice(-40).padEnd(42)}${C.reset}  ${applied}  ${C.muted}${p.provider || '—'}${C.reset}`);
+      });
+    }
+    return;
+  }
+
+  if (sub === 'enable') {
+    ok('Set NEXUS_FORGE_APPLY=true before starting cortex to enable live patching');
+    info('Example: NEXUS_FORGE_APPLY=true node cortex/boot.js');
+    return;
+  }
+
+  if (sub === 'gaps') {
+    const d = await GET('cortex', '/api/gaps');
+    if (!d.ok && !Array.isArray(d.gaps)) return fail('gaps unavailable');
+    const gaps = (d.gaps || d || []).filter(g => ['needs_manual','forge_failed','human_required','forge_applied','forge_patch_ready'].includes(g.status));
+    if (!gaps.length) return ok('no active self-heal gaps');
+    hdr('SELF-HEAL GAPS');
+    gaps.forEach(g => {
+      const sc = g.status === 'forge_applied' ? C.green : g.status === 'human_required' ? C.red : C.yellow;
+      console.log(`  ${sc}${(g.status||'?').padEnd(22)}${C.reset}  ${C.cyan}${(g.type||'?').padEnd(20)}${C.reset}  ${(g.body||'').slice(0, 50)}`);
+    });
+    return;
+  }
+
+  fail(`Unknown self-heal command: ${sub}`);
+  info('Commands: status  enable  gaps');
+};
+
+// ── Context command (agent self-awareness) ─────────────────────────────────────
+CMDS['context'] = CMDS['ctx'] = async function() {
+  const d = await POST('cortex', '/api/tools/exec', { tool: 'nexus.context', input: {} });
+  if (!d.ok) return fail(d.error || 'context unavailable');
+  hdr('NEXUS CONTEXT');
+  row('open gaps',      d.openGaps);
+  row('recent failures', d.recentFailures);
+  row('forge patches',  d.forgePatchCount);
+  row('snapshots',      d.snapshotCount);
+  row('latest snapshot', d.latestSnapshot || 'none');
+  if (d.recentEvents?.length) {
+    console.log(`
+  ${C.muted}Recent events:${C.reset}`);
+    d.recentEvents.slice(-8).forEach(e =>
+      console.log(`  ${C.muted}${new Date(e.ts).toTimeString().slice(0,8)}${C.reset}  ${C.cyan}${(e.type||'?').padEnd(36)}${C.reset}  ${C.muted}${e.source}${C.reset}`)
+    );
+  }
+};
+
+// ── Update help to include new commands ───────────────────────────────────────
+const _origHelp = CMDS.help;
+CMDS.help = function() {
+  _origHelp();
+  console.log(`
+  ${C.bold}Self-healing & observability:${C.reset}
+    ${C.cyan}nexus snap list${C.reset}                  list snapshots
+    ${C.cyan}nexus snap create [message]${C.reset}      take a snapshot
+    ${C.cyan}nexus snap diff <a> <b>${C.reset}          diff two snapshots
+    ${C.cyan}nexus snap rollback <id>${C.reset}         preview rollback
+    ${C.cyan}nexus snap rollback <id> --apply${C.reset} execute rollback
+
+    ${C.cyan}nexus replay verify${C.reset}              verify state consistency
+    ${C.cyan}nexus replay inspect${C.reset}             inspect rebuilt state
+    ${C.cyan}nexus replay simulate <event>${C.reset}    fault injection test
+
+    ${C.cyan}nexus heal status${C.reset}                self-heal pipeline status
+    ${C.cyan}nexus heal gaps${C.reset}                  show self-heal gaps
+    ${C.cyan}nexus heal enable${C.reset}                how to enable live patching
+
+    ${C.cyan}nexus tools list${C.reset}                 list agent tools
+    ${C.cyan}nexus tools exec <tool>${C.reset}          run an agent tool
+    ${C.cyan}nexus context${C.reset}                    full system self-awareness
+  `);
+};
+
 // ── Router ────────────────────────────────────────────────────────────────────
 async function main() {
   if (!args.length) { CMDS.help(); return; }

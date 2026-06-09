@@ -56,9 +56,10 @@ async function _tick() {
         });
 
         jaaDB.update('gaps', gap.uuid, {
-          status:     fix.automated ? 'resolved' : 'needs_manual',
-          resolvedAt: Date.now(),
+          status:     fix.automated ? 'resolved' : (fix.escalate ? 'needs_manual' : 'needs_manual'),
+          resolvedAt: fix.automated ? Date.now() : null,
           fixStrategy: fix.strategy,
+          escalateToForge: fix.escalate || false,
         });
 
         jaaDB.insert('event_log', {
@@ -83,18 +84,22 @@ async function _tick() {
 function _prescribe(gap) {
   switch (gap.type) {
     case 'stale_module':
-      return { strategy: 'restart_module', action: `restart ${gap.path}`, automated: false };
+      // Escalate to self-heal — it will probe and attempt forge patch
+      return { strategy: 'forge_patch', action: `forge fix for stale ${gap.path}`, automated: false, escalate: true };
 
     case 'stuck_call':
       return { strategy: 'timeout_and_retry', action: `mark ${gap.path} as failed and re-enqueue`, automated: true };
 
     case 'recurring_failure':
-      return { strategy: 'circuit_breaker', action: `reduce poll rate for ${gap.path}`, automated: false };
+      // Escalate to forge — recurring failure means the code itself needs fixing
+      return { strategy: 'forge_patch', action: `forge fix for recurring failure in ${gap.path}`, automated: false, escalate: true };
 
     case 'missing_file':
-      return { strategy: 'scaffold', action: `generate stub for ${gap.path}`, automated: false };
+      return { strategy: 'forge_scaffold', action: `forge scaffold for ${gap.path}`, automated: false, escalate: true };
 
     case 'import_error':
+      return { strategy: 'forge_patch', action: `forge fix for import error in ${gap.path}`, automated: false, escalate: true };
+
     case 'deviation':
       return { strategy: 'log_and_observe', action: `alert on ${gap.path}`, automated: false };
 

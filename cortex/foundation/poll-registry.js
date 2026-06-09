@@ -7,6 +7,9 @@
 // Modules are started in declaration order (§3.1 bottom-up).
 
 const modules = [
+  // heartbeat — must be first so project_registry is populated before gap-finder starts
+  { id: 'heartbeat',       mod: require('../heartbeat'),                  pollMs: 10000 },
+
   // foundation
   { id: 'bus-log',         mod: require('./bus-log'),                    pollMs:  1000 },
 
@@ -21,6 +24,12 @@ const modules = [
   // gate / healer
   { id: 'gap-finder',      mod: require('../gate/gap-finder'),           pollMs:  2000 },
   { id: 'healer',          mod: require('../healer'),                    pollMs:  5000 },
+
+  // self-heal — escalates needs_manual gaps to forge for LLM patching
+  { id: 'self-heal',       mod: require('../self-heal'),                 pollMs: 15000 },
+
+  // snapshot — monitors forge_patches for pre-patch auto-snapshots
+  { id: 'snapshot',        mod: require('../snapshot'),                  pollMs: 30000 },
 
   // memory
   { id: 'agent-memory',    mod: require('../memory/agent-memory'),       pollMs:  4000 },

@@ -73,25 +73,12 @@ const ALL_TABLES = [
   // ── Automation / Idearium ────────────────────────────────────────────
   'schedules',
   'workflow_runs',
+  'forge_patches',
   'project_registry',
   'poll_log',
   'requests',
   // ── Backup ───────────────────────────────────────────────────────────
   'backup_records',
-
-  // ── Guardian layer (spec-guardian-layer.md) ──────────────────────────────
-  'chat_sessions',     // guardian/siphon.js   — one row per AI conversation
-  'chat_messages',     // guardian/siphon.js   — one row per conversation turn
-  'chat_completions',  // guardian/siphon.js   — one row per complete AI response
-  'guardian_nodes',    // guardian/pulse.js    — one row per Guardian instance
-  'guardian_health',   // guardian/watchman.js — one row per 5s health synthesis
-
-  // ── Memory layer (spec-memory-layer.md) ─────────────────────────────────
-  'lattice_nodes',     // memory/lattice-index.js — term frequency + source tracking
-  'lattice_edges',     // memory/lattice-index.js — term co-occurrence + NPMI weight
-
-  // ── Cognition layer (spec-cognition-layer.md) ────────────────────────────
-  'intent_edges',      // core/intent/index.js — sequential intent transitions
 ];
 
 class JaaDB {
