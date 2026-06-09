@@ -792,6 +792,70 @@ CMDS['context'] = CMDS['ctx'] = async function() {
   }
 };
 
+// ── Contract commands ─────────────────────────────────────────────────────────
+CMDS['contract'] = async function() {
+  const sub = args[1] || 'agents';
+
+  if (sub === 'agents' || sub === 'list') {
+    const d = await GET('cortex', '/api/contract/agents');
+    if (!d.ok) return fail(d.error || 'contract unavailable');
+    hdr('ORCHESTRATION CONTRACTS');
+    d.agents.forEach(a => {
+      const trust = a.trust_level === 'internal' ? C.green : a.trust_level === 'local' ? C.cyan : C.yellow;
+      const denied = a.denied?.length ? ` ${C.red}deny:${a.denied.join(',')}${C.reset}` : '';
+      const proof  = a.proof_required ? ` ${C.yellow}proof-required${C.reset}` : '';
+      console.log(`  ${trust}${(a.agent).padEnd(20)}${C.reset}  ${C.muted}${(a.trust_level).padEnd(10)}${C.reset}  ${(a.allowed || []).join(',')}${denied}${proof}`);
+    });
+    return;
+  }
+
+  if (sub === 'violations') {
+    const n = parseInt(flag('n') || args[2] || '20');
+    const d = await GET('cortex', `/api/contract/violations?n=${n}`);
+    if (!d.ok) return fail(d.error);
+    if (!d.violations?.length) return ok('no contract violations recorded');
+    hdr('CONTRACT VIOLATIONS');
+    d.violations.forEach(v => {
+      const ts = new Date(v.ts).toTimeString().slice(0,8);
+      console.log(`  ${C.red}${ts}${C.reset}  ${C.yellow}${(v.agent||'?').padEnd(20)}${C.reset}  ${(v.violation||'').slice(0,60)}`);
+    });
+    return;
+  }
+
+  if (sub === 'audit') {
+    const n = parseInt(flag('n') || args[2] || '20');
+    const d = await GET('cortex', `/api/contract/audit?n=${n}`);
+    if (!d.ok) return fail(d.error);
+    hdr('CONTRACT AUDIT');
+    d.audit.forEach(a => {
+      const ts   = new Date(a.ts).toTimeString().slice(0,8);
+      const sc   = a.result === 'pass' ? C.green : C.red;
+      console.log(`  ${C.muted}${ts}${C.reset}  ${sc}${(a.result).padEnd(12)}${C.reset}  ${C.cyan}${(a.agent||'?').padEnd(20)}${C.reset}  ${a.action||'?'}`);
+    });
+    return;
+  }
+
+  if (sub === 'check') {
+    // nexus contract check --agent=ollama --action=forge
+    const agent  = flag('agent')  || args[2];
+    const action = flag('action') || args[3];
+    if (!agent || !action) return fail('Usage: nexus contract check --agent=<agent> --action=<action>');
+    const d = await POST('cortex', '/api/contract/check', { uuid: require('crypto').randomUUID(), routedTo: agent, command: action, prompt: 'test' });
+    if (!d.ok && d.error) return fail(d.error);
+    const r = d.result || d;
+    if (r.violations?.length) {
+      console.log(`${C.red}✗ BLOCKED${C.reset}  ${agent}/${action}`);
+      r.violations.forEach(v => console.log(`  ${C.red}→${C.reset} ${v}`));
+    } else {
+      ok(`${agent}/${action} — permitted (trust=${r.trust_level || r.contract?.trust_level})`);
+    }
+    return;
+  }
+
+  fail(`Unknown contract command: ${sub}`);
+  info('Commands: agents  violations [n]  audit [n]  check --agent=<x> --action=<y>');
+};
+
 // ── Update help to include new commands ───────────────────────────────────────
 const _origHelp = CMDS.help;
 CMDS.help = function() {
@@ -815,6 +879,12 @@ CMDS.help = function() {
     ${C.cyan}nexus tools list${C.reset}                 list agent tools
     ${C.cyan}nexus tools exec <tool>${C.reset}          run an agent tool
     ${C.cyan}nexus context${C.reset}                    full system self-awareness
+
+  ${C.bold}Orchestration contract:${C.reset}
+    ${C.cyan}nexus contract agents${C.reset}            list agent contracts + permissions
+    ${C.cyan}nexus contract violations${C.reset}        recent contract violations
+    ${C.cyan}nexus contract audit${C.reset}             full dispatch audit trail
+    ${C.cyan}nexus contract check --agent=x --action=y${C.reset}  check if action is permitted
   `);
 };
 

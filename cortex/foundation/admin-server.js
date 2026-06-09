@@ -417,6 +417,39 @@ class AdminServer {
           break;
         }
 
+        // ── Contract routes ───────────────────────────────────────────────────
+        case route === 'GET /api/contract/agents': {
+          try {
+            const contract = require('../contract');
+            this._json(res, 200, { ok: true, agents: contract.listContracts() });
+          } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
+          break;
+        }
+        case route === 'GET /api/contract/violations': {
+          try {
+            const contract = require('../contract');
+            const n = parseInt(url.searchParams.get('n') || '50');
+            this._json(res, 200, { ok: true, violations: contract.getViolations(n) });
+          } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
+          break;
+        }
+        case route === 'GET /api/contract/audit': {
+          try {
+            const contract = require('../contract');
+            const n = parseInt(url.searchParams.get('n') || '50');
+            this._json(res, 200, { ok: true, audit: contract.getAudit(n) });
+          } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
+          break;
+        }
+        case route === 'POST /api/contract/check': {
+          try {
+            const contract = require('../contract');
+            const body = await this._body(req);
+            this._json(res, 200, { ok: true, result: contract.checkContract(body) });
+          } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
+          break;
+        }
+
         // ── Self-heal status ──────────────────────────────────────────────────
         case route === 'GET /api/self-heal/status': {
           try {

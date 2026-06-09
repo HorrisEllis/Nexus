@@ -579,10 +579,129 @@ section('Full pipeline — gap → heal → self-heal (mock forge)');
   restoreJAA(ctx);
 }
 
-// ── Summary ───────────────────────────────────────────────────────────────────
-const total = _pass + _fail;
+})().catch(err => { console.error('Test runner crashed:', err); process.exit(1); });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// APPENDED: Contract layer tests
+// ─────────────────────────────────────────────────────────────────────────────
+
+(async () => {
+
+section('Contract — orchestration contract enforcement');
+
+{
+  const ctx = makeJAA();
+  evict('../cortex/contract/index');
+  const contract = require('../cortex/contract/index');
+
+  test('listContracts returns all agent profiles', () => {
+    const agents = contract.listContracts();
+    assert(Array.isArray(agents), 'agents is array');
+    assert(agents.length >= 5, `at least 5 agents, got: ${agents.length}`);
+    const names = agents.map(a => a.agent);
+    assert(names.includes('ollama'), 'ollama contract present');
+    assert(names.includes('self-heal'), 'self-heal contract present');
+    assert(names.includes('_default'), '_default contract present');
+  });
+
+  test('ollama/code is permitted', () => {
+    const r = contract.checkContract({ uuid: ctx.uid(), routedTo: 'ollama', command: 'code', prompt: 'test' });
+    assert(r.ok, `ollama/code should be permitted, violations: ${r.violations?.join(',')}`);
+    assert(r.violations.length === 0, 'no violations');
+    assert(r.trust_level === 'local', 'trust_level=local');
+  });
+
+  test('guardian-chatgpt/forge is denied', () => {
+    const r = contract.checkContract({ uuid: ctx.uid(), routedTo: 'guardian-chatgpt', command: 'forge', prompt: 'test' });
+    assert(!r.ok, 'guardian-chatgpt/forge should be denied');
+    assert(r.violations.some(v => v.includes('action_denied')), 'action_denied violation');
+  });
+
+  test('self-heal without causedBy violates proof_required', () => {
+    const r = contract.checkContract({ uuid: ctx.uid(), routedTo: 'self-heal', command: 'forge', prompt: 'test' });
+    assert(!r.ok, 'self-heal without causedBy should fail');
+    assert(r.violations.some(v => v.includes('causality_proof_required')), 'causality_proof_required violation');
+  });
+
+  test('self-heal with causedBy passes proof check', () => {
+    const r = contract.checkContract({
+      uuid: ctx.uid(), routedTo: 'self-heal', command: 'forge',
+      prompt: 'test', causedBy: 'gap-uuid-001',
+    });
+    // May still fail on allowed_actions — self-heal only allows forge
+    assert(r.violations.every(v => !v.includes('causality_proof_required')), 'no causality violation');
+  });
+
+  test('_default agent has minimal permissions', () => {
+    const r = contract.checkContract({ uuid: ctx.uid(), routedTo: 'unknown-agent-xyz', command: 'forge', prompt: 'test' });
+    assert(!r.ok, 'unknown agent/forge should be denied');
+    assert(r.trust_level === 'unknown', 'trust_level=unknown');
+  });
+
+  test('missing required field triggers violation', () => {
+    const r = contract.checkContract({ uuid: ctx.uid(), routedTo: 'ollama', command: 'code' }); // missing prompt
+    assert(!r.ok, 'missing prompt should violate contract');
+    assert(r.violations.some(v => v.includes('missing_required_field')), 'missing_required_field violation');
+  });
+
+  await testAsync('enforce: compliant call writes contract_audit record', async () => {
+    const call = { uuid: ctx.uid(), routedTo: 'ollama', command: 'code', prompt: 'test', causedBy: null };
+    const result = contract.enforce(call);
+    assert(result.ok, `compliant call should pass, violations: ${result.violations?.join(',')}`);
+    assert(result.auditId, 'auditId present');
+    const audit = ctx.db.query('contract_audit', a => a.callUuid === call.uuid, 1)[0];
+    assert(audit, 'contract_audit record written');
+    assert(audit.result === 'pass', 'audit result=pass');
+  });
+
+  await testAsync('enforce: violation writes law_violations and gap', async () => {
+    const call = { uuid: ctx.uid(), routedTo: 'guardian-chatgpt', command: 'forge', prompt: 'test' };
+    const result = contract.enforce(call);
+    assert(!result.ok, 'violation should block');
+    const violation = ctx.db.query('law_violations', v => v.callUuid === call.uuid, 1)[0];
+    assert(violation, 'law_violations record written');
+    assert(violation.law === '§CONTRACT', 'law=§CONTRACT');
+    const gap = ctx.db.query('gaps', g => g.type === 'contract_violation', 1)[0];
+    assert(gap, 'gap written for contract violation');
+    assert(gap.severity === 'high', 'severity=high for denied action');
+  });
+
+  restoreJAA(ctx);
+  evict('../cortex/contract/index');
+}
+
+section('Contract + RAID integration — enforcement at dispatch');
+
+{
+  const ctx = makeJAA();
+  evict('../cortex/contract/index', '../cortex/core/raid/index');
+
+  test('contract module loads via require in RAID context', () => {
+    // RAID lazily requires contract — verify the require path works
+    const contractPath = require.resolve('../cortex/contract/index');
+    assert(contractPath.includes('contract'), 'contract path resolves');
+  });
+
+  test('contract enforcement does not break compliant dispatches', () => {
+    const contract = require('../cortex/contract/index');
+    // Simulate what RAID does
+    const call = {
+      uuid: ctx.uid(), routedTo: 'ollama', command: 'code',
+      prompt: 'write a hello world', causedBy: null,
+      preferredAgent: 'ollama', intent: 'write code',
+    };
+    const callWithRoute = { ...call, routedTo: 'ollama', command: call.command || 'code' };
+    const check = contract.enforce(callWithRoute);
+    assert(check.ok, `compliant call should pass: ${check.violations?.join(',')}`);
+  });
+
+  restoreJAA(ctx);
+}
+
+// Final summary
+const total2 = _pass + _fail;
 process.stdout.write(`\n${'═'.repeat(72)}\n`);
-process.stdout.write(`  ${_pass}/${total} passed   ${_fail} failed\n`);
+process.stdout.write(`  ${_pass}/${total2} passed   ${_fail} failed\n`);
 if (_failures.length) {
   process.stdout.write('\nFAILURES:\n');
   _failures.forEach(f => process.stdout.write(`  ✗ ${f.name}: ${f.error}\n`));
@@ -590,4 +709,4 @@ if (_failures.length) {
 process.stdout.write(`${'═'.repeat(72)}\n`);
 process.exit(_fail > 0 ? 1 : 0);
 
-})().catch(err => { console.error('Test runner crashed:', err); process.exit(1); });
+})();

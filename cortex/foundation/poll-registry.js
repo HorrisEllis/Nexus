@@ -28,6 +28,9 @@ const modules = [
   // self-heal — escalates needs_manual gaps to forge for LLM patching
   { id: 'self-heal',       mod: require('../self-heal'),                 pollMs: 15000 },
 
+  // contract — orchestration contract enforcement + violation monitoring
+  { id: 'contract',        mod: require('../contract'),                  pollMs: 30000 },
+
   // snapshot — monitors forge_patches for pre-patch auto-snapshots
   { id: 'snapshot',        mod: require('../snapshot'),                  pollMs: 30000 },
 
