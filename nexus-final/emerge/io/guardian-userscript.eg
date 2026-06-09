@@ -1,0 +1,39 @@
+// guardian-userscript.eg — Browser bridge. Explicit inject. Data channel.
+// UUID: guardian-userscript-v1-0-0
+// Tampermonkey: guardian/userscript-chatgpt.js (primary) + userscript-claude.js
+
+compartment "guardian-userscript" {
+  id      = guardian-userscript-001
+  uuid    = guardian-userscript-001-xxxx
+  version = 8.3.0
+  intent  = explicit_inject_data_channel_dom_mapper_console_sync
+
+  api     = http://127.0.0.1:7820
+  wss     = wss://127.0.0.1:7821
+  memory  = http://127.0.0.1:7823
+  cortex  = http://127.0.0.1:3748
+
+  inject_flow {
+    1 = log_input_to_ledger      { POST /ledger category=INPUT }
+    2 = send GUARDIAN_INPUT      { jobId text chatUrl }
+    3 = wait GUARDIAN_INPUT_ACK  { timeout = 10s gap if not acked }
+    4 = prepend GTCI_context     { GET /gap-questions?status=pending&limit=3 }
+    5 = inject_dom               { contenteditable selectAll insertText }
+    6 = tag_job PENDING          { DOM mapper now owns progress }
+    7 = submit
+    // channel stays open until DOM mapper fires GUARDIAN_DONE
+  }
+
+  dom_mapper {
+    poll    = 500ms
+    stable  = 5 consecutive unchanged polls
+    on stable { send GUARDIAN_DONE → close_channel → cortex_sync record }
+  }
+
+  console_sync {
+    sse = EventSource(cortex/sse)
+    on agent.call.routed  { addLog "RAID → " + agent record }
+    on gap.found          { addLog gap + type record }
+    on job.complete       { addLog ok + chars record }
+  }
+}

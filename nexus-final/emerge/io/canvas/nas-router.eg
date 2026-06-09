@@ -1,0 +1,18 @@
+// nas-router.eg — file_resolve request routing
+// UUID: nas-router-v1-0-0 | source: nas/router.js
+compartment "nas-router" {
+  id = nas-router-001
+  uuid = nas-router-001-xxxx
+  intent = route_file_resolve_requests_to_filestore_via_filerefs
+  reads  = [ requests ]
+  writes = [ requests event_log failures ]
+  component "router" {
+    interval = 2000
+    query jaa.requests where type == file_resolve and status == pending limit 10
+    for each req in pending
+      claim req
+      update jaa.requests set status = queued routedTo = nas routedAt = now
+      insert jaa.event_log { type = nas.file.queued payload = { reqUuid = req.uuid path = req.path } source = nas-router causedBy = req.uuid ts = now }
+      record
+  }
+}

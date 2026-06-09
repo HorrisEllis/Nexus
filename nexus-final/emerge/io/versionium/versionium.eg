@@ -1,0 +1,24 @@
+// versionium.eg — sigma-triggered auto-commit
+// UUID: versionium-v1-0-0 | source: versionium/index.js
+compartment "versionium" {
+  id = versionium-001
+  uuid = versionium-001-xxxx
+  intent = sigma_threshold_triggers_content_addressed_commit
+  reads  = [ artifacts shape_samples ]
+  writes = [ versionium_commits versionium_branches versionium_file_index versionium_calendar event_log ]
+  sigma_threshold = 0.7
+  component "auto-commit" {
+    interval = 3000
+    sigma_spike = jaa.shape_samples.find(sigma > sigma_threshold and committed == false)
+    if sigma_spike
+      parentId = jaa.versionium_branches.find(branch == main).head
+      commitId = "vtm-" + uid_short
+      objects = capture_current_artifacts()
+      insert jaa.versionium_commits { uuid = commitId message = "auto-commit sigma=" + sigma_spike.sigma branch = main parentHash = parentId objects = objects ts = now }
+      insert jaa.versionium_calendar { uuid = uid commitUuid = commitId ts = now label = sigma_spike.regime }
+      update jaa.versionium_branches set head = commitId where branch == main
+      update jaa.shape_samples set committed = true where uuid == sigma_spike.uuid
+      emit "versionium.committed" { commitId parentId sigma = sigma_spike.sigma }
+      record
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "hashes": {
+    "bridge-core/crypto-engine.js": "458c133f43438723d79e3c82ab13b6c2f98617c993cb6257e91d209eb93fbcf3",
+    "bridge-core/bus.js": "65b4ef9626827c0d5497d49eb886923b792b04c676a5f90c3d50f02bb288aff4",
+    "bridge-core/siso/index.js": "298bb675841d439104e74d4ffd4b5767e14016259c597adcda8f64e6e960d2c4",
+    "bridge-sngate/index.js": "abc0f8b9efc7f0cd8c21cf6daa4ec4a887006d71016d6c99a785576849eb8b4b",
+    "bridge-identity/identity.js": "bd8dbd06703e4528a6a906a1ed5a0d92c09ca69bdb6fb872637d37649e29a6bb",
+    "bridge-identity/index.js": "1b2024be231879d72236c93a3afcb71d017f95b7d9e5dc723bf690fb97ac0907",
+    "bridge-integrity/index.js": "6fed908a99e84ab95856a0ef6d980875e1131311115d01c4fc3c6fcb2d826e89",
+    "bridge-node/boot.js": "f64397508e2200b88a4a6ac2c5499bce477d4e335c5eb7004599e74e44fa6b39",
+    "bridge-cobalt/index.js": "a3c6fe70aae5bf389742a034d0bee6aa6e18e9c15365bcd6c2911a455d80781c",
+    "bridge-cobalt/ledger-lock.js": "ac2bafb3ac3a0b43fafdfa0c0384ac8da03e21d53aa5d3ba75575daa30957116",
+    "bridge-cobalt/symbol-detector.js": "c19269d0db775257a42609e7281c1fee7125a72440272794b287adddb6e8215e",
+    "index.js": "5225a82735a36220e90289e9ba8b7f4d0438e74e1f3ed607fbf0dec13a42e93d"
+  },
+  "ts": 1779024895657,
+  "nodeId": "42fe9506-922a-a3dd-8eca-0c8dd0e9e7a8",
+  "version": "1.0.0",
+  "sig": "/8tNFO0K77aFZu/vazO+nF1n1o4v1+r+nPTOy4BYu0OoZh/lBeEsaJailTlcbUkxWX0pZz7t1RrjDGIeo6KpBA=="
+}

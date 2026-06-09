@@ -1,0 +1,22 @@
+// nexus-boot.eg — full boot sequence
+// UUID: nexus-boot-v1-0-0 | source: boot.js
+compartment "nexus-boot" {
+  id = nexus-boot-001
+  uuid = nexus-boot-001-xxxx
+  intent = bottom_up_boot_storage_cobalt_deps_poll_admin_booted
+  boot_sequence {
+    1 = jaaDB.open()
+    2 = fileStore.open() fileRefs.open()
+    3 = cobalt_core.open() register_project_manifest
+    4 = versionium.setDeps({ fileStore fileRefs })
+    5 = agents.setDeps({ ollama claude chatgpt gemini })
+    6 = poll_registry.start()
+    7 = admin_server.start(3748)
+    8 = jaaDB.insert event_log { type = system.booted }
+  }
+  invariant {
+    axiom NO_SILENT_DROP
+    if jaaDB.open fails { HALT "§1.2 jaaDB open failed" }
+    if admin_server.start fails { HALT "§1.2 admin server failed" }
+  }
+}

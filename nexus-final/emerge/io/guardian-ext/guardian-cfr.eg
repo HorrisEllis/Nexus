@@ -1,0 +1,42 @@
+// guardian-cfr.eg — CFR/CESL/RAT runtime, replaces URCK
+// UUID: guardian-cfr-v1-0-0 | source: Guardian-v5/cfr.js
+compartment "guardian-cfr" {
+  id = guardian-cfr-001
+  uuid = guardian-cfr-001-xxxx
+  intent = constraint_field_cesl_rat_every_action_emits_trace
+  invariant {
+    axiom EXECUTION_IS_TRACEABLE
+    if cesl.trace missing { gap "cesl-violation" { pressure = 1.0 } }
+  }
+  cfr {
+    ring_buffer = 100000
+    causal_graph = true
+    macro_detection = true
+    snr_gate = true
+  }
+  cesl {
+    intent = canonical_execution_service_layer
+    invariant = every_browser_action_emits_AutomationTraceEvent
+    replay_valid = true
+  }
+  rat {
+    intent = reproducible_automation_traces
+    deterministic = true
+    event_sourced = true
+  }
+  component "trace-emitter" {
+    on any_browser_action {
+      input action
+      id = newId()
+      hash = hash64(canonicalize(action))
+      emit AutomationTraceEvent { id type = action.type hash ts = now causalId = id }
+      record
+    }
+  }
+  component "urck-compat" {
+    // Same surface as URCK — drop-in replacement
+    on urck.capture    { forward to cfr.capture record }
+    on urck.listen     { forward to cfr.listen record }
+    on urck.inspect    { forward to cfr.inspect record }
+  }
+}

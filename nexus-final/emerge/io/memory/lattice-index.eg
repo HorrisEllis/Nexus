@@ -1,0 +1,37 @@
+// lattice-index.eg — causal graph snapshot + entity index rebuild
+// UUID: lattice-index-v1-0-0 | source: memory/lattice-index.js
+compartment "lattice-index" {
+  id = lattice-index-001
+  uuid = lattice-index-001-xxxx
+  intent = periodic_causal_graph_snapshot_entity_index_rebuild_on_boot
+  reads  = [ event_log memory_index ]
+  writes = [ event_log memory_index ]
+  component "snapshot" {
+    every 500 events
+      serialize causal_graph
+      insert jaa.event_log { type = lattice_snapshot payload = serialized_graph source = lattice-index ts = now }
+      record
+    on system.shutdown
+      serialize causal_graph
+      insert jaa.event_log { type = lattice_snapshot payload = serialized_graph }
+      record
+  }
+  component "rebuilder" {
+    on boot
+      snapshot = jaa.event_log.query(type == lattice_snapshot).last
+      if snapshot exists
+        restore causal_graph from snapshot.payload
+        subsequent = jaa.event_log.query(ts > snapshot.ts)
+        replay subsequent onto causal_graph
+      else
+        replay all jaa.event_log onto causal_graph
+      rebuild entity_index from jaa.memory_index
+      emit "lattice.ready"
+      record
+  }
+  component "query-cache" {
+    on causal.ancestors  { input uuid depth output ancestors(uuid depth) record }
+    on causal.descendants { input uuid depth output descendants(uuid depth) record }
+    on entity.traverse  { input entity hops output traverse(entity hops) record }
+  }
+}

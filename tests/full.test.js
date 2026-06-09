@@ -496,7 +496,9 @@ test('baseline latency mean is reasonable', () => {
 
 test('baseline friction low after normal events', () => {
   const m = makeBaseline('lowfrict');
-  for (let i=0; i<20; i++) m.observe({ type:'req', latencyMs:100+Math.random()*5, error:false });
+  // Send 25 events (> N=20) with consistent latency so baseline establishes
+  // and current sigma matches baseline sigma → friction near 0
+  for (let i=0; i<25; i++) m.observe({ type:'req', latencyMs:100, error:false });
   assert.ok(m.friction() < 0.3);
 });
 

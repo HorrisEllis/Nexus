@@ -1,0 +1,34 @@
+{
+  "uuid": "9d39980c-acbb-b894-cd45-40fb33735124",
+  "trustScore": 3.515,
+  "scoreReasons": [
+    "-1.48 probation (1/100)"
+  ],
+  "firstSeen": 1779618559695,
+  "lastSeen": 1779618559694,
+  "eventCount": 1,
+  "eventCounts": {
+    "http.request": 1
+  },
+  "events": [
+    {
+      "ts": 1779618559694,
+      "type": "http.request",
+      "hour": 3,
+      "path": null,
+      "command": null,
+      "tool": null,
+      "source": null
+    }
+  ],
+  "baseline": null,
+  "anomalies": [],
+  "relationships": {
+    "peers": [],
+    "clusters": []
+  },
+  "explorationState": {
+    "lastPressure": 0,
+    "consecutiveClean": 0
+  }
+}

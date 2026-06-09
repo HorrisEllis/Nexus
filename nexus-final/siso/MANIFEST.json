@@ -1,0 +1,72 @@
+{
+  "name": "siso-core",
+  "version": "1.0.0",
+  "description": "Pure functional event-driven framework. Event → Gate → Stream → StreamLog. The atom the NEXUS ecosystem is built from.",
+  "layer": "foundation",
+  "type": "library",
+  "license": "MIT",
+  "dependencies": "none — pure ES modules, zero external deps",
+
+  "uuid": "siso-core-f0und4t10n-layer-0000-000000000001",
+  "hookId": "siso.core:siso-core-f0und4t10n:00001",
+  "bridgeNodeType": "library-node",
+
+  "primitives": {
+    "Event": {
+      "uuid": "siso-event-00000000-0000-4000-a000-000000000001",
+      "hookId": "siso.core.event:siso-event-001:e0001",
+      "file": "src/core/Event.js",
+      "lines": 11,
+      "exported": true
+    },
+    "Gate": {
+      "uuid": "siso-gate-000000000-0000-4000-a000-000000000002",
+      "hookId": "siso.core.gate:siso-gate-001:a0002",
+      "file": "src/core/Gate.js",
+      "lines": 23,
+      "exported": true
+    },
+    "Stream": {
+      "uuid": "siso-stream-00000000-0000-4000-a000-000000000003",
+      "hookId": "siso.core.stream:siso-stream-001:a0003",
+      "file": "src/core/Stream.js",
+      "lines": 77,
+      "exported": true,
+      "features": ["O(1) gate lookup", "depth-first transform", "pending residue", "sub-stream support", "event count"]
+    },
+    "StreamLog": {
+      "uuid": "siso-streamlog-0000-0000-4000-a000-000000000004",
+      "hookId": "siso.core.streamlog:siso-streamlog-001:a0004",
+      "file": "src/core/StreamLog.js",
+      "lines": 89,
+      "exported": true,
+      "levels": ["OFF", "EVENTS", "DEEP", "DATA"]
+    }
+  },
+
+  "tests": {
+    "core": {
+      "file": "src/core.test.js",
+      "status": "passing"
+    },
+    "streamlog": {
+      "file": "src/streamlog.test.js",
+      "status": "passing"
+    }
+  },
+
+  "consumers": [
+    "jaa",
+    "mastermind",
+    "nexus-phase2",
+    "nexus-bridge"
+  ],
+
+  "axioms": [
+    "Signature collision is a hard error",
+    "Transforms run depth-first, synchronously",
+    "Pending is residue — not an error state",
+    "The log observes — it does not consume",
+    "Sub-streams share the parent log"
+  ]
+}

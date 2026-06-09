@@ -1,0 +1,20 @@
+// userscript-seam-tab.eg — SEAM tab: parse + deliver + verify + auto-inject
+// UUID: userscript-seam-tab-v1-0-0
+compartment "userscript-seam-tab" {
+  id = userscript-seam-tab-001
+  uuid = userscript-seam-tab-001-xxxx
+  intent = spec_parse_chunk_deliver_seam_contract_verify_auto_progress
+  state { seamState = { chunks [] activeChunk 0 specTitle customSystemPrompt created } seamAutoInject = false }
+  component "parser" {
+    on parse { input text splitOn maxSize customPat chunks = seamParseSpec(text splitOn maxSize customPat) seamState.chunks = chunks seamSaveState record }
+  }
+  component "injector" {
+    on inject { input idx if not isClaimed { toast "Not claimed" return } chunk = seamState.chunks[idx] prompt = seamBuildPrompt(chunk idx sysKey) explicitInject(prompt jobId) record }
+  }
+  component "verdict-handler" {
+    on response { input text jobId if seamVerdict(text) { seamVerifyChunk(activeChunk verdict) record } }
+  }
+  component "auto-injector" {
+    on seam.chunk.verified { if seamAutoInject and nextPending exists { after 2000ms inject(nextPending) } record }
+  }
+}

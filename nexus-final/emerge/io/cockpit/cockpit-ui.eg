@@ -1,0 +1,43 @@
+// cockpit-ui.eg — Cockpit v10 UI projection
+// UUID: cockpit-ui-v1-0-0 | source: forge-ui-final.html
+compartment "cockpit-ui" {
+  id = cockpit-ui-001
+  uuid = cockpit-ui-001-xxxx
+  version = 10.0.0
+  intent = cockpit_v10_ui_projection_of_cli_hotswappable
+  connects_to = 3748
+  modes { DEEP FAST AUDIT CREATIVE EMERGENCY SILENT }
+  panels {
+    panel-cognition  = { data = cobalt.nodes + kernel events }
+    panel-context    = { data = memory.context + open_gaps }
+    panel-health     = { data = health + guardian.status + relay.status }
+    panel-cobalt     = { data = cobalt.registry }
+    panel-spatial    = { data = COS_compartments_map }
+    panel-map        = { data = system_topology_expandable }
+    panel-ia         = { data = intent_graph_routing_decisions }
+    panel-tools      = { data = CLI_passthrough_command_palette }
+  }
+  topbar {
+    logo         = "NEXUS ⬡ v10"
+    mode_bar     = [ DEEP FAST AUDIT CREATIVE EMRG SILENT ]
+    nexus_pill   = { connected = green disconnected = red }
+    guardian_pill = { connected = green disconnected = red }
+    cobalt_pill  = { active = green inactive = grey }
+    sigma_ring   = live_sigma_score
+  }
+  compare_panel {
+    modes = [ pipeline race broadcast ]
+    trigger = topbar_broadcast_toggle
+  }
+  cli_groups {
+    standard  = nexus_cli_passthrough
+    callto    = guardian_dispatch
+    intent    = intent_to_agent_routing
+    api       = api_call_builder
+  }
+  event_viewer {
+    grouped_by = section
+    filterable = true
+    expandable = true
+  }
+}

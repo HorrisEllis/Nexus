@@ -1,0 +1,23 @@
+{
+  "stats": {
+    "idearium.spec.check": {
+      "count": 4,
+      "lastTs": 1780722373692,
+      "intervals": [
+        632,
+        18670,
+        635
+      ],
+      "totalMs": 19937
+    },
+    "idearium.snapshot.commit": {
+      "count": 2,
+      "lastTs": 1780722374019,
+      "intervals": [
+        19288
+      ],
+      "totalMs": 19288
+    }
+  },
+  "baseline": {}
+}

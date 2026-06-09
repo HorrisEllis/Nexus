@@ -1,0 +1,28 @@
+// agent-ollama.eg — local Ollama inference (LAW_I first)
+// UUID: agent-ollama-v1-0-0 | source: agents/ollama/index.js
+compartment "agent-ollama" {
+  id = agent-ollama-001
+  uuid = agent-ollama-001-xxxx
+  intent = local_first_inference_ollama_11434_streaming
+  reads  = [ agent_calls ]
+  writes = [ agent_calls cortex_memory event_log failures ]
+  url = http://localhost:11434/api/chat
+  component "runner" {
+    input call
+    update jaa.agent_calls set status = processing startedAt = now
+    context = mql.recall(call.prompt call.uuid)
+    messages = [ system = context_block + call.prompt ]
+    stream POST 11434/api/chat { model = ollama_model messages = messages stream = true }
+    on chunk { assembled += chunk emit "agent.chunk" { callUuid = call.uuid text = chunk } record }
+    on complete
+      update jaa.agent_calls set status = complete response = assembled completedAt = now
+      insert jaa.cortex_memory { uuid = uid content = assembled source = ollama tier = hot ts = now }
+      emit "agent.call.complete" { callUuid = call.uuid chars = assembled.length }
+      record
+    on error
+      update jaa.agent_calls set status = failed error = err
+      insert jaa.failures { source = agent-ollama error = err causedBy = call.uuid ts = now }
+      emit "agent.call.failed" { callUuid = call.uuid }
+      record
+  }
+}

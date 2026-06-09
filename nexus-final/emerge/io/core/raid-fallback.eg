@@ -1,0 +1,23 @@
+// raid-fallback.eg — fallback routing when primary agent fails
+// UUID: raid-fallback-v1-0-0 | source: core/raid/fallback.js
+compartment "raid-fallback" {
+  id = raid-fallback-001
+  uuid = raid-fallback-001-xxxx
+  intent = escalate_to_next_priority_agent_on_failure
+  reads  = [ agent_calls failures ]
+  writes = [ agent_calls event_log ]
+  component "fallback" {
+    on agent.call.failed {
+      input call
+      next = next_in_priority(call.routedTo agent_priority)
+      if next exists
+        update jaa.agent_calls set routedTo = next status = routed fallbackFrom = call.routedTo
+        cobalt_bus.ingest "agent.call.fallback" { uuid = call.uuid from = call.routedTo to = next }
+        record
+      else
+        update jaa.agent_calls set status = failed
+        gap "all-agents-failed" { pressure = 1.0 }
+        record
+    }
+  }
+}

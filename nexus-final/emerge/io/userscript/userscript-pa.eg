@@ -1,0 +1,24 @@
+// userscript-pa.eg — Prompt Archaeology session + waveform + hypotheses
+// UUID: userscript-pa-v1-0-0
+compartment "userscript-pa" {
+  id = userscript-pa-001
+  uuid = userscript-pa-001-xxxx
+  intent = streaming_token_behavioral_analysis_burst_pause_hypotheses
+  component "session" {
+    state { startTime chunks totalTokens burstZones pauseZones entropyHistory hypotheses }
+    on chunk { input delta now = now if not startTime { startTime = now } chunks.push { t = now - startTime text = delta tokens = estimateTokens(delta) } totalTokens += tokens entropyHistory.push entropy(delta) record }
+  }
+  component "analysis" {
+    on complete {
+      rates = chunks.slice(1).map(c => tps(c chunks[i-1]))
+      mean = avg(rates) std = stddev(rates)
+      burstZones = detect_bursts(rates mean std)
+      pauseZones = detect_pauses(rates 500ms)
+      hypotheses = generate(burstZones pauseZones lexical_diversity bullet_density)
+      record
+    }
+  }
+  component "waveform" {
+    on draw { input canvas velocities gradient = linear(purple) fill_area stroke_line record }
+  }
+}

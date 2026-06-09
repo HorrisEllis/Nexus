@@ -1,0 +1,66 @@
+// nexus-seam-contracts.eg — all seam boundary declarations
+// UUID: nexus-seam-contracts-v1-0-0
+compartment "nexus-seam-contracts" {
+  id = nexus-seam-contracts-001
+  uuid = nexus-seam-contracts-001-xxxx
+  intent = every_cross_layer_boundary_formally_declared_versioned_testable
+
+  seam CORTEX_CONTRACT {
+    version = 1.0.0 status = active
+    between = forge_ide <-> cortex_3748
+    commands {
+      event.emit    = { payload = { type payload source } returns = EventRecord }
+      memory.search = { payload = { query } returns = MemoryRecord[] }
+      gaps.query    = { payload = { status } returns = Gap[] }
+    }
+    events {
+      system.booted       = { payload = { version port } }
+      agent.call.routed   = { payload = { uuid agent } }
+      gap.found           = { payload = { type path } }
+      seam.chunk.verified = { payload = { idx title } }
+    }
+    isolation { no_direct_jaa_access all_state_via_http_3748 sse_for_realtime }
+  }
+
+  seam GUARDIAN_WSS_CONTRACT {
+    version = 9.0.0 status = active
+    between = userscript <-> guardian_wss_7821
+    server_to_provider { GUARDIAN_READY GUARDIAN_JOB GUARDIAN_ARTIFACT_SAVED GUARDIAN_FILE_SAVED GUARDIAN_HEARTBEAT_ACK GUARDIAN_INPUT_ACK ERROR }
+    provider_to_server { GUARDIAN_REGISTER GUARDIAN_DELIVERED GUARDIAN_CHUNK GUARDIAN_COMPLETE GUARDIAN_ARTIFACT GUARDIAN_FILE_UPLOAD GUARDIAN_LEDGER_EVENT GUARDIAN_ERROR GUARDIAN_HEARTBEAT GUARDIAN_PA_SESSION GUARDIAN_GAPS GUARDIAN_DOM_SYSTEMS GUARDIAN_DOWNLOAD GUARDIAN_SESSION_NAMED GUARDIAN_QUEUE_EVENT GUARDIAN_INPUT GUARDIAN_DONE }
+    isolation { providers_no_http_access GUARDIAN_INPUT_opens_persistent_channel_closed_by_GUARDIAN_DONE }
+  }
+
+  seam FORGE_CONTRACT {
+    version = 1.0.0 status = active
+    between = guardian_server <-> forge_idearium_4800
+    commands {
+      queue.progress = { payload = { queueId state } returns = ok }
+      gap.escalate   = { payload = { title pressure } returns = Gap }
+      guardian.event = { payload = any returns = ok }
+    }
+    isolation { no_internal_imports http_only }
+  }
+
+  seam SPEC_SEAM_CONTRACT {
+    version = 1.0.0 status = active
+    between = spec_parser <-> seam_delivery
+    commands {
+      spec.parse    = { payload = { text splitOn maxSize } returns = Chunk[] }
+      chunk.deliver = { payload = { idx provider } returns = jobId }
+      verdict.read  = { payload = { response } returns = pass_or_fail_or_null }
+    }
+    events {
+      seam.chunk.verified = { payload = { idx title } }
+      seam.chunk.failed   = { payload = { idx title reason } }
+      seam.complete       = { payload = { verified total } }
+    }
+  }
+
+  seam CLI_UI_CONTRACT {
+    version = 1.0.0 status = active
+    between = nexus_cli <-> cockpit_ui
+    hotswap = true
+    isolation { ui_no_direct_jaa cli_no_knowledge_of_ui replace_ui_without_touching_cli }
+    sync = sse_all_cli_events_to_ui
+  }
+}

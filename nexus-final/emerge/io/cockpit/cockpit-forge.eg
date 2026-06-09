@@ -1,0 +1,14 @@
+// cockpit-forge.eg — AI self-modification engine
+// UUID: cockpit-forge-v1-0-0 | source: forge.js
+compartment "cockpit-forge" {
+  id = cockpit-forge-001
+  uuid = cockpit-forge-001-xxxx
+  version = 1.0.0
+  intent = ai_self_mod_guardian_first_ollama_second_fail_loud_third
+  routing_priority { 1 = guardian_7820 2 = ollama_11434 3 = fail_loud }
+  system_nucleus_laws { no_stubs no_silent_fails jaa_before_behavior uuid_on_everything constraint_field_not_raw_text one_signature_per_gate }
+  component "forge-module"  { input src instruction insert jaa.forge_sessions route = select_route result = stream_inference validate output result record }
+  component "forge-patch"   { input src patch_spec insert jaa.forge_sessions prompt = build_patch_prompt result = stream_inference validate output result record }
+  component "forge-gate"    { input description prompt = "SISO gate for: " + description result = stream_inference(ollama) output result.gate_fn record }
+  component "forge-hook"    { input src hook_spec prompt = build_hook_prompt result = stream_inference if not contains_hook_uuid(result) { gap "missing-hook-uuid" } output result record }
+}

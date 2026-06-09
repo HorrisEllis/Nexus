@@ -444,21 +444,6 @@ function _handleNCPMessage(msg) {
         });
         bus.emit('guardian.job.complete', { jobId, provider, chars: finalText.length,
           gaps: gaps.length, gapDrift });
-        // §WM.1 — mirror completed job into Cortex working memory
-        if (global._guardianKernelClient) {
-          const completedJob = jobs.get(jobId) || {};
-          global._guardianKernelClient.mirrorJob({
-            ...completedJob,
-            id:          jobId,
-            provider:    provider || completedJob.provider,
-            status:      'complete',
-            response:    finalText,
-            completedAt: Date.now(),
-          });
-          if (completedJob._kernelJobId) {
-            global._guardianKernelClient.completeRelayed(completedJob._kernelJobId, finalText, null);
-          }
-        }
         cockpitBroadcast({ type: 'job.complete', jobId, provider,
           chars: finalText.length, gaps: gaps.length, gapDrift, ts: Date.now() });
       }
@@ -649,15 +634,11 @@ const ncp = createNCPServer({
   onConnect: ({ provider, tabId }) => {
     console.log(`[guardian] NCP connected: provider=${provider} tab=${tabId}`);
     bus.emit('guardian.provider.connected', { provider, tabId });
-    // §WM.1 — mirror into Cortex working memory
-    if (global._guardianKernelClient) global._guardianKernelClient.mirrorProvider(provider, true, { tabId });
     flushQueuedJobs(provider);
   },
   onDisconnect: ({ provider, tabId }) => {
     console.log(`[guardian] NCP disconnected: provider=${provider} tab=${tabId}`);
     bus.emit('guardian.provider.disconnected', { provider, tabId });
-    // §WM.1 — mirror into Cortex working memory
-    if (global._guardianKernelClient) global._guardianKernelClient.mirrorProvider(provider, false, { tabId });
   },
   busEmit: (type, data) => bus.emit(type, data),
 });
@@ -877,44 +858,6 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
         return { ok: true };
       } catch { return { ok: false, msg: 'bridge unavailable' }; }
     }
-  });
-
-  // ── PHASE 13: Cortex mind-bridge + Kernel sync ────────────────────────────
-  // §WM.1 — every Guardian event written to Cortex working memory via
-  //          kernel-client before anything else.
-  // §LAW_III — Cortex is the only write target; kernel gets peer mirrors.
-  seq.phase({ name: 'cortex.mind-bridge', type: 'SOFT',
-    label: 'Cortex working-memory sync + Kernel relay bridge',
-    fn: async () => {
-      const kernelClient = (() => {
-        try { return require('./kernel-client'); }
-        catch (_) {
-          console.warn('[guardian] kernel-client not found — Cortex/kernel sync disabled');
-          return { mirrorJob: () => {}, mirrorProvider: () => {}, mirrorEvent: () => {},
-                   startSync: () => {}, stopSync: () => {}, completeRelayed: () => {} };
-        }
-      })();
-
-      kernelClient.startSync({
-        getState: () => ({
-          version:   '3.5.1',
-          jobs:      jobs.size,
-          providers: Object.fromEntries(
-            ['claude', 'chatgpt', 'gemini', 'ollama'].map(p => [p, ncp.isConnected(p)])
-          ),
-        }),
-        dispatchFn: async ({ provider, command, prompt, _kernelJobId }) => {
-          const job = createJob(provider, command || 'chat', prompt);
-          job._kernelJobId = _kernelJobId;
-          jobs.set(job.id, job);
-          bus.emit('guardian.job.queued', { jobId: job.id, provider, source: 'kernel-relay' });
-          if (ncp.isConnected(provider)) dispatchJob(job);
-          else bus.emit('guardian.tab.needed', { provider, jobId: job.id });
-        },
-      });
-
-      global._guardianKernelClient = kernelClient;
-    },
   });
 
     await seq.run();
@@ -1760,8 +1703,6 @@ function _kernelEmit(type, data, ts) {
   ]);
   if (CORTEX_EVENTS.has(type)) {
     _postEvent(type, data, { source: 'guardian.bus', causedBy: data.jobId || null });
-    // §WM.1 — mirror into Cortex working memory via kernel-client
-    if (global._guardianKernelClient) global._guardianKernelClient.mirrorEvent(type, data);
   }
   // 3. Bridge SSE broadcast (§5.2 — everything on the bus)
   const BRIDGE_EVENTS = new Set([

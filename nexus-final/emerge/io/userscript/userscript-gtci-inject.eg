@@ -1,0 +1,23 @@
+// userscript-gtci-inject.eg — GTCI gap question injection
+// UUID: userscript-gtci-inject-v1-0-0
+compartment "userscript-gtci-inject" {
+  id = userscript-gtci-inject-001
+  uuid = userscript-gtci-inject-001-xxxx
+  intent = prepend_gap_context_block_to_every_prompt_max_3_questions
+  component "injector" {
+    on before_inject {
+      questions = await GET 7820/gap-questions?status=pending
+      if questions.length == 0 { return null }
+      selected = questions.slice(0 3)
+      blocks = selected.map (q i) =>
+        "[" + (i+1) + "/" + total + "] " + q.subject + nl
+        + q.contextBlock + nl
+        + "Label your answer: GAP ANSWER " + (i+1) + ": <answer>"
+      context = separator + header + blocks.join(separator) + nl
+        + "Address gaps BEFORE primary request." + nl
+        + separator + "PRIMARY REQUEST:" + separator
+      output context
+      record
+    }
+  }
+}

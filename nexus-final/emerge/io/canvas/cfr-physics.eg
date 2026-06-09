@@ -1,0 +1,21 @@
+// cfr-physics.eg — CPU particle physics (CFR kernel)
+// UUID: cfr-physics-v1-0-0 | source: canvas/spec-a/cfr-physics.js
+compartment "cfr-physics" {
+  id = cfr-physics-001
+  uuid = cfr-physics-001-xxxx
+  intent = cpu_particle_world_n_10000_perspective_zero_deps
+  config {
+    n      = 10000
+    bound  = 9.0
+    boundZ = 5.0
+    depth  = 3.0
+    wallK  = 0.11
+    wallZ  = 1.4
+    vmax   = 0.17
+  }
+  component "world" {
+    on step { update positions velocities apply_attractors apply_walls clamp_velocity record }
+    on add_attractor  { input id x y z mass record }
+    on inject_stress  { input x y z strength radius apply_gaussian_impulse record }
+  }
+}

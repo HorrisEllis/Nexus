@@ -1,0 +1,20 @@
+// guardian-content.eg — per-tab content script
+// UUID: guardian-content-v1-0-0 | source: Guardian-v5/content.js
+compartment "guardian-content" {
+  id = guardian-content-001
+  uuid = guardian-content-001-xxxx
+  intent = per_tab_content_script_wires_cfr_and_site_modules
+  component "injector" {
+    on tab.load
+      inject cfr.js
+      inject ir_layer.js
+      inject base_module.js
+      inject site_module_for(location.hostname)
+      inject content.js
+      record
+  }
+  component "relay" {
+    on site_module.event { browser.runtime.sendMessage { type = URCK_EVENT eventType source url } record }
+    on background.message { site_module.handle(message) record }
+  }
+}

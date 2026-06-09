@@ -1,0 +1,27 @@
+// automation-engine.eg — workflow_runs step executor
+// UUID: automation-engine-v1-0-0 | source: automation/engine.js
+compartment "automation-engine" {
+  id = automation-engine-001
+  uuid = automation-engine-001-xxxx
+  intent = execute_workflow_run_steps_sequentially_with_jaa_trace
+  reads  = [ workflow_runs agent_calls ]
+  writes = [ workflow_runs agent_calls event_log failures ]
+  component "executor" {
+    interval = 1000
+    query jaa.workflow_runs where status == pending limit 5
+    for each run in pending
+      claim run
+      try
+        for each step in run.steps
+          result = execute_step(step run.context)
+          run.context.outputs[step.id] = result
+          insert jaa.event_log { type = workflow.step.complete payload = { step result } source = automation ts = now }
+        update jaa.workflow_runs set status = complete completedAt = now
+        emit "workflow.complete" { runUuid = run.uuid }
+        record
+      else
+        update jaa.workflow_runs set status = failed error = err
+        insert jaa.failures { source = automation-engine error = err causedBy = run.uuid ts = now }
+        record
+  }
+}

@@ -1,0 +1,21 @@
+// siso-stream.eg — Stream + dispatch + history
+// UUID: siso-stream-v1-0-0 | source: foundation/siso/Stream.js
+compartment "siso-stream" {
+  id = siso-stream-001
+  uuid = siso-stream-001-xxxx
+  intent = event_bus_depth_first_drain_500_event_history
+  component "kernel" {
+    state { gates = Map history = Ring(500) queue = [] processing = false tick = 0 }
+    on gate.register { if signature exists { gap "gate-collision" { pressure = 1.0 } } gates.set signature record }
+    on emit { input type payload meta event = SISOEvent(type payload meta) enqueue event record }
+    on drain { while queue.length dispatch queue.shift record }
+    on dispatch {
+      input event
+      history.push event
+      for each gate in gates { if gate.matches(event) { gate.transform(event this) } }
+      for each listener in listeners[event.type] { listener(event) }
+      for each listener in listeners[*] { listener(event) }
+      record
+    }
+  }
+}

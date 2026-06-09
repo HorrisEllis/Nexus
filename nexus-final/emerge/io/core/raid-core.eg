@@ -1,0 +1,30 @@
+// raid-core.eg — LAW_I local-first agent routing dispatcher
+// UUID: raid-core-v1-0-0 | source: core/raid/index.js
+compartment "raid-core" {
+  id = raid-core-001
+  uuid = raid-core-001-xxxx
+  intent = local_first_agent_routing_ollama_before_cloud
+  reads  = [ agent_calls bep_patterns crystals ]
+  writes = [ agent_calls ]
+  agent_priority = [ ollama claude chatgpt gemini ]
+  component "dispatcher" {
+    interval = 3000
+    query jaa.agent_calls where status == pending limit 20
+    for each call in pending
+      claim call
+      route = select_route(call bep_patterns crystals)
+      update jaa.agent_calls set status = routed routedTo = route.agent routedAt = now
+      cobalt_bus.ingest "agent.call.routed" { uuid = call.uuid agent = route.agent reason = route.reason }
+      record
+  }
+  component "route-selector" {
+    input call patterns crystals
+    if call.preferredAgent and available(call.preferredAgent) { output call.preferredAgent reason = explicit }
+    for each agent in agent_priority
+      weight = trust.weight(agent)
+      pattern_match = bep_patterns.match(call.prompt)
+      if available(agent) and weight >= 0.2 { output agent reason = "w=" + weight + " pat=" + pattern_match }
+    gap "no-agent-available" { pressure = 1.0 }
+    record
+  }
+}

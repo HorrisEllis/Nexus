@@ -1,0 +1,27 @@
+// orion-sensor.eg — bridge_messages accumulator → orion_sessions
+// UUID: orion-sensor-v1-0-0 | source: orion/sensor.js
+compartment "orion-sensor" {
+  id = orion-sensor-001
+  uuid = orion-sensor-001-xxxx
+  intent = accumulate_bridge_messages_into_orion_sessions_by_callto_id
+  reads  = [ bridge_messages ]
+  writes = [ orion_sessions event_log ]
+  session_ttl = 120000
+  component "accumulator" {
+    interval = 1000
+    new_msgs = jaa.bridge_messages where _rowId > last_rowId
+    for each msg in new_msgs
+      calltoId = msg.callto.id or msg.instanceId or default
+      session = jaa.orion_sessions.find(calltoId == calltoId and status == buffering)
+      if not session
+        insert jaa.orion_sessions { uuid = uid calltoId service = detect_service(msg) events = [] regime = insufficient_data status = buffering causedBy = msg.uuid ts = now }
+        session = inserted
+      session.events.push(msg)
+      update jaa.orion_sessions set events = session.events
+      if now - session.ts > session_ttl
+        update jaa.orion_sessions set status = measured
+        emit "orion.session.measured" { uuid = session.uuid }
+      record
+    last_rowId = new_msgs.last._rowId
+  }
+}

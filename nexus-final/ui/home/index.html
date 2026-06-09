@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS — Sovereign Cognitive Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg:#030509; --bg1:#07090f; --bg2:#0d1018; --bg3:#141821; --bg4:#1a2030;
+  --border:#131825; --border2:#1e2535; --border3:#273045;
+  --text:#e2e4f0; --text2:#9298b0; --text3:#4e5470; --text4:#2e3450;
+  --c:#00d4ff; --g:#00ff88; --m:#cc44ff; --o:#ff6b35;
+  --y:#f59e0b; --b:#60a5fa; --p:#f472b6; --r:#ff2d55;
+  --display:'Bebas Neue',sans-serif;
+  --mono:'DM Mono',monospace;
+  --body:'Space Grotesk',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--body);font-size:12px;line-height:1.5;}
+
+/* ── ALIVE LAYER ─────────────────────────────────────────────────────────── */
+#nx-particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+#nx-scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);}
+.nx-blob{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(70px);
+  animation:blobDrift 18s ease-in-out infinite alternate;}
+@keyframes blobDrift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(50px,35px) scale(1.1);}}
+
+/* ── APP ─────────────────────────────────────────────────────────────────── */
+#app{position:relative;z-index:10;display:flex;flex-direction:column;width:100%;height:100%;}
+
+/* ── TOP BAR ─────────────────────────────────────────────────────────────── */
+#top-bar{
+  height:38px;min-height:38px;flex-shrink:0;
+  background:rgba(7,9,15,.94);border-bottom:1px solid var(--border2);
+  backdrop-filter:blur(16px);
+  display:flex;align-items:center;gap:6px;padding:0 10px;
+}
+.nxlogo{
+  font-family:var(--display);font-size:18px;letter-spacing:.28em;
+  color:var(--c);text-shadow:0 0 30px rgba(0,212,255,.4);
+  cursor:pointer;padding:0 6px;flex-shrink:0;
+  animation:logoCycle 9s ease-in-out infinite;
+}
+@keyframes logoCycle{
+  0%,100%{color:var(--c);text-shadow:0 0 28px rgba(0,212,255,.4);}
+  33%{color:var(--b);text-shadow:0 0 28px rgba(96,165,250,.35);}
+  66%{color:var(--m);text-shadow:0 0 28px rgba(204,68,255,.3);}
+}
+.nxver{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em;flex-shrink:0;}
+.tb-sep{width:1px;height:18px;background:var(--border2);flex-shrink:0;margin:0 2px;}
+
+/* Pills */
+.pill{display:flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;
+  border:1px solid var(--border2);font-family:var(--mono);font-size:9px;color:var(--text3);
+  background:var(--bg2);cursor:default;flex-shrink:0;}
+.pill-dot{width:5px;height:5px;border-radius:50%;background:var(--text4);transition:all .3s;}
+.pill.ok .pill-dot{background:var(--g);box-shadow:0 0 5px var(--g);}
+.pill.ok{border-color:rgba(0,255,136,.25);color:var(--g);}
+.pill.warn .pill-dot{background:var(--y);box-shadow:0 0 5px var(--y);}
+.pill.warn{border-color:rgba(245,158,11,.25);color:var(--y);}
+
+/* System dots */
+#sys-dots{display:flex;gap:8px;align-items:center;padding:0 4px;flex-shrink:0;}
+.sdot-wrap{display:flex;align-items:center;gap:3px;cursor:pointer;}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--text4);transition:all .3s;}
+.sdot.online{box-shadow:0 0 5px currentColor;}
+.sdot-lbl{font-size:7px;font-family:var(--mono);letter-spacing:.07em;color:var(--text4);}
+
+/* Entropy */
+#ent-wrap{display:flex;align-items:center;gap:4px;}
+#ent-track{width:38px;height:2px;background:var(--border2);border-radius:1px;overflow:hidden;}
+#ent-bar{height:100%;width:0%;background:var(--g);border-radius:1px;transition:width .5s,background .5s;}
+#ent-val{font-size:8px;color:var(--text3);font-family:var(--mono);min-width:26px;}
+.ent-lbl{font-size:8px;color:var(--text4);font-family:var(--mono);}
+
+.tbr{display:flex;align-items:center;gap:5px;margin-left:auto;}
+.tb-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text3);
+  padding:2px 9px;border-radius:2px;cursor:pointer;font-family:var(--mono);font-size:9px;
+  letter-spacing:.07em;transition:all .12s;}
+.tb-btn:hover{border-color:var(--border3);color:var(--text);}
+.tb-btn.accent{background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.3);color:var(--c);}
+.tb-btn.accent:hover{background:rgba(0,212,255,.14);}
+
+/* ── NAV BAR ─────────────────────────────────────────────────────────────── */
+#nav-bar{
+  height:32px;min-height:32px;flex-shrink:0;
+  background:rgba(7,9,15,.9);border-bottom:1px solid var(--border);
+  display:flex;align-items:stretch;padding:0 6px;gap:1px;overflow-x:auto;
+  scrollbar-width:none;
+}
+#nav-bar::-webkit-scrollbar{display:none;}
+.tab-btn{
+  padding:0 13px;background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--text3);font-family:var(--mono);font-size:9px;letter-spacing:.09em;
+  cursor:pointer;white-space:nowrap;transition:all .12s;text-transform:uppercase;
+  display:flex;align-items:center;gap:5px;
+}
+.tab-btn:hover{color:var(--text2);background:rgba(255,255,255,.02);}
+.tab-btn[data-active]{color:var(--c);border-bottom-color:var(--c);background:rgba(0,212,255,.04);}
+.tab-btn .tdot{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.7;flex-shrink:0;}
+.nav-sep{width:1px;height:18px;background:var(--border);align-self:center;margin:0 3px;flex-shrink:0;}
+
+/* ── PANELS ──────────────────────────────────────────────────────────────── */
+#main{flex:1;min-height:0;position:relative;}
+.tab-panel{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;}
+.tab-panel[data-active]{display:flex;animation:panelIn .18s ease;}
+@keyframes panelIn{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:none;}}
+.panel-iframe{border:none;width:100%;height:100%;flex:1;}
+
+/* ── HOME PANEL ──────────────────────────────────────────────────────────── */
+#tab-home{overflow-y:auto;background:transparent;}
+
+/* Hero */
+.home-hero{
+  padding:48px 24px 36px;text-align:center;position:relative;
+}
+.home-hero-title{
+  font-family:var(--display);font-size:clamp(52px,8vw,96px);letter-spacing:.28em;
+  color:var(--c);line-height:1;margin-bottom:6px;
+  text-shadow:0 0 60px rgba(0,212,255,.45),0 0 120px rgba(0,212,255,.15);
+  animation:heroIn .7s cubic-bezier(.16,1,.3,1) both, heroGlow 5s ease-in-out infinite .8s;
+  opacity:0;
+}
+@keyframes heroIn{from{opacity:0;transform:translateY(-12px);letter-spacing:.45em;}to{opacity:1;transform:none;letter-spacing:.28em;}}
+@keyframes heroGlow{
+  0%,100%{text-shadow:0 0 50px rgba(0,212,255,.4),0 0 100px rgba(0,212,255,.12);}
+  50%{text-shadow:0 0 80px rgba(0,212,255,.65),0 0 160px rgba(0,212,255,.25),0 0 240px rgba(0,212,255,.08);}
+}
+.home-hero-sub{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--text3);
+  text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp .4s ease .5s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* Status pills row */
+.hero-status{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;
+  opacity:0;animation:fadeUp .4s ease .6s both;}
+
+/* Action buttons */
+.home-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;
+  opacity:0;animation:fadeUp .4s ease .7s both;}
+.btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:5px 13px;border-radius:2px;cursor:pointer;font-family:var(--mono);
+  font-size:9px;letter-spacing:.08em;transition:all .12s;}
+.btn:hover{border-color:var(--border3);color:var(--text);}
+.btn.primary{background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.35);color:var(--c);}
+.btn.primary:hover{background:rgba(0,212,255,.15);}
+.btn.accent{background:rgba(0,255,136,.06);border-color:rgba(0,255,136,.3);color:var(--g);}
+.btn.accent:hover{background:rgba(0,255,136,.12);}
+.btn.void{background:rgba(204,68,255,.06);border-color:rgba(204,68,255,.25);color:var(--m);}
+.btn.void:hover{background:rgba(204,68,255,.12);}
+.btn.warn{background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.25);color:var(--y);}
+
+/* Continue banner */
+#home-resume-banner{
+  display:none;margin:0 auto 20px;max-width:720px;width:calc(100% - 48px);
+  padding:10px 16px;background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.18);
+  border-radius:2px;
+}
+#home-resume-banner.visible{display:flex;align-items:center;gap:10px;animation:fadeUp .3s ease both;}
+
+/* Section head */
+.home-section-head{
+  font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:var(--text3);
+  text-transform:uppercase;padding:0 24px;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.home-section-head::before{content:'//';color:var(--text4);}
+.home-section-head::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Recent projects */
+#home-recent-projects{padding:0 24px 20px;max-width:1280px;margin:0 auto;width:100%;}
+.recent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:28px;}
+
+.rproj-card{
+  padding:12px 14px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;
+  background:rgba(13,16,24,.65);transition:all .12s;
+  opacity:0;animation:fadeUp .3s ease both;
+}
+.rproj-card:hover{border-color:var(--border3);background:rgba(20,24,33,.8);transform:translateY(-1px);}
+.rproj-card.add-new{
+  border-style:dashed;display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.09em;
+}
+.rproj-card.add-new:hover{color:var(--c);border-color:rgba(0,212,255,.25);}
+.rpc-phase{font-size:7px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px;}
+.rpc-title{font-weight:600;font-size:11px;color:var(--text);margin-bottom:5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rpc-meta{font-size:8px;color:var(--text3);font-family:var(--mono);display:flex;gap:6px;}
+.rpc-snr{width:100%;height:2px;background:var(--border);border-radius:1px;overflow:hidden;margin-top:7px;}
+.rpc-snr-fill{height:100%;border-radius:1px;transition:width .5s;}
+.phase-seed{color:var(--text3);} .phase-expanding{color:var(--b);}
+.phase-tensioned{color:var(--y);} .phase-specced{color:var(--c);}
+.phase-building{color:var(--g);} .phase-complete{color:var(--teal);}
+.phase-archived{color:var(--text4);}
+
+/* Workspace tiles */
+#home-workspace{padding:0 24px 28px;max-width:1280px;margin:0 auto;width:100%;}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.home-tile{
+  padding:14px 16px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;
+  background:rgba(10,12,18,.6);transition:all .12s;
+  opacity:0;animation:fadeUp .3s ease both;
+}
+.home-tile:hover{border-color:var(--border3);background:rgba(18,22,32,.8);transform:translateY(-1px);}
+.home-tile-ico{font-size:22px;margin-bottom:8px;display:block;}
+.home-tile-name{font-family:var(--display);font-size:13px;letter-spacing:.15em;margin-bottom:4px;}
+.home-tile-desc{font-size:9px;color:var(--text3);line-height:1.65;margin-bottom:8px;}
+.home-tile-badge{
+  display:inline-block;font-size:7px;font-family:var(--mono);letter-spacing:.1em;
+  padding:1px 6px;border:1px solid currentColor;border-radius:1px;opacity:.7;
+}
+
+/* Metrics */
+#home-metrics{padding:0 24px 28px;max-width:1280px;margin:0 auto;width:100%;}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;}
+.mcard{padding:10px 12px;border:1px solid var(--border2);border-radius:2px;background:rgba(10,12,18,.5);}
+.mcard-title{font-size:8px;color:var(--text3);letter-spacing:.12em;font-family:var(--mono);margin-bottom:4px;}
+.mcard-val{font-family:var(--display);font-size:18px;color:var(--text2);}
+.mcard-val.ok{color:var(--g);} .mcard-val.warn{color:var(--y);} .mcard-val.err{color:var(--r);}
+
+/* Drop zone */
+.home-drop-zone{
+  border:2px dashed var(--border2);border-radius:2px;padding:14px;text-align:center;
+  cursor:pointer;transition:all .2s;margin:0 24px 24px;max-width:1232px;
+}
+.home-drop-zone:hover{border-color:rgba(0,212,255,.3);background:rgba(0,212,255,.03);}
+
+/* ── SETUP OVERLAY ───────────────────────────────────────────────────────── */
+#setup-overlay{
+  position:fixed;inset:0;z-index:1000;background:rgba(3,5,9,.96);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+}
+#setup-overlay.visible{display:flex;}
+#setup-box{
+  width:min(460px,90vw);background:var(--bg3);border:1px solid var(--border2);border-radius:3px;
+  overflow:hidden;
+}
+.setup-logo{font-family:var(--display);font-size:32px;letter-spacing:.3em;color:var(--c);
+  text-shadow:0 0 40px rgba(0,212,255,.4);text-align:center;padding:22px 24px 4px;}
+.setup-sub{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:var(--text3);
+  text-align:center;margin-bottom:20px;}
+.setup-step{padding:0 24px 20px;}
+.setup-q{font-family:var(--display);font-size:15px;letter-spacing:.14em;margin-bottom:5px;}
+.setup-hint{font-size:9px;color:var(--text3);margin-bottom:14px;line-height:1.65;}
+.setup-input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:2px;
+  color:var(--text);font-family:var(--mono);font-size:10px;padding:7px 10px;outline:none;
+  transition:border-color .12s;margin-bottom:12px;}
+.setup-input:focus{border-color:var(--c);}
+.setup-opts{display:flex;flex-direction:column;gap:5px;margin-bottom:16px;}
+.setup-opt{padding:10px 12px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;
+  transition:all .12s;display:flex;align-items:center;gap:10px;}
+.setup-opt:hover{border-color:var(--border3);background:var(--bg4);}
+.setup-opt.sel{border-color:var(--c);background:rgba(0,212,255,.06);}
+.so-ico{font-size:18px;flex-shrink:0;}
+.so-name{font-family:var(--display);font-size:11px;letter-spacing:.12em;}
+.so-desc{font-size:9px;color:var(--text3);}
+.setup-nav{display:flex;justify-content:flex-end;gap:6px;padding:10px 24px;
+  border-top:1px solid var(--border);background:var(--bg2);}
+
+/* ── WIZARD OVERLAY ──────────────────────────────────────────────────────── */
+#wizard-overlay{
+  position:fixed;inset:0;z-index:900;background:rgba(3,5,9,.92);
+  display:none;align-items:center;justify-content:center;
+}
+#wizard-overlay.visible{display:flex;}
+.wiz-bg{position:absolute;inset:0;}
+.wiz-bg canvas{width:100%;height:100%;}
+#wiz-box{
+  position:relative;z-index:2;width:min(540px,94vw);background:var(--bg3);
+  border:1px solid var(--border2);border-radius:3px;overflow:hidden;max-height:90vh;overflow-y:auto;
+}
+.wiz-header{padding:16px 20px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;}
+.wiz-title{font-family:var(--display);font-size:13px;letter-spacing:.2em;color:var(--c);}
+.wiz-dots{display:flex;gap:4px;margin-left:auto;}
+.wiz-dot{width:5px;height:5px;border-radius:50%;background:var(--border2);transition:all .2s;}
+.wiz-dot.done{background:var(--g);}
+.wiz-dot.active{background:var(--c);box-shadow:0 0 5px var(--c);}
+.wiz-close{background:none;border:1px solid var(--border2);border-radius:2px;color:var(--text3);
+  cursor:pointer;font-family:var(--mono);font-size:9px;padding:2px 7px;}
+.wiz-close:hover{color:var(--text);border-color:var(--border3);}
+.wiz-slide{padding:20px;display:none;}
+.wiz-slide.active{display:block;}
+.wiz-q{font-family:var(--display);font-size:16px;letter-spacing:.14em;margin-bottom:3px;}
+.wiz-sub{font-size:9px;color:var(--text3);margin-bottom:16px;}
+.wiz-options{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.wiz-opt{flex:1;min-width:130px;padding:12px;border:1px solid var(--border2);border-radius:2px;
+  cursor:pointer;transition:all .12s;text-align:center;}
+.wiz-opt:hover{border-color:var(--border3);background:var(--bg4);}
+.wiz-opt.sel{border-color:var(--c);background:rgba(0,212,255,.06);}
+.wiz-opt-ico{font-size:20px;margin-bottom:6px;}
+.wiz-opt-name{font-family:var(--display);font-size:10px;letter-spacing:.12em;margin-bottom:2px;}
+.wiz-opt-desc{font-size:8px;color:var(--text3);}
+.wiz-ta{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:2px;
+  color:var(--text);font-family:var(--body);font-size:10px;padding:8px 10px;outline:none;
+  resize:vertical;min-height:72px;margin-bottom:14px;transition:border-color .12s;}
+.wiz-ta:focus{border-color:var(--c);}
+.wiz-checks{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.wiz-check{padding:5px 10px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;
+  font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:.07em;transition:all .12s;}
+.wiz-check:hover{border-color:var(--border3);color:var(--text);}
+.wiz-check.on{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.06);}
+.wiz-nav{display:flex;justify-content:space-between;align-items:center;
+  padding-top:14px;border-top:1px solid var(--border);}
+
+/* ── SCROLLBAR ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border3);border-radius:2px;}
+
+/* ── TOAST ───────────────────────────────────────────────────────────────── */
+#toast-root{position:fixed;bottom:16px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:6px;}
+.toast{padding:8px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:2px;
+  font-size:10px;color:var(--text2);animation:fadeUp .2s ease;max-width:300px;}
+.toast.ok{border-color:rgba(0,255,136,.3);color:var(--g);}
+.toast.warn{border-color:rgba(245,158,11,.3);color:var(--y);}
+.toast.err{border-color:rgba(255,45,85,.3);color:var(--r);}
+</style>
+</head>
+<body>
+
+<!-- ALIVE LAYER -->
+<canvas id="nx-particle-canvas"></canvas>
+<div id="nx-scanline"></div>
+<div class="nx-blob" style="width:650px;height:650px;left:-180px;top:-180px;background:radial-gradient(circle,rgba(0,212,255,.06),transparent 70%);animation-duration:20s;"></div>
+<div class="nx-blob" style="width:550px;height:550px;right:-130px;bottom:-100px;background:radial-gradient(circle,rgba(204,68,255,.05),transparent 70%);animation-duration:15s;animation-delay:-6s;animation-direction:alternate-reverse;"></div>
+<div class="nx-blob" style="width:400px;height:400px;left:42%;top:28%;background:radial-gradient(circle,rgba(0,255,136,.03),transparent 70%);animation-duration:24s;animation-delay:-11s;"></div>
+
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div id="top-bar">
+    <span class="nxlogo" onclick="switchTab('home')">NEXUS</span>
+    <span class="nxver">v3.4.0</span>
+
+    <div class="tb-sep"></div>
+
+    <div id="sys-dots">
+      <div class="sdot-wrap" onclick="switchTab('guardian')" title="Guardian :7820">
+        <div class="sdot" id="dot-guardian" style="color:var(--p)"></div>
+        <span class="sdot-lbl">GRD</span>
+      </div>
+      <div class="sdot-wrap" onclick="switchTab('cortex')" title="Cortex :3748">
+        <div class="sdot" id="dot-cortex" style="color:#2dd4bf"></div>
+        <span class="sdot-lbl">COR</span>
+      </div>
+      <div class="sdot-wrap" onclick="switchTab('idearium')" title="Idearium :4800">
+        <div class="sdot" id="dot-idearium" style="color:var(--b)"></div>
+        <span class="sdot-lbl">IDE</span>
+      </div>
+      <div class="sdot-wrap" onclick="switchTab('bridge')" title="Bridge :9999">
+        <div class="sdot" id="dot-bridge" style="color:var(--y)"></div>
+        <span class="sdot-lbl">BRG</span>
+      </div>
+      <div class="sdot-wrap" onclick="switchTab('emerge')" title="Emerge :4242">
+        <div class="sdot" id="dot-emerge" style="color:var(--g)"></div>
+        <span class="sdot-lbl">EMG</span>
+      </div>
+      <div class="sdot-wrap" title="Ollama :11434">
+        <div class="sdot" id="dot-ollama" style="color:#e85d3c"></div>
+        <span class="sdot-lbl">OLL</span>
+      </div>
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <div class="pill" id="pill-ai"><div class="pill-dot"></div><span id="pill-ai-txt">GUARDIAN</span></div>
+    <div class="pill" id="bridge-status-pill" style="margin-left:2px;"><div class="pill-dot"></div><span id="bridge-status-txt">BRIDGE</span></div>
+
+    <div class="tb-sep"></div>
+
+    <div id="ent-wrap" title="System entropy">
+      <span class="ent-lbl">ENT</span>
+      <div id="ent-track"><div id="ent-bar"></div></div>
+      <span id="ent-val">—</span>
+    </div>
+
+    <div class="tbr">
+      <button class="btn" onclick="switchTab('idearium')" style="color:var(--b);border-color:rgba(96,165,250,.2);">◫ PROJECTS</button>
+      <button class="btn accent" onclick="openWizard()">✦ NEW SPEC</button>
+    </div>
+  </div>
+
+  <!-- NAV BAR -->
+  <nav id="nav-bar">
+    <button class="tab-btn" data-tab="home" data-active onclick="switchTab('home')">HOME</button>
+    <button class="tab-btn" data-tab="idearium" onclick="switchTab('idearium')"><span class="tdot" style="color:var(--b)"></span>IDEARIUM</button>
+    <button class="tab-btn" data-tab="guardian" onclick="switchTab('guardian')" style="color:var(--p)"><span class="tdot"></span>FORGE IDE</button>
+    <div class="nav-sep"></div>
+    <button class="tab-btn" data-tab="cortex" onclick="switchTab('cortex')"><span class="tdot" style="color:#2dd4bf"></span>CORTEX</button>
+    <button class="tab-btn" data-tab="bridge" onclick="switchTab('bridge')"><span class="tdot" style="color:var(--y)"></span>BRIDGE</button>
+    <button class="tab-btn" data-tab="emerge" onclick="switchTab('emerge')"><span class="tdot" style="color:var(--g)"></span>EMERGE</button>
+    <div class="nav-sep"></div>
+    <button class="tab-btn" data-tab="architect" onclick="switchTab('architect')" style="color:var(--m)">⬡ ARCHITECT</button>
+  </nav>
+
+  <!-- PANELS -->
+  <div id="main">
+
+    <!-- HOME -->
+    <section class="tab-panel" id="tab-home" data-active>
+
+      <!-- HERO -->
+      <div class="home-hero">
+        <div class="home-hero-title" id="home-hero-title">NEXUS</div>
+        <div class="home-hero-sub">v3.4.0 · SOVEREIGN COGNITIVE INFRASTRUCTURE · SISO CORE</div>
+
+        <div class="hero-status">
+          <div class="pill" id="home-conn-pill"><div class="pill-dot"></div><span id="home-conn-label">Checking systems…</span></div>
+          <div class="pill" style="cursor:default;"><span id="home-session-badge">SESSION —</span></div>
+        </div>
+
+        <div class="home-actions">
+          <button class="btn primary" onclick="openWizard()">✦ NEW SPEC</button>
+          <button class="btn accent" onclick="switchTab('guardian')">⚡ FORGE IDE</button>
+          <button class="btn" onclick="switchTab('idearium')" style="color:var(--b);border-color:rgba(96,165,250,.2);">◫ PROJECTS</button>
+          <button class="btn" onclick="resumeSession()" style="color:var(--g);border-color:rgba(0,255,136,.2);">↩ CONTINUE</button>
+          <button class="btn void" onclick="switchTab('architect')">⬡ ARCHITECT</button>
+        </div>
+
+        <!-- Resume banner -->
+        <div id="home-resume-banner">
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 7px var(--c);flex-shrink:0;animation:blink .8s infinite;"></div>
+          <div style="flex:1;">
+            <div style="font-family:var(--display);font-size:11px;letter-spacing:.13em;color:var(--c);" id="resume-proj-name">RESUME</div>
+            <div style="font-size:8px;color:var(--text3);margin-top:1px;" id="resume-proj-meta">—</div>
+          </div>
+          <button class="btn primary" style="font-size:9px;" onclick="resumeSession()">↩ RESUME</button>
+          <button class="btn" style="font-size:9px;" onclick="dismissResume()">DISMISS</button>
+        </div>
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+      </div>
+
+      <!-- RECENT PROJECTS -->
+      <div id="home-recent-projects">
+        <div class="home-section-head">RECENT PROJECTS</div>
+        <div class="recent-grid" id="recent-grid">
+          <div class="rproj-card add-new" onclick="openWizard()" style="animation-delay:0s;">
+            <span style="font-size:16px;opacity:.4;">+</span> NEW
+          </div>
+        </div>
+      </div>
+
+      <!-- DROP ZONE -->
+      <div class="home-drop-zone" id="home-drop-zone"
+        ondragover="event.preventDefault();this.style.borderColor='rgba(0,212,255,.4)'"
+        ondragleave="this.style.borderColor=''"
+        ondrop="homeDrop(event)">
+        <div style="font-family:var(--display);font-size:10px;letter-spacing:.16em;color:var(--text3);">⬇ DRAG & DROP TO IMPORT</div>
+        <div style="font-size:8px;color:var(--text4);margin-top:2px;">Projects · Specs · Config · Code files</div>
+      </div>
+
+      <!-- WORKSPACE -->
+      <div id="home-workspace">
+        <div class="home-section-head">WORKSPACE</div>
+        <div class="home-grid" id="home-grid"></div>
+      </div>
+
+      <!-- METRICS -->
+      <div id="home-metrics">
+        <div class="home-section-head">SYSTEM STATUS</div>
+        <div class="metrics-grid" id="metrics-grid"></div>
+      </div>
+
+      <div style="height:40px;flex-shrink:0;"></div>
+    </section>
+
+    <!-- IDEARIUM -->
+    <section class="tab-panel" id="tab-idearium">
+      <iframe class="panel-iframe" id="iframe-idearium" src="about:blank" title="Idearium"></iframe>
+    </section>
+
+    <!-- FORGE / GUARDIAN -->
+    <section class="tab-panel" id="tab-guardian">
+      <iframe class="panel-iframe" id="iframe-guardian" src="about:blank" title="Guardian Forge"></iframe>
+    </section>
+
+    <!-- CORTEX -->
+    <section class="tab-panel" id="tab-cortex">
+      <iframe class="panel-iframe" id="iframe-cortex" src="about:blank" title="Cortex"></iframe>
+    </section>
+
+    <!-- BRIDGE -->
+    <section class="tab-panel" id="tab-bridge">
+      <iframe class="panel-iframe" id="iframe-bridge" src="about:blank" title="Bridge"></iframe>
+    </section>
+
+    <!-- EMERGE -->
+    <section class="tab-panel" id="tab-emerge">
+      <iframe class="panel-iframe" id="iframe-emerge" src="about:blank" title="Emerge"></iframe>
+    </section>
+
+    <!-- ARCHITECT (placeholder — phase 2) -->
+    <section class="tab-panel" id="tab-architect">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px;">
+        <div style="font-family:var(--display);font-size:48px;letter-spacing:.3em;color:var(--m);text-shadow:0 0 40px rgba(204,68,255,.4);">ARCHITECT</div>
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--text3);">COMING IN NEXT PHASE</div>
+        <div style="font-size:10px;color:var(--text3);max-width:480px;text-align:center;line-height:1.8;">
+          The Architect is the constraint-first system authoring environment.<br>
+          Spec engine · Hook registry · Topology mapper · Schema builder · SNR gate.
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;font-size:9px;font-family:var(--mono);color:var(--text4);">
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L0 CONSTRAINT FIELD</span>
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L1 SPEC ENGINE</span>
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L2 HOOK REGISTRY</span>
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L3 TOPOLOGY MAP</span>
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L4 SCHEMA BUILDER</span>
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L5 CLI</span>
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L6 UI</span>
+          <span style="padding:3px 8px;border:1px solid var(--border2);border-radius:2px;">L7 SNR GATE</span>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- #main -->
+</div><!-- #app -->
+
+<!-- SETUP OVERLAY -->
+<div id="setup-overlay">
+  <div id="setup-box">
+    <div class="setup-logo">NEXUS</div>
+    <div class="setup-sub">FIRST TIME SETUP · 2 STEPS</div>
+    <div class="setup-step" id="ss-0">
+      <div class="setup-q">WHERE DO PROJECTS LIVE?</div>
+      <div class="setup-hint">NEXUS stores everything here — ideas, specs, event logs, artifacts. Defaults to the Idearium data folder.</div>
+      <input class="setup-input" id="setup-dir" value="data/idearium" placeholder="data/idearium or absolute path…">
+      <div style="font-size:8px;color:var(--text3);" id="setup-dir-status"></div>
+    </div>
+    <div class="setup-step" id="ss-1" style="display:none;">
+      <div class="setup-q">PRIMARY AI PROVIDER</div>
+      <div class="setup-hint">How does NEXUS route work to agents?</div>
+      <div class="setup-opts">
+        <div class="setup-opt sel" data-val="claude" onclick="setupPick(this)">
+          <span class="so-ico">⟁</span><div><div class="so-name">CLAUDE</div><div class="so-desc">Browser tab via Guardian NCP. No API key.</div></div>
+        </div>
+        <div class="setup-opt" data-val="chatgpt" onclick="setupPick(this)">
+          <span class="so-ico">⊕</span><div><div class="so-name">CHATGPT</div><div class="so-desc">Browser tab via Guardian NCP. No API key.</div></div>
+        </div>
+        <div class="setup-opt" data-val="ollama" onclick="setupPick(this)">
+          <span class="so-ico">⬡</span><div><div class="so-name">OLLAMA</div><div class="so-desc">Local LLM. Sovereign. Zero external calls.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="setup-nav">
+      <button class="btn" id="setup-back-btn" onclick="setupPrev()" style="display:none;">← BACK</button>
+      <div style="flex:1;"></div>
+      <button class="btn primary" id="setup-next-btn" onclick="setupNext()">CONTINUE →</button>
+    </div>
+  </div>
+</div>
+
+<!-- WIZARD OVERLAY -->
+<div id="wizard-overlay">
+  <div id="wiz-box">
+    <div class="wiz-header">
+      <span class="wiz-title">✦ NEW SPEC</span>
+      <div class="wiz-dots" id="wiz-dots"></div>
+      <button class="wiz-close" onclick="closeWizard()">✕ CLOSE</button>
+    </div>
+    <!-- Step 0 -->
+    <div class="wiz-slide active" data-step="0">
+      <div class="wiz-q">WHO IS THIS FOR?</div><div class="wiz-sub">This determines the entire direction of the build.</div>
+      <div class="wiz-options">
+        <div class="wiz-opt" data-val="personal" onclick="wizSel(this,0)"><div class="wiz-opt-ico">⚡</div><div class="wiz-opt-name">PERSONAL</div><div class="wiz-opt-desc">Maximum creative freedom. Your rules.</div></div>
+        <div class="wiz-opt" data-val="team" onclick="wizSel(this,0)"><div class="wiz-opt-ico">⊕</div><div class="wiz-opt-name">TEAM</div><div class="wiz-opt-desc">Shared conventions and stability.</div></div>
+        <div class="wiz-opt" data-val="client" onclick="wizSel(this,0)"><div class="wiz-opt-ico">⟁</div><div class="wiz-opt-name">CLIENT</div><div class="wiz-opt-desc">Spec-driven. Handoff-ready.</div></div>
+      </div>
+      <div class="wiz-nav"><span></span><button class="btn primary" onclick="wizNext()">CONTINUE →</button></div>
+    </div>
+    <!-- Step 1 -->
+    <div class="wiz-slide" data-step="1">
+      <div class="wiz-q">WHAT ARE YOU BUILDING?</div><div class="wiz-sub">Name it. Describe it.</div>
+      <textarea class="wiz-ta" id="wiz-name" placeholder="Name…" rows="1" style="min-height:38px;"></textarea>
+      <textarea class="wiz-ta" id="wiz-intent" placeholder="What does it do? What problem does it solve?"></textarea>
+      <div class="wiz-nav"><button class="btn" onclick="wizPrev()">← BACK</button><button class="btn primary" onclick="wizNext()">CONTINUE →</button></div>
+    </div>
+    <!-- Step 2 -->
+    <div class="wiz-slide" data-step="2">
+      <div class="wiz-q">WHAT INTERFACE?</div><div class="wiz-sub">How will users interact?</div>
+      <div class="wiz-checks" id="wiz-iface">
+        <div class="wiz-check" data-val="browser" onclick="wizTog(this)">BROWSER</div>
+        <div class="wiz-check" data-val="desktop" onclick="wizTog(this)">DESKTOP</div>
+        <div class="wiz-check" data-val="cli" onclick="wizTog(this)">CLI</div>
+        <div class="wiz-check" data-val="mobile" onclick="wizTog(this)">MOBILE</div>
+        <div class="wiz-check" data-val="api" onclick="wizTog(this)">API</div>
+        <div class="wiz-check" data-val="no-ui" onclick="wizTog(this)">NO UI</div>
+      </div>
+      <div class="wiz-nav"><button class="btn" onclick="wizPrev()">← BACK</button><button class="btn primary" onclick="wizNext()">CONTINUE →</button></div>
+    </div>
+    <!-- Step 3 -->
+    <div class="wiz-slide" data-step="3">
+      <div class="wiz-q">ARCHITECTURE</div><div class="wiz-sub">How should the codebase be structured?</div>
+      <div class="wiz-options">
+        <div class="wiz-opt" data-val="single" onclick="wizSel(this,3)"><div class="wiz-opt-ico">◉</div><div class="wiz-opt-name">SINGLE FILE</div><div class="wiz-opt-desc">SISO. Maximum portability.</div></div>
+        <div class="wiz-opt" data-val="grouped" onclick="wizSel(this,3)"><div class="wiz-opt-ico">▤</div><div class="wiz-opt-name">GROUPED</div><div class="wiz-opt-desc">Clean modules.</div></div>
+        <div class="wiz-opt" data-val="modular" onclick="wizSel(this,3)"><div class="wiz-opt-ico">⬡</div><div class="wiz-opt-name">FULL MODULAR</div><div class="wiz-opt-desc">Scales. Enterprise grade.</div></div>
+      </div>
+      <div class="wiz-nav"><button class="btn" onclick="wizPrev()">← BACK</button><button class="btn primary" onclick="wizNext()">CONTINUE →</button></div>
+    </div>
+    <!-- Step 4 -->
+    <div class="wiz-slide" data-step="4">
+      <div class="wiz-q">LEVEL OF AMBITION</div><div class="wiz-sub">How far outside the box?</div>
+      <div class="wiz-options" style="flex-direction:column;">
+        <div class="wiz-opt" data-val="conventional" onclick="wizSel(this,4)" style="min-width:100%;text-align:left;display:flex;gap:10px;">
+          <div class="wiz-opt-ico">◎</div><div><div class="wiz-opt-name">JUST A CLEAN BUILD</div><div class="wiz-opt-desc">Battle-tested patterns. Gets the job done.</div></div></div>
+        <div class="wiz-opt" data-val="unconventional" onclick="wizSel(this,4)" style="min-width:100%;text-align:left;display:flex;gap:10px;">
+          <div class="wiz-opt-ico">⚡</div><div><div class="wiz-opt-name">LET'S GET WEIRD</div><div class="wiz-opt-desc">Challenge assumptions. Creative but production-ready.</div></div></div>
+        <div class="wiz-opt" data-val="outlier" onclick="wizSel(this,4)" style="min-width:100%;text-align:left;display:flex;gap:10px;border-color:rgba(204,68,255,.2);">
+          <div class="wiz-opt-ico" style="color:var(--m)">∞</div><div><div class="wiz-opt-name" style="color:var(--m)">MAXIMUM AMBITION</div><div class="wiz-opt-desc">Highest leverage. Genuinely novel. Bleeding edge.</div></div></div>
+      </div>
+      <div class="wiz-nav"><button class="btn" onclick="wizPrev()">← BACK</button><button class="btn primary" onclick="wizNext()">CONTINUE →</button></div>
+    </div>
+    <!-- Step 5 -->
+    <div class="wiz-slide" data-step="5">
+      <div class="wiz-q">CONSTRAINTS & DETAILS</div><div class="wiz-sub">What does this need to be? Skip what doesn't apply.</div>
+      <div class="wiz-checks" id="wiz-constraints">
+        <div class="wiz-check" data-val="offline" onclick="wizTog(this)">OFFLINE FIRST</div>
+        <div class="wiz-check" data-val="no-deps" onclick="wizTog(this)">NO EXTERNAL DEPS</div>
+        <div class="wiz-check" data-val="encrypted" onclick="wizTog(this)">ENCRYPTED</div>
+        <div class="wiz-check" data-val="p2p" onclick="wizTog(this)">P2P / NO SERVER</div>
+        <div class="wiz-check" data-val="siso" onclick="wizTog(this)">SISO GATED</div>
+        <div class="wiz-check" data-val="sovereign" onclick="wizTog(this)">SOVEREIGN</div>
+      </div>
+      <textarea class="wiz-ta" id="wiz-extra" placeholder="Anything else? The more context the better."></textarea>
+      <div class="wiz-nav">
+        <button class="btn" onclick="wizPrev()">← BACK</button>
+        <button class="btn" style="background:rgba(0,255,136,.07);border-color:rgba(0,255,136,.35);color:var(--g);" onclick="wizFinish()">✦ BUILD SPEC →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script>
+'use strict';
+
+const ORC = 'http://127.0.0.1:9000';
+const SESSION_KEY = 'nexus_home_v2';
+
+const SYSTEMS = [
+  { id:'guardian', port:7820, label:'Guardian',  color:'#9b7fe8', desc:'Agent dispatch · NCP · Forge IDE',          badge:'FORGE',    iframeUrl:'http://127.0.0.1:7820/cockpit',  tab:'guardian'  },
+  { id:'cortex',   port:3748, label:'Cortex',    color:'#2dd4bf', desc:'RAID · JAA memory · Gap detection',         badge:'MEMORY',   iframeUrl:'http://127.0.0.1:3748',           tab:'cortex'    },
+  { id:'idearium', port:4800, label:'Idearium',  color:'#4a9eff', desc:'Projects · Ideas · Specs · Causal graph',   badge:'PROJECTS', iframeUrl:'http://127.0.0.1:4800',           tab:'idearium'  },
+  { id:'bridge',   port:9999, label:'Bridge',    color:'#f59e0b', desc:'Relay · P2P · Phantom network',             badge:'RELAY',    iframeUrl:'http://127.0.0.1:9999',           tab:'bridge'    },
+  { id:'emerge',   port:4242, label:'Emerge',    color:'#3ecf8e', desc:'ESS compiler · .eg language · Kernel',      badge:'COMPILE',  iframeUrl:'http://127.0.0.1:4242',           tab:'emerge'    },
+  { id:'ollama',   port:11434,label:'Ollama',    color:'#e85d3c', desc:'Local LLM · Sovereign · Zero cloud calls',  badge:'LLM',      iframeUrl:null,                              tab:null        },
+];
+
+const TILES = [
+  { ico:'⬡', name:'FORGE IDE',   desc:'SEAM chunker · Agent dispatch · NCP · Spec queue · Live chat · CFR brain.',       badge:'IDE',      color:'var(--p)',  tab:'guardian'  },
+  { ico:'◫', name:'IDEARIUM',    desc:'Projects · Ideas · Specs · Causal ancestry · Gap tracking · SNR scores.',          badge:'PROJECTS', color:'var(--b)',  tab:'idearium'  },
+  { ico:'⟁', name:'CORTEX',      desc:'RAID routing · JAA memory (41 tables) · Gap finder · Healer · ICO substrate.',     badge:'MEMORY',   color:'#2dd4bf',   tab:'cortex'    },
+  { ico:'⊕', name:'BRIDGE',      desc:'Relay network · P2P WebRTC · Phantom routing · Bridge OS · Sybil detection.',      badge:'RELAY',    color:'var(--y)',  tab:'bridge'    },
+  { ico:'⬢', name:'EMERGE IDE',  desc:'.eg compiler · ESS kernel · ICO substrate · Signal analysis · Emerge language.',   badge:'COMPILE',  color:'var(--g)',  tab:'emerge'    },
+  { ico:'∞', name:'ARCHITECT',   desc:'Spec engine · Hook registry (22 types) · Topology mapper · Schema builder · SNR.', badge:'SPEC',     color:'var(--m)',  tab:'architect' },
+  { ico:'⟡', name:'ORCHESTRATOR',desc:'System watchdog · SISO bus hub · SSE relay · Health polling · Boot sequence.',     badge:'HUB',      color:'var(--c)',  tab:null,       onclick:'window.open("http://127.0.0.1:9000/ui/orchestrator/index.html")' },
+  { ico:'◈', name:'DIAGNOSE',    desc:'Full system diagnostic · 12-phase guardian boot · Baseline check · Friction score.',badge:'DIAG',     color:'var(--y)',  onclick:'window.open("http://127.0.0.1:7825")' },
+];
+
+// ── SESSION ────────────────────────────────────────────────────────────────
+function loadSess(){ try{ return JSON.parse(localStorage.getItem(SESSION_KEY)||'null'); }catch{ return null; } }
+function saveSess(p){
+  try{
+    const s = loadSess() || { firstRun:true, setup:{complete:false,dir:'data/idearium',provider:'claude'}, lastState:{tab:'home',spec:{active:false,step:0,answers:{}}}, stats:{count:0,lastSeen:0} };
+    const m = merge(s,p); m.stats.lastSeen=Date.now();
+    localStorage.setItem(SESSION_KEY,JSON.stringify(m)); return m;
+  }catch{ return null; }
+}
+function merge(a,b){ const r={...a}; for(const k of Object.keys(b)){ if(b[k]!==null&&typeof b[k]==='object'&&!Array.isArray(b[k])&&typeof a[k]==='object') r[k]=merge(a[k]||{},b[k]); else r[k]=b[k]; } return r; }
+
+// ── TABS ───────────────────────────────────────────────────────────────────
+let _tab = 'home';
+const IFRAME_URLS = { idearium:'http://127.0.0.1:4800', guardian:'http://127.0.0.1:7820/cockpit', cortex:'http://127.0.0.1:3748', bridge:'http://127.0.0.1:9999', emerge:'http://127.0.0.1:4242' };
+
+function switchTab(id){
+  if(!document.getElementById('tab-'+id)) return;
+  document.querySelector('.tab-btn[data-active]')?.removeAttribute('data-active');
+  document.querySelector('.tab-panel[data-active]')?.removeAttribute('data-active');
+  _tab = id;
+  const btn = document.querySelector(`.tab-btn[data-tab="${id}"]`);
+  const panel = document.getElementById('tab-'+id);
+  btn?.setAttribute('data-active',''); panel?.setAttribute('data-active','');
+  // Lazy load iframe
+  const iframe = document.getElementById('iframe-'+id);
+  const url = IFRAME_URLS[id];
+  if(iframe && url && iframe.src==='about:blank') iframe.src=url;
+  saveSess({lastState:{tab:id}});
+}
+
+// ── WIZARD ─────────────────────────────────────────────────────────────────
+let _wizStep=0, _wizAns={};
+const WIZ_N=6;
+
+function openWizard(){
+  const s=loadSess();
+  if(s?.lastState?.spec?.active){ _wizStep=s.lastState.spec.step||0; _wizAns=s.lastState.spec.answers||{}; }
+  else{ _wizStep=0; _wizAns={}; }
+  _renderWiz();
+  document.getElementById('wizard-overlay').classList.add('visible');
+}
+function closeWizard(){
+  document.getElementById('wizard-overlay').classList.remove('visible');
+  saveSess({lastState:{spec:{active:false}}});
+}
+function _renderWiz(){
+  document.querySelectorAll('.wiz-slide').forEach((el,i)=>el.classList.toggle('active',i===_wizStep));
+  const dots=document.getElementById('wiz-dots');
+  dots.innerHTML=Array.from({length:WIZ_N},(_,i)=>`<div class="wiz-dot ${i<_wizStep?'done':i===_wizStep?'active':''}"></div>`).join('');
+  saveSess({lastState:{spec:{active:true,step:_wizStep,answers:_wizAns}}});
+}
+function wizSel(el,step){ el.closest('.wiz-options').querySelectorAll('.wiz-opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); _wizAns['s'+step]=el.dataset.val; }
+function wizTog(el){ el.classList.toggle('on'); const k=el.closest('.wiz-slide').dataset.step; _wizAns['s'+k+'m']=[...el.closest('.wiz-checks').querySelectorAll('.wiz-check.on')].map(c=>c.dataset.val); }
+function wizNext(){ if(_wizStep<WIZ_N-1){_wizStep++;_renderWiz();} }
+function wizPrev(){ if(_wizStep>0){_wizStep--;_renderWiz();} }
+
+async function wizFinish(){
+  const name=document.getElementById('wiz-name')?.value?.trim()||'Untitled';
+  const intent=document.getElementById('wiz-intent')?.value?.trim()||'';
+  const extra=document.getElementById('wiz-extra')?.value?.trim()||'';
+  const payload={ title:name, description:intent, phase:'seed',
+    tags:['nexus',_wizAns.s0||'personal',_wizAns.s4||'unconventional'].filter(Boolean),
+    meta:{..._wizAns,extra} };
+  try{
+    const r=await fetch(ORC+'/api/idearium/ideas',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json();
+    if(d.ok||d.uuid||d.idea?.uuid){ toast('✦ Spec created: '+name,'ok'); FIELD?.pulse('idearium',2); closeWizard(); loadProjects(); setTimeout(()=>switchTab('idearium'),600); }
+    else toast('Idearium offline — saved locally','warn');
+  }catch{ toast('Spec saved — start Idearium to sync','warn'); closeWizard(); }
+}
+
+// ── SETUP ──────────────────────────────────────────────────────────────────
+let _setupStep=0, _setupProvider='claude';
+function setupPick(el){ document.querySelectorAll('.setup-opt').forEach(o=>o.classList.remove('sel')); el.classList.add('sel'); _setupProvider=el.dataset.val; }
+function setupNext(){
+  if(_setupStep===0){
+    const dir=document.getElementById('setup-dir').value.trim();
+    if(!dir){ document.getElementById('setup-dir-status').textContent='Enter a path'; return; }
+    _setupStep=1;
+    document.getElementById('ss-0').style.display='none';
+    document.getElementById('ss-1').style.display='block';
+    document.getElementById('setup-back-btn').style.display='';
+    return;
+  }
+  saveSess({firstRun:false,setup:{complete:true,dir:document.getElementById('setup-dir').value.trim(),provider:_setupProvider,completedAt:Date.now()}});
+  document.getElementById('setup-overlay').classList.remove('visible');
+  toast('Welcome to NEXUS.','ok');
+}
+function setupPrev(){ if(_setupStep===1){ _setupStep=0; document.getElementById('ss-0').style.display='block'; document.getElementById('ss-1').style.display='none'; document.getElementById('setup-back-btn').style.display='none'; } }
+
+// ── HEALTH POLLING ─────────────────────────────────────────────────────────
+let _health={};
+async function pollHealth(){
+  try{
+    const d=await fetch(ORC+'/health',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());
+    const sys=d.systems||{};
+    let online=0;
+    for(const [id,info] of Object.entries(sys)){
+      _health[id]=info;
+      const dot=document.getElementById('dot-'+id);
+      if(dot){ dot.classList.toggle('online',!!info.online); if(info.online) online++; }
+      FIELD?.setHealth(id, info.online ? Math.max(.3,1-Math.min(info.ms||50,500)/500) : 0);
+    }
+    // Update hero color
+    const ratio=online/Math.max(1,Object.keys(sys).length);
+    const hero=document.getElementById('home-hero-title');
+    if(hero){
+      if(ratio>.8){ hero.style.color='#00d4ff'; hero.style.textShadow='0 0 70px rgba(0,212,255,.6),0 0 140px rgba(0,212,255,.2)'; }
+      else if(ratio>.4){ hero.style.color='#f59e0b'; hero.style.textShadow='0 0 50px rgba(245,158,11,.4)'; }
+      else{ hero.style.color='#cc44ff'; hero.style.textShadow='0 0 40px rgba(204,68,255,.3)'; }
+    }
+    // Pill
+    const pill=document.getElementById('home-conn-pill');
+    if(pill){ pill.className='pill '+(online===Object.keys(sys).length?'ok':online>0?'warn':''); document.getElementById('home-conn-label').textContent=online+'/'+Object.keys(sys).length+' systems online'; }
+    // Metrics
+    renderMetrics(sys);
+    // NCP pill
+    try{
+      const g=await fetch('http://127.0.0.1:7820/health',{signal:AbortSignal.timeout(1500)}).then(r=>r.json());
+      const provs=Object.keys(g.providers||{});
+      const ap=document.getElementById('pill-ai'), f=g.friction||0;
+      if(ap){ ap.className='pill '+(provs.length?'ok':''); document.getElementById('pill-ai-txt').textContent=provs.length?provs.join(', '):'GUARDIAN'; }
+      // Entropy
+      const ent=Math.min(1,(f*.4+Math.min(1,(g.physicalQueue?.pending||0)/5)*.2)).toFixed(2);
+      const ec=ent>.6?'var(--r)':ent>.3?'var(--y)':'var(--g)';
+      document.getElementById('ent-bar').style.width=Math.round(ent*100)+'%';
+      document.getElementById('ent-bar').style.background=ec;
+      document.getElementById('ent-val').textContent=ent;
+      document.getElementById('ent-val').style.color=ec;
+    }catch{}
+    // Bridge pill
+    try{
+      const b=await fetch('http://127.0.0.1:9999/bridge/health',{signal:AbortSignal.timeout(1500)}).then(r=>r.json());
+      const bp=document.getElementById('bridge-status-pill');
+      if(bp){ bp.className='pill '+(b.ok?'ok':''); document.getElementById('bridge-status-txt').textContent=b.ok?'BRIDGE ONLINE':'BRIDGE OFFLINE'; }
+    }catch{ const bp=document.getElementById('bridge-status-pill'); if(bp){ bp.className='pill'; document.getElementById('bridge-status-txt').textContent='BRIDGE OFFLINE'; } }
+  }catch{}
+}
+
+function renderMetrics(sys){
+  const grid=document.getElementById('metrics-grid');
+  if(!grid) return;
+  const items=[
+    {title:'ORCHESTRATOR',val:':9000',cls:'ok'},
+    ...Object.values(sys).map(s=>({title:s.label?.toUpperCase()||s.id?.toUpperCase(),val:s.online?s.ms+'ms':'OFFLINE',cls:s.online?'ok':'err'})),
+  ];
+  grid.innerHTML=items.map(m=>`<div class="mcard"><div class="mcard-title">${m.title||''}</div><div class="mcard-val ${m.cls||''}">${m.val||'—'}</div></div>`).join('');
+}
+
+// ── PROJECTS ───────────────────────────────────────────────────────────────
+async function loadProjects(){
+  try{
+    const d=await fetch(ORC+'/api/idearium/ideas',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());
+    const all=d.ideas||d.data?.ideas||[];
+    renderRecentGrid(all.slice(0,10));
+    if(all.length) FIELD?.pulse('idearium',.8);
+  }catch{ renderRecentGrid([]); }
+}
+
+function renderRecentGrid(ideas){
+  const grid=document.getElementById('recent-grid');
+  if(!grid) return;
+  if(!ideas.length){
+    grid.innerHTML=`<div class="rproj-card add-new" onclick="openWizard()" style="animation-delay:0s;"><span style="font-size:16px;opacity:.4;">+</span>NEW SPEC</div>`;
+    return;
+  }
+  const snrColor=pct=>pct>80?'var(--g)':pct>50?'var(--y)':'var(--text3)';
+  grid.innerHTML=ideas.map((idea,i)=>{
+    const pct=Math.round((idea.snr||0)*100);
+    const ago=Math.floor((Date.now()-(idea.updatedAt||idea.createdAt||0))/86400000);
+    return `<div class="rproj-card" onclick="openProject('${idea.uuid}')" style="animation-delay:${i*.05}s;">
+      <div class="rpc-phase phase-${idea.phase||'seed'}">${(idea.phase||'seed').toUpperCase()}</div>
+      <div class="rpc-title" title="${esc(idea.title)}">${esc(idea.title)}</div>
+      <div class="rpc-meta"><span style="color:${snrColor(pct)}">SNR ${pct}%</span><span>${idea.gapCount||0}g</span><span style="margin-left:auto">${ago===0?'today':ago+'d ago'}</span></div>
+      <div class="rpc-snr"><div class="rpc-snr-fill" style="width:${pct}%;background:${snrColor(pct)};"></div></div>
+    </div>`;
+  }).join('')+`<div class="rproj-card add-new" onclick="openWizard()" style="animation-delay:${ideas.length*.05}s;"><span style="font-size:16px;opacity:.4;">+</span>NEW</div>`;
+}
+
+function openProject(uuid){
+  switchTab('idearium');
+  const iframe=document.getElementById('iframe-idearium');
+  if(iframe?.contentWindow){ try{ iframe.contentWindow.postMessage({type:'NEXUS_OPEN_IDEA',uuid},'*'); }catch{} }
+}
+
+// ── WORKSPACE TILES ────────────────────────────────────────────────────────
+function renderTiles(){
+  const grid=document.getElementById('home-grid');
+  if(!grid) return;
+  grid.innerHTML=TILES.map((t,i)=>`
+    <div class="home-tile" style="animation-delay:${.8+i*.05}s;"
+      onclick="${t.onclick||`switchTab('${t.tab}')`}"
+      ${t.tab?'':'style="cursor:default;"'}>
+      <span class="home-tile-ico">${t.ico}</span>
+      <div class="home-tile-name" style="color:${t.color}">${t.name}</div>
+      <div class="home-tile-desc">${t.desc}</div>
+      <span class="home-tile-badge" style="color:${t.color};border-color:${t.color}40;">${t.badge}</span>
+    </div>`).join('');
+}
+
+// ── CONTINUE / RESUME ──────────────────────────────────────────────────────
+function resumeSession(){
+  const s=loadSess();
+  if(!s) return;
+  if(s.lastState?.spec?.active&&s.lastState.spec.step>0){ openWizard(); return; }
+  if(s.lastState?.tab&&s.lastState.tab!=='home'){ switchTab(s.lastState.tab); return; }
+  toast('Nothing to resume — start something new','ok');
+}
+function dismissResume(){ document.getElementById('home-resume-banner').style.display='none'; }
+function checkResume(){
+  const s=loadSess();
+  const banner=document.getElementById('home-resume-banner');
+  if(!s||!banner) return;
+  if(s.lastState?.spec?.active&&s.lastState.spec.step>0){
+    document.getElementById('resume-proj-name').textContent='CONTINUE SPEC';
+    document.getElementById('resume-proj-meta').textContent=`Step ${s.lastState.spec.step+1}/6 · ${new Date(s.stats?.lastSeen||0).toLocaleTimeString()}`;
+    banner.classList.add('visible'); return;
+  }
+  if(s.lastState?.tab&&s.lastState.tab!=='home'){
+    document.getElementById('resume-proj-name').textContent='RETURN TO '+s.lastState.tab.toUpperCase();
+    document.getElementById('resume-proj-meta').textContent='Last session: '+new Date(s.stats?.lastSeen||0).toLocaleString();
+    banner.classList.add('visible');
+  }
+}
+
+// ── DROP ZONE ──────────────────────────────────────────────────────────────
+function homeDrop(e){ e.preventDefault(); document.getElementById('home-drop-zone').style.borderColor=''; toast('Import coming soon','warn'); }
+
+// ── SSE ────────────────────────────────────────────────────────────────────
+function connectSSE(){
+  try{
+    const sse=new EventSource(ORC+'/sse');
+    sse.onmessage=e=>{
+      try{
+        const d=JSON.parse(e.data);
+        if(d.type==='orchestrator.watchdog.tick'){ const sys=d.systems||{}; for(const[id,info]of Object.entries(sys)){ _health[id]=info; const dot=document.getElementById('dot-'+id); if(dot) dot.classList.toggle('online',!!info.online); FIELD?.setHealth(id,info.online?.3:0); } }
+        if(d.type?.includes('idearium.idea')){ loadProjects(); FIELD?.pulse('idearium',1.2); }
+        if(d.type==='guardian.provider.connected'){ FIELD?.pulse('guardian',1.5); pollHealth(); }
+        if(d.type==='guardian.provider.disconnected'){ FIELD?.pulse('guardian',.3); pollHealth(); }
+        if(d.type?.includes('cortex')||d.type?.includes('gap')){ FIELD?.pulse('cortex',.8); }
+        if(d.type?.includes('bridge')){ FIELD?.pulse('bridge',.6); }
+        if(d.type?.includes('emerge')){ FIELD?.pulse('emerge',.6); }
+      }catch{}
+    };
+    sse.onerror=()=>setTimeout(connectSSE,5000);
+  }catch{}
+}
+
+// ── CANVAS — CFR PARTICLE FIELD ────────────────────────────────────────────
+const FIELD=(()=>{
+  const canvas=document.getElementById('nx-particle-canvas');
+  if(!canvas) return {pulse:()=>{},setHealth:()=>{}};
+  const ctx=canvas.getContext('2d');
+  let W=0,H=0;
+  const ATT=[
+    {id:'guardian',color:'#9b7fe8',x:.5,y:.22,base:.010},
+    {id:'cortex',  color:'#2dd4bf',x:.18,y:.62,base:.009},
+    {id:'idearium',color:'#4a9eff',x:.82,y:.62,base:.009},
+    {id:'bridge',  color:'#f59e0b',x:.35,y:.86,base:.007},
+    {id:'emerge',  color:'#3ecf8e',x:.65,y:.86,base:.007},
+  ];
+  const _h={guardian:.3,cortex:.3,idearium:.3,bridge:.2,emerge:.2};
+  const _er={guardian:0,cortex:0,idearium:0,bridge:0,emerge:0};
+  let world=null;
+  function mkWorld(w,h){
+    const stars=Array.from({length:280},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*.8+.15,a:Math.random()*.5+.08,da:(Math.random()-.5)*.002,vx:(Math.random()-.5)*.045,vy:(Math.random()-.5)*.035}));
+    const particles=Array.from({length:140},(_, i)=>{const def=ATT[i%ATT.length];return{x:def.x*w+(Math.random()-.5)*w*.35,y:def.y*h+(Math.random()-.5)*h*.35,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,att:def.id,size:.8+Math.random()*1.1};});
+    const attractors=ATT.map(a=>({...a,strength:a.base}));
+    return{stars,particles,attractors,W:w,H:h};
+  }
+  function step(){
+    const{particles,attractors,W:w,H:h}=world;
+    for(const k of Object.keys(_er)) _er[k]*=.97;
+    for(const p of particles){
+      const att=attractors.find(a=>a.id===p.att)||attractors[0];
+      const health=_h[att.id]||.3;
+      const tx=att.x*w,ty=att.y*h;
+      p.vx+=(tx-p.x)*att.strength*(.5+health);
+      p.vy+=(ty-p.y)*att.strength*(.5+health);
+      const damp=.93+health*.04; p.vx*=damp; p.vy*=damp;
+      p.x+=p.vx; p.y+=p.vy;
+      p.x=Math.max(2,Math.min(w-2,p.x)); p.y=Math.max(2,Math.min(h-2,p.y));
+      if(Math.hypot(p.x-tx,p.y-ty)<4){const src=ATT[Math.floor(Math.random()*ATT.length)];p.x=src.x*w+(Math.random()-.5)*80;p.y=src.y*h+(Math.random()-.5)*80;p.vx=(Math.random()-.5)*1.5;p.vy=(Math.random()-.5)*1.5;}
+    }
+  }
+  function draw(){
+    if(!world) return requestAnimationFrame(draw);
+    const{stars,particles,attractors,W:w,H:h}=world;
+    const rw=window.innerWidth,rh=window.innerHeight;
+    if(canvas.width!==rw||canvas.height!==rh){canvas.width=world.W=rw;canvas.height=world.H=rh;W=rw;H=rh;}
+    step();
+    ctx.fillStyle='rgba(3,5,9,.22)'; ctx.fillRect(0,0,w,h);
+    for(const s of stars){
+      s.x=(s.x+s.vx+w)%w; s.y=(s.y+s.vy+h)%h;
+      s.a=Math.max(.05,Math.min(.55,s.a+s.da)); if(s.a<=.05||s.a>=.55) s.da*=-1;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(195,205,255,${s.a})`; ctx.fill();
+    }
+    // Connection lines
+    for(let i=0;i<ATT.length;i++) for(let j=i+1;j<ATT.length;j++){
+      const a=attractors[i],b=attractors[j];
+      const rate=(_er[a.id]||0)+(_er[b.id]||0);
+      if(rate<.3) continue;
+      ctx.beginPath(); ctx.moveTo(a.x*w,a.y*h); ctx.lineTo(b.x*w,b.y*h);
+      ctx.strokeStyle=a.color+Math.floor(Math.min(.12,rate*.04)*255).toString(16).padStart(2,'0');
+      ctx.lineWidth=.5; ctx.stroke();
+    }
+    // Particles
+    for(const p of particles){
+      const def=ATT.find(d=>d.id===p.att)||ATT[0];
+      const spd=Math.min(1,Math.hypot(p.vx,p.vy)/3);
+      const alpha=Math.floor((.25+spd*.55)*255).toString(16).padStart(2,'0');
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.size*(.7+spd*.5),0,Math.PI*2);
+      ctx.fillStyle=def.color+alpha; ctx.fill();
+    }
+    // Attractor nodes
+    for(const a of attractors){
+      const h2=_h[a.id]||.3, er=_er[a.id]||0;
+      const ax=a.x*w,ay=a.y*h;
+      const baseR=5+h2*7, pulseR=baseR+er*5;
+      if(er>.3){ctx.beginPath();ctx.arc(ax,ay,pulseR+7,0,Math.PI*2);ctx.strokeStyle=a.color+Math.floor(er*55).toString(16).padStart(2,'0');ctx.lineWidth=1;ctx.stroke();}
+      ctx.beginPath();ctx.arc(ax,ay,pulseR,0,Math.PI*2);ctx.strokeStyle=a.color+'66';ctx.lineWidth=1.2;ctx.stroke();
+      ctx.beginPath();ctx.arc(ax,ay,baseR*.35,0,Math.PI*2);ctx.fillStyle=a.color;ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight;
+  world=mkWorld(W,H); requestAnimationFrame(draw);
+  window.addEventListener('resize',()=>{W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;world=mkWorld(W,H);});
+  function pulse(id,boost=1){
+    _er[id]=Math.min(5,(_er[id]||0)+boost);
+    const att=world?.attractors.find(a=>a.id===id);
+    if(att){const def=ATT.find(d=>d.id===id);att.strength=Math.min(.05,(def?.base||.009)+.005*boost);setTimeout(()=>{if(world){const a2=world.attractors.find(a=>a.id===id);if(a2)a2.strength=ATT.find(d=>d.id===id)?.base||.009;}},1200);}
+    if(world){const n=Math.floor(boost*4);for(let i=0;i<n;i++){const src=world.particles[Math.floor(Math.random()*world.particles.length)];if(src){src.att=id;src.vx+=(Math.random()-.5)*3*boost;src.vy+=(Math.random()-.5)*3*boost;}}}
+  }
+  function setHealth(id,val){_h[id]=Math.max(0,Math.min(1,val));}
+  return{pulse,setHealth};
+})();
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(msg,type=''){const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;document.getElementById('toast-root').appendChild(el);setTimeout(()=>el.remove(),3500);}
+
+// ── BOOT ───────────────────────────────────────────────────────────────────
+(function boot(){
+  saveSess({stats:{count:(loadSess()?.stats?.count||0)+1}});
+
+  // Setup check
+  const s=loadSess();
+  if(!s||!s.setup?.complete) document.getElementById('setup-overlay').classList.add('visible');
+
+  // Session badge
+  const badge=document.getElementById('home-session-badge');
+  if(badge) badge.textContent='SESSION '+((s?.stats?.count||1)).toString().padStart(3,'0');
+
+  // Render tiles immediately
+  renderTiles();
+
+  // Check resume
+  checkResume();
+
+  // Load data
+  pollHealth();
+  loadProjects();
+  connectSSE();
+
+  // Poll
+  setInterval(pollHealth,8000);
+})();
+</script>
+</body>
+</html>
