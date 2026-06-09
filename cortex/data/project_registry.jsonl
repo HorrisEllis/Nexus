@@ -541,3 +541,8 @@
 {"uuid":"25676510-b868-4693-b51c-924e93b45a68","name":"guardian","system":"guardian","ts":1780979934709,"source":"boot","_rowId":350,"_ts":1780979934709}
 {"uuid":"1b691e26-aea8-41f3-95c6-ac0456cb19c4","name":"idearium","system":"idearium","ts":1780979934709,"source":"boot","_rowId":351,"_ts":1780979934709}
 {"uuid":"5de44dd1-aac0-402e-aafc-a2da8275bd45","name":"emerge","system":"emerge","ts":1780979934709,"source":"boot","_rowId":352,"_ts":1780979934709}
+{"uuid":"3f1a0eb2-b5ff-43e6-98fd-0a92b22eee2d","name":"bridge","system":"bridge","ts":1780984692661,"source":"boot","_rowId":356,"_ts":1780984692661}
+{"uuid":"e8439de3-5216-4f64-a9b3-59c45f8cf38f","name":"cortex","system":"cortex","ts":1780984692661,"source":"boot","_rowId":357,"_ts":1780984692661}
+{"uuid":"2df9f89b-6e51-44a7-9e38-367b2f08dfb5","name":"guardian","system":"guardian","ts":1780984692661,"source":"boot","_rowId":358,"_ts":1780984692661}
+{"uuid":"ecefbe73-73dc-45ef-846a-d5a42fedbaf5","name":"idearium","system":"idearium","ts":1780984692661,"source":"boot","_rowId":359,"_ts":1780984692661}
+{"uuid":"866366d2-1059-48de-ba8b-2754b0f03712","name":"emerge","system":"emerge","ts":1780984692661,"source":"boot","_rowId":360,"_ts":1780984692661}

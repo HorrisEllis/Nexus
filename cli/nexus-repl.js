@@ -874,6 +874,7 @@ ${$(C.bold,'Self-healing')}
   ${$(C.cyan,'snap list|create|diff|rollback')}   .nex snapshots
   ${$(C.cyan,'replay verify|inspect|simulate')}   deterministic replay
   ${$(C.cyan,'heal status|gaps|enable')}           self-heal pipeline
+  ${$(C.cyan,'resilience status|run|chain')}       fallback strategy engine
   ${$(C.cyan,'tools list|exec <name>')}            agent tools
   ${$(C.cyan,'contract agents|violations|check')}  orchestration contracts
 
@@ -934,6 +935,7 @@ async function dispatch(line) {
     case 'snap': case 'snapshot':  return cmdSnap(args);
     case 'replay':                 return cmdReplay(args);
     case 'heal': case 'self-heal': return cmdHeal(args);
+    case 'resilience': case 'res': return cmdResilience(args);
     case 'tools': case 'tool':     return cmdTools(args);
     case 'contract':               return cmdContract(args);
 
@@ -967,6 +969,70 @@ async function dispatch(line) {
       console.log(`${$(C.red,'?')} unknown: ${cmd} — type ${$(C.cyan,'help')}`);
     }
   }
+}
+
+// ── Resilience command ────────────────────────────────────────────────────────
+async function cmdResilience(args) {
+  const sub = args[0] || 'status';
+
+  if (sub === 'status') {
+    const d = await GET(PORTS.cortex, '/api/resilience/status');
+    if (!d.ok) { console.log(err('Cortex offline')); return; }
+    const r = d.data || {};
+    console.log(hdr('RESILIENCE ENGINE'));
+    const summary = r.summary || {};
+    console.log(row('success',   summary.success || 0));
+    console.log(row('failed',    summary.failed  || 0));
+    console.log(row('skipped',   summary.skipped || 0));
+    console.log(row('pending',   summary.pending || 0));
+    console.log(row('AI in-flight', r.aiInFlight || 0));
+    if (r.log?.length) {
+      console.log(`
+  ${$(C.dim,'Recent strategy attempts:')}`);
+      for (const l of r.log.slice(0, 10)) {
+        const ts = new Date(l.ts||0).toTimeString().slice(0,8);
+        const sc = l.result==='success'?C.green:l.result==='failed'?C.red:C.dim;
+        console.log(`  ${$(C.dim,ts)}  ${$(sc,(l.result||'?').padEnd(10))}  ${$(C.cyan,(l.strategy||'?').padEnd(22))}  ${(l.detail||'').slice(0,45)}`);
+      }
+    }
+    console.log('');
+    return;
+  }
+
+  if (sub === 'run') {
+    const gapUuid = args[1];
+    const strategy = args[2]; // optional: auto_fix|diagnose|ollama|claude|chatgpt|escalate
+    if (!gapUuid) { console.log(err('Usage: resilience run <gapUuid> [strategy]')); return; }
+    console.log(inf(`running resilience${strategy?' strategy '+strategy:' chain'} on ${gapUuid.slice(0,8)}…`));
+    const d = await POST(PORTS.cortex, '/api/resilience/run', { gapUuid, strategy });
+    if (!d.ok) { console.log(err(d.data?.error||'failed')); return; }
+    if (d.data?.result) {
+      const r = d.data.result;
+      console.log(r.ok ? ok(`strategy ${d.data.strategy}: ${r.detail||r.reason||'success'}`) : err(`strategy ${d.data.strategy} failed: ${r.reason||r.error||'unknown'}`));
+    } else {
+      console.log(inf(d.data?.message||'queued'));
+    }
+    return;
+  }
+
+  if (sub === 'chain') {
+    console.log(hdr('RESILIENCE STRATEGY CHAIN'));
+    const chain = [
+      ['1', 'auto_fix',        'Deterministic: restart stuck calls, resolve false positives'],
+      ['2', 'diagnose',        'Run cli/diagnose.js --fix targeted at the failing system'],
+      ['3', 'ollama_forge',    'Local AI: Ollama patches the failing module source (LAW_I)'],
+      ['4', 'guardian_claude', 'Guardian AI: outsource to Claude via running userscript tab'],
+      ['5', 'guardian_chatgpt','Guardian AI: outsource to ChatGPT via running userscript tab'],
+      ['6', 'escalate',        'Human required: full context written to gap, all strategies logged'],
+    ];
+    for (const [n, name, desc] of chain)
+      console.log(`  ${$(C.dim,n+'.')}  ${$(C.cyan,name.padEnd(22))}  ${$(C.dim,desc)}`);
+    console.log('');
+    return;
+  }
+
+  console.log(err(`unknown resilience command: ${sub}`));
+  console.log(inf('Commands: status  run <gapUuid> [strategy]  chain'));
 }
 
 // Missing function stubs referenced in dispatch

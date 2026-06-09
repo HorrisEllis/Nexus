@@ -450,6 +450,44 @@ class AdminServer {
           break;
         }
 
+        // ── Resilience routes ─────────────────────────────────────────────────
+        case route === 'GET /api/resilience/status': {
+          try {
+            const log = jaaDB.tail('resilience_log', 50);
+            const byResult = {};
+            for (const r of log) { byResult[r.result] = (byResult[r.result]||0)+1; }
+            const inFlight = jaaDB.query('gaps', g => g.status==='ai_dispatched', 20);
+            this._json(res, 200, { ok:true, log: log.slice(0,20), summary: byResult, aiInFlight: inFlight.length });
+          } catch(e) { this._json(res, 500, { ok:false, error: e.message }); }
+          break;
+        }
+        case route === 'POST /api/resilience/run': {
+          try {
+            const body = await this._body(req);
+            if (!body.gapUuid) { this._json(res, 400, { ok:false, error:'gapUuid required' }); break; }
+            const gap = jaaDB.get('gaps', body.gapUuid);
+            if (!gap) { this._json(res, 404, { ok:false, error:'gap not found' }); break; }
+            const resilience = require('../resilience');
+            // Run specific strategy or full chain
+            if (body.strategy) {
+              const fn = {
+                auto_fix: resilience.strategyAutoFix,
+                diagnose: resilience.strategyDiagnose,
+                ollama:   resilience.strategyOllamaForge,
+                claude:   r => resilience.strategyGuardianAI(r, { provider:'claude' }),
+                chatgpt:  r => resilience.strategyGuardianAI(r, { provider:'chatgpt' }),
+                escalate: resilience.strategyEscalate,
+              }[body.strategy];
+              if (!fn) { this._json(res, 400, { ok:false, error:`unknown strategy: ${body.strategy}` }); break; }
+              const result = await fn(gap);
+              this._json(res, 200, { ok:true, strategy: body.strategy, result });
+            } else {
+              this._json(res, 202, { ok:true, message:'resilience chain queued — check resilience_log' });
+            }
+          } catch(e) { this._json(res, 500, { ok:false, error: e.message }); }
+          break;
+        }
+
         // ── Self-heal status ──────────────────────────────────────────────────
         case route === 'GET /api/self-heal/status': {
           try {

@@ -985,3 +985,4 @@
 {"type":"bridge.handshake","systemId":"cortex","ts":1780979934717,"uuid":"0a27d4db-5de8-4f96-b9f8-4c6941b58ed7"}
 {"type":"bridge.handshake","systemId":"cortex","bridgeTs":1780979934717,"bridgeId":"73d36f1d-f854-4b62-87ef-889f31dabaf8","uuid":"d63fb16c-ae6d-4abc-8fa1-8269457fa3f0","ts":1780979934717}
 {"type":"cortex.booted","version":"2.0.0","port":3748,"ts":1780979934722,"source":"external","bridgeTs":1780979934722,"bridgeId":"7ded8a8e-aead-4e14-bd78-284cf0a6a4d8","uuid":"3cb87b6e-fdce-4806-8185-134dd0f3a6b2"}
+{"type":"bridge.system.mounted","systemId":"cortex","ts":1780984692631,"bridgeTs":1780984692632,"bridgeId":"ad6530e8-b925-46a9-9131-d63fb6a2df3f","uuid":"8d3a01e0-38cb-42b2-b765-7777bcb8659d"}

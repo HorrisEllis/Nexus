@@ -80,6 +80,7 @@ const ALL_TABLES = [
   // ── Backup ───────────────────────────────────────────────────────────
   'backup_records',
   'contract_audit',
+  'resilience_log',
 ];
 
 class JaaDB {
