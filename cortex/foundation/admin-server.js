@@ -255,6 +255,24 @@ class AdminServer {
           break;
         }
 
+        // ── GET /api/memory/working — working memory recall ──────────────
+        case route === 'GET /api/memory/working': {
+          const sessionId = url.searchParams.get('session');
+          const limit     = parseInt(url.searchParams.get('n') || '20');
+          let rows;
+          try {
+            const wm = require('../memory/working-memory');
+            rows = sessionId
+              ? wm.recallForSession(sessionId, { limit })
+              : wm.recallSignals({ limit });
+          } catch {
+            rows = jaaDB.tail('working_memory', limit);
+          }
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, rows, tier: 'working' }));
+          break;
+        }
+
         // ── GET /api/memory ───────────────────────────────────────────────
         case route === 'GET /api/memory': {
           const table = url.searchParams.get('table') || 'cortex_memory';
@@ -293,13 +311,214 @@ class AdminServer {
 
         // ── POST /api/event — inject event ────────────────────────────────
         case route === 'POST /api/event': {
-          // Normal event handling (guardian.job.created intercepted below)
           this._readBody(req, (body) => {
-            const { type, payload, source } = JSON.parse(body || '{}');
+            let parsed;
+            try { parsed = JSON.parse(body || '{}'); } catch(e) {
+              res.writeHead(400); res.end(JSON.stringify({ error: 'invalid JSON' })); return;
+            }
+            const { type, payload, source, causedBy } = parsed;
             if (!type) { res.writeHead(400); res.end(JSON.stringify({ error: 'type required' })); return; }
-            const row = jaaDB.insert('event_log', { uuid: uid(), type, payload: payload || {}, source: source || 'admin', causedBy: null, ts: Date.now() });
+
+            const p = payload || {};
+
+            // ── WELL_KNOWN router — writes to the correct JAA table per event type ──
+            // Always runs before event_log write. Non-fatal — event_log is always written.
+            const _ROUTE = {
+              // Full response → cortex_memory + agent_messages
+              'guardian.job.complete': () => {
+                const text = p.response || p.text || '';
+                if (text) {
+                  jaaDB.insert('cortex_memory', {
+                    uuid: uid(), jobId: p.jobId || null, provider: p.provider || 'unknown',
+                    content: text.slice(0, 10000), chars: p.chars || text.length,
+                    gaps: p.gaps || 0, chatUrl: p.chatUrl || '', account: p.account || '',
+                    source: source || 'guardian', causedBy: p.jobId || causedBy || null,
+                    ts: p.completedAt || Date.now(),
+                  });
+                }
+                if (p.jobId) {
+                  jaaDB.insert('agent_messages', {
+                    uuid: uid(), jobId: p.jobId, provider: p.provider || 'unknown',
+                    role: 'assistant', content: text.slice(0, 10000),
+                    chars: p.chars || 0, complete: true, type: 'completion',
+                    chatUrl: p.chatUrl || '', account: p.account || '',
+                    source: source || 'guardian', causedBy: p.jobId || null,
+                    ts: p.completedAt || Date.now(),
+                  });
+                }
+              },
+              // Streaming batch → agent_messages (partial, for orion/sensor)
+              'guardian.job.stream': () => {
+                if (!p.jobId) return;
+                jaaDB.insert('agent_messages', {
+                  uuid: uid(), jobId: p.jobId, provider: p.provider || 'unknown',
+                  role: 'assistant', content: (p.text || '').slice(0, 2000),
+                  chars: p.chars || 0, complete: false, type: 'stream_chunk',
+                  chunkIndex: p.chunkIndex || 0, fullLen: p.fullLen || 0,
+                  source: source || 'guardian-stream', causedBy: p.jobId || null,
+                  ts: Date.now(),
+                });
+              },
+              // Agent message complete → agent_messages
+              'agent.message.complete': () => {
+                if (!p.jobId) return;
+                jaaDB.insert('agent_messages', {
+                  uuid: uid(), jobId: p.jobId, provider: p.provider || 'unknown',
+                  role: p.role || 'assistant', content: (p.content || '').slice(0, 10000),
+                  chars: p.chars || 0, complete: true, type: 'completion',
+                  chatUrl: p.chatUrl || '', account: p.account || '',
+                  source: source || 'guardian', causedBy: p.jobId || null,
+                  ts: Date.now(),
+                });
+              },
+              // Job start → agent_calls
+              'agent.call.start': () => {
+                if (!p.jobId) return;
+                jaaDB.insert('agent_calls', {
+                  uuid: uid(), jobId: p.jobId, provider: p.provider || 'unknown',
+                  command: p.command || '', promptLen: p.promptLen || 0,
+                  chatUrl: p.chatUrl || '', account: p.account || '',
+                  source: source || 'guardian', causedBy: null,
+                  ts: p.startedAt || Date.now(),
+                });
+              },
+              // Artifact extracted from response → artifacts
+              'guardian.artifact.extracted': () => {
+                jaaDB.insert('artifacts', {
+                  uuid: uid(), jobId: p.jobId || null, provider: p.provider || 'unknown',
+                  filename: p.filename || 'artifact', lang: p.lang || 'text',
+                  chars: p.chars || 0, content: (p.content || '').slice(0, 4000),
+                  chatUrl: p.chatUrl || '', source: source || 'guardian',
+                  causedBy: p.jobId || causedBy || null, ts: Date.now(),
+                });
+              },
+              // Artifact from userscript scan → artifacts
+              'guardian.artifact': () => {
+                jaaDB.insert('artifacts', {
+                  uuid: uid(), jobId: p.jobId || null, provider: p.provider || 'unknown',
+                  lang: p.lang || 'text', hash: p.hash || null,
+                  chars: p.chars || 0, content: (p.content || '').slice(0, 4000),
+                  chatUrl: p.chatUrl || '', source: source || 'userscript',
+                  causedBy: p.jobId || causedBy || null, ts: Date.now(),
+                });
+              },
+              // Gap found → gaps table
+              'cortex.gap.found': () => {
+                jaaDB.insert('gaps', {
+                  uuid: uid(), jobId: p.jobId || null, provider: p.provider || 'unknown',
+                  type: p.type || 'unknown', domain: p.domain || null,
+                  reason: p.reason || null, description: p.description || '',
+                  score: p.score || 0, evidence: p.evidence || null, status: 'open',
+                  severity: (p.score || 0) > 0.7 ? 'high' : (p.score || 0) > 0.4 ? 'medium' : 'low',
+                  source: p.source || source || 'guardian',
+                  causedBy: p.jobId || causedBy || null, ts: Date.now(),
+                });
+              },
+              // Session named → cortex_memory marker
+              'guardian.session.named': () => {
+                jaaDB.insert('cortex_memory', {
+                  uuid: uid(), jobId: null, provider: p.provider || 'unknown',
+                  type: 'session_named', content: p.sessionName || '',
+                  chatId: p.chatId || '', sessionName: p.sessionName || '',
+                  source: source || 'guardian', causedBy: causedBy || null, ts: Date.now(),
+                });
+              },
+              // SEAM chunk verified → seam_records
+              'guardian.seam.verified': () => {
+                jaaDB.insert('seam_records', {
+                  uuid: uid(), jobId: p.jobId || null, provider: p.provider || 'unknown',
+                  chunkIdx: p.chunkIdx || 0, chunkTitle: p.chunkTitle || '',
+                  status: 'verified', verifiedAt: Date.now(),
+                  source: source || 'guardian', causedBy: causedBy || null, ts: Date.now(),
+                });
+              },
+              // SEAM chunk failed → seam_records
+              'guardian.seam.failed': () => {
+                jaaDB.insert('seam_records', {
+                  uuid: uid(), jobId: p.jobId || null, provider: p.provider || 'unknown',
+                  chunkIdx: p.chunkIdx || 0, chunkTitle: p.chunkTitle || '',
+                  status: 'failed', failedAt: Date.now(),
+                  source: source || 'guardian', causedBy: causedBy || null, ts: Date.now(),
+                });
+              },
+              // Conversation turns -> working_memory (tier: working, decays in 2h)
+              'working.memory.turn': () => {
+                const wm = (() => { try { return require('../memory/working-memory'); } catch { return null; } })();
+                if (wm) wm.writeTurn({
+                  sessionId: p.sessionId || p.chatId || p.jobId || 'unknown',
+                  role:      p.role || 'unknown',
+                  content:   p.content || p.text || '',
+                  provider:  p.provider || source || 'unknown',
+                  chatUrl:   p.chatUrl || '',
+                  jobId:     p.jobId || causedBy || null,
+                  turnIndex: p.turnIndex || 0,
+                });
+              },
+              // Crystal candidate from ?REMEMBER: protocol -> intent_nodes
+              // Requires human/self-module promotion to crystals table.
+              'cortex.crystal.candidate': () => {
+                jaaDB.insert('intent_nodes', {
+                  uuid:        uid(),
+                  content:     (p.content || '').slice(0, 2000),
+                  sessionId:   p.sessionId || null,
+                  provider:    p.provider || 'unknown',
+                  source:      p.source || source || 'userscript',
+                  state:       'candidate',   // candidate -> stable requires manual or self-module promotion
+                  callCount:   1,
+                  successRate: null,
+                  causedBy:    causedBy || null,
+                  ts:          Date.now(),
+                });
+              },
+              // Signal extracted from response -> working_memory signals
+              'working.memory.signal': () => {
+                const wm = (() => { try { return require('../memory/working-memory'); } catch { return null; } })();
+                if (wm) wm.writeSignal({
+                  sessionId: p.sessionId || p.chatId || 'unknown',
+                  kind:      p.kind || 'unknown',
+                  content:   p.content || '',
+                  jobId:     p.jobId || causedBy || null,
+                  source:    source || 'userscript',
+                });
+              },
+            };
+
+            try { _ROUTE[type]?.(); } catch(e) { /* non-fatal — event_log still written */ }
+
+            // Always write to event_log (universal append-only record)
+            const row = jaaDB.insert('event_log', {
+              uuid: uid(), type, payload: p, source: source || 'admin',
+              causedBy: causedBy || null, ts: Date.now(),
+            });
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(row));
+          });
+          return;
+        }
+
+        // ── POST /api/table/insert — direct table write from trusted sources ──
+        // Used by guardian server's _toCortex helper for targeted table writes.
+        case route === 'POST /api/table/insert': {
+          this._readBody(req, (body) => {
+            let parsed;
+            try { parsed = JSON.parse(body || '{}'); } catch(e) {
+              res.writeHead(400); res.end(JSON.stringify({ error: 'invalid JSON' })); return;
+            }
+            const { table, row } = parsed;
+            const ALLOWED = new Set([
+              'agent_messages', 'cortex_memory', 'artifacts', 'gaps',
+              'seam_records', 'agent_calls', 'sigma_records', 'delta_records',
+              'orion_sessions', 'active_traces', 'working_memory', 'event_log',
+            ]);
+            if (!table || !ALLOWED.has(table)) {
+              res.writeHead(400); res.end(JSON.stringify({ error: `table not allowed: ${table}` })); return;
+            }
+            if (!row || typeof row !== 'object') {
+              res.writeHead(400); res.end(JSON.stringify({ error: 'row required' })); return;
+            }
+            const inserted = jaaDB.insert(table, { uuid: uid(), ...row, ts: row.ts || Date.now() });
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ ok: true, row: inserted }));
           });
           return;
         }

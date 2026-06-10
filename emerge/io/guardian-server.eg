@@ -1,55 +1,37 @@
-// guardian-server.eg — Agent orchestrator. 4 ports. ChatGPT is primary provider.
-// UUID: guardian-server-v1-0-0
-// node guardian/server.js
-
+// guardian-server.eg — Guardian HTTP+WSS server v9
+// UUID: guardian-server-v1-0-0 | source: guardian-final/server-v9.js
 compartment "guardian-server" {
-  id      = guardian-server-001
-  uuid    = guardian-server-001-xxxx
+  id = guardian-server-001
+  uuid = guardian-server-001-xxxx
   version = 9.0.0
-  intent  = agent_orchestrator_chatgpt_primary
-
+  intent = all_ports_all_routes_all_siso_channels_3748_bridge
   ports {
-    7820 = { binding = 127.0.0.1 protocol = http  purpose = api_cli_cockpit }
-    7821 = { binding = 127.0.0.1 protocol = wss   purpose = provider_connections }
-    7822 = { binding = 0.0.0.0   protocol = http  purpose = dropzone }
-    7823 = { binding = 0.0.0.0   protocol = http  purpose = memory }
+    7820 = { bind = 127.0.0.1 protocol = http  purpose = main_api_cli_cockpit }
+    7821 = { bind = 127.0.0.1 protocol = wss   purpose = provider_connections }
+    7822 = { bind = 0.0.0.0   protocol = http  purpose = dropzone_lan }
+    7823 = { bind = 0.0.0.0   protocol = http  purpose = memory_jaa_lan }
+    3748 = { bind = 127.0.0.1 protocol = http  purpose = cobalt_bridge_proxy }
   }
-
-  providers {
-    primary   = chatgpt   { url = chatgpt.com tab = 7821 }
-    secondary = claude    { url = claude.ai   tab = 7821 }
-    local     = ollama    { url = localhost:11434 }
+  isolation {
+    G-I1 = cockpit_no_direct_jaa_access
+    G-I2 = cli_no_knowledge_of_cockpit
+    G-I3 = providers_cannot_call_http_routes
+    G-I4 = providers_cannot_read_other_providers_jobs
+    G-I5 = 7823_and_7820_share_same_jaastore_single_write
+    G-I6 = nexus_3748_writes_fire_and_forget
+    G-I7 = dropzone_7822_independently_startable
   }
-
-  api {
-    route POST /command          { input provider command prompt → creates job → dispatches wss record }
-    route GET  /status/:jobId    { output job record }
-    route GET  /response/:jobId  { output response record }
-    route GET  /stream/:jobId    { output sse chunks record }
-    route GET  /jobs             { output jobs record }
-    route GET  /providers        { output provider_status record }
-    route GET  /artifacts        { output artifacts record }
-    route POST /artifacts        { insert emit record }
-    route GET  /gaps             { output gaps record }
-    route GET  /ledger           { output ledger_entries record }
-    route POST /ledger           { insert emit record }
-    route GET  /sessions         { output sessions record }
-    route GET  /memory/query     { input q output memory_index.search(q) record }
-    route POST /memory/ingest    { input type payload insert record }
-    route GET  /settings         { output settings record }
-    route PUT  /settings/:key    { update record }
-    route GET  /cockpit          { output cockpit_html record }
-    route GET  /sse              { output all_events live record }
-    route GET  /health           { output ok record }
-  }
-
-  wss {
-    on GUARDIAN_REGISTER  { register emit GUARDIAN_READY record }
-    on GUARDIAN_CHUNK     { update job stream forward_sse record }
-    on GUARDIAN_COMPLETE  { update job emit → cortex_3748 record }
-    on GUARDIAN_ARTIFACT  { insert artifacts emit record }
-    on GUARDIAN_INPUT     { insert ledger emit GUARDIAN_INPUT_ACK keep_channel record }
-    on GUARDIAN_DONE      { close_channel → cortex_3748 record }
-    on GUARDIAN_GAPS      { insert gaps emit record }
+  siso_channels {
+    guardian.artifact  = GUARDIAN_ARTIFACT -> jaa.artifacts + dropzone + ledger
+    guardian.gap       = GUARDIAN_GAPS -> jaa.gaps + ledger
+    guardian.job       = GUARDIAN_COMPLETE -> jobs PA ledger
+    guardian.pa        = GUARDIAN_PA_SESSION -> jaa.pa_sessions
+    guardian.ledger    = GUARDIAN_LEDGER_EVENT -> jaa.ledger_entries
+    guardian.file      = GUARDIAN_FILE_UPLOAD -> dropzone
+    guardian.download  = GUARDIAN_DOWNLOAD -> jaa.downloads
+    guardian.session   = sessions.name -> UPDATE
+    guardian.setting   = settings.key -> UPDATE + broadcast
+    guardian.timeline  = any_event -> timeline_events
+    guardian.input     = GUARDIAN_INPUT -> ledger + cortex + ACK + channel_open
   }
 }

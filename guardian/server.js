@@ -331,6 +331,24 @@ function _handleNCPMessage(msg) {
   const { type, jobId, provider, tabId, text, content, lang, hash,
           gaps, error, gate, chatUrl, account } = msg;
 
+  // ── §5.2 Cortex write — every significant userscript event reaches cortex ──
+  // Fire-and-forget: timeout 2s, never block the NCP response.
+  function _toCortex(eventType, payload) {
+    if (!nc) return;
+    nc._req('cortex', 'POST', '/api/event', {
+      type:     eventType,
+      payload:  { ...payload, _provider: provider, _chatUrl: chatUrl, _account: account },
+      source:   'guardian-ncp',
+      causedBy: jobId || null,
+      ts:       Date.now(),
+    }, 2000).catch(() => {});
+  }
+
+  // Chunk accumulator — flush to cortex every 5 chunks or ≥500 chars
+  // Avoids per-token writes while keeping cortex alive with stream data
+  if (!_handleNCPMessage._buf)   _handleNCPMessage._buf   = {};
+  if (!_handleNCPMessage._count) _handleNCPMessage._count = {};
+
   switch(type) {
 
     case 'GUARDIAN_REGISTER':
@@ -357,8 +375,21 @@ function _handleNCPMessage(msg) {
         const full = msg.full || null;
         updateJob(jobId, { status: 'streaming', lastChunk: Date.now() });
         bus.emit('guardian.job.chunk', { jobId, text, full, provider });
-        // Forward chunk via SSE — includes full accumulated text for Forge chat
         cockpitBroadcast({ type: 'job.chunk', jobId, text, full, provider, ts: Date.now() });
+
+        // ── Stream to cortex: batch before writing ────────────────────────
+        _handleNCPMessage._buf[jobId]   = (_handleNCPMessage._buf[jobId]   || '') + text;
+        _handleNCPMessage._count[jobId] = (_handleNCPMessage._count[jobId] || 0)  + 1;
+        const bufLen   = _handleNCPMessage._buf[jobId].length;
+        const chunkCnt = _handleNCPMessage._count[jobId];
+        if (bufLen >= 500 || chunkCnt % 5 === 0) {
+          const batch = _handleNCPMessage._buf[jobId];
+          _handleNCPMessage._buf[jobId] = '';
+          _toCortex('guardian.job.stream', {
+            jobId, provider, text: batch.slice(0, 2000), chars: batch.length,
+            chunkIndex: chunkCnt, fullLen: full ? full.length : bufLen,
+          });
+        }
       }
       break;
     }
@@ -441,6 +472,51 @@ function _handleNCPMessage(msg) {
           gaps: gaps.length, gapDrift });
         cockpitBroadcast({ type: 'job.complete', jobId, provider,
           chars: finalText.length, gaps: gaps.length, gapDrift, ts: Date.now() });
+
+        // ── §2.1 Write full response + gaps + artifacts to cortex ─────────
+        // Clear chunk buffer for this job
+        delete _handleNCPMessage._buf[jobId];
+        delete _handleNCPMessage._count[jobId];
+
+        if (nc) {
+          // 1. Full response to cortex (cortex_memory + agent_messages via WELL_KNOWN router)
+          nc._req('cortex', 'POST', '/api/event', {
+            type:    'guardian.job.complete',
+            payload: {
+              jobId, provider, chars: finalText.length,
+              response:    finalText.slice(0, 8000),
+              gaps:        gaps.length, gapDrift, detection: detection || null,
+              chatUrl, account, completedAt: Date.now(),
+            },
+            source: 'guardian-ncp', causedBy: jobId, ts: Date.now(),
+          }, 3000).catch(() => {});
+
+          // 2. Each gap → cortex gaps table
+          for (const g of gaps) {
+            nc._req('cortex', 'POST', '/api/event', {
+              type:    'cortex.gap.found',
+              payload: {
+                jobId, provider, type: g.type, domain: g.domain,
+                reason: g.reason, description: g.description,
+                score: g.score, evidence: g.evidence, source: 'guardian-gaphunter',
+              },
+              source: 'guardian-ncp', causedBy: jobId, ts: Date.now(),
+            }, 1500).catch(() => {});
+          }
+
+          // 3. Each extracted code block → cortex artifacts table
+          for (const block of codeBlocks.slice(0, 8)) {
+            nc._req('cortex', 'POST', '/api/event', {
+              type:    'guardian.artifact.extracted',
+              payload: {
+                jobId, provider, filename: block.filename,
+                lang: block.lang || null, chars: (block.content || '').length,
+                content: (block.content || '').slice(0, 4000), chatUrl,
+              },
+              source: 'guardian-ncp', causedBy: jobId, ts: Date.now(),
+            }, 1500).catch(() => {});
+          }
+        }
       }
       break;
     }
@@ -454,9 +530,13 @@ function _handleNCPMessage(msg) {
           content: content.slice(0, 4000), lang: lang || 'text',
           hash, ts: Date.now(), chatUrl,
         });
-        // Confirm back to userscript
         ncp.push(provider, { type: 'GUARDIAN_ARTIFACT_SAVED', jobId, artifactId: artId, ts: Date.now() });
         bus.emit('guardian.artifact', { jobId, artifactId: artId, provider });
+        // Write to cortex artifacts table
+        _toCortex('guardian.artifact', {
+          jobId, artifactId: artId, lang: lang || 'text', hash,
+          chars: (content || '').length, content: (content || '').slice(0, 4000), chatUrl,
+        });
       }
       break;
     }
@@ -466,6 +546,14 @@ function _handleNCPMessage(msg) {
       if (gaps?.length) {
         bus.emit('guardian.gaps', { jobId, gaps, provider });
         cockpitBroadcast({ type: 'job.gaps', jobId, gaps, ts: Date.now() });
+        // Write each gap to cortex gaps table
+        for (const g of gaps) {
+          _toCortex('cortex.gap.found', {
+            jobId, provider, type: g.type, domain: g.domain,
+            reason: g.reason, description: g.description,
+            score: g.score, source: 'userscript-detector',
+          });
+        }
       }
       break;
     }
@@ -538,10 +626,11 @@ function _handleNCPMessage(msg) {
     }
 
     case 'GUARDIAN_SESSION_NAMED': {
-      // Session got named by the AI — already handled via bus gate
-      // but may arrive via /result path too
       if (msg.chatId && msg.sessionName) {
         bus.emit('guardian.session.named', { chatId: msg.chatId, sessionName: msg.sessionName, provider });
+        _toCortex('guardian.session.named', {
+          chatId: msg.chatId, sessionName: msg.sessionName, provider,
+        });
       }
       break;
     }

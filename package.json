@@ -1,44 +1,18 @@
 {
-  "name": "nexus",
+  "name": "compartment-os",
   "version": "1.0.0",
-  "description": "Nexus system \u2014 SISO \u2192 JAA \u2192 Cortex \u2192 Guardian \u2192 Cockpit",
-  "type": "commonjs",
+  "description": "COMPARTMENT OS — Sovereign compartmentalized execution environment",
+  "author": "James Brooks (Erosmancer)",
+  "license": "MIT",
+  "private": true,
+  "bin": {
+    "cos": "./cli/index.js"
+  },
   "scripts": {
-    "cortex": "node cortex/boot.js",
-    "guardian": "node guardian/server.js",
-    "idearium": "node idearium/api/index.js",
-    "emerge": "node emerge-ide.js",
-    "cli": "node cortex/cortex.js",
-    "guardian-cli": "node guardian/cli.js",
-    "start": "node orchestrator.js",
-    "test": "node tests/kernel.test.js",
-    "test:watch": "node --watch tests/kernel.test.js",
-    "start:core": "node orchestrator.js & sleep 2 && npm run cortex & npm run guardian",
-    "nexus": "node cli/nexus.js",
-    "install_check": "node -e \"require(\"ws\"); console.log(\"deps ok\")\"",
-    "orchestrator": "node orchestrator.js",
-    "start:all": "node orchestrator.js & sleep 2 && npm run cortex & npm run guardian & npm run idearium",
-    "sync-ui": "node -e \"const fs=require(\"fs\"),path=require(\"path\");const pairs=[[\"guardian/ui\",\"ui/guardian\"],[\"cortex/ui\",\"ui/cortex\"],[\"idearium/ui\",\"ui/idearium\"],[\"emerge/ui\",\"ui/emerge\"]];for(const[s,d]of pairs){const f=path.join(s,\"index.html\");if(fs.existsSync(f)){fs.mkdirSync(d,{recursive:true});fs.copyFileSync(f,path.join(d,\"index.html\"));console.log(f,\"\u2192\",d);}}\"",
-    "diagnose": "node cli/diagnose.js",
-    "diagnose:fix": "node cli/diagnose.js --fix",
-    "diagnose:watch": "node cli/diagnose.js --watch",
-    "diagnose:orchestrator": "node cli/diagnose.js orchestrator",
-    "diagnose:cortex": "node cli/diagnose.js cortex",
-    "diagnose:guardian": "node cli/diagnose.js guardian",
-    "diagnose:idearium": "node cli/diagnose.js idearium",
-    "diagnose:emerge": "node cli/diagnose.js emerge"
+    "test":    "node test/test.js",
+    "cos":     "node cli/index.js"
   },
   "engines": {
-    "node": ">=18"
-  },
-  "dependencies": {
-    "ws": "^8.21.0"
-  },
-  "bin": {
-    "nexus": "./cli/nexus.js"
-  },
-  "optionalDependencies": {
-    "multer": "^1.4.5",
-    "express": "^4.18.0"
+    "node": ">=18.0.0"
   }
 }

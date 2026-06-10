@@ -195,6 +195,24 @@ const SERVICE = Object.freeze({
   STATUS_SHOWN:         'service:status:shown',
 });
 
+
+// ─── Playground Events ────────────────────────────────────────────────────────
+
+const PLAYGROUND = Object.freeze({
+  BRANCH_FORKED:        'playground:branch:forked',
+  BRANCH_DESTROYED:     'playground:branch:destroyed',
+  BRANCH_CHECKED_OUT:   'playground:branch:checked-out',
+  SANDBOX_STARTED:      'comp:sandbox:started',
+  SANDBOX_EXITED:       'comp:sandbox:exited',
+  SANDBOX_TIMEOUT:      'comp:sandbox:timeout',
+  SANDBOX_ERROR:        'comp:sandbox:error',
+  SANDBOX_STDOUT:       'comp:sandbox:stdout',
+  SANDBOX_STDERR:       'comp:sandbox:stderr',
+  SANDBOX_OUTPUT_LIMIT: 'comp:sandbox:output-limit',
+  COMPARE_STARTED:      'comp:compare:started',
+  COMPARE_DONE:         'comp:compare:done',
+});
+
 // ─── All Events (flat set for validation) ────────────────────────────────────
 
 const ALL_EVENT_TYPES = Object.freeze(new Set([
@@ -210,6 +228,7 @@ const ALL_EVENT_TYPES = Object.freeze(new Set([
   ...Object.values(NETWORK),
   ...Object.values(CLI),
   ...Object.values(SERVICE),
+  ...Object.values(PLAYGROUND),
 ]));
 
 /**
@@ -223,7 +242,7 @@ function isKnownEvent(eventType) {
 
 module.exports = {
   HOST, COMP, WATCHDOG, REPLAY, PIPE, GIT, SSH, VERSION,
-  NEXUS, NETWORK, CLI, SERVICE,
+  NEXUS, NETWORK, CLI, SERVICE, PLAYGROUND,
   ALL_EVENT_TYPES,
   isKnownEvent,
 };

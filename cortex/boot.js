@@ -19,6 +19,8 @@ const { FileRefs }   = require('./foundation/store/FileRefs');
 const { core }       = require('./foundation/cobalt-core');
 const { AdminServer }= require('./foundation/admin-server');
 const pollRegistry   = require('./foundation/poll-registry');
+const { dataPoller } = require('./memory/data-poller');
+const workingMemory  = require('./memory/working-memory');
 const versionium     = require('./versionium');
 const agentDispatch  = require('./agents');
 const ollamaAgent    = require('./agents/ollama');
@@ -62,6 +64,14 @@ async function bootAsync() {
       fileRefs  = new FileRefs({ store: fileStore,
         dir: path.join(STORE_DIR, 'refs') });
       await jaaDB.open(DATA_DIR);
+
+      // ── Data Poller — cortex pulls from all system data folders ──────────
+      // §2.1: disk-first. Every system writes local data/ first.
+      // Cortex polls and ingests anything new into its JAA tables.
+      dataPoller.init({
+        pollMs:   parseInt(process.env.CORTEX_POLL_MS || '5000'),
+        dataRoot: DATA_DIR,
+      });
 
       // ── CFR-Ω Ledger — cortex kernel ─────────────────────────────────────
       // Every event through cortex bus gets sigma + delta + CFR snapshot.
@@ -135,7 +145,11 @@ async function bootAsync() {
   // ── Phase 4 HARD: poll registry ──────────────────────────────────────────
   seq.phase({ name:'poll.start', type:'HARD',
     label:'Start all module poll loops',
-    fn: async () => { pollRegistry.start(); },
+    fn: async () => {
+      pollRegistry.start();
+      // Working memory maintenance (5-min context snapshots)
+      workingMemory.init({});
+    },
   });
 
   // ── Phase 5 HARD: admin server ───────────────────────────────────────────

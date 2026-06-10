@@ -121,11 +121,86 @@ function _toBridge(type, payload = {}) {
       body: JSON.stringify({ type, ...payload, ts:Date.now() }) }).catch(()=>{});
   } catch(_) {}
 }
+// ── Cortex channel — direct writes from userscript to cortex JAA ────────────
+// These bypass the guardian relay so cortex gets data even when guardian is slow.
+// POST /api/event uses the WELL_KNOWN router to write the correct table.
 function _toCortex(type, payload = {}) {
   try {
-    fetch(`${CORTEX_URL}/api/event`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
-      body: JSON.stringify({ type, payload, source:'guardian-claude', causedBy:currentJobId, ts:Date.now() }) }).catch(()=>{});
+    fetch(`${CORTEX_URL}/api/event`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({
+        type, payload: { ...payload, _account: getAccount(), _chatUrl: location.href },
+        source: 'userscript-claude', causedBy: currentJobId || null, ts: Date.now(),
+      }),
+    }).catch(() => {});
   } catch(_) {}
+}
+
+// Streaming: batch chunks before hitting cortex — flush at ≥400 chars, every 5th chunk, or sentence end
+let _streamBuf = '', _streamCnt = 0;
+function _streamToCortex(jobId, delta, full) {
+  _streamBuf += delta;
+  _streamCnt++;
+  const flush = _streamBuf.length >= 400 || _streamCnt % 5 === 0 || /[.!?\n]$/.test(delta);
+  if (!flush) return;
+  const batch = _streamBuf; const cnt = _streamCnt;
+  _streamBuf = '';
+  try {
+    fetch(`${CORTEX_URL}/api/event`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({
+        type: 'guardian.job.stream',
+        payload: {
+          jobId, provider: PROVIDER, text: batch.slice(0, 2000), chars: batch.length,
+          chunkIndex: cnt, fullLen: full ? full.length : 0,
+          chatUrl: location.href, account: getAccount(),
+        },
+        source: 'userscript-claude-stream', causedBy: jobId, ts: Date.now(),
+      }),
+    }).catch(() => {});
+  } catch(_) {}
+}
+
+// Job start → agent_calls table
+function _jobStartToCortex(jobId, command, prompt) {
+  _toCortex('agent.call.start', {
+    jobId, provider: PROVIDER, command,
+    promptLen: (prompt || '').length,
+    chatUrl: location.href, account: getAccount(), startedAt: Date.now(),
+  });
+}
+
+// Full completion → cortex_memory + agent_messages (via WELL_KNOWN router)
+function _completeToCortex(jobId, text, ms, usage) {
+  try {
+    fetch(`${CORTEX_URL}/api/event`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({
+        type: 'guardian.job.complete',
+        payload: {
+          jobId, provider: PROVIDER, chars: text.length,
+          response: text.slice(0, 8000), durationMs: ms,
+          chatUrl: location.href, account: getAccount(),
+          completedAt: Date.now(), tokens: usage ? usage.tokens : 0,
+        },
+        source: 'userscript-claude', causedBy: jobId, ts: Date.now(),
+      }),
+    }).catch(() => {});
+  } catch(_) {}
+  // Reset stream buffer on completion
+  _streamBuf = ''; _streamCnt = 0;
+}
+
+// Gaps → cortex gaps table (via WELL_KNOWN router)
+function _gapsToCortex(jobId, gapList) {
+  for (const g of (gapList || [])) {
+    _toCortex('cortex.gap.found', {
+      jobId, provider: PROVIDER,
+      type: g.type, domain: g.domain, reason: g.reason,
+      description: g.reason || g.description || '',
+      score: g.score, source: 'userscript-gaphunter',
+    });
+  }
 }
 function send(obj) {
   // NCP: all outbound messages go via fetch() POST /result
@@ -409,6 +484,8 @@ function startWatch(jobId, prompt, retryCount = 0) {
         if (delta.length > 10 || /[.!?\n]/.test(delta)) {
           send({ type:'GUARDIAN_CHUNK', jobId, text: delta, full: text,
             provider: PROVIDER, chatUrl: location.href, ts: Date.now() });
+          // Also stream directly to cortex (batch-throttled)
+          _streamToCortex(jobId, delta, text);
         }
       }
       lastText = text;
@@ -455,6 +532,7 @@ function _onJobComplete(jobId, text, ms, prompt, retryCount) {
     }
     send({ type:'GUARDIAN_GAPS', jobId, gaps:issues, chatUrl:location.href, account:getAccount() });
     _toBridge('guardian.gaps', { jobId, gaps:issues });
+    _gapsToCortex(jobId, issues);
   } else {
     // Clean completion
     sendLedger('UPGRADE', `Job complete · #${jobId.slice(0,8)}`, { jobId, chars:text.length, ms });
@@ -462,6 +540,7 @@ function _onJobComplete(jobId, text, ms, prompt, retryCount) {
         parseCortexCommands(lastText, jobId);
     _toBridge('guardian.job.complete', { jobId, chars:text.length, ms, provider:PROVIDER });
     _toCortex('guardian.job.complete', { jobId, chars:text.length, ms, usage });
+    _completeToCortex(jobId, text, ms, usage);
     _toOrc('guardian','guardian.job.complete',{ jobId, chars:text.length, ms });
     scanDOM();
     stopWatch();
@@ -488,6 +567,7 @@ async function handleJob(msg) {
   _log('job', `Job: ${command}`, `${text.length}ch · #${jobId.slice(0,8)}`);
   toast(`⚡ ${command} · #${jobId.slice(0,8)}`, 'job', 3000);
   _toOrc('guardian', 'guardian.job.received', { jobId, command, chars:text.length });
+  _jobStartToCortex(jobId, command, text);
   _toBridge('guardian.job.dispatched', { jobId, command, provider:PROVIDER });
 
   await gate('handleJob', async () => {
@@ -1000,6 +1080,7 @@ function renderSeam() {
           if(status==='verified'){
             _toOrc('guardian','guardian.seam.verified',{chunk:c.id,title:c.title});
             _toBridge('guardian.seam.verified',{chunk:c.id,title:c.title});
+            _toCortex('guardian.seam.verified', { chunkIdx: c.id, chunkTitle: c.title });
             // Push to idearium
             fetch(`http://127.0.0.1:4800/api/ideas`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:`SEAM ✓ ${c.title}`,tags:['seam','verified'],source:'guardian'})}).catch(()=>{});
           }

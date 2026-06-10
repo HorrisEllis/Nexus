@@ -133,6 +133,19 @@ async function postEvent(type, payload, opts = {}) {
 }
 
 /** POST to orchestrator ledger ring */
+async function postStream(jobId, text, fullLen, chunkIndex, provider) {
+  return _req('cortex', 'POST', '/api/event', {
+    type: 'guardian.job.stream',
+    payload: { jobId, text: (text||'').slice(0,2000), chars:(text||'').length, fullLen, chunkIndex, provider },
+    source: 'guardian-stream', causedBy: jobId, ts: Date.now(),
+  }, 1500);
+}
+
+async function postTableInsert(table, row) {
+  return _req('cortex', 'POST', '/api/table/insert', { table, row }, 2000);
+}
+
+
 async function postLedger(system, type, payload) {
   const r = await _req('orchestrator', 'POST', '/api/ledger', { system, type, payload });
   if (!r.ok && process.env.NEXUS_VERBOSE) console.warn(`[nexus-connect] postLedger: orchestrator offline`);
@@ -239,4 +252,4 @@ function startHeartbeat(systemId, port) {
   return iv;
 }
 
-module.exports = { _req, postEvent, postLedger, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, PORTS };
+module.exports = { _req, postEvent, postLedger, postStream, postTableInsert, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, PORTS };

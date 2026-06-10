@@ -29,6 +29,67 @@ const API_URL        = 'http://127.0.0.1:7820';   // Guardian HTTP (jobs, provid
 const MEMORY_URL     = 'http://127.0.0.1:7823';   // Guardian Memory (LAN artifact store)
 const GUARDIAN_NCP = 'http://127.0.0.1:7820';  // Guardian NCP direct
 const CORTEX_URL     = 'http://127.0.0.1:3748';   // Cortex (source of truth, event log)
+
+// ── Cortex direct-write helpers ──────────────────────────────────────────────
+// Direct fetch to cortex — bypasses guardian relay for real-time data.
+// POST /api/event routes to the correct JAA table via WELL_KNOWN router.
+function _cxEvent(type, payload) {
+  try {
+    fetch(CORTEX_URL + '/api/event', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({
+        type,
+        payload: { ...payload, _provider: PROVIDER, _chatUrl: location.href, _account: getAccount() },
+        source: 'userscript-chatgpt', causedBy: payload.jobId || null, ts: Date.now(),
+      }),
+    }).catch(() => {});
+  } catch(_) {}
+}
+
+// Streaming batch — flush at ≥400 chars, every 5th chunk, or sentence boundary
+let _cxBuf = '', _cxCnt = 0;
+function _cxStream(jobId, delta, fullLen) {
+  _cxBuf += delta; _cxCnt++;
+  if (_cxBuf.length < 400 && _cxCnt % 5 !== 0 && !/[.!?\n]$/.test(delta)) return;
+  const batch = _cxBuf; const cnt = _cxCnt; _cxBuf = '';
+  _cxEvent('guardian.job.stream', {
+    jobId, provider: PROVIDER, text: batch.slice(0, 2000), chars: batch.length,
+    chunkIndex: cnt, fullLen: fullLen || 0,
+    chatUrl: location.href, account: getAccount(),
+  });
+}
+
+function _cxJobStart(jobId, command, promptLen) {
+  _cxEvent('agent.call.start', {
+    jobId, provider: PROVIDER, command, promptLen, startedAt: Date.now(),
+    chatUrl: location.href, account: getAccount(),
+  });
+}
+
+function _cxComplete(jobId, text, durationMs) {
+  _cxEvent('guardian.job.complete', {
+    jobId, provider: PROVIDER, chars: text.length,
+    response: text.slice(0, 8000), durationMs, completedAt: Date.now(),
+    chatUrl: location.href, account: getAccount(),
+  });
+  _cxBuf = ''; _cxCnt = 0; // reset stream buffer
+}
+
+function _cxGaps(jobId, gapList) {
+  for (const g of (gapList || [])) {
+    _cxEvent('cortex.gap.found', {
+      jobId, provider: PROVIDER, type: g.type, domain: g.domain,
+      reason: g.reason, description: g.description || g.reason || '',
+      score: g.score, source: 'userscript-gaphunter',
+    });
+  }
+}
+
+function _cxSeam(jobId, idx, title, status) {
+  _cxEvent(status === 'verified' ? 'guardian.seam.verified' : 'guardian.seam.failed', {
+    jobId: jobId || null, provider: PROVIDER, chunkIdx: idx, chunkTitle: title,
+  });
+}
 const IDEARIUM_URL   = 'http://127.0.0.1:4800';   // Idearium (idea OS)
 const ORCH_URL       = 'http://127.0.0.1:9000';   // Orchestrator (unified root)
 const OLLAMA_URL_US  = 'http://127.0.0.1:11434';  // Ollama (local LLM)
@@ -288,6 +349,7 @@ function seamVerifyChunk(idx, result) {
     toast(`✓ SEAM chunk ${idx+1} verified: ${c.title.slice(0,30)}`, 'success');
     ledgerRecord('UPGRADE', `SEAM verified: ${c.title}`, { chunkIdx:idx });
     evLog('seam.chunk.verified', { idx, title:c.title });
+    _cxSeam(currentJobId, idx, c.title, 'verified');
     seamSaveState(); seamChannel.postMessage({ type:'chunk_verified', idx, ts:Date.now() });
     if (seamAutoInject && idx+1 < seamState.chunks.length) setTimeout(() => seamInjectChunk(idx+1), 2000);
   } else if (result === 'fail') {
@@ -295,6 +357,7 @@ function seamVerifyChunk(idx, result) {
     addLog('err', `SEAM chunk ${idx+1} FAILED`, c.title);
     toast(`✗ SEAM chunk ${idx+1} FAILED: ${c.title.slice(0,30)}`, 'error', 5000);
     evLog('seam.chunk.failed', { idx, title:c.title });
+    _cxSeam(currentJobId, idx, c.title, 'failed');
     seamSaveState();
   } else {
     c.status = 'skipped'; c.verifiedAt = Date.now();
@@ -712,6 +775,7 @@ function startWatch(jobId, prompt) {
           evLog('gaps.detected', { count:gaps.length, types:gaps.map(g=>g.type) });
           sendToServer({ type:'GUARDIAN_GAPS', jobId, gaps, chatUrl:location.href, account:getAccount() });
           for (const g of gaps) ledgerRecord('GAP', `${g.domain||g.type} · ${((g.score||0)*100).toFixed(0)}%`, g);
+          _cxGaps(jobId, gaps);
           if (activeTab === 'gaps') renderGapsTab();
         }
 
@@ -729,8 +793,7 @@ function startWatch(jobId, prompt) {
         fetch(GUARDIAN_NCP+'/result', { method:'POST', headers:{'Content-Type':'application/json'},
           body:JSON.stringify({ type:'guardian.job.complete', jobId, chars:lastText.length, gaps:gaps.length, provider:PROVIDER, ts:Date.now() }) }).catch(()=>{});
         // Sync to cortex (write event)
-        fetch(CORTEX_URL+'/api/event', { method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({ type:'guardian.job.complete', payload:{ jobId, chars:lastText.length, gaps:gaps.length, provider:PROVIDER }, source:'userscript' }) }).catch(()=>{});
+        _cxComplete(jobId, lastText, Date.now() - (sessionStartTime || Date.now()));
         sisoEmit('guardian.job.complete', { jobId, chars:lastText.length, gaps:gaps.length });
 
         // SEAM auto-verdict check
@@ -751,6 +814,7 @@ function startWatch(jobId, prompt) {
           evLog('job.generating', { jobId });
         }
         sendToServer({ type:'GUARDIAN_CHUNK', jobId, text:delta, chatUrl:location.href, account:getAccount() });
+          _cxStream(jobId, delta, text.length);
         if (CFG.pa_enabled && pa.session) {
           const now = Date.now(), tokens = estimateTokens(delta);
           if (!pa.session.startTime) pa.session.startTime = now;
@@ -781,6 +845,7 @@ async function handleJob(msg) {
   addLog('job', `Job: ${command}`, text.slice(0,80));
   ledgerRecord('INPUT', `Job · ${command} · #${jobId.slice(0,8)}`, { jobId, command });
   evLog('job.start', { jobId, command, chars:text.length });
+  _cxJobStart(jobId, command, text.length);
   toast(`Job: ${command} · #${jobId.slice(0,8)}`, 'job', 3000);
 
   const result = await gate('handleJob', async () => {

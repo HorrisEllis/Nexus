@@ -366,6 +366,7 @@ function broadcast(data) {
   }
 }
 
+function connectBridgeRelay() {
   // ORC-05: prevent double-connect and clear any pending retry timer first
 
   const r = http.request({
@@ -449,7 +450,7 @@ const SYSTEM_LOCAL_UI_DIRS = [
   { system:'guardian',     dir: path.join(ROOT,'guardian','ui') },
   { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
   { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
-  { system:       dir: path.join(ROOT,'ui') },
+  { system:'nexus',       dir: path.join(ROOT,'ui') },
   { system:'emerge',       dir: path.join(ROOT,'emerge','ui') },
   { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
 ];
@@ -857,7 +858,6 @@ const server = http.createServer(async (req, res) => {
         { m:'GET',p:'/' },{ m:'GET',p:'/health' },{ m:'GET',p:'/sse' },
         { m:'GET',p:'/ui/:system' },{ m:'GET',p:'/api/status' },{ m:'GET',p:'/api/channels' },
         { m:'GET',p:'/api/cli' },{ m:'GET',p:'/api/ui' },{ m:'GET',p:'/api/api-map' },
-          ({ m:'*',p:`/api/${s}/*`,desc:`${n} routes proxied to ${s}` })),
       ]},
     }});
   }
@@ -1058,6 +1058,7 @@ async function cliStatus() {
 
 function cliWatch() {
   console.log(`\n${C.b}${C.c}NEXUS LIVE${C.r}  ${C.d}connecting to cortex SSE…${C.r}\n`);
+  const r = http.request({ hostname:'127.0.0.1', port:PORT, path:'/sse', method:'GET', headers:{Accept:'text/event-stream'} }, res => {
     let buf='';
     res.on('data', c => {
       buf+=c.toString();

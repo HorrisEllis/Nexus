@@ -797,3 +797,72 @@ file_store  = content_addressable_blob_storage
 sha256      = content_hash_algorithm
 fork_version = create_divergent_version_chain
 rewind      = restore_to_prior_versionium_commit
+
+// ════════════════════════════════════════════════════════════════════════════
+// SPEC EXTENSION v2.1.0 — Cockpit + Guardian Extension + Siphon + Schema
+// ════════════════════════════════════════════════════════════════════════════
+
+domain "cockpit"
+cockpit       = guardian_control_panel_ui
+cockpit_mode  = operational_display_mode
+deep_mode     = full_signal_display
+fast_mode     = minimal_overhead_display
+audit_mode    = expanded_signal_audit
+creative_mode = creative_workflow_display
+emergency_mode = command_only_display
+silent_mode   = stream_and_command_only
+panel         = named_display_region
+topbar        = persistent_status_bar
+sigma_ring    = live_sigma_score_indicator
+compare_panel = dual_agent_comparison_panel
+broadcast_mode = fire_same_prompt_to_multiple_agents
+capture_panel = artifact_capture_display
+event_viewer  = live_siso_bus_event_grouped_display
+appid         = guardian_application_identity_token
+session_token = guardian_session_authentication_token
+
+domain "guardian_ext"
+extension      = firefox_browser_extension
+content_script = per_tab_injected_script
+background_js  = extension_background_orchestrator
+popup_js       = extension_popup_ui
+cfr            = constraint_field_runtime
+cesl           = canonical_execution_service_layer
+rat            = reproducible_automation_trace
+urck           = universal_runtime_constraint_kernel
+ir_layer       = intent_routing_layer
+callto         = routing_packet_to_agent
+callto_state   = lifecycle_state_of_callto_packet
+delivery_mode  = callto_delivery_guarantee_level
+fire_and_forget = delivery_no_ack_required
+at_least_once  = delivery_with_retry
+exactly_once   = delivery_with_dedup
+guarded_pipeline = delivery_with_full_verification
+instance_id    = unique_extension_instance_identifier
+automation_trace = cesl_deterministic_event_record
+
+domain "siphon"
+siphon         = server_side_chat_ingestion_module
+pulse          = guardian_node_liveness_tracker
+watchman       = guardian_health_monitor
+chat_session   = normalized_captured_chat_session
+chat_message   = individual_message_in_session
+chat_completion = complete_agent_response_record
+guardian_node  = registered_guardian_extension_instance
+guardian_health = system_health_summary_record
+health_score   = 0_to_1_guardian_health_metric
+stale_node     = guardian_node_without_recent_heartbeat
+siphon_ingest  = normalize_bridge_event_to_chat_table
+
+domain "trust"
+beta_distribution = bayesian_trust_model
+alpha             = beta_pass_count
+beta_param        = beta_fail_count
+posterior_mean    = expected_trust_score
+wilson_lower      = conservative_routing_weight
+confidence_n      = total_observations
+decay_halflife    = trust_score_decay_period
+routing_weight    = raid_agent_selection_weight
+cold_start_floor  = minimum_weight_for_new_source
+snr_record        = single_gate_evaluation_record
+trust_band        = categorical_trust_level

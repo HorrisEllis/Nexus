@@ -36,6 +36,7 @@ const modules = [
 
   // memory
   { id: 'agent-memory',    mod: require('../memory/agent-memory'),       pollMs:  4000 },
+  { id: 'data-poller',     mod: require('../memory/data-poller').dataPoller,  pollMs:  5000 },
 
   // versionium
   { id: 'versionium',      mod: require('../versionium'),                pollMs:  3000 },
