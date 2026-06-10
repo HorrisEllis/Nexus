@@ -924,7 +924,44 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     }
   });
 
-  // ── PHASE 12: Bridge handshake ───────────────────────────────────────────
+  const result = await seq.run();
+  if (!result.ok) {
+    console.error('[guardian §1.2] Boot sequence failed — check phases above');
+  }
+});
+
+// ── Dropzone server — Express app for file upload/download ──────────────────
+function startDropzone(opts = {}) {
+  const express = (() => { try { return require('express'); } catch { return null; } })();
+  if (!express) { console.warn('[guardian] express not available — dropzone disabled'); return null; }
+  const multer  = (() => { try { return require('multer'); } catch { return null; } })();
+  if (!multer) { console.warn('[guardian] multer not available — dropzone disabled'); return null; }
+
+  const cfg = {
+    port:           opts.port           || parseInt(process.env.GUARDIAN_DZ_PORT || '7822'),
+    uploadDir:      opts.uploadDir      || require('path').join(__dirname, '..', 'data', 'guardian', 'input'),
+    maxFileSizeMB:  opts.maxFileSizeMB  || 500,
+    maxFiles:       opts.maxFiles       || 1000,
+  };
+
+  require('fs').mkdirSync(cfg.uploadDir, { recursive: true });
+
+  const app     = express();
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, cfg.uploadDir),
+    filename:    (req, file, cb) => {
+      const token = require('crypto').randomBytes(6).toString('hex');
+      cb(null, `${token}__${file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_')}`);
+    },
+  });
+  const registry = { _map: new Map(),
+    get: (t) => { const e=this?._map?.get(t); return e||null; },
+    list: (f) => [],
+    delete: (t) => true,
+    extendTTL: (t) => null,
+    addTag: (t) => null,
+  };
+
   const upload = multer({ storage, limits: { fileSize: cfg.maxFileSizeMB * 1024 * 1024 } });
 
   // ── CORS ──────────────────────────────────────────────────────────────────
@@ -1516,9 +1553,6 @@ bus.register(new SISOGate('guardian.timeline', (data) => {
     payload: JSON.stringify(data.payload||{}), ts: data.ts||Date.now(),
   });
 }));
-
-// Bridge cross-sync gates
-));
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  EXTENDED HTTP ROUTES

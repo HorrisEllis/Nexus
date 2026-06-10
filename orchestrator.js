@@ -1413,5 +1413,6 @@ server.listen(PORT, '127.0.0.1', async () => {
   // START-SYSTEMS SEQUENCE — delegated to cli/boot-systems.js
   // ════════════════════════════════════════════════════════════════════════════
   const { _bootSystems } = require('./cli/boot-systems');
+  setTimeout(() => _bootSystems(ledgerWrite, PORT, connectBridgeRelay, _eventLedger), 500);
 });
 }

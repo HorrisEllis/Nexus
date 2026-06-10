@@ -204,11 +204,15 @@ async function diagOrchestrator() {
 async function diagBridge() {
 
     // Test handshake
+    const r = await req(9999, 'POST', '/api/register',
       { systemId:'orchestrator', appId:'orchestrator', secret:'nexus-orchestrator-internal-v1' });
     // Test broadcast
-  } else {
-    if (r.error === 'ECONNREFUSED') console.log(info('    → nothing listening on :9999'));
-  }
+    if (r && r.ok) {
+      console.log(ok('    bridge handshake: ok'));
+    } else {
+      if (r && r.error === 'ECONNREFUSED') console.log(info('    → nothing listening on :9999'));
+      else console.log(err('    bridge handshake: failed'));
+    }
 }
 
 async function diagCortex() {

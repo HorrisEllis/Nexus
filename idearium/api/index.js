@@ -598,12 +598,17 @@ export function startAPI() {
     });
 
     // Phase 5 SOFT: bridge handshake (§5.2)
+    seq.phase({ name:'bridge.handshake', type:'SOFT',
+      label:'Bridge handshake with orchestrator',
+      fn: async () => {
+        const bBody = JSON.stringify({ systemId:'idearium', appId:'idearium', secret:'nexus-idearium-internal-v1' });
         const r = _require('http').request({
-            headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(bBody)},
+          hostname:'127.0.0.1', port:9000, path:'/api/register', method:'POST',
+          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(bBody)},
         }, res => {
           let d = ''; res.on('data', c => { d += c; });
           res.on('end', () => {
-            catch(_) {}
+            try { JSON.parse(d); } catch(_) {}
           });
         });
         r.on('error', () => {}); r.write(bBody); r.end();

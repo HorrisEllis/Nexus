@@ -36,6 +36,7 @@ const C = {
 const $ = (col, s) => `${col}${s}${C.reset}`;
 const ok  = s => `${C.green}✓${C.reset} ${s}`;
 const err = s => `${C.red}✗${C.reset} ${s}`;
+const SYS_COLORS = { guardian:C.magenta, cortex:C.cyan,
                     idearium:C.blue, emerge:C.green, orchestrator:C.green };
 
 // ── HTTP helper ───────────────────────────────────────────────────────────────
@@ -102,14 +103,20 @@ async function cmdStatus() {
     // Also get registry for heartbeat data
     const reg = await GET(PORTS.orchestrator, '/api/registry').catch(()=>null);
     const registry = reg?.data?.registry || {};
-    console.log(`
-${$(C.bold+C.cyan, 'LIVE STREAM')}  ${$(C.dim, 'connecting to cortex SSE…')}
-`);
-  // Watch cortex SSE instead
+    console.log(`\n${$(C.bold+C.cyan, 'NEXUS STATUS')}\n`);
+    for (const [name, sys] of Object.entries(systems)) {
+      const live = sys.status === 'online';
+      console.log(`  ${live ? $(C.green,'●') : $(C.red,'○')} ${name.padEnd(12)} ${$(C.dim, sys.port?':'+sys.port:'')}`);
+    }
+    console.log('');
+  });
+}
+
+async function cmdStream() {
+  // Watch cortex SSE
   const r = http.request({ hostname:'127.0.0.1', port:3748, path:'/sse', method:'GET', headers:{Accept:'text/event-stream'} }, res => {
     let buf='';
-    res.on('data', c => { buf+=c.toString(); const lines=buf.split('
-'); buf=lines.pop(); for(const l of lines){ if(!l.startsWith('data:')) continue; try{const d=JSON.parse(l.slice(5).trim()); console.log(d.type, JSON.stringify(d).slice(0,80));}catch(_){} }});
+    res.on('data', c => { buf+=c.toString(); const lines=buf.split('\n'); buf=lines.pop(); for(const l of lines){ if(!l.startsWith('data:')) continue; try{const d=JSON.parse(l.slice(5).trim()); console.log(d.type, JSON.stringify(d).slice(0,80));}catch(_){} }});
     res.on('end', () => { console.log('stream ended'); process.exit(0); });
   });
   r.on('error', e => { console.log(`cortex offline: ${e.message}`); process.exit(1); });

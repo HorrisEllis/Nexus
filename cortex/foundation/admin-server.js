@@ -110,18 +110,15 @@ class AdminServer {
           break;
         }
         // ── Bridge proxy routes ────────────────────────────────────────────
-        }
         case route === 'GET /api/tags': {
           const entityId = url.searchParams.get('entityId');
           const tag      = url.searchParams.get('tag');
-          else { this._json(res, 400, { ok:false, error:'entityId or tag required' }); }
+          if (!entityId && !tag) { this._json(res, 400, { ok:false, error:'entityId or tag required' }); break; }
           break;
         }
         case route === 'POST /api/tags': {
           const b = await this._body(req);
           this._json(res, 200, { ok:true }); break;
-        }
-        }
         }
         case route === 'GET /contract': {
           const { readFileSync, existsSync } = require('fs');

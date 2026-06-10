@@ -121,7 +121,7 @@ function detectNode(root, pkg) {
   // Entry file
   const mainCandidates = [
     pkg.main,
-    pkg.exports?.'.', pkg.exports,
+    typeof pkg.exports === 'object' ? pkg.exports?.['.'] : null,
     typeof pkg.exports === 'string' ? pkg.exports : null,
     'index.js', 'src/index.js', 'lib/index.js', 'app.js', 'server.js',
   ].filter(Boolean).map(c => (typeof c === 'string' ? c : null)).filter(Boolean);

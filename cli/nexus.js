@@ -109,7 +109,7 @@ const CMDS = {
     const checks = await Promise.all(
       Object.entries(SYSTEMS).map(async ([name, sys]) => {
         const start = Date.now();
-                     : name === 'ollama'  ? '/api/tags'
+        const health = name === 'ollama'  ? '/api/tags'
                      : '/health';
         const d = await GET(name, health);
         return { name, sys, d, ms: Date.now() - start, live: !d.error };
@@ -137,6 +137,7 @@ const CMDS = {
           if (models.length) info(`         ${models.join(', ')}`);
           else info(`         no models — run: nexus /ollama pull qwen2.5-coder:1.5b`);
         }
+        if (d.pendingRequests) {
           info(`         ${C.yellow}${d.pendingRequests} pending requests${C.reset}`);
         }
       } else {
@@ -381,3 +382,24 @@ Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
     const id   = args.find(a => !a.startsWith('--') && a !== 'tag');
     const tags = flag('tags')?.split(',').map(t=>t.trim()).filter(Boolean);
     if (!id || !tags?.length) return fail('Usage: nexus tag <entityId> --tags=tag1,tag2');
+
+    const d = await POST('cortex', '/api/tags', { entityId: id, tags });
+    if (d.error) return fail(d.error);
+    info(`Tagged ${id}: ${tags.join(', ')}`);
+  },
+};
+
+// ── Command dispatch ──────────────────────────────────────────────────────────
+const cmd = args[0];
+if (!cmd || cmd === 'help') {
+  CMDS.help();
+} else if (cmd.startsWith('/')) {
+  CMDS.passthrough(cmd.slice(1), args.slice(1));
+} else if (typeof CMDS[cmd] === 'function') {
+  CMDS[cmd]().catch(e => {
+    console.error(`\n  ${C.red}✗${C.reset} ${e.message}\n`);
+    process.exit(1);
+  });
+} else {
+  fail(`Unknown command: ${cmd}\nRun: nexus help`);
+}
