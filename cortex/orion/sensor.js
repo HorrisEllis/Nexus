@@ -3,12 +3,12 @@
 // UUID: mod-orion-sensor-v5-0000-4000-0000-000000000001
 //
 // ORION §A2 — measure. First stage.
-// Reads bridge_messages from Guardian. Accumulates events per calltoId.
+// Reads agent_messages from Guardian. Accumulates events per calltoId.
 // Writes completed sessions to orion_sessions (status='measured').
 // v5.0: Buffer lives in orion_sessions table, not in-memory (§G-V5-02 resolved).
 //
 // §M1: init(cfg) + stop().
-// §M2: reads: bridge_messages. writes: orion_sessions, event_log.
+// §M2: reads: agent_messages. writes: orion_sessions, event_log.
 
 const { jaaDB, uid } = require('../memory/jaa-db');
 
@@ -33,7 +33,7 @@ function stop() {
 async function _tick() {
   try {
     const now       = Date.now();
-    const newMsgs   = jaaDB.query('bridge_messages', r => r._rowId > _lastBrMsg, 100);
+    const newMsgs   = jaaDB.query('agent_messages', r => r._rowId > _lastBrMsg, 100);
     if (newMsgs.length) _lastBrMsg = newMsgs[newMsgs.length - 1]._rowId;
 
     // Group new messages by session

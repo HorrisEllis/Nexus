@@ -16,7 +16,6 @@
 import http         from 'http';
 import { createRequire } from 'module';
 const _require = createRequire(import.meta.url);
-const bridge   = (() => { try { return _require('../../bridge/nexus-bridge'); } catch(_) { return null; } })();
 import { getIdeaOS, VERSION } from '../core/index.js';
 
 const PORT    = 4800;
@@ -96,9 +95,6 @@ function matchRoute(method, url) {
   }
 
   // Bridge routes
-  if (method === 'GET' && clean === '/api/bridge/health') return { action: 'bridge.health', params: {} };
-  if (method === 'GET' && clean === '/api/bridge/requests') return { action: 'bridge.requests', params: {} };
-  if (method === 'POST' && clean === '/api/bridge/request') return { action: 'bridge.request', params: {} };
 
   // Dynamic routes
   const dynRoutes = [
@@ -179,7 +175,6 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ideas: os.ideas(query) });
 
     case 'idea.create': {
-        // bridge sync happens after idea is created — see below
       const { text, tags, compartment } = body;
       if (!text) return err(res, 400, 'text required');
       const ev = os.emit('idearium.idea.create', { text, tags: tags||[], compartment: compartment||null, source: 'api' });
@@ -367,7 +362,6 @@ async function handle(req, res, route, query, body) {
       return ok(res, { snapshots: os.snapshots().slice(0, 50) });
 
     case 'snapshot.push': {
-        // bridge: sync to cortex versionium
       os.emit('idearium.snapshot.commit', { message: body.message||'snapshot', branch: body.branch||'main', author:'api' });
       return ok(res, { snapshot: os.snapshots()[0] });
     }
@@ -604,18 +598,11 @@ export function startAPI() {
     });
 
     // Phase 5 SOFT: bridge handshake (§5.2)
-    seq.phase({ name:'bridge.register', type:'SOFT',
-      label:'Bridge handshake (§5.2)',
-      fn: async () => {
-        const bBody = JSON.stringify({ systemId:'idearium', appId:'idearium',
-          secret:'nexus-idearium-internal-v1' });
         const r = _require('http').request({
-          hostname:'127.0.0.1', port:9999, path:'/bridge/handshake', method:'POST',
-          headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(bBody)},
+            headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(bBody)},
         }, res => {
           let d = ''; res.on('data', c => { d += c; });
           res.on('end', () => {
-            try { const j = JSON.parse(d); if (j.ok) console.log('[idearium §5.2] bridge registered'); }
             catch(_) {}
           });
         });

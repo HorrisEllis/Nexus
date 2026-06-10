@@ -31,9 +31,6 @@ const modules = [
   // contract — orchestration contract enforcement + violation monitoring
   { id: 'contract',        mod: require('../contract'),                  pollMs: 30000 },
 
-  // resilience — fallback strategy engine: auto-fix → diagnose → ollama → AI → escalate
-  { id: 'resilience',      mod: require('../resilience'),                pollMs: 20000 },
-
   // snapshot — monitors forge_patches for pre-patch auto-snapshots
   { id: 'snapshot',        mod: require('../snapshot'),                  pollMs: 30000 },
 

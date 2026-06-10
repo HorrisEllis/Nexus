@@ -119,7 +119,6 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#08080a;color:#e2
     <a class="sys-url" href="http://localhost:7820/cockpit" target="_blank">Cockpit :7820</a>
     <a class="sys-url" href="http://localhost:3748/cortex" target="_blank">Cortex UI :3748</a>
     <a class="sys-url" href="http://localhost:4800" target="_blank">Idearium :4800</a>
-    <a class="sys-url" href="http://localhost:9999/bridge/health" target="_blank">Bridge :9999</a>
     <a class="sys-url" href="http://localhost:9000" target="_blank">Orchestrator :9000</a>
   </div>
 </div>
@@ -170,7 +169,6 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#08080a;color:#e2
     <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg2)">
       <select id="ledger-system" onchange="loadLedger()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;font:inherit;font-size:10px;border-radius:2px;outline:none">
         <option value="">all systems</option>
-        <option>bridge</option><option>cortex</option><option>guardian</option>
         <option>idearium</option><option>emerge</option><option>orchestrator</option>
       </select>
       <button class="btn" onclick="loadLedger()">↺</button>
@@ -219,7 +217,6 @@ html,body{margin:0;padding:0;width:100%;height:100%;background:#08080a;color:#e2
 
 <script>
 const SYSTEMS = {
-  bridge:   { port:9999, label:'Bridge',   color:'#f0a500', health:'/bridge/health' },
   cortex:   { port:3748, label:'Cortex',   color:'#2dd4bf', health:'/health' },
   guardian: { port:7820, label:'Guardian', color:'#9b7fe8', health:'/health' },
   idearium: { port:4800, label:'Idearium', color:'#4a9eff', health:'/' },
@@ -228,45 +225,15 @@ const SYSTEMS = {
 };
 
 const CHANNELS = [
-  { from:'guardian', channel:'guardian.job.complete',    to:['cortex','bridge'],   desc:'Job finished — syncs to cortex, bridge memory.ingest' },
-  { from:'guardian', channel:'guardian.artifact',        to:['cortex','bridge'],   desc:'Code artifact received — stored and tagged' },
   { from:'guardian', channel:'guardian.gaps',            to:['cortex'],            desc:'Gaps detected in AI output' },
   { from:'guardian', channel:'guardian.ledger',          to:['jaa'],               desc:'Ledger entry written' },
   { from:'guardian', channel:'guardian.session.named',   to:['jaa'],               desc:'Chat session named by agent' },
   { from:'guardian', channel:'guardian.timeline',        to:['jaa'],               desc:'Timeline event recorded' },
-  { from:'guardian', channel:'guardian.job.queued',      to:['bridge'],            desc:'Job queued — waiting for provider' },
-  { from:'guardian', channel:'guardian.job.dispatched',  to:['bridge'],            desc:'Job dispatched to provider' },
-  { from:'cortex',   channel:'cortex.gap.found',         to:['guardian','bridge'], desc:'Gap detected — notifies guardian ledger' },
-  { from:'cortex',   channel:'cortex.gap.resolved',      to:['bridge'],            desc:'Gap resolved — broadcasts to all' },
-  { from:'idearium', channel:'idearium.idea.created',    to:['cortex','bridge'],   desc:'New idea — synced to cortex, tagged' },
+  { from:'cortex',   channel:'cortex.gap.found',         to:['guardian'], desc:'Gap detected — notifies guardian ledger' },
   { from:'idearium', channel:'idearium.snapshot.pushed', to:['cortex'],            desc:'Snapshot — triggers versionium commit' },
-  { from:'bridge',   channel:'bridge.request.created',   to:['all'],               desc:'New request in queue — broadcast' },
-  { from:'bridge',   channel:'bridge.request.accepted',  to:['all'],               desc:'Request accepted' },
-  { from:'bridge',   channel:'bridge.request.complete',  to:['all'],               desc:'Request complete' },
-  { from:'bridge',   channel:'bridge.request.expired',   to:['all'],               desc:'Stale request purged (30min TTL)' },
-  { from:'bridge',   channel:'bridge.handshake',         to:['audit'],             desc:'System handshake logged' },
 ];
 
 const API_MAP = {
-  bridge: [
-    {m:'POST',p:'/bridge/handshake',d:'Register system — get token'},
-    {m:'GET', p:'/bridge/health',d:'Health + session count'},
-    {m:'GET', p:'/bridge/stats',d:'Full statistics'},
-    {m:'GET', p:'/bridge/tags/:id',d:'Get tags for entity'},
-    {m:'POST',p:'/bridge/tags',d:'Tag an entity'},
-    {m:'GET', p:'/bridge/tags?tag=x',d:'Find entities by tag'},
-    {m:'GET', p:'/bridge/requests',d:'List requests (filter by status/from/to)'},
-    {m:'POST',p:'/bridge/requests',d:'Submit typed request'},
-    {m:'GET', p:'/bridge/requests/:uuid',d:'Get single request'},
-    {m:'POST',p:'/bridge/requests/:uuid/accept',d:'Accept pending request'},
-    {m:'POST',p:'/bridge/requests/:uuid/reject',d:'Reject with reason'},
-    {m:'POST',p:'/bridge/requests/:uuid/complete',d:'Mark complete + result'},
-    {m:'GET', p:'/bridge/subscribe?channel=x',d:'SSE subscription'},
-    {m:'GET', p:'/bridge/pull?channel=x&since=ts',d:'Pull buffered events'},
-    {m:'POST',p:'/bridge/broadcast',d:'Broadcast event to all subscribers'},
-    {m:'POST',p:'/bridge/forward',d:'Forward to specific system'},
-    {m:'POST',p:'/bridge/purge',d:'Expire stale pending requests'},
-  ],
   cortex: [
     {m:'GET', p:'/health',d:'System health + JAA counts'},
     {m:'GET', p:'/sse',d:'Live event stream'},
@@ -281,8 +248,6 @@ const API_MAP = {
     {m:'POST',p:'/api/files',d:'Upload file (multipart)'},
     {m:'GET', p:'/api/tags?entityId=x',d:'Get entity tags'},
     {m:'POST',p:'/api/tags',d:'Tag entity via cortex'},
-    {m:'GET', p:'/api/bridge/health',d:'Bridge health proxy'},
-    {m:'GET', p:'/api/bridge/requests',d:'Bridge requests proxy'},
   ],
   guardian: [
     {m:'POST',p:'/command',d:'Dispatch job to provider'},
@@ -343,12 +308,8 @@ const CLI_CMDS = {
     {cmd:'nexus watch <jobId>',desc:'Stream guardian job tokens'},
     {cmd:'nexus watchdog',desc:'Live dashboard all systems'},
     {cmd:'nexus requests',desc:'Bridge request queue'},
-    {cmd:'nexus accept <uuid>',desc:'Accept bridge request'},
-    {cmd:'nexus reject <uuid>',desc:'Reject bridge request'},
-    {cmd:'nexus tag <id> --tags=x,y',desc:'Tag entity in bridge'},
+    {cmd:'nexus tag <id> --tags=x,y',desc:'Tag entity'},
     {cmd:'nexus tags <id>',desc:'Get entity tags'},
-    {cmd:'nexus bridge health',desc:'Bridge health'},
-    {cmd:'nexus bridge find --tag=x',desc:'Find entities by tag'},
     {cmd:'nexus cortex status',desc:'Cortex status + JAA counts'},
     {cmd:'nexus cortex post --type=x',desc:'Write cortex event'},
     {cmd:'nexus cortex memory <query>',desc:'Search memory'},
@@ -373,9 +334,6 @@ const CLI_CMDS = {
     {cmd:'nexus /ollama status',desc:'Ollama model list'},
     {cmd:'nexus /ollama pull qwen2.5-coder:7b',desc:'Pull model (streaming)'},
     {cmd:'nexus /ollama run "prompt"',desc:'Run inference (streaming)'},
-    {cmd:'nexus /bridge health',desc:'Bridge health'},
-    {cmd:'nexus /bridge requests --status=pending',desc:'Pending requests'},
-    {cmd:'nexus /bridge subscribe guardian.job.*',desc:'Subscribe channel'},
   ],
 };
 
@@ -439,7 +397,6 @@ async function loadAll() {
       const q=Object.values(d.queued||{}).reduce((a,b)=>a+b,0);
       extra=`<div class="sys-stat">${conn.length?'providers: '+conn.join(', '):'no providers connected'}${q?'  ·  '+q+' queued':''}</div>`;
     }
-    if(alive&&id==='bridge') { extra=`<div class="sys-stat">${d.sessions||0} sessions · ${d.pendingRequests||0} pending</div>`; }
     if(alive&&id==='ollama') { const models=(d.models||[]).map(m=>m.name).join(', '); extra=`<div class="sys-stat">${models||'no models'}</div>`; }
     return `<div class="sys-card" id="sc-${id}" onclick="selectSystem('${id}')">
       <div class="sys-name" style="color:${sys.color}">
@@ -477,7 +434,6 @@ function startStream() {
   if(sse){sse.close();sse=null;}
   const ch=document.getElementById('stream-ch').value||'*';
   try {
-    sse=new EventSource('http://localhost:9999/bridge/subscribe?channel='+encodeURIComponent(ch));
     sse.onopen=()=>{ document.getElementById('stream-pill').textContent='● connected'; document.getElementById('stream-pill').className='pill ok'; };
     sse.onerror=()=>{ document.getElementById('stream-pill').textContent='✗ disconnected'; document.getElementById('stream-pill').className='pill err'; };
     sse.onmessage=e=>{
@@ -485,9 +441,9 @@ function startStream() {
         const d=JSON.parse(e.data);
         const log=document.getElementById('stream-log');
         const row=document.createElement('div'); row.className='log-row';
-        const sys=d.type?.split('.')?.[0]||'bridge';
+        const sys=d.type?.split('.')?.[0]||'cortex';
         const sysColor=SYSTEMS[sys]?.color||'#4a4a5a';
-        row.innerHTML=`<span class="log-ts">${new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8)}</span>
+        row.innerHTML=`<span class="log-ts">${new Date(d.ts||Date.now()).toTimeString().slice(0,8)}</span>
           <span class="log-sys" style="color:${sysColor}">${sys}</span>
           <span class="log-type" style="color:var(--text)">${d.type||'event'}</span>
           <span class="log-body">${JSON.stringify(d).slice(0,100)}</span>`;
@@ -498,14 +454,13 @@ function startStream() {
         if(chEl){chEl.classList.add('ch-active');setTimeout(()=>chEl.classList.remove('ch-active'),800);}
       }catch(_){}
     };
-  } catch(e) { document.getElementById('stream-pill').textContent='bridge offline'; }
+  } catch(e) { document.getElementById('stream-pill').textContent='stream offline'; }
 }
 function stopStream(){if(sse){sse.close();sse=null;document.getElementById('stream-pill').textContent='disconnected';document.getElementById('stream-pill').className='pill';}}
 
 // ── Requests ──────────────────────────────────────────────────────────────────
 async function loadBridgeRequests(status='') {
   try{
-    const d=await (await fetch('http://localhost:9999/bridge/requests'+(status?'?status='+status:''))).json();
     const list=[...(d.requests||[])].reverse().slice(0,30);
     document.getElementById('req-body').innerHTML=list.map(r=>`
       <div style="background:var(--bg3);border:1px solid var(--border);border-left:3px solid ${r.status==='pending'?'var(--warn)':r.status==='complete'?'var(--signal)':'var(--err)'};border-radius:3px;padding:7px 10px;margin-bottom:5px">
@@ -520,21 +475,19 @@ async function loadBridgeRequests(status='') {
           <button class="btn" onclick="actReq('${r.uuid}','reject')" style="font-size:9px;color:var(--err)">reject</button>
         </div>`:''}
       </div>`).join('')||'<div style="color:var(--muted)">no requests</div>';
-  }catch(e){document.getElementById('req-body').innerHTML='<div style="color:var(--err)">bridge offline</div>';}
+  }catch(e){document.getElementById('req-body').innerHTML='<div style="color:var(--err)">stream offline</div>';}
 }
 
 async function actReq(uuid,action) {
-  try{await fetch('http://localhost:9999/bridge/requests/'+uuid+'/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({by:'orchestrator-ui'})});}catch(_){}
   loadBridgeRequests();
 }
 async function purgeReqs() {
-  try{await fetch('http://localhost:9999/bridge/purge',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});}catch(_){}
   loadBridgeRequests('pending');
 }
 
 // ── LEDGER ───────────────────────────────────────────────────────────────────
 let ledgerLive = true;
-const SYS_COLOR = {bridge:'#f0a500',cortex:'#2dd4bf',guardian:'#9b7fe8',idearium:'#4a9eff',emerge:'#3ecf8e',orchestrator:'#3ecf8e'};
+const SYS_COLOR = {cortex:'#2dd4bf',guardian:'#9b7fe8',idearium:'#4a9eff',emerge:'#3ecf8e',orchestrator:'#3ecf8e'};
 
 async function loadLedger() {
   const sys = document.getElementById('ledger-system')?.value || '';

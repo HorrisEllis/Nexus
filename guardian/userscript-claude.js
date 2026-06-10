@@ -27,7 +27,7 @@ const NCP_HB      = `${NCP_URL}/heartbeat`;
 const WS_URL     = NCP_CHANNEL;
 const API_URL    = 'http://127.0.0.1:7820';
 const ORCH_URL   = 'http://127.0.0.1:9000';
-const BRIDGE_URL = 'http://127.0.0.1:9999';
+const GUARDIAN_NCP = 'http://127.0.0.1:7820';  // NCP — direct guardian channel
 const CORTEX_URL = 'http://127.0.0.1:3748';
 const PROVIDER   = 'claude';
 const VERSION    = '9.0.0';
@@ -117,7 +117,7 @@ function _toOrc(system, type, payload = {}) {
 }
 function _toBridge(type, payload = {}) {
   try {
-    fetch(`${BRIDGE_URL}/bridge/broadcast`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
+    fetch(`${GUARDIAN_NCP}/result`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
       body: JSON.stringify({ type, ...payload, ts:Date.now() }) }).catch(()=>{});
   } catch(_) {}
 }

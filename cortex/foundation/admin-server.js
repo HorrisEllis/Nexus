@@ -9,26 +9,29 @@
 // No kernel bus bridging in v5.0. JAA is the source of truth.
 
 const http   = require('http');
-const bridge = (() => { try { return require('../../bridge/nexus-bridge'); } catch(_) { return null; } })();
 const { jaaDB, uid } = require('../memory/jaa-db');
 const { core }       = require('./cobalt-core');
+const versionium     = (() => { try { return require('../versionium'); } catch(_) { return null; } })();
+const essEngine      = (() => { try { return require('../ess-gap-engine'); } catch(_) { return null; } })();
 
 const DEFAULT_PORT = 3748;
+const MAX_BODY     = 25 * 1024 * 1024; // 25MB — uploads are b64-inflated (BUG-06 class)
 
 class AdminServer {
-  constructor({ port = DEFAULT_PORT } = {}) {
+  constructor({ port = DEFAULT_PORT, deps = {} } = {}) {
     this._port       = port;
     this._server     = null;
     this._sseClients = new Set();
     this._lastLogId  = 0; // will be set to current tail on first push
     this._sseTimer   = null;
+    this._fileStore  = deps.fileStore || null; // content-addressable SHA-256 store
+    this._fileRefs   = deps.fileRefs  || null; // named refs over the store
   }
 
   async start() {
     this._server = http.createServer((req, res) => this._handle(req, res));
 
     await new Promise((resolve, reject) => {
-      if (bridge) bridge.mount(this._server, 'cortex');
     this._server.listen(this._port, '127.0.0.1', (err) => {
         if (err) reject(err);
         else resolve();
@@ -107,31 +110,18 @@ class AdminServer {
           break;
         }
         // ── Bridge proxy routes ────────────────────────────────────────────
-        case route === 'GET /api/bridge/health': {
-          const b = bridge ? { ok:true, bridge:'mounted' } : { ok:false, bridge:'not loaded' };
-          this._json(res, 200, b); break;
         }
         case route === 'GET /api/tags': {
           const entityId = url.searchParams.get('entityId');
           const tag      = url.searchParams.get('tag');
-          if (entityId && bridge) { this._json(res, 200, { ok:true, tags: bridge.getTags(entityId) }); }
-          else if (tag && bridge) { this._json(res, 200, { ok:true, entities: bridge.findByTag(tag) }); }
           else { this._json(res, 400, { ok:false, error:'entityId or tag required' }); }
           break;
         }
         case route === 'POST /api/tags': {
           const b = await this._body(req);
-          if (bridge) bridge.tag(b.entityId, b.entityType, b.system, b.tags, b.addedBy);
           this._json(res, 200, { ok:true }); break;
         }
-        case route === 'GET /api/bridge/requests': {
-          const filter = Object.fromEntries(url.searchParams);
-          this._json(res, 200, { ok:true, requests: bridge ? bridge.listRequests(filter) : [] }); break;
         }
-        case route === 'POST /api/bridge/broadcast': {
-          const b = await this._body(req);
-          if (bridge) bridge.broadcast(b);
-          this._json(res, 200, { ok:true }); break;
         }
         case route === 'GET /contract': {
           const { readFileSync, existsSync } = require('fs');
@@ -201,6 +191,17 @@ class AdminServer {
           // Broadcast to SSE clients so UI + terminal see output
           this._broadcast({ type:'CLI_RESULT', command:raw, result, error, ts:Date.now() });
           this._json(res, 200, { ok:!error, command:raw, result, error });
+          break;
+        }
+
+        case req.url?.startsWith('/cfr'): {
+          const ledger = global._cortexCFRLedger;
+          if (ledger) {
+            const { URL } = require('url');
+            const u = new URL(req.url, 'http://localhost');
+            if (ledger.handleCFRRoute(req, res, u)) break;
+          }
+          this._json(res, 404, { ok: false, error: 'CFR ledger not initialized' });
           break;
         }
 
@@ -316,6 +317,156 @@ class AdminServer {
           const rows = jaaDB.query('project_registry', () => true, 50);
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ok:true,rows}));
+          break;
+        }
+
+        // ── VERSIONIUM ────────────────────────────────────────────────────
+        // GET /api/versionium/log?n=N&branch=main — commits newest-first + branches
+        case route === 'GET /api/versionium/log': {
+          const n      = Math.min(parseInt(url.searchParams.get('n') || '50', 10) || 50, 500);
+          const branch = url.searchParams.get('branch');
+          let commits  = jaaDB.tail('versionium_commits', n);
+          if (branch) commits = commits.filter(c => c.branch === branch);
+          commits = commits.slice().reverse(); // newest first
+          const branches = jaaDB.query('versionium_branches', () => true, 50);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, commits, branches,
+            head: branches.find(b => b.branch === (branch || 'main'))?.headCommitId || null }));
+          break;
+        }
+
+        // POST /api/versionium/commit { message, branch?, causedBy? } — manual commit
+        case route === 'POST /api/versionium/commit': {
+          this._readBody(req, (body) => {
+            if (body === null) { res.writeHead(413, {'Content-Type':'application/json'}); res.end(JSON.stringify({ok:false,error:'body too large'})); return; }
+            try {
+              const { message, branch = 'main', causedBy = null } = JSON.parse(body || '{}');
+              if (!versionium || typeof versionium.commit !== 'function') {
+                res.writeHead(503, {'Content-Type':'application/json'});
+                res.end(JSON.stringify({ ok:false, error:'versionium module unavailable' }));
+                return;
+              }
+              const commit = versionium.commit({ message, branch, causedBy });
+              res.writeHead(200, {'Content-Type':'application/json'});
+              res.end(JSON.stringify({ ok:true, commit }));
+            } catch (err) {
+              res.writeHead(400, {'Content-Type':'application/json'});
+              res.end(JSON.stringify({ ok:false, error: err.message }));
+            }
+          });
+          break;
+        }
+
+        // ── FILES — content-addressed store ───────────────────────────────
+        // GET /api/files — versionium_file_index, newest first
+        case route === 'GET /api/files': {
+          const n    = Math.min(parseInt(url.searchParams.get('n') || '200', 10) || 200, 1000);
+          const rows = jaaDB.tail('versionium_file_index', n).slice().reverse();
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, rows,
+            store: this._fileStore ? this._fileStore.stats : null }));
+          break;
+        }
+
+        // POST /api/files/upload { name, content, encoding?, mime?, project?, causedBy? }
+        // content: utf8 text by default, or base64 when encoding === 'base64'.
+        // Writes object to SHA-256 FileStore, indexes in versionium_file_index,
+        // sets named ref, emits event_log row. Idempotent on identical content.
+        case route === 'POST /api/files/upload': {
+          this._readBody(req, (body) => {
+            if (body === null) { res.writeHead(413, {'Content-Type':'application/json'}); res.end(JSON.stringify({ok:false,error:'body too large (25MB cap)'})); return; }
+            try {
+              const { name, content, encoding = 'utf8', mime = 'text/plain',
+                      project = null, causedBy = null } = JSON.parse(body || '{}');
+              if (!name || typeof content !== 'string') {
+                res.writeHead(400, {'Content-Type':'application/json'});
+                res.end(JSON.stringify({ ok:false, error:'name and content required' }));
+                return;
+              }
+              if (!this._fileStore) {
+                res.writeHead(503, {'Content-Type':'application/json'});
+                res.end(JSON.stringify({ ok:false, error:'file store not wired (boot deps missing)' }));
+                return;
+              }
+              const obj  = { name, mime, encoding, content, ts: Date.now() };
+              const hash = this._fileStore.put(obj);
+              if (this._fileRefs) { try { this._fileRefs.set('file/' + name, hash); } catch {} }
+              const size = Buffer.byteLength(content, encoding === 'base64' ? 'base64' : 'utf8');
+              const row  = jaaDB.insert('versionium_file_index', {
+                uuid: uid(), name, hash, mime, encoding, size,
+                project, source: 'admin-server.upload', causedBy, ts: Date.now(),
+              });
+              jaaDB.insert('event_log', {
+                uuid: uid(), type: 'file.uploaded',
+                payload: { name, hash, size, mime, project },
+                source: 'admin-server', causedBy, ts: Date.now(),
+              });
+              res.writeHead(200, {'Content-Type':'application/json'});
+              res.end(JSON.stringify({ ok:true, hash, row }));
+            } catch (err) {
+              res.writeHead(400, {'Content-Type':'application/json'});
+              res.end(JSON.stringify({ ok:false, error: err.message }));
+            }
+          });
+          break;
+        }
+
+        // GET /api/files/get?hash=H — retrieve stored object by content hash
+        case route === 'GET /api/files/get': {
+          const hash = url.searchParams.get('hash');
+          if (!hash || !/^[a-f0-9]{64}$/.test(hash)) {
+            res.writeHead(400, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({ ok:false, error:'valid sha-256 hash required' }));
+            break;
+          }
+          const obj = this._fileStore ? this._fileStore.get(hash) : null;
+          res.writeHead(obj ? 200 : 404, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify(obj ? { ok:true, object: obj } : { ok:false, error:'not found' }));
+          break;
+        }
+
+        // ── PROJECTS — repo suite read layer ──────────────────────────────
+        // GET /api/projects — project_registry joined with file + commit counts
+        case route === 'GET /api/projects': {
+          const projects = jaaDB.query('project_registry', () => true, 200);
+          const files    = jaaDB.query('versionium_file_index', () => true, 2000);
+          const commits  = jaaDB.query('versionium_commits',   () => true, 2000);
+          const enriched = projects.map(p => ({
+            ...p,
+            fileCount:   files.filter(f => f.project === (p.name || p.uuid)).length,
+            commitCount: commits.filter(c => c.project === (p.name || p.uuid) || c.branch === p.name).length,
+          }));
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok:true, rows: enriched,
+            totals: { files: files.length, commits: commits.length } }));
+          break;
+        }
+
+        // ── ESS — omission analysis (ess-gap-engine) ──────────────────────
+        // POST /api/ess/analyse { text } → expressed/inferred/omitted + score
+        case route === 'POST /api/ess/analyse': {
+          this._readBody(req, (body) => {
+            if (body === null) { res.writeHead(413, {'Content-Type':'application/json'}); res.end(JSON.stringify({ok:false,error:'body too large'})); return; }
+            try {
+              const { text } = JSON.parse(body || '{}');
+              if (!essEngine) {
+                res.writeHead(503, {'Content-Type':'application/json'});
+                res.end(JSON.stringify({ ok:false, error:'ess-gap-engine unavailable' }));
+                return;
+              }
+              const result = essEngine.analyzeESS(String(text || ''));
+              jaaDB.insert('event_log', {
+                uuid: uid(), type: 'ess.analysed',
+                payload: { omitted: (result.omitted || []).length, score: result.score },
+                source: 'admin-server', ts: Date.now(),
+              });
+              res.writeHead(200, {'Content-Type':'application/json'});
+              res.end(JSON.stringify({ ok:true, result }));
+            } catch (err) {
+              res.writeHead(400, {'Content-Type':'application/json'});
+              res.end(JSON.stringify({ ok:false, error: err.message }));
+            }
+          });
           break;
         }
 
@@ -450,44 +601,6 @@ class AdminServer {
           break;
         }
 
-        // ── Resilience routes ─────────────────────────────────────────────────
-        case route === 'GET /api/resilience/status': {
-          try {
-            const log = jaaDB.tail('resilience_log', 50);
-            const byResult = {};
-            for (const r of log) { byResult[r.result] = (byResult[r.result]||0)+1; }
-            const inFlight = jaaDB.query('gaps', g => g.status==='ai_dispatched', 20);
-            this._json(res, 200, { ok:true, log: log.slice(0,20), summary: byResult, aiInFlight: inFlight.length });
-          } catch(e) { this._json(res, 500, { ok:false, error: e.message }); }
-          break;
-        }
-        case route === 'POST /api/resilience/run': {
-          try {
-            const body = await this._body(req);
-            if (!body.gapUuid) { this._json(res, 400, { ok:false, error:'gapUuid required' }); break; }
-            const gap = jaaDB.get('gaps', body.gapUuid);
-            if (!gap) { this._json(res, 404, { ok:false, error:'gap not found' }); break; }
-            const resilience = require('../resilience');
-            // Run specific strategy or full chain
-            if (body.strategy) {
-              const fn = {
-                auto_fix: resilience.strategyAutoFix,
-                diagnose: resilience.strategyDiagnose,
-                ollama:   resilience.strategyOllamaForge,
-                claude:   r => resilience.strategyGuardianAI(r, { provider:'claude' }),
-                chatgpt:  r => resilience.strategyGuardianAI(r, { provider:'chatgpt' }),
-                escalate: resilience.strategyEscalate,
-              }[body.strategy];
-              if (!fn) { this._json(res, 400, { ok:false, error:`unknown strategy: ${body.strategy}` }); break; }
-              const result = await fn(gap);
-              this._json(res, 200, { ok:true, strategy: body.strategy, result });
-            } else {
-              this._json(res, 202, { ok:true, message:'resilience chain queued — check resilience_log' });
-            }
-          } catch(e) { this._json(res, 500, { ok:false, error: e.message }); }
-          break;
-        }
-
         // ── Self-heal status ──────────────────────────────────────────────────
         case route === 'GET /api/self-heal/status': {
           try {
@@ -519,10 +632,23 @@ class AdminServer {
     }
   }
 
+  // BUG-01/BUG-06 class (cross-applied from ncp.js forensics): accumulate Buffer[]
+  // to avoid multi-byte mojibake at chunk boundaries; cap body size to bound memory.
   _readBody(req, cb) {
-    let body = '';
-    req.on('data', d => { body += d; });
-    req.on('end', () => cb(body));
+    const bufs = [];
+    let size = 0, killed = false;
+    req.on('data', d => {
+      if (killed) return;
+      size += d.length;
+      if (size > MAX_BODY) {
+        killed = true;
+        try { req.destroy(); } catch {}
+        cb(null); // signal overflow
+        return;
+      }
+      bufs.push(d);
+    });
+    req.on('end', () => { if (!killed) cb(Buffer.concat(bufs).toString('utf8')); });
   }
 }
 

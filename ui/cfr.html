@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS · CFR Field — Kernel Debugger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,600;0,800;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #03050b;
+  --bg2:   #060a14;
+  --bg3:   #0a1020;
+  --bdr:   #12203a;
+  --bdr2:  #1e3050;
+  --c:     #00d4ff;
+  --g:     #00ff88;
+  --r:     #ff3366;
+  --y:     #ffb800;
+  --m:     #cc44ff;
+  --w:     #e0eeff;
+  --dim:   rgba(0,212,255,.12);
+  --mono:  'Share Tech Mono', monospace;
+  --sans:  'Exo 2', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;background:var(--bg);overflow:hidden;font-family:var(--mono);color:var(--w)}
+
+/* ── APP SHELL ─────────────────────────────────────────── */
+#app{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  grid-template-rows:46px 1fr 26px;
+  width:100vw;height:100vh;
+}
+
+/* ── TOPBAR ─────────────────────────────────────────────── */
+#tb{
+  grid-column:1/-1;
+  display:flex;align-items:center;gap:10px;
+  padding:0 16px;
+  background:var(--bg2);
+  border-bottom:1px solid var(--bdr);
+  z-index:20;
+}
+.tb-logo{
+  font-family:var(--sans);font-weight:800;font-size:15px;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--c);white-space:nowrap;
+}
+.tb-logo em{color:var(--g);font-style:normal}
+.tb-sep{width:1px;height:18px;background:var(--bdr2);flex-shrink:0}
+.tb-stat{display:flex;flex-direction:column;gap:1px;min-width:54px}
+.tb-stat-label{font-size:7px;letter-spacing:.14em;text-transform:uppercase;color:rgba(0,212,255,.4)}
+.tb-stat-val{font-size:12px;color:var(--c)}
+.tb-stat-val.g{color:var(--g)}.tb-stat-val.y{color:var(--y)}.tb-stat-val.r{color:var(--r)}.tb-stat-val.m{color:var(--m)}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:8px}
+.badge{
+  padding:2px 8px;border-radius:2px;
+  font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+}
+.badge-g{background:rgba(0,255,136,.1);color:var(--g);border:1px solid rgba(0,255,136,.25)}
+.badge-r{background:rgba(255,51,102,.1);color:var(--r);border:1px solid rgba(255,51,102,.25)}
+.badge-y{background:rgba(255,184,0,.1);color:var(--y);border:1px solid rgba(255,184,0,.25)}
+.badge-c{background:rgba(0,212,255,.1);color:var(--c);border:1px solid rgba(0,212,255,.25)}
+.badge-m{background:rgba(204,68,255,.1);color:var(--m);border:1px solid rgba(204,68,255,.25)}
+#kernel-badge{cursor:pointer}
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+#sb{
+  background:var(--bg2);
+  border-right:1px solid var(--bdr);
+  overflow-y:auto;
+  display:flex;flex-direction:column;
+  gap:0;
+}
+#sb::-webkit-scrollbar{width:3px}
+#sb::-webkit-scrollbar-thumb{background:var(--bdr2)}
+
+.sb-section{border-bottom:1px solid var(--bdr)}
+.sb-section-hd{
+  padding:8px 12px;
+  font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(0,212,255,.4);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sb-section-hd span{color:var(--c)}
+
+.ctrl-row{padding:6px 12px 8px;display:flex;flex-direction:column;gap:3px}
+.ctrl-label-row{display:flex;justify-content:space-between;align-items:center}
+.ctrl-label{font-size:9px;letter-spacing:.08em;color:rgba(224,238,255,.5)}
+.ctrl-val{font-size:10px;color:var(--c)}
+input[type=range]{
+  width:100%;height:2px;border-radius:1px;
+  -webkit-appearance:none;appearance:none;
+  background:rgba(0,212,255,.18);outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:10px;height:10px;
+  border-radius:50%;background:var(--c);cursor:pointer;
+}
+
+.view-btns{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:8px 12px}
+.vbtn{
+  padding:5px;border:1px solid var(--bdr2);background:transparent;
+  color:rgba(224,238,255,.5);font-family:var(--mono);font-size:9px;
+  letter-spacing:.06em;cursor:pointer;border-radius:2px;text-transform:uppercase;
+  transition:all .1s;
+}
+.vbtn:hover{background:rgba(0,212,255,.08);color:var(--c);border-color:var(--c)}
+.vbtn.active{background:rgba(0,212,255,.15);color:var(--c);border-color:var(--c)}
+
+.node-list{flex:1;overflow-y:auto;padding:4px 8px}
+.node-list::-webkit-scrollbar{width:2px}
+.node-list::-webkit-scrollbar-thumb{background:var(--bdr2)}
+.node-item{
+  padding:5px 7px;border-radius:2px;border:1px solid transparent;
+  cursor:pointer;margin-bottom:2px;transition:all .1s;
+  display:flex;align-items:center;gap:8px;
+}
+.node-item:hover{background:rgba(0,212,255,.06);border-color:var(--bdr2)}
+.node-item.active{background:rgba(0,212,255,.1);border-color:var(--c)}
+.node-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.node-name{font-size:10px;color:var(--w);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node-type{font-size:8px;color:rgba(224,238,255,.35);letter-spacing:.04em}
+
+.ev-feed{max-height:160px;overflow-y:auto;padding:4px 8px}
+.ev-feed::-webkit-scrollbar{width:2px}
+.ev-feed::-webkit-scrollbar-thumb{background:var(--bdr2)}
+.ev-item{
+  padding:3px 6px;font-size:9px;line-height:1.4;
+  border-left:2px solid var(--bdr2);margin-bottom:2px;
+}
+.ev-item.ok{border-color:var(--g)}
+.ev-item.warn{border-color:var(--y)}
+.ev-item.err{border-color:var(--r)}
+.ev-item.cfr{border-color:var(--m)}
+.ev-ts{color:rgba(224,238,255,.3);font-size:8px}
+.ev-type{color:var(--w)}
+
+.regime-box{
+  margin:8px 12px;padding:8px 10px;
+  border:1px solid var(--bdr2);border-radius:3px;
+  display:flex;flex-direction:column;gap:3px;
+}
+.regime-label{font-size:8px;letter-spacing:.12em;color:rgba(0,212,255,.4);text-transform:uppercase}
+.regime-val{font-family:var(--sans);font-size:20px;font-weight:800;letter-spacing:.06em}
+.regime-val.stable{color:var(--g)}.regime-val.turbulent{color:var(--y)}
+.regime-val.chaotic{color:var(--r)}.regime-val.resonant{color:var(--m)}
+
+/* ── CANVAS AREA ────────────────────────────────────────── */
+#stage{position:relative;overflow:hidden;background:var(--bg)}
+canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+#canvas-2d{z-index:2;pointer-events:none}
+#canvas-3d{z-index:1}
+
+#hud{
+  position:absolute;top:12px;right:12px;z-index:5;
+  display:flex;flex-direction:column;gap:6px;align-items:flex-end;pointer-events:none;
+}
+.hud-metric{
+  background:rgba(3,5,11,.75);border:1px solid var(--bdr2);
+  border-radius:2px;padding:4px 9px;backdrop-filter:blur(8px);
+  display:flex;align-items:baseline;gap:6px;
+}
+.hud-val{font-size:20px;font-weight:600;font-family:var(--sans);color:var(--c)}
+.hud-unit{font-size:9px;color:rgba(0,212,255,.5);letter-spacing:.08em}
+
+#legend{
+  position:absolute;bottom:12px;right:12px;z-index:5;
+  background:rgba(3,5,11,.8);border:1px solid var(--bdr2);
+  border-radius:3px;padding:8px 12px;pointer-events:none;backdrop-filter:blur(8px);
+}
+.leg-row{display:flex;align-items:center;gap:8px;font-size:9px;margin-bottom:3px;color:rgba(224,238,255,.55)}
+.leg-row:last-child{margin-bottom:0}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── STATUSBAR ──────────────────────────────────────────── */
+#statusbar{
+  grid-column:1/-1;
+  background:var(--bg2);border-top:1px solid var(--bdr);
+  display:flex;align-items:center;padding:0 12px;gap:16px;
+  font-size:9px;color:rgba(224,238,255,.35);letter-spacing:.05em;
+}
+.sb-item span{color:rgba(224,238,255,.7)}
+#sb-mode{color:var(--c);font-weight:600;letter-spacing:.1em}
+
+#stress-overlay{
+  position:absolute;inset:0;z-index:10;pointer-events:none;
+  opacity:0;border:2px solid var(--r);
+  box-shadow:inset 0 0 80px rgba(255,51,102,.3);
+  transition:opacity .06s;
+}
+#stress-overlay.flash{animation:flash .4s ease-out forwards}
+@keyframes flash{0%{opacity:.7}100%{opacity:0}}
+
+#inspect-panel{
+  position:absolute;bottom:16px;left:16px;z-index:20;
+  background:rgba(6,10,20,.92);border:1px solid var(--bdr2);
+  border-radius:3px;padding:12px 14px;min-width:200px;
+  backdrop-filter:blur(12px);display:none;
+}
+#inspect-panel.open{display:block}
+.ip-title{font-size:11px;color:var(--c);margin-bottom:8px;letter-spacing:.06em}
+.ip-row{display:flex;justify-content:space-between;gap:16px;font-size:9px;margin-bottom:3px}
+.ip-key{color:rgba(224,238,255,.4)}.ip-val{color:var(--w)}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div id="tb">
+    <div class="tb-logo">Brain<em>OS</em> · CFR <em>3D</em></div>
+    <div class="tb-sep"></div>
+    <div class="tb-stat"><span class="tb-stat-label">Particles</span><span class="tb-stat-val g" id="t-particles">—</span></div>
+    <div class="tb-sep"></div>
+    <div class="tb-stat"><span class="tb-stat-label">FPS</span><span class="tb-stat-val g" id="t-fps">—</span></div>
+    <div class="tb-sep"></div>
+    <div class="tb-stat"><span class="tb-stat-label">Nodes</span><span class="tb-stat-val" id="t-nodes">0</span></div>
+    <div class="tb-sep"></div>
+    <div class="tb-stat"><span class="tb-stat-label">Events</span><span class="tb-stat-val m" id="t-events">0</span></div>
+    <div class="tb-sep"></div>
+    <div class="tb-stat"><span class="tb-stat-label">Regime</span><span class="tb-stat-val g" id="t-regime">STABLE</span></div>
+    <div class="tb-r">
+      <span class="badge badge-y" id="kernel-badge" title="Click to reconnect">BRIDGE OFFLINE</span>
+      <span class="badge badge-c">v2.4.1</span>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div id="sb">
+
+    <div class="sb-section">
+      <div class="sb-section-hd">Field Parameters</div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Particles</span><span class="ctrl-val" id="v-count">30k</span></div>
+        <input type="range" id="sl-count" min="1000" max="80000" step="1000" value="30000">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Structure</span><span class="ctrl-val" id="v-struct">0.50</span></div>
+        <input type="range" id="sl-struct" min="0" max="1" step="0.01" value="0.5">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Entropy</span><span class="ctrl-val" id="v-entropy">0.20</span></div>
+        <input type="range" id="sl-entropy" min="0" max="1" step="0.01" value="0.2">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Attention</span><span class="ctrl-val" id="v-attract">0.50</span></div>
+        <input type="range" id="sl-attract" min="0" max="1" step="0.01" value="0.5">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Damping</span><span class="ctrl-val" id="v-damp">0.12</span></div>
+        <input type="range" id="sl-damp" min="0" max="0.5" step="0.01" value="0.12">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Depth (Z)</span><span class="ctrl-val" id="v-depth">3.0</span></div>
+        <input type="range" id="sl-depth" min="0.5" max="8" step="0.1" value="3.0">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Speed</span><span class="ctrl-val" id="v-speed">1.0</span></div>
+        <input type="range" id="sl-speed" min="0.1" max="4" step="0.1" value="1.0">
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-hd">View</div>
+      <div class="view-btns">
+        <button class="vbtn active" id="vb-3d">3D FIELD</button>
+        <button class="vbtn" id="vb-top">TOP DOWN</button>
+        <button class="vbtn" id="vb-side">SIDE</button>
+        <button class="vbtn" id="vb-orbit">AUTO ORBIT</button>
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Rotation</span><span class="ctrl-val" id="v-rot">0.0°</span></div>
+        <input type="range" id="sl-rot" min="-180" max="180" step="1" value="0">
+      </div>
+      <div class="ctrl-row">
+        <div class="ctrl-label-row"><span class="ctrl-label">Tilt</span><span class="ctrl-val" id="v-tilt">-25°</span></div>
+        <input type="range" id="sl-tilt" min="-90" max="90" step="1" value="-25">
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-hd">Regime</div>
+      <div class="regime-box">
+        <span class="regime-label">Current State</span>
+        <span class="regime-val stable" id="regime-display">STABLE</span>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-section-hd">Canvas Nodes <span id="node-count-label">0</span></div>
+      <div class="node-list" id="node-list">
+        <div style="font-size:9px;color:rgba(224,238,255,.2);padding:8px 4px">No nodes connected</div>
+      </div>
+    </div>
+
+    <div class="sb-section" style="flex:1">
+      <div class="sb-section-hd">Bridge Events</div>
+      <div class="ev-feed" id="ev-feed">
+        <div style="font-size:9px;color:rgba(224,238,255,.2);padding:4px">Waiting for kernel…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- STAGE -->
+  <div id="stage">
+    <canvas id="canvas-3d"></canvas>
+    <canvas id="canvas-2d"></canvas>
+    <div id="stress-overlay"></div>
+
+    <div id="hud">
+      <div class="hud-metric">
+        <span class="hud-val" id="hud-fps">60</span>
+        <span class="hud-unit">FPS</span>
+      </div>
+      <div class="hud-metric">
+        <span class="hud-val" id="hud-count">30k</span>
+        <span class="hud-unit">PARTICLES</span>
+      </div>
+    </div>
+
+    <div id="legend">
+      <div class="leg-row"><div class="leg-dot" style="background:#00ff88"></div>Laminar — healthy flow</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#00d4ff"></div>Resonant — causal signal</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#ffb800"></div>Turbulent — logic deadlock</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#cc44ff"></div>Cluster — persistent state</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#ff3366"></div>Stress — SNR block / error</div>
+    </div>
+
+    <div id="inspect-panel">
+      <div class="ip-title" id="ip-title">Node Inspector</div>
+      <div id="ip-body"></div>
+      <button onclick="document.getElementById('inspect-panel').classList.remove('open')"
+        style="margin-top:8px;width:100%;padding:4px;background:transparent;border:1px solid rgba(0,212,255,.3);color:rgba(0,212,255,.6);font-family:var(--mono);font-size:9px;cursor:pointer;letter-spacing:.08em">CLOSE</button>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div id="statusbar">
+    <span id="sb-mode" class="sb-item">3D FIELD</span>
+    <div class="tb-sep"></div>
+    <div class="sb-item">Struct <span id="sb-struct">0.50</span></div>
+    <div class="sb-item">Entropy <span id="sb-entropy">0.20</span></div>
+    <div class="sb-item">Attn <span id="sb-attract">0.50</span></div>
+    <div class="sb-item">Damp <span id="sb-damp">0.12</span></div>
+    <div class="sb-item" style="margin-left:auto">PING-PONG BUFFER <span id="sb-buf">tA</span></div>
+    <div class="sb-item">WebGL <span id="sb-gl">—</span></div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+/* ─────────────────────────────────────────────────────────
+   CONFIG
+   ───────────────────────────────────────────────────────── */
+const CFG = {
+  kernelUrl:   'http://127.0.0.1:3748',  // cortex kernel — default CFR source
+  pollMs:      2000,
+  maxEvents:   80,
+  maxNodes:    200,
+  stressDecay: 0.92,
+  // Physics bounds — particles stay INSIDE these
+  BOUND_XY:    9.0,   // half-width of XY box
+  BOUND_Z:     5.0,   // half-depth of Z (before depthScale multiply)
+  WALL_SPRING: 0.12,  // spring stiffness at boundary
+  WALL_ZONE:   1.5,   // distance from wall where spring activates
+  VEL_MAX:     0.18,  // hard velocity cap per component
+  VEL_CAP:     0.22,  // hard magnitude cap
+};
+
+/* ─────────────────────────────────────────────────────────
+   FIELD STATE
+   ───────────────────────────────────────────────────────── */
+const FIELD = {
+  structure:     0.5,
+  entropy:       0.2,
+  attention:     0.5,
+  damping:       0.12,
+  depthScale:    3.0,
+  speed:         1.0,
+  particleCount: 30000,
+  stresses:      [],
+  attractors:    [],
+  regime:        'stable',
+};
+
+const VIEW = {
+  rotY:      0,
+  rotX:     -25,
+  autoOrbit: false,
+  mode:      '3d',
+};
+
+/* ─────────────────────────────────────────────────────────
+   CANVAS / GL REFS
+   ───────────────────────────────────────────────────────── */
+const c3d  = document.getElementById('canvas-3d');
+const c2d  = document.getElementById('canvas-2d');
+const ctx2 = c2d.getContext('2d');
+let   gl;
+
+let N = FIELD.particleCount;
+let posA, vel, pLife, pSpeed;
+let buf = 'A';
+
+const canvasNodes = new Map();
+let   totalEvents = 0;
+let   kernelOnline = false;
+
+/* ─────────────────────────────────────────────────────────
+   WEBGL SETUP
+   ───────────────────────────────────────────────────────── */
+function initGL() {
+  try {
+    gl = c3d.getContext('webgl', { antialias:false, alpha:false, preserveDrawingBuffer:false });
+    if (!gl) throw new Error('no webgl');
+    document.getElementById('sb-gl').textContent = 'WebGL1';
+    return true;
+  } catch(e) {
+    document.getElementById('sb-gl').textContent = 'CANVAS';
+    return false;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   SHADERS  (fixed: depth calc, NaN guard, correct point size)
+   ───────────────────────────────────────────────────────── */
+const VS_SRC = `
+precision highp float;
+attribute vec3  aPos;
+attribute float aLife;
+attribute float aSpeed;
+
+uniform mat4  uMVP;
+uniform float uSize;
+
+varying float vLife;
+varying float vSpeed;
+varying vec3  vPos;
+
+void main(){
+  vLife  = aLife;
+  vSpeed = aSpeed;
+  vPos   = aPos;
+
+  vec4 clip  = uMVP * vec4(aPos, 1.0);
+  gl_Position = clip;
+
+  // Safe depth-based sizing — clamp w to prevent divide-by-zero / NaN
+  float w    = max(clip.w, 0.0001);
+  float ndcZ = clip.z / w;                         // -1..1
+  float depth = clamp((ndcZ + 1.0) * 0.5, 0.0, 1.0); // 0..1
+  float sz   = uSize * (0.5 + depth * 1.2) * max(aLife, 0.0);
+  gl_PointSize = clamp(sz, 1.0, 12.0);
+}`;
+
+const FS_SRC = `
+precision highp float;
+varying float vLife;
+varying float vSpeed;
+varying vec3  vPos;
+
+vec3 speedToColor(float s, float life, vec3 p) {
+  float slow = smoothstep(0.0, 0.25, s);
+  float fast = smoothstep(0.45, 0.9, s);
+  float mid  = max(0.0, 1.0 - abs(s - 0.35) * 4.0);
+
+  vec3 laminar  = vec3(0.0,  1.0,  0.53);
+  vec3 resonant = vec3(0.0,  0.83, 1.0);
+  vec3 turb     = vec3(1.0,  0.72, 0.0);
+  vec3 stress   = vec3(1.0,  0.2,  0.4);
+  vec3 cluster  = vec3(0.8,  0.27, 1.0);
+
+  vec3 col = laminar;
+  col = mix(col, resonant, mid);
+  col = mix(col, turb,     fast * 0.85);
+  col = mix(col, stress,   max(0.0, fast - 0.65) * 3.5);
+  col = mix(col, cluster,  max(0.0, 0.04 - s) * 25.0);
+
+  // gentle depth fog
+  float fog = 1.0 - abs(p.z) * 0.04;
+  return col * clamp(fog, 0.3, 1.0) * life;
+}
+
+void main(){
+  vec2  uv   = gl_PointCoord - 0.5;
+  float d    = length(uv);
+  if (d > 0.5) discard;
+  float alpha = smoothstep(0.5, 0.08, d) * vLife;
+  vec3  col   = speedToColor(vSpeed, vLife, vPos);
+  gl_FragColor = vec4(col * alpha, alpha * 0.88);
+}`;
+
+let prog, aPos_loc, aLife_loc, aSpeed_loc, uMVP_loc, uSize_loc;
+let vbo_pos, vbo_life, vbo_speed;
+
+function compileShader(src, type) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    throw new Error('Shader: ' + gl.getShaderInfoLog(s));
+  return s;
+}
+
+function buildProgram() {
+  const vs = compileShader(VS_SRC, gl.VERTEX_SHADER);
+  const fs = compileShader(FS_SRC, gl.FRAGMENT_SHADER);
+  prog = gl.createProgram();
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS))
+    throw new Error('Link: ' + gl.getProgramInfoLog(prog));
+  aPos_loc   = gl.getAttribLocation(prog, 'aPos');
+  aLife_loc  = gl.getAttribLocation(prog, 'aLife');
+  aSpeed_loc = gl.getAttribLocation(prog, 'aSpeed');
+  uMVP_loc   = gl.getUniformLocation(prog, 'uMVP');
+  uSize_loc  = gl.getUniformLocation(prog, 'uSize');
+}
+
+/* ─────────────────────────────────────────────────────────
+   PARTICLE ALLOCATION
+   ───────────────────────────────────────────────────────── */
+function allocParticles(n) {
+  N = n;
+  posA   = new Float32Array(n * 3);
+  vel    = new Float32Array(n * 3);
+  pLife  = new Float32Array(n);
+  pSpeed = new Float32Array(n);
+
+  const bxy = CFG.BOUND_XY * 0.85;
+  const bz  = CFG.BOUND_Z  * FIELD.depthScale * 0.85;
+
+  for (let i = 0; i < n; i++) {
+    const i3 = i * 3;
+    posA[i3]   = (Math.random() - 0.5) * bxy * 2;
+    posA[i3+1] = (Math.random() - 0.5) * bxy * 2;
+    posA[i3+2] = (Math.random() - 0.5) * bz  * 2;
+    vel[i3]    = (Math.random() - 0.5) * 0.04;
+    vel[i3+1]  = (Math.random() - 0.5) * 0.04;
+    vel[i3+2]  = (Math.random() - 0.5) * 0.02;
+    pLife[i]   = 0.5 + Math.random() * 0.5;
+    pSpeed[i]  = Math.random() * 0.3;
+  }
+
+  if (gl) {
+    if (vbo_pos) { gl.deleteBuffer(vbo_pos); gl.deleteBuffer(vbo_life); gl.deleteBuffer(vbo_speed); }
+    vbo_pos   = gl.createBuffer();
+    vbo_life  = gl.createBuffer();
+    vbo_speed = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo_life);
+    gl.bufferData(gl.ARRAY_BUFFER, pLife, gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo_speed);
+    gl.bufferData(gl.ARRAY_BUFFER, pSpeed, gl.DYNAMIC_DRAW);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   PHYSICS — FIXED
+   Key fixes:
+   1. Soft boundary walls (spring force) — NO hard teleport
+   2. Tight per-component AND magnitude velocity cap
+   3. NaN guard: if position escapes, reset particle in-place
+   4. dt capped at 33ms to prevent explosion on tab-blur resume
+   ───────────────────────────────────────────────────────── */
+function updatePhysics(dt) {
+  const str   = FIELD.structure;
+  const entr  = FIELD.entropy;
+  const attn  = FIELD.attention;
+  const damp  = FIELD.damping;
+  const dz    = FIELD.depthScale;
+  const spd   = FIELD.speed;
+  const t     = _now * 0.0001;
+
+  const BXY  = CFG.BOUND_XY;
+  const BZ   = CFG.BOUND_Z * dz;
+  const WSP  = CFG.WALL_SPRING;
+  const WZ   = CFG.WALL_ZONE;
+  const VMAX = CFG.VEL_MAX;
+  const VCAP = CFG.VEL_CAP;
+
+  const dtFixed = Math.min(dt, 0.033) * 60 * spd; // normalised step, hard dt cap
+
+  for (let i = 0; i < N; i++) {
+    const i3 = i * 3;
+    let px = posA[i3], py = posA[i3+1], pz = posA[i3+2];
+    let vx = vel[i3],  vy = vel[i3+1],  vz = vel[i3+2];
+
+    // ── NaN/Inf guard ── if a particle escaped, reset it ──
+    if (!isFinite(px) || !isFinite(py) || !isFinite(pz)) {
+      posA[i3]   = (Math.random() - 0.5) * BXY;
+      posA[i3+1] = (Math.random() - 0.5) * BXY;
+      posA[i3+2] = (Math.random() - 0.5) * BZ;
+      vel[i3] = vel[i3+1] = vel[i3+2] = 0;
+      continue;
+    }
+
+    // ── Curl noise (structure field) ──────────────────────
+    const sc = str * 1.6;
+    const nx = Math.sin(py * sc + t) * Math.cos(pz * sc * 0.4);
+    const ny = Math.cos(px * sc - t) * Math.sin(pz * sc * 0.4);
+    const nz = Math.sin(px * sc + py * sc) * 0.4;
+    vx += nx * 0.0015;
+    vy += ny * 0.0015;
+    vz += nz * 0.0008;
+
+    // ── Entropy (random walk) ──────────────────────────────
+    vx += (Math.random() - 0.5) * entr * 0.025;
+    vy += (Math.random() - 0.5) * entr * 0.025;
+    vz += (Math.random() - 0.5) * entr * 0.012;
+
+    // ── Attractors ─────────────────────────────────────────
+    for (const att of FIELD.attractors) {
+      const dx  = att.x - px, dy = att.y - py, dz2 = att.z - pz;
+      const d2  = dx*dx + dy*dy + dz2*dz2 + 0.8;
+      const f   = (att.mass * attn * 0.012) / d2;
+      vx += dx * f; vy += dy * f; vz += dz2 * f;
+    }
+
+    // ── Stress repulsors ──────────────────────────────────
+    for (const st of FIELD.stresses) {
+      const dx  = px - st.x, dy = py - st.y, dz2 = pz - st.z;
+      const d   = Math.sqrt(dx*dx + dy*dy + dz2*dz2) + 0.001;
+      if (d < st.radius) {
+        const f = (st.strength * st.life * 0.00025) / (d * d + 1.5);
+        vx += (dx/d) * f; vy += (dy/d) * f; vz += (dz2/d) * f * 0.4;
+      }
+    }
+
+    // ── Damping ────────────────────────────────────────────
+    const dampF = 1 - damp;
+    vx *= dampF; vy *= dampF; vz *= dampF;
+
+    // ── Soft wall boundaries (spring repulsion) ────────────
+    // Much gentler than hard wrap — keeps particles visible & contained
+    const wallForce = (pos, limit) => {
+      const dist = limit - Math.abs(pos);
+      if (dist < WZ) {
+        // spring pulls back, strength proportional to penetration
+        return Math.sign(pos) * -WSP * (WZ - dist) / WZ;
+      }
+      return 0;
+    };
+    vx += wallForce(px, BXY);
+    vy += wallForce(py, BXY);
+    vz += wallForce(pz, BZ);
+
+    // ── Hard velocity cap ─────────────────────────────────
+    // Per-component clamp first
+    vx = Math.max(-VMAX, Math.min(VMAX, vx));
+    vy = Math.max(-VMAX, Math.min(VMAX, vy));
+    vz = Math.max(-VMAX, Math.min(VMAX, vz));
+    // Then magnitude cap
+    const vlen = Math.sqrt(vx*vx + vy*vy + vz*vz);
+    if (vlen > VCAP) { const s = VCAP/vlen; vx*=s; vy*=s; vz*=s; }
+
+    // ── Integrate ──────────────────────────────────────────
+    px += vx * dtFixed;
+    py += vy * dtFixed;
+    pz += vz * dtFixed;
+
+    // ── Absolute hard clamp (last resort, no teleport flash) ─
+    // Particles can't be outside 1.1x the boundary
+    const hardXY = BXY * 1.1, hardZ = BZ * 1.1;
+    if (px >  hardXY) { px =  hardXY; vx *= -0.3; }
+    if (px < -hardXY) { px = -hardXY; vx *= -0.3; }
+    if (py >  hardXY) { py =  hardXY; vy *= -0.3; }
+    if (py < -hardXY) { py = -hardXY; vy *= -0.3; }
+    if (pz >  hardZ)  { pz =  hardZ;  vz *= -0.3; }
+    if (pz < -hardZ)  { pz = -hardZ;  vz *= -0.3; }
+
+    posA[i3] = px; posA[i3+1] = py; posA[i3+2] = pz;
+    vel[i3]  = vx; vel[i3+1]  = vy; vel[i3+2]  = vz;
+
+    pSpeed[i] = Math.min(1, vlen * 5);
+  }
+
+  // decay stresses
+  for (const st of FIELD.stresses) st.life *= CFG.stressDecay;
+  FIELD.stresses = FIELD.stresses.filter(s => s.life > 0.01);
+}
+
+/* ─────────────────────────────────────────────────────────
+   MATRIX MATH  (column-major, matches WebGL uniformMatrix4fv)
+   Index layout:
+     [0]  [4]  [8]  [12]
+     [1]  [5]  [9]  [13]
+     [2]  [6]  [10] [14]
+     [3]  [7]  [11] [15]
+   ───────────────────────────────────────────────────────── */
+function mat4id() {
+  // Returns identity matrix
+  return new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+}
+
+// Perspective projection (column-major)
+function perspectiveM(fov, aspect, near, far) {
+  const f  = 1 / Math.tan(fov / 2);
+  const nf = 1 / (near - far);
+  const m  = new Float32Array(16);
+  m[0]  = f / aspect;
+  m[5]  = f;
+  m[10] = (far + near) * nf;
+  m[11] = -1;
+  m[14] = 2 * far * near * nf;
+  // m[15] = 0  (correct for perspective — w is set by m[11]=-1 * z)
+  return m;
+}
+
+// Rotation about X axis (column-major)
+function rotXM(rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const m = mat4id();
+  m[5]  =  c;  m[9]  = -s;
+  m[6]  =  s;  m[10] =  c;
+  return m;
+}
+
+// Rotation about Y axis (column-major)
+function rotYM(rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const m = mat4id();
+  m[0]  =  c;  m[8]  =  s;
+  m[2]  = -s;  m[10] =  c;
+  return m;
+}
+
+// Matrix multiply: result = a * b  (column-major)
+function mulM(a, b) {
+  const o = new Float32Array(16);
+  for (let col = 0; col < 4; col++) {
+    for (let row = 0; row < 4; row++) {
+      let sum = 0;
+      for (let k = 0; k < 4; k++) sum += a[k*4 + row] * b[col*4 + k];
+      o[col*4 + row] = sum;
+    }
+  }
+  return o;
+}
+
+// In-place translation applied to existing matrix (moves camera back along Z)
+function translateM(m, x, y, z) {
+  const o = new Float32Array(m);
+  // column 3 = m * [x,y,z,1]
+  o[12] = m[0]*x + m[4]*y + m[8]*z  + m[12];
+  o[13] = m[1]*x + m[5]*y + m[9]*z  + m[13];
+  o[14] = m[2]*x + m[6]*y + m[10]*z + m[14];
+  o[15] = m[3]*x + m[7]*y + m[11]*z + m[15];
+  return o;
+}
+
+function buildMVP() {
+  const w = c3d.width || 1, h = c3d.height || 1;
+  // View: rotate then pull back 20 units
+  const ry   = rotYM(VIEW.rotY * Math.PI / 180);
+  const rx   = rotXM(VIEW.rotX * Math.PI / 180);
+  const rot  = mulM(rx, ry);           // rx applied after ry
+  const view = translateM(rot, 0, 0, -20); // camera 20 units back
+  const proj = perspectiveM(0.72, w / h, 0.5, 150);
+  return mulM(proj, view);             // proj * view
+}
+
+/* ─────────────────────────────────────────────────────────
+   RENDER
+   ───────────────────────────────────────────────────────── */
+let _fps=0, _frames=0, _lastFpsTs=0, _lastFrame=0, _now=0;
+
+function render(ts) {
+  requestAnimationFrame(render);
+
+  _now = Date.now();
+  const dt = Math.min(0.033, (_now - (_lastFrame || _now)) / 1000);
+  _lastFrame = _now;
+
+  _frames++;
+  if (_now - _lastFpsTs > 500) {
+    _fps = Math.round(_frames * 1000 / (_now - _lastFpsTs));
+    _frames = 0; _lastFpsTs = _now;
+    document.getElementById('t-fps').textContent = _fps;
+    document.getElementById('hud-fps').textContent = _fps;
+    updateRegimeDisplay();
+  }
+
+  if (VIEW.autoOrbit) {
+    VIEW.rotY += 0.18;
+    const sl = document.getElementById('sl-rot');
+    sl.value = VIEW.rotY % 360;
+    document.getElementById('v-rot').textContent = (VIEW.rotY % 360).toFixed(1) + '°';
+  }
+
+  updatePhysics(dt);
+  resize();
+
+  if (gl) renderGL();
+  else    renderCanvas();
+
+  render2D();
+
+  buf = buf === 'A' ? 'B' : 'A';
+  document.getElementById('sb-buf').textContent = 't' + buf;
+}
+
+function renderGL() {
+  const w = c3d.width, h = c3d.height;
+  gl.viewport(0, 0, w, h);
+  gl.clearColor(0.012, 0.02, 0.043, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthMask(false);
+
+  gl.useProgram(prog);
+  const mvp = buildMVP();
+  gl.uniformMatrix4fv(uMVP_loc, false, mvp);
+  // Size: larger when fewer particles, smaller when dense
+  const ptSize = Math.max(1.5, Math.min(6, 60000 / N));
+  gl.uniform1f(uSize_loc, ptSize);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo_pos);
+  gl.bufferData(gl.ARRAY_BUFFER, posA, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(aPos_loc);
+  gl.vertexAttribPointer(aPos_loc, 3, gl.FLOAT, false, 0, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo_speed);
+  gl.bufferData(gl.ARRAY_BUFFER, pSpeed, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(aSpeed_loc);
+  gl.vertexAttribPointer(aSpeed_loc, 1, gl.FLOAT, false, 0, 0);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo_life);
+  gl.bufferData(gl.ARRAY_BUFFER, pLife, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(aLife_loc);
+  gl.vertexAttribPointer(aLife_loc, 1, gl.FLOAT, false, 0, 0);
+
+  gl.drawArrays(gl.POINTS, 0, N);
+  gl.depthMask(true);
+}
+
+function renderCanvas() {
+  const w = c3d.width, h = c3d.height;
+  const cctx = c3d.getContext('2d');
+  cctx.fillStyle = 'rgba(3,5,11,.3)';
+  cctx.fillRect(0, 0, w, h);
+  const mvp = buildMVP();
+  cctx.globalCompositeOperation = 'lighter';
+  const step = N > 10000 ? 3 : N > 5000 ? 2 : 1;
+  for (let i = 0; i < N; i += step) {
+    const i3 = i*3;
+    const px = posA[i3], py = posA[i3+1], pz = posA[i3+2];
+    const cx4 = mvp[0]*px + mvp[4]*py + mvp[8]*pz  + mvp[12];
+    const cy4 = mvp[1]*px + mvp[5]*py + mvp[9]*pz  + mvp[13];
+    const cw4 = mvp[3]*px + mvp[7]*py + mvp[11]*pz + mvp[15];
+    if (cw4 <= 0.001) continue;
+    const sx = ( cx4/cw4 * 0.5 + 0.5) * w;
+    const sy = (-cy4/cw4 * 0.5 + 0.5) * h;
+    if (sx < -10 || sx > w+10 || sy < -10 || sy > h+10) continue;
+    const s = pSpeed[i];
+    const r = s > 0.6 ? 255 : s > 0.35 ? 0 : 0;
+    const g = s > 0.6 ? 180 : s > 0.35 ? 212 : 255;
+    const b = s > 0.6 ? 0   : s > 0.35 ? 255 : 136;
+    cctx.fillStyle = `rgba(${r},${g},${b},0.65)`;
+    cctx.fillRect(sx, sy, 1.5, 1.5);
+  }
+  cctx.globalCompositeOperation = 'source-over';
+}
+
+function render2D() {
+  const w = c2d.width, h = c2d.height;
+  ctx2.clearRect(0, 0, w, h);
+  if (!canvasNodes.size) return;
+  const mvp = buildMVP();
+
+  for (const [id, node] of canvasNodes) {
+    const att = FIELD.attractors.find(a => a.id === id);
+    if (!att) continue;
+    const ax = att.x, ay = att.y, az = att.z;
+    const ncx = mvp[0]*ax + mvp[4]*ay + mvp[8]*az  + mvp[12];
+    const ncy = mvp[1]*ax + mvp[5]*ay + mvp[9]*az  + mvp[13];
+    const ncw = mvp[3]*ax + mvp[7]*ay + mvp[11]*az + mvp[15];
+    if (ncw <= 0.001) continue;
+    const sx = ( ncx/ncw * 0.5 + 0.5) * w;
+    const sy = (-ncy/ncw * 0.5 + 0.5) * h;
+    if (sx < -50 || sx > w+50 || sy < -50 || sy > h+50) continue;
+    const col = nodeTypeColor(node.type || 'default');
+    const pulse = (Math.sin(_now * 0.002 + (att.phase||0)) + 1) * 7;
+
+    // outer pulse ring
+    ctx2.beginPath();
+    ctx2.arc(sx, sy, 14 + pulse, 0, Math.PI*2);
+    ctx2.strokeStyle = col;
+    ctx2.lineWidth = 1;
+    ctx2.globalAlpha = 0.12;
+    ctx2.stroke();
+
+    // inner ring
+    ctx2.beginPath();
+    ctx2.arc(sx, sy, 14, 0, Math.PI*2);
+    ctx2.strokeStyle = col;
+    ctx2.lineWidth = 1.5;
+    ctx2.globalAlpha = 0.75;
+    ctx2.stroke();
+
+    // dot center
+    ctx2.beginPath();
+    ctx2.arc(sx, sy, 3, 0, Math.PI*2);
+    ctx2.fillStyle = col;
+    ctx2.globalAlpha = 0.9;
+    ctx2.fill();
+
+    // label
+    ctx2.globalAlpha = 0.88;
+    ctx2.font = '8px Share Tech Mono';
+    ctx2.fillStyle = col;
+    ctx2.fillText(node.label || id.slice(0, 8), sx + 19, sy + 3);
+    ctx2.globalAlpha = 1;
+  }
+}
+
+function nodeTypeColor(type) {
+  const map = {
+    foundation: '#cc44ff', vault: '#ffb800', kernel: '#00d4ff',
+    canvas: '#00ff88', urck: '#00d4ff', guardian: '#40e0d0',
+    default: '#5a7090'
+  };
+  return map[type] || map.default;
+}
+
+/* ─────────────────────────────────────────────────────────
+   RESIZE
+   ───────────────────────────────────────────────────────── */
+function resize() {
+  const stage = document.getElementById('stage');
+  const w = stage.clientWidth, h = stage.clientHeight;
+  if (c3d.width !== w || c3d.height !== h) {
+    c3d.width = w; c3d.height = h;
+    c2d.width = w; c2d.height = h;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   REGIME
+   ───────────────────────────────────────────────────────── */
+function computeRegime() {
+  let avg = 0;
+  for (let i = 0; i < N; i++) avg += pSpeed[i];
+  avg /= N;
+  if (avg < 0.08 && FIELD.structure > 0.6) return 'stable';
+  if (avg > 0.45) return 'chaotic';
+  if (FIELD.stresses.length > 3) return 'turbulent';
+  if (FIELD.structure > 0.4 && FIELD.entropy < 0.3) return 'resonant';
+  return 'stable';
+}
+
+function updateRegimeDisplay() {
+  const r   = computeRegime();
+  FIELD.regime = r;
+  const el  = document.getElementById('regime-display');
+  const tel = document.getElementById('t-regime');
+  el.className  = 'regime-val ' + r;
+  el.textContent = r.toUpperCase();
+  tel.textContent = r.toUpperCase();
+  const cols = { stable:'var(--g)', chaotic:'var(--r)', turbulent:'var(--y)', resonant:'var(--m)' };
+  tel.style.color = cols[r] || 'var(--g)';
+}
+
+/* ─────────────────────────────────────────────────────────
+   BRIDGE POLLING
+   ───────────────────────────────────────────────────────── */
+
+function switchKernel(url) {
+  CFG.kernelUrl = url;
+  kernelOnline  = false;
+  console.log('[cfr] switched kernel to', url);
+}
+
+async function pollKernel() {
+  try {
+    const hres = await fetch(`${CFG.kernelUrl}/cfr/health`, { signal: AbortSignal.timeout(1500) });
+    if (!hres.ok) throw new Error('health fail');
+
+    if (!kernelOnline) {
+      kernelOnline = true;
+      updateBridgeBadge(true);
+      addEvent('boot:complete', 'Bridge connected', 'ok');
+    }
+
+    const [nr, dr, sr] = await Promise.allSettled([
+      fetch(`${CFG.kernelUrl}/cfr/nodes`,        { signal: AbortSignal.timeout(2000) }),
+      fetch(`${CFG.kernelUrl}/cfr/deltas?limit=20`, { signal: AbortSignal.timeout(2000) }),
+      fetch(`${CFG.kernelUrl}/cfr/state`,        { signal: AbortSignal.timeout(2000) }),
+    ]);
+
+    if (nr.status === 'fulfilled' && nr.value.ok) {
+      const d = await nr.value.json();
+      syncCanvasNodes(d.nodes || []);
+    }
+    if (dr.status === 'fulfilled' && dr.value.ok) {
+      const d = await dr.value.json();
+      processDeltaEvents(d);
+    }
+    if (sr.status === 'fulfilled' && sr.value.ok) {
+      const d = await sr.value.json();
+      if (d.state?.snrConfig) applySnrToField(d.state.snrConfig);
+    }
+
+  } catch(e) {
+    if (kernelOnline) {
+      kernelOnline = false;
+      updateBridgeBadge(false);
+      addEvent('http:error', 'Bridge disconnected', 'err');
+    }
+    simulateOfflineEvents();
+  }
+}
+
+function applySnrToField(snr) {
+  const threshold = snr.threshold || 5;
+  FIELD.structure = Math.min(1, threshold / 10);
+}
+
+function syncCanvasNodes(nodes) {
+  const liveIds = new Set(nodes.map(n => n.id));
+  FIELD.attractors = FIELD.attractors.filter(a => liveIds.has(a.id));
+
+  for (const node of nodes) {
+    canvasNodes.set(node.id, node);
+    const existing = FIELD.attractors.find(a => a.id === node.id);
+    if (!existing) {
+      const BXY = CFG.BOUND_XY * 0.6;
+      const BZ  = CFG.BOUND_Z  * FIELD.depthScale * 0.6;
+      FIELD.attractors.push({
+        id:    node.id,
+        x:    (Math.random() - 0.5) * BXY * 2,
+        y:    (Math.random() - 0.5) * BXY * 2,
+        z:    (Math.random() - 0.5) * BZ  * 2,
+        mass:  1.5 + Math.random(),
+        phase: Math.random() * Math.PI * 2,
+      });
+      addEvent('canvas:node_upsert', `Node: ${node.label||node.id}`, 'ok');
+    }
+  }
+
+  document.getElementById('t-nodes').textContent = nodes.length;
+  document.getElementById('node-count-label').textContent = nodes.length;
+  renderNodeList(nodes);
+}
+
+function processDeltaEvents(deltas) {
+  if (!Array.isArray(deltas)) return;
+  for (const d of deltas.slice(0, 5)) {
+    const cls = d.type?.includes('error')||d.type?.includes('blocked') ? 'err'
+              : d.type?.includes('warn')  ? 'warn'
+              : d.type?.includes('cfr')   ? 'cfr' : 'ok';
+    addEvent(d.type || 'delta', d.msg || '', cls);
+
+    if (d.type === 'snr:blocked' || d.type === 'firewall:block') spawnStress(null,null,null,600);
+    if (d.type === 'mesh:link' || d.type === 'mesh:peer:connected') FIELD.structure = Math.min(1, FIELD.structure + 0.05);
+    if (d.type === 'copilot:input') FIELD.entropy = Math.min(1, FIELD.entropy + 0.04);
+    if (d.type === 'CFR_UPDATE' && d.detail) {
+      try {
+        const fd = JSON.parse(d.detail);
+        if (fd.structure !== undefined) FIELD.structure = fd.structure;
+        if (fd.entropy   !== undefined) FIELD.entropy   = fd.entropy;
+      } catch {}
+    }
+  }
+  totalEvents += deltas.length;
+  document.getElementById('t-events').textContent = totalEvents;
+}
+
+const _simEvents = [
+  {type:'snr:status',      msg:'Adaptive mode',    cls:'ok'},
+  {type:'node:heartbeat',  msg:'30s pulse',         cls:'ok'},
+  {type:'mesh:data:incoming', msg:'Packet rx',      cls:'ok'},
+  {type:'snr:blocked',     msg:'Blocked: bot scan', cls:'err'},
+  {type:'canvas:watchdog', msg:'Storage OK',        cls:'ok'},
+  {type:'CFR_UPDATE',      msg:'Field update',      cls:'cfr'},
+  {type:'identity:ready',  msg:'Key loaded',        cls:'ok'},
+  {type:'mesh:peer:connected', msg:'Peer up',       cls:'ok'},
+];
+let _simIdx = 0;
+function simulateOfflineEvents() {
+  const ev = _simEvents[_simIdx++ % _simEvents.length];
+  addEvent(ev.type, ev.msg, ev.cls);
+  if (ev.type === 'snr:blocked')       spawnStress(null, null, null, 400);
+  if (ev.type === 'CFR_UPDATE')        FIELD.entropy = Math.min(0.8, FIELD.entropy + 0.02);
+  if (ev.type === 'mesh:peer:connected') FIELD.structure = Math.min(1, FIELD.structure + 0.03);
+}
+
+function spawnStress(x, y, z, str) {
+  const BXY = CFG.BOUND_XY * 0.7, BZ = CFG.BOUND_Z * FIELD.depthScale * 0.4;
+  FIELD.stresses.push({
+    x: x ?? (Math.random()-0.5)*BXY*2,
+    y: y ?? (Math.random()-0.5)*BXY*2,
+    z: z ?? (Math.random()-0.5)*BZ*2,
+    strength: str || 500,
+    radius:   4,
+    life:     1,
+  });
+  const ov = document.getElementById('stress-overlay');
+  ov.classList.remove('flash');
+  void ov.offsetWidth;
+  ov.classList.add('flash');
+}
+
+/* ─────────────────────────────────────────────────────────
+   UI
+   ───────────────────────────────────────────────────────── */
+function updateBridgeBadge(online) {
+  const b = document.getElementById('kernel-badge');
+  b.textContent = online ? 'BRIDGE ONLINE' : 'BRIDGE OFFLINE';
+  b.className   = 'badge ' + (online ? 'badge-g' : 'badge-y');
+}
+
+function addEvent(type, msg, cls) {
+  const feed = document.getElementById('ev-feed');
+  if (feed.children.length === 1 && feed.children[0].textContent.includes('Waiting')) feed.innerHTML = '';
+  const ts  = new Date().toLocaleTimeString('en',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const el  = document.createElement('div');
+  el.className = `ev-item ${cls||'ok'}`;
+  el.innerHTML = `<span class="ev-ts">${ts}</span> <span class="ev-type">${type}</span>${msg ? ' · '+msg : ''}`;
+  feed.insertBefore(el, feed.firstChild);
+  while (feed.children.length > CFG.maxEvents) feed.removeChild(feed.lastChild);
+}
+
+function renderNodeList(nodes) {
+  const list = document.getElementById('node-list');
+  if (!nodes.length) {
+    list.innerHTML = '<div style="font-size:9px;color:rgba(224,238,255,.2);padding:8px 4px">No nodes</div>';
+    return;
+  }
+  list.innerHTML = nodes.slice(0, CFG.maxNodes).map(n => {
+    const col = nodeTypeColor(n.type||'default');
+    return `<div class="node-item" data-id="${n.id}" onclick="inspectNode('${n.id}')">
+      <div class="node-dot" style="background:${col}"></div>
+      <div>
+        <div class="node-name">${n.label || n.id?.slice(0,12) || '?'}</div>
+        <div class="node-type">${n.type||'node'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function inspectNode(id) {
+  const node = canvasNodes.get(id);
+  if (!node) return;
+  const att = FIELD.attractors.find(a => a.id === id);
+  document.getElementById('ip-title').textContent = node.label || id.slice(0,12);
+  document.getElementById('ip-body').innerHTML = `
+    <div class="ip-row"><span class="ip-key">ID</span><span class="ip-val">${id.slice(0,16)}…</span></div>
+    <div class="ip-row"><span class="ip-key">Type</span><span class="ip-val">${node.type||'node'}</span></div>
+    <div class="ip-row"><span class="ip-key">Version</span><span class="ip-val">${node.version||'—'}</span></div>
+    <div class="ip-row"><span class="ip-key">X</span><span class="ip-val">${att ? att.x.toFixed(2) : '—'}</span></div>
+    <div class="ip-row"><span class="ip-key">Y</span><span class="ip-val">${att ? att.y.toFixed(2) : '—'}</span></div>
+    <div class="ip-row"><span class="ip-key">Mass</span><span class="ip-val">${att ? att.mass.toFixed(2) : '—'}</span></div>
+    <div class="ip-row"><span class="ip-key">Updated</span><span class="ip-val">${node.updatedAt ? new Date(node.updatedAt).toLocaleTimeString() : '—'}</span></div>
+  `;
+  document.getElementById('inspect-panel').classList.add('open');
+  document.querySelectorAll('.node-item').forEach(el => el.classList.remove('active'));
+  document.querySelector(`[data-id="${id}"]`)?.classList.add('active');
+}
+
+// Click to spawn stress
+document.getElementById('stage').addEventListener('click', e => {
+  const rect = e.target.getBoundingClientRect();
+  const nx = (e.clientX - rect.left)  / rect.width;
+  const ny = (e.clientY - rect.top)   / rect.height;
+  const wx = (nx - 0.5) * CFG.BOUND_XY * 1.6;
+  const wy = (0.5 - ny) * CFG.BOUND_XY;
+  spawnStress(wx, wy, 0, 700);
+});
+
+/* ─────────────────────────────────────────────────────────
+   SLIDERS
+   ───────────────────────────────────────────────────────── */
+function bindSlider(id, valId, handler, fmt) {
+  const el  = document.getElementById(id);
+  const vel = document.getElementById(valId);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    const v = parseFloat(el.value);
+    vel.textContent = fmt ? fmt(v) : v.toFixed(2);
+    handler(v);
+  });
+}
+
+bindSlider('sl-count', 'v-count', v => {
+  allocParticles(Math.round(v));
+  const lbl = N >= 1000 ? Math.round(N/1000)+'k' : N;
+  document.getElementById('hud-count').textContent = lbl;
+  document.getElementById('t-particles').textContent = lbl;
+}, v => Math.round(v/1000)+'k');
+
+bindSlider('sl-struct',  'v-struct',  v => { FIELD.structure  = v; document.getElementById('sb-struct').textContent  = v.toFixed(2); });
+bindSlider('sl-entropy', 'v-entropy', v => { FIELD.entropy    = v; document.getElementById('sb-entropy').textContent = v.toFixed(2); });
+bindSlider('sl-attract', 'v-attract', v => { FIELD.attention  = v; document.getElementById('sb-attract').textContent = v.toFixed(2); });
+bindSlider('sl-damp',    'v-damp',    v => { FIELD.damping    = v; document.getElementById('sb-damp').textContent    = v.toFixed(2); });
+bindSlider('sl-depth',   'v-depth',   v => { FIELD.depthScale = v; });
+bindSlider('sl-speed',   'v-speed',   v => { FIELD.speed      = v; });
+bindSlider('sl-rot',     'v-rot',     v => { VIEW.rotY = v; }, v => v.toFixed(1)+'°');
+bindSlider('sl-tilt',    'v-tilt',    v => { VIEW.rotX = v; }, v => v.toFixed(1)+'°');
+
+/* ─────────────────────────────────────────────────────────
+   VIEW BUTTONS
+   ───────────────────────────────────────────────────────── */
+function setView(rx, ry, label, btnId) {
+  VIEW.autoOrbit = false; VIEW.rotX = rx; VIEW.rotY = ry;
+  document.getElementById('sl-rot').value  = ry;
+  document.getElementById('sl-tilt').value = rx;
+  document.getElementById('v-rot').textContent  = ry.toFixed(1)+'°';
+  document.getElementById('v-tilt').textContent = rx.toFixed(1)+'°';
+  document.getElementById('sb-mode').textContent = label;
+  document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('active'));
+  document.getElementById(btnId).classList.add('active');
+}
+
+document.getElementById('vb-3d').addEventListener('click',   () => setView(-25,  0, '3D FIELD',  'vb-3d'));
+document.getElementById('vb-top').addEventListener('click',  () => setView(-89,  0, 'TOP DOWN',  'vb-top'));
+document.getElementById('vb-side').addEventListener('click', () => setView(  0, 90, 'SIDE VIEW', 'vb-side'));
+document.getElementById('vb-orbit').addEventListener('click', () => {
+  VIEW.autoOrbit = !VIEW.autoOrbit;
+  document.getElementById('vb-orbit').classList.toggle('active', VIEW.autoOrbit);
+  document.getElementById('sb-mode').textContent = VIEW.autoOrbit ? 'AUTO ORBIT' : '3D FIELD';
+});
+document.getElementById('kernel-badge').addEventListener('click', () => pollKernel());
+
+/* ─────────────────────────────────────────────────────────
+   INIT
+   ───────────────────────────────────────────────────────── */
+function init() {
+  resize();
+  const glOk = initGL();
+  if (glOk) {
+    try { buildProgram(); }
+    catch(e) { console.error('Shader build failed:', e); gl = null; }
+  }
+
+  allocParticles(N);
+
+  const lbl = Math.round(N/1000)+'k';
+  document.getElementById('t-particles').textContent = lbl;
+  document.getElementById('hud-count').textContent   = lbl;
+
+  pollKernel();
+  setInterval(pollKernel, CFG.pollMs);
+
+  // Seed demo nodes if bridge is offline after 2s
+  setTimeout(() => {
+    if (!canvasNodes.size) {
+      syncCanvasNodes([
+        {id:'demo-foundation', label:'Foundation', type:'foundation'},
+        {id:'demo-vault',      label:'Vault',      type:'vault'},
+        {id:'demo-guardian',   label:'Guardian',   type:'guardian'},
+        {id:'demo-canvas',     label:'Canvas',     type:'canvas'},
+      ]);
+      addEvent('boot:complete', 'Demo mode — no kernel', 'ok');
+    }
+  }, 2000);
+
+  requestAnimationFrame(render);
+}
+
+window.addEventListener('resize', resize);
+// Pause physics on tab hidden to prevent dt explosion on resume
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) _lastFrame = Date.now();
+});
+
+// ── NEXUS shell integration ──────────────────────────────────────
+// Receives postMessage from nexus.html shell.
+// NEXUS_NODES  → sync as attractors (live system nodes)
+// NEXUS_STRESS → spawn stress repulsor (gap/error event)
+// NEXUS_FIELD  → update entropy from store
+// NEXUS_PING   → reply with current regime
+window.addEventListener('message', (ev) => {
+  const d = ev.data;
+  if (!d || !d.type) return;
+
+  if (d.type === 'NEXUS_NODES' && Array.isArray(d.nodes)) {
+    syncCanvasNodes(d.nodes);
+  }
+
+  if (d.type === 'NEXUS_STRESS') {
+    const str = d.severity === 'fatal' ? 900
+              : d.severity === 'high'  ? 700
+              : d.severity === 'medium'? 500 : 350;
+    spawnStress(null, null, null, str);
+  }
+
+  if (d.type === 'NEXUS_FIELD') {
+    if (d.entropy   !== undefined) FIELD.entropy   = Math.max(0, Math.min(1, d.entropy));
+    if (d.structure !== undefined) FIELD.structure = Math.max(0, Math.min(1, d.structure));
+  }
+
+  if (d.type === 'NEXUS_PING') {
+    try { ev.source?.postMessage({ type: 'CFR_REGIME', regime: FIELD.regime }, '*'); } catch {}
+  }
+});
+
+// Push regime back to parent shell on every regime change
+let _lastRegime = '';
+setInterval(() => {
+  if (FIELD.regime !== _lastRegime) {
+    _lastRegime = FIELD.regime;
+    try { window.parent?.postMessage({ type: 'CFR_REGIME', regime: FIELD.regime }, '*'); } catch {}
+  }
+}, 1000);
+
+init();
+</script>
+</body>
+</html>

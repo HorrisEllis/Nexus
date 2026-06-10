@@ -17,6 +17,16 @@
         19288
       ],
       "totalMs": 19288
+    },
+    "idearium.idea.phase": {
+      "count": 4,
+      "lastTs": 1781038566219,
+      "intervals": [
+        840,
+        332456,
+        2390
+      ],
+      "totalMs": 335686
     }
   },
   "baseline": {}

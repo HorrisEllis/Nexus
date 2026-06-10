@@ -4,20 +4,32 @@
   "namespace": "cortex",
   "port": 3748,
   "uuid": "cortex-contract-v1-0000-4000-0000-000000000001",
-  "role": "source-of-truth — 28 JAA tables, event_log, gap engine, append-only memory",
-  "axiom": "§2.1 persistence is the golden rule — nothing is ever deleted",
+  "role": "source-of-truth \u2014 28 JAA tables, event_log, gap engine, append-only memory",
+  "axiom": "\u00a72.1 persistence is the golden rule \u2014 nothing is ever deleted",
   "health": {
     "method": "GET",
     "path": "/health",
-    "returns": { "status": "ok", "jaa": { "counts": {} }, "uptime": 0 }
+    "returns": {
+      "status": "ok",
+      "jaa": {
+        "counts": {}
+      },
+      "uptime": 0
+    }
   },
-  "sse": { "path": "/sse", "description": "live event stream" },
+  "sse": {
+    "path": "/sse",
+    "description": "live event stream"
+  },
   "siso": {
     "emits": [
       "cortex.gap.found",
       "cortex.gap.resolved",
       "cortex.memory.updated",
-      "cortex.event.stored"
+      "cortex.event.stored",
+      "cortex.cfr.gap",
+      "contract.ok",
+      "contract.violation"
     ],
     "consumes": [
       "guardian.job.complete",
@@ -26,28 +38,152 @@
     ]
   },
   "jaa_tables": [
-    "event_log", "bridge_messages", "agent_calls", "agent_signatures",
-    "artifacts", "gaps", "failures", "fix_map", "memory_index", "memory_queries",
-    "conditioning_log", "feedback_scores", "crystals", "bep_patterns",
-    "active_traces", "orion_sessions", "versionium_commits", "versionium_branches",
-    "versionium_file_index", "versionium_calendar", "versionium_objects",
-    "schedules", "workflow_runs", "project_registry", "shape_samples",
-    "poll_log", "requests", "cortex_memory"
+    "event_log",
+    "agent_messages",
+    "agent_calls",
+    "agent_signatures",
+    "artifacts",
+    "gaps",
+    "failures",
+    "fix_map",
+    "memory_index",
+    "memory_queries",
+    "conditioning_log",
+    "feedback_scores",
+    "crystals",
+    "bep_patterns",
+    "active_traces",
+    "orion_sessions",
+    "versionium_commits",
+    "versionium_branches",
+    "versionium_file_index",
+    "versionium_calendar",
+    "versionium_objects",
+    "schedules",
+    "workflow_runs",
+    "project_registry",
+    "shape_samples",
+    "poll_log",
+    "requests",
+    "cortex_memory",
+    "cfr_ledger"
   ],
   "routes": [
-    { "method": "GET",  "path": "/health" },
-    { "method": "GET",  "path": "/sse" },
-    { "method": "GET",  "path": "/api/events",          "params": ["n"] },
-    { "method": "POST", "path": "/api/event",            "body": ["type", "payload", "causedBy", "source"] },
-    { "method": "GET",  "path": "/api/gaps" },
-    { "method": "GET",  "path": "/api/failures" },
-    { "method": "GET",  "path": "/api/memory",           "params": ["table", "n"] },
-    { "method": "POST", "path": "/api/memory/search",    "body": ["q"] },
-    { "method": "GET",  "path": "/api/tags",             "params": ["entityId"] },
-    { "method": "POST", "path": "/api/tags",             "body": ["entityId", "entityType", "tags", "system"] }
+    {
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "method": "GET",
+      "path": "/sse"
+    },
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "params": [
+        "n"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/event",
+      "body": [
+        "type",
+        "payload",
+        "causedBy",
+        "source"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/gaps"
+    },
+    {
+      "method": "GET",
+      "path": "/api/failures"
+    },
+    {
+      "method": "GET",
+      "path": "/api/memory",
+      "params": [
+        "table",
+        "n"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/memory/search",
+      "body": [
+        "q"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/tags",
+      "params": [
+        "entityId"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/tags",
+      "body": [
+        "entityId",
+        "entityType",
+        "tags",
+        "system"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/health"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/state"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/field"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/nodes"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/deltas"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/stream"
+    },
+    {
+      "method": "POST",
+      "path": "/cfr/emit"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/replay"
+    }
   ],
   "cli": {
     "entry": "cortex/cortex.js",
-    "commands": ["events", "gaps", "memory", "tags", "health"]
+    "commands": [
+      "events",
+      "gaps",
+      "memory",
+      "tags",
+      "health"
+    ]
+  },
+  "cfr": {
+    "description": "CFR-\u03a9 ledger active. All cortex events annotated with sigma/delta/CFR.",
+    "dimensions": [
+      "coherence",
+      "friction",
+      "resonance",
+      "entropy"
+    ]
   }
 }

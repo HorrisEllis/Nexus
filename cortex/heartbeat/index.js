@@ -22,7 +22,6 @@ const VERSION   = '1.0.0';
 
 const SYSTEMS = [
   { name: 'orchestrator', port: 9000, path: '/health' },
-  { name: 'bridge',       port: 9999, path: '/health' },
   { name: 'cortex',       port: 3748, path: '/health' },
   { name: 'guardian',     port: 7820, path: '/health' },
   { name: 'idearium',     port: 4800, path: '/health' },

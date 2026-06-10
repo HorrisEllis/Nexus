@@ -1,13 +1,11 @@
 'use strict';
-const bridge = (() => { try { return require('../bridge/nexus-bridge'); } catch(_) { return null; } })();
-
 
 const http       = require('http');
 // NCP — NEXUS Channel Protocol (replaces WebSocket entirely)
 // Zero external dependencies. SSE server→browser, fetch() browser→server.
 // See lib/ncp.js for protocol spec.
 const { createNCPServer }    = require('../lib/ncp');
-const { createEventLedger } = require('../lib/event-ledger');
+const { createCFRLedger } = require('../lib/cfr/ledger');
 const { Detector }          = require('./lib/detector');
 const GapHunter             = require('./lib/gap-hunter');
 const { SEAMQueue, STATE }  = require('./lib/seam-queue');
@@ -141,9 +139,6 @@ function _postLedger(system, type, payload) {
 }
 function _postEvent(type, payload, opts) {
   if (nc) nc.postEvent(type, payload, opts).catch(() => {});
-}
-function _postBridge(type, payload) {
-  if (nc) nc.postBridge(type, payload).catch(() => {});
 }
 const DROPZONE_PORT = process.env.GUARDIAN_DROPZONE_PORT || 7822;
 const NEXUS_URL     = process.env.NEXUS_URL || 'http://127.0.0.1:3748';
@@ -841,532 +836,6 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
   });
 
   // ── PHASE 12: Bridge handshake ───────────────────────────────────────────
-  seq.phase({ name:'bridge.register', type:'SOFT',
-    label:'Bridge handshake (§5.2)',
-    fn: async () => {
-      // §5.2 — attempt bridge connection
-      try {
-        const r = await new Promise(resolve => {
-          const req = require('http').get('http://127.0.0.1:9999/bridge/health', {timeout:2000}, res=>{
-            resolve(res.statusCode===200);
-            res.resume();
-          });
-          req.on('error', ()=>resolve(false));
-          req.on('timeout', ()=>{req.destroy();resolve(false);});
-        });
-        if (!r) return { ok: false, msg: 'bridge unavailable' };
-        return { ok: true };
-      } catch { return { ok: false, msg: 'bridge unavailable' }; }
-    }
-  });
-
-    await seq.run();
-  // Guardian never hard-exits on SOFT failures — HTTP is the core, WSS is optional.
-});
-
-
-// ── DROPZONE server ───────────────────────────────────────────────────────────
-// Starts an Express file-sharing drop zone on DROPZONE_PORT alongside guardian.
-// Requires: npm install express multer
-// Access: http://127.0.0.1:<DROPZONE_PORT>  (LAN-accessible on 0.0.0.0)
-
-function getLocalIPs() {
-  const ifaces = os.networkInterfaces();
-  const ips = [];
-  for (const name of Object.keys(ifaces)) {
-    for (const iface of ifaces[name]) {
-      if (iface.family === 'IPv4' && !iface.internal) ips.push({ name, address: iface.address });
-    }
-  }
-  return ips;
-}
-
-function sanitizeFilename(name) {
-  return path.basename(name).replace(/[^\w.\-]/g, '_').slice(0, 240) || 'file';
-}
-
-function fmtSize(bytes) {
-  if (bytes < 1024)        return bytes + ' B';
-  if (bytes < 1024 ** 2)   return (bytes / 1024).toFixed(1) + ' KB';
-  if (bytes < 1024 ** 3)   return (bytes / 1024 ** 2).toFixed(1) + ' MB';
-  return (bytes / 1024 ** 3).toFixed(2) + ' GB';
-}
-
-function buildDropzoneHTML(cfg) {
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${cfg.serverName}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #030506; --surface: #080d10; --surface2: #0d1519; --border: #0f2030;
-  --text: #c8e8f0; --muted: #3a6070; --mono: 'Share Tech Mono', monospace;
-  --display: 'Orbitron', sans-serif;
-  --r: 0; --g: 200; --b: 255;
-  --rgb: rgb(var(--r), var(--g), var(--b));
-  --rgb-dim: rgba(var(--r), var(--g), var(--b), 0.12);
-  --rgb-glow: rgba(var(--r), var(--g), var(--b), 0.35);
-}
-html, body { height: 100%; }
-body { background: var(--bg); color: var(--text); font-family: var(--mono); overflow-x: hidden; min-height: 100vh; }
-.bg-grid { position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image: linear-gradient(rgba(var(--r),var(--g),var(--b),0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(var(--r),var(--g),var(--b),0.03) 1px, transparent 1px);
-  background-size: 40px 40px; animation: gridDrift 20s linear infinite; }
-@keyframes gridDrift { from { background-position: 0 0; } to { background-position: 40px 40px; } }
-.scanline { position: fixed; left: 0; right: 0; height: 2px; z-index: 1; pointer-events: none;
-  background: linear-gradient(90deg, transparent, var(--rgb), transparent);
-  opacity: 0.6; animation: scan 4s linear infinite; top: -2px; }
-@keyframes scan { from { top: -2px; } to { top: 100vh; } }
-.corner { position: fixed; width: 60px; height: 60px; z-index: 2; pointer-events: none; }
-.corner::before, .corner::after { content:''; position: absolute; background: var(--rgb); }
-.corner::before { width: 2px; height: 100%; }
-.corner::after  { width: 100%; height: 2px; }
-.corner-tl { top: 16px; left: 16px; } .corner-tr { top: 16px; right: 16px; transform: scaleX(-1); }
-.corner-bl { bottom: 16px; left: 16px; transform: scaleY(-1); } .corner-br { bottom: 16px; right: 16px; transform: scale(-1); }
-.app { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 2rem; }
-header { display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);
-  flex-wrap: wrap; gap: 1rem; }
-.logo { font-family: var(--display); font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 900;
-  letter-spacing: 0.12em; color: var(--rgb);
-  text-shadow: 0 0 30px var(--rgb-glow), 0 0 60px var(--rgb-dim);
-  animation: logoPulse 2s ease-in-out infinite; }
-@keyframes logoPulse { 0%,100% { text-shadow: 0 0 20px var(--rgb-glow); } 50% { text-shadow: 0 0 40px var(--rgb-glow), 0 0 80px var(--rgb-dim); } }
-.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; }
-.server-ip { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; }
-.server-ip span { color: var(--rgb); }
-.status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--rgb); margin-right: 6px; box-shadow: 0 0 8px var(--rgb-glow);
-  animation: blink 1.2s ease-in-out infinite; }
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-.stats-bar { display: flex; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
-.stat { background: var(--surface); border: 1px solid var(--border);
-  padding: 0.6rem 1.2rem; border-radius: 2px; font-size: 0.72rem; letter-spacing: 0.08em;
-  position: relative; overflow: hidden; transition: border-color 0.3s; }
-.stat::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--rgb); }
-.stat:hover { border-color: rgba(var(--r),var(--g),var(--b),0.4); }
-.stat-label { color: var(--muted); text-transform: uppercase; font-size: 0.62rem; margin-bottom: 0.2rem; }
-.stat-value { color: var(--text); font-size: 0.9rem; }
-.main-grid { display: grid; grid-template-columns: 380px 1fr; gap: 1.5rem; align-items: start; }
-@media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
-.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; position: relative; }
-.panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--rgb), transparent); }
-.panel-header { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between; background: var(--surface2); }
-.panel-title { font-family: var(--display); font-size: 0.6rem; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--rgb); }
-.panel-body { padding: 1.2rem; }
-#drop-zone { border: 2px dashed var(--border); border-radius: 3px; padding: 2.5rem 1rem;
-  text-align: center; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; margin-bottom: 1rem; }
-#drop-zone::after { content: ''; position: absolute; inset: 0; background: var(--rgb-dim); opacity: 0; transition: opacity 0.25s; }
-#drop-zone:hover, #drop-zone.dragover { border-color: var(--rgb); box-shadow: 0 0 20px var(--rgb-dim), inset 0 0 20px var(--rgb-dim); }
-#drop-zone:hover::after, #drop-zone.dragover::after { opacity: 1; }
-.dz-icon { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; filter: drop-shadow(0 0 12px var(--rgb-glow)); animation: float 3s ease-in-out infinite; }
-@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-.dz-text { color: var(--text); font-size: 0.82rem; margin-bottom: 0.3rem; }
-.dz-sub  { color: var(--muted); font-size: 0.7rem; }
-#file-chosen { color: var(--rgb); font-size: 0.75rem; margin-top: 0.5rem; word-break: break-all; padding: 0 0.5rem; }
-#file-input { display: none; }
-.form-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem; font-size: 0.78rem; color: var(--muted); }
-.form-row label { white-space: nowrap; }
-select, input[type=number] { flex: 1; background: var(--bg); color: var(--text);
-  border: 1px solid var(--border); border-radius: 2px; padding: 0.35rem 0.6rem;
-  font-family: var(--mono); font-size: 0.78rem; outline: none; transition: border-color 0.2s; }
-select:focus, input:focus { border-color: rgba(var(--r),var(--g),var(--b),0.5); }
-#upload-btn { width: 100%; padding: 0.85rem; background: transparent; color: var(--rgb);
-  border: 1px solid var(--rgb); border-radius: 2px; font-family: var(--display);
-  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-  cursor: pointer; transition: all 0.2s; box-shadow: 0 0 12px var(--rgb-dim); position: relative; overflow: hidden; }
-#upload-btn::before { content: ''; position: absolute; inset: 0; background: var(--rgb-dim); opacity: 0; transition: opacity 0.2s; }
-#upload-btn:hover:not(:disabled)::before { opacity: 1; }
-#upload-btn:hover:not(:disabled) { box-shadow: 0 0 24px var(--rgb-glow), inset 0 0 12px var(--rgb-dim); }
-#upload-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-#progress-wrap { display: none; margin-top: 1rem; }
-.prog-track { background: var(--border); height: 3px; border-radius: 2px; overflow: hidden; margin-bottom: 0.4rem; }
-.prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, rgba(var(--r),var(--g),var(--b),0.6), var(--rgb));
-  transition: width 0.15s; border-radius: 2px; box-shadow: 0 0 8px var(--rgb-glow); }
-.prog-label { font-size: 0.68rem; color: var(--muted); display: flex; justify-content: space-between; }
-#result { display: none; margin-top: 1rem; }
-.result-box { background: var(--surface2); border: 1px solid rgba(var(--r),var(--g),var(--b),0.3);
-  border-radius: 2px; padding: 0.75rem; box-shadow: 0 0 20px var(--rgb-dim); }
-.result-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 0.5rem; }
-.result-url-row { display: flex; gap: 0.4rem; margin-bottom: 0.5rem; }
-.result-url-row input { flex: 1; color: var(--rgb); border-color: rgba(var(--r),var(--g),var(--b),0.3); font-size: 0.7rem; background: var(--bg); }
-.copy-btn { background: rgba(var(--r),var(--g),var(--b),0.15); color: var(--rgb);
-  border: 1px solid rgba(var(--r),var(--g),var(--b),0.4); padding: 0 0.8rem; border-radius: 2px;
-  font-family: var(--mono); font-size: 0.68rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-.copy-btn:hover { background: rgba(var(--r),var(--g),var(--b),0.3); }
-.result-meta { font-size: 0.68rem; color: var(--muted); }
-.result-meta span { color: var(--text); }
-.explorer-toolbar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-.explorer-toolbar input[type=text] { flex: 1; min-width: 120px; background: var(--bg);
-  border: 1px solid var(--border); color: var(--text); padding: 0.35rem 0.6rem;
-  font-family: var(--mono); font-size: 0.75rem; border-radius: 2px; outline: none; transition: border-color 0.2s; }
-.explorer-toolbar input[type=text]:focus { border-color: rgba(var(--r),var(--g),var(--b),0.5); }
-.sort-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
-  padding: 0.35rem 0.7rem; border-radius: 2px; font-family: var(--mono); font-size: 0.7rem;
-  cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-.sort-btn:hover, .sort-btn.active { border-color: rgba(var(--r),var(--g),var(--b),0.5); color: var(--rgb); }
-.file-table-wrap { overflow-x: auto; margin-top: 1rem; }
-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
-thead th { text-align: left; padding: 0.5rem 0.75rem; color: var(--muted); font-size: 0.6rem;
-  text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--border);
-  cursor: pointer; user-select: none; white-space: nowrap; background: var(--surface2); }
-thead th:hover { color: var(--rgb); }
-tbody tr { border-bottom: 1px solid rgba(15,32,48,0.8); transition: background 0.15s; animation: rowIn 0.3s ease both; }
-@keyframes rowIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
-tbody tr:hover { background: var(--surface2); }
-tbody td { padding: 0.65rem 0.75rem; vertical-align: middle; }
-.file-icon { font-size: 1.1rem; }
-.file-name-cell { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
-.file-name-text { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
-.file-token { color: var(--muted); font-size: 0.6rem; letter-spacing: 0.05em; }
-.badge { display: inline-block; padding: 0.1rem 0.45rem; border-radius: 2px; font-size: 0.6rem;
-  text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
-.badge-ext { background: rgba(var(--r),var(--g),var(--b),0.1); color: var(--rgb); border: 1px solid rgba(var(--r),var(--g),var(--b),0.2); }
-.badge-size { background: rgba(255,255,255,0.04); color: var(--muted); }
-.badge-dl { background: rgba(100,220,100,0.08); color: #5ec45e; }
-.ttl-bar-wrap { display: flex; align-items: center; gap: 0.5rem; min-width: 100px; }
-.ttl-bar-bg { flex: 1; height: 3px; background: var(--border); border-radius: 2px; }
-.ttl-bar-fill { height: 100%; border-radius: 2px;
-  background: linear-gradient(90deg, rgba(var(--r),var(--g),var(--b),0.5), var(--rgb));
-  box-shadow: 0 0 6px var(--rgb-glow); transition: width 1s linear; }
-.ttl-text { font-size: 0.65rem; color: var(--muted); white-space: nowrap; }
-.action-btns { display: flex; gap: 0.4rem; }
-.act-btn { background: transparent; border: 1px solid var(--border); color: var(--muted);
-  padding: 0.25rem 0.55rem; border-radius: 2px; font-family: var(--mono); font-size: 0.68rem;
-  cursor: pointer; transition: all 0.15s; white-space: nowrap; text-decoration: none; display: inline-block; }
-.act-btn:hover { border-color: var(--rgb); color: var(--rgb); background: var(--rgb-dim); }
-.act-btn.del:hover { border-color: #e05; color: #e05; background: rgba(238,0,85,0.08); }
-.empty-state { padding: 3rem; text-align: center; color: var(--muted); font-size: 0.8rem; letter-spacing: 0.05em; }
-.empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.3; display: block; }
-footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);
-  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
-  font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; }
-footer span { color: var(--rgb); }
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(var(--r),var(--g),var(--b),0.4); }
-.toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
-.toast { background: var(--surface2); border: 1px solid rgba(var(--r),var(--g),var(--b),0.4);
-  color: var(--text); padding: 0.6rem 1rem; border-radius: 3px; font-size: 0.75rem;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 20px var(--rgb-dim);
-  animation: toastIn 0.3s ease both; max-width: 300px; }
-@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-.toast.bye { animation: toastOut 0.3s ease both; }
-@keyframes toastOut { to { opacity: 0; transform: translateY(10px); } }
-@media (max-width: 600px) { .app { padding: 1rem; } .stats-bar { gap: 0.75rem; } .stat { padding: 0.5rem 0.8rem; } table { font-size: 0.7rem; } .file-name-text { max-width: 140px; } }
-</style>
-</head>
-<body>
-<div class="bg-grid"></div>
-<div class="scanline"></div>
-<div class="corner corner-tl"></div><div class="corner corner-tr"></div>
-<div class="corner corner-bl"></div><div class="corner corner-br"></div>
-<div class="app">
-  <header>
-    <div class="logo">${cfg.serverName}</div>
-    <div class="header-right">
-      <div class="server-ip"><span class="status-dot"></span>LIVE &nbsp;·&nbsp; PORT <span id="hdr-port">...</span></div>
-      <div class="server-ip" id="hdr-ips">Detecting interfaces...</div>
-    </div>
-  </header>
-  <div class="stats-bar">
-    <div class="stat"><div class="stat-label">Files Active</div><div class="stat-value" id="stat-count">0</div></div>
-    <div class="stat"><div class="stat-label">Total Size</div><div class="stat-value" id="stat-size">0 B</div></div>
-    <div class="stat"><div class="stat-label">Downloads</div><div class="stat-value" id="stat-dl">0</div></div>
-    <div class="stat"><div class="stat-label">Max File</div><div class="stat-value">${cfg.maxFileSizeMB} MB</div></div>
-  </div>
-  <div class="main-grid">
-    <div class="panel">
-      <div class="panel-header"><span class="panel-title">Upload</span><span style="font-size:0.65rem;color:var(--muted)">All formats accepted</span></div>
-      <div class="panel-body">
-        <div id="drop-zone" onclick="document.getElementById('file-input').click()">
-          <span class="dz-icon">⬆</span>
-          <div class="dz-text"><strong>Click to browse</strong> or drag &amp; drop</div>
-          <div class="dz-sub">Any file type · up to ${cfg.maxFileSizeMB} MB</div>
-          <div id="file-chosen"></div>
-        </div>
-        <input type="file" id="file-input">
-        <div class="form-row">
-          <label>Expires in</label>
-          <select id="ttl">
-            <option value="300">5 min</option><option value="900">15 min</option>
-            <option value="3600" selected>1 hour</option><option value="10800">3 hours</option>
-            <option value="21600">6 hours</option><option value="43200">12 hours</option>
-            <option value="86400">24 hours</option>
-          </select>
-        </div>
-        <button id="upload-btn" disabled onclick="uploadFile()">⬆ &nbsp;Upload File</button>
-        <div id="progress-wrap">
-          <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
-          <div class="prog-label"><span id="prog-pct">0%</span><span id="prog-speed"></span></div>
-        </div>
-        <div id="result">
-          <div class="result-box">
-            <div class="result-label">Share Link</div>
-            <div class="result-url-row">
-              <input type="text" id="share-url" readonly>
-              <button class="copy-btn" onclick="copyUrl()">Copy</button>
-            </div>
-            <div class="result-meta" id="result-meta"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="panel-header"><span class="panel-title">File Explorer</span><span class="status-dot" style="margin-left:4px"></span></div>
-      <div class="panel-body">
-        <div class="explorer-toolbar">
-          <input type="text" id="search-input" placeholder="Search files..." oninput="renderTable()">
-          <button class="sort-btn active" id="sort-time" onclick="setSort('time')">Time ↓</button>
-          <button class="sort-btn" id="sort-name" onclick="setSort('name')">Name</button>
-          <button class="sort-btn" id="sort-size" onclick="setSort('size')">Size</button>
-        </div>
-        <div class="file-table-wrap">
-          <table id="file-table">
-            <thead><tr>
-              <th style="width:36px"></th><th>Filename</th><th>Ext</th>
-              <th>Size</th><th>Downloads</th><th>Expires</th><th>Actions</th>
-            </tr></thead>
-            <tbody id="file-tbody">
-              <tr><td colspan="7"><div class="empty-state"><span class="empty-icon">📂</span>No files yet. Upload one!</div></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <footer>
-    <span>DROP ZONE &nbsp;·&nbsp; Guardian v2 &nbsp;·&nbsp; <span id="ft-time"></span></span>
-    <span><span id="ft-uptime"></span></span>
-  </footer>
-</div>
-<div class="toast-container" id="toasts"></div>
-<script>
-let hue = 0;
-function cycleRGB() {
-  hue = (hue + 0.4) % 360;
-  const r = Math.round(127 + 127 * Math.sin((hue * Math.PI / 180)));
-  const g = Math.round(127 + 127 * Math.sin((hue * Math.PI / 180) + 2.094));
-  const b = Math.round(127 + 127 * Math.sin((hue * Math.PI / 180) + 4.189));
-  document.documentElement.style.setProperty('--r', r);
-  document.documentElement.style.setProperty('--g', g);
-  document.documentElement.style.setProperty('--b', b);
-}
-setInterval(cycleRGB, 30);
-function toast(msg, dur = 3000) {
-  const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
-  document.getElementById('toasts').appendChild(el);
-  setTimeout(() => { el.classList.add('bye'); setTimeout(() => el.remove(), 300); }, dur);
-}
-function fmtSize(b) {
-  if (b < 1024) return b + ' B'; if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
-  if (b < 1073741824) return (b/1048576).toFixed(1) + ' MB'; return (b/1073741824).toFixed(2) + ' GB';
-}
-function fmtCountdown(expiresAt) {
-  const diff = Math.max(0, expiresAt - Date.now());
-  const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-  if (h > 0) return h + 'h ' + m + 'm'; if (m > 0) return m + 'm ' + s + 's'; return s + 's';
-}
-function extIcon(ext) {
-  const map = { pdf:'📄', png:'🖼', jpg:'🖼', jpeg:'🖼', gif:'🖼', svg:'🖼', webp:'🖼',
-    mp4:'🎬', mov:'🎬', avi:'🎬', mkv:'🎬', webm:'🎬', mp3:'🎵', wav:'🎵', flac:'🎵', ogg:'🎵',
-    zip:'🗜', tar:'🗜', gz:'🗜', rar:'🗜', '7z':'🗜',
-    js:'💻', ts:'💻', py:'💻', rb:'💻', go:'💻', rs:'💻', c:'💻', cpp:'💻', java:'💻',
-    html:'🌐', css:'🎨', json:'📋', xml:'📋', csv:'📊', xlsx:'📊', xls:'📊',
-    doc:'📝', docx:'📝', txt:'📝', md:'📝', exe:'⚙', dmg:'⚙', pkg:'⚙', deb:'⚙', apk:'📱' };
-  return map[ext.toLowerCase()] || '📁';
-}
-function getExt(filename) { return filename.includes('.') ? filename.split('.').pop() : ''; }
-let files = [], sortKey = 'time', serverInfo = {};
-async function loadInfo() {
-  const r = await fetch('/api/info'); serverInfo = await r.json();
-  document.getElementById('hdr-port').textContent = serverInfo.port;
-  document.getElementById('hdr-ips').textContent = serverInfo.ips.map(i => i.address).join('  ·  ') || 'localhost';
-}
-async function loadFiles() {
-  const r = await fetch('/api/files'); files = await r.json(); renderTable(); updateStats();
-}
-function updateStats() {
-  const totalSize = files.reduce((s, f) => s + f.size, 0);
-  const totalDl = files.reduce((s, f) => s + f.downloads, 0);
-  document.getElementById('stat-count').textContent = files.length;
-  document.getElementById('stat-size').textContent = fmtSize(totalSize);
-  document.getElementById('stat-dl').textContent = totalDl;
-}
-function setSort(key) {
-  sortKey = key;
-  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('sort-' + key).classList.add('active'); renderTable();
-}
-function renderTable() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  let list = files.filter(f => f.filename.toLowerCase().includes(q));
-  if (sortKey === 'time') list.sort((a, b) => a.expiresAt - b.expiresAt);
-  if (sortKey === 'name') list.sort((a, b) => a.filename.localeCompare(b.filename));
-  if (sortKey === 'size') list.sort((a, b) => b.size - a.size);
-  const tbody = document.getElementById('file-tbody');
-  if (list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><span class="empty-icon">📂</span>' +
-      (q ? 'No files match "' + q + '"' : 'No files yet. Upload one!') + '</div></td></tr>'; return;
-  }
-  tbody.innerHTML = list.map((f, i) => {
-    const ext = getExt(f.filename), icon = extIcon(ext);
-    const pct = Math.max(0, Math.min(100, ((f.expiresAt - Date.now()) / (f.ttl * 1000)) * 100)).toFixed(1);
-    const dlUrl = '/d/' + f.token;
-    return \`<tr style="animation-delay:\${i * 40}ms">
-      <td class="file-icon">\${icon}</td>
-      <td><div class="file-name-cell"><span class="file-name-text" title="\${f.filename}">\${f.filename}</span><span class="file-token">\${f.token}</span></div></td>
-      <td><span class="badge badge-ext">\${ext || '—'}</span></td>
-      <td><span class="badge badge-size">\${fmtSize(f.size)}</span></td>
-      <td><span class="badge badge-dl">\${f.downloads}</span></td>
-      <td><div class="ttl-bar-wrap"><div class="ttl-bar-bg"><div class="ttl-bar-fill" style="width:\${pct}%"></div></div>
-        <span class="ttl-text" id="ttl-\${f.token}">\${fmtCountdown(f.expiresAt)}</span></div></td>
-      <td><div class="action-btns">
-        <button class="act-btn" onclick="copyLink('\${dlUrl}')">Copy</button>
-        <a class="act-btn" href="\${dlUrl}" target="_blank" download>↓ DL</a>
-        <button class="act-btn del" onclick="deleteFile('\${f.token}')">✕</button>
-      </div></td>
-    </tr>\`;
-  }).join('');
-}
-setInterval(() => {
-  files.forEach(f => {
-    const el = document.getElementById('ttl-' + f.token);
-    if (el) el.textContent = fmtCountdown(f.expiresAt);
-    const pct = Math.max(0, Math.min(100, ((f.expiresAt - Date.now()) / (f.ttl * 1000)) * 100));
-    const row = el && el.closest('tr');
-    if (row) { const bar = row.querySelector('.ttl-bar-fill'); if (bar) bar.style.width = pct.toFixed(1) + '%'; }
-  });
-}, 1000);
-async function deleteFile(token) {
-  const r = await fetch('/api/files/' + token, { method: 'DELETE' });
-  if (r.ok) { toast('File deleted'); loadFiles(); } else toast('Delete failed');
-}
-function copyLink(path) {
-  navigator.clipboard.writeText(location.origin + path).then(() => toast('Link copied!')).catch(() => toast('Copy failed'));
-}
-function copyUrl() {
-  const input = document.getElementById('share-url'); input.select();
-  navigator.clipboard.writeText(input.value).then(() => { toast('Link copied!'); }).catch(() => { document.execCommand('copy'); toast('Copied!'); });
-  const btn = document.querySelector('.copy-btn'); btn.textContent = 'Copied!';
-  setTimeout(() => btn.textContent = 'Copy', 1800);
-}
-const dz = document.getElementById('drop-zone'), fi = document.getElementById('file-input');
-let selectedFile = null;
-function selectFile(file) {
-  selectedFile = file;
-  document.getElementById('file-chosen').textContent = file.name + ' (' + fmtSize(file.size) + ')';
-  document.getElementById('upload-btn').disabled = false;
-}
-fi.addEventListener('change', () => fi.files[0] && selectFile(fi.files[0]));
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
-dz.addEventListener('dragleave', e => { if (!dz.contains(e.relatedTarget)) dz.classList.remove('dragover'); });
-dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files[0]) selectFile(e.dataTransfer.files[0]); });
-function uploadFile() {
-  if (!selectedFile) return;
-  const ttl = document.getElementById('ttl').value, btn = document.getElementById('upload-btn');
-  btn.disabled = true;
-  const fd = new FormData(); fd.append('file', selectedFile); fd.append('ttl', ttl);
-  document.getElementById('progress-wrap').style.display = 'block';
-  document.getElementById('result').style.display = 'none';
-  const xhr = new XMLHttpRequest(); xhr.open('POST', '/api/upload');
-  let startTime = Date.now(), lastLoaded = 0;
-  xhr.upload.addEventListener('progress', e => {
-    if (!e.lengthComputable) return;
-    const pct = Math.round(e.loaded / e.total * 100);
-    document.getElementById('prog-fill').style.width = pct + '%';
-    document.getElementById('prog-pct').textContent = pct + '%';
-    const elapsed = (Date.now() - startTime) / 1000, speed = elapsed > 0 ? (e.loaded - lastLoaded) / elapsed : 0;
-    lastLoaded = e.loaded;
-    if (speed > 0) document.getElementById('prog-speed').textContent = fmtSize(speed) + '/s';
-  });
-  xhr.onload = () => {
-    btn.disabled = false;
-    if (xhr.status === 200) {
-      const data = JSON.parse(xhr.responseText), url = location.origin + '/d/' + data.token;
-      document.getElementById('share-url').value = url;
-      document.getElementById('result-meta').innerHTML = '<span>' + fmtSize(data.size) + '</span> &nbsp;·&nbsp; expires in <span>' + fmtCountdown(data.expiresAt) + '</span>';
-      document.getElementById('result').style.display = 'block';
-      toast('✓ Uploaded! Link ready.'); loadFiles();
-    } else toast('Upload failed: ' + xhr.responseText);
-  };
-  xhr.onerror = () => { btn.disabled = false; toast('Network error during upload.'); };
-  xhr.send(fd);
-}
-const startTs = Date.now();
-function updateFooter() {
-  document.getElementById('ft-time').textContent = new Date().toLocaleTimeString();
-  const up = Math.floor((Date.now() - startTs) / 1000);
-  const h = Math.floor(up / 3600), m = Math.floor((up % 3600) / 60), s = up % 60;
-  document.getElementById('ft-uptime').textContent = 'Uptime: ' + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-}
-setInterval(updateFooter, 1000);
-loadInfo(); loadFiles(); setInterval(loadFiles, 8000);
-</script>
-</body>
-</html>`;
-}
-
-
-// ── v9: load persistent registry + spec namer ────────────────────────────────
-let DropzoneRegistry, inferFilename, inferSpecFilename;
-try {
-  ({ DropzoneRegistry } = require('./dropzone-persist'));
-  ({ inferFilename, inferSpecFilename } = require('./spec-namer'));
-} catch(e) {
-  console.warn('[dropzone] dropzone-persist.js or spec-namer.js not found:', e.message);
-}
-
-function startDropzone() {
-  if (!express || !multer) {
-    // dropzone optional — express/multer not installed (soft feature)
-    return null;
-  }
-
-  const cfg = {
-    port:          DROPZONE_PORT,
-    host:          '0.0.0.0',
-    uploadDir:     process.env.DROPZONE_UPLOAD_DIR || path.join(__dirname, 'dropzone_files'),
-    maxFileSizeMB: parseInt(process.env.DROPZONE_MAX_MB || '500'),
-    defaultTTL:    3600,
-    maxTTL:        86400 * 30,   // v9: 30-day max (was 24h)
-    serverName:    'DROP ZONE',
-  };
-
-  const app       = express();
-  const uploadDir = path.resolve(cfg.uploadDir);
-  if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-
-  // ── v9: persistent registry ───────────────────────────────────────────────
-  const registry = DropzoneRegistry
-    ? new DropzoneRegistry({ uploadDir, defaultTTL: cfg.defaultTTL, maxTTL: cfg.maxTTL, port: cfg.port })
-    : null;
-
-  if (registry) {
-    process.on('exit',    () => registry.flushSync());
-    process.on('SIGINT',  () => { registry.flushSync(); process.exit(0); });
-    process.on('SIGTERM', () => { registry.flushSync(); process.exit(0); });
-  }
-
-  // ── Multer storage ────────────────────────────────────────────────────────
-  const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadDir),
-    filename:    (req, file, cb) => {
-      const token = require('crypto').randomBytes(6).toString('hex');
-      req._dzToken = token;
-      cb(null, `${token}__${sanitizeFilename(file.originalname)}`);
-    },
-  });
   const upload = multer({ storage, limits: { fileSize: cfg.maxFileSizeMB * 1024 * 1024 } });
 
   // ── CORS ──────────────────────────────────────────────────────────────────
@@ -1616,7 +1085,7 @@ const dropzoneServer = dropzone ? dropzone.server : null;
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  SISO EVENT BUS — §8.3 canonical SISO as foundation
-//  Every emit() gates through: local JAA → cortex → bridge → orchestrator
+//  Every emit() gates through: local JAA → cortex → orchestrator
 //  §5.7 all inter-module communication via event bus only
 //  §2.3 all state observable — every event logged to StreamLog
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1675,7 +1144,7 @@ class SISOStream {
     // §2.3 — broadcast to cockpit SSE (observable by UI)
     cockpitBroadcast({ seq, type, ts, claimed });
 
-    // §5.2 — kernel connection: every event flows to orchestrator + cortex + bridge
+    // §5.2 — kernel connection: every event flows to orchestrator + cortex
     // Only emit externally for system-significant events (not every UI tick)
     if (!type.startsWith('dom.') && !type.startsWith('guardian.heartbeat')) {
       _kernelEmit(type, data, ts);
@@ -1710,25 +1179,48 @@ function _kernelEmit(type, data, ts) {
     'guardian.job.queued', 'guardian.job.dispatched',
   ]);
   if (BRIDGE_EVENTS.has(type)) {
-    _postBridge(type, data);
-  }
+    }
 }
 
 const bus = new SISOStream();
 
 // Event ledger — §LAW II: every bus emit written to ledger first
-const _evLedger = createEventLedger({
+// ── CFR-Ω Ledger — every bus.emit written with sigma + delta + CFR snapshot ──
+const _evLedger = createCFRLedger({
   ledgerDir: require('path').join(__dirname, 'memory_store'),
   systemId:  'guardian',
-  onEvent:   null, // baseline learning only — no side effects
+  onEvent:   null, // downstream consumers can add onEvent hooks here
+  onGap: (gap) => {
+    // Gap emission from CFR threshold crossing → JAA gaps table
+    try {
+      jaa.insert('gaps', {
+        uuid:     require('crypto').randomUUID(),
+        type:     gap.type,
+        body:     gap.message,
+        severity: gap.severity > 0.8 ? 'high' : gap.severity > 0.5 ? 'medium' : 'low',
+        status:   'open',
+        source:   'cfr-ledger',
+        causedBy: gap.entry?.uuid || null,
+        createdAt: Date.now(),
+        ts:       Date.now(),
+      });
+    } catch(_) {}
+    // Surface on bus so diagnostic tool sees it
+    try { _origEmit('guardian.cfr.gap', gap); } catch(_) {}
+  },
 });
 _evLedger.open();
 _evLedger.startAutoSave(60000);
 
-// Intercept every bus emit — write to ledger before routing
+// Intercept every bus emit — write to CFR ledger before routing
+// §LAW II: ledger write happens BEFORE any subscriber processes the event
 const _origEmit = bus.emit.bind(bus);
 bus.emit = function(type, data) {
-  _evLedger.record(type, data || {}, { source: 'guardian.bus' });
+  _evLedger.record(type, data || {}, {
+    source:    'guardian.bus',
+    causedBy:  data?.jobId || data?.causedBy || null,
+    sessionId: data?.sessionId || null,
+  });
   return _origEmit(type, data);
 };
 
@@ -1937,29 +1429,7 @@ bus.register(new SISOGate('guardian.timeline', (data) => {
 }));
 
 // Bridge cross-sync gates
-if (bridge) {
-  bus.register(new SISOGate('guardian.job.complete.bridge', (data) => {
-    bridge.crossSync.onJobComplete(data).catch(() => {});
-  }));
-  bus.register(new SISOGate('guardian.artifact.bridge', (data) => {
-    bridge.crossSync.onArtifact(data).catch(() => {});
-  }));
-  // Mount bridge routes on the HTTP server
-  const origListeners = server.listeners('request').slice();
-  server.removeAllListeners('request');
-  server.on('request', (req, res) => {
-    if (req.url && req.url.startsWith('/bridge')) {
-      return bridge._handler ? bridge._handler(req, res) : res.end('bridge not ready');
-    }
-    for (const l of origListeners) l(req, res);
-  });
-  console.log('[guardian] bridge cross-sync gates registered');
-}
-
-bus.register(new SISOGate('guardian.setting.update', (data) => {
-  // Already persisted by setSetting() — just broadcast
-  cockpitBroadcast({ type:'setting.updated', key:data.key, value:data.value, ts:Date.now() });
-}));
+));
 
 // ══════════════════════════════════════════════════════════════════════════════
 //  EXTENDED HTTP ROUTES
@@ -2226,6 +1696,11 @@ function handleExtendedRoutes(req, res, url, method) {
   }
 
   // ── NCP channel endpoints (replace WSS) ─────────────────────────────────
+  // ── CFR-Ω routes — kernel field debugger ──────────────────────────────
+  if (url.pathname.startsWith('/cfr')) {
+    if (_evLedger.handleCFRRoute(req, res, url)) return true;
+  }
+
   if (method==='GET' && url.pathname==='/channel') {
     ncp.handleChannel(req, res, url); return true;
   }

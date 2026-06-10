@@ -3,10 +3,9 @@
 // UUID: cortex-boot-v2-0000-4000-0000-000000000001
 // Version: 2.0.0
 //
-// §3.1  Bottom-up boot: storage → siso → jaa → modules → admin → bridge register
+// §3.1  Bottom-up boot: storage → siso → jaa → modules → admin → orchestrator
 // §1.2  Every failure loud, specific, halts boot
 // §2.1  Persistence before everything else
-// §5.2  Registers with bridge after boot
 // §8.3  SISO and Jaa are load-order prerequisites
 
 'use strict';
@@ -14,6 +13,7 @@
 const path        = require('path');
 const nc          = require('../nexus-connect');
 const { JaaDB, uid } = require('./memory/jaa-db');
+const { createCFRLedger } = require('../lib/cfr/ledger');
 const { FileStore }  = require('./foundation/store/FileStore');
 const { FileRefs }   = require('./foundation/store/FileRefs');
 const { core }       = require('./foundation/cobalt-core');
@@ -53,17 +53,52 @@ async function bootAsync() {
   seq.phase({ name:'storage.init', type:'HARD',
     label:'JAA database open + FileStore init (§2.1)',
     fn: async () => {
-      jaaDB     = new JaaDB({ dir: DATA_DIR });
+      // CRITICAL: open the SHARED singleton at cortex/data — not a private
+      // instance. Every module (versionium, admin-server, healer, memory)
+      // imports the singleton; a private `new JaaDB()` here creates a second,
+      // never-persisted database and all API writes evaporate on restart.
+      jaaDB     = require('./memory/jaa-db').jaaDB;
       fileStore = new FileStore({ dir: STORE_DIR });
       fileRefs  = new FileRefs({ store: fileStore,
         dir: path.join(STORE_DIR, 'refs') });
-      await jaaDB.open();
+      await jaaDB.open(DATA_DIR);
+
+      // ── CFR-Ω Ledger — cortex kernel ─────────────────────────────────────
+      // Every event through cortex bus gets sigma + delta + CFR snapshot.
+      // /cfr/* HTTP routes served directly from this ledger instance.
+      global._cortexCFRLedger = createCFRLedger({
+        ledgerDir: DATA_DIR,
+        systemId:  'cortex',
+        onGap: (gap) => {
+          // Write CFR-triggered gaps into JAA
+          try {
+            jaaDB.insert('gaps', {
+              uuid:      uid(),
+              type:      gap.type,
+              body:      gap.message,
+              severity:  gap.severity > 0.8 ? 'high' : 'medium',
+              status:    'open',
+              source:    'cfr-ledger',
+              causedBy:  gap.entry?.uuid || null,
+              createdAt: Date.now(),
+              ts:        Date.now(),
+            });
+          } catch(_) {}
+        },
+      });
+      global._cortexCFRLedger.open();
+      global._cortexCFRLedger.startAutoSave(60000);
+
       jaaDB.insert('event_log', {
         uuid: uid(), type: 'cortex.storage.opened', ts: Date.now(),
         payload: { dataDir: DATA_DIR,
           tables: Object.keys(jaaDB._tables || {}).length },
         source: 'boot', causedBy: null,
       });
+      // Record boot event through CFR ledger too
+      global._cortexCFRLedger.record('cortex.storage.opened', {
+        dataDir: DATA_DIR, tables: Object.keys(jaaDB._tables || {}).length,
+      }, { source: 'boot' });
     },
   });
 
@@ -107,7 +142,7 @@ async function bootAsync() {
   seq.phase({ name:'server.start', type:'HARD',
     label:'HTTP admin server on :' + PORT,
     fn: async () => {
-      adminServer = new AdminServer({ port: PORT });
+      adminServer = new AdminServer({ port: PORT, deps: { fileStore, fileRefs } });
       await adminServer.start();
     },
   });
@@ -144,7 +179,7 @@ async function bootAsync() {
       });
       // seed project registry with known systems
 try {
-  const systems = ['bridge','cortex','guardian','idearium','emerge'];
+  const systems = ['cortex','guardian','idearium','emerge'];
   for (const s of systems) {
     jaaDB.insert('project_registry', {
       uuid: require('crypto').randomUUID(), name: s, system: s,
@@ -155,19 +190,6 @@ try {
     },
   });
 
-  // ── Phase 7 SOFT: bridge registration ───────────────────────────────────
-  seq.phase({ name:'bridge.register', type:'SOFT',
-    label:'Bridge handshake + bus announce (§5.2)',
-    fn: async () => {
-      const r = await nc._req('bridge', 'POST', '/bridge/handshake', {
-        systemId: 'cortex', appId: 'cortex',
-        secret: 'nexus-cortex-internal-v1',
-      }, 4000);
-      if (!r.ok) throw new Error('bridge unavailable');
-      await nc.postLedger('cortex', 'cortex.booted', { version:VERSION, port:PORT });
-      await nc.postBridge('cortex.booted', { version:VERSION, port:PORT });
-    },
-  });
 
   const result = await seq.run();
   if (!result.ok) process.exit(1);

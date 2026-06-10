@@ -27,7 +27,7 @@ const NCP_HB     = NCP_URL + '/heartbeat';
 const WS_URL     = NCP_CH; // alias so footer still shows something useful
 const API_URL        = 'http://127.0.0.1:7820';   // Guardian HTTP (jobs, providers, cockpit)
 const MEMORY_URL     = 'http://127.0.0.1:7823';   // Guardian Memory (LAN artifact store)
-const BRIDGE_URL     = 'http://127.0.0.1:9999';   // Bridge (tag engine, request queue)
+const GUARDIAN_NCP = 'http://127.0.0.1:7820';  // Guardian NCP direct
 const CORTEX_URL     = 'http://127.0.0.1:3748';   // Cortex (source of truth, event log)
 const IDEARIUM_URL   = 'http://127.0.0.1:4800';   // Idearium (idea OS)
 const ORCH_URL       = 'http://127.0.0.1:9000';   // Orchestrator (unified root)
@@ -726,7 +726,7 @@ function startWatch(jobId, prompt) {
         sendToServer({ type:'GUARDIAN_DONE', jobId, chatUrl:location.href, account:getAccount(), requestId:jobId });
         sendToMemory({ type:'JOB_COMPLETE', payload:{ jobId, chars:lastText.length, gaps:gaps.length } });
         // Sync to bridge (tag job as complete)
-        fetch(BRIDGE_URL+'/bridge/broadcast', { method:'POST', headers:{'Content-Type':'application/json'},
+        fetch(GUARDIAN_NCP+'/result', { method:'POST', headers:{'Content-Type':'application/json'},
           body:JSON.stringify({ type:'guardian.job.complete', jobId, chars:lastText.length, gaps:gaps.length, provider:PROVIDER, ts:Date.now() }) }).catch(()=>{});
         // Sync to cortex (write event)
         fetch(CORTEX_URL+'/api/event', { method:'POST', headers:{'Content-Type':'application/json'},

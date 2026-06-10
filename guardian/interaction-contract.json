@@ -2,59 +2,261 @@
   "id": "guardian-v1",
   "version": "3.5.0",
   "namespace": "guardian",
-  "ports": { "http": 7820, "wss": 7821, "dropzone": 7822, "memory": 7823 },
+  "ports": {
+    "http": 7820,
+    "wss": 7821,
+    "dropzone": 7822,
+    "memory": 7823
+  },
   "uuid": "guardian-contract-v1-0000-4000-0000-000000000001",
-  "role": "AI orchestration — job queue, WSS provider bridge, SISO bus, Forge IDE",
-  "forge_ide": { "path": "/cockpit", "description": "Forge IDE — SEAM chunker, pipeline, brain, providers" },
+  "role": "AI orchestration \u2014 job queue, SISO bus, Forge IDE",
+  "forge_ide": {
+    "path": "/cockpit",
+    "description": "Forge IDE \u2014 SEAM chunker, pipeline, brain, providers"
+  },
   "health": {
     "method": "GET",
     "path": "/health",
-    "returns": { "ok": true, "uptime": 0, "jobs": 0, "providers": {}, "queued": {} }
+    "returns": {
+      "ok": true,
+      "uptime": 0,
+      "jobs": 0,
+      "providers": {},
+      "queued": {}
+    }
   },
-  "sse": { "path": "/events", "description": "live job stream" },
+  "sse": {
+    "path": "/events",
+    "description": "live job stream"
+  },
   "siso": {
     "bus": "/bus",
     "emit": "/bus/emit",
     "emits": [
-      "guardian.job.complete", "guardian.artifact", "guardian.gaps",
-      "guardian.job.queued", "guardian.job.dispatched",
-      "guardian.ledger", "guardian.session.named"
+      "guardian.job.complete",
+      "guardian.artifact",
+      "guardian.gaps",
+      "guardian.job.queued",
+      "guardian.job.dispatched",
+      "guardian.ledger",
+      "guardian.session.named",
+      "guardian.cfr.gap",
+      "contract.structural.fail",
+      "contract.behavioral.fail",
+      "contract.temporal.fail"
     ],
-    "consumes": ["bridge.request.created"]
+    "consumes": []
   },
   "routes": [
-    { "method": "GET",  "path": "/health" },
-    { "method": "GET",  "path": "/events" },
-    { "method": "GET",  "path": "/bus",             "params": ["n"], "description": "SISO bus log" },
-    { "method": "POST", "path": "/bus/emit",         "body": ["type", "data"] },
-    { "method": "POST", "path": "/command",          "body": ["provider", "command", "prompt", "content"] },
-    { "method": "GET",  "path": "/jobs",             "params": ["status", "limit"] },
-    { "method": "GET",  "path": "/status/:jobId" },
-    { "method": "GET",  "path": "/response/:jobId" },
-    { "method": "GET",  "path": "/providers" },
-    { "method": "GET",  "path": "/artifacts" },
-    { "method": "GET",  "path": "/ledger",           "params": ["category"] },
-    { "method": "POST", "path": "/ledger",           "body": ["category", "msg", "meta"] },
-    { "method": "GET",  "path": "/cockpit",          "description": "Forge IDE HTML" },
-    { "method": "GET",  "path": "/memory/ledger" },
-    { "method": "GET",  "path": "/memory/artifacts" },
-    { "method": "GET",  "path": "/memory/stats" }
+    {
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "method": "GET",
+      "path": "/events"
+    },
+    {
+      "method": "GET",
+      "path": "/bus",
+      "params": [
+        "n"
+      ],
+      "description": "SISO bus log"
+    },
+    {
+      "method": "POST",
+      "path": "/bus/emit",
+      "body": [
+        "type",
+        "data"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/command",
+      "body": [
+        "provider",
+        "command",
+        "prompt",
+        "content"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/jobs",
+      "params": [
+        "status",
+        "limit"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/status/:jobId"
+    },
+    {
+      "method": "GET",
+      "path": "/response/:jobId"
+    },
+    {
+      "method": "GET",
+      "path": "/providers"
+    },
+    {
+      "method": "GET",
+      "path": "/artifacts"
+    },
+    {
+      "method": "GET",
+      "path": "/ledger",
+      "params": [
+        "category"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/ledger",
+      "body": [
+        "category",
+        "msg",
+        "meta"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/cockpit",
+      "description": "Forge IDE HTML"
+    },
+    {
+      "method": "GET",
+      "path": "/memory/ledger"
+    },
+    {
+      "method": "GET",
+      "path": "/memory/artifacts"
+    },
+    {
+      "method": "GET",
+      "path": "/memory/stats"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/health",
+      "description": "CFR field health + regime"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/state",
+      "description": "Full CFR state + graph stats"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/field",
+      "description": "Raw field dimensions"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/nodes",
+      "description": "High-sigma nodes for visualization"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/deltas",
+      "params": [
+        "limit",
+        "minSigma"
+      ],
+      "description": "Recent annotated ledger entries"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/stream",
+      "description": "SSE stream of live ledger entries with CFR"
+    },
+    {
+      "method": "POST",
+      "path": "/cfr/emit",
+      "body": [
+        "type",
+        "payload"
+      ],
+      "description": "Inject synthetic event"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/replay",
+      "params": [
+        "jobId",
+        "since",
+        "minSigma"
+      ],
+      "description": "Filtered causal replay"
+    }
   ],
   "cli": {
     "entry": "guardian/cli.js",
     "commands": [
       "/code <provider> <prompt>",
       "/spec <provider> <file>",
-      "status", "jobs", "providers", "watch <jobId>"
+      "status",
+      "jobs",
+      "providers",
+      "watch <jobId>"
     ]
   },
   "userscripts": [
-    { "file": "guardian/userscript-claude.js",   "target": "claude.ai",    "install": "Tampermonkey" },
-    { "file": "guardian/userscript-chatgpt.js",  "target": "chatgpt.com",  "install": "Tampermonkey" }
+    {
+      "file": "guardian/userscript-claude.js",
+      "target": "claude.ai",
+      "install": "Tampermonkey"
+    },
+    {
+      "file": "guardian/userscript-chatgpt.js",
+      "target": "chatgpt.com",
+      "install": "Tampermonkey"
+    }
   ],
   "tls": {
     "cert": "guardian/guardian-cert.pem",
-    "key":  "guardian/guardian-key.pem",
+    "key": "guardian/guardian-key.pem",
     "note": "visit https://127.0.0.1:7821/ once to accept self-signed cert"
+  },
+  "cfr": {
+    "description": "CFR-\u03a9 field baked into every ledger entry. Every bus.emit is annotated with sigma + delta + frozen CFR snapshot.",
+    "dimensions": [
+      "coherence",
+      "friction",
+      "resonance",
+      "entropy"
+    ],
+    "regimes": [
+      "stable",
+      "resonant",
+      "turbulent",
+      "chaotic"
+    ],
+    "ledger_entry_schema": {
+      "sigma": {
+        "score": "number 0..1",
+        "axes": {
+          "structural": "number",
+          "temporal": "number",
+          "contextual": "number"
+        },
+        "reason": "string"
+      },
+      "delta": {
+        "tension": "number 0..1",
+        "friction": "number 0..1",
+        "slope": "number -1..1"
+      },
+      "cfr": {
+        "coherence": "number 0..1",
+        "friction": "number 0..1",
+        "resonance": "number 0..1",
+        "entropy": "number 0..1",
+        "regime": "string"
+      }
+    }
   }
 }

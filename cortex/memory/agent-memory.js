@@ -83,7 +83,7 @@ function _tagsFor(ev) {
   if (t.startsWith('raid.'))          return ['raid', 'routing'];
   if (t.startsWith('gap.'))           return ['gap', 'gate'];
   if (t.startsWith('healer.'))        return ['healer', 'fix'];
-  if (t.startsWith('guardian.'))      return ['guardian', 'bridge'];
+  if (t.startsWith('guardian.'))      return ['guardian'];
   if (t.startsWith('versionium.'))    return ['versionium', 'commit'];
   if (t.startsWith('cobalt.'))        return ['cobalt', 'bus'];
   if (t === 'system.booted')          return ['system', 'boot'];

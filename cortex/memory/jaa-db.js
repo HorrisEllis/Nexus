@@ -42,7 +42,7 @@ const ALL_TABLES = [
   'fix_map',             // gap→fix knowledge base
   // ── Agents ───────────────────────────────────────────────────────────
   'agent_calls',         // all agent dispatches
-  'bridge_messages',     // bridge event log
+  'agent_messages',      // agent interaction log (replaces bridge_messages)
   'active_traces',       // MCL trace records
   // ── Memory / Cortex ──────────────────────────────────────────────────
   'memory_index',        // all indexed agent content
@@ -80,7 +80,6 @@ const ALL_TABLES = [
   // ── Backup ───────────────────────────────────────────────────────────
   'backup_records',
   'contract_audit',
-  'resilience_log',
 ];
 
 class JaaDB {
@@ -95,8 +94,9 @@ class JaaDB {
   }
 
   // ── open — replay persisted data, open append streams ─────────────────────
-  async open() {
+  async open(dir) {
     if (this._ready) return this;
+    if (dir) this._dir = dir; // allow boot to point the shared singleton at cortex/data
     fs.mkdirSync(this._dir, { recursive: true });
 
     for (const table of ALL_TABLES) {

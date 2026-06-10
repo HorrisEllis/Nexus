@@ -6,14 +6,12 @@
  *
  * §1.2  Every failure loud, specific, traceable.
  * §5.1  Every call has a UUID.
- * §5.2  Everything implements the bridge.
  * §5.7  All inter-system communication via event bus only.
  *
  * Usage (CJS):
  *   const nc = require('./nexus-connect');
  *   await nc.postEvent('guardian.job.complete', { jobId, chars });
  *   await nc.postLedger('guardian', 'guardian.job.complete', payload);
- *   await nc.postBridge('guardian.artifact', payload);
  *   await nc.healthCheck('cortex');
  */
 
@@ -33,7 +31,6 @@ function startPulse(systemId, port) {
   try {
     const { createPulseEmitter } = require('./lib/heartbeat');
     const SYSTEM_UUIDS = {
-      bridge:       'nexus-bridge-0000-4000-0000-000000000001',
       cortex:       'nexus-cortex-0000-4000-0000-000000000001',
       guardian:     'nexus-guardian-0000-4000-0000-000000000001',
       idearium:     'nexus-idearium-0000-4000-0000-000000000001',
@@ -41,7 +38,7 @@ function startPulse(systemId, port) {
       orchestrator: 'nexus-orchestrator-0000-4000-0000-000000000001',
     };
     const GROUP_HINTS = {
-      bridge: 'nexus:core', cortex: 'nexus:memory', guardian: 'nexus:agent',
+      cortex: 'nexus:memory', guardian: 'nexus:agent',
       idearium: 'nexus:ide', emerge: 'nexus:ide', orchestrator: 'nexus:core',
     };
     _pulseEmitter = createPulseEmitter({
@@ -60,7 +57,6 @@ function startPulse(systemId, port) {
 
 const PORTS = {
   orchestrator: parseInt(process.env.ORCHESTRATOR_PORT || '9000'),
-  bridge:       parseInt(process.env.BRIDGE_PORT       || '9999'),
   cortex:       parseInt(process.env.NEXUS_PORT        || '3748'),
   guardian:     parseInt(process.env.GUARDIAN_HTTP_PORT|| '7820'),
   idearium:     parseInt(process.env.IDEARIUM_PORT     || '4800'),
@@ -69,7 +65,6 @@ const PORTS = {
 };
 
 const HEALTH_PATHS = {
-  bridge:       '/bridge/health',
   cortex:       '/health',
   guardian:     '/health',
   idearium:     '/health',
@@ -144,12 +139,7 @@ async function postLedger(system, type, payload) {
   return r;
 }
 
-/** POST broadcast to bridge SSE (§5.2 — all systems on the bus) */
-async function postBridge(type, payload) {
-  const r = await _req('bridge', 'POST', '/bridge/broadcast', { type, ...payload, ts: Date.now() });
-  if (!r.ok) console.warn(`[nexus-connect] postBridge failed: ${r.error || r.status} type=${type}`);
-  return r;
-}
+
 
 /** GET health of any system. Returns { online, ms, data } */
 async function healthCheck(system) {
@@ -249,4 +239,4 @@ function startHeartbeat(systemId, port) {
   return iv;
 }
 
-module.exports = { _req, postEvent, postLedger, postBridge, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, PORTS };
+module.exports = { _req, postEvent, postLedger, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, PORTS };

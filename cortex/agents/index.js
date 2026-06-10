@@ -7,7 +7,7 @@
 // Does not know about agent internals — §5.7 low coupling.
 //
 // §M1: init(cfg) + stop().
-// §M2: reads: agent_calls, bridge_messages. writes: agent_calls (status).
+// §M2: reads: agent_calls, agent_messages. writes: agent_calls (status).
 // §M3: pollMs from cfg.
 
 const { jaaDB, uid } = require('../memory/jaa-db');

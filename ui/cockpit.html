@@ -308,7 +308,6 @@ select.fi option{background:var(--surface);}
       <div class="tb-tab" data-panel="brain">◆ Brain</div>
       <div class="tb-tab" data-panel="forge">⚙ Forge</div>
       <div class="tb-tab" data-panel="providers">⬡ Providers</div>
-      <div class="tb-tab" data-panel="bridge">⇄ Bridge</div>
       <div class="tb-tab" data-panel="forge">⚙ Forge</div>
       <div class="tb-tab" data-panel="providers">⬡ Providers</div>
     </div>
@@ -661,11 +660,6 @@ select.fi option{background:var(--surface);}
 </div>
 
 <!-- BRIDGE PANEL -->
-<div class="panel" id="panel-bridge">
-  <div class="ph">
-    <span class="pt">⇄ Nexus Bridge — tag · queue · push/pull · handshake</span>
-    <span style="font-size:9px;color:var(--muted);margin-left:auto">port 9999 · mounted on all systems</span>
-  </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;height:100%;overflow:hidden;border-top:1px solid var(--border)">
 
     <!-- Tags -->
@@ -700,7 +694,7 @@ select.fi option{background:var(--surface);}
           <button onclick="loadBridgeRequests('complete')" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">complete</button>
           <button onclick="loadBridgeRequests()"           style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:2px 7px;font:inherit;font-size:9px;cursor:pointer">all</button>
         </div>
-        <div id="bridge-request-list"></div>
+        
         <div style="font-size:9px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase">submit request</div>
         <select id="req-type" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none;margin-bottom:4px;display:block">
           <option value="job.dispatch">job.dispatch</option>
@@ -710,7 +704,6 @@ select.fi option{background:var(--surface);}
           <option value="artifact.store">artifact.store</option>
           <option value="forge.run">forge.run</option>
           <option value="seam.deliver">seam.deliver</option>
-          <option value="bridge.sync">bridge.sync</option>
         </select>
         <div style="display:flex;gap:4px;margin-bottom:4px">
           <input id="req-from" placeholder="from" value="cockpit" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;font:inherit;font-size:10px;outline:none">
@@ -741,8 +734,8 @@ select.fi option{background:var(--surface);}
         </select>
         <button onclick="doHandshake()" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:4px;font:inherit;font-size:10px;cursor:pointer;margin-bottom:4px">handshake</button>
         <div id="hs-result" style="font-size:10px;color:var(--muted);margin-bottom:10px"></div>
-        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">bridge health</div>
-        <div id="bridge-health" style="font-size:10px;color:var(--muted)">loading…</div>
+        
+        
         <button onclick="loadBridgeHealth()" style="width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--muted);padding:3px;font:inherit;font-size:9px;cursor:pointer;margin-top:4px">refresh</button>
       </div>
     </div>
@@ -1861,14 +1854,11 @@ async function sendJob() {
 // ── Bridge ───────────────────────────────────────────────────────────────────
 const BRIDGE = 'http://localhost:9999';
 
-async function bapi(path, opts={}) {
-  try { const r=await fetch(BRIDGE+path,opts); return r.ok?r.json():null; } catch(e){return null;}
-}
+
 
 async function lookupTags() {
   const id = document.getElementById('tag-entity-id').value.trim();
   if(!id) return;
-  const d = await bapi('/bridge/tags/'+encodeURIComponent(id));
   document.getElementById('tag-result').innerHTML = d?.tags?.length
     ? d.tags.map(t=>`<span style="display:inline-block;background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:1px 5px;margin:1px;font-size:9px">${t}</span>`).join('')
     : '<span style="color:var(--muted)">no tags</span>';
@@ -1879,14 +1869,12 @@ async function addTags() {
   const type = document.getElementById('tag-type').value.trim();
   const tags = document.getElementById('tag-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
   if(!id||!tags.length) return;
-  const d = await bapi('/bridge/tags', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({entityId:id,entityType:type||'unknown',system:'cockpit',tags,addedBy:'cockpit'})});
   lookupTags();
 }
 
 async function findByTag() {
   const tag = document.getElementById('find-tag').value.trim();
   if(!tag) return;
-  const d = await bapi('/bridge/tags?tag='+encodeURIComponent(tag));
   document.getElementById('find-tag-result').innerHTML = (d?.entities||[]).map(e=>`
     <div style="padding:3px 0;border-bottom:1px solid var(--border)">
       <span style="color:var(--text)">${e.entityId?.slice(0,16)||'—'}</span>
@@ -1895,8 +1883,6 @@ async function findByTag() {
 }
 
 async function loadBridgeRequests(status='') {
-  const d = await bapi('/bridge/requests' + (status?'?status='+status:''));
-  document.getElementById('bridge-request-list').innerHTML = (d?.requests||[]).slice(-20).reverse().map(r=>`
     <div style="background:var(--bg);border:1px solid var(--border);border-left:3px solid ${r.status==='pending'?'var(--amber)':r.status==='complete'?'var(--signal)':r.status==='rejected'?'var(--err)':'var(--border)'};padding:5px 7px;margin-bottom:3px;border-radius:2px">
       <div style="display:flex;justify-content:space-between;font-size:10px">
         <span style="color:var(--text)">${r.type}</span>
@@ -1911,7 +1897,6 @@ async function loadBridgeRequests(status='') {
 }
 
 async function actRequest(uuid, action) {
-  await bapi('/bridge/requests/'+uuid+'/'+action, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({by:'cockpit'})});
   loadBridgeRequests();
 }
 
@@ -1921,20 +1906,15 @@ async function submitRequest() {
   const to      = document.getElementById('req-to').value||'guardian';
   let   payload = {};
   try { payload = JSON.parse(document.getElementById('req-payload').value||'{}'); } catch(_){}
-  const d = await bapi('/bridge/requests', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,from,to,payload})});
   const el = document.getElementById('req-result');
   el.textContent = d?.ok ? '✓ submitted: '+d.request?.uuid?.slice(0,8) : '✗ failed';
   el.style.color = d?.ok ? 'var(--signal)' : 'var(--err)';
   setTimeout(() => loadBridgeRequests('pending'), 500);
 }
 
-let bridgeSse = null;
 function startSubscription() {
   const channel = document.getElementById('sub-channel').value || '*';
-  if(bridgeSse) { bridgeSse.close(); bridgeSse=null; }
-  bridgeSse = new EventSource(BRIDGE+'/bridge/subscribe?channel='+encodeURIComponent(channel));
   const log = document.getElementById('sub-log');
-  bridgeSse.onmessage = e => {
     try {
       const d = JSON.parse(e.data);
       const row = document.createElement('div');
@@ -1949,16 +1929,11 @@ function startSubscription() {
 async function doHandshake() {
   const systemId = document.getElementById('hs-system').value;
   const secrets  = {cortex:'nexus-cortex-internal-v1',guardian:'nexus-guardian-internal-v1',idearium:'nexus-idearium-internal-v1',cockpit:'nexus-cockpit-internal-v1'};
-  const d = await bapi('/bridge/handshake', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemId,appId:systemId,secret:secrets[systemId]||''})});
   const el = document.getElementById('hs-result');
-  el.textContent = d?.ok ? '✓ token: '+d.token?.slice(0,16)+'… exp: '+new Date(d.expiresAt).toTimeString().slice(0,8) : '✗ failed: '+(d?.error||'bridge offline');
   el.style.color = d?.ok ? 'var(--signal)' : 'var(--err)';
 }
 
 async function loadBridgeHealth() {
-  const d = await bapi('/bridge/health');
-  const el = document.getElementById('bridge-health');
-  if(!d) { el.textContent = '✗ bridge offline — node bridge/nexus-bridge.js'; el.style.color='var(--err)'; return; }
   el.innerHTML = `<div style="color:var(--signal)">● online</div>
     <div>sessions: ${d.sessions} · pending: ${d.pendingRequests}</div>
     <div>events ring: ${d.recentEvents}</div>
@@ -2043,7 +2018,6 @@ const CFR = (() => {
 
   // ── 8 System attractors ───────────────────────────────────────────────────
   const ATT_DEFS = [
-    { id:'bridge',   label:'Bridge',   color:'#f0a500', x:-5,  y: 3,  mass:2.2 },
     { id:'cortex',   label:'Cortex',   color:'#2dd4bf', x: 5,  y: 3,  mass:3.0 },
     { id:'guardian', label:'Guardian', color:'#9b7fe8', x: 0,  y:-5,  mass:2.8 },
     { id:'idearium', label:'Idearium', color:'#4a9eff', x:-5,  y:-3,  mass:1.8 },
@@ -2179,7 +2153,7 @@ const CFR = (() => {
     if (type.startsWith('guardian')) pulse('guardian', 0.8);
     else if (type.startsWith('cortex'))   pulse('cortex',   0.6);
     else if (type.startsWith('idearium')) pulse('idearium', 0.7);
-    else if (type.startsWith('bridge'))   pulse('bridge',   0.5);
+    else if (type.startsWith('cortex.gap'))  pulse('cortex', 0.6);
     else if (type.startsWith('raid'))     pulse('ollama',   1.0);
     else if (type.includes('gap'))        pulse('gaps',     1.2);
     else if (type.includes('emerge'))     pulse('emerge',   0.6);
@@ -2218,7 +2192,6 @@ function _cfrHandleSSEEvent(ev) {
   if (ev.type === 'guardian.job.queued')   CFR.onJob('queued');
   if (ev.type === 'guardian.job.failed')   CFR.onJob('failed');
   if (ev.type === 'cortex.gap.found')      CFR.pulse('gaps', 2);
-  if (ev.type === 'bridge.request.created') CFR.pulse('bridge', 0.8);
 }
 
 // Hook into the existing SSE subscription that cockpit already has

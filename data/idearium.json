@@ -1,13 +1,13 @@
 {
   "_version": "2.0.0",
-  "_savedAt": 1780722374022,
+  "_savedAt": 1781038566220,
   "ideas": [
     {
       "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
       "slug": "test-ledger-idea",
       "text": "test ledger idea",
       "tags": [],
-      "phase": "seed",
+      "phase": "building",
       "tension": 0,
       "tensionUpdatedAt": 1780722374020,
       "parentIdea": null,
@@ -28,7 +28,7 @@
       "causedBy": null,
       "source": "api",
       "createdAt": 1780381250279,
-      "updatedAt": 1780474788126
+      "updatedAt": 1781038566220
     },
     {
       "uuid": "64a72499-a425-48fa-a287-627a8732d218",
@@ -59,7 +59,7 @@
       "causedBy": null,
       "source": "api",
       "createdAt": 1780397707451,
-      "updatedAt": 1780397707451
+      "updatedAt": 1781038231373
     },
     {
       "uuid": "dad8489d-a2b6-41ec-bb1e-54cf4ef6031b",
@@ -29437,6 +29437,54 @@
       "causedBy": null,
       "source": "idearium.core",
       "ts": 1780722374019
+    },
+    {
+      "uuid": "d69eed92-8f7c-4856-966f-720e5cf2444c",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "64a72499-a425-48fa-a287-627a8732d218",
+        "phase": "expanding",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1781038230533
+    },
+    {
+      "uuid": "749affe1-d0b9-4fe2-a02c-04c9f8ec48bc",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "64a72499-a425-48fa-a287-627a8732d218",
+        "phase": "seed",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1781038231373
+    },
+    {
+      "uuid": "7d193c3c-e8d5-4f3e-abac-e14bb7c37895",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "expanding",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1781038563830
+    },
+    {
+      "uuid": "d98b64d1-b110-4c48-b9e4-3fb0bd50bb86",
+      "type": "idearium.idea.phase",
+      "payload": {
+        "uuid": "7afd024d-4fd1-4855-b4cc-6cbad96206b9",
+        "phase": "building",
+        "source": "api"
+      },
+      "causedBy": null,
+      "source": "idearium.core",
+      "ts": 1781038566220
     }
   ],
   "snr": [],

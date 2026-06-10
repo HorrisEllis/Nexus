@@ -352,8 +352,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
         <div class="sdot" id="dot-idearium" style="color:var(--b)"></div>
         <span class="sdot-lbl">IDE</span>
       </div>
-      <div class="sdot-wrap" onclick="switchTab('bridge')" title="Bridge :9999">
-        <div class="sdot" id="dot-bridge" style="color:var(--y)"></div>
         <span class="sdot-lbl">BRG</span>
       </div>
       <div class="sdot-wrap" onclick="switchTab('emerge')" title="Emerge :4242">
@@ -369,7 +367,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <div class="tb-sep"></div>
 
     <div class="pill" id="pill-ai"><div class="pill-dot"></div><span id="pill-ai-txt">GUARDIAN</span></div>
-    <div class="pill" id="bridge-status-pill" style="margin-left:2px;"><div class="pill-dot"></div><span id="bridge-status-txt">BRIDGE</span></div>
 
     <div class="tb-sep"></div>
 
@@ -392,7 +389,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     <button class="tab-btn" data-tab="guardian" onclick="switchTab('guardian')" style="color:var(--p)"><span class="tdot"></span>FORGE IDE</button>
     <div class="nav-sep"></div>
     <button class="tab-btn" data-tab="cortex" onclick="switchTab('cortex')"><span class="tdot" style="color:#2dd4bf"></span>CORTEX</button>
-    <button class="tab-btn" data-tab="bridge" onclick="switchTab('bridge')"><span class="tdot" style="color:var(--y)"></span>BRIDGE</button>
     <button class="tab-btn" data-tab="emerge" onclick="switchTab('emerge')"><span class="tdot" style="color:var(--g)"></span>EMERGE</button>
     <div class="nav-sep"></div>
     <button class="tab-btn" data-tab="architect" onclick="switchTab('architect')" style="color:var(--m)">⬡ ARCHITECT</button>
@@ -485,9 +481,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
     </section>
 
     <!-- BRIDGE -->
-    <section class="tab-panel" id="tab-bridge">
-      <iframe class="panel-iframe" id="iframe-bridge" src="about:blank" title="Bridge"></iframe>
-    </section>
+    
 
     <!-- EMERGE -->
     <section class="tab-panel" id="tab-emerge">
@@ -646,7 +640,6 @@ const SYSTEMS = [
   { id:'guardian', port:7820, label:'Guardian',  color:'#9b7fe8', desc:'Agent dispatch · NCP · Forge IDE',          badge:'FORGE',    iframeUrl:'http://127.0.0.1:7820/cockpit',  tab:'guardian'  },
   { id:'cortex',   port:3748, label:'Cortex',    color:'#2dd4bf', desc:'RAID · JAA memory · Gap detection',         badge:'MEMORY',   iframeUrl:'http://127.0.0.1:3748',           tab:'cortex'    },
   { id:'idearium', port:4800, label:'Idearium',  color:'#4a9eff', desc:'Projects · Ideas · Specs · Causal graph',   badge:'PROJECTS', iframeUrl:'http://127.0.0.1:4800',           tab:'idearium'  },
-  { id:'bridge',   port:9999, label:'Bridge',    color:'#f59e0b', desc:'Relay · P2P · Phantom network',             badge:'RELAY',    iframeUrl:'http://127.0.0.1:9999',           tab:'bridge'    },
   { id:'emerge',   port:4242, label:'Emerge',    color:'#3ecf8e', desc:'ESS compiler · .eg language · Kernel',      badge:'COMPILE',  iframeUrl:'http://127.0.0.1:4242',           tab:'emerge'    },
   { id:'ollama',   port:11434,label:'Ollama',    color:'#e85d3c', desc:'Local LLM · Sovereign · Zero cloud calls',  badge:'LLM',      iframeUrl:null,                              tab:null        },
 ];
@@ -655,7 +648,6 @@ const TILES = [
   { ico:'⬡', name:'FORGE IDE',   desc:'SEAM chunker · Agent dispatch · NCP · Spec queue · Live chat · CFR brain.',       badge:'IDE',      color:'var(--p)',  tab:'guardian'  },
   { ico:'◫', name:'IDEARIUM',    desc:'Projects · Ideas · Specs · Causal ancestry · Gap tracking · SNR scores.',          badge:'PROJECTS', color:'var(--b)',  tab:'idearium'  },
   { ico:'⟁', name:'CORTEX',      desc:'RAID routing · JAA memory (41 tables) · Gap finder · Healer · ICO substrate.',     badge:'MEMORY',   color:'#2dd4bf',   tab:'cortex'    },
-  { ico:'⊕', name:'BRIDGE',      desc:'Relay network · P2P WebRTC · Phantom routing · Bridge OS · Sybil detection.',      badge:'RELAY',    color:'var(--y)',  tab:'bridge'    },
   { ico:'⬢', name:'EMERGE IDE',  desc:'.eg compiler · ESS kernel · ICO substrate · Signal analysis · Emerge language.',   badge:'COMPILE',  color:'var(--g)',  tab:'emerge'    },
   { ico:'∞', name:'ARCHITECT',   desc:'Spec engine · Hook registry (22 types) · Topology mapper · Schema builder · SNR.', badge:'SPEC',     color:'var(--m)',  tab:'architect' },
   { ico:'⟡', name:'ORCHESTRATOR',desc:'System watchdog · SISO bus hub · SSE relay · Health polling · Boot sequence.',     badge:'HUB',      color:'var(--c)',  tab:null,       onclick:'window.open("http://127.0.0.1:9000/ui/orchestrator/index.html")' },
@@ -675,7 +667,7 @@ function merge(a,b){ const r={...a}; for(const k of Object.keys(b)){ if(b[k]!==n
 
 // ── TABS ───────────────────────────────────────────────────────────────────
 let _tab = 'home';
-const IFRAME_URLS = { idearium:'http://127.0.0.1:4800', guardian:'http://127.0.0.1:7820/cockpit', cortex:'http://127.0.0.1:3748', bridge:'http://127.0.0.1:9999', emerge:'http://127.0.0.1:4242' };
+const IFRAME_URLS = { idearium:'http://127.0.0.1:4800', guardian:'http://127.0.0.1:7820/cockpit', cortex:'http://127.0.0.1:3748', emerge:'http://127.0.0.1:4242' };
 
 function switchTab(id){
   if(!document.getElementById('tab-'+id)) return;
@@ -794,10 +786,6 @@ async function pollHealth(){
     }catch{}
     // Bridge pill
     try{
-      const b=await fetch('http://127.0.0.1:9999/bridge/health',{signal:AbortSignal.timeout(1500)}).then(r=>r.json());
-      const bp=document.getElementById('bridge-status-pill');
-      if(bp){ bp.className='pill '+(b.ok?'ok':''); document.getElementById('bridge-status-txt').textContent=b.ok?'BRIDGE ONLINE':'BRIDGE OFFLINE'; }
-    }catch{ const bp=document.getElementById('bridge-status-pill'); if(bp){ bp.className='pill'; document.getElementById('bridge-status-txt').textContent='BRIDGE OFFLINE'; } }
   }catch{}
 }
 
@@ -902,7 +890,6 @@ function connectSSE(){
         if(d.type==='guardian.provider.connected'){ FIELD?.pulse('guardian',1.5); pollHealth(); }
         if(d.type==='guardian.provider.disconnected'){ FIELD?.pulse('guardian',.3); pollHealth(); }
         if(d.type?.includes('cortex')||d.type?.includes('gap')){ FIELD?.pulse('cortex',.8); }
-        if(d.type?.includes('bridge')){ FIELD?.pulse('bridge',.6); }
         if(d.type?.includes('emerge')){ FIELD?.pulse('emerge',.6); }
       }catch{}
     };
@@ -920,11 +907,10 @@ const FIELD=(()=>{
     {id:'guardian',color:'#9b7fe8',x:.5,y:.22,base:.010},
     {id:'cortex',  color:'#2dd4bf',x:.18,y:.62,base:.009},
     {id:'idearium',color:'#4a9eff',x:.82,y:.62,base:.009},
-    {id:'bridge',  color:'#f59e0b',x:.35,y:.86,base:.007},
     {id:'emerge',  color:'#3ecf8e',x:.65,y:.86,base:.007},
   ];
-  const _h={guardian:.3,cortex:.3,idearium:.3,bridge:.2,emerge:.2};
-  const _er={guardian:0,cortex:0,idearium:0,bridge:0,emerge:0};
+  const _h={guardian:.3,cortex:.3,idearium:.3,emerge:.2};
+  const _er={guardian:0,cortex:0,idearium:0,emerge:0};
   let world=null;
   function mkWorld(w,h){
     const stars=Array.from({length:280},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*.8+.15,a:Math.random()*.5+.08,da:(Math.random()-.5)*.002,vx:(Math.random()-.5)*.045,vy:(Math.random()-.5)*.035}));

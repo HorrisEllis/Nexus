@@ -1,0 +1,229 @@
+/**
+ * foundation/event-contracts.js
+ * COMPARTMENT OS — Kernel Event Type Registry
+ * IMMUTABLE after v1.0.0 (COS-5)
+ *
+ * Author: James Brooks (Erosmancer)
+ * Version: 1.0.0
+ *
+ * Every kernel event string used by the system is declared here.
+ * Pattern: "{layer}:{noun}:{verb}" — all lowercase kebab.
+ * Spec §24 (hook map) + §20 (Nexus events) + §21 (watchdog) are the source.
+ */
+
+'use strict';
+
+// ─── Host Events ──────────────────────────────────────────────────────────────
+
+const HOST = Object.freeze({
+  // Compartment lifecycle
+  COMPARTMENT_CREATED:   'host:compartment:created',
+  COMPARTMENT_STARTED:   'host:compartment:started',
+  COMPARTMENT_STOPPED:   'host:compartment:stopped',
+  COMPARTMENT_DESTROYED: 'host:compartment:destroyed',
+  COMPARTMENT_ERROR:     'host:compartment:error',
+  COMPARTMENT_STATUS:    'host:compartment:status',
+  COMPARTMENTS_LISTED:   'host:compartments:listed',
+
+  // Snapshots
+  SNAPSHOT_TAKEN:        'host:snapshot:taken',
+  SNAPSHOT_RESTORED:     'host:snapshot:restored',
+  SNAPSHOT_MANUAL:       'host:snapshot:manual',
+
+  // System map
+  MAP_RENDERED:          'host:map:rendered',
+  MAP_EXPORTED:          'host:map:exported',
+  MAP_WATCHING:          'host:map:watching',
+  MAP_UPDATED:           'host:map:updated',
+
+  // Files
+  FILE_UPLOADED:         'host:file:uploaded',
+  UI_SWAPPED:            'host:ui:swapped',
+
+  // Hooks
+  HOOKS_LISTED:          'host:hooks:listed',
+  HOOK_SHOWN:            'host:hook:shown',
+  HOOK_FIRED:            'host:hook:fired',
+
+  // Commands
+  COMMAND_RUN:           'host:command:run',
+
+  // Events stream
+  EVENTS_STREAMING:      'host:events:streaming',
+
+  // Plugins
+  PLUGINS_LISTED:        'host:plugins:listed',
+  PLUGIN_ADDED:          'host:plugin:added',
+
+  // Schema
+  SCHEMA_VALIDATED:      'host:schema:validated',
+  VERSION_SHOWN:         'host:version:shown',
+
+  // System
+  SYSTEM_SHUTDOWN:       'host:system:shutdown',
+  NEXUS_THRESHOLD:       'host:nexus:threshold',
+});
+
+// ─── Compartment Events ───────────────────────────────────────────────────────
+
+const COMP = Object.freeze({
+  PROCESS_STARTED:       'comp:process:started',
+  PROCESS_STOPPED:       'comp:process:stopped',
+  PROCESS_EXITED:        'comp:process:exited',
+  PROCESS_STDOUT:        'comp:process:stdout',
+  PROCESS_STDERR:        'comp:process:stderr',
+  PROCESS_ERROR:         'comp:process:error',
+  PROCESS_CRASHED:       'comp:process:crashed',
+  SPAWN_FAILED:          'comp:spawn:failed',
+  COMPILER_STARTED:      'comp:compiler:started',
+  BUILD_COMPLETED:       'comp:build:completed',
+  TESTS_RUNNING:         'comp:tests:running',
+  FS_LISTED:             'comp:fs:listed',
+  FS_TREE:               'comp:fs:tree',
+  FILE_WRITTEN:          'comp:file:written',
+  UI_SWAPPED:            'comp:ui:swapped',
+  SNAPSHOT_TAKEN:        'comp:snapshot:taken',
+  COMMAND_RUN:           'comp:command:run',
+  STATE_CHANGED:         'comp:state:changed',
+});
+
+// ─── Watchdog Events ──────────────────────────────────────────────────────────
+
+const WATCHDOG = Object.freeze({
+  PROCESS_STALLED:      'watchdog:process:stalled',
+  PROCESS_CRASH_LOOP:   'watchdog:process:crash-loop',
+  MEMORY_EXCEEDED:      'watchdog:memory:exceeded',
+  CPU_EXCEEDED:         'watchdog:cpu:exceeded',
+  FS_UNAUTHORIZED:      'watchdog:fs:unauthorized-write',
+  NET_VIOLATION:        'watchdog:net:policy-violation',
+  ANOMALY_DETECTED:     'watchdog:anomaly:detected',
+  STATUS_SHOWN:         'watchdog:status:shown',
+  ENABLED:              'watchdog:enabled',
+  DISABLED:             'watchdog:disabled',
+  CONFIG_UPDATED:       'watchdog:config:updated',
+  LOG_SHOWN:            'watchdog:log:shown',
+});
+
+// ─── Replay Events ────────────────────────────────────────────────────────────
+
+const REPLAY = Object.freeze({
+  MODE_ENTERED:         'replay:mode:entered',
+  PLAYING:              'replay:playing',
+  PAUSED:               'replay:paused',
+  REWINDING:            'replay:rewinding',
+  FORWARDING:           'replay:forwarding',
+  SEEKED:               'replay:seeked',
+  DIFFED:               'replay:diffed',
+  MODE_EXITED:          'replay:mode:exited',
+});
+
+// ─── Pipe Events ──────────────────────────────────────────────────────────────
+
+const PIPE = Object.freeze({
+  CREATED:              'pipe:created',
+  LISTED:               'pipe:listed',
+  SHOWN:                'pipe:shown',
+  PAUSED:               'pipe:paused',
+  RESUMED:              'pipe:resumed',
+  SEVERED:              'pipe:severed',
+  TESTED:               'pipe:tested',
+  LOG_SHOWN:            'pipe:log:shown',
+  MESSAGE_SENT:         'pipe:message:sent',
+  MESSAGE_RECEIVED:     'pipe:message:received',
+  MESSAGE_REJECTED:     'pipe:message:rejected',
+});
+
+// ─── Git Events ───────────────────────────────────────────────────────────────
+
+const GIT = Object.freeze({
+  STATUS_SHOWN:         'git:status:shown',
+  COMMIT_CREATED:       'git:commit:created',
+  PUSH_COMPLETED:       'git:push:completed',
+  LOG_SHOWN:            'git:log:shown',
+  DIFF_SHOWN:           'git:diff:shown',
+  BRANCH_SWITCHED:      'git:branch:switched',
+});
+
+// ─── SSH Events ───────────────────────────────────────────────────────────────
+
+const SSH = Object.freeze({
+  SESSION_OPENED:       'ssh:session:opened',
+  TUNNEL_ADDED:         'ssh:tunnel:added',
+  TUNNELS_LISTED:       'ssh:tunnels:listed',
+  KEY_GENERATED:        'ssh:key:generated',
+});
+
+// ─── Version Events ───────────────────────────────────────────────────────────
+
+const VERSION = Object.freeze({
+  BUMPED:               'version:bumped',
+  LOG_SHOWN:            'version:log:shown',
+  DIFFED:               'version:diffed',
+  RESTORED:             'version:restored',
+});
+
+// ─── Nexus / Kernel Events ────────────────────────────────────────────────────
+
+const NEXUS = Object.freeze({
+  BOTTLENECK_DETECTED:  'nexus:bottleneck:detected',
+  SNAPSHOT_WRITTEN:     'nexus:snapshot:written',
+  WAL_FLUSHED:          'nexus:wal:flushed',
+});
+
+// ─── Network Events ───────────────────────────────────────────────────────────
+
+const NETWORK = Object.freeze({
+  REQUEST_SENT:         'network:request:sent',
+  RESPONSE_RECEIVED:    'network:response:received',
+});
+
+// ─── CLI Events ───────────────────────────────────────────────────────────────
+
+const CLI = Object.freeze({
+  COMMAND_RESOLVED:     'cli:command:resolved',
+  COMMAND_FAILED:       'cli:command:failed',
+});
+
+// ─── Service Events ───────────────────────────────────────────────────────────
+
+const SERVICE = Object.freeze({
+  INSTALLED:            'service:installed',
+  UNINSTALLED:          'service:uninstalled',
+  STARTED:              'service:started',
+  STOPPED:              'service:stopped',
+  RESTARTED:            'service:restarted',
+  STATUS_SHOWN:         'service:status:shown',
+});
+
+// ─── All Events (flat set for validation) ────────────────────────────────────
+
+const ALL_EVENT_TYPES = Object.freeze(new Set([
+  ...Object.values(HOST),
+  ...Object.values(COMP),
+  ...Object.values(WATCHDOG),
+  ...Object.values(REPLAY),
+  ...Object.values(PIPE),
+  ...Object.values(GIT),
+  ...Object.values(SSH),
+  ...Object.values(VERSION),
+  ...Object.values(NEXUS),
+  ...Object.values(NETWORK),
+  ...Object.values(CLI),
+  ...Object.values(SERVICE),
+]));
+
+/**
+ * Returns true if the given string is a registered kernel event type.
+ * @param {string} eventType
+ * @returns {boolean}
+ */
+function isKnownEvent(eventType) {
+  return ALL_EVENT_TYPES.has(eventType);
+}
+
+module.exports = {
+  HOST, COMP, WATCHDOG, REPLAY, PIPE, GIT, SSH, VERSION,
+  NEXUS, NETWORK, CLI, SERVICE,
+  ALL_EVENT_TYPES,
+  isKnownEvent,
+};

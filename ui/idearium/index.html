@@ -158,7 +158,6 @@ textarea.inp{resize:vertical;min-height:60px;}
   <span class="sp"></span>
   <!-- System status dots -->
   <span title="Orchestrator :9000"><span class="sys-dot" id="dot-orch"></span></span>
-  <span title="Bridge :9999"><span class="sys-dot" id="dot-bridge"></span></span>
   <span title="Cortex :3748"><span class="sys-dot" id="dot-cortex"></span></span>
   <span title="Guardian :7820"><span class="sys-dot" id="dot-guardian"></span></span>
   <button class="btn primary" onclick="toggleAdd()">+ idea</button>
@@ -183,7 +182,6 @@ textarea.inp{resize:vertical;min-height:60px;}
     <div class="nav-systems">
       <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Systems</div>
       <div class="sys-row"><span class="sys-dot" id="sys-orch"></span>Orchestrator :9000</div>
-      <div class="sys-row"><span class="sys-dot" id="sys-bridge"></span>Bridge :9999</div>
       <div class="sys-row"><span class="sys-dot" id="sys-cortex"></span>Cortex :3748</div>
       <div class="sys-row"><span class="sys-dot" id="sys-guardian"></span>Guardian :7820</div>
     </div>
@@ -348,7 +346,6 @@ textarea.inp{resize:vertical;min-height:60px;}
 
 const BASE  = 'http://localhost:4800';
 const ORCH  = 'http://localhost:9000';
-const BRIDGE= 'http://localhost:9999';
 const CORTEX= 'http://localhost:3748';
 const GUARD = 'http://localhost:7820';
 
@@ -399,7 +396,6 @@ function toggleOpenGap() {
 async function checkSystems() {
   const checks = [
     { id:'orch',    url:ORCH+'/health' },
-    { id:'bridge',  url:BRIDGE+'/bridge/health' },
     { id:'cortex',  url:CORTEX+'/health' },
     { id:'guardian',url:GUARD+'/health' },
   ];
@@ -976,12 +972,11 @@ async function runPipeline() {
   const healthResults = await Promise.all([
     fetch(BASE+'/health').then(r=>r.ok).catch(()=>false),
     fetch(ORCH+'/health').then(r=>r.ok).catch(()=>false),
-    fetch(BRIDGE+'/bridge/health').then(r=>r.ok).catch(()=>false),
   ]);
   const allHealthy = healthResults.every(Boolean);
   if(allHealthy) {
     setPipeStatus('test','done');
-    logPipeline({step:'system.test', status:'done', systems:`idearium:${healthResults[0]} orch:${healthResults[1]} bridge:${healthResults[2]}`});
+    logPipeline({step:'system.test', status:'done', systems:`idearium:${healthResults[0]} orch:${healthResults[1]}`});
   } else {
     setPipeStatus('test','fail');
     logPipeline({step:'system.test', status:'fail', results:healthResults});
@@ -990,7 +985,6 @@ async function runPipeline() {
   // Final — post to orchestrator ledger
   const pipelineResult = {status:allHealthy?'passed':'failed', specUuid, steps:PIPE_STEPS.length};
   post('/api/ledger', { system:'idearium', type:'idearium.pipeline.complete', payload:pipelineResult }, ORCH);
-  post('/bridge/broadcast', { type:'idearium.pipeline.complete', ...pipelineResult }, BRIDGE);
   logPipeline({step:'pipeline', status:allHealthy?'done':'fail', message:`pipeline ${allHealthy?'PASSED':'FAILED'}`});
 }
 
@@ -1049,7 +1043,6 @@ function clearStream() { document.getElementById('stream-log').innerHTML=''; _st
 const KERNEL_SYSTEMS = [
   { id:'idearium', name:'IdeaOS',       url:BASE+'/health',        desc:'Idea OS — SISO+JAA, SNR, tension engine' },
   { id:'orch',     name:'Orchestrator', url:ORCH+'/health',        desc:'Source of truth, recall, system registry' },
-  { id:'bridge',   name:'Bridge',       url:BRIDGE+'/bridge/health',desc:'Tag engine, request queue, SSE relay' },
   { id:'cortex',   name:'Cortex',       url:CORTEX+'/health',      desc:'28 JAA tables, event_log, gap engine' },
   { id:'guardian', name:'Guardian',     url:GUARD+'/health',       desc:'AI orchestration, SISO bus, job queue' },
 ];

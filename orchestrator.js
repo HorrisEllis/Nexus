@@ -20,28 +20,8 @@
 //   GET  /api/api-map             All routes across all systems
 //   GET  /api/cli                 CLI reference
 //   GET  /api/ui                  UI file status
-//   GET  /sse                     Unified SSE (all bridge events)
+//   GET  /sse                     Unified SSE (all system events)
 //   GET  /ui/:system              System UI (hotswapped from disk)
-//
-//   ── Bridge ───────────────────────────────────────────────────────────────
-//   POST /api/bridge/handshake    { systemId, appId, secret }
-//   GET  /api/bridge/health
-//   GET  /api/bridge/stats
-//   GET  /api/bridge/tags/:id
-//   POST /api/bridge/tags         { entityId, entityType, system, tags[], addedBy }
-//   GET  /api/bridge/tags?tag=x
-//   GET  /api/bridge/requests     ?status=&from=&to=&type=
-//   POST /api/bridge/requests     { type, from, to, payload }
-//   GET  /api/bridge/requests/:uuid
-//   POST /api/bridge/requests/:uuid/accept   { by }
-//   POST /api/bridge/requests/:uuid/reject   { by, reason }
-//   POST /api/bridge/requests/:uuid/complete { result }
-//   POST /api/bridge/requests/:uuid/fail     { error }
-//   GET  /api/bridge/subscribe    ?channel=x  → SSE
-//   GET  /api/bridge/pull         ?channel=x&since=ts
-//   POST /api/bridge/broadcast    { type, ...data }
-//   POST /api/bridge/forward      { to, path, payload }
-//   POST /api/bridge/purge
 //
 //   ── Cortex ───────────────────────────────────────────────────────────────
 //   GET  /api/cortex/health
@@ -129,12 +109,22 @@ const path   = require('path');
 const { URL } = require('url');
 
 const PORT    = parseInt(process.env.ORCHESTRATOR_PORT || '9000');
+
+// ── Pulse system ──────────────────────────────────────────────────────────────
+// lib/pulse.js is optional — if it doesn't exist yet, pulse is a no-op.
+let _orchPulse = null;
+try {
+  const { createPulse } = require('./lib/pulse');
+  // Pulse is started after server binds (in server.listen callback)
+  module._createPulse = createPulse;
+} catch(_) {
+  console.warn('[orchestrator] lib/pulse.js not found — heartbeat self-registration disabled');
+}
 const ROOT    = __dirname;
 const UI_ROOT = path.join(ROOT, 'ui');
 
 // ── System registry ───────────────────────────────────────────────────────────
 const SYS = {
-  bridge:   { port:9999,  host:'127.0.0.1', label:'Bridge',     color:'#f0a500' },
   cortex:   { port:3748,  host:'127.0.0.1', label:'Cortex',     color:'#2dd4bf' },
   guardian: { port:7820,  host:'127.0.0.1', label:'Guardian',   color:'#9b7fe8' },
   idearium: { port:4800,  host:'127.0.0.1', label:'Idearium',   color:'#4a9eff' },
@@ -144,25 +134,16 @@ const SYS = {
 
 // ── Channel map ───────────────────────────────────────────────────────────────
 const CHANNELS = [
-  { from:'guardian', ch:'guardian.job.complete',    to:['cortex','bridge'],   desc:'Job finished → memory.ingest' },
-  { from:'guardian', ch:'guardian.artifact',        to:['cortex','bridge'],   desc:'Code artifact → cortex + tagged' },
+  { from:'guardian', ch:'guardian.job.complete',    to:['cortex'],   desc:'Job finished → memory.ingest' },
+  { from:'guardian', ch:'guardian.artifact',        to:['cortex'],   desc:'Code artifact → cortex + tagged' },
   { from:'guardian', ch:'guardian.gaps',            to:['cortex'],            desc:'Gaps detected in AI output' },
   { from:'guardian', ch:'guardian.ledger',          to:['jaa'],               desc:'Ledger entry' },
   { from:'guardian', ch:'guardian.session.named',   to:['jaa'],               desc:'Chat session named' },
   { from:'guardian', ch:'guardian.timeline',        to:['jaa'],               desc:'Timeline event' },
-  { from:'guardian', ch:'guardian.job.queued',      to:['bridge'],            desc:'Job queued waiting for provider' },
-  { from:'guardian', ch:'guardian.job.dispatched',  to:['bridge'],            desc:'Job dispatched to provider' },
   { from:'guardian', ch:'guardian.setting.update',  to:['jaa'],               desc:'Setting changed' },
-  { from:'cortex',   ch:'cortex.gap.found',         to:['guardian','bridge'], desc:'Gap → guardian ledger' },
-  { from:'cortex',   ch:'cortex.gap.resolved',      to:['bridge'],            desc:'Gap resolved broadcast' },
-  { from:'idearium', ch:'idearium.idea.created',    to:['cortex','bridge'],   desc:'Idea → cortex + tagged' },
+  { from:'cortex',   ch:'cortex.gap.found',         to:['guardian'], desc:'Gap → guardian ledger' },
+  { from:'idearium', ch:'idearium.idea.created',    to:['cortex'],   desc:'Idea → cortex + tagged' },
   { from:'idearium', ch:'idearium.snapshot.pushed', to:['cortex'],            desc:'Snapshot → versionium' },
-  { from:'bridge',   ch:'bridge.request.created',   to:['*'],                 desc:'Request queued → all' },
-  { from:'bridge',   ch:'bridge.request.accepted',  to:['*'],                 desc:'Request accepted' },
-  { from:'bridge',   ch:'bridge.request.complete',  to:['*'],                 desc:'Request complete' },
-  { from:'bridge',   ch:'bridge.request.expired',   to:['*'],                 desc:'Stale request purged' },
-  { from:'bridge',   ch:'bridge.handshake',         to:['audit'],             desc:'Handshake logged' },
-  { from:'bridge',   ch:'bridge.tag.added',         to:['*'],                 desc:'Entity tagged' },
   { from:'alk',      ch:'alk.signal.composite',     to:['cortex'],            desc:'ALK composite → event_log' },
 ];
 
@@ -180,7 +161,7 @@ const CLI_REF = {
     { cmd:'node orchestrator.js ideas',        desc:'Idearium ideas' },
     { cmd:'node orchestrator.js idea "text"',  desc:'Create idea' },
     { cmd:'node orchestrator.js requests [status]', desc:'Bridge request queue' },
-    { cmd:'node orchestrator.js tag <id> <t1,t2>', desc:'Tag entity in bridge' },
+    { cmd:'node orchestrator.js tag <id> <t1,t2>', desc:'Tag entity' },
     { cmd:'node orchestrator.js push "msg"',   desc:'Idearium snapshot' },
     { cmd:'node orchestrator.js snr',          desc:'Idearium SNR' },
     { cmd:'node orchestrator.js help',         desc:'This message' },
@@ -199,10 +180,7 @@ const CLI_REF = {
     { cmd:'nexus watch <jobId>',       desc:'Stream job tokens' },
     { cmd:'nexus watchdog',            desc:'Live all-systems dashboard' },
     { cmd:'nexus requests',            desc:'Bridge request queue' },
-    { cmd:'nexus accept <uuid>',       desc:'Accept bridge request' },
-    { cmd:'nexus reject <uuid>',       desc:'Reject bridge request' },
     { cmd:'nexus tag <id> --tags=x,y', desc:'Tag entity' },
-    { cmd:'nexus bridge health',       desc:'Bridge health' },
     { cmd:'nexus cortex status',       desc:'Cortex status' },
     { cmd:'nexus guardian providers',  desc:'Provider status' },
   ],
@@ -218,7 +196,6 @@ const CLI_REF = {
     { cmd:'nexus /idearium spec new <uuid>',        desc:'Create spec' },
     { cmd:'nexus /ollama pull qwen2.5-coder:7b',    desc:'Pull model' },
     { cmd:'nexus /ollama run "prompt"',             desc:'Run inference' },
-    { cmd:'nexus /bridge subscribe guardian.job.*', desc:'Subscribe channel' },
   ],
 };
 
@@ -237,11 +214,20 @@ function sysReq(systemId, method, p, body, timeout = 5000) {
       },
     };
     const r = http.request(opts, res => {
-      let d = '';
-      res.on('data', c => d += c);
+      // ORC-03: Buffer accumulation (same fix as ORC-01)
+      const chunks = [];
+      res.on('data', c => chunks.push(c));
       res.on('end', () => {
-        try { resolve(JSON.parse(d)); }
-        catch { resolve({ ok: res.statusCode < 400, raw: d, status: res.statusCode }); }
+        const d = Buffer.concat(chunks).toString('utf8');
+        // ORC-04: preserve upstream status for honest error propagation
+        const upstreamOk = res.statusCode >= 200 && res.statusCode < 300;
+        try {
+          const parsed = JSON.parse(d);
+          // If upstream returned an error status, surface it even if body parses
+          if (!upstreamOk && parsed.ok !== false) parsed._upstreamStatus = res.statusCode;
+          resolve(parsed);
+        }
+        catch { resolve({ ok: upstreamOk, raw: d, status: res.statusCode }); }
       });
     });
     r.setTimeout(timeout, () => { r.destroy(); resolve({ ok:false, error:`${sys.label} timeout` }); });
@@ -258,7 +244,6 @@ const PATCH= (sys, p, b, timeout) => sysReq(sys, 'PATCH',  p, b, timeout);
 
 // ── All systems health ────────────────────────────────────────────────────────
 const HEALTH_PATHS = {
-  bridge:   '/bridge/health',
   cortex:   '/health',
   guardian: '/health',
   idearium: '/health',
@@ -322,7 +307,7 @@ try {
 } catch(e) { console.warn('[orchestrator] event-ledger init failed:', e.message); }
 
 // In-memory ring (fast reads)
-const LEDGER = { orchestrator:[], bridge:[], cortex:[], guardian:[], idearium:[], emerge:[] };
+const LEDGER = { orchestrator:[], cortex:[], guardian:[], idearium:[], emerge:[] };
 
 // Ensure ledger dir exists
 try { fs.mkdirSync(LEDGER_DIR, { recursive: true }); } catch(_) {}
@@ -342,6 +327,11 @@ try {
     }
   }
   _ledgerFd = fs.createWriteStream(LEDGER_FILE, { flags: 'a' });
+  // ORC-14: WriteStream errors don't throw synchronously — listen on 'error' event
+  _ledgerFd.on('error', e => {
+    console.error('[ledger] disk write error:', e.message);
+    _ledgerFd = null; // stop further writes to a broken stream
+  });
 } catch(e) { console.warn('[ledger] disk init failed:', e.message); }
 
 function ledgerWrite(system, type, payload = {}) {
@@ -368,7 +358,6 @@ function ledgerAll(n = 100) {
   }
   return all.sort((a, b) => (b._ts || 0) - (a._ts || 0)).slice(0, n);
 }
-let bridgeSse    = null;
 
 function broadcast(data) {
   const msg = `data: ${data}\n\n`;
@@ -377,10 +366,10 @@ function broadcast(data) {
   }
 }
 
-function connectBridgeSSE() {
+  // ORC-05: prevent double-connect and clear any pending retry timer first
+
   const r = http.request({
     hostname:'127.0.0.1', port:9999,
-    path:'/bridge/subscribe?channel=*', method:'GET',
     headers:{Accept:'text/event-stream'},
   }, res => {
     let buf = '';
@@ -391,21 +380,27 @@ function connectBridgeSSE() {
         if (l.startsWith('data:')) broadcast(l.slice(5).trim());
       }
     });
-    res.on('end', () => { bridgeSse=null; setTimeout(connectBridgeSSE, 3000); });
+    res.on('end', () => {
+      // ORC-05: single timer, cleared above on next connect
+    });
   });
-  r.on('error', () => { bridgeSse=null; setTimeout(connectBridgeSSE, 5000); });
+  r.on('error', () => {
+  });
   r.end();
-  bridgeSse = r;
 }
 
 // ── §AXIOM: System watchdog — pauses bridge relay until core systems online ────
 // Orchestrator knows the required boot order. If bridge/cortex are down it
 // retries every 5s and logs to ledger. Forge UI will show red dots until they come up.
-const REQUIRED_SYSTEMS   = ['bridge','cortex','guardian','idearium']; // must be online for full operation
+const REQUIRED_SYSTEMS   = ['cortex','guardian','idearium']; // must be online for full operation
 const WATCHDOG_INTERVAL  = 10000; // ms
 const _prevSystemState   = {}; // track transitions: online ↔ offline
 
+let _watchdogRunning = false; // ORC-06: prevent overlapping watchdog ticks
 async function systemWatchdog() {
+  if (_watchdogRunning) return;
+  _watchdogRunning = true;
+  try {
   const systems = await allHealth();
   const now     = Date.now();
   let   allRequired = true;
@@ -425,12 +420,7 @@ async function systemWatchdog() {
     if (REQUIRED_SYSTEMS.includes(id) && !online) allRequired = false;
   }
 
-  // If bridge is offline, try to reconnect SSE relay
-  const bridgeOnline = systems.find(s=>s.id==='bridge')?.online;
-  if (bridgeOnline && !bridgeSse) {
-    console.log('[watchdog] bridge came online — reconnecting SSE relay');
-    connectBridgeSSE();
-  }
+
 
   // Broadcast current health to all SSE clients
   broadcast(JSON.stringify({
@@ -438,6 +428,7 @@ async function systemWatchdog() {
     systems: Object.fromEntries(systems.map(s=>[s.id,{ online:s.online, ms:s.ms }])),
     allRequired, ts: now,
   }));
+  } finally { _watchdogRunning = false; } // ORC-06
 }
 
 // Start watchdog after server is ready
@@ -450,7 +441,7 @@ function startWatchdog() {
 }
 
 // ── UI hotswap watcher ────────────────────────────────────────────────────────
-const UI_SYSTEMS = ['bridge','cortex','guardian','idearium','emerge','orchestrator'];
+const UI_SYSTEMS = ['cortex','guardian','idearium','emerge','orchestrator'];
 // System-local ui/ dirs (guardian/ui/, cortex/ui/, etc.) — also watched
 // These are the canonical sources. Edit files here → hotswap fires.
 // Run `npm run sync-ui` to mirror them to root ui/<system>/ for orchestrator serving.
@@ -458,7 +449,7 @@ const SYSTEM_LOCAL_UI_DIRS = [
   { system:'guardian',     dir: path.join(ROOT,'guardian','ui') },
   { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
   { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
-  { system:'bridge',       dir: path.join(ROOT,'bridge','ui') },
+  { system:       dir: path.join(ROOT,'ui') },
   { system:'emerge',       dir: path.join(ROOT,'emerge','ui') },
   { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
 ];
@@ -470,6 +461,13 @@ const SYSTEM_LOCAL_UI_DIRS = [
 // NO file copying in watchers. Copying causes infinite loops.
 // Debounce at 500ms per file key prevents rapid re-fires from editors.
 const _hotswapDebounce = new Map();
+// ORC-09: clear stale debounce entries every 30s to prevent unbounded growth
+setInterval(() => {
+  const cutoff = Date.now() - 30000;
+  for (const [key, ts] of _hotswapDebounce) {
+    if (ts < cutoff) _hotswapDebounce.delete(key);
+  }
+}, 30000).unref();
 
 function watchUIDirs() {
   const WATCH_DIRS = SYSTEM_LOCAL_UI_DIRS.filter(({ dir }) => {
@@ -516,6 +514,12 @@ function serveFile(res, fp) {
   });
 }
 
+// ORC-10/11: Validate that resolved path stays within a root dir (path traversal guard)
+function _safePath(root, ...parts) {
+  const resolved = path.resolve(path.join(root, ...parts));
+  return resolved.startsWith(path.resolve(root)) ? resolved : null;
+}
+
 // ── JSON response helpers ─────────────────────────────────────────────────────
 function json(res, code, body) {
   res.writeHead(code, { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' });
@@ -523,10 +527,16 @@ function json(res, code, body) {
 }
 
 function readBody(req) {
+  // ORC-01: accumulate Buffer chunks — don't do d += c (corrupts multi-byte chars)
   return new Promise(resolve => {
-    let d = '';
-    req.on('data', c => d += c);
-    req.on('end', () => { try { resolve(JSON.parse(d || '{}')); } catch(_) { resolve({}); } });
+    const chunks = [];
+    let total = 0;
+    req.on('data', c => { total += c.length; chunks.push(c); });
+    req.on('end', () => {
+      const raw = Buffer.concat(chunks).toString('utf8');
+      try { resolve(JSON.parse(raw || '{}')); } catch(_) { resolve({}); }
+    });
+    req.on('error', () => resolve({}));
   });
 }
 
@@ -554,18 +564,20 @@ const server = http.createServer(async (req, res) => {
 
   // ── Home static assets ───────────────────────────────────────────────────
   if (M==='GET' && u.pathname.startsWith('/home/')) {
-    const asset = path.join(UI_ROOT, u.pathname.slice(1));
-    if (fs.existsSync(asset)) return serveFile(res, asset);
+    // ORC-11: path traversal guard
+    const asset = _safePath(UI_ROOT, u.pathname.slice(1));
+    if (asset && fs.existsSync(asset)) return serveFile(res, asset);
+    else if (!asset) return json(res, 403, { ok:false, error:'forbidden path' });
   }
 
   // ── System UIs ───────────────────────────────────────────────────────────
   if (M==='GET' && top==='ui' && sub) {
-    const fp = rest
-      ? path.join(UI_ROOT, sub, rest)
-      : path.join(UI_ROOT, sub, 'index.html');
+    // ORC-10: path traversal guard — validate both sub and rest
+    const fp = _safePath(UI_ROOT, sub, rest || 'index.html');
+    if (!fp) return json(res, 403, { ok:false, error:'forbidden path' });
     if (fs.existsSync(fp)) return serveFile(res, fp);
-    const idx = path.join(UI_ROOT, sub, 'index.html');
-    if (fs.existsSync(idx)) return serveFile(res, idx);
+    const idx = _safePath(UI_ROOT, sub, 'index.html');
+    if (idx && fs.existsSync(idx)) return serveFile(res, idx);
     return json(res, 404, { ok:false, error:`UI not found: ${sub}` });
   }
 
@@ -642,8 +654,12 @@ const server = http.createServer(async (req, res) => {
     let entries = [];
     try {
       if (fs.existsSync(LEDGER_FILE)) {
-        const lines = fs.readFileSync(LEDGER_FILE, 'utf8').split('\n').filter(Boolean);
-        for (const line of lines) {
+        // ORC-07: readFileSync blocks the event loop. Cap at last 5000 lines to
+        // limit blocking time. For production scale use readline streaming instead.
+        const raw = fs.readFileSync(LEDGER_FILE, 'utf8');
+        const lines = raw.split('\n').filter(Boolean);
+        const readLines = lines.slice(-5000); // cap to prevent extreme blocking
+        for (const line of readLines) {
           try {
             const e = JSON.parse(line);
             if (system && e._system !== system) continue;
@@ -678,14 +694,53 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── Heartbeat from any system ─────────────────────────────────────────────
+  // Receives beats from: systems (via lib/pulse.js), UI pages (via ui/pulse.js)
+  // Returns: full system health snapshot so caller can update dots immediately
   if (M==='POST' && sub==='heartbeat') {
     const body = await readBody(req);
-    const { systemId, port, status = 'online' } = body;
+    const { systemId, port, status = 'online', seq, pulseId, meta = {} } = body;
+    const now = Date.now();
+
     if (systemId) {
       const existing = SYSTEM_REGISTRY.get(systemId) || {};
-      SYSTEM_REGISTRY.set(systemId, { ...existing, systemId, port, status, lastSeen: Date.now() });
+      SYSTEM_REGISTRY.set(systemId, {
+        ...existing, systemId, port, status, meta,
+        lastSeen: now, seq, pulseId,
+      });
     }
-    return json(res, 200, { ok:true, ts:Date.now() });
+
+    // Build lightweight health snapshot from registry (no outbound requests — fast)
+    const snapshot = {};
+    for (const [id, s] of SYSTEM_REGISTRY) {
+      snapshot[id] = {
+        online: (now - (s.lastSeen || 0)) < 30000,
+        ms:     s.latencyMs || null,
+        port:   s.port,
+      };
+    }
+
+    // Broadcast pulse event to all SSE clients — updates health dots in real time
+    broadcast(JSON.stringify({
+      type:     'orchestrator.pulse',
+      systemId: systemId || 'orchestrator',
+      seq,
+      pulseId,
+      systems:  snapshot,
+      ts:       now,
+    }));
+
+    ledgerWrite('orchestrator', 'orchestrator.pulse', {
+      systemId, seq, pulseId, port,
+      clients: sseClients.size,
+    });
+
+    return json(res, 200, {
+      ok:      true,
+      ts:      now,
+      seq,
+      pulseId,
+      systems: snapshot,
+    });
   }
 
   // ── Unified SISO bus log — all systems' event buses merged ────────────────
@@ -725,9 +780,14 @@ const server = http.createServer(async (req, res) => {
     const body = await readBody(req);
     const { cmd = '', args = [], system = '' } = body;
     if (!cmd) return json(res, 400, { ok:false, error:'cmd required' });
+    // ORC-02: allowlist — prevent arbitrary OS execution via SSRF/XSS
+    const ALLOWED_BINS = new Set(['node','npm','npx','git','ls','cat','echo','pwd','which']);
     const { spawnSync } = require('child_process');
     const fullArgs = args.length ? [cmd, ...args] : cmd.split(' ').filter(Boolean);
     const bin = fullArgs.shift();
+    if (!ALLOWED_BINS.has(require('path').basename(bin))) {
+      return json(res, 403, { ok:false, error:`exec: '${bin}' not in allowlist` });
+    }
     const result = spawnSync(bin, fullArgs, { cwd: ROOT, encoding: 'utf8', timeout: 30000 });
     const output = (result.stdout || '') + (result.stderr || '');
     const entry = { cmd: [bin, ...fullArgs].join(' '), exit: result.status, output, ts: Date.now() };
@@ -764,15 +824,6 @@ const server = http.createServer(async (req, res) => {
 
   if (M==='GET' && sub==='api-map') {
     return json(res, 200, { ok:true, generated: new Date().toISOString(), systems: {
-      bridge:{ port:9999, routes:[
-        { m:'POST',p:'/bridge/handshake' },{ m:'GET',p:'/bridge/health' },{ m:'GET',p:'/bridge/stats' },
-        { m:'GET',p:'/bridge/tags/:id' },{ m:'POST',p:'/bridge/tags' },{ m:'GET',p:'/bridge/tags?tag=x' },
-        { m:'GET',p:'/bridge/requests' },{ m:'POST',p:'/bridge/requests' },{ m:'GET',p:'/bridge/requests/:uuid' },
-        { m:'POST',p:'/bridge/requests/:uuid/accept' },{ m:'POST',p:'/bridge/requests/:uuid/reject' },
-        { m:'POST',p:'/bridge/requests/:uuid/complete' },{ m:'POST',p:'/bridge/requests/:uuid/fail' },
-        { m:'GET',p:'/bridge/subscribe?channel=x' },{ m:'GET',p:'/bridge/pull?channel=x&since=ts' },
-        { m:'POST',p:'/bridge/broadcast' },{ m:'POST',p:'/bridge/forward' },{ m:'POST',p:'/bridge/purge' },
-      ]},
       cortex:{ port:3748, routes:[
         { m:'GET',p:'/health' },{ m:'GET',p:'/sse' },{ m:'GET',p:'/api/events?n=N' },
         { m:'POST',p:'/api/event' },{ m:'GET',p:'/api/gaps' },{ m:'GET',p:'/api/failures' },
@@ -806,65 +857,11 @@ const server = http.createServer(async (req, res) => {
         { m:'GET',p:'/' },{ m:'GET',p:'/health' },{ m:'GET',p:'/sse' },
         { m:'GET',p:'/ui/:system' },{ m:'GET',p:'/api/status' },{ m:'GET',p:'/api/channels' },
         { m:'GET',p:'/api/cli' },{ m:'GET',p:'/api/ui' },{ m:'GET',p:'/api/api-map' },
-        ...Object.entries({bridge:17,cortex:14,guardian:22,idearium:22}).map(([s,n])=>
           ({ m:'*',p:`/api/${s}/*`,desc:`${n} routes proxied to ${s}` })),
       ]},
     }});
   }
 
-  // ── Bridge proxy ──────────────────────────────────────────────────────────
-  if (sub==='bridge') {
-    const action = seg[2] || '';
-    const uuid   = seg[3] || '';
-    const op     = seg[4] || '';
-
-    // SSE subscribe — stream from bridge directly
-    if (M==='GET' && action==='subscribe') {
-      const channel = QS.get('channel') || '*';
-      res.writeHead(200, { 'Content-Type':'text/event-stream','Cache-Control':'no-cache',
-        'Connection':'keep-alive','Access-Control-Allow-Origin':'*' });
-      const r = http.request({
-        hostname:'127.0.0.1', port:9999,
-        path:`/bridge/subscribe?channel=${encodeURIComponent(channel)}`, method:'GET',
-        headers:{Accept:'text/event-stream'},
-      }, rs => {
-        rs.on('data', c => res.write(c));
-        rs.on('end',  () => res.end());
-      });
-      r.on('error', () => res.end());
-      r.end();
-      req.on('close', () => r.destroy());
-      return;
-    }
-
-    if (M==='POST' && action==='handshake') return json(res,200,await POST('bridge','/bridge/handshake',await readBody(req)));
-    if (M==='GET'  && action==='health')    return json(res,200,await GET('bridge','/bridge/health'));
-    if (M==='GET'  && action==='stats')     return json(res,200,await GET('bridge','/bridge/stats'));
-    if (M==='POST' && action==='purge')     return json(res,200,await POST('bridge','/bridge/purge',{}));
-    if (M==='POST' && action==='broadcast') return json(res,200,await POST('bridge','/bridge/broadcast',await readBody(req)));
-    if (M==='POST' && action==='forward')   return json(res,200,await POST('bridge','/bridge/forward',await readBody(req)));
-    if (M==='GET'  && action==='pull')      return json(res,200,await GET('bridge',`/bridge/pull?channel=${QS.get('channel')||'*'}&since=${QS.get('since')||0}`));
-
-    if (action==='tags') {
-      if (M==='GET' && uuid)          return json(res,200,await GET('bridge',`/bridge/tags/${encodeURIComponent(uuid)}`));
-      if (M==='GET' && QS.get('tag')) return json(res,200,await GET('bridge',`/bridge/tags?tag=${encodeURIComponent(QS.get('tag'))}`));
-      if (M==='POST')                 return json(res,200,await POST('bridge','/bridge/tags',await readBody(req)));
-      if (M==='DELETE' && uuid)       return json(res,200,await sysReq('bridge','DELETE',`/bridge/tags/${uuid}`,await readBody(req)));
-    }
-
-    if (action==='requests') {
-      if (M==='GET' && !uuid) {
-        const q = new URLSearchParams();
-        for (const k of ['status','from','to','type','tag']) { const v=QS.get(k); if(v) q.set(k,v); }
-        return json(res,200,await GET('bridge',`/bridge/requests${q.toString()?'?'+q:''}`));
-      }
-      if (M==='POST' && !uuid)        return json(res,202,await POST('bridge','/bridge/requests',await readBody(req)));
-      if (M==='GET' && uuid && !op)   return json(res,200,await GET('bridge',`/bridge/requests/${uuid}`));
-      if (M==='POST' && uuid && op)   return json(res,200,await POST('bridge',`/bridge/requests/${uuid}/${op}`,await readBody(req)));
-    }
-
-    return json(res,404,{ok:false,error:`bridge route not found: ${M} ${u.pathname}`});
-  }
 
   // ── Cortex proxy ──────────────────────────────────────────────────────────
   if (sub==='cortex') {
@@ -878,7 +875,13 @@ const server = http.createServer(async (req, res) => {
     if (M==='GET'  && action==='failures')         return json(res,200,await GET('cortex','/api/failures'));
     if (M==='GET'  && action==='ring')             return json(res,200,await GET('cortex','/api/ring'));
     if (M==='GET'  && action==='modules')          return json(res,200,await GET('cortex','/api/modules'));
-    if (M==='GET'  && action==='files')            return json(res,200,await GET('cortex','/api/files'));
+    if (M==='GET'  && action==='files' && !action2) return json(res,200,await GET('cortex',`/api/files?n=${QS.get('n')||200}`));
+    if (M==='GET'  && action==='files' && action2==='get') return json(res,200,await GET('cortex',`/api/files/get?hash=${QS.get('hash')||''}`));
+    if (M==='POST' && action==='files' && action2==='upload') return json(res,200,await POST('cortex','/api/files/upload',await readBody(req)));
+    if (M==='GET'  && action==='versionium' && action2==='log') return json(res,200,await GET('cortex',`/api/versionium/log?n=${QS.get('n')||50}${QS.get('branch')?'&branch='+QS.get('branch'):''}`));
+    if (M==='POST' && action==='versionium' && action2==='commit') return json(res,200,await POST('cortex','/api/versionium/commit',await readBody(req)));
+    if (M==='GET'  && action==='projects')         return json(res,200,await GET('cortex','/api/projects'));
+    if (M==='POST' && action==='ess' && action2==='analyse') return json(res,200,await POST('cortex','/api/ess/analyse',await readBody(req)));
     if (M==='GET'  && action==='tags')             return json(res,200,await GET('cortex',`/api/tags?entityId=${QS.get('entityId')||''}`));
     if (M==='POST' && action==='tags')             return json(res,200,await POST('cortex','/api/tags',await readBody(req)));
     if (M==='GET'  && action==='memory' && !action2) return json(res,200,await GET('cortex',`/api/memory?table=${QS.get('table')||'event_log'}&n=${QS.get('n')||50}`));
@@ -894,7 +897,9 @@ const server = http.createServer(async (req, res) => {
       const r = http.request({ hostname:'127.0.0.1',port:3748,path:'/sse',method:'GET',headers:{Accept:'text/event-stream'} }, rs => {
         rs.on('data', c => res.write(c)); rs.on('end', () => res.end());
       });
-      r.on('error', () => res.end()); r.end();
+      r.on('error', () => { try { res.end(); } catch {} });
+      r.on('close', () => { try { res.end(); } catch {} }); // ORC-15
+      r.end();
       req.on('close', () => r.destroy());
       return;
     }
@@ -1026,7 +1031,7 @@ const C = { r:'\x1b[0m',b:'\x1b[1m',g:'\x1b[32m',red:'\x1b[31m',y:'\x1b[33m',
 
 function sysDot(online) { return online ? `${C.g}●${C.r}` : `${C.red}○${C.r}`; }
 function sysCol(id) {
-  return { bridge:C.y, cortex:C.c, guardian:C.m, idearium:C.blue, emerge:C.g, ollama:C.red }[id] || C.d;
+  return { cortex:C.c, guardian:C.m, idearium:C.blue, emerge:C.g, ollama:C.red }[id] || C.d;
 }
 
 async function cliStatus() {
@@ -1044,7 +1049,6 @@ async function cliStatus() {
         const q=Object.values(d.queued||{}).reduce((a,b)=>a+b,0);
         if(q) console.log(`     ${C.y}${q} jobs queued${C.r}`);
       }
-      if (id==='bridge'  ) { if(d.pendingRequests>0) console.log(`     ${C.y}${d.pendingRequests} pending requests${C.r}`); }
       if (id==='ollama'  ) { const m=(d.models||[]).map(x=>x.name); if(m.length) console.log(`     ${C.d}${m.join(', ')}${C.r}`); }
     } else { console.log(`     ${C.red}${d.error}${C.r}`); }
   }
@@ -1053,8 +1057,7 @@ async function cliStatus() {
 }
 
 function cliWatch() {
-  console.log(`\n${C.b}${C.c}NEXUS LIVE${C.r}  ${C.d}connecting to bridge…${C.r}\n`);
-  const r = http.request({ hostname:'127.0.0.1',port:9999,path:'/bridge/subscribe?channel=*',method:'GET',headers:{Accept:'text/event-stream'} }, res => {
+  console.log(`\n${C.b}${C.c}NEXUS LIVE${C.r}  ${C.d}connecting to cortex SSE…${C.r}\n`);
     let buf='';
     res.on('data', c => {
       buf+=c.toString();
@@ -1063,7 +1066,7 @@ function cliWatch() {
         if (!l.startsWith('data:')) continue;
         try {
           const d=JSON.parse(l.slice(5).trim());
-          const ts=new Date(d.bridgeTs||Date.now()).toTimeString().slice(0,8);
+          const ts=new Date(d.ts||Date.now()).toTimeString().slice(0,8);
           const sys=(d.type||'').split('.')[0];
           console.log(`  ${C.d}${ts}${C.r}  ${sysCol(sys)}${sys.padEnd(10)}${C.r}  ${C.c}${(d.type||'event').padEnd(34)}${C.r}  ${C.d}${JSON.stringify(d).slice(0,60)}${C.r}`);
         } catch(_) {}
@@ -1071,7 +1074,7 @@ function cliWatch() {
     });
     res.on('end', () => { console.log('stream ended'); process.exit(0); });
   });
-  r.on('error', e => { console.log(`${C.red}bridge offline: ${e.message}${C.r}`); process.exit(1); });
+  r.on('error', e => { console.log(`${C.red}cortex offline: ${e.message}${C.r}`); process.exit(1); });
   r.end();
 }
 
@@ -1158,25 +1161,9 @@ async function cliDispatch(prompt, provider='chatgpt', command='code') {
   else console.log(`  ${C.d}watch: node cli/nexus.js watch ${d.jobId}${C.r}`);
 }
 
-async function cliRequests(statusFilter) {
-  const d=await GET('bridge',`/bridge/requests${statusFilter?'?status='+statusFilter:''}`);
-  if(d.error){console.log(`${C.red}✗${C.r} Bridge offline: ${d.error}`);return;}
-  const list=[...(d.requests||[])].reverse().slice(0,20);
-  console.log(`\n${C.b}${C.c}REQUESTS (${list.length})${C.r}\n`);
-  for (const r of list) {
-    const sc=r.status==='pending'?C.y:r.status==='complete'?C.g:C.red;
-    console.log(`  ${C.d}${(r.uuid||'').slice(0,8)}${C.r}  ${sc}${(r.status||'—').padEnd(10)}${C.r}  ${C.c}${(r.type||'—').padEnd(22)}${C.r}  ${C.d}${r.from} → ${r.to}${C.r}`);
-  }
-  console.log('');
-}
 
-async function cliTag(entityId, tagsRaw) {
-  if(!entityId||!tagsRaw){console.log(`Usage: node orchestrator.js tag <entityId> <tag1,tag2>`);return;}
-  const tags=tagsRaw.split(',').map(t=>t.trim()).filter(Boolean);
-  const d=await POST('bridge','/bridge/tags',{entityId,entityType:'entity',system:'orchestrator',tags,addedBy:'orchestrator-cli'});
-  if(!d.ok){console.log(`${C.red}✗${C.r} ${d.error||'failed'}`);return;}
-  console.log(`${C.g}✓${C.r} Tagged ${entityId}: ${tags.join(', ')}`);
-}
+
+
 
 async function cliPush(message) {
   const d=await POST('idearium','/api/snapshots',{message:message||'orchestrator snapshot'});
@@ -1202,7 +1189,7 @@ ${C.b}Server mode${C.r}
 
 ${C.b}CLI commands${C.r}
   node orchestrator.js status           all systems health
-  node orchestrator.js watch            live event stream (bridge SSE)
+  node orchestrator.js watch            live event stream (cortex SSE)
   node orchestrator.js ui               UI file status + hotswap dirs
   node orchestrator.js jobs [status]    guardian jobs
   node orchestrator.js events [n]       cortex event log
@@ -1210,8 +1197,8 @@ ${C.b}CLI commands${C.r}
   node orchestrator.js ideas            idearium ideas
   node orchestrator.js idea "text"      create idea
   node orchestrator.js dispatch "prompt" [provider] [command]
-  node orchestrator.js requests [status] bridge request queue
-  node orchestrator.js tag <id> <tags>  tag entity in bridge
+  node orchestrator.js requests [status] cortex memory queries
+  node orchestrator.js tag <id> <tags>  tag entity
   node orchestrator.js push "message"   idearium snapshot
   node orchestrator.js snr              idearium SNR
   node orchestrator.js help             this message
@@ -1233,7 +1220,6 @@ ${C.b}Endpoints${C.r}
 
 ${C.b}UI hotswap${C.r}
   Edit any file in ui/<system>/  →  served on next request, no restart
-  ui/bridge/      → http://localhost:${PORT}/ui/bridge
   ui/cortex/      → http://localhost:${PORT}/ui/cortex
   ui/guardian/    → http://localhost:${PORT}/ui/guardian
   ui/idearium/    → http://localhost:${PORT}/ui/idearium
@@ -1362,6 +1348,38 @@ server.listen(PORT, '127.0.0.1', async () => {
     },
   });
 
+  // Phase 6 SOFT: open NEXUS UI in browser
+  // Controlled by orchestrator.config.json → openUIOnBoot (default: true)
+  ownSeq.phase({ name:'nexus.ui.open', type:'SOFT',
+    label:'Open NEXUS UI in browser',
+    fn: async () => {
+      const cfgPath = path.join(ROOT, 'orchestrator.config.json');
+      let cfg = {};
+      try { cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8')); } catch (_) {}
+      if (cfg.openUIOnBoot === false) return;  // explicit opt-out only
+      const rawUrl = cfg.uiURL || `http://127.0.0.1:${PORT}`;
+      // ORC-12: validate uiURL to prevent command injection via crafted config
+      const uiUrl = /^https?:\/\/[\w.:\/-]+$/.test(rawUrl) ? rawUrl : `http://127.0.0.1:${PORT}`;
+      const { spawn } = require('child_process');
+      const openers = [
+        ['cmd',      ['/c', 'start', '', uiUrl]],
+        ['open',     [uiUrl]],
+        ['xdg-open', [uiUrl]],
+        ['wslview',  [uiUrl]],
+      ];
+      for (const [bin, args] of openers) {
+        try {
+          const proc = spawn(bin, args, { detached: true, stdio: 'ignore', shell: bin === 'cmd' });
+          proc.on('error', () => {});
+          proc.unref();
+          ledgerWrite('orchestrator', 'orchestrator.ui.opened', { url: uiUrl });
+          return;
+        } catch (_) {}
+      }
+      console.log(`[nexus] UI available at ${uiUrl}`);
+    },
+  });
+
   const ownResult = await ownSeq.run();
   if (!ownResult.ok) process.exit(1);
 
@@ -1371,169 +1389,28 @@ server.listen(PORT, '127.0.0.1', async () => {
   ledgerWrite('orchestrator','orchestrator.booted',{ version:VERSION, port:PORT });
   startWatchdog();
 
+  // ── Start pulse self-registration ─────────────────────────────────────────
+  // Orchestrator registers itself as a system in its own registry so the UI
+  // can see it as a first-class entry and track its own health dot.
+  if (module._createPulse) {
+    _orchPulse = module._createPulse({
+      systemId:   'orchestrator',
+      port:       PORT,
+      orchPort:   PORT,  // self-loop: register with itself
+      intervalMs: 10000,
+      meta:       { version: VERSION },
+      onBeat: ({ latency, seq }) => {
+        // Update own registry entry with measured latency
+        const existing = SYSTEM_REGISTRY.get('orchestrator') || {};
+        SYSTEM_REGISTRY.set('orchestrator', { ...existing, latencyMs: latency, lastSeen: Date.now() });
+      },
+      log: (...a) => {},  // suppress self-loop noise
+    });
+  }
+
   // ════════════════════════════════════════════════════════════════════════════
-  // START-SYSTEMS SEQUENCE
-  // Orchestrator boots each system one by one, waits for health, diagnoses on fail.
+  // START-SYSTEMS SEQUENCE — delegated to cli/boot-systems.js
   // ════════════════════════════════════════════════════════════════════════════
-  setTimeout(() => _bootSystems(), 500);
+  const { _bootSystems } = require('./cli/boot-systems');
 });
-
-// ── Per-system boot management ────────────────────────────────────────────────
-async function _waitForHealth(systemId, port, healthPath, maxWaitMs = 15000) {
-  const start = Date.now();
-  while (Date.now() - start < maxWaitMs) {
-    try {
-      const ok = await new Promise(resolve => {
-        let d = '';
-        const r = require('http').get(`http://127.0.0.1:${port}${healthPath}`, res => {
-          res.on('data', c => d += c);
-          res.on('end', () => {
-            try { const j = JSON.parse(d); resolve(res.statusCode === 200 && (j.ok !== false)); }
-            catch(_) { resolve(res.statusCode === 200); }
-          });
-        });
-        r.setTimeout(2000, () => { r.destroy(); resolve(false); });
-        r.on('error', () => resolve(false));
-      });
-      if (ok) return true;
-    } catch(_) {}
-    await new Promise(r => setTimeout(r, 800));
-  }
-  return false;
-}
-
-async function _bootOneSys({ systemId, port, cmd, args, healthPath, label }) {
-  const DIAG = require('path').join(__dirname, 'cli', 'diagnose.js');
-  console.log(`\n\x1b[90m[orchestrator] starting ${label}…\x1b[0m`);
-  ledgerWrite('orchestrator', `orchestrator.system.starting`, { systemId, port, cmd });
-
-  const proc = require('child_process').spawn(process.execPath, [cmd, ...args], {
-    detached: false, stdio: 'inherit',
-    env: { ...process.env, ORCHESTRATOR_PORT: String(PORT) },
-  });
-  proc.on('error', err => {
-    ledgerWrite('orchestrator', `orchestrator.system.spawn.error`, { systemId, error: err.message });
-  });
-
-  const up = await _waitForHealth(systemId, port, healthPath);
-
-  if (up) {
-    console.log(`\x1b[32m  ✓ ${label} healthy on :${port}\x1b[0m`);
-    ledgerWrite('orchestrator', `${systemId}.system.online`, { systemId, port });
-    return { ok: true, proc };
-  }
-
-  // System failed to come up — notify and diagnose
-  console.error(`\x1b[31m  ✗ ${label} did not come up within 15s\x1b[0m`);
-  ledgerWrite('orchestrator', `orchestrator.system.failed`, { systemId, port });
-  console.log(`\x1b[36m  → running diagnose for ${systemId}…\x1b[0m`);
-
-  return new Promise(resolve => {
-    let diagOut = '';
-    const diag = require('child_process').spawn(process.execPath, [DIAG, systemId], {
-      detached: false, stdio: ['ignore','pipe','pipe'],
-    });
-    diag.stdout?.on('data', d => { diagOut += d; process.stdout.write(d); });
-    diag.stderr?.on('data', d => { diagOut += d; });
-    diag.on('close', code => {
-      const pass = (diagOut.match(/✓/g)||[]).length;
-      const fail = (diagOut.match(/✗/g)||[]).length;
-      ledgerWrite('orchestrator', `${systemId}.diagnose.result`, {
-        systemId, pass, fail, exitCode: code, fixed: fail===0, ts: Date.now(),
-      });
-      resolve({ ok: false, proc, diagPass: pass, diagFail: fail });
-    });
-  });
-}
-
-async function _bootSystems() {
-  const ROOT2 = require('path').join(__dirname);
-  const systems = [
-    {
-      systemId: 'bridge',   port: 9999, healthPath: '/bridge/health',
-      label: 'Bridge', cmd: require('path').join(ROOT2,'bridge','nexus-bridge.js'), args:[],
-    },
-    {
-      systemId: 'cortex',   port: 3748, healthPath: '/health',
-      label: 'Cortex', cmd: require('path').join(ROOT2,'cortex','boot.js'), args:[],
-    },
-    {
-      systemId: 'guardian', port: 7820, healthPath: '/health',
-      label: 'Guardian', cmd: require('path').join(ROOT2,'guardian','server.js'), args:[],
-    },
-    {
-      systemId: 'idearium', port: 4800, healthPath: '/health',
-      label: 'Idearium', cmd: require('path').join(ROOT2,'idearium','api','index.js'), args:[],
-    },
-    {
-      systemId: 'emerge',   port: 4242, healthPath: '/status',
-      label: 'Emerge IDE', cmd: require('path').join(ROOT2,'emerge-ide.js'), args:[],
-    },
-  ];
-
-  console.log('\n\x1b[1m\x1b[36m── Orchestrator: starting systems one by one ──\x1b[0m');
-  ledgerWrite('orchestrator','orchestrator.systems.sequence.started',
-    { systems: systems.map(s=>s.systemId), ts: Date.now() });
-
-  const results = [];
-  for (const sys of systems) {
-    const r = await _bootOneSys(sys);
-    results.push({ ...sys, ...r });
-    // Brief pause between systems
-    await new Promise(res => setTimeout(res, 800));
-  }
-
-  const up   = results.filter(r => r.ok).length;
-  const down = results.filter(r => !r.ok).length;
-  console.log(`\n\x1b[1m\x1b[36m── Systems sequence complete: ${up}/${results.length} online\x1b[0m`);
-  if (down > 0) {
-    console.log(`\x1b[33m  ${down} system(s) degraded — check diagnose output above\x1b[0m`);
-  }
-  ledgerWrite('orchestrator','orchestrator.systems.sequence.complete',
-    { up, down, total: results.length, ts: Date.now() });
-
-  // Connect bridge SSE relay now that bridge is up
-  setTimeout(connectBridgeSSE, 1000);
-
-  // Hourly invariant scan — reads all ledgers, surfaces baselines and anomalies
-  // The ledger IS the learning system. This is where it learns.
-  setInterval(() => {
-    if (!_eventLedger) return;
-    try {
-      const invariants = _eventLedger.scanInvariants(5000);
-      const baselines  = _eventLedger.getAllBaselines();
-      const stats      = _eventLedger.getAllStats();
-
-      // Write the learned state to the ledger so it's visible in recall
-      ledgerWrite('orchestrator', 'orchestrator.invariants.scanned', {
-        eventTypes:       Object.keys(stats).length,
-        baselineTypes:    Object.keys(baselines).length,
-        topCoOccurrences: Object.entries(invariants.coOccurrences || {})
-          .sort(([,a],[,b]) => b-a).slice(0,10)
-          .map(([pair,count]) => ({ pair, count })),
-        failurePrecursors: Object.entries(invariants.failurePrecursors || {})
-          .sort(([,a],[,b]) => b-a).slice(0,5)
-          .map(([type,count]) => ({ type, count })),
-        eventCount: invariants.eventCount,
-        ts: Date.now(),
-      });
-    } catch(e) {
-      ledgerWrite('orchestrator', 'orchestrator.invariants.scan.error', { error: e.message });
-    }
-  }, 3600000).unref(); // every hour
-
-  // Bridge registration
-  setTimeout(async () => {
-    const nc = require('./nexus-connect');
-    const r = await nc._req('bridge','POST','/bridge/handshake',{
-      systemId:'orchestrator', appId:'orchestrator',
-      secret:'nexus-orchestrator-internal-v1',
-    }, 4000);
-    if (r.ok) {
-      ledgerWrite('orchestrator','orchestrator.bridge.registered',{ version:'2.0.0', port:PORT });
-      await nc.postBridge('orchestrator.booted',{ version:'2.0.0', port:PORT });
-    }
-  }, 2000);
-}
-
 }

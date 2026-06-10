@@ -11,7 +11,6 @@
  *
  * Usage:
  *   node cli/diagnose.js              # all systems
- *   node cli/diagnose.js bridge       # one system
  *   node cli/diagnose.js --fix        # attempt auto-fixes
  *   node cli/diagnose.js --watch      # keep watching until all pass
  */
@@ -203,55 +202,11 @@ async function diagOrchestrator() {
 }
 
 async function diagBridge() {
-  console.log(hdr('bridge', C.yellow));
-  console.log(info('Tag engine, request queue, SSE relay — §5.2 everything connects here'));
-  console.log(info('Port :9999\n'));
 
-  const checks = [
-    ['file: bridge/nexus-bridge.js',           () => fileExists('bridge/nexus-bridge.js')],
-    ['file: bridge/interaction-contract.json', () => fileExists('bridge/interaction-contract.json')],
-    ['syntax: bridge/nexus-bridge.js',         () => {
-      const r = spawnSync('node',['--check','bridge/nexus-bridge.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
-      return r.status === 0;
-    }],
-    ['require: bridge loads without error', () => {
-      // Bridge is self-contained CJS — just check it parses
-      const r = spawnSync('node',['-e','require("../bridge/nexus-bridge.js")'],
-        {cwd:ROOT,encoding:'utf8',timeout:5000,env:{...process.env,NEXUS_DIAGNOSE:'1'}});
-      // Bridge starts listening — we just need no throw before listen
-      return r.status === 0 || r.stderr === '';
-    }],
-    ['contract: valid JSON', () => {
-      try { JSON.parse(fs.readFileSync(path.join(ROOT,'bridge/interaction-contract.json'),'utf8')); return true; }
-      catch { return false; }
-    }],
-  ];
-
-  for (const [i, [name, fn]] of checks.entries()) {
-    try {
-      const r = await fn();
-      if (r) { console.log(ok(step(i+1, checks.length, name))); record('bridge',name,'PASS'); }
-      else   { console.log(fail(step(i+1, checks.length, name))); record('bridge',name,'FAIL'); }
-    } catch(e) { console.log(fail(step(i+1, checks.length, name))); record('bridge',name,'FAIL',e.message); }
-  }
-
-  console.log('');
-  const r = await probe(9999, '/bridge/health');
-  if (r.ok) {
-    console.log(ok(`LIVE :9999  sessions=${r.data.sessions}  pending=${r.data.pendingRequests}`));
-    record('bridge','live /bridge/health','PASS');
     // Test handshake
-    const hs = await probePost(9999, '/bridge/handshake',
       { systemId:'orchestrator', appId:'orchestrator', secret:'nexus-orchestrator-internal-v1' });
-    if (hs.ok) { console.log(ok(`    handshake: token=${hs.data.token?.slice(0,16)}…`)); record('bridge','handshake','PASS'); }
-    else        { console.log(fail(`    handshake failed: ${JSON.stringify(hs.data).slice(0,60)}`)); record('bridge','handshake','FAIL'); }
     // Test broadcast
-    const bc = await probePost(9999, '/bridge/broadcast', { type:'diagnose.ping', ts: Date.now() });
-    if (bc.ok) { console.log(ok(`    broadcast: accepted`)); record('bridge','broadcast','PASS'); }
-    else        { console.log(fail(`    broadcast failed`)); record('bridge','broadcast','FAIL'); }
   } else {
-    console.log(warn(`NOT RUNNING — start with: node bridge/nexus-bridge.js`));
-    record('bridge','live /bridge/health','WARN','not running');
     if (r.error === 'ECONNREFUSED') console.log(info('    → nothing listening on :9999'));
   }
 }
@@ -934,7 +889,6 @@ async function diagCrossSystem() {
 
 const SYSTEM_MAP = {
   orchestrator: diagOrchestrator,
-  bridge:       diagBridge,
   cortex:       diagCortex,
   guardian:     diagGuardian,
   idearium:     diagIdearium,

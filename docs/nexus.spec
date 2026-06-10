@@ -333,3 +333,57 @@ tests:
       - guardian_jobs_list
       - bridge_stats
       - bridge_pull_events
+
+## ── v3.1 INTEGRATION — 2026-06-09 ────────────────────────────────────────────
+REQUEST: integrate everything into ui/index.html — idearium (drag-drop, upload,
+repo suite), versionium, cortex/data persistence, forge, cfr, diagnostics; then bugs.
+
+### Components added/changed
+| component_id        | file                                  | change |
+|---------------------|---------------------------------------|--------|
+| cortex.admin.routes | cortex/foundation/admin-server.js     | +6 routes: versionium/{log,commit}, files/{list,upload,get}, projects, ess/analyse. _readBody Buffer.concat + 25MB cap (BUG-01/06 cross-applied). deps:{fileStore,fileRefs} injected. |
+| cortex.boot         | cortex/boot.js                        | CRITICAL: opens the SHARED jaaDB singleton at cortex/data (was: private `new JaaDB` → dual-DB split, all module/API writes volatile). AdminServer gets store deps. |
+| jaa-db              | cortex/memory/jaa-db.js               | open(dir) accepts dir override for singleton. |
+| orchestrator.proxy  | orchestrator.js (+ui/ copy)           | +7 /api/cortex/* proxies (versionium, files, projects, ess). AXIOM CLI=UI=API held. |
+| packaging           | cli/boot-systems.js, lib/pulse.js     | moved from ui/ to require-resolvable paths (zip shipped them only in ui/). |
+| ui.shell            | ui/index.html                         | see below. |
+
+### ui/index.html — v3.1
+- CRITICAL FIX: Object.assign(window,{...}) exposure block — shell IIFE exposed
+  only `go`; all ~60 inline handlers were ReferenceError-dead.
+- Implemented 14 dead-button functions: cxLoadVersionium, cxCommit, cxVerChain,
+  cxLoadFiles, cxUploadFiles(+dropzone), ideToggleView(+kanban), ideClearConfirm,
+  ideOpenGapBar/ideSubmitGap, ideRunESS, ideRunPipeline, ideLoadSNR, ideLoadTension,
+  ideLoadKernels/ideRunKernels, ideClearStream/cxClearStream.
+- NEW: ide REPO subtab (project_registry × versionium_file_index × commits),
+  ide UPLOAD button + board-wide file drop (file→idea + cortex object + linking event),
+  guardian FORGE subtab (heading/divider/size chunker → per-chunk dispatch → SEAM
+  verdict → versionium commit on all-verified), grid drag→drop = idea link,
+  kanban column drop = phase gate (logged to cortex).
+- Pipeline: SPEC→CHUNK→DISPATCH→VERIFY→COMMIT; completion commits to versionium
+  (idearium↔versionium hook) and emits pipeline.completed to cortex.
+- Diagnostics (Bugs.md req): first-script console interceptor ring (error/warn/
+  onerror/unhandledrejection w/ file:line), DOM audit (dead inline handlers,
+  duplicate ids, runtime-error pressure), wired into DIAGNOSE + diagRun output.
+- Bug-class sweep: toast XSS (server error strings → innerHTML) escaped opt-in;
+  13 unescaped innerHTML sinks esc()'d (tags, status, severity, uuid-in-attr,
+  resilience JSON, gap meta); BUG-10 class: cosmetic init try/caught so a throw
+  cannot abort boot; ideRefresh/idePhase respect active view+filters.
+- Contracts: C.CORTEX.{versionium,files,projects,ess}; API: versioniumLog/Commit,
+  cortexFiles/Upload/FileGet, cortexProjects, essAnalyse (exported on NX_API).
+
+### Verified (live)
+- cortex routes E2E: commit→log→chain, upload→roundtrip byte-identical, projects,
+  ESS. Persistence across restart: commit B parent = commit A post-restart;
+  rows on disk in cortex/data/*.jsonl.
+- orchestrator proxies E2E via :9000 incl. upload + commit.
+- jsdom UI smoke: 0 dead handlers, 0 dup ids, 0 DOM-audit issues, all new fns
+  callable, view toggle + chunker + nav exercised.
+
+### Residue (pending[], not errors)
+- root data/ vs cortex/data: historical jsonl seeds exist in both; cortex/data is
+  now authoritative. Migrate root data/*.jsonl if history matters.
+- ui/orchestrator.js vs root orchestrator.js: root is canonical run location
+  (./lib, ./cli resolve there); ui copy kept in sync this pass.
+- VERIFY stage samples guardian queue once; full SEAM verdict polling lives in
+  FORGE dispatch path.

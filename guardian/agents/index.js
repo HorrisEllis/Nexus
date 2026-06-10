@@ -84,7 +84,7 @@ function init(cfg = {}) {
   _interval = setInterval(_tick, cfg.pollMs ?? 2000);
   _interval.unref();
   console.log(`[callto] init v${VERSION} — Guardian at ${GUARDIAN_URL}`);
-  _toast('toast.agent', `${MODULE_ID} v${VERSION} started — bridge: ${GUARDIAN_URL}`);
+  _toast('toast.agent', `${MODULE_ID} v${VERSION} started — guardian: ${GUARDIAN_URL}`);
 }
 
 function stop() {
@@ -493,7 +493,7 @@ async function dispatch({
 // ── CLI status ────────────────────────────────────────────────────────────────
 function status() {
   const calls = jaaDB.query('agent_calls',
-    r => r.routedTo && r.routedTo.startsWith('guardian-'), 9999
+    r => r.routedTo && r.routedTo.startsWith('guardian-'), 500
   );
   const byStatus = {};
   for (const c of calls) byStatus[c.status] = (byStatus[c.status]||0)+1;
@@ -503,7 +503,7 @@ function status() {
   const pending = jaaDB.query('gap_questions', q => q.status === 'pending', 100);
 
   return [
-    `[CALLTO]  OK     Guardian bridge: ${GUARDIAN_URL}  (v${VERSION})`,
+    `[CALLTO]  OK     Guardian: ${GUARDIAN_URL}  (v${VERSION})`,
     `[CALLTO]  OK     guardian_health: connected=${health?.connected} score=${(health?.healthScore||0).toFixed(2)}`,
     `[CALLTO]  OK     agent_calls: ${calls.length} total — ${JSON.stringify(byStatus)}`,
     `[CALLTO]  OK     GTCI: ${_gtci ? 'loaded' : 'not loaded'} | pending gap questions: ${pending.length}`,

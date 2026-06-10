@@ -540,7 +540,6 @@ body[data-theme="amber"]{--bg:#0f0d05;--bg1:#181508;--bg2:#211d0c;--bg3:#2a2410;
   <button class="hbtn grd" onclick="toggleGrdMode()">◈ GUARDIAN</button>
   <button class="hbtn ds" onclick="toggleDSMode()">⬡ DEEPSEEK</button>
   <button class="hbtn m" onclick="toggleAIMode()">⬡ OLLAMA</button>
-  <div style="margin-left:4px;font-size:7.5px;color:var(--text3)" id="bridge-label">bridge:3747</div>
   <div style="display:flex;align-items:center;gap:4px;padding:3px 7px;border:1px solid var(--border);border-radius:1px;background:var(--bg2)">
     <div id="ollama-dot" style="width:5px;height:5px;border-radius:50%;background:var(--text4);transition:all .4s;flex-shrink:0"></div>
     <span id="ollama-transport-label" style="font-size:7px;letter-spacing:.08em;color:var(--text3)">OLLAMA</span>
@@ -597,7 +596,6 @@ body[data-theme="amber"]{--bg:#0f0d05;--bg1:#181508;--bg2:#211d0c;--bg3:#2a2410;
 NEXUS CHAT v3 — Guardian · DeepSeek · P2P
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 <span style="color:var(--grd)">◈ GUARDIAN</span> — IR pulse 1.5s · handshake/heartbeat/ingest
-  bridge: <code>http://127.0.0.1:3747</code>  nexus: <code>http://127.0.0.1:3748</code>
 
 <span style="color:var(--ds)">⬡ DEEPSEEK</span> — r1:8b via Ollama local or DS API
 <span style="color:var(--m)">⬡ OLLAMA</span>   — any local model via HTTP/WS
@@ -779,10 +777,8 @@ Commands: <code>/grd [msg]</code> · <code>/ds [msg]</code> · <code>/ai [msg]</
         <span class="s-arrow">▶</span>
       </div>
       <div class="s-section-body" id="sb-guardian">
-        <div class="s-note">Guardian is the Firefox extension + IR Layer. Configure the bridge and Nexus endpoints it communicates through. Pulse emits every 1500ms.</div>
         <div class="s-field">
           <div class="s-label">BRIDGE URL (port 3747 default)</div>
-          <input class="s-input grd" id="s-bridge" placeholder="http://127.0.0.1:3747"/>
         </div>
         <div class="s-field">
           <div class="s-label">NEXUS URL (port 3748 default)</div>
@@ -889,10 +885,8 @@ Commands: <code>/grd [msg]</code> · <code>/ds [msg]</code> · <code>/ai [msg]</
           <input class="s-input" id="s-ollama-ws" placeholder="ws://0.0.0.0:11434"/>
         </div>
         <div class="s-field">
-          <div class="s-label">LEGACY PROVIDER (bridge fallback)</div>
           <select class="s-select" id="s-provider">
             <option value="ollama">ollama (direct)</option>
-            <option value="deepseek">deepseek (via bridge)</option>
             <option value="guardian">guardian (no API key)</option>
             <option value="auto">auto (local-first)</option>
             <option value="claude">claude</option>
@@ -913,10 +907,8 @@ Commands: <code>/grd [msg]</code> · <code>/ds [msg]</code> · <code>/ai [msg]</
         <span class="s-arrow">▶</span>
       </div>
       <div class="s-section-body" id="sb-p2p">
-        <div class="s-note">Bridge handles P2P signalling (WebRTC). Guardian also uses this bridge. Default: <code>localhost:3747</code>.</div>
         <div class="s-field">
           <div class="s-label">BRIDGE RELAY URL</div>
-          <input class="s-input" id="s-bridge-p2p" placeholder="http://127.0.0.1:3747"/>
         </div>
         <div class="s-toggle-row">
           <div><div class="s-toggle-label">AUTO-JOIN ROOM ON START</div></div>
@@ -1160,13 +1152,12 @@ const G = {
   autoRoom:       localStorage.getItem('nc_auto_room')  || '',
 
   // Guardian config
-  bridgeUrl:      localStorage.getItem('nc_bridge')     || 'http://127.0.0.1:7820',
   guardianNcp:    localStorage.getItem('nc_guardian_ncp') || 'http://127.0.0.1:7820',
   nexusUrl:       localStorage.getItem('nc_nexus')      || 'http://127.0.0.1:3748',
   grdToken:       null,
   grdTokenTs:     0,
   grdConnected:   false,
-  grdTransport:   'none', // 'bridge_v3' | 'bridge_basic' | 'none'
+  grdTransport:   'none',
   grdVersion:     null,
   pulseCount:     0,
   pulseTimer:     null,
@@ -1177,7 +1168,6 @@ const G = {
   // Node registry (from pulse acks)
   discoveredNodes: new Map(), // instanceId → node
 
-  // Callto HOT tier (mirror of bridge)
   calltoHot: [],
   calltoCount: 0,
 
@@ -1209,7 +1199,6 @@ const G = {
   peers:       new Map(),
   myPeerId:    null,
   pollTimer:   null,
-  bridgeConnected: false,
   convId:      null,
 
   // Data
@@ -1405,7 +1394,6 @@ async function decrypt(key,b64){const buf=Uint8Array.from(atob(b64),c=>c.charCod
 // ─────────────────────────────────────────────────────────────────────────
 
 async function grdFetch(path, opts={}) {
-  const url = (path.startsWith('http') ? path : G.bridgeUrl + path);
   const r = await fetch(url, {
     headers: { 'Content-Type': 'application/json', ...(opts.headers||{}) },
     signal: AbortSignal.timeout(opts.timeout || 6000),
@@ -1439,7 +1427,6 @@ async function doHandshake() {
     G.grdToken   = d.token;
     G.grdTokenTs = Date.now();
     G.grdConnected  = true;
-    G.grdTransport  = 'bridge_v3';
     G.grdVersion    = d.version || '?';
     // Update node registry from handshake
     if (Array.isArray(d.nodes)) d.nodes.forEach(n => updateNode(n));
@@ -1598,7 +1585,7 @@ async function ingestCallto(payload, intent='chat') {
 
   // Fire to bridge
   try {
-    const r = await grdPost(G.bridgeUrl + '/ingest', {
+    const r = await grdPost(G.guardianUrl + '/ingest', {
       ...callto, routeType: 'nexus',
     });
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -1625,7 +1612,7 @@ function _enqueueRetry(callto) {
   setTimeout(async () => {
     G.retryQueue.shift();
     try {
-      const r = await grdPost(G.bridgeUrl + '/ingest', callto);
+      const r = await grdPost(G.guardianUrl + '/ingest', callto);
       if (r.ok) {
         callto.state = 'acknowledged';
         urckEmit('guardian.callto.register.ok', { calltoId: callto.id, attempt: callto.retryCount });
@@ -1638,7 +1625,7 @@ function _enqueueRetry(callto) {
 // ── GET /guardian/status ──────────────────────────────────────────────────
 async function fetchGuardianStatus() {
   try {
-    const r = await grdFetch(G.bridgeUrl + '/guardian/status', { timeout: 4000 });
+    const r = await grdFetch(G.guardianUrl + '/status', { timeout: 4000 });
     if (!r.ok) return null;
     return await r.json();
   } catch { return null; }
@@ -1647,7 +1634,7 @@ async function fetchGuardianStatus() {
 // ── GET /nodes ────────────────────────────────────────────────────────────
 async function fetchNodes() {
   try {
-    const r = await grdFetch(G.bridgeUrl + '/nodes', { timeout: 4000 });
+    const r = await grdFetch(G.guardianUrl + '/nodes', { timeout: 4000 });
     if (!r.ok) return [];
     const d = await r.json();
     return d.nodes || [];
@@ -1657,7 +1644,7 @@ async function fetchNodes() {
 // ── GET /ingest/recent ────────────────────────────────────────────────────
 async function fetchIngestRecent(limit=20) {
   try {
-    const r = await grdFetch(G.bridgeUrl + '/ingest/recent?limit='+limit, { timeout: 4000 });
+    const r = await grdFetch(G.guardianUrl + '/memory/ledger?limit='+limit, { timeout: 4000 });
     if (!r.ok) return [];
     const d = await r.json();
     return d.calltos || [];
@@ -1765,7 +1752,7 @@ async function runGuardian(userText) {
   if (!G.grdConnected) {
     sysMsg('Guardian offline — attempting handshake…');
     const ok = await doHandshake();
-    if (!ok) { sysMsg('Guardian unavailable. Set bridge URL in ⚙ Settings → GUARDIAN.'); SFX.error(); return; }
+    if (!ok) { sysMsg('Guardian unavailable. Check Guardian is running'); SFX.error(); return; }
   }
   G.aiStreaming = true;
   $('send-btn').disabled = true;
@@ -1783,7 +1770,6 @@ async function runGuardian(userText) {
     <div class="msg-body" style="max-width:80%">
       <div class="msg-meta">
         <span class="msg-name" style="color:var(--grd)">Guardian</span>
-        <span class="msg-grd-tag">via bridge</span>
         <span class="msg-time">${ts()}</span>
       </div>
       <div class="msg-bubble grd"><span id="grd-stream-text"></span><span class="streaming-cursor"> </span></div>
@@ -1796,7 +1782,7 @@ async function runGuardian(userText) {
 
   let fullText = '';
   try {
-    const r = await grdFetch(G.bridgeUrl + '/v1/messages', {
+    const r = await grdFetch(G.guardianUrl + '/command', {
       method: 'POST',
       body: JSON.stringify({
         provider:  'guardian',
@@ -1809,7 +1795,6 @@ async function runGuardian(userText) {
     });
     if (r.status === 202) {
       // Response arrives via SSE — bridge dispatched
-      fullText = '◈ Dispatched via Guardian bridge (202). Response arrives via /events guardian.link.event.\nListen on the bridge SSE stream for the AI response.';
       streamEl.textContent = fullText;
     } else if (r.ok) {
       const d = await r.json();
@@ -1820,7 +1805,6 @@ async function runGuardian(userText) {
       throw new Error('Bridge HTTP ' + r.status + ': ' + txt.slice(0,80));
     }
   } catch (e) {
-    fullText = '⚠ Guardian bridge error: ' + e.message + '\n\nMake sure bridge is running at ' + G.bridgeUrl;
     streamEl.textContent = fullText;
     SFX.error();
   }
@@ -1841,20 +1825,14 @@ async function probeGuardian() {
   setGrdStatus('probe');
   // Try /health first
   try {
-    const r = await grdFetch(G.bridgeUrl + '/health', { timeout: 3000 });
+    const r = await grdFetch(G.guardianUrl + '/health', { timeout: 3000 });
     if (r.ok) {
       const d = await r.json().catch(()=>({}));
-      $('bridge-label').textContent = 'bridge v'+(d.version||'?');
-      $('bridge-label').style.color = 'var(--g)';
-      G.bridgeConnected = true;
       // Now try Guardian handshake
       await doHandshake();
       return;
     }
   } catch {}
-  $('bridge-label').style.color = 'var(--r)';
-  $('bridge-label').textContent = 'bridge offline';
-  G.bridgeConnected = false;
   G.grdConnected = false;
   setGrdStatus('dead');
 }
@@ -1862,16 +1840,10 @@ async function probeGuardian() {
 // ── Bridge heartbeat (for P2P/chat) ──────────────────────────────────────
 async function connectBridge() {
   try {
-    const r = await grdFetch(G.bridgeUrl + '/health', { timeout: 5000 });
+    const r = await grdFetch(G.guardianUrl + '/health', { timeout: 5000 });
     if (r.ok) {
-      G.bridgeConnected = true;
-      $('bridge-label').textContent = 'bridge on';
-      $('bridge-label').style.color = 'var(--g)';
     }
   } catch {
-    G.bridgeConnected = false;
-    $('bridge-label').style.color = 'var(--r)';
-    $('bridge-label').textContent = 'bridge off';
   }
 }
 
@@ -2043,7 +2015,6 @@ async function runAI(userText) {
   try{
     if(G.ollamaTransport==='http'){const r=await fetch(G.ollamaUrl+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:G.model,messages:msgs,stream:true}),signal:AbortSignal.timeout(120000)});if(!r.ok)throw new Error('Ollama HTTP '+r.status);const reader=r.body.getReader();const dec=new TextDecoder();while(true){const{done,value}=await reader.read();if(done)break;const chunk=dec.decode(value);for(const line of chunk.split('\n')){if(!line.trim())continue;try{const d=JSON.parse(line);const tok=d.message?.content||'';if(tok){fullText+=tok;streamEl.textContent=fullText;msgArea.scrollTop=msgArea.scrollHeight;}}catch{}}}}
     else if(G.ollamaTransport==='ws'){fullText=await new Promise((res,rej)=>{let ws=(G.ollamaWs&&G.ollamaWs.readyState===1)?G.ollamaWs:null;let own=false;if(!ws){try{ws=new WebSocket(G.ollamaWsUrl+'/api/chat');own=true;}catch(e){rej(e);return;}}let ft='';const send=()=>ws.send(JSON.stringify({model:G.model,messages:msgs,stream:true}));ws.onmessage=e=>{try{const d=JSON.parse(e.data);const tok=d.message?.content||'';if(tok){ft+=tok;streamEl.textContent=ft;msgArea.scrollTop=msgArea.scrollHeight;}if(d.done){if(own)ws.close();res(ft);}}catch{}};ws.onerror=()=>{if(own)ws.close();rej(new Error('WS error'));};if(ws.readyState===1)send();else ws.onopen=()=>send();});}
-    else{const r=await fetch(G.bridgeUrl+'/ai/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:msgs,provider:G.provider,model:G.model,stream:false}),signal:AbortSignal.timeout(90000)});const d=await r.json();fullText=d.content?.[0]?.text||d.choices?.[0]?.message?.content||'(no response)';streamEl.textContent=fullText;}
   }catch(e){fullText='⚠ '+e.message;streamEl.textContent=fullText;SFX.error();}
   bubble.querySelector('.streaming-cursor')?.remove();
   addReactionBar(bubble.querySelector('.msg-bubble'));
@@ -2062,9 +2033,7 @@ async function testOllama() {
 // DIAGNOSTICS — 7 tests per Guardian v3 spec
 // ═══════════════════════════════════════════════════════════════════════════
 const DIAG_TESTS = [
-  { id:'bridge',    name:'Bridge connection',   desc:'GET /health — 2xx within 2.5s' },
   { id:'nexus',     name:'Nexus service',        desc:'GET localhost:3748/health — 2xx within 2.5s' },
-  { id:'handshake', name:'Handshake',            desc:'Full challenge/response with bridge' },
   { id:'ir',        name:'IR Layer',             desc:'Guardian instanceId non-null' },
   { id:'urck',      name:'URCK kernel',          desc:'Ingest test event, retrieve by ID' },
   { id:'callto',    name:'Callto pipeline',      desc:'Ingest callto, verify ACK schema' },
@@ -2110,11 +2079,6 @@ async function runDiagTest(id) {
 
   try {
     switch (id) {
-      case 'bridge': {
-        const r = await grdFetch(G.bridgeUrl+'/health',{timeout:2500});
-        r.ok ? setResult('pass','HTTP '+r.status) : setResult('fail','HTTP '+r.status);
-        break;
-      }
       case 'nexus': {
         const r = await grdFetch(G.nexusUrl+'/health',{timeout:2500});
         r.ok ? setResult('pass','HTTP '+r.status) : setResult('fail','HTTP '+r.status);
@@ -2219,7 +2183,6 @@ function syncSettingsInputs() {
   sv('s-name',       G.name);
   sv('s-instance-id',G.instanceId);
   sv('s-short-id',   _guardianShortId(G.instanceId));
-  sv('s-bridge',     G.bridgeUrl);
   sv('s-nexus',      G.nexusUrl);
   sv('s-ds-key',     G.dsApiKey);
   sv('s-ds-base',    G.dsApiBase);
@@ -2228,7 +2191,6 @@ function syncSettingsInputs() {
   sv('s-provider',   G.provider);
   sv('s-sysprompt',  G.systemPrompt);
   sv('s-custom-model',G.model);
-  sv('s-bridge-p2p', G.bridgeUrl);
   sv('s-auto-room',  G.autoRoom);
   $('s-font-val')     && ($('s-font-val').textContent     = G.fontScale.toFixed(1)+'×');
   $('s-particle-val') && ($('s-particle-val').textContent = G.particleCount);
@@ -2285,9 +2247,7 @@ function regenerateInstanceId() {
 }
 
 function saveGuardianSettings() {
-  G.bridgeUrl = $('s-bridge')?.value.trim() || G.bridgeUrl;
   G.nexusUrl  = $('s-nexus')?.value.trim()  || G.nexusUrl;
-  localStorage.setItem('nc_bridge', G.bridgeUrl);
   localStorage.setItem('nc_nexus',  G.nexusUrl);
   G.grdToken = null;
   G.grdConnected = false;
@@ -2324,10 +2284,8 @@ function saveOllamaSettings() {
 }
 
 function saveP2PSettings() {
-  G.bridgeUrl = $('s-bridge-p2p')?.value.trim() || G.bridgeUrl;
   G.autoJoin  = !!$('tog-auto-join')?.classList.contains('on');
   G.autoRoom  = $('s-auto-room')?.value.trim()  || '';
-  localStorage.setItem('nc_bridge',    G.bridgeUrl);
   localStorage.setItem('nc_auto_join', G.autoJoin);
   localStorage.setItem('nc_auto_room', G.autoRoom);
   toast('P2P settings saved', 'g');
@@ -2350,7 +2308,6 @@ const MODELS = [
   { id:'deepseek-chat',    name:'deepseek-chat',     desc:'Cloud · DeepSeek API',                   tags:['api'],         transport:'api' },
   { id:'llama3',           name:'llama3',            desc:'Meta Llama 3 · Ollama',                  tags:['fast'],        transport:'ollama' },
   { id:'mistral',          name:'mistral',           desc:'Mistral 7B · Ollama',                    tags:['fast'],        transport:'ollama' },
-  { id:'guardian',         name:'Guardian (bridge)', desc:'Route via Guardian bridge /v1/messages', tags:['grd-t'],       transport:'bridge' },
 ];
 
 let _selModel = null;
@@ -2396,7 +2353,6 @@ function applyModelFromSettings() {
 // COMMANDS
 // ═══════════════════════════════════════════════════════════════════════════
 const CMDS = [
-  { cmd:'/grd',      desc:'Send to Guardian bridge',     cls:'grd' },
   { cmd:'/ds',       desc:'Send to DeepSeek r1:8b',      cls:'ds-c' },
   { cmd:'/ai',       desc:'Send to Ollama AI',           cls:'' },
   { cmd:'/callto',   desc:'Ingest callto via Guardian',  cls:'grd' },
@@ -2456,7 +2412,6 @@ async function handleCommand(text) {
   if (cmd==='clear')    { $('msg-area').innerHTML='';G.messages=[];G.dsMessages=[];G.aiMessages=[];updateLogStats();return true; }
   if (cmd==='hotkeys')  { sysMsg('HOTKEYS:\nCtrl+G — Guardian mode\nCtrl+D — DeepSeek mode\nCtrl+A — Ollama mode\nCtrl+M — Model picker\nCtrl+, — Settings\nCtrl+K — Clear\nCtrl+E — Export\nCtrl+/ — Command palette\nEsc — Close');return true; }
   if (cmd==='help') {
-    sysMsg('/grd [msg] — Guardian bridge\n/ds [msg] — DeepSeek r1\n/ai [msg] — Ollama\n/callto [text] — ingest callto\n/pulse — emit pulse\n/nodes — list mesh nodes\n/diag — run diagnostics\n/handshake — force handshake\n/think — toggle reasoning\n/model — model picker\n/idea [text] — save idea\n/join [code] — join room\n/create — new room\n/export — export\n/clear — clear chat');
     return true;
   }
   return false;
@@ -2538,7 +2493,6 @@ function toggleAIMode(){G.mode=G.mode==='ollama'?'chat':'ollama';localStorage.se
 function updateModeBadge() {
   const badge=$('mode-badge');const inp=$('msg-input');const btn=$('send-btn');
   const modes={
-    guardian: {text:'GUARDIAN MODE',cls:'grd',ph:'/grd [msg] or type freely',ic:'grd-mode',bc:'grd-mode',lbl:'◈ guardian',ch:'GUARDIAN',cd:'Guardian bridge · IR Resolver'},
     deepseek: {text:'DS MODE',      cls:'ds',  ph:'/ds [msg] or type freely', ic:'ds-mode', bc:'ds-mode', lbl:'⬡ deepseek-r1:8b',ch:'DEEPSEEK',cd:'DeepSeek r1:8b · reasoning'},
     ollama:   {text:'OLLAMA MODE',  cls:'ai',  ph:'/ai [msg] or type freely', ic:'',        bc:'',        lbl:'⬡ '+(G.provider||'ollama'),ch:'OLLAMA',cd:G.model+' · local'},
     chat:     {text:'CHAT MODE',    cls:'chat',ph:'Message… /grd · /ds · /ai',ic:'',        bc:'',        lbl:'',ch:'GENERAL',cd:'Local channel · Not encrypted'},
@@ -2624,9 +2578,6 @@ async function joinRoom(){
   closeModal('join-modal');$('room-id-display').textContent=roomId;$('encrypt-label').textContent=pass?'🔒 AES-256-GCM':'not encrypted';
   updateChannels();sysMsg('Joining '+roomId+'…');toast('Joining '+roomId);await initiateP2P(roomId);startPeerPoll();
 }
-async function initiateP2P(roomId){if(!G.bridgeConnected){sysMsg('Bridge not connected — P2P requires bridge for signalling');return;}const pc=new RTCPeerConnection(rtcConfig());const dc=pc.createDataChannel('nexus-chat',{ordered:true});const peerId='host-'+roomId;G.peers.set(peerId,{name:'Room',pc,dc,status:'connecting'});dc.onopen=()=>onPeerConnected(peerId);dc.onclose=()=>onPeerDisconnected(peerId);dc.onmessage=e=>onPeerMessage(peerId,e.data);pc.onicecandidate=async e=>{if(e.candidate===null){try{await grdFetch(G.bridgeUrl+'/webrtc/offer',{method:'POST',body:JSON.stringify({roomId,offer:pc.localDescription,from:G.myPeerId}),headers:{'Content-Type':'application/json'}});setTimeout(()=>pollForAnswer(pc,roomId),2000);}catch{sysMsg('Signalling failed');}}};const offer=await pc.createOffer();await pc.setLocalDescription(offer);$('p2p-dot').className='p2p-dot connecting';$('p2p-label').textContent='CONNECTING…';}
-async function pollForAnswer(pc,roomId){try{const r=await grdFetch(G.bridgeUrl+'/webrtc/answer?peerId='+encodeURIComponent(roomId));if(r.ok){const d=await r.json();if(d.ok&&d.offer)await pc.setRemoteDescription(d.offer);}}catch{}}
-function startPeerPoll(){if(G.pollTimer)clearInterval(G.pollTimer);G.pollTimer=setInterval(async()=>{if(!G.bridgeConnected||!G.roomId)return;try{$('stat-p2p').textContent=G.peers.size;}catch{}try{await grdPost(G.bridgeUrl+'/broadcast/'+G.roomId,{type:'PRESENCE',from:G.myPeerId,name:G.name,ts:Date.now()});}catch{}},10000);}
 function onPeerConnected(peerId){const p=G.peers.get(peerId);if(p)p.status='connected';$('p2p-dot').className='p2p-dot connected';$('p2p-label').textContent='CONNECTED · '+G.roomId;updatePeerList();$('stat-p2p').textContent=G.peers.size;sysMsg('Peer connected: '+(p?.name||peerId));toast('Peer connected','g');SFX.connect();}
 function onPeerDisconnected(peerId){const p=G.peers.get(peerId);G.peers.delete(peerId);updatePeerList();$('stat-p2p').textContent=G.peers.size;sysMsg('Peer disconnected: '+(p?.name||peerId));}
 async function onPeerMessage(peerId,raw){let data;try{data=JSON.parse(raw);}catch{return;}if(data.type==='CHAT'){let c=data.content;if(G.cryptoKey&&data.encrypted){try{c=await decrypt(G.cryptoKey,data.content);}catch{c='[decrypt failed]';}}const p=G.peers.get(peerId);addMessage('peer',p?.name||'Peer',c);SFX.receive();}else if(data.type==='FILE_DATA')receiveFile(data);}
@@ -2669,7 +2620,6 @@ $('msg-input').addEventListener('input',()=>{
 // Replaces the old WSS/handshake pattern. Plain SSE + fetch.
 // No TLS required. Works from any origin to localhost.
 let _ncpEs = null, _ncpHb = null;
-const NCP_BASE    = () => G.guardianNcp || G.bridgeUrl;
 const NCP_CH      = () => NCP_BASE() + '/channel';
 const NCP_RESULT  = () => NCP_BASE() + '/result';
 const NCP_HB_URL  = () => NCP_BASE() + '/heartbeat';
@@ -2787,7 +2737,6 @@ $('msg-input').addEventListener('paste',async e=>{
 // ── Bridge heartbeat ─────────────────────────────────────────────────────
 setInterval(()=>connectBridge().catch(()=>{}),10000);
 // Re-probe if lost
-setInterval(()=>{if(G.ollamaTransport==='none')probeOllama();if(G.dsTransport==='none')probeDeepSeek();if(!G.grdConnected&&G.autoReconnect&&G.bridgeConnected)doHandshake();},30000);
 
 // ── Init ─────────────────────────────────────────────────────────────────
 // Apply persisted UI prefs
@@ -2805,7 +2754,6 @@ updateGrdPanel();
 urckEmit('guardian.init',{version:'3.0.0',instanceId:G.instanceId,startedAt:Date.now()});
 
 // Probe all transports
-probeGuardian();   // → handshake if bridge up
 probeOllama();
 probeDeepSeek();
 

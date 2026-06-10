@@ -31,6 +31,8 @@ const http   = require('http');
 const crypto = require('crypto');
 
 const { createICO }      = require('../lib/ico');
+const { createContractVerifier, loadContracts } = require('../lib/cfr/contract-verifier');
+const { createCFRField, computeRegime }         = require('../lib/cfr/field');
 const { createBaseline } = require('../lib/baseline');
 const { sigma, mean }    = require('../lib/baseline');
 
@@ -46,7 +48,6 @@ const SYSTEMS = {
   guardian:    { port: 7820, ledgerDir: 'data/guardian/ledger',    healthPath: '/health' },
   cortex:      { port: 3748, ledgerDir: 'data/cortex/ledger',      healthPath: '/api/health' },
   idearium:    { port: 4800, ledgerDir: 'data/idearium/ledger',    healthPath: '/api/health' },
-  bridge:      { port: 9999, ledgerDir: 'data/bridge/ledger',      healthPath: '/bridge/health' },
   orchestrator:{ port: 9000, ledgerDir: 'data/orchestrator/ledger',healthPath: '/health' },
   emerge:      { port: 4242, ledgerDir: 'data/emerge/ledger',      healthPath: '/health' },
 };
@@ -151,6 +152,31 @@ function startService() {
       try { res.write(payload); } catch { sseClients.delete(res); }
     }
   }
+
+  // ── Contract verifier — validates runtime behavior vs interaction contracts ──
+  const contracts = loadContracts(ROOT);
+  const _verifier = createContractVerifier({
+    contracts,
+    onViolation: (v) => {
+      // Write violation to diagnostic ledger
+      if (v.severity > 0) {
+        ico.ledger.append('gaps', {
+          type:     v.type,
+          body:     v.message,
+          system:   v.system,
+          severity: v.severity > 0.7 ? 'high' : v.severity > 0.4 ? 'medium' : 'low',
+          status:   'open',
+          source:   'contract-verifier',
+          ts:       Date.now(),
+        });
+        // Broadcast to diagnostic SSE
+        _broadcast({ type: v.type, ...v });
+      }
+    },
+  });
+
+  // Tick the contract verifier every 5s to catch expired behavioral rules
+  setInterval(() => _verifier.tick(), 5000).unref();
 
   // ── Polling loop — read ledgers + probe health ────────────────────────────
 
@@ -370,7 +396,6 @@ function startService() {
       guardian:  ['guardian/server.js','guardian/userscript-claude.js','guardian/userscript-chatgpt.js'],
       cortex:    ['cortex/boot.js','cortex/core/raid/index.js','cortex/memory/jaa-db.js'],
       idearium:  ['idearium/api/index.js'],
-      bridge:    ['bridge/nexus-bridge.js'],
       lib:       ['lib/ess.js','lib/ico.js','lib/baseline.js','lib/queue.js','lib/ncp.js'],
     };
     for (const [group, files] of Object.entries(REQUIRED_FILES)) {
@@ -457,6 +482,28 @@ function startService() {
       res.writeHead(200, CORS);
       res.end(JSON.stringify({ ok: true, summary, openGaps: openGaps.size,
         uptime: process.uptime(), ts: Date.now() }));
+      return;
+    }
+
+    // Contract audit
+    if (url.pathname === '/audit/contracts') {
+      const report = _verifier?.auditReport() || {};
+      res.writeHead(200, CORS);
+      res.end(JSON.stringify({ ok: true, report, ts: Date.now() }));
+      return;
+    }
+
+    // Audit health
+    if (url.pathname === '/audit/health') {
+      const health = {};
+      for (const [name, cfg] of Object.entries(SYSTEMS)) {
+        const lp  = require('path').join(ROOT, cfg.ledgerDir, 'event_log.jsonl');
+        const ex  = require('fs').existsSync(lp);
+        const st  = ex ? require('fs').statSync(lp) : null;
+        health[name] = { ledgerExists: ex, ledgerSizeKB: st ? Math.round(st.size/1024) : 0, port: cfg.port };
+      }
+      res.writeHead(200, CORS);
+      res.end(JSON.stringify({ ok: true, health, ts: Date.now() }));
       return;
     }
 

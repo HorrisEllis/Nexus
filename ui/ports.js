@@ -6,7 +6,6 @@
  */
 window.NEXUS_PORTS = {
   orchestrator: 9000,
-  bridge:       9999,
   cortex:       3748,
   guardian:     7820,
   guardian_wss: 7821,
@@ -19,7 +18,6 @@ window.NEXUS_PORTS = {
 
 window.NEXUS_URLS = {
   orchestrator: 'http://localhost:9000',
-  bridge:       'http://localhost:9999',
   cortex:       'http://localhost:3748',
   guardian:     'http://localhost:7820',
   guardian_wss: 'wss://localhost:7821',
@@ -29,7 +27,6 @@ window.NEXUS_URLS = {
   emerge:       'http://localhost:4242',
   ollama:       'http://localhost:11434',
   orch_sse:     'http://localhost:9000/sse',
-  bridge_sub:   'http://localhost:9999/bridge/subscribe',
   cortex_sse:   'http://localhost:3748/sse',
 };
 
