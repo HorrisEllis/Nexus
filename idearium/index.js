@@ -105,7 +105,6 @@ function freshDB() {
     events:    [],
     snr:       [],
     tensions:  [],
-    api_keys:  [],   // { uuid, name, hash, caps[], createdAt, lastUsedAt, usageCount, revoked, expiresAt }
   };
 }
 
@@ -120,7 +119,6 @@ function migrateDB(old) {
   db.events    = old.events    || [];
   db.snr       = old.snr       || [];
   db.tensions  = old.tensions  || [];
-  db.api_keys  = old.api_keys  || [];   // preserve existing keys across version migrations
   return db;
 }
 

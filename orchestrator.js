@@ -115,6 +115,13 @@ let BootSequence, _bootSystems, createEventLedger, spawnChild;
 try { ({ BootSequence } = require('./lib/boot-sequence')); } catch(e) { console.warn('[orchestrator] boot-sequence not found:', e.message); BootSequence = null; }
 try { ({ _bootSystems } = require('./cli/boot-systems')); } catch(e) { console.warn('[orchestrator] boot-systems not found:', e.message); _bootSystems = null; }
 try { ({ createEventLedger } = require('./lib/event-ledger')); } catch(e) { console.warn('[orchestrator] event-ledger not found:', e.message); createEventLedger = null; }
+
+// ── NEXUS INTERCONNECT LAYER ──────────────────────────────────────────────────
+const nexusBus       = (() => { try { return require('./nexus-bus');           } catch(e) { console.warn('[orc] nexus-bus:',e.message); return null; } })();
+const nexusQuery     = (() => { try { return require('./nexus-query');         } catch(e) { return null; } })();
+const nexusKnowledge = (() => { try { return require('./nexus-knowledge');     } catch(e) { return null; } })();
+const nexusCFR       = (() => { try { return require('./nexus-cfr-influence'); } catch(e) { return null; } })();
+const nexusHealLoop  = (() => { try { return require('./nexus-heal-loop');     } catch(e) { return null; } })();
 try { ({ spawn: spawnChild } = require('child_process')); } catch(e) { spawnChild = null; }
 
 const PORT    = parseInt(process.env.ORCHESTRATOR_PORT || '9000');
@@ -134,12 +141,14 @@ const UI_ROOT = path.join(ROOT, 'ui');
 
 // ── System registry ───────────────────────────────────────────────────────────
 const SYS = {
-  cortex:    { port:3748,  host:'127.0.0.1', label:'Cortex',     color:'#2dd4bf' },
-  guardian:  { port:7820,  host:'127.0.0.1', label:'Guardian',   color:'#9b7fe8' },
-  idearium:  { port:4800,  host:'127.0.0.1', label:'Idearium',   color:'#4a9eff' },
-  emerge:    { port:4242,  host:'127.0.0.1', label:'Emerge IDE', color:'#3ecf8e' },
-  architect: { port:3747,  host:'127.0.0.1', label:'Architect',  color:'#ef9f27' },
-  ollama:    { port:11434, host:'127.0.0.1', label:'Ollama',     color:'#e85d3c' },
+  bridge:     { port:9999,  host:'127.0.0.1', label:'Bridge',      color:'#00d4ff', healthPath:'/health' },
+  cortex:     { port:3748,  host:'127.0.0.1', label:'Cortex',      color:'#2dd4bf' },
+  guardian:   { port:7820,  host:'127.0.0.1', label:'Guardian',    color:'#9b7fe8' },
+  idearium:   { port:4800,  host:'127.0.0.1', label:'Idearium',    color:'#4a9eff' },
+  architect:  { port:3747,  host:'127.0.0.1', label:'Architect',   color:'#ef9f27' },
+  emerge:     { port:4242,  host:'127.0.0.1', label:'Emerge IDE',  color:'#3ecf8e' },
+  diagnostic: { port:7825,  host:'127.0.0.1', label:'Diagnostic',  color:'#ff6b35', healthPath:'/status' },
+  ollama:     { port:11434, host:'127.0.0.1', label:'Ollama',      color:'#e85d3c' },
 };
 
 // ── Channel map ───────────────────────────────────────────────────────────────
@@ -389,6 +398,7 @@ function connectBridgeRelay() {
 
   const r = http.request({
     hostname:'127.0.0.1', port:9999,
+    path: '/bridge/sse',  // §AXIOM fix: relay bridge SSE events into orchestrator broadcast
     headers:{Accept:'text/event-stream'},
   }, res => {
     let buf = '';
@@ -601,7 +611,35 @@ const server = http.createServer(async (req, res) => {
   }
 
   // ── SSE unified ──────────────────────────────────────────────────────────
-  if (M==='GET' && u.pathname==='/sse') {
+if (M==='GET' && u.pathname==='/nexus-bus/sse') {
+    if (nexusBus) { nexusBus.handleSSE(req,res); return; }
+    res.writeHead(503); return res.end('nexus-bus not loaded');
+  }
+  if (M==='POST' && u.pathname==='/api/nexus/query') {
+    if (!nexusQuery) return json(res,503,{ok:false,error:'nexus-query not loaded'});
+    try { const b=await readBody(req); const r=await nexusQuery.query(b); return json(res,r.ok?200:500,r); }
+    catch(e) { return json(res,500,{ok:false,error:e.message}); }
+  }
+  if (u.pathname.startsWith('/api/nexus/knowledge')) {
+    if (!nexusKnowledge) return json(res,503,{ok:false,error:'not loaded'});
+    const kseg=u.pathname.split('/').filter(Boolean),kact=kseg[3];
+    if (M==='GET'&&!kact) return json(res,200,{ok:true,stats:nexusKnowledge.stats(),facts:nexusKnowledge.recall({n:parseInt(u.searchParams?.get('n')||50)})});
+    if (M==='POST'&&kact==='learn'){const b=await readBody(req);return json(res,201,{ok:true,fact:nexusKnowledge.learn(b)});}
+    if (M==='GET'&&kact==='recall'){const q={type:u.searchParams?.get('type'),subject:u.searchParams?.get('subject'),tag:u.searchParams?.get('tag'),n:parseInt(u.searchParams?.get('n')||50)};return json(res,200,{ok:true,facts:nexusKnowledge.recall(q)});}
+  }
+  if (M==='GET'&&u.pathname==='/api/nexus/cfr') {
+    if (!nexusCFR) return json(res,503,{ok:false,error:'not loaded'});
+    return json(res,200,{ok:true,...nexusCFR.getState(),thresholds:nexusCFR.THRESHOLDS});
+  }
+  if (M==='POST'&&u.pathname==='/api/nexus/heal') {
+    if (!nexusHealLoop) return json(res,503,{ok:false,error:'not loaded'});
+    return nexusHealLoop.healLoopHandler(req,res);
+  }
+  if (M==='GET'&&u.pathname==='/api/nexus/bus') {
+    if (!nexusBus) return json(res,503,{ok:false,error:'not loaded'});
+    return json(res,200,{ok:true,...nexusBus.stats(),recent:nexusBus.history(20)});
+  }
+    if (M==='GET' && u.pathname==='/sse') {
     res.writeHead(200, { 'Content-Type':'text/event-stream', 'Cache-Control':'no-cache',
       'Connection':'keep-alive', 'Access-Control-Allow-Origin':'*' });
     res.write(`data: ${JSON.stringify({ type:'orchestrator.connected', ts:Date.now() })}\n\n`);
@@ -1371,6 +1409,14 @@ else if (cmd==='snr')      cliSNR().then(()=>process.exit(0));
 else if (cmd==='help'||cmd==='--help'||cmd==='-h') { cliHelp(); process.exit(0); }
 else {
   // Start server
+// ── Wire nexus interconnect ────────────────────────────────────────────────────
+if (nexusBus) {
+  if (nexusCFR)       nexusCFR.init({ bus: nexusBus, pollMs: 5000 });
+  if (nexusHealLoop)  nexusHealLoop.attachToBus(nexusBus);
+  if (nexusKnowledge) nexusKnowledge.seedSystemFacts();
+  console.log('[orchestrator] nexus interconnect: bus+cfr+heal+knowledge active');
+}
+
 server.listen(PORT, '127.0.0.1', async () => {
   // BootSequence hoisted to top-level
 

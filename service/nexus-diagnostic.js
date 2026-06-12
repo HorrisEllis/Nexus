@@ -136,6 +136,8 @@ function startService() {
         openGaps.set(gap.uuid, gap);
         broadcast({ type: 'gap.found', gap, ts: Date.now() });
         ico.ledger.append('gaps', { ...gap, ts: Date.now() });
+        const cfrSnap = cfrFeed('cortex.gap.found', gap.sigma || 0);
+        broadcast({ type: 'cfr.update', cfr: cfrSnap, ts: Date.now() });
         console.log(`[diag] GAP ${name}: ${gap.type} sigma=${gap.sigma}`);
       },
     });
@@ -143,6 +145,27 @@ function startService() {
 
   // In-memory gap store (backed by ledger)
   const openGaps = new Map();
+
+  // ── CFR field — local diagnostic field, nudged by gap/poll events ──────────
+  const cfrField = createCFRField();
+  function cfrFeed(type, sigmaScore = 0) {
+    return cfrField.update(type, sigmaScore);
+  }
+
+  // ── Guardian CFR field — proxied from the ledger-backed source of truth ────
+  let guardianCFR = null; // last fetched snapshot from :7820/cfr/state, or null if unreachable
+  function fetchGuardianCFR() {
+    return new Promise((resolve) => {
+      const req = http.get(`http://127.0.0.1:${SYSTEMS.guardian.port}/cfr/state`, { timeout: 1500 }, res => {
+        let b = ''; res.on('data', d => b += d); res.on('end', () => {
+          try { guardianCFR = JSON.parse(b); } catch { guardianCFR = null; }
+          resolve(guardianCFR);
+        });
+      });
+      req.on('error', () => { guardianCFR = null; resolve(null); });
+      req.on('timeout', () => { req.destroy(); guardianCFR = null; resolve(null); });
+    });
+  }
 
   // SSE clients
   const sseClients = new Set();
@@ -287,8 +310,11 @@ function startService() {
     for (const [name, cfg] of Object.entries(SYSTEMS)) {
       await pollSystem(name, cfg);
     }
-    broadcast({ type: 'poll.complete', systems: systemState, ts: Date.now() });
-    ico.ledger.append('poll', { type: 'poll.complete', systems: Object.keys(systemState), ts: Date.now() });
+    await fetchGuardianCFR();
+    const allOnline = Object.values(systemState).every(s => s.online);
+    const cfrSnap = cfrFeed(allOnline ? 'orchestrator.pulse' : 'pulse.missed');
+    broadcast({ type: 'poll.complete', systems: systemState, cfr: cfrSnap, ts: Date.now() });
+    ico.ledger.append('poll', { type: 'poll.complete', systems: Object.keys(systemState), cfr: cfrSnap, ts: Date.now() });
   }
 
   // Poll every 15 seconds
@@ -481,7 +507,50 @@ function startService() {
       }
       res.writeHead(200, CORS);
       res.end(JSON.stringify({ ok: true, summary, openGaps: openGaps.size,
+        cfr: guardianCFR ? guardianCFR.cfr : cfrField.snapshot(),
+        cfrSource: guardianCFR ? 'guardian' : 'diagnostic',
         uptime: process.uptime(), ts: Date.now() }));
+      return;
+    }
+
+    // ── CFR field state ─────────────────────────────────────────────────────
+    // GET /cfr/health — { ok, status, regime, cfr } (Guardian primary, local fallback)
+    if (url.pathname === '/cfr/health') {
+      const localSnap = cfrField.snapshot();
+      const source = guardianCFR ? 'guardian' : 'diagnostic';
+      const cfr = guardianCFR ? guardianCFR.cfr : localSnap;
+      const regime = guardianCFR ? guardianCFR.regime : localSnap.regime;
+      res.writeHead(200, CORS);
+      res.end(JSON.stringify({ ok: true, status: 'online', source, regime, cfr, local: localSnap, ts: Date.now() }));
+      return;
+    }
+
+    // GET /cfr/state — full field state + system summary. Guardian's ledger-backed
+    // field is the source of truth when reachable; local diagnostic field is
+    // always included so the panel never reports "module offline".
+    if (url.pathname === '/cfr/state') {
+      const localSnap = cfrField.snapshot();
+      const summary = {};
+      for (const [name, state] of Object.entries(systemState)) {
+        summary[name] = { online: state.online, friction: state.friction, sigma: state.sigma, openGaps: state.openGaps };
+      }
+      const source = guardianCFR ? 'guardian' : 'diagnostic';
+      const cfr = guardianCFR ? guardianCFR.cfr : localSnap;
+      const regime = guardianCFR ? guardianCFR.regime : localSnap.regime;
+      res.writeHead(200, CORS);
+      res.end(JSON.stringify({
+        ok: true, source, cfr, regime,
+        guardian: guardianCFR,   // null if guardian :7820/cfr/state unreachable
+        diagnostic: localSnap,   // always present
+        openGaps: openGaps.size, systems: summary, ts: Date.now(),
+      }));
+      return;
+    }
+
+    // GET /cfr/field — raw field dimensions (local diagnostic field only)
+    if (url.pathname === '/cfr/field') {
+      res.writeHead(200, CORS);
+      res.end(JSON.stringify({ ok: true, ...cfrField.get(), guardianReachable: !!guardianCFR, ts: Date.now() }));
       return;
     }
 

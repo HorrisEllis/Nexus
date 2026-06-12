@@ -1535,6 +1535,71 @@ textarea.finp{resize:vertical;line-height:1.55}
       </div>
     </div>
 
+    <!-- ══ NEXUS BUS — event fabric + query + knowledge + CFR ══════════ -->
+    <div class="panel" id="panel-nexus-bus" style="flex-direction:column">
+      <div class="stbar">
+        <button class="stb on" onclick="_nxbTab('bus',this)">⚡ LIVE BUS</button>
+        <button class="stb"    onclick="_nxbTab('query',this)">⬡ QUERY</button>
+        <button class="stb"    onclick="_nxbTab('knowledge',this)">◈ KNOWLEDGE</button>
+        <button class="stb"    onclick="_nxbTab('cfr',this)">⬡ CFR FIELD</button>
+        <div style="flex:1"></div>
+        <span id="nxb-dot" style="width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px;flex-shrink:0"></span>
+        <span style="font-size:9px;color:var(--muted);margin-right:8px" id="nxb-stats">—</span>
+        <button class="btn c" style="font-size:9px" onclick="nxbConnect()">CONNECT</button>
+      </div>
+      <div class="spanel on" id="nxb-bus" style="flex-direction:column;overflow:hidden">
+        <div style="padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+          <input id="nxb-filter" class="fi" placeholder="filter type…" style="width:200px" oninput="nxbFilter(this.value)">
+          <span id="nxb-count" style="font-size:9px;color:var(--muted)">0 events</span>
+          <button class="btn" style="font-size:9px" onclick="nxbClear()">clear</button>
+          <div style="flex:1"></div>
+          <label style="font-size:9px;color:var(--text2);display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="nxb-paused" style="accent-color:var(--c)"> pause</label>
+        </div>
+        <div id="nxb-events" style="flex:1;overflow-y:auto;font-size:10px;font-family:var(--mono)"></div>
+      </div>
+      <div class="spanel" id="nxb-query" style="flex-direction:column;overflow:hidden">
+        <div style="display:flex;flex:1;overflow:hidden;min-height:0">
+          <div style="width:260px;border-right:1px solid var(--border);padding:12px;overflow-y:auto;flex-shrink:0">
+            <div class="sb-lbl">QUERY TYPE</div>
+            <select id="nxq-type" class="fi" style="margin-bottom:8px">
+              <optgroup label="Gaps"><option value="gaps.open">gaps.open</option><option value="gaps.all">gaps.all</option></optgroup>
+              <optgroup label="Ideas"><option value="ideas.all">ideas.all</option><option value="ideas.specced">ideas.specced</option></optgroup>
+              <optgroup label="Jobs"><option value="jobs.recent">jobs.recent</option></optgroup>
+              <optgroup label="Events"><option value="events.recent">events.recent</option></optgroup>
+              <optgroup label="Memory"><option value="memory.query">memory.query</option></optgroup>
+              <optgroup label="System"><option value="health.all">health.all</option><option value="compile.history">compile.history</option><option value="versions.recent">versions.recent</option></optgroup>
+            </select>
+            <div class="sb-lbl">PARAMS (JSON)</div>
+            <textarea id="nxq-params" class="sb-ta" rows="4" placeholder="{}">{}</textarea>
+            <button class="btn primary" style="margin-top:8px;width:100%" onclick="nxqRun()">▶ RUN QUERY</button>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:12px">
+            <div class="sb-lbl" id="nxq-meta">ready</div>
+            <pre id="nxq-result" style="font:10px/1.6 var(--mono);color:var(--text2);white-space:pre-wrap;word-break:break-word;margin-top:6px">—</pre>
+          </div>
+        </div>
+      </div>
+      <div class="spanel" id="nxb-knowledge" style="flex-direction:column;overflow:hidden">
+        <div style="display:flex;flex:1;overflow:hidden;min-height:0">
+          <div style="width:260px;border-right:1px solid var(--border);padding:12px;overflow-y:auto;flex-shrink:0">
+            <div class="sb-lbl">LEARN A FACT</div>
+            <div class="frow"><span class="flbl">SUBJECT</span><input class="finp" id="nxk-subj" placeholder="field.restore"></div>
+            <div class="frow"><span class="flbl">PREDICATE</span><select class="finp" id="nxk-pred"><option>must_not</option><option>depends_on</option><option>was_fixed_by</option><option>supports</option><option>pattern</option><option>capability</option></select></div>
+            <div class="frow"><span class="flbl">OBJECT</span><textarea class="finp" id="nxk-obj" rows="2" placeholder="what was learned"></textarea></div>
+            <div class="frow"><span class="flbl">TYPE</span><select class="finp" id="nxk-type"><option>resolution</option><option>invariant</option><option>pattern</option><option>correction</option><option>capability</option><option>dependency</option></select></div>
+            <div class="frow"><span class="flbl">CONFIDENCE</span><input class="finp" id="nxk-conf" type="number" value="0.85" min="0" max="1" step="0.05" style="width:70px"></div>
+            <button class="btn primary" style="margin-top:8px;width:100%" onclick="nxkLearn()">◈ LEARN</button>
+            <div style="margin-top:10px"><div class="sb-lbl">RECALL</div><input class="finp" id="nxk-recall" placeholder="subject…" oninput="nxkRecall(this.value)"></div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:12px" id="nxk-list"><div style="color:var(--muted);font-size:10px">Click Recall or Learn a fact</div></div>
+        </div>
+      </div>
+      <div class="spanel" id="nxb-cfr" style="overflow-y:auto;padding:14px">
+        <div id="nxb-cfr-content"><div style="color:var(--muted);font-size:10px">Load CFR influence state…</div></div>
+        <button class="btn" style="margin-top:8px;max-width:120px" onclick="nxbLoadCFR()">↺ Load</button>
+      </div>
+    </div>
+
     <!-- ══ ORCHESTRATE — 3-tier agent hub ═════════════════════════ -->
     <div class="panel" id="panel-orchestrate">
       <div class="tshdr">
@@ -1792,6 +1857,7 @@ textarea.finp{resize:vertical;line-height:1.55}
   };
 })();
 </script>
+<script src="http://127.0.0.1:9000/ports.js"></script>
 <script>
 /**
  * ui/contracts.js — NEXUS Interaction Contract Layer
@@ -1809,6 +1875,10 @@ textarea.finp{resize:vertical;line-height:1.55}
 'use strict';
 
 // ── Ports ─────────────────────────────────────────────────────────────────────
+// Canonical source: ui/ports.js (served by orchestrator at /ports.js), which
+// sets window.NEXUS_PORTS. If it loaded, use it; otherwise fall back to these
+// defaults so the UI still works standalone. Either way PORTS becomes the
+// single source of truth used everywhere below.
 const PORTS = Object.freeze({
   orchestrator: 9000,
   bridge:       9999,
@@ -1820,6 +1890,7 @@ const PORTS = Object.freeze({
   idearium:     4800,
   emerge:       4242,
   ollama:       11434,
+  ...(typeof window !== 'undefined' && window.NEXUS_PORTS ? window.NEXUS_PORTS : {}),
 });
 
 // ── Base URLs ─────────────────────────────────────────────────────────────────
@@ -2065,7 +2136,7 @@ const BRIDGE = Object.freeze({
     field:   `${BASE.bridge}/cfr/field`,
     state:   `${BASE.bridge}/cfr/state`,
     emit:    `${BASE.bridge}/cfr/emit`,
-    stream:  `ws://127.0.0.1:${PORTS.bridge}/cfr/stream`,
+    stream:  `${BASE.bridge}/cfr/stream`,
   },
 });
 
@@ -2651,9 +2722,11 @@ const STATE = {
 
   // SSE connection state
   sse: {
-    cortex:    { connected: false, retries: 0 },
-    guardian:  { connected: false, retries: 0 },
+    cortex:       { connected: false, retries: 0 },
+    guardian:     { connected: false, retries: 0 },
     orchestrator: { connected: false, retries: 0 },
+    bridge:       { connected: false, retries: 0 },
+    idearium:     { connected: false, retries: 0 },
   },
 
   // Guardian provider state (NCP channels)
@@ -2703,13 +2776,16 @@ const STATE = {
   // Cortex entropy (0..1) — derived from gap density
   entropy: 0.0,
 
-  // CFR field state
+  // CFR field state — mirrors lib/cfr/field.js dimensions, fed by Bridge SSE
+  // (/cfr/stream on :9999, mounted via bridge/server.js handleCFRRoute)
   cfr: {
-    structure: 0.5,
+    coherence: 0.6,
+    friction:  0.2,
+    resonance: 0.3,
     entropy:   0.2,
-    attention: 0.5,
-    damping:   0.12,
-    regime:    'laminar',
+    regime:    'stable',
+    stressCount: 0,
+    source:    'none',   // 'bridge' once SSE connects, else 'none'
     nodes:     [],
     deltas:    new Ring(50),
   },
@@ -2727,7 +2803,7 @@ const STATE = {
 
 // ── SSE channels ──────────────────────────────────────────────────────────────
 
-let _sseOrc, _sseCortex, _sseGuardian;
+let _sseOrc, _sseCortex, _sseGuardian, _sseBridge, _sseIdearium;
 
 function startSSE() {
   // Orchestrator SSE
@@ -2753,12 +2829,30 @@ function startSSE() {
     onEvent: (d) => _ingestGuardian(d),
   });
   _sseGuardian.open();
+
+  // Bridge CFR SSE — live field state (/cfr/stream on :9999)
+  _sseBridge = new (_API().SSEChannel)(_C().BRIDGE.cfr.stream, {
+    onOpen:  () => { STATE.sse.bridge.connected = true; STATE.cfr.source = 'bridge'; emit('sse.bridge.open'); },
+    onError: () => { STATE.sse.bridge.connected = false; STATE.cfr.source = 'none'; emit('sse.bridge.error'); },
+    onEvent: (d) => _ingestBridgeCFR(d),
+  });
+  _sseBridge.open();
+
+  // Idearium SSE — idea/spec lifecycle events
+  _sseIdearium = new (_API().SSEChannel)(_C().IDEARIUM.sse, {
+    onOpen:  () => { STATE.sse.idearium.connected = true; emit('sse.idearium.open'); },
+    onError: () => { STATE.sse.idearium.connected = false; emit('sse.idearium.error'); },
+    onEvent: (d) => _ingestIdearium(d),
+  });
+  _sseIdearium.open();
 }
 
 function stopSSE() {
   _sseOrc?.close();
   _sseCortex?.close();
   _sseGuardian?.close();
+  _sseBridge?.close();
+  _sseIdearium?.close();
 }
 
 // ── Ingest — SSE event routers ────────────────────────────────────────────────
@@ -2783,12 +2877,52 @@ function _ingestCortex(row) {
     emit('cortex.memory.updated', row);
   }
 
-  // Entropy — derived from gap velocity (gaps per 10 events)
+  // Entropy fallback — derived from gap velocity (gaps per 10 events).
+  // Only used while the Bridge CFR field (real source) isn't connected.
   const recentGaps = STATE.eventLog.last(10).filter(e =>
     (e.type || '').includes('gap') || (e.type || '').includes('fail')).length;
   STATE.entropy = Math.min(1, recentGaps / 10);
-  STATE.cfr.entropy = STATE.entropy;
+  if (STATE.cfr.source !== 'bridge') {
+    STATE.cfr.entropy = STATE.entropy;
+  }
   emit('entropy.changed', STATE.entropy);
+}
+
+// Bridge /cfr/stream — either { type:'CFR_READY', cfr, ts } (initial snapshot)
+// or a full ledger entry { type, payload, cfr, sigma, delta, ts }.
+function _ingestBridgeCFR(d) {
+  const snap = d?.cfr;
+  if (snap) {
+    STATE.cfr.coherence   = snap.coherence;
+    STATE.cfr.friction    = snap.friction;
+    STATE.cfr.resonance   = snap.resonance;
+    STATE.cfr.entropy     = snap.entropy;
+    STATE.cfr.regime      = snap.regime;
+    STATE.cfr.stressCount = snap.stressCount ?? 0;
+    STATE.cfr.source      = 'bridge';
+    STATE.entropy         = snap.entropy;
+    emit('cfr.changed', STATE.cfr);
+    emit('entropy.changed', STATE.entropy);
+  }
+  if (d?.type && d.type !== 'CFR_READY') {
+    STATE.cfr.deltas.push({ type: d.type, sigma: d.sigma, delta: d.delta, ts: d.ts });
+    emit('cfr.delta', d);
+    emit('log', { source: 'bridge', ...d });
+  }
+}
+
+// Idearium SSE — idea/spec lifecycle events
+function _ingestIdearium(d) {
+  emit('log', { source: 'idearium', ...d });
+  emit('sse.event', d);
+  const t = d.type || '';
+  if (t.startsWith('idea.') || t.startsWith('spec.')) {
+    STATE.ideas.dirty = true;
+    emit('idearium.changed', d);
+  }
+  if (t === 'gap.resolved') {
+    refreshGaps('cortex');
+  }
 }
 
 function _ingestGuardian(d) {
@@ -4676,9 +4810,8 @@ Object.assign(window,{
   logRender,logFilter,logClear,
   diagRun,diagBuild,diagRenderConsole,diagClearConsole,diagDomAudit,
   optLoad,optSave,optTestOllama,
-  // cortex tables + intelligence
-  cxLoadTables, cxSelectTable, cxTblFilter, cxIntelTab,
-  cxIntelLoadStatus, cxIntelLoadPatterns, cxIntelLoadFaults, cxIntelLoadReuse, cxIntelLoadDrift,
+  // cortex tables + intelligence exposed in second shell (defined after this IIFE)
+  // cxLoadTables, cxSelectTable etc. are exposed via the second Object.assign below
   // bootDiagForceAdvance + showBootDiag self-expose inside DOMContentLoaded (closure scope)
 });
 })(); // end NEXUS SHELL
@@ -6087,12 +6220,9 @@ loadContract();
 // Wire contract:* CLI commands
 Object.assign(_NX_CLI_COMMANDS, {
   'contract':         async()      => { const c=await loadContract(); return c?`Contract v${c.version} — ${Object.keys(c.systems||{}).length} systems, ${Object.keys(c.cliIndex||{}).length} CLI commands, ${Object.keys(c.routeIndex||{}).length} routes`:'offline'; },
-  'contract:routes':  async(args)  => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; const sys=args[0]; return Object.entries(c.systems||{}).filter(([s])=>!sys||s===sys).flatMap(([s,cs])=>(cs.routes||[]).map(r=>`${s} ${r.method} ${r.path}`)).join('
-'); },
-  'contract:cli':     async()      => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; return Object.entries(c.cliIndex||{}).map(([cmd,d])=>`${cmd.padEnd(18)} → ${d.system} — ${d.description}`).join('
-'); },
-  'contract:ports':   async()      => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; return Object.entries(c.ports||{}).map(([s,p])=>`${s.padEnd(14)} :${p}`).join('
-'); },
+  'contract:routes':  async(args)  => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; const sys=args[0]; return Object.entries(c.systems||{}).filter(([s])=>!sys||s===sys).flatMap(([s,cs])=>(cs.routes||[]).map(r=>`${s} ${r.method} ${r.path}`)).join('\n'); },
+  'contract:cli':     async()      => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; return Object.entries(c.cliIndex||{}).map(([cmd,d])=>`${cmd.padEnd(18)} → ${d.system} — ${d.description}`).join('\n'); },
+  'contract:ports':   async()      => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; return Object.entries(c.ports||{}).map(([s,p])=>`${s.padEnd(14)} :${p}`).join('\n'); },
   'contract:validate': async(args) => {
     const [sys,method,...rest] = args;
     const path_ = rest.join(' ');
@@ -6244,11 +6374,183 @@ async function saveNexusState() {
 // Save state every 10s
 setInterval(saveNexusState, 10000);
 
+// ═══ NEXUS BUS PANEL ═══════════════════════════════════════════════════════
+let _nxbES = null;
+let _nxbEvents = [];
+let _nxbFilter = '';
+
+function _nxbTab(name, btn) {
+  document.querySelectorAll('#panel-nexus-bus .stb').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  document.querySelectorAll('#panel-nexus-bus .spanel').forEach(p => p.classList.remove('on'));
+  const el = document.getElementById('nxb-' + name);
+  if (el) el.classList.add('on');
+  if (name === 'knowledge') nxkLoad();
+  if (name === 'cfr') nxbLoadCFR();
+}
+
+function nxbConnect() {
+  if (_nxbES) { _nxbES.close(); _nxbES = null; }
+  const dot = document.getElementById('nxb-dot');
+  if (dot) dot.style.background = 'var(--y)';
+  _nxbES = new EventSource('http://127.0.0.1:9000/nexus-bus/sse');
+  _nxbES.onopen = () => {
+    if (dot) { dot.style.background = 'var(--g)'; dot.style.boxShadow = '0 0 6px var(--g)'; }
+    document.getElementById('nxb-stats').textContent = 'connected';
+  };
+  _nxbES.onerror = () => {
+    if (dot) { dot.style.background = 'var(--err)'; dot.style.boxShadow = 'none'; }
+    document.getElementById('nxb-stats').textContent = 'disconnected';
+    setTimeout(nxbConnect, 4000);
+  };
+  _nxbES.onmessage = (e) => {
+    if (document.getElementById('nxb-paused')?.checked) return;
+    try {
+      const ev = JSON.parse(e.data);
+      _nxbEvents.unshift(ev);
+      if (_nxbEvents.length > 500) _nxbEvents.pop();
+      nxbRender();
+      document.getElementById('nxb-count').textContent = _nxbEvents.length + ' events';
+    } catch(_) {}
+  };
+}
+
+function nxbFilter(v) { _nxbFilter = v.toLowerCase(); nxbRender(); }
+function nxbClear() { _nxbEvents = []; nxbRender(); document.getElementById('nxb-count').textContent = '0 events'; }
+
+function nxbRender() {
+  const el = document.getElementById('nxb-events'); if (!el) return;
+  const SYSCOL = { orchestrator:'#818cf8',cortex:'#34d399',guardian:'#f59e0b',architect:'#ef9f27',bridge:'#22d3ee',idearium:'#4a9eff','heal-loop':'#f472b6','cfr-influence':'#a78bfa' };
+  const evs = _nxbFilter ? _nxbEvents.filter(e => (e.type||'').toLowerCase().includes(_nxbFilter) || (e.source||'').toLowerCase().includes(_nxbFilter)) : _nxbEvents;
+  el.innerHTML = evs.slice(0,200).map(ev => {
+    const col = ev.type?.includes('error')||ev.type?.includes('fail') ? '#ef4444'
+      : ev.type?.includes('gap') ? '#f472b6'
+      : ev.type?.includes('complete')||ev.type?.includes('booted')||ev.type?.includes('resolved') ? '#34d399'
+      : SYSCOL[ev.source] || 'var(--text2)';
+    const payload = ev.payload ? JSON.stringify(ev.payload).slice(0,120) : '';
+    return `<div style="display:flex;gap:8px;padding:3px 8px;border-bottom:1px solid var(--border);align-items:baseline">
+      <span style="color:var(--text3);font-size:9px;flex-shrink:0;width:52px">${new Date(ev.ts||Date.now()).toTimeString().slice(0,8)}</span>
+      <span style="color:${col};font-size:9px;flex-shrink:0;min-width:200px">${_nxEsc(ev.type||'?')}</span>
+      <span style="color:var(--text3);font-size:8px;flex-shrink:0;width:80px;overflow:hidden;text-overflow:ellipsis">${_nxEsc(ev.source||'')}</span>
+      <span style="color:var(--text3);font-size:8px;flex:1;overflow:hidden;text-overflow:ellipsis">${_nxEsc(payload)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── nexus.query() panel ───────────────────────────────────────────────────────
+async function nxqRun() {
+  const type = document.getElementById('nxq-type').value;
+  let params = {};
+  try { params = JSON.parse(document.getElementById('nxq-params').value || '{}'); } catch(_) {}
+  document.getElementById('nxq-meta').textContent = 'querying…';
+  document.getElementById('nxq-result').textContent = '…';
+  const r = await nexus.query({ type, ...params });
+  document.getElementById('nxq-meta').textContent = r.ok ? `${type} — ${Array.isArray(r.data) ? r.data.length + ' rows' : 'ok'} ${r.cached?'(cached)':''}` : 'ERROR: ' + r.error;
+  document.getElementById('nxq-result').textContent = JSON.stringify(r.data, null, 2);
+}
+
+// ── nexus.knowledge panel ─────────────────────────────────────────────────────
+async function nxkLoad() {
+  const r = await nexus.query({ type: 'system.registry' }).catch(() => null);
+  // Load knowledge from orchestrator
+  try {
+    const kr = await fetch('http://127.0.0.1:9000/api/nexus/knowledge?n=50');
+    const kd = await kr.json();
+    _renderKnowledge(kd.facts || []);
+  } catch(e) { document.getElementById('nxk-list').innerHTML = '<div style="color:var(--err);font-size:10px">Knowledge service unreachable</div>'; }
+}
+
+function _renderKnowledge(facts) {
+  const el = document.getElementById('nxk-list'); if (!el) return;
+  if (!facts.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No facts yet — learn some!</div>'; return; }
+  const TYPE_COL = { resolution:'#34d399',invariant:'#818cf8',pattern:'#f59e0b',correction:'#ef4444',capability:'#22d3ee',dependency:'#a78bfa' };
+  el.innerHTML = facts.map(f => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 10px;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+        <span style="font-size:8px;padding:1px 6px;border-radius:2px;background:${TYPE_COL[f.type]||'var(--muted)'}22;color:${TYPE_COL[f.type]||'var(--text2)'};border:1px solid ${TYPE_COL[f.type]||'var(--border)'}44">${_nxEsc(f.type)}</span>
+        <span style="font-size:10px;font-weight:600;color:var(--text)">${_nxEsc(f.subject)}</span>
+        <span style="font-size:9px;color:var(--text3)">${_nxEsc(f.predicate)}</span>
+        <span style="font-size:9px;color:var(--muted);margin-left:auto">${Math.round(f.confidence*100)}%${f.verified?' ✓':''}</span>
+      </div>
+      <div style="font-size:10px;color:var(--text2)">${_nxEsc(f.object)}</div>
+    </div>`).join('');
+}
+
+async function nxkLearn() {
+  const fact = {
+    subject:    document.getElementById('nxk-subj').value.trim(),
+    predicate:  document.getElementById('nxk-pred').value,
+    object:     document.getElementById('nxk-obj').value.trim(),
+    type:       document.getElementById('nxk-type').value,
+    confidence: parseFloat(document.getElementById('nxk-conf').value) || 0.85,
+    source:     'ui',
+  };
+  if (!fact.subject || !fact.object) { alert('subject and object required'); return; }
+  try {
+    const r = await fetch('http://127.0.0.1:9000/api/nexus/knowledge/learn', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(fact),
+    });
+    const d = await r.json();
+    if (d.ok) { nxkLoad(); document.getElementById('nxk-subj').value = ''; document.getElementById('nxk-obj').value = ''; }
+    else alert('Failed: ' + d.error);
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function nxkRecall(q) {
+  if (!q) { nxkLoad(); return; }
+  try {
+    const r = await fetch(`http://127.0.0.1:9000/api/nexus/knowledge/recall?subject=${encodeURIComponent(q)}&n=50`);
+    const d = await r.json();
+    _renderKnowledge(d.facts || []);
+  } catch(_) {}
+}
+
+// ── CFR influence panel ───────────────────────────────────────────────────────
+async function nxbLoadCFR() {
+  const el = document.getElementById('nxb-cfr-content'); if (!el) return;
+  try {
+    const r = await fetch('http://127.0.0.1:9000/api/nexus/cfr');
+    const d = await r.json();
+    if (!d.ok) { el.innerHTML = `<div style="color:var(--err);font-size:10px">${_nxEsc(d.error)}</div>`; return; }
+    const s = d.state || {};
+    const f = s.field || {};
+    const axes = ['tension','coherence','friction','entropy','resonance'];
+    const AXIS_COL = { tension:'#ef4444',coherence:'#34d399',friction:'#f59e0b',entropy:'#818cf8',resonance:'#22d3ee' };
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        ${axes.map(ax=>`<div style="background:var(--surface);border:1px solid ${AXIS_COL[ax]}33;border-radius:4px;padding:10px">
+          <div style="font-size:8px;color:${AXIS_COL[ax]};text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">${ax}</div>
+          <div style="font-size:22px;font-weight:700;color:${AXIS_COL[ax]};font-family:var(--mono)">${f[ax]!==undefined?(f[ax]*100).toFixed(0):'—'}<span style="font-size:11px">%</span></div>
+        </div>`).join('')}
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px">
+        <div style="font-size:9px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">INFLUENCE STATE</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:10px">
+          <div>SNR floor: <span style="color:${s.sigmaFloor>0?'var(--y)':'var(--g)'}">${((s.sigmaFloor||0)*100).toFixed(0)}%</span></div>
+          <div>Guardian: <span style="color:${s.guardianThrottled?'var(--err)':'var(--g)'}">${s.guardianThrottled?'THROTTLED':'OK'}</span></div>
+          <div>Diagnostic: <span style="color:${s.diagnosticScheduled?'var(--y)':'var(--muted)'}">${s.diagnosticScheduled?'SCHEDULED':'idle'}</span></div>
+          <div>Entropy: <span style="color:${s.chaosBroadcast?'var(--err)':'var(--muted)'}">${s.chaosBroadcast?'⚠ CHAOS':'stable'}</span></div>
+          <div>Versionium: <span style="color:${s.versioniumAccel?'var(--c)':'var(--muted)'}">${s.versioniumAccel?'accelerated':'normal'}</span></div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:9px;color:var(--text3)">thresholds: tension ${d.thresholds?.tension_high} / coherence ${d.thresholds?.coherence_low} / friction ${d.thresholds?.friction_high}</div>`;
+  } catch(e) { el.innerHTML = `<div style="color:var(--err);font-size:10px">CFR service unreachable: ${_nxEsc(e.message)}</div>`; }
+}
+
+// Auto-connect nexus bus when panel is activated
+const _origGo = typeof go === 'function' ? go : null;
+// Hook into go() to auto-connect nexus bus
+function go(tab) {
+  if (_origGo) _origGo(tab);
+  if (tab === 'nexus-bus') {
+    setTimeout(() => { if (!_nxbES) nxbConnect(); }, 100);
+  }
+}
+
 // ── CLI extensions for new systems ────────────────────────────────────────────
 Object.assign(_NX_CLI_COMMANDS || {}, {
   // Boot sequence
-  'boot':     async() => { const d=await _nxGet(_NX.ORCH,'/health'); return (d?.bootPhases||[]).map(p=>`${p.pass?'✓':'✗'} [${p.type}] ${p.label} ${p.ms||0}ms`).join('
-')||'no boot data'; },
+  'boot':     async() => { const d=await _nxGet(_NX.ORCH,'/health'); return (d?.bootPhases||[]).map(p=>`${p.pass?'✓':'✗'} [${p.type}] ${p.label} ${p.ms||0}ms`).join('\n')||'no boot data'; },
   'state':    async() => { const d=await _nxGet(_NX.ORCH,'/api/state'); return d?JSON.stringify(d,null,2):'no state'; },
 
   // Calendar log
@@ -6257,14 +6559,12 @@ Object.assign(_NX_CLI_COMMANDS || {}, {
     const d=await _nxGet(_NX.CORTEX,'/api/events?limit=200');
     const today = new Date().toDateString();
     const evs = (d?.rows||[]).filter(e=>e.ts&&new Date(e.ts).toDateString()===today);
-    return evs.map(e=>`${new Date(e.ts).toTimeString().slice(0,8)} ${e.type||'?'}`).join('
-')||'no events today';
+    return evs.map(e=>`${new Date(e.ts).toTimeString().slice(0,8)} ${e.type||'?'}`).join('\n')||'no events today';
   },
 
   // Architect CLI
   'arch':         async() => { const d=await _nxGet(_NX.ARCHITECT,'/health'); return d?`architect ONLINE :3747 · ${d.hooks?.total||0} hooks`:'architect offline'; },
-  'arch:hooks':   async() => { const d=await _nxGet(_NX.ARCHITECT,'/api/hooks'); return (d?.hooks||[]).map(h=>`[${h.type}] ${h.name}`).join('
-')||'no hooks'; },
+  'arch:hooks':   async() => { const d=await _nxGet(_NX.ARCHITECT,'/api/hooks'); return (d?.hooks||[]).map(h=>`[${h.type}] ${h.name}`).join('\n')||'no hooks'; },
   'arch:scan':    async(args) => { if(!args[0]) return 'usage: arch:scan <path>'; const r=await _nxPost(_NX.ARCHITECT,'/api/blueprint/scan',{rootPath:args.join(' ')}); return r?.ok?`Blueprint: ${r.blueprint?.name} SNR:${r.blueprint?.snrScore}`:`Error: ${r?.error}`; },
   'arch:snr':     async(args) => { if(!args[0]) return 'usage: arch:snr <json>'; let src;try{src=JSON.parse(args.join(' '))}catch{return 'invalid JSON';}; const r=await _nxPost(_NX.ARCHITECT,'/api/snr/check',{source:src}); return r?.result?`SNR: ${r.result.score} → ${r.result.recommendation}`:`offline`; },
 
@@ -6273,12 +6573,10 @@ Object.assign(_NX_CLI_COMMANDS || {}, {
 
   // Idearium
   'idea':         async(args) => { if(!args[0]) return 'usage: idea <text>'; const r=await _nxPost('http://127.0.0.1:4800','/api/ideas',{text:args.join(' ')}); return r?.ok?`Idea created: ${r.idea?.uuid?.slice(0,12)}`:`Error: ${r?.error||'idearium offline'}`; },
-  'ideas':        async() => { const d=await _nxGet('http://127.0.0.1:4800','/api/ideas'); return (d?.ideas||[]).slice(0,10).map(i=>`${i.uuid?.slice(0,8)} ${i.text?.slice(0,60)}`).join('
-')||'no ideas'; },
+  'ideas':        async() => { const d=await _nxGet('http://127.0.0.1:4800','/api/ideas'); return (d?.ideas||[]).slice(0,10).map(i=>`${i.uuid?.slice(0,8)} ${i.text?.slice(0,60)}`).join('\n')||'no ideas'; },
 
   // Execution trees
-  'trees':        async() => { const d=await _nxGet(_NX.CORTEX,'/api/memory?table=execution_trees&n=10'); return (d?.rows||[]).map(r=>`${r.jobId?.slice(0,12)} branches:${r.branches?.length||0} status:${r.status}`).join('
-')||'no trees'; },
+  'trees':        async() => { const d=await _nxGet(_NX.CORTEX,'/api/memory?table=execution_trees&n=10'); return (d?.rows||[]).map(r=>`${r.jobId?.slice(0,12)} branches:${r.branches?.length||0} status:${r.status}`).join('\n')||'no trees'; },
 });
 </script>
 
@@ -6465,9 +6763,10 @@ Object.assign(_NX_CLI_COMMANDS || {}, {
     <button class="stb"    onclick="metaTab('versions',this)">VERSIONS</button>
     <button class="stb"    onclick="metaTab('faults',this)">FAULT TAXONOMY</button>
     <div style="flex:1"></div>
-    <span id="meta-live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px;flex-shrink:0;display:inline-block"></span>
+    <span id="meta-live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px;flex-shrink:0;display:inline-block;transition:all .3s;cursor:pointer" onclick="metaSSEToggle()" title="Toggle live SSE"></span>
     <span style="font-size:9px;color:var(--muted);margin-right:8px" id="meta-refresh-ts">—</span>
-    <button class="btn m" style="font-size:9px" onclick="metaRefresh()">↺ Refresh</button>
+    <button class="btn m" style="font-size:9px" id="meta-live-btn" onclick="metaSSEToggle()">⚡ LIVE</button>
+    <button class="btn" style="font-size:9px;margin-left:4px" onclick="metaRefresh()">↺</button>
   </div>
 
   <div class="spanel on" id="meta-health" style="flex-direction:column;overflow-y:auto;padding:14px">
@@ -6506,6 +6805,52 @@ const _NX = {
   GUARDIAN:   'http://127.0.0.1:7820',
   BRIDGE:     'http://127.0.0.1:9999',
   ARCHITECT:  'http://127.0.0.1:3747',
+};
+
+// ── nexus.query() — unified query layer ──────────────────────────────────────
+const nexus = {
+  async query(params) {
+    try {
+      const r = await fetch('http://127.0.0.1:9000/api/nexus/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(params),
+      });
+      return await r.json();
+    } catch(e) { return { ok: false, error: e.message }; }
+  },
+  async write(type, payload) {
+    // TODO: wire to /api/nexus/write when available
+    return { ok: false, error: 'not yet exposed as HTTP endpoint' };
+  },
+  bus: {
+    _es: null,
+    _handlers: new Map(),
+    connect() {
+      if (this._es) return;
+      this._es = new EventSource('http://127.0.0.1:9000/nexus-bus/sse');
+      this._es.onmessage = (e) => {
+        try {
+          const ev = JSON.parse(e.data);
+          const type = ev.type || '*';
+          // Dispatch to handlers
+          for (const [pattern, fns] of this._handlers) {
+            if (pattern === '*' || type === pattern || type.startsWith(pattern.replace(/\*$/, ''))) {
+              fns.forEach(fn => { try { fn(ev); } catch(_) {} });
+            }
+          }
+        } catch(_) {}
+      };
+      this._es.onerror = () => { this._es = null; setTimeout(() => this.connect(), 3000); };
+    },
+    on(type, fn) {
+      if (!this._handlers.has(type)) this._handlers.set(type, new Set());
+      this._handlers.get(type).add(fn);
+      this.connect();
+      return () => this._handlers.get(type)?.delete(fn);
+    },
+    disconnect() { if (this._es) { this._es.close(); this._es = null; } },
+  },
 };
 
 async function _nxGet(base, path, timeout=5000) {
@@ -7097,6 +7442,65 @@ function metaTab(tab, btn) {
   if (tab==='faults')    metaLoadFaults();
 }
 
+// ── Meta Observer: live SSE event feed ───────────────────────────────────────
+let _metaSSEActive = false;
+let _metaSSEUnsub  = null;
+
+function metaSSEToggle() {
+  if (_metaSSEActive) {
+    metaStopLive();
+    document.getElementById('meta-live-btn').textContent = '⚡ LIVE';
+    document.getElementById('meta-live-btn').classList.remove('primary');
+  } else {
+    metaStartLive();
+    document.getElementById('meta-live-btn').textContent = '● LIVE';
+    document.getElementById('meta-live-btn').classList.add('primary');
+  }
+}
+
+function metaStartLive() {
+  if (_metaSSEActive) return;
+  _metaSSEActive = true;
+  const dot = document.getElementById('meta-live-dot');
+  if (dot) { dot.style.background = '#22c55e'; dot.style.boxShadow = '0 0 6px #22c55e'; }
+
+  _metaSSEUnsub = nexus.bus.on('*', (ev) => {
+    const ts = document.getElementById('meta-refresh-ts');
+    if (ts) ts.textContent = new Date(ev.ts || Date.now()).toTimeString().slice(0,8);
+
+    // Live-inject into events list if events tab is active
+    const evList = document.getElementById('meta-events-list');
+    if (evList && document.getElementById('meta-events')?.classList.contains('on')) {
+      const SYSCOL = { orchestrator:'#818cf8',cortex:'#34d399',guardian:'#f59e0b',architect:'#ef9f27',bridge:'#22d3ee',idearium:'#4a9eff' };
+      const col = ev.type?.includes('error')||ev.type?.includes('fail') ? '#ef4444'
+        : ev.type?.includes('gap')     ? '#f472b6'
+        : ev.type?.includes('complete')||ev.type?.includes('booted') ? '#34d399'
+        : SYSCOL[ev.source?.split('/')[0]] || 'var(--text2)';
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);align-items:center;animation:fadeIn .2s';
+      row.innerHTML = `<span style="color:var(--text3);font-size:9px;font-family:var(--mono);flex-shrink:0;width:56px">${new Date(ev.ts||Date.now()).toTimeString().slice(0,8)}</span><span style="color:${col};font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_nxEsc(ev.type||'?')}</span><span style="color:var(--text3);font-size:9px;flex-shrink:0;max-width:100px;overflow:hidden;text-overflow:ellipsis">${_nxEsc(ev.source||'')}</span>`;
+      evList.insertBefore(row, evList.firstChild);
+      // Keep max 200 rows
+      while (evList.children.length > 200) evList.removeChild(evList.lastChild);
+    }
+
+    // Update health dots live
+    if (ev.type === 'orchestrator.watchdog.tick' && ev.payload?.systems) {
+      for (const [sysId, info] of Object.entries(ev.payload.systems)) {
+        const dot_ = document.querySelector(`[data-sys="${sysId}"] .sys-dot`);
+        if (dot_) dot_.style.background = info.online ? '#22c55e' : '#ef4444';
+      }
+    }
+  });
+}
+
+function metaStopLive() {
+  if (_metaSSEUnsub) { _metaSSEUnsub(); _metaSSEUnsub = null; }
+  _metaSSEActive = false;
+  const dot = document.getElementById('meta-live-dot');
+  if (dot) { dot.style.background = 'var(--muted)'; dot.style.boxShadow = 'none'; }
+}
+
 async function metaRefresh() {
   const dot = document.getElementById('meta-live-dot');
   const ts  = document.getElementById('meta-refresh-ts');
@@ -7106,6 +7510,8 @@ async function metaRefresh() {
   if (active) { if(active==='health') metaLoadHealth(); else metaTab(active, null); }
   if (dot) dot.style.background = '#22c55e';
   if (ts) ts.textContent = new Date().toTimeString().slice(0,8);
+  // Start live mode on first manual refresh
+  if (!_metaSSEActive) metaStartLive();
 }
 
 const META_SYSTEMS = [
@@ -7247,48 +7653,38 @@ const _NX_CLI_COMMANDS = {
   // Memory
   'mem':         () => { go('memory'); },
   'memory':      () => { go('memory'); },
-  'gaps':        () => { go('memory'); setTimeout(()=>document.querySelector('[onclick*="memTab('gaps"]")?.click(), 100); },
-  'artifacts':   () => { go('memory'); setTimeout(()=>{ const b=document.querySelector('[onclick*="memTab('artifacts"]'); if(b)b.click(); }, 100); },
-  'ledger':      async() => { const d=await _nxGet(_NX.CORTEX,'/api/events?limit=20'); return (d?.rows||[]).map(r=>`${_nxFts(r.ts)} ${r.type||'?'} [${r.source||'?'}]`).join('
-')||'(empty)'; },
+  'gaps':        () => { go('memory'); setTimeout(()=>{ try{document.querySelector('[data-tab="gaps"]')?.click();}catch(e){} }, 150); },
+  'artifacts':   () => { go('memory'); setTimeout(()=>{ try{document.querySelector('[data-tab="artifacts"]')?.click();}catch(e){} }, 150); },
+  'ledger':      async() => { const d=await _nxGet(_NX.CORTEX,'/api/events?limit=20'); return (d?.rows||[]).map(r=>`${_nxFts(r.ts)} ${r.type||'?'} [${r.source||'?'}]`).join('\n')||'(empty)'; },
 
   // Intelligence
   'intel':       () => { go('intel'); },
   'drift':       async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/status'); return d?`Drift: ${d.driftLevel} · Patterns: ${d.patterns} (${d.crystallised} crystallised) · Reuse: ${d.reuseItems}`:'intelligence offline'; },
-  'patterns':    async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/patterns'); return (d?.patterns||[]).slice(0,10).map(p=>`[${p.patternType}] ${p.description} (${((p.confidence||0)*100).toFixed(0)}%)`).join('
-')||'(none)'; },
-  'faults':      async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/failures'); const f=Array.isArray(d?.failures)?d.failures:Object.values(d?.failures||{}); return f.sort((a,b)=>(b.count||0)-(a.count||0)).slice(0,10).map(fi=>`${fi.faultClass} ×${fi.count}`).join('
-')||'(none)'; },
+  'patterns':    async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/patterns'); return (d?.patterns||[]).slice(0,10).map(p=>`[${p.patternType}] ${p.description} (${((p.confidence||0)*100).toFixed(0)}%)`).join('\n')||'(none)'; },
+  'faults':      async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/failures'); const f=Array.isArray(d?.failures)?d.failures:Object.values(d?.failures||{}); return f.sort((a,b)=>(b.count||0)-(a.count||0)).slice(0,10).map(fi=>`${fi.faultClass} ×${fi.count}`).join('\n')||'(none)'; },
 
   // Architect
   'architect':   () => { go('architect'); },
-  'hooks':       async() => { const d=await _nxGet(_NX.ARCHITECT,'/api/hooks'); return (d?.hooks||[]).map(h=>`[${h.type}] ${h.name} (${h.meta?.status||'active'})`).join('
-')||'architect offline'; },
+  'hooks':       async() => { const d=await _nxGet(_NX.ARCHITECT,'/api/hooks'); return (d?.hooks||[]).map(h=>`[${h.type}] ${h.name} (${h.meta?.status||'active'})`).join('\n')||'architect offline'; },
   'hook':        async(args) => { const d=await _nxGet(_NX.ARCHITECT,`/api/hooks/${args[0]}`); return d?.hook?JSON.stringify(d.hook,null,2):'not found'; },
   'snr':         async(args) => { if(!args[0]) return 'usage: snr <json>'; let src; try{src=JSON.parse(args.join(' '))}catch{return 'invalid JSON';}; const r=await _nxPost(_NX.ARCHITECT,'/api/snr/check',{source:src}); return r?.result?`SNR: ${r.result.score} → ${r.result.recommendation}`:r?.error||'offline'; },
   'scan':        async(args) => { if(!args[0]) return 'usage: scan <path>'; const r=await _nxPost(_NX.ARCHITECT,'/api/blueprint/scan',{rootPath:args.join(' ')}); return r?.ok?`Blueprint created: ${r.blueprint?.name} (SNR ${r.blueprint?.snrScore})`:r?.error||'failed'; },
 
   // Meta / system
   'meta':        () => { go('meta'); },
-  'health':      async() => { const results=await Promise.all(META_SYSTEMS.map(async s=>{const h=await _nxGet(s.base,'/health',2000);return `${s.id.padEnd(12)} ${h?.ok?'ONLINE ':'OFFLINE'} :${s.port}`;})); return results.join('
-'); },
+  'health':      async() => { const results=await Promise.all(META_SYSTEMS.map(async s=>{const h=await _nxGet(s.base,'/health',2000);return `${s.id.padEnd(12)} ${h?.ok?'ONLINE ':'OFFLINE'} :${s.port}`;})); return results.join('\n'); },
   'systems':     async() => { const d=await _nxGet(_NX.ORCH,'/health'); return JSON.stringify(d?.systems||d,null,2)||'orchestrator offline'; },
   'snapshot':    async(args) => { const r=await _nxPost(_NX.CORTEX,'/api/snapshots/create',{message:args.join(' ')||'cli snapshot'}); return r?.ok?`Snapshot: ${r.snapId}`:`Failed: ${r?.error}`; },
 
   // Guardian
-  'jobs':        async() => { const d=await _nxGet(_NX.GUARDIAN,'/jobs'); return (d?.jobs||[]).map(j=>`[${j.status}] #${(j.id||'').slice(0,8)} ${j.command||''} ${j.provider||''}`).join('
-')||'(no jobs)'; },
+  'jobs':        async() => { const d=await _nxGet(_NX.GUARDIAN,'/jobs'); return (d?.jobs||[]).map(j=>`[${j.status}] #${(j.id||'').slice(0,8)} ${j.command||''} ${j.provider||''}`).join('\n')||'(no jobs)'; },
   'dispatch':    async(args) => { const [provider,...rest]=args; const prompt=rest.join(' '); if(!provider||!prompt) return 'usage: dispatch <provider> <prompt>'; const r=await _nxPost(_NX.GUARDIAN,'/command',{provider,command:'code',prompt}); return r?.jobId?`Dispatched: ${r.jobId}`:JSON.stringify(r); },
-  'providers':   async() => { const d=await _nxGet(_NX.GUARDIAN,'/providers'); return (d?.providers||[]).map(p=>`${p.provider||p.id} ${p.connected?'CONNECTED':'OFFLINE'} ${p.tabId||''}`).join('
-')||'(none)'; },
+  'providers':   async() => { const d=await _nxGet(_NX.GUARDIAN,'/providers'); return (d?.providers||[]).map(p=>`${p.provider||p.id} ${p.connected?'CONNECTED':'OFFLINE'} ${p.tabId||''}`).join('\n')||'(none)'; },
 
   // Cortex
-  'events':      async(args) => { const n=parseInt(args[0])||20; const d=await _nxGet(_NX.CORTEX,`/api/events?limit=${n}`); return (d?.rows||d?.events||[]).map(r=>`${_nxFts(r.ts)} ${r.type||'?'}`).join('
-')||'(empty)'; },
-  'tables':      async() => { const d=await _nxGet(_NX.CORTEX,'/health'); const c=d?.jaa?.counts||{}; return Object.entries(c).filter(([,v])=>v>0).map(([k,v])=>`${k.padEnd(28)} ${v}`).join('
-')||'(no data)'; },
-  'versions':    async() => { const d=await _nxGet(_NX.CORTEX,'/api/versionium/log?n=10'); return (d?.commits||d?.log||[]).map(v=>`${(v.hash||'').slice(0,8)} ${v.branch||'main'} ${v.message||''}`.trim()).join('
-')||'(none)'; },
+  'events':      async(args) => { const n=parseInt(args[0])||20; const d=await _nxGet(_NX.CORTEX,`/api/events?limit=${n}`); return (d?.rows||d?.events||[]).map(r=>`${_nxFts(r.ts)} ${r.type||'?'}`).join('\n')||'(empty)'; },
+  'tables':      async() => { const d=await _nxGet(_NX.CORTEX,'/health'); const c=d?.jaa?.counts||{}; return Object.entries(c).filter(([,v])=>v>0).map(([k,v])=>`${k.padEnd(28)} ${v}`).join('\n')||'(no data)'; },
+  'versions':    async() => { const d=await _nxGet(_NX.CORTEX,'/api/versionium/log?n=10'); return (d?.commits||d?.log||[]).map(v=>`${(v.hash||'').slice(0,8)} ${v.branch||'main'} ${v.message||''}`.trim()).join('\n')||'(none)'; },
 };
 
 // Patch into existing console command runner if present

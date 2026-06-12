@@ -29,6 +29,7 @@ const nc   = require('../nexus-connect');
 
 const { BootSequence }     = require('../lib/boot-sequence');
 const { createBridgeLedger }   = require('./ledger');
+const { createCFRLedger }      = require('../lib/cfr');
 const { createBridgeIdentity } = require('./identity');
 const { createBridgeRegistry } = require('./registry');
 const { createBridgeRouter }   = require('./router');
@@ -39,7 +40,7 @@ const DATA_DIR   = path.join(ROOT, 'data', 'bridge');
 const LEDGER_DIR = process.env.BRIDGE_LEDGER_DIR || path.join(DATA_DIR, 'ledger');
 const VERSION    = '3.0.0';
 
-let ledger, identity, registry, router, server;
+let ledger, identity, registry, router, server, cfrLedger;
 
 async function bootBridge() {
   const seq = new BootSequence({
@@ -65,6 +66,10 @@ async function bootBridge() {
       ledger = createBridgeLedger({ ledgerDir: LEDGER_DIR });
       const { replayed } = ledger.open();
       if (replayed) console.log(`[bridge] replayed ${replayed} requests from ledger`);
+
+      // CFR-Ω field ledger — powers /cfr/* routes (CFR FIELD panel)
+      cfrLedger = createCFRLedger({ ledgerDir: path.join(LEDGER_DIR, 'cfr'), systemId: 'bridge' });
+      cfrLedger.open();
     },
   });
 
@@ -104,7 +109,7 @@ async function bootBridge() {
   seq.phase({ name: 'server.start', type: 'HARD',
     label: `HTTP server on :${BRIDGE_PORT}`,
     fn: async () => {
-      server = createBridgeServer({ identity, registry, router, ledger });
+      server = createBridgeServer({ identity, registry, router, ledger, cfrLedger });
       await server.start();
     },
   });

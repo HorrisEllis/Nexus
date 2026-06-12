@@ -23,6 +23,9 @@ const { randomUUID } = require('crypto');
 
 const { HookRegistry }          = require('./src/hooks/Registry');
 const { Blueprint, SNRGate, Translate, scanTopology } = require('./src/spec/Blueprint');
+// Living hook registry — the canonical wire map for all NEXUS systems
+const systemHooks = (() => { try { return require('../hooks'); } catch(_) { return null; } })();
+const { createCompileRoutes }   = (() => { try { return require('./compile-route'); } catch(_) { return { createCompileRoutes: null }; } })();
 
 const PORT = process.env.ARCHITECT_PORT || 3747;
 const CORTEX_PORT = process.env.CORTEX_PORT || 3748;
@@ -155,10 +158,21 @@ async function boot() {
   const blueprint = new Blueprint({ jaa, hooks: registry, busEmit });
   const snrGate   = new SNRGate({ jaa, busEmit });
   const translate  = new Translate();
+  const handleCompileRoute = createCompileRoutes ? createCompileRoutes({ jaa, busEmit, architectRoot: __dirname }) : null;
 
   // ── Seed built-in hooks (first boot) ────────────────────────────────────
   if (registry.list().length === 0) {
     _seedBuiltinHooks(registry);
+    // Also seed from living hooks registry (hooks/*.hooks.js)
+    if (systemHooks) {
+      const allHooks = systemHooks.allHooks ? systemHooks.allHooks() : [];
+      let seeded = 0;
+      for (const hook of allHooks) {
+        try { registry.register(hook); seeded++; }
+        catch(_) {} // skip duplicates
+      }
+      if (seeded > 0) console.log(`[architect] seeded ${seeded} hooks from living registry`);
+    }
   }
 
   // Phase 5 HARD: HTTP server
@@ -302,6 +316,18 @@ async function boot() {
           const sourceId = seg[3];
           return json(res, 200, { ok: true, history: snrGate.history(sourceId) });
         }
+        // POST /api/snr/route — run SNR then route output to correct downstream
+        if (method === 'POST' && action === 'route') {
+          const body = await readBody(req);
+          const { source, context, opts } = body;
+          if (!source) return json(res, 400, { ok: false, error: 'source required' });
+          try {
+            const routeResult = await snrGate.route(source, context || {}, opts || {});
+            busEmit('architect.snr.routed', { sourceId: source.id, score: routeResult.snr.score, target: routeResult.target });
+            return json(res, 200, { ok: true, ...routeResult });
+          } catch(e) { return json(res, 500, { ok: false, error: e.message }); }
+        }
+
         // GET /api/snr — recent results
         if (method === 'GET' && !action) {
           const results = jaa.query('snr_results', () => true, 20).map(r => r.data || r);
@@ -313,14 +339,65 @@ async function boot() {
       if (path_.startsWith('/api/translate')) {
         const seg = path_.split('/').filter(Boolean);
         const action = seg[2];
+
+        // POST /api/translate/utl — raw text → constraint objects
         if (method === 'POST' && action === 'utl') {
           const { text } = await readBody(req);
-          return json(res, 200, { ok: true, result: translate.utl(text) });
+          if (!text) return json(res, 400, { ok: false, error: 'text required' });
+          const result = translate.utl(text);
+          jaa.insert('event_log', { type: 'architect.utl.processed', payload: { type_signature: result.type_signature, confidence: result.confidence, constraints: result.constraints.length }, source: 'translate', ts: Date.now() });
+          return json(res, 200, { ok: true, result });
         }
+
+        // POST /api/translate/clip-to-timeline — Clip → timeline
         if (method === 'POST' && action === 'clip-to-timeline') {
           const { clip, format } = await readBody(req);
           return json(res, 200, { ok: true, timeline: translate.clipToTimeline(clip, format || 'markdown') });
         }
+
+        // POST /api/translate/schema-to-types — JSON Schema → TypeScript
+        if (method === 'POST' && action === 'schema-to-types') {
+          const { schema, name } = await readBody(req);
+          if (!schema) return json(res, 400, { ok: false, error: 'schema required' });
+          return json(res, 200, { ok: true, types: translate.schemaToTypes(schema, name || 'Schema') });
+        }
+
+        // POST /api/translate/field-to-schema — ConstraintField → JSON Schema
+        if (method === 'POST' && action === 'field-to-schema') {
+          const { field } = await readBody(req);
+          return json(res, 200, { ok: true, schema: translate.fieldToSchema(field) });
+        }
+
+        // POST /api/translate/seam-to-js — Seam phrase → JS handler
+        if (method === 'POST' && action === 'seam-to-js') {
+          const { phrase } = await readBody(req);
+          if (!phrase) return json(res, 400, { ok: false, error: 'phrase required' });
+          return json(res, 200, { ok: true, js: translate.seamToJs(phrase) });
+        }
+
+        // POST /api/translate/blueprint-to-spec — Blueprint → .spec structure
+        if (method === 'POST' && action === 'blueprint-to-spec') {
+          const { blueprintId } = await readBody(req);
+          const bp = blueprintId ? blueprint.read(blueprintId) : null;
+          if (!bp) return json(res, 404, { ok: false, error: 'blueprint not found' });
+          return json(res, 200, { ok: true, spec: translate.blueprintToSpec(bp) });
+        }
+      }
+
+      // ── Spec Compiler integration ────────────────────────────────────────
+      if (path_.startsWith('/api/compile') && handleCompileRoute) {
+        const result = await handleCompileRoute(method, path_, req, res, url, readBody, json);
+        if (result !== null) return result;
+      }
+
+      // ── Spec Builder UI ──────────────────────────────────────────────────
+      if (path_ === '/ui/spec-builder' && method === 'GET') {
+        const htmlPath = path.join(__dirname, 'src', 'ui', 'spec-builder.html');
+        try {
+          const content = fs.readFileSync(htmlPath, 'utf8');
+          res.writeHead(200, { 'Content-Type':'text/html; charset=utf-8', 'Access-Control-Allow-Origin':'*' });
+          return res.end(content);
+        } catch(_) { return json(res, 404, { ok: false, error: 'spec-builder not found' }); }
       }
 
       // ── Topology Map ─────────────────────────────────────────────────────

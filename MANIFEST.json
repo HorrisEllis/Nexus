@@ -76,6 +76,23 @@
       "port": 4242,
       "uuid": "emerge-ide-v1-0-0",
       "file": "emerge-ide.js"
+    },
+    "bridge": {
+      "port": 9999,
+      "uuid": "nexus-bridge-v1-0000-4000-0000-000000000001",
+      "file": "bridge/index.js",
+      "boots": "first",
+      "role": "connective_tissue"
+    },
+    "architect": {
+      "port": 3747,
+      "uuid": "architect-service-v1-0000-4000",
+      "file": "architect/service.js"
+    },
+    "diagnostic": {
+      "port": 7825,
+      "uuid": "nexus-diagnostic-service-v1-0000-4000-0000-000000000001",
+      "file": "service/nexus-diagnostic.js"
     }
   },
   "axiom_violations_fixed": [

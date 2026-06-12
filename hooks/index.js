@@ -48,7 +48,7 @@ const SYSTEMS = {
 // ── Unified query interface ────────────────────────────────────────────────
 
 function allHooks() {
-  return Object.values(SYSTEMS).flatMap(s => s.hooks || []);
+  return canonicalizeHooks(Object.values(SYSTEMS).flatMap(s => s.hooks || []));
 }
 
 function bySystem(systemId) {
@@ -136,6 +136,22 @@ function seamManifest() {
     type:        h.type,
     status:      h.status,
   }));
+}
+
+// ── G-A-003: canonicalize webserver hook port declarations ──────────────────
+// Ensures every webserver-type hook has a canonical port at hook.config.port
+function canonicalizeWebserverHook(hook) {
+  if (hook.type !== 'webserver') return hook;
+  // Derive canonical port: config.port || to.port || from.port
+  const port = hook.config?.port ?? hook.to?.port ?? hook.from?.port ?? null;
+  if (port && (!hook.config || hook.config.port === undefined)) {
+    return { ...hook, config: { ...(hook.config || {}), port } };
+  }
+  return hook;
+}
+
+function canonicalizeHooks(hooks) {
+  return hooks.map(canonicalizeWebserverHook);
 }
 
 module.exports = {

@@ -56,12 +56,15 @@ function startPulse(systemId, port) {
 }
 
 const PORTS = {
-  orchestrator: parseInt(process.env.ORCHESTRATOR_PORT || '9000'),
-  cortex:       parseInt(process.env.NEXUS_PORT        || '3748'),
-  guardian:     parseInt(process.env.GUARDIAN_HTTP_PORT|| '7820'),
-  idearium:     parseInt(process.env.IDEARIUM_PORT     || '4800'),
-  emerge:       parseInt(process.env.EMERGE_PORT       || '4242'),
-  ollama:       parseInt(process.env.OLLAMA_PORT       || '11434'),
+  bridge:       parseInt(process.env.BRIDGE_PORT        || '9999'),
+  orchestrator: parseInt(process.env.ORCHESTRATOR_PORT  || '9000'),
+  cortex:       parseInt(process.env.NEXUS_PORT         || '3748'),
+  guardian:     parseInt(process.env.GUARDIAN_HTTP_PORT || '7820'),
+  idearium:     parseInt(process.env.IDEARIUM_PORT      || '4800'),
+  architect:    parseInt(process.env.ARCHITECT_PORT     || '3747'),
+  emerge:       parseInt(process.env.EMERGE_PORT        || '4242'),
+  diagnostic:   parseInt(process.env.DIAGNOSTIC_PORT   || '7825'),
+  ollama:       parseInt(process.env.OLLAMA_PORT        || '11434'),
 };
 
 const HEALTH_PATHS = {

@@ -65,7 +65,18 @@ class Blueprint {
       version: spec.meta?.version || '1.0.0',
       hooks:       (spec.hooks    || []).map(h => ({ id: h.id || randomUUID(), name: h.name, type: h.type, intent: h.intent })),
       surfaces:    (spec.surfaces || spec.architecture?.surfaces || []).map(s => ({ id: s.id, name: s.name, layer: s.layer, path: s.path })),
-      constraints: (spec.constraints || []).map(c => ({ id: c.id, description: c.description, type: c.type })),
+      constraints: (spec.constraints || []).map((c, i) => ({
+        id:          c.id || `CC-${String(i+1).padStart(3,'0')}`,
+        description: c.description || c.rule || '',
+        type:        c.type || (c.rule?.match(/\b(must not|never|forbidden)\b/i) ? 'hard' : 'soft'),
+        enforced_by: c.enforced_by || c.enforcedBy || [],
+        causedBy:    c.causedBy || 'spec',
+        status:      c.status || 'active',
+        // Embed axiom reference if present
+        axiom:       c.axiom || c.ref || null,
+        // Embed condition for SNR gate evaluation
+        condition:   c.condition || null,
+      })),
       gaps:        (spec.gaps || []).map(g => ({ id: g.id, severity: g.severity, description: g.description, status: g.status })),
       tensions:    [],
       vocabulary:  [],
@@ -225,6 +236,69 @@ class SNRGate {
     return tags;
   }
 
+  // ── route — L7 final output surface ──────────────────────────────────────
+  // §A-5: SNR gate is the last thing before output.
+  // Dispatches to the correct downstream based on score.
+  async route(source, context = {}, opts = {}) {
+    const snrResult = this.check(source, context);
+    const { score, recommendation } = snrResult;
+    const guardianPort = opts.guardianPort || 7820;
+    const ideariumPort = opts.ideariumPort || 4800;
+    const ollamaPort   = opts.ollamaPort   || 11434;
+    const http = require('http');
+
+    const dispatch = (port, path, body, label) => new Promise(resolve => {
+      const payload = JSON.stringify(body);
+      const req = http.request({
+        hostname: '127.0.0.1', port, path, method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) },
+      }, res => {
+        let d = '';
+        res.on('data', c => d += c);
+        res.on('end', () => {
+          try { resolve({ ok: true, label, status: res.statusCode, body: JSON.parse(d) }); }
+          catch(_) { resolve({ ok: true, label, status: res.statusCode }); }
+        });
+      });
+      req.on('error', e => resolve({ ok: false, label, error: e.message }));
+      req.write(payload); req.end();
+    });
+
+    let routeResult = { snr: snrResult, dispatched: false, target: recommendation };
+
+    if (score >= SNR_THRESHOLDS.send) {
+      // ≥ 0.85: send to Guardian for AI processing
+      const body = { type: 'snr.output.send', payload: { source, context, snr: snrResult }, source: 'architect-snr' };
+      routeResult.dispatch = await dispatch(guardianPort, '/api/event', body, 'guardian');
+      routeResult.dispatched = routeResult.dispatch.ok;
+
+    } else if (score >= SNR_THRESHOLDS.hold) {
+      // ≥ 0.65: hold in Idearium for review
+      const body = { description: `SNR hold: score=${score.toFixed(2)} — ${source?.name || 'unknown'}`, tags: ['snr-hold', 'needs-review'], phase: 'seed' };
+      routeResult.dispatch = await dispatch(ideariumPort, '/api/ideas', body, 'idearium');
+      routeResult.dispatched = routeResult.dispatch.ok;
+
+    } else if (score >= SNR_THRESHOLDS.rewrite) {
+      // ≥ 0.45: log gap, request rewrite
+      if (this._jaa) {
+        this._jaa.insert('gaps', { id: require('crypto').randomUUID(), status: 'open', severity: 'high',
+          description: `SNR rewrite required: score=${score.toFixed(2)}`, sourceId: source?.id, causedBy: 'snr-gate', ts: Date.now() });
+      }
+      this._emit('architect.snr.rewrite-required', { sourceId: source?.id, score, tags: snrResult.tags });
+      routeResult.dispatched = true;
+
+    } else {
+      // < 0.45: flag — do not route
+      if (this._jaa) {
+        this._jaa.insert('gaps', { id: require('crypto').randomUUID(), status: 'open', severity: 'critical',
+          description: `SNR flagged: score=${score.toFixed(2)} below minimum threshold`, sourceId: source?.id, causedBy: 'snr-gate', ts: Date.now() });
+      }
+      this._emit('architect.snr.flagged', { sourceId: source?.id, score, tags: snrResult.tags });
+    }
+
+    return routeResult;
+  }
+
   history(sourceId) {
     if (!this._jaa) return [];
     return this._jaa.query('snr_results', r => r.sourceId === sourceId, 50)
@@ -254,9 +328,13 @@ function scanTopology(rootPath, opts = {}) {
         walk(full, depth + 1);
       } else if (e.isFile() && /\.(js|json|ts|spec|md|yaml|yml|eg)$/.test(e.name)) {
         const type = e.name.endsWith('.spec') || e.name.endsWith('.spec.json') ? 'spec'
-          : e.name.endsWith('.test.js') ? 'test'
+          : e.name.endsWith('.eg') || e.name.endsWith('.emerge') ? 'seam-grammar'
+          : e.name.endsWith('.seam') ? 'seam-contract'
+          : e.name.endsWith('.test.js') || e.name.endsWith('.test.ts') ? 'test'
           : e.name.endsWith('.json') ? (e.name.includes('schema') ? 'schema' : 'config')
           : e.name.endsWith('.md') ? 'data'
+          : e.name.endsWith('.ts') ? 'typescript'
+          : e.name.endsWith('.yaml') || e.name.endsWith('.yml') ? 'yaml'
           : 'module';
         let size = 0;
         try { size = fs.statSync(full).size; } catch(_) {}
@@ -267,6 +345,16 @@ function scanTopology(rootPath, opts = {}) {
   walk(rootPath, 0);
 
   // Detect surface directories (any dir with index.js or package.json)
+  // Surface seam-grammar files as explicit surfaces
+  for (const f of files.filter(ff => ff.type === 'seam-grammar' || ff.type === 'seam-contract')) {
+    surfaces.push({
+      name: path.basename(f.path, path.extname(f.path)),
+      path: f.path,
+      type: f.type,
+      layer: f.type === 'seam-contract' ? 5 : 4,  // L5=seam/L4=agents
+    });
+  }
+
   const dirSet = new Set(files.map(f => path.dirname(f.path)));
   let layerIdx = 0;
   for (const dir of [...dirSet].slice(0, 20)) {
@@ -284,48 +372,213 @@ function scanTopology(rootPath, opts = {}) {
   if (!hasTests) {
     gaps.push({ id: randomUUID(), type:'missing-test', description:'No test files found', location: rootPath, severity:'high', suggestion:'Add test files' });
   }
-  const hasSpec = files.some(f => f.type === 'spec');
+  const hasSpec  = files.some(f => f.type === 'spec');
+  const hasSeam  = files.some(f => f.type === 'seam-grammar' || f.type === 'seam-contract');
   if (!hasSpec) {
     gaps.push({ id: randomUUID(), type:'no-schema', description:'No .spec file found', location: rootPath, severity:'medium', suggestion:'Add a .spec or .spec.json file' });
+  }
+  if (hasSeam && !hasSpec) {
+    gaps.push({ id: randomUUID(), type:'seam-no-spec', description:'.eg/.seam files found but no .spec — seam grammar is not backed by a spec contract', location: rootPath, severity:'medium', suggestion:'Add a .spec file describing the seam grammar contract' });
   }
 
   return { files, surfaces, gaps, dataFlows, snrScore: Math.max(0.3, 1 - (gaps.filter(g=>g.severity==='critical').length * 0.3)) };
 }
 
 // ── Translate engine (L1 §5.6) ────────────────────────────────────────────
+// ── UTL keyword taxonomy ─────────────────────────────────────────────────────
+const UTL_PATTERNS = {
+  // Constraint signals
+  constraint: /\b(must|shall|never|always|only|forbidden|required|invariant|law|axiom|§)\b/gi,
+  // Gap signals
+  gap:        /\b(missing|unknown|unclear|undefined|TODO|FIXME|gap|open|unresolved|tbd|not yet)\b/gi,
+  // Tension signals
+  tension:    /\b(vs|versus|trade.?off|either|or|conflict|tension|balance|choose|prefer)\b/gi,
+  // Hook signals
+  hook:       /\b(wire|connect|route|from|to|emit|listen|subscribe|dispatch|send|receive)\b/gi,
+  // Layer signals
+  layer:      /\b(L[0-7]|layer|foundation|persistence|bus|data|logic|agent|seam|ui|snr)\b/gi,
+  // Behavioral signals
+  behavior:   /\b(when|then|if|on error|fail|throw|assert|verify|validate|check)\b/gi,
+};
+
 class Translate {
+  // ── utl — Universal Translation Layer ────────────────────────────────────
+  // §I-5: No engine receives raw text. All input passes through UTL first.
+  // Converts natural language intent into structured constraint objects.
   utl(rawInput) {
-    // Universal Translation Layer — raw text → structured constraint objects
-    // Full expression evaluator is Phase 2 — this is the stub layer
-    const constraints = [], gaps = [], tensions = [];
-    const words = (rawInput || '').split(/\s+/);
-    const confidence = words.length > 5 ? 0.7 : 0.4;
-    return { raw: rawInput, constraints, gaps, tensions, confidence, type_signature: 'text.natural' };
+    const text = (rawInput || '').trim();
+    if (!text) return { raw: text, constraints: [], gaps: [], tensions: [], hooks: [], type_signature: 'text.empty', confidence: 0 };
+
+    const constraints = [], gaps = [], tensions = [], hooks = [];
+    const sentences = text.split(/[.!?\n]+/).map(s => s.trim()).filter(Boolean);
+    const words = text.split(/\s+/);
+
+    // Score confidence from content density
+    const constraintMatches = (text.match(UTL_PATTERNS.constraint) || []).length;
+    const gapMatches        = (text.match(UTL_PATTERNS.gap)        || []).length;
+    const tensionMatches    = (text.match(UTL_PATTERNS.tension)    || []).length;
+    const hookMatches       = (text.match(UTL_PATTERNS.hook)       || []).length;
+    const layerMatches      = (text.match(UTL_PATTERNS.layer)      || []).length;
+
+    const totalSignals = constraintMatches + gapMatches + tensionMatches + hookMatches;
+    const confidence = Math.min(0.95, 0.3 + (totalSignals / Math.max(words.length, 1)) * 2 + (layerMatches > 0 ? 0.1 : 0));
+
+    // Extract constraint sentences
+    for (const sent of sentences) {
+      if (UTL_PATTERNS.constraint.test(sent)) {
+        UTL_PATTERNS.constraint.lastIndex = 0;
+        constraints.push({
+          id:          `utl-c-${Date.now().toString(36)}-${constraints.length}`,
+          description: sent,
+          type:        sent.match(/\b(never|forbidden|must not)\b/i) ? 'hard' : 'soft',
+          source:      'utl',
+          confidence,
+        });
+      }
+      UTL_PATTERNS.constraint.lastIndex = 0;
+
+      if (UTL_PATTERNS.gap.test(sent)) {
+        UTL_PATTERNS.gap.lastIndex = 0;
+        gaps.push({
+          id:          `utl-g-${Date.now().toString(36)}-${gaps.length}`,
+          description: sent,
+          severity:    sent.match(/\b(TODO|FIXME|missing|critical)\b/i) ? 'high' : 'medium',
+          source:      'utl',
+        });
+      }
+      UTL_PATTERNS.gap.lastIndex = 0;
+
+      if (UTL_PATTERNS.tension.test(sent)) {
+        UTL_PATTERNS.tension.lastIndex = 0;
+        tensions.push({
+          id:          `utl-t-${Date.now().toString(36)}-${tensions.length}`,
+          description: sent,
+          source:      'utl',
+        });
+      }
+      UTL_PATTERNS.tension.lastIndex = 0;
+
+      if (UTL_PATTERNS.hook.test(sent)) {
+        UTL_PATTERNS.hook.lastIndex = 0;
+        hooks.push({
+          id:      `utl-h-${Date.now().toString(36)}-${hooks.length}`,
+          intent:  sent,
+          source:  'utl',
+        });
+      }
+      UTL_PATTERNS.hook.lastIndex = 0;
+    }
+
+    // Detect type signature from content
+    let type_signature = 'text.natural';
+    if (text.startsWith('§') || text.match(/^[A-Z_]+:/m))   type_signature = 'text.axiom';
+    else if (text.match(/^spec:|^meta:|^modules:/m))         type_signature = 'text.spec';
+    else if (constraintMatches > tensionMatches + gapMatches) type_signature = 'text.constraint-dense';
+    else if (gapMatches > 2)                                  type_signature = 'text.gap-rich';
+    else if (hookMatches > 2)                                 type_signature = 'text.hook-dense';
+
+    return { raw: text, constraints, gaps, tensions, hooks, confidence, type_signature, signals: { constraintMatches, gapMatches, tensionMatches, hookMatches, layerMatches } };
   }
 
+  // ── fieldToSchema — ConstraintField → JSON Schema ─────────────────────────
   fieldToSchema(field) {
-    // ConstraintField → JSON Schema
-    if (!field) return { type: 'object' };
-    return { type: 'object', description: JSON.stringify(field), properties: {} };
+    if (!field) return { type: 'object', properties: {} };
+    const props = {};
+    for (const [k, v] of Object.entries(field)) {
+      if (typeof v === 'number')  props[k] = { type: 'number',  description: `CFR dimension: ${k}`, minimum: 0, maximum: 1 };
+      else if (typeof v === 'string') props[k] = { type: 'string' };
+      else if (typeof v === 'boolean') props[k] = { type: 'boolean' };
+      else props[k] = { type: 'object' };
+    }
+    return { type: 'object', description: 'ConstraintField snapshot', properties: props, required: Object.keys(props) };
   }
 
+  // ── schemaToTypes — JSON Schema → TypeScript interfaces ───────────────────
+  schemaToTypes(schema, name = 'Schema') {
+    if (!schema?.properties) return `export interface ${name} {}
+`;
+    const lines = [`export interface ${name} {`];
+    for (const [k, v] of Object.entries(schema.properties)) {
+      const tsType = v.type === 'number' ? 'number' : v.type === 'boolean' ? 'boolean' : v.type === 'object' ? 'Record<string,unknown>' : 'string';
+      const optional = (schema.required || []).includes(k) ? '' : '?';
+      lines.push(`  ${k}${optional}: ${tsType};${v.description ? ' // '+v.description : ''}`);
+    }
+    lines.push('}');
+    return lines.join('\n');
+  }
+
+  // ── clipToTimeline — Clip → human-readable timeline ───────────────────────
   clipToTimeline(clip, format = 'markdown') {
-    if (!clip?.events?.length) return '# Empty clip\n';
-    const lines = [`# Clip: ${clip.id}`, `Events: ${clip.events.length}`, ''];
-    for (const ev of clip.events.slice(0, 50)) {
-      lines.push(`- [${new Date(ev.meta?.wall || 0).toISOString()}] ${ev.type}`);
+    if (!clip?.events?.length) return format === 'json' ? '[]' : '# Empty clip\n';
+    if (format === 'json') return JSON.stringify(clip.events.map(ev => ({ ts: ev.meta?.wall || 0, type: ev.type, payload: ev.payload })), null, 2);
+    if (format === 'seam') {
+      const lines = [`seam clip ${clip.id} {`];
+      for (const ev of clip.events.slice(0, 100)) lines.push(`  event ${ev.type} { ts = ${ev.meta?.wall || 0} }`);
+      lines.push('}');
+      return lines.join('\n');
+    }
+    // markdown
+    const lines = [`# Clip: ${clip.id || 'unnamed'}`, `> ${clip.events.length} events · ${clip.duration || '?'}ms`, ''];
+    for (const ev of clip.events.slice(0, 100)) {
+      const wall = ev.meta?.wall || ev.ts || 0;
+      lines.push(`- **${ev.type}** \`${new Date(wall).toISOString()}\`${ev.payload ? ' — '+JSON.stringify(ev.payload).slice(0,80) : ''}`);
     }
     return lines.join('\n');
   }
 
+  // ── seamToJs — Seam phrase → JS predicate/handler ─────────────────────────
+  seamToJs(phrase) {
+    if (!phrase) return '// empty phrase';
+    // Simple Seam → JS pattern translation
+    const p = phrase.trim();
+    // "when X emit Y" → event handler
+    const whenEmit = p.match(/^when\s+([\w.]+)\s+emit\s+([\w.]+)(?:\s+\{(.+)\})?$/i);
+    if (whenEmit) {
+      const [,trigger, event, payload=''] = whenEmit;
+      return `stream.register(new Gate('${trigger}', ev => {\n  stream.emit(new Event('${event}', {${payload}}));\n}));`;
+    }
+    // "if X then Y" → conditional
+    const ifThen = p.match(/^if\s+(.+)\s+then\s+(.+)$/i);
+    if (ifThen) {
+      const [,cond, action] = ifThen;
+      return `if (${cond.trim()}) { ${action.trim()}; }`;
+    }
+    // "gate X validates Y" → gate registration
+    const gate = p.match(/^gate\s+([\w.]+)\s+validates?\s+(.+)$/i);
+    if (gate) {
+      const [,name, contract] = gate;
+      return `stream.register(new Gate('${name}', ev => {\n  // validate: ${contract.trim()}\n  if (!ev.data) throw new Error('${name}: invalid — ${contract.trim()}');\n}));`;
+    }
+    return `// seam: ${p}`;
+  }
+
+  // ── blueprintToSpec — Blueprint → living .spec structure ─────────────────
   blueprintToSpec(blueprint) {
+    const id = blueprint.id || require('crypto').randomUUID();
     return {
-      meta: { name: blueprint.name, version: blueprint.version, status: 'growing', uuid: blueprint.id },
-      intent: { purpose: `Blueprint: ${blueprint.name}`, problem_statement: '', non_goals: [] },
-      hooks: blueprint.hooks || [],
+      meta: {
+        name:       blueprint.name,
+        version:    blueprint.version || '0.1.0',
+        status:     'growing',
+        uuid:       id,
+        created_at: new Date().toISOString().slice(0, 10),
+        author:     'architect-utl',
+      },
+      intent: {
+        purpose:           `Blueprint: ${blueprint.name}`,
+        problem_statement: blueprint.intent || '',
+        non_goals:         [],
+      },
+      constraints: (blueprint.constraints || []).map((c, i) => ({
+        id:          c.id || `CC-${String(i+1).padStart(3,'0')}`,
+        description: c.description,
+        type:        c.type || 'soft',
+        enforced_by: [],
+      })),
+      hooks:    blueprint.hooks    || [],
       surfaces: blueprint.surfaces || [],
-      constraints: blueprint.constraints || [],
-      gaps: blueprint.gaps || [],
+      gaps:     (blueprint.gaps || []).map(g => ({ ...g, status: g.status || 'open' })),
+      schemas:  blueprint.schemas  || {},
     };
   }
 }

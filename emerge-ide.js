@@ -21,6 +21,18 @@ const kernelPath = [
 if (!kernelPath) { console.error('[ide] emerge-kernel.js not found'); process.exit(1); }
 const kernel = require(kernelPath);
 
+// ── Locate codegen ────────────────────────────────────────────────────────
+const codegenPath = [
+  path.join(__dirname, 'emerge-codegen-v2.js'),
+  path.join(__dirname, '..', 'emerge-codegen-v2.js'),
+].find(p => fs.existsSync(p));
+const codegen = codegenPath ? (() => {
+  try { return require(codegenPath); }
+  catch(e) { console.warn('[ide] codegen load failed:', e.message); return null; }
+})() : null;
+if (codegen) console.log('[ide] codegen loaded');
+else console.warn('[ide] emerge-codegen-v2.js not found — /api/codegen will return 503');
+
 const specPath = [
   path.join(__dirname, 'emerge.spec'),
   path.join(path.dirname(kernelPath), 'emerge.spec'),
@@ -195,6 +207,24 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // POST /api/codegen — compile .eg source → SISO-wired JS module
+  if (url==='/api/codegen' && method==='POST') {
+    let body='';
+    req.on('data',d=>body+=d);
+    req.on('end',()=>{
+      try{
+        const {source,filename}=JSON.parse(body);
+        if(!source){res.writeHead(400,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});return res.end(JSON.stringify({ok:false,error:'source required'}));}
+        if(!codegen){res.writeHead(503,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});return res.end(JSON.stringify({ok:false,error:'codegen not available'}));}
+        const {ir,valid,gaps,snr}=kernel.compile(source,filename||'input.eg');
+        const files=codegen.generateFile(ir,filename||'input.eg');
+        res.writeHead(200,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+        res.end(JSON.stringify({ok:true,valid,snr,gaps:gaps.length,files:files.map(f=>({filename:f.filename,size:f.content.length,content:f.content}))}));
+      }catch(e){res.writeHead(500,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});res.end(JSON.stringify({ok:false,error:e.message}));}
+    });
+    return;
+  }
+
   if (url==='/status') {
     res.writeHead(200,{'Content-Type':'application/json'});
     return res.end(JSON.stringify({ streams: bus.streams(), log: bus.log().tail(20) }));
@@ -255,8 +285,7 @@ if (fs.existsSync(IO_DIR)) {
 }
 
 // 4. Lifecycle handlers
-// Auto-open controlled by orchestrator.config.json → openEmergeOnBoot
-// Do not open here — orchestrator boot-systems decides
+setTimeout(() => require('child_process').exec(`start http://localhost:${PORT}`), 800);
 process.on('SIGINT', () => { console.log('\n[ide] stopped'); process.exit(0); });
 
   // Check ollama
@@ -277,5 +306,7 @@ process.on('SIGINT', () => { console.log('\n[ide] stopped'); process.exit(0); })
     }
 };
 
-// Auto-open removed — controlled by orchestrator.config.json
+// Auto-open browser on Windows
+setTimeout(() => require('child_process').exec(`start http://localhost:${PORT}`), 800);
+process.on('SIGINT', () => { console.log('\n[ide] stopped'); process.exit(0); });
 

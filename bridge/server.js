@@ -34,11 +34,19 @@ const BRIDGE_HOST = process.env.BRIDGE_HOST || '127.0.0.1';
 // ── SSE client registry ───────────────────────────────────────────────────────
 const _sseClients = new Set();
 
+// CFR field ledger ref — set by createBridgeServer, feeds bridge activity
+// into the CFR field so /cfr/* reflects real traffic.
+let _cfrLedger = null;
+
 function _pushSSE(type, data) {
   const msg = `data: ${JSON.stringify({ type, data, ts: Date.now() })}\n\n`;
   for (const res of _sseClients) {
     try { res.write(msg); }
     catch(_) { _sseClients.delete(res); }
+  }
+  if (_cfrLedger) {
+    try { _cfrLedger.record(`ncp.${type.replace(/^bridge\./,'')}`, data); }
+    catch(_) {}
   }
 }
 
@@ -309,8 +317,9 @@ function handleContract(req, res) {
 
 // ── createBridgeServer ────────────────────────────────────────────────────────
 
-function createBridgeServer({ identity, registry, router, ledger }) {
+function createBridgeServer({ identity, registry, router, ledger, cfrLedger }) {
   const deps = { identity, registry, router, ledger };
+  _cfrLedger = cfrLedger || null;
 
   const server = http.createServer(async (req, res) => {
     const url      = new URL(req.url, 'http://localhost');
@@ -365,6 +374,11 @@ function createBridgeServer({ identity, registry, router, ledger }) {
       // /bridge/subscribe is an alias for /bridge/sse (integration test compat)
       if ((pathname === '/bridge/sse' || pathname === '/bridge/subscribe') && method === 'GET')
         return handleSSE(req, res);
+
+      // CFR-Ω field routes — /cfr/health, /cfr/state, /cfr/field, /cfr/nodes, etc.
+      if (cfrLedger && pathname.startsWith('/cfr')) {
+        if (cfrLedger.handleCFRRoute(req, res, url)) return;
+      }
 
       // Causal spine routes (item 1.5)
       if (await routeCausal(method, pathname, url, req, res)) return;
