@@ -625,6 +625,14 @@ function _handleNCPMessage(msg) {
       break;
     }
 
+    case 'NEXUS_DOM_MAP': {
+      // DOM snapshot from userscript — store in tab context for agent tooling
+      if (msg.nodes && Array.isArray(msg.nodes)) {
+        bus.emit('guardian.tab.dom_map', { provider, tabId, nodes: msg.nodes, ts: msg.ts || Date.now(), meta: msg.meta });
+      }
+      break;
+    }
+
     case 'GUARDIAN_SESSION_NAMED': {
       if (msg.chatId && msg.sessionName) {
         bus.emit('guardian.session.named', { chatId: msg.chatId, sessionName: msg.sessionName, provider });

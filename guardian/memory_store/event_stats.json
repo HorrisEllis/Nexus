@@ -1,15 +1,9 @@
 {
   "stats": {
     "ncp.message.received": {
-      "count": 3031,
-      "lastTs": 1781247493781,
+      "count": 3037,
+      "lastTs": 1781247504201,
       "intervals": [
-        44109,
-        7672,
-        2,
-        8843,
-        44082,
-        7201,
         1,
         9668,
         5466633,
@@ -103,13 +97,19 @@
         1673,
         1020,
         93134,
-        77
+        77,
+        4402,
+        3074,
+        12,
+        2315,
+        471,
+        146
       ],
-      "totalMs": 525221446
+      "totalMs": 525231866
     },
     "ncp.client.connected": {
-      "count": 93,
-      "lastTs": 1781247397514,
+      "count": 94,
+      "lastTs": 1781247501252,
       "intervals": [
         15,
         17,
@@ -202,13 +202,14 @@
         3004,
         199040133,
         253,
-        80670
+        80670,
+        103738
       ],
-      "totalMs": 525125055
+      "totalMs": 525228793
     },
     "guardian.provider.connected": {
-      "count": 93,
-      "lastTs": 1781247397515,
+      "count": 94,
+      "lastTs": 1781247501252,
       "intervals": [
         15,
         16,
@@ -301,9 +302,10 @@
         3005,
         199040132,
         253,
-        80671
+        80671,
+        103737
       ],
-      "totalMs": 525125055
+      "totalMs": 525228792
     },
     "guardian.tab.event": {
       "count": 1413,
@@ -413,8 +415,8 @@
       "totalMs": 326141414
     },
     "ncp.client.disconnected": {
-      "count": 68,
-      "lastTs": 1781247395952,
+      "count": 69,
+      "lastTs": 1781247499244,
       "intervals": [
         4,
         1,
@@ -482,13 +484,14 @@
         27839,
         140425,
         2,
-        198982070
+        198982070,
+        103292
       ],
-      "totalMs": 525010239
+      "totalMs": 525113531
     },
     "guardian.provider.disconnected": {
-      "count": 68,
-      "lastTs": 1781247395952,
+      "count": 69,
+      "lastTs": 1781247499244,
       "intervals": [
         3,
         1,
@@ -556,13 +559,14 @@
         27840,
         140425,
         2,
-        198982069
+        198982069,
+        103292
       ],
-      "totalMs": 525010238
+      "totalMs": 525113530
     },
     "guardian.provider.registered": {
-      "count": 20,
-      "lastTs": 1781247397526,
+      "count": 21,
+      "lastTs": 1781247501269,
       "intervals": [
         253308401,
         26159742,
@@ -582,9 +586,10 @@
         326274,
         199043192,
         198,
-        80671
+        80671,
+        103743
       ],
-      "totalMs": 520167943
+      "totalMs": 520271686
     },
     "guardian.job.queued": {
       "count": 8,

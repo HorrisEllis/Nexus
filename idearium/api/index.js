@@ -177,7 +177,7 @@ const ROUTE_CAP = {
   'tunnel.status':    CAPS.READ_IDEAS,
   'tunnel.start':     CAPS.ADMIN,
   'tunnel.stop':      CAPS.ADMIN,
-  'stats.get':        CAPS.READ_IDEAS,
+  'stats.get':        null,              // public — non-sensitive, required by boot verify (§1.2 HALT fix)
   'snr.current':      CAPS.READ_IDEAS,
   'snr.history':      CAPS.READ_IDEAS,
   'events.log':       CAPS.READ_IDEAS,

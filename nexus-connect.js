@@ -261,4 +261,51 @@ async function postBridge(type, payload = {}) {
   }, 2000).catch(e => ({ ok: false, error: e.message }));
 }
 
-module.exports = { _req, postEvent, postLedger, postStream, postTableInsert, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, postBridge, PORTS };
+// ── bridgeEmit — emit a causal event to the Bridge Causal Spine (item 1.6) ────
+// §B-7: buffer locally on Bridge unreachable. Flush on reconnect.
+// Ring buffer: max 100 events. Oldest evicted when full.
+const _localBuffer = [];
+const _LOCAL_BUFFER_MAX = 100;
+let   _bridgeWasOffline = false;
+
+/**
+ * bridgeEmit — emit a causal event to /bridge/causal/emit.
+ *
+ * @param {object} opts
+ * @param {string}   opts.source       — must be a valid CAUSAL_SOURCE
+ * @param {string}   opts.action       — verb.noun, e.g. 'job.dispatched'
+ * @param {string}   [opts.sessionId]
+ * @param {Array}    [opts.causalEdges]  — [{ type, eventId }]
+ * @param {object}   [opts.input]
+ * @param {object}   [opts.output]
+ * @param {object}   [opts.stateDiff]   — deltas only
+ * @param {string[]} [opts.tags]
+ * @returns {Promise<{ ok, uuid? }>}
+ */
+async function bridgeEmit({ source, action, sessionId = null, causalEdges = [], input = {}, output = {}, stateDiff = {}, tags = [] } = {}) {
+  const payload = { source, action, sessionId, causalEdges, input, output, stateDiff, tags, ts: Date.now() };
+
+  try {
+    const result = await _req('bridge', 'POST', '/bridge/causal/emit', payload, 2000);
+
+    // If Bridge just came back online, flush the local buffer in order
+    if (_bridgeWasOffline && _localBuffer.length > 0) {
+      _bridgeWasOffline = false;
+      const toFlush = _localBuffer.splice(0);
+      for (const buffered of toFlush) {
+        await _req('bridge', 'POST', '/bridge/causal/emit', buffered, 2000).catch(() => {});
+      }
+      console.log(`[nexus-connect] flushed ${toFlush.length} buffered causal events`);
+    }
+
+    return result;
+  } catch (e) {
+    // Bridge unreachable — buffer locally (§B-7)
+    _bridgeWasOffline = true;
+    _localBuffer.push(payload);
+    if (_localBuffer.length > _LOCAL_BUFFER_MAX) _localBuffer.shift();
+    return { ok: false, buffered: true };
+  }
+}
+
+module.exports = { _req, postEvent, postLedger, postStream, postTableInsert, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, postBridge, bridgeEmit, PORTS };

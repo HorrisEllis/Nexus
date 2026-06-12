@@ -26,6 +26,7 @@
 const http           = require('http');
 const { randomUUID } = require('crypto');
 const { validateRequest, createRequest, STATUS } = require('./types');
+const { routeCausal } = require('./causal/server');
 
 const BRIDGE_PORT = parseInt(process.env.BRIDGE_PORT || '9999');
 const BRIDGE_HOST = process.env.BRIDGE_HOST || '127.0.0.1';
@@ -364,6 +365,9 @@ function createBridgeServer({ identity, registry, router, ledger }) {
       // /bridge/subscribe is an alias for /bridge/sse (integration test compat)
       if ((pathname === '/bridge/sse' || pathname === '/bridge/subscribe') && method === 'GET')
         return handleSSE(req, res);
+
+      // Causal spine routes (item 1.5)
+      if (await routeCausal(method, pathname, url, req, res)) return;
 
       _json(res, 404, { ok: false, error: `no route: ${method} ${pathname}` });
 

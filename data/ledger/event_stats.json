@@ -102,21 +102,9 @@
       "totalMs": 2881867
     },
     "orchestrator.pulse": {
-      "count": 880,
-      "lastTs": 1781247484045,
+      "count": 892,
+      "lastTs": 1781247544081,
       "intervals": [
-        7994,
-        1941,
-        80,
-        7991,
-        1939,
-        80,
-        7991,
-        1936,
-        80,
-        7994,
-        1931,
-        80,
         7999,
         1931,
         80,
@@ -204,9 +192,21 @@
         9934,
         79,
         9934,
-        79
+        79,
+        9923,
+        77,
+        9928,
+        77,
+        9934,
+        80,
+        9927,
+        79,
+        9921,
+        80,
+        9929,
+        81
       ],
-      "totalMs": 3041994
+      "totalMs": 3102030
     },
     "cortex.boot.started": {
       "count": 2,
@@ -396,8 +396,8 @@
       "totalMs": 0
     },
     "ncp.message.received": {
-      "count": 12,
-      "lastTs": 1781247493707,
+      "count": 19,
+      "lastTs": 1781247504203,
       "intervals": [
         1051,
         198,
@@ -409,9 +409,16 @@
         352,
         1672,
         1020,
-        93136
+        93136,
+        75,
+        4404,
+        3073,
+        11,
+        2316,
+        471,
+        146
       ],
-      "totalMs": 178096
+      "totalMs": 188592
     },
     "guardian.system.online": {
       "count": 1,
@@ -420,31 +427,34 @@
       "totalMs": 0
     },
     "ncp.client.connected": {
-      "count": 3,
-      "lastTs": 1781247397516,
+      "count": 4,
+      "lastTs": 1781247501254,
       "intervals": [
         253,
-        80667
+        80667,
+        103738
       ],
-      "totalMs": 80920
+      "totalMs": 184658
     },
     "guardian.provider.connected": {
-      "count": 3,
-      "lastTs": 1781247397516,
+      "count": 4,
+      "lastTs": 1781247501255,
       "intervals": [
         253,
-        80667
+        80667,
+        103739
       ],
-      "totalMs": 80920
+      "totalMs": 184659
     },
     "guardian.provider.registered": {
-      "count": 3,
-      "lastTs": 1781247397527,
+      "count": 4,
+      "lastTs": 1781247501270,
       "intervals": [
         198,
-        80667
+        80667,
+        103743
       ],
-      "totalMs": 80865
+      "totalMs": 184608
     },
     "idearium.phase.failed": {
       "count": 1,
@@ -465,16 +475,20 @@
       "totalMs": 0
     },
     "ncp.client.disconnected": {
-      "count": 1,
-      "lastTs": 1781247395954,
-      "intervals": [],
-      "totalMs": 0
+      "count": 2,
+      "lastTs": 1781247499246,
+      "intervals": [
+        103292
+      ],
+      "totalMs": 103292
     },
     "guardian.provider.disconnected": {
-      "count": 1,
-      "lastTs": 1781247395955,
-      "intervals": [],
-      "totalMs": 0
+      "count": 2,
+      "lastTs": 1781247499247,
+      "intervals": [
+        103292
+      ],
+      "totalMs": 103292
     }
   },
   "baseline": {
@@ -487,12 +501,12 @@
       "computedAt": 1781247313975
     },
     "orchestrator.pulse": {
-      "avgIntervalMs": 4399,
-      "stddevMs": 6231,
+      "avgIntervalMs": 4519,
+      "stddevMs": 6325,
       "consistency": 0,
-      "count": 880,
+      "count": 890,
       "sampleSize": 100,
-      "computedAt": 1781247484045
+      "computedAt": 1781247534071
     },
     "orchestrator.phase.ok": {
       "avgIntervalMs": 319087,
