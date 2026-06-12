@@ -501,8 +501,7 @@ textarea.finp{resize:vertical;line-height:1.55}
     <button class="tbn"    data-tab="diagnose"   onclick="go('diagnose')">DIAGNOSE</button>
     <button class="tbn"    data-tab="options"    onclick="go('options')">OPTIONS</button>
     <div class="nsep"></div>
-    <button class="tbn g"  data-tab="repo"       onclick="go('repo')">⊞ REPO</button>
-    <button class="tbn o"  data-tab="forge-ide"  onclick="go('forge-ide')">⚒ FORGE IDE</button>
+    <button class="tbn g"  data-tab="repo"       onclick="go('repo')">⊞ FILES</button>
     <button class="tbn m"  data-tab="orchestrate" onclick="go('orchestrate')">⟁ ORCHESTRATE</button>
   </div>
 
@@ -519,7 +518,7 @@ textarea.finp{resize:vertical;line-height:1.55}
             <button class="btn primary" onclick="go('idearium');newIdea()">✦ NEW IDEA</button>
             <button class="btn o" onclick="go('guardian')">⚡ DISPATCH</button>
             <button class="btn g" onclick="go('cortex')">◈ CORTEX</button>
-            <button class="btn" onclick="go('architect')">⬡ ARCHITECT</button>
+            <button class="btn" onclick="go('architect')">⬡ ARCHITECT · FORGE</button>
             <button class="btn m" onclick="go('meta')">⟁ META</button>
           </div>
         </div>
@@ -1041,16 +1040,7 @@ textarea.finp{resize:vertical;line-height:1.55}
       </div>
 
       <!-- REPO — full project repo suite (cortex project_registry + versionium) -->
-      <div class="spanel" id="ide-repo">
-        <div class="fbar">
-          <span style="font-size:9px;color:var(--text3)" id="ide-repo-stats">— projects</span>
-          <input class="finp" id="ide-repo-filter" placeholder="Filter projects…" style="max-width:180px;margin-left:8px" oninput="ideRenderRepo()"/>
-          <button class="btn" style="font-size:9px;padding:2px 8px;margin-left:auto" onclick="ideLoadRepo()">↻</button>
-        </div>
-        <div class="scroll" style="padding:8px 14px" id="ide-repo-body">
-          <div class="note">Loading repo suite…</div>
-        </div>
-      </div>
+      <div class="spanel" id="ide-repo" style="display:none"></div>
 
       <!-- SPECS -->
       <div class="spanel" id="ide-specs">
@@ -1357,7 +1347,7 @@ textarea.finp{resize:vertical;line-height:1.55}
     <!-- ══ REPO BROWSER + FILE EDITOR ══════════════════════════════ -->
     <div class="panel" id="panel-repo">
       <div class="tshdr">
-        <span class="tshdr-title" style="color:var(--g)">⊞ REPO</span>
+        <span class="tshdr-title" style="color:var(--g)">⊞ FILES</span>
         <span class="note" style="margin-left:8px">Browse · edit · commit · snapshot</span>
         <div style="margin-left:auto;display:flex;gap:6px">
           <button class="btn g" style="font-size:9px;padding:2px 10px" onclick="repoCommitQuick()">⎇ COMMIT</button>
@@ -1368,6 +1358,7 @@ textarea.finp{resize:vertical;line-height:1.55}
         <button class="stb on" onclick="st('rp','browser',this)">BROWSER</button>
         <button class="stb" onclick="st('rp','editor',this)">EDITOR</button>
         <button class="stb" onclick="st('rp','versions',this)">VERSIONS</button>
+        <button class="stb" onclick="st('rp','artifacts',this)" id="rp-artifacts-btn">ARTIFACTS</button>
         <button class="stb" onclick="st('rp','ci',this)">CI/CD</button>
         <button class="stb" onclick="st('rp','snapshots',this)">SNAPSHOTS</button>
         <button class="stb" onclick="st('rp','diff',this)">DIFF</button>
@@ -1461,81 +1452,30 @@ textarea.finp{resize:vertical;line-height:1.55}
           <div class="note">Select two commits and click DIFF.</div>
         </div>
       </div>
-    </div>
 
-    <!-- ══ FORGE IDE ════════════════════════════════════════════════ -->
-    <div class="panel" id="panel-forge-ide">
-      <div class="tshdr">
-        <span class="tshdr-title" style="color:var(--o)">⚒ FORGE IDE</span>
-        <span class="note" style="margin-left:8px">Spec → chunk → dispatch → verify → commit</span>
-      </div>
-      <div class="stbar">
-        <button class="stb on" onclick="st('fi','workspace',this)">WORKSPACE</button>
-        <button class="stb" onclick="st('fi','queue',this)">QUEUE</button>
-        <button class="stb" onclick="st('fi','artifacts',this)">ARTIFACTS</button>
-        <button class="stb" onclick="st('fi','seam',this)">SEAM</button>
-      </div>
-      <!-- WORKSPACE -->
-      <div class="spanel on" id="fi-workspace">
-        <div style="display:flex;flex:1;min-height:0;overflow:hidden">
-          <!-- left: spec editor -->
-          <div style="flex:1;display:flex;flex-direction:column;border-right:1px solid var(--border)">
-            <div class="fbar">
-              <span style="font-size:9px;color:var(--o)">SPEC</span>
-              <select class="finp" id="fi-split" style="max-width:120px;margin-left:auto">
-                <option value="heading">Split: headings</option>
-                <option value="divider">Split: ---</option>
-                <option value="size">Split: 2KB</option>
-              </select>
-              <select class="finp" id="fi-prov" style="max-width:110px">
-                <option value="claude">Claude</option>
-                <option value="chatgpt">ChatGPT</option>
-                <option value="ollama">Ollama</option>
-              </select>
-              <button class="btn" onclick="fiChunk()">◫ CHUNK</button>
-              <button class="btn primary" id="fi-dispatch-btn" disabled onclick="fiDispatchAll()">▶ ALL</button>
-            </div>
-            <textarea id="fi-spec" style="flex:1;background:var(--bg2);border:none;border-top:1px solid var(--border);padding:10px;font:11px/1.6 var(--mono);color:var(--text);outline:none;resize:none" placeholder="Paste spec here. Headings (# ##) or --- are split points."></textarea>
-          </div>
-          <!-- right: chunk list + result -->
-          <div style="flex:0 0 320px;display:flex;flex-direction:column">
-            <div class="fbar" style="border-bottom:1px solid var(--border)">
-              <span style="font-size:9px;color:var(--text3)" id="fi-chunk-count">0 chunks</span>
-            </div>
-            <div style="flex:1;overflow-y:auto;padding:6px 8px" id="fi-chunks">
-              <div class="note">No chunks yet.</div>
-            </div>
-            <div style="flex:0 0 200px;border-top:1px solid var(--border);overflow-y:auto;padding:8px;background:var(--bg2)">
-              <div style="font-size:8px;color:var(--text3);letter-spacing:.1em;margin-bottom:4px">RESULT</div>
-              <pre id="fi-result" style="font:9px/1.5 var(--mono);color:var(--text2);white-space:pre-wrap;word-break:break-word">—</pre>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- QUEUE -->
-      <div class="spanel" id="fi-queue">
-        <div class="scroll" style="padding:8px 14px" id="fi-queue-body">
-          <div class="note">Queue will appear when forge dispatches.</div>
-        </div>
-      </div>
-      <!-- ARTIFACTS -->
-      <div class="spanel" id="fi-artifacts">
+      <!-- ARTIFACTS — Guardian compiled outputs + forge results -->
+      <div class="spanel" id="rp-artifacts" style="flex-direction:column;overflow:hidden">
         <div class="fbar">
-          <input class="finp" id="fi-art-filter" placeholder="Filter…" style="max-width:200px" oninput="fiFilterArtifacts()"/>
+          <input class="finp" id="rp-art-filter" placeholder="Filter artifacts…" style="flex:1" oninput="rpFilterArtifacts()"/>
+          <select class="finp" id="rp-art-lang" style="max-width:110px" onchange="rpFilterArtifacts()">
+            <option value="">All langs</option>
+            <option value="js">JavaScript</option>
+            <option value="ts">TypeScript</option>
+            <option value="py">Python</option>
+            <option value="spec">Spec</option>
+          </select>
+          <button class="btn" style="font-size:9px;padding:2px 8px;margin-left:auto" onclick="rpLoadArtifacts()">↻</button>
         </div>
-        <div class="scroll" style="padding:6px 14px" id="fi-art-body">
+        <div class="scroll" style="padding:6px 14px" id="rp-art-body">
           <div class="note">Loading artifacts…</div>
         </div>
       </div>
-      <!-- SEAM -->
-      <div class="spanel" id="fi-seam">
-        <div class="scroll" style="padding:8px 14px" id="fi-seam-body">
-          <div class="note">SEAM queue sessions will appear here.</div>
-        </div>
-      </div>
     </div>
 
-    <!-- ══ NEXUS BUS — event fabric + query + knowledge + CFR ══════════ -->
+    <!-- FORGE IDE absorbed into ARCHITECT·FORGE panel -->
+    <div class="panel" id="panel-forge-ide" style="display:none"></div>
+
+        <!-- ══ NEXUS BUS — event fabric + query + knowledge + CFR ══════════ -->
     <div class="panel" id="panel-nexus-bus" style="flex-direction:column">
       <div class="stbar">
         <button class="stb on" onclick="_nxbTab('bus',this)">⚡ LIVE BUS</button>
@@ -4810,8 +4750,9 @@ Object.assign(window,{
   logRender,logFilter,logClear,
   diagRun,diagBuild,diagRenderConsole,diagClearConsole,diagDomAudit,
   optLoad,optSave,optTestOllama,
-  // cortex tables + intelligence exposed in second shell (defined after this IIFE)
-  // cxLoadTables, cxSelectTable etc. are exposed via the second Object.assign below
+  // cortex tables + intelligence
+  cxLoadTables, cxSelectTable, cxTblFilter, cxIntelTab,
+  cxIntelLoadStatus, cxIntelLoadPatterns, cxIntelLoadFaults, cxIntelLoadReuse, cxIntelLoadDrift,
   // bootDiagForceAdvance + showBootDiag self-expose inside DOMContentLoaded (closure scope)
 });
 })(); // end NEXUS SHELL
@@ -6374,6 +6315,117 @@ async function saveNexusState() {
 // Save state every 10s
 setInterval(saveNexusState, 10000);
 
+// ═══ ARCHITECT PANEL FORGE TAB ═══════════════════════════════════════════════
+
+// forgeSub — switch between chunks/queue/artifacts/seam sub-panels
+function forgeSub(name, btn) {
+  ['chunks','queue','artifacts','seam'].forEach(n => {
+    const el = document.getElementById('forge-sub-'+n);
+    if (el) el.style.display = n === name ? 'flex' : 'none';
+  });
+  document.querySelectorAll('#arch-ui-forge .stb').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  if (name === 'artifacts') {
+    rpLoadArtifacts && rpLoadArtifacts(); // reuse FILES artifacts loader
+    // Mirror into forge-sub-artifacts
+    const body = document.getElementById('forge-sub-artifacts');
+    const rpBody = document.getElementById('fi-art-body');
+    if (body && rpBody) body.innerHTML = rpBody.innerHTML;
+  }
+  if (name === 'queue') {
+    const body = document.getElementById('forge-sub-queue');
+    const fiQ = document.getElementById('fi-queue-body');
+    if (body && fiQ) body.innerHTML = fiQ.innerHTML;
+  }
+  if (name === 'seam') {
+    const body = document.getElementById('forge-sub-seam');
+    const fiS = document.getElementById('fi-seam-body');
+    if (body && fiS) body.innerHTML = fiS.innerHTML;
+  }
+}
+
+// archUITab override to handle spec-builder and forge
+const _origArchUITab = typeof archUITab === 'function' ? archUITab : null;
+function archUITab(name, btn) {
+  // Hide all arch spanels
+  document.querySelectorAll('#panel-architect .spanel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('#panel-architect .stb').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  const el = document.getElementById('arch-ui-' + name);
+  if (el) { el.classList.add('on'); }
+  // Lazy-load artifacts when forge tab opens
+  if (name === 'forge') {
+    forgeSub('chunks', document.querySelector('#arch-ui-forge .stb'));
+    setTimeout(() => fiFilterArtifacts && fiFilterArtifacts(), 200);
+  }
+  // Refresh iframe when spec-builder tab opens
+  if (name === 'spec-builder') {
+    const iframe = document.getElementById('arch-spec-builder-frame');
+    if (iframe && !iframe.src) iframe.src = 'http://127.0.0.1:3747/ui/spec-builder';
+  }
+  // Fall through to original for hooks/blueprint/topology/snr
+  if (_origArchUITab && name !== 'spec-builder' && name !== 'forge') {
+    _origArchUITab(name, btn);
+  }
+}
+
+// ═══ FILES PANEL ARTIFACTS ═══════════════════════════════════════════════════
+
+let _rpArtifacts = [];
+
+async function rpLoadArtifacts() {
+  const lang = document.getElementById('rp-art-lang')?.value || '';
+  const q    = document.getElementById('rp-art-filter')?.value || '';
+  const data = await _nxGet(_NX.GUARDIAN, `/artifacts?lang=${encodeURIComponent(lang)}&q=${encodeURIComponent(q)}`);
+  _rpArtifacts = data?.artifacts || [];
+  rpRenderArtifacts();
+}
+
+function rpFilterArtifacts() {
+  const q    = (document.getElementById('rp-art-filter')?.value || '').toLowerCase();
+  const lang = document.getElementById('rp-art-lang')?.value || '';
+  const filtered = _rpArtifacts.filter(a =>
+    (!q || (a.filename||'').toLowerCase().includes(q) || (a.content||'').toLowerCase().slice(0,200).includes(q)) &&
+    (!lang || (a.lang||'').startsWith(lang))
+  );
+  rpRenderArtifacts(filtered);
+}
+
+function rpRenderArtifacts(artifacts) {
+  const list = artifacts || _rpArtifacts;
+  const el = document.getElementById('rp-art-body'); if (!el) return;
+  if (!list.length) { el.innerHTML = '<div class="note">No artifacts yet — dispatch a spec to create some.</div>'; return; }
+  el.innerHTML = list.map(a => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px;cursor:pointer"
+         onclick="rpPreviewArtifact('${(a.id||a.uuid||'').replace(/'/g,'')}')">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <span style="font-size:9px;padding:1px 6px;border-radius:2px;background:rgba(0,212,255,.1);color:var(--c);border:1px solid rgba(0,212,255,.2)">${esc(a.lang||'?')}</span>
+        <span style="font-size:10px;font-weight:600;color:var(--text);font-family:var(--mono)">${esc(a.filename||'unnamed')}</span>
+        <span style="font-size:9px;color:var(--text3);margin-left:auto">${_nxFts(a.ts||a.createdAt)}</span>
+      </div>
+      <div style="font-size:9px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc((a.content||'').slice(0,120))}</div>
+    </div>`).join('');
+}
+
+async function rpPreviewArtifact(id) {
+  if (!id) return;
+  const data = await _nxGet(_NX.GUARDIAN, '/artifacts/' + id);
+  if (!data?.artifact) return;
+  const a = data.artifact;
+  const preview = document.getElementById('rp-preview-pane');
+  if (preview) {
+    preview.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span style="font-size:11px;font-weight:700;color:var(--text);font-family:var(--mono)">${esc(a.filename||'unnamed')}</span>
+        <span style="font-size:9px;padding:1px 6px;border-radius:2px;background:rgba(0,212,255,.1);color:var(--c)">${esc(a.lang||'?')}</span>
+        <button class="btn" style="font-size:9px;margin-left:auto" onclick="navigator.clipboard.writeText(this.dataset.c).then(()=>this.textContent='copied!')" data-c="${(a.content||'').replace(/"/g,'&quot;')}">copy</button>
+      </div>
+      <pre style="font:11px/1.6 var(--mono);color:var(--text2);white-space:pre-wrap;word-break:break-word;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:12px;overflow-y:auto;max-height:70vh">${esc(a.content||'')}</pre>`;
+    // Switch to browser tab to show preview
+    st('rp','browser',null);
+  }
+}
+
 // ═══ NEXUS BUS PANEL ═══════════════════════════════════════════════════════
 let _nxbES = null;
 let _nxbEvents = [];
@@ -6542,6 +6594,20 @@ const _origGo = typeof go === 'function' ? go : null;
 // Hook into go() to auto-connect nexus bus
 function go(tab) {
   if (_origGo) _origGo(tab);
+  if (tab === 'forge-ide') { tab = 'architect'; }
+  if (tab === 'repo') {
+    // Load artifacts when FILES panel opens
+    setTimeout(() => { if (typeof rpLoadArtifacts === 'function') rpLoadArtifacts(); }, 200);
+  }
+  if (tab === 'architect') {
+    // Ensure spec-builder tab is shown by default
+    setTimeout(() => {
+      const frame = document.getElementById('arch-spec-builder-frame');
+      if (frame && !frame.src.includes('spec-builder')) {
+        frame.src = 'http://127.0.0.1:3747/ui/spec-builder';
+      }
+    }, 100);
+  }
   if (tab === 'nexus-bus') {
     setTimeout(() => { if (!_nxbES) nxbConnect(); }, 100);
   }
@@ -6697,9 +6763,10 @@ Object.assign(_NX_CLI_COMMANDS || {}, {
 <!-- ═══════════════════════════ ARCHITECT PANEL ════════════════════════════ -->
 <div class="panel" id="panel-architect" style="flex-direction:column">
   <div class="stbar">
-    <button class="stb on" onclick="archUITab('hooks',this)">HOOKS</button>
+    <button class="stb on" onclick="archUITab('spec-builder',this)">⬡ SPEC BUILDER</button>
+    <button class="stb"    onclick="archUITab('forge',this)">⚒ FORGE</button>
+    <button class="stb"    onclick="archUITab('hooks',this)">HOOKS</button>
     <button class="stb"    onclick="archUITab('blueprint',this)">BLUEPRINT</button>
-    <button class="stb"    onclick="archUITab('canvas',this)">CANVAS</button>
     <button class="stb"    onclick="archUITab('topology',this)">TOPOLOGY</button>
     <button class="stb"    onclick="archUITab('snr',this)">SNR GATE</button>
     <div style="flex:1"></div>
@@ -6734,8 +6801,63 @@ Object.assign(_NX_CLI_COMMANDS || {}, {
     </div>
   </div>
 
-  <div class="spanel" id="arch-ui-canvas" style="overflow:hidden;flex:1">
-    <iframe src="http://127.0.0.1:3747/ui/arch-builder" style="width:100%;height:100%;border:none;background:#0e0e10" title="Arch Builder"></iframe>
+  <!-- ── SPEC BUILDER (default: iframe to :3747/ui/spec-builder) ──────────── -->
+  <div class="spanel on" id="arch-ui-spec-builder" style="overflow:hidden;flex:1">
+    <iframe id="arch-spec-builder-frame" src="http://127.0.0.1:3747/ui/spec-builder"
+      style="width:100%;height:100%;border:none;background:#05080f" title="Spec Builder"></iframe>
+  </div>
+
+  <!-- ── FORGE (chunk → dispatch → queue → artifacts) ─────────────────────── -->
+  <div class="spanel" id="arch-ui-forge" style="flex-direction:column;overflow:hidden">
+    <div style="display:flex;flex:1;min-height:0;overflow:hidden">
+      <!-- left: spec text editor + chunk controls -->
+      <div style="flex:1;display:flex;flex-direction:column;border-right:1px solid var(--border)">
+        <div class="fbar">
+          <span style="font-size:9px;color:var(--o)">SPEC TEXT</span>
+          <select class="finp" id="fi-split" style="max-width:120px;margin-left:auto">
+            <option value="heading">Split: headings</option>
+            <option value="divider">Split: ---</option>
+            <option value="size">Split: 2KB</option>
+          </select>
+          <select class="finp" id="fi-prov" style="max-width:110px">
+            <option value="claude">Claude</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="ollama">Ollama</option>
+          </select>
+          <button class="btn" onclick="fiChunk()">◫ CHUNK</button>
+          <button class="btn primary" id="fi-dispatch-btn" disabled onclick="fiDispatchAll()">▶ DISPATCH ALL</button>
+        </div>
+        <textarea id="fi-spec" style="flex:1;background:var(--bg2);border:none;border-top:1px solid var(--border);padding:10px;font:11px/1.6 var(--mono);color:var(--text);outline:none;resize:none" placeholder="Paste .spec here, or compile from Spec Builder and the YAML spec will auto-populate. Headings (# ##) or --- are split points."></textarea>
+      </div>
+      <!-- right: chunks + result -->
+      <div style="flex:0 0 340px;display:flex;flex-direction:column;overflow:hidden">
+        <!-- sub-tabs: chunks / queue / artifacts / seam -->
+        <div style="display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+          <button class="stb on" style="flex:1;font-size:9px" onclick="forgeSub('chunks',this)">CHUNKS</button>
+          <button class="stb"    style="flex:1;font-size:9px" onclick="forgeSub('queue',this)">QUEUE</button>
+          <button class="stb"    style="flex:1;font-size:9px" onclick="forgeSub('artifacts',this)">ARTIFACTS</button>
+          <button class="stb"    style="flex:1;font-size:9px" onclick="forgeSub('seam',this)">SEAM</button>
+        </div>
+        <div id="forge-sub-chunks" style="flex:1;overflow-y:auto;padding:6px 8px">
+          <div class="note">No chunks yet — paste a spec and click CHUNK.</div>
+        </div>
+        <div id="forge-sub-queue" style="display:none;flex:1;overflow-y:auto;padding:6px 8px" id="fi-queue-body">
+          <div class="note">Queue will appear when forge dispatches.</div>
+        </div>
+        <div id="forge-sub-artifacts" style="display:none;flex:1;overflow-y:auto;padding:0">
+          <div class="fbar"><input class="finp" id="fi-art-filter" placeholder="Filter artifacts…" style="flex:1" oninput="fiFilterArtifacts()"/></div>
+          <div style="padding:6px 8px" id="fi-art-body"><div class="note">Loading artifacts…</div></div>
+        </div>
+        <div id="forge-sub-seam" style="display:none;flex:1;overflow-y:auto;padding:6px 8px" id="fi-seam-body">
+          <div class="note">SEAM sessions will appear here.</div>
+        </div>
+        <!-- result strip -->
+        <div style="flex:0 0 140px;border-top:1px solid var(--border);overflow-y:auto;padding:8px;background:var(--bg2);flex-shrink:0">
+          <div style="font-size:8px;color:var(--text3);letter-spacing:.1em;margin-bottom:4px">RESULT</div>
+          <pre id="fi-result" style="font:9px/1.5 var(--mono);color:var(--text2);white-space:pre-wrap;word-break:break-word">—</pre>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="spanel" id="arch-ui-topology" style="flex-direction:column;overflow-y:auto;padding:14px">
