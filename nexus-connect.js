@@ -252,4 +252,13 @@ function startHeartbeat(systemId, port) {
   return iv;
 }
 
-module.exports = { _req, postEvent, postLedger, postStream, postTableInsert, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, PORTS };
+// ── postBridge — post an event to Bridge SSE/ledger ───────────────────────────
+// §A-2 hooks are the wire. Bridge is the wire for all cross-system events.
+async function postBridge(type, payload = {}) {
+  return _req('bridge', 'POST', '/bridge/event', {
+    type, payload: { ...payload, _source: 'nexus-connect', _ts: Date.now() },
+    ts: Date.now(),
+  }, 2000).catch(e => ({ ok: false, error: e.message }));
+}
+
+module.exports = { _req, postEvent, postLedger, postStream, postTableInsert, healthCheck, healthAll, gate, recall, registerWithOrchestrator, startHeartbeat, startPulse, postBridge, PORTS };

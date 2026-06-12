@@ -1,22 +1,9 @@
 {
   "stats": {
     "ncp.message.received": {
-      "count": 3018,
-      "lastTs": 1781048427954,
+      "count": 3031,
+      "lastTs": 1781247493781,
       "intervals": [
-        7597,
-        44257,
-        8315,
-        3,
-        8131,
-        44065,
-        7838,
-        3,
-        8842,
-        44055,
-        7317,
-        3,
-        9195,
         44109,
         7672,
         2,
@@ -103,13 +90,26 @@
         3336,
         82,
         5738,
-        540
+        540,
+        198887650,
+        1052,
+        199,
+        1882,
+        181,
+        75918,
+        2669,
+        20,
+        352,
+        1673,
+        1020,
+        93134,
+        77
       ],
-      "totalMs": 326155619
+      "totalMs": 525221446
     },
     "ncp.client.connected": {
-      "count": 90,
-      "lastTs": 1781048276458,
+      "count": 93,
+      "lastTs": 1781247397514,
       "intervals": [
         15,
         17,
@@ -199,13 +199,16 @@
         2349,
         306086,
         16645,
-        3004
+        3004,
+        199040133,
+        253,
+        80670
       ],
-      "totalMs": 326003999
+      "totalMs": 525125055
     },
     "guardian.provider.connected": {
-      "count": 90,
-      "lastTs": 1781048276459,
+      "count": 93,
+      "lastTs": 1781247397515,
       "intervals": [
         15,
         16,
@@ -295,9 +298,12 @@
         2349,
         306086,
         16645,
-        3005
+        3005,
+        199040132,
+        253,
+        80671
       ],
-      "totalMs": 326003999
+      "totalMs": 525125055
     },
     "guardian.tab.event": {
       "count": 1413,
@@ -407,8 +413,8 @@
       "totalMs": 326141414
     },
     "ncp.client.disconnected": {
-      "count": 67,
-      "lastTs": 1781048413882,
+      "count": 68,
+      "lastTs": 1781247395952,
       "intervals": [
         4,
         1,
@@ -475,13 +481,14 @@
         1,
         27839,
         140425,
-        2
+        2,
+        198982070
       ],
-      "totalMs": 326028169
+      "totalMs": 525010239
     },
     "guardian.provider.disconnected": {
-      "count": 67,
-      "lastTs": 1781048413883,
+      "count": 68,
+      "lastTs": 1781247395952,
       "intervals": [
         3,
         1,
@@ -548,13 +555,14 @@
         1,
         27840,
         140425,
-        2
+        2,
+        198982069
       ],
-      "totalMs": 326028169
+      "totalMs": 525010238
     },
     "guardian.provider.registered": {
-      "count": 17,
-      "lastTs": 1781048273465,
+      "count": 20,
+      "lastTs": 1781247397526,
       "intervals": [
         253308401,
         26159742,
@@ -571,9 +579,12 @@
         4,
         9417652,
         1977,
-        326274
+        326274,
+        199043192,
+        198,
+        80671
       ],
-      "totalMs": 321043882
+      "totalMs": 520167943
     },
     "guardian.job.queued": {
       "count": 8,
@@ -601,12 +612,12 @@
   },
   "baseline": {
     "ncp.message.received": {
-      "avgIntervalMs": 63684,
-      "stddevMs": 543177,
+      "avgIntervalMs": 2051467,
+      "stddevMs": 19790240,
       "consistency": 0,
-      "count": 3010,
+      "count": 3030,
       "sampleSize": 100,
-      "computedAt": 1781048414634
+      "computedAt": 1781247493704
     },
     "guardian.tab.event": {
       "avgIntervalMs": 67526,
@@ -649,12 +660,12 @@
       "computedAt": 1781047947183
     },
     "guardian.provider.registered": {
-      "avgIntervalMs": 34516738,
-      "stddevMs": 77956389,
+      "avgIntervalMs": 27377260,
+      "stddevMs": 69161863,
       "consistency": 0,
-      "count": 10,
-      "sampleSize": 9,
-      "computedAt": 1781037880222
+      "count": 20,
+      "sampleSize": 19,
+      "computedAt": 1781247397526
     }
   }
 }

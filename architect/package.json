@@ -1,0 +1,23 @@
+{
+  "name": "architect",
+  "version": "1.0.0",
+  "description": "The Architect — constraint-first system authoring environment. Meaning is downstream of constraints.",
+  "main": "service.js",
+  "uuid": "architect-service-v1-0000-4000",
+  "author": "James Brooks (Erosmancer)",
+  "scripts": {
+    "start": "node service.js",
+    "test":  "node test/architect.test.js"
+  },
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {},
+  "devDependencies": {},
+  "_architect_axioms": {
+    "§5.5": "zero external runtime deps in core",
+    "§A-1": "architecture before implementation",
+    "§A-2": "hooks are the wire",
+    "§A-3": "map before build",
+    "§A-4": "spec is living",
+    "§A-5": "signal before noise"
+  }
+}

@@ -29,7 +29,7 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-export const VERSION   = '2.0.0';
+export const VERSION   = '3.0.0';
 export const NAMESPACE = 'idearium';
 export const PORT      = 4800;
 
@@ -105,6 +105,7 @@ function freshDB() {
     events:    [],
     snr:       [],
     tensions:  [],
+    api_keys:  [],   // { uuid, name, hash, caps[], createdAt, lastUsedAt, usageCount, revoked, expiresAt }
   };
 }
 
@@ -119,6 +120,7 @@ function migrateDB(old) {
   db.events    = old.events    || [];
   db.snr       = old.snr       || [];
   db.tensions  = old.tensions  || [];
+  db.api_keys  = old.api_keys  || [];   // preserve existing keys across version migrations
   return db;
 }
 

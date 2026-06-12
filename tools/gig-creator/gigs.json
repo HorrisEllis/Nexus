@@ -1,0 +1,75 @@
+{
+  "profile": {
+    "name": "James Brooks",
+    "tagline": "Sovereign AI automation engineer — I build systems that write code from specs",
+    "skills": ["AI orchestration", "browser automation", "spec-driven development", "Node.js", "system architecture"],
+    "portfolio_url": "https://rheon.world",
+    "github": "https://github.com/HorrisEllis/Nexus-Orachastrate"
+  },
+  "gigs": [
+    {
+      "id": "gig-001",
+      "platform": "fiverr",
+      "title": "I will build a custom AI automation pipeline using Claude or ChatGPT",
+      "category": "Programming & Tech > AI Applications",
+      "tags": ["AI automation", "ChatGPT", "Claude", "automation pipeline", "AI agent"],
+      "description": "I build custom AI automation pipelines that dispatch jobs to Claude and ChatGPT automatically — without API costs.\n\nYou give me a spec or a problem. I deliver a working automation system.\n\nWhat I've built:\n• A sovereign AI orchestration system (216,000+ lines) that controls Claude and ChatGPT through browser automation — zero per-request cost\n• Spec-driven pipelines that automatically chunk, dispatch, verify, and deliver code\n• Self-healing systems that detect and fix their own failures\n• Runs for $20/month flat — no API bills\n\nWhat I can build for you:\n• Custom automation that dispatches tasks to AI providers automatically\n• Spec-to-code pipelines — give me a specification, get working code back\n• AI-powered workflows for your existing system\n• Browser automation agents\n\nI work fast. I work bottom-up. Nothing silently fails.",
+      "packages": {
+        "basic": {
+          "name": "Starter",
+          "price": 150,
+          "currency": "GBP",
+          "delivery_days": 3,
+          "includes": ["Single automation task", "One AI provider (Claude or ChatGPT)", "Basic error handling", "1 revision"]
+        },
+        "standard": {
+          "name": "Pipeline",
+          "price": 400,
+          "currency": "GBP",
+          "delivery_days": 5,
+          "includes": ["Full spec-to-code pipeline", "Both providers with fallback", "Error handling + logging", "3 revisions", "Documentation"]
+        },
+        "premium": {
+          "name": "Full System",
+          "price": 900,
+          "currency": "GBP",
+          "delivery_days": 10,
+          "includes": ["Complete automation system", "Multi-provider orchestration", "Self-healing + monitoring", "Unlimited revisions for 30 days", "Full documentation", "1 month support"]
+        }
+      },
+      "faq": [
+        {"q": "Do I need API keys?", "a": "No. My approach uses browser automation — no API costs. You need a Claude.ai or ChatGPT account (free or paid)."},
+        {"q": "What do you need from me?", "a": "A clear description of what you want automated. The clearer the spec, the faster I deliver."},
+        {"q": "What tech stack?", "a": "Node.js primarily, but I can adapt. The orchestration layer is language-agnostic."},
+        {"q": "Can you work with my existing system?", "a": "Yes. I build integrations, not just standalone tools."}
+      ]
+    },
+    {
+      "id": "gig-002",
+      "platform": "fiverr",
+      "title": "I will architect and build a Node.js backend system from your specification",
+      "category": "Programming & Tech > Web Programming",
+      "tags": ["Node.js", "backend", "REST API", "system architecture", "specification"],
+      "description": "You have a spec or an idea. I turn it into a working, production-grade Node.js backend.\n\nI don't build scaffolding and call it done. I build systems that:\n• Handle their own failures\n• Log everything causally\n• Survive restarts\n• Have real health checks and diagnostics\n\nI've built 216,000+ lines of sovereign infrastructure including:\n• A full AI orchestration stack with 6 services\n• An encrypted P2P mesh network\n• A self-healing intelligence layer\n• A custom programming language and compiler\n\nAll solo. All from scratch. All in three months.\n\nIf you have a spec, I can build it.",
+      "packages": {
+        "basic": {"name": "API", "price": 200, "currency": "GBP", "delivery_days": 4, "includes": ["REST API up to 15 endpoints", "Basic auth", "Error handling", "1 revision"]},
+        "standard": {"name": "Service", "price": 500, "currency": "GBP", "delivery_days": 7, "includes": ["Full service with data layer", "Auth + validation", "Health checks + logging", "3 revisions", "Documentation"]},
+        "premium": {"name": "System", "price": 1200, "currency": "GBP", "delivery_days": 14, "includes": ["Complete multi-service system", "Persistence + recovery", "Monitoring + diagnostics", "Unlimited revisions 30 days", "Architecture documentation", "1 month support"]}
+      }
+    },
+    {
+      "id": "gig-003",
+      "platform": "upwork",
+      "title": "AI Automation Engineer — Spec-to-code pipelines, browser automation, Node.js systems",
+      "type": "hourly",
+      "rate": {"min": 45, "max": 75, "currency": "GBP"},
+      "description": "I build AI automation systems that actually work.\n\nMy background: I built NEXUS — a 216,000-line sovereign AI orchestration stack that controls Claude and ChatGPT through browser automation at zero per-request cost. Built solo, from scratch, in three months. Includes a custom programming language, a spec compiler, an encrypted mesh network, and a self-healing intelligence layer.\n\nWhat that means for you: I can move fast, I build things that don't break silently, and I understand AI orchestration at a deep architectural level — not just API wrappers.\n\nServices:\n• AI automation pipelines (Claude, ChatGPT, local LLMs)\n• Spec-driven development — I work from your requirements directly\n• Node.js backend systems, REST APIs, real-time systems\n• System architecture and technical design\n• Browser automation and web agents\n• Debugging and hardening existing systems\n\nI work bottom-up. Nothing silently fails. I document everything.",
+      "cover_letter_template": "Hi [Client name],\n\nI read your brief carefully. [Specific thing about their project].\n\nI've built this exact type of system before — [relevant part of NEXUS]. The approach I'd take: [concrete first step].\n\nI can start immediately. Happy to jump on a quick call to confirm scope before you commit.\n\nJames"
+    }
+  ],
+  "social_posts": {
+    "twitter": "Built a system that dispatches jobs to Claude and ChatGPT automatically — no API costs, no rate limits, runs for $20/month.\n\n216,000 lines. Solo. 3 months.\n\nNow taking 3 clients. DM me a spec, I'll build your automation.\n\n→ rheon.world",
+    "threads": "I built an AI orchestration system from scratch that:\n• Controls Claude + ChatGPT through browser automation\n• Costs $20/month to run (no API bills)\n• Self-heals when things break\n• Has its own programming language\n\n216,000 lines. Solo. 3 months.\n\nLooking for 3 clients to build custom AI automation for. DM me.",
+    "linkedin": "For the past 3 months I've been building NEXUS — a sovereign AI orchestration system.\n\n216,000 lines of code. Solo.\n\nWhat it does:\n✓ Dispatches jobs to Claude and ChatGPT automatically\n✓ Runs for $20/month (vs $375/month for LangGraph + observability)\n✓ Self-heals when systems fail\n✓ Has its own spec compiler and programming language\n✓ Adversarially-tested encrypted mesh network\n\nNow taking clients for custom AI automation work.\n\nIf you're spending money on AI API costs and want a smarter approach, let's talk.\n\n→ rheon.world | james@rheon.world"
+  }
+}

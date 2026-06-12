@@ -29,7 +29,7 @@ const claudeAgent    = require('./agents/claude');
 const DATA_DIR  = process.env.NEXUS_DATA_DIR  || path.join(__dirname, 'data');
 const STORE_DIR = process.env.NEXUS_STORE_DIR || path.join(__dirname, 'store');
 const PORT      = parseInt(process.env.NEXUS_PORT || '3748');
-const VERSION   = '2.0.0';
+const VERSION   = '3.0.0';
 
 let jaaDB, fileStore, fileRefs, adminServer;
 
@@ -48,6 +48,19 @@ async function bootAsync() {
       const r = await nc.registerWithOrchestrator('cortex', PORT,
         { role:'source-of-truth', version:VERSION });
       if (r.ok) nc.startHeartbeat('cortex', PORT);
+    },
+  });
+
+  // ── Phase 0.5 SOFT: Bridge handshake ─────────────────────────────────────
+  seq.phase({ name:'bridge.handshake', type:'SOFT',
+    label:'Handshake with Bridge (identity + session token)',
+    fn: async () => {
+      const r = await nc.postBridge('bridge.handshake', {
+        systemId: 'cortex',
+        secret:   process.env.BRIDGE_SECRET_CORTEX || 'nexus-cortex-internal-v1',
+        port:     PORT,
+      });
+      if (r.ok && r.token) process.env.BRIDGE_TOKEN = r.token;
     },
   });
 
@@ -161,6 +174,45 @@ async function bootAsync() {
     },
   });
 
+  // ── Phase 5.3 SOFT: Intelligence core ────────────────────────────────────
+  // Starts after admin server so HTTP routes are live.
+  // Starts before snapshot so first scan can run during snapshot window.
+  // SOFT — intelligence degraded is better than intelligence blocking boot.
+  // Drift: intelligence reads JAA tables that may have 0 rows on first boot.
+  //        It accounts for this — all scans guard against insufficient data.
+  seq.phase({ name:'intelligence.init', type:'SOFT',
+    label:'Intelligence core (pattern recognition + failure taxonomy)',
+    fn: async () => {
+      try {
+        const intelligence = require('./intelligence');
+        intelligence.init({
+          pollMs:     parseInt(process.env.CORTEX_INTEL_MS || '60000'),
+          jaaDB,
+        });
+        // Wire intelligence HTTP routes into admin-server
+        adminServer.registerIntelligence(intelligence);
+        jaaDB.insert('event_log', {
+          uuid: uid(), type: 'intelligence.booted', ts: Date.now(),
+          payload: { version: '1.0.0', scanIntervals: {
+            patterns:   60000,
+            failures:   30000,
+            reuseIndex: 120000,
+            crossLedger:90000,
+          }},
+          source: 'boot', causedBy: null,
+        });
+      } catch(e) {
+        // §SOFT — log and continue, never halt boot
+        console.warn(`[cortex/boot] intelligence core degraded: ${e.message}`);
+        jaaDB.insert('event_log', {
+          uuid: uid(), type: 'intelligence.boot.degraded', ts: Date.now(),
+          payload: { error: e.message, stack: e.stack?.split('\n')[1] || '' },
+          source: 'boot', causedBy: null,
+        });
+      }
+    },
+  });
+
   // ── Phase 5.5 SOFT: boot snapshot + agent-tools init ───────────────────────
   seq.phase({ name:'snapshot.boot', type:'SOFT',
     label:'Take boot snapshot (§2.1 persistence baseline)',
@@ -181,6 +233,72 @@ async function bootAsync() {
     },
   });
 
+  // ── Phase 5.7 SOFT: Bridge SSE subscription ──────────────────────────────
+  // Cortex subscribes to Bridge's SSE stream.
+  // Every bridge.request.* event updates the JAA requests table projection.
+  // This makes GET /api/requests a live view of Bridge's ledger.
+  seq.phase({ name:'bridge.subscribe', type:'SOFT',
+    label:'Subscribe to Bridge SSE (requests table projection)',
+    fn: async () => {
+      const http = require('http');
+      const BRIDGE_PORT = parseInt(process.env.BRIDGE_PORT || '9999');
+
+      function _connectBridgeSSE() {
+        const req = http.get({
+          hostname: '127.0.0.1', port: BRIDGE_PORT,
+          path: '/bridge/sse', headers: { Accept: 'text/event-stream' },
+        }, res => {
+          let buf = '';
+          res.on('data', chunk => {
+            buf += chunk.toString();
+            const lines = buf.split('\n'); buf = lines.pop();
+            for (const line of lines) {
+              if (!line.startsWith('data:')) continue;
+              try {
+                const event = JSON.parse(line.slice(5).trim());
+                _handleBridgeEvent(event);
+              } catch(_) {}
+            }
+          });
+          res.on('end', () => setTimeout(_connectBridgeSSE, 5000)); // reconnect
+        });
+        req.setTimeout(0);
+        req.on('error', () => setTimeout(_connectBridgeSSE, 10000));
+        req.end();
+      }
+
+      function _handleBridgeEvent(event) {
+        // Project Bridge request events into JAA requests table
+        try {
+          if (event.type === 'bridge.request.created') {
+            jaaDB.insert('requests', {
+              uuid:       event.data.uuid,
+              type:       event.data.type,
+              source:     event.data.source,
+              target:     event.data.target,
+              status:     'pending',
+              createdAt:  event.ts,
+              updatedAt:  event.ts,
+              ts:         event.ts,
+            });
+          } else if (event.type === 'bridge.request.updated') {
+            // Patch existing row
+            const rows = jaaDB.query('requests', r => r.uuid === event.data.uuid, 1);
+            if (rows.length) {
+              jaaDB.update('requests', rows[0].uuid, {
+                status:    event.data.status,
+                updatedAt: event.ts,
+              });
+            }
+          }
+        } catch(_) {}
+      }
+
+      // Connect in background — SOFT phase, never blocks boot
+      setTimeout(_connectBridgeSSE, 2000);
+    },
+  });
+
   // ── Phase 6 SOFT: boot record ────────────────────────────────────────────
   seq.phase({ name:'boot.record', type:'SOFT',
     label:'Write boot record to event_log (§M1)',
@@ -192,15 +310,35 @@ async function bootAsync() {
         source: 'boot', causedBy: null,
       });
       // seed project registry with known systems
-try {
-  const systems = ['cortex','guardian','idearium','emerge'];
-  for (const s of systems) {
-    jaaDB.insert('project_registry', {
-      uuid: require('crypto').randomUUID(), name: s, system: s,
-      ts: Date.now(), source: 'boot',
-    });
-  }
-} catch(_) {}
+      try {
+        const systems = ['cortex','guardian','idearium','emerge'];
+        for (const s of systems) {
+          jaaDB.insert('project_registry', {
+            uuid: require('crypto').randomUUID(), name: s, system: s,
+            ts: Date.now(), source: 'boot',
+          });
+        }
+      } catch(_) {}
+
+      // ── Register system-wide contracts on boot (§5.1 — self-awareness) ──
+      try {
+        const C = require('../contracts/SYSTEM-CONTRACTS');
+        jaaDB.insert('event_log', {
+          uuid: uid(), type: 'cortex.contracts.loaded', ts: Date.now(),
+          payload: {
+            systems:    Object.keys(C.SYSTEMS).length,
+            eventTypes: C.allEventTypes().length,
+            gapTypes:   Object.keys(C.GAPS.TYPES).length,
+            faultClasses: Object.keys(C.FAULTS.CLASS).length,
+            axioms:     Object.keys(C.AXIOMS).length,
+            verificationChecks: [
+              ...C.VERIFICATION_CONTRACTS.UNIVERSAL,
+              ...C.VERIFICATION_CONTRACTS.CORTEX,
+            ].length,
+          },
+          source: 'boot', causedBy: null,
+        });
+      } catch(_) {}
     },
   });
 

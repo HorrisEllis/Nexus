@@ -1,18 +1,26 @@
 {
-  "name": "compartment-os",
-  "version": "1.0.0",
-  "description": "COMPARTMENT OS — Sovereign compartmentalized execution environment",
+  "name": "nexus-orchestrate",
+  "version": "3.0.0",
+  "description": "NEXUS — Sovereign AI Orchestration System",
   "author": "James Brooks (Erosmancer)",
   "license": "MIT",
   "private": true,
-  "bin": {
-    "cos": "./cli/index.js"
-  },
+  "type": "commonjs",
+  "main": "orchestrator.js",
   "scripts": {
-    "test":    "node test/test.js",
-    "cos":     "node cli/index.js"
+    "start":      "node orchestrator.js",
+    "cortex":     "node cortex/boot.js",
+    "guardian":   "node guardian/server.js",
+    "architect":  "node architect/service.js",
+    "test":       "node tests/brutal.test.js",
+    "session":    "node cli/session.js"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "_nexus": {
+    "axioms":  "docs/AXIOMS-v2.0.md",
+    "spec":    "docs/NEXUS-SYSTEM.md",
+    "changelog":"docs/SESSION-CHANGELOG.md"
   }
 }

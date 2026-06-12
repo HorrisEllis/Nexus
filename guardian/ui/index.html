@@ -308,6 +308,8 @@ select.fi option{background:var(--surface);}
       <div class="tb-tab" data-panel="brain">◆ Brain</div>
       <div class="tb-tab" data-panel="forge">⚙ Forge</div>
       <div class="tb-tab" data-panel="providers">⬡ Providers</div>
+      <div class="tb-tab" data-panel="architect">⬡ Architect</div>
+      <div class="tb-tab" data-panel="lab">⚗ Lab</div>
     </div>
     <div class="tb-right">
       <div class="tb-status"><div class="tb-dot" id="dot-orch"></div><span>Orch :9000</span></div>
@@ -3151,5 +3153,1027 @@ function _renderBrainJaa() {
     </div>
 
   </div>
+  <!-- PANEL: ARCHITECT — constraint-first system authoring -->
+  <!-- §A-1 Architecture before implementation. §A-2 Hooks are the wire. -->
+<style>
+.arch-inner-tab{padding:7px 14px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);cursor:pointer;border-right:1px solid var(--border);border-bottom:2px solid transparent;transition:all .15s;}
+.arch-inner-tab:hover{color:var(--text);background:var(--surface2);}
+.arch-inner-tab.active{color:var(--amber);border-bottom-color:var(--amber);background:var(--surface2);}
+.arch-inner-panel{display:none;}
+.arch-inner-panel.show{display:flex!important;}
+.arch-hook-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.arch-hook-row:hover,.arch-hook-row.active{background:var(--surface2);}
+.arch-hook-type{font-size:8px;font-weight:700;text-transform:uppercase;padding:2px 6px;border-radius:3px;flex-shrink:0;}
+.arch-hook-type-api{background:#1a2a40;color:#85b7eb;}
+.arch-hook-type-event-bus,.arch-hook-type-event\.bus{background:#1a2a1a;color:#9fe1cb;}
+.arch-hook-type-webserver{background:#2a1a2a;color:#c9a0f6;}
+.arch-hook-type-gate{background:#2a2010;color:#fac775;}
+.arch-hook-type-snr{background:#1a2a2a;color:#67d8cf;}
+.arch-hook-type-ollama,.arch-hook-type-raid{background:#2a1510;color:#f8a07a;}
+.arch-hook-type-default{background:#1e1e26;color:#9090a0;}
+.arch-hook-name{font-size:10px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.arch-hook-status{font-size:8px;padding:1px 6px;border-radius:10px;flex-shrink:0;}
+.arch-hook-status-active{background:#1a2a1a;color:#34d399;}
+.arch-hook-status-seed{background:#2a2010;color:#f59e0b;}
+.arch-hook-status-deprecated{background:#2a1515;color:#ef4444;}
+.arch-detail-block{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:10px;}
+.arch-detail-title{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;font-weight:700;}
+.arch-detail-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border);}
+.arch-detail-row:last-child{border-bottom:none;}
+.arch-detail-label{font-size:9px;color:var(--muted);}
+.arch-detail-val{font-size:9px;color:var(--text);font-family:var(--mono);text-align:right;max-width:200px;overflow:hidden;text-overflow:ellipsis;}
+.arch-bp-item{padding:7px 10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.arch-bp-item:hover,.arch-bp-item.active{background:var(--surface2);}
+.arch-bp-name{font-size:10px;font-weight:500;color:var(--text);}
+.arch-bp-meta{font-size:9px;color:var(--muted);margin-top:2px;}
+.arch-snr-axis{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);}
+.arch-snr-axis:last-child{border-bottom:none;}
+.arch-snr-axis-name{font-size:9px;color:var(--text);width:100px;flex-shrink:0;}
+.arch-snr-bar{flex:1;height:6px;background:var(--surface);border-radius:3px;overflow:hidden;}
+.arch-snr-fill{height:100%;border-radius:3px;transition:width .4s;}
+.arch-snr-val{font-size:9px;font-family:var(--mono);width:36px;text-align:right;flex-shrink:0;}
+.arch-map-file{display:flex;align-items:center;gap:6px;padding:3px 8px;border-bottom:1px solid var(--border);font-size:9px;}
+.arch-map-type{font-size:8px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:2px;flex-shrink:0;}
+.arch-gap-row{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:7px 10px;margin-bottom:6px;}
+.arch-gap-row.sev-critical{border-color:#ef444433;}
+.arch-gap-row.sev-high{border-color:#f59e0b33;}
+</style>
+<script>
+'use strict';
+// ── Architect panel — wired to architect service :3747 ────────────────────
+// §A-2 Hooks are the wire. §A-5 Signal before noise.
+const ARCH_BASE = 'http://127.0.0.1:3747';
+const ORCH_ARCH = 'http://127.0.0.1:9000/api/architect';
+
+let _archHooks     = [];
+let _archBlueprints= [];
+let _archSelectedHook = null;
+let _archSelectedBP   = null;
+let _archOnline    = false;
+let _archTab       = 'hooks';
+
+function archSwitchTab(tab) {
+  _archTab = tab;
+  document.querySelectorAll('.arch-inner-tab').forEach(t => {
+    t.classList.toggle('active', t.id === `arch-tab-${tab}`);
+  });
+  ['hooks','blueprint','canvas','map','snr','lattice'].forEach(t => {
+    const el = document.getElementById(`arch-panel-${t}`);
+    if (el) { el.style.display = t === tab ? 'flex' : 'none'; el.style.flexDirection = 'column'; }
+  });
+  if (tab === 'hooks')     archLoadHooks();
+  if (tab === 'blueprint') archLoadBlueprints();
+  if (tab === 'map')       archLoadMap();
+  if (tab === 'snr')       archLoadSNRHistory();
+}
+
+// ── API helpers ────────────────────────────────────────────────────────────
+async function _archGet(path) {
+  try {
+    const r = await fetch(ARCH_BASE + path, { signal: AbortSignal.timeout(4000) });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch(_) { return null; }
+}
+async function _archPost(path, body) {
+  try {
+    const r = await fetch(ARCH_BASE + path, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body), signal: AbortSignal.timeout(8000),
+    });
+    return await r.json();
+  } catch(e) { return { ok: false, error: e.message }; }
+}
+
+// ── Health check ───────────────────────────────────────────────────────────
+async function archCheckHealth() {
+  const h = await _archGet('/health');
+  _archOnline = !!(h?.ok);
+  const dot   = document.getElementById('arch-status-dot');
+  const label = document.getElementById('arch-status-label');
+  if (dot)   dot.style.background   = _archOnline ? '#34d399' : '#ef4444';
+  if (label) label.textContent = _archOnline ? `:3747 ONLINE · ${h?.hooks?.total||0} hooks` : ':3747 OFFLINE';
+  return _archOnline;
+}
+
+async function archRefresh() {
+  await archCheckHealth();
+  if (_archTab === 'hooks')     archLoadHooks();
+  if (_archTab === 'blueprint') archLoadBlueprints();
+  if (_archTab === 'map')       archLoadMap();
+  if (_archTab === 'snr')       archLoadSNRHistory();
+}
+
+// ── HOOKS ──────────────────────────────────────────────────────────────────
+async function archLoadHooks() {
+  if (!_archOnline) await archCheckHealth();
+  const type   = document.getElementById('arch-hook-type-filter')?.value || '';
+  const status = document.getElementById('arch-hook-status-filter')?.value || '';
+  const qs = [type&&`type=${type}`, status&&`status=${status}`].filter(Boolean).join('&');
+  const data = await _archGet(`/api/hooks${qs?'?'+qs:''}`);
+  const list = document.getElementById('arch-hook-list');
+  const count= document.getElementById('arch-hook-count');
+  if (!list) return;
+  if (!data) {
+    list.innerHTML = `<div style="color:var(--red);font-size:9px;padding:12px">Architect offline — start with: node architect/service.js</div>`;
+    return;
+  }
+  _archHooks = data.hooks || [];
+  if (count) count.textContent = `${_archHooks.length} hook${_archHooks.length!==1?'s':''}`;
+  if (!_archHooks.length) {
+    list.innerHTML = `<div style="color:var(--muted);font-size:9px;padding:12px;text-align:center">No hooks registered yet.<br>Click "+ Register Hook" to declare a wire.</div>`;
+    return;
+  }
+  list.innerHTML = _archHooks.map((h,i) => {
+    const typeClass = `arch-hook-type-${(h.type||'').replace(/[^a-z-]/g,'-')}`;
+    const statusClass = `arch-hook-status-${h.meta?.status||'active'}`;
+    return `<div class="arch-hook-row${_archSelectedHook?.uuid===h.uuid?' active':''}" onclick="archSelectHook(${i})">
+      <span class="arch-hook-type ${typeClass}" style="background:var(--surface2)">${h.type||'?'}</span>
+      <span class="arch-hook-name">${h.name}</span>
+      <span class="arch-hook-status ${statusClass}">${h.meta?.status||'active'}</span>
+    </div>`;
+  }).join('');
+}
+
+function archSelectHook(idx) {
+  _archSelectedHook = _archHooks[idx];
+  document.querySelectorAll('.arch-hook-row').forEach((r,i) => r.classList.toggle('active', i===idx));
+  const detail = document.getElementById('arch-hook-detail');
+  if (!detail || !_archSelectedHook) return;
+  const h = _archSelectedHook;
+  const friction = h.frictionScore || {};
+  const contract = h.contract || {};
+  detail.innerHTML = `
+    <div class="arch-detail-block">
+      <div class="arch-detail-title">${h.name}</div>
+      <div style="color:var(--text2);font-size:10px;margin-bottom:8px;">${h.intent||'No intent declared'}</div>
+      <div class="arch-detail-row"><span class="arch-detail-label">UUID</span><span class="arch-detail-val">${h.uuid?.slice(0,18)||'?'}…</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Type</span><span class="arch-detail-val" style="color:var(--amber)">${h.type}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Direction</span><span class="arch-detail-val">${h.direction}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Version</span><span class="arch-detail-val">${h.version||'1.0.0'}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Status</span><span class="arch-detail-val">${h.meta?.status||'active'}</span></div>
+    </div>
+    <div class="arch-detail-block">
+      <div class="arch-detail-title">Endpoints</div>
+      <div class="arch-detail-row"><span class="arch-detail-label">From</span><span class="arch-detail-val">${h.from?.surface||'*'} (L${h.from?.layer??'?'})</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">To</span><span class="arch-detail-val">${h.to?.surface||'*'} (L${h.to?.layer??'?'})</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">CLI binding</span><span class="arch-detail-val">${h.bindings?.cli||'—'}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Event type</span><span class="arch-detail-val">${h.bindings?.event||'—'}</span></div>
+    </div>
+    <div class="arch-detail-block">
+      <div class="arch-detail-title">Contract</div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Axioms</span><span class="arch-detail-val">${(contract.axioms||[]).join(', ')||'—'}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Side effects</span><span class="arch-detail-val">${(contract.sideEffects||[]).join(', ')||'none'}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Idempotent</span><span class="arch-detail-val">${contract.idempotent?'yes':'no'}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">Replayable</span><span class="arch-detail-val">${contract.replayable?'yes':'no'}</span></div>
+      <div class="arch-detail-row"><span class="arch-detail-label">SNR gated</span><span class="arch-detail-val">${contract.snrGated?'yes':'no'}</span></div>
+      ${contract.timeout?`<div class="arch-detail-row"><span class="arch-detail-label">Timeout</span><span class="arch-detail-val">${contract.timeout}ms</span></div>`:''}
+    </div>
+    <div class="arch-detail-block">
+      <div class="arch-detail-title">Friction Score (§I-19)</div>
+      ${['latency','failureRate','semanticDistance'].map(axis => {
+        const val = friction[axis]||0;
+        const color = val<0.3?'#34d399':val<0.7?'#f59e0b':'#ef4444';
+        return `<div class="arch-snr-axis">
+          <span class="arch-snr-axis-name">${axis}</span>
+          <div class="arch-snr-bar"><div class="arch-snr-fill" style="width:${val*100}%;background:${color}"></div></div>
+          <span class="arch-snr-val" style="color:${color}">${val.toFixed(2)}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    ${h.meta?.notes?`<div class="arch-detail-block"><div class="arch-detail-title">Notes</div><div style="font-size:9px;color:var(--text2);line-height:1.6">${h.meta.notes}</div></div>`:''}
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <button class="btn" onclick="archDeprecateHook('${h.uuid}')" style="font-size:9px;">Deprecate</button>
+      <button class="btn danger" onclick="archRemoveHook('${h.uuid}')" style="font-size:9px;">Remove (hard)</button>
+    </div>`;
+}
+
+function archShowRegisterHook() {
+  const form = document.getElementById('arch-register-form');
+  if (form) form.style.display = form.style.display==='none' ? 'block' : 'none';
+}
+
+async function archRegisterHook() {
+  const name      = document.getElementById('arch-reg-name')?.value?.trim();
+  const type      = document.getElementById('arch-reg-type')?.value;
+  const direction = document.getElementById('arch-reg-direction')?.value;
+  const intent    = document.getElementById('arch-reg-intent')?.value?.trim();
+  const from      = document.getElementById('arch-reg-from')?.value?.trim() || '*';
+  if (!name || !type) { alert('Name and type required'); return; }
+  const result = await _archPost('/api/hooks', {
+    name, type, direction, intent,
+    from: { surface: from, layer: 1 }, to: { surface: '*', layer: 1 },
+    schema: { input: { type:'object' }, output: { type:'object' }, errors: [] },
+    contract: { axioms: ['§A-2'], sideEffects: [], idempotent: false, replayable: false, snrGated: false },
+    status: 'active', causedBy: 'forge-ui.register',
+  });
+  if (result?.ok) {
+    document.getElementById('arch-register-form').style.display = 'none';
+    archLoadHooks();
+  } else {
+    alert('Error: ' + (result?.error || 'unknown'));
+  }
+}
+
+async function archDeprecateHook(id) {
+  const reason = prompt('Deprecation reason:');
+  if (!reason) return;
+  await fetch(`${ARCH_BASE}/api/hooks/${id}`, {
+    method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason, causedBy: 'forge-ui.deprecate' }),
+  });
+  archLoadHooks();
+}
+async function archRemoveHook(id) {
+  if (!confirm('Hard remove hook? This fails if bindings exist.')) return;
+  await fetch(`${ARCH_BASE}/api/hooks/${id}`, {
+    method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ hard: true, causedBy: 'forge-ui.remove' }),
+  });
+  archLoadHooks();
+}
+
+// ── BLUEPRINTS ─────────────────────────────────────────────────────────────
+async function archLoadBlueprints() {
+  if (!_archOnline) await archCheckHealth();
+  const data = await _archGet('/api/blueprint');
+  const list = document.getElementById('arch-bp-list');
+  if (!list) return;
+  _archBlueprints = data?.blueprints || [];
+  if (!_archBlueprints.length) {
+    list.innerHTML = `<div style="color:var(--muted);font-size:9px;padding:12px;text-align:center">No blueprints yet.<br>Enter a path above and click Scan.</div>`;
+    return;
+  }
+  list.innerHTML = _archBlueprints.map((bp,i) =>
+    `<div class="arch-bp-item${_archSelectedBP?.id===bp.id?' active':''}" onclick="archSelectBP(${i})">
+      <div class="arch-bp-name">${bp.name||'unnamed'}</div>
+      <div class="arch-bp-meta">v${bp.version||'?'} · SNR ${(bp.snrScore||0).toFixed(2)} · ${new Date(bp.createdAt||0).toTimeString().slice(0,8)}</div>
+    </div>`
+  ).join('');
+}
+
+async function archScanPath() {
+  const rootPath = document.getElementById('arch-scan-path')?.value?.trim();
+  if (!rootPath) { alert('Enter a path to scan'); return; }
+  const result = await _archPost('/api/blueprint/scan', { rootPath });
+  if (result?.ok) { archLoadBlueprints(); if (result.blueprint) { setTimeout(() => archSelectBPById(result.blueprint.id), 300); } }
+  else alert('Scan failed: ' + (result?.error || 'unknown'));
+}
+
+function archSelectBP(idx) {
+  _archSelectedBP = _archBlueprints[idx];
+  document.querySelectorAll('.arch-bp-item').forEach((r,i) => r.classList.toggle('active', i===idx));
+  archRenderBPDetail(_archSelectedBP);
+}
+function archSelectBPById(id) {
+  const idx = _archBlueprints.findIndex(bp => bp.id === id);
+  if (idx >= 0) archSelectBP(idx);
+}
+
+function archRenderBPDetail(bp) {
+  const detail = document.getElementById('arch-bp-detail');
+  if (!detail || !bp) return;
+  const hooks    = bp.hooks    || [];
+  const surfaces = bp.surfaces || [];
+  const gaps     = bp.gaps     || [];
+  const snr      = bp.snrScore || 0;
+  const snrColor = snr>=0.85?'#34d399':snr>=0.65?'#f59e0b':'#ef4444';
+  detail.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--text)">${bp.name}</div>
+        <div style="font-size:9px;color:var(--muted)">v${bp.version||'?'} · ${bp.source||'?'} · ${bp.sourceId?.slice(0,40)||''}</div>
+      </div>
+      <div style="margin-left:auto;text-align:right;">
+        <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:${snrColor}">${snr.toFixed(2)}</div>
+        <div style="font-size:8px;color:var(--muted)">SNR SCORE</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+      ${[['Hooks',hooks.length,'var(--amber)'],['Surfaces',surfaces.length,'#85b7eb'],['Constraints',(bp.constraints||[]).length,'#9fe1cb'],['Gaps',gaps.length,gaps.length?'#ef4444':'#34d399']].map(([l,v,c])=>
+        `<div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px 10px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:${c};font-family:var(--mono)">${v}</div>
+          <div style="font-size:8px;color:var(--muted)">${l}</div>
+        </div>`).join('')}
+    </div>
+    ${surfaces.length ? `<div class="arch-detail-block"><div class="arch-detail-title">Surfaces</div>${surfaces.map(s=>`<div class="arch-detail-row"><span class="arch-detail-label">L${s.layer||'?'} ${s.name}</span><span class="arch-detail-val">${s.path||s.id||''}</span></div>`).join('')}</div>` : ''}
+    ${hooks.length ? `<div class="arch-detail-block"><div class="arch-detail-title">Declared Hooks</div>${hooks.map(h=>`<div class="arch-detail-row"><span class="arch-detail-label">${h.name||h.id||'?'}</span><span class="arch-detail-val" style="color:var(--amber)">${h.type||'?'}</span></div>`).join('')}</div>` : ''}
+    ${gaps.length ? `<div class="arch-detail-block"><div class="arch-detail-title">Gaps (${gaps.length})</div>${gaps.map(g=>`<div class="arch-gap-row sev-${g.severity||'medium'}">
+      <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--red)">${g.severity||'?'}</span><span style="font-size:9px;color:var(--text)">${g.description||g.id||''}</span></div>
+    </div>`).join('')}</div>` : '<div style="color:var(--green);font-size:9px;padding:8px">✓ No gaps detected</div>'}
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <button class="btn" onclick="archExportBP('${bp.id}','mermaid')" style="font-size:9px;">Export Mermaid</button>
+      <button class="btn" onclick="archExportBP('${bp.id}','json')" style="font-size:9px;">Export JSON</button>
+    </div>`;
+  // Also update topology tab
+  archRenderMapFromBP(bp);
+}
+
+async function archExportBP(id) {
+  const data = await _archGet(`/api/blueprint/${id}`);
+  if (data?.blueprint) {
+    const blob = new Blob([JSON.stringify(data.blueprint, null, 2)], { type:'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `blueprint-${id.slice(0,8)}.json`; a.click();
+  }
+}
+
+// ── TOPOLOGY MAP ───────────────────────────────────────────────────────────
+async function archLoadMap() {
+  const data = await _archGet('/api/map');
+  const content = document.getElementById('arch-map-content');
+  if (!content) return;
+  const maps = data?.maps || [];
+  if (!maps.length) { content.innerHTML = '<div style="color:var(--muted);font-size:9px;text-align:center;padding:20px">No topology maps yet — scan a path in the Blueprint tab</div>'; return; }
+  archRenderMapData(maps[maps.length-1], content);
+}
+
+function archRenderMapFromBP(bp) {
+  const content = document.getElementById('arch-map-content');
+  if (!content || !bp?.topology) return;
+  archRenderMapData(bp.topology, content);
+}
+
+function archRenderMapData(map, container) {
+  const files  = map.files    || [];
+  const surfaces = map.surfaces || [];
+  const gaps   = map.gaps     || [];
+  const typeColors = { spec:'#1a48a8', module:'#0d2a1e', test:'#2a2010', config:'#1e1e26', schema:'#1a2a2a', data:'#2a1a2a', unknown:'#1e1e26' };
+  container.innerHTML = `
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      ${[['Files',files.length,'var(--text)'],['Surfaces',surfaces.length,'#85b7eb'],['Gaps',gaps.length,gaps.length?'#ef4444':'#34d399']].map(([l,v,c])=>
+        `<div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:7px 12px;text-align:center;min-width:80px">
+          <div style="font-size:16px;font-weight:700;color:${c};font-family:var(--mono)">${v}</div>
+          <div style="font-size:8px;color:var(--muted)">${l}</div>
+        </div>`).join('')}
+    </div>
+    ${gaps.length ? `<div style="margin-bottom:12px">${gaps.map(g=>`<div class="arch-gap-row sev-${g.severity||'medium'}">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:8px;font-weight:700;text-transform:uppercase;color:#ef4444">${g.severity||'?'}</span>
+        <span style="font-size:9px;color:var(--text)">${g.type||''}: ${g.description||''}</span>
+        <span style="font-size:9px;color:var(--muted);margin-left:auto">${g.suggestion||''}</span>
+      </div></div>`).join('')}</div>` : ''}
+    <div style="font-size:9px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Files (${files.length})</div>
+    <div style="max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;">
+      ${files.slice(0,200).map(f => {
+        const col = typeColors[f.type] || typeColors.unknown;
+        return `<div class="arch-map-file">
+          <span class="arch-map-type" style="background:${col};color:#ccc">${f.type||'?'}</span>
+          <span style="color:var(--text)">${f.relative||f.path||''}</span>
+          <span style="color:var(--muted);margin-left:auto">${f.size?Math.round(f.size/1024)+'KB':''}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+// ── SNR GATE ───────────────────────────────────────────────────────────────
+async function archCheckSNR() {
+  const input = document.getElementById('arch-snr-input')?.value?.trim();
+  let source = {};
+  try { source = JSON.parse(input); } catch(e) { alert('Invalid JSON: ' + e.message); return; }
+  const result = await _archPost('/api/snr/check', { source });
+  const panel  = document.getElementById('arch-snr-result');
+  if (!panel) return;
+  if (!result?.ok || !result?.result) { panel.innerHTML = `<div style="color:var(--red);font-size:9px;padding:12px">SNR check failed: ${result?.error||'offline'}</div>`; return; }
+  const r = result.result;
+  const scoreColor = r.score>=0.85?'#34d399':r.score>=0.65?'#f59e0b':'#ef4444';
+  const recColors  = { send:'#34d399', hold:'#f59e0b', rewrite:'#f59e0b', flag:'#ef4444' };
+  const axes = r.axes || {};
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <div style="text-align:center;">
+        <div style="font-size:36px;font-weight:700;font-family:var(--mono);color:${scoreColor}">${r.score.toFixed(2)}</div>
+        <div style="font-size:8px;color:var(--muted)">COMPOSITE SNR</div>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:700;text-transform:uppercase;color:${recColors[r.recommendation]||'#9090a0'}">${r.recommendation.toUpperCase()}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">${r.reasoning}</div>
+        ${r.routing?.target?`<div style="font-size:9px;color:var(--teal);margin-top:3px">→ route to ${r.routing.target}</div>`:''}
+      </div>
+    </div>
+    <div class="arch-detail-block">
+      <div class="arch-detail-title">8-Axis Breakdown</div>
+      ${Object.entries(axes).map(([axis, val]) => {
+        const c = val>=0.85?'#34d399':val>=0.65?'#f59e0b':'#ef4444';
+        return `<div class="arch-snr-axis">
+          <span class="arch-snr-axis-name">${axis}</span>
+          <div class="arch-snr-bar"><div class="arch-snr-fill" style="width:${val*100}%;background:${c}"></div></div>
+          <span class="arch-snr-val" style="color:${c}">${val.toFixed(2)}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    ${r.tags?.length?`<div class="arch-detail-block"><div class="arch-detail-title">Tags</div>${r.tags.map(t=>`<div class="arch-detail-row"><span class="arch-detail-label" style="color:#f59e0b">${t.axis} ${t.severity}</span><span class="arch-detail-val">${t.suggestion}</span></div>`).join('')}</div>`:''}`;
+}
+
+async function archLoadSNRHistory() {
+  const data = await _archGet('/api/snr');
+  const panel = document.getElementById('arch-snr-result');
+  if (!panel || !data?.results?.length) return;
+  // Show recent results summary
+  const recent = data.results.slice(-5);
+  if (!document.getElementById('arch-snr-input')?.value) {
+    panel.innerHTML = `<div style="color:var(--muted);font-size:9px;margin-bottom:10px">Recent SNR history (${recent.length}):</div>` +
+      recent.map(r => {
+        const sc = r.score||0;
+        const c  = sc>=0.85?'#34d399':sc>=0.65?'#f59e0b':'#ef4444';
+        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)">
+          <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:${c}">${sc.toFixed(2)}</span>
+          <span style="font-size:9px;color:var(--text)">${r.recommendation}</span>
+          <span style="font-size:9px;color:var(--muted);margin-left:auto">${new Date(r.scoredAt||0).toTimeString().slice(0,8)}</span>
+        </div>`;
+      }).join('');
+  }
+}
+
+// ── Canvas + Lattice ───────────────────────────────────────────────────────
+function archOpenBuilderFull() { window.open('http://127.0.0.1:3747/ui/arch-builder', '_blank'); }
+function archOpenLatticeFull()  { window.open('http://127.0.0.1:3747/ui/alk-lattice', '_blank'); }
+
+// ── Init when architect tab activated ─────────────────────────────────────
+document.querySelector('[data-panel="architect"]')?.addEventListener('click', () => {
+  setTimeout(async () => {
+    await archCheckHealth();
+    archSwitchTab('hooks');
+  }, 50);
+});
+
+// Architect dot in top status bar (add if not present)
+(function() {
+  const bar = document.querySelector('.tb-right');
+  if (bar && !document.getElementById('dot-architect')) {
+    const el = document.createElement('div');
+    el.className = 'tb-status';
+    el.innerHTML = `<div class="tb-dot" id="dot-architect" style="background:#ef9f27"></div><span>Arch :3747</span>`;
+    bar.insertBefore(el, bar.children[0]);
+  }
+})();
+
+// Poll architect health every 15s (aligns with other system dots)
+setInterval(async () => {
+  const h = await _archGet('/health');
+  const dot = document.getElementById('dot-architect');
+  if (dot) dot.style.background = h?.ok ? '#22c55e' : '#ef4444';
+}, 15000);
+</script>
+
+
+    <!-- Architect topbar -->
+    <div style="display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface);">
+      <div id="arch-tab-hooks"     class="arch-inner-tab active" onclick="archSwitchTab('hooks')">⬡ Hooks</div>
+      <div id="arch-tab-blueprint" class="arch-inner-tab" onclick="archSwitchTab('blueprint')">◈ Blueprint</div>
+      <div id="arch-tab-canvas"    class="arch-inner-tab" onclick="archSwitchTab('canvas')">⚙ Canvas</div>
+      <div id="arch-tab-map"       class="arch-inner-tab" onclick="archSwitchTab('map')">⬡ Topology</div>
+      <div id="arch-tab-snr"       class="arch-inner-tab" onclick="archSwitchTab('snr')">◆ SNR</div>
+      <div id="arch-tab-lattice"   class="arch-inner-tab" onclick="archSwitchTab('lattice')">⬡ ALK Lattice</div>
+      <div style="flex:1;"></div>
+      <div id="arch-status-dot" style="width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px;flex-shrink:0;"></div>
+      <span id="arch-status-label" style="font-size:9px;color:var(--muted);margin-right:12px;">:3747</span>
+      <button class="btn" onclick="archRefresh()" style="margin-right:8px;font-size:9px;">↺ Refresh</button>
+    </div>
+
+    <!-- ── HOOKS TAB ─────────────────────────────────────────────────────── -->
+    <div id="arch-panel-hooks" class="arch-inner-panel" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <!-- Hook filter bar -->
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Hook Registry</span>
+        <select id="arch-hook-type-filter" class="fi" style="width:120px;" onchange="archLoadHooks()">
+          <option value="">All types</option>
+          <option value="api">api</option>
+          <option value="event-bus">event-bus</option>
+          <option value="webserver">webserver</option>
+          <option value="stream">stream</option>
+          <option value="gate">gate</option>
+          <option value="blueprint">blueprint</option>
+          <option value="snr">snr</option>
+          <option value="ollama">ollama</option>
+          <option value="raid">raid</option>
+          <option value="gap">gap</option>
+          <option value="tension">tension</option>
+          <option value="seam">seam</option>
+          <option value="translate">translate</option>
+          <option value="compress">compress</option>
+          <option value="clip">clip</option>
+          <option value="reconstruct">reconstruct</option>
+          <option value="behavior">behavior</option>
+          <option value="lens">lens</option>
+          <option value="macro">macro</option>
+          <option value="synthesize">synthesize</option>
+          <option value="callto">callto</option>
+          <option value="direct">direct</option>
+          <option value="decompress">decompress</option>
+        </select>
+        <select id="arch-hook-status-filter" class="fi" style="width:100px;" onchange="archLoadHooks()">
+          <option value="">All status</option>
+          <option value="active">active</option>
+          <option value="seed">seed</option>
+          <option value="deprecated">deprecated</option>
+        </select>
+        <div style="flex:1;"></div>
+        <span id="arch-hook-count" style="font-size:9px;color:var(--muted);">0 hooks</span>
+        <button class="btn primary" onclick="archShowRegisterHook()" style="font-size:9px;">+ Register Hook</button>
+      </div>
+      <!-- Hook list + detail split -->
+      <div style="display:flex;flex:1;overflow:hidden;">
+        <!-- Hook list -->
+        <div id="arch-hook-list" style="width:340px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--border);">
+          <div style="color:var(--muted);font-size:9px;padding:20px;text-align:center;">Loading hooks…</div>
+        </div>
+        <!-- Hook detail -->
+        <div id="arch-hook-detail" style="flex:1;overflow-y:auto;padding:14px;">
+          <div style="color:var(--muted);font-size:9px;text-align:center;padding-top:40px;">Select a hook to inspect</div>
+        </div>
+      </div>
+      <!-- Register hook form (hidden) -->
+      <div id="arch-register-form" style="display:none;border-top:1px solid var(--border);padding:12px;background:var(--surface);flex-shrink:0;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber);margin-bottom:8px;">Register Hook — §A-2 Hooks are the wire</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Name (kebab-case)</div>
+            <input class="fi" id="arch-reg-name" placeholder="my-hook-name" style="width:100%;">
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Type</div>
+            <select class="fi" id="arch-reg-type" style="width:100%;">
+              <option value="api">api</option>
+              <option value="event-bus" selected>event-bus</option>
+              <option value="webserver">webserver</option>
+              <option value="gate">gate</option>
+              <option value="stream">stream</option>
+              <option value="snr">snr</option>
+              <option value="blueprint">blueprint</option>
+              <option value="translate">translate</option>
+              <option value="compress">compress</option>
+              <option value="gap">gap</option>
+              <option value="tension">tension</option>
+              <option value="seam">seam</option>
+              <option value="ollama">ollama</option>
+              <option value="raid">raid</option>
+              <option value="callto">callto</option>
+              <option value="direct">direct</option>
+              <option value="clip">clip</option>
+              <option value="reconstruct">reconstruct</option>
+              <option value="behavior">behavior</option>
+              <option value="lens">lens</option>
+              <option value="macro">macro</option>
+              <option value="synthesize">synthesize</option>
+              <option value="decompress">decompress</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Direction</div>
+            <select class="fi" id="arch-reg-direction" style="width:100%;">
+              <option value="unidirectional">unidirectional →</option>
+              <option value="bidirectional">bidirectional ↔</option>
+              <option value="broadcast">broadcast →*</option>
+              <option value="sink">sink *→</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-bottom:8px;">
+          <div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">From surface</div>
+            <input class="fi" id="arch-reg-from" placeholder="surface-id or *" style="width:100%;">
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Intent (one sentence: what this wire does and why)</div>
+            <input class="fi" id="arch-reg-intent" placeholder="Routes X from A to B so that..." style="width:100%;">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn primary" onclick="archRegisterHook()" style="font-size:9px;">Register Hook</button>
+          <button class="btn" onclick="document.getElementById('arch-register-form').style.display='none'" style="font-size:9px;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BLUEPRINT TAB ──────────────────────────────────────────────────── -->
+    <div id="arch-panel-blueprint" class="arch-inner-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Blueprint Viewer</span>
+        <div style="flex:1;"></div>
+        <input id="arch-scan-path" class="fi" placeholder="Path to scan (e.g. D:\\Backups\\Downloads\\nexus-patched-5\\nexus-work)" style="width:380px;font-size:10px;">
+        <button class="btn primary" onclick="archScanPath()" style="font-size:9px;">⬡ Scan</button>
+        <button class="btn" onclick="archLoadBlueprints()" style="font-size:9px;">↺ Load</button>
+      </div>
+      <div style="display:flex;flex:1;overflow:hidden;">
+        <!-- Blueprint list -->
+        <div id="arch-bp-list" style="width:240px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--border);padding:8px;">
+          <div style="color:var(--muted);font-size:9px;text-align:center;padding:20px;">No blueprints yet — scan a path</div>
+        </div>
+        <!-- Blueprint detail: layers, surfaces, hooks, gaps -->
+        <div id="arch-bp-detail" style="flex:1;overflow-y:auto;padding:14px;">
+          <div style="color:var(--muted);font-size:9px;text-align:center;padding-top:40px;">Select a blueprint to view structural digest</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CANVAS TAB — arch-builder embedded ────────────────────────────── -->
+    <div id="arch-panel-canvas" class="arch-inner-panel" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Architecture Builder — drag/drop canvas</span>
+        <div style="flex:1;"></div>
+        <button class="btn" onclick="archOpenBuilderFull()" style="font-size:9px;">↗ Open full</button>
+      </div>
+      <iframe id="arch-builder-frame" src="http://127.0.0.1:3747/ui/arch-builder"
+        style="flex:1;border:none;width:100%;background:var(--bg);"
+        title="Architecture Builder Canvas"></iframe>
+    </div>
+
+    <!-- ── TOPOLOGY MAP TAB ───────────────────────────────────────────────── -->
+    <div id="arch-panel-map" class="arch-inner-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">File / Data Topology</span>
+        <div style="flex:1;"></div>
+        <span style="font-size:9px;color:var(--muted);">§A-3 Map before build</span>
+      </div>
+      <div id="arch-map-content" style="flex:1;overflow-y:auto;padding:14px;">
+        <div style="color:var(--muted);font-size:9px;text-align:center;padding:20px;">Scan a path in the Blueprint tab to see topology</div>
+      </div>
+    </div>
+
+    <!-- ── SNR GATE TAB ───────────────────────────────────────────────────── -->
+    <div id="arch-panel-snr" class="arch-inner-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">SNR Gate — §A-5 Signal before noise</span>
+        <div style="flex:1;"></div>
+        <span style="font-size:9px;color:var(--muted);">Thresholds: send≥0.85 · hold≥0.65 · rewrite≥0.45 · flag&lt;0.45</span>
+      </div>
+      <div style="display:flex;flex:1;overflow:hidden;">
+        <!-- SNR input -->
+        <div style="width:380px;flex-shrink:0;border-right:1px solid var(--border);padding:12px;overflow-y:auto;">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:6px;">Input JSON (any structured output)</div>
+          <textarea id="arch-snr-input" class="sb-ta" rows="10" placeholder='{"id":"...","name":"...","type":"..."}'
+            style="width:100%;min-height:140px;"></textarea>
+          <button class="btn primary" onclick="archCheckSNR()" style="margin-top:8px;width:100%;">Run SNR Gate</button>
+        </div>
+        <!-- SNR result -->
+        <div id="arch-snr-result" style="flex:1;overflow-y:auto;padding:14px;">
+          <div style="color:var(--muted);font-size:9px;text-align:center;padding-top:40px;">Paste JSON and run SNR gate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ALK LATTICE TAB ────────────────────────────────────────────────── -->
+    <div id="arch-panel-lattice" class="arch-inner-panel" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">ALK Lattice — 3D Associative Lattice Kernel</span>
+        <div style="flex:1;"></div>
+        <button class="btn" onclick="archOpenLatticeFull()" style="font-size:9px;">↗ Open full</button>
+      </div>
+      <iframe id="arch-lattice-frame" src="http://127.0.0.1:3747/ui/alk-lattice"
+        style="flex:1;border:none;width:100%;background:var(--bg);"
+        title="ALK Lattice 3D"></iframe>
+    </div>
+
+  </div>
+
+
+  <!-- ═══════════════ LAB — NEXUS LLM Testing Environment ══════════════════ -->
+  <div class="panel" id="panel-lab" style="flex-direction:column;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);flex-shrink:0">
+      <div id="lab-tab-run"       class="arch-inner-tab active" onclick="labTab('run')">⚗ Run</div>
+      <div id="lab-tab-sessions"  class="arch-inner-tab" onclick="labTab('sessions')">Sessions</div>
+      <div id="lab-tab-results"   class="arch-inner-tab" onclick="labTab('results')">Results</div>
+      <div id="lab-tab-templates" class="arch-inner-tab" onclick="labTab('templates')">Templates</div>
+      <div id="lab-tab-h2h"       class="arch-inner-tab" onclick="labTab('h2h')">H2H Compare</div>
+      <div style="flex:1"></div>
+      <span id="lab-status" style="font-size:9px;color:var(--muted);margin-right:10px">IDLE</span>
+    </div>
+
+    <!-- RUN TAB -->
+    <div id="lab-panel-run" style="display:flex;flex:1;overflow:hidden">
+      <!-- Config sidebar -->
+      <div style="width:320px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;padding:12px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px">Experiment Config</div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Type</div>
+          <select id="lab-type" class="fi" style="width:100%" onchange="labUpdateConfig()">
+            <option value="single">Single shot</option>
+            <option value="h2h">Head-to-head (Claude vs ChatGPT)</option>
+            <option value="loop">Feedback loop</option>
+            <option value="chain">If/then chain</option>
+            <option value="stress">Stress test</option>
+          </select>
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Provider</div>
+          <select id="lab-provider" class="fi" style="width:100%">
+            <option value="claude">Claude</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="ollama">Ollama</option>
+          </select>
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Hypothesis (what are we testing?)</div>
+          <input id="lab-hypothesis" class="fi" style="width:100%" placeholder="e.g. Does Claude handle context limits better?">
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Prompt / Initial prompt</div>
+          <textarea id="lab-prompt" class="sb-ta" rows="5" style="width:100%;min-height:100px" placeholder="Enter your prompt…"></textarea>
+        </div>
+        <!-- Loop config -->
+        <div id="lab-loop-config" style="display:none;margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Next prompt template <span style="color:var(--text3)">(use {response} {iteration})</span></div>
+          <textarea id="lab-next-prompt" class="sb-ta" rows="3" style="width:100%;min-height:60px" placeholder="Continue from where you left off: {response}"></textarea>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <div style="flex:1">
+              <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Stop condition</div>
+              <select id="lab-cond-op" class="fi" style="width:100%">
+                <option value="seam_pass">SEAM VERDICT: PASS</option>
+                <option value="contains">Contains text</option>
+                <option value="not_contains">Not contains</option>
+                <option value="has_code_block">Has code block</option>
+                <option value="length_gt">Length &gt; N</option>
+                <option value="is_refusal">Is refusal</option>
+              </select>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Value</div>
+              <input id="lab-cond-val" class="fi" style="width:100%" placeholder="e.g. PASS or 500">
+            </div>
+          </div>
+          <div style="margin-top:6px">
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Max iterations</div>
+            <input id="lab-max-iter" class="fi" type="number" value="5" style="width:80px">
+          </div>
+        </div>
+        <!-- Stress config -->
+        <div id="lab-stress-config" style="display:none;margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Stress mode</div>
+          <select id="lab-stress-mode" class="fi" style="width:100%">
+            <option value="context_growth">Context growth — build up until limit</option>
+            <option value="repeat">Repeat identical prompt</option>
+          </select>
+          <div style="margin-top:6px">
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Max rounds</div>
+            <input id="lab-max-rounds" class="fi" type="number" value="8" style="width:80px">
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <button class="btn primary" style="flex:1" onclick="labRun()">⚗ Run Experiment</button>
+          <button class="btn" onclick="labStop()">■ Stop</button>
+        </div>
+      </div>
+
+      <!-- Live output -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+          <span style="font-size:9px;color:var(--muted)">Live output</span>
+          <span id="lab-run-status" style="font-size:9px;color:var(--amber)"></span>
+          <div style="flex:1"></div>
+          <button class="btn" style="font-size:9px" onclick="labClearOutput()">Clear</button>
+        </div>
+        <div id="lab-output" style="flex:1;overflow-y:auto;padding:12px;font-size:10px;font-family:var(--mono)"></div>
+      </div>
+    </div>
+
+    <!-- SESSIONS TAB -->
+    <div id="lab-panel-sessions" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div style="padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Experiment Sessions</span>
+        <div style="flex:1"></div>
+        <button class="btn" style="font-size:9px" onclick="labLoadSessions()">↺ Refresh</button>
+      </div>
+      <div id="lab-sessions-list" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+    </div>
+
+    <!-- RESULTS TAB -->
+    <div id="lab-panel-results" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div id="lab-results-content" style="flex:1;overflow-y:auto;padding:12px;font-size:10px;font-family:var(--mono)">
+        <div style="color:var(--muted)">Run an experiment to see results</div>
+      </div>
+    </div>
+
+    <!-- TEMPLATES TAB -->
+    <div id="lab-panel-templates" style="display:none;flex-direction:column;flex:1;overflow-y:auto;padding:14px">
+      <div id="lab-templates-content"><div style="color:var(--muted);font-size:10px">Loading templates…</div></div>
+    </div>
+
+    <!-- H2H TAB -->
+    <div id="lab-panel-h2h" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div style="padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+        <div style="font-size:9px;color:var(--muted);margin-bottom:6px">Claude vs ChatGPT — identical prompt</div>
+        <textarea id="lab-h2h-prompt" class="sb-ta" rows="4" style="width:100%;min-height:80px" placeholder="Enter prompt to send to both providers simultaneously…"></textarea>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input id="lab-h2h-rounds" class="fi" type="number" value="1" style="width:70px" placeholder="Rounds">
+          <button class="btn primary" style="font-size:9px" onclick="labRunH2H()">⚗ Compare</button>
+        </div>
+      </div>
+      <div style="display:flex;flex:1;overflow:hidden">
+        <div style="flex:1;border-right:1px solid var(--border);overflow-y:auto;padding:10px">
+          <div style="font-size:9px;color:var(--amber);font-weight:700;margin-bottom:6px;text-transform:uppercase">Claude</div>
+          <div id="lab-h2h-claude" style="font-size:10px;color:var(--text2);font-family:var(--mono)"></div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:10px">
+          <div style="font-size:9px;color:var(--teal);font-weight:700;margin-bottom:6px;text-transform:uppercase">ChatGPT</div>
+          <div id="lab-h2h-chatgpt" style="font-size:10px;color:var(--text2);font-family:var(--mono)"></div>
+        </div>
+      </div>
+      <div id="lab-h2h-comparison" style="padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;font-size:10px"></div>
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+  // ── LAB panel JS ───────────────────────────────────────────────────────────
+  const LAB_BASE = 'http://127.0.0.1:7820';
+  let _labRunning = false;
+  let _labCurrentSummary = null;
+
+  async function _labGet(path) {
+    try { const r=await fetch(LAB_BASE+path,{signal:AbortSignal.timeout(5000)}); return r.ok?await r.json():null; }
+    catch(_){return null;}
+  }
+  async function _labPost(path, body) {
+    try { const r=await fetch(LAB_BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(120000)}); return await r.json(); }
+    catch(e){return{ok:false,error:e.message};}
+  }
+
+  function labTab(tab) {
+    ['run','sessions','results','templates','h2h'].forEach(t => {
+      document.getElementById(`lab-tab-${t}`)?.classList.toggle('active', t===tab);
+      document.getElementById(`lab-panel-${t}`).style.display = t===tab?'flex':'none';
+    });
+    if (tab==='sessions')  labLoadSessions();
+    if (tab==='templates') labLoadTemplates();
+  }
+
+  function labUpdateConfig() {
+    const type = document.getElementById('lab-type')?.value;
+    document.getElementById('lab-loop-config').style.display   = type==='loop'?'block':'none';
+    document.getElementById('lab-stress-config').style.display = type==='stress'?'block':'none';
+  }
+
+  function labClearOutput() {
+    const el = document.getElementById('lab-output');
+    if (el) el.innerHTML = '';
+  }
+
+  function _labLog(msg, color='var(--text2)') {
+    const el = document.getElementById('lab-output'); if (!el) return;
+    const line = document.createElement('div');
+    line.style.cssText = `padding:2px 0;border-bottom:1px solid var(--border);color:${color}`;
+    line.textContent = `[${new Date().toTimeString().slice(0,8)}] ${msg}`;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  async function labRun() {
+    if (_labRunning) { alert('Experiment already running'); return; }
+    const type       = document.getElementById('lab-type')?.value;
+    const provider   = document.getElementById('lab-provider')?.value;
+    const prompt     = document.getElementById('lab-prompt')?.value?.trim();
+    const hypothesis = document.getElementById('lab-hypothesis')?.value?.trim();
+    if (!prompt) { alert('Prompt required'); return; }
+
+    const config = { type, provider, prompt, hypothesis };
+    if (type==='loop') {
+      config.next_prompt   = document.getElementById('lab-next-prompt')?.value?.trim();
+      config.max_iterations = parseInt(document.getElementById('lab-max-iter')?.value)||5;
+      const op  = document.getElementById('lab-cond-op')?.value;
+      const val = document.getElementById('lab-cond-val')?.value?.trim();
+      if (op) config.condition = { op, value:val||undefined };
+    }
+    if (type==='stress') {
+      config.mode       = document.getElementById('lab-stress-mode')?.value;
+      config.max_rounds = parseInt(document.getElementById('lab-max-rounds')?.value)||8;
+      config.base_prompt = prompt;
+    }
+
+    _labRunning = true;
+    document.getElementById('lab-run-status').textContent = 'RUNNING…';
+    document.getElementById('lab-status').textContent = 'RUNNING';
+    _labLog(`▶ Starting ${type} experiment on ${provider}`, 'var(--amber)');
+    _labLog(`Hypothesis: ${hypothesis||'(none)'}`, 'var(--text3)');
+
+    const result = await _labPost('/lab/run', config);
+    _labRunning = false;
+    document.getElementById('lab-run-status').textContent = '';
+    document.getElementById('lab-status').textContent = result?.summary?.status?.toUpperCase()||'DONE';
+
+    if (result?.ok && result?.summary) {
+      _labCurrentSummary = result.summary;
+      const s = result.summary;
+      _labLog(`✓ Complete — ${s.total} results, ${s.ok} ok, ${s.refusals} refusals, avg ${s.avgMs}ms`, 'var(--teal)');
+      _labLog(`Avg response length: ${s.avgLen} chars`, 'var(--text2)');
+      if (s.byProvider) {
+        for (const [p,d] of Object.entries(s.byProvider)) {
+          _labLog(`  ${p}: count=${d.count} avgMs=${d.avgMs}ms avgLen=${d.avgLen}ch refusals=${d.refusals}`, 'var(--text2)');
+        }
+      }
+      labRenderResults(result.summary);
+    } else {
+      _labLog(`✗ Error: ${result?.error||'unknown'}`, 'var(--red)');
+    }
+  }
+
+  function labStop() {
+    _labRunning = false;
+    document.getElementById('lab-run-status').textContent = 'STOPPED';
+    document.getElementById('lab-status').textContent = 'STOPPED';
+    _labLog('■ Stop requested', 'var(--muted)');
+  }
+
+  function labRenderResults(summary) {
+    const el = document.getElementById('lab-results-content'); if (!el) return;
+    labTab('results');
+    const s = summary;
+    el.innerHTML = `
+      <div style="margin-bottom:12px">
+        <div style="font-size:14px;font-weight:700;color:var(--text)">${s.config?.type?.toUpperCase()} — ${s.config?.hypothesis||'No hypothesis'}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">Session ${s.sessionId?.slice(0,12)} · ${s.durationMs}ms total</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        ${[['Results',s.total],['OK',s.ok],['Refusals',s.refusals],['SEAM Pass',s.seamPass]].map(([l,v])=>`
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--mono)">${v}</div>
+          <div style="font-size:8px;color:var(--muted)">${l}</div>
+        </div>`).join('')}
+      </div>
+      ${Object.entries(s.byProvider||{}).map(([p,d])=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--text);margin-bottom:6px;text-transform:uppercase">${p}</div>
+        ${[['Jobs',d.count],['Avg latency',d.avgMs+'ms'],['Avg length',d.avgLen+'ch'],['Refusals',d.refusals],['SEAM Pass',d.seamPass]].map(([l,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:9px;color:var(--muted)">${l}</span>
+          <span style="font-size:9px;color:var(--text);font-family:var(--mono)">${v}</span>
+        </div>`).join('')}
+      </div>`).join('')}`;
+  }
+
+  async function labLoadSessions() {
+    const data = await _labGet('/lab');
+    const el = document.getElementById('lab-sessions-list'); if (!el) return;
+    const sessions = data?.sessions||[];
+    const history  = data?.history||[];
+    if (!sessions.length && !history.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px;padding:12px">No sessions yet</div>'; return; }
+    el.innerHTML = [...sessions, ...history].map(s=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+          <span style="color:var(--amber);font-size:9px;font-family:var(--mono)">${(s.id||s._sessionId||'').slice(0,12)}</span>
+          <span style="font-size:9px;font-weight:700;text-transform:uppercase;color:${s.status==='complete'?'var(--teal)':s.status==='failed'?'var(--red)':'var(--amber)'}">${s.status||'?'}</span>
+          <span style="color:var(--muted);font-size:9px;margin-left:auto">${s.results||0} results</span>
+        </div>
+        <div style="color:var(--text2);font-size:9px">${s.config?.type||'?'} · ${s.config?.provider||'?'} · ${s.config?.hypothesis||''}</div>
+      </div>`).join('');
+  }
+
+  async function labLoadTemplates() {
+    const data = await _labGet('/lab/templates');
+    const el = document.getElementById('lab-templates-content'); if (!el) return;
+    const templates = data?.templates||[];
+    if (!templates.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No templates</div>'; return; }
+    el.innerHTML = templates.map(t=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <span style="font-size:11px;font-weight:700;color:var(--text)">${t.name}</span>
+          <span style="font-size:8px;text-transform:uppercase;padding:1px 6px;border-radius:10px;background:rgba(129,140,248,.15);color:var(--acc)">${t.config?.type}</span>
+        </div>
+        <div style="color:var(--text2);font-size:9px;margin-bottom:8px">${t.description}</div>
+        <button class="btn o" style="font-size:9px" onclick="labLoadTemplate('${t.id}')">Use Template</button>
+      </div>`).join('');
+  }
+
+  const _LAB_TEMPLATE_CACHE = {};
+  async function labLoadTemplate(id) {
+    const data = await _labGet('/lab/templates');
+    const t = data?.templates?.find(t=>t.id===id); if (!t) return;
+    document.getElementById('lab-type').value       = t.config.type||'single';
+    document.getElementById('lab-provider').value   = t.config.provider||t.config.providers?.[0]||'claude';
+    document.getElementById('lab-hypothesis').value = t.config.hypothesis||'';
+    document.getElementById('lab-prompt').value     = typeof t.config.prompt==='string' ? t.config.prompt : (t.config.initial_prompt||t.config.base_prompt||'');
+    if (t.config.next_prompt) document.getElementById('lab-next-prompt').value = t.config.next_prompt;
+    if (t.config.max_iterations) document.getElementById('lab-max-iter').value = t.config.max_iterations;
+    if (t.config.condition) { document.getElementById('lab-cond-op').value=t.config.condition.op; if(t.config.condition.value)document.getElementById('lab-cond-val').value=t.config.condition.value; }
+    if (t.config.max_rounds) document.getElementById('lab-max-rounds').value = t.config.max_rounds;
+    if (t.config.mode) document.getElementById('lab-stress-mode').value = t.config.mode;
+    labUpdateConfig();
+    labTab('run');
+    _labLog(`Template loaded: ${t.name}`, 'var(--teal)');
+  }
+
+  async function labRunH2H() {
+    const prompt  = document.getElementById('lab-h2h-prompt')?.value?.trim();
+    const rounds  = parseInt(document.getElementById('lab-h2h-rounds')?.value)||1;
+    if (!prompt) { alert('Prompt required'); return; }
+    document.getElementById('lab-h2h-claude').textContent  = 'Running…';
+    document.getElementById('lab-h2h-chatgpt').textContent = 'Running…';
+    document.getElementById('lab-h2h-comparison').textContent = '';
+    const result = await _labPost('/lab/run', { type:'h2h', providers:['claude','chatgpt'], prompt, rounds, hypothesis:'Head-to-head comparison' });
+    if (result?.ok && result?.summary) {
+      const s = result.summary;
+      const c = s.byProvider?.claude,  cg = s.byProvider?.chatgpt;
+      document.getElementById('lab-h2h-claude').innerHTML  = c  ? `<div style="color:var(--muted);margin-bottom:6px">${c.avgLen}ch · ${c.avgMs}ms · refusals:${c.refusals}</div>` : 'No response';
+      document.getElementById('lab-h2h-chatgpt').innerHTML = cg ? `<div style="color:var(--muted);margin-bottom:6px">${cg.avgLen}ch · ${cg.avgMs}ms · refusals:${cg.refusals}</div>` : 'No response';
+      if (c && cg) {
+        const winnerColor = c.avgLen > cg.avgLen ? 'var(--amber)' : 'var(--teal)';
+        document.getElementById('lab-h2h-comparison').innerHTML = `<span style="color:${winnerColor};font-weight:700">Winner: ${c.avgLen>=cg.avgLen?'Claude':'ChatGPT'}</span> · Claude ${c.avgLen}ch / ChatGPT ${cg.avgLen}ch · latency: Claude ${c.avgMs}ms / ChatGPT ${cg.avgMs}ms`;
+      }
+    } else {
+      document.getElementById('lab-h2h-comparison').innerHTML = `<span style="color:var(--red)">Error: ${result?.error||'failed'}</span>`;
+    }
+  }
+  </script>
+
 </body>
 </html>

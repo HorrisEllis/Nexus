@@ -202,17 +202,157 @@ async function diagOrchestrator() {
 }
 
 async function diagBridge() {
+  console.log(hdr('bridge', C.cyan));
+  console.log(info('Trust relay — all cross-system requests routed through here'));
+  console.log(info('Port :9999  § boot order: bridge FIRST, everything else second\n'));
 
-    // Test handshake
-    const r = await req(9999, 'POST', '/api/register',
-      { systemId:'orchestrator', appId:'orchestrator', secret:'nexus-orchestrator-internal-v1' });
-    // Test broadcast
-    if (r && r.ok) {
-      console.log(ok('    bridge handshake: ok'));
+  const ledger = (phase, status, detail) =>
+    postLedger('bridge', `bridge.diagnose.${phase}`, { status, detail, ts: Date.now() });
+
+  // ── File checks ────────────────────────────────────────────────────────────
+  const FILES = [
+    ['bridge/index.js',      'entry point (BootSequence)'],
+    ['bridge/server.js',     'HTTP :9999'],
+    ['bridge/ledger.js',     'JSONL append-only request ledger'],
+    ['bridge/identity.js',   'token issuance (MAX_TOKENS_PER_SYS=10)'],
+    ['bridge/registry.js',   'HeartbeatManager + fallback chains'],
+    ['bridge/router.js',     'ResolveGate→CircuitGate→DispatchGate→HoldGate'],
+    ['bridge/types.js',      '16 request types, 7 statuses'],
+  ];
+  console.log(C.bold + '  FILES:' + C.reset);
+  let fileFails = 0;
+  for (const [i, [file, desc]] of FILES.entries()) {
+    const ok_ = fileExists(file);
+    if (ok_) {
+      console.log(ok(step(i+1, FILES.length, `${file} — ${desc}`)));
+      await ledger(`file.${path.basename(file)}`, 'PASS');
     } else {
-      if (r && r.error === 'ECONNREFUSED') console.log(info('    → nothing listening on :9999'));
-      else console.log(err('    bridge handshake: failed'));
+      console.log(fail(step(i+1, FILES.length, `${file} — MISSING (${desc})`)));
+      await ledger(`file.${path.basename(file)}`, 'FAIL', 'missing');
+      record('bridge', `file:${file}`, 'FAIL', 'missing');
+      fileFails++;
     }
+  }
+
+  // ── Syntax check ───────────────────────────────────────────────────────────
+  console.log('');
+  for (const file of ['bridge/index.js','bridge/server.js','bridge/router.js']) {
+    if (!fileExists(file)) continue;
+    const r = spawnSync('node', ['--check', file], { cwd:ROOT, encoding:'utf8', timeout:5000 });
+    if (r.status === 0) {
+      console.log(ok(`  syntax: ${file}`));
+    } else {
+      const errLine = r.stderr?.split('\n').find(l=>l.trim()) || 'syntax error';
+      console.log(fail(`  syntax: ${file} — ${errLine}`));
+      record('bridge', `syntax:${file}`, 'FAIL', errLine);
+      // Named gap: §1.2 nothing silently fails
+      detail_error('bridge', 'F-BRIDGE-SYNTAX',
+        `syntax error in ${file}: ${errLine}`,
+        'Fix syntax error then restart bridge', null);
+    }
+  }
+
+  // ── Data dir ───────────────────────────────────────────────────────────────
+  const dataDir = path.join(ROOT, 'data', 'bridge');
+  try {
+    fs.mkdirSync(dataDir, { recursive:true });
+    console.log(ok('  data/bridge/ writable'));
+    await ledger('data.dir', 'PASS');
+  } catch(e) {
+    console.log(fail(`  data/bridge/ not writable: ${e.message}`));
+    await ledger('data.dir', 'FAIL', e.message);
+    record('bridge', 'data.dir', 'FAIL', e.message);
+  }
+
+  // ── nexus-connect postBridge ───────────────────────────────────────────────
+  console.log('');
+  try {
+    const nc = require(path.join(ROOT, 'nexus-connect'));
+    if (typeof nc.postBridge === 'function') {
+      console.log(ok('  nexus-connect: postBridge() exported'));
+      await ledger('nc.postBridge', 'PASS');
+    } else {
+      console.log(fail('  nexus-connect: postBridge() MISSING — bridge Phase 8 will fail'));
+      await ledger('nc.postBridge', 'FAIL', 'not exported');
+      record('bridge', 'nc.postBridge', 'FAIL', 'not exported');
+      detail_error('bridge', 'F-BRIDGE-NC-001',
+        'nc.postBridge is not a function — bridge Phase 8 (announce boot) will throw',
+        'Add postBridge() to nexus-connect.js exports', null);
+    }
+  } catch(e) {
+    console.log(fail(`  nexus-connect: require failed — ${e.message}`));
+  }
+
+  // ── Live checks ────────────────────────────────────────────────────────────
+  console.log('');
+  const hr = await probe(9999, '/health');
+  if (hr.ok) {
+    console.log(ok(`LIVE :9999  v${hr.data.version||'?'}  uptime=${hr.data.uptime?.toFixed(0)||'?'}s`));
+    await ledger('live.health', 'PASS');
+    record('bridge', 'live /health', 'PASS');
+
+    // Registration test
+    const rr = await probePost(9999, '/api/register', {
+      systemId:'diag-probe', appId:'diag-probe', secret:'nexus-orchestrator-internal-v1'
+    });
+    if (rr.ok) {
+      console.log(ok(`    register: token issued`));
+      await ledger('live.register', 'PASS');
+    } else {
+      console.log(warn(`    register: ${JSON.stringify(rr.data).slice(0,80)}`));
+      await ledger('live.register', 'WARN');
+    }
+
+    // Ledger endpoint
+    const lr = await probe(9999, '/ledger?n=5');
+    if (lr.ok) {
+      const rows = lr.data.entries || lr.data.rows || [];
+      console.log(ok(`    ledger: ${rows.length} recent entries`));
+      await ledger('live.ledger', 'PASS');
+    } else {
+      console.log(warn(`    ledger: endpoint missing or empty`));
+      await ledger('live.ledger', 'WARN');
+    }
+
+    // Registry state
+    const regR = await probe(9999, '/registry');
+    if (regR.ok) {
+      const sys = regR.data.systems || regR.data.nodes || {};
+      const online = Object.values(sys).filter(s=>s.online||s.status==='online').length;
+      console.log(ok(`    registry: ${Object.keys(sys).length} systems, ${online} online`));
+      await ledger('live.registry', 'PASS');
+    } else {
+      console.log(warn(`    registry: endpoint missing`));
+      await ledger('live.registry', 'WARN');
+    }
+
+    // SSE endpoint
+    const sseR = await probe(9999, '/sse');
+    if (sseR.status === 200) {
+      console.log(ok(`    SSE /sse: ready`));
+      await ledger('live.sse', 'PASS');
+    } else {
+      console.log(warn(`    SSE /sse: not responding (status ${sseR.status||'?'})`));
+      await ledger('live.sse', 'WARN');
+    }
+
+  } else {
+    console.log(fail('NOT RUNNING on :9999'));
+    console.log(info('  → Start: node bridge/index.js'));
+    console.log(info('  → Or:    node orchestrator.js  (boots all systems)'));
+    await ledger('live.health', 'FAIL', 'not running');
+    record('bridge', 'live /health', 'FAIL', 'not running');
+    // Named gap — §1.2
+    detail_error('bridge', 'F-BRIDGE-DOWN',
+      'Bridge not responding on :9999',
+      'node bridge/index.js  (must start before all other systems)',
+      null);
+    // Escalate immediately — bridge is §boot-order: FIRST
+    _escalateGap('bridge', 'F-BRIDGE-DOWN', 'bridge offline', 'high', {
+      fix: 'node bridge/index.js',
+      note: '§AXIOM boot order — bridge must be first'
+    });
+  }
 }
 
 async function diagCortex() {
@@ -289,272 +429,252 @@ async function diagCortex() {
 
 async function diagGuardian() {
   console.log(hdr('guardian', C.magenta));
-  console.log(info('HTTP :7820  WSS :7821 (userscripts, needs TLS)  Dropzone :7822  Memory :7823'));
-  console.log(info('WSS needs TLS because userscripts run on https:// pages (browser mixed-content rule).'));
-  console.log(info('HTTP server boots independently — WSS failure does not take down HTTP.\n'));
+  console.log(info('AI orchestration layer — dispatches jobs to Claude/ChatGPT via NCP (SSE+fetch)'));
+  console.log(info('Port :7820 HTTP+NCP  :7822 Dropzone  :7823 Memory'));
+  console.log(info('Transport: NCP (SSE server→browser + fetch POST browser→server). No WebSocket. No TLS.\n'));
 
   const ledger = (phase, status, detail) =>
     postLedger('guardian', `guardian.diagnose.${phase}`, { status, detail, ts: Date.now() });
 
-  // ── HARD checks — these must pass or guardian cannot start ──────────────────
-  console.log(`${C.bold}  HARD (boot blockers):${C.reset}`);
+  // ── File checks (v3.0 — NCP transport, no ws, no TLS) ────────────────────
+  const HARD_FILES = [
+    ['guardian/server.js',              'main server — NCP+HTTP'],
+    ['guardian/lib/seam-queue.js',      'SEAM state machine'],
+    ['guardian/lib/spec-parser.js',     'spec→chunks parser'],
+    ['guardian/lib/detector.js',        'SEAM verdict evaluator'],
+    ['guardian/lab/lab.js',             'LLM testing lab'],
+    ['guardian/interaction-contract.json', 'API contract declaration'],
+    ['lib/ncp.js',                      'NCP — _write() must be inside createNCPServer'],
+    ['guardian/memory_store',           'JAA store directory'],
+  ];
+  const SOFT_FILES = [
+    ['guardian/ui/index.html',          'Forge IDE UI'],
+    ['guardian/userscript-claude.js',   'Claude Tampermonkey userscript v10'],
+    ['guardian/userscript-chatgpt.js',  'ChatGPT Tampermonkey userscript v9'],
+  ];
 
-  // Package: ws (required)
-  const wsOk = checkNode('ws');
-  if (wsOk) {
-    console.log(ok(step(1, 17, 'npm: ws — required (WebSocket server)')));
-    await ledger('ws', 'PASS');
-  } else {
-    console.log(fail(step(1, 17, 'npm: ws — MISSING, guardian cannot start')));
-    await ledger('ws', 'FAIL', 'missing');
-    if (FIX) {
-      console.log(fix('  Auto-installing ws...'));
-      const r = spawnSync('npm', ['install', 'ws'], { cwd: ROOT, encoding:'utf8' });
-      if (r.status === 0) { console.log(ok('  ws installed ✓')); await ledger('ws.fix', 'PASS'); }
-      else { console.log(fail('  ws install failed: ' + r.stderr?.slice(0,100))); await ledger('ws.fix', 'FAIL'); }
+  console.log(C.bold + '  HARD files:' + C.reset);
+  let hardFails = 0;
+  for (const [i,[file,desc]] of HARD_FILES.entries()) {
+    const exists = fileExists(file);
+    if (exists) {
+      console.log(ok(step(i+1, HARD_FILES.length, `${file} — ${desc}`)));
+      await ledger(`file.${path.basename(file)}`, 'PASS');
     } else {
-      console.log(info('  → Fix: cd ' + ROOT + ' && npm install ws'));
+      console.log(fail(step(i+1, HARD_FILES.length, `${file} — MISSING (${desc})`)));
+      await ledger(`file.${path.basename(file)}`, 'FAIL', 'missing');
+      record('guardian', `file:${file}`, 'FAIL', 'missing');
+      hardFails++;
     }
-    record('guardian', 'npm:ws', 'FAIL', 'missing');
   }
 
-  // File: server.js
-  const serverOk = fileExists('guardian/server.js');
-  serverOk
-    ? (console.log(ok(step(2, 17, 'file: guardian/server.js'))), await ledger('server.js', 'PASS'))
-    : (console.log(fail(step(2, 17, 'file: guardian/server.js — MISSING'))), await ledger('server.js', 'FAIL'));
-  record('guardian', 'file:server.js', serverOk ? 'PASS' : 'FAIL');
-
-  // File: jaa-store.js
-  const jaaOk = fileExists('guardian/jaa-store.js');
-  jaaOk
-    ? (console.log(ok(step(3, 17, 'file: guardian/jaa-store.js'))), await ledger('jaa-store.js', 'PASS'))
-    : (console.log(fail(step(3, 17, 'file: guardian/jaa-store.js — MISSING'))), await ledger('jaa-store.js', 'FAIL'));
-  record('guardian', 'file:jaa-store.js', jaaOk ? 'PASS' : 'FAIL');
-
-  // File: interaction-contract.json
-  const contractOk = fileExists('guardian/interaction-contract.json');
-  contractOk
-    ? (console.log(ok(step(4, 17, 'file: guardian/interaction-contract.json'))), await ledger('contract', 'PASS'))
-    : (console.log(fail(step(4, 17, 'guardian/interaction-contract.json — MISSING'))), await ledger('contract', 'FAIL'));
-  record('guardian', 'file:contract', contractOk ? 'PASS' : 'FAIL');
-
-  // Syntax check
-  const synR = spawnSync('node', ['--check', 'guardian/server.js'], { cwd:ROOT, encoding:'utf8', timeout:5000 });
-  const synOk = synR.status === 0;
-  if (synOk) {
-    console.log(ok(step(5, 17, 'syntax: guardian/server.js')));
-    await ledger('syntax', 'PASS');
-  } else {
-    const errLine = synR.stderr?.split('\n').find(l => l.trim()) || 'syntax error';
-    console.log(fail(step(5, 17, 'syntax: guardian/server.js — ' + errLine)));
-    await ledger('syntax', 'FAIL', errLine);
-  }
-  record('guardian', 'syntax', synOk ? 'PASS' : 'FAIL');
-
-  // memory_store directory writable
-  const msDir = path.join(ROOT, 'guardian', 'memory_store');
-  let msOk = false;
-  try { fs.mkdirSync(msDir, { recursive:true }); msOk = true; } catch(_) {}
-  msOk
-    ? (console.log(ok(step(6, 17, 'guardian/memory_store/ writable'))), await ledger('memory_store', 'PASS'))
-    : (console.log(fail(step(6, 17, 'guardian/memory_store/ not writable'))), await ledger('memory_store', 'FAIL'));
-  record('guardian', 'memory_store', msOk ? 'PASS' : 'FAIL');
-
-  // ui/index.html (Forge IDE)
-  const uiOk = fileExists('guardian/ui/index.html');
-  uiOk
-    ? (console.log(ok(step(7, 17, 'file: guardian/ui/index.html (Forge IDE)'))), await ledger('ui', 'PASS'))
-    : (console.log(fail(step(7, 17, 'guardian/ui/index.html — MISSING (Forge IDE will not serve)'))), await ledger('ui', 'FAIL'));
-  record('guardian', 'file:ui', uiOk ? 'PASS' : 'FAIL');
-
-  // seam-queue.js
-  const sqOk = fileExists('guardian/lib/seam-queue.js');
-  sqOk
-    ? (console.log(ok(step(14, 17, 'file: guardian/lib/seam-queue.js (SEAM state machine)'))), await ledger('seam-queue', 'PASS'))
-    : (console.log(fail(step(8, 17, 'guardian/lib/seam-queue.js — MISSING (SEAM delivery broken)'))), await ledger('seam-queue', 'FAIL'));
-  record('guardian', 'file:seam-queue', sqOk ? 'PASS' : 'FAIL');
-
-  // spec-parser.js
-  const spOk = fileExists('guardian/lib/spec-parser.js');
-  spOk
-    ? (console.log(ok(step(15, 17, 'file: guardian/lib/spec-parser.js (spec compiler)'))), await ledger('spec-parser', 'PASS'))
-    : (console.log(fail(step(9, 17, 'guardian/lib/spec-parser.js — MISSING (spec dispatch broken)'))), await ledger('spec-parser', 'FAIL'));
-  record('guardian', 'file:spec-parser', spOk ? 'PASS' : 'FAIL');
-
-  // detector.js
-  const detOk = fileExists('guardian/lib/detector.js');
-  detOk
-    ? (console.log(ok(step(16, 17, 'file: guardian/lib/detector.js (SEAM verdict evaluator)'))), await ledger('detector', 'PASS'))
-    : (console.log(fail(step(10, 17, 'guardian/lib/detector.js — MISSING'))), await ledger('detector', 'FAIL'));
-  record('guardian', 'file:detector', detOk ? 'PASS' : 'FAIL');
-
-  // ── SOFT checks — degraded if missing, but guardian still boots ────────────
+  // ── Syntax check ───────────────────────────────────────────────────────────
   console.log('');
-  console.log(C.bold + '  SOFT (degrade if missing):' + C.reset);
-
-  // TLS cert (WSS only — HTTP boots without it)
-  const certOk = fileExists('guardian/guardian-cert.pem') && fileExists('guardian/guardian-key.pem');
-  if (certOk) {
-    console.log(ok(step(8, 17, 'TLS cert present (WSS :7821 ready)')));
-    await ledger('tls.cert', 'PASS');
-  } else {
-    console.log(warn(step(8, 17, 'TLS cert missing — WSS :7821 disabled (HTTP :7820 unaffected)')));
-    console.log(info('  → Why: userscripts run on https:// pages, browser blocks plain ws://'));
-    console.log(info('  → Fix (option 1): npm install selfsigned  (guardian auto-generates)'));
-    console.log(info('  → Fix (option 2): openssl req -x509 -newkey rsa:2048 -keyout guardian-key.pem -out guardian-cert.pem -days 825 -nodes'));
-    await ledger('tls.cert', 'WARN', 'missing');
-    if (FIX) {
-      console.log(fix('  Auto-installing selfsigned for cert generation...'));
-      const r = spawnSync('npm', ['install', 'selfsigned'], { cwd: ROOT, encoding:'utf8' });
-      if (r.status === 0) { console.log(ok('  selfsigned installed — restart guardian to generate cert ✓')); await ledger('tls.fix', 'PASS'); }
-      else { console.log(warn('  selfsigned install failed — try: npm install selfsigned')); await ledger('tls.fix', 'FAIL'); }
+  for (const file of ['guardian/server.js', 'lib/ncp.js']) {
+    if (!fileExists(file)) continue;
+    const r = spawnSync('node', ['--check', file], { cwd:ROOT, encoding:'utf8', timeout:5000 });
+    if (r.status === 0) {
+      console.log(ok(`  syntax: ${file}`));
+    } else {
+      const errLine = r.stderr?.split('\n').find(l=>l.trim()) || 'syntax error';
+      console.log(fail(`  syntax: ${file} — ${errLine}`));
+      record('guardian', `syntax:${file}`, 'FAIL', errLine);
+      detail_error('guardian', 'F-GUARDIAN-SYNTAX', errLine, `Fix: node --check ${file}`, null);
+      hardFails++;
     }
-    record('guardian', 'tls.cert', 'WARN', 'missing — WSS disabled');
   }
 
-  // Package: selfsigned (SOFT — only for cert generation)
-  const ssOk = checkNode('selfsigned');
-  if (ssOk) {
-    console.log(ok(step(9, 17, 'npm: selfsigned (cert generation)')));
-    await ledger('selfsigned', 'PASS');
-  } else {
-    console.log(warn(step(9, 17, 'npm: selfsigned missing — cert auto-generation unavailable')));
-    console.log(info('  → If cert already exists, this is fine. If not: npm install selfsigned'));
-    await ledger('selfsigned', 'WARN', 'missing');
-    record('guardian', 'npm:selfsigned', 'WARN', 'missing');
+  // ── Critical: _write() inside createNCPServer ─────────────────────────────
+  console.log('');
+  if (fileExists('lib/ncp.js')) {
+    const ncpSrc = fs.readFileSync(path.join(ROOT, 'lib', 'ncp.js'), 'utf8');
+    const hasWrite = ncpSrc.includes('function _write(res, data)');
+    const insideFactory = (() => {
+      const factoryStart = ncpSrc.indexOf('function createNCPServer');
+      const writePos     = ncpSrc.indexOf('function _write(res, data)');
+      return writePos > factoryStart;
+    })();
+    if (hasWrite && insideFactory) {
+      console.log(ok('  lib/ncp.js: _write() defined inside createNCPServer ✓'));
+      await ledger('ncp._write', 'PASS');
+    } else if (hasWrite && !insideFactory) {
+      console.log(fail('  lib/ncp.js: _write() defined but OUTSIDE createNCPServer — dispatch will fail'));
+      detail_error('guardian', 'F-NCP-001',
+        '_write() must be inside createNCPServer() — if outside, ncp.push() throws ReferenceError',
+        'Move function _write(res,data){...} to be the first function inside createNCPServer',
+        'This was the root cause of all dispatch failures before 2026-06-11');
+      await ledger('ncp._write', 'FAIL', 'outside factory');
+      hardFails++;
+    } else {
+      console.log(fail('  lib/ncp.js: _write() MISSING — F-NCP-001, every dispatch will throw'));
+      detail_error('guardian', 'F-NCP-001',
+        '_write not defined in lib/ncp.js',
+        'Add: function _write(res, data) { try { res.write(`data: ${JSON.stringify(data)}\\n\\n`); } catch(_) {} }',
+        'Place immediately after const _clients = new Map() inside createNCPServer');
+      record('guardian', 'ncp._write', 'FAIL', 'F-NCP-001');
+      hardFails++;
+    }
   }
 
-  // Userscripts
-  const ucl = fileExists('guardian/userscript-claude.js');
-  const ugt = fileExists('guardian/userscript-chatgpt.js');
-  if (ucl && ugt) {
-    console.log(ok(step(10, 17, 'userscripts: claude + chatgpt (Tampermonkey install)')));
-  } else {
-    console.log(warn(step(10, 17, `userscripts: ${ucl?'':'claude MISSING '}${ugt?'':'chatgpt MISSING'}`)));
-    console.log(info('  → Install in Tampermonkey on claude.ai and chatgpt.com'));
+  // ── Job persistence check (Phase 4.5) ─────────────────────────────────────
+  if (fileExists('guardian/server.js')) {
+    const srvSrc = fs.readFileSync(path.join(ROOT, 'guardian', 'server.js'), 'utf8');
+    const hasReplay = srvSrc.includes('jobs.replay') || srvSrc.includes('Replay jobs from JAA') || srvSrc.includes('jaa.query');
+    if (hasReplay) {
+      console.log(ok("  guardian/server.js: Phase 4.5 job replay present ✓"));
+      await ledger('job.replay', 'PASS');
+    } else {
+      console.log(warn("  guardian/server.js: Phase 4.5 job replay MISSING — jobs lost on restart"));
+      detail_error('guardian', 'F-JOBS-001',
+        'const jobs = new Map() starts empty on every restart — §2.1 violation',
+        'Add Phase 4.5 SOFT in boot sequence: replay jaa.query("jobs") into Map',
+        'Without this, /jobs returns empty after restart');
+      await ledger('job.replay', 'WARN', 'F-JOBS-001');
+    }
   }
-  record('guardian', 'userscripts', (ucl && ugt) ? 'PASS' : 'WARN');
-  await ledger('userscripts', (ucl && ugt) ? 'PASS' : 'WARN');
 
-  // Optional: dropzone-persist.js
-  const dpOk = fileExists('guardian/dropzone-persist.js');
-  dpOk
-    ? console.log(ok(step(11, 17, 'optional: guardian/dropzone-persist.js')))
-    : console.log(warn(step(11, 17, 'optional: guardian/dropzone-persist.js (dropzone disabled)')));
+  // ── DOM_MAP handler check ──────────────────────────────────────────────────
+  if (fileExists('guardian/server.js')) {
+    const srvSrc = fs.readFileSync(path.join(ROOT, 'guardian', 'server.js'), 'utf8');
+    const hasDomMap = srvSrc.includes("case 'NEXUS_DOM_MAP'");
+    if (hasDomMap) {
+      console.log(ok("  guardian/server.js: NEXUS_DOM_MAP handler present ✓"));
+      await ledger('dom_map.handler', 'PASS');
+    } else {
+      console.log(warn("  guardian/server.js: NEXUS_DOM_MAP has no handler — F-DOM-001 (log spam)"));
+      detail_error('guardian', 'F-DOM-001',
+        'NEXUS_DOM_MAP hits default case — hundreds of log lines per minute, nothing to cortex',
+        'Add case \'NEXUS_DOM_MAP\' before default in _handleNCPMessage',
+        'Write to cortex as guardian.dom_map.received, emit on bus');
+      await ledger('dom_map.handler', 'WARN', 'F-DOM-001');
+    }
+  }
 
-  // Optional: spec-namer.js
-  const snOk = fileExists('guardian/spec-namer.js');
-  snOk
-    ? console.log(ok(step(12, 17, 'optional: guardian/spec-namer.js')))
-    : console.log(warn(step(12, 17, 'optional: guardian/spec-namer.js (auto-naming disabled)')));
+  // ── SEAM onResponse routing check ─────────────────────────────────────────
+  if (fileExists('guardian/server.js')) {
+    const srvSrc = fs.readFileSync(path.join(ROOT, 'guardian', 'server.js'), 'utf8');
+    const hasOnResponse = srvSrc.includes('queue.onResponse') || srvSrc.includes('.onResponse(jobId');
+    if (hasOnResponse) {
+      console.log(ok("  guardian/server.js: GUARDIAN_COMPLETE routed to queue.onResponse ✓"));
+      await ledger('seam.onResponse', 'PASS');
+    } else {
+      console.log(fail("  guardian/server.js: GUARDIAN_COMPLETE NOT routed to queue.onResponse — F-SEAM-001"));
+      detail_error('guardian', 'F-SEAM-001',
+        'GUARDIAN_COMPLETE never calls queue.onResponse() — SEAM stalls after chunk 0',
+        'In GUARDIAN_COMPLETE handler: iterate _activeQueues, call q.onResponse(jobId, finalText)',
+        'Fixed 2026-06-11 — verify it stayed fixed');
+      record('guardian', 'seam.onResponse', 'FAIL', 'F-SEAM-001');
+      hardFails++;
+    }
+  }
 
-  // ── Live checks ─────────────────────────────────────────────────────────────
+  // ── Soft files ─────────────────────────────────────────────────────────────
+  console.log('');
+  console.log(C.bold + '  SOFT files:' + C.reset);
+  for (const [i,[file,desc]] of SOFT_FILES.entries()) {
+    const exists = fileExists(file);
+    exists
+      ? console.log(ok(step(i+1, SOFT_FILES.length, `${file} — ${desc}`)))
+      : console.log(warn(step(i+1, SOFT_FILES.length, `${file} — missing (${desc})`)));
+    record('guardian', `file:${file}`, exists ? 'PASS' : 'WARN');
+  }
+
+  // ── Live checks ────────────────────────────────────────────────────────────
   console.log('');
   const hr = await probe(7820, '/health');
   if (hr.ok) {
-    console.log(ok(step(13, 17, `LIVE :7820  uptime=${hr.data.uptime?.toFixed(0)||'?'}s`)));
+    const d = hr.data;
+    console.log(ok(`LIVE :7820  v${d.version||'?'}  uptime=${d.uptime?.toFixed(0)||'?'}s`));
     await ledger('live.health', 'PASS');
     record('guardian', 'live /health', 'PASS');
 
-    // Contract
-    const cr = await probe(7820, '/contract');
-    if (cr.ok && cr.data.id === 'guardian-v1') {
-      console.log(ok(`    contract: id=guardian-v1  ${cr.data.routes?.length||0} routes`));
-      await ledger('live.contract', 'PASS');
-    } else {
-      console.log(fail(`    contract: id=${cr.data?.id} (expected guardian-v1)`));
-      await ledger('live.contract', 'FAIL');
+    // Jobs
+    const jr = await probe(7820, '/jobs');
+    if (jr.ok) {
+      const jobs = jr.data.jobs || jr.data || [];
+      const pending = Array.isArray(jobs) ? jobs.filter(j=>j.status==='queued'||j.status==='pending').length : 0;
+      const complete= Array.isArray(jobs) ? jobs.filter(j=>j.status==='complete').length : 0;
+      console.log(ok(`    jobs: ${Array.isArray(jobs)?jobs.length:'?'} total  pending=${pending}  complete=${complete}`));
+      await ledger('live.jobs', 'PASS');
+      // Bottleneck detection: if >10 pending jobs that's a bottleneck
+      if (pending > 10) {
+        detail_error('guardian', 'F-GUARDIAN-BOTTLENECK',
+          `${pending} pending jobs — dispatch bottleneck or provider offline`,
+          'Check GET /providers for connected tabs, check NCP /channel is open',
+          null);
+        _escalateGap('guardian', 'F-GUARDIAN-BOTTLENECK', `${pending} pending jobs`, 'medium', {});
+      }
     }
-
-    // SISO bus
-    const br = await probe(7820, '/bus?n=5');
-    if (br.ok) {
-      console.log(ok(`    SISO bus: ${br.data.gates?.length||0} gates  ${br.data.entries?.length||0} events`));
-      await ledger('live.bus', 'PASS');
-    }
-
-    // Bus emit
-    const er = await probePost(7820, '/bus/emit', { type:'diagnose.guardian.test', data:{ ts:Date.now() } });
-    if (er.ok) { console.log(ok(`    bus emit: seq=${er.data.seq}`)); await ledger('live.bus.emit', 'PASS'); }
-    else        { console.log(fail(`    bus emit failed: ${JSON.stringify(er.data).slice(0,60)}`)); await ledger('live.bus.emit', 'FAIL'); }
 
     // Providers
     const pr = await probe(7820, '/providers');
     if (pr.ok) {
-      const connected = Object.entries(pr.data?.providers || {}).filter(([,v])=>v==='connected').map(([k])=>k);
+      const provs = pr.data?.providers || {};
+      const connected = Object.entries(provs).filter(([,v])=>v?.connected||v==='connected').map(([k])=>k);
       connected.length
         ? console.log(ok(`    providers connected: ${connected.join(', ')}`))
-        : console.log(warn(`    no providers connected — install userscripts in Tampermonkey`));
+        : console.log(warn(`    providers: none connected — open Claude/ChatGPT with Tampermonkey userscripts`));
       await ledger('live.providers', connected.length ? 'PASS' : 'WARN');
     }
 
-    // NCP channel endpoint (:7820/channel)
-    const ncpR = await probe(7820, '/channel?provider=diagnose&tabId=diag-test');
-    // /channel opens SSE — we just check it responds with 200
-    if (ncpR.status === 200 || ncpR.ok) {
-      console.log(ok('    NCP /channel: SSE endpoint ready (userscripts can connect)'));
+    // NCP channel
+    const ncpR = await probe(7820, '/channel?provider=diag&tabId=diag-test');
+    if (ncpR.status === 200) {
+      console.log(ok(`    NCP /channel: SSE endpoint ready`));
       await ledger('live.ncp', 'PASS');
     } else {
-      console.log(warn('    NCP /channel: not responding — userscripts cannot connect'));
+      console.log(warn(`    NCP /channel: status=${ncpR.status||'?'} — userscripts may not connect`));
       await ledger('live.ncp', 'WARN');
     }
 
-    // /version endpoint (auto-update check)
-    const verR = await probe(7820, '/version');
-    if (verR.ok && verR.data?.guardian) {
-      const v = verR.data;
-      console.log(ok('    /version: guardian=' + v.guardian +
-        '  claude=' + (v.userscript_claude||'?') +
-        '  chatgpt=' + (v.userscript_chatgpt||'?')));
-      await ledger('live.version', 'PASS');
-    } else {
-      console.log(warn('    /version endpoint missing — auto-update checks disabled'));
-      await ledger('live.version', 'WARN');
-    }
-
-    // SEAM queue status
+    // SEAM queues
     const qR = await probe(7820, '/seam/queues');
     if (qR.ok) {
-      console.log(ok('    /seam/queues: ' + (qR.data?.active||0) + ' active queue(s)'));
+      console.log(ok(`    SEAM queues: ${qR.data?.active||0} active, ${qR.data?.total||0} total`));
       await ledger('live.seam', 'PASS');
     }
 
-    // Baseline + friction check
-    const bR = await probe(7820, '/baseline');
-    if (bR.ok && bR.data) {
-      const b = bR.data;
-      const frictionCol = b.friction > 0.5 ? C.red : b.friction > 0.2 ? C.yellow : C.green;
-      console.log(ok('    /baseline: friction=' + frictionCol + b.friction + C.reset +
-        '  sigma=' + (b.stats?.sigma||0) +
-        '  established=' + !!b.baseline +
-        '  openGaps=' + (b.gaps?.length||0)));
-      if (b.gaps?.length > 0) {
-        for (const gap of b.gaps.slice(0,3)) {
-          console.log(warn('    BASELINE GAP: ' + gap.type + ' sigma=' + gap.sigma +
-            ' frictions=' + gap.frictions?.map(f=>f.axis).join(',') ));
+    // Lab
+    const labR = await probe(7820, '/lab');
+    if (labR.ok) {
+      console.log(ok(`    Lab: ${labR.data?.sessions?.length||0} active sessions`));
+      await ledger('live.lab', 'PASS');
+    } else {
+      console.log(warn(`    Lab: not available — guardian/lab/lab.js may be missing`));
+      await ledger('live.lab', 'WARN');
+    }
+
+    // Bus
+    const bR = await probe(7820, '/bus?n=5');
+    if (bR.ok) {
+      console.log(ok(`    SISO bus: ${bR.data.gates||0} gates  ${bR.data.entries||0} recent events`));
+      await ledger('live.bus', 'PASS');
+    }
+
+    // Baseline/friction
+    const blR = await probe(7820, '/baseline');
+    if (blR.ok && blR.data) {
+      const b = blR.data;
+      const col = b.friction > 0.5 ? C.red : b.friction > 0.2 ? C.yellow : C.green;
+      console.log(ok(`    baseline: friction=${col}${b.friction||0}${C.reset}  sigma=${b.stats?.sigma||0}  gaps=${b.gaps?.length||0}`));
+      if ((b.gaps?.length||0) > 0) {
+        for (const g of (b.gaps||[]).slice(0,3)) {
           detail_error('guardian', 'baseline-gap',
-            'Sigma deviation: ' + gap.sigma + ' on ' + gap.frictions?.map(f=>f.axis).join(', '),
-            'Check guardian data/guardian/ledger/baseline-events.ndjson for recent events',
-            null);
+            `sigma deviation: ${g.sigma} on ${g.frictions?.map(f=>f.axis).join(',') || '?'}`,
+            'Check data/guardian/ledger/ for recent anomalies', null);
         }
       }
       await ledger('live.baseline', b.friction < 0.5 ? 'PASS' : 'WARN');
-    } else {
-      console.log(warn('    /baseline: not responding — baseline not established'));
-      await ledger('live.baseline', 'WARN');
     }
 
-    // WSS (legacy — NCP is primary, WSS is secondary)
-    const wssReady = fileExists('guardian/guardian-cert.pem');
-    wssReady
-      ? console.log(ok('    WSS :7821 cert ready — legacy transport available'))
-      : console.log(warn('    WSS :7821 not ready — NCP (:7820) is primary transport'));
-
   } else {
-    console.log(warn(step(13, 17, 'NOT RUNNING — start with: node guardian/server.js')));
-    await ledger('live.health', 'WARN', 'not running');
-    record('guardian', 'live /health', 'WARN', 'not running');
+    console.log(fail('NOT RUNNING on :7820'));
+    console.log(info('  → Start: node guardian/server.js'));
+    await ledger('live.health', 'FAIL', 'not running');
+    record('guardian', 'live /health', 'FAIL', 'not running');
+    _escalateGap('guardian', 'F-GUARDIAN-DOWN', 'guardian offline', 'high', {
+      fix: 'node guardian/server.js'
+    });
   }
 }
 
@@ -909,10 +1029,17 @@ async function runAll() {
   if (WATCH) console.log(`${C.cyan}  --watch mode: will retry until all pass${C.reset}`);
   console.log('');
 
+  if (DEEP) {
+    await runRecursiveScan({ maxLevel: 5, verbose: true });
+    return;
+  }
+
   if (TARGET === 'all') {
     // §AXIOM: orchestrator first
     for (const fn of Object.values(SYSTEM_MAP)) { await fn(); }
     await diagCrossSystem();
+    // After standard diag, run L3 integrity scan
+    await runRecursiveScan({ systems: Object.keys(SYSTEM_MAP), maxLevel: 3, verbose: false });
   } else if (SYSTEM_MAP[TARGET]) {
     await SYSTEM_MAP[TARGET]();
   } else {
@@ -936,3 +1063,388 @@ async function runAll() {
 }
 
 runAll().catch(e => { console.error(e); process.exit(1); });
+
+// ════════════════════════════════════════════════════════════════════════════
+// RECURSIVE DIAGNOSTIC ENGINE — §DIAG-01
+// Polls ports, runs integrity checks, escalates gaps, dispatches to agent.
+// 
+// Strategy levels (increasing intensity):
+//   L1: health probe (port alive, HTTP 200)
+//   L2: deep probe (routes, queue depth, latency, gap count)
+//   L3: file integrity (required files, syntax, known fault patterns)
+//   L4: cross-system integrity (dependency chain, bridge routing)
+//   L5: agent dispatch (send gap summary to guardian → agent for repair)
+//
+// §1.2 Nothing silently fails — every gap is named, typed, logged.
+// §F-DIAG-001 If diagnostic cannot identify a problem, that IS the gap.
+// §F-DIAG-002 If diagnostic cannot fix a problem, that IS a gap to log.
+// ════════════════════════════════════════════════════════════════════════════
+
+const ALL_PORTS = [
+  { system:'orchestrator', port:9000, health:'/health',  critical:true  },
+  { system:'bridge',       port:9999, health:'/health',  critical:true  },
+  { system:'cortex',       port:3748, health:'/health',  critical:true  },
+  { system:'guardian',     port:7820, health:'/health',  critical:false },
+  { system:'architect',    port:3747, health:'/health',  critical:false },
+  { system:'idearium',     port:4800, health:'/health',  critical:false },
+  { system:'emerge',       port:4242, health:'/status',  critical:false },
+  { system:'guardian-mem', port:7823, health:'/ping',    critical:false },
+  { system:'guardian-drop',port:7822, health:'/health',  critical:false },
+];
+
+// Volatile cache — lives only for this process run
+const _cache = {
+  health:   new Map(),   // port → { ok, latency, data, ts }
+  files:    new Map(),   // relPath → { exists, hash, ts }
+  gaps:     new Map(),   // faultId → gap entry
+  results:  new Map(),   // `${system}.${check}` → result
+};
+const CACHE_TTL = 30000; // 30s — don't re-probe within TTL
+
+function _cacheGet(map, key) {
+  const v = map.get(key);
+  if (!v || Date.now() - v.ts > CACHE_TTL) return null;
+  return v;
+}
+function _cacheSet(map, key, val) {
+  map.set(key, { ...val, ts: Date.now() });
+}
+
+// ── L1: Port sweep ────────────────────────────────────────────────────────────
+async function sweepPorts(targets = ALL_PORTS) {
+  const results = await Promise.all(targets.map(async t => {
+    const cached = _cacheGet(_cache.health, t.port);
+    if (cached) return { ...t, ...cached, cached:true };
+    const t0  = Date.now();
+    const r   = await probe(t.port, t.health);
+    const res = { ...t, ok:r.ok, latency:Date.now()-t0, status:r.status, data:r.data };
+    _cacheSet(_cache.health, t.port, res);
+    return res;
+  }));
+  return results;
+}
+
+// ── L2: Deep probe ────────────────────────────────────────────────────────────
+async function deepProbe(port, system) {
+  const routes = {
+    orchestrator: ['/health','/api/recall?n=5'],
+    bridge:       ['/health','/registry','/ledger?n=5'],
+    cortex:       ['/health','/api/events?n=5','/api/gaps?status=open'],
+    guardian:     ['/health','/jobs','/providers','/seam/queues','/lab'],
+    architect:    ['/health','/api/hooks','/api/snr'],
+    idearium:     ['/health','/api/ideas'],
+  };
+  const checks = routes[system] || ['/health'];
+  const results = {};
+  for (const path of checks) {
+    const r = await probe(port, path);
+    results[path] = { ok:r.ok, status:r.status, latency:0 };
+    // Detect bottleneck: queue depth, gap count
+    if (path.includes('jobs') && r.ok) {
+      const jobs = r.data?.jobs || [];
+      const pending = Array.isArray(jobs) ? jobs.filter(j=>j.status==='queued'||j.status==='pending').length : 0;
+      if (pending > 5) {
+        _namedGap(system, 'queue-bottleneck', `${pending} pending jobs — dispatch bottleneck`, 'medium');
+      }
+    }
+    if (path.includes('gaps') && r.ok) {
+      const gaps = r.data?.gaps || r.data?.rows || [];
+      const fatal = gaps.filter(g=>g.severity==='fatal').length;
+      if (fatal > 0) {
+        _namedGap(system, 'cortex-fatal-gaps', `${fatal} fatal gaps open in cortex`, 'high');
+      }
+    }
+  }
+  return results;
+}
+
+// ── L3: File integrity ────────────────────────────────────────────────────────
+const INTEGRITY_MANIFEST = [
+  // Core
+  { file:'orchestrator.js',          system:'orchestrator', critical:true,  check: src => !src.includes('require is not defined') },
+  { file:'package.json',             system:'orchestrator', critical:true,  check: src => src.includes('"type": "commonjs"') || !src.includes('"type"') },
+  { file:'nexus-connect.js',         system:'orchestrator', critical:true,  check: src => src.includes('postBridge') },
+  // Bridge
+  { file:'bridge/server.js',         system:'bridge',       critical:true,  check: src => src.includes('BRIDGE_PORT') },
+  { file:'bridge/ledger.js',         system:'bridge',       critical:true,  check: src => src.includes('createBridgeLedger') },
+  // Guardian
+  { file:'guardian/server.js',       system:'guardian',     critical:true,  check: src => {
+    const hasWrite = src.includes('function _write(res, data)');
+    const factoryStart = src.indexOf('function createNCPServer');
+    const writePos = src.indexOf('function _write(res, data)');
+    return hasWrite && writePos > factoryStart;
+  }},
+  { file:'lib/ncp.js',               system:'guardian',     critical:true,  check: src => src.includes('function _write(res, data)') },
+  // Cortex
+  { file:'cortex/boot.js',           system:'cortex',       critical:true,  check: src => src.includes('intelligence') || src.includes('Phase 5.3') },
+  { file:'cortex/intelligence/index.js', system:'cortex',   critical:false, check: src => src.includes('_scanPatterns') },
+  // Hooks
+  { file:'hooks/index.js',           system:'architect',    critical:false, check: src => src.includes('seamManifest') },
+];
+
+async function integrityCheck(systems = null) {
+  const results = [];
+  const targets = systems
+    ? INTEGRITY_MANIFEST.filter(m => systems.includes(m.system))
+    : INTEGRITY_MANIFEST;
+
+  for (const manifest of targets) {
+    const fullPath = path.join(ROOT, manifest.file);
+    if (!fs.existsSync(fullPath)) {
+      const gap = _namedGap(manifest.system, `F-FILE-MISSING:${manifest.file}`,
+        `Required file missing: ${manifest.file}`, manifest.critical ? 'high' : 'medium');
+      results.push({ file:manifest.file, ok:false, reason:'missing', gap });
+      continue;
+    }
+    // Check content rule
+    if (manifest.check) {
+      try {
+        const src = fs.readFileSync(fullPath, 'utf8');
+        const ok = manifest.check(src);
+        if (!ok) {
+          const gap = _namedGap(manifest.system, `F-INTEGRITY:${manifest.file}`,
+            `Integrity check failed for ${manifest.file}`,
+            manifest.critical ? 'high' : 'medium');
+          results.push({ file:manifest.file, ok:false, reason:'integrity', gap });
+        } else {
+          results.push({ file:manifest.file, ok:true });
+        }
+      } catch(e) {
+        results.push({ file:manifest.file, ok:false, reason:e.message });
+      }
+    } else {
+      results.push({ file:manifest.file, ok:true });
+    }
+  }
+  return results;
+}
+
+// ── Named gap registration ────────────────────────────────────────────────────
+function _namedGap(system, faultId, description, severity = 'medium') {
+  if (_cache.gaps.has(faultId)) return _cache.gaps.get(faultId);
+  const gap = { system, faultId, description, severity, ts: Date.now(), strategies_tried: [], resolved: false };
+  _cache.gaps.set(faultId, gap);
+  // Write to cortex failure ledger
+  _escalateGap(system, faultId, description, severity, {});
+  return gap;
+}
+
+// ── Recursive escalation ──────────────────────────────────────────────────────
+async function recursiveDiagnose(system, opts = {}) {
+  const { maxLevel = 5, verbose = false } = opts;
+  const port = ALL_PORTS.find(p => p.system === system);
+  if (!port) return { ok:false, error:`unknown system: ${system}` };
+
+  const log = (msg, col) => verbose && console.log(`  ${col||C.dim}[diag:${system}]${C.reset} ${msg}`);
+  const failures = [];
+
+  // L1: Is it alive?
+  log('L1: port sweep', C.cyan);
+  const health = await probe(port.port, port.health);
+  if (!health.ok) {
+    const gap = _namedGap(system, `F-${system.toUpperCase()}-DOWN`,
+      `${system} not responding on :${port.port}`, port.critical ? 'high' : 'medium');
+    gap.strategies_tried.push('L1:health-probe');
+    failures.push({ level:1, gap, fix:`node ${system}/server.js or node ${system}/boot.js` });
+    if (maxLevel < 2) return { ok:false, level:1, failures };
+  }
+
+  // L2: Deep probe (only if alive)
+  if (health.ok && maxLevel >= 2) {
+    log('L2: deep probe', C.cyan);
+    await deepProbe(port.port, system);
+  }
+
+  // L3: File integrity
+  if (maxLevel >= 3) {
+    log('L3: file integrity', C.cyan);
+    const iResults = await integrityCheck([system]);
+    for (const r of iResults) {
+      if (!r.ok) {
+        if (r.gap) r.gap.strategies_tried.push('L3:integrity');
+        failures.push({ level:3, file:r.file, reason:r.reason });
+      }
+    }
+  }
+
+  // L4: Cross-system dependency check
+  if (maxLevel >= 4) {
+    log('L4: cross-system deps', C.cyan);
+    // Check cortex → bridge dependency
+    if (system === 'cortex') {
+      const bridgeHealth = await probe(9999, '/health');
+      if (!bridgeHealth.ok) {
+        _namedGap('bridge', 'F-BRIDGE-DOWN-FROM-CORTEX',
+          'Cortex depends on Bridge but Bridge is offline', 'high');
+      }
+    }
+    // Check guardian → cortex
+    if (system === 'guardian') {
+      const cortexHealth = await probe(3748, '/health');
+      if (!cortexHealth.ok) {
+        _namedGap('cortex', 'F-CORTEX-DOWN-FROM-GUARDIAN',
+          'Guardian cannot write events — Cortex offline', 'high');
+      }
+    }
+  }
+
+  // L5: Agent dispatch if failures remain and can't self-fix
+  if (maxLevel >= 5 && failures.length > 0) {
+    log('L5: escalating to agent', C.yellow);
+    const gapSummary = failures.map(f =>
+      `[${f.gap?.faultId||f.file||'unknown'}] ${f.gap?.description||f.reason||'unknown'}`
+    ).join('\n');
+
+    await _dispatchToAgent(system, gapSummary, failures);
+  }
+
+  return { ok: failures.length === 0, level: maxLevel, failures, gaps: [..._cache.gaps.values()] };
+}
+
+// ── Agent dispatch ─────────────────────────────────────────────────────────────
+async function _dispatchToAgent(system, gapSummary, failures) {
+  // Write to cortex as a high-priority gap requiring agent intervention
+  const faultId = `F-AGENT-DISPATCH:${system}:${Date.now().toString(36)}`;
+  _namedGap(system, faultId,
+    `Recursive diagnostic exhausted — agent intervention required for ${system}`,
+    'high');
+
+  // Try to dispatch via guardian if it's running
+  const guardianHealth = await probe(7820, '/health');
+  if (!guardianHealth.ok) {
+    // Guardian is itself down — can't dispatch, log to failure mode ledger
+    _logFailureMode(system, 'F-AGENT-DISPATCH-FAILED',
+      'Cannot dispatch agent repair — guardian offline. Gap cannot be escalated.',
+      { system, gapSummary, failures: failures.length });
+    return;
+  }
+
+  // POST to guardian /command with the diagnostic summary
+  const prompt = [
+    `NEXUS DIAGNOSTIC ESCALATION — System: ${system}`,
+    ``,
+    `The recursive diagnostic found ${failures.length} unresolved issue(s):`,
+    gapSummary,
+    ``,
+    `Please:`,
+    `1. Analyse each gap above`,
+    `2. Identify the root cause using the NEXUS fault taxonomy`,
+    `3. Propose a concrete fix with exact file paths and code changes`,
+    `4. Output: [FAULT_CLASS] [ROOT_CAUSE] [FIX] for each issue`,
+  ].join('\n');
+
+  await probePost(7820, '/command', {
+    provider: 'claude',
+    command:  'diagnose',
+    prompt,
+    meta: { source:'recursive-diagnose', system, faults:failures.map(f=>f.gap?.faultId||f.file) },
+  });
+
+  console.log(warn(`  [escalate] Dispatched ${failures.length} gap(s) to Claude for repair`));
+}
+
+// ── Failure mode ledger ────────────────────────────────────────────────────────
+// §F-DIAG-002: If diagnostic cannot fix, log explicitly to meta failure ledger
+function _logFailureMode(system, faultId, description, meta = {}) {
+  const entry = {
+    uuid:        require('crypto').randomUUID(),
+    faultId,     system, description,
+    faultClass:  'diagnostic_failure',
+    gapType:     'diagnostic_dead_end',
+    meta,
+    ts:          Date.now(),
+    note:        '§F-DIAG-002: diagnostic could not identify or fix this problem — logged for meta observer',
+  };
+  // Append to local failure ledger file
+  const ledgerPath = path.join(ROOT, 'data', 'diagnostic-failures.jsonl');
+  try {
+    require('fs').mkdirSync(path.join(ROOT, 'data'), { recursive:true });
+    require('fs').appendFileSync(ledgerPath, JSON.stringify(entry) + '\n');
+  } catch(_) {}
+  // Write to cortex
+  _escalateGap(system, faultId, description, 'high', { ...meta, faultClass:'diagnostic_failure' });
+  console.log(fail(`  [${system}] §F-DIAG-002 NAMED FAILURE: ${faultId} — ${description}`));
+}
+
+// ── Full recursive scan ────────────────────────────────────────────────────────
+// Called from diagnose UI or on --deep flag
+async function runRecursiveScan(opts = {}) {
+  const { systems = ALL_PORTS.map(p=>p.system), maxLevel = 4, verbose = true } = opts;
+  console.log('');
+  console.log(C.bold + C.cyan + '  ⬡ RECURSIVE DIAGNOSTIC SCAN (' + systems.length + ' systems, L' + maxLevel + ')' + C.reset);
+  console.log('');
+
+  // Run port sweep first (parallel, cached)
+  const portResults = await sweepPorts(ALL_PORTS);
+  const offline = portResults.filter(r => !r.ok);
+  const online  = portResults.filter(r =>  r.ok);
+
+  console.log(ok(`  Port sweep: ${online.length}/${portResults.length} online (${offline.map(r=>`:${r.port} ${r.system}`).join(', ')||'all online'})`));
+  if (offline.length > 0) {
+    for (const p of offline) {
+      if (p.critical) {
+        _namedGap(p.system, `F-${p.system.toUpperCase()}-DOWN`, `${p.system} offline on :${p.port}`, 'high');
+        console.log(fail(`    CRITICAL OFFLINE: ${p.system} :${p.port}`));
+      } else {
+        console.log(warn(`    offline: ${p.system} :${p.port}`));
+      }
+    }
+  }
+
+  // File integrity scan (parallel)
+  console.log('');
+  console.log(C.bold + '  File integrity:' + C.reset);
+  const integrityResults = await integrityCheck();
+  const intFails = integrityResults.filter(r => !r.ok);
+  if (intFails.length === 0) {
+    console.log(ok(`  All ${integrityResults.length} integrity checks passed`));
+  } else {
+    for (const r of intFails) {
+      console.log(fail(`    ${r.file}: ${r.reason}`));
+    }
+  }
+
+  // Deep probe online systems
+  if (maxLevel >= 2) {
+    console.log('');
+    console.log(C.bold + '  Deep probes:' + C.reset);
+    for (const p of online) {
+      const dp = await deepProbe(p.port, p.system);
+      const failing = Object.entries(dp).filter(([,v])=>!v.ok).map(([route])=>route);
+      if (failing.length === 0) {
+        console.log(ok(`    ${p.system}: all routes OK`));
+      } else {
+        console.log(warn(`    ${p.system}: failing routes: ${failing.join(', ')}`));
+      }
+    }
+  }
+
+  // Report all named gaps
+  const allGaps = [..._cache.gaps.values()];
+  if (allGaps.length > 0) {
+    console.log('');
+    console.log(C.bold + C.red + '  Named gaps (' + allGaps.length + '):' + C.reset);
+    for (const g of allGaps) {
+      const col = g.severity === 'high' ? C.red : g.severity === 'medium' ? C.yellow : C.dim;
+      console.log(`    ${col}[${g.severity.toUpperCase()}]${C.reset} ${g.system} · ${g.faultId}`);
+      console.log(`       ${C.dim}${g.description}${C.reset}`);
+    }
+
+    // L5 escalation for high-severity gaps that persist
+    const highGaps = allGaps.filter(g => g.severity === 'high' && !g.resolved);
+    if (highGaps.length > 0 && maxLevel >= 5) {
+      console.log('');
+      console.log(warn(`  Escalating ${highGaps.length} high-severity gap(s) to agent…`));
+      for (const g of highGaps) {
+        await _dispatchToAgent(g.system, g.description, [{ gap:g }]);
+      }
+    }
+  } else {
+    console.log(ok('  No named gaps — system clean'));
+  }
+
+  return { online: online.length, offline: offline.length, intFails: intFails.length, gaps: allGaps.length };
+}
+
+// ── Wire --deep flag into runAll ────────────────────────────────────────────
+const DEEP = process.argv.includes('--deep');

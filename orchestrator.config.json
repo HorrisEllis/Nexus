@@ -1,0 +1,30 @@
+{
+  "_comment": "NEXUS Orchestrator runtime config — edit here, never in orchestrator.js",
+  "openUIOnBoot": true,
+  "uiURL": "http://127.0.0.1:9000",
+  "openEmergeOnBoot": false,
+  "emerge": {
+    "autoOpen": false,
+    "port": 4242
+  },
+  "ports": {
+    "orchestrator": 9000,
+    "bridge": 9999,
+    "cortex": 3748,
+    "guardian": 7820,
+    "architect": 3747,
+    "idearium": 4800,
+    "emerge": 4242,
+    "ollama": 11434
+  },
+  "raid": {
+    "tickMs": 3000,
+    "healthPollMs": 10000,
+    "executionTreeEnabled": true
+  },
+  "state": {
+    "persistPath": "data/NEXUS_STATE.json",
+    "saveIntervalMs": 10000,
+    "resumeOnBoot": true
+  }
+}

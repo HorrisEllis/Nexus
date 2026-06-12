@@ -485,21 +485,24 @@ textarea.finp{resize:vertical;line-height:1.55}
 
   <!-- NAVBAR -->
   <div id="navbar">
-    <button class="tbn on" data-tab="home"     onclick="go('home')">HOME</button>
-    <button class="tbn"    data-tab="console"  onclick="go('console')">CONSOLE</button>
+    <button class="tbn on" data-tab="home"       onclick="go('home')">HOME</button>
+    <button class="tbn"    data-tab="console"    onclick="go('console')">CONSOLE</button>
     <div class="nsep"></div>
-    <button class="tbn o"  data-tab="guardian" onclick="go('guardian')">⚡ GUARDIAN</button>
-    <button class="tbn"    data-tab="cortex"   onclick="go('cortex')">CORTEX</button>
-    <button class="tbn g"  data-tab="idearium" onclick="go('idearium')">IDEARIUM</button>
-    <button class="tbn"    data-tab="bridge"   onclick="go('bridge')">BRIDGE</button>
-    <button class="tbn m"  data-tab="cfr"      onclick="go('cfr')">⬡ CFR FIELD</button>
+    <button class="tbn o"  data-tab="guardian"   onclick="go('guardian')">⚡ GUARDIAN</button>
+    <button class="tbn"    data-tab="cortex"     onclick="go('cortex')">CORTEX</button>
+    <button class="tbn g"  data-tab="idearium"   onclick="go('idearium')">IDEARIUM</button>
+    <button class="tbn"    data-tab="bridge"     onclick="go('bridge')">BRIDGE</button>
+    <button class="tbn m"  data-tab="cfr"        onclick="go('cfr')">⬡ CFR FIELD</button>
     <div class="nsep"></div>
-    <button class="tbn m"  data-tab="log"      onclick="go('log')">LOG</button>
-    <button class="tbn"    data-tab="diagnose" onclick="go('diagnose')">DIAGNOSE</button>
-    <button class="tbn"    data-tab="options"  onclick="go('options')">OPTIONS</button>
+    <button class="tbn o"  data-tab="architect"  onclick="go('architect')">⬡ ARCHITECT</button>
+    <button class="tbn"    data-tab="meta"       onclick="go('meta')">⟁ META</button>
     <div class="nsep"></div>
-    <button class="tbn g"  data-tab="repo"     onclick="go('repo')">⊞ REPO</button>
-    <button class="tbn o"  data-tab="forge-ide" onclick="go('forge-ide')">⚒ FORGE IDE</button>
+    <button class="tbn m"  data-tab="log"        onclick="go('log')">LOG</button>
+    <button class="tbn"    data-tab="diagnose"   onclick="go('diagnose')">DIAGNOSE</button>
+    <button class="tbn"    data-tab="options"    onclick="go('options')">OPTIONS</button>
+    <div class="nsep"></div>
+    <button class="tbn g"  data-tab="repo"       onclick="go('repo')">⊞ REPO</button>
+    <button class="tbn o"  data-tab="forge-ide"  onclick="go('forge-ide')">⚒ FORGE IDE</button>
     <button class="tbn m"  data-tab="orchestrate" onclick="go('orchestrate')">⟁ ORCHESTRATE</button>
   </div>
 
@@ -516,7 +519,19 @@ textarea.finp{resize:vertical;line-height:1.55}
             <button class="btn primary" onclick="go('idearium');newIdea()">✦ NEW IDEA</button>
             <button class="btn o" onclick="go('guardian')">⚡ DISPATCH</button>
             <button class="btn g" onclick="go('cortex')">◈ CORTEX</button>
+            <button class="btn" onclick="go('architect')">⬡ ARCHITECT</button>
+            <button class="btn m" onclick="go('meta')">⟁ META</button>
           </div>
+        </div>
+
+        <!-- Boot sequence display -->
+        <div style="margin:12px 0 0 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span class="shdr" style="margin:0">⬡ BOOT SEQUENCE</span>
+            <span id="home-boot-seq" style="font-size:9px;color:var(--muted);font-family:var(--mono)"></span>
+            <button class="btn" style="font-size:9px;padding:2px 8px;margin-left:auto" onclick="homeLoadBoot()">↺</button>
+          </div>
+          <div id="home-boot-log" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px 12px;font-family:var(--mono);font-size:9px;max-height:120px;overflow-y:auto"></div>
         </div>
         <div class="shdr">⊕ SYSTEMS</div>
         <div class="sys-grid" id="home-sys"></div>
@@ -802,6 +817,8 @@ textarea.finp{resize:vertical;line-height:1.55}
         <button class="stb"    onclick="st('cx','events',this)">EVENTS</button>
         <button class="stb"    onclick="st('cx','gaps',this)">GAPS</button>
         <button class="stb"    onclick="st('cx','memory',this)">MEMORY</button>
+        <button class="stb"    onclick="st('cx','tables',this)">TABLES</button>
+        <button class="stb"    onclick="st('cx','intelligence',this)">INTELLIGENCE</button>
         <button class="stb"    onclick="st('cx','resilience',this)">RESILIENCE</button>
         <button class="stb"    onclick="st('cx','versionium',this)">VERSIONIUM</button>
         <button class="stb"    onclick="st('cx','files',this)">FILES</button>
@@ -860,6 +877,39 @@ textarea.finp{resize:vertical;line-height:1.55}
           <pre id="cx-mem-out" style="font:10px/1.6 var(--mono);color:var(--text2);white-space:pre-wrap;word-break:break-all">Select a table above.</pre>
         </div>
       </div>
+
+      <!-- ── TABLES — full JAA table browser ── -->
+      <div class="spanel" id="cx-tables" style="flex-direction:row;overflow:hidden">
+        <div id="cx-tbl-list" style="width:180px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;padding:6px 0">
+          <div class="note">Loading tables…</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+          <div style="padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:8px">
+            <span id="cx-tbl-name" style="font-size:10px;font-weight:700;color:var(--text)">—</span>
+            <span id="cx-tbl-rowcount" style="font-size:9px;color:var(--text3)"></span>
+            <div style="flex:1"></div>
+            <input id="cx-tbl-filter" class="finp" placeholder="filter…" style="width:150px;font-size:9px" oninput="cxTblFilter(this.value)">
+          </div>
+          <div id="cx-tbl-rows" style="flex:1;overflow-y:auto;font-size:9px;font-family:var(--mono)"></div>
+        </div>
+      </div>
+
+      <!-- ── INTELLIGENCE — cortex intelligence core ── -->
+      <div class="spanel" id="cx-intelligence" style="flex-direction:column;overflow:hidden">
+        <div style="display:flex;border-bottom:1px solid var(--border);flex-shrink:0">
+          <button class="stb on" onclick="cxIntelTab('status',this)"  style="font-size:9px">STATUS</button>
+          <button class="stb"    onclick="cxIntelTab('patterns',this)" style="font-size:9px">PATTERNS</button>
+          <button class="stb"    onclick="cxIntelTab('faults',this)"   style="font-size:9px">FAULTS</button>
+          <button class="stb"    onclick="cxIntelTab('reuse',this)"    style="font-size:9px">REUSE</button>
+          <button class="stb"    onclick="cxIntelTab('drift',this)"    style="font-size:9px">DRIFT</button>
+        </div>
+        <div id="cx-intel-status"   style="flex:1;overflow-y:auto;padding:14px"><div class="note">Loading…</div></div>
+        <div id="cx-intel-patterns" style="display:none;flex:1;overflow-y:auto;padding:14px"></div>
+        <div id="cx-intel-faults"   style="display:none;flex:1;overflow-y:auto;padding:14px"></div>
+        <div id="cx-intel-reuse"    style="display:none;flex:1;overflow-y:auto;padding:14px"></div>
+        <div id="cx-intel-drift"    style="display:none;flex:1;overflow-y:auto;padding:14px"></div>
+      </div>
+
       <div class="spanel" id="cx-resilience">
         <div class="scroll" id="cx-res-body">
           <div class="note">Loading resilience status…</div>
@@ -1134,42 +1184,23 @@ textarea.finp{resize:vertical;line-height:1.55}
     </div>
 
     <!-- ══ LOG ════════════════════════════════════════════════════ -->
-    <div class="panel" id="panel-log">
-      <div class="tshdr">
-        <div class="adot g" id="log-dot"></div>
-        <span class="tshdr-title" style="color:var(--g)">EVENT LOG</span>
-        <span style="font-size:9px;color:var(--text3);margin-left:4px" id="log-count">0</span>
-        <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
-          <label style="display:flex;align-items:center;gap:4px;font-size:9px;color:var(--text3);cursor:pointer">
-            <input type="checkbox" id="log-live" checked style="accent-color:var(--g)"> LIVE
-          </label>
-          <button class="btn" style="font-size:9px;padding:2px 8px" onclick="logClear()">CLEAR</button>
-        </div>
-      </div>
-      <div class="fbar">
-        <select class="finp" id="log-sys-f" style="max-width:120px" onchange="logFilter()">
-          <option value="">ALL SYS</option>
-          <option value="cortex">cortex</option>
-          <option value="guardian">guardian</option>
-          <option value="orchestrator">orchestrator</option>
-          <option value="idearium">idearium</option>
-          <option value="bridge">bridge</option>
-        </select>
-        <select class="finp" id="log-lvl-f" style="max-width:100px" onchange="logFilter()">
-          <option value="">ALL LVL</option>
-          <option value="INFO">INFO</option>
-          <option value="WARN">WARN</option>
-          <option value="ERROR">ERROR</option>
-        </select>
-        <input class="finp" id="log-type-f" placeholder="Filter type…" style="max-width:200px" oninput="logFilter()"/>
-        <span style="font-size:9px;color:var(--text3);margin-left:auto" id="log-showing">0</span>
-      </div>
-      <div class="log-hdr"><span>SEQ</span><span>TIME</span><span>SYSTEM</span><span>LVL</span><span>TYPE</span><span>BODY</span></div>
-      <div style="flex:1;overflow-y:auto;min-height:0" id="log-out"></div>
-    </div>
+    <div class="panel" id="panel-log" style="flex-direction:column">
+  <!-- §CAUSAL: append-only. No clear. No archive. Segment by date. -->
+  <div style="display:flex;align-items:center;gap:6px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+    <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Event Ledger</span>
+    <span id="cal-event-count" style="font-size:9px;color:var(--muted)"></span>
+    <div style="flex:1"></div>
+    <input id="cal-filter-input" class="finp" placeholder="filter by type or source…" style="width:180px;font-size:9px" oninput="calSetFilter(this.value)">
+    <input id="cal-date-input" class="finp" type="date" style="width:130px;font-size:9px" onchange="calSetDate(this.value)">
+    <button class="btn" style="font-size:9px" onclick="calSetDate('');document.getElementById('cal-date-input').value=''">All dates</button>
+    <button class="btn o" style="font-size:9px" onclick="calLoadEvents(true)">↺</button>
+  </div>
+  <div id="cal-event-list" style="flex:1;overflow-y:auto;padding:8px 14px">
+    <div style="color:var(--muted);font-size:10px">Loading events…</div>
+  </div>
+</div>
 
-    <!-- ══ DIAGNOSE ═══════════════════════════════════════════════ -->
-    <div class="panel" id="panel-diagnose">
+<div class="panel" id="panel-diagnose">
       <div class="tshdr">
         <span class="tshdr-title">DIAGNOSE</span>
         <button class="btn primary" style="padding:4px 16px;font-size:10px;margin-left:auto" onclick="diagRun()">▶ RUN ALL</button>
@@ -4639,6 +4670,9 @@ Object.assign(window,{
   logRender,logFilter,logClear,
   diagRun,diagBuild,diagRenderConsole,diagClearConsole,diagDomAudit,
   optLoad,optSave,optTestOllama,
+  // cortex tables + intelligence
+  cxLoadTables, cxSelectTable, cxTblFilter, cxIntelTab,
+  cxIntelLoadStatus, cxIntelLoadPatterns, cxIntelLoadFaults, cxIntelLoadReuse, cxIntelLoadDrift,
   // bootDiagForceAdvance + showBootDiag self-expose inside DOMContentLoaded (closure scope)
 });
 })(); // end NEXUS SHELL
@@ -5718,7 +5752,1563 @@ Object.assign(window,{
   conCortexEvents,conCortexGaps,conVersioniumLog,conHelpUserscript,
 });
 
+
+// ── Cortex: TABLES sub-tab ───────────────────────────────────────────────────
+const CX_TABLES = [
+  'event_log','artifacts','gaps','failures','agent_calls','bep_patterns','crystals',
+  'seam_records','seam_sessions','queue_compartments','versionium_commits',
+  'versionium_branches','cortex_memory','memory_index','active_traces',
+  'orion_sessions','schedules','workflow_runs','project_registry','requests',
+  'hooks','hook_bindings','blueprints','snr_results','constraints','tensions',
+];
+
+let _cxTblAllRows = [], _cxTblSelected = '';
+
+async function cxLoadTables() {
+  const h = await _nxGet(_NX.CORTEX, '/health');
+  const counts = h?.jaa?.counts || h?.jaa || {};
+  const list = document.getElementById('cx-tbl-list');
+  if (!list) return;
+  list.innerHTML = CX_TABLES.map(t => {
+    const n = counts[t] || 0;
+    return `<div style="padding:5px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;cursor:pointer;font-size:9px;transition:background .1s"
+      onclick="cxSelectTable('${t}')" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="color:${n>0?'var(--text)':'var(--text3)'}">${t}</span>
+      <span style="font-family:var(--mono);color:${n>0?'var(--amber)':'var(--text3)'}">${n||'—'}</span>
+    </div>`;
+  }).join('');
+}
+
+async function cxSelectTable(table) {
+  _cxTblSelected = table;
+  document.getElementById('cx-tbl-name').textContent = table;
+  document.getElementById('cx-tbl-filter').value = '';
+  const data = await _nxGet(_NX.CORTEX, `/api/memory?table=${encodeURIComponent(table)}&n=200`);
+  _cxTblAllRows = data?.rows || data?.data || [];
+  document.getElementById('cx-tbl-rowcount').textContent = `${_cxTblAllRows.length} rows`;
+  cxTblFilter('');
+}
+
+function cxTblFilter(q) {
+  const rows = q
+    ? _cxTblAllRows.filter(r => JSON.stringify(r).toLowerCase().includes(q.toLowerCase()))
+    : _cxTblAllRows;
+  const el = document.getElementById('cx-tbl-rows');
+  if (!el) return;
+  if (!rows.length) { el.innerHTML = '<div style="color:var(--text3);padding:12px;font-size:9px">No rows</div>'; return; }
+  el.innerHTML = rows.slice(0, 300).map((r, i) => {
+    const ts   = r.ts || r.createdAt || 0;
+    const type = r.type || r.eventType || r.op || '';
+    const id   = (r.uuid || r.id || '').slice(0, 10);
+    const body = JSON.stringify(r).slice(0, 100);
+    return `<div style="padding:4px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s"
+      onclick="cxTblExpandRow(${i})" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="color:var(--text3);width:52px;flex-shrink:0">${ts ? new Date(ts).toTimeString().slice(0,8) : '—'}</span>
+        ${type ? `<span style="color:var(--amber)">${type.slice(0,30)}</span>` : ''}
+        <span style="color:var(--text3);font-family:var(--mono)">${id}</span>
+      </div>
+      <div style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px">${body}</div>
+    </div>`;
+  }).join('');
+}
+
+function cxTblExpandRow(i) {
+  const r = _cxTblAllRows[i]; if (!r) return;
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center';
+  ov.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:18px;max-width:700px;max-height:80vh;overflow-y:auto;min-width:440px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+      <span style="color:var(--text);font-weight:700">${_cxTblSelected}</span>
+      <button onclick="this.closest('div').parentElement.remove()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px">×</button>
+    </div>
+    <pre style="font:9px/1.6 var(--mono);color:var(--text2);white-space:pre-wrap;word-break:break-all">${JSON.stringify(r,null,2)}</pre>
+  </div>`;
+  document.body.appendChild(ov);
+}
+
+// ── Cortex: INTELLIGENCE sub-tab ─────────────────────────────────────────────
+function cxIntelTab(tab, btn) {
+  ['status','patterns','faults','reuse','drift'].forEach(t => {
+    const el = document.getElementById(`cx-intel-${t}`);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('[onclick*="cxIntelTab"]').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  if (tab==='status')   cxIntelLoadStatus();
+  if (tab==='patterns') cxIntelLoadPatterns();
+  if (tab==='faults')   cxIntelLoadFaults();
+  if (tab==='reuse')    cxIntelLoadReuse();
+  if (tab==='drift')    cxIntelLoadDrift();
+}
+
+async function cxIntelLoadStatus() {
+  const el = document.getElementById('cx-intel-status'); if (!el) return;
+  const d = await _nxGet(_NX.CORTEX, '/api/intelligence/status');
+  if (!d) { el.innerHTML = '<div class="note" style="color:var(--red)">Intelligence core offline — check cortex boot Phase 5.3</div>'; return; }
+  const dc = d.driftLevel==='critical'?'var(--red)':d.driftLevel==='elevated'?'var(--amber)':'var(--teal)';
+  el.innerHTML = `
+    <div class="mgrid" style="margin-bottom:14px">
+      ${[['Patterns',d.patterns||0,`${d.crystallised||0} crystallised`],['Fault Classes',d.faultClasses||0,'named modes'],['Reuse Items',d.reuseItems||0,'artifacts'],['Drift',d.driftLevel||'?','cross-ledger']].map(([l,v,s])=>`
+      <div class="mcard"><div class="mval">${v}</div><div class="mlbl">${l}</div><div class="msub">${s}</div></div>`).join('')}
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px">
+      <div style="font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:7px">Scan intervals</div>
+      ${[['Pattern scan',d.lastPatternScan],['Failure scan',d.lastFailureScan],['Reuse index',d.lastReuseIndex],['Cross-ledger',d.lastCrossLedger]].map(([l,v])=>`
+      <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:9px;color:var(--text3)">${l}</span>
+        <span style="font-size:9px;color:var(--text);font-family:var(--mono)">${v?new Date(Date.now()-v)/1000|0+'s ago':'never'}</span>
+      </div>`).join('')}
+    </div>`;
+}
+
+async function cxIntelLoadPatterns() {
+  const el = document.getElementById('cx-intel-patterns'); if (!el) return;
+  const d = await _nxGet(_NX.CORTEX, '/api/intelligence/patterns');
+  const pats = (d?.patterns||[]).sort((a,b)=>(b.confidence||0)-(a.confidence||0));
+  if (!pats.length) { el.innerHTML = '<div class="note">No patterns crystallised yet — needs 20+ events</div>'; return; }
+  el.innerHTML = pats.map(p => {
+    const c = ((p.confidence||0)*100).toFixed(0);
+    const col = p.crystallised?'var(--teal)':p.confidence>=0.6?'var(--amber)':'var(--text3)';
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:7px 10px;margin-bottom:5px">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+        <span style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--amber)">${p.patternType||'?'}</span>
+        ${p.crystallised?'<span style="font-size:8px;color:var(--teal);font-weight:700">✦ CRYSTALLISED</span>':''}
+        <span style="color:var(--text3);font-size:9px;margin-left:auto">×${p.count||0} · ${c}%</span>
+      </div>
+      <div style="color:var(--text2);font-size:9px">${p.description||p.signature||''}</div>
+      <div style="height:3px;background:var(--bg);border-radius:2px;margin-top:5px;overflow:hidden">
+        <div style="height:100%;width:${c}%;background:${col};transition:width .4s"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function cxIntelLoadFaults() {
+  const el = document.getElementById('cx-intel-faults'); if (!el) return;
+  const d = await _nxGet(_NX.CORTEX, '/api/intelligence/failures');
+  const faults = (Array.isArray(d?.failures)?d.failures:Object.values(d?.failures||{})).sort((a,b)=>(b.count||0)-(a.count||0));
+  if (!faults.length) { el.innerHTML = '<div class="note" style="color:var(--teal)">✓ No fault taxonomy yet</div>'; return; }
+  el.innerHTML = faults.map(f => `
+    <div style="display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--border);align-items:baseline">
+      <span style="color:var(--red);font-size:9px;font-weight:700;font-family:var(--mono);flex:1;overflow:hidden;text-overflow:ellipsis">${f.faultClass||'?'}</span>
+      <span style="font-size:13px;font-weight:700;color:${(f.count||0)>5?'var(--red)':(f.count||0)>2?'var(--amber)':'var(--text)'};font-family:var(--mono)">×${f.count||0}</span>
+      <span style="font-size:9px;color:var(--text3);flex-shrink:0">${(f.systems||[]).join(', ').slice(0,24)||'?'}</span>
+    </div>
+    ${f.examples?.[0]?.msg?`<div style="color:var(--text3);font-size:8px;padding:2px 0;font-style:italic">"${f.examples[0].msg.slice(0,100)}"</div>`:''}`).join('');
+}
+
+async function cxIntelLoadReuse() {
+  const el = document.getElementById('cx-intel-reuse'); if (!el) return;
+  const d = await _nxGet(_NX.CORTEX, '/api/intelligence/reuse?n=50');
+  const items = d?.results||[];
+  if (!items.length) { el.innerHTML = '<div class="note">No reuse candidates yet</div>'; return; }
+  el.innerHTML = items.map(r => `
+    <div style="display:flex;gap:8px;align-items:center;padding:4px 0;border-bottom:1px solid var(--border)">
+      <span style="color:var(--teal);font-size:9px;font-weight:700;text-transform:uppercase;width:50px;flex-shrink:0">${r.lang||'?'}</span>
+      <span style="color:var(--text3);font-size:9px;font-family:var(--mono)">#${(r.hash||'').slice(0,12)}</span>
+      <span style="color:var(--text2);font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.intent||''}</span>
+      <span style="color:var(--text3);font-size:9px">×${r.usedCount||1}</span>
+    </div>`).join('');
+}
+
+async function cxIntelLoadDrift() {
+  const el = document.getElementById('cx-intel-drift'); if (!el) return;
+  const d = await _nxGet(_NX.CORTEX, '/api/events?limit=1&type=intelligence.cross_ledger_analysis');
+  const p = (d?.rows||d?.events||[])[0]?.payload;
+  if (!p) { el.innerHTML = '<div class="note">No drift analysis yet — runs every 90s</div>'; return; }
+  const dc = p.driftLevel==='critical'?'var(--red)':p.driftLevel==='elevated'?'var(--amber)':'var(--teal)';
+  el.innerHTML = `
+    <div style="text-align:center;padding:20px 0 14px">
+      <div style="font-size:44px;font-weight:700;color:${dc};font-family:var(--mono)">${(p.driftScore||0).toFixed(2)}</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:${dc};letter-spacing:.1em;margin-top:4px">${p.driftLevel||'?'} DRIFT</div>
+      <div style="height:6px;background:var(--bg);border-radius:3px;margin:10px auto 0;max-width:160px;overflow:hidden">
+        <div style="height:100%;width:${(p.driftScore||0)*100}%;background:${dc};transition:width .5s"></div>
+      </div>
+    </div>
+    <div class="mgrid">
+      ${[['σ events',p.sigmaEvents||0],['avg σ',(p.avgSigma||0).toFixed(3)],['friction',(p.avgFriction||0).toFixed(3)],['new gaps',p.recentGaps||0]].map(([l,v])=>`
+      <div class="mcard"><div class="mval" style="font-size:16px">${v}</div><div class="mlbl">${l}</div></div>`).join('')}
+    </div>`;
+}
+
+// Wire table loading into cortex st() sub-tab switch
+const _origSt = window.st;
+if (typeof _origSt === 'function') {
+  window.st = function(sys, tab, btn) {
+    _origSt(sys, tab, btn);
+    if (sys==='cx' && tab==='tables')      { cxLoadTables(); }
+    if (sys==='cx' && tab==='intelligence') { cxIntelLoadStatus(); }
+  };
+}
+
 })(); // end NEXUS EXPANDED SHELL
+</script>
+<script>
+'use strict';
+// ── Interaction Contract — single source of truth ─────────────────────────────
+// UI reads contract from :9000/api/contract on load.
+// Every URL, every CLI command, every route comes from here.
+// §AXIOM: CLI = UI = API — same commands, same shapes, same ports.
+
+let _CONTRACT = null;
+
+// Static fallback — baked in, no network dependency
+// UI works in read-only mode if orchestrator is offline
+const _CONTRACT_FALLBACK = {
+  version: '1.0.0', isFallback: true, source: 'baked',
+  ports: { orchestrator:9000, bridge:9999, cortex:3748, guardian:7820, architect:3747, idearium:4800, emerge:4242, ollama:11434 },
+  systems: {
+    orchestrator:{ port:9000, color:'#818cf8', label:'Orchestrator', routes:[] },
+    guardian:    { port:7820, color:'#f59e0b', label:'Guardian',     routes:[] },
+    cortex:      { port:3748, color:'#34d399', label:'Cortex',       routes:[] },
+    architect:   { port:3747, color:'#ef9f27', label:'Architect',    routes:[] },
+    idearium:    { port:4800, color:'#4a9eff', label:'Idearium',     routes:[] },
+    bridge:      { port:9999, color:'#22d3ee', label:'Bridge',       routes:[] },
+  },
+};
+
+// Circuit breaker state
+let _contractState = 'unloaded'; // unloaded | live | stale | fallback
+let _contractHash  = null;
+
+async function loadContract() {
+  try {
+    const r = await fetch('http://127.0.0.1:9000/api/contract', { signal: AbortSignal.timeout(3000) });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    const c = d.contract;
+    if (!c?.systems) throw new Error('invalid contract shape');
+
+    // Detect schema drift — warn but don't block
+    if (_contractHash && _contractHash !== c.schemaHash) {
+      console.warn(`[contract] schema changed: ${_contractHash} → ${c.schemaHash}`);
+    }
+    _contractHash  = c.schemaHash;
+    _contractState = 'live';
+    _CONTRACT      = c;
+
+    // Update ports from live contract
+    if (c.ports) {
+      for (const [sys, port] of Object.entries(c.ports)) {
+        const key = sys.toUpperCase();
+        if (_NX && _NX[key]) _NX[key] = `http://127.0.0.1:${port}`;
+      }
+    }
+    _buildContractCLI();
+    console.log(`[contract] live v${c.version} hash:${c.schemaHash} — ${Object.keys(c.systems||{}).length} systems`);
+    return _CONTRACT;
+  } catch(e) {
+    // Graceful degradation — never block boot
+    if (_contractState === 'live') {
+      _contractState = 'stale';
+      console.warn(`[contract] gone stale — using last known: ${e.message}`);
+    } else {
+      _contractState = 'fallback';
+      _CONTRACT = _CONTRACT_FALLBACK;
+      console.warn(`[contract] fallback mode — orchestrator offline: ${e.message}`);
+    }
+    return _CONTRACT;
+  }
+}
+
+function _buildContractCLI() {
+  if (!_CONTRACT?.cliIndex) return;
+  // Wire all contract CLI commands into the command runner
+  for (const [cmd, def] of Object.entries(_CONTRACT.cliIndex)) {
+    if (!_NX_CLI_COMMANDS[cmd]) {
+      _NX_CLI_COMMANDS[cmd] = async (args) => {
+        const sys = def.system;
+        const contract = _CONTRACT.systems[sys];
+        if (!contract) return `system ${sys} not in contract`;
+        return `${cmd}: routes to ${sys}:${contract.port} — ${def.description}`;
+      };
+    }
+  }
+}
+
+// Contract viewer panel in OPTIONS tab
+async function showContractViewer() {
+  const el = document.getElementById('opt-contract-view');
+  if (!el) return;
+  const contract = _CONTRACT || await loadContract();
+  if (!contract) { el.innerHTML = '<div style="color:var(--red);font-size:10px">Contract unavailable — is orchestrator running?</div>'; return; }
+
+  el.innerHTML = Object.entries(contract.systems || {}).map(([sys, c]) => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${c.color||'var(--muted)'};flex-shrink:0"></div>
+        <span style="font-weight:700;font-size:11px;text-transform:uppercase;color:var(--text)">${c.label||sys}</span>
+        <span style="font-size:9px;color:var(--muted)">:${c.port}</span>
+        <span style="font-size:9px;color:var(--text2);margin-left:4px;flex:1">${c.role||''}</span>
+      </div>
+      <div style="font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px">Routes (${(c.routes||[]).length})</div>
+      ${(c.routes||[]).map(r => `
+        <div style="display:flex;gap:6px;padding:2px 0;border-bottom:1px solid var(--border);font-size:9px">
+          <span style="color:${r.method==='GET'?'#34d399':r.method==='POST'?'#f59e0b':r.method==='DELETE'?'#ef4444':'var(--muted)'};font-family:var(--mono);flex-shrink:0;width:36px">${r.method}</span>
+          <span style="color:var(--text);font-family:var(--mono);flex-shrink:0">${r.path}</span>
+          <span style="color:var(--muted);margin-left:auto">${r.description||''}</span>
+        </div>`).join('')}
+      ${c.cli?.length ? `
+        <div style="font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:6px 0 4px">CLI</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px">
+          ${c.cli.map(cmd => `<span style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:1px 6px;font-size:9px;font-family:var(--mono);color:var(--amber)">${cmd.cmd}</span>`).join('')}
+        </div>` : ''}
+    </div>`).join('');
+}
+
+// Load contract on boot
+loadContract();
+
+// Add contract viewer to OPTIONS tab
+(function() {
+  const optPanel = document.getElementById('panel-options');
+  if (!optPanel) return;
+  const div = document.createElement('div');
+  div.style.cssText = 'margin-top:18px';
+  div.innerHTML = `
+    <div class="shdr" style="display:flex;align-items:center;gap:8px">
+      ⬡ INTERACTION CONTRACT
+      <button class="btn" style="font-size:9px;margin-left:auto" onclick="showContractViewer()">↺ Load</button>
+      <button class="btn" style="font-size:9px" onclick="window.open('http://127.0.0.1:9000/api/contract','_blank')">↗ Raw</button>
+    </div>
+    <div id="opt-contract-view" style="margin-top:8px">
+      <div style="color:var(--muted);font-size:10px">Click Load to view the full contract</div>
+    </div>`;
+  optPanel.appendChild(div);
+})();
+
+// Wire contract:* CLI commands
+Object.assign(_NX_CLI_COMMANDS, {
+  'contract':         async()      => { const c=await loadContract(); return c?`Contract v${c.version} — ${Object.keys(c.systems||{}).length} systems, ${Object.keys(c.cliIndex||{}).length} CLI commands, ${Object.keys(c.routeIndex||{}).length} routes`:'offline'; },
+  'contract:routes':  async(args)  => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; const sys=args[0]; return Object.entries(c.systems||{}).filter(([s])=>!sys||s===sys).flatMap(([s,cs])=>(cs.routes||[]).map(r=>`${s} ${r.method} ${r.path}`)).join('
+'); },
+  'contract:cli':     async()      => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; return Object.entries(c.cliIndex||{}).map(([cmd,d])=>`${cmd.padEnd(18)} → ${d.system} — ${d.description}`).join('
+'); },
+  'contract:ports':   async()      => { const c=_CONTRACT||await loadContract(); if(!c) return 'offline'; return Object.entries(c.ports||{}).map(([s,p])=>`${s.padEnd(14)} :${p}`).join('
+'); },
+  'contract:validate': async(args) => {
+    const [sys,method,...rest] = args;
+    const path_ = rest.join(' ');
+    if (!sys||!method||!path_) return 'usage: contract:validate <system> <METHOD> <path>';
+    const r = await _nxPost(_NX.ORCH, '/api/contract/validate', { system:sys, method, path:path_ });
+    return r?.result?.valid ? `✓ valid: ${r.result.route?.description||''}` : `✗ invalid: ${r?.result?.error||'?'}`;
+  },
+});
+</script>
+
+<script>
+'use strict';
+// ── HOME boot sequence + calendar event log ──────────────────────────────────
+
+async function homeLoadBoot() {
+  const el  = document.getElementById('home-boot-log');
+  const seq = document.getElementById('home-boot-seq');
+  if (!el) return;
+  const data = await _nxGet(_NX.ORCH, '/health');
+  if (!data) { el.innerHTML = '<span style="color:var(--red)">orchestrator offline</span>'; return; }
+
+  const phases = data.bootPhases || data.boot || [];
+  if (seq) seq.textContent = `seq:${data.bootSeq||'?'} · ${phases.length} phases`;
+
+  if (!phases.length) {
+    // Fall back to event log boot events
+    const ev = await _nxGet(_NX.CORTEX, '/api/events?limit=50');
+    const boots = (ev?.rows||ev?.events||[]).filter(e => e.type?.includes('boot')||e.type?.includes('phase')||e.type?.includes('started'));
+    el.innerHTML = boots.map(b => {
+      const ts = b.ts ? new Date(b.ts).toTimeString().slice(0,8) : '—';
+      const col = b.type?.includes('fail')||b.type?.includes('error') ? 'var(--red)' : 'var(--teal)';
+      return `<div style="display:flex;gap:8px;padding:1px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--muted);flex-shrink:0">${ts}</span>
+        <span style="color:${col}">${b.type||'?'}</span>
+        <span style="color:var(--muted);margin-left:auto">${b.source||''}</span>
+      </div>`;
+    }).join('') || '<span style="color:var(--muted)">No boot events yet</span>';
+    return;
+  }
+
+  el.innerHTML = phases.map(p => {
+    const pass = p.pass || p.status === 'pass' || p.ok;
+    const col  = pass ? 'var(--teal)' : p.type === 'SOFT' ? 'var(--amber)' : 'var(--red)';
+    const icon = pass ? '✓' : p.type === 'SOFT' ? '~' : '✗';
+    return `<div style="display:flex;gap:8px;padding:1px 0;border-bottom:1px solid var(--border)">
+      <span style="color:${col};flex-shrink:0">${icon}</span>
+      <span style="font-size:8px;color:var(--muted);flex-shrink:0">${p.type||'?'}</span>
+      <span style="color:var(--text)">${p.label||p.name||'?'}</span>
+      <span style="color:var(--muted);margin-left:auto;font-family:var(--mono)">${p.ms||0}ms</span>
+    </div>`;
+  }).join('');
+}
+
+// Load boot on home tab open
+const _origGoHome = window.go;
+if (typeof _origGoHome === 'function') {
+  window.go = function(tab) {
+    _origGoHome(tab);
+    if (tab === 'home') setTimeout(homeLoadBoot, 100);
+  };
+}
+setTimeout(homeLoadBoot, 800);
+
+// ── Calendar event log ────────────────────────────────────────────────────────
+// Replaces the flat LOG tab event list with date-segmented append-only view
+// §CAUSAL: never clear, never archive — segment by date
+
+let _calEvents   = [];
+let _calFilter   = '';
+let _calDateFilter = '';
+
+async function calLoadEvents(force = false) {
+  const data = await _nxGet(_NX.CORTEX, '/api/events?limit=1000');
+  const rows  = data?.rows || data?.events || [];
+  if (rows.length) _calEvents = rows;
+  calRender();
+}
+
+function calRender() {
+  const el = document.getElementById('cal-event-list');
+  if (!el) return;
+
+  let evs = _calEvents;
+  if (_calFilter)     evs = evs.filter(e => (e.type||'').includes(_calFilter)||(e.source||'').includes(_calFilter));
+  if (_calDateFilter) evs = evs.filter(e => e.ts && new Date(e.ts).toDateString() === new Date(_calDateFilter).toDateString());
+
+  // Group by date — append-only, newest date first
+  const byDate = {};
+  for (const e of evs) {
+    const d = e.ts ? new Date(e.ts).toDateString() : 'Unknown';
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(e);
+  }
+
+  const dates = Object.keys(byDate).sort((a,b) => new Date(b) - new Date(a));
+
+  if (!dates.length) { el.innerHTML = '<div style="color:var(--muted);padding:12px;font-size:10px">No events</div>'; return; }
+
+  const SYSCOL = { orchestrator:'#818cf8', cortex:'#34d399', guardian:'#f59e0b', architect:'#ef9f27', bridge:'#22d3ee', idearium:'#4a9eff' };
+
+  el.innerHTML = dates.map(date => {
+    const dayEvs = byDate[date];
+    const isToday = date === new Date().toDateString();
+    return `
+      <div style="margin-bottom:12px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${isToday?'var(--amber)':'var(--muted)'};padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:4px;position:sticky;top:0;background:var(--bg)">
+          ${isToday?'⬡ TODAY — ':''}${date} <span style="font-weight:400;color:var(--muted)">(${dayEvs.length} events)</span>
+        </div>
+        ${dayEvs.map(e => {
+          const ts  = e.ts ? new Date(e.ts).toTimeString().slice(0,8) : '—';
+          const col = e.type?.includes('error')||e.type?.includes('fail') ? '#ef4444'
+            : e.type?.includes('gap') ? '#f472b6'
+            : e.type?.includes('boot')||e.type?.includes('complete') ? '#34d399'
+            : SYSCOL[e.source?.split('/')[0]] || 'var(--text2)';
+          return `<div style="display:flex;gap:8px;padding:2px 0;border-bottom:1px solid var(--border);font-size:9px">
+            <span style="color:var(--muted);font-family:var(--mono);flex-shrink:0;width:52px">${ts}</span>
+            <span style="color:${col};flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.type||'?'}</span>
+            <span style="color:var(--muted);flex-shrink:0;max-width:80px;overflow:hidden;text-overflow:ellipsis">${e.source||''}</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }).join('');
+}
+
+function calSetFilter(q) { _calFilter = q; calRender(); }
+function calSetDate(d)   { _calDateFilter = d; calRender(); }
+
+// ── NEXUS_STATE persistence ───────────────────────────────────────────────────
+// Saves system state every 10s so restarts resume where they left off
+
+async function saveNexusState() {
+  try {
+    const health = await _nxGet(_NX.ORCH, '/health');
+    const jobs   = await _nxGet(_NX.GUARDIAN, '/jobs');
+    const seam   = await _nxGet(_NX.GUARDIAN, '/seam/queues');
+    const lab    = await _nxGet(_NX.GUARDIAN, '/lab');
+    const state  = {
+      savedAt:    Date.now(),
+      version:    '3.0.0',
+      systems:    health?.systems || {},
+      activeJobs: (jobs?.jobs||[]).filter(j=>j.status==='queued'||j.status==='running').map(j=>j.id),
+      seamQueues: (seam?.active||0),
+      labSessions:(lab?.sessions||[]).map(s=>s.id),
+    };
+    await _nxPost(_NX.ORCH, '/api/state/save', state);
+  } catch(_) {}
+}
+
+// Save state every 10s
+setInterval(saveNexusState, 10000);
+
+// ── CLI extensions for new systems ────────────────────────────────────────────
+Object.assign(_NX_CLI_COMMANDS || {}, {
+  // Boot sequence
+  'boot':     async() => { const d=await _nxGet(_NX.ORCH,'/health'); return (d?.bootPhases||[]).map(p=>`${p.pass?'✓':'✗'} [${p.type}] ${p.label} ${p.ms||0}ms`).join('
+')||'no boot data'; },
+  'state':    async() => { const d=await _nxGet(_NX.ORCH,'/api/state'); return d?JSON.stringify(d,null,2):'no state'; },
+
+  // Calendar log
+  'cal':      async(args) => { await calLoadEvents(); return `${_calEvents.length} events loaded — switch to LOG tab to view`; },
+  'today':    async() => {
+    const d=await _nxGet(_NX.CORTEX,'/api/events?limit=200');
+    const today = new Date().toDateString();
+    const evs = (d?.rows||[]).filter(e=>e.ts&&new Date(e.ts).toDateString()===today);
+    return evs.map(e=>`${new Date(e.ts).toTimeString().slice(0,8)} ${e.type||'?'}`).join('
+')||'no events today';
+  },
+
+  // Architect CLI
+  'arch':         async() => { const d=await _nxGet(_NX.ARCHITECT,'/health'); return d?`architect ONLINE :3747 · ${d.hooks?.total||0} hooks`:'architect offline'; },
+  'arch:hooks':   async() => { const d=await _nxGet(_NX.ARCHITECT,'/api/hooks'); return (d?.hooks||[]).map(h=>`[${h.type}] ${h.name}`).join('
+')||'no hooks'; },
+  'arch:scan':    async(args) => { if(!args[0]) return 'usage: arch:scan <path>'; const r=await _nxPost(_NX.ARCHITECT,'/api/blueprint/scan',{rootPath:args.join(' ')}); return r?.ok?`Blueprint: ${r.blueprint?.name} SNR:${r.blueprint?.snrScore}`:`Error: ${r?.error}`; },
+  'arch:snr':     async(args) => { if(!args[0]) return 'usage: arch:snr <json>'; let src;try{src=JSON.parse(args.join(' '))}catch{return 'invalid JSON';}; const r=await _nxPost(_NX.ARCHITECT,'/api/snr/check',{source:src}); return r?.result?`SNR: ${r.result.score} → ${r.result.recommendation}`:`offline`; },
+
+  // Spec compiler
+  'compile':      async(args) => { return `spec-bridge ready — use GUARDIAN > DISPATCH with a .spec file`; },
+
+  // Idearium
+  'idea':         async(args) => { if(!args[0]) return 'usage: idea <text>'; const r=await _nxPost('http://127.0.0.1:4800','/api/ideas',{text:args.join(' ')}); return r?.ok?`Idea created: ${r.idea?.uuid?.slice(0,12)}`:`Error: ${r?.error||'idearium offline'}`; },
+  'ideas':        async() => { const d=await _nxGet('http://127.0.0.1:4800','/api/ideas'); return (d?.ideas||[]).slice(0,10).map(i=>`${i.uuid?.slice(0,8)} ${i.text?.slice(0,60)}`).join('
+')||'no ideas'; },
+
+  // Execution trees
+  'trees':        async() => { const d=await _nxGet(_NX.CORTEX,'/api/memory?table=execution_trees&n=10'); return (d?.rows||[]).map(r=>`${r.jobId?.slice(0,12)} branches:${r.branches?.length||0} status:${r.status}`).join('
+')||'no trees'; },
+});
+</script>
+
+
+
+<!-- ═══════════════════════════ MEMORY PANEL ═══════════════════════════════ -->
+<div class="panel" id="panel-memory" style="flex-direction:column">
+  <div class="stbar">
+    <button class="stb on" onclick="memTab('tables',this)">TABLES</button>
+    <button class="stb"    onclick="memTab('artifacts',this)">ARTIFACTS</button>
+    <button class="stb"    onclick="memTab('sessions',this)">SESSIONS</button>
+    <button class="stb"    onclick="memTab('gaps',this)">GAPS</button>
+    <button class="stb"    onclick="memTab('ledger',this)">LEDGER</button>
+    <button class="stb"    onclick="memTab('search',this)">SEARCH</button>
+    <div style="flex:1"></div>
+    <button class="btn m" style="font-size:9px" onclick="memRefreshAll()">↺ Refresh</button>
+  </div>
+
+  <div class="spanel on" id="mem-tables" style="flex-direction:column;overflow:hidden">
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">JAA Memory Tables — Cortex :3748</span>
+      <span id="mem-table-count" style="font-size:9px;color:var(--muted)"></span>
+    </div>
+    <div style="display:flex;flex:1;overflow:hidden">
+      <div id="mem-table-list" style="width:180px;border-right:1px solid var(--border);overflow-y:auto;padding:6px 0"></div>
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:8px">
+          <span id="mem-table-name" style="font-size:9px;font-weight:700;color:var(--text)">—</span>
+          <span id="mem-table-rows" style="font-size:9px;color:var(--muted)"></span>
+          <div style="flex:1"></div>
+          <input id="mem-table-filter" placeholder="filter…" class="fi" style="width:160px;font-size:10px" oninput="memFilterRows(this.value)">
+        </div>
+        <div id="mem-table-rows-list" style="flex:1;overflow-y:auto;font-size:10px;font-family:var(--mono)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spanel" id="mem-artifacts" style="flex-direction:column;overflow:hidden">
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Artifacts — SHA-256 deduplicated</span>
+    </div>
+    <div id="mem-artifacts-list" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+  </div>
+
+  <div class="spanel" id="mem-sessions" style="flex-direction:column;overflow:hidden">
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Sessions — UUID chain</span>
+    </div>
+    <div id="mem-sessions-list" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+  </div>
+
+  <div class="spanel" id="mem-gaps" style="flex-direction:column;overflow:hidden">
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Open Gaps</span>
+      <select id="mem-gap-sev" class="fi" style="width:110px" onchange="memLoadGaps()">
+        <option value="">All severity</option>
+        <option value="fatal">fatal</option>
+        <option value="high">high</option>
+        <option value="medium">medium</option>
+      </select>
+    </div>
+    <div id="mem-gaps-list" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+  </div>
+
+  <div class="spanel" id="mem-ledger" style="flex-direction:column;overflow:hidden">
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Event Ledger — append-only</span>
+    </div>
+    <div id="mem-ledger-list" style="flex:1;overflow-y:auto;padding:0 12px"></div>
+  </div>
+
+  <div class="spanel" id="mem-search" style="flex-direction:column;overflow:hidden">
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+      <input id="mem-search-q" class="fi" placeholder="Search all memory…" style="flex:1">
+      <select id="mem-search-table" class="fi" style="width:140px">
+        <option value="">All tables</option>
+        <option value="event_log">event_log</option>
+        <option value="artifacts">artifacts</option>
+        <option value="gaps">gaps</option>
+        <option value="failures">failures</option>
+        <option value="agent_calls">agent_calls</option>
+      </select>
+      <button class="btn o" onclick="memSearch()">Search</button>
+    </div>
+    <div id="mem-search-results" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ INTELLIGENCE PANEL ══════════════════════════ -->
+<div class="panel" id="panel-intel" style="flex-direction:column">
+  <div class="stbar">
+    <button class="stb on" onclick="intelTab('overview',this)">OVERVIEW</button>
+    <button class="stb"    onclick="intelTab('patterns',this)">PATTERNS</button>
+    <button class="stb"    onclick="intelTab('failures',this)">FAULT TAXONOMY</button>
+    <button class="stb"    onclick="intelTab('reuse',this)">REUSE INDEX</button>
+    <button class="stb"    onclick="intelTab('drift',this)">DRIFT</button>
+    <div style="flex:1"></div>
+    <button class="btn m" style="font-size:9px" onclick="intelRefresh()">↺ Refresh</button>
+  </div>
+
+  <div class="spanel on" id="intel-overview" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="intel-overview-content"><div style="color:var(--muted);font-size:10px">Loading intelligence…</div></div>
+  </div>
+  <div class="spanel" id="intel-patterns" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="intel-patterns-content"></div>
+  </div>
+  <div class="spanel" id="intel-failures" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="intel-failures-content"></div>
+  </div>
+  <div class="spanel" id="intel-reuse" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="intel-reuse-content"></div>
+  </div>
+  <div class="spanel" id="intel-drift" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="intel-drift-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ARCHITECT PANEL ════════════════════════════ -->
+<div class="panel" id="panel-architect" style="flex-direction:column">
+  <div class="stbar">
+    <button class="stb on" onclick="archUITab('hooks',this)">HOOKS</button>
+    <button class="stb"    onclick="archUITab('blueprint',this)">BLUEPRINT</button>
+    <button class="stb"    onclick="archUITab('canvas',this)">CANVAS</button>
+    <button class="stb"    onclick="archUITab('topology',this)">TOPOLOGY</button>
+    <button class="stb"    onclick="archUITab('snr',this)">SNR GATE</button>
+    <div style="flex:1"></div>
+    <span id="arch-ui-dot" style="width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px;flex-shrink:0;display:inline-block"></span>
+    <span style="font-size:9px;color:var(--muted);margin-right:8px">:3747</span>
+    <button class="btn m" style="font-size:9px" onclick="archUIRefresh()">↺ Refresh</button>
+  </div>
+
+  <div class="spanel on" id="arch-ui-hooks" style="flex-direction:column;overflow:hidden">
+    <div style="padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+      <select id="arch-ui-type" class="fi" style="width:120px" onchange="archUILoadHooks()"><option value="">All types</option><option>api</option><option>event-bus</option><option>webserver</option><option>gate</option><option>stream</option><option>snr</option><option>ollama</option><option>raid</option><option>gap</option><option>tension</option><option>seam</option><option>translate</option><option>compress</option><option>clip</option><option>reconstruct</option><option>behavior</option><option>lens</option><option>macro</option><option>synthesize</option><option>callto</option><option>direct</option><option>decompress</option><option>blueprint</option></select>
+      <select id="arch-ui-status" class="fi" style="width:100px" onchange="archUILoadHooks()"><option value="">All status</option><option>active</option><option>seed</option><option>deprecated</option></select>
+      <span id="arch-ui-hook-count" style="font-size:9px;color:var(--muted)">—</span>
+      <div style="flex:1"></div>
+      <button class="btn o" style="font-size:9px" onclick="archUIShowRegister()">+ Register Hook</button>
+    </div>
+    <div style="display:flex;flex:1;overflow:hidden">
+      <div id="arch-ui-hook-list" style="width:320px;overflow-y:auto;border-right:1px solid var(--border)"></div>
+      <div id="arch-ui-hook-detail" style="flex:1;overflow-y:auto;padding:14px"><div style="color:var(--muted);font-size:10px;padding-top:40px;text-align:center">Select a hook</div></div>
+    </div>
+  </div>
+
+  <div class="spanel" id="arch-ui-blueprint" style="flex-direction:column;overflow:hidden">
+    <div style="padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+      <input id="arch-ui-scan-path" class="fi" placeholder="Root path to scan…" style="flex:1">
+      <button class="btn o" onclick="archUIScan()">Scan</button>
+      <button class="btn" onclick="archUILoadBPs()">Load</button>
+    </div>
+    <div style="display:flex;flex:1;overflow:hidden">
+      <div id="arch-ui-bp-list" style="width:220px;overflow-y:auto;border-right:1px solid var(--border);padding:6px 0"></div>
+      <div id="arch-ui-bp-detail" style="flex:1;overflow-y:auto;padding:14px"></div>
+    </div>
+  </div>
+
+  <div class="spanel" id="arch-ui-canvas" style="overflow:hidden;flex:1">
+    <iframe src="http://127.0.0.1:3747/ui/arch-builder" style="width:100%;height:100%;border:none;background:#0e0e10" title="Arch Builder"></iframe>
+  </div>
+
+  <div class="spanel" id="arch-ui-topology" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="arch-ui-topo-content"><div style="color:var(--muted);font-size:10px">Scan a path to see topology</div></div>
+  </div>
+
+  <div class="spanel" id="arch-ui-snr" style="flex-direction:column;overflow:hidden">
+    <div style="display:flex;gap:0;flex:1;overflow:hidden">
+      <div style="width:360px;border-right:1px solid var(--border);padding:12px;overflow-y:auto;flex-shrink:0">
+        <div style="font-size:9px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Input JSON</div>
+        <textarea id="arch-ui-snr-in" class="sb-ta" rows="10" style="width:100%;min-height:120px" placeholder='{"id":"...","name":"...","type":"..."}'></textarea>
+        <button class="btn o" style="margin-top:8px;width:100%" onclick="archUICheckSNR()">Run SNR Gate</button>
+      </div>
+      <div id="arch-ui-snr-out" style="flex:1;overflow-y:auto;padding:14px"><div style="color:var(--muted);font-size:10px;padding-top:40px;text-align:center">Paste JSON → Run SNR Gate</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ META OBSERVER PANEL ════════════════════════ -->
+<div class="panel" id="panel-meta" style="flex-direction:column">
+  <div class="stbar">
+    <button class="stb on" onclick="metaTab('health',this)">HEALTH</button>
+    <button class="stb"    onclick="metaTab('events',this)">EVENTS</button>
+    <button class="stb"    onclick="metaTab('snapshots',this)">SNAPSHOTS</button>
+    <button class="stb"    onclick="metaTab('versions',this)">VERSIONS</button>
+    <button class="stb"    onclick="metaTab('faults',this)">FAULT TAXONOMY</button>
+    <div style="flex:1"></div>
+    <span id="meta-live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px;flex-shrink:0;display:inline-block"></span>
+    <span style="font-size:9px;color:var(--muted);margin-right:8px" id="meta-refresh-ts">—</span>
+    <button class="btn m" style="font-size:9px" onclick="metaRefresh()">↺ Refresh</button>
+  </div>
+
+  <div class="spanel on" id="meta-health" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="meta-health-content"><div style="color:var(--muted);font-size:10px">Loading system health…</div></div>
+  </div>
+  <div class="spanel" id="meta-events" style="flex-direction:column;overflow:hidden">
+    <div style="padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+      <input id="meta-ev-filter" class="fi" placeholder="filter by type…" style="width:200px" oninput="metaFilterEvents(this.value)">
+      <span id="meta-ev-count" style="font-size:9px;color:var(--muted)"></span>
+    </div>
+    <div id="meta-events-list" style="flex:1;overflow-y:auto;padding:0 12px"></div>
+  </div>
+  <div class="spanel" id="meta-snapshots" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="meta-snapshots-content"></div>
+  </div>
+  <div class="spanel" id="meta-versions" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="meta-versions-content"></div>
+  </div>
+  <div class="spanel" id="meta-faults" style="flex-direction:column;overflow-y:auto;padding:14px">
+    <div id="meta-faults-content"></div>
+  </div>
+</div>
+
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════════════════════
+// NEXUS UI EXTENSION — Memory, Intelligence, Architect, Meta, CLI expansion
+// Wired to: cortex :3748, architect :3747, orchestrator :9000
+// §2.3 All state observable. §1.2 Nothing silently fails.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const _NX = {
+  CORTEX:     'http://127.0.0.1:3748',
+  ORCH:       'http://127.0.0.1:9000',
+  GUARDIAN:   'http://127.0.0.1:7820',
+  BRIDGE:     'http://127.0.0.1:9999',
+  ARCHITECT:  'http://127.0.0.1:3747',
+};
+
+async function _nxGet(base, path, timeout=5000) {
+  try {
+    const r = await fetch(base+path, { signal: AbortSignal.timeout(timeout) });
+    return r.ok ? await r.json() : null;
+  } catch(_) { return null; }
+}
+async function _nxPost(base, path, body, timeout=8000) {
+  try {
+    const r = await fetch(base+path, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body), signal: AbortSignal.timeout(timeout) });
+    return await r.json();
+  } catch(e) { return { ok:false, error:e.message }; }
+}
+function _nxFts(ts) { return ts ? new Date(ts).toTimeString().slice(0,8) : '—'; }
+function _nxAgo(ts) {
+  if (!ts) return '—';
+  const s = Math.round((Date.now()-ts)/1000);
+  if (s < 60) return s+'s'; if (s < 3600) return Math.round(s/60)+'m'; return Math.round(s/3600)+'h';
+}
+function _nxEsc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function _nxSwitchSpanel(prefix, tab, btn) {
+  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(el => el.classList.remove('on'));
+  document.querySelectorAll(`[onclick*="${prefix}Tab"],.stb`).forEach(b => b.classList.remove('on'));
+  const el = document.getElementById(`${prefix}-${tab}`);
+  if (el) el.classList.add('on');
+  if (btn) btn.classList.add('on');
+}
+
+// ── §LOG THIS FAULT to cortex ─────────────────────────────────────────────
+// _eventLedger.write is not a function — fixed to .record()
+// Logged here at UI load so cortex has a record
+(function() {
+  setTimeout(() => {
+    _nxPost(_NX.CORTEX, '/api/event', {
+      type: 'nexus.fault.fixed',
+      payload: {
+        faultId:    'F-LEDGER-001',
+        faultClass: 'ghost_call',
+        description: '_eventLedger.write() called but method is .record(). Fixed in orchestrator.js.',
+        fixedIn:    'orchestrator.js _bootSystems call site',
+        causedBy:   'method name mismatch between createEventLedger API and call site',
+        axiom:      '§1.2 nothing silently fails',
+        ts:         Date.now(),
+      },
+      source: 'nexus-ui', causedBy: null, ts: Date.now(),
+    }).catch(()=>{});
+  }, 3000);
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MEMORY PANEL
+// ═══════════════════════════════════════════════════════════════════════════
+
+let _memAllRows = [];
+let _memCurrentTable = '';
+
+const MEM_TABLES = [
+  'event_log','artifacts','gaps','failures','agent_calls','agent_signatures',
+  'bep_patterns','crystals','seam_records','seam_sessions','queue_compartments',
+  'versionium_commits','versionium_branches','cortex_memory','memory_index',
+  'active_traces','orion_sessions','schedules','workflow_runs','project_registry',
+  'requests','hooks','hook_bindings','blueprints','topology_maps','snr_results',
+  'constraints','tensions','sessions','grammar',
+];
+
+function memTab(tab, btn) {
+  _nxSwitchSpanel('mem', tab, btn);
+  if (tab==='tables')    memLoadTables();
+  if (tab==='artifacts') memLoadArtifacts();
+  if (tab==='sessions')  memLoadSessions();
+  if (tab==='gaps')      memLoadGaps();
+  if (tab==='ledger')    memLoadLedger();
+}
+
+async function memRefreshAll() {
+  if (document.getElementById('mem-tables')?.classList.contains('on')) memLoadTables();
+  else if (document.getElementById('mem-artifacts')?.classList.contains('on')) memLoadArtifacts();
+  else if (document.getElementById('mem-gaps')?.classList.contains('on')) memLoadGaps();
+  else if (document.getElementById('mem-ledger')?.classList.contains('on')) memLoadLedger();
+}
+
+async function memLoadTables() {
+  // Load JAA stats from cortex
+  const stats = await _nxGet(_NX.CORTEX, '/health');
+  const jaaStats = stats?.jaa || {};
+  const tableList = document.getElementById('mem-table-list');
+  const countEl   = document.getElementById('mem-table-count');
+  if (!tableList) return;
+  const counts = jaaStats.counts || jaaStats || {};
+  const tables = MEM_TABLES.sort();
+  if (countEl) countEl.textContent = `${Object.keys(counts).filter(k=>counts[k]>0).length} active tables`;
+  tableList.innerHTML = tables.map(t => {
+    const n = counts[t] || 0;
+    return `<div style="padding:5px 10px;cursor:pointer;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:10px;transition:background .1s"
+      onclick="memSelectTable('${t}')" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="color:${n>0?'var(--text)':'var(--muted)'}">${t}</span>
+      <span style="color:${n>0?'var(--amber)':'var(--muted)'}; font-family:var(--mono);font-size:9px">${n||'—'}</span>
+    </div>`;
+  }).join('');
+}
+
+async function memSelectTable(table) {
+  _memCurrentTable = table;
+  document.getElementById('mem-table-name').textContent = table;
+  document.getElementById('mem-table-filter').value = '';
+  const data = await _nxGet(_NX.CORTEX, `/api/memory?table=${encodeURIComponent(table)}&n=200`);
+  const rows = data?.rows || data?.data || [];
+  _memAllRows = rows;
+  document.getElementById('mem-table-rows').textContent = `${rows.length} rows`;
+  memRenderRows(rows);
+}
+
+function memFilterRows(q) {
+  const filtered = q ? _memAllRows.filter(r => JSON.stringify(r).toLowerCase().includes(q.toLowerCase())) : _memAllRows;
+  memRenderRows(filtered);
+}
+
+function memRenderRows(rows) {
+  const el = document.getElementById('mem-table-rows-list');
+  if (!el) return;
+  if (!rows.length) { el.innerHTML = '<div style="color:var(--muted);padding:12px;font-size:10px">No rows</div>'; return; }
+  el.innerHTML = rows.slice(0,500).map((r,i) => {
+    const ts    = r.ts || r.createdAt || r.timestamp;
+    const type  = r.type || r.eventType || r.op || '';
+    const id    = (r.uuid || r.id || '').slice(0,12);
+    const body  = JSON.stringify(r).slice(0,120);
+    return `<div style="padding:5px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s"
+      onclick="memExpandRow(${i})" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:2px">
+        <span style="color:var(--muted);font-size:9px;width:52px;flex-shrink:0">${_nxFts(ts)}</span>
+        ${type?`<span style="color:var(--amber);font-size:9px;flex-shrink:0">${_nxEsc(type.slice(0,30))}</span>`:''}
+        <span style="color:var(--text3);font-size:9px;font-family:var(--mono)">${id}</span>
+      </div>
+      <div style="color:var(--muted);font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_nxEsc(body)}</div>
+    </div>`;
+  }).join('');
+}
+
+function memExpandRow(idx) {
+  const r = _memAllRows[idx];
+  if (!r) return;
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center';
+  overlay.innerHTML = `<div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:18px;max-width:700px;max-height:80vh;overflow-y:auto;min-width:440px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px;align-items:center">
+      <span style="color:var(--text);font-weight:700;font-size:12px">${_memCurrentTable} row</span>
+      <button onclick="this.closest('div').parentElement.remove()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px">×</button>
+    </div>
+    <pre style="font-size:9px;color:var(--text2);white-space:pre-wrap;word-break:break-all">${_nxEsc(JSON.stringify(r,null,2))}</pre>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+async function memLoadArtifacts() {
+  const data = await _nxGet(_NX.GUARDIAN, '/artifacts');
+  const arts  = data?.artifacts || data?.rows || [];
+  const el = document.getElementById('mem-artifacts-list');
+  if (!el) return;
+  if (!arts.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No artifacts yet</div>'; return; }
+  el.innerHTML = arts.slice(0,100).map(a => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">
+        <span style="color:var(--teal);font-size:9px;font-weight:700;text-transform:uppercase">${_nxEsc(a.lang||'text')}</span>
+        <span style="color:var(--muted);font-size:9px;font-family:var(--mono)">#${(a.hash||'').slice(0,12)}</span>
+        <span style="color:var(--muted);font-size:9px;margin-left:auto">${_nxFts(a.ts)}</span>
+      </div>
+      <div style="color:var(--text2);font-size:9px;white-space:pre-wrap;max-height:60px;overflow:hidden">${_nxEsc((a.content||'').slice(0,200))}</div>
+    </div>`).join('');
+}
+
+async function memLoadSessions() {
+  const data = await _nxGet(_NX.CORTEX, '/api/memory?table=sessions&n=50');
+  const rows  = data?.rows || data?.data || [];
+  const el = document.getElementById('mem-sessions-list');
+  if (!el) return;
+  if (!rows.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No sessions in JAA yet</div>'; return; }
+  el.innerHTML = rows.map(r => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px">
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="color:var(--amber);font-size:9px;font-family:var(--mono)">${(r.id||r.sessionId||r.uuid||'').slice(0,16)}</span>
+        <span style="color:var(--muted);font-size:9px">${r.eventCount||0} events</span>
+        <span style="color:var(--muted);font-size:9px;margin-left:auto">${_nxFts(r.startedAt||r.ts)}</span>
+      </div>
+    </div>`).join('');
+}
+
+async function memLoadGaps() {
+  const sev   = document.getElementById('mem-gap-sev')?.value || '';
+  const qs    = sev ? `?severity=${sev}` : '';
+  const data  = await _nxGet(_NX.CORTEX, `/api/gaps${qs}`);
+  const gaps  = data?.gaps || data?.rows || [];
+  const el = document.getElementById('mem-gaps-list');
+  if (!el) return;
+  if (!gaps.length) { el.innerHTML = '<div style="color:var(--teal);font-size:10px">✓ No open gaps</div>'; return; }
+  const SEVCOLOR = { fatal:'#ef4444', high:'#f59e0b', medium:'#94a3b8', low:'#475569' };
+  el.innerHTML = gaps.map(g => {
+    const c = SEVCOLOR[g.severity||'medium'] || '#94a3b8';
+    return `<div style="background:var(--surface);border:1px solid ${c}33;border-radius:4px;padding:8px 12px;margin-bottom:6px">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+        <span style="color:${c};font-size:8px;font-weight:700;text-transform:uppercase">${g.severity||'?'}</span>
+        <span style="color:var(--text);font-size:10px">${_nxEsc(g.type||g.faultClass||'')}</span>
+        <span style="color:var(--muted);font-size:9px;margin-left:auto">${_nxAgo(g.ts||g.createdAt)}</span>
+      </div>
+      <div style="color:var(--text2);font-size:9px">${_nxEsc((g.body||g.description||'').slice(0,160))}</div>
+      <div style="color:var(--text3);font-size:9px;margin-top:2px">source: ${_nxEsc(g.source||'?')} · path: ${_nxEsc(g.path||'?')}</div>
+    </div>`;
+  }).join('');
+}
+
+async function memLoadLedger() {
+  const data = await _nxGet(_NX.CORTEX, '/api/events?limit=100');
+  const rows  = data?.rows || data?.events || [];
+  const el = document.getElementById('mem-ledger-list');
+  if (!el) return;
+  el.innerHTML = rows.map(r => {
+    const t = r.type||'?';
+    const c = t.includes('error')||t.includes('fail') ? '#ef4444'
+      : t.includes('gap') ? '#f472b6'
+      : t.includes('complete')||t.includes('ok') ? '#34d399' : 'var(--text2)';
+    return `<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)">
+      <span style="color:var(--text3);font-size:9px;font-family:var(--mono);flex-shrink:0;width:56px">${_nxFts(r.ts)}</span>
+      <span style="color:${c};font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_nxEsc(t)}</span>
+      <span style="color:var(--muted);font-size:9px;flex-shrink:0">${_nxEsc((r.source||'').slice(0,16))}</span>
+    </div>`;
+  }).join('');
+}
+
+async function memSearch() {
+  const q     = document.getElementById('mem-search-q')?.value?.trim();
+  const table = document.getElementById('mem-search-table')?.value;
+  if (!q) return;
+  const data  = await _nxPost(_NX.CORTEX, '/api/memory/search', { q, table: table||undefined, n:50 });
+  const rows  = data?.rows || data?.results || [];
+  const el = document.getElementById('mem-search-results');
+  if (!el) return;
+  if (!rows.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No results</div>'; return; }
+  el.innerHTML = rows.map(r => `
+    <div style="padding:6px 0;border-bottom:1px solid var(--border)">
+      <div style="color:var(--amber);font-size:9px;margin-bottom:2px">${_nxEsc(r.type||r.table||'')}</div>
+      <div style="color:var(--text2);font-size:9px;white-space:pre-wrap">${_nxEsc(JSON.stringify(r).slice(0,200))}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INTELLIGENCE PANEL
+// ═══════════════════════════════════════════════════════════════════════════
+
+function intelTab(tab, btn) {
+  _nxSwitchSpanel('intel', tab, btn);
+  if (tab==='overview')  intelLoadOverview();
+  if (tab==='patterns')  intelLoadPatterns();
+  if (tab==='failures')  intelLoadFailures();
+  if (tab==='reuse')     intelLoadReuse();
+  if (tab==='drift')     intelLoadDrift();
+}
+
+async function intelRefresh() {
+  const tabs = ['overview','patterns','failures','reuse','drift'];
+  const active = tabs.find(t => document.getElementById(`intel-${t}`)?.classList.contains('on'));
+  if (active === 'overview') intelLoadOverview();
+  else if (active) intelTab(active, null);
+}
+
+async function intelLoadOverview() {
+  const status = await _nxGet(_NX.CORTEX, '/api/intelligence/status');
+  const ctx    = await _nxGet(_NX.CORTEX, '/api/intelligence/context');
+  const el = document.getElementById('intel-overview-content');
+  if (!el) return;
+  if (!status) { el.innerHTML = '<div style="color:var(--red);font-size:10px">Intelligence core offline — check cortex boot Phase 5.3</div>'; return; }
+  const drift  = status.driftLevel || 'unknown';
+  const dc = drift==='critical'?'#ef4444':drift==='elevated'?'#f59e0b':'#34d399';
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px">
+      ${[
+        ['Patterns',`${status.patterns||0}`,`${status.crystallised||0} crystallised`,'var(--amber)'],
+        ['Fault Classes',`${status.faultClasses||0}`,'named fault modes','#ef4444'],
+        ['Reuse Index',`${status.reuseItems||0}`,'verified artifacts','var(--teal)'],
+        ['Drift',drift.toUpperCase(),'cross-ledger analysis',dc],
+      ].map(([l,v,s,c])=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px;text-align:center">
+        <div style="font-size:22px;font-weight:700;color:${c};font-family:var(--mono)">${_nxEsc(v)}</div>
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px">${l}</div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">${s}</div>
+      </div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px">
+        <div style="font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px">Scan Intervals</div>
+        ${[['Last pattern scan',status.lastPatternScan],['Last failure scan',status.lastFailureScan],['Last reuse index',status.lastReuseIndex],['Last cross-ledger',status.lastCrossLedger]].map(([l,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:9px;color:var(--muted)">${l}</span>
+          <span style="font-size:9px;color:var(--text);font-family:var(--mono)">${_nxAgo(v)}</span>
+        </div>`).join('')}
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px">
+        <div style="font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px">System State</div>
+        ${ctx?.systemState ? [
+          ['Open gaps', ctx.systemState.openGaps],
+          ['Critical gaps', ctx.systemState.criticalGaps],
+          ['Recent failures', ctx.systemState.recentFailures],
+          ['Top gap type', (ctx.systemState.topGapTypes||[]).join(', ')||'—'],
+        ].map(([l,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:9px;color:var(--muted)">${l}</span>
+          <span style="font-size:9px;color:var(--text);font-family:var(--mono)">${_nxEsc(String(v??'—'))}</span>
+        </div>`).join('') : '<div style="color:var(--muted);font-size:9px">No context available</div>'}
+      </div>
+    </div>`;
+}
+
+async function intelLoadPatterns() {
+  const data = await _nxGet(_NX.CORTEX, '/api/intelligence/patterns');
+  const pats = (data?.patterns || []).sort((a,b)=>(b.confidence||0)-(a.confidence||0));
+  const el = document.getElementById('intel-patterns-content');
+  if (!el) return;
+  if (!pats.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No patterns yet — needs 20+ events across sessions</div>'; return; }
+  el.innerHTML = pats.map(p => {
+    const conf = ((p.confidence||0)*100).toFixed(0);
+    const c = p.crystallised ? '#34d399' : p.confidence>=0.6?'#f59e0b':'var(--muted)';
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <span style="font-size:8px;font-weight:700;text-transform:uppercase;color:var(--amber)">${_nxEsc(p.patternType||'?')}</span>
+        ${p.crystallised?'<span style="font-size:8px;color:#34d399;font-weight:700">CRYSTALLISED</span>':''}
+        <span style="color:var(--muted);font-size:9px;margin-left:auto">${conf}% confidence</span>
+        <span style="color:var(--muted);font-size:9px">×${p.count||0}</span>
+      </div>
+      <div style="color:var(--text2);font-size:9px">${_nxEsc(p.description||p.signature||'')}</div>
+      <div style="height:3px;background:var(--bg);border-radius:2px;margin-top:6px;overflow:hidden">
+        <div style="height:100%;width:${conf}%;background:${c};border-radius:2px;transition:width .4s"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function intelLoadFailures() {
+  const data = await _nxGet(_NX.CORTEX, '/api/intelligence/failures');
+  const failures = Array.isArray(data?.failures) ? data.failures : Object.values(data?.failures||{});
+  const el = document.getElementById('intel-failures-content');
+  if (!el) return;
+  if (!failures.length) { el.innerHTML = '<div style="color:var(--teal);font-size:10px">✓ No fault classes built yet</div>'; return; }
+  failures.sort((a,b)=>(b.count||0)-(a.count||0));
+  el.innerHTML = `<div style="font-size:9px;color:var(--muted);margin-bottom:10px">${failures.length} fault classes · sorted by frequency</div>` +
+    failures.map(f => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <span style="color:#ef4444;font-size:10px;font-weight:700;font-family:var(--mono)">${_nxEsc(f.faultClass||'?')}</span>
+        <span style="font-size:12px;font-weight:700;color:${f.count>5?'#ef4444':f.count>2?'#f59e0b':'var(--text)'};font-family:var(--mono);margin-left:auto">×${f.count||0}</span>
+      </div>
+      <div style="font-size:9px;color:var(--muted)">systems: ${_nxEsc((f.systems||[]).join(', ')||'?')} · last: ${_nxAgo(f.lastSeen)}</div>
+      ${f.examples?.[0]?.msg?`<div style="color:var(--text3);font-size:9px;margin-top:3px;font-style:italic">"${_nxEsc(f.examples[0].msg.slice(0,100))}"</div>`:''}
+    </div>`).join('');
+}
+
+async function intelLoadReuse() {
+  const data = await _nxGet(_NX.CORTEX, '/api/intelligence/reuse?n=50');
+  const items = data?.results || [];
+  const el = document.getElementById('intel-reuse-content');
+  if (!el) return;
+  if (!items.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No reuse candidates yet — artifacts accumulate per session</div>'; return; }
+  el.innerHTML = items.map(r => `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:7px 12px;margin-bottom:5px;display:flex;gap:10px;align-items:center">
+      <span style="color:var(--teal);font-size:9px;font-weight:700;text-transform:uppercase;flex-shrink:0;width:50px">${_nxEsc(r.lang||'?')}</span>
+      <span style="color:var(--text3);font-size:9px;font-family:var(--mono);flex-shrink:0">#${(r.hash||'').slice(0,12)}</span>
+      <span style="color:var(--text2);font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_nxEsc(r.intent||'')}</span>
+      <span style="color:var(--muted);font-size:9px;flex-shrink:0">×${r.usedCount||1}</span>
+      <span style="color:var(--text3);font-size:9px;flex-shrink:0">${Math.round((r.size||0)/1000)}k</span>
+    </div>`).join('');
+}
+
+async function intelLoadDrift() {
+  const data = await _nxGet(_NX.CORTEX, '/api/events?limit=5&type=intelligence.cross_ledger_analysis');
+  const events = data?.rows || data?.events || [];
+  const latest = events[0]?.payload;
+  const el = document.getElementById('intel-drift-content');
+  if (!el) return;
+  if (!latest) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No drift analysis yet — runs every 90s when intelligence core is active</div>'; return; }
+  const score = latest.driftScore||0;
+  const level = latest.driftLevel||'unknown';
+  const dc = level==='critical'?'#ef4444':level==='elevated'?'#f59e0b':'#34d399';
+  el.innerHTML = `
+    <div style="background:var(--surface);border:1px solid ${dc}44;border-radius:8px;padding:16px;margin-bottom:14px;text-align:center">
+      <div style="font-size:40px;font-weight:700;color:${dc};font-family:var(--mono)">${score.toFixed(2)}</div>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:${dc};letter-spacing:.1em;margin-top:4px">${level} DRIFT</div>
+      <div style="height:6px;background:var(--bg);border-radius:3px;margin:10px auto 0;max-width:200px;overflow:hidden">
+        <div style="height:100%;width:${score*100}%;background:${dc};border-radius:3px;transition:width .5s"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      ${[
+        ['Sigma events',latest.sigmaEvents||0],
+        ['Avg sigma',((latest.avgSigma||0)).toFixed(3)],
+        ['Max sigma',((latest.maxSigma||0)).toFixed(3)],
+        ['Avg friction',((latest.avgFriction||0)).toFixed(3)],
+        ['Avg tension',((latest.avgTension||0)).toFixed(3)],
+        ['Recent gaps',latest.recentGaps||0],
+      ].map(([l,v])=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px;text-align:center">
+        <div style="font-size:14px;font-weight:700;color:var(--text);font-family:var(--mono)">${v}</div>
+        <div style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">${l}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ARCHITECT PANEL (full wiring to :3747)
+// ═══════════════════════════════════════════════════════════════════════════
+
+let _archUIHooks = [], _archUIBPs = [];
+
+function archUITab(tab, btn) {
+  document.querySelectorAll('[id^="arch-ui-"]').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('[onclick*="archUITab"]').forEach(b => b.classList.remove('on'));
+  const el = document.getElementById(`arch-ui-${tab}`);
+  if (el) el.classList.add('on');
+  if (btn) btn.classList.add('on');
+  if (tab==='hooks')     archUILoadHooks();
+  if (tab==='blueprint') archUILoadBPs();
+  if (tab==='topology')  archUILoadTopo();
+}
+
+async function archUIRefresh() {
+  const h = await _nxGet(_NX.ARCHITECT, '/health');
+  const dot = document.getElementById('arch-ui-dot');
+  if (dot) dot.style.background = h?.ok ? '#22c55e' : '#ef4444';
+  archUILoadHooks();
+}
+
+async function archUILoadHooks() {
+  const type   = document.getElementById('arch-ui-type')?.value||'';
+  const status = document.getElementById('arch-ui-status')?.value||'';
+  const qs = [type&&`type=${type}`,status&&`status=${status}`].filter(Boolean).join('&');
+  const data = await _nxGet(_NX.ARCHITECT, `/api/hooks${qs?'?'+qs:''}`);
+  const list = document.getElementById('arch-ui-hook-list');
+  const cnt  = document.getElementById('arch-ui-hook-count');
+  if (!list) return;
+  if (!data) { list.innerHTML = '<div style="color:var(--red);font-size:9px;padding:10px">Architect offline — node architect/service.js</div>'; return; }
+  _archUIHooks = data.hooks||[];
+  if (cnt) cnt.textContent = `${_archUIHooks.length} hooks`;
+  const TC = {api:'#85b7eb','event-bus':'#9fe1cb',webserver:'#c9a0f6',gate:'#fac775',snr:'#67d8cf',ollama:'#f8a07a',raid:'#f8a07a'};
+  list.innerHTML = _archUIHooks.map((h,i)=>`
+    <div style="padding:6px 10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onclick="archUISelectHook(${i})" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:8px;font-weight:700;text-transform:uppercase;padding:2px 5px;border-radius:2px;background:var(--surface2);color:${TC[h.type]||'var(--muted)'};flex-shrink:0">${h.type||'?'}</span>
+        <span style="font-size:10px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_nxEsc(h.name||'')}</span>
+      </div>
+    </div>`).join('');
+}
+
+function archUISelectHook(i) {
+  const h = _archUIHooks[i];
+  const el = document.getElementById('arch-ui-hook-detail');
+  if (!el||!h) return;
+  const rows = [
+    ['UUID', (h.uuid||h.id||'').slice(0,18)+'…'],
+    ['Type', h.type], ['Direction', h.direction], ['Version', h.version||'1.0.0'],
+    ['Status', h.meta?.status||'active'], ['From', `${h.from?.surface||'*'} L${h.from?.layer??'?'}`],
+    ['To', `${h.to?.surface||'*'} L${h.to?.layer??'?'}`], ['CLI', h.bindings?.cli||'—'],
+    ['Event', h.bindings?.event||'—'], ['Axioms', (h.contract?.axioms||[]).join(', ')||'—'],
+    ['Side effects', (h.contract?.sideEffects||[]).join(', ')||'none'],
+    ['SNR gated', h.contract?.snrGated?'yes':'no'], ['Idempotent', h.contract?.idempotent?'yes':'no'],
+  ];
+  el.innerHTML = `
+    <div style="margin-bottom:10px"><div style="font-size:13px;font-weight:700;color:var(--text)">${_nxEsc(h.name)}</div>
+    <div style="font-size:9px;color:var(--text2);margin-top:4px;line-height:1.6">${_nxEsc(h.intent||'')}</div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:8px">
+      ${rows.map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:9px;color:var(--muted)">${l}</span>
+        <span style="font-size:9px;color:var(--text);font-family:var(--mono);text-align:right">${_nxEsc(String(v))}</span>
+      </div>`).join('')}
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="btn" style="font-size:9px" onclick="archUIDeprecate('${h.uuid||h.id||''}')">Deprecate</button>
+    </div>`;
+}
+
+async function archUIDeprecate(id) {
+  const reason = prompt('Reason:'); if (!reason) return;
+  await fetch(`${_NX.ARCHITECT}/api/hooks/${id}`, { method:'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({reason, causedBy:'nexus-ui'}) });
+  archUILoadHooks();
+}
+
+async function archUIShowRegister() {
+  const name    = prompt('Hook name (kebab-case):'); if (!name) return;
+  const type    = prompt('Hook type (api/event-bus/webserver/gate/snr/ollama/raid/seam/gap/tension/translate/clip/reconstruct/compress/behavior/lens/macro/synthesize/callto/direct/decompress/blueprint):');
+  const intent  = prompt('Intent (one sentence):');
+  if (!name||!type) return;
+  const r = await _nxPost(_NX.ARCHITECT, '/api/hooks', { name, type, direction:'unidirectional', intent,
+    from:{surface:'*',layer:1}, to:{surface:'*',layer:1},
+    schema:{input:{type:'object'},output:{type:'object'},errors:[]},
+    contract:{axioms:['§A-2'],sideEffects:[],idempotent:false,replayable:false,snrGated:false},
+    status:'active', causedBy:'nexus-ui.register' });
+  if (r?.ok) archUILoadHooks(); else alert('Error: '+(r?.error||'unknown'));
+}
+
+async function archUILoadBPs() {
+  const data = await _nxGet(_NX.ARCHITECT, '/api/blueprint');
+  const list = document.getElementById('arch-ui-bp-list');
+  if (!list) return;
+  _archUIBPs = data?.blueprints||[];
+  list.innerHTML = _archUIBPs.length ? _archUIBPs.map((bp,i)=>`
+    <div style="padding:7px 10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onclick="archUISelectBP(${i})" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <div style="font-size:10px;font-weight:500;color:var(--text)">${_nxEsc(bp.name||'?')}</div>
+      <div style="font-size:9px;color:var(--muted)">v${bp.version||'?'} · SNR ${(bp.snrScore||0).toFixed(2)}</div>
+    </div>`).join('') : '<div style="color:var(--muted);font-size:9px;padding:10px">No blueprints — scan a path</div>';
+}
+
+function archUISelectBP(i) {
+  const bp = _archUIBPs[i]; const el = document.getElementById('arch-ui-bp-detail');
+  if (!el||!bp) return;
+  const sc = bp.snrScore||0;
+  const dc = sc>=0.85?'#34d399':sc>=0.65?'#f59e0b':'#ef4444';
+  el.innerHTML = `<div style="margin-bottom:12px;display:flex;gap:10px;align-items:flex-start">
+    <div><div style="font-size:14px;font-weight:700;color:var(--text)">${_nxEsc(bp.name)}</div>
+    <div style="font-size:9px;color:var(--muted);margin-top:3px">v${bp.version} · ${bp.source}</div></div>
+    <div style="margin-left:auto;text-align:right"><div style="font-size:22px;font-weight:700;color:${dc};font-family:var(--mono)">${sc.toFixed(2)}</div>
+    <div style="font-size:8px;color:var(--muted)">SNR</div></div></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+      ${[['Hooks',(bp.hooks||[]).length],['Surfaces',(bp.surfaces||[]).length],['Constraints',(bp.constraints||[]).length],['Gaps',(bp.gaps||[]).length]].map(([l,v])=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:7px;text-align:center">
+        <div style="font-size:16px;font-weight:700;color:var(--text);font-family:var(--mono)">${v}</div>
+        <div style="font-size:8px;color:var(--muted)">${l}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+async function archUIScan() {
+  const p = document.getElementById('arch-ui-scan-path')?.value?.trim();
+  if (!p) { alert('Enter a path'); return; }
+  const r = await _nxPost(_NX.ARCHITECT, '/api/blueprint/scan', { rootPath: p });
+  if (r?.ok) { archUILoadBPs(); archUILoadTopo(); }
+  else alert('Scan failed: '+(r?.error||'offline'));
+}
+
+async function archUILoadTopo() {
+  const data = await _nxGet(_NX.ARCHITECT, '/api/map');
+  const el = document.getElementById('arch-ui-topo-content');
+  if (!el) return;
+  const maps = data?.maps||[];
+  if (!maps.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No topology maps — scan a path first</div>'; return; }
+  const m = maps[maps.length-1];
+  el.innerHTML = `<div style="margin-bottom:10px;font-size:9px;color:var(--muted)">${(m.files||[]).length} files · ${(m.surfaces||[]).length} surfaces · ${(m.gaps||[]).length} topology gaps</div>
+    ${(m.gaps||[]).map(g=>`<div style="padding:5px 10px;background:var(--surface);border:1px solid #ef444433;border-radius:3px;margin-bottom:5px;font-size:9px">
+      <span style="color:#ef4444;font-weight:700;margin-right:6px">${g.severity}</span>${_nxEsc(g.type)}: ${_nxEsc(g.description)}
+    </div>`).join('')}
+    <div style="border:1px solid var(--border);border-radius:4px;overflow:hidden;max-height:400px;overflow-y:auto">
+      ${(m.files||[]).slice(0,300).map(f=>`<div style="display:flex;gap:8px;padding:3px 10px;border-bottom:1px solid var(--border);font-size:9px">
+        <span style="color:var(--muted);width:60px;flex-shrink:0;text-transform:uppercase">${f.type||'?'}</span>
+        <span style="color:var(--text2)">${_nxEsc(f.relative||f.path||'')}</span>
+      </div>`).join('')}
+    </div>`;
+}
+
+async function archUICheckSNR() {
+  const raw = document.getElementById('arch-ui-snr-in')?.value?.trim();
+  let src = {}; try { src = JSON.parse(raw); } catch(e) { alert('Invalid JSON'); return; }
+  const r = await _nxPost(_NX.ARCHITECT, '/api/snr/check', { source: src });
+  const el = document.getElementById('arch-ui-snr-out'); if (!el) return;
+  if (!r?.ok||!r?.result) { el.innerHTML = `<div style="color:var(--red);font-size:9px">${r?.error||'offline'}</div>`; return; }
+  const res = r.result; const sc = res.score;
+  const dc = sc>=0.85?'#34d399':sc>=0.65?'#f59e0b':'#ef4444';
+  const RC = { send:'#34d399', hold:'#f59e0b', rewrite:'#f59e0b', flag:'#ef4444' };
+  el.innerHTML = `<div style="display:flex;gap:14px;margin-bottom:14px;align-items:center">
+    <div style="text-align:center"><div style="font-size:36px;font-weight:700;color:${dc};font-family:var(--mono)">${sc.toFixed(2)}</div>
+    <div style="font-size:8px;color:var(--muted)">COMPOSITE SNR</div></div>
+    <div><div style="font-size:14px;font-weight:700;text-transform:uppercase;color:${RC[res.recommendation]||dc}">${res.recommendation.toUpperCase()}</div>
+    <div style="font-size:9px;color:var(--muted);margin-top:3px">${_nxEsc(res.reasoning)}</div></div></div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px">
+      ${Object.entries(res.axes||{}).map(([ax,v])=>{const c=v>=0.85?'#34d399':v>=0.65?'#f59e0b':'#ef4444';return`
+      <div style="display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:9px;color:var(--text);width:110px;flex-shrink:0">${ax}</span>
+        <div style="flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="height:100%;width:${v*100}%;background:${c}"></div></div>
+        <span style="font-size:9px;color:${c};font-family:var(--mono);width:36px;text-align:right">${v.toFixed(2)}</span>
+      </div>`;}).join('')}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// META OBSERVER PANEL
+// ═══════════════════════════════════════════════════════════════════════════
+
+let _metaEvents = [];
+
+function metaTab(tab, btn) {
+  _nxSwitchSpanel('meta', tab, btn);
+  if (tab==='health')    metaLoadHealth();
+  if (tab==='events')    metaLoadEvents();
+  if (tab==='snapshots') metaLoadSnapshots();
+  if (tab==='versions')  metaLoadVersions();
+  if (tab==='faults')    metaLoadFaults();
+}
+
+async function metaRefresh() {
+  const dot = document.getElementById('meta-live-dot');
+  const ts  = document.getElementById('meta-refresh-ts');
+  const tabs = ['health','events','snapshots','versions','faults'];
+  const active = tabs.find(t => document.getElementById(`meta-${t}`)?.classList.contains('on'));
+  if (dot) dot.style.background = '#f59e0b';
+  if (active) { if(active==='health') metaLoadHealth(); else metaTab(active, null); }
+  if (dot) dot.style.background = '#22c55e';
+  if (ts) ts.textContent = new Date().toTimeString().slice(0,8);
+}
+
+const META_SYSTEMS = [
+  {id:'orchestrator',port:9000,base:_NX.ORCH,    color:'#818cf8'},
+  {id:'bridge',      port:9999,base:'http://127.0.0.1:9999', color:'#22d3ee'},
+  {id:'cortex',      port:3748,base:_NX.CORTEX,  color:'#34d399'},
+  {id:'guardian',    port:7820,base:_NX.GUARDIAN, color:'#f59e0b'},
+  {id:'architect',   port:3747,base:_NX.ARCHITECT,color:'#ef9f27'},
+  {id:'idearium',    port:4800,base:'http://127.0.0.1:4800', color:'#4a9eff'},
+];
+
+async function metaLoadHealth() {
+  const results = await Promise.all(META_SYSTEMS.map(async sys => {
+    const t0 = Date.now(); const h = await _nxGet(sys.base, '/health', 3000);
+    return { ...sys, online:!!h, latency:Date.now()-t0, health:h };
+  }));
+  const el = document.getElementById('meta-health-content'); if (!el) return;
+  const online = results.filter(r=>r.online).length;
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
+      ${results.map(r=>`<div style="background:var(--surface);border:1px solid ${r.color}33;border-radius:8px;padding:14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:${r.online?r.color:'#ef4444'}"></div>
+          <span style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--text)">${r.id}</span>
+          <span style="font-size:9px;color:var(--muted);margin-left:auto">:${r.port}</span>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:${r.online?r.color:'#ef4444'}">${r.online?'ONLINE':'OFFLINE'}</div>
+        ${r.online?`<div style="font-size:9px;color:var(--muted);margin-top:3px">${r.latency}ms · v${r.health?.version||'?'}</div>`:''}
+        ${r.health?.hooks?`<div style="font-size:9px;color:var(--muted)">hooks: ${r.health.hooks.total||0}</div>`:''}
+        ${r.health?.jaa?`<div style="font-size:9px;color:var(--muted)">jaa tables: ${Object.keys(r.health.jaa?.counts||r.health.jaa||{}).length}</div>`:''}
+      </div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:var(--muted);text-align:center">${online}/${results.length} systems online · ${new Date().toTimeString().slice(0,8)}</div>`;
+}
+
+async function metaLoadEvents() {
+  const data = await _nxGet(_NX.CORTEX, '/api/events?limit=200');
+  _metaEvents = data?.rows || data?.events || [];
+  metaFilterEvents('');
+  const cnt = document.getElementById('meta-ev-count');
+  if (cnt) cnt.textContent = `${_metaEvents.length} events`;
+}
+
+function metaFilterEvents(filter) {
+  const evs = filter ? _metaEvents.filter(e => (e.type||'').includes(filter)||(e.source||'').includes(filter)) : _metaEvents;
+  const el = document.getElementById('meta-events-list'); if (!el) return;
+  const SYSCOL = { orchestrator:'#818cf8', cortex:'#34d399', guardian:'#f59e0b', architect:'#ef9f27', bridge:'#22d3ee', idearium:'#4a9eff' };
+  el.innerHTML = evs.map(ev => {
+    const col = ev.type?.includes('error')||ev.type?.includes('fail')?'#ef4444'
+      : ev.type?.includes('gap')?'#f472b6'
+      : ev.type?.includes('complete')||ev.type?.includes('booted')?'#34d399'
+      : SYSCOL[ev.source?.split('/')[0]] || 'var(--text2)';
+    return `<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);align-items:center">
+      <span style="color:var(--text3);font-size:9px;font-family:var(--mono);flex-shrink:0;width:56px">${_nxFts(ev.ts)}</span>
+      <span style="color:${col};font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_nxEsc(ev.type||'?')}</span>
+      <span style="color:var(--text3);font-size:9px;flex-shrink:0;max-width:100px;overflow:hidden;text-overflow:ellipsis">${_nxEsc(ev.source||'')}</span>
+    </div>`;
+  }).join('');
+}
+
+async function metaLoadSnapshots() {
+  const data = await _nxGet(_NX.CORTEX, '/api/snapshots?n=20');
+  const snaps = data?.snapshots||[];
+  const el = document.getElementById('meta-snapshots-content'); if (!el) return;
+  if (!snaps.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No snapshots yet — create one from the CORTEX → SNAPSHOTS tab</div>'; return; }
+  el.innerHTML = `<div style="margin-bottom:10px;display:flex;gap:8px"><button class="btn o" style="font-size:9px" onclick="metaCreateSnapshot()">+ Create Snapshot</button></div>` +
+    snaps.map(s=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px;display:flex;align-items:center;gap:10px">
+      <span style="color:var(--amber);font-family:var(--mono);font-size:9px;flex-shrink:0;width:100px;overflow:hidden;text-overflow:ellipsis">${(s.id||s.uuid||'').slice(0,12)}</span>
+      <span style="font-size:8px;text-transform:uppercase;padding:1px 6px;border-radius:10px;background:rgba(129,140,248,.15);color:#818cf8;flex-shrink:0">${s.type||'manual'}</span>
+      <span style="color:var(--text2);font-size:9px;flex:1">${_nxEsc(s.message||s.tag||'')}</span>
+      <span style="color:var(--muted);font-size:9px;flex-shrink:0">${s.rows||0} rows</span>
+      <span style="color:var(--text3);font-family:var(--mono);font-size:9px;flex-shrink:0">${_nxFts(s.ts||s.createdAt)}</span>
+      <button class="btn" style="font-size:9px;color:var(--red);flex-shrink:0" onclick="metaRollback('${(s.id||s.uuid||'')}')">⏪ Rewind</button>
+    </div>`).join('');
+}
+
+async function metaCreateSnapshot() {
+  const msg = prompt('Snapshot message:')||'nexus-ui manual';
+  const r = await _nxPost(_NX.CORTEX, '/api/snapshots/create', { message: msg });
+  if (r?.ok) metaLoadSnapshots(); else alert('Failed: '+(r?.error||'offline'));
+}
+
+async function metaRollback(snapId) {
+  if (!confirm(`Rewind to snapshot ${snapId.slice(0,12)}?
+This restores JAA tables. Files on disk unchanged.`)) return;
+  const r = await _nxPost(_NX.CORTEX, '/api/snapshots/rollback', { snapId, apply:true });
+  if (r?.ok) { alert('Rollback applied'); metaLoadHealth(); }
+  else alert('Failed: '+(r?.error||'offline'));
+}
+
+async function metaLoadVersions() {
+  const data = await _nxGet(_NX.CORTEX, '/api/versionium/log?n=30');
+  const vers = data?.commits||data?.log||[];
+  const el = document.getElementById('meta-versions-content'); if (!el) return;
+  if (!vers.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No version commits yet</div>'; return; }
+  el.innerHTML = vers.map(v=>`<div style="display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--border);align-items:center;font-size:9px">
+    <span style="color:var(--amber);font-family:var(--mono);flex-shrink:0;width:70px">${(v.hash||v.uuid||'').slice(0,8)}</span>
+    <span style="font-size:8px;padding:1px 5px;border-radius:10px;background:rgba(34,211,238,.1);color:#22d3ee;flex-shrink:0">${v.branch||'main'}</span>
+    <span style="color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_nxEsc(v.message||v.msg||v.description||'')}</span>
+    <span style="color:var(--muted);flex-shrink:0">${v.files?.length||0} files</span>
+    <span style="color:var(--text3);font-family:var(--mono);flex-shrink:0">${_nxFts(v.ts||v.createdAt)}</span>
+  </div>`).join('');
+}
+
+async function metaLoadFaults() {
+  const data = await _nxGet(_NX.CORTEX, '/api/intelligence/failures');
+  const faults = Array.isArray(data?.failures) ? data.failures : Object.values(data?.failures||{});
+  const el = document.getElementById('meta-faults-content'); if (!el) return;
+  if (!faults.length) { el.innerHTML = '<div style="color:var(--teal);font-size:10px">✓ No fault taxonomy built yet</div>'; return; }
+  faults.sort((a,b)=>(b.count||0)-(a.count||0));
+  el.innerHTML = faults.map(f=>`
+    <div style="display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--border);align-items:center">
+      <span style="color:#ef4444;font-size:10px;font-weight:700;font-family:var(--mono);flex:1;overflow:hidden;text-overflow:ellipsis">${_nxEsc(f.faultClass||'?')}</span>
+      <span style="font-size:13px;font-weight:700;color:${(f.count||0)>5?'#ef4444':(f.count||0)>2?'#f59e0b':'var(--text)'};font-family:var(--mono);flex-shrink:0">×${f.count||0}</span>
+      <span style="font-size:9px;color:var(--muted);flex-shrink:0;width:120px;overflow:hidden;text-overflow:ellipsis">${_nxEsc((f.systems||[]).join(', ').slice(0,30)||'?')}</span>
+      <span style="font-size:9px;color:var(--text3);font-family:var(--mono);flex-shrink:0">${_nxAgo(f.lastSeen)}</span>
+    </div>
+    ${f.examples?.[0]?.msg?`<div style="color:var(--text3);font-size:8px;padding:0 0 4px 0;font-style:italic">"${_nxEsc(f.examples[0].msg.slice(0,120))}"</div>`:''}`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CONSOLE CLI EXPANSION
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Extend the existing go() onEnter to load new panels
+if (typeof window !== 'undefined') {
+  const _origOnEnterExtended = window._onEnterExtended;
+  window._onEnterExtended = function(tab) {
+    if (_origOnEnterExtended) _origOnEnterExtended(tab);
+    if (tab==='memory')    { memLoadTables(); }
+    if (tab==='intel')     { intelLoadOverview(); }
+    if (tab==='architect') { archUIRefresh(); archUILoadHooks(); }
+    if (tab==='meta')      { metaLoadHealth(); }
+  };
+}
+
+// Extended CLI commands (wired into existing console)
+const _NX_CLI_COMMANDS = {
+  // Memory
+  'mem':         () => { go('memory'); },
+  'memory':      () => { go('memory'); },
+  'gaps':        () => { go('memory'); setTimeout(()=>document.querySelector('[onclick*="memTab('gaps"]")?.click(), 100); },
+  'artifacts':   () => { go('memory'); setTimeout(()=>{ const b=document.querySelector('[onclick*="memTab('artifacts"]'); if(b)b.click(); }, 100); },
+  'ledger':      async() => { const d=await _nxGet(_NX.CORTEX,'/api/events?limit=20'); return (d?.rows||[]).map(r=>`${_nxFts(r.ts)} ${r.type||'?'} [${r.source||'?'}]`).join('
+')||'(empty)'; },
+
+  // Intelligence
+  'intel':       () => { go('intel'); },
+  'drift':       async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/status'); return d?`Drift: ${d.driftLevel} · Patterns: ${d.patterns} (${d.crystallised} crystallised) · Reuse: ${d.reuseItems}`:'intelligence offline'; },
+  'patterns':    async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/patterns'); return (d?.patterns||[]).slice(0,10).map(p=>`[${p.patternType}] ${p.description} (${((p.confidence||0)*100).toFixed(0)}%)`).join('
+')||'(none)'; },
+  'faults':      async() => { const d=await _nxGet(_NX.CORTEX,'/api/intelligence/failures'); const f=Array.isArray(d?.failures)?d.failures:Object.values(d?.failures||{}); return f.sort((a,b)=>(b.count||0)-(a.count||0)).slice(0,10).map(fi=>`${fi.faultClass} ×${fi.count}`).join('
+')||'(none)'; },
+
+  // Architect
+  'architect':   () => { go('architect'); },
+  'hooks':       async() => { const d=await _nxGet(_NX.ARCHITECT,'/api/hooks'); return (d?.hooks||[]).map(h=>`[${h.type}] ${h.name} (${h.meta?.status||'active'})`).join('
+')||'architect offline'; },
+  'hook':        async(args) => { const d=await _nxGet(_NX.ARCHITECT,`/api/hooks/${args[0]}`); return d?.hook?JSON.stringify(d.hook,null,2):'not found'; },
+  'snr':         async(args) => { if(!args[0]) return 'usage: snr <json>'; let src; try{src=JSON.parse(args.join(' '))}catch{return 'invalid JSON';}; const r=await _nxPost(_NX.ARCHITECT,'/api/snr/check',{source:src}); return r?.result?`SNR: ${r.result.score} → ${r.result.recommendation}`:r?.error||'offline'; },
+  'scan':        async(args) => { if(!args[0]) return 'usage: scan <path>'; const r=await _nxPost(_NX.ARCHITECT,'/api/blueprint/scan',{rootPath:args.join(' ')}); return r?.ok?`Blueprint created: ${r.blueprint?.name} (SNR ${r.blueprint?.snrScore})`:r?.error||'failed'; },
+
+  // Meta / system
+  'meta':        () => { go('meta'); },
+  'health':      async() => { const results=await Promise.all(META_SYSTEMS.map(async s=>{const h=await _nxGet(s.base,'/health',2000);return `${s.id.padEnd(12)} ${h?.ok?'ONLINE ':'OFFLINE'} :${s.port}`;})); return results.join('
+'); },
+  'systems':     async() => { const d=await _nxGet(_NX.ORCH,'/health'); return JSON.stringify(d?.systems||d,null,2)||'orchestrator offline'; },
+  'snapshot':    async(args) => { const r=await _nxPost(_NX.CORTEX,'/api/snapshots/create',{message:args.join(' ')||'cli snapshot'}); return r?.ok?`Snapshot: ${r.snapId}`:`Failed: ${r?.error}`; },
+
+  // Guardian
+  'jobs':        async() => { const d=await _nxGet(_NX.GUARDIAN,'/jobs'); return (d?.jobs||[]).map(j=>`[${j.status}] #${(j.id||'').slice(0,8)} ${j.command||''} ${j.provider||''}`).join('
+')||'(no jobs)'; },
+  'dispatch':    async(args) => { const [provider,...rest]=args; const prompt=rest.join(' '); if(!provider||!prompt) return 'usage: dispatch <provider> <prompt>'; const r=await _nxPost(_NX.GUARDIAN,'/command',{provider,command:'code',prompt}); return r?.jobId?`Dispatched: ${r.jobId}`:JSON.stringify(r); },
+  'providers':   async() => { const d=await _nxGet(_NX.GUARDIAN,'/providers'); return (d?.providers||[]).map(p=>`${p.provider||p.id} ${p.connected?'CONNECTED':'OFFLINE'} ${p.tabId||''}`).join('
+')||'(none)'; },
+
+  // Cortex
+  'events':      async(args) => { const n=parseInt(args[0])||20; const d=await _nxGet(_NX.CORTEX,`/api/events?limit=${n}`); return (d?.rows||d?.events||[]).map(r=>`${_nxFts(r.ts)} ${r.type||'?'}`).join('
+')||'(empty)'; },
+  'tables':      async() => { const d=await _nxGet(_NX.CORTEX,'/health'); const c=d?.jaa?.counts||{}; return Object.entries(c).filter(([,v])=>v>0).map(([k,v])=>`${k.padEnd(28)} ${v}`).join('
+')||'(no data)'; },
+  'versions':    async() => { const d=await _nxGet(_NX.CORTEX,'/api/versionium/log?n=10'); return (d?.commits||d?.log||[]).map(v=>`${(v.hash||'').slice(0,8)} ${v.branch||'main'} ${v.message||''}`.trim()).join('
+')||'(none)'; },
+};
+
+// Patch into existing console command runner if present
+if (typeof window !== 'undefined') {
+  const _origConRun = window.conRun;
+  window.conRun = async function(cmd) {
+    const parts  = cmd.trim().split(/\s+/);
+    const base   = parts[0];
+    const args   = parts.slice(1);
+    if (_NX_CLI_COMMANDS[base]) {
+      const result = await _NX_CLI_COMMANDS[base](args);
+      if (typeof result === 'string' && result) {
+        // Print to console output if available
+        const out = document.getElementById('con-out');
+        if (out) {
+          const div = document.createElement('div');
+          div.style.cssText = 'padding:3px 0;border-bottom:1px solid var(--border);color:var(--text2);font-family:var(--mono);font-size:10px;white-space:pre-wrap';
+          div.textContent = result;
+          out.insertBefore(div, out.firstChild);
+        }
+      }
+      return result;
+    }
+    if (_origConRun) return _origConRun(cmd);
+  };
+}
 </script>
 
 </body>

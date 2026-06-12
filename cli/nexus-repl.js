@@ -22,7 +22,8 @@ const { randomUUID } = require('crypto');
 // ── Ports ─────────────────────────────────────────────────────────────────────
 const PORTS = {
   orchestrator: parseInt(process.env.ORCHESTRATOR_PORT || '9000'),
- cortex: 3748, guardian: 7820,
+  bridge:       parseInt(process.env.BRIDGE_PORT       || '9999'),
+  cortex: 3748, guardian: 7820,
   idearium:     4800, emerge: 4242, ollama: 11434,
 };
 
@@ -208,6 +209,7 @@ ${$(C.bold, 'Commands')}
   idea <text>         Create idea
   dispatch [prov] <p> Dispatch job to provider (default: chatgpt)
   requests [status]   Bridge request queue (default: pending)
+  session             Render SESSION.md from live system state
   ledger [sys] [n]    System event ledger
   snr                 Idearium SNR
   diagnose [sys]       Run full system diagnostic (all or one system)
@@ -219,6 +221,7 @@ ${$(C.bold, 'Commands')}
   exit / quit / q     Exit
 
 ${$(C.bold, 'Systems')}
+  ${$(C.yellow, 'bridge   :9999')}   trust relay, request queue, identity
   ${$(C.cyan,'cortex   :3748')}   source of truth, 28 JAA tables
   ${$(C.magenta,'guardian :7820')}   AI orchestration, job queue
   ${$(C.blue,'idearium :4800')}   idea OS

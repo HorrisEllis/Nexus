@@ -1,9 +1,10 @@
 // ==UserScript==
-// @name         Guardian — Claude v9.0
+// @name         Guardian — Claude v10.0
 // @namespace    nexus.guardian.claude
-// @version      9.0.0
-// @description  Guardian v9.0: lean pill, full bus wiring, auto-error detection,
-//               retry, usage tracking, SEAM delivery, all heavy ops delegated to CLI.
+// @version      10.0.0
+// @description  Guardian v10: IndexedDB kernel, SHA-256 dedup, pre-prompt intelligence
+//               injection, full system widget, connection info, log/ledger, options,
+//               SEAM, queue, tags — fully system aware, no localStorage for state.
 // @author       James Brooks / Nexus
 // @match        https://claude.ai/*
 // @grant        GM_xmlhttpRequest
@@ -16,439 +17,470 @@
 (function () {
 'use strict';
 
-// ── §5.1 Constants — all ports canonical ─────────────────────────────────────
-// NCP — NEXUS Channel Protocol (replaces WebSocket)
-// Plain HTTP — no TLS, no ws package, no port 7821
+// ── Constants ─────────────────────────────────────────────────────────────────
 const NCP_URL    = 'http://127.0.0.1:7820';
 const NCP_CHANNEL = `${NCP_URL}/channel`;
 const NCP_RESULT  = `${NCP_URL}/result`;
 const NCP_HB      = `${NCP_URL}/heartbeat`;
-// Keep WS_URL alias so any remaining code that reads it gets a useful value
-const WS_URL     = NCP_CHANNEL;
-const API_URL    = 'http://127.0.0.1:7820';
-const ORCH_URL   = 'http://127.0.0.1:9000';
-const GUARDIAN_NCP = 'http://127.0.0.1:7820';  // NCP — direct guardian channel
-const CORTEX_URL = 'http://127.0.0.1:3748';
-const PROVIDER   = 'claude';
-const VERSION    = '9.0.0';
+const CORTEX_URL  = 'http://127.0.0.1:3748';
+const ORCH_URL    = 'http://127.0.0.1:9000';
+const BRIDGE_URL  = 'http://127.0.0.1:9999';
+const PROVIDER    = 'claude';
+const VERSION     = '10.0.0';
 const RECONNECT_MS = 3000;
 const HB_MS        = 8000;
-const LOG_MAX      = 300;
 
-// ── State ────────────────────────────────────────────────────────────────────
-let _es = null, hb = null, reconnectTimer = null;
+// ── Tab identity (sessionStorage only — intentionally ephemeral) ──────────────
+const MY_TAB = sessionStorage.getItem('gd_tab_id') || (() => {
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2);
+  sessionStorage.setItem('gd_tab_id', id); return id;
+})();
+const TAB_KEY = 'guardian_claimed_tab_claude';
+
+// ── Runtime state ─────────────────────────────────────────────────────────────
+let _es = null, _hb = null, _reconnectTimer = null;
 let connState = 'disconnected';
 let currentJobId = null, jobActive = false;
+let _watchTimer = null, _watchObs = null, _watchStart = 0;
 let panelOpen = false, activeTab = 'log';
 let isClaimed = false;
 let sessionStart = Date.now(), sessionTokens = 0, sessionJobs = 0;
 let logEntries = [], unreadCount = 0;
-let currentGaps = [], artifactStore = [], seenHashes = new Set();
+let currentGaps = [], artifactStore = [], _usageHistory = [];
 let accountState = null;
+let _settings = {}; // loaded from GM_getValue on init
+let _systemStatus = {}; // polled from orchestrator
+let _intelligenceCtx = null; // last pulled context
 
-// ── Tab claim ─────────────────────────────────────────────────────────────────
-const TAB_KEY = 'guardian_claimed_tab_claude';
-const MY_TAB  = sessionStorage.getItem('gd_tab_id') || (() => {
-  const id = Date.now().toString(36) + Math.random().toString(36).slice(2);
-  sessionStorage.setItem('gd_tab_id', id); return id;
-})();
-function amIClaimed() { return localStorage.getItem(TAB_KEY) === MY_TAB; }
-function claimTab()   { localStorage.setItem(TAB_KEY, MY_TAB); isClaimed = true; updatePill(); }
-function releaseTab() { if (amIClaimed()) localStorage.removeItem(TAB_KEY); isClaimed = false; updatePill(); }
-function autoClaimIfFree() {
-  const ex = localStorage.getItem(TAB_KEY);
-  if (!ex) { claimTab(); return; }
-  // Check if holder tab is still alive via heartbeat key
-  const hbKey = 'gd_hb_' + ex;
-  const last  = parseInt(localStorage.getItem(hbKey)||'0');
-  if (Date.now() - last > 15000) { localStorage.removeItem(TAB_KEY); claimTab(); }
+// ── IndexedDB Kernel — §US-02 ─────────────────────────────────────────────────
+// Three stores: requests (queue), sessions (UUID chain), artifacts (hash→UUID).
+// Replay authority lives here. Nothing else owns replay. §US-03.
+const IDB_NAME    = 'nexus_guardian_claude';
+const IDB_VERSION = 1;
+let _db = null;
+
+function dbOpen() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(IDB_NAME, IDB_VERSION);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('requests')) {
+        const s = db.createObjectStore('requests', { keyPath: 'uuid' });
+        s.createIndex('status', 'status');
+        s.createIndex('sessionId', 'sessionId');
+      }
+      if (!db.objectStoreNames.contains('sessions')) {
+        db.createObjectStore('sessions', { keyPath: 'sessionId' });
+      }
+      if (!db.objectStoreNames.contains('artifacts')) {
+        const a = db.createObjectStore('artifacts', { keyPath: 'hash' });
+        a.createIndex('jobId', 'jobId');
+        a.createIndex('ts', 'ts');
+      }
+    };
+    req.onsuccess = e => { _db = e.target.result; res(_db); };
+    req.onerror   = e => rej(e.target.error);
+  });
 }
-// Heartbeat to prove this tab is alive
-setInterval(() => localStorage.setItem('gd_hb_' + MY_TAB, Date.now()), 5000);
+
+function dbPut(store, obj) {
+  if (!_db) return Promise.resolve(null);
+  return new Promise((res, rej) => {
+    const tx = _db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).put(obj);
+    req.onsuccess = () => res(req.result);
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+function dbGet(store, key) {
+  if (!_db) return Promise.resolve(null);
+  return new Promise((res, rej) => {
+    const tx  = _db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = () => res(req.result || null);
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+function dbGetAll(store, indexName, value) {
+  if (!_db) return Promise.resolve([]);
+  return new Promise((res, rej) => {
+    const tx = _db.transaction(store, 'readonly');
+    const s  = tx.objectStore(store);
+    const req = indexName ? s.index(indexName).getAll(value) : s.getAll();
+    req.onsuccess = () => res(req.result || []);
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+function dbDelete(store, key) {
+  if (!_db) return Promise.resolve();
+  return new Promise((res, rej) => {
+    const tx  = _db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).delete(key);
+    req.onsuccess = () => res();
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+// ── SHA-256 dedup — §US-05 ────────────────────────────────────────────────────
+async function sha256(text) {
+  try {
+    const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('').slice(0,16);
+  } catch(_) {
+    // fallback if subtle not available (http context)
+    let h = 0;
+    for (let i = 0; i < text.length; i++) { h = Math.imul(31, h) + text.charCodeAt(i) | 0; }
+    return Math.abs(h).toString(16).padStart(8,'0');
+  }
+}
+
+// ── Session UUID chain — §US-04, §IDENTITY-03 ─────────────────────────────────
+let _sessionId = null;
+async function getSessionId() {
+  if (_sessionId) return _sessionId;
+  const chatPath = location.pathname;
+  const stored   = await dbGet('sessions', chatPath);
+  if (stored) { _sessionId = stored.sessionId; return _sessionId; }
+  _sessionId = `sess_${Date.now().toString(36)}_${Math.random().toString(36).slice(2)}`;
+  await dbPut('sessions', { sessionId: _sessionId, chatPath, provider: PROVIDER, startedAt: Date.now() });
+  return _sessionId;
+}
+
+// ── Replay — §US-03 ───────────────────────────────────────────────────────────
+// On connect: replay any pending requests from IDB to guardian.
+// Bridge does NOT replay for the userscript. We do.
+async function replayPending() {
+  const pending = await dbGetAll('requests', 'status', 'pending');
+  if (!pending.length) return;
+  _log('sys', `Replaying ${pending.length} pending request(s) from IDB`);
+  for (const r of pending) {
+    // Re-send to guardian — if it already processed it, it will deduplicate by jobId
+    ncpPost(NCP_RESULT, { type: 'GUARDIAN_REPLAY', ...r }).catch(() => {});
+    await dbPut('requests', { ...r, status: 'replayed', replayedAt: Date.now() });
+  }
+}
 
 // ── Utils ─────────────────────────────────────────────────────────────────────
-function uid()       { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-function fts(ts)     { return new Date(ts).toTimeString().slice(0,8); }
-function escHtml(s)  { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function uid()  { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function fts(ts){ return new Date(ts).toTimeString().slice(0,8); }
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 function estimateTokens(s) { return Math.max(1, Math.round((s||'').length / 4)); }
-function simpleHash(s) { let h=0; for (let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;} return Math.abs(h).toString(16).slice(0,8); }
-function chatId()    { const m=location.pathname.match(/\/chat\/([a-zA-Z0-9_-]+)/); return m?m[1]:'home'; }
+function chatId() {
+  const m = location.pathname.match(/\/chat\/([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : 'home';
+}
 function getAccount() {
   if (accountState) return accountState;
   const sels = ['[data-testid="user-email"]','[data-testid="account-email"]','[aria-label*="@"]','nav [title*="@"]'];
   for (const sel of sels) {
     const el = document.querySelector(sel);
-    if (el) { const t=(el.getAttribute('aria-label')||el.getAttribute('title')||el.textContent||'').trim(); if(t.includes('@')||t.length>3){accountState=t.slice(0,60);return accountState;} }
+    if (el) {
+      const t = (el.getAttribute('aria-label')||el.getAttribute('title')||el.textContent||'').trim();
+      if (t.includes('@') || t.length > 3) { accountState = t.slice(0,60); return accountState; }
+    }
   }
   return location.hostname;
 }
 function detectLang(el) {
-  const c = el.tagName==='CODE'?el:el.querySelector('code');
-  if (c) { const cl=Array.from(c.classList).find(x=>x.startsWith('language-')); if(cl) return cl.replace('language-',''); }
+  const c = el.tagName==='CODE' ? el : el.querySelector('code');
+  if (c) { const cl=Array.from(c.classList).find(x=>x.startsWith('language-')); if(cl)return cl.replace('language-',''); }
   return null;
 }
 
-// ── §1.2 Gate — every significant operation gated + logged ────────────────────
+// ── Tab claim — sessionStorage only, GM for persistence across tabs ───────────
+function amIClaimed() { return GM_getValue(TAB_KEY,'') === MY_TAB; }
+function claimTab()   { GM_setValue(TAB_KEY, MY_TAB); isClaimed = true; updatePill(); }
+function releaseTab() { if (amIClaimed()) GM_setValue(TAB_KEY,''); isClaimed = false; updatePill(); }
+function autoClaimIfFree() {
+  const ex = GM_getValue(TAB_KEY,'');
+  if (!ex) { claimTab(); return; }
+  const last = GM_getValue('gd_hb_'+ex, 0);
+  if (Date.now() - last > 15000) { GM_setValue(TAB_KEY,''); claimTab(); }
+}
+setInterval(() => GM_setValue('gd_hb_'+MY_TAB, Date.now()), 5000);
+
+// ── Bus connections ───────────────────────────────────────────────────────────
+function _toOrc(system, type, payload = {}) {
+  fetch(`${ORCH_URL}/api/ledger`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
+    body: JSON.stringify({ system, type, payload }) }).catch(()=>{});
+}
+function _toCortex(type, payload = {}) {
+  fetch(`${CORTEX_URL}/api/event`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
+    body: JSON.stringify({ type, payload: { ...payload, _account:getAccount(), _chatUrl:location.href },
+      source:'userscript-claude', causedBy:currentJobId||null, ts:Date.now() }) }).catch(()=>{});
+}
+function _toBridge(type, payload = {}) {
+  fetch(`${NCP_URL}/result`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
+    body: JSON.stringify({ type, ...payload, ts:Date.now() }) }).catch(()=>{});
+}
+
+// ── Gate — §1.2 ───────────────────────────────────────────────────────────────
 async function gate(name, fn, opts = {}) {
-  const { jobId = null, silent = false } = opts;
+  const { jobId = null } = opts;
   const t0 = Date.now();
   try {
     const result = await fn();
     _log('ok', `✓ ${name}`, `${Date.now()-t0}ms`);
-    _toOrc('repl', `gate.${name}.ok`, { ms: Date.now()-t0 });
     return { ok: true, result };
   } catch (e) {
     const msg = `${name}: ${e.message}`;
     _log('err', `§1.2 GATE FAIL: ${name}`, e.message);
     toast(msg, 'error', 4000);
-    _toOrc('guardian', `gate.${name}.failed`, { error: e.message, ms: Date.now()-t0 });
     if (jobId) send({ type:'GUARDIAN_ERROR', jobId, gate:name, error:msg, chatUrl:location.href, account:getAccount() });
-    if (!silent) _toCortex(`guardian.gate.failed`, { gate:name, error:e.message });
+    _toCortex('guardian.gate.failed', { gate:name, error:e.message });
     return { ok: false, error: msg };
   }
 }
 
-// ── §5.2 Bus connections — send to all systems ───────────────────────────────
-function _toOrc(system, type, payload = {}) {
+// ── §US-04 Pre-prompt intelligence injection ───────────────────────────────────
+// Before each prompt: query cortex intelligence for reusable artifacts,
+// failure modes, and active patterns. Sends UUID refs, not full content.
+async function pullIntelligenceContext(intent, command) {
   try {
-    fetch(`${ORCH_URL}/api/ledger`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
-      body: JSON.stringify({ system, type, payload }) }).catch(()=>{});
-  } catch(_) {}
-}
-function _toBridge(type, payload = {}) {
-  try {
-    fetch(`${GUARDIAN_NCP}/result`, { method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
-      body: JSON.stringify({ type, ...payload, ts:Date.now() }) }).catch(()=>{});
-  } catch(_) {}
-}
-// ── Cortex channel — direct writes from userscript to cortex JAA ────────────
-// These bypass the guardian relay so cortex gets data even when guardian is slow.
-// POST /api/event uses the WELL_KNOWN router to write the correct table.
-function _toCortex(type, payload = {}) {
-  try {
-    fetch(`${CORTEX_URL}/api/event`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
-      body: JSON.stringify({
-        type, payload: { ...payload, _account: getAccount(), _chatUrl: location.href },
-        source: 'userscript-claude', causedBy: currentJobId || null, ts: Date.now(),
-      }),
-    }).catch(() => {});
-  } catch(_) {}
+    const url = `${CORTEX_URL}/api/intelligence/context` +
+      `?intent=${encodeURIComponent((intent||'').slice(0,120))}` +
+      `&command=${encodeURIComponent(command||'')}` +
+      `&provider=${PROVIDER}`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(3000) });
+    if (!r.ok) return null;
+    _intelligenceCtx = await r.json();
+    return _intelligenceCtx;
+  } catch(_) { return null; }
 }
 
-// Streaming: batch chunks before hitting cortex — flush at ≥400 chars, every 5th chunk, or sentence end
-let _streamBuf = '', _streamCnt = 0;
-function _streamToCortex(jobId, delta, full) {
-  _streamBuf += delta;
-  _streamCnt++;
-  const flush = _streamBuf.length >= 400 || _streamCnt % 5 === 0 || /[.!?\n]$/.test(delta);
-  if (!flush) return;
-  const batch = _streamBuf; const cnt = _streamCnt;
-  _streamBuf = '';
-  try {
-    fetch(`${CORTEX_URL}/api/event`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
-      body: JSON.stringify({
-        type: 'guardian.job.stream',
-        payload: {
-          jobId, provider: PROVIDER, text: batch.slice(0, 2000), chars: batch.length,
-          chunkIndex: cnt, fullLen: full ? full.length : 0,
-          chatUrl: location.href, account: getAccount(),
-        },
-        source: 'userscript-claude-stream', causedBy: jobId, ts: Date.now(),
-      }),
-    }).catch(() => {});
-  } catch(_) {}
-}
+function buildContextHeader(ctx) {
+  if (!ctx) return '';
+  const parts = [];
 
-// Job start → agent_calls table
-function _jobStartToCortex(jobId, command, prompt) {
-  _toCortex('agent.call.start', {
-    jobId, provider: PROVIDER, command,
-    promptLen: (prompt || '').length,
-    chatUrl: location.href, account: getAccount(), startedAt: Date.now(),
-  });
-}
-
-// Full completion → cortex_memory + agent_messages (via WELL_KNOWN router)
-function _completeToCortex(jobId, text, ms, usage) {
-  try {
-    fetch(`${CORTEX_URL}/api/event`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
-      body: JSON.stringify({
-        type: 'guardian.job.complete',
-        payload: {
-          jobId, provider: PROVIDER, chars: text.length,
-          response: text.slice(0, 8000), durationMs: ms,
-          chatUrl: location.href, account: getAccount(),
-          completedAt: Date.now(), tokens: usage ? usage.tokens : 0,
-        },
-        source: 'userscript-claude', causedBy: jobId, ts: Date.now(),
-      }),
-    }).catch(() => {});
-  } catch(_) {}
-  // Reset stream buffer on completion
-  _streamBuf = ''; _streamCnt = 0;
-}
-
-// Gaps → cortex gaps table (via WELL_KNOWN router)
-function _gapsToCortex(jobId, gapList) {
-  for (const g of (gapList || [])) {
-    _toCortex('cortex.gap.found', {
-      jobId, provider: PROVIDER,
-      type: g.type, domain: g.domain, reason: g.reason,
-      description: g.reason || g.description || '',
-      score: g.score, source: 'userscript-gaphunter',
-    });
+  if (ctx.failureModes?.length) {
+    const modes = ctx.failureModes.slice(0,3)
+      .map(f => `  - ${f.faultClass} (×${f.count}): ${f.note||''}`)
+      .join('\n');
+    parts.push(`[KNOWN FAILURE MODES — account for these]\n${modes}`);
   }
-}
-function send(obj) {
-  // NCP: all outbound messages go via fetch() POST /result
-  ncpPost(NCP_RESULT, obj).catch(() => {});
-}
-function sendLedger(category, msg, meta={}) {
-  send({ type:'GUARDIAN_LEDGER_EVENT', level:category, category, msg, meta, chatUrl:location.href, account:getAccount(), requestId:currentJobId });
-  _toOrc('guardian', `guardian.ledger.${category.toLowerCase()}`, { msg, meta });
+
+  if (ctx.reuse?.length) {
+    const items = ctx.reuse.slice(0,2)
+      .map(r => `  - ${r.type} [${r.lang||'?'}] hash:${r.hash} — ${r.intent||''}`)
+      .join('\n');
+    parts.push(`[REUSABLE ARTIFACTS — check before reimplementing]\n${items}`);
+  }
+
+  if (ctx.patterns?.filter(p => p.actionable).length) {
+    const pats = ctx.patterns.filter(p => p.actionable).slice(0,2)
+      .map(p => `  - ${p.description}`)
+      .join('\n');
+    parts.push(`[ACTIVE PATTERNS]\n${pats}`);
+  }
+
+  if (ctx.systemState?.criticalGaps > 0) {
+    parts.push(`[SYSTEM STATE] ${ctx.systemState.criticalGaps} critical gaps open — types: ${ctx.systemState.topGapTypes?.join(', ')||'?'}`);
+  }
+
+  return parts.length ? `[NEXUS CONTEXT]\n${parts.join('\n')}\n\n` : '';
 }
 
-// ── §2.3 Event log — all state observable ────────────────────────────────────
+// Legacy cortex context pull (memory/context endpoint)
+async function pullCortexContext(prompt) {
+  try {
+    const q = encodeURIComponent((prompt||'').slice(0,120));
+    const r = await fetch(`${NCP_URL}/memory/context?q=${q}`, { signal: AbortSignal.timeout(2000) });
+    if (!r.ok) return '';
+    const d = await r.json();
+    const parts = [];
+    if (d.gaps?.length) {
+      parts.push('[OPEN GAPS]\n' + d.gaps.slice(0,3).map(g=>`  - ${g.type}: ${(g.description||'').slice(0,80)}`).join('\n'));
+    }
+    if (d.artifacts?.length) {
+      parts.push('[RECENT ARTIFACTS]\n' + d.artifacts.slice(0,2).map(a=>`  - ${a.name||a.lang||'artifact'}`).join('\n'));
+    }
+    return parts.length ? '[NEXUS CONTEXT]\n' + parts.join('\n') + '\n\n' : '';
+  } catch(_) { return ''; }
+}
+
+// ── NCP post helper ───────────────────────────────────────────────────────────
+async function ncpPost(url, data) {
+  try {
+    const res = await fetch(url, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+      body: JSON.stringify({ ...data, chatUrl: location.href, account: getAccount() }),
+    });
+    return res.ok ? await res.json() : null;
+  } catch(_) { return null; }
+}
+
+function send(obj) { ncpPost(NCP_RESULT, obj).catch(()=>{}); }
+function sendLedger(category, msg, meta={}) {
+  send({ type:'GUARDIAN_LEDGER_EVENT', level:category, category, msg, meta,
+    chatUrl:location.href, account:getAccount(), requestId:currentJobId });
+}
+
+// ── §2.3 Log ──────────────────────────────────────────────────────────────────
 function _log(type, msg, detail) {
-  const TYPES = { info:{c:'#94a3b8',i:'·'}, in:{c:'#60a5fa',i:'↓'}, out:{c:'#a78bfa',i:'↑'}, ok:{c:'#34d399',i:'✓'},
-    err:{c:'#f87171',i:'✗'}, job:{c:'#fbbf24',i:'⚡'}, gap:{c:'#f472b6',i:'△'}, sys:{c:'#818cf8',i:'◈'}, use:{c:'#2dd4bf',i:'~'} };
-  const t = TYPES[type] || TYPES.info;
+  const T = { info:{c:'#94a3b8',i:'·'}, in:{c:'#60a5fa',i:'↓'}, out:{c:'#a78bfa',i:'↑'},
+    ok:{c:'#34d399',i:'✓'}, err:{c:'#f87171',i:'✗'}, job:{c:'#fbbf24',i:'⚡'},
+    gap:{c:'#f472b6',i:'△'}, sys:{c:'#818cf8',i:'◈'}, use:{c:'#2dd4bf',i:'~'},
+    debug:{c:'#334155',i:'·'} };
+  const t = T[type] || T.info;
   const entry = { ts:Date.now(), type, msg, detail:detail||null, color:t.c, icon:t.i };
   logEntries.push(entry);
-  if (logEntries.length > LOG_MAX) logEntries.shift();
+  if (logEntries.length > 300) logEntries.shift();
   if (panelOpen && activeTab==='log') _appendLogRow(entry);
-  else if (type !== 'hb') { unreadCount++; _setBadge(unreadCount); }
-  // Phase 3: sync significant events to server event-ledger (§LAW II)
-  if (type === 'err' || type === 'gap' || type === 'job' || type === 'ok') {
-    try {
-      fetch(NCP_RESULT, { method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ type:'GUARDIAN_EVENT', event:entry,
-          provider:'claude', chatUrl:location.href, account:getAccount() }),
-        keepalive:true }).catch(function(){});
-    } catch(e) {}
-  }
+  else { unreadCount++; _setBadge(unreadCount); }
 }
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
-let _toastTimer = null;
-function toast(msg, type='info', dur=3000) {
-  let el = document.getElementById('__g9toast__');
-  if (!el) {
-    el = document.createElement('div'); el.id='__g9toast__';
-    Object.assign(el.style, { position:'fixed',bottom:'72px',right:'20px',zIndex:'2147483648',
-      maxWidth:'340px',padding:'8px 13px',borderRadius:'6px',fontFamily:"'SF Mono','Fira Code',monospace",
-      fontSize:'11px',fontWeight:'500',lineHeight:'1.4',pointerEvents:'none',transition:'opacity .2s,transform .2s',
-      opacity:'0',transform:'translateY(6px)' });
-    document.body.appendChild(el);
-  }
-  const S = { success:{bg:'rgba(34,197,94,.13)',bd:'rgba(34,197,94,.4)',c:'#86efac',i:'✓'},
-    error:{bg:'rgba(239,68,68,.13)',bd:'rgba(239,68,68,.4)',c:'#fca5a5',i:'✗'},
-    warn:{bg:'rgba(245,158,11,.13)',bd:'rgba(245,158,11,.4)',c:'#fde68a',i:'⚠'},
-    info:{bg:'rgba(96,165,250,.1)',bd:'rgba(96,165,250,.35)',c:'#93c5fd',i:'·'},
-    job:{bg:'rgba(167,139,250,.1)',bd:'rgba(167,139,250,.35)',c:'#c4b5fd',i:'⚡'} };
-  const s = S[type]||S.info;
-  el.textContent = `${s.i} ${msg}`;
-  Object.assign(el.style,{background:s.bg,border:`1px solid ${s.bd}`,color:s.c,opacity:'1',transform:'translateY(0)'});
-  clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(6px)';},dur);
+function toast(msg, type='info', ms=3000) {
+  const C = { success:'#34d399', error:'#f87171', warn:'#f59e0b', job:'#fbbf24', info:'#818cf8' };
+  const el = document.createElement('div');
+  el.style.cssText = `position:fixed;bottom:80px;right:20px;z-index:2147483647;background:rgba(8,8,14,.95);` +
+    `border:1px solid ${C[type]||C.info}44;color:${C[type]||C.info};padding:8px 14px;border-radius:6px;` +
+    `font:600 11px 'SF Mono',monospace;box-shadow:0 4px 20px rgba(0,0,0,.6);max-width:340px;animation:gfadein .12s ease`;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), ms);
 }
 
-// ── Error / truncation detection (inline, auto) ───────────────────────────────
-// Detects: truncation, error messages, refusals — auto-flags and retries if claimed
-function detectResponseErrors(text, jobId) {
+// ── Streaming to cortex ───────────────────────────────────────────────────────
+let _streamBuf = '', _streamCnt = 0;
+function _streamToCortex(jobId, delta, full) {
+  _streamBuf += delta; _streamCnt++;
+  if (_streamBuf.length < 400 && _streamCnt % 5 !== 0 && !/[.!?\n]$/.test(delta)) return;
+  const batch = _streamBuf; _streamBuf = '';
+  _toCortex('guardian.job.stream', { jobId, provider:PROVIDER, text:batch.slice(0,2000),
+    chars:batch.length, fullLen:(full||'').length, chatUrl:location.href });
+}
+
+// ── Usage recording ───────────────────────────────────────────────────────────
+function recordUsage(jobId, text, ms) {
+  const tokens = estimateTokens(text);
+  sessionTokens += tokens; sessionJobs++;
+  const u = { jobId, chatId:chatId(), chars:text.length, tokens, ms, ts:Date.now(), retried:false };
+  _usageHistory.push(u);
+  if (_usageHistory.length > 50) _usageHistory.shift();
+  return u;
+}
+
+// ── Artifact detection + IDB dedup (SHA-256) — §US-05 ────────────────────────
+let _seenHashes = new Set(); // session-level dedup, IDB is persistent
+
+async function scanArtifacts(jobId) {
+  const codeEls = document.querySelectorAll('pre code, .code-block__code, [class*="CodeBlock"] code');
+  for (const el of codeEls) {
+    const content = (el.innerText || el.textContent || '').trim();
+    if (content.length < 50) continue;
+    const hash = await sha256(content);
+    if (_seenHashes.has(hash)) continue;
+    // Check IDB — if already stored, skip
+    const existing = await dbGet('artifacts', hash);
+    if (existing) { _seenHashes.add(hash); continue; }
+    _seenHashes.add(hash);
+    const lang = detectLang(el) || 'text';
+    const art  = { hash, lang, content: content.slice(0,4000), jobId, provider:PROVIDER,
+      sessionId: await getSessionId(), ts: Date.now() };
+    // §US-05 — store in IDB first
+    await dbPut('artifacts', art);
+    artifactStore.push(art);
+    if (artifactStore.length > 200) artifactStore.shift();
+    // Then send to guardian/cortex
+    send({ type:'GUARDIAN_ARTIFACT', jobId, content:art.content, lang, hash, chatUrl:location.href, account:getAccount() });
+    _toCortex('guardian.artifact', { jobId, hash, lang, chars:content.length });
+    _log('ok', `Artifact: ${lang} ${hash}`, `${content.length}ch`);
+    if (panelOpen && activeTab==='arts') renderArts();
+  }
+}
+
+// ── DOM observation ───────────────────────────────────────────────────────────
+function findResponseEl() {
+  return document.querySelector(
+    '[data-is-streaming="true"], .font-claude-message:last-child, ' +
+    '[class*="assistant-message"]:last-child .font-claude-message, ' +
+    '.text-streaming'
+  );
+}
+function _isGenerating() {
+  return !!document.querySelector('[data-is-streaming="true"], .text-streaming, [class*="loading"]');
+}
+function injectText(text) {
+  const el = document.querySelector('[contenteditable="true"][data-placeholder]') ||
+             document.querySelector('.ProseMirror[contenteditable="true"]') ||
+             document.querySelector('[contenteditable="true"]');
+  if (!el) return false;
+  el.focus();
+  document.execCommand('selectAll', false, null);
+  document.execCommand('insertText', false, text);
+  if (!el.textContent.includes(text.slice(0,20))) {
+    el.textContent = text;
+    el.dispatchEvent(new Event('input', { bubbles:true }));
+  }
+  return true;
+}
+function submit() {
+  const btn = document.querySelector('button[aria-label="Send message"]:not([disabled])') ||
+              document.querySelector('button[type="submit"]:not([disabled])') ||
+              document.querySelector('[data-testid="send-button"]:not([disabled])');
+  if (btn) { btn.click(); return; }
+  const el = document.querySelector('[contenteditable="true"]');
+  if (el) el.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',keyCode:13,which:13,bubbles:true,cancelable:true}));
+}
+
+// ── Scan DOM for spatial / DOM map signal ─────────────────────────────────────
+function sendDOMMap() {
+  if (!connState === 'ready') return;
+  const nodes = Array.from(document.querySelectorAll(
+    '[data-message-author-role], .font-claude-message, [class*="conversation"], [class*="message"]'
+  )).slice(0,20).map(el => ({
+    tag: el.tagName, id: el.id||null,
+    role: el.getAttribute('data-message-author-role')||null,
+    text: (el.innerText||'').slice(0,60),
+  }));
+  send({ type:'NEXUS_DOM_MAP', provider:PROVIDER, tabId:MY_TAB, nodes,
+    context:{ url:location.href, chatId:chatId(), ts:Date.now() } });
+}
+
+// ── Gap / error detection ─────────────────────────────────────────────────────
+function detectResponseErrors(text) {
   const issues = [];
-  const lastLine = text.split('\n').filter(Boolean).pop() || '';
-  const lower = text.toLowerCase();
-
-  // Truncation signals
-  if (text.length > 100 && (lastLine.endsWith('...') || lastLine.endsWith('…') || lastLine.length < 10))
-    issues.push({ type:'truncation', score:0.9, reason:'trailing ellipsis or empty last line' });
-  if (text.length > 0 && text.length < 120 && !lastLine.match(/[.!?"`]/))
-    issues.push({ type:'truncation', score:0.8, reason:'too short, no sentence end' });
-
-  // Claude error messages
-  if (/i('m| am) unable to|i can't help|i cannot (assist|help|continue)|let me know if you.d like me to/i.test(text))
-    issues.push({ type:'refusal', score:0.95, reason:'refusal phrase detected' });
-  if (/\bcontext window\b|\btoken limit\b|\btoo long\b/i.test(text))
-    issues.push({ type:'context_limit', score:0.9, reason:'context limit mentioned' });
-  if (/something went wrong|an error occurred|please try again/i.test(lower))
-    issues.push({ type:'claude_error', score:1.0, reason:'error page text detected' });
-  if (/\bseam verdict:\s*fail/i.test(text))
-    issues.push({ type:'seam_fail', score:1.0, reason:'SEAM VERDICT: FAIL' });
-
-  // Gap analysis (inline)
-  const words = lower.match(/\b\w+\b/g)||[];
-  const hedges = (text.match(/\b(might|may|could|perhaps|possibly|seems|appears|likely|probably)\b/gi)||[]).length;
-  const bulletDens = text.split('\n').filter(l=>/^\s*[-*•]|\d+\./.test(l)).length / Math.max(1,text.split('\n').length);
-  if (bulletDens > 0.55) issues.push({ type:'compression', score:bulletDens, reason:'high bullet density — load-bearing assumptions hidden' });
-  if (words.length > 80 && hedges/words.length > 0.05) issues.push({ type:'epistemic_hedge', score:hedges/words.length*10, reason:'high hedge rate' });
-
+  const t = text.toLowerCase();
+  if (/\bcannot\s+assist|\bcannot\s+help|\bum unable\b/i.test(text)) issues.push({type:'refusal',score:0.9,reason:'refusal detected'});
+  if (/\bcontext window\b|\btoken limit\b|\btoo long\b/i.test(text)) issues.push({type:'context_limit',score:0.9,reason:'context limit'});
+  if (/\bsorry\b|\bapologize\b/i.test(text)&&text.length<200) issues.push({type:'short_apology',score:0.6,reason:'short apology'});
+  if (text.length < 80 && jobActive) issues.push({type:'truncation',score:0.7,reason:'very short response'});
+  if ((text.match(/```/g)||[]).length % 2 !== 0) issues.push({type:'unclosed_code_block',score:0.8,reason:'unclosed code block'});
   return issues;
 }
 
-function autoRetry(jobId, text, retryCount = 0) {
-  const MAX_RETRIES = 2;
-  if (retryCount >= MAX_RETRIES) {
-    _log('err', `Max retries (${MAX_RETRIES}) reached for job ${jobId.slice(0,8)}`, 'escalating to gap');
-    _toBridge('guardian.job.escalated', { jobId, retries:retryCount });
-    sendLedger('GAP', `Job escalated after ${retryCount} retries`, { jobId });
-    return;
-  }
-  const issues = detectResponseErrors(text, jobId);
-  if (!issues.length) return;
-
-  const top = issues.sort((a,b)=>b.score-a.score)[0];
-  const retryPrompt = buildRetryPrompt(top, text);
-
-  _log('err', `Auto-retry ${retryCount+1}/${MAX_RETRIES}: ${top.type}`, top.reason);
-  toast(`Retry ${retryCount+1}: ${top.reason.slice(0,40)}`, 'warn', 4000);
-  sendLedger('EVENT', `Auto-retry ${retryCount+1} — ${top.type}`, { jobId, reason:top.reason, score:top.score });
-  _toOrc('guardian', 'guardian.job.retry', { jobId, retry:retryCount+1, reason:top.type });
-  _toBridge('guardian.job.retry', { jobId, retry:retryCount+1, reason:top.type });
-
-  setTimeout(async () => {
-    if (!injectText(retryPrompt)) { _log('err', 'Retry inject failed — no input'); return; }
-    setTimeout(() => { submit(); startWatch(jobId, retryPrompt, retryCount+1); }, 400);
+function autoRetry(jobId, text, retryCount) {
+  const issue = detectResponseErrors(text)[0];
+  if (!issue || retryCount >= 2) return;
+  const retryPrompts = {
+    context_limit:     'The previous response hit a context limit. Please summarise what was completed and list exactly what remains.',
+    truncation:        'Your response was cut off. Please continue from exactly where you stopped.',
+    refusal:           'Please reconsider and provide the technical assistance requested.',
+    unclosed_code_block: 'Your last code block was not closed. Please complete it.',
+    short_apology:     'Please provide a full technical response rather than an apology.',
+  };
+  const retry = retryPrompts[issue.type] || `Issue detected (${issue.type}). Please revise your response.`;
+  _log('gap', `Auto-retry: ${issue.type}`, `attempt ${retryCount+1}`);
+  setTimeout(() => {
+    if (!injectText(retry)) return;
+    _usageHistory[_usageHistory.length-1].retried = true;
+    setTimeout(submit, 500);
+    startWatch(jobId, retry, retryCount+1);
   }, 1000);
 }
 
-function buildRetryPrompt(issue, originalText) {
-  if (issue.type === 'truncation') return `Your previous response appears to be truncated (it ended: "${(originalText.slice(-80)).trim()}"). Please continue from exactly where you left off without repeating anything.`;
-  if (issue.type === 'refusal')    return `Please continue with the previous task. If there is a specific concern, state it precisely.`;
-  if (issue.type === 'context_limit') return `The previous response mentioned context limits. Please summarise what was completed and list exactly what remains to be done.`;
-  if (issue.type === 'seam_fail') return `Your SEAM VERDICT was FAIL. Please fix the failing tests and re-run them, reporting the corrected SEAM VERDICT.`;
-  return `The previous response had an issue (${issue.type}: ${issue.reason}). Please retry the task.`;
-}
-
-// ── Usage tracking — §2.3 all state observable ───────────────────────────────
-let _usageHistory = []; // { ts, jobId, chars, tokens, ms, provider, command }
-function recordUsage(jobId, text, ms) {
-  const tokens = estimateTokens(text);
-  sessionTokens += tokens;
-  sessionJobs++;
-  const entry = { ts:Date.now(), jobId, chars:text.length, tokens, ms, provider:PROVIDER, chatId:chatId() };
-  _usageHistory.push(entry);
-  if (_usageHistory.length > 500) _usageHistory.shift();
-  // Report to orchestrator ledger
-  _toOrc('guardian', 'guardian.usage', entry);
-  _toBridge('guardian.usage', entry);
-  return entry;
-}
-
-// ── DOM helpers — response finding ───────────────────────────────────────────
-function findResponseEl() {
-  // Try most specific/stable selectors first
-  const all = document.querySelectorAll('[data-testid="assistant-message"]');
-  if (all.length) return all[all.length - 1];
-  // Claude artifact renderer
-  const arts = document.querySelectorAll('.font-claude-message');
-  if (arts.length) return arts[arts.length - 1];
-  // Prose fallback
-  const prose = document.querySelectorAll('.prose');
-  if (prose.length) return prose[prose.length - 1];
-  return null;
-}
-function injectText(text) {
-  // Claude uses a React-controlled contenteditable div
-  // Must trigger React's synthetic event system — not just set textContent
-  const SELECTORS = [
-    'div[contenteditable="true"].ProseMirror',
-    'div[contenteditable="true"][data-testid="chat-input"]',
-    'div[contenteditable="true"]',
-  ];
-  let input = null;
-  for (const sel of SELECTORS) {
-    const el = document.querySelector(sel);
-    if (el) { input = el; break; }
-  }
-  if (!input) return false;
-  input.focus();
-  // Use execCommand first — works in most cases
-  document.execCommand('selectAll', false, null);
-  document.execCommand('delete', false, null);
-  const ok = document.execCommand('insertText', false, text);
-  if (ok && input.textContent.trim() === text.trim()) return true;
-  // Fallback: React synthetic input event path
-  input.textContent = '';
-  const dataTransfer = new DataTransfer();
-  dataTransfer.setData('text/plain', text);
-  input.dispatchEvent(new ClipboardEvent('paste', { clipboardData: dataTransfer, bubbles: true }));
-  if (input.textContent.trim()) return true;
-  // Last resort: direct textContent + InputEvent
-  input.textContent = text;
-  input.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: text }));
-  return !!input.textContent.trim();
-}
-function submit() {
-  // Try send button first
-  const BTN_SELS = [
-    'button[data-testid="send-button"]:not([disabled])',
-    'button[aria-label="Send message"]:not([disabled])',
-    'button[aria-label="Send"]:not([disabled])',
-  ];
-  for (const sel of BTN_SELS) {
-    const btn = document.querySelector(sel);
-    if (btn) { btn.click(); return; }
-  }
-  // Fallback: Enter key on the input
-  const input = document.querySelector('div[contenteditable="true"]');
-  if (input) {
-    input.dispatchEvent(new KeyboardEvent('keydown', { key:'Enter', code:'Enter', keyCode:13, which:13, bubbles:true, cancelable:true }));
-  }
-}
-function isChatBlank() { return !document.querySelector('[data-testid="assistant-message"],[data-testid="human-message"]'); }
-
-// ── Artifact / code block detection ──────────────────────────────────────────
-const ARTIFACT_SELECTORS = ['pre code','[class*="CodeBlock"] code','[class*="artifact"] code','.language-','[data-testid="code-snippet"] code'];
-function scanDOM() {
-  for (const sel of ARTIFACT_SELECTORS) {
-    document.querySelectorAll(sel).forEach(el => {
-      const content = (el.innerText||el.textContent||'').trim();
-      if (!content || content.length < 30) return;
-      const hash = simpleHash(content);
-      if (seenHashes.has(hash)) return;
-      seenHashes.add(hash);
-      const lang = detectLang(el);
-      const entry = { id:uid(), hash, lang, content:content.slice(0,5000), ts:Date.now(), jobId:currentJobId, chatId:chatId() };
-      artifactStore.push(entry);
-      if (artifactStore.length > 200) artifactStore.shift();
-      _log('out', `Artifact: ${lang||'text'} (${content.length}ch)`, hash);
-      send({ type:'GUARDIAN_ARTIFACT', jobId:currentJobId, content:content.slice(0,4000), lang, hash, chatUrl:location.href, account:getAccount(), provider:PROVIDER });
-      _toBridge('guardian.artifact', { hash, lang, chars:content.length, jobId:currentJobId });
-      _toOrc('guardian','guardian.artifact.detected',{hash,lang,chars:content.length});
-    });
-  }
-}
-let _scanTimer = null;
-function scheduleScan() { clearTimeout(_scanTimer); _scanTimer = setTimeout(scanDOM, 800); }
-let _domObs = null;
-function startObserver() {
-  if (_domObs) return;
-  _domObs = new MutationObserver(scheduleScan);
-  _domObs.observe(document.body, { childList:true, subtree:true, characterData:true });
-}
-
-// ── Response watcher — the job execution loop ─────────────────────────────────
-let _watchObs = null, _watchTimer = null, _watchStart = 0;
-
+// ── Watch ─────────────────────────────────────────────────────────────────────
 function stopWatch() {
-  if (_watchObs)   { _watchObs.disconnect(); _watchObs = null; }
+  if (_watchObs) { _watchObs.disconnect(); _watchObs = null; }
   if (_watchTimer) { clearTimeout(_watchTimer); _watchTimer = null; }
   currentJobId = null; jobActive = false;
   setJobBar(false);
-}
-
-// Is Claude currently generating? — checks for stop/streaming indicator
-function _isGenerating() {
-  return !!(
-    document.querySelector('button[aria-label="Stop generating"]') ||
-    document.querySelector('button[data-testid="stop-button"]') ||
-    document.querySelector('[data-testid="streaming-indicator"]') ||
-    document.querySelector('.text-streaming')
-  );
 }
 
 function startWatch(jobId, prompt, retryCount = 0) {
@@ -457,108 +489,92 @@ function startWatch(jobId, prompt, retryCount = 0) {
   setJobBar(true, prompt, jobId);
 
   let lastText = '', stableCount = 0;
-  const STABLE_NEEDED = 3;   // 3 mutation-free cycles = done
-  const STABLE_MS     = 300; // ms between stable checks
-
-  let _lastChunkLen = 0;  // track how much we've streamed
+  let _lastChunkLen = 0;
 
   function checkStable() {
     if (!currentJobId || currentJobId !== jobId) return;
-    const el = findResponseEl();
+    const el   = findResponseEl();
     if (!el) { _watchTimer = setTimeout(checkStable, 600); return; }
     const text = (el.innerText || el.textContent || '').trim();
     if (text === lastText && !_isGenerating()) {
       stableCount++;
-      if (stableCount >= STABLE_NEEDED) {
+      if (stableCount >= 3) {
         const ms = Date.now() - _watchStart;
-        stopWatch();
         _onJobComplete(jobId, text, ms, prompt, retryCount);
         return;
       }
     } else {
-      // Text changed — stream the new portion to guardian
       if (text.length > _lastChunkLen) {
-        const delta = text.slice(_lastChunkLen);
-        _lastChunkLen = text.length;
-        // Throttle: only send if delta is meaningful (>10 chars or ends a sentence)
+        const delta = text.slice(_lastChunkLen); _lastChunkLen = text.length;
         if (delta.length > 10 || /[.!?\n]/.test(delta)) {
-          send({ type:'GUARDIAN_CHUNK', jobId, text: delta, full: text,
-            provider: PROVIDER, chatUrl: location.href, ts: Date.now() });
-          // Also stream directly to cortex (batch-throttled)
+          send({ type:'GUARDIAN_CHUNK', jobId, text:delta, full:text, provider:PROVIDER, chatUrl:location.href, ts:Date.now() });
           _streamToCortex(jobId, delta, text);
         }
       }
-      lastText = text;
-      stableCount = 0;
-      scheduleScan();
+      lastText = text; stableCount = 0;
     }
-    _watchTimer = setTimeout(checkStable, STABLE_MS);
+    _watchTimer = setTimeout(checkStable, 300);
   }
 
-  // MutationObserver — fires on every DOM change (token by token as Claude streams)
   const target = document.querySelector('main') || document.body;
   _watchObs = new MutationObserver(() => {
-    stableCount = 0; // any mutation resets stable counter
+    stableCount = 0;
     if (_watchTimer) { clearTimeout(_watchTimer); _watchTimer = null; }
-    _watchTimer = setTimeout(checkStable, STABLE_MS);
+    _watchTimer = setTimeout(checkStable, 300);
   });
-  _watchObs.observe(target, { childList: true, subtree: true, characterData: true });
-
-  // Fallback timer in case observer misses something
+  _watchObs.observe(target, { childList:true, subtree:true, characterData:true });
   _watchTimer = setTimeout(checkStable, 1500);
 }
 
-function _onJobComplete(jobId, text, ms, prompt, retryCount) {
-  // §LAW II — ledger write first
+async function _onJobComplete(jobId, text, ms, prompt, retryCount) {
+  stopWatch();
   send({ type:'GUARDIAN_LEDGER_WRITE', jobId, category:'UPGRADE',
     msg:`Complete · ${text.length}ch · ${Math.round(ms/1000)}s`,
     meta:{ jobId, chars:text.length, ms, provider:PROVIDER, ts:Date.now() }
   });
   _log('ok', `Complete · ${text.length}ch`, `${Math.round(ms/1000)}s · #${jobId.slice(0,8)}`);
-  toast(`Done: ${text.length} chars in ${Math.round(ms/1000)}s`, 'success', 3500);
+  toast(`Done: ${text.length}ch in ${Math.round(ms/1000)}s`, 'success', 3500);
 
   const usage = recordUsage(jobId, text, ms);
+  await scanArtifacts(jobId);
 
-  // Detect errors / gaps — auto-retry if issues found
-  const issues = detectResponseErrors(text, jobId);
+  // Update IDB request status
+  await dbPut('requests', { uuid:jobId, status:'fulfilled', completedAt:Date.now(), sessionId:await getSessionId() });
+
+  const issues = detectResponseErrors(text);
   if (issues.length) {
-    const top = issues[0];
-    _log('gap', `${issues.length} issue(s)`, issues.map(i=>i.type).join(','));
     currentGaps = [...issues, ...currentGaps].slice(0,100);
-    if (retryCount === 0) { // only auto-retry on first completion
-      autoRetry(jobId, text, retryCount);
-    } else {
-      sendLedger('GAP', `Issues after retry ${retryCount}`, { issues });
-    }
+    if (retryCount === 0) autoRetry(jobId, text, retryCount);
     send({ type:'GUARDIAN_GAPS', jobId, gaps:issues, chatUrl:location.href, account:getAccount() });
-    _toBridge('guardian.gaps', { jobId, gaps:issues });
-    _gapsToCortex(jobId, issues);
-  } else {
-    // Clean completion
-    sendLedger('UPGRADE', `Job complete · #${jobId.slice(0,8)}`, { jobId, chars:text.length, ms });
-    send({ type:'GUARDIAN_COMPLETE', jobId, text, chatUrl:location.href, account:getAccount(), requestId:jobId });
-        parseCortexCommands(lastText, jobId);
-    _toBridge('guardian.job.complete', { jobId, chars:text.length, ms, provider:PROVIDER });
-    _toCortex('guardian.job.complete', { jobId, chars:text.length, ms, usage });
-    _completeToCortex(jobId, text, ms, usage);
-    _toOrc('guardian','guardian.job.complete',{ jobId, chars:text.length, ms });
-    scanDOM();
-    stopWatch();
+    _toCortex('cortex.gap.found', { jobId, gaps:issues, source:'userscript-detector' });
   }
+
+  send({ type:'GUARDIAN_COMPLETE', jobId, text, chatUrl:location.href, account:getAccount(), requestId:jobId });
+  _toCortex('guardian.job.complete', { jobId, chars:text.length, ms, usage });
+  _toBridge('guardian.job.complete', { jobId, chars:text.length, ms, provider:PROVIDER });
+  sendLedger('UPGRADE', `Job complete · #${jobId.slice(0,8)}`, { jobId, chars:text.length, ms });
+
+  // Post-response cortex command parser
+  await parseCortexCommands(text, jobId);
+  if (panelOpen) renderActiveTab();
 }
 
 // ── Job handler ───────────────────────────────────────────────────────────────
 async function handleJob(msg) {
   if (!isClaimed) {
-    _log('info', 'Job ignored — PASSIVE', msg.jobId?.slice(0,8));
-    toast('Job ignored — tab not claimed (click PASSIVE to claim)', 'warn', 3000);
+    _log('info','Job ignored — PASSIVE', msg.jobId?.slice(0,8));
+    toast('Job ignored — tab not claimed', 'warn', 3000);
     return;
   }
   const { jobId, prompt='', content='', command='' } = msg;
   const text = content ? (prompt ? `${prompt}\n\n${content}` : content) : prompt;
   if (!text.trim()) { _log('err','Empty job','skipping'); return; }
 
-  // §LAW II — ledger write IS the state change. Write first, act second.
+  // §LAW II — write to IDB before any action
+  const sessionId = await getSessionId();
+  await dbPut('requests', { uuid:jobId, status:'pending', command, promptLen:text.length,
+    sessionId, provider:PROVIDER, createdAt:Date.now() });
+
   send({ type:'GUARDIAN_LEDGER_WRITE', jobId, category:'INPUT',
     msg:`Job: ${command} #${jobId.slice(0,8)}`,
     meta:{ jobId, command, chars:text.length, provider:PROVIDER, chatUrl:location.href, ts:Date.now() }
@@ -566,143 +582,84 @@ async function handleJob(msg) {
 
   _log('job', `Job: ${command}`, `${text.length}ch · #${jobId.slice(0,8)}`);
   toast(`⚡ ${command} · #${jobId.slice(0,8)}`, 'job', 3000);
-  _toOrc('guardian', 'guardian.job.received', { jobId, command, chars:text.length });
-  _jobStartToCortex(jobId, command, text);
+  _toCortex('agent.call.start', { jobId, provider:PROVIDER, command, promptLen:text.length });
   _toBridge('guardian.job.dispatched', { jobId, command, provider:PROVIDER });
 
   await gate('handleJob', async () => {
-    seenHashes.clear();
-    const ctx = await pullCortexContext(text);
-    const finalText = ctx ? ctx + text : text;
+    // §US-04 — pre-prompt intelligence injection
+    const intel   = await pullIntelligenceContext(text, command);
+    const intelHdr= buildContextHeader(intel);
+    // Legacy cortex context
+    const legacyCtx = _settings.enableContextInjection !== false
+      ? await pullCortexContext(text) : '';
+
+    const finalText = (intelHdr || legacyCtx) + text;
     if (!injectText(finalText)) throw new Error('Input not found — no contenteditable');
-    // Ledger write: DELIVERED — before submit fires
-    send({ type:'GUARDIAN_LEDGER_WRITE', jobId, category:'EVENT',
-      msg:`Delivered: ${command} #${jobId.slice(0,8)}`,
-      meta:{ jobId, command, provider:PROVIDER, ts:Date.now() }
-    });
+
     send({ type:'GUARDIAN_DELIVERED', jobId, chatUrl:location.href, account:getAccount(), requestId:jobId });
+    await dbPut('requests', { uuid:jobId, status:'dispatched', sessionId, dispatchedAt:Date.now() });
     setTimeout(() => { submit(); startWatch(jobId, text, 0); }, 500);
     return true;
   }, { jobId });
 }
 
-// ── Cortex context pull ───────────────────────────────────────────────────────
-async function pullCortexContext(prompt) {
-  try {
-    var q = encodeURIComponent(prompt.slice(0, 120));
-    var r = await fetch(NCP_URL + '/memory/context?q=' + q, { signal: AbortSignal.timeout(2000) });
-    if (!r.ok) return '';
-    var d = await r.json();
-    var parts = [];
-    if (d.gaps && d.gaps.length) {
-      var gapLines = d.gaps.slice(0,3).map(function(g) { return '- ' + g.type + ': ' + (g.description||'').slice(0,80); });
-      parts.push('[OPEN GAPS]\n' + gapLines.join('\n'));
-    }
-    if (d.artifacts && d.artifacts.length) {
-      var artLines = d.artifacts.slice(0,2).map(function(a) { return '- ' + (a.name||a.lang||'artifact'); });
-      parts.push('[RECENT ARTIFACTS]\n' + artLines.join('\n'));
-    }
-    return parts.length ? '[NEXUS CONTEXT]\n' + parts.join('\n') + '\n\n' : '';
-  } catch(e) { return ''; }
-}
-
-// ── Post-response cortex command parser ──────────────────────────────────────
-// Scans completed response for ?CORTEX:query lines.
-// Executes against guardian memory API, posts result back for SEAM queue injection.
+// ── Cortex command parser ─────────────────────────────────────────────────────
 async function parseCortexCommands(text, jobId) {
-  var cmds = text.split('\n').filter(function(l) { return /^\?CORTEX:/i.test(l.trim()); });
-  if (!cmds.length) return;
-  for (var i = 0; i < cmds.length; i++) {
-    var q = cmds[i].replace(/^\?CORTEX:/i,'').trim();
+  const cmds = text.split('\n').filter(l => /^\?CORTEX:/i.test(l.trim()));
+  for (const cmd of cmds) {
+    const q = cmd.replace(/^\?CORTEX:/i,'').trim();
     try {
-      var r = await fetch(NCP_URL + '/memory/query?q=' + encodeURIComponent(q),
-        { signal: AbortSignal.timeout(2000) });
+      const r = await fetch(`${NCP_URL}/memory/query?q=${encodeURIComponent(q)}`, { signal:AbortSignal.timeout(2000) });
       if (!r.ok) continue;
-      var d = await r.json();
-      var result = (d.results||[]).slice(0,3).map(function(x) { return x.text||x.content||''; }).join('\n') || '(no results)';
-      send({ type:'GUARDIAN_CORTEX_RESULT', jobId:jobId, query:q, result:result });
-      _log('info', '?CORTEX: ' + q, (d.results||[]).length + ' results');
-    } catch(e) {}
+      const d = await r.json();
+      const result = (d.results||[]).slice(0,3).map(x=>x.text||x.content||'').join('\n') || '(no results)';
+      send({ type:'GUARDIAN_CORTEX_RESULT', jobId, query:q, result });
+    } catch(_) {}
   }
 }
 
-// ── Navigation ────────────────────────────────────────────────────────────────
-let _lastPath = location.pathname;
-function checkNavigate() {
-  if (location.pathname === _lastPath) return;
-  _lastPath = location.pathname;
-  seenHashes.clear();
-  if (currentJobId) stopWatch();
-  _log('sys', `Nav → ${chatId()}`);
-  setTimeout(scanDOM, 1000);
-}
-setInterval(checkNavigate, 800);
-
-// ── WebSocket ─────────────────────────────────────────────────────────────────
-function connect() {
-  // NCP: SSE for server→browser push, fetch() for browser→server
-  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-  if (_es) { try { _es.close(); } catch(_) {} }
-
-  const tabParam = `tabId=${MY_TAB}&provider=${PROVIDER}`;
-  _log('info', 'NCP connecting…', `${NCP_CHANNEL}?${tabParam}`);
-  connState = 'connecting'; setConnState('connecting');
-
-  _es = new EventSource(`${NCP_CHANNEL}?${tabParam}`);
-
-  _es.onmessage = (e) => {
-    try {
-      const msg = JSON.parse(e.data);
-      _handleServerMessage(msg);
-    } catch(err) {
-      _log('err', 'NCP parse error', err.message);
+// ── System status polling ─────────────────────────────────────────────────────
+async function pollSystemStatus() {
+  try {
+    const r = await fetch(`${ORCH_URL}/health`, { signal:AbortSignal.timeout(2000) });
+    if (r.ok) {
+      _systemStatus = await r.json();
+      if (panelOpen && activeTab==='sys') renderSys();
     }
-  };
+  } catch(_) {}
+}
+setInterval(pollSystemStatus, 15000);
 
+// ── NCP connection ────────────────────────────────────────────────────────────
+function connect() {
+  if (_reconnectTimer) { clearTimeout(_reconnectTimer); _reconnectTimer = null; }
+  if (_es) { try { _es.close(); } catch(_) {} }
+  const params = `tabId=${MY_TAB}&provider=${PROVIDER}`;
+  _log('info', 'NCP connecting…', `${NCP_CHANNEL}?${params}`);
+  connState = 'connecting'; setConnState('connecting');
+  _es = new EventSource(`${NCP_CHANNEL}?${params}`);
+  _es.onmessage = e => {
+    try { _handleServerMessage(JSON.parse(e.data)); } catch(err) { _log('err','NCP parse',err.message); }
+  };
   _es.onopen = () => {
     connState = 'ready'; setConnState('ready');
     _log('ok', `NCP connected · ${PROVIDER}`, NCP_CHANNEL);
-    // Register with server via POST (EventSource opened = we're live)
-    ncpPost(NCP_RESULT, {
-      type: 'GUARDIAN_REGISTER', provider: PROVIDER,
-      host: location.hostname, tabId: MY_TAB, claimed: amIClaimed(),
-    });
-    // Start heartbeat via POST /heartbeat
-    if (hb) clearInterval(hb);
-    hb = setInterval(async () => {
-      const res = await ncpPost(NCP_HB, {
-        type: 'GUARDIAN_HEARTBEAT', provider: PROVIDER,
-        tabId: MY_TAB, ts: Date.now(),
-      });
-      // ACK is in the response body — no separate message needed
-    }, HB_MS);
+    ncpPost(NCP_RESULT, { type:'GUARDIAN_REGISTER', provider:PROVIDER, host:location.hostname, tabId:MY_TAB, claimed:amIClaimed() });
+    if (_hb) clearInterval(_hb);
+    _hb = setInterval(() => ncpPost(NCP_HB, { type:'GUARDIAN_HEARTBEAT', provider:PROVIDER, tabId:MY_TAB, ts:Date.now() }), HB_MS);
+    autoClaimIfFree();
+    replayPending();
+    setTimeout(() => sendDOMMap(), 2000);
+    pollSystemStatus();
   };
-
-  _es.onerror = (e) => {
+  _es.onerror = () => {
     connState = 'disconnected'; setConnState('disconnected');
-    _log('err', 'NCP error — reconnecting in ' + RECONNECT_MS + 'ms');
-    _es.close();
-    clearInterval(hb);
-    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-    reconnectTimer = setTimeout(connect, RECONNECT_MS);
+    _log('err', `NCP error — retry ${RECONNECT_MS}ms`);
+    _es.close(); clearInterval(_hb);
+    _reconnectTimer = setTimeout(connect, RECONNECT_MS);
   };
 }
 
-
-// POST helper for NCP results
-async function ncpPost(url, data) {
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, chatUrl: location.href, account: getAccount() }),
-      keepalive: true,
-    });
-    return res.ok ? await res.json() : null;
-  } catch(_) { return null; }
-}
-
-// Unified server message handler (replaces ws.onmessage switch)
 function _handleServerMessage(msg) {
   switch(msg.type) {
     case 'NCP_READY':
@@ -710,11 +667,7 @@ function _handleServerMessage(msg) {
       setConnState('ready');
       _log('ok', `Ready · ${msg.provider||PROVIDER}`, NCP_CHANNEL);
       toast('Guardian connected ✓', 'success', 2000);
-      autoClaimIfFree();
-      startObserver();
-      setTimeout(scanDOM, 800);
       break;
-
     case 'GUARDIAN_CLAIM':
       if (msg.tabId===MY_TAB||msg.tabId==='any') {
         claimTab();
@@ -722,445 +675,550 @@ function _handleServerMessage(msg) {
         toast('Tab claimed — ACTIVE', 'success', 2000);
       }
       break;
-
-    case 'GUARDIAN_RELEASE':
-      releaseTab?.();
+    case 'GUARDIAN_RELEASE': releaseTab(); break;
+    case 'GUARDIAN_JOB':     currentJobId = msg.jobId; handleJob(msg); break;
+    case 'NEXUS_CONTEXT_RESPONSE':
+      if (msg.context) { _intelligenceCtx = msg.context; _log('sys','Context updated from server'); }
       break;
-
-    case 'GUARDIAN_JOB':
-      currentJobId = msg.jobId;
-      handleJob(msg);
-      break;
-
-    case 'GUARDIAN_SESSION_NAMED':
-      _log('info', 'Session named', msg.name);
-      break;
-
-    case 'GUARDIAN_ARTIFACT_SAVED':
-      _log('ok', 'Artifact saved', msg.artifactId);
-      break;
-
-    default:
-      _log('debug', `NCP msg: ${msg.type}`);
+    case 'GUARDIAN_SESSION_NAMED': _log('info','Session named', msg.name); break;
+    case 'GUARDIAN_ARTIFACT_SAVED': _log('ok','Artifact saved', msg.artifactId); break;
+    default: _log('debug', `NCP: ${msg.type}`);
   }
 }
 
-// ── UI — Styles ───────────────────────────────────────────────────────────────
+// Navigation
+let _lastPath = location.pathname;
+setInterval(() => {
+  if (location.pathname !== _lastPath) {
+    _lastPath = location.pathname;
+    _sessionId = null; // reset session chain on navigation
+    if (currentJobId) stopWatch();
+    _log('sys', `Nav → ${chatId()}`);
+    setTimeout(() => sendDOMMap(), 1000);
+  }
+}, 800);
+
+// ══════════════════════════════════════════════════════════════════════════════
+// UI
+// ══════════════════════════════════════════════════════════════════════════════
+
 function injectStyles() {
   const s = document.createElement('style');
   s.textContent = `
-    @keyframes gpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
     @keyframes gfadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-    #__g9root__{position:fixed;bottom:16px;right:16px;z-index:2147483647;font-family:'SF Mono','Fira Code',monospace;font-size:11px;user-select:none}
-    #__g9pill__{display:flex;align-items:center;gap:6px;background:rgba(10,10,16,.94);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:5px 12px 5px 8px;cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.6);transition:opacity .2s;margin-left:auto}
-    #__g9pill__:hover{opacity:.88}
-    #__g9panel__{width:480px;background:rgba(8,8,14,.98);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.08);border-radius:14px;box-shadow:0 10px 50px rgba(0,0,0,.8);overflow:hidden;margin-bottom:8px;display:none;flex-direction:column;max-height:520px;animation:gfadein .14s ease}
-    #__g9tabs__{display:flex;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.35);flex-shrink:0}
-    .g9tab{flex:1;padding:6px 2px;text-align:center;cursor:pointer;font-size:9px;color:#334155;border-bottom:2px solid transparent;transition:all .14s;letter-spacing:.04em;font-weight:700;text-transform:uppercase}
-    .g9tab:hover{color:#64748b}.g9tab.active{color:#e2e8f0;border-bottom-color:#6366f1}
-    #__g9log__{flex:1;overflow-y:auto;padding:4px 0;min-height:180px;max-height:320px}
-    .g9row{display:flex;align-items:flex-start;gap:7px;padding:3px 12px;transition:background .12s}
-    .g9row:hover{background:rgba(255,255,255,.02)}
-    .g9ts{color:#1e293b;font-size:9px;flex-shrink:0;padding-top:1px;width:52px}
-    .g9ic{flex-shrink:0;width:10px;text-align:center;padding-top:1px}
-    .g9ct{flex:1;min-width:0}
-    .g9msg{font-size:10px}.g9det{color:#334155;font-size:9px;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    /* Usage tab */
-    .g9use-row{display:flex;justify-content:space-between;align-items:center;padding:4px 12px;border-bottom:1px solid rgba(255,255,255,.03);font-size:9px}
-    .g9use-label{color:#475569}.g9use-val{color:#e2e8f0;font-weight:600}
-    .g9use-bar{height:3px;background:#1e293b;border-radius:2px;margin:2px 12px 0;overflow:hidden}
-    .g9use-fill{height:100%;background:linear-gradient(90deg,#6366f1,#2dd4bf);border-radius:2px;transition:width .4s}
-    /* Gaps tab */
-    .g9gap{padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.03);font-size:9px}
-    .g9gap-type{color:#f472b6;font-weight:700;font-size:8px;text-transform:uppercase;letter-spacing:.08em}
-    .g9gap-desc{color:#64748b;margin-top:2px;line-height:1.5}
-    .g9gap-score{color:#475569;font-size:8px}
-    /* Artifacts */
-    .g9art{padding:5px 10px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer}
-    .g9art:hover{background:rgba(255,255,255,.02)}
-    .g9art-hdr{display:flex;align-items:center;gap:6px;font-size:9px}
-    .g9art-lang{color:#6366f1;font-weight:700;min-width:40px}.g9art-sz{color:#334155}.g9art-hash{color:#1e293b}
-    .g9art-pre{font-size:9px;color:#475569;padding:4px 0;white-space:pre-wrap;word-break:break-all;max-height:80px;overflow:hidden;line-height:1.4}
-    /* Footer */
-    .g9footer{padding:6px 12px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;font-size:9px;color:#1e293b}
-    /* Job bar */
-    #__g9jobbar__{display:none;align-items:center;gap:8px;padding:6px 12px;background:rgba(251,191,36,.07);border-bottom:1px solid rgba(251,191,36,.14);flex-shrink:0}
-    .g9jdot{width:5px;height:5px;border-radius:50%;background:#fbbf24;animation:gpulse 1.2s ease-in-out infinite;flex-shrink:0}
-    .g9jtext{color:#fde68a;font-size:10px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-    .g9jid{color:#78716c;font-size:9px}
-    /* Claim badge */
-    #__g9claim__{font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;cursor:pointer;letter-spacing:.05em;border:1px solid rgba(100,116,139,.25);color:#64748b;background:rgba(100,116,139,.08)}
-    #__g9claim__.active{border-color:rgba(34,197,94,.4);color:#22c55e;background:rgba(34,197,94,.08)}
-    #__g9badge__{background:#7c3aed;color:#fff;border-radius:10px;padding:0 5px;font-size:9px;display:none;font-weight:700}
-    #__g9hdr__{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);flex-shrink:0}
-    .g9hdr-l{display:flex;align-items:center;gap:7px}
-    .g9hdr-dot{width:7px;height:7px;border-radius:50%;background:#888;flex-shrink:0;transition:background .3s}
-    .g9hdr-title{color:#e2e8f0;font-weight:700;font-size:11px}
-    .g9hdr-badge{font-size:9px;padding:1px 7px;border-radius:10px;background:rgba(136,136,136,.2);color:#888;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-    .g9clear{background:none;border:1px solid rgba(255,255,255,.08);color:#334155;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:9px;font-family:inherit}
-    .g9clear:hover{color:#64748b}
-    /* CLI hint box */
-    .g9cli{background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:6px;padding:8px 10px;margin:8px;font-size:9px;color:#475569;line-height:1.7}
-    .g9cli-cmd{color:#818cf8;font-weight:600}.g9cli-desc{color:#334155}
-    .g9cli a{color:#6366f1;text-decoration:none}
+    @keyframes gpulse{0%,100%{opacity:1}50%{opacity:.4}}
+    #__g10root__{position:fixed;bottom:16px;right:16px;z-index:2147483647;font-family:'SF Mono','Fira Code',monospace;font-size:11px;user-select:none}
+    #__g10pill__{display:flex;align-items:center;gap:6px;background:rgba(8,8,14,.95);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:5px 12px 5px 8px;cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.6);transition:opacity .2s;margin-left:auto}
+    #__g10pill__:hover{opacity:.85}
+    #__g10panel__{width:520px;background:rgba(6,6,12,.98);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.07);border-radius:14px;box-shadow:0 12px 60px rgba(0,0,0,.85);overflow:hidden;margin-bottom:8px;display:none;flex-direction:column;max-height:580px;animation:gfadein .14s ease}
+    #__g10hdr__{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0}
+    .g10hdr-l{display:flex;align-items:center;gap:8px}
+    .g10hdr-dot{width:8px;height:8px;border-radius:50%;background:#888;transition:background .4s}
+    .g10hdr-title{color:#e2e8f0;font-weight:700;font-size:12px;letter-spacing:.04em}
+    .g10hdr-badge{font-size:9px;padding:2px 7px;border-radius:10px;background:#88888822;color:#888;font-weight:600}
+    .g10clear{background:none;border:1px solid rgba(255,255,255,.08);color:#475569;border-radius:3px;padding:2px 8px;font:inherit;font-size:9px;cursor:pointer;transition:color .2s}
+    .g10clear:hover{color:#94a3b8}
+    #__g10jobbar__{display:none;align-items:center;gap:8px;padding:6px 14px;background:rgba(251,191,36,.05);border-bottom:1px solid rgba(251,191,36,.1);flex-shrink:0}
+    .g10jdot{width:6px;height:6px;border-radius:50%;background:#fbbf24;animation:gpulse 1.2s infinite}
+    .g10jtext{color:#fbbf24;font-size:10px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .g10jid{color:#78716c;font-size:9px}
+    #__g10tabs__{display:flex;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0}
+    .g10tab{flex:1;text-align:center;padding:7px 0;cursor:pointer;color:#334155;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:color .2s;border-bottom:2px solid transparent}
+    .g10tab:hover{color:#64748b}
+    .g10tab.active{color:#818cf8;border-bottom-color:#818cf8}
+    #__g10log__{flex:1;overflow-y:auto;padding:6px 0;min-height:0}
+    .g10row{display:flex;align-items:flex-start;gap:6px;padding:2px 12px;transition:background .15s}
+    .g10row:hover{background:rgba(255,255,255,.02)}
+    .g10ts{color:#1e293b;font-size:9px;flex-shrink:0;padding-top:1px;width:52px}
+    .g10ic{font-size:10px;flex-shrink:0;width:12px;text-align:center;padding-top:1px}
+    .g10ct{flex:1;min-width:0}
+    .g10msg{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .g10det{color:#1e293b;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+    .g10use-row{display:flex;justify-content:space-between;padding:3px 12px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .g10use-label{color:#334155;font-size:9px}
+    .g10use-val{color:#64748b;font-size:9px;font-weight:600}
+    .g10use-bar{height:3px;background:rgba(255,255,255,.05);margin:8px 12px 4px;border-radius:2px}
+    .g10use-fill{height:100%;background:linear-gradient(90deg,#818cf8,#6366f1);border-radius:2px;transition:width .4s}
+    .g10gap{padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .g10gap-type{color:#f472b6;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+    .g10gap-desc{color:#475569;font-size:9px;margin-top:2px}
+    .g10gap-score{color:#1e293b;font-size:8px;margin-top:1px}
+    .g10art{padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer}
+    .g10art:hover{background:rgba(255,255,255,.02)}
+    .g10art-hdr{display:flex;align-items:center;gap:6px}
+    .g10art-lang{color:#2dd4bf;font-size:9px;font-weight:700;text-transform:uppercase}
+    .g10art-sz{color:#334155;font-size:9px}
+    .g10art-hash{color:#1e293b;font-size:9px;font-family:monospace}
+    .g10art-pre{color:#475569;font-size:9px;margin-top:4px;white-space:pre-wrap;word-break:break-all;max-height:80px;overflow:hidden}
+    #__g10sys__{overflow-y:auto;max-height:460px}
+    .g10sys-section{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
+    .g10sys-title{color:#334155;font-size:8px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;font-weight:700}
+    .g10sys-row{display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+    .g10sys-label{color:#1e293b;font-size:9px}
+    .g10sys-val{font-size:9px;font-weight:600}
+    .g10sys-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .g10online{color:#34d399}.g10offline{color:#f87171}.g10warn{color:#f59e0b}
+    #__g10opts__{overflow-y:auto;max-height:460px;padding:8px 0}
+    .g10opt-row{display:flex;justify-content:space-between;align-items:center;padding:6px 14px;border-bottom:1px solid rgba(255,255,255,.03)}
+    .g10opt-label{color:#64748b;font-size:9px}
+    .g10opt-toggle{width:28px;height:14px;border-radius:7px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);cursor:pointer;position:relative;transition:background .2s}
+    .g10opt-toggle.on{background:#6366f144;border-color:#6366f166}
+    .g10opt-toggle::after{content:'';position:absolute;width:10px;height:10px;border-radius:50%;background:#475569;top:1px;left:1px;transition:all .2s}
+    .g10opt-toggle.on::after{background:#818cf8;left:15px}
+    .g10intel-section{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04);font-size:9px}
+    .g10intel-title{color:#f59e0b;font-size:8px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;font-weight:700}
+    .g10intel-row{color:#334155;padding:2px 0;line-height:1.5}
+    .g10intel-val{color:#64748b}
+    .g10badge-count{display:inline-block;background:#f87171;color:#fff;border-radius:8px;padding:0 5px;font-size:8px;font-weight:700;margin-left:3px;min-width:14px;text-align:center}
+    .g10footer{display:flex;justify-content:space-between;padding:5px 12px;border-top:1px solid rgba(255,255,255,.04);flex-shrink:0}
+    .g10footer span{color:#1e293b;font-size:9px}
+    #__g10badge__{background:#f87171;color:#fff;border-radius:8px;padding:0 5px;font-size:9px;font-weight:700;display:none;min-width:16px;text-align:center}
+    #__g10claim__{font-size:8px;padding:2px 7px;border-radius:10px;border:1px solid rgba(255,255,255,.08);color:#475569;cursor:pointer;transition:all .2s;font-weight:700;letter-spacing:.04em}
+    #__g10claim__.active{color:#34d399;border-color:#34d39933;background:#34d39910}
+    .g10seam-area{padding:8px 12px;overflow-y:auto;max-height:400px}
+    .g10seam-chunk{border:1px solid rgba(255,255,255,.05);border-radius:4px;margin-bottom:6px;overflow:hidden}
+    .g10seam-hdr{display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(255,255,255,.02)}
+    .g10seam-title{color:#94a3b8;font-size:9px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .g10seam-inject{background:none;border:1px solid rgba(245,158,11,.3);color:#f59e0b;border-radius:2px;padding:2px 7px;font:inherit;font-size:8px;cursor:pointer;flex-shrink:0}
+    .g10seam-inject:hover{background:rgba(245,158,11,.1)}
+    .g10seam-inject:disabled{opacity:.3;cursor:default}
+    .g10ledger-row{display:flex;gap:6px;padding:3px 12px;border-bottom:1px solid rgba(255,255,255,.02);align-items:flex-start}
+    .g10ledger-ts{color:#1e293b;font-size:9px;flex-shrink:0;width:52px}
+    .g10ledger-cat{font-size:8px;font-weight:700;text-transform:uppercase;flex-shrink:0;width:50px;letter-spacing:.04em}
+    .g10ledger-msg{color:#475569;font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .cat-upgrade{color:#34d399}.cat-input{color:#60a5fa}.cat-event{color:#818cf8}.cat-gap{color:#f472b6}.cat-error{color:#f87171}
   `;
   document.head.appendChild(s);
 }
 
-// ── UI — Build ────────────────────────────────────────────────────────────────
 function buildUI() {
   injectStyles();
-  const root = document.createElement('div'); root.id='__g9root__';
+  const root = document.createElement('div'); root.id='__g10root__';
   document.body.appendChild(root);
 
   // Pill
-  const pill = document.createElement('div'); pill.id='__g9pill__';
-  const dot   = document.createElement('div'); dot.id='__g9dot__';
+  const pill  = document.createElement('div'); pill.id='__g10pill__';
+  const dot   = document.createElement('div'); dot.id='__g10dot__';
   Object.assign(dot.style,{width:'7px',height:'7px',borderRadius:'50%',background:'#888',transition:'background .4s',flexShrink:'0'});
-  const lbl   = document.createElement('span'); lbl.id='__g9label__'; lbl.style.cssText='color:#cbd5e1;font-size:11px;font-weight:600'; lbl.textContent='Guardian';
-  const prov  = document.createElement('span'); prov.style.cssText='color:#475569;font-size:9px;border-left:1px solid rgba(255,255,255,.1);padding-left:6px;margin-left:1px'; prov.textContent=`claude v${VERSION}`;
-  const claim = document.createElement('span'); claim.id='__g9claim__'; claim.textContent='PASSIVE';
-  claim.addEventListener('click', e => { e.stopPropagation(); isClaimed?releaseTab():claimTab(); toast(isClaimed?'ACTIVE — jobs will execute':'PASSIVE — jobs ignored', isClaimed?'success':'warn',2500); });
-  const badge = document.createElement('span'); badge.id='__g9badge__';
-  pill.append(dot,lbl,prov,claim,badge);
+  const lbl   = document.createElement('span'); lbl.id='__g10label__'; lbl.style.cssText='color:#cbd5e1;font-size:11px;font-weight:600'; lbl.textContent='Guardian';
+  const prov  = document.createElement('span'); prov.style.cssText='color:#475569;font-size:9px;border-left:1px solid rgba(255,255,255,.08);padding-left:6px;margin-left:1px'; prov.textContent=`claude v${VERSION}`;
+  const claim = document.createElement('span'); claim.id='__g10claim__'; claim.textContent='PASSIVE';
+  claim.addEventListener('click', e => {
+    e.stopPropagation();
+    isClaimed ? releaseTab() : claimTab();
+    toast(isClaimed ? 'ACTIVE — jobs will execute' : 'PASSIVE — jobs ignored', isClaimed ? 'success' : 'warn', 2500);
+  });
+  const badge = document.createElement('span'); badge.id='__g10badge__';
+  pill.append(dot, lbl, prov, claim, badge);
 
   // Panel
-  const panel = document.createElement('div'); panel.id='__g9panel__';
+  const panel  = document.createElement('div'); panel.id='__g10panel__';
 
   // Header
-  const hdr = document.createElement('div'); hdr.id='__g9hdr__';
-  const hdrL = document.createElement('div'); hdrL.className='g9hdr-l';
-  const hdrDot = document.createElement('div'); hdrDot.id='__g9hdrdot__'; hdrDot.className='g9hdr-dot';
-  const hdrTitle = document.createElement('span'); hdrTitle.className='g9hdr-title'; hdrTitle.textContent='Guardian';
-  const hdrBadge = document.createElement('span'); hdrBadge.id='__g9hdrbadge__'; hdrBadge.className='g9hdr-badge'; hdrBadge.textContent='DISCONNECTED';
-  hdrL.append(hdrDot,hdrTitle,hdrBadge);
-  const clearBtn = document.createElement('button'); clearBtn.className='g9clear'; clearBtn.textContent='Clear';
+  const hdr    = document.createElement('div'); hdr.id='__g10hdr__';
+  const hdrL   = document.createElement('div'); hdrL.className='g10hdr-l';
+  const hdrDot = document.createElement('div'); hdrDot.id='__g10hdrdot__'; hdrDot.className='g10hdr-dot';
+  const hdrTitle= document.createElement('span'); hdrTitle.className='g10hdr-title'; hdrTitle.textContent='Guardian';
+  const hdrBadge= document.createElement('span'); hdrBadge.id='__g10hdrbadge__'; hdrBadge.className='g10hdr-badge'; hdrBadge.textContent='DISCONNECTED';
+  hdrL.append(hdrDot, hdrTitle, hdrBadge);
+  const clearBtn= document.createElement('button'); clearBtn.className='g10clear'; clearBtn.textContent='Clear';
   clearBtn.onclick = () => { logEntries=[]; unreadCount=0; renderLog(); _setBadge(0); };
-  hdr.append(hdrL,clearBtn);
+  hdr.append(hdrL, clearBtn);
 
   // Job bar
-  const jobBar = document.createElement('div'); jobBar.id='__g9jobbar__';
-  const jDot   = document.createElement('div'); jDot.className='g9jdot';
-  const jText  = document.createElement('span'); jText.id='__g9jtext__'; jText.className='g9jtext'; jText.textContent='Job running…';
-  const jId    = document.createElement('span'); jId.id='__g9jid__'; jId.className='g9jid';
-  jobBar.append(jDot,jText,jId);
+  const jobBar = document.createElement('div'); jobBar.id='__g10jobbar__';
+  const jDot   = document.createElement('div'); jDot.className='g10jdot';
+  const jText  = document.createElement('span'); jText.id='__g10jtext__'; jText.className='g10jtext'; jText.textContent='Job running…';
+  const jId    = document.createElement('span'); jId.id='__g10jid__'; jId.className='g10jid';
+  jobBar.append(jDot, jText, jId);
 
-  // Tabs: Log | Use | Gaps | Arts | SEAM | API
-  const tabs = document.createElement('div'); tabs.id='__g9tabs__';
-  const TAB_LIST = [['log','Log'],['use','Usage'],['gaps','Gaps'],['arts','Arts'],['seam','SEAM'],['api','API']];
+  // Tabs: Log | Ledger | Gaps | Arts | SEAM | Intel | Sys | Opts
+  const tabs = document.createElement('div'); tabs.id='__g10tabs__';
+  const TAB_LIST = [
+    ['log','Log'], ['ledger','Ledger'], ['gaps','Gaps'], ['arts','Arts'],
+    ['seam','SEAM'], ['intel','Intel'], ['sys','Sys'], ['opts','Opts'],
+  ];
   for (const [id,label] of TAB_LIST) {
-    const t = document.createElement('div'); t.className='g9tab'+(id===activeTab?' active':'');
-    t.textContent=label; t.dataset.tab=id; t.addEventListener('click',()=>switchTab(id)); tabs.appendChild(t);
+    const t = document.createElement('div');
+    t.className = 'g10tab' + (id===activeTab?' active':'');
+    t.textContent = label; t.dataset.tab = id;
+    t.addEventListener('click', () => switchTab(id));
+    tabs.appendChild(t);
   }
 
   // Content areas
-  const logArea  = document.createElement('div'); logArea.id='__g9log__';
-  const useArea  = document.createElement('div'); useArea.id='__g9use__';  useArea.style.display='none';
-  const gapsArea = document.createElement('div'); gapsArea.id='__g9gaps__'; gapsArea.style.cssText='display:none;overflow-y:auto;max-height:340px';
-  const artsArea = document.createElement('div'); artsArea.id='__g9arts__'; artsArea.style.cssText='display:none;overflow-y:auto;max-height:340px';
-  const seamArea = document.createElement('div'); seamArea.id='__g9seam__'; seamArea.style.cssText='display:none;padding:8px;overflow-y:auto;max-height:340px';
-  const apiArea  = document.createElement('div'); apiArea.id='__g9api__';  apiArea.style.display='none';
+  const logArea    = document.createElement('div'); logArea.id='__g10log__';
+  const ledgerArea = document.createElement('div'); ledgerArea.id='__g10ledger__'; ledgerArea.style.cssText='display:none;overflow-y:auto;max-height:460px';
+  const gapsArea   = document.createElement('div'); gapsArea.id='__g10gaps__';   gapsArea.style.cssText='display:none;overflow-y:auto;max-height:460px';
+  const artsArea   = document.createElement('div'); artsArea.id='__g10arts__';   artsArea.style.cssText='display:none;overflow-y:auto;max-height:460px';
+  const seamArea   = document.createElement('div'); seamArea.id='__g10seam__';   seamArea.style.display='none';
+  const intelArea  = document.createElement('div'); intelArea.id='__g10intel__'; intelArea.style.cssText='display:none;overflow-y:auto;max-height:460px';
+  const sysArea    = document.createElement('div'); sysArea.id='__g10sys__';     sysArea.style.display='none';
+  const optsArea   = document.createElement('div'); optsArea.id='__g10opts__';   optsArea.style.display='none';
 
-  const footer = document.createElement('div'); footer.className='g9footer';
-  const fL = document.createElement('span'); fL.id='__g9fl__'; fL.textContent=`${WS_URL} · claude`;
+  const footer = document.createElement('div'); footer.className='g10footer';
+  const fL = document.createElement('span'); fL.id='__g10fl__'; fL.textContent=`${NCP_URL} · claude`;
   const fR = document.createElement('span'); fR.textContent=`v${VERSION}`;
-  footer.append(fL,fR);
+  footer.append(fL, fR);
 
-  panel.append(hdr,jobBar,tabs,logArea,useArea,gapsArea,artsArea,seamArea,apiArea,footer);
+  panel.append(hdr, jobBar, tabs, logArea, ledgerArea, gapsArea, artsArea, seamArea, intelArea, sysArea, optsArea, footer);
+
   pill.addEventListener('click', () => {
-    panelOpen=!panelOpen; panel.style.display=panelOpen?'flex':'none';
+    panelOpen = !panelOpen;
+    panel.style.display = panelOpen ? 'flex' : 'none';
     if (panelOpen) { renderActiveTab(); unreadCount=0; _setBadge(0); }
   });
-  root.append(panel,pill);
+  root.append(panel, pill);
 }
 
-// ── UI helpers ────────────────────────────────────────────────────────────────
-const AREAS = { log:'__g9log__', use:'__g9use__', gaps:'__g9gaps__', arts:'__g9arts__', seam:'__g9seam__', api:'__g9api__' };
+// Tab management
+const AREAS = {
+  log:'__g10log__', ledger:'__g10ledger__', gaps:'__g10gaps__',
+  arts:'__g10arts__', seam:'__g10seam__', intel:'__g10intel__',
+  sys:'__g10sys__', opts:'__g10opts__',
+};
 function switchTab(id) {
-  activeTab=id;
-  document.querySelectorAll('.g9tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
-  for (const [k,eid] of Object.entries(AREAS)) { const el=document.getElementById(eid); if(el)el.style.display=k===id?(k==='log'?'block':'block'):'none'; }
+  activeTab = id;
+  document.querySelectorAll('.g10tab').forEach(t => t.classList.toggle('active', t.dataset.tab===id));
+  Object.entries(AREAS).forEach(([k,eid]) => {
+    const el = document.getElementById(eid);
+    if (el) el.style.display = k===id ? 'block' : 'none';
+  });
   renderActiveTab();
 }
 function renderActiveTab() {
-  if (activeTab==='log')  renderLog();
-  if (activeTab==='use')  renderUse();
-  if (activeTab==='gaps') renderGaps();
-  if (activeTab==='arts') renderArts();
-  if (activeTab==='seam') renderSeam();
-  if (activeTab==='api')  renderApi();
+  if (activeTab==='log')    renderLog();
+  if (activeTab==='ledger') renderLedger();
+  if (activeTab==='gaps')   renderGaps();
+  if (activeTab==='arts')   renderArts();
+  if (activeTab==='seam')   renderSeam();
+  if (activeTab==='intel')  renderIntel();
+  if (activeTab==='sys')    renderSys();
+  if (activeTab==='opts')   renderOpts();
 }
-function _setBadge(n) { const b=document.getElementById('__g9badge__'); if(b){b.textContent=n>99?'99+':n; b.style.display=n>0?'inline':'none';} }
+
+function _setBadge(n) {
+  const b = document.getElementById('__g10badge__');
+  if (b) { b.textContent = n > 99 ? '99+' : n; b.style.display = n > 0 ? 'inline' : 'none'; }
+}
 function setConnState(state) {
-  connState=state;
-  const COLORS = { connecting:'#888', handshaking:'#f59e0b', ready:'#22c55e', disconnected:'#ef4444' };
+  const COLORS = { connecting:'#f59e0b', handshaking:'#f59e0b', ready:'#22c55e', disconnected:'#ef4444' };
   const LABELS = { connecting:'CONNECTING', handshaking:'HANDSHAKING', ready:'READY', disconnected:'DISCONNECTED' };
-  const col = COLORS[state]||'#ef4444';
-  const d=document.getElementById('__g9dot__'); if(d)d.style.background=col;
-  const hd=document.getElementById('__g9hdrdot__'); if(hd)hd.style.background=col;
-  const hb=document.getElementById('__g9hdrbadge__'); if(hb){hb.textContent=LABELS[state]||state.toUpperCase();hb.style.background=col+'22';hb.style.color=col;}
+  const col = COLORS[state] || '#ef4444';
+  ['__g10dot__','__g10hdrdot__'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.background = col;
+  });
+  const hb = document.getElementById('__g10hdrbadge__');
+  if (hb) { hb.textContent = LABELS[state]||state.toUpperCase(); hb.style.background=col+'22'; hb.style.color=col; }
 }
 function updatePill() {
-  const c=document.getElementById('__g9claim__');
-  if (!c) return;
-  c.textContent=isClaimed?'ACTIVE':'PASSIVE';
-  c.classList.toggle('active',isClaimed);
+  const c = document.getElementById('__g10claim__');
+  if (c) { c.textContent = isClaimed ? 'ACTIVE' : 'PASSIVE'; c.classList.toggle('active', isClaimed); }
 }
 function setJobBar(active, prompt, jobId) {
-  const bar=document.getElementById('__g9jobbar__'); if(!bar)return;
-  bar.style.display=active?'flex':'none';
+  const bar = document.getElementById('__g10jobbar__'); if (!bar) return;
+  bar.style.display = active ? 'flex' : 'none';
   if (active) {
-    const t=document.getElementById('__g9jtext__'); if(t)t.textContent=(prompt||'Job running…').slice(0,60);
-    const i=document.getElementById('__g9jid__'); if(i)i.textContent=jobId?`#${jobId.slice(0,8)}`:'';
+    const t = document.getElementById('__g10jtext__'); if (t) t.textContent = (prompt||'Job running…').slice(0,60);
+    const i = document.getElementById('__g10jid__');   if (i) i.textContent = jobId ? `#${jobId.slice(0,8)}` : '';
   }
 }
-function updateFooter() {
-  const el=document.getElementById('__g9fl__'); if(!el)return;
-  const secs = Math.round((Date.now()-sessionStart)/1000);
-  el.textContent=`${getAccount().slice(0,18)} · ${Math.floor(secs/60)}m · ~${sessionTokens.toLocaleString()}tok · ${sessionJobs}j`;
-}
 
-// ── Log render ─────────────────────────────────────────────────────────────────
+// ── Log tab ───────────────────────────────────────────────────────────────────
 function _appendLogRow(entry) {
-  const a=document.getElementById('__g9log__'); if(!a)return;
-  const row=document.createElement('div'); row.className='g9row';
-  const ts=document.createElement('span'); ts.className='g9ts'; ts.textContent=fts(entry.ts);
-  const ic=document.createElement('span'); ic.className='g9ic'; ic.style.color=entry.color; ic.textContent=entry.icon;
-  const ct=document.createElement('div'); ct.className='g9ct';
-  const m=document.createElement('span'); m.className='g9msg'; m.style.color=entry.color; m.textContent=entry.msg; ct.appendChild(m);
-  if (entry.detail) { const d=document.createElement('div'); d.className='g9det'; d.textContent=entry.detail; ct.appendChild(d); }
-  row.append(ts,ic,ct); a.appendChild(row);
-  a.scrollTop=a.scrollHeight;
+  const a = document.getElementById('__g10log__'); if (!a) return;
+  const row = document.createElement('div'); row.className = 'g10row';
+  const ts  = document.createElement('span'); ts.className = 'g10ts'; ts.textContent = fts(entry.ts);
+  const ic  = document.createElement('span'); ic.className = 'g10ic'; ic.style.color = entry.color; ic.textContent = entry.icon;
+  const ct  = document.createElement('div'); ct.className = 'g10ct';
+  const m   = document.createElement('span'); m.className = 'g10msg'; m.style.color = entry.color; m.textContent = entry.msg; ct.appendChild(m);
+  if (entry.detail) { const d = document.createElement('div'); d.className = 'g10det'; d.textContent = entry.detail; ct.appendChild(d); }
+  row.append(ts, ic, ct); a.appendChild(row);
+  a.scrollTop = a.scrollHeight;
 }
-function renderLog() { const a=document.getElementById('__g9log__'); if(!a)return; a.innerHTML=''; logEntries.forEach(e=>_appendLogRow(e)); }
+function renderLog() {
+  const a = document.getElementById('__g10log__'); if (!a) return;
+  a.innerHTML = ''; logEntries.forEach(e => _appendLogRow(e));
+}
 
-// ── Usage tab ─────────────────────────────────────────────────────────────────
-function renderUse() {
-  const a=document.getElementById('__g9use__'); if(!a)return;
-  const secs = Math.round((Date.now()-sessionStart)/1000);
-  const tps   = sessionJobs > 0 ? (sessionTokens/sessionJobs).toFixed(0) : '—';
-  const rows = [
-    ['Session time',  `${Math.floor(secs/60)}m ${secs%60}s`],
-    ['Jobs complete', sessionJobs],
-    ['Est. tokens',   sessionTokens.toLocaleString()],
-    ['Avg tok/job',   tps],
-    ['Gaps detected', currentGaps.length],
-    ['Artifacts',     artifactStore.length],
-    ['Retries',       _usageHistory.filter(u=>u.retried).length],
-    ['Account',       getAccount().slice(0,30)],
-    ['Tab',           isClaimed?'ACTIVE (executing jobs)':'PASSIVE (ignoring jobs)'],
-    ['Chat ID',       chatId()],
-  ];
-  a.innerHTML = rows.map(([k,v])=>`<div class="g9use-row"><span class="g9use-label">${k}</span><span class="g9use-val">${v}</span></div>`).join('');
-
-  // Token bar
-  const maxTok = 100000;
-  const pct = Math.min(100, (sessionTokens/maxTok)*100).toFixed(1);
-  a.innerHTML += `<div class="g9use-bar" title="~${pct}% of 100k session budget"><div class="g9use-fill" style="width:${pct}%"></div></div>`;
-
-  // Recent jobs
-  if (_usageHistory.length) {
-    a.innerHTML += `<div style="padding:8px 12px 2px;font-size:8px;color:#1e293b;text-transform:uppercase;letter-spacing:.08em">Recent jobs</div>`;
-    for (const u of [..._usageHistory].reverse().slice(0,8)) {
-      const t=new Date(u.ts).toTimeString().slice(0,8);
-      a.innerHTML += `<div class="g9use-row"><span class="g9use-label">${t} · ${u.chatId.slice(0,8)}</span><span class="g9use-val">${u.chars}ch / ~${u.tokens}tok / ${Math.round(u.ms/1000)}s</span></div>`;
-    }
+// ── Ledger tab ────────────────────────────────────────────────────────────────
+async function renderLedger() {
+  const a = document.getElementById('__g10ledger__'); if (!a) return;
+  a.innerHTML = '<div style="color:#1e293b;font-size:9px;padding:10px 12px">Loading ledger…</div>';
+  try {
+    const r = await fetch(`${CORTEX_URL}/api/events?limit=30&source=userscript-claude`, { signal:AbortSignal.timeout(2000) });
+    const d = r.ok ? await r.json() : { rows:[] };
+    const rows = (d.rows || d.events || []).slice(0,30);
+    if (!rows.length) { a.innerHTML='<div style="color:#1e293b;font-size:9px;padding:20px;text-align:center">No ledger entries</div>'; return; }
+    a.innerHTML = rows.map(row => {
+      const cat = (row.type||'').split('.').pop().toUpperCase();
+      const catClass = row.type?.includes('error')||row.type?.includes('fail') ? 'cat-error'
+        : row.type?.includes('gap') ? 'cat-gap'
+        : row.type?.includes('complete')||row.type?.includes('ok') ? 'cat-upgrade'
+        : row.type?.includes('start')||row.type?.includes('dispatch') ? 'cat-input' : 'cat-event';
+      return `<div class="g10ledger-row">
+        <span class="g10ledger-ts">${fts(row.ts||0)}</span>
+        <span class="g10ledger-cat ${catClass}">${escHtml(cat.slice(0,8))}</span>
+        <span class="g10ledger-msg">${escHtml((row.type||'')+' '+JSON.stringify(row.payload||{}).slice(0,60))}</span>
+      </div>`;
+    }).join('');
+  } catch(_) {
+    a.innerHTML = '<div style="color:#f87171;font-size:9px;padding:12px">Cortex offline</div>';
   }
-
-  // CLI hint
-  a.innerHTML += `<div class="g9cli"><b class="g9cli-cmd">nexus> ledger guardian</b><br><span class="g9cli-desc">Full usage history available in the NEXUS CLI</span><br><b class="g9cli-cmd">nexus> jobs</b> · <b class="g9cli-cmd">nexus> events</b></div>`;
 }
 
 // ── Gaps tab ──────────────────────────────────────────────────────────────────
 function renderGaps() {
-  const a=document.getElementById('__g9gaps__'); if(!a)return;
-  if (!currentGaps.length) { a.innerHTML='<div style="color:#1e293b;font-size:9px;padding:20px;text-align:center">No gaps detected this session</div>'; return; }
-  a.innerHTML = currentGaps.map(g=>`<div class="g9gap"><div class="g9gap-type">${g.type||'—'}</div><div class="g9gap-desc">${escHtml(g.reason||g.description||'')}</div><div class="g9gap-score">score: ${(g.score||0).toFixed(2)}</div></div>`).join('');
-  a.innerHTML += `<div class="g9cli"><b class="g9cli-cmd">nexus> gaps</b><br><span class="g9cli-desc">Gap history → cortex event_log + idearium gaps</span></div>`;
+  const a = document.getElementById('__g10gaps__'); if (!a) return;
+  if (!currentGaps.length) {
+    a.innerHTML = '<div style="color:#1e293b;font-size:9px;padding:20px;text-align:center">No gaps this session</div>';
+    return;
+  }
+  a.innerHTML = currentGaps.map(g => `
+    <div class="g10gap">
+      <div class="g10gap-type">${escHtml(g.type||'unknown')}</div>
+      <div class="g10gap-desc">${escHtml(g.reason||g.description||'')}</div>
+      <div class="g10gap-score">score: ${(g.score||0).toFixed(2)} · domain: ${escHtml(g.domain||'?')}</div>
+    </div>`).join('');
 }
 
 // ── Artifacts tab ─────────────────────────────────────────────────────────────
 let _artExpanded = new Set();
 function renderArts() {
-  const a=document.getElementById('__g9arts__'); if(!a)return;
-  if (!artifactStore.length) { a.innerHTML='<div style="color:#1e293b;font-size:9px;padding:20px;text-align:center">No artifacts this session</div>'; return; }
-  a.innerHTML = '';
-  for (const art of [...artifactStore].reverse()) {
-    const div=document.createElement('div'); div.className='g9art';
-    const exp = _artExpanded.has(art.hash);
-    div.innerHTML=`<div class="g9art-hdr"><span class="g9art-lang">${art.lang||'text'}</span><span class="g9art-sz">${art.content.length}ch</span><span class="g9art-hash">#${art.hash}</span><span style="color:#334155;margin-left:auto">${exp?'▲':'▼'}</span></div>${exp?`<div class="g9art-pre">${escHtml(art.content.slice(0,400))}${art.content.length>400?'…':''}</div>`:''}`;
-    div.addEventListener('click',()=>{ if(exp)_artExpanded.delete(art.hash);else _artExpanded.add(art.hash); renderArts(); });
-    a.appendChild(div);
-  }
-  a.innerHTML += `<div class="g9cli"><b class="g9cli-cmd">nexus> </b><span class="g9cli-desc">Artifacts synced to guardian memory server & cortex</span></div>`;
-}
-
-// ── SEAM tab — minimal (parse + inject) ──────────────────────────────────────
-let seamState = { chunks:[], title:'', sysPrompt:'nexus' };
-function seamLoad() { try { const s=localStorage.getItem('seam_v9'); if(s)seamState=JSON.parse(s); }catch(_){} }
-function seamSave() { try { localStorage.setItem('seam_v9',JSON.stringify(seamState)); }catch(_){} }
-seamLoad();
-
-function renderSeam() {
-  const a=document.getElementById('__g9seam__'); if(!a)return;
-  a.innerHTML='';
-
-  // Title bar
-  const tb=document.createElement('div'); tb.style.cssText='display:flex;gap:4px;margin-bottom:6px;align-items:center';
-  const ti=document.createElement('input'); ti.style.cssText='flex:1;background:#030308;border:1px solid #1e1e3a;color:#94a3b8;padding:3px 7px;font:inherit;font-size:9px;outline:none;border-radius:2px';
-  ti.placeholder='Spec title…'; ti.value=seamState.title||'';
-  ti.oninput=e=>{seamState.title=e.target.value;seamSave();};
-
-  const parseBtn=document.createElement('button'); parseBtn.style.cssText='background:none;border:1px solid #1e1e3a;color:#f59e0b;border-radius:2px;padding:2px 7px;font:inherit;font-size:9px;cursor:pointer';
-  parseBtn.textContent='+ Parse'; parseBtn.onclick=()=>{
-    const text=prompt('Paste spec text:'); if(!text)return;
-    const rawChunks=text.split(/\n(?=#+\s|Phase\s*\d+|PHASE\s*\d+|\d+\.\s+\*\*)/);
-    seamState.chunks=rawChunks.filter(c=>c.trim().length>30).map((c,i)=>({
-      id:i, title:c.split('\n')[0].replace(/^#+\s*/,'').trim().slice(0,60)||`Chunk ${i+1}`,
-      content:c.trim(), status:'pending', ts:Date.now(),
-    }));
-    seamState.title=ti.value||'Spec';
-    seamSave(); renderSeam();
-    _toOrc('guardian','guardian.seam.parsed',{chunks:seamState.chunks.length,title:seamState.title});
-    _toBridge('guardian.seam.parsed',{chunks:seamState.chunks.length});
-    toast(`Parsed ${seamState.chunks.length} chunks`,'success',2500);
-  };
-
-  const clearBtn=document.createElement('button'); clearBtn.style.cssText='background:none;border:1px solid #1e1e3a;color:#475569;border-radius:2px;padding:2px 7px;font:inherit;font-size:9px;cursor:pointer';
-  clearBtn.textContent='✕'; clearBtn.onclick=()=>{if(confirm('Clear SEAM?')){seamState={chunks:[],title:'',sysPrompt:'nexus'};seamSave();renderSeam();}};
-  tb.append(ti,parseBtn,clearBtn); a.appendChild(tb);
-
-  if (!seamState.chunks.length) {
-    a.innerHTML+='<div style="color:#1e293b;font-size:9px;padding:16px;text-align:center;line-height:1.8">Paste a spec → Parse → inject chunks one by one.<br>Verified chunks push to idearium + cortex.</div>';
+  const a = document.getElementById('__g10arts__'); if (!a) return;
+  if (!artifactStore.length) {
+    a.innerHTML = '<div style="color:#1e293b;font-size:9px;padding:20px;text-align:center">No artifacts (SHA-256 dedup active)</div>';
     return;
   }
-
-  // Progress
-  const done=seamState.chunks.filter(c=>c.status==='verified').length;
-  const pct=Math.round(done/seamState.chunks.length*100);
-  a.innerHTML+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="flex:1;height:3px;background:#1e1e3a;border-radius:2px;overflow:hidden"><div style="width:${pct}%;height:100%;background:linear-gradient(90deg,#f59e0b,#22c55e);border-radius:2px"></div></div><span style="font-size:9px;color:#475569">${done}/${seamState.chunks.length}</span></div>`;
-
-  // Chunks
-  for (const c of seamState.chunks) {
-    const div=document.createElement('div');
-    const scol={pending:'#334155',verified:'#22c55e',failed:'#ef4444',skipped:'#475569'}[c.status];
-    div.style.cssText='padding:5px 8px;border:1px solid #1e1e3a;border-radius:3px;margin-bottom:4px;cursor:pointer';
-    if(c.status==='verified')div.style.borderColor='rgba(34,197,94,.3)';
-    if(c.status==='failed')div.style.borderColor='rgba(239,68,68,.3)';
-    div.innerHTML=`<div style="display:flex;align-items:center;gap:6px"><span style="color:#1e293b;font-size:8px;width:16px">${c.id+1}</span><span style="color:${scol};font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(c.title)}</span><span style="color:${scol};font-size:9px">${{pending:'○',verified:'✓',failed:'✗',skipped:'—'}[c.status]}</span></div>`;
-
-    if (c.status!=='verified') {
-      const injectBtn=document.createElement('button');
-      injectBtn.style.cssText='margin-top:4px;background:none;border:1px solid rgba(245,158,11,.3);color:#f59e0b;border-radius:2px;padding:2px 7px;font:inherit;font-size:8px;cursor:pointer;width:100%';
-      injectBtn.textContent=`↗ Inject chunk ${c.id+1}`;
-      injectBtn.disabled=!!currentJobId||!isClaimed;
-      if(!isClaimed)injectBtn.title='Claim tab first';
-      injectBtn.onclick=e=>{
-        e.stopPropagation();
-        const sysPrompts={nexus:'You are building the NEXUS system. Implement exactly what is described. Do not stub or defer. End with SEAM VERDICT: PASS or FAIL.',seam:'Receive spec, implement, test, report SEAM VERDICT: PASS or FAIL.'};
-        const prompt=`${sysPrompts[seamState.sysPrompt]||sysPrompts.nexus}\n\n${c.content}`;
-        if(!injectText(prompt)){toast('No input found','error');return;}
-        const jid=uid();
-        send({type:'GUARDIAN_DELIVERED',jobId:jid,chatUrl:location.href,account:getAccount()});
-        startWatch(jid,prompt,0);
-        setTimeout(submit,500);
-        _toOrc('guardian','guardian.seam.inject',{chunk:c.id,title:c.title,chars:prompt.length});
-        toast(`Injecting chunk ${c.id+1}…`,'job',2500);
-      };
-      div.appendChild(injectBtn);
-
-      const btns=document.createElement('div'); btns.style.cssText='display:flex;gap:4px;margin-top:3px';
-      for (const [label,status,col] of [['✓ Pass','verified','#22c55e'],['✗ Fail','failed','#ef4444'],['— Skip','skipped','#475569']]) {
-        const b=document.createElement('button');
-        b.style.cssText=`flex:1;background:none;border:1px solid ${col}40;color:${col};border-radius:2px;padding:2px 4px;font:inherit;font-size:8px;cursor:pointer`;
-        b.textContent=label;
-        b.onclick=e=>{
-          e.stopPropagation();
-          c.status=status; c.verifiedAt=Date.now(); seamSave(); renderSeam();
-          if(status==='verified'){
-            _toOrc('guardian','guardian.seam.verified',{chunk:c.id,title:c.title});
-            _toBridge('guardian.seam.verified',{chunk:c.id,title:c.title});
-            _toCortex('guardian.seam.verified', { chunkIdx: c.id, chunkTitle: c.title });
-            // Push to idearium
-            fetch(`http://127.0.0.1:4800/api/ideas`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:`SEAM ✓ ${c.title}`,tags:['seam','verified'],source:'guardian'})}).catch(()=>{});
-          }
-        };
-        btns.appendChild(b);
-      }
-      div.appendChild(btns);
-    }
+  a.innerHTML = '';
+  for (const art of [...artifactStore].reverse()) {
+    const div = document.createElement('div'); div.className='g10art';
+    const exp = _artExpanded.has(art.hash);
+    div.innerHTML = `<div class="g10art-hdr">
+      <span class="g10art-lang">${escHtml(art.lang||'text')}</span>
+      <span class="g10art-sz">${art.content.length}ch</span>
+      <span class="g10art-hash">#${art.hash}</span>
+      <span style="color:#334155;margin-left:auto">${exp?'▲':'▼'}</span>
+    </div>${exp ? `<div class="g10art-pre">${escHtml(art.content.slice(0,400))}${art.content.length>400?'…':''}</div>` : ''}`;
+    div.addEventListener('click', () => {
+      if (exp) _artExpanded.delete(art.hash); else _artExpanded.add(art.hash);
+      renderArts();
+    });
     a.appendChild(div);
   }
 }
 
-// ── API tab — minimal, power ops ─────────────────────────────────────────────
-function renderApi() {
-  const a=document.getElementById('__g9api__'); if(!a)return;
-  function sec(title) { const d=document.createElement('div'); d.style.cssText='padding:8px 12px 4px;font-size:8px;color:#1e293b;text-transform:uppercase;letter-spacing:.1em;border-top:1px solid rgba(255,255,255,.04)'; d.textContent=title; a.appendChild(d); return a; }
-  function row(label,val,col='#e2e8f0') { const d=document.createElement('div');d.style.cssText='display:flex;justify-content:space-between;padding:3px 12px;font-size:9px';d.innerHTML=`<span style="color:#475569">${label}</span><span style="color:${col};font-weight:600">${escHtml(String(val))}</span>`;a.appendChild(d); }
-  function btn(label,col,fn) { const b=document.createElement('button');b.style.cssText=`margin:3px 12px;background:none;border:1px solid ${col}40;color:${col};border-radius:3px;padding:3px 10px;font:inherit;font-size:9px;cursor:pointer;display:block;width:calc(100% - 24px)`;b.textContent=label;b.onclick=fn;a.appendChild(b); }
-  a.innerHTML='';
-
-  sec('Identity');
-  row('Account', getAccount().slice(0,28));
-  row('Chat ID',  chatId());
-  row('Tab ID',   MY_TAB.slice(-10));
-  row('Provider', `${PROVIDER} v${VERSION}`);
-  row('Status',   connState, connState==='ready'?'#22c55e':'#ef4444');
-
-  sec('Tab Control');
-  row('Claim', isClaimed?'ACTIVE — executing jobs':'PASSIVE — ignoring jobs', isClaimed?'#22c55e':'#f59e0b');
-  btn(isClaimed?'Release tab (→ PASSIVE)':'Claim tab (→ ACTIVE)', isClaimed?'#f87171':'#22c55e', ()=>{ isClaimed?releaseTab():claimTab(); renderApi(); });
-
-  sec('Connection');
-  row('NCP Channel', NCP_CHANNEL); row('State', connState + ' (NCP/SSE)');
-  btn('Reconnect now', '#818cf8', ()=>{ connect(); renderApi(); });
-
-  sec('SEAM state');
-  row('Sys prompt', seamState.sysPrompt);
-  const spBtn=document.createElement('div'); spBtn.style.cssText='display:flex;gap:4px;padding:3px 12px';
-  for (const k of ['nexus','seam','generic']) {
-    const b=document.createElement('button');
-    b.style.cssText=`flex:1;background:${seamState.sysPrompt===k?'rgba(245,158,11,.15)':'none'};border:1px solid ${seamState.sysPrompt===k?'rgba(245,158,11,.5)':'#1e1e3a'};color:${seamState.sysPrompt===k?'#f59e0b':'#475569'};border-radius:2px;padding:2px;font:inherit;font-size:8px;cursor:pointer`;
-    b.textContent=k; b.onclick=()=>{seamState.sysPrompt=k;seamSave();renderApi();};
-    spBtn.appendChild(b);
+// ── SEAM tab ──────────────────────────────────────────────────────────────────
+let _seamState = { chunks:[], title:'', parsed:false };
+function renderSeam() {
+  const a = document.getElementById('__g10seam__'); if (!a) return;
+  a.innerHTML = '';
+  const ta_wrap = document.createElement('div'); ta_wrap.style.cssText='padding:8px 12px';
+  const ta = document.createElement('textarea');
+  ta.style.cssText = 'width:100%;background:#030308;border:1px solid #1e1e3a;color:#64748b;padding:6px 8px;font-family:inherit;font-size:.68rem;line-height:1.5;outline:none;resize:none;border-radius:2px;min-height:70px;display:block;box-sizing:border-box';
+  ta.placeholder = 'Paste .spec content here…';
+  const parseBtn = document.createElement('button');
+  parseBtn.style.cssText='margin-top:4px;background:none;border:1px solid rgba(129,140,248,.3);color:#818cf8;border-radius:2px;padding:3px 10px;font:inherit;font-size:9px;cursor:pointer';
+  parseBtn.textContent='Parse Spec';
+  parseBtn.onclick = () => {
+    const lines = ta.value.split('\n');
+    const chunks=[]; let cur=null;
+    for (const l of lines) {
+      const h = l.match(/^#+\s+(.*)/);
+      if (h) { if(cur)chunks.push(cur); cur={title:h[1],id:chunks.length,lines:[]}; }
+      else if (cur) cur.lines.push(l);
+    }
+    if (cur) chunks.push(cur);
+    _seamState.chunks = chunks.map(c=>({...c,content:c.lines.join('\n').trim()}));
+    _seamState.parsed = true;
+    renderSeamChunks(a);
+  };
+  ta_wrap.append(ta, parseBtn);
+  a.appendChild(ta_wrap);
+  if (_seamState.parsed) renderSeamChunks(a);
+}
+function renderSeamChunks(a) {
+  const existing = a.querySelector('.g10seam-area');
+  if (existing) existing.remove();
+  const area = document.createElement('div'); area.className='g10seam-area';
+  for (const chunk of _seamState.chunks) {
+    const div = document.createElement('div'); div.className='g10seam-chunk';
+    const hdr = document.createElement('div'); hdr.className='g10seam-hdr';
+    const title = document.createElement('span'); title.className='g10seam-title'; title.textContent=`#${chunk.id+1} ${chunk.title}`;
+    const btn = document.createElement('button'); btn.className='g10seam-inject';
+    btn.textContent='↗ Inject'; btn.disabled=!!currentJobId||!isClaimed;
+    btn.onclick = () => {
+      const prompt = `[SEAM CHUNK ${chunk.id+1}/${_seamState.chunks.length}] ${chunk.title}\n\n${chunk.content}`;
+      if (!injectText(prompt)) { toast('No input found','error'); return; }
+      send({ type:'GUARDIAN_SEAM_CHUNK', chunkId:chunk.id, title:chunk.title, total:_seamState.chunks.length,
+        jobId:currentJobId||uid(), chatUrl:location.href, account:getAccount() });
+      setTimeout(submit, 300);
+    };
+    hdr.append(title, btn); div.appendChild(hdr); area.appendChild(div);
   }
-  a.appendChild(spBtn);
-
-  sec('CLI — full power');
-  a.innerHTML += `<div class="g9cli" style="margin:6px 12px">These ops live in the NEXUS CLI:<br><b class="g9cli-cmd">nexus> status</b> — all systems health<br><b class="g9cli-cmd">nexus> jobs</b> — job queue<br><b class="g9cli-cmd">nexus> ledger guardian</b> — full ledger<br><b class="g9cli-cmd">nexus> bus guardian</b> — SISO bus log<br><b class="g9cli-cmd">nexus> gaps</b> — all open gaps<br><b class="g9cli-cmd">nexus> dispatch chatgpt &lt;prompt&gt;</b> — queue job<br><span class="g9cli-desc">Run: <b>node cli/nexus-repl.js --repl</b></span></div>`;
-
-  sec('Debug');
-  btn('Export log (JSON)', '#6366f1', ()=>{
-    const a2=document.createElement('a');
-    a2.href=URL.createObjectURL(new Blob([JSON.stringify({log:logEntries,usage:_usageHistory,gaps:currentGaps,artifacts:artifactStore.map(a=>({...a,content:a.content.slice(0,200)}))},null,2)],{type:'application/json'}));
-    a2.download=`guardian-${Date.now()}.json`; a2.click();
-    toast('Exported','success',2000);
-  });
-  btn('Scan DOM now', '#6366f1', ()=>{ scanDOM(); toast('Scan complete — check Arts tab','info',2000); });
+  a.appendChild(area);
 }
 
-// ── Footer updater ────────────────────────────────────────────────────────────
-setInterval(updateFooter, 20000);
-
-// ── Boot ──────────────────────────────────────────────────────────────────────
-buildUI();
-setConnState('disconnected');
-connect();
-_log('sys', `Guardian v${VERSION} loaded`, location.hostname);
-
-// Phase 6: version check — fire and forget, never blocks
-setTimeout(async function() {
+// ── Intelligence tab ──────────────────────────────────────────────────────────
+async function renderIntel() {
+  const a = document.getElementById('__g10intel__'); if (!a) return;
+  a.innerHTML = '<div style="color:#1e293b;font-size:9px;padding:10px 12px">Loading intelligence context…</div>';
   try {
-    var r = await fetch(NCP_URL + '/version', { signal: AbortSignal.timeout(3000) });
-    if (!r.ok) return;
-    var d = await r.json();
-    var serverVer = d.userscript_claude;
-    if (serverVer && serverVer !== VERSION) {
-      _log('sys', 'Version mismatch — server expects v' + serverVer + ', running v' + VERSION, 'Reinstall userscript from Forge');
-      toast('Update available: userscript v' + serverVer + ' (running v' + VERSION + ')', 'warn', 8000);
+    const r = await fetch(`${CORTEX_URL}/api/intelligence/status`, { signal:AbortSignal.timeout(2000) });
+    const status = r.ok ? await r.json() : null;
+    const ctx    = _intelligenceCtx;
+    let html = '';
+    if (status) {
+      html += `<div class="g10intel-section">
+        <div class="g10intel-title">Intelligence Core</div>
+        <div class="g10intel-row">Patterns: <span class="g10intel-val">${status.patterns||0} (${status.crystallised||0} crystallised)</span></div>
+        <div class="g10intel-row">Fault classes: <span class="g10intel-val">${status.faultClasses||0}</span></div>
+        <div class="g10intel-row">Reuse index: <span class="g10intel-val">${status.reuseItems||0} items</span></div>
+        <div class="g10intel-row">Drift: <span class="g10intel-val ${status.driftLevel==='critical'?'g10offline':status.driftLevel==='elevated'?'g10warn':'g10online'}">${status.driftLevel||'unknown'}</span></div>
+      </div>`;
     }
-  } catch(e) {}
-}, 4000);
+    if (ctx?.failureModes?.length) {
+      html += `<div class="g10intel-section"><div class="g10intel-title">Active Failure Modes</div>`;
+      for (const f of ctx.failureModes.slice(0,5)) {
+        html += `<div class="g10intel-row">${escHtml(f.faultClass)} <span class="g10intel-val">×${f.count}</span></div>`;
+      }
+      html += '</div>';
+    }
+    if (ctx?.reuse?.length) {
+      html += `<div class="g10intel-section"><div class="g10intel-title">Reusable Artifacts</div>`;
+      for (const r2 of ctx.reuse.slice(0,3)) {
+        html += `<div class="g10intel-row">${escHtml(r2.lang||'?')} <span class="g10intel-val">#${r2.hash}</span> ${escHtml((r2.intent||'').slice(0,40))}</div>`;
+      }
+      html += '</div>';
+    }
+    if (ctx?.patterns?.filter(p=>p.actionable).length) {
+      html += `<div class="g10intel-section"><div class="g10intel-title">Active Patterns</div>`;
+      for (const p of ctx.patterns.filter(p=>p.actionable).slice(0,3)) {
+        html += `<div class="g10intel-row" style="color:#94a3b8">${escHtml(p.description.slice(0,80))}</div>`;
+      }
+      html += '</div>';
+    }
+    a.innerHTML = html || '<div style="color:#1e293b;font-size:9px;padding:20px;text-align:center">No intelligence context yet — fire a job first</div>';
+  } catch(_) {
+    a.innerHTML = '<div style="color:#f87171;font-size:9px;padding:12px">Intelligence core offline or not initialised</div>';
+  }
+}
+
+// ── System status tab ─────────────────────────────────────────────────────────
+function renderSys() {
+  const a = document.getElementById('__g10sys__'); if (!a) return;
+  const systems = [
+    { id:'orchestrator', port:9000 }, { id:'bridge', port:9999 },
+    { id:'cortex', port:3748 },       { id:'guardian', port:7820 },
+    { id:'idearium', port:4800 },     { id:'emerge', port:4242 },
+  ];
+  const health  = _systemStatus;
+  let html = `<div class="g10sys-section">
+    <div class="g10sys-title">System Health</div>`;
+  for (const sys of systems) {
+    const online = health[sys.id]?.ok || health.systems?.[sys.id]?.ok || health[sys.id];
+    html += `<div class="g10sys-row">
+      <div class="g10sys-dot" style="background:${online?'#22c55e':'#ef4444'}"></div>
+      <span class="g10sys-label">${sys.id}</span>
+      <span class="g10sys-val ${online?'g10online':'g10offline'}">:${sys.port} ${online?'ONLINE':'OFFLINE'}</span>
+    </div>`;
+  }
+  html += '</div>';
+  html += `<div class="g10sys-section">
+    <div class="g10sys-title">Connection</div>
+    <div class="g10sys-row"><span class="g10sys-label">NCP</span><span class="g10sys-val">${NCP_URL}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Cortex</span><span class="g10sys-val">${CORTEX_URL}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Provider</span><span class="g10sys-val">${PROVIDER}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Tab</span><span class="g10sys-val">${MY_TAB.slice(0,12)}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">State</span><span class="g10sys-val ${connState==='ready'?'g10online':'g10offline'}">${connState.toUpperCase()}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Claimed</span><span class="g10sys-val ${isClaimed?'g10online':'g10offline'}">${isClaimed?'ACTIVE':'PASSIVE'}</span></div>
+  </div>`;
+  html += `<div class="g10sys-section">
+    <div class="g10sys-title">Session</div>
+    <div class="g10sys-row"><span class="g10sys-label">Account</span><span class="g10sys-val">${escHtml(getAccount().slice(0,25))}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Chat ID</span><span class="g10sys-val">${escHtml(chatId())}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Jobs</span><span class="g10sys-val">${sessionJobs}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">~Tokens</span><span class="g10sys-val">${sessionTokens.toLocaleString()}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Artifacts (IDB)</span><span class="g10sys-val">${artifactStore.length}</span></div>
+    <div class="g10sys-row"><span class="g10sys-label">Gaps</span><span class="g10sys-val">${currentGaps.length}</span></div>
+  </div>`;
+  const refreshBtn = `<div style="padding:8px 12px"><button onclick="window.__g10pollSys?.()" style="background:none;border:1px solid rgba(255,255,255,.08);color:#475569;border-radius:3px;padding:3px 10px;font:inherit;font-size:9px;cursor:pointer;width:100%">↺ Refresh</button></div>`;
+  a.innerHTML = html + refreshBtn;
+  window.__g10pollSys = pollSystemStatus;
+}
+
+// ── Options tab ───────────────────────────────────────────────────────────────
+const OPTIONS = [
+  { key:'enableContextInjection', label:'Pre-prompt intelligence injection', default:true },
+  { key:'enableArtifactCapture',  label:'Artifact capture (SHA-256 dedup)',   default:true },
+  { key:'enableAutoRetry',        label:'Auto-retry on gap detection',        default:true },
+  { key:'enableDOMMap',           label:'Send DOM map on navigation',         default:true },
+  { key:'enableStreamCapture',    label:'Stream response to cortex',          default:true },
+  { key:'enableSeamAutoInject',   label:'SEAM auto-inject mode',              default:false },
+  { key:'verboseLog',             label:'Verbose logging',                    default:false },
+];
+function loadSettings() {
+  for (const opt of OPTIONS) {
+    const v = GM_getValue('g10_'+opt.key, null);
+    _settings[opt.key] = v === null ? opt.default : v;
+  }
+}
+function renderOpts() {
+  const a = document.getElementById('__g10opts__'); if (!a) return;
+  a.innerHTML = '';
+  for (const opt of OPTIONS) {
+    const row = document.createElement('div'); row.className='g10opt-row';
+    const lbl = document.createElement('span'); lbl.className='g10opt-label'; lbl.textContent=opt.label;
+    const toggle = document.createElement('div');
+    toggle.className = 'g10opt-toggle' + (_settings[opt.key] ? ' on' : '');
+    toggle.addEventListener('click', () => {
+      _settings[opt.key] = !_settings[opt.key];
+      GM_setValue('g10_'+opt.key, _settings[opt.key]);
+      toggle.classList.toggle('on', _settings[opt.key]);
+      _log('sys', `Setting: ${opt.key}`, _settings[opt.key] ? 'on' : 'off');
+    });
+    row.append(lbl, toggle); a.appendChild(row);
+  }
+  // Connection test button
+  const testDiv = document.createElement('div'); testDiv.style.cssText='padding:10px 12px';
+  const testBtn = document.createElement('button');
+  testBtn.style.cssText = 'background:none;border:1px solid rgba(129,140,248,.3);color:#818cf8;border-radius:3px;padding:4px 12px;font:inherit;font-size:9px;cursor:pointer;width:100%';
+  testBtn.textContent = '↺ Test all connections';
+  testBtn.onclick = async () => {
+    testBtn.textContent = 'Testing…';
+    await pollSystemStatus();
+    switchTab('sys');
+    testBtn.textContent = '↺ Test all connections';
+  };
+  testDiv.appendChild(testBtn);
+  a.appendChild(testDiv);
+  // IDB stats
+  dbGetAll('artifacts').then(arts => {
+    const statsDiv = document.createElement('div'); statsDiv.style.cssText='padding:4px 14px;color:#1e293b;font-size:9px';
+    statsDiv.textContent = `IDB: ${arts.length} artifacts stored`;
+    a.appendChild(statsDiv);
+  }).catch(()=>{});
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  loadSettings();
+  await dbOpen().catch(() => { _log('err','IDB failed — degraded mode'); });
+  buildUI();
+  connect();
+  _log('sys', `Guardian v${VERSION}`, `${PROVIDER} · ${location.hostname}`);
+  // DOM map on load if enabled
+  if (_settings.enableDOMMap) setTimeout(() => sendDOMMap(), 3000);
+  // Periodic footer update
+  setInterval(() => {
+    const el = document.getElementById('__g10fl__');
+    if (el) {
+      const secs = Math.round((Date.now()-sessionStart)/1000);
+      el.textContent = `${getAccount().slice(0,16)} · ${Math.floor(secs/60)}m · ~${sessionTokens.toLocaleString()}tok`;
+    }
+  }, 5000);
+}
+
+init().catch(e => console.error('[Guardian §1.2]', e));
 
 })();

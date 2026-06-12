@@ -29,7 +29,7 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-export const VERSION   = '2.0.0';
+export const VERSION   = '3.0.0';
 export const NAMESPACE = 'idearium';
 export const PORT      = 4800;
 

@@ -1,0 +1,13 @@
+{
+  "stats": {
+    "cortex.storage.opened": {
+      "count": 2,
+      "lastTs": 1781247313921,
+      "intervals": [
+        2871780
+      ],
+      "totalMs": 2871780
+    }
+  },
+  "baseline": {}
+}

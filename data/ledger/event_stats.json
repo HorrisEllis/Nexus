@@ -1,0 +1,538 @@
+{
+  "stats": {
+    "orchestrator.boot.started": {
+      "count": 2,
+      "lastTs": 1781247313767,
+      "intervals": [
+        2871769
+      ],
+      "totalMs": 2871769
+    },
+    "orchestrator.phase.ok": {
+      "count": 14,
+      "lastTs": 1781247313823,
+      "intervals": [
+        0,
+        11,
+        34,
+        0,
+        1,
+        4,
+        2871719,
+        0,
+        10,
+        40,
+        0,
+        1,
+        3
+      ],
+      "totalMs": 2871823
+    },
+    "orchestrator.cli.terminal.opened": {
+      "count": 2,
+      "lastTs": 1781247313797,
+      "intervals": [
+        2871771
+      ],
+      "totalMs": 2871771
+    },
+    "orchestrator.ui.opened": {
+      "count": 2,
+      "lastTs": 1781247313809,
+      "intervals": [
+        2871774
+      ],
+      "totalMs": 2871774
+    },
+    "orchestrator.booted": {
+      "count": 2,
+      "lastTs": 1781247313810,
+      "intervals": [
+        2871773
+      ],
+      "totalMs": 2871773
+    },
+    "orchestrator.systems.sequence.started": {
+      "count": 2,
+      "lastTs": 1781247313811,
+      "intervals": [
+        2871773
+      ],
+      "totalMs": 2871773
+    },
+    "orchestrator.system.starting": {
+      "count": 10,
+      "lastTs": 1781247320302,
+      "intervals": [
+        1631,
+        16242,
+        1618,
+        1622,
+        2850660,
+        1620,
+        1619,
+        1623,
+        1629
+      ],
+      "totalMs": 2878264
+    },
+    "orchestrator.boot.complete": {
+      "count": 2,
+      "lastTs": 1781247313824,
+      "intervals": [
+        2871774
+      ],
+      "totalMs": 2871774
+    },
+    "system.registered": {
+      "count": 11,
+      "lastTs": 1781247323917,
+      "intervals": [
+        73,
+        17905,
+        1,
+        3583,
+        3173,
+        2847039,
+        73,
+        1671,
+        5185,
+        3164
+      ],
+      "totalMs": 2881867
+    },
+    "orchestrator.pulse": {
+      "count": 880,
+      "lastTs": 1781247484045,
+      "intervals": [
+        7994,
+        1941,
+        80,
+        7991,
+        1939,
+        80,
+        7991,
+        1936,
+        80,
+        7994,
+        1931,
+        80,
+        7999,
+        1931,
+        80,
+        7993,
+        1933,
+        80,
+        7988,
+        1933,
+        81,
+        7986,
+        1938,
+        76,
+        7998,
+        1938,
+        76,
+        7985,
+        1952,
+        62,
+        8000,
+        1949,
+        63,
+        7987,
+        1950,
+        62,
+        8004,
+        1939,
+        64,
+        8002,
+        1949,
+        64,
+        7997,
+        1951,
+        65,
+        7985,
+        1962,
+        65,
+        7974,
+        1962,
+        64,
+        7985,
+        1960,
+        64,
+        7983,
+        1965,
+        53,
+        7985,
+        1967,
+        49,
+        7988,
+        1976,
+        48,
+        7989,
+        51562,
+        121,
+        9875,
+        97,
+        9917,
+        95,
+        9918,
+        95,
+        9915,
+        95,
+        9921,
+        79,
+        9937,
+        81,
+        9921,
+        79,
+        9931,
+        80,
+        9927,
+        78,
+        9936,
+        76,
+        9927,
+        78,
+        9925,
+        79,
+        9923,
+        79,
+        9926,
+        79,
+        9926,
+        79,
+        9934,
+        79,
+        9934,
+        79
+      ],
+      "totalMs": 3041994
+    },
+    "cortex.boot.started": {
+      "count": 2,
+      "lastTs": 1781247313897,
+      "intervals": [
+        2871775
+      ],
+      "totalMs": 2871775
+    },
+    "cortex.registered": {
+      "count": 2,
+      "lastTs": 1781247313901,
+      "intervals": [
+        2871774
+      ],
+      "totalMs": 2871774
+    },
+    "cortex.phase.ok": {
+      "count": 22,
+      "lastTs": 1781247313975,
+      "intervals": [
+        24,
+        2,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        2871759,
+        26,
+        0,
+        1,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalMs": 2871819
+    },
+    "repl.status": {
+      "count": 2,
+      "lastTs": 1781247313933,
+      "intervals": [
+        2871776
+      ],
+      "totalMs": 2871776
+    },
+    "cortex.boot.complete": {
+      "count": 2,
+      "lastTs": 1781247313975,
+      "intervals": [
+        2871789
+      ],
+      "totalMs": 2871789
+    },
+    "cortex.system.online": {
+      "count": 2,
+      "lastTs": 1781247314624,
+      "intervals": [
+        2871761
+      ],
+      "totalMs": 2871761
+    },
+    "orchestrator.system.failed": {
+      "count": 1,
+      "lastTs": 1781244459008,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "guardian.diagnose.result": {
+      "count": 1,
+      "lastTs": 1781244459101,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "idearium.boot.started": {
+      "count": 2,
+      "lastTs": 1781247317147,
+      "intervals": [
+        2857135
+      ],
+      "totalMs": 2857135
+    },
+    "idearium.phase.ok": {
+      "count": 8,
+      "lastTs": 1781247317147,
+      "intervals": [
+        8,
+        2,
+        5,
+        1,
+        1,
+        2,
+        2857116
+      ],
+      "totalMs": 2857135
+    },
+    "idearium.booted": {
+      "count": 1,
+      "lastTs": 1781244460029,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "idearium.boot.complete": {
+      "count": 1,
+      "lastTs": 1781244460031,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "idearium.system.online": {
+      "count": 2,
+      "lastTs": 1781247317859,
+      "intervals": [
+        2857138
+      ],
+      "totalMs": 2857138
+    },
+    "architect.system.online": {
+      "count": 2,
+      "lastTs": 1781247319495,
+      "intervals": [
+        2857154
+      ],
+      "totalMs": 2857154
+    },
+    "emerge.system.online": {
+      "count": 2,
+      "lastTs": 1781247321111,
+      "intervals": [
+        2857147
+      ],
+      "totalMs": 2857147
+    },
+    "orchestrator.systems.sequence.complete": {
+      "count": 2,
+      "lastTs": 1781247321916,
+      "intervals": [
+        2857147
+      ],
+      "totalMs": 2857147
+    },
+    "guardian.boot.started": {
+      "count": 1,
+      "lastTs": 1781247315532,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "guardian.phase.ok": {
+      "count": 11,
+      "lastTs": 1781247315573,
+      "intervals": [
+        20,
+        1,
+        1,
+        0,
+        0,
+        13,
+        0,
+        0,
+        4,
+        1
+      ],
+      "totalMs": 40
+    },
+    "guardian.registered": {
+      "count": 1,
+      "lastTs": 1781247315570,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "[object Object]": {
+      "count": 1,
+      "lastTs": 1781247315572,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "guardian.boot.complete": {
+      "count": 1,
+      "lastTs": 1781247315573,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "ncp.message.received": {
+      "count": 12,
+      "lastTs": 1781247493707,
+      "intervals": [
+        1051,
+        198,
+        1881,
+        181,
+        75916,
+        2668,
+        21,
+        352,
+        1672,
+        1020,
+        93136
+      ],
+      "totalMs": 178096
+    },
+    "guardian.system.online": {
+      "count": 1,
+      "lastTs": 1781247316242,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "ncp.client.connected": {
+      "count": 3,
+      "lastTs": 1781247397516,
+      "intervals": [
+        253,
+        80667
+      ],
+      "totalMs": 80920
+    },
+    "guardian.provider.connected": {
+      "count": 3,
+      "lastTs": 1781247397516,
+      "intervals": [
+        253,
+        80667
+      ],
+      "totalMs": 80920
+    },
+    "guardian.provider.registered": {
+      "count": 3,
+      "lastTs": 1781247397527,
+      "intervals": [
+        198,
+        80667
+      ],
+      "totalMs": 80865
+    },
+    "idearium.phase.failed": {
+      "count": 1,
+      "lastTs": 1781247317572,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "idearium.boot.halted": {
+      "count": 1,
+      "lastTs": 1781247317572,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "idearium.diagnose.complete": {
+      "count": 1,
+      "lastTs": 1781247317646,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "ncp.client.disconnected": {
+      "count": 1,
+      "lastTs": 1781247395954,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "guardian.provider.disconnected": {
+      "count": 1,
+      "lastTs": 1781247395955,
+      "intervals": [],
+      "totalMs": 0
+    }
+  },
+  "baseline": {
+    "cortex.phase.ok": {
+      "avgIntervalMs": 151148,
+      "stddevMs": 641254,
+      "consistency": 0,
+      "count": 20,
+      "sampleSize": 19,
+      "computedAt": 1781247313975
+    },
+    "orchestrator.pulse": {
+      "avgIntervalMs": 4399,
+      "stddevMs": 6231,
+      "consistency": 0,
+      "count": 880,
+      "sampleSize": 100,
+      "computedAt": 1781247484045
+    },
+    "orchestrator.phase.ok": {
+      "avgIntervalMs": 319087,
+      "stddevMs": 902492,
+      "consistency": 0,
+      "count": 10,
+      "sampleSize": 9,
+      "computedAt": 1781247313779
+    },
+    "guardian.phase.ok": {
+      "avgIntervalMs": 4,
+      "stddevMs": 7,
+      "consistency": 0,
+      "count": 10,
+      "sampleSize": 9,
+      "computedAt": 1781247315572
+    },
+    "orchestrator.system.starting": {
+      "avgIntervalMs": 319807,
+      "stddevMs": 894803,
+      "consistency": 0,
+      "count": 10,
+      "sampleSize": 9,
+      "computedAt": 1781247320302
+    },
+    "system.registered": {
+      "avgIntervalMs": 319856,
+      "stddevMs": 893510,
+      "consistency": 0,
+      "count": 10,
+      "sampleSize": 9,
+      "computedAt": 1781247320753
+    },
+    "ncp.message.received": {
+      "avgIntervalMs": 9327,
+      "stddevMs": 23559,
+      "consistency": 0,
+      "count": 10,
+      "sampleSize": 9,
+      "computedAt": 1781247399551
+    }
+  }
+}

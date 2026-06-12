@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS · META OBSERVER</title>
+<style>
+:root {
+  --bg0:   #020207;
+  --bg1:   #07070f;
+  --bg2:   #0d0d1a;
+  --bg3:   #111124;
+  --line:  rgba(255,255,255,.05);
+  --line2: rgba(255,255,255,.10);
+  --text0: #e2e8f0;
+  --text1: #94a3b8;
+  --text2: #475569;
+  --text3: #1e293b;
+  --acc:   #818cf8;
+  --grn:   #22c55e;
+  --red:   #ef4444;
+  --yel:   #f59e0b;
+  --cyn:   #22d3ee;
+  --pnk:   #f472b6;
+  --pur:   #a78bfa;
+  --mono:  'SF Mono','Fira Code',monospace;
+  --sans:  -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg0);color:var(--text1);font-family:var(--sans);font-size:12px;overflow:hidden;height:100vh;display:flex;flex-direction:column}
+
+/* ── Top bar ── */
+#topbar{display:flex;align-items:center;gap:12px;padding:0 16px;height:42px;border-bottom:1px solid var(--line);flex-shrink:0;background:var(--bg1)}
+#topbar .logo{color:var(--text0);font-weight:700;letter-spacing:.12em;font-size:13px}
+#topbar .sep{color:var(--text3)}
+#topbar .sub{color:var(--text2);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+#topbar .spacer{flex:1}
+#topbar .refresh-btn{background:none;border:1px solid var(--line2);color:var(--text2);padding:3px 10px;border-radius:3px;cursor:pointer;font:inherit;font-size:10px;letter-spacing:.06em}
+#topbar .refresh-btn:hover{color:var(--text0);border-color:var(--acc)}
+#topbar .live-dot{width:7px;height:7px;border-radius:50%;background:var(--red)}
+#topbar .live-dot.live{background:var(--grn);animation:pulse 2s infinite}
+#topbar .ts{color:var(--text3);font:10px var(--mono)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── Nav tabs ── */
+#nav{display:flex;gap:2px;padding:8px 16px 0;border-bottom:1px solid var(--line);flex-shrink:0;background:var(--bg1)}
+.ntab{padding:6px 14px;cursor:pointer;color:var(--text2);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:2px solid transparent;transition:color .15s}
+.ntab:hover{color:var(--text1)}
+.ntab.active{color:var(--acc);border-bottom-color:var(--acc)}
+
+/* ── Main layout ── */
+#main{flex:1;display:flex;min-height:0;overflow:hidden}
+#sidebar{width:260px;flex-shrink:0;border-right:1px solid var(--line);overflow-y:auto;background:var(--bg1)}
+#content{flex:1;overflow-y:auto;padding:16px}
+
+/* ── Sidebar system cards ── */
+.sys-card{border-bottom:1px solid var(--line);padding:12px 14px;cursor:pointer;transition:background .12s}
+.sys-card:hover,.sys-card.active{background:var(--bg2)}
+.sys-card .sc-head{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.sys-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sys-name{color:var(--text0);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.sys-port{color:var(--text3);font:9px var(--mono);margin-left:auto}
+.sys-status{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.sc-row{display:flex;justify-content:space-between;margin-top:2px}
+.sc-label{color:var(--text3);font-size:9px}
+.sc-val{font-size:9px;font-family:var(--mono)}
+.bpm-bar{height:2px;background:var(--bg3);margin-top:6px;border-radius:1px;overflow:hidden}
+.bpm-fill{height:100%;background:var(--acc);transition:width .4s}
+
+/* ── Metric grid ── */
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.metric{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.metric .m-val{font-size:22px;font-weight:700;color:var(--text0);font-family:var(--mono)}
+.metric .m-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.metric .m-sub{font-size:9px;color:var(--text3);margin-top:2px}
+.metric.ok .m-val{color:var(--grn)}
+.metric.warn .m-val{color:var(--yel)}
+.metric.crit .m-val{color:var(--red)}
+
+/* ── Section ── */
+.section{margin-bottom:20px}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.section-title{color:var(--text0);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+.section-action{background:none;border:1px solid var(--line2);color:var(--text2);padding:2px 9px;border-radius:3px;cursor:pointer;font:inherit;font-size:9px}
+.section-action:hover{color:var(--text0);border-color:var(--acc)}
+
+/* ── Event ledger ── */
+.ev-row{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.ev-ts{color:var(--text3);font:9px var(--mono);flex-shrink:0;width:58px;padding-top:1px}
+.ev-type{font-size:9px;font-family:var(--mono);flex-shrink:0;width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-payload{color:var(--text2);font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-sys{font-size:8px;font-weight:700;text-transform:uppercase;flex-shrink:0;padding:1px 5px;border-radius:2px;background:rgba(255,255,255,.04);color:var(--text2)}
+
+/* ── Gap table ── */
+.gap-row{background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:8px 12px;margin-bottom:6px}
+.gap-row.sev-fatal{border-color:#ef444433}
+.gap-row.sev-high{border-color:#f59e0b33}
+.gap-hdr{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.gap-type{color:var(--pnk);font:9px var(--mono);font-weight:700;text-transform:uppercase}
+.gap-sev{font-size:8px;font-weight:700;text-transform:uppercase;padding:1px 6px;border-radius:10px}
+.sev-fatal .gap-sev{background:#ef444422;color:#ef4444}
+.sev-high .gap-sev{background:#f59e0b22;color:#f59e0b}
+.sev-medium .gap-sev{background:#81818122;color:#94a3b8}
+.gap-body{color:var(--text2);font-size:9px;line-height:1.5}
+.gap-meta{color:var(--text3);font-size:9px;margin-top:3px}
+
+/* ── Snapshot list ── */
+.snap-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg2);border:1px solid var(--line);border-radius:4px;margin-bottom:5px;cursor:pointer;transition:background .12s}
+.snap-row:hover{background:var(--bg3)}
+.snap-id{color:var(--acc);font:9px var(--mono);flex-shrink:0;width:100px;overflow:hidden;text-overflow:ellipsis}
+.snap-type{font-size:8px;text-transform:uppercase;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(129,140,248,.12);color:var(--acc);flex-shrink:0}
+.snap-ts{color:var(--text3);font:9px var(--mono);flex-shrink:0;margin-left:auto}
+.snap-rows{color:var(--text2);font-size:9px;flex-shrink:0}
+.snap-btn{background:none;border:1px solid var(--line2);color:var(--text3);padding:2px 7px;border-radius:2px;cursor:pointer;font:8px var(--mono);flex-shrink:0}
+.snap-btn:hover{color:var(--text0);border-color:var(--acc)}
+.snap-btn.danger:hover{color:var(--red);border-color:var(--red)}
+
+/* ── Version timeline ── */
+.ver-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);align-items:center}
+.ver-hash{color:var(--acc);font:9px var(--mono);flex-shrink:0;width:72px}
+.ver-msg{color:var(--text1);font-size:9px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ver-files{color:var(--text3);font-size:9px;flex-shrink:0}
+.ver-sigma{font:9px var(--mono);flex-shrink:0;width:40px;text-align:right}
+.ver-ts{color:var(--text3);font:9px var(--mono);flex-shrink:0;width:58px;text-align:right}
+.ver-branch{font-size:8px;text-transform:uppercase;padding:1px 5px;border-radius:10px;background:rgba(34,211,238,.1);color:var(--cyn);flex-shrink:0}
+
+/* ── Intelligence panels ── */
+.intel-block{background:var(--bg2);border:1px solid var(--line);border-radius:5px;padding:10px 12px;margin-bottom:8px}
+.intel-block .ib-title{color:var(--yel);font-size:8px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:6px}
+.intel-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--line)}
+.intel-row:last-child{border-bottom:none}
+.intel-label{color:var(--text2);font-size:9px}
+.intel-val{color:var(--text0);font-size:9px;font-family:var(--mono)}
+.pattern-row{padding:5px 0;border-bottom:1px solid var(--line)}
+.pattern-row:last-child{border-bottom:none}
+.pattern-type{color:var(--cyn);font-size:8px;font-weight:700;text-transform:uppercase}
+.pattern-desc{color:var(--text1);font-size:9px;margin-top:2px}
+.pattern-conf{color:var(--text3);font-size:9px}
+
+/* ── Drift indicator ── */
+.drift-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-top:6px}
+.drift-fill{height:100%;border-radius:3px;transition:width .5s}
+.drift-normal{background:var(--grn)}
+.drift-elevated{background:var(--yel)}
+.drift-critical{background:var(--red);animation:pulse 1s infinite}
+
+/* ── System detail panel ── */
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.det-card{background:var(--bg2);border:1px solid var(--line);border-radius:5px;padding:10px 12px}
+.det-card-title{color:var(--text2);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.det-row{display:flex;justify-content:space-between;padding:2px 0}
+.det-label{color:var(--text3);font-size:9px}
+.det-val{color:var(--text0);font-size:9px;font-family:var(--mono)}
+
+/* ── CFR field ── */
+.cfr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.cfr-dim{background:var(--bg2);border:1px solid var(--line);border-radius:4px;padding:8px 10px;text-align:center}
+.cfr-dim-val{font:700 18px var(--mono);color:var(--text0)}
+.cfr-dim-name{color:var(--text3);font-size:8px;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.cfr-dim-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden}
+.cfr-dim-fill{height:100%;border-radius:2px;transition:width .4s}
+
+/* ── Fault taxonomy ── */
+.fault-row{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);align-items:center}
+.fault-class{color:var(--red);font:700 9px var(--mono);flex-shrink:0;width:160px;overflow:hidden;text-overflow:ellipsis}
+.fault-count{color:var(--text0);font:700 11px var(--mono);flex-shrink:0;width:30px;text-align:right}
+.fault-systems{color:var(--text3);font-size:9px;flex:1}
+.fault-last{color:var(--text3);font:9px var(--mono);flex-shrink:0}
+
+/* ── Loading/empty ── */
+.loading{color:var(--text3);font-size:10px;padding:20px;text-align:center;animation:pulse 1.5s infinite}
+.empty{color:var(--text3);font-size:10px;padding:20px;text-align:center}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(6,6,12,.95);border:1px solid var(--acc);color:var(--acc);padding:8px 16px;border-radius:6px;font-size:11px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9999}
+#toast.show{opacity:1}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div id="topbar">
+  <span class="logo">NEXUS</span>
+  <span class="sep">·</span>
+  <span class="sub">Meta Observer</span>
+  <div class="spacer"></div>
+  <span id="live-dot" class="live-dot"></span>
+  <span id="last-refresh" class="ts">—</span>
+  <button class="refresh-btn" onclick="refreshAll()">↺ Refresh</button>
+</div>
+
+<!-- Nav -->
+<div id="nav">
+  <div class="ntab active" data-tab="overview" onclick="switchTab('overview')">Overview</div>
+  <div class="ntab" data-tab="events" onclick="switchTab('events')">Event Ledger</div>
+  <div class="ntab" data-tab="gaps" onclick="switchTab('gaps')">Gaps</div>
+  <div class="ntab" data-tab="intelligence" onclick="switchTab('intelligence')">Intelligence</div>
+  <div class="ntab" data-tab="versions" onclick="switchTab('versions')">Versions</div>
+  <div class="ntab" data-tab="snapshots" onclick="switchTab('snapshots')">Snapshots</div>
+  <div class="ntab" data-tab="faults" onclick="switchTab('faults')">Fault Taxonomy</div>
+</div>
+
+<!-- Main -->
+<div id="main">
+  <!-- Sidebar: system cards -->
+  <div id="sidebar" id="sidebar">
+    <div style="padding:10px 14px 6px;color:var(--text3);font-size:8px;text-transform:uppercase;letter-spacing:.1em;font-weight:700">Systems</div>
+    <div id="sys-cards"><div class="loading">Polling systems…</div></div>
+  </div>
+
+  <!-- Content area -->
+  <div id="content">
+    <div id="tab-overview"><div class="loading">Loading…</div></div>
+    <div id="tab-events" style="display:none"><div class="loading">Loading…</div></div>
+    <div id="tab-gaps" style="display:none"><div class="loading">Loading…</div></div>
+    <div id="tab-intelligence" style="display:none"><div class="loading">Loading…</div></div>
+    <div id="tab-versions" style="display:none"><div class="loading">Loading…</div></div>
+    <div id="tab-snapshots" style="display:none"><div class="loading">Loading…</div></div>
+    <div id="tab-faults" style="display:none"><div class="loading">Loading…</div></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ── Config ──────────────────────────────────────────────────────────────────
+const ORCH    = 'http://127.0.0.1:9000';
+const CORTEX  = 'http://127.0.0.1:3748';
+const BRIDGE  = 'http://127.0.0.1:9999';
+const GUARDIAN= 'http://127.0.0.1:7820';
+const REFRESH_MS = 15000;
+
+const SYSTEMS = [
+  { id:'orchestrator', label:'Orchestrator', port:9000, base:ORCH,     health:'/health',      color:'#818cf8' },
+  { id:'bridge',       label:'Bridge',       port:9999, base:BRIDGE,   health:'/health',      color:'#22d3ee' },
+  { id:'cortex',       label:'Cortex',       port:3748, base:CORTEX,   health:'/health',      color:'#34d399' },
+  { id:'guardian',     label:'Guardian',     port:7820, base:GUARDIAN, health:'/health',      color:'#f59e0b' },
+  { id:'idearium',     label:'Idearium',     port:4800, base:'http://127.0.0.1:4800', health:'/health', color:'#f472b6' },
+  { id:'emerge',       label:'Emerge',       port:4242, base:'http://127.0.0.1:4242', health:'/health', color:'#a78bfa' },
+];
+
+// ── State ───────────────────────────────────────────────────────────────────
+let _state = {
+  systems:     {},   // id → { online, latency, lastSeen, health }
+  events:      [],
+  gaps:        [],
+  intelligence:null,
+  versions:    [],
+  snapshots:   [],
+  faults:      {},
+  driftLevel:  'unknown',
+  selectedSys: null,
+};
+let _tab = 'overview';
+let _autoRefresh = null;
+
+// ── Utils ───────────────────────────────────────────────────────────────────
+function fts(ts) {
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toTimeString().slice(0,8);
+}
+function fago(ts) {
+  if (!ts) return '—';
+  const s = Math.round((Date.now()-ts)/1000);
+  if (s < 60) return s+'s ago';
+  if (s < 3600) return Math.round(s/60)+'m ago';
+  return Math.round(s/3600)+'h ago';
+}
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function colorByScore(score) {
+  if (score >= 0.8) return 'var(--grn)';
+  if (score >= 0.5) return 'var(--yel)';
+  return 'var(--red)';
+}
+function driftColor(level) {
+  if (level === 'critical') return 'var(--red)';
+  if (level === 'elevated') return 'var(--yel)';
+  if (level === 'normal')   return 'var(--grn)';
+  return 'var(--text3)';
+}
+
+async function api(base, path, opts={}) {
+  try {
+    const r = await fetch(base+path, { signal: AbortSignal.timeout(3000), ...opts });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch(_) { return null; }
+}
+
+function toast(msg, ms=2500) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), ms);
+}
+
+// ── Tab switching ────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  _tab = tab;
+  document.querySelectorAll('.ntab').forEach(t => t.classList.toggle('active', t.dataset.tab===tab));
+  ['overview','events','gaps','intelligence','versions','snapshots','faults'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+  });
+  renderTab(tab);
+}
+
+// ── Data fetching ────────────────────────────────────────────────────────────
+async function fetchAll() {
+  // System health (parallel)
+  const healthResults = await Promise.all(
+    SYSTEMS.map(async sys => {
+      const t0 = Date.now();
+      const r  = await api(sys.base, sys.health);
+      return { id: sys.id, online: !!r, latency: Date.now()-t0, data: r };
+    })
+  );
+  healthResults.forEach(({ id, online, latency, data }) => {
+    _state.systems[id] = {
+      online, latency,
+      lastSeen: online ? Date.now() : (_state.systems[id]?.lastSeen || null),
+      health: data,
+    };
+  });
+
+  // Events from cortex
+  const evData = await api(CORTEX, '/api/events?limit=100');
+  if (evData) _state.events = evData.rows || evData.events || [];
+
+  // Gaps
+  const gapData = await api(CORTEX, '/api/gaps?status=open&limit=50');
+  if (gapData) _state.gaps = gapData.rows || gapData.gaps || [];
+
+  // Intelligence status
+  const intel = await api(CORTEX, '/api/intelligence/status');
+  if (intel) _state.intelligence = intel;
+
+  // Intelligence context (for patterns + failures)
+  const ctx = await api(CORTEX, '/api/intelligence/context');
+  if (ctx) _state.intelCtx = ctx;
+
+  // Patterns
+  const pats = await api(CORTEX, '/api/intelligence/patterns');
+  if (pats) _state.patterns = pats.patterns || [];
+
+  // Failure taxonomy
+  const failures = await api(CORTEX, '/api/intelligence/failures');
+  if (failures) _state.faults = failures.failures || [];
+
+  // Snapshots
+  const snaps = await api(CORTEX, '/api/snapshots?n=20');
+  if (snaps) _state.snapshots = snaps.snapshots || [];
+
+  // Versionium log
+  const verLog = await api(CORTEX, '/api/versionium/log?n=30');
+  if (verLog) _state.versions = verLog.commits || verLog.log || [];
+
+  // Drift
+  if (_state.intelligence?.driftLevel) _state.driftLevel = _state.intelligence.driftLevel;
+
+  // Update live dot
+  const anyOnline = Object.values(_state.systems).some(s => s.online);
+  document.getElementById('live-dot').classList.toggle('live', anyOnline);
+  document.getElementById('last-refresh').textContent = new Date().toTimeString().slice(0,8);
+}
+
+// ── Render: System cards ─────────────────────────────────────────────────────
+function renderSidebarCards() {
+  const container = document.getElementById('sys-cards');
+  container.innerHTML = SYSTEMS.map(sys => {
+    const s   = _state.systems[sys.id] || {};
+    const col = s.online ? sys.color : 'var(--red)';
+    const bpm = s.health?.bpm || 0;
+    const score = s.online ? Math.max(0, 1 - (s.latency||0)/1500) : 0;
+    const selected = _state.selectedSys === sys.id ? ' active' : '';
+    return `<div class="sys-card${selected}" onclick="selectSystem('${sys.id}')">
+      <div class="sc-head">
+        <div class="sys-dot" style="background:${col}"></div>
+        <span class="sys-name">${sys.label}</span>
+        <span class="sys-port">:${sys.port}</span>
+      </div>
+      <div class="sc-row">
+        <span class="sc-label">Status</span>
+        <span class="sys-status" style="color:${col}">${s.online?'ONLINE':'OFFLINE'}</span>
+      </div>
+      <div class="sc-row">
+        <span class="sc-label">Latency</span>
+        <span class="sc-val" style="color:${colorByScore(score)}">${s.online?(s.latency||0)+'ms':'—'}</span>
+      </div>
+      <div class="sc-row">
+        <span class="sc-label">Last seen</span>
+        <span class="sc-val">${fago(s.lastSeen)}</span>
+      </div>
+      <div class="bpm-bar"><div class="bpm-fill" style="width:${Math.min(100,bpm/2)}%;background:${col}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── Render: Overview ─────────────────────────────────────────────────────────
+function renderOverview() {
+  const online = Object.values(_state.systems).filter(s=>s.online).length;
+  const total  = SYSTEMS.length;
+  const openGaps = _state.gaps.length;
+  const critGaps = _state.gaps.filter(g=>g.severity==='fatal'||g.severity==='high').length;
+  const intel  = _state.intelligence;
+  const drift  = _state.driftLevel;
+  const driftScore = _state.intelCtx?.systemState?.driftScore || 0;
+
+  document.getElementById('tab-overview').innerHTML = `
+    <div class="metric-grid">
+      <div class="metric ${online===total?'ok':online>0?'warn':'crit'}">
+        <div class="m-val">${online}/${total}</div>
+        <div class="m-lbl">Systems Online</div>
+        <div class="m-sub">${online===total?'All healthy':online+' of '+total+' responding'}</div>
+      </div>
+      <div class="metric ${openGaps===0?'ok':critGaps>0?'crit':'warn'}">
+        <div class="m-val">${openGaps}</div>
+        <div class="m-lbl">Open Gaps</div>
+        <div class="m-sub">${critGaps} critical</div>
+      </div>
+      <div class="metric ${drift==='normal'?'ok':drift==='elevated'?'warn':'crit'}">
+        <div class="m-val" style="font-size:16px;text-transform:uppercase">${drift}</div>
+        <div class="m-lbl">System Drift</div>
+        <div class="m-sub">Cross-ledger analysis</div>
+      </div>
+      <div class="metric">
+        <div class="m-val">${intel?.patterns||0}</div>
+        <div class="m-lbl">Patterns</div>
+        <div class="m-sub">${intel?.crystallised||0} crystallised</div>
+      </div>
+    </div>
+
+    ${_state.selectedSys ? renderSystemDetail(_state.selectedSys) : renderAllSystems()}
+
+    <div class="section">
+      <div class="section-hdr">
+        <span class="section-title">Recent Events</span>
+        <button class="section-action" onclick="switchTab('events')">View all →</button>
+      </div>
+      ${renderEventRows(_state.events.slice(0,20))}
+    </div>
+  `;
+}
+
+function renderAllSystems() {
+  return `<div class="section">
+    <div class="section-hdr"><span class="section-title">System Health</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
+      ${SYSTEMS.map(sys => {
+        const s = _state.systems[sys.id] || {};
+        const col = s.online ? sys.color : 'var(--red)';
+        const lastEv = _state.events.find(e => e.source && e.source.includes(sys.id));
+        return `<div style="background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:12px;cursor:pointer" onclick="selectSystem('${sys.id}')">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+            <div style="width:8px;height:8px;border-radius:50%;background:${col};${s.online?'animation:pulse 2s infinite':''}"></div>
+            <span style="color:var(--text0);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase">${sys.label}</span>
+            <span style="color:var(--text3);font:9px var(--mono);margin-left:auto">:${sys.port}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="color:var(--text3);font-size:9px">Status</span>
+            <span style="color:${col};font-size:9px;font-weight:700">${s.online?'ONLINE':'OFFLINE'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="color:var(--text3);font-size:9px">Latency</span>
+            <span style="color:var(--text1);font:9px var(--mono)">${s.online?(s.latency||0)+'ms':'—'}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--text3);font-size:9px">Last event</span>
+            <span style="color:var(--text3);font:9px var(--mono)">${lastEv?fago(lastEv.ts):'—'}</span>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function renderSystemDetail(sysId) {
+  const sys = SYSTEMS.find(s=>s.id===sysId);
+  if (!sys) return '';
+  const s = _state.systems[sysId] || {};
+  const h = s.health || {};
+  const sysEvents = _state.events.filter(e => e.source?.includes(sysId)).slice(0,10);
+  const sysGaps   = _state.gaps.filter(g => g.source?.includes(sysId)).slice(0,5);
+
+  return `<div class="section">
+    <div class="section-hdr">
+      <span class="section-title" style="color:${sys.color}">${sys.label} Detail</span>
+      <button class="section-action" onclick="selectSystem(null)">← All systems</button>
+    </div>
+    <div class="det-grid">
+      <div class="det-card">
+        <div class="det-card-title">Connection</div>
+        <div class="det-row"><span class="det-label">Status</span><span class="det-val" style="color:${s.online?'var(--grn)':'var(--red)'}">${s.online?'ONLINE':'OFFLINE'}</span></div>
+        <div class="det-row"><span class="det-label">Port</span><span class="det-val">:${sys.port}</span></div>
+        <div class="det-row"><span class="det-label">Latency</span><span class="det-val">${s.latency||0}ms</span></div>
+        <div class="det-row"><span class="det-label">Last seen</span><span class="det-val">${fago(s.lastSeen)}</span></div>
+        <div class="det-row"><span class="det-label">Version</span><span class="det-val">${h.version||'—'}</span></div>
+      </div>
+      <div class="det-card">
+        <div class="det-card-title">Runtime</div>
+        <div class="det-row"><span class="det-label">Uptime</span><span class="det-val">${h.uptime?Math.round(h.uptime/60)+'m':'—'}</span></div>
+        <div class="det-row"><span class="det-label">Jobs</span><span class="det-val">${h.jobs??'—'}</span></div>
+        <div class="det-row"><span class="det-label">Providers</span><span class="det-val">${Array.isArray(h.providers)?h.providers.join(', '):(h.providers||'—')}</span></div>
+        <div class="det-row"><span class="det-label">Open gaps</span><span class="det-val" style="color:${sysGaps.length?'var(--yel)':'var(--grn)'}">${sysGaps.length}</span></div>
+      </div>
+    </div>
+    ${sysEvents.length?`<div style="margin-bottom:14px">
+      <div style="color:var(--text3);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Recent Events</div>
+      ${renderEventRows(sysEvents)}
+    </div>`:''}
+  </div>`;
+}
+
+// ── Render: Events ────────────────────────────────────────────────────────────
+function renderEventRows(events) {
+  if (!events.length) return '<div class="empty">No events</div>';
+  return events.map(ev => {
+    const sysId = ev.source?.split('/')[0] || ev.source || '?';
+    const sys   = SYSTEMS.find(s=>s.id===sysId||ev.source?.includes(s.id));
+    const col   = sys?.color || 'var(--text2)';
+    const typeCol = ev.type?.includes('error')||ev.type?.includes('fail') ? 'var(--red)'
+      : ev.type?.includes('gap') ? 'var(--pnk)'
+      : ev.type?.includes('complete')||ev.type?.includes('ok') ? 'var(--grn)'
+      : col;
+    return `<div class="ev-row">
+      <span class="ev-ts">${fts(ev.ts)}</span>
+      <span class="ev-type" style="color:${typeCol}">${esc(ev.type||'?')}</span>
+      <span class="ev-payload">${esc(JSON.stringify(ev.payload||{}).slice(0,80))}</span>
+      <span class="ev-sys" style="color:${col}">${esc(sysId.slice(0,10))}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderEvents() {
+  document.getElementById('tab-events').innerHTML = `
+    <div class="section">
+      <div class="section-hdr">
+        <span class="section-title">Event Ledger</span>
+        <span style="color:var(--text3);font-size:9px">${_state.events.length} events</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        ${['all','error','gap','complete','guardian','cortex','bridge'].map(f=>
+          `<button onclick="filterEvents('${f}')" id="evf-${f}" class="section-action" style="${f==='all'?'color:var(--acc);border-color:var(--acc)':''}">${f}</button>`
+        ).join('')}
+      </div>
+      <div id="ev-list">${renderEventRows(_state.events)}</div>
+    </div>`;
+}
+
+function filterEvents(filter) {
+  document.querySelectorAll('[id^="evf-"]').forEach(b => {
+    b.style.cssText = b.id.includes(filter) ? 'color:var(--acc);border-color:var(--acc)' : '';
+  });
+  const evs = filter === 'all' ? _state.events
+    : _state.events.filter(e => e.type?.includes(filter) || e.source?.includes(filter));
+  document.getElementById('ev-list').innerHTML = renderEventRows(evs);
+}
+
+// ── Render: Gaps ─────────────────────────────────────────────────────────────
+function renderGaps() {
+  const gaps = _state.gaps;
+  document.getElementById('tab-gaps').innerHTML = `
+    <div class="section">
+      <div class="section-hdr">
+        <span class="section-title">Open Gaps</span>
+        <span style="color:var(--text3);font-size:9px">${gaps.length} open</span>
+      </div>
+      ${!gaps.length ? '<div class="empty">No open gaps — system clean</div>' :
+        gaps.map(g => `<div class="gap-row sev-${g.severity||'medium'}">
+          <div class="gap-hdr">
+            <span class="gap-type">${esc(g.type||'unknown')}</span>
+            <span class="gap-sev">${g.severity||'medium'}</span>
+            <span style="color:var(--text3);font:9px var(--mono);margin-left:auto">${fago(g.ts||g.createdAt)}</span>
+          </div>
+          <div class="gap-body">${esc((g.body||g.description||'').slice(0,200))}</div>
+          <div class="gap-meta">source: ${esc(g.source||'?')} · path: ${esc(g.path||'?')}</div>
+        </div>`).join('')
+      }
+    </div>`;
+}
+
+// ── Render: Intelligence ──────────────────────────────────────────────────────
+function renderIntelligence() {
+  const intel = _state.intelligence;
+  const ctx   = _state.intelCtx;
+  const pats  = _state.patterns || [];
+  const drift = _state.driftLevel;
+  const driftPct = Math.round((ctx?.systemState?.driftScore||0) * 100);
+
+  document.getElementById('tab-intelligence').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+      <div>
+        <div class="intel-block">
+          <div class="ib-title">Core Status</div>
+          ${intel ? `
+          <div class="intel-row"><span class="intel-label">Version</span><span class="intel-val">${intel.version||'—'}</span></div>
+          <div class="intel-row"><span class="intel-label">Patterns</span><span class="intel-val">${intel.patterns||0} (${intel.crystallised||0} crystallised)</span></div>
+          <div class="intel-row"><span class="intel-label">Fault classes</span><span class="intel-val">${intel.faultClasses||0}</span></div>
+          <div class="intel-row"><span class="intel-label">Reuse index</span><span class="intel-val">${intel.reuseItems||0} items</span></div>
+          <div class="intel-row"><span class="intel-label">Last pattern scan</span><span class="intel-val">${fago(intel.lastPatternScan)}</span></div>
+          <div class="intel-row"><span class="intel-label">Last failure scan</span><span class="intel-val">${fago(intel.lastFailureScan)}</span></div>
+          <div class="intel-row"><span class="intel-label">Last cross-ledger</span><span class="intel-val">${fago(intel.lastCrossLedger)}</span></div>
+          ` : '<div class="intel-row"><span class="intel-label">Status</span><span class="intel-val" style="color:var(--red)">Offline</span></div>'}
+        </div>
+        <div class="intel-block">
+          <div class="ib-title">System Drift</div>
+          <div class="intel-row"><span class="intel-label">Level</span><span class="intel-val" style="color:${driftColor(drift)}">${drift}</span></div>
+          <div class="intel-row"><span class="intel-label">Open gaps</span><span class="intel-val">${ctx?.systemState?.openGaps||0}</span></div>
+          <div class="intel-row"><span class="intel-label">Critical gaps</span><span class="intel-val" style="color:${(ctx?.systemState?.criticalGaps||0)>0?'var(--red)':'var(--grn)'}">${ctx?.systemState?.criticalGaps||0}</span></div>
+          <div class="drift-bar"><div class="drift-fill drift-${drift}" style="width:${driftPct}%"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="intel-block">
+          <div class="ib-title">Active Failure Modes</div>
+          ${ctx?.failureModes?.length ? ctx.failureModes.slice(0,8).map(f=>`
+            <div class="intel-row">
+              <span class="intel-label" style="color:var(--red)">${esc(f.faultClass)}</span>
+              <span class="intel-val">×${f.count}</span>
+            </div>`).join('') : '<div style="color:var(--text3);font-size:9px;padding:4px 0">None detected</div>'}
+        </div>
+        <div class="intel-block">
+          <div class="ib-title">Reusable Artifacts</div>
+          ${ctx?.reuse?.length ? ctx.reuse.slice(0,5).map(r=>`
+            <div class="intel-row">
+              <span class="intel-label">${esc(r.lang||'?')} <span style="color:var(--acc);font-family:var(--mono)">#${r.hash}</span></span>
+              <span class="intel-val">${esc((r.intent||'').slice(0,30))}</span>
+            </div>`).join('') : '<div style="color:var(--text3);font-size:9px;padding:4px 0">No reuse candidates yet</div>'}
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-hdr"><span class="section-title">Crystallised Patterns</span></div>
+      ${!pats.length ? '<div class="empty">No patterns crystallised yet</div>' :
+        pats.filter(p=>p.crystallised||p.confidence>=0.5).slice(0,20).map(p=>`
+          <div class="pattern-row">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="pattern-type">${esc(p.patternType||'?')}</span>
+              <span style="color:var(--text3);font-size:9px">conf: ${((p.confidence||0)*100).toFixed(0)}%</span>
+              ${p.crystallised?'<span style="color:var(--grn);font-size:8px">CRYSTALLISED</span>':''}
+            </div>
+            <div class="pattern-desc">${esc(p.description||p.signature||'')}</div>
+          </div>`).join('')
+      }
+    </div>`;
+}
+
+// ── Render: Versions ──────────────────────────────────────────────────────────
+function renderVersions() {
+  const vers = _state.versions;
+  document.getElementById('tab-versions').innerHTML = `
+    <div class="section">
+      <div class="section-hdr">
+        <span class="section-title">Versionium — Causal Version Chain</span>
+        <button class="section-action" onclick="createSnapshot()">+ Snapshot now</button>
+      </div>
+      ${!vers.length ? '<div class="empty">No version commits yet</div>' :
+        vers.map(v => `<div class="ver-row">
+          <span class="ver-hash">${esc((v.hash||v.uuid||'').slice(0,8))}</span>
+          <span class="ver-branch">${esc(v.branch||'main')}</span>
+          <span class="ver-msg">${esc(v.message||v.msg||v.description||'')}</span>
+          <span class="ver-files">${v.files?.length||v.fileCount||0} files</span>
+          <span class="ver-sigma" style="color:${colorByScore(1-(v.sigma||0))}">${(v.sigma||0).toFixed(2)}σ</span>
+          <span class="ver-ts">${fts(v.ts||v.createdAt)}</span>
+        </div>`).join('')
+      }
+    </div>`;
+}
+
+// ── Render: Snapshots ─────────────────────────────────────────────────────────
+function renderSnapshots() {
+  const snaps = _state.snapshots;
+  document.getElementById('tab-snapshots').innerHTML = `
+    <div class="section">
+      <div class="section-hdr">
+        <span class="section-title">Snapshots — System State Archives</span>
+        <button class="section-action" onclick="createSnapshot()">+ Create snapshot</button>
+      </div>
+      <div style="color:var(--text2);font-size:9px;margin-bottom:12px;padding:8px 12px;background:var(--bg2);border:1px solid var(--line);border-radius:4px">
+        Snapshots capture all JAA table state. Rollback restores tables only — files on disk are not modified.
+        Always create a snapshot before applying forge patches.
+      </div>
+      ${!snaps.length ? '<div class="empty">No snapshots yet</div>' :
+        snaps.map(s => `<div class="snap-row" onclick="showSnapshotDetail('${esc(s.id||s.uuid||'')}')">
+          <span class="snap-id">${esc((s.id||s.uuid||'').slice(0,12))}</span>
+          <span class="snap-type">${esc(s.type||'manual')}</span>
+          <span style="color:var(--text2);font-size:9px;flex:1">${esc(s.message||s.tag||'')}</span>
+          <span class="snap-rows">${s.rows||s.totalRows||0} rows</span>
+          <span class="snap-ts">${fts(s.ts||s.createdAt)}</span>
+          <button class="snap-btn danger" onclick="event.stopPropagation();rollbackSnapshot('${esc(s.id||s.uuid||'')}')">⏪ Rewind</button>
+        </div>`).join('')
+      }
+    </div>`;
+}
+
+// ── Render: Fault Taxonomy ────────────────────────────────────────────────────
+function renderFaults() {
+  const faults = Array.isArray(_state.faults) ? _state.faults : Object.values(_state.faults);
+  document.getElementById('tab-faults').innerHTML = `
+    <div class="section">
+      <div class="section-hdr">
+        <span class="section-title">Fault Mode Taxonomy</span>
+        <span style="color:var(--text3);font-size:9px">${faults.length} fault classes</span>
+      </div>
+      ${!faults.length ? '<div class="empty">No fault taxonomy built yet — run diagnostics</div>' :
+        [...faults].sort((a,b)=>(b.count||0)-(a.count||0)).map(f => `
+          <div class="fault-row">
+            <span class="fault-class">${esc(f.faultClass||f.type||'?')}</span>
+            <span class="fault-count" style="color:${(f.count||0)>5?'var(--red)':(f.count||0)>2?'var(--yel)':'var(--text0)'}">${f.count||0}</span>
+            <span class="fault-systems">${esc((f.systems||[]).join(', ').slice(0,60)||'?')}</span>
+            <span class="fault-last">${fago(f.lastSeen)}</span>
+          </div>
+          ${f.examples?.length?`<div style="padding:4px 0 8px 170px;color:var(--text3);font-size:9px;border-bottom:1px solid var(--line)">
+            e.g. ${esc((f.examples[0]?.msg||'').slice(0,120))}
+          </div>`:''}
+        `).join('')
+      }
+    </div>`;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function selectSystem(id) {
+  _state.selectedSys = id === _state.selectedSys ? null : id;
+  renderSidebarCards();
+  if (_tab === 'overview') renderOverview();
+}
+
+async function createSnapshot() {
+  const msg = prompt('Snapshot message (optional):') || 'meta-portal manual snapshot';
+  const r = await api(CORTEX, '/api/snapshots/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: msg }),
+  });
+  if (r?.ok) {
+    toast('Snapshot created: ' + (r.snapId||'').slice(0,12));
+    await fetchAll();
+    renderSnapshots();
+  } else {
+    toast('Snapshot failed: ' + (r?.error||'unknown'), 3000);
+  }
+}
+
+async function rollbackSnapshot(snapId) {
+  if (!confirm('Rewind system to snapshot ' + snapId.slice(0,12) + '?\n\nThis restores all JAA tables. Files on disk are not modified.')) return;
+  const r = await api(CORTEX, '/api/snapshots/rollback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ snapId, apply: true }),
+  });
+  if (r?.ok) {
+    toast('Rollback applied. System rewound to ' + snapId.slice(0,12));
+    await fetchAll(); renderAll();
+  } else {
+    toast('Rollback failed: ' + (r?.error||'unknown'), 3000);
+  }
+}
+
+async function showSnapshotDetail(snapId) {
+  toast('Loading snapshot diff…');
+  // Show what changed between this snapshot and current
+  const latest = _state.snapshots[0]?.id || _state.snapshots[0]?.uuid;
+  if (!latest || latest === snapId) { toast('Already at this snapshot'); return; }
+  const r = await api(CORTEX, `/api/snapshots/diff?a=${snapId}&b=${latest}`);
+  if (!r) { toast('Diff unavailable'); return; }
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9998;display:flex;align-items:center;justify-content:center';
+  modal.innerHTML = `<div style="background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:20px;max-width:600px;max-height:80vh;overflow-y:auto;min-width:400px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+      <span style="color:var(--text0);font-weight:700">Snapshot Diff</span>
+      <button onclick="this.closest('div').parentElement.remove()" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px">×</button>
+    </div>
+    <pre style="font:9px var(--mono);color:var(--text2);white-space:pre-wrap">${esc(JSON.stringify(r, null, 2).slice(0,3000))}</pre>
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+// ── Render dispatch ───────────────────────────────────────────────────────────
+function renderTab(tab) {
+  if (tab==='overview')     renderOverview();
+  if (tab==='events')       renderEvents();
+  if (tab==='gaps')         renderGaps();
+  if (tab==='intelligence') renderIntelligence();
+  if (tab==='versions')     renderVersions();
+  if (tab==='snapshots')    renderSnapshots();
+  if (tab==='faults')       renderFaults();
+}
+function renderAll() {
+  renderSidebarCards();
+  renderTab(_tab);
+}
+
+// ── Boot + polling ────────────────────────────────────────────────────────────
+async function refreshAll() {
+  document.getElementById('live-dot').classList.remove('live');
+  await fetchAll();
+  renderAll();
+}
+
+(async () => {
+  await refreshAll();
+  _autoRefresh = setInterval(refreshAll, REFRESH_MS);
+})();
+</script>
+</body>
+</html>

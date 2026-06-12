@@ -16,9 +16,10 @@
 // ── Ports ─────────────────────────────────────────────────────────────────────
 const PORTS = Object.freeze({
   orchestrator: 9000,
+  bridge:       9999,
   cortex:       3748,
   guardian:     7820,
-  guardian_ncp: 7820,   // NCP runs on same port as HTTP
+  guardian_ncp: 7820,
   idearium:     4800,
   emerge:       4242,
   ollama:       11434,
@@ -27,6 +28,7 @@ const PORTS = Object.freeze({
 // ── Base URLs ─────────────────────────────────────────────────────────────────
 const BASE = Object.freeze({
   orchestrator: `http://127.0.0.1:${PORTS.orchestrator}`,
+  bridge:       `http://127.0.0.1:${PORTS.bridge}`,
   cortex:       `http://127.0.0.1:${PORTS.cortex}`,
   guardian:     `http://127.0.0.1:${PORTS.guardian}`,
   idearium:     `http://127.0.0.1:${PORTS.idearium}`,
@@ -55,6 +57,24 @@ const ORCH = Object.freeze({
     guardian:  (path) => `${BASE.orchestrator}/api/guardian${path.startsWith('/') ? path : '/' + path}`,
     idearium:  (path) => `${BASE.orchestrator}/api/idearium${path.startsWith('/') ? path : '/' + path}`,
   },
+});
+
+// ── Bridge endpoints (:9999) ──────────────────────────────────────────────────
+const BRIDGE = Object.freeze({
+  health:     `${BASE.bridge}/health`,
+  sse:        `${BASE.bridge}/bridge/sse`,
+  handshake:  `${BASE.bridge}/bridge/handshake`,
+  request:    `${BASE.bridge}/bridge/request`,
+  event:      `${BASE.bridge}/bridge/event`,
+  requests:   `${BASE.bridge}/bridge/requests`,
+  registry:   `${BASE.bridge}/bridge/registry`,
+  circuits:   `${BASE.bridge}/bridge/circuits`,
+  revoke:     `${BASE.bridge}/bridge/revoke`,
+  contract:   `${BASE.bridge}/bridge/contract`,
+  tags:       `${BASE.bridge}/bridge/tags`,
+  stats:      `${BASE.bridge}/bridge/stats`,
+  broadcast:  `${BASE.bridge}/bridge/broadcast`,
+  subscribe:  `${BASE.bridge}/bridge/subscribe`,
 });
 
 // ── Guardian endpoints (:7820) ────────────────────────────────────────────────
@@ -401,7 +421,7 @@ const PULSE = Object.freeze({
 
 // Export — works in both browser (window.NX) and Node require()
 const CONTRACTS = {
-  PORTS, BASE, ORCH, GUARDIAN, CORTEX, IDEARIUM, OLLAMA, CFR,
+  PORTS, BASE, BRIDGE, ORCH, GUARDIAN, CORTEX, IDEARIUM, OLLAMA, CFR,
   SSE_EVENTS, JOB_STATES, SEAM_STATES, TIMEOUTS, POLL, PULSE,
 };
 

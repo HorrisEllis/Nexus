@@ -644,3 +644,239 @@ nexus-final/
 *This document is updated at the start of every build session.*
 *If you are reading a Claude session that is missing context, start here.*
 *The axiom: nothing exists in isolation. Read this first.*
+
+---
+
+## Session Rules (Established — Non-Negotiable)
+
+These were locked in through hostile review and build sessions. They are addenda to AXIOMS-v1.0.
+
+### Bridge is Write Authority
+```
+§BRIDGE-01  Bridge is the only system that creates requests.
+            No system writes directly to the 'requests' JAA table.
+            No system calls another system's API directly for cross-system work.
+            Everything goes through POST /bridge/request.
+
+§BRIDGE-02  Ledger write before dispatch. Always.
+            A request that was not written to the ledger before dispatch
+            is a phantom — it does not exist as far as the system is concerned.
+
+§BRIDGE-03  Held requests never leave the queue.
+            If a target is offline, status = 'held'. Never dropped, never lost.
+            When the target comes back online, Bridge drains the held queue automatically.
+
+§BRIDGE-04  MAX_ROUTE_DEPTH = 3.
+            A request may traverse at most 3 fallback hops before being marked FAILED.
+            routeHistory is written on every hop. A silent fallback chain is a bug.
+```
+
+### Request Identity
+```
+§IDENTITY-01  One UUID per request event. Assigned by Bridge at creation.
+              Carried on every hop as X-Bridge-UUID header.
+              Cortex's requests table is a projection of Bridge ledger, not a source.
+
+§IDENTITY-02  One hash per content artifact. SHA-256 of content body.
+              Cortex FileStore is the canonical content-addressed store.
+              userscript simpleHash() is a known gap — replacement is pending.
+              No artifact is re-sent if its SHA-256 is already in the store.
+
+§IDENTITY-03  Session UUID chain links prompts within a conversation.
+              Each browser session gets a UUID. Each prompt in that session
+              carries the session UUID as causedBy. This is how context is
+              reconstructed without re-sending full content.
+```
+
+### Single Truth Layers
+```
+§TRUTH-01  Each data type has exactly one write authority:
+            - Requests:        Bridge ledger (requests.jsonl)
+            - Events:          Cortex event_log (JAA table, JSONL)
+            - Artifacts:       Cortex FileStore (SHA-256 blobs) + artifacts JAA table
+            - System state:    Orchestrator ledger (data/ledger/orchestrator.jsonl)
+            - Ideas/Specs:     Idearium JAA (ideas, specs, gaps tables)
+            - Queue execution: Guardian physical queue (data/guardian/input|output)
+            - Forward state:   SESSION.md (rendered from Bridge ledger, not edited)
+
+§TRUTH-02  Cortex requests table is a projection. Never written directly.
+            It is populated by subscribing to Bridge SSE stream.
+            GET /api/requests reads from this projection.
+
+§TRUTH-03  SESSION.md is a compiled artifact, not a manual document.
+            Regenerate with: node cli/session.js
+            It reads Bridge ledger + Orchestrator ledger + live system probes.
+            Editing it manually makes it wrong. Let the renderer own it.
+```
+
+### SISO Coding Model (from Jonathan Bailey's paper)
+```
+§SISO-01  Every cross-system feature is a SISO pipeline, not a monolith.
+          Event → Gate → Event. One gate, one transformation.
+          Complex operations = pipeline of simple gates, not one complex function.
+
+§SISO-02  Gates are pure functions. No side effects except emitting events.
+          Same input → same output. Every gate is independently testable.
+
+§SISO-03  Signature collision is a hard error, not a precedence rule.
+          Two gates with the same signature cannot coexist in one stream.
+
+§SISO-04  Infinite loop prevention: gates mark events as processed.
+          A gate that re-emits its own event type will check wasProcessedBy()
+          before claiming. This pattern is mandatory for recursive pipelines.
+
+§SISO-05  The ledger is the learning system. §7.6.
+          Every event written to event_log before any subscriber processes it.
+          The log is the truth. The code is a projection of the log.
+```
+
+### Userscript Architecture (pending rebuild)
+```
+§US-01  Kernel/UI separation is mandatory.
+        The transport+storage kernel runs independently of the panel UI.
+        The panel is a window into what the kernel already captured.
+        Closing the panel does not stop capture.
+
+§US-02  IndexedDB is the userscript's persistence layer.
+        Three stores only: requests (queue), sessions (UUID chain), artifacts (hash→UUID).
+        localStorage is only for tab claim and heartbeat. Nothing else.
+        GM_setValue is only for cross-origin settings. Nothing else.
+
+§US-03  Replay authority belongs to the userscript kernel.
+        On tab open/reconnect: kernel replays pending requests from IndexedDB.
+        Bridge does not replay for the userscript. The userscript replays to Bridge.
+        One replay engine. Not two.
+
+§US-04  Context injection is pre-prompt, not post-response.
+        Before each prompt fires: kernel queries IndexedDB for session artifacts,
+        builds a context header of UUID refs (not full content), sends to Guardian.
+        Guardian resolves refs from Cortex FileStore and prepends to prompt.
+        This is the token efficiency mechanism.
+
+§US-05  SHA-256 hash dedup replaces simpleHash().
+        Every artifact is hashed via SubtleCrypto.digest('SHA-256', ...) in the browser.
+        Known hash = skip send. Unknown hash = send + store in IndexedDB artifacts store.
+```
+
+### Orchestrator UI Tab: Data
+```
+§UI-DATA-01  A dedicated 'DATA' tab shows the full storage topology.
+             One row per storage location. Shows: path, type, last write, size, health.
+             Read-only. No mutation from the UI.
+             Sources: file system stats + system health probes.
+```
+
+---
+
+## Interaction Contracts (System-Wide Rules)
+
+Every system exposes an interaction-contract.json. These are the invariants:
+
+```
+Every contract must have:
+  id:         "<system>-v<version>"
+  version:    semver string
+  port:       canonical port number
+  role:       one sentence describing the system's single responsibility
+  health:     { method, path, returns } — must return { ok: true }
+  routes:     array of { method, path } — every route declared
+  siso:       { emits: [], consumes: [] } — bus contract
+  valid_request_types: array — only for Bridge contract
+
+Every system must:
+  - Respond to GET /health within 3000ms
+  - Emit a pulse on UDP :7777 every 10s (via nexus-connect.startPulse)
+  - Register with orchestrator on boot (POST :9000/api/register)
+  - Handshake with Bridge on boot (POST :9999/bridge/handshake)
+  - Write a boot record to event_log on successful start
+  - Never call another system directly — always via Bridge or nexus-connect
+
+Every request must:
+  - Carry X-Bridge-UUID if it crossed Bridge
+  - Carry X-Bridge-Source identifying the originating system/client
+  - Be idempotent — retrying a request must not cause duplicate state
+```
+
+---
+
+## Build Session Log (This Session)
+
+```
+Session: Bridge rebuild + system wiring
+  - Rogue write path audit: 9 paths found, 9 closed
+  - bridge/types.js         — canonical Request schema, single truth shape
+  - bridge/ledger.js        — SISO pipeline, JSONL append-only, held queue
+  - bridge/identity.js      — token issuance on node-ledger trust state machine
+  - bridge/registry.js      — HeartbeatManager wrapper, fallback chains, weight
+  - bridge/router.js        — ResolveGate → CircuitGate → DispatchGate → HoldGate
+  - bridge/server.js        — thin HTTP, all routes, SSE stream, /bridge/contract
+  - bridge/index.js         — 8-phase BootSequence, integrates with nexus-connect
+  - boot-systems.js         — Bridge added as first system (§AXIOM boot order)
+  - cortex/boot.js          — bridge.handshake + bridge.subscribe phases added
+  - guardian/server.js      — bridge.handshake phase, enqueue gates, uploadDir fix, getLocalIPs fix
+  - nexus-connect.js        — postBridge() implemented, PORTS map includes bridge
+  - orchestrator.js         — bridge proxy, SYS/HEALTH_PATHS/CHANNELS/UI_SYSTEMS/LEDGER updated
+  - ui/orchestrator.js      — synced to root orchestrator.js (identical)
+  - ui/cfr.html             — syncCanvasNodes fix (no wipe on empty), SYSTEM_ANCHORS added
+  - ui/ports.js             — bridge: 9999 added
+  - ui/contracts.js         — BRIDGE contract block added and exported
+  - cli/diagnose.js         — diagBridge() rewritten with correct routes
+  - cli/nexus-repl.js       — bridge port, bridge in systems help
+  - cli/session.js          — SESSION.md renderer (new — deterministic projection)
+  - service/bridge-service.js — rewritten to delegate to bridge/index.js
+  - tests/integration.test.js — bridge test updated to new route shape
+
+Open gaps carried forward:
+  - Userscript kernel: IndexedDB + SHA-256 hash chain + replay authority
+  - Pre-prompt context injection (session UUID chain → Cortex ref resolution)
+  - DATA tab in orchestrator UI (storage topology view)
+  - simpleHash() → SubtleCrypto SHA-256 in userscripts
+  - Wire diagnose.js failures → idearium gaps (auto-create)
+  - Run all 5 systems concurrently → verify integration tests
+```
+
+---
+
+*If you are starting a new session: run `node cli/session.js` first.*
+*Then read docs/NEXUS-SPEC.md and MANIFEST.json session_log.*
+*Then ask the five FORGE-SKILL orienting questions.*
+*Then build.*
+
+---
+
+## System-Wide Contract Registry
+
+**File:** `contracts/SYSTEM-CONTRACTS.js`
+**UUID:** nexus-contracts-registry-v1-0000-4000-0000-000000000001
+
+Single source of truth for every named entity in the system. Required reading before any build session. Query live via `GET :3748/api/contracts`.
+
+### What it contains
+
+| Section | Count | Purpose |
+|---------|-------|---------|
+| AXIOMS | 52 | All system laws, machine-readable |
+| SYSTEMS | 7 | Every system: id, uuid, port, role, boot order |
+| EVENTS | 119 | Every named event type, grouped by system |
+| GAPS | 19 types | Every named gap type, severity, status |
+| FAULTS | 21 classes + 15 known | Every fault class and named fault with fix status |
+| EDGES | 14 | Every system boundary: protocol, port, auth, failure modes |
+| DELTAS | axes + transitions | Transition physics taxonomy |
+| DIVERGENT | 4 regimes + sigma patterns | CFR regime and anomaly classification |
+| BOTTLENECKS | 11 signals + thresholds | Ledger flow bottleneck indicators |
+| LEDGERS | 7 + 44 JAA tables | Every ledger: authority, write rules, projection source |
+| INTERACTION_CONTRACTS | per system | Declared routes, auth, SISO channels |
+| VERIFICATION_CONTRACTS | 76 checks | What each system must prove |
+| SELF_AWARENESS | self + system | What every backend must know about itself and the system |
+
+### Gap types (19)
+unresolved, contradiction, missing_link, boundary_gap, file_friction, spec_incomplete, ci_fail, schema_violation, wiring_missing, baseline_drift, ledger_divergence, phantom_request, hash_collision, replay_orphan, contract_mismatch, silent_failure, trust_violation, rogue_write, held_overflow
+
+### Fault classes (21)
+silent_failure, phantom_write, dual_truth, rogue_bypass, replay_double, ghost_call, stub_in_production, scope_escape, missing_provenance, token_expiry, circuit_deadlock, held_starvation, context_loss, hash_drift, monolith_growth, boot_order_violation, version_drift, ledger_orphan, contract_drift, cfr_collapse, invariant_break
+
+### CFR regimes (4)
+stable (coherence > 0.6, entropy < 0.3), resonant (cyclic signal), turbulent (friction > 0.65 OR resonance > 0.7), chaotic (entropy > 0.7 OR coherence < 0.25)
+
+### Verification contract — universal (every system)
+V-UNI-01 through V-UNI-10: health endpoint, orchestrator registration, Bridge handshake, boot record, UDP pulse, restart survival, §1.2 compliance, interaction-contract.json, SYSTEMS registry entry, version match.

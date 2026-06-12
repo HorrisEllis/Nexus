@@ -761,6 +761,19 @@ const _lip = (() => {
   return null;
 })();
 
+function getLocalIPs() {
+  try {
+    const ifaces = require('os').networkInterfaces();
+    const ips = [];
+    for (const [,addrs] of Object.entries(ifaces)) {
+      for (const a of addrs) {
+        if (a.family === 'IPv4' && !a.internal) ips.push(a.address);
+      }
+    }
+    return ips.length ? ips : ['127.0.0.1'];
+  } catch(_) { return ['127.0.0.1']; }
+}
+
 // ── _selfProbe — used by boot phases (module-level) ─────────────────────────
 async function _selfProbe(path_) {
   return new Promise(resolve => {
@@ -1004,7 +1017,7 @@ function startDropzone(opts = {}) {
           : { filename: `spec-${Date.now()}.md` };
         const buf   = Buffer.from(content, 'utf8');
         const token = require('crypto').randomBytes(6).toString('hex');
-        const filepath = path.join(uploadDir, `${token}__${inferred.filename}`);
+        const filepath = path.join(cfg.uploadDir, `${token}__${inferred.filename}`);
         fs.writeFileSync(filepath, buf);
         result = { token, url: `http://127.0.0.1:${cfg.port}/d/${token}`, filename: inferred.filename, size: buf.length };
       }
@@ -1046,7 +1059,7 @@ function startDropzone(opts = {}) {
           : { filename: 'paste.txt' };
         const buf = Buffer.from(content, 'utf8');
         const token = require('crypto').randomBytes(6).toString('hex');
-        const filepath = path.join(uploadDir, `${token}__${inferred.filename}`);
+        const filepath = path.join(cfg.uploadDir, `${token}__${inferred.filename}`);
         fs.writeFileSync(filepath, buf);
         result = { token, url: `http://127.0.0.1:${cfg.port}/d/${token}`, filename: inferred.filename, size: buf.length };
       }
@@ -1078,7 +1091,7 @@ function startDropzone(opts = {}) {
           lang, isSpec,
         });
         finalFilename = inferred.filename;
-        const newPath = path.join(uploadDir, `${token}__${finalFilename}`);
+        const newPath = path.join(cfg.uploadDir, `${token}__${finalFilename}`);
         if (newPath !== req.file.path) {
           fs.renameSync(req.file.path, newPath);
           req.file.path = newPath;
@@ -1175,7 +1188,7 @@ function startDropzone(opts = {}) {
     const ips = getLocalIPs();
     console.log(`[dropzone] UI on http://127.0.0.1:${cfg.port}`);
     ips.forEach(ip => console.log(`[dropzone] LAN: http://${ip.address}:${cfg.port}  (${ip.name})`));
-    console.log(`[dropzone] Upload dir: ${uploadDir}`);
+    console.log(`[dropzone] Upload dir: ${cfg.uploadDir}`);
     console.log(`[dropzone] Persistent registry: ${registry ? 'YES ✓' : 'NO (fallback)'}`);
   });
 
@@ -1193,7 +1206,7 @@ function startDropzone(opts = {}) {
       const buf      = Buffer.isBuffer(content) ? content : Buffer.from(content, 'utf8');
       const token    = require('crypto').randomBytes(6).toString('hex');
       const safe     = sanitizeFilename(filename);
-      const filepath = path.join(uploadDir, `${token}__${safe}`);
+      const filepath = path.join(cfg.uploadDir, `${token}__${safe}`);
       fs.writeFileSync(filepath, buf);
       const url = `http://127.0.0.1:${cfg.port}/d/${token}`;
       return { token, url, filename: safe, size: buf.length };
@@ -1365,9 +1378,43 @@ const jaa = new JaaStore(STORE_DIR);
 // Ensure guardian-specific tables exist on first run
 ['seam_sessions','queue_compartments','pa_sessions','jobs','artifacts',
  'gaps','failures','ledger','downloads','sessions','timeline_events',
- 'ledger_entries'].forEach(t => {
+ 'ledger_entries','lab_sessions','lab_results'].forEach(t => {
   try { jaa._ensureTable?.(t); } catch(_) {}
 });
+
+// ── Lab Manager — §LAB-01 every experiment has a UUID and a hypothesis ────
+let _lab = null;
+try {
+  const { LabManager } = require('./lab/lab');
+  _lab = new LabManager({
+    jaa,
+    guardianDispatch: async (provider, prompt, meta = {}) => {
+      // Dispatch via guardian job system — same path as regular jobs
+      const jobId = meta.jobId || require('crypto').randomUUID();
+      return new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('lab dispatch timeout')), 120000);
+        const job = { id:jobId, provider, command:'code', prompt, status:'queued',
+          createdAt:Date.now(), _labSession:meta.sessionId, _source:'lab' };
+        jobs.set(jobId, job);
+        jaa.insert('jobs', job);
+        // Listen for completion
+        bus.on(`guardian.job.${jobId}.complete`, (ev) => {
+          clearTimeout(timeout);
+          resolve({ text: ev.payload?.text || ev.payload?.response || '', ms: ev.payload?.ms || 0, jobId });
+        });
+        dispatchJob(job);
+      });
+    },
+    busEmit: (type, payload) => {
+      bus.emit(type, payload);
+      _toCortex(type, { ...payload, _source:'lab' });
+    },
+  });
+  console.log('[guardian] Lab Manager ready');
+} catch(e) {
+  console.warn('[guardian] Lab Manager degraded:', e.message);
+}
+
 
 // Shutdown hook — flush all dirty tables before exit
 process.on('exit', () => jaa.flushAll());
@@ -1765,6 +1812,31 @@ function handleExtendedRoutes(req, res, url, method) {
     res.end(require('fs').readFileSync(cp,'utf8')); return true;
   }
   // ── SEAM queue status ──────────────────────────────────────────────────────
+  // ── LAB routes (/lab/*) ────────────────────────────────────────────────────
+  if (url.pathname.startsWith('/lab')) {
+    if (_lab) {
+      // handleExtendedRoutes is sync — collect body then call lab handler
+      if (method === 'POST' || method === 'PUT') {
+        let raw = '';
+        req.on('data', c => raw += c);
+        req.on('end', () => {
+          let body = {};
+          try { body = JSON.parse(raw); } catch(_) {}
+          _lab.handleRequest(method, url.pathname, body, (status, data) => pRes(res, status, data))
+            .then(handled => { if (!handled) pRes(res, 404, { ok:false, error:'lab route not found' }); })
+            .catch(e => pRes(res, 500, { ok:false, error:e.message }));
+        });
+        return true;
+      }
+      _lab.handleRequest(method, url.pathname, {}, (status, data) => pRes(res, status, data))
+        .then(handled => { if (!handled) pRes(res, 404, { ok:false, error:'lab route not found' }); })
+        .catch(e => pRes(res, 500, { ok:false, error:e.message }));
+      return true;
+    }
+    pRes(res, 404, { ok:false, error:'lab not available' });
+    return true;
+  }
+
   if (method==='GET' && url.pathname==='/seam/queues') {
     const queues = [..._activeQueues.values()].map(q => q.toJSON());
     pRes(res, 200, { ok:true, active: queues.length, queues }); return true;

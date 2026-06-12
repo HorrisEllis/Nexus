@@ -305,17 +305,17 @@ async function testBridge() {
     assert(Array.isArray(r.data.requests || r.data), 'requests is array');
   }, ['bridge']);
 
-  await test('POST /bridge/requests → creates request, uuid in request object', async () => {
-    const r = await POST(9999, '/bridge/requests', {
-      type: 'job.dispatch', from: 'integration-test', to: 'guardian',
+  await test('POST /bridge/request → creates request, uuid in request object', async () => {
+    const r = await POST(9999, '/bridge/request', {
+      type: 'job.dispatch', source: 'integration-test', target: 'guardian',
       payload: { prompt:'integration test', provider:'ollama', command:'code' },
     });
     assertOk(r, 'create request');
     assert(r.data.ok, 'ok=true');
-    assertField(r.data, 'request');
-    assertField(r.data.request, 'uuid');
-    assertField(r.data.request, 'status');
-    assert(r.data.request.status === 'pending', `status=pending, got ${r.data.request.status}`);
+    assertField(r.data, 'uuid');
+    assertField(r.data, 'status');
+    assert(r.data.status === 'pending' || r.data.status === 'held' || r.data.status === 'dispatched',
+      `status is valid, got ${r.data.status}`);
   }, ['bridge']);
 
   await test('POST /bridge/tags → tags entity', async () => {

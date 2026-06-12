@@ -35,10 +35,23 @@ function setDeps({ jaaDB: db }) {
 async function _tick() {
   const db = _jaaDB || jaaDB;
   try {
+    // §BRIDGE-GATE: file_resolve requests must be written by Bridge, not directly to JAA.
+    // Until Bridge is live this tick is a no-op. NAS router is a consumer, not a writer.
+    // When Bridge routes a file_resolve request to Cortex, this tick will process it.
     const pending = db.query('requests', r => r.type === 'file_resolve' && r.status === 'pending', 10);
     if (!pending.length) return;
 
     for (const req of pending) {
+      // Verify request has a Bridge UUID before claiming — reject phantom rows
+      if (!req.bridgeUuid && !req._bridge) {
+        db.insert('failures', {
+          uuid: uid(), source: MODULE_ID, ts: Date.now(),
+          error: `file_resolve request ${req.uuid} has no Bridge provenance — quarantined`,
+        });
+        db.update('requests', req.uuid, { status: 'quarantined', reason: 'no_bridge_provenance' });
+        continue;
+      }
+
       db.update('requests', req.uuid, { status: 'processing', claimedBy: MODULE_ID });
 
       const claimed = db.get('requests', req.uuid);

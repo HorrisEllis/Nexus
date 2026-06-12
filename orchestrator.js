@@ -108,6 +108,15 @@ const fs     = require('fs');
 const path   = require('path');
 const { URL } = require('url');
 
+// ── Hoist all dynamic requires — fixes ReferenceError in ESM-adjacent contexts ──
+// These were previously inside server.listen callback and cli functions.
+// §3.1 load order is law — all imports declared before any logic runs.
+let BootSequence, _bootSystems, createEventLedger, spawnChild;
+try { ({ BootSequence } = require('./lib/boot-sequence')); } catch(e) { console.warn('[orchestrator] boot-sequence not found:', e.message); BootSequence = null; }
+try { ({ _bootSystems } = require('./cli/boot-systems')); } catch(e) { console.warn('[orchestrator] boot-systems not found:', e.message); _bootSystems = null; }
+try { ({ createEventLedger } = require('./lib/event-ledger')); } catch(e) { console.warn('[orchestrator] event-ledger not found:', e.message); createEventLedger = null; }
+try { ({ spawn: spawnChild } = require('child_process')); } catch(e) { spawnChild = null; }
+
 const PORT    = parseInt(process.env.ORCHESTRATOR_PORT || '9000');
 
 // ── Pulse system ──────────────────────────────────────────────────────────────
@@ -125,26 +134,33 @@ const UI_ROOT = path.join(ROOT, 'ui');
 
 // ── System registry ───────────────────────────────────────────────────────────
 const SYS = {
-  cortex:   { port:3748,  host:'127.0.0.1', label:'Cortex',     color:'#2dd4bf' },
-  guardian: { port:7820,  host:'127.0.0.1', label:'Guardian',   color:'#9b7fe8' },
-  idearium: { port:4800,  host:'127.0.0.1', label:'Idearium',   color:'#4a9eff' },
-  emerge:   { port:4242,  host:'127.0.0.1', label:'Emerge IDE', color:'#3ecf8e' },
-  ollama:   { port:11434, host:'127.0.0.1', label:'Ollama',     color:'#e85d3c' },
+  cortex:    { port:3748,  host:'127.0.0.1', label:'Cortex',     color:'#2dd4bf' },
+  guardian:  { port:7820,  host:'127.0.0.1', label:'Guardian',   color:'#9b7fe8' },
+  idearium:  { port:4800,  host:'127.0.0.1', label:'Idearium',   color:'#4a9eff' },
+  emerge:    { port:4242,  host:'127.0.0.1', label:'Emerge IDE', color:'#3ecf8e' },
+  architect: { port:3747,  host:'127.0.0.1', label:'Architect',  color:'#ef9f27' },
+  ollama:    { port:11434, host:'127.0.0.1', label:'Ollama',     color:'#e85d3c' },
 };
 
 // ── Channel map ───────────────────────────────────────────────────────────────
 const CHANNELS = [
-  { from:'guardian', ch:'guardian.job.complete',    to:['cortex'],   desc:'Job finished → memory.ingest' },
-  { from:'guardian', ch:'guardian.artifact',        to:['cortex'],   desc:'Code artifact → cortex + tagged' },
-  { from:'guardian', ch:'guardian.gaps',            to:['cortex'],            desc:'Gaps detected in AI output' },
-  { from:'guardian', ch:'guardian.ledger',          to:['jaa'],               desc:'Ledger entry' },
-  { from:'guardian', ch:'guardian.session.named',   to:['jaa'],               desc:'Chat session named' },
-  { from:'guardian', ch:'guardian.timeline',        to:['jaa'],               desc:'Timeline event' },
-  { from:'guardian', ch:'guardian.setting.update',  to:['jaa'],               desc:'Setting changed' },
-  { from:'cortex',   ch:'cortex.gap.found',         to:['guardian'], desc:'Gap → guardian ledger' },
-  { from:'idearium', ch:'idearium.idea.created',    to:['cortex'],   desc:'Idea → cortex + tagged' },
-  { from:'idearium', ch:'idearium.snapshot.pushed', to:['cortex'],            desc:'Snapshot → versionium' },
-  { from:'alk',      ch:'alk.signal.composite',     to:['cortex'],            desc:'ALK composite → event_log' },
+  { from:'guardian',  ch:'guardian.job.complete',        to:['cortex'],      desc:'Job finished → memory.ingest' },
+  { from:'guardian',  ch:'guardian.artifact',            to:['cortex'],      desc:'Code artifact → cortex + tagged' },
+  { from:'guardian',  ch:'guardian.gaps',                to:['cortex'],      desc:'Gaps detected in AI output' },
+  { from:'guardian',  ch:'guardian.ledger',              to:['jaa'],         desc:'Ledger entry' },
+  { from:'guardian',  ch:'guardian.session.named',       to:['jaa'],         desc:'Chat session named' },
+  { from:'guardian',  ch:'guardian.timeline',            to:['jaa'],         desc:'Timeline event' },
+  { from:'guardian',  ch:'guardian.setting.update',      to:['jaa'],         desc:'Setting changed' },
+  { from:'cortex',    ch:'cortex.gap.found',             to:['guardian'],    desc:'Gap → guardian ledger' },
+  { from:'idearium',  ch:'idearium.idea.created',        to:['cortex'],      desc:'Idea → cortex + tagged' },
+  { from:'idearium',  ch:'idearium.snapshot.pushed',     to:['cortex'],      desc:'Snapshot → versionium' },
+  { from:'alk',       ch:'alk.signal.composite',         to:['cortex'],      desc:'ALK composite → event_log' },
+  { from:'architect', ch:'architect.hook.registered',    to:['cortex'],      desc:'Hook declared → cortex event_log' },
+  { from:'architect', ch:'architect.hook.wired',         to:['cortex'],      desc:'Hook wiring → cortex event_log' },
+  { from:'architect', ch:'architect.blueprint.built',    to:['cortex'],      desc:'Blueprint → cortex + guardian' },
+  { from:'architect', ch:'architect.snr.checked',        to:['cortex'],      desc:'SNR result → cortex event_log' },
+  { from:'architect', ch:'architect.gap.opened',         to:['cortex','guardian'], desc:'Architect gap → cortex + guardian' },
+  { from:'architect', ch:'architect.map.scanned',        to:['cortex'],      desc:'Topology map → cortex event_log' },
 ];
 
 // ── CLI reference ─────────────────────────────────────────────────────────────
@@ -244,11 +260,12 @@ const PATCH= (sys, p, b, timeout) => sysReq(sys, 'PATCH',  p, b, timeout);
 
 // ── All systems health ────────────────────────────────────────────────────────
 const HEALTH_PATHS = {
-  cortex:   '/health',
-  guardian: '/health',
-  idearium: '/health',
-  emerge:   '/status',
-  ollama:   '/api/tags',
+  cortex:    '/health',
+  guardian:  '/health',
+  idearium:  '/health',
+  emerge:    '/status',
+  architect: '/health',
+  ollama:    '/api/tags',
 };
 
 async function allHealth() {
@@ -300,10 +317,11 @@ const LEDGER_FILE = path.join(LEDGER_DIR, 'orchestrator.jsonl');
 // §LAW II — module-scope event ledger: every ledgerWrite goes here first
 let _eventLedger = null;
 try {
-  const { createEventLedger } = require('./lib/event-ledger');
-  _eventLedger = createEventLedger({ ledgerDir: LEDGER_DIR, systemId:'orchestrator' });
-  _eventLedger.open();
-  _eventLedger.startAutoSave(60000);
+  if (createEventLedger) {
+    _eventLedger = createEventLedger({ ledgerDir: LEDGER_DIR, systemId:'orchestrator' });
+    _eventLedger.open();
+    _eventLedger.startAutoSave(60000);
+  }
 } catch(e) { console.warn('[orchestrator] event-ledger init failed:', e.message); }
 
 // In-memory ring (fast reads)
@@ -592,6 +610,61 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── /api/state — NEXUS_STATE persistence ─────────────────────────────────
+  if (u.pathname === '/api/state' && M === 'GET') {
+    try {
+      const statePath = path.join(ROOT, 'data', 'NEXUS_STATE.json');
+      const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+      return json(res, 200, { ok:true, state });
+    } catch(_) { return json(res, 200, { ok:true, state:null }); }
+  }
+  if (u.pathname === '/api/state/save' && M === 'POST') {
+    try {
+      const body = await readBody(req);
+      const statePath = path.join(ROOT, 'data', 'NEXUS_STATE.json');
+      fs.mkdirSync(path.dirname(statePath), { recursive:true });
+      fs.writeFileSync(statePath, JSON.stringify({ ...body, savedAt:Date.now() }, null, 2));
+      return json(res, 200, { ok:true });
+    } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+  }
+
+  // ── /api/contract — Unified Interaction Contract ──────────────────────────
+  if (u.pathname === '/api/contract' && M === 'GET') {
+    try {
+      const { getVersionedContract } = require('./contracts/nexus-interaction-contract');
+      const version = u.searchParams?.get('version') || null;
+      const contract = getVersionedContract(version);
+      if (!contract) return json(res, 404, { ok:false, error:`contract version not found: ${version}` });
+      return json(res, 200, { ok:true, contract });
+    } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+  }
+  if (u.pathname.startsWith('/api/contract/') && M === 'GET') {
+    try {
+      const { getVersionedContract } = require('./contracts/nexus-interaction-contract');
+      const seg = u.pathname.split('/');
+      const system = seg[3];
+      if (system === 'snapshots') {
+        const { listSnapshots } = require('./contracts/nexus-interaction-contract');
+        return json(res, 200, { ok:true, snapshots: listSnapshots() });
+      }
+      const contract = getVersionedContract();
+      const sysCont = contract?.systems?.[system];
+      if (!sysCont) return json(res, 404, { ok:false, error:`unknown system: ${system}` });
+      return json(res, 200, { ok:true, contract:sysCont, schemaHash:contract.schemaHash });
+    } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+  }
+  if (u.pathname === '/api/contract/validate' && M === 'POST') {
+    try {
+      const { validateRequestAt, getVersionedContract } = require('./contracts/nexus-interaction-contract');
+      const body = await readBody(req);
+      // Use snapshot-bound validation — deterministic
+      const current = getVersionedContract();
+      const hash = body.snapshotHash || current.schemaHash;
+      const result = validateRequestAt(hash, body.system, body.method, body.path, body.body || {});
+      return json(res, 200, { ok:true, result });
+    } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+  }
+
   // ── /health ──────────────────────────────────────────────────────────────
   if (M==='GET' && u.pathname==='/health') {
     const systems = await allHealth();
@@ -783,10 +856,10 @@ const server = http.createServer(async (req, res) => {
     if (!cmd) return json(res, 400, { ok:false, error:'cmd required' });
     // ORC-02: allowlist — prevent arbitrary OS execution via SSRF/XSS
     const ALLOWED_BINS = new Set(['node','npm','npx','git','ls','cat','echo','pwd','which']);
-    const { spawnSync } = require('child_process');
+    const { spawnSync } = require('child_process'); // inline ok — CLI path
     const fullArgs = args.length ? [cmd, ...args] : cmd.split(' ').filter(Boolean);
     const bin = fullArgs.shift();
-    if (!ALLOWED_BINS.has(require('path').basename(bin))) {
+    if (!ALLOWED_BINS.has(path.basename(bin))) {
       return json(res, 403, { ok:false, error:`exec: '${bin}' not in allowlist` });
     }
     const result = spawnSync(bin, fullArgs, { cwd: ROOT, encoding: 'utf8', timeout: 30000 });
@@ -966,6 +1039,55 @@ const server = http.createServer(async (req, res) => {
     }
 
     return json(res,404,{ok:false,error:`guardian route not found: ${M} /api/guardian/${action}`});
+  }
+
+  // ── Architect proxy ───────────────────────────────────────────────────────
+  if (sub==='architect') {
+    const action  = seg[2] || '';
+    const action2 = seg[3] || '';
+    const action3 = seg[4] || '';
+
+    if (M==='GET'  && !action)                                  return json(res,200,await GET('architect','/health'));
+    if (M==='GET'  && action==='health')                        return json(res,200,await GET('architect','/health'));
+    if (M==='GET'  && action==='spec')                          return json(res,200,await GET('architect','/api/spec'));
+
+    // Hooks
+    if (M==='GET'  && action==='hooks' && !action2)             return json(res,200,await GET('architect',`/api/hooks${url.search||''}`));
+    if (M==='GET'  && action==='hooks' && action2)              return json(res,200,await GET('architect',`/api/hooks/${action2}`));
+    if (M==='POST' && action==='hooks' && !action2)             return json(res,200,await POST('architect','/api/hooks',await readBody(req)));
+    if (M==='PATCH'&& action==='hooks' && action2)              return json(res,200,await POST('architect',`/api/hooks/${action2}`,await readBody(req)));
+    if (M==='DELETE'&&action==='hooks' && action2)              return json(res,200,await POST('architect',`/api/hooks/${action2}`,await readBody(req)));
+    if (M==='POST' && action==='hooks' && action2==='wire')     return json(res,200,await POST('architect','/api/hooks/wire',await readBody(req)));
+    if (M==='GET'  && action==='hooks' && action2==='validate') return json(res,200,await GET('architect','/api/hooks/validate'));
+    if (M==='GET'  && action==='hooks' && action2==='graph')    return json(res,200,await GET('architect',`/api/hooks/graph${url.search||''}`));
+
+    // Blueprints
+    if (M==='GET'  && action==='blueprint' && !action2)         return json(res,200,await GET('architect','/api/blueprint'));
+    if (M==='GET'  && action==='blueprint' && action2)          return json(res,200,await GET('architect',`/api/blueprint/${action2}`));
+    if (M==='POST' && action==='blueprint' && action2==='scan') return json(res,200,await POST('architect','/api/blueprint/scan',await readBody(req)));
+    if (M==='POST' && action==='blueprint' && action2==='diff') return json(res,200,await POST('architect','/api/blueprint/diff',await readBody(req)));
+
+    // Topology map
+    if (M==='GET'  && action==='map')                           return json(res,200,await GET('architect','/api/map'));
+    if (M==='POST' && action==='map' && action2==='scan')       return json(res,200,await POST('architect','/api/map/scan',await readBody(req)));
+
+    // SNR gate
+    if (M==='GET'  && action==='snr')                           return json(res,200,await GET('architect','/api/snr'));
+    if (M==='POST' && action==='snr' && action2==='check')      return json(res,200,await POST('architect','/api/snr/check',await readBody(req)));
+    if (M==='GET'  && action==='snr' && action2==='history')    return json(res,200,await GET('architect',`/api/snr/history/${action3}`));
+
+    // Translate / UTL
+    if (M==='POST' && action==='translate' && action2==='utl')  return json(res,200,await POST('architect','/api/translate/utl',await readBody(req)));
+
+    // Gaps
+    if (M==='GET'  && action==='gaps')                          return json(res,200,await GET('architect',`/api/gaps${url.search||''}`));
+    if (M==='POST' && action==='gaps')                          return json(res,200,await POST('architect','/api/gaps',await readBody(req)));
+
+    // UI assets
+    if (M==='GET'  && action==='ui' && action2==='arch-builder') return json(res,200,await GET('architect','/ui/arch-builder'));
+    if (M==='GET'  && action==='ui' && action2==='alk-lattice')  return json(res,200,await GET('architect','/ui/alk-lattice'));
+
+    return json(res,404,{ok:false,error:`architect route not found: ${M} /api/architect/${action}`});
   }
 
   // ── Idearium proxy ────────────────────────────────────────────────────────
@@ -1250,7 +1372,7 @@ else if (cmd==='help'||cmd==='--help'||cmd==='-h') { cliHelp(); process.exit(0);
 else {
   // Start server
 server.listen(PORT, '127.0.0.1', async () => {
-  const { BootSequence } = require('./lib/boot-sequence');
+  // BootSequence hoisted to top-level
 
   // ════════════════════════════════════════════════════════════════════════════
   // ORCHESTRATOR OWN BOOT SEQUENCE (§AXIOM — starts first)
@@ -1271,10 +1393,10 @@ server.listen(PORT, '127.0.0.1', async () => {
     label:'Ledger directory writable (§2.1)',
     fn: async () => {
       const ledgerDir = path.join(ROOT, 'data', 'ledger');
-      require('fs').mkdirSync(ledgerDir, { recursive: true });
+      fs.mkdirSync(ledgerDir, { recursive: true });
       const testFile = path.join(ledgerDir, '.boot-test');
-      require('fs').writeFileSync(testFile, String(Date.now()));
-      require('fs').unlinkSync(testFile);
+      fs.writeFileSync(testFile, String(Date.now()));
+      fs.unlinkSync(testFile);
     },
   });
 
@@ -1283,7 +1405,7 @@ server.listen(PORT, '127.0.0.1', async () => {
     label:'Verify /health responds with ok=true',
     fn: async () => {
       await new Promise((resolve, reject) => {
-        const r = require('http').get(
+        const r = http.get(
           'http://127.0.0.1:' + PORT + '/health',
           res => { res.statusCode === 200 ? resolve()
             : reject(new Error('health ' + res.statusCode)); }
@@ -1300,7 +1422,7 @@ server.listen(PORT, '127.0.0.1', async () => {
     fn: async () => {
       const r = await new Promise((resolve, reject) => {
         let d = '';
-        const req = require('http').get(
+        const req = http.get(
           'http://127.0.0.1:' + PORT + '/api/recall',
           res => {
             res.on('data', c => { d += c; });
@@ -1322,12 +1444,15 @@ server.listen(PORT, '127.0.0.1', async () => {
     fn: async () => { watchUIDirs(); },
   });
 
-  // Phase 5 SOFT: open CLI terminal
+  // Phase 5 SOFT: open CLI terminal — guarded, fires once only
+  let _cliOpened = false;
   ownSeq.phase({ name:'cli.terminal', type:'SOFT',
     label:'Open CLI terminal (nexus-repl.js)',
     fn: async () => {
-      const VERSION = '2.0.0';
-      const { spawn } = require('child_process');
+      if (_cliOpened) return; // guard — never open twice
+      _cliOpened = true;
+      const VERSION = '3.0.0';
+      const spawn = spawnChild;
       const cliScript = path.join(ROOT, 'cli', 'nexus-repl.js');
       const args = [cliScript, '--repl', `--port=${PORT}`];
       const terminals = [
@@ -1361,7 +1486,7 @@ server.listen(PORT, '127.0.0.1', async () => {
       const rawUrl = cfg.uiURL || `http://127.0.0.1:${PORT}`;
       // ORC-12: validate uiURL to prevent command injection via crafted config
       const uiUrl = /^https?:\/\/[\w.:\/-]+$/.test(rawUrl) ? rawUrl : `http://127.0.0.1:${PORT}`;
-      const { spawn } = require('child_process');
+      const spawn = spawnChild;
       const openers = [
         ['cmd',      ['/c', 'start', '', uiUrl]],
         ['open',     [uiUrl]],
@@ -1386,7 +1511,7 @@ server.listen(PORT, '127.0.0.1', async () => {
 
   // ────────────────────────────────────────────────────────────────────────────
   // Record own boot to ledger
-  const VERSION = '2.0.0';
+  const VERSION = '3.0.0';
   ledgerWrite('orchestrator','orchestrator.booted',{ version:VERSION, port:PORT });
   startWatchdog();
 
@@ -1412,7 +1537,21 @@ server.listen(PORT, '127.0.0.1', async () => {
   // ════════════════════════════════════════════════════════════════════════════
   // START-SYSTEMS SEQUENCE — delegated to cli/boot-systems.js
   // ════════════════════════════════════════════════════════════════════════════
-  const { _bootSystems } = require('./cli/boot-systems');
-  setTimeout(() => _bootSystems(ledgerWrite, PORT, connectBridgeRelay, _eventLedger), 500);
+  // _bootSystems hoisted to top-level
+  _bootSystems(
+    (system, type, payload) => {
+      LEDGER[system] = LEDGER[system] || [];
+      LEDGER[system].push({ type, payload, ts: Date.now() });
+      if (_eventLedger) {
+        try { _eventLedger.record(type, payload, { source: system, causedBy: null }); }
+        catch(e) { console.error('[orchestrator] §1.2 ledger.record:', e.message); }
+      }
+    },
+    PORT,
+    connectBridgeRelay,
+    _eventLedger
+  ).catch(e => {
+    console.error('[orchestrator] §1.2 _bootSystems error:', e.message);
+  });
 });
 }

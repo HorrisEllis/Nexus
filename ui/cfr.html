@@ -1018,14 +1018,51 @@ async function pollKernel() {
   }
 }
 
+// ── Stable system anchor nodes — always present regardless of CFR sigma ──────
+// These represent the NEXUS systems. They persist even when /cfr/nodes returns
+// empty (quiet periods with no high-sigma events). Without this the field
+// empties every time Cortex has nothing above the 0.3 sigma threshold.
+const SYSTEM_ANCHORS = [
+  { id: 'sys:orchestrator', label: 'ORCHESTRATOR', type: 'system', mass: 2.5 },
+  { id: 'sys:bridge',       label: 'BRIDGE',       type: 'system', mass: 2.2 },
+  { id: 'sys:cortex',       label: 'CORTEX',       type: 'system', mass: 2.4 },
+  { id: 'sys:guardian',     label: 'GUARDIAN',     type: 'system', mass: 2.0 },
+  { id: 'sys:idearium',     label: 'IDEARIUM',     type: 'system', mass: 1.8 },
+  { id: 'sys:ollama',       label: 'OLLAMA',       type: 'system', mass: 1.6 },
+];
+
+function ensureAnchors() {
+  for (const anchor of SYSTEM_ANCHORS) {
+    if (!FIELD.attractors.find(a => a.id === anchor.id)) {
+      const BXY = CFG.BOUND_XY * 0.5;
+      const BZ  = CFG.BOUND_Z  * FIELD.depthScale * 0.4;
+      FIELD.attractors.push({
+        id:    anchor.id,
+        x:    (Math.random() - 0.5) * BXY * 2,
+        y:    (Math.random() - 0.5) * BXY * 2,
+        z:    (Math.random() - 0.5) * BZ  * 2,
+        mass:  anchor.mass,
+        phase: Math.random() * Math.PI * 2,
+        _anchor: true,
+      });
+      canvasNodes.set(anchor.id, anchor);
+    }
+  }
+}
+
 function applySnrToField(snr) {
   const threshold = snr.threshold || 5;
   FIELD.structure = Math.min(1, threshold / 10);
 }
 
 function syncCanvasNodes(nodes) {
-  const liveIds = new Set(nodes.map(n => n.id));
-  FIELD.attractors = FIELD.attractors.filter(a => liveIds.has(a.id));
+  // §FIX: never wipe attractors on empty response — that causes the flash/disappear cycle.
+  // Only prune when we get a non-empty response AND the node is missing from it.
+  // Anchor nodes (system nodes) are NEVER pruned — they're permanent field structure.
+  if (nodes.length > 0) {
+    const liveIds = new Set(nodes.map(n => n.id));
+    FIELD.attractors = FIELD.attractors.filter(a => a._anchor || liveIds.has(a.id));
+  }
 
   for (const node of nodes) {
     canvasNodes.set(node.id, node);
@@ -1045,9 +1082,13 @@ function syncCanvasNodes(nodes) {
     }
   }
 
-  document.getElementById('t-nodes').textContent = nodes.length;
-  document.getElementById('node-count-label').textContent = nodes.length;
-  renderNodeList(nodes);
+  // Always ensure system anchors are present
+  ensureAnchors();
+
+  const total = canvasNodes.size;
+  document.getElementById('t-nodes').textContent = total;
+  document.getElementById('node-count-label').textContent = total;
+  renderNodeList([...canvasNodes.values()]);
 }
 
 function processDeltaEvents(deltas) {
@@ -1246,21 +1287,11 @@ function init() {
   document.getElementById('t-particles').textContent = lbl;
   document.getElementById('hud-count').textContent   = lbl;
 
+  // Seed system anchors immediately — field is never empty
+  ensureAnchors();
+
   pollKernel();
   setInterval(pollKernel, CFG.pollMs);
-
-  // Seed demo nodes if bridge is offline after 2s
-  setTimeout(() => {
-    if (!canvasNodes.size) {
-      syncCanvasNodes([
-        {id:'demo-foundation', label:'Foundation', type:'foundation'},
-        {id:'demo-vault',      label:'Vault',      type:'vault'},
-        {id:'demo-guardian',   label:'Guardian',   type:'guardian'},
-        {id:'demo-canvas',     label:'Canvas',     type:'canvas'},
-      ]);
-      addEvent('boot:complete', 'Demo mode — no kernel', 'ok');
-    }
-  }, 2000);
 
   requestAnimationFrame(render);
 }

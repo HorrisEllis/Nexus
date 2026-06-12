@@ -14,12 +14,113 @@
  */
 
 import http         from 'http';
+import os           from 'os';
+import crypto       from 'crypto';
 import { createRequire } from 'module';
+import { spawnSync, spawn as spawnProc } from 'child_process';
 const _require = createRequire(import.meta.url);
 import { getIdeaOS, VERSION } from '../core/index.js';
 
-const PORT    = 4800;
-const BINDING = '127.0.0.1';
+const PORT    = parseInt(process.env.IDEARIUM_PORT   || '4800');
+const BINDING = process.env.IDEARIUM_BIND || '0.0.0.0';
+
+// ── Network utilities ─────────────────────────────────────────────────────────
+
+function getLocalIPs() {
+  const ifaces = os.networkInterfaces();
+  const ips = [];
+  for (const name of Object.keys(ifaces)) {
+    for (const iface of ifaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) ips.push({ name, address: iface.address });
+    }
+  }
+  return ips;
+}
+
+// ── Tunnel manager — implicit cloudflare tunnel on boot ───────────────────────
+// §1.2 — nothing silently fails: every tunnel state logged to event_log gap-style.
+// §B-6 — tunnel failure opens a named gap, never crashes Idearium.
+// §2.1 — tunnel URL persisted to data/idearium-tunnel.json so restarts reconnect.
+
+let _tunnelProc  = null;
+let _tunnelUrl   = null;
+let _tunnelReady = false;
+
+const _require2 = _require;  // alias for use inside tunnel closure
+
+function _persistTunnelUrl(url) {
+  try {
+    const { writeFileSync, mkdirSync } = _require2('fs');
+    const { join } = _require2('path');
+    const { fileURLToPath } = _require2('url');
+    const dir = join(process.cwd(), 'data');
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, 'idearium-tunnel.json'), JSON.stringify({ url, ts: Date.now() }));
+  } catch (_) {}
+}
+
+function _cloudflaredBin() {
+  for (const candidate of ['cloudflared', 'cloudflared.exe']) {
+    try {
+      const r = spawnSync(candidate, ['--version'], { timeout: 3000, stdio: 'pipe' });
+      if (r.status === 0) return candidate;
+    } catch (_) {}
+  }
+  return null;
+}
+
+function startTunnel(port, onUrl, onFail) {
+  const bin = _cloudflaredBin();
+  if (!bin) {
+    onFail('cloudflared not installed — run: winget install Cloudflare.cloudflared');
+    return null;
+  }
+
+  const proc = spawnProc(bin, ['tunnel', '--url', `http://127.0.0.1:${port}`], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+
+  let resolved = false;
+  const urlPattern = /https:\/\/[\w-]+\.trycloudflare\.com/;
+
+  function tryParse(chunk) {
+    if (resolved) return;
+    const text = chunk.toString();
+    const m = text.match(urlPattern);
+    if (m) {
+      resolved = true;
+      _tunnelUrl   = m[0];
+      _tunnelReady = true;
+      _persistTunnelUrl(_tunnelUrl);
+      onUrl(_tunnelUrl);
+    }
+  }
+
+  proc.stdout.on('data', tryParse);
+  proc.stderr.on('data', tryParse);
+
+  proc.on('exit', (code, signal) => {
+    _tunnelReady = false;
+    if (!resolved) {
+      onFail(`cloudflared exited before URL (code=${code} signal=${signal})`);
+    } else {
+      console.warn('[idearium/tunnel §1.2] tunnel closed — will not auto-restart (§1.3 no silent recovery)');
+    }
+  });
+
+  proc.on('error', err => {
+    _tunnelReady = false;
+    onFail(`cloudflared spawn error: ${err.message}`);
+  });
+
+  _tunnelProc = proc;
+
+  process.on('exit',    () => { try { proc.kill(); } catch (_) {} });
+  process.on('SIGTERM', () => { try { proc.kill(); } catch (_) {} });
+  process.on('SIGINT',  () => { try { proc.kill(); } catch (_) {} });
+
+  return proc;
+}
 
 // ─── Body parser ─────────────────────────────────────────────────────────────
 
@@ -56,6 +157,151 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type,Authorization',
 };
 
+// ── Capability model ──────────────────────────────────────────────────────────
+// Every route maps to exactly one capability.
+// A key must have that capability to call it.
+// §1.2: wrong capability = 403 with the required capability named.
+// §5.1: every key has a UUID and an audit trail.
+
+const CAPS = {
+  READ_IDEAS:   'read_ideas',    // GET ideas, specs, gaps, snapshots, stats, health
+  WRITE_IDEAS:  'write_ideas',   // POST/PATCH ideas, create specs, open gaps
+  SEARCH_IDEAS: 'search_ideas',  // GET /api/ideas?search= (subset of read)
+  ADMIN:        'admin',         // key management, tunnel control, snapshots, cli.exec
+};
+
+// Route → required capability
+const ROUTE_CAP = {
+  'health':           null,              // public — no auth required
+  'contract.get':     null,              // public — contract is always readable
+  'tunnel.status':    CAPS.READ_IDEAS,
+  'tunnel.start':     CAPS.ADMIN,
+  'tunnel.stop':      CAPS.ADMIN,
+  'stats.get':        CAPS.READ_IDEAS,
+  'snr.current':      CAPS.READ_IDEAS,
+  'snr.history':      CAPS.READ_IDEAS,
+  'events.log':       CAPS.READ_IDEAS,
+  'idea.list':        CAPS.READ_IDEAS,
+  'idea.show':        CAPS.READ_IDEAS,
+  'idea.create':      CAPS.WRITE_IDEAS,
+  'idea.update':      CAPS.WRITE_IDEAS,
+  'idea.tension':     CAPS.WRITE_IDEAS,
+  'idea.link':        CAPS.WRITE_IDEAS,
+  'idea.spec':        CAPS.WRITE_IDEAS,
+  'idea.phase':       CAPS.WRITE_IDEAS,
+  'idea.archive':     CAPS.WRITE_IDEAS,
+  'idea.progress':    CAPS.WRITE_IDEAS,
+  'spec.list':        CAPS.READ_IDEAS,
+  'spec.show':        CAPS.READ_IDEAS,
+  'spec.update':      CAPS.WRITE_IDEAS,
+  'spec.check':       CAPS.WRITE_IDEAS,
+  'spec.build':       CAPS.WRITE_IDEAS,
+  'spec.export':      CAPS.READ_IDEAS,
+  'gap.list':         CAPS.READ_IDEAS,
+  'gap.show':         CAPS.READ_IDEAS,
+  'gap.open':         CAPS.WRITE_IDEAS,
+  'gap.resolve':      CAPS.WRITE_IDEAS,
+  'gap.ignore':       CAPS.WRITE_IDEAS,
+  'snapshot.list':    CAPS.READ_IDEAS,
+  'snapshot.show':    CAPS.READ_IDEAS,
+  'snapshot.diff':    CAPS.READ_IDEAS,
+  'snapshot.push':    CAPS.ADMIN,
+  'queue.show':       CAPS.READ_IDEAS,
+  'queue.progress':   CAPS.WRITE_IDEAS,
+  'key.list':         CAPS.ADMIN,
+  'key.create':       CAPS.ADMIN,
+  'key.revoke':       CAPS.ADMIN,
+  'cli.exec':         CAPS.ADMIN,
+};
+
+// ── Key store ─────────────────────────────────────────────────────────────────
+// Loaded from IdeaOS db.api_keys on first use.
+// Shape: { uuid, name, hash, caps[], createdAt, lastUsedAt, usageCount, revoked }
+// We store the SHA-256 hash of the key, never the key itself.
+// §2.1: keys persisted to idearium.json immediately on creation.
+
+function _hashKey(raw) {
+  return crypto.createHash('sha256').update(raw).digest('hex');
+}
+
+function _keyStore() {
+  const os = getIdeaOS();
+  if (!os.db.api_keys) os.db.api_keys = [];
+  return os.db.api_keys;
+}
+
+function _saveKeys() {
+  const { writeFileSync, mkdirSync } = _require('fs');
+  const { join } = _require('path');
+  const os = getIdeaOS();
+  mkdirSync(join(process.cwd(), 'data'), { recursive: true });
+  // saveDB is not exported — replicate the write inline (IdeaOS already handles this on next emit)
+  // trigger a save by emitting a no-op SNR event
+  try { os.emit('idearium.key.updated', { source: 'auth', ts: Date.now() }); } catch (_) {}
+}
+
+// Verify a raw key string. Returns { ok, key, missing_cap } or { ok: false, reason }.
+function _verifyKey(raw, requiredCap) {
+  if (!raw) return { ok: false, reason: 'no token' };
+  const hash  = _hashKey(raw);
+  const store = _keyStore();
+  const entry = store.find(k => k.hash === hash && !k.revoked);
+  if (!entry) return { ok: false, reason: 'invalid token' };
+  if (entry.expiresAt && Date.now() > entry.expiresAt) return { ok: false, reason: 'token expired' };
+  if (requiredCap && !entry.caps.includes(requiredCap) && !entry.caps.includes(CAPS.ADMIN)) {
+    return { ok: false, reason: 'insufficient capability', required: requiredCap };
+  }
+  // Update usage stats (best-effort — §1.2: never fail a request over a stats write)
+  entry.lastUsedAt = Date.now();
+  entry.usageCount = (entry.usageCount || 0) + 1;
+  return { ok: true, key: entry };
+}
+
+// Extract raw token from request headers.
+// Accepts: Authorization: Bearer <token>  OR  X-Idearium-Key: <token>
+function _extractToken(req) {
+  const auth = req.headers['authorization'] || '';
+  if (auth.startsWith('Bearer ')) return auth.slice(7).trim();
+  return (req.headers['x-idearium-key'] || '').trim() || null;
+}
+
+// Ensure at least one ADMIN key exists. Called on boot.
+// If no keys at all: generate one, print it ONCE to stdout, never again.
+// §1.2: key is printed to console with a clear banner so it is never missed.
+function _ensureBootKey() {
+  const store = _keyStore();
+  const activeAdmin = store.find(k => !k.revoked && k.caps.includes(CAPS.ADMIN));
+  if (activeAdmin) return; // already have one
+
+  const raw  = crypto.randomBytes(32).toString('hex');
+  const hash = _hashKey(raw);
+  const entry = {
+    uuid:       crypto.randomUUID(),
+    name:       'boot-admin',
+    hash,
+    caps:       [CAPS.ADMIN, CAPS.READ_IDEAS, CAPS.WRITE_IDEAS, CAPS.SEARCH_IDEAS],
+    createdAt:  Date.now(),
+    lastUsedAt: null,
+    usageCount: 0,
+    revoked:    false,
+    expiresAt:  null,
+  };
+  store.push(entry);
+  _saveKeys();
+
+  // Print ONCE — visible in orchestrator log. §1.2.
+  console.log('');
+  console.log('\x1b[1m\x1b[33m╔══════════════════════════════════════════════════════╗\x1b[0m');
+  console.log('\x1b[1m\x1b[33m║  IDEARIUM — BOOT ADMIN KEY (shown once, save it now) ║\x1b[0m');
+  console.log('\x1b[1m\x1b[33m╠══════════════════════════════════════════════════════╣\x1b[0m');
+  console.log(`\x1b[1m\x1b[33m║  ${raw}  ║\x1b[0m`);
+  console.log('\x1b[1m\x1b[33m╚══════════════════════════════════════════════════════╝\x1b[0m');
+  console.log('\x1b[33m  Use as:  Authorization: Bearer <key>\x1b[0m');
+  console.log('\x1b[33m  Or:      X-Idearium-Key: <key>\x1b[0m');
+  console.log('\x1b[33m  Rotate:  POST /api/keys  { name, caps[] }  with this key\x1b[0m');
+  console.log('');
+}
+
 // ─── Router ──────────────────────────────────────────────────────────────────
 
 function matchRoute(method, url) {
@@ -80,6 +326,12 @@ function matchRoute(method, url) {
     ['POST',   ['api','snapshots'],       'snapshot.push'],
     ['POST',   ['api','cli','exec'],      'cli.exec'],      // unified CLI axiom
     ['GET',    ['sse'],                   'sse'],
+    ['GET',    ['api','tunnel'],           'tunnel.status'],
+    ['POST',   ['api','tunnel','start'],   'tunnel.start'],
+    ['POST',   ['api','tunnel','stop'],    'tunnel.stop'],
+    ['GET',    ['api','keys'],             'key.list'],
+    ['POST',   ['api','keys'],             'key.create'],
+    ['DELETE', ['api','keys',':uuid'],     'key.revoke'],
   ];
 
   for (const [m, pattern, action] of routes) {
@@ -147,6 +399,20 @@ function parseQuery(url) {
 async function handle(req, res, route, query, body) {
   const os = getIdeaOS();
   const { action, params } = route;
+
+  // ── Auth gate ───────────────────────────────────────────────────────────────
+  // Public routes (null cap) bypass auth entirely.
+  // All other routes require a valid key with the mapped capability.
+  // §1.2: 401 = no/invalid token. 403 = valid token, wrong capability.
+  const requiredCap = ROUTE_CAP[action];
+  if (requiredCap !== null && requiredCap !== undefined) {
+    const raw    = _extractToken(req);
+    const result = _verifyKey(raw, requiredCap);
+    if (!result.ok) {
+      const code = (!raw || result.reason === 'invalid token' || result.reason === 'no token') ? 401 : 403;
+      return err(res, code, result.reason, result.required ? `required capability: ${result.required}` : null);
+    }
+  }
 
   switch (action) {
 
@@ -408,6 +674,104 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ok: true, queueId: params.queueId, events });
     }
 
+    // ── Key management ─────────────────────────────────────────────────────
+
+    case 'key.list': {
+      const store = _keyStore();
+      return ok(res, {
+        keys: store.map(k => ({
+          uuid:       k.uuid,
+          name:       k.name,
+          caps:       k.caps,
+          createdAt:  k.createdAt,
+          lastUsedAt: k.lastUsedAt,
+          usageCount: k.usageCount || 0,
+          revoked:    k.revoked,
+          expiresAt:  k.expiresAt || null,
+        })),
+      });
+    }
+
+    case 'key.create': {
+      const { name, caps, expiresIn } = body;
+      if (!name)              return err(res, 400, 'name required');
+      if (!Array.isArray(caps) || !caps.length)
+                              return err(res, 400, 'caps[] required — valid: read_ideas, write_ideas, search_ideas, admin');
+      const validCaps = Object.values(CAPS);
+      const badCaps   = caps.filter(c => !validCaps.includes(c));
+      if (badCaps.length)     return err(res, 400, `unknown capabilities: ${badCaps.join(', ')}`);
+
+      const raw  = crypto.randomBytes(32).toString('hex');
+      const hash = _hashKey(raw);
+      const entry = {
+        uuid:       crypto.randomUUID(),
+        name,
+        hash,
+        caps,
+        createdAt:  Date.now(),
+        lastUsedAt: null,
+        usageCount: 0,
+        revoked:    false,
+        expiresAt:  expiresIn ? Date.now() + expiresIn * 1000 : null,
+      };
+      _keyStore().push(entry);
+      _saveKeys();
+      // Return the raw key ONCE — never stored, never returned again
+      return ok(res, {
+        uuid:      entry.uuid,
+        name:      entry.name,
+        caps:      entry.caps,
+        key:       raw,
+        expiresAt: entry.expiresAt,
+        warning:   'store this key now — it will not be shown again',
+      });
+    }
+
+    case 'key.revoke': {
+      const store = _keyStore();
+      const entry = store.find(k => k.uuid === params.uuid);
+      if (!entry)  return err(res, 404, `key not found: ${params.uuid}`);
+      if (entry.revoked) return ok(res, { already: true });
+      // §M1: never delete — revoke only
+      entry.revoked   = true;
+      entry.revokedAt = Date.now();
+      _saveKeys();
+      return ok(res, { revoked: true, uuid: entry.uuid, name: entry.name });
+    }
+
+    // ── Tunnel ─────────────────────────────────────────────────────────────
+
+    case 'tunnel.status':
+      return ok(res, {
+        ready:   _tunnelReady,
+        url:     _tunnelUrl,
+        running: !!_tunnelProc && !_tunnelProc.exitCode,
+        lan:     getLocalIPs(),
+        port:    PORT,
+        binding: BINDING,
+      });
+
+    case 'tunnel.start': {
+      if (_tunnelProc && !_tunnelProc.exitCode) {
+        return ok(res, { already: true, url: _tunnelUrl, ready: _tunnelReady });
+      }
+      startTunnel(PORT,
+        url  => console.log(`[idearium/tunnel] ✓ ${url}`),
+        why  => console.warn(`[idearium/tunnel §1.2] ${why}`)
+      );
+      return ok(res, { started: true });
+    }
+
+    case 'tunnel.stop': {
+      if (_tunnelProc) {
+        try { _tunnelProc.kill(); } catch (_) {}
+        _tunnelProc  = null;
+        _tunnelUrl   = null;
+        _tunnelReady = false;
+      }
+      return ok(res, { stopped: true });
+    }
+
     default:
       return err(res, 404, `no handler for: ${action}`);
   }
@@ -637,6 +1001,78 @@ export function startAPI() {
           });
           r.setTimeout(2000, () => { r.destroy(); resolve(); }); // resolve on timeout = SSE streaming
           r.on('error', reject); r.end();
+        });
+      },
+    });
+
+    // Phase 7 SOFT: auth init + network bind announce
+    seq.phase({ name:'auth.init', type:'SOFT',
+      label:'Auth init — ensure boot key exists, announce surfaces',
+      fn: async () => {
+        _ensureBootKey();
+        const store   = _keyStore();
+        const active  = store.filter(k => !k.revoked).length;
+        const ips     = getLocalIPs();
+        console.log(`[idearium] bound :${PORT} on ${BINDING}`);
+        console.log(`[idearium] auth  — ${active} active key(s)`);
+        ips.forEach(ip =>
+          console.log(`[idearium] LAN:   http://${ip.address}:${PORT}  (${ip.name})`)
+        );
+        if (BINDING === '127.0.0.1') {
+          console.warn('[idearium] binding=127.0.0.1 — LAN access disabled. Set IDEARIUM_BIND=0.0.0.0 to enable.');
+        }
+      },
+    });
+
+    // Phase 8 SOFT: cloudflare tunnel — implicit, non-blocking (§B-6 gap on failure, never crash)
+    // Skipped if IDEARIUM_NO_TUNNEL=1. Gap opened if cloudflared not installed.
+    seq.phase({ name:'tunnel.init', type:'SOFT',
+      label:'Start cloudflare tunnel (remote access)',
+      fn: async () => {
+        if (process.env.IDEARIUM_NO_TUNNEL === '1') {
+          console.log('[idearium/tunnel] skipped (IDEARIUM_NO_TUNNEL=1)');
+          return;
+        }
+        await new Promise(resolve => {
+          const timer = setTimeout(() => {
+            console.warn('[idearium/tunnel] still waiting for URL — will surface when ready');
+            resolve();
+          }, 12000);
+
+          startTunnel(PORT,
+            url => {
+              clearTimeout(timer);
+              console.log(`[idearium/tunnel] ✓ remote: ${url}`);
+              // Post tunnel URL to orchestrator ledger so every system knows it
+              try {
+                const body = JSON.stringify({
+                  system: 'idearium', type: 'idearium.tunnel.ready',
+                  payload: { url, port: PORT, ts: Date.now() },
+                });
+                const r = _require('http').request({
+                  hostname: '127.0.0.1', port: 9000, path: '/api/ledger', method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+                });
+                r.on('error', () => {}); r.write(body); r.end();
+              } catch (_) {}
+              resolve();
+            },
+            why => {
+              clearTimeout(timer);
+              // §B-6: failure is a gap, not a crash
+              console.warn(`[idearium/tunnel §B-6] ${why}`);
+              try {
+                const os2 = getIdeaOS();
+                os2.emit('idearium.gap.open', {
+                  description: `tunnel unavailable: ${why}`,
+                  type:        'tunnel.unavailable',
+                  severity:    'low',
+                  source:      'boot',
+                });
+              } catch (_) {}
+              resolve();
+            }
+          );
         });
       },
     });

@@ -78,14 +78,14 @@ async function _waitForHealth(systemId, port, healthPath, maxWaitMs = 15000) {
  * @param {number} orchPort
  * @returns {Promise<{ok, proc, diagPass?, diagFail?}>}
  */
-async function _bootOneSys({ systemId, port, cmd, args, healthPath, label }, ledgerWrite, orchPort) {
+async function _bootOneSys({ systemId, port, cmd, args, healthPath, label, extraEnv }, ledgerWrite, orchPort) {
   console.log(`\n\x1b[90m[boot-systems] starting ${label}…\x1b[0m`);
   ledgerWrite('orchestrator', 'orchestrator.system.starting', { systemId, port, cmd });
 
   const proc = spawn(process.execPath, [cmd, ...args], {
     detached: false,
     stdio: 'inherit',
-    env: { ...process.env, ORCHESTRATOR_PORT: String(orchPort) },
+    env: { ...process.env, ORCHESTRATOR_PORT: String(orchPort), ...(extraEnv || {}) },
   });
   proc.on('error', err => {
     ledgerWrite('orchestrator', 'orchestrator.system.spawn.error', { systemId, error: err.message });
@@ -135,20 +135,31 @@ async function _bootOneSys({ systemId, port, cmd, args, healthPath, label }, led
 async function _bootSystems(ledgerWrite, orchPort, connectBridgeSSE, _eventLedger) {
   const systems = [
     {
-      systemId: 'cortex',   port: 3748, healthPath: '/health',
-      label: 'Cortex',      cmd: path.join(ROOT, 'cortex', 'boot.js'),              args: [],
+      systemId: 'cortex',    port: 3748, healthPath: '/health',
+      label: 'Cortex',       cmd: path.join(ROOT, 'cortex', 'boot.js'),              args: [],
     },
     {
-      systemId: 'guardian', port: 7820, healthPath: '/health',
-      label: 'Guardian',    cmd: path.join(ROOT, 'guardian', 'server.js'),          args: [],
+      systemId: 'guardian',  port: 7820, healthPath: '/health',
+      label: 'Guardian',     cmd: path.join(ROOT, 'guardian', 'server.js'),          args: [],
     },
     {
-      systemId: 'idearium', port: 4800, healthPath: '/health',
-      label: 'Idearium',    cmd: path.join(ROOT, 'idearium', 'api', 'index.js'),    args: [],
+      systemId: 'idearium',  port: 4800, healthPath: '/health',
+      label: 'Idearium',     cmd: path.join(ROOT, 'idearium', 'api', 'index.js'),    args: [],
+      // §B-6: bind to all interfaces so LAN and tunnel access work out of the box.
+      // Override with IDEARIUM_BIND=127.0.0.1 in environment to restrict.
+      // Override with IDEARIUM_NO_TUNNEL=1 to suppress cloudflare tunnel.
+      extraEnv: {
+        IDEARIUM_BIND:      process.env.IDEARIUM_BIND      || '0.0.0.0',
+        IDEARIUM_NO_TUNNEL: process.env.IDEARIUM_NO_TUNNEL || '0',
+      },
     },
     {
-      systemId: 'emerge',   port: 4242, healthPath: '/status',
-      label: 'Emerge IDE',  cmd: path.join(ROOT, 'emerge-ide.js'),                  args: [],
+      systemId: 'architect', port: 3747, healthPath: '/health',
+      label: 'Architect',    cmd: path.join(ROOT, 'architect', 'service.js'),        args: [],
+    },
+    {
+      systemId: 'emerge',    port: 4242, healthPath: '/status',
+      label: 'Emerge IDE',   cmd: path.join(ROOT, 'emerge-ide.js'),                  args: [],
     },
   ];
 

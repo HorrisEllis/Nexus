@@ -19,13 +19,23 @@ const MAX_BODY     = 25 * 1024 * 1024; // 25MB — uploads are b64-inflated (BUG
 
 class AdminServer {
   constructor({ port = DEFAULT_PORT, deps = {} } = {}) {
-    this._port       = port;
-    this._server     = null;
-    this._sseClients = new Set();
-    this._lastLogId  = 0; // will be set to current tail on first push
-    this._sseTimer   = null;
-    this._fileStore  = deps.fileStore || null; // content-addressable SHA-256 store
-    this._fileRefs   = deps.fileRefs  || null; // named refs over the store
+    this._port         = port;
+    this._server       = null;
+    this._sseClients   = new Set();
+    this._lastLogId    = 0; // will be set to current tail on first push
+    this._sseTimer     = null;
+    this._fileStore    = deps.fileStore || null; // content-addressable SHA-256 store
+    this._fileRefs     = deps.fileRefs  || null; // named refs over the store
+    this._intelligence = null; // registered via registerIntelligence()
+  }
+
+  // Wire the intelligence module into this server so its HTTP routes are served
+  // under /api/intelligence/*. Called from boot.js phase 8.
+  registerIntelligence(intelligence) {
+    if (typeof intelligence?.handleRequest !== 'function') {
+      throw new TypeError('[AdminServer] registerIntelligence: module must export handleRequest()');
+    }
+    this._intelligence = intelligence;
   }
 
   async start() {
@@ -43,6 +53,17 @@ class AdminServer {
     this._sseTimer.unref();
 
     // url printed by boot.js
+  }
+
+  // §1.2 — JSON response helper. Was missing from class — caused every request to throw.
+  _json(res, status, data) {
+    const body = JSON.stringify(data);
+    res.writeHead(status, {
+      'Content-Type':                'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers':'*',
+    });
+    res.end(body);
   }
 
   async stop() {
@@ -835,6 +856,15 @@ class AdminServer {
         }
 
                 default: {
+          // Delegate /api/intelligence/* to the registered intelligence module
+          if (this._intelligence && url.pathname.startsWith('/api/intelligence')) {
+            const body = req.method !== 'GET' ? await this._body(req).catch(() => null) : null;
+            const handled = this._intelligence.handleRequest(
+              req.method, url.pathname, url.searchParams, body,
+              (status, data) => this._json(res, status, data)
+            );
+            if (handled) break;
+          }
           res.writeHead(404, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: 'not found', route }));
         }
@@ -846,6 +876,16 @@ class AdminServer {
         res.end(JSON.stringify({ error: err.message }));
       } catch {}
     }
+  }
+
+  // Promisified body reader — used by async route handlers (await this._body(req))
+  _body(req) {
+    return new Promise((resolve, reject) => {
+      this._readBody(req, (text) => {
+        if (text === null) return reject(new Error('request body too large'));
+        try { resolve(JSON.parse(text)); } catch { resolve(text); }
+      });
+    });
   }
 
   // BUG-01/BUG-06 class (cross-applied from ncp.js forensics): accumulate Buffer[]
