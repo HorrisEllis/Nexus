@@ -3,7 +3,7 @@
 /**
  * cli/boot-systems.js — NEXUS Per-System Boot Sequencer
  * UUID: nexus-boot-systems-v1-0000-4000-0000-000000000001
- * Version: 1.1.0
+ * Version: 1.2.0
  *
  * Extracted from orchestrator.js so diagnose logic lives in one place.
  * Orchestrator calls:
@@ -19,6 +19,14 @@
  * Fixes carried forward from orchestrator.js:
  *   ORC-08  _waitForHealth: always destroy socket after use to prevent pool exhaustion
  *   ORC-08  explicit r.destroy() on both success and error paths
+ *
+ * Fixes in this version:
+ *   BOOT-01 Bridge was missing from systems[] — §AXIOM violation. Bridge is now
+ *           first. Nothing registers, handshakes, or relays until it is up.
+ *   BOOT-02 _bootOneSys spawned unconditionally. Every orchestrator restart
+ *           re-spawned every sub-system, orphaning the previous processes and
+ *           losing port binds to EADDRINUSE races. Now: single-shot health probe
+ *           before spawn — if the port answers, skip spawn, log [already running].
  *
  * §AXIOM: boot order — bridge → cortex → guardian → idearium → emerge.
  */
@@ -68,6 +76,36 @@ async function _waitForHealth(systemId, port, healthPath, maxWaitMs = 15000) {
   return false;
 }
 
+// ── Single-shot probe (BOOT-02) ───────────────────────────────────────────────
+
+/**
+ * _probeHealth — one attempt, no retry loop. Used pre-spawn to detect a system
+ * that is already running. Down systems fail fast (ECONNREFUSED resolves
+ * immediately), so cold boot pays ~0ms for this check.
+ * ORC-08 discipline: socket destroyed on every path.
+ *
+ * @param {number} port
+ * @param {string} healthPath
+ * @param {number} timeoutMs
+ * @returns {Promise<boolean>}
+ */
+function _probeHealth(port, healthPath, timeoutMs = 1500) {
+  return new Promise(resolve => {
+    const chunks = [];
+    const r = http.get(`http://127.0.0.1:${port}${healthPath}`, res => {
+      res.on('data', c => chunks.push(c));
+      res.on('end', () => {
+        r.destroy();
+        const d = Buffer.concat(chunks).toString('utf8');
+        try { const j = JSON.parse(d); resolve(res.statusCode === 200 && (j.ok !== false)); }
+        catch (_) { resolve(res.statusCode === 200); }
+      });
+    });
+    r.setTimeout(timeoutMs, () => { r.destroy(); resolve(false); });
+    r.on('error', () => { r.destroy(); resolve(false); });
+  });
+}
+
 // ── Single-system boot + diagnose-on-fail ─────────────────────────────────────
 
 /**
@@ -79,6 +117,15 @@ async function _waitForHealth(systemId, port, healthPath, maxWaitMs = 15000) {
  * @returns {Promise<{ok, proc, diagPass?, diagFail?}>}
  */
 async function _bootOneSys({ systemId, port, cmd, args, healthPath, label, extraEnv }, ledgerWrite, orchPort) {
+  // BOOT-02: probe before spawn. Orchestrator restarts must not re-spawn
+  // sub-systems that survived the restart. proc:null marks an adopted system —
+  // callers must not assume a child handle exists.
+  if (await _probeHealth(port, healthPath)) {
+    console.log(`\n\x1b[90m[boot-systems] ${label}\x1b[0m \x1b[33m[already running]\x1b[0m \x1b[90m— skipping spawn, adopting :${port}\x1b[0m`);
+    ledgerWrite('orchestrator', `${systemId}.system.already_running`, { systemId, port, adopted: true });
+    return { ok: true, proc: null, alreadyRunning: true };
+  }
+
   console.log(`\n\x1b[90m[boot-systems] starting ${label}…\x1b[0m`);
   ledgerWrite('orchestrator', 'orchestrator.system.starting', { systemId, port, cmd });
 
@@ -134,6 +181,14 @@ async function _bootOneSys({ systemId, port, cmd, args, healthPath, label, extra
  */
 async function _bootSystems(ledgerWrite, orchPort, connectBridgeSSE, _eventLedger) {
   const systems = [
+    {
+      // BOOT-01 §AXIOM: Bridge boots first. It is the trust relay — handshake,
+      // registration, and cross-system requests all route through it. Booting
+      // anything before Bridge means every nc.registerWithOrchestrator /
+      // nc.postBridge in downstream boot phases fires into a dead port.
+      systemId: 'bridge',    port: 9999, healthPath: '/health',
+      label: 'Bridge',       cmd: path.join(ROOT, 'bridge', 'index.js'),             args: [],
+    },
     {
       systemId: 'cortex',    port: 3748, healthPath: '/health',
       label: 'Cortex',       cmd: path.join(ROOT, 'cortex', 'boot.js'),              args: [],
@@ -234,4 +289,4 @@ async function _bootSystems(ledgerWrite, orchPort, connectBridgeSSE, _eventLedge
 
 // ── Export ────────────────────────────────────────────────────────────────────
 
-module.exports = { _waitForHealth, _bootOneSys, _bootSystems };
+module.exports = { _waitForHealth, _probeHealth, _bootOneSys, _bootSystems };

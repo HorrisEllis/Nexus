@@ -3096,6 +3096,7 @@ function go(tab){
   document.querySelectorAll('.tbn').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id===`panel-${tab}`));
   ST.STATE.tab=tab;
+  ST.saveConfig({tab}); // UI-01: persist active tab → nx_config (localStorage)
   onEnter(tab);
   // Extended tabs (from expanded shell)
   if(window._onEnterExtended) window._onEnterExtended(tab);
@@ -4567,6 +4568,11 @@ window.addEventListener('DOMContentLoaded',()=>{
     // Sync provider selector with saved config
     const p=document.getElementById('con-prov');
     if(p) p.value=ST.getProvider();
+    // UI-01: restore last active tab. Panel-existence guard — nx_config is
+    // shared with the home shell; a tab saved there always exists here, but
+    // the guard keeps restore safe if tab sets ever diverge further.
+    const lastTab=ST.STATE.config?.tab;
+    if(lastTab && lastTab!=='home' && document.getElementById('panel-'+lastTab)) go(lastTab);
   }).catch(err=>{
     if(window._bootStallTimer) clearTimeout(window._bootStallTimer);
     console.error('[boot] boot() promise rejected:', err);
