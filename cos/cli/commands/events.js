@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos events stream | tail [--n <count>]
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Subcommands:
  *   cos events stream    — live SSE-style stream of all kernel events

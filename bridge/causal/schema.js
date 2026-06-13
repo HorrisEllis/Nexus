@@ -2,7 +2,7 @@
 /**
  * bridge/causal/schema.js — Canonical Causal Event Schema
  * UUID: nexus-bridge-causal-schema-v1-0000-4000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Every service emits one of these per meaningful action.
  * Distinct from bridge/types.js (cross-system request shape).

@@ -2,7 +2,7 @@
 /**
  * nexus-connect.js — Universal cross-system connection layer
  * UUID: nexus-connect-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * §1.2  Every failure loud, specific, traceable.
  * §5.1  Every call has a UUID.

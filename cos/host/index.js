@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Host Shell Bootstrap
  *
  * Author: James Brooks (Erosmancer)
- * Version: 3.0.0
+ * Status: pre-release
  *
  * createHost() boots the host in dependency order:
  *   1. StateStore

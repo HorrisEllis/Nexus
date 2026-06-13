@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Compartment Virtual Filesystem Layer
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * The FsLayer wraps a compartment's root path and enforces:
  *   - Writable paths: writes allowed (default: entire root)

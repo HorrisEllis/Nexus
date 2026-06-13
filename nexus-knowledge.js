@@ -2,7 +2,7 @@
 /**
  * nexus-knowledge.js — Knowledge Memory Layer
  * UUID: nexus-knowledge-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * THE SURVIVAL LAYER. Facts that persist beyond events.
  *

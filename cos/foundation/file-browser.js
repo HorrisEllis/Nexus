@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Compartment File Browser
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * FileBrowser wraps FsLayer with higher-level operations:
  *   - Structured tree output for API/UI consumption

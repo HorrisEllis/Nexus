@@ -1,0 +1,113 @@
+{
+  "ts": 1780474788131,
+  "pass": 15,
+  "fail": 0,
+  "warn": 0,
+  "results": [
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/api/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788042
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/core/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788042
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/schemas/interaction-contract.json",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788042
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/ui/index.html",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788042
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: siso/core/index.js (ESM)",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788042
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: siso/core/package.json type:module",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788042
+    },
+    {
+      "system": "idearium",
+      "checkName": "file: idearium/package.json type:module",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788043
+    },
+    {
+      "system": "idearium",
+      "checkName": "ESM: idearium/core loads",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788096
+    },
+    {
+      "system": "idearium",
+      "checkName": "contract: idearium/schemas/ valid JSON",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788097
+    },
+    {
+      "system": "idearium",
+      "checkName": "startAPI: called at end of api/index.js",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788097
+    },
+    {
+      "system": "idearium",
+      "checkName": "live /health",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788111
+    },
+    {
+      "system": "idearium",
+      "checkName": "contract",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788113
+    },
+    {
+      "system": "idearium",
+      "checkName": "idea CRUD",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788118
+    },
+    {
+      "system": "idearium",
+      "checkName": "SNR",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788124
+    },
+    {
+      "system": "idearium",
+      "checkName": "spec pipeline",
+      "status": "PASS",
+      "detail": "",
+      "ts": 1780474788131
+    }
+  ]
+}

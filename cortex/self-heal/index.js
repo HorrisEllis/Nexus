@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/self-heal/index.js ─────────────────────────────────────────────────
 // UUID: nexus-self-heal-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // THE ACTIVATION LAYER. Connects:
 //   gap-finder  (finds problems) →
@@ -31,13 +31,103 @@ const MODULE_ID  = 'self-heal';
 const VERSION    = '1.0.0';
 const ROOT       = path.join(__dirname, '..', '..');
 
+// §TRUST-08: Heal trust tiers — explicit permissions per module class
+// Tier 1 (SAFE — auto-apply):       docs, UI, diagnostics, config stubs
+// Tier 2 (SNAPSHOT — apply+commit): adapters, bridges, service glue
+// Tier 3 (PROPOSE — human review):  core runtime, kernel, memory, orchestrator
+//
+// Healer reads tier before dispatch:
+//   T1 → apply patch directly (APPLY_PATCH must be true)
+//   T2 → versionium.commit() then apply (creates rollback point first)
+//   T3 → propose only — write to forge_patches table, never auto-apply
+//
+// This replaces the static SAFE_MODULES allowlist.
+// Adding a new module = decide its tier, not add to a growing list.
+
+const TRUST_TIERS = {
+  // ── Tier 1: Safe to auto-apply ─────────────────────────────────────────────
+  1: {
+    label:  'auto-apply',
+    action: 'apply',
+    modules: new Set([
+      // Diagnostics
+      'service/nexus-diagnostic.js',
+      'lib/ledger-writer.js',
+      'lib/baseline.js',
+      // UI files
+      'ui/index.html',
+      'guardian/ui/index.html',
+      // Guardian adapters (non-core)
+      'guardian/lib/gap-hunter.js',
+      'guardian/userscript-claude.js',
+      'guardian/userscript-chatgpt.js',
+      // Automation glue
+      'cortex/automation/engine.js',
+      'cortex/gate/gap-finder.js',
+    ]),
+  },
+  // ── Tier 2: Apply with snapshot first ─────────────────────────────────────
+  2: {
+    label:  'apply-with-snapshot',
+    action: 'snapshot_then_apply',
+    modules: new Set([
+      // Bridge adapters
+      'bridge/identity.js',
+      'bridge/router.js',
+      'bridge/registry.js',
+      'bridge/ledger.js',
+      // Cortex healers (can fix themselves)
+      'cortex/healer/index.js',
+      'cortex/self-heal/index.js',
+      'cortex/intelligence/index.js',
+      'cortex/orion/policy.js',
+      'cortex/orion/sensor.js',
+      // Agent adapters
+      'cortex/agents/ollama/index.js',
+      'cortex/agents/claude/index.js',
+      // Service layer
+      'architect/service.js',
+    ]),
+  },
+  // ── Tier 3: Propose only — never auto-apply ────────────────────────────────
+  3: {
+    label:  'propose-only',
+    action: 'propose',
+    modules: new Set([
+      // Core runtime
+      'cortex/boot.js',
+      'cortex/foundation/admin-server.js',
+      'cortex/foundation/cobalt-core.js',
+      // Memory kernel
+      'cortex/memory/jaa-db.js',
+      'cortex/memory/data-poller.js',
+      // Versionium
+      'cortex/versionium/index.js',
+      'cortex/versionium/causality.js',
+      // Orchestrator
+      'orchestrator.js',
+      // Queue
+      'lib/queue.js',
+      // Contracts (never auto-patch)
+      'contracts/nexus-interaction-contract.js',
+      'contracts/SYSTEM-CONTRACTS.js',
+    ]),
+  },
+};
+
+// Backwards-compat helper: resolvesTier(relPath) → { tier, action, label } | null
+function _resolveTier(relPath) {
+  for (const [tier, def] of Object.entries(TRUST_TIERS)) {
+    if (def.modules.has(relPath)) return { tier: parseInt(tier), ...def };
+  }
+  // Unknown module → default to Tier 2 (safe for most, requires snapshot)
+  return { tier: 2, label: 'apply-with-snapshot', action: 'snapshot_then_apply' };
+}
+
+// Keep SAFE_MODULES as backwards compat alias = all T1 + T2 combined
 const SAFE_MODULES = new Set([
-  'cortex/gate/gap-finder.js',
-  'cortex/healer/index.js',
-  'cortex/automation/engine.js',
-  'cortex/agents/ollama/index.js',
-  'cortex/agents/claude/index.js',
-  'guardian/lib/gap-hunter.js',
+  ...[...TRUST_TIERS[1].modules],
+  ...[...TRUST_TIERS[2].modules],
 ]);
 
 const APPLY_PATCH  = process.env.NEXUS_FORGE_APPLY === 'true';
@@ -127,7 +217,33 @@ async function _forgeGap(gap) {
 
 function _applyPatch(modAbsPath, modRelPath, newSrc) {
   if (!APPLY_PATCH)             return { applied: false, reason: 'apply_disabled — set NEXUS_FORGE_APPLY=true' };
-  if (!SAFE_MODULES.has(modRelPath)) return { applied: false, reason: `not_in_safe_list: ${modRelPath}` };
+  const tier = _resolveTier(modRelPath);
+
+  // §TRUST-08: tier-based dispatch
+  if (tier.action === 'propose') {
+    // T3: write to forge_patches table, never auto-apply
+    const { jaaDB, uid: _uid } = require('../memory/jaa-db');
+    jaaDB.insert('forge_patches', {
+      uuid:      _uid(),
+      gapUuid:   gap.uuid,
+      modPath:   modRelPath,
+      tier:      3,
+      action:    'propose',
+      status:    'proposed',
+      body:      gap.body,
+      source:    MODULE_ID,
+      ts:        Date.now(),
+    });
+    return { applied: false, reason: `tier_3_propose_only: ${modRelPath}`, tier: 3 };
+  }
+
+  if (tier.action === 'snapshot_then_apply') {
+    // T2: commit a snapshot before applying
+    try {
+      const versionium = require('../versionium/index');
+      versionium.commit({ message: `pre-heal snapshot: ${gap.type} in ${modRelPath}`, causedBy: gap.uuid });
+    } catch {}
+  }
   const backupPath = modAbsPath + `.backup-${Date.now()}`;
   try {
     fs.copyFileSync(modAbsPath, backupPath);
@@ -252,6 +368,23 @@ function init(cfg = {}) {
   _getForge();
   _interval = setInterval(_tick, _cfg.pollMs ?? 15_000);
   _interval.unref();
+
+  // §ESCALATE-09: subscribe to HEAL_REQUESTED on nexus-bus
+  try {
+    const _bus = require('../../nexus-bus');
+    _bus.on('HEAL_REQUESTED', async (payload) => {
+      const syntheticGap = {
+        uuid:    payload.gapUuid || require('crypto').randomUUID(),
+        type:    payload.gapType || 'unknown',
+        path:    payload.modulePath || '',
+        body:    payload.body || '',
+        sigma:   payload.sigma || 0,
+        causedBy:payload.causedBy || null,
+      };
+      try { await _forgeGap(syntheticGap); } catch (_) {}
+    });
+    console.log(`[${MODULE_ID}] subscribed to HEAL_REQUESTED`);
+  } catch (_) {}
   console.log(`[${MODULE_ID}] v${VERSION} — apply=${APPLY_PATCH} max_attempts=${MAX_ATTEMPTS}`);
 }
 

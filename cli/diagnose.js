@@ -3,7 +3,7 @@
 /**
  * cli/diagnose.js — NEXUS System Diagnostic Sequencer
  * UUID: nexus-diagnose-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Runs each system's diagnostic sequence one by one.
  * Every check is gated, logged, personalized to the system's role.

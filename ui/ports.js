@@ -15,6 +15,8 @@ window.NEXUS_PORTS = {
   idearium:     4800,
   emerge:       4242,
   ollama:       11434,
+  architect:    3747,
+  diagnostic:   7825,   // §A-4: added
 };
 
 window.NEXUS_URLS = {
@@ -28,6 +30,8 @@ window.NEXUS_URLS = {
   idearium:     'http://localhost:4800',
   emerge:       'http://localhost:4242',
   ollama:       'http://localhost:11434',
+  architect:    'http://localhost:3747',
+  diagnostic:   'http://localhost:7825',   // §A-4: added
   orch_sse:     'http://localhost:9000/sse',
   cortex_sse:   'http://localhost:3748/sse',
   bridge_sse:   'http://localhost:9999/bridge/sse',

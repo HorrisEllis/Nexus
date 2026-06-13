@@ -2,7 +2,7 @@
 /**
  * bridge/causal/server.js — Causal Spine HTTP Routes
  * UUID: nexus-bridge-causal-server-v1-0000-4000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Routes:
  *   POST /bridge/causal/emit                       — services emit causal events here

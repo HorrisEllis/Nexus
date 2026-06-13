@@ -2,7 +2,7 @@
 /**
  * hooks/index.js — NEXUS Hooks Living Registry
  * UUID: nexus-hooks-index-v1-0000-4000
- * Version: 1.0.0
+ * Status: pre-release
  * Status: living
  *
  * §A-2  Hooks are the wire. This is the complete map.

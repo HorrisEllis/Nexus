@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/boot.js ────────────────────────────────────────────────────────────
 // UUID: cortex-boot-v2-0000-4000-0000-000000000001
-// Version: 2.0.0
+// Status: pre-release
 //
 // §3.1  Bottom-up boot: storage → siso → jaa → modules → admin → orchestrator
 // §1.2  Every failure loud, specific, halts boot
@@ -12,6 +12,7 @@
 
 const path        = require('path');
 const nc          = require('../nexus-connect');
+const uidSystem   = require('../lib/uid'); // §14: component identity
 const { JaaDB, uid } = require('./memory/jaa-db');
 const { createCFRLedger } = require('../lib/cfr/ledger');
 const { FileStore }  = require('./foundation/store/FileStore');
@@ -42,6 +43,10 @@ async function bootAsync() {
   });
 
   // ── Phase 0 SOFT: orchestrator registration ──────────────────────────────
+  // §14: register cortex in the component identity system
+  uidSystem.register('nexus-cx'); // cortex registers itself and its parent chain
+  console.log('[boot] nexus-cx registered in component map');
+
   seq.phase({ name:'orchestrator.register', type:'SOFT',
     label:'Register with orchestrator (§AXIOM)',
     fn: async () => {

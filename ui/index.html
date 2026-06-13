@@ -2800,6 +2800,11 @@ function stopSSE() {
 function _ingestOrc(d) {
   emit('log', { source: 'orchestrator', ...d });
   emit('sse.event', d);
+  // §HOTSWAP-02 — reload when orchestrator signals this UI's files changed
+  if (d.type === 'orchestrator.ui.hotswap' && d.system === 'nexus') {
+    console.log('[hotswap] nexus UI reloading:', d.file);
+    setTimeout(() => location.reload(), 200);
+  }
 }
 
 function _ingestCortex(row) {

@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos status <name>
  *
  * Author: James Brooks (Erosmancer)
- * Version: 2.0.0
+ * Status: pre-release
  *
  * Prints full compartment status. Now includes live process info
  * from process-runner registry when the compartment is running.

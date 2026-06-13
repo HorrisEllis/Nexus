@@ -2,7 +2,7 @@
 /**
  * cos/playground/compare.js  -  Iteration Comparison Engine
  * UUID: cos-compare-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Compares two or more branch iterations across multiple dimensions:
  *

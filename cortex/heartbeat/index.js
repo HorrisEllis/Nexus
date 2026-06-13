@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/heartbeat/index.js ─────────────────────────────────────────────────
 // UUID: nexus-heartbeat-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // System heartbeat. Does two things every tick:
 //
@@ -26,6 +26,10 @@ const SYSTEMS = [
   { name: 'guardian',     port: 7820, path: '/health' },
   { name: 'idearium',     port: 4800, path: '/health' },
   { name: 'emerge',       port: 4242, path: '/health' },
+  // §MONITOR-05: added bridge, architect, diagnostic
+  { name: 'bridge',       port: 9999, path: '/health' },
+  { name: 'architect',    port: 3747, path: '/api/health' },
+  { name: 'diagnostic',   port: 7825, path: '/status' },
 ];
 
 let _interval = null;

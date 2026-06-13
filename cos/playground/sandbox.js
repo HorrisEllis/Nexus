@@ -2,7 +2,7 @@
 /**
  * cos/playground/sandbox.js  -  Compartment Sandbox Runner
  * UUID: cos-sandbox-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Runs a branch in a fully isolated child process.
  * The branch root is the cwd. The process gets a clean env.

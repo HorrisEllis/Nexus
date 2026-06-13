@@ -2,7 +2,7 @@
 /**
  * guardian/lab/lab.js — NEXUS Lab
  * UUID: nexus-lab-v1-0000-4000
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Controlled LLM experimental environment.
  * Run experiments against Claude and ChatGPT through Guardian.

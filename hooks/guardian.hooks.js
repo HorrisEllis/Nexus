@@ -2,7 +2,7 @@
 /**
  * hooks/guardian.hooks.js — Guardian System Hook Map
  * UUID: guardian-hooks-map-v1-0000-4000
- * Version: 1.0.0
+ * Status: pre-release
  * System: Guardian :7820
  * Status: living — auto-updated on hook registration changes
  *

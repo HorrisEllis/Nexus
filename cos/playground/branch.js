@@ -2,7 +2,7 @@
 /**
  * cos/playground/branch.js  -  Compartment Branch Engine
  * UUID: cos-branch-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * A Branch is a sovereign copy of a compartment's filesystem, isolated from
  * the parent and from every other branch. It lives inside the compartment's

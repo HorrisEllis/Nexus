@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Host Event Bus
  *
  * Author: James Brooks (Erosmancer)
- * Version: 2.0.0
+ * Status: pre-release
  *
  * The host event bus. Backed by a SISO Stream — not EventEmitter.
  *

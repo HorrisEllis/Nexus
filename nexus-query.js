@@ -2,7 +2,7 @@
 /**
  * nexus-query.js — Unified Query Layer
  * UUID: nexus-query-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * THE OPERATING SYSTEM QUERY INTERFACE.
  *

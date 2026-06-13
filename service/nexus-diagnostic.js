@@ -45,11 +45,17 @@ function uid() { return crypto.randomUUID(); }
 // ── System registry ───────────────────────────────────────────────────────────
 
 const SYSTEMS = {
-  guardian:    { port: 7820, ledgerDir: 'data/guardian/ledger',    healthPath: '/health' },
-  cortex:      { port: 3748, ledgerDir: 'data/cortex/ledger',      healthPath: '/api/health' },
-  idearium:    { port: 4800, ledgerDir: 'data/idearium/ledger',    healthPath: '/api/health' },
-  orchestrator:{ port: 9000, ledgerDir: 'data/orchestrator/ledger',healthPath: '/health' },
-  emerge:      { port: 4242, ledgerDir: 'data/emerge/ledger',      healthPath: '/health' },
+  // §LEDGER-FIX: paths now match flat JSONL written by ledger-writer + jaaDB
+  // data/<system>/<type>.jsonl — no subdirectory, no NDJSON stream wrappers
+  guardian:    { port: 7820, dataDir: 'data/guardian',    healthPath: '/health' },
+  cortex:      { port: 3748, dataDir: 'cortex/data',      healthPath: '/api/health' },
+  idearium:    { port: 4800, dataDir: 'data/idearium',    healthPath: '/api/health' },
+  orchestrator:{ port: 9000, dataDir: 'data/orchestrator',healthPath: '/health' },
+  emerge:      { port: 4242, dataDir: 'data/emerge',      healthPath: '/health' },
+  // §MONITOR-02: added bridge, architect, diagnostic
+  bridge:      { port: 9999, dataDir: 'data/bridge',      healthPath: '/health' },
+  architect:   { port: 3747, dataDir: 'data/architect',   healthPath: '/api/health' },
+  diagnostic:  { port: 7825, dataDir: 'data/diagnostic',  healthPath: '/status' },
 };
 
 // ── CLI dispatch ──────────────────────────────────────────────────────────────
@@ -126,9 +132,9 @@ function startService() {
   for (const [name, cfg] of Object.entries(SYSTEMS)) {
     monitors[name] = createBaseline({
       name,
-      ledgerDir:    path.join(ROOT, cfg.ledgerDir),
-      failuresDir:  path.join(ROOT, `data/${name}/failures`),
-      invariantDir: path.join(ROOT, `data/${name}/invariant`),
+      ledgerDir:    path.join(ROOT, cfg.dataDir),   // §LEDGER-FIX: dataDir is now the source
+      failuresDir:  path.join(ROOT, cfg.dataDir, 'failures'),
+      invariantDir: path.join(ROOT, cfg.dataDir, 'invariant'),
       baselineN:    10,
       sigmaThreshold: 0.25,
       onGap: (gap) => {
@@ -238,20 +244,25 @@ function startService() {
       ts:        Date.now(),
     });
 
-    // 2. Read recent ledger entries
+    // 2. Read recent ledger entries from flat JSONL (§LEDGER-FIX)
+    // ledger-writer writes: data/<system>/event_log.jsonl
+    // guardian still writes: data/guardian/ledger/events.ndjson (legacy path — read both)
     let recentEvents = [];
     try {
-      const ledgerPath = path.join(ROOT, cfg.ledgerDir);
-      if (fs.existsSync(ledgerPath)) {
-        const streams = fs.readdirSync(ledgerPath)
-          .filter(f => fs.statSync(path.join(ledgerPath, f)).isDirectory());
-        for (const stream of streams.slice(-3)) {
-          const evFile = path.join(ledgerPath, stream, 'events.ndjson');
-          if (!fs.existsSync(evFile)) continue;
-          const lines = fs.readFileSync(evFile, 'utf8').trim().split('\n').filter(Boolean);
-          const recent = lines.slice(-10).map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
-          recentEvents.push(...recent);
-        }
+      const dataPath  = path.join(ROOT, cfg.dataDir);
+      // Primary: flat event_log.jsonl (ledger-writer format)
+      const flatFile  = path.join(dataPath, 'event_log.jsonl');
+      if (fs.existsSync(flatFile)) {
+        const lines = fs.readFileSync(flatFile, 'utf8').trim().split('\n').filter(Boolean);
+        const recent = lines.slice(-20).map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+        recentEvents.push(...recent);
+      }
+      // Legacy: guardian-style ledger/events.ndjson (backwards compat)
+      const legacyFile = path.join(dataPath, 'ledger', 'events.ndjson');
+      if (!recentEvents.length && fs.existsSync(legacyFile)) {
+        const lines = fs.readFileSync(legacyFile, 'utf8').trim().split('\n').filter(Boolean);
+        const recent = lines.slice(-20).map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+        recentEvents.push(...recent);
       }
     } catch {}
 
@@ -262,7 +273,7 @@ function startService() {
     }
 
     // 3. Check physical queue for stuck items
-    const queueDir = path.join(ROOT, `data/${name}/queue`);
+    const queueDir = path.join(ROOT, cfg.dataDir, 'queue');
     let stuckCount = 0;
     if (fs.existsSync(queueDir)) {
       const items = fs.readdirSync(queueDir).filter(f => f.endsWith('.json'));
@@ -298,8 +309,19 @@ function startService() {
 
     // Update state
     const friction = monitors[name].friction();
+    const _mStats  = monitors[name].stats();
+
+    // §METRICS-06: write per-system metrics every poll cycle
+    try {
+      ledgerWriter.writeMetrics(name, {
+        sigma: _mStats.sigma||0, slope: _mStats.slope||0,
+        errorRate: _mStats.errorRate||0, friction: friction||0,
+        latencyMean: _mStats.latencyMean||0, latencyP95: _mStats.latencyP95||_mStats.latencyMean||0,
+      });
+    } catch(_){}
+
     systemState[name] = { online, uptime, jobs, friction, stuckCount,
-      sigma: monitors[name].stats().sigma,
+      sigma: _mStats.sigma, slope: _mStats.slope||0,
       openGaps: monitors[name].gaps().length,
       lastChecked: Date.now() };
 
@@ -401,7 +423,7 @@ function startService() {
 
     // 4. Check for recent failure ledger entries
     for (const [name] of Object.entries(SYSTEMS)) {
-      const failDir = path.join(ROOT, `data/${name}/failures`);
+      const failDir = path.join(ROOT, cfg.dataDir, 'failures');
       if (!fs.existsSync(failDir)) continue;
       const failFiles = fs.readdirSync(failDir).filter(f => f.endsWith('.ndjson'));
       for (const ff of failFiles.slice(-5)) {
@@ -723,7 +745,109 @@ function startService() {
     }
 
     // Audit
-    if (url.pathname === '/audit') {
+    if (url.pathname === '/decay') {
+    // Memory pressure — reads cortex decay_log directly
+    // Returns: eviction rate, pressure per tier, cycle summaries, working memory size
+    const decayFile = path.join(ROOT, 'cortex/data/decay_log.jsonl');
+    try {
+      if (!fs.existsSync(decayFile)) {
+        res.writeHead(200, CORS); res.end(JSON.stringify({ cycles:[], pressure:[], evictions:[], workingMemorySize:0 })); return;
+      }
+      const lines = fs.readFileSync(decayFile,'utf8').trim().split('\n').filter(Boolean);
+      const entries = lines.slice(-500).map(l=>{ try{return JSON.parse(l);}catch{return null;} }).filter(Boolean);
+
+      const cycles    = entries.filter(e => e._isCycleSummary).slice(-20);
+      const evictions = entries.filter(e => !e._isCycleSummary);
+
+      const byTable = {};
+      for (const e of evictions) {
+        if (!byTable[e.table]) byTable[e.table] = { count:0, totalAgeHours:0, tier:e.tier };
+        byTable[e.table].count++;
+        byTable[e.table].totalAgeHours += e.ageHours || 0;
+      }
+      const pressure = Object.entries(byTable).map(([table,d]) => ({
+        table, tier: d.tier, evictions: d.count,
+        avgAgeHours: d.count ? Math.round(d.totalAgeHours / d.count * 10) / 10 : 0,
+      })).sort((a,b) => b.evictions - a.evictions);
+
+      const lastCycle = cycles[cycles.length-1] || {};
+      res.writeHead(200, CORS);
+      res.end(JSON.stringify({
+        cycles: cycles.slice(-10), pressure,
+        evictions: evictions.slice(-50),
+        workingMemorySize: lastCycle.workingMemorySize || 0,
+        totalEvictions: evictions.length,
+      }));
+    } catch(e) { res.writeHead(500,CORS); res.end(JSON.stringify({error:e.message})); }
+    return;
+  }
+
+  if (url.pathname === '/tension') {
+    // §TENSION-05: per-system tension score
+    // tension = friction × (1 + openGaps × 0.2) × (1 + max(0, slope) × 2)
+    // High tension = system closest to breaking
+    const result = {};
+    for (const [name, mon] of Object.entries(monitors)) {
+      const s     = mon.stats();
+      const fric  = mon.friction();
+      const gaps  = mon.gaps().length;
+      const slope = Math.max(0, s.slope || 0);
+      const tension = fric * (1 + gaps * 0.2) * (1 + slope * 2);
+      result[name] = {
+        tension:   Math.round(tension * 1000) / 1000,
+        friction:  fric,
+        openGaps:  gaps,
+        slope:     s.slope || 0,
+        sigma:     s.sigma || 0,
+        online:    (systemState[name] || {}).online || false,
+        // tension regime
+        regime: tension > 2.0 ? 'critical' : tension > 1.0 ? 'turbulent' : tension > 0.4 ? 'elevated' : 'stable',
+      };
+    }
+    res.writeHead(200, CORS);
+    res.end(JSON.stringify(result));
+    return;
+  }
+
+  if (url.pathname === '/tension/edges') {
+    // §TENSION-05: per-edge tension (sigma divergence between communicating system pairs)
+    // Edges = system pairs that share data flow in the architecture
+    const EDGES = [
+      ['orchestrator','guardian'],
+      ['orchestrator','cortex'],
+      ['orchestrator','bridge'],
+      ['guardian','cortex'],
+      ['guardian','bridge'],
+      ['cortex','bridge'],
+      ['cortex','idearium'],
+      ['cortex','architect'],
+      ['cortex','diagnostic'],
+      ['diagnostic','orchestrator'],
+    ];
+    const edges = [];
+    for (const [a, b] of EDGES) {
+      const ma = monitors[a], mb = monitors[b];
+      if (!ma || !mb) continue;
+      const sa   = ma.stats(), sb = mb.stats();
+      const diff = Math.abs((sa.sigma||0) - (sb.sigma||0));
+      const fric = ((ma.friction()||0) + (mb.friction()||0)) / 2;
+      const edgeTension = diff * (1 + fric * 2);
+      edges.push({
+        from: a, to: b,
+        tension:    Math.round(edgeTension * 1000) / 1000,
+        sigmaDiff:  Math.round(diff * 1000) / 1000,
+        sigmaA:     sa.sigma || 0,
+        sigmaB:     sb.sigma || 0,
+        regime: edgeTension > 1.5 ? 'critical' : edgeTension > 0.7 ? 'turbulent' : edgeTension > 0.2 ? 'elevated' : 'stable',
+      });
+    }
+    edges.sort((a,b) => b.tension - a.tension);
+    res.writeHead(200, CORS);
+    res.end(JSON.stringify(edges));
+    return;
+  }
+
+  if (url.pathname === '/audit') {
       const result = await runAuditInternal();
       res.writeHead(200, CORS);
       res.end(JSON.stringify({ ok: true, ...result }));

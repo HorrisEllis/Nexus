@@ -1,7 +1,7 @@
 /**
  * ui/store.js — NEXUS Reactive State Store
  * UUID: nexus-ui-store-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * In-memory reactive state. SSE feeds in. UI reads out.
  * Nothing in the UI talks to the API directly — it goes through here.

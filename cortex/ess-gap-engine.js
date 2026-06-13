@@ -2,7 +2,7 @@
 /**
  * cortex/ess-gap-engine.js — ESS Variable Gap Analysis Engine
  * UUID: ess-gap-engine-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Based on ESS spec v0.1.0 — End-State Signal language.
  *

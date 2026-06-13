@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Compartment Process Runner
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Manages the lifecycle of a spawned compartment process.
  * Every process event flows back into the host event bus as a SISO Event.

@@ -2,7 +2,7 @@
 /**
  * contracts/SYSTEM-CONTRACTS.js — NEXUS System-Wide Contract Registry
  * UUID: nexus-contracts-registry-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Single source of truth for every named entity in the system:
  *   - Interaction contracts (per system)
@@ -30,6 +30,9 @@
  */
 
 const { randomUUID } = require('crypto');
+
+// ── System version — single source of truth ────────────────────────────────
+const NEXUS_VERSION = '0.4.0-pre'; // 0.x = pre-release. 1.0.0 = system builds on itself.
 
 // ══════════════════════════════════════════════════════════════════════════════
 // §1 — AXIOM REGISTRY
@@ -1056,6 +1059,7 @@ const SELF_AWARENESS = Object.freeze({
 // ══════════════════════════════════════════════════════════════════════════════
 
 module.exports = {
+  NEXUS_VERSION,
   AXIOMS,
   SYSTEMS,
   EVENTS,

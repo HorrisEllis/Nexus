@@ -2,7 +2,7 @@
 /**
  * bridge/causal/ledger.js — Causal Event Trace Ledger
  * UUID: nexus-bridge-causal-ledger-v1-0000-4000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Append-only JSONL store. NOT the same as bridge/ledger.js (request ledger).
  * This is the event trace ledger — every service action, permanently attributed.

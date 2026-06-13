@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Compartment Snapshot Engine
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Snapshot = point-in-time capture of:
  *   - Compartment config (from store)

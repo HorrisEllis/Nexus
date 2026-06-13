@@ -2,7 +2,7 @@
 /**
  * bridge/index.js — Bridge Entry Point
  * UUID: nexus-bridge-index-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Boots via BootSequence (lib/boot-sequence.js).
  * Wires identity → registry → ledger → router → server.

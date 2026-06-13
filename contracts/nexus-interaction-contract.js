@@ -2,7 +2,7 @@
 /**
  * contracts/nexus-interaction-contract.js
  * UUID: nexus-interaction-contract-v1-0000-4000
- * Version: 1.0.0
+ * Status: pre-release
  *
  * THE single source of truth for every system endpoint, port,
  * expected shape, SSE event name, and CLI command.
@@ -34,6 +34,7 @@ const PORTS = {
   idearium:     4800,
   emerge:       4242,
   ollama:       11434,
+  diagnostic:   7825,  // §A-4: added
 };
 
 // ── System contracts ──────────────────────────────────────────────────────────
@@ -267,6 +268,34 @@ const SYSTEMS = {
       uuid:      'SHA-256(pubKey)',
       token:     'MAX_TOKENS_PER_SYS=10',
     },
+  },
+
+  // ── DIAGNOSTIC :7825 ──────────────────────────────────────────────────────
+  // §A-4: added — append-only, never removed
+  diagnostic: {
+    id:     'diagnostic',
+    port:   PORTS.diagnostic,
+    color:  '#67e8f9',
+    label:  'Diagnostic',
+    health: { method: 'GET', path: '/status' },
+    routes: [
+      { method: 'GET',  path: '/status',      description: 'Full system health snapshot — sigma, slope, friction per system' },
+      { method: 'GET',  path: '/gaps',         description: 'All open gaps across all monitored systems', query: ['status','system','severity'] },
+      { method: 'GET',  path: '/friction',     description: 'Friction + sigma + slope + errorRate per system' },
+      { method: 'GET',  path: '/cfr/state',    description: 'CFR field state — coherence, friction, resonance, entropy, tension + regime' },
+      { method: 'GET',  path: '/trace/:uuid',  description: 'Causal chain trace — walks all system ledgers for a UUID' },
+      { method: 'GET',  path: '/audit',        description: 'Full system audit — syntax, endpoints, gap scan' },
+      { method: 'GET',  path: '/decay',        description: 'Memory pressure — eviction rate, pressure per tier, working memory size' },
+      { method: 'GET',  path: '/events',       description: 'SSE stream — live gap/poll/CFR events' },
+      { method: 'POST', path: '/gaps/:uuid/fix', description: 'Trigger fix command for a specific gap', body: [] },
+    ],
+    cli: [
+      { cmd: 'nexus diagnostic status',       desc: 'Full system health snapshot' },
+      { cmd: 'nexus diagnostic gaps',          desc: 'List open gaps' },
+      { cmd: 'nexus diagnostic trace <uuid>',  desc: 'Causal chain trace for UUID' },
+      { cmd: 'nexus diagnostic audit',         desc: 'Run system audit' },
+      { cmd: 'nexus diagnostic decay',         desc: 'Memory pressure report' },
+    ],
   },
 
 };

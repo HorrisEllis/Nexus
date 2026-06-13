@@ -62,6 +62,33 @@ async function _tick() {
           escalateToForge: fix.escalate || false,
         });
 
+        // §ESCALATE-09: emit HEAL_REQUESTED on nexus-bus — decouples healer from repair engine
+        if (fix.escalate) {
+          try {
+            const _bus = require('../../nexus-bus');
+            _bus.emit('HEAL_REQUESTED', {
+              gapUuid:    gap.uuid,
+              gapType:    gap.type,
+              modulePath: gap.path,
+              strategy:   fix.strategy,
+              body:       gap.body,
+              sigma:      gap.sigma || 0,
+              causedBy:   gap.causedBy,
+              ts:         Date.now(),
+            });
+          } catch (_) {
+            // nexus-bus not loaded — record as event_log entry for SSE pickup
+            jaaDB.insert('event_log', {
+              uuid:    uid(),
+              type:    'HEAL_REQUESTED',
+              payload: { gapUuid: gap.uuid, strategy: fix.strategy, modulePath: gap.path },
+              source:  MODULE_ID,
+              causedBy:gap.uuid,
+              ts:      Date.now(),
+            });
+          }
+        }
+
         jaaDB.insert('event_log', {
           uuid:     uid(),
           type:     fix.automated ? 'healer.resolved' : 'healer.escalated',

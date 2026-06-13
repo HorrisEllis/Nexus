@@ -27,17 +27,48 @@ async function _tick() {
           1
         );
         if (!existing.length) {
+          // §ORION-07: severity and routing weight derived from regime
+          // turbulent → medium + reduce routing weight by 20%
+          // collapsing → high   + reduce routing weight by 50%
+          // chaotic    → critical + block routing until stable
+          const _sevMap    = { collapsing: 'high', chaotic: 'critical', turbulent: 'medium' };
+          const _weightAdj = { collapsing: -0.5,   chaotic: -0.9,       turbulent: -0.2 };
+          const severity   = _sevMap[s.regime]    || 'medium';
+          const weightDelta= _weightAdj[s.regime] || -0.1;
+
           jaaDB.insert('gaps', {
-            uuid:      uid(),
-            path:      `orion/${s.calltoId}`,
-            type:      'regime_degraded',
-            severity:  s.regime === 'collapsing' ? 'high' : 'medium',
-            body:      `ORION session ${s.uuid}: regime=${s.regime} service=${s.service}`,
-            status:    'pending',
-            source:    MODULE_ID,
-            causedBy:  s.uuid,
-            createdAt: Date.now(),
+            uuid:        uid(),
+            path:        `orion/${s.calltoId}`,
+            type:        'regime_degraded',
+            severity,
+            body:        `ORION session ${s.uuid}: regime=${s.regime} service=${s.service}`,
+            status:      'pending',
+            source:      MODULE_ID,
+            causedBy:    s.uuid,
+            sigma:       s.sigma || 0,
+            createdAt:   Date.now(),
           });
+
+          // §ORION-07: adjust routing weight for this service in project_registry
+          // RAID reads routing weights from project_registry before dispatching
+          const reg = jaaDB.query('project_registry', r => r.name === s.service, 1);
+          if (reg.length) {
+            const current = reg[0].routingWeight ?? 1.0;
+            const adjusted = Math.max(0.05, Math.min(1.0, current + weightDelta));
+            jaaDB.update('project_registry', reg[0].uuid, {
+              routingWeight:      adjusted,
+              routingWeightNote:  `orion:${s.regime} @ ${new Date().toISOString()}`,
+              _orionLastAdjusted: Date.now(),
+            });
+            jaaDB.insert('event_log', {
+              uuid:    uid(),
+              type:    'orion.routing.adjusted',
+              payload: { service: s.service, regime: s.regime, from: current, to: adjusted, delta: weightDelta },
+              source:  MODULE_ID,
+              causedBy:s.uuid,
+              ts:      Date.now(),
+            });
+          }
         }
       }
 

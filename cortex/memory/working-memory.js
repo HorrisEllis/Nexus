@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/memory/working-memory.js ──────────────────────────────────────────
 // UUID: cortex-working-memory-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // Working memory module. Manages the `working_memory` table.
 //

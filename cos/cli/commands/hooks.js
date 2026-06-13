@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos hooks list | show <id> | fire <id>
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * hook subcommands:
  *   cos hooks list                → all registered hooks from system map

@@ -4,7 +4,7 @@
  * COMPARTMENT OS — cos CLI entry point
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.1.0
+ * Status: pre-release
  *
  * Usage:
  *   cos create [name]

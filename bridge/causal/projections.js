@@ -2,7 +2,7 @@
 /**
  * bridge/causal/projections.js — Causal Event Projections
  * UUID: nexus-bridge-causal-projections-v1-0000-4000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Four projections. Each is a pure function: events[] → view.
  * No side effects. No mutation. Project from the ledger on demand.

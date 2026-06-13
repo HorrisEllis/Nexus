@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos schema validate
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Validates all hooks in the system map against the hook schema.
  * Throws on first violation per COS-1 (nothing silently fails).

@@ -3,7 +3,7 @@
 /**
  * cli/nexus-repl.js — NEXUS Interactive CLI REPL
  * UUID: nexus-repl-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Opened automatically by orchestrator in a new terminal window.
  * Also runnable manually: node cli/nexus-repl.js --repl

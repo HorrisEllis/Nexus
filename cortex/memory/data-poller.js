@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/memory/data-poller.js ──────────────────────────────────────────────
 // UUID: cortex-data-poller-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // CORTEX IS THE ULTIMATE TRUTH.
 //
@@ -108,6 +108,56 @@ const DEFAULT_SOURCES = [
           causedBy: null,
           ts:       row.ts || Date.now(),
         }),
+      },
+      {
+        // Flat JSONL from ledger-writer (§MONITOR-04)
+        file:  'event_log.jsonl',
+        table: 'event_log',
+        transform: (row) => row.source ? row : { ...row, source: `idearium:poller` },
+      },
+    ],
+  },
+  // §MONITOR-04: Added architect, bridge, emerge sources
+  {
+    id:  'architect',
+    dir: null,
+    files: [
+      {
+        file:  'event_log.jsonl',
+        table: 'event_log',
+        transform: (row) => ({ ...row, source: `architect:${row.source||'poller'}` }),
+      },
+      {
+        file:  'gaps.jsonl',
+        table: 'gaps',
+        transform: (row) => ({ ...row, source: `architect:${row.source||'poller'}` }),
+      },
+    ],
+  },
+  {
+    id:  'bridge',
+    dir: null,
+    files: [
+      {
+        file:  'event_log.jsonl',
+        table: 'event_log',
+        transform: (row) => ({ ...row, source: `bridge:${row.source||'poller'}` }),
+      },
+      {
+        file:  'failures.jsonl',
+        table: 'failures',
+        transform: (row) => ({ ...row, source: `bridge:${row.source||'poller'}` }),
+      },
+    ],
+  },
+  {
+    id:  'emerge',
+    dir: null,
+    files: [
+      {
+        file:  'event_log.jsonl',
+        table: 'event_log',
+        transform: (row) => ({ ...row, source: `emerge:${row.source||'poller'}` }),
       },
     ],
   },
@@ -308,6 +358,11 @@ class DataPoller {
       orchestrator:  process.env.ORCH_DATA_DIR        || path.join(dataRoot, 'orchestrator'),
       idearium:      process.env.IDEARIUM_DATA_DIR    || path.join(dataRoot, 'idearium'),
       emerge:        process.env.EMERGE_DATA_DIR      || path.join(dataRoot, 'emerge'),
+      // §MONITOR-04: added architect, bridge
+      architect:     process.env.ARCHITECT_DATA_DIR   || path.join(dataRoot, 'architect'),
+      bridge:        process.env.BRIDGE_DATA_DIR      || path.join(dataRoot, 'bridge'),
+      // §LIMINAL-10: guardian memory store data
+      'guardian-mem':process.env.GUARDIAN_MEM_DIR     || path.join(__dirname,'../../guardian','memory_store'),
     };
 
     for (const def of DEFAULT_SOURCES) {

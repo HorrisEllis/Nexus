@@ -6,17 +6,24 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#08080f;--surface:#0d0d1a;--surface2:#111120;--surface3:#161628;
-  --border:#1c1c35;--border2:#252545;--border3:#2e2e58;
-  --text:#d4d4e8;--muted:#4a4a7a;
-  --amber:#f59e0b;--amber-dim:rgba(245,158,11,.1);--amber-glow:rgba(245,158,11,.25);
-  --green:#22c55e;--green-dim:rgba(34,197,94,.1);
-  --blue:#60a5fa;
-  --purple:#a78bfa;--purple-dim:rgba(167,139,250,.1);
-  --pink:#f472b6;
-  --red:#ef4444;--red-dim:rgba(239,68,68,.1);
-  --cyan:#22d3ee;
-  --mono:'Fira Code','JetBrains Mono','Cascadia Code',monospace;
+  /* NEXUS unified design system */
+  --bg:#05080f;--bg2:#080c14;--bg3:#0d1220;--bg4:#111828;
+  --surface:#0d1220;--surface2:#111828;--surface3:#151e2e;
+  --border:#1a2438;--border2:#1f2d45;--border3:#243454;
+  --text:#c8d8f0;--text2:#7a94b8;--text3:#3d5272;--muted:#2d3f58;
+  --c:#00d4ff;--c-dim:rgba(0,212,255,.08);--c-glow:rgba(0,212,255,.2);
+  --g:#22c55e;--g-dim:rgba(34,197,94,.1);
+  --y:#f59e0b;--y-dim:rgba(245,158,11,.1);--y-glow:rgba(245,158,11,.2);
+  --m:#818cf8;--m-dim:rgba(129,140,248,.1);
+  --o:#ef9f27;--o-dim:rgba(239,159,39,.1);
+  --err:#ef4444;--err-dim:rgba(239,68,68,.1);
+  --signal:#22c55e;
+  /* Legacy aliases for guardian UI components */
+  --amber:var(--y);--amber-dim:var(--y-dim);--amber-glow:var(--y-glow);
+  --green:var(--g);--green-dim:var(--g-dim);
+  --blue:#60a5fa;--purple:var(--m);--purple-dim:var(--m-dim);
+  --pink:#f472b6;--red:var(--err);--red-dim:var(--err-dim);--cyan:var(--c);
+  --mono:'SF Mono','JetBrains Mono','Cascadia Code',monospace;
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:12px;overflow:hidden;}
 .app{display:grid;grid-template-rows:42px 1fr;height:100vh;}
@@ -972,6 +979,8 @@ async function _checkConns(){
   }
 
   // Subscribe to bridge SSE (all cross-system events)
+  const bridgeSSE = new EventSource('http://127.0.0.1:9999/bridge/sse');
+  bridgeSSE.onmessage = e => {
     try {
       const d = JSON.parse(e.data);
       // Update bus log in brain panel
@@ -1918,6 +1927,7 @@ async function sendJob() {
 
 // ── Bridge ───────────────────────────────────────────────────────────────────
 
+async function bridgeFetch(path, opts={}) {
   try { const r=await fetch(BRIDGE+path,opts); return r.ok?r.json():null; } catch(e){return null;}
 }
 
@@ -1948,6 +1958,11 @@ async function findByTag() {
 }
 
 async function loadBridgeRequests(status='') {
+  const data = await bridgeFetch('/requests' + (status ? '?status='+encodeURIComponent(status) : ''));
+  const el = document.getElementById('bridge-requests');
+  if (!el) return;
+  const reqs = data?.requests || [];
+  el.innerHTML = reqs.map(r => `
     <div style="background:var(--bg);border:1px solid var(--border);border-left:3px solid ${r.status==='pending'?'var(--amber)':r.status==='complete'?'var(--signal)':r.status==='rejected'?'var(--err)':'var(--border)'};padding:5px 7px;margin-bottom:3px;border-radius:2px">
       <div style="display:flex;justify-content:space-between;font-size:10px">
         <span style="color:var(--text)">${r.type}</span>
@@ -1962,6 +1977,7 @@ async function loadBridgeRequests(status='') {
 }
 
 async function actRequest(uuid, action) {
+  await bridgeFetch('/requests/'+uuid+'/'+action, {method:'POST'});
   loadBridgeRequests();
 }
 
@@ -1971,6 +1987,7 @@ async function submitRequest() {
   const to      = document.getElementById('req-to').value||'guardian';
   let   payload = {};
   try { payload = JSON.parse(document.getElementById('req-payload').value||'{}'); } catch(_){}
+  const d = await bridgeFetch('/requests', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({type,from,to,payload})});
   const el = document.getElementById('req-result');
   el.textContent = d?.ok ? '✓ submitted: '+d.request?.uuid?.slice(0,8) : '✗ failed';
   el.style.color = d?.ok ? 'var(--signal)' : 'var(--err)';
@@ -1980,6 +1997,8 @@ async function submitRequest() {
 function startSubscription() {
   const channel = document.getElementById('sub-channel').value || '*';
   const log = document.getElementById('sub-log');
+  const sse = new EventSource('http://127.0.0.1:9999/bridge/sse?channel='+encodeURIComponent(channel));
+  sse.onmessage = e => {
     try {
       const d = JSON.parse(e.data);
       const row = document.createElement('div');
@@ -1994,11 +2013,17 @@ function startSubscription() {
 async function doHandshake() {
   const systemId = document.getElementById('hs-system').value;
   const secrets  = {cortex:'nexus-cortex-internal-v1',guardian:'nexus-guardian-internal-v1',idearium:'nexus-idearium-internal-v1',cockpit:'nexus-cockpit-internal-v1'};
+  const secret = secrets[systemId] || '';
+  const d = await bridgeFetch('/handshake', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({systemId,secret})});
   const el = document.getElementById('hs-result');
-  el.style.color = d?.ok ? 'var(--signal)' : 'var(--err)';
+  if (el) { el.textContent = d?.ok ? '✓ handshake ok' : '✗ failed'; el.style.color = d?.ok ? 'var(--signal)' : 'var(--err)'; }
 }
 
 async function loadBridgeHealth() {
+  const d = await bridgeFetch('/health');
+  const el = document.getElementById('bridge-health');
+  if (!el) return;
+  if (!d) { el.innerHTML = '<div style="color:var(--err)">● offline</div>'; return; }
   el.innerHTML = `<div style="color:var(--signal)">● online</div>
     <div>sessions: ${d.sessions} · pending: ${d.pendingRequests}</div>
     <div>events ring: ${d.recentEvents}</div>
@@ -2241,6 +2266,10 @@ const CFR = (() => {
 
     // Bridge
     try {
+      const br = await fetch('http://127.0.0.1:9999/health', {signal:AbortSignal.timeout(2000)}).then(r=>r.json()).catch(()=>null);
+      _sysHealth.bridge = br?.ok ? 1.0 : 0;
+      const el = document.getElementById('cfr-s-bridge'); if(el) el.textContent = br?.ok ? '● online' : '○ offline';
+    } catch { _sysHealth.bridge = 0; }
 
     // Idearium
     try {
@@ -2990,7 +3019,7 @@ async function brainRefreshNodes() {
   }).join('');
 
   // Update BPM display (use last seen as proxy — real BPM needs heartbeat module)
-    guardian:'bpm-guardian', idearium:'bpm-idearium' };
+  const bpmMap = { cortex:'bpm-cortex', guardian:'bpm-guardian', idearium:'bpm-idearium' };
   for (const [sys, elId] of Object.entries(bpmMap)) {
     const s = reg[sys];
     const el2 = document.getElementById(elId);
@@ -3153,683 +3182,81 @@ function _renderBrainJaa() {
     </div>
 
   </div>
-  <!-- PANEL: ARCHITECT — constraint-first system authoring -->
-  <!-- §A-1 Architecture before implementation. §A-2 Hooks are the wire. -->
-<style>
-.arch-inner-tab{padding:7px 14px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);cursor:pointer;border-right:1px solid var(--border);border-bottom:2px solid transparent;transition:all .15s;}
-.arch-inner-tab:hover{color:var(--text);background:var(--surface2);}
-.arch-inner-tab.active{color:var(--amber);border-bottom-color:var(--amber);background:var(--surface2);}
-.arch-inner-panel{display:none;}
-.arch-inner-panel.show{display:flex!important;}
-.arch-hook-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
-.arch-hook-row:hover,.arch-hook-row.active{background:var(--surface2);}
-.arch-hook-type{font-size:8px;font-weight:700;text-transform:uppercase;padding:2px 6px;border-radius:3px;flex-shrink:0;}
-.arch-hook-type-api{background:#1a2a40;color:#85b7eb;}
-.arch-hook-type-event-bus,.arch-hook-type-event\.bus{background:#1a2a1a;color:#9fe1cb;}
-.arch-hook-type-webserver{background:#2a1a2a;color:#c9a0f6;}
-.arch-hook-type-gate{background:#2a2010;color:#fac775;}
-.arch-hook-type-snr{background:#1a2a2a;color:#67d8cf;}
-.arch-hook-type-ollama,.arch-hook-type-raid{background:#2a1510;color:#f8a07a;}
-.arch-hook-type-default{background:#1e1e26;color:#9090a0;}
-.arch-hook-name{font-size:10px;font-weight:500;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.arch-hook-status{font-size:8px;padding:1px 6px;border-radius:10px;flex-shrink:0;}
-.arch-hook-status-active{background:#1a2a1a;color:#34d399;}
-.arch-hook-status-seed{background:#2a2010;color:#f59e0b;}
-.arch-hook-status-deprecated{background:#2a1515;color:#ef4444;}
-.arch-detail-block{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:10px;}
-.arch-detail-title{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px;font-weight:700;}
-.arch-detail-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border);}
-.arch-detail-row:last-child{border-bottom:none;}
-.arch-detail-label{font-size:9px;color:var(--muted);}
-.arch-detail-val{font-size:9px;color:var(--text);font-family:var(--mono);text-align:right;max-width:200px;overflow:hidden;text-overflow:ellipsis;}
-.arch-bp-item{padding:7px 10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
-.arch-bp-item:hover,.arch-bp-item.active{background:var(--surface2);}
-.arch-bp-name{font-size:10px;font-weight:500;color:var(--text);}
-.arch-bp-meta{font-size:9px;color:var(--muted);margin-top:2px;}
-.arch-snr-axis{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);}
-.arch-snr-axis:last-child{border-bottom:none;}
-.arch-snr-axis-name{font-size:9px;color:var(--text);width:100px;flex-shrink:0;}
-.arch-snr-bar{flex:1;height:6px;background:var(--surface);border-radius:3px;overflow:hidden;}
-.arch-snr-fill{height:100%;border-radius:3px;transition:width .4s;}
-.arch-snr-val{font-size:9px;font-family:var(--mono);width:36px;text-align:right;flex-shrink:0;}
-.arch-map-file{display:flex;align-items:center;gap:6px;padding:3px 8px;border-bottom:1px solid var(--border);font-size:9px;}
-.arch-map-type{font-size:8px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:2px;flex-shrink:0;}
-.arch-gap-row{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:7px 10px;margin-bottom:6px;}
-.arch-gap-row.sev-critical{border-color:#ef444433;}
-.arch-gap-row.sev-high{border-color:#f59e0b33;}
-</style>
-<script>
-'use strict';
-// ── Architect panel — wired to architect service :3747 ────────────────────
-// §A-2 Hooks are the wire. §A-5 Signal before noise.
-const ARCH_BASE = 'http://127.0.0.1:3747';
-const ORCH_ARCH = 'http://127.0.0.1:9000/api/architect';
-
-let _archHooks     = [];
-let _archBlueprints= [];
-let _archSelectedHook = null;
-let _archSelectedBP   = null;
-let _archOnline    = false;
-let _archTab       = 'hooks';
-
-function archSwitchTab(tab) {
-  _archTab = tab;
-  document.querySelectorAll('.arch-inner-tab').forEach(t => {
-    t.classList.toggle('active', t.id === `arch-tab-${tab}`);
-  });
-  ['hooks','blueprint','canvas','map','snr','lattice'].forEach(t => {
-    const el = document.getElementById(`arch-panel-${t}`);
-    if (el) { el.style.display = t === tab ? 'flex' : 'none'; el.style.flexDirection = 'column'; }
-  });
-  if (tab === 'hooks')     archLoadHooks();
-  if (tab === 'blueprint') archLoadBlueprints();
-  if (tab === 'map')       archLoadMap();
-  if (tab === 'snr')       archLoadSNRHistory();
-}
-
-// ── API helpers ────────────────────────────────────────────────────────────
-async function _archGet(path) {
-  try {
-    const r = await fetch(ARCH_BASE + path, { signal: AbortSignal.timeout(4000) });
-    if (!r.ok) return null;
-    return await r.json();
-  } catch(_) { return null; }
-}
-async function _archPost(path, body) {
-  try {
-    const r = await fetch(ARCH_BASE + path, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body), signal: AbortSignal.timeout(8000),
-    });
-    return await r.json();
-  } catch(e) { return { ok: false, error: e.message }; }
-}
-
-// ── Health check ───────────────────────────────────────────────────────────
-async function archCheckHealth() {
-  const h = await _archGet('/health');
-  _archOnline = !!(h?.ok);
-  const dot   = document.getElementById('arch-status-dot');
-  const label = document.getElementById('arch-status-label');
-  if (dot)   dot.style.background   = _archOnline ? '#34d399' : '#ef4444';
-  if (label) label.textContent = _archOnline ? `:3747 ONLINE · ${h?.hooks?.total||0} hooks` : ':3747 OFFLINE';
-  return _archOnline;
-}
-
-async function archRefresh() {
-  await archCheckHealth();
-  if (_archTab === 'hooks')     archLoadHooks();
-  if (_archTab === 'blueprint') archLoadBlueprints();
-  if (_archTab === 'map')       archLoadMap();
-  if (_archTab === 'snr')       archLoadSNRHistory();
-}
-
-// ── HOOKS ──────────────────────────────────────────────────────────────────
-async function archLoadHooks() {
-  if (!_archOnline) await archCheckHealth();
-  const type   = document.getElementById('arch-hook-type-filter')?.value || '';
-  const status = document.getElementById('arch-hook-status-filter')?.value || '';
-  const qs = [type&&`type=${type}`, status&&`status=${status}`].filter(Boolean).join('&');
-  const data = await _archGet(`/api/hooks${qs?'?'+qs:''}`);
-  const list = document.getElementById('arch-hook-list');
-  const count= document.getElementById('arch-hook-count');
-  if (!list) return;
-  if (!data) {
-    list.innerHTML = `<div style="color:var(--red);font-size:9px;padding:12px">Architect offline — start with: node architect/service.js</div>`;
-    return;
-  }
-  _archHooks = data.hooks || [];
-  if (count) count.textContent = `${_archHooks.length} hook${_archHooks.length!==1?'s':''}`;
-  if (!_archHooks.length) {
-    list.innerHTML = `<div style="color:var(--muted);font-size:9px;padding:12px;text-align:center">No hooks registered yet.<br>Click "+ Register Hook" to declare a wire.</div>`;
-    return;
-  }
-  list.innerHTML = _archHooks.map((h,i) => {
-    const typeClass = `arch-hook-type-${(h.type||'').replace(/[^a-z-]/g,'-')}`;
-    const statusClass = `arch-hook-status-${h.meta?.status||'active'}`;
-    return `<div class="arch-hook-row${_archSelectedHook?.uuid===h.uuid?' active':''}" onclick="archSelectHook(${i})">
-      <span class="arch-hook-type ${typeClass}" style="background:var(--surface2)">${h.type||'?'}</span>
-      <span class="arch-hook-name">${h.name}</span>
-      <span class="arch-hook-status ${statusClass}">${h.meta?.status||'active'}</span>
-    </div>`;
-  }).join('');
-}
-
-function archSelectHook(idx) {
-  _archSelectedHook = _archHooks[idx];
-  document.querySelectorAll('.arch-hook-row').forEach((r,i) => r.classList.toggle('active', i===idx));
-  const detail = document.getElementById('arch-hook-detail');
-  if (!detail || !_archSelectedHook) return;
-  const h = _archSelectedHook;
-  const friction = h.frictionScore || {};
-  const contract = h.contract || {};
-  detail.innerHTML = `
-    <div class="arch-detail-block">
-      <div class="arch-detail-title">${h.name}</div>
-      <div style="color:var(--text2);font-size:10px;margin-bottom:8px;">${h.intent||'No intent declared'}</div>
-      <div class="arch-detail-row"><span class="arch-detail-label">UUID</span><span class="arch-detail-val">${h.uuid?.slice(0,18)||'?'}…</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Type</span><span class="arch-detail-val" style="color:var(--amber)">${h.type}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Direction</span><span class="arch-detail-val">${h.direction}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Version</span><span class="arch-detail-val">${h.version||'1.0.0'}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Status</span><span class="arch-detail-val">${h.meta?.status||'active'}</span></div>
-    </div>
-    <div class="arch-detail-block">
-      <div class="arch-detail-title">Endpoints</div>
-      <div class="arch-detail-row"><span class="arch-detail-label">From</span><span class="arch-detail-val">${h.from?.surface||'*'} (L${h.from?.layer??'?'})</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">To</span><span class="arch-detail-val">${h.to?.surface||'*'} (L${h.to?.layer??'?'})</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">CLI binding</span><span class="arch-detail-val">${h.bindings?.cli||'—'}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Event type</span><span class="arch-detail-val">${h.bindings?.event||'—'}</span></div>
-    </div>
-    <div class="arch-detail-block">
-      <div class="arch-detail-title">Contract</div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Axioms</span><span class="arch-detail-val">${(contract.axioms||[]).join(', ')||'—'}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Side effects</span><span class="arch-detail-val">${(contract.sideEffects||[]).join(', ')||'none'}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Idempotent</span><span class="arch-detail-val">${contract.idempotent?'yes':'no'}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">Replayable</span><span class="arch-detail-val">${contract.replayable?'yes':'no'}</span></div>
-      <div class="arch-detail-row"><span class="arch-detail-label">SNR gated</span><span class="arch-detail-val">${contract.snrGated?'yes':'no'}</span></div>
-      ${contract.timeout?`<div class="arch-detail-row"><span class="arch-detail-label">Timeout</span><span class="arch-detail-val">${contract.timeout}ms</span></div>`:''}
-    </div>
-    <div class="arch-detail-block">
-      <div class="arch-detail-title">Friction Score (§I-19)</div>
-      ${['latency','failureRate','semanticDistance'].map(axis => {
-        const val = friction[axis]||0;
-        const color = val<0.3?'#34d399':val<0.7?'#f59e0b':'#ef4444';
-        return `<div class="arch-snr-axis">
-          <span class="arch-snr-axis-name">${axis}</span>
-          <div class="arch-snr-bar"><div class="arch-snr-fill" style="width:${val*100}%;background:${color}"></div></div>
-          <span class="arch-snr-val" style="color:${color}">${val.toFixed(2)}</span>
-        </div>`;
-      }).join('')}
-    </div>
-    ${h.meta?.notes?`<div class="arch-detail-block"><div class="arch-detail-title">Notes</div><div style="font-size:9px;color:var(--text2);line-height:1.6">${h.meta.notes}</div></div>`:''}
-    <div style="display:flex;gap:6px;margin-top:8px;">
-      <button class="btn" onclick="archDeprecateHook('${h.uuid}')" style="font-size:9px;">Deprecate</button>
-      <button class="btn danger" onclick="archRemoveHook('${h.uuid}')" style="font-size:9px;">Remove (hard)</button>
-    </div>`;
-}
-
-function archShowRegisterHook() {
-  const form = document.getElementById('arch-register-form');
-  if (form) form.style.display = form.style.display==='none' ? 'block' : 'none';
-}
-
-async function archRegisterHook() {
-  const name      = document.getElementById('arch-reg-name')?.value?.trim();
-  const type      = document.getElementById('arch-reg-type')?.value;
-  const direction = document.getElementById('arch-reg-direction')?.value;
-  const intent    = document.getElementById('arch-reg-intent')?.value?.trim();
-  const from      = document.getElementById('arch-reg-from')?.value?.trim() || '*';
-  if (!name || !type) { alert('Name and type required'); return; }
-  const result = await _archPost('/api/hooks', {
-    name, type, direction, intent,
-    from: { surface: from, layer: 1 }, to: { surface: '*', layer: 1 },
-    schema: { input: { type:'object' }, output: { type:'object' }, errors: [] },
-    contract: { axioms: ['§A-2'], sideEffects: [], idempotent: false, replayable: false, snrGated: false },
-    status: 'active', causedBy: 'forge-ui.register',
-  });
-  if (result?.ok) {
-    document.getElementById('arch-register-form').style.display = 'none';
-    archLoadHooks();
-  } else {
-    alert('Error: ' + (result?.error || 'unknown'));
-  }
-}
-
-async function archDeprecateHook(id) {
-  const reason = prompt('Deprecation reason:');
-  if (!reason) return;
-  await fetch(`${ARCH_BASE}/api/hooks/${id}`, {
-    method: 'DELETE', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ reason, causedBy: 'forge-ui.deprecate' }),
-  });
-  archLoadHooks();
-}
-async function archRemoveHook(id) {
-  if (!confirm('Hard remove hook? This fails if bindings exist.')) return;
-  await fetch(`${ARCH_BASE}/api/hooks/${id}`, {
-    method: 'DELETE', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ hard: true, causedBy: 'forge-ui.remove' }),
-  });
-  archLoadHooks();
-}
-
-// ── BLUEPRINTS ─────────────────────────────────────────────────────────────
-async function archLoadBlueprints() {
-  if (!_archOnline) await archCheckHealth();
-  const data = await _archGet('/api/blueprint');
-  const list = document.getElementById('arch-bp-list');
-  if (!list) return;
-  _archBlueprints = data?.blueprints || [];
-  if (!_archBlueprints.length) {
-    list.innerHTML = `<div style="color:var(--muted);font-size:9px;padding:12px;text-align:center">No blueprints yet.<br>Enter a path above and click Scan.</div>`;
-    return;
-  }
-  list.innerHTML = _archBlueprints.map((bp,i) =>
-    `<div class="arch-bp-item${_archSelectedBP?.id===bp.id?' active':''}" onclick="archSelectBP(${i})">
-      <div class="arch-bp-name">${bp.name||'unnamed'}</div>
-      <div class="arch-bp-meta">v${bp.version||'?'} · SNR ${(bp.snrScore||0).toFixed(2)} · ${new Date(bp.createdAt||0).toTimeString().slice(0,8)}</div>
-    </div>`
-  ).join('');
-}
-
-async function archScanPath() {
-  const rootPath = document.getElementById('arch-scan-path')?.value?.trim();
-  if (!rootPath) { alert('Enter a path to scan'); return; }
-  const result = await _archPost('/api/blueprint/scan', { rootPath });
-  if (result?.ok) { archLoadBlueprints(); if (result.blueprint) { setTimeout(() => archSelectBPById(result.blueprint.id), 300); } }
-  else alert('Scan failed: ' + (result?.error || 'unknown'));
-}
-
-function archSelectBP(idx) {
-  _archSelectedBP = _archBlueprints[idx];
-  document.querySelectorAll('.arch-bp-item').forEach((r,i) => r.classList.toggle('active', i===idx));
-  archRenderBPDetail(_archSelectedBP);
-}
-function archSelectBPById(id) {
-  const idx = _archBlueprints.findIndex(bp => bp.id === id);
-  if (idx >= 0) archSelectBP(idx);
-}
-
-function archRenderBPDetail(bp) {
-  const detail = document.getElementById('arch-bp-detail');
-  if (!detail || !bp) return;
-  const hooks    = bp.hooks    || [];
-  const surfaces = bp.surfaces || [];
-  const gaps     = bp.gaps     || [];
-  const snr      = bp.snrScore || 0;
-  const snrColor = snr>=0.85?'#34d399':snr>=0.65?'#f59e0b':'#ef4444';
-  detail.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-      <div>
-        <div style="font-size:14px;font-weight:700;color:var(--text)">${bp.name}</div>
-        <div style="font-size:9px;color:var(--muted)">v${bp.version||'?'} · ${bp.source||'?'} · ${bp.sourceId?.slice(0,40)||''}</div>
-      </div>
-      <div style="margin-left:auto;text-align:right;">
-        <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:${snrColor}">${snr.toFixed(2)}</div>
-        <div style="font-size:8px;color:var(--muted)">SNR SCORE</div>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
-      ${[['Hooks',hooks.length,'var(--amber)'],['Surfaces',surfaces.length,'#85b7eb'],['Constraints',(bp.constraints||[]).length,'#9fe1cb'],['Gaps',gaps.length,gaps.length?'#ef4444':'#34d399']].map(([l,v,c])=>
-        `<div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px 10px;text-align:center">
-          <div style="font-size:18px;font-weight:700;color:${c};font-family:var(--mono)">${v}</div>
-          <div style="font-size:8px;color:var(--muted)">${l}</div>
-        </div>`).join('')}
-    </div>
-    ${surfaces.length ? `<div class="arch-detail-block"><div class="arch-detail-title">Surfaces</div>${surfaces.map(s=>`<div class="arch-detail-row"><span class="arch-detail-label">L${s.layer||'?'} ${s.name}</span><span class="arch-detail-val">${s.path||s.id||''}</span></div>`).join('')}</div>` : ''}
-    ${hooks.length ? `<div class="arch-detail-block"><div class="arch-detail-title">Declared Hooks</div>${hooks.map(h=>`<div class="arch-detail-row"><span class="arch-detail-label">${h.name||h.id||'?'}</span><span class="arch-detail-val" style="color:var(--amber)">${h.type||'?'}</span></div>`).join('')}</div>` : ''}
-    ${gaps.length ? `<div class="arch-detail-block"><div class="arch-detail-title">Gaps (${gaps.length})</div>${gaps.map(g=>`<div class="arch-gap-row sev-${g.severity||'medium'}">
-      <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--red)">${g.severity||'?'}</span><span style="font-size:9px;color:var(--text)">${g.description||g.id||''}</span></div>
-    </div>`).join('')}</div>` : '<div style="color:var(--green);font-size:9px;padding:8px">✓ No gaps detected</div>'}
-    <div style="display:flex;gap:6px;margin-top:8px;">
-      <button class="btn" onclick="archExportBP('${bp.id}','mermaid')" style="font-size:9px;">Export Mermaid</button>
-      <button class="btn" onclick="archExportBP('${bp.id}','json')" style="font-size:9px;">Export JSON</button>
-    </div>`;
-  // Also update topology tab
-  archRenderMapFromBP(bp);
-}
-
-async function archExportBP(id) {
-  const data = await _archGet(`/api/blueprint/${id}`);
-  if (data?.blueprint) {
-    const blob = new Blob([JSON.stringify(data.blueprint, null, 2)], { type:'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `blueprint-${id.slice(0,8)}.json`; a.click();
-  }
-}
-
-// ── TOPOLOGY MAP ───────────────────────────────────────────────────────────
-async function archLoadMap() {
-  const data = await _archGet('/api/map');
-  const content = document.getElementById('arch-map-content');
-  if (!content) return;
-  const maps = data?.maps || [];
-  if (!maps.length) { content.innerHTML = '<div style="color:var(--muted);font-size:9px;text-align:center;padding:20px">No topology maps yet — scan a path in the Blueprint tab</div>'; return; }
-  archRenderMapData(maps[maps.length-1], content);
-}
-
-function archRenderMapFromBP(bp) {
-  const content = document.getElementById('arch-map-content');
-  if (!content || !bp?.topology) return;
-  archRenderMapData(bp.topology, content);
-}
-
-function archRenderMapData(map, container) {
-  const files  = map.files    || [];
-  const surfaces = map.surfaces || [];
-  const gaps   = map.gaps     || [];
-  const typeColors = { spec:'#1a48a8', module:'#0d2a1e', test:'#2a2010', config:'#1e1e26', schema:'#1a2a2a', data:'#2a1a2a', unknown:'#1e1e26' };
-  container.innerHTML = `
-    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
-      ${[['Files',files.length,'var(--text)'],['Surfaces',surfaces.length,'#85b7eb'],['Gaps',gaps.length,gaps.length?'#ef4444':'#34d399']].map(([l,v,c])=>
-        `<div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:7px 12px;text-align:center;min-width:80px">
-          <div style="font-size:16px;font-weight:700;color:${c};font-family:var(--mono)">${v}</div>
-          <div style="font-size:8px;color:var(--muted)">${l}</div>
-        </div>`).join('')}
-    </div>
-    ${gaps.length ? `<div style="margin-bottom:12px">${gaps.map(g=>`<div class="arch-gap-row sev-${g.severity||'medium'}">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:8px;font-weight:700;text-transform:uppercase;color:#ef4444">${g.severity||'?'}</span>
-        <span style="font-size:9px;color:var(--text)">${g.type||''}: ${g.description||''}</span>
-        <span style="font-size:9px;color:var(--muted);margin-left:auto">${g.suggestion||''}</span>
-      </div></div>`).join('')}</div>` : ''}
-    <div style="font-size:9px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Files (${files.length})</div>
-    <div style="max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:4px;">
-      ${files.slice(0,200).map(f => {
-        const col = typeColors[f.type] || typeColors.unknown;
-        return `<div class="arch-map-file">
-          <span class="arch-map-type" style="background:${col};color:#ccc">${f.type||'?'}</span>
-          <span style="color:var(--text)">${f.relative||f.path||''}</span>
-          <span style="color:var(--muted);margin-left:auto">${f.size?Math.round(f.size/1024)+'KB':''}</span>
-        </div>`;
-      }).join('')}
-    </div>`;
-}
-
-// ── SNR GATE ───────────────────────────────────────────────────────────────
-async function archCheckSNR() {
-  const input = document.getElementById('arch-snr-input')?.value?.trim();
-  let source = {};
-  try { source = JSON.parse(input); } catch(e) { alert('Invalid JSON: ' + e.message); return; }
-  const result = await _archPost('/api/snr/check', { source });
-  const panel  = document.getElementById('arch-snr-result');
-  if (!panel) return;
-  if (!result?.ok || !result?.result) { panel.innerHTML = `<div style="color:var(--red);font-size:9px;padding:12px">SNR check failed: ${result?.error||'offline'}</div>`; return; }
-  const r = result.result;
-  const scoreColor = r.score>=0.85?'#34d399':r.score>=0.65?'#f59e0b':'#ef4444';
-  const recColors  = { send:'#34d399', hold:'#f59e0b', rewrite:'#f59e0b', flag:'#ef4444' };
-  const axes = r.axes || {};
-  panel.innerHTML = `
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
-      <div style="text-align:center;">
-        <div style="font-size:36px;font-weight:700;font-family:var(--mono);color:${scoreColor}">${r.score.toFixed(2)}</div>
-        <div style="font-size:8px;color:var(--muted)">COMPOSITE SNR</div>
-      </div>
-      <div>
-        <div style="font-size:14px;font-weight:700;text-transform:uppercase;color:${recColors[r.recommendation]||'#9090a0'}">${r.recommendation.toUpperCase()}</div>
-        <div style="font-size:9px;color:var(--muted);margin-top:3px">${r.reasoning}</div>
-        ${r.routing?.target?`<div style="font-size:9px;color:var(--teal);margin-top:3px">→ route to ${r.routing.target}</div>`:''}
-      </div>
-    </div>
-    <div class="arch-detail-block">
-      <div class="arch-detail-title">8-Axis Breakdown</div>
-      ${Object.entries(axes).map(([axis, val]) => {
-        const c = val>=0.85?'#34d399':val>=0.65?'#f59e0b':'#ef4444';
-        return `<div class="arch-snr-axis">
-          <span class="arch-snr-axis-name">${axis}</span>
-          <div class="arch-snr-bar"><div class="arch-snr-fill" style="width:${val*100}%;background:${c}"></div></div>
-          <span class="arch-snr-val" style="color:${c}">${val.toFixed(2)}</span>
-        </div>`;
-      }).join('')}
-    </div>
-    ${r.tags?.length?`<div class="arch-detail-block"><div class="arch-detail-title">Tags</div>${r.tags.map(t=>`<div class="arch-detail-row"><span class="arch-detail-label" style="color:#f59e0b">${t.axis} ${t.severity}</span><span class="arch-detail-val">${t.suggestion}</span></div>`).join('')}</div>`:''}`;
-}
-
-async function archLoadSNRHistory() {
-  const data = await _archGet('/api/snr');
-  const panel = document.getElementById('arch-snr-result');
-  if (!panel || !data?.results?.length) return;
-  // Show recent results summary
-  const recent = data.results.slice(-5);
-  if (!document.getElementById('arch-snr-input')?.value) {
-    panel.innerHTML = `<div style="color:var(--muted);font-size:9px;margin-bottom:10px">Recent SNR history (${recent.length}):</div>` +
-      recent.map(r => {
-        const sc = r.score||0;
-        const c  = sc>=0.85?'#34d399':sc>=0.65?'#f59e0b':'#ef4444';
-        return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)">
-          <span style="font-family:var(--mono);font-size:11px;font-weight:700;color:${c}">${sc.toFixed(2)}</span>
-          <span style="font-size:9px;color:var(--text)">${r.recommendation}</span>
-          <span style="font-size:9px;color:var(--muted);margin-left:auto">${new Date(r.scoredAt||0).toTimeString().slice(0,8)}</span>
-        </div>`;
-      }).join('');
-  }
-}
-
-// ── Canvas + Lattice ───────────────────────────────────────────────────────
-function archOpenBuilderFull() { window.open('http://127.0.0.1:3747/ui/arch-builder', '_blank'); }
-function archOpenLatticeFull()  { window.open('http://127.0.0.1:3747/ui/alk-lattice', '_blank'); }
-
-// ── Init when architect tab activated ─────────────────────────────────────
-document.querySelector('[data-panel="architect"]')?.addEventListener('click', () => {
-  setTimeout(async () => {
-    await archCheckHealth();
-    archSwitchTab('hooks');
-  }, 50);
-});
-
-// Architect dot in top status bar (add if not present)
-(function() {
-  const bar = document.querySelector('.tb-right');
-  if (bar && !document.getElementById('dot-architect')) {
-    const el = document.createElement('div');
-    el.className = 'tb-status';
-    el.innerHTML = `<div class="tb-dot" id="dot-architect" style="background:#ef9f27"></div><span>Arch :3747</span>`;
-    bar.insertBefore(el, bar.children[0]);
-  }
-})();
-
-// Poll architect health every 15s (aligns with other system dots)
-setInterval(async () => {
-  const h = await _archGet('/health');
-  const dot = document.getElementById('dot-architect');
-  if (dot) dot.style.background = h?.ok ? '#22c55e' : '#ef4444';
-}, 15000);
-</script>
-
-
-    <!-- Architect topbar -->
+  <!-- ══ ARCHITECT — hooks + blueprint viewer (native, NEXUS-themed) ══ -->
+  <div class="panel" id="panel-architect" style="flex-direction:column;overflow:hidden">
     <div style="display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface);">
-      <div id="arch-tab-hooks"     class="arch-inner-tab active" onclick="archSwitchTab('hooks')">⬡ Hooks</div>
-      <div id="arch-tab-blueprint" class="arch-inner-tab" onclick="archSwitchTab('blueprint')">◈ Blueprint</div>
-      <div id="arch-tab-canvas"    class="arch-inner-tab" onclick="archSwitchTab('canvas')">⚙ Canvas</div>
-      <div id="arch-tab-map"       class="arch-inner-tab" onclick="archSwitchTab('map')">⬡ Topology</div>
-      <div id="arch-tab-snr"       class="arch-inner-tab" onclick="archSwitchTab('snr')">◆ SNR</div>
-      <div id="arch-tab-lattice"   class="arch-inner-tab" onclick="archSwitchTab('lattice')">⬡ ALK Lattice</div>
+      <div id="arch-tab-hooks"     class="arch-inner-tab active" onclick="archTab('hooks',this)">⬡ Hooks</div>
+      <div id="arch-tab-blueprint" class="arch-inner-tab" onclick="archTab('blueprint',this)">◈ Blueprint</div>
+      <div id="arch-tab-topology"  class="arch-inner-tab" onclick="archTab('topology',this)">⬡ Topology</div>
+      <div id="arch-tab-snr"       class="arch-inner-tab" onclick="archTab('snr',this)">◆ SNR Gate</div>
       <div style="flex:1;"></div>
-      <div id="arch-status-dot" style="width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px;flex-shrink:0;"></div>
-      <span id="arch-status-label" style="font-size:9px;color:var(--muted);margin-right:12px;">:3747</span>
-      <button class="btn" onclick="archRefresh()" style="margin-right:8px;font-size:9px;">↺ Refresh</button>
+      <span id="arch-status" style="font-size:9px;color:var(--muted);margin-right:10px">:3747</span>
+      <button class="btn" onclick="archRefresh()" style="margin-right:8px;font-size:9px">↺</button>
     </div>
 
-    <!-- ── HOOKS TAB ─────────────────────────────────────────────────────── -->
-    <div id="arch-panel-hooks" class="arch-inner-panel" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
-      <!-- Hook filter bar -->
-      <div style="display:flex;align-items:center;gap:6px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Hook Registry</span>
-        <select id="arch-hook-type-filter" class="fi" style="width:120px;" onchange="archLoadHooks()">
-          <option value="">All types</option>
-          <option value="api">api</option>
-          <option value="event-bus">event-bus</option>
-          <option value="webserver">webserver</option>
-          <option value="stream">stream</option>
-          <option value="gate">gate</option>
-          <option value="blueprint">blueprint</option>
-          <option value="snr">snr</option>
-          <option value="ollama">ollama</option>
-          <option value="raid">raid</option>
-          <option value="gap">gap</option>
-          <option value="tension">tension</option>
-          <option value="seam">seam</option>
-          <option value="translate">translate</option>
-          <option value="compress">compress</option>
-          <option value="clip">clip</option>
-          <option value="reconstruct">reconstruct</option>
-          <option value="behavior">behavior</option>
-          <option value="lens">lens</option>
-          <option value="macro">macro</option>
-          <option value="synthesize">synthesize</option>
-          <option value="callto">callto</option>
-          <option value="direct">direct</option>
-          <option value="decompress">decompress</option>
-        </select>
-        <select id="arch-hook-status-filter" class="fi" style="width:100px;" onchange="archLoadHooks()">
-          <option value="">All status</option>
-          <option value="active">active</option>
-          <option value="seed">seed</option>
-          <option value="deprecated">deprecated</option>
-        </select>
-        <div style="flex:1;"></div>
-        <span id="arch-hook-count" style="font-size:9px;color:var(--muted);">0 hooks</span>
-        <button class="btn primary" onclick="archShowRegisterHook()" style="font-size:9px;">+ Register Hook</button>
+    <!-- HOOKS -->
+    <div id="arch-panel-hooks" style="display:flex;flex:1;overflow:hidden">
+      <div style="width:280px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:7px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px;align-items:center;flex-shrink:0">
+          <select id="arch-hook-type" class="fi" style="flex:1" onchange="archLoadHooks()">
+            <option value="">All types</option>
+            <option value="api">api</option><option value="event-bus">event-bus</option>
+            <option value="webserver">webserver</option><option value="gate">gate</option>
+            <option value="snr">snr</option><option value="stream">stream</option>
+          </select>
+          <span id="arch-hook-ct" style="font-size:9px;color:var(--muted)">0</span>
+        </div>
+        <div id="arch-hook-list" style="flex:1;overflow-y:auto"></div>
       </div>
-      <!-- Hook list + detail split -->
-      <div style="display:flex;flex:1;overflow:hidden;">
-        <!-- Hook list -->
-        <div id="arch-hook-list" style="width:340px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--border);">
-          <div style="color:var(--muted);font-size:9px;padding:20px;text-align:center;">Loading hooks…</div>
-        </div>
-        <!-- Hook detail -->
-        <div id="arch-hook-detail" style="flex:1;overflow-y:auto;padding:14px;">
-          <div style="color:var(--muted);font-size:9px;text-align:center;padding-top:40px;">Select a hook to inspect</div>
-        </div>
+      <div id="arch-hook-detail" style="flex:1;overflow-y:auto;padding:14px">
+        <div style="color:var(--muted);font-size:9px;padding-top:40px;text-align:center">Select a hook</div>
       </div>
-      <!-- Register hook form (hidden) -->
-      <div id="arch-register-form" style="display:none;border-top:1px solid var(--border);padding:12px;background:var(--surface);flex-shrink:0;">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber);margin-bottom:8px;">Register Hook — §A-2 Hooks are the wire</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
-          <div>
-            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Name (kebab-case)</div>
-            <input class="fi" id="arch-reg-name" placeholder="my-hook-name" style="width:100%;">
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Type</div>
-            <select class="fi" id="arch-reg-type" style="width:100%;">
-              <option value="api">api</option>
-              <option value="event-bus" selected>event-bus</option>
-              <option value="webserver">webserver</option>
-              <option value="gate">gate</option>
-              <option value="stream">stream</option>
-              <option value="snr">snr</option>
-              <option value="blueprint">blueprint</option>
-              <option value="translate">translate</option>
-              <option value="compress">compress</option>
-              <option value="gap">gap</option>
-              <option value="tension">tension</option>
-              <option value="seam">seam</option>
-              <option value="ollama">ollama</option>
-              <option value="raid">raid</option>
-              <option value="callto">callto</option>
-              <option value="direct">direct</option>
-              <option value="clip">clip</option>
-              <option value="reconstruct">reconstruct</option>
-              <option value="behavior">behavior</option>
-              <option value="lens">lens</option>
-              <option value="macro">macro</option>
-              <option value="synthesize">synthesize</option>
-              <option value="decompress">decompress</option>
-            </select>
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Direction</div>
-            <select class="fi" id="arch-reg-direction" style="width:100%;">
-              <option value="unidirectional">unidirectional →</option>
-              <option value="bidirectional">bidirectional ↔</option>
-              <option value="broadcast">broadcast →*</option>
-              <option value="sink">sink *→</option>
-            </select>
-          </div>
+    </div>
+
+    <!-- BLUEPRINT -->
+    <div id="arch-panel-blueprint" style="display:none;flex:1;overflow:hidden">
+      <div style="display:flex;height:100%">
+        <div style="width:260px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+          <div style="padding:7px 12px;border-bottom:1px solid var(--border);font-size:9px;color:var(--muted)">Blueprints</div>
+          <div id="arch-bp-list" style="flex:1;overflow-y:auto"></div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-bottom:8px;">
-          <div>
-            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">From surface</div>
-            <input class="fi" id="arch-reg-from" placeholder="surface-id or *" style="width:100%;">
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--muted);margin-bottom:3px;">Intent (one sentence: what this wire does and why)</div>
-            <input class="fi" id="arch-reg-intent" placeholder="Routes X from A to B so that..." style="width:100%;">
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn primary" onclick="archRegisterHook()" style="font-size:9px;">Register Hook</button>
-          <button class="btn" onclick="document.getElementById('arch-register-form').style.display='none'" style="font-size:9px;">Cancel</button>
+        <div id="arch-bp-detail" style="flex:1;overflow-y:auto;padding:14px">
+          <div style="color:var(--muted);font-size:9px;padding-top:40px;text-align:center">Select a blueprint</div>
         </div>
       </div>
     </div>
 
-    <!-- ── BLUEPRINT TAB ──────────────────────────────────────────────────── -->
-    <div id="arch-panel-blueprint" class="arch-inner-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Blueprint Viewer</span>
-        <div style="flex:1;"></div>
-        <input id="arch-scan-path" class="fi" placeholder="Path to scan (e.g. D:\\Backups\\Downloads\\nexus-patched-5\\nexus-work)" style="width:380px;font-size:10px;">
-        <button class="btn primary" onclick="archScanPath()" style="font-size:9px;">⬡ Scan</button>
-        <button class="btn" onclick="archLoadBlueprints()" style="font-size:9px;">↺ Load</button>
+    <!-- TOPOLOGY -->
+    <div id="arch-panel-topology" style="display:none;flex:1;overflow:hidden;flex-direction:column">
+      <div style="padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+        <input class="fi" id="arch-topo-path" placeholder="Path to scan…" style="flex:1">
+        <button class="btn primary" onclick="archScanTopology()">Scan</button>
       </div>
-      <div style="display:flex;flex:1;overflow:hidden;">
-        <!-- Blueprint list -->
-        <div id="arch-bp-list" style="width:240px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--border);padding:8px;">
-          <div style="color:var(--muted);font-size:9px;text-align:center;padding:20px;">No blueprints yet — scan a path</div>
+      <div id="arch-topo-result" style="flex:1;overflow-y:auto;padding:12px;font-size:9px;font-family:var(--mono);color:var(--text2)">
+        Scan a directory to see topology
+      </div>
+    </div>
+
+    <!-- SNR GATE -->
+    <div id="arch-panel-snr" style="display:none;flex:1;overflow:hidden;flex-direction:column">
+      <div style="display:flex;gap:8px;padding:12px;border-bottom:1px solid var(--border);flex-shrink:0;align-items:flex-end">
+        <div style="flex:1">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:4px">SOURCE TEXT</div>
+          <textarea class="sb-ta" id="snr-source" rows="3" placeholder="Spec text or intent to score…"></textarea>
         </div>
-        <!-- Blueprint detail: layers, surfaces, hooks, gaps -->
-        <div id="arch-bp-detail" style="flex:1;overflow-y:auto;padding:14px;">
-          <div style="color:var(--muted);font-size:9px;text-align:center;padding-top:40px;">Select a blueprint to view structural digest</div>
+        <div>
+          <div style="font-size:9px;color:var(--muted);margin-bottom:4px">CONTEXT</div>
+          <input class="fi" id="snr-ctx" style="width:140px" placeholder="module name…">
         </div>
+        <button class="btn primary" onclick="archCheckSNR()">Check SNR</button>
+      </div>
+      <div id="snr-result" style="flex:1;overflow-y:auto;padding:14px">
+        <div style="color:var(--muted);font-size:9px;text-align:center;padding-top:40px">Run SNR check to see results</div>
       </div>
     </div>
-
-    <!-- ── CANVAS TAB — arch-builder embedded ────────────────────────────── -->
-    <div id="arch-panel-canvas" class="arch-inner-panel" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">Architecture Builder — drag/drop canvas</span>
-        <div style="flex:1;"></div>
-        <button class="btn" onclick="archOpenBuilderFull()" style="font-size:9px;">↗ Open full</button>
-      </div>
-      <iframe id="arch-builder-frame" src="http://127.0.0.1:3747/ui/arch-builder"
-        style="flex:1;border:none;width:100%;background:var(--bg);"
-        title="Architecture Builder Canvas"></iframe>
-    </div>
-
-    <!-- ── TOPOLOGY MAP TAB ───────────────────────────────────────────────── -->
-    <div id="arch-panel-map" class="arch-inner-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">File / Data Topology</span>
-        <div style="flex:1;"></div>
-        <span style="font-size:9px;color:var(--muted);">§A-3 Map before build</span>
-      </div>
-      <div id="arch-map-content" style="flex:1;overflow-y:auto;padding:14px;">
-        <div style="color:var(--muted);font-size:9px;text-align:center;padding:20px;">Scan a path in the Blueprint tab to see topology</div>
-      </div>
-    </div>
-
-    <!-- ── SNR GATE TAB ───────────────────────────────────────────────────── -->
-    <div id="arch-panel-snr" class="arch-inner-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden;">
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">SNR Gate — §A-5 Signal before noise</span>
-        <div style="flex:1;"></div>
-        <span style="font-size:9px;color:var(--muted);">Thresholds: send≥0.85 · hold≥0.65 · rewrite≥0.45 · flag&lt;0.45</span>
-      </div>
-      <div style="display:flex;flex:1;overflow:hidden;">
-        <!-- SNR input -->
-        <div style="width:380px;flex-shrink:0;border-right:1px solid var(--border);padding:12px;overflow-y:auto;">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:6px;">Input JSON (any structured output)</div>
-          <textarea id="arch-snr-input" class="sb-ta" rows="10" placeholder='{"id":"...","name":"...","type":"..."}'
-            style="width:100%;min-height:140px;"></textarea>
-          <button class="btn primary" onclick="archCheckSNR()" style="margin-top:8px;width:100%;">Run SNR Gate</button>
-        </div>
-        <!-- SNR result -->
-        <div id="arch-snr-result" style="flex:1;overflow-y:auto;padding:14px;">
-          <div style="color:var(--muted);font-size:9px;text-align:center;padding-top:40px;">Paste JSON and run SNR gate</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ALK LATTICE TAB ────────────────────────────────────────────────── -->
-    <div id="arch-panel-lattice" class="arch-inner-panel" style="display:none;flex:1;overflow:hidden;flex-direction:column;">
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);">ALK Lattice — 3D Associative Lattice Kernel</span>
-        <div style="flex:1;"></div>
-        <button class="btn" onclick="archOpenLatticeFull()" style="font-size:9px;">↗ Open full</button>
-      </div>
-      <iframe id="arch-lattice-frame" src="http://127.0.0.1:3747/ui/alk-lattice"
-        style="flex:1;border:none;width:100%;background:var(--bg);"
-        title="ALK Lattice 3D"></iframe>
-    </div>
-
   </div>
 
-
-  <!-- ═══════════════ LAB — NEXUS LLM Testing Environment ══════════════════ -->
-  <div class="panel" id="panel-lab" style="flex-direction:column;overflow:hidden">
+    <div class="panel" id="panel-lab" style="flex-direction:column;overflow:hidden">
     <div style="display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);flex-shrink:0">
       <div id="lab-tab-run"       class="arch-inner-tab active" onclick="labTab('run')">⚗ Run</div>
       <div id="lab-tab-sessions"  class="arch-inner-tab" onclick="labTab('sessions')">Sessions</div>
@@ -4173,7 +3600,78 @@ setInterval(async () => {
       document.getElementById('lab-h2h-comparison').innerHTML = `<span style="color:var(--red)">Error: ${result?.error||'failed'}</span>`;
     }
   }
+
+
+// ═══ GUARDIAN-NATIVE ARCHITECT PANEL ════════════════════════════════════════
+const ARCH_BASE = 'http://127.0.0.1:3747';
+function archTab(name,btn){document.querySelectorAll('#panel-architect .arch-inner-tab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');['hooks','blueprint','topology','snr'].forEach(n=>{const el=document.getElementById('arch-panel-'+n);if(el)el.style.display=n===name?'flex':'none';});if(name==='hooks')archLoadHooks();if(name==='blueprint')archLoadBlueprints();}
+async function archRefresh(){const a=document.querySelector('#panel-architect .arch-inner-tab.active')?.id?.replace('arch-tab-','');if(a)archTab(a,document.getElementById('arch-tab-'+a));}
+async function archLoadHooks(){const type=document.getElementById('arch-hook-type')?.value||'';const data=await fetch(`${ARCH_BASE}/api/hooks?type=${type}`).then(r=>r.json()).catch(()=>null);const hooks=data?.hooks||[];const ct=document.getElementById('arch-hook-ct');if(ct)ct.textContent=hooks.length;const list=document.getElementById('arch-hook-list');if(!list)return;const TC={api:'#60a5fa','event-bus':'#22c55e',webserver:'#a78bfa',gate:'#f59e0b',snr:'#22d3ee',stream:'#f472b6'};list.innerHTML=hooks.map(h=>`<div style="display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);cursor:pointer;align-items:center" onclick='archShowHook(${JSON.stringify(JSON.stringify(h))})'><span style="font-size:8px;padding:1px 5px;border-radius:2px;background:${TC[h.type]||'#334'}22;color:${TC[h.type]||'#778'};border:1px solid ${TC[h.type]||'#334'}44;flex-shrink:0">${$esc(h.type||'?')}</span><span style="font-size:10px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${$esc(h.name||h.id||'?')}</span><span style="font-size:8px;color:${h.status==='active'?'var(--g)':'var(--muted)'}">${h.status||''}</span></div>`).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No hooks</div>';}
+function archShowHook(json){const h=JSON.parse(json);const el=document.getElementById('arch-hook-detail');if(!el)return;const row=(k,v)=>`<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:9px"><span style="color:var(--muted);width:90px;flex-shrink:0">${k}</span><span style="color:var(--text);word-break:break-all">${$esc(String(v??''))}</span></div>`;el.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:10px">${$esc(h.name||h.id||'Hook')}</div>`+Object.entries(h).map(([k,v])=>row(k,typeof v==='object'?JSON.stringify(v):v)).join('');}
+async function archLoadBlueprints(){const data=await fetch(`${ARCH_BASE}/api/blueprint`).then(r=>r.json()).catch(()=>null);const bps=data?.blueprints||[];const list=document.getElementById('arch-bp-list');if(!list)return;list.innerHTML=bps.map(b=>`<div style="padding:7px 12px;border-bottom:1px solid var(--border);cursor:pointer;font-size:10px" onclick='archShowBlueprint(${JSON.stringify(JSON.stringify(b))})'><div style="color:var(--text)">${$esc(b.name||b.id)}</div><div style="color:var(--muted);font-size:9px">${b.version||''} · ${b.status||''}</div></div>`).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No blueprints</div>';}
+function archShowBlueprint(json){const b=JSON.parse(json);const el=document.getElementById('arch-bp-detail');if(!el)return;el.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px">${$esc(b.name)}</div><pre style="font:9px/1.6 var(--mono);color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px;overflow:auto;max-height:70vh;white-space:pre-wrap">${$esc(JSON.stringify(b,null,2))}</pre>`;}
+async function archScanTopology(){const path=document.getElementById('arch-topo-path')?.value;if(!path)return;const data=await fetch(`${ARCH_BASE}/api/topology/scan`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path})}).then(r=>r.json()).catch(()=>null);const el=document.getElementById('arch-topo-result');if(!el)return;if(!data){el.textContent='Architect offline or scan failed';return;}el.innerHTML=`<div style="color:var(--g);margin-bottom:8px">✓ ${data.files?.length||0} files · ${data.surfaces?.length||0} surfaces · ${data.gaps?.length||0} gaps</div>`+(data.gaps||[]).map(g=>`<div style="color:var(--err);margin:2px 0">⚠ ${$esc(g.description||g.type)}</div>`).join('')+(data.surfaces||[]).map(s=>`<div style="color:var(--c);margin:2px 0">⬡ ${$esc(s.name)} L${s.layer||'?'}</div>`).join('');}
+async function archCheckSNR(){const text=document.getElementById('snr-source')?.value;const ctx=document.getElementById('snr-ctx')?.value;if(!text)return;const data=await fetch(`${ARCH_BASE}/api/snr/check`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source:{name:ctx||'ui-check',text},context:{}})}).then(r=>r.json()).catch(()=>null);const el=document.getElementById('snr-result');if(!el)return;if(!data){el.innerHTML='<div style="color:var(--err)">Architect offline</div>';return;}const score=data.score??data.snr?.score??0;const col=score>=0.85?'var(--g)':score>=0.65?'var(--y)':score>=0.45?'var(--o)':'var(--err)';el.innerHTML=`<div style="font-size:28px;font-weight:700;color:${col};margin-bottom:12px;font-family:var(--mono)">${(score*100).toFixed(0)}<span style="font-size:14px">%</span></div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">Recommendation: <span style="color:var(--text)">${$esc(data.recommendation||'—')}</span></div>${(data.tags||[]).map(t=>`<span style="font-size:8px;padding:1px 6px;border-radius:2px;background:var(--surface);border:1px solid var(--border);margin:2px;display:inline-block;color:var(--text2)">${$esc(t)}</span>`).join('')}`;}
+
+// ═══ FORGE PANEL ════════════════════════════════════════════════════════════
+async function forgeLoadJobs(){const data=await gapi.req('/jobs?limit=50').catch(()=>null);const jobs=data?.jobs||[];const ct=document.getElementById('forge-job-ct');if(ct)ct.textContent=jobs.length+' jobs';const active=jobs.filter(j=>['queued','processing','retrying'].includes(j.status));const done=jobs.filter(j=>!['queued','processing','retrying'].includes(j.status)).slice(0,20);const act=document.getElementById('forge-active-ct');if(act)act.textContent=active.length;const don=document.getElementById('forge-done-ct');if(don)don.textContent=done.length;const rj=j=>{const col=j.status==='complete'||j.status==='verified'?'var(--g)':j.status==='failed'||j.status==='escalated'?'var(--err)':j.status==='processing'?'var(--y)':'var(--muted)';return`<div style="padding:6px 8px;border-bottom:1px solid var(--border);font-size:9px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:2px"><span style="color:${col}">●</span><span style="color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${$esc(j.id?.slice(0,12)||'?')}</span><span style="color:var(--muted)">${$esc(j.provider||'')}</span></div><div style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${$esc((j.prompt||j.command||'').slice(0,80))}</div></div>`;};const al=document.getElementById('forge-jobs-active');if(al)al.innerHTML=active.map(rj).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No active jobs</div>';const dl=document.getElementById('forge-jobs-done');if(dl)dl.innerHTML=done.map(rj).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No recent jobs</div>';}
+
+// ═══ PROVIDERS PANEL ════════════════════════════════════════════════════════
+async function providersLoad(){const[provData,ollamaData]=await Promise.all([gapi.req('/providers').catch(()=>null),fetch('http://127.0.0.1:11434/api/tags').then(r=>r.json()).catch(()=>null)]);const TC={claude:'#818cf8',chatgpt:'#22c55e',ollama:'#f59e0b',cluster:'#22d3ee'};const raid=document.getElementById('providers-raid');if(raid){const ch=provData?.channels||{};raid.innerHTML=Object.entries(ch).map(([p,info])=>{const age=Math.round((Date.now()-(info.connectedAt||Date.now()))/1000);const col=TC[p.split('-')[0]]||'var(--text2)';return`<div style="padding:6px 0;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:6px;font-size:10px"><span style="color:${col};font-weight:600">${$esc(p)}</span><span style="color:var(--g);font-size:8px;margin-left:auto">LIVE ${age}s</span></div><div style="color:var(--muted);font-size:8px">tab ${(info.tabId||'').slice(-6)} · hb ${Math.round((Date.now()-(info.lastHeartbeat||Date.now()))/1000)}s ago</div></div>`;}).join('')||'<div style="color:var(--muted);font-size:9px;padding:12px 0">No active channels</div>';}const ncp=document.getElementById('providers-ncp');if(ncp){const prov=provData?.providers||{};ncp.innerHTML=Object.entries(prov).map(([p,info])=>{const alive=info.alive??info.ok??false;return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:9px"><span style="color:${alive?'var(--g)':'var(--err)'}">●</span><span style="color:var(--text)">${$esc(p)}</span><span style="color:var(--muted);margin-left:auto">${info.latency!=null?info.latency+'ms':''}</span></div>`;}).join('')||'<div style="color:var(--muted);font-size:9px;padding:12px 0">No providers</div>';}const oll=document.getElementById('providers-ollama');if(oll){const models=ollamaData?.models||[];oll.innerHTML=models.map(m=>`<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:9px"><div style="color:var(--text)">${$esc(m.name)}</div><div style="color:var(--muted);font-size:8px">${m.size?(m.size/1e9).toFixed(1)+'GB':''}</div></div>`).join('')||'<div style="color:var(--muted);font-size:9px;padding:12px 0">Ollama offline</div>';}}
+
+// Wire new panels to tab clicks
+document.querySelectorAll('.tb-tab').forEach(tab=>{tab.addEventListener('click',()=>{const p=tab.dataset.panel;if(p==='forge')setTimeout(forgeLoadJobs,50);if(p==='providers')setTimeout(providersLoad,50);if(p==='architect')setTimeout(archLoadHooks,50);});});
+setInterval(()=>{if(document.getElementById('panel-forge')?.classList.contains('active'))forgeLoadJobs();if(document.getElementById('panel-providers')?.classList.contains('active'))providersLoad();},10000);
+
   </script>
+
+  <!-- ══ FORGE — jobs in flight, dispatch queue ═════════════════════ -->
+  <div class="panel" id="panel-forge" style="flex-direction:column;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--y)">⚙ Forge</span>
+      <div style="flex:1"></div>
+      <span id="forge-job-ct" style="font-size:9px;color:var(--muted)">— jobs</span>
+      <button class="btn" onclick="forgeLoadJobs()" style="font-size:9px">↺</button>
+    </div>
+    <div style="display:flex;flex:1;overflow:hidden;min-height:0">
+      <!-- Active jobs -->
+      <div style="flex:1;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:5px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Active <span id="forge-active-ct" style="color:var(--y)">0</span></div>
+        <div id="forge-jobs-active" style="flex:1;overflow-y:auto;padding:4px 8px"></div>
+      </div>
+      <!-- Recent done -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:5px 12px;border-bottom:1px solid var(--border);font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Recent <span id="forge-done-ct" style="color:var(--g)">0</span></div>
+        <div id="forge-jobs-done" style="flex:1;overflow-y:auto;padding:4px 8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PROVIDERS — AI provider health + RAID routing ══════════════ -->
+  <div class="panel" id="panel-providers" style="flex-direction:column;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;border-bottom:1px solid var(--border);flex-shrink:0">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--c)">⬡ Providers</span>
+      <div style="flex:1"></div>
+      <button class="btn" onclick="providersLoad()" style="font-size:9px">↺</button>
+    </div>
+    <div style="display:flex;flex:1;overflow:hidden;min-height:0">
+      <!-- Provider health -->
+      <div style="flex:1;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:5px 12px;border-bottom:1px solid var(--border);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">RAID Routing</div>
+        <div id="providers-raid" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+      </div>
+      <!-- NCP channels -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:5px 12px;border-bottom:1px solid var(--border);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">NCP Channels</div>
+        <div id="providers-ncp" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+      </div>
+      <!-- Ollama models -->
+      <div style="flex:0 0 220px;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:5px 12px;border-bottom:1px solid var(--border);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Ollama Models</div>
+        <div id="providers-ollama" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

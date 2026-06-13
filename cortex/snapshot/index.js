@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/snapshot/index.js ──────────────────────────────────────────────────
 // UUID: nexus-snapshot-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // .nex snapshot engine. Creates, lists, restores, and diffs system snapshots.
 //

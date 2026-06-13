@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/contract/index.js ──────────────────────────────────────────────────
 // UUID: nexus-contract-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // ORCHESTRATION CONTRACT LAYER
 //

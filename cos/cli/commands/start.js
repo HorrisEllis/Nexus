@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos start <name>
  *
  * Author: James Brooks (Erosmancer)
- * Version: 2.0.0
+ * Status: pre-release
  *
  * Dispatches via SISO gate pipeline:
  *   emit('host:compartment:start') → StartCompartmentGate → emit('host:compartment:started')

@@ -478,9 +478,10 @@ const SYSTEM_LOCAL_UI_DIRS = [
   { system:'guardian',     dir: path.join(ROOT,'guardian','ui') },
   { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
   { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
-  { system:'nexus',       dir: path.join(ROOT,'ui') },
+  { system:'nexus',        dir: path.join(ROOT,'ui') },
   { system:'emerge',       dir: path.join(ROOT,'emerge','ui') },
   { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
+  { system:'diagnostic',   dir: path.join(ROOT,'ui','diagnostic') },  // §HOTSWAP-03
 ];
 
 // ── UI Hotswap Watcher ───────────────────────────────────────────────────────
@@ -1417,7 +1418,8 @@ if (nexusBus) {
   console.log('[orchestrator] nexus interconnect: bus+cfr+heal+knowledge active');
 }
 
-server.listen(PORT, '127.0.0.1', async () => {
+const BIND_HOST = process.env.NEXUS_BIND_HOST || '127.0.0.1'; // §REMOTE-15
+server.listen(PORT, BIND_HOST, async () => {
   // BootSequence hoisted to top-level
 
   // ════════════════════════════════════════════════════════════════════════════

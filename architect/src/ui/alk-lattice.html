@@ -123,6 +123,19 @@ const GRAY    = dark ? [0.83,0.82,0.79] : [0.37,0.37,0.35];
 const WHITE   = dark ? [0.93,0.92,0.89] : [0.17,0.17,0.16];
 const SPOKE   = dark ? [0.5,0.5,0.5]   : [0.5,0.5,0.5];
 
+// ── sendPrompt — sends a query to the Guardian dispatch channel ──────────────
+// Falls back to console.log if guardian is offline
+function sendPrompt(text) {
+  fetch('http://localhost:7820/command', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ provider: 'claude', command: 'ask', prompt: text }),
+  })
+  .then(r => r.json())
+  .then(d => console.log('[ALK] dispatched:', d.jobId || d.id || 'ok'))
+  .catch(() => console.log('[ALK] sendPrompt (guardian offline):', text));
+}
+
 // nodes: { label, x, y, z, color, info }
 const nodes = [
   // kernel
@@ -312,7 +325,19 @@ function hitTest(e) {
 }
 
 canvas.addEventListener('click', e => {
-  if (hovered >= 0) sendPrompt('Tell me about ' + nodes[hovered].label + ' in the Associative Lattice: ' + nodes[hovered].info);
+  if (hovered >= 0) {
+    const n = nodes[hovered];
+    sendPrompt('Tell me about ' + n.label + ' in the Associative Lattice: ' + n.info);
+    // Record user interaction as ALK decision via architect API
+    fetch('http://localhost:3747/api/alk/record', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        actor: 'user', intent: 'explore-lattice',
+        payload: { node: n.label, info: n.info },
+      }),
+    }).catch(() => {});
+  }
 });
 
 // ── label overlay ──

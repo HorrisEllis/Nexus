@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Test Suite (Phase 0 + 1 + 2)
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Zero external dependencies. Plain Node.js assertions.
  * Run: node test/test.js

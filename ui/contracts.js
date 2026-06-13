@@ -1,7 +1,7 @@
 /**
  * ui/contracts.js — NEXUS Interaction Contract Layer
  * UUID: nexus-ui-contracts-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Single source of truth for every system endpoint, port, expected
  * shape, and SSE event name. Derived directly from the four

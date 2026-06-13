@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos run <name> <command>
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Sends a command string to a running compartment's stdin.
  * Also provides an interactive REPL mode (no command arg = attach).

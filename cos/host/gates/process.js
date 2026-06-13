@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Process Lifecycle Gates
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Gates in this file:
  *

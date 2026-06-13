@@ -322,6 +322,15 @@ function dispatchJob(job) {
   });
   updateJob(job.id, { status: 'delivered', deliveredAt: Date.now() });
   console.log(`[guardian] dispatched ${job.id} → ${job.provider} via NCP`);
+  // §ALK-09: record dispatch decision
+  try {
+    const alk = require('../lib/alk');
+    alk.record({
+      actor:   'llm',
+      intent:  'generate',
+      payload: { jobId: job.id, provider: job.provider, command: job.command, promptHash: job.prompt?.slice(0,40) },
+    });
+  } catch(_) {}
   bus.emit('guardian.job.dispatched', { jobId: job.id, provider: job.provider });
   return true;
 }

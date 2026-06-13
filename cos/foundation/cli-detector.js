@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Compartment CLI Auto-Detector
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Scans a compartment's project files and returns a DetectionResult:
  *   - runtimeId        (node | python | electron | html | go | rust | shell | ...)

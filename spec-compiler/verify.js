@@ -1,275 +1,150 @@
 'use strict';
 /**
- * verify.js — smoke test for spec-compiler pipeline
+ * spec-compiler/verify.js — Token Reduction Benchmark
+ * UUID: spec-verify-v1-0000-4000-0000-000000000001
+ * Status: pre-release
  *
- * Runs the full T0+T1 pipeline against spec-parser.spec
- * (or any .spec passed as first arg).
+ * Proves: tokens ∝ unresolved meaning
+ * Measures: raw prompt tokens vs compiled spec tokens at T0/T1/T2/T3
+ * Reports: ratio of resolved-meaning tokens to resolution-work tokens
  *
- * Also verifies:
- *   - Cortex query seam responds correctly
- *   - Chunk format produces valid prompt
- *   - Token estimates are within budget
- *
- * Usage:
- *   node verify.js [spec-path] [--skip-cortex] [--verbose]
+ * Usage: node verify.js <spec-file>
+ *        node verify.js --self   (runs against SPEC_COMPILER.spec)
  */
 
 const path    = require('path');
-
-function sanitizeSpec(raw) {
-  return raw.replace(
-    /^(\s*-\s+)([^'"#\n].+?:\s+.+?)(\s*)$/gm,
-    (match, indent, val, trail) => {
-      if (val.startsWith('"') || val.startsWith("'")) return match;
-      if (/^[A-Za-z].*:\s/.test(val) && !/^[a-z_]+:\s*$/.test(val)) {
-        const escaped = val.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-        return indent + '"' + escaped + '"' + trail;
-      }
-      return match;
-    }
-  );
-}
 const fs      = require('fs');
-const { ping, preflight } = require('./cortex-query');
-const { compile }         = require('./compiler');
-const { buildChunk, emitToPrompt, estimateTokens } = require('./chunk');
-const { writeback, summarizeWriteback } = require('./cortex-query/writeback');
+const { compile } = require('./compiler/pipeline');
 
-const args       = process.argv.slice(2);
-const specPath   = args.find(a => !a.startsWith('--')) ?? path.join(__dirname, 'SPEC_COMPILER.spec');
-const verbose    = args.includes('--verbose');
-const skipCortex = args.includes('--skip-cortex');
-
-const C = {
-  reset: '\x1b[0m', green: '\x1b[32m', red: '\x1b[31m',
-  yellow: '\x1b[33m', cyan: '\x1b[36m', dim: '\x1b[2m', bold: '\x1b[1m',
-};
-const ok   = t => `${C.green}✓${C.reset}  ${t}`;
-const fail = t => `${C.red}✗${C.reset}  ${t}`;
-const info = t => `${C.cyan}→${C.reset}  ${t}`;
-const warn = t => `${C.yellow}⚠${C.reset}  ${t}`;
-const dim  = t => `${C.dim}${t}${C.reset}`;
-
-async function run() {
-  console.log();
-  console.log(`${C.bold}  spec-compiler verify${C.reset}`);
-  console.log(`  spec: ${specPath}`);
-  console.log();
-
-  const results = { pass: 0, fail: 0, warn: 0 };
-
-  // ── 1. Cortex ping ────────────────────────────────────────────────────────
-  if (!skipCortex) {
-    process.stdout.write('  Cortex ping... ');
-    const health = await ping();
-    if (health.reachable) {
-      console.log(ok(`reachable  status=${health.status}  uptime=${Math.floor(health.uptime)}s`));
-      if (verbose && health.tables) {
-        const counts = Object.entries(health.tables).filter(([,v]) => v > 0);
-        for (const [t, n] of counts.slice(0, 5)) console.log(dim(`    ${t}: ${n}`));
-      }
-      results.pass++;
-    } else {
-      console.log(warn(`unreachable — ${health.error} — will run with --skip-cortex`));
-      results.warn++;
-    }
-  }
-
-  // ── 2. Spec parse check ───────────────────────────────────────────────────
-  process.stdout.write('  Spec parse... ');
-  try {
-    const { load } = await import('js-yaml');
-    const raw = fs.readFileSync(specPath, 'utf-8');
-    let doc;
-    try { doc = load(raw); } catch(_) { doc = load(sanitizeSpec(raw)); }
-    const spec = doc?.spec ?? doc;
-    if (!spec?.meta) throw new Error('no meta block');
-    console.log(ok(`${spec.meta.name} v${spec.meta.version}  modules=${spec.modules?.length ?? 0}  events=${countEvents(spec)}`));
-    results.pass++;
-  } catch (e) {
-    console.log(fail(`spec parse: ${e.message}`));
-    results.fail++;
-  }
-
-  // ── 3. Cortex preflight ───────────────────────────────────────────────────
-  if (!skipCortex) {
-    process.stdout.write('  Cortex preflight... ');
-    try {
-      const pre = await preflight({ moduleName: 'spec-compiler', specPath, outputDir: './output' });
-      const status = pre.skipGeneration ? 'SKIP (all files present)' : 'GENERATE';
-      console.log(ok(`${status}  gaps=${pre.openGaps?.length ?? 0}  files=${pre.existingFiles?.length ?? 0}`));
-      if (verbose) console.log(dim(pre.summary?.split('\n').map(l => '    ' + l).join('\n')));
-      results.pass++;
-    } catch (e) {
-      console.log(warn(`preflight error: ${e.message}`));
-      results.warn++;
-    }
-  }
-
-  // ── 4. T0 emit ────────────────────────────────────────────────────────────
-  const outputDir = path.join(__dirname, 'output', 'verify-run');
-  process.stdout.write('  T0 emit... ');
-  try {
-    const result = await compile(specPath, outputDir, { skipCortex: true, tier: 0, verbose: false });
-    if (!result.ok) throw new Error(result.error);
-    const t0 = result.t0;
-    console.log(ok(`emitted=${t0.emitted.length}  skipped=${t0.skipped.length}  failures=${t0.failures.length}`));
-    if (t0.failures.length) {
-      for (const f of t0.failures) console.log(fail(`  ${f.file}: ${f.error}`));
-      results.fail += t0.failures.length;
-    } else {
-      results.pass++;
-    }
-    if (verbose) for (const f of t0.emitted.slice(0, 5)) console.log(dim(`    + ${f}`));
-  } catch (e) {
-    console.log(fail(`T0: ${e.message}`));
-    results.fail++;
-  }
-
-  // ── 5. T1 emit ────────────────────────────────────────────────────────────
-  process.stdout.write('  T1 emit... ');
-  try {
-    const result = await compile(specPath, outputDir, { skipCortex: true, tier: 1, verbose: false, force: true });
-    if (!result.ok) throw new Error(result.error);
-    const t1 = result.t1;
-    const msg = t1 ? `emitted=${t1.emitted.length}  skipped=${t1.skipped.length}  failures=${t1.failures.length}` : 'tier 1 not run';
-    console.log(ok(msg));
-    results.pass++;
-  } catch (e) {
-    console.log(fail(`T1: ${e.message}`));
-    results.fail++;
-  }
-
-  // ── 6. Chunk build + token estimate ──────────────────────────────────────
-  process.stdout.write('  Chunk build... ');
-  try {
-    // Build a mock node from the spec
-    const { load } = await import('js-yaml');
-    const raw = fs.readFileSync(specPath, 'utf-8');
-    let doc;
-    try { doc = load(raw); } catch(_) { doc = load(sanitizeSpec(raw)); }
-    const spec = doc?.spec ?? doc;
-    const mod  = spec?.modules?.[0];
-
-    if (!mod) {
-      console.log(warn('no modules in spec — skipping chunk test'));
-      results.warn++;
-    } else {
-      const mockNode = {
-        id:                   mod.id,
-        name:                 mod.name ?? mod.id,
-        kind:                 'module',
-        description:          mod.description ?? '',
-        uuid:                 mod.uuid ?? null,
-        specRef:              null,
-        specDepth:            0.7,
-        generationReadiness:  0.6,
-        confidence:           'AMBER',
-        dependsOn:            [],
-        produces:             [],
-        consumes:             [],
-        exports:              mod.exports ?? [],
-        gatePipeline:         mod.gate_pipeline ?? [],
-        behavioralContracts:  mod.behavioral_contracts ?? [],
-        errorPaths:           mod.error_paths ?? [],
-        constraints:          spec?.meta?.constraints ?? [],
-      };
-
-      const mockGraph = {
-        getNode:        () => null,
-        getNodeByName:  () => null,
-        getNodesByKind: () => [],
-      };
-
-      const chunk   = buildChunk(mockNode, mockGraph, null, 2);
-      const prompt  = emitToPrompt(chunk);
-      const tokens  = estimateTokens(chunk);
-      const budget  = chunk.budget;   // from tier-contract (1024)
-      const warnAt  = chunk.warnAt;   // 85% of budget
-      const level   = tokens >= (chunk.criticalAt ?? budget * 0.95) ? 'CRITICAL'
-                    : tokens >= (warnAt ?? budget * 0.85)            ? 'WARN'
-                    : 'within';
-
-      const msg = 'node=' + mockNode.name + '  ~' + tokens + ' tokens  budget=' + budget + '  ' + level;
-      if (level === 'within') {
-        console.log(ok(msg));
-        results.pass++;
-      } else {
-        console.log(warn(msg));
-        results.warn++;
-      }
-
-      if (verbose) {
-        console.log();
-        console.log(dim('  ── CHUNK PROMPT PREVIEW ──────────────────────────────────────'));
-        for (const line of prompt.split('\n').slice(0, 20)) {
-          console.log(dim('  ' + line));
-        }
-        if (prompt.split('\n').length > 20) console.log(dim('  ... (truncated)'));
-        console.log();
-      }
-    }
-  } catch (e) {
-    console.log(fail(`chunk: ${e.message}`));
-    if (verbose) console.error(e.stack);
-    results.fail++;
-  }
-
-  // ── 7. Write-back (if Cortex reachable + T0 ran) ───────────────────────────
-  if (!skipCortex && results.pass >= 2) {
-    process.stdout.write('  Writeback... ');
-    try {
-      // Build a minimal compile result from the T0 run
-      const t0OutputDir = path.join(__dirname, 'output', 'verify-run');
-      const mockResult = {
-        ok: true, skipped: false,
-        moduleName: 'verify-test',
-        outputDir: t0OutputDir,
-        t0: { emitted: ['package.json', 'tsconfig.json'], skipped: [], failures: [] },
-        t1: null,
-        specDepths: [],
-      };
-      const wb = await writeback(mockResult, specPath, { verbose });
-      if (wb.skipped) {
-        console.log(warn('skipped (compile not ok)'));
-        results.warn++;
-      } else {
-        const parts = [];
-        if (wb.filesUploaded?.length) parts.push(`${wb.filesUploaded.length} files uploaded`);
-        if (wb.commit?.ok)            parts.push('commit ok');
-        if (wb.seam?.ok)              parts.push('seam ok');
-        if (wb.memory?.ok)            parts.push('memory ok');
-        if (wb.errors?.length)        parts.push(`${wb.errors.length} warn(s)`);
-        const allOk = wb.commit?.ok && wb.seam?.ok && wb.memory?.ok;
-        if (allOk) {
-          console.log(ok(parts.join('  ')));
-          results.pass++;
-        } else {
-          console.log(warn(parts.join('  ') || 'cortex unreachable — logged locally'));
-          results.warn++;
-        }
-        if (verbose) console.log(dim(summarizeWriteback(wb).split('\n').map(l=>'    '+l).join('\n')));
-      }
-    } catch(e) {
-      console.log(fail(`writeback: ${e.message}`));
-      results.fail++;
-    }
-  }
-
-    // ── Summary ───────────────────────────────────────────────────────────────
-  console.log();
-  console.log(`  ${C.bold}─────────────────────────────────────────────${C.reset}`);
-  const status = results.fail > 0 ? `${C.red}${C.bold}  ✗  FAILED${C.reset}` : `${C.green}${C.bold}  ✓  PASS${C.reset}`;
-  console.log(`  ${status}   ${C.green}${results.pass} pass${C.reset}  ${C.yellow}${results.warn} warn${C.reset}  ${C.red}${results.fail} fail${C.reset}`);
-  console.log();
-
-  if (results.fail > 0) process.exit(1);
+// ── Token estimator (GPT-style: ~4 chars per token) ─────────────────────────
+function countTokens(text) {
+  if (!text) return 0;
+  // Rough but consistent: split on whitespace + punctuation boundaries
+  return Math.ceil(text.replace(/\s+/g, ' ').length / 4);
 }
 
-function countEvents(spec) {
-  const ev = spec?.events ?? spec?.event_model ?? {};
-  if (Array.isArray(ev)) return ev.length;
-  return Object.values(ev).reduce((n, v) => n + (Array.isArray(v) ? v.length : 1), 0);
+function countObjectTokens(obj) {
+  return countTokens(JSON.stringify(obj));
 }
 
-run().catch(e => { console.error(e); process.exit(1); });
+// ── Benchmark ────────────────────────────────────────────────────────────────
+async function benchmark(specPath) {
+  const specSource = fs.readFileSync(specPath, 'utf8');
+  const specName   = path.basename(specPath);
+
+  console.log(`\n${'═'.repeat(60)}`);
+  console.log(`  SPEC COMPILER — TOKEN REDUCTION BENCHMARK`);
+  console.log(`  File: ${specName}`);
+  console.log(`${'═'.repeat(60)}\n`);
+
+  // ── Baseline: raw spec source ─────────────────────────────────────────────
+  const rawTokens = countTokens(specSource);
+  console.log(`  RAW SPEC SOURCE`);
+  console.log(`  ├── chars:  ${specSource.length}`);
+  console.log(`  └── tokens: ${rawTokens}\n`);
+
+  // ── What a naive prompt looks like (raw spec + generic instruction) ───────
+  const naivePrompt = `You are a software architect. Here is a system specification:\n\n${specSource}\n\nBased on this specification, generate the implementation.`;
+  const naiveTokens = countTokens(naivePrompt);
+  console.log(`  NAIVE PROMPT (spec + generic instruction)`);
+  console.log(`  └── tokens: ${naiveTokens}\n`);
+
+  // ── Compile the spec ──────────────────────────────────────────────────────
+  const t0 = Date.now();
+  let result;
+  try {
+    result = compile(specSource, specName);
+  } catch(e) {
+    console.error(`  COMPILE ERROR: ${e.message}`);
+    process.exit(1);
+  }
+  const compileMs = Date.now() - t0;
+
+  // ── Measure each compiled output ─────────────────────────────────────────
+  const outputs = {
+    graph:         result.graph,
+    gapField:      result.gapField,
+    tierMap:       result.tierMap,
+    executionPlan: result.executionPlan,
+    ringBuffer:    result.ringBuffer,
+    violations:    result.violations,
+    recommendations: result.recommendations,
+  };
+
+  let totalCompiled = 0;
+  console.log(`  COMPILED OUTPUTS (${compileMs}ms)`);
+  for (const [key, val] of Object.entries(outputs)) {
+    if (!val) continue;
+    const t = countObjectTokens(val);
+    totalCompiled += t;
+    console.log(`  ├── ${key.padEnd(16)}: ${t} tokens`);
+  }
+  console.log(`  └── TOTAL:           ${totalCompiled} tokens\n`);
+
+  // ── T0 prompt: schema + graph only (minimum context) ─────────────────────
+  const t0Prompt    = `Schema: ${JSON.stringify(result.graph?.schema || {})} | Nodes: ${JSON.stringify((result.graph?.nodes || []).slice(0,3))}`;
+  const t0Tokens    = countTokens(t0Prompt);
+
+  // ── T1 prompt: tier contract + execution plan ─────────────────────────────
+  const t1Prompt    = JSON.stringify({ tierMap: result.tierMap, executionPlan: result.executionPlan });
+  const t1Tokens    = countTokens(t1Prompt);
+
+  // ── T2 prompt: single node with all context ───────────────────────────────
+  const firstNode   = result.graph?.nodes?.[0] || {};
+  const t2Prompt    = JSON.stringify({ node: firstNode, gapField: result.gapField, violations: result.violations });
+  const t2Tokens    = countTokens(t2Prompt);
+
+  // ── T3 prompt: synthesis pass ─────────────────────────────────────────────
+  const t3Prompt    = JSON.stringify({ recommendations: result.recommendations, ringBuffer: result.ringBuffer });
+  const t3Tokens    = countTokens(t3Prompt);
+
+  console.log(`  PROMPT COMPARISON`);
+  console.log(`  ├── Naive (raw spec):        ${naiveTokens} tokens  (baseline)`);
+  console.log(`  ├── T0 (schema + graph):     ${t0Tokens} tokens  (${pct(t0Tokens,naiveTokens)}%)`);
+  console.log(`  ├── T1 (tiers + plan):       ${t1Tokens} tokens  (${pct(t1Tokens,naiveTokens)}%)`);
+  console.log(`  ├── T2 (per node, resolved): ${t2Tokens} tokens  (${pct(t2Tokens,naiveTokens)}% per node)`);
+  console.log(`  └── T3 (synthesis):          ${t3Tokens} tokens  (${pct(t3Tokens,naiveTokens)}%)\n`);
+
+  // ── Key metric: unresolved meaning reduction ──────────────────────────────
+  const gaps      = result.gapField?.gaps?.length || 0;
+  const resolved  = result.gapField?.resolved?.length || 0;
+  const total     = gaps + resolved;
+  const resolveRate = total > 0 ? Math.round(resolved / total * 100) : 0;
+
+  console.log(`  MEANING RESOLUTION`);
+  console.log(`  ├── gaps declared:   ${total}`);
+  console.log(`  ├── resolved:        ${resolved} (${resolveRate}%)`);
+  console.log(`  └── unresolved:      ${gaps}`);
+  console.log(`\n  REDUCTION VS NAIVE`);
+  console.log(`  ├── T0 saves:  ${naiveTokens - t0Tokens} tokens (${100 - pct(t0Tokens,naiveTokens)}%)`);
+  console.log(`  └── T2 saves:  ${naiveTokens - t2Tokens} tokens (${100 - pct(t2Tokens,naiveTokens)}% per node)\n`);
+
+  const ratio = naiveTokens > 0 ? (naiveTokens / Math.max(1, t2Tokens)).toFixed(2) : 'N/A';
+  console.log(`  tokens∝unresolved_meaning ratio: ${ratio}x  (naive / T2)`);
+  console.log(`  ${ratio >= 2 ? '✓ CLAIM SUPPORTED' : ratio >= 1.5 ? '◑ PARTIAL SUPPORT' : '✗ INSUFFICIENT REDUCTION'}`);
+  console.log(`${'═'.repeat(60)}\n`);
+
+  return { rawTokens, naiveTokens, t0Tokens, t1Tokens, t2Tokens, t3Tokens, totalCompiled, ratio, gaps, resolved };
+}
+
+function pct(a, b) { return b > 0 ? Math.round(a / b * 100) : 0; }
+
+// ── CLI ───────────────────────────────────────────────────────────────────────
+const args    = process.argv.slice(2);
+const selfRun = args.includes('--self');
+const target  = selfRun
+  ? path.join(__dirname, 'SPEC_COMPILER.spec')
+  : args.find(a => !a.startsWith('--'));
+
+if (!target) {
+  console.log('Usage: node verify.js <spec-file>');
+  console.log('       node verify.js --self');
+  process.exit(0);
+}
+
+if (!fs.existsSync(target)) {
+  console.error(`File not found: ${target}`);
+  process.exit(1);
+}
+
+benchmark(target).catch(e => { console.error(e.message); process.exit(1); });

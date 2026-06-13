@@ -4,7 +4,7 @@
  * IMMUTABLE after v1.0.0 (COS-5)
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Every kernel event string used by the system is declared here.
  * Pattern: "{layer}:{noun}:{verb}" — all lowercase kebab.

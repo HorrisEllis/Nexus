@@ -3,7 +3,7 @@
 /**
  * cli/boot-systems.js — NEXUS Per-System Boot Sequencer
  * UUID: nexus-boot-systems-v1-0000-4000-0000-000000000001
- * Version: 1.1.0
+ * Status: pre-release
  *
  * Extracted from orchestrator.js so diagnose logic lives in one place.
  * Orchestrator calls:

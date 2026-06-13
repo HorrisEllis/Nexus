@@ -21,6 +21,36 @@ const path   = require('path');
 const fs     = require('fs');
 const { randomUUID } = require('crypto');
 
+// ── Spec wizard constants ─────────────────────────────────────────────────────
+const SPEC_DIMENSIONS = ['meta','intent','axioms','constraints','modules','edges','gaps','tiers'];
+const SPEC_QUESTIONS  = {
+  meta:        'What is the name and version of this system?',
+  intent:      'In one sentence — what does this system do?',
+  axioms:      'What must always be true? What are the invariants?',
+  constraints: 'What must it do, and what must it never do?',
+  modules:     'What are the main components, and what does each export?',
+  edges:       'How do the modules connect? What events pass between them?',
+  gaps:        'What is explicitly unknown or unresolved right now?',
+  tiers:       'Which parts are T0 (schema), T1 (structure), T2 (logic), T3 (synthesis)?',
+};
+function buildSpecFromSession(session) {
+  var f = session.filled || {};
+  var NL = '\n';
+  var name = (f.meta && f.meta.name) ? String(f.meta.name) : 'unnamed';
+  var intent = String(f.intent || '').split('"').join("'");
+  var axioms = (f.axioms || []).map(function(a){ return '    - ' + String(a); }).join(NL);
+  if (!axioms) axioms = '    - []';
+  var cons = (f.constraints || []).map(function(c){ return '    - ' + String(c.body||c); }).join(NL);
+  if (!cons) cons = '    - []';
+  var gaps = (f.gaps || []).map(function(g) {
+    return '    - id: gap-' + Math.random().toString(36).slice(2,6) + NL + '      description: ' + String(g.body||g) + NL + '      severity: medium';
+  }).join(NL);
+  if (!gaps) gaps = '    - []';
+  return 'spec:' + NL + '  meta:' + NL + '    name: ' + name + NL + '    version: 0.1.0' + NL + '  intent: ' + intent + NL + '  axioms:' + NL + axioms + NL + '  constraints:' + NL + cons + NL + '  gaps:' + NL + gaps;
+}
+
+
+
 const { HookRegistry }          = require('./src/hooks/Registry');
 const { Blueprint, SNRGate, Translate, scanTopology } = require('./src/spec/Blueprint');
 // Living hook registry — the canonical wire map for all NEXUS systems
@@ -385,6 +415,59 @@ async function boot() {
       }
 
       // ── Spec Compiler integration ────────────────────────────────────────
+      // ── ALK — record user interaction ───────────────────────────────────────
+      // §ALK-09: architect surfaces ALK recording for UI events
+      if (path_ === '/api/alk/record' && method === 'POST') {
+        try {
+          const body = await readBody(req);
+          const alk  = require('../lib/alk');
+          const node = alk.record({ actor: body.actor || 'user', intent: body.intent || 'interact', payload: body.payload || {}, causedBy: body.causedBy || null });
+          busEmit('alk.decision.recorded', { uuid: node.uuid, intent: node.intent });
+          return json(res, 201, { ok: true, uuid: node.uuid });
+        } catch(e) { return json(res, 500, { ok: false, error: e.message }); }
+      }
+
+      // ── Spec Wizard — conversational session ─────────────────────────────
+      // §WIZARD-16: Mode 2 — intent in, questions back, spec out
+      if (path_ === '/api/spec/wizard' && method === 'POST') {
+        try {
+          const { sessionId, message } = await readBody(req);
+          // Load or create session state from JAA
+          const sessions = jaa.query('spec_wizard_sessions', r => r.sessionId === sessionId, 1);
+          const session  = sessions[0] || { sessionId: sessionId || require('crypto').randomUUID(), filled: {}, missing: Object.keys(SPEC_DIMENSIONS), turns: [] };
+
+          // Run message through UTL to extract filled dimensions
+          const { Translate } = require('./src/spec/Blueprint');
+          const utlResult = new Translate({}).utl(message || '');
+          const newlyFilled = {};
+
+          // Map UTL output to spec dimensions
+          if (utlResult.constraints?.length) newlyFilled.constraints = utlResult.constraints;
+          if (utlResult.gaps?.length)        newlyFilled.gaps        = utlResult.gaps;
+          if (utlResult.hooks?.length)       newlyFilled.hooks       = utlResult.hooks;
+          if (utlResult.tensions?.length)    newlyFilled.tensions    = utlResult.tensions;
+          if (message?.length > 10 && !session.filled.intent) newlyFilled.intent = message.slice(0, 200);
+
+          Object.assign(session.filled, newlyFilled);
+          session.missing = SPEC_DIMENSIONS.filter(d => !session.filled[d]);
+          session.turns.push({ role: 'user', content: message, extracted: newlyFilled });
+
+          // Generate next question
+          let nextQuestion = null;
+          let complete     = session.missing.length === 0;
+          if (!complete && session.missing.length > 0) {
+            const dim = session.missing[0];
+            nextQuestion = SPEC_QUESTIONS[dim] || `Can you describe the ${dim}?`;
+          }
+
+          // Persist session
+          if (sessions.length) jaa.update('spec_wizard_sessions', sessions[0].uuid, session);
+          else jaa.insert('spec_wizard_sessions', { ...session, uuid: require('crypto').randomUUID(), ts: Date.now() });
+
+          return json(res, 200, { ok: true, sessionId: session.sessionId, filled: session.filled, missing: session.missing, nextQuestion, complete, spec: complete ? buildSpecFromSession(session) : null });
+        } catch(e) { return json(res, 500, { ok: false, error: e.message }); }
+      }
+
       if (path_.startsWith('/api/compile') && handleCompileRoute) {
         const result = await handleCompileRoute(method, path_, req, res, url, readBody, json);
         if (result !== null) return result;

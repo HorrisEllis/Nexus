@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Live System Map
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * The system map is always current (COS-7).
  * Updated on every mutation — not batched, not deferred.

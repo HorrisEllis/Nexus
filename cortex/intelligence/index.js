@@ -2,7 +2,7 @@
 /**
  * cortex/intelligence/index.js — Cortex Intelligence Core
  * UUID: nexus-cortex-intelligence-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * The sovereign intelligence layer. Lives inside Cortex. Not above the
  * orchestrator — Cortex IS the source of truth, so intelligence lives here.
@@ -77,6 +77,25 @@ function init(cfg = {}) {
   // Initial build after 10s (let JAA settle from boot)
   setTimeout(() => {
     _scanPatterns();
+    // §PERSIST-03: hydrate in-memory indexes from persisted JAA tables on boot
+    // Healer and reuse engine work immediately — no cold-start amnesia
+    const _storedFaults = jaaDB.query('fault_taxonomy', () => true, 500);
+    for (const r of _storedFaults) {
+      _failureIndex[r.faultClass] = {
+        count: r.count, lastSeen: r.lastSeen,
+        precursors: r.precursors || [], examples: r.examples || [],
+        successRate: r.successRate || 0,
+      };
+    }
+    if (_storedFaults.length)
+      console.log(`[${MODULE_ID}] seeded _failureIndex: ${_storedFaults.length} faults from JAA`);
+
+    const _storedReuse = jaaDB.query('reuse_index', () => true, 500);
+    if (_storedReuse.length) {
+      _reuseIndex = _storedReuse;
+      console.log(`[${MODULE_ID}] seeded _reuseIndex: ${_storedReuse.length} entries from JAA`);
+    }
+
     _scanFailures();
     _buildReuseIndex();
   }, 10_000);
@@ -433,6 +452,23 @@ async function _buildReuseIndex() {
     }
 
     _reuseIndex = index;
+
+    // §PERSIST-02: write reuse_index to long-term JAA table after rebuild
+    for (const entry of index) {
+      if (!entry.hash) continue;
+      const existing = jaaDB.query('reuse_index', r => r.hash === entry.hash, 1);
+      if (existing.length) {
+        jaaDB.update('reuse_index', existing[0].uuid, {
+          successRate: entry.successRate, usedCount: entry.usedCount, _updatedAt: Date.now(),
+        });
+      } else {
+        jaaDB.insert('reuse_index', {
+          uuid: uid(), hash: entry.hash, type: entry.type, lang: entry.lang,
+          intent: entry.intent, successRate: entry.successRate, usedCount: entry.usedCount,
+          source: MODULE_ID, ts: Date.now(),
+        });
+      }
+    }
 
     jaaDB.insert('event_log', {
       uuid:    uid(),

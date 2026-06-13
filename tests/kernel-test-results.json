@@ -1,0 +1,578 @@
+{
+  "run_at": "2026-06-13T23:10:46.769Z",
+  "total": 142,
+  "passed": 142,
+  "failed": 0,
+  "pass_rate": "1.000",
+  "failures": [],
+  "log": [
+    {
+      "status": "PASS",
+      "name": "loadSpec: loads without throwing on valid spec"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: missing file does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: empty spec does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: version parsed correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: keywords registered from domain"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: axioms registered"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: domains registered"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: multiple domains, keywords isolated correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: root types parsed"
+    },
+    {
+      "status": "PASS",
+      "name": "loadSpec: hot reload — schema updates on second call"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: returns array"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: empty string returns empty array"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: whitespace-only returns empty array"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: comment-only returns empty array"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: string literal typed correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: number typed correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: OPEN and CLOSE braces typed"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: DEF (=) typed correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: ROUTE (->) typed correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: line numbers are 1-indexed"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: indent tracked correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: known keywords typed as KEYWORD"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: very long line does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: unicode does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: OR (|) typed correctly"
+    },
+    {
+      "status": "PASS",
+      "name": "tokenize: all tokens have required fields"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: returns { passed, noise, snr }"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: SNR is 0..1"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: empty tokens → snr 1 (nothing to fail)"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: known-good .eg has snr > 0.5"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: all noise tokens logged (never silently dropped)"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: every passed token has score attached"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: adversarial — 100k char string does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: noise tokens have reason field"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: score vector components all present"
+    },
+    {
+      "status": "PASS",
+      "name": "snrGate: recency penalises late tokens (last recency <= first)"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: returns valid IR shape"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: compartment name extracted"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: loop detected"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: field extraction works (id = test-001)"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: empty passed array returns empty IR"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: meta.keywords_used populated"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: multiple compartments parsed"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: gap block parsed"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: law block parsed"
+    },
+    {
+      "status": "PASS",
+      "name": "parse: deep nesting does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: valid IR returns { valid: true }"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: compartment without id → gap.structural"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: loop without record → gap.temporal"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: gap without pressure → gap.evidential"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: promote without proof → gap.logical"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: every gap has pressure, message, source"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: empty IR is valid (nothing to violate)"
+    },
+    {
+      "status": "PASS",
+      "name": "validate: multiple violations all reported"
+    },
+    {
+      "status": "PASS",
+      "name": "compile: returns { kernel, ir, snr, noise, gaps, valid }"
+    },
+    {
+      "status": "PASS",
+      "name": "compile: kernel has boot() and status() and ingest()"
+    },
+    {
+      "status": "PASS",
+      "name": "compile + boot: kernel runs after boot"
+    },
+    {
+      "status": "PASS",
+      "name": "compile + boot: status().regime is a valid string"
+    },
+    {
+      "status": "PASS",
+      "name": "compile + boot: status().compartments >= 1"
+    },
+    {
+      "status": "PASS",
+      "name": "compile + boot + ingest: passing signal accepted"
+    },
+    {
+      "status": "PASS",
+      "name": "compile + boot + ingest: noise signal returns passed=false"
+    },
+    {
+      "status": "PASS",
+      "name": "compile + boot + ingest: stats.ingested increments"
+    },
+    {
+      "status": "PASS",
+      "name": "compile + boot: event_log populated after boot"
+    },
+    {
+      "status": "PASS",
+      "name": "compile: snr in result is 0..1"
+    },
+    {
+      "status": "PASS",
+      "name": "compile: empty source does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "compile: comment-only source does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[0]: compile does not throw — \"\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[1]: compile does not throw — \"   \""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[2]: compile does not throw — \"↵↵↵\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[3]: compile does not throw — \"// only a comment\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[4]: compile does not throw — \"{}{}{}\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[5]: compile does not throw — \"{ id = test }\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[6]: compile does not throw — \"compartment {}\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[7]: compile does not throw — \"compartment \"a\" { id = x }\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[8]: compile does not throw — \"loop NORECORD { interval = 1 on tick ...\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[9]: compile does not throw — \"gap \"no-pressure\" { type = structural }\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[10]: compile does not throw — \":::::::\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[11]: compile does not throw — \"<script>alert(1)</script>\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[12]: compile does not throw — \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[13]: compile does not throw — \"0000000000000000000000000000000000000...\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[14]: compile does not throw — \"{\"not\":\"emerge\",\"at\":\"all\"}\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[15]: compile does not throw — \"                                     ...\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[16]: compile does not throw — \"compartment \"unicode\" { id = テスト uuid...\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial[17]: compile does not throw — \"null undefined NaN Infinity\""
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial: deeply nested compartments do not stack overflow"
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial: repeated compile same source is idempotent"
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial: ingest before boot returns error object not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial: status() before boot does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial: 10k ingest calls on single kernel"
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial: noise_ring never exceeds 5000 entries"
+    },
+    {
+      "status": "PASS",
+      "name": "adversarial: event_log never exceeds 5000 entries"
+    },
+    {
+      "status": "PASS",
+      "name": "emitFiles: exported from kernel"
+    },
+    {
+      "status": "PASS",
+      "name": "emitFiles: empty outputs does nothing"
+    },
+    {
+      "status": "PASS",
+      "name": "registerTemplate + emitFiles: writes file from template"
+    },
+    {
+      "status": "PASS",
+      "name": "emitFiles: missing template does not throw"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg files: found 124 files in emerge/io"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — agents/agent-base.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — agents/agent-base.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — agents/agent-chatgpt.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — agents/agent-chatgpt.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — agents/agent-claude.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — agents/agent-claude.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — agents/agent-gemini.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — agents/agent-gemini.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — agents/agent-ollama.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — agents/agent-ollama.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — agents/agents-dispatcher.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — agents/agents-dispatcher.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — automation/automation-engine.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — automation/automation-engine.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — automation/automation-queue.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — automation/automation-queue.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/canvas-renderer.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/canvas-renderer.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/cfr-physics.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/cfr-physics.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/cfr-render.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/cfr-render.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/cfr-rewind.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/cfr-rewind.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/image-analyzer.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/image-analyzer.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/nas-router.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/nas-router.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/node-inspector.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/node-inspector.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/rewind-scrubber.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/rewind-scrubber.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — canvas/tauri-ws.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — canvas/tauri-ws.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — cockpit/cockpit-cli.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — cockpit/cockpit-cli.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — cockpit/cockpit-core.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — cockpit/cockpit-core.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: compiles without throw — cockpit/cockpit-forge.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "real .eg: snr > 0 — cockpit/cockpit-forge.eg"
+    },
+    {
+      "status": "PASS",
+      "name": "emerge.spec: file exists at root"
+    },
+    {
+      "status": "PASS",
+      "name": "emerge.spec: parses without error"
+    },
+    {
+      "status": "PASS",
+      "name": "emerge.spec: version declared"
+    },
+    {
+      "status": "PASS",
+      "name": "emerge.spec: has at least 1 axiom"
+    },
+    {
+      "status": "PASS",
+      "name": "emerge.spec: has at least 5 keywords"
+    },
+    {
+      "status": "PASS",
+      "name": "emerge.spec: compartment is a known keyword after load"
+    }
+  ]
+}

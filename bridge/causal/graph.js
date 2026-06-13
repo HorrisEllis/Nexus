@@ -2,7 +2,7 @@
 /**
  * bridge/causal/graph.js — Causal Spine Graph
  * UUID: nexus-bridge-causal-graph-v1-0000-4000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Thin adapter. Imports CausalGraph from lib/cfr/graph.js (already exists),
  * wires it to the causal ledger's append stream, and exposes the spine query API.

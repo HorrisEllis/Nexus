@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/agent-tools/index.js ───────────────────────────────────────────────
 // UUID: nexus-agent-tools-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // Tools available to agents (Ollama, Claude, Guardian) via the RAID dispatch
 // system. Every tool is a pure function that reads JAA and returns structured

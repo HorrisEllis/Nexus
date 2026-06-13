@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos list
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Lists all compartments with: name, state, runtime, id.
  * Outputs a pretty table (default) or JSON (--json flag).

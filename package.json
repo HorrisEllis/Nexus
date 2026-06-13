@@ -1,6 +1,6 @@
 {
   "name": "compartment-os",
-  "version": "1.0.0",
+  "version": "0.4.0-pre",
   "description": "COMPARTMENT OS — Sovereign compartmentalized execution environment",
   "author": "James Brooks (Erosmancer)",
   "license": "MIT",

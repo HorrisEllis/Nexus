@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos map [--json] [--watch]
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Renders the live system map.
  * Default: pretty-printed tree to stdout.

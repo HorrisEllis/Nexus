@@ -2,7 +2,7 @@
 /**
  * hooks/cortex.hooks.js — Cortex System Hook Map
  * UUID: cortex-hooks-map-v1-0000-4000
- * Version: 1.0.0
+ * Status: pre-release
  * System: Cortex :3748
  * Status: living
  */

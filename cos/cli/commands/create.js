@@ -3,7 +3,7 @@
  * COMPARTMENT OS — cos create <name>
  *
  * Author: James Brooks (Erosmancer)
- * Version: 2.0.0
+ * Status: pre-release
  *
  * Creates a compartment via the SISO gate pipeline:
  *   emit('host:compartment:create', config) → CreateCompartmentGate → emit('host:compartment:created')

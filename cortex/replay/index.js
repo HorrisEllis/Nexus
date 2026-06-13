@@ -1,7 +1,7 @@
 'use strict';
 // ── cortex/replay/index.js ────────────────────────────────────────────────────
 // UUID: nexus-replay-v1-0000-4000-0000-000000000001
-// Version: 1.0.0
+// Status: pre-release
 //
 // Deterministic replay engine.
 //

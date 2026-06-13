@@ -4,7 +4,7 @@
  * Atomic flat-file JSON persistence for all compartment state.
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Design:
  *   - Single source of truth: state.json

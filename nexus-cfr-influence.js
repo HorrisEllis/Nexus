@@ -2,7 +2,7 @@
 /**
  * nexus-cfr-influence.js — CFR Field → System Behavior Influence
  * UUID: nexus-cfr-influence-v1-0000-4000-0000-000000000001
- * Version: 1.0.0
+ * Status: pre-release
  *
  * THE FIELD AS GOVERNOR.
  *

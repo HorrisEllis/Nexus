@@ -2,7 +2,7 @@
 // ── JAA — Just Another Abstraction ────────────────────────────────────────────
 // memory/jaa-db.js
 // UUID: jaa-db-nexus-v6-0000-4000-0000-000000000001
-// Version: 6.0.0
+// Status: pre-release
 //
 // CORTEX IS THE ULTIMATE TRUTH.
 // All storage for the entire NEXUS system lives here.
@@ -116,6 +116,13 @@ const TABLE_TIERS = {
   requests:            'long',
   backup_records:      'long',
   contract_audit:      'long',
+  // Decay observability — append-only record of every eviction
+  // Tier: long — the log itself must never decay
+  // Use: memory pressure monitoring, stability analysis, decay storm detection
+  decay_log:           'long',
+  // ALK decision lattice — tier: long (decisions are permanent record)
+  fault_taxonomy:      'long',
+  reuse_index:         'long',
 };
 
 // ── All declared tables ───────────────────────────────────────────────────────
@@ -160,9 +167,9 @@ class JaaDB {
         for (const line of lines) {
           try {
             const row = JSON.parse(line);
-            // Skip rows marked as evicted during replay
-            if (row._evicted) continue;
-            // For mutation tombstones, apply them
+            // §REPLAY-ORDER: mutations checked BEFORE _evicted
+            // Tombstone { _mutation:true, _evicted:true } must PATCH the row
+            // Checking _evicted first would discard tombstones — real bug fixed here
             if (row._mutation) {
               const idx = this._tables[table].findIndex(r => r.uuid === row.uuid);
               if (idx >= 0) {
@@ -170,6 +177,8 @@ class JaaDB {
               }
               continue;
             }
+            // Skip non-mutation rows that are themselves eviction records
+            if (row._evicted) continue;
             this._tables[table].push(row);
             if (row._rowId && row._rowId >= this._rowId) {
               this._rowId = row._rowId + 1;
@@ -179,6 +188,7 @@ class JaaDB {
       }
 
       this._fds[table] = fs.createWriteStream(file, { flags: 'a' });
+      this._fds[table].on('error', (e) => { if (e.code !== 'ENOENT') console.error(`[JaaDB] stream error on '${table}':`, e.code); });
     }
 
     // Write new PID file
@@ -221,8 +231,12 @@ class JaaDB {
   // Working memory: evict at 2h. Short-term: archive at 24h.
   // Runs every 5 minutes. Non-blocking.
   _tickDecay() {
-    const now = Date.now();
+    const now    = Date.now();
+    const cycleId = uid(); // links all evictions in one decay cycle
+
     for (const table of ALL_TABLES) {
+      if (table === 'decay_log') continue; // decay_log never decays itself
+
       const tier   = TABLE_TIERS[table];
       const config = MEMORY_TIERS[tier];
       if (!config?.evictAfterMs) continue; // long-term: no eviction
@@ -231,6 +245,8 @@ class JaaDB {
       if (!rows?.length) continue;
 
       let evicted = 0;
+      const evictedRows = [];
+
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
         if (row._evicted || row._mutation) continue;
@@ -238,22 +254,70 @@ class JaaDB {
         const age = now - (row.ts || row._ts || 0);
         if (age < config.evictAfterMs) continue;
 
-        // Mark evicted in-memory and write tombstone to disk
+        // Mark evicted in-memory
         this._tables[table][i] = { ...row, _evicted: true, _evictedAt: now };
+
+        // Write tombstone to the table's own JSONL (mutation record)
         try {
           this._fds[table]?.write(
             JSON.stringify({ _mutation: true, uuid: row.uuid, _evicted: true, _evictedAt: now }) + '\n'
           );
         } catch {}
+
+        evictedRows.push(row);
         evicted++;
       }
 
       if (evicted > 0) {
-        // Compact in-memory array — remove evicted rows
+        // Compact in-memory — remove evicted rows
         this._tables[table] = this._tables[table].filter(r => !r._evicted);
         console.log(`[JaaDB] decayed ${evicted} rows from ${table} (tier: ${tier})`);
+
+        // Write one decay_log entry per eviction — the observable memory pressure record
+        // This is the zoomed-out ledger: what is decaying, when, how fast
+        for (const row of evictedRows) {
+          const age = now - (row.ts || row._ts || 0);
+          this.insert('decay_log', {
+            uuid:      uid(),
+            cycleId,
+            table,
+            tier,
+            rowUuid:   row.uuid,
+            rowType:   row.type   || null,
+            rowSource: row.source || null,
+            ageMs:     age,
+            ageHours:  Math.round(age / 3600000 * 10) / 10,
+            halfLifeMs: config.halfLifeMs,
+            // Weight at eviction — near 0 for clean decay, > 0 means premature eviction
+            weightAtEviction: Math.pow(2, -age / config.halfLifeMs),
+            evictedAt: now,
+            ts:        now,
+          });
+        }
       }
     }
+
+    // Write a decay cycle summary to decay_log
+    // This creates a heartbeat even when nothing was evicted — absence of decay is signal too
+    const totalTables = ALL_TABLES.filter(t => {
+      const tier = TABLE_TIERS[t];
+      return MEMORY_TIERS[tier]?.evictAfterMs && t !== 'decay_log';
+    }).length;
+
+    this.insert('decay_log', {
+      uuid:          uid(),
+      cycleId,
+      table:         '_cycle_summary',
+      tier:          'system',
+      rowUuid:       null,
+      ageMs:         0,
+      evictedAt:     now,
+      ts:            now,
+      // Summary fields
+      _isCycleSummary:   true,
+      tablesChecked:     totalTables,
+      workingMemorySize: (this._tables['working_memory'] || []).length + (this._tables['active_traces'] || []).length,
+    });
   }
 
   // ── Weight for recall — applies decay factor based on age ─────────────────
@@ -272,10 +336,17 @@ class JaaDB {
   // ── close ─────────────────────────────────────────────────────────────────
   async close() {
     clearInterval(this._decayTimer);
-    for (const fd of Object.values(this._fds)) {
-      try { fd.end(); } catch {}
-    }
-    this._ready = false;
+    this._ready = false;  // Stop new writes first
+    // Await all stream finishes before returning (§2.1 — data on disk before close)
+    await Promise.all(Object.values(this._fds).map(fd =>
+      new Promise(resolve => {
+        try {
+          fd.end(() => resolve());
+          fd.once('error', () => resolve()); // don't hang on error
+        } catch { resolve(); }
+      })
+    ));
+    this._fds = {};
   }
 
   // ── insert ────────────────────────────────────────────────────────────────
@@ -380,6 +451,7 @@ class JaaDB {
       this._tables[table] = [];
       if (this._ready) {
         this._fds[table] = fs.createWriteStream(this._tableFile(table), { flags: 'a' });
+        this._fds[table].on('error', (e) => { if (e.code !== 'ENOENT') console.error(`[JaaDB] stream error on '${table}':`, e.code); });
       }
     }
   }

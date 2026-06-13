@@ -3,7 +3,7 @@
  * COMPARTMENT OS — Host Compartment Lifecycle Gates
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Every compartment lifecycle operation is a Gate.
  * The gate's signature = the event type it handles.

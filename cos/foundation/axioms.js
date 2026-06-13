@@ -4,7 +4,7 @@
  * IMMUTABLE after v1.0.0 (COS-5)
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * Axioms are not guidelines. Violation throws a CosAxiomError.
  * Every axiom has: id, description, enforce(ctx) function.

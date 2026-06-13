@@ -4,7 +4,7 @@
  * IMMUTABLE after v1.0.0 (COS-5)
  *
  * Author: James Brooks (Erosmancer)
- * Version: 1.0.0
+ * Status: pre-release
  *
  * These are structural contracts, not runtime validators.
  * Use validateHook() in hook-schema.js for runtime validation.
