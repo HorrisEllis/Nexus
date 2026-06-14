@@ -1183,6 +1183,30 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res,404,{ok:false,error:`idearium route not found: ${M} /api/idearium/${action}`});
   }
 
+  // ── Emerge proxy — /api/emerge/* → emerge-ide.js :4242 ─────────────────────
+  // emerge-ide.js no longer auto-opens its own browser window.
+  // All emerge API calls route through orchestrator.
+  if (top === 'api' && sub === 'emerge') {
+    const action = rest || seg[2] || '';
+    const p = '/' + (action || 'status');
+
+    // SSE stream from emerge
+    if (M === 'GET' && action === 'events') {
+      const r = http.request({ hostname:'127.0.0.1', port:4242, path:'/events', method:'GET',
+        headers:{'Accept':'text/event-stream'} }, upstream => {
+        res.writeHead(upstream.statusCode, upstream.headers);
+        upstream.pipe(res);
+        req.on('close', () => r.destroy());
+      });
+      r.on('error', () => json(res,503,{ok:false,error:'emerge offline'}));
+      r.end(); return;
+    }
+
+    // All other emerge routes
+    const r = await GET('emerge', p).catch(() => ({ok:false,error:'emerge offline'}));
+    return json(res, r.ok ? 200 : (r.error==='emerge offline'?503:500), r);
+  }
+
   return json(res,404,{ok:false,error:`route not found: ${M} ${u.pathname}`});
 });
 

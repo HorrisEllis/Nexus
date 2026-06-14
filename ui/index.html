@@ -7367,6 +7367,24 @@ Object.assign(_NX_CLI_COMMANDS || {}, {
   // Execution trees
   'trees':        async() => { const d=await _nxGet(_NX.CORTEX,'/api/memory?table=execution_trees&n=10'); return (d?.rows||[]).map(r=>`${r.jobId?.slice(0,12)} branches:${r.branches?.length||0} status:${r.status}`).join('\n')||'no trees'; },
 });
+
+function emRefresh() {
+  var iframe = document.getElementById('emerge-iframe');
+  var dot    = document.getElementById('em-dot');
+  var status = document.getElementById('em-status');
+  if (iframe) iframe.src = iframe.src;
+  fetch('http://127.0.0.1:9000/api/emerge/status', { signal: AbortSignal.timeout(2000) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (dot) dot.className = 'adot g';
+      if (status) status.textContent = 'ONLINE · ' + (d.regime || 'stable');
+    })
+    .catch(function() {
+      if (dot) dot.className = 'adot dim';
+      if (status) status.textContent = 'OFFLINE';
+    });
+}
+
 </script>
 
 

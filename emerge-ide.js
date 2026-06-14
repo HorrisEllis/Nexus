@@ -285,7 +285,7 @@ if (fs.existsSync(IO_DIR)) {
 }
 
 // 4. Lifecycle handlers
-setTimeout(() => require('child_process').exec(`start http://localhost:${PORT}`), 800);
+// auto-open removed — use orchestrator at :9000
 process.on('SIGINT', () => { console.log('\n[ide] stopped'); process.exit(0); });
 
   // Check ollama
@@ -306,7 +306,6 @@ process.on('SIGINT', () => { console.log('\n[ide] stopped'); process.exit(0); })
     }
 };
 
-// Auto-open browser on Windows
-setTimeout(() => require('child_process').exec(`start http://localhost:${PORT}`), 800);
+// Auto-open disabled — emerge UI served via orchestrator at :9000
 process.on('SIGINT', () => { console.log('\n[ide] stopped'); process.exit(0); });
 

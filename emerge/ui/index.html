@@ -222,7 +222,7 @@ const AXIOMS = [
 function dispatchToGuardian() {
   const spec = document.getElementById('editor')?.value || '';
   if (!spec.trim()) { alert('No spec content to dispatch'); return; }
-  fetch('http://127.0.0.1:7820/command', {
+  fetch('http://127.0.0.1:9000/api/guardian/command', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ spec, provider: 'claude', splitOn: 'heading' }),
@@ -514,11 +514,11 @@ document.addEventListener('keydown', e => {
 connectBus();
 updateGutter('');
 
-fetch('/status').then(r => r.json()).then(s => {
+fetch('http://127.0.0.1:9000/api/emerge/status').then(r => r.json()).then(s => {
   log('ide online','s');
 }).catch(() => log('server not reached — is emerge-ide.js running?','e'));
 
-fetch('/ollama-status').then(r => r.json()).then(o => {
+fetch('http://127.0.0.1:9000/api/emerge/ollama-status').then(r => r.json()).then(o => {
   document.getElementById('st-ollama').textContent = o.online ? 'ollama ✓' : 'ollama offline';
   document.getElementById('st-ollama').style.color = o.online ? 'var(--signal)' : 'var(--noise)';
   if (o.models?.length) {
@@ -547,7 +547,7 @@ fetch('/ollama-status').then(r => r.json()).then(o => {
   })();
   let sse, n=0;
   function connect(){
-    sse = new EventSource("http://localhost:9000/sse");
+    sse = new EventSource("http://127.0.0.1:9000/sse");
     sse.onopen  = ()=>{ n=0; };
     sse.onerror = ()=>{ sse.close(); setTimeout(connect, Math.min(10000, 1000*++n)); };
     sse.onmessage = e=>{
