@@ -474,27 +474,89 @@ textarea.finp{resize:vertical;line-height:1.55}
   body.nav-expanded #panels { margin-left: 140px; }
 
   /* ── FAB ────────────────────────────────────────────────────────────────── */
-  .fab-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; }
-  .fab-main {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: var(--c, #00d4ff); color: #000;
-    border: none; font-size: 22px; cursor: pointer;
-    box-shadow: 0 4px 16px rgba(0,212,255,0.3);
-    transition: transform 0.2s;
+  .fab-container {
+    position: fixed; bottom: 28px; right: 28px;
+    z-index: 300;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 0;
   }
-  .fab-main:hover { transform: scale(1.08); }
+
+  /* Backdrop — invisible tap target to close menu */
+  .fab-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: -1;
+  }
+  .fab-container.open .fab-backdrop { display: block; }
+
+  /* Menu — slides up from the button */
   .fab-menu {
-    position: absolute; bottom: 56px; right: 0;
-    display: none; flex-direction: column; gap: 8px; align-items: flex-end;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+    margin-bottom: 10px;
+    opacity: 0; transform: translateY(12px) scale(0.96);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
   }
-  .fab-menu.open { display: flex; }
+  .fab-container.open .fab-menu {
+    opacity: 1; transform: translateY(0) scale(1);
+    pointer-events: all;
+  }
+
+  .fab-sep {
+    width: 80%; height: 1px;
+    background: var(--s2, #1e1e2e);
+    margin: 2px 0 2px auto;
+  }
+
+  /* Each menu item */
   .fab-item {
-    background: var(--bg1, #12121a); border: 1px solid var(--s2, #1e1e2e);
-    color: var(--text1, #ccc); padding: 6px 12px; border-radius: 20px;
-    cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 6px;
-    white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg1, #0d0d18);
+    border: 1px solid var(--s2, #1e1e2e);
+    border-radius: 20px;
+    padding: 6px 14px 6px 10px;
+    cursor: pointer;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+    color: var(--text2, #aaa);
+    white-space: nowrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    user-select: none;
   }
-  .fab-item:hover { background: var(--s1, #1e1e2e); color: var(--c, #00d4ff); }
+  .fab-item:hover {
+    background: var(--s1, #12121a);
+    color: var(--c, #00d4ff);
+    border-color: rgba(0,212,255,0.25);
+  }
+  .fab-item:active { transform: scale(0.97); }
+
+  .fab-icon {
+    font-size: 14px; width: 18px; text-align: center; flex-shrink: 0;
+  }
+  .fab-label { font-size: 10px; letter-spacing: .08em; }
+
+  /* The main FAB button */
+  .fab-main {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: var(--c, #00d4ff); color: #000;
+    border: none; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .fab-main:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 24px rgba(0,212,255,0.5);
+  }
+  .fab-main:active { transform: scale(0.96); }
+
+  /* + rotates to × when open */
+  .fab-plus {
+    font-size: 24px; font-weight: 300; line-height: 1;
+    transition: transform 0.2s;
+    display: block;
+  }
+  .fab-container.open .fab-plus { transform: rotate(45deg); }
 </style>
 </head>
 <body>
@@ -9316,32 +9378,13 @@ function toggleNav() {
   document.body.classList.toggle('nav-expanded');
 }
 function toggleFab() {
-  document.getElementById('fab-menu').classList.toggle('open');
-}
-// Close FAB when clicking outside
-document.addEventListener('click', e => {
-  const fab = document.querySelector('.fab-container');
-  if (fab && !fab.contains(e.target)) {
-    document.getElementById('fab-menu')?.classList.remove('open');
-  }
-});
-// Resume — loads last ALK user decision
-async function resumeLastSession() {
-  try {
-    const r = await fetch('http://127.0.0.1:7820/alk/last');
-    const d = await r.json();
-    if (d.ok && d.decision) {
-      const dec = d.decision;
-      // Route to the right panel based on last intent
-      if (dec.intent?.includes('spec') || dec.intent?.includes('seam')) go('guardian');
-      else if (dec.intent?.includes('idea')) go('idearium');
-      else if (dec.intent?.includes('diagnos')) go('diagnose');
-      else if (dec.intent?.includes('route') || dec.intent?.includes('generate')) go('guardian');
-      toast('Resumed: ' + (dec.intent || 'last session'), 'info', 3000);
-    }
-  } catch(_) { toast('Nothing to resume', 'dim', 2000); }
+  const fab = document.getElementById('fab');
+  if (fab) fab.classList.toggle('open');
 }
 
-</script>
-</body>
-</html>
+function closeFab() {
+  const fab = document.getElementById('fab');
+  if (fab) fab.classList.remove('open');
+}
+
+>
