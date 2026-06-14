@@ -2405,6 +2405,43 @@ setInterval(()=>{if(document.getElementById('panel-forge')?.classList.contains('
   </div><!-- /main -->
 </div><!-- /app -->
 
+<!-- ══ FILE PUSH ZONE ══════════════════════════════════════════════════════ -->
+<!-- Floating drop zone — always available, collapses to icon when not in use -->
+<div id="push-zone-wrap" style="position:fixed;bottom:88px;right:28px;z-index:250;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+
+  <!-- Drop zone (shown when dragging over window) -->
+  <div id="push-dropzone"
+    style="display:none;width:280px;background:#0d0d1a;border:2px dashed var(--c,#00d4ff);border-radius:6px;padding:20px 16px;text-align:center;box-shadow:0 8px 32px rgba(0,212,255,.2)"
+    ondragover="event.preventDefault();pushZoneActivate()"
+    ondragleave="pushZoneDeactivate()"
+    ondrop="pushZoneOnDrop(event)">
+    <div style="font-size:22px;margin-bottom:6px">⬇</div>
+    <div style="font:700 11px var(--mono);color:var(--c,#00d4ff);margin-bottom:4px">DROP TO PUSH</div>
+    <div style="font-size:9px;color:var(--t2,#4a4a7a)">
+      .spec → SEAM pipeline<br>
+      .nex → lab sandbox<br>
+      .eg → emerge compiler<br>
+      .js → forge review<br>
+      .pub → auth whitelist<br>
+      .md → idearium idea
+    </div>
+    <!-- Peer targets (shown when peers connected) -->
+    <div id="push-peer-targets" style="margin-top:10px;display:none">
+      <div style="font-size:8px;color:var(--t2,#4a4a7a);margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em">Also push to</div>
+      <div id="push-peer-list" style="display:flex;flex-direction:column;gap:4px"></div>
+    </div>
+  </div>
+
+  <!-- Push log (recent pushes) -->
+  <div id="push-log" style="display:none;width:280px;background:#0d0d1a;border:1px solid #1c1c35;border-radius:4px;max-height:160px;overflow-y:auto;font:9px var(--mono,monospace)"></div>
+
+  <!-- Toggle button -->
+  <button id="push-toggle-btn"
+    title="File Push Zone — drag files to push to NEXUS"
+    onclick="pushZoneToggle()"
+    style="width:36px;height:36px;border-radius:50%;background:#0d0d1a;border:1px solid var(--border,#1c1c35);color:var(--t2,#4a4a7a);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s">⬆</button>
+</div>
+
 <!-- IDEA DETAIL MODAL (slide in from right, shows repo + spec + phases + files) -->
 <div id="idea-detail-modal" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(3,5,9,.7);backdrop-filter:blur(3px)">
   <div style="position:absolute;right:0;top:0;bottom:0;width:520px;max-width:95vw;background:var(--bg1);border-left:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden">
@@ -7367,6 +7404,145 @@ Object.assign(_NX_CLI_COMMANDS || {}, {
   // Execution trees
   'trees':        async() => { const d=await _nxGet(_NX.CORTEX,'/api/memory?table=execution_trees&n=10'); return (d?.rows||[]).map(r=>`${r.jobId?.slice(0,12)} branches:${r.branches?.length||0} status:${r.status}`).join('\n')||'no trees'; },
 });
+
+// ══ FILE PUSH SYSTEM ══════════════════════════════════════════════════════════
+const PUSH_ORCH   = 'http://127.0.0.1:9000';
+let _pushOpen     = false;
+let _pushDragging = false;
+let _pushPeers    = [];
+let _pushTargets  = new Set(); // peer IDs to also push to
+
+function pushZoneToggle() {
+  _pushOpen = !_pushOpen;
+  const zone = document.getElementById('push-dropzone');
+  const log  = document.getElementById('push-log');
+  const btn  = document.getElementById('push-toggle-btn');
+  if (zone) zone.style.display = _pushOpen ? '' : 'none';
+  if (log)  log.style.display  = _pushOpen ? '' : 'none';
+  if (btn)  { btn.style.borderColor = _pushOpen ? 'var(--c,#00d4ff)' : ''; btn.style.color = _pushOpen ? 'var(--c,#00d4ff)' : ''; }
+  if (_pushOpen) pushLoadPeers();
+}
+
+function pushZoneActivate() {
+  const zone = document.getElementById('push-dropzone');
+  if (zone) zone.style.borderColor = '#3ecf8e';
+}
+
+function pushZoneDeactivate() {
+  const zone = document.getElementById('push-dropzone');
+  if (zone) zone.style.borderColor = 'var(--c,#00d4ff)';
+}
+
+// ── Global drag-over detection — show zone when dragging anything over window
+document.addEventListener('dragenter', () => {
+  if (!_pushOpen) { _pushDragging = true; pushZoneToggle(); }
+});
+document.addEventListener('dragleave', (e) => {
+  if (!e.relatedTarget && _pushDragging) { _pushDragging = false; if (_pushOpen) pushZoneToggle(); }
+});
+
+function pushZoneOnDrop(event) {
+  event.preventDefault();
+  pushZoneDeactivate();
+  _pushDragging = false;
+  const files = [...(event.dataTransfer?.files || [])];
+  if (!files.length) return;
+  files.forEach(file => pushFile(file));
+}
+
+async function pushFile(file) {
+  pushLog('→ ' + file.name + ' (' + Math.round(file.size/1024) + 'KB)', 'dim');
+
+  const content = await new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload  = e => res(e.target.result);
+    reader.onerror = () => rej(new Error('read failed'));
+    reader.readAsText(file);
+  }).catch(e => { pushLog('✗ read: ' + e.message, 'err'); return null; });
+
+  if (content === null) return;
+
+  // Detect .pem before sending
+  if (file.name.endsWith('.pem')) {
+    pushLog('✗ ' + file.name + ' — PEM files rejected (never push private keys)', 'err');
+    return;
+  }
+
+  // Push to local NEXUS
+  try {
+    const r = await fetch(PUSH_ORCH + '/api/push/file', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ filename: file.name, content, source: 'drag-drop-ui' }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      pushLog('✓ ' + file.name + ' → ' + (d.label || d.destination), 'ok');
+    } else {
+      pushLog('✗ ' + file.name + ': ' + (d.error || 'failed'), 'err');
+    }
+  } catch(e) {
+    pushLog('✗ ' + file.name + ': ' + e.message, 'err');
+    return;
+  }
+
+  // Push to selected remote peers
+  for (const peerId of _pushTargets) {
+    pushLog('→ peer:' + peerId.slice(-6) + ' ' + file.name, 'dim');
+    try {
+      const r = await fetch(PUSH_ORCH + '/api/push/peer/' + peerId, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ filename: file.name, content, source: 'peer-push-ui' }),
+      });
+      const d = await r.json();
+      pushLog(d.ok ? '✓ peer ' + peerId.slice(-6) : '✗ peer ' + peerId.slice(-6) + ': ' + d.error, d.ok ? 'ok' : 'err');
+    } catch(e) {
+      pushLog('✗ peer ' + peerId.slice(-6) + ': ' + e.message, 'err');
+    }
+  }
+}
+
+async function pushLoadPeers() {
+  try {
+    const r = await fetch(PUSH_ORCH + '/api/peer/list');
+    const d = await r.json();
+    _pushPeers = (d.peers || []).filter(p => p.status === 'online');
+    const targetsEl = document.getElementById('push-peer-targets');
+    const listEl    = document.getElementById('push-peer-list');
+    if (!targetsEl || !listEl) return;
+    if (!_pushPeers.length) { targetsEl.style.display = 'none'; return; }
+    targetsEl.style.display = '';
+    listEl.innerHTML = _pushPeers.map(p => {
+      const checked = _pushTargets.has(p.peerId);
+      return '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:9px;color:#d4d4e8">' +
+        '<input type="checkbox" ' + (checked ? 'checked' : '') +
+        ' onchange="pushTogglePeer('' + p.peerId + '',this.checked)">' +
+        p.peerId.slice(-8) + ' (' + p.host + ':' + p.port + ')' +
+        '</label>';
+    }).join('');
+  } catch(_) {}
+}
+
+function pushTogglePeer(peerId, checked) {
+  if (checked) _pushTargets.add(peerId);
+  else _pushTargets.delete(peerId);
+}
+
+function pushLog(msg, type) {
+  const el  = document.getElementById('push-log');
+  if (!el) return;
+  el.style.display = '';
+  const div = document.createElement('div');
+  const col = type === 'ok' ? '#3ecf8e' : type === 'err' ? '#e85d3c' : '#4a4a7a';
+  div.style.cssText = 'padding:3px 8px;border-bottom:1px solid #1c1c35;color:' + col;
+  div.textContent   = new Date().toLocaleTimeString() + ' ' + msg;
+  el.prepend(div);
+  if (el.children.length > 30) el.lastChild?.remove();
+}
+
+// Also wire push to the CLI
+// nexus push <file> — uses the auth client to push a file through the API
 
 function emRefresh() {
   var iframe = document.getElementById('emerge-iframe');

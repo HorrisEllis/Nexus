@@ -223,6 +223,8 @@ ${$(C.bold, 'Commands')}
   intents             Show the intent map — every action with CLI/API/purpose
   artifacts [query]   Search built artifacts before generating new ones
   chatlog [n]         Browse logged AI conversations
+  push <file>         Push a file to NEXUS (auto-routed by extension)
+  push <file> --peer <id>  Push to local + remote peer
   exit / quit / q     Exit
 
 ${$(C.bold, 'Systems')}
@@ -273,6 +275,31 @@ async function dispatch(line) {
     case 'ui': await cmdUI(); return;
     case 'help': case '?': cmdHelp(); return;
     case 'status': await cmdStatus(); return;  // multi-system, local
+    case 'push': {
+      // nexus push <filepath>  — push a file to NEXUS, auto-routed by extension
+      // nexus push <filepath> --peer <peerId>  — push to remote peer too
+      const filepath = args[0];
+      if (!filepath) { log('Usage: push <filepath> [--peer <peerId>]'); return; }
+      const peerIdx = args.indexOf('--peer');
+      const peerId  = peerIdx !== -1 ? args[peerIdx + 1] : null;
+      const { readFileSync, existsSync } = require('fs');
+      if (!existsSync(filepath)) { log('File not found: ' + filepath); return; }
+      const content  = readFileSync(filepath, 'utf8');
+      const filename = require('path').basename(filepath);
+      log('Pushing ' + filename + '…');
+      try {
+        const route = peerId ? '/api/push/peer/' + peerId : '/api/push/file';
+        const r = await POST(9000, route, { filename, content, source: 'cli-push' });
+        if (r.ok) {
+          log('✓ ' + filename + ' → ' + (r.label || r.destination || 'ok'));
+          if (r.remote) log('  peer: ' + (r.remote.ok ? '✓' : '✗ ' + r.remote.error));
+        } else {
+          log('✗ ' + (r.error || 'push failed'));
+        }
+      } catch(e) { log('✗ ' + e.message); }
+      return;
+    }
+
     case 'chat': {
       // Direct Ollama chat — no NCP, no browser tab required
       const chatPrompt = args.join(' ').trim();

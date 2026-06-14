@@ -352,6 +352,25 @@ async function run() {
       break;
     }
 
+    case 'push': {
+      // node auth/client.js push <filepath> [--peer <peerId>]
+      // Authenticated file push through encrypted session
+      const filepath = args[0];
+      if (!filepath) { console.log('Usage: push <filepath> [--peer <peerId>]'); break; }
+      const peerIdx  = args.indexOf('--peer');
+      const peerId   = peerIdx !== -1 ? args[peerIdx + 1] : null;
+      const { readFileSync, existsSync } = require('fs');
+      if (!existsSync(filepath)) { console.error('File not found:', filepath); process.exit(1); }
+      const content  = readFileSync(filepath, 'utf8');
+      const filename = require('path').basename(filepath);
+      console.log('Pushing', filename, peerId ? '→ peer:' + peerId : '→ local');
+      const route = peerId ? '/api/push/peer/' + peerId : '/api/push/file';
+      const res   = await authRequest('POST', route, { filename, content, source: 'auth-client-push' });
+      console.log(`HTTP ${res.status}`);
+      console.log(JSON.stringify(res.body, null, 2));
+      break;
+    }
+
     case 'dispatch': {
       // Sugar: nexus-client dispatch "write me a rate limiter"
       const prompt    = args.join(' ');

@@ -813,6 +813,46 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return; // relay handles response
   }
 
+  // ── File push — /api/push/* ───────────────────────────────────────────────
+  // POST /api/push/file         — push a single file, auto-routed by extension
+  // POST /api/push/peer/:peerId — push file to a connected remote peer
+  // GET  /api/push/routes       — list all file type routes
+  if (top === 'api' && sub === 'push') {
+    const filePush = require('./lib/file-push');
+
+    if (M === 'GET' && rest === 'routes') {
+      return json(res, 200, { ok: true, routes: filePush.ROUTES });
+    }
+
+    if (M === 'POST' && rest === 'file') {
+      const body    = await readBody(req);
+      const filename= body.filename || 'upload.txt';
+      const content = body.content  || '';
+      const result  = await filePush.processPush(filename, content, {
+        source:     body.source || 'api-push',
+        provider:   body.provider || 'ollama',
+      });
+      return json(res, result.ok ? 200 : 400, result);
+    }
+
+    // Push to remote peer
+    if (M === 'POST' && rest && rest.startsWith('peer/')) {
+      const peerId  = rest.slice(5);
+      const body    = await readBody(req);
+      const filename= body.filename || 'upload.txt';
+      const content = body.content  || '';
+
+      // Push locally first
+      const local = await filePush.processPush(filename, content, { source: 'peer-push' });
+      // Then push to remote peer
+      const remote = await filePush.pushToPeer(peerId, filename, content);
+
+      return json(res, 200, { ok: true, local, remote, peerId });
+    }
+
+    return json(res, 404, { ok: false, error: 'unknown push route' });
+  }
+
   // ── Auth layer — /auth/* ──────────────────────────────────────────────────
   // Hotswappable: auth/index.js + auth/policy.json + auth/clients/*.pub
   // All watched by fs.watch — changes take effect within 500ms
