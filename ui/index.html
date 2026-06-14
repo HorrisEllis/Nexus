@@ -200,6 +200,14 @@ textarea.finp{resize:vertical;line-height:1.55}
 
 /* ═══════════════════════════ HOME ══════════════════════════════ */
 .home-hero{text-align:center;padding:28px 0 20px}
+  .landing-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:24px 20px;width:220px;cursor:pointer;transition:border-color .15s,transform .1s;display:flex;flex-direction:column;gap:8px;user-select:none}
+  .landing-card:hover{border-color:var(--c);transform:translateY(-2px)}
+  .landing-card:active{transform:translateY(0)}
+  .landing-card-primary{border-color:rgba(0,212,255,.25)}
+  .landing-card-ico{font-size:28px;margin-bottom:4px}
+  .landing-card-title{font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--text)}
+  .landing-card-desc{font-size:10px;color:var(--text2);line-height:1.6;flex:1}
+  .landing-card-meta{font-size:9px;color:var(--muted);font-family:var(--mono);margin-top:4px}
 .hero-title{font-family:var(--display);font-size:52px;letter-spacing:.3em;color:var(--c);
   text-shadow:0 0 60px rgba(0,212,255,.3);animation:logoCycle 14s ease-in-out infinite}
 .hero-sub{font-size:9px;color:var(--text3);letter-spacing:.2em;margin-top:4px}
@@ -661,77 +669,135 @@ textarea.finp{resize:vertical;line-height:1.55}
   <div id="main">
 
     <!-- ══ HOME ══════════════════════════════════════════════════ -->
-    <div class="panel on" id="panel-home">
-      <div class="scroll">
-        <div class="home-hero">
-          <div class="hero-title">NEXUS</div>
-          <div class="hero-sub">SOVEREIGN COGNITIVE INFRASTRUCTURE · v3.0</div>
-          <div class="hero-actions">
-            <button class="btn primary" onclick="go('idearium');newIdea()">✦ NEW IDEA</button>
-            <button class="btn o" onclick="go('guardian')">⚡ DISPATCH</button>
-            <button class="btn g" onclick="go('cortex')">◈ CORTEX</button>
-            <button class="btn" onclick="go('architect')">⬡ ARCHITECT · FORGE</button>
-            <button class="btn m" onclick="go('meta')">⟁ META</button>
-          </div>
-        </div>
+    <div class="panel on" id="panel-home" style="flex-direction:column;overflow:hidden">
 
-        <!-- Boot sequence display -->
-        <div style="margin:12px 0 0 0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-            <span class="shdr" style="margin:0">⬡ BOOT SEQUENCE</span>
-            <span id="home-boot-seq" style="font-size:9px;color:var(--muted);font-family:var(--mono)"></span>
-            <button class="btn" style="font-size:9px;padding:2px 8px;margin-left:auto" onclick="homeLoadBoot()">↺</button>
-          </div>
-          <div id="home-boot-log" style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px 12px;font-family:var(--mono);font-size:9px;max-height:120px;overflow-y:auto"></div>
-        </div>
-        <div class="shdr">⊕ SYSTEMS</div>
-        <div class="sys-grid" id="home-sys"></div>
-        <div style="display:flex;align-items:center;gap:10px;margin-top:20px;margin-bottom:8px">
-          <span class="shdr" style="margin:0">◫ RECENT IDEAS</span>
-          <button class="btn c" style="font-size:9px;padding:2px 8px;margin-left:auto" onclick="go('idearium')">ALL →</button>
-        </div>
-        <div id="home-ideas"></div>
-        <div class="shdr">◉ WORKSPACE</div>
-        <div class="tile-grid">
-          <div class="tile" onclick="go('console')">
-            <div class="tile-ico">⊕</div>
-            <div class="tile-name">CONSOLE</div>
-            <div class="tile-desc">CLI, AI dispatch, CFR context injection, quick commands.</div>
-            <div class="tile-badge" style="color:var(--c);border-color:rgba(0,212,255,.25)">CHAT</div>
-          </div>
-          <div class="tile" onclick="go('guardian')" style="border-color:rgba(255,107,53,.15)">
-            <div class="tile-ico">⚡</div>
-            <div class="tile-name" style="color:var(--o)">GUARDIAN</div>
-            <div class="tile-desc">Job queue, NCP providers, SEAM pipeline, artifacts.</div>
-            <div class="tile-badge" style="color:var(--o);border-color:rgba(255,107,53,.3)">FORGE</div>
-          </div>
-          <div class="tile" onclick="go('cortex')">
-            <div class="tile-ico">◈</div>
-            <div class="tile-name">CORTEX</div>
-            <div class="tile-desc">Memory, gaps, event log, resilience, 28 JAA tables.</div>
-            <div class="tile-badge" style="color:var(--m);border-color:rgba(204,68,255,.25)">MEMORY</div>
-          </div>
-          <div class="tile" onclick="go('idearium')">
-            <div class="tile-ico">◫</div>
-            <div class="tile-name">IDEARIUM</div>
-            <div class="tile-desc">Ideas on disc + cortex. Specs, phases, SNR, tension.</div>
-            <div class="tile-badge" style="color:var(--g);border-color:rgba(0,255,136,.25)">IDEAS</div>
-          </div>
-          <div class="tile" onclick="go('log')">
-            <div class="tile-ico">⊚</div>
-            <div class="tile-name">EVENT LOG</div>
-            <div class="tile-desc">Live cortex event_log stream. All systems. Filter by type.</div>
-            <div class="tile-badge" style="color:var(--g);border-color:rgba(0,255,136,.25)">LIVE</div>
-          </div>
-          <div class="tile" onclick="go('diagnose')">
-            <div class="tile-ico">⬡</div>
-            <div class="tile-name">DIAGNOSE</div>
-            <div class="tile-desc">Health checks, gap audit, system contract verification.</div>
-            <div class="tile-badge" style="color:var(--y);border-color:rgba(255,204,0,.25)">AUDIT</div>
-          </div>
-        </div>
+  <!-- ══ LANDING ══════════════════════════════════════════════════════════ -->
+  <!-- Three modes: RESUME / BUILD / IDM. Selected by clicking. Default: landing. -->
+
+  <!-- Landing screen -->
+  <div id="home-landing" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:0">
+
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="hero-title">NEXUS</div>
+      <div class="hero-sub">SOVEREIGN COGNITIVE INFRASTRUCTURE · v3.0</div>
+    </div>
+
+    <!-- Three primary actions -->
+    <div style="display:flex;gap:16px;align-items:stretch">
+
+      <!-- RESUME -->
+      <div class="landing-card" onclick="homeResume()" id="card-resume">
+        <div class="landing-card-ico">↩</div>
+        <div class="landing-card-title">RESUME</div>
+        <div class="landing-card-desc">Restore last session from the event ledger. Pick up exactly where you left off.</div>
+        <div class="landing-card-meta" id="resume-meta">loading…</div>
+      </div>
+
+      <!-- BUILD -->
+      <div class="landing-card landing-card-primary" onclick="homeBuild()">
+        <div class="landing-card-ico" style="color:var(--c)">⬡</div>
+        <div class="landing-card-title" style="color:var(--c)">BUILD</div>
+        <div class="landing-card-desc">Step-by-step spec wizard. Eight dimensions, guided questions, deterministic output.</div>
+        <div class="landing-card-meta">idea → spec → compile → dispatch</div>
+      </div>
+
+      <!-- IDM -->
+      <div class="landing-card" onclick="homeIDM()">
+        <div class="landing-card-ico" style="color:var(--g)">◫</div>
+        <div class="landing-card-title" style="color:var(--g)">PROJECTS</div>
+        <div class="landing-card-desc">Idearium project manager. Browse specs, repos, build history, pending queue.</div>
+        <div class="landing-card-meta" id="idm-meta">loading…</div>
+      </div>
+
+    </div>
+
+    <!-- System status strip -->
+    <div id="home-status-strip" style="display:flex;gap:12px;margin-top:48px;font:9px var(--mono);color:var(--muted)"></div>
+
+  </div>
+
+  <!-- ══ RESUME VIEW ════════════════════════════════════════════════════════ -->
+  <div id="home-resume-view" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+    <div class="tshdr">
+      <button class="btn" style="font-size:9px;padding:2px 8px" onclick="homeLanding()">← back</button>
+      <span class="tshdr-title" style="margin-left:10px">↩ RESUME — last session</span>
+      <span id="resume-session-ts" style="font-size:9px;color:var(--muted);margin-left:8px"></span>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:4px">Recent activity reconstructed from the event ledger:</div>
+      <div id="resume-events" style="display:flex;flex-direction:column;gap:4px;font:10px var(--mono)"></div>
+      <div id="resume-open-work" style="margin-top:12px"></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn" style="border-color:var(--c);color:var(--c)" onclick="homeResumeGo()">→ continue where I left off</button>
+        <button class="btn" onclick="homeLanding()">start fresh instead</button>
       </div>
     </div>
+  </div>
+
+  <!-- ══ BUILD VIEW — spec wizard ══════════════════════════════════════════ -->
+  <div id="home-build-view" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+    <div class="tshdr">
+      <button class="btn" style="font-size:9px;padding:2px 8px" onclick="homeLanding()">← back</button>
+      <span class="tshdr-title" style="margin-left:10px;color:var(--c)">⬡ BUILD — spec wizard</span>
+      <span id="build-dim-label" style="font-size:9px;color:var(--muted);margin-left:8px"></span>
+      <div style="flex:1"></div>
+      <div id="build-progress-dots" style="display:flex;gap:4px;align-items:center"></div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+
+      <!-- Step content -->
+      <div style="flex:1;overflow-y:auto;padding:24px 28px;display:flex;flex-direction:column;gap:14px">
+        <div id="build-step-num" style="font-size:9px;color:var(--muted);font-family:var(--mono)">DIMENSION 1 OF 8</div>
+        <div id="build-step-q" style="font-size:18px;font-weight:700;line-height:1.4;letter-spacing:.01em"></div>
+        <div id="build-step-hint" style="font-size:11px;color:var(--text2);line-height:1.6"></div>
+
+        <!-- Answer input -->
+        <textarea id="build-answer" rows="5"
+          placeholder="Type your answer here…"
+          style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;color:var(--text);font:13px var(--mono);padding:12px 14px;resize:vertical;outline:none;width:100%"
+          onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))buildNext()"></textarea>
+
+        <!-- What you have so far -->
+        <div id="build-filled-so-far" style="display:none;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;font:10px var(--mono);color:var(--text2);line-height:1.7"></div>
+      </div>
+
+      <!-- Step footer -->
+      <div style="padding:12px 28px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <button class="btn" onclick="buildPrev()" id="build-prev-btn" style="font-size:10px;padding:4px 12px">← prev</button>
+        <div style="flex:1;height:3px;background:var(--bg2);border-radius:2px">
+          <div id="build-bar" style="height:100%;background:var(--c);border-radius:2px;width:12.5%;transition:width .3s"></div>
+        </div>
+        <button class="btn" onclick="buildNext()" id="build-next-btn"
+          style="font-size:10px;padding:4px 16px;border-color:var(--c);color:var(--c)">next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BUILD COMPLETE — prompt ═══════════════════════════════════════════ -->
+  <div id="home-build-done" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:0">
+    <div style="max-width:480px;text-align:center">
+      <div style="font-size:32px;margin-bottom:16px;color:var(--g)">✓</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px">Spec complete</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:28px" id="build-done-summary"></div>
+
+      <div style="display:flex;gap:12px;justify-content:center">
+        <div class="landing-card" onclick="buildDispatchNow()" style="width:180px;cursor:pointer">
+          <div class="landing-card-ico" style="color:var(--o)">⚡</div>
+          <div class="landing-card-title" style="color:var(--o)">BUILD NOW</div>
+          <div class="landing-card-desc" style="font-size:10px">Push to the queue. Idearium picks it up and starts building immediately.</div>
+        </div>
+        <div class="landing-card" onclick="buildSaveToProjects()" style="width:180px;cursor:pointer">
+          <div class="landing-card-ico" style="color:var(--g)">◫</div>
+          <div class="landing-card-title" style="color:var(--g)">SAVE TO PROJECTS</div>
+          <div class="landing-card-desc" style="font-size:10px">Save to Idearium project manager. Build when ready.</div>
+        </div>
+      </div>
+
+      <div id="build-done-status" style="margin-top:20px;font:10px var(--mono);color:var(--muted)"></div>
+    </div>
+  </div>
+
 
     <!-- ══ CONSOLE ════════════════════════════════════════════════ -->
     <div class="panel" id="panel-console">
@@ -8374,6 +8440,284 @@ function pipeReset() {
     if (panel === 'tutorial') tutInit();
   };
 })();
+
+// ══ HOME LANDING — RESUME / BUILD / IDM ═════════════════════════════════════
+
+const SPEC_DIMS = [
+  { id:'meta',        q:'What is the name and version of this system?',
+    hint:'e.g.  name: rate-limiter  version: 1.0.0' },
+  { id:'intent',      q:'In one sentence — what does this system do?',
+    hint:'Be specific. This becomes the compass for every downstream decision.' },
+  { id:'axioms',      q:'What must always be true? What are the invariants?',
+    hint:'e.g. Nothing silently fails. Every write goes to disk before memory.' },
+  { id:'constraints', q:'What must it do, and what must it never do?',
+    hint:'Hard limits. Both positive (must) and negative (must not).' },
+  { id:'modules',     q:'What are the main components, and what does each export?',
+    hint:'e.g.  rate-limiter.js exports: check(key), reset(key), status()' },
+  { id:'edges',       q:'How do the modules connect? What events pass between them?',
+    hint:'Data flow. Event names. Which module owns which state.' },
+  { id:'gaps',        q:'What is explicitly unknown or unresolved right now?',
+    hint:'Be honest. Unknown things logged here become the T2/T3 AI work.' },
+  { id:'tiers',       q:'Which parts are T0 (schema), T1 (structure), T2 (logic)?',
+    hint:'T0 = directory/types, T1 = scaffolds, T2 = real logic needing AI.' },
+];
+
+var _buildStep    = 0;
+var _buildFilled  = {};
+var _buildSession = null;
+var _resumeData   = null;
+
+// ── View switching ────────────────────────────────────────────────────────────
+function homeLanding() {
+  ['home-landing','home-resume-view','home-build-view','home-build-done'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = id === 'home-landing' ? 'flex' : 'none';
+  });
+}
+
+// ── RESUME ────────────────────────────────────────────────────────────────────
+async function homeResume() {
+  var landing = document.getElementById('home-landing');
+  var view    = document.getElementById('home-resume-view');
+  if (landing) landing.style.display = 'none';
+  if (view)    view.style.display    = 'flex';
+
+  var tsEl     = document.getElementById('resume-session-ts');
+  var eventsEl = document.getElementById('resume-events');
+  var workEl   = document.getElementById('resume-open-work');
+
+  // Load last 30 events from cortex event ledger
+  try {
+    var r = await fetch('http://127.0.0.1:3748/api/events?n=30').then(function(r){return r.json();}).catch(function(){return null;});
+    var rows = (r && r.rows) ? r.rows : [];
+
+    if (rows.length) {
+      if (tsEl) tsEl.textContent = 'last event: ' + new Date(rows[0].ts || 0).toLocaleString();
+      if (eventsEl) {
+        eventsEl.innerHTML = rows.slice(0, 20).map(function(e) {
+          var ts   = new Date(e.ts||0).toLocaleTimeString();
+          var type = e.type || 'event';
+          var col  = type.includes('complete')||type.includes('ok') ? 'var(--g)' :
+                     type.includes('error')||type.includes('fail') ? 'var(--r)' : 'var(--muted)';
+          var detail = e.payload ? JSON.stringify(e.payload).slice(0,60) : '';
+          return '<div style="display:flex;gap:10px;padding:3px 0;border-bottom:1px solid var(--border)">' +
+            '<span style="color:var(--muted);min-width:60px">' + ts + '</span>' +
+            '<span style="color:' + col + ';min-width:180px">' + type + '</span>' +
+            '<span style="color:var(--muted)">' + detail + '</span>' +
+            '</div>';
+        }).join('');
+      }
+    } else {
+      if (eventsEl) eventsEl.innerHTML = '<div style="color:var(--muted)">No events in ledger yet.</div>';
+    }
+
+    // Find open work — in-progress ideas and specs
+    var ideas = await fetch('http://127.0.0.1:4800/api/ideas?limit=5').then(function(r){return r.json();}).catch(function(){return null;});
+    var active = ((ideas && ideas.ideas) ? ideas.ideas : []).filter(function(i) {
+      return i.phase !== 'complete' && i.phase !== 'archived';
+    }).slice(0, 3);
+
+    if (workEl && active.length) {
+      var header = document.createElement('div');
+      header.style.cssText = 'font-size:10px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em';
+      header.textContent = 'Open work';
+      workEl.appendChild(header);
+      active.forEach(function(idea) {
+        var card = document.createElement('div');
+        card.style.cssText = 'padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;margin-bottom:6px;cursor:pointer';
+        card.onclick = function() { go('idearium'); };
+        var t = document.createElement('div');
+        t.style.cssText = 'font-size:11px;color:var(--text)';
+        t.textContent = (idea.text||'').slice(0,60);
+        var s = document.createElement('div');
+        s.style.cssText = 'font-size:9px;color:var(--muted);margin-top:2px';
+        s.textContent = (idea.phase||'seed') + ' · ' + new Date(idea.createdAt||0).toLocaleDateString();
+        card.appendChild(t); card.appendChild(s); workEl.appendChild(card);
+      });
+      _resumeData = { lastIdea: active[0] };
+    }
+  } catch(e) {
+    if (typeof eventsEl !== 'undefined' && eventsEl) {
+      eventsEl.innerHTML = '<div style="color:var(--r)">Could not reach Cortex: ' + e.message + '</div>';
+    }
+  }
+}
+
+function buildShowFilled() {
+  var el = document.getElementById('build-filled-so-far');
+  if (!el) return;
+  var keys = Object.keys(_buildFilled).filter(function(k) { return _buildFilled[k]; });
+  if (!keys.length) { el.style.display = 'none'; return; }
+  el.style.display = '';
+  el.innerHTML = '<div style="color:var(--muted);font-size:9px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em">so far</div>' +
+    keys.map(function(k) {
+      var val = _buildFilled[k];
+      var str = typeof val === 'string' ? val : JSON.stringify(val);
+      return '<span style="color:var(--c)">' + k + ':</span> ' + str.slice(0,60) + (str.length>60?'…':'');
+    }).join('<br>');
+}
+
+function buildNext() {
+  var ansEl = document.getElementById('build-answer');
+  var val   = (ansEl && ansEl.value.trim()) || '';
+  var dim   = SPEC_DIMS[_buildStep];
+  if (val) _buildFilled[dim.id] = val;
+
+  if (_buildStep === 7) {
+    buildComplete();
+    return;
+  }
+  _buildStep++;
+  buildRender();
+}
+
+function buildPrev() {
+  if (_buildStep > 0) { _buildStep--; buildRender(); }
+}
+
+async function buildComplete() {
+  var view = document.getElementById('home-build-view');
+  var done = document.getElementById('home-build-done');
+  var sumEl= document.getElementById('build-done-summary');
+  if (view) view.style.display = 'none';
+  if (done) done.style.display = 'flex';
+
+  // Save spec to architect
+  var spec = buildAssembleSpec();
+  _buildFilled._specText = spec;
+
+  // Send to Idearium as an idea + spec
+  try {
+    var r = await fetch('http://127.0.0.1:4800/api/ideas', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        text:   _buildFilled.intent || _buildFilled.meta || 'New spec',
+        source: 'spec-wizard',
+        tags:   ['spec-wizard', 'pending'],
+        meta:   { spec: spec, dimensions: _buildFilled, sessionId: _buildSession },
+      })
+    }).then(function(r){return r.json();}).catch(function(){return null;});
+
+    _buildFilled._ideaUuid = r && (r.uuid || (r.idea && r.idea.uuid));
+  } catch(_) {}
+
+  if (sumEl) {
+    var name = _buildFilled.meta || 'Unnamed spec';
+    var dims = Object.keys(_buildFilled).filter(function(k){return !k.startsWith('_');}).length;
+    sumEl.textContent = name + ' — ' + dims + ' dimensions filled. Saved to Idearium.';
+  }
+}
+
+function buildAssembleSpec() {
+  var f  = _buildFilled;
+  var nl = '\n';
+  return 'spec:' + nl +
+    '  meta:' + nl +
+    '    name: '    + (f.meta||'unnamed') + nl +
+    '    version: 0.1.0' + nl +
+    '  intent: '   + (f.intent||'') + nl +
+    '  axioms:' + nl +
+    '    - ' + (f.axioms||'(not specified)') + nl +
+    '  constraints:' + nl +
+    '    - ' + (f.constraints||'(not specified)') + nl +
+    '  modules: ' + (f.modules||'(not specified)') + nl +
+    '  edges: '   + (f.edges||'(not specified)') + nl +
+    '  gaps:' + nl +
+    '    - description: ' + (f.gaps||'none') + nl +
+    '      severity: medium' + nl +
+    '  tiers: ' + (f.tiers||'(not specified)');
+}
+
+async function buildDispatchNow() {
+  var statusEl = document.getElementById('build-done-status');
+  if (statusEl) statusEl.textContent = 'Pushing to queue…';
+
+  // Push spec file to the physical queue — Idearium is listening
+  try {
+    var spec = _buildFilled._specText || buildAssembleSpec();
+    var name = (_buildFilled.meta || 'spec').replace(/\s+/g,'-').toLowerCase();
+    var r = await fetch('http://127.0.0.1:9000/api/push/file', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        filename: name + '.spec',
+        content:  spec,
+        source:   'spec-wizard-build-now',
+        _ideaUuid: _buildFilled._ideaUuid,
+      })
+    }).then(function(r){return r.json();}).catch(function(){return null;});
+
+    if (r && r.ok) {
+      if (statusEl) statusEl.textContent = '✓ Queued. Push ID: ' + (r.pushId||'?').slice(0,8) + ' — Idearium is listening.';
+      setTimeout(function() { go('idearium'); }, 2000);
+    } else {
+      if (statusEl) statusEl.textContent = '✗ ' + ((r && r.error) || 'push failed');
+    }
+  } catch(e) {
+    if (statusEl) statusEl.textContent = '✗ ' + e.message;
+  }
+}
+
+function buildSaveToProjects() {
+  go('idearium');
+}
+
+// ── IDM ───────────────────────────────────────────────────────────────────────
+function homeIDM() {
+  go('idearium');
+}
+
+// ── Status strip on landing ───────────────────────────────────────────────────
+async function homeLandingLoad() {
+  // Status strip
+  var strip = document.getElementById('home-status-strip');
+  try {
+    var r = await fetch('http://127.0.0.1:9000/api/status').then(function(r){return r.json();}).catch(function(){return null;});
+    var systems = (r && r.systems) ? r.systems : [];
+    var online  = systems.filter(function(s){return s.online;}).length;
+    var total   = systems.length;
+    if (strip) strip.innerHTML = systems.slice(0,6).map(function(s) {
+      var col = s.online ? 'var(--g)' : 'var(--r)';
+      return '<span><span style="color:' + col + '">' + (s.online?'●':'○') + '</span> ' + (s.systemId||s.id||'?') + '</span>';
+    }).join('<span style="color:var(--border)">  |  </span>') +
+    '<span style="color:var(--border)">  |  </span><span>' + online + '/' + total + ' online</span>';
+  } catch(_) {}
+
+  // Resume meta
+  var resumeMeta = document.getElementById('resume-meta');
+  try {
+    var ev = await fetch('http://127.0.0.1:3748/api/events?n=1').then(function(r){return r.json();}).catch(function(){return null;});
+    var last = ev && ev.rows && ev.rows[0];
+    if (last && resumeMeta) {
+      resumeMeta.textContent = 'Last: ' + (last.type||'event') + ' · ' + new Date(last.ts||0).toLocaleTimeString();
+    }
+  } catch(_) {}
+
+  // IDM meta
+  var idmMeta = document.getElementById('idm-meta');
+  try {
+    var ideas = await fetch('http://127.0.0.1:4800/api/stats').then(function(r){return r.json();}).catch(function(){return null;});
+    if (idmMeta && ideas) {
+      var total_ = ideas.ideas && ideas.ideas.total;
+      idmMeta.textContent = total_ !== undefined ? total_ + ' ideas' : 'open projects';
+    }
+  } catch(_) {}
+}
+
+// Run when home tab is shown — override existing homeLoad
+(function() {
+  var _existingGo = typeof go === 'function' ? go : function(){};
+  go = function(panel) {
+    _existingGo(panel);
+    if (panel === 'home') {
+      homeLanding();
+      homeLandingLoad();
+    }
+  };
+})();
+
+// Initial load
+setTimeout(homeLandingLoad, 500);
 
 function emRefresh() {
   var iframe = document.getElementById('emerge-iframe');
