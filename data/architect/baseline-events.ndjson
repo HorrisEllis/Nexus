@@ -3410,3 +3410,11 @@
 {"type":"health.fail","latencyMs":0,"error":true,"ts":1781449575778,"_ts":1781449575778}
 {"type":"health.fail","latencyMs":0,"error":true,"ts":1781449576292,"_ts":1781449576292}
 {"type":"health.fail","latencyMs":0,"error":true,"ts":1781449576811,"_ts":1781449576811}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449577323,"_ts":1781449577323}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449577829,"_ts":1781449577829}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449578339,"_ts":1781449578339}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449578844,"_ts":1781449578844}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449578888,"_ts":1781449578888}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449579391,"_ts":1781449579391}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449579914,"_ts":1781449579914}
+{"type":"health.fail","latencyMs":0,"error":true,"ts":1781449580427,"_ts":1781449580427}
