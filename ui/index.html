@@ -645,6 +645,7 @@ textarea.finp{resize:vertical;line-height:1.55}
     <button class="tbn g"  data-tab="repo"       onclick="go('repo')"      title="Files">⊞<span class="nav-label">FILES</span></button>
     <button class="tbn c"  data-tab="tutorial"   onclick="go('tutorial')"  title="Tutorial">?<span class="nav-label">TUTORIAL</span></button>
     <button class="tbn c"  data-tab="pipeline"   onclick="go('pipeline')"  title="Pipeline">⟶<span class="nav-label">PIPELINE</span></button>
+    <button class="tbn o"  data-tab="builder-ext" onclick="openBuilder()"   title="Builder">⊞<span class="nav-label">BUILDER</span></button>
 
     <div class="nav-sep"></div>
 
@@ -8718,6 +8719,10 @@ async function homeLandingLoad() {
 
 // Initial load
 setTimeout(homeLandingLoad, 500);
+
+function openBuilder() {
+  window.open('http://127.0.0.1:9000/ui/explorer/builder.html', '_blank');
+}
 
 function emRefresh() {
   var iframe = document.getElementById('emerge-iframe');

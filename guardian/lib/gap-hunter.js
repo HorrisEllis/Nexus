@@ -1,4 +1,13 @@
 'use strict';
+// ── Liminal meta-layer integration ────────────────────────────────────────────
+// Extends gap detection with Liminal's 12 domain detectors.
+// Falls back gracefully if meta layer not available.
+let _liminal = null;
+function _getLiminal() {
+  if (_liminal !== null) return _liminal;
+  try { _liminal = require('../../lib/meta/liminal/index.js'); } catch(_) { _liminal = false; }
+  return _liminal;
+}
 /**
  * guardian/lib/gap-hunter.js — GapHunter v3
  * UUID: guardian-gap-hunter-v1-0000-4000-0000-000000000001
@@ -139,6 +148,32 @@ function analyze(text, opts = {}) {
       description: 'High assertion density without evidence',
       score: s, evidence: { metric: assertRate, pattern: 'assertion_rate' },
     });
+  }
+
+  // ── Liminal meta-layer augmentation ─────────────────────────────────────
+  const liminal = _getLiminal();
+  if (liminal && text) {
+    try {
+      const lGaps = liminal.analyzeText(text);
+      for (const lg of lGaps) {
+        gaps.push({
+          type: lg.type, reason: Array.isArray(lg.reason)?lg.reason[0]:lg.reason,
+          score: lg.criticality, domain: lg.domain,
+          description: lg.description, question: lg.question,
+          source: 'liminal/' + (lg.module||'unknown'),
+        });
+      }
+      if (/function|catch|async|await|SELECT/.test(text)) {
+        const cGaps = liminal.analyzeCode(text);
+        for (const cg of cGaps) {
+          gaps.push({
+            type: cg.type, reason: Array.isArray(cg.reason)?cg.reason[0]:cg.reason,
+            score: cg.criticality, domain: 'code',
+            description: cg.description, source: 'liminal/code',
+          });
+        }
+      }
+    } catch(_) {}
   }
 
   return gaps;

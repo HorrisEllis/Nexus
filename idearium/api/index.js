@@ -19,6 +19,23 @@ import crypto       from 'crypto';
 import { createRequire } from 'module';
 import { spawnSync, spawn as spawnProc } from 'child_process';
 const _require = createRequire(import.meta.url);
+
+// ── Meta: Spatial Lattice — resonance-weighted idea/spec/gap graph ────────────
+let _latticeEng = null;
+function _getLattice() {
+  if (_latticeEng) return _latticeEng;
+  try {
+    const { LatticeEngine } = _require('../lib/meta/spatial/lattice.js');
+    _latticeEng = new LatticeEngine({ threshold: 0.3 });
+  } catch(_) {}
+  return _latticeEng;
+}
+function _latticeAdd(id, label, tags=[]) {
+  try { const l=_getLattice(); if(l) l.add({id,label:label.slice(0,80),tags}); } catch(_) {}
+}
+function _latticeLink(a, b, w=0.7, t='associated') {
+  try { const l=_getLattice(); if(l) { _latticeAdd(a,a); _latticeAdd(b,b); l.connect(a,b,w,t); } } catch(_) {}
+}
 import { getIdeaOS, VERSION } from '../core/index.js';
 
 const PORT    = parseInt(process.env.IDEARIUM_PORT   || '4800');
@@ -859,6 +876,23 @@ export function startAPI() {
   server.listen(PORT, BINDING, async () => {
     // ESM: use createRequire for CJS modules
     const _require = createRequire(import.meta.url);
+
+// ── Meta: Spatial Lattice — resonance-weighted idea/spec/gap graph ────────────
+let _latticeEng = null;
+function _getLattice() {
+  if (_latticeEng) return _latticeEng;
+  try {
+    const { LatticeEngine } = _require('../lib/meta/spatial/lattice.js');
+    _latticeEng = new LatticeEngine({ threshold: 0.3 });
+  } catch(_) {}
+  return _latticeEng;
+}
+function _latticeAdd(id, label, tags=[]) {
+  try { const l=_getLattice(); if(l) l.add({id,label:label.slice(0,80),tags}); } catch(_) {}
+}
+function _latticeLink(a, b, w=0.7, t='associated') {
+  try { const l=_getLattice(); if(l) { _latticeAdd(a,a); _latticeAdd(b,b); l.connect(a,b,w,t); } } catch(_) {}
+}
     const { BootSequence } = _require('../../lib/boot-sequence');
 
     const seq = new BootSequence({

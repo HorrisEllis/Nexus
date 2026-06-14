@@ -904,6 +904,72 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res, 404, { ok: false, error: 'unknown auth route' });
   }
 
+  // ── Meta layer — /api/meta/* ─────────────────────────────────────────────
+  // GET /api/meta/status    — all four modules + versions
+  // GET /api/meta/classify  — ALK perception of current system state
+  // GET /api/meta/gaps?text= — run Liminal gap detection on text
+  if (top === 'api' && sub === 'meta') {
+    const meta = (() => { try { return require('./lib/meta'); } catch(_) { return null; } })();
+    if (!meta) return json(res, 503, { ok:false, error:'meta layer not loaded' });
+
+    if (M === 'GET' && !rest) {
+      return json(res, 200, { ok:true, modules: {
+        'topo-kernel':     meta.topo?.VERSION      || 'unavailable',
+        'telemetry-codec': meta.telemetry?.VERSION || 'unavailable',
+        'liminal':         meta.liminal?.VERSION   || 'unavailable',
+        'alk-perception':  meta.alk?.VERSION       || 'unavailable',
+        'spatial':         meta.spatial?.VERSION   || 'unavailable',
+        'bda':             meta.bda?.VERSION       || 'unavailable',
+      }});
+    }
+
+    if (M === 'GET' && rest === 'status') {
+      return json(res, 200, { ok:true, modules: {
+        'topo-kernel':     { version: meta.topo?.VERSION,      id: meta.topo?.MODULE_ID },
+        'telemetry-codec': { version: meta.telemetry?.VERSION, id: meta.telemetry?.MODULE_ID },
+        'liminal':         { version: meta.liminal?.VERSION,   id: meta.liminal?.MODULE_ID },
+        'alk-perception':  { version: meta.alk?.VERSION,       id: meta.alk?.MODULE_ID },
+      }});
+    }
+
+    if (M === 'POST' && rest === 'gaps') {
+      const body = await readBody(req);
+      const text = body.text || body.content || '';
+      if (!text) return json(res, 400, { ok:false, error:'text required' });
+      try {
+        const gaps = meta.liminal.analyze(text, { mode: body.mode || 'text' });
+        return json(res, 200, { ok:true, gaps, count: gaps.length });
+      } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+    }
+
+    if (M === 'POST' && rest === 'classify') {
+      const body = await readBody(req);
+      try {
+        const state = meta.alk.classify(body);
+        return json(res, 200, { ok:true, state });
+      } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+    }
+
+    // BDA observe — feed text through behavioral drift analyzer
+    if (M === 'POST' && rest === 'observe') {
+      const body = await readBody(req);
+      try {
+        const { BDAKernel } = meta.bda;
+        // Per-session BDA kernel — stored on orchestrator module scope
+        if (!global._bdaKernel) global._bdaKernel = new BDAKernel();
+        const result = global._bdaKernel.observe({ role: body.role||'user', text: body.text||'', ts: body.ts });
+        return json(res, 200, { ok:true, result, state: global._bdaKernel.state() });
+      } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+    }
+
+    if (M === 'GET' && rest === 'bda') {
+      if (!global._bdaKernel) return json(res, 200, { ok:true, state: null, note:'no observations yet' });
+      return json(res, 200, { ok:true, state: global._bdaKernel.state() });
+    }
+
+    return json(res, 404, { ok:false, error:'unknown meta route' });
+  }
+
   // ── Contract trust map ────────────────────────────────────────────────────
   if (top === 'api' && sub === 'trust') {
     const hs = require('./lib/contract-handshake');

@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS BUILDER</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05080f;--bg2:#080d17;--bg3:#0b1120;--bg4:#0f1a2e;
+  --border:#1a2a40;--border2:#1e3050;--c:#00d4ff;--g:#00ff88;
+  --o:#ff6b35;--r:#ff2d55;--y:#ffcc00;--m:#cc44ff;--p:#818cf8;
+  --text:#b8cfe0;--muted:#3a5570;--mono:'Cascadia Code','Fira Code',monospace;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font:11px var(--mono)}
+
+/* ── TOPBAR ── */
+#topbar{height:44px;background:var(--bg2);border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;gap:0;padding:0 14px;flex-shrink:0;z-index:100}
+.logo{font-size:13px;font-weight:700;letter-spacing:.15em;color:var(--c);margin-right:16px}
+.mode-btn{height:28px;padding:0 14px;border:1px solid var(--border2);background:transparent;
+  color:var(--muted);font:10px var(--mono);cursor:pointer;letter-spacing:.07em;
+  transition:all .15s;border-left:none}
+.mode-btn:first-of-type{border-left:1px solid var(--border2);border-radius:3px 0 0 3px}
+.mode-btn:last-of-type{border-radius:0 3px 3px 0}
+.mode-btn.active{background:var(--bg3);color:var(--c);border-color:var(--c)}
+.sp{flex:1}
+#build-status{font-size:9px;color:var(--muted);margin-right:12px}
+.act-btn{height:28px;padding:0 14px;border:1px solid;font:10px var(--mono);
+  cursor:pointer;border-radius:3px;letter-spacing:.06em;transition:all .15s}
+.act-btn.primary{border-color:var(--c);color:var(--c);background:rgba(0,212,255,.08)}
+.act-btn.primary:hover{background:rgba(0,212,255,.16)}
+.act-btn.go{border-color:var(--g);color:var(--g);background:rgba(0,255,136,.08)}
+.act-btn.go:hover{background:rgba(0,255,136,.16)}
+.act-btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* ── LAYOUT ── */
+#layout{display:flex;height:calc(100vh - 44px);overflow:hidden}
+
+/* ── LEFT PANEL ── */
+#left{width:260px;flex-shrink:0;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden}
+.panel-hdr{padding:8px 12px;border-bottom:1px solid var(--border);
+  font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;
+  display:flex;align-items:center;gap:8px}
+.panel-hdr span{color:var(--c)}
+
+/* Search */
+#lib-search{width:100%;background:var(--bg3);border:none;border-bottom:1px solid var(--border);
+  color:var(--text);font:10px var(--mono);padding:8px 12px;outline:none}
+#lib-search::placeholder{color:var(--muted)}
+
+/* Library tabs */
+.ltabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.ltab{flex:1;padding:6px 0;text-align:center;font-size:9px;cursor:pointer;
+  color:var(--muted);border-bottom:2px solid transparent;letter-spacing:.06em}
+.ltab.active{color:var(--c);border-bottom-color:var(--c)}
+#left-content{flex:1;overflow-y:auto}
+
+/* Library items */
+.lib-item{padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;
+  display:flex;flex-direction:column;gap:3px}
+.lib-item:hover{background:var(--bg3)}
+.lib-item.selected{background:var(--bg4);border-left:2px solid var(--c)}
+.lib-name{font-size:10px;color:var(--text)}
+.lib-meta{font-size:9px;color:var(--muted)}
+.lib-tag{display:inline-block;font-size:8px;padding:1px 5px;border-radius:2px;
+  border:1px solid;margin-right:3px;margin-top:2px}
+
+/* ── MAIN AREA ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* Mode panels */
+.mode-panel{flex:1;overflow:hidden;display:none;flex-direction:column}
+.mode-panel.active{display:flex}
+
+/* ── MODE: DROP ── */
+#mode-drop{align-items:center;justify-content:center;position:relative}
+#drop-zone{border:2px dashed var(--border2);border-radius:8px;
+  padding:48px 40px;text-align:center;max-width:520px;width:90%;
+  transition:all .2s;position:relative}
+#drop-zone.hovering{border-color:var(--c);background:rgba(0,212,255,.04)}
+.drop-ico{font-size:40px;margin-bottom:16px;opacity:.5}
+.drop-title{font-size:16px;font-weight:700;letter-spacing:.06em;margin-bottom:8px;color:var(--text)}
+.drop-sub{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:20px}
+.drop-types{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.dtype{font-size:9px;padding:3px 10px;border-radius:3px;border:1px solid var(--border2);
+  color:var(--muted);letter-spacing:.06em}
+.dtype.active{border-color:var(--c);color:var(--c)}
+#drop-file-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+#drop-result{margin-top:20px;padding:12px 14px;border-radius:4px;
+  background:var(--bg3);border:1px solid var(--border);display:none}
+#drop-log{max-width:520px;width:90%;margin-top:12px;max-height:160px;overflow-y:auto}
+.drop-log-line{font-size:9px;padding:3px 0;border-bottom:1px solid var(--border);color:var(--muted)}
+
+/* ── MODE: SPEC ── */
+#mode-spec{display:flex;flex-direction:column}
+.spec-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;
+  border-bottom:1px solid var(--border);flex-shrink:0}
+.spec-toolbar label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.sselect{background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  font:10px var(--mono);padding:3px 8px;border-radius:3px}
+#spec-editor{flex:1;background:var(--bg);border:none;color:var(--text);
+  font:12px var(--mono);padding:16px;resize:none;outline:none;
+  line-height:1.7;overflow-y:auto}
+#spec-editor::placeholder{color:var(--muted)}
+.spec-footer{border-top:1px solid var(--border);padding:8px 12px;
+  display:flex;align-items:center;gap:8px;flex-shrink:0}
+#spec-line-count{font-size:9px;color:var(--muted)}
+
+/* ── MODE: CANVAS ── */
+#mode-canvas{position:relative}
+#canvas-wrap{flex:1;position:relative;overflow:hidden;background:var(--bg)}
+#cvs{position:absolute;inset:0;pointer-events:none}
+#canvas-nodes{position:absolute;inset:0}
+.cnode{position:absolute;border-radius:3px;border:1px solid;min-width:120px;
+  cursor:move;user-select:none;font:10px var(--mono)}
+.cnode-hdr{padding:5px 8px;display:flex;align-items:center;gap:6px;font-size:9px;
+  letter-spacing:.06em;font-weight:700}
+.cnode-body{padding:4px 8px 8px;font-size:9px;color:var(--muted);line-height:1.5}
+.cnode.type-layer{background:#0a0d2e;border-color:#534ab7}
+.cnode.type-gate{background:#020d1e;border-color:#1a6aff;border-style:dashed}
+.cnode.type-node{background:#021a10;border-color:#00cc66}
+.cnode.type-check{background:#1a0d00;border-color:#ff7a00}
+.cnode.type-surface{background:#0a0a14;border-color:#334466}
+.canvas-toolbar{display:flex;align-items:center;gap:6px;padding:6px 10px;
+  border-bottom:1px solid var(--border);flex-shrink:0}
+.cchip{padding:2px 8px;border-radius:2px;font-size:9px;cursor:grab;
+  border:1px solid;letter-spacing:.05em;white-space:nowrap}
+.cchip[data-type=layer]{background:rgba(83,74,183,.15);border-color:#534ab7;color:#9b8fff}
+.cchip[data-type=gate]{background:rgba(26,106,255,.12);border-color:#1a6aff;color:#6699ff;border-style:dashed}
+.cchip[data-type=node]{background:rgba(0,204,102,.1);border-color:#00cc66;color:#00ff88}
+.cchip[data-type=check]{background:rgba(255,122,0,.1);border-color:#ff7a00;color:#ffaa44}
+.cchip[data-type=surface]{background:rgba(51,68,102,.15);border-color:#334466;color:#5a7a96}
+svg.edge-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+
+/* ── MODE: REPO ── */
+#mode-repo{display:flex;flex-direction:column}
+.repo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:12px;padding:16px;flex:1;overflow-y:auto;align-content:start}
+.repo-card{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  padding:14px;cursor:pointer;transition:border-color .15s}
+.repo-card:hover{border-color:var(--c)}
+.repo-card-title{font-size:12px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.repo-card-meta{font-size:9px;color:var(--muted);line-height:1.6}
+.repo-card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.repo-tag{font-size:8px;padding:1px 6px;border-radius:2px;border:1px solid var(--border2);color:var(--muted)}
+.phase-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
+
+/* ── RIGHT PANEL ── */
+#right{width:280px;flex-shrink:0;border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden}
+.right-section{border-bottom:1px solid var(--border);padding:10px 12px}
+.rsec-title{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.prop-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.prop-label{font-size:9px;color:var(--muted);width:70px;flex-shrink:0}
+.prop-val{font-size:10px;color:var(--text)}
+.prop-inp{flex:1;background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);font:10px var(--mono);padding:2px 6px;outline:none;border-radius:2px}
+.prop-inp:focus{border-color:var(--c)}
+#provider-sel,#target-sel{width:100%;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);font:10px var(--mono);padding:3px 6px;border-radius:3px}
+#build-log{flex:1;overflow-y:auto;padding:8px 12px;font:9px var(--mono)}
+.log-line{padding:2px 0;border-bottom:1px solid var(--border);color:var(--muted);
+  display:flex;gap:8px}
+.log-line.ok{color:var(--g)}
+.log-line.err{color:var(--r)}
+.log-line.info{color:var(--c)}
+.log-ts{color:var(--muted);flex-shrink:0;min-width:50px}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<div id="topbar">
+  <div class="logo">⬡ NEXUS BUILDER</div>
+  <button class="mode-btn active" onclick="setMode('drop')"   id="mbtn-drop">⬇ DROP</button>
+  <button class="mode-btn"        onclick="setMode('spec')"   id="mbtn-spec">◈ SPEC</button>
+  <button class="mode-btn"        onclick="setMode('canvas')" id="mbtn-canvas">⊞ CANVAS</button>
+  <button class="mode-btn"        onclick="setMode('repo')"   id="mbtn-repo">◫ REPO</button>
+  <div class="sp"></div>
+  <span id="build-status">ready</span>
+  <button class="act-btn primary" onclick="saveToProjects()" style="margin-right:6px">◫ save to projects</button>
+  <button class="act-btn go" id="build-now-btn" onclick="buildNow()">⚡ build now</button>
+</div>
+
+<!-- ── LAYOUT ── -->
+<div id="layout">
+
+  <!-- LEFT: Library / Spec Library / Repo Browser -->
+  <div id="left">
+    <div class="panel-hdr"><span>LIBRARY</span> <span id="lib-count" style="color:var(--muted)"></span></div>
+    <input id="lib-search" placeholder="search specs, ideas, repos…" oninput="libSearch(this.value)">
+    <div class="ltabs">
+      <div class="ltab active" onclick="libTab('specs',this)">SPECS</div>
+      <div class="ltab" onclick="libTab('ideas',this)">IDEAS</div>
+      <div class="ltab" onclick="libTab('repos',this)">REPOS</div>
+      <div class="ltab" onclick="libTab('builtin',this)">BUILT-IN</div>
+    </div>
+    <div id="left-content"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- MODE: DROP -->
+    <div class="mode-panel active" id="mode-drop">
+      <div id="drop-zone"
+        ondragover="event.preventDefault();this.classList.add('hovering')"
+        ondragleave="this.classList.remove('hovering')"
+        ondrop="onDrop(event)">
+        <input id="drop-file-input" type="file" accept=".zip,.spec,.json,.md,.js,.eg" multiple
+          onchange="onFileInput(this.files)">
+        <div class="drop-ico">⬇</div>
+        <div class="drop-title">DROP TO BUILD</div>
+        <div class="drop-sub">
+          Drop a file from Claude, a spec, a zip, a JSON, or anything.<br>
+          The system routes it automatically.
+        </div>
+        <div class="drop-types">
+          <div class="dtype active">.zip</div>
+          <div class="dtype active">.spec</div>
+          <div class="dtype active">.json</div>
+          <div class="dtype active">.md</div>
+          <div class="dtype active">.js</div>
+          <div class="dtype active">.eg</div>
+          <div class="dtype">click to browse</div>
+        </div>
+        <div id="drop-result"></div>
+      </div>
+      <div id="drop-log"></div>
+    </div>
+
+    <!-- MODE: SPEC -->
+    <div class="mode-panel" id="mode-spec">
+      <div class="spec-toolbar">
+        <label>target</label>
+        <select id="target-sel" class="sselect" onchange="specTargetChanged(this.value)">
+          <option value="forge">⚡ forge (Guardian → Ollama)</option>
+          <option value="claude">◈ claude (Guardian → Claude)</option>
+          <option value="compile">⊞ compile only (T0/T1 scaffold)</option>
+        </select>
+        <div class="sp"></div>
+        <button class="act-btn" style="border-color:var(--border2);color:var(--muted);font-size:9px;padding:2px 8px"
+          onclick="specLoad()">↑ load</button>
+        <button class="act-btn" style="border-color:var(--border2);color:var(--muted);font-size:9px;padding:2px 8px"
+          onclick="specClear()">✕ clear</button>
+      </div>
+      <textarea id="spec-editor"
+        placeholder="Paste or type a spec here.
+
+spec:
+  meta:
+    name: my-system
+    version: 0.1.0
+  intent: What does this system do?
+  axioms:
+    - Nothing silently fails
+    - Every write persists before anything else
+  constraints:
+    - Must do: ...
+    - Must not: ...
+  modules:
+    - name: core
+      exports: [init, stop]
+  gaps:
+    - description: Unknown
+      severity: medium
+  tiers:
+    T0: schema, types, directory structure
+    T1: scaffolds, barrel files
+    T2: implementation logic (AI)"
+        oninput="specChanged()"></textarea>
+      <div class="spec-footer">
+        <span id="spec-line-count">0 lines</span>
+        <div class="sp"></div>
+        <button class="act-btn" style="border-color:var(--border2);color:var(--muted);font-size:9px;padding:2px 8px"
+          onclick="specValidate()">▷ validate</button>
+      </div>
+    </div>
+
+    <!-- MODE: CANVAS -->
+    <div class="mode-panel" id="mode-canvas">
+      <div class="canvas-toolbar">
+        <span style="font-size:9px;color:var(--muted);margin-right:4px">drag to canvas:</span>
+        <div class="cchip" data-type="layer"   draggable="true" ondragstart="chipDrag(event)">LAYER</div>
+        <div class="cchip" data-type="gate"    draggable="true" ondragstart="chipDrag(event)">GATE</div>
+        <div class="cchip" data-type="node"    draggable="true" ondragstart="chipDrag(event)">NODE</div>
+        <div class="cchip" data-type="check"   draggable="true" ondragstart="chipDrag(event)">CHECK</div>
+        <div class="cchip" data-type="surface" draggable="true" ondragstart="chipDrag(event)">SURFACE</div>
+        <div class="sp"></div>
+        <button class="act-btn" style="border-color:var(--border2);color:var(--muted);font-size:9px;padding:2px 8px"
+          onclick="canvasClear()">✕ clear</button>
+        <button class="act-btn" style="border-color:var(--border2);color:var(--muted);font-size:9px;padding:2px 8px"
+          onclick="canvasToSpec()">→ spec</button>
+      </div>
+      <div id="canvas-wrap"
+        ondragover="event.preventDefault()"
+        ondrop="canvasDrop(event)"
+        onclick="canvasDeselect()">
+        <canvas id="cvs"></canvas>
+        <div id="canvas-nodes"></div>
+        <svg class="edge-svg" id="edge-svg"></svg>
+      </div>
+    </div>
+
+    <!-- MODE: REPO -->
+    <div class="mode-panel" id="mode-repo">
+      <div class="panel-hdr" style="border-bottom:1px solid var(--border)">
+        <span>IDEARIUM REPOSITORY</span>
+        <button class="act-btn" style="border-color:var(--border2);color:var(--muted);font-size:9px;padding:1px 8px;margin-left:auto"
+          onclick="repoRefresh()">↺ refresh</button>
+      </div>
+      <div class="repo-grid" id="repo-grid">
+        <div style="grid-column:1/-1;color:var(--muted);font-size:10px;padding:8px 0">Loading projects…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Properties + Log -->
+  <div id="right">
+    <div class="right-section">
+      <div class="rsec-title">Build Target</div>
+      <div class="prop-row">
+        <div class="prop-label">provider</div>
+        <select id="provider-sel">
+          <option value="ollama">Ollama (local)</option>
+          <option value="claude">Claude (NCP)</option>
+          <option value="chatgpt">ChatGPT (NCP)</option>
+        </select>
+      </div>
+      <div class="prop-row">
+        <div class="prop-label">name</div>
+        <input class="prop-inp" id="build-name" placeholder="project name" value="">
+      </div>
+      <div class="prop-row">
+        <div class="prop-label">version</div>
+        <input class="prop-inp" id="build-version" placeholder="0.1.0" value="0.1.0">
+      </div>
+    </div>
+
+    <div class="right-section">
+      <div class="rsec-title">Selected Item</div>
+      <div id="selected-info" style="font-size:9px;color:var(--muted);line-height:1.7">
+        Nothing selected.<br>Drop a file or pick from the library.
+      </div>
+    </div>
+
+    <div class="right-section" style="padding:8px 12px">
+      <div class="rsec-title">Build Log</div>
+    </div>
+    <div id="build-log"></div>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+const ORCH = 'http://127.0.0.1:9000';
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let _mode      = 'drop';
+let _selected  = null;   // { type, id, content, name }
+let _libTab    = 'specs';
+let _libItems  = { specs:[], ideas:[], repos:[], builtin:[] };
+let _canvasNodes = [];
+let _chipType  = null;   // type being dragged from palette
+let _nodeSeq   = 0;
+let _edges     = [];
+let _connecting = null;  // node id being connected from
+
+// ── Mode switching ────────────────────────────────────────────────────────────
+function setMode(m) {
+  _mode = m;
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('mode-' + m);
+  const btn   = document.getElementById('mbtn-' + m);
+  if (panel) panel.classList.add('active');
+  if (btn)   btn.classList.add('active');
+  if (m === 'repo')   repoRefresh();
+  if (m === 'canvas') canvasResize();
+}
+
+// ── Log ───────────────────────────────────────────────────────────────────────
+function log(msg, type='info') {
+  const el  = document.getElementById('build-log');
+  const ts  = new Date().toLocaleTimeString('en',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'log-line ' + type;
+  div.innerHTML = '<span class="log-ts">' + ts + '</span>' + msg;
+  el.prepend(div);
+  if (el.children.length > 100) el.lastChild.remove();
+  document.getElementById('build-status').textContent = msg.slice(0,40);
+}
+
+// ── Status ────────────────────────────────────────────────────────────────────
+function setSelected(item) {
+  _selected = item;
+  const el = document.getElementById('selected-info');
+  if (!item) { el.innerHTML = 'Nothing selected.'; return; }
+  el.innerHTML =
+    '<div style="color:var(--text);font-size:10px;margin-bottom:4px">' + (item.name||'?') + '</div>' +
+    '<div>type: ' + item.type + '</div>' +
+    (item.size ? '<div>size: ' + item.size + '</div>' : '') +
+    (item.phase ? '<div>phase: ' + item.phase + '</div>' : '') +
+    (item.id ? '<div>id: ' + item.id.slice(0,12) + '…</div>' : '');
+  if (item.name) document.getElementById('build-name').value = item.name;
+}
+
+// ══ MODE: DROP ════════════════════════════════════════════════════════════════
+function onDrop(event) {
+  event.preventDefault();
+  document.getElementById('drop-zone').classList.remove('hovering');
+  const files = [...(event.dataTransfer?.files || [])];
+  files.forEach(processFile);
+}
+
+function onFileInput(files) { [...files].forEach(processFile); }
+
+async function processFile(file) {
+  const name = file.name;
+  const ext  = name.split('.').pop().toLowerCase();
+  dropLog('→ ' + name + ' (' + Math.round(file.size/1024) + ' KB)', 'info');
+
+  const content = await readFile(file);
+
+  // Detect type and route
+  let route, label;
+  if (ext === 'zip') {
+    route = '/api/push/file'; label = 'zip → repo ingestion';
+    // For zip: push as binary-ish via content
+    log('⬇ ' + name + ' → repo watcher', 'info');
+    setSelected({ type:'zip', name, size: file.size + ' bytes' });
+    dropLog('✓ zip detected — push to Idearium repo drop zone', 'ok');
+    // Actually push the spec portion if we can parse it
+    await pushToOrch(name, content, ext);
+    return;
+  }
+  if (ext === 'spec') {
+    route = '/api/push/file'; label = 'spec → SEAM pipeline';
+    // Auto-populate spec editor
+    document.getElementById('spec-editor').value = content;
+    specChanged();
+    setMode('spec');
+  } else if (ext === 'json') {
+    label = 'json → guardian queue';
+  } else if (ext === 'md') {
+    label = 'md → idearium idea';
+    // First line becomes idea text
+    const firstLine = content.split('\n').find(l=>l.trim())||(name);
+    setSelected({ type:'idea', name: firstLine.replace(/^#+\s*/,'').slice(0,60) });
+  } else if (ext === 'js' || ext === 'ts') {
+    label = 'code → forge review';
+  } else if (ext === 'eg' || ext === 'emerge') {
+    label = 'emerge → compiler';
+  } else {
+    label = 'file → cortex store';
+  }
+
+  setSelected({ type:ext, name, size: file.size + ' bytes' });
+  log('⬇ ' + name + ' → ' + label, 'info');
+
+  const result = await pushToOrch(name, content, ext);
+  if (result?.ok) {
+    dropLog('✓ ' + name + ' → ' + (result.label || label), 'ok');
+    log('✓ ' + name, 'ok');
+  } else {
+    dropLog('✗ ' + name + ': ' + (result?.error || 'push failed'), 'err');
+    log('✗ ' + name + ': ' + (result?.error||'failed'), 'err');
+  }
+}
+
+async function pushToOrch(filename, content, ext) {
+  try {
+    const r = await fetch(ORCH + '/api/push/file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename, content, source: 'builder-drop' }),
+    });
+    return r.json();
+  } catch(e) { return { ok: false, error: e.message }; }
+}
+
+function readFile(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload  = e => res(e.target.result);
+    r.onerror = () => rej(new Error('read failed'));
+    r.readAsText(file);
+  });
+}
+
+function dropLog(msg, type) {
+  const el  = document.getElementById('drop-log');
+  const div = document.createElement('div');
+  div.className = 'drop-log-line';
+  div.style.color = type === 'ok' ? 'var(--g)' : type === 'err' ? 'var(--r)' : 'var(--c)';
+  div.textContent = new Date().toLocaleTimeString() + ' ' + msg;
+  el.prepend(div);
+  if (el.children.length > 30) el.lastChild.remove();
+}
+
+// ══ MODE: SPEC ════════════════════════════════════════════════════════════════
+function specChanged() {
+  const ta  = document.getElementById('spec-editor');
+  const n   = (ta.value.match(/\n/g)||[]).length + 1;
+  document.getElementById('spec-line-count').textContent = n + ' lines';
+  // Auto-extract name from spec
+  const m = ta.value.match(/name:\s*(.+)/);
+  if (m) document.getElementById('build-name').value = m[1].trim();
+}
+
+function specTargetChanged(v) {
+  log('target: ' + v, 'info');
+}
+
+function specLoad() {
+  const el = document.getElementById('drop-file-input');
+  el.accept = '.spec,.yaml,.yml,.txt,.md';
+  el.click();
+}
+
+function specClear() {
+  document.getElementById('spec-editor').value = '';
+  document.getElementById('spec-line-count').textContent = '0 lines';
+}
+
+async function specValidate() {
+  const content = document.getElementById('spec-editor').value;
+  if (!content.trim()) { log('spec is empty', 'err'); return; }
+  log('validating spec…', 'info');
+  try {
+    const r = await fetch(ORCH + '/api/architect/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
+    const d = await r.json();
+    if (d.ok) log('✓ spec valid', 'ok');
+    else log('✗ ' + (d.error||'invalid'), 'err');
+  } catch(e) { log('validate: ' + e.message, 'err'); }
+}
+
+// ══ MODE: CANVAS ══════════════════════════════════════════════════════════════
+const NODE_COLORS = {
+  layer:'#534ab7', gate:'#1a6aff', node:'#00cc66', check:'#ff7a00', surface:'#334466'
+};
+
+function chipDrag(event) {
+  _chipType = event.target.dataset.type;
+  event.dataTransfer.setData('text/plain', _chipType);
+}
+
+function canvasDrop(event) {
+  event.preventDefault();
+  const wrap = document.getElementById('canvas-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const x = event.clientX - rect.left - 60;
+  const y = event.clientY - rect.top  - 16;
+  const type = _chipType || 'node';
+  addCanvasNode(type, x, y);
+  _chipType = null;
+}
+
+function addCanvasNode(type, x, y, label) {
+  const id  = 'n' + (++_nodeSeq);
+  const col = NODE_COLORS[type] || '#334466';
+  const lbl = label || type.toUpperCase() + ' ' + _nodeSeq;
+  const node = { id, type, x, y, label: lbl, body: '' };
+  _canvasNodes.push(node);
+  renderCanvasNode(node);
+  return id;
+}
+
+function renderCanvasNode(node) {
+  const wrap = document.getElementById('canvas-nodes');
+  const div  = document.createElement('div');
+  div.className = 'cnode type-' + node.type;
+  div.id = 'cnode-' + node.id;
+  div.style.left = node.x + 'px';
+  div.style.top  = node.y + 'px';
+  div.innerHTML =
+    '<div class="cnode-hdr" style="color:' + (NODE_COLORS[node.type]||'#fff') + '">' +
+    '<span style="font-size:7px;opacity:.5">' + node.type.toUpperCase() + '</span>' +
+    '<span contenteditable="true" spellcheck="false" style="outline:none" ' +
+    'oninput="updateNodeLabel(\'' + node.id + '\',this.textContent)">' + node.label + '</span>' +
+    '</div>' +
+    '<div class="cnode-body" contenteditable="true" spellcheck="false" style="outline:none;min-height:24px" ' +
+    'oninput="updateNodeBody(\'' + node.id + '\',this.textContent)" ' +
+    'data-placeholder="description…"></div>';
+
+  // Drag to move
+  let ox=0, oy=0, mx=0, my=0;
+  const hdr = div.querySelector('.cnode-hdr');
+  hdr.addEventListener('mousedown', e => {
+    if (e.target.contentEditable === 'true') return;
+    e.preventDefault();
+    ox = div.offsetLeft; oy = div.offsetTop;
+    mx = e.clientX;      my = e.clientY;
+    function move(ev) {
+      const nx = ox + ev.clientX - mx;
+      const ny = oy + ev.clientY - my;
+      div.style.left = nx + 'px'; div.style.top = ny + 'px';
+      node.x = nx; node.y = ny;
+      renderEdges();
+    }
+    function up() { document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up); }
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  });
+  wrap.appendChild(div);
+}
+
+function updateNodeLabel(id, txt) { const n=_canvasNodes.find(n=>n.id===id); if(n) n.label=txt; }
+function updateNodeBody(id, txt)  { const n=_canvasNodes.find(n=>n.id===id); if(n) n.body=txt; }
+function canvasDeselect() {}
+
+function renderEdges() {
+  const svg = document.getElementById('edge-svg');
+  svg.innerHTML = '';
+  for (const e of _edges) {
+    const a = document.getElementById('cnode-' + e.a);
+    const b = document.getElementById('cnode-' + e.b);
+    if (!a || !b) continue;
+    const ar = a.getBoundingClientRect();
+    const br = b.getBoundingClientRect();
+    const wr = document.getElementById('canvas-wrap').getBoundingClientRect();
+    const x1 = ar.left + ar.width/2  - wr.left;
+    const y1 = ar.top  + ar.height/2 - wr.top;
+    const x2 = br.left + br.width/2  - wr.left;
+    const y2 = br.top  + br.height/2 - wr.top;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    const cx = (x1+x2)/2;
+    path.setAttribute('d', `M${x1},${y1} C${cx},${y1} ${cx},${y2} ${x2},${y2}`);
+    path.setAttribute('stroke', '#1e3050');
+    path.setAttribute('stroke-width', '1.5');
+    path.setAttribute('fill', 'none');
+    svg.appendChild(path);
+  }
+}
+
+function canvasClear() {
+  _canvasNodes = []; _edges = []; _nodeSeq = 0;
+  document.getElementById('canvas-nodes').innerHTML = '';
+  document.getElementById('edge-svg').innerHTML = '';
+}
+
+function canvasToSpec() {
+  if (!_canvasNodes.length) { log('canvas is empty', 'err'); return; }
+  const name = document.getElementById('build-name').value || 'canvas-spec';
+  let spec = 'spec:\n  meta:\n    name: ' + name + '\n    version: 0.1.0\n';
+  spec += '  intent: ' + (document.getElementById('build-name').value || 'Built from canvas') + '\n';
+  spec += '  modules:\n';
+  for (const n of _canvasNodes) {
+    spec += '    - name: ' + n.label.replace(/\s+/g,'-').toLowerCase() + '\n';
+    spec += '      type: ' + n.type + '\n';
+    if (n.body) spec += '      description: ' + n.body.slice(0,80) + '\n';
+  }
+  if (_edges.length) {
+    spec += '  edges:\n';
+    for (const e of _edges) {
+      const a = _canvasNodes.find(n=>n.id===e.a)?.label || e.a;
+      const b = _canvasNodes.find(n=>n.id===e.b)?.label || e.b;
+      spec += '    - from: ' + a + '\n      to: ' + b + '\n';
+    }
+  }
+  document.getElementById('spec-editor').value = spec;
+  specChanged();
+  setMode('spec');
+  log('canvas → spec (' + _canvasNodes.length + ' nodes)', 'ok');
+}
+
+function canvasResize() {
+  const cvs = document.getElementById('cvs');
+  const wrap = document.getElementById('canvas-wrap');
+  cvs.width  = wrap.offsetWidth;
+  cvs.height = wrap.offsetHeight;
+}
+
+// ══ MODE: REPO ════════════════════════════════════════════════════════════════
+async function repoRefresh() {
+  const grid = document.getElementById('repo-grid');
+  grid.innerHTML = '<div style="grid-column:1/-1;color:var(--muted);font-size:10px">Loading…</div>';
+  try {
+    const r = await fetch('http://127.0.0.1:4800/api/ideas?limit=30').then(r=>r.json()).catch(()=>null);
+    const ideas = r?.ideas || r?.rows || [];
+    if (!ideas.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;color:var(--muted);font-size:10px">No projects yet. Drop a file or build from a spec.</div>';
+      return;
+    }
+    grid.innerHTML = ideas.map(idea => {
+      const phase = idea.phase || 'seed';
+      const col   = phase==='complete'?'var(--g)':phase==='building'?'var(--c)':phase==='specced'?'var(--y)':'var(--muted)';
+      const tags  = (idea.tags||[]).slice(0,3);
+      return '<div class="repo-card" onclick="repoSelect(' + JSON.stringify(JSON.stringify(idea)) + ')">' +
+        '<div class="repo-card-title">' + (idea.text||'').slice(0,50) + '</div>' +
+        '<div class="repo-card-meta">' +
+          '<span class="phase-dot" style="background:'+col+'"></span>' + phase +
+          ' · ' + new Date(idea.createdAt||0).toLocaleDateString() +
+        '</div>' +
+        (tags.length ? '<div class="repo-card-tags">' + tags.map(t=>'<span class="repo-tag">'+t+'</span>').join('') + '</div>' : '') +
+        '</div>';
+    }).join('');
+    log('loaded ' + ideas.length + ' projects', 'ok');
+  } catch(e) {
+    grid.innerHTML = '<div style="grid-column:1/-1;color:var(--r);font-size:10px">Error: ' + e.message + '</div>';
+  }
+}
+
+function repoSelect(raw) {
+  try {
+    const idea = JSON.parse(raw);
+    setSelected({ type:'idea', name:(idea.text||'').slice(0,60), id:idea.uuid, phase:idea.phase });
+    log('selected: ' + (idea.text||'').slice(0,40), 'info');
+    if (idea.meta?.spec) {
+      document.getElementById('spec-editor').value = idea.meta.spec;
+      specChanged();
+      setMode('spec');
+    }
+  } catch(_) {}
+}
+
+// ══ LIBRARY ═══════════════════════════════════════════════════════════════════
+function libTab(tab, el) {
+  _libTab = tab;
+  document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  libRender();
+}
+
+function libSearch(q) { libRender(q); }
+
+async function libLoad() {
+  try {
+    // Load specs from architect
+    const specs = await fetch('http://127.0.0.1:3747/api/blueprint').then(r=>r.json()).catch(()=>null);
+    _libItems.specs = specs?.blueprints || [];
+
+    // Load ideas
+    const ideas = await fetch('http://127.0.0.1:4800/api/ideas?limit=50').then(r=>r.json()).catch(()=>null);
+    _libItems.ideas = ideas?.ideas || ideas?.rows || [];
+
+    // Built-in spec templates
+    _libItems.builtin = [
+      { name:'Rate Limiter',    desc:'Token bucket, per-key, queue overflow, 30s timeout' },
+      { name:'Event Bus',       desc:'SISO pub/sub, ring buffer, typed events, SSE output' },
+      { name:'Memory Store',    desc:'Three-tier memory with decay (working/short/long-term)' },
+      { name:'Auth Layer',      desc:'RSA-2048 + AES-256-GCM + SNR gate + whitelist' },
+      { name:'Gap Detector',    desc:'12-module Liminal integration, code + relational + field' },
+      { name:'Heartbeat Organ', desc:'Health probe + API pulse + telemetry frame' },
+      { name:'Spec Compiler',   desc:'T0/T1 deterministic scaffold + T2 AI dispatch' },
+      { name:'Peer Relay',      desc:'Contract-verified P2P bridge, pulse-driven auto-connect' },
+    ];
+
+    libRender();
+    const total = _libItems.specs.length + _libItems.ideas.length;
+    document.getElementById('lib-count').textContent = total + ' items';
+  } catch(e) {
+    log('library load: ' + e.message, 'err');
+  }
+}
+
+function libRender(q='') {
+  const el    = document.getElementById('left-content');
+  const items = _libItems[_libTab] || [];
+  const filt  = q ? items.filter(i => {
+    const s = JSON.stringify(i).toLowerCase();
+    return q.toLowerCase().split(/\s+/).every(w => s.includes(w));
+  }) : items;
+
+  if (!filt.length) {
+    el.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:10px">No items.</div>';
+    return;
+  }
+
+  el.innerHTML = filt.map((item, i) => {
+    if (_libTab === 'builtin') {
+      return '<div class="lib-item" onclick="libSelectBuiltin(' + i + ')">' +
+        '<div class="lib-name">' + item.name + '</div>' +
+        '<div class="lib-meta">' + item.desc + '</div>' +
+        '</div>';
+    }
+    const name = item.name || item.text || item.id || '?';
+    const meta = item.phase || item.version || item.type || '';
+    return '<div class="lib-item" onclick="libSelectItem(' + JSON.stringify(JSON.stringify(item)) + ')">' +
+      '<div class="lib-name">' + name.slice(0,50) + '</div>' +
+      '<div class="lib-meta">' + meta + '</div>' +
+      '</div>';
+  }).join('');
+}
+
+function libSelectItem(raw) {
+  try {
+    const item = JSON.parse(raw);
+    const name = item.name || item.text || 'item';
+    setSelected({ type: _libTab, name: name.slice(0,60), id: item.uuid||item.id, phase: item.phase });
+    if (item.meta?.spec) {
+      document.getElementById('spec-editor').value = item.meta.spec;
+      specChanged(); setMode('spec');
+    }
+    log('loaded: ' + name.slice(0,40), 'ok');
+  } catch(_) {}
+}
+
+function libSelectBuiltin(i) {
+  const item = _libItems.builtin[i];
+  if (!item) return;
+  document.getElementById('build-name').value = item.name.toLowerCase().replace(/\s+/g,'-');
+  const spec = 'spec:\n  meta:\n    name: ' + item.name.toLowerCase().replace(/\s+/g,'-') +
+    '\n    version: 0.1.0\n  intent: ' + item.desc +
+    '\n  axioms:\n    - Nothing silently fails\n    - Every write persists before behavior\n' +
+    '  constraints:\n    - [fill in]\n  modules:\n    - name: core\n      exports: [init, stop]\n' +
+    '  gaps:\n    - description: Implementation details to be determined\n      severity: medium\n' +
+    '  tiers:\n    T0: schema and types\n    T1: scaffold\n    T2: logic (AI)';
+  document.getElementById('spec-editor').value = spec;
+  specChanged(); setMode('spec');
+  setSelected({ type:'builtin', name:item.name });
+  log('template: ' + item.name, 'ok');
+}
+
+// ══ BUILD ACTIONS ═════════════════════════════════════════════════════════════
+async function buildNow() {
+  const spec     = document.getElementById('spec-editor').value.trim();
+  const name     = document.getElementById('build-name').value || 'unnamed';
+  const provider = document.getElementById('provider-sel').value;
+  const version  = document.getElementById('build-version').value || '0.1.0';
+
+  if (!spec && !_selected && !_canvasNodes.length) {
+    log('nothing to build — drop a file, write a spec, or pick from library', 'err');
+    return;
+  }
+
+  document.getElementById('build-now-btn').disabled = true;
+  log('building: ' + name + ' → ' + provider, 'info');
+
+  try {
+    // 1. Save spec to idearium
+    let ideaUuid = null;
+    if (spec) {
+      const ideaRes = await fetch('http://127.0.0.1:4800/api/ideas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text:   name,
+          source: 'builder',
+          tags:   ['builder', 'pending'],
+          meta:   { spec, version, provider },
+        }),
+      }).then(r=>r.json()).catch(()=>null);
+      ideaUuid = ideaRes?.uuid || ideaRes?.idea?.uuid;
+      if (ideaUuid) log('✓ saved to idearium: ' + ideaUuid.slice(0,8), 'ok');
+    }
+
+    // 2. Push spec to queue — Idearium listens
+    const filename = name.replace(/\s+/g,'-').toLowerCase() + '.spec';
+    const pushRes = await fetch(ORCH + '/api/push/file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename,
+        content:  spec || ('# ' + name),
+        source:   'builder-build-now',
+        provider,
+        _ideaUuid: ideaUuid,
+      }),
+    }).then(r=>r.json()).catch(()=>null);
+
+    if (pushRes?.ok) {
+      log('✓ queued: ' + filename + ' → ' + (pushRes.label||pushRes.destination||'guardian'), 'ok');
+      document.getElementById('build-status').textContent = 'queued · ' + name;
+    } else {
+      log('✗ queue failed: ' + (pushRes?.error||'unknown'), 'err');
+    }
+  } catch(e) {
+    log('✗ build: ' + e.message, 'err');
+  } finally {
+    document.getElementById('build-now-btn').disabled = false;
+  }
+}
+
+async function saveToProjects() {
+  const spec = document.getElementById('spec-editor').value.trim();
+  const name = document.getElementById('build-name').value || 'unnamed';
+  if (!spec && !_selected) { log('nothing to save', 'err'); return; }
+
+  try {
+    const r = await fetch('http://127.0.0.1:4800/api/ideas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: name, source: 'builder', tags: ['builder', 'saved'],
+        meta: { spec: spec || '', provider: document.getElementById('provider-sel').value },
+      }),
+    }).then(r=>r.json()).catch(()=>null);
+    if (r?.uuid || r?.idea?.uuid) {
+      log('✓ saved to projects: ' + name, 'ok');
+      setMode('repo'); repoRefresh();
+    } else {
+      log('✗ save failed', 'err');
+    }
+  } catch(e) { log('✗ save: ' + e.message, 'err'); }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+window.addEventListener('resize', canvasResize);
+libLoad();
+log('builder ready', 'ok');
+</script>
+</body>
+</html>

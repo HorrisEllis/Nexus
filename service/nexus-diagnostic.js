@@ -35,6 +35,22 @@ const { createContractVerifier, loadContracts } = require('../lib/cfr/contract-v
 const { createCFRField, computeRegime }         = require('../lib/cfr/field');
 const { createBaseline } = require('../lib/baseline');
 const { sigma, mean }    = require('../lib/baseline');
+// ── Meta layer: telemetry codec replaces hand-rolled stats where available ────
+let _metaTelemetry = null;
+function _getMetaTel() {
+  if (_metaTelemetry !== null) return _metaTelemetry;
+  try { _metaTelemetry = require('../lib/meta/telemetry-codec/index.js'); } catch(_) { _metaTelemetry = false; }
+  return _metaTelemetry;
+}
+// Per-system TelemetryRuntime instances — keyed by system name
+const _sysRuntimes = {};
+function _getSysRuntime(name) {
+  if (!_sysRuntimes[name]) {
+    const tel = _getMetaTel();
+    if (tel) _sysRuntimes[name] = new tel.TelemetryRuntime({ serviceId: name });
+  }
+  return _sysRuntimes[name] || null;
+}
 
 const ROOT    = path.join(__dirname, '..');
 const PORT    = 7825;
