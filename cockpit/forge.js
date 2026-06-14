@@ -24,6 +24,15 @@
 
 const http = require('http');
 
+// ── Context builder ──────────────────────────────────────────────────────────
+let _ctxBuilder = null;
+function _getCtxBuilder() {
+  if (!_ctxBuilder) {
+    try { _ctxBuilder = require('../lib/context-builder'); } catch(_) {}
+  }
+  return _ctxBuilder;
+}
+
 // ── Config ─────────────────────────────────────────────────────────────────────
 const GUARDIAN_HTTP_URL = process.env.RHEON_GUARDIAN_URL  || 'http://127.0.0.1:7820';
 const OLLAMA_URL        = process.env.RHEON_OLLAMA_URL    || 'http://127.0.0.1:11434';
@@ -204,15 +213,29 @@ ${userMessage}`,
 
 // ── _callLLM(systemPrompt, userMessage, opts) ─────────────────────────────────
 // Routing cascade: Ollama code models → Ollama general models → Guardian async
+// Context injection: prepends live NEXUS system context to every Ollama call
 // §NO_SINGLE_POINT_OF_FAILURE: every failure tries the next option
 // §1.2: if ALL fail, throw loud with full error chain
 async function _callLLM(systemPrompt, userMessage, opts = {}) {
   const errs  = [];
   const models = opts.preferCode ? OLLAMA_CODE_MODELS : OLLAMA_MODELS;
 
+  // §NEXUS-CTX: inject live system context into every Ollama call
+  // Gives Mistral awareness of gaps, artifacts, axioms — uses local data only
+  let enrichedSystem = systemPrompt;
+  if (!opts.skipContext) {
+    try {
+      const ctxBuilder = _getCtxBuilder();
+      if (ctxBuilder) {
+        const ctx = await ctxBuilder.buildContext({ intent: userMessage.slice(0, 200) });
+        enrichedSystem = ctx.systemPrompt + '\n\n' + systemPrompt;
+      }
+    } catch(_) {} // context injection never blocks dispatch
+  }
+
   // §LAW_I equivalent for forge: local Ollama first, always
   try {
-    return await _tryOllamaCascade(models, systemPrompt, userMessage);
+    return await _tryOllamaCascade(models, enrichedSystem, userMessage);
   } catch(e) {
     errs.push(`ollama-cascade: ${e.message.slice(0,120)}`);
   }
