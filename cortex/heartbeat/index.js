@@ -169,8 +169,8 @@ async function _apiPulseTick() {
       const { ok, latencyMs } = await _probe(port, api.path, 3000);
       apiResults[api.label] = { ok, latencyMs, ts: now };
 
-      // Emit gap if API probe fails
-      if (!ok) {
+      // Only emit gap if system was previously healthy — avoids boot-time noise
+      if (!ok && _seenAt[system.name] && (now - _seenAt[system.name]) > 20000) {
         jaaDB.insert('gaps', {
           uuid:     uid(),
           type:     'api_degraded',

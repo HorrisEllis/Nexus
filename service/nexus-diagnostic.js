@@ -836,7 +836,7 @@ function startService() {
       }).catch(() => null);
       if (gapRes?.ok) {
         const gapData = await gapRes.json();
-        allOpenGaps = gapData.gaps || gapData || [];
+        allOpenGaps = gapData.gaps || gapData.rows || (Array.isArray(gapData) ? gapData : []);
       }
     } catch(_) {}
 
@@ -844,6 +844,7 @@ function startService() {
     let scoreTension;
     try { scoreTension = require('../cortex/healer/index').scoreTension; } catch(_) {}
     const gapTensionBySystem = {};
+    if (!Array.isArray(allOpenGaps)) allOpenGaps = [];
     for (const gap of allOpenGaps) {
       const sys = gap.source?.split('/')?.[0] || gap.system || 'unknown';
       if (!gapTensionBySystem[sys]) gapTensionBySystem[sys] = { total: 0, count: 0, gaps: [] };
