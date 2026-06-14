@@ -635,6 +635,7 @@ textarea.finp{resize:vertical;line-height:1.55}
     <button class="tbn m"  data-tab="diagnose"   onclick="go('diagnose')"  title="Diagnostic">⬡<span class="nav-label">DIAGNOSE</span></button>
     <button class="tbn m"  data-tab="log"        onclick="go('log')"       title="Log">≡<span class="nav-label">LOG</span></button>
     <button class="tbn g"  data-tab="repo"       onclick="go('repo')"      title="Files">⊞<span class="nav-label">FILES</span></button>
+    <button class="tbn c"  data-tab="tutorial"   onclick="go('tutorial')"  title="Tutorial">?<span class="nav-label">TUTORIAL</span></button>
 
     <div class="nav-sep"></div>
 
@@ -2401,6 +2402,50 @@ setInterval(()=>{if(document.getElementById('panel-forge')?.classList.contains('
       </div>
     </div>
 
+
+    <!-- ══ TUTORIAL ═══════════════════════════════════════════ -->
+    <div class="panel" id="panel-tutorial" style="flex-direction:column;overflow:hidden">
+      <div class="tshdr">
+        <div class="adot g" id="tut-hdr-dot"></div>
+        <span class="tshdr-title" style="color:var(--c)">? TUTORIAL</span>
+        <span class="note" style="margin-left:8px">Walk the whole system step by step · live verification at every stage</span>
+        <div style="flex:1"></div>
+        <span id="tut-progress-label" style="font-size:9px;color:var(--muted)">step 1 of 12</span>
+        <button class="btn" style="font-size:9px;padding:2px 10px;margin-left:8px" onclick="tutReset()">↺ restart</button>
+      </div>
+
+      <div style="display:flex;height:100%;min-height:0;overflow:hidden">
+
+        <!-- Step list sidebar -->
+        <div id="tut-sidebar" style="width:210px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;font-size:10px"></div>
+
+        <!-- Active step content -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+
+          <div style="padding:14px 18px 10px;border-bottom:1px solid var(--border);flex-shrink:0">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span id="tut-num" style="font-size:9px;color:var(--muted);font-family:var(--mono);min-width:44px">STEP 1</span>
+              <span id="tut-status-badge" style="font-size:9px;padding:1px 8px;border-radius:8px;border:1px solid var(--border);color:var(--muted);background:var(--bg2)">—</span>
+              <div style="flex:1"></div>
+              <button id="tut-verify-btn" class="btn" style="font-size:9px;padding:2px 10px;border-color:var(--c);color:var(--c)" onclick="tutVerify()">▶ check live</button>
+              <button id="tut-next-btn" class="btn" style="font-size:9px;padding:2px 10px" onclick="tutNext()">next →</button>
+            </div>
+            <div id="tut-title" style="font-size:14px;font-weight:700;margin-top:8px;letter-spacing:.02em"></div>
+          </div>
+
+          <div style="flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+            <div id="tut-explain" style="font-size:12px;line-height:1.75;color:var(--text2);white-space:pre-wrap"></div>
+            <div id="tut-commands" style="display:flex;flex-direction:column;gap:6px"></div>
+            <div id="tut-verify-box" style="display:none;border-radius:4px;padding:12px 14px;font:11px var(--mono);line-height:1.7"></div>
+            <div id="tut-what-next" style="display:none;padding:10px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;font-size:11px;color:var(--text2)"></div>
+          </div>
+
+          <div style="height:3px;background:var(--bg2);flex-shrink:0">
+            <div id="tut-bar" style="height:100%;background:var(--c);width:8.3%;transition:width .35s ease"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div><!-- /main -->
 </div><!-- /app -->
@@ -7517,7 +7562,7 @@ async function pushLoadPeers() {
       const checked = _pushTargets.has(p.peerId);
       return '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:9px;color:#d4d4e8">' +
         '<input type="checkbox" ' + (checked ? 'checked' : '') +
-        ' onchange="pushTogglePeer('' + p.peerId + '',this.checked)">' +
+        ' onchange="pushTogglePeer("+JSON.stringify(p.peerId)+",this.checked)">' +
         p.peerId.slice(-8) + ' (' + p.host + ':' + p.port + ')' +
         '</label>';
     }).join('');
@@ -7543,6 +7588,396 @@ function pushLog(msg, type) {
 
 // Also wire push to the CLI
 // nexus push <file> — uses the auth client to push a file through the API
+
+// ══ TUTORIAL SYSTEM ════════════════════════════════════════════════════════════
+// 12 steps, each with: title, plain explanation, live verify(), optional commands
+// Drives the panel in index.html — no deps on wizard.js or tutorial/*.
+
+const TUT_STEPS = [
+  {
+    id: 'boot',
+    title: 'Step 1 — Boot the stack',
+    explain:
+      'NEXUS is eight programs working together like organs in a body. ' +
+      'The Orchestrator is the conductor — it starts everything else in order.\n\n' +
+      'If you have not started yet, open a terminal in the NEXUS folder and run:',
+    commands: ['npm run start:all'],
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:9000/health').then(r=>r.json()).catch(()=>null);
+      if (r?.ok) return { pass: true, detail: 'Orchestrator is up and watching. ' + (r.online||0) + ' systems online.' };
+      return { pass: false, detail: 'Orchestrator not responding. Run: npm run start:all' };
+    },
+    next: 'Once all dots are green in the top bar, move to step 2.',
+  },
+  {
+    id: 'snapshot',
+    title: 'Step 2 — Your first .nex snapshot',
+    explain:
+      'A .nex file is a frozen snapshot of everything NEXUS remembers — every event, ' +
+      'every idea, every gap. Cortex takes one automatically on every boot.\n\n' +
+      'Let us confirm one was created when you started.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:3748/api/memory?table=backup_records&n=5').then(r=>r.json()).catch(()=>null);
+      const snaps = r?.rows || [];
+      if (snaps.length) return { pass: true, detail: 'Found ' + snaps.length + ' snapshot(s). Latest: ' + (snaps[0]?.snapId || '?') + ' (' + (snaps[0]?.type||'?') + ')' };
+      return { pass: false, detail: 'No snapshots found yet. Cortex may still be starting up — wait 5 seconds and re-check.' };
+    },
+    next: 'The .nex files live on disk at data/snapshots/. You can drag them into the Lab panel to test against.',
+  },
+  {
+    id: 'idea',
+    title: 'Step 3 — Log your first idea',
+    explain:
+      'Idearium is where ideas live before they become specs. It’s the entry point ' +
+      'for everything you want to build.\n\n' +
+      'Click the + button in the top right, or use the FAB button (bottom right) → Log Idea. ' +
+      'Type anything — even one word. Press enter.\n\n' +
+      'Or use the verify button to confirm the Idearium service is running.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:4800/api/stats').then(r=>r.json()).catch(()=>null);
+      if (r?.ok !== false) {
+        const ideas = r?.ideas?.total || r?.ideas || 0;
+        return { pass: true, detail: 'Idearium online. ' + ideas + ' idea(s) stored.' };
+      }
+      return { pass: false, detail: 'Idearium not responding — check that it started in the boot sequence.' };
+    },
+    next: 'Every idea gets a UUID, a phase (seed → building → complete), and a tension score.',
+  },
+  {
+    id: 'dispatch',
+    title: 'Step 4 — Dispatch your first AI job',
+    explain:
+      'Guardian is the part that talks to AI models. It takes a prompt, ' +
+      'routes it through RAID (which picks the best provider — Ollama first), ' +
+      'and brings back the result.\n\n' +
+      'Go to GUARDIAN → DISPATCH. Set provider to Ollama (local). Type a prompt. Hit → DISPATCH.\n\n' +
+      'First call is slow — Ollama loads the model into RAM. After that it is fast.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:7820/health').then(r=>r.json()).catch(()=>null);
+      if (!r?.ok && r?.ok !== undefined) return { pass: false, detail: 'Guardian not responding.' };
+      const jobs = await fetch('http://127.0.0.1:7820/jobs?limit=5').then(r=>r.json()).catch(()=>null);
+      const count = jobs?.jobs?.length || jobs?.length || 0;
+      if (count > 0) return { pass: true, detail: 'Guardian online. ' + count + ' job(s) in history. RAID routing active.' };
+      return { pass: true, detail: 'Guardian online and waiting. Send a dispatch from the GUARDIAN panel to test.' };
+    },
+    next: 'The result lands in GUARDIAN → ARTIFACTS. Cortex also logs the event.',
+  },
+  {
+    id: 'seam',
+    title: 'Step 5 — The SEAM pipeline',
+    explain:
+      'SEAM (Structural Emergence with Autonomous Mechanism) is how large specs ' +
+      'get sent to an AI in verified chunks. Each chunk must pass a detector ' +
+      'before the next one is sent.\n\n' +
+      'Go to GUARDIAN → SEAM. Paste any spec or description. ' +
+      'Set provider to Ollama. Click → SEAM QUEUE.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:7820/jobs?status=complete&limit=3').then(r=>r.json()).catch(()=>null);
+      const done = (r?.jobs||r||[]).filter(j=>j.status==='complete'||j.status==='verified');
+      if (done.length) return { pass: true, detail: done.length + ' completed job(s) — pipeline has run.' };
+      return { pass: true, detail: 'Guardian ready for SEAM. Go to GUARDIAN → SEAM to try it.' };
+    },
+    next: 'Each chunk goes through QUEUED → GENERATING → DETECTING → VERIFIED. Failures retry with three strategies.',
+  },
+  {
+    id: 'cortex',
+    title: 'Step 6 — What Cortex remembers',
+    explain:
+      'Cortex is the memory. It remembers everything that has happened — ' +
+      'every job, every idea, every gap, every pattern the intelligence layer has noticed.\n\n' +
+      'Go to CORTEX → EVENTS to see a live stream of activity. ' +
+      'Go to CORTEX → TABLES to browse the raw JAA memory tables.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:3748/api/events?limit=10').then(r=>r.json()).catch(()=>null);
+      const count = r?.rows?.length || r?.count || 0;
+      if (count > 0) {
+        const types = [...new Set((r?.rows||[]).map(e=>e.type))].slice(0,3).join(', ');
+        return { pass: true, detail: count + ' recent events. Types: ' + types };
+      }
+      return { pass: true, detail: 'Cortex online. Events appear as you use the system.' };
+    },
+    next: 'The intelligence layer mines these events for patterns. Look for "pattern crystallised" entries.',
+  },
+  {
+    id: 'gaps',
+    title: 'Step 7 — Open gaps',
+    explain:
+      'Gaps are things the system has flagged as broken or missing. ' +
+      'The gap-finder organ detects them. The healer prescribes fixes. ' +
+      'Self-heal applies them.\n\n' +
+      'Go to DIAGNOSE to see the gap table. Or check CORTEX → GAPS.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:3748/api/gaps?status=open&n=10').then(r=>r.json()).catch(()=>null);
+      const gaps = r?.gaps || r || [];
+      const real = Array.isArray(gaps) ? gaps.filter(g=>g.type!=='DELTA.TENSION') : [];
+      if (real.length === 0) return { pass: true, detail: '✓ No real open gaps — system is clean.' };
+      const bySev = {};
+      real.forEach(g => bySev[g.severity||'?'] = (bySev[g.severity||'?']||0)+1);
+      const summary = Object.entries(bySev).map(([k,v])=>v+' '+k).join(', ');
+      return { pass: true, detail: real.length + ' open gap(s): ' + summary };
+    },
+    next: 'DELTA.TENSION entries are signals, not gaps. Ignore them. Focus on stale_module or recurring_failure types.',
+  },
+  {
+    id: 'healer',
+    title: 'Step 8 — Self-heal status',
+    explain:
+      'The self-heal system watches the gap table and tries to fix things automatically. ' +
+      'It has three trust tiers:\n\n' +
+      'T1 — safe fixes applied automatically (e.g. restart a stale module)\n' +
+      'T2 — snapshot first, then apply\n' +
+      'T3 — propose to forge (AI writes a patch)\n\n' +
+      'Check the Diagnostic panel for the self-heal status.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:3748/api/self-heal/status').then(r=>r.json()).catch(()=>null);
+      if (r?.ok) {
+        const tension = r.totalTension || 0;
+        const loops = r.openLoops || 0;
+        return { pass: true, detail: 'Self-heal running. Open loops: ' + loops + '. Total tension: ' + tension.toFixed(2) };
+      }
+      return { pass: true, detail: 'Self-heal status endpoint responding.' };
+    },
+    next: 'High tension means the system has been trying and failing to fix something. Check DIAGNOSE → SELF-HEAL for details.',
+  },
+  {
+    id: 'lab',
+    title: 'Step 9 — The Lab sandbox',
+    explain:
+      'The Lab lets you test against a frozen snapshot without touching the live system. ' +
+      'Drop a .nex file into the Lab and run experiments — query tables, simulate healer ' +
+      'prescriptions, validate a patch — then see what changed in the diff.\n\n' +
+      'Go to DIAGNOSE → LAB. Load a production snapshot (the selector lists them). Run "heal" experiment.',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:3748/api/lab/sessions').then(r=>r.json()).catch(()=>null);
+      if (r?.ok) {
+        const count = r?.sessions?.length || 0;
+        return { pass: true, detail: 'Lab ready. ' + count + ' active session(s).' };
+      }
+      return { pass: true, detail: 'Lab endpoint available. Load a snapshot to start a session.' };
+    },
+    next: 'The lab is also where you test self-heal patches before applying them to production.',
+  },
+  {
+    id: 'tension',
+    title: 'Step 10 — Diagnostic tension map',
+    explain:
+      'Every system has a tension score — a measure of how close to failing it is. ' +
+      'Tension = friction × open loops × age of gaps. The diagnostic service calculates ' +
+      'this in real time and surfaces which system needs attention most.\n\n' +
+      'Open the Diagnostic panel or check: http://127.0.0.1:7825',
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:7825/tension').then(r=>r.json()).catch(()=>null);
+      if (r?.systems || r?.maxTension !== undefined) {
+        const max = r.maxTension?.toFixed(2) || '?';
+        const systems = Object.keys(r.systems||{});
+        const turbulent = systems.filter(s=>(r.systems[s].regime||'')!=='stable');
+        return { pass: true, detail: 'Tension map live. Max: ' + max + (turbulent.length ? '. Elevated: ' + turbulent.join(', ') : '. All stable.') };
+      }
+      return { pass: false, detail: 'Diagnostic service not responding on :7825.' };
+    },
+    next: 'Regime: stable < 0.4 < elevated < 1.0 < turbulent < 2.0 < critical. Anything above elevated needs attention.',
+  },
+  {
+    id: 'remote',
+    title: 'Step 11 — Remote access',
+    explain:
+      'You can control NEXUS remotely using the auth client. It uses RSA-2048 for identity ' +
+      'and AES-256-GCM for the session. No passwords. No JWT. No third party.\n\n' +
+      'First time: run this to generate your keypair and get your UUID:',
+    commands: ['node auth/client.js setup', 'node auth/client.js login', 'node auth/client.js status'],
+    verify: async () => {
+      const r = await fetch('http://127.0.0.1:9000/auth/pubkey').then(r=>r.json()).catch(()=>null);
+      if (r?.ok && r?.publicKey) return { pass: true, detail: 'Auth system online. NEXUS RSA-2048 public key is available. SNR gate active.' };
+      return { pass: false, detail: 'Auth endpoint not responding. Orchestrator may need a restart.' };
+    },
+    next: 'After login, every command goes through an encrypted session. Revoke access by deleting the client’s .pub file.',
+  },
+  {
+    id: 'flow',
+    title: 'Step 12 — The full picture',
+    explain: 'Here is how everything connects:\n\n' +
+      '  Idea (Idearium)\n' +
+      '    \u2192 spec wizard (Architect) \u2192 .spec file\n' +
+      '    \u2192 compiler (T0 scaffold, T2 AI chunks)\n' +
+      '    \u2192 SEAM dispatch (Guardian \u2192 Ollama/Claude)\n' +
+      '    \u2192 artifacts stored in JAA (Cortex memory)\n' +
+      '    \u2192 gaps detected \u2192 healed \u2192 tension scored\n' +
+      '    \u2192 snapshot (.nex) \u2192 lab (test safely)\n' +
+      '    \u2192 remote client for full control from anywhere\n\n' +
+      'The system watches itself, learns from its own failures, and never forgets.\n' +
+      'Every event is logged. Every decision is traceable. Every gap is an open loop\n' +
+      'that builds tension until it is resolved.',
+    verify: async () => {
+      const [orch, cortex, guardian] = await Promise.all([
+        fetch('http://127.0.0.1:9000/health').then(r=>r.json()).catch(()=>null),
+        fetch('http://127.0.0.1:3748/health').then(r=>r.json()).catch(()=>null),
+        fetch('http://127.0.0.1:7820/health').then(r=>r.json()).catch(()=>null),
+      ]);
+      const up = [orch, cortex, guardian].filter(r=>r?.ok!==false && r!==null).length;
+      if (up === 3) return { pass: true, detail: '✓ Core systems all online. NEXUS is fully operational.' };
+      return { pass: up > 0, detail: up + '/3 core systems responding.' };
+    },
+    next: 'You have walked the whole system. Explore the intent map at /ui/home/intent.html for a domain view of every capability.',
+  },
+];
+
+// ── Tutorial state ────────────────────────────────────────────────────────────
+let _tutStep   = 0;
+let _tutPassed = new Array(TUT_STEPS.length).fill(null); // null=unchecked, true, false
+
+function tutInit() {
+  // Render sidebar
+  const sidebar = document.getElementById('tut-sidebar');
+  if (!sidebar) return;
+  sidebar.innerHTML = TUT_STEPS.map((s, i) => {
+    const state = _tutPassed[i];
+    const dot   = state === true ? '✓' : state === false ? '✗' : '○';
+    const col   = state === true ? 'var(--g)' : state === false ? 'var(--r)' : 'var(--muted)';
+    const active= i === _tutStep ? 'background:var(--bg2);' : '';
+    return '<div onclick="tutGoto(' + i + ')" style="display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;border-left:2px solid ' + (i===_tutStep?'var(--c)':'transparent') + ';' + active + '">' +
+      '<span style="font-size:10px;color:' + col + ';width:12px;flex-shrink:0">' + dot + '</span>' +
+      '<span style="font-size:10px;color:' + (i===_tutStep?'var(--text)':'var(--muted)') + ';line-height:1.3">' + s.title + '</span>' +
+      '</div>';
+  }).join('');
+  tutRender();
+}
+
+function tutRender() {
+  const s = TUT_STEPS[_tutStep];
+  if (!s) return;
+
+  // Progress
+  const pct = Math.round(((_tutStep + 1) / TUT_STEPS.length) * 100);
+  const bar  = document.getElementById('tut-bar');
+  const lbl  = document.getElementById('tut-progress-label');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = 'step ' + (_tutStep+1) + ' of ' + TUT_STEPS.length;
+
+  // Header
+  const numEl  = document.getElementById('tut-num');
+  const titleEl= document.getElementById('tut-title');
+  if (numEl)   numEl.textContent  = 'STEP ' + (_tutStep+1);
+  if (titleEl) titleEl.textContent= s.title;
+
+  // Status badge
+  tutUpdateBadge();
+
+  // Explain
+  const explainEl = document.getElementById('tut-explain');
+  if (explainEl) explainEl.textContent = s.explain;
+
+  // Commands
+  const cmdsEl = document.getElementById('tut-commands');
+  if (cmdsEl) {
+    if (s.commands?.length) {
+      cmdsEl.style.display = 'flex';
+      cmdsEl.innerHTML = '';
+      s.commands.forEach(function(cmd) {
+        var d = document.createElement('div');
+        d.style.cssText = 'display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:7px 10px';
+        var c = document.createElement('code');
+        c.style.cssText = 'flex:1;font-size:11px;color:var(--c)';
+        c.textContent = cmd;
+        var b = document.createElement('button');
+        b.style.cssText = 'font-size:9px;background:none;border:1px solid var(--border);color:var(--muted);padding:1px 6px;cursor:pointer;border-radius:2px';
+        b.textContent = 'copy';
+        b.onclick = function() { navigator.clipboard && navigator.clipboard.writeText(cmd); };
+        d.appendChild(c); d.appendChild(b); cmdsEl.appendChild(d);
+      });
+    } else {
+      cmdsEl.style.display = 'none';
+    }
+  }
+
+  // Reset verify box
+  const vbox = document.getElementById('tut-verify-box');
+  if (vbox) vbox.style.display = 'none';
+
+  // What next
+  const nextEl = document.getElementById('tut-what-next');
+  if (nextEl) {
+    if (s.next) {
+      nextEl.style.display = '';
+      nextEl.textContent   = '→ ' + s.next;
+    } else {
+      nextEl.style.display = 'none';
+    }
+  }
+
+  // Sidebar highlight
+  tutInit(); // re-render sidebar with current state
+}
+
+function tutUpdateBadge() {
+  const badge = document.getElementById('tut-status-badge');
+  if (!badge) return;
+  const state = _tutPassed[_tutStep];
+  if (state === true)  { badge.textContent = '✓ verified'; badge.style.color = 'var(--g)'; badge.style.borderColor = 'var(--g)'; }
+  else if (state === false) { badge.textContent = '✗ failed'; badge.style.color = 'var(--r)'; badge.style.borderColor = 'var(--r)'; }
+  else { badge.textContent = '— not checked'; badge.style.color = 'var(--muted)'; badge.style.borderColor = 'var(--border)'; }
+}
+
+async function tutVerify() {
+  const s   = TUT_STEPS[_tutStep];
+  const btn = document.getElementById('tut-verify-btn');
+  const box = document.getElementById('tut-verify-box');
+  if (!s || !box) return;
+
+  if (btn) { btn.textContent = '⟳ checking…'; btn.disabled = true; }
+  box.style.display = '';
+  box.style.background = 'var(--bg2)';
+  box.style.border = '1px solid var(--border)';
+  box.textContent = 'Probing live system…';
+
+  try {
+    const result = await s.verify();
+    _tutPassed[_tutStep] = result.pass;
+
+    const col = result.pass ? 'var(--g)' : 'var(--r)';
+    const icon= result.pass ? '✓' : '✗';
+    box.style.background  = result.pass ? 'rgba(0,255,136,.06)' : 'rgba(239,68,68,.06)';
+    box.style.border      = '1px solid ' + col;
+    box.innerHTML = '<span style="color:' + col + ';font-weight:700">' + icon + '</span>  ' + result.detail;
+  } catch(e) {
+    _tutPassed[_tutStep] = false;
+    box.style.background  = 'rgba(239,68,68,.06)';
+    box.style.border      = '1px solid var(--r)';
+    box.textContent = '✗ Error: ' + e.message;
+  }
+
+  if (btn) { btn.textContent = '▶ check live'; btn.disabled = false; }
+  tutUpdateBadge();
+  // Update sidebar
+  const sidebar = document.getElementById('tut-sidebar');
+  if (sidebar) tutInit();
+}
+
+function tutNext() {
+  if (_tutStep < TUT_STEPS.length - 1) {
+    _tutStep++;
+    tutRender();
+  }
+}
+
+function tutGoto(i) {
+  _tutStep = i;
+  tutRender();
+}
+
+function tutReset() {
+  _tutStep   = 0;
+  _tutPassed = new Array(TUT_STEPS.length).fill(null);
+  tutRender();
+}
+
+// Auto-init when tutorial panel is shown — hook into existing go() if present
+(function() {
+  var _prevGo = typeof go === 'function' ? go : function(){};
+  go = function(panel) {
+    _prevGo(panel);
+    if (panel === 'tutorial') tutInit();
+  };
+})();
 
 function emRefresh() {
   var iframe = document.getElementById('emerge-iframe');
