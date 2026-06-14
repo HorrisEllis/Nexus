@@ -218,11 +218,6 @@ ${$(C.bold, 'Commands')}
   watch               Live event stream (Ctrl+C to stop)
   ui                  Open orchestrator UI in browser
   help                This message
-  chat <prompt>       Talk to Ollama directly (local, no browser tab needed)
-  context             Show current system context (what Ollama knows about NEXUS)
-  intents             Show the intent map — every action with CLI/API/purpose
-  artifacts [query]   Search built artifacts before generating new ones
-  chatlog [n]         Browse logged AI conversations
   exit / quit / q     Exit
 
 ${$(C.bold, 'Systems')}
@@ -273,120 +268,6 @@ async function dispatch(line) {
     case 'ui': await cmdUI(); return;
     case 'help': case '?': cmdHelp(); return;
     case 'status': await cmdStatus(); return;  // multi-system, local
-    case 'chat': {
-      // Direct Ollama chat — no NCP, no browser tab required
-      const chatPrompt = args.join(' ').trim();
-      if (!chatPrompt) { log('Usage: chat <prompt>'); return; }
-      log('→ Ollama…');
-      try {
-        const r = await fetch('http://127.0.0.1:11434/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: process.env.RHEON_OLLAMA_MODEL_PRIMARY || 'mistral:7b-instruct-q4_K_M',
-            prompt: chatPrompt,
-            stream: false,
-          }),
-          signal: AbortSignal.timeout(120000),
-        });
-        const d = await r.json();
-        log('\n' + (d.response || '(no response)') + '\n');
-      } catch(e) { log('✗ Ollama: ' + e.message); }
-      return;
-    }
-
-    case 'context': {
-      // Show system context that gets injected into Ollama calls
-      try {
-        const ctxBuilder = require('../lib/context-builder');
-        const ctx = await ctxBuilder.buildContext();
-        log(ctx.systemPrompt);
-        log('\n--- ' + ctx.tokensUsed + '/' + ctx.tokensBudget + ' tokens used ---');
-      } catch(e) { log('context-builder unavailable: ' + e.message); }
-      return;
-    }
-
-    case 'intents': {
-      // Show intent map
-      const INTENTS = [
-        { category:'memory',   cli:'nexus memory artifacts',    intent:'Query what has already been built' },
-        { category:'memory',   cli:'nexus memory chat_log',     intent:'Browse logged AI conversations' },
-        { category:'dispatch', cli:'nexus dispatch "prompt"',   intent:'Send a job to an AI provider' },
-        { category:'dispatch', cli:'nexus chat "prompt"',       intent:'Talk to Ollama directly' },
-        { category:'build',    cli:'nexus idea "your idea"',    intent:'Log an idea' },
-        { category:'build',    cli:'nexus spec new',            intent:'Start a new spec' },
-        { category:'observe',  cli:'nexus gaps',                intent:'See open system gaps' },
-        { category:'observe',  cli:'nexus tension',             intent:'See system tension scores' },
-        { category:'control',  cli:'nexus selfheal',            intent:'Check self-heal status' },
-        { category:'control',  cli:'nexus snapshot',            intent:'Take a system snapshot' },
-      ];
-      for (const i of INTENTS) {
-        log('[' + i.category.padEnd(10) + '] ' + i.cli.padEnd(35) + i.intent);
-      }
-      return;
-    }
-
-    case 'artifacts': {
-      const q = args.join(' ').trim();
-      try {
-        const url = q
-          ? 'http://127.0.0.1:7820/memory/query?q=' + encodeURIComponent(q) + '&limit=10'
-          : 'http://127.0.0.1:7820/artifacts?limit=20';
-        const r = await fetch(url, { signal: AbortSignal.timeout(3000) });
-        const d = await r.json();
-        const items = d.artifacts || d.results || d || [];
-        if (!items.length) { log('No artifacts found' + (q ? ' for: ' + q : '')); return; }
-        for (const a of items) {
-          log('[' + (a.lang||'?').padEnd(6) + '] ' + (a.name||a.hash||'').slice(0,40).padEnd(42) + (a.description||'').slice(0,50));
-        }
-        log('--- ' + items.length + ' artifacts ---');
-      } catch(e) { log('guardian offline: ' + e.message); }
-      return;
-    }
-
-    case 'chatlog': {
-      const n = parseInt(args[0]) || 20;
-      try {
-        const r = await fetch('http://127.0.0.1:3748/api/memory?table=chat_log&n=' + n,
-          { signal: AbortSignal.timeout(3000) });
-        const d = await r.json();
-        const rows = d.rows || [];
-        if (!rows.length) { log('No chat log entries yet.'); return; }
-        for (const row of rows) {
-          log('[' + (row.provider||'?').padEnd(10) + '] ' + new Date(row.ts||0).toLocaleTimeString() + ' — ' + (row.prompt||'').slice(0,60));
-        }
-      } catch(e) { log('cortex offline: ' + e.message); }
-      return;
-    }
-
-    case 'tension': {
-      try {
-        const r = await fetch('http://127.0.0.1:7825/tension', { signal: AbortSignal.timeout(3000) });
-        const d = await r.json();
-        const systems = d.systems || d;
-        for (const [sys, t] of Object.entries(systems)) {
-          const regime = t.regime || 'stable';
-          const bar = '█'.repeat(Math.min(10, Math.ceil((t.tension||0)*2)));
-          log('[' + sys.padEnd(12) + '] ' + regime.padEnd(10) + ' tension:' + (t.tension||0).toFixed(2) + ' ' + bar);
-        }
-      } catch(e) { log('diagnostic offline: ' + e.message); }
-      return;
-    }
-
-    case 'selfheal': {
-      try {
-        const r = await fetch('http://127.0.0.1:7825/self-heal', { signal: AbortSignal.timeout(3000) });
-        const d = await r.json();
-        log('Open loops: ' + (d.openLoops||0) + '  Total tension: ' + (d.totalTension||0).toFixed(2));
-        log('Pending: ' + (d.pending||0) + '  Forge ready: ' + (d.forgeReady||0) + '  Human required: ' + (d.humanRequired||0));
-        if (d.humanRequiredGaps?.length) {
-          log('\nNeeds you:');
-          for (const g of d.humanRequiredGaps) log('  [' + g.type + '] ' + (g.body||'').slice(0,60));
-        }
-      } catch(e) { log('diagnostic offline: ' + e.message); }
-      return;
-    }
-
     case 'exit': case 'quit': case 'q':
       console.log($(C.dim, 'goodbye')); process.exit(0);
     case '': return;
