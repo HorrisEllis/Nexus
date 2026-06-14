@@ -751,22 +751,41 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
 
     // §1.1 Contract verification — fetch and verify the system's interaction contract
     // Non-blocking: registration succeeds regardless, but trust state is set
-    setImmediate(async () => {
+    // Skip self-verification: orchestrator knows its own contract without HTTP round-trip
+    if (systemId === 'orchestrator') {
+      try {
+        const hs = require('./lib/contract-handshake');
+        const { getVersionedContract } = require('./contracts/nexus-interaction-contract');
+        const full = getVersionedContract();
+        const orchContract = full?.systems?.orchestrator || full;
+        const crypto = require('crypto');
+        const hash = crypto.createHash('sha256')
+          .update(JSON.stringify(orchContract)).digest('hex').slice(0,16);
+        registryUpdate('orchestrator', { contractTrust: 'VERIFIED', contractHash: hash, contractVerifiedAt: Date.now() });
+        broadcast('system.contract.verified', { systemId: 'orchestrator', trust: 'VERIFIED', hash, routeCount: (orchContract.routes||[]).length });
+        console.log('[orch] contract.verified — orchestrator (' + (orchContract.routes||[]).length + ' routes, hash:' + hash.slice(0,8) + ')');
+      } catch(e) { console.warn('[orch] self-contract failed:', e.message); }
+    } else
+    // Delay contract verification by 2s — system just registered but may not
+    // have finished binding its HTTP server yet (especially on Windows)
+    setTimeout(async () => {
       try {
         const hs = require('./lib/contract-handshake');
         const entry = await hs.verifySystem(systemId, '127.0.0.1', port, {
           jaaInsert: null, // cortex not guaranteed up during early boot
           onResult: (e) => {
             registryUpdate(systemId, { contractTrust: e.trust, contractHash: e.hash, contractVerifiedAt: e.checkedAt });
-            console.log(`[orch] contract.${e.trust.toLowerCase()} — ${systemId} (${e.routeCount} routes, hash:${e.hash?.slice(0,8)})`);
+            const routeStr = e.routeCount !== undefined ? e.routeCount + ' routes' : e.error || 'unreachable';
+            const hashStr  = e.hash ? e.hash.slice(0,8) : '—';
+            console.log('[orch] contract.' + e.trust.toLowerCase() + ' — ' + systemId + ' (' + routeStr + ', hash:' + hashStr + ')');
             // Broadcast trust state over SSE so UIs can show it
             broadcast('system.contract.verified', { systemId, trust: e.trust, hash: e.hash, routeCount: e.routeCount });
           },
         });
       } catch(e) {
-        console.warn(`[orch] contract verify failed for ${systemId}: ${e.message}`);
+        console.warn('[orch] contract verify failed for ' + systemId + ': ' + e.message);
       }
-    });
+    }, 2000); // 2s delay — system needs time to finish binding
 
     return json(res, 200, {
       ok: true, systemId, ts: Date.now(),

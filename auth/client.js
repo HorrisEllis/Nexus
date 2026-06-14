@@ -262,10 +262,9 @@ function watchSSE(routePath = '/sse') {
         if (line.startsWith('data: ')) {
           try {
             const data = JSON.parse(line.slice(6));
-            const ts   = data.ts ? new Date(data.ts).toLocaleTimeString() : '';
-            console.log(`[${ts}] ${data.type || 'event'}`, JSON.stringify(data).slice(0, 120));
+            printEvent(data);
           } catch(_) {
-            if (line.length > 6) console.log(line.slice(6));
+            if (line.length > 6) console.log(dim('  ' + line.slice(6).slice(0,80)));
           }
         }
       }
@@ -286,21 +285,21 @@ async function run() {
     case 'setup': {
       let keys = loadOrCreateKeypair();
       if (keys) {
-        console.log('Keypair already exists at', CLIENT_DIR);
+        console.log(green('  ✓ ') + 'Keypair exists  ' + dim(CLIENT_DIR));
       } else {
         keys = generateKeypair();
-        console.log('✓ Keypair generated');
+        console.log(green('  ✓ ') + bold('RSA-2048 keypair generated'));
       }
       const uuid = getOrCreateUUID();
-      console.log('\n── Register this client with NEXUS ──────────────────────');
-      console.log('UUID:');
-      console.log(uuid);
-      console.log('\nPublic key (POST to /auth/clients or drop in auth/clients/<uuid>.pub):');
-      console.log(keys.publicKey);
-      console.log('\nOr run on the NEXUS machine:');
-      console.log(`curl -X POST ${NEXUS_URL}/auth/clients \\`);
-      console.log(`  -H "Content-Type: application/json" \\`);
-      console.log(`  -d '{"uuid":"${uuid}","publicKey":"<paste_public_key>","meta":{"label":"my-client"}}'`);
+      console.log('');
+      console.log(hr('REGISTER THIS CLIENT'));
+      console.log(field('Your UUID',  cyan(uuid)));
+      console.log(field('Client dir', CLIENT_DIR));
+      console.log('');
+      console.log('  ' + bold('Public Key') + ' — paste this into NEXUS:');
+      console.log('');
+      console.log(dim(keys.publicKey));
+      console.log('  ' + gray('Drop ' + uuid + '.pub into auth/clients/ on the NEXUS machine'));
       break;
     }
 
@@ -313,18 +312,14 @@ async function run() {
       const s = loadSession();
       if (!s) { console.log('Not logged in.'); break; }
       const uuid = getOrCreateUUID();
-      console.log('UUID:      ', uuid);
-      console.log('Session:   ', s.sessionId);
-      console.log('Expires:   ', new Date(s.expiresAt).toLocaleString());
-      console.log('NEXUS URL: ', NEXUS_URL);
+      printSession(s, uuid);
       break;
     }
 
     case 'get': {
       const route = args[0] || '/api/status';
       const res   = await authRequest('GET', route);
-      console.log(`HTTP ${res.status}`);
-      console.log(JSON.stringify(res.body, null, 2));
+      printRaw('GET ' + (args[0] || '/api/status'), res.body);
       break;
     }
 
@@ -332,8 +327,7 @@ async function run() {
       const route = args[0] || '/api/status';
       const body  = args[1] ? JSON.parse(args[1]) : {};
       const res   = await authRequest('POST', route, body);
-      console.log(`HTTP ${res.status}`);
-      console.log(JSON.stringify(res.body, null, 2));
+      printRaw('POST ' + route, res.body);
       break;
     }
 
@@ -348,7 +342,7 @@ async function run() {
         await authRequest('POST', '/auth/revoke', { sessionId: s.sessionId });
         clearSession();
       }
-      console.log('✓ Session revoked');
+      console.log(green('  ✓ ') + 'Session ended');
       break;
     }
 
@@ -363,11 +357,10 @@ async function run() {
       if (!existsSync(filepath)) { console.error('File not found:', filepath); process.exit(1); }
       const content  = readFileSync(filepath, 'utf8');
       const filename = require('path').basename(filepath);
-      console.log('Pushing', filename, peerId ? '→ peer:' + peerId : '→ local');
+      console.log('  ' + dim('→ ') + bold(filename) + (peerId ? dim('  to peer:' + peerId) : '') + '…');
       const route = peerId ? '/api/push/peer/' + peerId : '/api/push/file';
       const res   = await authRequest('POST', route, { filename, content, source: 'auth-client-push' });
-      console.log(`HTTP ${res.status}`);
-      console.log(JSON.stringify(res.body, null, 2));
+      printPush(res.body || {}, filename);
       break;
     }
 
@@ -376,8 +369,7 @@ async function run() {
       const prompt    = args.join(' ');
       const provider  = process.env.NEXUS_PROVIDER || 'ollama';
       const res       = await authRequest('POST', '/api/guardian/command', { prompt, provider, command: 'code' });
-      console.log(`HTTP ${res.status}`);
-      console.log(JSON.stringify(res.body, null, 2));
+      printDispatch(res.body || {});
       break;
     }
 
@@ -386,11 +378,7 @@ async function run() {
       const d   = res.body;
       if (!d) { console.log('No response'); break; }
       console.log('\n── NEXUS STATUS ─────────────────────────────────────────');
-      const systems = d.systems || d.statuses || [];
-      for (const s of systems) {
-        const dot = s.online ? '●' : '○';
-        console.log(`  ${dot}  ${(s.systemId || s.id || '?').padEnd(14)} :${s.port || '?'}  ${s.online ? 'online' : 'offline'}`);
-      }
+      printStatus(d);
       break;
     }
 
@@ -398,10 +386,7 @@ async function run() {
       const res = await authRequest('GET', '/api/cortex/gaps?status=open&n=20');
       const gaps = res.body?.gaps || res.body || [];
       if (!gaps.length) { console.log('No open gaps.'); break; }
-      console.log(`\n── ${gaps.length} OPEN GAPS ──────────────────────────────────────`);
-      for (const g of gaps) {
-        console.log(`  [${(g.severity||'?').padEnd(8)}] ${g.type}  ${(g.body||'').slice(0,60)}`);
-      }
+      printGaps(gaps);
       break;
     }
 
@@ -414,54 +399,56 @@ async function run() {
       }
       const publicKey = fs.readFileSync(pubkeyFile, 'utf8');
       const res = await authRequest('POST', '/auth/clients', { uuid, publicKey });
-      console.log(JSON.stringify(res.body, null, 2));
+      if (res.body?.ok) console.log(green('  ✓ ') + 'Client ' + cyan(uuid) + ' registered');
+      else console.log(red('  ✗ ') + (res.body?.error || 'failed'));
       break;
     }
 
     case 'list-clients': {
       const res = await authRequest('GET', '/auth/clients');
-      const clients = res.body?.clients || [];
-      console.log(`\n── ${clients.length} REGISTERED CLIENTS ──────────────────────────`);
-      for (const c of clients) {
-        console.log(`  ${c.uuid}  ${JSON.stringify(c.meta)}`);
-      }
+      printClients(res.body?.clients || []);
       break;
     }
 
     case 'revoke-client': {
       const [uuid] = args;
-      if (!uuid) { console.log('Usage: revoke-client <uuid>'); break; }
-      const res = await authRequest('DELETE', `/auth/clients/${uuid}`);
-      console.log(JSON.stringify(res.body, null, 2));
+      if (!uuid) { console.log(yellow('  Usage: revoke-client <uuid>')); break; }
+      const res = await authRequest('DELETE', '/auth/clients/' + uuid);
+      if (res.body?.ok) console.log(red('  ✗ ') + 'Client ' + cyan(uuid) + ' revoked');
+      else console.log(red('  ✗ ') + (res.body?.error || 'failed'));
       break;
     }
 
     default: {
-      console.log(`
-NEXUS Remote Client — ${NEXUS_URL}
-
-Commands:
-  setup                      Generate keypair, print public key to register
-  login                      Authenticate with NEXUS
-  whoami                     Show current session
-  revoke                     End current session
-
-  get <route>                Authenticated GET request
-  post <route> <json>        Authenticated POST request
-  watch [route]              Stream SSE events (default: /sse)
-  dispatch <prompt>          Send a job to the AI provider
-  status                     All system status
-  gaps                       Open system gaps
-
-  register-client <uuid> <pubkey.pem>   Admin: add a client
-  list-clients                           Admin: list all clients
-  revoke-client <uuid>                   Admin: remove a client
-
-Environment:
-  NEXUS_URL          ${NEXUS_URL}
-  NEXUS_CLIENT_DIR   ${CLIENT_DIR}
-  NEXUS_PROVIDER     ollama (for dispatch)
-`);
+      console.log('');
+      console.log(bold(cyan('NEXUS')) + ' Remote Client  ' + gray(NEXUS_URL));
+      console.log('');
+      console.log(bold('  First time'));
+      console.log(field('setup',   'Generate RSA-2048 keypair, output public key to register'));
+      console.log(field('login',   'Authenticate and start an encrypted session'));
+      console.log('');
+      console.log(bold('  Session'));
+      console.log(field('whoami',  'Your identity, session ID, expiry'));
+      console.log(field('revoke',  'End your session'));
+      console.log('');
+      console.log(bold('  System'));
+      console.log(field('status',  'All systems — online, latency, trust'));
+      console.log(field('gaps',    'Open system gaps — severity, type, age'));
+      console.log(field('watch',   'Live event stream  (watch /sse, watch /api/events)'));
+      console.log(field('dispatch <prompt>', 'Send a job to the AI provider'));
+      console.log(field('push <file>', 'Push file to NEXUS (routed by extension)'));
+      console.log('');
+      console.log(bold('  Raw'));
+      console.log(field('get <route>',  'Authenticated GET, readable output'));
+      console.log(field('post <route> <json>', 'Authenticated POST'));
+      console.log('');
+      console.log(bold('  Admin'));
+      console.log(field('register-client <uuid> <file.pub>', 'Add client to whitelist'));
+      console.log(field('list-clients', 'All registered clients'));
+      console.log(field('revoke-client <uuid>', 'Remove client — immediate'));
+      console.log('');
+      console.log(gray('  ' + NEXUS_URL + '  ·  ' + CLIENT_DIR));
+      console.log('');
     }
   }
 }
