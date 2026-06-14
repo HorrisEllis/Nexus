@@ -1,0 +1,9 @@
+{"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","path":"modules/diagnostic","type":"stale_module","severity":"medium","body":"Module 'diagnostic' has not sent a heartbeat in 60s","status":"pending","source":"gate/gap-finder","causedBy":null,"createdAt":1781397957825,"_rowId":157,"_ts":1781397957825}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"processing","claimedBy":"healer","claimedAt":1781397962640,"_updatedAt":1781397962640}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"needs_manual","resolvedAt":null,"fixStrategy":"forge_patch","escalateToForge":true,"_updatedAt":1781397962641}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"forge_processing","lastForgeAt":1781397972629,"attempts":1,"claimedBy":"self-heal","_updatedAt":1781397972629}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"forge_failed","forgeReason":"module_not_found","_updatedAt":1781397972629}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"forge_processing","lastForgeAt":1781398032674,"attempts":2,"claimedBy":"self-heal","_updatedAt":1781398032674}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"forge_failed","forgeReason":"module_not_found","_updatedAt":1781398032675}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"forge_processing","lastForgeAt":1781398092691,"attempts":3,"claimedBy":"self-heal","_updatedAt":1781398092691}
+{"_mutation":true,"uuid":"b10251da-c068-4f72-a0dd-1926d1901d66","status":"human_required","forgeReason":"module_not_found","_updatedAt":1781398092692}

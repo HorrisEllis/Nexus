@@ -218,6 +218,65 @@ async function bootAsync() {
     },
   });
 
+  // ── Phase 5.4 SOFT: Cognition organs ─────────────────────────────────────
+  // The frontal lobe + cerebellum. These modules existed, were unit-tested,
+  // and were NEVER started by boot. Wiring them is what turns cortex from
+  // "brain with disconnected organs" into a running nervous system.
+  //   gap-finder  — detects stale modules, stuck calls, recurring failures → gaps
+  //   orion/*     — sensor→record→policy→verify: measure, persist, classify regime, verify
+  //   self-heal   — trust-tiered gap remediation; subscribes to HEAL_REQUESTED
+  //   heartbeat   — probes all services, writes heartbeat entries
+  //   raid        — routing intelligence; getState() consulted by guardian dispatch
+  // SOFT: any organ degrading logs and continues. No organ blocks boot.
+  // §3.1 ordering: sensor before record before policy before verify (pipeline order).
+  seq.phase({ name:'cognition.init', type:'SOFT',
+    label:'Cognition organs (gap-finder, orion pipeline, self-heal, heartbeat, raid)',
+    fn: async () => {
+      const organs = [
+        ['gap-finder',   './gate/gap-finder',  { pollMs: parseInt(process.env.CORTEX_GAP_MS    || '2000'),  jaaDB }],
+        ['orion-sensor', './orion/sensor',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '1000'),  jaaDB }],
+        ['orion-record', './orion/record',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '1000'),  jaaDB }],
+        ['orion-policy', './orion/policy',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '2000'),  jaaDB }],
+        ['orion-verify', './orion/verify',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '3000'),  jaaDB }],
+        ['self-heal',    './self-heal',        { pollMs: parseInt(process.env.CORTEX_HEAL_MS   || '15000'), jaaDB }],
+        ['heartbeat',    './heartbeat',        { pollMs: parseInt(process.env.CORTEX_HB_MS     || '10000'), jaaDB }],
+        ['raid',         './core/raid',        { pollMs: parseInt(process.env.CORTEX_RAID_MS   || '3000'),  jaaDB }],
+      ];
+      const started = [];
+      const degraded = [];
+      for (const [name, modPath, cfg] of organs) {
+        try {
+          const mod = require(modPath);
+          mod.init(cfg);
+          started.push(name);
+          global._cortexOrgans = global._cortexOrgans || {};
+          global._cortexOrgans[name] = mod;        // stop() handles can reach these on shutdown
+          // Wire RAID into the admin server so guardian can consult it (§seam, not §import)
+          if (name === 'raid') {
+            try { adminServer.registerRaid(mod); } catch (e) { console.warn(`[cortex/boot] raid route not wired: ${e.message}`); }
+          }
+        } catch (e) {
+          // §1.2 — never silent. Each organ failure is named, logged, survived.
+          degraded.push({ name, error: e.message });
+          console.warn(`[cortex/boot] organ '${name}' degraded: ${e.message}`);
+          try {
+            jaaDB.insert('event_log', {
+              uuid: uid(), type: 'organ.boot.degraded', ts: Date.now(),
+              payload: { organ: name, error: e.message, stack: e.stack?.split('\n')[1] || '' },
+              source: 'boot', causedBy: null,
+            });
+          } catch (_) {}
+        }
+      }
+      jaaDB.insert('event_log', {
+        uuid: uid(), type: 'cognition.booted', ts: Date.now(),
+        payload: { started, startedCount: started.length, degraded, total: organs.length },
+        source: 'boot', causedBy: null,
+      });
+      console.log(`[cortex/boot] cognition: ${started.length}/${organs.length} organs running [${started.join(', ')}]`);
+    },
+  });
+
   // ── Phase 5.5 SOFT: boot snapshot + agent-tools init ───────────────────────
   seq.phase({ name:'snapshot.boot', type:'SOFT',
     label:'Take boot snapshot (§2.1 persistence baseline)',

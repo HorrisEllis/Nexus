@@ -38,6 +38,16 @@ class AdminServer {
     this._intelligence = intelligence;
   }
 
+  // Wire the (already-running) RAID module so guardian can consult routing
+  // decisions over HTTP without importing cortex internals (LAW III: services
+  // talk via the seam, not via cross-process require). Called from boot.js.
+  registerRaid(raid) {
+    if (typeof raid?._decide !== 'function') {
+      throw new TypeError('[AdminServer] registerRaid: module must export _decide()');
+    }
+    this._raid = raid;
+  }
+
   async start() {
     this._server = http.createServer((req, res) => this._handle(req, res));
 
@@ -856,6 +866,26 @@ class AdminServer {
         }
 
                 default: {
+          // ── RAID decision seam ────────────────────────────────────────────
+          // GET /api/raid/decide?intent=...&preferred=...
+          // Guardian consults this to route a job. Returns { agent, reason, cluster }.
+          // Non-fatal by contract: if RAID isn't wired, guardian falls back to its
+          // own default — so we simply 404 and let the caller degrade.
+          if (this._raid && url.pathname === '/api/raid/decide') {
+            try {
+              const intent    = url.searchParams.get('intent') || url.searchParams.get('prompt') || '';
+              const preferred = url.searchParams.get('preferred') || '';
+              const snap      = (typeof this._raid._health === 'object' && this._raid._health) || {};
+              const weights   = this._raid._weights instanceof Map ? this._raid._weights : new Map();
+              const decision  = this._raid._decide({ intent, preferredAgent: preferred }, snap, weights);
+              this._json(res, 200, { ok: true, ...decision });
+            } catch (e) {
+              // §1.2 — name it, don't swallow. Guardian will fall back.
+              this._json(res, 500, { ok: false, error: e.message });
+            }
+            break;
+          }
+
           // Delegate /api/intelligence/* to the registered intelligence module
           if (this._intelligence && url.pathname.startsWith('/api/intelligence')) {
             const body = req.method !== 'GET' ? await this._body(req).catch(() => null) : null;

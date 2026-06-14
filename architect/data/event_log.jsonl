@@ -1,0 +1,1 @@
+{"uuid":"187d32b9-4c91-4146-888d-0850d36edb9c","ts":1781397902444,"type":"architect.booted","payload":{"port":3747,"version":"3.0.0","hooks":{"total":4,"bindings":0,"byType":{"event-bus":1,"api":1,"ollama":1,"webserver":1},"byStatus":{"active":3,"deprecated":0,"seed":1}}},"source":"service"}

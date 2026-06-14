@@ -1,26 +1,9 @@
 {
   "stats": {
     "ncp.message.received": {
-      "count": 3131,
-      "lastTs": 1781249102852,
+      "count": 3148,
+      "lastTs": 1781401717893,
       "intervals": [
-        4402,
-        3074,
-        12,
-        2315,
-        471,
-        146,
-        826471,
-        1464,
-        1110,
-        929,
-        1099,
-        3921,
-        1575,
-        1015,
-        5407,
-        5903,
-        2221,
         11409,
         12442,
         12443,
@@ -103,13 +86,30 @@
         12520,
         12402,
         12433,
-        12450
+        12450,
+        148796412,
+        206,
+        3,
+        197,
+        1670,
+        178,
+        225,
+        5690,
+        130,
+        115,
+        894,
+        2019,
+        3351,
+        2062,
+        2039,
+        1165,
+        3798685
       ],
-      "totalMs": 526830517
+      "totalMs": 679445558
     },
     "ncp.client.connected": {
-      "count": 98,
-      "lastTs": 1781248530764,
+      "count": 101,
+      "lastTs": 1781397899661,
       "intervals": [
         15,
         17,
@@ -207,13 +207,16 @@
         830833,
         1153,
         184220,
-        13306
+        13306,
+        149368461,
+        84,
+        352
       ],
-      "totalMs": 526258305
+      "totalMs": 675627202
     },
     "guardian.provider.connected": {
-      "count": 98,
-      "lastTs": 1781248530764,
+      "count": 101,
+      "lastTs": 1781397899661,
       "intervals": [
         15,
         16,
@@ -311,9 +314,12 @@
         830834,
         1153,
         184220,
-        13305
+        13305,
+        149368463,
+        82,
+        352
       ],
-      "totalMs": 526258304
+      "totalMs": 675627201
     },
     "guardian.tab.event": {
       "count": 1413,
@@ -423,8 +429,8 @@
       "totalMs": 326141414
     },
     "ncp.client.disconnected": {
-      "count": 71,
-      "lastTs": 1781248529874,
+      "count": 73,
+      "lastTs": 1781401636158,
       "intervals": [
         4,
         1,
@@ -495,13 +501,15 @@
         198982070,
         103292,
         1017494,
-        13136
+        13136,
+        153105538,
+        746
       ],
-      "totalMs": 526144161
+      "totalMs": 679250445
     },
     "guardian.provider.disconnected": {
-      "count": 71,
-      "lastTs": 1781248529875,
+      "count": 73,
+      "lastTs": 1781401636158,
       "intervals": [
         3,
         1,
@@ -572,13 +580,15 @@
         198982069,
         103292,
         1017495,
-        13136
+        13136,
+        153105538,
+        745
       ],
-      "totalMs": 526144161
+      "totalMs": 679250444
     },
     "guardian.provider.registered": {
-      "count": 25,
-      "lastTs": 1781248530857,
+      "count": 28,
+      "lastTs": 1781397899670,
       "intervals": [
         253308401,
         26159742,
@@ -603,9 +613,12 @@
         830868,
         1109,
         184229,
-        13382
+        13382,
+        149368614,
+        2,
+        197
       ],
-      "totalMs": 521301274
+      "totalMs": 670670087
     },
     "guardian.job.queued": {
       "count": 8,
@@ -631,12 +644,9 @@
       "totalMs": 319625
     },
     "guardian.tab.dom_map": {
-      "count": 90,
-      "lastTs": 1781249102852,
+      "count": 104,
+      "lastTs": 1781401717894,
       "intervals": [
-        3501,
-        1099,
-        3921,
         1576,
         1015,
         5407,
@@ -722,19 +732,33 @@
         12520,
         12401,
         12433,
-        12450
+        12450,
+        148796413,
+        2075,
+        179,
+        224,
+        5691,
+        129,
+        116,
+        894,
+        2019,
+        3350,
+        2062,
+        2040,
+        1165,
+        3798685
       ],
-      "totalMs": 772178
+      "totalMs": 153387220
     }
   },
   "baseline": {
     "ncp.message.received": {
-      "avgIntervalMs": 15967,
-      "stddevMs": 81630,
+      "avgIntervalMs": 1495743,
+      "stddevMs": 14804275,
       "consistency": 0,
-      "count": 3130,
+      "count": 3140,
       "sampleSize": 100,
-      "computedAt": 1781249090402
+      "computedAt": 1781397907563
     },
     "guardian.tab.event": {
       "avgIntervalMs": 67526,
@@ -745,20 +769,20 @@
       "computedAt": 1781048376829
     },
     "ncp.client.connected": {
-      "avgIntervalMs": 3662966,
-      "stddevMs": 26670236,
+      "avgIntervalMs": 6824514,
+      "stddevMs": 35078239,
       "consistency": 0,
-      "count": 90,
-      "sampleSize": 89,
-      "computedAt": 1781048276458
+      "count": 100,
+      "sampleSize": 99,
+      "computedAt": 1781397899309
     },
     "guardian.provider.connected": {
-      "avgIntervalMs": 3662966,
-      "stddevMs": 26670236,
+      "avgIntervalMs": 6824514,
+      "stddevMs": 35078239,
       "consistency": 0,
-      "count": 90,
-      "sampleSize": 89,
-      "computedAt": 1781048276459
+      "count": 100,
+      "sampleSize": 99,
+      "computedAt": 1781397899310
     },
     "ncp.client.disconnected": {
       "avgIntervalMs": 7625087,
@@ -785,12 +809,12 @@
       "computedAt": 1781247397526
     },
     "guardian.tab.dom_map": {
-      "avgIntervalMs": 8676,
-      "stddevMs": 4986,
-      "consistency": 0.42526547315713026,
-      "count": 90,
-      "sampleSize": 89,
-      "computedAt": 1781249102852
+      "avgIntervalMs": 1510942,
+      "stddevMs": 14878080,
+      "consistency": 0,
+      "count": 100,
+      "sampleSize": 99,
+      "computedAt": 1781397913942
     }
   }
 }
