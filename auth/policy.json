@@ -1,0 +1,47 @@
+{
+  "_comment": "NEXUS Auth Policy — edit this file live, changes apply within 500ms",
+  "version": "1.0.0",
+
+  "snr": {
+    "threshold": 0.75,
+    "requiredFields": ["uuid", "signature", "encryptedSessionKey", "nonce", "ts"],
+    "windowSize": 20,
+    "dropBelowThreshold": true,
+    "logDropped": true
+  },
+
+  "session": {
+    "ttlMs": 28800000,
+    "maxPerClient": 3,
+    "renewWithin": 3600000
+  },
+
+  "rsa": {
+    "keySize": 2048,
+    "paddingScheme": "RSA_PKCS1_OAEP_PADDING",
+    "hashAlgorithm": "sha256"
+  },
+
+  "aes": {
+    "algorithm": "aes-256-gcm",
+    "ivBytes": 12,
+    "tagBytes": 16
+  },
+
+  "whitelist": {
+    "requireUUID": true,
+    "requireUserAgent": false,
+    "allowedUserAgents": [],
+    "uuidPattern": null
+  },
+
+  "rateLimit": {
+    "maxAttemptsPerMinute": 5,
+    "lockoutMs": 300000
+  },
+
+  "nonce": {
+    "bytes": 32,
+    "ttlMs": 60000
+  }
+}

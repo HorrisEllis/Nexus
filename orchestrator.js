@@ -481,6 +481,7 @@ const SYSTEM_LOCAL_UI_DIRS = [
   { system:'nexus',        dir: path.join(ROOT,'ui') },
   { system:'emerge',       dir: path.join(ROOT,'emerge','ui') },
   { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
+  { system:'explorer',     dir: path.join(ROOT,'ui') },  // contract-explorer + contract-renderer
   { system:'diagnostic',   dir: path.join(ROOT,'ui','diagnostic') },  // §HOTSWAP-03
 ];
 
@@ -747,12 +748,109 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     const { systemId, port, meta = {} } = body;
     if (!systemId) return json(res, 400, { ok:false, error:'systemId required' });
     registryUpdate(systemId, { port, meta, registeredAt: Date.now() });
-    // Acknowledge with current orchestrator state for context
+
+    // §1.1 Contract verification — fetch and verify the system's interaction contract
+    // Non-blocking: registration succeeds regardless, but trust state is set
+    setImmediate(async () => {
+      try {
+        const hs = require('./lib/contract-handshake');
+        const entry = await hs.verifySystem(systemId, '127.0.0.1', port, {
+          jaaInsert: null, // cortex not guaranteed up during early boot
+          onResult: (e) => {
+            registryUpdate(systemId, { contractTrust: e.trust, contractHash: e.hash, contractVerifiedAt: e.checkedAt });
+            console.log(`[orch] contract.${e.trust.toLowerCase()} — ${systemId} (${e.routeCount} routes, hash:${e.hash?.slice(0,8)})`);
+            // Broadcast trust state over SSE so UIs can show it
+            broadcast('system.contract.verified', { systemId, trust: e.trust, hash: e.hash, routeCount: e.routeCount });
+          },
+        });
+      } catch(e) {
+        console.warn(`[orch] contract verify failed for ${systemId}: ${e.message}`);
+      }
+    });
+
     return json(res, 200, {
       ok: true, systemId, ts: Date.now(),
       orchestrator: { port: PORT, version: '2.0.0', uptime: process.uptime() },
       registry: registryAll(),
     });
+  }
+
+  // ── Peer relay — cross-orchestrator connection ─────────────────────────────
+  // POST /api/peer/announce  — remote orchestrator announces itself
+  // GET  /api/peer/list      — all known peers
+  // GET  /api/remote/:peerId/* — proxy a request to a remote peer's system
+  if (top === 'api' && sub === 'peer') {
+    const relay = require('./lib/peer-relay');
+    if (M === 'POST' && rest === 'announce') {
+      const body = await readBody(req);
+      const result = await relay.handleAnnounce(body, {
+        broadcastSSE: (type, data) => broadcast(type, data),
+      });
+      return json(res, result.ok ? 200 : 400, result);
+    }
+    if (M === 'GET' && rest === 'list') {
+      return json(res, 200, { ok: true, peers: relay.getAllPeers() });
+    }
+    if (M === 'GET' && rest === 'online') {
+      return json(res, 200, { ok: true, peers: relay.getOnlinePeers() });
+    }
+    // Stale peer prune (can be called by health check cron)
+    if (M === 'POST' && rest === 'prune') {
+      relay.pruneStalePeers({ broadcastSSE: (type, data) => broadcast(type, data) });
+      return json(res, 200, { ok: true });
+    }
+    return json(res, 404, { ok: false, error: 'unknown peer route' });
+  }
+
+  // ── Remote proxy — /api/remote/:peerId/* → remote orchestrator ────────────
+  if (top === 'api' && sub === 'remote' && rest) {
+    const relay  = require('./lib/peer-relay');
+    const parts  = u.pathname.split('/').filter(Boolean);
+    // parts: ['api', 'remote', ':peerId', ...rest]
+    const peerId     = parts[2];
+    const remotePath = '/' + parts.slice(3).join('/') + (u.search || '');
+    relay.proxyToRemote(peerId, remotePath, req, res);
+    return; // relay handles response
+  }
+
+  // ── Auth layer — /auth/* ──────────────────────────────────────────────────
+  // Hotswappable: auth/index.js + auth/policy.json + auth/clients/*.pub
+  // All watched by fs.watch — changes take effect within 500ms
+  if (top === 'auth') {
+    let _auth;
+    try { _auth = require('./auth/index'); } catch(e) {
+      return json(res, 503, { ok: false, error: 'auth module unavailable: ' + e.message });
+    }
+
+    if (M === 'GET' && sub === 'pubkey') return _auth.handlePubkey(req, res);
+    if (M === 'GET' && sub === 'challenge') return _auth.handleChallenge(req, res);
+    if (M === 'POST' && sub === 'handshake') {
+      const body = await readBody(req);
+      return _auth.handleHandshake(body, req, res);
+    }
+    if (M === 'POST' && sub === 'revoke') {
+      const body = await readBody(req);
+      return _auth.handleRevoke(body, res);
+    }
+    // Client management (admin only — should be behind local-only guard in prod)
+    if (M === 'GET'    && sub === 'clients') return _auth.handleClients(res);
+    if (M === 'POST'   && sub === 'clients') {
+      const body = await readBody(req);
+      return _auth.handleRegisterClient(body, res);
+    }
+    if (M === 'DELETE' && sub === 'clients' && rest) {
+      return _auth.handleRevokeClient(rest, res);
+    }
+    return json(res, 404, { ok: false, error: 'unknown auth route' });
+  }
+
+  // ── Contract trust map ────────────────────────────────────────────────────
+  if (top === 'api' && sub === 'trust') {
+    const hs = require('./lib/contract-handshake');
+    return json(res, 200, { ok: true, trust: hs.getTrustMap(), all: hs.getAllEntries().map(e => ({
+      systemId: e.systemId, trust: e.trust, hash: e.hash, routeCount: e.routeCount,
+      checkedAt: e.checkedAt, latencyMs: e.latencyMs, driftReason: e.driftReason,
+    }))});
   }
 
   // ── §AXIOM: Recall — read-only ledger replay for CLIs ─────────────────────
@@ -1513,7 +1611,33 @@ server.listen(PORT, BIND_HOST, async () => {
   // Phase 4 SOFT: UI hotswap watcher
   ownSeq.phase({ name:'ui.hotswap', type:'SOFT',
     label:'Start UI hotswap file watcher',
-    fn: async () => { watchUIDirs(); },
+    fn: async () => { watchUIDirs();
+
+// ── Auth module init + hotswap ────────────────────────────────────────────────
+// auth/index.js, auth/policy.json, auth/clients/*.pub all watched live
+try {
+  const _authMod = require('./auth/index');
+  _authMod.init();
+  // Watch auth/index.js itself for hotswap
+  const _authFile = require.resolve('./auth/index');
+  fs.watch(_authFile, () => {
+    setTimeout(() => {
+      try {
+        delete require.cache[_authFile];
+        const fresh = require('./auth/index');
+        fresh.init();
+        broadcast('orchestrator.auth.hotswapped', { ts: Date.now() });
+        console.log('[auth] module hotswapped');
+      } catch(e) {
+        console.warn('[auth] hotswap failed:', e.message);
+        broadcast('orchestrator.auth.hotswap_failed', { error: e.message, ts: Date.now() });
+      }
+    }, 300);
+  });
+  console.log('[orch] auth module loaded');
+} catch(e) {
+  console.warn('[orch] auth module unavailable:', e.message);
+} },
   });
 
   // Phase 5 SOFT: open CLI terminal — guarded, fires once only
