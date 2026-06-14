@@ -135,6 +135,115 @@ function load(snapId) {
   return JSON.parse(raw);
 }
 
+// ── Half-life decay — retention schedule ─────────────────────────────────────
+// Age brackets and retention fractions:
+//   < 2 weeks:    keep all
+//   2w  → 1mo:   keep 1/3   (thin 2/3 — lowest priority first)
+//   1mo → 1.5mo: keep 1/2   (thin 1/2)
+//   1.5 → 2mo:   keep 1/4   (thin 3/4)
+//   > 2 months:  delete all (except manually pinned)
+//
+// Priority order within bracket (highest → survives pruning):
+//   manual > pre_rollback > auto > pre_forge > boot
+//
+// Pinned snapshots (message starts with '!') are always kept.
+//
+// §A-4: prune writes a 'snapshot.pruned' event before deleting — audit trail.
+// §2.1: disk delete happens after JAA tombstone, never before.
+
+const DECAY_BRACKETS = [
+  { minMs: 0,              maxMs: 14 * 86400000,    keep: 1.0 },  // < 2w: keep all
+  { minMs: 14 * 86400000, maxMs: 30 * 86400000,    keep: 1/3 },  // 2w-1mo: keep 1/3
+  { minMs: 30 * 86400000, maxMs: 45 * 86400000,    keep: 1/2 },  // 1-1.5mo: keep 1/2
+  { minMs: 45 * 86400000, maxMs: 60 * 86400000,    keep: 1/4 },  // 1.5-2mo: keep 1/4
+  { minMs: 60 * 86400000, maxMs: Infinity,          keep: 0   },  // > 2mo: delete all
+];
+
+const TYPE_PRIORITY = { manual:5, pre_rollback:4, auto:3, pre_forge:2, boot:1 };
+
+function prune(opts = {}) {
+  const now     = Date.now();
+  const dryRun  = opts.dryRun !== false; // default dry-run for safety
+  const records = jaaDB.tail('backup_records', 2000);
+  const pruned  = [];
+  const kept    = [];
+
+  // Group by bracket
+  const brackets = DECAY_BRACKETS.map(b => ({ ...b, snaps: [] }));
+  for (const rec of records) {
+    const ageMs = now - (rec.ts || 0);
+    const pinned = (rec.message || '').startsWith('!');
+    if (pinned) { kept.push({ snapId: rec.snapId, reason: 'pinned' }); continue; }
+    const bracket = brackets.find(b => ageMs >= b.minMs && ageMs < b.maxMs);
+    if (bracket) bracket.snaps.push(rec);
+  }
+
+  for (const bracket of brackets) {
+    if (!bracket.snaps.length) continue;
+
+    if (bracket.keep === 0) {
+      // Delete all in this bracket
+      for (const rec of bracket.snaps) {
+        pruned.push({ snapId: rec.snapId, reason: 'age>2mo', ageMs: now - rec.ts });
+        if (!dryRun) _deleteSnapshot(rec);
+      }
+      continue;
+    }
+
+    if (bracket.keep === 1.0) {
+      kept.push(...bracket.snaps.map(s => ({ snapId: s.snapId, reason: 'within-2w' })));
+      continue;
+    }
+
+    // Sort by priority descending — highest priority survives
+    const sorted = [...bracket.snaps].sort((a, b) =>
+      (TYPE_PRIORITY[b.type] || 0) - (TYPE_PRIORITY[a.type] || 0)
+    );
+    const keepN  = Math.ceil(sorted.length * bracket.keep);
+    const toKeep = sorted.slice(0, keepN);
+    const toDrop = sorted.slice(keepN);
+
+    kept.push(...toKeep.map(s => ({ snapId: s.snapId, reason: 'priority-kept' })));
+    for (const rec of toDrop) {
+      pruned.push({ snapId: rec.snapId, reason: `bracket-thinned-keep${bracket.keep}`, ageMs: now - rec.ts });
+      if (!dryRun) _deleteSnapshot(rec);
+    }
+  }
+
+  if (!dryRun && pruned.length) {
+    jaaDB.insert('event_log', {
+      uuid: uid(), type: 'snapshot.pruned',
+      payload: { count: pruned.length, kept: kept.length, snapIds: pruned.map(p => p.snapId) },
+      source: MODULE_ID, causedBy: null, ts: now,
+    });
+    console.log(`[${MODULE_ID}] pruned ${pruned.length} snapshots, kept ${kept.length}`);
+  }
+
+  return { dryRun, pruned, kept, total: records.length };
+}
+
+function _deleteSnapshot(rec) {
+  // Tombstone in JAA first (§2.1)
+  try {
+    jaaDB.update('backup_records', rec.uuid, {
+      status:    'pruned',
+      prunedAt:  Date.now(),
+    });
+  } catch(_) {}
+  // Then delete from disk
+  try {
+    if (rec.snapPath && fs.existsSync(rec.snapPath)) {
+      fs.unlinkSync(rec.snapPath);
+    }
+  } catch(e) {
+    jaaDB.insert('failures', {
+      uuid: uid(), source: MODULE_ID,
+      error: `delete snapshot ${rec.snapId}: ${e.message}`,
+      ts: Date.now(),
+    });
+  }
+}
+
 // ── Diff two snapshots ────────────────────────────────────────────────────────
 function diff(snapIdA, snapIdB) {
   const a = load(snapIdA);
@@ -238,6 +347,13 @@ let _interval = null;
 
 async function _tick() {
   try {
+    // Hourly prune — enforce half-life decay schedule
+    const now = Date.now();
+    if (!_tick._lastPrune || now - _tick._lastPrune > 3600000) {
+      _tick._lastPrune = now;
+      prune({ dryRun: false }); // live prune
+    }
+
     // Auto-snapshot when a forge patch is about to be applied
     const pending = jaaDB.query('forge_patches',
       r => r.applied === true && !r.snapshotBefore, 5
@@ -269,4 +385,4 @@ function stop() {
   if (_interval) { clearInterval(_interval); _interval = null; }
 }
 
-module.exports = { init, stop, create, list, load, diff, rollback, bootSnapshot, VERSION, MODULE_ID };
+module.exports = { init, stop, create, list, load, diff, rollback, bootSnapshot, prune, VERSION, MODULE_ID };

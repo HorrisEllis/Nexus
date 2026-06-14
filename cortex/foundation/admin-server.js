@@ -880,6 +880,73 @@ class AdminServer {
           break;
         }
 
+        // ── Lab — snapshot test environment ─────────────────────────────────
+        // POST /api/lab/session { snapId }  → create session from production snap
+        // POST /api/lab/session/upload      → create session from .nex file body
+        // GET  /api/lab/sessions            → list sessions
+        // POST /api/lab/session/:id/run     → run experiment
+        // GET  /api/lab/session/:id         → get session
+        // DELETE /api/lab/session/:id       → destroy session
+
+        case route === 'POST /api/lab/session': {
+          try {
+            const body = await this._body(req);
+            const lab  = require('../lab/index');
+            let session;
+            if (body.snapId) {
+              const snapData = lab.loadProductionSnapshot(body.snapId);
+              session = lab.createSession(snapData);
+            } else if (body.snapData) {
+              session = lab.createSession(body.snapData);
+            } else {
+              this._json(res, 400, { ok:false, error:'snapId or snapData required' }); break;
+            }
+            this._json(res, 201, { ok:true, session: session.toJSON() });
+          } catch(e) { this._json(res, 500, { ok:false, error:e.message }); }
+          break;
+        }
+
+        case route === 'GET /api/lab/sessions': {
+          try {
+            const lab = require('../lab/index');
+            this._json(res, 200, { ok:true, sessions: lab.listSessions() });
+          } catch(e) { this._json(res, 500, { ok:false, error:e.message }); }
+          break;
+        }
+
+        case url.pathname.startsWith('/api/lab/session/') && route.includes('/run'): {
+          try {
+            const parts     = url.pathname.split('/').filter(Boolean);
+            const sessionId = parts[3];
+            const body      = await this._body(req);
+            const lab       = require('../lab/index');
+            const result    = await lab.runExperiment(sessionId, body);
+            this._json(res, 200, { ok:true, result });
+          } catch(e) { this._json(res, 500, { ok:false, error:e.message }); }
+          break;
+        }
+
+        case url.pathname.startsWith('/api/lab/session/') && req.method === 'GET': {
+          try {
+            const sessionId = url.pathname.split('/')[4];
+            const lab       = require('../lab/index');
+            const session   = lab.getSession(sessionId);
+            if (!session) { this._json(res, 404, { ok:false, error:'session not found' }); break; }
+            this._json(res, 200, { ok:true, session: session.toJSON() });
+          } catch(e) { this._json(res, 500, { ok:false, error:e.message }); }
+          break;
+        }
+
+        case url.pathname.startsWith('/api/lab/session/') && req.method === 'DELETE': {
+          try {
+            const sessionId = url.pathname.split('/')[4];
+            const lab       = require('../lab/index');
+            const ok        = lab.destroySession(sessionId);
+            this._json(res, ok ? 200 : 404, { ok });
+          } catch(e) { this._json(res, 500, { ok:false, error:e.message }); }
+          break;
+        }
+
         // ── Gap bulk resolve — clear noise gaps by type ───────────────────────
         // POST /api/gaps/resolve-batch { type, reason }
         // Use to clear DELTA.TENSION and other signal-not-gap rows
