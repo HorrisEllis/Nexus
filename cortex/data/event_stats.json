@@ -1,14 +1,17 @@
 {
   "stats": {
     "cortex.storage.opened": {
-      "count": 4,
-      "lastTs": 1781287394289,
+      "count": 7,
+      "lastTs": 1781449128740,
       "intervals": [
         2871780,
         1015091,
-        39065277
+        39065277,
+        158061769,
+        2382048,
+        1290634
       ],
-      "totalMs": 42952148
+      "totalMs": 204686599
     }
   },
   "baseline": {}
