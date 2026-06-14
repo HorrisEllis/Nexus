@@ -636,6 +636,7 @@ textarea.finp{resize:vertical;line-height:1.55}
     <button class="tbn m"  data-tab="log"        onclick="go('log')"       title="Log">≡<span class="nav-label">LOG</span></button>
     <button class="tbn g"  data-tab="repo"       onclick="go('repo')"      title="Files">⊞<span class="nav-label">FILES</span></button>
     <button class="tbn c"  data-tab="tutorial"   onclick="go('tutorial')"  title="Tutorial">?<span class="nav-label">TUTORIAL</span></button>
+    <button class="tbn c"  data-tab="pipeline"   onclick="go('pipeline')"  title="Pipeline">⟶<span class="nav-label">PIPELINE</span></button>
 
     <div class="nav-sep"></div>
 
@@ -2442,6 +2443,80 @@ setInterval(()=>{if(document.getElementById('panel-forge')?.classList.contains('
 
           <div style="height:3px;background:var(--bg2);flex-shrink:0">
             <div id="tut-bar" style="height:100%;background:var(--c);width:8.3%;transition:width .35s ease"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PIPELINE TUTORIAL ════════════════════════════════════ -->
+    <div class="panel" id="panel-pipeline" style="flex-direction:column;overflow:hidden">
+      <div class="tshdr">
+        <div class="adot g" id="pipe-hdr-dot"></div>
+        <span class="tshdr-title" style="color:var(--o)">⟶ PIPELINE</span>
+        <span class="note" style="margin-left:8px">Idea → Spec → Compile → Dispatch → Artifact → Heal · live walkthrough</span>
+        <div style="flex:1"></div>
+        <span id="pipe-stage-label" style="font-size:9px;color:var(--muted)">stage 1 of 8</span>
+        <button class="btn" style="font-size:9px;padding:2px 10px;margin-left:8px;border-color:var(--o);color:var(--o)" onclick="pipeReset()">↺ restart</button>
+      </div>
+
+      <div style="display:flex;height:100%;min-height:0;overflow:hidden">
+
+        <!-- Stage list sidebar -->
+        <div id="pipe-sidebar" style="width:190px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;font-size:10px"></div>
+
+        <!-- Active stage -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden">
+
+          <!-- Stage header -->
+          <div style="padding:12px 18px 10px;border-bottom:1px solid var(--border);flex-shrink:0">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span id="pipe-stage-num" style="font-size:9px;color:var(--muted);font-family:var(--mono);min-width:60px">STAGE 0</span>
+              <span id="pipe-status-badge" style="font-size:9px;padding:1px 8px;border-radius:8px;border:1px solid var(--border);color:var(--muted)">—</span>
+              <div style="flex:1"></div>
+              <button id="pipe-run-btn" class="btn" onclick="pipeRun()"
+                style="font-size:9px;padding:2px 12px;border-color:var(--o);color:var(--o)">▶ run stage</button>
+              <button id="pipe-next-btn" class="btn" onclick="pipeNext()"
+                style="font-size:9px;padding:2px 10px">next →</button>
+            </div>
+            <div id="pipe-stage-title" style="font-size:14px;font-weight:700;margin-top:8px;letter-spacing:.02em"></div>
+          </div>
+
+          <!-- Stage content -->
+          <div style="flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px;min-height:0">
+
+            <!-- What / Why -->
+            <div style="display:flex;gap:10px">
+              <div style="flex:1">
+                <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">what</div>
+                <div id="pipe-what" style="font-size:11px;line-height:1.7;color:var(--text2);white-space:pre-wrap"></div>
+              </div>
+              <div style="width:1px;background:var(--border);flex-shrink:0"></div>
+              <div style="flex:1">
+                <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">why</div>
+                <div id="pipe-why" style="font-size:11px;line-height:1.7;color:var(--text2)"></div>
+              </div>
+            </div>
+
+            <!-- Run output -->
+            <div id="pipe-run-output" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:10px 12px;font:10px var(--mono);line-height:1.7;color:var(--text2)"></div>
+
+            <!-- Verify result -->
+            <div id="pipe-verify-box" style="display:none;border-radius:4px;padding:10px 12px;font:11px var(--mono);line-height:1.6"></div>
+
+            <!-- Escalation log -->
+            <div id="pipe-escalation" style="display:none;border-radius:4px;border:1px solid var(--y);padding:10px 12px">
+              <div style="font-size:9px;color:var(--y);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">⚠ escalation in progress</div>
+              <div id="pipe-escalation-log" style="font:9px var(--mono);color:var(--text2);line-height:1.8"></div>
+            </div>
+
+            <!-- Resolution -->
+            <div id="pipe-resolution" style="display:none;border-radius:4px;padding:10px 12px;font-size:11px;line-height:1.6"></div>
+
+          </div>
+
+          <!-- Progress bar -->
+          <div style="height:3px;background:var(--bg2);flex-shrink:0">
+            <div id="pipe-bar" style="height:100%;background:var(--o);width:12.5%;transition:width .35s ease"></div>
           </div>
         </div>
       </div>
@@ -7969,6 +8044,327 @@ function tutReset() {
   _tutPassed = new Array(TUT_STEPS.length).fill(null);
   tutRender();
 }
+
+// ══ PIPELINE TUTORIAL ENGINE ════════════════════════════════════════════════════
+// Drives the pipeline panel — loads stage definitions from pipeline-tutorial.js
+// if available, otherwise uses inline fallback.
+
+var _pipeStages   = null;
+var _pipeStep     = 0;
+var _pipeCtx      = {};   // shared context passed through all stages
+var _pipeResults  = [];   // null | { ok, result, escalation }
+
+function pipeGetStages() {
+  // Try to use the external module (served from /ui/pipeline-tutorial.js)
+  if (window.PIPELINE_STAGES) return window.PIPELINE_STAGES;
+  return [];
+}
+
+function pipeInit() {
+  _pipeStages = pipeGetStages();
+  if (!_pipeStages.length) {
+    // Script not loaded yet — load it
+    if (!document.getElementById('pipe-script')) {
+      var s = document.createElement('script');
+      s.id  = 'pipe-script';
+      s.src = 'http://127.0.0.1:9000/ui/pipeline-tutorial.js';
+      s.onload = function() {
+        _pipeStages = window.PIPELINE_STAGES || [];
+        _pipeResults = new Array(_pipeStages.length).fill(null);
+        pipeSidebarRender();
+        pipeRender();
+      };
+      document.head.appendChild(s);
+      return;
+    }
+  }
+  _pipeResults = new Array(_pipeStages.length).fill(null);
+  pipeSidebarRender();
+  pipeRender();
+}
+
+function pipeSidebarRender() {
+  var sidebar = document.getElementById('pipe-sidebar');
+  if (!sidebar || !_pipeStages.length) return;
+  var COLORS = ['auto','auto','auto','auto','auto','auto','auto','auto'];
+  sidebar.innerHTML = _pipeStages.map(function(s, i) {
+    var res   = _pipeResults[i];
+    var dot   = res === null ? '○' : res.ok ? '✓' : res.escalation?.fixed ? '⚡' : '✗';
+    var col   = res === null ? 'var(--muted)' : res.ok ? 'var(--g)' : res.escalation?.fixed ? 'var(--y)' : 'var(--r)';
+    var active= i === _pipeStep;
+    return '<div onclick="pipeGoto(' + i + ')" style="display:flex;align-items:flex-start;gap:7px;padding:7px 10px;cursor:pointer;border-left:2px solid ' + (active ? 'var(--o)' : 'transparent') + ';' + (active ? 'background:var(--bg2)' : '') + '">' +
+      '<span style="font-size:10px;color:' + col + ';margin-top:1px;width:10px;flex-shrink:0">' + dot + '</span>' +
+      '<span style="font-size:9px;color:' + (active ? 'var(--text)' : 'var(--muted)') + ';line-height:1.4">' + s.title + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+function pipeRender() {
+  var stages = _pipeStages;
+  if (!stages.length) return;
+  var s = stages[_pipeStep];
+  if (!s) return;
+
+  // Progress
+  var pct = Math.round(((_pipeStep + 1) / stages.length) * 100);
+  var bar = document.getElementById('pipe-bar');
+  var lbl = document.getElementById('pipe-stage-label');
+  if (bar) bar.style.width = pct + '%';
+  if (lbl) lbl.textContent = 'stage ' + (_pipeStep+1) + ' of ' + stages.length;
+
+  // Header
+  var num   = document.getElementById('pipe-stage-num');
+  var title = document.getElementById('pipe-stage-title');
+  if (num)   num.textContent   = 'STAGE ' + (_pipeStep + 1);
+  if (title) title.textContent = s.title;
+
+  // What / Why
+  var whatEl = document.getElementById('pipe-what');
+  var whyEl  = document.getElementById('pipe-why');
+  if (whatEl) whatEl.textContent = s.what || '';
+  if (whyEl)  whyEl.textContent  = s.why  || '';
+
+  // Reset result displays
+  ['pipe-run-output','pipe-verify-box','pipe-escalation','pipe-resolution'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+
+  // Badge
+  pipeUpdateBadge();
+  pipeSidebarRender();
+}
+
+function pipeUpdateBadge() {
+  var badge = document.getElementById('pipe-status-badge');
+  if (!badge) return;
+  var res = _pipeResults[_pipeStep];
+  if (res === null) { badge.textContent = '— not run'; badge.style.color = 'var(--muted)'; badge.style.borderColor = 'var(--border)'; }
+  else if (res.ok)  { badge.textContent = '✓ passed';  badge.style.color = 'var(--g)';     badge.style.borderColor = 'var(--g)'; }
+  else if (res.escalation?.fixed) { badge.textContent = '⚡ healed'; badge.style.color = 'var(--y)'; badge.style.borderColor = 'var(--y)'; }
+  else { badge.textContent = '✗ failed'; badge.style.color = 'var(--r)'; badge.style.borderColor = 'var(--r)'; }
+}
+
+async function pipeRun() {
+  var stages = _pipeStages;
+  var s = stages[_pipeStep];
+  if (!s) return;
+
+  var btn = document.getElementById('pipe-run-btn');
+  var out = document.getElementById('pipe-run-output');
+  var vbox= document.getElementById('pipe-verify-box');
+  var esc = document.getElementById('pipe-escalation');
+  var res = document.getElementById('pipe-resolution');
+
+  if (btn) { btn.textContent = '⟳ running…'; btn.disabled = true; }
+
+  // Show output box
+  if (out) { out.style.display = ''; out.textContent = 'Running: ' + s.title + '…'; }
+  if (vbox) vbox.style.display = 'none';
+  if (esc)  esc.style.display  = 'none';
+  if (res)  res.style.display  = 'none';
+
+  var stageResult = null;
+  var stageError  = null;
+
+  try {
+    stageResult = await s.run(_pipeCtx);
+    if (out) out.textContent = 'Done: ' + JSON.stringify(stageResult, null, 2).slice(0, 400);
+  } catch(e) {
+    stageError = e.message;
+    if (out) {
+      out.textContent = 'Error: ' + e.message;
+      out.style.background = 'rgba(239,68,68,.06)';
+      out.style.borderColor = 'var(--r)';
+    }
+  }
+
+  // Verify
+  var verifyResult = null;
+  if (!stageError) {
+    try {
+      verifyResult = await s.verify(stageResult, _pipeCtx);
+    } catch(e) {
+      verifyResult = { pass: false, detail: 'Verify threw: ' + e.message };
+    }
+  }
+
+  var passed = !stageError && verifyResult?.pass;
+
+  if (vbox) {
+    vbox.style.display = '';
+    var col  = passed ? 'var(--g)' : 'var(--r)';
+    var icon = passed ? '✓' : '✗';
+    vbox.style.background  = passed ? 'rgba(0,255,136,.06)' : 'rgba(239,68,68,.06)';
+    vbox.style.border      = '1px solid ' + col;
+    vbox.innerHTML = '<span style="color:' + col + ';font-weight:700">' + icon + '</span>  ' +
+      (stageError ? stageError : (verifyResult?.detail || ''));
+  }
+
+  // Escalate if failed
+  var escalationResult = null;
+  if (!passed) {
+    escalationResult = await pipeEscalate(s, stageError || verifyResult?.detail || 'unknown failure');
+  }
+
+  _pipeResults[_pipeStep] = {
+    ok:         passed,
+    result:     stageResult,
+    error:      stageError,
+    verify:     verifyResult,
+    escalation: escalationResult,
+  };
+
+  if (btn) { btn.textContent = '▶ run stage'; btn.disabled = false; }
+  pipeUpdateBadge();
+  pipeSidebarRender();
+}
+
+async function pipeEscalate(stage, errorMsg) {
+  var escEl  = document.getElementById('pipe-escalation');
+  var logEl  = document.getElementById('pipe-escalation-log');
+  var resEl  = document.getElementById('pipe-resolution');
+
+  if (escEl) escEl.style.display = '';
+
+  function log(msg) {
+    if (logEl) {
+      var line = document.createElement('div');
+      line.textContent = msg;
+      logEl.appendChild(line);
+    }
+  }
+
+  log('Stage failed: ' + errorMsg);
+  log('Starting escalation chain…');
+
+  // Strategy 1: auto-retry
+  log('');
+  log('Strategy 1/4 — AUTO: retry with corrected input');
+  if (stage.autoFix) {
+    try {
+      var autoResult = await stage.autoFix(_pipeCtx);
+      if (autoResult) {
+        log('  ✓ Auto-fix applied: ' + JSON.stringify(autoResult).slice(0,80));
+        // Re-run the stage
+        try {
+          var retryResult = await stage.run(_pipeCtx);
+          var retryVerify = await stage.verify(retryResult, _pipeCtx);
+          if (retryVerify.pass) {
+            log('  ✓ Retry succeeded after auto-fix');
+            if (resEl) {
+              resEl.style.display = '';
+              resEl.style.background = 'rgba(0,255,136,.06)';
+              resEl.style.border = '1px solid var(--g)';
+              resEl.innerHTML = '<span style="color:var(--g);font-weight:700">⚡ AUTO-HEALED</span>  Stage passed after auto-fix: ' + retryVerify.detail;
+            }
+            return { fixed: true, strategy: 'auto', detail: autoResult };
+          }
+        } catch(e2) { log('  Retry failed: ' + e2.message); }
+      } else { log('  Auto-fix returned null — moving to next strategy'); }
+    } catch(e) { log('  Auto-fix threw: ' + e.message); }
+  } else { log('  No auto-fix defined for this stage'); }
+
+  // Strategy 2: T1 — self-heal
+  log('');
+  log('Strategy 2/4 — T1: ask self-heal to repair');
+  try {
+    var healStatus = await fetch(CORTEX + '/api/self-heal/status').then(function(r){return r.json();}).catch(function(){return null;});
+    if (healStatus?.ok) {
+      log('  Self-heal online. Tension: ' + (healStatus.totalTension||0).toFixed(2) + '  Open loops: ' + (healStatus.openLoops||0));
+      if (stage.gapType) {
+        var gapRes = await fetch(CORTEX + '/api/gaps', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ type: stage.gapType, path: stage.id, body: errorMsg, severity: 'high', source: 'pipeline-tutorial' })
+        }).then(function(r){return r.json();}).catch(function(){return null;});
+        if (gapRes?.ok) {
+          log('  ✓ Gap registered — UUID: ' + (gapRes.uuid||'?').slice(0,8));
+          log('  Waiting up to 8s for healer response…');
+          for (var i = 0; i < 4; i++) {
+            await new Promise(function(r){setTimeout(r,2000);});
+            var statusNow = await fetch(CORTEX + '/api/self-heal/status').then(function(r){return r.json();}).catch(function(){return null;});
+            if (statusNow && (statusNow.openLoops||0) < (healStatus.openLoops||0) + 1) {
+              log('  ✓ Loop closed — healer acted');
+              break;
+            }
+          }
+        }
+      } else { log('  No gapType defined — cannot create targeted gap'); }
+    } else { log('  Self-heal offline'); }
+  } catch(e) { log('  T1 threw: ' + e.message); }
+
+  // Strategy 3: T2 — snapshot + note
+  log('');
+  log('Strategy 3/4 — T2: take snapshot (safe rollback point)');
+  try {
+    var snapRes = await fetch(CORTEX + '/api/snapshots', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: 'pre-repair: pipeline stage ' + stage.id, type: 'pre_rollback' })
+    }).then(function(r){return r.json();}).catch(function(){return null;});
+    if (snapRes?.ok) {
+      log('  ✓ Snapshot taken: ' + (snapRes.snapId||'?') + ' — safe to attempt manual repair');
+    } else { log('  Snapshot failed: ' + (snapRes?.error||'unknown')); }
+  } catch(e) { log('  T2 threw: ' + e.message); }
+
+  // Strategy 4: T3 — forge proposal
+  log('');
+  log('Strategy 4/4 — T3: ask forge to propose a fix');
+  try {
+    var forgeRes = await fetch(GUARD + '/command', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        command: 'fix', provider: 'ollama',
+        prompt: 'Pipeline stage "' + stage.title + '" failed: ' + errorMsg + '. Write a one-paragraph diagnosis and suggest a specific fix.',
+      })
+    }).then(function(r){return r.json();}).catch(function(){return null;});
+    if (forgeRes?.id || forgeRes?.jobId) {
+      log('  ✓ Fix proposal dispatched — Job: ' + (forgeRes.id||forgeRes.jobId||'?').slice(0,8));
+      log('  Check GUARDIAN → ARTIFACTS for the proposed fix');
+    } else { log('  Forge dispatch failed: ' + (forgeRes?.error||'guardian offline?')); }
+  } catch(e) { log('  T3 threw: ' + e.message); }
+
+  // All strategies exhausted — show human action
+  log('');
+  log('All automated strategies exhausted.');
+  if (resEl) {
+    resEl.style.display = '';
+    resEl.style.background = 'rgba(239,68,68,.06)';
+    resEl.style.border = '1px solid var(--r)';
+    resEl.innerHTML = '<span style="color:var(--r);font-weight:700">⚠ HUMAN ACTION REQUIRED</span><br>' +
+      '<div style="margin-top:6px;color:var(--text2)">' + (stage.humanAction || 'Review the error above and repair manually, then click Run Stage to retry.') + '</div>';
+  }
+
+  return { fixed: false, strategy: 'human', detail: stage.humanAction };
+}
+
+function pipeNext() {
+  if (_pipeStep < _pipeStages.length - 1) {
+    _pipeStep++;
+    pipeRender();
+  }
+}
+
+function pipeGoto(i) {
+  _pipeStep = i;
+  pipeRender();
+}
+
+function pipeReset() {
+  _pipeStep   = 0;
+  _pipeCtx    = {};
+  _pipeResults= new Array((_pipeStages||[]).length).fill(null);
+  pipeSidebarRender();
+  pipeRender();
+}
+
+// Hook go() for pipeline init
+(function() {
+  var _prevGoPipe = typeof go === 'function' ? go : function(){};
+  go = function(panel) {
+    _prevGoPipe(panel);
+    if (panel === 'pipeline') pipeInit();
+  };
+})();
 
 // Auto-init when tutorial panel is shown — hook into existing go() if present
 (function() {

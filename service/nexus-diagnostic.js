@@ -35,7 +35,6 @@ const { createContractVerifier, loadContracts } = require('../lib/cfr/contract-v
 const { createCFRField, computeRegime }         = require('../lib/cfr/field');
 const { createBaseline } = require('../lib/baseline');
 const { sigma, mean }    = require('../lib/baseline');
-const ledgerWriter       = require('../lib/ledger-writer');
 
 const ROOT    = path.join(__dirname, '..');
 const PORT    = 7825;
@@ -200,7 +199,7 @@ function startService() {
           ts:       Date.now(),
         });
         // Broadcast to diagnostic SSE
-        broadcast({ type: v.type, ...v });
+        _broadcast({ type: v.type, ...v });
       }
     },
   });
@@ -346,7 +345,7 @@ function startService() {
 
   // Live ledger watching — detect new events within milliseconds
   for (const [name, cfg] of Object.entries(SYSTEMS)) {
-    const ledgerDir = path.join(ROOT, cfg.dataDir);
+    const ledgerDir = path.join(ROOT, cfg.ledgerDir);
     fs.mkdirSync(ledgerDir, { recursive: true });
     try {
       fs.watch(ledgerDir, { recursive: true }, (event, filename) => {
@@ -424,7 +423,7 @@ function startService() {
 
     // 4. Check for recent failure ledger entries
     for (const [name] of Object.entries(SYSTEMS)) {
-      const failDir = path.join(ROOT, SYSTEMS[name].dataDir, 'failures');
+      const failDir = path.join(ROOT, cfg.dataDir, 'failures');
       if (!fs.existsSync(failDir)) continue;
       const failFiles = fs.readdirSync(failDir).filter(f => f.endsWith('.ndjson'));
       for (const ff of failFiles.slice(-5)) {
@@ -466,7 +465,7 @@ function startService() {
 
     // 7. Ledger health — is each system writing?
     for (const [name, cfg] of Object.entries(SYSTEMS)) {
-      const ledgerDir = path.join(ROOT, cfg.dataDir);
+      const ledgerDir = path.join(ROOT, cfg.ledgerDir);
       if (!fs.existsSync(ledgerDir)) {
         issues.push({ type:'ledger_missing', system:name, severity:'medium',
           fix:`Start ${name} service to create ledger` }); continue;
@@ -589,7 +588,7 @@ function startService() {
     if (url.pathname === '/audit/health') {
       const health = {};
       for (const [name, cfg] of Object.entries(SYSTEMS)) {
-        const lp  = require('path').join(ROOT, cfg.dataDir, 'event_log.jsonl');
+        const lp  = require('path').join(ROOT, cfg.ledgerDir, 'event_log.jsonl');
         const ex  = require('fs').existsSync(lp);
         const st  = ex ? require('fs').statSync(lp) : null;
         health[name] = { ledgerExists: ex, ledgerSizeKB: st ? Math.round(st.size/1024) : 0, port: cfg.port };
@@ -650,7 +649,7 @@ function startService() {
       const n      = parseInt(url.searchParams.get('n') || '20');
       const cfg    = SYSTEMS[system];
       if (!cfg) { res.writeHead(404, CORS); res.end(JSON.stringify({ ok: false, error: 'unknown system' })); return; }
-      const ledgerFile = path.join(ROOT, cfg.dataDir, stream, 'events.ndjson');
+      const ledgerFile = path.join(ROOT, cfg.ledgerDir, stream, 'events.ndjson');
       let events = [];
       if (fs.existsSync(ledgerFile)) {
         const lines = fs.readFileSync(ledgerFile, 'utf8').trim().split('\n').filter(Boolean);
@@ -667,7 +666,7 @@ function startService() {
       if (!traceId) { res.writeHead(400, CORS); res.end(JSON.stringify({ ok:false, error:'uuid required' })); return; }
       const trace = [];
       for (const [name, cfg] of Object.entries(SYSTEMS)) {
-        const ledgerDir = path.join(ROOT, cfg.dataDir);
+        const ledgerDir = path.join(ROOT, cfg.ledgerDir);
         if (!fs.existsSync(ledgerDir)) continue;
         const streams = fs.readdirSync(ledgerDir).filter(f => {
           try { return fs.statSync(path.join(ledgerDir,f)).isDirectory(); } catch { return false; }
