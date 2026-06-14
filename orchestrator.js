@@ -475,7 +475,7 @@ const UI_SYSTEMS = ['cortex','guardian','idearium','emerge','orchestrator'];
 // These are the canonical sources. Edit files here → hotswap fires.
 // Run `npm run sync-ui` to mirror them to root ui/<system>/ for orchestrator serving.
 const SYSTEM_LOCAL_UI_DIRS = [
-  { system:'guardian',     dir: path.join(ROOT,'guardian','ui') },
+  // guardian UI absorbed into main nexus UI — no separate guardian/ui
   { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
   { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
   { system:'nexus',        dir: path.join(ROOT,'ui') },

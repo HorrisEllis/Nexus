@@ -1,19 +1,18 @@
 {
   "stats": {
     "orchestrator.boot.started": {
-      "count": 5,
-      "lastTs": 1781397895795,
+      "count": 4,
+      "lastTs": 1781287394224,
       "intervals": [
         2871769,
         1015092,
-        39065365,
-        110501571
+        39065365
       ],
-      "totalMs": 153453797
+      "totalMs": 42952226
     },
     "orchestrator.phase.ok": {
-      "count": 35,
-      "lastTs": 1781397895852,
+      "count": 28,
+      "lastTs": 1781287394527,
       "intervals": [
         0,
         11,
@@ -41,64 +40,53 @@
         130,
         0,
         1,
-        0,
-        110501270,
-        0,
-        12,
-        40,
-        0,
-        0,
-        3
+        0
       ],
-      "totalMs": 153453852
+      "totalMs": 42952527
     },
     "orchestrator.cli.terminal.opened": {
-      "count": 5,
-      "lastTs": 1781397895824,
+      "count": 4,
+      "lastTs": 1781287394507,
       "intervals": [
         2871771,
         1015091,
-        39065619,
-        110501317
+        39065619
       ],
-      "totalMs": 153453798
+      "totalMs": 42952481
     },
     "orchestrator.ui.opened": {
-      "count": 5,
-      "lastTs": 1781397895837,
+      "count": 4,
+      "lastTs": 1781287394511,
       "intervals": [
         2871774,
         1015090,
-        39065612,
-        110501326
+        39065612
       ],
-      "totalMs": 153453802
+      "totalMs": 42952476
     },
     "orchestrator.booted": {
-      "count": 5,
-      "lastTs": 1781397895838,
+      "count": 4,
+      "lastTs": 1781287394513,
       "intervals": [
         2871773,
         1015090,
-        39065613,
-        110501325
+        39065613
       ],
-      "totalMs": 153453801
+      "totalMs": 42952476
     },
     "orchestrator.systems.sequence.started": {
-      "count": 5,
-      "lastTs": 1781397895840,
+      "count": 4,
+      "lastTs": 1781287394515,
       "intervals": [
         2871773,
         1015090,
-        39065614,
-        110501325
+        39065614
       ],
-      "totalMs": 153453802
+      "totalMs": 42952477
     },
     "orchestrator.system.starting": {
-      "count": 26,
-      "lastTs": 1781397903991,
+      "count": 20,
+      "lastTs": 1781287398565,
       "intervals": [
         1631,
         16242,
@@ -118,30 +106,23 @@
         822,
         806,
         811,
-        1610,
-        110497275,
-        1632,
-        1631,
-        1631,
-        1630,
-        1627
+        1610
       ],
-      "totalMs": 153461953
+      "totalMs": 42956527
     },
     "orchestrator.boot.complete": {
-      "count": 5,
-      "lastTs": 1781397895853,
+      "count": 4,
+      "lastTs": 1781287394527,
       "intervals": [
         2871774,
         1015088,
-        39065615,
-        110501326
+        39065615
       ],
-      "totalMs": 153453803
+      "totalMs": 42952477
     },
     "system.registered": {
-      "count": 34,
-      "lastTs": 1781397907622,
+      "count": 26,
+      "lastTs": 1781287401374,
       "intervals": [
         73,
         17905,
@@ -167,152 +148,142 @@
         59,
         156,
         4270,
-        2358,
-        110494479,
-        72,
-        1634,
-        1677,
-        1616,
-        2,
-        3602,
-        3166
+        2358
       ],
-      "totalMs": 153465572
+      "totalMs": 42959324
     },
     "orchestrator.pulse": {
-      "count": 2804,
-      "lastTs": 1781401913999,
+      "count": 1197,
+      "lastTs": 1781287624525,
       "intervals": [
-        5030,
-        284,
-        1506,
-        3182,
-        5033,
-        285,
-        1505,
-        3180,
-        5038,
-        286,
-        1508,
-        3179,
-        5030,
-        286,
-        1507,
-        3183,
-        5038,
-        284,
-        1508,
-        3181,
-        5038,
-        278,
-        1504,
-        3180,
-        5047,
-        282,
-        1491,
-        3182,
-        5061,
-        280,
-        1493,
-        3172,
-        5057,
-        286,
-        1488,
-        3181,
-        5059,
-        280,
-        1495,
-        3180,
-        5054,
-        285,
-        1487,
-        3183,
-        5054,
-        285,
-        1486,
-        3180,
-        5064,
-        271,
-        1494,
-        3182,
-        5065,
-        271,
-        1489,
-        3177,
-        5077,
-        270,
-        1489,
-        3180,
-        5068,
-        269,
-        1486,
-        3192,
-        5062,
-        269,
-        1491,
-        3178,
-        5062,
-        284,
-        1489,
-        3179,
-        5059,
-        285,
-        1491,
-        3180,
-        5054,
-        285,
-        1487,
-        3177,
-        5053,
-        286,
-        1489,
-        3183,
-        5048,
-        285,
-        1490,
-        3181,
-        5046,
-        285,
-        1491,
-        3179,
-        5055,
-        276,
-        1500,
-        3172,
-        5053,
-        287,
-        1496,
-        3176
+        3293,
+        6646,
+        77,
+        3282,
+        6649,
+        69,
+        3294,
+        6643,
+        72,
+        3294,
+        6648,
+        69,
+        3297,
+        6653,
+        50,
+        3300,
+        6653,
+        54,
+        3304,
+        6645,
+        62,
+        3306,
+        6633,
+        61,
+        3321,
+        6628,
+        61,
+        3318,
+        38291364,
+        290,
+        229,
+        9482,
+        109,
+        168,
+        9722,
+        110,
+        168,
+        9723,
+        109,
+        168,
+        9725,
+        107,
+        168,
+        9724,
+        108,
+        169,
+        9724,
+        107,
+        169,
+        9725,
+        106,
+        169,
+        9726,
+        105,
+        169,
+        9727,
+        104,
+        169,
+        9728,
+        104,
+        169,
+        9729,
+        102,
+        170,
+        9727,
+        103,
+        169,
+        9728,
+        103,
+        170,
+        9727,
+        104,
+        170,
+        9728,
+        102,
+        171,
+        9727,
+        102,
+        171,
+        9729,
+        100,
+        172,
+        9728,
+        101,
+        171,
+        9729,
+        100,
+        171,
+        9731,
+        98,
+        172,
+        9729,
+        99,
+        175,
+        9728,
+        97,
+        174,
+        9730,
+        96,
+        174
       ],
-      "totalMs": 157471948
+      "totalMs": 43182474
     },
     "cortex.boot.started": {
-      "count": 6,
-      "lastTs": 1781397897558,
+      "count": 5,
+      "lastTs": 1781287394745,
       "intervals": [
         2871775,
         1015084,
         39065218,
-        546,
-        110502813
+        546
       ],
-      "totalMs": 153455436
+      "totalMs": 42952623
     },
     "cortex.registered": {
-      "count": 6,
-      "lastTs": 1781397897562,
+      "count": 5,
+      "lastTs": 1781287394754,
       "intervals": [
         2871774,
         1015084,
         39065247,
-        522,
-        110502808
+        522
       ],
-      "totalMs": 153455435
+      "totalMs": 42952627
     },
     "cortex.phase.ok": {
-      "count": 59,
-      "lastTs": 1781397897624,
+      "count": 47,
+      "lastTs": 1781287394835,
       "intervals": [
         24,
         2,
@@ -359,53 +330,38 @@
         2,
         174,
         74,
-        3,
-        110502729,
-        29,
-        0,
-        24,
-        0,
-        2,
-        1,
-        0,
-        3,
-        1,
-        0,
-        0
+        3
       ],
-      "totalMs": 153455468
+      "totalMs": 42952679
     },
     "repl.status": {
-      "count": 4,
-      "lastTs": 1781397895988,
+      "count": 3,
+      "lastTs": 1781248329014,
       "intervals": [
         2871776,
-        1015081,
-        149566974
+        1015081
       ],
-      "totalMs": 153453831
+      "totalMs": 3886857
     },
     "cortex.boot.complete": {
-      "count": 5,
-      "lastTs": 1781397897625,
+      "count": 4,
+      "lastTs": 1781287394588,
       "intervals": [
         2871789,
         1015087,
-        39065526,
-        110503037
+        39065526
       ],
-      "totalMs": 153455439
+      "totalMs": 42952402
     },
     "cortex.system.online": {
-      "count": 5,
-      "lastTs": 1781397898295,
+      "count": 4,
+      "lastTs": 1781287394537,
       "intervals": [
         2871761,
         1015096,
-        39064817,
-        110503758
+        39064817
       ],
-      "totalMs": 153455432
+      "totalMs": 42951674
     },
     "orchestrator.system.failed": {
       "count": 1,
@@ -420,19 +376,18 @@
       "totalMs": 0
     },
     "idearium.boot.started": {
-      "count": 5,
-      "lastTs": 1781397900836,
+      "count": 4,
+      "lastTs": 1781287394236,
       "intervals": [
         2857135,
         1015086,
-        39062003,
-        110506600
+        39062003
       ],
-      "totalMs": 153440824
+      "totalMs": 42934224
     },
     "idearium.phase.ok": {
-      "count": 35,
-      "lastTs": 1781397904011,
+      "count": 26,
+      "lastTs": 1781287394598,
       "intervals": [
         8,
         2,
@@ -458,96 +413,80 @@
         1,
         113,
         48,
-        60,
-        110506238,
-        10,
-        1,
-        5,
-        2,
-        1,
-        125,
-        1,
-        3030
+        60
       ],
-      "totalMs": 153443999
+      "totalMs": 42934586
     },
     "idearium.booted": {
-      "count": 4,
-      "lastTs": 1781397900854,
+      "count": 3,
+      "lastTs": 1781287394594,
       "intervals": [
         3872226,
-        39062339,
-        110506260
+        39062339
       ],
-      "totalMs": 153440825
+      "totalMs": 42934565
     },
     "idearium.boot.complete": {
-      "count": 4,
-      "lastTs": 1781397904011,
+      "count": 3,
+      "lastTs": 1781287394377,
       "intervals": [
         3872242,
-        39062104,
-        110509634
+        39062104
       ],
-      "totalMs": 153443980
+      "totalMs": 42934346
     },
     "idearium.system.online": {
-      "count": 5,
-      "lastTs": 1781397901558,
+      "count": 4,
+      "lastTs": 1781287396153,
       "intervals": [
         2857138,
         1015093,
-        39063201,
-        110505405
+        39063201
       ],
-      "totalMs": 153440837
+      "totalMs": 42935432
     },
     "architect.system.online": {
-      "count": 5,
-      "lastTs": 1781397903186,
+      "count": 4,
+      "lastTs": 1781287397764,
       "intervals": [
         2857154,
         1016791,
-        39061478,
-        110505422
+        39061478
       ],
-      "totalMs": 153440845
+      "totalMs": 42935423
     },
     "emerge.system.online": {
-      "count": 5,
-      "lastTs": 1781397904815,
+      "count": 4,
+      "lastTs": 1781287398571,
       "intervals": [
         2857147,
         1016797,
-        39060663,
-        110506244
+        39060663
       ],
-      "totalMs": 153440851
+      "totalMs": 42934607
     },
     "orchestrator.systems.sequence.complete": {
-      "count": 5,
-      "lastTs": 1781397905620,
+      "count": 4,
+      "lastTs": 1781287399371,
       "intervals": [
         2857147,
         1016798,
-        39060657,
-        110506249
+        39060657
       ],
-      "totalMs": 153440851
+      "totalMs": 42934602
     },
     "guardian.boot.started": {
-      "count": 4,
-      "lastTs": 1781397899210,
+      "count": 3,
+      "lastTs": 1781287394232,
       "intervals": [
         1015094,
-        39063606,
-        110504978
+        39063606
       ],
-      "totalMs": 150583678
+      "totalMs": 40078700
     },
     "guardian.phase.ok": {
-      "count": 44,
-      "lastTs": 1781397899243,
+      "count": 33,
+      "lastTs": 1781287394567,
       "intervals": [
         20,
         1,
@@ -580,55 +519,58 @@
         98,
         27,
         28,
-        19,
-        110504643,
-        14,
-        0,
-        5,
-        0,
-        1,
-        5,
-        1,
-        0,
-        5,
-        2
+        19
       ],
-      "totalMs": 150583710
+      "totalMs": 40079034
     },
     "guardian.registered": {
-      "count": 4,
-      "lastTs": 1781397899238,
+      "count": 3,
+      "lastTs": 1781287394540,
       "intervals": [
         1015085,
-        39063885,
-        110504698
+        39063885
       ],
-      "totalMs": 150583668
+      "totalMs": 40078970
     },
     "[object Object]": {
-      "count": 4,
-      "lastTs": 1781397899241,
+      "count": 3,
+      "lastTs": 1781287394550,
       "intervals": [
         1015085,
-        39063893,
-        110504691
+        39063893
       ],
-      "totalMs": 150583669
+      "totalMs": 40078978
     },
     "guardian.boot.complete": {
-      "count": 4,
-      "lastTs": 1781397899243,
+      "count": 3,
+      "lastTs": 1781287394568,
       "intervals": [
         1015085,
-        39063910,
-        110504675
+        39063910
       ],
-      "totalMs": 150583670
+      "totalMs": 40078995
     },
     "ncp.message.received": {
-      "count": 130,
-      "lastTs": 1781401717895,
+      "count": 113,
+      "lastTs": 1781249102854,
       "intervals": [
+        4404,
+        3073,
+        11,
+        2316,
+        471,
+        146,
+        826473,
+        1463,
+        1109,
+        930,
+        2109,
+        2912,
+        1575,
+        1015,
+        5408,
+        5902,
+        2220,
         11411,
         12442,
         12450,
@@ -711,40 +653,22 @@
         12520,
         12401,
         12433,
-        12450,
-        148796412,
-        207,
-        1,
-        199,
-        1668,
-        180,
-        223,
-        5694,
-        128,
-        115,
-        894,
-        2019,
-        3350,
-        2062,
-        2040,
-        1164,
-        3798685
+        12450
       ],
-      "totalMs": 154402284
+      "totalMs": 1787243
     },
     "guardian.system.online": {
-      "count": 4,
-      "lastTs": 1781397899927,
+      "count": 3,
+      "lastTs": 1781287395343,
       "intervals": [
         1015094,
-        39064007,
-        110504584
+        39064007
       ],
-      "totalMs": 150583685
+      "totalMs": 40079101
     },
     "ncp.client.connected": {
-      "count": 11,
-      "lastTs": 1781397899663,
+      "count": 8,
+      "lastTs": 1781248530769,
       "intervals": [
         253,
         80667,
@@ -752,16 +676,13 @@
         830835,
         1152,
         184223,
-        13305,
-        149368461,
-        81,
-        352
+        13305
       ],
-      "totalMs": 150583067
+      "totalMs": 1214173
     },
     "guardian.provider.connected": {
-      "count": 11,
-      "lastTs": 1781397899663,
+      "count": 8,
+      "lastTs": 1781248530770,
       "intervals": [
         253,
         80667,
@@ -769,16 +690,13 @@
         830834,
         1153,
         184223,
-        13305,
-        149368461,
-        80,
-        352
+        13305
       ],
-      "totalMs": 150583067
+      "totalMs": 1214174
     },
     "guardian.provider.registered": {
-      "count": 11,
-      "lastTs": 1781397899673,
+      "count": 8,
+      "lastTs": 1781248530862,
       "intervals": [
         198,
         80667,
@@ -786,12 +704,9 @@
         830875,
         1104,
         184233,
-        13380,
-        149368612,
-        1,
-        198
+        13380
       ],
-      "totalMs": 150583011
+      "totalMs": 1214200
     },
     "idearium.phase.failed": {
       "count": 1,
@@ -812,33 +727,32 @@
       "totalMs": 0
     },
     "ncp.client.disconnected": {
-      "count": 6,
-      "lastTs": 1781401636159,
+      "count": 4,
+      "lastTs": 1781248529881,
       "intervals": [
         103292,
         1017499,
-        13136,
-        153105534,
-        744
+        13136
       ],
-      "totalMs": 154240205
+      "totalMs": 1133927
     },
     "guardian.provider.disconnected": {
-      "count": 6,
-      "lastTs": 1781401636159,
+      "count": 4,
+      "lastTs": 1781248529881,
       "intervals": [
         103292,
         1017498,
-        13136,
-        153105534,
-        744
+        13136
       ],
-      "totalMs": 154240204
+      "totalMs": 1133926
     },
     "guardian.tab.dom_map": {
-      "count": 104,
-      "lastTs": 1781401717895,
+      "count": 90,
+      "lastTs": 1781249102855,
       "intervals": [
+        3502,
+        2109,
+        2913,
         1576,
         1014,
         5408,
@@ -924,28 +838,32 @@
         12519,
         12402,
         12433,
-        12450,
-        148796412,
-        2075,
-        179,
-        224,
-        5695,
-        126,
-        115,
-        895,
-        2019,
-        3350,
-        2062,
-        2039,
-        1165,
-        3798684
+        12450
       ],
-      "totalMs": 153387219
+      "totalMs": 772179
     },
     "guardian.cfr.gap": {
-      "count": 157,
-      "lastTs": 1781401635415,
+      "count": 139,
+      "lastTs": 1781249102855,
       "intervals": [
+        532,
+        1,
+        1352,
+        9215,
+        1147,
+        953,
+        3,
+        1871,
+        316,
+        8184,
+        12411,
+        1,
+        12370,
+        1,
+        12452,
+        1,
+        12455,
+        0,
         12453,
         1,
         807,
@@ -1027,117 +945,43 @@
         12432,
         0,
         12450,
-        1,
-        148804584,
-        126,
-        1,
-        114,
-        1,
-        894,
-        0,
-        2018,
-        1,
-        3350,
-        1,
-        2061,
-        0,
-        2039,
-        1,
-        1164,
-        1,
-        3716204
+        1
       ],
-      "totalMs": 153296216
-    },
-    "bridge.boot.started": {
-      "count": 1,
-      "lastTs": 1781397895925,
-      "intervals": [],
-      "totalMs": 0
-    },
-    "bridge.registered": {
-      "count": 1,
-      "lastTs": 1781397895930,
-      "intervals": [],
-      "totalMs": 0
-    },
-    "bridge.phase.ok": {
-      "count": 8,
-      "lastTs": 1781397895968,
-      "intervals": [
-        11,
-        1,
-        0,
-        0,
-        0,
-        2,
-        6
-      ],
-      "totalMs": 20
-    },
-    "bridge.booted": {
-      "count": 1,
-      "lastTs": 1781397895967,
-      "intervals": [],
-      "totalMs": 0
-    },
-    "bridge.boot.complete": {
-      "count": 1,
-      "lastTs": 1781397895968,
-      "intervals": [],
-      "totalMs": 0
-    },
-    "bridge.system.online": {
-      "count": 1,
-      "lastTs": 1781397896668,
-      "intervals": [],
-      "totalMs": 0
-    },
-    "idearium.tunnel.ready": {
-      "count": 1,
-      "lastTs": 1781397904011,
-      "intervals": [],
-      "totalMs": 0
-    },
-    "orchestrator.invariants.scanned": {
-      "count": 1,
-      "lastTs": 1781401505640,
-      "intervals": [],
-      "totalMs": 0
+      "totalMs": 763656
     }
   },
   "baseline": {
     "cortex.phase.ok": {
-      "avgIntervalMs": 3131744,
-      "stddevMs": 16453791,
-      "consistency": 0,
-      "count": 50,
-      "sampleSize": 49,
-      "computedAt": 1781397897593
-    },
-    "orchestrator.pulse": {
-      "avgIntervalMs": 2502,
-      "stddevMs": 1796,
-      "consistency": 0.2820010642743179,
-      "count": 2800,
-      "sampleSize": 100,
-      "computedAt": 1781401903987
-    },
-    "orchestrator.phase.ok": {
-      "avgIntervalMs": 5291510,
-      "stddevMs": 21118635,
-      "consistency": 0,
-      "count": 30,
-      "sampleSize": 29,
-      "computedAt": 1781397895797
-    },
-    "guardian.phase.ok": {
-      "avgIntervalMs": 3861121,
-      "stddevMs": 18367227,
+      "avgIntervalMs": 1101344,
+      "stddevMs": 6177005,
       "consistency": 0,
       "count": 40,
       "sampleSize": 39,
-      "computedAt": 1781397899236
+      "computedAt": 1781287394566
+    },
+    "orchestrator.pulse": {
+      "avgIntervalMs": 386149,
+      "stddevMs": 3809619,
+      "consistency": 0,
+      "count": 1190,
+      "sampleSize": 100,
+      "computedAt": 1781287604351
+    },
+    "orchestrator.phase.ok": {
+      "avgIntervalMs": 204574,
+      "stddevMs": 668144,
+      "consistency": 0,
+      "count": 20,
+      "sampleSize": 19,
+      "computedAt": 1781248328909
+    },
+    "guardian.phase.ok": {
+      "avgIntervalMs": 1382033,
+      "stddevMs": 7123545,
+      "consistency": 0,
+      "count": 30,
+      "sampleSize": 29,
+      "computedAt": 1781287394493
     },
     "orchestrator.system.starting": {
       "avgIntervalMs": 2260870,
@@ -1148,68 +992,44 @@
       "computedAt": 1781287398565
     },
     "system.registered": {
-      "avgIntervalMs": 5291627,
-      "stddevMs": 21116495,
+      "avgIntervalMs": 2260648,
+      "stddevMs": 8697223,
       "consistency": 0,
-      "count": 30,
-      "sampleSize": 29,
-      "computedAt": 1781397899236
+      "count": 20,
+      "sampleSize": 19,
+      "computedAt": 1781287394356
     },
     "ncp.message.received": {
-      "avgIntervalMs": 1533626,
-      "stddevMs": 14805273,
+      "avgIntervalMs": 16660,
+      "stddevMs": 82003,
+      "consistency": 0,
+      "count": 110,
+      "sampleSize": 100,
+      "computedAt": 1781249065570
+    },
+    "idearium.phase.ok": {
+      "avgIntervalMs": 2259702,
+      "stddevMs": 8699731,
+      "consistency": 0,
+      "count": 20,
+      "sampleSize": 19,
+      "computedAt": 1781287394358
+    },
+    "guardian.cfr.gap": {
+      "avgIntervalMs": 5618,
+      "stddevMs": 5889,
       "consistency": 0,
       "count": 130,
       "sampleSize": 100,
-      "computedAt": 1781401717895
-    },
-    "idearium.phase.ok": {
-      "avgIntervalMs": 5291063,
-      "stddevMs": 21119368,
-      "consistency": 0,
-      "count": 30,
-      "sampleSize": 29,
-      "computedAt": 1781397900852
-    },
-    "guardian.cfr.gap": {
-      "avgIntervalMs": 1493603,
-      "stddevMs": 14805312,
-      "consistency": 0,
-      "count": 150,
-      "sampleSize": 100,
-      "computedAt": 1781397913945
+      "computedAt": 1781249053050
     },
     "guardian.tab.dom_map": {
-      "avgIntervalMs": 1510942,
-      "stddevMs": 14878080,
-      "consistency": 0,
-      "count": 100,
-      "sampleSize": 99,
-      "computedAt": 1781397913945
-    },
-    "ncp.client.connected": {
-      "avgIntervalMs": 16731413,
-      "stddevMs": 46894938,
-      "consistency": 0,
-      "count": 10,
-      "sampleSize": 9,
-      "computedAt": 1781397899311
-    },
-    "guardian.provider.connected": {
-      "avgIntervalMs": 16731413,
-      "stddevMs": 46894938,
-      "consistency": 0,
-      "count": 10,
-      "sampleSize": 9,
-      "computedAt": 1781397899311
-    },
-    "guardian.provider.registered": {
-      "avgIntervalMs": 16731424,
-      "stddevMs": 46894988,
-      "consistency": 0,
-      "count": 10,
-      "sampleSize": 9,
-      "computedAt": 1781397899475
+      "avgIntervalMs": 8676,
+      "stddevMs": 4982,
+      "consistency": 0.42572736982095527,
+      "count": 90,
+      "sampleSize": 89,
+      "computedAt": 1781249102855
     }
   }
 }

@@ -38,16 +38,6 @@ class AdminServer {
     this._intelligence = intelligence;
   }
 
-  // Wire the (already-running) RAID module so guardian can consult routing
-  // decisions over HTTP without importing cortex internals (LAW III: services
-  // talk via the seam, not via cross-process require). Called from boot.js.
-  registerRaid(raid) {
-    if (typeof raid?._decide !== 'function') {
-      throw new TypeError('[AdminServer] registerRaid: module must export _decide()');
-    }
-    this._raid = raid;
-  }
-
   async start() {
     this._server = http.createServer((req, res) => this._handle(req, res));
 
@@ -848,44 +838,84 @@ class AdminServer {
           break;
         }
 
-        // ── Self-heal status ──────────────────────────────────────────────────
+        // ── Self-heal status — enhanced with tension scoring ─────────────────
         case route === 'GET /api/self-heal/status': {
           try {
+            const allGaps  = jaaDB.query('gaps', () => true, 500);
+            const byStatus = {};
+            let totalTension = 0;
+            for (const g of allGaps) {
+              byStatus[g.status] = (byStatus[g.status] || 0) + 1;
+            }
+
+            // Tension scoring — open loops accumulate tension over time
+            const openStatuses = new Set(['pending','processing','needs_manual','forge_processing','forge_failed']);
+            const openGaps = allGaps.filter(g => openStatuses.has(g.status));
+            for (const g of openGaps) {
+              const WEIGHT = { critical:4, high:2, medium:1, low:0.4 };
+              const w = WEIGHT[g.severity] || 1;
+              const ageH = (Date.now() - (g.createdAt || g.ts || Date.now())) / 3600000;
+              const ageFactor = Math.min(3, 1 + Math.log1p(ageH) * 0.5);
+              const retryPenalty = 1 + (g.attempts || 0) * 0.3;
+              totalTension += w * ageFactor * retryPenalty;
+            }
+
             const pending  = jaaDB.query('gaps', r => r.status === 'needs_manual', 50);
             const patched  = jaaDB.query('gaps', r => r.status === 'forge_applied', 50);
             const ready    = jaaDB.query('gaps', r => r.status === 'forge_patch_ready', 50);
             const human    = jaaDB.query('gaps', r => r.status === 'human_required', 50);
             const patches  = jaaDB.tail('forge_patches', 20);
+
             this._json(res, 200, { ok: true,
-              pending: pending.length, patched: patched.length,
-              ready: ready.length, human_required: human.length,
-              recentPatches: patches,
+              pending:        pending.length,
+              patched:        patched.length,
+              ready:          ready.length,
+              human_required: human.length,
+              openLoops:      openGaps.length,
+              totalTension:   Math.round(totalTension * 100) / 100,
+              byStatus,
+              recentPatches:  patches,
             });
           } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
           break;
         }
 
-                default: {
-          // ── RAID decision seam ────────────────────────────────────────────
-          // GET /api/raid/decide?intent=...&preferred=...
-          // Guardian consults this to route a job. Returns { agent, reason, cluster }.
-          // Non-fatal by contract: if RAID isn't wired, guardian falls back to its
-          // own default — so we simply 404 and let the caller degrade.
-          if (this._raid && url.pathname === '/api/raid/decide') {
-            try {
-              const intent    = url.searchParams.get('intent') || url.searchParams.get('prompt') || '';
-              const preferred = url.searchParams.get('preferred') || '';
-              const snap      = (typeof this._raid._health === 'object' && this._raid._health) || {};
-              const weights   = this._raid._weights instanceof Map ? this._raid._weights : new Map();
-              const decision  = this._raid._decide({ intent, preferredAgent: preferred }, snap, weights);
-              this._json(res, 200, { ok: true, ...decision });
-            } catch (e) {
-              // §1.2 — name it, don't swallow. Guardian will fall back.
-              this._json(res, 500, { ok: false, error: e.message });
-            }
-            break;
-          }
+        // ── Gap bulk resolve — clear noise gaps by type ───────────────────────
+        // POST /api/gaps/resolve-batch { type, reason }
+        // Use to clear DELTA.TENSION and other signal-not-gap rows
+        case route === 'POST /api/gaps/resolve-batch': {
+          try {
+            const body   = await this._body(req);
+            const type   = body.type;
+            const reason = body.reason || 'bulk-resolve';
+            if (!type) { this._json(res, 400, { ok:false, error:'type required' }); break; }
 
+            const matches = jaaDB.query('gaps',
+              r => r.type === type && r.status !== 'resolved' && r.status !== 'forge_applied',
+              500
+            );
+            let resolved = 0;
+            for (const g of matches) {
+              jaaDB.update('gaps', g.uuid, {
+                status:     'resolved',
+                resolvedAt: Date.now(),
+                fixStrategy:'bulk-resolve',
+                resolveReason: reason,
+              });
+              resolved++;
+            }
+            jaaDB.insert('event_log', {
+              uuid: require('crypto').randomUUID(),
+              type: 'gaps.bulk-resolved',
+              payload: { gapType: type, count: resolved, reason },
+              source: 'admin-server', ts: Date.now(),
+            });
+            this._json(res, 200, { ok:true, resolved, type, reason });
+          } catch(e) { this._json(res, 500, { ok:false, error: e.message }); }
+          break;
+        }
+
+                default: {
           // Delegate /api/intelligence/* to the registered intelligence module
           if (this._intelligence && url.pathname.startsWith('/api/intelligence')) {
             const body = req.method !== 'GET' ? await this._body(req).catch(() => null) : null;

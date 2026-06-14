@@ -90,7 +90,7 @@ _physQueue.watchInput(async (data, filename) => {
     if (!prompt) return;
     const provider = 'claude';
     console.log('[guardian queue] text job arrived:', filename.slice(0, 40));
-    const job = createJob({ command: 'queue', provider, prompt });
+    const job = createJob(provider, 'queue', prompt);
     jobs.set(job.id, job);
     bus.emit('guardian.job.queued', { jobId: job.id, provider, filename });
     if (ncp.isConnected(provider)) dispatchJob(job);
@@ -104,12 +104,9 @@ _physQueue.watchInput(async (data, filename) => {
       _physQueue.enqueue({ content: body.spec, ext: 'spec', provider,
         uuid: queueUid + '-s', source: 'queue-json' });
     } else if (body.prompt) {
-      // Consult RAID for routing unless caller named a provider explicitly.
-      const chosen = body.provider ? body.provider : await chooseProvider(body.prompt, 'claude', body.preferred || '');
-      const job = createJob({ command: body.command || 'queue', provider: chosen, prompt: body.prompt });
+      const job = createJob(provider, body.command || 'queue', body.prompt);
       jobs.set(job.id, job);
-      if (ncp.isConnected(chosen)) dispatchJob(job);
-      else dispatchJob(job); // dispatchJob handles the not-connected queue+tab path
+      if (ncp.isConnected(provider)) dispatchJob(job);
     }
   }
 });
@@ -145,48 +142,6 @@ function _postEvent(type, payload, opts) {
 }
 const DROPZONE_PORT = process.env.GUARDIAN_DROPZONE_PORT || 7822;
 const NEXUS_URL     = process.env.NEXUS_URL || 'http://127.0.0.1:3748';
-
-// ── RAID routing seam ─────────────────────────────────────────────────────────
-// Guardian asks cortex's RAID "what provider for this intent?" before dispatch.
-// RAID returns an AGENT (ollama / guardian-claude / guardian-chatgpt / claude);
-// guardian maps that to one of its own PROVIDERS (the userscript tab keys).
-// Non-fatal by design (§CC-style): cortex unreachable → fall back to `fallback`.
-// LAW I lives in RAID — guardian just honours the decision.
-const _RAID_AGENT_TO_PROVIDER = {
-  'ollama':          'ollama',
-  'guardian-claude': 'claude',
-  'guardian-chatgpt':'chatgpt',
-  'claude':          'claude',
-  'chatgpt':         'chatgpt',
-};
-async function chooseProvider(intent, fallback = 'claude', preferred = '') {
-  if (process.env.GUARDIAN_RAID_OFF === '1') return fallback;
-  try {
-    const http = require('http');
-    const u = new URL('/api/raid/decide', NEXUS_URL);
-    u.searchParams.set('intent', (intent || '').slice(0, 300));
-    if (preferred) u.searchParams.set('preferred', preferred);
-    const decision = await new Promise((resolve, reject) => {
-      const req = http.get(u, { timeout: 1500 }, res => {
-        let raw = '';
-        res.on('data', d => raw += d);
-        res.on('end', () => { try { resolve(JSON.parse(raw)); } catch (e) { reject(e); } });
-      });
-      req.on('timeout', () => req.destroy(new Error('raid timeout')));
-      req.on('error', reject);
-    });
-    if (decision?.ok && decision.agent) {
-      const provider = _RAID_AGENT_TO_PROVIDER[decision.agent.toLowerCase()] || fallback;
-      _postEvent('guardian.route.decided', { intent: (intent||'').slice(0,80), agent: decision.agent, provider, reason: decision.reason, cluster: decision.cluster });
-      return provider;
-    }
-    return fallback;
-  } catch (e) {
-    // §1.2 — visible, not silent. Degrade to fallback, log why.
-    _postEvent('guardian.route.fallback', { reason: e.message, fallback });
-    return fallback;
-  }
-}
 
 const DB_FILE   = path.join(__dirname, 'guardian.db');
 const SCHEMA_FILE = path.join(__dirname, 'schema.sql');
@@ -332,9 +287,20 @@ function updateJob(id, patch) {
 }
 
 // Jobs waiting for provider to connect
-const pendingQueue = new Map(); // provider → job[]
+const { pool: _dispatchPool } = require('../lib/dispatch-pool'); // §P11: per-provider semaphore
+const pendingQueue = new Map(); // provider → job[] (legacy fallback for non-pool paths)
 
 function dispatchJob(job) {
+  // §P11: route through dispatch pool — per-provider semaphore, job stealing
+  _dispatchPool.enqueue(job.provider, { id: job.id, provider: job.provider, priority: job.priority || 'normal', payload: job },
+    (poolJob) => _doDispatch(poolJob.payload));
+
+  // If pool enqueued (slot available) _doDispatch was called synchronously.
+  // If queued or stolen, it will be called when slot frees.
+  return; // pool owns dispatch from here
+}
+
+function _doDispatch(job) {
   // NCP: push job via SSE channel instead of WebSocket
   if (!ncp.isConnected(job.provider)) {
     // Queue it — will flush when provider connects via GET /channel
@@ -1673,6 +1639,15 @@ function bodyJ(req) { return new Promise((resolve,reject) => { let b=''; req.on(
 function handleExtendedRoutes(req, res, url, method) {
   const parts = url.pathname.split('/').filter(Boolean);
 
+  // ── Forge health ──────────────────────────────────────────────────────────
+  if (url.pathname === '/forge/health' && method === 'GET') {
+    const forge = require('../cockpit/forge');
+    forge.healthCheck()
+      .then(h => pRes(res, 200, { ok: true, forge: h }))
+      .catch(e => pRes(res, 200, { ok: false, error: e.message }));
+    return;
+  }
+
   // ── Core API routes ────────────────────────────────────────────────────────
   // ── Auto-update: /version returns component versions ─────────────────────
   // ── GET /open/:provider — redirect to provider URL (opens tab) ──────────────
@@ -1897,6 +1872,38 @@ function handleExtendedRoutes(req, res, url, method) {
     }
     pRes(res, 404, { ok:false, error:'lab not available' });
     return true;
+  }
+
+  if (method==='GET' && url.pathname==='/alk/last') {
+    // Resume — returns last user-initiated ALK decision
+    try {
+      const alk = require('../lib/alk');
+      const decisions = alk.query({ actor: 'user', limit: 1 });
+      const last = decisions[0] || null;
+      pRes(res, 200, { ok:true, decision: last });
+    } catch(_) { pRes(res, 200, { ok:true, decision: null }); }
+    return;
+  }
+
+  if (method==='POST' && url.pathname==='/seam/retry') {
+    // SEAM watchdog — force retry a stuck GENERATING chunk
+    bodyJ(req).then(body => {
+      const { queueId, chunkUuid, reason } = body || {};
+      const queue = _activeQueues.get(queueId);
+      if (!queue) { pRes(res,404,{ok:false,error:'queue not found'}); return; }
+      const active = queue._active;
+      if (active && (!chunkUuid || active.uuid === chunkUuid)) {
+        // Release the lock and force retry
+        queue._active = null;
+        try { active._transition('RETRYING', { reason: reason||'watchdog_timeout' }); } catch(_){}
+        setTimeout(() => queue._next(), 100);
+        console.log('[guardian] watchdog retry forced:', chunkUuid, 'queue:', queueId);
+        pRes(res, 200, { ok:true, retried: active.uuid });
+      } else {
+        pRes(res, 200, { ok:true, msg:'chunk no longer active or mismatch' });
+      }
+    }).catch(e => pRes(res,500,{ok:false,error:e.message}));
+    return;
   }
 
   if (method==='GET' && url.pathname==='/seam/queues') {
@@ -2430,7 +2437,22 @@ function handleExtendedRoutes(req, res, url, method) {
 
       // ── Raw job dispatch ────────────────────────────────────────────────────
       const parsed = parseCommand(body.raw);
-      const provider = body.provider || parsed.provider || 'chatgpt';
+      let _rawProvider = body.provider || parsed.provider || null;
+
+      // §RAID: if no explicit provider, let RAID decide (LAW_I: Ollama first)
+      if (!_rawProvider || _rawProvider === 'auto') {
+        try {
+          const _raid = require('../cortex/core/raid/index');
+          const _prompt = body.prompt || parsed.prompt || '';
+          const _decision = _raid.decide(_prompt, { preferredAgent: 'auto' });
+          _rawProvider = _decision.agent;
+          console.log(`[guardian] RAID → ${_rawProvider} (${_decision.reason})`);
+        } catch(_) {
+          _rawProvider = 'chatgpt'; // RAID not started — fallback
+        }
+      }
+
+      const provider = _rawProvider;
       const command  = body.command  || parsed.command  || 'code';
       const prompt   = body.prompt   || parsed.prompt   || '';
       const content  = body.content  || '';

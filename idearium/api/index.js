@@ -2,7 +2,7 @@
  * ╔══════════════════════════════════════════════════════════════════════════╗
  * ║  Idearium HTTP API — idearium/api/index.js                             ║
  * ║  UUID:    idearium-api-v1-0000-4000-0000-000000000002                  ║
- * ║  Version: 2.0.0  ·  Port: 4800                                        ║
+ * ║  Version: pre-release  ·  Port: 4800                                        ║
  * ╚══════════════════════════════════════════════════════════════════════════╝
  *
  * Every endpoint declared in interaction-contract.json is implemented here.

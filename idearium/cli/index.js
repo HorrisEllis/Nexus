@@ -3,7 +3,7 @@
  * ╔══════════════════════════════════════════════════════════════════════════╗
  * ║  Idearium CLI — idearium/cli/index.js                                  ║
  * ║  UUID:    idearium-cli-v1-0000-4000-0000-000000000003                  ║
- * ║  Version: 2.0.0                                                        ║
+ * ║  Version: pre-release                                                        ║
  * ╚══════════════════════════════════════════════════════════════════════════╝
  *
  * The CLI is the truth layer. Every feature has a CLI command.

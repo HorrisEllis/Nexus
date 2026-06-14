@@ -692,22 +692,45 @@ function startService() {
       return;
     }
 
-    // Gap resolution — get fix command for a gap
-    if (url.pathname.startsWith('/gaps/') && url.pathname.endsWith('/fix')) {
+    // Gap resolution — POST /gaps/:uuid/fix triggers HEAL_REQUESTED on nexus-bus
+    // The diagnostic UI calls this when you click HEAL on an open loop.
+    // Self-heal subscribes to HEAL_REQUESTED and runs the forge pipeline.
+    if (url.pathname.startsWith('/gaps/') && url.pathname.endsWith('/fix') && req.method === 'POST') {
       const gapId = url.pathname.split('/')[2];
       const gap   = openGaps.get(gapId);
       if (!gap) { res.writeHead(404, CORS); res.end(JSON.stringify({ ok:false, error:'gap not found' })); return; }
-      const fixes = {
-        'stuck_queue_item':    `node cli/diagnose.js ${gap.system} --fix`,
-        'baseline_deviation':  `curl http://127.0.0.1:${PORT}/baseline/${gap.system}`,
-        'system_offline':      `node service/${gap.system}-service.js`,
-        'high_friction':       `node cli/diagnose.js ${gap.system}`,
-        'orphaned_pending':    `node service/${gap.system}-service.js  # restart to replay queue`,
-        'syntax_error':        `node --check ${gap.file || ''}`,
-      };
-      const fix = fixes[gap.type] || `node cli/diagnose.js ${gap.system || 'all'}`;
+
+      let triggered = false;
+      try {
+        const bus = require('../nexus-bus');
+        bus.emit('HEAL_REQUESTED', {
+          gapUuid:    gapId,
+          gapType:    gap.type,
+          modulePath: gap.file || gap.system || '',
+          body:       gap.body || '',
+          sigma:      gap.sigma || 0,
+          causedBy:   gapId,
+          ts:         Date.now(),
+          source:     'diagnostic.ui',
+        });
+        triggered = true;
+      } catch(_) {
+        // nexus-bus not available — write to cortex event_log for pickup
+        try {
+          await fetch('http://127.0.0.1:3748/api/event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'HEAL_REQUESTED',
+              payload: { gapUuid: gapId, gapType: gap.type, source: 'diagnostic.ui' },
+              source: 'diagnostic', ts: Date.now(),
+            }),
+          }).catch(() => {});
+        } catch(_) {}
+      }
+
       res.writeHead(200, CORS);
-      res.end(JSON.stringify({ ok:true, gap, fix, ts: Date.now() }));
+      res.end(JSON.stringify({ ok: true, triggered, gapId, ts: Date.now() }));
       return;
     }
 
@@ -785,27 +808,69 @@ function startService() {
   if (url.pathname === '/tension') {
     // §TENSION-05: per-system tension score
     // tension = friction × (1 + openGaps × 0.2) × (1 + max(0, slope) × 2)
-    // High tension = system closest to breaking
+    // Open gaps are open loops — they accumulate tension via healer.scoreTension()
     const result = {};
+
+    // Load gap-based tension from JAA (open loops)
+    let allOpenGaps = [];
+    try {
+      const cortexUrl = 'http://127.0.0.1:3748';
+      const gapRes = await fetch(cortexUrl + '/api/gaps?status=open', {
+        signal: AbortSignal.timeout(2000)
+      }).catch(() => null);
+      if (gapRes?.ok) {
+        const gapData = await gapRes.json();
+        allOpenGaps = gapData.gaps || gapData || [];
+      }
+    } catch(_) {}
+
+    // Score each open gap and group by system
+    let scoreTension;
+    try { scoreTension = require('../cortex/healer/index').scoreTension; } catch(_) {}
+    const gapTensionBySystem = {};
+    for (const gap of allOpenGaps) {
+      const sys = gap.source?.split('/')?.[0] || gap.system || 'unknown';
+      if (!gapTensionBySystem[sys]) gapTensionBySystem[sys] = { total: 0, count: 0, gaps: [] };
+      const t = scoreTension ? scoreTension(gap) : (gap.severity === 'high' ? 2 : 1);
+      gapTensionBySystem[sys].total += t;
+      gapTensionBySystem[sys].count++;
+      gapTensionBySystem[sys].gaps.push({ uuid: gap.uuid, type: gap.type, tension: t, severity: gap.severity });
+    }
+
     for (const [name, mon] of Object.entries(monitors)) {
-      const s     = mon.stats();
-      const fric  = mon.friction();
-      const gaps  = mon.gaps().length;
-      const slope = Math.max(0, s.slope || 0);
-      const tension = fric * (1 + gaps * 0.2) * (1 + slope * 2);
+      const s       = mon.stats();
+      const fric    = mon.friction();
+      const monGaps = mon.gaps().length;
+      const slope   = Math.max(0, s.slope || 0);
+      const gapData = gapTensionBySystem[name] || { total: 0, count: 0, gaps: [] };
+
+      // Combined tension: monitoring signal + open loop accumulation
+      const monitorTension = fric * (1 + monGaps * 0.2) * (1 + slope * 2);
+      const loopTension    = gapData.total;
+      const tension        = monitorTension + loopTension * 0.3; // loops add 30% weight
+
       result[name] = {
-        tension:   Math.round(tension * 1000) / 1000,
-        friction:  fric,
-        openGaps:  gaps,
-        slope:     s.slope || 0,
-        sigma:     s.sigma || 0,
-        online:    (systemState[name] || {}).online || false,
-        // tension regime
+        tension:        Math.round(tension * 1000) / 1000,
+        monitorTension: Math.round(monitorTension * 1000) / 1000,
+        loopTension:    Math.round(loopTension * 1000) / 1000,
+        friction:       fric,
+        openGaps:       monGaps + gapData.count,
+        openLoops:      gapData.count,
+        topLoops:       gapData.gaps.slice(0, 3),
+        slope:          s.slope || 0,
+        sigma:          s.sigma || 0,
+        online:         (systemState[name] || {}).online || false,
         regime: tension > 2.0 ? 'critical' : tension > 1.0 ? 'turbulent' : tension > 0.4 ? 'elevated' : 'stable',
       };
     }
+
+    // System-wide tension summary
+    const tensions = Object.values(result).map(r => r.tension);
+    const maxTension = tensions.length ? Math.max(...tensions) : 0;
+    const totalLoops = allOpenGaps.length;
+
     res.writeHead(200, CORS);
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify({ systems: result, maxTension, totalLoops, openGapCount: allOpenGaps.length }));
     return;
   }
 
@@ -844,6 +909,57 @@ function startService() {
     edges.sort((a,b) => b.tension - a.tension);
     res.writeHead(200, CORS);
     res.end(JSON.stringify(edges));
+    return;
+  }
+
+  if (url.pathname === '/self-heal') {
+    // Self-heal status — open loops, pending patches, human-required gaps
+    // This is what the diagnostic UI shows in the self-heal panel
+    try {
+      const cortexUrl = 'http://127.0.0.1:3748';
+      const [gapsRes, patchRes] = await Promise.all([
+        fetch(cortexUrl + '/api/gaps?status=all', { signal: AbortSignal.timeout(2000) }).catch(() => null),
+        fetch(cortexUrl + '/api/gaps?status=forge_patch_ready', { signal: AbortSignal.timeout(2000) }).catch(() => null),
+      ]);
+      const allGaps   = gapsRes?.ok   ? (await gapsRes.json()).gaps   || [] : [];
+      const readyPatch= patchRes?.ok  ? (await patchRes.json()).gaps  || [] : [];
+
+      let scoreTension;
+      try { scoreTension = require('../cortex/healer/index').scoreTension; } catch(_) {}
+
+      const byStatus = {};
+      let totalTension = 0;
+      for (const g of allGaps) {
+        byStatus[g.status] = (byStatus[g.status] || 0) + 1;
+        if (g.status !== 'resolved' && g.status !== 'forge_applied') {
+          totalTension += scoreTension ? scoreTension(g) : 1;
+        }
+      }
+
+      const humanRequired = allGaps.filter(g => g.status === 'human_required');
+      const openLoops     = allGaps.filter(g => !['resolved','forge_applied'].includes(g.status));
+
+      res.writeHead(200, CORS);
+      res.end(JSON.stringify({
+        ok:             true,
+        totalGaps:      allGaps.length,
+        openLoops:      openLoops.length,
+        totalTension:   Math.round(totalTension * 100) / 100,
+        byStatus,
+        pending:        byStatus['pending']        || 0,
+        processing:     byStatus['processing']     || 0,
+        needsManual:    byStatus['needs_manual']   || 0,
+        forgeReady:     readyPatch.length,
+        humanRequired:  humanRequired.length,
+        humanRequiredGaps: humanRequired.slice(0,5).map(g => ({
+          uuid: g.uuid, type: g.type, path: g.path, body: g.body?.slice(0,100)
+        })),
+        recentPatches:  byStatus['forge_applied']  || 0,
+      }));
+    } catch(e) {
+      res.writeHead(500, CORS);
+      res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
     return;
   }
 

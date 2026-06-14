@@ -26,12 +26,38 @@ function stop() {
   _interval = null;
 }
 
+// Gap types that are signals, not fixable problems
+// These should never sit in the queue — auto-resolve immediately
+const SIGNAL_TYPES = new Set([
+  'DELTA.TENSION', 'delta.tension', 'tension', 'cfr.tension',
+  'cfr.delta', 'signal', 'observation',
+]);
+
 async function _tick() {
   try {
-    const pending = jaaDB.query('gaps', r => r.status === 'pending', 10);
+    const pending = jaaDB.query('gaps', r => r.status === 'pending', 20);
     if (!pending.length) return;
 
-    for (const gap of pending) {
+    // Auto-resolve signal gaps immediately — don't process through forge
+    const signals = pending.filter(g => SIGNAL_TYPES.has(g.type));
+    if (signals.length) {
+      for (const g of signals) {
+        jaaDB.update('gaps', g.uuid, {
+          status:       'resolved',
+          resolvedAt:   Date.now(),
+          fixStrategy:  'signal-auto-resolve',
+          resolveReason:'Signal type — not an actionable gap',
+          claimedBy:    MODULE_ID,
+        });
+      }
+      console.log(`[${MODULE_ID}] auto-resolved ${signals.length} signal gaps`);
+    }
+
+    // Only process real actionable gaps
+    const actionable = pending.filter(g => !SIGNAL_TYPES.has(g.type));
+    if (!actionable.length) return;
+
+    for (const gap of actionable.slice(0, 10)) {
       // Claim
       jaaDB.update('gaps', gap.uuid, { status: 'processing', claimedBy: MODULE_ID, claimedAt: Date.now() });
 
@@ -130,9 +156,36 @@ function _prescribe(gap) {
     case 'deviation':
       return { strategy: 'log_and_observe', action: `alert on ${gap.path}`, automated: false };
 
+    case 'DELTA.TENSION':
+    case 'delta.tension':
+    case 'tension':
+      // Tension signals are CFR field observations, not fixable gaps.
+      // Route to observe — they feed the diagnostic tension score.
+      return { strategy: 'log_and_observe', action: `tension signal at ${gap.path}`, automated: true, escalate: false };
+
+    case 'deviation':
+      return { strategy: 'log_and_observe', action: `alert on ${gap.path}`, automated: false };
+
     default:
       return { strategy: 'manual_review', action: `review ${gap.path}`, automated: false };
   }
 }
 
-module.exports = { init, stop };
+// ── Tension scoring — open gaps accumulate tension over time ─────────────────
+// Every open gap is an open loop. The longer it stays open, the more tension.
+// tension(gap) = severity_weight × age_factor × retry_penalty
+// This is the signal the diagnostic service uses for the tension map.
+function scoreTension(gap) {
+  const SEVERITY_WEIGHT = { critical: 4.0, high: 2.0, medium: 1.0, low: 0.4 };
+  const weight    = SEVERITY_WEIGHT[gap.severity] || 1.0;
+  const ageMs     = Date.now() - (gap.createdAt || gap.ts || Date.now());
+  const ageHours  = ageMs / 3600000;
+  const ageFactor = Math.min(3.0, 1.0 + Math.log1p(ageHours) * 0.5); // caps at 3x
+  const retries   = gap.attempts || 0;
+  const retryPenalty = 1.0 + retries * 0.3; // each failed attempt adds 30% tension
+  return Math.round(weight * ageFactor * retryPenalty * 1000) / 1000;
+}
+
+module.exports = { init, stop, scoreTension };
+
+

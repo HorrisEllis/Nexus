@@ -98,15 +98,30 @@ async function bootAsync() {
         ledgerDir: DATA_DIR,
         systemId:  'cortex',
         onGap: (gap) => {
-          // Write CFR-triggered gaps into JAA
+          // Write CFR-triggered gaps into JAA — deduplicated
+          // §FIX-CFR-GAP: DELTA.TENSION is a signal, not an open loop.
+          // It feeds the tension score, not the gap table.
+          // Only structural CFR gaps (missing contract, protocol violation) become gap rows.
           try {
+            const SIGNAL_TYPES = new Set(['DELTA.TENSION','delta.tension','tension','cfr.tension']);
+            if (SIGNAL_TYPES.has(gap.type)) return; // tension signals → diagnostic, not gaps
+
+            // Dedup: don't insert if identical open gap exists
+            const existing = jaaDB.query('gaps',
+              r => r.type === gap.type && r.source === 'cfr-ledger' &&
+                   r.status !== 'resolved' && r.status !== 'forge_applied',
+              1
+            );
+            if (existing.length) return;
+
             jaaDB.insert('gaps', {
               uuid:      uid(),
               type:      gap.type,
               body:      gap.message,
               severity:  gap.severity > 0.8 ? 'high' : 'medium',
-              status:    'open',
+              status:    'pending',
               source:    'cfr-ledger',
+              path:      gap.path || 'cfr/' + gap.type,
               causedBy:  gap.entry?.uuid || null,
               createdAt: Date.now(),
               ts:        Date.now(),
@@ -218,62 +233,52 @@ async function bootAsync() {
     },
   });
 
-  // ── Phase 5.4 SOFT: Cognition organs ─────────────────────────────────────
-  // The frontal lobe + cerebellum. These modules existed, were unit-tested,
-  // and were NEVER started by boot. Wiring them is what turns cortex from
-  // "brain with disconnected organs" into a running nervous system.
-  //   gap-finder  — detects stale modules, stuck calls, recurring failures → gaps
-  //   orion/*     — sensor→record→policy→verify: measure, persist, classify regime, verify
-  //   self-heal   — trust-tiered gap remediation; subscribes to HEAL_REQUESTED
-  //   heartbeat   — probes all services, writes heartbeat entries
-  //   raid        — routing intelligence; getState() consulted by guardian dispatch
-  // SOFT: any organ degrading logs and continues. No organ blocks boot.
-  // §3.1 ordering: sensor before record before policy before verify (pipeline order).
-  seq.phase({ name:'cognition.init', type:'SOFT',
-    label:'Cognition organs (gap-finder, orion pipeline, self-heal, heartbeat, raid)',
+  // ── Phase 5.4 SOFT: operational intelligence organs ─────────────────────
+  // These modules exist, pass unit tests, and have never started at boot.
+  // gap-finder, self-heal, orion/sensor, orion/policy, raid, heartbeat.
+  // All have identical contract: init({ jaaDB, pollMs }) + stop().
+  // All use .unref() on their intervals — consistent with existing pattern.
+  // SOFT — any one failing degrades but never blocks boot.
+  // §3.1 wiring: Alexander's audit + forensic audit both confirmed this gap.
+  seq.phase({ name:'organs.init', type:'SOFT',
+    label:'Operational intelligence organs (gap-finder, healer, self-heal, orion, raid, heartbeat)',
     fn: async () => {
       const organs = [
-        ['gap-finder',   './gate/gap-finder',  { pollMs: parseInt(process.env.CORTEX_GAP_MS    || '2000'),  jaaDB }],
-        ['orion-sensor', './orion/sensor',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '1000'),  jaaDB }],
-        ['orion-record', './orion/record',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '1000'),  jaaDB }],
-        ['orion-policy', './orion/policy',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '2000'),  jaaDB }],
-        ['orion-verify', './orion/verify',     { pollMs: parseInt(process.env.CORTEX_ORION_MS  || '3000'),  jaaDB }],
-        ['self-heal',    './self-heal',        { pollMs: parseInt(process.env.CORTEX_HEAL_MS   || '15000'), jaaDB }],
-        ['heartbeat',    './heartbeat',        { pollMs: parseInt(process.env.CORTEX_HB_MS     || '10000'), jaaDB }],
-        ['raid',         './core/raid',        { pollMs: parseInt(process.env.CORTEX_RAID_MS   || '3000'),  jaaDB }],
+        { name: 'gap-finder',   path: './gate/gap-finder'   },
+        { name: 'healer',       path: './healer/index'      },
+        { name: 'self-heal',    path: './self-heal/index'   },
+        { name: 'orion/sensor', path: './orion/sensor'      },
+        { name: 'orion/policy', path: './orion/policy'      },
+        { name: 'raid',         path: './core/raid/index'   },
+        { name: 'heartbeat',    path: './heartbeat/index'   },
       ];
-      const started = [];
-      const degraded = [];
-      for (const [name, modPath, cfg] of organs) {
+
+      const pollMs = parseInt(process.env.CORTEX_ORGAN_MS || '15000');
+      const started = [], failed = [];
+
+      for (const organ of organs) {
         try {
-          const mod = require(modPath);
-          mod.init(cfg);
-          started.push(name);
-          global._cortexOrgans = global._cortexOrgans || {};
-          global._cortexOrgans[name] = mod;        // stop() handles can reach these on shutdown
-          // Wire RAID into the admin server so guardian can consult it (§seam, not §import)
-          if (name === 'raid') {
-            try { adminServer.registerRaid(mod); } catch (e) { console.warn(`[cortex/boot] raid route not wired: ${e.message}`); }
-          }
-        } catch (e) {
-          // §1.2 — never silent. Each organ failure is named, logged, survived.
-          degraded.push({ name, error: e.message });
-          console.warn(`[cortex/boot] organ '${name}' degraded: ${e.message}`);
-          try {
-            jaaDB.insert('event_log', {
-              uuid: uid(), type: 'organ.boot.degraded', ts: Date.now(),
-              payload: { organ: name, error: e.message, stack: e.stack?.split('\n')[1] || '' },
-              source: 'boot', causedBy: null,
-            });
-          } catch (_) {}
+          const mod = require(organ.path);
+          mod.init({ jaaDB, pollMs });
+          started.push(organ.name);
+        } catch(e) {
+          failed.push({ name: organ.name, error: e.message });
+          console.warn(`[cortex/boot] organ degraded — ${organ.name}: ${e.message}`);
         }
       }
+
       jaaDB.insert('event_log', {
-        uuid: uid(), type: 'cognition.booted', ts: Date.now(),
-        payload: { started, startedCount: started.length, degraded, total: organs.length },
+        uuid: uid(), type: 'cortex.organs.booted', ts: Date.now(),
+        payload: { started, failed: failed.map(f => f.name), total: organs.length },
         source: 'boot', causedBy: null,
       });
-      console.log(`[cortex/boot] cognition: ${started.length}/${organs.length} organs running [${started.join(', ')}]`);
+
+      if (started.length > 0) {
+        console.log(`[cortex/boot] organs online: ${started.join(', ')}`);
+      }
+      if (failed.length > 0) {
+        console.warn(`[cortex/boot] organs degraded: ${failed.map(f=>f.name).join(', ')}`);
+      }
     },
   });
 
@@ -367,6 +372,12 @@ async function bootAsync() {
   seq.phase({ name:'boot.record', type:'SOFT',
     label:'Write boot record to event_log (§M1)',
     fn: async () => {
+      // §ALK: load decision history from disk so session is not empty
+      try {
+        const alk = require('../lib/alk');
+        const loaded = alk.load();
+        console.log(`[cortex/boot] ALK loaded ${loaded} decisions from disk`);
+      } catch(_) {}
       jaaDB.insert('event_log', {
         uuid: uid(), type: 'system.booted', ts: Date.now(),
         payload: { version: VERSION,

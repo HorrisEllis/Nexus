@@ -434,6 +434,67 @@ textarea.finp{resize:vertical;line-height:1.55}
 .toast.warn{background:rgba(255,204,0,.07);border-color:rgba(255,204,0,.4);color:var(--y)}
 .toast.info{background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.4);color:var(--c)}
 .toast.show{transform:translateX(0);opacity:1}
+
+  /* ── Nav Rail ──────────────────────────────────────────────────────────── */
+  #nav-rail {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 48px; /* collapsed */
+    background: var(--bg0, #0a0a0f);
+    border-right: 1px solid var(--s2, #1e1e2e);
+    display: flex; flex-direction: column;
+    align-items: center; padding: 4px 0;
+    z-index: 100; overflow: hidden;
+    transition: width 0.2s ease;
+  }
+  #nav-rail.expanded { width: 140px; }
+  #nav-rail .nav-label { display: none; margin-left: 6px; font-size: 9px; white-space: nowrap; }
+  #nav-rail.expanded .nav-label { display: inline; }
+  .nav-toggle {
+    background: none; border: none; color: var(--text2, #888);
+    font-size: 14px; cursor: pointer; padding: 8px;
+    width: 100%; text-align: center;
+  }
+  .nav-sep { width: 80%; height: 1px; background: var(--s2, #1e1e2e); margin: 3px auto; }
+  #nav-rail .tbn {
+    background: none; border: none; color: var(--text2, #888);
+    font-size: 13px; cursor: pointer;
+    padding: 7px 0; width: 100%; text-align: left;
+    padding-left: 14px; display: flex; align-items: center;
+    border-radius: 4px; transition: background 0.1s;
+  }
+  #nav-rail .tbn:hover { background: var(--s1, #12121a); color: var(--text1, #ccc); }
+  #nav-rail .tbn.on { background: var(--s1, #12121a); color: var(--c, #00d4ff); }
+  #nav-rail .tbn.o  { color: var(--o, #f59e0b); }
+  #nav-rail .tbn.g  { color: var(--g, #22c55e); }
+  #nav-rail .tbn.m  { color: var(--m, #a78bfa); }
+
+  /* Shift main content right */
+  #main-wrap, .main-wrap, #panels, .panels { margin-left: 48px; transition: margin-left 0.2s; }
+  body.nav-expanded #main-wrap,
+  body.nav-expanded #panels { margin-left: 140px; }
+
+  /* ── FAB ────────────────────────────────────────────────────────────────── */
+  .fab-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; }
+  .fab-main {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--c, #00d4ff); color: #000;
+    border: none; font-size: 22px; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,212,255,0.3);
+    transition: transform 0.2s;
+  }
+  .fab-main:hover { transform: scale(1.08); }
+  .fab-menu {
+    position: absolute; bottom: 56px; right: 0;
+    display: none; flex-direction: column; gap: 8px; align-items: flex-end;
+  }
+  .fab-menu.open { display: flex; }
+  .fab-item {
+    background: var(--bg1, #12121a); border: 1px solid var(--s2, #1e1e2e);
+    color: var(--text1, #ccc); padding: 6px 12px; border-radius: 20px;
+    cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 6px;
+    white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .fab-item:hover { background: var(--s1, #1e1e2e); color: var(--c, #00d4ff); }
 </style>
 </head>
 <body>
@@ -483,26 +544,53 @@ textarea.finp{resize:vertical;line-height:1.55}
     </div>
   </div>
 
-  <!-- NAVBAR -->
-  <div id="navbar">
-    <button class="tbn on" data-tab="home"       onclick="go('home')">HOME</button>
-    <button class="tbn"    data-tab="console"    onclick="go('console')">CONSOLE</button>
-    <div class="nsep"></div>
-    <button class="tbn o"  data-tab="guardian"   onclick="go('guardian')">⚡ GUARDIAN</button>
-    <button class="tbn"    data-tab="cortex"     onclick="go('cortex')">CORTEX</button>
-    <button class="tbn g"  data-tab="idearium"   onclick="go('idearium')">IDEARIUM</button>
-    <button class="tbn"    data-tab="bridge"     onclick="go('bridge')">BRIDGE</button>
-    <button class="tbn m"  data-tab="cfr"        onclick="go('cfr')">⬡ CFR FIELD</button>
-    <div class="nsep"></div>
-    <button class="tbn o"  data-tab="architect"  onclick="go('architect')">⬡ ARCHITECT</button>
-    <button class="tbn"    data-tab="meta"       onclick="go('meta')">⟁ META</button>
-    <div class="nsep"></div>
-    <button class="tbn m"  data-tab="log"        onclick="go('log')">LOG</button>
-    <button class="tbn"    data-tab="diagnose"   onclick="go('diagnose')">DIAGNOSE</button>
-    <button class="tbn"    data-tab="options"    onclick="go('options')">OPTIONS</button>
-    <div class="nsep"></div>
-    <button class="tbn g"  data-tab="repo"       onclick="go('repo')">⊞ FILES</button>
-    <button class="tbn m"  data-tab="orchestrate" onclick="go('orchestrate')">⟁ ORCHESTRATE</button>
+  <!-- PRIMARY NAV RAIL — icon sidebar, collapses to icons only -->
+  <div id="nav-rail" class="nav-rail">
+    <button class="nav-toggle" onclick="toggleNav()" title="Toggle nav">☰</button>
+    <div class="nav-sep"></div>
+
+    <!-- PRIMARY — always visible -->
+    <button class="tbn on" data-tab="home"       onclick="go('home')"      title="Home">🏠<span class="nav-label">HOME</span></button>
+    <button class="tbn"    data-tab="console"    onclick="go('console')"   title="Console">⌨<span class="nav-label">CONSOLE</span></button>
+
+    <div class="nav-sep"></div>
+
+    <!-- SYSTEMS -->
+    <button class="tbn o"  data-tab="guardian"   onclick="go('guardian')"  title="Guardian">⚡<span class="nav-label">GUARDIAN</span></button>
+    <button class="tbn"    data-tab="cortex"     onclick="go('cortex')"    title="Cortex">◈<span class="nav-label">CORTEX</span></button>
+    <button class="tbn g"  data-tab="idearium"   onclick="go('idearium')"  title="Idearium">◎<span class="nav-label">IDEARIUM</span></button>
+    <button class="tbn"    data-tab="bridge"     onclick="go('bridge')"    title="Bridge">⬡<span class="nav-label">BRIDGE</span></button>
+
+    <div class="nav-sep"></div>
+
+    <!-- BUILD -->
+    <button class="tbn o"  data-tab="architect"  onclick="go('architect')" title="Architect">⟁<span class="nav-label">ARCHITECT</span></button>
+    <button class="tbn m"  data-tab="cfr"        onclick="go('cfr')"       title="CFR Field">〜<span class="nav-label">CFR</span></button>
+
+    <div class="nav-sep"></div>
+
+    <!-- OBSERVE -->
+    <button class="tbn m"  data-tab="diagnose"   onclick="go('diagnose')"  title="Diagnostic">⬡<span class="nav-label">DIAGNOSE</span></button>
+    <button class="tbn m"  data-tab="log"        onclick="go('log')"       title="Log">≡<span class="nav-label">LOG</span></button>
+    <button class="tbn g"  data-tab="repo"       onclick="go('repo')"      title="Files">⊞<span class="nav-label">FILES</span></button>
+
+    <div class="nav-sep"></div>
+
+    <!-- SYSTEM -->
+    <button class="tbn"    data-tab="meta"       onclick="go('meta')"      title="Meta">∞<span class="nav-label">META</span></button>
+    <button class="tbn m"  data-tab="orchestrate" onclick="go('orchestrate')" title="Orchestrate">⟁<span class="nav-label">ORCH</span></button>
+    <button class="tbn"    data-tab="options"    onclick="go('options')"   title="Options">⚙<span class="nav-label">OPTIONS</span></button>
+  </div>
+
+  <!-- FAB — floating action button for quick actions -->
+  <div id="fab" class="fab-container">
+    <button class="fab-main" onclick="toggleFab()" title="Quick actions">+</button>
+    <div class="fab-menu" id="fab-menu">
+      <button class="fab-item" onclick="go('idearium');toggleFab()" title="Log Idea">💡<span>Log Idea</span></button>
+      <button class="fab-item" onclick="go('guardian');st('gd','seam',null);toggleFab()" title="New Spec">⚡<span>Spec</span></button>
+      <button class="fab-item" onclick="go('diagnose');toggleFab()" title="Diagnostics">◎<span>Diagnose</span></button>
+      <button class="fab-item" onclick="resumeLastSession();toggleFab()" title="Resume">↩<span>Resume</span></button>
+    </div>
   </div>
 
   <!-- PANELS -->
@@ -638,9 +726,11 @@ textarea.finp{resize:vertical;line-height:1.55}
         <button class="stb"    onclick="st('gd','forge',this)">⚒ FORGE</button>
         <button class="stb"    onclick="st('gd','jobs',this)">JOBS</button>
         <button class="stb"    onclick="st('gd','providers',this)">PROVIDERS</button>
-        <button class="stb"    onclick="st('gd','seam',this)">SEAM</button>
+        <button class="stb"    onclick="st('gd','seam',this)">⚡ SEAM</button>
         <button class="stb"    onclick="st('gd','artifacts',this)">ARTIFACTS</button>
         <button class="stb"    onclick="st('gd','gaps',this)">GAPS</button>
+        <button class="stb" onclick="st('gd','lab',this)">LAB</button>
+        <button class="stb" onclick="st('gd','brain',this)">BRAIN</button>
       </div>
 
       <!-- dispatch -->
@@ -776,12 +866,578 @@ textarea.finp{resize:vertical;line-height:1.55}
       </div>
 
       <!-- seam -->
-      <div class="spanel" id="gd-seam">
-        <div class="fbar">
-          <span style="font-size:9px;color:var(--text3)" id="gd-seam-count">0 queues</span>
-          <button class="btn" style="font-size:9px;padding:2px 8px;margin-left:auto" onclick="ST.refreshSeamQueues().then(gdRenderSeam)">↻</button>
+      <div class="spanel" id="gd-seam" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+        <!-- SEAM Chunker — migrated from guardian/ui -->
+        <div class="ck-sb">
+      <div class="sb-sect">
+        <div class="sb-lbl">Spec / Source Text</div>
+                <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+          <div class="drop-zone-icon">📄</div>
+          <div>Drop .md .txt .spec .seam .yaml or click to browse</div>
         </div>
-        <div class="scroll" style="padding:8px 14px" id="gd-seam-list"></div>
+        <input type="file" id="file-input" accept=".md,.txt,.spec,.seam,.json,.yaml,.yml" style="display:none;" multiple>
+<textarea class="sb-ta" id="ck-spec" rows="10" style="min-height:80px;" placeholder="Paste spec, SEAM source, or any text to chunk and deliver to AI..."></textarea>
+      </div>
+      <div class="sb-sect">
+        <div class="frow">
+          <div class="fcol"><div class="fl">Split on</div>
+            <select class="fi" id="split-on">
+              <option value="size">Size (chars)</option>
+              <option value="section">Section headers (##)</option>
+              <option value="seam">SEAM keywords</option>
+              <option value="custom">Custom regex</option>
+            </select>
+          </div>
+          <div class="fcol"><div class="fl">Chunk size</div>
+            <input class="fi" type="number" id="chunk-size" value="3500" min="200" max="20000">
+          </div>
+        </div>
+        <div class="frow" id="custom-pattern-row" style="display:none;">
+          <div class="fcol"><div class="fl">Custom regex</div><input class="fi" id="custom-pattern" placeholder="^##\s"></div>
+        </div>
+        <div class="frow">
+          <div class="fcol"><div class="fl">Provider</div>
+            <select class="fi" id="ck-provider">
+              <option value="claude">Claude (Guardian)</option>
+              <option value="chatgpt">ChatGPT (Guardian)</option>
+              <option value="gemini">Gemini (Guardian)</option>
+              <option value="claude-direct">Claude (direct tab)</option>
+              <option value="chatgpt-direct">ChatGPT (direct tab)</option>
+            </select>
+          </div>
+          <div class="fcol"><div class="fl">System prompt</div>
+            <select class="fi" id="system-prompt">
+              <option value="nexus">Nexus/Forge</option>
+              <option value="seam">SEAM Language</option>
+              <option value="pipeline">Pipeline</option>
+              <option value="none">None</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+        </div>
+        <div id="custom-prompt-row" style="display:none;margin-bottom:6px;">
+          <textarea class="sb-ta" id="custom-sys-prompt" rows="3" style="min-height:60px;" placeholder="Custom system prompt..."></textarea>
+        </div>
+        <button class="btn primary" id="btn-parse" style="width:100%;">Parse Spec →</button>
+      </div>
+      <div class="sb-sect" style="flex-shrink:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <div class="sb-lbl" style="margin-bottom:0;">Chunks (<span id="chunk-count">0</span>)</div>
+          <div style="display:flex;gap:4px;">
+            <button class="btn" id="btn-ck-export">Export</button>
+            <button class="btn" id="btn-ck-import-btn">Import</button>
+            <input type="file" id="btn-ck-import" accept=".json" style="display:none;">
+          </div>
+        </div>
+      </div>
+      <div class="chunk-list" id="chunk-list"></div>
+    </div>
+    <div class="ck-main">
+      <div class="progress-strip">
+        <div class="ps-hdr">
+          <span style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Delivery Progress</span>
+          <span class="ps-pct" id="stat-pct">0%</span>
+        </div>
+        <div class="ps-bar"><div class="ps-fill" id="ps-fill" style="width:0%"></div></div>
+        <div class="ps-ticks" id="ps-ticks"></div>
+        <div style="display:flex;gap:12px;margin-top:4px;font-size:9px;color:var(--muted);">
+          <span>✓ <span id="stat-verified">0</span> verified</span>
+          <span>✗ <span id="stat-failed">0</span> failed</span>
+          <span>— <span id="stat-skipped">0</span> skipped</span>
+          <span>⧖ <span id="stat-pending">0</span> pending</span>
+        </div>
+      </div>
+      <div class="cv" id="chunk-viewer">
+        <div class="empty" id="ck-empty">
+          <div class="empty-icon">◈</div>
+          <div class="empty-title">No spec loaded</div>
+          <div class="empty-sub">Paste spec text and click Parse Spec to begin the SEAM delivery protocol</div>
+        </div>
+      </div>
+      <div class="ck-nav" id="ck-nav" style="display:none;">
+        <button class="btn" id="btn-prev">← Prev</button>
+        <div style="flex:1;text-align:center;font-size:10px;color:var(--muted);" id="ck-pos">—</div>
+        <button class="btn" id="btn-next">Next →</button>
+      </div>
+    </div>
+  </div>
+      </div>
+
+      <!-- lab — migrated from guardian/ui -->
+      <div class="spanel" id="gd-lab">
+        <div style="display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);flex-shrink:0">
+      <div id="lab-tab-run"       class="arch-inner-tab active" onclick="labTab('run')">⚗ Run</div>
+      <div id="lab-tab-sessions"  class="arch-inner-tab" onclick="labTab('sessions')">Sessions</div>
+      <div id="lab-tab-results"   class="arch-inner-tab" onclick="labTab('results')">Results</div>
+      <div id="lab-tab-templates" class="arch-inner-tab" onclick="labTab('templates')">Templates</div>
+      <div id="lab-tab-h2h"       class="arch-inner-tab" onclick="labTab('h2h')">H2H Compare</div>
+      <div style="flex:1"></div>
+      <span id="lab-status" style="font-size:9px;color:var(--muted);margin-right:10px">IDLE</span>
+    </div>
+
+    <!-- RUN TAB -->
+    <div id="lab-panel-run" style="display:flex;flex:1;overflow:hidden">
+      <!-- Config sidebar -->
+      <div style="width:320px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;padding:12px">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px">Experiment Config</div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Type</div>
+          <select id="lab-type" class="fi" style="width:100%" onchange="labUpdateConfig()">
+            <option value="single">Single shot</option>
+            <option value="h2h">Head-to-head (Claude vs ChatGPT)</option>
+            <option value="loop">Feedback loop</option>
+            <option value="chain">If/then chain</option>
+            <option value="stress">Stress test</option>
+          </select>
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Provider</div>
+          <select id="lab-provider" class="fi" style="width:100%">
+            <option value="claude">Claude</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="ollama">Ollama</option>
+          </select>
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Hypothesis (what are we testing?)</div>
+          <input id="lab-hypothesis" class="fi" style="width:100%" placeholder="e.g. Does Claude handle context limits better?">
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Prompt / Initial prompt</div>
+          <textarea id="lab-prompt" class="sb-ta" rows="5" style="width:100%;min-height:100px" placeholder="Enter your prompt…"></textarea>
+        </div>
+        <!-- Loop config -->
+        <div id="lab-loop-config" style="display:none;margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Next prompt template <span style="color:var(--text3)">(use {response} {iteration})</span></div>
+          <textarea id="lab-next-prompt" class="sb-ta" rows="3" style="width:100%;min-height:60px" placeholder="Continue from where you left off: {response}"></textarea>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <div style="flex:1">
+              <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Stop condition</div>
+              <select id="lab-cond-op" class="fi" style="width:100%">
+                <option value="seam_pass">SEAM VERDICT: PASS</option>
+                <option value="contains">Contains text</option>
+                <option value="not_contains">Not contains</option>
+                <option value="has_code_block">Has code block</option>
+                <option value="length_gt">Length &gt; N</option>
+                <option value="is_refusal">Is refusal</option>
+              </select>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Value</div>
+              <input id="lab-cond-val" class="fi" style="width:100%" placeholder="e.g. PASS or 500">
+            </div>
+          </div>
+          <div style="margin-top:6px">
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Max iterations</div>
+            <input id="lab-max-iter" class="fi" type="number" value="5" style="width:80px">
+          </div>
+        </div>
+        <!-- Stress config -->
+        <div id="lab-stress-config" style="display:none;margin-bottom:8px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Stress mode</div>
+          <select id="lab-stress-mode" class="fi" style="width:100%">
+            <option value="context_growth">Context growth — build up until limit</option>
+            <option value="repeat">Repeat identical prompt</option>
+          </select>
+          <div style="margin-top:6px">
+            <div style="font-size:9px;color:var(--muted);margin-bottom:3px">Max rounds</div>
+            <input id="lab-max-rounds" class="fi" type="number" value="8" style="width:80px">
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px">
+          <button class="btn primary" style="flex:1" onclick="labRun()">⚗ Run Experiment</button>
+          <button class="btn" onclick="labStop()">■ Stop</button>
+        </div>
+      </div>
+
+      <!-- Live output -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+          <span style="font-size:9px;color:var(--muted)">Live output</span>
+          <span id="lab-run-status" style="font-size:9px;color:var(--amber)"></span>
+          <div style="flex:1"></div>
+          <button class="btn" style="font-size:9px" onclick="labClearOutput()">Clear</button>
+        </div>
+        <div id="lab-output" style="flex:1;overflow-y:auto;padding:12px;font-size:10px;font-family:var(--mono)"></div>
+      </div>
+    </div>
+
+    <!-- SESSIONS TAB -->
+    <div id="lab-panel-sessions" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div style="padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px;align-items:center">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Experiment Sessions</span>
+        <div style="flex:1"></div>
+        <button class="btn" style="font-size:9px" onclick="labLoadSessions()">↺ Refresh</button>
+      </div>
+      <div id="lab-sessions-list" style="flex:1;overflow-y:auto;padding:8px 12px"></div>
+    </div>
+
+    <!-- RESULTS TAB -->
+    <div id="lab-panel-results" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div id="lab-results-content" style="flex:1;overflow-y:auto;padding:12px;font-size:10px;font-family:var(--mono)">
+        <div style="color:var(--muted)">Run an experiment to see results</div>
+      </div>
+    </div>
+
+    <!-- TEMPLATES TAB -->
+    <div id="lab-panel-templates" style="display:none;flex-direction:column;flex:1;overflow-y:auto;padding:14px">
+      <div id="lab-templates-content"><div style="color:var(--muted);font-size:10px">Loading templates…</div></div>
+    </div>
+
+    <!-- H2H TAB -->
+    <div id="lab-panel-h2h" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div style="padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0">
+        <div style="font-size:9px;color:var(--muted);margin-bottom:6px">Claude vs ChatGPT — identical prompt</div>
+        <textarea id="lab-h2h-prompt" class="sb-ta" rows="4" style="width:100%;min-height:80px" placeholder="Enter prompt to send to both providers simultaneously…"></textarea>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <input id="lab-h2h-rounds" class="fi" type="number" value="1" style="width:70px" placeholder="Rounds">
+          <button class="btn primary" style="font-size:9px" onclick="labRunH2H()">⚗ Compare</button>
+        </div>
+      </div>
+      <div style="display:flex;flex:1;overflow:hidden">
+        <div style="flex:1;border-right:1px solid var(--border);overflow-y:auto;padding:10px">
+          <div style="font-size:9px;color:var(--amber);font-weight:700;margin-bottom:6px;text-transform:uppercase">Claude</div>
+          <div id="lab-h2h-claude" style="font-size:10px;color:var(--text2);font-family:var(--mono)"></div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:10px">
+          <div style="font-size:9px;color:var(--teal);font-weight:700;margin-bottom:6px;text-transform:uppercase">ChatGPT</div>
+          <div id="lab-h2h-chatgpt" style="font-size:10px;color:var(--text2);font-family:var(--mono)"></div>
+        </div>
+      </div>
+      <div id="lab-h2h-comparison" style="padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;font-size:10px"></div>
+    </div>
+  </div>
+
+  <script>
+  'use strict';
+  // ── LAB panel JS ───────────────────────────────────────────────────────────
+  const LAB_BASE = 'http://127.0.0.1:7820';
+  let _labRunning = false;
+  let _labCurrentSummary = null;
+
+  async function _labGet(path) {
+    try { const r=await fetch(LAB_BASE+path,{signal:AbortSignal.timeout(5000)}); return r.ok?await r.json():null; }
+    catch(_){return null;}
+  }
+  async function _labPost(path, body) {
+    try { const r=await fetch(LAB_BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(120000)}); return await r.json(); }
+    catch(e){return{ok:false,error:e.message};}
+  }
+
+  function labTab(tab) {
+    ['run','sessions','results','templates','h2h'].forEach(t => {
+      document.getElementById(`lab-tab-${t}`)?.classList.toggle('active', t===tab);
+      document.getElementById(`lab-panel-${t}`).style.display = t===tab?'flex':'none';
+    });
+    if (tab==='sessions')  labLoadSessions();
+    if (tab==='templates') labLoadTemplates();
+  }
+
+  function labUpdateConfig() {
+    const type = document.getElementById('lab-type')?.value;
+    document.getElementById('lab-loop-config').style.display   = type==='loop'?'block':'none';
+    document.getElementById('lab-stress-config').style.display = type==='stress'?'block':'none';
+  }
+
+  function labClearOutput() {
+    const el = document.getElementById('lab-output');
+    if (el) el.innerHTML = '';
+  }
+
+  function _labLog(msg, color='var(--text2)') {
+    const el = document.getElementById('lab-output'); if (!el) return;
+    const line = document.createElement('div');
+    line.style.cssText = `padding:2px 0;border-bottom:1px solid var(--border);color:${color}`;
+    line.textContent = `[${new Date().toTimeString().slice(0,8)}] ${msg}`;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  async function labRun() {
+    if (_labRunning) { alert('Experiment already running'); return; }
+    const type       = document.getElementById('lab-type')?.value;
+    const provider   = document.getElementById('lab-provider')?.value;
+    const prompt     = document.getElementById('lab-prompt')?.value?.trim();
+    const hypothesis = document.getElementById('lab-hypothesis')?.value?.trim();
+    if (!prompt) { alert('Prompt required'); return; }
+
+    const config = { type, provider, prompt, hypothesis };
+    if (type==='loop') {
+      config.next_prompt   = document.getElementById('lab-next-prompt')?.value?.trim();
+      config.max_iterations = parseInt(document.getElementById('lab-max-iter')?.value)||5;
+      const op  = document.getElementById('lab-cond-op')?.value;
+      const val = document.getElementById('lab-cond-val')?.value?.trim();
+      if (op) config.condition = { op, value:val||undefined };
+    }
+    if (type==='stress') {
+      config.mode       = document.getElementById('lab-stress-mode')?.value;
+      config.max_rounds = parseInt(document.getElementById('lab-max-rounds')?.value)||8;
+      config.base_prompt = prompt;
+    }
+
+    _labRunning = true;
+    document.getElementById('lab-run-status').textContent = 'RUNNING…';
+    document.getElementById('lab-status').textContent = 'RUNNING';
+    _labLog(`▶ Starting ${type} experiment on ${provider}`, 'var(--amber)');
+    _labLog(`Hypothesis: ${hypothesis||'(none)'}`, 'var(--text3)');
+
+    const result = await _labPost('/lab/run', config);
+    _labRunning = false;
+    document.getElementById('lab-run-status').textContent = '';
+    document.getElementById('lab-status').textContent = result?.summary?.status?.toUpperCase()||'DONE';
+
+    if (result?.ok && result?.summary) {
+      _labCurrentSummary = result.summary;
+      const s = result.summary;
+      _labLog(`✓ Complete — ${s.total} results, ${s.ok} ok, ${s.refusals} refusals, avg ${s.avgMs}ms`, 'var(--teal)');
+      _labLog(`Avg response length: ${s.avgLen} chars`, 'var(--text2)');
+      if (s.byProvider) {
+        for (const [p,d] of Object.entries(s.byProvider)) {
+          _labLog(`  ${p}: count=${d.count} avgMs=${d.avgMs}ms avgLen=${d.avgLen}ch refusals=${d.refusals}`, 'var(--text2)');
+        }
+      }
+      labRenderResults(result.summary);
+    } else {
+      _labLog(`✗ Error: ${result?.error||'unknown'}`, 'var(--red)');
+    }
+  }
+
+  function labStop() {
+    _labRunning = false;
+    document.getElementById('lab-run-status').textContent = 'STOPPED';
+    document.getElementById('lab-status').textContent = 'STOPPED';
+    _labLog('■ Stop requested', 'var(--muted)');
+  }
+
+  function labRenderResults(summary) {
+    const el = document.getElementById('lab-results-content'); if (!el) return;
+    labTab('results');
+    const s = summary;
+    el.innerHTML = `
+      <div style="margin-bottom:12px">
+        <div style="font-size:14px;font-weight:700;color:var(--text)">${s.config?.type?.toUpperCase()} — ${s.config?.hypothesis||'No hypothesis'}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">Session ${s.sessionId?.slice(0,12)} · ${s.durationMs}ms total</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        ${[['Results',s.total],['OK',s.ok],['Refusals',s.refusals],['SEAM Pass',s.seamPass]].map(([l,v])=>`
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--mono)">${v}</div>
+          <div style="font-size:8px;color:var(--muted)">${l}</div>
+        </div>`).join('')}
+      </div>
+      ${Object.entries(s.byProvider||{}).map(([p,d])=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--text);margin-bottom:6px;text-transform:uppercase">${p}</div>
+        ${[['Jobs',d.count],['Avg latency',d.avgMs+'ms'],['Avg length',d.avgLen+'ch'],['Refusals',d.refusals],['SEAM Pass',d.seamPass]].map(([l,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:9px;color:var(--muted)">${l}</span>
+          <span style="font-size:9px;color:var(--text);font-family:var(--mono)">${v}</span>
+        </div>`).join('')}
+      </div>`).join('')}`;
+  }
+
+  async function labLoadSessions() {
+    const data = await _labGet('/lab');
+    const el = document.getElementById('lab-sessions-list'); if (!el) return;
+    const sessions = data?.sessions||[];
+    const history  = data?.history||[];
+    if (!sessions.length && !history.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px;padding:12px">No sessions yet</div>'; return; }
+    el.innerHTML = [...sessions, ...history].map(s=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+          <span style="color:var(--amber);font-size:9px;font-family:var(--mono)">${(s.id||s._sessionId||'').slice(0,12)}</span>
+          <span style="font-size:9px;font-weight:700;text-transform:uppercase;color:${s.status==='complete'?'var(--teal)':s.status==='failed'?'var(--red)':'var(--amber)'}">${s.status||'?'}</span>
+          <span style="color:var(--muted);font-size:9px;margin-left:auto">${s.results||0} results</span>
+        </div>
+        <div style="color:var(--text2);font-size:9px">${s.config?.type||'?'} · ${s.config?.provider||'?'} · ${s.config?.hypothesis||''}</div>
+      </div>`).join('');
+  }
+
+  async function labLoadTemplates() {
+    const data = await _labGet('/lab/templates');
+    const el = document.getElementById('lab-templates-content'); if (!el) return;
+    const templates = data?.templates||[];
+    if (!templates.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No templates</div>'; return; }
+    el.innerHTML = templates.map(t=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <span style="font-size:11px;font-weight:700;color:var(--text)">${t.name}</span>
+          <span style="font-size:8px;text-transform:uppercase;padding:1px 6px;border-radius:10px;background:rgba(129,140,248,.15);color:var(--acc)">${t.config?.type}</span>
+        </div>
+        <div style="color:var(--text2);font-size:9px;margin-bottom:8px">${t.description}</div>
+        <button class="btn o" style="font-size:9px" onclick="labLoadTemplate('${t.id}')">Use Template</button>
+      </div>`).join('');
+  }
+
+  const _LAB_TEMPLATE_CACHE = {};
+  async function labLoadTemplate(id) {
+    const data = await _labGet('/lab/templates');
+    const t = data?.templates?.find(t=>t.id===id); if (!t) return;
+    document.getElementById('lab-type').value       = t.config.type||'single';
+    document.getElementById('lab-provider').value   = t.config.provider||t.config.providers?.[0]||'claude';
+    document.getElementById('lab-hypothesis').value = t.config.hypothesis||'';
+    document.getElementById('lab-prompt').value     = typeof t.config.prompt==='string' ? t.config.prompt : (t.config.initial_prompt||t.config.base_prompt||'');
+    if (t.config.next_prompt) document.getElementById('lab-next-prompt').value = t.config.next_prompt;
+    if (t.config.max_iterations) document.getElementById('lab-max-iter').value = t.config.max_iterations;
+    if (t.config.condition) { document.getElementById('lab-cond-op').value=t.config.condition.op; if(t.config.condition.value)document.getElementById('lab-cond-val').value=t.config.condition.value; }
+    if (t.config.max_rounds) document.getElementById('lab-max-rounds').value = t.config.max_rounds;
+    if (t.config.mode) document.getElementById('lab-stress-mode').value = t.config.mode;
+    labUpdateConfig();
+    labTab('run');
+    _labLog(`Template loaded: ${t.name}`, 'var(--teal)');
+  }
+
+  async function labRunH2H() {
+    const prompt  = document.getElementById('lab-h2h-prompt')?.value?.trim();
+    const rounds  = parseInt(document.getElementById('lab-h2h-rounds')?.value)||1;
+    if (!prompt) { alert('Prompt required'); return; }
+    document.getElementById('lab-h2h-claude').textContent  = 'Running…';
+    document.getElementById('lab-h2h-chatgpt').textContent = 'Running…';
+    document.getElementById('lab-h2h-comparison').textContent = '';
+    const result = await _labPost('/lab/run', { type:'h2h', providers:['claude','chatgpt'], prompt, rounds, hypothesis:'Head-to-head comparison' });
+    if (result?.ok && result?.summary) {
+      const s = result.summary;
+      const c = s.byProvider?.claude,  cg = s.byProvider?.chatgpt;
+      document.getElementById('lab-h2h-claude').innerHTML  = c  ? `<div style="color:var(--muted);margin-bottom:6px">${c.avgLen}ch · ${c.avgMs}ms · refusals:${c.refusals}</div>` : 'No response';
+      document.getElementById('lab-h2h-chatgpt').innerHTML = cg ? `<div style="color:var(--muted);margin-bottom:6px">${cg.avgLen}ch · ${cg.avgMs}ms · refusals:${cg.refusals}</div>` : 'No response';
+      if (c && cg) {
+        const winnerColor = c.avgLen > cg.avgLen ? 'var(--amber)' : 'var(--teal)';
+        document.getElementById('lab-h2h-comparison').innerHTML = `<span style="color:${winnerColor};font-weight:700">Winner: ${c.avgLen>=cg.avgLen?'Claude':'ChatGPT'}</span> · Claude ${c.avgLen}ch / ChatGPT ${cg.avgLen}ch · latency: Claude ${c.avgMs}ms / ChatGPT ${cg.avgMs}ms`;
+      }
+    } else {
+      document.getElementById('lab-h2h-comparison').innerHTML = `<span style="color:var(--red)">Error: ${result?.error||'failed'}</span>`;
+    }
+  }
+
+
+// ═══ GUARDIAN-NATIVE ARCHITECT PANEL ════════════════════════════════════════
+const ARCH_BASE = 'http://127.0.0.1:3747';
+function archTab(name,btn){document.querySelectorAll('#panel-architect .arch-inner-tab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');['hooks','blueprint','topology','snr'].forEach(n=>{const el=document.getElementById('arch-panel-'+n);if(el)el.style.display=n===name?'flex':'none';});if(name==='hooks')archLoadHooks();if(name==='blueprint')archLoadBlueprints();}
+async function archRefresh(){const a=document.querySelector('#panel-architect .arch-inner-tab.active')?.id?.replace('arch-tab-','');if(a)archTab(a,document.getElementById('arch-tab-'+a));}
+async function archLoadHooks(){const type=document.getElementById('arch-hook-type')?.value||'';const data=await fetch(`${ARCH_BASE}/api/hooks?type=${type}`).then(r=>r.json()).catch(()=>null);const hooks=data?.hooks||[];const ct=document.getElementById('arch-hook-ct');if(ct)ct.textContent=hooks.length;const list=document.getElementById('arch-hook-list');if(!list)return;const TC={api:'#60a5fa','event-bus':'#22c55e',webserver:'#a78bfa',gate:'#f59e0b',snr:'#22d3ee',stream:'#f472b6'};list.innerHTML=hooks.map(h=>`<div style="display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);cursor:pointer;align-items:center" onclick='archShowHook(${JSON.stringify(JSON.stringify(h))})'><span style="font-size:8px;padding:1px 5px;border-radius:2px;background:${TC[h.type]||'#334'}22;color:${TC[h.type]||'#778'};border:1px solid ${TC[h.type]||'#334'}44;flex-shrink:0">${$esc(h.type||'?')}</span><span style="font-size:10px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${$esc(h.name||h.id||'?')}</span><span style="font-size:8px;color:${h.status==='active'?'var(--g)':'var(--muted)'}">${h.status||''}</span></div>`).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No hooks</div>';}
+function archShowHook(json){const h=JSON.parse(json);const el=document.getElementById('arch-hook-detail');if(!el)return;const row=(k,v)=>`<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:9px"><span style="color:var(--muted);width:90px;flex-shrink:0">${k}</span><span style="color:var(--text);word-break:break-all">${$esc(String(v??''))}</span></div>`;el.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:10px">${$esc(h.name||h.id||'Hook')}</div>`+Object.entries(h).map(([k,v])=>row(k,typeof v==='object'?JSON.stringify(v):v)).join('');}
+async function archLoadBlueprints(){const data=await fetch(`${ARCH_BASE}/api/blueprint`).then(r=>r.json()).catch(()=>null);const bps=data?.blueprints||[];const list=document.getElementById('arch-bp-list');if(!list)return;list.innerHTML=bps.map(b=>`<div style="padding:7px 12px;border-bottom:1px solid var(--border);cursor:pointer;font-size:10px" onclick='archShowBlueprint(${JSON.stringify(JSON.stringify(b))})'><div style="color:var(--text)">${$esc(b.name||b.id)}</div><div style="color:var(--muted);font-size:9px">${b.version||''} · ${b.status||''}</div></div>`).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No blueprints</div>';}
+function archShowBlueprint(json){const b=JSON.parse(json);const el=document.getElementById('arch-bp-detail');if(!el)return;el.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:8px">${$esc(b.name)}</div><pre style="font:9px/1.6 var(--mono);color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:10px;overflow:auto;max-height:70vh;white-space:pre-wrap">${$esc(JSON.stringify(b,null,2))}</pre>`;}
+async function archScanTopology(){const path=document.getElementById('arch-topo-path')?.value;if(!path)return;const data=await fetch(`${ARCH_BASE}/api/topology/scan`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path})}).then(r=>r.json()).catch(()=>null);const el=document.getElementById('arch-topo-result');if(!el)return;if(!data){el.textContent='Architect offline or scan failed';return;}el.innerHTML=`<div style="color:var(--g);margin-bottom:8px">✓ ${data.files?.length||0} files · ${data.surfaces?.length||0} surfaces · ${data.gaps?.length||0} gaps</div>`+(data.gaps||[]).map(g=>`<div style="color:var(--err);margin:2px 0">⚠ ${$esc(g.description||g.type)}</div>`).join('')+(data.surfaces||[]).map(s=>`<div style="color:var(--c);margin:2px 0">⬡ ${$esc(s.name)} L${s.layer||'?'}</div>`).join('');}
+async function archCheckSNR(){const text=document.getElementById('snr-source')?.value;const ctx=document.getElementById('snr-ctx')?.value;if(!text)return;const data=await fetch(`${ARCH_BASE}/api/snr/check`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source:{name:ctx||'ui-check',text},context:{}})}).then(r=>r.json()).catch(()=>null);const el=document.getElementById('snr-result');if(!el)return;if(!data){el.innerHTML='<div style="color:var(--err)">Architect offline</div>';return;}const score=data.score??data.snr?.score??0;const col=score>=0.85?'var(--g)':score>=0.65?'var(--y)':score>=0.45?'var(--o)':'var(--err)';el.innerHTML=`<div style="font-size:28px;font-weight:700;color:${col};margin-bottom:12px;font-family:var(--mono)">${(score*100).toFixed(0)}<span style="font-size:14px">%</span></div><div style="font-size:10px;color:var(--muted);margin-bottom:4px">Recommendation: <span style="color:var(--text)">${$esc(data.recommendation||'—')}</span></div>${(data.tags||[]).map(t=>`<span style="font-size:8px;padding:1px 6px;border-radius:2px;background:var(--surface);border:1px solid var(--border);margin:2px;display:inline-block;color:var(--text2)">${$esc(t)}</span>`).join('')}`;}
+
+// ═══ FORGE PANEL ════════════════════════════════════════════════════════════
+async function forgeLoadJobs(){const data=await gapi.req('/jobs?limit=50').catch(()=>null);const jobs=data?.jobs||[];const ct=document.getElementById('forge-job-ct');if(ct)ct.textContent=jobs.length+' jobs';const active=jobs.filter(j=>['queued','processing','retrying'].includes(j.status));const done=jobs.filter(j=>!['queued','processing','retrying'].includes(j.status)).slice(0,20);const act=document.getElementById('forge-active-ct');if(act)act.textContent=active.length;const don=document.getElementById('forge-done-ct');if(don)don.textContent=done.length;const rj=j=>{const col=j.status==='complete'||j.status==='verified'?'var(--g)':j.status==='failed'||j.status==='escalated'?'var(--err)':j.status==='processing'?'var(--y)':'var(--muted)';return`<div style="padding:6px 8px;border-bottom:1px solid var(--border);font-size:9px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:2px"><span style="color:${col}">●</span><span style="color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${$esc(j.id?.slice(0,12)||'?')}</span><span style="color:var(--muted)">${$esc(j.provider||'')}</span></div><div style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${$esc((j.prompt||j.command||'').slice(0,80))}</div></div>`;};const al=document.getElementById('forge-jobs-active');if(al)al.innerHTML=active.map(rj).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No active jobs</div>';const dl=document.getElementById('forge-jobs-done');if(dl)dl.innerHTML=done.map(rj).join('')||'<div style="color:var(--muted);font-size:9px;padding:20px;text-align:center">No recent jobs</div>';}
+
+// ═══ PROVIDERS PANEL ════════════════════════════════════════════════════════
+async function providersLoad(){const[provData,ollamaData]=await Promise.all([gapi.req('/providers').catch(()=>null),fetch('http://127.0.0.1:11434/api/tags').then(r=>r.json()).catch(()=>null)]);const TC={claude:'#818cf8',chatgpt:'#22c55e',ollama:'#f59e0b',cluster:'#22d3ee'};const raid=document.getElementById('providers-raid');if(raid){const ch=provData?.channels||{};raid.innerHTML=Object.entries(ch).map(([p,info])=>{const age=Math.round((Date.now()-(info.connectedAt||Date.now()))/1000);const col=TC[p.split('-')[0]]||'var(--text2)';return`<div style="padding:6px 0;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:6px;font-size:10px"><span style="color:${col};font-weight:600">${$esc(p)}</span><span style="color:var(--g);font-size:8px;margin-left:auto">LIVE ${age}s</span></div><div style="color:var(--muted);font-size:8px">tab ${(info.tabId||'').slice(-6)} · hb ${Math.round((Date.now()-(info.lastHeartbeat||Date.now()))/1000)}s ago</div></div>`;}).join('')||'<div style="color:var(--muted);font-size:9px;padding:12px 0">No active channels</div>';}const ncp=document.getElementById('providers-ncp');if(ncp){const prov=provData?.providers||{};ncp.innerHTML=Object.entries(prov).map(([p,info])=>{const alive=info.alive??info.ok??false;return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:9px"><span style="color:${alive?'var(--g)':'var(--err)'}">●</span><span style="color:var(--text)">${$esc(p)}</span><span style="color:var(--muted);margin-left:auto">${info.latency!=null?info.latency+'ms':''}</span></div>`;}).join('')||'<div style="color:var(--muted);font-size:9px;padding:12px 0">No providers</div>';}const oll=document.getElementById('providers-ollama');if(oll){const models=ollamaData?.models||[];oll.innerHTML=models.map(m=>`<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:9px"><div style="color:var(--text)">${$esc(m.name)}</div><div style="color:var(--muted);font-size:8px">${m.size?(m.size/1e9).toFixed(1)+'GB':''}</div></div>`).join('')||'<div style="color:var(--muted);font-size:9px;padding:12px 0">Ollama offline</div>';}}
+
+// Wire new panels to tab clicks
+document.querySelectorAll('.tb-tab').forEach(tab=>{tab.addEventListener('click',()=>{const p=tab.dataset.panel;if(p==='forge')setTimeout(forgeLoadJobs,50);if(p==='providers')setTimeout(providersLoad,50);if(p==='architect')setTimeout(archLoadHooks,50);});});
+setInterval(()=>{if(document.getElementById('panel-forge')?.classList.contains('active'))forgeLoadJobs();if(document.getElementById('panel-providers')?.classList.contains('active'))providersLoad();},10000);
+
+  </script>
+
+  <!-- ══ FORGE — jobs in flight, dispatch queue ═════════════════════ -->
+      </div>
+
+      <!-- brain / observability — migrated from guardian/ui -->
+      <div class="spanel" id="gd-brain">
+        <!-- CFR Canvas — fills the full panel, everything else overlays -->
+    <canvas id="cfr-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;"></canvas>
+
+    <!-- Top overlay bar -->
+    <div style="position:relative;z-index:10;display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(8,8,15,0.85);border-bottom:1px solid var(--border);flex-shrink:0;">
+      <span id="cfr-overlay" style="font-size:9px;color:var(--muted);letter-spacing:.1em;font-family:var(--mono);">&#9713; CFR  initialising...</span>
+      <div style="flex:1;"></div>
+      <span id="cfr-attractors-legend" style="font-size:9px;color:var(--muted);display:flex;gap:10px;align-items:center;"></span>
+      <div class="sep"></div>
+      <!-- Entropy readout -->
+      <span style="font-size:9px;color:var(--muted);">ENT</span>
+      <span id="cfr-entropy" style="font-size:9px;color:var(--green);min-width:30px;">0.00</span>
+    </div>
+
+    <!-- Main layout: left sidebar | centre (canvas shows through) | right sidebar -->
+    <div style="position:relative;z-index:10;display:flex;flex:1;overflow:hidden;pointer-events:none;">
+
+      <!-- LEFT: system state -->
+      <div class="brain-left" style="overflow-y:auto;background:rgba(8,8,15,0.82);pointer-events:all;flex-shrink:0;">
+
+        <!-- System health -->
+        <div class="brain-sec">
+          <div class="brain-sec-hdr">System State</div>
+          <div id="cfr-system-state" style="font-size:9px;">
+            <div class="brain-stat"><span style="color:var(--amber);">guardian</span><span class="brain-stat-val" id="cfr-s-guardian">—</span></div>
+            <div class="brain-stat"><span style="color:var(--purple);">cortex</span><span class="brain-stat-val" id="cfr-s-cortex">—</span></div>
+            <div class="brain-stat"><span style="color:var(--blue);">idearium</span><span class="brain-stat-val" id="cfr-s-idearium">—</span></div>
+            <div class="brain-stat"><span style="color:var(--pink);">gaps</span><span class="brain-stat-val" id="cfr-s-gaps">—</span></div>
+            <div class="brain-stat"><span style="color:var(--cyan);">jobs</span><span class="brain-stat-val" id="cfr-s-jobs">—</span></div>
+          </div>
+        </div>
+
+        <!-- RAID routing state -->
+        <div class="brain-sec">
+          <div class="brain-sec-hdr">RAID Routing</div>
+          <div id="cfr-raid-state" style="font-size:9px;">
+            <div class="brain-stat"><span>ollama</span><span class="brain-stat-val" id="cfr-r-ollama">—</span></div>
+            <div class="brain-stat"><span>g-claude</span><span class="brain-stat-val" id="cfr-r-gclaude">—</span></div>
+            <div class="brain-stat"><span>g-chatgpt</span><span class="brain-stat-val" id="cfr-r-gchatgpt">—</span></div>
+            <div class="brain-stat"><span>cluster</span><span class="brain-stat-val" id="cfr-r-cluster">—</span></div>
+          </div>
+        </div>
+
+        <!-- Memory modules -->
+        <div class="brain-sec">
+          <div class="brain-sec-hdr">Memory</div>
+          <div id="brain-modules" style="font-size:9px;">
+            <div class="brain-stat"><span>crystals</span><span class="brain-stat-val" id="bm-crystals">—</span></div>
+            <div class="brain-stat"><span>bep_patterns</span><span class="brain-stat-val" id="bm-bep">—</span></div>
+            <div class="brain-stat"><span>agent_calls</span><span class="brain-stat-val" id="bm-agent">—</span></div>
+            <div class="brain-stat"><span>artifacts</span><span class="brain-stat-val" id="bm-artifacts">—</span></div>
+            <div class="brain-stat"><span>gaps</span><span class="brain-stat-val" id="bm-gaps">—</span></div>
+          </div>
+        </div>
+
+        <!-- NCP channels -->
+        <div class="brain-sec">
+          <div class="brain-sec-hdr">NCP Channels</div>
+          <div id="brain-providers" style="font-size:9px;"></div>
+        </div>
+
+      </div>
+
+      <!-- CENTRE: canvas shows through — event trace overlay at bottom -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;">
+        <!-- Active job trace — shows at bottom of canvas -->
+        <div id="cfr-trace" style="background:rgba(8,8,15,0.78);border-top:1px solid var(--border);padding:6px 14px;font-size:9px;color:var(--muted);max-height:90px;overflow-y:auto;pointer-events:all;display:none;">
+        </div>
+      </div>
+
+      <!-- RIGHT: live event bus -->
+      <div class="brain-right" style="overflow-y:auto;background:rgba(8,8,15,0.82);pointer-events:all;flex-shrink:0;display:flex;flex-direction:column;">
+
+        <div style="padding:6px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          <span style="font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700;">Live Bus</span>
+          <span id="brain-bus-count" style="font-size:9px;color:var(--amber);">0</span>
+          <button onclick="document.getElementById('brain-bus').innerHTML='';window._busCnt=0;document.getElementById('brain-bus-count').textContent='0';" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:2px 6px;border-radius:2px;cursor:pointer;font-family:var(--mono);">clear</button>
+        </div>
+        <div id="brain-bus" style="flex:1;overflow-y:auto;padding:2px 0;font-size:9px;"></div>
+
+        <!-- Physical queue -->
+        <div style="border-top:1px solid var(--border);padding:6px 10px;flex-shrink:0;">
+          <div class="brain-sec-hdr" style="margin-bottom:4px;">Queue</div>
+          <div style="display:flex;gap:10px;font-size:9px;">
+            <span>&#9679; <span id="cfr-q-pending" style="color:var(--amber);">0</span> pending</span>
+            <span>&#9632; <span id="cfr-q-proc" style="color:var(--blue);">0</span> proc</span>
+            <span>&#10003; <span id="cfr-q-done" style="color:var(--green);">0</span> done</span>
+            <span>&#10007; <span id="cfr-q-failed" style="color:var(--red);">0</span> fail</span>
+          </div>
+        </div>
+
+        <!-- Cortex tables count -->
+        <div style="border-top:1px solid var(--border);padding:6px 10px;flex-shrink:0;">
+          <div class="brain-sec-hdr" style="margin-bottom:4px;">Cortex Tables <span id="brain-table-count" style="color:var(--amber);">0/41</span></div>
+          <div id="brain-tables" style="font-size:9px;color:var(--muted);line-height:1.6;max-height:80px;overflow-y:auto;"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
       </div>
 
       <!-- artifacts -->
@@ -7838,7 +8494,854 @@ if (typeof window !== 'undefined') {
     if (_origConRun) return _origConRun(cmd);
   };
 }
-</script>
 
+// ══ MIGRATED FROM guardian/ui — SEAM + Brain + Lab + Workflow ══════════════
+
+// ── SEAM heartbeat timeout — fixes stuck GENERATING chunks ──────────────────
+// If a chunk has been GENERATING for > SEAM_TIMEOUT_MS, force retry
+const SEAM_TIMEOUT_MS = 120000; // 2 minutes
+let _seamWatchdog = null;
+
+function startSeamWatchdog() {
+  if (_seamWatchdog) return;
+  _seamWatchdog = setInterval(async () => {
+    try {
+      const r = await fetch('http://127.0.0.1:7820/seam/queues');
+      if (!r.ok) return;
+      const { queues = [] } = await r.json();
+      for (const q of queues) {
+        if (!q.stats) continue;
+        // Detect stuck queue — GENERATING for too long
+        const active = q.stats.active;
+        if (active && active.state === 'GENERATING') {
+          const age = Date.now() - (active.generatingAt || 0);
+          if (age > SEAM_TIMEOUT_MS) {
+            console.warn('[SEAM watchdog] chunk stuck GENERATING for', age, 'ms — forcing retry');
+            // POST retry to guardian
+            await fetch('http://127.0.0.1:7820/seam/retry', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ queueId: q.uuid, chunkUuid: active.uuid, reason: 'watchdog_timeout' }),
+            }).catch(() => {});
+            // If no NCP channel open — open a new tab
+            const providers = await fetch('http://127.0.0.1:7820/providers').then(r=>r.json()).catch(()=>({providers:[]}));
+            const prov = providers.providers?.find(p => p.name === q.provider);
+            if (!prov?.connected) {
+              console.warn('[SEAM watchdog] no NCP channel for', q.provider, '— requesting tab open');
+              openInProvider(q.provider); // open the provider tab
+            }
+          }
+        }
+      }
+    } catch(_) {}
+  }, 30000); // check every 30s
+}
+
+
+// MIGRATED FROM guardian/ui/index.html
+// SEAM + Brain + Lab + Workflow functions
+
+
+// ── queueFullSeam ──
+async function queueFullSeam() {
+  const specText = (document.getElementById('ck-spec') || document.getElementById('spec-input'))?.value.trim();
+  if (!specText) { toast('Paste a spec first', 'error'); return; }
+  const prov = (document.getElementById('ck-provider')?.value || 'chatgpt').replace('-direct','');
+  const splitOn = document.getElementById('split-on')?.value || 'heading';
+  const maxSize = parseInt(document.getElementById('max-size')?.value || '3000');
+  toast('Queuing full spec → Guardian (' + prov + ')…', 'info');
+  try {
+    const r = await fetch('http://127.0.0.1:7820/command', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ spec: specText, provider: prov, splitOn, maxChunkSize: maxSize }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      toast('SEAM queue created: ' + d.total + ' chunks → ' + d.provider, 'success', 5000);
+      // Switch to Brain tab to watch progress
+      document.querySelector('[data-panel="brain"]')?.click();
+      setTimeout(brainRefreshSeam, 1000);
+    } else {
+      toast('Queue failed: ' + (d.error || 'unknown'), 'error');
+    }
+  } catch(e) { toast('Guardian unreachable: ' + e.message, 'error'); }
+}
+
+// ── parseSpec ──
+function parseSpec(){
+  const raw=($get('ck-spec')||$get('spec-input'))?.value.trim();
+  if(!raw){toast('Paste or drop spec text first','warn');return;}
+  const splitOn=$val('split-on'),size=parseInt($val('chunk-size'))||3500;
+  const chunks=splitOn==='section'?_splitSection(raw):splitOn==='seam'?_splitSeam(raw):splitOn==='custom'?_splitCustom(raw):_splitSize(raw,size);
+  ckState.chunks=chunks.map((c,i)=>({index:i,title:c.title,content:c.content,size:c.content.length,status:'pending',verified:false,tests:c.tests||[],verificationNote:'',total:chunks.length}));
+  ckState.activeChunk=0;_saveCkState();
+  const cc=$get('chunk-count');if(cc)cc.textContent=ckState.chunks.length;
+  const emp=$get('ck-empty');if(emp)emp.style.display='none';
+  const nav=$get('ck-nav');if(nav)nav.style.display='flex';
+  _renderCkList();_renderCkProgress();_renderCkViewer(0);
+  toast(ckState.chunks.length+' chunks parsed','success');
+  bus.emit('seam.chunker.parsed',{count:ckState.chunks.length});
+  for(const c of ckState.chunks)jaa.insert('seam_chunks',{...c,parsedAt:$ts()});
+}
+
+// ── _splitSeam ──
+function _splitSeam(text){const lines=text.split('\n'),chunks=[],BR=/^(define|blueprint|hook|when|if)\s/;let cur=[];for(const l of lines){if(BR.test(l.trim())&&cur.length>3){chunks.push(_mkChunk(cur.join('\n')));cur=[];}cur.push(l);}if(cur.length)chunks.push(_mkChunk(cur.join('\n')));return chunks;}
+
+// ── _splitSection ──
+function _splitSection(text){return text.split(/(?=^#{1,4}\s)/m).filter(p=>p.trim()).map(p=>_mkChunk(p));}
+
+// ── _splitCustom ──
+function _splitCustom(text){try{const re=new RegExp($val('custom-pattern')||'^##','m');return text.split(re).filter(p=>p.trim()).map(p=>_mkChunk(p));}catch{return _splitSize(text,3500);}}
+
+// ── _splitSize ──
+function _splitSize(text,size){const lines=text.split('\n');const chunks=[];let cur=[],sz=0;for(const l of lines){const ls=l.length+1;if(sz+ls>size&&cur.length){chunks.push(_mkChunk(cur.join('\n')));cur=[];sz=0;}cur.push(l);sz+=ls;}if(cur.length)chunks.push(_mkChunk(cur.join('\n')));return chunks;}
+
+// ── _mkChunk ──
+function _mkChunk(content){
+  const lines=content.split('\n').filter(l=>l.trim());let title='Chunk';
+  for(const l of lines){const m=l.match(/^#{1,4}\s+(.+)/)||l.match(/^([A-Z][^#\n]{3,60})$/)||l.match(/^(\w+):/);if(m){title=m[1].slice(0,60);break;}}
+  if(title==='Chunk'&&lines[0])title=lines[0].slice(0,60);
+  const tests=[];for(const l of lines){if(/test:|verify:|check:|assert:|invariant:/i.test(l))tests.push({text:l.trim().slice(0,80),pass:null});}
+  return{content,title,tests};
+}
+
+// ── _renderCkList ──
+function _renderCkList(){
+  const el=$get('chunk-list');if(!el||!ckState.chunks.length){if(el)el.innerHTML='';return;}
+  el.innerHTML=ckState.chunks.map((c,i)=>{
+    const pct=c.tests.length?Math.round(c.tests.filter(t=>t.pass===true).length/c.tests.length*100):0;
+    const cls=c.status==='verified'?'ci verified':c.status==='failed'?'ci failed':c.status==='skipped'?'ci skipped':i===ckState.activeChunk?'ci active':'ci';
+    const icon={verified:'✓',failed:'✗',skipped:'—'}[c.status]||'⧖';
+    const fc=c.status==='verified'?'g':c.status==='failed'?'r':'a';
+    return`<div class="${cls}" onclick="selectChunk(${i})"><div class="ci-top"><span class="ci-num">${i+1}</span><span class="ci-title">${$esc(c.title)}</span><span>${icon}</span></div><div style="font-size:9px;color:var(--muted)">${c.size} chars · ${c.tests.length} tests</div>${c.tests.length?`<div class="ci-bar"><div class="ci-fill ${fc}" style="width:${pct}%"></div></div>`:''}</div>`;
+  }).join('');
+}
+
+// ── _renderCkProgress ──
+function _renderCkProgress(){
+  const ch=ckState.chunks;if(!ch.length)return;
+  const v=ch.filter(c=>c.status==='verified').length,f=ch.filter(c=>c.status==='failed').length,sk=ch.filter(c=>c.status==='skipped').length,p=ch.filter(c=>c.status==='pending').length;
+  const pct=Math.round(v/ch.length*100);
+  const pf=$get('ps-fill');if(pf)pf.style.width=pct+'%';
+  const pp=$get('stat-pct');if(pp)pp.textContent=pct+'%';
+  const sv=$get('stat-verified');if(sv)sv.textContent=v+'/'+ch.length;
+  const sf=$get('stat-failed');if(sf)sf.textContent=f;
+  const ss=$get('stat-skipped');if(ss)ss.textContent=sk;
+  const sp=$get('stat-pending');if(sp)sp.textContent=p;
+  const ticks=$get('ps-ticks');if(ticks)ticks.innerHTML=ch.map((c,i)=>`<div class="${c.status==='verified'?'ps-tick done':c.status==='failed'?'ps-tick fail':i===ckState.activeChunk?'ps-tick active':'ps-tick'}" title="${$esc(c.title)}"></div>`).join('');
+}
+
+// ── _renderCkViewer ──
+function _renderCkViewer(idx){
+  const c=ckState.chunks[idx],el=$get('chunk-viewer');
+  if(!el)return;
+  if(!c){el.innerHTML='<div class="empty"><div class="empty-sub">No chunk selected</div></div>';return;}
+  const prov=$val('ck-provider'),spKey=$val('system-prompt');
+  const sysP=spKey==='custom'?ckState.customSysPrompt:ckState.systemPrompts[spKey]||'';
+  const prompt=_buildPrompt(c,idx,sysP,prov);
+  const bCls={verified:'cv-badge badge-verified',failed:'cv-badge badge-failed'}[c.status]||'cv-badge badge-pending';
+  const testsHtml=c.tests.map((t,ti)=>`<div class="ts"><span class="ts-n">${ti+1}</span><span class="ts-t">${$esc(t.text)}</span><span class="ts-p ${t.pass===true?'rle-pass':t.pass===false?'rle-fail':''}" onclick="toggleTest(${idx},${ti})">${t.pass===true?'✓':t.pass===false?'✗':'·'}</span></div>`).join('');
+  el.innerHTML=`<div class="cv-hdr"><span class="cv-num">${idx+1}/${ckState.chunks.length}</span><span class="cv-title">${$esc(c.title)}</span><span class="${bCls}">${c.status}</span></div><div class="cv-body"><div class="prompt-block"><div class="pb-hdr"><span class="pb-lbl">Delivery Prompt</span><div class="pb-acts"><button class="pb-btn" onclick="copyPrompt(${idx})">Copy</button><button class="pb-btn guardian" onclick="guardianDispatch(${idx})">→ Guardian</button><button class="pb-btn send" onclick="openInProvider(${idx},'${prov}')">↗ Open</button></div></div><div class="pb-content">${$esc(prompt)}</div></div>${c.tests.length?`<div class="test-block ${c.status==='verified'?'verified':c.status==='failed'?'failed':''}"><div class="tb-ttl">◈ Test Contract (${c.tests.filter(t=>t.pass===true).length}/${c.tests.length} pass)</div>${testsHtml}</div>`:''}<div class="verify-area"><div class="va-lbl">Verification Note</div><textarea class="va-ta" id="va-note-${idx}" placeholder="SEAM VERDICT: PASS">${$esc(c.verificationNote||'')}</textarea><div class="va-acts"><button class="va-btn pass" onclick="verifyCk(${idx},'pass')">✓ Mark PASS</button><button class="va-btn fail" onclick="verifyCk(${idx},'fail')">✗ Mark FAIL</button><button class="va-btn skip" onclick="verifyCk(${idx},'skip')">— Skip</button><button class="va-btn idea" onclick="pushCkToIdearium(${idx})">↑ Push Idea</button></div></div></div>`;
+  const pos=$get('ck-pos');if(pos)pos.textContent=`Chunk ${idx+1} / ${ckState.chunks.length}`;
+}
+
+// ── _buildPrompt ──
+function _buildPrompt(c,idx,sysP,prov){
+  const v=ckState.chunks.slice(0,idx).filter(x=>x.status==='verified').length;
+  const hdr=`━━ SEAM CHUNK ${idx+1}/${ckState.chunks.length} — ${c.title} ━━\n[Prior chunks verified: ${v}/${idx}]\n\n`;
+  const contract=c.tests.length?`\n\n━━ SEAM CONTRACT ━━\nAfter reading, respond with:\n${c.tests.map((t,i)=>`[PASS/FAIL] Test ${i+1}: ${t.text}`).join('\n')}\n\nSEAM VERDICT: PASS | FAIL`:'';
+  return(sysP?`[SYSTEM]\n${sysP}\n\n`:'')+hdr+c.content+contract;
+}
+
+// ── selectChunk ──
+function selectChunk(idx){ckState.activeChunk=idx;_saveCkState();_renderCkList();_renderCkProgress();_renderCkViewer(idx);}
+
+// ── verifyCk ──
+function verifyCk(idx,result){
+  const c=ckState.chunks[idx],noteEl=$get(`va-note-${idx}`);
+  if(noteEl)c.verificationNote=noteEl.value;
+  c.tests.forEach(t=>{if(result==='pass'&&t.pass===null)t.pass=true;});
+  c.status=result==='pass'?'verified':result==='fail'?'failed':'skipped';
+  c.verifiedAt=$ts();_saveCkState();_renderCkList();_renderCkProgress();_renderCkViewer(idx);
+  toast(`Chunk ${idx+1} ${c.status}`,result==='pass'?'success':result==='fail'?'error':'info');
+  if((result==='pass'||result==='skip')&&idx+1<ckState.chunks.length)setTimeout(()=>selectChunk(idx+1),350);
+  bus.emit('seam.chunk.verified',{idx,status:c.status});
+}
+
+// ── toggleTest ──
+function toggleTest(cIdx,tIdx){const t=ckState.chunks[cIdx].tests[tIdx];t.pass=t.pass===true?null:true;_saveCkState();_renderCkViewer(cIdx);_renderCkList();}
+
+// ── copyPrompt ──
+function copyPrompt(idx){const c=ckState.chunks[idx];const sysP=$val('system-prompt')==='custom'?ckState.customSysPrompt:ckState.systemPrompts[$val('system-prompt')]||'';navigator.clipboard.writeText(_buildPrompt(c,idx,sysP,$val('ck-provider'))).then(()=>toast('Copied','success'));}
+
+// ── loadDroppedFile ──
+function loadDroppedFile(file){
+  const r=new FileReader();
+  r.onload=e=>{$get('ck-spec').value=e.target.result;toast('Loaded: '+file.name,'success');};
+  r.readAsText(file);
+}
+
+// ── exportCkState ──
+function exportCkState(){const blob=new Blob([JSON.stringify(ckState,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='forge-seam-'+$ts()+'.json';a.click();toast('Exported','success');}
+
+// ── importCkState ──
+function importCkState(file){const r=new FileReader();r.onload=e=>{try{const s=JSON.parse(e.target.result);ckState={...ckState,...s};_saveCkState();_renderCkList();_renderCkProgress();_renderCkViewer(ckState.activeChunk);toast('Imported','success');}catch(err){toast('Invalid: '+err.message,'error');}};r.readAsText(file);}
+
+// ── _loadCkState ──
+function _loadCkState(){try{const s=JSON.parse(localStorage.getItem('forge_ck')||'null');if(s)ckState={...ckState,...s};}catch(_){}}
+
+// ── _saveCkState ──
+function _saveCkState(){localStorage.setItem('forge_ck',JSON.stringify({chunks:ckState.chunks,activeChunk:ckState.activeChunk,customSysPrompt:ckState.customSysPrompt}));}
+
+// ── pushCkToIdearium ──
+async function pushCkToIdearium(idx){
+  const c=ckState.chunks[idx];
+  try{const r=await idearium.createIdea({title:'SEAM: '+c.title,body:c.content.slice(0,800),tags:['seam-chunk'],phase:'seed'});toast(r.ok?'Pushed to Idearium':'Error: '+r.error,r.ok?'success':'error');}
+  catch(e){toast('Idearium: '+e.message,'error');}
+}
+
+// ── openInProvider ──
+function openInProvider(idx,provider){
+  const c=ckState.chunks[idx];const sysP=$val('system-prompt')==='custom'?ckState.customSysPrompt:ckState.systemPrompts[$val('system-prompt')]||'';
+  navigator.clipboard.writeText(_buildPrompt(c,idx,sysP,provider)).then(()=>{window.open(provider.includes('chatgpt')?'https://chatgpt.com/':'https://claude.ai/new','_blank');toast('Copied + opened','info');});
+}
+
+// ── guardianDispatch ──
+async function guardianDispatch(idx){
+  const c=ckState.chunks[idx];const sysP=$val('system-prompt')==='custom'?ckState.customSysPrompt:ckState.systemPrompts[$val('system-prompt')]||'';
+  const prompt=_buildPrompt(c,idx,sysP,'claude');const prov=$val('ck-provider').replace('-direct','');
+  toast(`Dispatching chunk ${idx+1} → Guardian (${prov})…`,'info');
+  try{
+    let text;try{text=await guardian.dispatch(prov,prompt);}catch(_){}
+    if(!text){const r=await idearium.dispatch(prov,prompt);text=r?.result?.content||r?.content||'';}
+    if(text){ckState.chunks[idx].verificationNote=text.slice(0,600);_saveCkState();_renderCkViewer(idx);if(/SEAM VERDICT:\s*PASS/i.test(text))verifyCk(idx,'pass');else if(/SEAM VERDICT:\s*FAIL/i.test(text))verifyCk(idx,'fail');toast('Guardian response received','success');}
+    else toast('Guardian: empty response','warn');
+  }catch(e){toast('Guardian: '+e.message,'error');}
+}
+
+// ── brainRefreshAll ──
+async function brainRefreshAll() {
+  brainRefreshMemoryModules();
+  brainRefreshCortexTables();
+  brainRefreshProviders();
+  brainRefreshSeam();
+  brainRefreshQueue();
+  brainRefreshNodes();
+  brainRefreshFlow();
+}
+
+// ── brainRefreshSeam ──
+async function brainRefreshSeam() {
+  // Both persistent sessions (JAA) and active in-memory queues
+  const [sessData, queueData] = await Promise.all([
+    brainFetch(BRAIN_GUARDIAN + '/seam/sessions'),
+    brainFetch(BRAIN_GUARDIAN + '/seam/queues'),
+  ]);
+  const data = sessData;
+  // Overlay active queue status on top
+  const activeQueues = queueData?.queues || [];
+  if (!data) return;
+  const el = document.getElementById('brain-seam');
+  if (!el) return;
+
+  // Active (in-memory) queues first — these are live
+  const liveRows = activeQueues.map(q => {
+    const st = q.stats || {};
+    const pct = st.total ? Math.round(st.verified/st.total*100) : 0;
+    const col = pct === 100 ? '#22c55e' : st.escalated ? '#f472b6' : pct > 0 ? '#f59e0b' : '#60a5fa';
+    return `<div style="padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+        <span style="color:#60a5fa;font-weight:600">${q.title||'Active Queue'}</span>
+        <span style="color:${col};font-size:8px;font-weight:700">LIVE · ${q.provider||''}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="flex:1;height:3px;background:var(--border);border-radius:2px">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:2px;transition:width .4s"></div>
+        </div>
+        <span style="color:${col};font-weight:700">${st.verified||0}/${st.total||0}</span>
+      </div>
+      <div style="color:#334155;font-size:8px;margin-top:2px">
+        queued:${st.queued||0} retrying:${st.retrying||0} escalated:${st.escalated||0}
+      </div>
+    </div>`;
+  });
+
+  // JAA sessions (historical)
+  const sessions = (data?.sessions || []).slice(-5).reverse();
+  const sessRows = sessions.map(s => {
+    const chunks = s.chunks || [];
+    const verified = chunks.filter(c => c.status === 'verified').length;
+    const total = chunks.length || s.total || 0;
+    const pct = total ? Math.round(verified/total*100) : 0;
+    const col = pct === 100 ? '#22c55e' : pct > 0 ? '#f59e0b' : '#334155';
+    return `<div style="padding:4px 0;border-bottom:1px solid var(--border)">
+      <div style="color:var(--text);margin-bottom:2px">${s.title||'Untitled'}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="flex:1;height:3px;background:var(--border);border-radius:2px">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:2px"></div>
+        </div>
+        <span style="color:${col};font-weight:700">${verified}/${total}</span>
+      </div>
+    </div>`;
+  });
+
+  const allRows = [...liveRows, ...sessRows];
+  if (!allRows.length) { el.innerHTML = '<span style="color:var(--muted)">No sessions</span>'; return; }
+  el.innerHTML = allRows.join('');
+}
+
+// ── brainRefreshQueue ──
+async function brainRefreshQueue() {
+  const data = await brainFetch(BRAIN_GUARDIAN + '/queue/compartments');
+  if (!data) return;
+  const el = document.getElementById('brain-queue');
+  if (!el) return;
+  const comps = (data.compartments || []).slice(-10).reverse();
+  if (!comps.length) { el.innerHTML = '<span style="color:var(--muted)">No compartments</span>'; return; }
+  const STATE_COL = { QUEUED:'#475569',INJECTING:'#60a5fa',GENERATING:'#fbbf24',
+    DETECTING:'#a78bfa',VERIFIED:'#22c55e',FAILED:'#ef4444',RETRYING:'#f59e0b',ESCALATED:'#f472b6' };
+  el.innerHTML = comps.map(c => {
+    const col = STATE_COL[c.state] || '#475569';
+    return `<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid var(--border)">
+      <span style="color:#334155;width:20px">${c.chunkIdx+1}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)">${c.chunkTitle||'—'}</span>
+      <span style="color:${col};font-weight:700;font-size:8px">${c.state}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── brainRefreshProviders ──
+async function brainRefreshProviders() {
+  const data = await brainFetch(BRAIN_GUARDIAN + '/providers');
+  if (!data) return;
+  const el = document.getElementById('brain-providers');
+  if (!el) return;
+  const providers = data.channels || {};
+  if (!Object.keys(providers).length) {
+    el.innerHTML = '<span style="color:var(--muted)">No active channels</span>';
+    return;
+  }
+  el.innerHTML = Object.entries(providers).map(([p, info]) => {
+    const age = Math.round((Date.now() - info.connectedAt) / 1000);
+    const hbAge = Math.round((Date.now() - info.lastHeartbeat) / 1000);
+    return `<div class="brain-stat"><span>${p} (tab ${info.tabId?.slice(-6)})</span>
+      <span class="brain-stat-val" style="color:#22c55e">LIVE ${age}s · hb ${hbAge}s ago</span></div>`;
+  }).join('');
+}
+
+// ── brainRefreshMemoryModules ──
+async function brainRefreshMemoryModules() {
+  const data = await brainFetch(BRAIN_CORTEX + '/health');
+  if (!data) return;
+  const counts = data.jaa?.counts || {};
+  const map = {
+    'crystals':'bm-crystals','bep_patterns':'bm-bep','memory_index':'bm-memory',
+    'cortex_memory':'bm-cortex','intent_nodes':'bm-intent',
+    'agent_calls':'bm-agent','artifacts':'bm-artifacts','gaps':'bm-gaps',
+  };
+  for (const [table, elId] of Object.entries(map)) {
+    const el = document.getElementById(elId);
+    if (el) el.textContent = counts[table] ?? '0';
+  }
+}
+
+// ── brainRefreshCortexTables ──
+async function brainRefreshCortexTables() {
+  const data = await brainFetch(BRAIN_CORTEX + '/health');
+  if (!data) return;
+  const counts = data.jaa?.counts || {};
+  const tables = Object.keys(counts);
+  const el = document.getElementById('brain-tables');
+  const ct = document.getElementById('brain-table-count');
+  if (!el) return;
+  el.innerHTML = tables.map(t => {
+    const n = counts[t] || 0;
+    const col = n > 0 ? '#34d399' : '#334155';
+    return `<span style="color:${col};margin-right:6px">${t}(${n})</span>`;
+  }).join('');
+  if (ct) ct.textContent = `${tables.filter(t=>counts[t]>0).length}/${tables.length}`;
+}
+
+// ── brainRefreshNodes ──
+async function brainRefreshNodes() {
+  const data = await brainFetch(BRAIN_ORCH + '/api/registry');
+  if (!data) return;
+  const el = document.getElementById('brain-nodes');
+  if (!el) return;
+  const reg = data.registry || {};
+  const systems = Object.entries(reg);
+  if (!systems.length) { el.innerHTML = '<span style="color:var(--muted)">No registered nodes</span>'; return; }
+  el.innerHTML = systems.map(([id, s]) => {
+    const age = s.lastSeen ? Math.round((Date.now()-s.lastSeen)/1000) : null;
+    const online = age !== null && age < 30;
+    const col = online ? '#22c55e' : '#ef4444';
+    return `<div class="brain-stat">
+      <span>${id}</span>
+      <span class="brain-stat-val" style="color:${col}">:${s.port||'?'} ${online?`${age}s`:'OFFLINE'}</span>
+    </div>`;
+  }).join('');
+
+  // Update BPM display (use last seen as proxy — real BPM needs heartbeat module)
+  const bpmMap = { cortex:'bpm-cortex', guardian:'bpm-guardian', idearium:'bpm-idearium' };
+  for (const [sys, elId] of Object.entries(bpmMap)) {
+    const s = reg[sys];
+    const el2 = document.getElementById(elId);
+    if (!el2) continue;
+    if (!s?.lastSeen) { el2.textContent = '—'; continue; }
+    const age = Math.round((Date.now()-s.lastSeen)/1000);
+    el2.textContent = age < 30 ? `LIVE ${age}s` : 'STALE';
+    el2.style.color = age < 30 ? '#22c55e' : '#ef4444';
+  }
+}
+
+// ── brainLoadBaselines ──
+async function brainLoadBaselines() {
+  const data = await brainFetch(BRAIN_ORCH + '/api/baselines');
+  if (!data) return;
+  const el = document.getElementById('brain-baselines');
+  if (!el) return;
+  const baselines = data.baselines || {};
+  const entries = Object.entries(baselines).slice(0, 20);
+  if (!entries.length) { el.innerHTML = '<span style="color:var(--muted)">Accumulating…</span>'; return; }
+  el.innerHTML = entries.map(([type, b]) => {
+    const col = b.consistency > 0.8 ? '#22c55e' : b.consistency > 0.5 ? '#f59e0b' : '#ef4444';
+    return `<div style="padding:3px 0;border-bottom:1px solid var(--border)">
+      <div style="color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${type}</div>
+      <div style="display:flex;gap:8px;font-size:8px">
+        <span style="color:${col}">c=${b.consistency.toFixed(2)}</span>
+        <span>avg=${b.avgIntervalMs}ms</span>
+        <span>n=${b.count}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── brainPollBus ──
+async function brainPollBus() {
+  const data = await brainFetch(BRAIN_GUARDIAN + '/bus?n=20');
+  if (!data) return;
+  const entries = data.entries || [];
+  if (!entries.length) return;
+  const el = document.getElementById('brain-bus');
+  const ct = document.getElementById('brain-bus-count');
+  if (!el) return;
+  // Add new events to top
+  const newEntries = entries.filter(e => !_brainBusEvents.find(x => x.type === e.type && x.ts === e.ts));
+  if (!newEntries.length) return;
+  _brainBusEvents = [...newEntries, ..._brainBusEvents].slice(0, 200);
+  if (ct) ct.textContent = `${_brainBusEvents.length} events`;
+  const TC = { 'guardian.artifact':'#a78bfa','guardian.gaps':'#f472b6',
+    'guardian.job.complete':'#34d399','guardian.pa.session':'#f59e0b',
+    'guardian.ledger':'#94a3b8','GUARDIAN_COMPLETE':'#34d399',
+    'ncp.client.connected':'#22c55e','ncp.client.disconnected':'#ef4444',
+    'heartbeat:pulse':'#475569','node.discovered':'#f59e0b' };
+  el.innerHTML = _brainBusEvents.slice(0, 50).map(e => {
+    const col = TC[e.type] || '#475569';
+    const ts = e.ts ? new Date(e.ts).toTimeString().slice(0,8) : '';
+    return `<div style="display:flex;gap:8px;padding:2px 8px;border-bottom:1px solid rgba(255,255,255,.03)">
+      <span style="color:#1e293b;flex-shrink:0">${ts}</span>
+      <span style="color:${col};flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.type}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── brainClearBus ──
+function brainClearBus() {
+  _brainBusEvents = [];
+  const el = document.getElementById('brain-bus');
+  if (el) el.innerHTML = '';
+  const ct = document.getElementById('brain-bus-count');
+  if (ct) ct.textContent = '0 events';
+}
+
+// ── brainRefreshFlow ──
+async function brainRefreshFlow() {
+  // Color the flow nodes based on health
+  const systems = [
+    { id:'flow-guardian', url:BRAIN_GUARDIAN+'/health' },
+    { id:'flow-cortex',   url:BRAIN_CORTEX+'/health' },
+    { id:'flow-orch',     url:BRAIN_ORCH+'/health' },
+  ];
+  for (const s of systems) {
+    const el = document.getElementById(s.id);
+    if (!el) continue;
+    const data = await brainFetch(s.url);
+    el.style.borderColor = data?.ok ? 'rgba(34,197,94,.5)' : 'rgba(239,68,68,.4)';
+    el.style.color = data?.ok ? '#22c55e' : '#ef4444';
+  }
+}
+
+// ── brainFetch ──
+async function brainFetch(url, opts={}) {
+  try { const r = await fetch(url, { ...opts, signal: AbortSignal.timeout(3000) });
+    if (!r.ok) return null; return r.json(); } catch(_) { return null; }
+}
+
+// ── _renderBrainJaa ──
+function _renderBrainJaa(){
+  const el=$get('brain-jaa-stats');if(!el)return;
+  const stats=jaa.stats(),keys=Object.keys(stats);
+  if(!keys.length){el.innerHTML='<div style="color:var(--muted);font-size:9px;padding:4px;">No data yet</div>';return;}
+  el.innerHTML=keys.map(k=>`<div class="brain-stat"><span>${k}</span><span class="brain-stat-val">${stats[k]}</span></div>`).join('');
+}
+
+// ── _renderBrainGaps ──
+function _renderBrainGaps(){
+  const el=$get('brain-gaps-list');if(!el)return;
+  const gaps=jaa.query('gaps',g=>g.status==='open',20);
+  if(!gaps.length){el.innerHTML='<div style="color:var(--muted);font-size:9px;padding:6px;">No open gaps ✓</div>';return;}
+  el.innerHTML=gaps.map(g=>`<div style="padding:5px 6px;border-bottom:1px solid var(--border);font-size:9px;"><span style="color:var(--red)">◈</span> ${$esc(g.id||'gap')} <span style="color:var(--muted)">p:${g.pressure}</span></div>`).join('');
+}
+
+// ── _renderBrainTrust ──
+function _renderBrainTrust(){
+  const el=$get('brain-trust-list');if(!el)return;
+  const scores=trust.all();
+  if(!scores.length){el.innerHTML='<div style="color:var(--muted);font-size:9px;padding:4px;">No trust records</div>';return;}
+  el.innerHTML=scores.slice(0,10).map(s=>`<div style="padding:3px 0;border-bottom:1px solid var(--border);"><div style="display:flex;justify-content:space-between;font-size:9px;"><span>${$esc(s.uuid.slice(0,14))}</span><span style="color:var(--amber)">${(s.score||0).toFixed(2)} (${trust.band(s.score||0)})</span></div><div style="height:2px;background:var(--border);border-radius:1px;margin-top:2px;"><div style="height:100%;width:${((s.score||0)*100).toFixed(0)}%;background:${s.score>=0.6?'var(--green)':s.score>=0.35?'var(--amber)':'var(--red)'};border-radius:1px;"></div></div></div>`).join('');
+}
+
+// ── labRun ──
+async function labRun() {
+    if (_labRunning) { alert('Experiment already running'); return; }
+    const type       = document.getElementById('lab-type')?.value;
+    const provider   = document.getElementById('lab-provider')?.value;
+    const prompt     = document.getElementById('lab-prompt')?.value?.trim();
+    const hypothesis = document.getElementById('lab-hypothesis')?.value?.trim();
+    if (!prompt) { alert('Prompt required'); return; }
+
+    const config = { type, provider, prompt, hypothesis };
+    if (type==='loop') {
+      config.next_prompt   = document.getElementById('lab-next-prompt')?.value?.trim();
+      config.max_iterations = parseInt(document.getElementById('lab-max-iter')?.value)||5;
+      const op  = document.getElementById('lab-cond-op')?.value;
+      const val = document.getElementById('lab-cond-val')?.value?.trim();
+      if (op) config.condition = { op, value:val||undefined };
+    }
+    if (type==='stress') {
+      config.mode       = document.getElementById('lab-stress-mode')?.value;
+      config.max_rounds = parseInt(document.getElementById('lab-max-rounds')?.value)||8;
+      config.base_prompt = prompt;
+    }
+
+    _labRunning = true;
+    document.getElementById('lab-run-status').textContent = 'RUNNING…';
+    document.getElementById('lab-status').textContent = 'RUNNING';
+    _labLog(`▶ Starting ${type} experiment on ${provider}`, 'var(--amber)');
+    _labLog(`Hypothesis: ${hypothesis||'(none)'}`, 'var(--text3)');
+
+    const result = await _labPost('/lab/run', config);
+    _labRunning = false;
+    document.getElementById('lab-run-status').textContent = '';
+    document.getElementById('lab-status').textContent = result?.summary?.status?.toUpperCase()||'DONE';
+
+    if (result?.ok && result?.summary) {
+      _labCurrentSummary = result.summary;
+      const s = result.summary;
+      _labLog(`✓ Complete — ${s.total} results, ${s.ok} ok, ${s.refusals} refusals, avg ${s.avgMs}ms`, 'var(--teal)');
+      _labLog(`Avg response length: ${s.avgLen} chars`, 'var(--text2)');
+      if (s.byProvider) {
+        for (const [p,d] of Object.entries(s.byProvider)) {
+          _labLog(`  ${p}: count=${d.count} avgMs=${d.avgMs}ms avgLen=${d.avgLen}ch refusals=${d.refusals}`, 'var(--text2)');
+        }
+      }
+      labRenderResults(result.summary);
+    } else {
+      _labLog(`✗ Error: ${result?.error||'unknown'}`, 'var(--red)');
+    }
+  }
+
+// ── labStop ──
+function labStop() {
+    _labRunning = false;
+    document.getElementById('lab-run-status').textContent = 'STOPPED';
+    document.getElementById('lab-status').textContent = 'STOPPED';
+    _labLog('■ Stop requested', 'var(--muted)');
+  }
+
+// ── labTab ──
+function labTab(tab) {
+    ['run','sessions','results','templates','h2h'].forEach(t => {
+      document.getElementById(`lab-tab-${t}`)?.classList.toggle('active', t===tab);
+      document.getElementById(`lab-panel-${t}`).style.display = t===tab?'flex':'none';
+    });
+    if (tab==='sessions')  labLoadSessions();
+    if (tab==='templates') labLoadTemplates();
+  }
+
+// ── labUpdateConfig ──
+function labUpdateConfig() {
+    const type = document.getElementById('lab-type')?.value;
+    document.getElementById('lab-loop-config').style.display   = type==='loop'?'block':'none';
+    document.getElementById('lab-stress-config').style.display = type==='stress'?'block':'none';
+  }
+
+// ── labClearOutput ──
+function labClearOutput() {
+    const el = document.getElementById('lab-output');
+    if (el) el.innerHTML = '';
+  }
+
+// ── _labLog ──
+function _labLog(msg, color='var(--text2)') {
+    const el = document.getElementById('lab-output'); if (!el) return;
+    const line = document.createElement('div');
+    line.style.cssText = `padding:2px 0;border-bottom:1px solid var(--border);color:${color}`;
+    line.textContent = `[${new Date().toTimeString().slice(0,8)}] ${msg}`;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+// ── labRenderResults ──
+function labRenderResults(summary) {
+    const el = document.getElementById('lab-results-content'); if (!el) return;
+    labTab('results');
+    const s = summary;
+    el.innerHTML = `
+      <div style="margin-bottom:12px">
+        <div style="font-size:14px;font-weight:700;color:var(--text)">${s.config?.type?.toUpperCase()} — ${s.config?.hypothesis||'No hypothesis'}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px">Session ${s.sessionId?.slice(0,12)} · ${s.durationMs}ms total</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        ${[['Results',s.total],['OK',s.ok],['Refusals',s.refusals],['SEAM Pass',s.seamPass]].map(([l,v])=>`
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:8px;text-align:center">
+          <div style="font-size:18px;font-weight:700;color:var(--text);font-family:var(--mono)">${v}</div>
+          <div style="font-size:8px;color:var(--muted)">${l}</div>
+        </div>`).join('')}
+      </div>
+      ${Object.entries(s.byProvider||{}).map(([p,d])=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--text);margin-bottom:6px;text-transform:uppercase">${p}</div>
+        ${[['Jobs',d.count],['Avg latency',d.avgMs+'ms'],['Avg length',d.avgLen+'ch'],['Refusals',d.refusals],['SEAM Pass',d.seamPass]].map(([l,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:9px;color:var(--muted)">${l}</span>
+          <span style="font-size:9px;color:var(--text);font-family:var(--mono)">${v}</span>
+        </div>`).join('')}
+      </div>`).join('')}`;
+  }
+
+// ── labLoadSessions ──
+async function labLoadSessions() {
+    const data = await _labGet('/lab');
+    const el = document.getElementById('lab-sessions-list'); if (!el) return;
+    const sessions = data?.sessions||[];
+    const history  = data?.history||[];
+    if (!sessions.length && !history.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px;padding:12px">No sessions yet</div>'; return; }
+    el.innerHTML = [...sessions, ...history].map(s=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:8px 12px;margin-bottom:6px">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:3px">
+          <span style="color:var(--amber);font-size:9px;font-family:var(--mono)">${(s.id||s._sessionId||'').slice(0,12)}</span>
+          <span style="font-size:9px;font-weight:700;text-transform:uppercase;color:${s.status==='complete'?'var(--teal)':s.status==='failed'?'var(--red)':'var(--amber)'}">${s.status||'?'}</span>
+          <span style="color:var(--muted);font-size:9px;margin-left:auto">${s.results||0} results</span>
+        </div>
+        <div style="color:var(--text2);font-size:9px">${s.config?.type||'?'} · ${s.config?.provider||'?'} · ${s.config?.hypothesis||''}</div>
+      </div>`).join('');
+  }
+
+// ── labLoadTemplates ──
+async function labLoadTemplates() {
+    const data = await _labGet('/lab/templates');
+    const el = document.getElementById('lab-templates-content'); if (!el) return;
+    const templates = data?.templates||[];
+    if (!templates.length) { el.innerHTML = '<div style="color:var(--muted);font-size:10px">No templates</div>'; return; }
+    el.innerHTML = templates.map(t=>`
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <span style="font-size:11px;font-weight:700;color:var(--text)">${t.name}</span>
+          <span style="font-size:8px;text-transform:uppercase;padding:1px 6px;border-radius:10px;background:rgba(129,140,248,.15);color:var(--acc)">${t.config?.type}</span>
+        </div>
+        <div style="color:var(--text2);font-size:9px;margin-bottom:8px">${t.description}</div>
+        <button class="btn o" style="font-size:9px" onclick="labLoadTemplate('${t.id}')">Use Template</button>
+      </div>`).join('');
+  }
+
+// ── labLoadTemplate ──
+async function labLoadTemplate(id) {
+    const data = await _labGet('/lab/templates');
+    const t = data?.templates?.find(t=>t.id===id); if (!t) return;
+    document.getElementById('lab-type').value       = t.config.type||'single';
+    document.getElementById('lab-provider').value   = t.config.provider||t.config.providers?.[0]||'claude';
+    document.getElementById('lab-hypothesis').value = t.config.hypothesis||'';
+    document.getElementById('lab-prompt').value     = typeof t.config.prompt==='string' ? t.config.prompt : (t.config.initial_prompt||t.config.base_prompt||'');
+    if (t.config.next_prompt) document.getElementById('lab-next-prompt').value = t.config.next_prompt;
+    if (t.config.max_iterations) document.getElementById('lab-max-iter').value = t.config.max_iterations;
+    if (t.config.condition) { document.getElementById('lab-cond-op').value=t.config.condition.op; if(t.config.condition.value)document.getElementById('lab-cond-val').value=t.config.condition.value; }
+    if (t.config.max_rounds) document.getElementById('lab-max-rounds').value = t.config.max_rounds;
+    if (t.config.mode) document.getElementById('lab-stress-mode').value = t.config.mode;
+    labUpdateConfig();
+    labTab('run');
+    _labLog(`Template loaded: ${t.name}`, 'var(--teal)');
+  }
+
+// ── labRunH2H ──
+async function labRunH2H() {
+    const prompt  = document.getElementById('lab-h2h-prompt')?.value?.trim();
+    const rounds  = parseInt(document.getElementById('lab-h2h-rounds')?.value)||1;
+    if (!prompt) { alert('Prompt required'); return; }
+    document.getElementById('lab-h2h-claude').textContent  = 'Running…';
+    document.getElementById('lab-h2h-chatgpt').textContent = 'Running…';
+    document.getElementById('lab-h2h-comparison').textContent = '';
+    const result = await _labPost('/lab/run', { type:'h2h', providers:['claude','chatgpt'], prompt, rounds, hypothesis:'Head-to-head comparison' });
+    if (result?.ok && result?.summary) {
+      const s = result.summary;
+      const c = s.byProvider?.claude,  cg = s.byProvider?.chatgpt;
+      document.getElementById('lab-h2h-claude').innerHTML  = c  ? `<div style="color:var(--muted);margin-bottom:6px">${c.avgLen}ch · ${c.avgMs}ms · refusals:${c.refusals}</div>` : 'No response';
+      document.getElementById('lab-h2h-chatgpt').innerHTML = cg ? `<div style="color:var(--muted);margin-bottom:6px">${cg.avgLen}ch · ${cg.avgMs}ms · refusals:${cg.refusals}</div>` : 'No response';
+      if (c && cg) {
+        const winnerColor = c.avgLen > cg.avgLen ? 'var(--amber)' : 'var(--teal)';
+        document.getElementById('lab-h2h-comparison').innerHTML = `<span style="color:${winnerColor};font-weight:700">Winner: ${c.avgLen>=cg.avgLen?'Claude':'ChatGPT'}</span> · Claude ${c.avgLen}ch / ChatGPT ${cg.avgLen}ch · latency: Claude ${c.avgMs}ms / ChatGPT ${cg.avgMs}ms`;
+      }
+    } else {
+      document.getElementById('lab-h2h-comparison').innerHTML = `<span style="color:var(--red)">Error: ${result?.error||'failed'}</span>`;
+    }
+  }
+
+// ── _labGet ──
+async function _labGet(path) {
+    try { const r=await fetch(LAB_BASE+path,{signal:AbortSignal.timeout(5000)}); return r.ok?await r.json():null; }
+    catch(_){return null;}
+  }
+
+// ── _labPost ──
+async function _labPost(path, body) {
+    try { const r=await fetch(LAB_BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(120000)}); return await r.json(); }
+    catch(e){return{ok:false,error:e.message};}
+  }
+
+// ── _loadWorkflows ──
+function _loadWorkflows(){try{workflows=JSON.parse(localStorage.getItem('forge_workflows')||'{}');}catch(_){workflows={};}}
+
+// ── _saveWorkflows ──
+function _saveWorkflows(){localStorage.setItem('forge_workflows',JSON.stringify(workflows));}
+
+// ── _renderWorkflowList ──
+function _renderWorkflowList(){
+  const el=$get('auto-list');if(!el)return;const items=Object.values(workflows);
+  if(!items.length){el.innerHTML='<div class="empty" style="height:80px;"><div class="empty-sub">No workflows. Click + New.</div></div>';return;}
+  el.innerHTML=items.map(w=>`<div class="${w.id===activeWid?'auto-item active':'auto-item'}" onclick="loadWorkflow('${w.id}')"><div class="auto-item-hdr"><span class="auto-item-name">${$esc(w.name)}</span><span class="auto-badge ${w.lastStatus==='pass'?'ab-pass':w.lastStatus==='fail'?'ab-fail':'ab-idle'}">${w.lastStatus||'idle'}</span></div><div style="font-size:9px;color:var(--muted)">${w.trigger?.type||'manual'} · ${(w.steps||[]).length} steps${w.lastRunAt?' · '+new Date(w.lastRunAt).toLocaleTimeString():''}</div></div>`).join('');
+}
+
+// ── newWorkflow ──
+function newWorkflow(){const id=$uid(),name='Workflow '+(Object.keys(workflows).length+1);workflows[id]={id,name,trigger:{type:'manual'},steps:[],enabled:true,runCount:0,lastRunAt:null,lastStatus:null};_saveWorkflows();_renderWorkflowList();loadWorkflow(id);}
+
+// ── loadWorkflow ──
+function loadWorkflow(id){activeWid=id;_renderWorkflowList();const w=workflows[id];if(!w)return;const en=$get('auto-editing-name');if(en)en.textContent=w.name;_renderWorkflowForm(w);}
+
+// ── _renderWorkflowForm ──
+function _renderWorkflowForm(w){
+  const el=$get('auto-form');if(!el)return;
+  el.innerHTML=`<div class="auto-sec-hdr">Name</div><div style="margin-bottom:12px;"><input class="fi" value="${$esc(w.name)}" onchange="updateWf('name',this.value)"></div><div class="auto-sec-hdr">Trigger</div><div style="margin-bottom:12px;"><div class="frow"><div class="fcol"><div class="fl">Type</div><select class="fi" onchange="updateWfTrigger('type',this.value)">${['manual','cron','interval','event','condition','chain'].map(t=>`<option value="${t}"${w.trigger?.type===t?' selected':''}>${t}</option>`).join('')}</select></div></div>${w.trigger?.type==='cron'?`<div class="frow"><div class="fcol"><div class="fl">Cron expression</div><input class="fi" value="${$esc(w.trigger.expression||'')}" placeholder="0 * * * *" onchange="updateWfTrigger('expression',this.value)"></div></div>`:''} ${w.trigger?.type==='interval'?`<div class="frow"><div class="fcol"><div class="fl">Every (ms)</div><input class="fi" type="number" value="${w.trigger.every||60000}" onchange="updateWfTrigger('every',Number(this.value))"></div></div>`:''} ${w.trigger?.type==='event'?`<div class="frow"><div class="fcol"><div class="fl">Channel</div><input class="fi" value="${$esc(w.trigger.channel||'')}" placeholder="forge.event" onchange="updateWfTrigger('channel',this.value)"></div></div>`:''}</div><div class="auto-sec-hdr">Steps (${(w.steps||[]).length})</div><div class="step-list">${(w.steps||[]).map((s,i)=>_renderStep(s,i)).join('')}</div><div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">${['emit','agent_call','api_call','store','condition','delay','notify','gap','seam_compile'].map(t=>`<button class="btn" style="font-size:8px;padding:2px 6px;" onclick="addStep('${t}')">${NODE_DEFS[t]?.icon||''} ${t}</button>`).join('')}</div>`;
+}
+
+// ── _renderStep ──
+function _renderStep(s,i){
+  const def=NODE_DEFS[s.type]||{icon:'?'};
+  const fh={emit:`<div class="frow"><div class="fcol"><div class="fl">Channel</div><input class="fi" value="${$esc(s.channel||'')}" placeholder="forge.event" onchange="updateStep(${i},'channel',this.value)"></div></div>`,agent_call:`<div class="frow"><div class="fcol"><div class="fl">Provider</div><select class="fi" onchange="updateStep(${i},'provider',this.value)">${['claude','chatgpt','gemini','ollama'].map(p=>`<option value="${p}"${s.provider===p?' selected':''}>${p}</option>`).join('')}</select></div></div><div class="frow"><div class="fcol"><div class="fl">Prompt</div><textarea class="prop-ta" onchange="updateStep(${i},'prompt',this.value)">${$esc(s.prompt||'')}</textarea></div></div>`,api_call:`<div class="frow"><div class="fcol"><div class="fl">URL</div><input class="fi" value="${$esc(s.url||'')}" onchange="updateStep(${i},'url',this.value)"></div></div>`,store:`<div class="frow"><div class="fcol"><div class="fl">Table</div><input class="fi" value="${$esc(s.table||'')}" placeholder="artifacts" onchange="updateStep(${i},'table',this.value)"></div></div>`,condition:`<div class="frow"><div class="fcol"><div class="fl">SEAM condition</div><input class="fi" value="${$esc(s.check||'')}" placeholder="payload.score > 0.5" onchange="updateStep(${i},'check',this.value)"></div></div>`,delay:`<div class="frow"><div class="fcol"><div class="fl">Delay ms</div><input class="fi" type="number" value="${s.ms||1000}" onchange="updateStep(${i},'ms',Number(this.value))"></div></div>`,notify:`<div class="frow"><div class="fcol"><div class="fl">Message</div><input class="fi" value="${$esc(s.message||'')}" onchange="updateStep(${i},'message',this.value)"></div></div>`,gap:`<div class="frow"><div class="fcol"><div class="fl">Gap ID</div><input class="fi" value="${$esc(s.id||'')}" onchange="updateStep(${i},'id',this.value)"></div><div class="fcol"><div class="fl">Pressure</div><input class="fi" type="number" value="${s.pressure||0.5}" step="0.1" onchange="updateStep(${i},'pressure',Number(this.value))"></div></div>`,seam_compile:`<div class="frow"><div class="fcol"><div class="fl">SEAM source</div><textarea class="prop-ta" onchange="updateStep(${i},'source',this.value)">${$esc(s.source||'')}</textarea></div></div>`}[s.type]||'';
+  return`<div class="step-item"><div class="step-hdr" onclick="toggleStep(${i})"><span style="font-size:11px;">${def.icon}</span><span class="step-type">${s.type}</span><span class="step-label">${$esc(s.label||s.id?.slice(0,8)||'step')}</span><button class="step-del" onclick="event.stopPropagation();deleteStep(${i})">✕</button></div><div class="step-body" id="step-body-${i}"><div class="frow"><div class="fcol"><div class="fl">Label</div><input class="fi" value="${$esc(s.label||'')}" onchange="updateStep(${i},'label',this.value)"></div></div>${fh}<div style="margin-top:4px;display:flex;align-items:center;gap:6px;"><label style="font-size:9px;color:var(--muted)">Continue on fail</label><input type="checkbox"${s.continueOnFail?' checked':''} onchange="updateStep(${i},'continueOnFail',this.checked)"></div></div></div>`;
+}
+
+// ── toggleStep ──
+function toggleStep(i){const el=$get(`step-body-${i}`);if(el)el.classList.toggle('open');}
+
+// ── addStep ──
+function addStep(type){if(!activeWid)return;const w=workflows[activeWid];w.steps=w.steps||[];w.steps.push({id:$uid(),type,label:'',continueOnFail:false});_saveWorkflows();_renderWorkflowForm(w);}
+
+// ── deleteStep ──
+function deleteStep(i){if(!activeWid)return;const w=workflows[activeWid];w.steps.splice(i,1);_saveWorkflows();_renderWorkflowForm(w);}
+
+// ── updateWf ──
+function updateWf(k,v){if(!activeWid)return;workflows[activeWid][k]=v;_saveWorkflows();}
+
+// ── updateWfTrigger ──
+function updateWfTrigger(k,v){if(!activeWid)return;workflows[activeWid].trigger=workflows[activeWid].trigger||{};workflows[activeWid].trigger[k]=v;_saveWorkflows();_renderWorkflowForm(workflows[activeWid]);}
+
+// ── updateStep ──
+function updateStep(i,k,v){if(!activeWid)return;workflows[activeWid].steps[i][k]=v;_saveWorkflows();}
+
+// ── saveWorkflow ──
+function saveWorkflow(){if(!activeWid)return;_saveWorkflows();toast('Saved','success');}
+
+// ── armWorkflow ──
+function armWorkflow(){
+  if(!activeWid)return;const w=workflows[activeWid];
+  if(_wfTimers[activeWid]){clearInterval(_wfTimers[activeWid]);typeof _wfTimers[activeWid]==='function'&&_wfTimers[activeWid]();delete _wfTimers[activeWid];toast('Disarmed','info');return;}
+  if(w.trigger?.type==='interval'){_wfTimers[activeWid]=setInterval(()=>runWorkflowExec(activeWid),w.trigger.every||60000);toast('Armed: every '+(w.trigger.every||60000)+'ms','success');}
+  else if(w.trigger?.type==='event'){const unsub=bus.on(w.trigger.channel||'*',()=>runWorkflowExec(activeWid));_wfTimers[activeWid]=unsub;toast('Armed: '+w.trigger.channel,'success');}
+  else toast('Manual workflow — use Run Now','info');
+}
+
+// ── runWorkflowExec ──
+async function runWorkflowExec(id){
+  const w=workflows[id||activeWid];if(!w)return;
+  const runId=$uid();w.lastRunAt=$ts();let status='pass';
+  toast('Running: '+w.name,'info');
+  const ctx={runId,trigger:{payload:{}},stepResults:{}};
+  for(const step of(w.steps||[])){
+    try{
+      let result;
+      switch(step.type){
+        case 'emit':result=bus.emit(step.channel||'forge.step',step.payload||{});break;
+        case 'agent_call':result={content:await guardian.dispatch(step.provider||'claude',step.prompt||'')};break;
+        case 'api_call':{const res=await fetch(step.url,{method:step.method||'GET',headers:{'Content-Type':'application/json'}});result={status:res.status,data:await res.json().catch(()=>null)};break;}
+        case 'store':result=jaa.insert(step.table||'artifacts',{source:'workflow'});break;
+        case 'condition':{try{result={passed:!!new Function('ctx','return '+step.check)(ctx)};}catch{result={passed:false};}break;}
+        case 'delay':await $sleep(step.ms||1000);result={delayed:step.ms};break;
+        case 'notify':toast(step.message||'',step.level||'info');result={notified:true};break;
+        case 'gap':{const g={id:step.id||$uid(),pressure:step.pressure||0.5,status:'open',ts:$ts()};jaa.insert('gaps',g);bus.emit('forge.gap.opened',g);result=g;break;}
+        case 'seam_compile':result=compiler.compile(step.source||'');break;
+        default:result={skipped:true};
+      }
+      ctx.stepResults[step.id]={result,status:'pass'};
+    }catch(err){ctx.stepResults[step.id]={error:err.message,status:'fail'};if(!step.continueOnFail){status='fail';break;}}
+  }
+  w.lastStatus=status;w.runCount=(w.runCount||0)+1;_saveWorkflows();_renderWorkflowList();
+  jaa.insert('workflow_runs',{uuid:runId,workflowId:w.id,name:w.name,status,wall:$ts()});
+  bus.emit('workflow.complete',{id:w.id,status});_renderWorkflowRuns();
+  toast('Workflow: '+status,status==='pass'?'success':'error');
+}
+
+// ── _renderWorkflowRuns ──
+function _renderWorkflowRuns(){
+  const el=$get('runs-scroll');if(!el)return;
+  const runs=jaa.tail('workflow_runs',20).reverse();
+  if(!runs.length){el.innerHTML='<div class="empty" style="height:80px;"><div class="empty-sub">No runs yet</div></div>';return;}
+  el.innerHTML=runs.map(r=>`<div class="run-entry ${r.status}"><div class="run-entry-top"><span class="run-entry-name">${$esc(r.name)}</span><span style="color:${r.status==='pass'?'var(--green)':'var(--red)'}">${r.status}</span></div><div style="font-size:9px;color:var(--muted)">${new Date(r.wall||r.ts).toLocaleTimeString()}</div></div>`).join('');
+}
+
+// ══ END MIGRATION ══════════════════════════════════════════════════════════
+// ── Nav rail + FAB ────────────────────────────────────────────────────────────
+function toggleNav() {
+  document.getElementById('nav-rail').classList.toggle('expanded');
+  document.body.classList.toggle('nav-expanded');
+}
+function toggleFab() {
+  document.getElementById('fab-menu').classList.toggle('open');
+}
+// Close FAB when clicking outside
+document.addEventListener('click', e => {
+  const fab = document.querySelector('.fab-container');
+  if (fab && !fab.contains(e.target)) {
+    document.getElementById('fab-menu')?.classList.remove('open');
+  }
+});
+// Resume — loads last ALK user decision
+async function resumeLastSession() {
+  try {
+    const r = await fetch('http://127.0.0.1:7820/alk/last');
+    const d = await r.json();
+    if (d.ok && d.decision) {
+      const dec = d.decision;
+      // Route to the right panel based on last intent
+      if (dec.intent?.includes('spec') || dec.intent?.includes('seam')) go('guardian');
+      else if (dec.intent?.includes('idea')) go('idearium');
+      else if (dec.intent?.includes('diagnos')) go('diagnose');
+      else if (dec.intent?.includes('route') || dec.intent?.includes('generate')) go('guardian');
+      toast('Resumed: ' + (dec.intent || 'last session'), 'info', 3000);
+    }
+  } catch(_) { toast('Nothing to resume', 'dim', 2000); }
+}
+
+</script>
 </body>
 </html>

@@ -27,8 +27,22 @@ const http = require('http');
 // ── Config ─────────────────────────────────────────────────────────────────────
 const GUARDIAN_HTTP_URL = process.env.RHEON_GUARDIAN_URL  || 'http://127.0.0.1:7820';
 const OLLAMA_URL        = process.env.RHEON_OLLAMA_URL    || 'http://127.0.0.1:11434';
-const OLLAMA_MODEL      = process.env.RHEON_OLLAMA_MODEL  || 'deepseek-coder-v2:16b-lite-instruct-q4_K_M';
 const FORGE_TIMEOUT_MS  = 120_000;
+
+// Model cascade — tried in order, first success wins
+// §NO_SINGLE_POINT_OF_FAILURE: if mistral fails, qwen2.5-coder:1.5b picks it up
+// Override any of these via env vars
+const OLLAMA_MODELS = [
+  process.env.RHEON_OLLAMA_MODEL_PRIMARY   || 'mistral:7b-instruct-q4_K_M',
+  process.env.RHEON_OLLAMA_MODEL_CODE      || 'qwen2.5-coder:1.5b',
+  process.env.RHEON_OLLAMA_MODEL_FALLBACK  || null,
+].filter(Boolean);
+
+// For code-specific tasks (patches, gates, hooks) prefer the coder model
+const OLLAMA_CODE_MODELS = [
+  process.env.RHEON_OLLAMA_MODEL_CODE      || 'qwen2.5-coder:1.5b',
+  process.env.RHEON_OLLAMA_MODEL_PRIMARY   || 'mistral:7b-instruct-q4_K_M',
+].filter(Boolean);
 
 // ── RHEON system prompt nucleus ────────────────────────────────────────────────
 const SYSTEM_NUCLEUS = `\
@@ -132,64 +146,96 @@ function _httpPost(url, body, timeoutMs = FORGE_TIMEOUT_MS) {
 // Guardian routes internally to whatever local model is running.
 // Ollama is direct fallback if Guardian is not running.
 
-async function _tryGuardianHttp(systemPrompt, userMessage) {
-  const jobId = _stableUuid(`forge:${Date.now()}:${userMessage.slice(0,40)}`);
-  const t0    = Date.now();
-
-  const submit = await _httpPost(`${GUARDIAN_HTTP_URL}/command`, {
-    jobId,
-    command:  'forge',
-    prompt:   `${systemPrompt}\n\n---\n\n${userMessage}`,
-    provider: 'local',
-  });
-
-  if (!submit?.body?.accepted && !submit?.body?.jobId) {
-    throw new Error(`[forge] Guardian rejected: ${JSON.stringify(submit?.body).slice(0,120)}`);
-  }
-
-  // Poll for response using Guardian's response endpoint
-  const POLL_MS = 800, DEADLINE = Date.now() + FORGE_TIMEOUT_MS;
-  while (Date.now() < DEADLINE) {
-    await new Promise(r => setTimeout(r, POLL_MS));
-    const res = await _httpPost(`${GUARDIAN_HTTP_URL}/response/${jobId}`, {}).catch(() => null);
-    if (res?.body?.text) {
-      return { text: res.body.text, durationMs: Date.now() - t0, provider: 'guardian-http' };
-    }
-    if (res?.body?.status === 'failed') {
-      throw new Error(`[forge] Guardian job failed: ${res.body.error || 'unknown'}`);
-    }
-  }
-  throw new Error(`[forge] Guardian poll timeout after ${FORGE_TIMEOUT_MS}ms`);
-}
-
-async function _tryOllama(systemPrompt, userMessage) {
+// ── _tryOllamaModel(model, systemPrompt, userMessage) ──────────────────────────
+// Single model attempt — no retry, no cascade. Caller handles cascade.
+async function _tryOllamaModel(model, systemPrompt, userMessage) {
   const t0  = Date.now();
   const res = await _httpPost(`${OLLAMA_URL}/api/generate`, {
-    model:  OLLAMA_MODEL,
+    model,
     system: systemPrompt,
     prompt: userMessage,
     stream: false,
-  });
+  }, FORGE_TIMEOUT_MS);
+
   if (res.status !== 200 || !res.body?.response) {
-    throw new Error(`[forge] Ollama ${res.status}: ${JSON.stringify(res.body).slice(0,200)}`);
+    throw new Error(`[forge] Ollama/${model} ${res.status}: ${JSON.stringify(res.body).slice(0,200)}`);
   }
-  return { text: res.body.response, durationMs: Date.now() - t0, provider: 'ollama' };
+  return { text: res.body.response, durationMs: Date.now() - t0, provider: `ollama/${model}` };
 }
 
-async function _callLLM(systemPrompt, userMessage) {
+// ── _tryOllamaCascade(models, systemPrompt, userMessage) ───────────────────────
+// Try each model in order. First success wins.
+// §NO_SINGLE_POINT_OF_FAILURE: model unavailable → next model
+async function _tryOllamaCascade(models, systemPrompt, userMessage) {
   const errs = [];
+  for (const model of models) {
+    try {
+      const result = await _tryOllamaModel(model, systemPrompt, userMessage);
+      return result;
+    } catch(e) {
+      errs.push(`${model}: ${e.message.slice(0,80)}`);
+      console.warn(`[forge] ${model} failed — trying next: ${e.message.slice(0,60)}`);
+    }
+  }
+  throw new Error('[forge] All Ollama models failed:\n  ' + errs.join('\n  '));
+}
 
-  try { return await _tryGuardianHttp(systemPrompt, userMessage); }
-  catch (e) { errs.push(`guardian-http: ${e.message}`); }
+// ── _tryGuardianAsync(systemPrompt, userMessage) ──────────────────────────────
+// Submit to Guardian NCP dispatch. Guardian routes to whatever tab is open.
+// This is ASYNC — we submit and return the jobId. Caller polls /jobs/:id.
+// Used as a fire-and-forget for non-blocking forge (large rewrites).
+async function _tryGuardianAsync(systemPrompt, userMessage) {
+  const t0 = Date.now();
+  const res = await _httpPost(`${GUARDIAN_HTTP_URL}/command`, {
+    command:  'forge',
+    prompt:   `${systemPrompt}
 
-  try { return await _tryOllama(systemPrompt, userMessage); }
-  catch (e) { errs.push(`ollama: ${e.message}`); }
+---
+
+${userMessage}`,
+    provider: 'ollama', // route to local model via NCP
+  }, 5000); // short timeout — just submit
+
+  if (!res?.body?.id && !res?.body?.jobId) {
+    throw new Error(`[forge] Guardian submit failed: ${JSON.stringify(res?.body).slice(0,120)}`);
+  }
+  return { text: null, jobId: res.body.id || res.body.jobId, durationMs: Date.now() - t0, provider: 'guardian-async' };
+}
+
+// ── _callLLM(systemPrompt, userMessage, opts) ─────────────────────────────────
+// Routing cascade: Ollama code models → Ollama general models → Guardian async
+// §NO_SINGLE_POINT_OF_FAILURE: every failure tries the next option
+// §1.2: if ALL fail, throw loud with full error chain
+async function _callLLM(systemPrompt, userMessage, opts = {}) {
+  const errs  = [];
+  const models = opts.preferCode ? OLLAMA_CODE_MODELS : OLLAMA_MODELS;
+
+  // §LAW_I equivalent for forge: local Ollama first, always
+  try {
+    return await _tryOllamaCascade(models, systemPrompt, userMessage);
+  } catch(e) {
+    errs.push(`ollama-cascade: ${e.message.slice(0,120)}`);
+  }
+
+  // Guardian NCP dispatch as async fallback — Guardian routes to open tab
+  // Only use for non-blocking tasks (patch will be returned via jobs table)
+  if (!opts.requireSync) {
+    try {
+      const r = await _tryGuardianAsync(systemPrompt, userMessage);
+      // Guardian async — text will come via NCP, not immediately
+      // Return a placeholder that signals async dispatch
+      return { text: null, jobId: r.jobId, durationMs: r.durationMs, provider: 'guardian-async', async: true };
+    } catch(e) {
+      errs.push(`guardian-async: ${e.message.slice(0,80)}`);
+    }
+  }
 
   // §1.2 — nothing silently fails
-  throw new Error(
-    `[forge] All LLM backends failed.\n  ${errs.join('\n  ')}\n` +
-    `  Ensure Guardian is running (${GUARDIAN_HTTP_URL}) or Ollama is running (${OLLAMA_URL})`
-  );
+  const errMsg = '[forge] All LLM backends failed — is Ollama running? (ollama serve)' +
+    '\n  Models tried: ' + models.join(', ') +
+    '\n  Errors:\n  ' + errs.join('\n  ') +
+    '\n  Ollama URL: ' + OLLAMA_URL;
+  throw new Error(errMsg);
 }
 
 // ── forgeModule ────────────────────────────────────────────────────────────────
@@ -222,7 +268,7 @@ async function forgePatch(moduleSrc, patchSpec, { moduleName = 'unknown', store 
   const user   = `Current source:\n\`\`\`javascript\n${moduleSrc}\n\`\`\`\n\nPatch spec:\n${JSON.stringify(patchSpec, null, 2)}`;
 
   let r;
-  try { r = await _callLLM(system, user); }
+  try { r = await _callLLM(system, user, { preferCode: true, requireSync: true }); }
   catch (e) {
     bus?.emit('forge:failed', { module: moduleName, error: e.message, strategy: 'patch' });
     const rec = ForgePatchRecord.create({ module: moduleName, instruction, strategy: 'patch', error: e.message, provider: 'failed' });
@@ -244,7 +290,7 @@ async function forgeGate(description, { triggerType = null, outputType = null, s
   const hints  = [description, triggerType && `Trigger: '${triggerType}'`, outputType && `Output: '${outputType}'`].filter(Boolean).join('\n');
 
   let r;
-  try { r = await _callLLM(system, `Gate description:\n${hints}`); }
+  try { r = await _callLLM(system, `Gate description:\n${hints}`, { preferCode: true, requireSync: true }); }
   catch (e) {
     bus?.emit('forge:gate:failed', { error: e.message });
     return { ok: false, gateFn: null, error: e.message, durationMs: 0, provider: 'failed' };
