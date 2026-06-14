@@ -107,6 +107,7 @@ const http   = require('http');
 const fs     = require('fs');
 const path   = require('path');
 const { URL } = require('url');
+const { buildIntentMap } = require('./lib/intent-map');  // Gap 2: intent-map endpoint
 
 // ── Hoist all dynamic requires — fixes ReferenceError in ESM-adjacent contexts ──
 // These were previously inside server.listen callback and cli functions.
@@ -1092,6 +1093,18 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     ), invariants, ts: Date.now() });
   }
 
+  if (M==='GET' && sub==='intent-map') {
+    // Gap 2: the intent-map — every interaction point tagged with what a HUMAN
+    // wants, grouped by intent category, component resolved via the UID backbone.
+    // This is what the map-driven orchestrator UI reads. ?category=ACT to filter.
+    const full = buildIntentMap();
+    const cat = QS.get('category');
+    if (cat && full.map[cat]) {
+      return json(res, 200, { ok:true, generated: full.generated, category: cat, ...full.map[cat] });
+    }
+    return json(res, 200, full);
+  }
+
   if (M==='GET' && sub==='api-map') {
     return json(res, 200, { ok:true, generated: new Date().toISOString(), systems: {
       cortex:{ port:3748, routes:[
@@ -1126,7 +1139,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
       orchestrator:{ port:PORT, routes:[
         { m:'GET',p:'/' },{ m:'GET',p:'/health' },{ m:'GET',p:'/sse' },
         { m:'GET',p:'/ui/:system' },{ m:'GET',p:'/api/status' },{ m:'GET',p:'/api/channels' },
-        { m:'GET',p:'/api/cli' },{ m:'GET',p:'/api/ui' },{ m:'GET',p:'/api/api-map' },
+        { m:'GET',p:'/api/cli' },{ m:'GET',p:'/api/ui' },{ m:'GET',p:'/api/api-map' },{ m:'GET',p:'/api/intent-map' },
       ]},
     }});
   }

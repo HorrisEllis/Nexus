@@ -38,6 +38,15 @@ class AdminServer {
     this._intelligence = intelligence;
   }
 
+  // Wire the running RAID module so guardian can consult routing over HTTP
+  // (LAW III: seam, not cross-process require). Called from boot.js.
+  registerRaid(raid) {
+    if (typeof raid?._decide !== 'function') {
+      throw new TypeError('[AdminServer] registerRaid: module must export _decide()');
+    }
+    this._raid = raid;
+  }
+
   async start() {
     this._server = http.createServer((req, res) => this._handle(req, res));
 
@@ -265,11 +274,20 @@ class AdminServer {
         }
 
         // ── GET /api/events ───────────────────────────────────────────────
+        // Accepts ?limit= (or legacy ?n=) and optional ?type= filter.
+        // Prior bug (found by adversarial harness): only ?n= read, ?limit=
+        // silently ignored -> always 50 rows; ?type= dropped. (1.2/2.3)
         case route === 'GET /api/events': {
-          const n    = parseInt(url.searchParams.get('n') || '50');
-          const rows = jaaDB.tail('event_log', n);
+          const raw  = url.searchParams.get('limit') || url.searchParams.get('n') || '50';
+          let   n    = parseInt(raw, 10);
+          if (!Number.isFinite(n) || n < 0) n = 50;
+          n = Math.min(n, 5000);
+          const type = url.searchParams.get('type');
+          const rows = type
+            ? jaaDB.query('event_log', r => r.type === type, n)
+            : jaaDB.tail('event_log', n);
           res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ok:true,rows}));
+          res.end(JSON.stringify({ ok: true, rows, count: rows.length, capped: n >= 5000 }));
           break;
         }
 
@@ -983,6 +1001,20 @@ class AdminServer {
         }
 
                 default: {
+          // ── RAID decision seam — GET /api/raid/decide?intent=...&preferred=... ──
+          if (this._raid && url.pathname === '/api/raid/decide') {
+            try {
+              const intent    = url.searchParams.get('intent') || url.searchParams.get('prompt') || '';
+              const preferred = url.searchParams.get('preferred') || '';
+              const snap      = (typeof this._raid._health === 'object' && this._raid._health) || {};
+              const weights   = this._raid._weights instanceof Map ? this._raid._weights : new Map();
+              const decision  = this._raid._decide({ intent, preferredAgent: preferred }, snap, weights);
+              this._json(res, 200, { ok: true, ...decision });
+            } catch (e) {
+              this._json(res, 500, { ok: false, error: e.message });
+            }
+            break;
+          }
           // Delegate /api/intelligence/* to the registered intelligence module
           if (this._intelligence && url.pathname.startsWith('/api/intelligence')) {
             const body = req.method !== 'GET' ? await this._body(req).catch(() => null) : null;

@@ -104,9 +104,10 @@ _physQueue.watchInput(async (data, filename) => {
       _physQueue.enqueue({ content: body.spec, ext: 'spec', provider,
         uuid: queueUid + '-s', source: 'queue-json' });
     } else if (body.prompt) {
-      const job = createJob(provider, body.command || 'queue', body.prompt);
+      const chosen = body.provider ? body.provider : await chooseProvider(body.prompt, 'claude', body.preferred || '');
+      const job = createJob({ command: body.command || 'queue', provider: chosen, prompt: body.prompt });
       jobs.set(job.id, job);
-      if (ncp.isConnected(provider)) dispatchJob(job);
+      dispatchJob(job);
     }
   }
 });
@@ -142,6 +143,40 @@ function _postEvent(type, payload, opts) {
 }
 const DROPZONE_PORT = process.env.GUARDIAN_DROPZONE_PORT || 7822;
 const NEXUS_URL     = process.env.NEXUS_URL || 'http://127.0.0.1:3748';
+
+// ── RAID routing seam ─────────────────────────────────────────────────────────
+// Guardian asks cortex's RAID which provider for this intent before dispatch.
+// Non-fatal: cortex unreachable -> fall back. LAW I lives in RAID.
+const _RAID_AGENT_TO_PROVIDER = {
+  'ollama': 'ollama', 'guardian-claude': 'claude', 'guardian-chatgpt': 'chatgpt',
+  'claude': 'claude', 'chatgpt': 'chatgpt',
+};
+async function chooseProvider(intent, fallback = 'claude', preferred = '') {
+  if (process.env.GUARDIAN_RAID_OFF === '1') return fallback;
+  try {
+    const http = require('http');
+    const u = new URL('/api/raid/decide', NEXUS_URL);
+    u.searchParams.set('intent', (intent || '').slice(0, 300));
+    if (preferred) u.searchParams.set('preferred', preferred);
+    const decision = await new Promise((resolve, reject) => {
+      const req = http.get(u, { timeout: 1500 }, res => {
+        let raw = ''; res.on('data', d => raw += d);
+        res.on('end', () => { try { resolve(JSON.parse(raw)); } catch (e) { reject(e); } });
+      });
+      req.on('timeout', () => req.destroy(new Error('raid timeout')));
+      req.on('error', reject);
+    });
+    if (decision?.ok && decision.agent) {
+      const provider = _RAID_AGENT_TO_PROVIDER[decision.agent.toLowerCase()] || fallback;
+      _postEvent('guardian.route.decided', { agent: decision.agent, provider, reason: decision.reason, cluster: decision.cluster });
+      return provider;
+    }
+    return fallback;
+  } catch (e) {
+    _postEvent('guardian.route.fallback', { reason: e.message, fallback });
+    return fallback;
+  }
+}
 
 const DB_FILE   = path.join(__dirname, 'guardian.db');
 const SCHEMA_FILE = path.join(__dirname, 'schema.sql');

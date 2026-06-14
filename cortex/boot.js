@@ -261,6 +261,11 @@ async function bootAsync() {
           const mod = require(organ.path);
           mod.init({ jaaDB, pollMs });
           started.push(organ.name);
+          // Wire RAID into admin server so guardian can consult it (seam, not import)
+          if (organ.name === 'raid' || (organ.id && String(organ.id).includes('raid'))) {
+            try { adminServer.registerRaid(mod); }
+            catch (e) { console.warn(`[cortex/boot] raid route not wired: ${e.message}`); }
+          }
         } catch(e) {
           failed.push({ name: organ.name, error: e.message });
           console.warn(`[cortex/boot] organ degraded — ${organ.name}: ${e.message}`);
