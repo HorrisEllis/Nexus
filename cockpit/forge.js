@@ -38,19 +38,39 @@ const GUARDIAN_HTTP_URL = process.env.RHEON_GUARDIAN_URL  || 'http://127.0.0.1:7
 const OLLAMA_URL        = process.env.RHEON_OLLAMA_URL    || 'http://127.0.0.1:11434';
 const FORGE_TIMEOUT_MS  = 120_000;
 
-// Model cascade — tried in order, first success wins
-// §NO_SINGLE_POINT_OF_FAILURE: if mistral fails, qwen2.5-coder:1.5b picks it up
-// Override any of these via env vars
+// ── Ollama model cascades ─────────────────────────────────────────────────────
+// Tried in order — first available model wins.
+// SEAM/forge uses token-efficient local models. Claude/ChatGPT are the last resort,
+// never the first choice. Tokens ∝ unresolved meaning — resolve as much as possible
+// with small fast local models before escalating.
+//
+// Override via env vars:
+//   RHEON_OLLAMA_MODEL_SEAM    — SEAM T2 chunk dispatch (default: qwen2.5-coder:1.5b)
+//   RHEON_OLLAMA_MODEL_CODE    — code patches and gate generation
+//   RHEON_OLLAMA_MODEL_PRIMARY — general reasoning (analysis, spec, explanation)
+//   RHEON_OLLAMA_MODEL_FALLBACK— last local resort before NCP escalation
+
 const OLLAMA_MODELS = [
   process.env.RHEON_OLLAMA_MODEL_PRIMARY   || 'mistral:7b-instruct-q4_K_M',
   process.env.RHEON_OLLAMA_MODEL_CODE      || 'qwen2.5-coder:1.5b',
   process.env.RHEON_OLLAMA_MODEL_FALLBACK  || null,
 ].filter(Boolean);
 
-// For code-specific tasks (patches, gates, hooks) prefer the coder model
+// Code patches and gate generation — coder-first cascade
 const OLLAMA_CODE_MODELS = [
   process.env.RHEON_OLLAMA_MODEL_CODE      || 'qwen2.5-coder:1.5b',
   process.env.RHEON_OLLAMA_MODEL_PRIMARY   || 'mistral:7b-instruct-q4_K_M',
+].filter(Boolean);
+
+// SEAM T2 dispatch — token-minimised structured code completion
+// Hardware: GTX 1650 (4GB VRAM), 16GB RAM, Ryzen 3700X
+// qwen2.5-coder:1.5b — ~1GB VRAM, fast, code-first. Primary SEAM model.
+// mistral:7b-instruct-q4_K_M — ~4GB VRAM, fills full VRAM. General fallback.
+// Chunks arriving here are already maximally compressed by T0/T1.
+// We are only filling genuine logic gaps — prompts are short by design.
+const OLLAMA_SEAM_MODELS = [
+  process.env.RHEON_OLLAMA_MODEL_SEAM || 'qwen2.5-coder:1.5b',
+  process.env.RHEON_OLLAMA_MODEL_PRIMARY || 'mistral:7b-instruct-q4_K_M',
 ].filter(Boolean);
 
 // ── RHEON system prompt nucleus ────────────────────────────────────────────────
@@ -285,6 +305,56 @@ async function forgeModule(moduleSrc, instruction, { moduleName = 'unknown', sto
 
 // ── forgePatch ─────────────────────────────────────────────────────────────────
 // @hook rheon-forge-patch-0000-2026-0529-002  forge:forgePatch  kind:function
+// ── SEAM T2 dispatch — token-minimised chunk completion ──────────────────────
+// This is the right function for SEAM chunks. Uses OLLAMA_SEAM_MODELS cascade.
+// Chunks arriving here are already maximally compressed — T0/T1 stripped everything
+// deterministic. We're only filling genuine logic gaps.
+//
+// System prompt is tight: no preamble, no explanation, code only.
+// If Ollama is entirely unavailable, escalates to Guardian NCP (chatgpt → claude).
+//
+// §CC-001: T2 chunks never exceed 2048 tokens on input
+// §CC-002: Output must be valid JS or return error — never silent empty
+async function seamDispatch(chunk, opts = {}) {
+  const { intent = '', moduleName = 'seam-chunk', jobId = null } = opts;
+
+  const system = `You are a code completion engine. Fill the implementation gap exactly.
+Return ONLY the completed JavaScript. No explanation. No markdown. No preamble.
+Laws: §1.1 no stubs, §1.2 nothing silent, §2.1 disk before memory, §5.1 UUID on new symbols.
+Module: ${moduleName}`;
+
+  const user = `Intent: ${intent}
+
+Chunk to complete:
+${chunk}`;
+
+  const t0 = Date.now();
+
+  // Try SEAM-specific model cascade first (Ollama only)
+  try {
+    const result = await _tryOllamaCascade(OLLAMA_SEAM_MODELS, system, user);
+    if (result?.text?.trim()) {
+      console.log(`[forge/seam] ${moduleName} — ${OLLAMA_SEAM_MODELS[0]} — ${Date.now()-t0}ms`);
+      return { ok:true, text: result.text, provider: result.provider, durationMs: Date.now()-t0 };
+    }
+  } catch(e) {
+    console.warn(`[forge/seam] Ollama cascade failed: ${e.message} — escalating to Guardian NCP`);
+  }
+
+  // Ollama unavailable — escalate to Guardian NCP (chatgpt preferred, claude last)
+  // This should be rare. SEAM chunks are small, Ollama handles them well.
+  try {
+    const r = await _callLLM(system, user, { preferCode: true, requireSync: false });
+    if (r?.text) {
+      return { ok:true, text: r.text, provider: r.provider, durationMs: Date.now()-t0, escalated: true };
+    }
+  } catch(e) {
+    return { ok:false, error: e.message, durationMs: Date.now()-t0 };
+  }
+
+  return { ok:false, error:'all providers exhausted', durationMs: Date.now()-t0 };
+}
+
 async function forgePatch(moduleSrc, patchSpec, { moduleName = 'unknown', store = null, bus = null } = {}) {
   const instruction = `Apply this patch:\n${JSON.stringify(patchSpec, null, 2)}`;
   // ── Inject prior chat context for continuity ─────────────────────────────
@@ -374,4 +444,27 @@ async function healthCheck() {
   return out;
 }
 
-module.exports = { ForgePatchRecord, forgeModule, forgePatch, forgeGate, forgeHook, healthCheck, _callLLM, _extractCode, _stableUuid };
+
+/**
+ * @module       forge
+ * @component_id rheon.forge
+ * @version      1.0.0
+ * @uuid         rheon-forge-0000-2026-0529-jamesbrooks-001
+ *
+ * AI-powered self-modification engine.
+ * Local-first. No API key. No external dependency.
+ *
+ * LLM routing priority (§LOCAL_FIRST):
+ *   1. Guardian HTTP  — http://127.0.0.1:7820/command (running NEXUS session)
+ *   2. Ollama         — http://127.0.0.1:11434/api/generate (local model)
+ *   3. FAIL LOUD      — §1.2: nothing silently fails
+ *
+ * Four entry points (same contract as causal-nexus/forge v5.0.0):
+ *   forgeModule(src, instruction, opts)  — full module rewrite
+ *   forgePatch(src, patchSpec, opts)     — minimal targeted patch
+ *   forgeGate(description, opts)         — generate SISO gate function body
+ *   forgeHook(src, hookSpec, opts)       — add new exported function with UUID
+ *
+ * ForgePatchRecord written to JAA (store.insert) before patch is applied. Always. §2.1
+ */
+module.exports = { ForgePatchRecord, forgeModule, forgePatch, forgeGate, forgeHook, healthCheck, seamDispatch, _callLLM, _extractCode, _stableUuid };

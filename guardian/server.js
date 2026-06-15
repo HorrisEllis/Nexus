@@ -148,8 +148,15 @@ const NEXUS_URL     = process.env.NEXUS_URL || 'http://127.0.0.1:3748';
 // Guardian asks cortex's RAID which provider for this intent before dispatch.
 // Non-fatal: cortex unreachable -> fall back. LAW I lives in RAID.
 const _RAID_AGENT_TO_PROVIDER = {
-  'ollama': 'ollama', 'guardian-claude': 'claude', 'guardian-chatgpt': 'chatgpt',
-  'claude': 'claude', 'chatgpt': 'chatgpt',
+  'ollama':             'ollama',
+  'guardian-claude':    'claude',
+  'guardian-chatgpt':   'chatgpt',
+  'guardian-gemini':    'gemini',
+  'guardian-perplexity':'perplexity',
+  'claude':      'claude',
+  'chatgpt':     'chatgpt',
+  'gemini':      'gemini',
+  'perplexity':  'perplexity',
 };
 async function chooseProvider(intent, fallback = 'claude', preferred = '') {
   if (process.env.GUARDIAN_RAID_OFF === '1') return fallback;
@@ -214,12 +221,14 @@ let tlsOpts = null;
 
 
 const PROVIDER_ALIASES = {
-  'claude.ai':         'claude',
-  'chat.openai.com':   'chatgpt',
-  'chatgpt.com':       'chatgpt',
-  'gemini.google.com': 'gemini',
-  'localhost':         'ollama',
-  '127.0.0.1':         'ollama',
+  'claude.ai':           'claude',
+  'chat.openai.com':     'chatgpt',
+  'chatgpt.com':         'chatgpt',
+  'gemini.google.com':   'gemini',
+  'aistudio.google.com': 'gemini',
+  'perplexity.ai':       'perplexity',
+  'localhost':           'ollama',
+  '127.0.0.1':          'ollama',
 };
 
 // ── job store ─────────────────────────────────────────────────────────────────
@@ -348,9 +357,11 @@ function _doDispatch(job) {
     // Emit tab.needed — Forge cockpit SSE listeners will open the tab
     // CLI watcher will print the URL for the operator to open
     const provUrls = {
-      claude:   'https://claude.ai/new',
-      chatgpt:  'https://chatgpt.com/',
-      ollama:   null,  // local — no tab needed
+      claude:     'https://claude.ai/new',
+      chatgpt:    'https://chatgpt.com/',
+      gemini:     'https://gemini.google.com/',
+      perplexity: 'https://www.perplexity.ai/',
+      ollama:     null,  // local — no tab needed
     };
     const url = provUrls[job.provider];
     if (url) {
@@ -1000,11 +1011,16 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
       const fs  = require('fs');
       const rp  = require('path');
       const readVer = f => { try { const c=fs.readFileSync(rp.join(__dirname,f),'utf8'); const m=c.match(/@version\s+([\d.]+)/); return m?m[1]:null; } catch { return null; } };
-      const cv = readVer('userscript-claude.js'), gv = readVer('userscript-chatgpt.js');
+      const cv  = readVer('userscript-claude.js');
+      const gv  = readVer('userscript-chatgpt.js');
+      const gmv = readVer('userscript-gemini.js');
+      const ppv = readVer('userscript-perplexity.js');
       if (!cv) return { ok:false, msg:'userscript-claude.js: @version missing' };
       if (!gv) return { ok:false, msg:'userscript-chatgpt.js: @version missing' };
-      console.log('[guardian versions] claude=' + cv + ' chatgpt=' + gv);
-      return { ok: true };
+      console.log('[guardian versions] claude=' + cv + ' chatgpt=' + gv +
+        (gmv ? ' gemini=' + gmv : ' gemini=NOT_INSTALLED') +
+        (ppv ? ' perplexity=' + ppv : ' perplexity=NOT_INSTALLED'));
+      return { ok: true, versions: { claude:cv, chatgpt:gv, gemini:gmv||null, perplexity:ppv||null } };
     }
   });
 
@@ -1722,7 +1738,7 @@ function handleExtendedRoutes(req, res, url, method) {
   // ── GET /open/:provider — redirect to provider URL (opens tab) ──────────────
   if (method==='GET' && url.pathname.startsWith('/open/')) {
     const prov = url.pathname.split('/')[2];
-    const provUrls = { claude:'https://claude.ai/new', chatgpt:'https://chatgpt.com/' };
+    const provUrls = { claude:'https://claude.ai/new', chatgpt:'https://chatgpt.com/', gemini:'https://gemini.google.com/', perplexity:'https://www.perplexity.ai/' };
     const target = provUrls[prov];
     if (!target) { pRes(res, 404, { ok:false, error:'unknown provider' }); return true; }
     res.writeHead(302, { Location: target }); res.end();
@@ -2026,34 +2042,6 @@ function handleExtendedRoutes(req, res, url, method) {
       if (ncp.isConnected(p)) out[p] = 'connected';
     }
     pRes(res, 200, { ok:true, providers:out, channels: connected }); return true;
-  }
-
-  // ── API provider dispatch (Gemini, Perplexity, ChatGPT, Claude API) ──────
-  async function dispatchToApi(job) {
-    const api = _getApiDispatch();
-    if (!api) return { ok: false, error: 'api-dispatch module unavailable' };
-    const provider = job.provider;
-    if (!api.isAvailable(provider)) {
-      return { ok: false, error: `${provider}: API key not set` };
-    }
-    console.log(`[guardian] API dispatch → ${provider}  job:${(job.id||'?').slice(0,8)}`);
-    const result = await api.dispatch(provider, job.prompt, {
-      command: job.command, jobId: job.id,
-      system:  job.systemPrompt || null, maxTokens: job.maxTokens || 4096,
-    });
-    if (result.ok) {
-      jaa.insert('artifacts', {
-        uuid: require('crypto').randomUUID(), jobId: job.id, provider,
-        content: result.text, gapScore: result.gapScore,
-        usage: result.usage, citations: result.citations, ts: Date.now(),
-      });
-      const j = jobs.get(job.id);
-      if (j) { j.status = 'complete'; j.result = result.text; }
-      _postEvent('guardian.job.complete', { jobId: job.id, provider, durationMs: result.durationMs });
-    } else {
-      _postEvent('guardian.job.failed', { jobId: job.id, provider, error: result.error });
-    }
-    return result;
   }
 
   // ── NCP channel endpoints (replace WSS) ─────────────────────────────────

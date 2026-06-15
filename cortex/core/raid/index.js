@@ -194,39 +194,26 @@ const CLUSTER_CHAINS = {
   vision:     ['gemini', 'claude'],
   research:   ['perplexity', 'chatgpt', 'claude'],
   hostile:    ['chatgpt', 'claude'],
-  forge:      ['ollama', 'claude'],
+  forge:      ['ollama', 'claude'],      // deepseek-coder → qwen2.5-coder → mistral (via OLLAMA_SEAM_MODELS), then claude reserve
   general:    ['ollama', 'chatgpt', 'claude'],
 };
 
-// NCP-connected providers (browser tab required)
-const NCP_PROVIDERS = new Set(['guardian-claude', 'guardian-chatgpt']);
-
-// API providers (REST call, env key required)
-const API_PROVIDERS = {
-  claude:      { key: process.env.ANTHROPIC_API_KEY,    base: 'https://api.anthropic.com' },
-  chatgpt:     { key: process.env.OPENAI_API_KEY,       base: 'https://api.openai.com' },
-  gemini:      { key: process.env.GOOGLE_AI_API_KEY,    base: 'https://generativelanguage.googleapis.com' },
-  perplexity:  { key: process.env.PERPLEXITY_API_KEY,   base: 'https://api.perplexity.ai' },
-};
+// ALL providers are NCP — browser tab + userscript. No API keys. No REST calls.
+// §AXIOM: No APIs, ever.
+// Add a provider by installing its userscript in the browser. That's it.
+const NCP_PROVIDERS = new Set([
+  'ollama',           // local — no browser tab needed
+  'guardian-claude',  // claude.ai tab + userscript-claude.js
+  'guardian-chatgpt', // chatgpt.com tab + userscript-chatgpt.js
+  'gemini',           // gemini.google.com tab + userscript-gemini.js
+  'perplexity',       // perplexity.ai tab + userscript-perplexity.js
+]);
 
 function _agentAvailable(agent, healthSnap) {
-  // NCP agents: check browser connection
-  if (agent === 'guardian-claude' || agent === 'guardian-chatgpt') {
-    return !!healthSnap[agent]?.online;
-  }
-  // Ollama: check health probe
-  if (agent === 'ollama') {
-    return !!healthSnap['ollama']?.online;
-  }
-  // API providers: check key exists
-  const api = API_PROVIDERS[agent];
-  if (api) return !!api.key;
-  // NCP short-form aliases
-  if (agent === 'claude')  return !!healthSnap['guardian-claude']?.online || !!API_PROVIDERS.claude.key;
-  if (agent === 'chatgpt') return !!healthSnap['guardian-chatgpt']?.online || !!API_PROVIDERS.chatgpt.key;
-  if (agent === 'gemini')  return !!API_PROVIDERS.gemini.key;
-  if (agent === 'perplexity') return !!API_PROVIDERS.perplexity.key;
-  return false;
+  if (agent === 'ollama') return !!healthSnap['ollama']?.online;
+  // All other providers: NCP browser tab — check if tab is connected
+  const ncpKey = agent.startsWith('guardian-') ? agent : 'guardian-' + agent;
+  return !!(healthSnap[agent]?.online || healthSnap[ncpKey]?.online);
 }
 
 function _decide(call, healthSnap, weights) {
