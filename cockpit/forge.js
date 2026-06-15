@@ -287,7 +287,16 @@ async function forgeModule(moduleSrc, instruction, { moduleName = 'unknown', sto
 // @hook rheon-forge-patch-0000-2026-0529-002  forge:forgePatch  kind:function
 async function forgePatch(moduleSrc, patchSpec, { moduleName = 'unknown', store = null, bus = null } = {}) {
   const instruction = `Apply this patch:\n${JSON.stringify(patchSpec, null, 2)}`;
-  const system = `${SYSTEM_NUCLEUS}\n\nApply a minimal targeted patch to '${moduleName}'.\nReturn ONLY the complete patched JavaScript source in a \`\`\`javascript block.`;
+  // ── Inject prior chat context for continuity ─────────────────────────────
+  let chatCtx = '';
+  try {
+    const cl = require('../lib/chat-logger');
+    chatCtx = await cl.buildInjectionContext(patchSpec?.description || moduleName, {
+      k: 5, threshold: 0.68, maxChars: 1500
+    });
+  } catch(_) {}
+
+  const system = `${SYSTEM_NUCLEUS}\n\n${chatCtx ? chatCtx + '\n' : ''}Apply a minimal targeted patch to '${moduleName}'.\nReturn ONLY the complete patched JavaScript source in a \`\`\`javascript block.`;
   const user   = `Current source:\n\`\`\`javascript\n${moduleSrc}\n\`\`\`\n\nPatch spec:\n${JSON.stringify(patchSpec, null, 2)}`;
 
   let r;

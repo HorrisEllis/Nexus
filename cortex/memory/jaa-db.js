@@ -123,6 +123,9 @@ const TABLE_TIERS = {
   // ALK decision lattice — tier: long (decisions are permanent record)
   fault_taxonomy:      'long',
   reuse_index:         'long',
+  failure_modes:       'long',   // escalation level 4 — human action items
+  chat_log:            'short',  // all AI exchanges for context reinjection
+  escalation_log:      'long',   // full history of every escalation attempt
 };
 
 // ── All declared tables ───────────────────────────────────────────────────────

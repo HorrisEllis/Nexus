@@ -286,6 +286,24 @@ async function _tick() {
             status: attempts >= MAX_ATTEMPTS ? 'human_required' : 'forge_failed',
             forgeReason: result.reason,
           });
+
+          // ── Escalation engine: level-by-level retry with friction ledger ──
+          if (attempts >= MAX_ATTEMPTS) {
+            setImmediate(async () => {
+              try {
+                const esc = require('./escalation');
+                const esResult = await esc.escalate(gap);
+                jaaDB.insert('event_log', {
+                  uuid: uid(), type: 'self-heal.escalated',
+                  payload: { gapUuid: gap.uuid, level: esResult.level,
+                    resolved: esResult.resolved, friction: esc.getFriction(gap.type) },
+                  source: MODULE_ID, causedBy: gap.uuid, ts: Date.now(),
+                });
+              } catch(e) {
+                console.warn(`[${MODULE_ID}] escalation failed: ${e.message}`);
+              }
+            });
+          }
           jaaDB.insert('event_log', {
             uuid: uid(), type: 'self-heal.forge_failed',
             payload: { gapUuid: gap.uuid, gapType: gap.type, reason: result.reason, attempts },

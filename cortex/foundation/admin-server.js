@@ -253,6 +253,35 @@ class AdminServer {
           break;
         }
 
+        // ── GET /api/failure-modes — active failure modes ────────────────────
+        case route === 'GET /api/failure-modes': {
+          const rows = jaaDB.query('failure_modes', r => r.status === 'active', 50);
+          res.writeHead(200, {'Content-Type':'application/json'});
+          res.end(JSON.stringify({ ok:true, failureModes: rows, count: rows.length }));
+          break;
+        }
+
+        // ── GET /api/friction — fault class friction scores ───────────────────
+        case route === 'GET /api/friction': {
+          const rows = jaaDB.query('fault_taxonomy', () => true, 100);
+          const sorted = rows.sort((a,b) => (b.friction||0) - (a.friction||0));
+          res.writeHead(200, {'Content-Type':'application/json'});
+          res.end(JSON.stringify({ ok:true, faultClasses: sorted, count: sorted.length }));
+          break;
+        }
+
+        // ── GET /api/chat-log — recent AI exchanges ───────────────────────────
+        case route === 'GET /api/chat-log': {
+          const n    = parseInt(url.searchParams.get('n') || '20');
+          const sid  = url.searchParams.get('sessionId');
+          const rows = sid
+            ? jaaDB.query('chat_log', r => r.sessionId === sid, n)
+            : jaaDB.tail('chat_log', n);
+          res.writeHead(200, {'Content-Type':'application/json'});
+          res.end(JSON.stringify({ ok:true, rows, count: rows.length }));
+          break;
+        }
+
         // ── GET /api/search — SNR-gated semantic search ──────────────────────
         // GET /api/search?q=rate+limiting&k=5&threshold=0.72&table=gaps
         case route === 'GET /api/search': {

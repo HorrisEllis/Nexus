@@ -197,7 +197,7 @@ async function bootAsync() {
   // ── Phase 5.2 SOFT: Vector memory ────────────────────────────────────────
   seq.phase({ name:'vector.memory.init', type:'SOFT',
     label:'Vector memory index (SNR-gated semantic search)',
-    run: async () => {
+    fn: async () => {
       try {
         const vm = require('../lib/vector-memory');
         await vm.init();

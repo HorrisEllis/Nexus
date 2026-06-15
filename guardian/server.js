@@ -529,6 +529,18 @@ function _handleNCPMessage(msg) {
         // Used by context-builder to surface recent completions to Ollama
         try {
           const jobRec = jobs.get(jobId);
+
+          // ── Chat logger — full exchange to disk + JAA + vector index ─────
+          try {
+            const cl = require('../lib/chat-logger');
+            if (!cl.getSession()) cl.startSession({ meta: { source: 'guardian' } });
+            // Log the prompt (user turn)
+            if (jobRec?.prompt) {
+              cl.log({ role:'user', content: jobRec.prompt, provider: provider||'ollama',
+                jobId, intent: jobRec.command, outcome:'complete' }).catch(()=>{});
+            }
+          } catch(_) {}
+
           jaa.insert('chat_log', {
             uuid:       require('crypto').randomUUID(),
             jobId,
