@@ -1042,6 +1042,16 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res, 404, { ok:false, error:'unknown meta route' });
   }
 
+  // ── Guardian capabilities — /api/guardian/capabilities ─────────────────
+  // Lists all available AI providers and their strengths
+  if (top === 'api' && sub === 'guardian' && rest === 'capabilities') {
+    try {
+      const ad = require('./guardian/api-dispatch');
+      const caps = ad.capabilities();
+      return json(res, 200, { ok:true, providers: caps });
+    } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+  }
+
   // ── Semantic search proxy — /api/search/* ───────────────────────────────
   // Proxies to cortex /api/search for UI + auth client access
   if (top === 'api' && sub === 'search') {

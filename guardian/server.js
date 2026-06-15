@@ -2028,6 +2028,34 @@ function handleExtendedRoutes(req, res, url, method) {
     pRes(res, 200, { ok:true, providers:out, channels: connected }); return true;
   }
 
+  // ── API provider dispatch (Gemini, Perplexity, ChatGPT, Claude API) ──────
+  async function dispatchToApi(job) {
+    const api = _getApiDispatch();
+    if (!api) return { ok: false, error: 'api-dispatch module unavailable' };
+    const provider = job.provider;
+    if (!api.isAvailable(provider)) {
+      return { ok: false, error: `${provider}: API key not set` };
+    }
+    console.log(`[guardian] API dispatch → ${provider}  job:${(job.id||'?').slice(0,8)}`);
+    const result = await api.dispatch(provider, job.prompt, {
+      command: job.command, jobId: job.id,
+      system:  job.systemPrompt || null, maxTokens: job.maxTokens || 4096,
+    });
+    if (result.ok) {
+      jaa.insert('artifacts', {
+        uuid: require('crypto').randomUUID(), jobId: job.id, provider,
+        content: result.text, gapScore: result.gapScore,
+        usage: result.usage, citations: result.citations, ts: Date.now(),
+      });
+      const j = jobs.get(job.id);
+      if (j) { j.status = 'complete'; j.result = result.text; }
+      _postEvent('guardian.job.complete', { jobId: job.id, provider, durationMs: result.durationMs });
+    } else {
+      _postEvent('guardian.job.failed', { jobId: job.id, provider, error: result.error });
+    }
+    return result;
+  }
+
   // ── NCP channel endpoints (replace WSS) ─────────────────────────────────
   // ── CFR-Ω routes — kernel field debugger ──────────────────────────────
   if (url.pathname.startsWith('/cfr')) {

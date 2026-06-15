@@ -377,8 +377,19 @@ async function run() {
       const res = await authRequest('GET', '/api/status');
       const d   = res.body;
       if (!d) { console.log('No response'); break; }
-      console.log('\n── NEXUS STATUS ─────────────────────────────────────────');
       printStatus(d);
+      try {
+        const caps = await authRequest('GET', '/api/guardian/capabilities');
+        if (caps.body && caps.body.providers && caps.body.providers.length) {
+          console.log(hr('AI PROVIDERS'));
+          for (const p of caps.body.providers) {
+            var avail = p.available ? green('\u2713') : red('\u2717');
+            var str   = (p.strengths||[]).slice(0,3).join(', ');
+            console.log('  ' + avail + '  ' + bold((p.id||'?').padEnd(14)) + dim(str));
+          }
+          console.log('');
+        }
+      } catch(_) {}
       break;
     }
 

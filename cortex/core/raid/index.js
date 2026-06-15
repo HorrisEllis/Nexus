@@ -55,6 +55,8 @@ const _health = {
   'guardian-chatgpt': { online: false, lastCheck: 0, consecutiveFails: 0, latencyMs: 0 },
   claude:             { online: true,  lastCheck: 0, consecutiveFails: 0, latencyMs: 0 },
   chatgpt:            { online: true,  lastCheck: 0, consecutiveFails: 0, latencyMs: 0 },
+  gemini:             { online: true,  lastCheck: 0, consecutiveFails: 0, latencyMs: 0 },
+  perplexity:         { online: true,  lastCheck: 0, consecutiveFails: 0, latencyMs: 0 },
 };
 
 async function _probeAgent(agent) {
@@ -143,11 +145,24 @@ function _loadWeights() {
 
 // ── Intent clustering (deterministic, no randomness) ─────────────────────────
 const CLUSTERS = {
-  code:       /\b(code|function|class|module|implement|build|write|create|fix|debug|refactor|typescript|javascript|python|rust|node)\b/i,
-  analysis:   /\b(analyze|analyse|explain|understand|review|audit|check|evaluate|compare)\b/i,
-  spec:       /\b(spec|design|architecture|system|plan|structure|schema|contract|api)\b/i,
+  // Local-first work
+  code:       /\b(code|function|class|module|implement|build|write|create|fix|refactor|typescript|javascript|python|rust|node|patch)\b/i,
+  spec:       /\b(spec|design|architecture|system|plan|structure|schema|contract|api|blueprint)\b/i,
   data:       /\b(data|json|csv|sql|database|query|table|migrate|transform|parse)\b/i,
-  diagnostic: /\b(error|fail|broken|debug|trace|diagnose|crash|exception|issue|bug)\b/i,
+  diagnostic: /\b(error|fail|broken|debug|trace|diagnose|crash|exception|issue|bug|stack)\b/i,
+  analysis:   /\b(analyze|analyse|explain|understand|review|audit|check|evaluate|compare|summarize)\b/i,
+
+  // Vision/UI — Gemini primary
+  vision:     /\b(image|screenshot|photo|visual|ui|interface|design|layout|render|pixel|svg|canvas|color|theme|mock)\b/i,
+
+  // Research/facts — Perplexity primary
+  research:   /\b(research|fact|current|today|news|latest|real.world|source|citation|search|web|grounded|up.to.date)\b/i,
+
+  // Hostile/adversarial — ChatGPT primary
+  hostile:    /\b(attack|adversar|hostile|red.team|pentest|bypass|exploit|break|challenge|counter|stress.test|find.flaw|worst.case)\b/i,
+
+  // Forge/SEAM — highest stakes, Claude reserve
+  forge:      /\b(forge|seam|patch|repair|self.heal|autonomous|critical.fix|production)\b/i,
 };
 
 function _cluster(text) {
@@ -158,6 +173,61 @@ function _cluster(text) {
 
 // ── Deterministic routing decision ───────────────────────────────────────────
 // PURE FUNCTION: same (call, healthSnap, weights) → same decision. Always.
+//
+// PROVIDER HIERARCHY (by intent cluster):
+//   Local/private:  ollama → chatgpt → claude
+//   Vision/UI:      gemini → claude
+//   Research/facts: perplexity → claude
+//   Hostile/attack: chatgpt → claude
+//   Forge/critical: ollama → claude (never chatgpt — output quality matters)
+//
+// LAW_I: Ollama always first for code/spec/data/diagnostic/analysis/general.
+// LAW_III: Claude always last (reserve, highest quality, most expensive).
+
+// Per-cluster fallback chains
+const CLUSTER_CHAINS = {
+  code:       ['ollama', 'chatgpt', 'claude'],
+  spec:       ['ollama', 'claude'],
+  data:       ['ollama', 'chatgpt', 'claude'],
+  diagnostic: ['ollama', 'chatgpt', 'claude'],
+  analysis:   ['ollama', 'chatgpt', 'claude'],
+  vision:     ['gemini', 'claude'],
+  research:   ['perplexity', 'chatgpt', 'claude'],
+  hostile:    ['chatgpt', 'claude'],
+  forge:      ['ollama', 'claude'],
+  general:    ['ollama', 'chatgpt', 'claude'],
+};
+
+// NCP-connected providers (browser tab required)
+const NCP_PROVIDERS = new Set(['guardian-claude', 'guardian-chatgpt']);
+
+// API providers (REST call, env key required)
+const API_PROVIDERS = {
+  claude:      { key: process.env.ANTHROPIC_API_KEY,    base: 'https://api.anthropic.com' },
+  chatgpt:     { key: process.env.OPENAI_API_KEY,       base: 'https://api.openai.com' },
+  gemini:      { key: process.env.GOOGLE_AI_API_KEY,    base: 'https://generativelanguage.googleapis.com' },
+  perplexity:  { key: process.env.PERPLEXITY_API_KEY,   base: 'https://api.perplexity.ai' },
+};
+
+function _agentAvailable(agent, healthSnap) {
+  // NCP agents: check browser connection
+  if (agent === 'guardian-claude' || agent === 'guardian-chatgpt') {
+    return !!healthSnap[agent]?.online;
+  }
+  // Ollama: check health probe
+  if (agent === 'ollama') {
+    return !!healthSnap['ollama']?.online;
+  }
+  // API providers: check key exists
+  const api = API_PROVIDERS[agent];
+  if (api) return !!api.key;
+  // NCP short-form aliases
+  if (agent === 'claude')  return !!healthSnap['guardian-claude']?.online || !!API_PROVIDERS.claude.key;
+  if (agent === 'chatgpt') return !!healthSnap['guardian-chatgpt']?.online || !!API_PROVIDERS.chatgpt.key;
+  if (agent === 'gemini')  return !!API_PROVIDERS.gemini.key;
+  if (agent === 'perplexity') return !!API_PROVIDERS.perplexity.key;
+  return false;
+}
 
 function _decide(call, healthSnap, weights) {
   const intent    = call.intent || call.prompt || '';
@@ -165,37 +235,36 @@ function _decide(call, healthSnap, weights) {
   const preferred = (call.preferredAgent || '').toLowerCase();
 
   // Rule 1: explicit preference + available
-  if (preferred && preferred !== 'auto' && healthSnap[preferred]?.online) {
+  if (preferred && preferred !== 'auto' && _agentAvailable(preferred, healthSnap)) {
     return { agent: preferred, reason: `explicit:${preferred}`, cluster };
   }
 
-  // Rule 2: LAW_I — Ollama first
-  const oh = healthSnap['ollama'];
-  if (oh?.online) {
-    const w = weights.get(_wKey(cluster, 'ollama'));
-    if (!w || w.successRate >= 0.4 || w.callCount < 3) {
-      return { agent: 'ollama', reason: 'LAW_I:ollama', cluster };
+  // Rule 2: intent-specific cluster chain
+  const chain = CLUSTER_CHAINS[cluster] || CLUSTER_CHAINS.general;
+
+  for (const agent of chain) {
+    if (!_agentAvailable(agent, healthSnap)) continue;
+
+    // For ollama: respect LAW_I failure tracking
+    if (agent === 'ollama') {
+      const oh = healthSnap['ollama'];
+      if (oh.consecutiveFails >= 3) continue; // bypass to next in chain
+      const w = weights.get(_wKey(cluster, 'ollama'));
+      if (w && w.callCount >= 3 && w.successRate < 0.3) continue; // too many failures
     }
-    // Low success rate on this cluster — record but still use (LAW_I requires it)
-    // unless it has ALSO failed 3× consecutively at the health level
-    if (oh.consecutiveFails < 3) {
-      return { agent: 'ollama', reason: `LAW_I:ollama_low_rate(${w.successRate.toFixed(2)})`, cluster };
-    }
+
+    const w = weights.get(_wKey(cluster, agent));
+    const successRate = w?.successRate ?? 0.5;
+    const callCount   = w?.callCount   ?? 0;
+
+    // Skip agents with very poor track record (but not Claude — it's the reserve)
+    if (agent !== 'claude' && callCount >= 5 && successRate < 0.2) continue;
+
+    return { agent, reason: 'cluster_chain:' + cluster, cluster };
   }
 
-  // Ollama is unavailable (3+ health fails) — continue cascade
-  // Rule 3: Guardian-Claude
-  if (healthSnap['guardian-claude']?.online) {
-    return { agent: 'guardian-claude', reason: 'LAW_I:guardian_claude', cluster };
-  }
-
-  // Rule 4: Guardian-ChatGPT
-  if (healthSnap['guardian-chatgpt']?.online) {
-    return { agent: 'guardian-chatgpt', reason: 'LAW_I:guardian_chatgpt', cluster };
-  }
-
-  // Rule 5: API Claude (treated as always available; let dispatch fail if not)
-  return { agent: 'claude', reason: 'LAW_I:api_claude_fallback', cluster };
+  // Absolute fallback: claude (always reserve)
+  return { agent: 'claude', reason: 'LAW_I:claude_reserve', cluster };
 }
 
 // ── Ollama brain (analyzes failures, adjusts weights) ────────────────────────
