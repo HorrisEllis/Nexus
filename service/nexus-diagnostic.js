@@ -821,6 +821,31 @@ function startService() {
     return;
   }
 
+  // ── /engines — all 12 diagnostic engines ──────────────────────────────────
+  if (url.pathname === '/engines') {
+    const de = _getDiagEngines();
+    if (!de) {
+      res.writeHead(503, CORS);
+      return res.end(JSON.stringify({ok:false, error:'diagnostic engines unavailable'}));
+    }
+    try {
+      const allEvents = [];
+      for (const [, state] of Object.entries(systemState)) {
+        if (Array.isArray(state.recentEvents)) allEvents.push(...state.recentEvents);
+      }
+      const states = {};
+      for (const [name, state] of Object.entries(systemState)) {
+        states[name] = { online: state.online, friction: state.friction||0, sigma: state.sigma||0 };
+      }
+      const result = de.runAllEngines({ events: allEvents, systemStates: states });
+      res.writeHead(200, CORS);
+      return res.end(JSON.stringify({ ok:true, ...result }));
+    } catch(e) {
+      res.writeHead(500, CORS);
+      return res.end(JSON.stringify({ok:false, error:e.message}));
+    }
+  }
+
   if (url.pathname === '/tension') {
     // §TENSION-05: per-system tension score
     // tension = friction × (1 + openGaps × 0.2) × (1 + max(0, slope) × 2)
@@ -887,7 +912,21 @@ function startService() {
     const totalLoops = allOpenGaps.length;
 
     res.writeHead(200, CORS);
-    res.end(JSON.stringify({ systems: result, maxTension, totalLoops, openGapCount: allOpenGaps.length }));
+    // Engine summary for composite health picture
+    let engineSummary = null;
+    const de2 = _getDiagEngines();
+    if (de2) {
+      try {
+        const evts = []; for (const [,s] of Object.entries(systemState)) { if (Array.isArray(s.recentEvents)) evts.push(...s.recentEvents); }
+        const sts  = {}; for (const [n,s] of Object.entries(systemState)) { sts[n]={online:s.online,friction:s.friction||0,sigma:s.sigma||0}; }
+        const er = de2.runAllEngines({ events: evts, systemStates: sts });
+        engineSummary = { healthScore:er.healthScore, alertCount:er.alertCount, alerts:er.alerts.slice(0,3),
+          entropyRegime:er.engines?.entropy_rate?.regime, snrRegime:er.engines?.snr_floor?.regime,
+          homeostasis:er.engines?.homeostasis?.regime, faultTree:er.engines?.fault_tree?.topEventActive,
+          cascadeRisks:(er.engines?.cascade_risk||[]).length, fingerprint:er.engines?.fingerprint?.regime };
+      } catch(_) {}
+    }
+    res.end(JSON.stringify({ systems: result, maxTension, totalLoops, openGapCount: allOpenGaps.length, engines: engineSummary }));
     return;
   }
 

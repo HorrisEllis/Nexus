@@ -64,6 +64,68 @@ let _patternIndex= [];   // crystallised BEP patterns
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
+// ── Human-readable pattern translator ────────────────────────────────────────
+// Turns machine signatures into plain-English boot log lines.
+// co_occurrence — what always fires together and what that means
+// failure_precursor — what event reliably shows up before trouble
+// bottleneck — what keeps breaking in the same way
+
+const EVENT_LABELS = {
+  'heartbeat.tick':                 'health check',
+  'heartbeat.pulse':                'API pulse',
+  'heartbeat.api.degraded':         'API probe failure',
+  'heartbeat.frame':                'telemetry frame',
+  'raid.health':                    'RAID routing health',
+  'intelligence.pattern_scan':      'pattern scan',
+  'intelligence.failure_scan':      'failure scan',
+  'intelligence.reuse_index_built': 'reuse index build',
+  'intelligence.booted':            'intelligence boot',
+  'intelligence.cross_ledger':      'cross-ledger analysis',
+  'cortex.storage.opened':          'storage open',
+  'cortex.organs.booted':           'organs booted',
+  'cortex.contracts.loaded':        'contracts loaded',
+  'system.booted':                  'system boot',
+  'snapshot.created':               'snapshot taken',
+  'agent-tools.ready':              'agent tools ready',
+  'gap.found':                      'gap detected',
+  'gap.resolved':                   'gap resolved',
+  'heal.requested':                 'heal requested',
+  'heal.applied':                   'heal applied',
+  'spec.compile.complete':          'spec compiled',
+  'seam.complete':                  'SEAM job complete',
+  'artifact.stored':                'artifact stored',
+};
+
+function _label(eventType) {
+  if (!eventType) return 'unknown event';
+  if (EVENT_LABELS[eventType]) return EVENT_LABELS[eventType];
+  // Generic: cortex.foo.bar → "cortex: foo bar"
+  const parts = eventType.split('.');
+  if (parts.length >= 2) return parts[0] + ': ' + parts.slice(1).join(' ').replace(/_/g,' ');
+  return eventType.replace(/[._]/g,' ');
+}
+
+function _humanPattern(p) {
+  if (p.patternType === 'co_occurrence') {
+    const a = _label(p.typeA);
+    const b = _label(p.typeB);
+    const conf = Math.round((p.confidence||0)*100);
+    // Same event co-occurring with itself = it fires in bursts
+    if (p.typeA === p.typeB) return `"${a}" fires in bursts (${p.count}× observed, ${conf}% confidence)`;
+    return `"${a}" always fires alongside "${b}" (${p.count}× — ${conf}% confidence)`;
+  }
+  if (p.patternType === 'failure_precursor') {
+    const event = _label(p.precursorType);
+    const failures = (p.failureTypes||[]).slice(0,2).map(_label).join(', ');
+    return `"${event}" reliably appears before failures [${failures||'errors'}] — ${p.count}× observed`;
+  }
+  if (p.patternType === 'bottleneck') {
+    const gap = (p.gapType||'').replace(/_/g,' ');
+    return `"${gap}" gaps keep recurring (${p.count}× open) — likely a systemic bottleneck`;
+  }
+  return p.patternType + ' — ' + p.signature;
+}
+
 function init(cfg = {}) {
   _cfg = cfg;
 
@@ -259,7 +321,7 @@ async function _scanPatterns() {
       jaaDB.insert('bep_patterns', p);
       _patternIndex.push(p);
       if (p.crystallised) {
-        _log(`pattern crystallised: ${p.patternType} — ${p.signature.slice(0, 60)}`);
+        _log('pattern crystallised: ' + _humanPattern(p));
       }
     }
 

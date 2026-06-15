@@ -359,6 +359,13 @@ class JaaDB {
     };
     this._tables[table].push(row);
     this._persist(table, row);
+
+    // Vector memory: fire-and-forget embed (non-blocking, graceful)
+    try {
+      const vm = require('../../lib/vector-memory');
+      vm.onJaaInsert(table, row);
+    } catch(_) {}
+
     return row;
   }
 

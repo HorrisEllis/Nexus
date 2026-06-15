@@ -382,6 +382,37 @@ async function run() {
       break;
     }
 
+    case 'search': {
+      // node auth/client.js search "rate limiting strategy" [--threshold 0.72] [--table gaps]
+      const query     = args.filter(a=>!a.startsWith('--')).join(' ');
+      if (!query) { console.log(yellow('  Usage: search <query> [--threshold 0.72] [--table gaps]')); break; }
+      const tIdx = args.indexOf('--threshold');
+      const tabIdx= args.indexOf('--table');
+      const threshold = tIdx !== -1 ? parseFloat(args[tIdx+1]) : 0.72;
+      const table     = tabIdx !== -1 ? args[tabIdx+1] : null;
+      const url = '/api/search?q=' + encodeURIComponent(query) + '&k=10&threshold=' + threshold + (table?'&table='+table:'');
+      const res = await authRequest('GET', url);
+      const d   = res.body;
+      if (!d?.ok) { console.log(red('  ✗ ') + (d?.error||'search failed')); break; }
+      console.log('');
+      console.log(hr('SEMANTIC SEARCH — ' + JSON.stringify(query)));
+      console.log(field('SNR',       (d.snr*100).toFixed(0) + '%'));
+      console.log(field('Signal',    d.signal + ' results above threshold'));
+      console.log(field('Noise',     d.noise + ' results filtered out'));
+      console.log(field('Threshold', (threshold*100).toFixed(0) + '% similarity'));
+      if (!d.results?.length) { console.log('\n  ' + gray('No results above threshold.')); break; }
+      console.log('');
+      for (const r of d.results) {
+        const pct = Math.round((r.snr||r.similarity||0)*100);
+        const bar = '▓'.repeat(Math.round(pct/10)) + '░'.repeat(10-Math.round(pct/10));
+        const col = pct>=85?'var(--g)':pct>=72?'var(--c)':'var(--muted)';
+        console.log('  ' + green('['+pct+'%]') + ' ' + cyan(bar) + ' ' + bold(r.signal||'?') + ' — ' + (r.type||r.table||'?'));
+        if (r.text) console.log('    ' + dim(r.text.slice(0,80)));
+      }
+      console.log('');
+      break;
+    }
+
     case 'gaps': {
       const res = await authRequest('GET', '/api/cortex/gaps?status=open&n=20');
       const gaps = res.body?.gaps || res.body || [];

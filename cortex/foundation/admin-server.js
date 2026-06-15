@@ -253,6 +253,59 @@ class AdminServer {
           break;
         }
 
+        // ── GET /api/search — SNR-gated semantic search ──────────────────────
+        // GET /api/search?q=rate+limiting&k=5&threshold=0.72&table=gaps
+        case route === 'GET /api/search': {
+          const q         = url.searchParams.get('q') || '';
+          const k         = parseInt(url.searchParams.get('k') || '8');
+          const threshold = parseFloat(url.searchParams.get('threshold') || '0.72');
+          const table     = url.searchParams.get('table');
+          const explain   = url.searchParams.get('explain') === 'true';
+          if (!q) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({ok:false,error:'q required'})); break; }
+          try {
+            const vm = require('../../lib/vector-memory');
+            const filter = table ? { table: { '$eq': table } } : null;
+            const result = await vm.search(q, { k, threshold, filter, explain });
+            res.writeHead(200, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({ ok:true, ...result }));
+          } catch(e) {
+            res.writeHead(503, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({ok:false, error:e.message}));
+          }
+          break;
+        }
+
+        // ── POST /api/search/context — assemble semantic context for a prompt ─
+        case route === 'POST /api/search/context': {
+          const body = await _readBody(req);
+          const { prompt, k=8, threshold=0.70, tables=null, maxTokens=2000 } = body;
+          if (!prompt) { res.writeHead(400, {'Content-Type':'application/json'}); res.end(JSON.stringify({ok:false,error:'prompt required'})); break; }
+          try {
+            const vm = require('../../lib/vector-memory');
+            const ctx = await vm.assembleContext(prompt, { k, threshold, tables, maxTokens });
+            res.writeHead(200, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({ ok:true, ...ctx }));
+          } catch(e) {
+            res.writeHead(503, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({ok:false, error:e.message}));
+          }
+          break;
+        }
+
+        // ── GET /api/search/status — vector memory health ─────────────────────
+        case route === 'GET /api/search/status': {
+          try {
+            const vm = require('../../lib/vector-memory');
+            const st = await vm.status();
+            res.writeHead(200, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({ ok:true, ...st }));
+          } catch(e) {
+            res.writeHead(503, {'Content-Type':'application/json'});
+            res.end(JSON.stringify({ok:false, error:'vector memory not initialized'}));
+          }
+          break;
+        }
+
         // ── GET /api/gaps ─────────────────────────────────────────────────
         case route === 'GET /api/gaps': {
           const status = url.searchParams.get('status');

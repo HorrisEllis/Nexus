@@ -134,7 +134,43 @@ async function _tick() {
   }
 }
 
+// ── Engine-informed prescription ──────────────────────────────────────────────
+let _lastEngineRun = 0, _lastEngineResult = null;
+const ENGINE_TTL   = 30000;
+
+function _getEngineInsights() {
+  const now = Date.now();
+  if (_lastEngineResult && (now - _lastEngineRun) < ENGINE_TTL) return _lastEngineResult;
+  try {
+    const de   = require('../../lib/diagnostic-engines');
+    const evts = jaaDB.tail('event_log', 100);
+    const gaps = jaaDB.query('gaps', r => r.status === 'open', 30);
+    const states = { cortex:{online:true,friction:Math.min(1,gaps.length*0.05)}, guardian:{online:true,friction:0.1} };
+    _lastEngineResult = de.runAllEngines({ events: evts, systemStates: states });
+    _lastEngineRun = now;
+    return _lastEngineResult;
+  } catch(_) { return null; }
+}
+
 function _prescribe(gap) {
+  // ── Engine-informed pre-routing ───────────────────────────────────────────
+  try {
+    const ins = _getEngineInsights();
+    if (ins) {
+      const gapSys = (gap.path||gap.source||'').split('/')[0];
+      const cb     = ins.engines?.circuit_breaker;
+      if (cb?.breakers?.some(b => b.system === gapSys && b.state === 'OPEN'))
+        return { strategy:'pause_and_observe', action:`circuit OPEN for ${gapSys} — pausing retries`, automated:false, escalate:true, reason:'circuit_breaker' };
+      if (ins.engines?.fault_tree?.topEventActive)
+        return { strategy:'human_review', action:`fault tree active — system-level failure detected`, automated:false, reason:'fault_tree' };
+      if (ins.engines?.homeostasis?.regime === 'vulnerable')
+        return { strategy:'snapshot_then_forge', action:`homeostasis vulnerable — snapshot before patching ${gap.path}`, automated:false, escalate:true, reason:'homeostasis' };
+      const cascade = (ins.engines?.cascade_risk||[]).find(r => r.system === gapSys && (r.blastRadius||[]).length > 2);
+      if (cascade)
+        return { strategy:'quarantine_and_patch', action:`cascade risk — blast radius: ${cascade.blastRadius.join(', ')}`, automated:false, escalate:true, reason:'cascade_risk' };
+    }
+  } catch(_) {}
+
   switch (gap.type) {
     case 'stale_module':
       // Escalate to self-heal — it will probe and attempt forge patch

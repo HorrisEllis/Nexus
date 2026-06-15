@@ -904,6 +904,78 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res, 404, { ok: false, error: 'unknown auth route' });
   }
 
+  // ── Spec compiler — /api/compile/* ──────────────────────────────────────
+  // POST /api/compile/spec    — compile a .spec through T0/T1 pipeline
+  // GET  /api/compile/status  — check compile availability
+  if (top === 'api' && sub === 'compile') {
+    if (M === 'GET' && !rest) {
+      // Compiler availability check
+      let compilerAvailable = false;
+      try {
+        const p = require('path').join(__dirname, '..', 'spec-compiler', 'compiler', 'pipeline.js');
+        require('fs').accessSync(p);
+        compilerAvailable = true;
+      } catch(_) {}
+      return json(res, 200, { ok:true, available: compilerAvailable });
+    }
+
+    if (M === 'POST' && (rest === 'spec' || !rest)) {
+      const body = await readBody(req);
+      const { content, filename = 'input.spec', ideaUuid } = body;
+      if (!content) return json(res, 400, { ok:false, error:'content required' });
+
+      try {
+        // Write spec to a temp file and run through spec-compiler pipeline
+        const fs   = require('fs');
+        const path = require('path');
+        const { execSync } = require('child_process');
+
+        const tmpDir  = path.join(__dirname, 'data', 'compile-tmp');
+        fs.mkdirSync(tmpDir, { recursive: true });
+        const tmpFile = path.join(tmpDir, filename.replace(/[^a-z0-9._-]/gi,'_'));
+        fs.writeFileSync(tmpFile, content);
+
+        // Try spec-compiler CLI
+        const compilerCli = path.join(__dirname, '..', 'spec-compiler', 'cli.js');
+        let result;
+        if (fs.existsSync(compilerCli)) {
+          try {
+            const out = execSync(`node "${compilerCli}" "${tmpFile}"`, { encoding:'utf8', timeout:30000 });
+            result = { ok:true, output:out, source:'spec-compiler', filename };
+          } catch(e) {
+            result = { ok:false, error:e.message.slice(0,200), source:'spec-compiler' };
+          }
+        } else {
+          // Spec compiler not found — use guardian SEAM as fallback
+          result = { ok:false, error:'spec-compiler not found at expected path', fallback:'guardian-seam' };
+        }
+
+        // Log to cortex event ledger
+        broadcast('spec.compile.complete', { filename, ok:result.ok, source:result.source, ideaUuid });
+
+        // If ideaUuid given, update idearium phase to 'specced'
+        if (ideaUuid && result.ok) {
+          try {
+            const r = await (async () => {
+              const http = require('http');
+              return new Promise((resolve) => {
+                const b = JSON.stringify({ phase:'specced' });
+                const req2 = http.request({ hostname:'127.0.0.1', port:4800, path:'/api/ideas/'+ideaUuid, method:'PATCH',
+                  headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(b)} }, res2 => { res2.resume(); resolve(true); });
+                req2.on('error',()=>resolve(false)); req2.write(b); req2.end();
+              });
+            })();
+          } catch(_) {}
+        }
+
+        return json(res, result.ok ? 200 : 422, result);
+      } catch(e) {
+        return json(res, 500, { ok:false, error:e.message });
+      }
+    }
+    return json(res, 404, { ok:false, error:'unknown compile route' });
+  }
+
   // ── Meta layer — /api/meta/* ─────────────────────────────────────────────
   // GET /api/meta/status    — all four modules + versions
   // GET /api/meta/classify  — ALK perception of current system state
@@ -968,6 +1040,42 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     }
 
     return json(res, 404, { ok:false, error:'unknown meta route' });
+  }
+
+  // ── Semantic search proxy — /api/search/* ───────────────────────────────
+  // Proxies to cortex /api/search for UI + auth client access
+  if (top === 'api' && sub === 'search') {
+    const http = require('http');
+    const cortexPath = '/api/search' + (rest ? '/' + rest : '') + (u.search || '');
+    const r = await new Promise((resolve) => {
+      const req2 = http.request({ hostname:'127.0.0.1', port:3748, path:cortexPath, method:M,
+        headers:{'Content-Type':'application/json'} }, res2 => {
+        const chunks=[]; res2.on('data',c=>chunks.push(c));
+        res2.on('end',()=>{ try{resolve(JSON.parse(Buffer.concat(chunks).toString()));}catch(_){resolve(null);} });
+      });
+      req2.on('error',()=>resolve(null));
+      if (M==='POST') { readBody(req).then(b=>{ req2.write(JSON.stringify(b)); req2.end(); }); }
+      else req2.end();
+    });
+    if (r) return json(res, 200, r);
+    return json(res, 503, { ok:false, error:'cortex search unavailable' });
+  }
+
+  // ── Diagnostic engines proxy — /api/engines ──────────────────────────────
+  // Proxies to nexus-diagnostic /engines endpoint for UI access
+  if (top === 'api' && sub === 'engines') {
+    try {
+      const http = require('http');
+      const r = await new Promise((resolve) => {
+        const req2 = http.get('http://127.0.0.1:7825/engines', { timeout: 5000 }, res2 => {
+          const chunks = []; res2.on('data', c => chunks.push(c));
+          res2.on('end', () => { try { resolve(JSON.parse(Buffer.concat(chunks).toString())); } catch(_) { resolve(null); } });
+        });
+        req2.on('error', () => resolve(null));
+      });
+      if (r) return json(res, 200, r);
+      return json(res, 503, { ok:false, error:'diagnostic service unavailable' });
+    } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
   }
 
   // ── Contract trust map ────────────────────────────────────────────────────

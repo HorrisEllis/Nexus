@@ -194,6 +194,21 @@ async function bootAsync() {
     },
   });
 
+  // ── Phase 5.2 SOFT: Vector memory ────────────────────────────────────────
+  seq.phase({ name:'vector.memory.init', type:'SOFT',
+    label:'Vector memory index (SNR-gated semantic search)',
+    run: async () => {
+      try {
+        const vm = require('../lib/vector-memory');
+        await vm.init();
+        const st = await vm.status();
+        return { ok: true, items: st.indexStats?.items || 0, ollama: st.ollamaOk };
+      } catch(e) {
+        return { ok: false, error: e.message }; // SOFT — never blocks boot
+      }
+    }
+  });
+
   // ── Phase 5.3 SOFT: Intelligence core ────────────────────────────────────
   // Starts after admin server so HTTP routes are live.
   // Starts before snapshot so first scan can run during snapshot window.
