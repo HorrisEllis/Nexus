@@ -443,6 +443,140 @@ function sendDOMMap() {
     context:{ url:location.href, chatId:chatId(), ts:Date.now() } });
 }
 
+// ── DOM command executor — runs NEXUS_CLI_EXEC actions on live page ───────────
+function _execDOMCommand(execId, commandName, selector, action) {
+  let el;
+  try { el = document.querySelector(selector); } catch(e) {
+    _postCliResult(execId, commandName, { ok: false, error: 'invalid selector: ' + e.message }); return;
+  }
+  if (!el) {
+    _postCliResult(execId, commandName, { ok: false, error: 'element not found: ' + selector }); return;
+  }
+  try {
+    let value = null;
+    if (action === 'click') {
+      el.click(); value = 'clicked';
+    } else if (action === 'focus') {
+      el.focus(); value = 'focused';
+    } else if (action === 'read') {
+      value = el.innerText || el.value || el.textContent || '';
+    } else if (action === 'hover') {
+      el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      el.dispatchEvent(new MouseEvent('mouseover',  { bubbles: true }));
+      value = 'hovered';
+    } else if (action === 'clear') {
+      if ('value' in el) { el.value = ''; el.dispatchEvent(new Event('input', { bubbles: true })); }
+      else el.textContent = '';
+      value = 'cleared';
+    } else if (action.startsWith('type:')) {
+      const text = action.slice(5);
+      el.focus();
+      const nativeDesc = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')
+                      || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
+      if (nativeDesc) nativeDesc.set.call(el, text);
+      else el.value = text;
+      el.dispatchEvent(new Event('input',  { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      value = 'typed:' + text.slice(0, 40);
+    } else if (action.startsWith('attr:')) {
+      value = el.getAttribute(action.slice(5)) || null;
+    } else {
+      _postCliResult(execId, commandName, { ok: false, error: 'unknown action: ' + action }); return;
+    }
+    _log('ok', 'CLI exec OK: ' + commandName + ' → ' + action, String(value).slice(0, 60));
+    _postCliResult(execId, commandName, { ok: true, execId, commandName, selector, action, value, tagName: el.tagName, ts: Date.now() });
+  } catch(e) {
+    _log('error', 'CLI exec error: ' + e.message, commandName);
+    _postCliResult(execId, commandName, { ok: false, error: e.message, execId, commandName, selector, action });
+  }
+}
+
+function _postCliResult(execId, commandName, result) {
+  GM_xmlhttpRequest({
+    method: 'POST', url: NCP_URL + '/result',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify({ type: 'NEXUS_CLI_RESULT', execId, commandName, provider: PROVIDER, tabId: MY_TAB, result, ts: Date.now() }),
+    onerror: () => console.warn('[guardian] cli result post failed'),
+  });
+}
+
+// ── Built-in DOM picker (used when no pickerScript provided) ──────────────────
+function _domPickerActivate(commandName, action) {
+  if (document.getElementById('nexus-dom-picker-banner')) return;
+  const banner = document.createElement('div');
+  banner.id = 'nexus-dom-picker-banner';
+  Object.assign(banner.style, {
+    position: 'fixed', top: '0', left: '0', right: '0', zIndex: '2147483647',
+    background: '#05080f', borderBottom: '2px solid #00d4ff',
+    color: '#00d4ff', fontFamily: 'monospace', fontSize: '12px',
+    padding: '7px 14px', userSelect: 'none',
+    display: 'flex', alignItems: 'center', gap: '12px',
+  });
+  banner.innerHTML =
+    '<span>⬡ NEXUS › DOM PICKER</span>' +
+    '<span style="color:#666">Mapping: <strong style="color:#00d4ff">' + commandName + '</strong></span>' +
+    '<span style="margin-left:auto;color:#666;font-size:11px">Click any element · ESC to cancel</span>';
+  document.body.appendChild(banner);
+
+  function cleanup() { clearTimeout(_t); document.removeEventListener('keydown', _onKey); document.removeEventListener('click', _onClick, { capture: true }); banner.remove(); }
+
+  const _onClick = function(e) {
+    if (e.target === banner || banner.contains(e.target)) return;
+    e.preventDefault(); e.stopPropagation();
+    cleanup();
+    const sel = _stableSelector(e.target);
+    GM_xmlhttpRequest({
+      method: 'POST', url: NCP_URL + '/cli/pick-result',
+      headers: { 'Content-Type': 'application/json' },
+      data: JSON.stringify({ commandName, provider: PROVIDER, selector: sel,
+        meta: { tagName: e.target.tagName, id: e.target.id||null, innerText: (e.target.innerText||'').slice(0,80), type: e.target.type||null }, ts: Date.now() }),
+      onload: () => _log('ok', 'DOM pick sent: ' + sel, commandName),
+    });
+  };
+
+  const _onKey = function(e) {
+    if (e.key !== 'Escape') return;
+    cleanup();
+    GM_xmlhttpRequest({ method:'POST', url: NCP_URL+'/cli/pick-cancel',
+      headers:{'Content-Type':'application/json'},
+      data: JSON.stringify({commandName, provider:PROVIDER, reason:'cancelled', ts:Date.now()}),
+    });
+  };
+
+  document.addEventListener('click',   _onClick, { capture: true, once: true });
+  document.addEventListener('keydown', _onKey);
+  const _t = setTimeout(() => {
+    cleanup();
+    GM_xmlhttpRequest({ method:'POST', url: NCP_URL+'/cli/pick-cancel',
+      headers:{'Content-Type':'application/json'},
+      data: JSON.stringify({commandName, provider:PROVIDER, reason:'timeout', ts:Date.now()}),
+    });
+  }, 30000);
+}
+
+function _stableSelector(el) {
+  if (!el || el === document.body) return 'body';
+  for (const attr of ['data-testid','data-cy','name','aria-label','placeholder']) {
+    const v = el.getAttribute?.(attr);
+    if (v && v.length < 60 && !/[{}\[\]]/.test(v)) {
+      const sel = el.tagName.toLowerCase()+'['+attr+'='+JSON.stringify(v)+']';
+      try { if (document.querySelectorAll(sel).length === 1) return sel; } catch(_) {}
+    }
+  }
+  if (el.id && el.id.length < 30 && !/[0-9a-f]{8,}/i.test(el.id))
+    return '#' + el.id.replace(/([[\]().+*?^${}|])/g,'\\$1');
+  const parts = []; let node = el;
+  for (let d = 0; d < 5 && node && node !== document.body; d++) {
+    const tag = node.tagName.toLowerCase(), parent = node.parentElement;
+    if (!parent) break;
+    const siblings = Array.from(parent.children).filter(c => c.tagName === node.tagName);
+    const idx = siblings.indexOf(node) + 1;
+    parts.unshift(idx > 1 ? tag+':nth-of-type('+idx+')' : tag);
+    node = parent;
+  }
+  return parts.join(' > ') || el.tagName.toLowerCase();
+}
+
 // ── Gap / error detection ─────────────────────────────────────────────────────
 function detectResponseErrors(text) {
   const issues = [];
@@ -682,6 +816,35 @@ function _handleServerMessage(msg) {
       break;
     case 'GUARDIAN_SESSION_NAMED': _log('info','Session named', msg.name); break;
     case 'GUARDIAN_ARTIFACT_SAVED': _log('ok','Artifact saved', msg.artifactId); break;
+
+    case 'NEXUS_DOM_PICK': {
+      const { commandName, action = 'click', pickerScript } = msg;
+      _log('info', 'DOM picker activated', commandName);
+      if (pickerScript) {
+        try {
+          // eslint-disable-next-line no-eval
+          eval(pickerScript);
+          _log('ok', 'Picker overlay injected', commandName);
+        } catch(e) {
+          _log('error', 'Picker inject failed: ' + e.message, commandName);
+          GM_xmlhttpRequest({
+            method: 'POST', url: NCP_URL + '/cli/pick-cancel',
+            headers: { 'Content-Type': 'application/json' },
+            data: JSON.stringify({ commandName, provider: PROVIDER, reason: 'inject_error:' + e.message }),
+          });
+        }
+      } else {
+        _domPickerActivate(commandName, action);
+      }
+      break;
+    }
+
+    case 'NEXUS_CLI_EXEC': {
+      const { execId, commandName, selector, action } = msg;
+      _log('info', 'CLI exec: ' + commandName, selector);
+      _execDOMCommand(execId, commandName, selector, action);
+      break;
+    }
     default: _log('debug', `NCP: ${msg.type}`);
   }
 }

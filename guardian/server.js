@@ -726,6 +726,19 @@ function _handleNCPMessage(msg) {
       break;
     }
 
+    case 'NEXUS_CLI_RESULT': {
+      // Userscript finished executing a NEXUS_CLI_EXEC command
+      const { execId, commandName, result } = msg;
+      bus.emit('guardian.cli.exec.result', { execId, commandName, provider, tabId, result });
+      cockpitBroadcast({ type: 'CLI_EXEC_RESULT', execId, commandName, provider, result, ts: Date.now() });
+      if (result?.ok) {
+        console.log(`[guardian][cli-exec] "${commandName}" OK | execId=${(execId||'?').slice(0,8)} value=${String(result.value||'').slice(0,60)}`);
+      } else {
+        console.warn(`[guardian][cli-exec] "${commandName}" FAILED | ${result?.error}`);
+      }
+      break;
+    }
+
     case 'NEXUS_DOM_MAP': {
       // DOM snapshot from userscript — store in tab context for agent tooling
       if (msg.nodes && Array.isArray(msg.nodes)) {
@@ -1517,6 +1530,24 @@ bus.emit = function(type, data) {
 
 const STORE_DIR = process.env.MEMORY_STORE_DIR || path.join(__dirname, 'memory_store');
 const jaa = new JaaStore(STORE_DIR);
+
+// ── CLI Registry — dynamic user-defined commands (§5.1 UUID+hook registration) ─
+let _cliReg = null;
+try {
+  const { CLIRegistry } = require('./lib/cli-registry');
+  _cliReg = new CLIRegistry(jaa);
+} catch(e) {
+  console.warn('[guardian] cli-registry unavailable:', e.message);
+}
+
+// ── DOM Picker — script builder (§1.1 proven injection, not stub) ──────────────
+let _buildPickerScript = null;
+try {
+  ({ buildPickerScript: _buildPickerScript } = require('./lib/dom-picker-inject'));
+} catch(e) {
+  console.warn('[guardian] dom-picker-inject unavailable:', e.message);
+}
+
 // Ensure guardian-specific tables exist on first run
 ['seam_sessions','queue_compartments','pa_sessions','jobs','artifacts',
  'gaps','failures','ledger','downloads','sessions','timeline_events',
@@ -2433,8 +2464,76 @@ function handleExtendedRoutes(req, res, url, method) {
             result = { events: (_evLedger?.recent?.(limit) || []) };
             break;
           }
+          case 'cli': {
+            const sub = parts[1];
+            if (!sub || sub === 'help') {
+              result = { usage: [
+                'cli list [provider]',
+                'cli set <name> <selector> [action]   — action: click|focus|read|hover|clear|type:<text>',
+                'cli pick <name> [provider] [action]  — activate DOM picker on tab',
+                'cli del <name> [provider]',
+                'cli run <name> [provider]',
+              ]};
+              break;
+            }
+            if (sub === 'list') {
+              const provider = parts[2] || null;
+              result = { commands: _cliReg ? _cliReg.list(provider) : [] };
+              break;
+            }
+            if (sub === 'set') {
+              const name = parts[2], selector = parts[3];
+              const action   = parts[4] || 'click';
+              const provider = flags.provider || flags.p || 'claude';
+              if (!name || !selector) { error = 'usage: cli set <name> <selector> [action]'; break; }
+              const r = _cliReg ? _cliReg.set(name, { selector, action, provider }) : { ok:false, error:'cli-registry not loaded' };
+              if (!r.ok) { error = r.error; break; }
+              result = r;
+              break;
+            }
+            if (sub === 'pick') {
+              const name     = parts[2];
+              const provider = parts[3] || flags.provider || 'claude';
+              const action   = parts[4] || flags.action   || 'click';
+              if (!name) { error = 'usage: cli pick <name> [provider] [action]'; break; }
+              if (!ncp.isConnected(provider)) { error = `Provider "${provider}" not connected`; break; }
+              if (_cliReg) _cliReg.markPickPending(name, provider, action);
+              let pickerScript = null;
+              if (_buildPickerScript) pickerScript = _buildPickerScript({ commandName: name, provider, guardianUrl: `http://127.0.0.1:${HTTP_PORT}` });
+              ncp.push(provider, { type: 'NEXUS_DOM_PICK', commandName: name, provider, action, pickerScript, ts: Date.now() });
+              bus.emit('guardian.cli.pick.started', { commandName: name, provider });
+              cockpitBroadcast({ type: 'CLI_PICK_STARTED', commandName: name, provider });
+              console.log(`[guardian][cli-exec] DOM pick started: "${name}" on ${provider}`);
+              result = { ok: true, status: 'pick_pending', message: `DOM picker activated on ${provider} tab — click any element. ESC to cancel.` };
+              break;
+            }
+            if (sub === 'del') {
+              const name = parts[2], provider = parts[3] || flags.provider || null;
+              if (!name) { error = 'usage: cli del <name> [provider]'; break; }
+              const r = _cliReg ? _cliReg.delete(name, provider) : { ok:false, error:'cli-registry not loaded' };
+              if (!r.ok) { error = r.error; break; }
+              result = r;
+              break;
+            }
+            if (sub === 'run') {
+              const name = parts[2], provider = parts[3] || flags.provider || null;
+              if (!name) { error = 'usage: cli run <name> [provider]'; break; }
+              const resolved = _cliReg ? _cliReg.resolve(name, provider) : null;
+              if (!resolved || !resolved.ok) { error = resolved?.error || `Command "${name}" not found`; break; }
+              const execProvider = provider || resolved.provider;
+              if (!ncp.isConnected(execProvider)) { error = `Provider "${execProvider}" not connected`; break; }
+              const execId = require('crypto').randomUUID();
+              ncp.push(execProvider, { type: 'NEXUS_CLI_EXEC', execId, commandName: name, selector: resolved.selector, action: resolved.action, ts: Date.now() });
+              bus.emit('guardian.cli.exec.dispatched', { commandName: name, selector: resolved.selector, action: resolved.action, provider: execProvider, execId });
+              console.log(`[guardian][cli-exec] "${name}" → ${resolved.action}(${resolved.selector}) on ${execProvider}`);
+              result = { ok: true, execId, commandName: name, selector: resolved.selector, action: resolved.action, provider: execProvider };
+              break;
+            }
+            error = `Unknown cli sub-command: ${sub}. Try: cli help`;
+            break;
+          }
           default:
-            error = 'Unknown command: ' + cmd + '. Try: jobs, artifacts, gaps, sessions, providers, health, stats, ledger, settings, set, send, seam, version, bus';
+            error = 'Unknown command: ' + cmd + '. Try: jobs, artifacts, gaps, sessions, providers, health, stats, ledger, settings, set, send, seam, version, bus, cli';
         }
       } catch(e) {
         error = e.message;
@@ -2857,6 +2956,177 @@ function handleExtendedRoutes(req, res, url, method) {
         pRes(res,200,{ok:true});
       }).catch(e=>pRes(res,400,{ok:false,error:e.message})); return true;
     }
+  }
+
+  // ── GET /cli/commands[?provider=] ─────────────────────────────────────────
+  if (method === 'GET' && url.pathname === '/cli/commands') {
+    const provider = url.searchParams.get('provider') || null;
+    const list = _cliReg ? _cliReg.list(provider) : [];
+    pRes(res, 200, { ok: true, commands: list, count: list.length });
+    return true;
+  }
+
+  // ── POST /cli/commands — create / update ──────────────────────────────────
+  if (method === 'POST' && url.pathname === '/cli/commands') {
+    bodyJ(req).then(body => {
+      if (!_cliReg) { pRes(res, 503, { ok: false, error: 'cli-registry unavailable' }); return; }
+      const { name, selector, action, provider, desc } = body;
+      const result = _cliReg.set(name, { selector, action, provider, desc });
+      if (!result.ok) { pRes(res, 400, { ok: false, error: result.error }); return; }
+      bus.emit('guardian.cli.command.set', { name, provider, action, selector });
+      cockpitBroadcast({ type: 'CLI_COMMAND_UPDATED', command: result.command });
+      console.log(`[guardian][cli-reg] command set: ${name} on ${provider}`);
+      pRes(res, 200, result);
+    }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+    return true;
+  }
+
+  // ── DELETE /cli/commands/:name ────────────────────────────────────────────
+  if (method === 'DELETE' && url.pathname.startsWith('/cli/commands/')) {
+    if (!_cliReg) { pRes(res, 503, { ok: false, error: 'cli-registry unavailable' }); return true; }
+    const name     = decodeURIComponent(url.pathname.split('/')[3] || '');
+    const provider = url.searchParams.get('provider') || null;
+    const result   = _cliReg.delete(name, provider);
+    if (!result.ok) { pRes(res, 404, { ok: false, error: result.error }); return true; }
+    cockpitBroadcast({ type: 'CLI_COMMAND_DELETED', name, provider });
+    pRes(res, 200, result);
+    return true;
+  }
+
+  // ── POST /cli/pick — activate DOM picker on a provider tab ────────────────
+  if (method === 'POST' && url.pathname === '/cli/pick') {
+    bodyJ(req).then(body => {
+      if (!_cliReg) { pRes(res, 503, { ok: false, error: 'cli-registry unavailable' }); return; }
+      const { commandName, provider = 'claude', action = 'click', desc = '' } = body;
+      if (!commandName) { pRes(res, 400, { ok: false, error: 'commandName required' }); return; }
+      if (!ncp.isConnected(provider)) {
+        pRes(res, 409, { ok: false, error: `Provider "${provider}" not connected` }); return;
+      }
+      _cliReg.markPickPending(commandName, provider, action, desc);
+      let pickerScript = null;
+      if (_buildPickerScript) {
+        pickerScript = _buildPickerScript({ commandName, provider, guardianUrl: `http://127.0.0.1:${HTTP_PORT}` });
+      }
+      ncp.push(provider, { type: 'NEXUS_DOM_PICK', commandName, provider, action, pickerScript, ts: Date.now() });
+      console.log(`[guardian][cli-reg] DOM pick activated: "${commandName}" on ${provider}`);
+      bus.emit('guardian.cli.pick.started', { commandName, provider });
+      cockpitBroadcast({ type: 'CLI_PICK_STARTED', commandName, provider });
+      pRes(res, 200, { ok: true, commandName, provider, status: 'pick_pending',
+        message: `DOM picker activated on ${provider} tab — click an element to map it` });
+    }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+    return true;
+  }
+
+  // ── POST /cli/pick-result — userscript posts the picked selector ──────────
+  if (method === 'POST' && url.pathname === '/cli/pick-result') {
+    bodyJ(req).then(body => {
+      const { commandName, provider, selector, meta = {} } = body;
+      if (!commandName || !selector) {
+        pRes(res, 400, { ok: false, error: 'commandName and selector required' }); return;
+      }
+      const result = _cliReg ? _cliReg.resolvePick(commandName, provider, selector, meta) : null;
+      if (!result || !result.ok) {
+        pRes(res, 404, { ok: false, error: result?.error || `No pending pick for "${commandName}"` }); return;
+      }
+      console.log(`[guardian][cli-reg] pick resolved: "${commandName}" → ${selector} (${meta.tagName || '?'})`);
+      bus.emit('guardian.cli.pick.resolved', { commandName, provider, selector, meta });
+      cockpitBroadcast({ type: 'CLI_PICK_RESOLVED', commandName, provider, selector, meta });
+      pRes(res, 200, { ok: true, commandName, provider, selector, command: result.command });
+    }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+    return true;
+  }
+
+  // ── POST /cli/pick-cancel — ESC or timeout ────────────────────────────────
+  if (method === 'POST' && url.pathname === '/cli/pick-cancel') {
+    bodyJ(req).then(body => {
+      const { commandName, provider, reason = 'cancelled' } = body;
+      if (_cliReg && commandName) {
+        const cmd = _cliReg.get(commandName, provider);
+        if (cmd?.pickPending) jaa.update('cli_commands', cmd.uuid, { pickPending: false });
+      }
+      console.log(`[guardian][cli-reg] pick cancelled: "${commandName}" reason=${reason}`);
+      bus.emit('guardian.cli.pick.cancelled', { commandName, provider, reason });
+      cockpitBroadcast({ type: 'CLI_PICK_CANCELLED', commandName, provider, reason });
+      pRes(res, 200, { ok: true, commandName, reason });
+    }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+    return true;
+  }
+
+  // ── POST /cli/exec-command — execute a named custom command on a tab ────────
+  if (method === 'POST' && url.pathname === '/cli/exec-command') {
+    bodyJ(req).then(body => {
+      const { commandName, provider } = body;
+      if (!commandName) { pRes(res, 400, { ok: false, error: 'commandName required' }); return; }
+      if (!_cliReg)     { pRes(res, 503, { ok: false, error: 'cli-registry unavailable' }); return; }
+      const resolved = _cliReg.resolve(commandName, provider);
+      if (!resolved || !resolved.ok) {
+        pRes(res, 400, { ok: false, error: resolved?.error || `Command "${commandName}" not found` }); return;
+      }
+      const execProvider = provider || resolved.provider;
+      if (!ncp.isConnected(execProvider)) {
+        pRes(res, 409, { ok: false, error: `Provider "${execProvider}" not connected`, commandName }); return;
+      }
+      const execId = require('crypto').randomUUID();
+      ncp.push(execProvider, {
+        type: 'NEXUS_CLI_EXEC', execId, commandName,
+        selector: resolved.selector, action: resolved.action, ts: Date.now(),
+      });
+      console.log(`[guardian][cli-exec] "${commandName}" → ${resolved.action}(${resolved.selector}) on ${execProvider}`);
+      bus.emit('guardian.cli.exec.dispatched', { commandName, selector: resolved.selector, action: resolved.action, provider: execProvider, execId });
+      pRes(res, 200, { ok: true, execId, commandName, selector: resolved.selector, action: resolved.action, provider: execProvider });
+    }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+    return true;
+  }
+
+  // ── POST /bda/observe — receive completed LLM text for drift analysis ────────
+  // Called by streaming userscripts (ollama-ncp, etc.) when a stream completes.
+  if (method === 'POST' && url.pathname === '/bda/observe') {
+    bodyJ(req).then(body => {
+      const { jobId, provider = 'unknown', role = 'assistant', text, model } = body;
+      if (!text) { pRes(res, 400, { ok: false, error: 'text required' }); return; }
+
+      let bdaResult = null;
+      try {
+        const { BDAKernel } = require('../lib/meta/bda');
+        if (!server._bdaRegistry) server._bdaRegistry = new Map();
+        const regKey = `${provider}:stream`;
+        if (!server._bdaRegistry.has(regKey)) {
+          const k = new BDAKernel();
+          k.on('regime', ev => {
+            console.warn(`[guardian][bda][${provider}] REGIME SHIFT: ${ev.prev} → ${ev.curr} | trust=${ev.pendulum?.trust} sigma=${ev.pendulum?.sigma} n=${ev.pendulum?.n}`);
+            try { require('../cortex/core/raid').recordDrift?.(provider, ev.curr, ev.pendulum); } catch(_) {}
+          });
+          k.on('alert', ev => {
+            console.error(`[guardian][bda][${provider}] !! ALERT !! regime=${ev.regime} — escalating`);
+            try {
+              require('../cortex/self-heal/escalation').escalate?.({
+                faultClass: `bda.drift.${provider}`, level: 2,
+                description: `Stream provider ${provider} entered ${ev.regime} — coding drift`,
+                evidence: { provider, regime: ev.regime, pendulum: ev.pendulum }, source: 'guardian-bda',
+              });
+            } catch(_) {}
+          });
+          k.on('drift', ev => {
+            console.warn(`[guardian][bda][${provider}] DRIFT sigma=${ev.pendulum?.sigma} delta=${ev.pendulum?.delta} regime=${ev.pendulum?.regime} gaps=${ev.gapCount}`);
+          });
+          k.on('gap', ev => {
+            console.warn(`[guardian][bda][${provider}] GAP crit=${ev.gap?.criticality} type=${ev.gap?.type} | ${ev.gap?.description?.slice(0,80)}`);
+          });
+          server._bdaRegistry.set(regKey, k);
+        }
+        const kernel = server._bdaRegistry.get(regKey);
+        bdaResult = kernel.observe({ role, text });
+        if (bdaResult?.pendulum) {
+          const p = bdaResult.pendulum;
+          console.log(`[guardian][bda][${provider}] job=${(jobId||'?').slice(0,8)} regime=${p.regime} trust=${p.trust} sigma=${p.sigma} delta=${p.delta} n=${p.n} trend=${p.trend}`);
+        }
+      } catch(e) {
+        console.warn(`[guardian][bda] observe error: ${e.message}`);
+      }
+
+      pRes(res, 200, { ok: true, jobId, provider, pendulum: bdaResult?.pendulum || null, gaps: bdaResult?.gaps?.length || 0 });
+    }).catch(e => pRes(res, 400, { ok: false, error: e.message }));
+    return true;
   }
 
   return false;
