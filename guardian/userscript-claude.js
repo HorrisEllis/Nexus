@@ -836,7 +836,7 @@ function buildUI() {
   const tabs = document.createElement('div'); tabs.id='__g10tabs__';
   const TAB_LIST = [
     ['log','Log'], ['ledger','Ledger'], ['gaps','Gaps'], ['arts','Arts'],
-    ['seam','SEAM'], ['intel','Intel'], ['sys','Sys'], ['opts','Opts'],
+    ['seam','SEAM'], ['intel','Intel'], ['nexus','NEXUS'], ['sys','Sys'], ['opts','Opts'],
   ];
   for (const [id,label] of TAB_LIST) {
     const t = document.createElement('div');
@@ -853,6 +853,7 @@ function buildUI() {
   const artsArea   = document.createElement('div'); artsArea.id='__g10arts__';   artsArea.style.cssText='display:none;overflow-y:auto;max-height:460px';
   const seamArea   = document.createElement('div'); seamArea.id='__g10seam__';   seamArea.style.display='none';
   const intelArea  = document.createElement('div'); intelArea.id='__g10intel__'; intelArea.style.cssText='display:none;overflow-y:auto;max-height:460px';
+  const nexusArea  = document.createElement('div'); nexusArea.id='__g10nexus__'; nexusArea.style.cssText='display:none;overflow-y:auto;max-height:460px;padding:0';
   const sysArea    = document.createElement('div'); sysArea.id='__g10sys__';     sysArea.style.display='none';
   const optsArea   = document.createElement('div'); optsArea.id='__g10opts__';   optsArea.style.display='none';
 
@@ -861,7 +862,7 @@ function buildUI() {
   const fR = document.createElement('span'); fR.textContent=`v${VERSION}`;
   footer.append(fL, fR);
 
-  panel.append(hdr, jobBar, tabs, logArea, ledgerArea, gapsArea, artsArea, seamArea, intelArea, sysArea, optsArea, footer);
+  panel.append(hdr, jobBar, tabs, logArea, ledgerArea, gapsArea, artsArea, seamArea, intelArea, nexusArea, sysArea, optsArea, footer);
 
   pill.addEventListener('click', () => {
     panelOpen = !panelOpen;
@@ -875,7 +876,7 @@ function buildUI() {
 const AREAS = {
   log:'__g10log__', ledger:'__g10ledger__', gaps:'__g10gaps__',
   arts:'__g10arts__', seam:'__g10seam__', intel:'__g10intel__',
-  sys:'__g10sys__', opts:'__g10opts__',
+  nexus:'__g10nexus__', sys:'__g10sys__', opts:'__g10opts__',
 };
 function switchTab(id) {
   activeTab = id;
@@ -893,6 +894,7 @@ function renderActiveTab() {
   if (activeTab==='arts')   renderArts();
   if (activeTab==='seam')   renderSeam();
   if (activeTab==='intel')  renderIntel();
+  if (activeTab==='nexus')  renderNexus();
   if (activeTab==='sys')    renderSys();
   if (activeTab==='opts')   renderOpts();
 }
@@ -1200,12 +1202,349 @@ function renderOpts() {
   }).catch(()=>{});
 }
 
+// ══ NEXUS MODULE ════════════════════════════════════════════════════════════
+// Wires the chat tab into NEXUS:
+//   1. MutationObserver watches conversation DOM — every new message is captured
+//   2. BDA signal extraction on each message (via Cortex /api/meta/observe)
+//   3. Gap scoring on AI responses (via Cortex /api/meta/gaps)
+//   4. Semantic context pull (via /api/search) — surfaces relevant past work
+//   5. Ollama fallback (GM_xmlhttpRequest to 127.0.0.1:11434) for offline use
+//   6. Inline annotations added to AI messages in the chat DOM
+
+const _nexus = {
+  observer:    null,
+  lastMsgCount:0,
+  sessionId:   null,
+  signals:     [],
+  context:     '',
+  ollamaOk:    null,
+  pending:      false,
+};
+
+// ── Extract all visible messages from the DOM ─────────────────────────────────
+function _nexusGetMessages() {
+  const msgs = [];
+  // Claude message selectors
+  const humanEls = document.querySelectorAll(
+    '[data-testid="human-turn-content"], .human-turn, [class*="HumanMessage"]'
+  );
+  const aiEls = document.querySelectorAll(
+    '[data-testid="assistant-turn-content"], .font-claude-message, [class*="AssistantMessage"]'
+  );
+  // Interleave by DOM order
+  const all = [...document.querySelectorAll(
+    '[data-testid="human-turn-content"], [data-testid="assistant-turn-content"], .font-claude-message, .human-turn'
+  )];
+  for (const el of all) {
+    const text = (el.innerText || el.textContent || '').trim();
+    if (!text || text.length < 5) continue;
+    const isHuman = el.matches('[data-testid="human-turn-content"], .human-turn, [class*="HumanMessage"]');
+    msgs.push({ role: isHuman ? 'user' : 'assistant', text: text.slice(0, 2000) });
+  }
+  return msgs;
+}
+
+// ── Post message to NEXUS (chat-logger + BDA) ─────────────────────────────────
+function _nexusLogMessage(msg) {
+  // POST to Cortex /api/meta/observe for BDA signal extraction
+  GM_xmlhttpRequest({
+    method: 'POST',
+    url: CORTEX_URL + '/api/meta/observe',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify({
+      role:      msg.role,
+      text:      msg.text,
+      sessionId: _nexus.sessionId,
+      source:    PROVIDER,
+    }),
+    onload: (r) => {
+      try {
+        const d = JSON.parse(r.responseText);
+        if (d?.result?.signals) {
+          _nexus.signals.push({ ...d.result.signals, role: msg.role, ts: Date.now() });
+          // Update NEXUS tab if open
+          if (activeTab === 'nexus') renderNexus();
+          // Annotate the message in DOM if gap score is high
+          if (d.result.pendulum?.regime && d.result.pendulum.regime !== 'STABLE') {
+            _nexusAnnotate(msg.role, d.result.pendulum.regime, d.result.gaps?.length || 0);
+          }
+        }
+      } catch(_) {}
+    },
+    onerror: () => {},
+  });
+}
+
+// ── Pull semantic context from NEXUS memory ────────────────────────────────────
+function _nexusPullContext(query) {
+  if (!query || _nexus.pending) return;
+  _nexus.pending = true;
+  GM_xmlhttpRequest({
+    method: 'GET',
+    url: ORCH_URL + '/api/search?q=' + encodeURIComponent(query.slice(0, 200)) + '&k=5&threshold=0.68&table=artifacts',
+    onload: (r) => {
+      _nexus.pending = false;
+      try {
+        const d = JSON.parse(r.responseText);
+        if (d?.results?.length) {
+          _nexus.context = d.results;
+          if (activeTab === 'nexus') renderNexus();
+        }
+      } catch(_) { _nexus.pending = false; }
+    },
+    onerror: () => { _nexus.pending = false; },
+  });
+}
+
+// ── Ollama fallback via GM_xmlhttpRequest ─────────────────────────────────────
+// When Ollama is running locally and Guardian's Node process can't reach it,
+// the userscript can call it directly — browser has no CORS restrictions via GM.
+function _nexusOllamaQuery(prompt, cb) {
+  GM_xmlhttpRequest({
+    method: 'POST',
+    url: 'http://127.0.0.1:11434/api/generate',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify({
+      model:  'qwen2.5-coder:1.5b',
+      prompt,
+      stream: false,
+    }),
+    timeout: 30000,
+    onload: (r) => {
+      try {
+        const d = JSON.parse(r.responseText);
+        _nexus.ollamaOk = true;
+        cb(null, d.response || '');
+      } catch(e) { cb(e.message, null); }
+    },
+    onerror: (e) => {
+      _nexus.ollamaOk = false;
+      cb('Ollama unreachable', null);
+    },
+    ontimeout: () => {
+      _nexus.ollamaOk = false;
+      cb('Ollama timeout', null);
+    },
+  });
+}
+
+// Check Ollama availability on boot
+function _nexusCheckOllama() {
+  GM_xmlhttpRequest({
+    method: 'GET', url: 'http://127.0.0.1:11434/api/tags',
+    timeout: 3000,
+    onload:  () => { _nexus.ollamaOk = true;  if (activeTab==='nexus') renderNexus(); },
+    onerror: () => { _nexus.ollamaOk = false; if (activeTab==='nexus') renderNexus(); },
+    ontimeout:()=> { _nexus.ollamaOk = false; },
+  });
+}
+
+// ── Annotate AI messages with gap/regime badges ────────────────────────────────
+function _nexusAnnotate(role, regime, gapCount) {
+  if (role !== 'assistant' || !regime || regime === 'STABLE') return;
+  // Find the last assistant message element
+  const aiEls = document.querySelectorAll('[data-testid="assistant-turn-content"], .font-claude-message');
+  if (!aiEls.length) return;
+  const last = aiEls[aiEls.length - 1];
+  if (last.querySelector('.__nx_badge__')) return; // already annotated
+  const badge = document.createElement('div');
+  badge.className = '__nx_badge__';
+  const col = regime === 'OSCILLATING' || regime === 'DYSREGULATED' ? '#ff6b35' : '#818cf8';
+  badge.style.cssText = `display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:2px 8px;border-radius:3px;font:9px monospace;color:${col};border:1px solid ${col};opacity:.7`;
+  badge.textContent = `⬡ NEXUS · ${regime}${gapCount ? ' · ' + gapCount + ' gaps' : ''}`;
+  last.appendChild(badge);
+}
+
+// ── MutationObserver — watch for new messages ─────────────────────────────────
+function _nexusStartObserver() {
+  const target = document.querySelector('main') || document.body;
+  _nexus.observer = new MutationObserver(() => {
+    const msgs = _nexusGetMessages();
+    if (msgs.length === _nexus.lastMsgCount) return;
+    _nexus.lastMsgCount = msgs.length;
+    // Process the newest message
+    const newest = msgs[msgs.length - 1];
+    if (!newest) return;
+    _nexusLogMessage(newest);
+    // On user message: pull semantic context for what they're asking
+    if (newest.role === 'user') {
+      _nexusPullContext(newest.text);
+    }
+    if (activeTab === 'nexus') renderNexus();
+  });
+  _nexus.observer.observe(target, { childList: true, subtree: true, characterData: false });
+}
+
+// ── Render NEXUS tab ──────────────────────────────────────────────────────────
+function renderNexus() {
+  const el = document.getElementById('__g10nexus__');
+  if (!el) return;
+
+  const msgs    = _nexusGetMessages();
+  const signals = _nexus.signals.slice(-5);
+  const context = _nexus.context || [];
+  const ollamaStatus = _nexus.ollamaOk === null ? '...' : _nexus.ollamaOk ? '✓ online' : '✗ offline';
+  const ollamaCol    = _nexus.ollamaOk ? '#00ff88' : _nexus.ollamaOk === false ? '#ff2d55' : '#818cf8';
+
+  el.innerHTML = '';
+
+  const pad = 'padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06)';
+  const dim = 'color:#334466;font-size:9px';
+  const bright = 'color:#b8cfe0;font-size:10px';
+
+  // ── Status bar ───────────────────────────────────────────────────────────────
+  const status = document.createElement('div');
+  status.style.cssText = pad + ';display:flex;gap:12px;align-items:center;flex-wrap:wrap';
+  status.innerHTML =
+    '<span style="' + dim + ';text-transform:uppercase;letter-spacing:.08em">NEXUS</span>' +
+    '<span style="font:9px monospace;color:' + ollamaCol + '">ollama ' + ollamaStatus + '</span>' +
+    '<span style="' + dim + '">' + msgs.length + ' messages</span>' +
+    '<span style="' + dim + '">' + signals.length + ' signals</span>' +
+    '<span style="' + dim + '">' + context.length + ' context hits</span>' +
+    '<button style="margin-left:auto;background:none;border:1px solid rgba(129,140,248,.3);color:#818cf8;border-radius:3px;padding:2px 8px;font:9px monospace;cursor:pointer" ' +
+    'onclick="_nexusCheckOllama()">↺ ping ollama</button>';
+  el.appendChild(status);
+
+  // ── BDA Signals ───────────────────────────────────────────────────────────────
+  if (signals.length) {
+    const sdiv = document.createElement('div');
+    sdiv.style.cssText = pad;
+    sdiv.innerHTML = '<div style="' + dim + ';margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">BDA SIGNALS</div>';
+    const latest = signals[signals.length - 1];
+    const axes = ['valence','certainty','openness','tension','selfref'];
+    const sigRow = document.createElement('div');
+    sigRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap';
+    for (const ax of axes) {
+      const v = latest[ax] ?? 0;
+      const pct = Math.round(v * 100);
+      const col = ax === 'tension' ? (pct > 60 ? '#ff2d55' : '#818cf8') :
+                  ax === 'valence' ? (pct > 50 ? '#00ff88' : '#ff6b35') : '#818cf8';
+      const chip = document.createElement('div');
+      chip.style.cssText = 'font:9px monospace;color:' + col + ';border:1px solid ' + col + ';border-radius:3px;padding:2px 6px;opacity:.8';
+      chip.textContent = ax + ':' + pct + '%';
+      sigRow.appendChild(chip);
+    }
+    // Regime
+    if (latest.regime) {
+      const reg = document.createElement('div');
+      reg.style.cssText = 'margin-top:5px;font:9px monospace;color:#ff6b35';
+      reg.textContent = 'regime: ' + latest.regime;
+      sdiv.appendChild(sigRow);
+      sdiv.appendChild(reg);
+    } else {
+      sdiv.appendChild(sigRow);
+    }
+    el.appendChild(sdiv);
+  }
+
+  // ── Semantic context from NEXUS memory ───────────────────────────────────────
+  if (context.length) {
+    const cdiv = document.createElement('div');
+    cdiv.style.cssText = pad;
+    cdiv.innerHTML = '<div style="' + dim + ';margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">RELEVANT MEMORY</div>';
+    for (const hit of context.slice(0, 4)) {
+      const pct = Math.round((hit.snr || hit.similarity || 0) * 100);
+      const col = pct >= 85 ? '#00ff88' : pct >= 72 ? '#00d4ff' : '#818cf8';
+      const row = document.createElement('div');
+      row.style.cssText = 'margin-bottom:4px;padding:5px 8px;background:rgba(0,0,0,.3);border-radius:3px;border-left:2px solid ' + col;
+      row.innerHTML =
+        '<div style="font:9px monospace;color:' + col + '">' + pct + '% · ' + (hit.type || hit.table || '?') + '</div>' +
+        '<div style="font:10px monospace;color:#5a7a96;margin-top:2px;line-height:1.4">' +
+        (hit.text || '').slice(0, 100) + '</div>';
+      cdiv.appendChild(row);
+    }
+    // Inject context button
+    const injectBtn = document.createElement('button');
+    injectBtn.style.cssText = 'margin-top:6px;background:none;border:1px solid rgba(0,212,255,.3);color:#00d4ff;border-radius:3px;padding:3px 10px;font:9px monospace;cursor:pointer;width:100%';
+    injectBtn.textContent = '⬡ inject context into next prompt';
+    injectBtn.onclick = () => _nexusInjectContext();
+    cdiv.appendChild(injectBtn);
+    el.appendChild(cdiv);
+  }
+
+  // ── Ollama quick-query ────────────────────────────────────────────────────────
+  const qdiv = document.createElement('div');
+  qdiv.style.cssText = pad;
+  qdiv.innerHTML = '<div style="' + dim + ';margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">OLLAMA DIRECT</div>';
+  const qInput = document.createElement('textarea');
+  qInput.id = '__nx_query__';
+  qInput.placeholder = 'Ask Ollama directly (qwen2.5-coder:1.5b)…';
+  qInput.style.cssText = 'width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);color:#b8cfe0;font:10px monospace;padding:6px 8px;border-radius:3px;resize:none;height:52px;outline:none;box-sizing:border-box';
+  const qBtn = document.createElement('button');
+  qBtn.textContent = '↗ ask ollama';
+  qBtn.style.cssText = 'margin-top:4px;background:none;border:1px solid rgba(0,255,136,.3);color:#00ff88;border-radius:3px;padding:3px 10px;font:9px monospace;cursor:pointer';
+  const qOut = document.createElement('div');
+  qOut.id = '__nx_qout__';
+  qOut.style.cssText = 'margin-top:6px;font:10px monospace;color:#5a7a96;line-height:1.5;min-height:20px';
+  qBtn.onclick = () => {
+    const q = document.getElementById('__nx_query__')?.value?.trim();
+    if (!q) return;
+    qOut.style.color = '#818cf8'; qOut.textContent = '⟳ querying ollama…';
+    _nexusOllamaQuery(q, (err, text) => {
+      const out = document.getElementById('__nx_qout__');
+      if (!out) return;
+      if (err) { out.style.color='#ff2d55'; out.textContent='✗ ' + err; }
+      else      { out.style.color='#b8cfe0'; out.textContent = text.slice(0, 400); }
+    });
+  };
+  qdiv.append(qInput, qBtn, qOut);
+  el.appendChild(qdiv);
+
+  // ── Recent conversation summary ────────────────────────────────────────────
+  if (msgs.length) {
+    const mdiv = document.createElement('div');
+    mdiv.style.cssText = 'padding:8px 12px';
+    mdiv.innerHTML = '<div style="' + dim + ';margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em">CONVERSATION (' + msgs.length + ')</div>';
+    for (const m of msgs.slice(-4)) {
+      const row = document.createElement('div');
+      row.style.cssText = 'margin-bottom:3px;display:flex;gap:6px';
+      const role = document.createElement('span');
+      role.style.cssText = 'font:8px monospace;color:' + (m.role==='user'?'#00d4ff':'#00ff88') + ';width:52px;flex-shrink:0;padding-top:1px';
+      role.textContent = m.role.toUpperCase();
+      const text = document.createElement('span');
+      text.style.cssText = 'font:10px monospace;color:#334466;line-height:1.4';
+      text.textContent = m.text.slice(0, 80) + (m.text.length > 80 ? '…' : '');
+      row.append(role, text);
+      mdiv.appendChild(row);
+    }
+    el.appendChild(mdiv);
+  }
+}
+
+// ── Inject NEXUS context into the Claude input field ─────────────────────────
+function _nexusInjectContext() {
+  if (!_nexus.context?.length) return;
+  const lines = ['[NEXUS CONTEXT — relevant past work]'];
+  for (const hit of _nexus.context.slice(0, 3)) {
+    const pct = Math.round((hit.snr || hit.similarity || 0) * 100);
+    lines.push('[' + pct + '% match · ' + (hit.type || '?') + '] ' + (hit.text || '').slice(0, 200));
+  }
+  lines.push('[END NEXUS CONTEXT]');
+  const ctx = lines.join('\n');
+  // Find Claude's input
+  const inp = document.querySelector('[contenteditable="true"][data-placeholder]') ||
+              document.querySelector('div[contenteditable="true"]');
+  if (!inp) return;
+  inp.focus();
+  const existing = inp.innerText || '';
+  document.execCommand('selectAll', false, null);
+  document.execCommand('insertText', false, ctx + (existing ? '\n\n' + existing : ''));
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+function _nexusInit() {
+  _nexus.sessionId = MY_TAB + '-' + Date.now().toString(36);
+  _nexusCheckOllama();
+  setTimeout(_nexusStartObserver, 2000); // wait for DOM to settle
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 async function init() {
   loadSettings();
   await dbOpen().catch(() => { _log('err','IDB failed — degraded mode'); });
   buildUI();
   connect();
+  _nexusInit();  // start conversation observer + Ollama fallback
   _log('sys', `Guardian v${VERSION}`, `${PROVIDER} · ${location.hostname}`);
   // DOM map on load if enabled
   if (_settings.enableDOMMap) setTimeout(() => sendDOMMap(), 3000);
