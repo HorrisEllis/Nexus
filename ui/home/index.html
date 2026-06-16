@@ -9,94 +9,137 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e0e8ff;font-family:'Space Grotesk',sans-serif}
 
+
 /* ── Layer 0: particle void ── */
 #void{position:fixed;inset:0;z-index:0}
 
-/* ── Layer 1: channel content — fills the screen ── */
+/* ── Layer 1: channel content ── */
 #channel{position:fixed;inset:0;z-index:1;overflow:hidden}
-.ch{display:none;width:100%;height:100%;animation:ch-in .4s ease}
+.ch{display:none;width:100%;height:100%;animation:ch-in .35s ease}
 .ch.active{display:flex;flex-direction:column}
-@keyframes ch-in{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
+@keyframes ch-in{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
 
-/* ── Layer 2: Meta chrome — always pointer-events:none except specific elements ── */
-/* Nothing here blocks channel content. Only named interactive elements get pointer-events:auto */
-#hud{
-  position:fixed;inset:0;z-index:10;pointer-events:none;
+/* ── Layer 2: HUD — pointer-events:none at container level always ── */
+#hud{position:fixed;inset:0;z-index:10;pointer-events:none}
+
+/* ── Floating menu button — bottom center, always above everything ── */
+#menu-btn{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  z-index:100;pointer-events:auto;
+  display:flex;align-items:center;gap:10px;
+  padding:11px 22px;
+  background:rgba(6,6,16,.85);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:32px;
+  color:rgba(255,255,255,.75);
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.12em;
+  cursor:pointer;
+  backdrop-filter:blur(16px);
+  transition:background .2s,border-color .2s,color .2s,box-shadow .2s;
+  white-space:nowrap;
 }
+#menu-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);color:#fff}
+#menu-btn.open{
+  background:rgba(10,10,24,.92);border-color:rgba(0,229,255,.35);color:#00e5ff;
+  box-shadow:0 0 24px rgba(0,229,255,.12);
+}
+#menu-icon{font-size:15px;transition:transform .35s ease}
+#menu-btn.open #menu-icon{transform:rotate(60deg)}
+#menu-label{transition:color .2s}
 
-/* Channel switcher — left edge — hidden until menu open */
+/* ── Menu overlay — rises from bottom when open ── */
+#menu-overlay{
+  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
+  z-index:90;pointer-events:none;
+  display:flex;flex-direction:column;gap:10px;align-items:center;
+  opacity:0;transform:translateX(-50%) translateY(12px);
+  transition:opacity .25s ease,transform .25s ease;
+  min-width:520px;
+}
+#menu-overlay.open{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+
+/* Channel rail — horizontal pill row */
 #ch-rail{
-  position:absolute;left:0;top:0;bottom:0;width:56px;
-  background:linear-gradient(to right,rgba(0,0,0,.85),transparent);
-  display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 8px;
-  pointer-events:auto;
-  opacity:0;transform:translateX(-8px);transition:opacity .25s ease,transform .25s ease;
+  display:flex;gap:6px;
+  background:rgba(6,6,16,.88);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:6px 8px;
+  backdrop-filter:blur(16px);
 }
-#hud.menu-open #ch-rail{opacity:1;transform:translateX(0)}
 .ch-btn{
-  width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.04);cursor:pointer;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:3px;transition:all .2s;position:relative;
-  font-size:16px;
+  display:flex;align-items:center;gap:7px;
+  padding:7px 14px;border-radius:14px;border:none;
+  background:transparent;color:rgba(255,255,255,.4);
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.07em;
+  cursor:pointer;transition:all .2s;white-space:nowrap;position:relative;
 }
-.ch-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
-.ch-btn.on{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
-.ch-btn .ch-num{font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.3);line-height:1}
-.ch-btn.on .ch-num{color:rgba(255,255,255,.7)}
-.ch-dot{position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:#666;transition:all .4s}
+.ch-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8)}
+.ch-btn.on{background:rgba(255,255,255,.1);color:#fff}
+.ch-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:all .4s}
 .ch-dot.online{background:#00ff88;animation:dot-live 2.5s ease-in-out infinite}
-@keyframes dot-live{0%,100%{opacity:.5}50%{opacity:1;box-shadow:0 0 6px #00ff88}}
+@keyframes dot-live{0%,100%{opacity:.4}50%{opacity:1;box-shadow:0 0 5px #00ff88}}
 
-/* Top bar — appears with menu */
-#top-bar{
-  position:absolute;top:0;left:56px;right:0;height:48px;
-  background:linear-gradient(to bottom,rgba(0,0,0,.7),transparent);
-  display:flex;align-items:center;padding:0 20px;gap:16px;
-  pointer-events:none;
-  opacity:0;transition:opacity .25s ease;
-}
-#hud.menu-open #top-bar{opacity:1}
-#hud-pin{pointer-events:auto}
-#ch-name{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:.15em;color:#fff}
-#ch-accent{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.4);margin-left:4px}
-#sys-pills{display:flex;gap:8px;margin-left:auto}
-.spill{display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.07em;text-transform:uppercase}
-.spill-dot{width:5px;height:5px;border-radius:50%;background:#444;flex-shrink:0;transition:all .4s}
-.spill-dot.on{background:#00ff88;animation:dot-live 2.5s ease-in-out infinite}
-.spill-dot.err{background:#ff3355}
-#hud-pin{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:16px;padding:4px;transition:color .2s}
-#hud-pin:hover,#hud-pin.on{color:#fff}
-
-/* Bottom bar — inline assistant */
+/* Assistant bar — above channel rail */
 #bot-bar{
-  position:absolute;bottom:0;left:56px;right:0;
-  background:linear-gradient(to top,rgba(0,0,0,.85) 60%,transparent);
-  padding:12px 20px 16px;display:flex;flex-direction:column;gap:8px;
+  display:flex;flex-direction:column;gap:8px;
+  background:rgba(6,6,16,.88);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:12px 14px;
+  backdrop-filter:blur(16px);width:100%;
 }
 #assistant-row{display:flex;gap:8px;align-items:center}
 #assistant-in{
   flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
   border-radius:8px;color:#e0e8ff;font-family:'Space Grotesk',sans-serif;font-size:13px;
-  padding:10px 14px;outline:none;transition:all .2s;
+  padding:9px 13px;outline:none;transition:all .2s;
 }
 #assistant-in::placeholder{color:rgba(255,255,255,.2)}
 #assistant-in:focus{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
 #send-btn{
-  padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.08);color:#e0e8ff;font-family:'Space Mono',monospace;
-  font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap;
+  padding:9px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);color:#e0e8ff;font-family:'Space Mono',monospace;
+  font-size:10px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;
 }
-#send-btn:hover{background:rgba(255,255,255,.16)}
-#ticker-line{
-  font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2);
-  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;letter-spacing:.05em;
-}
+#send-btn:hover{background:rgba(255,255,255,.14)}
 #assistant-out{
   font-family:'Space Mono',monospace;font-size:11px;color:rgba(200,220,210,.8);
-  background:rgba(0,0,0,.4);border-radius:6px;padding:10px 12px;
-  max-height:120px;overflow-y:auto;white-space:pre-wrap;line-height:1.5;
+  background:rgba(0,0,0,.3);border-radius:6px;padding:9px 11px;
+  max-height:100px;overflow-y:auto;white-space:pre-wrap;line-height:1.5;
   display:none;border:1px solid rgba(255,255,255,.06);
 }
+#ticker-line{
+  font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2);
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;letter-spacing:.04em;
+}
+
+/* System status bar — above assistant */
+#sys-bar{
+  display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;
+}
+.spill{display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.07em;text-transform:uppercase}
+.spill-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:all .4s}
+.spill-dot.on{background:#00ff88;animation:dot-live 2.5s ease-in-out infinite}
+.spill-dot.err{background:#ff3355}
+
+/* Rewind button — inside menu overlay, above rail */
+#rewind-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:20px;
+  background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.18);
+  color:rgba(0,229,255,.75);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;
+}
+#rewind-btn:hover{background:rgba(0,229,255,.14);border-color:rgba(0,229,255,.35);color:#00e5ff}
+
+/* top-bar — only shows when menu open, top of screen */
+#top-bar{
+  position:fixed;top:0;left:0;right:0;height:44px;z-index:90;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;padding:0 18px;gap:12px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;
+}
+#top-bar.open{opacity:1}
+#ch-name{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.15em;color:#fff}
+#ch-accent{font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);margin-left:4px}
 
 /* ── CHANNEL STYLES ── */
 
@@ -327,19 +370,6 @@ select option{background:#111}
 #rw-status.ok{color:#00ff88}
 #rw-status.err{color:#ff3355}
 #rw-status.working{color:#ffaa00}
-
-  position:fixed;top:16px;right:16px;z-index:100;
-  display:flex;align-items:center;gap:8px;
-  padding:9px 14px;
-  background:rgba(0,0,0,.6);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:24px;
-  color:rgba(255,255,255,.7);
-  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.1em;
-  cursor:pointer;
-  backdrop-filter:blur(12px);
-  transition:all .2s;
-  pointer-events:auto;
 }
 #menu-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff}
 #menu-btn.open{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff}
@@ -482,37 +512,49 @@ select option{background:#111}
   </div>
 </div>
 
-<!-- Floating menu button — always on top, always clickable, never blocks content -->
-<button id="menu-btn" onclick="toggleMenu()" title="Menu (M)">
-  <span id="menu-icon">⬡</span>
-  <span id="menu-label">NEXUS</span>
-</button>
+<!-- Top bar — channel name, visible when menu open -->
+<div id="top-bar">
+  <span id="ch-name">NEXUS</span>
+  <span id="ch-accent">v0.6.3</span>
+</div>
 
-<!-- HUD — pointer-events:none on container, only specific children are interactive -->
+<!-- HUD shell — pointer-events:none, never blocks channel content -->
 <div id="hud">
-  <!-- Left rail: channel switcher -->
-  <div id="ch-rail">
-    <div class="ch-btn on" id="rail-0" onclick="tune(0)" title="Overview"><span>⬡</span><span class="ch-num">01</span><span class="ch-dot" id="rd-0"></span></div>
-    <div class="ch-btn" id="rail-1" onclick="tune(1)" title="Guardian"><span>⚡</span><span class="ch-num">02</span><span class="ch-dot" id="rd-1"></span></div>
-    <div class="ch-btn" id="rail-2" onclick="tune(2)" title="Cortex"><span>◈</span><span class="ch-num">03</span><span class="ch-dot" id="rd-2"></span></div>
-    <div class="ch-btn" id="rail-3" onclick="tune(3)" title="Idearium"><span>◐</span><span class="ch-num">04</span><span class="ch-dot" id="rd-3"></span></div>
-    <div class="ch-btn" id="rail-4" onclick="tune(4)" title="Bridge"><span>⟁</span><span class="ch-num">05</span><span class="ch-dot" id="rd-4"></span></div>
-    <div class="ch-btn" id="rail-5" onclick="tune(5)" title="Log"><span>≡</span><span class="ch-num">06</span></div>
-    <div class="ch-btn" id="rail-6" onclick="tune(6)" title="Diagnose"><span>⊕</span><span class="ch-num">07</span></div>
-  </div>
 
-  <!-- Top bar -->
-  <div id="top-bar">
-    <span id="ch-name">NEXUS</span>
-    <span id="ch-accent">v0.6.3</span>
-    <div id="sys-pills">
+  <!-- Menu overlay — rises from bottom when open -->
+  <div id="menu-overlay">
+
+    <!-- System status row -->
+    <div id="sys-bar">
       <div class="spill"><span class="spill-dot" id="sd-orch"></span>ORCH</div>
       <div class="spill"><span class="spill-dot" id="sd-cx"></span>CX</div>
       <div class="spill"><span class="spill-dot" id="sd-gd"></span>GD</div>
       <div class="spill"><span class="spill-dot" id="sd-idr"></span>IDR</div>
       <div class="spill"><span class="spill-dot" id="sd-br"></span>BR</div>
+      <button id="rewind-btn" onclick="openRewind()">⟲ REWIND</button>
     </div>
-    <button id="rewind-btn" onclick="openRewind()" title="Rewind system state (R)">⟲ REWIND</button>
+
+    <!-- Assistant -->
+    <div id="bot-bar">
+      <div id="assistant-out"></div>
+      <div id="assistant-row">
+        <input id="assistant-in" placeholder="Ask NEXUS anything... or type a command" onkeydown="if(event.key==='Enter')asSend()">
+        <button id="send-btn" onclick="asSend()">→</button>
+      </div>
+      <div id="ticker-line">NEXUS v0.6.3 · sovereign cognitive OS · waiting for systems...</div>
+    </div>
+
+    <!-- Channel rail -->
+    <div id="ch-rail">
+      <button class="ch-btn on" id="rail-0" onclick="tune(0)"><span class="ch-dot" id="rd-0"></span>⬡ Overview</button>
+      <button class="ch-btn" id="rail-1" onclick="tune(1)"><span class="ch-dot" id="rd-1"></span>⚡ Guardian</button>
+      <button class="ch-btn" id="rail-2" onclick="tune(2)"><span class="ch-dot" id="rd-2"></span>◈ Cortex</button>
+      <button class="ch-btn" id="rail-3" onclick="tune(3)"><span class="ch-dot" id="rd-3"></span>◐ Idearium</button>
+      <button class="ch-btn" id="rail-4" onclick="tune(4)"><span class="ch-dot" id="rd-4"></span>⟁ Bridge</button>
+      <button class="ch-btn" id="rail-5" onclick="tune(5)"><span class="ch-dot"></span>≡ Log</button>
+      <button class="ch-btn" id="rail-6" onclick="tune(6)"><span class="ch-dot"></span>⊕ Diagnose</button>
+    </div>
+
   </div>
 
   <!-- ── REWIND OVERLAY — full meta layer ── -->
@@ -528,22 +570,16 @@ select option{background:#111}
           <button id="rw-close" onclick="closeRewind()">✕</button>
         </div>
       </div>
-
-      <!-- Timeline canvas -->
       <div id="rw-timeline-wrap">
         <canvas id="rw-canvas"></canvas>
         <div id="rw-hover-tip"></div>
       </div>
-
-      <!-- Legend -->
       <div id="rw-legend">
         <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#00ff88"></span>Low sigma — stable</div>
         <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#ffaa00"></span>Mid sigma — elevated</div>
         <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#ff3355"></span>High sigma — critical</div>
         <div class="rw-leg-item"><span style="font-family:'Space Mono',monospace;font-size:10px;margin-right:5px">↕</span>Delta magnitude</div>
       </div>
-
-      <!-- Snapshot detail + confirm -->
       <div id="rw-detail">
         <div id="rw-detail-inner">
           <div id="rw-detail-empty">← Hover a snapshot to preview · Click to select</div>
@@ -568,22 +604,18 @@ select option{background:#111}
           </div>
         </div>
       </div>
-
-      <!-- Status bar -->
       <div id="rw-status"></div>
     </div>
   </div>
 
-  <!-- Bottom: inline assistant + ticker -->
-  <div id="bot-bar">
-    <div id="assistant-out"></div>
-    <div id="assistant-row">
-      <input id="assistant-in" placeholder="Ask NEXUS anything... or type a command" onkeydown="if(event.key==='Enter')asSend()">
-      <button id="send-btn" onclick="asSend()">→ Send</button>
-    </div>
-    <div id="ticker-line">NEXUS v0.6.3 · sovereign cognitive OS · waiting for systems...</div>
-  </div>
 </div>
+
+<!-- Floating menu button — bottom center, always clickable -->
+<button id="menu-btn" onclick="toggleMenu()">
+  <span id="menu-icon">⬡</span>
+  <span id="menu-label">NEXUS</span>
+</button>
+
 
 <script>
 'use strict';
@@ -647,24 +679,23 @@ let curCh = 0;
 let menuOpen = false;
 function toggleMenu() {
   menuOpen = !menuOpen;
-  document.getElementById('hud').classList.toggle('menu-open', menuOpen);
+  document.getElementById('menu-overlay').classList.toggle('open', menuOpen);
   document.getElementById('menu-btn').classList.toggle('open', menuOpen);
+  document.getElementById('top-bar').classList.toggle('open', menuOpen);
 }
 // Close on outside click
 document.addEventListener('click', e => {
-  if (menuOpen && !e.target.closest('#hud') && !e.target.closest('#menu-btn')) toggleMenu();
+  if (menuOpen && !e.target.closest('#menu-overlay') && !e.target.closest('#menu-btn')) toggleMenu();
 });
 
 // ── Channel tuner ─────────────────────────────────────────────────────────────
 function tune(n) {
   if (menuOpen) toggleMenu();
-  if (n === curCh && n !== 0) return;
   document.querySelectorAll('.ch').forEach(c => c.classList.remove('active'));
   document.getElementById(CH_META[n].id).classList.add('active');
   document.querySelectorAll('.ch-btn').forEach((b,i) => b.classList.toggle('on', i === n));
   document.getElementById('ch-name').textContent = CH_META[n].name;
   document.getElementById('ch-accent').textContent = CH_META[n].accent;
-  // Update floating button label
   document.getElementById('menu-label').textContent = CH_META[n].name;
   curCh = n;
   if (n === 1) { gdLoadJobs(); gdLoadProvs(); }
