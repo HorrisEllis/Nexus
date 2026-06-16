@@ -1654,7 +1654,7 @@ bus.register(new SISOGate('ncp.stream.chunk', (chunk) => {
   }
 }));
 
-
+bus.register(new SISOGate('guardian.artifact', (data) => {
   const ts = Date.now();
   const hash = data.hash || '';
   const existing = jaa.get('artifacts', { hash });
