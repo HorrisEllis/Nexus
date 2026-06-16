@@ -1,0 +1,18 @@
+{
+  "name": "spec-compiler",
+  "version": "1.1.0",
+  "description": "Compress intent. Decompress deterministically. Pay tokens once.",
+  "type": "commonjs",
+  "main": "compiler/pipeline.js",
+  "scripts": {
+    "compile": "node compiler/pipeline.js",
+    "verify":  "node verify.js",
+    "test":    "node test/propagation.test.js && node test/kg.test.js && node test/tier-contract.test.js && node test/invariants.test.js && node test/gap-field.test.js && node test/reply-engine.test.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -480,7 +480,7 @@ const SYSTEM_LOCAL_UI_DIRS = [
   { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
   { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
   { system:'nexus',        dir: path.join(ROOT,'ui') },
-  { system:'emerge',       dir: path.join(ROOT,'emerge','ui') },
+  { system:'emerge',       dir: path.join(ROOT,'ui') },        // emerge IDE ui lives at root ui/
   { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
   { system:'explorer',     dir: path.join(ROOT,'ui') },  // contract-explorer + contract-renderer
   { system:'diagnostic',   dir: path.join(ROOT,'ui','diagnostic') },  // §HOTSWAP-03
@@ -922,7 +922,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
       // Compiler availability check
       let compilerAvailable = false;
       try {
-        const p = require('path').join(__dirname, 'cockpit', 'spec-compiler', 'compiler', 'pipeline.js');
+        const p = require('path').join(__dirname, 'emerge', 'compiler', 'pipeline.js');
         require('fs').accessSync(p);
         compilerAvailable = true;
       } catch(_) {}
@@ -946,7 +946,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
         fs.writeFileSync(tmpFile, content);
 
         // Try spec-compiler CLI
-        const compilerCli = path.join(__dirname, 'cockpit', 'spec-compiler', 'cli.js');
+        const compilerCli = path.join(__dirname, 'emerge', 'cli.js');
         let result;
         if (fs.existsSync(compilerCli)) {
           try {

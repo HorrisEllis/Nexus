@@ -785,32 +785,38 @@ async function diagIdearium() {
 
 async function diagEmerge() {
   console.log(hdr('emerge', C.green));
-  console.log(info('Emerge IDE — .eg language compiler, Ollama LSP, SNR analysis'));
-  console.log(info('Port :4242  depends on emerge-kernel.js + emerge.spec\n'));
+  console.log(info('Emerge — spec-compiler (T0+T1 pipeline), Ollama LSP, SNR analysis'));
+  console.log(info('Port :4242  depends on emerge-ide.js + emerge-kernel.js\n'));
 
   const checks = [
-    ['file: emerge-ide.js',                () => fileExists('emerge-ide.js')],
-    ['file: emerge-kernel.js',             () => fileExists('emerge-kernel.js')],
-    ['file: emerge.spec',                  () => fileExists('emerge.spec')],
-    ['file: emerge/siso.js',               () => fileExists('emerge/siso.js')],
-    ['file: emerge/ollama-runtime.js',     () => fileExists('emerge/ollama-runtime.js')],
-    ['emerge.spec: valid (parseable)',     () => {
+    ['file: emerge-ide.js',                    () => fileExists('emerge-ide.js')],
+    ['file: emerge-kernel.js',                 () => fileExists('emerge-kernel.js')],
+    ['file: emerge.spec',                      () => fileExists('emerge.spec')],
+    ['file: emerge/compiler/index.js',         () => fileExists('emerge/compiler/index.js')],
+    ['file: emerge/compiler/pipeline.js',      () => fileExists('emerge/compiler/pipeline.js')],
+    ['file: emerge/siso/index.js',             () => fileExists('emerge/siso/index.js')],
+    ['file: emerge/version.js',                () => fileExists('emerge/version.js')],
+    ['emerge.spec: valid (parseable)',         () => {
       const specPath = path.join(ROOT,'emerge.spec');
       if (!fs.existsSync(specPath)) return false;
       const src = fs.readFileSync(specPath,'utf8');
       return src.length > 100 && src.includes('emerge');
     }],
-    ['syntax: emerge-ide.js',             () => {
+    ['syntax: emerge-ide.js',                 () => {
       const r = spawnSync('node',['--check','emerge-ide.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
       return r.status === 0;
     }],
-    ['syntax: emerge-kernel.js',          () => {
+    ['syntax: emerge-kernel.js',              () => {
       const r = spawnSync('node',['--check','emerge-kernel.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
       return r.status === 0;
     }],
-    ['kernel: loads spec without crash',   () => {
+    ['syntax: emerge/compiler/index.js',      () => {
+      const r = spawnSync('node',['--check','emerge/compiler/index.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
+      return r.status === 0;
+    }],
+    ['kernel: loads spec without crash',       () => {
       const r = spawnSync('node',['-e',`
-        const k=require('../emerge/emerge-kernel.js');
+        const k=require('./emerge-kernel.js');
         const spec=['emerge.spec'].find(p=>require('fs').existsSync(p));
         if(spec){k.loadSpec(spec);console.log('kw:'+k.SCHEMA.keywords.size);}
       `], {cwd:ROOT, encoding:'utf8', timeout:8000});
