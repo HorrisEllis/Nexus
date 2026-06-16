@@ -134,60 +134,47 @@ function reduceFriction(faultClass, delta = 0.15, reason = 'successful_fix') {
 // ── Escalation log ────────────────────────────────────────────────────────────
 function logEscalation(gap, level, result) {
   const record = {
-    uuid:       uid(),
-    gapUuid:    gap.uuid,
-    gapType:    gap.type,
-    gapPath:    gap.path,
-    faultClass: gap.type,
-    level,
-    outcome:    result.outcome,
-    strategy:   result.strategy,
-    action:     result.action || null,
-    verified:   result.verified || false,
-    friction:   getFriction(gap.type),
-    reason:     result.reason || null,
-    note:       result.note || null,
-    source:     MODULE_ID,
-    causedBy:   gap.uuid,
-    ts:         Date.now(),
+    uuid:      uid(),
+    type:     `escalation.level_${level}`,
+    payload: {
+      gapUuid:    gap.uuid,
+      gapType:    gap.type,
+      gapPath:    gap.path,
+      faultClass: gap.type,
+      level,
+      result:     result.outcome,
+      strategy:   result.strategy,
+      friction:   getFriction(gap.type),
+      reason:     result.reason,
+    },
+    source:    MODULE_ID,
+    causedBy:  gap.uuid,
+    ts:        Date.now(),
   };
-  // §LAW II: write to escalation_log (dedicated table) for history queries
-  jaaDB.insert('escalation_log', record);
-  // Also write to event_log for SSE/stream observability
-  jaaDB.insert('event_log', {
-    uuid:    uid(),
-    type:   `escalation.level_${level}`,
-    payload: record,
-    source:  MODULE_ID,
-    causedBy:gap.uuid,
-    ts:      record.ts,
-  });
+  jaaDB.insert('event_log', record);
   return record;
 }
 
 // ── Level 0: Known fix from history ──────────────────────────────────────────
 async function level0_knownFix(gap) {
-  // Query escalation_log for prior successful safe fixes on this fault class.
-  // A 'resolved' outcome at level 1 with a verified=true result is a known good fix.
-  const history = jaaDB.query('escalation_log',
-    r => r.faultClass === gap.type && r.level === 1 && r.outcome === 'resolved' && r.verified === true,
-    5
+  // Look for previously successful fixes for this fault class
+  const history = jaaDB.query('forge_patches',
+    r => r.faultClass === gap.type && r.status === 'verified' && r.successRate > 0.5,
+    1
   );
 
   if (!history.length) {
-    return { outcome: 'skip', reason: 'no verified prior fix for this fault class', strategy: 'escalate' };
+    return { outcome: 'skip', reason: 'no known successful fix for this fault class', strategy: 'escalate' };
   }
 
-  // Most recent successful fix
-  const known = history.sort((a, b) => b.ts - a.ts)[0];
-  console.log(`[${MODULE_ID}] level 0: known fix found for ${gap.type} — strategy: ${known.strategy} (verified ${new Date(known.ts).toLocaleString()})`);
+  const known = history[0];
+  console.log(`[${MODULE_ID}] level 0: known fix found for ${gap.type} (success rate: ${known.successRate})`);
 
   return {
     outcome:  'attempted',
-    strategy: known.strategy || 'safe_fix',
-    action:   known.action,
-    note:     `Replaying verified fix from ${new Date(known.ts).toLocaleString()}`,
-    fromLog:  known.uuid,
+    strategy: 'known_fix_replay',
+    patchRef: known.uuid,
+    note:     `Replaying fix from ${new Date(known.ts).toLocaleString()}`,
   };
 }
 
@@ -391,17 +378,9 @@ async function escalate(gap) {
     history.push({ level: 1, result: r1, ts: Date.now() });
     logEscalation(gap, 1, r1);
 
-    if (r1.outcome === 'resolved') {
-      // §1.1 — explicit success: friction reduced, gap closed in JAA
-      reduceFriction(faultClass, 0.20, 'safe_fix_verified');
-      jaaDB.update('gaps', gap.uuid, { status: 'resolved', resolvedAt: Date.now(), fixStrategy: 'safe_fix_restart' });
-      return { resolved: true, level: 1, ...r1 };
-    }
-
     if (r1.outcome === 'attempted') {
-      // Restart fired but health unverified — add friction, fall through to forge
-      addFriction(faultClass, FRICTION_COST[1], 'safe_fix_applied_unverified', { r1 });
-      // Do NOT return — fall through to level 2
+      addFriction(faultClass, FRICTION_COST[1], 'safe_fix_applied', { r1 });
+      return { resolved: 'pending', level: 1, ...r1 };
     }
   }
 
@@ -420,20 +399,7 @@ async function escalate(gap) {
     history.push({ level: 3, result: r3, ts: Date.now() });
     logEscalation(gap, 3, r3);
     addFriction(faultClass, FRICTION_COST[3], 'deep_scan_run', { engineResults: r3.engineResults });
-    // Fall through to agent consult — automated strategies exhausted
-  }
-
-  // ── Level 3.5: agent consult ──────────────────────────────────────────────
-  if (friction < FRICTION.FAILURE_MODE) {
-    const r35 = await level3_5_agentConsult(gap);
-    history.push({ level: 3.5, result: r35, ts: Date.now() });
-    logEscalation(gap, 3.5, r35);
-
-    if (r35.outcome === 'agent_consulted') {
-      // Agent dispatched — hold, do not enter failure mode yet
-      return { resolved: 'pending_agent', level: 3.5, ...r35 };
-    }
-    // agent_failed → fall through to failure mode
+    return { resolved: 'scanned', level: 3, ...r3 };
   }
 
   // ── Level 4: failure mode ─────────────────────────────────────────────────
@@ -444,103 +410,11 @@ async function escalate(gap) {
   return { resolved: false, level: 4, ...r4 };
 }
 
-// ── Level 3.5: Agent consult ──────────────────────────────────────────────────
-const { execSync } = require('child_process');
-
-async function level3_5_agentConsult(gap) {
-  const http           = require('http');
-  const GUARDIAN_PORT  = process.env.GUARDIAN_HTTP_PORT || 7820;
-  const AGENT_OPEN_URL = process.env.NEXUS_AGENT_URL || `http://localhost:${GUARDIAN_PORT}/ui`;
-
-  const prompt = [
-    `NEXUS self-heal: escalation wall reached.`,
-    `Gap type:     ${gap.type}`,
-    `Path:         ${gap.path}`,
-    `Body:         ${gap.body}`,
-    `Friction:     ${getFriction(gap.type).toFixed(2)}`,
-    ``,
-    `Automated strategies (restart, deep scan) have not resolved this gap.`,
-    `Diagnose the root cause and propose a minimal targeted fix.`,
-    `Respond with: DIAGNOSIS: <one sentence> | FIX: <concrete action>`,
-  ].join('\n');
-
-  async function _tryAgent() {
-    return new Promise(resolve => {
-      const body = JSON.stringify({
-        command: 'forge_repair', provider: 'claude', prompt, priority: 'high',
-        meta: { type: 'escalation.agent_consult', gapType: gap.type, gapPath: gap.path },
-      });
-      const req = http.request({
-        hostname: '127.0.0.1', port: GUARDIAN_PORT,
-        path: '/command', method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
-        timeout: 8000,
-      }, res => {
-        let b = ''; res.on('data', c => b += c);
-        res.on('end', () => {
-          req.destroy();
-          try { resolve({ ok: res.statusCode < 400, data: JSON.parse(b) }); }
-          catch (_) { resolve({ ok: res.statusCode < 400 }); }
-        });
-      });
-      req.on('timeout', () => { req.destroy(); resolve({ ok: false, reason: 'timeout' }); });
-      req.on('error',   e  => resolve({ ok: false, reason: e.message }));
-      req.write(body); req.end();
-    });
-  }
-
-  console.log(`[${MODULE_ID}] level 3.5: consulting agent at http://127.0.0.1:${GUARDIAN_PORT}`);
-  let result = await _tryAgent();
-
-  if (!result.ok) {
-    console.warn(`[${MODULE_ID}] level 3.5: agent unreachable (${result.reason}) — opening ${AGENT_OPEN_URL} and retrying in 5s`);
-    jaaDB.insert('event_log', {
-      uuid: uid(), type: 'escalation.agent_unreachable',
-      payload: { gapUuid: gap.uuid, reason: result.reason, url: AGENT_OPEN_URL },
-      source: MODULE_ID, causedBy: gap.uuid, ts: Date.now(),
-    });
-
-    try {
-      const open = process.platform === 'win32' ? `start "" "${AGENT_OPEN_URL}"` :
-                   process.platform === 'darwin' ? `open "${AGENT_OPEN_URL}"` :
-                   `xdg-open "${AGENT_OPEN_URL}"`;
-      execSync(open, { timeout: 3000 });
-    } catch (e) {
-      console.warn(`[${MODULE_ID}] level 3.5: could not open URL — ${e.message}`);
-    }
-
-    await new Promise(r => setTimeout(r, 5000));
-    console.log(`[${MODULE_ID}] level 3.5: retrying agent`);
-    result = await _tryAgent();
-  }
-
-  if (result.ok) {
-    const jobId = result.data?.jobId;
-    console.log(`[${MODULE_ID}] level 3.5: ✓ agent consulted — job ${jobId || 'dispatched'}`);
-    jaaDB.insert('event_log', {
-      uuid: uid(), type: 'escalation.agent_consulted',
-      payload: { gapUuid: gap.uuid, jobId, gapType: gap.type },
-      source: MODULE_ID, causedBy: gap.uuid, ts: Date.now(),
-    });
-    return { outcome: 'agent_consulted', strategy: 'agent_consult', jobId,
-             note: `Agent dispatched for diagnosis. Job: ${jobId || 'unknown'}.` };
-  }
-
-  console.error(`[${MODULE_ID}] level 3.5: ✗ agent still unreachable after retry — proceeding to failure mode`);
-  jaaDB.insert('event_log', {
-    uuid: uid(), type: 'escalation.agent_consult_failed',
-    payload: { gapUuid: gap.uuid, gapType: gap.type, reason: result.reason },
-    source: MODULE_ID, causedBy: gap.uuid, ts: Date.now(),
-  });
-  return { outcome: 'agent_failed', strategy: 'agent_consult',
-           note: 'Agent unreachable after URL open + retry. Proceeding to failure mode.' };
-}
-
 module.exports = {
   escalate,
   getFriction, addFriction, reduceFriction,
   level0_knownFix, level1_safeFix, level2_snapshotAndForge,
-  level3_deepScan, level3_5_agentConsult, level4_failureMode,
+  level3_deepScan, level4_failureMode,
   FRICTION, FRICTION_COST,
   MODULE_ID, VERSION,
 };

@@ -127,6 +127,8 @@ const TABLE_TIERS = {
   chat_log:            'short',  // all AI exchanges for context reinjection
   escalation_log:      'long',   // full history of every escalation attempt
   components:          'long',   // component registry — self-describing kernel
+  snapshots:           'long',   // replay engine — state before every decision
+  decision_log:        'long',   // replay engine — every choice, input, output, outcome
 };
 
 // ── All declared tables ───────────────────────────────────────────────────────

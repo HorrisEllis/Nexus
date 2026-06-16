@@ -339,10 +339,9 @@ async function _tick() {
         }
 
         jaaDB.update('gaps', gap.uuid, {
-          status:      applyResult.applied ? 'resolved' : 'forge_patch_ready',
+          status: applyResult.applied ? 'forge_applied' : 'forge_patch_ready',
           fixStrategy: 'self_heal',
-          resolvedAt:  applyResult.applied ? Date.now() : null,
-          applyNote:   applyResult.reason || null,
+          resolvedAt: applyResult.applied ? Date.now() : null,
         });
 
         jaaDB.insert('event_log', {

@@ -192,25 +192,6 @@ function _prescribe(gap) {
     case 'deviation':
       return { strategy: 'log_and_observe', action: `alert on ${gap.path}`, automated: false };
 
-    // ── Self-repair artifact gaps (v5.1) ─────────────────────────────────
-    // These come from gap-finder scanning the repair pipeline itself.
-
-    case 'stalled_patch':
-      // A forge patch was generated but never applied. Escalate for human review.
-      return { strategy: 'human_review', action: `review stalled patch for ${gap.meta?.module || gap.path}`, automated: false, escalate: true };
-
-    case 'unresolved_fix':
-      // A fix_map entry stuck at manual_required — re-escalate to forge
-      return { strategy: 'forge_patch', action: `re-attempt fix for ${gap.path}`, automated: false, escalate: true };
-
-    case 'high_friction_fault':
-      // Fault class near failure mode — snapshot + deep scan before it tips over
-      return { strategy: 'snapshot_then_forge', action: `pre-emptive snapshot + deep scan for ${gap.meta?.faultClass || gap.path}`, automated: false, escalate: true };
-
-    case 'failure_mode_active':
-      // Already in failure mode — surface as human action item, do not auto-attempt
-      return { strategy: 'human_required', action: gap.meta?.humanAction || `manual intervention for ${gap.path}`, automated: false, escalate: false };
-
     case 'DELTA.TENSION':
     case 'delta.tension':
     case 'tension':
