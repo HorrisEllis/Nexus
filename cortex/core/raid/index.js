@@ -297,6 +297,64 @@ async function _brainTick() {
 async function _dispatch(call, decision) {
   const t0 = Date.now();
 
+  // ── Intelligence Bridge — query before routing ───────────────────────────
+  let _evidence = { weight: 0, recommendation: null };
+  try {
+    const ib = require('./intelligence-bridge');
+    _evidence = ib.queryBefore({
+      cluster:    decision.cluster,
+      faultClass: call.faultClass || null,
+      intent:     call.intent || call.prompt || '',
+      jobId:      call.uuid,
+    });
+    // If intelligence strongly recommends a provider and confidence is high,
+    // nudge the decision (never override — advisory only)
+    if (_evidence.recommendation && _evidence.weight > 0.6) {
+      call._intelligenceRecommendation = _evidence.recommendation;
+      call._intelligenceWeight         = _evidence.weight;
+    }
+  } catch(e) {
+    console.warn('[raid/intelligence] query failed:', e.message);
+  }
+
+  // ── SNR Filter — invariants first, patterns second, AI last ──────────────
+  // Tokens ∝ unresolved meaning. Only genuine unknowns reach AI.
+  try {
+    const snr = require('./snr-filter');
+    const filterResult = snr.filter({
+      intent:     call.intent || call.prompt || '',
+      cluster:    decision.cluster,
+      faultClass: call.faultClass || null,
+      jobId:      call.uuid,
+    });
+
+    if (!filterResult.dispatch) {
+      // Resolved locally — zero tokens
+      const ms = Date.now() - t0;
+      // Feed outcome back to intelligence layer
+      try {
+        const ib = require('./intelligence-bridge');
+        ib.feedOutcome(call, decision, { ok:true, provider:'local', durationMs:ms });
+      } catch(_) {}
+      jaaDB.insert('event_log', {
+        uuid: uid(), type: 'raid.resolved_locally',
+        payload: { cluster: decision.cluster, type: filterResult.type,
+                   reason: filterResult.reason, snr: filterResult.snr, ms },
+        source: 'raid-snr-filter', causedBy: call.uuid, ts: Date.now(),
+      });
+      console.log(`[raid/snr] resolved locally: ${filterResult.reason}`);
+      return { ok: true, agent: 'local', result: filterResult.result,
+               tokens: 0, snr: filterResult.snr, ms };
+    }
+
+    // If open loop flagged — inject context into call
+    if (filterResult.type === 'open_loop' && filterResult.injectContext) {
+      call._snrContext = filterResult.flag;
+    }
+  } catch(e) {
+    console.warn('[raid/snr] filter failed (continuing to dispatch):', e.message);
+  }
+
   // ESS path
   if (_ess?.hasRole(decision.agent)) {
     const r = await _ess.callto(decision.agent, call);

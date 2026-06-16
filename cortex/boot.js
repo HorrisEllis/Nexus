@@ -267,6 +267,7 @@ async function bootAsync() {
         { name: 'raid',         path: './core/raid/index'   },
         { name: 'heartbeat',    path: './heartbeat/index'   },
         { name: 'behavioral-boundary', path: './behavioral-boundary/index' },
+        { name: 'liminal-space',        path: './liminal-space/index'        },
       ];
 
       const pollMs = parseInt(process.env.CORTEX_ORGAN_MS || '15000');

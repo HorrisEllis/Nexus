@@ -1,0 +1,80 @@
+guide:
+  meta:
+    name:     tutorial-build-first-spec
+    version:  1.0.0
+    audience: [new-user, operator]
+    purpose: >
+      Walk through building your first spec using the wizard,
+      sending it to Idearium, and watching it land as a pending project.
+      End to end. No shortcuts.
+
+  steps:
+
+    - id: 1
+      title: "Boot the system"
+      action: "node orchestrator.js"
+      watch_for: "6/6 systems online"
+
+    - id: 2
+      title: "Open the building wizard"
+      action: "http://127.0.0.1:9000 → click BUILD"
+      what_you_see: "11-dimension spec wizard. One question at a time."
+
+    - id: 3
+      title: "Fill the wizard"
+      dimensions:
+        1:  "Name — what is it?"
+        2:  "Intent — what does it do?"
+        3:  "Axioms — which rules apply?"
+        4:  "Constraints — any hard limits?"
+        5:  "Modules — what does it need?"
+        6:  "Edges — how do modules connect?"
+        7:  "Gaps — what don't you know yet?"
+        8:  "Tiers — T0/T1/T2 split"
+        9:  "Events — what does it emit?"
+        10: "Schemas — data shapes"
+        11: "Tests — what must pass before shipping?"
+
+    - id: 4
+      title: "Click BUILD NOW"
+      what_happens: >
+        T0/T1 scaffold generated deterministically — zero tokens.
+        T2 gaps sent to Ollama (qwen2.5-coder:1.5b).
+        Artifacts stored in JAA.
+
+    - id: 5
+      title: "Spec sent to Idearium automatically"
+      what_happens: >
+        Spec compiled → sent to Idearium → tagged phase: pending.
+        UI navigates to Idearium channel automatically.
+
+    - id: 6
+      title: "Idearium — your project lands"
+      what_you_see: >
+        Project appears in board. Phase: pending.
+        Spec attached. Artifacts listed. Gaps linked.
+
+    - id: 7
+      title: "Use it from the CLI"
+      action: "node cli/nexus-cli.js"
+      commands:
+        - "Tab to find your new commands"
+        - "notes write --key first --value hello"
+        - "notes list"
+        - "notes read --key first"
+
+    - id: 8
+      title: "Watch the system learn"
+      commands:
+        - "gaps"
+        - "search --q notes"
+      what_you_see: >
+        Memory semantically indexed. Patterns crystallise over time.
+        Intelligence layer logs: pattern crystallised.
+
+    - id: 9
+      title: "Full loop complete"
+      summary: >
+        Wizard → spec → scaffold → Ollama fills gaps →
+        Idearium receives → CLI commands appear →
+        Memory indexes → system learns your patterns.
