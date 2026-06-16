@@ -256,12 +256,13 @@ async function bootAsync() {
   // SOFT — any one failing degrades but never blocks boot.
   // §3.1 wiring: Alexander's audit + forensic audit both confirmed this gap.
   seq.phase({ name:'organs.init', type:'SOFT',
-    label:'Operational intelligence organs (gap-finder, healer, self-heal, orion, raid, heartbeat)',
+    label:'Operational intelligence organs (gap-finder, healer, self-heal, gap-loop, orion, raid, heartbeat)',
     fn: async () => {
       const organs = [
         { name: 'gap-finder',   path: './gate/gap-finder'   },
         { name: 'healer',       path: './healer/index'      },
         { name: 'self-heal',    path: './self-heal/index'   },
+        { name: 'gap-loop',     path: './gap-loop'          },
         { name: 'orion/sensor', path: './orion/sensor'      },
         { name: 'orion/policy', path: './orion/policy'      },
         { name: 'raid',         path: './core/raid/index'   },
