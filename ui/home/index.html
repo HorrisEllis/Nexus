@@ -748,7 +748,7 @@ async function loadMetrics() {
     if (orch.uptimeMs) { const h=Math.floor(orch.uptimeMs/3600000),m=Math.floor((orch.uptimeMs%3600000)/60000); document.getElementById('tm-uptime').textContent = h ? `${h}h` : `${m}m`; }
   }
   const gd = await get(`${B.gd}/health`);
-  if (gd) { document.getElementById('tm-jobs').textContent = gd.jobs ?? '—'; document.getElementById('tm-provs').textContent = gd.providers ?? Object.keys(gd.connected||{}).length || '—'; }
+  if (gd) { document.getElementById('tm-jobs').textContent = gd.jobs ?? '—'; document.getElementById('tm-provs').textContent = (gd.providers ?? Object.keys(gd.connected||{}).length) || '—'; }
   const gaps = await get(`${B.cx}/api/gaps?status=open`);
   if (Array.isArray(gaps)) document.getElementById('tm-gaps').textContent = gaps.length;
   const idr = await get(`${B.idr}/api/stats`);
