@@ -839,29 +839,32 @@ const ncp = createNCPServer({
 // ── Stream token accumulator — listens for ncp.stream.chunk events ───────────
 // NCP handleStream fires busEmit('ncp.stream.chunk', ...) on every token.
 // Guardian picks it up here and accumulates into the job buffer + broadcasts.
-bus.on('ncp.stream.chunk', (chunk) => {
-  const { jobId, token, done, seq, provider } = chunk;
-  const job = jobs.get(jobId);
-  if (!job) return;
-  if (!job._streamBuffer) job._streamBuffer = '';
-  job._streamBuffer += token;
-  job._streamSeq  = seq;
-  job.status      = done ? 'complete' : 'streaming';
-  cockpitBroadcast({ type:'STREAM_TOKEN', jobId, token, done, seq, provider, ts: Date.now() });
-  if (done) {
-    job.result = job._streamBuffer;
-    job.doneAt = Date.now();
-    jaa.insert('artifacts', {
-      uuid: require('crypto').randomUUID(), jobId, provider,
-      content: job._streamBuffer, streamTokens: seq, ts: Date.now(),
-    });
-    _postEvent('guardian.job.complete', { jobId, provider, streaming:true, tokenCount:seq });
-    try {
-      const cl = require('../lib/chat-logger');
-      cl.log({ role:'assistant', content:job._streamBuffer, provider, outcome:'complete',
-        jobId, meta:{ streaming:true, tokens:seq } }).catch(()=>{});
-    } catch(_) {}
-  }
+// setImmediate defers registration until after bus is declared (line ~1466).
+setImmediate(() => {
+  bus.on('ncp.stream.chunk', (chunk) => {
+    const { jobId, token, done, seq, provider } = chunk;
+    const job = jobs.get(jobId);
+    if (!job) return;
+    if (!job._streamBuffer) job._streamBuffer = '';
+    job._streamBuffer += token;
+    job._streamSeq  = seq;
+    job.status      = done ? 'complete' : 'streaming';
+    cockpitBroadcast({ type:'STREAM_TOKEN', jobId, token, done, seq, provider, ts: Date.now() });
+    if (done) {
+      job.result = job._streamBuffer;
+      job.doneAt = Date.now();
+      jaa.insert('artifacts', {
+        uuid: require('crypto').randomUUID(), jobId, provider,
+        content: job._streamBuffer, streamTokens: seq, ts: Date.now(),
+      });
+      _postEvent('guardian.job.complete', { jobId, provider, streaming:true, tokenCount:seq });
+      try {
+        const cl = require('../lib/chat-logger');
+        cl.log({ role:'assistant', content:job._streamBuffer, provider, outcome:'complete',
+          jobId, meta:{ streaming:true, tokens:seq } }).catch(()=>{});
+      } catch(_) {}
+    }
+  });
 });
 
 // Compatibility shims — code that used PROVIDERS[x] now uses ncp.isConnected(x)

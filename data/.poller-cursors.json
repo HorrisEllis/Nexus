@@ -1,1 +1,6 @@
-{}
+{
+  "idearium:event_log.jsonl": {
+    "lineOffset": 0,
+    "seenIds": []
+  }
+}
