@@ -18,20 +18,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e0e8ff;f
 .ch.active{display:flex;flex-direction:column}
 @keyframes ch-in{from{opacity:0;transform:scale(.99)}to{opacity:1;transform:scale(1)}}
 
-/* ── Layer 2: HUD — appears on hover / key press ── */
+/* ── Layer 2: Meta chrome — always pointer-events:none except specific elements ── */
+/* Nothing here blocks channel content. Only named interactive elements get pointer-events:auto */
 #hud{
   position:fixed;inset:0;z-index:10;pointer-events:none;
-  transition:opacity .35s ease;opacity:0;
 }
-body:hover #hud,#hud.pinned{opacity:1;pointer-events:auto}
-body:hover #hud *,#hud.pinned *{pointer-events:auto}
 
-/* Channel switcher — left edge */
+/* Channel switcher — left edge — hidden until menu open */
 #ch-rail{
   position:absolute;left:0;top:0;bottom:0;width:56px;
   background:linear-gradient(to right,rgba(0,0,0,.85),transparent);
   display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 8px;
+  pointer-events:auto;
+  opacity:0;transform:translateX(-8px);transition:opacity .25s ease,transform .25s ease;
 }
+#hud.menu-open #ch-rail{opacity:1;transform:translateX(0)}
 .ch-btn{
   width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.08);
   background:rgba(255,255,255,.04);cursor:pointer;display:flex;flex-direction:column;
@@ -46,12 +47,16 @@ body:hover #hud *,#hud.pinned *{pointer-events:auto}
 .ch-dot.online{background:#00ff88;animation:dot-live 2.5s ease-in-out infinite}
 @keyframes dot-live{0%,100%{opacity:.5}50%{opacity:1;box-shadow:0 0 6px #00ff88}}
 
-/* Top bar — system name + status */
+/* Top bar — appears with menu */
 #top-bar{
   position:absolute;top:0;left:56px;right:0;height:48px;
   background:linear-gradient(to bottom,rgba(0,0,0,.7),transparent);
   display:flex;align-items:center;padding:0 20px;gap:16px;
+  pointer-events:none;
+  opacity:0;transition:opacity .25s ease;
 }
+#hud.menu-open #top-bar{opacity:1}
+#hud-pin{pointer-events:auto}
 #ch-name{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:.15em;color:#fff}
 #ch-accent{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.4);margin-left:4px}
 #sys-pills{display:flex;gap:8px;margin-left:auto}
@@ -221,9 +226,28 @@ select option{background:#111}
 .box-input{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:6px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:7px 10px;outline:none;width:100%;transition:border-color .2s}
 .box-input:focus{border-color:rgba(255,255,255,.2)}
 
-/* Channel transition */
-@keyframes ch-scan{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0% 0 0)}}
-.ch.active{animation:ch-scan .3s cubic-bezier(.4,0,.2,1)}
+/* ── Floating menu button — always above everything, never blocks content ── */
+#menu-btn{
+  position:fixed;top:16px;right:16px;z-index:100;
+  display:flex;align-items:center;gap:8px;
+  padding:9px 14px;
+  background:rgba(0,0,0,.6);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:24px;
+  color:rgba(255,255,255,.7);
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.1em;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+  transition:all .2s;
+  pointer-events:auto;
+}
+#menu-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff}
+#menu-btn.open{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff}
+#menu-icon{font-size:14px;transition:transform .3s}
+#menu-btn.open #menu-icon{transform:rotate(30deg)}
+
+/* ch-rail buttons need pointer-events when rail is visible */
+#ch-rail .ch-btn{pointer-events:auto}
 </style>
 </head>
 <body>
@@ -358,7 +382,13 @@ select option{background:#111}
   </div>
 </div>
 
-<!-- HUD -->
+<!-- Floating menu button — always on top, always clickable, never blocks content -->
+<button id="menu-btn" onclick="toggleMenu()" title="Menu (M)">
+  <span id="menu-icon">⬡</span>
+  <span id="menu-label">NEXUS</span>
+</button>
+
+<!-- HUD — pointer-events:none on container, only specific children are interactive -->
 <div id="hud">
   <!-- Left rail: channel switcher -->
   <div id="ch-rail">
@@ -382,7 +412,6 @@ select option{background:#111}
       <div class="spill"><span class="spill-dot" id="sd-idr"></span>IDR</div>
       <div class="spill"><span class="spill-dot" id="sd-br"></span>BR</div>
     </div>
-    <button id="hud-pin" onclick="togglePin()" title="Pin HUD">📌</button>
   </div>
 
   <!-- Bottom: inline assistant + ticker -->
@@ -454,13 +483,29 @@ const CH_META = [
 ];
 let curCh = 0;
 
+// ── Menu toggle ───────────────────────────────────────────────────────────────
+let menuOpen = false;
+function toggleMenu() {
+  menuOpen = !menuOpen;
+  document.getElementById('hud').classList.toggle('menu-open', menuOpen);
+  document.getElementById('menu-btn').classList.toggle('open', menuOpen);
+}
+// Close on outside click
+document.addEventListener('click', e => {
+  if (menuOpen && !e.target.closest('#hud') && !e.target.closest('#menu-btn')) toggleMenu();
+});
+
+// ── Channel tuner ─────────────────────────────────────────────────────────────
 function tune(n) {
+  if (menuOpen) toggleMenu();
   if (n === curCh && n !== 0) return;
   document.querySelectorAll('.ch').forEach(c => c.classList.remove('active'));
   document.getElementById(CH_META[n].id).classList.add('active');
   document.querySelectorAll('.ch-btn').forEach((b,i) => b.classList.toggle('on', i === n));
   document.getElementById('ch-name').textContent = CH_META[n].name;
   document.getElementById('ch-accent').textContent = CH_META[n].accent;
+  // Update floating button label
+  document.getElementById('menu-label').textContent = CH_META[n].name;
   curCh = n;
   if (n === 1) { gdLoadJobs(); gdLoadProvs(); }
   if (n === 2) { cxLoadGaps(); cxLoadFails(); }
@@ -469,21 +514,15 @@ function tune(n) {
   if (n === 6) { buildDiag(); }
 }
 
-// Arrow key channel switching
+// Arrow key + M key switching
 document.addEventListener('keydown', e => {
   if (e.target === document.getElementById('assistant-in') || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
   if (e.key === 'ArrowLeft' || e.key === '[') tune(Math.max(0, curCh - 1));
   if (e.key === 'ArrowRight' || e.key === ']') tune(Math.min(CH_META.length - 1, curCh + 1));
   if (e.key >= '1' && e.key <= '7') tune(parseInt(e.key) - 1);
+  if (e.key === 'm' || e.key === 'M') toggleMenu();
+  if (e.key === 'Escape' && menuOpen) toggleMenu();
 });
-
-// HUD pin
-function togglePin() {
-  const h = document.getElementById('hud');
-  const p = document.getElementById('hud-pin');
-  h.classList.toggle('pinned');
-  p.classList.toggle('on');
-}
 
 // ── Health polling ────────────────────────────────────────────────────────────
 const SYSTEMS = [
