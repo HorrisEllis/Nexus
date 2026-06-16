@@ -97,6 +97,63 @@ function nodeVersion() {
   return process.version;
 }
 
+// ── Cortex gap injection ───────────────────────────────────────────────────────
+// _escalateGap: POST a named gap into cortex JAA (gaps table) via /api/table/insert.
+// Called from _namedGap, _logFailureMode, and any system check that finds a critical fault.
+// Fire-and-forget — never blocks the diagnostic. Silent fail if cortex is down.
+function _escalateGap(system, faultId, description, severity = 'medium', meta = {}) {
+  try {
+    const row = {
+      uuid:      require('crypto').randomUUID(),
+      path:      `diagnose/${system}/${faultId}`,
+      type:      meta.faultClass || 'diagnostic_fault',
+      severity,
+      body:      description,
+      status:    'pending',
+      source:    'diagnose.js',
+      faultId,
+      system,
+      meta,
+      causedBy:  null,
+      createdAt: Date.now(),
+      ts:        Date.now(),
+    };
+    const body = JSON.stringify({ table: 'gaps', row });
+    const req  = require('http').request({
+      hostname: '127.0.0.1', port: 3748,
+      path: '/api/table/insert', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+      timeout: 3000,
+    });
+    req.on('error', () => {}); // silent — cortex may be down
+    req.write(body); req.end();
+  } catch (_) {}
+}
+
+// postLedger: POST a diagnostic event to cortex event_log.
+// Called per-system during each check phase to record diagnostic state.
+function postLedger(system, type, payload = {}) {
+  try {
+    const row = {
+      uuid:     require('crypto').randomUUID(),
+      type,
+      payload:  { ...payload, system },
+      source:   'diagnose.js',
+      causedBy: null,
+      ts:       Date.now(),
+    };
+    const body = JSON.stringify({ table: 'event_log', row });
+    const req  = require('http').request({
+      hostname: '127.0.0.1', port: 3748,
+      path: '/api/table/insert', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+      timeout: 3000,
+    });
+    req.on('error', () => {}); // silent — cortex may be down
+    req.write(body); req.end();
+  } catch (_) {}
+}
+
 // ── Results ───────────────────────────────────────────────────────────────────
 const allResults = [];
 let totalPass = 0, totalFail = 0, totalWarn = 0;
@@ -1178,6 +1235,12 @@ const INTEGRITY_MANIFEST = [
   // Cortex
   { file:'cortex/boot.js',           system:'cortex',       critical:true,  check: src => src.includes('intelligence') || src.includes('Phase 5.3') },
   { file:'cortex/intelligence/index.js', system:'cortex',   critical:false, check: src => src.includes('_scanPatterns') },
+  // Self-repair pipeline — these files ARE the automated repair system.
+  // A corrupt or missing file here means the loop is broken silently.
+  { file:'cortex/gate/gap-finder.js',   system:'cortex',   critical:true,  check: src => src.includes('forge_patches') },
+  { file:'cortex/healer/index.js',      system:'cortex',   critical:true,  check: src => src.includes('_prescribe') },
+  { file:'cortex/self-heal/index.js',   system:'cortex',   critical:true,  check: src => src.includes('APPLY_PATCH') },
+  { file:'cortex/self-heal/escalation.js', system:'cortex',critical:true,  check: src => src.includes('level1_safeFix') },
   // Hooks
   { file:'hooks/index.js',           system:'architect',    critical:false, check: src => src.includes('seamManifest') },
 ];

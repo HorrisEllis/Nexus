@@ -627,6 +627,8 @@ class AdminServer {
               'agent_messages', 'cortex_memory', 'artifacts', 'gaps',
               'seam_records', 'agent_calls', 'sigma_records', 'delta_records',
               'orion_sessions', 'active_traces', 'working_memory', 'event_log',
+              // Self-repair pipeline — diagnose.js, escalation.js, gap-finder all write here
+              'forge_patches', 'fix_map', 'fault_taxonomy', 'escalation_log', 'failure_modes',
             ]);
             if (!table || !ALLOWED.has(table)) {
               res.writeHead(400); res.end(JSON.stringify({ error: `table not allowed: ${table}` })); return;
