@@ -922,7 +922,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
       // Compiler availability check
       let compilerAvailable = false;
       try {
-        const p = require('path').join(__dirname, '..', 'spec-compiler', 'compiler', 'pipeline.js');
+        const p = require('path').join(__dirname, 'cockpit', 'spec-compiler', 'compiler', 'pipeline.js');
         require('fs').accessSync(p);
         compilerAvailable = true;
       } catch(_) {}
@@ -946,7 +946,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
         fs.writeFileSync(tmpFile, content);
 
         // Try spec-compiler CLI
-        const compilerCli = path.join(__dirname, '..', 'spec-compiler', 'cli.js');
+        const compilerCli = path.join(__dirname, 'cockpit', 'spec-compiler', 'cli.js');
         let result;
         if (fs.existsSync(compilerCli)) {
           try {
