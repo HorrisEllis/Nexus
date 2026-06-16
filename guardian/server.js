@@ -836,36 +836,9 @@ const ncp = createNCPServer({
   busEmit: (type, data) => bus.emit(type, data),
 });
 
-// ── Stream token accumulator — listens for ncp.stream.chunk events ───────────
+// ── Stream token accumulator ──────────────────────────────────────────────────
+// Registered as a SISOGate after bus is declared (see below — search STREAM_GATE).
 // NCP handleStream fires busEmit('ncp.stream.chunk', ...) on every token.
-// Guardian picks it up here and accumulates into the job buffer + broadcasts.
-// setImmediate defers registration until after bus is declared (line ~1466).
-setImmediate(() => {
-  bus.on('ncp.stream.chunk', (chunk) => {
-    const { jobId, token, done, seq, provider } = chunk;
-    const job = jobs.get(jobId);
-    if (!job) return;
-    if (!job._streamBuffer) job._streamBuffer = '';
-    job._streamBuffer += token;
-    job._streamSeq  = seq;
-    job.status      = done ? 'complete' : 'streaming';
-    cockpitBroadcast({ type:'STREAM_TOKEN', jobId, token, done, seq, provider, ts: Date.now() });
-    if (done) {
-      job.result = job._streamBuffer;
-      job.doneAt = Date.now();
-      jaa.insert('artifacts', {
-        uuid: require('crypto').randomUUID(), jobId, provider,
-        content: job._streamBuffer, streamTokens: seq, ts: Date.now(),
-      });
-      _postEvent('guardian.job.complete', { jobId, provider, streaming:true, tokenCount:seq });
-      try {
-        const cl = require('../lib/chat-logger');
-        cl.log({ role:'assistant', content:job._streamBuffer, provider, outcome:'complete',
-          jobId, meta:{ streaming:true, tokens:seq } }).catch(()=>{});
-      } catch(_) {}
-    }
-  });
-});
 
 // Compatibility shims — code that used PROVIDERS[x] now uses ncp.isConnected(x)
 const PROVIDERS = new Proxy({}, {
@@ -1400,13 +1373,22 @@ const _LOG_MAX  = 2000;
 // Canonical bus — §5.7 single event bus, all communication through it
 class SISOStream {
   constructor() {
-    this.gates    = new Map();
-    this.logLevel = 'EVENTS'; // OFF | EVENTS | DEEP | DATA
+    this.gates     = new Map();
+    this._listeners = new Map(); // dynamic one-shot/persistent listeners (§5.7 escape hatch)
+    this.logLevel  = 'EVENTS'; // OFF | EVENTS | DEEP | DATA
   }
   register(gate) {
     if (this.gates.has(gate.signature))
       throw new Error(`[§1.2 SISOStream] Signature collision: '${gate.signature}'`);
     this.gates.set(gate.signature, gate);
+  }
+  // §5.7 — dynamic listener (for one-shot per-job patterns; prefer register() for static gates)
+  on(type, fn) {
+    if (!this._listeners.has(type)) this._listeners.set(type, new Set());
+    this._listeners.get(type).add(fn);
+  }
+  off(type, fn) {
+    this._listeners.get(type)?.delete(fn);
   }
   emit(type, data = {}) {
     const seq   = _streamSeq++;
@@ -1424,6 +1406,16 @@ class SISOStream {
 
     // §5.7 — fire registered gate (depth-first, synchronous)
     if (gate) gate.transform({ type, data }, this);
+
+    // §5.7 — fire dynamic listeners (one-shot per-job patterns)
+    const dynListeners = this._listeners.get(type);
+    if (dynListeners?.size) {
+      for (const fn of dynListeners) {
+        try { fn({ type, data }); } catch(e) {
+          console.error(`[§1.2 siso.listener.${type}] ${e.message}`);
+        }
+      }
+    }
 
     // §2.3 — broadcast to cockpit SSE (observable by UI)
     cockpitBroadcast({ seq, type, ts, claimed });
@@ -1542,11 +1534,13 @@ try {
           createdAt:Date.now(), _labSession:meta.sessionId, _source:'lab' };
         jobs.set(jobId, job);
         jaa.insert('jobs', job);
-        // Listen for completion
-        bus.on(`guardian.job.${jobId}.complete`, (ev) => {
+        // Listen for completion — one-shot: auto-removes after firing
+        const _onComplete = (ev) => {
+          bus.off(`guardian.job.${jobId}.complete`, _onComplete);
           clearTimeout(timeout);
-          resolve({ text: ev.payload?.text || ev.payload?.response || '', ms: ev.payload?.ms || 0, jobId });
-        });
+          resolve({ text: ev.data?.text || ev.data?.response || '', ms: ev.data?.ms || 0, jobId });
+        };
+        bus.on(`guardian.job.${jobId}.complete`, _onComplete);
         dispatchJob(job);
       });
     },
@@ -1632,7 +1626,35 @@ function cockpitBroadcast(data) {
 //  SISO GATE REGISTRATIONS
 // ══════════════════════════════════════════════════════════════════════════════
 
-bus.register(new SISOGate('guardian.artifact', (data) => {
+// ── STREAM_GATE: stream token accumulator ────────────────────────────────────
+// NCP handleStream fires busEmit('ncp.stream.chunk', ...) on every token.
+// Registered here (after bus declaration) as a proper SISOGate — §5.1/§5.7.
+bus.register(new SISOGate('ncp.stream.chunk', (chunk) => {
+  const { jobId, token, done, seq, provider } = chunk;
+  const job = jobs.get(jobId);
+  if (!job) return;
+  if (!job._streamBuffer) job._streamBuffer = '';
+  job._streamBuffer += token;
+  job._streamSeq  = seq;
+  job.status      = done ? 'complete' : 'streaming';
+  cockpitBroadcast({ type:'STREAM_TOKEN', jobId, token, done, seq, provider, ts: Date.now() });
+  if (done) {
+    job.result = job._streamBuffer;
+    job.doneAt = Date.now();
+    jaa.insert('artifacts', {
+      uuid: require('crypto').randomUUID(), jobId, provider,
+      content: job._streamBuffer, streamTokens: seq, ts: Date.now(),
+    });
+    _postEvent('guardian.job.complete', { jobId, provider, streaming:true, tokenCount:seq });
+    try {
+      const cl = require('../lib/chat-logger');
+      cl.log({ role:'assistant', content:job._streamBuffer, provider, outcome:'complete',
+        jobId, meta:{ streaming:true, tokens:seq } }).catch(()=>{});
+    } catch(_) {}
+  }
+}));
+
+
   const ts = Date.now();
   const hash = data.hash || '';
   const existing = jaa.get('artifacts', { hash });

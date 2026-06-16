@@ -99,28 +99,44 @@ async function _bootOneSys({ systemId, port, cmd, args, healthPath, label, extra
     return { ok: true, proc };
   }
 
-  // System failed — spawn cli/diagnose.js for this system
+  // System failed — spawn cli/diagnose.js in a NEW terminal window
   console.error(`\x1b[31m  ✗ ${label} did not come up within 15s\x1b[0m`);
   ledgerWrite('orchestrator', 'orchestrator.system.failed', { systemId, port });
-  console.log(`\x1b[36m  → running diagnose for ${systemId}…\x1b[0m`);
+  console.log(`\x1b[36m  → opening diagnose window for ${systemId}…\x1b[0m`);
 
-  return new Promise(resolve => {
-    let diagOut = '';
-    const diag = spawn(process.execPath, [DIAG, systemId], {
-      detached: false,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-    diag.stdout?.on('data', d => { diagOut += d; process.stdout.write(d); });
-    diag.stderr?.on('data', d => { diagOut += d; });
-    diag.on('close', code => {
-      const pass = (diagOut.match(/✓/g) || []).length;
-      const fail = (diagOut.match(/✗/g) || []).length;
-      ledgerWrite('orchestrator', `${systemId}.diagnose.result`, {
-        systemId, pass, fail, exitCode: code, fixed: fail === 0, ts: Date.now(),
+  // Spawn diagnose in a new terminal so the main boot log stays readable.
+  // Windows: cmd /c start; macOS: open -a Terminal; Linux: x-terminal-emulator / xterm fallback.
+  const isWin  = process.platform === 'win32';
+  const isMac  = process.platform === 'darwin';
+  let diagProc;
+  try {
+    if (isWin) {
+      // `start` opens a new cmd window; title shows which system failed
+      diagProc = spawn('cmd', [
+        '/c', 'start',
+        `NEXUS Diagnose — ${systemId}`,
+        'cmd', '/k',
+        `node "${DIAG}" ${systemId}`,
+      ], { detached: true, stdio: 'ignore', shell: false });
+    } else if (isMac) {
+      const script = `tell application "Terminal" to do script "node '${DIAG}' ${systemId}"`;
+      diagProc = spawn('osascript', ['-e', script], { detached: true, stdio: 'ignore' });
+    } else {
+      // Linux: try common terminal emulators in order
+      const terms = ['x-terminal-emulator', 'gnome-terminal', 'xfce4-terminal', 'xterm'];
+      const term  = terms[0]; // x-terminal-emulator covers most distros
+      diagProc = spawn(term, ['-e', `node "${DIAG}" ${systemId}`], {
+        detached: true, stdio: 'ignore',
       });
-      resolve({ ok: false, proc, diagPass: pass, diagFail: fail });
-    });
-  });
+    }
+    diagProc?.unref(); // don't hold the event loop
+  } catch(e) {
+    console.warn(`\x1b[33m  [diagnose] could not open terminal window: ${e.message}\x1b[0m`);
+    console.warn(`\x1b[33m  run manually: node cli/diagnose.js ${systemId}\x1b[0m`);
+  }
+
+  ledgerWrite('orchestrator', `${systemId}.diagnose.window.opened`, { systemId, ts: Date.now() });
+  return { ok: false, proc, diagPass: 0, diagFail: 0 };
 }
 
 // ── Full boot sequence ────────────────────────────────────────────────────────
