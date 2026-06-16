@@ -750,6 +750,16 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     if (!systemId) return json(res, 400, { ok:false, error:'systemId required' });
     registryUpdate(systemId, { port, meta, registeredAt: Date.now() });
 
+    // Component registry — auto-register system components (CR-007)
+    if (Array.isArray(body.components) && body.components.length) {
+      try {
+        const reg = require('./lib/component-registry');
+        reg.onSystemRegister(systemId, body.components, _bus);
+      } catch(e) {
+        console.warn('[component-registry] auto-register failed:', e.message);
+      }
+    }
+
     // §1.1 Contract verification — fetch and verify the system's interaction contract
     // Non-blocking: registration succeeds regardless, but trust state is set
     // Skip self-verification: orchestrator knows its own contract without HTTP round-trip
@@ -1085,6 +1095,14 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
       });
       if (r) return json(res, 200, r);
       return json(res, 503, { ok:false, error:'diagnostic service unavailable' });
+    } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
+  }
+
+  // ── Version registry — /api/version ─────────────────────────────────────
+  if (top === 'api' && sub === 'version') {
+    try {
+      const V = require('./lib/version');
+      return json(res, 200, { ok:true, ...V, toString: undefined, get: undefined });
     } catch(e) { return json(res, 500, { ok:false, error:e.message }); }
   }
 
@@ -1960,6 +1978,42 @@ try {
 
   const ownResult = await ownSeq.run();
   if (!ownResult.ok) process.exit(1);
+
+  // ── Component Registry + UI Registry init ────────────────────────────────
+  // Both are SOFT — failure never blocks orchestrator
+  try {
+    const { jaaDB } = require('./cortex/memory/jaa-db');
+    const compReg = require('./lib/component-registry');
+    compReg.init(jaaDB, nexusBus);
+    console.log('  [component-registry] ' + compReg.list().length + ' components loaded');
+  } catch(e) {
+    console.warn('  [component-registry] init skipped:', e.message);
+  }
+  try {
+    const { jaaDB } = require('./cortex/memory/jaa-db');
+    const uiReg = require('./lib/ui-registry');
+    uiReg.init((type, payload) => {
+      broadcast(JSON.stringify({ type, ...payload }));
+    }, jaaDB);
+    console.log('  [ui-registry] UI handshake active');
+  } catch(e) {
+    console.warn('  [ui-registry] init skipped:', e.message);
+  }
+  // Spec drift check — opens gaps for any spec/code version mismatch
+  // SOFT: drift is a gap, not a crash. Boot continues regardless.
+  try {
+    const drift = require('./lib/spec-drift');
+    const { jaaDB } = require('./cortex/memory/jaa-db');
+    const result = drift.check({ jaaDB, bus: _bus });
+    const issues = (result.drifted||[]).length + (result.missing||[]).length;
+    if (issues > 0) {
+      console.warn('  [spec-drift] ⚠  ' + issues + ' gap(s) — ' + result.summary);
+    } else {
+      console.log('  [spec-drift] ✓  ' + result.summary);
+    }
+  } catch(e) {
+    console.warn('  [spec-drift] check failed (non-fatal):', e.message);
+  }
 
   // ────────────────────────────────────────────────────────────────────────────
   // Record own boot to ledger

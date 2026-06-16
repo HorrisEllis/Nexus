@@ -1,0 +1,19 @@
+{
+  "stats": {
+    "idearium.key.updated": {
+      "count": 1,
+      "lastTs": 1781248332256,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "idearium.gap.open": {
+      "count": 2,
+      "lastTs": 1781287394371,
+      "intervals": [
+        39062104
+      ],
+      "totalMs": 39062104
+    }
+  },
+  "baseline": {}
+}

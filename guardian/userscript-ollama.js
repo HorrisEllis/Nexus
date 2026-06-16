@@ -66,51 +66,6 @@ let _activeStream = null;  // current GM_xmlhttpRequest streaming handle
 let _tokenCount   = 0;
 let _ollamaOnline = false;
 
-// ── BDA drift tracker — accumulates full response, posts to Guardian on done ──
-// Guardian-side /bda endpoint receives the completed text and runs BDA.observe().
-// The userscript does NOT run BDA locally — it ships the text back over NCP.
-// This keeps the JS bundle zero-dependency and BDA logic server-side.
-let _streamBuffer = '';  // accumulates tokens for current job
-
-function _postBdaObservation(jobId, text, model) {
-  if (!text || text.length < 20) return;  // skip trivially short responses
-  GM_xmlhttpRequest({
-    method: 'POST',
-    url:    GUARDIAN_URL + '/bda/observe',
-    headers: { 'Content-Type': 'application/json' },
-    data: JSON.stringify({
-      jobId,
-      provider: PROVIDER,
-      role:     'assistant',
-      text,
-      model,
-      tabId: MY_TAB,
-      ts:    Date.now(),
-    }),
-    onload: (r) => {
-      try {
-        const d = JSON.parse(r.responseText);
-        if (d.pendulum) {
-          const p = d.pendulum;
-          const color = p.regime === 'STABLE' ? '#00d4ff'
-                      : ['DYSREGULATED','COLLAPSING'].includes(p.regime) ? '#ff2d55'
-                      : '#ff6b35';
-          console.log(
-            `[ollama-ncp][bda] job=${jobId?.slice(0,8)}` +
-            ` regime=${p.regime} trust=${p.trust} sigma=${p.sigma}` +
-            ` delta=${p.delta} n=${p.n} trend=${p.trend}`
-          );
-          if (['OSCILLATING','UNGROUNDED','DYSREGULATED','COLLAPSING'].includes(p.regime)) {
-            console.warn(`[ollama-ncp][bda] !! DRIFT DETECTED !! regime=${p.regime} — sigma=${p.sigma}`);
-            _updateWidget(`⚠ DRIFT:${p.regime} σ=${p.sigma}`);
-          }
-        }
-      } catch(_) {}
-    },
-    onerror: () => {},  // non-fatal
-  });
-}
-
 // ── Ollama health check ───────────────────────────────────────────────────────
 function _checkOllama(cb) {
   GM_xmlhttpRequest({
@@ -139,8 +94,7 @@ function _streamOllama(job, model) {
   const prompt = job.prompt || job.text || '';
   const system = job.systemPrompt || job.system || null;
 
-  _tokenCount  = 0;
-  _streamBuffer = '';   // reset accumulator for this job
+  _tokenCount = 0;
   let _seenLen = 0;  // track how many chars of responseText we've already parsed
 
   const body = JSON.stringify({
@@ -177,14 +131,12 @@ function _streamOllama(job, model) {
           const chunk = JSON.parse(line);
           if (chunk.response) {
             _tokenCount++;
-            _streamBuffer += chunk.response;   // accumulate for BDA
             // Stream each token to Guardian immediately
             _postTokenChunk(jobId, chunk.response, false, _tokenCount);
             _updateWidget(`⟳ ${_tokenCount} tokens — ${model.split(':')[0]}`);
           }
           if (chunk.done) {
-            // Stream complete — post full text to BDA before signaling done
-            _postBdaObservation(jobId, _streamBuffer, model);
+            // Stream complete
             _postTokenChunk(jobId, '', true, _tokenCount);
             _onStreamComplete(jobId, model);
           }
@@ -200,13 +152,11 @@ function _streamOllama(job, model) {
       try {
         const chunk = JSON.parse(last);
         if (chunk.done && _busy) {
-          _postBdaObservation(jobId, _streamBuffer, model);
           _postTokenChunk(jobId, '', true, _tokenCount);
           _onStreamComplete(jobId, model);
         }
       } catch(_) {
         // Ensure we always complete
-        _postBdaObservation(jobId, _streamBuffer, model);
         _postTokenChunk(jobId, '', true, _tokenCount);
         _onStreamComplete(jobId, model);
       }
@@ -257,12 +207,11 @@ function _postError(jobId, error) {
 
 // ── Stream complete ────────────────────────────────────────────────────────────
 function _onStreamComplete(jobId, model, errored) {
-  console.log(`[ollama-ncp] job ${jobId?.slice(0,8)} complete — ${_tokenCount} tokens via ${model}${errored ? ' (ERRORED)' : ''}`);
+  console.log(`[ollama-ncp] job ${jobId?.slice(0,8)} complete — ${_tokenCount} tokens via ${model}`);
   _busy         = false;
   _currentJob   = null;
   _activeStream = null;
   _tokenCount   = 0;
-  _streamBuffer = '';
   _updateWidget(`✓ ${PROVIDER} ready`);
 }
 

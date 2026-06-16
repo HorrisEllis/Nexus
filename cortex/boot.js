@@ -266,6 +266,7 @@ async function bootAsync() {
         { name: 'orion/policy', path: './orion/policy'      },
         { name: 'raid',         path: './core/raid/index'   },
         { name: 'heartbeat',    path: './heartbeat/index'   },
+        { name: 'behavioral-boundary', path: './behavioral-boundary/index' },
       ];
 
       const pollMs = parseInt(process.env.CORTEX_ORGAN_MS || '15000');

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — Claude v10.0
 // @namespace    nexus.guardian.claude
-// @version      10.0.0
+// @version      10.1.0
 // @description  Guardian v10: IndexedDB kernel, SHA-256 dedup, pre-prompt intelligence
 //               injection, full system widget, connection info, log/ledger, options,
 //               SEAM, queue, tags — fully system aware, no localStorage for state.
@@ -26,7 +26,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const BRIDGE_URL  = 'http://127.0.0.1:9999';
 const PROVIDER    = 'claude';
-const VERSION     = '10.0.0';
+const VERSION    = '10.1.0';
 const RECONNECT_MS = 3000;
 const HB_MS        = 8000;
 
@@ -443,140 +443,6 @@ function sendDOMMap() {
     context:{ url:location.href, chatId:chatId(), ts:Date.now() } });
 }
 
-// ── DOM command executor — runs NEXUS_CLI_EXEC actions on live page ───────────
-function _execDOMCommand(execId, commandName, selector, action) {
-  let el;
-  try { el = document.querySelector(selector); } catch(e) {
-    _postCliResult(execId, commandName, { ok: false, error: 'invalid selector: ' + e.message }); return;
-  }
-  if (!el) {
-    _postCliResult(execId, commandName, { ok: false, error: 'element not found: ' + selector }); return;
-  }
-  try {
-    let value = null;
-    if (action === 'click') {
-      el.click(); value = 'clicked';
-    } else if (action === 'focus') {
-      el.focus(); value = 'focused';
-    } else if (action === 'read') {
-      value = el.innerText || el.value || el.textContent || '';
-    } else if (action === 'hover') {
-      el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-      el.dispatchEvent(new MouseEvent('mouseover',  { bubbles: true }));
-      value = 'hovered';
-    } else if (action === 'clear') {
-      if ('value' in el) { el.value = ''; el.dispatchEvent(new Event('input', { bubbles: true })); }
-      else el.textContent = '';
-      value = 'cleared';
-    } else if (action.startsWith('type:')) {
-      const text = action.slice(5);
-      el.focus();
-      const nativeDesc = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')
-                      || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
-      if (nativeDesc) nativeDesc.set.call(el, text);
-      else el.value = text;
-      el.dispatchEvent(new Event('input',  { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-      value = 'typed:' + text.slice(0, 40);
-    } else if (action.startsWith('attr:')) {
-      value = el.getAttribute(action.slice(5)) || null;
-    } else {
-      _postCliResult(execId, commandName, { ok: false, error: 'unknown action: ' + action }); return;
-    }
-    _log('ok', 'CLI exec OK: ' + commandName + ' → ' + action, String(value).slice(0, 60));
-    _postCliResult(execId, commandName, { ok: true, execId, commandName, selector, action, value, tagName: el.tagName, ts: Date.now() });
-  } catch(e) {
-    _log('error', 'CLI exec error: ' + e.message, commandName);
-    _postCliResult(execId, commandName, { ok: false, error: e.message, execId, commandName, selector, action });
-  }
-}
-
-function _postCliResult(execId, commandName, result) {
-  GM_xmlhttpRequest({
-    method: 'POST', url: NCP_URL + '/result',
-    headers: { 'Content-Type': 'application/json' },
-    data: JSON.stringify({ type: 'NEXUS_CLI_RESULT', execId, commandName, provider: PROVIDER, tabId: MY_TAB, result, ts: Date.now() }),
-    onerror: () => console.warn('[guardian] cli result post failed'),
-  });
-}
-
-// ── Built-in DOM picker (used when no pickerScript provided) ──────────────────
-function _domPickerActivate(commandName, action) {
-  if (document.getElementById('nexus-dom-picker-banner')) return;
-  const banner = document.createElement('div');
-  banner.id = 'nexus-dom-picker-banner';
-  Object.assign(banner.style, {
-    position: 'fixed', top: '0', left: '0', right: '0', zIndex: '2147483647',
-    background: '#05080f', borderBottom: '2px solid #00d4ff',
-    color: '#00d4ff', fontFamily: 'monospace', fontSize: '12px',
-    padding: '7px 14px', userSelect: 'none',
-    display: 'flex', alignItems: 'center', gap: '12px',
-  });
-  banner.innerHTML =
-    '<span>⬡ NEXUS › DOM PICKER</span>' +
-    '<span style="color:#666">Mapping: <strong style="color:#00d4ff">' + commandName + '</strong></span>' +
-    '<span style="margin-left:auto;color:#666;font-size:11px">Click any element · ESC to cancel</span>';
-  document.body.appendChild(banner);
-
-  function cleanup() { clearTimeout(_t); document.removeEventListener('keydown', _onKey); document.removeEventListener('click', _onClick, { capture: true }); banner.remove(); }
-
-  const _onClick = function(e) {
-    if (e.target === banner || banner.contains(e.target)) return;
-    e.preventDefault(); e.stopPropagation();
-    cleanup();
-    const sel = _stableSelector(e.target);
-    GM_xmlhttpRequest({
-      method: 'POST', url: NCP_URL + '/cli/pick-result',
-      headers: { 'Content-Type': 'application/json' },
-      data: JSON.stringify({ commandName, provider: PROVIDER, selector: sel,
-        meta: { tagName: e.target.tagName, id: e.target.id||null, innerText: (e.target.innerText||'').slice(0,80), type: e.target.type||null }, ts: Date.now() }),
-      onload: () => _log('ok', 'DOM pick sent: ' + sel, commandName),
-    });
-  };
-
-  const _onKey = function(e) {
-    if (e.key !== 'Escape') return;
-    cleanup();
-    GM_xmlhttpRequest({ method:'POST', url: NCP_URL+'/cli/pick-cancel',
-      headers:{'Content-Type':'application/json'},
-      data: JSON.stringify({commandName, provider:PROVIDER, reason:'cancelled', ts:Date.now()}),
-    });
-  };
-
-  document.addEventListener('click',   _onClick, { capture: true, once: true });
-  document.addEventListener('keydown', _onKey);
-  const _t = setTimeout(() => {
-    cleanup();
-    GM_xmlhttpRequest({ method:'POST', url: NCP_URL+'/cli/pick-cancel',
-      headers:{'Content-Type':'application/json'},
-      data: JSON.stringify({commandName, provider:PROVIDER, reason:'timeout', ts:Date.now()}),
-    });
-  }, 30000);
-}
-
-function _stableSelector(el) {
-  if (!el || el === document.body) return 'body';
-  for (const attr of ['data-testid','data-cy','name','aria-label','placeholder']) {
-    const v = el.getAttribute?.(attr);
-    if (v && v.length < 60 && !/[{}\[\]]/.test(v)) {
-      const sel = el.tagName.toLowerCase()+'['+attr+'='+JSON.stringify(v)+']';
-      try { if (document.querySelectorAll(sel).length === 1) return sel; } catch(_) {}
-    }
-  }
-  if (el.id && el.id.length < 30 && !/[0-9a-f]{8,}/i.test(el.id))
-    return '#' + el.id.replace(/([[\]().+*?^${}|])/g,'\\$1');
-  const parts = []; let node = el;
-  for (let d = 0; d < 5 && node && node !== document.body; d++) {
-    const tag = node.tagName.toLowerCase(), parent = node.parentElement;
-    if (!parent) break;
-    const siblings = Array.from(parent.children).filter(c => c.tagName === node.tagName);
-    const idx = siblings.indexOf(node) + 1;
-    parts.unshift(idx > 1 ? tag+':nth-of-type('+idx+')' : tag);
-    node = parent;
-  }
-  return parts.join(' > ') || el.tagName.toLowerCase();
-}
-
 // ── Gap / error detection ─────────────────────────────────────────────────────
 function detectResponseErrors(text) {
   const issues = [];
@@ -816,35 +682,6 @@ function _handleServerMessage(msg) {
       break;
     case 'GUARDIAN_SESSION_NAMED': _log('info','Session named', msg.name); break;
     case 'GUARDIAN_ARTIFACT_SAVED': _log('ok','Artifact saved', msg.artifactId); break;
-
-    case 'NEXUS_DOM_PICK': {
-      const { commandName, action = 'click', pickerScript } = msg;
-      _log('info', 'DOM picker activated', commandName);
-      if (pickerScript) {
-        try {
-          // eslint-disable-next-line no-eval
-          eval(pickerScript);
-          _log('ok', 'Picker overlay injected', commandName);
-        } catch(e) {
-          _log('error', 'Picker inject failed: ' + e.message, commandName);
-          GM_xmlhttpRequest({
-            method: 'POST', url: NCP_URL + '/cli/pick-cancel',
-            headers: { 'Content-Type': 'application/json' },
-            data: JSON.stringify({ commandName, provider: PROVIDER, reason: 'inject_error:' + e.message }),
-          });
-        }
-      } else {
-        _domPickerActivate(commandName, action);
-      }
-      break;
-    }
-
-    case 'NEXUS_CLI_EXEC': {
-      const { execId, commandName, selector, action } = msg;
-      _log('info', 'CLI exec: ' + commandName, selector);
-      _execDOMCommand(execId, commandName, selector, action);
-      break;
-    }
     default: _log('debug', `NCP: ${msg.type}`);
   }
 }
@@ -1699,6 +1536,530 @@ function _nexusInit() {
   _nexus.sessionId = MY_TAB + '-' + Date.now().toString(36);
   _nexusCheckOllama();
   setTimeout(_nexusStartObserver, 2000); // wait for DOM to settle
+}
+
+// ══ NEXUS HOOKS — Memory · RAID · Self-Heal ═════════════════════════════════
+// The userscript is now a full NEXUS agent.
+// Three hooks into the sovereign system, callable from the NEXUS tab
+// or triggered automatically by conversation events.
+
+// ── MEMORY HOOK ───────────────────────────────────────────────────────────────
+// Read working memory, write observations, search semantic memory.
+// The conversation IS the input. Every exchange enriches the memory store.
+
+const _mem = {
+  working:   [],  // live working memory from cortex
+  lastFetch: 0,
+};
+
+function _memFetch(cb) {
+  GM_xmlhttpRequest({
+    method: 'GET',
+    url: CORTEX_URL + '/api/memory/working',
+    onload: (r) => {
+      try {
+        const d = JSON.parse(r.responseText);
+        _mem.working = d.rows || d.memory || [];
+        _mem.lastFetch = Date.now();
+        if (cb) cb(_mem.working);
+      } catch(_) { if (cb) cb([]); }
+    },
+    onerror: () => { if (cb) cb([]); },
+  });
+}
+
+function _memWrite(key, value, tags = []) {
+  // Write an observation to cortex working memory from the conversation
+  GM_xmlhttpRequest({
+    method: 'POST',
+    url: CORTEX_URL + '/api/table/insert',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify({
+      table: 'cortex_memory',
+      record: {
+        key,
+        value: typeof value === 'string' ? value : JSON.stringify(value),
+        tags:  [...tags, 'userscript', PROVIDER],
+        source: PROVIDER + '-userscript',
+        ts:    Date.now(),
+      },
+    }),
+    onerror: () => {},
+  });
+}
+
+function _memSearch(query, cb) {
+  GM_xmlhttpRequest({
+    method: 'GET',
+    url: ORCH_URL + '/api/search?q=' + encodeURIComponent(query) + '&k=8&threshold=0.68',
+    onload: (r) => {
+      try { cb(null, JSON.parse(r.responseText)); }
+      catch(e) { cb(e.message, null); }
+    },
+    onerror: (e) => cb('search failed', null),
+  });
+}
+
+function _memForget(id) {
+  GM_xmlhttpRequest({
+    method: 'POST',
+    url: CORTEX_URL + '/api/memory/forget',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify({ id }),
+    onerror: () => {},
+  });
+}
+
+// ── RAID HOOK ─────────────────────────────────────────────────────────────────
+// Ask RAID which provider it would choose for a given intent.
+// Surface the decision in the NEXUS tab — you can see why NEXUS would route
+// a particular query to Claude vs ChatGPT vs Gemini vs Perplexity vs Ollama.
+// Lets you override before dispatching.
+
+const _raid = {
+  lastDecision: null,
+  history:      [],
+};
+
+function _raidDecide(intent, preferred, cb) {
+  const url = CORTEX_URL + '/api/raid/decide?intent=' +
+    encodeURIComponent(intent || '') +
+    (preferred ? '&preferred=' + encodeURIComponent(preferred) : '');
+  GM_xmlhttpRequest({
+    method: 'GET', url,
+    onload: (r) => {
+      try {
+        const d = JSON.parse(r.responseText);
+        _raid.lastDecision = d;
+        _raid.history.unshift({ intent: intent.slice(0,60), decision: d, ts: Date.now() });
+        if (_raid.history.length > 20) _raid.history.pop();
+        if (cb) cb(null, d);
+        if (activeTab === 'nexus') _renderNexusRaid();
+      } catch(e) { if (cb) cb(e.message, null); }
+    },
+    onerror: () => { if (cb) cb('RAID unreachable', null); },
+  });
+}
+
+function _raidStatus(cb) {
+  GM_xmlhttpRequest({
+    method: 'GET',
+    url: CORTEX_URL + '/health',
+    onload: (r) => {
+      try { cb(null, JSON.parse(r.responseText)); }
+      catch(e) { cb(e.message, null); }
+    },
+    onerror: () => cb('cortex offline', null),
+  });
+}
+
+// ── SELF-HEAL HOOK ─────────────────────────────────────────────────────────────
+// Read open gaps, active failure modes, friction scores.
+// Trigger a heal request from the userscript for a specific gap.
+// Surface the escalation state — you can see what the system tried and where it is.
+
+const _heal = {
+  gaps:         [],
+  failureModes: [],
+  friction:     [],
+  status:       null,
+  lastFetch:    0,
+};
+
+function _healFetch(cb) {
+  let done = 0;
+  const finish = () => { done++; if (done === 3 && cb) cb(_heal); };
+
+  GM_xmlhttpRequest({
+    method: 'GET', url: CORTEX_URL + '/api/gaps?status=open',
+    onload: (r) => {
+      try { const d=JSON.parse(r.responseText); _heal.gaps=d.rows||d.gaps||[]; } catch(_) {}
+      finish();
+    },
+    onerror: finish,
+  });
+
+  GM_xmlhttpRequest({
+    method: 'GET', url: CORTEX_URL + '/api/failure-modes',
+    onload: (r) => {
+      try { const d=JSON.parse(r.responseText); _heal.failureModes=d.failureModes||[]; } catch(_) {}
+      finish();
+    },
+    onerror: finish,
+  });
+
+  GM_xmlhttpRequest({
+    method: 'GET', url: CORTEX_URL + '/api/friction',
+    onload: (r) => {
+      try { const d=JSON.parse(r.responseText); _heal.friction=d.faultClasses||[]; } catch(_) {}
+      finish();
+    },
+    onerror: finish,
+  });
+}
+
+function _healTrigger(gapUuid, cb) {
+  // Inject a HEAL_REQUESTED event into the bus — escalation engine picks it up
+  GM_xmlhttpRequest({
+    method: 'POST',
+    url: CORTEX_URL + '/api/event',
+    headers: { 'Content-Type': 'application/json' },
+    data: JSON.stringify({
+      type:    'HEAL_REQUESTED',
+      payload: { gapUuid, source: PROVIDER + '-userscript', manual: true },
+      source:  'userscript',
+      ts:      Date.now(),
+    }),
+    onload: (r) => {
+      try { if (cb) cb(null, JSON.parse(r.responseText)); }
+      catch(e) { if (cb) cb(e.message, null); }
+    },
+    onerror: () => { if (cb) cb('heal trigger failed', null); },
+  });
+}
+
+function _healStatus(cb) {
+  GM_xmlhttpRequest({
+    method: 'GET', url: CORTEX_URL + '/api/self-heal/status',
+    onload: (r) => {
+      try { const d=JSON.parse(r.responseText); _heal.status=d; if(cb) cb(null,d); }
+      catch(e) { if(cb) cb(e.message,null); }
+    },
+    onerror: () => { if(cb) cb('self-heal offline',null); },
+  });
+}
+
+// ── NEXUS tab sub-renderers ────────────────────────────────────────────────────
+function _renderNexusMemory(container) {
+  const sec = document.createElement('div');
+  sec.style.cssText = 'padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06)';
+
+  const hdr = document.createElement('div');
+  hdr.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:5px';
+  hdr.innerHTML =
+    '<span style="color:#334466;font-size:9px;text-transform:uppercase;letter-spacing:.08em">WORKING MEMORY</span>' +
+    '<span style="color:#1e3050;font-size:9px">' + _mem.working.length + ' items</span>' +
+    '<button style="margin-left:auto;background:none;border:1px solid rgba(255,255,255,.07);color:#334466;border-radius:3px;padding:1px 7px;font:9px monospace;cursor:pointer" ' +
+    'id="__nx_mem_refresh__">↺</button>';
+  sec.appendChild(hdr);
+
+  if (!_mem.working.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'color:#1e3050;font:9px monospace';
+    empty.textContent = 'empty — memory fills as the system runs';
+    sec.appendChild(empty);
+  } else {
+    for (const m of _mem.working.slice(0, 5)) {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:6px;margin-bottom:3px;align-items:flex-start';
+      const k = document.createElement('span');
+      k.style.cssText = 'color:#00d4ff;font:9px monospace;flex-shrink:0;width:90px;overflow:hidden;text-overflow:ellipsis';
+      k.textContent = (m.key||'').slice(0,14);
+      const v = document.createElement('span');
+      v.style.cssText = 'color:#334466;font:9px monospace;line-height:1.4;flex:1';
+      v.textContent = String(m.value||'').slice(0,80);
+      const del = document.createElement('button');
+      del.style.cssText = 'margin-left:auto;background:none;border:none;color:#1e3050;font:9px monospace;cursor:pointer;flex-shrink:0';
+      del.textContent = '✕';
+      const mUuid = m.uuid||'';
+      del.onclick = function() { _memForget(mUuid); this.parentNode.remove(); };
+      row.append(k, v, del);
+      sec.appendChild(row);
+    }
+    if (_mem.working.length > 5) {
+      const more = document.createElement('div');
+      more.style.cssText = 'color:#1e3050;font:9px monospace;margin-top:3px';
+      more.textContent = '+ ' + (_mem.working.length - 5) + ' more';
+      sec.appendChild(more);
+    }
+  }
+
+  // Write to memory from conversation
+  const writeRow = document.createElement('div');
+  writeRow.style.cssText = 'display:flex;gap:4px;margin-top:6px';
+  const keyIn = document.createElement('input');
+  keyIn.placeholder = 'key';
+  keyIn.style.cssText = 'flex:0 0 80px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);color:#b8cfe0;font:9px monospace;padding:3px 5px;border-radius:3px;outline:none';
+  const valIn = document.createElement('input');
+  valIn.placeholder = 'value to remember';
+  valIn.style.cssText = 'flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);color:#b8cfe0;font:9px monospace;padding:3px 5px;border-radius:3px;outline:none';
+  const writeBtn = document.createElement('button');
+  writeBtn.textContent = '+ mem';
+  writeBtn.style.cssText = 'background:none;border:1px solid rgba(0,212,255,.2);color:#00d4ff;border-radius:3px;padding:2px 7px;font:9px monospace;cursor:pointer;flex-shrink:0';
+  writeBtn.onclick = () => {
+    const k = keyIn.value.trim(); const v = valIn.value.trim();
+    if (!k || !v) return;
+    _memWrite(k, v, ['manual']);
+    keyIn.value = ''; valIn.value = '';
+    setTimeout(() => _memFetch(() => { if(activeTab==='nexus') renderNexus(); }), 300);
+  };
+  writeRow.append(keyIn, valIn, writeBtn);
+  sec.appendChild(writeRow);
+  container.appendChild(sec);
+}
+
+function _renderNexusRaid(container) {
+  const sec = document.createElement('div');
+  sec.style.cssText = 'padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06)';
+
+  const hdr = document.createElement('div');
+  hdr.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:6px';
+  hdr.innerHTML = '<span style="color:#334466;font-size:9px;text-transform:uppercase;letter-spacing:.08em">RAID ROUTING</span>';
+  sec.appendChild(hdr);
+
+  // Last decision
+  if (_raid.lastDecision) {
+    const d = _raid.lastDecision;
+    const agentCol = { ollama:'#00ff88', claude:'#818cf8', chatgpt:'#34d399', gemini:'#ff6b35', perplexity:'#00d4ff' };
+    const col = agentCol[d.agent] || '#b8cfe0';
+    const decision = document.createElement('div');
+    decision.style.cssText = 'padding:5px 8px;background:rgba(0,0,0,.3);border-radius:3px;border-left:2px solid ' + col + ';margin-bottom:6px';
+    decision.innerHTML =
+      '<div style="display:flex;gap:8px;align-items:center">' +
+      '<span style="font:10px monospace;color:' + col + ';font-weight:700">' + (d.agent||'?') + '</span>' +
+      '<span style="font:9px monospace;color:#334466">cluster: ' + (d.cluster||'?') + '</span>' +
+      '<span style="font:9px monospace;color:#1e3050">' + (d.reason||'') + '</span>' +
+      '</div>';
+    sec.appendChild(decision);
+  }
+
+  // Ask RAID row
+  const askRow = document.createElement('div');
+  askRow.style.cssText = 'display:flex;gap:4px;align-items:center';
+  const intentIn = document.createElement('input');
+  intentIn.placeholder = 'intent to route…';
+  intentIn.style.cssText = 'flex:1;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);color:#b8cfe0;font:9px monospace;padding:3px 6px;border-radius:3px;outline:none';
+  const askBtn = document.createElement('button');
+  askBtn.textContent = '→ route';
+  askBtn.style.cssText = 'background:none;border:1px solid rgba(129,140,248,.3);color:#818cf8;border-radius:3px;padding:2px 8px;font:9px monospace;cursor:pointer;flex-shrink:0';
+  askBtn.onclick = () => {
+    const q = intentIn.value.trim(); if (!q) return;
+    _raidDecide(q, '', (err, d) => { if (!err && activeTab==='nexus') renderNexus(); });
+  };
+  // Auto-route the current input field content
+  const autoBtn = document.createElement('button');
+  autoBtn.textContent = '⟳ auto';
+  autoBtn.style.cssText = 'background:none;border:1px solid rgba(0,255,136,.2);color:#00ff88;border-radius:3px;padding:2px 8px;font:9px monospace;cursor:pointer;flex-shrink:0';
+  autoBtn.onclick = () => {
+    const msgs = _nexusGetMessages();
+    const last = msgs.filter(m => m.role==='user').pop();
+    if (last) { intentIn.value=last.text.slice(0,80); askBtn.click(); }
+  };
+  askRow.append(intentIn, askBtn, autoBtn);
+  sec.appendChild(askRow);
+
+  // History
+  if (_raid.history.length) {
+    const hist = document.createElement('div');
+    hist.style.cssText = 'margin-top:5px;display:flex;flex-direction:column;gap:2px';
+    for (const h of _raid.history.slice(0, 4)) {
+      const agentCol = { ollama:'#00ff88', claude:'#818cf8', chatgpt:'#34d399', gemini:'#ff6b35', perplexity:'#00d4ff' };
+      const col = agentCol[h.decision?.agent] || '#334466';
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:6px;font:9px monospace;color:#1e3050';
+      row.innerHTML =
+        '<span style="color:' + col + ';width:70px;flex-shrink:0">' + (h.decision?.agent||'?') + '</span>' +
+        '<span style="color:#1e3050">' + (h.intent||'').slice(0,50) + '</span>';
+      hist.appendChild(row);
+    }
+    sec.appendChild(hist);
+  }
+
+  if (container) container.appendChild(sec);
+  else {
+    const el = document.getElementById('__g10nexus__');
+    if (el) { /* will be called from renderNexus */ }
+  }
+  return sec;
+}
+
+function _renderNexusHeal(container) {
+  const sec = document.createElement('div');
+  sec.style.cssText = 'padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06)';
+
+  const hdr = document.createElement('div');
+  hdr.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:5px';
+  hdr.innerHTML =
+    '<span style="color:#334466;font-size:9px;text-transform:uppercase;letter-spacing:.08em">SELF-HEAL</span>' +
+    '<span style="color:#1e3050;font-size:9px">' + _heal.gaps.length + ' open gaps · ' + _heal.failureModes.length + ' failure modes</span>' +
+    '<button style="margin-left:auto;background:none;border:1px solid rgba(255,255,255,.07);color:#334466;border-radius:3px;padding:1px 7px;font:9px monospace;cursor:pointer" ' +
+    'id="__nx_heal_refresh__">↺</button>';
+  sec.appendChild(hdr);
+
+  // Failure modes (highest priority)
+  for (const fm of _heal.failureModes.slice(0, 2)) {
+    const card = document.createElement('div');
+    card.style.cssText = 'padding:5px 8px;background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.2);border-radius:3px;margin-bottom:4px';
+    card.innerHTML =
+      '<div style="display:flex;gap:6px;align-items:center">' +
+      '<span style="font:9px monospace;color:#ff2d55;font-weight:700">FAILURE MODE</span>' +
+      '<span style="font:9px monospace;color:#5a7a96">' + (fm.faultClass||'').slice(0,30) + '</span>' +
+      '<span style="font:9px monospace;color:#334466">friction:' + ((fm.friction||0)*100).toFixed(0) + '%</span>' +
+      '</div>' +
+      '<div style="font:9px monospace;color:#5a7a96;margin-top:3px;line-height:1.4">' + (fm.humanAction||'').slice(0,100) + '</div>';
+    sec.appendChild(card);
+  }
+
+  // Open gaps
+  for (const gap of _heal.gaps.slice(0, 4)) {
+    const sev  = gap.severity || 'medium';
+    const col  = sev==='high'?'#ff6b35':sev==='critical'?'#ff2d55':'#818cf8';
+    const fric = (_heal.friction.find(f=>f.faultClass===gap.type)?.friction||0)*100;
+    const row  = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:3px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)';
+    const sevEl = document.createElement('span');
+    sevEl.style.cssText = 'font:8px monospace;color:'+col+';width:50px;flex-shrink:0';
+    sevEl.textContent = sev;
+    const typeEl = document.createElement('span');
+    typeEl.style.cssText = 'font:9px monospace;color:#334466;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+    typeEl.textContent = (gap.type||'?') + (gap.path?' · '+gap.path.slice(-20):'');
+    const healBtn = document.createElement('button');
+    healBtn.style.cssText = 'background:none;border:1px solid rgba(0,255,136,.2);color:#00ff88;border-radius:3px;padding:1px 6px;font:8px monospace;cursor:pointer;flex-shrink:0';
+    healBtn.textContent = '⟳ heal';
+    const gUuid = gap.uuid||'';
+    healBtn.onclick = function() {
+      _healTrigger(gUuid, function(e) {
+        healBtn.textContent = e ? '✗' : '✓';
+        setTimeout(function() { _healFetch(function() { if(activeTab==='nexus') renderNexus(); }); }, 500);
+      });
+    };
+    if (fric>0) { const fr=document.createElement('span'); fr.style.cssText='font:8px monospace;color:#ff6b35'; fr.textContent='f:'+fric.toFixed(0)+'%'; row.append(sevEl,typeEl,fr,healBtn); }
+    else row.append(sevEl,typeEl,healBtn);
+    sec.appendChild(row);
+  }
+
+  if (!_heal.gaps.length && !_heal.failureModes.length) {
+    const ok = document.createElement('div');
+    ok.style.cssText = 'color:#00ff88;font:9px monospace';
+    ok.textContent = '✓ no open gaps';
+    sec.appendChild(ok);
+  }
+
+  // Friction table
+  if (_heal.friction.some(f=>f.friction>0)) {
+    const ftbl = document.createElement('div');
+    ftbl.style.cssText = 'margin-top:6px';
+    ftbl.innerHTML = '<div style="color:#1e3050;font:8px monospace;margin-bottom:3px;text-transform:uppercase">FRICTION</div>';
+    for (const f of _heal.friction.filter(x=>x.friction>0).slice(0,5)) {
+      const pct = Math.round(f.friction*100);
+      const col = pct>=70?'#ff2d55':pct>=40?'#ff6b35':'#818cf8';
+      const bar = document.createElement('div');
+      bar.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:2px';
+      bar.innerHTML =
+        '<span style="font:8px monospace;color:#334466;width:100px;overflow:hidden;text-overflow:ellipsis">' + (f.faultClass||'?') + '</span>' +
+        '<div style="flex:1;height:4px;background:rgba(255,255,255,.05);border-radius:2px">' +
+        '<div style="width:' + pct + '%;height:100%;background:' + col + ';border-radius:2px"></div>' +
+        '</div>' +
+        '<span style="font:8px monospace;color:' + col + ';width:24px;text-align:right">' + pct + '%</span>';
+      ftbl.appendChild(bar);
+    }
+    sec.appendChild(ftbl);
+  }
+
+  container.appendChild(sec);
+}
+
+// ── Rewrite renderNexus to include all three hooks ────────────────────────────
+const _renderNexusOrig = renderNexus;
+function renderNexus() {
+  const el = document.getElementById('__g10nexus__');
+  if (!el) return;
+  el.innerHTML = '';
+
+  // Status bar
+  const msgs = _nexusGetMessages();
+  const os   = _nexus.ollamaOk===null?'...':_nexus.ollamaOk?'✓':'✗';
+  const oc   = _nexus.ollamaOk?'#00ff88':_nexus.ollamaOk===false?'#ff2d55':'#818cf8';
+  const sb   = document.createElement('div');
+  sb.style.cssText = 'padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:rgba(0,0,0,.2)';
+  sb.innerHTML =
+    '<span style="color:#00d4ff;font:9px monospace;font-weight:700">⬡ NEXUS</span>' +
+    '<span style="font:9px monospace;color:' + oc + '">ollama ' + os + '</span>' +
+    '<span style="color:#1e3050;font:9px monospace">' + msgs.length + ' msgs</span>' +
+    '<span style="color:#1e3050;font:9px monospace">' + _heal.gaps.length + ' gaps</span>' +
+    '<span style="color:#1e3050;font:9px monospace">' + _mem.working.length + ' mem</span>' +
+    '<button style="margin-left:auto;background:none;border:1px solid rgba(0,212,255,.2);color:#00d4ff;border-radius:3px;padding:1px 7px;font:8px monospace;cursor:pointer" ' +
+    'onclick="_nexusRefreshAll()">↺ all</button>';
+  el.appendChild(sb);
+
+  // BDA signals (compact)
+  if (_nexus.signals.length) {
+    const latest = _nexus.signals[_nexus.signals.length-1];
+    const sdiv   = document.createElement('div');
+    sdiv.style.cssText = 'padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:5px;flex-wrap:wrap;align-items:center';
+    sdiv.innerHTML = '<span style="color:#334466;font:8px monospace;margin-right:3px;text-transform:uppercase">BDA</span>';
+    for (const ax of ['valence','certainty','openness','tension','selfref']) {
+      const v = latest[ax]??0; const pct=Math.round(v*100);
+      const col=ax==='tension'?(pct>60?'#ff2d55':'#818cf8'):ax==='valence'?(pct>50?'#00ff88':'#ff6b35'):'#818cf8';
+      sdiv.innerHTML += '<span style="font:8px monospace;color:'+col+';border:1px solid '+col+';border-radius:2px;padding:1px 4px">'+ax[0].toUpperCase()+':'+pct+'%</span>';
+    }
+    if (latest.regime && latest.regime!=='STABLE') {
+      sdiv.innerHTML += '<span style="font:8px monospace;color:#ff6b35;margin-left:4px">'+latest.regime+'</span>';
+    }
+    el.appendChild(sdiv);
+  }
+
+  // Semantic context (compact)
+  if (_nexus.context?.length) {
+    const cdiv = document.createElement('div');
+    cdiv.style.cssText = 'padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.06)';
+    cdiv.innerHTML = '<div style="color:#334466;font:8px monospace;margin-bottom:4px;text-transform:uppercase">MEMORY HITS</div>';
+    for (const hit of _nexus.context.slice(0,3)) {
+      const pct=Math.round((hit.snr||hit.similarity||0)*100);
+      const col=pct>=85?'#00ff88':pct>=72?'#00d4ff':'#818cf8';
+      const row=document.createElement('div');
+      row.style.cssText='display:flex;gap:6px;margin-bottom:2px;align-items:flex-start';
+      row.innerHTML='<span style="font:8px monospace;color:'+col+';width:28px;flex-shrink:0">'+pct+'%</span><span style="font:9px monospace;color:#334466;line-height:1.4">'+(hit.text||'').slice(0,90)+'</span>';
+      cdiv.appendChild(row);
+    }
+    const inj=document.createElement('button');
+    inj.style.cssText='margin-top:4px;background:none;border:1px solid rgba(0,212,255,.2);color:#00d4ff;border-radius:3px;padding:2px 8px;font:8px monospace;cursor:pointer;width:100%';
+    inj.textContent='⬡ inject into prompt';
+    inj.onclick=_nexusInjectContext;
+    cdiv.appendChild(inj);
+    el.appendChild(cdiv);
+  }
+
+  // RAID
+  el.appendChild(_renderNexusRaid());
+
+  // Memory
+  _renderNexusMemory(el);
+
+  // Self-Heal
+  _renderNexusHeal(el);
+
+  // Ollama direct (compact)
+  const qdiv=document.createElement('div');
+  qdiv.style.cssText='padding:8px 12px';
+  qdiv.innerHTML='<div style="color:#334466;font:8px monospace;margin-bottom:4px;text-transform:uppercase">OLLAMA DIRECT</div>';
+  const qi=document.createElement('textarea');qi.id='__nx_query__';
+  qi.placeholder='qwen2.5-coder:1.5b…';
+  qi.style.cssText='width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);color:#b8cfe0;font:9px monospace;padding:5px 7px;border-radius:3px;resize:none;height:44px;outline:none;box-sizing:border-box';
+  const qb=document.createElement('button');qb.textContent='↗ ask';
+  qb.style.cssText='margin-top:3px;background:none;border:1px solid rgba(0,255,136,.2);color:#00ff88;border-radius:3px;padding:2px 8px;font:8px monospace;cursor:pointer';
+  const qo=document.createElement('div');qo.id='__nx_qout__';
+  qo.style.cssText='margin-top:4px;font:9px monospace;color:#334466;line-height:1.5;min-height:16px';
+  qb.onclick=()=>{const q=document.getElementById('__nx_query__')?.value?.trim();if(!q)return;qo.style.color='#818cf8';qo.textContent='⟳';_nexusOllamaQuery(q,(err,text)=>{const o=document.getElementById('__nx_qout__');if(!o)return;if(err){o.style.color='#ff2d55';o.textContent='✗ '+err;}else{o.style.color='#b8cfe0';o.textContent=text.slice(0,400);}});};
+  qdiv.append(qi,qb,qo);el.appendChild(qdiv);
+}
+
+function _nexusRefreshAll() {
+  _nexusCheckOllama();
+  _memFetch(() => { if(activeTab==='nexus') renderNexus(); });
+  _healFetch(() => { if(activeTab==='nexus') renderNexus(); });
+  const msgs = _nexusGetMessages();
+  const last = msgs.filter(m=>m.role==='user').pop();
+  if (last) _raidDecide(last.text, '', () => { if(activeTab==='nexus') renderNexus(); });
+}
+
+// Override _nexusInit to also boot hooks
+const _nexusInitBase = _nexusInit;
+function _nexusInit() {
+  _nexus.sessionId = MY_TAB + '-' + Date.now().toString(36);
+  _nexusCheckOllama();
+  setTimeout(_nexusStartObserver, 2000);
+  setTimeout(() => { _memFetch(); _healFetch(); }, 3000);
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────

@@ -126,6 +126,7 @@ const TABLE_TIERS = {
   failure_modes:       'long',   // escalation level 4 — human action items
   chat_log:            'short',  // all AI exchanges for context reinjection
   escalation_log:      'long',   // full history of every escalation attempt
+  components:          'long',   // component registry — self-describing kernel
 };
 
 // ── All declared tables ───────────────────────────────────────────────────────

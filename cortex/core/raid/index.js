@@ -1,8 +1,8 @@
 'use strict';
-// ── core/raid/index.js — RAID v6.1 ───────────────────────────────────────────
+// ── core/raid/index.js — RAID v6 ─────────────────────────────────────────────
 // UUID: mod-raid-v6-0000-4000-0000-000000000001
 //
-// RAID — Routing and Agent Intelligence Dispatcher v6.1
+// RAID — Routing and Agent Intelligence Dispatcher v6
 // The orchestrator's ONLY control layer for agent dispatch.
 //
 // AXIOMS (enforced in code):
@@ -10,15 +10,6 @@
 //   LAW_II MEMORY_AUTHORITY — every decision written to JAA BEFORE dispatch.
 //   §1.1   DETERMINISTIC — f(call, healthSnapshot, weights) → same decision always.
 //   §1.2   NOTHING_SILENT — every routing failure logged + gap emitted.
-//
-// v6.1 additions:
-//   DIAGNOSTIC — diagnostic-engines suite runs on every dispatch failure.
-//                Causal chain trace, invariant scan, SNR floor emitted to console.
-//   DRIFT — BDA regime signals from api-dispatch fed back via recordDrift().
-//            Regime DYSREGULATED/COLLAPSING → weight penalty + escalation.
-//   SELF-HEAL — escalation.escalate() called on: consecutive fails, drift alert,
-//                high friction fault classes.
-//   CONSOLE — explicit structured diagnostic lines on every decision, failure, drift.
 //
 // LEARNING: updates (intentCluster × agent) weight table from outcomes.
 // SYSTEM-AWARE: probes all agents every 10s. Never dispatches to a dead system.
@@ -32,36 +23,8 @@ const { jaaDB, uid } = require('../../memory/jaa-db');
 let ESSKernel = null;
 try { ESSKernel = require('../../lib/ess').ESSKernel; } catch(_) {}
 
-// ── Lazy-loaded engines (non-fatal if unavailable) ────────────────────────────
-let _diagEngines  = null;
-let _escalation   = null;
-
-function _diag() {
-  if (_diagEngines !== null) return _diagEngines;
-  try {
-    _diagEngines = require('../../lib/diagnostic-engines');
-    console.log('[raid] diagnostic-engines loaded');
-  } catch(e) {
-    console.warn(`[raid] diagnostic-engines unavailable: ${e.message}`);
-    _diagEngines = false;
-  }
-  return _diagEngines;
-}
-
-function _esc() {
-  if (_escalation !== null) return _escalation;
-  try {
-    _escalation = require('../../cortex/self-heal/escalation');
-    console.log('[raid] self-heal escalation loaded');
-  } catch(e) {
-    console.warn(`[raid] escalation unavailable: ${e.message}`);
-    _escalation = false;
-  }
-  return _escalation;
-}
-
 const MODULE_ID = 'raid';
-const VERSION   = '6.1.0';
+const VERSION   = '6.0.0';
 
 // ── ESS (optional) ────────────────────────────────────────────────────────────
 let _ess = null;
@@ -82,7 +45,7 @@ if (ESSKernel) {
   });
 }
 
-// ── Health cache ───────────────────────────────────────────────────────────────
+// ── Health cache ──────────────────────────────────────────────────────────────
 const HEALTH_INTERVAL = 10000;
 const HEALTH_TIMEOUT  = 2000;
 
@@ -103,7 +66,7 @@ async function _probeAgent(agent) {
     'guardian-chatgpt': { host: '127.0.0.1', port: 7820,  path: '/providers' },
   };
   const probe = probes[agent];
-  if (!probe) return;
+  if (!probe) return; // claude/chatgpt assumed available unless proven otherwise
 
   const t0 = Date.now();
   return new Promise(resolve => {
@@ -136,253 +99,103 @@ async function _probeAgent(agent) {
         resolve();
       });
     });
-    req.on('error', () => {
-      _health[agent].consecutiveFails++;
-      _health[agent].lastCheck = Date.now();
-
-      // Console diagnostic on agent going offline
-      if (_health[agent].consecutiveFails === 1) {
-        console.warn(`[raid][health] ${agent} OFFLINE (consecutive_fails=${_health[agent].consecutiveFails})`);
-      }
-      if (_health[agent].consecutiveFails >= 3) {
-        console.error(`[raid][health] ${agent} UNREACHABLE — consecutive_fails=${_health[agent].consecutiveFails} — bypassing in LAW_I`);
-        // Escalate persistent agent failure
-        _triggerEscalation({
-          faultClass:  `raid.agent_offline.${agent}`,
-          level:       1,
-          description: `Agent ${agent} has been unreachable for ${_health[agent].consecutiveFails} consecutive probes`,
-          evidence:    { agent, consecutiveFails: _health[agent].consecutiveFails },
-        });
-      }
-      resolve();
-    });
-    req.on('timeout', () => { req.destroy(); resolve(); });
+    req.on('error',   () => { _health[agent].online = false; _health[agent].consecutiveFails++; _health[agent].lastCheck = Date.now(); resolve(); });
+    req.on('timeout', () => { req.destroy(); _health[agent].online = false; resolve(); });
   });
 }
 
 async function _refreshHealth() {
-  await Promise.all(Object.keys(_health).map(_probeAgent));
-}
-
-// ── Weights ───────────────────────────────────────────────────────────────────
-const _WEIGHTS_FILE = path.join(__dirname, '../../../data/cortex/raid-weights.json');
-const _weights = new Map();
-
-function _loadWeights() {
+  await Promise.all(['ollama','guardian-claude','guardian-chatgpt'].map(_probeAgent));
   try {
-    const d = JSON.parse(fs.readFileSync(_WEIGHTS_FILE, 'utf8'));
-    for (const [k, v] of Object.entries(d)) _weights.set(k, v);
-    console.log(`[raid] weights loaded — ${_weights.size} entries`);
+    jaaDB.insert('event_log', { uuid: uid(), type: 'raid.health',
+      payload: JSON.stringify(Object.fromEntries(
+        Object.entries(_health).map(([k,v]) => [k, { online: v.online, fails: v.consecutiveFails }])
+      )), source: MODULE_ID, ts: Date.now() });
   } catch(_) {}
 }
+
+// ── Weight table (learning) ───────────────────────────────────────────────────
+const _weights = new Map();
+const _WEIGHTS_FILE = path.join(__dirname, '../../../data/cortex/ledger/raid-weights.json');
 
 function _wKey(cluster, agent) { return `${cluster}:${agent}`; }
 
 function _getW(cluster, agent) {
-  const k = _wKey(cluster, agent);
-  if (!_weights.has(k)) _weights.set(k, { cluster, agent, successCount:0, callCount:0, successRate:0.5, totalMs:0, avgMs:0 });
-  return _weights.get(k);
+  return _weights.get(_wKey(cluster, agent)) || {
+    successCount: 0, failCount: 0, totalMs: 0,
+    successRate: 0.5, avgMs: 0, callCount: 0, lastUsed: 0,
+  };
 }
 
-function _updateW(cluster, agent, success, ms) {
+function _updateW(cluster, agent, ok, ms) {
   const w = _getW(cluster, agent);
+  if (ok) w.successCount++; else w.failCount++;
+  w.totalMs    += ms;
   w.callCount++;
-  w.totalMs += ms;
-  w.avgMs = Math.round(w.totalMs / w.callCount);
-  if (success) w.successCount++;
-  w.successRate = +(w.successCount / w.callCount).toFixed(4);
+  w.successRate = w.successCount / w.callCount;
+  w.avgMs       = Math.round(w.totalMs / w.callCount);
+  w.lastUsed    = Date.now();
   _weights.set(_wKey(cluster, agent), w);
-  try { fs.writeFileSync(_WEIGHTS_FILE, JSON.stringify(Object.fromEntries(_weights), null, 2)); } catch(_) {}
+  try { fs.mkdirSync(path.dirname(_WEIGHTS_FILE), { recursive: true }); fs.writeFileSync(_WEIGHTS_FILE, JSON.stringify(Object.fromEntries(_weights), null, 2)); } catch(_) {}
 }
 
-// ── Outcome recording (called from api-dispatch and other callers) ─────────────
-// jobId → cluster+agent lookup via JAA
-function recordOutcome(jobId, success, ms) {
-  try {
-    const call = jaaDB.get('agent_calls', jobId);
-    if (!call) return;
-    const cluster = call.routeCluster || 'general';
-    const agent   = call.routedTo     || 'unknown';
-    _updateW(cluster, agent, success, ms);
-
-    if (!success) {
-      console.warn(
-        `[raid][outcome] FAIL job=${jobId.slice(0,8)}` +
-        ` agent=${agent} cluster=${cluster} ms=${ms}` +
-        ` successRate=${_getW(cluster, agent).successRate}`
-      );
-    }
-  } catch(_) {}
+function _loadWeights() {
+  try { const raw = JSON.parse(fs.readFileSync(_WEIGHTS_FILE, 'utf8')); for (const [k,v] of Object.entries(raw)) _weights.set(k,v); } catch(_) {}
 }
 
-// ── Drift signal from BDA (called from api-dispatch) ──────────────────────────
-// Applies trust-weighted penalty to agent's weight for the affected cluster.
-const DRIFT_PENALTY = {
-  STABLE:       0,
-  ACTIVATING:   0,
-  OSCILLATING:  0.05,   // mild — monitor
-  UNGROUNDED:   0.15,   // moderate — reduce routing probability
-  DYSREGULATED: 0.35,   // severe — heavy penalty, escalate
-  COLLAPSING:   0.60,   // critical — near-blacklist, escalate
-};
-
-function recordDrift(provider, regime, pendulum) {
-  const penalty  = DRIFT_PENALTY[regime] || 0;
-  if (penalty === 0) return;
-
-  const trust    = pendulum?.trust ?? 1.0;
-  const sigma    = pendulum?.sigma ?? 1.0;
-  const n        = pendulum?.n     ?? 0;
-
-  console.warn(
-    `[raid][drift] provider=${provider} regime=${regime}` +
-    ` penalty=${penalty} trust=${trust} sigma=${sigma} n=${n}`
-  );
-
-  // Apply penalty across all clusters for this provider
-  for (const [key, w] of _weights.entries()) {
-    if (!key.startsWith(':') && key.split(':')[1] === provider) {
-      const cluster = key.split(':')[0];
-      // Reduce successRate by penalty, floor at 0
-      w.successRate = Math.max(0, +(w.successRate - penalty).toFixed(4));
-      w.callCount   = Math.max(w.callCount, 5); // ensure threshold is active
-      _weights.set(key, w);
-      console.warn(`[raid][drift]   → ${cluster}:${provider} successRate now=${w.successRate}`);
-    }
-  }
-
-  // Persist
-  try { fs.writeFileSync(_WEIGHTS_FILE, JSON.stringify(Object.fromEntries(_weights), null, 2)); } catch(_) {}
-
-  // Log gap
-  try {
-    jaaDB.insert('gaps', {
-      uuid: uid(), type: 'raid.drift', path: `raid/${provider}`,
-      body: `BDA drift: provider=${provider} regime=${regime} trust=${trust} sigma=${sigma}`,
-      severity: penalty >= 0.35 ? 'high' : 'medium', status: 'open',
-      source: MODULE_ID, causedBy: null, createdAt: Date.now(), attempts: 0, ts: Date.now(),
-    });
-  } catch(_) {}
-
-  // Escalate on severe drift
-  if (penalty >= 0.35) {
-    _triggerEscalation({
-      faultClass:  `raid.drift.${provider}`,
-      level:       penalty >= 0.60 ? 3 : 2,
-      description: `Provider ${provider} BDA regime=${regime} — coding drift exceeds threshold`,
-      evidence:    { provider, regime, penalty, trust, sigma, n },
-    });
-  }
-}
-
-// ── Diagnostic engine run on dispatch failure ──────────────────────────────────
-function _runDiagnostics(context) {
-  const de = _diag();
-  if (!de) return null;
-
-  const { callUuid, agent, cluster, error, recentEvents } = context;
-
-  console.log(`[raid][diag] running diagnostics — job=${callUuid?.slice(0,8)} agent=${agent} cluster=${cluster}`);
-
-  let result = {};
-
-  // Causal chain trace from recent event log
-  try {
-    if (recentEvents?.length) {
-      const chain = de.causalChainTrace(recentEvents, 'fail');
-      if (chain.chain.length > 1) {
-        console.warn(
-          `[raid][diag] causal chain: source=${chain.source} R0=${chain.r0}` +
-          ` systems=${chain.infected?.join(',')} generations=${chain.generations}`
-        );
-        console.warn(`[raid][diag]   ${chain.summary}`);
-      }
-      result.causal = chain;
-    }
-  } catch(e) {
-    console.warn(`[raid][diag] causal trace error: ${e.message}`);
-  }
-
-  // Invariant scan
-  try {
-    if (recentEvents?.length) {
-      const scan = de.invariantScan(recentEvents);
-      if (scan.violations?.length) {
-        for (const v of scan.violations) {
-          console.warn(`[raid][diag] INVARIANT VIOLATION ${v.id} (${v.axiom}) ${v.violations?.length} hits`);
-        }
-      }
-      result.invariants = scan;
-    }
-  } catch(e) {
-    console.warn(`[raid][diag] invariant scan error: ${e.message}`);
-  }
-
-  // SNR floor
-  try {
-    if (recentEvents?.length) {
-      const snr = de.snrFloorDetect(recentEvents);
-      console.log(
-        `[raid][diag] SNR: score=${snr.score} regime=${snr.regime}` +
-        ` noiseFloor=${snr.noiseFloor} coherence=${snr.coherence}`
-      );
-      result.snr = snr;
-    }
-  } catch(e) {
-    console.warn(`[raid][diag] SNR error: ${e.message}`);
-  }
-
-  // Write diagnostic result to JAA
-  try {
-    jaaDB.insert('event_log', {
-      uuid: uid(), type: 'raid.diagnostic.complete',
-      payload: JSON.stringify({ callUuid, agent, cluster, result }),
-      source: MODULE_ID, causedBy: callUuid, ts: Date.now(),
-    });
-  } catch(_) {}
-
-  return result;
-}
-
-// ── Self-heal escalation trigger ───────────────────────────────────────────────
-function _triggerEscalation(opts) {
-  const esc = _esc();
-  if (!esc || typeof esc.escalate !== 'function') return;
-  try {
-    esc.escalate({ ...opts, source: opts.source || MODULE_ID });
-  } catch(e) {
-    console.warn(`[raid][escalation] escalate error: ${e.message}`);
-  }
-}
-
-// ── Intent clustering ─────────────────────────────────────────────────────────
+// ── Intent clustering (deterministic, no randomness) ─────────────────────────
 const CLUSTERS = {
-  code:       /\b(code|implement|function|class|module|bug|fix|refactor|write|build|create|generate)\b/i,
-  spec:       /\b(spec|seam|contract|schema|design|architecture|plan|structure)\b/i,
-  data:       /\b(data|sql|query|database|table|csv|json|transform|parse|extract)\b/i,
-  analysis:   /\b(analyze|analyse|explain|understand|review|audit|check|evaluate|assess)\b/i,
-  general:    /./,
+  // Local-first work
+  code:       /\b(code|function|class|module|implement|build|write|create|fix|refactor|typescript|javascript|python|rust|node|patch)\b/i,
+  spec:       /\b(spec|design|architecture|system|plan|structure|schema|contract|api|blueprint)\b/i,
+  data:       /\b(data|json|csv|sql|database|query|table|migrate|transform|parse)\b/i,
   diagnostic: /\b(error|fail|broken|debug|trace|diagnose|crash|exception|issue|bug|stack)\b/i,
+  analysis:   /\b(analyze|analyse|explain|understand|review|audit|check|evaluate|compare|summarize)\b/i,
+
+  // Vision/UI — Gemini primary
+  vision:     /\b(image|screenshot|photo|visual|ui|interface|design|layout|render|pixel|svg|canvas|color|theme|mock)\b/i,
+
+  // Research/facts — Perplexity primary
+  research:   /\b(research|fact|current|today|news|latest|real.world|source|citation|search|web|grounded|up.to.date)\b/i,
+
+  // Hostile/adversarial — ChatGPT primary
+  hostile:    /\b(attack|adversar|hostile|red.team|pentest|bypass|exploit|break|challenge|counter|stress.test|find.flaw|worst.case)\b/i,
+
+  // Forge/SEAM — highest stakes, Claude reserve
   forge:      /\b(forge|seam|patch|repair|self.heal|autonomous|critical.fix|production)\b/i,
 };
 
-function _cluster(intent) {
-  for (const [name, re] of Object.entries(CLUSTERS)) {
-    if (name === 'general') continue;
-    if (re.test(intent)) return name;
-  }
+function _cluster(text) {
+  if (!text) return 'general';
+  for (const [name, re] of Object.entries(CLUSTERS)) if (re.test(text)) return name;
   return 'general';
 }
 
+// ── Deterministic routing decision ───────────────────────────────────────────
+// PURE FUNCTION: same (call, healthSnap, weights) → same decision. Always.
+//
+// PROVIDER HIERARCHY (by intent cluster):
+//   Local/private:  ollama → chatgpt → claude
+//   Vision/UI:      gemini → claude
+//   Research/facts: perplexity → claude
+//   Hostile/attack: chatgpt → claude
+//   Forge/critical: ollama → claude (never chatgpt — output quality matters)
+//
 // LAW_I: Ollama always first for code/spec/data/diagnostic/analysis/general.
+// LAW_III: Claude always last (reserve, highest quality, most expensive).
+
+// Per-cluster fallback chains
 const CLUSTER_CHAINS = {
-  code:       ['ollama', 'guardian-claude', 'claude'],
-  spec:       ['ollama', 'guardian-claude', 'claude'],
-  data:       ['ollama', 'guardian-chatgpt', 'chatgpt'],
-  analysis:   ['ollama', 'guardian-chatgpt', 'chatgpt', 'claude'],
-  general:    ['ollama', 'guardian-chatgpt', 'chatgpt'],
+  code:       ['ollama', 'chatgpt', 'claude'],
+  spec:       ['ollama', 'claude'],
+  data:       ['ollama', 'chatgpt', 'claude'],
   diagnostic: ['ollama', 'chatgpt', 'claude'],
-  forge:      ['ollama', 'guardian-claude', 'claude'],
+  analysis:   ['ollama', 'chatgpt', 'claude'],
+  vision:     ['gemini', 'claude'],
+  research:   ['perplexity', 'chatgpt', 'claude'],
+  hostile:    ['chatgpt', 'claude'],
+  forge:      ['ollama', 'claude'],      // deepseek-coder → qwen2.5-coder → mistral (via OLLAMA_SEAM_MODELS), then claude reserve
+  general:    ['ollama', 'chatgpt', 'claude'],
 };
 
 // ALL providers are NCP — browser tab + userscript. No API keys. No REST calls.
@@ -398,6 +211,7 @@ const NCP_PROVIDERS = new Set([
 
 function _agentAvailable(agent, healthSnap) {
   if (agent === 'ollama') return !!healthSnap['ollama']?.online;
+  // All other providers: NCP browser tab — check if tab is connected
   const ncpKey = agent.startsWith('guardian-') ? agent : 'guardian-' + agent;
   return !!(healthSnap[agent]?.online || healthSnap[ncpKey]?.online);
 }
@@ -409,7 +223,6 @@ function _decide(call, healthSnap, weights) {
 
   // Rule 1: explicit preference + available
   if (preferred && preferred !== 'auto' && _agentAvailable(preferred, healthSnap)) {
-    console.log(`[raid][decide] job=${call.uuid?.slice(0,8)} → ${preferred} (explicit) cluster=${cluster}`);
     return { agent: preferred, reason: `explicit:${preferred}`, cluster };
   }
 
@@ -419,35 +232,29 @@ function _decide(call, healthSnap, weights) {
   for (const agent of chain) {
     if (!_agentAvailable(agent, healthSnap)) continue;
 
+    // For ollama: respect LAW_I failure tracking
     if (agent === 'ollama') {
       const oh = healthSnap['ollama'];
-      if (oh.consecutiveFails >= 3) continue;
+      if (oh.consecutiveFails >= 3) continue; // bypass to next in chain
       const w = weights.get(_wKey(cluster, 'ollama'));
-      if (w && w.callCount >= 3 && w.successRate < 0.3) continue;
+      if (w && w.callCount >= 3 && w.successRate < 0.3) continue; // too many failures
     }
 
     const w = weights.get(_wKey(cluster, agent));
     const successRate = w?.successRate ?? 0.5;
     const callCount   = w?.callCount   ?? 0;
 
-    if (agent !== 'claude' && callCount >= 5 && successRate < 0.2) {
-      console.warn(`[raid][decide] ${agent} skipped — successRate=${successRate} callCount=${callCount}`);
-      continue;
-    }
+    // Skip agents with very poor track record (but not Claude — it's the reserve)
+    if (agent !== 'claude' && callCount >= 5 && successRate < 0.2) continue;
 
-    console.log(
-      `[raid][decide] job=${call.uuid?.slice(0,8)} → ${agent}` +
-      ` cluster=${cluster} successRate=${successRate} callCount=${callCount}`
-    );
     return { agent, reason: 'cluster_chain:' + cluster, cluster };
   }
 
-  // Absolute fallback: claude
-  console.warn(`[raid][decide] job=${call.uuid?.slice(0,8)} → claude (LAW_I reserve) cluster=${cluster}`);
+  // Absolute fallback: claude (always reserve)
   return { agent: 'claude', reason: 'LAW_I:claude_reserve', cluster };
 }
 
-// ── Ollama brain (analyzes failures, adjusts weights) ─────────────────────────
+// ── Ollama brain (analyzes failures, adjusts weights) ────────────────────────
 const _failures = [];
 let _cfg = {};
 
@@ -455,8 +262,6 @@ async function _brainTick() {
   if (!_health['ollama']?.online || _failures.length === 0) return;
   const batch = _failures.splice(0, 5);
   const model = _cfg.ollamaModel || _health.ollama.models?.[0] || 'mistral';
-
-  console.log(`[raid][brain] analyzing ${batch.length} failures via ${model}`);
 
   const prompt =
     'You are the NEXUS RAID routing analyzer. Here are routing failures.\n' +
@@ -479,22 +284,15 @@ async function _brainTick() {
       for (const s of analysis.suggestions) {
         if (!s.cluster || !s.agent) continue;
         const w = _getW(s.cluster, s.agent);
-        if (w.callCount < 5) {
-          w.successCount = Math.max(w.successCount,1);
-          w.callCount    = Math.max(w.callCount,2);
-          w.successRate  = w.successCount / w.callCount;
-          _weights.set(_wKey(s.cluster,s.agent),w);
-        }
+        if (w.callCount < 5) { w.successCount = Math.max(w.successCount,1); w.callCount=Math.max(w.callCount,2); w.successRate=w.successCount/w.callCount; _weights.set(_wKey(s.cluster,s.agent),w); }
       }
       try { fs.writeFileSync(_WEIGHTS_FILE, JSON.stringify(Object.fromEntries(_weights), null, 2)); } catch(_) {}
-      console.log(`[raid][brain] ${(analysis.analysis||'').slice(0,100)}`);
+      console.log(`[raid] brain: ${(analysis.analysis||'').slice(0,80)}`);
     }
-  } catch(e) {
-    console.warn(`[raid][brain] analysis failed: ${e.message}`);
-  }
+  } catch(_) {}
 }
 
-// ── Main dispatch ──────────────────────────────────────────────────────────────
+// ── Main dispatch ─────────────────────────────────────────────────────────────
 
 async function _dispatch(call, decision) {
   const t0 = Date.now();
@@ -524,36 +322,16 @@ async function _dispatch(call, decision) {
 
   // Direct agent module
   try {
-    const mod    = require(`../agents/${decision.agent}`);
+    const mod = require(`../agents/${decision.agent}`);
     const result = await mod.dispatch({ uuid:call.uuid, prompt:call.prompt, intent:call.intent, context:call.context });
-    const ms     = Date.now()-t0;
+    const ms = Date.now()-t0;
     jaaDB.update('agent_calls', call.uuid, { status:'complete', response:result?.text||result?.response||JSON.stringify(result)||'', completedAt:Date.now(), latencyMs:ms });
     _updateW(decision.cluster, decision.agent, true, ms);
-    console.log(`[raid][dispatch] OK job=${call.uuid?.slice(0,8)} agent=${decision.agent} ${ms}ms`);
     return result;
   } catch(e) {
-    const ms = Date.now()-t0;
     jaaDB.update('agent_calls', call.uuid, { status:'pending_external', routedTo:decision.agent });
-    _updateW(decision.cluster, decision.agent, false, ms);
+    _updateW(decision.cluster, decision.agent, false, Date.now()-t0);
     _failures.push({ uuid:call.uuid, cluster:decision.cluster, agent:decision.agent, error:e.message });
-
-    console.error(
-      `[raid][dispatch] FAIL job=${call.uuid?.slice(0,8)}` +
-      ` agent=${decision.agent} cluster=${decision.cluster} ${ms}ms | ${e.message}`
-    );
-
-    // Run diagnostic engines on dispatch failure
-    try {
-      const recentEvents = jaaDB.query('event_log', () => true, 50)
-        .sort((a,b) => (b.ts||0) - (a.ts||0)).slice(0, 30);
-      _runDiagnostics({
-        callUuid: call.uuid, agent: decision.agent,
-        cluster: decision.cluster, error: e.message, recentEvents,
-      });
-    } catch(diagErr) {
-      console.warn(`[raid][dispatch] diagnostic run error: ${diagErr.message}`);
-    }
-
     throw e;
   }
 }
@@ -582,7 +360,6 @@ async function _tick() {
       });
     }
   } catch(err) {
-    console.error(`[raid][tick] error: ${err.message}`);
     jaaDB.insert('failures',{uuid:uid(),source:MODULE_ID,error:err.message,stack:err.stack,ts:Date.now()});
   }
 }
@@ -607,21 +384,11 @@ function init(cfg={}) {
   _interval = setInterval(_tick,         _cfg.pollMs??3000); _interval.unref();
   _hTimer   = setInterval(_refreshHealth,HEALTH_INTERVAL);   _hTimer.unref();
   _bTimer   = setInterval(_brainTick,    60000);             _bTimer.unref();
-  console.log(`[raid] v${VERSION} — weights:${_weights.size} ESS:${_ess?'on':'off'} diag:${!!_diag()} esc:${!!_esc()}`);
+  console.log(`[raid] v${VERSION} — weights:${_weights.size} ESS:${_ess?'on':'off'}`);
 }
 
 function stop() { [_interval,_hTimer,_bTimer].forEach(t=>t&&clearInterval(t)); _interval=_hTimer=_bTimer=null; }
 function setSystemState(s) { _systemState=s||{}; }
-function getState() {
-  return {
-    version:     VERSION,
-    health:      _health,
-    weights:     Object.fromEntries(_weights),
-    essEnabled:  !!_ess,
-    weightCount: _weights.size,
-    diagEnabled: !!_diag(),
-    escEnabled:  !!_esc(),
-  };
-}
+function getState() { return { version:VERSION, health:_health, weights:Object.fromEntries(_weights), essEnabled:!!_ess, weightCount:_weights.size }; }
 
-module.exports = { init, stop, getState, setSystemState, recordOutcome, recordDrift, _decide, _cluster, _health, _weights };
+module.exports = { init, stop, getState, setSystemState, _decide, _cluster, _health, _weights };

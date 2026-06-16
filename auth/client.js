@@ -374,6 +374,17 @@ async function run() {
     }
 
     case 'status': {
+      // Also fetch version
+      try {
+        const vr = await authRequest('GET', '/api/version');
+        if (vr.body?.system) {
+          console.log('\n' + hr('NEXUS v' + vr.body.system));
+          const svcs = vr.body.services || {};
+          for (const [k,v] of Object.entries(svcs)) {
+            console.log('  ' + dim(k.padEnd(16)) + gray(v));
+          }
+        }
+      } catch(_) {}
       const res = await authRequest('GET', '/api/status');
       const d   = res.body;
       if (!d) { console.log('No response'); break; }

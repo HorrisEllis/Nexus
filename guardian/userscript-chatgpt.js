@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — ChatGPT v9.0
 // @namespace    nexus.guardian.chatgpt
-// @version      9.0.0
+// @version      9.1.0
 // @description  Guardian v9: IndexedDB kernel, SHA-256 dedup, pre-prompt intelligence
 //               injection, full system widget, SEAM, queue, tags — same architecture as claude v10.
 // @author       James Brooks / Nexus
@@ -25,7 +25,7 @@ const NCP_HB     = NCP_URL + '/heartbeat';
 const CORTEX_URL = 'http://127.0.0.1:3748';
 const ORCH_URL   = 'http://127.0.0.1:9000';
 const PROVIDER   = 'chatgpt';
-const VERSION    = '9.0.0';
+const VERSION    = '9.1.0';
 const RECONNECT_MS = 3000;
 const HB_MS        = 8000;
 
