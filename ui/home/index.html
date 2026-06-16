@@ -226,8 +226,108 @@ select option{background:#111}
 .box-input{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:6px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:7px 10px;outline:none;width:100%;transition:border-color .2s}
 .box-input:focus{border-color:rgba(255,255,255,.2)}
 
-/* ── Floating menu button — always above everything, never blocks content ── */
-#menu-btn{
+/* ── Rewind button in top-bar ── */
+#rewind-btn{
+  pointer-events:auto;
+  margin-left:12px;padding:5px 12px;
+  background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);
+  border-radius:20px;color:rgba(0,229,255,.8);
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+#rewind-btn:hover{background:rgba(0,229,255,.16);border-color:rgba(0,229,255,.4);color:#00e5ff}
+
+/* ── Rewind overlay — full meta layer ── */
+#rewind-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,5,.85);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+#rewind-overlay.open{opacity:1;pointer-events:auto}
+
+#rewind-panel{
+  width:min(920px,95vw);
+  background:rgba(8,8,18,.95);border:1px solid rgba(0,229,255,.15);
+  border-radius:16px;overflow:hidden;
+  display:flex;flex-direction:column;
+  transform:translateY(20px);transition:transform .3s ease;
+  max-height:85vh;
+}
+#rewind-overlay.open #rewind-panel{transform:translateY(0)}
+
+#rw-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+#rw-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:.12em;color:#00e5ff}
+#rw-sub{font-size:11px;color:rgba(255,255,255,.3);margin-top:3px}
+#rw-sigma-badge{font-family:'Space Mono',monospace;font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+#rw-close{background:none;border:none;color:rgba(255,255,255,.3);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s}
+#rw-close:hover{color:#fff}
+
+/* Timeline canvas wrapper */
+#rw-timeline-wrap{
+  position:relative;padding:20px 22px 10px;flex-shrink:0;
+}
+#rw-canvas{display:block;width:100%;height:120px;cursor:crosshair}
+#rw-hover-tip{
+  position:absolute;pointer-events:none;
+  background:rgba(0,0,16,.92);border:1px solid rgba(0,229,255,.3);
+  border-radius:6px;padding:7px 10px;
+  font-family:'Space Mono',monospace;font-size:10px;color:#e0e8ff;
+  white-space:nowrap;opacity:0;transition:opacity .15s;
+  top:0;left:0;transform:translate(-50%,-100%);
+}
+#rw-hover-tip.show{opacity:1}
+
+/* Legend */
+#rw-legend{
+  display:flex;gap:20px;padding:0 22px 12px;flex-shrink:0;
+  font-size:10px;color:rgba(255,255,255,.3);align-items:center;
+}
+.rw-leg-item{display:flex;align-items:center;gap:6px}
+.rw-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Detail panel */
+#rw-detail{
+  border-top:1px solid rgba(255,255,255,.06);padding:16px 22px;
+  flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;
+  overflow-y:auto;
+}
+#rw-detail-empty{font-size:12px;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;text-align:center;padding:20px 0}
+#rw-snap-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+#rw-snap-id{font-size:12px;font-weight:700;color:#00e5ff}
+#rw-snap-trigger{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.07em}
+#rw-snap-stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.rw-stat{display:flex;flex-direction:column;gap:2px}
+.rw-stat-v{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:#fff}
+.rw-stat-l{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em}
+
+#rw-snap-sigma-bar-wrap{margin-bottom:4px}
+#rw-snap-sigma-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+#rw-snap-sigma-fill{height:100%;border-radius:3px;transition:width .4s ease,background .4s ease}
+
+/* Confirm row */
+#rw-confirm-warn{font-size:11px;color:#ffaa00;line-height:1.5;padding:10px 12px;background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.2);border-radius:6px}
+#rw-confirm-btn{padding:10px 20px;border-radius:8px;border:1px solid rgba(0,229,255,.4);background:rgba(0,229,255,.1);color:#00e5ff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s}
+#rw-confirm-btn:hover{background:rgba(0,229,255,.2)}
+#rw-confirm-btn.danger{border-color:rgba(255,51,85,.5);background:rgba(255,51,85,.12);color:#ff3355}
+#rw-confirm-btn.danger:hover{background:rgba(255,51,85,.22)}
+#rw-cancel-btn{padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.4);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s}
+#rw-cancel-btn:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+
+#rw-status{
+  padding:10px 22px;border-top:1px solid rgba(255,255,255,.05);
+  font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);
+  min-height:36px;flex-shrink:0;display:flex;align-items:center;gap:8px;
+}
+#rw-status.ok{color:#00ff88}
+#rw-status.err{color:#ff3355}
+#rw-status.working{color:#ffaa00}
+</style>
   position:fixed;top:16px;right:16px;z-index:100;
   display:flex;align-items:center;gap:8px;
   padding:9px 14px;
@@ -411,6 +511,66 @@ select option{background:#111}
       <div class="spill"><span class="spill-dot" id="sd-gd"></span>GD</div>
       <div class="spill"><span class="spill-dot" id="sd-idr"></span>IDR</div>
       <div class="spill"><span class="spill-dot" id="sd-br"></span>BR</div>
+    </div>
+    <button id="rewind-btn" onclick="openRewind()" title="Rewind system state (R)">⟲ REWIND</button>
+  </div>
+
+  <!-- ── REWIND OVERLAY — full meta layer ── -->
+  <div id="rewind-overlay" onclick="if(event.target===this)closeRewind()">
+    <div id="rewind-panel">
+      <div id="rw-head">
+        <div>
+          <div id="rw-title">⟲ SYSTEM REWIND</div>
+          <div id="rw-sub">Select a snapshot to restore the system to that state</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div id="rw-sigma-badge"></div>
+          <button id="rw-close" onclick="closeRewind()">✕</button>
+        </div>
+      </div>
+
+      <!-- Timeline canvas -->
+      <div id="rw-timeline-wrap">
+        <canvas id="rw-canvas"></canvas>
+        <div id="rw-hover-tip"></div>
+      </div>
+
+      <!-- Legend -->
+      <div id="rw-legend">
+        <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#00ff88"></span>Low sigma — stable</div>
+        <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#ffaa00"></span>Mid sigma — elevated</div>
+        <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#ff3355"></span>High sigma — critical</div>
+        <div class="rw-leg-item"><span style="font-family:'Space Mono',monospace;font-size:10px;margin-right:5px">↕</span>Delta magnitude</div>
+      </div>
+
+      <!-- Snapshot detail + confirm -->
+      <div id="rw-detail">
+        <div id="rw-detail-inner">
+          <div id="rw-detail-empty">← Hover a snapshot to preview · Click to select</div>
+          <div id="rw-detail-content" style="display:none">
+            <div id="rw-snap-head">
+              <span id="rw-snap-id" class="mono"></span>
+              <span id="rw-snap-trigger"></span>
+              <span id="rw-snap-ts" class="mono" style="margin-left:auto;color:rgba(255,255,255,.3)"></span>
+            </div>
+            <div id="rw-snap-stats"></div>
+            <div id="rw-snap-sigma-bar-wrap">
+              <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:5px;font-family:'Space Mono',monospace">SIGMA</div>
+              <div id="rw-snap-sigma-bar"><div id="rw-snap-sigma-fill"></div></div>
+            </div>
+          </div>
+        </div>
+        <div id="rw-confirm-row" style="display:none">
+          <div id="rw-confirm-warn">⚠ This will rollback all JAA tables to the snapshot state. Running processes will be interrupted.</div>
+          <div style="display:flex;gap:10px;margin-top:10px">
+            <button id="rw-confirm-btn" onclick="confirmRewind()">⟲ Restore this snapshot</button>
+            <button id="rw-cancel-btn" onclick="cancelSelect()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status bar -->
+      <div id="rw-status"></div>
     </div>
   </div>
 
@@ -783,11 +943,389 @@ async function asSend() {
   out.textContent = d?.jobId ? `Dispatched to Ollama — job ${d.jobId}\nMonitor on Guardian channel (key 2)` : 'Guardian offline. Connect a provider tab or start Ollama.';
 }
 
+// ── REWIND TIMELINE ───────────────────────────────────────────────────────────
+// Loads snapshots from Cortex. Each snapshot has sigma score + delta from the
+// CFR ledger. Timeline is a horizontal scrubber — colored by sigma, height by
+// delta magnitude. Click a point to select, confirm to rollback.
+
+let rwSnapshots = [];
+let rwSelected  = null;
+let rwHovered   = null;
+let rwCanvas    = null;
+let rwCtx       = null;
+let rwAnimFrame = null;
+let rwParticles = [];
+const CX_SNAP   = `${B.cx}/api/snapshots`;
+const CX_EVENTS = `${B.cx}/api/events`;
+const CX_ROLLBACK = `${B.cx}/api/snapshots/rollback`;
+
+// sigma → color (green=stable, amber=elevated, red=critical)
+function sigmaColor(s, alpha = 1) {
+  if (typeof s !== 'number') s = 0;
+  s = Math.min(1, Math.max(0, s));
+  if (s < 0.35) {
+    // green → cyan
+    const t = s / 0.35;
+    const r = Math.round(0   + t * 0);
+    const g = Math.round(255 - t * 25);
+    const b = Math.round(136 + t * 119);
+    return `rgba(${r},${g},${b},${alpha})`;
+  } else if (s < 0.7) {
+    // cyan → amber
+    const t = (s - 0.35) / 0.35;
+    const r = Math.round(0   + t * 255);
+    const g = Math.round(229 - t * 59);
+    const b = Math.round(255 - t * 255);
+    return `rgba(${r},${g},${b},${alpha})`;
+  } else {
+    // amber → red
+    const t = (s - 0.7) / 0.3;
+    const r = Math.round(255);
+    const g = Math.round(170 - t * 170);
+    const b = Math.round(0   + t * 85);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+}
+
+async function openRewind() {
+  const overlay = document.getElementById('rewind-overlay');
+  overlay.classList.add('open');
+  setRwStatus('Loading snapshots...', 'working');
+  await loadRewindData();
+  // Keyboard shortcut
+  document.addEventListener('keydown', rwKeyHandler);
+}
+
+function closeRewind() {
+  document.getElementById('rewind-overlay').classList.remove('open');
+  document.removeEventListener('keydown', rwKeyHandler);
+  rwSelected = null;
+  if (rwAnimFrame) { cancelAnimationFrame(rwAnimFrame); rwAnimFrame = null; }
+}
+
+function rwKeyHandler(e) {
+  if (e.key === 'Escape') closeRewind();
+}
+
+async function loadRewindData() {
+  // Load snapshots
+  const sd = await get(CX_SNAP);
+  const snaps = sd?.snapshots || sd || [];
+
+  // Load recent events with sigma scores
+  const ed = await get(`${CX_EVENTS}?n=200`);
+  const events = Array.isArray(ed) ? ed : (ed?.events || []);
+
+  // Build sigma timeline from events that have sigma scores
+  const sigmaEvents = events
+    .filter(e => e.sigma?.score !== undefined || e.cfr)
+    .map(e => ({
+      ts:    e.ts,
+      sigma: e.sigma?.score ?? 0,
+      delta: e.delta ?? 0,
+      type:  e.type || '',
+      src:   e.source || '',
+    }))
+    .sort((a, b) => a.ts - b.ts);
+
+  // Attach estimated sigma to each snapshot by interpolating nearest event
+  rwSnapshots = snaps.map(s => {
+    // Find closest event in time
+    let closest = null, minDiff = Infinity;
+    for (const ev of sigmaEvents) {
+      const diff = Math.abs(ev.ts - s.ts);
+      if (diff < minDiff) { minDiff = diff; closest = ev; }
+    }
+    return {
+      ...s,
+      sigma:  closest?.sigma ?? 0,
+      delta:  closest?.delta ?? 0,
+      sigmaColor: sigmaColor(closest?.sigma ?? 0),
+    };
+  }).sort((a, b) => a.ts - b.ts);
+
+  if (!rwSnapshots.length) {
+    setRwStatus('No snapshots found. Snapshots are created automatically before decisions.', '');
+    return;
+  }
+
+  setRwStatus(`${rwSnapshots.length} snapshots loaded — oldest to newest`, '');
+  drawTimeline();
+}
+
+// ── Timeline canvas renderer ──────────────────────────────────────────────────
+function drawTimeline() {
+  rwCanvas = document.getElementById('rw-canvas');
+  if (!rwCanvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = rwCanvas.getBoundingClientRect();
+  rwCanvas.width  = rect.width  * dpr;
+  rwCanvas.height = rect.height * dpr;
+  rwCtx = rwCanvas.getContext('2d');
+  rwCtx.scale(dpr, dpr);
+
+  _renderTimeline();
+
+  // Mouse events
+  rwCanvas.onmousemove = rwMouseMove;
+  rwCanvas.onclick     = rwMouseClick;
+  rwCanvas.onmouseleave = () => {
+    rwHovered = null;
+    document.getElementById('rw-hover-tip').classList.remove('show');
+    _renderTimeline();
+  };
+
+  // Animate breathing glow on selected
+  if (rwAnimFrame) cancelAnimationFrame(rwAnimFrame);
+  let glowT = 0;
+  function animLoop() {
+    glowT += 0.04;
+    _renderTimeline(glowT);
+    rwAnimFrame = requestAnimationFrame(animLoop);
+  }
+  animLoop();
+}
+
+function _renderTimeline(t = 0) {
+  if (!rwCtx || !rwSnapshots.length) return;
+  const W = rwCanvas.getBoundingClientRect().width;
+  const H = rwCanvas.getBoundingClientRect().height;
+  rwCtx.clearRect(0, 0, W, H);
+
+  const n = rwSnapshots.length;
+  const PAD = 24;
+  const MID = H * 0.55;
+  const MAX_H = H * 0.38;
+
+  // Baseline line
+  rwCtx.beginPath();
+  rwCtx.moveTo(PAD, MID);
+  rwCtx.lineTo(W - PAD, MID);
+  rwCtx.strokeStyle = 'rgba(255,255,255,.07)';
+  rwCtx.lineWidth = 1;
+  rwCtx.stroke();
+
+  // Time labels
+  if (n >= 2) {
+    const fmt = ts => new Date(ts).toISOString().substr(11, 5);
+    rwCtx.font = '9px "Space Mono"';
+    rwCtx.fillStyle = 'rgba(255,255,255,.2)';
+    rwCtx.textAlign = 'left';  rwCtx.fillText(fmt(rwSnapshots[0].ts), PAD, H - 6);
+    rwCtx.textAlign = 'right'; rwCtx.fillText(fmt(rwSnapshots[n-1].ts), W - PAD, H - 6);
+  }
+
+  // Connect snapshots with gradient line
+  if (n >= 2) {
+    for (let i = 0; i < n - 1; i++) {
+      const x1 = _snapX(i, n, W, PAD);
+      const x2 = _snapX(i+1, n, W, PAD);
+      const grad = rwCtx.createLinearGradient(x1, 0, x2, 0);
+      grad.addColorStop(0, sigmaColor(rwSnapshots[i].sigma, .25));
+      grad.addColorStop(1, sigmaColor(rwSnapshots[i+1].sigma, .25));
+      rwCtx.beginPath();
+      rwCtx.moveTo(x1, MID);
+      rwCtx.lineTo(x2, MID);
+      rwCtx.strokeStyle = grad;
+      rwCtx.lineWidth = 1.5;
+      rwCtx.stroke();
+    }
+  }
+
+  // Draw each snapshot point
+  for (let i = 0; i < n; i++) {
+    const snap = rwSnapshots[i];
+    const x = _snapX(i, n, W, PAD);
+    // Delta drives vertical position (up = positive delta, down = negative)
+    const deltaY = _clamp(snap.delta * MAX_H * 2, -MAX_H, MAX_H);
+    const y = MID - deltaY;
+    const isSelected = rwSelected?.snapId === snap.snapId;
+    const isHovered  = rwHovered  === i;
+
+    // Stem from baseline
+    rwCtx.beginPath();
+    rwCtx.moveTo(x, MID);
+    rwCtx.lineTo(x, y);
+    rwCtx.strokeStyle = sigmaColor(snap.sigma, isSelected ? .6 : .2);
+    rwCtx.lineWidth = isSelected ? 1.5 : .8;
+    rwCtx.stroke();
+
+    // Node
+    const r = isSelected ? 7 + Math.sin(t) * 2 : isHovered ? 6 : 4;
+    if (isSelected || isHovered) {
+      rwCtx.beginPath();
+      rwCtx.arc(x, y, r + 5, 0, Math.PI * 2);
+      rwCtx.fillStyle = sigmaColor(snap.sigma, isSelected ? .1 + Math.sin(t) * .05 : .08);
+      rwCtx.fill();
+    }
+    rwCtx.beginPath();
+    rwCtx.arc(x, y, r, 0, Math.PI * 2);
+    rwCtx.fillStyle = sigmaColor(snap.sigma, isSelected || isHovered ? 1 : .7);
+    rwCtx.fill();
+    if (isSelected) {
+      rwCtx.beginPath();
+      rwCtx.arc(x, y, r, 0, Math.PI * 2);
+      rwCtx.strokeStyle = '#fff';
+      rwCtx.lineWidth = 1.5;
+      rwCtx.stroke();
+    }
+  }
+}
+
+function _snapX(i, n, W, PAD) {
+  if (n === 1) return W / 2;
+  return PAD + (i / (n - 1)) * (W - PAD * 2);
+}
+function _clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+function _snapAtX(mouseX) {
+  if (!rwSnapshots.length) return -1;
+  const W = rwCanvas.getBoundingClientRect().width;
+  const PAD = 24;
+  const n = rwSnapshots.length;
+  let best = 0, bestDist = Infinity;
+  for (let i = 0; i < n; i++) {
+    const x = _snapX(i, n, W, PAD);
+    const d = Math.abs(x - mouseX);
+    if (d < bestDist) { bestDist = d; best = i; }
+  }
+  return bestDist < 28 ? best : -1;
+}
+
+function rwMouseMove(e) {
+  const rect = rwCanvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const idx = _snapAtX(mx);
+  rwHovered = idx >= 0 ? idx : null;
+  const tip = document.getElementById('rw-hover-tip');
+  if (idx >= 0) {
+    const snap = rwSnapshots[idx];
+    const ts = new Date(snap.ts).toISOString().replace('T', ' ').substr(0, 19);
+    tip.innerHTML = `<b>${snap.snapId?.slice(0,10) || '?'}</b>  ${snap.trigger || '?'}<br>${ts}  σ=${snap.sigma?.toFixed(3) || '?'}  rows=${snap.totalRows || '?'}`;
+    const W = rect.width, PAD = 24;
+    const tipX = _snapX(idx, rwSnapshots.length, W, PAD);
+    tip.style.left = (rect.left + tipX) + 'px';
+    tip.style.top  = (rect.top + my - 8) + 'px';
+    tip.style.transform = 'translate(-50%,-100%)';
+    tip.classList.add('show');
+  } else {
+    tip.classList.remove('show');
+  }
+}
+
+function rwMouseClick(e) {
+  const rect = rwCanvas.getBoundingClientRect();
+  const idx = _snapAtX(e.clientX - rect.left);
+  if (idx < 0) return;
+  rwSelected = rwSnapshots[idx];
+  showSnapDetail(rwSelected);
+  document.getElementById('rw-hover-tip').classList.remove('show');
+}
+
+function showSnapDetail(snap) {
+  document.getElementById('rw-detail-empty').style.display = 'none';
+  const c = document.getElementById('rw-detail-content');
+  c.style.display = 'block';
+  document.getElementById('rw-snap-id').textContent = snap.snapId?.slice(0, 20) || '?';
+  const trig = document.getElementById('rw-snap-trigger');
+  trig.textContent = snap.trigger || snap.type || 'manual';
+  const ts = new Date(snap.ts);
+  document.getElementById('rw-snap-ts').textContent = ts.toISOString().replace('T',' ').substr(0,19);
+  // Stats
+  const stats = [
+    {v: snap.totalRows ?? '?', l: 'Rows'},
+    {v: snap.openGaps  ?? '?', l: 'Open gaps'},
+    {v: snap.rollback_count ?? 0, l: 'Rollbacks'},
+    {v: snap.sigma?.toFixed ? snap.sigma.toFixed(3) : '?', l: 'Sigma'},
+  ];
+  document.getElementById('rw-snap-stats').innerHTML = stats.map(s =>
+    `<div class="rw-stat"><div class="rw-stat-v">${s.v}</div><div class="rw-stat-l">${s.l}</div></div>`
+  ).join('');
+  // Sigma bar
+  const pct = Math.round((snap.sigma || 0) * 100);
+  const fill = document.getElementById('rw-snap-sigma-fill');
+  fill.style.width = pct + '%';
+  fill.style.background = sigmaColor(snap.sigma || 0);
+  // Show confirm
+  document.getElementById('rw-confirm-row').style.display = 'block';
+  const btn = document.getElementById('rw-confirm-btn');
+  btn.textContent = '⟲ Restore this snapshot';
+  btn.classList.remove('danger');
+  setRwStatus(`Selected: ${snap.snapId?.slice(0,16)} — ${snap.trigger || '?'} at ${new Date(snap.ts).toLocaleTimeString()}`, '');
+}
+
+function cancelSelect() {
+  rwSelected = null;
+  document.getElementById('rw-confirm-row').style.display = 'none';
+  document.getElementById('rw-detail-empty').style.display = 'block';
+  document.getElementById('rw-detail-content').style.display = 'none';
+  setRwStatus('', '');
+}
+
+async function confirmRewind() {
+  if (!rwSelected) return;
+  const btn = document.getElementById('rw-confirm-btn');
+  if (!btn.classList.contains('danger')) {
+    // First click — prime the button
+    btn.textContent = '⚠ Confirm — this will rewind all state';
+    btn.classList.add('danger');
+    setRwStatus('Click again to confirm rollback. This cannot be undone.', 'working');
+    return;
+  }
+  // Second click — execute
+  btn.textContent = '⟳ Rewinding...';
+  btn.disabled = true;
+  setRwStatus('Sending rollback to Cortex...', 'working');
+  const d = await post(CX_ROLLBACK, { snapId: rwSelected.snapId, reason: 'user-rewind-ui' });
+  if (d?.ok || d?.rolled_back) {
+    setRwStatus(`✓ Rolled back to ${rwSelected.snapId?.slice(0,14)} — refreshing...`, 'ok');
+    // Animate the channel content — brief static effect
+    const ch = document.getElementById('channel');
+    ch.style.filter = 'brightness(.2) saturate(0)';
+    setTimeout(() => {
+      ch.style.transition = 'filter .6s ease';
+      ch.style.filter = '';
+      setTimeout(() => { ch.style.transition = ''; }, 700);
+    }, 300);
+    // Reload health + data
+    setTimeout(() => {
+      pollHealth();
+      loadRewindData();
+      btn.textContent = '⟲ Restore this snapshot';
+      btn.classList.remove('danger');
+      btn.disabled = false;
+    }, 1200);
+  } else {
+    setRwStatus(`✗ Rollback failed: ${d?.error || 'Cortex not responding'}`, 'err');
+    btn.textContent = '⟲ Restore this snapshot';
+    btn.classList.remove('danger');
+    btn.disabled = false;
+  }
+}
+
+function setRwStatus(msg, cls = '') {
+  const el = document.getElementById('rw-status');
+  el.textContent = msg;
+  el.className = cls;
+}
+
 // ── Boot ──────────────────────────────────────────────────────────────────────
 buildDiag();
 pollHealth();
 setInterval(pollHealth, 15000);
 connectSSE();
+
+// Keyboard shortcut R to open rewind
+document.addEventListener('keydown', e => {
+  if ((e.key === 'r' || e.key === 'R') &&
+      e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    if (document.getElementById('rewind-overlay').classList.contains('open')) {
+      closeRewind();
+    } else {
+      openRewind();
+    }
+  }
+});
 </script>
 </body>
 </html>
