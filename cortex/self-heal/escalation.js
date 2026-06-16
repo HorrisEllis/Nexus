@@ -151,36 +151,42 @@ function logEscalation(gap, level, result) {
     causedBy:  gap.uuid,
     ts:        Date.now(),
   };
-  jaaDB.insert('event_log', record);
+  // Fix 5: route to escalation_log (the dedicated table), not event_log
+  try { jaaDB.insert('escalation_log', record); } catch(_) {
+    jaaDB.insert('event_log', record); // fallback if table not provisioned yet
+  }
   return record;
 }
 
 // ── Level 0: Known fix from history ──────────────────────────────────────────
 async function level0_knownFix(gap) {
-  // Look for previously successful fixes for this fault class
+  // Fix 6: query fields that are actually written by self-heal (applied, gapType, source)
+  // Previously queried faultClass/verified/successRate which are never populated
   const history = jaaDB.query('forge_patches',
-    r => r.faultClass === gap.type && r.status === 'verified' && r.successRate > 0.5,
-    1
+    r => r.gapType === gap.type && r.applied === true,
+    3
   );
 
   if (!history.length) {
-    return { outcome: 'skip', reason: 'no known successful fix for this fault class', strategy: 'escalate' };
+    return { outcome: 'skip', reason: 'no previously applied fix for this fault class', strategy: 'escalate' };
   }
 
-  const known = history[0];
-  console.log(`[${MODULE_ID}] level 0: known fix found for ${gap.type} (success rate: ${known.successRate})`);
+  // Pick the most recent successful patch
+  const known = history.sort((a, b) => (b.ts || 0) - (a.ts || 0))[0];
+  console.log(`[${MODULE_ID}] level 0: known fix found for ${gap.type} (applied: ${new Date(known.ts).toLocaleString()})`);
 
   return {
     outcome:  'attempted',
     strategy: 'known_fix_replay',
     patchRef: known.uuid,
+    module:   known.module,
     note:     `Replaying fix from ${new Date(known.ts).toLocaleString()}`,
   };
 }
 
 // ── Level 1: Safe fix (no code changes) ──────────────────────────────────────
 const SAFE_FIXES = {
-  stale_module:     { action: 'restart_module',    note: 'Module heartbeat stale — restarting poll' },
+  stale_module:     { action: 'restart_module',    note: 'Module heartbeat stale — requesting restart via orchestrator' },
   timeout:          { action: 'clear_and_retry',   note: 'Request timed out — clearing and retrying' },
   api_degraded:     { action: 'probe_and_wait',    note: 'API degraded — probing every 5s, max 30s' },
   queue_saturated:  { action: 'drain_queue',       note: 'Queue saturated — draining oldest items' },
@@ -188,6 +194,7 @@ const SAFE_FIXES = {
   bottleneck:       { action: 'log_and_throttle',  note: 'Recurring bottleneck — throttling intake rate' },
   circuit_breaker:  { action: 'wait_and_reset',    note: 'Circuit open — waiting 30s before reset' },
   import_error:     { action: 'check_deps',        note: 'Import error — scanning module dependencies' },
+  recurring_failure:{ action: 'restart_module',    note: 'Recurring failure — requesting module restart' },
 };
 
 async function level1_safeFix(gap) {
@@ -196,14 +203,53 @@ async function level1_safeFix(gap) {
     return { outcome: 'no_safe_fix', strategy: 'escalate', reason: `no safe fix registered for ${gap.type}` };
   }
 
-  console.log(`[${MODULE_ID}] level 1: safe fix — ${fix.action} (${fix.note})`);
+  console.log(`[${MODULE_ID}] level 1: ${fix.action} — ${fix.note}`);
 
-  return {
-    outcome:  'attempted',
-    strategy: 'safe_fix',
-    action:   fix.action,
-    note:     fix.note,
-  };
+  // Fix 2: actually attempt the restart via orchestrator API + probe health
+  const systemId = (gap.path || '').split('/')[0].replace('modules/', '').replace('failures/', '');
+  const ORCH_PORT = process.env.ORCHESTRATOR_PORT || 9000;
+
+  try {
+    const http = require('http');
+
+    // POST restart request to orchestrator
+    await new Promise((resolve) => {
+      const body = JSON.stringify({ system: systemId, reason: gap.type, gapUuid: gap.uuid });
+      const req = http.request({
+        host: '127.0.0.1', port: ORCH_PORT,
+        path: '/api/system/restart', method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+        timeout: 3000,
+      }, res => resolve(res.statusCode));
+      req.on('error', () => resolve(null));
+      req.write(body); req.end();
+    });
+
+    // Wait 3s then probe health up to 5×
+    await new Promise(r => setTimeout(r, 3000));
+    let healthy = false;
+    for (let i = 0; i < 5 && !healthy; i++) {
+      healthy = await new Promise(resolve => {
+        http.get({ host: '127.0.0.1', port: ORCH_PORT, path: '/health', timeout: 2000 },
+          res => resolve(res.statusCode === 200)
+        ).on('error', () => resolve(false));
+      });
+      if (!healthy) await new Promise(r => setTimeout(r, 2000));
+    }
+
+    if (healthy) {
+      console.log(`[${MODULE_ID}] level 1: restart confirmed healthy — ${systemId}`);
+      return { outcome: 'resolved', strategy: 'safe_fix', action: fix.action, note: fix.note };
+    }
+
+    // Restart attempted but health not confirmed — fall through to level 2 immediately
+    console.log(`[${MODULE_ID}] level 1: restart attempted, health not confirmed — ${systemId}`);
+    return { outcome: 'attempted', strategy: 'safe_fix', action: fix.action, note: fix.note };
+
+  } catch(e) {
+    return { outcome: 'attempted', strategy: 'safe_fix', action: fix.action,
+             note: fix.note, error: e.message };
+  }
 }
 
 // ── Level 2: Snapshot + Forge ─────────────────────────────────────────────────
@@ -283,6 +329,84 @@ async function level3_deepScan(gap) {
     strategy:     'deep_scan',
     engineResults: engineResults ? { healthScore: engineResults.healthScore, alerts: engineResults.alertCount } : null,
     note:         `Full diagnostic scan complete. Evidence written to fault_taxonomy.`,
+  };
+}
+
+// ── Level 3.5: Agent consult — forge repair via Guardian ──────────────────────
+// Fix 3: attempt a forge_repair job via Guardian before entering failure mode.
+// If Guardian unreachable, open the URL and retry once.
+async function level3_5_agentConsult(gap) {
+  const GUARDIAN_PORT = process.env.GUARDIAN_PORT || 7820;
+  const http = require('http');
+
+  const jobPayload = JSON.stringify({
+    command:  'forge_repair',
+    prompt:   `Diagnose and repair this open loop:\nType: ${gap.type}\nPath: ${gap.path}\nBody: ${gap.body}\nFriction: ${getFriction(gap.type).toFixed(2)}`,
+    provider: 'ollama',
+    meta:     { gapUuid: gap.uuid, gapType: gap.type, source: 'escalation.level3_5' },
+  });
+
+  async function tryDispatch() {
+    return new Promise(resolve => {
+      const req = http.request({
+        host: '127.0.0.1', port: GUARDIAN_PORT,
+        path: '/command', method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(jobPayload) },
+        timeout: 10000,
+      }, res => {
+        let body = '';
+        res.on('data', d => body += d);
+        res.on('end', () => {
+          try {
+            const d = JSON.parse(body);
+            resolve({ ok: res.statusCode < 400, jobId: d.jobId || d.uuid, data: d });
+          } catch(_) { resolve({ ok: false }); }
+        });
+      });
+      req.on('error', () => resolve({ ok: false }));
+      req.on('timeout', () => { req.destroy(); resolve({ ok: false }); });
+      req.write(jobPayload); req.end();
+    });
+  }
+
+  let result = await tryDispatch();
+
+  // If Guardian unreachable, try to open it via platform native command and retry once
+  if (!result.ok) {
+    console.log(`[${MODULE_ID}] level 3.5: Guardian unreachable — attempting to open`);
+    try {
+      const { execSync } = require('child_process');
+      const url = `http://127.0.0.1:${GUARDIAN_PORT}`;
+      const cmd = process.platform === 'win32' ? `start ${url}` :
+                  process.platform === 'darwin' ? `open ${url}` : `xdg-open ${url}`;
+      execSync(cmd, { timeout: 3000 });
+      await new Promise(r => setTimeout(r, 5000));
+      result = await tryDispatch();
+    } catch(_) {}
+  }
+
+  if (result.ok) {
+    jaaDB.update('gaps', gap.uuid, { status: 'pending_agent', agentJobId: result.jobId });
+    console.log(`[${MODULE_ID}] level 3.5: forge_repair dispatched — jobId: ${result.jobId}`);
+    return {
+      outcome:  'pending_agent',
+      strategy: 'agent_consult',
+      jobId:    result.jobId,
+      note:     'forge_repair job dispatched to Guardian — awaiting agent response',
+    };
+  }
+
+  console.log(`[${MODULE_ID}] level 3.5: agent consult failed — both attempts exhausted`);
+  jaaDB.insert('event_log', {
+    uuid: uid(), type: 'escalation.agent_consult_failed',
+    payload: { gapUuid: gap.uuid, gapType: gap.type },
+    source: MODULE_ID, causedBy: gap.uuid, ts: Date.now(),
+  });
+
+  return {
+    outcome:  'failed',
+    strategy: 'agent_consult',
+    note:     'Guardian unreachable after retry — dropping to failure mode',
   };
 }
 
@@ -378,9 +502,15 @@ async function escalate(gap) {
     history.push({ level: 1, result: r1, ts: Date.now() });
     logEscalation(gap, 1, r1);
 
+    if (r1.outcome === 'resolved') {
+      // Fix 2: true resolution — reduce friction and close
+      reduceFriction(faultClass, 0.15, 'safe_fix_resolved');
+      return { resolved: true, level: 1, ...r1 };
+    }
+    // Fix 2: 'attempted' means restart tried but health not confirmed — fall through to level 2 immediately
     if (r1.outcome === 'attempted') {
-      addFriction(faultClass, FRICTION_COST[1], 'safe_fix_applied', { r1 });
-      return { resolved: 'pending', level: 1, ...r1 };
+      addFriction(faultClass, FRICTION_COST[1], 'safe_fix_attempted_no_confirm', { r1 });
+      // fall through — do not return
     }
   }
 
@@ -399,7 +529,15 @@ async function escalate(gap) {
     history.push({ level: 3, result: r3, ts: Date.now() });
     logEscalation(gap, 3, r3);
     addFriction(faultClass, FRICTION_COST[3], 'deep_scan_run', { engineResults: r3.engineResults });
-    return { resolved: 'scanned', level: 3, ...r3 };
+
+    // Fix 3: level 3.5 — agent consult before failure mode
+    const r35 = await level3_5_agentConsult(gap);
+    history.push({ level: 3.5, result: r35, ts: Date.now() });
+    logEscalation(gap, 3.5, r35);
+    if (r35.outcome === 'pending_agent') {
+      return { resolved: 'pending_agent', level: 3.5, ...r35 };
+    }
+    // agent consult failed — drop to failure mode
   }
 
   // ── Level 4: failure mode ─────────────────────────────────────────────────
@@ -414,7 +552,7 @@ module.exports = {
   escalate,
   getFriction, addFriction, reduceFriction,
   level0_knownFix, level1_safeFix, level2_snapshotAndForge,
-  level3_deepScan, level4_failureMode,
+  level3_deepScan, level3_5_agentConsult, level4_failureMode,
   FRICTION, FRICTION_COST,
   MODULE_ID, VERSION,
 };

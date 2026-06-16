@@ -83,7 +83,8 @@ async function _tick() {
     // ── Write gaps (deduplicated) ──────────────────────────────────────────
     for (const gap of found) {
       const existing = jaaDB.query('gaps',
-        r => r.path === gap.path && r.type === gap.type && r.status !== 'resolved',
+        r => r.path === gap.path && r.type === gap.type &&
+             !['resolved', 'forge_applied', 'human_required'].includes(r.status),
         1
       );
       if (existing.length) continue; // already open

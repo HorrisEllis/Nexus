@@ -125,6 +125,65 @@ const { execSync } = require('child_process');
 let express, multer;
 try { express = require('express'); multer = require('multer'); } catch (_) {}
 
+// ── SISOStream — hoisted here so bus is available before any module code runs ─
+// §5.7 single event bus. Must be declared before NCP callbacks, gate registrations,
+// and any bus.on() / bus.emit() calls lower in the file.
+// §2.3 StreamLog: all state observable
+const _sisoLog = [];
+let _streamSeq = 0;
+const _LOG_MAX  = 2000;
+
+class SISOStream {
+  constructor() {
+    this.gates     = new Map();
+    this._listeners = new Map();
+    this.logLevel  = 'EVENTS';
+  }
+  register(gate) {
+    if (this.gates.has(gate.signature))
+      throw new Error(`[§1.2 SISOStream] Signature collision: '${gate.signature}'`);
+    this.gates.set(gate.signature, gate);
+  }
+  on(type, fn) {
+    if (!this._listeners.has(type)) this._listeners.set(type, new Set());
+    this._listeners.get(type).add(fn);
+  }
+  off(type, fn) {
+    this._listeners.get(type)?.delete(fn);
+  }
+  emit(type, data = {}) {
+    const seq     = _streamSeq++;
+    const ts      = Date.now();
+    const gate    = this.gates.get(type);
+    const claimed = gate ? gate.signature : null;
+    if (this.logLevel !== 'OFF') {
+      const entry = { seq, ts, type, claimed };
+      if (this.logLevel === 'DATA') entry.data = data;
+      _sisoLog.push(entry);
+      if (_sisoLog.length > _LOG_MAX) _sisoLog.shift();
+    }
+    if (gate) gate.transform({ type, data }, this);
+    const dynListeners = this._listeners.get(type);
+    if (dynListeners?.size) {
+      for (const fn of dynListeners) {
+        try { fn({ type, data }); } catch(e) {
+          console.error(`[§1.2 siso.listener.${type}] ${e.message}`);
+        }
+      }
+    }
+    cockpitBroadcast({ seq, type, ts, claimed });
+    if (!type.startsWith('dom.') && !type.startsWith('guardian.heartbeat')) {
+      _kernelEmit(type, data, ts);
+    }
+    return { seq, ts, claimed };
+  }
+  sample(n = 100) {
+    return { logLevel: this.logLevel, count: _sisoLog.length, entries: _sisoLog.slice(-n) };
+  }
+}
+
+const bus = new SISOStream();
+
 // ── Jaa pure-JS store (zero native deps) ────────────────────────────────────────────
 const { JaaStore } = require('./jaa-store.js');
 
@@ -1365,75 +1424,6 @@ class SISOGate {
   }
 }
 
-// §2.3 — StreamLog: all state observable
-const _sisoLog = [];
-let _streamSeq = 0;
-const _LOG_MAX  = 2000;
-
-// Canonical bus — §5.7 single event bus, all communication through it
-class SISOStream {
-  constructor() {
-    this.gates     = new Map();
-    this._listeners = new Map(); // dynamic one-shot/persistent listeners (§5.7 escape hatch)
-    this.logLevel  = 'EVENTS'; // OFF | EVENTS | DEEP | DATA
-  }
-  register(gate) {
-    if (this.gates.has(gate.signature))
-      throw new Error(`[§1.2 SISOStream] Signature collision: '${gate.signature}'`);
-    this.gates.set(gate.signature, gate);
-  }
-  // §5.7 — dynamic listener (for one-shot per-job patterns; prefer register() for static gates)
-  on(type, fn) {
-    if (!this._listeners.has(type)) this._listeners.set(type, new Set());
-    this._listeners.get(type).add(fn);
-  }
-  off(type, fn) {
-    this._listeners.get(type)?.delete(fn);
-  }
-  emit(type, data = {}) {
-    const seq   = _streamSeq++;
-    const ts    = Date.now();
-    const gate  = this.gates.get(type);
-    const claimed = gate ? gate.signature : null;
-
-    // §2.3 — log every event (StreamLog pattern from canonical SISO)
-    if (this.logLevel !== 'OFF') {
-      const entry = { seq, ts, type, claimed };
-      if (this.logLevel === 'DATA') entry.data = data;
-      _sisoLog.push(entry);
-      if (_sisoLog.length > _LOG_MAX) _sisoLog.shift();
-    }
-
-    // §5.7 — fire registered gate (depth-first, synchronous)
-    if (gate) gate.transform({ type, data }, this);
-
-    // §5.7 — fire dynamic listeners (one-shot per-job patterns)
-    const dynListeners = this._listeners.get(type);
-    if (dynListeners?.size) {
-      for (const fn of dynListeners) {
-        try { fn({ type, data }); } catch(e) {
-          console.error(`[§1.2 siso.listener.${type}] ${e.message}`);
-        }
-      }
-    }
-
-    // §2.3 — broadcast to cockpit SSE (observable by UI)
-    cockpitBroadcast({ seq, type, ts, claimed });
-
-    // §5.2 — kernel connection: every event flows to orchestrator + cortex
-    // Only emit externally for system-significant events (not every UI tick)
-    if (!type.startsWith('dom.') && !type.startsWith('guardian.heartbeat')) {
-      _kernelEmit(type, data, ts);
-    }
-
-    return { seq, ts, claimed };
-  }
-  // §2.3 — sample the log (observable, not consumed)
-  sample(n = 100) {
-    return { logLevel: this.logLevel, count: _sisoLog.length, entries: _sisoLog.slice(-n) };
-  }
-}
-
 // §5.1 — kernel emit: every bus event reported to all connected systems
 // Fires-and-forgets — §1.2 errors are logged, never swallowed
 function _kernelEmit(type, data, ts) {
@@ -1458,7 +1448,6 @@ function _kernelEmit(type, data, ts) {
     }
 }
 
-const bus = new SISOStream();
 
 // Event ledger — §LAW II: every bus emit written to ledger first
 // ── CFR-Ω Ledger — every bus.emit written with sigma + delta + CFR snapshot ──
