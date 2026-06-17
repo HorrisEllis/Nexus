@@ -49,8 +49,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e0e8ff;f
 
 /* ── Menu overlay — rises from bottom when open ── */
 #menu-overlay{
-  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
-  z-index:90;pointer-events:none;
+  position:fixed;bottom:72px;left:50%;z-index:90;pointer-events:none;
   display:flex;flex-direction:column;gap:10px;align-items:center;
   opacity:0;transform:translateX(-50%) translateY(12px);
   transition:opacity .25s ease,transform .25s ease;
@@ -417,7 +416,7 @@ select option{background:#111}
         <div class="tile-desc">P2P trust relay. Routes inter-system requests with identity + circuit breaker.</div>
         <div class="tile-metrics"><div><div class="tm-val" id="tm-reqs">—</div><div class="tm-lbl">Requests</div></div><div><div class="tm-val" id="tm-nodes">—</div><div class="tm-lbl">Nodes</div></div></div>
       </div>
-      <div class="sys-tile" onclick="tune(7)" id="tile-dg">
+      <div class="sys-tile" onclick="tune(6)" id="tile-dg">
         <div class="tile-head"><span class="tile-icon">⊕</span><span class="tile-port">diagnostics</span><span class="tile-status" id="ts-dg" class="tile-status" style="color:#8890bb">SYSTEM</span></div>
         <div class="tile-name" style="color:#8890bb">Diagnose</div>
         <div class="tile-desc">Live health checks across all systems. Run at any time.</div>
@@ -1109,8 +1108,7 @@ async function asSend(){
   out.style.display='block';out.style.color='rgba(200,220,210,.8)';out.textContent='...';
   const cmd=q.toLowerCase();
   // Built-in commands
-  if(cmd==='help'){out.textContent='Commands: status · gaps · jobs · providers · ideas · clear
-Keys: 1-7 channels · ← → step · M menu · R rewind';return}
+  if(cmd==='help'){out.textContent='Commands: status · gaps · jobs · providers · ideas · clear\nKeys: 1-7 channels · ← → step · M menu · R rewind';return}
   if(cmd==='clear'){out.style.display='none';return}
   if(cmd==='status'){const lines=[];for(const s of SYSTEMS){const d=await get(s.url);lines.push(`${s.key}: ${d?'online':'offline'}`)}out.textContent=lines.join('\n');return}
   if(cmd==='gaps'){const d=await get(`${B.cx}/api/gaps?status=open`);const g=Array.isArray(d)?d:[];out.textContent=g.length?g.slice(0,8).map(x=>`[${x.severity||'?'}] ${x.loop_type||x.type}: ${(x.body||'').slice(0,80)}`).join('\n'):'No open gaps';return}
