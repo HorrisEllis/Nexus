@@ -63,6 +63,7 @@ let _cfg      = {};
 let _raid     = null;
 let _esc      = null;
 let _heal     = null;
+let _lastTopoSig = null; // suppress repeated topology log lines
 
 // ── Lazy-load dependencies ─────────────────────────────────────────────────────
 function _getRaid() {
@@ -529,8 +530,15 @@ async function _tick() {
           });
 
           if (topo.topology_health !== 'nominal') {
-            console.log(`[${MODULE_ID}] topology:${topo.topology_health} — ${topo.summary}`);
-            if (topo.top_action) console.log(`[${MODULE_ID}] → ${topo.top_action}`);
+            // Only log when health level or focal identity changes — never on count alone
+            const topoSig = `${topo.topology_health}:${topo.focal_points[0]?.identity?.label}`;
+            if (topoSig !== _lastTopoSig) {
+              _lastTopoSig = topoSig;
+              console.log(`[${MODULE_ID}] topology:${topo.topology_health} — ${topo.summary}`);
+              if (topo.top_action) console.log(`[${MODULE_ID}] → ${topo.top_action}`);
+            }
+          } else {
+            _lastTopoSig = null; // reset when nominal so next degradation logs
           }
 
           // Evolve loops that are part of a focal point — accumulate focal evidence onto the loop

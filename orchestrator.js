@@ -1248,6 +1248,21 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     return json(res, 200, { ok:true, entries, systems:Object.keys(LEDGER), counts: Object.fromEntries(Object.entries(LEDGER).map(([k,v])=>[k,v.length])) });
   }
 
+
+  // ── Request Handler — constitutional choke point (Phase 9) ────────────────
+  // ALL requests that require AI routing, memory recall, or system decisions
+  // should flow through here. Grammar → SNR → memory → RAID → execute.
+  if (M==='POST' && sub==='request') {
+    const body = await readBody(req);
+    try {
+      const handler = require('./lib/request-handler');
+      const result  = await handler.handle(body, { costCeiling: body.costCeiling });
+      return json(res, 200, result);
+    } catch(e) {
+      return json(res, 500, { ok:false, error: e.message, outcome: 'UNRESOLVED' });
+    }
+  }
+
   // ── Exec — run CLI command and stream result ──────────────────────────────
   if (M==='POST' && sub==='exec') {
     const body = await readBody(req);
@@ -2056,7 +2071,33 @@ try {
     PORT,
     connectBridgeRelay,
     _eventLedger
-  ).catch(e => {
+  ).then(() => {
+    // ── Universal boot snapshot (§2.1 — persistence baseline after all systems up) ──
+    // Phase 8.6: snapshot the full system state once boot sequence completes.
+    // This gives the rewind timeline a clean baseline after every cold start.
+    try {
+      const http = require('http');
+      http.request({
+        host: '127.0.0.1', port: PORT,
+        path: '/api/cortex/snapshots/create', method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 5000,
+      }, res => {
+        let body = '';
+        res.on('data', d => body += d);
+        res.on('end', () => {
+          try {
+            const d = JSON.parse(body);
+            console.log(`[orchestrator] §2.1 boot snapshot — ${d.snapshot?.snapId || 'ok'}`);
+          } catch(_) {}
+        });
+      }).on('error', () => {
+        console.warn('[orchestrator] §2.1 boot snapshot: cortex not responding (non-fatal)');
+      }).end(JSON.stringify({ message: 'orchestrator-boot-complete', type: 'boot' }));
+    } catch(e) {
+      console.warn('[orchestrator] §2.1 boot snapshot failed (non-fatal):', e.message);
+    }
+  }).catch(e => {
     console.error('[orchestrator] §1.2 _bootSystems error:', e.message);
   });
 });

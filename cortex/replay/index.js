@@ -142,7 +142,7 @@ function _replayEvents(events, state, opts = {}) {
 
 // ── inspect: replay a time range, return state at that point ──────────────────
 function inspect(opts = {}) {
-  const { fromTs = 0, toTs = Date.now(), n = 5000 } = opts;
+  const { fromTs = 0, toTs = Date.now() + 5000, n = 5000 } = opts;
 
   const events = jaaDB.query('event_log',
     e => (e.ts || 0) >= fromTs && (e.ts || 0) <= toTs,
@@ -150,6 +150,7 @@ function inspect(opts = {}) {
   ).sort((a, b) => (a.ts || 0) - (b.ts || 0));
 
   const state = _emptyState();
+  // Pass fromTs/toTs so _replayEvents window matches the query window
   _replayEvents(events, state, { fromTs, toTs });
 
   return {

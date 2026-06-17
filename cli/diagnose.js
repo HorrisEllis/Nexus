@@ -420,6 +420,28 @@ async function diagCortex() {
       console.log(ok(`    JAA: ${Object.keys(jaa.counts).length} tables, ${count} total rows`));
       record('cortex','JAA tables','PASS');
     }
+    // Test snapshot system — Phase 8.6
+    const snapR = await probe(3748, '/api/snapshots');
+    if (snapR.ok) {
+      const snaps = snapR.data.snapshots || [];
+      console.log(ok(`    snapshots: ${snaps.length} available`));
+      record('cortex','snapshots','PASS');
+      if (snaps.length > 0) {
+        const latest = snaps[0];
+        const age = Date.now() - (latest.ts || 0);
+        const ageStr = age < 60000 ? `${(age/1000).toFixed(0)}s ago` : age < 3600000 ? `${(age/60000).toFixed(0)}m ago` : `${(age/3600000).toFixed(1)}h ago`;
+        console.log(info(`    latest: ${latest.snapId?.slice(0,14)} (${latest.trigger||'?'}) ${ageStr} ${latest.totalRows||'?'} rows`));
+        const bootSnap = snaps.find(s => s.trigger === 'boot' || s.type === 'boot');
+        if (bootSnap) { console.log(ok('    boot snapshot present')); record('cortex','boot-snapshot','PASS'); }
+        else { console.log(warn('    no boot snapshot found')); record('cortex','boot-snapshot','WARN'); }
+      }
+    } else { console.log(warn('    snapshots endpoint not responding')); record('cortex','snapshots','WARN'); }
+    // Test replay engine
+    const replayR = await probePost(3748, '/api/replay/inspect', { fromTs: Date.now() - 60000 });
+    if (replayR.ok) {
+      console.log(ok(`    replay engine: ${replayR.data.eventCount ?? 0} events in last 60s`));
+      record('cortex','replay-engine','PASS');
+    } else { console.log(warn('    replay engine not responding')); record('cortex','replay-engine','WARN'); }
   } else {
     console.log(warn(`NOT RUNNING — start with: node cortex/boot.js`));
     record('cortex','live /health','WARN','not running');

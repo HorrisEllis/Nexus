@@ -33,6 +33,13 @@ async function _tick() {
   try {
     const now    = Date.now();
     const found  = [];
+    // Cooldown: don't re-detect a path+type that was recently resolved
+    const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+    const recentlyResolved = jaaDB.query('gaps',
+      r => r.status === 'resolved' && r.resolvedAt && (now - r.resolvedAt) < COOLDOWN_MS,
+      200
+    );
+    const cooldownPaths = new Set(recentlyResolved.map(r => `${r.path}:${r.type}`));
 
     // ── Stale module detection ─────────────────────────────────────────────
     const modules = jaaDB.query('project_registry', () => true, 50);
@@ -80,8 +87,11 @@ async function _tick() {
       }
     }
 
-    // ── Write gaps (deduplicated) ──────────────────────────────────────────
+    // ── Write gaps (deduplicated + cooldown) ──────────────────────────────
     for (const gap of found) {
+      // Skip if recently resolved (cooldown prevents thrash loops)
+      if (cooldownPaths.has(`${gap.path}:${gap.type}`)) continue;
+
       const existing = jaaDB.query('gaps',
         r => r.path === gap.path && r.type === gap.type &&
              !['resolved', 'forge_applied', 'human_required'].includes(r.status),

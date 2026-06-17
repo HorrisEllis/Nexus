@@ -238,10 +238,32 @@ function _applyPatch(modAbsPath, modRelPath, newSrc) {
   }
 
   if (tier.action === 'snapshot_then_apply') {
-    // T2: commit a snapshot before applying
+    // T2: full snapshot before applying — Phase 8.6 wiring
+    // This creates a rewind point so the timeline shows this decision.
+    let snapId = null;
     try {
-      const versionium = require('../versionium/index');
-      versionium.commit({ message: `pre-heal snapshot: ${gap.type} in ${modRelPath}`, causedBy: gap.uuid });
+      const snap = require('../snapshot/index');
+      const result = snap.create({ type: 'pre_forge', message: `self-heal pre-apply: ${gap.type} in ${modRelPath}`, causedBy: gap.uuid });
+      snapId = result?.snapId;
+      if (snapId) console.log(`[${MODULE_ID}] §2.1 snapshot before apply — ${snapId}`);
+    } catch(e) {
+      // Snapshot failure is non-fatal — still attempt the patch, but log it
+      console.warn(`[${MODULE_ID}] §2.1 pre-apply snapshot failed (non-fatal): ${e.message}`);
+      try {
+        // Fallback: versionium commit (lighter weight)
+        const versionium = require('../versionium/index');
+        versionium.commit({ message: `pre-heal snapshot: ${gap.type} in ${modRelPath}`, causedBy: gap.uuid });
+      } catch {}
+    }
+    // Log the decision so replay engine can reconstruct it
+    try {
+      const replayMod = require('../../lib/replay-engine');
+      replayMod.logDecision({
+        actor: MODULE_ID, snapshotId: snapId,
+        input: `gap: ${gap.type} in ${modRelPath}`,
+        chosen: 'forge_apply', alternatives: ['defer', 'escalate'],
+        cost: { complexity: tier.tier }, outcome: null, // filled in after apply
+      });
     } catch {}
   }
   const backupPath = modAbsPath + `.backup-${Date.now()}`;

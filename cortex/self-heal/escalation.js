@@ -205,14 +205,27 @@ async function level1_safeFix(gap) {
 
   console.log(`[${MODULE_ID}] level 1: ${fix.action} — ${fix.note}`);
 
-  // Fix 2: actually attempt the restart via orchestrator API + probe health
-  const systemId = (gap.path || '').split('/')[0].replace('modules/', '').replace('failures/', '');
+  // Map system names to their health ports
+  const SYSTEM_PORTS = {
+    orchestrator: 9000, bridge: 9999, cortex: 3748, guardian: 7820,
+    idearium: 4800, architect: 3747, emerge: 4242, diagnostic: 7825,
+    // heartbeat, gap-finder etc. are cortex organs — probe cortex
+    heartbeat: 3748, 'gap-finder': 3748, 'self-heal': 3748, healer: 3748,
+    raid: 3748, orion: 3748,
+  };
+
+  // Extract system from gap path: 'modules/heartbeat' → 'heartbeat', 'cortex/healer' → 'cortex'
+  const rawPath = (gap.path || '').replace('modules/', '').replace('failures/', '');
+  const systemId = rawPath.split('/')[0] || 'cortex';
   const ORCH_PORT = process.env.ORCHESTRATOR_PORT || 9000;
+  // Probe the module's own port, fall back to orchestrator
+  const probePort = SYSTEM_PORTS[systemId] ?? ORCH_PORT;
+  const healthPath = probePort === ORCH_PORT ? '/health' : '/health';
 
   try {
     const http = require('http');
 
-    // POST restart request to orchestrator
+    // POST restart request to orchestrator (it knows how to restart subsystems)
     await new Promise((resolve) => {
       const body = JSON.stringify({ system: systemId, reason: gap.type, gapUuid: gap.uuid });
       const req = http.request({
@@ -225,25 +238,40 @@ async function level1_safeFix(gap) {
       req.write(body); req.end();
     });
 
-    // Wait 3s then probe health up to 5×
+    // Wait 3s then probe the MODULE's own health endpoint (not orchestrator)
     await new Promise(r => setTimeout(r, 3000));
     let healthy = false;
-    for (let i = 0; i < 5 && !healthy; i++) {
+    for (let i = 0; i < 3 && !healthy; i++) {
       healthy = await new Promise(resolve => {
-        http.get({ host: '127.0.0.1', port: ORCH_PORT, path: '/health', timeout: 2000 },
-          res => resolve(res.statusCode === 200)
+        http.get({ host: '127.0.0.1', port: probePort, path: healthPath, timeout: 2000 },
+          res => {
+            // Collect body to check ok:true
+            let body = '';
+            res.on('data', d => body += d);
+            res.on('end', () => {
+              try {
+                const d = JSON.parse(body);
+                resolve(d.ok === true || d.status === 'ok');
+              } catch { resolve(res.statusCode === 200); }
+            });
+          }
         ).on('error', () => resolve(false));
       });
       if (!healthy) await new Promise(r => setTimeout(r, 2000));
     }
 
     if (healthy) {
-      console.log(`[${MODULE_ID}] level 1: restart confirmed healthy — ${systemId}`);
+      console.log(`[${MODULE_ID}] level 1: confirmed healthy — ${systemId}:${probePort}`);
+      // Mark the gap resolved so it stops re-triggering
+      try {
+        const { jaaDB, uid } = require('../memory/jaa-db');
+        jaaDB.update('gaps', gap.uuid, { status: 'resolved', resolvedAt: Date.now(), fixStrategy: 'level1_restart' });
+      } catch(_) {}
       return { outcome: 'resolved', strategy: 'safe_fix', action: fix.action, note: fix.note };
     }
 
-    // Restart attempted but health not confirmed — fall through to level 2 immediately
-    console.log(`[${MODULE_ID}] level 1: restart attempted, health not confirmed — ${systemId}`);
+    // Health not confirmed — return 'attempted' so gap-loop falls through to level 2
+    console.log(`[${MODULE_ID}] level 1: probe failed for ${systemId}:${probePort} — escalating`);
     return { outcome: 'attempted', strategy: 'safe_fix', action: fix.action, note: fix.note };
 
   } catch(e) {
@@ -503,11 +531,12 @@ async function escalate(gap) {
     logEscalation(gap, 1, r1);
 
     if (r1.outcome === 'resolved') {
-      // Fix 2: true resolution — reduce friction and close
-      reduceFriction(faultClass, 0.15, 'safe_fix_resolved');
+      // Resolved — but add a small friction increment so repeated occurrences build signal.
+      // A fault class that resolves instantly every time still warrants investigation.
+      addFriction(faultClass, 0.05, 'safe_fix_resolved_recurring');
       return { resolved: true, level: 1, ...r1 };
     }
-    // Fix 2: 'attempted' means restart tried but health not confirmed — fall through to level 2 immediately
+    // 'attempted' means restart tried but health not confirmed — fall through to level 2 immediately
     if (r1.outcome === 'attempted') {
       addFriction(faultClass, FRICTION_COST[1], 'safe_fix_attempted_no_confirm', { r1 });
       // fall through — do not return

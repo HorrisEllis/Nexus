@@ -1,1 +1,0 @@
-{"name":"nexus-system","version":"5.1.0","description":"NEXUS System — 115 Emergence files","scripts":{"watch":"node emerge-cli.js watch","check":"for f in **/*.eg; do node emerge-cli.js check $f; done"}}
