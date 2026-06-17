@@ -203,7 +203,7 @@ async function level1_safeFix(gap) {
     return { outcome: 'no_safe_fix', strategy: 'escalate', reason: `no safe fix registered for ${gap.type}` };
   }
 
-  console.log(`[${MODULE_ID}] level 1: ${fix.action} — ${fix.note}`);
+  console.log(`[${MODULE_ID}] level 1: ${fix.action} [${gap.moduleName || systemId}] — ${fix.note}`);
 
   // Map system names to their health ports
   const SYSTEM_PORTS = {
@@ -504,14 +504,20 @@ async function escalate(gap) {
   if (friction >= FRICTION.FAILURE_MODE) {
     const fm = jaaDB.query('failure_modes', r => r.faultClass === faultClass && r.status === 'active', 1)[0];
     if (fm) {
-      console.log(`[${MODULE_ID}] ${faultClass} already in failure mode — skipping escalation`);
+      const label = gap.moduleName
+        ? `${faultClass} [${gap.moduleName}${gap.modulePort ? ':' + gap.modulePort : ''}]`
+        : faultClass;
+      console.log(`[${MODULE_ID}] ${label} already in failure mode — skipping escalation`);
       return { alreadyFailureMode: true, fmUuid: fm.uuid, humanAction: fm.humanAction };
     }
   }
 
-  console.log(`[${MODULE_ID}] escalating ${faultClass} (friction: ${friction.toFixed(2)})`);
+  console.log(`[${MODULE_ID}] escalating ${faultClass}:${gap.moduleName || gap.path} (friction: ${friction.toFixed(2)})`);
 
-  // ── Level 0: known fix ────────────────────────────────────────────────────
+  // Enrich gap with human-readable identity for all log/console outputs
+  const gapLabel = gap.moduleName
+    ? `${gap.moduleName}${gap.modulePort ? ':' + gap.modulePort : ''}`
+    : gap.path;
   const r0 = await level0_knownFix(gap);
   history.push({ level: 0, result: r0, ts: Date.now() });
   logEscalation(gap, 0, r0);

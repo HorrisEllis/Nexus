@@ -312,6 +312,8 @@ async function bootAsync() {
       try {
         const snapshotMod = require('./snapshot');
         snapshotMod.bootSnapshot();
+        // Start divergence watcher — sigma-triggered auto-snapshots with blackbox
+        snapshotMod.divergenceWatcher.init();
       } catch(_) {}
       // Register agent-tools manifest in event_log so agents can discover tools
       try {

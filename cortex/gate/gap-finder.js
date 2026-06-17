@@ -45,12 +45,23 @@ async function _tick() {
     const modules = jaaDB.query('project_registry', () => true, 50);
     for (const mod of modules) {
       const lastSeen = mod.lastSeenAt || mod._ts || 0;
+      const staleSec = Math.floor((now - lastSeen) / 1000);
       if (now - lastSeen > STALE_MS && mod.status !== 'stale') {
+        // Typed severity based on how long stale + whether it's a hard dependency
+        const CRITICAL_MODULES = new Set(['cortex', 'orchestrator', 'guardian']);
+        const severity = CRITICAL_MODULES.has(mod.name) ? 'high'
+                       : staleSec > 300 ? 'high'
+                       : staleSec > 120 ? 'medium'
+                       : 'low';
         found.push({
-          path:     `modules/${mod.name}`,
-          type:     'stale_module',
-          severity: 'medium',
-          body:     `Module '${mod.name}' has not sent a heartbeat in ${Math.floor((now - lastSeen) / 1000)}s`,
+          path:       `modules/${mod.name}`,
+          type:       'stale_module',
+          severity,
+          // Named and typed: module name + expected port + how long offline
+          body:       `[${mod.name}:${mod.port || '?'}] stale ${staleSec}s — last seen: ${lastSeen ? new Date(lastSeen).toISOString() : 'never'}`,
+          moduleName: mod.name,
+          modulePort: mod.port || null,
+          staleSec,
         });
       }
     }
@@ -100,15 +111,19 @@ async function _tick() {
       if (existing.length) continue; // already open
 
       const row = jaaDB.insert('gaps', {
-        uuid:      uid(),
-        path:      gap.path,
-        type:      gap.type,
-        severity:  gap.severity,
-        body:      gap.body,
-        status:    'pending',
-        source:    MODULE_ID,
-        causedBy:  null,
-        createdAt: now,
+        uuid:       uid(),
+        path:       gap.path,
+        type:       gap.type,
+        severity:   gap.severity,
+        body:       gap.body,
+        status:     'pending',
+        source:     MODULE_ID,
+        causedBy:   null,
+        createdAt:  now,
+        // Named identity fields — populated for stale_module, sticky to gap
+        moduleName: gap.moduleName || null,
+        modulePort: gap.modulePort || null,
+        staleSec:   gap.staleSec   || null,
       });
 
       jaaDB.insert('event_log', {

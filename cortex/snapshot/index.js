@@ -67,7 +67,7 @@ function create(opts = {}) {
   const totalRows = Object.values(rowCounts).reduce((s, n) => s + n, 0);
 
   const nex = {
-    format:    'NEX-SNAP/1.0',
+    format:    'NEX-SNAP/1.1',   // 1.1 — supports system_state, blackbox, macro, resume
     uuid:      snapId,
     ts,
     type,
@@ -77,6 +77,16 @@ function create(opts = {}) {
     rowCounts,
     totalRows,
     tables,
+    // Extended fields — populated by divergence-watcher for type:'divergence'
+    // All other snapshot types get null placeholders for schema consistency
+    system_state:        null,
+    divergence_context:  null,
+    blackbox_pre:        null,
+    blackbox_post:       null,
+    macro:               null,
+    resume:              null,
+    // Spread any _extra fields from opts (divergence-watcher injects these)
+    ...(opts._extra || {}),
   };
 
   const snapPath = path.join(SNAP_DIR, `${snapId}.nex`);
@@ -95,6 +105,9 @@ function create(opts = {}) {
     ts,
     source:    MODULE_ID,
     rollback_count: 0,
+    has_system_state: !!(opts._extra?.system_state),
+    has_blackbox:     !!(opts._extra?.blackbox_pre),
+    has_macro:        false,  // updated async when macro compiles
   });
 
   jaaDB.insert('event_log', {
@@ -386,3 +399,6 @@ function stop() {
 }
 
 module.exports = { init, stop, create, list, load, diff, rollback, bootSnapshot, prune, VERSION, MODULE_ID };
+
+// ── Divergence watcher — re-exported for convenience ─────────────────────────
+module.exports.divergenceWatcher = require('./divergence-watcher');

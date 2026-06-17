@@ -375,11 +375,6 @@ select option{background:#111}
 #rw-status.ok{color:#00ff88}
 #rw-status.err{color:#ff3355}
 #rw-status.working{color:#ffaa00}
-}
-#menu-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff}
-#menu-btn.open{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff}
-#menu-icon{font-size:14px;transition:transform .3s}
-#menu-btn.open #menu-icon{transform:rotate(30deg)}
 
 /* ch-rail buttons need pointer-events when rail is visible */
 #ch-rail .ch-btn{pointer-events:auto}
@@ -816,10 +811,6 @@ function addEvent(d){
   const type=d.type||d.event||'';
   const src=d.source||d.system||'';
   flashDot(src||type.split('.')[0]);  // flash the source system's dot + tile icon
-  evCount++;
-  const type=d.type||d.event||'';
-  const src=d.source||d.system||'';
-  flashDot(src||type.split('.')[0]);  // flash the source system's dot
   const ts=new Date(d.ts||Date.now()).toISOString().substr(11,8);
   document.getElementById('ticker-line').textContent=`${ts} · ${src||type} · ${type}`;
   const srcF=logSrcFilter_||document.getElementById('log-src-filter')?.value||'';

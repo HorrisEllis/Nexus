@@ -830,6 +830,42 @@ class AdminServer {
           } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
           break;
         }
+        case route === 'GET /api/snapshots/divergence-watcher': {
+          try {
+            const dw = require('../snapshot/divergence-watcher');
+            this._json(res, 200, { ok: true, ...dw.status() });
+          } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
+          break;
+        }
+        case route === 'GET /api/snapshots/blackbox': {
+          // Decompress blackbox from a .nex snapshot
+          // ?snapId=nex-xxxx&section=pre|post
+          try {
+            const snapId  = url.searchParams.get('snapId');
+            const section = url.searchParams.get('section') || 'pre';
+            if (!snapId) { this._json(res, 400, { ok: false, error: 'snapId required' }); break; }
+            const snap = require('../snapshot');
+            const dw   = require('../snapshot/divergence-watcher');
+            const nex  = snap.load(snapId);
+            const field = section === 'post' ? nex.blackbox_post : nex.blackbox_pre;
+            if (!field) { this._json(res, 404, { ok: false, error: `no blackbox_${section} on ${snapId}` }); break; }
+            const decoded = dw.decompressBlackbox(field);
+            this._json(res, 200, { ok: true, snapId, section, ...decoded });
+          } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
+          break;
+        }
+        case route === 'GET /api/snapshots/macro': {
+          // Get the compiled macro for a divergence snapshot
+          try {
+            const snapId = url.searchParams.get('snapId');
+            if (!snapId) { this._json(res, 400, { ok: false, error: 'snapId required' }); break; }
+            const snap = require('../snapshot');
+            const nex  = snap.load(snapId);
+            if (!nex.macro) { this._json(res, 404, { ok: false, error: 'macro not yet compiled or not a divergence snapshot' }); break; }
+            this._json(res, 200, { ok: true, snapId, macro: nex.macro });
+          } catch(e) { this._json(res, 500, { ok: false, error: e.message }); }
+          break;
+        }
         case route === 'POST /api/snapshots/create': {
           try {
             const snap = require('../snapshot');
