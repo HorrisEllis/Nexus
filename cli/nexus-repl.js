@@ -304,21 +304,36 @@ async function dispatch(line) {
       // Direct Ollama chat — no NCP, no browser tab required
       const chatPrompt = args.join(' ').trim();
       if (!chatPrompt) { log('Usage: chat <prompt>'); return; }
-      log('→ Ollama…');
+      // Health check first — give a useful error if ollama isn't running
       try {
+        const healthR = await fetch('http://127.0.0.1:11434/api/tags', { signal: AbortSignal.timeout(3000) });
+        if (!healthR.ok) throw new Error('not ok');
+        const health = await healthR.json();
+        const models = (health.models || []).map(m => m.name);
+        if (!models.length) {
+          log('✗ Ollama is running but has no models. Run:\n  ollama pull qwen2.5-coder:1.5b\n  ollama pull mistral:7b-instruct-q4_K_M');
+          return;
+        }
+        const model = process.env.RHEON_OLLAMA_MODEL_PRIMARY || 'mistral:7b-instruct-q4_K_M';
+        const hasModel = models.some(m => m.startsWith(model.split(':')[0]));
+        const useModel = hasModel ? model : models[0];
+        if (!hasModel) log(`ℹ Model '${model}' not found — using '${useModel}' (available: ${models.slice(0,3).join(', ')})`);
+        log(`→ Ollama [${useModel}]…`);
         const r = await fetch('http://127.0.0.1:11434/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: process.env.RHEON_OLLAMA_MODEL_PRIMARY || 'mistral:7b-instruct-q4_K_M',
-            prompt: chatPrompt,
-            stream: false,
-          }),
+          body: JSON.stringify({ model: useModel, prompt: chatPrompt, stream: false }),
           signal: AbortSignal.timeout(120000),
         });
         const d = await r.json();
         log('\n' + (d.response || '(no response)') + '\n');
-      } catch(e) { log('✗ Ollama: ' + e.message); }
+      } catch(e) {
+        if (e.message.includes('ECONNREFUSED') || e.message.includes('fetch') || e.message.includes('timeout')) {
+          log('✗ Ollama not running. Start it with: ollama serve\n  Then pull a model: ollama pull qwen2.5-coder:1.5b');
+        } else {
+          log('✗ Ollama: ' + e.message);
+        }
+      }
       return;
     }
 

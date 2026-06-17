@@ -118,6 +118,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e0e8ff;f
 .spill-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:all .4s}
 .spill-dot.on{background:#00ff88;animation:dot-live 2.5s ease-in-out infinite}
 .spill-dot.err{background:#ff3355}
+/* Event-driven heartbeat flash — fires when an event arrives from that system */
+.spill-dot.flash{animation:dot-flash .4s ease-out!important}
+@keyframes dot-flash{0%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,136,0),0 0 8px 3px rgba(0,255,136,.9)}50%{box-shadow:0 0 0 6px rgba(0,255,136,0)}100%{opacity:.6;box-shadow:none}}
+.tile-icon.flash{animation:icon-flash .5s ease-out}
+@keyframes icon-flash{0%{filter:drop-shadow(0 0 8px currentColor)}100%{filter:none}}
 
 /* Rewind button — inside menu overlay, above rail */
 #rewind-btn{
@@ -430,21 +435,32 @@ select option{background:#111}
   <div class="ch" id="ch-guardian">
     <div class="gd-grid">
       <div class="gd-box">
-        <div class="box-head">Dispatch<button class="btn primary" style="font-size:9px;padding:4px 9px" onclick="gdSend()">SEND</button></div>
-        <div class="box-body" style="overflow:visible">
-          <div class="dispatch-area">
-            <textarea id="gd-prompt" rows="3" placeholder="Prompt..."></textarea>
-            <select id="gd-prov"><option value="claude">Claude</option><option value="chatgpt">ChatGPT</option><option value="ollama">Ollama</option><option value="gemini">Gemini</option><option value="perplexity">Perplexity</option></select>
-            <div id="gd-res" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.5);min-height:30px;white-space:pre-wrap"></div>
+        <div class="box-head">Dispatch
+          <div style="display:flex;gap:6px;align-items:center">
+            <select id="gd-prov" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:3px 6px;outline:none">
+              <option value="claude">Claude</option>
+              <option value="chatgpt">ChatGPT</option>
+              <option value="ollama">Ollama</option>
+              <option value="gemini">Gemini</option>
+              <option value="perplexity">Perplexity</option>
+            </select>
+            <button class="btn primary" style="font-size:9px;padding:4px 10px" onclick="gdSend()">SEND</button>
           </div>
+        </div>
+        <div class="box-body" style="overflow:visible;display:flex;flex-direction:column;gap:8px">
+          <textarea id="gd-prompt" rows="3" placeholder="Prompt..." onkeydown="if(event.key==='Enter'&&event.ctrlKey)gdSend()"></textarea>
+          <div id="gd-res" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.5);min-height:20px;white-space:pre-wrap"></div>
+          <div id="gd-provider-status" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"></div>
         </div>
       </div>
       <div class="gd-box">
-        <div class="box-head">Providers<button class="btn" style="font-size:9px;padding:4px 9px" onclick="gdLoadProvs()">↺</button></div>
-        <div class="box-body" id="gd-provs-el" style="display:flex;flex-direction:column;gap:6px"></div>
+        <div class="box-head">Providers <button class="btn" style="font-size:9px;padding:3px 7px" onclick="gdLoadProvs()">↺</button></div>
+        <div class="box-body" id="gd-provs-el" style="display:flex;flex-direction:column;gap:5px"></div>
       </div>
       <div class="gd-box" style="grid-column:1/-1">
-        <div class="box-head">Jobs <span id="gd-job-count" style="color:rgba(255,255,255,.2)">—</span><button class="btn" style="font-size:9px;padding:4px 9px" onclick="gdLoadJobs()">↺</button></div>
+        <div class="box-head">Jobs <span id="gd-job-count" style="color:rgba(255,255,255,.2)">0</span>
+          <button class="btn" style="font-size:9px;padding:3px 7px" onclick="gdLoadJobs()">↺</button>
+        </div>
         <div class="box-body" id="gd-jobs-el"></div>
       </div>
     </div>
@@ -458,11 +474,11 @@ select option{background:#111}
         <div class="box-body" id="cx-events-el"></div>
       </div>
       <div class="gd-box">
-        <div class="box-head">Open Loops <button class="btn" style="font-size:9px;padding:4px 9px" onclick="cxLoadGaps()">↺</button></div>
+        <div class="box-head">Open Loops <button class="btn" style="font-size:9px;padding:3px 7px" onclick="cxLoadGaps()">↺</button></div>
         <div class="box-body" id="cx-gaps-el"></div>
       </div>
       <div class="gd-box">
-        <div class="box-head">Failures <button class="btn" style="font-size:9px;padding:4px 9px" onclick="cxLoadFails()">↺</button></div>
+        <div class="box-head">Failures <button class="btn" style="font-size:9px;padding:3px 7px" onclick="cxLoadFails()">↺</button></div>
         <div class="box-body" id="cx-fails-el"></div>
       </div>
     </div>
@@ -470,11 +486,11 @@ select option{background:#111}
 
   <!-- CH4: IDEARIUM -->
   <div class="ch" id="ch-idearium">
-    <div style="display:flex;gap:12px;margin-bottom:12px;align-items:center;flex-shrink:0">
+    <div style="display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-shrink:0">
       <button class="btn" onclick="idrLoad('createdAt')">Recent</button>
       <button class="btn" onclick="idrLoad('tension')">By Tension</button>
-      <div style="margin-left:auto;display:flex;gap:8px">
-        <input class="box-input" id="idr-new" placeholder="New idea..." style="width:280px">
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <input class="box-input" id="idr-new" placeholder="New idea..." style="width:260px" onkeydown="if(event.key==='Enter')idrCreate()">
         <button class="btn primary" onclick="idrCreate()">+ Create</button>
       </div>
     </div>
@@ -490,7 +506,7 @@ select option{background:#111}
       <div class="stat-box"><div class="stat-v" id="br-uptime">—</div><div class="stat-l">Uptime</div></div>
     </div>
     <div class="gd-box" style="flex:1;min-height:0">
-      <div class="box-head">Registry <button class="btn" style="font-size:9px;padding:4px 9px" onclick="brLoad()">↺</button></div>
+      <div class="box-head">Registry <button class="btn" style="font-size:9px;padding:3px 7px" onclick="brLoad()">↺</button></div>
       <div class="box-body" id="br-reg"></div>
     </div>
   </div>
@@ -499,7 +515,16 @@ select option{background:#111}
   <div class="ch" id="ch-log">
     <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-shrink:0">
       <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">Live Log</span>
-      <input id="log-filter-in" placeholder="filter..." oninput="logFilter(this.value)">
+      <span id="log-conn-status" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)">connecting...</span>
+      <input id="log-filter-in" placeholder="filter..." oninput="logFilter(this.value)" style="width:180px">
+      <select id="log-src-filter" onchange="logFilter(document.getElementById('log-filter-in').value)" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:3px 6px;outline:none">
+        <option value="">All sources</option>
+        <option value="cortex">Cortex</option>
+        <option value="guardian">Guardian</option>
+        <option value="orchestrator">Orchestrator</option>
+        <option value="gap-loop">Gap Loop</option>
+        <option value="self-heal">Self Heal</option>
+      </select>
       <button class="btn" onclick="clearLog()" style="margin-left:auto">Clear</button>
     </div>
     <div id="log-stream"></div>
@@ -507,10 +532,29 @@ select option{background:#111}
 
   <!-- CH7: DIAGNOSE -->
   <div class="ch" id="ch-diagnose">
+    <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-shrink:0">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">System Diagnostics</span>
+      <button class="btn primary" onclick="runDiag()" style="margin-left:auto">Run All</button>
+    </div>
     <div id="diag-rows"></div>
-    <div style="margin-top:14px"><button class="btn primary" onclick="runDiag()">Run All Systems</button></div>
+    <!-- CFR Field -->
+    <div class="gd-box" style="margin-top:14px">
+      <div class="box-head">CFR Field <span id="diag-cfr-sigma" style="color:rgba(255,255,255,.3);font-size:9px;margin-left:8px"></span>
+        <button class="btn" style="font-size:9px;padding:3px 7px" onclick="loadDiagCFR()">↺</button>
+      </div>
+      <div class="box-body" id="diag-cfr-body"><div style="color:rgba(255,255,255,.2);font-size:11px">Not loaded</div></div>
+    </div>
+    <!-- Open Loops -->
+    <div class="gd-box" style="margin-top:10px">
+      <div class="box-head">Open Loops <button class="btn" style="font-size:9px;padding:3px 7px" onclick="loadDiagGaps()">↺</button></div>
+      <div class="box-body" id="diag-gaps-body"><div style="color:rgba(255,255,255,.2);font-size:11px">Not loaded</div></div>
+    </div>
+    <!-- Diagnostic Engines -->
+    <div class="gd-box" style="margin-top:10px">
+      <div class="box-head">Diagnostic Engines <button class="btn" style="font-size:9px;padding:3px 7px" onclick="runDiagEngines()">Run</button></div>
+      <div class="box-body" id="diag-engines-body"><div style="color:rgba(255,255,255,.2);font-size:11px">Not run yet</div></div>
+    </div>
   </div>
-</div>
 
 <!-- Top bar — channel name, visible when menu open -->
 <div id="top-bar">
@@ -621,308 +665,375 @@ select option{background:#111}
 'use strict';
 
 // ── Particle void ─────────────────────────────────────────────────────────────
-const vc = document.getElementById('void');
-const vx = vc.getContext('2d');
-let VW, VH, vpts = [], vt = 0;
-function vresize() { VW = vc.width = innerWidth; VH = vc.height = innerHeight; }
-class VP {
-  constructor() { this.reset(); }
-  reset() {
-    this.x = Math.random() * VW; this.y = Math.random() * VH;
-    this.vx = (Math.random() - .5) * .25; this.vy = (Math.random() - .5) * .25;
-    this.p = Math.random() * Math.PI * 2; this.r = Math.random() * 1.4 + .3;
-    this.h = [195, 145, 260, 210][Math.floor(Math.random() * 4)];
-  }
-  tick() {
-    this.x += this.vx; this.y += this.vy; this.p += .018;
-    if (this.x < 0 || this.x > VW || this.y < 0 || this.y > VH) this.reset();
-  }
-  draw() {
-    vx.beginPath(); vx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    vx.fillStyle = `hsla(${this.h},70%,65%,${.06 + Math.sin(this.p) * .05})`; vx.fill();
-  }
-}
-function vframe() {
-  vt += .01; vx.clearRect(0, 0, VW, VH);
-  for (let i = 0; i < vpts.length; i++) {
-    for (let j = i + 1; j < vpts.length; j++) {
-      const dx = vpts[i].x - vpts[j].x, dy = vpts[i].y - vpts[j].y, d = Math.sqrt(dx*dx + dy*dy);
-      if (d < 130) { vx.beginPath(); vx.moveTo(vpts[i].x, vpts[i].y); vx.lineTo(vpts[j].x, vpts[j].y); vx.strokeStyle = `rgba(120,140,200,${(1-d/130)*.05})`; vx.lineWidth = .4; vx.stroke(); }
-    }
-    vpts[i].tick(); vpts[i].draw();
-  }
-  requestAnimationFrame(vframe);
-}
-vresize(); window.addEventListener('resize', vresize);
-for (let i = 0; i < 70; i++) vpts.push(new VP());
-vframe();
+const vc=document.getElementById('void'),vx=vc.getContext('2d');
+let VW,VH,vpts=[],vt=0;
+function vresize(){VW=vc.width=innerWidth;VH=vc.height=innerHeight}
+class VP{constructor(){this.reset()}reset(){this.x=Math.random()*VW;this.y=Math.random()*VH;this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;this.p=Math.random()*Math.PI*2;this.r=Math.random()*1.4+.3;this.h=[195,145,260,210][Math.floor(Math.random()*4)]}tick(){this.x+=this.vx;this.y+=this.vy;this.p+=.018;if(this.x<0||this.x>VW||this.y<0||this.y>VH)this.reset()}draw(){vx.beginPath();vx.arc(this.x,this.y,this.r,0,Math.PI*2);vx.fillStyle=`hsla(${this.h},70%,65%,${.06+Math.sin(this.p)*.05})`;vx.fill()}}
+function vframe(){vt+=.01;vx.clearRect(0,0,VW,VH);for(let i=0;i<vpts.length;i++){for(let j=i+1;j<vpts.length;j++){const dx=vpts[i].x-vpts[j].x,dy=vpts[i].y-vpts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){vx.beginPath();vx.moveTo(vpts[i].x,vpts[i].y);vx.lineTo(vpts[j].x,vpts[j].y);vx.strokeStyle=`rgba(120,140,200,${(1-d/130)*.05})`;vx.lineWidth=.4;vx.stroke()}}vpts[i].tick();vpts[i].draw()}requestAnimationFrame(vframe)}
+vresize();window.addEventListener('resize',vresize);for(let i=0;i<70;i++)vpts.push(new VP());vframe();
 
 // ── API ───────────────────────────────────────────────────────────────────────
-const P = {orch:9000,gd:7820,cx:3748,br:9999,idr:4800,em:4242};
-const B = {orch:`http://127.0.0.1:${P.orch}`,gd:`http://127.0.0.1:${P.gd}`,cx:`http://127.0.0.1:${P.cx}`,br:`http://127.0.0.1:${P.br}`,idr:`http://127.0.0.1:${P.idr}`};
-async function get(url) { try { const r = await fetch(url); return await r.json(); } catch { return null; } }
-async function post(url, body) { try { const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}); return await r.json(); } catch { return null; } }
+const P={orch:9000,gd:7820,cx:3748,br:9999,idr:4800,em:4242};
+const B={orch:`http://127.0.0.1:${P.orch}`,gd:`http://127.0.0.1:${P.gd}`,cx:`http://127.0.0.1:${P.cx}`,br:`http://127.0.0.1:${P.br}`,idr:`http://127.0.0.1:${P.idr}`};
+async function get(url){try{const r=await fetch(url,{signal:AbortSignal.timeout(5000)});return await r.json()}catch{return null}}
+async function post(url,body){try{const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(8000)});return await r.json()}catch{return null}}
+async function del(url){try{const r=await fetch(url,{method:'DELETE',signal:AbortSignal.timeout(3000)});return await r.json()}catch{return null}}
 
-// ── Channel tuner ─────────────────────────────────────────────────────────────
-const CH_META = [
+// ── Provider URLs for window.open when no tab connected ───────────────────────
+const PROVIDER_URLS={
+  claude:      'https://claude.ai/new',
+  chatgpt:     'https://chatgpt.com',
+  gemini:      'https://gemini.google.com',
+  perplexity:  'https://www.perplexity.ai',
+  ollama:      'http://localhost:11434',
+};
+
+// ── Channel meta ──────────────────────────────────────────────────────────────
+const CH_META=[
   {id:'ch-overview',  name:'NEXUS',      accent:'Overview'},
   {id:'ch-guardian',  name:'GUARDIAN',   accent:':7820 · NCP'},
   {id:'ch-cortex',    name:'CORTEX',     accent:':3748 · Memory'},
   {id:'ch-idearium',  name:'IDEARIUM',   accent:':4800 · Idea Lattice'},
   {id:'ch-bridge',    name:'BRIDGE',     accent:':9999 · P2P Relay'},
   {id:'ch-log',       name:'EVENT LOG',  accent:'Live SSE stream'},
-  {id:'ch-diagnose',  name:'DIAGNOSE',   accent:'System checks'},
+  {id:'ch-diagnose',  name:'DIAGNOSE',   accent:'System checks · CFR · Gaps'},
 ];
-let curCh = 0;
+let curCh=0;
+let menuOpen=false;
 
-// ── Menu toggle ───────────────────────────────────────────────────────────────
-let menuOpen = false;
-function toggleMenu() {
-  menuOpen = !menuOpen;
-  document.getElementById('menu-overlay').classList.toggle('open', menuOpen);
-  document.getElementById('menu-btn').classList.toggle('open', menuOpen);
-  document.getElementById('top-bar').classList.toggle('open', menuOpen);
-}
-// Close on outside click
-document.addEventListener('click', e => {
-  if (menuOpen && !e.target.closest('#menu-overlay') && !e.target.closest('#menu-btn')) toggleMenu();
-});
+function toggleMenu(){menuOpen=!menuOpen;document.getElementById('menu-overlay').classList.toggle('open',menuOpen);document.getElementById('menu-btn').classList.toggle('open',menuOpen);document.getElementById('top-bar').classList.toggle('open',menuOpen)}
+document.addEventListener('click',e=>{if(menuOpen&&!e.target.closest('#menu-overlay')&&!e.target.closest('#menu-btn'))toggleMenu()});
 
-// ── Channel tuner ─────────────────────────────────────────────────────────────
-function tune(n) {
-  if (menuOpen) toggleMenu();
-  document.querySelectorAll('.ch').forEach(c => c.classList.remove('active'));
+function tune(n){
+  if(menuOpen)toggleMenu();
+  document.querySelectorAll('.ch').forEach(c=>c.classList.remove('active'));
   document.getElementById(CH_META[n].id).classList.add('active');
-  document.querySelectorAll('.ch-btn').forEach((b,i) => b.classList.toggle('on', i === n));
-  document.getElementById('ch-name').textContent = CH_META[n].name;
-  document.getElementById('ch-accent').textContent = CH_META[n].accent;
-  document.getElementById('menu-label').textContent = CH_META[n].name;
-  curCh = n;
-  if (n === 1) { gdLoadJobs(); gdLoadProvs(); }
-  if (n === 2) { cxLoadGaps(); cxLoadFails(); }
-  if (n === 3) { idrLoad('createdAt'); }
-  if (n === 4) { brLoad(); }
-  if (n === 6) { buildDiag(); }
+  document.querySelectorAll('.ch-btn').forEach((b,i)=>b.classList.toggle('on',i===n));
+  document.getElementById('ch-name').textContent=CH_META[n].name;
+  document.getElementById('ch-accent').textContent=CH_META[n].accent;
+  document.getElementById('menu-label').textContent=CH_META[n].name;
+  curCh=n;
+  if(n===1){gdLoadJobs();gdLoadProvs()}
+  if(n===2){cxLoadGaps();cxLoadFails()}
+  if(n===3)idrLoad('createdAt');
+  if(n===4)brLoad();
+  if(n===6){buildDiag();runDiag();loadDiagCFR();loadDiagGaps()}
 }
 
-// Arrow key + M key switching
-document.addEventListener('keydown', e => {
-  if (e.target === document.getElementById('assistant-in') || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
-  if (e.key === 'ArrowLeft' || e.key === '[') tune(Math.max(0, curCh - 1));
-  if (e.key === 'ArrowRight' || e.key === ']') tune(Math.min(CH_META.length - 1, curCh + 1));
-  if (e.key >= '1' && e.key <= '7') tune(parseInt(e.key) - 1);
-  if (e.key === 'm' || e.key === 'M') toggleMenu();
-  if (e.key === 'Escape' && menuOpen) toggleMenu();
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='ArrowLeft'||e.key==='[')tune(Math.max(0,curCh-1));
+  if(e.key==='ArrowRight'||e.key===']')tune(Math.min(CH_META.length-1,curCh+1));
+  if(e.key>='1'&&e.key<='7')tune(parseInt(e.key)-1);
+  if(e.key==='m'||e.key==='M')toggleMenu();
+  if(e.key==='Escape'&&menuOpen)toggleMenu();
+  if((e.key==='r'||e.key==='R')&&!menuOpen)openRewind();
 });
 
 // ── Health polling ────────────────────────────────────────────────────────────
-const SYSTEMS = [
-  {key:'orch', url:`${B.orch}/health`, dot:'sd-orch', tileId:'tile-orch', tileStatus:'ts-orch'},
-  {key:'gd',   url:`${B.gd}/health`,  dot:'sd-gd',   tileId:'tile-gd',   tileStatus:'ts-gd'},
-  {key:'cx',   url:`${B.cx}/health`,  dot:'sd-cx',   tileId:'tile-cx',   tileStatus:'ts-cx'},
-  {key:'idr',  url:`${B.idr}/health`, dot:'sd-idr',  tileId:'tile-idr',  tileStatus:'ts-idr'},
-  {key:'br',   url:`${B.br}/health`,  dot:'sd-br',   tileId:'tile-br',   tileStatus:'ts-br'},
+const SYSTEMS=[
+  {key:'orch',url:`${B.orch}/health`,dot:'sd-orch',tileId:'tile-orch',tileStatus:'ts-orch'},
+  {key:'gd',  url:`${B.gd}/health`, dot:'sd-gd',  tileId:'tile-gd',  tileStatus:'ts-gd'},
+  {key:'cx',  url:`${B.cx}/health`, dot:'sd-cx',  tileId:'tile-cx',  tileStatus:'ts-cx'},
+  {key:'idr', url:`${B.idr}/health`,dot:'sd-idr', tileId:'tile-idr', tileStatus:'ts-idr'},
+  {key:'br',  url:`${B.br}/health`, dot:'sd-br',  tileId:'tile-br',  tileStatus:'ts-br'},
 ];
-const railDots = {orch:0, gd:1, cx:2, idr:3, br:4};
-
-async function pollHealth() {
-  for (const s of SYSTEMS) {
-    const d = await get(s.url);
-    const up = d && (d.ok === true || d.status === 'ok' || !d.error);
-    const dot = document.getElementById(s.dot);
-    if (dot) { dot.classList.toggle('on', up); dot.classList.toggle('err', !up); }
-    const ts = document.getElementById(s.tileStatus);
-    if (ts) { ts.textContent = up ? 'ONLINE' : 'OFFLINE'; ts.className = 'tile-status ' + (up ? 'online' : 'offline'); }
-    const tile = document.getElementById(s.tileId);
-    if (tile) tile.classList.toggle('online', up);
-    const rdIdx = railDots[s.key];
-    if (rdIdx !== undefined) { const rd = document.getElementById(`rd-${rdIdx}`); if (rd) rd.classList.toggle('online', up); }
+const railDots={orch:0,gd:1,cx:2,idr:3,br:4};
+async function pollHealth(){
+  for(const s of SYSTEMS){
+    const d=await get(s.url);
+    const up=d&&(d.ok===true||d.status==='ok'||!d.error);
+    const dot=document.getElementById(s.dot);if(dot){dot.classList.toggle('on',up);dot.classList.toggle('err',!up)}
+    const ts=document.getElementById(s.tileStatus);if(ts){ts.textContent=up?'ONLINE':'OFFLINE';ts.className='tile-status '+(up?'online':'offline')}
+    const tile=document.getElementById(s.tileId);if(tile)tile.classList.toggle('online',up);
+    const rdIdx=railDots[s.key];if(rdIdx!==undefined){const rd=document.getElementById(`rd-${rdIdx}`);if(rd)rd.classList.toggle('online',up)}
   }
   loadMetrics();
 }
+async function loadMetrics(){
+  const orch=await get(`${B.orch}/api/status`);
+  if(orch){document.getElementById('tm-routes').textContent=orch.routes??'—';if(orch.uptimeMs){const h=Math.floor(orch.uptimeMs/3600000),m=Math.floor((orch.uptimeMs%3600000)/60000);document.getElementById('tm-uptime').textContent=h?`${h}h`:`${m}m`}}
+  const gd=await get(`${B.gd}/health`);
+  if(gd){document.getElementById('tm-jobs').textContent=gd.jobs??'—';document.getElementById('tm-provs').textContent=(gd.providers??Object.keys(gd.connected||{}).length)||'—'}
+  const gaps=await get(`${B.cx}/api/gaps?status=open`);if(Array.isArray(gaps))document.getElementById('tm-gaps').textContent=gaps.length;
+  const idr=await get(`${B.idr}/api/stats`);if(idr){document.getElementById('tm-ideas').textContent=idr.ideas??'—';document.getElementById('tm-specs').textContent=idr.specs??'—'}
+  const br=await get(`${B.br}/health`);if(br){document.getElementById('tm-reqs').textContent=br.requests??'—';document.getElementById('tm-nodes').textContent=br.nodes??'—'}
+}
 
-async function loadMetrics() {
-  const orch = await get(`${B.orch}/api/status`);
-  if (orch) {
-    document.getElementById('tm-routes').textContent = orch.routes ?? '—';
-    if (orch.uptimeMs) { const h=Math.floor(orch.uptimeMs/3600000),m=Math.floor((orch.uptimeMs%3600000)/60000); document.getElementById('tm-uptime').textContent = h ? `${h}h` : `${m}m`; }
+// ── SSE — live events ─────────────────────────────────────────────────────────
+let evCount=0,logFilter_='',logSrcFilter_='';
+let sseOrch=null,sseCx=null;
+function connectSSE(){
+  function connect(url,handler,onStatus){
+    let es;
+    function tryConnect(){
+      try{
+        es=new EventSource(url);
+        es.onopen=()=>{if(onStatus)onStatus('live')}
+        es.onmessage=e=>{try{handler(JSON.parse(e.data))}catch(_){}};
+        es.onerror=()=>{if(onStatus)onStatus('reconnecting');setTimeout(tryConnect,5000)};
+      }catch(_){setTimeout(tryConnect,5000)}
+    }
+    tryConnect();
   }
-  const gd = await get(`${B.gd}/health`);
-  if (gd) { document.getElementById('tm-jobs').textContent = gd.jobs ?? '—'; document.getElementById('tm-provs').textContent = (gd.providers ?? Object.keys(gd.connected||{}).length) || '—'; }
-  const gaps = await get(`${B.cx}/api/gaps?status=open`);
-  if (Array.isArray(gaps)) document.getElementById('tm-gaps').textContent = gaps.length;
-  const idr = await get(`${B.idr}/api/stats`);
-  if (idr) { document.getElementById('tm-ideas').textContent = idr.ideas ?? '—'; document.getElementById('tm-specs').textContent = idr.specs ?? '—'; }
-  const br = await get(`${B.br}/health`);
-  if (br) { document.getElementById('tm-reqs').textContent = br.requests ?? '—'; document.getElementById('tm-nodes').textContent = br.nodes ?? '—'; }
+  connect(`${B.orch}/sse`,addEvent);
+  connect(`${B.cx}/sse`,d=>{addCxEvent(d);addEvent(d)},s=>{
+    const el=document.getElementById('log-conn-status');
+    if(el)el.textContent=s==='live'?'● live':s;
+    if(el)el.style.color=s==='live'?'#00ff88':'rgba(255,170,0,.6)';
+  });
+  // Guardian SSE for job updates
+  try{
+    const gdEs=new EventSource(`${B.gd}/events`);
+    gdEs.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.type&&(d.type.includes('job')||d.type.includes('guardian')))gdLoadJobs()}catch(_){}};
+  }catch(_){}
+}
+// Map source strings to their dot element IDs
+const SRC_DOT={orchestrator:'sd-orch',cortex:'sd-cx',guardian:'sd-gd',idearium:'sd-idr',bridge:'sd-br','gap-loop':'sd-cx','self-heal':'sd-cx',healer:'sd-cx',raid:'sd-cx',heartbeat:'sd-cx'};
+// Map source to their tile icon element for flash
+const SRC_TILE_ICON={orchestrator:'tile-orch',guardian:'tile-gd',cortex:'tile-cx',idearium:'tile-idr',bridge:'tile-br'};
+function flashDot(src){
+  const key=Object.keys(SRC_DOT).find(k=>src?.toLowerCase().includes(k));
+  const id=key?SRC_DOT[key]:null;
+  if(!id)return;
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.remove('flash');
+  void el.offsetWidth;
+  el.classList.add('flash');
+  setTimeout(()=>el.classList.remove('flash'),500);
+  // Also flash tile icon on overview
+  const tileKey=Object.keys(SRC_TILE_ICON).find(k=>src?.toLowerCase().includes(k));
+  if(tileKey){
+    const tile=document.getElementById(SRC_TILE_ICON[tileKey]);
+    const icon=tile?.querySelector('.tile-icon');
+    if(icon){icon.classList.remove('flash');void icon.offsetWidth;icon.classList.add('flash');setTimeout(()=>icon.classList.remove('flash'),600);}
+  }
 }
 
-// ── SSE ───────────────────────────────────────────────────────────────────────
-let evCount = 0, logFilter_ = '';
-function connectSSE() {
-  try {
-    const es = new EventSource(`${B.orch}/sse`);
-    es.onmessage = e => { try { addEvent(JSON.parse(e.data)); } catch(_) {} };
-    es.onerror = () => setTimeout(connectSSE, 5000);
-  } catch(_) {}
-  try {
-    const cx = new EventSource(`${B.cx}/sse`);
-    cx.onmessage = e => { try { const d = JSON.parse(e.data); addCxEvent(d); addEvent(d); } catch(_) {} };
-  } catch(_) {}
-}
-
-function addEvent(d) {
+function addEvent(d){
   evCount++;
-  const type = d.type || d.event || 'event';
-  const src = d.source || d.system || '';
-  const ts = new Date(d.ts || Date.now()).toISOString().substr(11, 8);
-  // Update ticker
-  document.getElementById('ticker-line').textContent = `${ts} · ${src} · ${type}`;
-  // Log channel
-  if (!logFilter_ || type.includes(logFilter_) || src.includes(logFilter_)) {
-    const stream = document.getElementById('log-stream');
-    const row = document.createElement('div');
-    row.className = 'll';
-    row.innerHTML = `<span class="ll-ts">${ts}</span><span class="ll-src">${src}</span><span class="ll-msg">${type}</span>`;
+  const type=d.type||d.event||'';
+  const src=d.source||d.system||'';
+  flashDot(src||type.split('.')[0]);  // flash the source system's dot + tile icon
+  evCount++;
+  const type=d.type||d.event||'';
+  const src=d.source||d.system||'';
+  flashDot(src||type.split('.')[0]);  // flash the source system's dot
+  const ts=new Date(d.ts||Date.now()).toISOString().substr(11,8);
+  document.getElementById('ticker-line').textContent=`${ts} · ${src||type} · ${type}`;
+  const srcF=logSrcFilter_||document.getElementById('log-src-filter')?.value||'';
+  if((!logFilter_||type.includes(logFilter_)||src.includes(logFilter_))&&(!srcF||src.includes(srcF)||type.includes(srcF))){
+    const stream=document.getElementById('log-stream');
+    if(!stream)return;
+    const row=document.createElement('div');row.className='ll';
+    row.innerHTML=`<span class="ll-ts">${ts}</span><span class="ll-src">${src}</span><span class="ll-msg">${type}</span>`;
     stream.prepend(row);
-    if (stream.children.length > 400) stream.removeChild(stream.lastChild);
+    if(stream.children.length>500)stream.removeChild(stream.lastChild);
   }
 }
-
-function addCxEvent(d) {
-  const el = document.getElementById('cx-events-el');
-  if (!el) return;
-  evCount++;
-  document.getElementById('cx-ev-count').textContent = evCount;
-  const ts = new Date(d.ts || Date.now()).toISOString().substr(11, 8);
-  const row = document.createElement('div');
-  row.className = 'evt-row';
-  row.innerHTML = `<span class="ev-ts">${ts}</span><span class="ev-src">${d.source||d.system||''}</span><span class="ev-type">${d.type||''}</span>`;
-  el.prepend(row);
-  if (el.children.length > 80) el.removeChild(el.lastChild);
+function addCxEvent(d){
+  const el=document.getElementById('cx-events-el');if(!el)return;
+  evCount++;document.getElementById('cx-ev-count').textContent=evCount;
+  const ts=new Date(d.ts||Date.now()).toISOString().substr(11,8);
+  const row=document.createElement('div');row.className='evt-row';
+  row.innerHTML=`<span class="ev-ts">${ts}</span><span class="ev-src">${d.source||d.system||''}</span><span class="ev-type">${d.type||''}</span>`;
+  el.prepend(row);if(el.children.length>100)el.removeChild(el.lastChild);
 }
-
-function logFilter(v) { logFilter_ = v.toLowerCase(); }
-function clearLog() { document.getElementById('log-stream').innerHTML = ''; evCount = 0; }
+function logFilter(v){logFilter_=v.toLowerCase()}
+function clearLog(){document.getElementById('log-stream').innerHTML='';evCount=0}
 
 // ── Guardian ──────────────────────────────────────────────────────────────────
-async function gdSend() {
-  const p = document.getElementById('gd-prompt').value.trim();
-  const pr = document.getElementById('gd-prov').value;
-  if (!p) return;
-  const el = document.getElementById('gd-res');
-  el.textContent = 'Dispatching to ' + pr + '...';
-  const d = await post(`${B.gd}/command`, {command:'chat', prompt:p, provider:pr});
-  el.textContent = d?.jobId ? `Job ${d.jobId} — ${d.status||'queued'}` : (d ? JSON.stringify(d) : 'Error: Guardian offline or no provider connected');
-  gdLoadJobs();
-}
-async function gdLoadJobs() {
-  const d = await get(`${B.gd}/jobs`);
-  const el = document.getElementById('gd-jobs-el');
-  const jobs = Array.isArray(d) ? d : (d?.jobs || []);
-  document.getElementById('gd-job-count').textContent = jobs.length || '0';
-  if (!jobs.length) { el.innerHTML = '<div style="color:rgba(255,255,255,.2);font-size:11px">No jobs yet</div>'; return; }
-  el.innerHTML = jobs.slice(0, 20).map(j => `
-    <div class="job-row">
-      <span class="j-st ${j.status}">${j.status||'?'}</span>
-      <span class="j-prov">${j.provider||'?'}</span>
-      <span class="j-txt">${(j.prompt||j.command||'').slice(0,120)}</span>
-      <span style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)">${(j.id||'').slice(0,8)}</span>
-    </div>`).join('');
-}
-async function gdLoadProvs() {
-  const d = await get(`${B.gd}/providers`);
-  const el = document.getElementById('gd-provs-el');
-  const provs = d?.providers || d?.connected || {};
-  const names = Object.keys(provs);
-  if (!names.length) { el.innerHTML = '<div style="color:rgba(255,255,255,.2);font-size:11px;line-height:1.7">No providers connected.<br>Open Claude.ai or ChatGPT in a tab with the userscript active.</div>'; return; }
-  el.innerHTML = names.map(n => `<div class="prov-pill live"><span>●</span>${n}</div>`).join('');
-}
+// Known busy providers — tracks tab state
+let _providerState={};
 
-// ── Cortex ────────────────────────────────────────────────────────────────────
-async function cxLoadGaps() {
-  const d = await get(`${B.cx}/api/gaps?status=open`);
-  const el = document.getElementById('cx-gaps-el');
-  const gaps = Array.isArray(d) ? d : [];
-  if (!gaps.length) { el.innerHTML = '<div style="color:rgba(0,255,136,.4);font-size:11px">No open loops — ecology nominal</div>'; return; }
-  el.innerHTML = gaps.slice(0, 20).map(g => `
-    <div class="gap-row ${g.severity||'low'}">
-      <div class="gap-type-lbl">${g.loop_type||g.type||'gap'} ${g.severity?'· '+g.severity:''}</div>
-      <div class="gap-body-txt">${(g.body||g.path||'').slice(0,120)}</div>
-    </div>`).join('');
-}
-async function cxLoadFails() {
-  const d = await get(`${B.cx}/api/failures`);
-  const el = document.getElementById('cx-fails-el');
-  const fails = Array.isArray(d) ? d : (d?.failures || []);
-  if (!fails.length) { el.innerHTML = '<div style="color:rgba(255,255,255,.2);font-size:11px">No failures</div>'; return; }
-  el.innerHTML = fails.slice(0, 10).map(f => `
-    <div class="gap-row high">
-      <div class="gap-type-lbl">${f.source||'unknown'}</div>
-      <div class="gap-body-txt">${(f.error||'').slice(0,140)}</div>
-    </div>`).join('');
-}
-
-// ── Idearium ──────────────────────────────────────────────────────────────────
-async function idrLoad(sort = 'createdAt') {
-  const d = await get(`${B.idr}/api/ideas?sort=${sort}`);
-  const el = document.getElementById('idr-feed');
-  const ideas = Array.isArray(d) ? d : (d?.ideas || []);
-  if (!ideas.length) { el.innerHTML = '<div style="color:rgba(255,255,255,.2);font-size:12px">No ideas yet. Type one above.</div>'; return; }
-  const maxT = Math.max(...ideas.map(i => i.tension || 0), 1);
-  el.innerHTML = ideas.slice(0, 40).map(i => {
-    const t = i.tension || 0;
-    const tags = (i.tags || []).map(g => `<span class="it-tag">${g}</span>`).join('');
-    return `<div class="idea-tile ${t > 0.6 ? 'high-t' : ''}">
-      <div class="it-title">${i.title || (i.body||'').slice(0,80) || 'Untitled'}</div>
-      ${i.body && i.title ? `<div class="it-body">${i.body}</div>` : ''}
-      <div class="it-meta">${i.status||'open'}${tags}${t ? `<span>tension: ${t.toFixed?t.toFixed(2):t}</span>` : ''}</div>
-      ${t ? `<div class="t-bar"><div class="t-fill" style="width:${Math.round(t/maxT*100)}%"></div></div>` : ''}
+async function gdLoadProvs(){
+  const d=await get(`${B.gd}/providers`);
+  const el=document.getElementById('gd-provs-el');
+  const provs=d?.providers||d?.connected||{};
+  const names=Object.keys(provs);
+  _providerState=provs;
+  updateProviderStatusLine();
+  if(!names.length){
+    el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px;line-height:1.8">No providers connected.<br>Open a tab and activate the userscript.</div>';
+    return;
+  }
+  el.innerHTML=names.map(n=>{
+    const p=provs[n]||{};
+    const busy=p.busy||p.status==='busy';
+    return `<div class="prov-pill ${busy?'':'live'}" style="${busy?'border-color:rgba(255,170,0,.3);color:#ffaa00':''}">
+      <span>${busy?'⏳':'●'}</span>${n}${busy?'<span style="font-size:8px;margin-left:4px">BUSY</span>':''}
+      ${!busy?`<button onclick="gdOpenNewTab('${n}')" style="margin-left:auto;background:none;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.4);font-size:8px;padding:1px 5px;cursor:pointer" title="Open new tab">+tab</button>`:''}
     </div>`;
   }).join('');
 }
-async function idrCreate() {
-  const inp = document.getElementById('idr-new');
-  const body = inp.value.trim();
-  if (!body) return;
-  const d = await post(`${B.idr}/api/ideas`, {body, status:'open'});
-  if (d?.uuid || d?.ok) { inp.value = ''; idrLoad('createdAt'); }
-  else { inp.style.borderColor = '#ff3355'; setTimeout(() => inp.style.borderColor = '', 1500); }
+
+function updateProviderStatusLine(){
+  const pr=document.getElementById('gd-prov')?.value||'claude';
+  const el=document.getElementById('gd-provider-status');if(!el)return;
+  const connected=Object.keys(_providerState);
+  if(!connected.length){el.textContent='No tabs connected — send will open a tab';el.style.color='rgba(255,170,0,.6)';return}
+  const match=connected.find(n=>n.toLowerCase().includes(pr.toLowerCase()));
+  if(match){
+    const busy=_providerState[match]?.busy;
+    el.textContent=busy?`${match} is busy — will route to next available`:`${match} ready`;
+    el.style.color=busy?'rgba(255,170,0,.6)':'rgba(0,255,136,.5)';
+  }else{
+    el.textContent=`${pr} not connected — send will open ${PROVIDER_URLS[pr]||'a new tab'}`;
+    el.style.color='rgba(255,170,0,.6)';
+  }
+}
+
+function gdOpenNewTab(provider){
+  const url=PROVIDER_URLS[provider||'claude'];
+  if(url)window.open(url,'_blank');
+}
+
+async function gdSend(){
+  const p=document.getElementById('gd-prompt').value.trim();
+  const pr=document.getElementById('gd-prov').value;
+  if(!p)return;
+  const res=document.getElementById('gd-res');
+  res.style.color='rgba(255,255,255,.5)';
+
+  // Check if provider is connected
+  const provs=await get(`${B.gd}/providers`);
+  const connected=Object.keys(provs?.providers||provs?.connected||{});
+  const hasProvider=connected.some(n=>n.toLowerCase().includes(pr.toLowerCase()));
+
+  if(!hasProvider){
+    // EVENT-DRIVEN: open the tab immediately, don't just show a message
+    const url=PROVIDER_URLS[pr];
+    res.textContent=`No ${pr} tab connected — opening now. Install the userscript then Send again.`;
+    res.style.color='rgba(255,170,0,.7)';
+    if(url) window.open(url,'_blank');
+    return;
+  }
+
+  // Check if this provider is busy (has an active streaming/processing job)
+  const jobs=await get(`${B.gd}/jobs`);
+  const jobList=Array.isArray(jobs)?jobs:(jobs?.jobs||[]);
+  const busy=jobList.some(j=>j.provider?.toLowerCase().includes(pr.toLowerCase())&&(j.status==='streaming'||j.status==='processing'));
+  if(busy){
+    // Find next available provider that's connected and not busy
+    const busyProviders=new Set(jobList.filter(j=>j.status==='streaming'||j.status==='processing').map(j=>j.provider?.toLowerCase()));
+    const available=connected.find(n=>!busyProviders.has(n.toLowerCase())&&n.toLowerCase()!==pr.toLowerCase());
+    if(available){
+      res.innerHTML=`${pr} is busy. Route to <b style="color:#00e5ff">${available}</b>? <button onclick="routeToProvider('${available}')" style="background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);border-radius:4px;color:#00e5ff;font-size:10px;padding:2px 8px;cursor:pointer;margin-left:8px">Use ${available}</button> <button onclick="openNewProviderTab('${pr}')" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;color:rgba(255,255,255,.5);font-size:10px;padding:2px 8px;cursor:pointer;margin-left:4px">Open new ${pr} tab</button>`;
+      res.style.color='rgba(255,170,0,.7)';
+      return;
+    }else{
+      // All connected providers busy — open a new tab
+      const url=PROVIDER_URLS[pr];
+      res.textContent=`All providers busy. Opening new ${pr} tab...`;
+      if(url) window.open(url,'_blank');
+      return;
+    }
+  }
+
+  // Timestamp is the source of truth for ordering
+  const jobTs=Date.now();
+  res.textContent=`Dispatching [${new Date(jobTs).toISOString().substr(11,8)}]...`;
+  res.style.color='rgba(255,255,255,.4)';
+
+  const d=await post(`${B.gd}/command`,{command:'chat',prompt:p,provider:pr,meta:{ts:jobTs,source:'ui',ordered:true,seam_ts:jobTs}});
+  if(d?.jobId){
+    res.textContent=`Job ${d.jobId.slice(0,12)} — ${d.status||'queued'} [${new Date(jobTs).toISOString().substr(11,8)}]`;
+    res.style.color='rgba(0,229,255,.6)';
+    document.getElementById('gd-prompt').value='';
+  }else{
+    res.textContent=d?JSON.stringify(d):'Error: Guardian offline';
+    res.style.color='rgba(255,51,85,.7)';
+  }
+  gdLoadJobs();
+  setTimeout(gdLoadJobs,2000);
+}
+
+function openNewProviderTab(pr){const url=PROVIDER_URLS[pr];if(url)window.open(url,'_blank');}
+async function routeToProvider(pr){
+  document.getElementById('gd-prov').value=pr;
+  await gdSend();
+}
+
+async function gdCancelJob(jobId){
+  await post(`${B.gd}/queue/cancel/${jobId}`,{});
+  gdLoadJobs();
+}
+
+async function gdLoadJobs(){
+  const d=await get(`${B.gd}/jobs`);
+  const el=document.getElementById('gd-jobs-el');
+  const jobs=Array.isArray(d)?d:(d?.jobs||[]);
+  document.getElementById('gd-job-count').textContent=jobs.length||'0';
+  if(!jobs.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">No jobs yet</div>';return}
+  // Sort by timestamp (source of truth for order)
+  const sorted=jobs.slice(0,30).sort((a,b)=>(b.ts||b.createdAt||0)-(a.ts||a.createdAt||0));
+  el.innerHTML=sorted.map(j=>{
+    const ts=j.ts||j.createdAt?new Date(j.ts||j.createdAt).toISOString().substr(11,8):'';
+    const isActive=j.status==='streaming'||j.status==='processing'||j.status==='queued';
+    return `<div class="job-row">
+      <span class="j-st ${j.status||''}">${j.status||'?'}</span>
+      <span class="j-prov">${j.provider||'?'}</span>
+      <span class="j-txt">${(j.prompt||j.command||'').slice(0,100)}</span>
+      <span style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.2)">${ts}</span>
+      ${isActive?`<button onclick="gdCancelJob('${j.id||j.uuid||''}')" style="margin-left:4px;background:none;border:1px solid rgba(255,51,85,.3);border-radius:4px;color:rgba(255,51,85,.6);font-size:8px;padding:1px 5px;cursor:pointer;flex-shrink:0">✕</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── Cortex ────────────────────────────────────────────────────────────────────
+async function cxLoadGaps(){
+  const d=await get(`${B.cx}/api/gaps?status=open`);const el=document.getElementById('cx-gaps-el');
+  const gaps=Array.isArray(d)?d:[];
+  if(!gaps.length){el.innerHTML='<div style="color:rgba(0,255,136,.4);font-size:11px">No open loops — ecology nominal</div>';return}
+  el.innerHTML=gaps.slice(0,20).map(g=>`<div class="gap-row ${g.severity||'low'}"><div class="gap-type-lbl">${g.loop_type||g.type||'gap'}${g.severity?' · '+g.severity:''}</div><div class="gap-body-txt">${(g.body||g.path||'').slice(0,120)}</div></div>`).join('');
+}
+async function cxLoadFails(){
+  const d=await get(`${B.cx}/api/failures`);const el=document.getElementById('cx-fails-el');
+  const fails=Array.isArray(d)?d:(d?.failures||[]);
+  if(!fails.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">No failures</div>';return}
+  el.innerHTML=fails.slice(0,10).map(f=>`<div class="gap-row high"><div class="gap-type-lbl">${f.source||'unknown'}</div><div class="gap-body-txt">${(f.error||'').slice(0,140)}</div></div>`).join('');
+}
+
+// ── Idearium ──────────────────────────────────────────────────────────────────
+async function idrLoad(sort='createdAt'){
+  const d=await get(`${B.idr}/api/ideas?sort=${sort}`);const el=document.getElementById('idr-feed');
+  const ideas=Array.isArray(d)?d:(d?.ideas||[]);
+  if(!ideas.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:12px">No ideas yet. Type one above.</div>';return}
+  const maxT=Math.max(...ideas.map(i=>i.tension||0),1);
+  el.innerHTML=ideas.slice(0,40).map(i=>{
+    const t=i.tension||0;const tags=(i.tags||[]).map(g=>`<span class="it-tag">${g}</span>`).join('');
+    return `<div class="idea-tile ${t>.6?'high-t':''}"><div class="it-title">${i.title||(i.body||'').slice(0,80)||'Untitled'}</div>${i.body&&i.title?`<div class="it-body">${i.body}</div>`:''}<div class="it-meta">${i.status||'open'}${tags}${t?`<span>tension: ${t.toFixed?t.toFixed(2):t}</span>`:''}</div>${t?`<div class="t-bar"><div class="t-fill" style="width:${Math.round(t/maxT*100)}%"></div></div>`:''}</div>`;
+  }).join('');
+}
+async function idrCreate(){
+  const inp=document.getElementById('idr-new');const body=inp.value.trim();if(!body)return;
+  const d=await post(`${B.idr}/api/ideas`,{body,status:'open'});
+  if(d?.uuid||d?.ok){inp.value='';idrLoad('createdAt')}
+  else{inp.style.borderColor='#ff3355';setTimeout(()=>inp.style.borderColor='',1500)}
 }
 
 // ── Bridge ────────────────────────────────────────────────────────────────────
-async function brLoad() {
-  const h = await get(`${B.br}/health`);
-  if (h) {
-    document.getElementById('br-reqs').textContent = h.requests ?? '—';
-    document.getElementById('br-nodes').textContent = h.nodes ?? '—';
-    document.getElementById('br-health').textContent = h.ok ? 'OK' : 'DEGRADED';
-    document.getElementById('br-health').style.color = h.ok ? '#00ff88' : '#ff3355';
-    document.getElementById('br-uptime').textContent = h.uptimeMs ? Math.floor(h.uptimeMs/60000)+'m' : '—';
-  }
-  const reg = await get(`${B.br}/api/registry`);
-  const el = document.getElementById('br-reg');
-  const nodes = Array.isArray(reg) ? reg : (reg?.nodes || []);
-  if (!nodes.length) { el.innerHTML = '<div style="color:rgba(255,255,255,.2);font-size:11px">No registered nodes</div>'; return; }
-  el.innerHTML = nodes.map(n => `
-    <div class="node-row">
-      <span class="node-id">${n.id||n.name||'node'}</span>
-      <span class="node-url">${n.url||n.address||''}</span>
-      <span class="node-st ${n.online||n.healthy?'up':'down'}">${n.online||n.healthy?'● online':'● offline'}</span>
-    </div>`).join('');
+async function brLoad(){
+  const h=await get(`${B.br}/health`);
+  if(h){document.getElementById('br-reqs').textContent=h.requests??'—';document.getElementById('br-nodes').textContent=h.nodes??'—';document.getElementById('br-health').textContent=h.ok?'OK':'DEGRADED';document.getElementById('br-health').style.color=h.ok?'#00ff88':'#ff3355';document.getElementById('br-uptime').textContent=h.uptimeMs?Math.floor(h.uptimeMs/60000)+'m':'—'}
+  const reg=await get(`${B.br}/api/registry`);const el=document.getElementById('br-reg');
+  const nodes=Array.isArray(reg)?reg:(reg?.nodes||[]);
+  if(!nodes.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">No registered nodes</div>';return}
+  el.innerHTML=nodes.map(n=>`<div class="node-row"><span class="node-id">${n.id||n.name||'node'}</span><span class="node-url">${n.url||n.address||''}</span><span class="node-st ${n.online||n.healthy?'up':'down'}">${n.online||n.healthy?'● online':'● offline'}</span></div>`).join('');
 }
 
 // ── Diagnose ──────────────────────────────────────────────────────────────────
-const DIAG = [
-  {name:'Orchestrator', port:9000, url:`${B.orch}/health`},
-  {name:'Guardian',     port:7820, url:`${B.gd}/health`},
-  {name:'Cortex',       port:3748, url:`${B.cx}/health`},
-  {name:'Idearium',     port:4800, url:`${B.idr}/health`},
-  {name:'Bridge',       port:9999, url:`${B.br}/health`},
-  {name:'Emerge',       port:4242, url:'http://127.0.0.1:4242/health'},
+const DIAG=[
+  {name:'Orchestrator',port:9000,url:`${B.orch}/health`},
+  {name:'Guardian',    port:7820,url:`${B.gd}/health`},
+  {name:'Cortex',      port:3748,url:`${B.cx}/health`},
+  {name:'Idearium',    port:4800,url:`${B.idr}/health`},
+  {name:'Bridge',      port:9999,url:`${B.br}/health`},
+  {name:'Emerge',      port:4242,url:'http://127.0.0.1:4242/health'},
 ];
-function buildDiag() {
-  document.getElementById('diag-rows').innerHTML = DIAG.map((s, i) => `
+function buildDiag(){
+  document.getElementById('diag-rows').innerHTML=DIAG.map((s,i)=>`
     <div class="diag-row" id="dr-${i}">
       <span class="diag-name">${s.name}</span>
       <span class="diag-port">:${s.port}</span>
@@ -930,433 +1041,170 @@ function buildDiag() {
       <span class="diag-detail" id="ddt-${i}">not checked</span>
     </div>`).join('');
 }
-async function runDiag() {
-  for (let i = 0; i < DIAG.length; i++) {
-    const s = DIAG[i];
-    document.getElementById(`dst-${i}`).textContent = '...';
-    document.getElementById(`dst-${i}`).className = 'diag-status checking';
-    const d = await get(s.url);
-    const ok = d && (d.ok === true || d.status === 'ok' || !d.error);
-    document.getElementById(`dst-${i}`).textContent = ok ? 'ONLINE' : 'OFFLINE';
-    document.getElementById(`dst-${i}`).className = 'diag-status ' + (ok ? 'ok' : 'fail');
-    const detail = [];
-    if (d?.version) detail.push('v' + d.version);
-    if (d?.uptimeMs) detail.push(Math.floor(d.uptimeMs/60000) + 'm uptime');
-    if (d?.routes) detail.push(d.routes + ' routes');
-    if (d?.jobs !== undefined) detail.push(d.jobs + ' jobs');
-    document.getElementById(`ddt-${i}`).textContent = detail.join(' · ') || (ok ? 'healthy' : 'unreachable');
+async function runDiag(){
+  for(let i=0;i<DIAG.length;i++){
+    const s=DIAG[i];
+    const statusEl=document.getElementById(`dst-${i}`);
+    const detailEl=document.getElementById(`ddt-${i}`);
+    if(statusEl)statusEl.textContent='...';
+    if(statusEl)statusEl.className='diag-status checking';
+    const d=await get(s.url);
+    const ok=d&&(d.ok===true||d.status==='ok'||!d.error);
+    if(statusEl){statusEl.textContent=ok?'ONLINE':'OFFLINE';statusEl.className='diag-status '+(ok?'ok':'fail')}
+    const detail=[];
+    if(d?.version)detail.push('v'+d.version);
+    if(d?.uptimeMs)detail.push(Math.floor(d.uptimeMs/60000)+'m uptime');
+    if(d?.routes)detail.push(d.routes+' routes');
+    if(d?.jobs!==undefined)detail.push(d.jobs+' jobs');
+    if(d?.tables)detail.push(Object.keys(d.tables||{}).length+' tables');
+    if(detailEl)detailEl.textContent=detail.join(' · ')||(ok?'healthy':'unreachable');
   }
 }
+async function loadDiagCFR(){
+  const el=document.getElementById('diag-cfr-body');
+  const sigma=document.getElementById('diag-cfr-sigma');
+  // Try guardian CFR first, fall back to cortex resilience
+  const d=await get(`${B.gd}/cfr/state`)||await get(`${B.cx}/api/resilience/status`);
+  if(!d){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">CFR not responding</div>';return}
+  const s=d.sigma?.score??d.sigma??d.score??0;
+  if(sigma)sigma.textContent=`σ=${typeof s==='number'?s.toFixed(3):s}`;
+  const color=s<.35?'#00ff88':s<.7?'#ffaa00':'#ff3355';
+  el.innerHTML=`
+    <div style="margin-bottom:8px">
+      <div style="font-size:9px;color:rgba(255,255,255,.3);margin-bottom:4px;font-family:'Space Mono',monospace">SIGMA</div>
+      <div style="height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden"><div style="width:${Math.min(100,Math.round((s||0)*100))}%;height:100%;background:${color};transition:width .5s"></div></div>
+      <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:${color};margin-top:6px">${typeof s==='number'?s.toFixed(3):s||'—'}</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.4)">
+      ${Object.entries(d).filter(([k])=>!['sigma','cfr','_'].some(x=>k.startsWith(x))).slice(0,8).map(([k,v])=>`<span><span style="color:rgba(255,255,255,.2)">${k}:</span> ${typeof v==='object'?JSON.stringify(v).slice(0,30):String(v).slice(0,30)}</span>`).join('')}
+    </div>`;
+}
+async function loadDiagGaps(){
+  const el=document.getElementById('diag-gaps-body');
+  const d=await get(`${B.cx}/api/gaps?status=open`);
+  const gaps=Array.isArray(d)?d:[];
+  if(!gaps.length){el.innerHTML='<div style="color:rgba(0,255,136,.4);font-size:11px">No open loops</div>';return}
+  el.innerHTML=gaps.slice(0,15).map(g=>`<div class="gap-row ${g.severity||'low'}"><div class="gap-type-lbl">${g.loop_type||g.type||'gap'}${g.severity?' · '+g.severity:''}</div><div class="gap-body-txt">${(g.body||g.path||'').slice(0,120)}</div></div>`).join('');
+}
+async function runDiagEngines(){
+  const el=document.getElementById('diag-engines-body');
+  el.innerHTML='<div style="color:rgba(255,170,0,.6);font-size:11px">Running diagnostic engines...</div>';
+  const d=await post(`${B.cx}/api/replay/inspect`,{fromTs:Date.now()-300000});
+  const v=await get(`${B.cx}/api/resilience/status`);
+  const rows=[];
+  if(d){rows.push({name:'Replay inspect (5m)',val:d.eventCount+' events',ok:true})}
+  if(v){rows.push({name:'Resilience status',val:`σ=${(v.sigma?.score??v.sigma??0).toFixed?.(3)}`,ok:true})}
+  // Topology from gap-loop via cortex event_log
+  const gaps=await get(`${B.cx}/api/gaps?status=open`);
+  const gapCount=Array.isArray(gaps)?gaps.length:0;
+  rows.push({name:'Open loops',val:gapCount+' total',ok:gapCount===0});
+  const fails=await get(`${B.cx}/api/failures`);
+  const failCount=Array.isArray(fails)?fails.length:(fails?.failures||[]).length;
+  rows.push({name:'Failures',val:failCount+' recent',ok:failCount===0});
+  el.innerHTML=rows.map(r=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:${r.ok?'#00ff88':'#ffaa00'}">${r.ok?'✓':'⚠'}</span><span style="color:rgba(255,255,255,.6)">${r.name}</span><span style="margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3)">${r.val}</span></div>`).join('');
+}
 
-// ── Inline assistant ──────────────────────────────────────────────────────────
-const asHist = []; let asIdx = -1;
-document.getElementById('assistant-in').addEventListener('keydown', e => {
-  if (e.key === 'ArrowUp') { asIdx = Math.min(asIdx+1, asHist.length-1); e.target.value = asHist[asIdx]||''; e.preventDefault(); }
-  if (e.key === 'ArrowDown') { asIdx = Math.max(asIdx-1, -1); e.target.value = asIdx>=0 ? asHist[asIdx] : ''; e.preventDefault(); }
+// ── Assistant with grammar engine ─────────────────────────────────────────────
+const asHist=[];let asIdx=-1;
+document.getElementById('assistant-in').addEventListener('keydown',e=>{
+  if(e.key==='ArrowUp'){asIdx=Math.min(asIdx+1,asHist.length-1);e.target.value=asHist[asIdx]||'';e.preventDefault()}
+  if(e.key==='ArrowDown'){asIdx=Math.max(asIdx-1,-1);e.target.value=asIdx>=0?asHist[asIdx]:'';e.preventDefault()}
 });
-async function asSend() {
-  const inp = document.getElementById('assistant-in');
-  const q = inp.value.trim(); if (!q) return;
-  asHist.unshift(q); asIdx = -1; inp.value = '';
-  const out = document.getElementById('assistant-out');
-  out.style.display = 'block'; out.textContent = '...';
-  // Route locally first
-  const cmd = q.toLowerCase();
-  if (cmd === 'help') { out.textContent = 'Commands: status · gaps · jobs · providers · ideas · clear\nArrow keys or 1-7 to switch channels'; return; }
-  if (cmd === 'clear') { out.style.display = 'none'; return; }
-  if (cmd === 'status') { const lines=[]; for(const s of SYSTEMS){const d=await get(s.url);lines.push(`${s.key}: ${d?'online':'offline'}`)} out.textContent=lines.join('\n'); return; }
-  if (cmd === 'gaps') { const d=await get(`${B.cx}/api/gaps?status=open`); const g=Array.isArray(d)?d:[]; out.textContent=g.length?g.slice(0,8).map(x=>`[${x.severity||'?'}] ${x.loop_type||x.type}: ${(x.body||'').slice(0,80)}`).join('\n'):'No open gaps'; return; }
-  if (cmd === 'jobs') { const d=await get(`${B.gd}/jobs`); const j=Array.isArray(d)?d:(d?.jobs||[]); out.textContent=j.length?j.slice(0,8).map(x=>`[${x.status}] ${x.provider}: ${(x.prompt||'').slice(0,60)}`).join('\n'):'No jobs'; return; }
-  if (cmd === 'providers') { const d=await get(`${B.gd}/providers`); const p=Object.keys(d?.providers||d?.connected||{}); out.textContent=p.length?p.map(n=>'● '+n).join('\n'):'No providers connected'; return; }
-  if (cmd === 'ideas') { const d=await get(`${B.idr}/api/ideas?sort=tension`); const i=Array.isArray(d)?d:(d?.ideas||[]); out.textContent=i.length?i.slice(0,8).map(x=>`[${x.status||'?'}] ${(x.title||x.body||'').slice(0,80)}`).join('\n'):'No ideas'; return; }
-  // Forward to guardian as a job
-  const d = await post(`${B.gd}/command`, {command:'chat', prompt:q, provider:'ollama'});
-  out.textContent = d?.jobId ? `Dispatched to Ollama — job ${d.jobId}\nMonitor on Guardian channel (key 2)` : 'Guardian offline. Connect a provider tab or start Ollama.';
+async function asSend(){
+  const inp=document.getElementById('assistant-in');
+  const q=inp.value.trim();if(!q)return;
+  asHist.unshift(q);asIdx=-1;inp.value='';
+  const out=document.getElementById('assistant-out');
+  out.style.display='block';out.style.color='rgba(200,220,210,.8)';out.textContent='...';
+  const cmd=q.toLowerCase();
+  // Built-in commands
+  if(cmd==='help'){out.textContent='Commands: status · gaps · jobs · providers · ideas · clear
+Keys: 1-7 channels · ← → step · M menu · R rewind';return}
+  if(cmd==='clear'){out.style.display='none';return}
+  if(cmd==='status'){const lines=[];for(const s of SYSTEMS){const d=await get(s.url);lines.push(`${s.key}: ${d?'online':'offline'}`)}out.textContent=lines.join('\n');return}
+  if(cmd==='gaps'){const d=await get(`${B.cx}/api/gaps?status=open`);const g=Array.isArray(d)?d:[];out.textContent=g.length?g.slice(0,8).map(x=>`[${x.severity||'?'}] ${x.loop_type||x.type}: ${(x.body||'').slice(0,80)}`).join('\n'):'No open gaps';return}
+  if(cmd==='jobs'){const d=await get(`${B.gd}/jobs`);const j=Array.isArray(d)?d:(d?.jobs||[]);out.textContent=j.length?j.slice(0,8).map(x=>`[${x.status}] ${x.provider}: ${(x.prompt||'').slice(0,60)}`).join('\n'):'No jobs';return}
+  if(cmd==='providers'){const d=await get(`${B.gd}/providers`);const p=Object.keys(d?.providers||d?.connected||{});out.textContent=p.length?p.map(n=>'● '+n).join('\n'):'No providers connected';return}
+  if(cmd==='ideas'){const d=await get(`${B.idr}/api/ideas?sort=tension`);const i=Array.isArray(d)?d:(d?.ideas||[]);out.textContent=i.length?i.slice(0,8).map(x=>`[${x.status||'?'}] ${(x.title||x.body||'').slice(0,80)}`).join('\n'):'No ideas';return}
+  // Try grammar engine via request-handler
+  const hr=await post(`${B.orch}/api/request`,{prompt:q});
+  if(hr?.result?.componentId){out.textContent=`Grammar: ${hr.result.componentId}\nParams: ${JSON.stringify(hr.result.params||{})}\nOutcome: ${hr.outcome}`;return}
+  if(hr?.outcome&&hr.outcome!=='RESOLVED'){out.textContent=`${hr.outcome}: ${hr.reason||''}`;return}
+  // Forward to ollama via guardian
+  const d=await post(`${B.gd}/command`,{command:'chat',prompt:q,provider:'ollama',meta:{source:'assistant',ts:Date.now()}});
+  out.textContent=d?.jobId?`Dispatched to Ollama — job ${d.jobId.slice(0,12)}\nMonitor on Guardian channel (key 2)`:'Guardian offline. Connect a provider or start Ollama.';
 }
 
-// ── REWIND TIMELINE ───────────────────────────────────────────────────────────
-// Loads snapshots from Cortex. Each snapshot has sigma score + delta from the
-// CFR ledger. Timeline is a horizontal scrubber — colored by sigma, height by
-// delta magnitude. Click a point to select, confirm to rollback.
-
-let rwSnapshots = [];
-let rwSelected  = null;
-let rwHovered   = null;
-let rwCanvas    = null;
-let rwCtx       = null;
-let rwAnimFrame = null;
-let rwParticles = [];
-const CX_SNAP   = `${B.cx}/api/snapshots`;
-const CX_EVENTS = `${B.cx}/api/events`;
-const CX_ROLLBACK = `${B.cx}/api/snapshots/rollback`;
-
-// sigma → color (green=stable, amber=elevated, red=critical)
-function sigmaColor(s, alpha = 1) {
-  if (typeof s !== 'number') s = 0;
-  s = Math.min(1, Math.max(0, s));
-  if (s < 0.35) {
-    // green → cyan
-    const t = s / 0.35;
-    const r = Math.round(0   + t * 0);
-    const g = Math.round(255 - t * 25);
-    const b = Math.round(136 + t * 119);
-    return `rgba(${r},${g},${b},${alpha})`;
-  } else if (s < 0.7) {
-    // cyan → amber
-    const t = (s - 0.35) / 0.35;
-    const r = Math.round(0   + t * 255);
-    const g = Math.round(229 - t * 59);
-    const b = Math.round(255 - t * 255);
-    return `rgba(${r},${g},${b},${alpha})`;
-  } else {
-    // amber → red
-    const t = (s - 0.7) / 0.3;
-    const r = Math.round(255);
-    const g = Math.round(170 - t * 170);
-    const b = Math.round(0   + t * 85);
-    return `rgba(${r},${g},${b},${alpha})`;
+// ── Rewind ────────────────────────────────────────────────────────────────────
+let rwSnapshots=[],rwSelected=null,rwHovered=null,rwAnimFrame=null;
+const CX_SNAP=`${B.cx}/api/snapshots`,CX_ROLLBACK=`${B.cx}/api/snapshots/rollback`;
+function sigmaColor(s,a=1){if(typeof s!=='number')s=0;s=Math.min(1,Math.max(0,s));if(s<.35){const t=s/.35;return`rgba(${Math.round(0)},${Math.round(255-t*25)},${Math.round(136+t*119)},${a})`}else if(s<.7){const t=(s-.35)/.35;return`rgba(${Math.round(t*255)},${Math.round(229-t*59)},${Math.round(255-t*255)},${a})`}else{const t=(s-.7)/.3;return`rgba(255,${Math.round(170-t*170)},${Math.round(t*85)},${a})`}}
+async function openRewind(){document.getElementById('rewind-overlay').classList.add('open');setRwStatus('Loading...','working');await loadRewindData()}
+function closeRewind(){document.getElementById('rewind-overlay').classList.remove('open');if(rwAnimFrame){cancelAnimationFrame(rwAnimFrame);rwAnimFrame=null}}
+async function loadRewindData(){
+  const sd=await get(CX_SNAP);const ed=await get(`${B.cx}/api/events?n=200`);
+  const snaps=sd?.snapshots||sd||[];const events=Array.isArray(ed)?ed:(ed?.events||[]);
+  const sigmaEvents=events.filter(e=>e.sigma?.score!==undefined).map(e=>({ts:e.ts,sigma:e.sigma.score,delta:e.delta||0})).sort((a,b)=>a.ts-b.ts);
+  rwSnapshots=snaps.map(s=>{let closest=null,minD=Infinity;for(const ev of sigmaEvents){const d=Math.abs(ev.ts-s.ts);if(d<minD){minD=d;closest=ev}}return{...s,sigma:closest?.sigma||0,delta:closest?.delta||0}}).sort((a,b)=>a.ts-b.ts);
+  if(!rwSnapshots.length){setRwStatus('No snapshots','');return}
+  setRwStatus(rwSnapshots.length+' snapshots','');drawTimeline();
+}
+function drawTimeline(){
+  const c=document.getElementById('rw-canvas');if(!c)return;
+  const dpr=window.devicePixelRatio||1,rect=c.getBoundingClientRect();
+  c.width=rect.width*dpr;c.height=rect.height*dpr;
+  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);
+  c.onmousemove=e=>{const r=c.getBoundingClientRect(),mx=e.clientX-r.left;const idx=_snapAtX(mx,r.width);rwHovered=idx>=0?idx:null;const tip=document.getElementById('rw-hover-tip');if(idx>=0){const sn=rwSnapshots[idx];const ts=new Date(sn.ts).toISOString().replace('T',' ').substr(0,19);tip.innerHTML=`<b>${sn.snapId?.slice(0,12)||'?'}</b> ${sn.trigger||'?'}<br>${ts} σ=${sn.sigma?.toFixed(3)||'0'}`;tip.style.left=(r.left+_snapX(idx,rwSnapshots.length,r.width,24))+'px';tip.style.top=(r.top+80)+'px';tip.classList.add('show')}else tip.classList.remove('show')};
+  c.onclick=e=>{const r=c.getBoundingClientRect();const idx=_snapAtX(e.clientX-r.left,r.width);if(idx>=0){rwSelected=rwSnapshots[idx];showSnapDetail(rwSelected)}};
+  c.onmouseleave=()=>{rwHovered=null;document.getElementById('rw-hover-tip').classList.remove('show')};
+  let gt=0;function animLoop(){gt+=.04;_renderTL(ctx,c.getBoundingClientRect().width,c.getBoundingClientRect().height,gt);rwAnimFrame=requestAnimationFrame(animLoop)}animLoop();
+}
+function _snapX(i,n,W,PAD){return n===1?W/2:PAD+(i/(n-1))*(W-PAD*2)}
+function _snapAtX(mx,W){const PAD=24,n=rwSnapshots.length;if(!n)return-1;let best=0,bestD=Infinity;for(let i=0;i<n;i++){const d=Math.abs(_snapX(i,n,W,PAD)-mx);if(d<bestD){bestD=d;best=i}}return bestD<28?best:-1}
+function _renderTL(ctx,W,H,t){
+  ctx.clearRect(0,0,W,H);const n=rwSnapshots.length;if(!n)return;const PAD=24,MID=H*.55,MH=H*.38;
+  ctx.beginPath();ctx.moveTo(PAD,MID);ctx.lineTo(W-PAD,MID);ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();
+  if(n>=2){const fmt=ts=>new Date(ts).toISOString().substr(11,5);ctx.font='9px "Space Mono"';ctx.fillStyle='rgba(255,255,255,.2)';ctx.textAlign='left';ctx.fillText(fmt(rwSnapshots[0].ts),PAD,H-4);ctx.textAlign='right';ctx.fillText(fmt(rwSnapshots[n-1].ts),W-PAD,H-4)}
+  for(let i=0;i<n-1;i++){const x1=_snapX(i,n,W,PAD),x2=_snapX(i+1,n,W,PAD);const g=ctx.createLinearGradient(x1,0,x2,0);g.addColorStop(0,sigmaColor(rwSnapshots[i].sigma,.2));g.addColorStop(1,sigmaColor(rwSnapshots[i+1].sigma,.2));ctx.beginPath();ctx.moveTo(x1,MID);ctx.lineTo(x2,MID);ctx.strokeStyle=g;ctx.lineWidth=1.5;ctx.stroke()}
+  for(let i=0;i<n;i++){
+    const sn=rwSnapshots[i];const x=_snapX(i,n,W,PAD);const dy=Math.min(MH,Math.max(-MH,(sn.delta||0)*MH*2));const y=MID-dy;
+    const sel=rwSelected?.snapId===sn.snapId;const hov=rwHovered===i;const r=sel?7+Math.sin(t)*2:hov?6:4;
+    if(sel||hov){ctx.beginPath();ctx.arc(x,y,r+5,0,Math.PI*2);ctx.fillStyle=sigmaColor(sn.sigma,sel?.1+Math.sin(t)*.05:.06);ctx.fill()}
+    ctx.beginPath();ctx.moveTo(x,MID);ctx.lineTo(x,y);ctx.strokeStyle=sigmaColor(sn.sigma,sel?.5:.15);ctx.lineWidth=sel?1.5:.7;ctx.stroke();
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=sigmaColor(sn.sigma,sel||hov?1:.65);ctx.fill();
+    if(sel){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke()}
   }
 }
-
-async function openRewind() {
-  const overlay = document.getElementById('rewind-overlay');
-  overlay.classList.add('open');
-  setRwStatus('Loading snapshots...', 'working');
-  await loadRewindData();
-  // Keyboard shortcut
-  document.addEventListener('keydown', rwKeyHandler);
+function showSnapDetail(sn){
+  document.getElementById('rw-detail-empty').style.display='none';
+  const c=document.getElementById('rw-detail-content');c.style.display='block';
+  document.getElementById('rw-snap-id').textContent=sn.snapId?.slice(0,20)||'?';
+  document.getElementById('rw-snap-trigger').textContent=sn.trigger||sn.type||'manual';
+  document.getElementById('rw-snap-ts').textContent=new Date(sn.ts).toISOString().replace('T',' ').substr(0,19);
+  document.getElementById('rw-snap-stats').innerHTML=[{v:sn.totalRows??'?',l:'Rows'},{v:sn.openGaps??'?',l:'Open gaps'},{v:sn.rollback_count||0,l:'Rollbacks'},{v:sn.sigma?.toFixed?sn.sigma.toFixed(3):'?',l:'Sigma'}].map(s=>`<div class="rw-stat"><div class="rw-stat-v">${s.v}</div><div class="rw-stat-l">${s.l}</div></div>`).join('');
+  const pct=Math.round((sn.sigma||0)*100);const fill=document.getElementById('rw-snap-sigma-fill');fill.style.width=pct+'%';fill.style.background=sigmaColor(sn.sigma||0);
+  document.getElementById('rw-confirm-row').style.display='block';
+  const btn=document.getElementById('rw-confirm-btn');btn.textContent='⟲ Restore this snapshot';btn.classList.remove('danger');btn.disabled=false;
+  setRwStatus(`Selected: ${sn.snapId?.slice(0,16)} — ${sn.trigger||'?'} at ${new Date(sn.ts).toLocaleTimeString()}`,'');
 }
-
-function closeRewind() {
-  document.getElementById('rewind-overlay').classList.remove('open');
-  document.removeEventListener('keydown', rwKeyHandler);
-  rwSelected = null;
-  if (rwAnimFrame) { cancelAnimationFrame(rwAnimFrame); rwAnimFrame = null; }
+function cancelSelect(){rwSelected=null;document.getElementById('rw-confirm-row').style.display='none';document.getElementById('rw-detail-empty').style.display='block';document.getElementById('rw-detail-content').style.display='none';setRwStatus('','')}
+async function confirmRewind(){
+  if(!rwSelected)return;const btn=document.getElementById('rw-confirm-btn');
+  if(!btn.classList.contains('danger')){btn.textContent='⚠ Confirm — rewinds all state';btn.classList.add('danger');setRwStatus('Click again to confirm rollback','working');return}
+  btn.textContent='⟳ Rewinding...';btn.disabled=true;setRwStatus('Sending rollback...','working');
+  const d=await post(CX_ROLLBACK,{snapId:rwSelected.snapId,reason:'user-rewind-ui'});
+  if(d?.ok||d?.rolled_back){setRwStatus('✓ Rolled back — refreshing...','ok');const ch=document.getElementById('channel');ch.style.filter='brightness(.1) saturate(0)';setTimeout(()=>{ch.style.transition='filter .6s ease';ch.style.filter='';setTimeout(()=>ch.style.transition='',700)},300);setTimeout(()=>{pollHealth();loadRewindData()},1200)}
+  else{setRwStatus(`✗ Rollback failed: ${d?.error||'Cortex not responding'}`,'err');btn.textContent='⟲ Restore this snapshot';btn.classList.remove('danger');btn.disabled=false}
 }
-
-function rwKeyHandler(e) {
-  if (e.key === 'Escape') closeRewind();
-}
-
-async function loadRewindData() {
-  // Load snapshots
-  const sd = await get(CX_SNAP);
-  const snaps = sd?.snapshots || sd || [];
-
-  // Load recent events with sigma scores
-  const ed = await get(`${CX_EVENTS}?n=200`);
-  const events = Array.isArray(ed) ? ed : (ed?.events || []);
-
-  // Build sigma timeline from events that have sigma scores
-  const sigmaEvents = events
-    .filter(e => e.sigma?.score !== undefined || e.cfr)
-    .map(e => ({
-      ts:    e.ts,
-      sigma: e.sigma?.score ?? 0,
-      delta: e.delta ?? 0,
-      type:  e.type || '',
-      src:   e.source || '',
-    }))
-    .sort((a, b) => a.ts - b.ts);
-
-  // Attach estimated sigma to each snapshot by interpolating nearest event
-  rwSnapshots = snaps.map(s => {
-    // Find closest event in time
-    let closest = null, minDiff = Infinity;
-    for (const ev of sigmaEvents) {
-      const diff = Math.abs(ev.ts - s.ts);
-      if (diff < minDiff) { minDiff = diff; closest = ev; }
-    }
-    return {
-      ...s,
-      sigma:  closest?.sigma ?? 0,
-      delta:  closest?.delta ?? 0,
-      sigmaColor: sigmaColor(closest?.sigma ?? 0),
-    };
-  }).sort((a, b) => a.ts - b.ts);
-
-  if (!rwSnapshots.length) {
-    setRwStatus('No snapshots found. Snapshots are created automatically before decisions.', '');
-    return;
-  }
-
-  setRwStatus(`${rwSnapshots.length} snapshots loaded — oldest to newest`, '');
-  drawTimeline();
-}
-
-// ── Timeline canvas renderer ──────────────────────────────────────────────────
-function drawTimeline() {
-  rwCanvas = document.getElementById('rw-canvas');
-  if (!rwCanvas) return;
-  const dpr = window.devicePixelRatio || 1;
-  const rect = rwCanvas.getBoundingClientRect();
-  rwCanvas.width  = rect.width  * dpr;
-  rwCanvas.height = rect.height * dpr;
-  rwCtx = rwCanvas.getContext('2d');
-  rwCtx.scale(dpr, dpr);
-
-  _renderTimeline();
-
-  // Mouse events
-  rwCanvas.onmousemove = rwMouseMove;
-  rwCanvas.onclick     = rwMouseClick;
-  rwCanvas.onmouseleave = () => {
-    rwHovered = null;
-    document.getElementById('rw-hover-tip').classList.remove('show');
-    _renderTimeline();
-  };
-
-  // Animate breathing glow on selected
-  if (rwAnimFrame) cancelAnimationFrame(rwAnimFrame);
-  let glowT = 0;
-  function animLoop() {
-    glowT += 0.04;
-    _renderTimeline(glowT);
-    rwAnimFrame = requestAnimationFrame(animLoop);
-  }
-  animLoop();
-}
-
-function _renderTimeline(t = 0) {
-  if (!rwCtx || !rwSnapshots.length) return;
-  const W = rwCanvas.getBoundingClientRect().width;
-  const H = rwCanvas.getBoundingClientRect().height;
-  rwCtx.clearRect(0, 0, W, H);
-
-  const n = rwSnapshots.length;
-  const PAD = 24;
-  const MID = H * 0.55;
-  const MAX_H = H * 0.38;
-
-  // Baseline line
-  rwCtx.beginPath();
-  rwCtx.moveTo(PAD, MID);
-  rwCtx.lineTo(W - PAD, MID);
-  rwCtx.strokeStyle = 'rgba(255,255,255,.07)';
-  rwCtx.lineWidth = 1;
-  rwCtx.stroke();
-
-  // Time labels
-  if (n >= 2) {
-    const fmt = ts => new Date(ts).toISOString().substr(11, 5);
-    rwCtx.font = '9px "Space Mono"';
-    rwCtx.fillStyle = 'rgba(255,255,255,.2)';
-    rwCtx.textAlign = 'left';  rwCtx.fillText(fmt(rwSnapshots[0].ts), PAD, H - 6);
-    rwCtx.textAlign = 'right'; rwCtx.fillText(fmt(rwSnapshots[n-1].ts), W - PAD, H - 6);
-  }
-
-  // Connect snapshots with gradient line
-  if (n >= 2) {
-    for (let i = 0; i < n - 1; i++) {
-      const x1 = _snapX(i, n, W, PAD);
-      const x2 = _snapX(i+1, n, W, PAD);
-      const grad = rwCtx.createLinearGradient(x1, 0, x2, 0);
-      grad.addColorStop(0, sigmaColor(rwSnapshots[i].sigma, .25));
-      grad.addColorStop(1, sigmaColor(rwSnapshots[i+1].sigma, .25));
-      rwCtx.beginPath();
-      rwCtx.moveTo(x1, MID);
-      rwCtx.lineTo(x2, MID);
-      rwCtx.strokeStyle = grad;
-      rwCtx.lineWidth = 1.5;
-      rwCtx.stroke();
-    }
-  }
-
-  // Draw each snapshot point
-  for (let i = 0; i < n; i++) {
-    const snap = rwSnapshots[i];
-    const x = _snapX(i, n, W, PAD);
-    // Delta drives vertical position (up = positive delta, down = negative)
-    const deltaY = _clamp(snap.delta * MAX_H * 2, -MAX_H, MAX_H);
-    const y = MID - deltaY;
-    const isSelected = rwSelected?.snapId === snap.snapId;
-    const isHovered  = rwHovered  === i;
-
-    // Stem from baseline
-    rwCtx.beginPath();
-    rwCtx.moveTo(x, MID);
-    rwCtx.lineTo(x, y);
-    rwCtx.strokeStyle = sigmaColor(snap.sigma, isSelected ? .6 : .2);
-    rwCtx.lineWidth = isSelected ? 1.5 : .8;
-    rwCtx.stroke();
-
-    // Node
-    const r = isSelected ? 7 + Math.sin(t) * 2 : isHovered ? 6 : 4;
-    if (isSelected || isHovered) {
-      rwCtx.beginPath();
-      rwCtx.arc(x, y, r + 5, 0, Math.PI * 2);
-      rwCtx.fillStyle = sigmaColor(snap.sigma, isSelected ? .1 + Math.sin(t) * .05 : .08);
-      rwCtx.fill();
-    }
-    rwCtx.beginPath();
-    rwCtx.arc(x, y, r, 0, Math.PI * 2);
-    rwCtx.fillStyle = sigmaColor(snap.sigma, isSelected || isHovered ? 1 : .7);
-    rwCtx.fill();
-    if (isSelected) {
-      rwCtx.beginPath();
-      rwCtx.arc(x, y, r, 0, Math.PI * 2);
-      rwCtx.strokeStyle = '#fff';
-      rwCtx.lineWidth = 1.5;
-      rwCtx.stroke();
-    }
-  }
-}
-
-function _snapX(i, n, W, PAD) {
-  if (n === 1) return W / 2;
-  return PAD + (i / (n - 1)) * (W - PAD * 2);
-}
-function _clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
-
-function _snapAtX(mouseX) {
-  if (!rwSnapshots.length) return -1;
-  const W = rwCanvas.getBoundingClientRect().width;
-  const PAD = 24;
-  const n = rwSnapshots.length;
-  let best = 0, bestDist = Infinity;
-  for (let i = 0; i < n; i++) {
-    const x = _snapX(i, n, W, PAD);
-    const d = Math.abs(x - mouseX);
-    if (d < bestDist) { bestDist = d; best = i; }
-  }
-  return bestDist < 28 ? best : -1;
-}
-
-function rwMouseMove(e) {
-  const rect = rwCanvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
-  const idx = _snapAtX(mx);
-  rwHovered = idx >= 0 ? idx : null;
-  const tip = document.getElementById('rw-hover-tip');
-  if (idx >= 0) {
-    const snap = rwSnapshots[idx];
-    const ts = new Date(snap.ts).toISOString().replace('T', ' ').substr(0, 19);
-    tip.innerHTML = `<b>${snap.snapId?.slice(0,10) || '?'}</b>  ${snap.trigger || '?'}<br>${ts}  σ=${snap.sigma?.toFixed(3) || '?'}  rows=${snap.totalRows || '?'}`;
-    const W = rect.width, PAD = 24;
-    const tipX = _snapX(idx, rwSnapshots.length, W, PAD);
-    tip.style.left = (rect.left + tipX) + 'px';
-    tip.style.top  = (rect.top + my - 8) + 'px';
-    tip.style.transform = 'translate(-50%,-100%)';
-    tip.classList.add('show');
-  } else {
-    tip.classList.remove('show');
-  }
-}
-
-function rwMouseClick(e) {
-  const rect = rwCanvas.getBoundingClientRect();
-  const idx = _snapAtX(e.clientX - rect.left);
-  if (idx < 0) return;
-  rwSelected = rwSnapshots[idx];
-  showSnapDetail(rwSelected);
-  document.getElementById('rw-hover-tip').classList.remove('show');
-}
-
-function showSnapDetail(snap) {
-  document.getElementById('rw-detail-empty').style.display = 'none';
-  const c = document.getElementById('rw-detail-content');
-  c.style.display = 'block';
-  document.getElementById('rw-snap-id').textContent = snap.snapId?.slice(0, 20) || '?';
-  const trig = document.getElementById('rw-snap-trigger');
-  trig.textContent = snap.trigger || snap.type || 'manual';
-  const ts = new Date(snap.ts);
-  document.getElementById('rw-snap-ts').textContent = ts.toISOString().replace('T',' ').substr(0,19);
-  // Stats
-  const stats = [
-    {v: snap.totalRows ?? '?', l: 'Rows'},
-    {v: snap.openGaps  ?? '?', l: 'Open gaps'},
-    {v: snap.rollback_count ?? 0, l: 'Rollbacks'},
-    {v: snap.sigma?.toFixed ? snap.sigma.toFixed(3) : '?', l: 'Sigma'},
-  ];
-  document.getElementById('rw-snap-stats').innerHTML = stats.map(s =>
-    `<div class="rw-stat"><div class="rw-stat-v">${s.v}</div><div class="rw-stat-l">${s.l}</div></div>`
-  ).join('');
-  // Sigma bar
-  const pct = Math.round((snap.sigma || 0) * 100);
-  const fill = document.getElementById('rw-snap-sigma-fill');
-  fill.style.width = pct + '%';
-  fill.style.background = sigmaColor(snap.sigma || 0);
-  // Show confirm
-  document.getElementById('rw-confirm-row').style.display = 'block';
-  const btn = document.getElementById('rw-confirm-btn');
-  btn.textContent = '⟲ Restore this snapshot';
-  btn.classList.remove('danger');
-  setRwStatus(`Selected: ${snap.snapId?.slice(0,16)} — ${snap.trigger || '?'} at ${new Date(snap.ts).toLocaleTimeString()}`, '');
-}
-
-function cancelSelect() {
-  rwSelected = null;
-  document.getElementById('rw-confirm-row').style.display = 'none';
-  document.getElementById('rw-detail-empty').style.display = 'block';
-  document.getElementById('rw-detail-content').style.display = 'none';
-  setRwStatus('', '');
-}
-
-async function confirmRewind() {
-  if (!rwSelected) return;
-  const btn = document.getElementById('rw-confirm-btn');
-  if (!btn.classList.contains('danger')) {
-    // First click — prime the button
-    btn.textContent = '⚠ Confirm — this will rewind all state';
-    btn.classList.add('danger');
-    setRwStatus('Click again to confirm rollback. This cannot be undone.', 'working');
-    return;
-  }
-  // Second click — execute
-  btn.textContent = '⟳ Rewinding...';
-  btn.disabled = true;
-  setRwStatus('Sending rollback to Cortex...', 'working');
-  const d = await post(CX_ROLLBACK, { snapId: rwSelected.snapId, reason: 'user-rewind-ui' });
-  if (d?.ok || d?.rolled_back) {
-    setRwStatus(`✓ Rolled back to ${rwSelected.snapId?.slice(0,14)} — refreshing...`, 'ok');
-    // Animate the channel content — brief static effect
-    const ch = document.getElementById('channel');
-    ch.style.filter = 'brightness(.2) saturate(0)';
-    setTimeout(() => {
-      ch.style.transition = 'filter .6s ease';
-      ch.style.filter = '';
-      setTimeout(() => { ch.style.transition = ''; }, 700);
-    }, 300);
-    // Reload health + data
-    setTimeout(() => {
-      pollHealth();
-      loadRewindData();
-      btn.textContent = '⟲ Restore this snapshot';
-      btn.classList.remove('danger');
-      btn.disabled = false;
-    }, 1200);
-  } else {
-    setRwStatus(`✗ Rollback failed: ${d?.error || 'Cortex not responding'}`, 'err');
-    btn.textContent = '⟲ Restore this snapshot';
-    btn.classList.remove('danger');
-    btn.disabled = false;
-  }
-}
-
-function setRwStatus(msg, cls = '') {
-  const el = document.getElementById('rw-status');
-  el.textContent = msg;
-  el.className = cls;
-}
+function setRwStatus(msg,cls=''){const el=document.getElementById('rw-status');if(el){el.textContent=msg;el.className=cls}}
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 buildDiag();
 pollHealth();
-setInterval(pollHealth, 15000);
+setInterval(pollHealth,15000);
+setInterval(gdLoadJobs,8000); // poll jobs every 8s for live updates
+setInterval(gdLoadProvs,12000); // poll providers
 connectSSE();
-
-// Keyboard shortcut R to open rewind
-document.addEventListener('keydown', e => {
-  if ((e.key === 'r' || e.key === 'R') &&
-      e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-    if (document.getElementById('rewind-overlay').classList.contains('open')) {
-      closeRewind();
-    } else {
-      openRewind();
-    }
-  }
-});
 </script>
 </body>
 </html>

@@ -639,7 +639,17 @@ function connect() {
   connState = 'connecting'; setConnState('connecting');
   _es = new EventSource(`${NCP_CHANNEL}?${params}`);
   _es.onmessage = e => {
-    try { _handleServerMessage(JSON.parse(e.data)); } catch(err) { _log('err','NCP parse',err.message); }
+    try {
+      _handleServerMessage(JSON.parse(e.data));
+      // ♥ pulse on every NCP emit
+      const h = document.getElementById('__g10heart__');
+      if (h) {
+        h.style.color = '#ef4444';
+        h.style.transform = 'scale(1.4)';
+        h.style.transition = 'none';
+        setTimeout(() => { h.style.color = 'rgba(239,68,68,.25)'; h.style.transform = 'scale(1)'; h.style.transition = 'all .4s ease'; }, 150);
+      }
+    } catch(err) { _log('err','NCP parse',err.message); }
   };
   _es.onopen = () => {
     connState = 'ready'; setConnState('ready');
@@ -802,6 +812,10 @@ function buildUI() {
   Object.assign(dot.style,{width:'7px',height:'7px',borderRadius:'50%',background:'#888',transition:'background .4s',flexShrink:'0'});
   const lbl   = document.createElement('span'); lbl.id='__g10label__'; lbl.style.cssText='color:#cbd5e1;font-size:11px;font-weight:600'; lbl.textContent='Guardian';
   const prov  = document.createElement('span'); prov.style.cssText='color:#475569;font-size:9px;border-left:1px solid rgba(255,255,255,.08);padding-left:6px;margin-left:1px'; prov.textContent=`claude v${VERSION}`;
+  // ♥ heartbeat — flashes on every NCP SSE message
+  const heart = document.createElement('span'); heart.id='__g10heart__';
+  heart.textContent='♥';
+  heart.style.cssText='font-size:10px;color:rgba(239,68,68,.3);transition:none;flex-shrink:0;margin-left:2px';
   const claim = document.createElement('span'); claim.id='__g10claim__'; claim.textContent='PASSIVE';
   claim.addEventListener('click', e => {
     e.stopPropagation();
@@ -809,7 +823,7 @@ function buildUI() {
     toast(isClaimed ? 'ACTIVE — jobs will execute' : 'PASSIVE — jobs ignored', isClaimed ? 'success' : 'warn', 2500);
   });
   const badge = document.createElement('span'); badge.id='__g10badge__';
-  pill.append(dot, lbl, prov, claim, badge);
+  pill.append(dot, lbl, prov, heart, claim, badge);
 
   // Panel
   const panel  = document.createElement('div'); panel.id='__g10panel__';

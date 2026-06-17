@@ -111,12 +111,10 @@ async function _bootOneSys({ systemId, port, cmd, args, healthPath, label, extra
   let diagProc;
   try {
     if (isWin) {
-      // `start` opens a new cmd window; title shows which system failed
-      diagProc = spawn('cmd', [
-        '/c', 'start',
-        `NEXUS Diagnose — ${systemId}`,
-        'cmd', '/k',
-        `node "${DIAG}" ${systemId}`,
+      // Use powershell to open a new window — avoids cmd /c start title-quoting bugs on Windows
+      const diagCmd = `node "${DIAG}" ${systemId}`;
+      diagProc = spawn('powershell', [
+        '-NoExit', '-Command', diagCmd,
       ], { detached: true, stdio: 'ignore', shell: false });
     } else if (isMac) {
       const script = `tell application "Terminal" to do script "node '${DIAG}' ${systemId}"`;
