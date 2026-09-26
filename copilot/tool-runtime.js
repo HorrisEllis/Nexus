@@ -163,7 +163,70 @@ function _safeParse(s) { try { return JSON.parse(s); } catch { return {}; } }
 // protocol to teach them beyond what's in the prompt itself.
 const TOOL_BLOCK_RE = /```tool\s*\n([\s\S]*?)\n```/g;
 
-function _parseToolBlocks(text) {
+// §0.39.261 — James, live: the agent answered
+//     tool
+//     {"name":"file_tree","arguments":{}}
+// and "tool did nothing". A browser agent's reply is read from the RENDERED
+// page (guardian's userscripts take the DOM text), where a ```tool fence is
+// already a code block: its text is the language label on its own line,
+// sometimes a "Copy code" button label, then the JSON — no backticks at all.
+// TOOL_BLOCK_RE only ever matched the raw-markdown form, so every tool call
+// from ChatGPT/Claude's rendered page was silently dropped. _findToolCalls
+// reads all three forms: the fence, the rendered block, and a bare JSON call
+// object. A non-fence form counts ONLY when its name is one of the tools
+// actually offered (known), so an answer that merely contains JSON never
+// triggers a tool.
+function _jsonObjectAt(text, start) {
+  let depth = 0, q = null;
+  for (let i = start; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '\\') i++; else if (c === q) q = null; continue; }
+    if (c === '"') q = c;
+    else if (c === '{') depth++;
+    else if (c === '}') { depth--; if (depth === 0) return text.slice(start, i + 1); }
+  }
+  return null;
+}
+
+function _findToolCalls(text, known = null) {
+  const src = String(text || '');
+  const calls = [], spans = [];
+  const knownSet = known && known.length ? new Set(known) : null;
+  const take = (obj, from, to, fenced) => {
+    if (!obj || typeof obj.name !== 'string' || !obj.name) return false;
+    if (!fenced && !knownSet) return false;                 // bare JSON needs a known tool list to be trusted
+    if (knownSet && !knownSet.has(obj.name)) return false;
+    const args = obj.arguments && typeof obj.arguments === 'object' ? obj.arguments : (obj.args && typeof obj.args === 'object' ? obj.args : {});
+    calls.push({ id: `call_${calls.length}`, name: obj.name, arguments: args });
+    spans.push([from, to]);
+    return true;
+  };
+  TOOL_BLOCK_RE.lastIndex = 0;
+  let m;
+  while ((m = TOOL_BLOCK_RE.exec(src)) !== null) {
+    try { take(JSON.parse(m[1].trim()), m.index, m.index + m[0].length, true); } catch (_) { /* malformed block — skipped, not fatal */ }
+  }
+  const inSpan = (i) => spans.some(([a, b]) => i >= a && i < b);
+  const rx = /\{\s*"name"\s*:/g;
+  while ((m = rx.exec(src)) !== null) {
+    if (inSpan(m.index)) continue;
+    const raw = _jsonObjectAt(src, m.index);
+    if (!raw) continue;
+    let obj; try { obj = JSON.parse(raw); } catch (_) { continue; }
+    // widen the span over a rendered code block's label lines ("tool", "Copy code") just above it
+    let from = m.index;
+    const before = src.slice(0, from);
+    const lab = before.match(/(?:^|\n)[ \t]*(?:tool|json)[ \t]*\n(?:[ \t]*copy(?: code)?[ \t]*\n)?[ \t]*$/i);
+    if (lab) from = before.length - lab[0].length + (lab[0].startsWith('\n') ? 1 : 0);
+    if (take(obj, from, m.index + raw.length, !!lab && !knownSet)) rx.lastIndex = m.index + raw.length;
+  }
+  let rest = src;
+  for (const [a, b] of spans.slice().sort((x, y) => y[0] - x[0])) rest = rest.slice(0, a) + rest.slice(b);
+  return { calls, text: rest.replace(/\n{3,}/g, '\n\n').trim() };
+}
+
+function _parseToolBlocks(text, known = null) {
+  if (known) return _findToolCalls(text, known).calls;
   const commands = [];
   TOOL_BLOCK_RE.lastIndex = 0; // regex has /g — reset between calls, a shared module-level regex with lastIndex is a real footgun otherwise
   let m;
@@ -311,9 +374,8 @@ function makeNcpCallModel(dispatchToAgent, opts = {}) {
         const why = (result && result.error) || 'no response';
         return { text: (result && result.text) || `[NCP dispatch failed — ${why}]`, toolCalls: null, failed: !(result && result.text), error: why, jobId: jobId || null };
       }
-      const toolCalls = _parseToolBlocks(result.text);
-      const text = toolCalls.length ? result.text.replace(TOOL_BLOCK_RE, '').trim() : result.text;
-      return { text, toolCalls: toolCalls.length ? toolCalls : null };
+      const found = _findToolCalls(result.text, (opts.toolScope && opts.toolScope.length ? opts.toolScope : toolSchemas.map(t => t.function.name)));
+      return { text: found.calls.length ? found.text : result.text, toolCalls: found.calls.length ? found.calls : null };
     }
     // §EXTENDED 2026-08-13 (P8) — a hat with a toolScope narrows which
     // tools are even OFFERED, not just which are allowed to run. A
@@ -434,15 +496,13 @@ function makeNcpCallModel(dispatchToAgent, opts = {}) {
       };
     }
 
-    const toolCalls = _parseToolBlocks(result.text);
-    // Strip the tool block out of the visible text if a call was made — the
-    // JSON block is machine-facing, not something the loop should echo back
-    // as if it were a real answer once a real tool call is going to run.
-    // Enforcement of opts.toolScope now lives in runToolLoop's allowedTools
-    // (lib/agent-tools/index.js) — one real gate, not two places pretending
-    // to be the same rule.
-    const text = toolCalls.length ? result.text.replace(TOOL_BLOCK_RE, '').trim() : result.text;
-    return { text, toolCalls: toolCalls.length ? toolCalls : null };
+    // Strip the tool call out of the visible text if a call was made — the
+    // JSON is machine-facing, not something the loop should echo back as if it
+    // were a real answer once a real tool call is going to run. Enforcement of
+    // opts.toolScope lives in runToolLoop's allowedTools (lib/agent-tools/
+    // index.js); the known list here only decides what COUNTS as a call.
+    const found = _findToolCalls(result.text, scoped.map(t => t.function.name));
+    return { text: found.calls.length ? found.text : result.text, toolCalls: found.calls.length ? found.calls : null };
   };
 }
 
@@ -528,4 +588,4 @@ async function run(o = {}) {
   });
 }
 
-module.exports = { run, runViaAgent, makeOllamaCallModel, makeNcpCallModel, fillToolPlaceholders, formatToolResult, _extractToolCalls, _parseToolBlocks, toolCount: () => agentTools.TOOLS.size };
+module.exports = { run, runViaAgent, makeOllamaCallModel, makeNcpCallModel, fillToolPlaceholders, formatToolResult, _extractToolCalls, _parseToolBlocks, _findToolCalls, toolCount: () => agentTools.TOOLS.size };

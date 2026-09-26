@@ -235,6 +235,7 @@ spec:
       - atlas:build:complete
       - chunk:decompose:start
       - chunk:decompose:complete
+      - chunk:glyphs:complete      # 0.39.261 — each chunk's glyph (its most compressed semantic form) in indexes/glyphs.json
       - chunk:verify:failed
       - index:build:complete
       - compartment:import:ready

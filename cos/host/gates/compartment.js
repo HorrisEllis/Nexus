@@ -62,7 +62,7 @@ class CreateCompartmentGate extends Gate {
   }
 
   transform(event, stream) {
-    const { name, purpose, runtimeId, networkIsolated = true, store, sysmap } = event.data;
+    const { name, purpose, runtimeId, networkIsolated = true, parentId = null, store, sysmap } = event.data;
 
     if (!name) {
       stream.emit(new Event(HOST.COMPARTMENT_ERROR, {
@@ -90,6 +90,20 @@ class CreateCompartmentGate extends Gate {
       return;
     }
 
+    // §NEST 0.39.261 — a parent must already exist; nesting under a
+    // compartment that isn't there is refused, never silently made top-level.
+    let parent = null;
+    if (parentId) {
+      parent = store.getCompartment(parentId) || store.getCompartmentByName(parentId);
+      if (!parent) {
+        stream.emit(new Event(HOST.COMPARTMENT_ERROR, {
+          operation: 'create',
+          reason:    `parent compartment "${parentId}" not found`,
+        }));
+        return;
+      }
+    }
+
     const id    = randomUUID();
     const now   = Date.now();
     const paths = compartmentPaths(id);
@@ -101,6 +115,7 @@ class CreateCompartmentGate extends Gate {
       purpose:   purpose  || '',
       runtimeId: runtimeId || null,
       state:     'created',
+      parentId:  parent ? parent.id : null,
       network: {
         isolated:     networkIsolated,
         proxyPort:    null,
@@ -129,6 +144,15 @@ class CreateCompartmentGate extends Gate {
 
     // Persist (COS-7: system map updated on every mutation)
     store.setCompartment(compartment);
+    if (parent) {
+      const updatedParent = Object.assign({}, parent, {
+        childIds:  [...new Set([...(parent.childIds || []), id])],
+        updatedAt: now,
+      });
+      store.setCompartment(updatedParent);
+      try { fs.writeFileSync(compartmentPaths(parent.id).manifest, JSON.stringify(updatedParent, null, 2), 'utf8'); } catch (_) { /* store is authoritative; manifest refresh is best-effort */ }
+      sysmap.upsertCompartment(updatedParent);
+    }
     store.flushSync();
     sysmap.upsertCompartment(compartment);
 

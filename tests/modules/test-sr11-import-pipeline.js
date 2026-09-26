@@ -92,7 +92,7 @@ async function main() {
 
   console.log('\n[2] lib/intake.js — stage() + expandArchive(), real end to end');
 
-  const AdmZip = require('adm-zip');
+  const AdmZip = require('../../lib/zip.js');   // §0.39.261 — in-house (was adm-zip)
   const zip = new AdmZip();
   zip.addFile('README.md', Buffer.from('# Test Project\n\nA real test fixture.'));
   zip.addFile('package.json', Buffer.from('{"name":"zipped-project","dependencies":{}}'));

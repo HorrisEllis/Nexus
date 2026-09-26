@@ -11,7 +11,7 @@
  */
 
 const http    = require('http');
-const express = require('express');
+const express = require('../../../lib/micro-http.js');   // §0.39.261 — in-house express subset (lib/micro-http.js), was express
 const { ipcMain, session, Notification } = require('electron');
 const { emit, on, Event, getBus } = require('../core/bus');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.

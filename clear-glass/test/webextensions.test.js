@@ -4,7 +4,7 @@
 // session (including ones created later), disable/enable, remove.
 const assert = require('assert');
 const fs = require('fs'), os = require('os'), path = require('path');
-const AdmZip = require('adm-zip');
+const Zip = require('../../lib/zip.js');
 let pass = 0;
 const t = async (n, fn) => { await fn(); pass++; console.log(`[PASS] ${n}`); };
 const home = fs.mkdtempSync(path.join(os.tmpdir(), 'cg-wx-'));
@@ -44,7 +44,7 @@ const mkExt = (dir, extra = {}) => { fs.mkdirSync(dir, { recursive: true }); fs.
   });
   await t('.zip (with a wrapping folder) and .crx (CRX3 header) unpack into ~/.clear-glass/extensions', async () => {
     const zdir = mkExt(path.join(home, 'z', 'wrap'), { name: 'Zipped' });
-    const zip = new AdmZip(); zip.addLocalFolder(path.join(home, 'z', 'wrap'), 'wrap');
+    const zip = new Zip(); zip.addFile('wrap/manifest.json', fs.readFileSync(path.join(zdir, 'manifest.json')));
     const zpath = path.join(home, 'x.zip'); zip.writeZip(zpath);
     const rz = await host.install({ source: zpath });
     assert.ok(rz.extension.dir.startsWith(path.join(home, '.clear-glass', 'extensions')), rz.extension.dir);

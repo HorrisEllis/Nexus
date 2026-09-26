@@ -140,11 +140,11 @@ class WebExtensionHost {
     } else {
       const ext = path.extname(source).toLowerCase();
       if (!['.zip', '.crx'].includes(ext)) throw new Error('choose an extension folder, a .zip or a .crx');
-      const AdmZip = require('adm-zip');
+      const Zip = require('../../../lib/zip.js'); // in-house since 0.39.261 (was adm-zip)
       // Named by the zip payload (after any CRX header), so the same
       // extension as .crx or .zip unpacks to — and updates — one record.
       const payload = crxToZip(fs.readFileSync(source));
-      const zip = new AdmZip(payload);
+      const zip = new Zip(payload);
       const hash = crypto.createHash('sha256').update(payload).digest('hex').slice(0, 16);
       dir = path.join(extDir(), hash);
       fs.mkdirSync(dir, { recursive: true });

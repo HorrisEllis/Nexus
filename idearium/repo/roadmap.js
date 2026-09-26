@@ -261,3 +261,49 @@ function dropOldPrevious(lines, hdrIdx, keepIdx) {
   }
   return out;
 }
+
+/**
+ * addPhase({ text, mapName, title, does, dependsOn, prefix }) -> { text, id }
+ * §0.39.261 — James: "a full idea tab and section for improving/iterating or
+ * expanding the project." An iteration taken onto the roadmap becomes a real
+ * phase in the repo's phasemap file, in the same shape loom's scanner reads
+ * (loom/scanners/phasemap-map.js PHASE_RE: 4-space `ID_slug:`, status,
+ * depends_on, does). text null starts a new phasemap file. The id is the next
+ * free <prefix><n>. The result is parsed back with loom's own parser before it
+ * is returned: a phase that would not read back is an error, never a write.
+ */
+export function addPhase({ text = null, mapName = 'roadmap-phasemap', title, does = '', dependsOn = [], prefix = 'IT' } = {}) {
+  const clean = String(title || '').trim();
+  if (!clean) throw new RoadmapError('BAD_TITLE', 'a phase needs a title');
+  if (!/^[A-Z]{1,3}$/.test(prefix)) throw new RoadmapError('BAD_PREFIX', 'prefix must be 1-3 capital letters');
+  const existing = text ? loom.parsePhasemapText(text, mapName) : [];
+  let n = 0;
+  for (const p of existing) { const m = p.id.match(new RegExp(`^${prefix}(\\d+)_`)); if (m) n = Math.max(n, Number(m[1])); }
+  const slug = clean.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 48) || 'phase';
+  const id = `${prefix}${n + 1}_${slug}`;
+  const deps = (dependsOn || []).filter(d => existing.some(p => p.id === d || p.id.split('_')[0] === d));
+  const esc = (s) => String(s).replace(/\s+/g, ' ').trim();
+  const block = [
+    `    ${id}:`,
+    `      status: pending`,
+    `      depends_on: [${deps.map(d => d.split('_')[0]).join(', ')}]`,
+    `      does: >`,
+    `        ${esc(does || clean)}`,
+    '',
+  ].join('\n');
+  let out;
+  if (!text) {
+    out = [
+      'spec:', '  meta:', `    name:    ${mapName}`, '    version: 0.1.0-phasemap',
+      `    status:  PHASEMAP ${new Date().toISOString().slice(0, 10)} — started from this repo's Idea tab.`, '',
+      '  phases:', '', block,
+    ].join('\n');
+  } else {
+    out = text.replace(/\s*$/, '\n\n') + block;
+  }
+  const back = loom.parsePhasemapText(out, mapName);
+  const hit = back.find(p => p.id === id);
+  if (!hit) throw new RoadmapError('ROUNDTRIP_FAILED', `${id} was written but loom's parser does not read it back`);
+  if (back.length !== existing.length + 1) throw new RoadmapError('ROUNDTRIP_FAILED', `adding ${id} changed how many phases the file holds (${existing.length} -> ${back.length})`);
+  return { text: out, id, status: hit.status };
+}

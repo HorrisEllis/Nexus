@@ -11,7 +11,7 @@
  */
 
 const http    = require('http');
-const express = require('express');
+const express = require('../../../lib/micro-http.js');   // §0.39.261 — in-house express subset (lib/micro-http.js), was express
 const { on }  = require('../core/bus');
 
 class SseServer {

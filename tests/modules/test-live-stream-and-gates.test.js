@@ -164,11 +164,13 @@ test('GS-10', 'Agent tab: streamed chunks build the live text (a reset replaces 
 });
 
 test('GS-11', 'every userscript: the job start arms the streamer; the watch marks itself when it streams; versions bumped together', () => {
-  const want = { chatgpt: '10.10.0', claude: '10.10.0', gemini: '10.8.1', perplexity: '10.8.1', deepseek: '10.8.1' };
+  const want = { chatgpt: '10.11.0', claude: '10.11.0', gemini: '10.8.2', perplexity: '10.8.2', deepseek: '10.8.2' };
   for (const [p, v] of Object.entries(want)) {
     const s = fs.readFileSync(path.join(ROOT, `guardian/userscript-${p}.js`), 'utf8');
     assert.ok(s.includes('currentJobId = msg.jobId; _txJobStart(msg); handleJob(msg); break;'), `${p}: job start not armed`);
-    assert.ok(s.includes("_txWatchStreamed = jobId; send({ type:'GUARDIAN_CHUNK', jobId, text:delta, full:text,"), `${p}: watch does not mark itself`);
+    // 0.39.261 — the watch still marks itself; its FIRST chunk for a job now restates the whole reply
+    // with reset (the transcript streamer may have sent part of it already — James saw it tripled).
+    assert.ok(s.includes("const _first = typeof _txWatchStreamed === 'undefined' || _txWatchStreamed !== jobId; _txWatchStreamed = jobId; send({ type:'GUARDIAN_CHUNK', jobId, text:_first ? text : delta, full:text, reset:"), `${p}: watch does not mark itself (or does not reset on its first chunk)`);
     assert.ok(/const _TX_STREAM_MS = 500;/.test(s), `${p}: cadence`);
     const esc = v.replace(/\./g, '\\.');
     assert.ok(new RegExp(`// @version\\s+${esc}\\b`).test(s) && new RegExp(`const VERSION\\s*=\\s*'${esc}'`).test(s), `${p}: not ${v}`);

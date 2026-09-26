@@ -28,7 +28,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { execFileSync } from 'child_process';
+import { spawn } from 'child_process';
 import { createRequire } from 'module';
 import { affected } from './graph.js';
 
@@ -63,7 +63,27 @@ const TEST_FILE_RE = /(?:(?:^|\/)(?:tests?|__tests__)\/.*\.[a-z0-9]+$)|(?:\.(?:t
 function isTestPath(p) { return TEST_FILE_RE.test(p); }
 export { isTestPath }; // §runtime-proof 2026-09-21 — one definition of "a test file", shared with idearium/repo/runtime-proof.js
 
-function runL6(repoDir, coneFiles) {
+// §0.39.261 — was execFileSync per test file, INSIDE idearium's process: a
+// repo whose affected cone held many tests froze the event loop for up to
+// 15 s per file (measured: 126 s for Nexus's own core slice), which is the
+// same OFFLINE/phase-gate failure 0.39.260 fixed for materialize. Each test
+// now runs as an awaited child process; the loop keeps serving meanwhile.
+function _runTestFile(abs, cwd, timeoutMs = 15000) {
+  return new Promise((resolve) => {
+    let stderr = '', done = false;
+    const child = spawn(process.execPath, [abs], { cwd, stdio: ['ignore', 'ignore', 'pipe'] });
+    const timer = setTimeout(() => { if (!done) { done = true; child.kill('SIGKILL'); resolve({ ok: false, error: `timed out after ${timeoutMs}ms` }); } }, timeoutMs);
+    child.stderr.on('data', (c) => { if (stderr.length < 4000) stderr += c; });
+    child.on('error', (e) => { if (!done) { done = true; clearTimeout(timer); resolve({ ok: false, error: e.message }); } });
+    child.on('close', (code) => { if (!done) { done = true; clearTimeout(timer); resolve(code === 0 ? { ok: true } : { ok: false, error: (stderr || `exit ${code}`).slice(0, 2000) }); } });
+  });
+}
+
+async function runL6(repoDir, coneFiles, { runTests = true } = {}) {
+  if (!runTests) {
+    return { level: 'L6', name: 'targeted runtime/test', status: 'not_applicable', passed: true,
+             reason: 'tests are not run for this repo at import (its tests need files outside it — run them from the COS run menu)', testsFound: 0, testsRun: 0, testsSkipped: 0, results: [] };
+  }
   const candidates = coneFiles.filter(f => f.file && isTestPath(f.file));
   const results = [];
   for (const f of candidates) {
@@ -75,15 +95,8 @@ function runL6(repoDir, coneFiles) {
       });
       continue;
     }
-    try {
-      execFileSync(process.execPath, [abs], { cwd: repoDir, timeout: 15000, stdio: 'pipe' });
-      results.push({ file: f.file, status: 'passed' });
-    } catch (e) {
-      results.push({
-        file: f.file, status: 'failed',
-        error: ((e.stderr && e.stderr.toString()) || e.message || '').slice(0, 2000),
-      });
-    }
+    const r = await _runTestFile(abs, repoDir);
+    results.push(r.ok ? { file: f.file, status: 'passed' } : { file: f.file, status: 'failed', error: r.error });
   }
   const ran = results.filter(r => r.status !== 'skipped');
   return {
@@ -157,7 +170,7 @@ function runL8(repoDir, allFiles) {
  * synchronously before returning, so a reader can never mistake a stale
  * prior result for the current one while this run is in flight.
  */
-export function scheduleLazyVerification({ repoDir, repository, graph, changedFiles = [], runtimeProof = true }) {
+export function scheduleLazyVerification({ repoDir, repository, graph, changedFiles = [], runtimeProof = true, runTests = true }) {
   const outPath = path.join(repoDir, 'verification.lazy.json');
   const scope = affected(graph, changedFiles);
   const scopedTo = scope.files.map(f => f.file).filter(Boolean);
@@ -171,13 +184,13 @@ export function scheduleLazyVerification({ repoDir, repository, graph, changedFi
 
   const queue = workQueue.get(QUEUE_NAME, { concurrency: 1, maxDepth: 50, timeoutMs: 60000 });
 
-  const job = queue.push(() => {
+  const job = queue.push(async () => {
     const filesIdx = loadJsonSafe(path.join(repoDir, 'indexes', 'files.json'), []);
     const filesByPath = new Map(filesIdx.map(f => [f.path, f]));
     const coneFileIds = new Set(scope.files.map(f => f.id));
 
     const tiers = [
-      runL6(repoDir, scope.files),
+      await runL6(repoDir, scope.files, { runTests }),
       runL7(graph, filesByPath, coneFileIds),
       runL8(repoDir, filesIdx),
     ];

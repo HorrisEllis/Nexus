@@ -330,7 +330,7 @@ spec:
     - version: 3.16.0
       date: 2026-09-26
       summary: >-
-        MINOR (v0.39.261) — James: "fix [renderer] unhandledrejection GUEST_VIEW_MANAGER_CALL ERR_CONNECTION_REFUSED
+        MINOR (v0.39.262) — James: "fix [renderer] unhandledrejection GUEST_VIEW_MANAGER_CALL ERR_CONNECTION_REFUSED
         127.0.0.1:900 … make the macros way more user friendly … expand the copilot settings … add new button to the
         plugins section with webextension support … expand per site settings … make a clearglass hat for the copilot
         cli … make it jaa. no json … expand the autofill section, agent mesh and brainos." (1) renderer/browser.js: every

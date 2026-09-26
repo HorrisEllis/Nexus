@@ -78,6 +78,14 @@ const DEFAULT_COMPARTMENT = Object.freeze({
   // starts using phases — a compartment created for something else
   // entirely (a plain dev sandbox) is never forced into this model.
   workPhase:   null,
+  // §NEST 0.39.261 — James: "a nexus repo in idearium … with nested
+  // compartments per system." Compartments were flat. parentId names the
+  // compartment this one lives inside (null = top level); childIds is the
+  // parent's own list, kept in step by CreateCompartmentGate. Lineage only:
+  // a child keeps its own fs root, network and state — nesting says what it
+  // belongs to, it never merges or shares storage.
+  parentId:    null,
+  childIds:    [],
   network:     DEFAULT_NETWORK_CONFIG,
   fs:          DEFAULT_FS_CONFIG,
   compiler:    DEFAULT_COMPILER_CONFIG,
@@ -186,6 +194,7 @@ function makeCompartment(overrides = {}) {
     watchdog: Object.assign({}, DEFAULT_WATCHDOG_CONFIG, overrides.watchdog ?? {}),
     hooks:    [...(overrides.hooks ?? [])],
     tags:     [...(overrides.tags  ?? [])],
+    childIds: [...(overrides.childIds ?? [])],
   });
 }
 

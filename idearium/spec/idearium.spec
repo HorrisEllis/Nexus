@@ -267,7 +267,7 @@ spec:
       copilot on :3750; the CLI helpers run from app.js); test-repo-agent, test-repo-agent-provider, test-repo-context
       updated for the intended changes. 13 mutations, each caught.
   built_2026_09_26_compartment_recursive_tabs:
-    shipped: "0.39.261"
+    shipped: "0.39.262"
     versionium: null
     asked_by: >-
       James: "in idearium can you make the tabs much more recursive, deep and expanded fully? interconnected. i want

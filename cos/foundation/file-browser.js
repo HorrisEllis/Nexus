@@ -179,7 +179,7 @@ class FileBrowser {
    */
   extractZip(zipRelPath, destRel) {
     let AdmZip;
-    try { AdmZip = require('adm-zip'); }
+    try { AdmZip = require('../../lib/zip.js'); }   // §0.39.261 — in-house, was adm-zip
     catch {
       // adm-zip not installed — emit event, return empty (Phase 5 installs it)
       if (this._bus) {
