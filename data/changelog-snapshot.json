@@ -1,0 +1,536 @@
+{
+  "2026-08-22-session-full": {
+    "version": "0.1.0-phasemap"
+  },
+  "2026-08-23-backlog": {
+    "version": "0.2.0-phasemap"
+  },
+  "2026-08-27-event-taxonomy-and-brainstorm": {
+    "version": "0.1.0-phasemap"
+  },
+  "2026-08-28-definition-of-complete": {
+    "version": "0.1.0-phasemap"
+  },
+  "2026-08-28-self-building-pipeline": {
+    "version": "0.1.0-phasemap"
+  },
+  "2026-08-30-interaction-contract-context-phasemap": {
+    "version": "0.1.0-phasemap"
+  },
+  "2026-09-01-living-model-and-autonomous-pipeline-phasemap": {
+    "version": "0.2.0-phasemap"
+  },
+  "2026-09-02-agent-mesh-full-map-phasemap": {
+    "version": "1.0.0"
+  },
+  "2026-09-02-nexus-vision-master-phasemap": {
+    "version": "1.0.0"
+  },
+  "2026-09-02-versionium-sovereign-and-cleanup-phasemap": {
+    "version": "1.0.0"
+  },
+  "2026-09-05-observability-sovereignty-and-agent-mesh-phasemap": {
+    "version": "0.1.0-phasemap"
+  },
+  "brainos-agent-orchestration": {
+    "version": "0.1.0"
+  },
+  "brainos-external-concept-mapping": {
+    "version": "0.1.0"
+  },
+  "2026-09-11-compartment-nodetype-and-reorg-phasemap": {
+    "version": "1.0.0"
+  },
+  "2026-09-11-sovereign-node-architecture-phasemap": {
+    "version": "0.1.0"
+  },
+  "axiom-5-2-raid-routing": {
+    "version": "0.1.0-phasemap"
+  },
+  "track-b-sovereignty": {
+    "version": "0.1.0-phasemap"
+  },
+  "2026-09-19-agents-clearglass-guardian-idearium-copilot-phasemap": {
+    "version": "0.1.0-phasemap"
+  },
+  "architect-blueprint-forge-idearium-consolidation": {
+    "version": "0.1.0-phasemap"
+  },
+  "cortex-to-intelligence-and-versionium-consolidation": {
+    "version": "0.1.0-phasemap"
+  },
+  "guardian-mesh-first-dispatch": {
+    "version": "0.1.0-phasemap"
+  },
+  "brainos-agent-suite": {
+    "version": "0.1.0-phasemap"
+  },
+  "clear-glass-tab-per-repo-and-ui-expansion": {
+    "version": "0.1.0-phasemap"
+  },
+  "spec-engine-manifest-first": {
+    "version": "0.2.0"
+  },
+  "spec-registry": {
+    "version": "2.0.0"
+  },
+  "agent-intelligence-loop": {
+    "version": "0.1.0-phasemap"
+  },
+  "agent-model-and-user-continuity": {
+    "version": "0.1.0-phasemap"
+  },
+  "alk-gl-intelligence-canvas": {
+    "version": "0.1.0"
+  },
+  "alk-perception": {
+    "version": "1.0.0"
+  },
+  "api-dispatch": {
+    "version": "1.0.0"
+  },
+  "architect": {
+    "version": "1.0.0"
+  },
+  "auth": {
+    "version": "1.0.0"
+  },
+  "autonomous-loop": {
+    "version": "1.0.0"
+  },
+  "bda": {
+    "version": "1.0.0"
+  },
+  "behavioral-boundary": {
+    "version": "1.0.0"
+  },
+  "blueprint": {
+    "version": "1.1.0"
+  },
+  "brainos-live-control-panel": {
+    "version": "0.1.0"
+  },
+  "builder": {
+    "version": "1.0.0"
+  },
+  "case-library": {
+    "version": "1.0.0"
+  },
+  "cfr-contract-wire": {
+    "version": "1.0.0"
+  },
+  "cfr": {
+    "version": "1.0.0"
+  },
+  "chat-logger": {
+    "version": "1.0.0"
+  },
+  "clear-glass": {
+    "version": "3.1.0"
+  },
+  "clearglass-agent-suite-and-cfr-loom": {
+    "version": "0.1.0-phasemap"
+  },
+  "clearglass-snowflake-relay": {
+    "version": "1.0.0"
+  },
+  "cli-reasoning": {
+    "version": "1.0.0"
+  },
+  "cli": {
+    "version": "1.4.0"
+  },
+  "command-index-per-system": {
+    "version": "0.1.0"
+  },
+  "component-registry": {
+    "version": "1.0.0"
+  },
+  "constitutional-ai": {
+    "version": "1.0.0"
+  },
+  "context-builder": {
+    "version": "1.0.0"
+  },
+  "contract-queue": {
+    "version": "1.0.0"
+  },
+  "contracts": {
+    "version": "1.0.0"
+  },
+  "copilot-autonomous": {
+    "version": "0.1.0-phasemap"
+  },
+  "copilot-awareness-and-intent-routing": {
+    "version": "0.2.0-phasemap"
+  },
+  "copilot-expansion": {
+    "version": "1.2.0"
+  },
+  "copilot-full-capability": {
+    "version": "0.1.0-phasemap"
+  },
+  "copilot-guardian-cos-expansion": {
+    "version": "0.1.0-phasemap"
+  },
+  "copilot-migration-and-new-capabilities": {
+    "version": "1.1.0"
+  },
+  "copilot-omniscience": {
+    "version": "0.1.0-phasemap"
+  },
+  "copilot-system-programmer": {
+    "version": "0.1.0"
+  },
+  "copilot": {
+    "version": "3.5.0"
+  },
+  "cortex-dual-cognition": {
+    "version": "1.0.0"
+  },
+  "cortex-intelligence": {
+    "version": "1.0.0"
+  },
+  "cortex-schema-registry": {
+    "version": "0.1.0-phasemap"
+  },
+  "cortex": {
+    "version": "3.5.0"
+  },
+  "cos": {
+    "version": "0.1.7"
+  },
+  "diagnostic-engines": {
+    "version": "1.0.0"
+  },
+  "diagnostic-fixes": {
+    "version": "1.0.0"
+  },
+  "diagnostic-phase-map": {
+    "version": "1.0.0"
+  },
+  "diagnostic": {
+    "version": "1.1.0"
+  },
+  "emerge": {
+    "version": "1.1.0"
+  },
+  "eravos-agnostic-canvas": {
+    "version": "1.0.0"
+  },
+  "eravos": {
+    "version": "3.0.0"
+  },
+  "erosmancer-os": {
+    "version": "1.0.0"
+  },
+  "escalation": {
+    "version": "1.2.0"
+  },
+  "forge": {
+    "version": "2.0.0-spec"
+  },
+  "gap-finder": {
+    "version": "1.1.0"
+  },
+  "gap-lifecycle": {
+    "version": "1.0.0"
+  },
+  "gemini-multiagent-coding": {
+    "version": "0.1.0-phasemap"
+  },
+  "grammar-engine": {
+    "version": "1.2.0"
+  },
+  "grammar-fallback": {
+    "version": "1.0.1"
+  },
+  "guardian-user-understanding": {
+    "version": "1.0.0"
+  },
+  "guardian": {
+    "version": "3.6.2"
+  },
+  "handshake-ledger": {
+    "version": "0.1.0-spec"
+  },
+  "healer": {
+    "version": "1.0.0"
+  },
+  "heartbeat": {
+    "version": "2.0.0"
+  },
+  "home-ui": {
+    "version": "1.4.0"
+  },
+  "hooks-migration": {
+    "version": "1.0.0"
+  },
+  "hooks": {
+    "version": "1.0.0"
+  },
+  "hot-module-loader": {
+    "version": "1.0.0"
+  },
+  "idearium-creative-repo-overhaul": {
+    "version": "0.1.0-phasemap"
+  },
+  "idearium-creative-repo": {
+    "version": "1.0.0"
+  },
+  "idearium-repository-overhaul": {
+    "version": "0.2.0-phasemap"
+  },
+  "idearium-templates": {
+    "version": "1.0.0"
+  },
+  "idearium": {
+    "version": "4.1.0"
+  },
+  "intelligence-bridge": {
+    "version": "1.0.0"
+  },
+  "intelligence": {
+    "version": "1.0.0"
+  },
+  "jaa-db": {
+    "version": "6.0.0"
+  },
+  "jaa-store": {
+    "version": "1.0.0"
+  },
+  "lib": {
+    "version": "1.0.0"
+  },
+  "liminal-space": {
+    "version": "1.0.0"
+  },
+  "liminal": {
+    "version": "1.0.0"
+  },
+  "loom-phasemap-section": {
+    "version": "0.1.0-phasemap"
+  },
+  "loom": {
+    "version": "1.5.0"
+  },
+  "loop-topology": {
+    "version": "1.0.0"
+  },
+  "mcp": {
+    "version": "1.0.0"
+  },
+  "meta-layer": {
+    "version": "1.2.0"
+  },
+  "movement": {
+    "version": "0.1.0"
+  },
+  "mutation-contract": {
+    "version": "1.0.1"
+  },
+  "ncp": {
+    "version": "1.1.0"
+  },
+  "nexus-analysis-module-foundation": {
+    "version": "1.0.0"
+  },
+  "nexus-architecture-rebuild": {
+    "version": "0.1.0-phasemap"
+  },
+  "nexus-cli": {
+    "version": "1.0.0"
+  },
+  "nexus-copilot-recall": {
+    "version": "1.3.0"
+  },
+  "nexus-decomposition-architecture": {
+    "version": "1.0.0"
+  },
+  "nexus-improvement-roadmap": {
+    "version": "1.0.0"
+  },
+  "nexus-intelligence-system": {
+    "version": "0.1.0"
+  },
+  "nexus-live-mind": {
+    "version": "0.1.0-phasemap"
+  },
+  "nexus-nerve-design-philosophy": {
+    "version": "0.1.0"
+  },
+  "nexus-nerve": {
+    "version": "0.2.0"
+  },
+  "nexus-observability-and-tablet": {
+    "version": "0.2.0-phasemap"
+  },
+  "nexus-optimization-service": {
+    "version": "0.1.0"
+  },
+  "nexus-organisms": {
+    "version": "1.0.0"
+  },
+  "nexus-project-flow": {
+    "version": "0.1.0"
+  },
+  "nexus-query-surface": {
+    "version": "0.1.0"
+  },
+  "nexus-relationship-shape": {
+    "version": "0.2.0"
+  },
+  "nexus-repo-compartment-and-rich-dispatch": {
+    "version": "0.1.0-phasemap"
+  },
+  "nexus-repository-system-build": {
+    "version": "0.1.0-phasemap"
+  },
+  "nexus-repository-system": {
+    "version": "1.0.0"
+  },
+  "nexus-self-build-pipeline": {
+    "version": "0.1.0-phasemap"
+  },
+  "nexus-sentinel": {
+    "version": "0.4.0-spec"
+  },
+  "nexus-shell-ui": {
+    "version": "1.0.0"
+  },
+  "nexus-system-foundation-addendum": {
+    "version": "1.3.0"
+  },
+  "nexus-system-foundation": {
+    "version": "1.1.0"
+  },
+  "nexus-system-standardization": {
+    "version": "0.1.0-phasemap"
+  },
+  "nexus-tablet": {
+    "version": "0.4.0-spec"
+  },
+  "nexus-uri-clearglass-mesh-integration": {
+    "version": "1.0.0"
+  },
+  "nexus": {
+    "version": "2.0.0"
+  },
+  "ollama-bridge": {
+    "version": "1.0.0"
+  },
+  "open-loop-taxonomy": {
+    "version": "1.0.0"
+  },
+  "orchestrator": {
+    "version": "2.2.0"
+  },
+  "raid-routing-fidelity": {
+    "version": "0.1.0-phasemap"
+  },
+  "raid-simulation-engine": {
+    "version": "0.1.0"
+  },
+  "raid-snr-filter": {
+    "version": "1.1.0"
+  },
+  "raid-verification-spine": {
+    "version": "0.1.0-phasemap"
+  },
+  "raid-warp-verification-spine": {
+    "version": "0.2.0-phasemap"
+  },
+  "raid": {
+    "version": "6.3.0"
+  },
+  "reflection-engine": {
+    "version": "1.0.0"
+  },
+  "registry-consolidation": {
+    "version": "0.1.0-spec"
+  },
+  "repair-contract-and-loom-hub": {
+    "version": "0.1.0-phasemap"
+  },
+  "replay-engine": {
+    "version": "1.1.0"
+  },
+  "request-handler": {
+    "version": "1.0.0"
+  },
+  "rfr2": {
+    "version": "1.0.0"
+  },
+  "rich-addressable-editable-atlas": {
+    "version": "0.1.0-phasemap"
+  },
+  "seam-component-registry": {
+    "version": "1.1.0"
+  },
+  "seam-queue": {
+    "version": "1.0.0"
+  },
+  "seam": {
+    "version": "1.0.0"
+  },
+  "self-heal": {
+    "version": "1.1.0"
+  },
+  "service": {
+    "version": "1.0.0"
+  },
+  "siso": {
+    "version": "1.0.0"
+  },
+  "snapshot-trigger-and-diagnostic": {
+    "version": "0.1.0-phasemap"
+  },
+  "snapshot": {
+    "version": "1.2.0"
+  },
+  "spatial": {
+    "version": "1.0.0"
+  },
+  "spec-compiler": {
+    "version": "1.1.0"
+  },
+  "spec-drift": {
+    "version": "1.1.1"
+  },
+  "telemetry-codec": {
+    "version": "1.0.0"
+  },
+  "tests": {
+    "version": "1.1.0"
+  },
+  "topo-kernel": {
+    "version": "1.0.0"
+  },
+  "ui-location": {
+    "version": "1.0.0"
+  },
+  "ui-registry": {
+    "version": "1.0.0"
+  },
+  "ui": {
+    "version": "1.0.0"
+  },
+  "universal-block-primitive": {
+    "version": "0.1.0"
+  },
+  "user-model": {
+    "version": "1.0.0"
+  },
+  "vector-memory": {
+    "version": "1.0.0"
+  },
+  "versionium": {
+    "version": "3.1.0"
+  },
+  "warp-devkit-addendum": {
+    "version": "1.4.1"
+  },
+  "warp": {
+    "version": "1.4.0"
+  }
+}

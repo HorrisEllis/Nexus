@@ -1,5 +1,186 @@
 # NEXUS Changelog
 
+## 2026-09-26 — auto-generated from spec version bumps
+
+- **2026-08-22-session-full** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-08-23-backlog** — new spec, v0.2.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-08-27-event-taxonomy-and-brainstorm** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-08-28-definition-of-complete** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-08-28-self-building-pipeline** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-08-30-interaction-contract-context-phasemap** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-09-01-living-model-and-autonomous-pipeline-phasemap** — new spec, v0.2.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-09-02-agent-mesh-full-map-phasemap** — new spec, v1.0.0. James: "look at all the agent phases. lets do the highest leverage,
+- **2026-09-02-nexus-vision-master-phasemap** — new spec, v1.0.0. James: "some ideas to map to phasemaps. do not build." A large,
+- **2026-09-02-versionium-sovereign-and-cleanup-phasemap** — new spec, v1.0.0. James's ask this session was, verbatim, dozens of distinct real
+- **2026-09-05-observability-sovereignty-and-agent-mesh-phasemap** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **brainos-agent-orchestration** — new spec, v0.1.0. (no purpose line found — undocumented change, check the spec directly)
+- **brainos-external-concept-mapping** — new spec, v0.1.0. (no purpose line found — undocumented change, check the spec directly)
+- **2026-09-11-compartment-nodetype-and-reorg-phasemap** — new spec, v1.0.0. Locks the compartment/nodetype architecture decided this session and
+- **2026-09-11-sovereign-node-architecture-phasemap** — new spec, v0.1.0. (no purpose line found — undocumented change, check the spec directly)
+- **axiom-5-2-raid-routing** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **track-b-sovereignty** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **2026-09-19-agents-clearglass-guardian-idearium-copilot-phasemap** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **architect-blueprint-forge-idearium-consolidation** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **cortex-to-intelligence-and-versionium-consolidation** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **guardian-mesh-first-dispatch** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **brainos-agent-suite** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **clear-glass-tab-per-repo-and-ui-expansion** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **spec-engine-manifest-first** — new spec, v0.2.0. (no purpose line found — undocumented change, check the spec directly)
+- **spec-registry** — new spec, v2.0.0. Every real .spec file in this repo is entered here on creation and
+- **agent-intelligence-loop** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **agent-model-and-user-continuity** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **alk-gl-intelligence-canvas** — new spec, v0.1.0. ALK-GL is a WebGL2 particle field engine where each particle responds
+- **alk-perception** — new spec, v1.0.0. Composite behavioral state classifier. Maps NEXUS telemetry to: COGNITIVE_LOAD, GENUINE_FLOW, CONCEALMENT, STRESS_ACUTE, SOCIAL_MASK, GENUINE_ENGAGEMENT. path: lib/meta/alk-perception/index.js
+- **api-dispatch** — new spec, v1.0.0. Direct REST API dispatch for guardian. Complements NCP browser tabs.
+- **architect** — new spec, v1.0.0. Spec builder, hook registry, blueprint scanner. The design surface
+- **auth** — new spec, v1.0.0. First-principles authentication layer.
+- **autonomous-loop** — new spec, v1.0.0. Ollama as the orchestrator brain. Not a tool called by orchestrator —
+- **bda** — new spec, v1.0.0. Behavioral Drift Analyzer. 5-signal extraction per text: valence, certainty, openness, tension, selfref. Pendulum engine. Gap detector (12 named patterns). Hash-linked append-only observation ledger. path: lib/meta/bda/index.js
+- **behavioral-boundary** — new spec, v1.0.0. Behavioral Boundary Organ. Enforces the line between the
+- **blueprint** — new spec, v1.1.0. Declarative compartment/module definitions. Blueprint loader reads
+- **brainos-live-control-panel** — new spec, v0.1.0. (no purpose line found — undocumented change, check the spec directly)
+- **builder** — new spec, v1.0.0. NEXUS Builder UI. Four modes: Drop (auto-route by file extension), Spec (editor with compile→dispatch), Canvas (drag-drop node canvas, five chip types), Repo (Idearium project grid). BUILD NOW → spec-compiler → queue → Idearium.
+- **case-library** — new spec, v1.0.0. Queryable index of every PASS compartment trace, keyed by intent
+- **cfr-contract-wire** — new spec, v1.0.0. CFR tracks contracts through wires, hook to hook.
+- **cfr** — new spec, v1.0.0. Causal field/graph. Derives relationship edges passively from
+- **chat-logger** — new spec, v1.0.0. Every AI exchange logged to disk (JSONL), JAA (chat_log), and vector index. Context reinjection: buildInjectionContext() returns semantically relevant past exchanges. BDA signal extraction and Liminal gap scoring on every message.
+- **clear-glass** — new spec, v3.1.0. Sovereign NEXUS browser — Electron + Chromium + Firefox fingerprint +
+- **clearglass-agent-suite-and-cfr-loom** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **clearglass-snowflake-relay** — new spec, v1.0.0. Answers thread_1_mesh_node's open "what transport?" question from
+- **cli-reasoning** — new spec, v1.0.0. Qwen 0.5b as the CLI reasoning layer.
+- **cli** — new spec, v1.4.0. Command-line tools for NEXUS operation, diagnosis, and boot.
+- **command-index-per-system** — new spec, v0.1.0. One real, current command index per system, each a file living
+- **component-registry** — new spec, v1.0.0. The Component Registry makes NEXUS self-describing.
+- **constitutional-ai** — new spec, v1.0.0. Phase A of the request handler. Should we act?
+- **context-builder** — new spec, v1.0.0. Builds system prompt context for Ollama/forge calls. Standard: last N JAA events. Semantic: buildSemanticContext() uses vector-memory for meaning-based retrieval. Signal over recency.
+- **contract-queue** — new spec, v1.0.0. Every request between systems is a contract.
+- **contracts** — new spec, v1.0.0. Interaction contracts for every NEXUS system.
+- **copilot-autonomous** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **copilot-awareness-and-intent-routing** — new spec, v0.2.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **copilot-expansion** — new spec, v1.2.0. Everything NEXUS can do, co-pilot can access.
+- **copilot-full-capability** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **copilot-guardian-cos-expansion** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **copilot-migration-and-new-capabilities** — new spec, v1.1.0. (no purpose line found — undocumented change, check the spec directly)
+- **copilot-omniscience** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **copilot-system-programmer** — new spec, v0.1.0. Co-pilot is currently a request-response interface. You ask, it answers,
+- **copilot** — new spec, v3.5.0. Sovereign co-pilot system. Separated from Guardian.
+- **cortex-dual-cognition** — new spec, v1.0.0. Cortex is the brain. Intelligence is the nervous system.
+- **cortex-intelligence** — new spec, v1.0.0. Phase 84/85 bill this as "INTUITION faculty — BEP + sigma + fault
+- **cortex-schema-registry** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **cortex** — new spec, v3.5.0. The memory and brain of NEXUS. Everything that needs to be
+- **cos** — new spec, v0.1.7. Compartment OS — isolated sandboxes with their own process/network/
+- **diagnostic-engines** — new spec, v1.0.0. 12 cross-domain diagnostic methods. Causal chain tracer, invariant scanner, circuit breaker inspector, temporal gap analyzer, cascade failure predictor, entropy rate monitor, SNR noise floor detector, memory pressure estimator, behavioral fingerprinter, fault tree evaluator, homeostasis scorer, cross-system correlation matrix.
+- **diagnostic-fixes** — new spec, v1.0.0. Documents all boot-time and diagnostic bugs fixed in this session.
+- **diagnostic-phase-map** — new spec, v1.0.0. The active remediation engine for NEXUS. Detects problems, attempts fixes,
+- **diagnostic** — new spec, v1.1.0. Standalone diagnostic service. Watches all system ledgers via
+- **emerge** — new spec, v1.1.0. DSL runtime. Reads .eg / .emerge files — a purpose-built declarative
+- **eravos-agnostic-canvas** — new spec, v1.0.0. Eravos is already a sovereign canvas with the right primitives —
+- **eravos** — new spec, v3.0.0. Sovereign canvas system. Organisms, wires, audio, spatial transport.
+- **erosmancer-os** — new spec, v1.0.0. ErosmancerOS — TypeScript CDP browser automation platform.
+- **escalation** — new spec, v1.2.0. The friction ledger and escalation logic. Every failed attempt adds friction to the fault class (0.10/0.20/0.35/0.50 per level). Friction persists in fault_taxonomy across sessions. At 1.0 → failure mode, no more auto-attempts.
+- **forge** — new spec, v2.0.0-spec. An LLM-agnostic tool that can code a system of any size, decomposed
+- **gap-finder** — new spec, v1.1.0. Cortex's "Gap-Finder Organ" — turns real signal into real gaps.
+- **gap-lifecycle** — new spec, v1.0.0. A gap is an open loop. It stays open until the system produces a tangible
+- **gemini-multiagent-coding** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **grammar-engine** — new spec, v1.2.0. Reads component registry grammar tree. Builds trie for O(k)
+- **grammar-fallback** — new spec, v1.0.1. NEXUS Grammar-Driven Command Resolution. guardian's /cli/exec had
+- **guardian-user-understanding** — new spec, v1.0.0. Guardian understanding the user better over time.
+- **guardian** — new spec, v3.6.2. The AI engine of NEXUS. Guardian is the only system that touches
+- **handshake-ledger** — new spec, v0.1.0-spec. Signed receipts for every cross-system handoff, so RFR2's causal
+- **healer** — new spec, v1.0.0. Prescribes fixes for open gaps. Engine-informed: reads circuit breaker state, fault tree, homeostasis score, cascade risk before choosing strategy. Routes to safe fix or escalation based on engine evidence.
+- **heartbeat** — new spec, v2.0.0. Three-tier health monitoring. Tier 1: health probe every 10s. Tier 2: API pulse every 30s. Tier 3: telemetry frame every 60s fed through meta layer (ALK, BDA, sigma, telemetry-codec). ServiceDriftEngine on tier 3.
+- **home-ui** — new spec, v1.4.0. The NEXUS home screen. Sovereign OS overview surface.
+- **hooks-migration** — new spec, v1.0.0. Move hook-registry ownership from architect (which absorbed it by
+- **hooks** — new spec, v1.0.0. The NEXUS hook system. Seams where behavior can be injected
+- **hot-module-loader** — new spec, v1.0.0. Drop a module in. It integrates automatically. No restart.
+- **idearium-creative-repo-overhaul** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **idearium-creative-repo** — new spec, v1.0.0. Defines the layer idearium adds ON TOP of a repository once
+- **idearium-repository-overhaul** — new spec, v0.2.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **idearium-templates** — new spec, v1.0.0. A registry of spec templates, and a deterministic seed path that fills
+- **idearium** — new spec, v4.1.0. The idea manager and project repository. Every build starts here
+- **intelligence-bridge** — new spec, v1.0.0. Connects the intelligence layer to RAID routing decisions.
+- **intelligence** — new spec, v1.0.0. Consolidates NEXUS's real cognition layer into its own standalone
+- **jaa-db** — new spec, v6.0.0. Persistent storage for NEXUS. Flat-file JSONL backed in-memory Map. 53 tables across three tiers: working (30min), short (6hr), long (permanent). §2.1: disk write before in-memory update. Auto-hooks vector-memory on insert.
+- **jaa-store** — new spec, v1.0.0. Zero-native-dependency, pure-JS relational store. Tables-as-Maps
+- **lib** — new spec, v1.0.0. Shared library modules used by all NEXUS systems.
+- **liminal-space** — new spec, v1.0.0. The five interstitial spaces. The boundary between memory levels.
+- **liminal** — new spec, v1.0.0. 12 gap detectors: code, assumption, contrastive, structural, shadow, negative_space, relational (8 gaslighting patterns), oscillatory (pendulum math), existential, field, music, reversal. path: lib/meta/liminal/index.js
+- **loom-phasemap-section** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **loom** — new spec, v1.5.0. Sovereign component/hook/wire/seam registry + contracts + phasemap
+- **loop-topology** — new spec, v1.0.0. INSIGHT (module's own header): real systems don't fail independently
+- **mcp** — new spec, v1.0.0. Phase 67 — MCP Tool Bridge.
+- **meta-layer** — new spec, v1.2.0. Six intelligence modules. All lazy-loaded. No ports.
+- **movement** — new spec, v0.1.0. ALL MOVEMENT for one system in one read-only snapshot — logs, error logs,
+- **mutation-contract** — new spec, v1.0.1. NEXUS Mutation Contract — implements seam-component-registry-spec.md
+- **ncp** — new spec, v1.1.0. The real, live channel between a browser-tab userscript (claude/
+- **nexus-analysis-module-foundation** — new spec, v1.0.0. A specialization of the base foundation for modules whose job is
+- **nexus-architecture-rebuild** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-cli** — new spec, v1.0.0. Dynamic CLI runtime. No hardcoded commands.
+- **nexus-copilot-recall** — new spec, v1.3.0. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-decomposition-architecture** — new spec, v1.0.0. One coherent design for decomposing NEXUS down to its smallest
+- **nexus-improvement-roadmap** — new spec, v1.0.0. All 30 improvements from the combined what-if loop (two rounds,
+- **nexus-intelligence-system** — new spec, v0.1.0. The intelligence system is not one module. It is the composition of
+- **nexus-live-mind** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-nerve-design-philosophy** — new spec, v0.1.0. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-nerve** — new spec, v0.2.0. Nerve is the Attention layer of NEXUS's cognition stack. It does not
+- **nexus-observability-and-tablet** — new spec, v0.2.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-optimization-service** — new spec, v0.1.0. NEXUS currently improves reactively — a gap opens, a human notices,
+- **nexus-organisms** — new spec, v1.0.0. NEXUS Organism Layer — the natural extension of the ERAVOS organism model
+- **nexus-project-flow** — new spec, v0.1.0. When there are no active projects, NEXUS should not wait silently.
+- **nexus-query-surface** — new spec, v0.1.0. A single HTTP route that answers "what's happening with X?" by joining
+- **nexus-relationship-shape** — new spec, v0.2.0. CFR (Coherence-Friction-Resonance-Entropy) and RFR2 together define the
+- **nexus-repo-compartment-and-rich-dispatch** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-repository-system-build** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-repository-system** — new spec, v1.0.0. Makes an entire software repository addressable, traversable,
+- **nexus-self-build-pipeline** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-sentinel** — new spec, v0.4.0-spec. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-shell-ui** — new spec, v1.0.0. The layered NEXUS UI. TV channel model.
+- **nexus-system-foundation-addendum** — new spec, v1.3.0. Defines three new, additive top-level sections every system-local
+- **nexus-system-foundation** — new spec, v1.1.0. Defines the shape every NEXUS system must implement.
+- **nexus-system-standardization** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-tablet** — new spec, v0.4.0-spec. (no purpose line found — undocumented change, check the spec directly)
+- **nexus-uri-clearglass-mesh-integration** — new spec, v1.0.0. Maps and phases three integration threads James asked to bring
+- **nexus** — new spec, v2.0.0. (no purpose line found — undocumented change, check the spec directly)
+- **ollama-bridge** — new spec, v1.0.0. Sovereign Ollama bridge. Local model dispatch, isolated from Guardian.
+- **open-loop-taxonomy** — new spec, v1.0.0. THE INSIGHT (module's own header): a gap is an open loop. Open loops
+- **orchestrator** — new spec, v2.2.0. The root coordinator. Single focal point for every UI, CLI,
+- **raid-routing-fidelity** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **raid-simulation-engine** — new spec, v0.1.0. Between RAID deciding which agent to route to and that dispatch actually
+- **raid-snr-filter** — new spec, v1.1.0. SNR filter on RAID dispatch. Invariants first. Patterns second. AI last.
+- **raid-verification-spine** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **raid-warp-verification-spine** — new spec, v0.2.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **raid** — new spec, v6.3.0. Provider routing. Ollama always first. Claude always last. Weight table learns from outcomes. _decide() is a pure function — same inputs always produce same decision.
+- **reflection-engine** — new spec, v1.0.0. Phase C of the request handler. After execution.
+- **registry-consolidation** — new spec, v0.1.0-spec. (no purpose line found — undocumented change, check the spec directly)
+- **repair-contract-and-loom-hub** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **replay-engine** — new spec, v1.1.0. Full observability and replay for every system decision.
+- **request-handler** — new spec, v1.0.0. The constitutional choke point. Single entry for every request.
+- **rfr2** — new spec, v1.0.0. "RFR2 Causal Toolkit" — 13 modules for identity, timing, querying
+- **rich-addressable-editable-atlas** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **seam-component-registry** — new spec, v1.1.0. Every component (kernel, engine, runtime, or file) has a stable
+- **seam-queue** — new spec, v1.0.0. SEAM queue — chunked spec dispatch to a browser-tab provider.
+- **seam** — new spec, v1.0.0. SEAM pipeline runner. Splits specs into chunks. T0/T1 deterministic. T2 dispatched to Ollama. Three-axis gate detector (truncation/sigma/delta). Three retry strategies on failure. Artifacts stored in JAA on success.
+- **self-heal** — new spec, v1.1.0. 5-level escalation ladder wired to the healer organ and escalation engine. Subscribes to HEAL_REQUESTED. Runs level 0 (known fix) → level 1 (safe fix) → level 2 (snapshot+forge) → level 3 (deep scan) → level 4 (failure mode). Friction tracked per fault class.
+- **service** — new spec, v1.0.0. Windows service integration and process management for NEXUS.
+- **siso** — new spec, v1.0.0. SISO — Single Input Single Output architecture.
+- **snapshot-trigger-and-diagnostic** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
+- **snapshot** — new spec, v1.2.0. Cortex state snapshot system. Half-life decay with priority tiers. Permanent pinning available. Snapshots taken before any T2 forge patch. Replay engine reconstructs past state from event log and detects divergence.
+- **spatial** — new spec, v1.0.0. Sigma engine (entropy/slope/regime: STABLE, ACTIVATING, UNGROUNDED, DYSREGULATED, OSCILLATORY, COLLAPSING, OFFLINE) + Lattice engine (resonance-weighted associative graph). path: lib/meta/spatial/index.js
+- **spec-compiler** — new spec, v1.1.0. Deterministic code emitter from .spec files.
+- **spec-drift** — new spec, v1.1.1. Spec drift detector. Compares version declared in each system's
+- **telemetry-codec** — new spec, v1.0.0. Four compression engines: SlopeEngine (OLS regression), StabilityEngine (CV, entropy), OscillationEngine (zero-crossings), ConfidencePropagator (cross-channel). ServiceDriftEngine (7 sub-threshold precursor signals). path: lib/meta/telemetry-codec/index.js
+- **tests** — new spec, v1.1.0. The test suite. Three layers:
+- **topo-kernel** — new spec, v1.0.0. 8-gate SNR pipeline. Entropy → Variance → Consistency → Fidelity → Causality → Pattern → IME → Bayesian. The primitive everything else mounts on. path: lib/meta/topo-kernel/index.js
+- **ui-location** — new spec, v1.0.0. Defines where each system's UI lives, who serves it, and
+- **ui-registry** — new spec, v1.0.0. UI session tracking. Any UI registers via POST /api/ui/register, gets sessionId. Heartbeat checked 30s, timeout 70s. Disconnect emits SSE event to all clients. Multiple UIs simultaneously.
+- **ui** — new spec, v1.0.0. Browser interfaces for NEXUS. Currently 33,814 lines across 31 files —
+- **universal-block-primitive** — new spec, v0.1.0. (no purpose line found — undocumented change, check the spec directly)
+- **user-model** — new spec, v1.0.0. Persistent model of how the user works, thinks, and communicates.
+- **vector-memory** — new spec, v1.0.0. SNR-gated semantic search. nomic-embed-text via Ollama, 768-dim, vectra LocalIndex. Similarity score IS the SNR. Threshold 0.72 default. TF-IDF fallback when Ollama offline. Auto-embeds on JAA insert.
+- **versionium** — new spec, v3.1.0. "Versionium" is referenced throughout this session's design
+- **warp-devkit-addendum** — new spec, v1.4.1. Distinguish the exact cache (memoization of identical input) from the
+- **warp** — new spec, v1.4.0. A standalone, zero-dependency devkit that makes correct LLM-generated
+
 ## 2026-09-25 — auto-generated from spec version bumps
 
 - **2026-08-22-session-full** — new spec, v0.1.0-phasemap. (no purpose line found — undocumented change, check the spec directly)
