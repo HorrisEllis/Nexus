@@ -111,6 +111,12 @@ async function nxWireRefs(root) {
 
 function _nxRepoFor(system) { return API_REPOS.find(r => r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system === system) || null; }
 function _nxParent() { return API_REPOS.find(r => r.nexusSelf && r.nexusSelf.role === 'parent') || null; }
+// §0.39.265 — James: "why not combine nexus and nexus core?" They are one repo
+// now: nexus/core (everything the systems share) is where you work — Files,
+// Agent, Spec… — and its Home is the Nexus atlas. The old parent record stays
+// as the index behind it; it is used only until core has synced once.
+function _nxMain() { return _nxRepoFor('core') || _nxParent(); }
+function _nxIsMain(r) { return !!(r && r.nexusSelf && (r.nexusSelf.system === 'core' || (r.nexusSelf.role === 'parent' && !_nxRepoFor('core')))); }
 
 function _nxEnter(uuid) {
   if (!REPO_DETAIL_OPEN) enterRepoDetail(uuid); else selectApiRepo(uuid);
@@ -137,7 +143,7 @@ async function nexusOpenRef(hit) {
 
 /** a doc (.md) from the atlas: rendered on the nexus Home, its references live too */
 async function nexusOpenDoc(p) {
-  const parent = _nxParent();
+  const parent = _nxMain();
   if (!parent) { toast('the nexus repo is not synced yet', 'err'); return; }
   if (!CURRENT_API_REPO || CURRENT_API_REPO.uuid !== parent.uuid) _nxEnter(parent.uuid);
   if (CURRENT_REPO_SUBTAB !== 'home') setRepoSubtab('home');
@@ -157,7 +163,7 @@ async function nexusOpenDoc(p) {
 function nexusDocBack(i) { const p = NX_DOC_TRAIL[i]; NX_DOC_TRAIL.length = i; nexusOpenDoc(p); }
 function nexusAtlasHome() {
   NX_DOC_TRAIL.length = 0;
-  const parent = _nxParent(); if (!parent) return;
+  const parent = _nxMain(); if (!parent) return;
   if (!CURRENT_API_REPO || CURRENT_API_REPO.uuid !== parent.uuid) return _nxEnter(parent.uuid);
   if (CURRENT_REPO_SUBTAB !== 'home') return setRepoSubtab('home');
   renderRepoHome(parent);

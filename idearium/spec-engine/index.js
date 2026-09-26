@@ -706,6 +706,29 @@ export function loadSpec(specUuid) {
   return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 }
 
+// §0.39.265 — James: "its really unstable. idearium." loadSpec() parses the whole
+// manifest, and a manifest carries every chunk's full content (nexus/core's is
+// ~20 MB). RepoLayer._enrich() called it for EVERY repo on EVERY list — the
+// library view, the 10-minute nexus-self sync, the build loop — so a plain repo
+// list parsed tens of MB synchronously and /health stopped answering. The list
+// needs chunk metadata, never content: loadSpecMeta() returns the manifest with
+// chunk content stripped, cached against the manifest file's mtime+size (and
+// dropped by saveSpec), so it is re-read only when the spec actually changed.
+// READ-ONLY by contract — the object is shared between callers; anything that
+// mutates and saves must use loadSpec().
+const _metaCache = new Map();   // specUuid -> { mtimeMs, size, meta }
+export function loadSpecMeta(specUuid) {
+  const manifestPath = path.join(SPECS_ROOT, specUuid, 'manifest.json');
+  let st;
+  try { st = fs.statSync(manifestPath); } catch (_) { throw new Error(`spec ${specUuid} not found`); }
+  const hit = _metaCache.get(specUuid);
+  if (hit && hit.mtimeMs === st.mtimeMs && hit.size === st.size) return hit.meta;
+  const m = loadSpec(specUuid);
+  const meta = { ...m, chunks: (m.chunks || []).map(({ content, ...c }) => c) };
+  _metaCache.set(specUuid, { mtimeMs: st.mtimeMs, size: st.size, meta });
+  return meta;
+}
+
 // §EXPORT 2026-07-18 — real reconstruction of the original .spec text, for
 // export. For an IMPORTED spec this is byte-exact: strips the
 // `<!-- imported: ... -->\n\n` tag importSpec() prepends to every chunk
@@ -731,6 +754,7 @@ export function saveSpec(manifest) {
   const specDir = path.join(SPECS_ROOT, manifest.uuid);
   fs.mkdirSync(specDir, { recursive: true });
   manifest.updatedAt = Date.now();
+  _metaCache.delete(manifest.uuid);   // loadSpecMeta re-reads it next time
   // §2.1 disk before behavior — the write cortex mirrors below can lag or
   // fail without losing anything; this line is the one that must not.
   fs.writeFileSync(path.join(specDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
@@ -776,6 +800,10 @@ function _summarize(manifest) {
       // flagged after a restart is an interrupted import (see ingestFilesAsSpec); the
       // build queue must never AI-"generate" its files.
       ingesting:   !!manifest.ingesting,
+      // §0.39.265 — the document spec ↔ its generated code spec ("Generate code")
+      codeSpecUuid: manifest.codeSpecUuid || null,
+      codeFor:      manifest.codeFor || null,
+      fileTree:     !!manifest.fileTree,
       // §2026-07-10 — lightweight per-section status for the UI's Spec Library
       // chips. Id/title/done only, NOT content: the list must stay small even
       // with many specs. The detail view loads full chunk content on demand.
@@ -1341,7 +1369,7 @@ export default {
   // live endpoint, not by reading the file.
   listTemplates, getTemplate, readSeed,
   findByDedupKey, findPriorSection, importSpec,
-  createSpec, createFileTreeSpec, loadSpec, saveSpec, listSpecs,
+  createSpec, createFileTreeSpec, loadSpec, loadSpecMeta, saveSpec, listSpecs,
   nextPendingChunk, markChunkBuilding, completeChunk, failChunk, setChunkAgent, recordDispatchJob, setWarpPrimitives,
   recoverOrphanedChunks,
   buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec,

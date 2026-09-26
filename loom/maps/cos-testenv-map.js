@@ -32,6 +32,7 @@ const FILES = [
   ['cos/testenv/setup-job.js',  I('cos/testenv/setup-job.js'), [
     I('cos/testenv/index.js'),                                                      // status() → capabilities()
     I('cos/testenv/provision.js'),                                                  // spawned by path (child process)
+    I('cos/testenv/host.js'), I('cos/compartment/qemu-runtime.js'), I('cos/testenv/installer.js'),   // hostInfo() for the step-by-step setup (0.39.265)
   ]],
   // ErosmancerOS runs with Clear Glass (0.39.264): the supervisor spawns the TypeScript server by path.
   // The source scanner reads .js/.cjs/.mjs only, so ErosmancerOS's server enters the registry here.

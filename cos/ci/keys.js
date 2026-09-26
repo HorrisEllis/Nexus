@@ -228,6 +228,23 @@ function secretsEnvFor({ host, compartment } = {}) {
   } catch (e) { return { ok: false, error: `vault injection failed: ${e.message}`, env: {} }; }
 }
 
+/**
+ * gitTokenFor({ host, compartmentName }) — §0.39.265. The compartment's
+ * `git_token` CI secret (an https access token), for the environment of ONE
+ * git process (lib/repo-git.js authEnv → an Authorization header via
+ * GIT_CONFIG_*, never argv, never .git/config). The second value-returning
+ * function here, under the same rule as secretsEnvFor(): it hands a value to a
+ * spawning process and must never be routed to an HTTP response.
+ * Returns the token string, or null when none is set / not granted.
+ */
+function gitTokenFor({ host, compartmentName } = {}) {
+  if (!compartmentName) return null;
+  try {
+    const res = _vault().getSecret(hostFor(host), { compartmentName, key: `${SECRET_PREFIX}git_token`, reveal: true });
+    return (res && !res.denied && res.value) || null;
+  } catch (_) { return null; }
+}
+
 /** Redact anything that looks like a known secret value out of captured
  *  stage output. Best-effort and stated as such: a secret that a command
  *  transforms (base64s, splits, hashes) cannot be caught this way. It
@@ -247,6 +264,6 @@ module.exports = {
   MODULE_ID, VERSION, SSH_PREFIX, SECRET_PREFIX, ALIAS_RE,
   validateAlias, hostFor,
   registerSshKey, resolveSshKey, listSshKeys, removeSshKey,
-  setSecret, listSecrets, removeSecret, secretsEnvFor,
+  setSecret, listSecrets, removeSecret, secretsEnvFor, gitTokenFor,
   redact,
 };

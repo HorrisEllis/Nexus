@@ -1,8 +1,8 @@
 {
   "stats": {
     "idearium.repo.chunk.progress": {
-      "count": 8,
-      "lastTs": 1790427184400,
+      "count": 12,
+      "lastTs": 1790429553365,
       "intervals": [
         187,
         12000,
@@ -10,10 +10,23 @@
         847,
         1897,
         2119,
-        4794
+        4794,
+        2357750,
+        1089,
+        5073,
+        5053
       ],
-      "totalMs": 22371
+      "totalMs": 2391336
     }
   },
-  "baseline": {}
+  "baseline": {
+    "idearium.repo.chunk.progress": {
+      "avgIntervalMs": 264579,
+      "stddevMs": 740056,
+      "consistency": 0,
+      "count": 10,
+      "sampleSize": 9,
+      "computedAt": 1790429543239
+    }
+  }
 }

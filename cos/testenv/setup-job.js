@@ -10,7 +10,7 @@
  * polls. One job at a time; a second start while one runs returns the running one.
  *
  * start({ installQemu, extras, node }) -> status()
- * status() -> { state: 'idle'|'running'|'done'|'failed', startedAt, endedAt, log:[…], result, vm }
+ * status() -> { state: 'idle'|'running'|'done'|'failed', startedAt, endedAt, log:[…], result, vm, host }
  */
 const path = require('path');
 const { spawn } = require('child_process');
@@ -23,7 +23,16 @@ let job = { state: 'idle', startedAt: null, endedAt: null, log: [], result: null
 function status() {
   let vm = null;
   try { vm = require('./index.js').capabilities().vm; } catch (e) { vm = { ok: false, reason: e.message }; }
-  return { ...job, log: job.log.slice(-120), vm };
+  return { ...job, log: job.log.slice(-120), vm, host: hostInfo() };
+}
+
+/** §0.39.265 — what the step-by-step setup in the run menu tells the person about this computer */
+function hostInfo() {
+  const out = { platform: process.platform, home: null, installHint: null, accel: null, qemuPlan: null };
+  try { const H = require('./host.js'); out.home = H.home(); out.installHint = H.installHint(); } catch (_) {}
+  try { out.accel = require('../compartment/qemu-runtime.js').pickAccelerator(); } catch (_) {}
+  try { out.qemuPlan = require('./installer.js').plan('qemu'); } catch (_) {}
+  return out;
 }
 
 function start({ installQemu = false, extras = [], node = null, _spawn = spawn, _script = PROVISION } = {}) {
@@ -60,4 +69,4 @@ function start({ installQemu = false, extras = [], node = null, _spawn = spawn, 
   return status();
 }
 
-module.exports = { start, status, PROVISION };
+module.exports = { start, status, hostInfo, PROVISION };

@@ -304,6 +304,24 @@ export class RepoLayer {
     return result;
   }
 
+  // §0.39.265 — writeSources for a big tree while the server is serving
+  // (nexus-self sync): yields every 50 files, keeps unchanged files.
+  async writeSourcesAsync(repoUuid, realFiles = []) {
+    const r = this.repos.repos.find(x => x.uuid === repoUuid);
+    if (!r) return { ok: false, error: 'repo not found' };
+    const outDir = r.materializeDir || path.join(this.dataDir, 'projects', repoUuid);
+    const result = await sourceFiles.writeSourceFilesAsync(outDir, realFiles, { verify: true });
+    if (result.ok && result.manifest) {
+      r.sourceFileCount = result.manifest.totalFiles;
+      r.sourceBytes     = result.manifest.totalBytes;
+      r.sourceWrittenAt = result.manifest.writtenAt;
+      if (result.failed.length) r.sourceFailedCount = result.failed.length;
+      r.updatedAt = Date.now();
+      this._save();
+    }
+    return result;
+  }
+
   // §MCO-C 2026-09-20 — the source layer's single-file primitives, for snapshot
   // restore (see source-files.js setSourceFile).
   _sourceDir(repoUuid) {
@@ -683,7 +701,9 @@ export class RepoLayer {
   _enrich(r) {
     const idea = (this.os && r.ideaUuid && this.os.idea) ? this.os.idea(r.ideaUuid) : null;
     let manifest = null, filesError = null;
-    try { manifest = this.se ? this.se.loadSpec(r.specUuid) : null; }
+    // §0.39.265 — metadata only (no chunk content), cached until the manifest changes:
+    // a list of every repo used to parse every repo's full manifest, core's alone ~20 MB.
+    try { manifest = this.se ? (typeof this.se.loadSpecMeta === 'function' ? this.se.loadSpecMeta(r.specUuid) : this.se.loadSpec(r.specUuid)) : null; }
     catch (e) { filesError = `spec ${r.specUuid} unreadable: ${e.message}`; }
     // §BUG FIXED 2026-07-11 — removed chunks (deleteFile → removeChunk)
     // were still showing up in the repo's file listing — the whole point

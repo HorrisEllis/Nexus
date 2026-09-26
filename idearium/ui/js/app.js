@@ -99,7 +99,11 @@ async function nexusConnect(manual=false) {
 // Connection state is re-proved every 10 s, not asserted once at page load:
 // idearium going down after the page connected (the MASTERMIND-import stall)
 // used to leave the indicator green indefinitely.
-let _healthTimer = null, _healthBusy = false;
+// §0.39.265 — James: "its really unstable. idearium." One missed probe (a
+// 5 s window while idearium finishes a big write) flipped the page offline, and
+// the reconnect 10 s later re-ran loadAll() — every list reloaded, the open view
+// re-rendered. Offline now takes two misses in a row (~20 s of silence).
+let _healthTimer = null, _healthBusy = false, _healthMisses = 0;
 function _startHealthWatch() {
   if (_healthTimer) return;
   _healthTimer = setInterval(async () => {
@@ -107,7 +111,12 @@ function _startHealthWatch() {
     _healthBusy = true;
     try {
       if (CONNECTED) {
-        if (!(await _ideariumAlive(API_BASE))) {
+        const alive = await _ideariumAlive(API_BASE);
+        _healthMisses = alive ? 0 : _healthMisses + 1;
+        if (!alive && _healthMisses === 1) setConnUI('slow', API_BASE);
+        else if (alive && document.querySelector('.conn-slow')) setConnUI('online', API_BASE);
+        if (!alive && _healthMisses >= 2) {
+          _healthMisses = 0;
           CONNECTED = false; API_BASE = null;
           try { if (SSE) SSE.close(); } catch (_) {}
           SSE = null;
@@ -126,12 +135,13 @@ function setConnUI(state, base) {
   const el = document.getElementById('conn-indicator');
   const label = document.getElementById('conn-label');
   const banner = document.getElementById('offline-banner');
-  el.className = 'tb-conn ' + (state==='online'?'online':state==='connecting'?'':'offline');
+  el.className = 'tb-conn ' + (state==='online'?'online':state==='slow'?'online conn-slow':state==='connecting'?'':'offline');
   // Names what was proven alive — idearium — and the route to it, instead of
   // "nexus · :9000/api/idearium", which read as the orchestrator's state.
   const via = base && base.indexOf(':9000') !== -1 ? ' via :9000' : '';
-  label.textContent = state==='online' ? `idearium · online${via}` : state==='connecting' ? 'connecting…' : 'idearium offline — click to retry';
+  label.textContent = state==='online' ? `idearium · online${via}` : state==='slow' ? `idearium · busy${via}` : state==='connecting' ? 'connecting…' : 'idearium offline — click to retry';
   banner.classList.toggle('show', state==='offline');
+  if (state === 'slow') return;   // busy, still connected — the banner and footer stay as they are
   document.getElementById('welcome-foot').textContent = state==='online'
     ? `idearium connected · ${base}`
     : 'idearium (:4800) not answering — awaiting connection';
@@ -1061,7 +1071,17 @@ function renderSpecEngineBuilder(spec) {
         <div id="spec-history-panel">${buildSpecHistoryHtml(spec.uuid)}</div>
       </div>
       <div class="action-row">
-        <button class="action-btn primary" ${building||done===chunks.length?'disabled':''} onclick="createRepoThenBuild('${spec.uuid}')">${building?'building…':(done===chunks.length?'all chunks built':'build remaining chunks')}</button>
+        ${
+          // §0.39.265 — James: "now what? no code actually generated." A finished
+          // document spec's next step is its code: Generate code plans the files
+          // from the spec and builds each one (speceng.codegen → a code spec).
+          done === chunks.length && chunks.length && !spec.fileTree && !building
+            ? (spec.codeSpecUuid
+                ? `<button class="action-btn primary" onclick="openCodeSpec('${spec.uuid}')">open the code →</button>`
+                : `<button class="action-btn primary" id="codegen-btn" onclick="generateCode('${spec.uuid}')">generate code →</button>`)
+            : `<button class="action-btn primary" ${building||done===chunks.length?'disabled':''} onclick="createRepoThenBuild('${spec.uuid}')">${building?'building…':(done===chunks.length?(spec.fileTree?'all files built':'all chunks built'):(spec.fileTree?'build remaining files':'build remaining chunks'))}</button>`
+        }
+        ${spec.codeFor ? `<button class="action-btn" onclick="selectSpec('${spec.codeFor}')">← the spec it came from</button>` : ''}
         <button class="action-btn" onclick="exportSpec('${spec.uuid}')">export markdown</button>
         <button class="action-btn danger" onclick="deleteSpec('${spec.uuid}', '${escapeHtml(spec.name).replace(/'/g,"\\'").slice(0,40)}')">remove spec (stops building)</button>
       </div>
@@ -1148,7 +1168,7 @@ async function createRepoThenBuild(specUuid) {
       return;
     }
 
-    toast('all chunks built', 'ok');
+    toast(spec && !spec.fileTree && !spec.codeSpecUuid ? 'all chunks built — next: generate code' : 'all chunks built', 'ok');
     await loadApiRepos();
     if (spec?.ideaUuid) await loadIdeas(); // phase just advanced
     openRepoFor(spec?.ideaUuid || null, specUuid, spec?.name || '');
@@ -1159,6 +1179,36 @@ async function createRepoThenBuild(specUuid) {
     const spec = SPECS.find(s => s.uuid === specUuid);
     if (spec) renderSpecBuilder(spec);
   }
+}
+
+// §0.39.265 — Generate code. The spec (purpose, schema, api, build order, tests…)
+// is condensed into the project description; the agent plans the file tree
+// from it (kernel → engine → runtime → test); each file is then built as real
+// code into a new "<name> · code" repo by the same build loop the spec used.
+async function generateCode(specUuid) {
+  if (!CONNECTED) { toast('connect to nexus first', 'err'); return; }
+  const btn = document.getElementById('codegen-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'planning the files…'; }
+  toast('planning the files from the spec — this asks the agent, give it a minute', 'ok');
+  let r;
+  try { r = await api(`/api/spec-engine/specs/${specUuid}/codegen`, { method: 'POST', body: JSON.stringify({}) }, 600000); }
+  catch (e) {
+    toast(`could not plan the code: ${e.message}`, 'err');
+    if (btn) { btn.disabled = false; btn.textContent = 'generate code →'; }
+    return;
+  }
+  const code = r.manifest;
+  const n = (code.chunks || []).length, pre = (code.chunks || []).filter(c => c.status === 'complete').length;
+  toast(r.existing ? 'opening the code that was already generated' : `${n} file(s) planned${r.plan && r.plan.planSource ? ` (${r.plan.planSource})` : ''}${pre ? ` · ${pre} from templates` : ''} — building them now`, 'ok');
+  await loadSpecs();
+  await loadApiRepos();
+  selectSpec(code.uuid);
+  if (!r.existing || (code.chunks || []).some(c => c.status !== 'complete')) createRepoThenBuild(code.uuid);
+}
+function openCodeSpec(specUuid) {
+  const spec = SPECS.find(s => s.uuid === specUuid);
+  if (spec && spec.codeSpecUuid && SPECS.some(s => s.uuid === spec.codeSpecUuid)) return selectSpec(spec.codeSpecUuid);
+  generateCode(specUuid);   // the code spec is gone or not loaded — the route returns (or re-plans) it
 }
 
 function switchSection(uuid, sectionId) {
@@ -1708,7 +1758,7 @@ function renderRepoLibrary() {
   const badge = document.getElementById('repo-count-badge');
   // 0.39.263 — the systems are inside nexus. §0.39.265 — nexus/core is shown with
   // nexus (the main repo), and RAID's auto-made contract repos don't count as yours.
-  const _shown = API_REPOS.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system !== 'core') && !_isRaidContractRepo(r)).length;
+  const _shown = API_REPOS.filter(r => (!r.nexusSelf || _nxIsMain(r)) && !_isRaidContractRepo(r)).length;
   if (badge) badge.textContent = _shown ? String(_shown) : '';
   body.classList.toggle('block-grid', !REPO_DETAIL_OPEN);
   if (!API_REPOS.length) {
@@ -1738,7 +1788,9 @@ function renderRepoLibrary() {
     if (q && !r.name.toLowerCase().includes(q)) continue;
     // §0.39.265 — James: "nexus and nexus/core should be the main repo": core
     // (everything the systems share) is listed with nexus, not hidden inside it.
-    if (r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system !== 'core' && !q && !(REPO_DETAIL_OPEN && r.uuid === inSystem)) continue;
+    // §0.39.265 — "why not combine nexus and nexus core?": one "nexus" entry (core,
+    // whose Home is the atlas); the other systems open from inside it.
+    if (r.nexusSelf && !_nxIsMain(r) && (r.nexusSelf.role === 'parent' || (!q && !(REPO_DETAIL_OPEN && r.uuid === inSystem)))) continue;
     // RAID provisions a repo per queued contract (lib/contract-repo-provision.js):
     // plumbing, not your projects — its own group, last, closed in the list.
     const key = r.nexusSelf ? NEXUS_KEY : _isRaidContractRepo(r) ? RAID_KEY : (r.compartmentId || '');
@@ -1761,7 +1813,7 @@ function renderRepoLibrary() {
     // in it as a block. No collapsing here — the point is to see all of it.
     body.innerHTML = keys.map(key => {
       const repos = key === NEXUS_KEY ? groups.get(key) : groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-      const label = key === NEXUS_KEY ? 'nexus · main' : key ? key : 'Uncategorized';
+      const label = key === NEXUS_KEY ? 'nexus' : key ? key : 'Uncategorized';
       if (key === RAID_KEY) {
         return `<details class="repo-grid-raid"><summary class="repo-grid-group-label">${escapeHtml(label)} · ${repos.length} — made automatically for RAID's queued contracts</summary>
           ${repos.map(r => `<div class="repo-block raid" onclick="enterRepoDetail('${r.uuid}')"><div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name.replace(/^raid-contract-/, 'contract '))}</span></div><div class="repo-block-desc">${r.fileCount} file${r.fileCount === 1 ? '' : 's'}</div></div>`).join('')}</details>`;
@@ -1772,8 +1824,8 @@ function renderRepoLibrary() {
           const dotClass = r.phase === 'complete' ? 'done' : (r.phase === 'building' ? 'building' : '');
           return `
           <div class="repo-block${r.nexusSelf && (r.nexusSelf.role === 'parent' || r.nexusSelf.system === 'core') ? ' main' : ''}" onclick="enterRepoDetail('${r.uuid}')">
-            <div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</span></div>
-            <div class="repo-block-desc">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · snapshot ${escapeHtml(String(r.nexusSelf.snapshot || '').slice(0, 8))}` : `${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable`) : `${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}`}</div>
+            <div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(_nxIsMain(r) ? 'nexus' : r.name)}</span></div>
+            <div class="repo-block-desc">${_nxIsMain(r) && r.nexusSelf.role === 'system' ? `${Object.keys((_nxParent() || { nexusSelf: {} }).nexusSelf.children || {}).length} systems · ${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable` : r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · snapshot ${escapeHtml(String(r.nexusSelf.snapshot || '').slice(0, 8))}` : `${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable`) : `${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}`}</div>
             <div class="repo-block-meta"><span class="dot ${r.nexusSelf ? 'done' : dotClass}"></span><span>${r.nexusSelf ? `immutable · synced ${r.nexusSelf.syncedAt ? new Date(r.nexusSelf.syncedAt).toLocaleTimeString() : '—'}` : escapeHtml(r.phase||'idle')}</span></div>
           </div>`;
         }).join('')}`;
@@ -1799,7 +1851,7 @@ function renderRepoLibrary() {
             <div class="repo-card${CURRENT_API_REPO && CURRENT_API_REPO.uuid===r.uuid?' active':''}${r.nexusSelf && r.nexusSelf.role === 'system' ? ' nx-child' : ''}" onclick="${r.nexusSelf && r.nexusSelf.role === 'parent' ? 'nexusAtlasHome()' : `selectApiRepo('${r.uuid}')`}">
               ${dotClass ? `<span class="repo-card-dot ${dotClass}"></span>` : ''}
               <div class="repo-card-body">
-                <div class="repo-card-name">${escapeHtml(r.name)}</div>
+                <div class="repo-card-name">${escapeHtml(_nxIsMain(r) ? 'nexus' : r.name)}</div>
                 <div class="repo-card-meta">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · immutable` : `nexus/${escapeHtml(r.nexusSelf.system)} · ${r.nexusSelf.fileCount || r.fileCount} files`) : `${r.fileCount} files · ${escapeHtml(r.phase||'—')}`}</div>
               </div>
             </div>`;
@@ -1837,7 +1889,7 @@ function enterRepoDetail(uuid) {
 // re-entering a repo always starts from its tree, same as a fresh visit.
 function exitRepoDetail() {
   // §0.39.263 — a nexus system is inside the nexus repo: back goes to nexus, then to the library
-  if (CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' && typeof nexusAtlasHome === 'function' && _nxParent()) return nexusAtlasHome();
+  if (CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' && CURRENT_API_REPO.nexusSelf.system !== 'core' && typeof nexusAtlasHome === 'function' && _nxParent()) return nexusAtlasHome();
   if (typeof NX_DOC_TRAIL !== 'undefined' && NX_DOC_TRAIL.length) return nexusAtlasHome();
   REPO_DETAIL_OPEN = false;
   CURRENT_API_REPO = null; ACTIVE_API_FILE = null; API_FILE_DIRTY = false; CURRENT_REPO_SUBTAB = null;
@@ -1864,7 +1916,7 @@ function selectApiRepo(uuid) {
   document.getElementById('repo-context').textContent = '';
   if (switchingRepo && typeof NX_DOC_TRAIL !== 'undefined') NX_DOC_TRAIL.length = 0;
   const backBtn = document.getElementById('repo-back-btn');
-  if (backBtn) backBtn.textContent = repo.nexusSelf && repo.nexusSelf.role === 'system' ? '← nexus' : '← All repos';
+  if (backBtn) backBtn.textContent = repo.nexusSelf && repo.nexusSelf.role === 'system' && repo.nexusSelf.system !== 'core' ? '← nexus' : '← All repos';
   renderApiRepoPanel(repo);   // sets CURRENT_API_REPO …
   renderRepoLibrary();        // … which the active-card highlight (and the open nexus system under nexus) read
   // §REPO SUBTABS — a genuinely different repo always lands back on Home,
@@ -1908,6 +1960,7 @@ function renderCurrentRepoSubtab() {
   else if (CURRENT_REPO_SUBTAB === 'idea') renderRepoIdea(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'debug') renderRepoDebug(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'versionium') renderRepoVersionium(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'git') renderRepoGit(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'settings') renderRepoSettings(CURRENT_API_REPO);
 }
 
@@ -2191,7 +2244,7 @@ async function renderNexusHome(repo, el) {
   const stillHere = () => CURRENT_API_REPO?.uuid === repo.uuid && CURRENT_REPO_SUBTAB === 'home';
   // §0.39.263 — the nexus repo's Home is the Nexus atlas (ui/js/nexus-atlas.js);
   // the operational panels below live in its collapsible "snapshot · …" section.
-  if (repo.nexusSelf.role === 'parent') return renderNexusAtlasHome(repo, el);
+  if (repo.nexusSelf.role === 'parent' || repo.nexusSelf.system === 'core') return renderNexusAtlasHome(repo, el);   // §0.39.265 — nexus and nexus/core are one repo
   return _nexusSystemHome(repo, el, stillHere);
 }
 
@@ -2992,6 +3045,212 @@ toolScope  ${st.toolScopeEnforced ? 'enforced' : 'NOT enforced on this path'}</d
   if (typeof renderAgentBlocks === 'function') renderAgentBlocks(repo);
 }
 
+// ── §GIT TAB — §0.39.265 ─────────────────────────────────────────────────
+// James: "what about push pull, cd ci, ssh, and git support?" Real git on this
+// repo's folder (lib/repo-git.js via /api/repos/:uuid/git…) and its CI/CD
+// pipeline (cos/ci via /api/repos/:uuid/ci…). Credentials never reach the page:
+// an SSH key is picked by its alias (the key stays in ~/.ssh), a token is
+// stored in the compartment vault as the `git_token` secret and only ever
+// handed to the git process.
+let _gitState = { uuid: null, keyAlias: '', log: '' };
+function _gitLog(line, bad) {
+  const el = document.getElementById('git-log');
+  _gitState.log = `${new Date().toLocaleTimeString()}  ${line}\n${_gitState.log}`.slice(0, 20000);
+  if (el) { el.textContent = _gitState.log; el.style.color = bad ? 'var(--coral,#f87171)' : ''; }
+}
+async function renderRepoGit(repo) {
+  const el = document.getElementById('repo-subtab-git');
+  if (!el) return;
+  if (_gitState.uuid !== repo.uuid) _gitState = { uuid: repo.uuid, keyAlias: '', log: '' };
+  el.innerHTML = '<div style="opacity:.6">reading git…</div>';
+  const forUuid = repo.uuid;
+  let st, ci, runs;
+  try {
+    [st, ci, runs] = await Promise.all([
+      api(`/api/repos/${repo.uuid}/git`, {}, 20000),
+      api(`/api/repos/${repo.uuid}/ci`, {}, 20000).catch(e => ({ error: e.message })),
+      api(`/api/repos/${repo.uuid}/ci/runs?limit=10`, {}, 20000).catch(() => ({ runs: [] })),
+    ]);
+  } catch (e) { el.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'git') return;
+  const origin = (st.remotes || []).find(r => r.name === 'origin') || (st.remotes || [])[0] || null;
+  if (!_gitState.keyAlias && st.sshKeys && st.sshKeys.length) _gitState.keyAlias = st.sshKeys[0];
+  const box = (title, inner) => `<div class="ds" style="margin-bottom:14px"><div class="ds-label">${title}</div>${inner}</div>`;
+  const row = (label, inner) => `<div style="display:flex;gap:10px;align-items:center;margin:6px 0;flex-wrap:wrap"><span style="min-width:110px;font-size:11px;opacity:.7">${label}</span>${inner}</div>`;
+  let gitHtml;
+  if (!st.git) {
+    gitHtml = `<div>Git is not installed on this computer. Install it from <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com</a> (Windows: <code>winget install --id Git.Git -e</code>), then reopen this tab.</div>`;
+  } else {
+    const summary = !st.initialized ? 'no git history yet — your first commit starts it'
+      : `branch <b>${escapeHtml(st.branch || '?')}</b>${st.lastCommit ? ` · last commit <code>${escapeHtml(st.lastCommit.short)}</code> ${escapeHtml(st.lastCommit.subject)}` : ' · no commits yet'}${st.upstream ? ` · tracks ${escapeHtml(st.upstream)}${st.ahead ? ` · <b>${st.ahead} to push</b>` : ''}${st.behind ? ` · <b>${st.behind} to pull</b>` : ''}` : ''} · ${st.changeCount ? `<b>${st.changeCount} changed file(s)</b>` : 'nothing to commit'}`;
+    gitHtml = `<div style="margin-bottom:8px">${summary}</div>
+      ${row('remote', `<input id="git-remote" style="flex:1;min-width:280px" placeholder="git@github.com:you/${escapeHtml((repo.name || 'repo').replace(/\s+/g, '-'))}.git  or  https://github.com/you/…" value="${escapeHtml(origin ? origin.url : '')}"><button class="action-btn" onclick="gitSetRemote('${repo.uuid}')">save</button>`)}
+      ${row('sign in with', `<select id="git-key" onchange="_gitState.keyAlias=this.value"><option value="">no SSH key (https / public)</option>${(st.sshKeys || []).map(k => `<option value="${escapeHtml(k)}" ${k === _gitState.keyAlias ? 'selected' : ''}>SSH key “${escapeHtml(k)}”</option>`).join('')}</select>
+        <button class="action-btn" onclick="gitKeygen('${repo.uuid}')">create an SSH key…</button>
+        <button class="action-btn" onclick="gitSetToken('${repo.uuid}')">${st.hasToken ? 'replace' : 'set'} https token…</button>
+        <span style="font-size:10px;opacity:.6">${st.hasToken ? 'an https token is stored for this repo' : ''}</span>`)}
+      ${st.immutable ? '<div style="font-size:11px;opacity:.7;margin:6px 0">This is a Nexus system repo (immutable) — you can push it, but pulls go through a branch.</div>' : ''}
+      ${row('commit', `<input id="git-msg" style="flex:1;min-width:280px" placeholder="what changed"><button class="action-btn primary" onclick="gitCommit('${repo.uuid}')">commit</button>`)}
+      <div style="display:flex;gap:8px;margin:10px 0">
+        <button class="action-btn" onclick="gitPull('${repo.uuid}')" ${st.immutable || !origin ? 'disabled' : ''}>↓ pull</button>
+        <button class="action-btn primary" onclick="gitPush('${repo.uuid}')" ${!origin ? 'disabled title="set a remote first"' : ''}>↑ push</button>
+        <button class="action-btn" onclick="renderRepoGit(CURRENT_API_REPO)">refresh</button>
+      </div>
+      ${(st.changes || []).length ? `<details><summary style="cursor:pointer;font-size:11px">changed files (${st.changeCount})</summary><pre style="max-height:200px;overflow:auto;font-size:10px">${escapeHtml(st.changes.slice(0, 200).map(c => `${c.status.padEnd(2)} ${c.path}`).join('\n'))}</pre></details>` : ''}
+      <pre id="git-log" style="white-space:pre-wrap;max-height:220px;overflow:auto;font-size:10px;margin-top:8px">${escapeHtml(_gitState.log)}</pre>`;
+  }
+  const cfgText = ci && ci.config ? JSON.stringify(ci.config, null, 2) : '';
+  const ciHtml = ci && ci.error ? `<div style="color:var(--coral)">${escapeHtml(ci.error)}</div>`
+    : `<div style="font-size:11px;opacity:.75;margin-bottom:6px">Stages run in order in COS's sandbox with this repo as the working folder. <code>command</code> stages run a command line; <code>ssh</code> stages run on a server with an SSH key alias (deploys). Secrets you store are given to stages as <code>CI_SECRET_*</code> variables.${repo.compartmentId ? '' : ' <b>This repo has no compartment, so the pipeline cannot run here.</b>'}</div>
+      <textarea id="ci-config" spellcheck="false" style="width:100%;min-height:200px;font-family:var(--mono);font-size:11px">${escapeHtml(cfgText)}</textarea>
+      <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
+        <button class="action-btn" onclick="ciStarter('${repo.uuid}')">fill in a starter pipeline</button>
+        <button class="action-btn" onclick="ciSave('${repo.uuid}')">save pipeline</button>
+        <button class="action-btn primary" onclick="ciRun('${repo.uuid}')" ${repo.compartmentId ? '' : 'disabled'}>▶ run pipeline</button>
+      </div>
+      <div id="ci-result"></div>
+      <div style="font-size:10px;opacity:.6;letter-spacing:.08em;margin-top:10px">RECENT RUNS</div>
+      ${(runs.runs || []).map(r => `<div style="font-family:var(--mono);font-size:11px;padding:3px 0;border-bottom:1px solid var(--b0);cursor:pointer" onclick="ciShowRun('${repo.uuid}','${r.runId}')"><span style="color:${r.status === 'passed' ? 'var(--mint)' : r.status === 'failed' ? 'var(--coral)' : 'inherit'}">${escapeHtml(r.status)}</span> · ${new Date(r.startedAt).toLocaleString()} · ${r.durationMs}ms · ${r.stages.map(x => `${escapeHtml(x.name)}:${escapeHtml(x.status)}`).join(' ')}</div>`).join('') || '<div style="font-size:11px;opacity:.5">no runs yet</div>'}`;
+  el.innerHTML = box('GIT', gitHtml) + box('CI / CD', ciHtml);
+}
+async function _gitCall(uuid, what, body, label) {
+  _gitLog(`${label}…`);
+  try {
+    const r = await api(`/api/repos/${uuid}/git/${what}`, { method: 'POST', body: JSON.stringify(body || {}) }, 330000);
+    return r;
+  } catch (e) { _gitLog(`${label} failed: ${e.message}`, true); toast(`${label} failed: ${e.message}`, 'err'); return null; }
+}
+async function gitSetRemote(uuid) {
+  const url = (document.getElementById('git-remote') || {}).value || '';
+  const r = await _gitCall(uuid, 'remote', { url }, 'set remote');
+  if (r) { _gitLog(`remote ${r.name} → ${r.url}`); toast('remote saved', 'ok'); renderRepoGit(CURRENT_API_REPO); }
+}
+async function gitCommit(uuid) {
+  const message = (document.getElementById('git-msg') || {}).value || '';
+  if (!message.trim()) { toast('write what changed first', 'err'); return; }
+  const r = await _gitCall(uuid, 'commit', { message }, 'commit');
+  if (!r) return;
+  _gitLog(r.nothingToCommit ? 'nothing to commit — the folder matches the last commit' : `committed ${r.commit.slice(0, 8)} · ${r.files} file(s)`);
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitPush(uuid) {
+  const r = await _gitCall(uuid, 'push', { keyAlias: _gitState.keyAlias || undefined }, 'push');
+  if (!r) return;
+  _gitLog(`pushed ${r.branch} → ${r.remote}${r.output ? `\n${r.output}` : ''}`); toast('pushed', 'ok');
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitPull(uuid) {
+  const r = await _gitCall(uuid, 'pull', { keyAlias: _gitState.keyAlias || undefined }, 'pull');
+  if (!r) return;
+  _gitLog(r.upToDate ? 'already up to date' : `pulled ${r.branch}: ${r.applied.length} file(s) updated, ${r.removed.length} removed${r.binary.length ? `, ${r.binary.length} binary file(s) kept on disk only` : ''}${r.failed.length ? `, ${r.failed.length} could not be applied: ${r.failed.map(f => f.path).join(', ')}` : ''}`, r.failed.length > 0);
+  toast(r.upToDate ? 'already up to date' : 'pulled', 'ok');
+  if (!r.upToDate) await loadApiRepos();
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitKeygen(uuid) {
+  const alias = prompt('Name for the new SSH key (snake_case, e.g. github_deploy):', 'github');
+  if (!alias) return;
+  const r = await _gitCall(uuid, 'keygen', { alias: alias.trim() }, 'create SSH key');
+  if (!r) return;
+  _gitState.keyAlias = r.alias;
+  const body = document.getElementById('repo-diagnose-body');
+  document.getElementById('repo-diagnose-title').textContent = `SSH key “${r.alias}”`;
+  document.getElementById('repo-diagnose-reindex').style.display = 'none';
+  body.innerHTML = `<div style="white-space:normal">${r.existed ? 'This key already existed and is now registered to this repo.' : 'A new key was created and registered to this repo.'} The private key stays at <code>${escapeHtml(r.keyPath)}</code>; only the public key below leaves this computer.</div>
+    <ol style="white-space:normal;line-height:1.7">
+      <li>Copy the public key: <button class="action-btn" onclick="navigator.clipboard.writeText(${escapeHtml(JSON.stringify(r.publicKey || ''))});toast('copied','ok')">copy</button></li>
+      <li>GitHub: <b>Settings → SSH and GPG keys → New SSH key</b> (all your repos), or the repo's <b>Settings → Deploy keys → Add</b> with “Allow write access” (just this one). GitLab: <b>Preferences → SSH Keys</b>.</li>
+      <li>Set the remote to the <b>SSH</b> URL (<code>git@github.com:you/repo.git</code>), pick this key under “sign in with”, and push.</li>
+    </ol>
+    <pre style="white-space:pre-wrap;word-break:break-all;font-size:11px">${escapeHtml(r.publicKey || '(public key file not found)')}</pre>`;
+  document.getElementById('repo-diagnose-modal').classList.add('open');
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitSetToken(uuid) {
+  const value = prompt('Paste an https access token (GitHub: Settings → Developer settings → Personal access tokens, with repo / contents: write). It is stored encrypted in this repo\'s compartment vault and only given to git.');
+  if (!value) return;
+  try { await api(`/api/repos/${uuid}/ci/secrets`, { method: 'POST', body: JSON.stringify({ name: 'git_token', value: value.trim() }) }, 20000); toast('token stored', 'ok'); _gitLog('https token stored for this repo'); }
+  catch (e) { toast(`could not store the token: ${e.message}`, 'err'); }
+  renderRepoGit(CURRENT_API_REPO);
+}
+function ciStarter(uuid) {
+  const files = (CURRENT_API_REPO && CURRENT_API_REPO.files || []).map(f => f.path);
+  const has = (re) => files.some(p => re.test(p));
+  const stages = has(/(^|\/)package\.json$/) ? [{ name: 'install', kind: 'command', run: 'npm install' }, { name: 'test', kind: 'command', run: 'npm test' }]
+    : has(/(^|\/)(requirements\.txt|pyproject\.toml)$/) ? [{ name: 'install', kind: 'command', run: 'pip install -r requirements.txt' }, { name: 'test', kind: 'command', run: 'python -m pytest' }]
+    : has(/(^|\/)go\.mod$/) ? [{ name: 'test', kind: 'command', run: 'go test ./...' }]
+    : has(/(^|\/)Cargo\.toml$/) ? [{ name: 'test', kind: 'command', run: 'cargo test' }]
+    : [{ name: 'check', kind: 'command', run: 'echo add your build and test commands here' }];
+  stages.push({ name: 'deploy', kind: 'ssh', host: 'user@your-server', keyAlias: _gitState.keyAlias || 'deploy_key', run: 'cd /srv/app && git pull && npm install --omit=dev', continueOnError: false });
+  const cfg = { version: 1, stages, triggers: { onChunkDone: false, onCommit: false } };
+  const ta = document.getElementById('ci-config');
+  if (ta) ta.value = JSON.stringify(cfg, null, 2);
+  toast('starter pipeline filled in — edit the deploy stage (or delete it), then save', 'ok');
+}
+async function ciSave(uuid) {
+  let config;
+  try { config = JSON.parse((document.getElementById('ci-config') || {}).value || ''); }
+  catch (e) { toast(`the pipeline is not valid JSON: ${e.message}`, 'err'); return; }
+  try { await api(`/api/repos/${uuid}/ci`, { method: 'PUT', body: JSON.stringify({ config }) }, 20000); toast('pipeline saved', 'ok'); }
+  catch (e) { toast(`not saved: ${e.message}`, 'err'); }
+}
+async function ciRun(uuid) {
+  const out = document.getElementById('ci-result');
+  if (out) out.innerHTML = '<div style="opacity:.6">running the pipeline…</div>';
+  let r;
+  try { r = await api(`/api/repos/${uuid}/ci/run`, { method: 'POST', body: JSON.stringify({}) }, 900000); }
+  catch (e) { if (out) out.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  if (out) out.innerHTML = _ciRunHtml(r.run);
+  toast(`pipeline ${r.run.status}`, r.run.status === 'passed' ? 'ok' : 'err');
+}
+async function ciShowRun(uuid, runId) {
+  const out = document.getElementById('ci-result');
+  try { const r = await api(`/api/repos/${uuid}/ci/runs/${runId}`, {}, 20000); if (out) out.innerHTML = _ciRunHtml(r.run); }
+  catch (e) { if (out) out.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; }
+}
+function _ciRunHtml(run) {
+  if (!run) return '';
+  const col = (s) => s === 'passed' ? 'var(--mint)' : s === 'failed' ? 'var(--coral)' : 'inherit';
+  return `<div style="margin:6px 0"><b style="color:${col(run.status)}">${escapeHtml(run.status)}</b> · ${run.durationMs}ms</div>` + (run.stages || []).map(s => `
+    <div style="margin:6px 0 2px"><span style="color:${col(s.status)}">${escapeHtml(s.status)}</span> · <b>${escapeHtml(s.name)}</b> (${escapeHtml(s.kind || 'command')}) · exit ${s.exitCode ?? '—'} · ${s.durationMs ?? '—'}ms</div>
+    ${s.stdout ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;font-size:10px;margin:0">${escapeHtml(String(s.stdout).slice(-4000))}</pre>` : ''}
+    ${s.stderr ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;font-size:10px;margin:0;color:var(--coral)">${escapeHtml(String(s.stderr).slice(-4000))}</pre>` : ''}`).join('');
+}
+
+// Clone a git URL into a new repo (welcome page → "Clone from git").
+function openGitCloneModal() {
+  if (!CONNECTED) { toast('connect to nexus first', 'err'); return; }
+  document.getElementById('repo-diagnose-title').textContent = 'Clone from git';
+  document.getElementById('repo-diagnose-reindex').style.display = 'none';
+  document.getElementById('repo-diagnose-body').innerHTML = `
+    <div style="white-space:normal;margin-bottom:8px">Brings a git repository in as a new repo — its files, and its history, so pull and push work straight away (Git &amp; CI tab).</div>
+    <div style="margin:6px 0"><div style="font-size:10px;opacity:.7">repository URL</div><input id="clone-url" style="width:100%" placeholder="https://github.com/owner/repo.git  or  git@github.com:owner/repo.git"></div>
+    <div style="margin:6px 0"><div style="font-size:10px;opacity:.7">name (optional)</div><input id="clone-name" style="width:100%"></div>
+    <details style="margin:6px 0"><summary style="cursor:pointer;font-size:11px">private repository?</summary>
+      <div style="font-size:10px;opacity:.7;margin-top:6px">SSH: the full path to a private key on this computer (e.g. C:\\Users\\you\\.ssh\\id_ed25519)</div><input id="clone-key" style="width:100%">
+      <div style="font-size:10px;opacity:.7;margin-top:6px">https: an access token (used for this clone only, not stored)</div><input id="clone-token" type="password" style="width:100%">
+    </details>
+    <div style="margin-top:10px"><button class="modal-btn confirm" onclick="gitClone()">Clone</button></div>
+    <div id="clone-result" style="margin-top:8px"></div>`;
+  document.getElementById('repo-diagnose-modal').classList.add('open');
+  setTimeout(() => { const i = document.getElementById('clone-url'); if (i) i.focus(); }, 30);
+}
+async function gitClone() {
+  const v = (id) => ((document.getElementById(id) || {}).value || '').trim();
+  const out = document.getElementById('clone-result');
+  if (!v('clone-url')) { toast('paste the repository URL', 'err'); return; }
+  out.innerHTML = '<div style="opacity:.6">cloning…</div>';
+  let r;
+  try { r = await api('/api/git/clone', { method: 'POST', body: JSON.stringify({ url: v('clone-url'), name: v('clone-name') || undefined, keyPath: v('clone-key') || undefined, token: v('clone-token') || undefined }) }, 330000); }
+  catch (e) { out.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  out.innerHTML = `<div style="color:var(--mint)">cloned “${escapeHtml(r.name)}” · ${r.fileCount} file(s)${r.omittedCount ? ` · ${r.omittedCount} skipped` : ''} — indexing it now</div>`;
+  toast(`cloned ${r.name}`, 'ok');
+  await loadApiRepos();
+  api(`/api/repos/${r.repoUuid}/chunk`, { method: 'POST', body: JSON.stringify({}) }, 600000).then(() => loadApiRepos()).catch(e => toast(`indexing: ${e.message}`, 'err'));
+  document.getElementById('repo-diagnose-modal').classList.remove('open');
+  if (typeof selectApiRepo === 'function') selectApiRepo(r.repoUuid);
+}
+
 function renderRepoSettings(repo) {
   const el = document.getElementById('repo-subtab-settings');
   if (!el) return;
@@ -3205,10 +3464,12 @@ function _renderRunMenu() {
     html += `<div style="margin-top:10px"><button class="modal-btn confirm" onclick="_runMenuGo()">Run</button></div>`;
   }
   html += `</div></div>`;
-  // §0.39.264 — the VM option names what is missing; offer to set it up right here
+  // §0.39.264 — the VM option names what is missing; offer to set it up right here.
+  // §0.39.265 — James: "have a prompt telling me to set it up, and have it completely in a step by step
+  // process." Run asks first (Set it up / Not now); the setup is a numbered walk-through (_vmWizardHtml).
   const vmOpt = M.options.find(o => o.id === 'test.vm' && !o.available && o.setup);
-  if (vmOpt) html += `<div id="vm-setup" style="margin-top:10px;border-top:1px solid var(--border,#333);padding-top:8px">${_vmSetupHtml(null)}</div>`;
-  body.innerHTML = `<div id="run-menu-install">${_installPromptHtml()}</div><div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
+  const vmBox = vmOpt ? `<div id="vm-setup" style="margin-bottom:10px">${_vmWizardHtml()}</div>` : '';
+  body.innerHTML = `<div id="run-menu-install">${_installPromptHtml()}</div>${vmBox}<div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
   if (vmOpt) _vmSetupPoll(true);
   if (Object.values(_installState).some(s => s && s.state === 'running')) _installPoll();
 }
@@ -3222,7 +3483,9 @@ let _installDismissed = false;
 let _installTimer = null;
 function _installPromptHtml() {
   const M = _runMenu; if (!M || _installDismissed) return '';
-  const needs = (M.installs || []);
+  // QEMU is step 1 of the VM walk-through when the VM is not set up — not offered twice
+  const vmWalk = M.options.some(o => o.id === 'test.vm' && !o.available && o.setup);
+  const needs = (M.installs || []).filter(n => !(vmWalk && n.tool === 'qemu'));
   if (!needs.length) return '';
   const row = (n) => {
     const st = _installState[n.tool];
@@ -3252,6 +3515,7 @@ async function _installPoll() {
   const before = { ..._installState };
   _installState = { ..._installState, ...(r.jobs || {}) };
   const el = document.getElementById('run-menu-install'); if (el) el.innerHTML = _installPromptHtml();
+  if (_installState.qemu) _vmWizPaint();
   const running = Object.values(_installState).some(s => s && s.state === 'running');
   if (running) { _installTimer = setTimeout(_installPoll, 2000); return; }
   const finished = Object.keys(_installState).filter(t => before[t] && before[t].state === 'running' && _installState[t].state !== 'running');
@@ -3268,34 +3532,144 @@ async function _installPoll() {
 // tick it; a Debian cloud image made into the base, verified by booting it);
 // GET /api/cos/testenv is polled for its progress. The same thing runs from a
 // terminal: cos\testenv\setup-vm.bat (Windows) or cos/testenv/setup-vm.sh.
+//
+// §0.39.265 — James: "the run button in repos. can you have a prompt telling me
+// to set it up, and have it completely in a step by step process for me to set
+// up cos qemu for vms". When the VM is not set up, Run first ASKS (Set it up
+// step by step / Not now — "not now" is remembered on this computer and leaves a
+// small link). The walk-through is five numbered steps, each ticked off from
+// what the backend actually finds (setup-job.js status().vm / .host), never from
+// what was clicked:
+//   1 QEMU            found on PATH or in its install folder; else Install (winget/brew/
+//                     apt, the installer job) or the exact command + "check again"
+//   2 acceleration    kvm / hvf / whpx found, or how to turn it on (optional — TCG works, slower)
+//   3 what goes in    Node version + extra runtimes; where the image lives, the download size
+//   4 build           download → disk → first boot (installs packages) → verify offline → ready,
+//                     each ticked from provision.js's own progress lines
+//   5 done            the run menu reloads with "Run all tests in a VM" available
 let _vmSetupTimer = null;
-function _vmSetupHtml(st) {
+const _vmWiz = { open: false, st: null, node: 'lts', extras: [] };
+const _VM_DISMISS_KEY = 'idearium.vmSetup.notNow';
+function _vmNotNow() { try { return localStorage.getItem(_VM_DISMISS_KEY) === '1'; } catch (_) { return false; } }
+function _vmSetNotNow(v) { try { v ? localStorage.setItem(_VM_DISMISS_KEY, '1') : localStorage.removeItem(_VM_DISMISS_KEY); } catch (_) {} }
+function _vmWizOpen(v) { _vmWiz.open = v; if (v) _vmSetNotNow(false); _vmWizPaint(); }
+function _vmWizPaint() { const el = document.getElementById('vm-setup'); if (el) el.innerHTML = _vmWizardHtml(); }
+function _vmCopyBtn(cmd) { return `<button class="action-btn" onclick="navigator.clipboard.writeText(${escapeHtml(JSON.stringify(cmd))});toast('copied')">copy</button>`; }
+
+// which build stage provision.js has reached, read from its own log lines
+const _VM_STAGES = [
+  ['download', 'Download the Debian cloud image (~350 MB)', /downloading|download \d|using the downloaded image/i],
+  ['disk',     'Prepare the VM disk',                        /preparing the disk/i],
+  ['boot',     'First boot — install Node, Python, git, build tools (3–15 min)', /first boot|^guest:|guest reported/i],
+  ['verify',   'Verify: boot it offline and run node through the guest agent', /verifying|verified:/i],
+  ['ready',    'Save it as the base image',                  /^ready:/i],
+];
+function _vmStageReached(log) {
+  let n = -1;
+  for (const e of log || []) _VM_STAGES.forEach(([, , re], i) => { if (i > n && re.test(e.msg || '')) n = i; });
+  return n;
+}
+
+function _vmWizardHtml() {
+  const st = _vmWiz.st, vm = st && st.vm, host = (st && st.host) || {};
   const running = st && st.state === 'running';
-  const last = st && st.log && st.log.length ? st.log.slice(-14).map(e => escapeHtml(e.msg || '')).join('\n') : '';
-  const col = st && st.state === 'failed' ? 'var(--bad,#f87171)' : st && st.state === 'done' ? 'var(--ok,#4ade80)' : 'inherit';
-  return `<div style="font-size:10px;opacity:.6;letter-spacing:.08em">TEST VM</div>
-    ${st && st.vm && st.vm.ok ? `<div style="color:var(--ok,#4ade80);margin:4px 0">ready — ${escapeHtml(st.vm.baseImage || '')}</div><button class="action-btn" onclick="repoRun()">reload the run menu</button>` : `
-    <div style="font-size:10px;opacity:.8;margin:4px 0;white-space:normal">${escapeHtml(st && st.vm ? st.vm.reason : 'checking…')}</div>
-    ${running ? '' : `<label style="display:block;font-size:10px"><input type="checkbox" id="vm-setup-qemu" checked> install QEMU if it is missing (Windows: winget)</label>
-    <div style="font-size:10px;margin:3px 0">extra runtimes: ${['go', 'ruby', 'php', 'rust'].map(x => `<label style="margin-right:8px"><input type="checkbox" class="vm-setup-extra" value="${x}"> ${x}</label>`).join('')}</div>
-    <button class="action-btn" onclick="_vmSetupStart()">Set up the test VM</button>
-    <span style="font-size:10px;opacity:.6"> 5–40 min · downloads ~350 MB · or run ${escapeHtml((st && st.vm && st.vm.setup) || 'cos/testenv/setup-vm')}</span>`}`}
-    ${st && st.state !== 'idle' ? `<div style="font-size:10px;margin-top:6px;color:${col}">${escapeHtml(st.state)}${st.result && st.result.error ? ` — ${escapeHtml(st.result.error)}` : ''}</div>` : ''}
-    ${last ? `<pre style="white-space:pre-wrap;max-height:180px;overflow:auto;font-size:10px;opacity:.85;margin:4px 0 0">${last}</pre>` : ''}`;
+  const box = (inner) => `<div style="border:1px solid var(--accent,#a78bfa);border-radius:6px;padding:10px 12px">${inner}</div>`;
+  if (vm && vm.ok && !running) return box(`<div style="color:var(--ok,#4ade80)">✓ The COS test VM is set up — ${escapeHtml(vm.baseImage || '')}</div>
+    <div style="margin-top:6px"><button class="modal-btn confirm" onclick="_vmWiz.open=false;repoRun('test')">Reload the run menu</button></div>`);
+
+  // the prompt — before the walk-through is opened
+  if (!_vmWiz.open && !running) {
+    if (_vmNotNow()) return `<div style="font-size:11px;opacity:.75">The test VM is not set up. <a href="#" onclick="event.preventDefault();_vmWizOpen(true)">Set up the test VM</a></div>`;
+    return box(`<div style="font-size:10px;opacity:.7;letter-spacing:.08em;margin-bottom:4px">SET UP THE COS TEST VM?</div>
+      <div style="white-space:normal;margin-bottom:8px">"Run all tests in a VM" runs this repo inside a throw-away QEMU virtual machine — its own OS, no network while tests run, nothing touches this computer. It needs a one-time setup (about 10–40 minutes, mostly waiting). Nexus walks you through it step by step.</div>
+      <button class="modal-btn confirm" onclick="_vmWizOpen(true)">Set it up — step by step</button>
+      <button class="action-btn" onclick="_vmSetNotNow(true);_vmWizPaint()">Not now</button>
+      <span style="font-size:10px;opacity:.6"> everything else in the run menu works without it</span>`);
+  }
+
+  if (!st) return box('<div style="opacity:.6">checking this computer…</div>');
+  const qemuOk = !!(vm && vm.qemu);
+  const accel = host.accel || null;
+  const accelOk = accel && accel.accel && accel.accel !== 'tcg';
+  const qi = _installState.qemu;
+  const reached = _vmStageReached(st.log);
+  const done = st.state === 'done' && vm && vm.ok;
+  const failed = st.state === 'failed';
+  const mark = (state) => state === 'ok' ? '<span style="color:var(--ok,#4ade80)">✓</span>' : state === 'now' ? '<span style="color:var(--accent,#a78bfa)">●</span>' : state === 'bad' ? '<span style="color:var(--bad,#f87171)">✗</span>' : state === 'opt' ? '<span style="opacity:.6">◇</span>' : '<span style="opacity:.4">○</span>';
+  const step = (n, state, title, inner) => `<div style="display:flex;gap:10px;margin:8px 0;${state === 'todo' ? 'opacity:.55' : ''}"><div style="width:22px;text-align:center;font-weight:bold">${mark(state)}</div>
+    <div style="flex:1;min-width:0;white-space:normal"><div><b>Step ${n} · ${escapeHtml(title)}</b></div>${inner ? `<div style="font-size:11px;margin-top:3px">${inner}</div>` : ''}</div></div>`;
+  let h = `<div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;opacity:.7;letter-spacing:.08em">SET UP THE COS TEST VM (QEMU) — STEP BY STEP</div>
+    ${running ? '' : `<button class="action-btn" onclick="_vmWizOpen(false)">close</button>`}</div>`;
+
+  // 1 — QEMU
+  let s1;
+  if (qemuOk) s1 = `found: <code>${escapeHtml(vm.qemu.system)}</code>`;
+  else if (qi && qi.state === 'running') s1 = `installing QEMU… ${escapeHtml(((qi.log || []).slice(-1)[0] || {}).msg || '').slice(0, 140)}`;
+  else {
+    const p = host.qemuPlan;
+    s1 = `QEMU is the program that runs the virtual machine. It is not on this computer yet.<br>`;
+    if (p && p.unattended) s1 += `<button class="action-btn" onclick="_installStart('qemu')">Install QEMU now</button> <span style="opacity:.7">runs <code>${escapeHtml(p.command)}</code></span>`;
+    else if (p) s1 += `Run this in a terminal${host.platform === 'win32' ? ' (PowerShell)' : ''}: <code>${escapeHtml(p.command)}</code> ${_vmCopyBtn(p.command)}${p.note ? `<div style="opacity:.7">${escapeHtml(p.note)}</div>` : ''}`;
+    else if (host.installHint) s1 += `Install it: <code>${escapeHtml(host.installHint)}</code> ${_vmCopyBtn(host.installHint.split('   ')[0])}`;
+    s1 += `<div style="opacity:.7;margin-top:3px">Or download it from <a href="https://www.qemu.org/download/" target="_blank" rel="noopener">qemu.org/download</a>${host.platform === 'win32' ? ' (Windows installer: qemu.weilnetz.de/w64) — install to C:\\Program Files\\qemu, where Nexus looks' : ''}.
+      Then <button class="action-btn" onclick="_vmSetupPoll(true)">check again</button></div>`;
+    if (qi && qi.state === 'failed') s1 += `<div style="color:var(--bad,#f87171)">the install did not finish: ${escapeHtml((qi.result && qi.result.error) || '')}</div>`;
+  }
+  h += step(1, qemuOk ? 'ok' : (qi && qi.state === 'failed') ? 'bad' : 'now', 'Install QEMU', s1);
+
+  // 2 — acceleration (optional)
+  let s2;
+  if (accelOk) s2 = `${escapeHtml(accel.accel.toUpperCase())} — ${escapeHtml(accel.reason)}.${accel.accel === 'whpx' ? ` If the build says WHPX did not start, turn on <b>Windows Hypervisor Platform</b>: <code>dism /online /enable-feature /featurename:HypervisorPlatform /all</code> ${_vmCopyBtn('dism /online /enable-feature /featurename:HypervisorPlatform /all')} in an administrator PowerShell, then restart. Also check virtualisation (VT-x / AMD-V) is on in the BIOS.` : ''}`;
+  else if (host.platform === 'linux') s2 = `No hardware acceleration (${escapeHtml((accel && accel.reason) || 'unknown')}). The VM still works with software emulation, just several times slower. To speed it up: <code>sudo modprobe kvm_intel || sudo modprobe kvm_amd; sudo usermod -aG kvm $USER</code> ${_vmCopyBtn('sudo modprobe kvm_intel || sudo modprobe kvm_amd; sudo usermod -aG kvm $USER')} then log out and back in.`;
+  else s2 = `Software emulation only — it works, just slower.`;
+  h += step(2, accelOk ? 'ok' : 'opt', 'Hardware acceleration (optional — faster VMs)', s2);
+
+  // 3 — what goes into the image
+  const s3 = running || done ? `Node ${escapeHtml(_vmWiz.node)}${_vmWiz.extras.length ? ' + ' + escapeHtml(_vmWiz.extras.join(', ')) : ''}, Python 3, git, build tools`
+    : `Always included: Python 3, git, build tools, the QEMU guest agent. Node version:
+      <select onchange="_vmWiz.node=this.value">${['lts', '22', '20'].map(v => `<option value="${v}" ${_vmWiz.node === v ? 'selected' : ''}>${v === 'lts' ? 'latest LTS' : 'Node ' + v}</option>`).join('')}</select>
+      <div style="margin-top:3px">Extra languages for repos that need them: ${['go', 'ruby', 'php', 'rust'].map(x => `<label style="margin-right:8px"><input type="checkbox" class="vm-setup-extra" value="${x}" ${_vmWiz.extras.includes(x) ? 'checked' : ''} onchange="_vmWiz.extras=[...document.querySelectorAll('.vm-setup-extra:checked')].map(e=>e.value)"> ${x}</label>`).join('')}</div>
+      <div style="opacity:.7;margin-top:3px">Needs ~350 MB download and ~3 GB of disk${host.home ? ` in <code>${escapeHtml(host.home)}</code>` : ''}. You can run the setup again later to add languages.</div>`;
+  h += step(3, running || done ? 'ok' : qemuOk ? 'now' : 'todo', 'Choose what goes in the VM', s3);
+
+  // 4 — build
+  let s4 = _VM_STAGES.map(([, label], i) => {
+    const stt = done || i < reached ? 'ok' : (running && i === Math.max(reached, 0)) ? 'now' : (failed && i === Math.max(reached, 0)) ? 'bad' : 'todo';
+    return `<div style="margin:2px 0;${stt === 'todo' ? 'opacity:.55' : ''}">${mark(stt)} ${escapeHtml(label)}</div>`;
+  }).join('');
+  if (!running && !done) s4 += qemuOk
+    ? `<div style="margin-top:6px"><button class="modal-btn confirm" onclick="_vmSetupStart()">${failed ? 'Try again' : 'Set up the test VM'}</button> <span style="opacity:.7">you can keep using Nexus while it runs</span></div>`
+    : `<div style="opacity:.7;margin-top:4px">finish step 1 first</div>`;
+  if (failed) s4 += `<div style="color:var(--bad,#f87171);margin-top:4px">${escapeHtml((st.result && st.result.error) || 'the setup failed')} — the log below says where; "Try again" re-uses the downloaded image.</div>`;
+  const last = (st.log || []).slice(-12).map(e => escapeHtml(e.msg || '')).join('\n');
+  if (last && (running || failed)) s4 += `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;font-size:10px;opacity:.85;margin:6px 0 0">${last}</pre>`;
+  if (!running && !done) s4 += `<div style="opacity:.6;margin-top:4px">Same thing from a terminal: <code>${escapeHtml((vm && vm.setup) || 'node cos/testenv/provision.js')}</code></div>`;
+  h += step(4, done ? 'ok' : failed ? 'bad' : running ? 'now' : 'todo', 'Build the VM image', s4);
+
+  // 5 — done
+  h += step(5, done ? 'ok' : 'todo', 'Run tests in the VM', done
+    ? `Ready. <button class="modal-btn confirm" onclick="_vmWiz.open=false;repoRun('test')">Open the run menu</button> — pick "Run all tests in a VM".`
+    : `The run menu will offer "Run all tests in a VM".`);
+  return box(h);
 }
 async function _vmSetupPoll(once) {
   clearTimeout(_vmSetupTimer);
   const el = document.getElementById('vm-setup'); if (!el) return;
   let st; try { st = await api('/api/cos/testenv', {}, 20000); } catch (e) { el.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
-  el.innerHTML = _vmSetupHtml(st);
-  if (st.state === 'running') _vmSetupTimer = setTimeout(() => _vmSetupPoll(), 2000);
-  else if (!once && st.state === 'done') toast('the test VM is ready', 'ok');
+  const was = _vmWiz.st && _vmWiz.st.state;
+  _vmWiz.st = st;
+  if (st.state === 'running') _vmWiz.open = true;
+  el.innerHTML = _vmWizardHtml();
+  const qemuInstalling = _installState.qemu && _installState.qemu.state === 'running';
+  if (st.state === 'running' || qemuInstalling) _vmSetupTimer = setTimeout(() => _vmSetupPoll(), 2000);
+  else if (was === 'running' && st.state === 'done') toast('the test VM is ready', 'ok');
 }
 async function _vmSetupStart() {
   const extras = [...document.querySelectorAll('.vm-setup-extra:checked')].map(x => x.value);
-  const installQemu = !!(document.getElementById('vm-setup-qemu') || {}).checked;
-  try { await api('/api/cos/testenv/setup', { method: 'POST', body: JSON.stringify({ installQemu, extras }) }, 20000); }
+  if (extras.length) _vmWiz.extras = extras;
+  try { await api('/api/cos/testenv/setup', { method: 'POST', body: JSON.stringify({ installQemu: false, extras: _vmWiz.extras, node: _vmWiz.node }) }, 20000); }
   catch (e) { toast(`VM setup did not start: ${e.message}`, 'err'); return; }
+  _vmWiz.open = true;
   _vmSetupPoll();
 }
 
