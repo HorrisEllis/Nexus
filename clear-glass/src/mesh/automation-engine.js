@@ -53,6 +53,7 @@ const DATA_ROOT = process.env.NEXUS_DATA_ROOT || path.join(__dirname, '..', '..'
 const WORKFLOWS_DIR = path.join(DATA_ROOT, 'brainos', 'workflows');
 const RUNS_DIR = path.join(DATA_ROOT, 'brainos', 'automation-runs');
 const OUTPUT_DIR = path.join(DATA_ROOT, 'brainos', 'automation-output');
+const NODES_DIR = path.join(DATA_ROOT, 'brainos', 'automation-nodes');   // saved .workflow / .macro node files (automation/nodes.js)
 const TICK_MS = 5000;
 const RUNS_KEPT = 200;
 const MAX_DEPTH = 5;
@@ -259,7 +260,7 @@ class AutomationEngine {
     return s;
   }
 
-  create({ name, status, steps, description, vars, settings }) {
+  create({ name, status, steps, description, vars, settings, origin }) {
     const wf = {
       id: randomUUID(), name: name || 'Untitled Workflow', status: status || 'draft', description: description || '',
       // §0.39.265 — every step gets its own id here: a template or a duplicate
@@ -269,6 +270,8 @@ class AutomationEngine {
     };
     if (vars && typeof vars === 'object') wf.vars = { ...vars };
     if (settings && typeof settings === 'object') wf.settings = { ...settings };
+    // §0.39.266 — where an imported workflow came from ({ fingerprint, nodeId, importedAt }), so importing the same .workflow again finds it
+    if (origin && typeof origin === 'object') wf.origin = { ...origin };
     const src = Array.isArray(steps) ? steps : [];
     const newIds = src.map(() => randomUUID());
     const idMap = new Map(src.map((st, i) => [st.id, newIds[i]]).filter(([old]) => old));   // only steps that HAD an id can be branched to
@@ -1153,4 +1156,4 @@ class AutomationEngine {
   }
 }
 
-module.exports = { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR, TICK_MS, SYSTEM_PORTS, nextScheduled, _kv, _asList, _glob };
+module.exports = { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR, NODES_DIR, TICK_MS, SYSTEM_PORTS, nextScheduled, _kv, _asList, _glob };

@@ -232,6 +232,39 @@ await test('UI-A7', 'Run now starts it (without waiting); New workflow from a te
   assert.deepStrictEqual(errors, []);
 });
 
+await test('UI-A8', '⋯ → Save to library puts a .workflow in the Library pane; Import there brings it back (switched off); Import accepts pasted node text', async () => {
+  const { NODES_DIR } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
+  try { fs.rmSync(NODES_DIR, { recursive: true, force: true }); } catch (_) {}
+  const wf = engine.create({ name: 'AAC nodes', status: 'paused', steps: [{ type: 'log', config: { message: 'node' } }] }).workflow;
+  await render();
+  let pane = $$('#main .pane.wf').find(p => p.querySelector('h2').textContent === 'AAC nodes');
+  $('button[aria-label="More for AAC nodes"]', pane).click();
+  let m = await waitModal();
+  byText('Save to library', 'button', m).click();
+  for (let i = 0; i < 60 && !$$('#main .pane').some(p => /Library/.test(p.querySelector('h2') && p.querySelector('h2').textContent) && /aac-nodes\.workflow/.test(p.textContent)); i++) await tick();
+  const lib = $$('#main .pane').find(p => p.querySelector('h2') && p.querySelector('h2').textContent === 'Library');
+  assert.ok(lib && /aac-nodes\.workflow/.test(lib.textContent) && /\.workflow/.test($('.chip', lib).textContent), lib && lib.textContent);
+  assert.ok(toasts().some(t => /Saved aac-nodes\.workflow in the library/.test(t)));
+  engine.remove(wf.id);
+  byText('Import', 'button', lib).click();
+  for (let i = 0; i < 60 && !engine.list().some(w => w.name === 'AAC nodes'); i++) await tick();
+  const back = engine.list().find(w => w.name === 'AAC nodes');
+  assert.ok(back && back.status === 'paused' && back.steps[0].config.message === 'node');
+  const text = (await require(path.join(ROOT, 'clear-glass/src/automation/nodes.js')).workflowNode(engine, back.id)).text.replace(/AAC nodes/g, 'AAD pasted');
+  await render();
+  byText('Import').click();
+  m = await waitModal();
+  if (!/Import a workflow or macro/.test(m.textContent)) throw new Error('modal: ' + m.querySelector('h2').textContent);
+  $('textarea', m).value = text;
+  byText('Import', 'button', m).click();
+  for (let i = 0; i < 60 && !engine.list().some(w => w.name === 'AAD pasted'); i++) await tick();
+  assert.ok(engine.list().some(w => w.name === 'AAD pasted'));
+  for (let i = 0; i < 60 && !toasts().some(t => /AAD pasted/.test(t)); i++) await tick();
+  assert.ok(toasts().some(t => /Imported “AAD pasted” \(switched off\)/.test(t)), toasts().join(' | '));
+  try { fs.rmSync(NODES_DIR, { recursive: true, force: true }); } catch (_) {}
+  assert.deepStrictEqual(errors, []);
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 for (const d of [WORKFLOWS_DIR, RUNS_DIR]) try { fs.rmSync(d, { recursive: true, force: true }); } catch (_) {}
 process.exitCode = failed ? 1 : 0;

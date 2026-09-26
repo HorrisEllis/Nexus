@@ -891,6 +891,7 @@ async function _startWire() {
       if (u.startsWith('/automation/')) {
         const r = await require('../automation/routes.js').handle(mesh && mesh._automation, { method: req.method, url: u, body: parsed, headers: req.headers, rawBody: body }, {
           getMacro: (name) => macroTool.execute({ action: 'get', name }),
+          createMacro: (m) => macroTool.execute({ action: 'create', ...m }),
           openPath: (dir) => shell.openPath(dir),
           pages: {
             list: () => listBackgroundTabs().filter(t => /^auto-/.test(t.agentId)),

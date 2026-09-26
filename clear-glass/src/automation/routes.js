@@ -49,7 +49,37 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
   if (path === '/automation/catalogue' && method === 'GET') return ok({ ok: true, catalogue: S.CATALOGUE, trigger: S.TRIGGER, common: S.COMMON, ops: S.OPS });
   if (path === '/automation/templates' && method === 'GET') return ok({ ok: true, templates: require('./templates.js').TEMPLATES });
   if (path === '/automation/active' && method === 'GET') return ok({ ok: true, runs: A.activeRuns() });
-  if (path === '/automation/import' && method === 'POST') return res(A.importWorkflow(body));
+  // ── .workflow / .macro node files (automation/nodes.js) ────────────────────
+  const N = require('./nodes.js');
+  const nodesDir = deps.nodesDir || require('../mesh/automation-engine.js').NODES_DIR;
+  const macroDeps = { getMacro: deps.getMacro || null, createMacro: deps.createMacro || null };
+  if (path === '/automation/import' && method === 'POST') {
+    // a node file's text (.workflow / .macro, or the older JSON) — or the older JSON object itself
+    if (body && typeof body.text === 'string') return res(await N.importNode(A, body.text, { ...macroDeps, allowDuplicate: !!body.allowDuplicate, name: body.name || null }));
+    return res(A.importWorkflow(body));
+  }
+  if (path === '/automation/nodes' && method === 'GET') return ok({ ok: true, dir: nodesDir, nodes: N.listNodes(nodesDir) });
+  if (p[2] === 'nodes' && p[3] && /\.(workflow|macro)$/.test(p[3]) && !p[3].includes('..')) {
+    const fp = require('path').join(nodesDir, p[3]);
+    if (!require('fs').existsSync(fp)) return ok({ ok: false, error: 'no such node file' }, 404);
+    if (!p[4] && method === 'GET') return ok({ ok: true, file: p[3], text: require('fs').readFileSync(fp, 'utf8') });
+    if (!p[4] && method === 'DELETE') { require('fs').unlinkSync(fp); return ok({ ok: true }); }
+    if (p[4] === 'import' && method === 'POST') return res(await N.importNode(A, require('fs').readFileSync(fp, 'utf8'), { ...macroDeps, allowDuplicate: !!(body && body.allowDuplicate) }));
+  }
+  if (path === '/automation/nodes/open' && method === 'POST') {
+    require('fs').mkdirSync(nodesDir, { recursive: true });
+    if (!deps.openPath) return ok({ ok: true, dir: nodesDir });
+    const err = await deps.openPath(nodesDir);
+    return err ? ok({ ok: false, error: err }, 500) : ok({ ok: true, dir: nodesDir });
+  }
+  if (p[2] === 'macros' && p[3] && p[4] === 'node') {
+    if (!deps.getMacro) return ok({ ok: false, error: 'macros are not available here' }, 501);
+    const m = await deps.getMacro(p[3]);
+    if (!m || !m.ok) return ok({ ok: false, error: (m && m.error) || 'no such macro' }, 404);
+    const n = N.macroNode(m.macro, { tags: (body && body.tags) || [] });
+    if (!p[5] && method === 'GET') return ok({ ok: true, filename: n.filename, text: n.text });
+    if (p[5] === 'save' && method === 'POST') { const fp = N.saveNode(nodesDir, n); return ok({ ok: true, path: fp, file: require('path').basename(fp) }); }
+  }
   if (path === '/automation/step' && method === 'POST') return ok(await A.runStep((body && body.step) || body, { vars: (body && body.vars) || {}, workflowId: (body && body.workflowId) || null }));
   if (p[2] === 'cron' && method === 'GET') {   // the trigger editor's live preview
     const C = require('./cron.js');
@@ -97,6 +127,16 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
     if (p[4] === 'runs' && method === 'GET') return ok({ ok: true, runs: A.listRuns(id, parseInt(q('limit'), 10) || 30) });
     if (p[4] === 'cancel' && method === 'POST') return ok(A.cancelAll(id));
     if (p[4] === 'export' && method === 'GET') return res(A.exportWorkflow(id));
+    if (p[4] === 'node' && !p[5] && method === 'GET') {
+      const n = await N.workflowNode(A, id, { getMacro: deps.getMacro || null });
+      return res(n.ok ? { ok: true, filename: n.filename, text: n.text, missing: n.missing } : n);
+    }
+    if (p[4] === 'node' && p[5] === 'save' && method === 'POST') {
+      const n = await N.workflowNode(A, id, { getMacro: deps.getMacro || null, tags: (body && body.tags) || [] });
+      if (!n.ok) return res(n);
+      const fp = N.saveNode(nodesDir, n);
+      return ok({ ok: true, path: fp, file: require('path').basename(fp), missing: n.missing });
+    }
     if (p[4] === 'validate' && method === 'GET') return res(A.validate(id));
     if (p[4] === 'output' && method === 'POST') {
       const dir = A.outputDir(id);

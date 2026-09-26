@@ -433,22 +433,51 @@
       } }] });
     if (r) { toast('Workflow created — check its steps and variables, then switch it on'); rerender(); }
   }
+  // §0.39.266 — workflows and macros travel as NEXUS node files: .workflow (with the
+  // macros and workflows it uses bundled) and .macro — src/automation/nodes.js.
+  function importSummary(r) {
+    if (r.existing) return `“${r.workflow.name}” is already here — nothing imported`;
+    const what = r.type === 'macro' ? `macro “${r.macro.name}”${r.macro.reused ? ' (already here — reused)' : ''}` : `“${r.workflow.name}” (switched off)`;
+    const extra = [(r.macros || []).length && r.type === 'workflow' ? `${r.macros.length} macro${r.macros.length === 1 ? '' : 's'}${r.macros.some(m => m.reused) ? ` (${r.macros.filter(m => m.reused).length} already here)` : ''}` : null,
+      (r.workflows || []).length ? `${r.workflows.length} workflow${r.workflows.length === 1 ? '' : 's'} it calls` : null].filter(Boolean);
+    return `Imported ${what}${extra.length ? ` with ${extra.join(' and ')}` : ''}`;
+  }
   async function importWorkflow(rerender) {
-    const ta = h('textarea', { rows: 12, class: 'mono', placeholder: '{ "format": "nexus-workflow", "name": …, "steps": [ … ] }' });
-    const file = h('input', { type: 'file', accept: '.json,application/json' });
+    const ta = h('textarea', { rows: 12, class: 'mono', placeholder: 'envelope: 1\ntype: workflow\n…   (a .workflow or .macro file — or an older JSON export)' });
+    const file = h('input', { type: 'file', accept: '.workflow,.macro,.json,.yaml,.yml,application/json,text/yaml' });
+    const dup = h('input', { type: 'checkbox' });
     file.addEventListener('change', async () => { const f = file.files[0]; if (f) ta.value = await f.text(); });
-    const r = await modal({ title: 'Import a workflow', wide: true, body: [field('From a file', file), field('Or paste it', ta)], actions: [{ label: 'Import', primary: true, run: () => {
-      let obj; try { obj = JSON.parse(ta.value); } catch (e) { throw new Error(`That is not JSON: ${e.message}`); }
-      return wire('/automation/import', { method: 'POST', body: obj });
+    const r = await modal({ title: 'Import a workflow or macro', wide: true, body: [
+      h('p', { class: 'blurb', text: 'A .workflow brings the macros and workflows it uses with it. It arrives switched off, with a fresh webhook secret.' }),
+      field('From a file', file), field('Or paste it', ta), h('label', { class: 'field chk' }, dup, h('span', { text: 'Import even if an identical workflow is already here' }))],
+    actions: [{ label: 'Import', primary: true, run: () => {
+      if (!ta.value.trim()) throw new Error('Pick a file or paste one.');
+      return wire('/automation/import', { method: 'POST', body: { text: ta.value, allowDuplicate: dup.checked } });
     } }] });
-    if (r) { toast('Imported (switched off)'); rerender(); }
+    if (r) { toast(importSummary(r), r.warnings && r.warnings.length ? 'warn' : 'ok', 7000); if (r.warnings && r.warnings.length) toast(r.warnings.join(' · '), 'warn', 9000); rerender(); }
+  }
+  function download(text, filename, type = 'text/yaml') {
+    const a = h('a', { href: URL.createObjectURL(new Blob([text], { type })), download: filename });
+    document.body.append(a); a.click(); a.remove();
   }
   async function exportWorkflow(w) {
-    const r = await wire(`/automation/workflows/${encodeURIComponent(w.id)}/export`);
-    const text = JSON.stringify(r.workflow, null, 2);
-    const a = h('a', { href: URL.createObjectURL(new Blob([text], { type: 'application/json' })), download: `${w.name.replace(/[^\w.-]+/g, '-')}.workflow.json` });
-    document.body.append(a); a.click(); a.remove();
-    copy(text);
+    const r = await wire(`/automation/workflows/${encodeURIComponent(w.id)}/node`);
+    download(r.text, r.filename);
+    if (r.missing && r.missing.length) toast(`Not bundled (not found): ${r.missing.join(', ')}`, 'warn', 7000);
+  }
+  async function libraryPane(rerender) {
+    const r = await wire('/automation/nodes').catch(() => null);
+    if (!r || !r.nodes) return null;
+    const rows = r.nodes.map(n => h('div', { class: 'row' },
+      h('div', { class: 'what' }, h('div', { class: 't' }, h('span', { class: 'mono', text: n.file }), ' ', chip(n.type === 'workflow' ? '.workflow' : '.macro', n.type === 'workflow' ? 'ok' : '')),
+        h('div', { class: 'd', text: [n.summary, n.exportedAt ? `saved ${ago(n.exportedAt)}` : null].filter(Boolean).join(' · ') })),
+      h('div', { class: 'acts' },
+        btn('Import', (e) => busy(e.currentTarget, async () => { const x = await wire(`/automation/nodes/${encodeURIComponent(n.file)}/import`, { method: 'POST', body: {} }); toast(importSummary(x), x.warnings && x.warnings.length ? 'warn' : 'ok', 7000); rerender(); }), 'sm'),
+        btn('Download', (e) => busy(e.currentTarget, async () => { const x = await wire(`/automation/nodes/${encodeURIComponent(n.file)}`); download(x.text, n.file); }), 'sm ghost'),
+        btn('✕', async () => { if (await confirmDo(`Delete ${n.file}?`, 'The saved file is removed from the library. Workflows and macros already imported stay.', 'Delete')) { await busy(null, () => wire(`/automation/nodes/${encodeURIComponent(n.file)}`, { method: 'DELETE' })); rerender(); } }, 'sm ghost'))));
+    return pane({ title: 'Library', sub: '.workflow and .macro node files saved on this machine — share them, keep versions, import them anywhere',
+      tools: btn('Open folder', () => wire('/automation/nodes/open', { method: 'POST' }).catch(e => toast(e.message, 'bad')), 'sm ghost'),
+      body: rows.length ? rows : h('p', { class: 'blurb', text: 'Nothing saved yet — a workflow’s ⋯ → “Save to library”, or Macros → “Save .macro”.' }) });
   }
   async function settingsEditor(w) {
     const s = w.settings || {};
@@ -580,13 +609,15 @@
           const r = await modal({ title: 'Workflow', body: [field('Name', nm), field('Description', ds)], actions: [
             { label: 'Run with values…', run: () => 'runwith' },
             { label: 'Settings…', run: () => 'settings' },
-            { label: 'Export', run: () => exportWorkflow(w).then(() => 'exported') },
+            { label: 'Export .workflow', run: () => exportWorkflow(w).then(() => 'exported') },
+            { label: 'Save to library', run: () => wire(`${W(w.id)}/node/save`, { method: 'POST', body: {} }).then((x) => ({ saved: x })) },
             { label: 'Duplicate', run: () => wire('/automation/workflows', { method: 'POST', body: { name: `${w.name} (copy)`, description: w.description || '', status: 'paused', steps, vars: w.vars, settings: w.settings } }).then(() => 'dup') },
             { label: 'Delete', danger: true, run: async () => { if (!await confirmDo(`Delete “${w.name}”?`, 'The workflow, its steps and its run history are removed. Files it saved stay.', 'Delete')) return false; await wire(W(w.id), { method: 'DELETE' }); return 'deleted'; } },
             { label: 'Save', primary: true, run: () => { if (!nm.value.trim()) throw new Error('Give it a name.'); return wire(W(w.id), { method: 'PATCH', body: { name: nm.value.trim(), description: ds.value.trim() } }); } }] });
           if (r === 'runwith') { const vars = await runWith(w); if (vars) { await wire(`${W(w.id)}/start`, { method: 'POST', body: { vars } }); toast(`Started “${w.name}”`); setTimeout(rerender, 400); } return; }
           if (r === 'settings') { if (await settingsEditor(w)) { toast('Saved'); rerender(); } return; }
-          if (r === 'exported') { toast('Exported — saved as a file and copied'); return; }
+          if (r === 'exported') { toast('Exported as a .workflow file (with the macros and workflows it uses)'); return; }
+          if (r && r.saved) { toast(`Saved ${r.saved.file} in the library${r.saved.missing && r.saved.missing.length ? ` — not bundled: ${r.saved.missing.join(', ')}` : ''}`); rerender(); return; }
           if (r) { toast(r === 'dup' ? 'Duplicated (switched off)' : r === 'deleted' ? 'Workflow deleted' : 'Saved'); rerender(); }
         }, 'sm ghost');
         more.setAttribute('aria-label', `More for ${w.name}`);
@@ -604,9 +635,11 @@
       const log = await wire('/automation/log').catch(e => ({ log: [], error: e.message }));
       const entries = (log.log || []).slice(0, 60); // engine keeps newest first
       const pages = await pagesPane();
+      const library = await libraryPane(rerender);
       return [
         ...(panes.length ? panes : [pane({ title: 'No workflows yet', body: [h('p', { class: 'blurb', text: 'A workflow runs steps for you — watch a job board and send you the good ones, check a price every hour, fill a form from a webhook, ask an agent every morning. Start from a template.' }), h('div', { style: { marginTop: '10px' } }, btn('Create your first workflow', () => newWorkflow(rerender, ctx), 'primary'))] })]),
         pages,
+        library,
         pane({ title: 'Recent activity', sub: 'All workflows, newest first — open a workflow’s Runs for step-by-step detail', body: log.error ? h('div', { class: 'err-box', text: log.error }) : entries.length ? h('pre', { class: 'out', text: entries.map(e => `${new Date(e.ts).toLocaleString()}  ${e.workflowName || e.workflowId}: ${e.msg}`).join('\n') }) : h('p', { class: 'blurb', text: 'Nothing has run yet.' }) }),
       ].filter(Boolean);
     },
