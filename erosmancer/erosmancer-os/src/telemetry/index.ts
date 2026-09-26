@@ -48,7 +48,13 @@ export class Telemetry {
       this.buffer.shift();
     }
 
-    // Always print to stderr so it's visible without file config
+    // Printed so it's visible without file config. §0.39.264: EROS_LOG_LEVEL
+    // (debug|info|warn|error, default debug) limits what is PRINTED — every
+    // event is still buffered and persisted. Clear Glass starts ErosmancerOS
+    // with info, so each CDP message does not flood its console.
+    const RANK: Record<string, number> = { debug: 0, info: 1, warn: 2, error: 3 };
+    const floor = RANK[String(process.env.EROS_LOG_LEVEL ?? "debug").toLowerCase()] ?? 0;
+    if ((RANK[level] ?? 0) < floor) return;
     const prefix = `[${level.toUpperCase()}][${category}]`;
     if (level === "error" || level === "warn") {
       console.error(`${prefix} ${message}`, data ?? "");

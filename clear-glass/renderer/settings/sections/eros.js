@@ -28,12 +28,24 @@
       try { health = await wire('/eros/health', { allowNotOk: true }); }
       catch (e) { health = { ok: false, error: e.message }; }
       const connected = health.ok && health.state && health.state !== 'disconnected';
-      const port = h('input', { type: 'number', value: 9222, min: 1 });
-      const conn = pane({ title: 'Connection', sub: connected ? `state: ${health.state}` : (health.error || 'not connected'),
+      // §0.39.264 — Clear Glass starts ErosmancerOS and connects it to its own DevTools port
+      let sup = null;
+      try { sup = await wire('/eros-supervisor', { allowNotOk: true }); } catch (_) {}
+      const port = h('input', { type: 'number', value: (sup && sup.cdpPort) || 9333, min: 1 });
+      const supLine = sup ? (sup.external ? `running on :${sup.port} (started outside Clear Glass)`
+        : sup.state === 'manual' ? 'not started by Clear Glass (EROS_AUTOSTART=0)'
+        : `${sup.state} on :${sup.port}${sup.pid ? ` · pid ${sup.pid}` : ''}${sup.restarts ? ` · ${sup.restarts} restart(s)` : ''}${sup.lastError && sup.state !== 'running' ? ` · ${sup.lastError}` : ''}`) : null;
+      const startBtn = btn(sup && sup.state === 'running' ? 'Reconnect to Clear Glass' : 'Start ErosmancerOS', (e) => busy(e.currentTarget, async () => {
+        const r = await wire('/eros-supervisor/start', { method: 'POST', allowNotOk: true });
+        toast(r.ok ? 'ErosmancerOS running and connected' : `ErosmancerOS: ${r.lastError || r.state}`, r.ok ? undefined : 'err'); rerender();
+      }), 'primary');
+      const conn = pane({ title: 'Connection', sub: connected ? `state: ${health.state}${supLine ? ` · ${supLine}` : ''}` : (health.error || 'not connected'),
         tools: chip(connected ? 'connected' : 'disconnected', connected ? 'ok' : 'warn'),
         body: connected
           ? [h('pre', { class: 'out', text: JSON.stringify(health.status, null, 2) }), h('div', { style: { marginTop: '10px' } }, btn('Disconnect', (e) => busy(e.currentTarget, async () => { await wire('/eros/connect', { method: 'DELETE' }); rerender(); }), 'danger'))]
-          : [h('p', { class: 'blurb', text: 'Point Erosmancer at a Chrome DevTools port (Clear Glass started with --remote-debugging-port, or another browser).' }),
+          : [h('p', { class: 'blurb', text: `Clear Glass starts ErosmancerOS with itself and connects it to its own DevTools port.${supLine ? ` Now: ${supLine}.` : ''}` }),
+             h('div', { style: { marginTop: '10px' } }, startBtn),
+             h('p', { class: 'blurb', style: { marginTop: '14px' }, text: 'Or point Erosmancer at another Chrome DevTools port (a browser started with --remote-debugging-port).' }),
              h('div', { class: 'grid', style: { marginTop: '10px' } }, field('DevTools port', port)),
              h('div', { style: { marginTop: '10px' } }, btn('Connect', (e) => busy(e.currentTarget, async () => { await wire('/eros/connect', { method: 'POST', body: { target: { type: 'local', port: parseInt(port.value, 10) } } }); toast('Erosmancer connected'); rerender(); }), 'primary'))] });
       if (!connected) return conn;

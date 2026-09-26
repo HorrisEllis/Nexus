@@ -588,3 +588,11 @@ spec:
         (7), /cli/downloads/clear-completed, /cli/screen-qa/* (3 REST + 5 IPC). Full detail in
         lib/version.js's own 0.39.204–0.39.210 changelog entries.
       versioniumCommitId: null
+
+  # ## ADDENDUM 2026-09-26 (0.39.264) — ErosmancerOS runs with Clear Glass
+  # src/eros/supervisor.js (new): bootstrap step 14.4 starts ErosmancerOS (unless EROS_AUTOSTART=0)
+  # before the wire, connects it to CG_CDP_PORT when it answers, restarts it with backoff, and
+  # shutdown() stops it. Wire routes: GET /eros-supervisor (state, pid, port, cdpPort, restarts,
+  # last error, recent output) and POST /eros-supervisor/start (start, or reconnect if running).
+  # Settings → ErosmancerOS shows who started it, offers Start/Reconnect, and its DevTools port
+  # field defaults to Clear Glass's real port (was a hard-coded 9222; Clear Glass opens 9333).

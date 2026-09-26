@@ -69,7 +69,8 @@ const SUITES = [
   'test-repo-run.js',
   'test-repo-agent-provider.js',
   'test-cos-testenv.js',
-  'test-cos-testenv-any-repo.js',   // §0.39.264 — the VM for any repo: tar disk, detect, provision, setup job, real QEMU boot where available
+  'test-cos-testenv-any-repo.js',
+  'test-cg-eros-supervisor.js',     // §0.39.264 — ErosmancerOS starts, connects and stops with Clear Glass (real tsx + Chromium where available)   // §0.39.264 — the VM for any repo: tar disk, detect, provision, setup job, real QEMU boot where available
   'ollama-runtime.test.js',
   'flush-redundancy.test.js',
   'admin-server-routes.test.js',

@@ -164,6 +164,11 @@ const EROS_COMPONENTS   = require('../../wire/eros-registry-components');
 
 // ── Wire config ───────────────────────────────────────────────────────────
 const EROS_PORT = parseInt(process.env.EROS_PORT || '7432');
+// §0.39.264 — James: "hook it in to run with clearglass." ErosmancerOS is started,
+// connected to CG_CDP_PORT, restarted and stopped by Clear Glass (src/eros/supervisor.js).
+// EROS_AUTOSTART=0 leaves it to be started by hand, as before.
+const { ErosSupervisor } = require('../eros/supervisor');
+let erosSupervisor = null;
 const WIRE_PORT = parseInt(process.env.WIRE_PORT || '7704');
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -653,7 +658,9 @@ async function _startWire() {
   }, 8000);
   console.log(erosConnect.ok
     ? `[ClearGlass/Wire] ErosmancerOS connected to CDP :${CG_CDP_PORT}`
-    : `[ClearGlass/Wire] ErosmancerOS connect failed (will retry on first driver call): ${erosConnect.error || erosConnect.status}`);
+    : (erosSupervisor && erosSupervisor.state !== 'failed'
+      ? `[ClearGlass/Wire] ErosmancerOS not up yet (${erosConnect.error || erosConnect.status}) — Clear Glass is starting it and connects it to :${CG_CDP_PORT} when ready`
+      : `[ClearGlass/Wire] ErosmancerOS connect failed (will retry on first driver call): ${erosConnect.error || erosConnect.status}`));
 
   // ── Register nexus-wire itself ───────────────────────────────────────────
   await _ncReq(NEXUS_PORTS.orchestrator, 'POST', '/api/register', {
@@ -1035,6 +1042,17 @@ async function _startWire() {
         const result = await providerHost.deploy(providerId);
         if (!result.ok) res.writeHead(502);
         return res.end(JSON.stringify(result));
+      }
+
+      // §0.39.264 — ErosmancerOS's lifetime, owned by Clear Glass (src/eros/supervisor.js)
+      if (u === '/eros-supervisor' && req.method === 'GET') {
+        return res.end(JSON.stringify({ ok: true, autostart: !!erosSupervisor, ...(erosSupervisor ? erosSupervisor.status() : { state: 'manual', port: EROS_PORT, cdpPort: CG_CDP_PORT }) }));
+      }
+      if (u === '/eros-supervisor/start' && req.method === 'POST') {
+        if (!erosSupervisor) erosSupervisor = new ErosSupervisor({ port: EROS_PORT, cdpPort: CG_CDP_PORT });
+        const st = erosSupervisor.state === 'running' ? (await erosSupervisor.connect(), erosSupervisor.status()) : await erosSupervisor.start();
+        if (st.state !== 'running') res.writeHead(502);
+        return res.end(JSON.stringify({ ok: st.state === 'running', ...st }));
       }
 
       // ErosmancerOS proxy
@@ -1586,6 +1604,13 @@ async function bootstrap() {
   await _registerWithNexus();
   _startHeartbeat();
   _startAutopilotActivityHeartbeat();
+
+  // 14.4. ErosmancerOS — started with Clear Glass, then pointed at its DevTools port (non-fatal, not awaited:
+  // the wire below must answer autopilot's health probe on :7704 without waiting for tsx to compile)
+  if (process.env.EROS_AUTOSTART !== '0') {
+    erosSupervisor = new ErosSupervisor({ port: EROS_PORT, cdpPort: CG_CDP_PORT });
+    erosSupervisor.start().catch(err => console.warn(`[ClearGlass/Eros] start failed (non-fatal): ${err.message}`));
+  }
 
   // 14.5. Wire — ErosmancerOS registration + :7704 HTTP server (non-fatal)
   _startWire().catch(err => console.warn(`[ClearGlass/Wire] start failed (non-fatal): ${err.message}`));
@@ -2396,6 +2421,8 @@ async function shutdown() {
   _postEvent('clear-glass.shutdown', { uuid: MODULE_UUID });
 
   if (_heartbeatInterval) clearInterval(_heartbeatInterval);
+  // §0.39.264 — ErosmancerOS goes down with Clear Glass (only the one Clear Glass started)
+  if (erosSupervisor) { try { erosSupervisor.stop(); } catch (_) {} }
 
   // §NEW 2026-08-24 — closes the gap named at the end of the previous
   // commit, but scoped correctly rather than mechanically as originally

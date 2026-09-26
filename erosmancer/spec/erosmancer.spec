@@ -54,3 +54,19 @@ spec:
     - "Not yet integrated into NEXUS boot sequence"
     - "Planned: register as guardian NCP provider type 'cdp'"
     - "Planned: CLI command via component registry: erosmancer.run <task>"
+
+  # ## ADDENDUM 2026-09-26 (0.39.264) — runs with Clear Glass
+  # James: "hook it in to run with clearglass" / "just need erosmanceros to start with clearglass".
+  # Before: Clear Glass registered erosmancer-os with the orchestrator and POSTed /api/connect,
+  # but nothing started the server — every boot logged ECONNREFUSED 127.0.0.1:7432.
+  # Now: clear-glass/src/eros/supervisor.js starts erosmancer-os/src/api/server.ts through tsx
+  # (a root devDependency via the erosmancer-os workspace; no build step), waits for /api/health,
+  # connects it to Clear Glass's own DevTools port (CG_CDP_PORT, default 9333), restarts it with
+  # backoff (gives up after 5 crashes in 2 minutes, saying why), and stops it on Clear Glass quit
+  # (taskkill /T on Windows, since tsx runs the server in a child). An ErosmancerOS already on
+  # the port is used as is. EROS_AUTOSTART=0 opts out. Data: <Nexus>/data/erosmancer.
+  # Fixed on the way: DEFAULT_CONFIG lacked behavior/routing/observer (declared in OSConfig,
+  # "merged during build" per a comment, never merged) — every /api/connect crashed with
+  # "Cannot read properties of undefined (reading 'defaultLevel')". EROS_LOG_LEVEL limits what
+  # telemetry prints (Clear Glass uses info). Proven: tests/modules/test-cg-eros-supervisor.js,
+  # a real tsx start connected to a real Chromium DevTools port, then stopped.
