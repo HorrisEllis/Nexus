@@ -4,7 +4,8 @@
  *
  * Spec: idearium/spec/idearium.repo-snapshot.spec (written first, §8.5).
  *
- * §33 says a snapshot must record: source hash, Git commit, atlas version,
+ * §33 says a snapshot must record: source hash, Git commit (0.39.263: the repo's
+ * versionium commit chain — see versionField), atlas version,
  * chunk index version, graph version, dependency state, environment, test
  * state, verification state. This module builds that record from the
  * artifacts the import pipeline already wrote, and commits it through
@@ -13,8 +14,8 @@
  *
  * §UNKNOWN IS NOT ZERO. All nine keys are ALWAYS present. A value that
  * cannot be determined carries `available:false` and a reason. It is never
- * omitted, never 0, never ''. That is what makes "there is no git repo
- * here" distinguishable from "nobody looked".
+ * omitted, never 0, never ''. That is what makes "the file layer was not
+ * asked" distinguishable from "there is no earlier version".
  *
  * §NOT VERSIONS THAT DO NOT EXIST. atlas.json and chunks/index.json declare
  * no version. This module does not invent one. Their identity is their
@@ -32,7 +33,6 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { execFileSync } from 'child_process';
 import { readLazyVerification } from './verify-lazy.js';
 import { collectFiles, treeHashOf } from './snapshot-files.js';
 
@@ -46,12 +46,16 @@ export const SCHEMA_VERSION = '1.0.0';
 export const SNAPSHOT_SYSTEM = process.env.IDEARIUM_SNAPSHOT_SYSTEM || 'idearium.repo';
 export const STATE_KIND = 'repo-snapshot';
 
+// §0.39.263 — James: "loom depends on the .git i want versionium to hold the history
+// for each repo." §33's "Git commit" is now the repo's VERSIONIUM commit chain
+// (versionCommit): a repo's history is its snapshots on branch repo-<uuid>, and
+// nothing here reads a .git. Records written before this carry gitCommit instead;
+// readers (summarizeRepoSnapshots, the Versionium tab) accept either.
 export const MUST_RECORD = Object.freeze([
-  'sourceHash', 'gitCommit', 'atlasVersion', 'chunkIndexVersion', 'graphVersion',
+  'sourceHash', 'versionCommit', 'atlasVersion', 'chunkIndexVersion', 'graphVersion',
   'dependencyState', 'environment', 'testState', 'verificationState',
 ]);
 
-const GIT_TIMEOUT_MS = parseInt(process.env.IDEARIUM_SNAPSHOT_GIT_TIMEOUT_MS || '5000', 10);
 const MAX_LISTED = 50; // cap on failed-file lists carried in a record
 
 const MANIFEST_BASENAMES = new Set([
@@ -119,28 +123,17 @@ function sourceHashField(repoDir, filesIdx, repo) {
   };
 }
 
-// ── gitCommit ─────────────────────────────────────────────────────────────
-// Requires a .git IN repoDir. git walks upward by default, and the
-// materialized repo lives inside NEXUS's own tree: without this check a repo
-// with no .git of its own would report NEXUS's HEAD as its own.
-function gitField(repoDir) {
-  if (!fs.existsSync(path.join(repoDir, '.git'))) {
-    return unavailable('no .git in the repo directory (git is not asked to search parent directories)');
-  }
-  const run = (args) => execFileSync('git', ['-C', repoDir, ...args], {
-    encoding: 'utf8', timeout: GIT_TIMEOUT_MS, stdio: ['ignore', 'pipe', 'pipe'],
-  }).trim();
-  try {
-    return {
-      available: true,
-      commit: run(['rev-parse', 'HEAD']),
-      branch: run(['rev-parse', '--abbrev-ref', 'HEAD']),
-      dirty: run(['status', '--porcelain']).length > 0,
-    };
-  } catch (e) {
-    const detail = String(e.stderr || e.message || e).trim().split('\n')[0].slice(0, 200);
-    return unavailable(`git could not report a commit: ${detail}`);
-  }
+// ── versionCommit ─────────────────────────────────────────────────────────
+// Where this snapshot sits in the repo's own history, which lives in versionium:
+// branch repo-<uuid>, parent = the snapshot before it. The parent is known once
+// versionium's file layer has planned the snapshot (plan().baseCommitId, filled in
+// by commitRepoSnapshot); without a file layer it is stated as not asked.
+function versionField(repo) {
+  return {
+    available: true, source: 'versionium', branch: snapshotBranch(repo.uuid),
+    parent: null, parentKnown: false,
+    note: 'the repo\'s history is its versionium snapshots on this branch; the commit this record becomes is the version',
+  };
 }
 
 // ── atlas / chunk index / graph ───────────────────────────────────────────
@@ -284,7 +277,7 @@ export function buildSnapshotRecord({ repo, repoDir, now = Date.now() } = {}) {
   const filesIdx = readJson(path.join(repoDir, 'indexes', 'files.json'));
   const mustRecord = {
     sourceHash:        sourceHashField(repoDir, filesIdx, repo),
-    gitCommit:         gitField(repoDir),
+    versionCommit:     versionField(repo),
     atlasVersion:      atlasField(repoDir),
     chunkIndexVersion: chunkIndexField(repoDir),
     graphVersion:      graphField(repoDir),
@@ -320,7 +313,8 @@ export function isRepoSnapshotState(state) {
  * `commit` is async-or-sync: ({message, branch, causedBy, system, state})
  * => commit row, or { error }. Never receives anything but the record.
  *
- * `fileLayer` (optional, MCO-B) = { limits(), plan(entries), record({commitId, tree, contents, mode}) }
+ * `fileLayer` (optional, MCO-B) = { limits(), plan(entries), record({commitId, tree, contents, mode}), stage?(contents) }
+ * stage (0.39.263): content over one request's cap is staged in batches first, then recorded.
  * `snapshotMode` is idearium's pipeline.snapshot_mode: 'delta' (default) or 'full'.
  * — versionium's per-file layer. Without it this behaves exactly as MCO3: the
  * derived-state record only, no files, and the snapshot cannot restore.
@@ -346,10 +340,27 @@ export async function commitRepoSnapshot({ repo, repoDir, commit, message = null
       kept = col.entries.filter(e => !tooLarge.has(e.path));
       const need = new Set(plan.need || []);
       const needBytes = kept.filter(e => need.has(e.path)).reduce((n, e) => n + e.bytes, 0);
+      const needed = kept.filter(e => need.has(e.path));
       if (needBytes > limits.maxRecordBytes) {
-        return { ok: false, code: 'FILES_TOO_BIG', error: `changed content is ${needBytes} bytes, over the per-snapshot limit of ${limits.maxRecordBytes} (VERSIONIUM_FILE_MAX_RECORD_BYTES) — no snapshot was made` };
+        if (typeof fileLayer.stage !== 'function') {
+          return { ok: false, code: 'FILES_TOO_BIG', error: `changed content is ${needBytes} bytes, over the per-snapshot limit of ${limits.maxRecordBytes} (VERSIONIUM_FILE_MAX_RECORD_BYTES) — no snapshot was made` };
+        }
+        // 0.39.263 — over one request: stage the content in batches under the cap
+        // (versionium verifies each by hash), then record with nothing inline.
+        let batch = [], size = 0;
+        const flush = async () => { if (batch.length) await fileLayer.stage(batch); batch = []; size = 0; };
+        for (const e of needed) {
+          const b64 = col.buffers.get(e.path).toString('base64');
+          if (size + b64.length > limits.maxRecordBytes && batch.length) await flush();
+          batch.push({ path: e.path, content_b64: b64 }); size += b64.length;
+        }
+        await flush();
+        contents = [];
+      } else {
+        contents = needed.map(e => ({ path: e.path, content_b64: col.buffers.get(e.path).toString('base64') }));
       }
-      contents = kept.filter(e => need.has(e.path)).map(e => ({ path: e.path, content_b64: col.buffers.get(e.path).toString('base64') }));
+      built.record.mustRecord.versionCommit.parent = plan.baseCommitId || null;
+      built.record.mustRecord.versionCommit.parentKnown = true;
       built.record.files = {
         layer: 'versionium', treeHash: treeHashOf(kept), fileCount: kept.length,
         totalBytes: kept.reduce((n, e) => n + e.bytes, 0), changedFiles: need.size,
@@ -404,7 +415,8 @@ export function summarizeRepoSnapshots(rows, repoUuid) {
         commitId: r.commitId || r.uuid, ts: r.wall ?? null, message: r.message ?? null,
         sourceHash: m.sourceHash?.available ? m.sourceHash.value : null,
         fresh: m.sourceHash?.available ? m.sourceHash.fresh : null,
-        gitCommit: m.gitCommit?.available ? m.gitCommit.commit : null,
+        parentCommit: m.versionCommit?.available ? (m.versionCommit.parent || null) : null,
+        gitCommit: m.gitCommit?.available ? m.gitCommit.commit : null,   // records from before 0.39.263 only
         verification: m.verificationState?.available ? m.verificationState.status : null,
         tests: m.testState?.available ? m.testState.status : null,
         // MCO-B: has a file layer (a restore may be possible), and how big. Whether

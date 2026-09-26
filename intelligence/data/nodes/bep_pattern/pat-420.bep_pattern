@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-420
+type: bep_pattern
+id: pat-420
+context: 'intelligence crystallised pattern: bottleneck'
+intent: null
+summary: Gap type "drift" appears 5 times — recurring bottleneck
+system: intelligence
+tags:
+  - bep_patterns
+  - bottleneck
+  - cortex/intelligence
+exported_at: 1790408076104
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790408076104
+lastSeenAt: 1790408076104
+fingerprint: null
+payload:
+  uuid: pat-420
+  signature: bottleneck::drift
+  patternType: bottleneck
+  gapType: drift
+  count: 5
+  confidence: 0.5
+  description: Gap type "drift" appears 5 times — recurring bottleneck
+  actionable: true
+  crystallised: true
+  source: cortex/intelligence
+  ts: 1790408076104

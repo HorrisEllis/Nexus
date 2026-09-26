@@ -4,7 +4,7 @@
  * comp_id: nexus.versionium.registry
  * uuid: nexus-versionium-registry-v1-0000-2026-0902-jamesbrooks-001
  */
-const NS = 'versionium', V = '3.0.0';
+const NS = 'versionium', V = '3.3.0';
 function _c(id, method, path, desc, opts = {}) {
   return {
     id: `${NS}.${id}`, namespace: NS, name: id, version: V,
@@ -35,6 +35,8 @@ const components = [
   _c('files.record', 'POST', '/api/versionium/files/record', 'Attach a repo tree\'s files (full copy or proven delta) to an existing repo-snapshot commit', { grammar: ['versionium files record'], tags: ['files'] }),
   _c('files.tree', 'GET', '/api/versionium/files/tree', 'Files (path, sha256, bytes) and tree hash as of a commit', { grammar: ['versionium files tree'], tags: ['files'] }),
   _c('files.content', 'GET', '/api/versionium/files/content', 'One file\'s exact bytes as of a commit, every chain step verified', { grammar: ['versionium files content'], tags: ['files'] }),
+  _c('files.stage', 'POST', '/api/versionium/files/stage', 'Put file content into the blob store ahead of record(), in batches under the per-request cap (0.39.263)', { grammar: ['versionium files stage'], tags: ['files'] }),
+  _c('files.versions', 'GET', '/api/versionium/files/versions', 'Every commit that wrote a path, newest first, with the file\'s sha256 as of each — the history loom reads instead of git (0.39.263)', { grammar: ['versionium files versions'], tags: ['files'] }),
   _c('health', 'GET', '/health', 'Versionium health', { grammar: ['versionium health'] }),
 ];
 module.exports = {

@@ -164,7 +164,7 @@ export class RepoLayer {
       // this file keeps no dependency on it; tests/modules/test-mco3-repo-
       // snapshot.js asserts they still match cos/ci's constants.
       const PRESERVE = new Set(['.git', 'manifest.json', 'project.json', 'chunks', 'atlas.json', 'indexes', 'verification.json',
-        'graph.json', 'verification.lazy.json', 'proof.json', '.nexus-ci.json', '.nexus-ci-runs']);
+        'graph.json', 'spec-graph.json', 'verification.lazy.json', 'proof.json', '.nexus-ci.json', '.nexus-ci-runs']);
 
       // §SOURCE-FILES 2026-09-15 — James: "it needs to import the real
       // files from the uploaded project to the repo, not just the

@@ -12,3 +12,6 @@ idearium/data/nodes/
 idearium/data/node-index/
 idearium/repo/repos/
 *.log
+
+# stray duplicate of the tree written by a mis-configured trial script (NEXUS_SELF_DIR=undefined/self) — safe to delete
+/undefined/

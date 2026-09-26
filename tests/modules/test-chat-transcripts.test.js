@@ -10,7 +10,7 @@
  * guardian/lib/chat-transcripts.js recording them and answering its HTTP routes.
  * The bus delivers fn({type, data}) exactly as guardian's SISOStream does (server.js;
  * it cannot be lifted out alone — its emit reaches cockpitBroadcast and the kernel).
- * The userscript side is proven in real Chromium: tests/probe/transcript-push-chromium.py
+ * The userscript side is proven in a real page (Clear Glass's engine): tests/probe/transcript-push-chromium.js
  * (TX-20 runs it). Nothing is written under data/.
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), { spawnSync } = require('child_process');
@@ -382,10 +382,11 @@ test('TX-30', 'end to end: the transcript completes the job through the REAL han
   assert.deepStrictEqual([late.found, late.jobId, late.text], [true, job.id, 'Hello — ready to work on the ERAVOS v3-17 catalog.'], JSON.stringify(late));
 });
 
-const probe = spawnSync('python3', [path.join(ROOT, 'tests/probe/transcript-push-chromium.py')], { encoding: 'utf8', timeout: 180000 });
-if (probe.status === 3 || probe.error) { console.log(`  - TX-20 SKIPPED (not passed): the userscript push in real Chromium — ${probe.error ? probe.error.message : 'python playwright not installed'}`); skipped++; }
-else test('TX-20', 'the userscript §TRANSCRIPT block in real Chromium (tests/probe/transcript-push-chromium.py)', () => {
-  assert.strictEqual(probe.status, 0, (probe.stdout || '').split('\n').filter(l => /"pass": false|summary/.test(l)).join('\n') || probe.stderr);
+// 0.39.263 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright
+const probe = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/transcript-push-chromium.js')], { encoding: 'utf8', timeout: 180000 });
+if (probe.status === 3 || probe.error) { console.log(`  - TX-20 SKIPPED (not passed): the userscript push in a real page — ${probe.error ? probe.error.message : 'no page engine (electron not installed)'}`); skipped++; }
+else test('TX-20', 'the userscript §TRANSCRIPT block in a real page, Clear Glass\'s engine (tests/probe/transcript-push-chromium.js)', () => {
+  assert.strictEqual(probe.status, 0, (probe.stdout || '').split('\n').filter(l => /"pass": ?false|summary/.test(l)).join('\n') || probe.stderr);
 });
 
 console.log(`\n  ${passed} passed · ${failed} failed${skipped ? ` · ${skipped} skipped` : ''}\n`);

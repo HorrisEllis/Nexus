@@ -35,7 +35,12 @@
 // /api/events, /sse · POST /api/ideas, /api/gaps, /api/snapshots, etc.
 // Tries direct :4800, falls back to orchestrator proxy at :9000/api/idearium
 // ════════════════════════════════════════════════════
-const API_CANDIDATES = ['http://127.0.0.1:4800', 'http://127.0.0.1:9000/api/idearium'];
+// §0.39.263 — the idearium that served this page comes first: an idearium on
+// another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
+const API_CANDIDATES = [...new Set([
+  ...(typeof location !== 'undefined' && /^https?:$/.test(location.protocol) && !/^\/api\/idearium/.test(location.pathname) ? [location.origin] : []),
+  'http://127.0.0.1:4800', 'http://127.0.0.1:9000/api/idearium',
+])];
 let API_BASE = null;
 let CONNECTED = false;
 let SSE = null;
@@ -398,6 +403,7 @@ function updateStats() {
 // VIEW SWITCHING + NAV RAIL
 // ════════════════════════════════════════════════════
 function setView(v) {
+  if (v === 'compartment') v = 'repo';   // 0.39.263 — repos are compartments; there is no separate view
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active', el.id==='view-'+v));
   document.querySelectorAll('.tab-btn, .tab-sub').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
   document.querySelectorAll('.tab-group').forEach(g=>{
@@ -561,7 +567,11 @@ function renderDetail(idea) {
     html += `<div class="ds"><div class="ds-label">spec</div><button class="action-btn primary" onclick="createSpecForIdea('${idea.uuid}')">+ create spec from this idea</button></div>`;
   }
 
-  html += `<div class="ds"><div class="ds-label">idea compartment</div><button class="action-btn primary" onclick="admitToCompartment('${idea.uuid}')">work in compartment → brainstorm · problems · expand · improve</button></div>`;
+  // §0.39.263 — an idea is worked here until it is a spec; then its repo's Idea tab holds the lanes
+  const ideaRepo = typeof _repoOfIdea === 'function' ? _repoOfIdea(idea.uuid) : null;
+  html += ideaRepo
+    ? `<div class="ds"><div class="ds-label">work it</div><button class="action-btn primary" onclick="openIdeaLanes('${idea.uuid}')">it is a spec — its lanes are in its repo's Idea tab →</button></div>`
+    : `<div class="ds"><div class="ds-label">work it · brainstorm · problem solving · expand · improve</div><div class="cmp-host cmp-detail"><div class="detail-empty">loading the lanes…</div></div></div>`;
   html += `<div class="ds"><div class="ds-label">repository</div><button class="action-btn" onclick="openRepoFor('${idea.uuid}', null, '${escapeHtml(idea.text||idea.uuid).replace(/'/g,"\\'").slice(0,40)}')">open repository →</button></div>`;
 
   if (openGaps.length) {
@@ -603,6 +613,7 @@ function renderDetail(idea) {
     <div class="ds"><div class="ds-label">identity</div><div class="ds-mono">${idea.uuid}\n${idea.slug||''}\ncreated ${idea.createdAt?new Date(idea.createdAt).toLocaleString():'—'}\nupdated ${idea.updatedAt?new Date(idea.updatedAt).toLocaleString():'—'}</div></div>
   `;
   area.innerHTML = html;
+  if (!ideaRepo && typeof openCompartmentIdea === 'function') openCompartmentIdea(idea.uuid, { quiet: true, keepLane: typeof WBC !== 'undefined' && WBC.ideaUuid === idea.uuid });
 }
 
 async function setPhase(uuid, phase) {
@@ -750,9 +761,9 @@ async function promoteBrainstorm(id) {
     const r = await api(`/api/brainstorms/${id}/promote`, { method: 'POST' });
     await loadBrainstorms();
     await loadIdeas();
-    toast('promoted — now in the Compartment','ok');
-    // §BUILT 2026-09-26 — a promoted idea moves to the Compartment to be worked.
-    if (r.idea?.uuid && typeof openCompartmentIdea === 'function') { await loadCompartment(); openCompartmentIdea(r.idea.uuid); }
+    toast('promoted — work it in Ideas','ok');
+    // §0.39.263 — a promoted brainstorm is an idea (not a spec, no repo): its lanes are in its Ideas detail
+    if (r.idea?.uuid && typeof openIdeaLanes === 'function') openIdeaLanes(r.idea.uuid);
   } catch(e) { toast(e.message,'err'); }
 }
 function renderBrainstorms() {
@@ -766,7 +777,7 @@ function renderBrainstorms() {
         <span class="brain-ts">${new Date(b.ts).toLocaleString()}</span>
       </div>
       <div class="action-row">
-        ${b.promoted ? (b.ideaUuid ? `<button class="action-btn" style="color:var(--mint)" onclick="openCompartmentIdea('${b.ideaUuid}')">promoted ✓ · open in compartment →</button>` : `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>`) : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → compartment</button>`}
+        ${b.promoted ? (b.ideaUuid ? `<button class="action-btn" style="color:var(--mint)" onclick="openIdeaLanes('${b.ideaUuid}')">promoted ✓ · open the idea →</button>` : `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>`) : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → idea</button>`}
         ${b.promoted ? '' : `<button class="action-btn" onclick="assistBrainstormCard('${b.uuid}')">✨ refine</button>`}
         <button class="action-btn" onclick='openNewSpecModal({name:${JSON.stringify(b.text.slice(0,60))}, description:${JSON.stringify(b.text)}})'>+ spec</button>
         <button class="action-btn danger" onclick="deleteBrainstorm('${b.uuid}')">discard</button>
@@ -837,8 +848,8 @@ async function assistBrainstormCard(uuid) {
       const r = await api(`/api/brainstorms/${uuid}/promote`, { method: 'POST', body: JSON.stringify({ text }) });
       await loadBrainstorms();
       await loadIdeas();
-      toast('promoted — now in the Compartment', 'ok');
-      if (r.idea?.uuid && typeof openCompartmentIdea === 'function') { await loadCompartment(); openCompartmentIdea(r.idea.uuid); }
+      toast('promoted — work it in Ideas', 'ok');
+      if (r.idea?.uuid && typeof openIdeaLanes === 'function') openIdeaLanes(r.idea.uuid);
     } catch (e) { toast(e.message, 'err'); }
   }});
 }
@@ -1648,7 +1659,8 @@ let REPO_DETAIL_OPEN = false;
 function renderRepoLibrary() {
   const body = document.getElementById('repo-rail-body');
   const badge = document.getElementById('repo-count-badge');
-  if (badge) badge.textContent = API_REPOS.length ? String(API_REPOS.length) : '';
+  const _shown = API_REPOS.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system')).length;   // 0.39.263 — the systems are inside nexus
+  if (badge) badge.textContent = _shown ? String(_shown) : '';
   body.classList.toggle('block-grid', !REPO_DETAIL_OPEN);
   if (!API_REPOS.length) {
     // §FIXED 2026-09-20 — real actions, not just passive text, matching
@@ -1666,9 +1678,15 @@ function renderRepoLibrary() {
   const groups = new Map(); // compartmentId (or '') -> repos[]
   // §0.39.261 — the Nexus repos (one parent + one per system, each in its own
   // nested COS compartment) are one group, shown first: Nexus managing itself.
-  const NEXUS_KEY = 'nexus · immutable · nested compartments';
+  const NEXUS_KEY = 'nexus';
+  // §0.39.263 — "nexus is the repo, not 15, just nexus": the system repos are
+  // opened from inside it (its atlas Home), so the library lists only the parent —
+  // plus, in the compact list, the system you are in, under it. A filter that
+  // names a system still finds it.
+  const inSystem = CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' ? CURRENT_API_REPO.uuid : null;
   for (const r of API_REPOS) {
     if (q && !r.name.toLowerCase().includes(q)) continue;
+    if (r.nexusSelf && r.nexusSelf.role === 'system' && !q && !(REPO_DETAIL_OPEN && r.uuid === inSystem)) continue;
     const key = r.nexusSelf ? NEXUS_KEY : (r.compartmentId || '');
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(r);
@@ -1717,11 +1735,11 @@ function renderRepoLibrary() {
           ${repos.map(r => {
             const dotClass = r.phase === 'complete' ? 'done' : (r.phase === 'building' ? 'building' : '');
             return `
-            <div class="repo-card${CURRENT_API_REPO && CURRENT_API_REPO.uuid===r.uuid?' active':''}" onclick="selectApiRepo('${r.uuid}')">
+            <div class="repo-card${CURRENT_API_REPO && CURRENT_API_REPO.uuid===r.uuid?' active':''}${r.nexusSelf && r.nexusSelf.role === 'system' ? ' nx-child' : ''}" onclick="${r.nexusSelf && r.nexusSelf.role === 'parent' ? 'nexusAtlasHome()' : `selectApiRepo('${r.uuid}')`}">
               ${dotClass ? `<span class="repo-card-dot ${dotClass}"></span>` : ''}
               <div class="repo-card-body">
                 <div class="repo-card-name">${escapeHtml(r.name)}</div>
-                <div class="repo-card-meta">${r.fileCount} files · ${escapeHtml(r.phase||'—')}</div>
+                <div class="repo-card-meta">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · immutable` : `nexus/${escapeHtml(r.nexusSelf.system)} · ${r.nexusSelf.fileCount || r.fileCount} files`) : `${r.fileCount} files · ${escapeHtml(r.phase||'—')}`}</div>
               </div>
             </div>`;
           }).join('')}
@@ -1746,6 +1764,9 @@ function enterRepoDetail(uuid) {
 // Back button: return to the landing grid. Closes whatever file was open —
 // re-entering a repo always starts from its tree, same as a fresh visit.
 function exitRepoDetail() {
+  // §0.39.263 — a nexus system is inside the nexus repo: back goes to nexus, then to the library
+  if (CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' && typeof nexusAtlasHome === 'function' && _nxParent()) return nexusAtlasHome();
+  if (typeof NX_DOC_TRAIL !== 'undefined' && NX_DOC_TRAIL.length) return nexusAtlasHome();
   REPO_DETAIL_OPEN = false;
   CURRENT_API_REPO = null; ACTIVE_API_FILE = null; API_FILE_DIRTY = false; CURRENT_REPO_SUBTAB = null;
   document.getElementById('repo-wrap').classList.remove('repo-open');
@@ -1768,8 +1789,11 @@ function selectApiRepo(uuid) {
     _showIdeEditor(false);
   }
   document.getElementById('repo-context').textContent = '';
-  renderRepoLibrary(); // refresh active-card highlight
-  renderApiRepoPanel(repo);
+  if (switchingRepo && typeof NX_DOC_TRAIL !== 'undefined') NX_DOC_TRAIL.length = 0;
+  const backBtn = document.getElementById('repo-back-btn');
+  if (backBtn) backBtn.textContent = repo.nexusSelf && repo.nexusSelf.role === 'system' ? '← nexus' : '← All repos';
+  renderApiRepoPanel(repo);   // sets CURRENT_API_REPO …
+  renderRepoLibrary();        // … which the active-card highlight (and the open nexus system under nexus) read
   // §REPO SUBTABS — a genuinely different repo always lands back on Home,
   // same "always starts fresh" rule the file-tree above already follows.
   // A same-repo refresh (switchingRepo:false, e.g. after loadApiRepos()
@@ -1960,11 +1984,17 @@ async function renderRepoIdea(repo) {
     <div class="ds"><div class="ds-label">the idea · ${escapeHtml(r.idea.phase)}${r.idea.tension != null ? ` · tension ${Number(r.idea.tension).toFixed(2)}` : ''} · ${r.idea.links} link(s)</div>
       <textarea id="repo-idea-text" class="field-textarea" rows="3" spellcheck="false">${escapeHtml(r.idea.text)}</textarea>
       <div class="action-row"><button class="action-btn" onclick="repoIdeaSave()">save idea</button></div></div>
-    <div class="ds"><div class="ds-label">grow it</div>
-      <div style="display:flex;gap:6px;margin-bottom:6px">${r.kinds.map(k => `<label style="font-size:11px"><input type="radio" name="repo-idea-kind" value="${k}" ${k === 'expand' ? 'checked' : ''}> ${k}</label>`).join('')}</div>
+    <div class="cmp-host cmp-detail cmp-in-repo"><div class="detail-empty">loading the lanes…</div></div>
+    <details class="ds repo-iterations"><summary class="ds-label" style="cursor:pointer">iterations for the agent / roadmap · ${it.length}</summary>
+      <div style="display:flex;gap:6px;margin:6px 0">${r.kinds.map(k => `<label style="font-size:11px"><input type="radio" name="repo-idea-kind" value="${k}" ${k === 'expand' ? 'checked' : ''}> ${k}</label>`).join('')}</div>
       <textarea id="repo-idea-new" class="field-textarea" rows="3" spellcheck="false" placeholder="improve: what should be better · iterate: another pass on something · expand: where the project goes next"></textarea>
-      <div class="action-row"><button class="action-btn" onclick="repoIdeaAdd()">add</button><button class="action-btn" onclick="repoIdeaAdd(true)">add + send to agent</button></div></div>
-    ${r.kinds.map(k => `<div class="ds"><div class="ds-label">${k} · ${by(k).length}</div>${by(k).map(row).join('') || '<div class="ds-mono" style="opacity:.5">none yet</div>'}</div>`).join('')}`;
+      <div class="action-row"><button class="action-btn" onclick="repoIdeaAdd()">add</button><button class="action-btn" onclick="repoIdeaAdd(true)">add + send to agent</button></div>
+      ${r.kinds.map(k => `<div class="ds"><div class="ds-label">${k} · ${by(k).length}</div>${by(k).map(row).join('') || '<div class="ds-mono" style="opacity:.5">none yet</div>'}</div>`).join('')}</details>`;
+  // §0.39.263 — a spec's repo is its compartment: the idea's four lanes (brainstorm ·
+  // problem solving · expand · improve, js/compartment.js) are this tab's body
+  if (r.idea && r.idea.uuid && typeof openCompartmentIdea === 'function') {
+    openCompartmentIdea(r.idea.uuid, { quiet: true, keepLane: typeof WBC !== 'undefined' && WBC.ideaUuid === r.idea.uuid });
+  }
 }
 async function repoIdeaSave() {
   const repo = CURRENT_API_REPO; if (!repo) return;
@@ -2086,7 +2116,16 @@ const _nsDelta = (cur, prev, k, higherBetter = true) => {
 async function renderNexusHome(repo, el) {
   el.innerHTML = `<div class="detail-empty">loading Nexus…</div>`;
   const stillHere = () => CURRENT_API_REPO?.uuid === repo.uuid && CURRENT_REPO_SUBTAB === 'home';
-  if (repo.nexusSelf.role === 'parent') {
+  // §0.39.263 — the nexus repo's Home is the Nexus atlas (ui/js/nexus-atlas.js);
+  // the operational panels below live in its collapsible "snapshot · …" section.
+  if (repo.nexusSelf.role === 'parent') return renderNexusAtlasHome(repo, el);
+  return _nexusSystemHome(repo, el, stillHere);
+}
+
+async function _nexusOpsInto(el, repo) {
+  if (!el) return;
+  const stillHere = () => CURRENT_API_REPO?.uuid === repo.uuid && document.body.contains(el);
+  {
     let st, und, ap;
     try { [st, und, ap] = await Promise.all([api('/api/nexus-self'), api('/api/nexus-self/understanding'), api('/api/nexus-self/applies')]); }
     catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
@@ -2110,8 +2149,10 @@ genuine gaps: ${st.systemGraph.broken.length} broken relative import(s) · ${st.
 ${st.systemGraph.broken.slice(0, 20).map(b => `  ${escapeHtml(b.from)} → ${escapeHtml(b.spec)}`).join('\n')}` : 'built on the next sync'}</div></div>
       <div class="ds"><div class="ds-label">compartments (COS, nested)</div><div class="ds-mono">${escapeHtml(tree(st.compartments) || 'not created yet')}</div></div>
       <div class="ds"><div class="ds-label">applied changes</div>${(ap.applies || []).length ? ap.applies.map(a => `<div class="pend-row" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--b0)"><span style="font-family:var(--mono);font-size:10px">${escapeHtml(a.id)} · ${escapeHtml(a.system)} · ${a.items.length} file(s) · ${escapeHtml(a.status)} · ${new Date(a.at).toLocaleString()}${a.reason ? ' — ' + escapeHtml(a.reason) : ''}</span>${a.status === 'applied' ? `<button class="action-btn" onclick="nexusSelfRollback('${a.id}')">roll back</button>` : ''}</div>`).join('') : '<div class="ds-mono">none yet</div>'}</div>`;
-    return;
   }
+}
+
+async function _nexusSystemHome(repo, el, stillHere) {
   let v;
   try { v = await api(`/api/nexus-self/${encodeURIComponent(repo.nexusSelf.system)}`); }
   catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
@@ -2122,6 +2163,8 @@ ${st.systemGraph.broken.slice(0, 20).map(b => `  ${escapeHtml(b.from)} → ${esc
   const U = v.understanding.latest, P = v.understanding.previous;
   const kv = (o) => Object.entries(o || {}).sort((x, y) => y[1] - x[1]).map(([k, n]) => `${k} ${n}`).join(' · ');
   el.innerHTML = `
+    <div class="nx-crumbs"><span class="nx-link" onclick="nexusAtlasHome()">nexus</span> › <b>${escapeHtml(v.system)}</b> <span class="nx-dim">· one of ${escapeHtml(String((v.siblings || []).length || '—'))} systems</span></div>
+    <details class="ds nx-sys-atlas" open><summary class="ds-label">${v.atlasDoc ? `atlas — ${escapeHtml(v.atlasDoc)}` : 'atlas'}</summary><div id="nx-sys-atlas-doc"><div class="ds-mono">loading…</div></div></details>
     <div class="ds"><div class="ds-label">nexus/${escapeHtml(v.system)} · immutable</div><div class="ds-mono">${escapeHtml((v.def.dirs || ['everything no kernel owns']).join(', '))}${v.def.entry ? `\nentry ${escapeHtml(v.def.entry)} · port :${v.def.port}` : ''}
 snapshot ${escapeHtml(String(v.repo?.snapshot || '—').slice(0, 16))} · ${v.repo?.fileCount ?? '—'} files · ${(v.repo?.versions || []).length} version(s) · synced ${v.repo?.syncedAt ? new Date(v.repo.syncedAt).toLocaleString() : '—'}</div></div>
     <div class="ds"><div class="ds-label">atlas</div>${a.error ? `<div class="ds-mono">${escapeHtml(a.error)}</div>` : `<div class="ds-mono">${a.fileCount} files parsed${a.failedCount ? ` · ${a.failedCount} failed` : ''}
@@ -2140,6 +2183,7 @@ ${v.understanding.history.length} measurement(s)` : 'not measured yet'}</div></d
     <div class="ds"><div class="ds-label">edit branches (COS, compartment nexus-self-${escapeHtml(v.system)})</div>
       ${(br.branches || []).map(b => `<div class="pend-row" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--b0)"><span style="font-family:var(--mono);font-size:10px">${escapeHtml(b.label)} · ${escapeHtml(b.id)} · base ${escapeHtml(b.base.slice(0, 8))} · ${(b.runs || []).length} run(s)</span><button class="action-btn" onclick="nexusBranchOpen('${escapeHtml(v.system)}','${b.id}')">open</button></div>`).join('') || '<div class="ds-mono">no branches</div>'}
       <div class="action-row"><button class="action-btn" onclick="nexusBranchNew('${escapeHtml(v.system)}')">new branch</button></div></div>`;
+  nxSystemAtlasDoc(document.getElementById('nx-sys-atlas-doc'), v.atlasDoc);
 }
 
 async function renderNexusPhasemap(repo, el) {
@@ -2541,8 +2585,12 @@ function snapFieldRows(rec) {
       ? `STALE — the indexes below describe older source (${(sh.mismatched || []).length} changed, ${(sh.missing || []).length} missing${(sh.mismatched || []).length ? ': ' + sh.mismatched.slice(0, 3).join(', ') : ''})`
       : 'indexes match the files on disk'}` });
 
+  // 0.39.263 — a repo's history is versionium's (versionCommit); records from before carry gitCommit
+  const vc = m.versionCommit;
+  if (vc && !gone(vc)) rows.push({ key: 'version', ok: true, text: `versionium · ${vc.branch || '?'} · ${vc.parentKnown ? (vc.parent ? `after ${_short(vc.parent, 12)}` : 'first version') : 'parent not asked'}` });
+  else if (vc) rows.push({ key: 'version', ok: false, text: reason(vc) });
   const g = m.gitCommit;
-  if (gone(g)) rows.push({ key: 'git', ok: false, text: reason(g) });
+  if (g && gone(g)) rows.push({ key: 'git', ok: false, text: reason(g) });
   else if (g) rows.push({ key: 'git', ok: !g.dirty, warn: !!g.dirty, text: `${_short(g.commit, 10)} · ${g.branch || '?'}${g.dirty ? ' · working tree has uncommitted changes' : ' · clean'}` });
 
   const a = m.atlasVersion;
@@ -2595,7 +2643,7 @@ function snapDiffLines(cur, prev) {
     // not move when a file is edited without a reindex — comparing it would
     // report "same" for a repo whose files changed.
     source: m.sourceHash?.available ? (m.sourceHash.diskHash || m.sourceHash.value) : null,
-    git: m.gitCommit?.available ? m.gitCommit.commit : null,
+    git: m.gitCommit?.available ? m.gitCommit.commit : null,   // pre-0.39.263 records
     atlas: m.atlasVersion?.available ? m.atlasVersion.sha256 : null,
     chunks: m.chunkIndexVersion?.available ? m.chunkIndexVersion.sha256 : null,
     graph: m.graphVersion?.available ? m.graphVersion.sha256 : null,

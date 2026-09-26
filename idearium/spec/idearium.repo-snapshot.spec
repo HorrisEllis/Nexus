@@ -74,12 +74,16 @@ spec:
         files as they are on disk right now, so fresh:true/false says
         whether the atlas/chunks/graph below still describe this source.
         A snapshot of stale indexes is recorded as stale, not hidden.
-      gitCommit: >
-        HEAD of a .git that lives IN the repo directory, plus dirty flag.
-        A repo directory without its own .git reports available:false. It
-        never asks git to walk upward: the materialized repo lives inside
-        NEXUS's own tree, and an upward walk would report NEXUS's commit
-        as the repo's.
+      versionCommit: >
+        0.39.263 (was gitCommit) — James: "loom depends on the .git i want
+        versionium to hold the history for each repo." The repo's history
+        is its versionium snapshots on branch repo-<uuid>; nothing reads a
+        .git. { available:true, source:'versionium', branch, parent,
+        parentKnown }: parent is the snapshot before this one, known once
+        the file layer planned it (plan().baseCommitId); without a file
+        layer parentKnown:false says it was not asked. Records written
+        before 0.39.263 carry gitCommit (HEAD of a .git IN the repo
+        directory) instead; readers accept either.
       atlasVersion: >
         atlas.json declares no version. Identity is its sha256 and its
         own generatedAt. Stated as such (declaredVersion: null).

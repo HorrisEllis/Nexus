@@ -412,7 +412,7 @@ const server = http.createServer(async (req, res) => {
       // James: "loom should already have a phasemap system... log the phase
       // maps." Fire-and-forget on purpose: a slow/failed history write must
       // never make the phasemap view itself unavailable (§1.2).
-      try { phasemapMap.persistHistory(); } catch (_) {}
+      try { phasemapMap.persistHistory().catch(() => {}); } catch (_) {}   // 0.39.263 — async (asks versionium)
       return json(res, 200, { ok: true, ...all, summary: phasemapMap.summary() });
     }
     // §R0 2026-08-12 — real transition history for one phase: /api/phasemap/

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-280
+type: bep_pattern
+id: pat-280
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"q.tick" and "q.tick" co-occur within 5s — 6 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790408076079
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790408076079
+lastSeenAt: 1790408076079
+fingerprint: null
+payload:
+  uuid: pat-280
+  signature: q.tick::q.tick
+  patternType: co_occurrence
+  typeA: q.tick
+  typeB: q.tick
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 6
+  confidence: 0.3
+  description: '"q.tick" and "q.tick" co-occur within 5s — 6 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790408076076

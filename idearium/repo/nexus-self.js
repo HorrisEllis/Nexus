@@ -176,9 +176,9 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
  * Yields to the event loop between systems so a boot-time sync never holds
  * idearium's /health (the 0.39.260 lesson).
  */
-export async function sync(rl, se, { only = null, force = false, log = () => {}, onSystem = null } = {}) {
+export async function sync(rl, se, { only = null, force = false, log = () => {}, onSystem = null, commitVersion = null, liveRoot = undefined } = {}) {
   const t0 = Date.now();
-  const snap0 = store.snapshot();
+  const snap0 = store.snapshot(liveRoot ? { liveRoot } : {});   // liveRoot: tests sync a small tree, never the real one
   const snap = store.loadSnapshot(snap0.hash);
   const comps = ensureCompartments();
 
@@ -210,7 +210,9 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
       rl.replaceSpec(parent.uuid, m.uuid);
     }
     if (parent) {
-      rl.materialize(parent.uuid);
+      const pm = rl.materialize(parent.uuid);
+      // indexed like every repo (0.39.263), so it can be a versionium version too
+      if (pm && pm.dir) { try { runImportPipeline(rl.get(parent.uuid), pm.dir, { runtimeProof: false, lazyTests: false }); } catch (_) {} }
       rl.annotate(parent.uuid, { immutable: true, nexusSelf: { role: 'parent', hash: parentHash, snapshot: snap.hash, children: repoBySystem, syncedAt: Date.now() } });
     }
   }
@@ -218,6 +220,34 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
   if (parent) for (const uuid of Object.values(repoBySystem)) {
     const r = rl.get(uuid);
     if (r && r.nexusSelf && r.nexusSelf.parentRepo !== parent.uuid) rl.annotate(uuid, { nexusSelf: { ...r.nexusSelf, parentRepo: parent.uuid } });
+  }
+
+  // §0.39.263 — James: "i want versionium to hold the history for each repo." Every
+  // repo whose content is not yet a versionium version (a new or changed system, the
+  // parent index, or one synced before this existed) gets a repo snapshot WITH its
+  // files — its history lives in versionium, branch repo-<uuid>, not in any .git.
+  // commitVersion is injected (the API passes versionium's commit + file layer), so
+  // this module knows nothing of HTTP. A failure is recorded on the repo, never fatal.
+  const versions = [];
+  if (commitVersion) {
+    const all = [...Object.entries(repoBySystem).filter(([n]) => !only || only.includes(n)).map(([n, u]) => [n, u]), ...(parent ? [['(nexus)', parent.uuid]] : [])];
+    for (const [name, uuid] of all) {
+      const r = rl.get(uuid);
+      if (!r || !r.nexusSelf || (r.nexusSelf.versionCommit && r.nexusSelf.versionOf === r.nexusSelf.hash)) continue;
+      await new Promise(res => setImmediate(res));
+      let v;
+      try { v = await commitVersion({ repo: r, system: name, snapshot: snap.hash }); }
+      catch (e) { v = { ok: false, error: e.message }; }
+      const fresh = rl.get(uuid);
+      const ns = { ...fresh.nexusSelf };
+      if (v && v.ok) {
+        ns.versionCommit = v.commitId; ns.versionOf = ns.hash; ns.versionError = null;
+        if (Array.isArray(ns.versions) && ns.versions.length) ns.versions = [...ns.versions.slice(0, -1), { ...ns.versions[ns.versions.length - 1], versionCommit: v.commitId }];
+      } else ns.versionError = (v && v.error) || 'versionium did not answer';
+      rl.annotate(uuid, { nexusSelf: ns });
+      versions.push({ system: name, repoUuid: uuid, ok: !!(v && v.ok), commitId: v && v.commitId || null, error: v && !v.ok ? v.error : null });
+      if (!(v && v.ok)) log(`[${MODULE_ID}] ${name}: versionium commit failed — ${v && v.error}`);
+    }
   }
 
   // Measured after every sync that changed anything (or the first ever) —
@@ -234,7 +264,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     snapshot: snap.hash, snapshotCreated: snap0.created, stats: snap0.stats, understanding: understanding && { improved: understanding.improved, regressed: understanding.regressed, delta: understanding.delta, totals: understanding.totals },
     parentRepo: parent ? parent.uuid : null,
     compartments: { parent: comps.parent ? comps.parent.id : null, children: Object.fromEntries(Object.entries(comps.children).map(([k, v]) => [k, v.id])), errors: comps.errors },
-    systems: results, ms: Date.now() - t0,
+    systems: results, versions, ms: Date.now() - t0,
   };
 }
 
@@ -413,6 +443,8 @@ export function systemView(rl, system) {
   return {
     system, def: systems.get(system), repo: repo ? { uuid: repo.uuid, name: repo.name, ...repo.nexusSelf } : null,
     atlas: repo ? atlasFor(rl, repo.uuid) : { error: 'not synced yet' },
+    atlasDoc: (() => { const snap = _headSnap(); return snap ? _atlasDocFor(_index(snap), systems.get(system)) : null; })(),
+    siblings: systems.names(),
     phases: phasesFor(system), specs: specsFor(system),
     understanding: { latest: hist[hist.length - 1] || null, previous: hist[hist.length - 2] || null, history: hist },
   };
@@ -497,3 +529,139 @@ export async function systemGraph(rl, snapHash = null) {
 }
 
 export function readSystemGraph() { return _readJson(path.join(store.storeRoot(), 'system-graph.json')); }
+
+// ── the Nexus atlas: the nexus repo's Home ──────────────────────────────────
+//
+// §0.39.263 — James: "nexus is the repo, not 15, just nexus, then clicking inside
+// of it, shows the rest of them in … the nexus atlas, wire that completely in as
+// the homepage of the nexus repo, and everything referenced can be opened in
+// idearium, including each system."
+//
+// The page is docs/atlases/nexus-atlas.md itself, read from the immutable base
+// (so it is the atlas of the snapshot the repos show), with live numbers joined
+// onto each module, and every reference in it resolvable by resolveRefs().
+
+export const NEXUS_ATLAS = 'docs/atlases/nexus-atlas.md';
+const ATLAS_DIR = 'docs/atlases';
+
+let _pathIndexFor = null, _pathIndex = null;   // snapshot hash -> { byPath, byBase, dirs }
+function _index(snap) {
+  if (_pathIndexFor === snap.hash && _pathIndex) return _pathIndex;
+  const byPath = new Map(), byBase = new Map(), dirs = new Set();
+  for (const [sys, list] of Object.entries(snap.files)) {
+    for (const [p, sha, size] of list) {
+      byPath.set(p, { system: sys, sha, size });
+      const b = p.split('/').pop();
+      if (!byBase.has(b)) byBase.set(b, []);
+      byBase.get(b).push(p);
+      const parts = p.split('/');
+      for (let i = 1; i < parts.length; i++) dirs.add(parts.slice(0, i).join('/'));
+    }
+  }
+  _pathIndexFor = snap.hash; _pathIndex = { byPath, byBase, dirs };
+  return _pathIndex;
+}
+
+function _headSnap() { const h = store.head(); return h.hash ? store.loadSnapshot(h.hash) : null; }
+
+/** the system's own hand-written atlas doc, if the snapshot has one */
+function _atlasDocFor(idx, s) {
+  const names = [s.name, ...(s.dirs || [])];
+  for (const n of names) { const p = `${ATLAS_DIR}/${n}-atlas.md`; if (idx.byPath.has(p)) return p; }
+  return null;
+}
+
+/**
+ * fileText(relPath) — any text file of the immutable base, read-only.
+ * -> { path, system, content, bytes } | { error }
+ */
+export function fileText(relPath) {
+  const snap = _headSnap();
+  if (!snap) return { error: 'no snapshot yet — sync once' };
+  const rel = String(relPath || '').replace(/^\/+/, '');
+  const hit = _index(snap).byPath.get(rel);
+  if (!hit) return { error: `${rel} is not in snapshot ${snap.hash.slice(0, 12)}` };
+  const buf = store.getBlob(hit.sha);
+  if (!_isText(rel, buf)) return { error: `${rel} is binary` };
+  return { path: rel, system: hit.system, content: buf.toString('utf8'), bytes: hit.size, snapshot: snap.hash };
+}
+
+/**
+ * resolveRefs(rl, refs) — what each reference in an atlas points at, so the page
+ * can open it: a system (its repo), a file (in its system repo), a directory, or
+ * a doc (rendered in place). Unknown references resolve to null — never guessed.
+ * Accepts: a path ('guardian/lib/node-registry.js', 'loom/', 'cortex/intelligence/'),
+ * a file name the snapshot has ('loom.spec', 'guardian-atlas.md'), a system name
+ * ('guardian', 'ollama-bridge'), an id ('nexus.loom'), a port (':3753').
+ */
+export function resolveRefs(rl, refs) {
+  const snap = _headSnap();
+  const out = {};
+  if (!snap) { for (const r of refs || []) out[r] = null; return out; }
+  const idx = _index(snap);
+  const repos = rl.list({ includeArchived: true }).filter(r => r.nexusSelf && r.nexusSelf.role === 'system');
+  const repoOf = (sys) => { const r = repos.find(x => x.nexusSelf.system === sys); return r ? r.uuid : null; };
+  const sysHit = (s) => ({ kind: 'system', system: s.name, repoUuid: repoOf(s.name), path: null });
+  const fileHit = (p) => { const h = idx.byPath.get(p); return { kind: /\.md$/i.test(p) ? 'doc' : 'file', system: h.system, repoUuid: repoOf(h.system), path: p }; };
+  for (const raw of (refs || []).slice(0, 2000)) {
+    let r = String(raw).trim().replace(/^[`'"(]+|[`'",.;:)]+$/g, '').replace(/:\d+(:\d+)?$/, '');
+    let hit = null;
+    const port = /^:(\d{2,5})$/.exec(String(raw).trim());
+    if (port) { const s = systems.SYSTEMS.find(x => x.port === +port[1]); hit = s ? sysHit(s) : null; out[raw] = hit; continue; }
+    if (/^nexus\/?$/i.test(r)) { out[raw] = { kind: 'nexus', system: null, repoUuid: null, path: null }; continue; }   // the atlas's own root
+    r = r.replace(/^nexus\./, '').replace(/^\.\//, '');
+    const bare = r.replace(/\/+$/, '');
+    const sys = systems.get(bare) || systems.SYSTEMS.find(s => (s.dirs || []).includes(bare));
+    if (sys && !r.includes('.')) hit = sysHit(sys);
+    else if (idx.byPath.has(bare)) hit = fileHit(bare);
+    else if (idx.byPath.has(`${ATLAS_DIR}/${bare}`)) hit = fileHit(`${ATLAS_DIR}/${bare}`);
+    else if (idx.dirs.has(bare)) { const owner = systems.ownerOf(bare); hit = { kind: 'dir', system: owner, repoUuid: repoOf(owner), path: bare }; }
+    else if (!bare.includes('/') && idx.byBase.has(bare)) {
+      // loom.spec -> loom/spec/loom.spec before docs/loom.spec: the file inside the system it is named after wins
+      const stem = bare.replace(/\.[^.]+$/, '').replace(/-atlas$/, '');
+      const own = (p) => (systems.ownerOf(p) === stem || p.split('/')[0] === stem ? 0 : 1);
+      const cands = idx.byBase.get(bare).slice().sort((a, b) => own(a) - own(b) || a.split('/').length - b.split('/').length || a.length - b.length);
+      hit = { ...fileHit(cands[0]), alternatives: cands.length > 1 ? cands.slice(1, 6) : undefined };
+    }
+    out[raw] = hit;
+  }
+  return out;
+}
+
+/**
+ * nexusAtlas(rl) — the nexus repo's Home: the atlas document plus, per system,
+ * what the snapshot and the last measurement say about it, and the whole-Nexus
+ * roll-up of every system's atlas.json (architecture-spec's nexus-atlas-aggregate).
+ */
+export function nexusAtlas(rl) {
+  const snap = _headSnap();
+  const doc = snap ? fileText(NEXUS_ATLAS) : { error: 'no snapshot yet — sync once' };
+  const idx = snap ? _index(snap) : null;
+  const repos = rl.list({ includeArchived: true }).filter(r => r.nexusSelf && r.nexusSelf.role === 'system');
+  const und = readUnderstanding({ limit: 2 });
+  const L = und[und.length - 1] || null, P = und[und.length - 2] || null;
+  const perAtlas = {};
+  const list = systems.SYSTEMS.map(s => {
+    const r = repos.find(x => x.nexusSelf.system === s.name) || null;
+    const atlas = r ? _readJson(path.join(rl._sourceDir(r.uuid), 'atlas.json')) : null;
+    if (atlas) perAtlas[s.name] = atlas;
+    let ph = null; try { const p = phasesFor(s.name); ph = { total: p.total, done: p.done, inProgress: p.inProgress }; } catch (_) {}
+    return {
+      system: s.name, dirs: s.dirs, port: s.port, entry: s.entry,
+      repoUuid: r ? r.uuid : null, fileCount: r ? r.nexusSelf.fileCount : (snap && snap.systems[s.name] ? snap.systems[s.name].fileCount : 0),
+      versions: r ? (r.nexusSelf.versions || []).length : 0, syncedAt: r ? r.nexusSelf.syncedAt : null,
+      atlasDoc: idx ? _atlasDocFor(idx, s) : null,
+      byLanguage: atlas ? atlas.byLanguage : null,
+      phases: ph,
+      now: L && L.bySystem ? L.bySystem[s.name] || null : null,
+      before: P && P.bySystem ? P.bySystem[s.name] || null : null,
+    };
+  });
+  let aggregate = null;
+  try { aggregate = require('../../architecture-spec/registry/nexus-atlas-aggregate.js').aggregate(perAtlas); } catch (_) {}
+  const otherAtlases = idx ? [...idx.byPath.keys()].filter(p => p.startsWith(ATLAS_DIR + '/') && p.endsWith('-atlas.md') && p !== NEXUS_ATLAS && !list.some(x => x.atlasDoc === p)) : [];
+  return {
+    snapshot: snap ? snap.hash : null, doc: doc.error ? null : { path: doc.path, content: doc.content }, docError: doc.error || null,
+    systems: list, aggregate, otherAtlases, understanding: L ? { at: L.at, totals: L.totals, improved: L.improved, regressed: L.regressed } : null,
+  };
+}

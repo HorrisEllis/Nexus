@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-response-job-with-artifacts-2
+type: response
+id: job-with-artifacts-2
+context: guardian agent response — durable return-point record
+intent: null
+summary: claude complete (22 chars)
+system: guardian
+tags:
+  - provider:claude
+  - status:complete
+  - source:ncp
+exported_at: 1790408274931
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1790408274931
+lastSeenAt: 1790408274931
+fingerprint: null
+payload:
+  jobId: job-with-artifacts-2
+  provider: claude
+  agentId: null
+  status: complete
+  text: |-
+    ```js
+    const x = 1;
+    ```
+  chars: 22
+  contentHash: b2c1a97bf415bf2f372381ffd2cb051afa4a48e69bf35a99892f0f46fac043c3
+  source: ncp
+  sinks:
+    sse:
+      ok: true
+      detail: chunk+complete
+    ledger:
+      ok: true
+      detail: artifacts
+    downloads:
+      ok: false
+      detail: 'clear-glass unreachable: connect ECONNREFUSED 127.0.0.1:7702'
+      queued: true
+  prompt: write a function
+  command: code
+  ts: 1790408274915

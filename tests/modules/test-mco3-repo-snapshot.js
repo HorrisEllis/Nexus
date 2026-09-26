@@ -4,11 +4,14 @@
  *
  * §12.2 — no fixture records. A real repository is written to a real temp
  * directory, the REAL import pipeline runs over it, the REAL lazy queue is
- * drained, a REAL git repo is initialised in it, and the record is built
- * from what is actually on disk. The gate is proven through versionium's
- * REAL engine: commit, then read the state back with getState() and check
- * all nine §33 keys survived. Expected values are computed here,
- * independently of snapshot.js (own sha256, own git rev-parse).
+ * drained, and the record is built from what is actually on disk. The gate is
+ * proven through versionium's REAL engine: commit, then read the state back
+ * with getState() and check all nine §33 keys survived. Expected values are
+ * computed here, independently of snapshot.js (own sha256).
+ *
+ * §0.39.263 — James: "loom depends on the .git i want versionium to hold the
+ * history for each repo." §33's git commit is now versionCommit: the repo's
+ * versionium chain. The repo here even has a .git directory, and nothing reads it.
  *
  * §ISOLATION — VERSIONIUM_DATA_DIR and JAA_DATA_DIR are set BEFORE the
  * engine or anything touching cortex's jaa-db is required, so nothing here
@@ -20,7 +23,6 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const crypto = require('crypto');
-const { execFileSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '../..');
 process.env.VERSIONIUM_DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'mco3-versionium-'));
@@ -33,7 +35,6 @@ async function t(name, fn) {
 }
 
 const sha = (x) => crypto.createHash('sha256').update(x).digest('hex');
-const git = (dir, ...args) => execFileSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-C', dir, ...args], { encoding: 'utf8' }).trim();
 
 const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mco3-'));
 
@@ -83,12 +84,11 @@ function writeFiles(repoDir, files) {
     'src/b.test.js': "const assert = require('assert');\nassert.strictEqual(require('./b.js').b, 2);\nconsole.log('ok');\n",
   };
 
-  console.log('\n── the record, built from a real indexed + git repo ─────');
+  console.log('\n── the record, built from a real indexed repo ───────────');
   const main = await makeRepo('mco3-main', FILES, { extra: { compartmentId: 'cmp-test-1' } });
-  git(main.repoDir, 'init', '-q');
-  git(main.repoDir, 'add', '-A');
-  git(main.repoDir, 'commit', '-q', '-m', 'initial');
-  const HEAD = git(main.repoDir, 'rev-parse', 'HEAD');
+  // a .git directory the record must NOT read (history is versionium's)
+  fs.mkdirSync(path.join(main.repoDir, '.git'), { recursive: true });
+  fs.writeFileSync(path.join(main.repoDir, '.git', 'HEAD'), 'ref: refs/heads/main\n');
 
   const built = snap.buildSnapshotRecord({ repo: main.repo, repoDir: main.repoDir, now: 1234567890 });
   const R = built.record;
@@ -107,7 +107,7 @@ function writeFiles(repoDir, files) {
     for (const k of snap.MUST_RECORD) assert.strictEqual(typeof mr[k].available, 'boolean', k);
     assert.deepStrictEqual(snap.verifyMustRecord(R), { complete: true, missing: [] });
   });
-  await t('on a fully indexed, git-tracked repo every one of the nine is available', () => {
+  await t('on a fully indexed repo every one of the nine is available', () => {
     for (const k of snap.MUST_RECORD) assert.strictEqual(mr[k].available, true, `${k}: ${mr[k].reason || ''}`);
   });
 
@@ -119,10 +119,12 @@ function writeFiles(repoDir, files) {
     assert.strictEqual(mr.sourceHash.indexedFileCount, Object.keys(FILES).length);
   });
 
-  await t('gitCommit is the real HEAD (compared with a separate git rev-parse), clean tree', () => {
-    assert.strictEqual(mr.gitCommit.commit, HEAD);
-    assert.strictEqual(mr.gitCommit.dirty, false);
-    assert.ok(mr.gitCommit.branch);
+  await t('versionCommit is the repo\'s versionium chain (branch repo-<uuid>) — the .git beside it is not read', () => {
+    assert.deepStrictEqual([mr.versionCommit.source, mr.versionCommit.branch], ['versionium', 'repo-mco3-main']);
+    assert.strictEqual(mr.versionCommit.parentKnown, false, 'no file layer was asked, so the parent is stated as not asked');
+    assert.strictEqual(mr.gitCommit, undefined);
+    const src = fs.readFileSync(path.join(ROOT, 'idearium/repo/snapshot.js'), 'utf8');
+    assert.ok(!/child_process|execFileSync|'git'/.test(src), 'snapshot.js runs no git');
   });
 
   await t('atlasVersion: no declared version, identity is the file hash', () => {
@@ -187,25 +189,20 @@ function writeFiles(repoDir, files) {
     assert.deepStrictEqual(stale.sourceHash.mismatched, ['src/b.js']);
     assert.notStrictEqual(stale.sourceHash.diskHash, stale.sourceHash.value);
   });
-  await t('...and git now reports the tree dirty, at the same HEAD', () => {
-    assert.strictEqual(stale.gitCommit.dirty, true);
-    assert.strictEqual(stale.gitCommit.commit, HEAD);
+  await t('...and the edit does not move the repo\'s version: that is versionium\'s next snapshot, not a working tree', () => {
+    assert.deepStrictEqual(stale.versionCommit, mr.versionCommit);
   });
 
   {
-    // An indexed repo dir with NO .git of its own, nested inside a real git
-    // repo. git would walk upward and report the outer repo's HEAD.
+    // A repo nested inside another directory tree: its version is its own branch,
+    // whatever surrounds it on disk.
     const outer = path.join(tmpRoot, 'outer');
-    fs.mkdirSync(outer, { recursive: true });
-    fs.writeFileSync(path.join(outer, 'x.txt'), 'x');
-    git(outer, 'init', '-q'); git(outer, 'add', '-A'); git(outer, 'commit', '-q', '-m', 'outer');
+    fs.mkdirSync(path.join(outer, '.git'), { recursive: true });
     const nested = await makeRepo('mco3-nested', { 'src/i.js': 'module.exports = 1;\n' }, { dirName: 'outer/inner' });
     const rec = snap.buildSnapshotRecord({ repo: nested.repo, repoDir: nested.repoDir }).record.mustRecord;
-    await t('a repo with no .git of its own inside a git repo does NOT report the outer commit', () => {
-      assert.strictEqual(git(outer, 'rev-parse', 'HEAD').length, 40); // the outer repo really has a HEAD
-      assert.strictEqual(rec.gitCommit.available, false);
-      assert.ok(/no \.git/.test(rec.gitCommit.reason));
-      assert.strictEqual(rec.gitCommit.commit, undefined);
+    await t('a nested repo\'s version is its own versionium branch, never the surrounding tree\'s', () => {
+      assert.strictEqual(rec.versionCommit.branch, 'repo-mco3-nested');
+      assert.strictEqual(rec.gitCommit, undefined);
     });
     await t('a repo with no tests reports no_tests — not passed, not zero-and-fine', () => {
       assert.strictEqual(rec.testState.status, 'no_tests');
@@ -260,8 +257,8 @@ function writeFiles(repoDir, files) {
   await t('verifyMustRecord rejects a bare null, an empty object, and a missing key', () => {
     assert.deepStrictEqual(snap.verifyMustRecord(null).missing.length, 9);
     assert.deepStrictEqual(snap.verifyMustRecord({ mustRecord: {} }).missing.length, 9);
-    const partial = JSON.parse(JSON.stringify(R)); partial.mustRecord.gitCommit = null; delete partial.mustRecord.testState;
-    assert.deepStrictEqual(snap.verifyMustRecord(partial).missing.sort(), ['gitCommit', 'testState']);
+    const partial = JSON.parse(JSON.stringify(R)); partial.mustRecord.versionCommit = null; delete partial.mustRecord.testState;
+    assert.deepStrictEqual(snap.verifyMustRecord(partial).missing.sort(), ['testState', 'versionCommit']);
   });
 
   console.log('\n── THE GATE: commit through versionium, read back ───────');
@@ -290,7 +287,7 @@ function writeFiles(repoDir, files) {
   await t('GATE: all nine §33 must_record keys round-trip, each with its data intact', () => {
     assert.deepStrictEqual(snap.verifyMustRecord(back.state), { complete: true, missing: [] });
     for (const k of snap.MUST_RECORD) assert.deepStrictEqual(back.state.mustRecord[k], committed.record.mustRecord[k], k);
-    assert.strictEqual(back.state.mustRecord.gitCommit.commit, HEAD);
+    assert.strictEqual(back.state.mustRecord.versionCommit.branch, 'repo-mco3-main');
     assert.strictEqual(back.state.mustRecord.sourceHash.value, mr.sourceHash.value);
     assert.strictEqual(back.state.mustRecord.graphVersion.declaredVersion, graphMod.GRAPH_VERSION);
   });
@@ -317,10 +314,27 @@ function writeFiles(repoDir, files) {
     assert.ok(list[0].ts >= list[1].ts);
     assert.strictEqual(list[1].commitId, committed.commit.commitId);
     assert.strictEqual(list[1].sourceHash, mr.sourceHash.value);
-    assert.strictEqual(list[1].gitCommit, HEAD);
+    assert.strictEqual(list[1].parentCommit, null);
+    assert.strictEqual(list[1].gitCommit, null);
     assert.strictEqual(list[1].verification, 'passed');
     assert.strictEqual(list[1].tests, 'passed');
     assert.strictEqual(snap.summarizeRepoSnapshots(rows, 'someone-else').length, 0);
+  });
+
+  await t('with versionium\'s file layer the record names its parent: the repo\'s previous version', async () => {
+    const files = require(path.join(ROOT, 'versionium/lib/files.js'));
+    const repository = 'mco3-main';
+    const fileLayer = { limits: async () => files.limits(), plan: async (tree) => files.plan({ repository, tree }), record: async (x) => files.record({ repository, ...x }) };
+    const before = jaaDB.query('versionium_commits', r => r.branch === 'repo-mco3-main', 500).sort((a, b) => (a.wall || 0) - (b.wall || 0));
+    const third = await snap.commitRepoSnapshot({ repo: main.repo, repoDir: main.repoDir, commit: (p) => engine.commit(p), fileLayer });
+    assert.strictEqual(third.ok, true, third.error);
+    assert.strictEqual(third.record.mustRecord.versionCommit.parentKnown, true);
+    assert.strictEqual(third.record.mustRecord.versionCommit.parent, before[before.length - 1].commitId);
+    assert.strictEqual(third.commit.parentId, before[before.length - 1].commitId, 'the same parent versionium chained it to');
+    // and versionium can say which of its commits holds a file's bytes — what loom now asks instead of git
+    const v = files.versions('src/b.js', { repository });
+    assert.strictEqual(v[0].commitId, third.commit.commitId);
+    assert.strictEqual(v[0].sha256, sha(fs.readFileSync(path.join(main.repoDir, 'src/b.js'))));
   });
 
   console.log('\n── transport failures are reported, not swallowed ───────');

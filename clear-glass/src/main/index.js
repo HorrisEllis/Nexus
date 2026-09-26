@@ -62,7 +62,7 @@ const MODULE_UUID = randomUUID();
 // glass.spec's meta.version independently exhibited. All three synced
 // to 3.9.0 (3.8.0 baseline + this session's real additions) together;
 // see clear-glass.spec's version_history for what's actually new.
-const CG_VERSION  = '3.15.0';
+const CG_VERSION  = '3.17.0';
 
 // ── Headless / tray-only mode ─────────────────────────────────────────────
 // CG_HEADLESS=1  OR  --headless in argv → no BrowserWindow, tray only.

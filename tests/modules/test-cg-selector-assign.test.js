@@ -15,13 +15,14 @@
  *     removed or changed — its look is James's rule ("do not change any css,
  *     style, themes, any thing about how it looks").
  *   - the area follows the one-JS-one-CSS rule, every rule scoped.
- *   - renderer/selector-check.js in real Chromium (tests/probe/selector-check-chromium.py),
- *     and the area's whole UI flow (tests/probe/selector-assign-ui-chromium.py).
- *     Without python playwright it is reported SKIPPED, never passed.
+ *   - renderer/selector-check.js in a real page (tests/probe/selector-check-chromium.js),
+ *     and the area's whole UI flow (tests/probe/selector-assign-ui-chromium.js), both driven
+ *     by Clear Glass's own engine (0.39.263 — was python playwright). Without the engine
+ *     (electron not installed) it is reported SKIPPED, never passed.
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http');
 const { execFileSync, spawnSync } = require('child_process');
-require('../../lib/test-sandbox.js').ensure();   // 0.39.255 — the sandbox rule (test-test-sandbox); this suite spawns only python probes and git
+require('../../lib/test-sandbox.js').ensure();   // 0.39.255 — the sandbox rule (test-test-sandbox); this suite spawns only the page probes and git
 const ROOT = path.resolve(__dirname, '..', '..');
 let passed = 0, failed = 0, skipped = 0;
 async function test(id, d, fn) {
@@ -149,7 +150,7 @@ const EVIDENCE = { url: 'https://chatgpt.com/c/abc', matched: 2, text: 'Latest a
   });
 
   await test('SA-09', 'renderer/selector-check.js passes every case in real Chromium on a saved ChatGPT-like page', () => {
-    const r = spawnSync('python3', [path.join(ROOT, 'tests/probe/selector-check-chromium.py')], { encoding: 'utf8', timeout: 120000 });
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/selector-check-chromium.js')], { encoding: 'utf8', timeout: 120000 });
     if (r.error || r.status === 3) return 'SKIP';
     const lines = (r.stdout || '').trim().split('\n').map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean);
     const bad = lines.filter(l => l.case && !l.pass).map(l => `${l.case}: ${l.why || JSON.stringify(l)}`);
@@ -158,7 +159,7 @@ const EVIDENCE = { url: 'https://chatgpt.com/c/abc', matched: 2, text: 'Latest a
   });
 
   await test('SA-10', 'the area\u2019s whole flow in real Chromium: offer → live check shown → Assign → guardian\u2019s own answer; refusals shown, never assignable', () => {
-    const r = spawnSync('python3', [path.join(ROOT, 'tests/probe/selector-assign-ui-chromium.py')], { encoding: 'utf8', timeout: 180000 });
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/selector-assign-ui-chromium.js')], { encoding: 'utf8', timeout: 180000 });
     if (r.error || r.status === 3) return 'SKIP';
     const lines = (r.stdout || '').trim().split('\n').map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean);
     const bad = lines.filter(l => l.case && !l.pass).map(l => `${l.case}: ${JSON.stringify(l)}`);

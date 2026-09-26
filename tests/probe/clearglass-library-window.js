@@ -5,7 +5,7 @@
  * but with the library."
  *
  * Loads Clear Glass's REAL renderer/library.html (the Settings runtime + the eight
- * Library areas) in headless Chromium against Clear Glass's REAL bridge on :7702,
+ * Library areas) in Clear Glass's own engine (headless Electron) against Clear Glass's REAL bridge on :7702,
  * started in-process with only 'electron' faked. Real stores behind it, seeded:
  * DownloadsStore, BookmarkStore, HistoryStore, AutofillStore, and the Responses
  * index (written by guardian's real writer). Accounts and macros answer from two
@@ -111,9 +111,9 @@ function preloadShape() {
       return Promise.resolve(/list$/i.test(m)?[]:{ok:true}); }; }
     for (const m of __s.__top) window.ClearGlass[m]=(...a)=>{ window.__calls.push(['cg.'+m,a]); return Promise.resolve({ok:true}); };`;
 
-  const { chromium } = require('playwright');
-  // PLAYWRIGHT_CHROMIUM lets a sandbox whose pinned browser build differs point at the Chromium it has.
-  const browser = await chromium.launch(process.env.PLAYWRIGHT_CHROMIUM ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM } : {});
+  // 0.39.263 — Clear Glass's own engine (Electron) drives the page; Playwright is gone from the root.
+  const { chromium } = require(path.join(CG, 'src/driver/glass.js'));
+  const browser = await chromium.launch();
   const pg = await browser.newPage({ viewport: { width: 1180, height: 820 } });
   const errs = [];
   pg.on('pageerror', e => errs.push(`pageerror: ${e.message}`));

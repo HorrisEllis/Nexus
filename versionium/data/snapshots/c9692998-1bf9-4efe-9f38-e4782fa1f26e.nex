@@ -1,0 +1,149 @@
+{
+  "format": "NEX-SNAP/1.0",
+  "snapId": "c9692998-1bf9-4efe-9f38-e4782fa1f26e",
+  "type": "manual",
+  "tables": {
+    "working_memory": [],
+    "active_traces": [],
+    "cortex_memory": [],
+    "gaps": [
+      {
+        "uuid": "g1",
+        "severity": "high",
+        "ts": 1000,
+        "id": "cce3e046-44d3-44cf-a287-c256780cb8d6"
+      },
+      {
+        "uuid": "g2",
+        "severity": "medium",
+        "ts": 2000,
+        "id": "945bbf12-1213-452c-a037-38bf30aaf474"
+      },
+      {
+        "uuid": "g4",
+        "id": "844b6414-db32-4713-9f64-902b1358b917"
+      },
+      {
+        "uuid": "g9",
+        "id": "37265f1c-b7b2-4360-aacf-fcd8843fa379"
+      }
+    ],
+    "event_log": [],
+    "sigma_records": [],
+    "sigma_rollups": [],
+    "meta_observations": [],
+    "sigma_live": [],
+    "component_ledger": [],
+    "cfr_tension_history": [],
+    "constitution_decisions": [],
+    "chat_log": [],
+    "schema_drift": [],
+    "crystals": [],
+    "bep_patterns": [],
+    "trust_scores": [],
+    "fix_map": [],
+    "memory_unified": [],
+    "interstitial_spaces": [],
+    "hooks": [],
+    "tool_index": [],
+    "raid_contract_queue": [],
+    "intake_drops": [],
+    "fault_taxonomy": [],
+    "forge_patches": [],
+    "raid_tunables": [],
+    "decay_log": [],
+    "settings": [
+      {
+        "id": "dfe20905-9581-49b8-a9b7-999a24f93742",
+        "key": "session_greeting_enabled",
+        "value": "true",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "43b50e3d-d257-4bda-8431-d053cddfab00",
+        "key": "session_greeting_text",
+        "value": "Guardian session initialising. Please ask me: \"What are we calling this session?\" — then wait for my answer before we begin.",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "cd1ab16f-deb7-4f04-8e47-b6d3251a415a",
+        "key": "scan_debounce_ms",
+        "value": "1500",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "1d7bf1b2-5f9a-4695-a47e-0a26d424fec1",
+        "key": "artifact_max",
+        "value": "500",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "9dd6f80f-223d-4dc8-b465-555bb8271c02",
+        "key": "gap_min_score",
+        "value": "0.25",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "665f4ba2-f372-4b22-bb17-10c1123ce9d8",
+        "key": "gap_taxonomy_version",
+        "value": "3.0.0",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "0ac6edf6-02b6-4857-90d9-c525a416168d",
+        "key": "pa_enabled",
+        "value": "true",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "effc1525-285d-4954-857f-3b0a466a90fb",
+        "key": "memory_auto_push",
+        "value": "true",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "4f16ae05-7328-4bab-a81f-8ee6306aa461",
+        "key": "dropzone_auto_upload",
+        "value": "true",
+        "updated_ts": 1790406370926
+      },
+      {
+        "id": "d80787c4-6841-4a49-80ae-af8078386f87",
+        "key": "stream_log_level",
+        "value": "EVENTS",
+        "updated_ts": 1790406370927
+      },
+      {
+        "id": "1f0b4ed9-df3b-4dc3-93c7-c92a43720514",
+        "key": "lan_host",
+        "value": "0.0.0.0",
+        "updated_ts": 1790406370927
+      },
+      {
+        "id": "61567195-9fdf-4bd3-a917-61e64e8aa839",
+        "key": "greeting_delay_ms",
+        "value": "1200",
+        "updated_ts": 1790406370927
+      },
+      {
+        "id": "7b1a3eaf-f27a-45fb-bb66-aee80115bf7a",
+        "key": "poll_interval_ms",
+        "value": "500",
+        "updated_ts": 1790406370927
+      },
+      {
+        "id": "fc6d4266-a02a-4928-9e26-ba2009ef663b",
+        "key": "stable_count_threshold",
+        "value": "5",
+        "updated_ts": 1790406370927
+      }
+    ],
+    "components": [],
+    "compaction_log": [],
+    "dedup_log": []
+  },
+  "hashVersion": 2,
+  "cortex_state_hash": "17b62571c59dbd6d4b28c30e7adfda361201a6363a75df159d2e9e279a6933d1",
+  "prev_snapshot_hash": "d1efa84ac0a6428f4cb7b1b57e4b64b9b6bd1e67805de4fa98a716f86a37b7cd",
+  "createdAt": 1790406370947
+}

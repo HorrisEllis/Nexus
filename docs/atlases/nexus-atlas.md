@@ -217,6 +217,13 @@ No single NEXUS-wide boot command confirmed this session — each system boots i
 - `lib/repo-context.js`: reads `graph.json` for file connections, and gives the project map when nothing matches.
 - `lib/test-sandbox.js`: covers `COPILOT_INJECTION_DIR`.
 
+### 0.39.263 — this document is the nexus repo's Home
+- In idearium, Nexus is one repo, `nexus`. Its Home tab renders this file from the immutable snapshot (`idearium/ui/js/nexus-atlas.js`).
+- Every system is a block at the top, and each module heading here gets that system's live numbers.
+- Every reference in this document opens in idearium: a system opens its repo, a file opens in its repo's editor, an `*-atlas.md` renders in place, and a directory opens its repo's Files tab.
+- A reference the snapshot does not have is marked, never guessed: `POST /api/nexus-self/resolve`.
+- Each system repo's Home starts with its own atlas from `docs/atlases/`.
+
 ---
 
 ## Copyright

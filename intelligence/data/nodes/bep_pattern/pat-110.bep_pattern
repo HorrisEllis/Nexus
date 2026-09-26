@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-110
+type: bep_pattern
+id: pat-110
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"y.tick" and "y.tick" co-occur within 5s — 3 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790408346139
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790408346139
+lastSeenAt: 1790408346139
+fingerprint: null
+payload:
+  uuid: pat-110
+  signature: y.tick::y.tick
+  patternType: co_occurrence
+  typeA: y.tick
+  typeB: y.tick
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 3
+  confidence: 0.15
+  description: '"y.tick" and "y.tick" co-occur within 5s — 3 observations'
+  actionable: false
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790408346135

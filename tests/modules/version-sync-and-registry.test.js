@@ -37,15 +37,15 @@ function main() {
   const CG_REGISTRY_SRC = fs.readFileSync(path.join(ROOT, 'clear-glass', 'registry-components.js'), 'utf8');
   const VERSION_JS = fs.readFileSync(path.join(ROOT, 'lib', 'version.js'), 'utf8');
 
-  check('clear-glass/package.json reads 3.15.0', CG_PKG.version === '3.15.0');
-  check('clear-glass.spec\'s meta.version matches package.json', /meta:[\s\S]{0,80}version:\s*3\.15\.0/.test(CG_SPEC));
+  check('clear-glass/package.json reads 3.17.0', CG_PKG.version === '3.17.0');
+  check('clear-glass.spec\'s meta.version matches package.json', /meta:[\s\S]{0,80}version:\s*3\.17\.0/.test(CG_SPEC));
   check('clear-glass.spec has a real version_history entry explaining the bump (not just a number change)',
     /- version: 3\.9\.0[\s\S]{0,200}date: 2026-09-22/.test(CG_SPEC) && /DRIFT CORRECTED, not invented/.test(CG_SPEC));
-  check('main/index.js\'s CG_VERSION matches', /const CG_VERSION\s*=\s*'3\.15\.0'/.test(CG_MAIN));
+  check('main/index.js\'s CG_VERSION matches', /const CG_VERSION\s*=\s*'3\.17\.0'/.test(CG_MAIN));
   check('registry-components.js\'s own local V constant matches (a FOURTH sync point, found while fixing the other three)',
-    /const V\s*=\s*'3\.15\.0'/.test(CG_REGISTRY_SRC));
-  check('registry-components.js\'s header comment matches too', /\* Version: 3\.15\.0/.test(CG_REGISTRY_SRC));
-  check('lib/version.js\'s services[\'clear-glass\'] matches', /'clear-glass':'3\.15\.0'/.test(VERSION_JS));
+    /const V\s*=\s*'3\.17\.0'/.test(CG_REGISTRY_SRC));
+  check('registry-components.js\'s header comment matches too', /\* Version: 3\.17\.0/.test(CG_REGISTRY_SRC));
+  check('lib/version.js\'s services[\'clear-glass\'] matches', /'clear-glass':'3\.17\.0'/.test(VERSION_JS));
 
   // ── idearium: four real sync points ───────────────────────────────────
   const ID_PKG = JSON.parse(fs.readFileSync(path.join(ROOT, 'idearium', 'package.json'), 'utf8'));
@@ -127,7 +127,7 @@ function main() {
   const yaml = require('js-yaml');
   try {
     const cg = yaml.load(CG_SPEC);
-    check('clear-glass.spec parses as real YAML', cg.spec.meta.version === '3.15.0');
+    check('clear-glass.spec parses as real YAML', cg.spec.meta.version === '3.17.0');
     check('clear-glass.spec\'s handshake.components_count matches the live registry export exactly',
       cg.spec.handshake.components_count === CG_REGISTRY.components.length);
     check('the new autofill/screen-qa module entries are real, present in the parsed doc',
@@ -152,7 +152,7 @@ function main() {
   const driftResult = specDrift.check({});
   check('the real, live spec-drift checker (orchestrator/lib/spec-drift.js) reports idearium synced at the correct version',
     (driftResult.synced || []).some(s => s.system === 'idearium' && s.version === '4.7.0'));
-  check('...and clear-glass synced at the correct version too', (driftResult.synced || []).some(s => s.system === 'clear-glass' && s.version === '3.15.0'));
+  check('...and clear-glass synced at the correct version too', (driftResult.synced || []).some(s => s.system === 'clear-glass' && s.version === '3.17.0'));
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`);
   process.exitCode = failed === 0 ? 0 : 1;
