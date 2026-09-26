@@ -304,6 +304,24 @@ export class RepoLayer {
     return result;
   }
 
+  // §0.39.265 — writeSources for a big tree while the server is serving
+  // (nexus-self sync): yields every 50 files, keeps unchanged files.
+  async writeSourcesAsync(repoUuid, realFiles = []) {
+    const r = this.repos.repos.find(x => x.uuid === repoUuid);
+    if (!r) return { ok: false, error: 'repo not found' };
+    const outDir = r.materializeDir || path.join(this.dataDir, 'projects', repoUuid);
+    const result = await sourceFiles.writeSourceFilesAsync(outDir, realFiles, { verify: true });
+    if (result.ok && result.manifest) {
+      r.sourceFileCount = result.manifest.totalFiles;
+      r.sourceBytes     = result.manifest.totalBytes;
+      r.sourceWrittenAt = result.manifest.writtenAt;
+      if (result.failed.length) r.sourceFailedCount = result.failed.length;
+      r.updatedAt = Date.now();
+      this._save();
+    }
+    return result;
+  }
+
   // §MCO-C 2026-09-20 — the source layer's single-file primitives, for snapshot
   // restore (see source-files.js setSourceFile).
   _sourceDir(repoUuid) {

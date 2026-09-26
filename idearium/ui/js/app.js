@@ -1708,7 +1708,7 @@ function renderRepoLibrary() {
   const badge = document.getElementById('repo-count-badge');
   // 0.39.263 — the systems are inside nexus. §0.39.265 — nexus/core is shown with
   // nexus (the main repo), and RAID's auto-made contract repos don't count as yours.
-  const _shown = API_REPOS.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system !== 'core') && !_isRaidContractRepo(r)).length;
+  const _shown = API_REPOS.filter(r => (!r.nexusSelf || _nxIsMain(r)) && !_isRaidContractRepo(r)).length;
   if (badge) badge.textContent = _shown ? String(_shown) : '';
   body.classList.toggle('block-grid', !REPO_DETAIL_OPEN);
   if (!API_REPOS.length) {
@@ -1738,7 +1738,9 @@ function renderRepoLibrary() {
     if (q && !r.name.toLowerCase().includes(q)) continue;
     // §0.39.265 — James: "nexus and nexus/core should be the main repo": core
     // (everything the systems share) is listed with nexus, not hidden inside it.
-    if (r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system !== 'core' && !q && !(REPO_DETAIL_OPEN && r.uuid === inSystem)) continue;
+    // §0.39.265 — "why not combine nexus and nexus core?": one "nexus" entry (core,
+    // whose Home is the atlas); the other systems open from inside it.
+    if (r.nexusSelf && !_nxIsMain(r) && (r.nexusSelf.role === 'parent' || (!q && !(REPO_DETAIL_OPEN && r.uuid === inSystem)))) continue;
     // RAID provisions a repo per queued contract (lib/contract-repo-provision.js):
     // plumbing, not your projects — its own group, last, closed in the list.
     const key = r.nexusSelf ? NEXUS_KEY : _isRaidContractRepo(r) ? RAID_KEY : (r.compartmentId || '');
@@ -1761,7 +1763,7 @@ function renderRepoLibrary() {
     // in it as a block. No collapsing here — the point is to see all of it.
     body.innerHTML = keys.map(key => {
       const repos = key === NEXUS_KEY ? groups.get(key) : groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-      const label = key === NEXUS_KEY ? 'nexus · main' : key ? key : 'Uncategorized';
+      const label = key === NEXUS_KEY ? 'nexus' : key ? key : 'Uncategorized';
       if (key === RAID_KEY) {
         return `<details class="repo-grid-raid"><summary class="repo-grid-group-label">${escapeHtml(label)} · ${repos.length} — made automatically for RAID's queued contracts</summary>
           ${repos.map(r => `<div class="repo-block raid" onclick="enterRepoDetail('${r.uuid}')"><div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name.replace(/^raid-contract-/, 'contract '))}</span></div><div class="repo-block-desc">${r.fileCount} file${r.fileCount === 1 ? '' : 's'}</div></div>`).join('')}</details>`;
@@ -1772,8 +1774,8 @@ function renderRepoLibrary() {
           const dotClass = r.phase === 'complete' ? 'done' : (r.phase === 'building' ? 'building' : '');
           return `
           <div class="repo-block${r.nexusSelf && (r.nexusSelf.role === 'parent' || r.nexusSelf.system === 'core') ? ' main' : ''}" onclick="enterRepoDetail('${r.uuid}')">
-            <div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</span></div>
-            <div class="repo-block-desc">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · snapshot ${escapeHtml(String(r.nexusSelf.snapshot || '').slice(0, 8))}` : `${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable`) : `${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}`}</div>
+            <div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(_nxIsMain(r) ? 'nexus' : r.name)}</span></div>
+            <div class="repo-block-desc">${_nxIsMain(r) && r.nexusSelf.role === 'system' ? `${Object.keys((_nxParent() || { nexusSelf: {} }).nexusSelf.children || {}).length} systems · ${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable` : r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · snapshot ${escapeHtml(String(r.nexusSelf.snapshot || '').slice(0, 8))}` : `${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable`) : `${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}`}</div>
             <div class="repo-block-meta"><span class="dot ${r.nexusSelf ? 'done' : dotClass}"></span><span>${r.nexusSelf ? `immutable · synced ${r.nexusSelf.syncedAt ? new Date(r.nexusSelf.syncedAt).toLocaleTimeString() : '—'}` : escapeHtml(r.phase||'idle')}</span></div>
           </div>`;
         }).join('')}`;
@@ -1799,7 +1801,7 @@ function renderRepoLibrary() {
             <div class="repo-card${CURRENT_API_REPO && CURRENT_API_REPO.uuid===r.uuid?' active':''}${r.nexusSelf && r.nexusSelf.role === 'system' ? ' nx-child' : ''}" onclick="${r.nexusSelf && r.nexusSelf.role === 'parent' ? 'nexusAtlasHome()' : `selectApiRepo('${r.uuid}')`}">
               ${dotClass ? `<span class="repo-card-dot ${dotClass}"></span>` : ''}
               <div class="repo-card-body">
-                <div class="repo-card-name">${escapeHtml(r.name)}</div>
+                <div class="repo-card-name">${escapeHtml(_nxIsMain(r) ? 'nexus' : r.name)}</div>
                 <div class="repo-card-meta">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · immutable` : `nexus/${escapeHtml(r.nexusSelf.system)} · ${r.nexusSelf.fileCount || r.fileCount} files`) : `${r.fileCount} files · ${escapeHtml(r.phase||'—')}`}</div>
               </div>
             </div>`;
@@ -1837,7 +1839,7 @@ function enterRepoDetail(uuid) {
 // re-entering a repo always starts from its tree, same as a fresh visit.
 function exitRepoDetail() {
   // §0.39.263 — a nexus system is inside the nexus repo: back goes to nexus, then to the library
-  if (CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' && typeof nexusAtlasHome === 'function' && _nxParent()) return nexusAtlasHome();
+  if (CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' && CURRENT_API_REPO.nexusSelf.system !== 'core' && typeof nexusAtlasHome === 'function' && _nxParent()) return nexusAtlasHome();
   if (typeof NX_DOC_TRAIL !== 'undefined' && NX_DOC_TRAIL.length) return nexusAtlasHome();
   REPO_DETAIL_OPEN = false;
   CURRENT_API_REPO = null; ACTIVE_API_FILE = null; API_FILE_DIRTY = false; CURRENT_REPO_SUBTAB = null;
@@ -1864,7 +1866,7 @@ function selectApiRepo(uuid) {
   document.getElementById('repo-context').textContent = '';
   if (switchingRepo && typeof NX_DOC_TRAIL !== 'undefined') NX_DOC_TRAIL.length = 0;
   const backBtn = document.getElementById('repo-back-btn');
-  if (backBtn) backBtn.textContent = repo.nexusSelf && repo.nexusSelf.role === 'system' ? '← nexus' : '← All repos';
+  if (backBtn) backBtn.textContent = repo.nexusSelf && repo.nexusSelf.role === 'system' && repo.nexusSelf.system !== 'core' ? '← nexus' : '← All repos';
   renderApiRepoPanel(repo);   // sets CURRENT_API_REPO …
   renderRepoLibrary();        // … which the active-card highlight (and the open nexus system under nexus) read
   // §REPO SUBTABS — a genuinely different repo always lands back on Home,
@@ -2191,7 +2193,7 @@ async function renderNexusHome(repo, el) {
   const stillHere = () => CURRENT_API_REPO?.uuid === repo.uuid && CURRENT_REPO_SUBTAB === 'home';
   // §0.39.263 — the nexus repo's Home is the Nexus atlas (ui/js/nexus-atlas.js);
   // the operational panels below live in its collapsible "snapshot · …" section.
-  if (repo.nexusSelf.role === 'parent') return renderNexusAtlasHome(repo, el);
+  if (repo.nexusSelf.role === 'parent' || repo.nexusSelf.system === 'core') return renderNexusAtlasHome(repo, el);   // §0.39.265 — nexus and nexus/core are one repo
   return _nexusSystemHome(repo, el, stillHere);
 }
 

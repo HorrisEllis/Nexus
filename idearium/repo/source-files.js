@@ -98,59 +98,92 @@ export function writeSourceFiles(repoDir, realFiles = [], { verify = true } = {}
   if (!Array.isArray(realFiles) || !realFiles.length) {
     return { ok: true, dir: repoDir, written: 0, failed: [], skipped: [], manifest: null };
   }
-
   fs.mkdirSync(repoDir, { recursive: true });
+  const acc = { files: [], failed: [], skipped: [], written: 0, unchanged: 0 };
+  for (const f of realFiles) _writeOne(repoDir, f, verify, null, acc);
+  return _finishWrite(repoDir, acc);
+}
 
-  const files   = [];
-  const failed  = [];
-  const skipped = [];
-  let written = 0;
-
+/**
+ * writeSourceFilesAsync(repoDir, realFiles, { verify, yieldEvery }) — §0.39.265.
+ * Same result as writeSourceFiles, for big trees written while a server is
+ * serving: it yields to the event loop every `yieldEvery` files, and a file
+ * whose bytes are already on disk (same sha256 in the previous manifest, same
+ * size) is kept instead of rewritten and re-verified. The nexus-self sync
+ * writes nexus/core's ~1,800 files this way: in one synchronous go it held
+ * idearium for ~20 s on Windows — /health missed, the watchdog marked it
+ * OFFLINE and the UI said "not answering".
+ */
+export async function writeSourceFilesAsync(repoDir, realFiles = [], { verify = true, yieldEvery = 50 } = {}) {
+  if (!repoDir) return { ok: false, error: 'repoDir required' };
+  if (!Array.isArray(realFiles) || !realFiles.length) {
+    return { ok: true, dir: repoDir, written: 0, failed: [], skipped: [], manifest: null };
+  }
+  fs.mkdirSync(repoDir, { recursive: true });
+  const prev = new Map(((loadSourceManifest(repoDir) || {}).files || []).map(e => [e.path, e]));
+  const acc = { files: [], failed: [], skipped: [], written: 0, unchanged: 0 };
+  let n = 0;
   for (const f of realFiles) {
-    const rel = _safeRel(f.path);
-    if (!rel) { skipped.push({ path: f.path, why: 'unsafe path' }); continue; }
-    // The manifest file is ours; a project that happens to contain one
-    // must not be able to overwrite the record of itself.
-    if (rel === SOURCE_MANIFEST_FILE) { skipped.push({ path: rel, why: 'reserved filename' }); continue; }
+    _writeOne(repoDir, f, verify, prev, acc);
+    if (++n % yieldEvery === 0) await new Promise(r => setImmediate(r));
+  }
+  return _finishWrite(repoDir, acc);
+}
 
-    const buf = Buffer.isBuffer(f.buffer) ? f.buffer
-      : (typeof f.content === 'string' ? Buffer.from(f.content, 'utf8') : null);
-    if (!buf) { failed.push({ path: rel, error: 'no buffer or content on realFile entry' }); continue; }
+// One file into acc (files / failed / skipped). prev: path → previous manifest
+// entry — when its sha256 and the on-disk size match, the file is kept as is.
+function _writeOne(repoDir, f, verify, prev, acc) {
+  const rel = _safeRel(f.path);
+  if (!rel) { acc.skipped.push({ path: f.path, why: 'unsafe path' }); return; }
+  // The manifest file is ours; a project that happens to contain one
+  // must not be able to overwrite the record of itself.
+  if (rel === SOURCE_MANIFEST_FILE) { acc.skipped.push({ path: rel, why: 'reserved filename' }); return; }
 
-    const dest = path.join(repoDir, rel);
+  const buf = Buffer.isBuffer(f.buffer) ? f.buffer
+    : (typeof f.content === 'string' ? Buffer.from(f.content, 'utf8') : null);
+  if (!buf) { acc.failed.push({ path: rel, error: 'no buffer or content on realFile entry' }); return; }
+
+  const dest = path.join(repoDir, rel);
+  const hash = f.sha256 || _sha256(buf);
+  const old = prev && prev.get(rel);
+  if (old && old.sha256 === hash) {
     try {
-      fs.mkdirSync(path.dirname(dest), { recursive: true });
-      fs.writeFileSync(dest, buf);
-    } catch (e) {
-      failed.push({ path: rel, error: e.message });
-      continue;
-    }
-
-    const hash = f.sha256 || _sha256(buf);
-    if (verify) {
-      // §1.1 nothing real until proven — the same discipline
-      // spec-engine's completeChunk() applies to a chunk artifact,
-      // applied to a source file. Re-read what was just written and
-      // compare hashes; a write that reported success but produced
-      // different bytes (a full disk, a filesystem that mangled the
-      // path) is caught here rather than discovered months later.
-      try {
-        const back = fs.readFileSync(dest);
-        const backHash = _sha256(back);
-        if (backHash !== hash) {
-          failed.push({ path: rel, error: `write verification failed — expected ${hash.slice(0, 12)}…, disk has ${backHash.slice(0, 12)}…` });
-          continue;
-        }
-      } catch (e) {
-        failed.push({ path: rel, error: `write verification read failed: ${e.message}` });
-        continue;
-      }
-    }
-
-    files.push({ path: rel, bytes: buf.length, sha256: hash, binary: !!f.binary });
-    written++;
+      if (fs.statSync(dest).size === buf.length) { acc.files.push({ path: rel, bytes: buf.length, sha256: hash, binary: !!f.binary }); acc.unchanged++; return; }
+    } catch (_) { /* gone — write it below */ }
+  }
+  try {
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.writeFileSync(dest, buf);
+  } catch (e) {
+    acc.failed.push({ path: rel, error: e.message });
+    return;
   }
 
+  if (verify) {
+    // §1.1 nothing real until proven — the same discipline
+    // spec-engine's completeChunk() applies to a chunk artifact,
+    // applied to a source file. Re-read what was just written and
+    // compare hashes; a write that reported success but produced
+    // different bytes (a full disk, a filesystem that mangled the
+    // path) is caught here rather than discovered months later.
+    try {
+      const back = fs.readFileSync(dest);
+      const backHash = _sha256(back);
+      if (backHash !== hash) {
+        acc.failed.push({ path: rel, error: `write verification failed — expected ${hash.slice(0, 12)}…, disk has ${backHash.slice(0, 12)}…` });
+        return;
+      }
+    } catch (e) {
+      acc.failed.push({ path: rel, error: `write verification read failed: ${e.message}` });
+      return;
+    }
+  }
+
+  acc.files.push({ path: rel, bytes: buf.length, sha256: hash, binary: !!f.binary });
+  acc.written++;
+}
+
+function _finishWrite(repoDir, { files, failed, skipped, written, unchanged }) {
   const manifest = {
     version: '1.0.0',
     writtenAt: Date.now(),
@@ -175,10 +208,10 @@ export function writeSourceFiles(repoDir, realFiles = [], { verify = true } = {}
   if (failed.length) {
     console.warn(`[${MODULE_ID}] §1.2 ${written} source file(s) written, ${failed.length} failed — see ${SOURCE_MANIFEST_FILE}`);
   } else {
-    console.log(`[${MODULE_ID}] ${written} real source file(s) written to ${repoDir} (${manifest.totalBytes} bytes)`);
+    console.log(`[${MODULE_ID}] ${written} real source file(s) written to ${repoDir}${unchanged ? `, ${unchanged} unchanged` : ''} (${manifest.totalBytes} bytes)`);
   }
 
-  return { ok: true, dir: repoDir, written, failed, skipped, manifest };
+  return { ok: true, dir: repoDir, written, unchanged, failed, skipped, manifest };
 }
 
 /**
@@ -315,4 +348,4 @@ export function verify(repoDir) {
   };
 }
 
-export default { writeSourceFiles, setSourceFile, removeSourceFile, loadSourceManifest, sourcePathSet, preserveEntries, verify, SOURCE_MANIFEST_FILE, MODULE_ID, VERSION };
+export default { writeSourceFiles, writeSourceFilesAsync, setSourceFile, removeSourceFile, loadSourceManifest, sourcePathSet, preserveEntries, verify, SOURCE_MANIFEST_FILE, MODULE_ID, VERSION };

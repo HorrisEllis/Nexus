@@ -145,7 +145,8 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
     const keep = new Set(realFiles.map(f => f.path));
     for (const f of prev.files || []) if (!keep.has(f.path)) fs.rmSync(path.join(dir, f.path), { force: true });
   } catch (_) { /* first version — nothing to remove */ }
-  const ws = rl.writeSources(repoUuid, realFiles);
+  // §0.39.265 — async: yields while writing (core is ~1,800 files) so /health keeps answering
+  const ws = typeof rl.writeSourcesAsync === 'function' ? await rl.writeSourcesAsync(repoUuid, realFiles) : rl.writeSources(repoUuid, realFiles);
   if (!ws.ok) return { system, status: 'failed', repoUuid, error: `source write: ${ws.error}` };
   await tick();
   const mat = rl.materialize(repoUuid);

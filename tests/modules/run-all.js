@@ -306,6 +306,7 @@ const SUITES = [
   'test-dangling-hooks-and-idearium-load.test.js', // 0.39.260 — dangling-hook flood, large-import idearium stall, real idearium health in the UI
   'test-nexus-self-and-cos-run.test.js', // 0.39.261 — Nexus as immutable repos in nested compartments, the COS run menu + JS runtime, tool calls, glyphs, in-house zip/http/ws
   'test-nexus-atlas-and-glass.test.js',  // 0.39.263 — one nexus repo whose Home is the Nexus atlas (every reference opens in idearium); Clear Glass's engine replaces Playwright
+  'test-idearium-source-files-async.test.js',  // 0.39.265 — nexus-self sync writes sources without blocking the event loop; unchanged files are kept
   'test-versionium-repo-history.test.js', // 0.39.263 — every repo's history in versionium (staged big versions, files/versions), nexus repos committed on sync, loom reads versionium not git
   'brainos-float-cg.test.js', // 0.39.262 — BrainOS Float Clear Glass tabs + pre-mount registration fix
   'test-agent-tools-and-graph.test.js', // 0.39.257 — every tool (enforced), /tools /debug /graph, the graph in context

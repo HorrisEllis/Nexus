@@ -121,9 +121,13 @@ async function main() {
   // shows nexus AND nexus/core; every other system still opens from inside nexus.
   await test('UI-002', 'the library shows nexus and nexus/core as the main repo; other systems open from inside it; back from a system goes to nexus', () => {
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
-    assert.ok(/r\.nexusSelf && r\.nexusSelf\.role === 'system' && r\.nexusSelf\.system !== 'core' && !q && !\(REPO_DETAIL_OPEN && r\.uuid === inSystem\)\) continue;/.test(app));
-    assert.ok(/if \(repo\.nexusSelf\.role === 'parent'\) return renderNexusAtlasHome\(repo, el\);/.test(app));
-    assert.ok(/role === 'system' && typeof nexusAtlasHome === 'function' && _nxParent\(\)\) return nexusAtlasHome\(\);/.test(app));
+    // §0.39.265 — nexus and nexus/core are ONE repo: the library lists only the main entry
+    assert.ok(/if \(r\.nexusSelf && !_nxIsMain\(r\) && \(r\.nexusSelf\.role === 'parent' \|\| \(!q && !\(REPO_DETAIL_OPEN && r\.uuid === inSystem\)\)\)\) continue;/.test(app));
+    assert.ok(/repo\.nexusSelf\.role === 'parent' \|\| repo\.nexusSelf\.system === 'core'\) return renderNexusAtlasHome/.test(app), 'core\'s Home is the atlas');
+    const atlas = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/nexus-atlas.js'), 'utf8');
+    assert.ok(/function _nxMain\(\) \{ return _nxRepoFor\('core'\) \|\| _nxParent\(\); \}/.test(atlas));
+    assert.ok(/if \(repo\.nexusSelf\.role === 'parent' \|\| repo\.nexusSelf\.system === 'core'\) return renderNexusAtlasHome\(repo, el\);/.test(app));
+    assert.ok(/role === 'system' && CURRENT_API_REPO\.nexusSelf\.system !== 'core' && typeof nexusAtlasHome === 'function' && _nxParent\(\)\) return nexusAtlasHome\(\);/.test(app));
     const html = fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8');
     assert.ok(html.indexOf('<script src="js/nexus-atlas.js">') > html.indexOf('<script src="js/app.js">'), 'loaded after app.js');
   });
