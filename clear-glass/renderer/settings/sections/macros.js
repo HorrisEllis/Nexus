@@ -27,7 +27,7 @@
  * a navigate step; steps read as {action, data}) is unchanged.
  */
 (function () {
-  const { cg, h, call, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section } = window.CGS;
+  const { cg, h, call, wire, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section, goto } = window.CGS;
 
   // Friendly definitions for the actions people use; anything else in the
   // live enum still works through the generic two-field form.
@@ -347,6 +347,12 @@
         btn('Steps', async () => { const g = await full(m); modal({ title: m.name, wide: true, body: [h('ol', { class: 'step-read' }, (g.steps || []).map(s => h('li', { text: describe(s) })))] }); }, 'sm'),
         btn('Edit', async () => { const g = await full(m); builder(schema, rerender, g, { editing: g }).catch(fail); }, 'sm'),
         btn('Duplicate', async () => { const g = await full(m); builder(schema, rerender, { ...g, name: `${g.name}-copy` }).catch(fail); }, 'sm'),
+        // §0.39.265 — grow it: a workflow can loop, read the page, branch and run on a schedule
+        btn('→ Workflow', (e) => busy(e.currentTarget, async () => {
+          const r = await wire('/automation/from-macro', { method: 'POST', body: { name: m.name } });
+          toast(r.warnings && r.warnings.length ? `Workflow made — steps ${r.warnings.join(', ')} need replacing` : 'Workflow made (switched off) — see Automation', r.warnings && r.warnings.length ? 'warn' : 'ok', 6000);
+          goto('automation');
+        }), 'sm'),
         btn('Delete', async () => { if (await confirmDo(`Delete “${m.name}”?`, 'It stops appearing here; the history is kept in the macro ledger.', 'Delete')) { await busy(null, () => call(() => cg.macros.delete(m.name), 'delete')); rerender(); } }, 'sm danger')))
         : empty('No macros yet.', btn('Record one', () => recordFlow(schema, rerender).catch(fail), 'sm primary'), btn('Use a template', () => templateFlow(schema, rerender).catch(fail), 'sm')) });
     },

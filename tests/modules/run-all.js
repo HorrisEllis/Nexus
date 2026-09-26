@@ -145,6 +145,8 @@ const SUITES = [
   'test-dispatcher-deepseek-ncp.js',
   'route-graph.test.js',
   'automation-engine.test.js',
+  'automation-v2.test.js',                // §0.39.265 — workflows v2: DOM steps, data, loops, triggers, runs, tools
+  'automation-settings-ui.test.js',       // §0.39.265 — Settings → Automation against a real engine
   'brainos-app-hostile.test.js',
   'guardian-hostile-file-read.test.js',
   'guardian-hostile-body-dos.test.js',
@@ -310,6 +312,8 @@ const SUITES = [
   'test-idearium-codegen.test.js',  // 0.39.265 — a finished spec → Generate code → a code spec (one chunk per real file) built into its own repo
   'test-idearium-spec-meta-cache.test.js',  // 0.39.265 — repo lists read cached, content-free spec metadata instead of parsing every whole manifest
   'test-repo-git.test.js',  // 0.39.265 — real git for repos: remote, commit, push, pull (changed files back into the repo), clone, SSH keygen; Git & CI tab
+  'test-cos-remote.test.js',  // 0.39.265 — compartment remotes: push/pull a COS compartment to a folder or ssh host, two machines, in-sync/ahead/behind/diverged
+  'test-cos-remote-api.test.js',  // 0.39.265 — the same through a real idearium API: a repo's compartment pushed, pulled elsewhere, edits back into the repo, clone
   'test-versionium-repo-history.test.js', // 0.39.263 — every repo's history in versionium (staged big versions, files/versions), nexus repos committed on sync, loom reads versionium not git
   'brainos-float-cg.test.js', // 0.39.262 — BrainOS Float Clear Glass tabs + pre-mount registration fix
   'test-agent-tools-and-graph.test.js', // 0.39.257 — every tool (enforced), /tools /debug /graph, the graph in context

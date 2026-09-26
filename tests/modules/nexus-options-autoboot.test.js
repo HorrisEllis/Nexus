@@ -50,13 +50,28 @@ async function main() {
   }
   const origHome = process.env.HOME;
 
-  await atest('real defaults include all 4 real providers, matching the registry', async () => {
+  await atest('defaults name every registry provider: ChatGPT + DeepSeek at boot, the rest on first use (0.39.265)', async () => {
     const { NexusOptions, cleanup } = freshOptions();
     const opts = new NexusOptions();
     await opts.load();
     const auto = opts.get().autoStartOnBoot;
-    assert.deepStrictEqual(Object.keys(auto).sort(), ['chatgpt', 'claude', 'gemini', 'perplexity']);
-    assert.ok(Object.values(auto).every(v => v === true), 'every real provider defaults to enabled');
+    const { listProviders, DEFAULT_AUTOSTART } = require('../../clear-glass/src/providers/registry.js');
+    assert.deepStrictEqual(Object.keys(auto).sort(), listProviders().map(p => p.id).sort());
+    assert.deepStrictEqual(auto, { ...DEFAULT_AUTOSTART });
+    assert.deepStrictEqual(Object.keys(auto).filter(k => auto[k]).sort(), ['chatgpt', 'deepseek']);
+    cleanup();
+  });
+
+  await atest('MIGRATION v2: a stored all-on autoStartOnBoot (never read before) is reset once to the real defaults; later choices stick', async () => {
+    const { NexusOptions, cleanup } = freshOptions();
+    const opts = new NexusOptions();
+    // an install from before: schema v1, the old all-true default stored
+    opts._kv().replaceAll({ _schemaVersion: 1, autoStartOnBoot: { claude: true, chatgpt: true, gemini: true, perplexity: true } });
+    await opts.load();
+    assert.deepStrictEqual(Object.keys(opts.get().autoStartOnBoot).filter(k => opts.get().autoStartOnBoot[k]).sort(), ['chatgpt', 'deepseek']);
+    await opts.set({ autoStartOnBoot: { claude: true } });
+    const again = new NexusOptions(); await again.load();
+    assert.strictEqual(again.get().autoStartOnBoot.claude, true, 'a choice made after the migration survives');
     cleanup();
   });
 
@@ -64,12 +79,13 @@ async function main() {
     const { NexusOptions, cleanup } = freshOptions();
     const opts = new NexusOptions();
     await opts.load();
-    await opts.set({ autoStartOnBoot: { claude: false } });
+    await opts.set({ autoStartOnBoot: { claude: true } });
     const auto = opts.get().autoStartOnBoot;
-    assert.strictEqual(auto.claude, false);
+    assert.strictEqual(auto.claude, true);
     assert.strictEqual(auto.chatgpt, true, 'chatgpt must survive a claude-only update');
-    assert.strictEqual(auto.gemini, true, 'gemini must survive a claude-only update');
-    assert.strictEqual(auto.perplexity, true, 'perplexity must survive a claude-only update');
+    assert.strictEqual(auto.deepseek, true, 'deepseek must survive a claude-only update');
+    assert.strictEqual(auto.gemini, false, 'gemini must survive a claude-only update');
+    assert.strictEqual(auto.perplexity, false, 'perplexity must survive a claude-only update');
     cleanup();
   });
 
@@ -95,11 +111,11 @@ async function main() {
     const { NexusOptions, cleanup } = freshOptions();
     const opts1 = new NexusOptions();
     await opts1.load();
-    await opts1.set({ autoStartOnBoot: { gemini: false } });
+    await opts1.set({ autoStartOnBoot: { gemini: true } });
     const opts2 = new NexusOptions();
     await opts2.load();
-    assert.strictEqual(opts2.get().autoStartOnBoot.gemini, false);
-    assert.strictEqual(opts2.get().autoStartOnBoot.claude, true);
+    assert.strictEqual(opts2.get().autoStartOnBoot.gemini, true);
+    assert.strictEqual(opts2.get().autoStartOnBoot.claude, false);
     cleanup();
   });
 
@@ -125,7 +141,7 @@ async function main() {
     const opts = new NexusOptions();
     await opts.load();
     assert.strictEqual(opts.get().defaultStartUrl, 'http://127.0.0.1:9000/');
-    assert.strictEqual(opts.get()._schemaVersion, 1);
+    assert.strictEqual(opts.get()._schemaVersion, 2);   // current schema (v2, 0.39.265)
     cleanup();
   });
 
@@ -138,7 +154,7 @@ async function main() {
     const opts = new NexusOptions();
     await opts.load();
     assert.strictEqual(opts.get().defaultStartUrl, 'http://127.0.0.1:9000/', 'about:blank must be upgraded');
-    assert.strictEqual(opts.get()._schemaVersion, 1, 'stamped so this never re-runs');
+    assert.strictEqual(opts.get()._schemaVersion, 2, 'stamped so this never re-runs');
     fs.rmSync(tmpHome, { recursive: true, force: true });
   });
 
@@ -151,7 +167,7 @@ async function main() {
     const opts = new NexusOptions();
     await opts.load();
     assert.strictEqual(opts.get().defaultStartUrl, 'https://claude.ai/new', 'a real choice must never be silently overwritten');
-    assert.strictEqual(opts.get()._schemaVersion, 1, 'still stamped, so the file is marked migrated');
+    assert.strictEqual(opts.get()._schemaVersion, 2, 'still stamped, so the file is marked migrated');
     fs.rmSync(tmpHome, { recursive: true, force: true });
   });
 
@@ -186,26 +202,37 @@ async function main() {
 
   // ── autoBootSetting decision logic (extracted, real equivalent of the
   // logic added to src/main/index.js) ────────────────────────────────────
-  const { listProviders } = require('../../clear-glass/src/providers/registry.js');
-  function computeAutoBootSetting(envVar, autoStartOnBoot) {
-    if (envVar !== undefined) return envVar.trim();
-    const auto = autoStartOnBoot || {};
-    const enabled = listProviders().filter(p => auto[p.id] !== false).map(p => p.id);
-    return enabled.length ? enabled.join(',') : 'none';
-  }
+  // §0.39.265 — the REAL function main/index.js calls (it used to read only the
+  // env var, so the options this test covered never took effect)
+  const { autoBootList: computeAutoBootSetting } = require('../../clear-glass/src/providers/registry.js');
+  const MAIN = fs.readFileSync(path.join(__dirname, '..', '..', 'clear-glass', 'src', 'main', 'index.js'), 'utf8');
 
-  test('env var unset — real NexusOptions default boots all 4', () => {
-    const r = computeAutoBootSetting(undefined, { claude: true, chatgpt: true, gemini: true, perplexity: true });
-    assert.strictEqual(r, 'claude,chatgpt,gemini,perplexity');
+  test('main/index.js decides auto-boot with autoBootList(env, options) — the Provider tabs toggles take effect', () => {
+    assert.ok(/autoBootList\(process\.env\.CG_AUTOBOOT_PROVIDERS, nexusOptions\.get\(\)\.autoStartOnBoot\)/.test(MAIN));
+    assert.ok(!/mesh\.spawn\('deepseek'\)/.test(MAIN), 'DeepSeek boots as a provider tab now, not a separate mesh tab');
   });
 
-  test('env var unset — a disabled provider is correctly excluded', () => {
-    const r = computeAutoBootSetting(undefined, { claude: false, chatgpt: true, gemini: true, perplexity: true });
-    assert.strictEqual(r, 'chatgpt,gemini,perplexity');
+  test('every registered provider has its guardian userscript, matching its own hosts (DeepSeek included)', () => {
+    const { listProviders } = require('../../clear-glass/src/providers/registry.js');
+    assert.ok(listProviders().some(p => p.id === 'deepseek'));
+    for (const p of listProviders()) {
+      const src = fs.readFileSync(path.join(__dirname, '..', '..', 'guardian', p.userscriptFile), 'utf8');
+      assert.ok(p.hosts.some(h => src.includes(`@match        https://${h}/`) || src.includes(`https://${h}/*`)), `${p.userscriptFile} matches ${p.hosts.join(', ')}`);
+      assert.ok(new RegExp(`const PROVIDER\\s*=\\s*'${p.id}'`).test(src) || p.id !== 'deepseek', `${p.userscriptFile} reports itself as ${p.id}`);
+    }
+  });
+
+  test('env var unset — defaults boot ChatGPT and DeepSeek', () => {
+    assert.strictEqual(computeAutoBootSetting(undefined, {}), 'chatgpt,deepseek');
+  });
+
+  test('env var unset — enabled toggles boot, disabled ones do not', () => {
+    const r = computeAutoBootSetting(undefined, { claude: true, chatgpt: false, gemini: true, perplexity: false, deepseek: false });
+    assert.strictEqual(r, 'claude,gemini');
   });
 
   test('env var unset — all disabled resolves to the real "none" skip path', () => {
-    const r = computeAutoBootSetting(undefined, { claude: false, chatgpt: false, gemini: false, perplexity: false });
+    const r = computeAutoBootSetting(undefined, { claude: false, chatgpt: false, gemini: false, perplexity: false, deepseek: false });
     assert.strictEqual(r, 'none');
   });
 

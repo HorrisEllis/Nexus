@@ -1405,7 +1405,7 @@ const server = http.createServer(async (req, res) => {
     // its own default toolset. tool_config's own internal design already
     // gates its dangerous half (loosening always needs the user, regardless
     // of who calls it), so offering it here doesn't bypass that protection.
-    const DEFAULT_CHAT_TOOLS = ['read_file', 'search_files', 'diagnose', 'system_priority', 'intent_hat', 'self_repair', 'agent_chat', 'tool_config', 'agent_notes', 'nexus_wake_events', 'framework_builder', 'intelligence_query', 'clear_glass_dom_archaeology', 'clear_glass_userscripts', 'clear_glass_tab_visibility'];
+    const DEFAULT_CHAT_TOOLS = ['read_file', 'search_files', 'diagnose', 'system_priority', 'intent_hat', 'self_repair', 'agent_chat', 'tool_config', 'agent_notes', 'nexus_wake_events', 'framework_builder', 'intelligence_query', 'clear_glass_dom_archaeology', 'clear_glass_userscripts', 'clear_glass_tab_visibility', 'clear_glass_automation', 'clear_glass_browser'];
     if (DEFAULT_CHAT_TOOLS.length) {
       const agentToolsForManifest = require('../lib/agent-tools/index.js');
       const manifest = DEFAULT_CHAT_TOOLS
@@ -1794,8 +1794,8 @@ const server = http.createServer(async (req, res) => {
       // already prevents a false positive regardless of which verb
       // matched, so widening the verb list doesn't widen what actually
       // triggers a switch.
-      const switchM = prompt.match(/\b(?:switch\s+(?:\S+\s+)?to|change\s+(?:\S+\s+)?to|use|route to)\s+(claude|chatgpt|gemini|perplexity|clear[- ]?glass|\w+)\s*(agent|model)?\b/i);
-      const KNOWN_AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'clear glass', 'clear-glass', 'clearglass'];
+      const switchM = prompt.match(/\b(?:switch\s+(?:\S+\s+)?to|change\s+(?:\S+\s+)?to|use|route to)\s+(claude|chatgpt|gemini|perplexity|deepseek|clear[- ]?glass|\w+)\s*(agent|model)?\b/i);
+      const KNOWN_AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek', 'clear glass', 'clear-glass', 'clearglass'];
       const switchTarget = switchM ? switchM[1].toLowerCase() : null;
 
       // §FIXED 2026-08-22 — James, live: "change to guardian" got the
@@ -1832,7 +1832,7 @@ const server = http.createServer(async (req, res) => {
           // generic "pick whichever's live" behavior — "switch to guardian
           // using chatgpt" means "route through guardian, specifically to
           // chatgpt," not "pick guardian's own default."
-          const namedMatch = prompt.match(/\b(claude|chatgpt|gemini|perplexity)\b/gi);
+          const namedMatch = prompt.match(/\b(claude|chatgpt|gemini|perplexity|deepseek)\b/gi);
           const namedAgent = namedMatch?.map(m => m.toLowerCase()).find(a => a !== switchTarget && live.has(a));
           const pick = namedAgent || DEFAULT_FALLBACK.find(a => live.has(a));
           if (!pick) {

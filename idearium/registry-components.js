@@ -164,6 +164,16 @@ const COMPONENTS = [
   _comp('repo.git.pull',   'POST', '/api/repos/:uuid/git/pull',         'Fast-forward pull; changed files are brought into the repo', { tags: ['git'] }),
   _comp('repo.git.keygen', 'POST', '/api/repos/:uuid/git/keygen',       'Create an ed25519 SSH key, register it to the compartment, return the public key', { tags: ['git', 'keys'] }),
   _comp('git.clone',       'POST', '/api/git/clone',                    'Clone a git URL into a new repo (same import rules as a zip)', { tags: ['git'] }),
+  // §0.39.265 — compartment remotes (lib/cos-remote.js)
+  _comp('cos.compartments.list', 'GET', '/api/cos/compartments',                         "This machine's compartments, with their repo and remotes", { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.list',   'GET',    '/api/cos/compartments/:cid/remotes',               "A compartment's remotes", { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.add',    'POST',   '/api/cos/compartments/:cid/remotes',               'Add a remote: a folder / synced drive, or user@host:path over ssh', { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.remove', 'DELETE', '/api/cos/compartments/:cid/remotes/:name',         'Remove a remote', { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.status', 'GET',    '/api/cos/compartments/:cid/remotes/:name/status',  'in-sync / ahead / behind / diverged against a remote', { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.push',   'POST',   '/api/cos/compartments/:cid/remotes/:name/push',    'Push the compartment (and its project folder) to a remote', { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.pull',   'POST',   '/api/cos/compartments/:cid/remotes/:name/pull',    'Pull from a remote; a backup of what it replaces is kept', { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.browse', 'POST',   '/api/cos/remote/browse',                           'The compartments kept at a location', { tags: ['cos', 'remote'] }),
+  _comp('cos.remote.clone',  'POST',   '/api/cos/remote/clone',                            'Pull a compartment this machine does not have (its project becomes a repo)', { tags: ['cos', 'remote'] }),
 
   // ── Queue ───────────────────────────────────────────────────────────────
   _comp('queue.show',      'GET',  '/api/queue/:queueId',               'Get queue item status'),

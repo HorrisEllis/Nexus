@@ -104,6 +104,9 @@
   // (see src/preload/webview-bridge.js for why the old require('electron')
   // trick inside injected page scripts didn't work).
   if (wvPreload) wv.setAttribute('preload', wvPreload);
+  // §0.39.265 — automation pages run in their own session (persist:automation)
+  const wvPartition = params.get('wvPartition') || '';
+  if (wvPartition && /^persist:[\w-]{1,60}$/.test(wvPartition)) wv.setAttribute('partition', wvPartition);
 
   // §NEW 2026-07-04: main process navigates this window in place when the
   // orchestrator's wire /open call targets the already-open default window
@@ -1335,7 +1338,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     try {
       const res = await fetch('http://127.0.0.1:3750/api/agent/current');
       const cur = await res.json();
-      const agents = ['auto', 'claude', 'chatgpt', 'gemini', 'perplexity'];
+      const agents = ['auto', 'claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
       panel.innerHTML = `
         <div style="padding:6px 4px;font-size:11px;color:var(--text-dim,#999);border-bottom:1px solid var(--border,#333);margin-bottom:6px">
           Current: <b style="color:var(--text,#ccc)">${(cur.agent || 'auto').replace(/</g,'&lt;')}</b>${cur.hatName ? ` (${cur.hatName.replace(/</g,'&lt;')})` : ''}

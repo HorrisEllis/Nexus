@@ -1107,12 +1107,14 @@ class AgentMesh {
   addRoute(edge) { return this._routeGraph.add(edge); }
   removeRoute(id) { return this._routeGraph.remove(id); }
   // §BUILT — automation accessors, same thin pass-through convention.
-  listWorkflows() { return this._automation.list().map(w => ({ ...w, nextRunAt: this._automation.nextRunAt(w) })); }
+  // §0.39.265 — without the engine's memory (seen-item lists can be thousands long) or runtime-only fields
+  listWorkflows() { return this._automation.list().map(({ memory, _nextRuns, ...w }) => ({ ...w, nextRunAt: this._automation.nextRunAt({ ...w, _nextRuns }) })); }
   getWorkflow(id) { return this._automation.get(id); }
   createWorkflow(fields) { return this._automation.create(fields); }
   updateWorkflow(id, patch) { return this._automation.update(id, patch); }
   removeWorkflow(id) { return this._automation.remove(id); }
-  runWorkflow(id, reason) { return this._automation.run(id, reason); }
+  runWorkflow(id, reason, opts) { return this._automation.run(id, reason, opts); }
+  get automation() { return this._automation; }
   getAutomationLog(limit, workflowId) { return this._automation.getLog(limit, workflowId); }
   addWorkflowStep(id, step) { return this._automation.addStep(id, step); }
   updateWorkflowStep(id, stepId, patch) { return this._automation.updateStep(id, stepId, patch); }

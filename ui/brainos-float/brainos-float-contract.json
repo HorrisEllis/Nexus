@@ -108,7 +108,7 @@
     {
       "id": "automation",
       "capability": "real workflow CRUD + run + log (clear-glass/src/mesh/automation-engine.js, v0.39.89)",
-      "honest_gap": "3 real step types shipped (trigger/agent/delay) — condition/branch/http/notification are named, not-yet-built extensions, same file's own header"
+      "honest_gap": "this panel edits trigger/condition/agent/delay/command/http/notify; the engine (v0.39.265) also runs browser, extract, wait_until, set, loop, file, workflow, macro, log, emit, stop and fail steps, cron/event/webhook triggers and per-step retry/onError — their forms are in Clear Glass → Settings → Automation (src/automation/steps.js is the catalogue)"
     }
   ],
   "extension_tabs": {

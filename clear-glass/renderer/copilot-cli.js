@@ -22,7 +22,7 @@
  */
 (function () {
   const BACKENDS = ['ollama', 'copilot', 'guardian'];
-  const AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity'];   // same real NCP set as ui/tv-shell/menu.js
+  const AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];   // same real NCP set as ui/tv-shell/menu.js
 
   const HELP = [
     'CO-PILOT CLI — wearing the Clear Glass hat',

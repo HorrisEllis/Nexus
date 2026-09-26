@@ -440,6 +440,65 @@ function _readPipelineArtifacts(dir) {
 // this function had no way to os.emit()). Every call site already has an
 // IdeaOS instance in scope (both call sites are inside api/index.js's
 // `handle()`, which does `const os = getIdeaOS()` at its top).
+// §0.39.265 — a folder on disk (a git clone, or the project part of a pulled
+// compartment) becomes a new Idearium repo, by the same rules as "Import
+// project" (lib/zip-ingest.js over the folder's files), its .git carried over so
+// history, pull and push survive. Chunking is deferred like a zip import.
+async function _importFolderAsRepo({ dir, name, source, compartmentId = null }) {
+  const G = _require('../../lib/repo-git.js');
+  const cfg = _require('../../lib/project-import.config.js');
+  const { extractZipToFiles } = _require('../../lib/zip-ingest.js');
+  const extraction = extractZipToFiles({
+    entries: G.readTree(dir), maxFiles: cfg.ZIP.maxFiles, maxBytesPerFile: cfg.ZIP.maxBytesPerFile, maxTotalBytes: cfg.ZIP.maxTotalBytes,
+    maxRealFileBytes: cfg.ZIP.maxRealFileBytes, realFiles: cfg.ZIP.realFiles, includeBinary: cfg.ZIP.includeBinary,
+    verifyHashes: cfg.ZIP.verifyHashes, skipDirs: cfg.ZIP.skipDirs, textExt: cfg.ZIP.textExt,
+  });
+  if (!extraction.ok) return { error: extraction.error };
+  const { included, realFiles, omitted } = extraction;
+  if (!included.length && !realFiles.length) return { error: 'no files pass the import bounds' };
+  const ingest = getRepoLayer().ingest({ name, files: included, source, compartmentId, materializeBaseDir: cfg.REPO_STORAGE.dir });
+  if (ingest.error) return { error: ingest.error };
+  const repoUuid = ingest.repo.uuid;
+  let sources = null;
+  if (realFiles.length) {
+    sources = getRepoLayer().writeSourcesAsync ? await getRepoLayer().writeSourcesAsync(repoUuid, realFiles) : getRepoLayer().writeSources(repoUuid, realFiles);
+    if (!sources.ok) return { error: `source-file write failed: ${sources.error}`, status: 500 };
+  }
+  const mat = getRepoLayer().materialize(repoUuid);
+  if (mat.error) return { error: `materialize after import failed: ${mat.error}`, status: 500 };
+  if (fs.existsSync(path.join(dir, '.git'))) {
+    fs.cpSync(path.join(dir, '.git'), path.join(mat.dir, '.git'), { recursive: true });
+    await G.ensureRepo(mat.dir);   // Idearium's own files excluded from git status
+  }
+  return { repoUuid, matDir: mat.dir, fileCount: sources ? sources.written : included.length, chunkCount: included.length, omitted };
+}
+
+// §0.39.265 — files changed on disk in a repo's folder (a git pull, a
+// compartment pull) brought into the repo itself: its content is the spec, so a
+// file changed only on disk would be rewritten from its chunk by the next
+// materialize. Text files update (or add) their chunk, deletions remove it;
+// binaries stay on disk and are listed, since only an import writes the source layer.
+function _applyChangedFilesToRepo(repoUuid, dir, changed) {
+  const G = _require('../../lib/repo-git.js');
+  const { _isProbablyText } = _require('../../lib/zip-ingest.js');
+  const applied = [], removed = [], binary = [], failed = [];
+  for (const c of changed || []) {
+    if (c.path === '.git' || c.path.startsWith('.git/')) continue;
+    if (G.isInternal(dir, c.path)) continue;
+    if (c.status === 'D') {
+      const d = getRepoLayer().deleteFile(repoUuid, c.path, { defer: true });
+      if (d.error && !/not found/.test(d.error)) failed.push({ path: c.path, error: d.error }); else removed.push(c.path);
+      continue;
+    }
+    let buf; try { buf = fs.readFileSync(path.join(dir, c.path)); } catch (e) { failed.push({ path: c.path, error: e.message }); continue; }
+    if (!_isProbablyText(buf)) { binary.push(c.path); continue; }
+    const w = getRepoLayer().writeFile(repoUuid, c.path, buf.toString('utf8'), { defer: true, preserveWhitespace: true });
+    if (w.error) failed.push({ path: c.path, error: w.error }); else applied.push(c.path);
+  }
+  if (applied.length || removed.length) getRepoLayer().refresh(repoUuid);
+  return { applied, removed, binary, failed };
+}
+
 async function _promoteSpecToRepo(ideaOS, se, specUuid, mode = 'emerge') {
   let manifest;
   try { manifest = se.loadSpec(specUuid); }
@@ -1146,6 +1205,17 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','git','pull'],        'repo.git.pull'],
     ['POST',   ['api','repos',    ':uuid','git','keygen'],      'repo.git.keygen'],
     ['POST',   ['api','git','clone'],                           'git.clone'],
+    // §0.39.265 — James: "push pull for the compartments remotely." A compartment's
+    // remotes (a folder / synced drive, or user@host:path over ssh) — lib/cos-remote.js.
+    ['GET',    ['api','cos','compartments'],                                'cos.compartments.list'],
+    ['GET',    ['api','cos','compartments',':cid','remotes'],               'cos.remote.list'],
+    ['POST',   ['api','cos','compartments',':cid','remotes'],               'cos.remote.add'],
+    ['DELETE', ['api','cos','compartments',':cid','remotes',':name'],       'cos.remote.remove'],
+    ['GET',    ['api','cos','compartments',':cid','remotes',':name','status'], 'cos.remote.status'],
+    ['POST',   ['api','cos','compartments',':cid','remotes',':name','push'],   'cos.remote.push'],
+    ['POST',   ['api','cos','compartments',':cid','remotes',':name','pull'],   'cos.remote.pull'],
+    ['POST',   ['api','cos','remote','browse'],                              'cos.remote.browse'],
+    ['POST',   ['api','cos','remote','clone'],                               'cos.remote.clone'],
     ['POST',   ['api','repos',    ':uuid','reindex'],       'repo.reindex'],
   ];
 
@@ -3639,21 +3709,7 @@ async function handle(req, res, route, query, body) {
       if (repo.immutable) return err(res, 400, 'this repo is immutable (a Nexus system) — pull into a branch instead');
       const r = await G.pull(dir, { remote: body.remote || 'origin', branch: body.branch || null, keyPath: a.keyPath, token: a.token });
       if (!r.ok) return err(res, 400, r.error);
-      const applied = [], removed = [], binary = [], failed = [];
-      const { _isProbablyText } = _require('../../lib/zip-ingest.js');
-      for (const c of r.changed) {
-        if (G.INTERNAL.some(x => c.path === x || c.path.startsWith(x))) continue;
-        if (c.status === 'D') {
-          const d = getRepoLayer().deleteFile(repo.uuid, c.path, { defer: true });
-          (d.error && !/not found/.test(d.error) ? failed : removed).push(d.error ? { path: c.path, error: d.error } : c.path);
-          continue;
-        }
-        let buf; try { buf = fs.readFileSync(path.join(dir, c.path)); } catch (e) { failed.push({ path: c.path, error: e.message }); continue; }
-        if (!_isProbablyText(buf)) { binary.push(c.path); continue; }
-        const w = getRepoLayer().writeFile(repo.uuid, c.path, buf.toString('utf8'), { defer: true, preserveWhitespace: true });
-        if (w.error) failed.push({ path: c.path, error: w.error }); else applied.push(c.path);
-      }
-      if (applied.length || removed.length) getRepoLayer().refresh(repo.uuid);
+      const { applied, removed, binary, failed } = _applyChangedFilesToRepo(repo.uuid, dir, r.changed);
       os.emit('idearium.repo.git.pull', { repoUuid: repo.uuid, remote: r.remote, branch: r.branch, applied: applied.length, removed: removed.length });
       return ok(res, { repoUuid: repo.uuid, ...r, applied, removed, binary, failed });
     }
@@ -3678,37 +3734,114 @@ async function handle(req, res, route, query, body) {
       try {
         const c = await G.clone(v.url, dest, { keyPath, token: body.token || null, depth: body.full ? 0 : 1 });
         if (!c.ok) return err(res, 400, c.error);
-        const cfg = _require('../../lib/project-import.config.js');
-        const { extractZipToFiles } = _require('../../lib/zip-ingest.js');
-        const extraction = extractZipToFiles({
-          entries: G.readTree(dest), maxFiles: cfg.ZIP.maxFiles, maxBytesPerFile: cfg.ZIP.maxBytesPerFile, maxTotalBytes: cfg.ZIP.maxTotalBytes,
-          maxRealFileBytes: cfg.ZIP.maxRealFileBytes, realFiles: cfg.ZIP.realFiles, includeBinary: cfg.ZIP.includeBinary,
-          verifyHashes: cfg.ZIP.verifyHashes, skipDirs: cfg.ZIP.skipDirs, textExt: cfg.ZIP.textExt,
-        });
-        if (!extraction.ok) return err(res, 400, extraction.error);
-        const { included, realFiles, omitted } = extraction;
-        if (!included.length && !realFiles.length) return err(res, 400, 'the repository has no files that pass the import bounds');
-        const ingest = getRepoLayer().ingest({ name, files: included, source: 'git-clone',
-          compartmentId: _ensureCompartment(`idearium-git-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`, `git clone of ${v.url}`),
-          materializeBaseDir: cfg.REPO_STORAGE.dir });
-        if (ingest.error) return err(res, 400, ingest.error);
-        const repoUuid = ingest.repo.uuid;
-        let sources = null;
-        if (realFiles.length) {
-          sources = getRepoLayer().writeSourcesAsync ? await getRepoLayer().writeSourcesAsync(repoUuid, realFiles) : getRepoLayer().writeSources(repoUuid, realFiles);
-          if (!sources.ok) return err(res, 500, `source-file write failed: ${sources.error}`);
-        }
-        const mat = getRepoLayer().materialize(repoUuid);
-        if (mat.error) return err(res, 500, `materialize after clone failed: ${mat.error}`);
-        fs.cpSync(path.join(dest, '.git'), path.join(mat.dir, '.git'), { recursive: true });
-        await G.ensureRepo(mat.dir);   // Idearium's own files excluded from git status
-        os.emit('idearium.repo.git.cloned', { repoUuid, name, kind: v.kind, fileCount: sources ? sources.written : included.length });
-        return ok(res, { repo: getRepoLayer().get(repoUuid), repoUuid, name, url: v.url,
-          fileCount: sources ? sources.written : included.length, chunkCount: included.length,
-          omittedCount: omitted.length, omitted: omitted.slice(0, 50), pipeline: { state: 'DEFERRED', note: 'call POST /api/repos/:uuid/chunk' } });
+        const im = await _importFolderAsRepo({ dir: dest, name, source: 'git-clone',
+          compartmentId: _ensureCompartment(`idearium-git-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`, `git clone of ${v.url}`) });
+        if (im.error) return err(res, im.status || 400, im.error);
+        os.emit('idearium.repo.git.cloned', { repoUuid: im.repoUuid, name, kind: v.kind, fileCount: im.fileCount });
+        return ok(res, { repo: getRepoLayer().get(im.repoUuid), repoUuid: im.repoUuid, name, url: v.url,
+          fileCount: im.fileCount, chunkCount: im.chunkCount, omittedCount: im.omitted.length, omitted: im.omitted.slice(0, 50),
+          pipeline: { state: 'DEFERRED', note: 'call POST /api/repos/:uuid/chunk' } });
       } finally {
         try { fs.rmSync(tmpRoot, { recursive: true, force: true }); } catch (_) {}
       }
+    }
+
+    // ── §0.39.265 — compartment remotes (lib/cos-remote.js) ──────────────
+    // Push/pull/status/browse run OUT OF PROCESS (runIsolated): packing a big
+    // compartment must not stall this API. An ssh remote signs in with an SSH
+    // key ALIAS registered to the compartment (cos/ci/keys.js), resolved here
+    // to its path; the key itself never moves. When the compartment belongs to
+    // an Idearium repo, the repo's folder travels as the compartment's project
+    // part, and a pull that changed it updates the repo.
+    case 'cos.compartments.list': {
+      const CR = _require('../../lib/cos-remote.js');
+      const bridge = _require('../../lib/cos-bridge.js');
+      const L = getRepoLayer();
+      const repoOf = new Map(((L.repos && L.repos.repos) || []).filter(r => r.compartmentId && r.status !== 'archived').map(r => [r.compartmentId, { uuid: r.uuid, name: r.name }]));
+      const list = bridge.listCompartments().map(c => ({ id: c.id, name: c.name, purpose: c.purpose || '', parentId: c.parentId || null, state: c.state || null,
+        repo: repoOf.get(c.id) || null, remotes: CR.listRemotes(c.id).map(r => ({ name: r.name, kind: r.kind, location: r.location, lastPush: r.lastPush || null, lastPull: r.lastPull || null })) }));
+      return ok(res, { available: bridge.available(), compartments: list });
+    }
+
+    case 'cos.remote.list':
+    case 'cos.remote.add':
+    case 'cos.remote.remove':
+    case 'cos.remote.status':
+    case 'cos.remote.push':
+    case 'cos.remote.pull': {
+      const CR = _require('../../lib/cos-remote.js');
+      const bridge = _require('../../lib/cos-bridge.js');
+      const comp = bridge.getCompartment(params.cid);
+      if (!comp) return err(res, 404, `compartment not found: ${params.cid}`);
+      const repoRow = (() => { try { const L = getRepoLayer(); return ((L.repos && L.repos.repos) || []).find(r => r.compartmentId === comp.id && r.status !== 'archived') || null; } catch (_) { return null; } })();
+      if (action === 'cos.remote.list') return ok(res, { compartmentId: comp.id, name: comp.name, repoUuid: repoRow ? repoRow.uuid : null, remotes: CR.listRemotes(comp.id), parts: CR.partsOf(comp).map(p => p.part) });
+      if (action === 'cos.remote.add') {
+        const r = CR.addRemote(comp.id, { name: body.name || 'origin', location: body.location, keyAlias: body.keyAlias || null });
+        if (!r.ok) return err(res, 400, r.error);
+        os.emit('idearium.cos.remote.added', { compartmentId: comp.id, name: r.name, kind: r.kind });
+        return ok(res, { compartmentId: comp.id, remote: r });
+      }
+      if (action === 'cos.remote.remove') {
+        const r = CR.removeRemote(comp.id, params.name);
+        return r.ok ? ok(res, { compartmentId: comp.id, removed: params.name }) : err(res, 404, r.error);
+      }
+      const remote = CR.listRemotes(comp.id).find(x => x.name === params.name);
+      if (!remote) return err(res, 404, `this compartment has no remote named "${params.name}"`);
+      let keyPath = null;
+      if (remote.kind === 'ssh' && remote.keyAlias) {
+        const k = _require('../../cos/ci/keys.js').resolveSshKey({ compartmentName: comp.id, alias: remote.keyAlias });
+        if (!k.ok) return err(res, 400, k.error);
+        keyPath = k.keyPath;
+      }
+      // a repo's folder is the compartment's project part — mount it if it never was (spec-created repos)
+      if (repoRow && !CR.partsOf(comp).some(p => p.part === 'project')) {
+        const dir = _repoDiskDir(repoRow.uuid);
+        if (dir) bridge.mountPath(comp.id, { path: dir, role: 'project' });
+      }
+      const op = action.split('.').pop();
+      const r = await CR.runIsolated(op, { compartment: comp.id, remote: remote.name, keyPath, force: !!body.force });
+      if (!r.ok) return err(res, op === 'status' ? 502 : 409, r.error, { state: r.state || null });
+      let repoSync = null;
+      if (op === 'pull' && repoRow && r.changed && r.changed.project && r.changed.project.length) {
+        const pm = CR.partsOf(bridge.getCompartment(comp.id)).find(p => p.part === 'project');
+        if (pm) repoSync = _applyChangedFilesToRepo(repoRow.uuid, pm.dir, r.changed.project);
+      }
+      if (op !== 'status') os.emit(`idearium.cos.remote.${op}`, { compartmentId: comp.id, remote: remote.name, state: r.state, repoUuid: repoRow ? repoRow.uuid : null });
+      return ok(res, { compartmentId: comp.id, remote: remote.name, repoUuid: repoRow ? repoRow.uuid : null, ...r, repoSync });
+    }
+
+    // What is kept at a location (to pull a compartment this machine does not
+    // have), and pulling one. A pulled compartment's project part becomes a
+    // new Idearium repo, attached to the compartment so its next push carries it.
+    case 'cos.remote.browse':
+    case 'cos.remote.clone': {
+      const CR = _require('../../lib/cos-remote.js');
+      let keyPath = null;
+      if (body.keyPath) {
+        const chk = _require('../../cos/ci/index.js').checkKeyRef(String(body.keyPath));
+        if (!chk.ok) return err(res, 400, chk.error);
+        keyPath = String(body.keyPath);
+      }
+      if (action === 'cos.remote.browse') {
+        const r = await CR.runIsolated('browse', { location: body.location, keyPath });
+        return r.ok ? ok(res, r) : err(res, 400, r.error);
+      }
+      if (!body.name) return err(res, 400, 'name (which compartment to pull) is required');
+      const r = await CR.runIsolated('pull', { location: body.location, name: body.name, keyPath });
+      if (!r.ok) return err(res, 400, r.error);
+      let repo = null;
+      if (r.project && r.project.dir) {
+        try {
+          const im = await _importFolderAsRepo({ dir: r.project.dir, name: r.name, source: 'cos-remote', compartmentId: r.compartmentId });
+          if (im.error) repo = { error: im.error };
+          else {
+            _require('../../lib/cos-bridge.js').mountPath(r.compartmentId, { path: im.matDir, role: 'project' });
+            repo = { repoUuid: im.repoUuid, fileCount: im.fileCount };
+          }
+        } finally { try { fs.rmSync(r.project.dir, { recursive: true, force: true }); } catch (_) {} }
+      }
+      os.emit('idearium.cos.remote.cloned', { compartmentId: r.compartmentId, name: r.name, repoUuid: repo && repo.repoUuid || null });
+      return ok(res, { ...r, project: r.project ? { files: r.project.files } : null, repo });
     }
 
     // §SCAN 2026-09-20 — repo intelligence scan: dangling hooks, gaps,
