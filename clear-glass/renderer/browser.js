@@ -2958,9 +2958,13 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     ctxMenu.querySelector('[data-action="unpin-sep"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar"]').style.display = ctxIsChrome ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar-sep"]').style.display = ctxIsChrome ? '' : 'none';
-    ctxMenu.style.left = Math.min(x, window.innerWidth - 180) + 'px';
-    ctxMenu.style.top  = Math.min(y, window.innerHeight - 220) + 'px';
+    // §0.39.265 — clamp to the menu's real, measured size (it grows with
+    // its rows) instead of a guessed 180×220, and never to a NaN position.
     ctxMenu.classList.add('visible');
+    const w = ctxMenu.offsetWidth || 180, h = ctxMenu.offsetHeight || 220;
+    const px = Number.isFinite(x) ? x : 0, py = Number.isFinite(y) ? y : 0;
+    ctxMenu.style.left = Math.max(4, Math.min(px, window.innerWidth - w - 4)) + 'px';
+    ctxMenu.style.top  = Math.max(4, Math.min(py, window.innerHeight - h - 4)) + 'px';
   }
   function hideCtxMenu() { ctxMenu.classList.remove('visible'); }
 
@@ -2990,9 +2994,15 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     // where on the page the click actually was. Adding the webview's own
     // offset within the window converts it to window-relative, the same
     // coordinate space showCtxMenu()'s Math.min clamp already assumes.
+    //
+    // §0.39.265 — still stuck: Electron's <webview> 'context-menu' event
+    // carries the point as e.params.x / e.params.y; e.x / e.y are undefined,
+    // so left/top became "NaNpx", which the browser ignores, and the menu sat
+    // at its default top-left corner. Read params (e.x kept as a fallback).
     const r = wv.getBoundingClientRect();
-    ctxPageXY = { x: e.x, y: e.y };
-    showCtxMenu(r.left + e.x, r.top + e.y);
+    const p = e.params || e;
+    ctxPageXY = { x: p.x, y: p.y };
+    showCtxMenu(r.left + p.x, r.top + p.y);
   });
 
   ctxMenu.addEventListener('click', async (e) => {
