@@ -120,26 +120,30 @@ body{display:flex;flex-direction:column;position:relative}
    WELCOME VIEW
    ════════════════════════════════════════════════════ */
 .welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;overflow-y:auto}
-.welcome-mark{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--text3);margin-bottom:14px}
-.welcome-title{font-family:var(--mono);font-size:34px;font-weight:600;letter-spacing:.12em;color:var(--sky);text-shadow:0 0 30px rgba(56,189,248,.25);margin-bottom:8px}
+.welcome-mark{font-family:var(--mono);font-size:clamp(11px,.8vw,14px);letter-spacing:.3em;color:var(--text3);margin-bottom:14px}
+.welcome-title{font-family:var(--mono);font-size:clamp(34px,3.4vw,60px);font-weight:600;letter-spacing:.12em;color:var(--sky);text-shadow:0 0 30px rgba(56,189,248,.25);margin-bottom:8px}
 .welcome-title span{color:var(--text)}
-.welcome-sub{font-size:13px;color:var(--text2);max-width:520px;text-align:center;line-height:1.7;margin-bottom:24px}
+.welcome-sub{font-size:clamp(13px,1.05vw,18px);color:var(--text2);max-width:min(900px,70vw);text-align:center;line-height:1.7;margin-bottom:24px}
 .welcome-actions{display:flex;gap:12px;margin-bottom:36px}
-.welcome-action-btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:10px 22px;border-radius:6px;cursor:pointer;transition:all .15s;background:none}
+.welcome-action-btn{font-family:var(--mono);font-size:clamp(12px,.95vw,16px);letter-spacing:.04em;padding:clamp(10px,.9vw,15px) clamp(22px,2vw,36px);border-radius:6px;cursor:pointer;transition:all .15s;background:none}
 .welcome-action-btn.primary{border:1px solid var(--sky);color:var(--sky);background:rgba(56,189,248,.08)}
 .welcome-action-btn.primary:hover{background:rgba(56,189,248,.16)}
 .welcome-action-btn.secondary{border:1px solid var(--b1);color:var(--text2)}
 .welcome-action-btn.secondary:hover{border-color:var(--sky);color:var(--sky)}
-.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:920px;width:100%}
-.pillar{background:rgba(13,18,25,.7);border:1px solid var(--b0);border-radius:10px;padding:18px;cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:clamp(14px,1.4vw,26px);max-width:min(1500px,92vw);width:100%}
+.pillar{background:rgba(13,18,25,.7);border:1px solid var(--b0);border-radius:10px;padding:clamp(18px,1.7vw,32px);cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden}
 .pillar:hover{border-color:var(--b2);background:rgba(56,189,248,.04);transform:translateY(-2px)}
-.pillar-step{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em}
-.pillar-icon{font-size:20px;margin:8px 0 10px}
-.pillar-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px}
-.pillar-desc{font-size:11px;color:var(--text2);line-height:1.55}
+.pillar-step{font-family:var(--mono);font-size:clamp(9px,.7vw,12px);color:var(--text3);letter-spacing:.1em}
+.pillar-icon{font-size:clamp(20px,1.7vw,30px);margin:8px 0 10px}
+.pillar-name{font-size:clamp(14px,1.15vw,20px);font-weight:500;color:var(--text);margin-bottom:5px}
+.pillar-desc{font-size:clamp(11px,.9vw,15px);color:var(--text2);line-height:1.55}
 .pillar.flow::after{content:'→';position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;z-index:5}
 .pillar:nth-child(3)::after,.pillar:nth-child(6)::after{display:none}
-.welcome-foot{margin-top:30px;font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.08em}
+/* §0.39.265 — James: "its small on the homepage". The grid now fits however many cards are showing (2 in the
+   nested view, 5 standalone) across the width and the text scales with the window, so the flow arrows
+   no longer land on a fixed third column — they are dropped rather than pointing at nothing. */
+.pillars .pillar.flow::after{display:none}
+.welcome-foot{margin-top:30px;font-family:var(--mono);font-size:clamp(9px,.7vw,12px);color:var(--text3);letter-spacing:.08em}
 
 /* ════════════════════════════════════════════════════
    SHARED panel/list/detail primitives (Ideas view baseline)
