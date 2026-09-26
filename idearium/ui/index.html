@@ -407,7 +407,7 @@ body{display:flex;flex-direction:column;position:relative}
    grid-template-columns override that used to live here is gone — as of
    §NO-SIDEBAR above, .repo-wrap is single-column in BOTH states.) */
 .repo-back-btn{margin-right:10px}
-.repo-rail-body.block-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:16px}
+.repo-rail-body.block-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:16px;align-content:start}
 .repo-block{background:rgba(255,255,255,.02);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:8px}
 .repo-block:hover{border-color:var(--sky);background:rgba(56,189,248,.05);transform:translateY(-1px)}
 .repo-block-head{display:flex;align-items:center;gap:8px}
@@ -419,6 +419,14 @@ body{display:flex;flex-direction:column;position:relative}
 .repo-block-meta .dot.done{background:var(--mint)}
 .repo-block-meta .dot.building{background:var(--sky);animation:pulse-dot 1.6s ease-in-out infinite}
 .repo-block-compartment{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--b0);border-radius:20px;padding:2px 8px;align-self:flex-start}
+/* §0.39.265 — nexus + nexus/core are the main repo; RAID's contract repos fold away at the end */
+.repo-block.main{border-color:color-mix(in srgb,var(--sky) 45%,var(--b1));background:rgba(56,189,248,.04)}
+.repo-grid-raid{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.repo-grid-raid>summary{cursor:pointer;list-style:none;opacity:.75}
+.repo-grid-raid>summary::-webkit-details-marker{display:none}
+.repo-grid-raid>summary::before{content:'▸ ';}
+.repo-grid-raid[open]>summary::before{content:'▾ ';}
+.repo-block.raid{padding:8px 12px;opacity:.8}
 .repo-grid-group-label{grid-column:1/-1;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:8px 4px 0;margin-top:4px}
 .repo-grid-group-label:first-child{margin-top:0}
 
