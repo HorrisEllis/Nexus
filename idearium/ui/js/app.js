@@ -567,7 +567,11 @@ function renderDetail(idea) {
     html += `<div class="ds"><div class="ds-label">spec</div><button class="action-btn primary" onclick="createSpecForIdea('${idea.uuid}')">+ create spec from this idea</button></div>`;
   }
 
-  html += `<div class="ds"><div class="ds-label">its repo</div><button class="action-btn primary" onclick="openIdeaInRepo('${idea.uuid}')">work it in its repo → brainstorm · problems · expand · improve</button></div>`;
+  // §0.39.263 — an idea is worked here until it is a spec; then its repo's Idea tab holds the lanes
+  const ideaRepo = typeof _repoOfIdea === 'function' ? _repoOfIdea(idea.uuid) : null;
+  html += ideaRepo
+    ? `<div class="ds"><div class="ds-label">work it</div><button class="action-btn primary" onclick="openIdeaLanes('${idea.uuid}')">it is a spec — its lanes are in its repo's Idea tab →</button></div>`
+    : `<div class="ds"><div class="ds-label">work it · brainstorm · problem solving · expand · improve</div><div class="cmp-host cmp-detail"><div class="detail-empty">loading the lanes…</div></div></div>`;
   html += `<div class="ds"><div class="ds-label">repository</div><button class="action-btn" onclick="openRepoFor('${idea.uuid}', null, '${escapeHtml(idea.text||idea.uuid).replace(/'/g,"\\'").slice(0,40)}')">open repository →</button></div>`;
 
   if (openGaps.length) {
@@ -609,6 +613,7 @@ function renderDetail(idea) {
     <div class="ds"><div class="ds-label">identity</div><div class="ds-mono">${idea.uuid}\n${idea.slug||''}\ncreated ${idea.createdAt?new Date(idea.createdAt).toLocaleString():'—'}\nupdated ${idea.updatedAt?new Date(idea.updatedAt).toLocaleString():'—'}</div></div>
   `;
   area.innerHTML = html;
+  if (!ideaRepo && typeof openCompartmentIdea === 'function') openCompartmentIdea(idea.uuid, { quiet: true, keepLane: typeof WBC !== 'undefined' && WBC.ideaUuid === idea.uuid });
 }
 
 async function setPhase(uuid, phase) {
@@ -756,9 +761,9 @@ async function promoteBrainstorm(id) {
     const r = await api(`/api/brainstorms/${id}/promote`, { method: 'POST' });
     await loadBrainstorms();
     await loadIdeas();
-    toast('promoted — now in its own repo','ok');
-    // §0.39.263 — a promoted idea gets its repo (a compartment); the lanes are that repo's Idea tab
-    if (r.idea?.uuid && typeof openIdeaInRepo === 'function') { await loadApiRepos(); openIdeaInRepo(r.idea.uuid); }
+    toast('promoted — work it in Ideas','ok');
+    // §0.39.263 — a promoted brainstorm is an idea (not a spec, no repo): its lanes are in its Ideas detail
+    if (r.idea?.uuid && typeof openIdeaLanes === 'function') openIdeaLanes(r.idea.uuid);
   } catch(e) { toast(e.message,'err'); }
 }
 function renderBrainstorms() {
@@ -772,7 +777,7 @@ function renderBrainstorms() {
         <span class="brain-ts">${new Date(b.ts).toLocaleString()}</span>
       </div>
       <div class="action-row">
-        ${b.promoted ? (b.ideaUuid ? `<button class="action-btn" style="color:var(--mint)" onclick="openIdeaInRepo('${b.ideaUuid}')">promoted ✓ · open its repo →</button>` : `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>`) : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → its repo</button>`}
+        ${b.promoted ? (b.ideaUuid ? `<button class="action-btn" style="color:var(--mint)" onclick="openIdeaLanes('${b.ideaUuid}')">promoted ✓ · open the idea →</button>` : `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>`) : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → idea</button>`}
         ${b.promoted ? '' : `<button class="action-btn" onclick="assistBrainstormCard('${b.uuid}')">✨ refine</button>`}
         <button class="action-btn" onclick='openNewSpecModal({name:${JSON.stringify(b.text.slice(0,60))}, description:${JSON.stringify(b.text)}})'>+ spec</button>
         <button class="action-btn danger" onclick="deleteBrainstorm('${b.uuid}')">discard</button>
@@ -843,8 +848,8 @@ async function assistBrainstormCard(uuid) {
       const r = await api(`/api/brainstorms/${uuid}/promote`, { method: 'POST', body: JSON.stringify({ text }) });
       await loadBrainstorms();
       await loadIdeas();
-      toast('promoted — now in its own repo', 'ok');
-      if (r.idea?.uuid && typeof openIdeaInRepo === 'function') { await loadApiRepos(); openIdeaInRepo(r.idea.uuid); }
+      toast('promoted — work it in Ideas', 'ok');
+      if (r.idea?.uuid && typeof openIdeaLanes === 'function') openIdeaLanes(r.idea.uuid);
     } catch (e) { toast(e.message, 'err'); }
   }});
 }
@@ -1979,13 +1984,13 @@ async function renderRepoIdea(repo) {
     <div class="ds"><div class="ds-label">the idea · ${escapeHtml(r.idea.phase)}${r.idea.tension != null ? ` · tension ${Number(r.idea.tension).toFixed(2)}` : ''} · ${r.idea.links} link(s)</div>
       <textarea id="repo-idea-text" class="field-textarea" rows="3" spellcheck="false">${escapeHtml(r.idea.text)}</textarea>
       <div class="action-row"><button class="action-btn" onclick="repoIdeaSave()">save idea</button></div></div>
-    <div id="cmp-detail" class="cmp-detail cmp-in-repo"><div class="detail-empty">loading the lanes…</div></div>
+    <div class="cmp-host cmp-detail cmp-in-repo"><div class="detail-empty">loading the lanes…</div></div>
     <details class="ds repo-iterations"><summary class="ds-label" style="cursor:pointer">iterations for the agent / roadmap · ${it.length}</summary>
       <div style="display:flex;gap:6px;margin:6px 0">${r.kinds.map(k => `<label style="font-size:11px"><input type="radio" name="repo-idea-kind" value="${k}" ${k === 'expand' ? 'checked' : ''}> ${k}</label>`).join('')}</div>
       <textarea id="repo-idea-new" class="field-textarea" rows="3" spellcheck="false" placeholder="improve: what should be better · iterate: another pass on something · expand: where the project goes next"></textarea>
       <div class="action-row"><button class="action-btn" onclick="repoIdeaAdd()">add</button><button class="action-btn" onclick="repoIdeaAdd(true)">add + send to agent</button></div>
       ${r.kinds.map(k => `<div class="ds"><div class="ds-label">${k} · ${by(k).length}</div>${by(k).map(row).join('') || '<div class="ds-mono" style="opacity:.5">none yet</div>'}</div>`).join('')}</details>`;
-  // §0.39.263 — the repo IS the compartment: the idea's four lanes (brainstorm ·
+  // §0.39.263 — a spec's repo is its compartment: the idea's four lanes (brainstorm ·
   // problem solving · expand · improve, js/compartment.js) are this tab's body
   if (r.idea && r.idea.uuid && typeof openCompartmentIdea === 'function') {
     openCompartmentIdea(r.idea.uuid, { quiet: true, keepLane: typeof WBC !== 'undefined' && WBC.ideaUuid === r.idea.uuid });

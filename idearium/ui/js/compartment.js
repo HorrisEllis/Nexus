@@ -18,11 +18,12 @@
 // IDEAS, API_REPOS, CONNECTED, setRepoSubtab(), enterRepoDetail().
 //
 // §0.39.263 — James: "should not be a compartments tab, repos are compartments …
-// move it where it belongs." There is no Compartment view any more. An idea worked
-// in the lanes lives in ITS repo (POST /api/ideas/:uuid/repo makes one, with its
-// own COS compartment, if it has none), and the lanes render in that repo's Idea
-// tab (#cmp-detail inside #repo-subtab-idea). openCompartmentIdea() now takes you
-// there. The navigator tree shows repos only, with the nexus systems nested in nexus.
+// move it where it belongs", and: "ideas promoted to specs get a repo." There is no
+// Compartment view. The lanes render where the idea lives:
+//   · an idea that is a spec has a repo → that repo's Idea tab
+//   · an idea that is not a spec yet → its detail in Create › Ideas
+// (a .cmp-host in either; nothing here ever creates a repo). The navigator tree
+// shows repos only, with the nexus systems nested in nexus.
 
 const WBC = {
   index: null,         // { lanes, tree }
@@ -65,7 +66,7 @@ async function openCompartmentIdea(uuid, { lane, keepLane, quiet } = {}) {
     const from = WBC.linking; WBC.linking = null;
     return _patchEntry(from, { addLink: uuid });
   }
-  if (!quiet) return openIdeaInRepo(uuid, { lane });   // 0.39.263 — the lanes live in the idea's repo
+  if (!quiet) return openIdeaLanes(uuid, { lane });   // 0.39.263 — the lanes live where the idea lives
   WBC.ideaUuid = uuid;
   if (lane) WBC.lane = lane; else if (!keepLane) WBC.lane = 'all';
   try {
@@ -75,19 +76,21 @@ async function openCompartmentIdea(uuid, { lane, keepLane, quiet } = {}) {
   renderCompartmentDetail();
 }
 
-async function admitToCompartment(uuid) { return openIdeaInRepo(uuid); }
+async function admitToCompartment(uuid) { return openIdeaLanes(uuid); }
 
-/** the idea's repo (made, with its compartment, if it has none) → its Idea tab, on the lanes */
-async function openIdeaInRepo(ideaUuid, { lane } = {}) {
-  let r;
-  try { r = await api(`/api/ideas/${ideaUuid}/repo`, { method: 'POST', body: '{}' }); }
-  catch (e) { toast(e.message, 'err'); return; }
-  if (!API_REPOS.some(x => x.uuid === r.repoUuid) && typeof loadApiRepos === 'function') await loadApiRepos();
+/** the idea's repo if it is a spec (its Idea tab), else the idea in Create › Ideas — the lanes are in both */
+function _repoOfIdea(ideaUuid) { return (API_REPOS || []).find(r => r.ideaUuid === ideaUuid && r.status !== 'archived') || null; }
+async function openIdeaLanes(ideaUuid, { lane } = {}) {
   WBC.ideaUuid = ideaUuid; WBC.lane = lane || 'all';
-  setView('repo');
-  if (typeof enterRepoDetail === 'function') enterRepoDetail(r.repoUuid);
-  setRepoSubtab('idea');
-  if (r.created) toast('its repo was made — a compartment of its own', 'ok');
+  const repo = _repoOfIdea(ideaUuid);
+  if (repo) {
+    setView('repo');
+    if (typeof enterRepoDetail === 'function') enterRepoDetail(repo.uuid);
+    setRepoSubtab('idea');
+    return;
+  }
+  setView('ideas');
+  if (typeof selectIdea === 'function') selectIdea(ideaUuid);
 }
 
 // ── left: recursive idea tree ───────────────────────────────────────────────
@@ -118,13 +121,16 @@ function renderCompartmentTree() {
 function setCompartmentLane(lane) { WBC.lane = lane; renderCompartmentDetail(); }
 
 function renderCompartmentDetail() {
-  const el = document.getElementById('cmp-detail');
+  // the host in the view on screen: a repo's Idea tab, or an idea's detail in Create › Ideas
+  const el = document.querySelector('.view.active .cmp-host') || document.querySelector('.cmp-host');
   const d = WBC.current;
   if (!el) return;
   if (!d) { el.innerHTML = `<div class="detail-empty">← pick an idea to work it</div>`; return; }
   const title = document.getElementById('cmp-title');
   if (title) title.textContent = _wbShort(d.idea.text, 60);
-  const inRepo = !!el.closest('#repo-subtab-idea');   // 0.39.263 — the idea's text is edited above, in the repo's Idea tab
+  // 0.39.263 — hosted in a repo's Idea tab or an idea's detail, where the idea's text is already shown above
+  const inRepo = !!el.closest('#repo-subtab-idea') || !!el.closest('#view-ideas');
+  const inIdeas = !!el.closest('#view-ideas');
 
   const crumbs = [...(d.path || []), { ideaUuid: d.idea.uuid, text: d.idea.text }]
     .map((p, i, a) => i === a.length - 1
@@ -151,7 +157,7 @@ function renderCompartmentDetail() {
       <div class="cmp-idea-meta">
         <span class="ic-tag">${_wbEsc(d.idea.phase || 'seed')}</span>
         ${(d.idea.tags || []).map(t => `<span class="ic-tag">#${_wbEsc(t)}</span>`).join('')}
-        <button class="action-btn" onclick="setView('ideas');selectIdea('${d.idea.uuid}')">open in Ideas</button>
+        ${inIdeas ? '' : `<button class="action-btn" onclick="setView('ideas');selectIdea('${d.idea.uuid}')">open in Ideas</button>`}
       </div>
       ${WBC.linking ? `<div class="cmp-linking">link mode — click any entry or idea to link it · <button class="action-btn" onclick="cancelCompartmentLink()">cancel</button></div>` : ''}
     </div>

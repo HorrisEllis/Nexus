@@ -327,40 +327,6 @@ function _ensureCompartment(nameBase, purpose) {
 // return that repo anyway; checking first avoids minting a compartment
 // nothing will use). Never throws — a failure on one spec is logged and the
 // rest still run (§1.2, same rule as the auto-repo step it backstops).
-// §0.39.263 — James: "should not be a compartments tab, repos are compartments."
-// An idea worked in the lanes (brainstorm · problem solving · expand · improve)
-// lives in ITS repo — a repo with its own COS compartment — and the lanes are
-// that repo's Idea tab. _ensureIdeaRepo finds the idea's repo or makes one
-// (bare, compartment-backed, the idea's phase left as it is). Used by promote,
-// admit, POST /api/ideas/:uuid/repo, and the boot reconcile below.
-function _ensureIdeaRepo(ideaUuid) {
-  const rl = getRepoLayer();
-  const have = rl.list({ includeArchived: false }).find(r => r.ideaUuid === ideaUuid);
-  if (have) return { repo: have, created: false };
-  const idea = getIdeaOS().idea(ideaUuid);
-  if (!idea) return { error: `idea not found: ${ideaUuid}` };
-  const text = String(idea.text || 'idea').replace(/\s+/g, ' ').trim();
-  const name = text.length > 60 ? text.slice(0, 59) + '…' : text;
-  const r = rl.ingest({ name, bare: true, source: 'idea.compartment', ideaUuid, keepIdeaPhase: true,
-    compartmentId: _ensureCompartment(`idearium-idea-${ideaUuid.slice(0, 8)}`, name) });
-  if (r.error) return { error: r.error };
-  return { repo: r.repo, created: true };
-}
-
-// Boot: every idea already in the old Compartment gets its repo, so nothing that
-// was worked there is left without a place to open it. Idempotent.
-function _reconcileWorkbenchRepos() {
-  let members = [];
-  try { members = loadTable(WB.MEMBER_TABLE); } catch (_) { return { created: 0 }; }
-  let created = 0;
-  for (const m of members) {
-    try { const r = _ensureIdeaRepo(m.ideaUuid); if (r.created) created++; if (r.error) console.warn(`[idearium/api] idea→repo: ${m.ideaUuid.slice(0, 8)}: ${r.error}`); }
-    catch (e) { console.warn(`[idearium/api] idea→repo threw for ${String(m.ideaUuid).slice(0, 8)}: ${e.message}`); }
-  }
-  if (created) console.log(`[idearium/api] idea→repo reconcile: ${created} compartment idea(s) given their repo`);
-  return { created };
-}
-
 async function _reconcileSpecRepos() {
   let se = getSpecEngine();
   // getSpecEngine() kicks off an async import() and returns null until it
@@ -802,7 +768,6 @@ const ROUTE_CAP = {
   'workbench.index':  CAPS.READ_IDEAS,
   'workbench.show':   CAPS.READ_IDEAS,
   'workbench.admit':  CAPS.WRITE_IDEAS,
-  'idea.repo':        CAPS.WRITE_IDEAS,
   'workbench.add':    CAPS.WRITE_IDEAS,
   'workbench.update': CAPS.WRITE_IDEAS,
   'workbench.delete': CAPS.WRITE_IDEAS,
@@ -883,7 +848,6 @@ function matchRoute(method, url) {
     ['GET',    ['api','workbench'],                        'workbench.index'],
     ['GET',    ['api','ideas',':uuid','workbench'],        'workbench.show'],
     ['POST',   ['api','ideas',':uuid','workbench','admit'],'workbench.admit'],
-    ['POST',   ['api','ideas',':uuid','repo'],             'idea.repo'],   // 0.39.263 — the idea's repo (its compartment), made if missing
     ['POST',   ['api','ideas',':uuid','workbench'],        'workbench.add'],
     ['PATCH',  ['api','workbench',':uuid'],                'workbench.update'],
     ['DELETE', ['api','workbench',':uuid'],                'workbench.delete'],
@@ -1336,8 +1300,7 @@ async function handle(req, res, route, query, body) {
         if (seed.entry) appendRow(WB.ENTRY_TABLE, seed.entry);
         os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: promotedIdea.uuid }, ts: Date.now() });
       }
-      const ir = _ensureIdeaRepo(promotedIdea.uuid);   // 0.39.263 — promoted → its own repo (a compartment)
-      return ok(res, { promoted: true, idea: promotedIdea, compartment: true, repoUuid: ir.repo ? ir.repo.uuid : null, repoError: ir.error || null, eventId: ev.uuid });
+      return ok(res, { promoted: true, idea: promotedIdea, compartment: true, eventId: ev.uuid });
     }
 
     // ── Compartment (idea workbench) — lib/idea-workbench.js ────────────────
@@ -1376,14 +1339,6 @@ async function handle(req, res, route, query, body) {
       return ok(res, { idea, member, lanes: WB.LANES, tree: WB.buildTree(mine), count: mine.length, inbound, outbound, childIdeas, path, links });
     }
 
-    case 'idea.repo': {
-      const ir = _ensureIdeaRepo(params.uuid);
-      if (ir.error) return err(res, /not found/.test(ir.error) ? 404 : 500, ir.error);
-      const members = loadTable(WB.MEMBER_TABLE);
-      if (!members.some(m => m.ideaUuid === params.uuid)) appendRow(WB.MEMBER_TABLE, WB.makeMember({ ideaUuid: params.uuid }));
-      return ok(res, { repoUuid: ir.repo.uuid, created: ir.created });
-    }
-
     case 'workbench.admit': {
       // Bring an existing idea (one not promoted from a brainstorm) into the
       // Compartment. Idempotent: admitting a member twice is a no-op.
@@ -1394,8 +1349,7 @@ async function handle(req, res, route, query, body) {
         appendRow(WB.MEMBER_TABLE, WB.makeMember({ ideaUuid: idea.uuid, parentIdea: body.parentIdea || null }));
         os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: idea.uuid }, ts: Date.now() });
       }
-      const ir = _ensureIdeaRepo(idea.uuid);   // 0.39.263 — the lanes live in the idea's repo
-      return ok(res, { admitted: true, ideaUuid: idea.uuid, repoUuid: ir.repo ? ir.repo.uuid : null, repoError: ir.error || null });
+      return ok(res, { admitted: true, ideaUuid: idea.uuid });
     }
 
     case 'workbench.add': {
@@ -4883,8 +4837,6 @@ export function startAPI() {
         // try/catch means a failure here can never fail the guardian half.
         try { await _reconcileSpecRepos(); }
         catch (e) { console.warn(`[idearium/api] spec→repo reconcile threw (non-fatal): ${e.message}`); }
-        try { _reconcileWorkbenchRepos(); }
-        catch (e) { console.warn(`[idearium/api] idea→repo reconcile threw (non-fatal): ${e.message}`); }
       },
     });
 

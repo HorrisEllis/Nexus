@@ -2,8 +2,10 @@
 // solving · expand · improve) from a mocked /api/workbench, and the expanded tab tree.
 // §0.39.263 — James: "should not be a compartments tab, repos are compartments …
 // the only repo i should be seeing is nexus, the rest are nested in the nexus repo."
-// The lanes render in the idea's REPO (its Idea tab); there is no Compartment tab or
-// view; opening an idea goes to its repo; the navigator nests the systems in nexus.
+// And: "ideas promoted to specs get a repo." There is no Compartment tab or view. The
+// lanes render where the idea lives — a spec's repo (its Idea tab), or, before it is a
+// spec, the idea's detail in Create › Ideas. Nothing creates a repo for an idea. The
+// navigator nests the systems in nexus.
 const { JSDOM } = require('jsdom');
 const fs = require('fs'), path = require('path');
 const assert = require('assert/strict');
@@ -34,7 +36,7 @@ const posted = [];
 window.fetch = async (url, opts = {}) => {
   const u = String(url);
   if ((opts.method || 'GET') === 'POST') posted.push(u);
-  const body = u.endsWith('/api/ideas/i1/repo') ? { repoUuid: 'r1', created: false } :
+  const body = u.endsWith('/health') ? { ok: true, version: 'test' } :   // idearium's own health body (0.39.260)
     u.endsWith('/api/repos/r1/idea') ? { idea: { uuid: 'i1', text: 'root idea', phase: 'seed', links: 0 }, iterations: [], kinds: ['improve', 'iterate', 'expand'], statuses: ['open', 'done'] } :
     u.endsWith('/api/workbench') ? INDEX : u.includes('/workbench') ? SHOW :
     u.includes('/api/repos') ? { repos: REPOS } : u.includes('/api/ideas') ? { ideas: [] } :
@@ -49,7 +51,11 @@ window.__drive = async function () {
   CONNECTED = true; API_BASE = 'http://127.0.0.1:4800';
   API_REPOS = ${JSON.stringify(REPOS)};
   await loadCompartment();
-  await openCompartmentIdea('i1');          // not quiet: goes to the idea's repo, Idea tab
+  IDEAS = [{ uuid: 'i1', text: 'root idea', phase: 'specced' }, { uuid: 'i4', text: 'an idea, not a spec', phase: 'seed', tension: 0.3 }];
+  await openCompartmentIdea('i4');          // not a spec: its detail in Create › Ideas
+  await new Promise(r => setTimeout(r, 50));
+  window.__ideasView = { active: document.getElementById('view-ideas').classList.contains('active'), lanes: document.querySelectorAll('#view-ideas .cmp-host .cmp-lane').length };
+  await openCompartmentIdea('i1');          // a spec (repo r1): its repo's Idea tab
   await new Promise(r => setTimeout(r, 50));
   toggleTabTree(true);
 };
@@ -62,12 +68,14 @@ window.eval(src);
   assert.equal(d.getElementById('view-compartment'), null, 'no Compartment view');
   assert.equal(d.querySelector('[data-view="compartment"]'), null, 'no Compartment tab');
   assert.equal(d.getElementById('compartment-tab-menu'), null, 'no Compartment menu');
-  // opening an idea asks for its repo and lands on that repo's Idea tab
-  assert.ok(posted.some(u => u.endsWith('/api/ideas/i1/repo')), 'the idea\'s repo was asked for');
+  // an idea that is not a spec is worked in Create › Ideas; nothing makes it a repo
+  assert.deepEqual({ ...window.__ideasView }, { active: true, lanes: 4 }, JSON.stringify(window.__ideasView));
+  assert.ok(!posted.some(u => /\/api\/repos$|\/repo$/.test(u)), 'no repo was created: ' + posted.join(', '));
+  // an idea that is a spec opens in its repo's Idea tab
   assert.deepEqual({ ...window.__state() }, { repo: 'r1', sub: 'idea' }, JSON.stringify(window.__state()));
   // lanes: all four columns, inside the repo's Idea tab, problem thread nested three deep
-  assert.equal(d.querySelectorAll('#repo-subtab-idea #cmp-detail .cmp-lane').length, 4, 'the lanes are the repo\'s Idea tab');
-  const pe = [...d.querySelectorAll('.cmp-lane[data-lane=problem] .cmp-entry')];
+  assert.equal(d.querySelectorAll('#repo-subtab-idea .cmp-host .cmp-lane').length, 4, 'a spec\'s lanes are its repo\'s Idea tab: ' + JSON.stringify({ host: !!d.querySelector('#repo-subtab-idea .cmp-host'), active: d.querySelector('.view.active')?.id, html: (d.querySelector('#repo-subtab-idea') || {}).innerHTML?.slice(0, 200) }));
+  const pe = [...d.querySelectorAll('#repo-subtab-idea .cmp-lane[data-lane=problem] .cmp-entry')];
   assert.deepEqual(pe.map(x => x.style.getPropertyValue('--d')), ['0', '1', '2']);
   // interconnection: outbound chip on the deepest entry, inbound marker on the root
   assert.match(pe[2].textContent, /linked elsewhere/);
@@ -90,8 +98,8 @@ window.eval(src);
   assert.equal(d.getElementById('repo-count-badge').textContent, '2');
   // links lane
   window.eval("setCompartmentLane('links')");
-  assert.match(d.getElementById('cmp-detail').textContent, /child idea/);
-  assert.match(d.getElementById('cmp-detail').textContent, /points at P root/);
-  console.log('[PASS] compartment UI: the lanes are the repo\'s Idea tab (nested, linked); no Compartment tab; nexus nests its systems');
+  assert.match(d.querySelector('#repo-subtab-idea .cmp-host').textContent, /child idea/);
+  assert.match(d.querySelector('#repo-subtab-idea .cmp-host').textContent, /points at P root/);
+  console.log('[PASS] compartment UI: lanes in Ideas before a spec, in the spec\'s repo after (nested, linked); no Compartment tab; no repo made; nexus nests its systems');
   process.exit(0);
 })().catch(e => { console.error('[FAIL]', e); process.exit(1); });

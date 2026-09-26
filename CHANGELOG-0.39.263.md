@@ -138,19 +138,13 @@ James, on main's 0.39.262 Compartment tab: *"what is this? repos are compartment
 - The Compartment tab, its entry in the Create menu, and the Compartment view.
 - Anything that still asks for that view lands on Repos.
 
-**The lanes live in the idea's repo**
-- The four lanes (brainstorm, problem solving, expand, improve) now live in the repo's **Idea tab**, under the idea's text.
-- The Idea tab's own iteration list (add to roadmap, send to agent) moves into a collapsed "iterations" section below the lanes.
+**The lanes live where the idea lives**
 
-**Every idea worked in the lanes has a repo**
-- `POST /api/ideas/:uuid/repo` finds the idea's repo, or makes one.
-- A new repo is bare, has its own COS compartment, and leaves the idea's phase as it is (`ingest({ keepIdeaPhase: true })`).
-- These actions all go through it, and then open that repo's Idea tab:
-  - promoting a brainstorm;
-  - "work it in its repo" on an idea;
-  - `workbench.admit`;
-  - `openCompartmentIdea()`.
-- At boot, every idea already in the old Compartment is given its repo (`_reconcileWorkbenchRepos`), so nothing worked there is stranded.
+James: *"ideas promoted to specs get a repo."* A first cut of this release gave every promoted brainstorm a repo. That was wrong, and it has been reverted. Nothing here creates a repo for an idea: only a spec gets one.
+
+- **Before an idea is a spec:** the four lanes (brainstorm, problem solving, expand, improve) render in its detail in Create › Ideas. Promoting a brainstorm opens it there.
+- **Once it is a spec:** it has a repo, and the lanes are that repo's **Idea tab**, under the idea's text. That tab's iteration list (roadmap, send to agent) folds away below the lanes.
+- `openCompartmentIdea()` and "open the idea" go to whichever of the two applies.
 
 **Only nexus at the top**
 - The navigator ("Expand all") lists repos only.
@@ -160,11 +154,14 @@ James, on main's 0.39.262 Compartment tab: *"what is this? repos are compartment
 **Tests**
 - `idearium/test/compartment-ui.smoke.cjs` is rewritten for this layout, and passes. It checks:
   - there is no Compartment tab, view or menu;
-  - opening an idea asks for its repo and lands on its Idea tab;
-  - the four lanes (nested, linked) render inside it;
+  - an idea that is not a spec is worked in Ideas, with the four lanes;
+  - no repo is created;
+  - a spec's idea opens in its repo's Idea tab, with the lanes nested and linked;
   - the navigator nests the systems in nexus;
   - the badge counts correctly.
-- `tests/probe/nexus-atlas-home.js`: 10/10 in a real idearium. Two new cases check that there is no Compartment tab, that the badge reads 1, and that promoting a brainstorm opens its own compartment-backed repo on the lanes.
+- `tests/probe/nexus-atlas-home.js`: 10/10 in a real idearium. Two new cases:
+  - there is no Compartment tab, and the badge reads 1;
+  - a promoted brainstorm opens in Create › Ideas with the lanes, and the repo count does not change.
 
 ## Tests
 
