@@ -25,13 +25,43 @@ const fs = require('fs');
 const path = require('path');
 const { randomUUID } = require('crypto');
 
-const WORKFLOWS_DIR = path.join(__dirname, '..', '..', '..', 'data', 'brainos', 'workflows');
+// §0.39.265 — under the shared data root (NEXUS_DATA_ROOT, like every other
+// store), so a test process — lib/test-sandbox.js points that root at a temp
+// folder — never reads or deletes the real saved workflows. Was hard-coded to
+// <repo>/data, and tests/modules/automation-engine.test.js rm -rf's this dir.
+require('../../../lib/test-sandbox.js').ensure();
+const WORKFLOWS_DIR = path.join(process.env.NEXUS_DATA_ROOT || path.join(__dirname, '..', '..', '..', 'data'), 'brainos', 'workflows');
 const TICK_MS = 5000;
 
 // §BUILT — real, already-established ports (guardian.spec, ollama/server.js,
 // copilot/server.js, clear-glass's own real convention) — reused verbatim,
 // not re-derived, for the new 'command' step type below.
-const SYSTEM_PORTS = { guardian: 7820, ollama: 3749, copilot: 3750, clearglass: 7704 };
+// §0.39.265 — 'clear-glass' is the name the Settings page offers (and every
+// other part of NEXUS uses); only 'clearglass' was listed, so every command
+// step aimed at Clear Glass failed with "unknown system". Both work now.
+const SYSTEM_PORTS = { guardian: 7820, ollama: 3749, copilot: 3750, clearglass: 7704, 'clear-glass': 7704 };
+
+/**
+ * nextScheduled(cfg, from) — §0.39.265 — when a trigger next fires.
+ *   { intervalMs }                       every N ms
+ *   { at: 'HH:MM', days: [0..6] }        daily at a local time, on those weekdays (all when empty)
+ * Returns a timestamp, or null for a manual-only trigger.
+ */
+function nextScheduled(cfg = {}, from = Date.now()) {
+  if (cfg.at && /^\d{1,2}:\d{2}$/.test(cfg.at)) {
+    const [hh, mm] = cfg.at.split(':').map(n => parseInt(n, 10));
+    const days = Array.isArray(cfg.days) && cfg.days.length ? cfg.days.map(Number) : [0, 1, 2, 3, 4, 5, 6];
+    const d = new Date(from);
+    d.setHours(hh, mm, 0, 0);
+    for (let i = 0; i < 8; i++) {
+      if (d.getTime() > from && days.includes(d.getDay())) return d.getTime();
+      d.setDate(d.getDate() + 1); d.setHours(hh, mm, 0, 0);
+    }
+    return null;
+  }
+  const iv = parseInt(cfg.intervalMs, 10);
+  return iv > 0 ? from + iv : null;
+}
 
 function _loadAll() {
   const out = [];
@@ -49,7 +79,13 @@ function _loadAll() {
 }
 
 class AutomationEngine {
-  constructor({ enqueueFn, busEmit, meshViewFn } = {}) {
+  constructor({ enqueueFn, busEmit, meshViewFn, statsFn, runMacroFn, notifyFn } = {}) {
+    // §0.39.265 — hooks for the newer step types and mesh.* values; the owner
+    // can also set them later (setHooks), since the macro tool and the
+    // notifier live in Clear Glass's main process, not in the mesh.
+    this._stats = typeof statsFn === 'function' ? statsFn : () => ({});
+    this._runMacro = typeof runMacroFn === 'function' ? runMacroFn : null;
+    this._notify = typeof notifyFn === 'function' ? notifyFn : null;
     this._enqueue = typeof enqueueFn === 'function' ? enqueueFn : () => {};
     this._busEmit = typeof busEmit === 'function' ? busEmit : () => {};
     // §BUILT — James: "providers map to commands, intent map to commands
@@ -78,6 +114,20 @@ class AutomationEngine {
     if (this._tickTimer) { clearInterval(this._tickTimer); this._tickTimer = null; }
   }
 
+  setHooks({ statsFn, runMacroFn, notifyFn } = {}) {
+    if (typeof statsFn === 'function') this._stats = statsFn;
+    if (typeof runMacroFn === 'function') this._runMacro = runMacroFn;
+    if (typeof notifyFn === 'function') this._notify = notifyFn;
+  }
+
+  /** nextRunAt(wf) — when an active workflow's trigger fires next (null: manual only / paused). */
+  nextRunAt(wf) {
+    if (!wf || wf.status !== 'active') return null;
+    const trigger = (wf.steps || []).find(s => s.type === 'trigger' && s.enabled !== false);
+    if (!trigger) return null;
+    return wf._nextRun || nextScheduled(trigger.config || {}, Date.now());
+  }
+
   list() { return this._workflows.slice(); }
   get(id) { return this._workflows.find(w => w.id === id) || null; }
 
@@ -90,11 +140,22 @@ class AutomationEngine {
     }
   }
 
-  create({ name, status, steps }) {
+  create({ name, status, steps, description }) {
     const wf = {
-      id: randomUUID(), name: name || 'Untitled Workflow', status: status || 'draft',
-      steps: Array.isArray(steps) ? steps : [], lastRun: null, runCount: 0, createdAt: Date.now(),
+      id: randomUUID(), name: name || 'Untitled Workflow', status: status || 'draft', description: description || '',
+      // §0.39.265 — every step gets its own id here: a template or a duplicate
+      // hands in steps with none, or with another workflow's. Condition
+      // branches that named a step by its old id are pointed at the new one.
+      steps: [], lastRun: null, runCount: 0, createdAt: Date.now(),
     };
+    const src = Array.isArray(steps) ? steps : [];
+    const newIds = src.map(() => randomUUID());
+    const idMap = new Map(src.map((st, i) => [st.id, newIds[i]]).filter(([old]) => old));   // only steps that HAD an id can be branched to
+    wf.steps = src.map((st, i) => {
+      const config = { ...(st.config || {}) };
+      for (const k of ['onTrue', 'onFalse']) if (config[k] && idMap.has(config[k])) config[k] = idMap.get(config[k]);
+      return { id: newIds[i], type: st.type, config, ...(st.enabled === false ? { enabled: false } : {}), ...(st.label ? { label: st.label } : {}) };
+    });
     this._workflows.push(wf);
     this._persist(wf);
     this._busEmit('automation.workflow.created', { id: wf.id, name: wf.name });
@@ -105,7 +166,8 @@ class AutomationEngine {
     const wf = this.get(id);
     if (!wf) return { ok: false, error: 'no such workflow' };
     if (patch.name !== undefined) wf.name = patch.name;
-    if (patch.status !== undefined) wf.status = patch.status;
+    if (patch.description !== undefined) wf.description = patch.description;
+    if (patch.status !== undefined) { wf.status = patch.status; delete wf._nextRun; }
     if (patch.steps !== undefined) wf.steps = patch.steps;
     this._persist(wf);
     return { ok: true, workflow: wf };
@@ -120,7 +182,7 @@ class AutomationEngine {
     return { ok: true };
   }
 
-  getLog(limit = 50) { return this._log.slice(0, limit); }
+  getLog(limit = 50, workflowId = null) { return (workflowId ? this._log.filter(e => e.workflowId === workflowId) : this._log).slice(0, limit); }
 
   _logEntry(wf, msg, status) {
     this._log.unshift({ ts: Date.now(), workflowId: wf.id, workflowName: wf.name, msg, status });
@@ -133,14 +195,14 @@ class AutomationEngine {
     const now = Date.now();
     for (const wf of this._workflows) {
       if (wf.status !== 'active') continue;
-      const trigger = wf.steps.find(s => s.type === 'trigger');
+      const trigger = wf.steps.find(s => s.type === 'trigger' && s.enabled !== false);
       if (!trigger) continue;
-      const intervalMs = parseInt(trigger.config?.intervalMs, 10);
-      if (!intervalMs || intervalMs <= 0) continue; // manual-only trigger — tick() never fires it
-      if (!wf._nextRun) wf._nextRun = now + intervalMs; // first arm, not persisted (recomputed each boot)
+      // §0.39.265 — interval OR daily-at-a-time schedules (nextScheduled above)
+      if (!wf._nextRun) wf._nextRun = nextScheduled(trigger.config || {}, now); // first arm, not persisted (recomputed each boot)
+      if (!wf._nextRun) continue; // manual-only trigger — tick() never fires it
       if (now >= wf._nextRun) {
-        wf._nextRun = now + intervalMs;
-        this.run(wf.id, 'interval').catch(() => {});
+        wf._nextRun = nextScheduled(trigger.config || {}, now);
+        this.run(wf.id, trigger.config && trigger.config.at ? 'schedule' : 'interval').catch(() => {});
       }
     }
   }
@@ -168,9 +230,11 @@ class AutomationEngine {
     while (i < wf.steps.length) {
       const step = wf.steps[i];
       if (step.type === 'trigger') { i++; continue; } // real trigger check already happened in tick()/run() caller
+      if (step.enabled === false) { this._logEntry(wf, `– ${step.type} step skipped (switched off)`, 'skipped'); i++; continue; }
       try {
         const result = await this._runStep(step, wf);
-        this._logEntry(wf, `✓ ${step.type} step`, 'ok');
+        this._logEntry(wf, `✓ ${step.label || step.type} step${result && result.note ? ` — ${result.note}` : ''}`, 'ok');
+        if (result && result.nextStepId === 'stop') { this._logEntry(wf, '■ stopped by a condition', 'ok'); break; }
         if (result && result.nextStepId) {
           const ni = wf.steps.findIndex(s => s.id === result.nextStepId);
           i = ni >= 0 ? ni : i + 1;
@@ -198,6 +262,8 @@ class AutomationEngine {
   _resolveVar(varPath) {
     if (!varPath) return undefined;
     const [id, field] = String(varPath).split('.');
+    // §0.39.265 — mesh-wide values: mesh.queueDepth, mesh.agentCount, …
+    if (id === 'mesh') { const st = this._stats() || {}; return field ? st[field] : st; }
     const entry = this._meshView().find(n => n.id === id || n.label === id);
     if (!entry) return undefined;
     return field ? entry[field] : entry;
@@ -208,7 +274,26 @@ class AutomationEngine {
 
     if (step.type === 'agent') {
       if (!cfg.agentKey || !cfg.prompt) throw new Error('agent step requires agentKey and prompt');
-      this._enqueue({ agentKey: cfg.agentKey, prompt: cfg.prompt });
+      // §0.39.265 — an agent step can name the account to send as
+      this._enqueue({ agentKey: cfg.agentKey, prompt: cfg.prompt, ...(cfg.accountId ? { accountId: cfg.accountId } : {}) });
+      return null;
+    }
+
+    // §0.39.265 — run a saved Clear Glass macro (the Macros page) in a window.
+    if (step.type === 'macro') {
+      if (!cfg.name) throw new Error('macro step requires a macro name');
+      if (!this._runMacro) throw new Error('macro step: macros are not available here');
+      const r = await this._runMacro({ name: cfg.name, agentId: cfg.agentId || 'default', params: cfg.params || {} });
+      if (r && (r.error || r.ok === false)) throw new Error(`macro "${cfg.name}": ${r.error || 'failed'}`);
+      return { note: `macro ${cfg.name}` };
+    }
+
+    // §0.39.265 — a desktop notification; {{workflow}} becomes the workflow's name.
+    if (step.type === 'notify') {
+      const fill = (t) => String(t || '').replace(/\{\{workflow\}\}/g, wf.name);
+      const title = fill(cfg.title) || wf.name;
+      if (this._notify) await this._notify({ title, body: fill(cfg.body) });
+      this._busEmit('automation.notify', { workflowId: wf.id, title, body: fill(cfg.body), ts: Date.now() });
       return null;
     }
 
@@ -262,14 +347,14 @@ class AutomationEngine {
       return null;
     }
 
-    throw new Error(`unknown or not-yet-built step type: "${step.type}" (branch/http/notification are real, named, not-yet-built extensions — see this file's own header)`);
+    throw new Error(`unknown step type: "${step.type}" (known: trigger, agent, macro, delay, condition, command, notify)`);
   }
 
   // ── Per-step CRUD — the real Tasker-style step editor's backend ──────
   addStep(workflowId, step) {
     const wf = this.get(workflowId);
     if (!wf) return { ok: false, error: 'no such workflow' };
-    const s = { id: randomUUID(), type: step.type, config: step.config || {} };
+    const s = { id: randomUUID(), type: step.type, config: step.config || {}, ...(step.enabled === false ? { enabled: false } : {}), ...(step.label ? { label: step.label } : {}) };
     wf.steps.push(s);
     this._persist(wf);
     return { ok: true, workflow: wf, step: s };
@@ -282,6 +367,9 @@ class AutomationEngine {
     if (!s) return { ok: false, error: 'no such step' };
     if (patch.type !== undefined) s.type = patch.type;
     if (patch.config !== undefined) s.config = patch.config;
+    if (patch.enabled !== undefined) { if (patch.enabled) delete s.enabled; else s.enabled = false; }
+    if (patch.label !== undefined) { if (patch.label) s.label = patch.label; else delete s.label; }
+    if (s.type === 'trigger') delete wf._nextRun;
     this._persist(wf);
     return { ok: true, workflow: wf, step: s };
   }
@@ -307,4 +395,4 @@ class AutomationEngine {
   }
 }
 
-module.exports = { AutomationEngine, WORKFLOWS_DIR, TICK_MS, SYSTEM_PORTS };
+module.exports = { AutomationEngine, WORKFLOWS_DIR, TICK_MS, SYSTEM_PORTS, nextScheduled };

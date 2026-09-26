@@ -917,9 +917,11 @@ async function _startWire() {
           return res.end(JSON.stringify({ ok: false, error: e.message }));
         }
       }
-      if (u === '/automation/log' && req.method === 'GET') {
+      if ((u === '/automation/log' || u.startsWith('/automation/log?')) && req.method === 'GET') {
+        // §0.39.265 — ?workflowId= narrows it to one workflow's runs
+        const q = new URL(u, 'http://x').searchParams;
         res.writeHead(200);
-        return res.end(JSON.stringify({ ok: true, log: mesh.getAutomationLog() }));
+        return res.end(JSON.stringify({ ok: true, log: mesh.getAutomationLog(parseInt(q.get('limit'), 10) || 50, q.get('workflowId') || null) }));
       }
       // §BUILT — per-step CRUD, the real Tasker-style step editor's
       // backend (James: "like tasker and automate").
@@ -1434,6 +1436,13 @@ async function bootstrap() {
   // GET /agent-mesh/view) can actually call it.
   mesh = new AgentMesh({ ctxMgr, driver, vault, accounts: nexusOptions, sse: { emit: (t, d) => emit(t, d) } });
   await mesh.init();
+  // §0.39.265 — workflow steps that run a macro or show a notification
+  try {
+    mesh._automation?.setHooks({
+      runMacroFn: ({ name, agentId, params }) => macroTool.execute({ action: 'run', name, agentId, params }),
+      notifyFn: ({ title, body }) => { const { Notification } = require('electron'); if (Notification.isSupported()) new Notification({ title, body: body || '' }).show(); },
+    });
+  } catch (e) { console.warn(`[ClearGlass] automation hooks not set: ${e.message}`); }
 
   // §BUILT 2026-09-23 — login portals: per-account provider sign-in in the
   // SAME partition + vault key agent-mesh spawn() reads (src/accounts/login-portal.js).

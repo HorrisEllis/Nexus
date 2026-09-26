@@ -55,7 +55,7 @@ await test('AE-003', 'run() reports a real error for a not-yet-built step type, 
   const { workflow } = engine.create({ name: 'Bad', status: 'active', steps: [{ type: 'branch', config: {} }] });
   const result = await engine.run(workflow.id);
   assert.strictEqual(result.ok, false);
-  assert.ok(result.error.includes('not-yet-built'), 'error must name the step honestly, not pretend it ran');
+  assert.ok(result.error.includes('unknown step type: "branch"'), 'error must name the step honestly, not pretend it ran');
   cleanup(WORKFLOWS_DIR);
 });
 
@@ -160,6 +160,93 @@ await test('AE-010', 'per-step CRUD: add/update/move/remove all persist to the r
   assert.strictEqual(engine.get(workflow.id).steps[1].id, stepId, 'move must actually reorder');
   engine.removeStep(workflow.id, stepId);
   assert.strictEqual(engine.get(workflow.id).steps.length, 1);
+  cleanup(WORKFLOWS_DIR);
+});
+
+// ── §0.39.265 — user-friendly workflows ──────────────────────────────────
+await test('AE-011', 'the workflow store is under the test sandbox, never the real data/brainos/workflows', () => {
+  const { WORKFLOWS_DIR } = fresh();
+  assert.ok(!WORKFLOWS_DIR.startsWith(require('path').resolve(__dirname, '../../data')), WORKFLOWS_DIR);
+});
+
+await test('AE-012', 'nextScheduled: every-N and daily-at-a-time on chosen weekdays; manual is null', () => {
+  const { nextScheduled } = require('../../clear-glass/src/mesh/automation-engine.js');
+  const from = new Date(2026, 8, 25, 10, 0, 0).getTime(); // Fri 25 Sep 2026 10:00 local
+  assert.strictEqual(nextScheduled({ intervalMs: 60000 }, from), from + 60000);
+  assert.strictEqual(nextScheduled({}, from), null);
+  const d1 = new Date(nextScheduled({ at: '09:00', days: [1, 2, 3, 4, 5] }, from));   // 09:00 today has passed → Monday
+  assert.deepStrictEqual([d1.getDay(), d1.getHours(), d1.getMinutes(), d1.getDate()], [1, 9, 0, 28]);
+  const d2 = new Date(nextScheduled({ at: '17:30', days: [] }, from));                // later today, every day
+  assert.deepStrictEqual([d2.getDate(), d2.getHours(), d2.getMinutes()], [25, 17, 30]);
+});
+
+await test('AE-013', 'a switched-off step is skipped; a condition can stop the workflow; mesh.* values resolve', async () => {
+  const { AutomationEngine, WORKFLOWS_DIR } = fresh();
+  cleanup(WORKFLOWS_DIR);
+  const enq = [];
+  const e = new AutomationEngine({ enqueueFn: (t) => enq.push(t), statsFn: () => ({ queueDepth: 7 }) });
+  const { workflow } = e.create({ name: 'S', status: 'paused', steps: [
+    { type: 'agent', enabled: false, config: { agentKey: 'claude', prompt: 'skipped' } },
+    { type: 'condition', config: { var: 'mesh.queueDepth', op: '>', value: '5', onTrue: 'stop', onFalse: 'next' } },
+    { type: 'agent', config: { agentKey: 'claude', prompt: 'never' } }] });
+  const r = await e.run(workflow.id);
+  assert.strictEqual(r.ok, true);
+  assert.deepStrictEqual(enq, [], 'the off step and the step after stop both did not run');
+  assert.ok(e.getLog(10, workflow.id).some(x => /stopped by a condition/.test(x.msg)));
+  assert.ok(e.getLog(10, workflow.id).some(x => /skipped \(switched off\)/.test(x.msg)));
+  cleanup(WORKFLOWS_DIR);
+});
+
+await test('AE-014', 'agent steps carry the account; macro and notify steps call their hooks; clear-glass is a known system', async () => {
+  const { AutomationEngine, WORKFLOWS_DIR } = fresh();
+  const { SYSTEM_PORTS } = require('../../clear-glass/src/mesh/automation-engine.js');
+  cleanup(WORKFLOWS_DIR);
+  assert.strictEqual(SYSTEM_PORTS['clear-glass'], SYSTEM_PORTS.clearglass);
+  const enq = [], macros = [], notes = [];
+  const e = new AutomationEngine({ enqueueFn: (t) => enq.push(t) });
+  e.setHooks({ runMacroFn: async (m) => { macros.push(m); return { ok: true }; }, notifyFn: async (n) => notes.push(n) });
+  const { workflow } = e.create({ name: 'Digest', status: 'paused', steps: [
+    { type: 'agent', config: { agentKey: 'claude', prompt: 'hi', accountId: 'acc1' } },
+    { type: 'macro', config: { name: 'apply', agentId: 'default', params: { rate: '45' } } },
+    { type: 'notify', config: { title: '{{workflow}} done', body: 'ok' } }] });
+  assert.strictEqual((await e.run(workflow.id)).ok, true);
+  assert.deepStrictEqual(enq, [{ agentKey: 'claude', prompt: 'hi', accountId: 'acc1' }]);
+  assert.deepStrictEqual(macros, [{ name: 'apply', agentId: 'default', params: { rate: '45' } }]);
+  assert.deepStrictEqual(notes, [{ title: 'Digest done', body: 'ok' }]);
+  e.setHooks({ runMacroFn: async () => ({ error: 'url does not match' }) });
+  const bad = await e.run(workflow.id);
+  assert.strictEqual(bad.ok, false); assert.match(bad.error, /macro "apply": url does not match/);
+  cleanup(WORKFLOWS_DIR);
+});
+
+await test('AE-015', 'create() gives templates/duplicates fresh step ids and re-points condition branches', () => {
+  const { AutomationEngine, WORKFLOWS_DIR } = fresh();
+  cleanup(WORKFLOWS_DIR);
+  const e = new AutomationEngine({});
+  const steps = [{ id: 'c1', type: 'condition', config: { var: 'mesh.queueDepth', op: '>', value: '1', onTrue: 'n1', onFalse: 'stop' } }, { id: 'n1', type: 'notify', config: { title: 'x' } }];
+  const a = e.create({ name: 'A', steps }).workflow, b = e.create({ name: 'B', steps: a.steps }).workflow;
+  const t = e.create({ name: 'T', steps: [{ type: 'trigger', config: {} }, { type: 'notify', config: {} }, { type: 'delay', config: {} }] }).workflow;
+  assert.strictEqual(new Set(t.steps.map(x => x.id)).size, 3, 'steps given without ids (templates) each get their own id');
+  assert.notStrictEqual(a.steps[1].id, 'n1'); assert.notStrictEqual(b.steps[1].id, a.steps[1].id);
+  assert.strictEqual(a.steps[0].config.onTrue, a.steps[1].id);
+  assert.strictEqual(b.steps[0].config.onTrue, b.steps[1].id);
+  assert.strictEqual(b.steps[0].config.onFalse, 'stop');
+  cleanup(WORKFLOWS_DIR);
+});
+
+await test('AE-016', 'updateStep switches a step on/off and names it; nextRunAt reflects an active daily trigger', () => {
+  const { AutomationEngine, WORKFLOWS_DIR } = fresh();
+  cleanup(WORKFLOWS_DIR);
+  const e = new AutomationEngine({});
+  const wf = e.create({ name: 'T', status: 'active', steps: [{ type: 'trigger', config: { at: '07:00', days: [] } }, { type: 'delay', config: { ms: 1 } }] }).workflow;
+  const at = new Date(e.nextRunAt(e.get(wf.id)));
+  assert.deepStrictEqual([at.getHours(), at.getMinutes()], [7, 0]);
+  e.updateStep(wf.id, wf.steps[1].id, { enabled: false, label: 'pause' });
+  assert.strictEqual(e.get(wf.id).steps[1].enabled, false); assert.strictEqual(e.get(wf.id).steps[1].label, 'pause');
+  e.updateStep(wf.id, wf.steps[1].id, { enabled: true, label: '' });
+  assert.ok(!('enabled' in e.get(wf.id).steps[1]) && !('label' in e.get(wf.id).steps[1]));
+  e.update(wf.id, { status: 'paused' });
+  assert.strictEqual(e.nextRunAt(e.get(wf.id)), null);
   cleanup(WORKFLOWS_DIR);
 });
 

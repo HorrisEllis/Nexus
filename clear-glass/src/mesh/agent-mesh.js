@@ -198,6 +198,8 @@ class AgentMesh {
       enqueueFn: (task) => this.enqueue(task),
       busEmit: (t, d) => this.sse.emit(t, d),
       meshViewFn: () => this.listMeshView(),
+      // §0.39.265 — mesh.* values a condition step can compare
+      statsFn: () => ({ queueDepth: this.queue.length, agentCount: this.agents.size }),
     });
     this._automation.start();
   }
@@ -1105,13 +1107,13 @@ class AgentMesh {
   addRoute(edge) { return this._routeGraph.add(edge); }
   removeRoute(id) { return this._routeGraph.remove(id); }
   // §BUILT — automation accessors, same thin pass-through convention.
-  listWorkflows() { return this._automation.list(); }
+  listWorkflows() { return this._automation.list().map(w => ({ ...w, nextRunAt: this._automation.nextRunAt(w) })); }
   getWorkflow(id) { return this._automation.get(id); }
   createWorkflow(fields) { return this._automation.create(fields); }
   updateWorkflow(id, patch) { return this._automation.update(id, patch); }
   removeWorkflow(id) { return this._automation.remove(id); }
   runWorkflow(id, reason) { return this._automation.run(id, reason); }
-  getAutomationLog(limit) { return this._automation.getLog(limit); }
+  getAutomationLog(limit, workflowId) { return this._automation.getLog(limit, workflowId); }
   addWorkflowStep(id, step) { return this._automation.addStep(id, step); }
   updateWorkflowStep(id, stepId, patch) { return this._automation.updateStep(id, stepId, patch); }
   removeWorkflowStep(id, stepId) { return this._automation.removeStep(id, stepId); }
