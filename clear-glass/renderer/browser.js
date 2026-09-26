@@ -112,7 +112,7 @@
   // load anyway once this fires.
   if (window.ClearGlass?.on) {
     window.ClearGlass.on('cg:navigate', (targetUrl) => {
-      if (targetUrl && typeof wv.loadURL === 'function') wv.loadURL(targetUrl);
+      if (targetUrl && typeof wv.loadURL === 'function') navigate(targetUrl);
     });
   }
   const urlBar         = document.getElementById('url-bar');
@@ -239,9 +239,72 @@
   wv.addEventListener('did-navigate-in-page', updateUrl);
   // page-title-updated handled by tab system below — removed duplicate here
 
+  // §fix 2026-09-26 — "[renderer] unhandledrejection Error invoking remote
+  // method 'GUEST_VIEW_MANAGER_CALL': ERR_CONNECTION_REFUSED (-102) loading
+  // 'http://127.0.0.1:900/'". <webview>.loadURL() returns a Promise that
+  // rejects on any failed navigation; every call site here dropped it, so
+  // each failure hit the global unhandledrejection handler (error toast +
+  // errors:report) on top of did-fail-load. ERR_ABORTED (-3) is a
+  // navigation superseded by a newer one (the :9000 start page cut off by
+  // a typed URL) — not an error at all. All navigation now goes through
+  // navigate(): the rejection is consumed here, and did-fail-load (below)
+  // is the single place a real failure is surfaced, as an in-view page.
+  function navigate(url) {
+    let p;
+    try { p = wv.loadURL(url); } catch (err) { _navFailed(url, -1, String(err?.message || err)); return Promise.resolve(false); }
+    return Promise.resolve(p).then(() => true, (err) => {
+      const m = /\((-\d+)\)/.exec(String(err?.message || ''));
+      const code = m ? Number(m[1]) : -1;
+      if (code !== -3 && code !== -1) _navFailed(url, code, String(err?.message || err));
+      return false;
+    });
+  }
+
+  // NEXUS service ports (nexus/autopilot.js). A refused connection to a
+  // local port one keystroke away from one of these is almost always a
+  // typo (":900" for ":9000") — the error page offers the real target.
+  const NEXUS_PORTS = [9000, 4800, 7820, 7821, 3747, 7799];
+  function _suggestPort(u) {
+    try {
+      const x = new URL(u);
+      if (!/^(127\.0\.0\.1|localhost)$/.test(x.hostname)) return null;
+      const p = Number(x.port || 80);
+      const hit = NEXUS_PORTS.find(n => n !== p && (String(n).startsWith(String(p)) || String(p).startsWith(String(n))));
+      if (!hit) return null;
+      x.port = String(hit);
+      return x.toString();
+    } catch { return null; }
+  }
+
+  let _lastNavFail = { url: '', at: 0 };
+  function _navFailed(url, code, desc) {
+    if (!url || url.startsWith('data:')) return;
+    const now = Date.now();
+    if (_lastNavFail.url === url && now - _lastNavFail.at < 1500) return; // promise + did-fail-load both report one failure
+    _lastNavFail = { url, at: now };
+    const esc = (v) => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    const alt = _suggestPort(url);
+    const refused = code === -102;
+    const html = `<!doctype html><meta charset="utf-8"><title>Can't reach ${esc(url)}</title>
+<body style="margin:0;background:#0b0b12;color:#d8dae4;font:14px system-ui,sans-serif;display:grid;place-items:center;height:100vh">
+<div style="max-width:560px;padding:24px">
+<div style="font-size:12px;letter-spacing:.2em;color:#ff5c7a">NAVIGATION FAILED · ${esc(code)}</div>
+<h2 style="margin:8px 0 4px;font-weight:600">${refused ? 'Nothing is listening at this address' : "This page couldn't load"}</h2>
+<code style="display:block;color:#00f5ff;margin:8px 0 12px;word-break:break-all">${esc(url)}</code>
+<div style="color:#8a8da2">${esc(desc)}</div>
+${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}</a>?</p>` : ''}
+<p><a style="color:#00f5ff" href="${esc(url)}">Retry</a></p></div></body>`;
+    // Keep the address bar on the URL that failed, not the data: URL.
+    _tabs.setUrl(_tabs.activeId, url);
+    const shown = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+    Promise.resolve(wv.loadURL(shown)).catch(() => {}).finally(() => { urlBar.value = url; });
+  }
+
   wv.addEventListener('did-fail-load', (e) => {
-    if (e.errorCode === -3) return; // Aborted — normal
+    if (e.errorCode === -3) return; // Aborted — superseded navigation, normal
+    if (e.isMainFrame === false) return; // subresource/iframe failures are the page's business
     addMsg('assistant', `Navigation failed: ${e.errorDescription}`);
+    _navFailed(e.validatedURL, e.errorCode, e.errorDescription);
   });
 
   wv.addEventListener('console-message', (e) => {
@@ -256,8 +319,16 @@
     if (domPanelVisible) refreshDomTree();
   });
 
+  // The navigation-failure page is a data: URL; everywhere the person sees
+  // or records "the current URL" it stands in for the URL that failed.
+  function _visibleUrl() {
+    const u = wv.getURL();
+    return (u && u.startsWith('data:text/html') && _lastNavFail.url) ? _lastNavFail.url : u;
+  }
+
   function updateUrl() {
-    const url = wv.getURL();
+    const url = _visibleUrl();
+    if (url !== wv.getURL()) { urlBar.value = url; statusUrl.textContent = url; return; }
     urlBar.value = url;
     statusUrl.textContent = url;
     _restoreZoomForOrigin();
@@ -321,7 +392,7 @@
     const url = normalizeUrl(urlBar.value);
     if (!url) return;
     _tabs.setUrl(_tabs.activeId, url);
-    wv.loadURL(url);
+    navigate(url);
   });
 
   // ── Tab system ───────────────────────────────────────────────────────────
@@ -373,7 +444,7 @@
       const t = tabs.find(x => x.id === id);
       if (!t) return;
       activeId = id;
-      wv.loadURL(t.url || 'about:blank');
+      navigate(t.url || 'about:blank');
       urlBar.value = t.url || '';
       render();
     }
@@ -390,7 +461,7 @@
         closedStack.push({ url: closed.url, title: closed.title });
         if (closedStack.length > 10) closedStack.shift();
       }
-      if (tabs.length === 1) { tabs[0].url = 'about:blank'; wv.loadURL('about:blank'); urlBar.value=''; render(); return; }
+      if (tabs.length === 1) { tabs[0].url = 'about:blank'; navigate('about:blank'); urlBar.value=''; render(); return; }
       const idx = tabs.findIndex(t => t.id === id);
       tabs = tabs.filter(t => t.id !== id);
       if (activeId === id) switchTo(tabs[Math.max(0, idx - 1)].id);
@@ -434,7 +505,7 @@
   wv.addEventListener('did-start-loading', () => _tabs.setLoading(_tabs.activeId, true));
   wv.addEventListener('did-stop-loading',  () => {
     _tabs.setLoading(_tabs.activeId, false);
-    const url = wv.getURL();
+    const url = _visibleUrl();
     _tabs.setUrl(_tabs.activeId, url);
     urlBar.value = url;
   });
@@ -451,9 +522,9 @@
       // node but the Electron API methods aren't attached until after that
       // event. Guard: call immediately if already ready, otherwise wait.
       if (typeof wv.loadURL === 'function') {
-        wv.loadURL(norm);
+        navigate(norm);
       } else {
-        wv.addEventListener('dom-ready', () => wv.loadURL(norm), { once: true });
+        wv.addEventListener('dom-ready', () => navigate(norm), { once: true });
       }
     }
   } else {
@@ -1312,7 +1383,7 @@
         btn.title = bk.url;
         btn.textContent = bk.title || bk.url;
         btn.addEventListener('click', () => {
-          wv.loadURL(bk.url);
+          navigate(bk.url);
           cg.bookmarks.visit({ id: bk.id });
         });
         list.appendChild(btn);
@@ -1655,7 +1726,7 @@
         </div>`).join('');
       listEl.querySelectorAll('[data-visit]').forEach(el => el.addEventListener('click', async () => {
         const bk = list.find(b => b.id === el.dataset.visit);
-        if (bk) { wv.loadURL(bk.url); await cg.bookmarks.visit({ id: bk.id, agentId }); panel.style.display = 'none'; }
+        if (bk) { navigate(bk.url); await cg.bookmarks.visit({ id: bk.id, agentId }); panel.style.display = 'none'; }
       }));
       listEl.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', async (ev) => {
         ev.stopPropagation();
@@ -1866,7 +1937,7 @@
       search.focus();
       search.selectionStart = search.selectionEnd = search.value.length;
       panel.querySelectorAll('[data-open]').forEach(el => el.addEventListener('click', () => {
-        wv.loadURL(el.dataset.url);
+        navigate(el.dataset.url);
         panel.style.display = 'none';
       }));
       panel.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', async (ev) => {
