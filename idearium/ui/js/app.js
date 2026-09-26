@@ -99,7 +99,11 @@ async function nexusConnect(manual=false) {
 // Connection state is re-proved every 10 s, not asserted once at page load:
 // idearium going down after the page connected (the MASTERMIND-import stall)
 // used to leave the indicator green indefinitely.
-let _healthTimer = null, _healthBusy = false;
+// §0.39.265 — James: "its really unstable. idearium." One missed probe (a
+// 5 s window while idearium finishes a big write) flipped the page offline, and
+// the reconnect 10 s later re-ran loadAll() — every list reloaded, the open view
+// re-rendered. Offline now takes two misses in a row (~20 s of silence).
+let _healthTimer = null, _healthBusy = false, _healthMisses = 0;
 function _startHealthWatch() {
   if (_healthTimer) return;
   _healthTimer = setInterval(async () => {
@@ -107,7 +111,12 @@ function _startHealthWatch() {
     _healthBusy = true;
     try {
       if (CONNECTED) {
-        if (!(await _ideariumAlive(API_BASE))) {
+        const alive = await _ideariumAlive(API_BASE);
+        _healthMisses = alive ? 0 : _healthMisses + 1;
+        if (!alive && _healthMisses === 1) setConnUI('slow', API_BASE);
+        else if (alive && document.querySelector('.conn-slow')) setConnUI('online', API_BASE);
+        if (!alive && _healthMisses >= 2) {
+          _healthMisses = 0;
           CONNECTED = false; API_BASE = null;
           try { if (SSE) SSE.close(); } catch (_) {}
           SSE = null;
@@ -126,12 +135,13 @@ function setConnUI(state, base) {
   const el = document.getElementById('conn-indicator');
   const label = document.getElementById('conn-label');
   const banner = document.getElementById('offline-banner');
-  el.className = 'tb-conn ' + (state==='online'?'online':state==='connecting'?'':'offline');
+  el.className = 'tb-conn ' + (state==='online'?'online':state==='slow'?'online conn-slow':state==='connecting'?'':'offline');
   // Names what was proven alive — idearium — and the route to it, instead of
   // "nexus · :9000/api/idearium", which read as the orchestrator's state.
   const via = base && base.indexOf(':9000') !== -1 ? ' via :9000' : '';
-  label.textContent = state==='online' ? `idearium · online${via}` : state==='connecting' ? 'connecting…' : 'idearium offline — click to retry';
+  label.textContent = state==='online' ? `idearium · online${via}` : state==='slow' ? `idearium · busy${via}` : state==='connecting' ? 'connecting…' : 'idearium offline — click to retry';
   banner.classList.toggle('show', state==='offline');
+  if (state === 'slow') return;   // busy, still connected — the banner and footer stay as they are
   document.getElementById('welcome-foot').textContent = state==='online'
     ? `idearium connected · ${base}`
     : 'idearium (:4800) not answering — awaiting connection';
@@ -1061,7 +1071,17 @@ function renderSpecEngineBuilder(spec) {
         <div id="spec-history-panel">${buildSpecHistoryHtml(spec.uuid)}</div>
       </div>
       <div class="action-row">
-        <button class="action-btn primary" ${building||done===chunks.length?'disabled':''} onclick="createRepoThenBuild('${spec.uuid}')">${building?'building…':(done===chunks.length?'all chunks built':'build remaining chunks')}</button>
+        ${
+          // §0.39.265 — James: "now what? no code actually generated." A finished
+          // document spec's next step is its code: Generate code plans the files
+          // from the spec and builds each one (speceng.codegen → a code spec).
+          done === chunks.length && chunks.length && !spec.fileTree && !building
+            ? (spec.codeSpecUuid
+                ? `<button class="action-btn primary" onclick="openCodeSpec('${spec.uuid}')">open the code →</button>`
+                : `<button class="action-btn primary" id="codegen-btn" onclick="generateCode('${spec.uuid}')">generate code →</button>`)
+            : `<button class="action-btn primary" ${building||done===chunks.length?'disabled':''} onclick="createRepoThenBuild('${spec.uuid}')">${building?'building…':(done===chunks.length?(spec.fileTree?'all files built':'all chunks built'):(spec.fileTree?'build remaining files':'build remaining chunks'))}</button>`
+        }
+        ${spec.codeFor ? `<button class="action-btn" onclick="selectSpec('${spec.codeFor}')">← the spec it came from</button>` : ''}
         <button class="action-btn" onclick="exportSpec('${spec.uuid}')">export markdown</button>
         <button class="action-btn danger" onclick="deleteSpec('${spec.uuid}', '${escapeHtml(spec.name).replace(/'/g,"\\'").slice(0,40)}')">remove spec (stops building)</button>
       </div>
@@ -1148,7 +1168,7 @@ async function createRepoThenBuild(specUuid) {
       return;
     }
 
-    toast('all chunks built', 'ok');
+    toast(spec && !spec.fileTree && !spec.codeSpecUuid ? 'all chunks built — next: generate code' : 'all chunks built', 'ok');
     await loadApiRepos();
     if (spec?.ideaUuid) await loadIdeas(); // phase just advanced
     openRepoFor(spec?.ideaUuid || null, specUuid, spec?.name || '');
@@ -1159,6 +1179,36 @@ async function createRepoThenBuild(specUuid) {
     const spec = SPECS.find(s => s.uuid === specUuid);
     if (spec) renderSpecBuilder(spec);
   }
+}
+
+// §0.39.265 — Generate code. The spec (purpose, schema, api, build order, tests…)
+// is condensed into the project description; the agent plans the file tree
+// from it (kernel → engine → runtime → test); each file is then built as real
+// code into a new "<name> · code" repo by the same build loop the spec used.
+async function generateCode(specUuid) {
+  if (!CONNECTED) { toast('connect to nexus first', 'err'); return; }
+  const btn = document.getElementById('codegen-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'planning the files…'; }
+  toast('planning the files from the spec — this asks the agent, give it a minute', 'ok');
+  let r;
+  try { r = await api(`/api/spec-engine/specs/${specUuid}/codegen`, { method: 'POST', body: JSON.stringify({}) }, 600000); }
+  catch (e) {
+    toast(`could not plan the code: ${e.message}`, 'err');
+    if (btn) { btn.disabled = false; btn.textContent = 'generate code →'; }
+    return;
+  }
+  const code = r.manifest;
+  const n = (code.chunks || []).length, pre = (code.chunks || []).filter(c => c.status === 'complete').length;
+  toast(r.existing ? 'opening the code that was already generated' : `${n} file(s) planned${r.plan && r.plan.planSource ? ` (${r.plan.planSource})` : ''}${pre ? ` · ${pre} from templates` : ''} — building them now`, 'ok');
+  await loadSpecs();
+  await loadApiRepos();
+  selectSpec(code.uuid);
+  if (!r.existing || (code.chunks || []).some(c => c.status !== 'complete')) createRepoThenBuild(code.uuid);
+}
+function openCodeSpec(specUuid) {
+  const spec = SPECS.find(s => s.uuid === specUuid);
+  if (spec && spec.codeSpecUuid && SPECS.some(s => s.uuid === spec.codeSpecUuid)) return selectSpec(spec.codeSpecUuid);
+  generateCode(specUuid);   // the code spec is gone or not loaded — the route returns (or re-plans) it
 }
 
 function switchSection(uuid, sectionId) {

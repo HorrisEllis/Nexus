@@ -728,7 +728,12 @@ function err(res, code, message, detail = null) {
 function _syncPhaseFromManifest(os, manifest) {
   if (!manifest) return;
   if (manifest.status === 'complete') {
-    os.emit('idearium.spec.update', { uuid: manifest.uuid, fields: { phase: 'complete' } });
+    // §0.39.265 — a spec-engine manifest is only ALSO an IdeaOS spec when one was made
+    // for it; emitting the update for one that was not logged
+    // "[IdeaOS][ERROR] op=spec.update reason=spec not found" at the end of every build.
+    if (typeof os.spec !== 'function' || os.spec(manifest.uuid)) {
+      os.emit('idearium.spec.update', { uuid: manifest.uuid, fields: { phase: 'complete' } });
+    }
     if (manifest.ideaUuid) {
       os.emit('idearium.idea.phase', { uuid: manifest.ideaUuid, phase: 'complete', source: 'spec-engine' });
     }
@@ -952,6 +957,8 @@ function matchRoute(method, url) {
     // ── Spec Engine dynamic routes ──────────────────────────────────────────
     ['GET',    ['api','spec-engine','specs',':uuid'],              'speceng.show'],
     ['POST',   ['api','spec-engine','specs',':uuid','build'],      'speceng.build'],
+    // §0.39.265 — a finished document spec → a code spec (one chunk per real file)
+    ['POST',   ['api','spec-engine','specs',':uuid','codegen'],    'speceng.codegen'],
     ['POST',   ['api','spec-engine','specs',':uuid','chunk',':chunkUuid','complete'], 'speceng.chunk.complete'],
     ['POST',   ['api','spec-engine','specs',':uuid','chunk',':chunkUuid','fail'],     'speceng.chunk.fail'],
     // §BUILT 2026-09-03 — per-chunk agent reassignment, PENDING chunks only
@@ -3818,6 +3825,76 @@ async function handle(req, res, route, query, body) {
         return ok(res, { templates: [...se.listTemplates(), ...cos, ...eros] });
       }
       catch (e) { return err(res, 500, e.message); }
+    }
+
+    // §0.39.265 — "Generate code": a finished document spec becomes a CODE spec
+    // (createFileTreeSpec — one chunk per real file, kernel → engine → runtime →
+    // test, built with expectCode and materialised into its repo). The files are
+    // planned by the agent from the spec's own content (lib/spec-digest.js), and every
+    // file prompt carries it. The two specs link both ways (codeSpecUuid /
+    // codeFor), so the document spec offers "open the code" afterwards, and a
+    // second click does not plan a second tree unless asked (body.again).
+    case 'speceng.codegen': {
+      const se = getSpecEngine();
+      if (!se) return err(res, 503, 'spec-engine not ready');
+      let doc;
+      try { doc = se.loadSpec(params.uuid); } catch (_) { return err(res, 404, `spec not found: ${params.uuid}`); }
+      if (doc.fileTree || doc.type === 'filetree') return err(res, 400, 'this spec is already the code — build its files');
+      const live = (doc.chunks || []).filter(c => c.status !== 'removed');
+      const pending = live.filter(c => c.status !== 'complete');
+      if (pending.length) return err(res, 409, `finish the spec first — ${pending.length} section(s) not built: ${pending.map(c => c.sectionId).join(', ')}`);
+      const repoFor = (specUuid) => { try { const L = getRepoLayer(); const r = ((L.repos && L.repos.repos) || []).find(x => x.specUuid === specUuid && x.status !== 'archived'); return r ? r.uuid : null; } catch (_) { return null; } };   // raw rows — list() enriches every repo
+      if (doc.codeSpecUuid && !body.again) {
+        try {
+          const existing = se.loadSpec(doc.codeSpecUuid);
+          return ok(res, { manifest: existing, existing: true, repoUuid: repoFor(existing.uuid) });
+        } catch (_) { /* the code spec was deleted — plan a new one */ }
+      }
+      const digest = _require('../../lib/spec-digest.js').specDigest(doc);   // the spec, condensed for the planner and every file prompt
+      if (!digest) return err(res, 409, 'the spec has no written sections to generate code from');
+      const description = [
+        doc.description || '',
+        'Build exactly what this finished spec describes. Where it names a storage layer, tool or service that the project does not have, write a small real adapter for it rather than assuming it exists.',
+        digest,
+      ].filter(Boolean).join('\n\n');
+      const FTP = _require('../../lib/file-tree-plan.js');
+      const warpFn = await getWarpChunkDispatch();
+      const ask = warpFn ? async (prompt) => {
+        const r = await warpFn(prompt, { chunkTitle: `plan: ${doc.name}`, expectCode: false, preferAgent: body.agent || null });
+        if (!r || !r.ok) throw new Error((r && r.error) || 'plan dispatch failed');
+        return r.text;
+      } : null;
+      let planned;
+      try { planned = await FTP.plan({ name: doc.name, description, ask }); }
+      catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
+      if (!planned.ok) return err(res, 422, (planned.errors || ['the files could not be planned']).join('; '), { agentError: planned.agentError || null });
+      let manifest;
+      try {
+        manifest = se.createFileTreeSpec({ name: `${doc.name} · code`, description, plan: planned, agent: body.agent || null, ideaUuid: doc.ideaUuid || null });
+        manifest.codeFor = doc.uuid;
+        se.saveSpec(manifest);
+        const freshDoc = se.loadSpec(doc.uuid);
+        freshDoc.codeSpecUuid = manifest.uuid;
+        freshDoc.updatedAt = Date.now();
+        se.saveSpec(freshDoc);
+      } catch (e) { return err(res, 500, `could not create the code spec: ${e.message}`); }
+      try { FTP.writeTreeNode(manifest); }
+      catch (e) { console.warn(`[speceng.codegen] .filetree node write failed (code spec still created): ${e.message}`); }
+      // Its repo, the same way speceng.create makes one — so the files land somewhere real as they build.
+      let repoUuid = null;
+      try {
+        const r = getRepoLayer().ingest({
+          name: manifest.name, specUuid: manifest.uuid, source: 'spec.codegen',
+          parent: doc.ideaUuid || null, ideaUuid: doc.ideaUuid || null, promotedFromSpec: doc.uuid,
+          compartmentId: _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name),
+        });
+        if (r.error) console.warn(`[speceng.codegen] repo creation failed, code spec still created: ${r.error}`);
+        else repoUuid = (r.repo && r.repo.uuid) || null;
+      } catch (e) { console.warn(`[speceng.codegen] repo creation threw, code spec still created: ${e.message}`); }
+      os.emit('idearium.spec-engine.codegen', { specUuid: doc.uuid, codeSpecUuid: manifest.uuid, repoUuid, files: planned.files.length, planSource: planned.planSource });
+      console.log(`[speceng.codegen] "${doc.name}" → ${planned.files.length} file(s) planned (${planned.planSource}) · code spec ${manifest.uuid.slice(0, 8)}`);
+      return ok(res, { manifest: se.loadSpec(manifest.uuid), repoUuid,
+        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers } });
     }
 
     case 'speceng.create': {

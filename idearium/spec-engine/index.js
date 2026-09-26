@@ -776,6 +776,10 @@ function _summarize(manifest) {
       // flagged after a restart is an interrupted import (see ingestFilesAsSpec); the
       // build queue must never AI-"generate" its files.
       ingesting:   !!manifest.ingesting,
+      // §0.39.265 — the document spec ↔ its generated code spec ("Generate code")
+      codeSpecUuid: manifest.codeSpecUuid || null,
+      codeFor:      manifest.codeFor || null,
+      fileTree:     !!manifest.fileTree,
       // §2026-07-10 — lightweight per-section status for the UI's Spec Library
       // chips. Id/title/done only, NOT content: the list must stay small even
       // with many specs. The detail view loads full chunk content on demand.
