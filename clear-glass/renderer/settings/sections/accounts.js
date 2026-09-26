@@ -16,7 +16,7 @@
  * (same backend, now with sign-in, capture, defaults and identity).
  */
 (function () {
-  const { cg, h, call, toast, fail, busy, modal, confirmDo, field, pane, btn, chip, empty, ago, copy, section, onLeave } = window.CGS;
+  const { cg, h, call, wire, toast, fail, busy, modal, confirmDo, field, pane, btn, chip, empty, ago, copy, section, onLeave, goto } = window.CGS;
 
   function statusChip(st) {
     if (!st) return chip('Status unavailable', 'bad');
@@ -135,6 +135,12 @@
       h('div', { class: 'name' }, star, nameIn, statusSlot),
       h('div', { class: 'acts' },
         signIn,
+        // §0.39.265 — straight into the agent mesh as this account (its own
+        // persist:mesh-<provider>-<account> session, restored from the vault).
+        btn('Open agent tab', (e) => busy(e.currentTarget, async () => {
+          const r = await wire('/agent-mesh/spawn', { method: 'POST', body: { agentKey: prov.id, accountId: acc.id } });
+          toast(`${prov.name} tab open as \u201C${acc.label}\u201D (${r.contextId})`);
+        }), 'sm'),
         btn('Save session', async () => { if (await captureFlow(acc, prov, st)) rerender(); }, 'sm'),
         btn('Saved sign-in', async () => { if (await credentialsFlow(acc, prov, st, vaultKey.passwords)) { toast('Sign-in saved'); rerender(); } }, 'sm'),
         btn('Sign out', async () => { const r = await signOutFlow(acc, prov); if (r) { toast(`Signed out of ${prov.name}`); rerender(); } }, 'sm danger'),
@@ -157,16 +163,26 @@
   }
 
   section({
-    id: 'accounts', group: 'Identity', icon: '\u25C8', label: 'Accounts & sign-in',
+    id: 'accounts', group: 'Accounts & agents', icon: '\u25C8', label: 'Accounts & sign-in',
     keywords: 'login portal app password cookie vault account id default provider session',
     blurb: 'Every account gets its own id and its own isolated session per provider. Sign in once here; the agent mesh reuses the saved session whenever it dispatches to that account.',
+    related: ['providers', 'mesh'],
     async render({ tools, rerender }) {
-      const [providers, accounts, defaults, vaultKey] = await Promise.all([
+      const [providers, accounts, defaults, vaultKey, tabs] = await Promise.all([
         call(() => cg.accounts.portal.providers(), 'providers'),
         call(() => cg.accounts.list(), 'accounts'),
         cg.accounts.defaults().catch(() => ({})),
         cg.vault.status().catch(() => ({})),
+        cg.providers.list().catch(() => []),
       ]);
+      // §0.39.265 — each provider pane links to its Guardian provider tab and its mesh agent.
+      const tabLink = (prov) => {
+        const t = tabs.find(x => x.id === prov.id);
+        const links = h('span', { class: 'pane-links' });
+        if (t) links.append(h('button', { class: 'link-btn', title: 'Provider tabs', onclick: () => goto('providers', prov.id), text: `provider tab ${t.running ? (t.status || 'running') : 'stopped'}` }), h('span', { text: ' \u00B7 ' }));
+        links.append(h('button', { class: 'link-btn', onclick: () => goto('mesh', prov.id), text: 'agent mesh' }));
+        return links;
+      };
       tools.append(btn('New account', () => newAccount(null, providers, rerender, accounts.length), 'primary'));
 
       const statusNodes = [];
@@ -206,7 +222,7 @@
         const def = mine.find(a => a.id === defaults[prov.id]);
         const plus = h('button', { class: 'plus', title: `Add a ${prov.name} account`, 'aria-label': `Add a ${prov.name} account`, text: '+', onclick: () => newAccount(prov, providers, rerender, mine.length) });
         out.push(pane({
-          title: prov.name, prov: prov.color || undefined, tools: plus, flush: true,
+          title: prov.name, prov: prov.color || undefined, tools: h('span', { class: 'pane-tools' }, tabLink(prov), plus), flush: true, anchor: prov.id,
           sub: mine.length ? `${mine.length} account${mine.length === 1 ? '' : 's'} \u00B7 dispatch uses ${def ? `\u201C${def.label}\u201D` : `\u201C${mine[0].label}\u201D (oldest \u2014 star one to choose)`}` : 'No accounts yet',
           body: mine.length ? mine.map(a => accountRow(a, prov, statuses.get(`${prov.id}:${a.id}`), ctx))
             : empty(`Add a ${prov.name} account, then sign in once.`, btn('Add account', () => newAccount(prov, providers, rerender, 0), 'sm')),

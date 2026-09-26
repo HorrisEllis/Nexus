@@ -33,6 +33,8 @@
         pane({ title: 'Clear data', flush: true, body: [
           row('Browsing history', 'Every tab\u2019s history.', btn('Clear history', async () => { if (await confirmDo('Clear all history?', 'This can\u2019t be undone.', 'Clear history')) await busy(null, async () => { await cg.history.clear(); toast('History cleared'); }); }, 'sm danger')),
           row('Finished downloads', 'Removes them from the list; files stay on disk.', btn('Clear list', () => busy(null, async () => { await cg.downloads.clearCompleted(); toast('Download list cleared'); }), 'sm')),
+          // §0.39.265 — moved here from the retired Nexus Options panel.
+          row('Rewind history', 'Saved page snapshots for the main window.', btn('Clear rewind', async () => { if (await confirmDo('Clear rewind history?', 'Saved snapshots for the main window are deleted.', 'Clear rewind')) await busy(null, async () => { await cg.rewind.clear('default'); toast('Rewind history cleared'); }); }, 'sm danger')),
           row('All site permissions', null, btn('Reset all', async () => { if (await confirmDo('Reset every site\u2019s permissions?', 'Sites will ask again.', 'Reset all')) await busy(null, async () => { await cg.siteSettings.clearAll(); rerender(); }); }, 'sm danger')),
         ] }),
       ];

@@ -117,9 +117,11 @@ async function main() {
     assert.ok(refs.includes('loom/') && !refs.includes('NEXUS/loom/'), 'the tree root named after Nexus is not a path segment');
   });
 
-  await test('UI-002', 'the library shows one nexus repo; its systems open from inside it; back from a system goes to nexus', () => {
+  // §0.39.265 — James: "nexus and nexus/core should be the main repo": the library
+  // shows nexus AND nexus/core; every other system still opens from inside nexus.
+  await test('UI-002', 'the library shows nexus and nexus/core as the main repo; other systems open from inside it; back from a system goes to nexus', () => {
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
-    assert.ok(/r\.nexusSelf && r\.nexusSelf\.role === 'system' && !q && !\(REPO_DETAIL_OPEN && r\.uuid === inSystem\)\) continue;/.test(app));
+    assert.ok(/r\.nexusSelf && r\.nexusSelf\.role === 'system' && r\.nexusSelf\.system !== 'core' && !q && !\(REPO_DETAIL_OPEN && r\.uuid === inSystem\)\) continue;/.test(app));
     assert.ok(/if \(repo\.nexusSelf\.role === 'parent'\) return renderNexusAtlasHome\(repo, el\);/.test(app));
     assert.ok(/role === 'system' && typeof nexusAtlasHome === 'function' && _nxParent\(\)\) return nexusAtlasHome\(\);/.test(app));
     const html = fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8');

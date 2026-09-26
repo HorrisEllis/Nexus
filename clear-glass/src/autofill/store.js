@@ -80,6 +80,37 @@ const DOCUMENT_FIELDS = Object.freeze({
   COVER_LETTER:      'coverLetter',        // free text — a real template, filled per-application by the caller, not auto-generated here
   LINKEDIN_URL:      'linkedinUrl',
   PORTFOLIO_URL:     'portfolioUrl',
+  // §0.39.265 — a freelance proposal / gig-offer template (Upwork, Fiverr),
+  // same {{placeholder}} rules as coverLetter (src/autofill/proposal.js)
+  PROPOSAL:          'proposal',
+});
+
+// §0.39.265 — James: "expand the job application autofill … maybe add fiverr
+// and upwork support?" Questions job applications and freelance platforms ask
+// that have no WHATWG autocomplete token. Clear Glass's own field names —
+// stored in profile.fields like FIELD_TYPES, matched by label/name/placeholder
+// (src/autofill/matcher.js), never by autocomplete (there is no standard one).
+const EXTRA_FIELDS = Object.freeze({
+  // Job applications
+  GITHUB_URL:        'github',
+  YEARS_EXPERIENCE:  'years-experience',
+  DESIRED_SALARY:    'desired-salary',
+  NOTICE_PERIOD:     'notice-period',
+  AVAILABLE_FROM:    'available-from',
+  WORK_AUTHORIZATION:'work-authorization',
+  SPONSORSHIP:       'sponsorship',
+  RELOCATE:          'relocate',
+  REMOTE:            'remote-preference',
+  PRONOUNS:          'pronouns',
+  // Freelance profiles (Upwork, Fiverr) — and useful on job forms too
+  HEADLINE:          'headline',
+  SUMMARY:           'summary',
+  SKILLS:            'skills',
+  HOURLY_RATE:       'hourly-rate',
+  HOURS_PER_WEEK:    'hours-per-week',
+  LANGUAGES:         'languages',
+  UPWORK_URL:        'upwork-url',
+  FIVERR_URL:        'fiverr-url',
 });
 
 class AutofillStore {
@@ -174,7 +205,7 @@ class AutofillStore {
 }
 
 function _validateFields(fields) {
-  const known = new Set(Object.values(FIELD_TYPES));
+  const known = new Set([...Object.values(FIELD_TYPES), ...Object.values(EXTRA_FIELDS)]);
   const bad = Object.keys(fields).filter(k => !known.has(k));
   if (bad.length) return { error: `unknown autofill field type(s): ${bad.join(', ')} — one of: ${[...known].join(', ')}` };
   return { ok: true };
@@ -190,4 +221,4 @@ function _validateDocuments(documents) {
   return { ok: true };
 }
 
-module.exports = { AutofillStore, FIELD_TYPES, DOCUMENT_FIELDS };
+module.exports = { AutofillStore, FIELD_TYPES, DOCUMENT_FIELDS, EXTRA_FIELDS };

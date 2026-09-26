@@ -1692,6 +1692,9 @@ function openRepoFor(ideaUuid, specUuid, label) {
 // mono/truncated style every other id already appears in across this
 // app — an honest identifier, not a guessed label.
 let REPO_RAIL_COLLAPSED = new Set(); // compartment keys the user closed (list mode only)
+let REPO_RAIL_SEEN_RAID = false;      // §0.39.265 — the RAID contracts group starts closed, once
+// §0.39.265 — a repo RAID made for a queued contract (lib/contract-repo-provision.js)
+function _isRaidContractRepo(r) { return !!r && (r.source === 'raid-contract' || /^raid-contract-/.test(r.name || '')); }
 // §BLOCKS-2026-09-19 — James: "repos tab needs to show all repo compartments
 // in blocks... click on a repo to actually enter it. like a github repo."
 // Two render modes off one state flag: REPO_DETAIL_OPEN=false is the landing
@@ -1703,7 +1706,9 @@ let REPO_DETAIL_OPEN = false;
 function renderRepoLibrary() {
   const body = document.getElementById('repo-rail-body');
   const badge = document.getElementById('repo-count-badge');
-  const _shown = API_REPOS.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system')).length;   // 0.39.263 — the systems are inside nexus
+  // 0.39.263 — the systems are inside nexus. §0.39.265 — nexus/core is shown with
+  // nexus (the main repo), and RAID's auto-made contract repos don't count as yours.
+  const _shown = API_REPOS.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system !== 'core') && !_isRaidContractRepo(r)).length;
   if (badge) badge.textContent = _shown ? String(_shown) : '';
   body.classList.toggle('block-grid', !REPO_DETAIL_OPEN);
   if (!API_REPOS.length) {
@@ -1723,6 +1728,7 @@ function renderRepoLibrary() {
   // §0.39.261 — the Nexus repos (one parent + one per system, each in its own
   // nested COS compartment) are one group, shown first: Nexus managing itself.
   const NEXUS_KEY = 'nexus';
+  const RAID_KEY = 'RAID contracts';
   // §0.39.263 — "nexus is the repo, not 15, just nexus": the system repos are
   // opened from inside it (its atlas Home), so the library lists only the parent —
   // plus, in the compact list, the system you are in, under it. A filter that
@@ -1730,16 +1736,23 @@ function renderRepoLibrary() {
   const inSystem = CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' ? CURRENT_API_REPO.uuid : null;
   for (const r of API_REPOS) {
     if (q && !r.name.toLowerCase().includes(q)) continue;
-    if (r.nexusSelf && r.nexusSelf.role === 'system' && !q && !(REPO_DETAIL_OPEN && r.uuid === inSystem)) continue;
-    const key = r.nexusSelf ? NEXUS_KEY : (r.compartmentId || '');
+    // §0.39.265 — James: "nexus and nexus/core should be the main repo": core
+    // (everything the systems share) is listed with nexus, not hidden inside it.
+    if (r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system !== 'core' && !q && !(REPO_DETAIL_OPEN && r.uuid === inSystem)) continue;
+    // RAID provisions a repo per queued contract (lib/contract-repo-provision.js):
+    // plumbing, not your projects — its own group, last, closed in the list.
+    const key = r.nexusSelf ? NEXUS_KEY : _isRaidContractRepo(r) ? RAID_KEY : (r.compartmentId || '');
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(r);
   }
-  if (groups.has(NEXUS_KEY)) groups.get(NEXUS_KEY).sort((a, b) => (a.nexusSelf.role === 'parent' ? -1 : b.nexusSelf.role === 'parent' ? 1 : a.name.localeCompare(b.name)));
+  const _nxRank = (r) => r.nexusSelf.role === 'parent' ? 0 : r.nexusSelf.system === 'core' ? 1 : 2;
+  if (groups.has(NEXUS_KEY)) groups.get(NEXUS_KEY).sort((a, b) => _nxRank(a) - _nxRank(b) || a.name.localeCompare(b.name));
+  if (groups.has(RAID_KEY) && !REPO_RAIL_SEEN_RAID) { REPO_RAIL_COLLAPSED.add(RAID_KEY); REPO_RAIL_SEEN_RAID = true; }
   if (!groups.size) { body.innerHTML = `<div class="repo-rail-empty">no repos match "${escapeHtml(q)}"</div>`; return; }
   // Nexus first, Uncategorized last, others by first-repo recency (newest activity first)
   const keys = [...groups.keys()].sort((a, b) => {
     if (a === NEXUS_KEY) return -1; if (b === NEXUS_KEY) return 1;
+    if (a === RAID_KEY) return 1; if (b === RAID_KEY) return -1;
     if (!a) return 1; if (!b) return -1;
     return Math.max(...groups.get(b).map(r=>r.updatedAt||0)) - Math.max(...groups.get(a).map(r=>r.updatedAt||0));
   });
@@ -1748,13 +1761,17 @@ function renderRepoLibrary() {
     // in it as a block. No collapsing here — the point is to see all of it.
     body.innerHTML = keys.map(key => {
       const repos = key === NEXUS_KEY ? groups.get(key) : groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
-      const label = key ? key : 'Uncategorized';
+      const label = key === NEXUS_KEY ? 'nexus · main' : key ? key : 'Uncategorized';
+      if (key === RAID_KEY) {
+        return `<details class="repo-grid-raid"><summary class="repo-grid-group-label">${escapeHtml(label)} · ${repos.length} — made automatically for RAID's queued contracts</summary>
+          ${repos.map(r => `<div class="repo-block raid" onclick="enterRepoDetail('${r.uuid}')"><div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name.replace(/^raid-contract-/, 'contract '))}</span></div><div class="repo-block-desc">${r.fileCount} file${r.fileCount === 1 ? '' : 's'}</div></div>`).join('')}</details>`;
+      }
       return `
         <div class="repo-grid-group-label">${escapeHtml(label)} · ${repos.length}</div>
         ${repos.map(r => {
           const dotClass = r.phase === 'complete' ? 'done' : (r.phase === 'building' ? 'building' : '');
           return `
-          <div class="repo-block" onclick="enterRepoDetail('${r.uuid}')">
+          <div class="repo-block${r.nexusSelf && (r.nexusSelf.role === 'parent' || r.nexusSelf.system === 'core') ? ' main' : ''}" onclick="enterRepoDetail('${r.uuid}')">
             <div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</span></div>
             <div class="repo-block-desc">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · snapshot ${escapeHtml(String(r.nexusSelf.snapshot || '').slice(0, 8))}` : `${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable`) : `${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}`}</div>
             <div class="repo-block-meta"><span class="dot ${r.nexusSelf ? 'done' : dotClass}"></span><span>${r.nexusSelf ? `immutable · synced ${r.nexusSelf.syncedAt ? new Date(r.nexusSelf.syncedAt).toLocaleTimeString() : '—'}` : escapeHtml(r.phase||'idle')}</span></div>

@@ -816,6 +816,8 @@ class IpcBridge {
     // reimplementation that could drift from this one.
     ipcMain.handle('bookmarks:addWithState',  async (e, d) => this._bookmarkAddWithState(d));
     ipcMain.handle('bookmarks:openWithState', async (e, d) => this._bookmarkOpenWithState(d));
+    // §0.39.265 — attach / detach an account (the ★ dialog's check mark) or a snapshot
+    ipcMain.handle('bookmarks:linkState',     async (e, d) => this.bookmarks?.linkState(d || {}));
 
     // Rewind
     ipcMain.handle('rewind:list',     async (e, d) => this.rewind?.list(d.agentId, d.limit));
@@ -1194,9 +1196,39 @@ class IpcBridge {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
       return _autofillDetect(this.dom, this.autofillStore, { agentId, profileId });
     });
-    ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium' } = {}) => {
+    ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
-      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence });
+      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars });
+    });
+
+    // §0.39.265 — James: "expand the job application autofill … maybe add fiverr
+    // and upwork support?" Draft a proposal / cover letter for one job post from
+    // a profile (src/autofill/proposal.js), through the same co-pilot the
+    // on-screen answers use. A draft only — shown to the person, never sent.
+    ipcMain.handle('autofill:proposal', async (e, { profileId, jobPost, platform, length, tone, extra, agentId = 'default' } = {}) => {
+      if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+      if (!this.copilot) return { ok: false, error: 'co-pilot is not connected' };
+      const profile = this.autofillStore.getProfile(profileId);
+      if (!profile) return { ok: false, error: `no autofill profile "${profileId}"` };
+      const { buildProposalPrompt } = require('../autofill/proposal.js');
+      const b = buildProposalPrompt({ profile, jobPost, platform, length, tone, extra });
+      if (b.error) return { ok: false, error: b.error };
+      try {
+        const r = await this.copilot.send({ message: b.prompt, agentId });
+        const text = String((r && (r.text || r.reply || r.message)) || '').trim();
+        return text ? { ok: true, text } : { ok: false, error: 'co-pilot returned no text' };
+      } catch (err) { return { ok: false, error: err.message }; }
+    });
+    // The text of a tab's page (the job post), for the proposal drafter.
+    ipcMain.handle('autofill:readPage', async (e, { agentId = 'default' } = {}) => {
+      if (!this.driver) return { ok: false, error: 'driver unavailable' };
+      try {
+        const [t, u] = await Promise.all([
+          this.driver.exec({ action: 'eval', agentId, code: '(document.querySelector("main,[role=main],article") || document.body).innerText.slice(0, 12000)' }),
+          this.driver.exec({ action: 'getUrl', agentId }).catch(() => ({})),
+        ]);
+        return { ok: true, text: String((t && t.result) || ''), url: (u && u.url) || null };
+      } catch (err) { return { ok: false, error: err.message }; }
     });
 
     // §BUILT 2026-09-21 — screen-qa's UI layer (hotkey, right-click menu,
@@ -1265,7 +1297,21 @@ class IpcBridge {
     // listener-modal save path is wired to this instead of only setting
     // activeListeners.set(...) in memory — that wiring is TX16's own next
     // slice, named honestly as not done in this pass.
-    ipcMain.handle('listeners:list',       async ()    => this.options?.listListeners());
+    // §0.39.265 — each listener comes back with its decay state (strength, fadesAt, removeAt).
+    ipcMain.handle('listeners:list',       async ()    => {
+      if (!this.options) return [];
+      this.options.decayListeners();
+      return this.options.listListeners().map(l => ({ ...l, decay: this.options.listenerStrength(l) }));
+    });
+    ipcMain.handle('listeners:decay:get',  async ()    => this.options?.getListenerDecay());
+    ipcMain.handle('listeners:decay:set',  async (e, d) => this.options?.setListenerDecay(d || {}));
+    ipcMain.handle('listeners:decay:run',  async ()    => this.options?.decayListeners());
+
+    // §0.39.265 — keyboard shortcuts (src/shortcuts/registry.js; caught in main, see main/index.js)
+    ipcMain.handle('shortcuts:list',   async () => ({ ...(this.options?.getShortcuts() || { bindings: {}, overrides: {} }), actions: require('../shortcuts/registry').ACTIONS, defaults: require('../shortcuts/registry').DEFAULT_BINDINGS }));
+    ipcMain.handle('shortcuts:set',    async (e, d) => this.options?.setShortcut(d.accel, d.action));
+    ipcMain.handle('shortcuts:remove', async (e, d) => this.options?.removeShortcut(d.accel));
+    ipcMain.handle('shortcuts:reset',  async () => this.options?.resetShortcuts());
     ipcMain.handle('listeners:get',        async (e, d) => this.options?.getListener(d.id));
     ipcMain.handle('listeners:register',   async (e, d) => this.options?.registerListener(d));
     ipcMain.handle('listeners:update',     async (e, d) => this.options?.updateListener(d.id, d.updates));
@@ -1354,6 +1400,7 @@ class IpcBridge {
             if (urlPattern && this.options) {
               this.options.registerListener({
                 urlPattern,
+                pageListenerId: d.listenerId,
                 fingerprint: { selector: d.config.selector, xpath: d.config.xpath },
                 eventType: d.config.mode,
                 label: d.config.label,
@@ -1366,6 +1413,8 @@ class IpcBridge {
           }
         } else if (d.type === 'guardian.listener.event' && d.listenerId) {
           this._routeGuardianListenerEvent(d.listenerId, d.eventData);
+          // §0.39.265 — firing keeps a listener alive (listener decay)
+          try { this.options?.touchListener(d.listenerId, 'fired'); } catch (_) {}
         } else if (d.type === 'guardian.callto.added' && d.callto?.id) {
           // §2026-08-29 — James: "a tool that links guardian directly to
           // dom elements." Real gap closed: guardian-picker.js's "ADD TO
@@ -1707,8 +1756,10 @@ class IpcBridge {
     // the caller is told that plainly rather than getting back a
     // bookmark that silently claims state it doesn't have.
     if (!snap) return { bookmark, added, stateError: 'rewind returned no snapshot for this page' };
-    const accountId = this.options?.resolveDefaultAccountForAgent
-      ? this.options.resolveDefaultAccountForAgent(bookmark.agentId) : null;
+    // §0.39.265 — the ★ dialog names the account explicitly (null = none);
+    // only a caller that says nothing gets the agent's default account.
+    const accountId = d.accountId !== undefined ? (d.accountId || null)
+      : this.options?.resolveDefaultAccountForAgent ? this.options.resolveDefaultAccountForAgent(bookmark.agentId) : null;
     const linked = this.bookmarks.linkState({ id: bookmark.id, snapshotId: snap.id, accountId });
     return { bookmark: linked.bookmark || bookmark, added };
   }

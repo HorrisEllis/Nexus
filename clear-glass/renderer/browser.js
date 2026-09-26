@@ -603,7 +603,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }
   }
 
-  document.getElementById('btn-options').addEventListener('click', openOptionsPanel);
+  document.getElementById('btn-options')?.addEventListener('click', openOptionsPanel);
   document.getElementById('options-panel-close').addEventListener('click', () => optionsPanel.classList.remove('visible'));
 
   optDefaultUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') optDefaultUrl.blur(); });
@@ -1392,23 +1392,148 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   connectSSE();
 
   // ── Bookmarks ──────────────────────────────────────────────────────────
+  // §0.39.265 — James: "the bookmark system is supposed to be hooked in to the
+  // system state/rewind engine and account. Like a bookmark with a check mark
+  // to attach to the account … different accounts in each tab." A bookmark
+  // can carry page state (a rewind snapshot of this window: URL, cookies,
+  // storage, scroll) and an account. An account's pages open in that
+  // account's own window (acct-<accountId>, its own session, signed in with
+  // the account's saved provider sessions — src/main/index.js), because the
+  // tabs of one window share its webview and so its session.
+  const ACCT_PREFIX = 'acct-';
+  const myAccountId = agentId.startsWith(ACCT_PREFIX) ? agentId.slice(ACCT_PREFIX.length) : null;
+  let _accountsCache = null;
+  async function _accounts(refresh) {
+    if (!_accountsCache || refresh) _accountsCache = await cg.accounts.list().catch(() => []) || [];
+    return _accountsCache;
+  }
+  const _accountLabel = (id) => ((_accountsCache || []).find(a => a.id === id) || {}).label || (id ? id.slice(0, 8) + '…' : '');
+
+  // This window's bookmarks, plus every bookmark attached to an account (those
+  // open in their account's window from anywhere).
+  async function _visibleBookmarks() {
+    const all = await cg.bookmarks.list({}) || [];
+    return all.filter(b => b.agentId === agentId || b.accountId);
+  }
+
+  async function openBookmark(bk) {
+    if (bk.accountId && bk.accountId !== myAccountId) {
+      const target = ACCT_PREFIX + bk.accountId;
+      await cg.window.open({ agentId: target, url: bk.url });
+      if (bk.snapshotId && bk.agentId === target) await cg.bookmarks.openWithState({ id: bk.id, agentId: target }).catch(() => {});
+      else cg.bookmarks.visit({ id: bk.id });
+      addMsg('assistant', `Opened in ${_accountLabel(bk.accountId) || 'the account'}\u2019s window.`);
+      return;
+    }
+    if (bk.snapshotId && bk.agentId === agentId) {
+      const r = await cg.bookmarks.openWithState({ id: bk.id, agentId }).catch(e => ({ restored: false, restoreError: e.message }));
+      if (r && r.restored) return;
+      navigate(bk.url);
+      if (r && r.restoreError) addMsg('assistant', `Saved page state could not be restored (${r.restoreError}) \u2014 opened the page without it.`);
+      return;
+    }
+    navigate(bk.url);
+    cg.bookmarks.visit({ id: bk.id });
+  }
+
+  // An account window says whose it is, next to its tabs.
+  if (myAccountId) _accounts().then(() => {
+    const b = document.createElement('span');
+    b.id = 'window-account'; b.textContent = `\u25C8 ${_accountLabel(myAccountId)}`;
+    b.title = 'This window is signed in as this account (its own session)';
+    document.getElementById('btn-new-tab')?.after(b);
+  });
+
   async function loadBookmarks() {
     try {
-      const bks = await cg.bookmarks.list({ agentId }) || [];
+      const bks = await _visibleBookmarks();
+      if (bks.some(b => b.accountId)) await _accounts();
       const list = document.getElementById('bookmarks-list');
       list.innerHTML = '';
       bks.slice(0, 20).forEach(bk => {
         const btn = document.createElement('button');
         btn.className = 'bk-btn';
-        btn.title = bk.url;
-        btn.textContent = bk.title || bk.url;
-        btn.addEventListener('click', () => {
-          navigate(bk.url);
-          cg.bookmarks.visit({ id: bk.id });
-        });
+        btn.title = [bk.url, bk.accountId ? `account: ${_accountLabel(bk.accountId)}` : null, bk.snapshotId ? 'restores saved page state' : null].filter(Boolean).join('\n');
+        if (bk.accountId) { const a = document.createElement('span'); a.className = 'bk-acct'; a.textContent = '\u25C8'; btn.appendChild(a); }
+        if (bk.snapshotId) { const st = document.createElement('span'); st.className = 'bk-state'; st.textContent = '\u23EE'; btn.appendChild(st); }
+        btn.appendChild(document.createTextNode(bk.title || bk.url));
+        btn.addEventListener('click', () => openBookmark(bk));
         list.appendChild(btn);
       });
     } catch (_) {}
+  }
+
+  // The ★ dialog — title, the account check list, "remember page state".
+  async function openBookmarkDialog() {
+    const url = wv.getURL(), title = wv.getTitle();
+    if (!url || url === 'about:blank') return;
+    document.getElementById('bk-dialog')?.remove();
+    const [accounts, all] = await Promise.all([_accounts(true), cg.bookmarks.list({ agentId }).catch(() => [])]);
+    const existing = (all || []).find(b => b.url === url);
+    let chosen = existing ? (existing.accountId || null) : myAccountId;
+
+    const el = (tag, props = {}, ...kids) => { const n = document.createElement(tag); Object.assign(n, props); kids.flat().forEach(k => k != null && n.append(k)); return n; };
+    const box = el('div', { id: 'bk-dialog', className: 'bk-dialog' });
+    box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'Bookmark this page');
+    const titleIn = el('input', { type: 'text', value: (existing && existing.title) || title || url, className: 'bk-title' });
+    const acctList = el('div', { className: 'bk-accts', role: 'listbox' });
+    const paint = () => acctList.querySelectorAll('.bk-acct-opt').forEach(o => {
+      const on = (o.dataset.id || null) === chosen;
+      o.setAttribute('aria-selected', String(on)); o.querySelector('.tick').textContent = on ? '\u2713' : '';
+    });
+    const opt = (id, label, sub) => {
+      const o = el('button', { type: 'button', className: 'bk-acct-opt' }, el('span', { className: 'tick' }), el('span', { className: 'lbl', textContent: label }), sub ? el('span', { className: 'sub', textContent: sub }) : null);
+      o.dataset.id = id || '';
+      o.addEventListener('click', () => { chosen = id || null; paint(); stateNote(); });
+      return o;
+    };
+    acctList.append(opt(null, 'No account', 'opens in whichever window you click it'));
+    accounts.forEach(a => acctList.append(opt(a.id, a.label, (a.agentKeys || []).join(', ') + (a.id === myAccountId ? ' \u00B7 this window' : ''))));
+    const stateIn = el('input', { type: 'checkbox', checked: !!(existing && existing.snapshotId) });
+    const note = el('div', { className: 'bk-note' });
+    const stateNote = () => { note.textContent = chosen && chosen !== myAccountId
+      ? `Opens in ${_accountLabel(chosen)}\u2019s own window, signed in as that account. Page state is saved from this window, so it restores only here.`
+      : 'Page state is a rewind snapshot: the URL, sign-in cookies, page storage and scroll position.'; };
+    const save = el('button', { type: 'button', className: 'bk-primary', textContent: existing ? 'Save' : 'Add bookmark' });
+    const remove = existing ? el('button', { type: 'button', className: 'bk-danger', textContent: 'Remove' }) : null;
+    const cancel = el('button', { type: 'button', textContent: 'Cancel' });
+    box.append(el('div', { className: 'bk-head', textContent: existing ? 'Edit bookmark' : 'Bookmark this page' }), titleIn,
+      el('div', { className: 'bk-label', textContent: 'Account' }), acctList,
+      el('label', { className: 'bk-check' }, stateIn, el('span', { textContent: 'Remember page state (rewind)' })), note,
+      el('div', { className: 'bk-actions' }, remove, el('span', { className: 'grow' }), cancel, save));
+    document.body.appendChild(box);
+    const r = document.getElementById('btn-bookmark').getBoundingClientRect();
+    box.style.top = `${Math.round(r.bottom + 6)}px`;
+    box.style.left = `${Math.round(Math.max(8, Math.min(r.right - box.offsetWidth, window.innerWidth - box.offsetWidth - 8)))}px`;
+    paint(); stateNote(); titleIn.focus(); titleIn.select();
+
+    const close = () => { box.remove(); document.removeEventListener('mousedown', outside, true); };
+    const outside = (e) => { if (!box.contains(e.target) && e.target.id !== 'btn-bookmark') close(); };
+    setTimeout(() => document.addEventListener('mousedown', outside, true), 0);
+    box.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); if (e.key === 'Enter' && e.target === titleIn) save.click(); });
+    cancel.addEventListener('click', close);
+    remove?.addEventListener('click', async () => {
+      await cg.bookmarks.remove({ id: existing.id });
+      document.getElementById('btn-bookmark').style.color = '';
+      close(); loadBookmarks();
+    });
+    save.addEventListener('click', async () => {
+      save.disabled = true;
+      try {
+        const t = titleIn.value.trim() || title || url;
+        let bk, stateError = null;
+        if (stateIn.checked && !(existing && existing.snapshotId)) {
+          const res = await cg.bookmarks.addWithState({ url, title: t, agentId, accountId: chosen });
+          bk = res.bookmark; stateError = res.stateError || null;
+        } else {
+          bk = (await cg.bookmarks.add({ url, title: t, agentId })).bookmark;
+        }
+        await cg.bookmarks.linkState({ id: bk.id, accountId: chosen, ...(stateIn.checked ? {} : { snapshotId: null }) });
+        document.getElementById('btn-bookmark').style.color = '#f5c842';
+        addMsg('assistant', `\u2605 ${existing ? 'Updated' : 'Bookmarked'}: ${t}${chosen ? ` \u00B7 account ${_accountLabel(chosen)}` : ''}${stateIn.checked && !stateError ? ' \u00B7 page state saved' : ''}${stateError ? ` \u00B7 page state not saved: ${stateError}` : ''}`);
+        close(); loadBookmarks();
+      } catch (e) { save.disabled = false; addMsg('assistant', `Bookmark failed: ${e.message}`); }
+    });
   }
 
   // §BUILD 2026-09-02 — wiring for the new inline #btn-zoom / #zoom-popover
@@ -1434,22 +1559,8 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     });
   })();
 
-  document.getElementById('btn-bookmark').addEventListener('click', async () => {
-    const url   = wv.getURL();
-    const title = wv.getTitle();
-    if (!url || url === 'about:blank') return;
-    const isMarked = await cg.bookmarks.check({ url, agentId }).catch(() => false);
-    if (isMarked) {
-      // Already bookmarked — remove it
-      const bks = await cg.bookmarks.list({ agentId });
-      const found = bks.find(b => b.url === url);
-      if (found) { await cg.bookmarks.remove({ id: found.id }); document.getElementById('btn-bookmark').style.color = ''; }
-    } else {
-      await cg.bookmarks.add({ url, title, agentId });
-      document.getElementById('btn-bookmark').style.color = '#f5c842';
-    }
-    loadBookmarks();
-  });
+  // §0.39.265 — ★ opens the bookmark dialog (add, or edit/remove when already bookmarked)
+  document.getElementById('btn-bookmark').addEventListener('click', () => { openBookmarkDialog().catch(e => addMsg('assistant', `Bookmark failed: ${e.message}`)); });
 
   // §BUILD 2026-08-28 — James: "the three dots, I want to be the menu...
   // the agent window manager moved to the menu with the 3 dots, same
@@ -1734,7 +1845,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     });
     const listEl = document.getElementById('menu-bookmarks-list');
     try {
-      const list = await cg.bookmarks.list({ agentId });
+      const list = await _visibleBookmarks();
       if (!list || !list.length) {
         listEl.innerHTML = '<div style="padding:6px 4px;color:var(--text-dim,#999);font-size:11px">No bookmarks yet — click the ★ in the search bar to add one.</div>';
         return;
@@ -1746,7 +1857,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         </div>`).join('');
       listEl.querySelectorAll('[data-visit]').forEach(el => el.addEventListener('click', async () => {
         const bk = list.find(b => b.id === el.dataset.visit);
-        if (bk) { navigate(bk.url); await cg.bookmarks.visit({ id: bk.id, agentId }); panel.style.display = 'none'; }
+        if (bk) { panel.style.display = 'none'; await openBookmark(bk); }
       }));
       listEl.querySelectorAll('[data-remove]').forEach(el => el.addEventListener('click', async (ev) => {
         ev.stopPropagation();
@@ -1873,6 +1984,61 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     if (!e.altKey) return;
     if (e.key === 'ArrowLeft') { e.preventDefault(); if (wv.canGoBack()) wv.goBack(); }
     else if (e.key === 'ArrowRight') { e.preventDefault(); if (wv.canGoForward()) wv.goForward(); }
+  });
+
+  // ── Keyboard shortcuts — §0.39.265 ─────────────────────────────────────
+  // The main process catches every shortcut (in this chrome AND inside the
+  // page — src/main/index.js, bindings from src/shortcuts/registry.js plus
+  // Settings › Keyboard shortcuts) and sends this window the browser actions.
+  // Each action calls the same function its button or menu item uses.
+  let _recordingMacro = false;
+  async function _shortcutAutofill() {
+    const [settings, profiles] = await Promise.all([cg.api.get().catch(() => ({})), cg.autofill.listProfiles().catch(() => [])]);
+    const pid = settings.screenQaProfileId || (profiles && profiles[0] && profiles[0].id);
+    if (!pid) { addMsg('assistant', 'Autofill: add a profile in Settings \u203A Autofill & answers first.'); return; }
+    const r = await cg.autofill.fill(pid, agentId).catch(e => ({ error: e.message }));
+    addMsg('assistant', r && r.error ? `Autofill: ${r.error}` : `Autofill: ${(r && (r.filled ?? (r.results || []).length)) || 0} field(s) filled.`);
+  }
+  const SHORTCUT_ACTIONS = {
+    'tab.new':        () => _tabs.newTab(),
+    'tab.close':      () => _tabs.closeTab(_tabs.activeId),
+    'tab.reopen':     () => _tabs.reopenClosed(),
+    'tab.next':       () => { const ids = _tabs.tabs.map(t => t.id); _tabs.switchTo(ids[(ids.indexOf(_tabs.activeId) + 1) % ids.length]); },
+    'tab.prev':       () => { const ids = _tabs.tabs.map(t => t.id); _tabs.switchTo(ids[(ids.indexOf(_tabs.activeId) - 1 + ids.length) % ids.length]); },
+    'tab.last':       () => { const last = _tabs.tabs[_tabs.tabs.length - 1]; if (last) _tabs.switchTo(last.id); },
+    'page.reload':    () => wv.reload(),
+    'page.back':      () => { if (wv.canGoBack()) wv.goBack(); },
+    'page.forward':   () => { if (wv.canGoForward()) wv.goForward(); },
+    'page.find':      () => openFindBar(),
+    'page.print':     () => cg.driver.exec({ action: 'print', agentId }),
+    'page.zoomIn':    () => applyZoom(_zoomFactor + 0.1),
+    'page.zoomOut':   () => applyZoom(_zoomFactor - 0.1),
+    'page.zoomReset': () => applyZoom(1.0),
+    'page.address':   () => { urlBar.focus(); urlBar.select(); },
+    'page.fullscreen':() => cg.window.fullscreen(agentId),
+    'cg.bookmark':    () => document.getElementById('btn-bookmark').click(),
+    'cg.history':     () => _openPanelFromMenu('history-panel', () => _renderHistoryPanel('')),
+    'cg.copilot':     () => copilotToggle && copilotToggle.click(),
+    'cg.rewind':      () => document.getElementById('btn-rewind')?.click(),
+    'cg.picker':      () => pickerBtn.click(),
+    'cg.autofill':    () => _shortcutAutofill(),
+    'cg.macroRecord': async () => {
+      if (!_recordingMacro) {
+        const r = await cg.macros.recordStart(agentId).catch(e => ({ error: e.message }));
+        if (r && r.error) return addMsg('assistant', `Recording: ${r.error}`);
+        _recordingMacro = true; addMsg('assistant', '\u25CF Recording a macro \u2014 press the shortcut again to stop.');
+      } else {
+        _recordingMacro = false;
+        const r = await cg.macros.recordStop(agentId).catch(e => ({ error: e.message }));
+        addMsg('assistant', r && r.error ? `Recording: ${r.error}` : `Recording stopped${r && r.steps ? ` \u2014 ${r.steps.length} step(s)` : ''}. Save it in Settings \u203A Macros.`);
+      }
+    },
+  };
+  cg.shortcuts?.onAction(({ action, result }) => {
+    if (result) { addMsg('assistant', result.ok === false ? `Shortcut: ${result.error}` : result.text || 'Done.'); return; }
+    const fn = SHORTCUT_ACTIONS[action];
+    if (!fn) return;
+    Promise.resolve().then(fn).catch(e => addMsg('assistant', `Shortcut failed: ${e.message}`));
   });
 
   // §LIBRARY 0.39.241 — the Downloads dropdown that lived here (2026-08-24, with
@@ -2958,9 +3124,13 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     ctxMenu.querySelector('[data-action="unpin-sep"]').style.display = ctxPinTarget ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar"]').style.display = ctxIsChrome ? '' : 'none';
     ctxMenu.querySelector('[data-action="customize-toolbar-sep"]').style.display = ctxIsChrome ? '' : 'none';
-    ctxMenu.style.left = Math.min(x, window.innerWidth - 180) + 'px';
-    ctxMenu.style.top  = Math.min(y, window.innerHeight - 220) + 'px';
+    // §0.39.265 — clamp to the menu's real, measured size (it grows with
+    // its rows) instead of a guessed 180×220, and never to a NaN position.
     ctxMenu.classList.add('visible');
+    const w = ctxMenu.offsetWidth || 180, h = ctxMenu.offsetHeight || 220;
+    const px = Number.isFinite(x) ? x : 0, py = Number.isFinite(y) ? y : 0;
+    ctxMenu.style.left = Math.max(4, Math.min(px, window.innerWidth - w - 4)) + 'px';
+    ctxMenu.style.top  = Math.max(4, Math.min(py, window.innerHeight - h - 4)) + 'px';
   }
   function hideCtxMenu() { ctxMenu.classList.remove('visible'); }
 
@@ -2990,9 +3160,15 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     // where on the page the click actually was. Adding the webview's own
     // offset within the window converts it to window-relative, the same
     // coordinate space showCtxMenu()'s Math.min clamp already assumes.
+    //
+    // §0.39.265 — still stuck: Electron's <webview> 'context-menu' event
+    // carries the point as e.params.x / e.params.y; e.x / e.y are undefined,
+    // so left/top became "NaNpx", which the browser ignores, and the menu sat
+    // at its default top-left corner. Read params (e.x kept as a fallback).
     const r = wv.getBoundingClientRect();
-    ctxPageXY = { x: e.x, y: e.y };
-    showCtxMenu(r.left + e.x, r.top + e.y);
+    const p = e.params || e;
+    ctxPageXY = { x: p.x, y: p.y };
+    showCtxMenu(r.left + p.x, r.top + p.y);
   });
 
   ctxMenu.addEventListener('click', async (e) => {

@@ -1,0 +1,875 @@
+{
+  "format": "NEX-SNAP/1.0",
+  "snapId": "86367355-9942-4ee2-a44c-1d4c6ed95780",
+  "type": "pre_forge",
+  "tables": {
+    "working_memory": [],
+    "active_traces": [],
+    "cortex_memory": [],
+    "gaps": [
+      {
+        "uuid": "7caf2b12-e333-4800-87ea-083c85e84376",
+        "type": "intent.low_confidence",
+        "domain": "system",
+        "body": "Intent parsed with confidence 0.343 (threshold: 0.45). verb=\"unknown\" domain=\"general\" raw=\"\"",
+        "source": "intent-classifier",
+        "severity": "medium",
+        "status": "open",
+        "causedBy": "f4280d04-2c49-4cbe-a036-a19c12b8a28f",
+        "dedup_key": "system::intent.low_confidence::intent-classifier",
+        "occurrences": 9,
+        "detectedAt": 1790427726594,
+        "lastSeenAt": 1790427726827,
+        "meta": {
+          "causedBy": "f4280d04-2c49-4cbe-a036-a19c12b8a28f",
+          "path": "intent-classifier/confidence"
+        },
+        "requested": null,
+        "received": null,
+        "systemsInvolved": [
+          "intent-classifier"
+        ],
+        "location": null,
+        "error": null,
+        "resourceState": {
+          "ts": 1790427726595,
+          "pid": 4304,
+          "system": {
+            "totalMem": 16877465600,
+            "freeMem": 15998382080,
+            "freeMemPct": 0.9479137720772484,
+            "usedMemPct": 0.05208622792275164,
+            "cpuPct": null,
+            "loadavg": [
+              0.98,
+              0.58,
+              0.3
+            ],
+            "cpuCount": 4,
+            "platform": "linux"
+          },
+          "process": {
+            "rss": 51945472,
+            "heapUsed": 5528008,
+            "heapTotal": 7966720,
+            "heapUsedPct": 0.6938875723007712,
+            "external": 1923744,
+            "uptimeSec": 0
+          },
+          "pressure": {
+            "level": "ok",
+            "reasons": [],
+            "spawnSafe": true
+          }
+        },
+        "why": null,
+        "component": null,
+        "priority": 0.3925,
+        "id": "36959577-2376-4198-b6ea-70624c3c36e3"
+      }
+    ],
+    "event_log": [
+      {
+        "uuid": "b1c47603-25f9-41cf-870a-1c75637ea2fc",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726586,
+        "payload": {
+          "intentUuid": "f4280d04-2c49-4cbe-a036-a19c12b8a28f",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "f6daa49d-7352-41c5-8e1c-6f4df5ccd3fe"
+      },
+      {
+        "uuid": "e9fddba5-dd3e-41a9-bcf7-34dd4290cac9",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726603,
+        "payload": {
+          "intentUuid": "a314c726-3f7f-4306-af09-c105febbc4b8",
+          "verb": "diagnose",
+          "domain": "general",
+          "risk_level": "LLM_LOCAL",
+          "execution_class": "AUTONOMOUS",
+          "confidence": 0.544,
+          "source": "AUTONOMOUS_LOOP",
+          "objectCount": 4,
+          "constraintCount": 0,
+          "lowConfidence": false
+        },
+        "id": "b39afbac-ef95-46b3-8252-7fdc4cb04425"
+      },
+      {
+        "uuid": "04312fc2-076e-4d93-8731-0e12cd444b9f",
+        "type": "case_library.queried",
+        "payload": {
+          "signature": "general:diagnose",
+          "domain": "general",
+          "verb": "diagnose",
+          "tier": "cold",
+          "confidence": null,
+          "workingMemorySeed": null,
+          "blocked": false,
+          "reason": "no lattice edge for this signature yet — never seen, not \"always fails\""
+        },
+        "source": "case-library",
+        "ts": 1790427726603,
+        "id": "73219ee6-e90f-448d-92c4-6414cbca2f33"
+      },
+      {
+        "uuid": "f5e59519-396a-49bb-9ce9-d3db797fee8a",
+        "type": "case_library.indexed",
+        "payload": {
+          "signature": "general:diagnose",
+          "compartment_uuid": "0690ee00-4fca-4c4e-a9c9-47ea0b680846",
+          "evicted": 0
+        },
+        "source": "case-library",
+        "ts": 1790427726613,
+        "id": "6239519b-20e6-44a8-8a82-0fa1c3760d4d"
+      },
+      {
+        "uuid": "6c3de831-986c-4087-acbd-107b78781653",
+        "type": "compartment.pass",
+        "payload": {
+          "id": "0690ee00-4fca-4c4e-a9c9-47ea0b680846",
+          "intent_uuid": "a314c726-3f7f-4306-af09-c105febbc4b8"
+        },
+        "source": "compartment-engine",
+        "ts": 1790427726613,
+        "id": "72c9c563-5164-4996-9411-d9c558b3dfc7"
+      },
+      {
+        "uuid": "3f391701-891e-48fa-8f35-9e1ef7c32c87",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726631,
+        "payload": {
+          "intentUuid": "b7289038-813a-4b61-b7ec-c3370ed0bb10",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "22e40dd1-f22e-41e5-a6c7-35e9971071a1"
+      },
+      {
+        "uuid": "5399dbb9-cbf3-4b74-be6d-b200ad344765",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726646,
+        "payload": {
+          "intentUuid": "aeba83b1-6266-40cf-a123-cc33d56125ef",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "8c046339-2601-4d19-ae72-53180b587c9c"
+      },
+      {
+        "uuid": "ef56bd53-9664-4d22-a0b4-61d292f8d7b2",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726661,
+        "payload": {
+          "intentUuid": "ad6ad08b-fcd3-468d-8442-84188e816d89",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "226b22be-155c-4910-9516-c198adb6e959"
+      },
+      {
+        "uuid": "5a8b6dbb-ed80-4f22-9e3f-b9d354e7bf0d",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726722,
+        "payload": {
+          "intentUuid": "bc697ae7-c60b-491a-9637-ce9a88e28dcf",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "6ba6f1e2-a962-4e3f-8979-34241e11e57a"
+      },
+      {
+        "uuid": "9c855ed5-d835-4dad-ac91-0129231d62e1",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726737,
+        "payload": {
+          "intentUuid": "73c8e409-177f-4efd-8468-354c2698edf7",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "a86c917b-8c86-4930-87f0-5b8446ac95da"
+      },
+      {
+        "uuid": "86aba676-f1e2-40c0-87da-3312d6e1b850",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726826,
+        "payload": {
+          "intentUuid": "c8d45e55-55d4-4d84-8336-f86b0db07b63",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "3b618c56-b559-4389-97c4-592a398c343a"
+      },
+      {
+        "uuid": "80ad4578-f0d7-4569-846e-25d41943489f",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726827,
+        "payload": {
+          "intentUuid": "c542b1f7-3f79-401c-89bd-5fffc6290c17",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "GENERATIVE",
+          "confidence": 0.343,
+          "source": "USER",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "7689ce2b-6ef6-43d5-8f6f-6b7609accdea"
+      },
+      {
+        "uuid": "fb9f8d4b-1269-4f77-9ff4-0c05c6beac60",
+        "type": "intent.classified",
+        "source": "intent-classifier",
+        "ts": 1790427726827,
+        "payload": {
+          "intentUuid": "03b973f9-899d-4284-ba2c-c59105e7ff4c",
+          "verb": "unknown",
+          "domain": "general",
+          "risk_level": "LLM_REMOTE",
+          "execution_class": "AUTONOMOUS",
+          "confidence": 0.343,
+          "source": "AUTONOMOUS_LOOP",
+          "objectCount": 0,
+          "constraintCount": 0,
+          "lowConfidence": true
+        },
+        "id": "55c19b29-9829-4a00-8c18-e1a70d07f5e8"
+      },
+      {
+        "uuid": "64b74a3c-3a15-46b7-8021-8f11e321dea0",
+        "type": "case_library.queried",
+        "payload": {
+          "signature": "general:unknown",
+          "domain": "general",
+          "verb": "unknown",
+          "tier": "cold",
+          "confidence": null,
+          "workingMemorySeed": null,
+          "blocked": false,
+          "reason": "no lattice edge for this signature yet — never seen, not \"always fails\""
+        },
+        "source": "case-library",
+        "ts": 1790427726827,
+        "id": "d81eebf4-aea6-4d43-a47a-abc55eed0ee2"
+      }
+    ],
+    "sigma_records": [],
+    "sigma_rollups": [],
+    "meta_observations": [],
+    "sigma_live": [],
+    "component_ledger": [],
+    "cfr_tension_history": [],
+    "constitution_decisions": [
+      {
+        "uuid": "85a93819-13b1-4c69-9bcf-e7d18146f27b",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726599,
+        "id": "d873fe3a-aaae-47ce-bcec-a3b57a77adf6"
+      },
+      {
+        "uuid": "fce34d7f-0afe-47e0-bb0d-2beb3a55d058",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726599,
+        "id": "93a2a9c2-5c1a-43f1-af17-1bf294368525"
+      },
+      {
+        "uuid": "5becd29e-4da6-4498-88f4-b0386a234d39",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726599,
+        "id": "f12b3012-3047-478e-9031-5b6d1f26c25c"
+      },
+      {
+        "uuid": "11ca094c-cfe3-452d-be20-4b68fcff7ab5",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726600,
+        "id": "e0fff370-cd1e-4897-b30b-18d665b2171d"
+      },
+      {
+        "uuid": "39935b4d-3c52-4ad8-9861-8dff12589821",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726631,
+        "id": "e827240b-c6a0-423e-8a8d-2d9ec54a85db"
+      },
+      {
+        "uuid": "5744662e-03c8-4f7f-8afb-4508a4351826",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726631,
+        "id": "4197e222-d87e-4be3-a2c7-7bdd4fd86100"
+      },
+      {
+        "uuid": "60e50d8e-f354-4354-bca9-0dfb3f2dc727",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726632,
+        "id": "2cdbe0d9-e08e-429a-b5c5-4e9f16ca102c"
+      },
+      {
+        "uuid": "0a2902d0-68d5-44fb-b834-c32bbba32336",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726632,
+        "id": "6d71b730-550b-4b10-aade-1dd3954d7c54"
+      },
+      {
+        "uuid": "dc5abe9c-55ee-4156-937e-f550e3ce9736",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726646,
+        "id": "e987275e-ea75-4ae9-bc08-9a01623e5991"
+      },
+      {
+        "uuid": "73fea872-873e-435a-85c6-de4cff5307a8",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726646,
+        "id": "f3e05ae8-5b71-4f38-9a65-5a0c846b628b"
+      },
+      {
+        "uuid": "001ca215-4ef9-4863-a1b6-78983ca70a9a",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726646,
+        "id": "27d5ced2-fa82-41b5-9fa0-943ffbc48db9"
+      },
+      {
+        "uuid": "dced41af-bef5-45c2-b885-df11ac51d02c",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726646,
+        "id": "64b9e0d0-a2db-4bfd-95d9-19b140a1b3fb"
+      },
+      {
+        "uuid": "77a8dffa-d0e9-4259-bf60-4fbe05221de1",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726661,
+        "id": "071b9396-08a6-46b6-a584-148e9443417c"
+      },
+      {
+        "uuid": "b81951ff-8224-42fe-bef9-d854135fa225",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726661,
+        "id": "b073c7d8-0b7e-4d76-9ec5-8227d17c4747"
+      },
+      {
+        "uuid": "92c18134-d42f-498c-a827-b07a9e154dc0",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726661,
+        "id": "7ce4844e-df11-46ae-b8a3-3d631c875172"
+      },
+      {
+        "uuid": "e50b1f3a-349e-4a0a-83b2-a88bc8262c00",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726661,
+        "id": "218eafd5-26cd-4ffc-b297-631b37aeb3c4"
+      },
+      {
+        "uuid": "fef54a3e-2d38-410d-842b-aa134bd69f10",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726722,
+        "id": "5f551ddc-c881-4dbf-a9ca-627b8aab2869"
+      },
+      {
+        "uuid": "bceb4c01-4b54-47ff-8b83-aea32c0d2852",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726722,
+        "id": "f0237c07-9fd6-47c4-8bba-9a7a04155dad"
+      },
+      {
+        "uuid": "924e4f2b-df20-4424-bc19-6dcaea44a4a8",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726722,
+        "id": "0d82d81a-8de5-4129-9e96-71b02d56cff4"
+      },
+      {
+        "uuid": "5a0b7ee5-d968-4646-9c39-21da1fb8cbc5",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726722,
+        "id": "395f0d40-1c99-4d30-8d5a-b98faae69074"
+      },
+      {
+        "uuid": "68c28dfa-14f3-48d5-9f4b-de312208fafb",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726738,
+        "id": "9339e796-9728-4f80-90ed-e98adc76bf0e"
+      },
+      {
+        "uuid": "af82fb40-510b-482d-94d3-c57f9e3a61bb",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726738,
+        "id": "f337ab54-4d91-45b9-b1b1-a252f67aa7e3"
+      },
+      {
+        "uuid": "ddeed3e4-60cf-452f-b856-4f81c3ed5126",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726738,
+        "id": "bdd0f967-381a-4127-b40a-e3c436d64b67"
+      },
+      {
+        "uuid": "7d10b973-dd9a-46ad-8953-c36415dfea08",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726738,
+        "id": "a06f25b4-87c8-46bc-81b9-a5ac428c41d3"
+      },
+      {
+        "uuid": "7b911eda-d528-4915-a0a3-d90cec96b247",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726826,
+        "id": "713c1a6f-d0e3-40d5-ad2a-b9b51b262dab"
+      },
+      {
+        "uuid": "1af254ac-20b6-482b-aac7-61bdeffcc3c7",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726826,
+        "id": "0f3b7a26-5832-4f97-8d38-bebb70288fe6"
+      },
+      {
+        "uuid": "65edb567-5e8c-401c-afbe-37f69c65f2ea",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726826,
+        "id": "9d2f3a8b-9437-4a08-9490-a38751377c17"
+      },
+      {
+        "uuid": "724a7302-dc24-42ae-856b-3608a044285d",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726826,
+        "id": "60675d5a-5c59-4e24-ac57-3d115ab6391a"
+      },
+      {
+        "uuid": "75c6ed4e-8fb3-478d-a450-81ff02cb25e7",
+        "requestId": null,
+        "axiom": "USER_AUTONOMY",
+        "pass": true,
+        "reason": "User intent is respected by default.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726827,
+        "id": "fb94df10-9ec3-4fc0-a17a-0496ceae8234"
+      },
+      {
+        "uuid": "a8a888b7-fc7a-49ac-af36-1da90203c9db",
+        "requestId": null,
+        "axiom": "REVERSIBILITY",
+        "pass": true,
+        "reason": "Action is reversible.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726827,
+        "id": "282979b3-ba0a-4d73-a242-e5fb9c34aaec"
+      },
+      {
+        "uuid": "eb5e6187-5fa4-4000-952e-032b2b5068ba",
+        "requestId": null,
+        "axiom": "TRUTH_OVER_COHERENCE",
+        "pass": true,
+        "reason": "No confidence signal available to evaluate — passing by default, not fabricating certainty.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726827,
+        "id": "7b6855e4-f6e8-4b3c-8188-564fd4e7b428"
+      },
+      {
+        "uuid": "e4bc30e3-7446-4bce-8ec7-4839d74e8226",
+        "requestId": null,
+        "axiom": "EXPLAINABILITY",
+        "pass": true,
+        "reason": "Outcome will be attributable and logged.",
+        "severity": "flag",
+        "blast_radius": "none",
+        "cost": 0,
+        "alternatives": [],
+        "ts": 1790427726827,
+        "id": "7acec211-4304-4b88-b23a-60be45f8f699"
+      }
+    ],
+    "chat_log": [],
+    "schema_drift": [],
+    "crystals": [],
+    "bep_patterns": [],
+    "trust_scores": [],
+    "fix_map": [],
+    "memory_unified": [],
+    "interstitial_spaces": [],
+    "hooks": [],
+    "tool_index": [
+      {
+        "id": "unit-test-tool",
+        "consumers": [
+          "unit-test"
+        ],
+        "intents": [],
+        "edgeCases": [
+          {
+            "note": "simulated failure for CA7 test",
+            "at": 1790427726614,
+            "consumer": "unit-test"
+          }
+        ],
+        "calls": 1,
+        "file": "x.js",
+        "dir": "lib",
+        "provides": "testing",
+        "updatedAt": 1790427726614,
+        "_key": "unit-test-tool"
+      }
+    ],
+    "raid_contract_queue": [],
+    "intake_drops": [],
+    "fault_taxonomy": [],
+    "forge_patches": [],
+    "raid_tunables": [],
+    "decay_log": [],
+    "settings": [
+      {
+        "id": "d9ba78c3-54eb-4329-9e84-91bde49009bd",
+        "key": "session_greeting_enabled",
+        "value": "true",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "df8d194c-c7fa-4473-a95c-86242bb84978",
+        "key": "session_greeting_text",
+        "value": "Guardian session initialising. Please ask me: \"What are we calling this session?\" — then wait for my answer before we begin.",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "dea050bb-bbed-4301-af36-52c0706b06c7",
+        "key": "scan_debounce_ms",
+        "value": "1500",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "4a99af63-43ba-4773-aadf-f1866b892a6c",
+        "key": "artifact_max",
+        "value": "500",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "2e6f186b-24be-4868-bb79-c57eec6a7548",
+        "key": "gap_min_score",
+        "value": "0.25",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "3008a116-ff97-4ef6-aa18-05fce6efef65",
+        "key": "gap_taxonomy_version",
+        "value": "3.0.0",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "21fbf856-2f55-4657-9f60-be88d35b7c04",
+        "key": "pa_enabled",
+        "value": "true",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "5880be2c-bd31-4195-83bf-cdfcffa1833a",
+        "key": "memory_auto_push",
+        "value": "true",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "64853a98-ee2e-4c76-b7b1-2394dde146ca",
+        "key": "dropzone_auto_upload",
+        "value": "true",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "0f62ff6c-996d-4b8d-900c-dee8cfbb9272",
+        "key": "stream_log_level",
+        "value": "EVENTS",
+        "updated_ts": 1790427726570
+      },
+      {
+        "id": "a21aa104-6c6e-4d02-ad3a-301926e7494e",
+        "key": "lan_host",
+        "value": "0.0.0.0",
+        "updated_ts": 1790427726571
+      },
+      {
+        "id": "9c8e59cf-190f-4d1b-8aed-83d6e4674752",
+        "key": "greeting_delay_ms",
+        "value": "1200",
+        "updated_ts": 1790427726571
+      },
+      {
+        "id": "b957712c-b9f7-4eed-bfb6-3345cf20000b",
+        "key": "poll_interval_ms",
+        "value": "500",
+        "updated_ts": 1790427726571
+      },
+      {
+        "id": "2e323c9e-6c7d-4f8c-85ad-45368e4e2ebb",
+        "key": "stable_count_threshold",
+        "value": "5",
+        "updated_ts": 1790427726571
+      }
+    ],
+    "components": [],
+    "compaction_log": [],
+    "dedup_log": []
+  },
+  "hashVersion": 2,
+  "cortex_state_hash": "de3fffec9fac8f29616fdab2aef13bd3d395ad86520a13a10a5690a27e092a34",
+  "prev_snapshot_hash": "2132e595d370836466db54b23e0dd53fd66aefa8195c77dea2b4e0b5c19d4b59",
+  "createdAt": 1790427726829
+}

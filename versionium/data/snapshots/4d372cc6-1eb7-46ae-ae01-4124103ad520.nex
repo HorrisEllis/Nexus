@@ -1,0 +1,220 @@
+{
+  "format": "NEX-SNAP/1.0",
+  "snapId": "4d372cc6-1eb7-46ae-ae01-4124103ad520",
+  "type": "pre_forge",
+  "tables": {
+    "working_memory": [],
+    "active_traces": [],
+    "cortex_memory": [],
+    "gaps": [],
+    "event_log": [
+      {
+        "uuid": "15811cb9-46f0-40a3-bb94-1a217ad9cf0e",
+        "type": "compartment.fail",
+        "payload": {
+          "id": "3546e70f-39c4-4c80-aa9a-cc4db65170b3",
+          "intent_uuid": "0390070c-68d1-4569-a814-e197bbd29b14",
+          "reason": "QA/QC check failed",
+          "status": "REWOUND"
+        },
+        "source": "compartment-engine",
+        "ts": 1790423136300,
+        "id": "cc8982ea-dc3c-4461-86d4-87243c55e156"
+      }
+    ],
+    "sigma_records": [],
+    "sigma_rollups": [],
+    "meta_observations": [],
+    "sigma_live": [],
+    "component_ledger": [],
+    "cfr_tension_history": [
+      {
+        "uuid": "66f7329f-ef1e-412c-8406-a2b8e199d058",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0,
+        "friction": 0,
+        "slope": 0,
+        "sigma": 0,
+        "ts": 1790423136253,
+        "id": "b2c0269d-82ee-4655-84f2-106e21671fa6"
+      },
+      {
+        "uuid": "48fc686d-5246-4e71-bfb4-126722d0127a",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.0205,
+        "friction": 0,
+        "slope": -1,
+        "sigma": 0,
+        "ts": 1790423136254,
+        "id": "9b13ce41-28a5-4aeb-9c6e-359223f5f54a"
+      },
+      {
+        "uuid": "d630e5da-fd7a-42ac-a29b-3c5041aa92d8",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.0335,
+        "friction": 0,
+        "slope": 1,
+        "sigma": 0,
+        "ts": 1790423136254,
+        "id": "89dd0c63-331b-41f8-8cf5-4b9f4abd5ecd"
+      },
+      {
+        "uuid": "59d4ea86-2486-40c3-bf2e-4e43ead8aa38",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.054,
+        "friction": 0,
+        "slope": -1,
+        "sigma": 0,
+        "ts": 1790423136255,
+        "id": "3e4355db-7b3c-46ff-ad0c-b2cf8263d0ae"
+      }
+    ],
+    "constitution_decisions": [],
+    "chat_log": [],
+    "schema_drift": [],
+    "crystals": [],
+    "bep_patterns": [],
+    "trust_scores": [],
+    "fix_map": [],
+    "memory_unified": [],
+    "interstitial_spaces": [],
+    "hooks": [],
+    "tool_index": [],
+    "raid_contract_queue": [
+      {
+        "uuid": "c8749b4c-7c59-4538-b03a-4090fb9608cc",
+        "status": "queued",
+        "intention": null,
+        "dir": null,
+        "language": null,
+        "stage": "system_queue",
+        "system": null,
+        "source": "test",
+        "sourceDropId": null,
+        "boundary": null,
+        "file": null,
+        "title": "RT-1: no onFail declared",
+        "forAgent": null,
+        "contract": {
+          "content": "a real test contract with no onFail declared",
+          "title": "RT-1: no onFail declared"
+        },
+        "dependsOn": [],
+        "onFail": {
+          "action": "retry",
+          "maxRetries": 2
+        },
+        "retryCount": 1,
+        "compartmentId": null,
+        "verdict": null,
+        "createdAt": 1790423136204,
+        "updatedAt": 1790423136300,
+        "id": "dd1168aa-26f7-4ca6-a07d-e2f3486d4355",
+        "inputArtifactPath": "/tmp/raid-input-retry-escalation-p7BM8E/c8749b4c-7c59-4538-b03a-4090fb9608cc.contract",
+        "acknowledgedBy": "raid-processNext-auto"
+      }
+    ],
+    "intake_drops": [],
+    "fault_taxonomy": [],
+    "forge_patches": [],
+    "raid_tunables": [],
+    "decay_log": [],
+    "settings": [
+      {
+        "id": "f94a452e-6b11-48d1-ada2-098740229ba9",
+        "key": "session_greeting_enabled",
+        "value": "true",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "b4cc0cda-bb25-425b-922d-921d88d318cc",
+        "key": "session_greeting_text",
+        "value": "Guardian session initialising. Please ask me: \"What are we calling this session?\" — then wait for my answer before we begin.",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "05373a19-5f5e-44bd-99b0-2cfff8f458b9",
+        "key": "scan_debounce_ms",
+        "value": "1500",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "f22278a9-0007-4935-bd88-dcd20deb8e21",
+        "key": "artifact_max",
+        "value": "500",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "1dda1d4d-8722-4d95-b403-2551ca74195d",
+        "key": "gap_min_score",
+        "value": "0.25",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "2e986b04-1ce0-4e35-83ef-74af937d1002",
+        "key": "gap_taxonomy_version",
+        "value": "3.0.0",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "2bf5aedf-2e4d-4496-998d-3c7fde9cc55f",
+        "key": "pa_enabled",
+        "value": "true",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "59d64b95-b535-44b7-be17-2f465ecc638f",
+        "key": "memory_auto_push",
+        "value": "true",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "a57a3588-5412-41c1-a093-4daea13f2718",
+        "key": "dropzone_auto_upload",
+        "value": "true",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "1a5df0a9-0e60-4bb4-82ee-4f2fc4fbf97f",
+        "key": "stream_log_level",
+        "value": "EVENTS",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "e142b4ef-7fb4-419a-bef6-ef4ea66f8ad5",
+        "key": "lan_host",
+        "value": "0.0.0.0",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "9d3e42ff-0186-49be-ada3-ac24d827368f",
+        "key": "greeting_delay_ms",
+        "value": "1200",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "e116cc35-2b83-4972-8c8c-35a28ec197ce",
+        "key": "poll_interval_ms",
+        "value": "500",
+        "updated_ts": 1790423136205
+      },
+      {
+        "id": "e7e7ff94-1d89-413c-bca8-76bf1f5c86d0",
+        "key": "stable_count_threshold",
+        "value": "5",
+        "updated_ts": 1790423136205
+      }
+    ],
+    "components": [],
+    "compaction_log": [],
+    "dedup_log": []
+  },
+  "hashVersion": 2,
+  "cortex_state_hash": "edbf9623927bcf09e360da2b7f1fc0d01e00c63da77f02f8d970a9c4276e612c",
+  "prev_snapshot_hash": "020364e37e7fc5968903a84aea17806154746b2c73fa1f8ac460cfbac12f5be4",
+  "createdAt": 1790423136301
+}

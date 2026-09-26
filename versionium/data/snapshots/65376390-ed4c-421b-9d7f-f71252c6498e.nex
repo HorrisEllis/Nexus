@@ -1,0 +1,153 @@
+{
+  "format": "NEX-SNAP/1.0",
+  "snapId": "65376390-ed4c-421b-9d7f-f71252c6498e",
+  "type": "manual",
+  "tables": {
+    "working_memory": [],
+    "active_traces": [],
+    "cortex_memory": [],
+    "gaps": [
+      {
+        "uuid": "g1",
+        "severity": "high",
+        "ts": 1000,
+        "id": "b78670aa-ce70-43a5-b5e5-6bb9819e2d84"
+      },
+      {
+        "uuid": "g2",
+        "severity": "medium",
+        "ts": 2000,
+        "id": "6bbdbed9-7725-4bae-a20b-92c719ee41ac"
+      },
+      {
+        "uuid": "g4",
+        "id": "06638f54-8cad-4583-855c-1d09ebe490e2"
+      }
+    ],
+    "event_log": [],
+    "sigma_records": [],
+    "sigma_rollups": [],
+    "meta_observations": [],
+    "sigma_live": [],
+    "component_ledger": [],
+    "cfr_tension_history": [],
+    "constitution_decisions": [],
+    "chat_log": [],
+    "schema_drift": [],
+    "crystals": [],
+    "bep_patterns": [],
+    "trust_scores": [],
+    "fix_map": [],
+    "memory_unified": [],
+    "interstitial_spaces": [],
+    "hooks": [],
+    "tool_index": [],
+    "raid_contract_queue": [],
+    "intake_drops": [],
+    "fault_taxonomy": [],
+    "forge_patches": [],
+    "raid_tunables": [],
+    "decay_log": [],
+    "settings": [
+      {
+        "id": "a231b92a-3771-44dc-8e05-0d1eb50b294b",
+        "key": "session_greeting_enabled",
+        "value": "true",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "0b77b2e5-660d-4176-a8e9-5caf5837d1c1",
+        "key": "session_greeting_text",
+        "value": "Guardian session initialising. Please ask me: \"What are we calling this session?\" — then wait for my answer before we begin.",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "535357b6-86f8-484f-823e-f8c2903b4a86",
+        "key": "scan_debounce_ms",
+        "value": "1500",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "e466b0aa-ab81-4553-9a9c-3725cd40d620",
+        "key": "artifact_max",
+        "value": "500",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "5badd90c-d0c5-4132-a248-2a04a6deb69a",
+        "key": "gap_min_score",
+        "value": "0.25",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "c00d1476-eaa2-4b61-8f5c-893198c7b261",
+        "key": "gap_taxonomy_version",
+        "value": "3.0.0",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "7401283e-4054-46a6-850b-c214e9d78984",
+        "key": "pa_enabled",
+        "value": "true",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "319388fd-d7c6-4b5f-bb3f-53044336944d",
+        "key": "memory_auto_push",
+        "value": "true",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "44295bb6-af35-42ac-9e1f-593a7f133d91",
+        "key": "dropzone_auto_upload",
+        "value": "true",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "3c3af2d4-7e45-4e5e-bc57-14123e05feb9",
+        "key": "stream_log_level",
+        "value": "EVENTS",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "8cb754f9-a855-4497-9729-ae7e40b8801a",
+        "key": "lan_host",
+        "value": "0.0.0.0",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "c905fba3-c413-4bc0-bc60-1b5bb9bee8f4",
+        "key": "greeting_delay_ms",
+        "value": "1200",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "7a653333-3ffd-4877-b5ba-eb9889737b2c",
+        "key": "poll_interval_ms",
+        "value": "500",
+        "updated_ts": 1790427337651
+      },
+      {
+        "id": "d9a56c5c-f79d-484d-8bde-9db86489dfb6",
+        "key": "stable_count_threshold",
+        "value": "5",
+        "updated_ts": 1790427337651
+      }
+    ],
+    "components": [],
+    "compaction_log": [],
+    "dedup_log": []
+  },
+  "hashVersion": 2,
+  "systemStates": {
+    "sys-b": {
+      "ok": true,
+      "state": {
+        "marker": "real-value-42"
+      }
+    }
+  },
+  "cortex_state_hash": "4a4bea0fbc9e8298b6f50b26e56aac5bacb9e64d37a53ba1c82e4650c58b2cdc",
+  "prev_snapshot_hash": "11a86b5e29ab4d20ef38dd40c620f0a338e7a2e05de9e0046d817a1e6a40bc59",
+  "createdAt": 1790427337672
+}

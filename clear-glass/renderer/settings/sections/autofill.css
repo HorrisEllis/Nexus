@@ -18,3 +18,9 @@ body[data-area="autofill"] .af-line.bad { color: var(--bad); }
 body[data-area="autofill"] .af-line.c-high { color: var(--ok); }
 body[data-area="autofill"] .af-line.c-medium { color: var(--warn); }
 body[data-area="autofill"] .af-line.c-low { color: var(--ink-dim); }
+
+/* §0.39.265 — proposals & cover letters */
+body[data-area="autofill"] .af-post-head { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 6px; }
+body[data-area="autofill"] .af-post-head .lbl { font-size: 12px; color: var(--ink-dim); }
+body[data-area="autofill"] textarea { width: 100%; resize: vertical; }
+body[data-area="autofill"] .af-draft { margin-top: 8px; font-size: 13px; line-height: 1.5; }

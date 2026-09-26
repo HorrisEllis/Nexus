@@ -178,6 +178,7 @@ let tray, sse, ipcBridge, nexusOptions, bookmarks, rewind, providerHost, userscr
 let fp          = null;   // FingerprintEngine  — set in bootstrap()
 let ctxMgr      = null;   // ContextMgr         — set in bootstrap()
 let driver      = null;   // ClearDriver        — set in bootstrap()
+let cookieVault = null;   // CookieVault        — set in bootstrap(); account windows restore from it
 let urlListener = null;   // UrlListener        — set in bootstrap()
 let apiSettings = null;   // ApiSettings        — set in bootstrap()
 let _heartbeatInterval = null;
@@ -836,12 +837,15 @@ async function _startWire() {
       }
 
       if (u === '/agent-mesh/spawn' && req.method === 'POST') {
-        const { agentKey } = parsed;
+        const { agentKey, accountId } = parsed;
         if (!agentKey) { res.writeHead(400); return res.end(JSON.stringify({ ok: false, error: 'agentKey required' })); }
         try {
-          const state = await mesh.spawn(agentKey);
+          // §0.39.265 — Settings › Accounts opens a mesh tab AS an account: the
+          // same deterministic mesh-<provider>-<account> id Guardian uses, so a
+          // second click reuses that tab and two accounts get two tabs.
+          const state = await mesh.spawn(agentKey, accountId ? { accountId, contextId: `mesh-${agentKey}-${accountId}` } : {});
           res.writeHead(200);
-          return res.end(JSON.stringify({ ok: true, agentKey, contextId: state.contextId }));
+          return res.end(JSON.stringify({ ok: true, agentKey, accountId: state.accountId || null, contextId: state.contextId }));
         } catch (e) {
           res.writeHead(502);
           return res.end(JSON.stringify({ ok: false, error: e.message }));
@@ -913,9 +917,11 @@ async function _startWire() {
           return res.end(JSON.stringify({ ok: false, error: e.message }));
         }
       }
-      if (u === '/automation/log' && req.method === 'GET') {
+      if ((u === '/automation/log' || u.startsWith('/automation/log?')) && req.method === 'GET') {
+        // §0.39.265 — ?workflowId= narrows it to one workflow's runs
+        const q = new URL(u, 'http://x').searchParams;
         res.writeHead(200);
-        return res.end(JSON.stringify({ ok: true, log: mesh.getAutomationLog() }));
+        return res.end(JSON.stringify({ ok: true, log: mesh.getAutomationLog(parseInt(q.get('limit'), 10) || 50, q.get('workflowId') || null) }));
       }
       // §BUILT — per-step CRUD, the real Tasker-style step editor's
       // backend (James: "like tasker and automate").
@@ -1224,6 +1230,7 @@ async function bootstrap() {
   // 3. Cookie vault
   const vault = new CookieVault();
   await vault.init();
+  cookieVault = vault;
 
   // 3.5. Global session CSP — allow NCP userscripts to connect to localhost
   // Guardian NCP uses http://127.0.0.1 from https:// pages (Private Network Access)
@@ -1268,6 +1275,9 @@ async function bootstrap() {
 
   // 8.5. Nexus options — window behavior + defaults, bus + UI controllable
   nexusOptions = new NexusOptions();
+  // §0.39.265 — page-listener decay: once at start, then hourly.
+  try { const d = nexusOptions.decayListeners(); if (d.disabled.length || d.removed.length) console.log(`[listeners] decay: ${d.disabled.length} switched off, ${d.removed.length} removed`); } catch (e) { console.warn(`[listeners] decay failed: ${e.message}`); }
+  setInterval(() => { try { nexusOptions.decayListeners(); } catch (_) {} }, 3600000).unref();
   await nexusOptions.load();
 
   // 8.6. Bookmark store
@@ -1426,6 +1436,13 @@ async function bootstrap() {
   // GET /agent-mesh/view) can actually call it.
   mesh = new AgentMesh({ ctxMgr, driver, vault, accounts: nexusOptions, sse: { emit: (t, d) => emit(t, d) } });
   await mesh.init();
+  // §0.39.265 — workflow steps that run a macro or show a notification
+  try {
+    mesh._automation?.setHooks({
+      runMacroFn: ({ name, agentId, params }) => macroTool.execute({ action: 'run', name, agentId, params }),
+      notifyFn: ({ title, body }) => { const { Notification } = require('electron'); if (Notification.isSupported()) new Notification({ title, body: body || '' }).show(); },
+    });
+  } catch (e) { console.warn(`[ClearGlass] automation hooks not set: ${e.message}`); }
 
   // §BUILT 2026-09-23 — login portals: per-account provider sign-in in the
   // SAME partition + vault key agent-mesh spawn() reads (src/accounts/login-portal.js).
@@ -1992,6 +2009,32 @@ function _rebuildTrayMenu(mesh) {
   tray.setContextMenu(Menu.buildFromTemplate(menuTemplate));
 }
 
+// ── Account windows — §0.39.265 ─────────────────────────────────────────────
+// James: a bookmark "with a check mark to attach to the account … that way
+// you can have different accounts in each tab." Tabs inside one window share
+// its webview (renderer/browser.js's tab system), so an account gets its own
+// WINDOW: agentId `acct-<accountId>`, its own persist:agent-acct-<id> session.
+// On open it is signed in with every provider session saved for that account
+// in Settings › Accounts & sign-in (the same vault records the mesh restores).
+const ACCOUNT_WINDOW_PREFIX = 'acct-';
+function accountIdOfWindow(agentId) {
+  return typeof agentId === 'string' && agentId.startsWith(ACCOUNT_WINDOW_PREFIX) ? agentId.slice(ACCOUNT_WINDOW_PREFIX.length) : null;
+}
+async function _restoreAccountWindow(agentId, partition) {
+  const accountId = accountIdOfWindow(agentId);
+  if (!accountId || !cookieVault || !nexusOptions) return null;
+  const acc = nexusOptions.getAccount?.(accountId);
+  if (!acc) { console.warn(`[ClearGlass] account window ${agentId}: no account ${accountId}`); return null; }
+  const ses = session.fromPartition(partition);
+  let restored = 0;
+  for (const provider of acc.agentKeys || []) {
+    try { const r = await cookieVault.restore({ agentId: provider, accountId, ses }); restored += (r && r.restored) || 0; }
+    catch (e) { console.warn(`[ClearGlass] account window ${agentId}: ${provider} sign-in not restored — ${e.message}`); }
+  }
+  console.log(`[ClearGlass] account window "${acc.label}" — ${restored} saved cookie(s) restored across ${(acc.agentKeys || []).length} provider(s)`);
+  return restored;
+}
+
 // ── Window management ──────────────────────────────────────────────────────
 async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } = {}) {
   if (windows.has(agentId)) {
@@ -2013,6 +2056,7 @@ async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } =
       console.warn(`[ClearGlass] context create failed for ${agentId}:`, e.message);
     }
   }
+  await _restoreAccountWindow(agentId, partition);
 
   // §NEW 2026-08-24 — the other half of the same gap James caught
   // ("as plugins right?"): the adblocker plugin was genuinely installed
@@ -2402,19 +2446,58 @@ function closeLibraryWindow() {
   if (libraryWin && !libraryWin.isDestroyed()) libraryWin.close();
 }
 
-// Ctrl+J opens the Library at Downloads from anywhere in Clear Glass — the
-// browser chrome AND the page inside it. A page's keystrokes never reach
-// browser.js (the webview is its own renderer), so the key is taken in the main
-// process for every web contents Clear Glass creates. Ctrl+Shift+J stays DevTools.
-function _isLibraryKey(input) {
-  return input && input.type === 'keyDown' && (input.control || input.meta) && !input.shift && !input.alt &&
-         String(input.key).toLowerCase() === 'j';
+// ── Keyboard shortcuts — §0.39.265 ─────────────────────────────────────────
+// James: "add keyboard shortcuts including macro support." A page's keystrokes
+// never reach browser.js (the webview is its own renderer), so shortcuts are
+// taken here, in the main process, for every web contents Clear Glass creates:
+// the chrome of an agent window AND the page inside it. The bindings are
+// src/shortcuts/registry.js's defaults plus Settings › Keyboard shortcuts.
+//   macro:<name>   runs the macro in the window the key was pressed in
+//   workflow:<id>  runs that Automation workflow
+//   cg.library / cg.settings open those windows
+//   anything else  is sent to that window's renderer ('shortcut:action')
+// (This replaces the Ctrl+J-only handler: Ctrl+J is cg.library's default.)
+// Ctrl+Shift+J / Ctrl+Shift+I / F12 stay DevTools (openAgentWindow).
+const Shortcuts = require('../shortcuts/registry');
+function _agentWindowFor(contents) {
+  const host = contents.hostWebContents || contents;   // a <webview> page → the window that embeds it
+  for (const [agentId, win] of windows) if (!win.isDestroyed() && win.webContents === host) return { agentId, win };
+  return null;
+}
+function _runShortcut(action, accel, owner) {
+  const tell = (result) => { if (owner && !owner.win.isDestroyed()) owner.win.webContents.send('shortcut:action', { action, accel, result }); };
+  if (action === 'cg.library') return openLibraryWindow('downloads');
+  if (action === 'cg.settings') return openSettingsWindow();
+  if (action.startsWith('macro:')) {
+    const name = action.slice(6);
+    return Promise.resolve(macroTool.execute({ action: 'run', name, agentId: owner ? owner.agentId : 'default' }))
+      .then(r => tell(r && r.error ? { ok: false, error: r.error } : { ok: true, text: `Ran macro \u201C${name}\u201D` }))
+      .catch(e => tell({ ok: false, error: e.message }));
+  }
+  if (action.startsWith('workflow:')) {
+    if (!mesh) return tell({ ok: false, error: 'the agent mesh is not ready' });
+    return Promise.resolve(mesh.runWorkflow(action.slice(9), 'shortcut'))
+      .then(r => tell(r && r.ok === false ? { ok: false, error: r.error } : { ok: true, text: 'Workflow ran' }))
+      .catch(e => tell({ ok: false, error: e.message }));
+  }
+  if (owner) owner.win.webContents.send('shortcut:action', { action, accel });
 }
 app.on('web-contents-created', (_e, contents) => {
   contents.on('before-input-event', (event, input) => {
-    if (!_isLibraryKey(input)) return;
+    if (!input || input.type !== 'keyDown' || input.isAutoRepeat) return;
+    const accel = Shortcuts.accelFromInput(input);
+    if (!accel) return;
+    const host = contents.hostWebContents || contents;
+    if (settingsWin && !settingsWin.isDestroyed() && host === settingsWin.webContents) return;   // Settings records new shortcuts
+    let bindings;
+    try { bindings = nexusOptions ? nexusOptions.getShortcuts().bindings : Shortcuts.DEFAULT_BINDINGS; } catch (_) { bindings = Shortcuts.DEFAULT_BINDINGS; }
+    const action = bindings[accel];
+    if (!action) return;
+    const owner = _agentWindowFor(contents);
+    // outside an agent window (the Library) only the window-opening shortcuts apply
+    if (!owner && action !== 'cg.library' && action !== 'cg.settings') return;
     event.preventDefault();
-    openLibraryWindow('downloads');
+    try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
 });
 

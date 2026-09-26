@@ -18,15 +18,6 @@
         "signature": "plugin:8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f:filter-request",
         "handler": "filterRequest"
       }
-    ],
-    "toolbar-command": [
-      {
-        "signature": "plugin:8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f:toggle-toolbar",
-        "handler": "toggleFromToolbar",
-        "icon": "🛡",
-        "label": "Toggle Ad Blocker",
-        "group": "Plugins"
-      }
     ]
   }
 }
