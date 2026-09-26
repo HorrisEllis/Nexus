@@ -1,0 +1,384 @@
+{
+  "format": "NEX-SNAP/1.0",
+  "snapId": "48227892-732c-4ec6-bcbf-7db634528eaf",
+  "type": "pre_forge",
+  "tables": {
+    "working_memory": [],
+    "active_traces": [],
+    "cortex_memory": [],
+    "gaps": [],
+    "event_log": [
+      {
+        "uuid": "a09ad0b4-ca8b-48c5-a5fb-4a605f40cae9",
+        "type": "compartment.fail",
+        "payload": {
+          "id": "c83fd355-b40e-45d9-bdb7-10ca0a1f9e9d",
+          "intent_uuid": "6e2b9615-9d94-4e38-9807-bd974ffe406d",
+          "reason": "QA/QC check failed",
+          "status": "REWOUND"
+        },
+        "source": "compartment-engine",
+        "ts": 1790427461479,
+        "id": "5d59b937-0684-43bb-b319-2cfb049df693"
+      },
+      {
+        "uuid": "9d2a7a38-cbe8-4533-a06c-091d61686862",
+        "type": "compartment.fail",
+        "payload": {
+          "id": "cfc0646a-dba7-44e7-b83d-553ef80b057a",
+          "intent_uuid": "32c59906-a7c1-4ba1-a7f6-2be852467637",
+          "reason": "QA/QC check failed",
+          "status": "REWOUND"
+        },
+        "source": "compartment-engine",
+        "ts": 1790427461486,
+        "id": "7b053f06-b46c-498c-bb04-807429a92163"
+      },
+      {
+        "uuid": "6eba4231-2e78-4915-9a54-5ddb559812b1",
+        "type": "crystal.negative_created",
+        "payload": {
+          "pattern_signature": "RT-1: no onFail declared:implement:FAIL",
+          "frequency": 3,
+          "crystalUuid": "052d995b-3180-45f3-b6ad-c9d00e8f57f5"
+        },
+        "source": "crystal-lattice",
+        "ts": 1790427461491,
+        "id": "e078466e-2287-4ace-9f45-7f3fc9525fc0"
+      },
+      {
+        "uuid": "4af7a623-4f5e-41b7-baa6-9008a174b532",
+        "type": "compartment.fail",
+        "payload": {
+          "id": "c682826f-1330-46c0-8dfb-e020996888b9",
+          "intent_uuid": "08dcbe77-10cc-42f3-985a-a6945c4b4b64",
+          "reason": "QA/QC check failed",
+          "status": "REWOUND"
+        },
+        "source": "compartment-engine",
+        "ts": 1790427461491,
+        "id": "e7e928bb-ff7b-4498-b197-9676f6ed5de8"
+      }
+    ],
+    "sigma_records": [],
+    "sigma_rollups": [],
+    "meta_observations": [],
+    "sigma_live": [],
+    "component_ledger": [],
+    "cfr_tension_history": [
+      {
+        "uuid": "53648d9b-1217-431f-8ba9-eb384b6fe763",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0,
+        "friction": 0,
+        "slope": 0,
+        "sigma": 0,
+        "ts": 1790427461432,
+        "id": "87e27d9b-8744-4ec0-ba98-9d40404a1291"
+      },
+      {
+        "uuid": "2b14db8a-7baa-4fa4-aafb-4302c4e6b962",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.0205,
+        "friction": 0,
+        "slope": -1,
+        "sigma": 0,
+        "ts": 1790427461433,
+        "id": "622eb460-ad67-415a-87b1-f5882155778a"
+      },
+      {
+        "uuid": "8269af5d-653e-486f-b9f0-4bb107038b27",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.0335,
+        "friction": 0,
+        "slope": 1,
+        "sigma": 0,
+        "ts": 1790427461434,
+        "id": "0f9d18a7-b67b-452a-87ce-27ed8ed11f5d"
+      },
+      {
+        "uuid": "ecc0d8b6-d234-47a7-b136-cff62d13f23c",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.054,
+        "friction": 0,
+        "slope": -1,
+        "sigma": 0,
+        "ts": 1790427461434,
+        "id": "dcbe6d78-0783-4650-b8f5-b3da756efe3d"
+      },
+      {
+        "uuid": "9ff74baf-e880-402f-b173-71c13291d041",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.0515,
+        "friction": 0,
+        "slope": 1,
+        "sigma": 0,
+        "ts": 1790427461494,
+        "id": "c49f7d84-da66-46f7-8020-0c8aee5a7701"
+      },
+      {
+        "uuid": "4cd99f55-25ad-4196-bf05-38aae23030b4",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.039,
+        "friction": 0,
+        "slope": -1,
+        "sigma": 0,
+        "ts": 1790427461494,
+        "id": "09dce20c-858e-4930-b3e5-e0d5e006b2b8"
+      },
+      {
+        "uuid": "e33a659f-237d-4f09-94dd-c26c49a96690",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.031,
+        "friction": 0,
+        "slope": 1,
+        "sigma": 0,
+        "ts": 1790427461496,
+        "id": "f1959d5c-80f4-43d8-b9a0-ca210dea7396"
+      },
+      {
+        "uuid": "0d876557-d454-4095-971c-10c25c12e991",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.023,
+        "friction": 0,
+        "slope": -1,
+        "sigma": 0,
+        "ts": 1790427461496,
+        "id": "fd2d8e3b-cfc5-4a81-9ba5-4090332763c1"
+      },
+      {
+        "uuid": "311ff307-6399-44de-a88a-aae22a455a18",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.0335,
+        "friction": 0,
+        "slope": 1,
+        "sigma": 0,
+        "ts": 1790427461496,
+        "id": "e871ff1a-74bd-4c99-be92-8e8d3b1b7420"
+      },
+      {
+        "uuid": "67cfcb0d-dd76-425a-a9b1-e0b95ce82536",
+        "source": "raid",
+        "systemId": "raid",
+        "tension": 0.054,
+        "friction": 0,
+        "slope": -1,
+        "sigma": 0,
+        "ts": 1790427461496,
+        "id": "1fe037ae-7d2a-411b-9235-eb238633fd02"
+      }
+    ],
+    "constitution_decisions": [],
+    "chat_log": [],
+    "schema_drift": [],
+    "crystals": [
+      {
+        "uuid": "052d995b-3180-45f3-b6ad-c9d00e8f57f5",
+        "kind": "CREATE_NEGATIVE_CRYSTAL",
+        "pattern_signature": "RT-1: no onFail declared:implement:FAIL",
+        "entry_conditions": {
+          "domain": "RT-1: no onFail declared",
+          "verb": "implement",
+          "risk_ceiling": null
+        },
+        "exit_conditions": {
+          "outcome": "FAIL"
+        },
+        "success_probability": 0,
+        "failure_boundaries": [
+          "FAIL"
+        ],
+        "support_paths": [
+          "c682826f-1330-46c0-8dfb-e020996888b9"
+        ],
+        "usage_count": 1,
+        "pattern_frequency_at_creation": 3,
+        "source": "crystal-lattice",
+        "ts": 1790427461491,
+        "id": "fe7a90ca-840f-4e26-92f1-4f1d0adff2f9"
+      }
+    ],
+    "bep_patterns": [],
+    "trust_scores": [],
+    "fix_map": [],
+    "memory_unified": [],
+    "interstitial_spaces": [],
+    "hooks": [],
+    "tool_index": [],
+    "raid_contract_queue": [
+      {
+        "uuid": "ed9f0cb9-ae51-448d-a1bc-b0782ece9de2",
+        "status": "fail",
+        "intention": null,
+        "dir": null,
+        "language": null,
+        "stage": "qc_pending",
+        "system": null,
+        "source": "test",
+        "sourceDropId": null,
+        "boundary": null,
+        "file": null,
+        "title": "RT-1: no onFail declared",
+        "forAgent": null,
+        "contract": {
+          "content": "a real test contract with no onFail declared",
+          "title": "RT-1: no onFail declared"
+        },
+        "dependsOn": [],
+        "onFail": {
+          "action": "retry",
+          "maxRetries": 2
+        },
+        "retryCount": 2,
+        "compartmentId": null,
+        "verdict": "FAIL",
+        "createdAt": 1790427461379,
+        "updatedAt": 1790427461494,
+        "id": "43dc208c-b7e8-4a33-adef-6b65f000c0e0",
+        "inputArtifactPath": "/tmp/raid-input-retry-escalation-Y7JHD3/ed9f0cb9-ae51-448d-a1bc-b0782ece9de2.contract",
+        "acknowledgedBy": "raid-processNext-auto",
+        "outputArtifactPath": "/home/user/Nexus/data/raid/output/ed9f0cb9-ae51-448d-a1bc-b0782ece9de2.contract",
+        "outputViaFallback": false,
+        "alreadyHadOutput": false
+      },
+      {
+        "uuid": "6ff6634b-4159-452e-9215-d704c6667ee9",
+        "status": "queued",
+        "intention": null,
+        "dir": null,
+        "language": null,
+        "stage": "system_queue",
+        "system": null,
+        "source": "self-heal",
+        "sourceDropId": null,
+        "boundary": null,
+        "file": null,
+        "title": "RT-2: self-heal sourced",
+        "forAgent": null,
+        "contract": {
+          "content": "a real self-heal level-4 contract",
+          "title": "RT-2: self-heal sourced"
+        },
+        "dependsOn": [],
+        "onFail": {
+          "action": "halt"
+        },
+        "retryCount": 0,
+        "compartmentId": null,
+        "verdict": null,
+        "createdAt": 1790427461495,
+        "updatedAt": 1790427461496,
+        "id": "97f9e822-e4f9-46c4-b6a0-6fe9b04623f6",
+        "inputArtifactPath": "/tmp/raid-input-retry-escalation-Y7JHD3/6ff6634b-4159-452e-9215-d704c6667ee9.contract",
+        "acknowledgedBy": "raid-processNext-auto"
+      }
+    ],
+    "intake_drops": [],
+    "fault_taxonomy": [],
+    "forge_patches": [],
+    "raid_tunables": [],
+    "decay_log": [],
+    "settings": [
+      {
+        "id": "39ba5f8d-bb3c-4eec-b6b8-98d59cb941c4",
+        "key": "session_greeting_enabled",
+        "value": "true",
+        "updated_ts": 1790427461380
+      },
+      {
+        "id": "d3f545e6-3581-4bbf-b1da-cea240d79cea",
+        "key": "session_greeting_text",
+        "value": "Guardian session initialising. Please ask me: \"What are we calling this session?\" — then wait for my answer before we begin.",
+        "updated_ts": 1790427461380
+      },
+      {
+        "id": "e17870f4-0c3a-422c-b3e1-f1b8203e17d1",
+        "key": "scan_debounce_ms",
+        "value": "1500",
+        "updated_ts": 1790427461380
+      },
+      {
+        "id": "bd5cc1a5-3b49-4667-a157-459968cc2d56",
+        "key": "artifact_max",
+        "value": "500",
+        "updated_ts": 1790427461380
+      },
+      {
+        "id": "316d2126-6871-4c4f-a353-3898a5ee1bf2",
+        "key": "gap_min_score",
+        "value": "0.25",
+        "updated_ts": 1790427461380
+      },
+      {
+        "id": "766d7d8d-f53b-4b85-88ff-7eea104bdc0b",
+        "key": "gap_taxonomy_version",
+        "value": "3.0.0",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "9138703d-1ece-4b89-8405-93365020ecc9",
+        "key": "pa_enabled",
+        "value": "true",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "df6f5c16-9ceb-4173-99a8-a250f17475ec",
+        "key": "memory_auto_push",
+        "value": "true",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "aa4c2af7-bfec-4c4c-9e88-7fec9c374990",
+        "key": "dropzone_auto_upload",
+        "value": "true",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "39a68b23-db04-4d40-b1a6-a6bdb81f9d42",
+        "key": "stream_log_level",
+        "value": "EVENTS",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "9b087d3c-b7b9-4c54-9823-04499b2383fe",
+        "key": "lan_host",
+        "value": "0.0.0.0",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "0d629aa2-d892-49e7-adb3-9d5b65c9cca0",
+        "key": "greeting_delay_ms",
+        "value": "1200",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "22310da6-e642-4cd4-8208-fa93c206b97c",
+        "key": "poll_interval_ms",
+        "value": "500",
+        "updated_ts": 1790427461382
+      },
+      {
+        "id": "def37bf5-f9f7-481b-8f49-8c15d65413db",
+        "key": "stable_count_threshold",
+        "value": "5",
+        "updated_ts": 1790427461382
+      }
+    ],
+    "components": [],
+    "compaction_log": [],
+    "dedup_log": []
+  },
+  "hashVersion": 2,
+  "cortex_state_hash": "a4442d76baf5f516c6fc95ddc3632f543ff02288c8851f6a8e87c15a9fc3e0dc",
+  "prev_snapshot_hash": "3c6ddd2265b3ec4fb4f2d0e81b1366a3ade9837635b3aad53ba0114033a69862",
+  "createdAt": 1790427461497
+}
