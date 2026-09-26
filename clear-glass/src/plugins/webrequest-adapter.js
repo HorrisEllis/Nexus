@@ -38,7 +38,20 @@ const { randomUUID } = require('crypto');
  *                one filter blocking is sufficient, no "vote").
  * Returns an unsubscribe function.
  */
-function attachContentFilters(session, bus, { signatures, timeoutMs = 3000 } = {}) {
+/*
+ * §BUILT 2026-09-26 — per-site exemption (James: "expand per site settings").
+ * `exempt(pageUrl)` — optional; when it returns true for the page a request
+ * belongs to (the tab's own URL, not the request's), content filters are
+ * skipped for that request. Wired in main/index.js to the site setting
+ * contentFilter = 'off', which Settings → Site settings edits.
+ */
+function _pageUrlOf(details) {
+  try { if (details.webContents && typeof details.webContents.getURL === 'function') { const u = details.webContents.getURL(); if (u) return u; } } catch (_) {}
+  if (details.resourceType === 'mainFrame') return details.url;
+  return details.referrer || null;
+}
+
+function attachContentFilters(session, bus, { signatures, timeoutMs = 3000, exempt = null } = {}) {
   if (!session?.webRequest?.onBeforeRequest) {
     throw new Error('[webrequest-adapter] session.webRequest.onBeforeRequest is required — not a real Electron Session?');
   }
@@ -49,6 +62,11 @@ function attachContentFilters(session, bus, { signatures, timeoutMs = 3000 } = {
   const { Event } = require('../core/bus.js');
 
   session.webRequest.onBeforeRequest((details, callback) => {
+    if (exempt) {
+      let skip = false;
+      try { const page = _pageUrlOf(details); skip = !!(page && exempt(page)); } catch (_) {}
+      if (skip) { callback({ cancel: false }); return; }
+    }
     const requestId = randomUUID();
     let settled = false;
     let seenCount = 0;
@@ -92,4 +110,4 @@ function attachContentFilters(session, bus, { signatures, timeoutMs = 3000 } = {
   return () => {}; // real unsubscribe would need Electron's own webRequest removal API — not exposed per-listener by Electron itself; scoped honestly, not faked.
 }
 
-module.exports = { attachContentFilters };
+module.exports = { attachContentFilters, _pageUrlOf };

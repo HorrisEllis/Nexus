@@ -208,6 +208,10 @@
       <span id="copilot-model">Cortex</span>
       <button id="copilot-clear" title="Clear history">✕</button>
     </div>
+    <!-- §BUILT 2026-09-26 — route bar, same toggle/dropdown as the TV UI's floating
+         menu (ui/tv-shell/menu.js) plus the Clear Glass hat chip; filled by
+         renderer/copilot-cli.js. /backend, /agent and /hat do the same thing. -->
+    <div id="copilot-route" aria-label="Co-pilot route"></div>
 
     <div id="copilot-messages">
       <div class="msg assistant">
@@ -221,7 +225,7 @@
         <span class="ctx-tag"        id="ctx-picks" title="Include picked elements">Picks</span>
         <span class="ctx-tag"        id="ctx-cookies" title="Include cookie info">Cookies</span>
       </div>
-      <textarea id="copilot-textarea" placeholder="Ask Co-pilot... (or /build <description>, /diagnose <topic>)" rows="3"></textarea>
+      <textarea id="copilot-textarea" placeholder="Ask Co-pilot… /help for commands · ↑↓ history · Tab completes" rows="3"></textarea>
       <button id="copilot-mic-btn" title="Voice input (real, local, offline speech-to-text)">🎤</button>
       <button id="copilot-send">Send ↵</button>
     </div>
@@ -520,6 +524,7 @@
 </div>
 
 <script src="selector-assign/selector-assign.js"></script>
+<script src="copilot-cli.js"></script>
 <script src="browser.js"></script>
 </body>
 </html>

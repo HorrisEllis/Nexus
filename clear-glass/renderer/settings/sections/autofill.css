@@ -3,3 +3,18 @@
  * scoped to body[data-area="autofill"] — set by core.js when the area is shown —
  * so nothing here can restyle another area. */
 body[data-area="autofill"] .modal.wide .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+
+/* §EXPANDED 2026-09-26 — grouped fields, completeness meter, fill preview */
+body[data-area="autofill"] .af-group { border: 1px solid var(--edge); border-radius: var(--r-m); padding: 8px 12px; margin-top: 10px; }
+body[data-area="autofill"] .af-group > summary { cursor: pointer; color: var(--ink-hi); font-size: 12.5px; margin-bottom: 4px; }
+body[data-area="autofill"] .af-group[open] > summary { margin-bottom: 10px; }
+body[data-area="autofill"] .af-meter { position: relative; height: 22px; border-radius: 11px; background: var(--pane-2); overflow: hidden; margin-top: 10px; }
+body[data-area="autofill"] .af-meter span { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--ok) 35%, transparent); transition: width .2s; }
+body[data-area="autofill"] .af-meter b { position: relative; font-weight: 400; font-size: 11.5px; line-height: 22px; padding-left: 10px; color: var(--ink); }
+body[data-area="autofill"] .af-acts { display: flex; gap: 8px; margin: 12px 0 8px; }
+body[data-area="autofill"] .af-out { display: grid; gap: 4px; font-family: var(--mono); font-size: 12px; }
+body[data-area="autofill"] .af-line.ok { color: var(--ok); }
+body[data-area="autofill"] .af-line.bad { color: var(--bad); }
+body[data-area="autofill"] .af-line.c-high { color: var(--ok); }
+body[data-area="autofill"] .af-line.c-medium { color: var(--warn); }
+body[data-area="autofill"] .af-line.c-low { color: var(--ink-dim); }

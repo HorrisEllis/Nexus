@@ -360,10 +360,13 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
         mesh: { list: () => ok({ registry: REGISTRY, agents: [{ key: 'claude', contextId: 'mesh-claude-x', accountId: A.id, status: 'idle', health: 90, taskCount: 1, lastUsed: Date.now() }], queueDepth: 0 }) },
         macros: { list: () => ok({ ok: true, macros: [{ name: 'apply', urlPattern: null, steps: 2, params: ['name'], runCount: 0, lastRunAt: null }] }), schema: () => ok({ ok: true, actions: ['navigate', 'click', 'type'], erosActions: ['click'], profiles: ['precise'] }), create: (p) => { calls.push(['macro.create', p]); return ok({ ok: true }); }, get: () => ok({ ok: true, macro: { steps: [] } }), delete: () => ok({ ok: true }) },
         customAgents: { list: () => ok([]) }, listeners: { list: () => ok([]) }, calltos: { list: () => ok([]) },
-        downloads: { listListeners: () => ok([]), clearCompleted: () => ok({}) }, userscripts: { list: () => ok([{ id: 'u', name: 'guardian-claude', enabled: true, matches: ['*'], readOnly: true }]) },
+        downloads: { list: () => ok([]), listListeners: () => ok([]), clearCompleted: () => ok({}) },
+        plugins: { list: () => ok([{ id: 'zoom', name: 'zoom', version: '1.0.0', state: 'active', contributions: [] }]) },
+        webext: { list: () => ok({ ok: true, extensions: [{ id: 'x1', name: 'Blocker', version: '1.0', manifestVersion: 3, permissions: ['storage'], enabled: true, loadedIn: 2, owned: true, dir: '/x' }] }) },
+        copilot: { hat: () => ok({ ok: true, exists: true, name: 'clear_glass', baseAgent: 'copilot', personaPrompt: 'P', uuid: '00000000-0000-4000-8000-000000000000' }) }, userscripts: { list: () => ok([{ id: 'u', name: 'guardian-claude', enabled: true, matches: ['*'], readOnly: true }]) },
         autofill: { listProfiles: () => ok([{ id: 'p1', label: 'Jobs', fields: { email: 'j@x.io' }, documents: {}, updatedAt: Date.now() }]) },
         api: { get: () => ok({ ipcPort: 7702, hasFallbackKey: false }), set: () => ok({ ok: true }) },
-        passwords: { list: () => ok(pv.list()) }, siteSettings: { listOrigins: () => ok([]) }, history: {},
+        passwords: { list: () => ok(pv.list()) }, siteSettings: { listOrigins: () => ok(['https://x.io']), getAll: () => ok({ zoomFactor: 1.25, 'permission:media': 'allow', contentFilter: 'off', custom: 1 }) }, history: {},
         errors: { recent: () => ok({ ok: true, errors: [] }) }, speech: { available: () => ok({ ok: false }) },
       };
       for (const s of [...html.matchAll(/<script src="([^"]+)"/g)].map(m => m[1])) w.eval(fs.readFileSync(path.join(CG, 'renderer', s), 'utf8'));
@@ -395,7 +398,7 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
     });
     await test('UI-05', 'every section renders without an error box against the fake backend', async () => {
       const ids = [...w.document.querySelectorAll('.rail-item')].map(b => b.dataset.id);
-      assert.deepStrictEqual(ids, ['accounts', 'providers', 'fingerprint', 'mesh', 'automation', 'macros', 'eros', 'suite', 'general', 'autofill', 'privacy', 'connections', 'copilot', 'diagnostics']);
+      assert.deepStrictEqual(ids, ['accounts', 'providers', 'fingerprint', 'mesh', 'automation', 'macros', 'eros', 'suite', 'general', 'autofill', 'privacy', 'sites', 'downloads', 'connections', 'copilot', 'diagnostics', 'plugins']);
       for (const id of ids) {
         w.CGS.show(id); await settle(); await settle();
         const err = w.document.querySelector('#main .err-box');

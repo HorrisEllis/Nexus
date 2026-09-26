@@ -3,3 +3,5 @@
  * scoped to body[data-area="copilot"] — set by core.js when the area is shown —
  * so nothing here can restyle another area. */
 body[data-area="copilot"] input[type=password] { font-family: var(--mono); }
+body[data-area="copilot"] .flush-rows { margin: 12px -18px -14px; }
+body[data-area="copilot"] textarea.mono { width: 100%; font-family: var(--mono); font-size: 12px; }

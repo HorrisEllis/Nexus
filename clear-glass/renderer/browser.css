@@ -840,6 +840,38 @@
     border: none;
   }
 
+  /* §BUILT 2026-09-26 — Co-pilot CLI (renderer/copilot-cli.js), styled after
+     the TV UI floating menu's CLI (ui/tv-shell/menu.js): mono, cyan accent. */
+  #copilot-route {
+    display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+    padding: 6px 10px; border-bottom: 1px solid var(--border);
+  }
+  #copilot-route .cr-toggle {
+    flex: 1; padding: 4px 6px; background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.09); border-radius: 6px;
+    color: rgba(255,255,255,.5); font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: .04em; cursor: pointer;
+  }
+  #copilot-route .cr-toggle:hover { background: rgba(255,255,255,.08); color: #fff; }
+  #copilot-route .cr-toggle.on { background: rgba(0,229,255,.12); border-color: rgba(0,229,255,.4); color: #00e5ff; }
+  #copilot-route .cr-agent {
+    flex: 1; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 6px; padding: 3px 6px; color: #00e5ff; font-family: var(--mono); font-size: 9.5px;
+  }
+  #copilot-route .cr-hat {
+    padding: 4px 8px; background: none; border: 1px dashed rgba(255,255,255,.18); border-radius: 12px;
+    color: rgba(255,255,255,.45); font-family: var(--mono); font-size: 9.5px; cursor: pointer;
+  }
+  #copilot-route .cr-hat.on { border-style: solid; border-color: rgba(204,68,255,.5); color: #cc44ff; background: rgba(204,68,255,.08); }
+  .msg.cli {
+    font-family: var(--mono); font-size: 10.5px; white-space: pre-wrap;
+    background: rgba(0,0,0,.3); border: 1px solid rgba(0,229,255,.12); color: rgba(0,229,255,.8);
+  }
+  .msg.route {
+    font-family: var(--mono); font-size: 9.5px; color: var(--text-dim);
+    padding: 0 10px; margin-top: -4px; background: none; border: none;
+  }
+
   .msg code {
     font-family: var(--mono);
     font-size: 10px;

@@ -50,6 +50,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const res = (status, body) => ({ ok: status >= 200 && status < 300, status, statusText: String(status), json: async () => body });
   const fakeFetch = async (url, opts = {}) => {
     const u = new URL(String(url)); const method = (opts.method || 'GET').toUpperCase();
+    // 0.39.260 — the UI counts itself connected only on idearium's own health body (ok + version)
+    if (u.pathname === '/health') return res(200, { ok: true, version: 'test' });
     const m = /^\/api\/repos\/([^/]+)\/roadmap(\/phase)?$/.exec(u.pathname);
     if (!m) return res(200, {});
     calls.push(`${method} ${u.pathname}`);

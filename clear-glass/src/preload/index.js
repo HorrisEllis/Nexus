@@ -34,6 +34,13 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   // ── Co-pilot ─────────────────────────────────────────────────────────
   copilot: {
     send: (payload) => ipcRenderer.invoke('copilot:send', payload),
+    hat:        () => ipcRenderer.invoke('copilot:hat'),
+    hatEnsure:  () => ipcRenderer.invoke('copilot:hatEnsure'),
+    hatUpdate:  (patch) => ipcRenderer.invoke('copilot:hatUpdate', patch),
+    exec:       (cmd, agentId) => ipcRenderer.invoke('copilot:exec', { cmd, agentId }),
+    // handlers existed in ipc/bridge.js; the pane's /build and /diagnose had no preload path to them
+    build:      (payload) => ipcRenderer.invoke('copilot:build', payload),
+    diagnose:   (payload) => ipcRenderer.invoke('copilot:diagnose', payload),
   },
 
   // ── Context ───────────────────────────────────────────────────────────
@@ -90,6 +97,15 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     disable: (id) => ipcRenderer.invoke('plugins:disable', { id }),
   },
 
+  // ── WebExtensions — §BUILT 2026-09-26 (src/plugins/webextensions.js) ──
+  webext: {
+    list:       ()                          => ipcRenderer.invoke('webext:list'),
+    pick:       (kind)                      => ipcRenderer.invoke('webext:pick', { kind }),
+    install:    (source, allowFileAccess)   => ipcRenderer.invoke('webext:install', { source, allowFileAccess }),
+    setEnabled: (id, enabled)               => ipcRenderer.invoke('webext:setEnabled', { id, enabled }),
+    remove:     (id)                        => ipcRenderer.invoke('webext:remove', { id }),
+  },
+
   // ── Downloads — §NEW 2026-08-24 ─────────────────────────────────────────
   downloads: {
     list:           (filter)  => ipcRenderer.invoke('downloads:list', filter),
@@ -127,6 +143,8 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   macros: {
     list:   ()     => ipcRenderer.invoke('macros:list'),
     get:    (name) => ipcRenderer.invoke('macros:get', { name }),
+    recordStart: (agentId) => ipcRenderer.invoke('macros:recordStart', { agentId }),
+    recordStop:  (agentId) => ipcRenderer.invoke('macros:recordStop', { agentId }),
     run:    (name, agentOrOpts, params, skipSnapshot) => {
       const o = (agentOrOpts && typeof agentOrOpts === 'object') ? agentOrOpts : { agentId: agentOrOpts, params, skipSnapshot };
       return ipcRenderer.invoke('macros:run', { name, agentId: o.agentId, params: o.params, skipSnapshot: o.skipSnapshot });

@@ -28,6 +28,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaRows } = require('../storage/jaa');
 const { randomUUID } = require('crypto');
 
 const AUTOFILL_PATH = path.join(
@@ -84,19 +85,24 @@ const DOCUMENT_FIELDS = Object.freeze({
 class AutofillStore {
   constructor() { this.data = { profiles: {} }; }
 
+  // §JAA 2026-09-26 — James: "with clearglass, make it jaa. no json." Rows live in
+  // the Clear Glass JAA store (src/storage/jaa.js); the old autofill-profiles.json is imported
+  // once on first load and left on disk.
+  _rows() {
+    return this._jaa || (this._jaa = new JaaRows('cg_autofill_profiles', {
+      legacyFile: AUTOFILL_PATH, fromLegacy: (raw) => Object.values((raw && raw.profiles) || {}),
+    }));
+  }
+
   load() {
-    try {
-      const raw = fs.readFileSync(AUTOFILL_PATH, 'utf8');
-      this.data = { profiles: {}, ...JSON.parse(raw) };
-    } catch (_) {
-      this.data = { profiles: {} }; // real, honest first-run default — no file yet is not an error
-    }
+    const profiles = {};
+    for (const p of this._rows().load()) profiles[p.id] = p;
+    this.data = { profiles };
     return { ...this.data };
   }
 
   _persist() {
-    fs.mkdirSync(path.dirname(AUTOFILL_PATH), { recursive: true });
-    fs.writeFileSync(AUTOFILL_PATH, JSON.stringify(this.data, null, 2), 'utf8');
+    this._rows().replaceAll(Object.values(this.data.profiles || {}).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)));
   }
 
   listProfiles() {

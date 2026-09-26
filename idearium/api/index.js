@@ -217,6 +217,7 @@ import { COMPONENTS as IDEARIUM_COMPONENTS } from '../registry-components.js';
 import path from 'path';
 import fs from 'fs';
 import { loadTable, appendRow, deleteRow, syncTable } from '../lib/db.js';
+import * as WB from '../lib/idea-workbench.js';
 import { runImportPipeline } from '../repo/import-pipeline.js';
 import { makeBusForwarder } from '../repo/pipeline-events.js';
 
@@ -763,6 +764,14 @@ const ROUTE_CAP = {
   'brainstorm.create':  CAPS.WRITE_IDEAS,
   'brainstorm.delete':  CAPS.WRITE_IDEAS,
   'brainstorm.promote': CAPS.WRITE_IDEAS,
+  'workbench.index':  CAPS.READ_IDEAS,
+  'workbench.show':   CAPS.READ_IDEAS,
+  'workbench.admit':  CAPS.WRITE_IDEAS,
+  'workbench.add':    CAPS.WRITE_IDEAS,
+  'workbench.update': CAPS.WRITE_IDEAS,
+  'workbench.delete': CAPS.WRITE_IDEAS,
+  'workbench.spawn':  CAPS.WRITE_IDEAS,
+  'workbench.assist': CAPS.WRITE_IDEAS,
   'idea.update':      CAPS.WRITE_IDEAS,
   'idea.tension':     CAPS.WRITE_IDEAS,
   'idea.link':        CAPS.WRITE_IDEAS,
@@ -830,6 +839,19 @@ function matchRoute(method, url) {
     ['POST',   ['api','brainstorms'],           'brainstorm.create'],
     ['DELETE', ['api','brainstorms',':uuid'],   'brainstorm.delete'],
     ['POST',   ['api','brainstorms',':uuid','promote'], 'brainstorm.promote'],
+    // §BUILT 2026-09-26 — the Compartment (lib/idea-workbench.js): promoted
+    // ideas land here with four recursive lanes (brainstorm / problem /
+    // expand / improve). Entries nest to any depth, cross-link to any
+    // entry or idea, and any entry can be spun out into its own idea —
+    // which is itself a Compartment member with its own lanes.
+    ['GET',    ['api','workbench'],                        'workbench.index'],
+    ['GET',    ['api','ideas',':uuid','workbench'],        'workbench.show'],
+    ['POST',   ['api','ideas',':uuid','workbench','admit'],'workbench.admit'],
+    ['POST',   ['api','ideas',':uuid','workbench'],        'workbench.add'],
+    ['PATCH',  ['api','workbench',':uuid'],                'workbench.update'],
+    ['DELETE', ['api','workbench',':uuid'],                'workbench.delete'],
+    ['POST',   ['api','workbench',':uuid','spawn'],        'workbench.spawn'],
+    ['POST',   ['api','workbench',':uuid','assist'],       'workbench.assist'],
     ['GET',    ['api','specs'],           'spec.list'],
     ['POST',   ['api','specs'],           'spec.create'],
     ['GET',    ['api','gaps'],            'gap.list'],
@@ -1261,9 +1283,146 @@ async function handle(req, res, route, query, body) {
       // the exact original behavior (promotes b.text as stored).
       if (typeof body.text === 'string' && body.text.trim()) b.text = body.text.trim();
       const ev = os.emit('idearium.idea.create', { text: b.text, tags: b.tags || [], compartment: null, source: 'brainstorm' });
+      const promotedIdea = os.db.ideas[os.db.ideas.length - 1];
       b.promoted = true;
+      b.ideaUuid = promotedIdea?.uuid || null;
       syncTable('idearium_brainstorms', rows, 'uuid');
-      return ok(res, { promoted: true, idea: os.db.ideas[os.db.ideas.length - 1], eventId: ev.uuid });
+      // §BUILT 2026-09-26 — a promoted idea moves into the Compartment: it
+      // becomes a member, and its brainstorm text seeds the Brainstorm lane
+      // so the thread that produced it is the first thing you work from.
+      if (promotedIdea) {
+        appendRow(WB.MEMBER_TABLE, WB.makeMember({ ideaUuid: promotedIdea.uuid, promotedFrom: b.uuid }));
+        const seed = WB.makeEntry({ ideaUuid: promotedIdea.uuid, lane: 'brainstorm', text: b.text });
+        if (seed.entry) appendRow(WB.ENTRY_TABLE, seed.entry);
+        os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: promotedIdea.uuid }, ts: Date.now() });
+      }
+      return ok(res, { promoted: true, idea: promotedIdea, compartment: true, eventId: ev.uuid });
+    }
+
+    // ── Compartment (idea workbench) — lib/idea-workbench.js ────────────────
+
+    case 'workbench.index': {
+      const members = loadTable(WB.MEMBER_TABLE);
+      const entries = loadTable(WB.ENTRY_TABLE);
+      const ideasByUuid = new Map(os.db.ideas.map(i => [i.uuid, i]));
+      return ok(res, { lanes: WB.LANES, tree: WB.memberTree(members, entries, ideasByUuid), members: members.length, entries: entries.length });
+    }
+
+    case 'workbench.show': {
+      const idea = os.idea(params.uuid);
+      if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      const members = loadTable(WB.MEMBER_TABLE);
+      const all = loadTable(WB.ENTRY_TABLE);
+      const mine = all.filter(e => e.ideaUuid === idea.uuid);
+      const ideaText = (u) => os.idea(u)?.text || null;
+      const member = members.find(m => m.ideaUuid === idea.uuid) || null;
+      // Interconnection, both directions: what this idea's entries link to,
+      // and what elsewhere links in (to this idea or any of its entries).
+      const mineIds = new Set([idea.uuid, ...mine.map(e => e.uuid)]);
+      const inbound = all.filter(e => e.ideaUuid !== idea.uuid && (e.links || []).some(l => mineIds.has(l)))
+        .map(e => ({ uuid: e.uuid, ideaUuid: e.ideaUuid, ideaText: ideaText(e.ideaUuid), lane: e.lane, text: e.text, links: e.links }));
+      const resolveRef = (ref) => {
+        const e = all.find(x => x.uuid === ref);
+        if (e) return { ref, kind: 'entry', ideaUuid: e.ideaUuid, ideaText: ideaText(e.ideaUuid), lane: e.lane, text: e.text };
+        const i = os.idea(ref);
+        return i ? { ref, kind: 'idea', ideaUuid: i.uuid, text: i.text } : { ref, kind: 'missing' };
+      };
+      const outbound = [...new Set(mine.flatMap(e => e.links || []))].map(resolveRef);
+      const childIdeas = members.filter(m => m.parentIdea === idea.uuid).map(m => ({ ideaUuid: m.ideaUuid, text: ideaText(m.ideaUuid) }));
+      const path = WB.ancestry(members, idea.uuid).map(u => ({ ideaUuid: u, text: ideaText(u) }));
+      const links = os.db.links.filter(l => l.fromUuid === idea.uuid || l.toUuid === idea.uuid)
+        .map(l => { const other = l.fromUuid === idea.uuid ? l.toUuid : l.fromUuid; return { ...l, other, otherText: ideaText(other) }; });
+      return ok(res, { idea, member, lanes: WB.LANES, tree: WB.buildTree(mine), count: mine.length, inbound, outbound, childIdeas, path, links });
+    }
+
+    case 'workbench.admit': {
+      // Bring an existing idea (one not promoted from a brainstorm) into the
+      // Compartment. Idempotent: admitting a member twice is a no-op.
+      const idea = os.idea(params.uuid);
+      if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      const members = loadTable(WB.MEMBER_TABLE);
+      if (!members.some(m => m.ideaUuid === idea.uuid)) {
+        appendRow(WB.MEMBER_TABLE, WB.makeMember({ ideaUuid: idea.uuid, parentIdea: body.parentIdea || null }));
+        os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: idea.uuid }, ts: Date.now() });
+      }
+      return ok(res, { admitted: true, ideaUuid: idea.uuid });
+    }
+
+    case 'workbench.add': {
+      const idea = os.idea(params.uuid);
+      if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      const all = loadTable(WB.ENTRY_TABLE);
+      const made = WB.makeEntry({ ideaUuid: idea.uuid, lane: body.lane, text: body.text, parentUuid: body.parentUuid, links: body.links }, all);
+      if (made.error) return err(res, 400, made.error);
+      if (!loadTable(WB.MEMBER_TABLE).some(m => m.ideaUuid === idea.uuid)) appendRow(WB.MEMBER_TABLE, WB.makeMember({ ideaUuid: idea.uuid }));
+      appendRow(WB.ENTRY_TABLE, made.entry);
+      os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: idea.uuid, entry: made.entry.uuid }, ts: Date.now() });
+      return ok(res, { entry: made.entry });
+    }
+
+    case 'workbench.update': {
+      const all = loadTable(WB.ENTRY_TABLE);
+      const i = all.findIndex(e => e.uuid === params.uuid);
+      if (i < 0) return err(res, 404, `entry not found: ${params.uuid}`);
+      if (body.addLink && !all.some(e => e.uuid === body.addLink) && !os.idea(body.addLink)) return err(res, 400, `link target not found: ${body.addLink}`);
+      if (body.addLink === params.uuid) return err(res, 400, 'an entry cannot link to itself');
+      const r = WB.patchEntry(all[i], body);
+      if (r.error) return err(res, 400, r.error);
+      all[i] = r.entry;
+      syncTable(WB.ENTRY_TABLE, all, 'uuid');
+      os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: r.entry.ideaUuid, entry: r.entry.uuid }, ts: Date.now() });
+      return ok(res, { entry: r.entry });
+    }
+
+    case 'workbench.delete': {
+      const all = loadTable(WB.ENTRY_TABLE);
+      const e = all.find(x => x.uuid === params.uuid);
+      if (!e) return err(res, 404, `entry not found: ${params.uuid}`);
+      const gone = [e.uuid, ...WB.descendants(all, e.uuid)];
+      for (const u of gone) deleteRow(WB.ENTRY_TABLE, u);
+      os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: e.ideaUuid }, ts: Date.now() });
+      return ok(res, { deleted: gone });
+    }
+
+    case 'workbench.spawn': {
+      // Recursion across ideas: an entry becomes its own idea, a child
+      // member of this one's Compartment, linked causally, with the entry
+      // (and its subtree's text) seeding the child's matching lane.
+      const all = loadTable(WB.ENTRY_TABLE);
+      const i = all.findIndex(x => x.uuid === params.uuid);
+      if (i < 0) return err(res, 404, `entry not found: ${params.uuid}`);
+      const e = all[i];
+      if (e.spawnedIdea && os.idea(e.spawnedIdea)) return ok(res, { idea: os.idea(e.spawnedIdea), existed: true });
+      const parent = os.idea(e.ideaUuid);
+      os.emit('idearium.idea.create', { text: e.text, tags: [...(parent?.tags || []), `from:${e.lane}`], compartment: null, source: 'workbench' });
+      const child = os.db.ideas[os.db.ideas.length - 1];
+      if (!child) return err(res, 500, 'idea create produced no idea');
+      os.emit('idearium.idea.link', { fromUuid: e.ideaUuid, toUuid: child.uuid, linkType: 'causal', source: 'workbench' });
+      appendRow(WB.MEMBER_TABLE, WB.makeMember({ ideaUuid: child.uuid, parentIdea: e.ideaUuid }));
+      const seed = WB.makeEntry({ ideaUuid: child.uuid, lane: e.lane, text: e.text, links: [e.uuid] });
+      if (seed.entry) appendRow(WB.ENTRY_TABLE, seed.entry);
+      all[i] = { ...e, spawnedIdea: child.uuid, updatedAt: Date.now() };
+      syncTable(WB.ENTRY_TABLE, all, 'uuid');
+      os._broadcast({ uuid: `wb-${Date.now()}`, type: 'workbench.changed', payload: { ideaUuid: e.ideaUuid, child: child.uuid }, ts: Date.now() });
+      return ok(res, { idea: child, parentIdea: e.ideaUuid });
+    }
+
+    case 'workbench.assist': {
+      // Copilot works an entry in its own lane's terms. Preview-first like
+      // every other assist here: returns suggestion lines, stores nothing.
+      const all = loadTable(WB.ENTRY_TABLE);
+      const e = all.find(x => x.uuid === params.uuid);
+      if (!e) return err(res, 404, `entry not found: ${params.uuid}`);
+      const lane = body.lane && WB.LANE_IDS.includes(body.lane) ? body.lane : e.lane;
+      const pathTexts = [];
+      for (let cur = e, n = 0; cur && cur.parentUuid && n < 32; n++) { cur = all.find(x => x.uuid === cur.parentUuid); if (cur) pathTexts.unshift(cur.text); }
+      const ca = getCopilotAdapter();
+      if (!ca) return err(res, 503, 'copilot-adapter not ready');
+      const goal = WB.lanePrompt(lane, os.idea(e.ideaUuid)?.text || '', e.text, pathTexts);
+      const result = await ca.suggest({ context: { ideaUuid: e.ideaUuid, lane }, goal, current_gate: `workbench.${lane}` });
+      const raw = (result?.suggestions || []).join('\n');
+      const lines = raw.split(/\n+/).map(l => l.replace(/^\s*(?:[-*•]|\d+[.)])\s*/, '').trim()).filter(Boolean).slice(0, 8);
+      return ok(res, { lane, connected: result?.connected !== false, reason: result?.reason || null, suggestions: lines });
     }
 
     case 'idea.show': {

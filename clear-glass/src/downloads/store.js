@@ -28,6 +28,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaRows } = require('../storage/jaa');
 
 const STORE_PATH = path.join(
   process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'downloads.json'
@@ -39,27 +40,20 @@ class DownloadsStore {
     this.items = []; // newest first
   }
 
+  // §JAA 2026-09-26 — James: "with clearglass, make it jaa. no json." Rows live in
+  // the Clear Glass JAA store (src/storage/jaa.js); the old downloads.json is imported
+  // once on first load and left on disk.
+  _rows() { return this._jaa || (this._jaa = new JaaRows('cg_downloads', { legacyFile: STORE_PATH, orderBy: 'startedAt', order: 'DESC' })); }
+
   load() {
-    try {
-      fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
-      if (fs.existsSync(STORE_PATH)) {
-        this.items = JSON.parse(fs.readFileSync(STORE_PATH, 'utf8'));
-      } else {
-        this._persist();
-      }
-    } catch (err) {
-      console.warn('[Downloads] load error:', err.message);
-    }
+    try { this.items = this._rows().load(); }
+    catch (err) { console.warn('[Downloads] load error:', err.message); }
     return this.items;
   }
 
   _persist() {
-    try {
-      fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
-      fs.writeFileSync(STORE_PATH, JSON.stringify(this.items, null, 2));
-    } catch (err) {
-      console.warn('[Downloads] persist error:', err.message);
-    }
+    try { this._rows().replaceAll(this.items); }
+    catch (err) { console.warn('[Downloads] persist error:', err.message); }
   }
 
   /**

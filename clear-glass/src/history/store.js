@@ -24,6 +24,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaRows } = require('../storage/jaa');
 
 const STORE_PATH = path.join(
   process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'history.json'
@@ -35,23 +36,20 @@ class HistoryStore {
     this.entries = []; // newest first: { id, url, title, agentId, ts }
   }
 
+  // §JAA 2026-09-26 — James: "with clearglass, make it jaa. no json." Rows live in
+  // the Clear Glass JAA store (src/storage/jaa.js); the old history.json is imported
+  // once on first load and left on disk.
+  _rows() { return this._jaa || (this._jaa = new JaaRows('cg_history', { legacyFile: STORE_PATH, orderBy: 'ts', order: 'DESC' })); }
+
   load() {
-    try {
-      if (fs.existsSync(STORE_PATH)) this.entries = JSON.parse(fs.readFileSync(STORE_PATH, 'utf8'));
-    } catch (err) {
-      console.warn('[history] load error:', err.message);
-      this.entries = [];
-    }
+    try { this.entries = this._rows().load(); }
+    catch (err) { console.warn('[history] load error:', err.message); this.entries = []; }
     return this.entries;
   }
 
   _persist() {
-    try {
-      fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
-      fs.writeFileSync(STORE_PATH, JSON.stringify(this.entries, null, 2));
-    } catch (err) {
-      console.warn('[history] persist error:', err.message);
-    }
+    try { this._rows().replaceAll(this.entries); }
+    catch (err) { console.warn('[history] persist error:', err.message); }
   }
 
   /**
