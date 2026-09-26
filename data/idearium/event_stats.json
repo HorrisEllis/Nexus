@@ -1,0 +1,19 @@
+{
+  "stats": {
+    "idearium.repo.chunk.progress": {
+      "count": 8,
+      "lastTs": 1790427184400,
+      "intervals": [
+        187,
+        12000,
+        527,
+        847,
+        1897,
+        2119,
+        4794
+      ],
+      "totalMs": 22371
+    }
+  },
+  "baseline": {}
+}
