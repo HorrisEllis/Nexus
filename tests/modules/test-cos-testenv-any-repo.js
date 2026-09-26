@@ -207,6 +207,13 @@ async function main() {
   check('Idearium registry: the new routes are registered components', /'cos\.testenv\.status'/.test(REG) && /'cos\.testenv\.setup'/.test(REG));
   const APP = fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'js', 'app.js'), 'utf8');
   check('Idearium UI: the run menu offers "Set up the test VM" when the VM is unavailable', /Set up the test VM/.test(APP) && /\/api\/cos\/testenv\/setup/.test(APP));
+  // §0.39.265 — Run asks first, then a numbered walk-through ticked off from what the backend finds
+  const host = SJ.status().host;
+  check('setup-job status: tells the walk-through about this computer (platform, QEMU install plan, accelerator, image folder)',
+    host && host.platform === process.platform && host.qemuPlan && typeof host.qemuPlan.command === 'string' && host.accel && /^(kvm|hvf|whpx|tcg)$/.test(host.accel.accel) && typeof host.home === 'string', JSON.stringify(host));
+  check('Idearium UI: Run prompts "Set it up — step by step" / "Not now" and walks through QEMU → acceleration → contents → build → run',
+    /Set it up — step by step/.test(APP) && /_vmSetNotNow\(true\)/.test(APP) && ['Install QEMU', 'Hardware acceleration', 'Choose what goes in the VM', 'Build the VM image', 'Run tests in the VM'].every(t => APP.includes(`'${t}`)) && /_VM_STAGES/.test(APP));
+  check('Idearium UI: QEMU is offered once — the install prompt leaves it to the walk-through', /!\(vmWalk && n\.tool === 'qemu'\)/.test(APP));
   const BAT = fs.readFileSync(path.join(ROOT, 'cos', 'testenv', 'setup-vm.bat'), 'utf8');
   check('setup-vm.bat: CRLF, installs QEMU with winget, then runs provision.js', /\r\n/.test(BAT) && /winget install --id SoftwareFreedomConservancy\.QEMU/.test(BAT) && /provision\.js/.test(BAT));
 

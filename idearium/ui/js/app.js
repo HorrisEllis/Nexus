@@ -3207,10 +3207,12 @@ function _renderRunMenu() {
     html += `<div style="margin-top:10px"><button class="modal-btn confirm" onclick="_runMenuGo()">Run</button></div>`;
   }
   html += `</div></div>`;
-  // §0.39.264 — the VM option names what is missing; offer to set it up right here
+  // §0.39.264 — the VM option names what is missing; offer to set it up right here.
+  // §0.39.265 — James: "have a prompt telling me to set it up, and have it completely in a step by step
+  // process." Run asks first (Set it up / Not now); the setup is a numbered walk-through (_vmWizardHtml).
   const vmOpt = M.options.find(o => o.id === 'test.vm' && !o.available && o.setup);
-  if (vmOpt) html += `<div id="vm-setup" style="margin-top:10px;border-top:1px solid var(--border,#333);padding-top:8px">${_vmSetupHtml(null)}</div>`;
-  body.innerHTML = `<div id="run-menu-install">${_installPromptHtml()}</div><div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
+  const vmBox = vmOpt ? `<div id="vm-setup" style="margin-bottom:10px">${_vmWizardHtml()}</div>` : '';
+  body.innerHTML = `<div id="run-menu-install">${_installPromptHtml()}</div>${vmBox}<div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
   if (vmOpt) _vmSetupPoll(true);
   if (Object.values(_installState).some(s => s && s.state === 'running')) _installPoll();
 }
@@ -3224,7 +3226,9 @@ let _installDismissed = false;
 let _installTimer = null;
 function _installPromptHtml() {
   const M = _runMenu; if (!M || _installDismissed) return '';
-  const needs = (M.installs || []);
+  // QEMU is step 1 of the VM walk-through when the VM is not set up — not offered twice
+  const vmWalk = M.options.some(o => o.id === 'test.vm' && !o.available && o.setup);
+  const needs = (M.installs || []).filter(n => !(vmWalk && n.tool === 'qemu'));
   if (!needs.length) return '';
   const row = (n) => {
     const st = _installState[n.tool];
@@ -3254,6 +3258,7 @@ async function _installPoll() {
   const before = { ..._installState };
   _installState = { ..._installState, ...(r.jobs || {}) };
   const el = document.getElementById('run-menu-install'); if (el) el.innerHTML = _installPromptHtml();
+  if (_installState.qemu) _vmWizPaint();
   const running = Object.values(_installState).some(s => s && s.state === 'running');
   if (running) { _installTimer = setTimeout(_installPoll, 2000); return; }
   const finished = Object.keys(_installState).filter(t => before[t] && before[t].state === 'running' && _installState[t].state !== 'running');
@@ -3270,34 +3275,144 @@ async function _installPoll() {
 // tick it; a Debian cloud image made into the base, verified by booting it);
 // GET /api/cos/testenv is polled for its progress. The same thing runs from a
 // terminal: cos\testenv\setup-vm.bat (Windows) or cos/testenv/setup-vm.sh.
+//
+// §0.39.265 — James: "the run button in repos. can you have a prompt telling me
+// to set it up, and have it completely in a step by step process for me to set
+// up cos qemu for vms". When the VM is not set up, Run first ASKS (Set it up
+// step by step / Not now — "not now" is remembered on this computer and leaves a
+// small link). The walk-through is five numbered steps, each ticked off from
+// what the backend actually finds (setup-job.js status().vm / .host), never from
+// what was clicked:
+//   1 QEMU            found on PATH or in its install folder; else Install (winget/brew/
+//                     apt, the installer job) or the exact command + "check again"
+//   2 acceleration    kvm / hvf / whpx found, or how to turn it on (optional — TCG works, slower)
+//   3 what goes in    Node version + extra runtimes; where the image lives, the download size
+//   4 build           download → disk → first boot (installs packages) → verify offline → ready,
+//                     each ticked from provision.js's own progress lines
+//   5 done            the run menu reloads with "Run all tests in a VM" available
 let _vmSetupTimer = null;
-function _vmSetupHtml(st) {
+const _vmWiz = { open: false, st: null, node: 'lts', extras: [] };
+const _VM_DISMISS_KEY = 'idearium.vmSetup.notNow';
+function _vmNotNow() { try { return localStorage.getItem(_VM_DISMISS_KEY) === '1'; } catch (_) { return false; } }
+function _vmSetNotNow(v) { try { v ? localStorage.setItem(_VM_DISMISS_KEY, '1') : localStorage.removeItem(_VM_DISMISS_KEY); } catch (_) {} }
+function _vmWizOpen(v) { _vmWiz.open = v; if (v) _vmSetNotNow(false); _vmWizPaint(); }
+function _vmWizPaint() { const el = document.getElementById('vm-setup'); if (el) el.innerHTML = _vmWizardHtml(); }
+function _vmCopyBtn(cmd) { return `<button class="action-btn" onclick="navigator.clipboard.writeText(${escapeHtml(JSON.stringify(cmd))});toast('copied')">copy</button>`; }
+
+// which build stage provision.js has reached, read from its own log lines
+const _VM_STAGES = [
+  ['download', 'Download the Debian cloud image (~350 MB)', /downloading|download \d|using the downloaded image/i],
+  ['disk',     'Prepare the VM disk',                        /preparing the disk/i],
+  ['boot',     'First boot — install Node, Python, git, build tools (3–15 min)', /first boot|^guest:|guest reported/i],
+  ['verify',   'Verify: boot it offline and run node through the guest agent', /verifying|verified:/i],
+  ['ready',    'Save it as the base image',                  /^ready:/i],
+];
+function _vmStageReached(log) {
+  let n = -1;
+  for (const e of log || []) _VM_STAGES.forEach(([, , re], i) => { if (i > n && re.test(e.msg || '')) n = i; });
+  return n;
+}
+
+function _vmWizardHtml() {
+  const st = _vmWiz.st, vm = st && st.vm, host = (st && st.host) || {};
   const running = st && st.state === 'running';
-  const last = st && st.log && st.log.length ? st.log.slice(-14).map(e => escapeHtml(e.msg || '')).join('\n') : '';
-  const col = st && st.state === 'failed' ? 'var(--bad,#f87171)' : st && st.state === 'done' ? 'var(--ok,#4ade80)' : 'inherit';
-  return `<div style="font-size:10px;opacity:.6;letter-spacing:.08em">TEST VM</div>
-    ${st && st.vm && st.vm.ok ? `<div style="color:var(--ok,#4ade80);margin:4px 0">ready — ${escapeHtml(st.vm.baseImage || '')}</div><button class="action-btn" onclick="repoRun()">reload the run menu</button>` : `
-    <div style="font-size:10px;opacity:.8;margin:4px 0;white-space:normal">${escapeHtml(st && st.vm ? st.vm.reason : 'checking…')}</div>
-    ${running ? '' : `<label style="display:block;font-size:10px"><input type="checkbox" id="vm-setup-qemu" checked> install QEMU if it is missing (Windows: winget)</label>
-    <div style="font-size:10px;margin:3px 0">extra runtimes: ${['go', 'ruby', 'php', 'rust'].map(x => `<label style="margin-right:8px"><input type="checkbox" class="vm-setup-extra" value="${x}"> ${x}</label>`).join('')}</div>
-    <button class="action-btn" onclick="_vmSetupStart()">Set up the test VM</button>
-    <span style="font-size:10px;opacity:.6"> 5–40 min · downloads ~350 MB · or run ${escapeHtml((st && st.vm && st.vm.setup) || 'cos/testenv/setup-vm')}</span>`}`}
-    ${st && st.state !== 'idle' ? `<div style="font-size:10px;margin-top:6px;color:${col}">${escapeHtml(st.state)}${st.result && st.result.error ? ` — ${escapeHtml(st.result.error)}` : ''}</div>` : ''}
-    ${last ? `<pre style="white-space:pre-wrap;max-height:180px;overflow:auto;font-size:10px;opacity:.85;margin:4px 0 0">${last}</pre>` : ''}`;
+  const box = (inner) => `<div style="border:1px solid var(--accent,#a78bfa);border-radius:6px;padding:10px 12px">${inner}</div>`;
+  if (vm && vm.ok && !running) return box(`<div style="color:var(--ok,#4ade80)">✓ The COS test VM is set up — ${escapeHtml(vm.baseImage || '')}</div>
+    <div style="margin-top:6px"><button class="modal-btn confirm" onclick="_vmWiz.open=false;repoRun('test')">Reload the run menu</button></div>`);
+
+  // the prompt — before the walk-through is opened
+  if (!_vmWiz.open && !running) {
+    if (_vmNotNow()) return `<div style="font-size:11px;opacity:.75">The test VM is not set up. <a href="#" onclick="event.preventDefault();_vmWizOpen(true)">Set up the test VM</a></div>`;
+    return box(`<div style="font-size:10px;opacity:.7;letter-spacing:.08em;margin-bottom:4px">SET UP THE COS TEST VM?</div>
+      <div style="white-space:normal;margin-bottom:8px">"Run all tests in a VM" runs this repo inside a throw-away QEMU virtual machine — its own OS, no network while tests run, nothing touches this computer. It needs a one-time setup (about 10–40 minutes, mostly waiting). Nexus walks you through it step by step.</div>
+      <button class="modal-btn confirm" onclick="_vmWizOpen(true)">Set it up — step by step</button>
+      <button class="action-btn" onclick="_vmSetNotNow(true);_vmWizPaint()">Not now</button>
+      <span style="font-size:10px;opacity:.6"> everything else in the run menu works without it</span>`);
+  }
+
+  if (!st) return box('<div style="opacity:.6">checking this computer…</div>');
+  const qemuOk = !!(vm && vm.qemu);
+  const accel = host.accel || null;
+  const accelOk = accel && accel.accel && accel.accel !== 'tcg';
+  const qi = _installState.qemu;
+  const reached = _vmStageReached(st.log);
+  const done = st.state === 'done' && vm && vm.ok;
+  const failed = st.state === 'failed';
+  const mark = (state) => state === 'ok' ? '<span style="color:var(--ok,#4ade80)">✓</span>' : state === 'now' ? '<span style="color:var(--accent,#a78bfa)">●</span>' : state === 'bad' ? '<span style="color:var(--bad,#f87171)">✗</span>' : state === 'opt' ? '<span style="opacity:.6">◇</span>' : '<span style="opacity:.4">○</span>';
+  const step = (n, state, title, inner) => `<div style="display:flex;gap:10px;margin:8px 0;${state === 'todo' ? 'opacity:.55' : ''}"><div style="width:22px;text-align:center;font-weight:bold">${mark(state)}</div>
+    <div style="flex:1;min-width:0;white-space:normal"><div><b>Step ${n} · ${escapeHtml(title)}</b></div>${inner ? `<div style="font-size:11px;margin-top:3px">${inner}</div>` : ''}</div></div>`;
+  let h = `<div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:10px;opacity:.7;letter-spacing:.08em">SET UP THE COS TEST VM (QEMU) — STEP BY STEP</div>
+    ${running ? '' : `<button class="action-btn" onclick="_vmWizOpen(false)">close</button>`}</div>`;
+
+  // 1 — QEMU
+  let s1;
+  if (qemuOk) s1 = `found: <code>${escapeHtml(vm.qemu.system)}</code>`;
+  else if (qi && qi.state === 'running') s1 = `installing QEMU… ${escapeHtml(((qi.log || []).slice(-1)[0] || {}).msg || '').slice(0, 140)}`;
+  else {
+    const p = host.qemuPlan;
+    s1 = `QEMU is the program that runs the virtual machine. It is not on this computer yet.<br>`;
+    if (p && p.unattended) s1 += `<button class="action-btn" onclick="_installStart('qemu')">Install QEMU now</button> <span style="opacity:.7">runs <code>${escapeHtml(p.command)}</code></span>`;
+    else if (p) s1 += `Run this in a terminal${host.platform === 'win32' ? ' (PowerShell)' : ''}: <code>${escapeHtml(p.command)}</code> ${_vmCopyBtn(p.command)}${p.note ? `<div style="opacity:.7">${escapeHtml(p.note)}</div>` : ''}`;
+    else if (host.installHint) s1 += `Install it: <code>${escapeHtml(host.installHint)}</code> ${_vmCopyBtn(host.installHint.split('   ')[0])}`;
+    s1 += `<div style="opacity:.7;margin-top:3px">Or download it from <a href="https://www.qemu.org/download/" target="_blank" rel="noopener">qemu.org/download</a>${host.platform === 'win32' ? ' (Windows installer: qemu.weilnetz.de/w64) — install to C:\\Program Files\\qemu, where Nexus looks' : ''}.
+      Then <button class="action-btn" onclick="_vmSetupPoll(true)">check again</button></div>`;
+    if (qi && qi.state === 'failed') s1 += `<div style="color:var(--bad,#f87171)">the install did not finish: ${escapeHtml((qi.result && qi.result.error) || '')}</div>`;
+  }
+  h += step(1, qemuOk ? 'ok' : (qi && qi.state === 'failed') ? 'bad' : 'now', 'Install QEMU', s1);
+
+  // 2 — acceleration (optional)
+  let s2;
+  if (accelOk) s2 = `${escapeHtml(accel.accel.toUpperCase())} — ${escapeHtml(accel.reason)}.${accel.accel === 'whpx' ? ` If the build says WHPX did not start, turn on <b>Windows Hypervisor Platform</b>: <code>dism /online /enable-feature /featurename:HypervisorPlatform /all</code> ${_vmCopyBtn('dism /online /enable-feature /featurename:HypervisorPlatform /all')} in an administrator PowerShell, then restart. Also check virtualisation (VT-x / AMD-V) is on in the BIOS.` : ''}`;
+  else if (host.platform === 'linux') s2 = `No hardware acceleration (${escapeHtml((accel && accel.reason) || 'unknown')}). The VM still works with software emulation, just several times slower. To speed it up: <code>sudo modprobe kvm_intel || sudo modprobe kvm_amd; sudo usermod -aG kvm $USER</code> ${_vmCopyBtn('sudo modprobe kvm_intel || sudo modprobe kvm_amd; sudo usermod -aG kvm $USER')} then log out and back in.`;
+  else s2 = `Software emulation only — it works, just slower.`;
+  h += step(2, accelOk ? 'ok' : 'opt', 'Hardware acceleration (optional — faster VMs)', s2);
+
+  // 3 — what goes into the image
+  const s3 = running || done ? `Node ${escapeHtml(_vmWiz.node)}${_vmWiz.extras.length ? ' + ' + escapeHtml(_vmWiz.extras.join(', ')) : ''}, Python 3, git, build tools`
+    : `Always included: Python 3, git, build tools, the QEMU guest agent. Node version:
+      <select onchange="_vmWiz.node=this.value">${['lts', '22', '20'].map(v => `<option value="${v}" ${_vmWiz.node === v ? 'selected' : ''}>${v === 'lts' ? 'latest LTS' : 'Node ' + v}</option>`).join('')}</select>
+      <div style="margin-top:3px">Extra languages for repos that need them: ${['go', 'ruby', 'php', 'rust'].map(x => `<label style="margin-right:8px"><input type="checkbox" class="vm-setup-extra" value="${x}" ${_vmWiz.extras.includes(x) ? 'checked' : ''} onchange="_vmWiz.extras=[...document.querySelectorAll('.vm-setup-extra:checked')].map(e=>e.value)"> ${x}</label>`).join('')}</div>
+      <div style="opacity:.7;margin-top:3px">Needs ~350 MB download and ~3 GB of disk${host.home ? ` in <code>${escapeHtml(host.home)}</code>` : ''}. You can run the setup again later to add languages.</div>`;
+  h += step(3, running || done ? 'ok' : qemuOk ? 'now' : 'todo', 'Choose what goes in the VM', s3);
+
+  // 4 — build
+  let s4 = _VM_STAGES.map(([, label], i) => {
+    const stt = done || i < reached ? 'ok' : (running && i === Math.max(reached, 0)) ? 'now' : (failed && i === Math.max(reached, 0)) ? 'bad' : 'todo';
+    return `<div style="margin:2px 0;${stt === 'todo' ? 'opacity:.55' : ''}">${mark(stt)} ${escapeHtml(label)}</div>`;
+  }).join('');
+  if (!running && !done) s4 += qemuOk
+    ? `<div style="margin-top:6px"><button class="modal-btn confirm" onclick="_vmSetupStart()">${failed ? 'Try again' : 'Set up the test VM'}</button> <span style="opacity:.7">you can keep using Nexus while it runs</span></div>`
+    : `<div style="opacity:.7;margin-top:4px">finish step 1 first</div>`;
+  if (failed) s4 += `<div style="color:var(--bad,#f87171);margin-top:4px">${escapeHtml((st.result && st.result.error) || 'the setup failed')} — the log below says where; "Try again" re-uses the downloaded image.</div>`;
+  const last = (st.log || []).slice(-12).map(e => escapeHtml(e.msg || '')).join('\n');
+  if (last && (running || failed)) s4 += `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;font-size:10px;opacity:.85;margin:6px 0 0">${last}</pre>`;
+  if (!running && !done) s4 += `<div style="opacity:.6;margin-top:4px">Same thing from a terminal: <code>${escapeHtml((vm && vm.setup) || 'node cos/testenv/provision.js')}</code></div>`;
+  h += step(4, done ? 'ok' : failed ? 'bad' : running ? 'now' : 'todo', 'Build the VM image', s4);
+
+  // 5 — done
+  h += step(5, done ? 'ok' : 'todo', 'Run tests in the VM', done
+    ? `Ready. <button class="modal-btn confirm" onclick="_vmWiz.open=false;repoRun('test')">Open the run menu</button> — pick "Run all tests in a VM".`
+    : `The run menu will offer "Run all tests in a VM".`);
+  return box(h);
 }
 async function _vmSetupPoll(once) {
   clearTimeout(_vmSetupTimer);
   const el = document.getElementById('vm-setup'); if (!el) return;
   let st; try { st = await api('/api/cos/testenv', {}, 20000); } catch (e) { el.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
-  el.innerHTML = _vmSetupHtml(st);
-  if (st.state === 'running') _vmSetupTimer = setTimeout(() => _vmSetupPoll(), 2000);
-  else if (!once && st.state === 'done') toast('the test VM is ready', 'ok');
+  const was = _vmWiz.st && _vmWiz.st.state;
+  _vmWiz.st = st;
+  if (st.state === 'running') _vmWiz.open = true;
+  el.innerHTML = _vmWizardHtml();
+  const qemuInstalling = _installState.qemu && _installState.qemu.state === 'running';
+  if (st.state === 'running' || qemuInstalling) _vmSetupTimer = setTimeout(() => _vmSetupPoll(), 2000);
+  else if (was === 'running' && st.state === 'done') toast('the test VM is ready', 'ok');
 }
 async function _vmSetupStart() {
   const extras = [...document.querySelectorAll('.vm-setup-extra:checked')].map(x => x.value);
-  const installQemu = !!(document.getElementById('vm-setup-qemu') || {}).checked;
-  try { await api('/api/cos/testenv/setup', { method: 'POST', body: JSON.stringify({ installQemu, extras }) }, 20000); }
+  if (extras.length) _vmWiz.extras = extras;
+  try { await api('/api/cos/testenv/setup', { method: 'POST', body: JSON.stringify({ installQemu: false, extras: _vmWiz.extras, node: _vmWiz.node }) }, 20000); }
   catch (e) { toast(`VM setup did not start: ${e.message}`, 'err'); return; }
+  _vmWiz.open = true;
   _vmSetupPoll();
 }
 
