@@ -328,6 +328,21 @@
     if (r) toast(`“${m.name}” finished — ${(r.results || []).length} steps`);
   }
 
+  // §0.39.266 — a .macro node file in. A macro with the same name and the same steps is
+  // reused; a different one with a taken name arrives as "<name> (imported)".
+  async function importMacroFile(rerender) {
+    const ta = h('textarea', { rows: 10, class: 'mono', placeholder: 'envelope: 1\ntype: macro\n…' });
+    const file = h('input', { type: 'file', accept: '.macro,.workflow,.yaml,.yml' });
+    file.addEventListener('change', async () => { const f = file.files[0]; if (f) ta.value = await f.text(); });
+    const r = await modal({ title: 'Import a .macro', wide: true, body: [field('From a file', file), field('Or paste it', ta)], actions: [{ label: 'Import', primary: true, run: () => {
+      if (!ta.value.trim()) throw new Error('Pick a file or paste one.');
+      return wire('/automation/import', { method: 'POST', body: { text: ta.value } });
+    } }] });
+    if (!r) return;
+    toast(r.type === 'macro' ? (r.macro.reused ? `“${r.macro.name}” is already here` : `Imported “${r.macro.name}”${r.macro.renamed ? ' (the name was taken)' : ''}`) : `Imported the workflow “${r.workflow.name}” — see Automation`, 'ok', 6000);
+    rerender();
+  }
+
   section({
     id: 'macros', group: 'Agents', icon: '⌘', label: 'Macros',
     keywords: 'macro steps record replay rewind job application erosmancer behavior template',
@@ -338,7 +353,9 @@
       tools.append(
         btn('● Record', () => recordFlow(schema, rerender).catch(fail), 'primary'),
         btn('From template', () => templateFlow(schema, rerender).catch(fail)),
-        btn('New macro', () => builder(schema, rerender).catch(fail)));
+        btn('New macro', () => builder(schema, rerender).catch(fail)),
+        // §0.39.266 — a .macro node file (or a .workflow, which brings its macros along)
+        btn('Import .macro', () => importMacroFile(rerender).catch(fail), 'ghost'));
       const macros = lr.macros || [];
       const full = async (m) => (await call(() => cg.macros.get(m.name), 'macro')).macro;
       return pane({ title: 'Macros', sub: `${macros.length} macro${macros.length === 1 ? '' : 's'}`, flush: true, body: macros.length ? macros.map(m => row(m.name,
@@ -347,6 +364,13 @@
         btn('Steps', async () => { const g = await full(m); modal({ title: m.name, wide: true, body: [h('ol', { class: 'step-read' }, (g.steps || []).map(s => h('li', { text: describe(s) })))] }); }, 'sm'),
         btn('Edit', async () => { const g = await full(m); builder(schema, rerender, g, { editing: g }).catch(fail); }, 'sm'),
         btn('Duplicate', async () => { const g = await full(m); builder(schema, rerender, { ...g, name: `${g.name}-copy` }).catch(fail); }, 'sm'),
+        btn('.macro', (e) => busy(e.currentTarget, async () => {
+          const r = await wire(`/automation/macros/${encodeURIComponent(m.name)}/node`);
+          const a = h('a', { href: URL.createObjectURL(new Blob([r.text], { type: 'text/yaml' })), download: r.filename });
+          document.body.append(a); a.click(); a.remove();
+          toast(`Exported ${r.filename}`);
+        }), 'sm'),
+        btn('Save .macro', (e) => busy(e.currentTarget, async () => { const r = await wire(`/automation/macros/${encodeURIComponent(m.name)}/node/save`, { method: 'POST', body: {} }); toast(`Saved ${r.file} in the automation library`); }), 'sm ghost'),
         // §0.39.265 — grow it: a workflow can loop, read the page, branch and run on a schedule
         btn('→ Workflow', (e) => busy(e.currentTarget, async () => {
           const r = await wire('/automation/from-macro', { method: 'POST', body: { name: m.name } });

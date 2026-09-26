@@ -147,6 +147,7 @@ const SUITES = [
   'automation-engine.test.js',
   'automation-v2.test.js',                // §0.39.265 — workflows v2: DOM steps, data, loops, triggers, runs, tools
   'automation-settings-ui.test.js',       // §0.39.265 — Settings → Automation against a real engine
+  'automation-nodes.test.js',             // §0.39.266 — .workflow / .macro node files: export, bundle, import, library
   'brainos-app-hostile.test.js',
   'guardian-hostile-file-read.test.js',
   'guardian-hostile-body-dos.test.js',
