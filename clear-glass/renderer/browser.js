@@ -603,7 +603,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }
   }
 
-  document.getElementById('btn-options').addEventListener('click', openOptionsPanel);
+  document.getElementById('btn-options')?.addEventListener('click', openOptionsPanel);
   document.getElementById('options-panel-close').addEventListener('click', () => optionsPanel.classList.remove('visible'));
 
   optDefaultUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') optDefaultUrl.blur(); });
