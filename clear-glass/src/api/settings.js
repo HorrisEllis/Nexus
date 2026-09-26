@@ -46,6 +46,20 @@ const DEFAULTS = {
   fallbackModel:   'claude-sonnet-4-6',
   fallbackEndpoint: 'https://api.anthropic.com/v1/messages',
 
+  // §BUILT 2026-09-26 — James: "expand the copilot settings… make a
+  // clearglass hat for the copilot cli." Per-call routing, the same three
+  // positions as ui/tv-shell/menu.js (ollama | copilot | guardian + NCP
+  // agent), the Clear Glass hat, and what each call carries.
+  copilotBackend:        'copilot',  // ollama | copilot | guardian
+  copilotAgent:          'claude',   // NCP agent when backend is guardian
+  copilotWearHat:        true,       // compose the clear_glass hat's persona into every call
+  copilotAutoRunCommands: true,      // run ```driver blocks from a reply; off = show them, run on confirm
+  copilotDomContext:     true,       // include the live DOM by default
+  copilotDomMaxChars:    3000,       // DOM snapshot budget per call
+  copilotTimeoutMs:      60000,      // one call's ceiling
+  copilotHistoryMax:     200,        // CLI input history kept per window
+  copilotShowRoute:      true,       // show backend/model under each reply
+
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job
   // applications, answering on screen questions... full ui to
   // configure this." Real, persistent — this file, not a second store.

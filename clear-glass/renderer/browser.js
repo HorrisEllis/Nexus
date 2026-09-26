@@ -888,7 +888,22 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     ctxCookies = !ctxCookies; e.target.classList.toggle('active', ctxCookies);
   });
 
+  // §BUILT 2026-09-26 — the pane's CLI wearing the Clear Glass hat
+  // (renderer/copilot-cli.js): route bar, slash commands, ↑/↓ history.
+  const _ctxChip = { dom: 'ctx-dom', picks: 'ctx-picks', cookies: 'ctx-cookies' };
+  const cli = window.CGCopilotCLI ? window.CGCopilotCLI.create({
+    cg, agentId, wv, normalizeUrl, navigate,
+    print: (role, text) => addMsg(role, text),
+    getCtx: () => ({ dom: ctxDom, picks: ctxPicks, cookies: ctxCookies }),
+    setCtx: (what, on) => {
+      if (what === 'dom') ctxDom = on; else if (what === 'picks') ctxPicks = on; else if (what === 'cookies') ctxCookies = on;
+      document.getElementById(_ctxChip[what])?.classList.toggle('active', on);
+    },
+    clearMessages: () => { copilotMsgs.replaceChildren(); },
+  }) : null;
+
   copilotInput.addEventListener('keydown', (e) => {
+    if (cli && cli.onKey(e, copilotInput)) return;
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendCopilot();
@@ -897,10 +912,15 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   copilotSend.addEventListener('click', sendCopilot);
 
   async function sendCopilot() {
-    const text = copilotInput.value.trim();
+    let text = copilotInput.value.trim();
     if (!text) return;
 
     copilotInput.value = '';
+    if (cli) {
+      const handled = await cli.handle(text);
+      if (handled === true) return;
+      if (handled && handled.passthrough) text = handled.passthrough;
+    }
     addMsg('user', text);
 
     // §NEW 2026-07-11 — /build and /diagnose slash commands. Both call
@@ -956,7 +976,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     }
 
     try {
-      const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra });
+      const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra, noDom: !ctxDom, ...(cli ? cli.route() : {}) });
       removeThinking();
 
       // Format response with code blocks
@@ -965,15 +985,15 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
         .replace(/`([^`]+)`/g, '<code>$1</code>');
 
       addMsg('assistant', formatted, true);
-
-      // Execute any driver commands
-      for (const cmd of res.commands || []) {
-        try {
-          await cg.driver.exec({ ...cmd, agentId });
-        } catch (err) {
-          addMsg('assistant', `Command error: ${err.message}`);
-        }
+      if (res.route && cli && cli.state.showRoute !== false) {
+        const r = res.route;
+        addMsg('route', `${r.backend}${r.agent ? ' · ' + r.agent : ''}${r.hat ? ' · 🎩' : ''}${r.modelUsed ? ' · ' + r.modelUsed : ''}${(res.commands || []).length ? ` · ${res.commands.length} command${res.commands.length === 1 ? '' : 's'}${res.executed === false ? ' proposed' : ' run'}` : ''}`);
       }
+      // §FIX 2026-09-26 — commands run once, in the main process
+      // (CoPilotBridge.send). This loop used to re-run every one through
+      // cg.driver.exec, so each copilot click/type happened twice. With
+      // auto-run off they come back unexecuted and the CLI proposes them.
+      if (res.executed === false && cli) cli.propose(res.commands || []);
     } catch (err) {
       removeThinking();
       addMsg('assistant', `Error: ${err.message}`);

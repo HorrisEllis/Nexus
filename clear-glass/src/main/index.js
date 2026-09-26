@@ -168,6 +168,7 @@ const WIRE_PORT = parseInt(process.env.WIRE_PORT || '7704');
 
 // ── State ──────────────────────────────────────────────────────────────────
 let loginPortal, jobIntake;
+let webExtensions = null;
 let tray, sse, ipcBridge, nexusOptions, bookmarks, rewind, providerHost, userscripts, siteSettings, downloads, passwordVault, pluginHost, errorCapture, processMetrics, history, mesh, autofillStore;
 let fp          = null;   // FingerprintEngine  — set in bootstrap()
 let ctxMgr      = null;   // ContextMgr         — set in bootstrap()
@@ -1487,6 +1488,19 @@ async function bootstrap() {
   // needs that gate to already be registered — checked the ordering
   // directly rather than assuming it would just work.
   pluginHost = new PluginHost();
+  // §BUILT 2026-09-26 — Chrome WebExtensions (src/plugins/webextensions.js):
+  // registry from JAA, loaded into the default session now and into every
+  // persistent session (each tab's persist:agent-* partition) as it's made.
+  try {
+    const { WebExtensionHost } = require('../plugins/webextensions');
+    webExtensions = new WebExtensionHost({ session, app });
+    webExtensions.load();
+    webExtensions.attach();
+    const n = webExtensions.records.filter(r => r.enabled).length;
+    if (n) console.log(`[ClearGlass/WebExtensions] ${n} enabled extension(s) loading`);
+  } catch (err) {
+    console.error('[ClearGlass/WebExtensions] host failed to start:', err.message);
+  }
   const BUILTIN_PLUGINS = ['adblocker', 'captcha-pause', 'guardian-listeners', 'zoom', 'permissions', 'passwords'];
   for (const dir of BUILTIN_PLUGINS) {
     try {
@@ -1611,6 +1625,8 @@ async function bootstrap() {
     speech,
     macroTool,
     pluginHost,
+    driver,
+    webExtensions,
     copilot,
     loginPortal,
   });

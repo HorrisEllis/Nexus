@@ -22,7 +22,7 @@ const {
 } = require('../screen-qa/detector.js');
 
 class IpcBridge {
-  constructor({ port, sse, ctxMgr, vault, apiSettings, urlListener, mesh, diag, fp, options, minimizeFn, hideFn, openFn, maximizeFn, openSettingsFn, closeSettingsFn, openLibraryFn, closeLibraryFn, bookmarks, rewind, providerHost, userscripts, siteSettings, downloads, passwordVault, speech, macroTool, errorCapture, copilot, postEvent, pluginHost, history, autofillStore, dom, loginPortal }) {
+  constructor({ port, sse, ctxMgr, vault, apiSettings, urlListener, mesh, diag, fp, options, minimizeFn, hideFn, openFn, maximizeFn, openSettingsFn, closeSettingsFn, openLibraryFn, closeLibraryFn, bookmarks, rewind, providerHost, userscripts, siteSettings, downloads, passwordVault, speech, macroTool, errorCapture, copilot, postEvent, pluginHost, history, autofillStore, dom, loginPortal, driver, webExtensions }) {
     this.port        = port;
     this.sse         = sse;
     this.errorCapture = errorCapture;
@@ -51,6 +51,8 @@ class IpcBridge {
     this.history       = history;
     this.autofillStore = autofillStore;
     this.dom           = dom;
+    this.driver        = driver || null;
+    this.webExtensions = webExtensions || null; // §2026-09-26 — src/plugins/webextensions.js // §2026-09-26 — macro recorder (macros:recordStart/Stop)
     this.downloads     = downloads;
     // §BUGFIX 2026-08-24 — found while wiring speech, not by inspection:
     // main/index.js already passed passwordVault into this constructor
@@ -706,6 +708,11 @@ class IpcBridge {
     // §fix 2026-07-04 — copilot:send was fire-and-forget (rendererEmit only).
     // Now calls the real CoPilotBridge.send() and returns its response,
     // so the renderer gets an actual {text, commands, msgId} back.
+    // §BUILT 2026-09-26 — the Clear Glass hat + the pane's CLI (src/copilot/hat.js).
+    ipcMain.handle('copilot:hat', async () => require('../copilot/hat').status());
+    ipcMain.handle('copilot:hatEnsure', async () => require('../copilot/hat').ensure());
+    ipcMain.handle('copilot:hatUpdate', async (e, patch) => require('../copilot/hat').update(patch || {}));
+    ipcMain.handle('copilot:exec', async (e, { cmd, agentId } = {}) => (this.copilot ? this.copilot.execCommand(cmd, agentId) : { ok: false, error: 'co-pilot bridge not wired' }));
     ipcMain.handle('copilot:send', async (e, d) => {
       if (this.copilot) {
         try {
@@ -961,6 +968,26 @@ class IpcBridge {
       if (!this.macroTool) return { error: 'macro tool not available' };
       return this.macroTool.execute({ action: 'delete', name: d.name });
     });
+    // §BUILT 2026-09-26 — record a macro from a real tab: the driver's
+    // recorder captures, src/macros/recording.js turns it into steps the
+    // builder opens pre-filled (passwords become a {{password}} parameter).
+    const _recStart = new Map(); // agentId → start url
+    ipcMain.handle('macros:recordStart', async (e, { agentId } = {}) => {
+      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
+      if (!agentId) return { ok: false, error: 'agentId required' };
+      try { const r = await this.driver.exec({ action: 'record.start', agentId }); _recStart.set(agentId, r.startUrl || null); return { ok: true, agentId, startUrl: r.startUrl || null }; }
+      catch (err) { return { ok: false, error: err.message }; }
+    });
+    ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => {
+      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
+      try {
+        const r = await this.driver.exec({ action: 'record.stop', agentId });
+        const { recordingToSteps } = require('../macros/recording');
+        const out = recordingToSteps(r.recording || [], { startUrl: _recStart.get(agentId) });
+        _recStart.delete(agentId);
+        return { ok: true, events: (r.recording || []).length, ...out };
+      } catch (err) { return { ok: false, error: err.message }; }
+    });
     ipcMain.handle('macros:schema', async () => {
       try {
         const ba = require('../../../lib/agent-tools/tools/browser/browser-action.js');
@@ -1079,6 +1106,22 @@ class IpcBridge {
       try { return this.pluginHost?.list() || []; }
       catch (err) { return { ok: false, error: err.message }; }
     });
+    // §BUILT 2026-09-26 — WebExtensions (Settings → Plugins → Add WebExtension).
+    const _wx = () => { if (!this.webExtensions) throw new Error('WebExtension host not running'); return this.webExtensions; };
+    const _wxWrap = (fn) => async (e, d = {}) => { try { return await fn(d, e); } catch (err) { return { ok: false, error: err.message }; } };
+    ipcMain.handle('webext:list', _wxWrap(() => ({ ok: true, extensions: _wx().list(), folder: require('path').join(process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'extensions') })));
+    ipcMain.handle('webext:install', _wxWrap((d) => _wx().install({ source: d.source, allowFileAccess: !!d.allowFileAccess })));
+    ipcMain.handle('webext:setEnabled', _wxWrap((d) => _wx().setEnabled(d.id, !!d.enabled)));
+    ipcMain.handle('webext:remove', _wxWrap((d) => _wx().remove(d.id)));
+    ipcMain.handle('webext:pick', _wxWrap(async (d, e) => {
+      const { dialog, BrowserWindow } = require('electron');
+      const win = BrowserWindow.fromWebContents(e.sender);
+      const folder = d.kind === 'folder';
+      const r = await dialog.showOpenDialog(win, folder
+        ? { title: 'Choose an unpacked extension folder (the one with manifest.json)', properties: ['openDirectory'] }
+        : { title: 'Choose a packed extension', properties: ['openFile'], filters: [{ name: 'Chrome extension', extensions: ['crx', 'zip'] }] });
+      return r.canceled || !r.filePaths.length ? { ok: true, canceled: true } : { ok: true, path: r.filePaths[0] };
+    }));
     ipcMain.handle('plugins:disable', async (e, { id } = {}) => {
       if (typeof id !== 'string') return { ok: false, error: 'id is required' };
       try { this.pluginHost?.disable(id); return { ok: true }; }
