@@ -156,6 +156,14 @@ const COMPONENTS = [
   _comp('repo.ci.run',     'POST', '/api/repos/:uuid/ci/run',           'Run the compartment CI pipeline in a real sandbox', { tags: ['ci'] }),
   _comp('repo.ci.runs',    'GET',  '/api/repos/:uuid/ci/runs',          'List CI run history for a compartment', { tags: ['ci'] }),
   _comp('repo.ci.run.show','GET',  '/api/repos/:uuid/ci/runs/:runId',   'Get one CI run with full stage logs', { tags: ['ci'] }),
+  // §0.39.265 — real git on the repo folder (lib/repo-git.js)
+  _comp('repo.git.status', 'GET',  '/api/repos/:uuid/git',              'Git status: branch, remotes, ahead/behind, changed files, SSH key aliases', { tags: ['git'] }),
+  _comp('repo.git.remote', 'POST', '/api/repos/:uuid/git/remote',       'Set a git remote URL (https, ssh://, git@host:path)', { tags: ['git'] }),
+  _comp('repo.git.commit', 'POST', '/api/repos/:uuid/git/commit',       'Commit every change in the repo folder', { tags: ['git'] }),
+  _comp('repo.git.push',   'POST', '/api/repos/:uuid/git/push',         'Push to a remote with a compartment SSH key or git_token', { tags: ['git'] }),
+  _comp('repo.git.pull',   'POST', '/api/repos/:uuid/git/pull',         'Fast-forward pull; changed files are brought into the repo', { tags: ['git'] }),
+  _comp('repo.git.keygen', 'POST', '/api/repos/:uuid/git/keygen',       'Create an ed25519 SSH key, register it to the compartment, return the public key', { tags: ['git', 'keys'] }),
+  _comp('git.clone',       'POST', '/api/git/clone',                    'Clone a git URL into a new repo (same import rules as a zip)', { tags: ['git'] }),
 
   // ── Queue ───────────────────────────────────────────────────────────────
   _comp('queue.show',      'GET',  '/api/queue/:queueId',               'Get queue item status'),

@@ -1960,6 +1960,7 @@ function renderCurrentRepoSubtab() {
   else if (CURRENT_REPO_SUBTAB === 'idea') renderRepoIdea(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'debug') renderRepoDebug(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'versionium') renderRepoVersionium(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'git') renderRepoGit(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'settings') renderRepoSettings(CURRENT_API_REPO);
 }
 
@@ -3042,6 +3043,212 @@ toolScope  ${st.toolScopeEnforced ? 'enforced' : 'NOT enforced on this path'}</d
     <div id="agent-blocks-section"></div>`;
   // 0.39.258 — the prompt's blocks, all editable (idearium/ui/js/agent-blocks.js)
   if (typeof renderAgentBlocks === 'function') renderAgentBlocks(repo);
+}
+
+// ── §GIT TAB — §0.39.265 ─────────────────────────────────────────────────
+// James: "what about push pull, cd ci, ssh, and git support?" Real git on this
+// repo's folder (lib/repo-git.js via /api/repos/:uuid/git…) and its CI/CD
+// pipeline (cos/ci via /api/repos/:uuid/ci…). Credentials never reach the page:
+// an SSH key is picked by its alias (the key stays in ~/.ssh), a token is
+// stored in the compartment vault as the `git_token` secret and only ever
+// handed to the git process.
+let _gitState = { uuid: null, keyAlias: '', log: '' };
+function _gitLog(line, bad) {
+  const el = document.getElementById('git-log');
+  _gitState.log = `${new Date().toLocaleTimeString()}  ${line}\n${_gitState.log}`.slice(0, 20000);
+  if (el) { el.textContent = _gitState.log; el.style.color = bad ? 'var(--coral,#f87171)' : ''; }
+}
+async function renderRepoGit(repo) {
+  const el = document.getElementById('repo-subtab-git');
+  if (!el) return;
+  if (_gitState.uuid !== repo.uuid) _gitState = { uuid: repo.uuid, keyAlias: '', log: '' };
+  el.innerHTML = '<div style="opacity:.6">reading git…</div>';
+  const forUuid = repo.uuid;
+  let st, ci, runs;
+  try {
+    [st, ci, runs] = await Promise.all([
+      api(`/api/repos/${repo.uuid}/git`, {}, 20000),
+      api(`/api/repos/${repo.uuid}/ci`, {}, 20000).catch(e => ({ error: e.message })),
+      api(`/api/repos/${repo.uuid}/ci/runs?limit=10`, {}, 20000).catch(() => ({ runs: [] })),
+    ]);
+  } catch (e) { el.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'git') return;
+  const origin = (st.remotes || []).find(r => r.name === 'origin') || (st.remotes || [])[0] || null;
+  if (!_gitState.keyAlias && st.sshKeys && st.sshKeys.length) _gitState.keyAlias = st.sshKeys[0];
+  const box = (title, inner) => `<div class="ds" style="margin-bottom:14px"><div class="ds-label">${title}</div>${inner}</div>`;
+  const row = (label, inner) => `<div style="display:flex;gap:10px;align-items:center;margin:6px 0;flex-wrap:wrap"><span style="min-width:110px;font-size:11px;opacity:.7">${label}</span>${inner}</div>`;
+  let gitHtml;
+  if (!st.git) {
+    gitHtml = `<div>Git is not installed on this computer. Install it from <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com</a> (Windows: <code>winget install --id Git.Git -e</code>), then reopen this tab.</div>`;
+  } else {
+    const summary = !st.initialized ? 'no git history yet — your first commit starts it'
+      : `branch <b>${escapeHtml(st.branch || '?')}</b>${st.lastCommit ? ` · last commit <code>${escapeHtml(st.lastCommit.short)}</code> ${escapeHtml(st.lastCommit.subject)}` : ' · no commits yet'}${st.upstream ? ` · tracks ${escapeHtml(st.upstream)}${st.ahead ? ` · <b>${st.ahead} to push</b>` : ''}${st.behind ? ` · <b>${st.behind} to pull</b>` : ''}` : ''} · ${st.changeCount ? `<b>${st.changeCount} changed file(s)</b>` : 'nothing to commit'}`;
+    gitHtml = `<div style="margin-bottom:8px">${summary}</div>
+      ${row('remote', `<input id="git-remote" style="flex:1;min-width:280px" placeholder="git@github.com:you/${escapeHtml((repo.name || 'repo').replace(/\s+/g, '-'))}.git  or  https://github.com/you/…" value="${escapeHtml(origin ? origin.url : '')}"><button class="action-btn" onclick="gitSetRemote('${repo.uuid}')">save</button>`)}
+      ${row('sign in with', `<select id="git-key" onchange="_gitState.keyAlias=this.value"><option value="">no SSH key (https / public)</option>${(st.sshKeys || []).map(k => `<option value="${escapeHtml(k)}" ${k === _gitState.keyAlias ? 'selected' : ''}>SSH key “${escapeHtml(k)}”</option>`).join('')}</select>
+        <button class="action-btn" onclick="gitKeygen('${repo.uuid}')">create an SSH key…</button>
+        <button class="action-btn" onclick="gitSetToken('${repo.uuid}')">${st.hasToken ? 'replace' : 'set'} https token…</button>
+        <span style="font-size:10px;opacity:.6">${st.hasToken ? 'an https token is stored for this repo' : ''}</span>`)}
+      ${st.immutable ? '<div style="font-size:11px;opacity:.7;margin:6px 0">This is a Nexus system repo (immutable) — you can push it, but pulls go through a branch.</div>' : ''}
+      ${row('commit', `<input id="git-msg" style="flex:1;min-width:280px" placeholder="what changed"><button class="action-btn primary" onclick="gitCommit('${repo.uuid}')">commit</button>`)}
+      <div style="display:flex;gap:8px;margin:10px 0">
+        <button class="action-btn" onclick="gitPull('${repo.uuid}')" ${st.immutable || !origin ? 'disabled' : ''}>↓ pull</button>
+        <button class="action-btn primary" onclick="gitPush('${repo.uuid}')" ${!origin ? 'disabled title="set a remote first"' : ''}>↑ push</button>
+        <button class="action-btn" onclick="renderRepoGit(CURRENT_API_REPO)">refresh</button>
+      </div>
+      ${(st.changes || []).length ? `<details><summary style="cursor:pointer;font-size:11px">changed files (${st.changeCount})</summary><pre style="max-height:200px;overflow:auto;font-size:10px">${escapeHtml(st.changes.slice(0, 200).map(c => `${c.status.padEnd(2)} ${c.path}`).join('\n'))}</pre></details>` : ''}
+      <pre id="git-log" style="white-space:pre-wrap;max-height:220px;overflow:auto;font-size:10px;margin-top:8px">${escapeHtml(_gitState.log)}</pre>`;
+  }
+  const cfgText = ci && ci.config ? JSON.stringify(ci.config, null, 2) : '';
+  const ciHtml = ci && ci.error ? `<div style="color:var(--coral)">${escapeHtml(ci.error)}</div>`
+    : `<div style="font-size:11px;opacity:.75;margin-bottom:6px">Stages run in order in COS's sandbox with this repo as the working folder. <code>command</code> stages run a command line; <code>ssh</code> stages run on a server with an SSH key alias (deploys). Secrets you store are given to stages as <code>CI_SECRET_*</code> variables.${repo.compartmentId ? '' : ' <b>This repo has no compartment, so the pipeline cannot run here.</b>'}</div>
+      <textarea id="ci-config" spellcheck="false" style="width:100%;min-height:200px;font-family:var(--mono);font-size:11px">${escapeHtml(cfgText)}</textarea>
+      <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
+        <button class="action-btn" onclick="ciStarter('${repo.uuid}')">fill in a starter pipeline</button>
+        <button class="action-btn" onclick="ciSave('${repo.uuid}')">save pipeline</button>
+        <button class="action-btn primary" onclick="ciRun('${repo.uuid}')" ${repo.compartmentId ? '' : 'disabled'}>▶ run pipeline</button>
+      </div>
+      <div id="ci-result"></div>
+      <div style="font-size:10px;opacity:.6;letter-spacing:.08em;margin-top:10px">RECENT RUNS</div>
+      ${(runs.runs || []).map(r => `<div style="font-family:var(--mono);font-size:11px;padding:3px 0;border-bottom:1px solid var(--b0);cursor:pointer" onclick="ciShowRun('${repo.uuid}','${r.runId}')"><span style="color:${r.status === 'passed' ? 'var(--mint)' : r.status === 'failed' ? 'var(--coral)' : 'inherit'}">${escapeHtml(r.status)}</span> · ${new Date(r.startedAt).toLocaleString()} · ${r.durationMs}ms · ${r.stages.map(x => `${escapeHtml(x.name)}:${escapeHtml(x.status)}`).join(' ')}</div>`).join('') || '<div style="font-size:11px;opacity:.5">no runs yet</div>'}`;
+  el.innerHTML = box('GIT', gitHtml) + box('CI / CD', ciHtml);
+}
+async function _gitCall(uuid, what, body, label) {
+  _gitLog(`${label}…`);
+  try {
+    const r = await api(`/api/repos/${uuid}/git/${what}`, { method: 'POST', body: JSON.stringify(body || {}) }, 330000);
+    return r;
+  } catch (e) { _gitLog(`${label} failed: ${e.message}`, true); toast(`${label} failed: ${e.message}`, 'err'); return null; }
+}
+async function gitSetRemote(uuid) {
+  const url = (document.getElementById('git-remote') || {}).value || '';
+  const r = await _gitCall(uuid, 'remote', { url }, 'set remote');
+  if (r) { _gitLog(`remote ${r.name} → ${r.url}`); toast('remote saved', 'ok'); renderRepoGit(CURRENT_API_REPO); }
+}
+async function gitCommit(uuid) {
+  const message = (document.getElementById('git-msg') || {}).value || '';
+  if (!message.trim()) { toast('write what changed first', 'err'); return; }
+  const r = await _gitCall(uuid, 'commit', { message }, 'commit');
+  if (!r) return;
+  _gitLog(r.nothingToCommit ? 'nothing to commit — the folder matches the last commit' : `committed ${r.commit.slice(0, 8)} · ${r.files} file(s)`);
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitPush(uuid) {
+  const r = await _gitCall(uuid, 'push', { keyAlias: _gitState.keyAlias || undefined }, 'push');
+  if (!r) return;
+  _gitLog(`pushed ${r.branch} → ${r.remote}${r.output ? `\n${r.output}` : ''}`); toast('pushed', 'ok');
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitPull(uuid) {
+  const r = await _gitCall(uuid, 'pull', { keyAlias: _gitState.keyAlias || undefined }, 'pull');
+  if (!r) return;
+  _gitLog(r.upToDate ? 'already up to date' : `pulled ${r.branch}: ${r.applied.length} file(s) updated, ${r.removed.length} removed${r.binary.length ? `, ${r.binary.length} binary file(s) kept on disk only` : ''}${r.failed.length ? `, ${r.failed.length} could not be applied: ${r.failed.map(f => f.path).join(', ')}` : ''}`, r.failed.length > 0);
+  toast(r.upToDate ? 'already up to date' : 'pulled', 'ok');
+  if (!r.upToDate) await loadApiRepos();
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitKeygen(uuid) {
+  const alias = prompt('Name for the new SSH key (snake_case, e.g. github_deploy):', 'github');
+  if (!alias) return;
+  const r = await _gitCall(uuid, 'keygen', { alias: alias.trim() }, 'create SSH key');
+  if (!r) return;
+  _gitState.keyAlias = r.alias;
+  const body = document.getElementById('repo-diagnose-body');
+  document.getElementById('repo-diagnose-title').textContent = `SSH key “${r.alias}”`;
+  document.getElementById('repo-diagnose-reindex').style.display = 'none';
+  body.innerHTML = `<div style="white-space:normal">${r.existed ? 'This key already existed and is now registered to this repo.' : 'A new key was created and registered to this repo.'} The private key stays at <code>${escapeHtml(r.keyPath)}</code>; only the public key below leaves this computer.</div>
+    <ol style="white-space:normal;line-height:1.7">
+      <li>Copy the public key: <button class="action-btn" onclick="navigator.clipboard.writeText(${escapeHtml(JSON.stringify(r.publicKey || ''))});toast('copied','ok')">copy</button></li>
+      <li>GitHub: <b>Settings → SSH and GPG keys → New SSH key</b> (all your repos), or the repo's <b>Settings → Deploy keys → Add</b> with “Allow write access” (just this one). GitLab: <b>Preferences → SSH Keys</b>.</li>
+      <li>Set the remote to the <b>SSH</b> URL (<code>git@github.com:you/repo.git</code>), pick this key under “sign in with”, and push.</li>
+    </ol>
+    <pre style="white-space:pre-wrap;word-break:break-all;font-size:11px">${escapeHtml(r.publicKey || '(public key file not found)')}</pre>`;
+  document.getElementById('repo-diagnose-modal').classList.add('open');
+  renderRepoGit(CURRENT_API_REPO);
+}
+async function gitSetToken(uuid) {
+  const value = prompt('Paste an https access token (GitHub: Settings → Developer settings → Personal access tokens, with repo / contents: write). It is stored encrypted in this repo\'s compartment vault and only given to git.');
+  if (!value) return;
+  try { await api(`/api/repos/${uuid}/ci/secrets`, { method: 'POST', body: JSON.stringify({ name: 'git_token', value: value.trim() }) }, 20000); toast('token stored', 'ok'); _gitLog('https token stored for this repo'); }
+  catch (e) { toast(`could not store the token: ${e.message}`, 'err'); }
+  renderRepoGit(CURRENT_API_REPO);
+}
+function ciStarter(uuid) {
+  const files = (CURRENT_API_REPO && CURRENT_API_REPO.files || []).map(f => f.path);
+  const has = (re) => files.some(p => re.test(p));
+  const stages = has(/(^|\/)package\.json$/) ? [{ name: 'install', kind: 'command', run: 'npm install' }, { name: 'test', kind: 'command', run: 'npm test' }]
+    : has(/(^|\/)(requirements\.txt|pyproject\.toml)$/) ? [{ name: 'install', kind: 'command', run: 'pip install -r requirements.txt' }, { name: 'test', kind: 'command', run: 'python -m pytest' }]
+    : has(/(^|\/)go\.mod$/) ? [{ name: 'test', kind: 'command', run: 'go test ./...' }]
+    : has(/(^|\/)Cargo\.toml$/) ? [{ name: 'test', kind: 'command', run: 'cargo test' }]
+    : [{ name: 'check', kind: 'command', run: 'echo add your build and test commands here' }];
+  stages.push({ name: 'deploy', kind: 'ssh', host: 'user@your-server', keyAlias: _gitState.keyAlias || 'deploy_key', run: 'cd /srv/app && git pull && npm install --omit=dev', continueOnError: false });
+  const cfg = { version: 1, stages, triggers: { onChunkDone: false, onCommit: false } };
+  const ta = document.getElementById('ci-config');
+  if (ta) ta.value = JSON.stringify(cfg, null, 2);
+  toast('starter pipeline filled in — edit the deploy stage (or delete it), then save', 'ok');
+}
+async function ciSave(uuid) {
+  let config;
+  try { config = JSON.parse((document.getElementById('ci-config') || {}).value || ''); }
+  catch (e) { toast(`the pipeline is not valid JSON: ${e.message}`, 'err'); return; }
+  try { await api(`/api/repos/${uuid}/ci`, { method: 'PUT', body: JSON.stringify({ config }) }, 20000); toast('pipeline saved', 'ok'); }
+  catch (e) { toast(`not saved: ${e.message}`, 'err'); }
+}
+async function ciRun(uuid) {
+  const out = document.getElementById('ci-result');
+  if (out) out.innerHTML = '<div style="opacity:.6">running the pipeline…</div>';
+  let r;
+  try { r = await api(`/api/repos/${uuid}/ci/run`, { method: 'POST', body: JSON.stringify({}) }, 900000); }
+  catch (e) { if (out) out.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  if (out) out.innerHTML = _ciRunHtml(r.run);
+  toast(`pipeline ${r.run.status}`, r.run.status === 'passed' ? 'ok' : 'err');
+}
+async function ciShowRun(uuid, runId) {
+  const out = document.getElementById('ci-result');
+  try { const r = await api(`/api/repos/${uuid}/ci/runs/${runId}`, {}, 20000); if (out) out.innerHTML = _ciRunHtml(r.run); }
+  catch (e) { if (out) out.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; }
+}
+function _ciRunHtml(run) {
+  if (!run) return '';
+  const col = (s) => s === 'passed' ? 'var(--mint)' : s === 'failed' ? 'var(--coral)' : 'inherit';
+  return `<div style="margin:6px 0"><b style="color:${col(run.status)}">${escapeHtml(run.status)}</b> · ${run.durationMs}ms</div>` + (run.stages || []).map(s => `
+    <div style="margin:6px 0 2px"><span style="color:${col(s.status)}">${escapeHtml(s.status)}</span> · <b>${escapeHtml(s.name)}</b> (${escapeHtml(s.kind || 'command')}) · exit ${s.exitCode ?? '—'} · ${s.durationMs ?? '—'}ms</div>
+    ${s.stdout ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;font-size:10px;margin:0">${escapeHtml(String(s.stdout).slice(-4000))}</pre>` : ''}
+    ${s.stderr ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;font-size:10px;margin:0;color:var(--coral)">${escapeHtml(String(s.stderr).slice(-4000))}</pre>` : ''}`).join('');
+}
+
+// Clone a git URL into a new repo (welcome page → "Clone from git").
+function openGitCloneModal() {
+  if (!CONNECTED) { toast('connect to nexus first', 'err'); return; }
+  document.getElementById('repo-diagnose-title').textContent = 'Clone from git';
+  document.getElementById('repo-diagnose-reindex').style.display = 'none';
+  document.getElementById('repo-diagnose-body').innerHTML = `
+    <div style="white-space:normal;margin-bottom:8px">Brings a git repository in as a new repo — its files, and its history, so pull and push work straight away (Git &amp; CI tab).</div>
+    <div style="margin:6px 0"><div style="font-size:10px;opacity:.7">repository URL</div><input id="clone-url" style="width:100%" placeholder="https://github.com/owner/repo.git  or  git@github.com:owner/repo.git"></div>
+    <div style="margin:6px 0"><div style="font-size:10px;opacity:.7">name (optional)</div><input id="clone-name" style="width:100%"></div>
+    <details style="margin:6px 0"><summary style="cursor:pointer;font-size:11px">private repository?</summary>
+      <div style="font-size:10px;opacity:.7;margin-top:6px">SSH: the full path to a private key on this computer (e.g. C:\\Users\\you\\.ssh\\id_ed25519)</div><input id="clone-key" style="width:100%">
+      <div style="font-size:10px;opacity:.7;margin-top:6px">https: an access token (used for this clone only, not stored)</div><input id="clone-token" type="password" style="width:100%">
+    </details>
+    <div style="margin-top:10px"><button class="modal-btn confirm" onclick="gitClone()">Clone</button></div>
+    <div id="clone-result" style="margin-top:8px"></div>`;
+  document.getElementById('repo-diagnose-modal').classList.add('open');
+  setTimeout(() => { const i = document.getElementById('clone-url'); if (i) i.focus(); }, 30);
+}
+async function gitClone() {
+  const v = (id) => ((document.getElementById(id) || {}).value || '').trim();
+  const out = document.getElementById('clone-result');
+  if (!v('clone-url')) { toast('paste the repository URL', 'err'); return; }
+  out.innerHTML = '<div style="opacity:.6">cloning…</div>';
+  let r;
+  try { r = await api('/api/git/clone', { method: 'POST', body: JSON.stringify({ url: v('clone-url'), name: v('clone-name') || undefined, keyPath: v('clone-key') || undefined, token: v('clone-token') || undefined }) }, 330000); }
+  catch (e) { out.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  out.innerHTML = `<div style="color:var(--mint)">cloned “${escapeHtml(r.name)}” · ${r.fileCount} file(s)${r.omittedCount ? ` · ${r.omittedCount} skipped` : ''} — indexing it now</div>`;
+  toast(`cloned ${r.name}`, 'ok');
+  await loadApiRepos();
+  api(`/api/repos/${r.repoUuid}/chunk`, { method: 'POST', body: JSON.stringify({}) }, 600000).then(() => loadApiRepos()).catch(e => toast(`indexing: ${e.message}`, 'err'));
+  document.getElementById('repo-diagnose-modal').classList.remove('open');
+  if (typeof selectApiRepo === 'function') selectApiRepo(r.repoUuid);
 }
 
 function renderRepoSettings(repo) {

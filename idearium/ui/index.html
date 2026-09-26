@@ -758,6 +758,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
         <div class="welcome-sub">Log ideas, brainstorm, visit repository or idea, spec and library builder, then architect.</div>
         <div class="welcome-actions">
           <button class="welcome-action-btn secondary" onclick="openUploadProjectModal()">Import project</button>
+          <button class="welcome-action-btn secondary" onclick="openGitCloneModal()">Clone from git</button>
           <button class="welcome-action-btn primary" onclick="newSpecPrompt()">Start new project</button>
         </div>
         <div class="pillars">
@@ -947,6 +948,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn" data-subtab="agent" onclick="setRepoSubtab('agent')">Agent</button>
             <button class="repo-subtab-btn" data-subtab="debug" onclick="setRepoSubtab('debug')">Debug</button>
             <button class="repo-subtab-btn" data-subtab="versionium" onclick="setRepoSubtab('versionium')">Versionium</button>
+            <button class="repo-subtab-btn" data-subtab="git" onclick="setRepoSubtab('git')">Git &amp; CI</button>
             <button class="repo-subtab-btn" data-subtab="settings" onclick="setRepoSubtab('settings')">Settings</button>
           </nav>
 
@@ -1046,6 +1048,12 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
                fork, export, archive) moved here from the old file-tree
                toolbar strip — this is the "repo settings" surface, not
                a file-tree control. -->
+          <!-- GIT & CI — §0.39.265: real git on this repo's folder (remote, commit, pull, push,
+               an SSH key or token to do it with) and its CI/CD pipeline. js/app.js §GIT TAB. -->
+          <div class="repo-subtab-panel" id="repo-subtab-git">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
           <div class="repo-subtab-panel" id="repo-subtab-settings">
             <div class="detail-empty">← select a repo</div>
           </div>

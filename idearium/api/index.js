@@ -1136,6 +1136,16 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','ci','run'],      'repo.ci.run'],
     ['GET',    ['api','repos',    ':uuid','ci','runs'],     'repo.ci.runs'],
     ['GET',    ['api','repos',    ':uuid','ci','runs',':runId'], 'repo.ci.run.show'],
+    // §0.39.265 — James: "what about push pull, cd ci, ssh, and git support?"
+    // Real git on the repo's materialized folder (lib/repo-git.js), with the
+    // compartment's SSH key aliases (cos/ci/keys.js) and its git_token secret.
+    ['GET',    ['api','repos',    ':uuid','git'],               'repo.git.status'],
+    ['POST',   ['api','repos',    ':uuid','git','remote'],      'repo.git.remote'],
+    ['POST',   ['api','repos',    ':uuid','git','commit'],      'repo.git.commit'],
+    ['POST',   ['api','repos',    ':uuid','git','push'],        'repo.git.push'],
+    ['POST',   ['api','repos',    ':uuid','git','pull'],        'repo.git.pull'],
+    ['POST',   ['api','repos',    ':uuid','git','keygen'],      'repo.git.keygen'],
+    ['POST',   ['api','git','clone'],                           'git.clone'],
     ['POST',   ['api','repos',    ':uuid','reindex'],       'repo.reindex'],
   ];
 
@@ -3553,6 +3563,152 @@ async function handle(req, res, route, query, body) {
       const run = ci.getRun(dir, params.runId);
       if (!run) return err(res, 404, `no such CI run: ${params.runId}`);
       return ok(res, { repoUuid: params.uuid, run });
+    }
+
+    // ── §0.39.265 — git: status / remote / commit / push / pull / keygen / clone ──
+    // Each works on the repo's materialized folder (_repoDiskDir — materialize
+    // keeps .git). Credentials: an SSH key ALIAS registered to the repo's
+    // compartment (resolved to its path at use time), and/or the compartment's
+    // `git_token` CI secret for https — neither ever in a response.
+    case 'repo.git.status':
+    case 'repo.git.remote':
+    case 'repo.git.commit':
+    case 'repo.git.push':
+    case 'repo.git.pull':
+    case 'repo.git.keygen': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const G = _require('../../lib/repo-git.js');
+      const keys = _require('../../cos/ci/keys.js');
+      const compartmentName = repo.compartmentId || null;
+      const auth = () => {
+        const out = { keyPath: null, token: null };
+        if (body.keyAlias) {
+          if (!compartmentName) return { error: 'this repo has no compartment, so it has no SSH keys' };
+          const k = keys.resolveSshKey({ compartmentName, alias: body.keyAlias });
+          if (!k.ok) return { error: k.error };
+          out.keyPath = k.keyPath;
+        }
+        out.token = keys.gitTokenFor({ compartmentName });
+        return out;
+      };
+      if (action === 'repo.git.keygen') {
+        if (!compartmentName) return err(res, 400, 'this repo has no compartment — SSH keys are registered to a compartment');
+        const g = await G.keygen({ alias: body.alias, comment: `nexus ${repo.name || repo.uuid}`.slice(0, 80) });
+        if (!g.ok) return err(res, 400, g.error);
+        const reg = keys.registerSshKey({ compartmentName, alias: body.alias, keyPath: g.keyPath });
+        if (!reg.ok) return err(res, 400, `key created at ${g.keyPath} but not registered: ${reg.error}`);
+        os.emit('idearium.repo.git.keygen', { repoUuid: repo.uuid, alias: body.alias, existed: g.existed });
+        // the PUBLIC key only — it is what you paste into GitHub / GitLab
+        return ok(res, { repoUuid: repo.uuid, alias: body.alias, keyPath: g.keyPath, publicKey: g.publicKey, existed: g.existed });
+      }
+      const dir = _repoDiskDir(repo.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      if (action === 'repo.git.status') {
+        const st = await G.status(dir);
+        let sshKeys = [];
+        if (compartmentName) { const l = keys.listSshKeys({ compartmentName }); if (l.ok) sshKeys = l.keys.map(k => k.alias); }
+        let hasToken = false;
+        if (compartmentName) { const ls = keys.listSecrets({ compartmentName }); hasToken = !!(ls.ok && ls.secrets.some(x => x.name === 'git_token')); }
+        return ok(res, { repoUuid: repo.uuid, dir, immutable: !!repo.immutable, compartmentId: compartmentName, sshKeys, hasToken, ...st });
+      }
+      if (action === 'repo.git.remote') {
+        const r = await G.setRemote(dir, body.url, body.name || 'origin');
+        if (!r.ok) return err(res, 400, r.error);
+        os.emit('idearium.repo.git.remote', { repoUuid: repo.uuid, name: r.name, kind: r.kind });
+        return ok(res, { repoUuid: repo.uuid, ...r });
+      }
+      if (action === 'repo.git.commit') {
+        const r = await G.commit(dir, { message: body.message, authorName: body.authorName || null, authorEmail: body.authorEmail || null });
+        if (!r.ok) return err(res, 400, r.error);
+        if (!r.nothingToCommit) os.emit('idearium.repo.git.commit', { repoUuid: repo.uuid, commit: r.commit, files: r.files });
+        return ok(res, { repoUuid: repo.uuid, ...r });
+      }
+      const a = auth();
+      if (a.error) return err(res, 400, a.error);
+      if (action === 'repo.git.push') {
+        const r = await G.push(dir, { remote: body.remote || 'origin', branch: body.branch || null, keyPath: a.keyPath, token: a.token });
+        if (!r.ok) return err(res, 400, r.error, { remote: r.remote, branch: r.branch });
+        os.emit('idearium.repo.git.push', { repoUuid: repo.uuid, remote: r.remote, branch: r.branch });
+        return ok(res, { repoUuid: repo.uuid, ...r });
+      }
+      // pull — then bring the changed files into the repo (its content is the
+      // spec: a file changed only on disk would be rewritten from its chunk by
+      // the next materialize). Text files update their chunks; binaries stay on
+      // disk and are listed, since only an import writes the source layer.
+      if (repo.immutable) return err(res, 400, 'this repo is immutable (a Nexus system) — pull into a branch instead');
+      const r = await G.pull(dir, { remote: body.remote || 'origin', branch: body.branch || null, keyPath: a.keyPath, token: a.token });
+      if (!r.ok) return err(res, 400, r.error);
+      const applied = [], removed = [], binary = [], failed = [];
+      const { _isProbablyText } = _require('../../lib/zip-ingest.js');
+      for (const c of r.changed) {
+        if (G.INTERNAL.some(x => c.path === x || c.path.startsWith(x))) continue;
+        if (c.status === 'D') {
+          const d = getRepoLayer().deleteFile(repo.uuid, c.path, { defer: true });
+          (d.error && !/not found/.test(d.error) ? failed : removed).push(d.error ? { path: c.path, error: d.error } : c.path);
+          continue;
+        }
+        let buf; try { buf = fs.readFileSync(path.join(dir, c.path)); } catch (e) { failed.push({ path: c.path, error: e.message }); continue; }
+        if (!_isProbablyText(buf)) { binary.push(c.path); continue; }
+        const w = getRepoLayer().writeFile(repo.uuid, c.path, buf.toString('utf8'), { defer: true, preserveWhitespace: true });
+        if (w.error) failed.push({ path: c.path, error: w.error }); else applied.push(c.path);
+      }
+      if (applied.length || removed.length) getRepoLayer().refresh(repo.uuid);
+      os.emit('idearium.repo.git.pull', { repoUuid: repo.uuid, remote: r.remote, branch: r.branch, applied: applied.length, removed: removed.length });
+      return ok(res, { repoUuid: repo.uuid, ...r, applied, removed, binary, failed });
+    }
+
+    // Clone a git URL into a NEW repo — the same file rules as "Import project"
+    // (lib/zip-ingest.js), then the clone's .git moves into the repo folder so
+    // push/pull work straight away. Chunking is deferred exactly like a zip
+    // import: the UI calls POST /api/repos/:uuid/chunk next.
+    case 'git.clone': {
+      const G = _require('../../lib/repo-git.js');
+      const v = G.validateRemoteUrl(body.url);
+      if (!v.ok) return err(res, 400, v.error);
+      const name = String(body.name || v.url.replace(/\.git$/i, '').split(/[/:]/).filter(Boolean).pop() || 'repo').slice(0, 200);
+      let keyPath = null;
+      if (body.keyPath) {
+        const chk = _require('../../cos/ci/index.js').checkKeyRef(String(body.keyPath));
+        if (!chk.ok) return err(res, 400, chk.error);
+        keyPath = String(body.keyPath);
+      }
+      const tmpRoot = fs.mkdtempSync(path.join(_require('os').tmpdir(), 'nexus-clone-'));
+      const dest = path.join(tmpRoot, 'repo');
+      try {
+        const c = await G.clone(v.url, dest, { keyPath, token: body.token || null, depth: body.full ? 0 : 1 });
+        if (!c.ok) return err(res, 400, c.error);
+        const cfg = _require('../../lib/project-import.config.js');
+        const { extractZipToFiles } = _require('../../lib/zip-ingest.js');
+        const extraction = extractZipToFiles({
+          entries: G.readTree(dest), maxFiles: cfg.ZIP.maxFiles, maxBytesPerFile: cfg.ZIP.maxBytesPerFile, maxTotalBytes: cfg.ZIP.maxTotalBytes,
+          maxRealFileBytes: cfg.ZIP.maxRealFileBytes, realFiles: cfg.ZIP.realFiles, includeBinary: cfg.ZIP.includeBinary,
+          verifyHashes: cfg.ZIP.verifyHashes, skipDirs: cfg.ZIP.skipDirs, textExt: cfg.ZIP.textExt,
+        });
+        if (!extraction.ok) return err(res, 400, extraction.error);
+        const { included, realFiles, omitted } = extraction;
+        if (!included.length && !realFiles.length) return err(res, 400, 'the repository has no files that pass the import bounds');
+        const ingest = getRepoLayer().ingest({ name, files: included, source: 'git-clone',
+          compartmentId: _ensureCompartment(`idearium-git-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`, `git clone of ${v.url}`),
+          materializeBaseDir: cfg.REPO_STORAGE.dir });
+        if (ingest.error) return err(res, 400, ingest.error);
+        const repoUuid = ingest.repo.uuid;
+        let sources = null;
+        if (realFiles.length) {
+          sources = getRepoLayer().writeSourcesAsync ? await getRepoLayer().writeSourcesAsync(repoUuid, realFiles) : getRepoLayer().writeSources(repoUuid, realFiles);
+          if (!sources.ok) return err(res, 500, `source-file write failed: ${sources.error}`);
+        }
+        const mat = getRepoLayer().materialize(repoUuid);
+        if (mat.error) return err(res, 500, `materialize after clone failed: ${mat.error}`);
+        fs.cpSync(path.join(dest, '.git'), path.join(mat.dir, '.git'), { recursive: true });
+        await G.ensureRepo(mat.dir);   // Idearium's own files excluded from git status
+        os.emit('idearium.repo.git.cloned', { repoUuid, name, kind: v.kind, fileCount: sources ? sources.written : included.length });
+        return ok(res, { repo: getRepoLayer().get(repoUuid), repoUuid, name, url: v.url,
+          fileCount: sources ? sources.written : included.length, chunkCount: included.length,
+          omittedCount: omitted.length, omitted: omitted.slice(0, 50), pipeline: { state: 'DEFERRED', note: 'call POST /api/repos/:uuid/chunk' } });
+      } finally {
+        try { fs.rmSync(tmpRoot, { recursive: true, force: true }); } catch (_) {}
+      }
     }
 
     // §SCAN 2026-09-20 — repo intelligence scan: dangling hooks, gaps,
