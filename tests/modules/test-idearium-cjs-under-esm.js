@@ -74,6 +74,10 @@ test('ICU-007', 'REGRESSION GUARD: no other file under idearium/ has the same bu
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       if (entry.name === 'node_modules') continue;
       const full = path.join(dir, entry.name);
+      // §0.39.265 — idearium/data holds materialized copies of OTHER code (repos
+      // made from imports and the nexus-self sync of the whole tree, gitignored),
+      // not idearium's own modules.
+      if (entry.isDirectory() && path.relative(root, full) === 'data') continue;
       if (entry.isDirectory()) { walk(full); continue; }
       if (!entry.name.endsWith('.js')) continue;
       const src = fs.readFileSync(full, 'utf8');

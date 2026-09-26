@@ -55,7 +55,7 @@ function main() {
   check('the menu item is wired to the single-field flow, using the right-click\'s own stored page point', /case 'answer-question':[\s\S]{0,300}screenQaAnswerAt\(ctxPageXY\.x, ctxPageXY\.y\)/.test(BROWSER_JS));
   check('a chrome-bar right-click (no page point) is refused honestly, not silently treated as page (0,0)', /if \(!ctxPageXY\) \{ addMsg\('assistant', '<div class="sqa-block"><div class="sqa-err">Right-click a page element/.test(BROWSER_JS));
   check('the page-relative right-click point is captured separately from the window-relative point used for menu positioning',
-    /let ctxPageXY = null;/.test(BROWSER_JS) && /ctxPageXY = \{ x: e\.x, y: e\.y \};/.test(BROWSER_JS) && /ctxPageXY = null; \/\/ a chrome-bar right-click has no page point/.test(BROWSER_JS));
+    /let ctxPageXY = null;/.test(BROWSER_JS) && /ctxPageXY = \{ x: p\.x, y: p\.y \};/.test(BROWSER_JS) && /const p = e\.params \|\| e;/.test(BROWSER_JS) && /ctxPageXY = null; \/\/ a chrome-bar right-click has no page point/.test(BROWSER_JS));
 
   // ── element-picker wiring (archaeology.js -> bridge.js -> preload) ──
   check('archaeology.js gained a real elementAt(x,y), using document.elementFromPoint + the SAME nodeId() every other real caller uses',
