@@ -3111,7 +3111,11 @@ async function renderRepoGit(repo) {
       <div id="ci-result"></div>
       <div style="font-size:10px;opacity:.6;letter-spacing:.08em;margin-top:10px">RECENT RUNS</div>
       ${(runs.runs || []).map(r => `<div style="font-family:var(--mono);font-size:11px;padding:3px 0;border-bottom:1px solid var(--b0);cursor:pointer" onclick="ciShowRun('${repo.uuid}','${r.runId}')"><span style="color:${r.status === 'passed' ? 'var(--mint)' : r.status === 'failed' ? 'var(--coral)' : 'inherit'}">${escapeHtml(r.status)}</span> · ${new Date(r.startedAt).toLocaleString()} · ${r.durationMs}ms · ${r.stages.map(x => `${escapeHtml(x.name)}:${escapeHtml(x.status)}`).join(' ')}</div>`).join('') || '<div style="font-size:11px;opacity:.5">no runs yet</div>'}`;
-  el.innerHTML = box('GIT', gitHtml) + box('CI / CD', ciHtml);
+  const remHtml = repo.compartmentId
+    ? `<div style="font-size:11px;opacity:.75;margin-bottom:6px;white-space:normal">Push this repo's whole compartment — its folder, files and history — to a folder (USB drive, network share, OneDrive / Dropbox / Google Drive) or a server over SSH, and pull it on any other machine running Nexus. Secrets and SSH keys stay on each machine.</div><div id="cos-remotes-box">${'<div style="opacity:.6">reading remotes…</div>'}</div>`
+    : '<div style="font-size:11px;opacity:.7">This repo has no compartment, so it has nothing to push as one.</div>';
+  el.innerHTML = box('COMPARTMENT REMOTES — PUSH / PULL', remHtml) + box('GIT', gitHtml) + box('CI / CD', ciHtml);
+  if (repo.compartmentId) renderCosRemotes(repo.compartmentId, 'cos-remotes-box', st.sshKeys || []);
 }
 async function _gitCall(uuid, what, body, label) {
   _gitLog(`${label}…`);
@@ -3249,6 +3253,138 @@ async function gitClone() {
   api(`/api/repos/${r.repoUuid}/chunk`, { method: 'POST', body: JSON.stringify({}) }, 600000).then(() => loadApiRepos()).catch(e => toast(`indexing: ${e.message}`, 'err'));
   document.getElementById('repo-diagnose-modal').classList.remove('open');
   if (typeof selectApiRepo === 'function') selectApiRepo(r.repoUuid);
+}
+
+// ── §COMPARTMENT REMOTES — §0.39.265 ──────────────────────────────────────
+// James: "push pull for the compartments remotely." lib/cos-remote.js through
+// /api/cos/compartments/:cid/remotes…: a remote is a folder (drive, share,
+// synced cloud folder) or user@host:path over ssh. Status is in-sync / ahead /
+// behind / diverged; a refused push or pull says why and offers force (a pull
+// always backs up what it replaces).
+const _REMOTE_STATE = { 'in-sync': ['in sync', 'var(--mint)'], ahead: ['this machine is ahead — push', 'var(--amber)'], behind: ['the remote is ahead — pull', 'var(--amber)'],
+  diverged: ['both changed', 'var(--coral)'], 'not-pushed': ['not pushed yet', 'var(--text3)'] };
+const _remoteStatus = {};   // `${cid}/${name}` -> last status
+async function renderCosRemotes(cid, boxId, sshKeys = []) {
+  const el = document.getElementById(boxId);
+  if (!el) return;
+  let r;
+  try { r = await api(`/api/cos/compartments/${cid}/remotes`, {}, 20000); }
+  catch (e) { el.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  const when = (t) => t ? new Date(t).toLocaleString() : 'never';
+  const rows = r.remotes.map(x => {
+    const st = _remoteStatus[`${cid}/${x.name}`];
+    const badge = st ? (st.error ? `<span style="color:var(--coral)">${escapeHtml(st.error)}</span>` : `<span style="color:${(_REMOTE_STATE[st.state] || ['', 'inherit'])[1]}">${escapeHtml((_REMOTE_STATE[st.state] || [st.state])[0])}</span>${st.diffCount ? ` · <span title="${escapeHtml((st.diff || []).slice(0, 30).map(d => `${d.path} — ${d.change}`).join('\n'))}">${st.diffCount} file(s) differ</span>` : ''}${st.remoteInfo ? ` · remote from ${escapeHtml(st.remoteInfo.from && st.remoteInfo.from.host || '?')} ${new Date(st.remoteInfo.pushedAt).toLocaleString()}` : ''}`) : '';
+    return `<div style="border-bottom:1px solid var(--b0);padding:6px 0">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b>${escapeHtml(x.name)}</b><span style="font-size:10px;opacity:.7">${x.kind === 'ssh' ? 'ssh' : 'folder'} · ${escapeHtml(x.location)}${x.keyAlias ? ` · key “${escapeHtml(x.keyAlias)}”` : ''}</span>
+        <span style="flex:1"></span>
+        <button class="action-btn" onclick="cosRemoteStatus('${cid}','${x.name}','${boxId}')">check</button>
+        <button class="action-btn" onclick="cosRemotePull('${cid}','${x.name}','${boxId}')">↓ pull</button>
+        <button class="action-btn primary" onclick="cosRemotePush('${cid}','${x.name}','${boxId}')">↑ push</button>
+        <button class="action-btn" title="forget this remote (nothing on it is deleted)" onclick="cosRemoteRemove('${cid}','${x.name}','${boxId}')">✕</button></div>
+      <div style="font-size:10px;opacity:.75;margin-top:3px">last push ${when(x.lastPush)} · last pull ${when(x.lastPull)} ${badge ? '· ' + badge : ''}</div></div>`;
+  }).join('');
+  el.innerHTML = `<div style="font-size:10px;opacity:.6;margin-bottom:4px">compartment <b>${escapeHtml(r.name)}</b> · travels: ${r.parts.map(p => p === 'project' ? 'its project folder' : 'its own folder').join(' + ') || 'its own folder'}</div>
+    ${rows || '<div style="font-size:11px;opacity:.6">no remotes yet — add one below</div>'}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px">
+      <input id="${boxId}-name" style="width:90px" placeholder="name" value="${r.remotes.length ? '' : 'origin'}">
+      <input id="${boxId}-loc" style="flex:1;min-width:260px" placeholder="D:\\nexus-remote   or   C:\\Users\\you\\OneDrive\\nexus   or   you@server:nexus">
+      <select id="${boxId}-key" title="ssh remotes only"><option value="">no SSH key</option>${sshKeys.map(k => `<option value="${escapeHtml(k)}">SSH key “${escapeHtml(k)}”</option>`).join('')}</select>
+      <button class="action-btn" onclick="cosRemoteAdd('${cid}','${boxId}')">add remote</button></div>
+    <div style="font-size:10px;opacity:.6;margin-top:4px;white-space:normal">A folder remote works with anything that syncs a folder between computers. An SSH remote needs only a login on the server (keys: create one in the Git section below and add its public key to the server's ~/.ssh/authorized_keys).</div>`;
+}
+async function cosRemoteAdd(cid, boxId) {
+  const v = (s) => ((document.getElementById(`${boxId}-${s}`) || {}).value || '').trim();
+  try { await api(`/api/cos/compartments/${cid}/remotes`, { method: 'POST', body: JSON.stringify({ name: v('name') || 'origin', location: v('loc'), keyAlias: v('key') || null }) }, 20000); toast('remote added', 'ok'); }
+  catch (e) { toast(`not added: ${e.message}`, 'err'); return; }
+  _rerenderRemotes(cid, boxId);
+}
+async function cosRemoteRemove(cid, name, boxId) {
+  if (!confirm(`Forget the remote "${name}"? Nothing stored on it is deleted.`)) return;
+  try { await api(`/api/cos/compartments/${cid}/remotes/${encodeURIComponent(name)}`, { method: 'DELETE' }, 20000); } catch (e) { toast(e.message, 'err'); }
+  _rerenderRemotes(cid, boxId);
+}
+function _rerenderRemotes(cid, boxId) {
+  const keys = [...document.querySelectorAll(`#${boxId}-key option`)].map(o => o.value).filter(Boolean);
+  renderCosRemotes(cid, boxId, keys);
+}
+async function cosRemoteStatus(cid, name, boxId) {
+  toast('comparing with the remote…', 'ok');
+  try { _remoteStatus[`${cid}/${name}`] = await api(`/api/cos/compartments/${cid}/remotes/${encodeURIComponent(name)}/status`, {}, 600000); }
+  catch (e) { _remoteStatus[`${cid}/${name}`] = { error: e.message }; }
+  _rerenderRemotes(cid, boxId);
+}
+async function _cosRemoteOp(cid, name, boxId, op, force = false) {
+  toast(`${op === 'push' ? 'pushing' : 'pulling'}…`, 'ok');
+  let r;
+  try { r = await api(`/api/cos/compartments/${cid}/remotes/${encodeURIComponent(name)}/${op}`, { method: 'POST', body: JSON.stringify({ force }) }, 1800000); }
+  catch (e) {
+    const state = e.data && e.data.detail && e.data.detail.state;
+    if (!force && (state === 'behind' || state === 'diverged' || state === 'ahead')) {
+      const msg = op === 'push'
+        ? `${e.message}\n\nPush anyway and REPLACE what is on the remote? (The remote keeps the version before this push as bundle.prev.zip.)`
+        : `${e.message}\n\nPull anyway and REPLACE this machine's version? (It is backed up first.)`;
+      if (confirm(msg)) return _cosRemoteOp(cid, name, boxId, op, true);
+    } else toast(`${op} failed: ${e.message}`, 'err');
+    _remoteStatus[`${cid}/${name}`] = { error: e.message };
+    _rerenderRemotes(cid, boxId);
+    return;
+  }
+  if (op === 'push') toast(r.nothingToPush ? 'already in sync — nothing to push' : `pushed ${r.files} file(s) · ${Math.round((r.bundleBytes || 0) / 1024)} KB`, 'ok');
+  else toast(r.upToDate ? 'already up to date' : `pulled${r.repoSync ? ` · repo: ${r.repoSync.applied.length} updated, ${r.repoSync.removed.length} removed` : ''}${r.backup ? ' · previous version backed up' : ''}`, 'ok');
+  _remoteStatus[`${cid}/${name}`] = { state: 'in-sync' };
+  if (op === 'pull' && r.repoUuid) await loadApiRepos();
+  _rerenderRemotes(cid, boxId);
+}
+function cosRemotePush(cid, name, boxId) { return _cosRemoteOp(cid, name, boxId, 'push'); }
+function cosRemotePull(cid, name, boxId) { return _cosRemoteOp(cid, name, boxId, 'pull'); }
+
+// Welcome → "Compartments": every compartment on this machine with its remotes,
+// and pulling one this machine does not have from a remote.
+async function openCosRemoteBrowse() {
+  if (!CONNECTED) { toast('connect to nexus first', 'err'); return; }
+  document.getElementById('repo-diagnose-title').textContent = 'Compartments — push & pull';
+  document.getElementById('repo-diagnose-reindex').style.display = 'none';
+  const body = document.getElementById('repo-diagnose-body');
+  body.innerHTML = '<div style="opacity:.6">reading compartments…</div>';
+  document.getElementById('repo-diagnose-modal').classList.add('open');
+  let r;
+  try { r = await api('/api/cos/compartments', {}, 20000); } catch (e) { body.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  body.innerHTML = `
+    <div class="ds-label" style="margin-bottom:4px">PULL A COMPARTMENT FROM A REMOTE</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <input id="cosb-loc" style="flex:1;min-width:260px" placeholder="D:\\nexus-remote   or   you@server:nexus">
+      <input id="cosb-key" style="width:260px" placeholder="SSH private key path (ssh only)">
+      <button class="action-btn primary" onclick="cosRemoteBrowse()">look</button></div>
+    <div id="cosb-list" style="margin:8px 0 16px"></div>
+    <div class="ds-label" style="margin-bottom:4px">ON THIS MACHINE (${r.compartments.length})</div>
+    ${r.compartments.map(c => `<details style="border-bottom:1px solid var(--b0);padding:4px 0" ontoggle="if(this.open)renderCosRemotes('${c.id}','cosr-${c.id}')">
+      <summary style="cursor:pointer"><b>${escapeHtml(c.name)}</b> <span style="font-size:10px;opacity:.7">${c.repo ? `repo “${escapeHtml(c.repo.name)}” · ` : ''}${c.remotes.length ? c.remotes.map(x => escapeHtml(x.name)).join(', ') : 'no remotes'}${c.purpose ? ` · ${escapeHtml(c.purpose.slice(0, 80))}` : ''}</span></summary>
+      <div id="cosr-${c.id}" style="padding:6px 0 6px 12px"><div style="opacity:.6">…</div></div></details>`).join('') || '<div style="opacity:.6">no compartments</div>'}`;
+}
+async function cosRemoteBrowse() {
+  const v = (id) => ((document.getElementById(id) || {}).value || '').trim();
+  const out = document.getElementById('cosb-list');
+  out.innerHTML = '<div style="opacity:.6">looking…</div>';
+  let r;
+  try { r = await api('/api/cos/remote/browse', { method: 'POST', body: JSON.stringify({ location: v('cosb-loc'), keyPath: v('cosb-key') || undefined }) }, 300000); }
+  catch (e) { out.innerHTML = `<div style="color:var(--coral)">${escapeHtml(e.message)}</div>`; return; }
+  out.innerHTML = r.compartments.map(c => `<div style="display:flex;gap:10px;align-items:center;padding:4px 0;border-bottom:1px solid var(--b0)">
+      <b>${escapeHtml(c.name)}</b><span style="font-size:10px;opacity:.7;flex:1">${c.files} files · ${Math.round(c.bytes / 1024)} KB · pushed ${new Date(c.pushedAt).toLocaleString()} from ${escapeHtml(c.from && c.from.host || '?')}${c.purpose ? ` · ${escapeHtml(c.purpose.slice(0, 60))}` : ''}</span>
+      ${c.here ? '<span style="font-size:10px;opacity:.7">already here — pull from its remotes</span>' : `<button class="action-btn primary" onclick="cosRemoteClone(${escapeHtml(JSON.stringify(c.name))})">pull it here</button>`}</div>`).join('')
+    || '<div style="opacity:.6">nothing has been pushed there yet</div>';
+}
+async function cosRemoteClone(name) {
+  const v = (id) => ((document.getElementById(id) || {}).value || '').trim();
+  toast(`pulling ${name}…`, 'ok');
+  let r;
+  try { r = await api('/api/cos/remote/clone', { method: 'POST', body: JSON.stringify({ location: v('cosb-loc'), keyPath: v('cosb-key') || undefined, name }) }, 1800000); }
+  catch (e) { toast(`pull failed: ${e.message}`, 'err'); return; }
+  toast(`pulled ${r.name} · ${r.files} file(s)${r.repo && r.repo.repoUuid ? ' · its project is a repo now' : ''}${r.repo && r.repo.error ? ` · repo import failed: ${r.repo.error}` : ''}`, r.repo && r.repo.error ? 'err' : 'ok');
+  if (r.repo && r.repo.repoUuid) {
+    await loadApiRepos();
+    api(`/api/repos/${r.repo.repoUuid}/chunk`, { method: 'POST', body: JSON.stringify({}) }, 600000).then(() => loadApiRepos()).catch(() => {});
+  }
+  openCosRemoteBrowse();
 }
 
 function renderRepoSettings(repo) {

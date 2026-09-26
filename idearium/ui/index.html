@@ -759,6 +759,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
         <div class="welcome-actions">
           <button class="welcome-action-btn secondary" onclick="openUploadProjectModal()">Import project</button>
           <button class="welcome-action-btn secondary" onclick="openGitCloneModal()">Clone from git</button>
+          <button class="welcome-action-btn secondary" onclick="openCosRemoteBrowse()">Compartments · push / pull</button>
           <button class="welcome-action-btn primary" onclick="newSpecPrompt()">Start new project</button>
         </div>
         <div class="pillars">
@@ -948,7 +949,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn" data-subtab="agent" onclick="setRepoSubtab('agent')">Agent</button>
             <button class="repo-subtab-btn" data-subtab="debug" onclick="setRepoSubtab('debug')">Debug</button>
             <button class="repo-subtab-btn" data-subtab="versionium" onclick="setRepoSubtab('versionium')">Versionium</button>
-            <button class="repo-subtab-btn" data-subtab="git" onclick="setRepoSubtab('git')">Git &amp; CI</button>
+            <button class="repo-subtab-btn" data-subtab="git" onclick="setRepoSubtab('git')">Sync &amp; CI</button>
             <button class="repo-subtab-btn" data-subtab="settings" onclick="setRepoSubtab('settings')">Settings</button>
           </nav>
 

@@ -95,6 +95,16 @@ const git = (args, cwd) => G.run(args, { cwd, env: { GIT_AUTHOR_NAME: 't', GIT_A
     assert.match((await G.pull(repo, {})).error, /both changed|fast-forward/);
   });
 
+  await test('Idearium\'s own files are recognised; a project\'s real manifest.json / project.json are not mistaken for them', () => {
+    const d = fs.mkdtempSync(path.join(tmp, 'own-'));
+    fs.writeFileSync(path.join(d, 'manifest.json'), '{"manifest_version":3,"name":"my extension"}');
+    fs.writeFileSync(path.join(d, 'project.json'), '{"uuid":"nexus-id-repo-1234","name":"x"}');
+    assert.strictEqual(G.isInternal(d, 'manifest.json'), false, 'a browser extension manifest is the project');
+    assert.strictEqual(G.isInternal(d, 'project.json'), true, 'project-container\'s project.json is Idearium\'s');
+    assert.ok(G.isInternal(d, 'chunks') && G.isInternal(d, 'chunks/0.json') && G.isInternal(d, 'atlas.json'));
+    assert.ok(!G.isInternal(d, 'src/atlas.json') && !G.isInternal(d, 'src/chunks/x.js'), 'only the top-level ones');
+  });
+
   await test('push/pull with no remote say so', async () => {
     const lone = path.join(tmp, 'lone'); fs.mkdirSync(lone); write(lone, 'a.txt', 'a');
     await G.commit(lone, { message: 'a' });
@@ -128,10 +138,14 @@ const git = (args, cwd) => G.run(args, { cwd, env: { GIT_AUTHOR_NAME: 't', GIT_A
     const i = API.indexOf("case 'repo.git.status':"), block = API.slice(i, API.indexOf("case 'git.clone':", i));
     assert.ok(/keys\.resolveSshKey\(\{ compartmentName, alias: body\.keyAlias \}\)/.test(block) && /keys\.gitTokenFor\(\{ compartmentName \}\)/.test(block));
     assert.ok(!/ok\(res, \{[^}]*token/.test(block), 'no response carries the token');
-    assert.ok(/getRepoLayer\(\)\.writeFile\(repo\.uuid, c\.path/.test(block) && /getRepoLayer\(\)\.deleteFile\(repo\.uuid, c\.path/.test(block) && /getRepoLayer\(\)\.refresh\(repo\.uuid\)/.test(block));
+    assert.ok(/_applyChangedFilesToRepo\(repo\.uuid, dir, r\.changed\)/.test(block), 'pulled files go through the shared helper');
+    const h = API.slice(API.indexOf('function _applyChangedFilesToRepo('), API.indexOf('function _applyChangedFilesToRepo(') + 2000);
+    assert.ok(/getRepoLayer\(\)\.writeFile\(repoUuid, c\.path/.test(h) && /getRepoLayer\(\)\.deleteFile\(repoUuid, c\.path/.test(h) && /getRepoLayer\(\)\.refresh\(repoUuid\)/.test(h));
     assert.ok(/repo\.immutable\) return err\(res, 400, 'this repo is immutable/.test(block));
     const c = API.slice(API.indexOf("case 'git.clone':"), API.indexOf("case 'git.clone':") + 4000);
-    assert.ok(/extractZipToFiles\(\{\s*\n?\s*entries: G\.readTree\(dest\)/.test(c) && /fs\.cpSync\(path\.join\(dest, '\.git'\)/.test(c) && /fs\.rmSync\(tmpRoot/.test(c));
+    assert.ok(/_importFolderAsRepo\(\{ dir: dest/.test(c) && /fs\.rmSync\(tmpRoot/.test(c));
+    const imp = API.slice(API.indexOf('async function _importFolderAsRepo('), API.indexOf('async function _importFolderAsRepo(') + 2600);
+    assert.ok(/entries: G\.readTree\(dir\)/.test(imp) && /fs\.cpSync\(path\.join\(dir, '\.git'\)/.test(imp), 'the clone\'s .git is carried into the repo');
     const keys = require(path.join(ROOT, 'cos', 'ci', 'keys.js'));
     assert.strictEqual(typeof keys.gitTokenFor, 'function');
     assert.strictEqual(keys.gitTokenFor({}), null);
