@@ -71,6 +71,7 @@ const SUITES = [
   'test-cos-testenv.js',
   'test-cos-testenv-any-repo.js',
   'test-cg-eros-supervisor.js',
+  'test-guardian-retry-novelty-installs.js', // 0.39.265 — guardian retry + answer-first + join, semantic rewording with novelty, Eros human typing, Run-menu installs
   'test-nexus-atlas-refs.test.js',  // §0.39.264 — every reference in the written-out atlases resolves against the real tree     // §0.39.264 — ErosmancerOS starts, connects and stops with Clear Glass (real tsx + Chromium where available)   // §0.39.264 — the VM for any repo: tar disk, detect, provision, setup job, real QEMU boot where available
   'ollama-runtime.test.js',
   'flush-redundancy.test.js',

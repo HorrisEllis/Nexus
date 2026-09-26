@@ -2223,6 +2223,17 @@ const server = http.createServer(async (req, res) => {
   // 0.39.258 — GET /api/prompt/resolve: which backend copilot's default (config.DEFAULT_PROVIDER) resolves to, for a
   // caller that composes its own prompt (idearium's repo agent in the "copilot" position) and must send it straight
   // there instead of through /api/prompt's plain path, which adds copilot's own context. Pure: config only.
+  // §0.39.265 — the semantic randomizer (copilot/lib/reword.js): { text, key, n, model, useModel } → the same
+  // meaning in new words (Ollama first, JS fallback), protected parts verbatim, novel against what `key` was sent.
+  if (method === 'POST' && p === '/api/reword') {
+    try {
+      const body = await readBody(req);
+      const r = await require('./lib/reword.js').reword({ text: body.text, key: body.key || 'default', n: Math.min(Math.max(parseInt(body.n, 10) || 3, 1), 5),
+        model: body.model || null, useModel: body.useModel !== false, guidance: typeof body.guidance === 'string' ? body.guidance : '' });
+      json(res, r.ok ? 200 : 400, r);
+    } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
   if (method === 'GET' && p === '/api/prompt/resolve') {
     json(res, 200, { ok: true, ...resolveDefaultBackend(config.DEFAULT_PROVIDER) });
     return;
@@ -2436,8 +2447,11 @@ const server = http.createServer(async (req, res) => {
           let loop;
           if (body.backend === 'guardian') {
             const agent = body.agent || 'guardian';
-            const dispatchToAgent = (fullPrompt, o = {}) => _lifeline.dispatchToNcpAgent(fullPrompt, { ...o, provider: body.agent || undefined,
-              agentId: body.agentId || undefined, timeoutMs: body.timeoutMs || undefined, requestId, sessionId });
+            // 0.39.265 — the first round carries the caller's canonical text (the question as typed, when copilot
+            // reworded it), so guardian can join an identical in-flight job; tool rounds carry none.
+            let _canon = typeof body.canonical === 'string' ? body.canonical : undefined;
+            const dispatchToAgent = (fullPrompt, o = {}) => { const c = _canon; _canon = undefined; return _lifeline.dispatchToNcpAgent(fullPrompt, { ...o, provider: body.agent || undefined,
+              agentId: body.agentId || undefined, timeoutMs: body.timeoutMs || undefined, requestId, sessionId, canonical: c }); };
             loop = await toolRuntime.runViaAgent(agent, dispatchToAgent, prompt, { toolScope: scope, identity: composed ? null : identity, context, maxIterations, composed, resultTemplate });
           } else {
             loop = await toolRuntime.run({ userPrompt: prompt, identity: composed ? null : identity, context, toolScope: scope, maxIterations, composed, resultTemplate,
@@ -2452,7 +2466,7 @@ const server = http.createServer(async (req, res) => {
             model_used: body.backend === 'ollama' ? (olModel || null) : undefined, toolCallLog, tools: toolsInfo, requestId });
           return;
         }
-        const result = await dispatchFn(prompt, { provider: body.agent || undefined, agentId: body.backend === 'guardian' ? (body.agentId || undefined) : undefined, timeoutMs: body.backend === 'guardian' ? (body.timeoutMs || undefined) : undefined, model: olModel, requestId, sessionId });
+        const result = await dispatchFn(prompt, { canonical: body.backend === 'guardian' && typeof body.canonical === 'string' ? body.canonical : undefined, provider: body.agent || undefined, agentId: body.backend === 'guardian' ? (body.agentId || undefined) : undefined, timeoutMs: body.backend === 'guardian' ? (body.timeoutMs || undefined) : undefined, model: olModel, requestId, sessionId });
         if (result?.ok || result?.text) {
           json(res, 200, { ok: true, text: result.text, provider_used: body.backend === 'guardian' ? (result.provider || body.agent) : 'ollama', model_used: body.backend === 'ollama' ? (result.model || olModel || null) : undefined, requestId });
         } else {

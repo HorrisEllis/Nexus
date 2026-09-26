@@ -133,6 +133,8 @@ const COMPONENTS = [
   _comp('repo.run.capabilities',   'GET',   '/api/repos/:uuid/run/capabilities',     'Which COS test environments are available here, and why not', { tags: ['run','cos'] }),
   _comp('repo.run.options',        'GET',   '/api/repos/:uuid/run/options',          'The COS run menu for this repo: every option, and why any is unavailable', { tags: ['run','cos'] }),
   _comp('cos.testenv.status',      'GET',   '/api/cos/testenv',                      'The COS test VM: available or not (and the fix), and the setup job\'s progress', { tags: ['run','cos','vm'] }),
+  _comp('cos.install.status',      'GET',   '/api/cos/install',                      'Install jobs for tools a run needs (QEMU, Python, Ruby, PHP, Go, Git)', { tags: ['run','cos','install'] }),
+  _comp('cos.install',             'POST',  '/api/cos/install',                      'Install a tool a run needs — winget/brew/apt; started only by a click in the Run menu', { tags: ['run','cos','install'] }),
   _comp('cos.testenv.setup',       'POST',  '/api/cos/testenv/setup',                'Set up the COS test VM in the background (QEMU via winget on Windows, base image via cos/testenv/provision.js)', { tags: ['run','cos','vm'] }),
   _comp('repo.agent.settings.get', 'GET',   '/api/repos/:uuid/agent/settings',        "This compartment agent's settings (inject mode, guardian switch + agent)", { tags: ['agent'] }),
   _comp('repo.agent.settings.set', 'POST',  '/api/repos/:uuid/agent/settings',        'Set inject mode, provider, ollamaModel (validated against Ollama\'s installed list), or useGuardian/guardianAgent', { tags: ['agent'] }),

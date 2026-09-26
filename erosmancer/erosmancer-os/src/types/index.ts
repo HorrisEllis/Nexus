@@ -405,7 +405,7 @@ export interface OSConfig {
 
 export const DEFAULT_CONFIG: OSConfig = {
   bridge: {
-    target: { type: "local", port: 9222, host: "localhost" },
+    target: { type: "local", port: 9222, host: "127.0.0.1" },
     reconnectDelayMs: 1000,
     maxReconnectAttempts: 10,
     commandTimeoutMs: 30000,

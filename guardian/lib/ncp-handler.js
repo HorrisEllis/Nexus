@@ -85,6 +85,7 @@ function createNCPMessageHandler(deps) {
     nc, ncp, bus, jaa, jobs, updateJob, cockpitBroadcast,
     physQueue, baseline, evLedger, activeQueues,
     extractCodeBlocks, extractToolCallsFromDOM, findActiveSeamCompartment,
+    retry,   // 0.39.265 — optional () => guardian/lib/job-retry.js instance (late-bound)
   } = deps;
   for (const [name, v] of Object.entries({
     ncp, bus, jaa, jobs, updateJob, cockpitBroadcast, physQueue, baseline,
@@ -649,9 +650,18 @@ function createNCPMessageHandler(deps) {
           if (seamQueue) {
             seamQueue.forceRetryActive('provider_error');
           }
-          updateJob(jobId, { status: 'error', error, errorGate: gate, errorAt: Date.now() });
-          bus.emit('guardian.job.error', { jobId, error, gate, provider });
-          cockpitBroadcast({ type: 'job.error', jobId, error, ts: Date.now() });
+          // §0.39.265 — a tab that could not take the job (busy, no composer, send failed, no reply) is tried
+          // again, after checking whether the answer already exists; only a final error ends the job here.
+          const R = !seamQueue && typeof retry === 'function' ? retry() : null;
+          if (R) {
+            const r = R.onError(jobId, { gate, error, provider });
+            if (r.handled) break;
+          }
+          const job0 = jobs.get(jobId);
+          const finalErr = R && job0 && job0.attempts && job0.attempts.length > 1 ? R.finalError(job0, error) : error;
+          updateJob(jobId, { status: 'error', error: finalErr, errorGate: gate, errorAt: Date.now() });
+          bus.emit('guardian.job.error', { jobId, error: finalErr, gate, provider });
+          cockpitBroadcast({ type: 'job.error', jobId, error: finalErr, ts: Date.now() });
         }
         break;
       }

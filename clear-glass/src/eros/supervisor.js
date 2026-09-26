@@ -133,7 +133,7 @@ class ErosSupervisor {
   /** point ErosmancerOS at Clear Glass's own DevTools port (retried: CDP may open a moment after boot) */
   async connect({ tries = 5 } = {}) {
     for (let i = 0; i < tries; i++) {
-      const r = await this._post(this.port, '/api/connect', { target: { type: 'local', port: this.cdpPort, host: 'localhost' } });
+      const r = await this._post(this.port, '/api/connect', { target: { type: 'local', port: this.cdpPort, host: '127.0.0.1' } });
       if (r.ok) { this.connected = { at: Date.now(), cdpPort: this.cdpPort }; this._say(`connected to Clear Glass's DevTools port :${this.cdpPort}`); return true; }
       this.lastError = `connect to DevTools :${this.cdpPort} failed: ${(r.body && r.body.error) || r.error || r.status}`;
       await new Promise(res => setTimeout(res, 1000 * (i + 1)));

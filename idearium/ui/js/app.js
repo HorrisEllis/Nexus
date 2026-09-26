@@ -3163,6 +3163,7 @@ async function repoRun(mode = 'run') {
   try { m = await api(`/api/repos/${repo.uuid}/run/options`, {}, 30000); }
   catch (e) { body.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
   _runMenu = { repo, ...m, selected: mode === 'test' ? 'test.all' : ((m.options.find(o => o.available) || {}).id || null) };
+  _installDismissed = false;
   _renderRunMenu();
 }
 
@@ -3190,8 +3191,58 @@ function _renderRunMenu() {
   // §0.39.264 — the VM option names what is missing; offer to set it up right here
   const vmOpt = M.options.find(o => o.id === 'test.vm' && !o.available && o.setup);
   if (vmOpt) html += `<div id="vm-setup" style="margin-top:10px;border-top:1px solid var(--border,#333);padding-top:8px">${_vmSetupHtml(null)}</div>`;
-  body.innerHTML = `<div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
+  body.innerHTML = `<div id="run-menu-install">${_installPromptHtml()}</div><div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
   if (vmOpt) _vmSetupPoll(true);
+  if (Object.values(_installState).some(s => s && s.state === 'running')) _installPoll();
+}
+
+// ── §0.39.265 — James: "have the run button menu prompt to install when it's not detected in the path."
+// The menu names what this repo's options need and this computer lacks (lib/cos-run.js → installer.js
+// needsFor) and asks: Install, or Not now. Nothing installs without the click. Linux without password-less
+// sudo gets the exact command to run instead of a background prompt for a password.
+let _installState = {};
+let _installDismissed = false;
+let _installTimer = null;
+function _installPromptHtml() {
+  const M = _runMenu; if (!M || _installDismissed) return '';
+  const needs = (M.installs || []);
+  if (!needs.length) return '';
+  const row = (n) => {
+    const st = _installState[n.tool];
+    const last = st && st.log && st.log.length ? st.log[st.log.length - 1].msg : '';
+    const col = st && st.state === 'failed' ? 'var(--bad,#f87171)' : st && st.state === 'done' ? 'var(--ok,#4ade80)' : 'inherit';
+    const action = st && st.state === 'running' ? `<span style="opacity:.8">installing… ${escapeHtml(last).slice(0, 120)}</span>`
+      : st && st.state === 'done' ? `<span style="color:${col}">installed ✓</span>`
+      : n.plan && !n.plan.unattended ? `<code style="font-size:10px">${escapeHtml(n.plan.command)}</code> <button class="action-btn" onclick="navigator.clipboard.writeText(${escapeHtml(JSON.stringify(n.plan.command))});toast('copied')">copy</button> <button class="action-btn" onclick="repoRun()">check again</button>`
+      : `<button class="action-btn" onclick="_installStart('${n.tool}')">Install ${escapeHtml(n.label)}</button>`;
+    return `<div style="display:flex;gap:10px;align-items:center;margin:4px 0;flex-wrap:wrap"><b style="min-width:70px">${escapeHtml(n.label)}</b><span style="opacity:.75;font-size:11px;flex:1;min-width:180px">${escapeHtml(n.why)}${n.plan && n.plan.note && !(st && st.state === 'running') ? ` — ${escapeHtml(n.plan.note)}` : ''}</span>${action}${st && st.state === 'failed' ? `<span style="color:${col};font-size:10px">${escapeHtml((st.result && st.result.error) || '')}</span>` : ''}</div>`;
+  };
+  return `<div style="border:1px solid var(--accent,#a78bfa);border-radius:6px;padding:8px 10px;margin-bottom:10px">
+    <div style="font-size:10px;opacity:.7;letter-spacing:.08em;margin-bottom:4px">NOT INSTALLED ON THIS COMPUTER — INSTALL NOW?</div>
+    ${needs.map(row).join('')}
+    <div style="margin-top:6px"><button class="action-btn" onclick="_installDismissed=true;_renderRunMenu()">Not now</button>
+    <span style="font-size:10px;opacity:.6">${navigator.platform && /win/i.test(navigator.platform) ? 'uses winget' : 'uses your package manager'}; Nexus finds the tool afterwards without a restart</span></div></div>`;
+}
+async function _installStart(tool) {
+  try { _installState[tool] = await api('/api/cos/install', { method: 'POST', body: JSON.stringify({ tool }) }, 20000); }
+  catch (e) { toast(`install did not start: ${e.message}`, 'err'); return; }
+  const el = document.getElementById('run-menu-install'); if (el) el.innerHTML = _installPromptHtml();
+  _installPoll();
+}
+async function _installPoll() {
+  clearTimeout(_installTimer);
+  let r; try { r = await api('/api/cos/install', {}, 15000); } catch (_) { _installTimer = setTimeout(_installPoll, 3000); return; }
+  const before = { ..._installState };
+  _installState = { ..._installState, ...(r.jobs || {}) };
+  const el = document.getElementById('run-menu-install'); if (el) el.innerHTML = _installPromptHtml();
+  const running = Object.values(_installState).some(s => s && s.state === 'running');
+  if (running) { _installTimer = setTimeout(_installPoll, 2000); return; }
+  const finished = Object.keys(_installState).filter(t => before[t] && before[t].state === 'running' && _installState[t].state !== 'running');
+  if (finished.length) {
+    const ok = finished.filter(t => _installState[t].state === 'done');
+    if (ok.length) { toast(`installed: ${ok.join(', ')} — the run menu is refreshed`, 'ok'); repoRun(); }
+    else toast(`install did not finish: ${finished.map(t => (_installState[t].result && _installState[t].result.error) || t).join('; ')}`, 'err');
+  }
 }
 
 // ── §0.39.264 — set up the COS test VM from the run menu ─────────────────
@@ -3692,6 +3743,13 @@ function _agentDetail(r) {
       (files.length ? files.map(f => `<div style="padding-left:12px">· ${escapeHtml(f)}</div>`).join('') : '') +
       (ids.length ? `<div style="padding-left:12px;opacity:.6">${ids.map(escapeHtml).join(', ')}</div>` : '') +
       `</details>`);
+  }
+  // 0.39.265 — the question as it was actually sent, when copilot reworded it (Settings → Agents → 'Reword')
+  const rw = c && c.reworded;
+  if (rw) {
+    const head = rw.source === 'original' ? `sent as typed${rw.reason ? ` — reword unavailable: ${rw.reason}` : ''}`
+      : `reworded by ${rw.source === 'ollama' ? 'the local model' : 'the built-in rewriter'}${rw.novel ? ' · new wording' : ` · close to an earlier one (${rw.similarity})`}`;
+    parts.push(`<details style="margin-top:4px;font-size:9px;opacity:.75"><summary style="cursor:pointer">${escapeHtml(head)}</summary>${c.sentMessage ? `<div style="padding-left:12px;white-space:pre-wrap">${escapeHtml(c.sentMessage)}</div>` : ''}</details>`);
   }
   // 0.39.257 — the tools the agent used this turn (copilot's tool loop), each ✓ or ✗ with its error
   const T = Array.isArray(r.toolCalls) ? r.toolCalls : [];

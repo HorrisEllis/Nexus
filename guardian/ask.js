@@ -186,8 +186,9 @@ async function askSync(prompt, opts = {}, deps = {}) {
     // this call just never passed one. opts.agentId traced back through
     // guardian/server.js, copilot/lifeline.js, copilot/server.js, to
     // idearium's lib/repo-agent.js — every hop now forwards it.
-    job = createJob({ command: opts.command || 'ask', provider: resolved, prompt, content: opts.content || '', tools: resolvedTools, agentId: opts.agentId || undefined });
-    dispatchJob(job);
+    job = createJob({ command: opts.command || 'ask', provider: resolved, prompt, content: opts.content || '', tools: resolvedTools, agentId: opts.agentId || undefined,
+      canonical: opts.canonical || undefined, reuse: opts.reuse || undefined });   // 0.39.265 — an identical in-flight job is joined, not sent twice
+    if (job.status !== 'complete') dispatchJob(job);
   } catch (e) {
     return { ok: false, error: `failed to enqueue job: ${e.message}` };
   }

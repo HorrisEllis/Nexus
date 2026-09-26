@@ -308,6 +308,7 @@ async function _tryGuardian(prompt, opts = {}) {
       // confirmed by direct trace, not assumed. Only meaningful for a
       // guardian-routed (browser-tab) dispatch.
       agentId:    opts.agentId || undefined,
+      canonical:  typeof opts.canonical === 'string' ? opts.canonical : undefined,   // 0.39.265 — the meaning, when prompt is a reworded variant
       requestId:  opts.requestId,
       sessionId:  opts.sessionId,
       channel:    'lifeline',

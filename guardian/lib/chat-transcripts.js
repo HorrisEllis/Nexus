@@ -279,7 +279,29 @@ function createChatTranscripts({ bus, jobs, ncp, complete, rootFn, index, log = 
     }
   }
 
-  return { record, attach, route, learnJobChat, chatFor, rememberAgentChat, stats };
+  /**
+   * replyFor(job) -> { text, chatUrl, chatKey } | null — §0.39.265 "check for the response first … chat logs?".
+   * The newest transcripts filed under the job's agent (or, without an agent, this provider's newest chats):
+   * if the job's prompt is a user turn there and the next turn answers it, that is the job's answer.
+   * Read-only; the caller decides what to do with it (guardian/lib/job-retry.js answerFirst).
+   */
+  function replyFor(job, { chats = 3 } = {}) {
+    if (!job || typeof job.prompt !== 'string') return null;
+    let rows = [];
+    try { rows = idx.listChats(root(), { agentId: job.agentId || undefined, provider: job.provider, limit: chats }) || []; } catch (_) { return null; }
+    for (const row of rows) {
+      let it = null;
+      try { it = typeof idx.readItem === 'function' ? idx.readItem(root(), row.id) : null; } catch (_) { continue; }
+      const raw = it && it.raw;
+      const messages = raw && (raw.messages || (raw.chat && raw.chat.messages));
+      if (!Array.isArray(messages)) continue;
+      const m = matchJobs(messages, [job])[0];
+      if (m && m.reply) return { text: m.reply, chatUrl: raw.url || null, chatKey: row.chatKey || null };
+    }
+    return null;
+  }
+
+  return { record, attach, route, learnJobChat, chatFor, rememberAgentChat, replyFor, stats };
 }
 
 module.exports = { createChatTranscripts, chatPathOf, matchJobs, resumableChatUrl, MODULE_ID, VERSION };

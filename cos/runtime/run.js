@@ -58,7 +58,9 @@ function capabilities() {
     typescript: { ok: ts !== null, reason: ts === null ? 'this Node cannot strip types (needs 22.6+)' : (ts ? `via ${ts}` : 'native') },
     packagesRoot: PACKAGES_ROOT,
     packages: _rootPackages(),
-    external: { python3: has('python3'), ruby: has('ruby'), php: has('php') },
+    // §0.39.265 — found the way cos/testenv/installer.js finds them (python3 also as python / py -3; on Windows
+    // also where a fresh install put them), so an install from the Run menu is seen without a restart
+    external: (() => { const I = require('../testenv/installer.js'); const f = (t) => { try { return I.find(t).found; } catch (_) { return false; } }; return { python3: f('python3'), ruby: f('ruby'), php: f('php') }; })(),
   };
 }
 

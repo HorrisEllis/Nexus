@@ -183,7 +183,34 @@ function createJobStore() {
     }
   }
 
-  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax }) {
+  // §0.39.265 — James: "Can reuse the same .jobs." A job identical to one already in flight (same provider, agent
+  // and canonical text — guardian/lib/job-retry.js fingerprint) JOINS it: the existing job is returned, nothing is
+  // sent twice, and the dispatcher ignores a second dispatch of a job it already holds. `reuse: 'complete'` also
+  // returns a finished twin's job (its answer on disk) — opt-in, because asking again is usually on purpose.
+  // `canonical` is the meaning when `prompt` is a reworded variant (copilot's semantic randomizer, 0.39.265).
+  function _twin(fp, { reuse = null, windowMs = 10 * 60000 } = {}) {
+    const IN_FLIGHT = require('./job-retry.js').IN_FLIGHT;
+    const since = Date.now() - windowMs;
+    let done = null;
+    for (const j of jobs.values()) {
+      if (!j || j.fingerprint !== fp || (j.ts || 0) < since) continue;
+      if (IN_FLIGHT.has(j.status)) return j;
+      if (reuse === 'complete' && j.status === 'complete' && j.responseText && (!done || j.ts > done.ts)) done = j;
+    }
+    return done;
+  }
+
+  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax, canonical, reuse, join = true }) {
+    const fingerprint = require('./job-retry.js').fingerprint({ provider, agentId, canonical, prompt });
+    if (join !== false && provider !== 'ollama') {
+      const twin = _twin(fingerprint, { reuse });
+      if (twin) {
+        const joiners = (twin.joinedBy || 0) + 1;
+        updateJob(twin.id, { joinedBy: joiners });
+        console.log(`[guardian] job not created — identical to ${twin.id} (${twin.status}); joined it (${joiners} caller${joiners === 1 ? '' : 's'} waiting on one answer)`);
+        return twin;
+      }
+    }
     const id = randomUUID();
     // §ACK-INJECTION-FIX — computed once at creation, not per-dispatch-
     // retry, so a job's persona stays stable across any real redelivery.
@@ -206,6 +233,7 @@ function createJobStore() {
       // Consumed by guardian/lib/code-artifact.js on completion.
       fileName: fileName || null, syntax: syntax || null,
       hat,
+      canonical: canonical && canonical !== prompt ? String(canonical) : null, fingerprint, attempts: [],
       status: 'pending', response: '', ts: Date.now(), updatedAt: Date.now(),
     };
     // The file first: if it cannot be written, this job is not recoverable

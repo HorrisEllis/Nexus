@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh, chatFor } = deps;   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith } = deps;   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -171,7 +171,17 @@ function createDispatcher(deps) {
     }
   });
 
+  // §0.39.265 — a job the pool already holds (active or waiting) is not enqueued twice: a joined twin
+  // (guardian/lib/jobs.js) or a caller that dispatches again gets the one run already under way.
+  const _inPool = new Set();
+  _dispatchPool.on('slot-freed', ({ jobId }) => _inPool.delete(jobId));
+  _dispatchPool.on('job-failed', ({ jobId }) => _inPool.delete(jobId));
+
   function dispatchJob(job) {
+    if (!job) return;
+    if (job.status === 'retry_wait') { console.log(`[guardian] ${job.id}: waiting to retry — guardian/lib/job-retry.js sends it when its backoff ends`); return; }
+    if (_inPool.has(job.id)) { console.log(`[guardian] ${job.id}: already queued or running — not dispatched twice`); return; }
+    _inPool.add(job.id);
     // §P11: route through dispatch pool — per-provider semaphore, job stealing.
     // Slot release is NOT here — see dispatch-pool-bridge.js's header for why.
     _dispatchPool.enqueue(job.provider, { id: job.id, provider: job.provider, priority: job.priority || 'normal', payload: job },
@@ -333,6 +343,35 @@ function createDispatcher(deps) {
         bus.emit('guardian.job.error', { jobId: job.id, error: e.message, provider: 'ollama' });
       });
       return true;
+    }
+
+    // §0.39.265 — a re-sent job first checks whether its answer already exists (its .response node, its chat
+    // transcript): found → completed from it, never typed again (guardian/lib/job-retry.js answerFirst).
+    if ((job.attempts && job.attempts.length) || job._timeoutRetries) {
+      const found = typeof answerFirst === 'function' ? answerFirst(job) : null;
+      if (found && typeof completeWith === 'function') {
+        console.log(`[guardian] ${job.id}: answer already exists (${found.source}) — completed from it, not re-sent`);
+        completeWith(job, found.text, found.chatUrl || null, found.source);
+        return true;
+      }
+    }
+    // §0.39.265 — ErosmancerOS as the fallback typist (James: "hook that in to ErosmancerOS"): after the tab
+    // could not take the job twice, Clear Glass's ErosmancerOS types it into the provider's own tab with human
+    // timing and presses send. The reply returns through the tab's transcript (chat-transcripts), as any other.
+    if (job.transport === 'eros' && typeof erosType === 'function') {
+      updateJob(job.id, { status: 'dispatched', dispatchedAt: Date.now() });
+      let r;
+      try { r = await erosType(job); } catch (e) { r = { ok: false, error: e.message }; }
+      if (r && r.ok) {
+        updateJob(job.id, { status: 'delivered', deliveredAt: Date.now(), transport: 'eros', erosTyping: { chars: r.typed, ms: r.ms, tab: r.url || null } });
+        _armCompletionWatch(job);
+        console.log(`[guardian] dispatched ${job.id} → ${job.provider} via ErosmancerOS (${r.typed} chars typed${r.url ? ` into ${r.url}` : ''})`);
+        bus.emit('guardian.job.dispatched', { jobId: job.id, provider: job.provider, transport: 'eros' });
+        bus.emit('guardian.job.progress', { jobId: job.id, provider: job.provider, stage: 'submitted', how: 'ErosmancerOS typed it and pressed send', ts: Date.now() });
+        return true;
+      }
+      console.warn(`[guardian] ${job.id}: ErosmancerOS could not type it (${r && r.error}) — back to the tab's userscript`);
+      updateJob(job.id, { transport: 'ncp', erosError: r && r.error });
     }
 
     // NCP: push job via SSE channel instead of WebSocket

@@ -16,7 +16,7 @@ import WebSocket, { WebSocketServer }     from "ws";
 import { randomUUID }                     from "crypto";
 
 import { ErosmancerOS }                   from "../index.ts";
-import { BehaviorEngine }                 from "../behavior/index.ts";
+import { BehaviorEngine, BEHAVIOR_PROFILES } from "../behavior/index.ts";
 import { RoutingEngine }                  from "../routing/index.ts";
 import { DOMObserver, ShadowDOMMapper }   from "../observer/index.ts";
 import { ScriptReplayQueue }              from "../replay/index.ts";
@@ -337,6 +337,143 @@ app.post("/api/navigate", async (req, res) => {
     push({ type: "navigate:started", tabId, url });
     res.json({ ok: true, commandId: cmd.id });
   } catch (err) { res.status(500).json({ ok: false, error: (err as Error).message }); }
+});
+
+// ─── /api/human-type ─────────────────────────────────────────
+// §0.39.265 — James: "hook that in to ErosmancerOS". NEXUS's guardian uses ErosmancerOS as its fallback
+// typist: when a provider tab could not take a job (no composer, send never pressed), this types the prompt
+// into that provider's OWN tab with human timing and presses send.
+//   target   tabId, or host (+ chatUrl preferred): a page OR webview target whose URL is on that host —
+//            never "the first tab" (clear-glass's /bridge/driver fell back to tabs[0])
+//   input    the first of inputSelectors that is on the page and visible; clicked like a person, cleared
+//   typing   the behavior profile's cadence (baseDelayMu/Sigma, occasional pauses) for the first
+//            maxKeystrokes characters; the rest in paced line bursts (Input.insertText); every newline is
+//            Shift+Enter — a bare Enter would send a half-typed message in a chat composer
+//   check    the composer's text is read back and must hold what was typed (whitespace-normalised)
+//   send     the first enabled sendSelectors match is clicked; none → Enter; sent = the composer emptied
+// -> { ok, typed, ms, url, tabId, input, sent, via } | { ok:false, error, stage }
+function gauss(mu: number, sigma: number): number {
+  let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random();
+  return mu + sigma * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+app.post("/api/human-type", async (req, res) => {
+  if (!requireOS(res)) return;
+  const { tabId: askedTab, host, chatUrl, text, inputSelectors = [], sendSelectors = [], profile = "precise",
+          maxKeystrokes = 400, send = true } = req.body ?? {};
+  if (typeof text !== "string" || !text.length) { res.status(400).json({ ok: false, error: "text required" }); return; }
+  if (!askedTab && !host) { res.status(400).json({ ok: false, error: "tabId or host required" }); return; }
+  const started = Date.now();
+  let stage = "bridge";
+  // a bridge still connecting (ErosmancerOS just started) gets up to 10 s — the caller asked once, on purpose
+  while (os!.bridge.getState() === "connecting" && Date.now() - started < 10000) await new Promise(r => setTimeout(r, 200));
+  if (os!.bridge.getState() !== "connected") { res.status(503).json({ ok: false, stage, error: `ErosmancerOS is not connected to the browser (state=${os!.bridge.getState()})` }); return; }
+  stage = "target";
+  try {
+    // ── the provider's own tab ──
+    let tabId = askedTab as string | undefined, url = "";
+    if (!tabId) {
+      const all = (await os!.bridge.send<{ targetInfos: Array<{ targetId: string; url: string; type: string }> }>("Target.getTargets")).targetInfos
+        .filter(t => (t.type === "page" || t.type === "webview") && (() => { try { return new URL(t.url).hostname.endsWith(String(host)); } catch { return false; } })());
+      const exact = chatUrl ? all.find(t => t.url === chatUrl) : undefined;
+      const pick = exact || (chatUrl ? all.find(t => { try { return new URL(t.url).pathname === new URL(String(chatUrl)).pathname; } catch { return false; } }) : undefined) || all[0];
+      if (!pick) { res.status(404).json({ ok: false, stage, error: `no ${host} tab is open in the browser ErosmancerOS is connected to` }); return; }
+      tabId = pick.targetId; url = pick.url;
+    }
+    let sid = getSession(tabId!);
+    if (!sid) sid = await os!.attachTab(tabId!);
+    const cdp = <T = any>(method: string, params?: Record<string, unknown>) => os!.bridge.send<T>(method, params, sid);
+    const evalJs = async (expr: string) => (await cdp<{ result: { value?: any } }>("Runtime.evaluate", { expression: expr, returnByValue: true, awaitPromise: true })).result?.value;
+
+    // ── the composer ──
+    stage = "input";
+    const found = await evalJs(`(() => {
+      const sels = ${JSON.stringify(inputSelectors)};
+      for (const s of sels) { let el; try { el = document.querySelector(s); } catch (_) { continue; }
+        if (!el) continue; const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
+        el.scrollIntoView({ block: 'center' }); const q = el.getBoundingClientRect();
+        return { sel: s, x: q.left + Math.min(q.width / 2, 120), y: q.top + q.height / 2, editable: el.isContentEditable, tag: el.tagName };
+      } return null; })()`);
+    if (!found) { res.status(422).json({ ok: false, stage, error: `no composer on ${url || tabId}: none of ${inputSelectors.join(" | ") || "(no selectors)"} is visible` }); return; }
+    // the behavior engine's own profile: typing cadence and pause rate
+    const P = (BEHAVIOR_PROFILES as Record<string, { baseDelayMu: number; baseDelaySigma: number; correctionRate: number }>)[String(profile)] || BEHAVIOR_PROFILES.precise;
+    const prof = [P.baseDelayMu, P.baseDelaySigma, P.correctionRate];
+    await cdp("Input.dispatchMouseEvent", { type: "mouseMoved", x: found.x - 30 + Math.random() * 20, y: found.y + 8, button: "none" });
+    await sleep(Math.max(40, gauss(prof[0] * 0.8, prof[1])));
+    await cdp("Input.dispatchMouseEvent", { type: "mousePressed", x: found.x, y: found.y, button: "left", clickCount: 1 });
+    await cdp("Input.dispatchMouseEvent", { type: "mouseReleased", x: found.x, y: found.y, button: "left", clickCount: 1 });
+    await evalJs(`(() => { const el = document.querySelector(${JSON.stringify(found.sel)}); el.focus();
+      if (el.isContentEditable) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand('delete'); }
+      else { const set = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value'); set && set.set ? set.set.call(el, '') : (el.value = ''); el.dispatchEvent(new Event('input', { bubbles: true })); } })()`);
+
+    // ── typing ──
+    stage = "type";
+    const shiftEnter = async () => {
+      await cdp("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13, modifiers: 8 });
+      await cdp("Input.dispatchKeyEvent", { type: "char", text: "\r", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13, modifiers: 8 });
+      await cdp("Input.dispatchKeyEvent", { type: "keyUp", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13, modifiers: 8 });
+    };
+    const chars = Array.from(text.replace(/\r\n?/g, "\n"));
+    const head = chars.slice(0, Math.max(0, Number(maxKeystrokes) || 0));
+    for (const ch of head) {
+      if (ch === "\n") await shiftEnter();
+      else await cdp("Input.insertText", { text: ch });
+      await sleep(Math.min(450, Math.max(18, gauss(prof[0] * 0.48, prof[1] * 0.75))));
+      if (Math.random() < prof[2] * 0.25) await sleep(Math.max(80, gauss(320, 110)));
+    }
+    const rest = chars.slice(head.length).join("");
+    if (rest.length) {
+      const lines = rest.split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i]) await cdp("Input.insertText", { text: lines[i] });
+        if (i < lines.length - 1) await shiftEnter();
+        await sleep(Math.max(30, gauss(90, 30)));
+      }
+    }
+
+    // ── check what landed ──
+    stage = "check";
+    const norm = (s: string) => String(s || "").replace(/\s+/g, " ").trim();
+    await sleep(250);
+    const landed: string = await evalJs(`(() => { const el = document.querySelector(${JSON.stringify(found.sel)}); return el ? (el.isContentEditable ? el.innerText : el.value) : ''; })()`);
+    if (norm(landed) !== norm(text)) {
+      res.status(422).json({ ok: false, stage, error: `the composer holds ${norm(landed).length} chars, expected ${norm(text).length} — not sent`, typed: norm(landed).length });
+      return;
+    }
+
+    // ── send ──
+    let via = "none", sent = false;
+    if (send) {
+      stage = "send";
+      await sleep(Math.max(120, gauss(prof[0] * 2, prof[1] * 2)));
+      const btn = await evalJs(`(() => { for (const s of ${JSON.stringify(sendSelectors)}) { let b; try { b = document.querySelector(s); } catch (_) { continue; }
+        if (!b || b.disabled || b.getAttribute('aria-disabled') === 'true') continue; const r = b.getBoundingClientRect(); if (!r.width) continue;
+        return { sel: s, x: r.left + r.width / 2, y: r.top + r.height / 2 }; } return null; })()`);
+      if (btn) {
+        via = `click ${btn.sel}`;
+        await cdp("Input.dispatchMouseEvent", { type: "mouseMoved", x: btn.x, y: btn.y, button: "none" });
+        await sleep(Math.max(30, gauss(90, 25)));
+        await cdp("Input.dispatchMouseEvent", { type: "mousePressed", x: btn.x, y: btn.y, button: "left", clickCount: 1 });
+        await cdp("Input.dispatchMouseEvent", { type: "mouseReleased", x: btn.x, y: btn.y, button: "left", clickCount: 1 });
+      } else {
+        via = "Enter";
+        await cdp("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13 });
+        await cdp("Input.dispatchKeyEvent", { type: "char", text: "\r", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13 });
+        await cdp("Input.dispatchKeyEvent", { type: "keyUp", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13 });
+      }
+      for (let i = 0; i < 20 && !sent; i++) {
+        await sleep(150);
+        const after: string = await evalJs(`(() => { const el = document.querySelector(${JSON.stringify(found.sel)}); return el ? (el.isContentEditable ? el.innerText : el.value) : ''; })()`);
+        sent = norm(after).length === 0;
+      }
+      if (!sent) { res.status(422).json({ ok: false, stage, error: `pressed send (${via}) but the composer still holds the text`, typed: chars.length, via }); return; }
+    }
+    push({ type: "human-type:done", tabId, chars: chars.length, sent, via });
+    res.json({ ok: true, typed: chars.length, ms: Date.now() - started, url, tabId, input: found.sel, sent, via });
+  } catch (err) {
+    res.status(500).json({ ok: false, stage, error: (err as Error).message });
+  }
 });
 
 // ─── /api/behavior ───────────────────────────────────────────

@@ -755,6 +755,8 @@ const ROUTE_CAP = {
   'health':           null,              // public — no auth required
   'cos.testenv.status': CAPS.READ_IDEAS,
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
+  'cos.install.status': CAPS.READ_IDEAS,
+  'cos.install':        CAPS.ADMIN,       // installs software on the host (winget / brew / apt), only on a click
   'contract.get':     null,              // public — contract is always readable
   'stats.get':        null,              // public — non-sensitive, required by boot verify (§1.2 HALT fix)
   'snr.current':      CAPS.READ_IDEAS,
@@ -1092,6 +1094,8 @@ function matchRoute(method, url) {
     // §0.39.264 — the COS test VM: what is there, and setting it up from the run menu (cos/testenv/setup-job.js)
     ['GET',    ['api','cos','testenv'],                          'cos.testenv.status'],
     ['POST',   ['api','cos','testenv','setup'],                  'cos.testenv.setup'],
+    ['GET',    ['api','cos','install'],                          'cos.install.status'],   // §0.39.265
+    ['POST',   ['api','cos','install'],                          'cos.install'],
     // §0.39.261 — the repo's own idea (the Idea tab) and one place for what is wrong (the Debug tab)
     ['GET',    ['api','repos',    ':uuid','idea'],                          'repo.idea.get'],
     ['PATCH',  ['api','repos',    ':uuid','idea'],                          'repo.idea.update'],
@@ -2970,6 +2974,16 @@ async function handle(req, res, route, query, body) {
     // the test VM" starts cos/testenv/provision.js in the background and polls this.
     case 'cos.testenv.status':
       return ok(res, _require('../../cos/testenv/setup-job.js').status());
+    // §0.39.265 — install what a run needs, on the person's click (cos/testenv/installer.js)
+    case 'cos.install.status':
+      return ok(res, { jobs: _require('../../cos/testenv/installer.js').status() });
+    case 'cos.install': {
+      const I = _require('../../cos/testenv/installer.js');
+      if (!body.tool || !I.TOOLS[body.tool]) return err(res, 400, `tool must be one of: ${Object.keys(I.TOOLS).join(', ')}`);
+      const st = I.install(body.tool);
+      os.emit('idearium.cos.install', { tool: body.tool, state: st.state });
+      return ok(res, st);
+    }
     case 'cos.testenv.setup': {
       const SJ = _require('../../cos/testenv/setup-job.js');
       const st = SJ.start({ installQemu: !!body.installQemu, extras: Array.isArray(body.extras) ? body.extras : [], node: body.node || null });
@@ -2987,7 +3001,8 @@ async function handle(req, res, route, query, body) {
         const comp = _require('../../lib/cos-bridge.js').getCompartment(`nexus-self-${repo.nexusSelf.system}`);
         if (comp) branches = _require('../../lib/nexus-self/branch.js').list(comp).map(b => ({ id: b.id, label: b.label, createdAt: b.createdAt, runs: (b.runs || []).length }));
       }
-      return ok(res, { repoUuid: params.uuid, nexusSystem: repo.nexusSelf ? repo.nexusSelf.system || null : null, branches, options: CR.options(repo, dir) });
+      const opts = CR.options(repo, dir);
+      return ok(res, { repoUuid: params.uuid, nexusSystem: repo.nexusSelf ? repo.nexusSelf.system || null : null, branches, options: opts, installs: opts.installs || [] });
     }
     // ── §0.39.261 — IDEA: the idea a repo was made from, and every way it
     // grows. James: "once a idea is a spec, move the idea section to the repo

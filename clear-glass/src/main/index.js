@@ -654,7 +654,7 @@ async function _startWire() {
   // app.commandLine.appendSwitch) so its Target.setDiscoverTargets call
   // actually sees Clear Glass's webContents.
   const erosConnect = await _proxyEros('POST', '/api/connect', {
-    target: { type: 'local', port: CG_CDP_PORT, host: 'localhost' },
+    target: { type: 'local', port: CG_CDP_PORT, host: '127.0.0.1' },
   }, 8000);
   console.log(erosConnect.ok
     ? `[ClearGlass/Wire] ErosmancerOS connected to CDP :${CG_CDP_PORT}`
@@ -1058,7 +1058,10 @@ async function _startWire() {
       // ErosmancerOS proxy
       if (u.startsWith('/eros/')) {
         const erosPath = '/api' + u.replace(/^\/eros/, '');
-        const up = await _proxyEros(req.method, erosPath, parsed);
+        // §0.39.265 — human-type is guardian's fallback typist: a long prompt typed at a person's pace takes
+        // minutes, not the proxy's default 15 s; and ErosmancerOS must be connected to Clear Glass first.
+        if (erosPath === '/api/human-type' && erosSupervisor && !erosSupervisor.connected) { try { await erosSupervisor.connect({ tries: 2 }); } catch (_) {} }
+        const up = await _proxyEros(req.method, erosPath, parsed, erosPath === '/api/human-type' ? 10 * 60000 : 15000);
         res.writeHead(up.status);
         return res.end(JSON.stringify(up.body));
       }

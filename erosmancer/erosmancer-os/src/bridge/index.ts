@@ -61,8 +61,16 @@ export class BridgeCore extends EventEmitter<BridgeEvents> {
   async connect(): Promise<void> {
     if (this._state === "connected" || this._state === "connecting") return;
     this.setState("connecting");
-    this.browserWsUrl = await this.resolveBrowserWsUrl();
-    await this.openSocket(this.browserWsUrl);
+    try {
+      this.browserWsUrl = await this.resolveBrowserWsUrl();
+      await this.openSocket(this.browserWsUrl);
+    } catch (err) {
+      // §0.39.265: a failed attempt used to leave the state at "connecting" forever — every later connect()
+      // returned early and every command threw "Bridge not connected (state=connecting)". Say so and reset.
+      this.ws?.removeAllListeners(); this.ws = null;
+      this.setState("disconnected");
+      throw err;
+    }
   }
 
   async disconnect(): Promise<void> {

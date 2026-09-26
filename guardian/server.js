@@ -665,6 +665,13 @@ const _ladder = require('./lib/dispatch-ladder').createLadder({
 // A mesh answer completes the job through the SAME handler an NCP GUARDIAN_COMPLETE goes through
 // (chat_log, response sink, bus events): no second completion implementation. Lazy: _handleNCPMessage is
 // defined further down and only referenced at call time.
+// §0.39.265 — the job retry module and the Eros typist (created below), and one way to complete a job from an
+// answer found on disk or in a transcript: the same handler a userscript's GUARDIAN_COMPLETE takes.
+let _jobRetryRef = null;
+const _erosTypist = require('./lib/eros-typist.js').createErosTypist({ selectorsFor: (p) => { try { const m = require('./lib/selector-map').mapFor(_agentRegistry, p); return m ? m.selectors : null; } catch (_) { return null; } } });
+function _completeJobWith(job, text, chatUrl, source) {
+  return _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl: chatUrl || undefined, source: source === 'transcript' ? 'transcript' : 'answer-first' });
+}
 const _completeFromMesh = (job, lr) => _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider,
   text: lr.text, chatUrl: lr.chatUrl, account: lr.accountId, agentId: lr.agentId });
 
@@ -677,6 +684,10 @@ const {
   // 0.39.259 — late-bound: _chatTranscripts is created below, after the job store exists; a job is only
   // dispatched once boot has finished, by which time it is set.
   chatFor: (job) => (_chatTranscriptsRef ? _chatTranscriptsRef.chatFor(job) : null),
+  // 0.39.265 — late-bound like chatFor: the retry module and the Eros typist are created further down
+  answerFirst: (job) => (_jobRetryRef ? _jobRetryRef.answerFirst(job) : null),
+  erosType: (job) => _erosTypist.type(job),
+  completeWith: (job, text, chatUrl, source) => _completeJobWith(job, text, chatUrl, source),
 });
 
 // §BUILT 2026-09-19 — agent-initiated wake for MESH-delivered jobs (the userscript path answers its own): when a mesh job's
@@ -702,6 +713,19 @@ const _chatTranscripts = require('./lib/chat-transcripts.js').createChatTranscri
   complete: (job, text, chatUrl) => _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl, source: 'transcript' }) });
 _chatTranscripts.attach();
 _chatTranscriptsRef = _chatTranscripts;
+
+// §0.39.265 — James: "Guardian needs better retry logic. It got stuck earlier when I ran two jobs … the .jobs file
+// can link to the response. That way if it runs again can check for the response first." guardian/lib/job-retry.js:
+// a tab error that is about timing (busy, no composer, send failed, no reply) is tried again after a backoff, and a
+// re-send first looks for the job's answer (its .response node, then its chat transcript). The third attempt after
+// input/send failures goes through ErosmancerOS (guardian/lib/eros-typist.js) when Clear Glass has it connected.
+_jobRetryRef = require('./lib/job-retry.js').createJobRetry({
+  jobs, updateJob, bus, pool: require('./lib/dispatch-pool').pool, dispatchJob,
+  complete: (job, text, chatUrl, source) => _completeJobWith(job, text, chatUrl, source),
+  readResponse: (jobId) => require('./lib/response-sink').readNode(jobId),
+  replyFor: (job) => _chatTranscripts.replyFor(job),
+  erosAvailable: () => _erosTypist.available(),
+});
 
 // §BUILT 2026-09-11 — James: "persistent and doesn't leave until it's
 // delivered." createJobStore() (guardian/lib/jobs.js, this same pass)
@@ -1304,6 +1328,7 @@ const _handleNCPMessage = createNCPMessageHandler({
   activeQueues: _activeQueues, extractCodeBlocks,
   extractToolCallsFromDOM: _extractToolCallsFromDOM,
   findActiveSeamCompartment: _findActiveSeamCompartment,
+  retry: () => _jobRetryRef,   // 0.39.265 — guardian/lib/job-retry.js (late-bound)
 });
 
 // §BUILT 2026-09-08 — James: "the listener for the tools... from the
@@ -3011,6 +3036,9 @@ function handleExtendedRoutes(req, res, url, method) {
         // the request body. Forwarded now; askSync itself still needs
         // its own patch to pass this through to createJob (see ask.js).
         agentId:   body.agentId || undefined,
+        // 0.39.265 — the meaning, when `prompt` is copilot's reworded variant; and whether a finished twin may answer
+        canonical: typeof body.canonical === 'string' ? body.canonical : undefined,
+        reuse:     body.reuse === 'complete' ? 'complete' : undefined,
       }, {
         createJob,
         dispatchJob,
@@ -3383,6 +3411,7 @@ function handleExtendedRoutes(req, res, url, method) {
       // §LAW II — createJob writes to JAA
       const job = createJob({ command, provider, prompt, content, source: body.source || null,
         accountId: body.accountId, agentId: body.agentId, transport: body.transport === 'ncp' ? 'ncp' : undefined, wakeDepth: body.wakeDepth,
+        canonical: typeof body.canonical === 'string' ? body.canonical : undefined, reuse: body.reuse === 'complete' ? 'complete' : undefined,
         // §CODE-ARTIFACT 2026-09-19 — the file this job's code belongs in,
         // and the fence language to trust. Both optional: absent means the
         // completion listener captures nothing, exactly as before.
