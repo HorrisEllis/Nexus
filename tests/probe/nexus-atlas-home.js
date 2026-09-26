@@ -80,6 +80,17 @@ const freePort = () => new Promise((resolve) => { const s = net.createServer(); 
     P.case("a system block opens that system; its Home starts with its own atlas; the list shows it under nexus", sys.repo === 'nexus/guardian' && /nexus › guardian/.test(sys.crumbs) && JSON.stringify(sys.list) === JSON.stringify(['nexus', 'nexus/guardian']), sys);
     await shot('5-system.png');
 
+    // §0.39.263 — "should not be a compartments tab, repos are compartments"
+    const shell = await pg.evaluate(() => ({ tab: !!document.querySelector('[data-view="compartment"]'), view: !!document.getElementById('view-compartment'), badge: document.getElementById('repo-count-badge').textContent }));
+    P.case('no Compartment tab or view; the Repos badge counts nexus, not its systems', !shell.tab && !shell.view && shell.badge === '1', shell);
+    const bs = await (await fetch(base + '/api/brainstorms', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'a probe idea: repos are compartments' }) })).json();
+    const bid = (bs.brainstorm || bs).uuid;
+    await pg.evaluate(async (id) => { await loadBrainstorms(); await promoteBrainstorm(id); }, bid);
+    await pg.waitForSelector('#repo-subtab-idea #cmp-detail .cmp-lane', { timeout: 20000 });
+    const promoted = await pg.evaluate(() => ({ repo: CURRENT_API_REPO && CURRENT_API_REPO.name, tab: CURRENT_REPO_SUBTAB, lanes: document.querySelectorAll('#repo-subtab-idea .cmp-lane').length, compartment: !!(CURRENT_API_REPO && CURRENT_API_REPO.compartmentId) }));
+    P.case('promoting a brainstorm gives it its own repo (with a COS compartment) and opens the lanes in its Idea tab', /probe idea/.test(promoted.repo || '') && promoted.tab === 'idea' && promoted.lanes === 4 && promoted.compartment, promoted);
+    await shot('6-promoted-idea-repo.png');
+
     P.case('no page errors', errs.length === 0, { errors: errs });
   } finally {
     if (b) await b.close();

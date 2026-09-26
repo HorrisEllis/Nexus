@@ -403,6 +403,7 @@ function updateStats() {
 // VIEW SWITCHING + NAV RAIL
 // ════════════════════════════════════════════════════
 function setView(v) {
+  if (v === 'compartment') v = 'repo';   // 0.39.263 — repos are compartments; there is no separate view
   document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active', el.id==='view-'+v));
   document.querySelectorAll('.tab-btn, .tab-sub').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
   document.querySelectorAll('.tab-group').forEach(g=>{
@@ -566,7 +567,7 @@ function renderDetail(idea) {
     html += `<div class="ds"><div class="ds-label">spec</div><button class="action-btn primary" onclick="createSpecForIdea('${idea.uuid}')">+ create spec from this idea</button></div>`;
   }
 
-  html += `<div class="ds"><div class="ds-label">idea compartment</div><button class="action-btn primary" onclick="admitToCompartment('${idea.uuid}')">work in compartment → brainstorm · problems · expand · improve</button></div>`;
+  html += `<div class="ds"><div class="ds-label">its repo</div><button class="action-btn primary" onclick="openIdeaInRepo('${idea.uuid}')">work it in its repo → brainstorm · problems · expand · improve</button></div>`;
   html += `<div class="ds"><div class="ds-label">repository</div><button class="action-btn" onclick="openRepoFor('${idea.uuid}', null, '${escapeHtml(idea.text||idea.uuid).replace(/'/g,"\\'").slice(0,40)}')">open repository →</button></div>`;
 
   if (openGaps.length) {
@@ -755,9 +756,9 @@ async function promoteBrainstorm(id) {
     const r = await api(`/api/brainstorms/${id}/promote`, { method: 'POST' });
     await loadBrainstorms();
     await loadIdeas();
-    toast('promoted — now in the Compartment','ok');
-    // §BUILT 2026-09-26 — a promoted idea moves to the Compartment to be worked.
-    if (r.idea?.uuid && typeof openCompartmentIdea === 'function') { await loadCompartment(); openCompartmentIdea(r.idea.uuid); }
+    toast('promoted — now in its own repo','ok');
+    // §0.39.263 — a promoted idea gets its repo (a compartment); the lanes are that repo's Idea tab
+    if (r.idea?.uuid && typeof openIdeaInRepo === 'function') { await loadApiRepos(); openIdeaInRepo(r.idea.uuid); }
   } catch(e) { toast(e.message,'err'); }
 }
 function renderBrainstorms() {
@@ -771,7 +772,7 @@ function renderBrainstorms() {
         <span class="brain-ts">${new Date(b.ts).toLocaleString()}</span>
       </div>
       <div class="action-row">
-        ${b.promoted ? (b.ideaUuid ? `<button class="action-btn" style="color:var(--mint)" onclick="openCompartmentIdea('${b.ideaUuid}')">promoted ✓ · open in compartment →</button>` : `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>`) : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → compartment</button>`}
+        ${b.promoted ? (b.ideaUuid ? `<button class="action-btn" style="color:var(--mint)" onclick="openIdeaInRepo('${b.ideaUuid}')">promoted ✓ · open its repo →</button>` : `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>`) : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → its repo</button>`}
         ${b.promoted ? '' : `<button class="action-btn" onclick="assistBrainstormCard('${b.uuid}')">✨ refine</button>`}
         <button class="action-btn" onclick='openNewSpecModal({name:${JSON.stringify(b.text.slice(0,60))}, description:${JSON.stringify(b.text)}})'>+ spec</button>
         <button class="action-btn danger" onclick="deleteBrainstorm('${b.uuid}')">discard</button>
@@ -842,8 +843,8 @@ async function assistBrainstormCard(uuid) {
       const r = await api(`/api/brainstorms/${uuid}/promote`, { method: 'POST', body: JSON.stringify({ text }) });
       await loadBrainstorms();
       await loadIdeas();
-      toast('promoted — now in the Compartment', 'ok');
-      if (r.idea?.uuid && typeof openCompartmentIdea === 'function') { await loadCompartment(); openCompartmentIdea(r.idea.uuid); }
+      toast('promoted — now in its own repo', 'ok');
+      if (r.idea?.uuid && typeof openIdeaInRepo === 'function') { await loadApiRepos(); openIdeaInRepo(r.idea.uuid); }
     } catch (e) { toast(e.message, 'err'); }
   }});
 }
@@ -1653,7 +1654,8 @@ let REPO_DETAIL_OPEN = false;
 function renderRepoLibrary() {
   const body = document.getElementById('repo-rail-body');
   const badge = document.getElementById('repo-count-badge');
-  if (badge) badge.textContent = API_REPOS.length ? String(API_REPOS.length) : '';
+  const _shown = API_REPOS.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system')).length;   // 0.39.263 — the systems are inside nexus
+  if (badge) badge.textContent = _shown ? String(_shown) : '';
   body.classList.toggle('block-grid', !REPO_DETAIL_OPEN);
   if (!API_REPOS.length) {
     // §FIXED 2026-09-20 — real actions, not just passive text, matching
@@ -1977,11 +1979,17 @@ async function renderRepoIdea(repo) {
     <div class="ds"><div class="ds-label">the idea · ${escapeHtml(r.idea.phase)}${r.idea.tension != null ? ` · tension ${Number(r.idea.tension).toFixed(2)}` : ''} · ${r.idea.links} link(s)</div>
       <textarea id="repo-idea-text" class="field-textarea" rows="3" spellcheck="false">${escapeHtml(r.idea.text)}</textarea>
       <div class="action-row"><button class="action-btn" onclick="repoIdeaSave()">save idea</button></div></div>
-    <div class="ds"><div class="ds-label">grow it</div>
-      <div style="display:flex;gap:6px;margin-bottom:6px">${r.kinds.map(k => `<label style="font-size:11px"><input type="radio" name="repo-idea-kind" value="${k}" ${k === 'expand' ? 'checked' : ''}> ${k}</label>`).join('')}</div>
+    <div id="cmp-detail" class="cmp-detail cmp-in-repo"><div class="detail-empty">loading the lanes…</div></div>
+    <details class="ds repo-iterations"><summary class="ds-label" style="cursor:pointer">iterations for the agent / roadmap · ${it.length}</summary>
+      <div style="display:flex;gap:6px;margin:6px 0">${r.kinds.map(k => `<label style="font-size:11px"><input type="radio" name="repo-idea-kind" value="${k}" ${k === 'expand' ? 'checked' : ''}> ${k}</label>`).join('')}</div>
       <textarea id="repo-idea-new" class="field-textarea" rows="3" spellcheck="false" placeholder="improve: what should be better · iterate: another pass on something · expand: where the project goes next"></textarea>
-      <div class="action-row"><button class="action-btn" onclick="repoIdeaAdd()">add</button><button class="action-btn" onclick="repoIdeaAdd(true)">add + send to agent</button></div></div>
-    ${r.kinds.map(k => `<div class="ds"><div class="ds-label">${k} · ${by(k).length}</div>${by(k).map(row).join('') || '<div class="ds-mono" style="opacity:.5">none yet</div>'}</div>`).join('')}`;
+      <div class="action-row"><button class="action-btn" onclick="repoIdeaAdd()">add</button><button class="action-btn" onclick="repoIdeaAdd(true)">add + send to agent</button></div>
+      ${r.kinds.map(k => `<div class="ds"><div class="ds-label">${k} · ${by(k).length}</div>${by(k).map(row).join('') || '<div class="ds-mono" style="opacity:.5">none yet</div>'}</div>`).join('')}</details>`;
+  // §0.39.263 — the repo IS the compartment: the idea's four lanes (brainstorm ·
+  // problem solving · expand · improve, js/compartment.js) are this tab's body
+  if (r.idea && r.idea.uuid && typeof openCompartmentIdea === 'function') {
+    openCompartmentIdea(r.idea.uuid, { quiet: true, keepLane: typeof WBC !== 'undefined' && WBC.ideaUuid === r.idea.uuid });
+  }
 }
 async function repoIdeaSave() {
   const repo = CURRENT_API_REPO; if (!repo) return;

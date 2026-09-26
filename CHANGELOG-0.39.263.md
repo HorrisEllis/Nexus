@@ -130,6 +130,42 @@ Neither does any more.
 
 **Still using git, deliberately:** `scripts/precommit-check.js` and `scripts/run-verification-manifest.cjs`, which are developer tools for the git checkout itself.
 
+## No Compartment tab: repos are compartments
+
+James, on main's 0.39.262 Compartment tab: *"what is this? repos are compartments. get rid of that and move it where it belongs. should not be a compartments tab, repos are compartments. the only repo i should be seeing is nexus, the rest are nested in the nexus repo, in the atlas."*
+
+**Removed**
+- The Compartment tab, its entry in the Create menu, and the Compartment view.
+- Anything that still asks for that view lands on Repos.
+
+**The lanes live in the idea's repo**
+- The four lanes (brainstorm, problem solving, expand, improve) now live in the repo's **Idea tab**, under the idea's text.
+- The Idea tab's own iteration list (add to roadmap, send to agent) moves into a collapsed "iterations" section below the lanes.
+
+**Every idea worked in the lanes has a repo**
+- `POST /api/ideas/:uuid/repo` finds the idea's repo, or makes one.
+- A new repo is bare, has its own COS compartment, and leaves the idea's phase as it is (`ingest({ keepIdeaPhase: true })`).
+- These actions all go through it, and then open that repo's Idea tab:
+  - promoting a brainstorm;
+  - "work it in its repo" on an idea;
+  - `workbench.admit`;
+  - `openCompartmentIdea()`.
+- At boot, every idea already in the old Compartment is given its repo (`_reconcileWorkbenchRepos`), so nothing worked there is stranded.
+
+**Only nexus at the top**
+- The navigator ("Expand all") lists repos only.
+- `nexus` holds its 14 systems under a "systems" separator, not as top-level entries.
+- The Repos badge counts what the library shows: nexus, not its systems.
+
+**Tests**
+- `idearium/test/compartment-ui.smoke.cjs` is rewritten for this layout, and passes. It checks:
+  - there is no Compartment tab, view or menu;
+  - opening an idea asks for its repo and lands on its Idea tab;
+  - the four lanes (nested, linked) render inside it;
+  - the navigator nests the systems in nexus;
+  - the badge counts correctly.
+- `tests/probe/nexus-atlas-home.js`: 10/10 in a real idearium. Two new cases check that there is no Compartment tab, that the badge reads 1, and that promoting a brainstorm opens its own compartment-backed repo on the lanes.
+
 ## Tests
 
 `tests/modules/test-nexus-atlas-and-glass.test.js`: 8/8, registered in run-all.

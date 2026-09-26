@@ -16,6 +16,13 @@
 //      every repo subtab.
 // Loaded after app.js; uses its api(), toast(), escapeHtml(), setView(),
 // IDEAS, API_REPOS, CONNECTED, setRepoSubtab(), enterRepoDetail().
+//
+// §0.39.263 — James: "should not be a compartments tab, repos are compartments …
+// move it where it belongs." There is no Compartment view any more. An idea worked
+// in the lanes lives in ITS repo (POST /api/ideas/:uuid/repo makes one, with its
+// own COS compartment, if it has none), and the lanes render in that repo's Idea
+// tab (#cmp-detail inside #repo-subtab-idea). openCompartmentIdea() now takes you
+// there. The navigator tree shows repos only, with the nexus systems nested in nexus.
 
 const WBC = {
   index: null,         // { lanes, tree }
@@ -58,9 +65,9 @@ async function openCompartmentIdea(uuid, { lane, keepLane, quiet } = {}) {
     const from = WBC.linking; WBC.linking = null;
     return _patchEntry(from, { addLink: uuid });
   }
+  if (!quiet) return openIdeaInRepo(uuid, { lane });   // 0.39.263 — the lanes live in the idea's repo
   WBC.ideaUuid = uuid;
   if (lane) WBC.lane = lane; else if (!keepLane) WBC.lane = 'all';
-  if (!quiet) setView('compartment');
   try {
     WBC.current = await api(`/api/ideas/${uuid}/workbench`);
   } catch (e) { toast(e.message, 'err'); return; }
@@ -68,12 +75,19 @@ async function openCompartmentIdea(uuid, { lane, keepLane, quiet } = {}) {
   renderCompartmentDetail();
 }
 
-async function admitToCompartment(uuid) {
-  try {
-    await api(`/api/ideas/${uuid}/workbench/admit`, { method: 'POST', body: '{}' });
-    await loadCompartment();
-    await openCompartmentIdea(uuid);
-  } catch (e) { toast(e.message, 'err'); }
+async function admitToCompartment(uuid) { return openIdeaInRepo(uuid); }
+
+/** the idea's repo (made, with its compartment, if it has none) → its Idea tab, on the lanes */
+async function openIdeaInRepo(ideaUuid, { lane } = {}) {
+  let r;
+  try { r = await api(`/api/ideas/${ideaUuid}/repo`, { method: 'POST', body: '{}' }); }
+  catch (e) { toast(e.message, 'err'); return; }
+  if (!API_REPOS.some(x => x.uuid === r.repoUuid) && typeof loadApiRepos === 'function') await loadApiRepos();
+  WBC.ideaUuid = ideaUuid; WBC.lane = lane || 'all';
+  setView('repo');
+  if (typeof enterRepoDetail === 'function') enterRepoDetail(r.repoUuid);
+  setRepoSubtab('idea');
+  if (r.created) toast('its repo was made — a compartment of its own', 'ok');
 }
 
 // ── left: recursive idea tree ───────────────────────────────────────────────
@@ -110,6 +124,7 @@ function renderCompartmentDetail() {
   if (!d) { el.innerHTML = `<div class="detail-empty">← pick an idea to work it</div>`; return; }
   const title = document.getElementById('cmp-title');
   if (title) title.textContent = _wbShort(d.idea.text, 60);
+  const inRepo = !!el.closest('#repo-subtab-idea');   // 0.39.263 — the idea's text is edited above, in the repo's Idea tab
 
   const crumbs = [...(d.path || []), { ideaUuid: d.idea.uuid, text: d.idea.text }]
     .map((p, i, a) => i === a.length - 1
@@ -132,12 +147,11 @@ function renderCompartmentDetail() {
   el.innerHTML = `
     <div class="cmp-head">
       <div class="cmp-crumbs">${crumbs}</div>
-      <div class="cmp-idea-text">${_wbEsc(d.idea.text)}</div>
+      ${inRepo ? '' : `<div class="cmp-idea-text">${_wbEsc(d.idea.text)}</div>`}
       <div class="cmp-idea-meta">
         <span class="ic-tag">${_wbEsc(d.idea.phase || 'seed')}</span>
         ${(d.idea.tags || []).map(t => `<span class="ic-tag">#${_wbEsc(t)}</span>`).join('')}
         <button class="action-btn" onclick="setView('ideas');selectIdea('${d.idea.uuid}')">open in Ideas</button>
-        <button class="action-btn" onclick="openRepoFor('${d.idea.uuid}', null, ${_wbEsc(JSON.stringify(_wbShort(d.idea.text, 40)))})">repository →</button>
       </div>
       ${WBC.linking ? `<div class="cmp-linking">link mode — click any entry or idea to link it · <button class="action-btn" onclick="cancelCompartmentLink()">cancel</button></div>` : ''}
     </div>
@@ -365,12 +379,13 @@ function renderTabTree() {
       <div class="tt-leaf tt-head" onclick="${onclick || `toggleTabTreeBranch('${key}')`}"><span class="tt-caret" onclick="event.stopPropagation();toggleTabTreeBranch('${key}')">${open ? '▾' : '▸'}</span><span class="tt-icon">${icon}</span><span class="tt-label">${_wbEsc(label)}</span></div>
       ${open ? `<div class="tt-kids">${inner}</div>` : ''}</div>`;
   };
-  const ideaNode = (n) => branch(`cmp:${n.ideaUuid}`, '◆', _wbShort(n.text, 40),
-    Object.entries(WBC.lanes).map(([id, L]) => leaf(L.icon, L.label, `openCompartmentIdea('${n.ideaUuid}',{lane:'${id}'})`, n.counts.lanes[id] ? `<span class="tt-n">${n.counts.lanes[id]}</span>` : '')).join('') +
-    leaf('⇄', 'Links', `openCompartmentIdea('${n.ideaUuid}',{lane:'links'})`) +
-    (n.children || []).map(ideaNode).join(''),
-    `openCompartmentIdea('${n.ideaUuid}')`);
   const repoSubtabs = [...document.querySelectorAll('.repo-subtab-btn[data-subtab]')].map(b => [b.dataset.subtab, b.textContent.trim()]);
+  // a repo is its subtabs; nexus also holds its systems (0.39.263 — "the rest are nested in the nexus repo")
+  const systemsOf = (r) => (r.nexusSelf && r.nexusSelf.role === 'parent') ? repos.filter(x => x.nexusSelf && x.nexusSelf.role === 'system').sort((a, b) => a.name.localeCompare(b.name)) : [];
+  const repoNode = (r) => branch(`repo:${r.uuid}`, '▣', _wbShort(r.name || r.uuid, 36),
+    repoSubtabs.map(([id, label]) => leaf('·', label, `tabTreeOpenRepo('${r.uuid}','${id}')`)).join('') +
+    (systemsOf(r).length ? `<div class="tt-sep">systems</div>` + systemsOf(r).map(repoNode).join('') : ''),
+    `tabTreeOpenRepo('${r.uuid}','home')`);
   const repos = (typeof API_REPOS !== 'undefined' ? API_REPOS : []).filter(r => !r.archived);
   const ideas = (typeof IDEAS !== 'undefined' ? IDEAS : []).filter(i => i.phase !== 'archived');
   el.innerHTML = `
@@ -379,14 +394,11 @@ function renderTabTree() {
     ${branch('create', '✎', 'Create',
       leaf('✎', 'Brainstorm', "setView('brainstorm')", `<span class="tt-n">${(typeof BRAINSTORMS !== 'undefined' ? BRAINSTORMS : []).filter(b => !b.promoted).length || ''}</span>`) +
       branch('ideas', '◇', 'Ideas', ideas.slice(0, 200).map(i => leaf('◇', _wbShort(i.text, 40), `setView('ideas');selectIdea('${i.uuid}')`)).join('') || '<div class="tt-empty">none</div>', "setView('ideas')"))}
-    ${branch('compartment', '◎', 'Compartment', (WBC.index?.tree || []).map(ideaNode).join('') || '<div class="tt-empty">promote a brainstorm</div>', "setView('compartment')")}
     ${branch('build', '▦', 'Build',
       leaf('◈', 'Eravos — organism canvas', "setView('eravos')") +
       leaf('⌘', 'Architect — block canvas', "setView('architect-build')") +
       leaf('▤', 'Spec Builder', "setView('spec-wizard')"))}
-    ${branch('repos', '🗂', 'Repos', repos.map(r => branch(`repo:${r.uuid}`, '▣', _wbShort(r.name || r.uuid, 36),
-      repoSubtabs.map(([id, label]) => leaf('·', label, `tabTreeOpenRepo('${r.uuid}','${id}')`)).join(''),
-      `tabTreeOpenRepo('${r.uuid}','home')`)).join('') || '<div class="tt-empty">none</div>', "setView('repo')")}`;
+    ${branch('repos', '🗂', 'Repos', repos.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system')).map(repoNode).join('') || '<div class="tt-empty">none</div>', "setView('repo')")}`;
 }
 
 // Deep branches start folded so a large tree stays readable; the top level starts open.

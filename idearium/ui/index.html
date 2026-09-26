@@ -600,6 +600,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
 .tt-label{overflow:hidden;text-overflow:ellipsis}
 .tt-n{margin-left:auto;font-size:10px;color:var(--text3)}
 .tt-kids{margin-left:12px;border-left:1px solid var(--b0);padding-left:2px}
+.tt-sep{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);padding:6px 10px 2px}
 .tt-empty{color:var(--text3);font-size:11px;padding:3px 10px}
 .cmp-wrap{display:grid;grid-template-columns:300px 1fr;flex:1;min-height:0}
 .cmp-left{border-right:1px solid var(--b0);display:flex;flex-direction:column;min-height:0}
@@ -696,20 +697,13 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
       <div class="tab-dropdown">
         <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
         <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
-        <button class="tab-sub" data-view="compartment" onclick="setView('compartment')"><span class="tab-icon">◎</span>Compartment</button>
       </div>
     </div>
 
-    <!-- §BUILT 2026-09-26 — James: "make the tabs much more recursive, deep
-         and expanded fully? interconnected. i want ideas once promoted to
-         move to the compartment idea section." The Compartment dropdown is
-         rendered from GET /api/workbench (js/compartment.js): idea → lanes,
-         and spun-out child ideas nested as flyouts to any depth. -->
-    <div class="tab-group" data-group="compartment">
-      <button class="tab-btn tab-group-btn" data-views="compartment" onclick="toggleTabGroup(event,this)"><span class="tab-icon">◎</span>Compartment<span class="tab-badge" id="compartment-count-badge"></span><span class="tab-caret">▾</span></button>
-      <div class="tab-dropdown tab-dropdown-deep" id="compartment-tab-menu"></div>
-    </div>
-
+    <!-- §0.39.263 — James: "should not be a compartments tab, repos are compartments."
+         The Compartment tab (main's 0.39.262) is gone: an idea worked in the four
+         lanes lives in its own repo (a COS compartment), and the lanes are that
+         repo's Idea tab. js/compartment.js renders them there. -->
     <!-- §UI 2026-09-20 — James: "Move eravos, architect, and spec builder to
          build tab. Eravos the organism canvas. Architect the block building
          canvas for architecture."
@@ -845,20 +839,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
     </section>
 
     <!-- ══════════ COMPARTMENT — promoted ideas, worked in four recursive lanes ══════════ -->
-    <section class="view" id="view-compartment">
-      <div class="ph">
-        <span class="ph-title">Compartment</span>
-        <span class="ph-badge" id="cmp-title" style="margin-left:10px"></span>
-        <span class="ph-badge" style="margin-left:auto">brainstorm · problem-solve · expand · improve</span>
-      </div>
-      <div class="cmp-wrap">
-        <div class="cmp-left">
-          <div class="repo-rail-search"><input type="text" id="cmp-filter" placeholder="filter ideas…" oninput="renderCompartmentTree()"></div>
-          <div class="cmp-tree" id="cmp-tree"></div>
-        </div>
-        <div class="cmp-detail" id="cmp-detail"><div class="detail-empty">← pick an idea to work it</div></div>
-      </div>
-    </section>
+    <!-- §0.39.263 — #view-compartment removed: the lanes are each repo's Idea tab (js/compartment.js) -->
 
     <!-- ══════════ SPEC LIBRARY — REMOVED 2026-09-21 ══════════
          James: "specs are supposed to use the same repo compartments...

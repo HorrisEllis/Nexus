@@ -395,7 +395,7 @@ export class RepoLayer {
   // idearium/data/projects/<repoUuid> — persisted on the repo record so
   // every later materialize() (including quiet ones after an edit) keeps
   // using it. null for every existing caller — purely additive.
-  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, bare = false, ideaUuid: fromIdea = null } = {}) {
+  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, bare = false, ideaUuid: fromIdea = null, keepIdeaPhase = false } = {}) {
     if (!name) return { error: 'repo name required' };
     if (!this.se) return { error: 'repo layer has no spec-engine — cannot store content' };
 
@@ -476,7 +476,8 @@ export class RepoLayer {
       const known = fromIdea && this.os && this.os.db && Array.isArray(this.os.db.ideas) ? this.os.db.ideas.find(i => i.uuid === fromIdea) : null;
       if (known) {
         ideaUuid = known.uuid;
-        if (['seed', 'expanding', 'tensioned'].includes(known.phase)) { known.phase = 'specced'; known.updatedAt = Date.now(); }
+        // keepIdeaPhase (0.39.263): an idea given a repo to be WORKED (its compartment) has no spec yet
+        if (!keepIdeaPhase && ['seed', 'expanding', 'tensioned'].includes(known.phase)) { known.phase = 'specced'; known.updatedAt = Date.now(); }
         syncTable('idearium_ideas', this.os.db.ideas, 'uuid');
       } else if (this.os && typeof this.os.createIdea === 'function') {
         const idea = this.os.createIdea({ text: `Repo: ${name}`, phase: 'specced', source: 'repo-ingest' });
