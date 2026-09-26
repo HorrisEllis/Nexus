@@ -3282,7 +3282,7 @@ function _agentFeedPaint(uuid) {
   if (!el || el.dataset.repo !== uuid) return;
   const sum = document.getElementById('agent-feed-summary'); if (sum) sum.textContent = _agentFeedSummary(uuid);
   const panel = document.getElementById('agent-feed-panel');
-  if (panel && !panel.open) return;   // collapsed: the summary line is all that shows — no repaint of the body
+  if (panel && panel.open === false) return;   // collapsed: the summary line is all that shows — no repaint of the body
   el.innerHTML = _agentFeedHtml(uuid);
   const rows = el.querySelector('[data-feed-rows]'); if (rows) rows.scrollTop = rows.scrollHeight;
 }

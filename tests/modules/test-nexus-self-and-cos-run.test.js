@@ -250,7 +250,7 @@ async function main() {
   await test('FD-002', "every userscript's watch marks its first chunk for a job as a reset", () => {
     for (const p of ['chatgpt', 'claude', 'gemini', 'perplexity', 'deepseek']) {
       const s = fs.readFileSync(path.join(ROOT, `guardian/userscript-${p}.js`), 'utf8');
-      assert.ok(s.includes('const _first = _txWatchStreamed !== jobId;'), p);
+      assert.ok(s.includes("const _first = typeof _txWatchStreamed === 'undefined' || _txWatchStreamed !== jobId;"), p);
     }
   });
 
