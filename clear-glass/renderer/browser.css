@@ -1304,3 +1304,26 @@
     border-top: 1px solid var(--border);
   }
   #toolbar-editor-footer .opt-link-btn { width: auto; flex: 1; text-align: center; }
+  /* §0.39.265 — bookmark dialog (★): account check list + page state */
+  .bk-dialog { position: fixed; z-index: 10000; width: 320px; background: var(--bg-1); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px; padding: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.55); color: var(--text); font-size: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .bk-dialog .bk-head { font-size: 13px; font-weight: 600; color: var(--text-bright); }
+  .bk-dialog input[type=text] { width: 100%; background: var(--bg-2); border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; color: var(--text-bright); font: inherit; }
+  .bk-dialog .bk-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-dim); margin-top: 2px; }
+  .bk-dialog .bk-accts { display: flex; flex-direction: column; gap: 2px; max-height: 180px; overflow-y: auto; }
+  .bk-acct-opt { display: grid; grid-template-columns: 18px 1fr; grid-template-rows: auto auto; align-items: center; text-align: left; background: transparent;
+    border: 1px solid transparent; border-radius: 6px; padding: 5px 8px; color: var(--text); cursor: pointer; font: inherit; }
+  .bk-acct-opt:hover { background: var(--bg-2); }
+  .bk-acct-opt[aria-selected="true"] { border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
+  .bk-acct-opt .tick { grid-row: 1 / span 2; color: var(--accent); font-weight: 700; }
+  .bk-acct-opt .sub { grid-column: 2; font-size: 10.5px; color: var(--text-dim); }
+  .bk-dialog .bk-check { display: flex; gap: 8px; align-items: center; cursor: pointer; margin-top: 2px; }
+  .bk-dialog .bk-note { font-size: 11px; color: var(--text-dim); line-height: 1.45; }
+  .bk-dialog .bk-actions { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
+  .bk-dialog .bk-actions .grow { flex: 1; }
+  .bk-dialog button:not(.bk-acct-opt) { background: var(--bg-2); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 12px; cursor: pointer; font: inherit; }
+  .bk-dialog button.bk-primary { border-color: var(--accent); color: var(--accent); }
+  .bk-dialog button.bk-danger { color: var(--red); border-color: color-mix(in srgb, var(--red) 50%, transparent); }
+  .bk-btn .bk-acct, .bk-btn .bk-state { margin-right: 4px; font-size: 10px; color: var(--accent); opacity: .8; }
+  #window-account { flex-shrink: 0; margin-left: 6px; padding: 2px 9px; border-radius: 999px; font-size: 11px; color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); -webkit-app-region: no-drag; }

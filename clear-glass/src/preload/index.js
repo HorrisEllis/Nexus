@@ -270,6 +270,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     list:   (filter)  => ipcRenderer.invoke('bookmarks:list',   filter || {}),
     check:  (payload) => ipcRenderer.invoke('bookmarks:check',  payload),
     visit:  (payload) => ipcRenderer.invoke('bookmarks:visit',  payload),
+    // §0.39.265 — a bookmark carries page state (a rewind snapshot) and an account
+    addWithState:  (payload) => ipcRenderer.invoke('bookmarks:addWithState',  payload),
+    openWithState: (payload) => ipcRenderer.invoke('bookmarks:openWithState', payload),
+    linkState:     (payload) => ipcRenderer.invoke('bookmarks:linkState',     payload),
   },
 
   // ── History — §fix 2026-09-02 ────────────────────────────────────────

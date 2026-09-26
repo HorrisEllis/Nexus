@@ -167,6 +167,7 @@ const SUITES = [
   'test-repo-agent-late.test.js',         // §0.39.241 — the Agent tab picks up a late reply from the Responses index, once
   'test-cg-accounts-portal-settings.test.js', // §0.39.223 — Clear Glass account authority, login portals, sealed vault keys, settings rebuild
   'test-cg-listener-decay.test.js',          // §0.39.265 — page listeners fade: switched off when idle, deleted later; Keep exempts
+  'test-cg-bookmark-account-state.test.js',  // §0.39.265 — ★ dialog: account check mark + rewind page state; account windows
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',

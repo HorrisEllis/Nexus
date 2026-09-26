@@ -816,6 +816,8 @@ class IpcBridge {
     // reimplementation that could drift from this one.
     ipcMain.handle('bookmarks:addWithState',  async (e, d) => this._bookmarkAddWithState(d));
     ipcMain.handle('bookmarks:openWithState', async (e, d) => this._bookmarkOpenWithState(d));
+    // §0.39.265 — attach / detach an account (the ★ dialog's check mark) or a snapshot
+    ipcMain.handle('bookmarks:linkState',     async (e, d) => this.bookmarks?.linkState(d || {}));
 
     // Rewind
     ipcMain.handle('rewind:list',     async (e, d) => this.rewind?.list(d.agentId, d.limit));
@@ -1718,8 +1720,10 @@ class IpcBridge {
     // the caller is told that plainly rather than getting back a
     // bookmark that silently claims state it doesn't have.
     if (!snap) return { bookmark, added, stateError: 'rewind returned no snapshot for this page' };
-    const accountId = this.options?.resolveDefaultAccountForAgent
-      ? this.options.resolveDefaultAccountForAgent(bookmark.agentId) : null;
+    // §0.39.265 — the ★ dialog names the account explicitly (null = none);
+    // only a caller that says nothing gets the agent's default account.
+    const accountId = d.accountId !== undefined ? (d.accountId || null)
+      : this.options?.resolveDefaultAccountForAgent ? this.options.resolveDefaultAccountForAgent(bookmark.agentId) : null;
     const linked = this.bookmarks.linkState({ id: bookmark.id, snapshotId: snap.id, accountId });
     return { bookmark: linked.bookmark || bookmark, added };
   }

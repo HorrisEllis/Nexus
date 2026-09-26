@@ -178,6 +178,7 @@ let tray, sse, ipcBridge, nexusOptions, bookmarks, rewind, providerHost, userscr
 let fp          = null;   // FingerprintEngine  — set in bootstrap()
 let ctxMgr      = null;   // ContextMgr         — set in bootstrap()
 let driver      = null;   // ClearDriver        — set in bootstrap()
+let cookieVault = null;   // CookieVault        — set in bootstrap(); account windows restore from it
 let urlListener = null;   // UrlListener        — set in bootstrap()
 let apiSettings = null;   // ApiSettings        — set in bootstrap()
 let _heartbeatInterval = null;
@@ -1227,6 +1228,7 @@ async function bootstrap() {
   // 3. Cookie vault
   const vault = new CookieVault();
   await vault.init();
+  cookieVault = vault;
 
   // 3.5. Global session CSP — allow NCP userscripts to connect to localhost
   // Guardian NCP uses http://127.0.0.1 from https:// pages (Private Network Access)
@@ -1998,6 +2000,32 @@ function _rebuildTrayMenu(mesh) {
   tray.setContextMenu(Menu.buildFromTemplate(menuTemplate));
 }
 
+// ── Account windows — §0.39.265 ─────────────────────────────────────────────
+// James: a bookmark "with a check mark to attach to the account … that way
+// you can have different accounts in each tab." Tabs inside one window share
+// its webview (renderer/browser.js's tab system), so an account gets its own
+// WINDOW: agentId `acct-<accountId>`, its own persist:agent-acct-<id> session.
+// On open it is signed in with every provider session saved for that account
+// in Settings › Accounts & sign-in (the same vault records the mesh restores).
+const ACCOUNT_WINDOW_PREFIX = 'acct-';
+function accountIdOfWindow(agentId) {
+  return typeof agentId === 'string' && agentId.startsWith(ACCOUNT_WINDOW_PREFIX) ? agentId.slice(ACCOUNT_WINDOW_PREFIX.length) : null;
+}
+async function _restoreAccountWindow(agentId, partition) {
+  const accountId = accountIdOfWindow(agentId);
+  if (!accountId || !cookieVault || !nexusOptions) return null;
+  const acc = nexusOptions.getAccount?.(accountId);
+  if (!acc) { console.warn(`[ClearGlass] account window ${agentId}: no account ${accountId}`); return null; }
+  const ses = session.fromPartition(partition);
+  let restored = 0;
+  for (const provider of acc.agentKeys || []) {
+    try { const r = await cookieVault.restore({ agentId: provider, accountId, ses }); restored += (r && r.restored) || 0; }
+    catch (e) { console.warn(`[ClearGlass] account window ${agentId}: ${provider} sign-in not restored — ${e.message}`); }
+  }
+  console.log(`[ClearGlass] account window "${acc.label}" — ${restored} saved cookie(s) restored across ${(acc.agentKeys || []).length} provider(s)`);
+  return restored;
+}
+
 // ── Window management ──────────────────────────────────────────────────────
 async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } = {}) {
   if (windows.has(agentId)) {
@@ -2019,6 +2047,7 @@ async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } =
       console.warn(`[ClearGlass] context create failed for ${agentId}:`, e.message);
     }
   }
+  await _restoreAccountWindow(agentId, partition);
 
   // §NEW 2026-08-24 — the other half of the same gap James caught
   // ("as plugins right?"): the adblocker plugin was genuinely installed
