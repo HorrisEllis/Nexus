@@ -294,6 +294,8 @@ const SUITES = [
   'test-selector-map.test.js',        // 0.39.249 — one selector map per provider, pushed to the userscripts
   'test-cg-selector-assign.test.js',   // 0.39.251 — the element picker assigns selectors (Chromium parts SKIPPED without python playwright)
   'test-chat-transcripts.test.js',
+  'test-back-and-forth.test.js',     // 0.39.259 — turns 2+ of a conversation complete; each agent keeps its chat
+  'test-dangling-hooks-and-idearium-load.test.js', // 0.39.260 — dangling-hook flood, large-import idearium stall, real idearium health in the UI
   'test-agent-tools-and-graph.test.js', // 0.39.257 — every tool (enforced), /tools /debug /graph, the graph in context
   'test-live-stream-and-gates.test.js', // 0.39.256 — 500 ms transcript streaming + gate-specific errors (GS-20 Chromium SKIPPED without python playwright)     // 0.39.254 — every provider chat, one versioned record per chat (TX-20 Chromium SKIPPED without python playwright)
   'test-one-tab-e2e.test.js',        // 0.39.247 — real guardian, one tab: job → reply → .response   // 0.39.245 — spec-engine/manifest phase 1: file list → wire-check → manifest + registry

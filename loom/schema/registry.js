@@ -29,15 +29,34 @@ class LoomRegistry {
     this._state = this._load();
   }
 
+  // §PERF 0.39.260 — has()/get()/all() re-read the store before every read
+  // (§FIX 2026-07-02 below: another process may have written it). That
+  // re-read was a full JSON.parse of registry.json — 7 MB — per call, which
+  // is most of loom/bootstrap.js's measured ~4 minutes (thousands of
+  // declare() calls, each doing several has() checks). The re-read is kept;
+  // only the parse is skipped when the file's mtime+size are unchanged since
+  // this instance last read or wrote it, so another process's write is still
+  // seen on the very next read.
+  _stat() {
+    try { const st = fs.statSync(this.file); return { mtimeMs: st.mtimeMs, size: st.size }; }
+    catch (_) { return null; }
+  }
+
   _load() {
+    const st = this._stat();
+    if (st && this._state && this._stamp && this._stamp.mtimeMs === st.mtimeMs && this._stamp.size === st.size) {
+      return this._state;
+    }
     try {
       const raw = JSON.parse(fs.readFileSync(this.file, 'utf8'));
       const state = {};
       for (const k of KINDS) state[k] = raw[k] || {};
+      this._stamp = st;
       return state;
     } catch (_) {
       const empty = {};
       for (const k of KINDS) empty[k] = {};
+      this._stamp = null;
       return empty;
     }
   }
@@ -45,6 +64,28 @@ class LoomRegistry {
   _persist() {
     if (!fs.existsSync(this.dataDir)) fs.mkdirSync(this.dataDir, { recursive: true });
     fs.writeFileSync(this.file, JSON.stringify(this._state, null, 2));
+    this._stamp = this._stat();
+  }
+
+  /**
+   * removeWhere(pred) — §0.39.260. The registry was add-only, so a record
+   * for a file that was deleted, moved, or should never have been scanned
+   * (an imported user project under idearium/repo/repos/) stayed forever,
+   * and its hooks were reported as dangling on every boot. pred(kind,
+   * record) -> true removes it. One persist for the whole batch. Returns
+   * { component: n, hook: n, ... } counts.
+   */
+  removeWhere(pred) {
+    this._state = this._load();
+    const removed = {};
+    for (const k of KINDS) {
+      removed[k] = 0;
+      for (const [id, rec] of Object.entries(this._state[k])) {
+        if (pred(k, rec)) { delete this._state[k][id]; removed[k]++; }
+      }
+    }
+    if (Object.values(removed).some(n => n > 0)) this._persist();
+    return removed;
   }
 
   has(kind, id) {

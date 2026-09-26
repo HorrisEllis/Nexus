@@ -52,17 +52,56 @@ async function fetchTimeout(url, opts={}, ms=5000) {
   finally { clearTimeout(id); }
 }
 
+// §0.39.260 — James: "should not show online at 9000, thats not useful."
+// An HTTP 200 from a base is not proof idearium is up: the orchestrator
+// proxy at :9000 answered /health with 200 {ok:false, error:'… timeout'}
+// while idearium (:4800) was dead, and this read that as connected. Only
+// idearium's own health body counts: ok === true AND a version (both come
+// from idearium/api's `health` action, never from the proxy's error path).
+async function _ideariumAlive(base) {
+  try {
+    const r = await fetchTimeout(base + '/health');
+    if (!r.ok) return false;
+    const h = await r.json().catch(() => null);
+    return !!(h && h.ok === true && h.version);
+  } catch (_) { return false; }
+}
+
 async function nexusConnect(manual=false) {
   setConnUI('connecting');
   for (const base of API_CANDIDATES) {
-    try {
-      const r = await fetchTimeout(base + '/health');
-      if (r.ok) { API_BASE = base; CONNECTED = true; setConnUI('online', base); await loadAll(); openSSE(); return true; }
-    } catch(_) {}
+    if (await _ideariumAlive(base)) { API_BASE = base; CONNECTED = true; setConnUI('online', base); await loadAll(); openSSE(); _startHealthWatch(); return true; }
   }
   CONNECTED = false; API_BASE = null; setConnUI('offline');
+  _startHealthWatch();
   if (manual) toast('still unreachable — is the idearium service running?','err');
   return false;
+}
+
+// Connection state is re-proved every 10 s, not asserted once at page load:
+// idearium going down after the page connected (the MASTERMIND-import stall)
+// used to leave the indicator green indefinitely.
+let _healthTimer = null, _healthBusy = false;
+function _startHealthWatch() {
+  if (_healthTimer) return;
+  _healthTimer = setInterval(async () => {
+    if (_healthBusy) return;
+    _healthBusy = true;
+    try {
+      if (CONNECTED) {
+        if (!(await _ideariumAlive(API_BASE))) {
+          CONNECTED = false; API_BASE = null;
+          try { if (SSE) SSE.close(); } catch (_) {}
+          SSE = null;
+          setConnUI('offline');
+        }
+      } else {
+        for (const base of API_CANDIDATES) {
+          if (await _ideariumAlive(base)) { API_BASE = base; CONNECTED = true; setConnUI('online', base); await loadAll(); openSSE(); break; }
+        }
+      }
+    } finally { _healthBusy = false; }
+  }, 10000);
 }
 
 function setConnUI(state, base) {
@@ -70,11 +109,14 @@ function setConnUI(state, base) {
   const label = document.getElementById('conn-label');
   const banner = document.getElementById('offline-banner');
   el.className = 'tb-conn ' + (state==='online'?'online':state==='connecting'?'':'offline');
-  label.textContent = state==='online' ? `nexus · ${base.replace('http://127.0.0.1','')}` : state==='connecting' ? 'connecting…' : 'offline — click to retry';
+  // Names what was proven alive — idearium — and the route to it, instead of
+  // "nexus · :9000/api/idearium", which read as the orchestrator's state.
+  const via = base && base.indexOf(':9000') !== -1 ? ' via :9000' : '';
+  label.textContent = state==='online' ? `idearium · online${via}` : state==='connecting' ? 'connecting…' : 'idearium offline — click to retry';
   banner.classList.toggle('show', state==='offline');
   document.getElementById('welcome-foot').textContent = state==='online'
-    ? `connected · ${base}`
-    : 'awaiting connection to nexus idearium service · :4800';
+    ? `idearium connected · ${base}`
+    : 'idearium (:4800) not answering — awaiting connection';
 }
 
 async function api(path, opts={}, timeoutMs=6000) {

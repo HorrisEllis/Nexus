@@ -184,16 +184,37 @@ export class RepoLayer {
       let written = 0;
       let deferred = 0;
       let failedPaths = [];
-      const files = this.get(repoUuid).files || [];
-      for (const f of files) {
+      // §PERF 0.39.260 — James: "imported my mastermind project and now
+      // idearium isn't running properly." This loop used to call
+      // this.get() once and then this.readFile() per file, and readFile()
+      // goes through _resolveChunk() -> se.loadSpec(), which JSON.parses
+      // the WHOLE manifest (every chunk's content) from disk each time.
+      // N files = N full parses of an N-file manifest: measured 1.9 s at
+      // 200 files, 11.5 s at 500; the 1364-file MASTERMIND import held the
+      // event loop long enough for the orchestrator watchdog to mark
+      // idearium OFFLINE, and on the next boot the same pass inside the
+      // spec→repo reconcile stalled the phase-3 /health gate. One parse,
+      // one path index, same resolution rule as _resolveChunk().
+      let manifest;
+      try { manifest = this.se.loadSpec(r.specUuid); }
+      catch (e) { return { error: `spec ${r.specUuid} unreadable: ${e.message}` }; }
+      const live = (manifest.chunks || []).filter(c => c.status !== 'removed').sort((a, b) => a.chunkIdx - b.chunkIdx);
+      const byKey = new Map();
+      for (const key of ['realPath', 'fileName', 'sectionId']) {
+        for (const c of live) if (c[key] && !byKey.has(c[key])) byKey.set(c[key], c);
+      }
+      const files = live.map(c => c.realPath || c.fileName || `${String(c.chunkIdx).padStart(2,'0')}-${c.sectionId}.md`);
+      const madeDirs = new Set();
+      for (const fpath of files) {
         // Rule 2 — the real file wins. Counted as deferred, not skipped:
         // the content IS on disk, just not from this layer.
-        if (srcPaths.has(f.path)) { deferred++; continue; }
-        const content = this.readFile(repoUuid, f.path);
-        if (content.error) { failedPaths.push(f.path); continue; } // §1.2 — logged by readFile itself; a real, individual missing chunk must not abort the whole materialize
-        const dest = path.join(outDir, f.path);
-        fs.mkdirSync(path.dirname(dest), { recursive: true });
-        fs.writeFileSync(dest, content.content, 'utf8');
+        if (srcPaths.has(fpath)) { deferred++; continue; }
+        const chunk = byKey.get(fpath.replace(/^\/+/, ''));
+        if (!chunk) { failedPaths.push(fpath); continue; } // §1.2 — a real, individual missing chunk must not abort the whole materialize
+        const dest = path.join(outDir, fpath);
+        const dir = path.dirname(dest);
+        if (!madeDirs.has(dir)) { fs.mkdirSync(dir, { recursive: true }); madeDirs.add(dir); }
+        fs.writeFileSync(dest, chunk.content || '', 'utf8');
         written++;
       }
       // §FIXED 2026-09-19 — James: "needs to fail when it doesn't

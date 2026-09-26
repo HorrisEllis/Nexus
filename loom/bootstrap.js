@@ -162,6 +162,33 @@ for (const file of handMapped) {
   if (r.ok) boundaryHooks++;
 }
 console.log(`  boundary .export hooks for hand-mapped files required by the tree: ${boundaryHooks}`);
+// §PRUNE 0.39.260 — registry.json was add-only: a file the scanner mapped
+// once stayed in the registry after it was deleted, moved, or (the case in
+// James's boot log) turned out to be an imported user project under
+// idearium/repo/repos/. Every such stale record's hooks were then reported
+// as dangling on every boot. Only records THIS scanner owns are pruned
+// (uuid prefix nexus-loom-scan-), plus anything under an excluded path;
+// hand-mapped and seeded records are never touched. Wires whose endpoint
+// hook is gone are removed with them — a wire cannot exist without both
+// endpoints (loom.wire-endpoints-exist), so such a wire is stale by
+// definition.
+{
+  const { skippedIdPrefixes } = require('./scanners/source-map');
+  const prefixes = skippedIdPrefixes();
+  const live = new Set(scan.FILES.map(f => f[1]));
+  for (const f of handMapped) live.add(idFor(f));
+  const isStaleComp = (c) =>
+    prefixes.some(p => c.id.startsWith(p)) ||
+    (typeof c.uuid === 'string' && c.uuid.startsWith('nexus-loom-scan-') && !live.has(c.id));
+  const staleComps = new Set(Object.values(driver.registry.all('component')).filter(isStaleComp).map(c => c.id));
+  const r1 = driver.registry.removeWhere((kind, rec) =>
+    (kind === 'component' && staleComps.has(rec.id)) ||
+    (kind === 'hook' && staleComps.has(rec.component_id)));
+  const hooksLeft = driver.registry.all('hook');
+  const r2 = driver.registry.removeWhere((kind, rec) =>
+    kind === 'wire' && (!hooksLeft[rec.from_hook_id] || !hooksLeft[rec.to_hook_id]));
+  console.log(`  pruned stale scan records: ${r1.component} component(s), ${r1.hook} hook(s), ${r2.wire} wire(s)`);
+}
 const mappedSrc = mapSource(driver, scan.FILES);
 console.log(`  components: ${mappedSrc.components.length} ok   hooks: ${mappedSrc.hooks.length} ok   wires: ${mappedSrc.wires.length} ok`);
 if (mappedSrc.failures.length) {

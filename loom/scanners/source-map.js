@@ -71,6 +71,26 @@ const SKIP_DIRS = new Set([
 ]);
 const CODE_EXT = new Set(['.js', '.cjs', '.mjs']);
 
+// §0.39.260 — James: "can we fix some of these dangling hooks." After an
+// Upload Project, the imported repo's files live under idearium/repo/repos/
+// (lib/project-import.config.js REPO_STORAGE) — inside this tree — so the
+// next registry refresh mapped the user's MASTERMIND project as if it were
+// Nexus source (nexus.idearium.repo.repos.nexus-id-repo-….mm9.tests.… in the
+// boot log) and the diagnostic reported its hooks as Nexus wiring gaps.
+// Those are user data, not this system. Excluded by path, not by name (a
+// directory called 'repos' elsewhere is legitimate code). Env overrides are
+// honored so a relocated repo store is still excluded.
+const SKIP_PATHS = new Set(['idearium/repo/repos', 'idearium/data'].concat(
+  [process.env.NEXUS_PROJECT_IMPORT_REPO_DIR, process.env.IDEARIUM_DATA_DIR]
+    .filter(Boolean)
+    .map(p => path.relative(ROOT, path.resolve(p)).replace(/\\/g, '/'))
+    .filter(p => p && !p.startsWith('..') && !path.isAbsolute(p))
+));
+/** id prefixes of SKIP_PATHS, for pruning records an older scan declared. */
+function skippedIdPrefixes() {
+  return [...SKIP_PATHS].map(p => 'nexus.' + p.split('/').filter(Boolean).join('.') + '.');
+}
+
 /** id for a source path: meta/rfr2/kernel/index.js -> nexus.meta.rfr2.kernel */
 function idFor(rel) {
   let p = rel.replace(/\\/g, '/').replace(/\.(js|cjs|mjs)$/, '');
@@ -94,6 +114,7 @@ function walk(dir, out = []) {
     const full = path.join(dir, e.name);
     if (e.isDirectory()) {
       if (SKIP_DIRS.has(e.name)) continue;
+      if (SKIP_PATHS.has(path.relative(ROOT, full).replace(/\\/g, '/'))) continue;
       walk(full, out);
     } else if (CODE_EXT.has(path.extname(e.name))) {
       out.push(path.relative(ROOT, full).replace(/\\/g, '/'));
@@ -278,4 +299,4 @@ function mapSource(driver, FILES) {
   return results;
 }
 
-module.exports = { scanTree, mapSource, idFor, stripNonCode, ROOT, SKIP_DIRS };
+module.exports = { scanTree, mapSource, idFor, stripNonCode, ROOT, SKIP_DIRS, SKIP_PATHS, skippedIdPrefixes };

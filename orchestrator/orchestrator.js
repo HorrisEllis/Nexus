@@ -2286,7 +2286,11 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     const op     = seg[4] || '';
 
     if (M==='GET'  && !action)               return json(res,200,await GET('idearium','/health'));
-    if (M==='GET'  && action==='health')     return json(res,200,await GET('idearium','/health'));
+    // §0.39.260 — was always 200, even when idearium itself was down (sysReq
+    // resolves {ok:false, error:'… timeout'}), so the Idearium UI's probe
+    // through this proxy read "connected" with :4800 dead. The status now
+    // carries idearium's real state.
+    if (M==='GET'  && action==='health')     { const h = await GET('idearium','/health'); return json(res, h && h.ok === true ? 200 : 503, h); }
     if (M==='GET'  && action==='snr' && !uuid)    return json(res,200,await GET('idearium','/api/snr'));
     if (M==='GET'  && action==='snr' && uuid==='history') return json(res,200,await GET('idearium','/api/snr/history'));
     if (M==='GET'  && action==='events')     return json(res,200,await GET('idearium','/api/events'));
