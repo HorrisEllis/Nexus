@@ -29,6 +29,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaRows } = require('../storage/jaa');
 const { randomUUID } = require('crypto');
 
 const BOOKMARKS_PATH = path.join(
@@ -40,23 +41,20 @@ class BookmarkStore {
     this.data = []; // flat array — filter by agentId on query
   }
 
+  // §JAA 2026-09-26 — James: "with clearglass, make it jaa. no json." Rows live in
+  // the Clear Glass JAA store (src/storage/jaa.js); the old bookmarks.json is imported
+  // once on first load and left on disk.
+  _rows() { return this._jaa || (this._jaa = new JaaRows('cg_bookmarks', { legacyFile: BOOKMARKS_PATH })); }
+
   async load() {
-    try {
-      fs.mkdirSync(path.dirname(BOOKMARKS_PATH), { recursive: true });
-      if (fs.existsSync(BOOKMARKS_PATH)) {
-        this.data = JSON.parse(fs.readFileSync(BOOKMARKS_PATH, 'utf8'));
-      }
-    } catch (err) {
-      console.warn('[Bookmarks] Load error:', err.message);
-      this.data = [];
-    }
+    try { this.data = this._rows().load(); }
+    catch (err) { console.warn('[Bookmarks] Load error:', err.message); this.data = []; }
     return this.data;
   }
 
   _save() {
     try {
-      fs.mkdirSync(path.dirname(BOOKMARKS_PATH), { recursive: true });
-      fs.writeFileSync(BOOKMARKS_PATH, JSON.stringify(this.data, null, 2), 'utf8');
+      this._rows().replaceAll(this.data);
     } catch (err) {
       // Non-fatal in test environments without home dir
     }

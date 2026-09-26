@@ -11,6 +11,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaKV } = require('../storage/jaa');
 
 const SETTINGS_PATH = path.join(
   process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'nexus-settings.json'
@@ -57,15 +58,16 @@ const DEFAULTS = {
 class ApiSettings {
   constructor() { this.data = { ...DEFAULTS }; }
 
+  // §JAA 2026-09-26 — James: "with clearglass, make it jaa. no json." Rows live in
+  // the Clear Glass JAA store (src/storage/jaa.js); the old nexus-settings.json is imported
+  // once on first load and left on disk.
+  _kv() { return this._jaa || (this._jaa = new JaaKV('cg_api_settings', { legacyFile: SETTINGS_PATH })); }
+
   async load() {
     try {
-      fs.mkdirSync(path.dirname(SETTINGS_PATH), { recursive: true });
-      if (fs.existsSync(SETTINGS_PATH)) {
-        const raw = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
-        this.data = { ...DEFAULTS, ...raw };
-      } else {
-        fs.writeFileSync(SETTINGS_PATH, JSON.stringify(this.data, null, 2), 'utf8');
-      }
+      const raw = this._kv().load();
+      this.data = { ...DEFAULTS, ...raw };
+      if (!Object.keys(raw).length) this._kv().replaceAll(this.data);
     } catch (err) {
       console.warn('[Settings] Load error:', err.message);
     }
@@ -73,7 +75,7 @@ class ApiSettings {
 
   async set(updates) {
     this.data = { ...this.data, ...updates };
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(this.data, null, 2), 'utf8');
+    this._kv().replaceAll(this.data);
     return { ok: true };
   }
 
