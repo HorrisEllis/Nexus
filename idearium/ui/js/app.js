@@ -38,11 +38,15 @@
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
 // 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
-// the Eravos canvas cannot resolve ../eravos/ against this server: use the orchestrator's.
+// the Eravos and Architect canvases cannot resolve ../<system>/ against this server: use the orchestrator's.
 (() => {
   try {
     if (typeof location === 'undefined' || /^\/ui\//.test(location.pathname)) return;
-    const set = () => { const f = document.getElementById('eravos-frame'); if (f) f.src = `${location.protocol}//${location.hostname}:9000/ui/eravos/`; };
+    const orch = `${location.protocol}//${location.hostname}:9000/ui`;
+    const set = () => {
+      const e = document.getElementById('eravos-frame'); if (e) e.src = `${orch}/eravos/`;
+      const a = document.getElementById('architect-frame'); if (a) a.src = `${orch}/architect/arch-builder.html`;
+    };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', set); else set();
   } catch (_) {}
 })();

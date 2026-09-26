@@ -138,7 +138,7 @@ async function main() {
         if (e.isDirectory()) { walk(f); continue; }
         if (!/\.(html|js)$/.test(e.name) || /[\\/]tests?[\\/]/.test(f)) continue;
         const src = fs.readFileSync(f, 'utf8');
-        for (const m of src.matchAll(/(?:src|href|location|\.src)\s*=\s*["'`]((?:\.\.\/)+|\/)([a-z-]+)\/ui(?:[\/"'`?#])/g)) {
+        for (const m of src.matchAll(/(?:src|href|location|\.src)\s*=\s*["'`]((?:\.\.\/)+|\/)([a-z-]+)\/(?:src\/)?ui(?:[\/"'`?#])/g)) {
           if (m[2] !== 'ui') offenders.push(`${path.relative(ROOT, f)}: ${m[0]}`);
         }
       }
@@ -148,6 +148,8 @@ async function main() {
     const tv = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/index.html'), 'utf8');
     assert.ok(tv.includes("f.src='../idearium/'"), 'tv-shell loads /ui/idearium/');
     assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('src="../eravos/"'), 'the Eravos canvas loads /ui/eravos/');
+    assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('src="../architect/arch-builder.html"'), 'the Architect canvas loads /ui/architect/');
+    assert.ok(/SYSTEM_UI_DIRS = \{ idearium: .*architect: \{ dir: \['architect', 'src', 'ui'\]/.test(fs.readFileSync(path.join(ROOT, 'orchestrator/orchestrator.js'), 'utf8')), 'the orchestrator serves /ui/architect/ from architect/src/ui/');
   });
 
   // ── CG-0xx ─────────────────────────────────────────────────────────────

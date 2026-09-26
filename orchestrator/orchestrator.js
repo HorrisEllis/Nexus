@@ -913,7 +913,12 @@ const server = http.createServer(async (req, res) => {
     // built to point at it. tests/integration.test.js already asserts
     // `GET /ui/idearium → serves idearium UI HTML, status 200` — this
     // was a documented requirement failing silently, not a new one.
-    if (sub === 'idearium') {
+    // §0.39.263 — systems whose UI lives in their own folder, not under UI_ROOT: served at
+    // /ui/<system>/ from there (James: "…should be /ui/idearium … what about the architect ui?").
+    // idearium: idearium/ui/. architect: architect/src/ui/ (arch-builder, spec-builder, alk-lattice;
+    // it has no index.html, so /ui/architect/ opens arch-builder.html).
+    const SYSTEM_UI_DIRS = { idearium: { dir: ['idearium', 'ui'], index: 'index.html' }, architect: { dir: ['architect', 'src', 'ui'], index: 'arch-builder.html' } };
+    if (SYSTEM_UI_DIRS[sub]) {
       // §TRAILING-SLASH FIX 2026-07-15 — a request for the exact URL
       // /ui/idearium (no trailing slash, no rest path) served index.html
       // directly AT that URL. The browser has no way to know /ui/idearium
@@ -931,13 +936,14 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(302, { Location: `${u.pathname}/` });
         return res.end();
       }
-      const ideariumSubPath = rest || 'index.html';
-      const ideariumDirect = _safePath(path.join(ROOT, 'idearium', 'ui'), ideariumSubPath);
+      const sys = SYSTEM_UI_DIRS[sub];
+      const ideariumSubPath = rest || sys.index;
+      const ideariumDirect = _safePath(path.join(ROOT, ...sys.dir), ideariumSubPath);
       if (!ideariumDirect) return json(res, 403, { ok:false, error:'forbidden path' });
       if (fs.existsSync(ideariumDirect) && fs.statSync(ideariumDirect).isFile()) {
         return serveFile(res, ideariumDirect);
       }
-      return json(res, 404, { ok:false, error:`idearium UI not found: ${ideariumSubPath} (looked in nexus/idearium/ui/)` });
+      return json(res, 404, { ok:false, error:`${sub} UI not found: ${ideariumSubPath} (looked in nexus/${sys.dir.join('/')}/)` });
     }
 
     const subPath = rest ? path.join(sub, rest) : sub;
