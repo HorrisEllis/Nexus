@@ -10,11 +10,11 @@ tags:
   - provider:claude
   - status:complete
   - source:ncp
-exported_at: 1790408274929
+exported_at: 1790423416613
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1790408274929
-lastSeenAt: 1790408274929
+firstSeenAt: 1790423416613
+lastSeenAt: 1790423416613
 fingerprint: null
 payload:
   jobId: job-no-artifacts
@@ -38,4 +38,4 @@ payload:
       queued: true
   prompt: say hello
   command: ask
-  ts: 1790408274881
+  ts: 1790423416572

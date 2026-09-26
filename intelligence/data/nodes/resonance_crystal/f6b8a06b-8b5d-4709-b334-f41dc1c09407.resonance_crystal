@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-resonance_crystal-f6b8a06b-8b5d-4709-b334-f41dc1c09407
+type: resonance_crystal
+id: f6b8a06b-8b5d-4709-b334-f41dc1c09407
+context: 'intelligence liminal-space resonance crystal: coherence_test'
+intent: null
+summary: 'focal point: L1/L2'
+system: intelligence
+tags:
+  - liminal-space
+  - coherence_test
+exported_at: 1790423247742
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790423247742
+lastSeenAt: 1790423247742
+fingerprint: null
+payload:
+  uuid: f6b8a06b-8b5d-4709-b334-f41dc1c09407
+  focalPoint: L1/L2
+  type: coherence_test
+  path: evidence_threshold
+  itemCount: 5
+  avgConfidence: 0.8
+  summary: coherence pattern 0 | coherence pattern 1 | coherence pattern 2
+  ts: 1790423247742
