@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-loom.gaps
+type: component
+id: loom.gaps
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789275153102
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153102
+lastSeenAt: 1789275153102
+fingerprint: loom::GET /api/gaps
+payload:
+  id: loom.gaps
+  uuid: a41046a9-514f-4b79-a9ae-158bf6679a94
+  namespace: loom
+  name: gaps
+  version: 1.5.0

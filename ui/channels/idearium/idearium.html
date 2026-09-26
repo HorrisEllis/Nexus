@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXUS · IDEARIUM</title>
+<link rel="stylesheet" href="/ui/home/home.css">
+<style>
+  /* §SOVEREIGN CHANNEL 2026-07-11 — this channel is a standalone document,
+     openable and testable on its own (DECOMP.md benefit #3). It reuses
+     home.css for design tokens + existing component classes (.sys-tile,
+     .ch, etc.) rather than forking them, so it always matches the shell's
+     look without duplicating hundreds of class definitions. */
+  html,body{margin:0;padding:0;background:transparent;color:var(--text,#e8eef7);font-family:'Space Grotesk',sans-serif;height:100%}
+  .ch{display:block!important;position:static!important;width:100%;height:100%;animation:none!important}
+  .channel-root{padding:16px;height:100%;box-sizing:border-box;overflow:auto}
+</style>
+</head>
+<body>
+<div class="channel-root">
+<div class="ch" id="ch-idearium">
+    <div style="display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-shrink:0">
+      <button class="btn" onclick="idrLoad('createdAt')">Recent</button>
+      <button class="btn" onclick="idrLoad('tension')">By Tension</button>
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <input class="box-input" id="idr-new" placeholder="New idea..." style="width:260px" onkeydown="if(event.key==='Enter')idrCreate()">
+        <button class="btn primary" onclick="idrCreate()">+ Create</button>
+      </div>
+    </div>
+    <div class="idea-feed" id="idr-feed"></div>
+  </div>
+</div>
+<script src="/ui/lib/api.js"></script>
+<script>
+'use strict';
+// §API base ports — same map home/index.html uses (P{...}), duplicated
+// here on purpose: a sovereign channel must not depend on the shell's
+// global scope existing (it may be opened standalone, per DECOMP.md).
+const P={orch:9000,gd:7820,cx:3748,br:9999,idr:4800,em:4242,arch:3747,dg:7825};
+const B={orch:`http://127.0.0.1:${P.orch}`,gd:`http://127.0.0.1:${P.gd}`,cx:`http://127.0.0.1:${P.cx}`,br:`http://127.0.0.1:${P.br}`,idr:`http://127.0.0.1:${P.idr}`,em:`http://127.0.0.1:${P.em}`,arch:`http://127.0.0.1:${P.arch}`,dg:`http://127.0.0.1:${P.dg}`};
+
+async function idrLoad(sort='createdAt'){
+  const d=await get(`${B.orch}/api/idearium/ideas?sort=${sort}`);const el=document.getElementById('idr-feed');
+  const ideas=Array.isArray(d)?d:(d?.ideas||[]);
+  if(!ideas.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:12px">No ideas yet. Type one above.</div>';return}
+  const maxT=Math.max(...ideas.map(i=>i.tension||0),1);
+  el.innerHTML=ideas.slice(0,40).map(i=>{
+    const t=i.tension||0;const tags=(i.tags||[]).map(g=>`<span class="it-tag">${g}</span>`).join('');
+    return `<div class="idea-tile ${t>.6?'high-t':''}"><div class="it-title">${i.title||(i.body||'').slice(0,80)||'Untitled'}</div>${i.body&&i.title?`<div class="it-body">${i.body}</div>`:''}<div class="it-meta">${i.status||'open'}${tags}${t?`<span>tension: ${t.toFixed?t.toFixed(2):t}</span>`:''}</div>${t?`<div class="t-bar"><div class="t-fill" style="width:${Math.round(t/maxT*100)}%"></div></div>`:''}</div>`;
+  }).join('');
+}
+
+async function idrCreate(){
+  const inp=document.getElementById('idr-new');const body=inp.value.trim();if(!body)return;
+  const d=await post(`${B.orch}/api/idearium/ideas`,{body,status:'open'});
+  if(d?.uuid||d?.ok){inp.value='';idrLoad('createdAt')}
+  else{inp.style.borderColor='#ff3355';setTimeout(()=>inp.style.borderColor='',1500)}
+}
+
+// ── init ──────────────────────────────────────────────────────────────────
+try { idrLoad(); } catch(e) { console.warn('[channel:idearium] init failed:', e.message); }
+
+// ── this channel's own SSE subscription — sovereign, not dependent on the
+//    shell's single connection (matches DECOMP.md's "each channel can be
+//    opened independently... for debugging"). Shell-embedded use can still
+//    layer postMessage on top later without this needing to change. ──────
+try {
+  const es = new EventSource(`${B.orch}/sse`);
+  es.onmessage = (e) => {
+    try {
+      const d = JSON.parse(e.data);
+      if (typeof window.onChannelEvent === 'function') window.onChannelEvent(d);
+    } catch(_) {}
+  };
+  es.onerror = () => { /* orchestrator not reachable — channel still renders, just static until it is */ };
+} catch(_) {}
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.ollama",
+  "name": "ollama",
+  "label": "Ollama",
+  "dir": "ollama",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.ollama",
+    "scope": [
+      "ollama/",
+      "data/ollama/"
+    ],
+    "versionLine": "1.0.0",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.ollama",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "ollama/server.js",
+    "entryExists": true,
+    "port": 3749,
+    "phase": 3,
+    "critical": false,
+    "optional": true,
+    "healthUrl": "http://127.0.0.1:3749/health"
+  },
+  "data": {
+    "dataDir": "data/ollama",
+    "ledgerDir": "ollama/data/ledger",
+    "nodeIndexDir": "ollama/data/node-index"
+  },
+  "spec": "ollama/spec/",
+  "dependsOn": {},
+  "sharedLibRequires": 3,
+  "stats": {
+    "jsFiles": 17,
+    "jsLines": 1482
+  },
+  "boundaryFindings": {
+    "count": 0,
+    "sample": []
+  }
+}

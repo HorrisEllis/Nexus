@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-failure_mode-49cf824e-f193-4a5b-9a1b-d39d22220eb2
+type: failure_mode
+id: 49cf824e-f193-4a5b-9a1b-d39d22220eb2
+context: real failure_modes row, enriched with real causal chain + sigma delta by failure-mode-forensics.js
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789529323177
+source: cortex.self-heal.failure-mode-forensics
+occurrences: 1
+firstSeenAt: 1789529323177
+lastSeenAt: 1789529323177
+fingerprint: null
+payload:
+  uuid: 49cf824e-f193-4a5b-9a1b-d39d22220eb2
+  faultClass: memory_pressure
+  gapUuid: null
+  friction: 1
+  enteredAt: 1789529323171
+  source: cortex/self-heal
+  id: 00e597da-e991-4891-b707-4baa4b4f3734
+  root: null
+  conditions: []
+  siblingDanglingHooks: []
+  sigmaBefore: null
+  sigmaAtEntry: null
+  sigmaDelta: null
+  enrichedAt: 1789529323177

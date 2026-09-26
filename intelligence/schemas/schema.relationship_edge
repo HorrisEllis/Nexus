@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-schema-relationship_edge
+type: schema
+id: relationship_edge
+context: >-
+  intelligence/schemas — sovereign local copy. Origin: lib/node-schemas/schema.relationship_edge
+  (shared canonical version, may have moved on independently since this copy was made — sovereignty
+  means intelligence does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789235656621
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/lattice/associative-lattice.js — updateEdge()'s real cortexWrite.insert(TABLE, row)
+    shape, TABLE = 'relationship_lattice'
+  fields:
+    id:
+      type: string
+      required: true
+      description: real dedup key, "<from>::<to>" — one row per directed pair, upserted on update
+    from:
+      type: string
+      required: true
+      description: >-
+        real source identity — system name today (e.g. "guardian"); spec extends to users/sessions
+        later, not yet restricted in code
+    to:
+      type: string
+      required: true
+      description: real target identity, same convention as from
+    field:
+      type: object
+      required: true
+      description: 'real CFR field snapshot: {coherence, friction, resonance, entropy}'
+    sigma:
+      type: number
+      required: true
+      description: >-
+        real derived stress-vs-calm score, (friction+entropy)/2 minus 0.3*(coherence+resonance)/2 +
+        0.3, clamped 0-1
+    regime:
+      type: string
+      required: true
+      description: real regime label from the field snapshot
+    updated_at:
+      type: number
+      required: true
+      description: real last-update timestamp
+    fractal:
+      type: object
+      required: true
+      description: >-
+        real, currently always {detected: false, period_ms: null, occurrences: 0} — fractal
+        detection needs per-edge delta history not yet wired (§NOT BUILT YET in source)

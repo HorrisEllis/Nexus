@@ -1,0 +1,36 @@
+{
+  "id": "a1b2c3d4-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+  "name": "guardian-listeners",
+  "version": "1.0.0",
+  "displayName": "Guardian Social Listeners",
+  "description": "Port of the old Guardian extension's #1 priority piece per GUARDIAN-ARCHIVE-MINING-2026-08-23.md: 'the social-media listener pattern (base-module.js + instagram.js/threads.js) — real, working, most substantial.' Reimplements the GuardianModule (MutationObserver -> emit()) pattern as real userscripts, wired into the SAME guardian.listener.start/guardian.listener.event protocol clear-glass/renderer/guardian-picker.js (TX14) already established, so detected events route through the identical, already-real listener-config-modal destinations (ledger, compartment, sse-to-system, ollama-stream). Includes the old extension's single/double-tap ESC killswitch pattern (item 3 of the same mining report): single ESC stops this module locally, a second ESC within 1.5s triggers a real full stop of every active Guardian listener userscript via ipc/bridge.js's _fullStopGuardianListeners.",
+  "author": "James Brooks (Erosmancer)",
+  "entryPoint": "index.js",
+  "permissions": {
+    "network": false,
+    "domStorage": false,
+    "webRequest": false,
+    "hostFs": false
+  },
+  "contributes": {
+    "userscript": [
+      {
+        "signature": "plugin:a1b2c3d4-5e6f-4a7b-8c9d-0e1f2a3b4c5d:instagram",
+        "handler": "getInstagramUserscript"
+      },
+      {
+        "signature": "plugin:a1b2c3d4-5e6f-4a7b-8c9d-0e1f2a3b4c5d:threads",
+        "handler": "getThreadsUserscript"
+      }
+    ],
+    "toolbar-command": [
+      {
+        "signature": "plugin:a1b2c3d4-5e6f-4a7b-8c9d-0e1f2a3b4c5d:stop-on-page",
+        "handler": "stopListenersOnPage",
+        "icon": "⛔",
+        "label": "Stop Guardian Listeners (this page)",
+        "group": "Guardian Listeners"
+      }
+    ]
+  }
+}

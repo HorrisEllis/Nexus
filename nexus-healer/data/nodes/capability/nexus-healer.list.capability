@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-capability-nexus-healer.list
+type: capability
+id: nexus-healer.list
+context: nexus-healer/registry-components.js real capability export
+intent: null
+summary: null
+system: nexus-healer
+tags: []
+exported_at: 1789250730155
+source: nexus-healer.registry-components:nexus-healer.list
+payload:
+  id: nexus-healer.list
+  namespace: nexus-healer
+  name: list
+  version: 0.1.0
+  grammar: []
+  route:
+    method: GET
+    path: /proposals
+  intent: []
+  description: List all proposals and their current status.
+  params: []
+  tags:
+    - nexus-healer
+  permissions:
+    - system
+  hooks: {}

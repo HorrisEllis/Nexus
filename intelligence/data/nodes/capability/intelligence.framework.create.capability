@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.framework.create
+type: capability
+id: intelligence.framework.create
+context: intelligence/registry-components.js real capability export
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789250756078
+source: intelligence.registry-components:intelligence.framework.create
+payload:
+  id: intelligence.framework.create
+  namespace: intelligence
+  name: framework.create
+  version: 1.0.0
+  grammar:
+    - framework create
+    - intelligence framework
+  route:
+    method: POST
+    path: /api/framework/create
+  intent:
+    - create
+    - build
+    - framework
+  description: Generate a real WARP-based framework skeleton
+  params: []
+  tags:
+    - intelligence
+    - build
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: intelligence.framework.receive
+        intent:
+          - create
+          - build
+          - framework
+        tags:
+          - framework-builder

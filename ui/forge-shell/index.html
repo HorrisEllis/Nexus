@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS · FORGE SHELL</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#00000f;
+  --ink:#080814;
+  --plate:#0d0d1f;
+  --panel:#111128;
+  --edge:#1e1e3a;
+  --rim:#2a2a4a;
+  --muted:#4a4a7a;
+  --dim:#7070a0;
+  --text:#d0d4f0;
+  --bright:#eeeeff;
+
+  --cyan:#00e5ff;
+  --cyan2:rgba(0,229,255,.12);
+  --cyan3:rgba(0,229,255,.06);
+  --green:#00ff88;
+  --amber:#ffaa00;
+  --red:#ff3355;
+  --purple:#a78bfa;
+  --magenta:#cc44ff;
+
+  --sys-or:#818cf8;
+  --sys-gu:#f59e0b;
+  --sys-cx:#34d399;
+  --sys-br:#22d3ee;
+  --sys-id:#4a9eff;
+  --sys-ar:#ef9f27;
+  --sys-em:#a78bfa;
+  --sys-di:#67e8f9;
+
+  --r:6px;
+  --font-mono:'Space Mono',monospace;
+  --font-body:'Space Grotesk',sans-serif;
+}
+
+html,body{width:100%;height:100%;overflow:hidden;background:var(--void);color:var(--text);font-family:var(--font-body);font-size:13px}
+
+/* ── CANVAS VOID ────────────────────────────────────────────────────── */
+#canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── SHELL GRID ─────────────────────────────────────────────────────── */
+#shell{
+  position:fixed;inset:0;z-index:1;
+  display:grid;
+  grid-template-rows:44px 1fr 52px;
+  grid-template-columns:280px 1fr 300px;
+  grid-template-areas:
+    "topbar topbar topbar"
+    "left   main   right"
+    "menu   menu   menu";
+}
+
+/* ── TOPBAR ─────────────────────────────────────────────────────────── */
+#topbar{
+  grid-area:topbar;
+  display:flex;align-items:center;gap:12px;
+  padding:0 16px;
+  background:rgba(8,8,20,.9);
+  border-bottom:1px solid var(--edge);
+  backdrop-filter:blur(12px);
+  z-index:20;
+}
+.logo{
+  font-family:var(--font-mono);font-size:11px;font-weight:700;
+  letter-spacing:.2em;color:var(--cyan);
+  display:flex;align-items:center;gap:8px;
+  white-space:nowrap;
+}
+.logo-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 8px var(--cyan);
+  animation:pulse-dot 2.4s ease-in-out infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+.topbar-divider{width:1px;height:20px;background:var(--edge);flex-shrink:0}
+
+#sys-strip{display:flex;gap:6px;align-items:center;flex:1}
+.sys-pip{
+  display:flex;align-items:center;gap:5px;
+  padding:3px 8px;border-radius:20px;
+  border:1px solid transparent;
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:.06em;cursor:default;
+  transition:border-color .2s,background .2s;
+}
+.sys-pip.online{background:rgba(0,255,136,.06);border-color:rgba(0,255,136,.18)}
+.sys-pip.offline{background:rgba(255,51,85,.04);border-color:rgba(255,51,85,.14)}
+.sys-pip.unknown{background:rgba(255,255,255,.03);border-color:var(--edge)}
+.sys-pip-dot{width:5px;height:5px;border-radius:50%;background:var(--dim)}
+.sys-pip.online .sys-pip-dot{background:var(--green);box-shadow:0 0 6px var(--green)}
+.sys-pip.offline .sys-pip-dot{background:var(--red)}
+
+#sigma-display{
+  display:flex;align-items:center;gap:8px;
+  padding:4px 12px;border-radius:20px;
+  border:1px solid var(--edge);
+  font-family:var(--font-mono);font-size:10px;
+  background:var(--ink);
+  white-space:nowrap;
+}
+.sigma-label{color:var(--muted)}
+#sigma-val{color:var(--green);font-weight:700}
+#sigma-bar{
+  width:60px;height:3px;background:var(--edge);border-radius:2px;overflow:hidden;
+}
+#sigma-fill{height:100%;width:0%;background:var(--green);transition:width .6s,background .4s;border-radius:2px}
+
+/* ── LEFT PANEL — PHASE MAP ─────────────────────────────────────────── */
+#left{
+  grid-area:left;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--edge);
+  background:var(--ink);
+  overflow:hidden;
+}
+.panel-header{
+  padding:10px 14px 8px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--edge);
+  flex-shrink:0;
+}
+.panel-title{
+  font-family:var(--font-mono);font-size:9px;font-weight:700;
+  letter-spacing:.16em;color:var(--muted);text-transform:uppercase;
+}
+.panel-badge{
+  font-family:var(--font-mono);font-size:9px;
+  padding:2px 6px;border-radius:10px;
+  background:var(--cyan2);color:var(--cyan);
+}
+
+#phase-list{
+  flex:1;overflow-y:auto;padding:8px 0;
+}
+#phase-list::-webkit-scrollbar{width:3px}
+#phase-list::-webkit-scrollbar-thumb{background:var(--rim)}
+
+.phase-item{
+  padding:7px 14px;
+  display:flex;align-items:flex-start;gap:9px;
+  cursor:pointer;
+  transition:background .15s;
+  border-left:2px solid transparent;
+}
+.phase-item:hover{background:rgba(255,255,255,.03)}
+.phase-item.active{background:var(--cyan2);border-left-color:var(--cyan)}
+.phase-item.complete .phase-num{color:var(--green)}
+.phase-item.next .phase-num{color:var(--cyan)}
+.phase-item.pending .phase-num{color:var(--muted)}
+.phase-item.superseded .phase-num{color:var(--rim)}
+
+.phase-num{
+  font-family:var(--font-mono);font-size:9px;font-weight:700;
+  width:28px;flex-shrink:0;margin-top:1px;
+}
+.phase-info{flex:1;min-width:0}
+.phase-name{
+  font-size:11px;font-weight:500;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.phase-item.superseded .phase-name{color:var(--muted);text-decoration:line-through}
+.phase-status-dot{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px;
+  background:var(--rim);
+}
+.phase-item.complete .phase-status-dot{background:var(--green);box-shadow:0 0 5px rgba(0,255,136,.5)}
+.phase-item.next .phase-status-dot{background:var(--cyan);box-shadow:0 0 7px rgba(0,229,255,.6);animation:pulse-dot 1.8s infinite}
+.phase-item.pending .phase-status-dot{background:var(--rim)}
+
+/* ── MAIN — CENTRAL BUILD SURFACE ───────────────────────────────────── */
+#main{
+  grid-area:main;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  background:var(--void);
+}
+
+/* View tabs */
+#view-tabs{
+  display:flex;gap:0;
+  border-bottom:1px solid var(--edge);
+  background:var(--ink);
+  flex-shrink:0;
+}
+.vtab{
+  padding:10px 18px;
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  letter-spacing:.1em;color:var(--muted);
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;
+}
+.vtab:hover{color:var(--text)}
+.vtab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+/* View areas */
+.view{display:none;flex:1;overflow:hidden}
+.view.active{display:flex;flex-direction:column}
+
+/* ─ XRAY VIEW ─ */
+#view-xray{padding:0}
+#xray-canvas-wrap{flex:1;position:relative;overflow:hidden}
+#xray-canvas{width:100%;height:100%}
+#xray-tooltip{
+  position:absolute;pointer-events:none;
+  background:rgba(8,8,20,.96);border:1px solid var(--cyan);
+  border-radius:var(--r);padding:10px 14px;
+  font-size:11px;max-width:240px;
+  opacity:0;transition:opacity .15s;
+  z-index:10;
+}
+.xt-name{font-family:var(--font-mono);font-size:10px;color:var(--cyan);margin-bottom:4px;font-weight:700}
+.xt-intent{color:var(--dim);line-height:1.5;font-size:11px}
+.xt-port{font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-top:5px}
+
+/* ─ PHASE DETAIL VIEW ─ */
+#view-phase{overflow-y:auto;padding:20px 24px}
+#view-phase::-webkit-scrollbar{width:3px}
+#view-phase::-webkit-scrollbar-thumb{background:var(--rim)}
+#phase-detail-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;color:var(--muted);gap:10px;
+}
+#phase-detail-empty .big{font-size:40px;opacity:.3}
+#phase-detail-content{display:none}
+.pd-phase-num{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.1em;margin-bottom:4px}
+.pd-title{font-size:22px;font-weight:600;color:var(--bright);margin-bottom:10px}
+.pd-status{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:4px 12px;border-radius:20px;
+  font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.08em;
+  margin-bottom:18px;
+}
+.pd-status.complete{background:rgba(0,255,136,.1);color:var(--green);border:1px solid rgba(0,255,136,.2)}
+.pd-status.next{background:var(--cyan2);color:var(--cyan);border:1px solid rgba(0,229,255,.2)}
+.pd-status.pending{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--edge)}
+.pd-section{margin-bottom:18px}
+.pd-section-title{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.pd-desc{color:var(--dim);line-height:1.7;font-size:12px}
+.pd-deps{display:flex;flex-wrap:wrap;gap:6px}
+.pd-dep{
+  padding:3px 9px;border-radius:12px;font-family:var(--font-mono);font-size:10px;
+  background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);
+}
+.pd-dep.done{background:rgba(0,255,136,.06);color:var(--green);border-color:rgba(0,255,136,.15)}
+.forge-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:var(--r);
+  background:var(--cyan);color:#000;
+  font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.1em;
+  border:none;cursor:pointer;
+  transition:background .2s,transform .1s,box-shadow .2s;
+  text-transform:uppercase;
+}
+.forge-btn:hover{background:#33eeff;box-shadow:0 0 20px rgba(0,229,255,.3)}
+.forge-btn:active{transform:scale(.97)}
+.forge-btn:disabled{background:var(--muted);color:var(--edge);cursor:not-allowed;box-shadow:none}
+.forge-btn-icon{font-size:14px}
+
+/* ─ TERMINAL VIEW ─ */
+#view-terminal{background:var(--void)}
+#term-output{
+  flex:1;overflow-y:auto;padding:12px 16px;
+  font-family:var(--font-mono);font-size:11px;line-height:1.7;
+}
+#term-output::-webkit-scrollbar{width:3px}
+#term-output::-webkit-scrollbar-thumb{background:var(--rim)}
+.term-line{padding:1px 0;white-space:pre-wrap;word-break:break-all}
+.term-line.sys{color:var(--muted)}
+.term-line.ok{color:var(--green)}
+.term-line.err{color:var(--red)}
+.term-line.info{color:var(--cyan)}
+.term-line.warn{color:var(--amber)}
+.term-line.out{color:var(--text)}
+#term-input-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px;border-top:1px solid var(--edge);
+  flex-shrink:0;
+}
+.term-prompt{font-family:var(--font-mono);font-size:11px;color:var(--cyan);white-space:nowrap}
+#term-input{
+  flex:1;background:none;border:none;outline:none;
+  font-family:var(--font-mono);font-size:11px;color:var(--bright);
+  caret-color:var(--cyan);
+}
+
+/* ── RIGHT PANEL — GAPS + EVENTS ────────────────────────────────────── */
+#right{
+  grid-area:right;
+  display:flex;flex-direction:column;
+  border-left:1px solid var(--edge);
+  background:var(--ink);
+  overflow:hidden;
+}
+.right-tabs{display:flex;border-bottom:1px solid var(--edge)}
+.rtab{
+  flex:1;padding:9px 0;text-align:center;
+  font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;
+  color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;
+  transition:color .2s,border-color .2s;
+}
+.rtab:hover{color:var(--text)}
+.rtab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+.rpanel{display:none;flex:1;overflow-y:auto;flex-direction:column}
+.rpanel::-webkit-scrollbar{width:3px}
+.rpanel::-webkit-scrollbar-thumb{background:var(--rim)}
+.rpanel.active{display:flex}
+
+/* Gap entries */
+.gap-entry{
+  padding:10px 14px;border-bottom:1px solid var(--edge);
+  cursor:default;transition:background .15s;
+}
+.gap-entry:hover{background:rgba(255,255,255,.02)}
+.gap-severity{
+  font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:.12em;
+  padding:2px 6px;border-radius:8px;display:inline-block;margin-bottom:5px;
+  text-transform:uppercase;
+}
+.gap-severity.high{background:rgba(255,51,85,.12);color:var(--red);border:1px solid rgba(255,51,85,.2)}
+.gap-severity.medium{background:rgba(255,170,0,.1);color:var(--amber);border:1px solid rgba(255,170,0,.2)}
+.gap-severity.low{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--edge)}
+.gap-body{font-size:11px;color:var(--text);line-height:1.5;margin-bottom:4px}
+.gap-meta{font-family:var(--font-mono);font-size:9px;color:var(--muted)}
+
+/* Event feed */
+.event-entry{
+  padding:8px 14px;border-bottom:1px solid rgba(30,30,58,.6);
+  display:flex;flex-direction:column;gap:2px;
+}
+.event-type{
+  font-family:var(--font-mono);font-size:9px;color:var(--cyan);
+  letter-spacing:.06em;
+}
+.event-payload{font-size:10px;color:var(--dim);line-height:1.4;word-break:break-word}
+.event-ts{font-family:var(--font-mono);font-size:8px;color:var(--muted);text-align:right}
+
+/* CFR panel */
+.cfr-row{
+  padding:10px 14px;border-bottom:1px solid var(--edge);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cfr-label{font-family:var(--font-mono);font-size:9px;color:var(--dim);letter-spacing:.08em}
+.cfr-val{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--text)}
+.cfr-bar-wrap{width:80px;height:3px;background:var(--edge);border-radius:2px;overflow:hidden}
+.cfr-bar{height:100%;border-radius:2px;transition:width .6s,background .4s}
+
+/* empty state */
+.empty-feed{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--muted);gap:8px;padding:20px;text-align:center;
+}
+.empty-feed .icon{font-size:28px;opacity:.3}
+.empty-feed .label{font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+
+/* ── FLOATING MENU ──────────────────────────────────────────────────── */
+#menu-area{
+  grid-area:menu;
+  display:flex;align-items:center;justify-content:center;
+  padding:8px 16px;
+  background:rgba(8,8,20,.92);
+  border-top:1px solid var(--edge);
+  backdrop-filter:blur(16px);
+  position:relative;z-index:30;
+}
+
+#fab{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 24px;
+  background:rgba(6,6,18,.9);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:32px;
+  color:rgba(255,255,255,.7);
+  font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.14em;
+  cursor:pointer;
+  backdrop-filter:blur(16px);
+  transition:all .2s;
+  white-space:nowrap;
+}
+#fab:hover{border-color:rgba(0,229,255,.3);color:var(--cyan);background:rgba(0,229,255,.06)}
+#fab.open{border-color:rgba(0,229,255,.4);color:var(--cyan);box-shadow:0 0 24px rgba(0,229,255,.1)}
+#fab-icon{font-size:14px;transition:transform .3s}
+#fab.open #fab-icon{transform:rotate(45deg)}
+
+#fab-menu{
+  position:absolute;bottom:58px;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;
+  opacity:0;pointer-events:none;
+  transform:translateX(-50%) translateY(8px);
+  transition:opacity .2s,transform .2s;
+  z-index:40;
+}
+#fab-menu.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.fab-action{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 14px;
+  background:rgba(8,8,24,.96);
+  border:1px solid var(--rim);
+  border-radius:10px;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+  min-width:72px;text-align:center;
+}
+.fab-action:hover{border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.05)}
+.fab-action-icon{font-size:20px}
+.fab-action-label{font-family:var(--font-mono);font-size:8px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.fab-action:hover .fab-action-label{color:var(--cyan)}
+
+/* ── TOAST ──────────────────────────────────────────────────────────── */
+#toast-root{position:fixed;bottom:80px;right:20px;z-index:100;display:flex;flex-direction:column;gap:8px}
+.toast{
+  padding:10px 16px;border-radius:var(--r);
+  font-size:12px;font-family:var(--font-mono);
+  background:rgba(8,8,24,.96);border:1px solid var(--rim);
+  animation:toast-in .2s ease;max-width:300px;
+}
+.toast.ok{border-color:rgba(0,255,136,.3);color:var(--green)}
+.toast.err{border-color:rgba(255,51,85,.3);color:var(--red)}
+.toast.info{border-color:rgba(0,229,255,.3);color:var(--cyan)}
+@keyframes toast-in{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── FORGE MODAL ────────────────────────────────────────────────────── */
+#forge-modal{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,8,.8);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;
+}
+#forge-modal.open{display:flex}
+.fm-box{
+  background:var(--plate);border:1px solid var(--rim);border-radius:10px;
+  width:560px;max-width:95vw;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.fm-header{
+  padding:16px 20px;border-bottom:1px solid var(--edge);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.fm-title{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--cyan);text-transform:uppercase}
+.fm-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:2px 6px;transition:color .2s}
+.fm-close:hover{color:var(--text)}
+.fm-body{padding:20px;display:flex;flex-direction:column;gap:14px}
+.fm-label{font-size:11px;color:var(--dim);margin-bottom:4px;display:block}
+.fm-input{
+  width:100%;background:var(--ink);border:1px solid var(--edge);border-radius:var(--r);
+  padding:9px 12px;color:var(--text);font-family:var(--font-mono);font-size:11px;
+  outline:none;transition:border-color .2s;
+}
+.fm-input:focus{border-color:rgba(0,229,255,.4)}
+.fm-textarea{resize:vertical;min-height:80px;max-height:200px;line-height:1.6}
+.fm-select{
+  width:100%;background:var(--ink);border:1px solid var(--edge);border-radius:var(--r);
+  padding:9px 12px;color:var(--text);font-family:var(--font-mono);font-size:11px;
+  outline:none;cursor:pointer;
+}
+.fm-footer{
+  padding:12px 20px;border-top:1px solid var(--edge);
+  display:flex;gap:10px;justify-content:flex-end;
+}
+.fm-btn{
+  padding:8px 18px;border-radius:var(--r);
+  font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;
+  border:1px solid var(--edge);cursor:pointer;color:var(--muted);background:var(--ink);
+  transition:all .2s;text-transform:uppercase;
+}
+.fm-btn:hover{color:var(--text);border-color:var(--rim)}
+.fm-btn.primary{background:var(--cyan);color:#000;border-color:var(--cyan)}
+.fm-btn.primary:hover{background:#33eeff;box-shadow:0 0 16px rgba(0,229,255,.3)}
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="shell">
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <div class="logo">
+      <div class="logo-dot"></div>
+      <span>FORGE SHELL</span>
+    </div>
+    <div class="topbar-divider"></div>
+    <div id="sys-strip"><!-- populated by JS --></div>
+    <div class="topbar-divider"></div>
+    <div id="sigma-display">
+      <span class="sigma-label">Σ</span>
+      <span id="sigma-val">—</span>
+      <div id="sigma-bar"><div id="sigma-fill"></div></div>
+    </div>
+  </header>
+
+  <!-- LEFT: PHASE MAP (legacy — static, see LOOM tab for live data) -->
+  <aside id="left">
+    <div class="panel-header">
+      <span class="panel-title">Phase Map (legacy, frozen 2026-07-19)</span>
+      <span class="panel-badge" id="phase-count">—</span>
+    </div>
+    <div style="padding:6px 10px;font:10px var(--mono,monospace);color:var(--dim);border-bottom:1px solid var(--edge)">
+      Static data — see the LOOM tab above for live phasemap progress.
+    </div>
+    <div id="phase-list"><!-- populated by JS --></div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+    <nav id="view-tabs">
+      <div class="vtab active" data-view="xray">X-RAY</div>
+      <div class="vtab" data-view="phase">PHASE (legacy)</div>
+      <div class="vtab" data-view="loom">LOOM</div>
+      <div class="vtab" data-view="terminal">TERMINAL</div>
+    </nav>
+
+    <!-- LOOM: real, live phasemap data — every phase from every system,
+         not the static array the legacy PHASE tab reads (see loom-note below) -->
+    <div class="view" id="view-loom">
+      <div style="padding:20px;max-width:900px;margin:0 auto">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px">
+          <span style="font:600 15px/1 var(--mono,monospace);color:var(--purple);letter-spacing:.04em">LOOM — LIVE PHASEMAP</span>
+          <span id="loom-summary" style="font:12px var(--mono,monospace);color:var(--dim)">—</span>
+        </div>
+        <div style="height:1px;background:var(--purple);opacity:.35;margin-bottom:1px"></div>
+        <div style="height:1px;background:var(--purple);opacity:.15;margin-bottom:14px"></div>
+        <div style="font:11px var(--mono,monospace);color:var(--dim);margin-bottom:18px">
+          Every phase from every docs/*.spec file, read live from loom/scanners/phasemap-map.js — not the
+          hand-maintained array the PHASE tab shows, which has not moved since 2026-07-19.
+        </div>
+        <div id="loom-systems"><!-- populated by JS --></div>
+      </div>
+    </div>
+
+    <!-- X-RAY: component topology -->
+    <div class="view active" id="view-xray">
+      <div id="xray-canvas-wrap">
+        <canvas id="xray-canvas"></canvas>
+        <div id="xray-tooltip">
+          <div class="xt-name" id="xt-name"></div>
+          <div class="xt-intent" id="xt-intent"></div>
+          <div class="xt-port" id="xt-port"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE DETAIL -->
+    <div class="view" id="view-phase">
+      <div id="phase-detail-empty">
+        <div class="big">⬡</div>
+        <span>Select a phase</span>
+      </div>
+      <div id="phase-detail-content">
+        <div class="pd-phase-num" id="pd-num"></div>
+        <div class="pd-title" id="pd-title"></div>
+        <div class="pd-status" id="pd-status"></div>
+        <div class="pd-section">
+          <div class="pd-section-title">Description</div>
+          <div class="pd-desc" id="pd-desc"></div>
+        </div>
+        <div class="pd-section">
+          <div class="pd-section-title">Dependencies</div>
+          <div class="pd-deps" id="pd-deps"></div>
+        </div>
+        <div class="pd-section">
+          <div class="pd-section-title">Unlocks</div>
+          <div class="pd-deps" id="pd-unlocks"></div>
+        </div>
+        <div class="pd-section" id="pd-forge-wrap">
+          <button class="forge-btn" id="pd-forge-btn">
+            <span class="forge-btn-icon">⚡</span>
+            <span id="pd-forge-label">FORGE THIS PHASE</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMINAL -->
+    <div class="view" id="view-terminal">
+      <div id="term-output"></div>
+      <div id="term-input-row">
+        <span class="term-prompt">nexus ›</span>
+        <input id="term-input" type="text" spellcheck="false" autocomplete="off" placeholder="type a command…">
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT: GAPS + EVENTS + CFR -->
+  <aside id="right">
+    <div class="right-tabs">
+      <div class="rtab active" data-rtab="gaps">GAPS</div>
+      <div class="rtab" data-rtab="events">EVENTS</div>
+      <div class="rtab" data-rtab="cfr">CFR</div>
+    </div>
+    <div class="rpanel active" id="rpanel-gaps"></div>
+    <div class="rpanel" id="rpanel-events"></div>
+    <div class="rpanel" id="rpanel-cfr"></div>
+  </aside>
+
+  <!-- MENU BAR -->
+  <div id="menu-area">
+    <div id="fab-menu">
+      <div class="fab-action" data-action="forge"><span class="fab-action-icon">⚡</span><span class="fab-action-label">Forge</span></div>
+      <div class="fab-action" data-action="dispatch"><span class="fab-action-icon">📡</span><span class="fab-action-label">Dispatch</span></div>
+      <div class="fab-action" data-action="snapshot"><span class="fab-action-icon">📸</span><span class="fab-action-label">Snapshot</span></div>
+      <div class="fab-action" data-action="diagnose"><span class="fab-action-icon">🔬</span><span class="fab-action-label">Diagnose</span></div>
+      <div class="fab-action" data-action="gaps"><span class="fab-action-icon">🕳</span><span class="fab-action-label">Open Gaps</span></div>
+    </div>
+    <button id="fab">
+      <span id="fab-icon">✦</span>
+      <span>FORGE SHELL</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- FORGE MODAL -->
+<div id="forge-modal">
+  <div class="fm-box">
+    <div class="fm-header">
+      <span class="fm-title" id="fm-title">FORGE PHASE</span>
+      <button class="fm-close" id="fm-close">✕</button>
+    </div>
+    <div class="fm-body">
+      <div>
+        <label class="fm-label">Phase / Task</label>
+        <input class="fm-input" id="fm-phase" type="text" placeholder="e.g. Phase 46 — Case Library">
+      </div>
+      <div>
+        <label class="fm-label">Provider</label>
+        <select class="fm-select" id="fm-provider">
+          <option value="claude">Claude (NCP)</option>
+          <option value="chatgpt">ChatGPT (NCP)</option>
+          <option value="ollama">Ollama (local)</option>
+        </select>
+      </div>
+      <div>
+        <label class="fm-label">Context / Prompt</label>
+        <textarea class="fm-input fm-textarea" id="fm-prompt" placeholder="What should be built? Any constraints or notes…"></textarea>
+      </div>
+    </div>
+    <div class="fm-footer">
+      <button class="fm-btn" id="fm-cancel">Cancel</button>
+      <button class="fm-btn primary" id="fm-submit">⚡ DISPATCH</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+// FORGE SHELL — sovereign build surface
+// Reads the interaction contract from :9000, renders itself from it.
+// Connects to SSE for live events. Dispatches forge jobs to guardian.
+// ══════════════════════════════════════════════════════════════════════
+
+const ORCH = 'http://127.0.0.1:9000';
+const GUARDIAN = 'http://127.0.0.1:7820';
+const CORTEX = 'http://127.0.0.1:3748';
+const DIAG = 'http://127.0.0.1:7825';
+const LOOM = 'http://127.0.0.1:3752';
+
+// ── Phase map (v0.7.5 — from nexus-phase-map.md, 2026-06-17) ────────────────
+const PHASES = [
+  // COMPLETE
+  { n:'0–9',   name:'Foundation + Organs',        status:'complete', desc:'Seven services online. Memory tiers, intelligence core, replay engine (16/16), CFR field, contracts, SEAM, self-heal, heartbeat v2, auth RSA, snapshot, Bridge circuit breaker, Builder UI, spec-compiler, RAID v6, grammar engine, liminal space, SNR filter, loop-topology, gap-loop.' },
+  { n:22,      name:'Divergence Watcher',          status:'complete', desc:'σ polled 5s. Fires at ≥0.65 or spike +0.20. 90s cooldown. .nex v1.1.' },
+  { n:23,      name:'Stale Module Gap',             status:'complete', desc:'Gap body: [idearium:4800] stale 47s. Severity by criticality + duration.' },
+  { n:24,      name:'TV Shell: Floating Menu',      status:'complete', desc:'Six bugs fixed. bus.onAny fixed. Cortex event logging wired.' },
+  { n:25,      name:'RAID Compartment Engine',      status:'complete', desc:'Isolated working memory sandbox per action. Constraint frame. Adversary suite (6 classes). PASS→commit delta. FAIL→rewind or delete. Crystallization.', deps:['Phase 25 ✓','Phase 26 ✓'] },
+  { n:26,      name:'Adversarial Integrity Layer',  status:'complete', desc:'File integrity hash chain on Cortex snapshots. Negative crystal promotion. Lattice decay enforced.' },
+  { n:45,      name:'Intent Classifier: RAID Gate', status:'complete', desc:'Every request enters RAID through this gate. INTENT object: uuid, domain, verb, objects, constraints, risk_level, confidence, execution_class, source, raw.', deps:['Phase 25 ✓','request-handler ✓','jaa ✓'], unlocks:['46','31'] },
+  { n:46,      name:'Queryable Case Library',       status:'complete', desc:'Every PASS compartment trace indexed by intent signature. Before spawning: RAID queries case library — known-good traces seed working memory.', deps:['Phase 25 ✓','Phase 45 ✓','jaa ✓'], unlocks:['13 enhanced'] },
+  // NEXT
+  { n:10,      name:'Constitutional AI',            status:'next',
+    desc:'lib/constitutional-ai.js — goal graph (stability, memory budget, release state, strategic direction), 4 axioms (USER_AUTONOMY, REVERSIBILITY, TRUTH_OVER_COHERENCE, EXPLAINABILITY), cost analysis, identity kernel (read-only until Phase 11).',
+    deps:['request-handler ✓','gap-loop ✓','jaa ✓'], unlocks:['11','12','13'] },
+  // TIER 1 — no pending deps
+  { n:14,      name:'Hot Module Loader',            status:'pending', desc:'Drop→QUARANTINE→PROVE(validateInvariants())→INTEGRATE→MONITOR (60s). Snapshot before integrate (§2.1).', deps:['bus ✓','jaa ✓','snapshot ✓'], unlocks:['16','28','38'] },
+  { n:15,      name:'Grammar Engine Wiring',        status:'pending', desc:'Wire grammar into: CLI tab completion, component-registry grammar signatures, guardian dispatch, request-handler Phase B.', deps:['grammar-engine ✓','component-registry ✓','request-handler ✓','nexus-repl ✓'], unlocks:['16','31'] },
+  { n:17,      name:'Userscript Heartbeat ♥',       status:'pending', desc:'♥ in every pill — snaps red on every NCP SSE message. System tile icons flash in TV shell Overview.', deps:['userscript-claude ✓','guardian/server ✓'] },
+  { n:27,      name:'System State VM (NEX-VM/1.0)', status:'pending', desc:'Every .nex: runtime_state + bus_queue + module_states + resume_plan. Auto-suspend at σ≥0.80. 7-day retention. Resume: dep-ordered restart→replay bus_queue→verify σ<0.50 within 60s.', deps:['Phase 25 ✓','Phase 26 ✓','snapshot ✓','divergence-watcher ✓','replay-engine ✓','jaa ✓'], unlocks:['28','30'] },
+  { n:31,      name:'Grammar ↔ Intent',             status:'pending', desc:'Grammar pre-filter feeds Phase 45 intent classifier. grammar.resolve()→{componentId,params,confidence} handed to intent gate. Feedback loop: case library hit/miss rates feed grammar confidence weights.', deps:['Phase 45 ✓','grammar-engine ✓','raid ✓','snr-filter ✓','request-handler ✓'], unlocks:['34'] },
+  { n:32,      name:'Per-File Sigma Versioning',    status:'pending', desc:'Any file: edit any time, roll back independently. Compressed binary diffs, last 10 versions. Rollback: reverse diffs→write→emit→Hot Loader reloads live.', deps:['snapshot ✓','versionium ✓','jaa ✓','divergence-watcher ✓'] },
+  { n:33,      name:'PID Isolation + State Cache',  status:'pending', desc:'PID tracked in process_registry. Heartbeat: process.kill(pid,0) AND HTTP independently. State cache every 5s, Cortex shadow every 30s. L1 in-memory·L2 JAA·L3 Cortex event_log.', deps:['snapshot ✓','jaa ✓','divergence-watcher ✓','heartbeat ✓'], unlocks:['34'] },
+  { n:35,      name:'Quick Notes Sync',             status:'pending', desc:'Type in any pill → all others + TV shell + CLI. 300ms debounce→POST→SSE broadcast→re-render. Tag→Idearium idea. Grammar: "note <text>"→KNOWLEDGE_CAPTURE.', deps:['jaa ✓','guardian/server ✓','sse ✓','userscripts ✓'], unlocks:['37'] },
+  { n:36,      name:'Dynamic CLI Commands',         status:'pending', desc:'New commands via compiler path only — never direct runtime injection (§6.1·§5.3). Flow: grammarEngine.registerCommand(descriptor)→incremental blueprint recompile→new cli-map.json→grammar tree reads updated map.', deps:['grammar-engine ✓','component-registry ✓','nexus-repl ✓','jaa ✓'], unlocks:['37','38'] },
+  { n:40,      name:'Component Descriptor',         status:'pending', desc:'The descriptor is the source of truth. One descriptor produces every surface: CLI command, grammar tree node, UI button, help text, docs section, SEAM chunk, Blueprint UUID.', deps:['emerge/compiler ✓','seam-queue ✓','component-registry ✓','grammar-engine ✓'], unlocks:['40.5','41','42','43','44'] },
+  // TIER 2
+  { n:11,      name:'Reflection Engine',            status:'pending', desc:'UNRESOLVED is honest uncertainty. Every decision: satisfaction (0–1). satisfaction<0.5 for N decisions→lower RAID score+open loop. Self-model updates via gap system only (§5.3).', deps:['Phase 10','request-handler ✓','raid ✓','gap-loop ✓','jaa ✓'], unlocks:['12','13'] },
+  { n:34,      name:'API_SURFACE_FAILURE Resolution', status:'pending', desc:'Focal point label for 2+ open loops sharing {api,probe,health,degraded,unreachable,port}. Current: architect+emerge seeded with lastSeenAt=0. Leverage>1.5→skip to level 3.5.', deps:['Phase 31','Phase 33','loop-topology ✓','gap-loop ✓','escalation ✓'] },
+  { n:37,      name:'Userscript Rebuild + Tool Intercept', status:'pending', desc:'All six userscripts rebuilt. Unified pill: ♥ NEXUS|Jobs|Notes|Spec|Log|Intel|Opts. Tool intercept: AI outputs tool_use→MutationObserver→extract→POST with seam_ts→grammar→RAID→system handles→result injected back.', deps:['Phase 35','Phase 36','guardian/server ✓','ollama ✓','grammar-engine ✓'], unlocks:['39'] },
+  { n:'40.5',  name:'Descriptor-Driven CLI',        status:'pending', desc:'The CLI is not created. It is derived from capabilities. From one capability→every surface simultaneously: CLI, Grammar, UI, Help, Docs, SEAM. cli-map.json compiled output.', deps:['Phase 40','nexus-repl ✓','grammar-engine ✓','component-registry ✓'], unlocks:['44'] },
+  { n:41,      name:'Compiler Knowledge Layer',     status:'pending', desc:'T1.5 stage. Zero LLM. Six projections from capabilities[]: phase map, manifest, CLI map, UI component map, README, axiom index. Understanding loop closes here.', deps:['Phase 40','emerge/compiler ✓','seam-queue ✓','versionium ✓'], unlocks:['42','43'] },
+  // TIER 3
+  { n:12,      name:'User Model: Hypotheses',       status:'pending', desc:'Every observation: {uuid, claim, confidence, evidence_count}. Nothing stored as fact. Confidence decays 0.1/day. Queryable from request-handler Phase B. Never shared.', deps:['Phase 10','Phase 11','bda ✓','jaa ✓'], unlocks:['13'] },
+  { n:16,      name:'Idearium↔Repo↔Spec prereq',    status:'superseded', desc:'Superseded by Phase 38. Kept as dep node for Phase 38 dep chain.', deps:['Phase 14','Phase 15','idearium ✓','architect ✓','versionium ✓'] },
+  { n:42,      name:'Blueprint: Loop Closes',       status:'pending', desc:'Blueprint assembles all projections into single authority chain. Boot sequence: one read, everything known. §6.1 enforcement point. Blueprint sigma degradation triggers recompile before divergence compounds.', deps:['Phase 40','Phase 41','emerge/compiler ✓','jaa ✓','grammar-engine ✓'], unlocks:['43','44'] },
+  // TIER 4
+  { n:13,      name:'Autonomous Loop: Ollama Brain', status:'pending', desc:'Four required: Goal·Budget (hard limit)·Boundary (written, not inferred)·Exit. gap-loop is the spine. Rewind if σ>0.70. Every action carries {autonomous:true, runId, step, causedBy, intent_uuid}.', deps:['Phase 10','Phase 11','Phase 12','Phase 25 ✓','Phase 46 ✓','gap-loop ✓','ollama ✓','snapshot ✓'] },
+  { n:28,      name:'Build From Inside: Live Editor', status:'pending', desc:'Three modes: (1) in-process hot patch — VM snapshot before any edit; (2) spec-first via Phase 38; (3) meta layer via grammar→request-handler→forge→hot-load.', deps:['Phase 14','Phase 27','emerge-ide ✓','architect ✓'], unlocks:['29'] },
+  { n:38,      name:'Unified Pipeline',             status:'pending', desc:'State machine: IDEA→TENSIONED→PROMOTED→SPEC_COMPILING→HOOKED→PROVING→INTEGRATED→MONITORING→COMPLETE|FAILED→REVERTED. All stages rewindable.', deps:['Phase 14','Phase 16','Phase 36','idearium ✓','architect ✓','emerge-ide ✓'], unlocks:['39'] },
+  { n:44,      name:'Resolution Spectrum Slider',   status:'pending', desc:'L0=Exact→L5=Autonomous. max_level per capability set in .spec, projected into descriptor and cli-map. Adjustable at runtime within descriptor ceiling. Every change logged with blueprintUuid+causedBy.', deps:['Phase 40','Phase 40.5','Phase 42','grammar-engine ✓','raid ✓','request-handler ✓'] },
+  // TIER 5
+  { n:39,      name:'Realtime Sync',                status:'pending', desc:'Everything visible everywhere. Not polling. Synchronized: jobs·specs·SEAM chunks·notes·pipeline transitions·sigma·gaps·file versions. nexus watch·nexus watch jobs·nexus watch sigma·nexus watch <regex>.', deps:['Phase 37','Phase 38','guardian/server ✓','orchestrator/sse ✓','nexus-repl ✓'] },
+  { n:43,      name:'Architect as UI Builder',      status:'pending', desc:'UI is a compiler target. TV shell is a dynamic renderer of whatever the blueprint says exists. New system→new spec→compile→TV shell gains a channel. Zero changes to TV shell HTML.', deps:['Phase 40','Phase 41','Phase 42','architect ✓','grammar-engine ✓','emerge-ide ✓'] },
+  { n:29,      name:'Topology View: Live System Graph', status:'pending', desc:'Live directed graph above TV shell. Nodes=modules (color=σ, size=event volume). Resolution level (Phase 44) shown per node. Gap focal points pulse. Click node→TV shell channel. No polling.', deps:['Phase 15','Phase 16','Phase 28','orchestrator/sse ✓','gap-loop ✓'], unlocks:['30'] },
+  // TIER 6
+  { n:30,      name:'Time-Travel Debugging',        status:'pending', desc:'Checkpoint every 10min. Fork a timeline→second runtime on alternate ports. Diff both in topology view. Jump to moment before divergence→replay forward deterministically.', deps:['Phase 27','Phase 29','replay-engine ✓','divergence-watcher ✓'] },
+];
+
+// ── System definitions from interaction contract ──────────────────────
+const SYSTEMS = [
+  { id:'orchestrator', label:'ORCH', port:9000, color:'#818cf8', health:'/health', layer:1 },
+  { id:'bridge',       label:'BRDG', port:9999, color:'#22d3ee', health:'/health', layer:1 },
+  { id:'cortex',       label:'CX',   port:3748, color:'#34d399', health:'/health', layer:1 },
+  { id:'guardian',     label:'GU',   port:7820, color:'#f59e0b', health:'/health', layer:2 },
+  { id:'architect',    label:'AR',   port:3747, color:'#ef9f27', health:'/health', layer:2 },
+  { id:'idearium',     label:'ID',   port:4800, color:'#4a9eff', health:'/health', layer:2 },
+  { id:'emerge',       label:'EM',   port:4242, color:'#a78bfa', health:'/status', layer:2 },
+  { id:'diagnostic',   label:'DX',   port:7825, color:'#67e8f9', health:'/status', layer:3 },
+];
+
+// Component map for x-ray
+const COMPONENTS = [
+  { id:'nexus-co',  name:'core',         intent:'Immutable kernel — invariants, axioms, system contract',  layer:0, tier:'kernel' },
+  { id:'nexus-jaa', name:'jaaDB',        intent:'Three-tier memory — working/short/long with decay physics', layer:0, tier:'kernel' },
+  { id:'nexus-bus', name:'event-bus',    intent:'Unified event multiplex — all systems emit and subscribe here', layer:0, tier:'kernel', port:9000 },
+  { id:'nexus-que', name:'queue',        intent:'Physical queue — file-first, atomic claim, replay on crash', layer:0, tier:'kernel' },
+  { id:'nexus-led', name:'ledger',       intent:'Single write surface — §2.1 disk before behavior', layer:0, tier:'kernel' },
+  { id:'nexus-or',  name:'orchestrator', intent:'Central hub — service registry, SSE broadcast, UI hotswap', layer:1, port:9000, color:'#818cf8' },
+  { id:'nexus-br',  name:'bridge',       intent:'Identity + transport boundary — token issuance, SSE relay', layer:1, port:9999, color:'#22d3ee' },
+  { id:'nexus-cx',  name:'cortex',       intent:'Sovereign memory + intelligence — 28 JAA tables, RAID, gap engine', layer:1, port:3748, color:'#34d399' },
+  { id:'nexus-gu',  name:'guardian',     intent:'AI dispatch — SEAM chunker, NCP transport, job queue, provider RAID', layer:1, port:7820, color:'#f59e0b' },
+  { id:'nexus-id',  name:'idearium',     intent:'Idea OS — capture, tension, spec promotion, version history', layer:1, port:4800, color:'#4a9eff' },
+  { id:'nexus-ar',  name:'architect',    intent:'Constraint-first authoring — hook registry, SNR gate, blueprint engine', layer:1, port:3747, color:'#ef9f27' },
+  { id:'nexus-em',  name:'emerge',       intent:'Code generation kernel — SEAM compiler, emergence pipeline', layer:1, port:4242, color:'#a78bfa' },
+  { id:'nexus-di',  name:'diagnostic',   intent:'System observability — sigma/slope/friction, gap surface, CFR field', layer:1, port:7825, color:'#67e8f9' },
+  { id:'nexus-uid', name:'uid-system',   intent:'Component identity — structured UUIDs, registry lookup', layer:0, tier:'infrastructure' },
+];
+
+// ── State ──────────────────────────────────────────────────────────────
+let systemHealth = {};
+let activePhase = null;
+let activeView = 'xray';
+let activeRtab = 'gaps';
+let gaps = [];
+let events = [];
+let cfrState = {};
+let sseConn = null;
+let termHistory = [];
+let termIdx = -1;
+let fabOpen = false;
+
+// ── DOM refs ───────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+// ══════════════════════════════════════════════════════════════════════
+// VOID CANVAS — particle field
+// ══════════════════════════════════════════════════════════════════════
+(function initVoid() {
+  const canvas = $('canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * 2000, y: Math.random() * 1200,
+      vx: (Math.random() - .5) * .08,
+      vy: (Math.random() - .5) * .08,
+      r: Math.random() * 1.2 + .3,
+      a: Math.random() * .5 + .05,
+      c: Math.random() < .12 ? '#00e5ff' : Math.random() < .08 ? '#a78bfa' : '#4a4a8a',
+    });
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.c;
+      ctx.globalAlpha = p.a;
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ══════════════════════════════════════════════════════════════════════
+// X-RAY CANVAS — component topology
+// ══════════════════════════════════════════════════════════════════════
+(function initXray() {
+  const wrap = $('xray-canvas-wrap');
+  const canvas = $('xray-canvas');
+  const ctx = canvas.getContext('2d');
+  const tooltip = $('xray-tooltip');
+  let W, H;
+  let nodes = [];
+  let hoveredNode = null;
+  let animT = 0;
+
+  function resize() {
+    W = canvas.width = wrap.offsetWidth;
+    H = canvas.height = wrap.offsetHeight;
+    layoutNodes();
+  }
+
+  function layoutNodes() {
+    // Layers: 0=kernel (bottom arc), 1=services (orbit)
+    const kernel = COMPONENTS.filter(c => c.layer === 0);
+    const services = COMPONENTS.filter(c => c.layer === 1);
+
+    const cx = W / 2, cy = H / 2;
+    const r0 = Math.min(W, H) * 0.16; // kernel orbit radius
+    const r1 = Math.min(W, H) * 0.36; // service orbit radius
+
+    nodes = [];
+
+    kernel.forEach((c, i) => {
+      const angle = (i / kernel.length) * Math.PI * 2 - Math.PI / 2;
+      nodes.push({
+        ...c,
+        x: cx + Math.cos(angle) * r0,
+        y: cy + Math.sin(angle) * r0,
+        radius: 18, orbitR: r0,
+        online: false,
+        pulse: Math.random() * Math.PI * 2,
+      });
+    });
+
+    services.forEach((c, i) => {
+      const angle = (i / services.length) * Math.PI * 2 - Math.PI / 2;
+      nodes.push({
+        ...c,
+        x: cx + Math.cos(angle) * r1,
+        y: cy + Math.sin(angle) * r1,
+        radius: 24, orbitR: r1,
+        online: false,
+        pulse: Math.random() * Math.PI * 2,
+      });
+    });
+  }
+
+  function updateHealth() {
+    for (const n of nodes) {
+      if (n.port) {
+        const sys = Object.values(systemHealth).find(s => s.port === n.port);
+        n.online = sys ? sys.online : false;
+      }
+    }
+  }
+
+  // Edges: kernel → kernel connections
+  const EDGES = [
+    ['nexus-co','nexus-jaa'],['nexus-co','nexus-bus'],['nexus-co','nexus-led'],
+    ['nexus-jaa','nexus-cx'],['nexus-bus','nexus-or'],['nexus-bus','nexus-gu'],
+    ['nexus-or','nexus-cx'],['nexus-or','nexus-gu'],['nexus-or','nexus-id'],
+    ['nexus-or','nexus-ar'],['nexus-or','nexus-em'],['nexus-or','nexus-br'],
+    ['nexus-cx','nexus-gu'],['nexus-gu','nexus-em'],
+  ];
+
+  function drawEdge(a, b, alpha) {
+    const na = nodes.find(n => n.id === a);
+    const nb = nodes.find(n => n.id === b);
+    if (!na || !nb) return;
+    const grad = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
+    const ca = na.color || '#4a4a8a';
+    const cb = nb.color || '#4a4a8a';
+    grad.addColorStop(0, ca + '40');
+    grad.addColorStop(1, cb + '40');
+    ctx.beginPath();
+    ctx.moveTo(na.x, na.y);
+    ctx.lineTo(nb.x, nb.y);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = alpha * .5;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  function drawNode(n, t) {
+    const pulse = Math.sin(t * .8 + n.pulse) * .3 + .7;
+    const color = n.color || (n.tier === 'kernel' ? '#4a4a9a' : '#5a5aaa');
+    const alpha = n.online ? 1 : .35;
+
+    // Outer glow (online only)
+    if (n.online) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.radius + 8, 0, Math.PI * 2);
+      ctx.fillStyle = color + '12';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.radius + 4, 0, Math.PI * 2);
+      ctx.fillStyle = color + '20';
+      ctx.fill();
+    }
+
+    // Pulse ring
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.radius + 2, 0, Math.PI * 2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = alpha * pulse * (n === hoveredNode ? 1 : .4);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Node body
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+    const grad = ctx.createRadialGradient(n.x - n.radius*.3, n.y - n.radius*.3, 0, n.x, n.y, n.radius);
+    grad.addColorStop(0, color + (n.online ? 'aa' : '44'));
+    grad.addColorStop(1, color + (n.online ? '33' : '11'));
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+    ctx.strokeStyle = color + (n.online ? 'cc' : '44');
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Label
+    ctx.font = `600 8px 'Space Mono',monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = n.online ? '#fff' : '#6060a0';
+    ctx.globalAlpha = alpha;
+    ctx.fillText(n.name.toUpperCase().slice(0,6), n.x, n.y);
+    ctx.globalAlpha = 1;
+
+    // Online dot
+    if (n.online) {
+      ctx.beginPath();
+      ctx.arc(n.x + n.radius - 4, n.y - n.radius + 4, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#00ff88';
+      ctx.fill();
+    }
+  }
+
+  function frame(t) {
+    animT = t * .001;
+    if (W === 0) { requestAnimationFrame(frame); return; }
+    ctx.clearRect(0, 0, W, H);
+
+    // Orbit rings
+    const cx = W/2, cy = H/2;
+    ctx.beginPath(); ctx.arc(cx, cy, Math.min(W,H)*.16, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(74,74,122,.2)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, Math.min(W,H)*.36, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(74,74,122,.15)'; ctx.lineWidth = 1; ctx.stroke();
+
+    updateHealth();
+
+    // Edges
+    for (const [a, b] of EDGES) drawEdge(a, b, .6);
+
+    // Nodes
+    for (const n of nodes) drawNode(n, animT);
+
+    requestAnimationFrame(frame);
+  }
+
+  // Hover
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    hoveredNode = null;
+    for (const n of nodes) {
+      const dx = n.x - mx, dy = n.y - my;
+      if (Math.sqrt(dx*dx + dy*dy) < n.radius + 6) { hoveredNode = n; break; }
+    }
+    if (hoveredNode) {
+      $('xt-name').textContent = hoveredNode.name.toUpperCase();
+      $('xt-intent').textContent = hoveredNode.intent;
+      $('xt-port').textContent = hoveredNode.port ? `:${hoveredNode.port}  ${hoveredNode.online ? '● ONLINE' : '○ OFFLINE'}` : hoveredNode.tier?.toUpperCase() || '';
+      const tx = Math.min(e.clientX - wrap.getBoundingClientRect().left + 16, W - 260);
+      const ty = Math.max(e.clientY - wrap.getBoundingClientRect().top - 20, 8);
+      tooltip.style.left = tx + 'px';
+      tooltip.style.top = ty + 'px';
+      tooltip.style.opacity = '1';
+      canvas.style.cursor = 'pointer';
+    } else {
+      tooltip.style.opacity = '0';
+      canvas.style.cursor = 'default';
+    }
+  });
+  canvas.addEventListener('mouseleave', () => { tooltip.style.opacity = '0'; });
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(frame);
+})();
+
+// ══════════════════════════════════════════════════════════════════════
+// PHASE MAP
+// ══════════════════════════════════════════════════════════════════════
+function renderPhaseList() {
+  const list = $('phase-list');
+  const complete = PHASES.filter(p => p.status === 'complete').length;
+  const next = PHASES.filter(p => p.status === 'next').length;
+  $('phase-count').textContent = `${complete}/${PHASES.length}`;
+
+  list.innerHTML = PHASES.map(p => `
+    <div class="phase-item ${p.status} ${activePhase?.n === p.n ? 'active' : ''}"
+         data-n="${p.n}" onclick="selectPhase('${p.n}')">
+      <div class="phase-num">${String(p.n).padStart(2,'0')}</div>
+      <div class="phase-info">
+        <div class="phase-name">${p.name}</div>
+      </div>
+      <div class="phase-status-dot"></div>
+    </div>
+  `).join('');
+}
+
+function selectPhase(n) {
+  activePhase = PHASES.find(p => String(p.n) === String(n));
+  renderPhaseList();
+  setView('phase');
+  renderPhaseDetail();
+}
+
+function renderPhaseDetail() {
+  const empty = $('phase-detail-empty');
+  const content = $('phase-detail-content');
+  if (!activePhase) { empty.style.display='flex'; content.style.display='none'; return; }
+  empty.style.display = 'none'; content.style.display = 'block';
+
+  $('pd-num').textContent = `PHASE ${activePhase.n}`;
+  $('pd-title').textContent = activePhase.name;
+
+  const st = $('pd-status');
+  st.className = `pd-status ${activePhase.status}`;
+  st.textContent = activePhase.status === 'complete' ? '✓ COMPLETE' :
+                   activePhase.status === 'next' ? '← BUILD THIS NOW' :
+                   activePhase.status === 'superseded' ? 'SUPERSEDED' : 'PENDING';
+
+  $('pd-desc').textContent = activePhase.desc || '—';
+
+  const deps = $('pd-deps');
+  deps.innerHTML = (activePhase.deps || []).map(d =>
+    `<span class="pd-dep ${d.includes('✓') ? 'done' : ''}">${d}</span>`
+  ).join('') || '<span style="color:var(--muted);font-size:11px">No dependencies</span>';
+
+  const unlocks = $('pd-unlocks');
+  unlocks.innerHTML = (activePhase.unlocks || []).map(u =>
+    `<span class="pd-dep">${u}</span>`
+  ).join('') || '<span style="color:var(--muted);font-size:11px">—</span>';
+
+  const forgeBtn = $('pd-forge-btn');
+  const forgeLabel = $('pd-forge-label');
+  if (activePhase.status === 'complete') {
+    forgeBtn.disabled = true;
+    forgeLabel.textContent = 'ALREADY BUILT';
+  } else if (activePhase.status === 'pending') {
+    const depsUnmet = (activePhase.deps || []).filter(d => !d.includes('✓')).length;
+    forgeBtn.disabled = depsUnmet > 0;
+    forgeLabel.textContent = depsUnmet > 0 ? `BLOCKED — ${depsUnmet} DEP${depsUnmet>1?'S':''} UNMET` : 'FORGE THIS PHASE';
+  } else {
+    forgeBtn.disabled = false;
+    forgeLabel.textContent = 'FORGE THIS PHASE';
+  }
+
+  forgeBtn.onclick = () => openForgeModal(activePhase);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// VIEW SWITCHING
+// ══════════════════════════════════════════════════════════════════════
+function setView(v) {
+  activeView = v;
+  document.querySelectorAll('.vtab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
+  document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.id === `view-${v}`));
+  if (v === 'phase') renderPhaseDetail();
+  if (v === 'loom') renderLoomPhasemap();
+}
+
+// §ADDED 2026-08-13 (P4), §BUGFIX same day — real, live data, not the
+// static PHASES array above. loom/server.js's /api/phasemap now correctly
+// resolves to the §LP3 handler (the P4-era duplicate that used to shadow
+// it, serving only {id,status}, is gone — see loom/server.js). The real
+// endpoint's shape is {ok, phases:[{id,title,map,status,systems,
+// dependsOn}], maps, bySystem, total, summary} straight off loadAll(); the
+// per-map grouping for these progress bars is now built client-side from
+// that one real array, so nothing server-side needs to pre-shape a
+// second, thinner view again.
+async function renderLoomPhasemap() {
+  const wrap = document.getElementById('loom-systems');
+  const summary = document.getElementById('loom-summary');
+  wrap.innerHTML = '<div style="color:var(--dim);font:12px var(--mono,monospace)">loading live data from loom :3752…</div>';
+  let data;
+  try {
+    const r = await fetch(`${LOOM}/api/phasemap`, { signal: AbortSignal.timeout(4000) });
+    data = await r.json();
+  } catch (e) {
+    wrap.innerHTML = `<div style="color:var(--red);font:12px var(--mono,monospace)">could not reach loom :3752 — ${e.message}. Is it running?</div>`;
+    summary.textContent = 'offline';
+    return;
+  }
+  if (!data || !data.ok || !Array.isArray(data.phases)) {
+    wrap.innerHTML = `<div style="color:var(--red);font:12px var(--mono,monospace)">loom returned an error: ${(data && data.error) || 'unexpected shape'}</div>`;
+    return;
+  }
+  // Group the real, flat phase list by map (one bar per phasemap file) —
+  // done client-side now so every field loadAll() produces (title,
+  // dependsOn, systems) survives on the wire instead of being stripped
+  // before it gets here.
+  const byMap = {};
+  for (const ph of data.phases) (byMap[ph.map] = byMap[ph.map] || []).push(ph);
+  const done = data.phases.filter(p => p.status === 'done').length;
+  summary.textContent = `${done}/${data.total} phases done · ${Object.keys(byMap).length} maps · ${data.summary?.systems ?? '—'} systems`;
+  const maps = Object.entries(byMap)
+    .map(([map, phases]) => ({ map, phases, total: phases.length, done: phases.filter(p => p.status === 'done').length }))
+    .sort((a, b) => b.total - a.total);
+  wrap.innerHTML = maps.map(sys => {
+    const pct = sys.total ? Math.round((sys.done / sys.total) * 100) : 0;
+    const pending = sys.phases.filter(p => p.status !== 'done');
+    // §SIGNATURE — a loom weaves threads into fabric. The fill isn't a
+    // flat gradient; it's two interlaced diagonal thread sets (warp/weft),
+    // done color for the woven portion, a bare warp (no weft) for what's
+    // still pending — the bar itself says what a loom does, not just what
+    // color "done" happens to be.
+    const wovenColor = pct === 100 ? 'var(--green)' : 'var(--purple)';
+    return `
+      <div style="margin-bottom:16px;padding:12px 14px;background:var(--panel);border:1px solid var(--edge);border-radius:6px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font:600 12px var(--mono,monospace);color:var(--text);letter-spacing:.02em">${sys.map}</span>
+          <span style="font:11px var(--mono,monospace);color:var(--dim)">${sys.done}/${sys.total}</span>
+        </div>
+        <div style="height:7px;background:repeating-linear-gradient(90deg,var(--ink) 0px,var(--ink) 2px,var(--edge) 2px,var(--edge) 3px);border-radius:3px;overflow:hidden;margin-bottom:${pending.length ? '8px' : '0'};position:relative">
+          <div style="height:100%;width:${pct}%;background:repeating-linear-gradient(45deg,${wovenColor} 0px,${wovenColor} 3px,color-mix(in srgb, ${wovenColor} 55%, transparent) 3px,color-mix(in srgb, ${wovenColor} 55%, transparent) 6px);transition:width .3s"></div>
+        </div>
+        ${pending.length ? `<div style="font:10px var(--mono,monospace);color:var(--dim)" title="${pending.map(p => p.title).join(' · ')}">pending: ${pending.map(p => p.id).join(', ')}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+document.querySelectorAll('.vtab').forEach(t => t.onclick = () => setView(t.dataset.view));
+
+// ══════════════════════════════════════════════════════════════════════
+// RIGHT TABS
+// ══════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.rtab').forEach(t => {
+  t.onclick = () => {
+    activeRtab = t.dataset.rtab;
+    document.querySelectorAll('.rtab').forEach(r => r.classList.toggle('active', r.dataset.rtab === activeRtab));
+    document.querySelectorAll('.rpanel').forEach(p => p.classList.toggle('active', p.id === `rpanel-${activeRtab}`));
+  };
+});
+
+// ══════════════════════════════════════════════════════════════════════
+// SYSTEM HEALTH
+// ══════════════════════════════════════════════════════════════════════
+async function checkHealth() {
+  const strip = $('sys-strip');
+
+  await Promise.all(SYSTEMS.map(async sys => {
+    try {
+      const r = await fetch(`http://127.0.0.1:${sys.port}${sys.health}`, { signal: AbortSignal.timeout(2000) });
+      const d = r.ok ? await r.json().catch(() => ({})) : {};
+      systemHealth[sys.id] = { ...sys, online: r.ok, data: d };
+    } catch {
+      systemHealth[sys.id] = { ...sys, online: false };
+    }
+  }));
+
+  strip.innerHTML = SYSTEMS.map(sys => {
+    const h = systemHealth[sys.id] || {};
+    const state = h.online ? 'online' : 'offline';
+    return `<div class="sys-pip ${state}" style="color:${sys.color}" title="${sys.id} :${sys.port}">
+      <div class="sys-pip-dot"></div>${sys.label}
+    </div>`;
+  }).join('');
+
+  // Sigma from cortex
+  try {
+    const r = await fetch(`${CORTEX}/api/sigma`, { signal: AbortSignal.timeout(2000) });
+    if (r.ok) {
+      const d = await r.json();
+      const s = d.sigma ?? d.score ?? 0;
+      $('sigma-val').textContent = s.toFixed(3);
+      $('sigma-val').style.color = s > 0.65 ? '#ff3355' : s > 0.4 ? '#ffaa00' : '#00ff88';
+      $('sigma-fill').style.width = (s * 100) + '%';
+      $('sigma-fill').style.background = s > 0.65 ? '#ff3355' : s > 0.4 ? '#ffaa00' : '#00ff88';
+    }
+  } catch {}
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// GAPS
+// ══════════════════════════════════════════════════════════════════════
+async function loadGaps() {
+  const panel = $('rpanel-gaps');
+  try {
+    // Try diagnostic service first, fall back to cortex
+    let d;
+    try {
+      const r = await fetch(`${DIAG}/gaps?status=open&n=30`, { signal: AbortSignal.timeout(2000) });
+      if (r.ok) d = await r.json();
+    } catch {}
+    if (!d) {
+      const r = await fetch(`${CORTEX}/api/gaps?status=open&n=30`, { signal: AbortSignal.timeout(2000) });
+      if (r.ok) d = await r.json();
+    }
+    gaps = (d?.gaps || d?.rows || []).slice(0, 30);
+
+    if (!gaps.length) {
+      panel.innerHTML = `<div class="empty-feed"><div class="icon">✓</div><div class="label">No open gaps</div></div>`;
+      return;
+    }
+
+    panel.innerHTML = gaps.map(g => `
+      <div class="gap-entry">
+        <span class="gap-severity ${g.severity || 'low'}">${(g.severity || 'low').toUpperCase()}</span>
+        <div class="gap-body">${g.body || g.description || g.type || '—'}</div>
+        <div class="gap-meta">${g.source || ''} · ${g.type || ''}</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    panel.innerHTML = `<div class="empty-feed"><div class="icon">⚠</div><div class="label">Cortex offline</div></div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// CFR STATE
+// ══════════════════════════════════════════════════════════════════════
+async function loadCFR() {
+  const panel = $('rpanel-cfr');
+  try {
+    const r = await fetch(`${GUARDIAN}/cfr/state`, { signal: AbortSignal.timeout(2000) });
+    if (!r.ok) throw new Error();
+    cfrState = await r.json();
+  } catch {
+    try {
+      const r2 = await fetch(`${CORTEX}/api/cfr`, { signal: AbortSignal.timeout(2000) });
+      if (r2.ok) cfrState = await r2.json();
+    } catch {}
+  }
+
+  const fields = [
+    { key:'coherence',  label:'COHERENCE',  color:'#00e5ff' },
+    { key:'friction',   label:'FRICTION',   color:'#ffaa00' },
+    { key:'resonance',  label:'RESONANCE',  color:'#a78bfa' },
+    { key:'entropy',    label:'ENTROPY',    color:'#ff3355' },
+    { key:'tension',    label:'TENSION',    color:'#f59e0b' },
+    { key:'sigma',      label:'SIGMA',      color:'#34d399' },
+  ];
+
+  panel.innerHTML = fields.map(f => {
+    const v = cfrState[f.key] ?? cfrState?.state?.[f.key] ?? null;
+    const pct = v !== null ? Math.round(v * 100) : 0;
+    return `<div class="cfr-row">
+      <span class="cfr-label">${f.label}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="cfr-bar-wrap"><div class="cfr-bar" style="width:${pct}%;background:${f.color}"></div></div>
+        <span class="cfr-val" style="color:${f.color}">${v !== null ? v.toFixed(3) : '—'}</span>
+      </div>
+    </div>`;
+  }).join('') + (cfrState.regime ? `
+    <div class="cfr-row">
+      <span class="cfr-label">REGIME</span>
+      <span class="cfr-val">${cfrState.regime}</span>
+    </div>` : '');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// SSE — live event feed
+// ══════════════════════════════════════════════════════════════════════
+function connectSSE() {
+  if (sseConn) { sseConn.close(); }
+  try {
+    sseConn = new EventSource(`${ORCH}/sse`);
+    sseConn.onopen = () => termLog('SSE connected to orchestrator', 'ok');
+    sseConn.onmessage = e => {
+      try {
+        const data = JSON.parse(e.data);
+        pushEvent(data);
+        // Hot-update sigma if it comes in
+        if (data.type === 'cortex.sigma' || data.payload?.sigma !== undefined) {
+          const s = data.payload?.sigma ?? 0;
+          $('sigma-val').textContent = s.toFixed(3);
+          $('sigma-fill').style.width = (s * 100) + '%';
+        }
+      } catch {}
+    };
+    sseConn.onerror = () => {
+      termLog('SSE disconnected — retrying in 5s', 'warn');
+      setTimeout(connectSSE, 5000);
+    };
+  } catch(e) {
+    termLog('SSE unavailable: orchestrator offline', 'warn');
+  }
+}
+
+function pushEvent(data) {
+  events.unshift(data);
+  if (events.length > 80) events.pop();
+  if (activeRtab === 'events') renderEvents();
+}
+
+function renderEvents() {
+  const panel = $('rpanel-events');
+  if (!events.length) {
+    panel.innerHTML = `<div class="empty-feed"><div class="icon">📡</div><div class="label">Waiting for events</div></div>`;
+    return;
+  }
+  panel.innerHTML = events.slice(0, 40).map(ev => `
+    <div class="event-entry">
+      <span class="event-type">${ev.type || 'event'}</span>
+      <div class="event-payload">${ev.source || ev.system || ''}${ev.payload ? ' · ' + JSON.stringify(ev.payload).slice(0,80) : ''}</div>
+      <div class="event-ts">${ev.ts ? new Date(ev.ts).toLocaleTimeString() : ''}</div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// TERMINAL
+// ══════════════════════════════════════════════════════════════════════
+function termLog(msg, cls = 'out') {
+  const out = $('term-output');
+  const line = document.createElement('div');
+  line.className = `term-line ${cls}`;
+  line.textContent = msg;
+  out.appendChild(line);
+  out.scrollTop = out.scrollHeight;
+}
+
+const TERM_COMMANDS = {
+  help: () => {
+    termLog('Commands: health  gaps  cfr  phases  dispatch <provider> <prompt>  snapshot  clear', 'info');
+  },
+  health: async () => {
+    await checkHealth();
+    for (const [id, h] of Object.entries(systemHealth)) {
+      termLog(`  ${h.online ? '✓' : '✗'} ${id.padEnd(14)} :${h.port}  ${h.online ? 'ONLINE' : 'OFFLINE'}`, h.online ? 'ok' : 'err');
+    }
+  },
+  gaps: async () => {
+    await loadGaps();
+    if (!gaps.length) { termLog('No open gaps', 'ok'); return; }
+    gaps.slice(0,10).forEach(g => termLog(`  [${(g.severity||'low').toUpperCase()}] ${g.body || g.type || '—'}`, g.severity === 'high' ? 'err' : 'warn'));
+  },
+  cfr: async () => {
+    await loadCFR();
+    for (const [k, v] of Object.entries(cfrState)) {
+      if (typeof v === 'number') termLog(`  ${k.padEnd(12)} ${v.toFixed(4)}`, 'info');
+    }
+  },
+  phases: () => {
+    PHASES.forEach(p => {
+      const sym = p.status === 'complete' ? '✓' : p.status === 'next' ? '→' : '·';
+      termLog(`  ${sym} ${String(p.n).padEnd(4)} ${p.name}`, p.status === 'complete' ? 'ok' : p.status === 'next' ? 'info' : 'sys');
+    });
+  },
+  clear: () => { $('term-output').innerHTML = ''; },
+  snapshot: async () => {
+    try {
+      const r = await fetch(`${CORTEX}/api/snapshot`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ trigger:'forge-shell', source:'terminal' }) });
+      const d = await r.json();
+      termLog(`Snapshot: ${d.snapId || d.id || 'created'}`, 'ok');
+    } catch { termLog('Snapshot failed — cortex offline', 'err'); }
+  },
+};
+
+async function runTermCommand(raw) {
+  const parts = raw.trim().split(/\s+/);
+  const cmd = parts[0].toLowerCase();
+  const args = parts.slice(1);
+
+  termLog(`nexus › ${raw}`, 'sys');
+  termHistory.unshift(raw);
+  termIdx = -1;
+
+  if (cmd === 'dispatch') {
+    const provider = args[0] || 'claude';
+    const prompt = args.slice(1).join(' ');
+    if (!prompt) { termLog('Usage: dispatch <provider> <prompt>', 'warn'); return; }
+    try {
+      const r = await fetch(`${GUARDIAN}/command`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ provider, command:'forge', prompt })
+      });
+      const d = await r.json();
+      termLog(`Dispatched → job ${d.jobId || d.id || '?'}`, 'ok');
+    } catch { termLog('Dispatch failed — guardian offline', 'err'); }
+    return;
+  }
+
+  if (TERM_COMMANDS[cmd]) {
+    await TERM_COMMANDS[cmd](args);
+  } else {
+    // Try forwarding to orchestrator CLI
+    try {
+      const r = await fetch(`${ORCH}/api/recall?type=${encodeURIComponent(cmd)}&n=5`, { signal: AbortSignal.timeout(3000) });
+      if (r.ok) {
+        const d = await r.json();
+        const rows = d.rows || d.events || [];
+        if (rows.length) {
+          rows.forEach(row => termLog(`  ${JSON.stringify(row).slice(0,100)}`, 'out'));
+        } else {
+          termLog(`Unknown command: ${cmd}  (try: help)`, 'warn');
+        }
+      } else {
+        termLog(`Unknown command: ${cmd}`, 'warn');
+      }
+    } catch { termLog(`Unknown command: ${cmd}`, 'warn'); }
+  }
+}
+
+const termInput = $('term-input');
+termInput.addEventListener('keydown', async e => {
+  if (e.key === 'Enter') {
+    const val = termInput.value.trim();
+    if (!val) return;
+    termInput.value = '';
+    await runTermCommand(val);
+  } else if (e.key === 'ArrowUp') {
+    if (termHistory.length) { termIdx = Math.min(termIdx + 1, termHistory.length - 1); termInput.value = termHistory[termIdx]; }
+    e.preventDefault();
+  } else if (e.key === 'ArrowDown') {
+    termIdx = Math.max(termIdx - 1, -1);
+    termInput.value = termIdx >= 0 ? termHistory[termIdx] : '';
+    e.preventDefault();
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════
+// FLOATING ACTION BUTTON
+// ══════════════════════════════════════════════════════════════════════
+$('fab').onclick = () => {
+  fabOpen = !fabOpen;
+  $('fab').classList.toggle('open', fabOpen);
+  $('fab-menu').classList.toggle('open', fabOpen);
+};
+
+document.querySelectorAll('.fab-action').forEach(btn => {
+  btn.onclick = () => {
+    const action = btn.dataset.action;
+    fabOpen = false;
+    $('fab').classList.remove('open');
+    $('fab-menu').classList.remove('open');
+
+    if (action === 'forge') {
+      openForgeModal(activePhase || PHASES.find(p => p.status === 'next'));
+    } else if (action === 'dispatch') {
+      openForgeModal(null, 'DISPATCH JOB');
+    } else if (action === 'snapshot') {
+      TERM_COMMANDS.snapshot();
+      setView('terminal');
+      toast('Snapshot requested', 'ok');
+    } else if (action === 'diagnose') {
+      setView('terminal');
+      TERM_COMMANDS.health();
+    } else if (action === 'gaps') {
+      loadGaps();
+      activeRtab = 'gaps';
+      document.querySelectorAll('.rtab').forEach(r => r.classList.toggle('active', r.dataset.rtab === 'gaps'));
+      document.querySelectorAll('.rpanel').forEach(p => p.classList.toggle('active', p.id === 'rpanel-gaps'));
+    }
+  };
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && fabOpen) {
+    fabOpen = false;
+    $('fab').classList.remove('open');
+    $('fab-menu').classList.remove('open');
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════
+// FORGE MODAL
+// ══════════════════════════════════════════════════════════════════════
+function openForgeModal(phase, title) {
+  $('fm-title').textContent = title || 'FORGE PHASE';
+  $('fm-phase').value = phase ? `Phase ${phase.n} — ${phase.name}` : '';
+  $('fm-prompt').value = phase?.desc || '';
+  $('forge-modal').classList.add('open');
+}
+
+$('fm-close').onclick = $('fm-cancel').onclick = () => $('forge-modal').classList.remove('open');
+$('forge-modal').onclick = e => { if (e.target === $('forge-modal')) $('forge-modal').classList.remove('open'); };
+
+$('fm-submit').onclick = async () => {
+  const phase = $('fm-phase').value;
+  const provider = $('fm-provider').value;
+  const prompt = $('fm-prompt').value;
+  if (!prompt.trim()) { toast('Enter a prompt', 'err'); return; }
+
+  $('fm-submit').disabled = true;
+  $('fm-submit').textContent = 'DISPATCHING…';
+
+  try {
+    const r = await fetch(`${GUARDIAN}/command`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ provider, command:'forge', prompt: `${phase ? phase + '\n\n' : ''}${prompt}` })
+    });
+    const d = await r.json();
+    toast(`Job dispatched → ${d.jobId || d.id || 'queued'}`, 'ok');
+    termLog(`FORGE: ${phase} → job ${d.jobId || '?'} via ${provider}`, 'ok');
+    setView('terminal');
+    $('forge-modal').classList.remove('open');
+  } catch {
+    toast('Guardian offline — job not dispatched', 'err');
+  } finally {
+    $('fm-submit').disabled = false;
+    $('fm-submit').textContent = '⚡ DISPATCH';
+  }
+};
+
+// ══════════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════════
+function toast(msg, type = 'info') {
+  const root = $('toast-root');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  root.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════════════════════════════════
+async function boot() {
+  renderPhaseList();
+  termLog('FORGE SHELL v1.0.0 — sovereign build surface', 'info');
+  termLog('Checking system health…', 'sys');
+  await checkHealth();
+  await loadGaps();
+  await loadCFR();
+  connectSSE();
+
+  const online = Object.values(systemHealth).filter(s => s.online).length;
+  termLog(`${online}/${SYSTEMS.length} systems online`, online > 0 ? 'ok' : 'warn');
+  termLog('Type "help" for commands', 'sys');
+
+  // Scroll to next phase in list
+  const nextEl = document.querySelector('.phase-item.next');
+  if (nextEl) nextEl.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+// Refresh loop
+setInterval(async () => {
+  await checkHealth();
+  if (activeRtab === 'gaps') await loadGaps();
+  if (activeRtab === 'cfr') await loadCFR();
+  if (activeRtab === 'events') renderEvents();
+}, 8000);
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.axioms.add
+type: component
+id: copilot.axioms.add
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153040
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153040
+lastSeenAt: 1789275153040
+fingerprint: copilot::POST /api/axioms/add
+payload:
+  id: copilot.axioms.add
+  uuid: 52304fd0-3dfc-45ab-ad4a-40a6490c1c47
+  namespace: copilot
+  name: axioms.add
+  version: 2.0.0

@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-23980c1e-2d96-4c74-8828-8469159826ad
+type: bep_pattern
+id: 23980c1e-2d96-4c74-8828-8469159826ad
+context: 'intelligence crystallised pattern: cross_system_causal'
+intent: null
+summary: >-
+  "adversarial.run.complete" (diagnostic) and "ledger.diagnostic.poll.complete" (copilot) co-occur
+  within 5s across two real systems — 30 observations
+system: intelligence
+tags:
+  - bep_patterns
+  - cross_system_causal
+  - cortex/intelligence
+exported_at: 1790369507827
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790369507827
+lastSeenAt: 1790369507827
+fingerprint: null
+payload:
+  uuid: 23980c1e-2d96-4c74-8828-8469159826ad
+  signature: adversarial.run.complete::ledger.diagnostic.poll.complete
+  patternType: cross_system_causal
+  typeA: adversarial.run.complete
+  typeB: ledger.diagnostic.poll.complete
+  systemA: diagnostic
+  systemB: copilot
+  crossSystem: true
+  count: 30
+  confidence: 1
+  description: >-
+    "adversarial.run.complete" (diagnostic) and "ledger.diagnostic.poll.complete" (copilot) co-occur
+    within 5s across two real systems — 30 observations
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790369507443

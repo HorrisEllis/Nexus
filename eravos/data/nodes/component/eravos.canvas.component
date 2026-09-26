@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-eravos.canvas
+type: component
+id: eravos.canvas
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789275153027
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153027
+lastSeenAt: 1789275153027
+fingerprint: eravos::GET /
+payload:
+  id: eravos.canvas
+  uuid: 28b82815-365a-4dce-8868-4252fd267d7a
+  namespace: eravos
+  name: canvas
+  version: 3.0.0

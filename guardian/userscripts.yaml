@@ -1,0 +1,168 @@
+# guardian/userscripts.yaml — real component registry for every Guardian
+# NCP userscript, read by clear-glass/src/userscripts/manager.js's
+# _loadGuardianScripts().
+#
+# §THE GAP THIS CLOSES — James: "userscripts yaml, very roomy blocks, each
+# block a component or system, with all the system relevant js." Checked
+# directly before writing this: manager.js's _loadGuardianScripts() had a
+# HAND-MAINTAINED array duplicating each script's own real `// @match`
+# Tampermonkey header — a second, separate copy of the same facts that can
+# drift from the source of truth. It already had:
+#   - a real, silent bug: referenced 'userscript-ollama.js', which does not
+#     exist on disk (only userscript-ollama.js.deprecated does) — the
+#     existsSync guard means this has always silently no-op'd, not crashed.
+#   - a real, silent gap: userscript-memory.js (a real, standalone script —
+#     confirmed by reading its own header, "Separate from Guardian — does
+#     not inject, does not claim tabs") was never in the array at all, so
+#     it has never been loadable through UserscriptManager.
+# This file is the single real registry going forward — one block per
+# component/system, matching each script's own real header (checked
+# against every file this session, not invented) rather than a second
+# hand-kept list. manager.js now parses THIS instead of the old array.
+#
+# §COMPOSED, NOT STANDALONE — nexus-wake is real but is NOT independently
+# injectable; its own header says "Loaded by each provider userscript...
+# so the behaviour is defined once rather than four times." It is listed
+# with standalone: false and composed_into naming which real scripts pull
+# it in, rather than given its own fake matches/injection entry.
+
+version: 1
+uuid: nexus-guardian-userscripts-registry-v1-0000-2026-0903-001
+
+components:
+
+  claude:
+    id: guardian-claude
+    name: "Guardian — Claude"
+    file: userscript-claude.js
+    version: "10.8.0"          # from the script's own @version, not re-derived. 0.39.254: was 10.2.0 here while the script was 10.5.0 — synced; +GUARDIAN_TRANSCRIPT push
+    matches: ["https://claude.ai/*"]
+    grants: [GM_xmlhttpRequest, GM_getValue, GM_setValue]
+    standalone: true
+    composed_into: []
+    description: >
+      IndexedDB kernel, SHA-256 dedup, pre-prompt intelligence injection,
+      full system widget, connection info, log/ledger, options, SEAM,
+      queue, tags.
+
+  chatgpt:
+    id: guardian-chatgpt
+    name: "Guardian — ChatGPT"
+    file: userscript-chatgpt.js
+    version: "10.8.0"   # 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating on transcript pushes, GUARDIAN_JOB_DONE. 0.39.254 — was 10.1.0 here while the script was 10.5.0; +GUARDIAN_TRANSCRIPT push, chatId keeps WEB:
+    matches: ["https://chatgpt.com/*", "https://chat.openai.com/*"]
+    grants: [GM_xmlhttpRequest, GM_getValue, GM_setValue]
+    standalone: true
+    composed_into: []
+    description: >
+      Full feature parity with Claude v10 — IndexedDB kernel, SHA-256
+      dedup, intelligence injection, SEAM, NEXUS module, memory/RAID/
+      self-heal hooks, structured output detection, tool intercept.
+
+  gemini:
+    id: guardian-gemini
+    name: "Guardian — Gemini"
+    file: userscript-gemini.js
+    version: "10.7.0"   # 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating, GUARDIAN_JOB_DONE. 0.39.254 — was 10.1.0 here while the script was 10.4.0; +GUARDIAN_TRANSCRIPT push
+    matches: ["https://gemini.google.com/*", "https://aistudio.google.com/*"]
+    grants: [GM_xmlhttpRequest, GM_getValue, GM_setValue]
+    standalone: true
+    composed_into: []
+    description: >
+      Protocol parity with Claude/ChatGPT v10 built around Gemini's real
+      distinctive surface — vision, image understanding, image
+      generation, multimodal.
+
+  perplexity:
+    id: guardian-perplexity
+    name: "Guardian — Perplexity"
+    file: userscript-perplexity.js
+    version: "10.7.0"   # 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating, GUARDIAN_JOB_DONE. 0.39.254 — was 10.1.0 here while the script was 10.4.0; +GUARDIAN_TRANSCRIPT push
+    matches: ["https://www.perplexity.ai/*", "https://perplexity.ai/*"]
+    grants: [GM_xmlhttpRequest, GM_getValue, GM_setValue]
+    standalone: true
+    composed_into: []
+    description: >
+      Protocol parity with Claude/ChatGPT/Gemini v10 built around
+      Perplexity's real distinctive surface — citations, web grounding,
+      research.
+
+  deepseek:
+    id: guardian-deepseek
+    name: "Guardian — DeepSeek"
+    file: userscript-deepseek.js
+    version: "10.7.0"   # 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating, GUARDIAN_JOB_DONE. 0.39.254 — was 1.0.0 here while the script was 10.4.0; +GUARDIAN_TRANSCRIPT push
+    matches: ["https://chat.deepseek.com/*"]
+    grants: [GM_xmlhttpRequest, GM_getValue, GM_setValue]
+    standalone: true
+    composed_into: []
+    description: >
+      NCP v10 protocol parity with Claude/ChatGPT/Gemini/Perplexity, cloned
+      per reuse-before-build with DeepSeek's own real, externally-verified
+      selectors (#chat-input, .ds-markdown, .ds-button--primary proximity
+      search). Was previously ollama-bridge-only (local model dispatch);
+      this is the real, separate browser/NCP path, same as the other 4.
+
+  memory:
+    id: guardian-memory
+    name: "NEXUS — Cortex Memory Observer"
+    file: userscript-memory.js
+    version: "1.0.0"
+    matches: ["https://claude.ai/*", "https://chatgpt.com/*", "https://chat.openai.com/*"]
+    grants: [GM_xmlhttpRequest]
+    standalone: true
+    composed_into: []
+    # §FIX 2026-09-03 — was never in the old hardcoded array at all; this
+    # is the real gap being closed, not a status-quo entry.
+    status: "was ungapped 2026-09-03 — previously unloadable through UserscriptManager"
+    description: >
+      Passive conversation observer. Watches all AI chats and routes
+      conversation turns into cortex working/short-term memory. Separate
+      from Guardian — does not inject, does not claim tabs. Extracts
+      ?REMEMBER: signals for long-term crystal candidates.
+
+  nexus_wake:
+    id: guardian-nexus-wake
+    name: "Nexus Wake Word"
+    file: userscript-nexus-wake.js
+    version: "1.1.0"   # 0.39.252 — checkMessage reports only; agent wakes answered by guardian/lib/wake-loop.js as a job
+    matches: []                # not independently injectable — see standalone
+    grants: []
+    standalone: false
+    composed_into: [claude, chatgpt, gemini, perplexity]
+    description: >
+      "Hey nexus" in any agent tab. Defined once and loaded BY each
+      provider userscript's own injectText()/submit(), rather than a
+      second composer driver that would drift from the host script.
+
+  ollama:
+    id: guardian-ollama
+    name: "Guardian — Ollama"
+    file: userscript-ollama.js.deprecated
+    version: null
+    matches: ["http://localhost:11434/*"]
+    grants: []
+    standalone: true
+    # §FIX 2026-09-03 — the old hardcoded array referenced
+    # 'userscript-ollama.js', which does not exist on disk (only the
+    # .deprecated file does) — existsSync silently no-op'd this entry
+    # forever. Marked loadable: false here so the real, current state is
+    # explicit instead of a filename that quietly never resolves.
+    loadable: false
+    status: "deprecated — real file is userscript-ollama.js.deprecated, not loaded"
+    description: >
+      Deprecated. Ollama is dispatched to directly over HTTP by guardian's
+      real provider-routing (ollama-bridge), not through a browser
+      userscript — this entry is kept for the historical record only.
+
+  orchestrator:
+    id: guardian-orchestrator
+    name: "Guardian — Orchestrator"
+    file: userscript-orchestrator.js.deprecated
+    version: null
+    matches: []
+    grants: []
+    standalone: true
+    loadable: false
+    status: "deprecated"
+    description: "Deprecated — kept for the historical record only."

@@ -1,0 +1,30 @@
+{
+  "_comment": "Phase 67 — NEXUS MCP Tool Bridge config for Claude Desktop",
+  "_instructions": [
+    "1. Copy this file's 'mcpServers' section into your Claude Desktop config",
+    "2. Config location: %APPDATA%\\Claude\\claude_desktop_config.json (Windows)",
+    "3. Start NEXUS before opening Claude Desktop",
+    "4. The MCP server starts automatically when Guardian boots on :7821",
+    "5. Verify with: curl http://127.0.0.1:7821/health"
+  ],
+  "mcpServers": {
+    "nexus": {
+      "url": "http://127.0.0.1:7821/sse",
+      "_tools": [
+        "nexus_copilot      — ask the co-pilot anything (7-layer context, zero grep)",
+        "nexus_status       — health of all NEXUS services",
+        "nexus_gaps         — open structural gaps by severity",
+        "nexus_jobs         — recent Guardian jobs",
+        "nexus_patterns     — crystallized intelligence patterns",
+        "nexus_rca          — root cause analysis findings",
+        "nexus_cfr          — CFR-Ω field: sigma, regime, coherence",
+        "nexus_conversations — recent co-pilot conversation history",
+        "nexus_artifacts    — saved code artifacts",
+        "nexus_ideas        — search Idearium",
+        "nexus_save_idea    — save insight to Idearium",
+        "nexus_build_organism — describe an organism, get a FORGE build plan",
+        "nexus_read_spec    — read a spec file by name"
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.dom.pick
+type: capability
+id: cg.dom.pick
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730158
+source: clear-glass.registry-components:cg.dom.pick
+payload:
+  id: cg.dom.pick
+  namespace: cg
+  name: dom.pick
+  version: 3.1.0
+  grammar:
+    - dom pick
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Register element picker result
+  params: []
+  tags:
+    - cg
+    - dom
+    - seam
+  permissions:
+    - system
+  hooks: {}

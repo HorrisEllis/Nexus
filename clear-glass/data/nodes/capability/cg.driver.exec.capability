@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.driver.exec
+type: capability
+id: cg.driver.exec
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730157
+source: clear-glass.registry-components:cg.driver.exec
+payload:
+  id: cg.driver.exec
+  namespace: cg
+  name: driver.exec
+  version: 3.1.0
+  grammar:
+    - driver exec
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Execute ClearDriver browser action
+  params: []
+  tags:
+    - cg
+    - driver
+    - automation
+  permissions:
+    - system
+  hooks: {}

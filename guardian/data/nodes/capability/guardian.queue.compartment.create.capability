@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.queue.compartment.create
+type: capability
+id: guardian.queue.compartment.create
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730142
+source: guardian.registry-components:guardian.queue.compartment.create
+payload:
+  id: guardian.queue.compartment.create
+  namespace: guardian
+  name: queue.compartment.create
+  version: 3.6.2
+  grammar:
+    - queue compartment create
+    - queue-compartment-create
+  route:
+    method: POST
+    path: /queue/compartments
+  intent: []
+  description: Create job compartment
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

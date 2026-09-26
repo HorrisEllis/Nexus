@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-schema-contract
+type: schema
+id: contract
+context: >-
+  cortex/schemas — sovereign local copy. Origin: lib/node-schemas/schema.contract (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means cortex does
+  not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789235656628
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    cortex/core/raid/contract-intake.js — BUILD_CONTRACT_SCHEMA + synthesizeContract() (B1, built
+    2026-09-03). Supersedes the older, narrower submitContract() queue-row shape this entry
+    originally documented — every field below is real, validated, and persisted, not just a
+    queue-row description.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real queue id, assigned by submitContract()
+    forAgent:
+      type: string
+      required: true
+      description: real target agent or hat name
+    intention:
+      type: string
+      required: true
+      description: >-
+        a real verb from intent-classifier.js's VALID_VERBS, validated. §NAMING — B1's own phasemap
+        spec calls this field "intent"; the real persisted RAID queue-row field has been named
+        `intention` since before B1 existed (submitContract()'s own real param).
+        synthesizeContract() honors the existing real field name rather than introducing a second,
+        conflicting one for the same fact.
+    system:
+      type: string
+      required: false
+      description: which real SYSTEM this contract concerns
+    endState:
+      type: string
+      required: true
+      description: the real target condition, not a task description
+    conditions:
+      type: object
+      required: false
+      description: 'structured { pre: string[], post: string[] }'
+    context:
+      type: string
+      required: false
+      description: real context, pulled on demand via toolScope
+    warpPrimitives:
+      type: array
+      required: false
+      description: 'subset of the real 5: Event, Gate, Axiom, Stream, StreamLog — validated against warp/core'
+    axioms:
+      type: array
+      required: false
+      description: real §N.N refs, validated live against docs/AXIOMS-v3.1.md
+    tools:
+      type: array
+      required: false
+      description: real toolScope; defaults from forAgent's hat when omitted
+    compartmentUuid:
+      type: string
+      required: false
+      description: a real, specific existing compartment to target
+    fileDirectory:
+      type: string
+      required: false
+      description: real target directory this contract's work lands in
+    fileName:
+      type: string
+      required: false
+      description: real target file name

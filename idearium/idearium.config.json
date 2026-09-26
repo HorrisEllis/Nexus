@@ -1,0 +1,80 @@
+{
+  "$comment": [
+    "idearium.config.json — the human-editable layer of idearium.config.",
+    "",
+    "Edit this file and save. It is re-read on every config load, so a change",
+    "takes effect on the next call — no restart, no redeploy. Delete a key to",
+    "fall back to its schema default (idearium/lib/config.js's SCHEMA).",
+    "",
+    "PRECEDENCE, lowest to highest:",
+    "  1. SCHEMA defaults in idearium/lib/config.js",
+    "  2. THIS FILE",
+    "  3. runtime writes (POST /api/config, idearium.config.set, copilot)",
+    "A runtime write therefore SHADOWS what you put here. If a value you set",
+    "in this file appears to do nothing, something wrote it at runtime — call",
+    "POST /api/config/reset with that key to drop the override, or check GET",
+    "/api/config, whose `source` field says 'default' | 'file' | 'runtime'",
+    "for every key.",
+    "",
+    "Every key below is optional. This file ships with the values that differ",
+    "from the defaults only where there is a reason to state them explicitly;",
+    "the rest are listed with their real defaults so the file doubles as the",
+    "reference for what can be changed.",
+    "",
+    "$comment and $schema are ignored as config."
+  ],
+
+  "chunking": {
+    "chunk_cap": 20000,
+    "max_chunk_bytes": 204800,
+    "write_chunk_nodes": true
+  },
+
+  "import": {
+    "real_files": true,
+    "include_binary": true,
+    "max_total_bytes": 536870912,
+    "max_real_file_bytes": 52428800,
+    "skip_dirs": ["node_modules", ".git", ".svn", "dist", "build", "__pycache__", ".next"],
+    "text_ext": [".js", ".ts", ".jsx", ".tsx", ".json", ".md", ".txt", ".py", ".html", ".css", ".yml", ".yaml", ".spec", ".sh"],
+    "verify_hashes": true
+  },
+
+  "repo": {
+    "storage_dir": "idearium/repo/repos",
+    "git_enabled": true,
+    "git_branch": "main",
+    "git_author_name": "NEXUS Idearium",
+    "git_author_email": "idearium@nexus.local"
+  },
+
+  "compartment": {
+    "use_cos": true,
+    "runtime_id": "node",
+    "network_isolated": true,
+    "wipe_on_cancel": true,
+    "time_budget_ms": 1800000,
+    "stale_after_ms": 1200000
+  },
+
+  "api": {
+    "port": 4800,
+    "binding": "127.0.0.1",
+    "chunk_events_limit": 200,
+    "cors_origin": "*"
+  },
+
+  "pipeline": {
+    "zoom_levels": 4,
+    "snapshot_mode": "delta",
+    "auto_phasemap": true,
+    "build_poll_ms": 15000,
+    "max_attempts": 3
+  },
+
+  "cicd": {
+    "push_enabled": false,
+    "pull_enabled": false,
+    "ssh_key_path": null
+  }
+}

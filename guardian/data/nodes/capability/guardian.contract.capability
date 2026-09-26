@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.contract
+type: capability
+id: guardian.contract
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730127
+source: guardian.registry-components:guardian.contract
+payload:
+  id: guardian.contract
+  namespace: guardian
+  name: contract
+  version: 3.6.2
+  grammar:
+    - contract
+    - contract
+  route:
+    method: GET
+    path: /contract
+  intent: []
+  description: Guardian interaction contract
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

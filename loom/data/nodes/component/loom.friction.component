@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-loom.friction
+type: component
+id: loom.friction
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789275153105
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153105
+lastSeenAt: 1789275153105
+fingerprint: loom::GET /api/friction
+payload:
+  id: loom.friction
+  uuid: 520c082c-b595-4c5f-82c9-d52ce0588e95
+  namespace: loom
+  name: friction
+  version: 1.5.0

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.phasemap.system
+type: capability
+id: loom.phasemap.system
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730153
+source: loom.registry-components:loom.phasemap.system
+payload:
+  id: loom.phasemap.system
+  namespace: loom
+  name: phasemap.system
+  version: 1.5.0
+  grammar:
+    - phasemap system
+    - phasemap-system
+  route:
+    method: GET
+    path: /api/phasemap/:system
+  intent: []
+  description: One system's roadmap — done/pending phase breakdown
+  params: []
+  tags:
+    - loom
+    - analysis
+  permissions:
+    - system
+  hooks: {}

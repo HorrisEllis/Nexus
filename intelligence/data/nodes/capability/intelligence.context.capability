@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.context
+type: capability
+id: intelligence.context
+context: intelligence/registry-components.js real capability export
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789250756064
+source: intelligence.registry-components:intelligence.context
+payload:
+  id: intelligence.context
+  namespace: intelligence
+  name: context
+  version: 1.0.0
+  grammar:
+    - context
+    - intelligence context
+  route:
+    method: GET
+    path: /api/intelligence/context
+  intent: []
+  description: Assembled intelligence context
+  params: []
+  tags:
+    - intelligence
+  permissions:
+    - system
+  hooks: {}

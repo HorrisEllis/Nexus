@@ -1,0 +1,74 @@
+envelope: 1
+uuid: nexus-export-schema-output
+type: schema
+id: output
+context: >-
+  guardian/schemas — sovereign local copy. Origin: lib/node-schemas/schema.output (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means guardian
+  does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789235656511
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Corrected this pass — the CLI's own captured response, not the server's internal ledger/bus
+    payload. Two real, distinct shapes checked directly: guardian/server.js's real GET
+    /response/:jobId route (the one guardian/cli.js's pollUntilDone() actually reads), and
+    copilot/cli.js's real parsed response object (the `d` in _talkToCopilot(), read straight off
+    POST /api/prompt). This replaces the earlier draft, which was grounded in writeToNexus()'s
+    internal cortex-write payload — real, but not what a CLI operator actually receives back.
+  fields:
+    ok:
+      type: boolean
+      required: true
+      description: >-
+        real success flag — present in both guardian's /response/:jobId and copilot's /api/prompt
+        reply
+    response:
+      type: string
+      required: false
+      description: real answer text — same field name in both real shapes, absent while still pending/failed
+    error:
+      type: string
+      required: false
+      description: >-
+        real failure reason — guardian's pollUntilDone() reads result.error on status:'failed',
+        copilot reads d.error on ok:false
+    jobId:
+      type: string
+      required: false
+      description: real job id this output resolves — guardian-only
+    status:
+      type: string
+      required: false
+      description: real job lifecycle status ('pending'|'complete'|'failed') — guardian-only
+    provider:
+      type: string
+      required: false
+      description: real provider that produced this output — guardian-only field on this route
+    ts:
+      type: number
+      required: false
+      description: real job timestamp — guardian-only
+    toolResult:
+      type: object
+      required: false
+      description: >-
+        real {result, ...} object — copilot-only, present when the prompt caused a tool call instead
+        of a chat reply
+    denied:
+      type: boolean
+      required: false
+      description: real RAID denial flag — copilot-only
+    reason:
+      type: string
+      required: false
+      description: real denial reason — copilot-only, present when denied:true
+    context:
+      type: object
+      required: false
+      description: real {sections, tokensUsed} — copilot-only, describes the context window used to answer

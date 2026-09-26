@@ -1,0 +1,22 @@
+envelope: 1
+uuid: nexus-export-schema-fault_taxonomy
+type: schema
+id: fault_taxonomy
+context: intelligence/schemas — intelligence-local schema registry
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789200001800
+source: nexus.lib.node-export
+payload:
+  status: OPEN
+  source: >-
+    intelligence/schemas.js documents this table's existence ("real, classified failure modes —
+    read by lib/fault-log.js for pre-action precedent checks") but its own entry is only a pointer
+    ("see lib/fault-log.js — the real, canonical writer"), not a field list. Marked OPEN honestly
+    rather than inventing fields lib/fault-log.js's real insert() call wasn't independently checked
+    against this pass. Distinct from the central .failure_mode (cortex/self-heal's escalation
+    record) and from lib/node-schemas/schema.fault (a different real table, per guardian's own
+    schema index) — three real, adjacent, unreconciled "fault"-adjacent concepts.
+  fields: {}

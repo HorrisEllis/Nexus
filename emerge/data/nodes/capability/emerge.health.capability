@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-emerge.health
+type: capability
+id: emerge.health
+context: emerge/registry-components.js real capability export
+intent: null
+summary: null
+system: emerge
+tags: []
+exported_at: 1789250730114
+source: emerge.registry-components:emerge.health
+payload:
+  id: emerge.health
+  namespace: emerge
+  name: health
+  version: 1.1.0
+  grammar:
+    - health
+    - emerge health
+  route:
+    method: GET
+    path: /status
+  intent: []
+  description: Emerge IDE health
+  params: []
+  tags:
+    - emerge
+  permissions:
+    - system
+  hooks: {}

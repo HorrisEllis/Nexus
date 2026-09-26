@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-eravos.wire.list
+type: component
+id: eravos.wire.list
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789275153029
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153029
+lastSeenAt: 1789275153029
+fingerprint: eravos::GET /api/wires
+payload:
+  id: eravos.wire.list
+  uuid: f4032a35-47ed-4fb0-b3c7-92bbe8e9cf89
+  namespace: eravos
+  name: wire.list
+  version: 3.0.0

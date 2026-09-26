@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.job.build
+type: capability
+id: guardian.job.build
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730139
+source: guardian.registry-components:guardian.job.build
+payload:
+  id: guardian.job.build
+  namespace: guardian
+  name: job.build
+  version: 3.6.2
+  grammar:
+    - job build
+    - job-build
+  route:
+    method: POST
+    path: /build
+  intent: []
+  description: Full T0→T1→T2 build pipeline from spec
+  params: []
+  tags:
+    - guardian
+    - build
+  permissions:
+    - system
+  hooks: {}

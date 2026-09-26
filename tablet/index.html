@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXUS Tablet</title>
+<!--
+  tablet/homepage.html — OB5 (v2, rebuilt) of the observability/tablet phasemap
+  UUID: nexus-tablet-homepage-v2-0000-2026-0730-001
+
+  §PHASEMAP OB5. Rebuilt per James: an ACTUAL tablet (device frame), CLI access
+  per system, capitalized system names, icons CONSISTENT with the tv-shell
+  (⬡ Orchestrator, ⚡ Guardian, ◈ Cortex, ◐ Idearium, ⟁ Bridge, ◈ Loom,
+  ✦ Co-pilot — the real tile-icon set), and the sovereign floating menu button
+  (matched to ui/tv-shell/menu.js — Space Mono, 24px pill, #00e5ff accent).
+  Homepage = grid of system boxes → click → per-system diagnostics menu
+  (summary/events/snapshots/diagnostics/edge-cases; loom adds versions/repo/
+  roadmap/cortex). Editable + expandable. Live OB1 data, no mocks (§1.1).
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+  :root {
+    --void:#05060a; --shell:#0d0f16; --screen:#0a0c12; --panel:#12151d;
+    --panel-2:#161a24; --line:#232a38; --line-2:#2e3646;
+    --ink:#e8edf5; --dim:#8792a6; --faint:#565f70;
+    --ac:#00e5ff; --ok:#3ad29f; --warn:#f2c14e; --bad:#ff5d6c;
+    --mono:'Space Mono',ui-monospace,Menlo,monospace;
+  }
+  * { box-sizing:border-box; }
+  html,body { height:100%; margin:0; }
+  body {
+    background:radial-gradient(ellipse at 50% 0%, #0f1220 0%, var(--void) 70%);
+    color:var(--ink); font-family:var(--mono);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ── the actual tablet device ── */
+  .tablet {
+    width:100%; max-width:960px; height:min(88vh,720px);
+    background:linear-gradient(160deg,#181c26,#0d0f16);
+    border-radius:28px; padding:14px;
+    box-shadow:0 0 0 2px #1c2130, 0 30px 80px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.05);
+    position:relative; display:flex; flex-direction:column;
+  }
+  .tablet::before { /* camera dot */
+    content:''; position:absolute; top:20px; left:50%; transform:translateX(-50%);
+    width:6px; height:6px; border-radius:50%; background:#2a3040; box-shadow:inset 0 0 2px #000;
+  }
+  .screen {
+    flex:1; background:var(--screen); border-radius:16px; overflow:hidden;
+    border:1px solid #1a1f2b; display:flex; flex-direction:column; position:relative;
+  }
+  .statusbar {
+    display:flex; align-items:center; gap:10px; padding:10px 18px;
+    border-bottom:1px solid var(--line); font-size:11px; color:var(--dim);
+    letter-spacing:.08em; flex:none;
+  }
+  .statusbar .brand { color:var(--ink); font-weight:700; letter-spacing:.18em; }
+  .statusbar .ver { color:var(--faint); }
+  .statusbar .right { margin-left:auto; display:flex; gap:14px; align-items:center; }
+  .statusbar .pulse b { color:var(--ok); }
+  .content { flex:1; overflow-y:auto; padding:20px; }
+  .content::-webkit-scrollbar { width:8px; }
+  .content::-webkit-scrollbar-thumb { background:var(--line-2); border-radius:4px; }
+
+  /* ── homepage grid ── */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; }
+  .app {
+    background:linear-gradient(155deg,var(--panel),var(--screen));
+    border:1px solid var(--line); border-radius:16px; padding:18px 16px;
+    cursor:pointer; transition:border-color .15s,transform .1s,box-shadow .15s;
+    display:flex; flex-direction:column; align-items:flex-start; gap:2px; position:relative;
+  }
+  .app:hover { border-color:var(--ac); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,229,255,.08); }
+  .app:focus-visible { outline:2px solid var(--ac); outline-offset:2px; }
+  .app .ico {
+    width:44px; height:44px; border-radius:12px; margin-bottom:10px;
+    display:grid; place-items:center; font-size:22px; color:var(--ac);
+    background:radial-gradient(circle at 40% 30%, rgba(0,229,255,.14), rgba(0,229,255,.02));
+    border:1px solid rgba(0,229,255,.18);
+  }
+  .app .nm { font-size:14px; font-weight:700; letter-spacing:.02em; }
+  .app .pt { color:var(--faint); font-size:11px; }
+  .ver-tag { color:var(--ac); font-size:9px; opacity:.8; }
+  .app .hb { display:flex; align-items:center; gap:6px; margin-top:10px; font-size:10px; color:var(--dim); }
+  .dot { width:7px; height:7px; border-radius:50%; background:var(--faint); flex:none; box-shadow:0 0 6px transparent; }
+  .dot.ok{background:var(--ok); box-shadow:0 0 6px rgba(58,210,159,.6);}
+  .dot.bad{background:var(--bad); box-shadow:0 0 6px rgba(255,93,108,.6);}
+
+  /* ── per-system view ── */
+  .sysview { display:none; }
+  .sysview.active { display:block; }
+  .grid.hidden { display:none; }
+  .crumb { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .crumb button { background:none; border:none; color:var(--ac); cursor:pointer; font-family:var(--mono); font-size:12px; padding:0; }
+  .crumb .ico { width:36px; height:36px; border-radius:10px; display:grid; place-items:center; font-size:18px; color:var(--ac); background:rgba(0,229,255,.06); border:1px solid rgba(0,229,255,.16); }
+  .crumb h2 { margin:0; font-size:19px; letter-spacing:.04em; }
+  .crumb .pt { color:var(--dim); font-size:11px; }
+
+  /* CLI access strip per system */
+  .cli {
+    background:#06080d; border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; margin-bottom:16px; font-size:12px;
+  }
+  .cli .cli-head { color:var(--faint); font-size:10px; letter-spacing:.1em; margin-bottom:6px; }
+  .cli-line { display:flex; align-items:center; gap:8px; }
+  .cli-line .pr { color:var(--ac); }
+  .cli-in {
+    flex:1; background:transparent; border:none; color:var(--ink);
+    font-family:var(--mono); font-size:12px; outline:none;
+  }
+  .cli-in::placeholder { color:var(--faint); }
+  .cli-out { margin-top:8px; color:var(--dim); font-size:11px; white-space:pre-wrap; max-height:120px; overflow-y:auto; }
+
+  .panels { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; }
+  .card > summary { list-style:none; cursor:pointer; padding:12px 14px; display:flex; align-items:center; gap:8px; font-weight:700; font-size:12px; letter-spacing:.03em; text-transform:capitalize; }
+  .card > summary::-webkit-details-marker { display:none; }
+  .card > summary .chev { margin-left:auto; color:var(--faint); transition:transform .15s; }
+  .card[open] > summary .chev { transform:rotate(90deg); }
+  .card .cbody { padding:0 14px 13px; color:var(--dim); font-size:12px; }
+  .row { padding:6px 0; border-top:1px solid var(--line); display:flex; gap:8px; }
+  .row:first-child { border-top:none; }
+  .k { color:var(--faint); flex:none; min-width:90px; }
+  .v { color:var(--ink); word-break:break-word; }
+  .empty { color:var(--faint); font-style:italic; padding:6px 0; }
+  .note { width:100%; margin-top:8px; background:#06080d; border:1px solid var(--line); border-radius:6px; color:var(--ink); font-family:var(--mono); font-size:12px; padding:8px; resize:vertical; min-height:48px; }
+  .note:focus { outline:1px solid var(--ac); }
+  .savebar { display:flex; gap:8px; align-items:center; margin-top:6px; }
+  .savebtn { background:var(--panel-2); border:1px solid var(--line); color:var(--dim); font-family:var(--mono); font-size:10px; padding:5px 10px; border-radius:5px; cursor:pointer; }
+  .savebtn:hover { border-color:var(--ac); color:var(--ink); }
+  .saved { color:var(--ok); font-size:10px; opacity:0; transition:opacity .2s; }
+  .saved.show { opacity:1; }
+  .sev-high{color:var(--bad);} .sev-medium{color:var(--warn);} .sev-low{color:var(--dim);}
+
+  /* ── sovereign floating menu button (matched to tv-shell/menu.js) ── */
+  #nexus-menu-btn {
+    position:absolute; bottom:18px; right:18px; z-index:40;
+    display:flex; align-items:center; gap:8px; padding:10px 20px;
+    background:rgba(8,8,20,.9); border:1px solid rgba(255,255,255,.18);
+    border-radius:24px; color:rgba(255,255,255,.7);
+    font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em;
+    cursor:pointer; transition:all .15s;
+  }
+  #nexus-menu-btn:hover { border-color:rgba(255,255,255,.35); color:#fff; }
+  #nexus-menu-btn.open { border-color:var(--ac); color:var(--ac); }
+  #nexus-menu-panel {
+    position:absolute; bottom:64px; right:18px; z-index:40; width:240px;
+    background:rgba(8,8,20,.96); border:1px solid var(--line-2); border-radius:14px;
+    padding:12px; display:none; box-shadow:0 20px 50px rgba(0,0,0,.6);
+  }
+  #nexus-menu-panel.open { display:block; }
+  .menu-row { display:flex; gap:8px; margin-bottom:8px; }
+  .menu-btn { flex:1; padding:8px 12px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); border-radius:8px; color:rgba(255,255,255,.6); font-family:var(--mono); font-size:10px; cursor:pointer; transition:all .12s; text-align:center; }
+  .menu-btn:hover { background:rgba(255,255,255,.09); color:#fff; }
+  .menu-btn.accent { border-color:rgba(0,229,255,.3); color:var(--ac); }
+</style>
+</head>
+<body>
+<div class="tablet">
+  <div class="screen">
+    <div class="statusbar">
+      <span class="brand">NEXUS</span><span class="ver" id="ver">v0.16</span>
+      <span class="right">
+        <span class="pulse" id="pulse">polling…</span>
+        <span id="clock"></span>
+      </span>
+    </div>
+    <div class="content">
+      <div class="grid" id="grid"></div>
+      <section class="sysview" id="sysview">
+        <div class="crumb">
+          <button id="back">←</button>
+          <span class="ico" id="crumbIco"></span>
+          <div><h2 id="sysName"></h2><span class="pt" id="sysSub"></span></div>
+        </div>
+        <div class="cli">
+          <div class="cli-head" id="cliLabel">CLI</div>
+          <div class="cli-line"><span class="pr" id="cliPrompt">nexus ›</span>
+            <input class="cli-in" id="cliIn" placeholder="type a command… (e.g. status, health, gaps)" autocomplete="off">
+          </div>
+          <div class="cli-out" id="cliOut"></div>
+        </div>
+        <div class="panels" id="panels"></div>
+      </section>
+    </div>
+    <!-- sovereign floating menu button -->
+    <button id="nexus-menu-btn">☰ MENU</button>
+    <div id="nexus-menu-panel">
+      <div class="menu-row">
+        <button class="menu-btn accent" onclick="TAB.diagnose()">⊕ DIAGNOSE</button>
+        <button class="menu-btn" onclick="TAB.home()">⌂ HOME</button>
+      </div>
+      <div class="menu-row">
+        <button class="menu-btn" onclick="TAB.refresh()">↻ REFRESH</button>
+        <button class="menu-btn" onclick="TAB.askCopilot()">✦ CO-PILOT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const COPILOT = `http://127.0.0.1:3750`;
+// §TABLET-SPEC connection law: "the tablet talks to ONE endpoint, autopilot
+// resolves the rest" — no hardcoded port map (the hard-pointer anti-pattern RAID
+// eliminated). Systems are resolved from autopilot's status server (:7799); the
+// static metadata below is a LABELED FALLBACK only (icons/labels/cli + last-
+// resort ports), used when autopilot's status server is unreachable so the
+// tablet still renders, honestly degraded.
+const AUTOPILOT = `http://127.0.0.1:7799`;
+
+const SYSTEM_META = {
+  orchestrator:{ label:'Orchestrator', icon:'⬡', cli:'/orchestrator', desc:'Root kernel · SSE bus' },
+  guardian:    { label:'Guardian',     icon:'⚡', cli:'/guardian',     desc:'NCP channel · AI jobs' },
+  cortex:      { label:'Cortex',       icon:'◈', cli:'/cortex',       desc:'Memory · gaps · RAID' },
+  idearium:    { label:'Idearium',     icon:'◐', cli:'/idearium',     desc:'Idea lattice · specs' },
+  bridge:      { label:'Bridge',       icon:'⟁', cli:'/bridge',       desc:'P2P trust relay' },
+  loom:        { label:'Loom',         icon:'◈', cli:'/nexus',        desc:'Registry · versions · roadmap' },
+  copilot:     { label:'Co-pilot',     icon:'✦', cli:'/copilot',      desc:'Senses · acts · fixes' },
+  architect:   { label:'Architect',    icon:'△', cli:'/architect',    desc:'Topology declarer' },
+  diagnostic:  { label:'Diagnostic',   icon:'⊕', cli:'/diagnose',     desc:'Live health checks' },
+};
+const FALLBACK_PORTS = { orchestrator:9000, guardian:7820, cortex:3748, idearium:4800, bridge:9999, loom:3752, copilot:3750, architect:3747, diagnostic:7825 };
+
+let SYSTEMS = [];
+let RESOLVED_VIA = 'fallback';
+
+async function resolveSystems(){
+  // ONE endpoint: autopilot's status server lists every kernel + its status.
+  try {
+    const r = await fetch(`${AUTOPILOT}/`, { signal: AbortSignal.timeout(2500) });
+    const j = await r.json();
+    if (j && j.kernels) {
+      RESOLVED_VIA = 'autopilot';
+      SYSTEMS = Object.keys(j.kernels).map(id => {
+        const meta = SYSTEM_META[id] || { label:id.charAt(0).toUpperCase()+id.slice(1), icon:'●', cli:`/${id}`, desc:'' };
+        return { id, ...meta, port:FALLBACK_PORTS[id]||'—', _live:j.kernels[id] };
+      });
+      for (const id of ['copilot','loom']) if (!SYSTEMS.find(s=>s.id===id)) SYSTEMS.push({ id, ...SYSTEM_META[id], port:FALLBACK_PORTS[id] });
+      return;
+    }
+  } catch { /* autopilot unreachable — labeled fallback below */ }
+  RESOLVED_VIA = 'fallback';
+  SYSTEMS = ['orchestrator','guardian','cortex','idearium','bridge','loom','copilot'].map(id => ({ id, ...SYSTEM_META[id], port:FALLBACK_PORTS[id] }));
+}
+const CORE_PANELS = ['summary','event stream','snapshots','diagnostics','edge cases','api map','databases','files','tests','config','user model','controls'];
+const LOOM_EXTRA  = ['cortex','versions','repository','roadmap'];
+
+const $ = s => document.querySelector(s);
+const grid=$('#grid'), sysview=$('#sysview'), panels=$('#panels');
+let lastDiag=null, curSys=null;
+window.__nexusNotes = window.__nexusNotes || {};
+
+async function jpost(prompt){ try{ const r=await fetch(`${COPILOT}/api/prompt`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})}); return await r.json(); }catch{ return null; } }
+const cssId = s => s.replace(/\s+/g,'-');
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+
+function renderGrid(){
+  grid.innerHTML='';
+  for(const s of SYSTEMS){
+    const a=document.createElement('div');
+    a.className='app'; a.tabIndex=0; a.setAttribute('role','button');
+    a.innerHTML=`<span class="ico">${s.icon}</span><div class="nm">${s.label}</div><div class="pt">:${s.port} <span class="ver-tag" id="ver-${s.id}"></span></div>
+      <div class="hb"><span class="dot" id="dot-${s.id}"></span><span id="stat-${s.id}">checking…</span></div>`;
+    a.addEventListener('click',()=>openSystem(s));
+    a.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();openSystem(s);} });
+    grid.appendChild(a);
+  }
+}
+
+async function refreshHealth(){
+  const res=await jpost('run diagnostics');
+  lastDiag=res&&res.report;
+  if(!lastDiag){ $('#pulse').textContent='co-pilot offline'; return; }
+  const h=lastDiag.health||{};
+  $('#pulse').innerHTML=`<b>${h.online||0}</b>/${h.total||SYSTEMS.length} online`;
+  for(const s of SYSTEMS){
+    const st=(h.systems&&h.systems[s.id])||'unknown';
+    const dot=$(`#dot-${s.id}`), stat=$(`#stat-${s.id}`); if(!dot)continue;
+    dot.className='dot '+(st==='online'?'ok':st==='unknown'?'':'bad'); stat.textContent=st;
+    // per-system version — each system's /health returns { version, ... } (James:
+    // "each system needs the version displayed"). Read from the resolved port.
+    if(s.port && s.port!=='—'){
+      fetch(`http://127.0.0.1:${s.port}/health`,{signal:AbortSignal.timeout(2500)})
+        .then(r=>r.json()).then(d=>{ const v=$(`#ver-${s.id}`); if(v&&d&&d.version)v.textContent='v'+d.version; })
+        .catch(()=>{});
+    }
+  }
+}
+
+function openSystem(s){
+  curSys=s;
+  grid.classList.add('hidden'); sysview.classList.add('active');
+  $('#crumbIco').textContent=s.icon;
+  $('#sysName').textContent=s.label;
+  $('#sysSub').textContent=`:${s.port} · ${s.desc}`;
+  $('#cliLabel').textContent=`CLI → ${s.cli}`;
+  $('#cliPrompt').textContent=`nexus ${s.cli} ›`;
+  $('#cliOut').textContent='';
+  $('#cliIn').value='';
+  const list=[...CORE_PANELS]; if(s.id==='loom')list.push(...LOOM_EXTRA);
+  panels.innerHTML=''; for(const p of list)panels.appendChild(renderPanel(s,p));
+}
+function home(){ sysview.classList.remove('active'); grid.classList.remove('hidden'); curSys=null; }
+$('#back').addEventListener('click',home);
+
+// per-system CLI: routes the typed command through co-pilot with the system prefix
+$('#cliIn').addEventListener('keydown',async e=>{
+  if(e.key!=='Enter'||!curSys)return;
+  const cmd=e.target.value.trim(); if(!cmd)return;
+  const out=$('#cliOut');
+  out.textContent=`nexus ${curSys.cli} ${cmd}\n…`;
+  const res=await jpost(`${curSys.cli} ${cmd}`);
+  out.textContent=`nexus ${curSys.cli} ${cmd}\n`+((res&&res.text)?res.text:'(no response — is co-pilot running on :3750?)');
+  e.target.value='';
+});
+
+function renderPanel(sys,kind){
+  const card=document.createElement('details'); card.className='card';
+  if(kind==='summary')card.open=true;
+  card.innerHTML=`<summary>${kind}<span class="chev">›</span></summary><div class="cbody"><div class="empty">loading…</div></div>`;
+  const fill=()=>fillPanel(sys,kind,card.querySelector('.cbody'));
+  if(card.open)fill(); else card.addEventListener('toggle',()=>{if(card.open)fill();},{once:true});
+  return card;
+}
+
+function fillPanel(sys,kind,body){
+  const noteKey=`${sys.id}.${cssId(kind)}`;
+  const d=lastDiag; let content='';
+  if(kind==='summary'){
+    content=d?`<div class="row"><span class="k">health</span><span class="v">${(d.health.systems&&d.health.systems[sys.id])||'unknown'}</span></div>
+      <div class="row"><span class="k">open gaps</span><span class="v">${d.gaps?d.gaps.open:'—'}</span></div>
+      <div class="row"><span class="k">CFR regime</span><span class="v">${d.regime?d.regime.state:'—'}</span></div>
+      <div class="row"><span class="k">concerns</span><span class="v">${(d.summary&&d.summary.concerns.length)?d.summary.concerns.join(', '):'none'}</span></div>`
+      :`<div class="empty">No live diagnostics — is co-pilot running on :3750?</div>`;
+  } else if(kind==='diagnostics'){
+    content=d&&d.decisions?`<div class="row"><span class="k">decisions</span><span class="v">${d.decisions.recent.length}</span></div>
+      <div class="row"><span class="k">denied</span><span class="v">${d.decisions.denied}</span></div>
+      <div class="row"><span class="k">schema drift</span><span class="v">${d.drift?d.drift.count:0}</span></div>`
+      :`<div class="empty">No diagnostic data yet.</div>`;
+  } else if(kind==='event stream'){
+    const g=d&&d.gaps?d.gaps.recent:[];
+    content=g.length?g.map(x=>`<div class="row"><span class="k sev-${x.severity||'low'}">${x.severity||'·'}</span><span class="v">${x.title||x.kind}</span></div>`).join(''):`<div class="empty">No recent events surfaced.</div>`;
+  } else if(kind==='edge cases'){
+    content=`<div class="empty">Edge cases accrue here as real faults hit them (OB11). None mapped yet.</div>`;
+  } else if(kind==='snapshots'){
+    content=`<div class="empty">Rewind points from the replay engine — surfaced on boot.</div>`;
+  } else if(kind==='versions'){
+    content=`<div class="row"><span class="k">system</span><span class="v" id="loom-ver">reading…</span></div>`;
+  } else if(kind==='api map'){
+    content=`<div class="row"><span class="k">routes</span><span class="v" id="apimap-${sys.id}">loading from /contract-map…</span></div>`;
+  } else if(kind==='databases'){
+    content=`<div class="row"><span class="k">JAA tables</span><span class="v" id="tables-${sys.id}">loading from /tables…</span></div>`;
+  } else if(kind==='files'){
+    content=`<div class="row"><span class="k">data tree</span><span class="v" id="files-${sys.id}">loading from /files…</span></div>`;
+  } else if(kind==='tests'){
+    content=`<div class="row"><span class="k">suite</span><span class="v">runs the REAL run-all.js filtered to ${sys.label}</span></div>
+      <div class="savebar"><button class="savebtn" id="runtests-${sys.id}">▶ run ${sys.label} tests</button><span class="v" id="testout-${sys.id}"></span></div>`;
+  } else if(kind==='config'){
+    content=`<div class="row"><span class="k">port</span><span class="v">${sys.port}</span></div>
+      <div class="row"><span class="k">resolved via</span><span class="v">${RESOLVED_VIA}</span></div>
+      <div class="row"><span class="k">edits</span><span class="v">governed — config changes route through change-governance, not raw writes</span></div>`;
+  } else if(kind==='user model'){
+    content=`<div class="row"><span class="k">hypotheses</span><span class="v" id="um-${sys.id}">loading…</span></div>`;
+  } else if(kind==='controls'){
+    // controls = spawn/despawn/restart + (for copilot) the CA7 account gear.
+    content=`<div class="row"><span class="k">lifecycle</span><span class="v">
+        <button class="savebtn" id="spawn-${sys.id}">▶ spawn</button>
+        <button class="savebtn" id="touch-${sys.id}">↻ touch</button>
+        <span class="v" id="ctlout-${sys.id}"></span></span></div>`;
+    if(sys.id==='copilot'){
+      content+=`<div class="row"><span class="k">accounts (CA7)</span><span class="v" id="accts-copilot">loading…</span></div>
+        <div class="savebar"><input class="cli-in" id="acct-provider" placeholder="provider (claude/chatgpt/gemini/perplexity)" style="max-width:210px">
+          <input class="cli-in" id="acct-label" placeholder="label" style="max-width:110px">
+          <button class="savebtn" id="acct-add">+ add slot</button></div>
+        <div class="row"><span class="k">note</span><span class="v">the gear registers a slot; credentials live as a REFERENCE in the registry, never raw here (decoupling law).</span></div>`;
+    }
+  } else { content=`<div class="empty">${cap(kind)} lives in Loom — wired to the live registry on boot.</div>`; }
+
+  body.innerHTML=content+`
+    <div class="savebar"><span class="k">notes</span><span class="saved" id="sv-${sys.id}-${cssId(kind)}">saved</span></div>
+    <textarea class="note" id="nt-${sys.id}-${cssId(kind)}" placeholder="Track ${sys.label}'s ${kind}…">${window.__nexusNotes[noteKey]||''}</textarea>
+    <div class="savebar"><button class="savebtn note-save">save note</button></div>`;
+  body.querySelector('.note-save').addEventListener('click',()=>{
+    window.__nexusNotes[noteKey]=body.querySelector('.note').value;
+    const f=body.querySelector('.saved'); f.classList.add('show'); setTimeout(()=>f.classList.remove('show'),1200);
+  });
+  if(kind==='versions')jpost('system status').then(r=>{const el=$('#loom-ver');if(el)el.textContent=(r&&r.text)?((r.text.match(/[0-9]+\.[0-9]+\.[0-9]+/)||['—'])[0]):'—';});
+
+  // container panels — wired to autopilot's :7799 endpoints (the ONE endpoint).
+  // Each shows real data or an honest "unreachable"/"none" — never a fake (§1.1).
+  const apGet = async (p) => { try{ const r=await fetch(`${AUTOPILOT}${p}`,{signal:AbortSignal.timeout(3000)}); return await r.json(); }catch{ return null; } };
+  if(kind==='api map'){
+    apGet(`/contract-map/${sys.id}`).then(j=>{ const el=$(`#apimap-${sys.id}`); if(!el)return;
+      el.textContent = j && j.routes ? `${j.routes.length} routes` : (j && j.paths ? `${Object.keys(j.paths).length} paths` : 'no contract exposed (or autopilot :7799 unreachable)'); });
+  } else if(kind==='databases'){
+    apGet(`/tables`).then(j=>{ const el=$(`#tables-${sys.id}`); if(!el)return;
+      el.textContent = j && j.tables ? `${j.tables.length} JAA tables` : (Array.isArray(j) ? `${j.length} tables` : 'no tables (or autopilot :7799 unreachable)'); });
+  } else if(kind==='files'){
+    apGet(`/files/${sys.id}`).then(j=>{ const el=$(`#files-${sys.id}`); if(!el)return;
+      el.textContent = j && (j.files||j.entries) ? `${(j.files||j.entries).length} entries` : 'no data tree (or autopilot :7799 unreachable)'; });
+  } else if(kind==='tests'){
+    const btn=$(`#runtests-${sys.id}`);
+    if(btn)btn.addEventListener('click',async()=>{ const out=$(`#testout-${sys.id}`); out.textContent=' running…';
+      try{ const r=await fetch(`${AUTOPILOT}/run-tests/${sys.id}`,{method:'POST',signal:AbortSignal.timeout(120000)}); const j=await r.json();
+        out.textContent = j && (j.passed!=null) ? ` ${j.passed} passed, ${j.failed||0} failed` : ' (no result — is autopilot :7799 up?)';
+      }catch{ out.textContent=' (autopilot :7799 unreachable)'; } });
+  } else if(kind==='user model'){
+    jpost('user model').then(r=>{ const el=$(`#um-${sys.id}`); if(!el)return;
+      el.textContent = r && r.hypotheses ? `${r.hypotheses.length} tracked (confidence-weighted)` : (r && r.text ? r.text : 'unavailable (co-pilot :3750?)'); });
+  } else if(kind==='controls'){
+    const sp=$(`#spawn-${sys.id}`), tc=$(`#touch-${sys.id}`), out=$(`#ctlout-${sys.id}`);
+    if(sp)sp.addEventListener('click',async()=>{ out.textContent=' spawning…'; try{ const r=await fetch(`${AUTOPILOT}/spawn/${sys.id}`,{method:'POST',signal:AbortSignal.timeout(8000)}); const j=await r.json(); out.textContent=j&&j.ok?' spawned':' '+((j&&j.error)||'failed'); }catch{ out.textContent=' (autopilot :7799 unreachable)'; } });
+    if(tc)tc.addEventListener('click',async()=>{ out.textContent=' touching…'; try{ const r=await fetch(`${AUTOPILOT}/touch/${sys.id}`,{method:'POST',signal:AbortSignal.timeout(8000)}); const j=await r.json(); out.textContent=j&&j.ok?' touched':' failed'; }catch{ out.textContent=' (autopilot :7799 unreachable)'; } });
+    if(sys.id==='copilot'){
+      jpost('list accounts').then(r=>{ const el=$('#accts-copilot'); if(!el)return; el.textContent = r&&r.accounts ? (r.accounts.length?r.accounts.map(a=>`${a.provider}/${a.label}`).join(', '):'none yet') : (r&&r.text?r.text:'unavailable'); });
+      const add=$('#acct-add');
+      if(add)add.addEventListener('click',async()=>{ const p=$('#acct-provider').value.trim(), l=$('#acct-label').value.trim(); if(!p||!l)return;
+        const r=await jpost(`add account ${p} ${l}`); const el=$('#accts-copilot'); if(el)el.textContent=(r&&r.text)?r.text:'(add routed — refresh to confirm)'; });
+    }
+  } else { /* other panels have no async load */ }
+}
+
+// floating menu
+const TAB={
+  home, refresh:refreshHealth,
+  diagnose(){ toggleMenu(false); if(curSys){openSystem(curSys);} else home(); refreshHealth(); },
+  askCopilot(){ toggleMenu(false); const q=prompt('Ask co-pilot:'); if(q)jpost(q).then(r=>alert((r&&r.text)||'(no response)')); },
+};
+function toggleMenu(force){ const b=$('#nexus-menu-btn'),p=$('#nexus-menu-panel'); const open=force!==undefined?force:!p.classList.contains('open'); p.classList.toggle('open',open); b.classList.toggle('open',open); }
+$('#nexus-menu-btn').addEventListener('click',()=>toggleMenu());
+
+function tick(){ $('#clock').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
+// boot: resolve systems from autopilot (ONE endpoint) BEFORE rendering the grid.
+(async function boot(){
+  await resolveSystems();
+  renderGrid(); refreshHealth(); tick();
+  // show how systems were resolved (autopilot vs fallback) — honest provenance
+  const st=$('#pulse'); if(st && RESOLVED_VIA==='fallback') st.title='systems from fallback list — autopilot status server (:7799) unreachable';
+  setInterval(refreshHealth,15000); setInterval(tick,10000);
+})();
+</script>
+</body>
+</html>

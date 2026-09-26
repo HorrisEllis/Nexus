@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-contract-3d66e369-e2c5-415a-a35f-46a3f5bb062a
+type: contract
+id: 3d66e369-e2c5-415a-a35f-46a3f5bb062a
+context: null
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789320171423
+source: test
+occurrences: 1
+firstSeenAt: 1789320171423
+lastSeenAt: 1789320171423
+fingerprint: null
+payload:
+  uuid: 3d66e369-e2c5-415a-a35f-46a3f5bb062a
+  status: queued
+  intention: null
+  dir: null
+  language: null
+  stage: queued
+  system: guardian
+  source: test
+  sourceDropId: null
+  boundary: null
+  file: null
+  title: null
+  forAgent: null
+  contract:
+    content: guardian-bound work
+  dependsOn: []
+  onFail:
+    action: halt
+  retryCount: 0
+  compartmentId: null
+  verdict: null
+  createdAt: 1789320171423
+  updatedAt: 1789320171423

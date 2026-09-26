@@ -1,0 +1,72 @@
+{
+  "id": "versionium-v1",
+  "version": "3.0.0",
+  "namespace": "versionium",
+  "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from versionium/registry-components.js (module.exports.components), never hand-authored. Port 3754 matches both registry-components.js and versionium/compartment.json. §NOTE: the LIVE /contract endpoint (versionium/routes/system.js) serves versionium/registry-components.js directly, always fresh — this file is a checked-in documentation mirror, not the source of truth, and will drift if not regenerated after registry-components.js changes.",
+  "ports": {
+    "http": 3754
+  },
+  "uuid": "versionium-contract-v1-0000-4000-0000-000000000001",
+  "role": "Causal version control — snapshots, restore, sigma-gated auto-commit",
+  "health": {
+    "method": "GET",
+    "path": "/health"
+  },
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/api/versionium/commit",
+      "_componentId": "versionium.commit.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/history",
+      "_componentId": "versionium.history.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/restore/:commitId",
+      "_componentId": "versionium.restore.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/state/:commitId",
+      "_componentId": "versionium.state.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/calendar/:date",
+      "_componentId": "versionium.calendar.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/files/limits",
+      "_componentId": "versionium.files.limits"
+    },
+    {
+      "method": "POST",
+      "path": "/api/versionium/files/plan",
+      "_componentId": "versionium.files.plan"
+    },
+    {
+      "method": "POST",
+      "path": "/api/versionium/files/record",
+      "_componentId": "versionium.files.record"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/files/tree",
+      "_componentId": "versionium.files.tree"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/files/content",
+      "_componentId": "versionium.files.content"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "_componentId": "versionium.health"
+    }
+  ]
+}

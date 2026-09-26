@@ -1,0 +1,70 @@
+envelope: 1
+uuid: nexus-export-schema-hypothesis
+type: schema
+id: hypothesis
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789239700000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    copilot/lib/user-model.js — _observeCore()'s real insert into the
+    user_model_hypotheses JAA table. Only just live: orchestrator/orchestrator.js's
+    own comment says this table "had one row" before this session — wired to
+    hydrate from real chat_log history and two real bus events
+    (cortex.gap.found, copilot.error.detected) for the first time today.
+    Confidence decays over time (DECAY_PER_DAY); a hypothesis below 0.2
+    confidence is pruned to archive, not deleted.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real crypto.randomUUID()
+    claim:
+      type: string
+      required: true
+      description: 'the observed claim, e.g. "prefers guardian channel"'
+    claimType:
+      type: string
+      required: true
+      description: "'channel' | 'intent' | 'topic' | 'error' | 'preference'"
+    category:
+      type: string
+      required: false
+      description: spec alias for claimType — real tests read h.category directly
+    confidence:
+      type: number
+      required: true
+      description: 0-1, capped at CONFIDENCE_CAP, boosted on reconfirm, decays over time
+    evidence_count:
+      type: number
+      required: true
+      description: real count of times this claim was reconfirmed
+    firstSeen:
+      type: number
+      required: true
+      description: real Date.now() at creation
+    lastSeen:
+      type: number
+      required: true
+      description: real Date.now() at last reconfirmation
+    lastEvidence:
+      type: object
+      required: false
+      description: the raw evidence object from the most recent observation
+    status:
+      type: string
+      required: true
+      description: "'active' | pruned-to-archive below 0.2 confidence"
+    decayRate:
+      type: number
+      required: true
+      description: real DECAY_PER_DAY constant applied on each decay pass
+    source:
+      type: string
+      required: false
+      description: "'observed' — how this hypothesis was created, as opposed to hand-authored"

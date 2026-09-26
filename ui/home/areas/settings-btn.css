@@ -1,0 +1,13 @@
+/* ui/home/areas/settings-btn.css — Settings button in #sys-bar.
+   §ADDED 2026-09-25 — James: "the three lines menu... its not here. at
+   all." Real gap: no way to reach Settings from this page at all.
+   Follows the one-JS-plus-one-CSS-per-area convention set at v0.39.227. */
+#settings-btn{
+  pointer-events:auto;
+  padding:5px 12px;
+  background:rgba(160,170,190,.08);border:1px solid rgba(160,170,190,.22);
+  border-radius:20px;color:rgba(200,208,224,.8);
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+#settings-btn:hover{background:rgba(160,170,190,.16);border-color:rgba(200,208,224,.4);color:#e4e9f2}

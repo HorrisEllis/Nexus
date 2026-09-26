@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXUS · Control Panel</title>
+<link rel="stylesheet" href="/ui/themes/nexus-dark.css">
+<style>
+/* comp_id: nexus.ui.control-panel */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--text);font-family:var(--font-mono);font-size:12px;min-height:100vh}
+.hdr{padding:14px 20px;border-bottom:1px solid var(--rim);display:flex;align-items:center;gap:10px}
+.hdr h1{font-size:13px;letter-spacing:.1em;color:var(--bright)}
+.hdr .sub{color:var(--dim);font-size:10px}
+.body{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;padding:18px 20px}
+.card{background:var(--plate);border:1px solid var(--rim);border-radius:10px;padding:14px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--edge)}
+.ct{font-size:11px;letter-spacing:.1em;font-weight:700;color:var(--bright)}
+.badge{font-size:9px;padding:2px 6px;border-radius:4px;background:var(--edge);color:var(--muted)}
+.row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.row:last-child{border-bottom:none}
+.lbl{color:var(--dim);font-size:11px;flex:1}
+.dsc{color:var(--muted);font-size:9px;margin-top:1px}
+.tgl{position:relative;width:34px;height:18px;flex-shrink:0}
+.tgl input{opacity:0;width:0;height:0;position:absolute}
+.tgl-s{position:absolute;inset:0;background:var(--rim);border-radius:9px;cursor:pointer;transition:.15s}
+.tgl-s:before{content:'';position:absolute;width:12px;height:12px;left:3px;top:3px;background:var(--muted);border-radius:50%;transition:.15s}
+input:checked+.tgl-s{background:rgba(0,255,136,.15);border:1px solid #00ff88}
+input:checked+.tgl-s:before{transform:translateX(16px);background:#00ff88}
+.ni{background:var(--panel);border:1px solid var(--rim);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:11px;padding:3px 7px;width:80px;text-align:right}
+.ni:focus,.si:focus{outline:none;border-color:var(--ac)}
+.si{background:var(--panel);border:1px solid var(--rim);border-radius:4px;color:var(--text);font-family:var(--font-mono);font-size:10px;padding:3px 7px}
+.brow{display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--edge)}
+.btn{padding:5px 12px;background:var(--ac-dim);border:1px solid var(--ac-border);border-radius:5px;color:var(--ac);font-family:var(--font-mono);font-size:10px;cursor:pointer;transition:.12s;letter-spacing:.05em}
+.btn:hover{background:rgba(var(--ac-rgb),.2)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--ok)} .dot.off{background:var(--err)} .dot.deg{background:var(--warn)}
+#toast{position:fixed;bottom:20px;right:20px;background:var(--plate);border:1px solid var(--ok-border);color:var(--ok);padding:8px 14px;border-radius:7px;font-size:11px;opacity:0;transition:.2s;pointer-events:none}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="dot" id="sdot"></div>
+  <h1>⬡ NEXUS CONTROL PANEL</h1>
+  <span class="sub">Interaction contracts · Toggles · Values · Runtime settings</span>
+  <span style="margin-left:auto;color:var(--muted);font-size:10px" id="ls">not saved</span>
+</div>
+<div class="body" id="panels"></div>
+<div id="toast">Saved</div>
+<script>
+/* comp_id: nexus.ui.control-panel */
+const OR='http://127.0.0.1:9000',CX='http://127.0.0.1:3748',GD='http://127.0.0.1:7820';
+const CP='http://127.0.0.1:3750',OL='http://127.0.0.1:3749';
+const SYSTEMS=[
+  {id:'guardian',label:'GUARDIAN',port:7820,url:GD,controls:[
+    {id:'ncp_log_rate_ms',label:'NCP log rate (ms)',type:'number',default:30000,desc:'Log interval per tab reconnect'},
+    {id:'ncp_flap_limit',label:'Flap limit (per 60s)',type:'number',default:3,desc:'Disconnects before FLAPPING warning'},
+    {id:'seam_stall_ms',label:'SEAM stall threshold (ms)',type:'number',default:45000,desc:'Stall detection window'},
+    {id:'seam_sweep_ms',label:'SEAM sweep (ms)',type:'number',default:10000,desc:'Watchdog sweep frequency'},
+    {id:'copilot_enabled',label:'Co-pilot listener',type:'toggle',default:true,desc:'Enable co-pilot bus polling'},
+    {id:'reflection_enabled',label:'Reflection contracts',type:'toggle',default:true,desc:'Mistral reflection every 30s'},
+    {id:'artifact_extract',label:'Auto artifact extract',type:'toggle',default:true,desc:'Extract code from responses'},
+  ]},
+  {id:'cortex',label:'CORTEX',port:3748,url:CX,controls:[
+    {id:'sigma_warn',label:'Sigma warn',type:'number',default:0.5,step:.05,desc:'Above = warning'},
+    {id:'sigma_halt',label:'Sigma halt',type:'number',default:0.7,step:.05,desc:'Above = halt autonomous'},
+    {id:'sigma_interval',label:'Sigma interval (ms)',type:'number',default:5000,desc:'Recompute frequency'},
+    {id:'sigma_window',label:'Sigma window (ms)',type:'number',default:60000,desc:'Rolling window'},
+    {id:'gap_poll_ms',label:'Gap poll (ms)',type:'number',default:15000,desc:'Gap loop sweep'},
+    {id:'gap_batch',label:'Gap batch size',type:'number',default:10,desc:'Max gaps per sweep'},
+    {id:'pattern_thresh',label:'Pattern threshold',type:'number',default:3,desc:'Occurrences to crystallise'},
+    {id:'self_heal',label:'Auto self-heal',type:'toggle',default:true,desc:'Apply forge patches'},
+    {id:'max_heal',label:'Max heal attempts',type:'number',default:3,desc:'Before abandoning repair'},
+  ]},
+  {id:'copilot',label:'CO-PILOT',port:3750,url:CP,controls:[
+    {id:'lifeline_conf',label:'Lifeline confidence',type:'number',default:.75,step:.05,desc:'Below = escalate to Guardian'},
+    {id:'stream_size',label:'Stream buffer (events)',type:'number',default:500,desc:'Rolling event buffer'},
+    {id:'adv_interval',label:'Adversarial interval (ms)',type:'number',default:60000,desc:'Probe frequency'},
+    {id:'diagnose_depth',label:'Diagnose max depth',type:'number',default:4,desc:'Fractal recursion depth'},
+    {id:'diagnose_branch',label:'Diagnose branches',type:'number',default:3,desc:'Sub-topics per node'},
+    {id:'stream_enabled',label:'Event stream',type:'toggle',default:true,desc:'Subscribe to live SSE streams'},
+    {id:'adv_enabled',label:'Adversarial probing',type:'toggle',default:true,desc:'Ping-pong INTUITION/MASTERMIND'},
+    {id:'auto_diagnose',label:'Auto-diagnose on halt sigma',type:'toggle',default:false,desc:'Start fractal diagnose on sigma halt'},
+  ]},
+  {id:'ollama',label:'OLLAMA BRIDGE',port:3749,url:OL,controls:[
+    {id:'max_concurrent',label:'Max concurrent jobs',type:'number',default:3,desc:'MAX_CONCURRENT'},
+    {id:'timeout_ms',label:'Job timeout (ms)',type:'number',default:45000,desc:'Default job timeout'},
+    {id:'default_model',label:'Default model',type:'select',default:'mistral:7b',
+      options:['mistral:7b','qwen2.5-coder:7b','llama3:8b','phi3:mini','codellama:7b'],desc:'Primary dispatch model'},
+    {id:'fallback_model',label:'Fallback model',type:'select',default:'qwen2.5-coder:7b',
+      options:['mistral:7b','qwen2.5-coder:7b','llama3:8b','phi3:mini'],desc:'When primary unavailable'},
+    {id:'health_interval',label:'Health check (ms)',type:'number',default:10000,desc:'Ollama host ping frequency'},
+  ]},
+  {id:'diagnostic',label:'DIAGNOSTIC',port:7825,url:'http://127.0.0.1:7825',controls:[
+    {id:'poll_ms',label:'Poll interval (ms)',type:'number',default:30000,desc:'Health check frequency'},
+    {id:'offline_thresh',label:'Offline escalation (ms)',type:'number',default:60000,desc:'Offline for this long → escalate'},
+    {id:'bullet_density',label:'Bullet density threshold',type:'number',default:.75,step:.05,desc:'Above = assumption gap'},
+    {id:'precursor_limit',label:'Precursor dispatch limit',type:'number',default:3,desc:'Max per sweep to Ollama'},
+    {id:'emerge_optional',label:'Emerge optional',type:'toggle',default:true,desc:'No repair escalation when offline'},
+    {id:'forge_optional',label:'Forge Shell optional',type:'toggle',default:true,desc:'No repair escalation when offline'},
+  ]},
+  {id:'contracts',label:'CONTRACT QUEUE',port:9000,url:OR,controls:[
+    {id:'poll_ms',label:'Poll interval (ms)',type:'number',default:15000,desc:'Folder scan frequency'},
+    {id:'stuck_ms',label:'Stuck threshold (ms)',type:'number',default:45000,desc:'Contract age = stuck'},
+    {id:'max_retries',label:'Max retries',type:'number',default:3,desc:'Before marking FAILED'},
+    {id:'enabled',label:'Poller active',type:'toggle',default:true,desc:'Enable contract monitoring'},
+  ]},
+];
+const SK='nexus-cp-v1';
+let _st={};try{_st=JSON.parse(localStorage.getItem(SK)||'{}')}catch(_){}
+const _g=(s,c)=>_st?.[s]?.[c]??SYSTEMS.find(x=>x.id===s)?.controls?.find(x=>x.id===c)?.default;
+window._sv=(s,c,v)=>{if(!_st[s])_st[s]={};_st[s][c]=v};
+function save(){localStorage.setItem(SK,JSON.stringify(_st));document.getElementById('ls').textContent='Saved '+new Date().toLocaleTimeString();const t=document.getElementById('toast');t.className='show';setTimeout(()=>t.className='',1400)}
+async function apply(sid){const s=SYSTEMS.find(x=>x.id===sid);if(!s)return;try{await fetch(s.url+'/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({settings:_st[sid]||{}}),signal:AbortSignal.timeout(3000)})}catch(_){}}
+window._sna=async(sid)=>{save();await apply(sid)};
+window._rst=(sid)=>{delete _st[sid];save();render()};
+
+function _ctrl(sys,c){
+  const v=_g(sys.id,c.id),id=sys.id+'-'+c.id;
+  let inp='';
+  if(c.type==='toggle'){
+    const ch=v===true||v==='true'?'checked':'';
+    inp=`<label class="tgl"><input type="checkbox" id="${id}" ${ch} onchange="_sv('${sys.id}','${c.id}',this.checked)"><span class="tgl-s"></span></label>`;
+  }else if(c.type==='select'){
+    const opts=(c.options||[]).map(o=>`<option${o===v?' selected':''}>${o}</option>`).join('');
+    inp=`<select class="si" id="${id}" onchange="_sv('${sys.id}','${c.id}',this.value)">${opts}</select>`;
+  }else{
+    const st=c.step?`step="${c.step}"`:'';
+    inp=`<input class="ni" type="number" id="${id}" value="${v}" ${st} onchange="_sv('${sys.id}','${c.id}',parseFloat(this.value)||this.value)">`;
+  }
+  return`<div class="row"><div><div class="lbl">${c.label}</div>${c.desc?`<div class="dsc">${c.desc}</div>`:''}</div>${inp}</div>`;
+}
+
+function render(){
+  document.getElementById('panels').innerHTML=SYSTEMS.map(sys=>`
+    <div class="card">
+      <div class="ch"><span class="ct">${sys.label} <span style="color:var(--muted);font-size:10px;font-weight:400">:${sys.port}</span></span>
+        <span class="badge" id="b-${sys.id}">UNKNOWN</span></div>
+      ${sys.controls.map(c=>_ctrl(sys,c)).join('')}
+      <div class="brow">
+        <button class="btn" onclick="_sna('${sys.id}')">Apply</button>
+        <button class="btn" onclick="_rst('${sys.id}')" style="background:none;color:var(--muted);border-color:var(--rim)">Reset</button>
+      </div>
+    </div>`).join('')}
+
+async function health(){
+  for(const s of SYSTEMS){const b=document.getElementById('b-'+s.id);if(!b)continue;
+    try{const r=await fetch(s.url+'/health',{signal:AbortSignal.timeout(2000)});const j=await r.json().catch(()=>({}));
+      if(j.ok){b.textContent='ONLINE';b.style.background='rgba(0,255,136,.12)';b.style.color='#00ff88';}
+      else{b.textContent='DEGRADED';b.style.background='rgba(255,170,0,.1)';b.style.color='#ffaa00';}}
+    catch(_){b.textContent='OFFLINE';b.style.background='rgba(255,51,85,.1)';b.style.color='#ff3355';}}
+  try{const r=await fetch(OR+'/health',{signal:AbortSignal.timeout(2000)});const j=await r.json().catch(()=>({}));
+    document.getElementById('sdot').className='dot '+(j.ok?'on':'deg');}
+  catch(_){document.getElementById('sdot').className='dot off';}
+}
+render();health();setInterval(health,15000);
+</script>
+</body>
+</html>

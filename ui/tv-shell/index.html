@@ -1,0 +1,3250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS</title>
+<link rel="stylesheet" href="../themes/nexus-dark.css">
+<link rel="stylesheet" href="./spotlight/spotlight.css">
+<!-- §fix 2026-07-04: Google Fonts blocked in Electron webviews and offline.
+     Replaced with system font stack that renders identically at these sizes. -->
+<link rel="stylesheet" href="./tv-shell.css">
+<script src="../lib/api.js"></script>
+</head>
+<body>
+<canvas id="void"></canvas>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     MODE SELECTOR OVERLAY
+     ══════════════════════════════════════════════════════════════════ -->
+<div id="mode-overlay" onclick="if(event.target===this)closeModeSelector()">
+  <div id="mode-inner">
+    <div class="mode-eyebrow">NEXUS · SELECT OPERATING MODE</div>
+    <div class="mode-title">Choose your agent</div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button class="swiz-btn swiz-btn-primary" onclick="openSpecWizard()" style="font-size:11px;padding:8px 16px">+ BUILD SPEC →</button>
+    </div>
+    <div class="mode-cards">
+
+      <!-- ORCHESTRATOR / OLLAMA -->
+      <div class="mode-card m-orch" onclick="selectMode('orchestrator')">
+        <div>
+          <div class="mode-icon">⬡</div>
+          <div class="mode-badge" style="margin-top:12px">LOCAL FIRST</div>
+        </div>
+        <div>
+          <div class="mode-name">ORCHESTRATOR</div>
+          <div class="mode-sub">Ollama on :11434. Zero token cost. Full system access. Sovereign. No external dependencies.</div>
+        </div>
+        <div class="mode-traits">
+          <div class="mode-trait">Qwen 2.5 Coder 1.5b — reasoning layer</div>
+          <div class="mode-trait">Mistral 7B — general dispatch</div>
+          <div class="mode-trait">All 28 JAA tables accessible</div>
+          <div class="mode-trait">Unlimited context — no chunking required</div>
+          <div class="mode-trait">SEAM pipeline available but optional</div>
+          <div class="mode-trait">SNR filter off — full signal</div>
+        </div>
+        <div class="mode-select-btn">ENTER ORCHESTRATOR MODE →</div>
+      </div>
+
+      <!-- CLAUDE -->
+      <div class="mode-card m-claude" onclick="selectMode('claude')">
+        <div>
+          <div class="mode-icon">✦</div>
+          <div class="mode-badge" style="margin-top:12px">NCP · TAB REQUIRED</div>
+        </div>
+        <div>
+          <div class="mode-name">CLAUDE</div>
+          <div class="mode-sub">Claude via NCP browser tab. 200k context. Token-optimised. SEAM chunking. Component context injection.</div>
+        </div>
+        <div class="mode-traits">
+          <div class="mode-trait">SEAM chunks — spec → T0 → T1 → T2 pipeline</div>
+          <div class="mode-trait">Component descriptors injected as context</div>
+          <div class="mode-trait">SNR filter ON — only signal reaches Claude</div>
+          <div class="mode-trait">Token budget tracked per session</div>
+          <div class="mode-trait">Constraint frames enforced before dispatch</div>
+          <div class="mode-trait">HELD/DENIED surfaced — never silent</div>
+        </div>
+        <div class="mode-select-btn">ENTER CLAUDE MODE →</div>
+      </div>
+
+      <!-- CHATGPT -->
+      <div class="mode-card m-chatgpt" onclick="selectMode('chatgpt')">
+        <div>
+          <div class="mode-icon">◈</div>
+          <div class="mode-badge" style="margin-top:12px">NCP · TAB REQUIRED</div>
+        </div>
+        <div>
+          <div class="mode-name">CHATGPT</div>
+          <div class="mode-sub">ChatGPT via NCP browser tab. Structured output mode. Batch dispatch. Code interpreter aware.</div>
+        </div>
+        <div class="mode-traits">
+          <div class="mode-trait">Structured JSON output — schema-validated</div>
+          <div class="mode-trait">Batch dispatch — queue multiple tasks</div>
+          <div class="mode-trait">Code interpreter detection + routing</div>
+          <div class="mode-trait">128k window — aggressive chunk splitting</div>
+          <div class="mode-trait">Token budget 4k/chunk enforced</div>
+          <div class="mode-trait">SEAM ordering enforced at transport layer</div>
+        </div>
+        <div class="mode-select-btn">ENTER CHATGPT MODE →</div>
+      </div>
+
+      <div class="mode-card m-gemini" onclick="selectMode('gemini')">
+        <div>
+          <div class="mode-icon">◆</div>
+          <div class="mode-badge" style="margin-top:12px">NCP · TAB REQUIRED</div>
+        </div>
+        <div>
+          <div class="mode-name">GEMINI</div>
+          <div class="mode-sub">Gemini via NCP browser tab. Vision + multimodal. Image generation aware.</div>
+        </div>
+        <div class="mode-traits">
+          <div class="mode-trait">Vision — understands attached images</div>
+          <div class="mode-trait">Detects generated images as artifacts, not text</div>
+          <div class="mode-trait">Vision-bearing jobs flagged for RAID — never silently retried text-only</div>
+          <div class="mode-trait">SEAM chunking available</div>
+          <div class="mode-trait">Usage cap detection</div>
+        </div>
+        <div class="mode-select-btn">ENTER GEMINI MODE →</div>
+      </div>
+
+      <div class="mode-card m-perplexity" onclick="selectMode('perplexity')">
+        <div>
+          <div class="mode-icon">⌖</div>
+          <div class="mode-badge" style="margin-top:12px">NCP · TAB REQUIRED</div>
+        </div>
+        <div>
+          <div class="mode-name">PERPLEXITY</div>
+          <div class="mode-sub">Perplexity via NCP browser tab. Web-grounded. Citations are a first-class artifact, not a footnote.</div>
+        </div>
+        <div class="mode-traits">
+          <div class="mode-trait">Citations persisted independently — survive a failed completion post</div>
+          <div class="mode-trait">Quick / Pro / Research mode detected — timeout scales accordingly</div>
+          <div class="mode-trait">Substantive answer with zero sources flagged as a quality gap</div>
+          <div class="mode-trait">SEAM chunking available</div>
+          <div class="mode-trait">Pro-search usage cap detection</div>
+        </div>
+        <div class="mode-select-btn">ENTER PERPLEXITY MODE →</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     AGENT SUITE CHANNEL — adapts to active mode
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="ch" id="ch-agent-suite">
+  <div class="agent-suite-header">
+    <div>
+      <div class="agent-suite-name agent-accent" id="as-name">AGENT SUITE</div>
+      <div class="agent-suite-sub" id="as-sub">Loading…</div>
+    </div>
+    <span class="mode-change-link" onclick="openModeSelector()">⇄ SWITCH MODE</span>
+  </div>
+
+  <!-- Status row -->
+  <div class="agent-status-row" id="as-status-row">
+    <div class="agent-stat-pill" id="as-provider-pill"><span class="asp-dot"></span><span id="as-provider-label">Provider</span></div>
+    <div class="agent-stat-pill" id="as-tab-pill"><span class="asp-dot"></span><span id="as-tab-label">NCP Tab</span></div>
+    <div class="agent-stat-pill" id="as-usage-pill" style="display:none"><span class="asp-dot"></span><span id="as-usage-label">Usage</span></div>
+    <div class="agent-stat-pill" id="as-jobs-pill"><span class="asp-dot"></span><span id="as-jobs-label">Jobs</span></div>
+    <div class="agent-stat-pill" id="as-gaps-pill"><span class="asp-dot"></span><span id="as-gaps-label">Open Gaps</span></div>
+  </div>
+
+  <!-- Phase progress -->
+  <div class="phase-strip">
+    <div class="phase-strip-label">PHASE MAP · BUILD PROGRESS</div>
+    <div class="phase-dots" id="as-phase-dots"></div>
+  </div>
+
+  <!-- Token budget (hidden for orchestrator) -->
+  <div class="token-budget" id="as-token-budget">
+    <div class="tb-label">TOKEN BUDGET · CURRENT SESSION</div>
+    <div class="tb-bar-wrap"><div class="tb-bar" id="tb-bar-fill" style="width:0%"></div></div>
+    <div class="tb-stats">
+      <div><span id="tb-used">0</span> <span class="tb-stat-val">USED</span></div>
+      <div><span id="tb-limit">200k</span> <span class="tb-stat-val">LIMIT</span></div>
+      <div><span id="tb-chunks">0</span> <span class="tb-stat-val">CHUNKS</span></div>
+      <div><span id="tb-snr">—</span> <span class="tb-stat-val">SNR</span></div>
+    </div>
+  </div>
+
+  <!-- Component context injector -->
+  <div class="ctx-section">
+    <div class="seam-label">CONTEXT INJECTION · SELECT COMPONENTS TO INCLUDE</div>
+    <div class="constraint-flags" id="as-ctx-chips">
+      <div class="ctx-chip active" data-comp="request-handler" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>request-handler</div>
+      <div class="ctx-chip active" data-comp="jaa-db" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>jaa-db</div>
+      <div class="ctx-chip" data-comp="grammar-engine" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>grammar-engine</div>
+      <div class="ctx-chip" data-comp="raid" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>raid</div>
+      <div class="ctx-chip" data-comp="gap-loop" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>gap-loop</div>
+      <div class="ctx-chip" data-comp="intent-classifier" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>intent-classifier</div>
+      <div class="ctx-chip" data-comp="cortex-boot" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>cortex/boot</div>
+      <div class="ctx-chip" data-comp="seam-queue" onclick="toggleCtxChip(this)"><span class="ctx-chip-dot"></span>seam-queue</div>
+    </div>
+  </div>
+
+  <!-- Constraint flags -->
+  <div class="seam-section">
+    <div class="seam-label">CONSTRAINT FLAGS</div>
+    <div class="constraint-flags" id="as-constraint-flags">
+      <div class="cflag active" data-c="bottom-up">§3.1 BOTTOM-UP</div>
+      <div class="cflag active" data-c="disk-first">§2.1 DISK FIRST</div>
+      <div class="cflag active" data-c="no-stubs">§1.3 NO STUBS</div>
+      <div class="cflag" data-c="no-llm">NO LLM</div>
+      <div class="cflag" data-c="dry-run">DRY RUN</div>
+      <div class="cflag" data-c="hostile-review">HOSTILE REVIEW</div>
+      <div class="cflag" data-c="spec-first">SPEC FIRST</div>
+    </div>
+  </div>
+
+  <!-- SEAM chunk queue -->
+  <div class="seam-section" id="as-seam-section">
+    <div class="seam-label">SEAM QUEUE · ACTIVE CHUNKS</div>
+    <div id="as-seam-rows">
+      <div style="font-size:11px;color:rgba(255,255,255,.2)">No active chunks</div>
+    </div>
+  </div>
+
+  <!-- Forge input -->
+  <div class="ctx-section">
+    <div class="seam-label">FORGE · DISPATCH TO AGENT</div>
+    <textarea class="forge-textarea" id="as-forge-input" placeholder="Describe what to build. Constraint flags and selected components will be prepended as context…"></textarea>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="forge-send" id="as-forge-btn" onclick="agentForge()">⚡ FORGE</button>
+      <div class="cflag" id="as-seam-toggle" data-c="seam-chunk" style="cursor:pointer" onclick="this.classList.toggle('active')">SEAM CHUNK</div>
+      <div class="cflag" id="as-snr-toggle" data-c="snr-filter" onclick="this.classList.toggle('active')">SNR FILTER</div>
+      <div class="cflag" id="as-structured-toggle" data-c="structured-output" style="cursor:pointer;display:none" onclick="this.classList.toggle('active')">STRUCTURED OUTPUT</div>
+      <span style="flex:1"></span>
+      <span id="as-forge-status" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)"></span>
+    </div>
+  </div>
+</div>
+
+<div id="channel">
+  <!-- CH1: OVERVIEW -->
+  <div class="ch active" id="ch-overview">
+    <!-- Warp contract-driven system cards — auto-populated from /contract endpoints -->
+    <div id="warp-overview-header" style="display:flex;align-items:center;gap:10px;padding:10px 16px 0;font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3)">
+      <span>VIEW:</span>
+      <button onclick="_setOverviewMode('legacy')" id="btn-legacy-view" style="background:rgba(0,229,255,.15);border:1px solid rgba(0,229,255,.3);color:#00e5ff;font-family:'Space Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;cursor:pointer;letter-spacing:.06em">TILES</button>
+      <button onclick="_setOverviewMode('warp')" id="btn-warp-view" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);font-family:'Space Mono',monospace;font-size:9px;padding:3px 10px;border-radius:4px;cursor:pointer;letter-spacing:.06em">CONTRACT ✦</button>
+      <span id="warp-view-status" style="margin-left:auto;color:rgba(255,255,255,.2)"></span>
+    </div>
+    <div id="warp-overview-container" style="display:none"></div>
+    <div class="sys-grid" id="sys-grid">
+      <div class="sys-tile" onclick="tuneById('ch-orch-full')" id="tile-orch">
+        <div class="tile-head"><span class="tile-icon">⬡</span><span class="tile-port">:9000</span><span class="tile-status" id="ts-orch">—</span></div>
+        <div class="tile-name" style="color:#00e5ff">Orchestrator</div>
+        <div class="tile-desc">Root kernel. Unified API, SSE bus, subsystem lifecycle management.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-routes">—</div><div class="tm-lbl">Routes</div></div><div><div class="tm-val" id="tm-uptime">—</div><div class="tm-lbl">Uptime</div></div></div>
+      </div>
+      <div class="sys-tile" onclick="tuneById('ch-gd-full')" id="tile-gd">
+        <div class="tile-head"><span class="tile-icon">⚡</span><span class="tile-port">:7820</span><span class="tile-status" id="ts-gd">—</span></div>
+        <div class="tile-name" style="color:#ffaa00">Guardian</div>
+        <div class="tile-desc">NCP channel server. Routes AI jobs to browser tab providers via SSE.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-jobs">—</div><div class="tm-lbl">Jobs</div></div><div><div class="tm-val" id="tm-provs">—</div><div class="tm-lbl">Providers</div></div></div>
+      </div>
+      <div class="sys-tile" onclick="tuneById('ch-cx-full')" id="tile-cx">
+        <div class="tile-head"><span class="tile-icon">◈</span><span class="tile-port">:3748</span><span class="tile-status" id="ts-cx">—</span></div>
+        <div class="tile-name" style="color:var(--ok)">Cortex</div>
+        <div class="tile-desc">Sovereign memory. 28 JAA tables, gap engine, self-heal, RAID routing.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-gaps">—</div><div class="tm-lbl">Open gaps</div></div><div><div class="tm-val" id="tm-events">—</div><div class="tm-lbl">Events</div></div></div>
+      </div>
+      <div class="sys-tile" onclick="tuneById('ch-idr-full')" id="tile-idr">
+        <div class="tile-head"><span class="tile-icon">◐</span><span class="tile-port">:4800</span><span class="tile-status" id="ts-idr">—</span></div>
+        <div class="tile-name" style="color:#a78bfa">Idearium</div>
+        <div class="tile-desc">Idea lattice. Captures, tensions, and promotes ideas to specs.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-ideas">—</div><div class="tm-lbl">Ideas</div></div><div><div class="tm-val" id="tm-specs">—</div><div class="tm-lbl">Specs</div></div></div>
+      </div>
+      <div class="sys-tile" onclick="tuneById('ch-br-full')" id="tile-br">
+        <div class="tile-head"><span class="tile-icon">⟁</span><span class="tile-port">:9999</span><span class="tile-status" id="ts-br">—</span></div>
+        <div class="tile-name" style="color:#8890bb">Bridge</div>
+        <div class="tile-desc">P2P trust relay. Routes inter-system requests with identity + circuit breaker.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-reqs">—</div><div class="tm-lbl">Requests</div></div><div><div class="tm-val" id="tm-nodes">—</div><div class="tm-lbl">Nodes</div></div></div>
+      </div>
+      <div class="sys-tile" onclick="tuneById('ch-diagnose')" id="tile-dg">
+        <div class="tile-head"><span class="tile-icon">⊕</span><span class="tile-port">diagnostics</span><span class="tile-status" id="ts-dg">—</span></div>
+        <div class="tile-name" style="color:#8890bb">Diagnose</div>
+        <div class="tile-desc">Live health checks across all systems. Run at any time.</div>
+        <div class="tile-metrics"></div>
+      </div>
+      <div class="sys-tile" id="tile-arch" onclick="window.open('http://127.0.0.1:3747../spec-builder', '_blank')">
+        <div class="tile-head"><span class="tile-icon">▲</span><span class="tile-port">:3747</span><span class="tile-status" id="ts-arch">—</span></div>
+        <div class="tile-name" style="color:#ff8844">Architect</div>
+        <div class="tile-desc">Builds architecture for specs and repositories. Spec blueprint engine, source SNR quality gate, spec topology scan.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-blueprints">—</div><div class="tm-lbl">Blueprints</div></div><div><div class="tm-val" id="tm-specs-built">—</div><div class="tm-lbl">Specs</div></div></div>
+      </div>
+      <div class="sys-tile" id="tile-loom" onclick="window.open('http://127.0.0.1:3752', '_blank')">
+        <div class="tile-head"><span class="tile-icon">◈</span><span class="tile-port">:3752</span><span class="tile-status" id="ts-loom">—</span></div>
+        <div class="tile-name" style="color:#e879f9">Loom</div>
+        <div class="tile-desc">Builds and maps NEXUS. Component, hook, wire, and seam registry + contracts.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-loom-hooks">—</div><div class="tm-lbl">Hooks</div></div><div><div class="tm-val" id="tm-loom-components">—</div><div class="tm-lbl">Components</div></div></div>
+      </div>
+      <div class="sys-tile" id="tile-em" onclick="tuneById('ch-emerge')">
+        <div class="tile-head"><span class="tile-icon">◆</span><span class="tile-port">:4242</span><span class="tile-status" id="ts-em">—</span></div>
+        <div class="tile-name" style="color:#44ddaa">Emerge IDE</div>
+        <div class="tile-desc">SEAM compiler + codegen. Spec-driven .eg / .emerge editing.</div>
+        <div class="tile-metrics"><div><div class="tm-val" id="tm-em-keywords">—</div><div class="tm-lbl">Keywords</div></div><div><div class="tm-val" id="tm-em-axioms">—</div><div class="tm-lbl">Axioms</div></div></div>
+      </div>
+      <div class="sys-tile" onclick="openForgeShell()" id="tile-forge">
+        <div class="tile-head">
+          <span class="tile-icon" id="forge-heart">✦</span>
+          <span class="tile-port">ui/forge-shell</span>
+          <span class="tile-status" id="ts-forge" style="color:#00e5ff;background:rgba(0,229,255,.1)">—</span>
+        </div>
+        <div class="tile-name" style="color:#00e5ff">Forge Shell</div>
+        <div class="tile-desc">Sovereign build surface. Phase map, X-ray topology, terminal, gap feed.</div>
+        <div class="tile-metrics">
+          <div><div class="tm-val" id="tm-forge-phase">10/45</div><div class="tm-lbl">Next Phase</div></div>
+          <div><div class="tm-val" id="tm-forge-gaps">—</div><div class="tm-lbl">Open Gaps</div></div>
+        </div>
+      </div>
+      <div class="sys-tile" onclick="openModeSelector()" id="tile-agent">
+        <div class="tile-head">
+          <span class="tile-icon">⇄</span>
+          <span class="tile-port">agent mode</span>
+          <span class="tile-status" id="ts-agent" style="color:#a78bfa;background:rgba(167,139,250,.1);padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700">—</span>
+        </div>
+        <div class="tile-name" id="tile-agent-name" style="color:#a78bfa">AGENTS</div>
+        <div class="tile-desc" id="tile-agent-desc">Choose AI provider — Claude, ChatGPT, Mistral, Gemini, Perplexity, or Orchestrator.</div>
+        <div class="tile-metrics"></div>
+      </div>
+      <div class="sys-tile" onclick="openBlueprintBuilder()" id="tile-blueprint">
+        <div class="tile-head">
+          <span class="tile-icon">⬡</span>
+          <span class="tile-port">ui/blueprint-builder</span>
+          <span class="tile-status" style="color:#534ab7;background:rgba(83,74,183,.15);padding:2px 7px;border-radius:20px;font-size:9px;font-weight:700">BUILD</span>
+        </div>
+        <div class="tile-name" style="color:#a78bfa">Blueprint Builder</div>
+        <div class="tile-desc">Component descriptor · Phase map · CLI projector · Constraint frame · Export.</div>
+        <div class="tile-metrics">
+          <div><div class="tm-val" id="tm-bp-next">10</div><div class="tm-lbl">Next Phase</div></div>
+          <div><div class="tm-val" id="tm-bp-done">18</div><div class="tm-lbl">Complete</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH2: GUARDIAN -->
+  <div class="ch" id="ch-guardian">
+    <div class="gd-grid">
+      <div class="gd-box">
+        <div class="box-head">Dispatch
+          <div style="display:flex;gap:6px;align-items:center">
+            <select id="gd-prov" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:3px 6px;outline:none">
+              <option value="claude">Claude</option>
+              <option value="chatgpt">ChatGPT</option>
+              <option value="ollama">Ollama</option>
+              <option value="gemini">Gemini</option>
+              <option value="perplexity">Perplexity</option>
+            </select>
+            <button class="btn primary" style="font-size:9px;padding:4px 10px" onclick="gdSend()">SEND</button>
+          </div>
+        </div>
+        <div class="box-body" style="overflow:visible;display:flex;flex-direction:column;gap:8px">
+          <textarea id="gd-prompt" rows="3" placeholder="Prompt..." onkeydown="if(event.key==='Enter'&&event.ctrlKey)gdSend()"></textarea>
+          <div id="gd-res" style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.5);min-height:20px;white-space:pre-wrap"></div>
+          <div id="gd-provider-status" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"></div>
+        </div>
+      </div>
+      <div class="gd-box">
+        <div class="box-head">Providers <button class="btn" style="font-size:9px;padding:3px 7px" onclick="gdLoadProvs()">↺</button></div>
+        <div class="box-body" id="gd-provs-el" style="display:flex;flex-direction:column;gap:5px"></div>
+      </div>
+      <div class="gd-box" style="grid-column:1/-1">
+        <div class="box-head">Jobs <span id="gd-job-count" style="color:rgba(255,255,255,.2)">0</span>
+          <button class="btn" style="font-size:9px;padding:3px 7px" onclick="gdLoadJobs()">↺</button>
+        </div>
+        <div class="box-body" id="gd-jobs-el"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH3: CORTEX -->
+  <div class="ch" id="ch-cortex">
+    <div class="cx-layout">
+      <div class="gd-box" style="grid-row:1/3">
+        <div class="box-head">Event Stream <span id="cx-ev-count" style="color:var(--ok)">0</span></div>
+        <div class="box-body" id="cx-events-el"></div>
+      </div>
+      <div class="gd-box">
+        <div class="box-head">Open Loops <button class="btn" style="font-size:9px;padding:3px 7px" onclick="cxLoadGaps()">↺</button></div>
+        <div class="box-body" id="cx-gaps-el"></div>
+      </div>
+      <div class="gd-box">
+        <div class="box-head">Failures <button class="btn" style="font-size:9px;padding:3px 7px" onclick="cxLoadFails()">↺</button></div>
+        <div class="box-body" id="cx-fails-el"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH4: IDEARIUM -->
+  <div class="ch" id="ch-idearium">
+    <div style="display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-shrink:0">
+      <button class="btn" onclick="idrLoad('createdAt')">Recent</button>
+      <button class="btn" onclick="idrLoad('tension')">By Tension</button>
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <input class="box-input" id="idr-new" placeholder="New idea..." style="width:260px" onkeydown="if(event.key==='Enter')idrCreate()">
+        <button class="btn primary" onclick="idrCreate()">+ Create</button>
+      </div>
+    </div>
+    <div class="idea-feed" id="idr-feed"></div>
+  </div>
+
+  <!-- CH5: BRIDGE -->
+  <div class="ch" id="ch-bridge">
+    <div class="stat-row" id="br-stats">
+      <div class="stat-box"><div class="stat-v" id="br-reqs">—</div><div class="stat-l">Requests</div></div>
+      <div class="stat-box"><div class="stat-v" id="br-nodes">—</div><div class="stat-l">Nodes</div></div>
+      <div class="stat-box"><div class="stat-v" id="br-health">—</div><div class="stat-l">Health</div></div>
+      <div class="stat-box"><div class="stat-v" id="br-uptime">—</div><div class="stat-l">Uptime</div></div>
+    </div>
+    <div class="gd-box" style="flex:1;min-height:0">
+      <div class="box-head">Registry <button class="btn" style="font-size:9px;padding:3px 7px" onclick="brLoad()">↺</button></div>
+      <div class="box-body" id="br-reg"></div>
+    </div>
+  </div>
+
+  <!-- CH6: LOG -->
+  <div class="ch" id="ch-log">
+    <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-shrink:0">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">Live Log</span>
+      <span id="log-conn-status" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)">connecting...</span>
+      <input id="log-filter-in" placeholder="filter..." oninput="logFilter(this.value)" style="width:180px">
+      <select id="log-src-filter" onchange="logFilter(document.getElementById('log-filter-in').value)" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:3px 6px;outline:none">
+        <option value="">All sources</option>
+        <option value="cortex">Cortex</option>
+        <option value="guardian">Guardian</option>
+        <option value="orchestrator">Orchestrator</option>
+        <option value="gap-loop">Gap Loop</option>
+        <option value="self-heal">Self Heal</option>
+      </select>
+      <button class="btn" onclick="clearLog()" style="margin-left:auto">Clear</button>
+    </div>
+    <div id="log-stream"></div>
+  </div>
+
+  <!-- CH7: DIAGNOSE -->
+  <div class="ch" id="ch-diagnose">
+    <div style="display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-shrink:0">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">System Diagnostics</span>
+      <button class="btn primary" onclick="runDiag()" style="margin-left:auto">Run All</button>
+    </div>
+    <div id="diag-rows"></div>
+    <!-- CFR Field -->
+    <div class="gd-box" style="margin-top:14px">
+      <div class="box-head">CFR Field <span id="diag-cfr-sigma" style="color:rgba(255,255,255,.3);font-size:9px;margin-left:8px"></span>
+        <button class="btn" style="font-size:9px;padding:3px 7px" onclick="loadDiagCFR()">↺</button>
+      </div>
+      <div class="box-body" id="diag-cfr-body"><div style="color:rgba(255,255,255,.2);font-size:11px">Not loaded</div></div>
+    </div>
+    <!-- Open Loops -->
+    <div class="gd-box" style="margin-top:10px">
+      <div class="box-head">Open Loops <button class="btn" style="font-size:9px;padding:3px 7px" onclick="loadDiagGaps()">↺</button></div>
+      <div class="box-body" id="diag-gaps-body"><div style="color:rgba(255,255,255,.2);font-size:11px">Not loaded</div></div>
+    </div>
+    <!-- Diagnostic Engines -->
+    <div class="gd-box" style="margin-top:10px">
+      <div class="box-head">Diagnostic Engines <button class="btn" style="font-size:9px;padding:3px 7px" onclick="runDiagEngines()">Run</button></div>
+      <div class="box-body" id="diag-engines-body"><div style="color:rgba(255,255,255,.2);font-size:11px">Not run yet</div></div>
+    </div>
+  </div>
+
+  <!-- CH8: BLUEPRINT BUILDER -->
+  <div class="ch" id="ch-blueprint">
+    <iframe src="" id="blueprint-iframe"
+      style="width:100%;height:100%;border:none;background:#0a0a14"
+      title="Blueprint Builder"></iframe>
+  </div>
+
+  <!-- CH9-13: Full standalone system UIs — same lazy-iframe pattern as Blueprint.
+       Reached from the Overview tiles, not the rail — these are the real,
+       dedicated UI for each system (not the thin embedded summary channels
+       above), shown in-page so the menu/top-bar still tracks the channel
+       the way it does everywhere else, instead of popping a new tab. -->
+  <div class="ch" id="ch-orch-full">
+    <iframe src="" id="orch-full-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Orchestrator"></iframe>
+  </div>
+  <div class="ch" id="ch-gd-full">
+    <iframe src="" id="gd-full-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Guardian"></iframe>
+  </div>
+  <div class="ch" id="ch-cx-full">
+    <iframe src="" id="cx-full-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Cortex"></iframe>
+  </div>
+  <div class="ch" id="ch-idr-full">
+    <iframe src="" id="idr-full-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Idearium"></iframe>
+  </div>
+  <div class="ch" id="ch-br-full">
+    <iframe src="" id="br-full-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Bridge"></iframe>
+  </div>
+  <div class="ch" id="ch-chatgpt-agent">
+    <iframe src="" id="chatgpt-agent-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="ChatGPT Console"></iframe>
+  </div>
+
+  <!-- CH: CLAUDE AGENT -->
+  <div class="ch" id="ch-claude-agent">
+    <iframe src="" id="claude-agent-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Claude Console"></iframe>
+  </div>
+
+  <!-- CH: MISTRAL AGENT -->
+  <div class="ch" id="ch-mistral-agent">
+    <iframe src="" id="mistral-agent-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Mistral Console"></iframe>
+  </div>
+
+  <!-- CH: GEMINI AGENT -->
+  <div class="ch" id="ch-gemini-agent">
+    <iframe src="" id="gemini-agent-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Gemini Console"></iframe>
+  </div>
+
+  <!-- CH: PERPLEXITY AGENT -->
+  <div class="ch" id="ch-perplexity-agent">
+    <iframe src="" id="perplexity-agent-iframe" style="width:100%;height:100%;border:none;background:#0a0a14" title="Perplexity Console"></iframe>
+  </div>
+
+  <!-- CH: CAUSAL GRAPH — live force graph of event causality + CFR sigma -->
+  <div class="ch" id="ch-causal">
+    <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-shrink:0;padding:0 4px">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">Causal Graph</span>
+      <span id="cg-node-count" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)">0 nodes</span>
+      <span id="cg-sigma" style="font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">σ 0.000</span>
+      <select id="cg-depth" style="margin-left:auto;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:rgba(255,255,255,.6);font-family:'Space Mono',monospace;font-size:9px;padding:3px 6px;outline:none">
+        <option value="50">Last 50</option>
+        <option value="100">Last 100</option>
+        <option value="200">Last 200</option>
+      </select>
+      <button class="btn" onclick="cgLoad()" style="font-size:9px;padding:4px 10px">↺ Refresh</button>
+    </div>
+    <div style="flex:1;position:relative;overflow:hidden;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,5,.6)">
+      <canvas id="cg-canvas" style="width:100%;height:100%;display:block"></canvas>
+      <div id="cg-tooltip" style="position:absolute;display:none;background:rgba(0,0,10,.92);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:8px 10px;font-family:'Space Mono',monospace;font-size:9px;color:#e0e8ff;pointer-events:none;max-width:240px;line-height:1.6;z-index:10"></div>
+      <div id="cg-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em">NO CAUSAL DATA — IS NEXUS RUNNING?</div>
+    </div>
+    <div id="cg-legend" style="display:flex;gap:16px;margin-top:8px;padding:0 4px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:50%;background:var(--ok)"></div>Low σ</div>
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:50%;background:#ffaa00"></div>Mid σ</div>
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:50%;background:var(--err)"></div>High σ</div>
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2)"></div>Causal edge</div>
+    </div>
+  </div>
+
+  <!-- CH: CONVERSATIONS — co-pilot exchange log with intent/model/channel metadata -->
+  <div class="ch" id="ch-conversations">
+    <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-shrink:0;padding:0 4px">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">Conversations</span>
+      <span id="conv-count" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)">0 exchanges</span>
+      <select id="conv-filter" onchange="convLoad()" style="margin-left:auto;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:rgba(255,255,255,.6);font-family:'Space Mono',monospace;font-size:9px;padding:3px 6px;outline:none">
+        <option value="">All providers</option>
+        <option value="copilot">Co-pilot</option>
+        <option value="claude">Claude NCP</option>
+        <option value="chatgpt">ChatGPT NCP</option>
+        <option value="ollama">Ollama</option>
+      </select>
+      <button class="btn" onclick="convLoad()" style="font-size:9px;padding:4px 10px">↺ Refresh</button>
+    </div>
+    <div id="conv-list" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:0 2px"></div>
+  </div>
+
+  <!-- CH: CANVAS — ERAVOS spatial canvas with NEXUS organisms -->
+  <div class="ch" id="ch-canvas">
+    <iframe id="canvas-iframe" src="" style="width:100%;height:100%;border:none;background:#06060e" title="NEXUS Canvas"></iframe>
+  </div>
+
+  <!-- CH: NERVE — CFR field mapped onto the live node graph -->
+  <div class="ch" id="ch-nerve" style="padding:0;overflow:hidden;">
+    <div id="nerve-root" style="position:relative;width:100%;height:100%;background:#08080d;">
+      <canvas id="nerve-canvas" style="display:block;width:100%;height:100%;"></canvas>
+      <div id="nerve-hud" style="position:absolute;bottom:10px;left:12px;display:flex;gap:16px;font-family:ui-monospace,monospace;font-size:10px;color:rgba(216,218,228,.4);pointer-events:none;letter-spacing:.04em;">
+        <span id="nerve-regime" style="text-transform:uppercase;font-weight:600;color:rgba(0,245,255,.6)">stable</span>
+        <span id="nerve-sigma">σ 0.000</span>
+        <span id="nerve-nodes-count">— nodes</span>
+        <span id="nerve-wires-count">— wires</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH: EMERGE IDE — Phase 28: Build From Inside -->
+  <div class="ch" id="ch-emerge">
+    <iframe id="emerge-iframe" src="" style="width:100%;height:100%;border:none;background:#0d0d0f" title="Emerge IDE"></iframe>
+  </div>
+
+<!-- Top bar — channel name, visible when menu open -->
+<div id="top-bar">
+  <span id="ch-name">NEXUS</span>
+  <span id="ch-accent">v0.6.3</span>
+</div>
+
+<!-- HUD shell — pointer-events:none, never blocks channel content -->
+<div id="hud">
+
+  <!-- Menu overlay — rises from bottom when open -->
+  <div id="menu-overlay">
+
+    <!-- System status row -->
+    <div id="sys-bar">
+      <button id="inspect-btn" onclick="openInspect()">⊕ INSPECT</button>
+      <div class="spill-group">
+        <div class="spill"><span class="spill-dot" id="sd-orch"></span>ORCH</div>
+        <div class="spill"><span class="spill-dot" id="sd-cx"></span>CX</div>
+        <div class="spill"><span class="spill-dot" id="sd-gd"></span>GD</div>
+        <div class="spill"><span class="spill-dot" id="sd-idr"></span>IDR</div>
+        <div class="spill"><span class="spill-dot" id="sd-br"></span>BR</div>
+        <div class="spill"><span class="spill-dot" id="sd-arch"></span>ARCH</div>
+        <div class="spill"><span class="spill-dot" id="sd-em"></span>EM</div>
+      </div>
+      <button id="rewind-btn" onclick="openRewind()">⟲ REWIND</button>
+      <!-- §ADDED 2026-09-25 — James: "the three lines menu... its not
+           here. at all." Real gap: this menu had no way to reach
+           Settings at all. Sends 'nexus:open-settings' to the real
+           window.__cg bridge (webview-bridge.js) → browser.js's host
+           listener → cg.window.openSettings() — the real Settings
+           window every section this session (Downloads, Plugins, ...)
+           already lives in, just never reachable from here. window.__cg
+           only exists when this page is running inside Clear Glass's own
+           <webview> (Electron); outside that (a plain browser tab) there
+           is no Electron Settings window to open, so the button says so
+           instead of silently doing nothing. -->
+      <button id="settings-btn" onclick="openNexusSettings()" title="Open Clear Glass settings">⚙ SETTINGS</button>
+    </div>
+
+    <!-- Assistant -->
+    <div id="bot-bar">
+      <div id="bot-bar-head">
+        <div id="bot-bar-left">
+          <span id="bot-bar-label">✦ CO-PILOT</span>
+          <div id="cp-backend-toggle" title="Which backend answers: ollama (local models), copilot (whatever copilot/config.js's DEFAULT_PROVIDER says), or guardian (a specific real NCP agent)">
+            <button id="cp-toggle-ollama" class="cp-toggle-btn" onclick="_setCoPilotBackend('ollama')">ollama</button>
+            <button id="cp-toggle-copilot" class="cp-toggle-btn cp-toggle-active" onclick="_setCoPilotBackend('copilot')">copilot</button>
+            <button id="cp-toggle-guardian" class="cp-toggle-btn" onclick="_setCoPilotBackend('guardian')">guardian</button>
+          </div>
+        </div>
+        <button id="fullscreen-btn" onclick="toggleConsoleFullscreen()" title="Fullscreen console (Shift+Enter)">⛶</button>
+      </div>
+      <div id="cp-guide"></div>
+      <div id="assistant-out"></div>
+      <div id="assistant-row">
+        <select id="cp-provider" title="Which real NCP agent answers"></select>
+        <input id="assistant-in" placeholder="Ask co-pilot — sees DOM, can navigate, build, dispatch…" onkeydown="if(event.key==='Enter')asSend();if(event.key==='Escape'&&document.getElementById('bot-bar').classList.contains('fullscreen'))toggleConsoleFullscreen()">
+        <button id="send-btn" onclick="asSend()">→</button>
+      </div>
+      <div id="ticker-line">NEXUS v0.6.3 · sovereign cognitive OS · waiting for systems...</div>
+    </div>
+
+    <!-- Channel rail — §EDITABLE 2026-09-20: rendered by renderChannelRail()
+         from a user-editable list (localStorage nexus.tv.rail), not
+         hand-authored per button. Default list below reproduces the
+         original 13 buttons exactly, so nothing changes until the user
+         actually opens the Channel Editor. -->
+    <div id="ch-rail"></div>
+    <button class="ch-btn" id="ch-rail-edit-btn" onclick="openChannelEditor()" title="Edit channels" style="opacity:.55">✎ Edit</button>
+
+  </div>
+
+  <!-- ── REWIND OVERLAY — full meta layer ── -->
+  <div id="rewind-overlay" onclick="if(event.target===this)closeRewind()">
+    <div id="rewind-panel">
+      <div id="rw-head">
+        <div>
+          <div id="rw-title">⟲ SYSTEM REWIND</div>
+          <div id="rw-sub">Select a snapshot to restore the system to that state</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div id="rw-sigma-badge"></div>
+          <button id="rw-close" onclick="closeRewind()">✕</button>
+        </div>
+      </div>
+      <div id="rw-timeline-wrap">
+        <canvas id="rw-canvas"></canvas>
+        <div id="rw-hover-tip"></div>
+      </div>
+      <div id="rw-legend">
+        <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#00ff88"></span>Low sigma — stable</div>
+        <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#ffaa00"></span>Mid sigma — elevated</div>
+        <div class="rw-leg-item"><span class="rw-leg-dot" style="background:#ff3355"></span>High sigma — critical</div>
+        <div class="rw-leg-item"><span style="font-family:'Space Mono',monospace;font-size:10px;margin-right:5px">↕</span>Delta magnitude</div>
+      </div>
+      <div id="rw-detail">
+        <div id="rw-detail-inner">
+          <div id="rw-detail-empty">← Hover a snapshot to preview · Click to select</div>
+          <div id="rw-detail-content" style="display:none">
+            <div id="rw-snap-head">
+              <span id="rw-snap-id" class="mono"></span>
+              <span id="rw-snap-trigger"></span>
+              <span id="rw-snap-ts" class="mono" style="margin-left:auto;color:rgba(255,255,255,.3)"></span>
+            </div>
+            <div id="rw-snap-stats"></div>
+            <div id="rw-snap-sigma-bar-wrap">
+              <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:5px;font-family:'Space Mono',monospace">SIGMA</div>
+              <div id="rw-snap-sigma-bar"><div id="rw-snap-sigma-fill"></div></div>
+            </div>
+          </div>
+        </div>
+        <div id="rw-confirm-row" style="display:none">
+          <div id="rw-confirm-warn">⚠ This will rollback all JAA tables to the snapshot state. Running processes will be interrupted.</div>
+          <div style="display:flex;gap:10px;margin-top:10px">
+            <button id="rw-confirm-btn" onclick="confirmRewind()">⟲ Restore this snapshot</button>
+            <button id="rw-cancel-btn" onclick="cancelSelect()">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div id="rw-status"></div>
+    </div>
+  </div>
+
+  <!-- ── INSPECT OVERLAY — contextual diagnostics for the active channel ── -->
+  <div id="inspect-overlay" onclick="if(event.target===this)closeInspect()">
+    <div id="inspect-panel">
+      <button id="insp-close" onclick="closeInspect()">✕</button>
+      <div id="insp-title"><span id="insp-name">CHANNEL</span></div>
+      <div id="insp-accent"></div>
+      <div id="insp-status"><span class="dot" id="insp-dot"></span><span id="insp-status-text">checking...</span></div>
+      <div id="insp-log">No recent events for this channel yet.</div>
+      <div id="insp-actions">
+        <button id="insp-reload" onclick="inspectReload()">↺ Reload panel</button>
+        <button onclick="closeInspect();tuneById('ch-diagnose')">⊕ Full diagnostics</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Floating menu button — bottom center, always clickable -->
+<button id="menu-btn" onclick="toggleMenu()">
+  <span id="menu-icon">⬡</span>
+  <span id="menu-label">NEXUS</span>
+</button>
+
+
+<script>
+'use strict';
+
+// ── Particle void ─────────────────────────────────────────────────────────────
+const vc=document.getElementById('void'),vx=vc.getContext('2d');
+let VW,VH,vpts=[],vt=0;
+function vresize(){VW=vc.width=innerWidth;VH=vc.height=innerHeight}
+class VP{constructor(){this.reset()}reset(){this.x=Math.random()*VW;this.y=Math.random()*VH;this.vx=(Math.random()-.5)*.25;this.vy=(Math.random()-.5)*.25;this.p=Math.random()*Math.PI*2;this.r=Math.random()*1.4+.3;this.h=[195,145,260,210][Math.floor(Math.random()*4)]}tick(){this.x+=this.vx;this.y+=this.vy;this.p+=.018;if(this.x<0||this.x>VW||this.y<0||this.y>VH)this.reset()}draw(){vx.beginPath();vx.arc(this.x,this.y,this.r,0,Math.PI*2);vx.fillStyle=`hsla(${this.h},70%,65%,${.06+Math.sin(this.p)*.05})`;vx.fill()}}
+function vframe(){if(!vx)return;vt+=.01;vx.clearRect(0,0,VW,VH);for(let i=0;i<vpts.length;i++){for(let j=i+1;j<vpts.length;j++){const dx=vpts[i].x-vpts[j].x,dy=vpts[i].y-vpts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<130){vx.beginPath();vx.moveTo(vpts[i].x,vpts[i].y);vx.lineTo(vpts[j].x,vpts[j].y);vx.strokeStyle=`rgba(120,140,200,${(1-d/130)*.05})`;vx.lineWidth=.4;vx.stroke()}}vpts[i].tick();vpts[i].draw()}requestAnimationFrame(vframe)}
+// §FIX 2026-06-21: this whole block is a purely decorative background
+// animation. It was previously the single most dangerous line in the file —
+// vframe() runs SYNCHRONOUSLY on this first call (not inside a rAF/timeout
+// yet), and vx.clearRect() on a null context (vx is null whenever
+// getContext('2d') fails — common in privacy-hardened browsers, ad-blockers,
+// and fingerprint-protection extensions that stub out canvas) throws
+// uncaught, which halts ALL subsequent top-level script execution in this
+// single inline <script> tag. Confirmed by reproduction: toggleConsoleFullscreen,
+// toggleMenu, and everything else declared after this point in source order
+// silently failed to finish initializing when this threw. try/catch here is
+// not decorative — it's the one thing standing between "background sparkle
+// effect is missing" and "half the page's JS never runs."
+try { vresize();window.addEventListener('resize',vresize);for(let i=0;i<70;i++)vpts.push(new VP());vframe(); }
+catch(e) { console.warn('[nexus-ui] background effect disabled (canvas unavailable): ' + e.message); }
+
+// ── API ───────────────────────────────────────────────────────────────────────
+const P={orch:9000,gd:7820,cx:3748,br:9999,idr:4800,em:4242,arch:3747,dg:7825};
+const B={orch:`http://127.0.0.1:${P.orch}`,gd:`http://127.0.0.1:${P.gd}`,cx:`http://127.0.0.1:${P.cx}`,br:`http://127.0.0.1:${P.br}`,idr:`http://127.0.0.1:${P.idr}`,em:`http://127.0.0.1:${P.em}`,arch:`http://127.0.0.1:${P.arch}`,dg:`http://127.0.0.1:${P.dg}`};
+// get/post/del now loaded from ../lib/api.js — see ui/home/DECOMP.md's
+// plan, extracted 2026-07-04. Same file, same functions, both UIs shared —
+// this was byte-for-byte duplicated between home and tv-shell before.
+
+// ── Provider URLs for window.open when no tab connected ───────────────────────
+const PROVIDER_URLS={
+  claude:      'https://claude.ai/new',
+  chatgpt:     'https://chatgpt.com',
+  gemini:      'https://gemini.google.com',
+  perplexity:  'https://www.perplexity.ai',
+  ollama:      'http://localhost:11434',
+};
+
+// comp_id: nexus.ui.tv-shell.channel-meta
+  // ── Channel meta ──────────────────────────────────────────────────────────────
+const CH_META=[
+  {id:'ch-overview',  name:'NEXUS',      accent:'Overview', railLabel:'⬡ Overview'},
+  {id:'ch-guardian',  name:'GUARDIAN',   accent:':7820 · NCP', railLabel:'⚡ Guardian'},
+  {id:'ch-cortex',    name:'CORTEX',     accent:':3748 · Memory', railLabel:'◈ Cortex'},
+  {id:'ch-idearium',  name:'IDEARIUM',   accent:':4800 · Idea Lattice', railLabel:'◐ Idearium'},
+  {id:'ch-bridge',    name:'BRIDGE',     accent:':9999 · P2P Relay', railLabel:'⟁ Bridge'},
+  {id:'ch-log',       name:'EVENT LOG',  accent:'Live SSE stream', railLabel:'≡ Log'},
+  {id:'ch-diagnose',  name:'DIAGNOSE',   accent:'System checks · CFR · Gaps', railLabel:'⊕ Diagnose'},
+  {id:'ch-blueprint', name:'BLUEPRINT',  accent:'Descriptor · Phase map · CLI projector', railLabel:'⬡ Blueprint'},
+  {id:'ch-nerve',     name:'NERVE',      accent:'Relational tension map', railLabel:'⬡ Nerve'},
+  {id:'ch-causal',       name:'CAUSAL GRAPH', accent:'Event causality · CFR sigma · Live force graph', railLabel:'◈ Causal'},
+  {id:'ch-conversations',name:'CONVERSATIONS',accent:'Co-pilot log · Intent · Model · Channel', railLabel:'⌂ Log'},
+  {id:'ch-canvas',       name:'CANVAS',       accent:'ERAVOS spatial canvas · NEXUS organisms · Wires', railLabel:'⬡ Canvas'},
+  {id:'ch-emerge',       name:'EMERGE IDE',   accent:'Phase 28 · Hot-load · Spec-first · Build from inside', railLabel:'⚡ IDE'},
+  {id:'ch-orch-full', name:'ORCHESTRATOR', accent:':9000 · Full UI', hidden:true},
+  {id:'ch-gd-full',   name:'GUARDIAN',     accent:':7820 · Full UI', hidden:true},
+  {id:'ch-cx-full',   name:'CORTEX',       accent:':3748 · Full UI', hidden:true},
+  {id:'ch-idr-full',  name:'IDEARIUM',     accent:':4800 · Full UI', hidden:true},
+  {id:'ch-br-full',   name:'BRIDGE',       accent:':9999 · Full UI', hidden:true},
+  {id:'ch-chatgpt-agent',   name:'CHATGPT',    accent:'Dispatch console · SEAM · Live queue', hidden:true},
+  {id:'ch-claude-agent',     name:'CLAUDE',      accent:'200k · SNR · SEAM · constitutional · NCP', hidden:true},
+  {id:'ch-mistral-agent',    name:'MISTRAL',     accent:'Local · Ollama · Enterprise · NCP', hidden:true},
+  {id:'ch-gemini-agent',     name:'GEMINI',      accent:'Vision · multimodal · NCP', hidden:true},
+  {id:'ch-perplexity-agent', name:'PERPLEXITY',  accent:'Web-grounded · citations · NCP', hidden:true},
+];
+// §EDITABLE 2026-09-20 — window.CH_META was never set (menu.js's own
+// _buildNavButtons() already expected it: `window.CH_META || []` always
+// fell through to the empty default — the floating menu's quick-nav row
+// has been silently empty this whole time). Fixed by exposing it, and
+// made genuinely editable at the same time: DEFAULT_CH_META is the
+// built-in list above; the live CH_META array is mutated in place
+// (never reassigned — plenty of code already keys off this exact array
+// object) from whatever's saved in localStorage, falling back to the
+// defaults untouched. Adding a channel just pushes {id,name,accent,url}
+// (url present = "genuinely new", gets a generic iframe .ch div created
+// on demand by ensureChannelDiv() — a built-in id that already has its
+// own bespoke .ch div is left completely alone).
+const DEFAULT_CH_META = CH_META.map(c => ({...c}));
+const CHANNEL_STORE_KEY = 'nexus.tv.channels';
+
+function loadChannelList() {
+  try {
+    const raw = localStorage.getItem(CHANNEL_STORE_KEY);
+    if (raw) { const parsed = JSON.parse(raw); if (Array.isArray(parsed) && parsed.length) return parsed; }
+  } catch (e) { console.warn('[tv-shell] channel list load failed, using defaults:', e.message); }
+  return DEFAULT_CH_META.map(c => ({...c}));
+}
+function saveChannelList(list) {
+  try { localStorage.setItem(CHANNEL_STORE_KEY, JSON.stringify(list)); }
+  catch (e) { console.warn('[tv-shell] channel list save failed (private mode?):', e.message); }
+}
+function applyChannelList(list) {
+  CH_META.length = 0;
+  CH_META.push(...list);
+  window.CH_META = CH_META; // same array reference — menu.js's own read stays live
+  list.forEach(ensureChannelDiv);
+  renderChannelRail();
+  if (window.NexusMenu && typeof window.NexusMenu.refresh === 'function') window.NexusMenu.refresh();
+  else if (typeof _buildNavButtons === 'function') _buildNavButtons();
+}
+// A genuinely new channel (has .url, no matching .ch div yet) gets a
+// plain iframe div appended to #channel. A built-in id that already has
+// a real, bespoke .ch div (guardian's dashboard, cortex's memory view,
+// etc.) is never touched — this only ever ADDS, never overwrites.
+function ensureChannelDiv(ch) {
+  if (!ch.url || document.getElementById(ch.id)) return;
+  const host = document.getElementById('channel');
+  if (!host) return;
+  const div = document.createElement('div');
+  div.className = 'ch';
+  div.id = ch.id;
+  const safeUrl = String(ch.url).replace(/"/g, '&quot;');
+  div.innerHTML = `<iframe src="${safeUrl}" style="width:100%;height:100%;border:0;background:#0a0a12" title="${(ch.name||ch.id).replace(/"/g,'&quot;')}"></iframe>`;
+  host.appendChild(div);
+}
+function renderChannelRail() {
+  const rail = document.getElementById('ch-rail');
+  if (!rail) return;
+  rail.innerHTML = CH_META.filter(c => !c.hidden).map(c =>
+    `<button class="ch-btn${c.id===CH_META[curCh]?.id?' on':''}" data-chid="${c.id}" onclick="tuneById('${c.id}')"><span class="ch-dot"></span>${(c.railLabel||c.name||c.id)}</button>`
+  ).join('');
+}
+document.addEventListener('DOMContentLoaded', () => applyChannelList(loadChannelList()));
+let curCh=0;
+window.menuOpen=false;
+
+function toggleMenu(){window.menuOpen=!window.menuOpen;document.getElementById('menu-overlay').classList.toggle('open',window.menuOpen);document.getElementById('menu-btn').classList.toggle('open',window.menuOpen);document.getElementById('top-bar').classList.toggle('open',window.menuOpen)}
+window.toggleMenu=toggleMenu;
+document.addEventListener('click',e=>{if(menuOpen&&!e.target.closest('#menu-overlay')&&!e.target.closest('#menu-btn'))toggleMenu()});
+
+function tune(n){
+  document.querySelectorAll('.ch').forEach(c=>c.classList.remove('active'));
+  const chId = CH_META[n].id;
+  document.getElementById(chId).classList.add('active');
+  // §24.1: notify co-pilot of channel change for user model tracking
+  curCh = n;
+  const chName = CH_META[n]?.name || 'Unknown';
+  // Post to co-pilot setCurrentChannel (via guardian server.js route)
+  fetch(`${B.orch}/api/guardian/copilot/channel`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ channelId: chId, channelName: chName }),
+  }).catch(()=>{});
+  document.querySelectorAll('.ch-btn').forEach((b,i)=>b.classList.toggle('on',i===n));
+  document.getElementById('ch-name').textContent=CH_META[n].name;
+  document.getElementById('ch-accent').textContent=CH_META[n].accent;
+  document.getElementById('menu-label').textContent=CH_META[n].name;
+  curCh=n;
+  // §FIX-2026-06-20: keyed by channel id, not array position — CH_META is
+  // mutated at runtime (_injectAgentSuiteTab), so a positional `if(n===8)`
+  // silently points at the wrong channel after any insertion before it.
+  // This bit James for the new ChatGPT console; everything below is now
+  // immune to it regardless of what gets added to CH_META later.
+  if(chId==='ch-guardian'){gdLoadJobs();gdLoadProvs()}
+  if(chId==='ch-cortex'){cxLoadGaps();cxLoadFails()}
+  if(chId==='ch-idearium')idrLoad('createdAt');
+  if(chId==='ch-bridge')brLoad();
+  if(chId==='ch-diagnose'){buildDiag();runDiag();loadDiagCFR();loadDiagGaps()}
+  if(chId==='ch-blueprint'){const f=document.getElementById('blueprint-iframe');if(f&&!f.src.endsWith('blueprint-builder/index.html'))f.src='../blueprint-builder/index.html';}
+  if(chId==='ch-orch-full'){const f=document.getElementById('orch-full-iframe');if(f&&!f.src.endsWith('/orchestrator'))f.src='../orchestrator';}
+  if(chId==='ch-gd-full'){const f=document.getElementById('gd-full-iframe');if(f&&!f.src.endsWith('/guardian'))f.src='../guardian';}
+  if(chId==='ch-cx-full'){const f=document.getElementById('cx-full-iframe');if(f&&!f.src.endsWith('/cortex'))f.src='../cortex';}
+  if(chId==='ch-idr-full'){const f=document.getElementById('idr-full-iframe');if(f&&!f.src.endsWith('/idearium/ui'))f.src='../../idearium/ui';}
+  if(chId==='ch-br-full'){const f=document.getElementById('br-full-iframe');if(f&&!f.src.endsWith('/bridge'))f.src='../bridge';}
+  if(chId==='ch-chatgpt-agent'){const f=document.getElementById('chatgpt-agent-iframe');if(f&&!f.src.endsWith('agents/chatgpt/index.html'))f.src='../agents/chatgpt/index.html';}
+  if(chId==='ch-claude-agent'){const f=document.getElementById('claude-agent-iframe');if(f&&!f.src.endsWith('agents/claude/index.html'))f.src='../agents/claude/index.html';}
+  if(chId==='ch-mistral-agent'){const f=document.getElementById('mistral-agent-iframe');if(f&&!f.src.endsWith('agents/mistral/index.html'))f.src='../agents/mistral/index.html';}
+  if(chId==='ch-gemini-agent'){const f=document.getElementById('gemini-agent-iframe');if(f&&!f.src.endsWith('agents/gemini/index.html'))f.src='../agents/gemini/index.html';}
+  if(chId==='ch-perplexity-agent'){const f=document.getElementById('perplexity-agent-iframe');if(f&&!f.src.endsWith('agents/perplexity/index.html'))f.src='../agents/perplexity/index.html';}
+  if(chId==='ch-causal'){cgLoad();}
+  if(chId==='ch-conversations'){convLoad();}
+  if(chId==='ch-canvas'){const f=document.getElementById('canvas-iframe');if(f&&!f.src)f.src='http://127.0.0.1:3751/';}
+  if(chId==='ch-emerge'){const f=document.getElementById('emerge-iframe');if(f&&!f.src)f.src='../emerge/emerge-ide.html';}
+}
+
+// ── Inspect overlay — contextual diagnostics for whatever channel is active ──
+// Maps CH_META index -> { dotId (its live status dot), srcMatch (for
+// filtering recent log rows), reload (re-fetch that channel's data) }.
+// null fields mean "this channel has no single backing system" (Overview,
+// Log, Diagnose, Blueprint aren't 1:1 with a system dot).
+const CH_INSPECT=[
+  {dotId:null,    srcMatch:'',         reload:null},
+  {dotId:'sd-gd', srcMatch:'guardian', reload:()=>{gdLoadJobs();gdLoadProvs()}},
+  {dotId:'sd-cx', srcMatch:'cortex',   reload:()=>{cxLoadGaps();cxLoadFails()}},
+  {dotId:'sd-idr',srcMatch:'idearium', reload:()=>idrLoad()},
+  {dotId:'sd-br', srcMatch:'bridge',   reload:()=>brLoad()},
+  {dotId:null,    srcMatch:'',         reload:()=>clearLog()},
+  {dotId:null,    srcMatch:'',         reload:()=>{buildDiag();runDiag();loadDiagCFR();loadDiagGaps()}},
+  {dotId:null,    srcMatch:'',         reload:()=>{const f=document.getElementById('blueprint-iframe');if(f&&f.src)f.src=f.src}},
+  {dotId:null,    srcMatch:'orchestrator', reload:()=>{const f=document.getElementById('orch-full-iframe');if(f&&f.src)f.src=f.src}},
+  {dotId:'sd-gd', srcMatch:'guardian', reload:()=>{const f=document.getElementById('gd-full-iframe');if(f&&f.src)f.src=f.src}},
+  {dotId:'sd-cx', srcMatch:'cortex',   reload:()=>{const f=document.getElementById('cx-full-iframe');if(f&&f.src)f.src=f.src}},
+  {dotId:'sd-idr',srcMatch:'idearium', reload:()=>{const f=document.getElementById('idr-full-iframe');if(f&&f.src)f.src=f.src}},
+  {dotId:'sd-br', srcMatch:'bridge',   reload:()=>{const f=document.getElementById('br-full-iframe');if(f&&f.src)f.src=f.src}},
+  {dotId:null,    srcMatch:'chatgpt',  reload:()=>{const f=document.getElementById('chatgpt-agent-iframe');if(f&&f.src)f.src=f.src}},
+];
+
+// §ADDED 2026-09-25 — see the #settings-btn comment above for the full
+// gap this closes. window.__cg (webview-bridge.js's contextBridge
+// global) only exists inside Clear Glass's own <webview> — checked
+// directly rather than assumed, since this same index.html is also
+// served as a plain page by the orchestrator and can be opened in an
+// ordinary browser tab with no Electron behind it at all.
+function openNexusSettings(){
+  if(window.__cg&&typeof window.__cg.send==='function'){window.__cg.send('nexus:open-settings',{});}
+  else{console.warn('openNexusSettings: window.__cg not present — this page is not running inside Clear Glass\'s Electron webview, so there is no Settings window to open.');}
+}
+
+function openInspect(){
+  const meta=CH_META[curCh],info=CH_INSPECT[curCh];
+  if(!info){console.warn(`openInspect: no CH_INSPECT entry for channel ${curCh} (${meta?.id})`);return;}
+  document.getElementById('insp-name').textContent=meta.name;
+  document.getElementById('insp-accent').textContent=meta.accent;
+  const dotEl=info.dotId?document.getElementById(info.dotId):null;
+  const statusDot=document.getElementById('insp-dot'),statusText=document.getElementById('insp-status-text');
+  if(dotEl){
+    const isErr=dotEl.classList.contains('err'),isOn=dotEl.classList.contains('on');
+    statusDot.className='dot'+(isErr?' err':isOn?' on':'');
+    statusText.textContent=isErr?'error':isOn?'online':'offline / unknown';
+  }else{
+    statusDot.className='dot';
+    statusText.textContent='n/a — this channel has no single backing system';
+  }
+  const rows=Array.from(document.querySelectorAll('#log-stream .ll'));
+  const filtered=info.srcMatch?rows.filter(r=>r.querySelector('.ll-src')?.textContent?.toLowerCase().includes(info.srcMatch)):rows;
+  const logEl=document.getElementById('insp-log');
+  logEl.textContent=filtered.length?filtered.slice(0,8).map(r=>r.textContent).join('\n'):'No recent events for this channel yet.';
+  document.getElementById('insp-reload').style.display=info.reload?'':'none';
+  document.getElementById('inspect-overlay').classList.add('open');
+}
+function closeInspect(){document.getElementById('inspect-overlay').classList.remove('open')}
+function inspectReload(){const info=CH_INSPECT[curCh];if(info&&info.reload)info.reload()}
+
+// ── Fullscreen system console ────────────────────────────────────────────────
+// §FIX 2026-06-21: #bot-bar lives inside #menu-overlay, which gets
+// transform:translateX(-50%) when .open — per CSS spec, a transformed
+// ancestor becomes the containing block for any position:fixed descendant.
+// So #bot-bar.fullscreen's "position:fixed; inset:16px" was resolving
+// against #menu-overlay's own small box, not the real viewport — clicking
+// fullscreen visually did almost nothing. Confirmed via direct measurement
+// (forcing the class without any click/JS path produced a ~132px-tall box,
+// not a near-viewport one). Fix: relocate #bot-bar to be a direct child of
+// <body> while fullscreen — a real sibling of every transformed ancestor,
+// so position:fixed resolves against the actual viewport — then restore it
+// to its original DOM position (via a marker comment node, not an assumed
+// parent) on exit.
+let _botBarHomeMarker = null; // Comment node marking #bot-bar's real position in the DOM
+function toggleConsoleFullscreen(){
+  const bar=document.getElementById('bot-bar');
+  const goingFullscreen=!bar.classList.contains('fullscreen');
+
+  if(goingFullscreen){
+    // Leave a marker where #bot-bar currently lives so exiting can put it
+    // back exactly, regardless of what #menu-overlay's own state does
+    // in between (don't assume parentElement is still #menu-overlay later).
+    _botBarHomeMarker=document.createComment('bot-bar-home');
+    bar.parentNode.insertBefore(_botBarHomeMarker, bar);
+    document.body.appendChild(bar);
+  } else if(_botBarHomeMarker && _botBarHomeMarker.parentNode){
+    _botBarHomeMarker.parentNode.insertBefore(bar, _botBarHomeMarker);
+    _botBarHomeMarker.parentNode.removeChild(_botBarHomeMarker);
+    _botBarHomeMarker=null;
+  }
+
+  bar.classList.toggle('fullscreen',goingFullscreen);
+  if(goingFullscreen){
+    document.getElementById('assistant-out').style.display='block';
+    document.getElementById('assistant-in').focus();
+  }
+}
+window.toggleConsoleFullscreen=toggleConsoleFullscreen;
+
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='ArrowLeft'||e.key==='[')tune(Math.max(0,curCh-1));
+  if(e.key==='ArrowRight'||e.key===']')tune(Math.min(CH_META.length-1,curCh+1));
+  if(e.key>='1'&&e.key<='7')tune(parseInt(e.key)-1);
+  if(e.key==='m'||e.key==='M')toggleMenu();
+  if(e.key==='Escape'&&document.getElementById('bot-bar').classList.contains('fullscreen')){toggleConsoleFullscreen();return}
+  if(e.key==='Escape'&&document.getElementById('inspect-overlay').classList.contains('open')){closeInspect();return}
+  if(e.key==='Escape'&&menuOpen)toggleMenu();
+  if(e.key==='Escape')closeModeSelector();
+  if((e.key==='r'||e.key==='R')&&!menuOpen)openRewind();
+  if((e.key==='i'||e.key==='I')&&!menuOpen)openInspect();
+});
+
+
+
+// comp_id: nexus.ui.tv-shell.health
+  // ── Health polling ────────────────────────────────────────────────────────────
+const SYSTEMS=[
+  {key:'orch',url:`${B.orch}/health`,dot:'sd-orch',tileId:'tile-orch',tileStatus:'ts-orch'},
+  {key:'gd',  url:`${B.orch}/api/guardian/health`, dot:'sd-gd',  tileId:'tile-gd',  tileStatus:'ts-gd'},
+  {key:'cx',  url:`${B.orch}/api/cortex/health`, dot:'sd-cx',  tileId:'tile-cx',  tileStatus:'ts-cx'},
+  {key:'idr', url:`${B.orch}/api/idearium/health`,dot:'sd-idr', tileId:'tile-idr', tileStatus:'ts-idr'},
+  // br/dg: no orchestrator proxy exists for Bridge or Diagnostic yet — direct
+  // port is the only path available right now. Flagged, not silently left.
+  {key:'br',  url:`${B.br}/health`, dot:'sd-br',  tileId:'tile-br',  tileStatus:'ts-br'},
+  {key:'arch',url:`${B.orch}/api/architect/health`,dot:'sd-arch',tileId:'tile-arch',tileStatus:'ts-arch'},
+  {key:'em',  url:`${B.orch}/api/emerge/status`, dot:'sd-em',  tileId:'tile-em',  tileStatus:'ts-em'},
+  {key:'dg',  url:`${B.dg}/status`, tileId:'tile-dg',  tileStatus:'ts-dg'},
+  {key:'forge',url:`${B.orch}/health`,             tileId:'tile-forge',tileStatus:'ts-forge'}, // virtual — served by orch, no health endpoint of its own
+];
+const railDots={orch:0,gd:1,cx:2,idr:3,br:4};
+
+// ── Per-card heartbeat pulse ──────────────────────────────────────────────────
+// Fires on every successful health poll — gives each card a live heartbeat
+// independent of SSE events, so offline-capable cards still pulse when up.
+function pulseCard(tileId){
+  const tile=document.getElementById(tileId);
+  const icon=tile?.querySelector('.tile-icon');
+  if(!icon)return;
+  icon.classList.remove('flash');
+  void icon.offsetWidth; // reflow to restart animation
+  icon.classList.add('flash');
+  setTimeout(()=>icon.classList.remove('flash'),600);
+}
+
+// Maps autopilot's kernel names to SYSTEMS' short keys. Emerge isn't in
+// autopilot's supervised kernel set (ALL_KERNELS in autopilot.js) — no entry
+// here means no entry there either, not an oversight on this side.
+const AUTOPILOT_KEY_MAP={orchestrator:'orch',cortex:'cx',guardian:'gd',idearium:'idr',architect:'arch',diagnostic:'dg'};
+
+async function pollHealth(){
+  for(const s of SYSTEMS){
+    const d=await get(s.url);
+    const up=d&&(d.ok===true||d.status==='ok'||!d.error);
+    const dot=document.getElementById(s.dot);
+    if(dot){dot.classList.toggle('on',up);dot.classList.toggle('err',!up)}
+    const ts=document.getElementById(s.tileStatus);
+    if(ts){ts.textContent=up?'ONLINE':'OFFLINE';ts.className='tile-status '+(up?'online':'offline')}
+    const tile=document.getElementById(s.tileId);
+    if(tile)tile.classList.toggle('online',up);
+    const rdIdx=railDots[s.key];
+    if(rdIdx!==undefined){const rd=document.getElementById(`rd-${rdIdx}`);if(rd)rd.classList.toggle('online',up)}
+    // Pulse card icon on every successful poll — heartbeat
+    if(up)pulseCard(s.tileId);
+    CP.setHealthState(s.key, up);  // co-pilot tension field
+  }
+  // Autopilot supervision overlay — a health probe only knows "did the HTTP
+  // endpoint respond". It can't see circuit-broken, mid-restart-with-backoff,
+  // or crash-looping-but-still-up-for-the-moment. Pure addition: if autopilot
+  // isn't running (plain `npm run start:all`, no supervisor), this resolves
+  // null and every tile stays exactly as the probe loop above already set it.
+  const ap=await get(`${B.orch}/api/autopilot/status`).catch(()=>null);
+  if(ap?.kernels){
+    for(const [name,k] of Object.entries(ap.kernels)){
+      const key=AUTOPILOT_KEY_MAP[name];if(!key)continue;
+      const s=SYSTEMS.find(sys=>sys.key===key);if(!s)continue;
+      const ts=document.getElementById(s.tileStatus);
+      const dot=document.getElementById(s.dot);
+      if(k.status==='circuit_open'){
+        if(ts){ts.textContent='CIRCUIT OPEN';ts.className='tile-status offline'}
+        if(dot){dot.classList.remove('on');dot.classList.add('err')}
+      }else if(k.status==='down'&&k.restarts>0){
+        if(ts){ts.textContent=`RESTARTING (${k.restarts})`;ts.className='tile-status offline'}
+      }else if(k.status==='online'&&k.restarts>0&&ts&&ts.textContent==='ONLINE'){
+        // Up right now, but it's crashed before — worth knowing even when green
+        ts.textContent=`ONLINE · ${k.restarts} restart${k.restarts===1?'':'s'}`;
+      }
+    }
+  }
+  loadMetrics();
+}
+
+async function loadMetrics(){
+  // ── Orchestrator ──────────────────────────────────────────────────────────
+  // /health returns { ok, uptime (seconds float), online, total, systems }
+  // /api/api-map returns route list — use health.total as route proxy
+  const orch=await get(`${B.orch}/health`);
+  if(orch){
+    // uptime is seconds (float), not ms
+    const secs=orch.uptime||0;
+    const h=Math.floor(secs/3600),m=Math.floor((secs%3600)/60);
+    document.getElementById('tm-uptime').textContent=h?`${h}h`:`${m}m`;
+    // route count — use systems total as proxy until /api/api-map is reliable
+    document.getElementById('tm-routes').textContent=orch.total??orch.online??'—';
+  }
+
+  // ── Guardian ──────────────────────────────────────────────────────────────
+  // /health returns { jobs, providers (obj or count), connected }
+  const gd=await get(`${B.orch}/api/guardian/health`);
+  if(gd){
+    document.getElementById('tm-jobs').textContent=gd.jobs??'—';
+    const provCount=typeof gd.providers==='number'
+      ? gd.providers
+      : Object.keys(gd.providers||gd.connected||{}).length;
+    document.getElementById('tm-provs').textContent=provCount||'0';
+  }
+
+  // ── Cortex ────────────────────────────────────────────────────────────────
+  const gaps=await get(`${B.orch}/api/cortex/gaps?status=open`);
+  if(Array.isArray(gaps))document.getElementById('tm-gaps').textContent=gaps.length;
+  const cxEvt=await get(`${B.orch}/api/cortex/events?n=1`);
+  if(cxEvt){
+    const count=Array.isArray(cxEvt)?cxEvt.length:(cxEvt.total??cxEvt.count??'—');
+    document.getElementById('tm-events').textContent=count;
+  }
+
+  // ── Idearium ──────────────────────────────────────────────────────────────
+  // /health returns { version, snr, uptime } — no idea counts
+  // fetch /api/ideas directly for count
+  const idrIdeas=await get(`${B.orch}/api/idearium/ideas`);
+  const idrSpecs=await get(`${B.orch}/api/idearium/specs`);
+  if(idrIdeas){
+    const ideas=Array.isArray(idrIdeas)?idrIdeas:(idrIdeas.ideas||[]);
+    document.getElementById('tm-ideas').textContent=ideas.length;
+  }
+  if(idrSpecs){
+    const specs=Array.isArray(idrSpecs)?idrSpecs:(idrSpecs.specs||[]);
+    document.getElementById('tm-specs').textContent=specs.length;
+  }
+
+  // ── Bridge ────────────────────────────────────────────────────────────────
+  // No orchestrator proxy exists for Bridge yet — direct call, flagged above.
+  // /health returns { ok, requests (stats obj), registry (snap), uptime (secs) }
+  const br=await get(`${B.br}/health`);
+  if(br){
+    // requests is a stats object — use total or length, not the object itself
+    const reqCount=typeof br.requests==='number'
+      ? br.requests
+      : (br.requests?.total??br.requests?.length??Object.keys(br.requests||{}).length??'—');
+    document.getElementById('tm-reqs').textContent=reqCount;
+    // nodes from registry snapshot
+    const nodeCount=typeof br.nodes==='number'
+      ? br.nodes
+      : Object.keys(br.registry||{}).length;
+    document.getElementById('tm-nodes').textContent=nodeCount||'—';
+  }
+
+  // ── Architect ─────────────────────────────────────────────────────────────
+  // §2026-07-24: architect BUILDS architecture for specs/repos. It is NOT the
+  // registry — loom is (§17.1, one owner per artifact). The Hooks metric moved
+  // to loom's tile below; architect shows what it actually produces.
+  const arch=await get(`${B.orch}/api/architect/health`);
+  if(arch){
+    const bp=document.getElementById('tm-blueprints');
+    if(bp) bp.textContent=arch.jaa?.blueprints??0;
+    const sp=document.getElementById('tm-specs-built');
+    if(sp) sp.textContent=arch.jaa?.spec_wizard_sessions??arch.jaa?.specs??'—';
+  }
+
+  // ── Loom — the registry authority (component/hook/wire/seam) ──────────────
+  const loom=await get('http://127.0.0.1:3752/health');
+  if(loom){
+    const lh=document.getElementById('tm-loom-hooks');
+    if(lh) lh.textContent=loom.hooks?.total??loom.hooks??'—';
+    const lc=document.getElementById('tm-loom-components');
+    if(lc) lc.textContent=loom.components?.total??loom.components??'—';
+    const ls=document.getElementById('ts-loom');
+    if(ls){ ls.textContent='ONLINE'; ls.style.color='#00ff88'; }
+  }
+
+  // ── Emerge ────────────────────────────────────────────────────────────────
+  // §GAP: emerge-ide.js has no HTTP route exposing keyword/axiom counts —
+  // kernel.SCHEMA.keywords/axioms only get emitted on the internal event bus
+  // (compiler.snapshot, spec.updated), never as a plain GET. Tile metrics stay
+  // dashed until that route exists — not fabricating a fetch to a URL that
+  // isn't there.
+}
+
+// ── SSE — live events ─────────────────────────────────────────────────────────
+let evCount=0,logFilter_='',logSrcFilter_='';
+let sseOrch=null,sseCx=null;
+function connectSSE(){
+  function connect(url,handler,onStatus){
+    let es;
+    function tryConnect(){
+      // §FIXED 2026-08-22 — James: "the moment 127.0.0.1:9000 opens, that's
+      // when memory sky rockets." Real, likely-larger cause than _uiLog
+      // alone: this manual reconnect never closed the old EventSource
+      // before creating a new one. Under real backend pressure (this
+      // exact machine's own boot log shows orchestrator oscillating
+      // critical<->pressure repeatedly), SSE connections drop often —
+      // every drop here created a fresh EventSource on top of the old,
+      // still-open one instead of replacing it, and competed with the
+      // browser's own native EventSource auto-reconnect at the same time.
+      if (es) { try { es.close(); } catch(_) {} }
+      try{
+        es=new EventSource(url);
+        es.onopen=()=>{if(onStatus)onStatus('live')}
+        es.onmessage=e=>{try{handler(JSON.parse(e.data))}catch(_){}};
+        es.onerror=()=>{if(onStatus)onStatus('reconnecting');setTimeout(tryConnect,5000)};
+      }catch(_){setTimeout(tryConnect,5000)}
+    }
+    tryConnect();
+  }
+  connect(`${B.orch}/sse`,addEvent);
+  // Cortex SSE — proxied through orchestrator, same as Idearium below
+  // (this finishes the Phase 23.5 lockdown — cortex was the one left dialing
+  // direct when idearium got fixed).
+  connect(`${B.orch}/api/cortex/sse`,d=>{addCxEvent(d);addEvent(d)},s=>{
+    const el=document.getElementById('log-conn-status');
+    if(el)el.textContent=s==='live'?'● live':s;
+    if(el)el.style.color=s==='live'?'#00ff88':'rgba(255,170,0,.6)';
+  });
+  // Guardian SSE for job updates — proxied through orchestrator
+  try{
+    const gdEs=new EventSource(`${B.orch}/api/guardian/events`);
+    // §FIXED 2026-09-13 — James: "the inject dom observer/mutation
+    // listener should stream live the response. jobid, jobstatus...
+    // the floating menu cli, and copilot dont get a response." This
+    // connection already carries every real job.chunk/job.dispatched/
+    // job.complete/job.error event guardian's own mutation observer
+    // emits (guardian/server.js's cockpitBroadcast) — onmessage below
+    // used to throw that data away, only using it to trigger a jobs-
+    // list refresh. Now also handed to CoPilot.onGuardianEvent (ui/
+    // copilot/copilot.js), which live-updates the floating widget while
+    // a request is in flight — a real no-op when nothing is pending.
+    gdEs.onmessage=e=>{
+      try{
+        const d=JSON.parse(e.data);
+        if(d.type&&(d.type.includes('job')||d.type.includes('guardian')))gdLoadJobs();
+        if(window.CoPilot&&typeof window.CoPilot.onGuardianEvent==='function')window.CoPilot.onGuardianEvent(d);
+      }catch(_){}
+    };
+  }catch(_){}
+  // Idearium SSE for live card refresh — proxied through orchestrator
+  // (Phase 23.5 lockdown: idearium is reached via the orchestrator gateway,
+  // not dialed directly, unlike guardian/cortex above).
+  try{
+    const idrEs=new EventSource(`${B.orch}/api/idearium/sse`);
+    idrEs.onmessage=e=>{
+      try{
+        const d=JSON.parse(e.data);
+        if(d.type==='idea.created'||d.type==='idea.updated'){
+          if(curCh===3)idrLoad();
+        }
+      }catch(_){}
+    };
+  }catch(_){}
+}
+// Map source strings to their dot element IDs
+const SRC_DOT={orchestrator:'sd-orch',cortex:'sd-cx',guardian:'sd-gd',idearium:'sd-idr',bridge:'sd-br',architect:'sd-arch',emerge:'sd-em','gap-loop':'sd-cx','self-heal':'sd-cx',healer:'sd-cx',raid:'sd-cx',heartbeat:'sd-cx'};
+// Map source to their tile icon element for flash
+const SRC_TILE_ICON={orchestrator:'tile-orch',guardian:'tile-gd',cortex:'tile-cx',idearium:'tile-idr',bridge:'tile-br'};
+function flashDot(src){
+  const key=Object.keys(SRC_DOT).find(k=>src?.toLowerCase().includes(k));
+  const id=key?SRC_DOT[key]:null;
+  if(!id)return;
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.remove('flash');
+  void el.offsetWidth;
+  el.classList.add('flash');
+  setTimeout(()=>el.classList.remove('flash'),500);
+  // Also flash tile icon on overview
+  const tileKey=Object.keys(SRC_TILE_ICON).find(k=>src?.toLowerCase().includes(k));
+  if(tileKey){
+    const tile=document.getElementById(SRC_TILE_ICON[tileKey]);
+    const icon=tile?.querySelector('.tile-icon');
+    if(icon){icon.classList.remove('flash');void icon.offsetWidth;icon.classList.add('flash');setTimeout(()=>icon.classList.remove('flash'),600);}
+  }
+}
+
+// Contract-verification trust state — the orchestrator hash-verifies every
+// system's interaction contract ~2s after it registers (lib/contract-handshake.js)
+// and broadcasts system.contract.verified over /sse. This was never tracked
+// anywhere in the UI before — every proxied call above assumes a verified
+// system without ever checking. Minimal surfacing: a border tint on each
+// tile. Not a hard gate (the proxy itself doesn't gate on this either — see
+// note in the chat) — visibility first, enforcement is a separate decision.
+const _verifiedSystems = {};
+const CONTRACT_KEY_MAP = {orchestrator:'orch',guardian:'gd',cortex:'cx',idearium:'idr',architect:'arch',emerge:'em'};
+
+function addEvent(d){
+  evCount++;
+  const type=d.type||d.event||'';
+  if (type === 'system.contract.verified') {
+    const sid = d.systemId || d.system || '';
+    _verifiedSystems[sid] = { trust: d.trust, hash: d.hash, ts: Date.now() };
+    const sysEntry = SYSTEMS.find(s => s.key === (CONTRACT_KEY_MAP[sid] || sid));
+    const tile = sysEntry && document.getElementById(sysEntry.tileId);
+    if (tile) tile.style.boxShadow = d.trust === 'VERIFIED' ? '0 0 0 1px rgba(0,255,136,.35) inset' : '0 0 0 1px rgba(255,170,0,.35) inset';
+  }
+  const src=d.source||d.system||'';
+  flashDot(src||type.split('.')[0]);  // flash the source system's dot + tile icon
+  const ts=new Date(d.ts||Date.now()).toISOString().substr(11,8);
+  document.getElementById('ticker-line').textContent=`${ts} · ${src||type} · ${type}`;
+  const srcF=logSrcFilter_||document.getElementById('log-src-filter')?.value||'';
+  if((!logFilter_||type.includes(logFilter_)||src.includes(logFilter_))&&(!srcF||src.includes(srcF)||type.includes(srcF))){
+    const stream=document.getElementById('log-stream');
+    if(!stream)return;
+    const row=document.createElement('div');row.className='ll';
+    row.innerHTML=`<span class="ll-ts">${ts}</span><span class="ll-src">${src}</span><span class="ll-msg">${type}</span>`;
+    stream.prepend(row);
+    if(stream.children.length>500)stream.removeChild(stream.lastChild);
+  }
+}
+function addCxEvent(d){
+  const el=document.getElementById('cx-events-el');if(!el)return;
+  evCount++;document.getElementById('cx-ev-count').textContent=evCount;
+  const ts=new Date(d.ts||Date.now()).toISOString().substr(11,8);
+  const row=document.createElement('div');row.className='evt-row';
+  row.innerHTML=`<span class="ev-ts">${ts}</span><span class="ev-src">${d.source||d.system||''}</span><span class="ev-type">${d.type||''}</span>`;
+  el.prepend(row);if(el.children.length>100)el.removeChild(el.lastChild);
+}
+function logFilter(v){logFilter_=v.toLowerCase()}
+function clearLog(){document.getElementById('log-stream').innerHTML='';evCount=0}
+
+// ── Guardian ──────────────────────────────────────────────────────────────────
+// Known busy providers — tracks tab state
+let _providerState={};
+
+async function gdLoadProvs(){
+  const d=await get(`${B.orch}/api/guardian/providers`);
+  const el=document.getElementById('gd-provs-el');
+  const provs=d?.providers||d?.connected||{};
+  const names=Object.keys(provs);
+  _providerState=provs;
+  updateProviderStatusLine();
+  if(!names.length){
+    el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px;line-height:1.8">No providers connected.<br>Open a tab and activate the userscript.</div>';
+    return;
+  }
+  el.innerHTML=names.map(n=>{
+    const p=provs[n]||{};
+    const busy=p.busy||p.status==='busy';
+    return `<div class="prov-pill ${busy?'':'live'}" style="${busy?'border-color:rgba(255,170,0,.3);color:#ffaa00':''}">
+      <span>${busy?'⏳':'●'}</span>${n}${busy?'<span style="font-size:8px;margin-left:4px">BUSY</span>':''}
+      ${!busy?`<button onclick="gdOpenNewTab('${n}')" style="margin-left:auto;background:none;border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.4);font-size:8px;padding:1px 5px;cursor:pointer" title="Open new tab">+tab</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+function updateProviderStatusLine(){
+  const pr=document.getElementById('gd-prov')?.value||'claude';
+  const el=document.getElementById('gd-provider-status');if(!el)return;
+  const connected=Object.keys(_providerState);
+  if(!connected.length){el.textContent='No tabs connected — send will open a tab';el.style.color='rgba(255,170,0,.6)';return}
+  const match=connected.find(n=>n.toLowerCase().includes(pr.toLowerCase()));
+  if(match){
+    const busy=_providerState[match]?.busy;
+    el.textContent=busy?`${match} is busy — will route to next available`:`${match} ready`;
+    el.style.color=busy?'rgba(255,170,0,.6)':'rgba(0,255,136,.5)';
+  }else{
+    el.textContent=`${pr} not connected — send will open ${PROVIDER_URLS[pr]||'a new tab'}`;
+    el.style.color='rgba(255,170,0,.6)';
+  }
+}
+
+function gdOpenNewTab(provider){
+  const url=PROVIDER_URLS[provider||'claude'];
+  if(url)window.open(url,'_blank');
+}
+
+async function gdSend(){
+  const p=document.getElementById('gd-prompt').value.trim();
+  const pr=document.getElementById('gd-prov').value;
+  if(!p)return;
+  const res=document.getElementById('gd-res');
+  res.style.color='rgba(255,255,255,.5)';
+
+  // Check if provider is connected
+  const provs=await get(`${B.orch}/api/guardian/providers`);
+  const connected=Object.keys(provs?.providers||provs?.connected||{});
+  const hasProvider=connected.some(n=>n.toLowerCase().includes(pr.toLowerCase()));
+
+  if(!hasProvider){
+    // EVENT-DRIVEN: open the tab immediately, don't just show a message
+    const url=PROVIDER_URLS[pr];
+    res.textContent=`No ${pr} tab connected — opening now. Install the userscript then Send again.`;
+    res.style.color='rgba(255,170,0,.7)';
+    if(url) window.open(url,'_blank');
+    return;
+  }
+
+  // Check if this provider is busy (has an active streaming/processing job)
+  const jobs=await get(`${B.orch}/api/guardian/jobs`);
+  const jobList=Array.isArray(jobs)?jobs:(jobs?.jobs||[]);
+  const busy=jobList.some(j=>j.provider?.toLowerCase().includes(pr.toLowerCase())&&(j.status==='streaming'||j.status==='processing'));
+  if(busy){
+    // Find next available provider that's connected and not busy
+    const busyProviders=new Set(jobList.filter(j=>j.status==='streaming'||j.status==='processing').map(j=>j.provider?.toLowerCase()));
+    const available=connected.find(n=>!busyProviders.has(n.toLowerCase())&&n.toLowerCase()!==pr.toLowerCase());
+    if(available){
+      res.innerHTML=`${pr} is busy. Route to <b style="color:#00e5ff">${available}</b>? <button onclick="routeToProvider('${available}')" style="background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);border-radius:4px;color:#00e5ff;font-size:10px;padding:2px 8px;cursor:pointer;margin-left:8px">Use ${available}</button> <button onclick="openNewProviderTab('${pr}')" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;color:rgba(255,255,255,.5);font-size:10px;padding:2px 8px;cursor:pointer;margin-left:4px">Open new ${pr} tab</button>`;
+      res.style.color='rgba(255,170,0,.7)';
+      return;
+    }else{
+      // All connected providers busy — open a new tab
+      const url=PROVIDER_URLS[pr];
+      res.textContent=`All providers busy. Opening new ${pr} tab...`;
+      if(url) window.open(url,'_blank');
+      return;
+    }
+  }
+
+  // Timestamp is the source of truth for ordering
+  const jobTs=Date.now();
+  res.textContent=`Dispatching [${new Date(jobTs).toISOString().substr(11,8)}]...`;
+  res.style.color='rgba(255,255,255,.4)';
+
+  const d=await post(`${B.orch}/api/guardian/dispatch`,{command:'chat',prompt:p,provider:pr,meta:{ts:jobTs,source:'ui',ordered:true,seam_ts:jobTs}});
+  if(d?.jobId){
+    res.textContent=`Job ${d.jobId.slice(0,12)} — ${d.status||'queued'} [${new Date(jobTs).toISOString().substr(11,8)}]`;
+    res.style.color='rgba(0,229,255,.6)';
+    document.getElementById('gd-prompt').value='';
+  }else{
+    res.textContent=d?JSON.stringify(d):'Error: Guardian offline';
+    res.style.color='rgba(255,51,85,.7)';
+  }
+  gdLoadJobs();
+  setTimeout(gdLoadJobs,2000);
+}
+
+function openNewProviderTab(pr){const url=PROVIDER_URLS[pr];if(url)window.open(url,'_blank');}
+async function routeToProvider(pr){
+  document.getElementById('gd-prov').value=pr;
+  await gdSend();
+}
+
+async function gdCancelJob(jobId){
+  await post(`${B.orch}/api/guardian/queue/cancel/${jobId}`,{});
+  gdLoadJobs();
+}
+
+async function gdLoadJobs(){
+  const d=await get(`${B.orch}/api/guardian/jobs`);
+  const el=document.getElementById('gd-jobs-el');
+  const jobs=Array.isArray(d)?d:(d?.jobs||[]);
+  document.getElementById('gd-job-count').textContent=jobs.length||'0';
+  if(!jobs.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">No jobs yet</div>';return}
+  // Sort by timestamp (source of truth for order)
+  const sorted=jobs.slice(0,30).sort((a,b)=>(b.ts||b.createdAt||0)-(a.ts||a.createdAt||0));
+  el.innerHTML=sorted.map(j=>{
+    const ts=j.ts||j.createdAt?new Date(j.ts||j.createdAt).toISOString().substr(11,8):'';
+    const isActive=j.status==='streaming'||j.status==='processing'||j.status==='queued';
+    return `<div class="job-row">
+      <span class="j-st ${j.status||''}">${j.status||'?'}</span>
+      <span class="j-prov">${j.provider||'?'}</span>
+      <span class="j-txt">${(j.prompt||j.command||'').slice(0,100)}</span>
+      <span style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.2)">${ts}</span>
+      ${isActive?`<button onclick="gdCancelJob('${j.id||j.uuid||''}')" style="margin-left:4px;background:none;border:1px solid rgba(255,51,85,.3);border-radius:4px;color:rgba(255,51,85,.6);font-size:8px;padding:1px 5px;cursor:pointer;flex-shrink:0">✕</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── Cortex ────────────────────────────────────────────────────────────────────
+async function cxLoadGaps(){
+  const d=await get(`${B.orch}/api/cortex/gaps?status=open`);const el=document.getElementById('cx-gaps-el');
+  const gaps=Array.isArray(d)?d:[];
+  if(!gaps.length){el.innerHTML='<div style="color:rgba(0,255,136,.4);font-size:11px">No open loops — ecology nominal</div>';return}
+  el.innerHTML=gaps.slice(0,20).map(g=>`<div class="gap-row ${g.severity||'low'}"><div class="gap-type-lbl">${g.loop_type||g.type||'gap'}${g.severity?' · '+g.severity:''}</div><div class="gap-body-txt">${(g.body||g.path||'').slice(0,120)}</div></div>`).join('');
+}
+async function cxLoadFails(){
+  const d=await get(`${B.orch}/api/cortex/failures`);const el=document.getElementById('cx-fails-el');
+  const fails=Array.isArray(d)?d:(d?.failures||[]);
+  if(!fails.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">No failures</div>';return}
+  el.innerHTML=fails.slice(0,10).map(f=>`<div class="gap-row high"><div class="gap-type-lbl">${f.source||'unknown'}</div><div class="gap-body-txt">${(f.error||'').slice(0,140)}</div></div>`).join('');
+}
+
+// ── Idearium ──────────────────────────────────────────────────────────────────
+async function idrLoad(sort='createdAt'){
+  const d=await get(`${B.orch}/api/idearium/ideas?sort=${sort}`);const el=document.getElementById('idr-feed');
+  const ideas=Array.isArray(d)?d:(d?.ideas||[]);
+  if(!ideas.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:12px">No ideas yet. Type one above.</div>';return}
+  const maxT=Math.max(...ideas.map(i=>i.tension||0),1);
+  el.innerHTML=ideas.slice(0,40).map(i=>{
+    const t=i.tension||0;const tags=(i.tags||[]).map(g=>`<span class="it-tag">${g}</span>`).join('');
+    return `<div class="idea-tile ${t>.6?'high-t':''}"><div class="it-title">${i.title||(i.body||'').slice(0,80)||'Untitled'}</div>${i.body&&i.title?`<div class="it-body">${i.body}</div>`:''}<div class="it-meta">${i.status||'open'}${tags}${t?`<span>tension: ${t.toFixed?t.toFixed(2):t}</span>`:''}</div>${t?`<div class="t-bar"><div class="t-fill" style="width:${Math.round(t/maxT*100)}%"></div></div>`:''}</div>`;
+  }).join('');
+}
+async function idrCreate(){
+  const inp=document.getElementById('idr-new');const body=inp.value.trim();if(!body)return;
+  const d=await post(`${B.orch}/api/idearium/ideas`,{body,status:'open'});
+  if(d?.uuid||d?.ok){inp.value='';idrLoad('createdAt')}
+  else{inp.style.borderColor='#ff3355';setTimeout(()=>inp.style.borderColor='',1500)}
+}
+
+// ── Bridge ────────────────────────────────────────────────────────────────────
+// No orchestrator proxy exists for Bridge yet — direct call. Same gap noted
+// at the SYSTEMS table above; needs a `sub==='bridge'` block in orchestrator.js
+// before this can move off :9999.
+async function brLoad(){
+  const h=await get(`${B.br}/health`);
+  if(h){document.getElementById('br-reqs').textContent=h.requests??'—';document.getElementById('br-nodes').textContent=h.nodes??'—';document.getElementById('br-health').textContent=h.ok?'OK':'DEGRADED';document.getElementById('br-health').style.color=h.ok?'#00ff88':'#ff3355';document.getElementById('br-uptime').textContent=h.uptimeMs?Math.floor(h.uptimeMs/60000)+'m':'—'}
+  const reg=await get(`${B.br}/api/registry`);const el=document.getElementById('br-reg');
+  const nodes=Array.isArray(reg)?reg:(reg?.nodes||[]);
+  if(!nodes.length){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">No registered nodes</div>';return}
+  el.innerHTML=nodes.map(n=>`<div class="node-row"><span class="node-id">${n.id||n.name||'node'}</span><span class="node-url">${n.url||n.address||''}</span><span class="node-st ${n.online||n.healthy?'up':'down'}">${n.online||n.healthy?'● online':'● offline'}</span></div>`).join('');
+}
+
+// ── Diagnose ──────────────────────────────────────────────────────────────────
+const DIAG=[
+  {name:'Orchestrator',port:9000,url:`${B.orch}/health`},
+  {name:'Guardian',    port:7820,url:`${B.orch}/api/guardian/health`},
+  {name:'Cortex',      port:3748,url:`${B.orch}/api/cortex/health`},
+  {name:'Idearium',    port:4800,url:`${B.orch}/api/idearium/health`},
+  {name:'Bridge',      port:9999,url:`${B.br}/health`}, // no orchestrator proxy yet — direct
+  {name:'Emerge',      port:4242,url:`${B.orch}/api/emerge/status`}, // was hitting :4242/health directly — wrong path (emerge has no /health, only /status) and bypassed the proxy
+];
+function buildDiag(){
+  document.getElementById('diag-rows').innerHTML=DIAG.map((s,i)=>`
+    <div class="diag-row" id="dr-${i}">
+      <span class="diag-name">${s.name}</span>
+      <span class="diag-port">:${s.port}</span>
+      <span class="diag-status" id="dst-${i}">—</span>
+      <span class="diag-detail" id="ddt-${i}">not checked</span>
+    </div>`).join('');
+}
+async function runDiag(){
+  for(let i=0;i<DIAG.length;i++){
+    const s=DIAG[i];
+    const statusEl=document.getElementById(`dst-${i}`);
+    const detailEl=document.getElementById(`ddt-${i}`);
+    if(statusEl)statusEl.textContent='...';
+    if(statusEl)statusEl.className='diag-status checking';
+    const d=await get(s.url);
+    const ok=d&&(d.ok===true||d.status==='ok'||!d.error);
+    if(statusEl){statusEl.textContent=ok?'ONLINE':'OFFLINE';statusEl.className='diag-status '+(ok?'ok':'fail')}
+    const detail=[];
+    if(d?.version)detail.push('v'+d.version);
+    if(d?.uptimeMs)detail.push(Math.floor(d.uptimeMs/60000)+'m uptime');
+    if(d?.routes)detail.push(d.routes+' routes');
+    if(d?.jobs!==undefined)detail.push(d.jobs+' jobs');
+    if(d?.tables)detail.push(Object.keys(d.tables||{}).length+' tables');
+    if(detailEl)detailEl.textContent=detail.join(' · ')||(ok?'healthy':'unreachable');
+  }
+}
+async function loadDiagCFR(){
+  const el=document.getElementById('diag-cfr-body');
+  const sigma=document.getElementById('diag-cfr-sigma');
+  // Was: guardian cfr/state, fall back to cortex resilience/status. Dropped
+  // the fallback — /api/resilience/status doesn't exist anywhere server-side
+  // (checked admin-server.js and every cortex/*.js route handler). It always
+  // resolved null before; routing it through the proxy would resolve a
+  // truthy {ok:false,error:...} 404 body instead, which is worse — it would
+  // render a fake "sigma=0.000" panel instead of "CFR not responding". This
+  // needs the actual cortex route built, not a proxy entry for a route that
+  // isn't there.
+  const d=await get(`${B.orch}/api/guardian/cfr/state`);
+  if(!d){el.innerHTML='<div style="color:rgba(255,255,255,.2);font-size:11px">CFR not responding</div>';return}
+  const s=d.sigma?.score??d.sigma??d.score??0;
+  if(sigma)sigma.textContent=`σ=${typeof s==='number'?s.toFixed(3):s}`;
+  const color=s<.35?'#00ff88':s<.7?'#ffaa00':'#ff3355';
+  el.innerHTML=`
+    <div style="margin-bottom:8px">
+      <div style="font-size:9px;color:rgba(255,255,255,.3);margin-bottom:4px;font-family:'Space Mono',monospace">SIGMA</div>
+      <div style="height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden"><div style="width:${Math.min(100,Math.round((s||0)*100))}%;height:100%;background:${color};transition:width .5s"></div></div>
+      <div style="font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:${color};margin-top:6px">${typeof s==='number'?s.toFixed(3):s||'—'}</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.4)">
+      ${Object.entries(d).filter(([k])=>!['sigma','cfr','_'].some(x=>k.startsWith(x))).slice(0,8).map(([k,v])=>`<span><span style="color:rgba(255,255,255,.2)">${k}:</span> ${typeof v==='object'?JSON.stringify(v).slice(0,30):String(v).slice(0,30)}</span>`).join('')}
+    </div>`;
+}
+async function loadDiagGaps(){
+  const el=document.getElementById('diag-gaps-body');
+  const d=await get(`${B.orch}/api/cortex/gaps?status=open`);
+  const gaps=Array.isArray(d)?d:[];
+  if(!gaps.length){el.innerHTML='<div style="color:rgba(0,255,136,.4);font-size:11px">No open loops</div>';return}
+  el.innerHTML=gaps.slice(0,15).map(g=>`<div class="gap-row ${g.severity||'low'}"><div class="gap-type-lbl">${g.loop_type||g.type||'gap'}${g.severity?' · '+g.severity:''}</div><div class="gap-body-txt">${(g.body||g.path||'').slice(0,120)}</div></div>`).join('');
+}
+async function runDiagEngines(){
+  const el=document.getElementById('diag-engines-body');
+  el.innerHTML='<div style="color:rgba(255,170,0,.6);font-size:11px">Running diagnostic engines...</div>';
+  const d=await post(`${B.orch}/api/cortex/replay/inspect`,{fromTs:Date.now()-300000});
+  const rows=[];
+  if(d){rows.push({name:'Replay inspect (5m)',val:d.eventCount+' events',ok:true})}
+  // Resilience status row dropped — /api/resilience/status doesn't exist
+  // server-side (see loadDiagCFR above). Was always a no-op.
+  // Topology from gap-loop via cortex event_log
+  const gaps=await get(`${B.orch}/api/cortex/gaps?status=open`);
+  const gapCount=Array.isArray(gaps)?gaps.length:0;
+  rows.push({name:'Open loops',val:gapCount+' total',ok:gapCount===0});
+  const fails=await get(`${B.orch}/api/cortex/failures`);
+  const failCount=Array.isArray(fails)?fails.length:(fails?.failures||[]).length;
+  rows.push({name:'Failures',val:failCount+' recent',ok:failCount===0});
+  el.innerHTML=rows.map(r=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:${r.ok?'#00ff88':'#ffaa00'}">${r.ok?'✓':'⚠'}</span><span style="color:rgba(255,255,255,.6)">${r.name}</span><span style="margin-left:auto;font-family:\'Space Mono\',monospace;font-size:10px;color:rgba(255,255,255,.3)">${r.val}</span></div>`).join('');
+}
+
+// ── Co-pilot mode toggle ───────────────────────────────────────────────────────
+let _asMode = 'copilot'; // §2026-07-04: always co-pilot now, no more system-console toggle
+// §BUILT 2026-09-06 — James: "copilot is the middie option for what
+// ever is enabled in the programmable configuration file. ollama routes
+// to the ollama module. guardian routes to guardian. drop down only
+// needs to route to each ncp tab and back." Real, live NCP coverage
+// (guardian/userscripts.yaml, docs/guardian.spec — same 4 confirmed
+// multiple times this session, not guessed): claude, chatgpt, gemini,
+// perplexity. lifeline.route()'s own opts.provider already accepts a
+// specific agent name directly (checked earlier this session), so the
+// dropdown's value IS the real provider sent, not an indirect label.
+// 'copilot' is a real, third, literal value now too — copilot/server.js
+// resolves it through copilot/config.js's own real DEFAULT_PROVIDER,
+// not a second default guessed at here.
+const CP_GUARDIAN_AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity'];
+let _cpBackend = 'copilot'; // 'ollama' | 'copilot' | 'guardian' — copilot is the real, middle, default option
+let _asProvider = 'copilot'; // the real, current value sent to /api/prompt
+
+function _setCoPilotBackend(mode) {
+  _cpBackend = mode;
+  document.getElementById('cp-toggle-ollama').classList.toggle('cp-toggle-active', mode === 'ollama');
+  document.getElementById('cp-toggle-copilot').classList.toggle('cp-toggle-active', mode === 'copilot');
+  document.getElementById('cp-toggle-guardian').classList.toggle('cp-toggle-active', mode === 'guardian');
+  _renderCpProviderOptions();
+  _logToData('ui.copilot.backend', { backend: mode });
+}
+
+function _renderCpProviderOptions() {
+  const sel = document.getElementById('cp-provider');
+  if (!sel) return;
+  // §BUILT 2026-09-06 — "drop down only needs to route to each ncp tab
+  // and back": the dropdown is real, meaningful choice ONLY for
+  // guardian (which of the 4 real agents/tabs answers) — ollama and
+  // copilot are each already one real, specific thing, no tab to pick
+  // between, so the dropdown gets out of the way entirely rather than
+  // showing a fake, single-option "choice."
+  if (_cpBackend === 'guardian') {
+    sel.style.display = '';
+    sel.disabled = false;
+    sel.innerHTML = CP_GUARDIAN_AGENTS.map(o => `<option value="${o}">${o}</option>`).join('');
+    _asProvider = CP_GUARDIAN_AGENTS[0];
+  } else {
+    sel.style.display = 'none';
+    sel.disabled = true;
+    sel.innerHTML = '';
+    _asProvider = _cpBackend; // 'ollama' or 'copilot' — the literal value itself, no tab to route to
+  }
+}
+// §FIXED — the <select id="cp-provider"> element is already parsed into
+// the DOM by this point (this script tag comes after it in document
+// order), and this script isn't deferred/async — waiting for
+// DOMContentLoaded here would risk attaching after it already fired
+// (a real, classic bug), for no actual benefit. Called directly instead.
+_renderCpProviderOptions();
+document.getElementById('cp-provider').onchange = function() { _asProvider = this.value; _logToData('ui.copilot.provider', { provider: _asProvider }); };
+
+// §FIXED 2026-09-06 — James, live, from his own running system, this exact
+// error: "Co-pilot bridge error: Bridge handshake failed — is Bridge :9999
+// running?" This file's own comment predicted this: "same bug as Clear
+// Glass's copilot bridge.js — independently implemented here, fixed there,
+// never fixed here." It happened again with the actual bridge removal —
+// this was a second, completely separate implementation of the same
+// bridge-routed dispatch, missed the first time. Bridge is gone; this now
+// calls copilot's real, direct /api/prompt — same real endpoint clear-glass's
+// bridge.js was fixed to call, same real fix, just a second file that needed
+// it independently.
+async function _copilotDispatch(payload, timeout = 30000) {
+  const copilotPort = (window.NEXUS_PORTS && window.NEXUS_PORTS.copilot) || 3750;
+  const r = await fetch(`http://127.0.0.1:${copilotPort}/api/prompt`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(timeout),
+  });
+  if (!r.ok) {
+    let detail = '';
+    try { const errBody = await r.json(); detail = errBody?.errors?.join('; ') || errBody?.error || ''; } catch (_) {}
+    throw new Error(`copilot HTTP ${r.status}${detail ? ' — ' + detail : ''}`);
+  }
+  const data = await r.json();
+  if (!data.ok) throw new Error(data.error || 'copilot error');
+  return data;
+}
+
+function toggleCopilotMode() {
+  _asMode = _asMode === 'system' ? 'copilot' : 'system';
+  const btn = document.getElementById('copilot-mode-btn');
+  const lbl = document.getElementById('bot-bar-label');
+  const inp = document.getElementById('assistant-in');
+  if (_asMode === 'copilot') {
+    btn.style.color = 'var(--ac)';
+    btn.style.borderColor = 'var(--ac-border-hi)';
+    btn.style.background = 'var(--ac-ghost)';
+    if (lbl) lbl.textContent = '✦ CO-PILOT';
+    if (inp) inp.placeholder = 'Ask co-pilot — sees DOM, can navigate, build, dispatch…';
+    _logToData('ui.copilot-mode.enabled', { ts: Date.now() });
+  } else {
+    btn.style.color = '';
+    btn.style.borderColor = '';
+    btn.style.background = '';
+    if (lbl) lbl.textContent = 'SYSTEM CONSOLE';
+    if (inp) inp.placeholder = 'Ask NEXUS anything · /command for tools · /gaps · /jobs · /status';
+    _logToData('ui.copilot-mode.disabled', { ts: Date.now() });
+  }
+}
+
+// ── Assistant with grammar engine ─────────────────────────────────────────────
+const asHist=[];let asIdx=-1;
+document.getElementById('assistant-in').addEventListener('keydown',e=>{
+  if(e.key==='ArrowUp'){asIdx=Math.min(asIdx+1,asHist.length-1);e.target.value=asHist[asIdx]||'';e.preventDefault()}
+  if(e.key==='ArrowDown'){asIdx=Math.max(asIdx-1,-1);e.target.value=asIdx>=0?asHist[asIdx]:'';e.preventDefault()}
+});
+
+// ── Causal Graph ─────────────────────────────────────────────────────────────
+// Force-directed graph of CFR causal events. Reads /cfr/nodes + /cfr/deltas.
+// Sigma drives node size and color. Causal edges drawn as directed arrows.
+// Pure canvas 2D — no library dependency.
+
+const CG = (() => {
+  let _nodes = [], _edges = [], _sim = null;
+  let _drag = null, _hover = null;
+  let _pan = {x:0, y:0}, _panStart = null;
+  let _scale = 1;
+  let _raf = null;
+  const ORCH = `http://127.0.0.1:${P.orch}`;
+
+  function sigCol(s) {
+    s = Math.min(1, Math.max(0, s||0));
+    if (s < 0.35) return `rgba(0,255,136,${0.5+s})`;
+    if (s < 0.7)  { const t=(s-.35)/.35; return `rgba(${Math.round(t*255)},${Math.round(229-t*59)},${Math.round(255-t*255)},0.9)`; }
+    const t=(s-.7)/.3; return `rgba(255,${Math.round(170-t*170)},${Math.round(t*85)},0.95)`;
+  }
+
+  async function load() {
+    const depth = parseInt(document.getElementById('cg-depth')?.value||'50');
+    try {
+      const [nodesR, deltasR] = await Promise.allSettled([
+        fetch(`${ORCH}/api/cortex/cfr/nodes`).then(r=>r.json()),
+        fetch(`${ORCH}/api/cortex/cfr/deltas?limit=${depth}`).then(r=>r.json()),
+      ]);
+      const rawNodes = nodesR.status==='fulfilled' ? (nodesR.value?.nodes||[]) : [];
+      const rawDeltas = deltasR.status==='fulfilled' ? (deltasR.value?.deltas||[]) : [];
+
+      // Build node map from events — aggregate by type
+      const nodeMap = {};
+      [...rawNodes, ...rawDeltas].forEach(e => {
+        const key = e.label || e.type || '?';
+        if (!nodeMap[key]) nodeMap[key] = { id:key, label:key, sigma:0, count:0, mass:1 };
+        const s = e.sigma?.score ?? e.sigma ?? 0;
+        nodeMap[key].sigma = Math.max(nodeMap[key].sigma, s);
+        nodeMap[key].count++;
+        nodeMap[key].mass = 1 + nodeMap[key].sigma * 3 + Math.min(nodeMap[key].count * 0.1, 2);
+      });
+
+      _nodes = Object.values(nodeMap);
+
+      // Build edges from causedBy links in deltas
+      const edgeMap = {};
+      rawDeltas.forEach(e => {
+        if (e.causedBy) {
+          // Find the type of the causing event
+          const fromDelta = rawDeltas.find(d => d.uuid === e.causedBy);
+          if (fromDelta) {
+            const fromKey = fromDelta.label || fromDelta.type || '?';
+            const toKey   = e.label || e.type || '?';
+            if (fromKey !== toKey) {
+              const ek = `${fromKey}→${toKey}`;
+              edgeMap[ek] = (edgeMap[ek]||0) + 1;
+            }
+          }
+        }
+      });
+      _edges = Object.entries(edgeMap).map(([k,w]) => {
+        const [f,t] = k.split('→');
+        return { from:f, to:t, weight:w };
+      });
+
+      // Assign initial positions (random in canvas center area)
+      const canvas = document.getElementById('cg-canvas');
+      if (!canvas) return;
+      const W = canvas.offsetWidth, H = canvas.offsetHeight;
+      _nodes.forEach(n => {
+        if (!n.x) { n.x = W/2 + (Math.random()-.5)*300; n.y = H/2 + (Math.random()-.5)*300; }
+        n.vx = 0; n.vy = 0;
+      });
+
+      document.getElementById('cg-node-count').textContent = `${_nodes.length} nodes · ${_edges.length} edges`;
+      document.getElementById('cg-empty').style.display = _nodes.length ? 'none' : 'flex';
+
+      // Update sigma badge with max sigma
+      const maxSig = _nodes.reduce((m,n) => Math.max(m, n.sigma), 0);
+      const sigEl = document.getElementById('cg-sigma');
+      if (sigEl) { sigEl.textContent = `σ ${maxSig.toFixed(3)}`; sigEl.style.color = sigCol(maxSig); }
+
+      _simulate();
+    } catch(e) {
+      document.getElementById('cg-empty').style.display='flex';
+      document.getElementById('cg-empty').textContent = `Error: ${e.message}`;
+    }
+  }
+
+  function _simulate() {
+    if (_raf) cancelAnimationFrame(_raf);
+    let ticks = 0;
+    const REPEL = 3000, ATTRACT = 0.03, DAMP = 0.88, CENTER = 0.004;
+
+    function tick() {
+      const canvas = document.getElementById('cg-canvas');
+      if (!canvas || CH_META[curCh]?.id !== 'ch-causal') { _raf=null; return; }
+      const W = canvas.offsetWidth, H = canvas.offsetHeight;
+      canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+
+      // Force simulation (simplified Barnes-Hut)
+      if (ticks < 300) {
+        _nodes.forEach(a => {
+          // Center gravity
+          a.vx += (W/2 - a.x) * CENTER;
+          a.vy += (H/2 - a.y) * CENTER;
+          // Node-node repulsion
+          _nodes.forEach(b => {
+            if (a===b) return;
+            const dx=a.x-b.x, dy=a.y-b.y;
+            const d2 = dx*dx+dy*dy+1;
+            const f = REPEL/(d2);
+            a.vx += dx*f; a.vy += dy*f;
+          });
+        });
+        // Edge attraction
+        _edges.forEach(e => {
+          const a = _nodes.find(n=>n.id===e.from), b = _nodes.find(n=>n.id===e.to);
+          if (!a||!b) return;
+          const dx=b.x-a.x, dy=b.y-a.y;
+          a.vx += dx*ATTRACT*e.weight; a.vy += dy*ATTRACT*e.weight;
+          b.vx -= dx*ATTRACT*e.weight; b.vy -= dy*ATTRACT*e.weight;
+        });
+        _nodes.forEach(n => {
+          if (_drag?.id===n.id) return;
+          n.vx *= DAMP; n.vy *= DAMP;
+          n.x  += n.vx; n.y  += n.vy;
+          n.x = Math.max(40,Math.min(W-40,n.x));
+          n.y = Math.max(40,Math.min(H-40,n.y));
+        });
+        ticks++;
+      }
+
+      // Draw
+      ctx.save();
+      ctx.translate(_pan.x, _pan.y);
+      ctx.scale(_scale, _scale);
+
+      ctx.clearRect(-_pan.x/_scale-100, -_pan.y/_scale-100, W/_scale+200, H/_scale+200);
+
+      // Edges
+      ctx.globalAlpha = 0.35;
+      _edges.forEach(e => {
+        const a=_nodes.find(n=>n.id===e.from), b=_nodes.find(n=>n.id===e.to);
+        if(!a||!b) return;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = Math.min(e.weight, 4) * 0.5;
+        ctx.stroke();
+        // Arrow
+        const angle = Math.atan2(b.y-a.y, b.x-a.x);
+        const r = 6 + b.mass*3;
+        const ax = b.x - Math.cos(angle)*r, ay = b.y - Math.sin(angle)*r;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax - Math.cos(angle-.5)*6, ay - Math.sin(angle-.5)*6);
+        ctx.lineTo(ax - Math.cos(angle+.5)*6, ay - Math.sin(angle+.5)*6);
+        ctx.closePath(); ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fill();
+      });
+
+      // Nodes
+      ctx.globalAlpha = 1;
+      _nodes.forEach(n => {
+        const r = 6 + n.mass * 3;
+        const col = sigCol(n.sigma);
+        const isHov = _hover?.id===n.id;
+
+        // Glow for high sigma
+        if (n.sigma > 0.4) {
+          ctx.beginPath(); ctx.arc(n.x, n.y, r*2.2, 0, Math.PI*2);
+          ctx.fillStyle = col.replace('0.9','0.06').replace('0.95','0.08'); ctx.fill();
+        }
+
+        // Node body
+        ctx.beginPath(); ctx.arc(n.x, n.y, r + (isHov?2:0), 0, Math.PI*2);
+        ctx.fillStyle = col; ctx.fill();
+        if (isHov) { ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=1.5; ctx.stroke(); }
+
+        // Label
+        ctx.fillStyle = isHov ? '#fff' : 'rgba(255,255,255,.55)';
+        ctx.font = `${isHov?'700 ':''} ${Math.min(9,7+n.mass*.3)}px 'Space Mono',monospace`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        // Truncate long labels
+        const lbl = n.label.length > 20 ? n.label.slice(0,18)+'…' : n.label;
+        ctx.fillText(lbl, n.x, n.y + r + 3);
+      });
+
+      ctx.restore();
+      _raf = requestAnimationFrame(tick);
+    }
+    _raf = requestAnimationFrame(tick);
+  }
+
+  function attachEvents() {
+    const canvas = document.getElementById('cg-canvas');
+    if (!canvas) return;
+
+    canvas.addEventListener('mousedown', e => {
+      const p = _canvasPoint(canvas, e);
+      const hit = _nodeAt(p);
+      if (hit) { _drag = hit; hit._dragOx = p.x-hit.x; hit._dragOy = p.y-hit.y; }
+      else { _panStart = p; }
+    });
+    canvas.addEventListener('mousemove', e => {
+      const p = _canvasPoint(canvas, e);
+      if (_drag) { _drag.x=p.x-_drag._dragOx; _drag.y=p.y-_drag._dragOy; _drag.vx=0; _drag.vy=0; }
+      else if (_panStart) { _pan.x+=p.x-_panStart.x; _pan.y+=p.y-_panStart.y; _panStart=p; }
+      const hit = _nodeAt(p);
+      if (hit !== _hover) {
+        _hover = hit;
+        const tip = document.getElementById('cg-tooltip');
+        if (hit && tip) {
+          tip.style.display='block'; tip.style.left=(e.offsetX+12)+'px'; tip.style.top=(e.offsetY-10)+'px';
+          tip.innerHTML = `<b style="color:${sigCol(hit.sigma)}">${hit.label}</b><br>σ ${hit.sigma.toFixed(3)} · count ${hit.count}`;
+        } else if (tip) tip.style.display='none';
+      }
+    });
+    canvas.addEventListener('mouseup', () => { _drag=null; _panStart=null; });
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      _scale = Math.max(0.3, Math.min(3, _scale * delta));
+    }, {passive:false});
+  }
+
+  function _canvasPoint(canvas, e) {
+    const r = canvas.getBoundingClientRect();
+    return { x:(e.clientX-r.left-_pan.x)/_scale, y:(e.clientY-r.top-_pan.y)/_scale };
+  }
+  function _nodeAt(p) {
+    for (const n of _nodes) {
+      const r=6+n.mass*3+4, dx=p.x-n.x, dy=p.y-n.y;
+      if (dx*dx+dy*dy < r*r) return n;
+    }
+    return null;
+  }
+
+  // Co-pilot readable state — exposed as window property for co-pilot context
+  function getState() {
+    return { nodeCount:_nodes.length, edgeCount:_edges.length,
+      topNodes: _nodes.sort((a,b)=>b.sigma-a.sigma).slice(0,5).map(n=>({label:n.label,sigma:n.sigma.toFixed(3),count:n.count})),
+      maxSigma: _nodes.reduce((m,n)=>Math.max(m,n.sigma),0).toFixed(3),
+    };
+  }
+
+  return { load, attachEvents, getState };
+})();
+
+function cgLoad() { CG.load(); }
+document.addEventListener('DOMContentLoaded', () => {
+  CG.attachEvents();
+});
+
+// ── Conversation Log ──────────────────────────────────────────────────────────
+// Reads chat_log from JAA via orchestrator proxy.
+// Shows co-pilot + NCP exchanges with intent, model, channel metadata.
+
+async function convLoad() {
+  const filter = document.getElementById('conv-filter')?.value || '';
+  const list   = document.getElementById('conv-list');
+  if (!list) return;
+  list.innerHTML = '<div style="font-family:\'Space Mono\',monospace;font-size:10px;color:rgba(255,255,255,.2);padding:16px">Loading…</div>';
+
+  try {
+    // §FIXED 2026-08-22 — James: "i need to be able to access the chat
+    // history." Found the real cause, not a missing feature: this panel
+    // already existed, fully built, but fetched the wrong URL. Orchestrator
+    // only proxies memory requests under /api/cortex/memory (checked
+    // directly: the proxy block is gated on sub==='cortex', and there is no
+    // handler at all for a bare /api/memory on this port) — so every call
+    // here has been hitting a 404 since the panel was written.
+    const url = `http://127.0.0.1:${P.orch}/api/cortex/memory?table=chat_log&limit=40`;
+    const d = await fetch(url).then(r=>r.json()).catch(()=>null);
+    const rows = (d?.rows || d?.result || []).filter(r => !filter || r.provider===filter || r.source===filter)
+      .sort((a,b)=>(b.ts||0)-(a.ts||0));
+
+    document.getElementById('conv-count').textContent = `${rows.length} exchanges`;
+
+    if (!rows.length) {
+      list.innerHTML = '<div style="font-family:\'Space Mono\',monospace;font-size:10px;color:rgba(255,255,255,.2);padding:16px">No conversations yet. Try asking co-pilot something.</div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    rows.forEach(row => {
+      const ago = _convAgo(row.ts);
+      const provider = row.provider || row.source || 'unknown';
+      const intent   = row.intent || '—';
+      const model    = row.modelUsed || row.model || '';
+      const channel  = row.channel || '';
+      const prompt   = (row.prompt || '').slice(0, 300);
+      const response = (row.response || '').slice(0, 400);
+
+      const card = document.createElement('div');
+      card.className = 'conv-card';
+      const badgeClass = ['copilot','claude','chatgpt','ollama'].includes(provider) ? provider : 'copilot';
+
+      card.innerHTML = `
+        <div class="conv-card-head">
+          <span class="conv-badge ${badgeClass}">${provider}</span>
+          ${intent!=='—'?`<span class="conv-intent">${intent}</span>`:''}
+          ${channel?`<span class="conv-intent" style="color:rgba(255,255,255,.18)">${channel}</span>`:''}
+          <span class="conv-ts" style="margin-left:auto">${ago}</span>
+        </div>
+        <div class="conv-prompt">${_escHtml(prompt)}</div>
+        ${response?`
+          <div class="conv-response" id="cr-${row.uuid}">${_escHtml(response)}${response.length>=400?'…':''}</div>
+          ${response.length>100?`<span class="conv-expand" onclick="this.previousElementSibling.classList.toggle('expanded');this.textContent=this.textContent==='▼ expand'?'▲ collapse':'▼ expand'">▼ expand</span>`:''}
+        `:''}
+        ${model?`<div style="font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.18);margin-top:6px">via ${model}${row.fromGrammar?' · grammar-routed':''}</div>`:''}
+      `;
+      list.appendChild(card);
+    });
+  } catch(e) {
+    list.innerHTML = `<div style="font-family:\'Space Mono\',monospace;font-size:10px;color:var(--err);padding:16px">Error: ${e.message}</div>`;
+  }
+}
+
+function _convAgo(ts) {
+  if (!ts) return '';
+  const s = Math.round((Date.now()-ts)/1000);
+  if (s<60) return `${s}s ago`;
+  if (s<3600) return `${Math.round(s/60)}m ago`;
+  return `${Math.round(s/3600)}h ago`;
+}
+function _escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Co-pilot UI reader ────────────────────────────────────────────────────────
+// Exposes window.NEXUS_UI_STATE so co-pilot can read what's on screen.
+// Updated whenever the channel changes or canvas loads.
+
+window.NEXUS_UI_STATE = {
+  currentChannel: () => CH_META[curCh]?.id || 'unknown',
+  currentChannelName: () => CH_META[curCh]?.name || 'unknown',
+  healthMap: () => {
+    const map = {};
+    document.querySelectorAll('.spill-dot').forEach(d => {
+      const id = d.id?.replace('sd-','');
+      if (id) map[id] = d.classList.contains('on');
+    });
+    return map;
+  },
+  openGaps: () => {
+    const gaps = [];
+    document.querySelectorAll('.gap-row').forEach(r => {
+      gaps.push({ severity: r.classList.contains('high')?'high':'medium', text: r.textContent?.trim()?.slice(0,60) });
+    });
+    return gaps;
+  },
+  causalGraph: () => {
+    try { return CG.getState(); } catch(_) { return null; }
+  },
+  canvasOrganisms: () => {
+    try {
+      const iframe = document.getElementById('canvas-iframe');
+      if (!iframe?.contentWindow?.KERNEL) return [];
+      const reg = iframe.contentWindow.KERNEL.registry;
+      const result = [];
+      reg.forEach((org, id) => result.push({ id, label: org.config?.label || id, online: org.state?.online }));
+      return result;
+    } catch(_) { return []; }
+  },
+  activeSpotlights: () => window._cpSpotlitEls?.map(el=>el.id)||[],
+  snapshot: () => JSON.stringify({
+    channel: window.NEXUS_UI_STATE.currentChannel(),
+    health: window.NEXUS_UI_STATE.healthMap(),
+    causal: window.NEXUS_UI_STATE.causalGraph(),
+    organisms: window.NEXUS_UI_STATE.canvasOrganisms(),
+    ts: Date.now(),
+  }),
+};
+
+// comp_id: nexus.ui.tv-shell.copilot-runtime
+  // file: ui/tv-shell/spotlight/spotlight.js (external)
+  // ── Co-pilot UI Runtime ─────────────────────────────────────────────────────
+// Loaded from: ./spotlight/spotlight.js (served by orchestrator)
+// window.CP and window.Spotlight are set by that module.
+// Stub defined here so inline code is safe before the module loads.
+if (typeof CP === 'undefined') {
+  window.CP = {
+    init:()=>{}, spotlight:()=>{}, clearSpotlight:()=>{},
+    updateTension:()=>{}, guidedSteps:()=>{}, executeUI:()=>{},
+    navigateTo:(ch)=>{ if(typeof tuneById==='function') tuneById(ch); },
+    setHealthState:()=>{}, guidedStep:()=>{}, stepNext:()=>{},
+  };
+}
+
+document.addEventListener('DOMContentLoaded', () => typeof CP !== 'undefined' && CP.init());
+
+function _setOverviewMode(mode) {
+  const legacyGrid = document.getElementById('sys-grid');
+  const warpGrid   = document.getElementById('warp-overview-container');
+  const btnLegacy  = document.getElementById('btn-legacy-view');
+  const btnWarp    = document.getElementById('btn-warp-view');
+  const status     = document.getElementById('warp-view-status');
+
+  if (mode === 'warp') {
+    if (legacyGrid) legacyGrid.style.display = 'none';
+    if (warpGrid)   warpGrid.style.display = 'block';
+    if (btnLegacy)  { btnLegacy.style.background='rgba(255,255,255,.04)'; btnLegacy.style.color='rgba(255,255,255,.3)'; btnLegacy.style.borderColor='rgba(255,255,255,.1)'; }
+    if (btnWarp)    { btnWarp.style.background='rgba(0,229,255,.15)'; btnWarp.style.color='#00e5ff'; btnWarp.style.borderColor='rgba(0,229,255,.3)'; }
+    if (status) status.textContent = 'reading /contract endpoints…';
+    if (window._warpRefresh) window._warpRefresh();
+    setTimeout(() => { if (status) status.textContent = ''; }, 3000);
+  } else {
+    if (legacyGrid) legacyGrid.style.display = '';
+    if (warpGrid)   warpGrid.style.display = 'none';
+    if (btnLegacy)  { btnLegacy.style.background='rgba(0,229,255,.15)'; btnLegacy.style.color='#00e5ff'; btnLegacy.style.borderColor='rgba(0,229,255,.3)'; }
+    if (btnWarp)    { btnWarp.style.background='rgba(255,255,255,.04)'; btnWarp.style.color='rgba(255,255,255,.3)'; btnWarp.style.borderColor='rgba(255,255,255,.1)'; }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // §Warp spine: init contract-driven component system
+  if (typeof NexusShell !== 'undefined') {
+    const container = document.getElementById('warp-overview-container');
+    NexusShell.init(container);
+    // Expose to window for dev console + co-pilot access
+    window._warp = NexusShell.stream;
+    window._warpRefresh = () => NexusShell.refresh();
+  }
+});
+
+async function asSend(){
+  const inp = document.getElementById('assistant-in');
+  const q   = inp.value.trim(); if(!q) return;
+  asHist.unshift(q); asIdx=-1; inp.value='';
+
+  const out = document.getElementById('assistant-out');
+  out.style.display='block';
+  out.style.color='rgba(200,220,210,.8)';
+  out.textContent='';
+
+  // clear is the only client-side command — everything else routes based on mode
+  if(q.toLowerCase()==='clear'){ out.style.display='none'; return; }
+
+  // Show thinking indicator
+  const thinking = document.createElement('span');
+  thinking.textContent = '…';
+  thinking.style.cssText='opacity:.4;font-style:italic';
+  out.appendChild(thinking);
+
+  // ── Co-pilot mode: route directly to copilot :3750 ──────────────
+  if (_asMode === 'copilot') {
+    try {
+      let uiSnapshot = null;
+      try { uiSnapshot = JSON.parse(window.NEXUS_UI_STATE.snapshot()); } catch(_) {}
+      // §BUILT 2026-09-06 — James: "a toggle switch to switch between
+      // ollama and guardian." Real, existing support found before building
+      // anything new: copilot/lifeline.js's route() already accepts an
+      // explicit opts.provider override (checked directly — it already
+      // validates 'auto' and real guardian agent names against guardian's
+      // own live /providers), copilot's /api/prompt just never passed the
+      // caller's own choice through (always auto-decided: ollama first,
+      // guardian fallback). Fixed at that real gap, not by inventing a
+      // second dispatch path.
+      const result = await _copilotDispatch({
+        prompt: q,
+        channel: CH_META[curCh]?.id || 'ch-overview',
+        channelName: CH_META[curCh]?.name || 'Overview',
+        uiState: uiSnapshot,
+        source: 'tv-shell',
+        provider: _asProvider, // real, specific value: a real agent name (guardian mode), or the literal 'ollama'/'copilot' — set directly by the toggle+dropdown, no translation needed
+      }, 60000);
+      out.textContent = '';
+      // §BUG FIXED 2026-07-11 — the real bug was upstream (bridge/router.js's
+      // ResultGate was discarding the actual response — see its own fix
+      // comment for the full story). This fallback chain could still pick
+      // JSON.stringify(result) if some future response genuinely has
+      // neither .text nor .response — kept as a last resort, but now it's
+      // actually a last resort instead of the routine outcome.
+      // §BUGFIX 2026-08-28 — James, live: co-pilot showed
+      // "[unstructured response — keys: ok, uuid, status, reason]" instead
+      // of any real information. Those exact 4 keys only ever come from
+      // bridge/router.js's HoldGate (target_offline or a tripped circuit
+      // breaker) resolving with {ok:false, uuid, status, reason} — a real,
+      // correctly-detected FAILURE, not an unstructured success this
+      // fallback chain was built for. The old code never even looked at
+      // result.reason, so the one genuinely useful piece of information
+      // (why it failed — almost always "target_offline" when copilot's own
+      // circuit breaker has tripped, exactly as seen elsewhere in this same
+      // session) was discarded in favor of a key-name dump. Checked first,
+      // now: if ok is explicitly false, show the real reason plainly.
+      const text = result?.ok === false
+        ? `Co-pilot didn't respond: ${result.reason || result.status || 'unknown failure'}${result.status && result.reason !== result.status ? ` (status: ${result.status})` : ''}. If this keeps happening, copilot's own process may be down — check whether its circuit breaker has tripped.`
+        : (result?.text || result?.response || (result ? `[unstructured response — keys: ${Object.keys(result).join(', ')}]` : 'No response'));
+      out.style.color = 'rgba(0,229,255,.92)';
+      out.textContent = text;
+      // Model tag
+      if (result?.modelUsed) {
+        const m = document.createElement('div');
+        m.style.cssText='font-size:10px;opacity:.35;margin-top:4px;font-family:monospace';
+        m.textContent = `✦ via ${result.modelUsed}`;
+        out.appendChild(m);
+      }
+      _logToData('ui.copilot.response', { promptLen: q.length, hasText: !!text });
+    } catch(err) {
+      out.textContent = '';
+      out.style.color = 'rgba(255,100,100,.8)';
+      out.textContent = `Co-pilot bridge error: ${err.message}`;
+      _logToData('ui.copilot.error', { error: err.message });
+    }
+    return;
+  }
+
+  // §DEADCODE 2026-07-04: everything below this point used to be the
+  // 'system mode' branch (orchestrator-proxy dispatch, identical to what
+  // ui/home/index.html's copilot.js now uses). The copilot-mode branch
+  // above always returns, and _asMode is permanently 'copilot' since the
+  // SYSTEM CONSOLE / CO-PILOT toggle was removed — this ~75 lines could
+  // never execute. Removed rather than left as dead weight. If tv-shell's
+  // §RETIRED 2026-09-06 — Bridge removed (James: "it has to go"). ui/home's orchestrator-proxy path should be
+  // unified into one shared module, that's a real decision to make
+  // explicitly, not something to guess at while deleting unreachable code.
+}
+
+
+// ── Rewind ────────────────────────────────────────────────────────────────────
+let rwSnapshots=[],rwSelected=null,rwHovered=null,rwAnimFrame=null;
+const CX_SNAP=`${B.orch}/api/cortex/snapshots`,CX_ROLLBACK=`${B.orch}/api/cortex/snapshots/rollback`;
+function sigmaColor(s,a=1){if(typeof s!=='number')s=0;s=Math.min(1,Math.max(0,s));if(s<.35){const t=s/.35;return`rgba(${Math.round(0)},${Math.round(255-t*25)},${Math.round(136+t*119)},${a})`}else if(s<.7){const t=(s-.35)/.35;return`rgba(${Math.round(t*255)},${Math.round(229-t*59)},${Math.round(255-t*255)},${a})`}else{const t=(s-.7)/.3;return`rgba(255,${Math.round(170-t*170)},${Math.round(t*85)},${a})`}}
+async function openRewind(){document.getElementById('rewind-overlay').classList.add('open');setRwStatus('Loading...','working');await loadRewindData()}
+function closeRewind(){document.getElementById('rewind-overlay').classList.remove('open');if(rwAnimFrame){cancelAnimationFrame(rwAnimFrame);rwAnimFrame=null}}
+async function loadRewindData(){
+  const sd=await get(CX_SNAP);const ed=await get(`${B.orch}/api/cortex/events?n=200`);
+  const snaps=sd?.snapshots||sd||[];const events=Array.isArray(ed)?ed:(ed?.events||[]);
+  const sigmaEvents=events.filter(e=>e.sigma?.score!==undefined).map(e=>({ts:e.ts,sigma:e.sigma.score,delta:e.delta||0})).sort((a,b)=>a.ts-b.ts);
+  rwSnapshots=snaps.map(s=>{let closest=null,minD=Infinity;for(const ev of sigmaEvents){const d=Math.abs(ev.ts-s.ts);if(d<minD){minD=d;closest=ev}}return{...s,sigma:closest?.sigma||0,delta:closest?.delta||0}}).sort((a,b)=>a.ts-b.ts);
+  if(!rwSnapshots.length){setRwStatus('No snapshots','');return}
+  setRwStatus(rwSnapshots.length+' snapshots','');drawTimeline();
+}
+function drawTimeline(){
+  const c=document.getElementById('rw-canvas');if(!c)return;
+  const dpr=window.devicePixelRatio||1,rect=c.getBoundingClientRect();
+  c.width=rect.width*dpr;c.height=rect.height*dpr;
+  const ctx=c.getContext('2d');ctx.scale(dpr,dpr);
+  c.onmousemove=e=>{const r=c.getBoundingClientRect(),mx=e.clientX-r.left;const idx=_snapAtX(mx,r.width);rwHovered=idx>=0?idx:null;const tip=document.getElementById('rw-hover-tip');if(idx>=0){const sn=rwSnapshots[idx];const ts=new Date(sn.ts).toISOString().replace('T',' ').substr(0,19);tip.innerHTML=`<b>${sn.snapId?.slice(0,12)||'?'}</b> ${sn.trigger||'?'}<br>${ts} σ=${sn.sigma?.toFixed(3)||'0'}`;tip.style.left=(r.left+_snapX(idx,rwSnapshots.length,r.width,24))+'px';tip.style.top=(r.top+80)+'px';tip.classList.add('show')}else tip.classList.remove('show')};
+  c.onclick=e=>{const r=c.getBoundingClientRect();const idx=_snapAtX(e.clientX-r.left,r.width);if(idx>=0){rwSelected=rwSnapshots[idx];showSnapDetail(rwSelected)}};
+  c.onmouseleave=()=>{rwHovered=null;document.getElementById('rw-hover-tip').classList.remove('show')};
+  let gt=0;function animLoop(){gt+=.04;_renderTL(ctx,c.getBoundingClientRect().width,c.getBoundingClientRect().height,gt);rwAnimFrame=requestAnimationFrame(animLoop)}animLoop();
+}
+function _snapX(i,n,W,PAD){return n===1?W/2:PAD+(i/(n-1))*(W-PAD*2)}
+function _snapAtX(mx,W){const PAD=24,n=rwSnapshots.length;if(!n)return-1;let best=0,bestD=Infinity;for(let i=0;i<n;i++){const d=Math.abs(_snapX(i,n,W,PAD)-mx);if(d<bestD){bestD=d;best=i}}return bestD<28?best:-1}
+function _renderTL(ctx,W,H,t){
+  if(!ctx)return;
+  ctx.clearRect(0,0,W,H);const n=rwSnapshots.length;if(!n)return;const PAD=24,MID=H*.55,MH=H*.38;
+  ctx.beginPath();ctx.moveTo(PAD,MID);ctx.lineTo(W-PAD,MID);ctx.strokeStyle='rgba(255,255,255,.07)';ctx.lineWidth=1;ctx.stroke();
+  if(n>=2){const fmt=ts=>new Date(ts).toISOString().substr(11,5);ctx.font='9px "Space Mono"';ctx.fillStyle='rgba(255,255,255,.2)';ctx.textAlign='left';ctx.fillText(fmt(rwSnapshots[0].ts),PAD,H-4);ctx.textAlign='right';ctx.fillText(fmt(rwSnapshots[n-1].ts),W-PAD,H-4)}
+  for(let i=0;i<n-1;i++){const x1=_snapX(i,n,W,PAD),x2=_snapX(i+1,n,W,PAD);const g=ctx.createLinearGradient(x1,0,x2,0);g.addColorStop(0,sigmaColor(rwSnapshots[i].sigma,.2));g.addColorStop(1,sigmaColor(rwSnapshots[i+1].sigma,.2));ctx.beginPath();ctx.moveTo(x1,MID);ctx.lineTo(x2,MID);ctx.strokeStyle=g;ctx.lineWidth=1.5;ctx.stroke()}
+  for(let i=0;i<n;i++){
+    const sn=rwSnapshots[i];const x=_snapX(i,n,W,PAD);const dy=Math.min(MH,Math.max(-MH,(sn.delta||0)*MH*2));const y=MID-dy;
+    const sel=rwSelected?.snapId===sn.snapId;const hov=rwHovered===i;const r=sel?7+Math.sin(t)*2:hov?6:4;
+    if(sel||hov){ctx.beginPath();ctx.arc(x,y,r+5,0,Math.PI*2);ctx.fillStyle=sigmaColor(sn.sigma,sel?.1+Math.sin(t)*.05:.06);ctx.fill()}
+    ctx.beginPath();ctx.moveTo(x,MID);ctx.lineTo(x,y);ctx.strokeStyle=sigmaColor(sn.sigma,sel?.5:.15);ctx.lineWidth=sel?1.5:.7;ctx.stroke();
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=sigmaColor(sn.sigma,sel||hov?1:.65);ctx.fill();
+    if(sel){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke()}
+  }
+}
+function showSnapDetail(sn){
+  document.getElementById('rw-detail-empty').style.display='none';
+  const c=document.getElementById('rw-detail-content');c.style.display='block';
+  document.getElementById('rw-snap-id').textContent=sn.snapId?.slice(0,20)||'?';
+  document.getElementById('rw-snap-trigger').textContent=sn.trigger||sn.type||'manual';
+  document.getElementById('rw-snap-ts').textContent=new Date(sn.ts).toISOString().replace('T',' ').substr(0,19);
+  document.getElementById('rw-snap-stats').innerHTML=[{v:sn.totalRows??'?',l:'Rows'},{v:sn.openGaps??'?',l:'Open gaps'},{v:sn.rollback_count||0,l:'Rollbacks'},{v:sn.sigma?.toFixed?sn.sigma.toFixed(3):'?',l:'Sigma'}].map(s=>`<div class="rw-stat"><div class="rw-stat-v">${s.v}</div><div class="rw-stat-l">${s.l}</div></div>`).join('');
+  const pct=Math.round((sn.sigma||0)*100);const fill=document.getElementById('rw-snap-sigma-fill');fill.style.width=pct+'%';fill.style.background=sigmaColor(sn.sigma||0);
+  document.getElementById('rw-confirm-row').style.display='block';
+  const btn=document.getElementById('rw-confirm-btn');btn.textContent='⟲ Restore this snapshot';btn.classList.remove('danger');btn.disabled=false;
+  setRwStatus(`Selected: ${sn.snapId?.slice(0,16)} — ${sn.trigger||'?'} at ${new Date(sn.ts).toLocaleTimeString()}`,'');
+}
+function cancelSelect(){rwSelected=null;document.getElementById('rw-confirm-row').style.display='none';document.getElementById('rw-detail-empty').style.display='block';document.getElementById('rw-detail-content').style.display='none';setRwStatus('','')}
+async function confirmRewind(){
+  if(!rwSelected)return;const btn=document.getElementById('rw-confirm-btn');
+  if(!btn.classList.contains('danger')){btn.textContent='⚠ Confirm — rewinds all state';btn.classList.add('danger');setRwStatus('Click again to confirm rollback','working');return}
+  btn.textContent='⟳ Rewinding...';btn.disabled=true;setRwStatus('Sending rollback...','working');
+  const d=await post(CX_ROLLBACK,{snapId:rwSelected.snapId,reason:'user-rewind-ui'});
+  if(d?.ok||d?.rolled_back){setRwStatus('✓ Rolled back — refreshing...','ok');const ch=document.getElementById('channel');ch.style.filter='brightness(.1) saturate(0)';setTimeout(()=>{ch.style.transition='filter .6s ease';ch.style.filter='';setTimeout(()=>ch.style.transition='',700)},300);setTimeout(()=>{pollHealth();loadRewindData()},1200)}
+  else{setRwStatus(`✗ Rollback failed: ${d?.error||'Cortex not responding'}`,'err');btn.textContent='⟲ Restore this snapshot';btn.classList.remove('danger');btn.disabled=false}
+}
+function setRwStatus(msg,cls=''){const el=document.getElementById('rw-status');if(el){el.textContent=msg;el.className=cls}}
+
+
+// ══════════════════════════════════════════════════════════════════════
+// MODE SYSTEM
+// Five modes: orchestrator · claude · chatgpt · gemini · perplexity
+// Stored in localStorage. Affects dispatch, token tracking, SEAM.
+// ══════════════════════════════════════════════════════════════════════
+
+const MODE_CONFIG = {
+  orchestrator: {
+    name:       'ORCHESTRATOR',
+    provider:   'ollama',
+    sub:        'Ollama :11434 · Local · Zero token cost · Full JAA access',
+    icon:       '⬡',
+    color:      '#00e5ff',
+    tokenLimit: null,       // unlimited
+    chunkSize:  null,       // no chunking
+    snrDefault: false,
+    seam:       false,
+    badge:      'LOCAL',
+    constraints:['§3.1 BOTTOM-UP','§2.1 DISK FIRST','§1.3 NO STUBS'],
+  },
+  claude: {
+    name:       'CLAUDE',
+    provider:   'claude',
+    sub:        'NCP browser tab · 200k context · SEAM chunking · Component injection',
+    icon:       '✦',
+    color:      '#cc44ff',
+    tokenLimit: 200000,
+    chunkSize:  8000,       // tokens per SEAM chunk
+    snrDefault: true,
+    seam:       true,
+    badge:      'NCP',
+    constraints:['§3.1 BOTTOM-UP','§2.1 DISK FIRST','§1.3 NO STUBS','SEAM CHUNK','SNR FILTER'],
+  },
+  chatgpt: {
+    name:       'CHATGPT',
+    provider:   'chatgpt',
+    sub:        'NCP browser tab · 128k window · Structured output · Batch dispatch',
+    icon:       '◈',
+    color:      '#00ff88',
+    tokenLimit: 128000,
+    chunkSize:  4000,       // aggressive splitting
+    snrDefault: true,
+    seam:       true,
+    structuredOutput: true,  // §AGENT-SUITE-CHATGPT — genuinely distinctive, not a shared flag
+    badge:      'NCP',
+    constraints:['§3.1 BOTTOM-UP','§2.1 DISK FIRST','SEAM CHUNK','STRUCTURED OUTPUT'],
+  },
+  gemini: {
+    name:       'GEMINI',
+    provider:   'gemini',
+    sub:        'NCP browser tab · Vision + multimodal · Image generation aware',
+    icon:       '◆',
+    color:      '#4a9eff',
+    // §HONEST-NOTE: not pinning a specific context-window number here the
+    // way claude/chatgpt do — haven't verified Gemini's current live figure,
+    // and an unverified-but-precise-looking number is worse than an honest gap.
+    tokenLimit: null,
+    chunkSize:  6000,
+    snrDefault: true,
+    seam:       true,
+    vision:     true,        // §AGENT-SUITE-GEMINI — matches userscript-gemini.js's extractMedia()/hasAttachedMedia()
+    badge:      'NCP',
+    constraints:['§3.1 BOTTOM-UP','§2.1 DISK FIRST','SEAM CHUNK','VISION'],
+  },
+  perplexity: {
+    name:       'PERPLEXITY',
+    provider:   'perplexity',
+    sub:        'NCP browser tab · Web-grounded · Citations as first-class artifact',
+    icon:       '⌖',
+    color:      '#818cf8',
+    tokenLimit: null,
+    chunkSize:  6000,
+    snrDefault: true,
+    seam:       true,
+    citations:  true,        // §AGENT-SUITE-PERPLEXITY — matches userscript-perplexity.js's extractCitations()/no_citations gap
+    badge:      'NCP',
+    constraints:['§3.1 BOTTOM-UP','§2.1 DISK FIRST','SEAM CHUNK','CITATIONS'],
+  },
+};
+
+// Phase map summary for progress dots
+const PHASE_SUMMARY = [
+  {n:'0-9',status:'done'},{n:'22',status:'done'},{n:'23',status:'done'},
+  {n:'24',status:'done'},{n:'45',status:'done'},{n:'46',status:'done'},
+  {n:'25',status:'done'},{n:'26',status:'done'},
+  {n:'10',status:'next'},
+  {n:'14',status:'pend'},{n:'15',status:'pend'},{n:'17',status:'pend'},
+  {n:'27',status:'pend'},{n:'31',status:'pend'},{n:'32',status:'pend'},
+  {n:'33',status:'pend'},{n:'35',status:'pend'},{n:'36',status:'pend'},
+  {n:'40',status:'pend'},{n:'11',status:'pend'},{n:'34',status:'pend'},
+  {n:'37',status:'pend'},{n:'40.5',status:'pend'},{n:'41',status:'pend'},
+  {n:'12',status:'pend'},{n:'42',status:'pend'},{n:'13',status:'pend'},
+  {n:'28',status:'pend'},{n:'38',status:'pend'},{n:'44',status:'pend'},
+  {n:'39',status:'pend'},{n:'43',status:'pend'},{n:'29',status:'pend'},
+  {n:'30',status:'pend'},
+];
+
+let _sessionTokens = 0;
+let _sessionChunks = 0;
+let _activeMode = null;
+
+function selectMode(mode, goToSuite=true) {
+  _activeMode = mode;
+  localStorage.setItem('nexus_mode', mode);
+  // Close overlay
+  const ov = document.getElementById('mode-overlay');
+  ov.classList.remove('open');
+  // Apply mode to body
+  document.body.setAttribute('data-mode', mode);
+  // Update menu badge
+  const ind = document.getElementById('mode-indicator');
+  if (ind) { ind.textContent = MODE_CONFIG[mode].badge; ind.style.display='inline'; }
+  // Tile stays as AGENTS — just update the status badge to show active mode
+  const agentTile = document.getElementById('tile-agent');
+  if (agentTile) {
+    const cfg = MODE_CONFIG[mode];
+    const statusEl = document.getElementById('ts-agent');
+    if (statusEl) { statusEl.textContent = cfg.badge; statusEl.style.color = cfg.color; }
+  }
+  // Inject rail tab (silent — don't navigate)
+  _injectAgentSuiteTab();
+  // Only go to suite if user explicitly chose a mode
+  if (goToSuite) _bootAgentSuite(mode);
+  // Log to cortex (§1.2)
+  _logToData('ui.mode.selected', { mode, provider: MODE_CONFIG[mode]?.provider });
+}
+
+function openModeSelector() {
+  const ov = document.getElementById('mode-overlay');
+  ov.classList.add('open');
+  _logToData('ui.mode-overlay.opened', { ts: Date.now() });
+}
+
+function closeModeSelector() {
+  const ov = document.getElementById('mode-overlay');
+  ov.classList.remove('open');
+}
+
+function _injectAgentSuiteTab() {
+  // Add agent suite to CH_META if not there
+  const idx = CH_META.findIndex(c => c.id === 'ch-agent-suite');
+  if (idx === -1) {
+    CH_META.push({id:'ch-agent-suite', name:MODE_CONFIG[_activeMode].name, accent:'Agent Suite'});
+    // Inject rail button
+    const rail = document.getElementById('ch-rail');
+    if (rail) {
+      const btn = document.createElement('button');
+      btn.className = 'ch-btn';
+      btn.id = 'rail-suite';
+      btn.innerHTML = `<span class="ch-dot" id="rd-suite" style="background:${MODE_CONFIG[_activeMode].color}"></span>${MODE_CONFIG[_activeMode].icon} ${MODE_CONFIG[_activeMode].name}`;
+      btn.style.color = MODE_CONFIG[_activeMode].color;
+      btn.onclick = () => tuneSuite();
+      rail.insertBefore(btn, rail.children[1]);
+    }
+  }
+}
+
+function tuneSuite() {
+  document.querySelectorAll('.ch').forEach(c => c.classList.remove('active'));
+  document.getElementById('ch-agent-suite').classList.add('active');
+  document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('on'));
+  const sBtn = document.getElementById('rail-suite');
+  if (sBtn) sBtn.classList.add('on');
+  document.getElementById('ch-name').textContent = MODE_CONFIG[_activeMode]?.name || 'AGENT';
+  document.getElementById('ch-accent').textContent = 'Agent Suite';
+  document.getElementById('menu-label').textContent = MODE_CONFIG[_activeMode]?.name || 'AGENT';
+  _refreshAgentSuite();
+}
+
+function tuneById(id) {
+  const idx = CH_META.findIndex(c => c.id === id);
+  if (idx === -1) { console.error(`tuneById: no channel with id "${id}"`); return; }
+  tune(idx);
+}
+
+function goToActiveMode() {
+  if (!_activeMode) { openModeSelector(); return; }
+  const agentChannels = {
+    chatgpt:     'ch-chatgpt-agent',
+    claude:      'ch-claude-agent',
+    mistral:     'ch-mistral-agent',
+    gemini:      'ch-gemini-agent',
+    perplexity:  'ch-perplexity-agent',
+    orchestrator: 'ch-agent-suite',
+  };
+  const ch = agentChannels[_activeMode];
+  if (ch) tuneById(ch);
+  else tuneSuite();
+}
+
+function _bootAgentSuite(mode) {
+  const cfg = MODE_CONFIG[mode];
+  document.getElementById('as-name').textContent = cfg.name + ' SUITE';
+  document.getElementById('as-sub').textContent = cfg.sub;
+  // Token budget visibility
+  const tb = document.getElementById('as-token-budget');
+  if (tb) tb.style.display = cfg.tokenLimit ? 'block' : 'none';
+  if (cfg.tokenLimit) {
+    document.getElementById('tb-limit').textContent = cfg.tokenLimit >= 1000 ? Math.round(cfg.tokenLimit/1000)+'k' : cfg.tokenLimit;
+  }
+  // Constraint flags
+  const flags = document.getElementById('as-constraint-flags');
+  if (flags) {
+    flags.querySelectorAll('.cflag').forEach(f => f.classList.remove('active'));
+    cfg.constraints.forEach(c => {
+      const f = flags.querySelector(`[data-c="${c.toLowerCase().replace(/[§ ]/g,'-').replace(/\./g,'')}"]`);
+      if (f) f.classList.add('active');
+    });
+  }
+  // SEAM/SNR toggles
+  const seam = document.getElementById('as-seam-toggle');
+  const snr = document.getElementById('as-snr-toggle');
+  if (seam) seam.classList.toggle('active', cfg.seam);
+  if (snr) snr.classList.toggle('active', cfg.snrDefault);
+  // Structured-output toggle — only visible for modes that actually have the
+  // capability (chatgpt today), not another flag shared identically by all three
+  const structToggle = document.getElementById('as-structured-toggle');
+  if (structToggle) {
+    structToggle.style.display = cfg.structuredOutput ? '' : 'none';
+    structToggle.classList.remove('active'); // off by default — changes response shape, shouldn't be silently on
+  }
+  // Phase dots
+  const dots = document.getElementById('as-phase-dots');
+  if (dots) dots.innerHTML = PHASE_SUMMARY.map(p =>
+    `<div class="pdot ${p.status}" title="Phase ${p.n}"></div>`
+  ).join('');
+  goToActiveMode();
+}
+
+async function _refreshAgentSuite() {
+  if (!_activeMode) return;
+  const cfg = MODE_CONFIG[_activeMode];
+  // Provider pill
+  const provPill = document.getElementById('as-provider-pill');
+  const provLbl = document.getElementById('as-provider-label');
+  if (cfg.provider === 'ollama') {
+    // Ollama has no orchestrator proxy either (like Diagnostic) — it's
+    // a local HTTP service, not one of orchestrator's SYS entries with a
+    // dedicated /api/<name>/* block. Direct call, same flagged category.
+    const ol = await get('http://127.0.0.1:11434/api/tags').catch(() => null);
+    const alive = !!ol;
+    if (provPill) provPill.className = 'agent-stat-pill ' + (alive ? 'live' : '');
+    if (provLbl) provLbl.textContent = alive ? 'Ollama online' : 'Ollama offline';
+  } else {
+    const gd = await get(`${B.orch}/api/guardian/providers`).catch(() => null);
+    const prov = gd?.providers || gd?.connected || {};
+    const channels = gd?.channels || {};
+    const connected = Object.keys(prov).some(k => k.startsWith(cfg.provider) && prov[k] === 'connected');
+    if (provPill) provPill.className = 'agent-stat-pill ' + (connected ? 'live' : '');
+    if (provLbl) provLbl.textContent = connected ? cfg.name + ' tab connected' : 'Open ' + cfg.name + ' tab + userscript';
+    // Tab pill
+    const tabPill = document.getElementById('as-tab-pill');
+    const tabLbl = document.getElementById('as-tab-label');
+    if (tabPill) tabPill.className = 'agent-stat-pill ' + (connected ? 'live' : '');
+    if (tabLbl) tabLbl.textContent = connected ? 'NCP active' : 'NCP waiting';
+    // Usage pill — real signal from the userscript's detectUsageLimit(), riding
+    // the heartbeat through lib/ncp.js's client.usage. Lives in gd.channels
+    // (per-provider detail), NOT gd.providers (just a connection-status string
+    // map) — reading it off the wrong field meant this pill was always hidden.
+    const usagePill = document.getElementById('as-usage-pill');
+    const usageLbl = document.getElementById('as-usage-label');
+    if (usagePill) {
+      const usage = channels[cfg.provider]?.usage;
+      if (!connected || !usage) {
+        usagePill.style.display = 'none';
+      } else {
+        usagePill.style.display = '';
+        if (usage.limited === true) {
+          usagePill.className = 'agent-stat-pill';
+          usagePill.style.borderColor = '#ff3355'; usagePill.style.color = '#ff3355';
+          if (usageLbl) usageLbl.textContent = usage.resetHint ? `Limited — ${usage.resetHint}` : 'Limited';
+        } else if (usage.limited === 'suspected') {
+          usagePill.className = 'agent-stat-pill';
+          usagePill.style.borderColor = '#ffaa00'; usagePill.style.color = '#ffaa00';
+          if (usageLbl) usageLbl.textContent = 'Usage — unclear';
+        } else {
+          usagePill.className = 'agent-stat-pill live';
+          usagePill.style.borderColor = ''; usagePill.style.color = '';
+          if (usageLbl) usageLbl.textContent = 'Usage OK';
+        }
+      }
+    }
+  }
+  // Jobs pill
+  const jd = await get(`${B.orch}/api/guardian/jobs`).catch(() => null);
+  const jobs = Array.isArray(jd) ? jd : (jd?.jobs || []);
+  const pending = jobs.filter(j => j.status === 'queued' || j.status === 'pending').length;
+  const jobPill = document.getElementById('as-jobs-pill');
+  const jobLbl = document.getElementById('as-jobs-label');
+  if (jobPill) jobPill.className = 'agent-stat-pill ' + (pending > 0 ? 'live' : '');
+  if (jobLbl) jobLbl.textContent = jobs.length + ' jobs' + (pending ? ', ' + pending + ' pending' : '');
+  // Gaps pill
+  const gapD = await get(`${B.orch}/api/cortex/gaps?status=open`).catch(() => null);
+  const gapCount = Array.isArray(gapD) ? gapD.length : (gapD?.gaps || []).length;
+  const gapPill = document.getElementById('as-gaps-pill');
+  const gapLbl = document.getElementById('as-gaps-label');
+  if (gapPill) gapPill.className = 'agent-stat-pill ' + (gapCount > 0 ? '' : 'live');
+  if (gapLbl) gapLbl.textContent = gapCount + ' open gaps';
+  // SEAM queue — /seam/queues returns an array (q.toJSON() per active queue),
+  // not an object keyed by id, and isn't provider-filtered server-side —
+  // filter to this mode's provider here so Claude's view doesn't show
+  // ChatGPT's chunks and vice versa.
+  const sq = await get(`${B.orch}/api/guardian/seam/queues`).catch(() => null);
+  const allQueues = Array.isArray(sq?.queues) ? sq.queues : [];
+  const myQueues = allQueues.filter(q => q.provider === cfg.provider);
+  const seam = document.getElementById('as-seam-rows');
+  if (seam && myQueues.length === 0) {
+    seam.innerHTML = '<div style="font-size:11px;color:rgba(255,255,255,.2)">No active chunks</div>';
+  } else if (seam) {
+    seam.innerHTML = myQueues.slice(0, 8).map(q => {
+      const stats = q.stats || {};
+      return `<div class="seam-row">
+        <span class="seam-chunk-id">${(q.uuid||'').slice(0,12)}</span>
+        <span class="seam-chunk-type">seam</span>
+        <span class="seam-chunk-body">${(q.title || '').slice(0,60)}</span>
+        <span class="seam-chunk-tokens">${stats.verified||0}/${stats.total||q.total||'?'}</span>
+        <span class="seam-status-dot ${q.completedAt ? 'verified' : (stats.active ? 'generating' : 'queued')}"></span>
+      </div>`;
+    }).join('');
+  }
+  // Token budget
+  if (cfg.tokenLimit) {
+    const pct = Math.min(100, Math.round((_sessionTokens / cfg.tokenLimit) * 100));
+    const fill = document.getElementById('tb-bar-fill');
+    if (fill) {
+      fill.style.width = pct + '%';
+      fill.style.background = pct > 80 ? '#ff3355' : pct > 50 ? '#ffaa00' : cfg.color;
+    }
+    const usedEl = document.getElementById('tb-used');
+    if (usedEl) usedEl.textContent = _sessionTokens >= 1000 ? Math.round(_sessionTokens/1000)+'k' : _sessionTokens;
+    const chunksEl = document.getElementById('tb-chunks');
+    if (chunksEl) chunksEl.textContent = _sessionChunks;
+    const snrEl = document.getElementById('tb-snr');
+    if (snrEl) {
+      // /api/resilience/status doesn't exist server-side (see loadDiagCFR
+      // above) — always resolves null, snrEl correctly falls back to '—'.
+      const snrD = await get(`${B.orch}/api/cortex/resilience/status`).catch(() => null);
+      const s = snrD?.sigma?.score ?? snrD?.sigma ?? null;
+      snrEl.textContent = s !== null ? s.toFixed(3) : '—';
+    }
+  }
+}
+
+function toggleCtxChip(el) { el.classList.toggle('active'); }
+
+async function agentForge() {
+  if (!_activeMode) return;
+  const cfg = MODE_CONFIG[_activeMode];
+  const input = document.getElementById('as-forge-input');
+  const prompt = input?.value?.trim();
+  if (!prompt) return;
+  const status = document.getElementById('as-forge-status');
+  const btn = document.getElementById('as-forge-btn');
+  if (btn) btn.disabled = true;
+  if (status) status.textContent = 'Dispatching…';
+
+  // Build constraint prefix
+  const activeFlags = [...document.querySelectorAll('#as-constraint-flags .cflag.active')]
+    .map(f => f.textContent.trim()).join(' · ');
+  const activeCtx = [...document.querySelectorAll('#as-ctx-chips .ctx-chip.active')]
+    .map(c => c.dataset.comp).join(', ');
+  const useSeam = document.getElementById('as-seam-toggle')?.classList.contains('active');
+  const useSnr = document.getElementById('as-snr-toggle')?.classList.contains('active');
+  const useStructured = cfg.structuredOutput && document.getElementById('as-structured-toggle')?.classList.contains('active');
+
+  const fullPrompt = [
+    activeFlags ? `[CONSTRAINTS: ${activeFlags}]` : '',
+    activeCtx ? `[CONTEXT COMPONENTS: ${activeCtx}]` : '',
+    useSnr ? '[SNR FILTER: ON — surface invariants first, LLM last]' : '',
+    useStructured ? '[OUTPUT FORMAT: respond with a single valid JSON object only — no prose, no markdown fencing, no commentary before or after]' : '',
+    '',
+    prompt,
+  ].filter(Boolean).join('\n');
+
+  try {
+    if (useSeam && cfg.seam && cfg.chunkSize) {
+      // §SEAM-GLUE-FIX: this used to call _chunkPrompt() (a local paragraph
+      // splitter) and fire each chunk as an independent /command 'forge' job
+      // — no real verification, no retry, no persisted session, and
+      // seam_chunk/seam_total were decorative metadata on plain jobs, not
+      // real SEAMQueue dispatch. Routes through the real pipeline now —
+      // same one the userscript SEAM tab submits to. splitOn:'size' because
+      // an arbitrary prompt typed here won't have the formal `# heading`
+      // structure a real .spec file has; parseSpec() degrades to plain
+      // size-based chunking when there's nothing to split on semantically.
+      const d = await post(`${B.orch}/api/guardian/dispatch`, {
+        command: 'spec',
+        provider: cfg.provider,
+        specText: fullPrompt,
+        splitOn: 'size',
+        maxChunkSize: cfg.chunkSize,
+        title: prompt.slice(0, 60),
+      });
+      if (d?.ok) {
+        _sessionChunks += (d.total || 1);
+        if (status) status.textContent = `✓ SEAM queue ${d.queueId?.slice(0,8)} — ${d.total} chunks`;
+      } else {
+        if (status) status.textContent = `✗ SEAM dispatch failed: ${d?.error || 'unknown error'}`;
+      }
+    } else {
+      const d = await post(`${B.orch}/api/guardian/dispatch`, {
+        provider: cfg.provider,
+        command: 'forge',
+        prompt: fullPrompt,
+        meta: { source: 'agent-suite', mode: _activeMode, ts: Date.now() }
+      });
+      if (status) status.textContent = d?.jobId ? `✓ Job ${d.jobId.slice(0,10)} dispatched` : '✗ Dispatch failed';
+      if (d?.tokens) _sessionTokens += d.tokens;
+    }
+    if (input) input.value = '';
+    setTimeout(_refreshAgentSuite, 1000);
+  } catch(e) {
+    if (status) status.textContent = '✗ Guardian offline';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// ── Boot: check stored mode ───────────────────────────────────────────
+(function initMode() {
+  // Add mode indicator to menu button
+  const menuBtn = document.getElementById('menu-btn');
+  if (menuBtn) {
+    const ind = document.createElement('span');
+    ind.id = 'mode-indicator';
+    ind.style.display = 'none';
+    menuBtn.appendChild(ind);
+  }
+  // Restore stored mode silently — stay on overview, don't open overlay
+  const stored = localStorage.getItem('nexus_mode');
+  if (stored && MODE_CONFIG[stored]) {
+    selectMode(stored, false); // false = don't navigate to suite
+  }
+})();
+
+
+// ── Failure / event logging ──────────────────────────────────────────────────
+// §1.2 nothing silently fails — all UI errors logged to cortex + local data/
+//
+// §BUGFIX 2026-07-04: was `const _uiLog = []`. If anything earlier in this
+// script throws before this line runs, this const never initializes — but
+// _logToData (a hoisted function declaration) is still callable afterward
+// from anywhere later in the file, and touching _uiLog then throws "can't
+// access lexical declaration before initialization." That secondary crash
+// was masking whatever broke first — the real error never got a chance to
+// surface. `var` is hoisted WITH its initial value, so this can't happen
+// regardless of what else in this file breaks upstream.
+var _uiLog = window._uiLog || [];
+function _logToData(type, payload = {}) {
+  try {
+    const entry = { type, source: 'home-ui', payload, ts: Date.now() };
+    _uiLog.push(entry);
+    // §FIXED 2026-08-22 — James: "the moment 127.0.0.1:9000 opens, that's
+    // when memory sky rockets." Found the real, precise cause: this array
+    // had NO cap at all, while its own fallback queue below (used only
+    // when cortex is offline) was correctly capped at 200 — someone capped
+    // the rare path and missed the common one. A dashboard tab left open
+    // for hours accumulates one entry here per logged UI event forever;
+    // that's a real, unbounded, per-tab memory leak, not a one-time cost.
+    // Same 200-entry bound as the sibling fallback queue, so both halves
+    // of this same mechanism now agree.
+    if (_uiLog.length > 200) _uiLog.splice(0, _uiLog.length - 200);
+    // POST to cortex (fire-and-forget)
+    fetch('http://127.0.0.1:3748/api/event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+    }).catch(() => {
+      // Cortex offline — store locally in sessionStorage for later replay
+      try {
+        const pending = JSON.parse(sessionStorage.getItem('nexus_ui_log_pending') || '[]');
+        pending.push(entry);
+        if (pending.length > 200) pending.splice(0, pending.length - 200);
+        sessionStorage.setItem('nexus_ui_log_pending', JSON.stringify(pending));
+      } catch(_) {}
+  });
+  } catch(_) { /* logging must never be the thing that crashes something else */ }
+}
+
+// Replay pending logs when cortex comes back online
+async function _replayPendingLogs() {
+  try {
+    const raw = sessionStorage.getItem('nexus_ui_log_pending');
+    if (!raw) return;
+    const pending = JSON.parse(raw);
+    if (!pending.length) return;
+    // Test cortex is alive
+    const hc = await fetch('http://127.0.0.1:3748/health', { signal: AbortSignal.timeout(1000) });
+    if (!hc.ok) return;
+    // Replay
+    for (const entry of pending) {
+      await fetch('http://127.0.0.1:3748/api/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...entry, replayed: true }),
+      }).catch(() => {});
+    }
+    sessionStorage.removeItem('nexus_ui_log_pending');
+    console.log(`[home-ui] replayed ${pending.length} pending log entries to cortex`);
+  } catch(_) {}
+}
+
+// Global error boundary — catch uncaught UI errors
+window.addEventListener('error', e => {
+  _logToData('ui.error', {
+    message: e.message,
+    filename: e.filename?.replace(/.*nexus-071\//,''),
+    lineno: e.lineno,
+    colno: e.colno,
+  });
+});
+
+window.addEventListener('unhandledrejection', e => {
+  _logToData('ui.unhandled-rejection', {
+    reason: String(e.reason).slice(0, 200),
+  });
+});
+
+// ── Forge Shell tile ─────────────────────────────────────────────────────────
+function openForgeShell() {
+  _logToData('ui.navigation', { target: 'forge-shell' });
+  window.open('../forge-shell.html','_blank');
+}
+
+function openBlueprintBuilder() {
+  _logToData('ui.navigation', { target: 'blueprint-builder' });
+  tuneById('ch-blueprint'); // opens in the TV shell iframe
+}
+
+// Update forge tile metrics on each health poll
+async function updateForgeTile() {
+  try {
+    const gaps = await get(`http://127.0.0.1:3748/api/gaps?status=open`);
+    const gapCount = Array.isArray(gaps) ? gaps.length : (gaps?.gaps?.length ?? '—');
+    const el = document.getElementById('tm-forge-gaps');
+    if (el) el.textContent = gapCount;
+  } catch(_) {}
+  // Agent tile — reflect current mode
+  const agentName = document.getElementById('tile-agent-name');
+  const agentDesc = document.getElementById('tile-agent-desc');
+  const agentStatus = document.getElementById('ts-agent');
+  if (_activeMode && MODE_CONFIG[_activeMode]) {
+    const cfg = MODE_CONFIG[_activeMode];
+    if (agentName) { agentName.textContent = cfg.name; agentName.style.color = cfg.color; }
+    if (agentDesc) agentDesc.textContent = cfg.sub.split('·').slice(0,2).join('·').trim();
+    if (agentStatus) { agentStatus.textContent = cfg.badge; agentStatus.style.color = cfg.color; }
+  } else {
+    if (agentStatus) agentStatus.textContent = 'NONE';
+  }
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+buildDiag();
+pollHealth();
+setInterval(pollHealth,15000);
+setInterval(gdLoadJobs,8000); // poll jobs every 8s for live updates
+setInterval(gdLoadProvs,12000); // poll providers
+setInterval(updateForgeTile,10000); // update forge+agent tiles
+setInterval(_replayPendingLogs,30000); // replay buffered logs when cortex recovers
+updateForgeTile(); // immediate first pass
+_logToData('ui.boot', { version:'1.1.0', ts: Date.now() });
+connectSSE();
+</script>
+<!-- ══ SPEC WIZARD MODAL ══════════════════════════════════════════════════ -->
+<div id="spec-wizard-overlay" onclick="if(event.target===this)closeSpecWizard()">
+  <div id="spec-wizard">
+
+    <!-- Step 1: Agent select + metadata -->
+    <div id="swiz-step-1">
+      <div class="swiz-title">BUILD A SPEC</div>
+      <div class="swiz-sub">Each section builds independently using the SEAM contract system. Mistral first, ChatGPT fallback, Claude fallback.</div>
+
+      <div class="swiz-field">
+        <div class="swiz-label">COMPONENT NAME</div>
+        <input class="swiz-input" id="swiz-name" placeholder="e.g. gap-predicate, seam-watchdog, raid-cluster-engine">
+      </div>
+      <div class="swiz-field">
+        <div class="swiz-label">TYPE</div>
+        <select class="swiz-select" id="swiz-type">
+          <option value="component">component</option>
+          <option value="service">service</option>
+          <option value="engine">engine</option>
+          <option value="bridge">bridge</option>
+          <option value="agent">agent</option>
+        </select>
+      </div>
+      <div class="swiz-field">
+        <div class="swiz-label">DESCRIPTION — what does it do?</div>
+        <textarea class="swiz-textarea" id="swiz-desc" placeholder="One sentence. What problem does this component solve in NEXUS?"></textarea>
+      </div>
+
+      <div class="swiz-label" style="margin-top:8px">PRIMARY AGENT</div>
+      <div class="swiz-agent-grid" id="swiz-agent-grid">
+        <div class="swiz-agent m-ollama selected" onclick="selectWizAgent('ollama',this)">
+          <div class="swiz-agent-name">⬡ MISTRAL</div>
+          <div class="swiz-agent-badge">LOCAL · NO TOKEN COST</div>
+          <div class="swiz-agent-traits">
+            mistral:7b-instruct-q4_K_M<br>
+            Full NEXUS tool access<br>
+            Cortex memory readable<br>
+            Diagnostic + repair tools<br>
+            Runs 100% locally via Ollama<br>
+            Sovereign — zero external deps
+          </div>
+        </div>
+        <div class="swiz-agent m-chatgpt" onclick="selectWizAgent('chatgpt',this)">
+          <div class="swiz-agent-name">◈ CHATGPT</div>
+          <div class="swiz-agent-badge">NCP · TAB REQUIRED</div>
+          <div class="swiz-agent-traits">
+            GPT-4o via browser tab<br>
+            128k context window<br>
+            Structured JSON output<br>
+            Code interpreter aware<br>
+            SEAM chunking enforced<br>
+            4k tokens/chunk limit
+          </div>
+        </div>
+        <div class="swiz-agent m-claude" onclick="selectWizAgent('claude',this)">
+          <div class="swiz-agent-name">✦ CLAUDE</div>
+          <div class="swiz-agent-badge">NCP · TAB REQUIRED</div>
+          <div class="swiz-agent-traits">
+            Claude via browser tab<br>
+            200k context window<br>
+            SNR filter active<br>
+            Component context injected<br>
+            Token budget tracked<br>
+            SEAM ordering enforced
+          </div>
+        </div>
+      </div>
+
+      <div class="swiz-actions">
+        <button class="swiz-btn swiz-btn-cancel" onclick="closeSpecWizard()">CANCEL</button>
+        <button class="swiz-btn swiz-btn-primary" onclick="wizNext()">CONTINUE →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Chunk overview + build -->
+    <div id="swiz-step-2" style="display:none">
+      <div class="swiz-title" id="swiz-s2-title">SPEC CHUNKS</div>
+      <div class="swiz-sub" id="swiz-s2-sub">Each chunk is a SEAM contract with its own UUID, seam_id, comp_id. Built independently — like a torrent.</div>
+
+      <div class="swiz-progress-bar">
+        <div class="swiz-progress-fill" id="swiz-progress" style="width:0%"></div>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px" id="swiz-progress-text">0 / 10 chunks</div>
+
+      <div class="swiz-chunk-grid" id="swiz-chunk-grid">
+        <!-- populated by JS -->
+      </div>
+
+      <div class="swiz-actions">
+        <button class="swiz-btn swiz-btn-cancel" onclick="closeSpecWizard()">CLOSE</button>
+        <button class="swiz-btn swiz-btn-build" id="swiz-build-btn" onclick="wizBuildNext()">▶ BUILD NEXT CHUNK</button>
+        <button class="swiz-btn swiz-btn-primary" onclick="wizBuildAll()">▶▶ BUILD ALL</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Spec browser (existing specs) -->
+    <div id="swiz-step-3" style="display:none">
+      <div class="swiz-title">OPEN SPEC</div>
+      <div class="swiz-sub">Existing specs — click to open the file browser.</div>
+      <div class="swiz-spec-list" id="swiz-spec-list">
+        <div style="color:rgba(255,255,255,.3);font-size:12px;text-align:center;padding:20px">Loading…</div>
+      </div>
+      <div class="swiz-actions">
+        <button class="swiz-btn swiz-btn-cancel" onclick="closeSpecWizard()">CANCEL</button>
+        <button class="swiz-btn swiz-btn-primary" onclick="wizShowStep(1)">+ NEW SPEC</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// comp_id: nexus.ui.tv-shell.spec-wizard
+  // ── Spec wizard state ─────────────────────────────────────────────────────────
+let _wizAgent   = 'ollama';
+let _wizSpecUuid = null;
+let _wizBuildInterval = null;
+
+function openSpecWizard() {
+  // Check if there are existing specs — if yes, show list first
+  fetch(`${B.orch}/api/spec-engine/specs`).then(r=>r.json()).then(d => {
+    if (d.specs && d.specs.length > 0) {
+      _renderSpecList(d.specs);
+      wizShowStep(3);
+    } else {
+      wizShowStep(1);
+    }
+  }).catch(() => wizShowStep(1));
+  document.getElementById('spec-wizard-overlay').classList.add('open');
+}
+
+function closeSpecWizard() {
+  document.getElementById('spec-wizard-overlay').classList.remove('open');
+  if (_wizBuildInterval) { clearInterval(_wizBuildInterval); _wizBuildInterval = null; }
+}
+
+function wizShowStep(n) {
+  for (let i=1;i<=3;i++) {
+    const el = document.getElementById(`swiz-step-${i}`);
+    if (el) el.style.display = i===n ? '' : 'none';
+  }
+}
+
+function selectWizAgent(agent, el) {
+  _wizAgent = agent;
+  document.querySelectorAll('.swiz-agent').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+async function wizNext() {
+  const name = document.getElementById('swiz-name').value.trim();
+  const type = document.getElementById('swiz-type').value;
+  const desc = document.getElementById('swiz-desc').value.trim();
+  if (!name) { document.getElementById('swiz-name').focus(); return; }
+
+  const r = await post(`${B.orch}/api/spec-engine/specs`, { name, type, description: desc, agent: _wizAgent });
+  if (!r?.manifest) { alert('Failed to create spec: ' + (r?.error || 'unknown')); return; }
+
+  _wizSpecUuid = r.manifest.uuid;
+  _renderChunkGrid(r.manifest);
+  document.getElementById('swiz-s2-title').textContent = r.manifest.name.toUpperCase();
+  document.getElementById('swiz-s2-sub').textContent =
+    `${r.manifest.totalChunks} chunks · agent: ${r.manifest.agent} · uuid: ${r.manifest.uuid.slice(0,8)}`;
+  wizShowStep(2);
+}
+
+function _renderChunkGrid(manifest) {
+  const grid = document.getElementById('swiz-chunk-grid');
+  grid.innerHTML = manifest.chunks.map(c => `
+    <div class="swiz-chunk ${c.status}" id="chunk-${c.uuid.slice(0,8)}">
+      <div class="swiz-chunk-title">${String(c.chunkIdx+1).padStart(2,'0')} ${c.sectionTitle}</div>
+      <div class="swiz-chunk-desc">${c.sectionDesc.slice(0,80)}</div>
+      <div class="swiz-chunk-status" id="chunkst-${c.uuid.slice(0,8)}">
+        ${c.status === 'complete' ? '✓ done' : c.status === 'building' ? '⟳ building…' : c.status === 'failed' ? '✗ failed' : '○ pending'}
+      </div>
+      <div style="font-size:9px;color:rgba(255,255,255,.2);margin-top:4px;word-break:break-all">
+        ${c.seam_id.slice(0,40)}
+      </div>
+    </div>
+  `).join('');
+  _updateProgress(manifest);
+}
+
+function _updateProgress(manifest) {
+  const pct = manifest.progress || 0;
+  document.getElementById('swiz-progress').style.width = pct + '%';
+  document.getElementById('swiz-progress-text').textContent =
+    `${manifest.doneChunks} / ${manifest.totalChunks} chunks · ${pct}%`;
+}
+
+async function wizBuildNext() {
+  if (!_wizSpecUuid) return;
+  const btn = document.getElementById('swiz-build-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ BUILDING…';
+
+  const r = await post(`${B.orch}/api/spec-engine/specs/${_wizSpecUuid}/build`,
+    { agent: _wizAgent });
+
+  if (r?.chunkUuid) {
+    const el = document.getElementById(`chunk-${r.chunkUuid.slice(0,8)}`);
+    const st = document.getElementById(`chunkst-${r.chunkUuid.slice(0,8)}`);
+    if (el) el.className = 'swiz-chunk building';
+    if (st) st.textContent = '⟳ building…';
+    // Poll for completion
+    _pollChunk(r.chunkUuid);
+  }
+  btn.disabled = false;
+  btn.textContent = '▶ BUILD NEXT CHUNK';
+}
+
+async function wizBuildAll() {
+  if (!_wizSpecUuid) return;
+  // Trigger builds sequentially — each triggers when previous completes
+  _autoBuildLoop();
+}
+
+async function _autoBuildLoop() {
+  if (!_wizSpecUuid) return;
+  const m = await fetch(`${B.orch}/api/spec-engine/specs/${_wizSpecUuid}`)
+    .then(r=>r.json()).then(d=>d.manifest).catch(()=>null);
+  if (!m) return;
+  if (m.status === 'complete') { return; }
+  const pending = m.chunks.filter(c => c.status === 'pending');
+  const building = m.chunks.filter(c => c.status === 'building');
+  if (building.length > 0) {
+    // Already building — wait
+    setTimeout(_autoBuildLoop, 3000); return;
+  }
+  if (pending.length === 0) return;
+  await wizBuildNext();
+}
+
+async function _pollChunk(chunkUuid) {
+  // Poll spec manifest until chunk is complete/failed
+  const short = chunkUuid.slice(0,8);
+  let polls = 0;
+  const interval = setInterval(async () => {
+    polls++;
+    if (polls > 120) { clearInterval(interval); return; } // 2min timeout
+    const m = await fetch(`${B.orch}/api/spec-engine/specs/${_wizSpecUuid}`)
+      .then(r=>r.json()).then(d=>d.manifest).catch(()=>null);
+    if (!m) return;
+    const chunk = m.chunks.find(c=>c.uuid.slice(0,8)===short || c.uuid===chunkUuid);
+    if (!chunk) { clearInterval(interval); return; }
+
+    const el = document.getElementById(`chunk-${short}`);
+    const st = document.getElementById(`chunkst-${short}`);
+
+    if (chunk.status === 'complete') {
+      clearInterval(interval);
+      if (el) el.className = 'swiz-chunk complete';
+      if (st) st.textContent = `✓ done · ${Math.round(chunk.byteSize/1024*10)/10}kb`;
+      _updateProgress(m);
+      if (m.status === 'complete') {
+        document.getElementById('swiz-build-btn').textContent = '✓ COMPLETE';
+      }
+    } else if (chunk.status === 'failed' || chunk.status === 'escalated') {
+      clearInterval(interval);
+      if (el) el.className = 'swiz-chunk failed';
+      if (st) st.textContent = `✗ failed: ${(chunk.failureMode||'').slice(0,40)}`;
+    }
+  }, 1500);
+}
+
+function _renderSpecList(specs) {
+  const list = document.getElementById('swiz-spec-list');
+  if (!specs.length) {
+    list.innerHTML = '<div style="color:rgba(255,255,255,.3);font-size:12px;text-align:center;padding:20px">No specs yet</div>';
+    return;
+  }
+  list.innerHTML = specs.map(s => `
+    <div class="swiz-spec-item" onclick="wizOpenSpec('${s.uuid}')">
+      <div>
+        <div class="swiz-spec-name">${s.name}</div>
+        <div class="swiz-spec-meta">${s.type} · ${s.status} · ${new Date(s.updatedAt).toLocaleString()}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="swiz-progress-bar" style="width:80px">
+          <div class="swiz-progress-fill" style="width:${s.progress||0}%"></div>
+        </div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:3px">${s.doneChunks||0}/${s.totalChunks} chunks</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function wizOpenSpec(uuid) {
+  _wizSpecUuid = uuid;
+  const r = await fetch(`${B.orch}/api/spec-engine/specs/${uuid}`).then(x=>x.json());
+  if (!r.manifest) return;
+  const m = r.manifest;
+  _renderChunkGrid(m);
+  document.getElementById('swiz-s2-title').textContent = m.name.toUpperCase();
+  document.getElementById('swiz-s2-sub').textContent =
+    `${m.totalChunks} chunks · agent: ${m.agent} · uuid: ${m.uuid.slice(0,8)}`;
+  wizShowStep(2);
+}
+</script>
+  <!-- Warp-UI spine — contract-driven component system -->
+  <script src="./warp-ui/warp-browser.js"></script>
+  <script src="./warp-ui/nexus-shell.js"></script>
+  <script src="./spotlight/spotlight.js"></script>
+  <script>
+    // Nerve canvas — set ORCH before loading so nerve.js can call the real routes
+    window.__NEXUS_ORCH__ = (typeof B !== 'undefined' && B.orch) ? B.orch : 'http://127.0.0.1:9000';
+  </script>
+  <script src="./nerve/nerve.js"></script>
+
+<!-- §CHANNEL EDITOR 2026-09-20 — edits the same CH_META array the rail
+     and the floating menu's quick-nav row both render from (see
+     applyChannelList() above). Reorder, hide/show, rename any channel;
+     add a new one (name + URL) which gets a generic iframe .ch div. -->
+<div id="channel-editor-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);align-items:center;justify-content:center">
+  <div style="width:min(560px,92vw);max-height:80vh;overflow-y:auto;background:#0d0d16;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:20px;font-family:'Space Mono',monospace">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span style="font-size:13px;font-weight:700;letter-spacing:.06em">CHANNEL EDITOR</span>
+      <button onclick="closeChannelEditor()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:16px;cursor:pointer">✕</button>
+    </div>
+    <div id="ce-list"></div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)">
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:8px">ADD CUSTOM CHANNEL</div>
+      <input id="ce-new-name" placeholder="name" style="width:100%;box-sizing:border-box;margin-bottom:6px;padding:7px 9px;background:#050508;border:1px solid rgba(255,255,255,.15);border-radius:5px;color:#eee;font-family:inherit;font-size:11px">
+      <input id="ce-new-url" placeholder="url (relative or absolute)" style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:7px 9px;background:#050508;border:1px solid rgba(255,255,255,.15);border-radius:5px;color:#eee;font-family:inherit;font-size:11px">
+      <button onclick="ceAddChannel()" style="width:100%;padding:8px;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.4);border-radius:5px;color:#7dd3fc;font-family:inherit;font-size:11px;cursor:pointer">+ add channel</button>
+    </div>
+    <div style="margin-top:14px;text-align:right">
+      <button onclick="ceResetDefaults()" style="background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);padding:6px 12px;border-radius:5px;font-family:inherit;font-size:10px;cursor:pointer">reset to defaults</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openChannelEditor() {
+  ceRenderList();
+  document.getElementById('channel-editor-modal').style.display = 'flex';
+}
+function closeChannelEditor() {
+  document.getElementById('channel-editor-modal').style.display = 'none';
+}
+function ceRenderList() {
+  const el = document.getElementById('ce-list');
+  el.innerHTML = CH_META.map((c, i) => `
+    <div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <button onclick="ceMove(${i},-1)" ${i===0?'disabled':''} style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:11px">▲</button>
+      <button onclick="ceMove(${i},1)" ${i===CH_META.length-1?'disabled':''} style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:11px">▼</button>
+      <span style="flex:1;font-size:11px;color:${c.hidden?'rgba(255,255,255,.3)':'#eee'}" ${c.url ? '' : ''}>${(c.railLabel||c.name||c.id)}${c.url?' <span style="color:rgba(255,255,255,.3)">(custom)</span>':''}</span>
+      <button onclick="ceRename(${i})" title="rename" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:11px">✎</button>
+      <button onclick="ceToggleHide(${i})" title="${c.hidden?'show':'hide'}" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:11px">${c.hidden?'show':'hide'}</button>
+      ${c.url ? `<button onclick="ceRemove(${i})" title="remove" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:11px">✕</button>` : ''}
+    </div>`).join('');
+}
+function ceMove(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= CH_META.length) return;
+  [CH_META[i], CH_META[j]] = [CH_META[j], CH_META[i]];
+  applyChannelList(CH_META.slice()); saveChannelList(CH_META); ceRenderList();
+}
+function ceToggleHide(i) {
+  CH_META[i].hidden = !CH_META[i].hidden;
+  applyChannelList(CH_META.slice()); saveChannelList(CH_META); ceRenderList();
+}
+function ceRename(i) {
+  const cur = CH_META[i].railLabel || CH_META[i].name || CH_META[i].id;
+  const next = prompt('Channel label:', cur);
+  if (next === null || !next.trim()) return;
+  CH_META[i].railLabel = next.trim();
+  applyChannelList(CH_META.slice()); saveChannelList(CH_META); ceRenderList();
+}
+function ceRemove(i) {
+  if (!CH_META[i].url) return; // built-ins can only be hidden, never removed — their content div isn't recreatable from a name+url
+  if (!confirm(`remove "${CH_META[i].railLabel||CH_META[i].name}"?`)) return;
+  const removedId = CH_META[i].id;
+  CH_META.splice(i, 1);
+  const div = document.getElementById(removedId);
+  if (div) div.remove();
+  applyChannelList(CH_META.slice()); saveChannelList(CH_META); ceRenderList();
+}
+function ceAddChannel() {
+  const nameEl = document.getElementById('ce-new-name');
+  const urlEl = document.getElementById('ce-new-url');
+  const name = nameEl.value.trim(), url = urlEl.value.trim();
+  if (!name || !url) { alert('name and url are both required'); return; }
+  const id = 'ch-custom-' + Date.now();
+  CH_META.push({ id, name, railLabel: name, url, accent: 'custom channel' });
+  nameEl.value = ''; urlEl.value = '';
+  applyChannelList(CH_META.slice()); saveChannelList(CH_META); ceRenderList();
+}
+function ceResetDefaults() {
+  if (!confirm('reset channel list to defaults? custom channels and hidden/reordered state will be lost.')) return;
+  try { localStorage.removeItem(CHANNEL_STORE_KEY); } catch (e) {}
+  applyChannelList(DEFAULT_CH_META.map(c => ({...c})));
+  ceRenderList();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "compartment-os",
+  "version": "1.0.0",
+  "description": "COMPARTMENT OS — Sovereign compartmentalized execution environment",
+  "author": "James Brooks (Erosmancer)",
+  "license": "MIT",
+  "private": true,
+  "bin": {
+    "cos": "./cli/index.js"
+  },
+  "scripts": {
+    "test":    "node test/test.js",
+    "cos":     "node cli/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

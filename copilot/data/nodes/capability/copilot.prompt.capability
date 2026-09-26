@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.prompt
+type: capability
+id: copilot.prompt
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730175
+source: copilot.registry-components:copilot.prompt
+payload:
+  id: copilot.prompt
+  namespace: copilot
+  name: prompt
+  version: 2.0.0
+  grammar:
+    - ask
+    - copilot
+    - cp
+  route:
+    method: POST
+    path: /api/prompt
+  intent:
+    - ask
+    - build
+    - diagnose
+    - navigate
+    - note
+    - tool
+    - action
+  description: Primary entry — all co-pilot interactions
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: copilot.prompt.receive
+        intent:
+          - ask
+          - build
+          - diagnose
+          - navigate
+          - note
+          - tool
+          - action
+        contract: nexus-interaction-contract-v1::copilot
+        tags:
+          - entry-point
+    out:
+      - id: copilot.prompt.to-ollama
+        wires_to:
+          - ollama.jobs.dispatch.receive
+        tags:
+          - model
+      - id: copilot.prompt.reply
+        wires_to:
+          - ui.copilot.receive
+        tags:
+          - response

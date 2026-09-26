@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.history.clear
+type: capability
+id: cg.history.clear
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730169
+source: clear-glass.registry-components:cg.history.clear
+payload:
+  id: cg.history.clear
+  namespace: cg
+  name: history.clear
+  version: 3.1.0
+  grammar:
+    - history clear
+  route:
+    method: IPC
+    path: history:clear
+  intent: []
+  description: Clear real history
+  params: []
+  tags:
+    - cg
+    - history
+  permissions:
+    - system
+  hooks: {}

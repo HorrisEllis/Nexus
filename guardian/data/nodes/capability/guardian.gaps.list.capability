@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.gaps.list
+type: capability
+id: guardian.gaps.list
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730142
+source: guardian.registry-components:guardian.gaps.list
+payload:
+  id: guardian.gaps.list
+  namespace: guardian
+  name: gaps.list
+  version: 3.6.2
+  grammar:
+    - gaps list
+    - gaps-list
+  route:
+    method: GET
+    path: /gaps
+  intent: []
+  description: Open gaps detected by guardian
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

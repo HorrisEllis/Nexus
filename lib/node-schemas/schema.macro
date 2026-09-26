@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-schema-macro
+type: schema
+id: macro
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116324006
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/agent-tools/tools/clear-glass/macro.js — the real macro record (create action), James:
+    "clear-glass: .macro" pointed here directly
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real macro id
+    name:
+      type: string
+      required: true
+      description: real macro name
+    urlPattern:
+      type: string
+      required: false
+      description: real glob ("*") pattern the current page must match before running
+    steps:
+      type: array
+      required: true
+      description: >-
+        real [{action, data}] or [{engine:"erosmancer", action, targetUuid, data}] — each a real,
+        valid browser_action name
+    params:
+      type: array
+      required: false
+      description: real named parameters a caller fills in per run
+    profile:
+      type: string
+      required: false
+      description: >-
+        one of 'precise'|'cautious'|'exploratory'|'turbo' — erosmancer behavior profile, or null for
+        its own adaptive pick
+    description:
+      type: string
+      required: false
+      description: real, optional human description
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp
+    runCount:
+      type: number
+      required: true
+      description: real run counter, starts at 0
+    lastRunAt:
+      type: any
+      required: false
+      description: real timestamp of last run, null until first run

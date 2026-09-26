@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.contracts.handoff
+type: capability
+id: loom.contracts.handoff
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730150
+source: loom.registry-components:loom.contracts.handoff
+payload:
+  id: loom.contracts.handoff
+  namespace: loom
+  name: contracts.handoff
+  version: 1.5.0
+  grammar:
+    - contracts handoff
+    - contracts-handoff
+  route:
+    method: POST
+    path: /api/contracts/:id/handoff
+  intent: []
+  description: Hand off a contract
+  params: []
+  tags:
+    - loom
+    - write
+  permissions:
+    - system
+  hooks: {}

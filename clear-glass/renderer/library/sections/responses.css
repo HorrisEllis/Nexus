@@ -1,0 +1,21 @@
+/* renderer/library/sections/responses.css — Library → Responses only. Scoped to body[data-area="responses"]. */
+body[data-area="responses"] .resp-agent { width: auto; min-width: 220px; font-family: var(--mono); font-size: 12px; }
+body[data-area="responses"] .resp-kind { width: 30px; height: 30px; flex: none; display: grid; place-items: center; border-radius: 8px;
+  background: rgba(124,92,252,.10); border: 1px solid rgba(124,92,252,.28); color: var(--violet); }
+body[data-area="responses"] .resp-artifact .resp-kind { background: rgba(0,245,255,.08); border-color: rgba(0,245,255,.25); color: var(--cyan); }
+body[data-area="responses"] .resp-row .what .t { font-family: var(--mono); font-size: 12.5px; }
+body[data-area="responses"] .resp-kv { display: grid; grid-template-columns: 96px 1fr; gap: 4px 12px; font-size: 12px; }
+body[data-area="responses"] .resp-kv .k { color: var(--ink-faint); }
+body[data-area="responses"] .resp-kv .v { color: var(--ink); font-family: var(--mono); word-break: break-all; }
+body[data-area="responses"] .resp-h { font-size: 12px; font-weight: 600; color: var(--ink-dim); margin-top: 4px; }
+body[data-area="responses"] .resp-text { max-height: 360px; }
+body[data-area="responses"] .resp-fold summary { cursor: pointer; color: var(--ink-dim); font-size: 12px; padding: 4px 0; }
+body[data-area="responses"] .resp-fold pre { margin-top: 6px; }
+body[data-area="responses"] .resp-transcript .resp-kind { background: rgba(52,211,153,.08); border-color: rgba(52,211,153,.28); color: #34d399; }
+body[data-area="responses"] .resp-ver { width: auto; min-width: 260px; font-family: var(--mono); font-size: 12px; }
+body[data-area="responses"] .resp-convo { display: flex; flex-direction: column; gap: 8px; max-height: 60vh; overflow: auto; }
+body[data-area="responses"] .resp-msg { display: grid; grid-template-columns: 56px 1fr; gap: 8px; align-items: start; }
+body[data-area="responses"] .resp-msg .who { font-size: 11px; color: var(--ink-faint); padding-top: 6px; text-transform: uppercase; letter-spacing: .06em; }
+body[data-area="responses"] .resp-msg pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+body[data-area="responses"] .resp-user pre { border-left: 2px solid var(--violet); }
+body[data-area="responses"] .resp-assistant pre { border-left: 2px solid var(--cyan); }

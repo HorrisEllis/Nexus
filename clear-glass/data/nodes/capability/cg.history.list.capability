@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.history.list
+type: capability
+id: cg.history.list
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730168
+source: clear-glass.registry-components:cg.history.list
+payload:
+  id: cg.history.list
+  namespace: cg
+  name: history.list
+  version: 3.1.0
+  grammar:
+    - history list
+  route:
+    method: IPC
+    path: history:list
+  intent: []
+  description: Real browsing history search/list
+  params: []
+  tags:
+    - cg
+    - history
+  permissions:
+    - system
+  hooks: {}

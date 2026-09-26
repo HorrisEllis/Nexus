@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-d210a7a6-f127-44e4-bcb6-12b13ecbbcae
+type: bep_pattern
+id: d210a7a6-f127-44e4-bcb6-12b13ecbbcae
+context: 'intelligence crystallised pattern: cross_system_causal'
+intent: null
+summary: >-
+  "ledger.copilot.event" (copilot) and "ledger.diagnostic.dangling-hook" (diagnostic) co-occur
+  within 5s across two real systems — 261 observations
+system: intelligence
+tags:
+  - bep_patterns
+  - cross_system_causal
+  - cortex/intelligence
+exported_at: 1790368216479
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368216479
+lastSeenAt: 1790368216479
+fingerprint: null
+payload:
+  uuid: d210a7a6-f127-44e4-bcb6-12b13ecbbcae
+  signature: ledger.copilot.event::ledger.diagnostic.dangling-hook
+  patternType: cross_system_causal
+  typeA: ledger.copilot.event
+  typeB: ledger.diagnostic.dangling-hook
+  systemA: copilot
+  systemB: diagnostic
+  crossSystem: true
+  count: 261
+  confidence: 1
+  description: >-
+    "ledger.copilot.event" (copilot) and "ledger.diagnostic.dangling-hook" (diagnostic) co-occur
+    within 5s across two real systems — 261 observations
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790368216317

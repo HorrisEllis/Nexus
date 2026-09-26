@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-schema-agent_model
+type: schema
+id: agent_model
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789700000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: copilot/lib/agent-model.js — the real, live per-agent behavioral
+    hypothesis engine (observe/decay/reconfirm/archive, same lifecycle
+    contract as user-model.js). Genuinely distinct from schema.health,
+    which is cortex/core/raid/index.js's real-time dispatch-availability
+    snapshot — see that schema's own source note. Both are real; neither
+    is a substitute for the other, decided explicitly (2026-09-17).
+  fields:
+    agentId:
+      type: string
+      required: true
+      description: real dispatch/hat identity this snapshot belongs to
+    hypotheses:
+      type: array
+      required: true
+      description: every currently-active hypothesis for this agent, each
+        item shaped exactly like a real agent_model_hypotheses row —
+        uuid, claim, claimType, confidence, evidence_count, firstSeen,
+        lastSeen, lastEvidence, decayRate, source. Archived hypotheses
+        are never included here — they remain queryable in
+        agent_model_hypotheses directly, not duplicated into this node.
+    hypothesisCount:
+      type: number
+      required: true
+      description: real count of the hypotheses array at write time —
+        not a separately-tracked total, purely derived, present for a
+        reader that wants the number without counting the array itself
+    generatedAt:
+      type: number
+      required: true
+      description: real epoch ms when this snapshot was written — this
+        node is overwritten on every write, not appended to; the
+        generation timestamp is how a reader knows how fresh it is

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.history.list
+type: capability
+id: versionium.history.list
+context: versionium/registry-components.js real capability export
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789250756043
+source: versionium.registry-components:versionium.history.list
+payload:
+  id: versionium.history.list
+  namespace: versionium
+  name: history.list
+  version: 3.0.0
+  grammar:
+    - versionium history
+    - vh
+  route:
+    method: GET
+    path: /api/versionium/history
+  intent: []
+  description: Real commit history, optionally filtered by system
+  params: []
+  tags:
+    - versionium
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,20 @@
+envelope: 1
+uuid: nexus-export-injection-f51aa395-4140-47b1-b137-3e51df30f167
+type: injection
+id: f51aa395-4140-47b1-b137-3e51df30f167
+context: copilot/tool-runtime.js makeNcpCallModel callModel
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789270278804
+source: copilot.tool-runtime.makeNcpCallModel
+payload:
+  provider: claude
+  primed: true
+  injectedSystemPrompt: false
+  injectedToolGuide: false
+  toolCount: 94
+  promptLength: 37
+  idleMsThreshold: 120000
+  msSinceLastPrimed: 1

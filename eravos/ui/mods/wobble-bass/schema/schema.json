@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.wobble-bass",
+  "label": "Wobble Bass",
+  "icon": "\ud83d\udd0a",
+  "accent": "#ff2266",
+  "domain": [
+    "music",
+    "synthesis",
+    "bass",
+    "dubstep"
+  ],
+  "description": "Detuned sawtooth through LFO-swept resonant lowpass with distortion. Continuous or one-shot.",
+  "permissions": [
+    "audio_out",
+    "bus_publish",
+    "bus_subscribe"
+  ],
+  "provides": [
+    "capability.audio_out"
+  ],
+  "requires": [
+    "capability.audio_context"
+  ],
+  "hooks": [
+    {
+      "hook_id": "wobble.hook.trig_in",
+      "direction": "in",
+      "event_type": "pad:trigger",
+      "contract_version": "1.0.0"
+    },
+    {
+      "hook_id": "wobble.hook.audio_out",
+      "direction": "out",
+      "event_type": "audio:signal",
+      "contract_version": "1.0.0"
+    }
+  ],
+  "params": {
+    "freq": {
+      "type": "float",
+      "min": 20,
+      "max": 220,
+      "default": 110,
+      "unit": "Hz"
+    },
+    "cutoff": {
+      "type": "float",
+      "min": 80,
+      "max": 4000,
+      "default": 600,
+      "unit": "Hz"
+    },
+    "res": {
+      "type": "float",
+      "min": 0.5,
+      "max": 20,
+      "default": 8,
+      "unit": ""
+    },
+    "rate": {
+      "type": "float",
+      "min": 0.1,
+      "max": 16,
+      "default": 4,
+      "unit": "Hz"
+    },
+    "depth": {
+      "type": "float",
+      "min": 0,
+      "max": 2000,
+      "default": 600,
+      "unit": "Hz"
+    },
+    "drive": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.4,
+      "unit": ""
+    },
+    "waveform": {
+      "type": "enum",
+      "values": [
+        "sawtooth",
+        "square",
+        "triangle"
+      ],
+      "default": "sawtooth"
+    }
+  },
+  "ui": {
+    "type": "filter_scope",
+    "continuous_mode": true
+  }
+}

@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.prompt.fulfill
+type: capability
+id: copilot.prompt.fulfill
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730178
+source: copilot.registry-components:copilot.prompt.fulfill
+payload:
+  id: copilot.prompt.fulfill
+  namespace: copilot
+  name: prompt.fulfill
+  version: 2.0.0
+  grammar:
+    - fulfill
+    - cp fulfill
+  route:
+    method: POST
+    path: /api/prompt/fulfill
+  intent:
+    - ask
+    - build
+    - diagnose
+  description: Adaptive iteration — RAID-routed, fault-classified, reflection-scored (§15.1-15.3)
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: copilot.prompt.fulfill.receive
+        intent:
+          - ask
+          - build
+          - diagnose
+        contract: nexus-interaction-contract-v1::copilot
+        tags:
+          - entry-point
+          - adaptive
+    out:
+      - id: copilot.fulfillment.attempt
+        wires_to:
+          - cortex.intelligence.event
+        tags:
+          - learning

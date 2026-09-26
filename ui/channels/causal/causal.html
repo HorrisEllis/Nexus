@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXUS · CAUSAL</title>
+<link rel="stylesheet" href="/ui/home/home.css">
+<style>
+  /* §SOVEREIGN CHANNEL 2026-07-11 — this channel is a standalone document,
+     openable and testable on its own (DECOMP.md benefit #3). It reuses
+     home.css for design tokens + existing component classes (.sys-tile,
+     .ch, etc.) rather than forking them, so it always matches the shell's
+     look without duplicating hundreds of class definitions. */
+  html,body{margin:0;padding:0;background:transparent;color:var(--text,#e8eef7);font-family:'Space Grotesk',sans-serif;height:100%}
+  .ch{display:block!important;position:static!important;width:100%;height:100%;animation:none!important}
+  .channel-root{padding:16px;height:100%;box-sizing:border-box;overflow:auto}
+</style>
+</head>
+<body>
+<div class="channel-root">
+<div class="ch" id="ch-causal">
+    <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-shrink:0;padding:0 4px">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">Causal Graph</span>
+      <span id="cg-node-count" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)">0 nodes</span>
+      <span id="cg-sigma" style="font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">σ 0.000</span>
+      <select id="cg-depth" style="margin-left:auto;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:rgba(255,255,255,.6);font-family:'Space Mono',monospace;font-size:9px;padding:3px 6px;outline:none">
+        <option value="50">Last 50</option>
+        <option value="100">Last 100</option>
+        <option value="200">Last 200</option>
+      </select>
+      <button class="btn" onclick="cgLoad()" style="font-size:9px;padding:4px 10px">↺ Refresh</button>
+    </div>
+    <div style="flex:1;position:relative;overflow:hidden;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,5,.6)">
+      <canvas id="cg-canvas" style="width:100%;height:100%;display:block"></canvas>
+      <div id="cg-tooltip" style="position:absolute;display:none;background:rgba(0,0,10,.92);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:8px 10px;font-family:'Space Mono',monospace;font-size:9px;color:#e0e8ff;pointer-events:none;max-width:240px;line-height:1.6;z-index:10"></div>
+      <div id="cg-empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em">NO CAUSAL DATA — IS NEXUS RUNNING?</div>
+    </div>
+    <div id="cg-legend" style="display:flex;gap:16px;margin-top:8px;padding:0 4px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:50%;background:var(--ok)"></div>Low σ</div>
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:50%;background:#ffaa00"></div>Mid σ</div>
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:50%;background:var(--err)"></div>High σ</div>
+      <div style="display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3)"><div style="width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2)"></div>Causal edge</div>
+    </div>
+  </div>
+</div>
+<script src="/ui/lib/api.js"></script>
+<script>
+'use strict';
+// §API base ports — same map home/index.html uses (P{...}), duplicated
+// here on purpose: a sovereign channel must not depend on the shell's
+// global scope existing (it may be opened standalone, per DECOMP.md).
+const P={orch:9000,gd:7820,cx:3748,br:9999,idr:4800,em:4242,arch:3747,dg:7825};
+const B={orch:`http://127.0.0.1:${P.orch}`,gd:`http://127.0.0.1:${P.gd}`,cx:`http://127.0.0.1:${P.cx}`,br:`http://127.0.0.1:${P.br}`,idr:`http://127.0.0.1:${P.idr}`,em:`http://127.0.0.1:${P.em}`,arch:`http://127.0.0.1:${P.arch}`,dg:`http://127.0.0.1:${P.dg}`};
+
+const CG = (() => {
+  let _nodes = [], _edges = [], _sim = null;
+  let _drag = null, _hover = null;
+  let _pan = {x:0, y:0}, _panStart = null;
+  let _scale = 1;
+  let _raf = null;
+  const ORCH = `http://127.0.0.1:${P.orch}`;
+
+  function sigCol(s) {
+    s = Math.min(1, Math.max(0, s||0));
+    if (s < 0.35) return `rgba(0,255,136,${0.5+s})`;
+    if (s < 0.7)  { const t=(s-.35)/.35; return `rgba(${Math.round(t*255)},${Math.round(229-t*59)},${Math.round(255-t*255)},0.9)`; }
+    const t=(s-.7)/.3; return `rgba(255,${Math.round(170-t*170)},${Math.round(t*85)},0.95)`;
+  }
+
+  async function load() {
+    const depth = parseInt(document.getElementById('cg-depth')?.value||'50');
+    try {
+      const [nodesR, deltasR] = await Promise.allSettled([
+        fetch(`${ORCH}/api/cortex/cfr/nodes`).then(r=>r.json()),
+        fetch(`${ORCH}/api/cortex/cfr/deltas?limit=${depth}`).then(r=>r.json()),
+      ]);
+      const rawNodes = nodesR.status==='fulfilled' ? (nodesR.value?.nodes||[]) : [];
+      const rawDeltas = deltasR.status==='fulfilled' ? (deltasR.value?.deltas||[]) : [];
+
+      // Build node map from events — aggregate by type
+      const nodeMap = {};
+      [...rawNodes, ...rawDeltas].forEach(e => {
+        const key = e.label || e.type || '?';
+        if (!nodeMap[key]) nodeMap[key] = { id:key, label:key, sigma:0, count:0, mass:1 };
+        const s = e.sigma?.score ?? e.sigma ?? 0;
+        nodeMap[key].sigma = Math.max(nodeMap[key].sigma, s);
+        nodeMap[key].count++;
+        nodeMap[key].mass = 1 + nodeMap[key].sigma * 3 + Math.min(nodeMap[key].count * 0.1, 2);
+      });
+
+      _nodes = Object.values(nodeMap);
+
+      // Build edges from causedBy links in deltas
+      const edgeMap = {};
+      rawDeltas.forEach(e => {
+        if (e.causedBy) {
+          // Find the type of the causing event
+          const fromDelta = rawDeltas.find(d => d.uuid === e.causedBy);
+          if (fromDelta) {
+            const fromKey = fromDelta.label || fromDelta.type || '?';
+            const toKey   = e.label || e.type || '?';
+            if (fromKey !== toKey) {
+              const ek = `${fromKey}→${toKey}`;
+              edgeMap[ek] = (edgeMap[ek]||0) + 1;
+            }
+          }
+        }
+      });
+      _edges = Object.entries(edgeMap).map(([k,w]) => {
+        const [f,t] = k.split('→');
+        return { from:f, to:t, weight:w };
+      });
+
+      // Assign initial positions (random in canvas center area)
+      const canvas = document.getElementById('cg-canvas');
+      if (!canvas) return;
+      const W = canvas.offsetWidth, H = canvas.offsetHeight;
+      _nodes.forEach(n => {
+        if (!n.x) { n.x = W/2 + (Math.random()-.5)*300; n.y = H/2 + (Math.random()-.5)*300; }
+        n.vx = 0; n.vy = 0;
+      });
+
+      document.getElementById('cg-node-count').textContent = `${_nodes.length} nodes · ${_edges.length} edges`;
+      document.getElementById('cg-empty').style.display = _nodes.length ? 'none' : 'flex';
+
+      // Update sigma badge with max sigma
+      const maxSig = _nodes.reduce((m,n) => Math.max(m, n.sigma), 0);
+      const sigEl = document.getElementById('cg-sigma');
+      if (sigEl) { sigEl.textContent = `σ ${maxSig.toFixed(3)}`; sigEl.style.color = sigCol(maxSig); }
+
+      _simulate();
+    } catch(e) {
+      document.getElementById('cg-empty').style.display='flex';
+      document.getElementById('cg-empty').textContent = `Error: ${e.message}`;
+    }
+  }
+
+  function _simulate() {
+    if (_raf) cancelAnimationFrame(_raf);
+    let ticks = 0;
+    const REPEL = 3000, ATTRACT = 0.03, DAMP = 0.88, CENTER = 0.004;
+
+    function tick() {
+      const canvas = document.getElementById('cg-canvas');
+      // §SOVEREIGN CHANNEL 2026-07-11 — was CH_META[curCh]?.id!=='ch-causal',
+      // a check for "is the shell currently tuned to this tab". This
+      // document IS the tab now (no sibling channels sharing its DOM), so
+      // the equivalent question is "is this document's tab in the
+      // background", answered by the standard Page Visibility API instead.
+      if (!canvas || document.hidden) { _raf=null; return; }
+      const W = canvas.offsetWidth, H = canvas.offsetHeight;
+      canvas.width = W * devicePixelRatio; canvas.height = H * devicePixelRatio;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+
+      // Force simulation (simplified Barnes-Hut)
+      if (ticks < 300) {
+        _nodes.forEach(a => {
+          // Center gravity
+          a.vx += (W/2 - a.x) * CENTER;
+          a.vy += (H/2 - a.y) * CENTER;
+          // Node-node repulsion
+          _nodes.forEach(b => {
+            if (a===b) return;
+            const dx=a.x-b.x, dy=a.y-b.y;
+            const d2 = dx*dx+dy*dy+1;
+            const f = REPEL/(d2);
+            a.vx += dx*f; a.vy += dy*f;
+          });
+        });
+        // Edge attraction
+        _edges.forEach(e => {
+          const a = _nodes.find(n=>n.id===e.from), b = _nodes.find(n=>n.id===e.to);
+          if (!a||!b) return;
+          const dx=b.x-a.x, dy=b.y-a.y;
+          a.vx += dx*ATTRACT*e.weight; a.vy += dy*ATTRACT*e.weight;
+          b.vx -= dx*ATTRACT*e.weight; b.vy -= dy*ATTRACT*e.weight;
+        });
+        _nodes.forEach(n => {
+          if (_drag?.id===n.id) return;
+          n.vx *= DAMP; n.vy *= DAMP;
+          n.x  += n.vx; n.y  += n.vy;
+          n.x = Math.max(40,Math.min(W-40,n.x));
+          n.y = Math.max(40,Math.min(H-40,n.y));
+        });
+        ticks++;
+      }
+
+      // Draw
+      ctx.save();
+      ctx.translate(_pan.x, _pan.y);
+      ctx.scale(_scale, _scale);
+
+      ctx.clearRect(-_pan.x/_scale-100, -_pan.y/_scale-100, W/_scale+200, H/_scale+200);
+
+      // Edges
+      ctx.globalAlpha = 0.35;
+      _edges.forEach(e => {
+        const a=_nodes.find(n=>n.id===e.from), b=_nodes.find(n=>n.id===e.to);
+        if(!a||!b) return;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = Math.min(e.weight, 4) * 0.5;
+        ctx.stroke();
+        // Arrow
+        const angle = Math.atan2(b.y-a.y, b.x-a.x);
+        const r = 6 + b.mass*3;
+        const ax = b.x - Math.cos(angle)*r, ay = b.y - Math.sin(angle)*r;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax - Math.cos(angle-.5)*6, ay - Math.sin(angle-.5)*6);
+        ctx.lineTo(ax - Math.cos(angle+.5)*6, ay - Math.sin(angle+.5)*6);
+        ctx.closePath(); ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fill();
+      });
+
+      // Nodes
+      ctx.globalAlpha = 1;
+      _nodes.forEach(n => {
+        const r = 6 + n.mass * 3;
+        const col = sigCol(n.sigma);
+        const isHov = _hover?.id===n.id;
+
+        // Glow for high sigma
+        if (n.sigma > 0.4) {
+          ctx.beginPath(); ctx.arc(n.x, n.y, r*2.2, 0, Math.PI*2);
+          ctx.fillStyle = col.replace('0.9','0.06').replace('0.95','0.08'); ctx.fill();
+        }
+
+        // Node body
+        ctx.beginPath(); ctx.arc(n.x, n.y, r + (isHov?2:0), 0, Math.PI*2);
+        ctx.fillStyle = col; ctx.fill();
+        if (isHov) { ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=1.5; ctx.stroke(); }
+
+        // Label
+        ctx.fillStyle = isHov ? '#fff' : 'rgba(255,255,255,.55)';
+        ctx.font = `${isHov?'700 ':''} ${Math.min(9,7+n.mass*.3)}px 'Space Mono',monospace`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        // Truncate long labels
+        const lbl = n.label.length > 20 ? n.label.slice(0,18)+'…' : n.label;
+        ctx.fillText(lbl, n.x, n.y + r + 3);
+      });
+
+      ctx.restore();
+      _raf = requestAnimationFrame(tick);
+    }
+    _raf = requestAnimationFrame(tick);
+  }
+
+  function attachEvents() {
+    const canvas = document.getElementById('cg-canvas');
+    if (!canvas) return;
+
+    canvas.addEventListener('mousedown', e => {
+      const p = _canvasPoint(canvas, e);
+      const hit = _nodeAt(p);
+      if (hit) { _drag = hit; hit._dragOx = p.x-hit.x; hit._dragOy = p.y-hit.y; }
+      else { _panStart = p; }
+    });
+    canvas.addEventListener('mousemove', e => {
+      const p = _canvasPoint(canvas, e);
+      if (_drag) { _drag.x=p.x-_drag._dragOx; _drag.y=p.y-_drag._dragOy; _drag.vx=0; _drag.vy=0; }
+      else if (_panStart) { _pan.x+=p.x-_panStart.x; _pan.y+=p.y-_panStart.y; _panStart=p; }
+      const hit = _nodeAt(p);
+      if (hit !== _hover) {
+        _hover = hit;
+        const tip = document.getElementById('cg-tooltip');
+        if (hit && tip) {
+          tip.style.display='block'; tip.style.left=(e.offsetX+12)+'px'; tip.style.top=(e.offsetY-10)+'px';
+          tip.innerHTML = `<b style="color:${sigCol(hit.sigma)}">${hit.label}</b><br>σ ${hit.sigma.toFixed(3)} · count ${hit.count}`;
+        } else if (tip) tip.style.display='none';
+      }
+    });
+    canvas.addEventListener('mouseup', () => { _drag=null; _panStart=null; });
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      _scale = Math.max(0.3, Math.min(3, _scale * delta));
+    }, {passive:false});
+  }
+
+  function _canvasPoint(canvas, e) {
+    const r = canvas.getBoundingClientRect();
+    return { x:(e.clientX-r.left-_pan.x)/_scale, y:(e.clientY-r.top-_pan.y)/_scale };
+  }
+  function _nodeAt(p) {
+    for (const n of _nodes) {
+      const r=6+n.mass*3+4, dx=p.x-n.x, dy=p.y-n.y;
+      if (dx*dx+dy*dy < r*r) return n;
+    }
+    return null;
+  }
+
+  // Co-pilot readable state — exposed as window property for co-pilot context
+  function getState() {
+    return { nodeCount:_nodes.length, edgeCount:_edges.length,
+      topNodes: _nodes.sort((a,b)=>b.sigma-a.sigma).slice(0,5).map(n=>({label:n.label,sigma:n.sigma.toFixed(3),count:n.count})),
+      maxSigma: _nodes.reduce((m,n)=>Math.max(m,n.sigma),0).toFixed(3),
+    };
+  }
+
+  return { load, attachEvents, getState };
+})();
+
+function cgLoad() { CG.load(); }
+
+// ── init ──────────────────────────────────────────────────────────────────
+try { cgLoad(); CG.attachEvents(); } catch(e) { console.warn('[channel:causal] init failed:', e.message); }
+
+// ── this channel's own SSE subscription — sovereign, not dependent on the
+//    shell's single connection (matches DECOMP.md's "each channel can be
+//    opened independently... for debugging"). Shell-embedded use can still
+//    layer postMessage on top later without this needing to change. ──────
+try {
+  const es = new EventSource(`${B.orch}/sse`);
+  es.onmessage = (e) => {
+    try {
+      const d = JSON.parse(e.data);
+      if (typeof window.onChannelEvent === 'function') window.onChannelEvent(d);
+    } catch(_) {}
+  };
+  es.onerror = () => { /* orchestrator not reachable — channel still renders, just static until it is */ };
+} catch(_) {}
+</script>
+</body>
+</html>

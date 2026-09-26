@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-schema-component
+type: schema
+id: component
+context: >-
+  clear-glass/schemas — sovereign local copy. Origin: lib/node-schemas/schema.component (shared
+  canonical version, may have moved on independently since this copy was made — sovereignty means
+  clear-glass does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789239046422
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    loom/schema/component.js — COMPONENT_SCHEMA (real, checked directly this pass:
+    requiredKeys ['id','namespace','name','version'], uuid enforced separately by the
+    loom.uuid-present Axiom in driver.js, not duplicated here). Broadened this pass, on request:
+    a component is deliberately language/syntax-agnostic already — the real schema never assumed
+    JS specifically, id/namespace/name/version says nothing about what's inside. `boundary` added
+    as an optional field, grounded in cos/kernel.js's real Compartment class — its own `axioms`
+    (1-5 identity-defining invariants, immutable, enforced: "Compartment requires at least one
+    axiom... max 5 — keep identity tight") is the real precedent for "a component as a compartment
+    with boundaries." Not merged into `.cos` — a cos Compartment is a live, running, stateful thing
+    (gates, buses, context); a `.component` node is a static declaration. Same boundary concept,
+    borrowed field, two different real things. Clear-glass's own use: clear-glass.node-taxonomy.md
+    marks this VIA LOOM, confirmed — both 'clear-glass' and 'clear-glass/seam' are separate real
+    entries in capability-map.js's own SYSTEMS map, so both get their components derived the same
+    way guardian's are. This local copy exists so clear-glass can validate/interpret component-shaped
+    data it receives back from that derivation without a runtime dependency on lib/node-schemas.js —
+    same reasoning already applied to clear-glass's other VIA LOOM types (hook, wire, node), which
+    already had local copies before this one.
+  fields:
+    id:
+      type: string
+      required: true
+      description: real, unique component id
+    namespace:
+      type: string
+      required: true
+      description: real component namespace
+    name:
+      type: string
+      required: true
+      description: real component display/file name
+    version:
+      type: string
+      required: true
+      description: real semver-ish version string
+    dir:
+      type: string
+      required: false
+      description: optional real filesystem path, added by SB1
+    uuid:
+      type: string
+      required: true
+      description: enforced by the loom.uuid-present Axiom, not this schema directly
+    boundary:
+      type: array
+      required: false
+      description: >-
+        optional 1-5 identity-defining invariants for this component, same real concept as
+        cos/kernel.js's Compartment.axioms — what this component IS and is NOT, bounding its
+        scope regardless of what language or syntax it's actually written in. Optional because
+        most real components today declare none; a component using this is opting into being
+        treated like a bounded compartment, not just a named, versioned file.

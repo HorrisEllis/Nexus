@@ -1,0 +1,139 @@
+/* ui/home/areas/agent-suite.css — Agent suite channel + per-mode skin.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* ── Mode-specific channel skin ───────────────────────────────────── */
+body[data-mode='claude']  #ch-agent-suite .agent-accent{color:#cc44ff}
+body[data-mode='chatgpt'] #ch-agent-suite .agent-accent{color:var(--ok)}
+body[data-mode='mistral'] #ch-agent-suite .agent-accent{color:var(--ac)}
+body[data-mode='gemini'] #ch-agent-suite .agent-accent{color:#4a9eff}
+body[data-mode='perplexity'] #ch-agent-suite .agent-accent{color:#818cf8}
+
+/* ── Agent suite channel ──────────────────────────────────────────── */
+#ch-agent-suite{
+  display:none;flex-direction:column;padding:52px 70px 110px;gap:16px;overflow-y:auto;
+}
+.agent-suite-header{
+  display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;
+}
+.agent-suite-name{
+  font-family:'Space Mono',monospace;font-size:22px;font-weight:700;
+  letter-spacing:.06em;color:#fff;
+}
+.agent-suite-sub{font-size:13px;color:rgba(255,255,255,.3);margin-top:4px;line-height:1.5}
+.agent-status-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.agent-stat-pill{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:20px;
+  border:1px solid rgba(255,255,255,.08);
+  font-family:'Space Mono',monospace;font-size:9px;
+  color:rgba(255,255,255,.5);background:rgba(255,255,255,.03);
+}
+.agent-stat-pill.live{border-color:rgba(0,255,136,.2);color:var(--ok)}
+.asp-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* Token budget */
+.token-budget{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;padding:16px;
+}
+.tb-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.25);margin-bottom:8px}
+.tb-bar-wrap{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.tb-bar{height:100%;border-radius:3px;transition:width .5s,background .4s}
+.tb-stats{display:flex;gap:20px;font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3)}
+.tb-stat-val{color:#fff}
+
+/* Chunker / SEAM section */
+.seam-section{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;
+}
+.seam-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.25)}
+.seam-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.seam-row:last-child{border-bottom:none}
+.seam-chunk-id{font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.25);width:100px;flex-shrink:0}
+.seam-chunk-type{
+  font-family:'Space Mono',monospace;font-size:9px;padding:2px 8px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);flex-shrink:0;
+}
+.seam-chunk-body{font-size:11px;color:rgba(255,255,255,.6);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seam-chunk-tokens{font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.25);flex-shrink:0}
+.seam-status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.seam-status-dot.queued{background:rgba(255,255,255,.2)}
+.seam-status-dot.dispatched{background:#ffaa00;animation:dot-live 1.5s infinite}
+.seam-status-dot.done{background:var(--ok)}
+.seam-status-dot.failed{background:var(--err)}
+
+/* Component context injector */
+.ctx-section{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;
+}
+.ctx-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:14px;
+  font-family:'Space Mono',monospace;font-size:9px;
+  border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.03);cursor:pointer;
+  transition:all .15s;
+}
+.ctx-chip:hover,.ctx-chip.active{border-color:var(--mc,var(--ac));color:var(--mc,var(--ac));background:var(--ac-ghost)}
+.ctx-chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* Forge input */
+.forge-input-row{
+  display:flex;gap:8px;
+}
+.forge-textarea{
+  flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:12px 14px;
+  font-family:'Space Mono',monospace;font-size:11px;
+  color:rgba(255,255,255,.8);line-height:1.6;
+  resize:vertical;min-height:80px;outline:none;
+  transition:border-color .2s;
+}
+.forge-textarea:focus{border-color:var(--ac-border-hi)}
+.forge-send{
+  padding:0 18px;border-radius:10px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  cursor:pointer;align-self:stretch;min-width:80px;
+  transition:all .2s;
+}
+.forge-send:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}
+body[data-mode='claude']  .forge-send:hover{background:rgba(204,68,255,.15);border-color:rgba(204,68,255,.3);color:#cc44ff}
+body[data-mode='chatgpt'] .forge-send:hover{background:var(--ok-dim);border-color:var(--ok-border);color:var(--ok)}
+body[data-mode='mistral'] .forge-send:hover{background:var(--ac-ghost);border-color:var(--ac-border-hi);color:var(--ac)}
+body[data-mode='gemini'] .forge-send:hover{background:rgba(74,158,255,.1);border-color:rgba(74,158,255,.3);color:#4a9eff}
+body[data-mode='perplexity'] .forge-send:hover{background:rgba(129,140,248,.1);border-color:rgba(129,140,248,.3);color:#818cf8}
+
+/* Constraint flags */
+.constraint-flags{display:flex;gap:8px;flex-wrap:wrap}
+.cflag{
+  padding:4px 10px;border-radius:10px;
+  font-family:'Space Mono',monospace;font-size:9px;
+  border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);
+  cursor:pointer;transition:all .15s;
+}
+.cflag.active{border-color:rgba(255,170,0,.3);color:#ffaa00;background:rgba(255,170,0,.08)}
+.cflag:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+
+/* Mode change link */
+.mode-change-link{
+  font-family:'Space Mono',monospace;font-size:9px;
+  color:rgba(255,255,255,.2);cursor:pointer;letter-spacing:.1em;
+  padding:6px 12px;border-radius:8px;
+  transition:color .2s,background .2s;
+  text-transform:uppercase;
+}
+.mode-change-link:hover{color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
+
+/* Phase progress strip */
+.phase-strip{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);
+  border-radius:10px;padding:12px 16px;
+}
+.phase-strip-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.2);margin-bottom:8px}
+.phase-dots{display:flex;gap:4px;flex-wrap:wrap}
+.pdot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.pdot.done{background:var(--ok)}
+.pdot.next{background:var(--ac);box-shadow:0 0 6px hsla(var(--ac-h),var(--ac-s),var(--ac-l),.5);animation:dot-live 2s infinite}
+.pdot.pend{background:rgba(255,255,255,.1)}

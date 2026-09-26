@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-f94cd517-4e94-4e14-86a4-36d48a3b8d09
+type: bep_pattern
+id: f94cd517-4e94-4e14-86a4-36d48a3b8d09
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.eravos.updated" precedes failures 12 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266432
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266432
+lastSeenAt: 1790368266432
+fingerprint: null
+payload:
+  uuid: f94cd517-4e94-4e14-86a4-36d48a3b8d09
+  signature: precursor::ledger.eravos.updated
+  patternType: failure_precursor
+  precursorType: ledger.eravos.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 12
+  confidence: 1
+  description: '"ledger.eravos.updated" precedes failures 12 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

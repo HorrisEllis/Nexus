@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BrainOS Float</title>
+<link rel="stylesheet" href="brainos-float.css">
+<style>
+  /* transparent host page — the floating panel is the only visible thing */
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+</style>
+</head>
+<body>
+<script src="brainos-float.js"></script>
+<script>
+  window.BrainOSFloat.mount({
+    clearGlassUrl: 'http://127.0.0.1:7704',
+    guardianUrl: 'http://127.0.0.1:7820',
+  });
+</script>
+</body>
+</html>

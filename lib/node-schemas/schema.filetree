@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-schema-filetree
+type: schema
+id: filetree
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: lib/file-tree-plan.js writeTreeNode() — the real construction site
+  note: >-
+    A spec's planned file tree, decided before any content is built. One node
+    per spec (id = spec uuid). Replaces the PLAN.md file of v0.39.199 —
+    James: "no md files. only node types."
+  fields:
+    schema:
+      type: string
+      required: true
+      description: "literal \"nexus.filetree/1\""
+    specUuid:
+      type: string
+      required: true
+      description: "the spec whose chunks are these files"
+    name:
+      type: string
+      required: true
+      description: "project name"
+    planSource:
+      type: string
+      required: true
+      description: "template + agent | agent | template only"
+    template:
+      type: object
+      required: false
+      description: "the COS archetype or blueprint used, if any"
+    layers:
+      type: object
+      required: true
+      description: "kernel, engine, runtime, test -> list of files, each with path, layer, purpose, source"
+    buildOrder:
+      type: array
+      required: true
+      description: "non-empty layers, bottom-up"
+    rejected:
+      type: number
+      required: true
+      description: "planned entries rejected by validation"

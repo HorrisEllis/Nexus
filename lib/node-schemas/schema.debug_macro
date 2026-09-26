@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-schema-debug_macro
+type: schema
+id: debug_macro
+context: lib/node-schemas — shared canonical registry.
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789253918808
+source: nexus.lib.node-export
+payload:
+  status: OPEN
+  source: >-
+    cortex/self-heal/failure-mode-forensics.js's generateDebugMacro() — composes the real precursor
+    event chain lib/diagnostic-causal.js's explainFinding() traces (via
+    intelligence/relational-field) into a replayable step list, using the same {call, target, args}
+    shape lib/tool-forge.js's forged tools already use. Marked OPEN, not REAL: no general executor
+    exists yet to actually replay these steps against a live system (unlike .macro's real
+    browser_action executor) — this is a real, structured reproduction recipe, honestly not yet
+    auto-playable.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real debug-macro id
+    name:
+      type: string
+      required: true
+      description: real, descriptive name, e.g. 'reproduce-<faultClass>-<gapUuid>'
+    faultClass:
+      type: string
+      required: true
+      description: real fault class this macro reproduces
+    gapUuid:
+      type: string
+      required: true
+      description: real id of the .gap this macro was generated from
+    failureModeUuid:
+      type: string
+      required: false
+      description: real id of the .failure_mode this macro was generated from, when one exists
+    steps:
+      type: array
+      required: true
+      description: >-
+        real, ordered list of {call:'event', type, payload, ts} steps — one per real precursor event
+        in the traced causal chain, in original chronological order
+    root:
+      type: any
+      required: false
+      description: >-
+        real root cause object from lib/diagnostic-causal.js's explainFinding(), when the causal
+        field had one
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp
+    runCount:
+      type: number
+      required: true
+      description: >-
+        real count of times this macro has actually been replayed — always 0 today, since no
+        executor exists yet
+    executable:
+      type: boolean
+      required: true
+      description: honestly false until a real event-replay executor exists — see status:OPEN above

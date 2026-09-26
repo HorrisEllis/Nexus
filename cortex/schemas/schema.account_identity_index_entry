@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-schema-account_identity_index_entry
+type: schema
+id: account_identity_index_entry
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table
+  (data/cortex/memory/account_identity_index.json). Origin:
+  intelligence/schemas/schema.account_identity_index_entry (same real grounding, cortex is the
+  physical store not the declaring system).
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252761268
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/schemas.js's own real account_identity_index JAA table — a real, stable UUID per
+    (agent, real detected account), distinct from per-session UUIDs.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real, stable identity id
+    agentId:
+      type: string
+      required: true
+      description: real agent id
+    account:
+      type: string
+      required: true
+      description: real, detected account string
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp
+    lastSeenAt:
+      type: number
+      required: true
+      description: real last-seen timestamp

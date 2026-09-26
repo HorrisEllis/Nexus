@@ -1,0 +1,10 @@
+/* ui/home/areas/cortex.css — Cortex channel.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* CH3: Cortex */
+#ch-cortex.active{display:flex;flex-direction:column;padding:60px 70px 110px;gap:14px;overflow:hidden}
+.cx-layout{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;flex:1;min-height:0}
+.evt-row{display:flex;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-family:'Space Mono',monospace;font-size:10px;animation:rowIn .2s ease}
+@keyframes rowIn{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}
+.ev-ts{color:rgba(255,255,255,.2);flex-shrink:0;width:56px}
+.ev-src{color:#00cc6a;flex-shrink:0;min-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-type{color:var(--ac);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

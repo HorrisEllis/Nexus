@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-schema-input
+type: schema
+id: input
+context: >-
+  copilot/schemas — sovereign local copy. Origin: lib/node-schemas/schema.input (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means copilot does
+  not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789235656548
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Two real, distinct CLI→system input payloads, checked directly, not assumed identical:
+    guardian/lib/jobs.js's createJob({command, provider, prompt, content, source, tools})
+    destructure (via guardian/cli.js's sendCommand()), and copilot/cli.js's _talkToCopilot()'s real
+    POST body to /api/prompt: {prompt, channel, sessionId, provider}. cockpit/cli.js was checked and
+    excluded — its REPL dispatches to in-process objects (forge-style), it never builds a network
+    input payload, so it has no real .input instance of its own.
+  fields:
+    provider:
+      type: string
+      required: true
+      description: real target provider — the one field both guardian and copilot's CLI always send
+    prompt:
+      type: string
+      required: false
+      description: >-
+        real prompt text — always present from copilot's CLI, absent from guardian's when the input
+        is stdin-piped content only
+    command:
+      type: string
+      required: false
+      description: >-
+        real command/intent name, e.g. code/spec/ask — guardian-only; copilot's CLI has no discrete
+        command field, it treats free text as conversational input via channel/sessionId instead
+    content:
+      type: string
+      required: false
+      description: >-
+        real piped/attached content — guardian-only, guardian/cli.js's sendCommand() reading
+        /dev/stdin
+    source:
+      type: string
+      required: false
+      description: real originating caller tag — guardian-only, e.g. 'cli', 'officiator-synthesis-tool'
+    tools:
+      type: array
+      required: false
+      description: >-
+        real tool-scope override for this one input — guardian-only, null means the job's hat's
+        default toolScope applies
+    channel:
+      type: string
+      required: false
+      description: >-
+        real input channel — copilot-only, e.g. 'cli'; copilot/server.js's own DEFAULT_PROVIDER
+        resolution distinguishes CLI input from its other real channels by this field
+    sessionId:
+      type: string
+      required: false
+      description: >-
+        real session correlation id — copilot-only, ties a sequence of CLI prompts to one
+        conversation

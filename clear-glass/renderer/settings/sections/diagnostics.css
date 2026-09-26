@@ -1,0 +1,5 @@
+/* renderer/settings/sections/diagnostics.css — Diagnostics
+ * v0.39.227: this area's own styles (one CSS file per UI file). Every rule is
+ * scoped to body[data-area="diagnostics"] — set by core.js when the area is shown —
+ * so nothing here can restyle another area. */
+body[data-area="diagnostics"] pre.out { max-height: 420px; }

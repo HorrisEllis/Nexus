@@ -1,0 +1,16 @@
+{
+  "establishedAt": 1789526664346,
+  "eventCount": 10,
+  "latency": {
+    "mean": 0,
+    "sigma": 0,
+    "p95": 0
+  },
+  "errorRate": {
+    "mean": 0,
+    "sigma": 0
+  },
+  "eventTypes": {
+    "health.ok": 10
+  }
+}

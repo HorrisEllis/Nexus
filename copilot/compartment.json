@@ -1,0 +1,62 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.copilot",
+  "name": "copilot",
+  "label": "Copilot",
+  "dir": "copilot",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.copilot",
+    "scope": [
+      "copilot/",
+      "data/copilot/"
+    ],
+    "versionLine": "3.5.1",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.copilot",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "copilot/server.js",
+    "entryExists": true,
+    "port": 3750,
+    "phase": 3,
+    "critical": false,
+    "optional": true,
+    "healthUrl": "http://127.0.0.1:3750/health"
+  },
+  "data": {
+    "dataDir": "data/copilot",
+    "ledgerDir": "copilot/data/ledger",
+    "nodeIndexDir": "copilot/data/node-index"
+  },
+  "spec": "copilot/spec/",
+  "dependsOn": {
+    "intelligence": 6,
+    "cortex": 21,
+    "loom": 2,
+    "guardian": 1
+  },
+  "sharedLibRequires": 96,
+  "stats": {
+    "jsFiles": 39,
+    "jsLines": 11661
+  },
+  "boundaryFindings": {
+    "count": 30,
+    "sample": [
+      "copilot/adversarial.js -> intelligence/adversarial",
+      "copilot/axiom-manager.js -> cortex/memory/jaa-db",
+      "copilot/diagnostic-sweep.js -> intelligence/gap/hunter.js",
+      "copilot/diagnostics.js -> cortex/memory/jaa-db",
+      "copilot/diagnostics.js -> intelligence/cfr/field",
+      "copilot/lib/capabilities.js -> loom/scanners/capability-map",
+      "copilot/lib/grammar-router.js -> cortex/memory/jaa-db",
+      "copilot/lib/grammar-router.js -> cortex/memory/jaa-db",
+      "copilot/lib/inject-config.js -> guardian/jaa-store.js",
+      "copilot/lib/intent-learning.js -> cortex/memory/jaa-db"
+    ]
+  }
+}

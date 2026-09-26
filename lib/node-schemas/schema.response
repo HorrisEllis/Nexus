@@ -1,0 +1,92 @@
+envelope: 1
+uuid: nexus-export-schema-response
+type: schema
+id: response
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789430000100
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    guardian/lib/ncp-handler.js's real GUARDIAN_COMPLETE/NCP_COMPLETE branch — the exact moment an
+    agent's answer becomes real (finalText, job.responseText, the artifacts row, the
+    guardian.job.complete bus event). Distinct from `.output` on purpose, and the distinction is
+    real, not cosmetic: schema.output describes what a CLI *receives back* from GET /response/:jobId
+    (ok/response/error — a transport reply), while this describes what guardian *holds* as the
+    durable record of an agent response, independent of whether anyone asked for it yet. The gap
+    this closes: before this, a response existed only as a field on an in-memory job object plus a
+    truncated artifacts row. A guardian restart with no artifact row meant GET /response/:jobId
+    answered `{ok:true, response:''}` — a silent lie at the return point. A .response node is the
+    one durable, re-readable artifact the return point can fall back to.
+  fields:
+    jobId:
+      type: string
+      required: true
+      description: real guardian job id this response answers — the id the node is filed under and the correlation key for every sink
+    provider:
+      type: string
+      required: true
+      description: real provider that produced it (claude|chatgpt|gemini|perplexity|ollama|...) — 'unknown' when genuinely unresolved, never guessed
+    status:
+      type: string
+      required: true
+      description: >-
+        real terminal state — 'complete' | 'error' | 'partial'. 'partial' is real and honest: a
+        stream that was delivered in chunks but never terminated is recorded as what it is, not
+        promoted to complete
+    text:
+      type: string
+      required: true
+      description: >-
+        real response text as received. Not truncated at this layer — the artifacts/chat_log rows
+        keep their own existing caps, but the node is the full record, which is the whole point of
+        having it
+    chars:
+      type: number
+      required: true
+      description: real text.length — recorded so a reader can detect a truncated copy elsewhere without comparing bodies
+    contentHash:
+      type: string
+      required: true
+      description: real sha256 of text — the identity of this response, and what makes a re-delivery detectable as the same answer rather than a second one
+    source:
+      type: string
+      required: true
+      description: >-
+        real origin of this delivery — 'ncp' (the normal completion path), 'api' (POST
+        /response/:jobId), or 'synthesized' (reconstructed from a surviving sink because the primary
+        path never reached the return point). Never blank: an unlabelled response is an unattributable one
+    sinks:
+      type: object
+      required: true
+      description: >-
+        real per-sink delivery result for this response — { node, ledger, downloads, sse } each
+        {ok, detail}. This is the honesty record: a sink that failed is recorded as failed here, on
+        the node itself, rather than the failure vanishing into a console warning
+    synthesizedFrom:
+      type: string
+      required: false
+      description: >-
+        real name of the sink this record was reconstructed from ('ledger'|'artifacts'|'intake'|'node')
+        when source is 'synthesized'; absent otherwise. A synthesized response must always be able to
+        say where it came from
+    prompt:
+      type: string
+      required: false
+      description: real originating prompt, when the job record still carried one — absent, not fabricated, when the job is gone
+    command:
+      type: string
+      required: false
+      description: real guardian command this job was dispatched under
+    chatUrl:
+      type: string
+      required: false
+      description: real chat URL the response was captured from — provider-tab paths only
+    ts:
+      type: number
+      required: false
+      description: real timestamp of delivery

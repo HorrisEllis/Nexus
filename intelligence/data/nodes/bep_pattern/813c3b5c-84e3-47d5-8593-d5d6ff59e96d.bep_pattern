@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-813c3b5c-84e3-47d5-8593-d5d6ff59e96d
+type: bep_pattern
+id: 813c3b5c-84e3-47d5-8593-d5d6ff59e96d
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.copilot.updated" precedes failures 33 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266423
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266423
+lastSeenAt: 1790368266423
+fingerprint: null
+payload:
+  uuid: 813c3b5c-84e3-47d5-8593-d5d6ff59e96d
+  signature: precursor::ledger.copilot.updated
+  patternType: failure_precursor
+  precursorType: ledger.copilot.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 33
+  confidence: 1
+  description: '"ledger.copilot.updated" precedes failures 33 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

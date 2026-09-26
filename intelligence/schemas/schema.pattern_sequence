@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-schema-pattern_sequence
+type: schema
+id: pattern_sequence
+context: >-
+  intelligence/schemas — sovereign local copy. Origin: lib/node-schemas/schema.pattern_sequence
+  (shared canonical version, may have moved on independently since this copy was made — sovereignty
+  means intelligence does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789822000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/mastermind.js's detectRecurringPatterns() — upserts bep_patterns keyed on
+    'sequence', not 'uuid'. Checked directly, not assumed: this real write site never assigns a
+    uuid at all, and carries none of schema.bep_pattern's fields (no typeA/typeB/crossSystem/count/
+    confidence/description/actionable/crystallised/noiseTainted) — a genuinely different real shape
+    sharing only the bep_patterns table name with the co-occurrence/meta_noise_source shapes, not the
+    same kind of variation those two are of each other. Kept as its own type rather than folded into
+    schema.bep_pattern's required-relaxation, because unlike those two (same module, same real
+    pipeline), forcing this one in would leave schema.bep_pattern with almost nothing actually
+    required — a schema that validates everything validates nothing (§16.3, invariants are sacred).
+  fields:
+    sequence:
+      type: string
+      required: true
+      description: real event-type chain this pattern represents, e.g. "a → b → c" — the upsert key field itself, this row's real identity
+    occurrenceCount:
+      type: number
+      required: false
+      description: real observed count of this sequence recurring
+    chainLength:
+      type: number
+      required: false
+      description: real length of the sequence chain
+    selfSimilarity:
+      type: number
+      required: false
+      description: real 0..1 self-similarity score for this sequence, when computed
+    crystallisedAt:
+      type: number
+      required: true
+      description: real epoch ms this row was last written — this shape's equivalent of schema.bep_pattern's `ts`, named differently at the real construction site, not unified here either
+    source:
+      type: string
+      required: true
+      description: real writing module id

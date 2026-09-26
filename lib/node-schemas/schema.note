@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-schema-note
+type: schema
+id: note
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789200000700
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Found while mapping intelligence and re-checking for a missed type after being asked directly.
+    Doubly grounded, not a guess: intelligence/schemas.js's own real agent_notes JAA table
+    ({uuid, agent, body, kind, source, relatesTo, createdAt, updatedAt, supersedes}), and
+    lib/agent-tools/tools/coordination/agent-notes.js's real 'agent_notes' tool, same field set,
+    independently. This is a genuinely missed 33rd type from the earlier passes — none of the 32
+    covers an agent-authored, editable, supersedable note about another real thing (an agent, a
+    tool, a constraint). Also the real target of copilot's own 'note' intent (see schema.intent),
+    which dispatches to cortex's push-recall mechanism — not fully verified as the identical shape,
+    flagged rather than assumed.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real note id
+    agent:
+      type: string
+      required: true
+      description: real, which agent this note is about or was authored by
+    body:
+      type: string
+      required: true
+      description: real, specific note text — a lesson, workaround, or constraint, not a vague comment
+    kind:
+      type: string
+      required: true
+      description: real enum — 'token-limit' | 'workaround' | 'constraint' | 'persistence' | 'other'
+    source:
+      type: string
+      required: false
+      description: real, who/what discovered this
+    relatesTo:
+      type: string
+      required: false
+      description: real, a file/component/tool this note concerns
+    supersedes:
+      type: string
+      required: false
+      description: real, uuid of an older note this one corrects — notes are editable/supersedable, not append-only-blind
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp
+    updatedAt:
+      type: number
+      required: false
+      description: real last-update timestamp

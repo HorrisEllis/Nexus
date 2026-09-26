@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-ollama.models.list
+type: capability
+id: ollama.models.list
+context: ollama/registry-components.js real capability export
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789250730190
+source: ollama.registry-components:ollama.models.list
+payload:
+  id: ollama.models.list
+  namespace: ollama
+  name: models.list
+  version: 1.0.0
+  grammar:
+    - ollama models
+    - om
+  route:
+    method: GET
+    path: /api/models
+  intent: []
+  description: Available local models
+  params: []
+  tags:
+    - ollama
+  permissions:
+    - system
+  hooks: {}

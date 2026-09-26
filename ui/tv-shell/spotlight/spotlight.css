@@ -1,0 +1,109 @@
+/* ── Co-pilot spotlight system ───────────────────────────────────────────────
+   Variable-based: co-pilot sets CSS vars, never changes themes or colors.
+   --cp-tension:     0-1  live CFR sigma, drives the "felt" field on tiles
+   --cp-focus:       hex  color of the spotlight ring (default cyan)
+   --cp-focus-alpha: 0-1  intensity of spotlight (default 0.8)
+   Teaching light: .copilot-spotlight pulses around a target element.
+   Co-pilot sets it, UI removes it after the user acts on it.
+   ─────────────────────────────────────────────────────────────────────── */
+:root{
+  /* Co-pilot runtime vars */
+  --cp-tension:0;
+  --cp-focus-alpha:0.8;
+
+  /* Accent RGB components — animated by @keyframes accent-cycle */
+  /* Primary accent (cyan → violet → cyan) — slow, 8s loop */
+  --ac-h:192;          /* hue: 192=cyan, cycles slowly */
+  --ac-s:100%;
+  --ac-l:56%;
+  /* Derived accent — used everywhere var(--ac) was hardcoded */
+  --ac:hsl(var(--ac-h),var(--ac-s),var(--ac-l));
+  --ac-dim:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.18);
+  --ac-ghost:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.07);
+  --ac-border:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.22);
+  --ac-border-hi:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.4);
+  /* Co-pilot spotlight derives from animated accent */
+  --cp-focus:hsl(var(--ac-h),var(--ac-s),var(--ac-l));
+  /* Online green and error red — stable, never animate */
+  --ok:#00ff88;
+  --ok-dim:rgba(0,255,136,.12);
+  --ac-rgb:0,212,255;
+  --ok-border:rgba(0,255,136,.25);
+  --err:#ff3355;
+  --err-dim:rgba(255,51,85,.12);
+}
+
+/* Accent hue cycle — slow RGB drift, 8s, subtle range (192→240→192)
+   Only hue moves. Saturation and lightness stay fixed.
+   Result: cyan ↔ blue-violet, never jarring, always legible.
+   Applied to :root so every var(--ac) consumer animates for free. */
+@keyframes accent-cycle{
+  0%   {--ac-h:192}   /* cyan       #00e5ff */
+  25%  {--ac-h:210}   /* sky-blue   #0099ff */
+  50%  {--ac-h:240}   /* blue-violet #4466ff */
+  75%  {--ac-h:210}   /* sky-blue */
+  100% {--ac-h:192}   /* back to cyan */
+}
+/* @property required for hue interpolation in Chromium */
+@property --ac-h{syntax:'<number>';inherits:true;initial-value:192}
+:root{animation:accent-cycle 8s ease-in-out infinite}
+
+/* Spotlight ring — teaching light, not theme change */
+@keyframes cp-pulse{
+  0%  {box-shadow:0 0 0 2px hsla(var(--ac-h),var(--ac-s),var(--ac-l),var(--cp-focus-alpha)),0 0 16px var(--ac-border-hi)}
+  50% {box-shadow:0 0 0 4px hsla(var(--ac-h),var(--ac-s),var(--ac-l),calc(var(--cp-focus-alpha)*.6)),0 0 32px hsla(var(--ac-h),var(--ac-s),var(--ac-l),.5)}
+  100%{box-shadow:0 0 0 2px hsla(var(--ac-h),var(--ac-s),var(--ac-l),var(--cp-focus-alpha)),0 0 16px var(--ac-border-hi)}
+}
+.copilot-spotlight{
+  animation:cp-pulse 1.4s ease-in-out infinite!important;
+  outline:none!important;
+  position:relative;z-index:10;
+}
+/* Step badge — numbered guide marker */
+.cp-step-badge{
+  position:absolute;top:-8px;right:-8px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--ac);color:#000;
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  z-index:100;pointer-events:none;
+  box-shadow:0 0 12px hsla(var(--ac-h),var(--ac-s),var(--ac-l),.5);
+}
+
+/* Tension field — co-pilot writes --cp-tension per tile via inline style
+   Tiles absorb system health as a felt field, not a color change */
+.sys-tile{transition:all .3s,box-shadow .8s ease}
+.sys-tile[style*="--cp-tension"]{
+  box-shadow:0 0 calc(var(--cp-tension,0)*40px) rgba(255,calc(170-var(--cp-tension,0)*170),calc(var(--cp-tension,0)*85),calc(var(--cp-tension,0)*.25)) inset;
+}
+
+/* Guided steps panel — appears above assistant bar */
+#cp-guide{
+  display:none;
+  padding:8px 12px;
+  background:rgba(0,8,20,.9);
+  border-top:1px solid var(--ac-border);
+  font-family:'Space Mono',monospace;font-size:10px;color:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.85);
+}
+#cp-guide.open{display:block}
+.cp-guide-step{
+  display:flex;align-items:flex-start;gap:8px;padding:4px 0;
+  opacity:.4;transition:opacity .3s;
+}
+.cp-guide-step.active{opacity:1}
+.cp-guide-step.done{opacity:.25;text-decoration:line-through}
+.cp-step-num{
+  flex-shrink:0;width:16px;height:16px;border-radius:50%;
+  background:var(--ac-border);border:1px solid var(--ac-border-hi);
+  display:flex;align-items:center;justify-content:center;font-size:9px;
+}
+.cp-guide-step.active .cp-step-num{background:var(--ac);color:#000;border-color:var(--ac)}
+#tile-forge{border-color:var(--ac-dim)}
+#tile-forge:hover{border-color:var(--ac-border-hi)}
+#tile-agent{border-color:rgba(167,139,250,.1)}
+#tile-agent:hover{border-color:rgba(167,139,250,.3)}
+#tile-blueprint{border-color:rgba(83,74,183,.15)}
+#tile-blueprint:hover{border-color:rgba(83,74,183,.4)}
+
+/* CH2: Guardian */
+#ch-guardian.active{display:flex;flex-direction:column;padding:60px 70px 110px;gap:16px;overflow:hidden}

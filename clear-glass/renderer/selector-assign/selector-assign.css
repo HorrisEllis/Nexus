@@ -1,0 +1,48 @@
+/* clear-glass/renderer/selector-assign/selector-assign.css — v0.39.251
+   The selector-assign area only; every rule is under #cg-selector-assign.
+   Uses browser.css's tokens (--bg-1, --border, --accent, --mono, …). */
+#cg-selector-assign {
+  position: absolute;
+  bottom: 12px; left: 12px;
+  width: 360px; max-width: calc(100% - var(--copilot-w) - 24px);
+  max-height: 60vh; overflow: auto;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  padding: 8px 10px 10px;
+  z-index: 70;
+  font-size: 11px; color: var(--text);
+}
+#cg-selector-assign .sa-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+#cg-selector-assign .sa-title { font-weight: 600; color: var(--sa-provider, var(--accent)); letter-spacing: .02em; }
+#cg-selector-assign .sa-close { background: none; border: 0; color: var(--text-dim); cursor: pointer; font-size: 12px; }
+#cg-selector-assign .sa-close:hover { color: var(--text-bright); }
+#cg-selector-assign .sa-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+#cg-selector-assign .sa-q { color: var(--text-dim); }
+#cg-selector-assign .sa-key,
+#cg-selector-assign .sa-btn {
+  background: var(--glass); border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text); font-family: var(--mono); font-size: 10px; padding: 4px 8px; cursor: pointer;
+}
+#cg-selector-assign .sa-key:hover,
+#cg-selector-assign .sa-btn:hover { border-color: var(--accent); color: var(--text-bright); }
+#cg-selector-assign .sa-primary { border-color: var(--accent); color: var(--accent); }
+#cg-selector-assign .sa-sel { display: flex; gap: 6px; align-items: baseline; margin: 4px 0; }
+#cg-selector-assign .sa-k { color: var(--text-dim); min-width: 64px; }
+#cg-selector-assign code { font-family: var(--mono); font-size: 10px; color: var(--accent); word-break: break-all; }
+#cg-selector-assign .sa-ok { color: var(--green); margin: 4px 0; }
+#cg-selector-assign .sa-bad { color: var(--red); margin: 4px 0; }
+#cg-selector-assign .sa-warn { color: #ffb86c; margin: 4px 0; line-height: 1.4; }
+#cg-selector-assign .sa-note { color: var(--text-dim); }
+#cg-selector-assign .sa-dim { color: var(--text-dim); font-size: 10px; }
+#cg-selector-assign .sa-preview {
+  margin: 4px 0; padding: 6px; border-radius: 4px; background: var(--bg-2);
+  color: var(--text); font-size: 10px; max-height: 64px; overflow: hidden; white-space: pre-wrap;
+}
+#cg-selector-assign .sa-alts { display: flex; flex-direction: column; gap: 3px; margin: 4px 0; }
+#cg-selector-assign .sa-alt { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+#cg-selector-assign .sa-tried ul { margin: 4px 0 0 14px; padding: 0; }
+#cg-selector-assign .sa-tried li { color: var(--text-dim); margin: 2px 0; }
+#cg-selector-assign .sa-tried summary { color: var(--text-dim); cursor: pointer; }
+#cg-selector-assign .sa-actions { display: flex; gap: 6px; margin-top: 8px; }

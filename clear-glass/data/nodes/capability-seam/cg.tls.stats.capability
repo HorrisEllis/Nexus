@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-cg.tls.stats
+type: capability
+id: cg.tls.stats
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251076038
+source: clear-glass.seam.registry-components:cg.tls.stats
+payload:
+  id: cg.tls.stats
+  namespace: cg
+  name: tls.stats
+  version: 3.0.0
+  grammar:
+    - tls stats
+    - tls-stats
+  route:
+    method: GET
+    path: /status
+  intent: []
+  description: TLS proxy — JA4 rewrite stats, tunnels, errors
+  params: []
+  tags:
+    - cg
+    - tls
+  permissions:
+    - system
+  hooks: {}

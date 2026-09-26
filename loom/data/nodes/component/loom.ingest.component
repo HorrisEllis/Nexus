@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-loom.ingest
+type: component
+id: loom.ingest
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789275153085
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153085
+lastSeenAt: 1789275153085
+fingerprint: loom::POST /api/ingest
+payload:
+  id: loom.ingest
+  uuid: 4020ca0e-c300-41d8-9ce0-b4c672946ee2
+  namespace: loom
+  name: ingest
+  version: 1.5.0

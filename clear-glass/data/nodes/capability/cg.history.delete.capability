@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.history.delete
+type: capability
+id: cg.history.delete
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730169
+source: clear-glass.registry-components:cg.history.delete
+payload:
+  id: cg.history.delete
+  namespace: cg
+  name: history.delete
+  version: 3.1.0
+  grammar:
+    - history delete
+  route:
+    method: IPC
+    path: history:delete
+  intent: []
+  description: Delete a real history entry
+  params: []
+  tags:
+    - cg
+    - history
+  permissions:
+    - system
+  hooks: {}

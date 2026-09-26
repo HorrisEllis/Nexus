@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-schema-health
+type: schema
+id: health
+context: >-
+  ollama/schemas — sovereign local copy. Origin: lib/node-schemas/schema.health (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means ollama does
+  not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789235656522
+source: nexus.lib.node-export
+payload:
+  renamed: >-
+    Was type `agent` until 2026-09-20. Renamed to `health` because `.agent` is for agent
+    models and personalities (an intent and commands); this is a provider health snapshot.
+  status: REAL
+  source: cortex/core/raid/index.js — _agentAvailable()'s real per-agent health snapshot fields
+  fields:
+    dispatchName:
+      type: string
+      required: true
+      description: real provider/hat dispatch name
+    online:
+      type: boolean
+      required: true
+      description: real live reachability
+    consecutiveFails:
+      type: number
+      required: false
+      description: real streak, gates availability at >=3 (or 1 under CFR stress)
+    callCount:
+      type: number
+      required: false
+      description: real total calls, used to gate successRate at >=5
+    successRate:
+      type: number
+      required: false
+      description: real 0-1 rate, refuses dispatch below 0.2 once callCount>=5
+    role:
+      type: string
+      required: false
+      description: real role tag — dispatch refused if 'violated'

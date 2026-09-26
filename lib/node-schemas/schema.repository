@@ -1,0 +1,91 @@
+envelope: 1
+uuid: nexus-export-schema-repository
+type: schema
+id: repository
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789430000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Grounded in two real construction sites, read directly: idearium/repo/index.js's real repo
+    record (RepoLayer.get()/this.repos.repos, fields uuid/name/specUuid/rootHash/parent/forks/
+    source/phase) and idearium/repo/import-pipeline.js's real runImportPipeline() return shape
+    (state/parse/atlas/chunks/verification/indexes). Not the full nexus-repository-system.spec §4
+    schema (that spec's repository_schema_fields also lists symbols, components, hooks, wires,
+    contracts, flows, tests, entrypoints, dependencies, artifacts — none of those exist as real,
+    constructed data anywhere in this codebase yet; inventing fields for them here would be exactly
+    the kind of fabrication this schema registry's own convention forbids). This node is a POINTER,
+    same discipline as `.chunk`'s relationship to its .md artifact: it carries counts and the real
+    on-disk paths of atlas.json/indexes/*.json/chunks/verification.json, not copies of their content.
+    Written by idearium/repo/repo-node.js's writeRepositoryNode(), called from repo/index.js right
+    after a successful runImportPipeline() — same place chunk nodes are already triggered from.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real repo uuid (idearium-repo-<8char>) — the id this node is filed under, same value RepoLayer.get()/materialize() key on
+    name:
+      type: string
+      required: true
+      description: real repo display name, set at ingest() time
+    specUuid:
+      type: string
+      required: true
+      description: real owning spec-engine manifest uuid — the repo's content lives there; this node is the repo-layer identity wrapped around it
+    rootHash:
+      type: string
+      required: false
+      description: real content-identity hash RepoLayer's own dedup check uses (same specUuid + same rootHash = same repo, per that module's header)
+    parent:
+      type: string
+      required: false
+      description: real parent repo uuid when this repo was created via fork(); null for a repo ingested directly
+    state:
+      type: string
+      required: true
+      description: real runImportPipeline() terminal state for the run this node reflects — READY or FAULT (the pipeline's own §42 state machine value, not a second vocabulary)
+    sourceHash:
+      type: string
+      required: false
+      description: real sha256 of the repo's materialized file set as of this pipeline run — changes iff any file's content changed, cheap staleness check without re-reading atlas/indexes
+    fileCount:
+      type: number
+      required: true
+      description: real count from the pipeline's atlas summary
+    byLanguage:
+      type: object
+      required: false
+      description: "real { language: count } map from atlas.json, copied through (small, genuinely summary-shaped — not the same discipline violation as copying chunk content would be)"
+    failedCount:
+      type: number
+      required: false
+      description: real count of files whose parse.status was 'failed' this run (spec §10 — these stay observable, just unchunked)
+    chunkCount:
+      type: number
+      required: false
+      description: real total chunk count from this run, from chunks.count
+    symbolCount:
+      type: number
+      required: false
+      description: real total symbol count from this run, from indexes.symbolCount
+    verificationStatus:
+      type: string
+      required: false
+      description: real verify() outcome this run — 'passed' or 'partial', per import-pipeline.js's own tiers array
+    verificationLevel:
+      type: string
+      required: false
+      description: real highest verification tier level actually reached this run (L0-L3 today — see import-pipeline.js's §HONEST SCOPE header for why not higher)
+    paths:
+      type: object
+      required: true
+      description: real on-disk paths this run wrote — { atlas, chunks, indexes, verification } — the pointers an agent actually needs to go read one of them without guessing the layout
+    generatedAt:
+      type: number
+      required: true
+      description: real timestamp of the pipeline run this node reflects — moves every re-materialize, same as the files it points at

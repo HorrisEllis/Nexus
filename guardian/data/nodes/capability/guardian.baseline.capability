@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.baseline
+type: capability
+id: guardian.baseline
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730128
+source: guardian.registry-components:guardian.baseline
+payload:
+  id: guardian.baseline
+  namespace: guardian
+  name: baseline
+  version: 3.6.2
+  grammar:
+    - baseline
+    - baseline
+  route:
+    method: GET
+    path: /baseline
+  intent: []
+  description: Friction + sigma baseline
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

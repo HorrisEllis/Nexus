@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-739b57e9-e29a-43f3-870d-fb22f65ddb6d
+type: bep_pattern
+id: 739b57e9-e29a-43f3-870d-fb22f65ddb6d
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"adversarial.run.complete" and "ledger.copilot.event" co-occur within 5s — 493 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790368216493
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368216493
+lastSeenAt: 1790368216493
+fingerprint: null
+payload:
+  uuid: 739b57e9-e29a-43f3-870d-fb22f65ddb6d
+  signature: adversarial.run.complete::ledger.copilot.event
+  patternType: co_occurrence
+  typeA: adversarial.run.complete
+  typeB: ledger.copilot.event
+  systemA: copilot
+  systemB: copilot
+  crossSystem: false
+  count: 493
+  confidence: 1
+  description: '"adversarial.run.complete" and "ledger.copilot.event" co-occur within 5s — 493 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790368216317

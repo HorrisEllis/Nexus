@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-schema-intent
+type: schema
+id: intent
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789200000600
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Promoted from OPEN this pass — real grounding found while mapping copilot: hooks/copilot.hooks.js's
+    own copilot-prompt hook declares seam.intentId: "ask|build|diagnose|navigate|note|tool|action", a
+    fixed, real 7-value enum, and copilot/intents.js implements real dispatch for each
+    (classifyIntent(), route(), handleNavigate/handleNote/handleTool/handleAction). Cross-checked
+    against two other independent real sites using the same concept: guardian/registry-components.js's
+    job.dispatch capability (hooks.in[].intent:['build','ask','forge','compile']) and
+    guardian/lib/jobs.js's intentHatRouter.suggestHat(). §HONEST SHAPE NOTE — every real site above
+    implements intent as a classification key (a string from a fixed vocabulary) plus dispatch
+    functions, not as a per-intent data record anyone writes to a file. A .intent node therefore
+    describes one entry in a real vocabulary (what it is, what it dispatches to) rather than being
+    the executable classifier itself — same relationship schema.tool has to a tool's own `execute`.
+  fields:
+    name:
+      type: string
+      required: true
+      description: real intent id from a system's own fixed vocabulary, e.g. 'ask', 'build', 'navigate' (copilot) or 'code' (guardian)
+    description:
+      type: string
+      required: true
+      description: real, human-readable description of what this intent covers
+    system:
+      type: string
+      required: true
+      description: real owning system whose vocabulary this intent belongs to, e.g. 'copilot', 'guardian' — intent vocabularies are real but per-system, not unified
+    dispatchesTo:
+      type: string
+      required: false
+      description: real handler/route this intent's classification leads to, e.g. copilot's handleNavigate, guardian's hat suggestion path
+    command:
+      type: string
+      required: false
+      description: real associated .command, when this intent maps to one guardian-style (e.g. job.dispatch's own command field)
+    defaultModel:
+      type: string
+      required: false
+      description: optional default model for this intent, when the owning system's dispatch sets one
+    timeoutMs:
+      type: number
+      required: false
+      description: optional per-intent deadline, when the owning system declares one

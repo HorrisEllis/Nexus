@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-capability-architect.hook.wire
+type: capability
+id: architect.hook.wire
+context: architect/registry-components.js real capability export
+intent: null
+summary: null
+system: architect
+tags: []
+exported_at: 1789250730058
+source: architect.registry-components:architect.hook.wire
+payload:
+  id: architect.hook.wire
+  namespace: architect
+  name: hook.wire
+  version: 1.0.0
+  grammar:
+    - hook wire
+  route:
+    method: POST
+    path: /api/hooks/wire
+  intent:
+    - wire
+    - connect
+    - bind
+  description: Wire two hooks together
+  params: []
+  tags:
+    - architect
+    - wires
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: architect.hook.wire.receive
+        intent:
+          - wire
+          - connect
+          - bind
+        tags:
+          - wires
+    out:
+      - id: architect.hook.wire.complete
+        wires_to:
+          - cortex.cfr.graph
+        tags:
+          - wires

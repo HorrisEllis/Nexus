@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-cg.health
+type: capability
+id: cg.health
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730156
+source: clear-glass.registry-components:cg.health
+payload:
+  id: cg.health
+  namespace: cg
+  name: health
+  version: 3.1.0
+  grammar:
+    - health
+  route:
+    method: GET
+    path: /health
+  intent: []
+  description: Clear Glass health, context count, bus stats
+  params: []
+  tags:
+    - cg
+  permissions:
+    - system
+  hooks: {}

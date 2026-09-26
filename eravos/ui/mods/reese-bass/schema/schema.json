@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.reese-bass",
+  "label": "Reese Bass",
+  "icon": "\ud83d\udd08",
+  "accent": "#ff2266",
+  "domain": [
+    "music",
+    "synthesis",
+    "bass",
+    "dnb"
+  ],
+  "description": "Two detuned sawtooth oscillators through sweeping lowpass. Sub octave oscillator.",
+  "permissions": [
+    "audio_out",
+    "bus_publish",
+    "bus_subscribe"
+  ],
+  "provides": [
+    "capability.audio_out"
+  ],
+  "requires": [
+    "capability.audio_context"
+  ],
+  "hooks": [
+    {
+      "hook_id": "reese.hook.trig_in",
+      "direction": "in",
+      "event_type": "pad:trigger",
+      "contract_version": "1.0.0"
+    },
+    {
+      "hook_id": "reese.hook.audio_out",
+      "direction": "out",
+      "event_type": "audio:signal",
+      "contract_version": "1.0.0"
+    }
+  ],
+  "params": {
+    "pitch": {
+      "type": "float",
+      "min": 20,
+      "max": 220,
+      "default": 55,
+      "unit": "Hz"
+    },
+    "detune": {
+      "type": "float",
+      "min": 0,
+      "max": 50,
+      "default": 10,
+      "unit": "cents"
+    },
+    "cutoff": {
+      "type": "float",
+      "min": 50,
+      "max": 4000,
+      "default": 400,
+      "unit": "Hz"
+    },
+    "sweep": {
+      "type": "float",
+      "min": 0.1,
+      "max": 4,
+      "default": 0.9,
+      "unit": "seconds"
+    },
+    "gain": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.85,
+      "unit": ""
+    },
+    "sub": {
+      "type": "bool",
+      "default": true
+    }
+  },
+  "ui": {
+    "type": "dual_osc_scope",
+    "detuning_visual": true
+  }
+}

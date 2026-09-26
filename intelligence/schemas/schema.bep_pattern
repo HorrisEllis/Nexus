@@ -1,0 +1,105 @@
+envelope: 1
+uuid: nexus-export-schema-bep_pattern
+type: schema
+id: bep_pattern
+context: intelligence/schemas — intelligence-local schema registry
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789200001400
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/schemas.js's own real bep_patterns JAA table — a crystallised or candidate
+    behavioral pattern, the real output of pattern crystallisation. A second, real, independently-
+    documented pattern shape alongside the shared central .pat (lib/case-library.js's
+    pattern_signature) — not unified, same fragmentation class as guardian's ledger/gap findings.
+
+    §TWO REAL SUB-SHAPES, BOTH FROM intelligence/index.js (2026-09-19) — checked directly, not
+    assumed: the co-occurrence/cross_system_causal scan (typeA/typeB/crossSystem/count/confidence/
+    noiseTainted all real and present) and the separate meta-noise-source scan (subjectType/share/
+    pairCount instead — no typeA/typeB/crossSystem/count/confidence/noiseTainted at all). Fields
+    unique to the co-occurrence shape are relaxed to optional rather than split into a second type —
+    both come from the same module's own real pattern-crystallisation pipeline, unlike mastermind.js's
+    genuinely separate sequence-pattern shape (see schema.pattern_sequence, kept as its own type).
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real row id
+    signature:
+      type: string
+      required: true
+      description: real pair/sequence this pattern represents
+    patternType:
+      type: string
+      required: true
+      description: >-
+        'cross_system_causal' | 'co_occurrence' | 'meta_noise_source' | others per scan type (see
+        intelligence/index.js's real scan functions)
+    typeA:
+      type: string
+      required: false
+      description: real event type — co-occurrence/cross_system_causal shape only, absent on meta_noise_source rows
+    typeB:
+      type: string
+      required: false
+      description: real event type — co-occurrence/cross_system_causal shape only, absent on meta_noise_source rows
+    systemA:
+      type: string
+      required: false
+      description: real originating system, null if not applicable
+    systemB:
+      type: string
+      required: false
+      description: real originating system, null if not applicable
+    crossSystem:
+      type: boolean
+      required: false
+      description: real flag for whether typeA/typeB span two different systems — co-occurrence shape only
+    count:
+      type: number
+      required: false
+      description: real, observed occurrence count — co-occurrence shape only
+    confidence:
+      type: number
+      required: false
+      description: real 0..1, count-derived, not independently modeled — co-occurrence shape only
+    description:
+      type: string
+      required: true
+      description: real, human-readable summary, generated at write time
+    actionable:
+      type: boolean
+      required: true
+      description: real flag
+    crystallised:
+      type: boolean
+      required: true
+      description: real flag — crosses the real threshold for this pattern type
+    noiseTainted:
+      type: boolean
+      required: false
+      description: real suppression flag, set when a pattern is statistically noise, not signal — co-occurrence shape only
+    subjectType:
+      type: string
+      required: false
+      description: real event type this noise-source pattern is about — meta_noise_source shape only
+    share:
+      type: number
+      required: false
+      description: real 0..1 share of all co-occurrence patterns this subject appears in — meta_noise_source shape only
+    pairCount:
+      type: number
+      required: false
+      description: real count of pairs this noise source appears in — meta_noise_source shape only
+    source:
+      type: string
+      required: true
+      description: real writing module id
+    ts:
+      type: number
+      required: true
+      description: real epoch ms

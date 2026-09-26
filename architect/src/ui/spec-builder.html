@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SPEC BUILDER · ARCHITECT</title>
+<!-- §BUILT 2026-09-21 — idearium's own real font import, from
+     idearium/ui/index.html directly, not guessed. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* §BUILT 2026-09-21 — James: "the spec builder html rebuild for
+   ideariums theme." Root tokens rebuilt from idearium/ui/index.html's
+   own real :root block, every value traced there — nothing invented.
+   HONEST LIMIT, named not implied fixed: idearium's palette has 6 named
+   accents (sky/mint/amber/coral/violet/rose); this file's z-layer band
+   colors (L0–L7, ~line 489) and several node-type/edge/chip colors are
+   hardcoded hex OUTSIDE this block — in CSS rules and in JS data — used
+   to keep 8+ distinct hues apart. Remapping all of those without a live
+   browser to actually look at the result (this sandbox has none) risks
+   getting the visual distinctness subtly wrong in a way nothing here
+   can catch. Left as-is, not touched, rather than guessed at. */
+:root{
+  --bg:#07090e;--bg1:#0b0f18;--bg2:#0f1520;--bg3:#141c2e;--bg4:#1a2440;
+  --border:rgba(56,189,248,.14);--border2:rgba(56,189,248,.28);--border3:rgba(56,189,248,.4);
+  --c:#38bdf8;--c2:#7dd3fc;--g:#34d399;--g2:#2bb583;
+  --r:#f87171;--y:#fbbf24;--o:#fbbf24;--m:#a78bfa;
+  --text:#c4d4ee;--text2:#607898;--text3:#334560;--text4:#22304a;
+  --mono:'IBM Plex Mono',monospace;--display:'IBM Plex Mono',monospace;--body:'IBM Plex Sans',sans-serif;
+  --rad:3px;--tf:.15s;
+  /* node colors by type — dark tints derived from idearium's OWN real
+     accents at low opacity, the same technique idearium's own --b0/
+     --b1/--b2 use to derive tints from --sky. Bright borders are
+     idearium's real named accents directly, not invented hues. */
+  --nl:rgba(167,139,250,.08);--nb:#a78bfa;
+  --ng:rgba(56,189,248,.08);--ngb:#38bdf8;
+  --nn:rgba(52,211,153,.08);--nnb:#34d399;
+  --nc:rgba(251,191,36,.08);--ncb:#fbbf24;
+  --ns:#0f1520;--nsb:#334560;
+  /* z-layer tint multiplier — applied via js */
+  --conf-green:#34d399;--conf-amber:#fbbf24;--conf-red:#f87171;--conf-black:#334560;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);
+  font-family:var(--mono);font-size:12px;line-height:1.5}
+::selection{background:rgba(0,212,255,.2);color:var(--c)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border3);border-radius:2px}
+#scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px)}
+#app{position:relative;z-index:10;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* ── topbar ── */
+#topbar{flex-shrink:0;display:flex;align-items:center;height:40px;gap:0;
+  background:rgba(8,13,23,.98);border-bottom:1px solid var(--border2);padding:0 10px;z-index:100}
+.tlogo{font-family:var(--display);font-size:15px;letter-spacing:.2em;color:var(--c);
+  text-shadow:0 0 18px rgba(0,212,255,.35);white-space:nowrap;padding-right:10px}
+.tsep{width:1px;height:18px;background:var(--border2);margin:0 7px;flex-shrink:0}
+.tname{background:transparent;border:none;border-bottom:1px solid var(--border);
+  color:var(--text);font:500 11px var(--mono);padding:2px 5px;width:130px;outline:none;transition:border-color var(--tf)}
+.tname:focus{border-color:var(--c)}
+#pal{display:flex;gap:4px;align-items:center}
+.chip{padding:2px 8px;border-radius:2px;font-size:10px;cursor:grab;user-select:none;
+  border:1px solid;letter-spacing:.05em;transition:opacity var(--tf);white-space:nowrap}
+.chip:hover{opacity:.7}
+.chip[data-type=layer]  {background:rgba(83,74,183,.15);border-color:#534ab7;color:#9b8fff}
+.chip[data-type=gate]   {background:rgba(26,106,255,.12);border-color:#1a6aff;color:#6699ff;border-style:dashed}
+.chip[data-type=node]   {background:rgba(0,204,102,.1);border-color:#00cc66;color:#00ff88}
+.chip[data-type=check]  {background:rgba(255,122,0,.1);border-color:#ff7a00;color:#ffaa44}
+.chip[data-type=surface]{background:rgba(51,68,102,.15);border-color:#334466;color:#5a7a96}
+.sp{flex:1}
+.tbtn{height:25px;padding:0 9px;border-radius:2px;border:1px solid var(--border2);
+  background:transparent;color:var(--text2);cursor:pointer;font:400 10px var(--mono);
+  letter-spacing:.07em;white-space:nowrap;transition:all var(--tf)}
+.tbtn:hover{border-color:var(--c);color:var(--c)}
+.tbtn.p{border-color:rgba(0,212,255,.4);color:var(--c);background:rgba(0,212,255,.06)}
+.tbtn.p:hover{background:rgba(0,212,255,.14)}
+.tbtn.g{border-color:rgba(0,255,136,.4);color:var(--g);background:rgba(0,255,136,.05)}
+.tbtn.g:hover{background:rgba(0,255,136,.1)}
+.tbtn.d{border-color:rgba(255,45,85,.3);color:var(--r)}
+.tbtn:disabled{opacity:.3;cursor:default}
+#cstatus{font-size:9px;letter-spacing:.1em;white-space:nowrap;padding-left:6px}
+#cstatus.ok{color:var(--g)}#cstatus.err{color:var(--r)}#cstatus.run{color:var(--c);animation:pls .8s infinite}
+@keyframes pls{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ── body: left panel | canvas | right panel ── */
+#body{flex:1;display:grid;grid-template-columns:230px 1fr 290px;overflow:hidden;min-height:0}
+
+/* ── left panel — spec library / file browser ── */
+#left{display:flex;flex-direction:column;background:var(--bg1);border-right:1px solid var(--border);overflow:hidden;min-height:0}
+#ltabs{display:flex;border-bottom:1px solid var(--border2);background:var(--bg2);flex-shrink:0;height:28px}
+.ltab{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);
+  cursor:pointer;font:400 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:all var(--tf)}
+.ltab:hover{color:var(--text)}.ltab.active{color:var(--c);border-bottom-color:var(--c)}
+#lpanes{flex:1;overflow:hidden;min-height:0;position:relative}
+.lpane{display:none;position:absolute;inset:0;overflow-y:auto;padding:8px}
+.lpane.active{display:block}
+.lpane-hdr{display:flex;align-items:center;gap:5px;margin-bottom:6px}
+.lpane-hdr input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:2px;
+  color:var(--text);font:400 10px var(--mono);padding:3px 6px;outline:none}
+.lpane-hdr input:focus{border-color:var(--c)}
+.fitem{display:flex;align-items:center;gap:5px;padding:4px 6px;border-radius:2px;cursor:pointer;
+  font-size:10px;color:var(--text2);transition:all var(--tf)}
+.fitem:hover{background:var(--bg3);color:var(--text)}
+.fitem.active{background:rgba(0,212,255,.08);color:var(--c)}
+.fitem-icon{font-size:9px;flex-shrink:0;width:12px}
+.fitem-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fitem-badge{font-size:7px;padding:0 4px;border-radius:2px;background:var(--bg3);color:var(--text3)}
+.fsec{font-size:7px;color:var(--text3);text-transform:uppercase;letter-spacing:.14em;
+  padding:8px 6px 3px;opacity:.7}
+.ftree-indent{padding-left:14px}
+/* spec info panel */
+.spec-meta{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:7px 9px;
+  margin-bottom:6px;font-size:9px}
+.spec-meta-name{font-family:var(--display);font-size:14px;letter-spacing:.15em;color:var(--c);margin-bottom:3px}
+.spec-meta-row{display:flex;justify-content:space-between;color:var(--text3);padding:1px 0}
+.spec-meta-row span:last-child{color:var(--text2)}
+
+/* ── canvas ── */
+#cwrap{position:relative;overflow:hidden;background:var(--bg);perspective:1200px}
+/* grid */
+#cwrap::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(26,42,64,.3) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(26,42,64,.3) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0}
+/* z-layer guides — subtle horizontal bands */
+.zlayer-guide{position:absolute;left:0;right:0;pointer-events:none;z-index:1;
+  border-top:1px solid;display:flex;align-items:flex-start;padding-left:6px}
+#cvs{width:100%;height:100%;position:absolute;top:0;left:0;z-index:3;transform-style:preserve-3d}
+#svo{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:4}
+
+/* ── nodes ── */
+.an{position:absolute;border-radius:var(--rad);border:1px solid;padding:8px 12px 10px;
+  cursor:grab;user-select:none;min-width:120px;max-width:220px;z-index:5;
+  transition:box-shadow var(--tf),transform var(--tf);transform-origin:center top}
+.an:hover{box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.an.sel{box-shadow:0 0 0 1px #fff,0 0 14px rgba(255,255,255,.08)}
+.an.layer  {background:var(--nl);border-color:var(--nb)}
+.an.gate   {background:var(--ng);border-color:var(--ngb);border-style:dashed}
+.an.node   {background:var(--nn);border-color:var(--nnb)}
+.an.check  {background:var(--nc);border-color:var(--ncb)}
+.an.surface{background:var(--ns);border-color:var(--nsb)}
+.an.cg{box-shadow:0 0 0 1px var(--conf-green),0 0 8px rgba(0,255,136,.12)}
+.an.ca{box-shadow:0 0 0 1px var(--conf-amber),0 0 8px rgba(255,204,0,.1)}
+.an.cr{box-shadow:0 0 0 1px var(--conf-red),0 0 6px rgba(255,45,85,.1)}
+.an.cb{box-shadow:0 0 0 1px var(--conf-black)}
+.an.sel.cg{box-shadow:0 0 0 2px var(--conf-green),0 0 18px rgba(0,255,136,.2)}
+.an.sel.ca{box-shadow:0 0 0 2px var(--conf-amber),0 0 18px rgba(255,204,0,.15)}
+.an.sel.cr{box-shadow:0 0 0 2px var(--conf-red),0 0 18px rgba(255,45,85,.15)}
+.ndel{position:absolute;top:3px;right:5px;font-size:8px;color:var(--text3);cursor:pointer;line-height:1}
+.ndel:hover{color:var(--r)}
+.nlbl{font-size:11px;font-weight:500;color:var(--text);word-break:break-word;
+  font-family:var(--body);padding-right:12px;outline:none}
+.nsub{font-size:9px;color:var(--text2);margin-top:1px;word-break:break-word;outline:none}
+/* z-depth indicator strip */
+.nz{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:var(--rad) 0 0 var(--rad);opacity:.7}
+.nbw{margin-top:3px}
+.nbadge{display:inline-flex;align-items:center;gap:3px;font-size:7px;
+  font-family:var(--mono);letter-spacing:.07em}
+.nbadge .dot{width:5px;height:5px;border-radius:50%}
+.nbadge.G{color:var(--conf-green)}.nbadge.G .dot{background:var(--conf-green)}
+.nbadge.A{color:var(--conf-amber)}.nbadge.A .dot{background:var(--conf-amber)}
+.nbadge.R{color:var(--conf-red)}  .nbadge.R .dot{background:var(--conf-red)}
+.nbadge.B{color:var(--text3)}     .nbadge.B .dot{background:var(--conf-black)}
+.ntier{font-size:7px;color:var(--c);margin-left:5px}
+.nrdns{font-size:8px;color:var(--text3);margin-top:2px}
+/* handles */
+.nh{width:8px;height:8px;border-radius:50%;border:1px solid;position:absolute;
+  background:var(--bg2);cursor:crosshair;transition:transform var(--tf)}
+.nh:hover{transform:scale(1.7)!important}
+.hin{top:-4px;left:50%;transform:translateX(-50%);border-color:var(--g2)}
+.hout{bottom:-4px;left:50%;transform:translateX(-50%);border-color:var(--c2)}
+.hin:hover {transform:translateX(-50%) scale(1.7)}
+.hout:hover{transform:translateX(-50%) scale(1.7)}
+
+/* ── right panel ── */
+#right{display:flex;flex-direction:column;background:var(--bg1);border-left:1px solid var(--border);overflow:hidden;min-height:0}
+#rtabs{display:flex;align-items:stretch;border-bottom:1px solid var(--border2);background:var(--bg2);flex-shrink:0;height:28px}
+.rtab{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);
+  cursor:pointer;font:400 8px var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:all var(--tf)}
+.rtab:hover{color:var(--text)}.rtab.active{color:var(--c);border-bottom-color:var(--c)}
+#rpanes{flex:1;overflow:hidden;min-height:0;position:relative}
+.rpane{display:none;position:absolute;inset:0;overflow-y:auto;padding:10px}
+.rpane.active{display:block}
+/* props */
+.prow{margin-bottom:6px}
+.plbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.pinp{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:2px;
+  color:var(--text);font:400 11px var(--mono);padding:3px 6px;outline:none;transition:border-color var(--tf)}
+.pinp:focus{border-color:var(--c)}
+select.pinp{cursor:pointer}
+.prow.two{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.prow.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.pnull{font-size:10px;color:var(--text3);text-align:center;margin-top:16px;line-height:1.9}
+.pico{font-family:var(--display);font-size:26px;letter-spacing:.2em;color:var(--text4);display:block;margin-bottom:4px}
+.seclbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;
+  padding-bottom:3px;border-bottom:1px solid var(--border);margin-bottom:5px;margin-top:8px}
+/* z-depth slider */
+.zdepth-wrap{display:flex;align-items:center;gap:6px}
+.zdepth-slider{flex:1;accent-color:var(--c);cursor:pointer;height:3px}
+.zdepth-val{font-family:var(--display);font-size:11px;color:var(--c);letter-spacing:.1em;width:14px}
+/* KG */
+.krow{display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid var(--border);font-size:10px}
+.krow:last-child{border:none}
+.kname{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rbar{height:3px;width:40px;background:var(--bg3);border-radius:1px;overflow:hidden;flex-shrink:0}
+.rfill{height:100%;border-radius:1px}
+.cpip{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+/* gaps */
+.gitem{background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:5px 8px;margin-bottom:4px}
+.git{font-size:7px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1px}
+.gim{font-size:10px;color:var(--text);line-height:1.4}
+.giw{font-size:8px;color:var(--y);margin-top:2px}
+/* plan */
+.pnbox{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.2);border-radius:2px;padding:7px 9px;margin-bottom:7px}
+.pnlbl{font-size:7px;color:var(--c);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px}
+.pnname{font-family:var(--display);font-size:15px;letter-spacing:.14em;color:var(--text)}
+.pnmeta{font-size:8px;color:var(--text2);margin-top:2px}
+.plan-chips{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px}
+.pchip{font-size:8px;padding:1px 6px;border-radius:2px;border:1px solid;font-family:var(--mono)}
+.pchip.run  {border-color:rgba(0,255,136,.4);color:var(--g)}
+.pchip.defer{border-color:rgba(255,204,0,.3);color:var(--y)}
+.pchip.block{border-color:rgba(255,45,85,.3);color:var(--r)}
+.pchip.t0   {border-color:var(--border2);color:var(--text3)}
+.pchip.t1   {border-color:rgba(0,150,255,.3);color:#6699ff}
+.pchip.t2   {border-color:rgba(0,212,255,.3);color:var(--c)}
+/* forge */
+.forge-area{background:var(--bg2);border:1px solid var(--border);border-radius:2px;
+  padding:6px 8px;margin-bottom:6px;font-size:10px}
+.forge-ta{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:2px;
+  color:var(--text);font:400 10px var(--mono);padding:5px 7px;outline:none;resize:vertical;line-height:1.6}
+.forge-ta:focus{border-color:var(--c)}
+.forge-chunk{background:var(--bg2);border:1px solid var(--border);border-radius:2px;
+  padding:5px 8px;margin-bottom:3px;font-size:9px;cursor:pointer;transition:border-color var(--tf)}
+.forge-chunk:hover{border-color:var(--c2)}
+.forge-chunk.active{border-color:var(--c)}
+/* idearium */
+.iinp{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:2px;
+  color:var(--text);font:400 11px var(--mono);padding:3px 6px;outline:none;transition:border-color var(--tf)}
+.iinp:focus{border-color:var(--c)}
+#iout{background:var(--bg3);border:1px solid var(--border);border-radius:2px;padding:7px 9px;
+  font-size:9px;color:var(--text3);white-space:pre-wrap;min-height:40px;margin-top:5px;line-height:1.6}
+#iout.ok{color:var(--g);border-color:rgba(0,255,136,.25)}
+#iout.err{color:var(--r);border-color:rgba(255,45,85,.25)}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 12px;color:var(--text3);font-size:10px;text-align:center;gap:4px}
+.eico{font-family:var(--display);font-size:22px;letter-spacing:.2em;color:var(--text4)}
+
+/* ── bottombar ── */
+#bottombar{flex-shrink:0;display:flex;align-items:center;gap:5px;height:32px;
+  background:rgba(8,13,23,.98);border-top:1px solid var(--border2);padding:0 10px;z-index:100}
+.bbstat{font-size:9px;color:var(--text3);letter-spacing:.07em;display:flex;align-items:center;gap:4px}
+.bval{font-family:var(--display);font-size:11px;letter-spacing:.13em}
+.bval.c{color:var(--c)}.bval.g{color:var(--g)}.bval.r{color:var(--r)}.bval.y{color:var(--y)}
+.bbdot{width:5px;height:5px;border-radius:50%;background:var(--text4)}
+.bbdot.on{background:var(--g);box-shadow:0 0 5px rgba(0,255,136,.5)}
+#bblog{flex:1;font-size:9px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.04em}
+/* z-tilt control */
+.ztilt-wrap{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text3)}
+.ztilt-slider{width:70px;accent-color:var(--m);cursor:pointer}
+</style>
+</head>
+<body>
+<div id="scanline"></div>
+<div id="app">
+
+<!-- ── TOPBAR ── -->
+<div id="topbar">
+  <span class="tlogo">ARCHITECT</span>
+  <div class="tsep"></div>
+  <input class="tname" id="spec-name" type="text" value="my-system" placeholder="spec name">
+  <div class="tsep"></div>
+  <div id="pal">
+    <span class="chip" draggable="true" data-type="layer">layer</span>
+    <span class="chip" draggable="true" data-type="gate">gate</span>
+    <span class="chip" draggable="true" data-type="node">node</span>
+    <span class="chip" draggable="true" data-type="check">check</span>
+    <span class="chip" draggable="true" data-type="surface">surface</span>
+  </div>
+  <div class="tsep"></div>
+  <button class="tbtn" id="btn-connect">connect</button>
+  <button class="tbtn" id="btn-clredges">clear edges</button>
+  <button class="tbtn d" id="btn-del">delete</button>
+  <button class="tbtn" id="btn-clrall">clear all</button>
+  <div class="sp"></div>
+  <button class="tbtn p" id="btn-compile">▶ COMPILE</button>
+  <span id="cstatus">—</span>
+</div>
+
+<!-- ── BODY ── -->
+<div id="body">
+
+  <!-- ── LEFT — spec library / file browser ── -->
+  <div id="left">
+    <div id="ltabs">
+      <button class="ltab active" data-l="library">Library</button>
+      <button class="ltab" data-l="files">Files</button>
+      <button class="ltab" data-l="repo">Repo</button>
+    </div>
+    <div id="lpanes">
+
+      <!-- library -->
+      <div class="lpane active" id="lpane-library">
+        <div class="lpane-hdr">
+          <input id="lib-search" placeholder="search specs…" oninput="libSearch(this.value)">
+          <button class="tbtn" onclick="libRefresh()">↺</button>
+        </div>
+        <div class="fsec">BUILT-IN</div>
+        <div id="lib-builtin"></div>
+        <div class="fsec">SYSTEM SPECS</div>
+        <div id="lib-system"></div>
+        <div class="fsec">RECENT</div>
+        <div id="lib-recent"></div>
+      </div>
+
+      <!-- files -->
+      <div class="lpane" id="lpane-files">
+        <div class="lpane-hdr">
+          <input id="file-path" value="/" placeholder="path…" onkeydown="if(event.key==='Enter')fileBrowse(this.value)">
+          <button class="tbtn" onclick="fileBrowse(document.getElementById('file-path').value)">↵</button>
+        </div>
+        <div id="file-tree"></div>
+      </div>
+
+      <!-- repo -->
+      <div class="lpane" id="lpane-repo">
+        <div class="lpane-hdr">
+          <input id="repo-path" placeholder="scan path…" value="/tmp/nexus-work">
+          <button class="tbtn" onclick="repoScan(document.getElementById('repo-path').value)">scan</button>
+        </div>
+        <div id="repo-tree"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── CANVAS ── -->
+  <div id="cwrap">
+    <!-- Z-layer guide strips (L0–L7) rendered by JS -->
+    <div id="cvs"></div>
+    <svg id="svo">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 2L8 5L2 8" fill="none" stroke="#1a6aff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <marker id="arrg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 2L8 5L2 8" fill="none" stroke="#534ab7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <marker id="arrz" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+          <path d="M2 2L8 5L2 8" fill="none" stroke="#cc44ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <g id="edgesg"></g>
+      <line id="dline" stroke="#1a6aff" stroke-width="1" stroke-dasharray="4 3" opacity="0"/>
+    </svg>
+  </div>
+
+  <!-- ── RIGHT — props / kg / gaps / plan / forge / idearium ── -->
+  <div id="right">
+    <div id="rtabs">
+      <button class="rtab active" data-r="props">Props</button>
+      <button class="rtab" data-r="kg">KG</button>
+      <button class="rtab" data-r="gaps">Gaps</button>
+      <button class="rtab" data-r="plan">Plan</button>
+      <button class="rtab" data-r="forge">Forge</button>
+      <button class="rtab" data-r="idearium">Idearium</button>
+    </div>
+    <div id="rpanes">
+
+      <!-- props -->
+      <div class="rpane active" id="rpane-props">
+        <div class="pnull" id="no-sel">
+          <span class="pico">⬡</span>
+          click a node to edit<br>drag chips · dblclick canvas
+        </div>
+        <div id="prop-form" style="display:none">
+          <div class="prow"><div class="plbl">Label</div><input class="pinp" id="p-label" type="text"></div>
+          <div class="prow"><div class="plbl">Description</div><input class="pinp" id="p-sub" type="text"></div>
+          <div class="prow"><div class="plbl">Type</div>
+            <select class="pinp" id="p-type">
+              <option>layer</option><option>gate</option><option>node</option><option>check</option><option>surface</option>
+            </select>
+          </div>
+          <div class="prow two">
+            <div><div class="plbl">SNR floor</div><input class="pinp" id="p-snr" type="text" placeholder="0.80"></div>
+            <div><div class="plbl">Fail mode</div><input class="pinp" id="p-fail" type="text" placeholder="type error"></div>
+          </div>
+          <div class="prow"><div class="plbl">Notes</div><input class="pinp" id="p-notes" type="text"></div>
+          <!-- §BUILT 2026-09-21 — James: "add ai assistance." Routes
+               through the same real gate idearium's own Brainstorm
+               assist now uses (POST :4800/api/copilot/suggest ->
+               idearium/copilot-adapter/index.js's real backend), called
+               directly since this page is served by architect (:3747),
+               a different system — same cross-origin fetch this file
+               already does for guardian/idearium elsewhere (forgeDispatchAll,
+               btn-sendi). Preview-first: never overwrites Notes on its
+               own — "use" is a real, separate click, same discipline as
+               every other AI-touches-real-content feature this session. -->
+          <div class="prow">
+            <button class="rtab" style="width:100%;font-size:10px" id="btn-node-assist" onclick="assistNode()">✨ assist (from Label + Description)</button>
+            <div id="node-assist-preview" style="display:none;margin-top:6px;padding:8px;background:var(--bg2);border:1px solid var(--c);border-radius:var(--rad);font-size:11px;color:var(--text)"></div>
+          </div>
+          <!-- Z-axis depth -->
+          <div class="prow">
+            <div class="plbl">Z-axis: Architectural Layer (L0–L7)</div>
+            <div class="zdepth-wrap">
+              <input class="zdepth-slider" type="range" id="p-z" min="0" max="7" value="3" step="1">
+              <span class="zdepth-val" id="p-z-val">L3</span>
+            </div>
+          </div>
+          <div id="kgnode" style="display:none">
+            <div class="seclbl">Compile Result</div>
+            <div id="knd-conf" style="font-size:10px;margin-bottom:3px"></div>
+            <div id="knd-rdns" style="font-size:9px;color:var(--text3)"></div>
+            <div id="knd-gaps" style="font-size:9px;color:var(--y);margin-top:2px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- kg -->
+      <div class="rpane" id="rpane-kg">
+        <div class="empty" id="kg-empty"><span class="eico">KG</span>compile to build the knowledge graph</div>
+        <div id="kg-list" style="display:none"></div>
+      </div>
+
+      <!-- gaps -->
+      <div class="rpane" id="rpane-gaps">
+        <div class="empty" id="gap-empty"><span class="eico">GAP</span>no gaps detected yet</div>
+        <div id="gap-list"></div>
+      </div>
+
+      <!-- plan -->
+      <div class="rpane" id="rpane-plan">
+        <div class="empty" id="plan-empty"><span class="eico">PLAN</span>compile to generate execution plan</div>
+        <div id="plan-body" style="display:none"></div>
+      </div>
+
+      <!-- forge IDE -->
+      <div class="rpane" id="rpane-forge">
+        <div class="seclbl">SPEC TEXT</div>
+        <textarea class="forge-ta" id="forge-spec" rows="7" placeholder="Paste .spec content or load from library…"></textarea>
+        <div style="display:flex;gap:4px;margin:5px 0">
+          <select class="pinp" id="forge-split" style="flex:1">
+            <option value="heading">Split: headings</option>
+            <option value="divider">Split: ---</option>
+            <option value="size">Split: 2KB</option>
+          </select>
+          <select class="pinp" id="forge-prov" style="flex:1">
+            <option value="claude">Claude</option>
+            <option value="chatgpt">ChatGPT</option>
+            <option value="ollama">Ollama</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:4px;margin-bottom:6px">
+          <button class="tbtn" onclick="forgeChunk()">◫ CHUNK</button>
+          <button class="tbtn g" id="forge-dispatch-btn" disabled onclick="forgeDispatchAll()">▶ DISPATCH ALL</button>
+          <button class="tbtn p" onclick="specToCanvas()">→ CANVAS</button>
+        </div>
+        <div class="seclbl">CHUNKS</div>
+        <div id="forge-chunks"><div style="font-size:9px;color:var(--text3)">no chunks yet</div></div>
+        <div class="seclbl" style="margin-top:8px">RESULT</div>
+        <pre id="forge-result" style="font:9px/1.6 var(--mono);color:var(--text2);
+          white-space:pre-wrap;word-break:break-word;background:var(--bg2);
+          border:1px solid var(--border);border-radius:2px;padding:7px;max-height:150px;overflow-y:auto">—</pre>
+      </div>
+
+      <!-- idearium -->
+      <div class="rpane" id="rpane-idearium">
+        <div class="prow"><div class="plbl">Port</div><input class="iinp" id="i-port" value="4800" style="width:80px"></div>
+        <div class="prow"><div class="plbl">Idea UUID (optional)</div><input class="iinp" id="i-uuid" placeholder="link to existing idea…"></div>
+        <div style="display:flex;gap:5px;margin-bottom:6px">
+          <button class="tbtn g" id="btn-sendi">→ SEND</button>
+          <button class="tbtn" id="btn-pingi">ping</button>
+        </div>
+        <div id="iout">compile first, then send.</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /body -->
+
+<!-- ── BOTTOMBAR ── -->
+<div id="bottombar">
+  <div class="bbdot" id="svcdot"></div>
+  <div class="bbstat"><span class="bval c" id="bb-nodes">0</span> nodes</div>
+  <div class="bbstat"><span class="bval" id="bb-edges">0</span> edges</div>
+  <div class="tsep" style="height:14px"></div>
+  <div class="bbstat"><span class="bval g" id="bb-mods">—</span> mods</div>
+  <div class="bbstat"><span class="bval y" id="bb-gaps">—</span> gaps</div>
+  <div class="bbstat"><span class="bval c" id="bb-tok">—</span> tokens</div>
+  <div class="tsep" style="height:14px"></div>
+  <!-- Z-tilt -->
+  <div class="ztilt-wrap">
+    <span>Z-tilt</span>
+    <input class="ztilt-slider" type="range" id="ztilt" min="0" max="30" value="0" step="1">
+    <span id="ztilt-val" style="font-family:var(--display);font-size:10px;color:var(--m)">0°</span>
+  </div>
+  <div class="tsep" style="height:14px"></div>
+  <div id="bblog">ready</div>
+  <div class="sp"></div>
+  <button class="tbtn" id="btn-export">↓ .spec</button>
+  <button class="tbtn" id="btn-import">↑ import</button>
+  <input id="import-file" type="file" accept=".spec,.yaml,.yml,.json" style="display:none">
+</div>
+
+</div><!-- /app -->
+
+<script>
+'use strict';
+const ARCH_PORT = location.port || 3747;
+const BASE = `http://127.0.0.1:${ARCH_PORT}`;
+const GUARDIAN = `http://127.0.0.1:7820`;
+// §BUILT 2026-09-21 — real copilot-adapter gate, idearium's own default
+// port (matches i-port's own default value='4800' below).
+const IDEARIUM = `http://127.0.0.1:4800`;
+
+// ── Z-LAYER CONFIG ────────────────────────────────────────────────────────────
+// L0=JAA/persist  L1=SISO  L2=data  L3=logic  L4=agents  L5=seam  L6=UI  L7=SNR
+const ZLAYERS = [
+  {n:'L0',label:'JAA · Persistence',color:'#1a3a2a',tc:'#00ff88'},
+  {n:'L1',label:'SISO · Event Bus', color:'#0d1a3a',tc:'#00d4ff'},
+  {n:'L2',label:'Data · Schema',    color:'#1a1a3a',tc:'#6699ff'},
+  {n:'L3',label:'Logic · Core',     color:'#1a1228',tc:'#9b8fff'},
+  {n:'L4',label:'Agents · AI',      color:'#1a0d28',tc:'#cc44ff'},
+  {n:'L5',label:'Seam · Contract',  color:'#1a1200',tc:'#ffcc00'},
+  {n:'L6',label:'UI · Surface',     color:'#0d1a0d',tc:'#00ff88'},
+  {n:'L7',label:'SNR · Output',     color:'#1a0a00',tc:'#ff6b35'},
+];
+const ZCOLORS = ZLAYERS.map(l=>l.tc);
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let nodes=[], edges=[], sel=null, seq=0;
+let conFrom=null, conMode=false, conMM=null;
+let lastResult=null;
+const kgData=new Map();
+const specLib=[];
+
+const cvs=document.getElementById('cvs');
+const wrap=document.getElementById('cwrap');
+const edgesG=document.getElementById('edgesg');
+const dline=document.getElementById('dline');
+const $=id=>document.getElementById(id);
+const qsa=s=>document.querySelectorAll(s);
+const uid=()=>'n'+(seq++);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const log=msg=>{ $('bblog').textContent=msg; };
+
+const DEFS={
+  layer:  {label:'layer',  sub:'components…',   snr:'',    fail:'',z:1},
+  gate:   {label:'gate α', sub:'validate',      snr:'0.80',fail:'schema violation',z:3},
+  node:   {label:'module', sub:'role / purpose',snr:'',    fail:'',z:3},
+  check:  {label:'check',  sub:'invariant',     snr:'0.70',fail:'malformed event',z:5},
+  surface:{label:'surface',sub:'CLI / HTTP',    snr:'',    fail:'',z:6},
+};
+
+// ── Z-LAYER GUIDES ────────────────────────────────────────────────────────────
+function renderZGuides(){
+  // Remove existing
+  wrap.querySelectorAll('.zlayer-guide').forEach(e=>e.remove());
+  const h=wrap.clientHeight||600;
+  const zh=h/8;
+  for(let i=0;i<8;i++){
+    const g=document.createElement('div');
+    g.className='zlayer-guide';
+    g.style.cssText=`top:${i*zh}px;height:${zh}px;border-top-color:${ZLAYERS[i].tc}18;background:${ZLAYERS[i].color}18`;
+    g.innerHTML=`<span style="font-size:7px;font-family:var(--display);letter-spacing:.12em;color:${ZLAYERS[i].tc};opacity:.4;padding-top:2px">${ZLAYERS[i].n}</span>`;
+    wrap.insertBefore(g,cvs);
+  }
+}
+
+// Canonical node Y position from z-depth
+function zToY(z,baseY){
+  // If baseY provided, snap to nearest layer band
+  const h=wrap.clientHeight||600;
+  return (z/7)*(h-80)+40;
+}
+function yToZ(y){
+  const h=wrap.clientHeight||600;
+  return Math.round(((y-40)/(h-80))*7);
+}
+
+// ── Z-TILT (3D perspective) ───────────────────────────────────────────────────
+$('ztilt').addEventListener('input',function(){
+  $('ztilt-val').textContent=this.value+'°';
+  cvs.style.transform=`rotateX(${this.value}deg)`;
+  svo.style.transform=`rotateX(${this.value}deg)`;
+  // Transform origin at top for natural layering effect
+  cvs.style.transformOrigin='center top';
+});
+
+// ── CANVAS SPEC ───────────────────────────────────────────────────────────────
+function canvasSpec(){
+  const name=$('spec-name').value.trim()||'unnamed';
+  const nname=id=>{const n=nodes.find(x=>x.id===id);return n?n.label:id;};
+  const sn=n=>{
+    const o={id:n.id,label:n.label,type:n.type,z:n.z||0};
+    if(n.sub)o.sub=n.sub;if(n.notes)o.notes=n.notes;return o;
+  };
+  return{name,version:'1.0.0',generated:new Date().toISOString().slice(0,19)+'Z',
+    layers:nodes.filter(n=>n.type==='layer').map(sn),
+    gates:nodes.filter(n=>n.type==='gate'||n.type==='check').map(n=>({...sn(n),snr:n.snr?+n.snr:undefined,failureMode:n.fail||undefined})),
+    nodes:nodes.filter(n=>n.type==='node'||n.type==='surface').map(sn),
+    edges:edges.map(e=>({from:nname(e.from),to:nname(e.to)}))};
+}
+
+// ── NODE CREATION ─────────────────────────────────────────────────────────────
+function mkNode(n){
+  const el=document.createElement('div');el.id=n.id;
+  const del=document.createElement('span');del.className='ndel';del.textContent='✕';
+  del.addEventListener('click',e=>{e.stopPropagation();deleteNode(n.id);});
+  const nz=document.createElement('div');nz.className='nz';
+  const hin=document.createElement('div');hin.className='nh hin';hin.dataset.role='in';
+  hin.addEventListener('mousedown',e=>{e.stopPropagation();if(conMode&&conFrom)finishCon(n.id);});
+  hin.addEventListener('mouseup',e=>{e.stopPropagation();if(conFrom&&conFrom!==n.id)finishCon(n.id);});
+  const lbl=document.createElement('div');lbl.className='nlbl';lbl.contentEditable='true';lbl.spellcheck=false;
+  lbl.textContent=n.label;
+  lbl.addEventListener('input',()=>{n.label=lbl.textContent.trim();if(sel===n.id)syncProps(n);updateBB();});
+  const sub=document.createElement('div');sub.className='nsub';sub.contentEditable='true';sub.spellcheck=false;
+  sub.textContent=n.sub;
+  sub.addEventListener('input',()=>{n.sub=sub.textContent.trim();if(sel===n.id)syncProps(n);});
+  const bw=document.createElement('div');bw.className='nbw';
+  const hout=document.createElement('div');hout.className='nh hout';hout.dataset.role='out';
+  hout.addEventListener('mousedown',e=>{e.stopPropagation();startCon(n.id,e);});
+  el.append(del,nz,hin,lbl,sub,bw,hout);
+  el.addEventListener('click',e=>{
+    if(e.target===hin||e.target===hout||e.target===del||e.target.isContentEditable)return;
+    selectNode(n.id);
+  });
+  cvs.appendChild(el);
+  makeDraggable(el,n);
+  return el;
+}
+
+function styleNode(n){
+  const el=document.getElementById(n.id);if(!el)return;
+  const kg=kgData.get(n.label);
+  const cc=kg?({'GREEN':'cg','AMBER':'ca','RED':'cr','BLACK':'cb'}[kg.confidence]||''):'';
+  el.className=`an ${n.type}${sel===n.id?' sel':''}${cc?' '+cc:''}`;
+  el.style.cssText=`left:${n.x}px;top:${n.y}px;width:${n.w}px`;
+  // Z-depth color strip
+  const zc=ZCOLORS[Math.min(n.z||0,7)];
+  const nzEl=el.querySelector('.nz');if(nzEl)nzEl.style.background=zc;
+  const le=el.querySelector('.nlbl'),se=el.querySelector('.nsub');
+  if(le&&document.activeElement!==le&&le.textContent!==n.label)le.textContent=n.label;
+  if(se&&document.activeElement!==se&&se.textContent!==n.sub)se.textContent=n.sub;
+  const bw=el.querySelector('.nbw');
+  if(bw){
+    if(kg){const L=kg.confidence[0];
+      bw.innerHTML=`<span class="nbadge ${L}"><span class="dot"></span>${kg.confidence}</span><span class="ntier">${kg.tier||''}</span><div class="nrdns">${(kg.readiness*100).toFixed(0)}% · L${n.z||0}</div>`;
+    }else{
+      bw.innerHTML=`<span style="font-size:7px;color:${zc};font-family:var(--mono)">${ZLAYERS[Math.min(n.z||0,7)].n}</span>`;
+    }
+  }
+}
+
+function createNode(type,x,y,zOverride){
+  const d=DEFS[type]||DEFS.node;
+  // Snap y to z-layer if not given x/y
+  const z=zOverride!==undefined?zOverride:(d.z||yToZ(y));
+  const n={id:uid(),type,label:d.label,sub:d.sub,notes:'',snr:d.snr,fail:d.fail,x,y,w:150,z};
+  nodes.push(n);mkNode(n);styleNode(n);renderEdges();updateBB();return n;
+}
+function renderAllNodes(){nodes.forEach(n=>styleNode(n));}
+function updateBB(){$('bb-nodes').textContent=nodes.length;$('bb-edges').textContent=edges.length;}
+
+function makeDraggable(el,n){
+  let ox,oy,sx,sy;
+  el.addEventListener('mousedown',e=>{
+    if(e.target.dataset.role||e.target.classList.contains('ndel')||e.target.isContentEditable)return;
+    if(conFrom)return;
+    e.preventDefault();ox=e.clientX;oy=e.clientY;sx=n.x;sy=n.y;
+    const mv=ev=>{n.x=sx+ev.clientX-ox;n.y=sy+ev.clientY-oy;el.style.left=n.x+'px';el.style.top=n.y+'px';
+      // Update z from y position
+      n.z=yToZ(n.y);if(sel===n.id){$('p-z').value=n.z;$('p-z-val').textContent='L'+n.z;}
+      styleNode(n);renderEdges();};
+    const up=()=>{document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};
+    document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+  });
+}
+
+// ── EDGES ─────────────────────────────────────────────────────────────────────
+function nCenter(id){const n=nodes.find(x=>x.id===id);return n?[n.x+n.w/2,n.y+32]:[0,0];}
+function renderEdges(){
+  edgesG.innerHTML='';
+  edges.forEach(e=>{
+    const[x1,y1]=nCenter(e.from),[x2,y2]=nCenter(e.to),mid=(y1+y2)/2;
+    const fn=nodes.find(n=>n.id===e.from);
+    const tn=nodes.find(n=>n.id===e.to);
+    // Cross-layer edges get purple / Z-axis color
+    const crossZ=fn&&tn&&fn.z!==tn.z;
+    const ig=fn&&(fn.type==='gate'||fn.type==='check');
+    const stroke=crossZ?'#cc44ff':ig?'#534ab7':'#1a6aff';
+    const marker=crossZ?'arrz':ig?'arrg':'arr';
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',`M${x1},${y1} C${x1},${mid} ${x2},${mid} ${x2},${y2}`);
+    p.setAttribute('fill','none');p.setAttribute('stroke',stroke);
+    p.setAttribute('stroke-width',crossZ?'1':'1.5');
+    p.setAttribute('opacity',crossZ?'0.45':'0.6');
+    p.setAttribute('stroke-dasharray',crossZ?'3 3':ig?'none':'6 3');
+    p.setAttribute('marker-end',`url(#${marker})`);
+    edgesG.appendChild(p);
+  });
+}
+
+// ── CONNECT ───────────────────────────────────────────────────────────────────
+function startCon(fromId,e){
+  if(!conMode)return;conFrom=fromId;
+  const r=wrap.getBoundingClientRect(),[cx,cy]=nCenter(fromId);
+  dline.setAttribute('x1',cx);dline.setAttribute('y1',cy);
+  dline.setAttribute('x2',e.clientX-r.left);dline.setAttribute('y2',e.clientY-r.top);
+  dline.setAttribute('opacity','0.8');
+  conMM=ev=>{dline.setAttribute('x2',ev.clientX-r.left);dline.setAttribute('y2',ev.clientY-r.top);};
+  document.addEventListener('mousemove',conMM);
+  document.addEventListener('mouseup',cancelCon,{once:true});
+}
+function finishCon(toId){
+  if(conFrom&&toId&&conFrom!==toId&&!edges.find(e=>e.from===conFrom&&e.to===toId))edges.push({from:conFrom,to:toId});
+  cancelCon();renderEdges();updateBB();
+}
+function cancelCon(){conFrom=null;dline.setAttribute('opacity','0');if(conMM){document.removeEventListener('mousemove',conMM);conMM=null;}}
+
+// ── SELECT / PROPS ────────────────────────────────────────────────────────────
+function selectNode(id){
+  sel=id;renderAllNodes();
+  const n=nodes.find(x=>x.id===id);if(!n)return;
+  $('no-sel').style.display='none';$('prop-form').style.display='block';
+  syncProps(n);
+  const kg=kgData.get(n.label);
+  if(kg){
+    $('kgnode').style.display='block';
+    $('knd-conf').innerHTML=`<span class="nbadge ${kg.confidence[0]}" style="font-size:10px"><span class="dot"></span>${kg.confidence}</span>`;
+    $('knd-rdns').textContent=`readiness ${(kg.readiness*100).toFixed(0)}% · specDepth ${(kg.specDepth*100).toFixed(0)}%`;
+    $('knd-gaps').textContent=kg.gapCount?`${kg.gapCount} gap(s) → Gaps tab`:'';
+  }else $('kgnode').style.display='none';
+  switchRTab('props');
+}
+function syncProps(n){
+  $('p-label').value=n.label;$('p-sub').value=n.sub;$('p-type').value=n.type;
+  $('p-notes').value=n.notes||'';$('p-snr').value=n.snr||'';$('p-fail').value=n.fail||'';
+  $('p-z').value=n.z||0;$('p-z-val').textContent='L'+(n.z||0);
+}
+cvs.addEventListener('click',e=>{
+  if(e.target===cvs){sel=null;renderAllNodes();$('no-sel').style.display='';$('prop-form').style.display='none';}
+});
+['p-label','p-sub','p-type','p-notes','p-snr','p-fail'].forEach(id=>{
+  $(id).addEventListener('input',()=>{
+    if(!sel)return;const n=nodes.find(x=>x.id===sel);if(!n)return;
+    n.label=$('p-label').value;n.sub=$('p-sub').value;n.type=$('p-type').value;
+    n.notes=$('p-notes').value;n.snr=$('p-snr').value;n.fail=$('p-fail').value;
+    styleNode(n);renderEdges();
+  });
+});
+$('p-z').addEventListener('input',function(){
+  $('p-z-val').textContent='L'+this.value;
+  if(!sel)return;
+  const n=nodes.find(x=>x.id===sel);if(!n)return;
+  n.z=+this.value;
+  // Snap Y to layer band
+  n.y=zToY(n.z);
+  const el=document.getElementById(n.id);if(el){el.style.top=n.y+'px';}
+  styleNode(n);renderEdges();
+});
+
+// §BUILT 2026-09-21 — James: "add ai assistance." Same real gate,
+// same preview-first shape idearium's own Brainstorm assist uses
+// (idearium/ui/js/app.js's _askCopilotSuggest/_renderAssistPreview) —
+// a second, independent caller of the one real backend, not a second
+// implementation of the AI call itself.
+async function assistNode(){
+  if(!sel){log('select a node first');return;}
+  const n=nodes.find(x=>x.id===sel);if(!n)return;
+  const label=$('p-label').value.trim(),sub=$('p-sub').value.trim();
+  if(!label&&!sub){log('give the node a Label or Description first');return;}
+  const el=$('node-assist-preview');
+  el.style.display='';el.textContent='thinking…';
+  $('btn-node-assist').disabled=true;
+  try{
+    const goal=`Write a short, concrete implementation note for a real architecture node in a spec.\nLabel: ${label||'(none)'}\nDescription: ${sub||'(none)'}\nType: ${n.type}`;
+    const r=await fetch(`${IDEARIUM}/api/copilot/suggest`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({goal,current_gate:'spec-builder-node',context:{}})});
+    const d=await r.json();
+    if(!r.ok){el.textContent=`idearium :4800 unreachable or returned HTTP ${r.status}`;return;}
+    if(d.connected===false){el.textContent=d.reason||'no copilot backend connected';return;}
+    const text=(d.suggestions||[])[0];
+    if(!text){el.textContent=d.reason||'copilot returned no suggestion';return;}
+    el.innerHTML='';
+    const label2=document.createElement('div');label2.style.cssText='color:var(--c);font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px';label2.textContent='✨ copilot suggests';
+    const body=document.createElement('div');body.textContent=text;
+    const actions=document.createElement('div');actions.style.cssText='display:flex;gap:6px;margin-top:8px';
+    const useBtn=document.createElement('button');useBtn.className='rtab';useBtn.style.fontSize='10px';useBtn.textContent='use this';
+    useBtn.onclick=()=>{ $('p-notes').value=text; n.notes=text; el.style.display='none'; log('node notes updated from AI suggestion'); };
+    const dismissBtn=document.createElement('button');dismissBtn.className='rtab';dismissBtn.style.fontSize='10px';dismissBtn.textContent='dismiss';
+    dismissBtn.onclick=()=>{ el.style.display='none'; };
+    actions.append(useBtn,dismissBtn);
+    el.append(label2,body,actions);
+  }catch(e){el.textContent=`idearium :4800 unreachable: ${e.message}`;}
+  finally{$('btn-node-assist').disabled=false;}
+}
+function deleteNode(id){
+  nodes=nodes.filter(n=>n.id!==id);edges=edges.filter(e=>e.from!==id&&e.to!==id);
+  const el=document.getElementById(id);if(el)el.remove();
+  if(sel===id){sel=null;$('no-sel').style.display='';$('prop-form').style.display='none';}
+  renderEdges();updateBB();
+}
+$('btn-del').addEventListener('click',()=>{if(sel)deleteNode(sel);});
+$('btn-clredges').addEventListener('click',()=>{edges=[];renderEdges();updateBB();});
+$('btn-clrall').addEventListener('click',()=>{
+  if(!confirm('Clear all?'))return;
+  nodes=[];edges=[];cvs.innerHTML='';renderEdges();updateBB();kgData.clear();clearResult();
+  sel=null;$('no-sel').style.display='';$('prop-form').style.display='none';
+});
+
+// ── DRAG FROM PALETTE ─────────────────────────────────────────────────────────
+let dragType=null;
+qsa('.chip').forEach(c=>{
+  c.addEventListener('dragstart',e=>{dragType=c.dataset.type;e.dataTransfer.effectAllowed='copy';});
+  c.addEventListener('dragend',()=>{dragType=null;});
+});
+wrap.addEventListener('dragover',e=>e.preventDefault());
+wrap.addEventListener('drop',e=>{
+  e.preventDefault();if(!dragType)return;
+  const r=wrap.getBoundingClientRect();
+  const x=e.clientX-r.left-75,y=e.clientY-r.top-30;
+  createNode(dragType,x,y);
+});
+wrap.addEventListener('dblclick',e=>{
+  if(e.target!==cvs&&e.target!==wrap&&!e.target.classList.contains('zlayer-guide'))return;
+  const r=wrap.getBoundingClientRect();
+  createNode('node',e.clientX-r.left-75,e.clientY-r.top-30);
+});
+
+$('btn-connect').addEventListener('click',()=>{
+  conMode=!conMode;
+  $('btn-connect').classList.toggle('p',conMode);
+  $('btn-connect').textContent=conMode?'connecting…':'connect';
+  cvs.style.cursor=conMode?'crosshair':'default';
+});
+document.addEventListener('keydown',e=>{
+  const t=e.target;if(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable)return;
+  if(e.key==='c')$('btn-connect').click();
+  if((e.key==='Delete'||e.key==='Backspace')&&sel)deleteNode(sel);
+  if(e.key==='Escape'){conMode=false;$('btn-connect').classList.remove('p');$('btn-connect').textContent='connect';cvs.style.cursor='default';cancelCon();}
+});
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function switchLTab(n){qsa('.ltab').forEach(b=>b.classList.toggle('active',b.dataset.l===n));qsa('.lpane').forEach(p=>p.classList.toggle('active',p.id===`lpane-${n}`));}
+function switchRTab(n){qsa('.rtab').forEach(b=>b.classList.toggle('active',b.dataset.r===n));qsa('.rpane').forEach(p=>p.classList.toggle('active',p.id===`rpane-${n}`));}
+qsa('.ltab').forEach(b=>b.addEventListener('click',()=>switchLTab(b.dataset.l)));
+qsa('.rtab').forEach(b=>b.addEventListener('click',()=>switchRTab(b.dataset.r)));
+
+// ── COMPILE ───────────────────────────────────────────────────────────────────
+function setStatus(msg,cls){const el=$('cstatus');el.textContent=msg;el.className=cls||'';}
+async function compile(){
+  if(!nodes.length){log('add some nodes first');return;}
+  const name=$('spec-name').value.trim()||'unnamed';
+  setStatus('compiling…','run');log('running spec-compiler pipeline…');
+  $('btn-compile').disabled=true;
+  try{
+    const r=await fetch(`${BASE}/api/compile`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({spec:canvasSpec(),name,dryRun:true,skipCortex:true})});
+    const d=await r.json();
+    if(!r.ok||!d.ok){setStatus('error','err');log(d.error||'compile failed');return;}
+    lastResult=d;applyResult(d.compile);setStatus('✓ compiled','ok');switchRTab('kg');
+  }catch(e){setStatus('error','err');log(`architect offline at ${BASE}`);}
+  finally{$('btn-compile').disabled=false;}
+}
+$('btn-compile').addEventListener('click',compile);
+
+function applyResult(c){
+  if(!c||!c.ok){log(c?.error||'no result');return;}
+  const mods=c.nodes||[],gaps=c.gaps||[],plan=c.plan,tm=c.tierMap||{};
+  const tok=c.tokenForecast?.estimatedTokens??0,rd=c.readiness||{};
+  $('bb-mods').textContent=mods.length;$('bb-mods').className='bval g';
+  $('bb-gaps').textContent=gaps.length;$('bb-gaps').className='bval'+(gaps.length===0?' g':gaps.length<3?' y':' r');
+  $('bb-tok').textContent=tok>0?`~${tok}`:'0';$('bb-tok').className='bval c';
+  log(`${mods.length} modules · ${gaps.length} gaps · ~${tok} tokens · ${rd.green||0}G ${rd.amber||0}A ${rd.red||0}R`);
+  kgData.clear();
+  for(const m of mods){const gc=gaps.filter(g=>g.nodeId===m.id).length;kgData.set(m.name,{...m,gapCount:gc,specDepth:m.specDepth??0});}
+  renderAllNodes();
+  // KG
+  $('kg-empty').style.display='none';$('kg-list').style.display='block';$('kg-list').innerHTML='';
+  for(const m of mods){
+    const rv=m.readiness??0,bc=rv>=0.8?'var(--g)':rv>=0.5?'var(--y)':'var(--r)';
+    const row=document.createElement('div');row.className='krow';
+    row.innerHTML=`<span class="cpip" style="background:var(--conf-${m.confidence.toLowerCase()})"></span><span class="kname">${esc(m.name)}</span><span class="rbar"><span class="rfill" style="width:${(rv*100).toFixed(0)}%;background:${bc}"></span></span><span style="font-size:9px;color:var(--text2)">${(rv*100).toFixed(0)}%</span><span style="font-size:9px;color:var(--c);margin-left:4px">${m.tier||''}</span>`;
+    $('kg-list').appendChild(row);
+  }
+  // Gaps
+  $('gap-list').innerHTML='';
+  if(gaps.length===0){$('gap-empty').style.display='flex';}
+  else{$('gap-empty').style.display='none';
+    for(const g of gaps){const d=document.createElement('div');d.className='gitem';
+      d.innerHTML=`<div class="git">${esc(g.type||'gap')} · ${esc(g.reason||g.nodeId||'')}</div><div class="gim">${esc(g.message||g.nodeId)}</div><div class="giw">⊘ ${(g.weight??0).toFixed(3)}</div>`;
+      $('gap-list').appendChild(d);}}
+  // Plan
+  $('plan-empty').style.display='none';$('plan-body').style.display='block';
+  let ph='';
+  if(plan?.nextNode)ph+=`<div class="pnbox"><div class="pnlbl">▶ NEXT</div><div class="pnname">${esc(plan.nextNode.name)}</div><div class="pnmeta">run ${plan.runCount||0} · defer ${plan.deferCount||0} · ~${plan.runTokenEstimate||0} tokens</div></div>`;
+  const tlbl={t0:'T0 — zero tokens',t1:'T1 — scaffold',t2:'T2 — LLM',skip:'SKIP',blocked:'BLOCKED'};
+  const tcls={t0:'t0',t1:'t1',t2:'t2',skip:'t0',blocked:'block'};
+  for(const[k,v]of Object.entries(tm)){
+    if(!Array.isArray(v)||!v.length)continue;
+    ph+=`<div class="seclbl">${tlbl[k]||k}</div><div class="plan-chips">`;
+    ph+=v.map(n=>`<span class="pchip ${tcls[k]||'t0'}">${esc(n.name||n.id)}</span>`).join('');
+    ph+='</div>';
+  }
+  $('plan-body').innerHTML=ph;
+  // Feed spec text to Forge
+  if(lastResult?.yamlSpec)$('forge-spec').value=lastResult.yamlSpec;
+}
+
+function clearResult(){
+  $('bb-mods').textContent='—';$('bb-gaps').textContent='—';$('bb-tok').textContent='—';
+  $('kg-empty').style.display='flex';$('kg-list').style.display='none';$('kg-list').innerHTML='';
+  $('gap-empty').style.display='flex';$('gap-list').innerHTML='';
+  $('plan-empty').style.display='flex';$('plan-body').style.display='none';
+  setStatus('—','');log('ready');
+}
+
+// ── SPEC LIBRARY ──────────────────────────────────────────────────────────────
+const BUILTIN_SPECS=[
+  {name:'nexus.spec',     path:'/tmp/nexus-work/docs/nexus.spec'},
+  {name:'SPEC_COMPILER',  path:'/tmp/spec-compiler/SPEC_COMPILER.spec'},
+  {name:'runtime.spec',   path:'/tmp/spec-compiler/runtime.spec'},
+  {name:'emerge.spec',    path:'/tmp/nexus-work/emerge.spec'},
+  {name:'cockpit.spec',   path:'/tmp/nexus-work/cockpit/cockpit.spec'},
+];
+
+async function libRefresh(){
+  renderLibBuiltin();
+  // Try to load architect blueprints
+  try{
+    const r=await fetch(`${BASE}/api/blueprint`);
+    const d=await r.json();
+    if(d.ok&&d.blueprints){
+      const sl=$('lib-system');sl.innerHTML='';
+      for(const bp of d.blueprints.slice(0,20)){
+        const el=document.createElement('div');el.className='fitem';
+        el.innerHTML=`<span class="fitem-icon">◈</span><span class="fitem-name">${esc(bp.name||bp.id)}</span><span class="fitem-badge">bp</span>`;
+        el.addEventListener('click',()=>loadBlueprintToCanvas(bp));
+        sl.appendChild(el);
+      }
+    }
+  }catch(_){}
+}
+
+function renderLibBuiltin(){
+  const el=$('lib-builtin');el.innerHTML='';
+  for(const s of BUILTIN_SPECS){
+    const item=document.createElement('div');item.className='fitem';
+    item.innerHTML=`<span class="fitem-icon">⬡</span><span class="fitem-name">${esc(s.name)}</span><span class="fitem-badge">spec</span>`;
+    item.addEventListener('click',()=>loadSpecFile(s.path,s.name));
+    el.appendChild(item);
+  }
+}
+
+async function loadSpecFile(path,name){
+  log(`loading ${name}…`);
+  try{
+    // Try via architect API first
+    const r=await fetch(`${BASE}/api/blueprint/scan`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rootPath:path})});
+    if(r.ok){const d=await r.json();if(d.ok&&d.map){loadTopologyToCanvas(d.map,name);return;}}
+  }catch(_){}
+  // Fallback: load raw spec text for Forge
+  log(`loaded ${name} → Forge`);
+  $('forge-spec').value=`# ${name}\n# (load from ${path})\n# connect to architect service to parse`;
+  $('spec-name').value=name.replace(/\.spec$/,'');
+  switchRTab('forge');
+}
+
+function libSearch(q){
+  if(!q){qsa('.fitem').forEach(e=>e.style.display='');return;}
+  qsa('#lib-builtin .fitem,#lib-system .fitem,#lib-recent .fitem').forEach(e=>{
+    e.style.display=e.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
+  });
+}
+
+// ── FILE BROWSER ──────────────────────────────────────────────────────────────
+async function fileBrowse(path){
+  const tree=$('file-tree');tree.innerHTML='<div style="font-size:9px;color:var(--text3);padding:6px">browsing…</div>';
+  try{
+    // Use architect /api/map/scan to get directory listing
+    const r=await fetch(`${BASE}/api/map/scan`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rootPath:path,opts:{maxDepth:2}})});
+    if(!r.ok)throw new Error(r.statusText);
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error||'scan failed');
+    renderFileTree(tree,d.map.files||[],path);
+  }catch(e){tree.innerHTML=`<div style="font-size:9px;color:var(--r);padding:6px">${esc(e.message)}</div>`;}
+}
+function renderFileTree(container,files,base){
+  container.innerHTML='';
+  // Group by directory
+  const dirs=new Map();
+  for(const f of files){
+    const parts=f.path.replace(base,'').split('/').filter(Boolean);
+    const dir=parts.length>1?parts.slice(0,-1).join('/'):'/';
+    if(!dirs.has(dir))dirs.set(dir,[]);
+    dirs.get(dir).push({...f,shortName:parts[parts.length-1]});
+  }
+  for(const[dir,items]of dirs){
+    if(dir!=='/')container.innerHTML+=`<div class="fsec">${esc(dir)}</div>`;
+    for(const f of items){
+      const isSpec=f.shortName?.endsWith('.spec')||f.shortName?.endsWith('.yaml');
+      const el=document.createElement('div');el.className='fitem';
+      el.innerHTML=`<span class="fitem-icon">${isSpec?'⬡':'·'}</span><span class="fitem-name">${esc(f.shortName)}</span>${isSpec?'<span class="fitem-badge">spec</span>':''}`;
+      if(isSpec)el.addEventListener('click',()=>{$('forge-spec').value=`# ${f.shortName}\n# path: ${f.path}`;$('spec-name').value=f.shortName.replace(/\.spec$/,'');switchRTab('forge');log(`loaded ${f.shortName} → Forge`);});
+      container.appendChild(el);
+    }
+  }
+  if(!files.length)container.innerHTML='<div style="font-size:9px;color:var(--text3);padding:6px">no files</div>';
+}
+
+// ── REPO SCAN ─────────────────────────────────────────────────────────────────
+async function repoScan(path){
+  const tree=$('repo-tree');tree.innerHTML='<div style="font-size:9px;color:var(--text3);padding:6px">scanning…</div>';
+  try{
+    const r=await fetch(`${BASE}/api/map/scan`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rootPath:path,opts:{maxDepth:3}})});
+    if(!r.ok)throw new Error(r.statusText);
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error||'scan failed');
+    const map=d.map;tree.innerHTML='';
+    // Show surfaces
+    if(map.surfaces?.length){
+      tree.innerHTML+=`<div class="fsec">Surfaces (${map.surfaces.length})</div>`;
+      for(const s of map.surfaces.slice(0,20)){
+        tree.innerHTML+=`<div class="fitem"><span class="fitem-icon">⬡</span><span class="fitem-name">${esc(s.name||s.path)}</span><span class="fitem-badge">${esc(s.type||'mod')}</span></div>`;
+      }
+    }
+    // Show .spec files
+    const specs=(map.files||[]).filter(f=>f.path?.endsWith('.spec'));
+    if(specs.length){
+      tree.innerHTML+=`<div class="fsec">.spec files (${specs.length})</div>`;
+      for(const s of specs){
+        const nm=s.path.split('/').pop();
+        const el=document.createElement('div');el.className='fitem';
+        el.innerHTML=`<span class="fitem-icon">⬡</span><span class="fitem-name">${esc(nm)}</span><span class="fitem-badge">spec</span>`;
+        el.addEventListener('click',()=>{$('forge-spec').value=`# ${nm}\n# ${s.path}`;$('spec-name').value=nm.replace(/\.spec$/,'');switchRTab('forge');log(`${nm} → Forge`);});
+        tree.appendChild(el);
+      }
+    }
+    // Gaps
+    if(map.gaps?.length){tree.innerHTML+=`<div class="fsec">Gaps (${map.gaps.length})</div>`;for(const g of map.gaps.slice(0,10))tree.innerHTML+=`<div class="fitem"><span class="fitem-icon" style="color:var(--y)">⊘</span><span class="fitem-name" style="color:var(--y)">${esc(g.description||g.type)}</span></div>`;}
+    log(`scan complete: ${map.files?.length||0} files, ${specs.length} specs, ${map.surfaces?.length||0} surfaces`);
+  }catch(e){tree.innerHTML=`<div style="font-size:9px;color:var(--r);padding:6px">${esc(e.message)}</div>`;}
+}
+
+function loadTopologyToCanvas(map,name){
+  // Convert topology map to canvas nodes
+  nodes=[];edges=[];cvs.innerHTML='';kgData.clear();clearResult();
+  const w=wrap.clientWidth||800;
+  let x=60,y=60;const xStep=180,yStep=90;let col=0;
+  const placed=new Map();
+  for(const surf of(map.surfaces||[]).slice(0,24)){
+    const z=surf.layer||3;
+    const n=createNode(surf.type==='spec'?'layer':surf.type==='test'?'check':'node',x,zToY(z),z);
+    n.label=surf.name||surf.path?.split('/').pop()||'module';
+    n.sub=surf.type||'surface';
+    styleNode(n);placed.set(surf.path,n.id);
+    col++;if(col>4){col=0;y+=yStep;}
+    x=60+col*xStep;
+  }
+  $('spec-name').value=(name||'').replace(/\.spec$/,'');
+  renderEdges();updateBB();renderAllNodes();
+  log(`loaded ${map.surfaces?.length||0} surfaces from ${name}`);
+}
+
+// ── SPEC → CANVAS (parse .spec YAML into canvas) ──────────────────────────────
+async function specToCanvas(){
+  const raw=$('forge-spec').value.trim();
+  if(!raw){log('no spec text to parse');return;}
+  // Try to parse via compile endpoint
+  try{
+    const specName=$('spec-name').value.trim()||'imported';
+    const r=await fetch(`${BASE}/api/compile`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({spec:{name:specName,version:'1.0.0',generated:new Date().toISOString(),layers:[],gates:[],nodes:[{id:'n0',label:specName,type:'node',sub:'imported spec'}],edges:[]},name:specName,dryRun:true,skipCortex:true,rawSpec:raw})});
+    const d=await r.json();
+    if(d.ok&&d.compile?.nodes?.length){
+      // Populate canvas from KG nodes
+      nodes=[];edges=[];cvs.innerHTML='';kgData.clear();
+      const w=wrap.clientWidth||800;
+      const mods=d.compile.nodes;
+      for(let i=0;i<mods.length;i++){
+        const m=mods[i];
+        const tier=m.tier||'t0';
+        const z=({t0:1,t1:3,t2:5,t3:6}[tier])||3;
+        const n=createNode(m.confidence==='BLACK'?'surface':m.confidence==='GREEN'?'layer':m.tier==='t2'?'gate':'node',
+          60+((i%5)*175),zToY(z),z);
+        n.label=m.name;n.sub=`${m.tier||'?'} · ${m.confidence}`;styleNode(n);
+      }
+      lastResult=d;applyResult(d.compile);
+      log(`parsed ${mods.length} modules from spec → canvas`);
+      return;
+    }
+  }catch(_){}
+  // Fallback: simple YAML parse (modules list)
+  importSpecText(raw);
+}
+
+function importSpecText(raw){
+  // Very simple spec parser — extracts module names
+  const modRe=/^\s*(?:-\s+)?(?:id:|name:)\s*['"]?([^'":\n]+)['"]?/gm;
+  const found=[];let m;
+  while((m=modRe.exec(raw))!==null){if(m[1]&&!found.includes(m[1]))found.push(m[1].trim());}
+  if(!found.length){log('no modules found in spec text');return;}
+  nodes=[];edges=[];cvs.innerHTML='';kgData.clear();clearResult();
+  for(let i=0;i<found.length;i++){
+    const z=Math.floor((i/found.length)*7);
+    const n=createNode('node',60+((i%4)*185),zToY(z),z);
+    n.label=found[i];styleNode(n);
+    if(i>0)edges.push({from:nodes[i-1].id,to:nodes[i].id});
+  }
+  renderEdges();updateBB();renderAllNodes();
+  log(`imported ${found.length} modules from spec text`);
+}
+
+// ── IMPORT / EXPORT ───────────────────────────────────────────────────────────
+$('btn-export').addEventListener('click',()=>{
+  const data=lastResult?.yamlSpec||JSON.stringify(canvasSpec(),null,2);
+  const name=($('spec-name').value.trim()||'architecture')+(lastResult?.yamlSpec?'.spec':'.spec.json');
+  const blob=new Blob([data],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+});
+$('btn-import').addEventListener('click',()=>$('import-file').click());
+$('import-file').addEventListener('change',function(){
+  const f=this.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const text=e.target.result;
+    const name=f.name.replace(/\.[^.]+$/,'');
+    $('spec-name').value=name;
+    $('forge-spec').value=text;
+    importSpecText(text);
+    switchRTab('forge');
+    log(`imported ${f.name}`);
+  };
+  r.readAsText(f);
+  this.value='';
+});
+
+// ── FORGE ─────────────────────────────────────────────────────────────────────
+let forgeChunksData=[];
+function forgeChunk(){
+  const txt=$('forge-spec').value.trim();
+  if(!txt){log('no spec text');return;}
+  const split=$('forge-split').value;
+  let chunks=[];
+  if(split==='heading')chunks=txt.split(/^#{1,3} /m).filter(Boolean).map((c,i)=>({i,text:c.trim().slice(0,800)}));
+  else if(split==='divider')chunks=txt.split(/^---$/m).filter(Boolean).map((c,i)=>({i,text:c.trim().slice(0,800)}));
+  else{// size 2KB
+    for(let i=0;i<txt.length;i+=2000)chunks.push({i:chunks.length,text:txt.slice(i,i+2000)});
+  }
+  forgeChunksData=chunks;
+  const el=$('forge-chunks');el.innerHTML='';
+  for(const c of chunks){
+    const d=document.createElement('div');d.className='forge-chunk';
+    d.innerHTML=`<span style="color:var(--c);font-size:8px">CHUNK ${c.i+1}</span> <span style="color:var(--text3)">${esc(c.text.slice(0,60))}…</span>`;
+    d.addEventListener('click',()=>{$('forge-result').textContent=c.text;qsa('.forge-chunk').forEach(x=>x.classList.remove('active'));d.classList.add('active');});
+    el.appendChild(d);
+  }
+  $('forge-dispatch-btn').disabled=chunks.length===0;
+  $('forge-chunk-count').textContent=`${chunks.length} chunks`;
+  log(`${chunks.length} chunks ready`);
+}
+async function forgeDispatchAll(){
+  if(!forgeChunksData.length){log('no chunks');return;}
+  const prov=$('forge-prov').value;
+  $('forge-dispatch-btn').disabled=true;
+  $('forge-result').textContent='dispatching…';
+  try{
+    const r=await fetch(`${GUARDIAN}/command`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({command:'spec',provider:prov,spec:forgeChunksData.map(c=>c.text).join('\n\n---\n\n')})});
+    const d=await r.json();
+    $('forge-result').textContent=JSON.stringify(d,null,2).slice(0,1500);
+    log(`dispatched ${forgeChunksData.length} chunks to ${prov}`);
+  }catch(e){$('forge-result').textContent=`guardian offline: ${e.message}`;log('guardian unreachable');}
+  finally{$('forge-dispatch-btn').disabled=false;}
+}
+
+// ── IDEARIUM ──────────────────────────────────────────────────────────────────
+$('btn-sendi').addEventListener('click',async()=>{
+  const out=$('iout');
+  if(!lastResult){out.className='err';out.textContent='compile first.';return;}
+  const name=$('spec-name').value.trim()||'unnamed';
+  const uuid=$('i-uuid').value.trim()||null;
+  const port=+$('i-port').value||4800;
+  out.className='';out.textContent='sending…';
+  try{
+    const r=await fetch(`${BASE}/api/compile/idearium`,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({spec:canvasSpec(),name,ideaUuid:uuid,ideariumPort:port,skipCortex:true})});
+    const d=await r.json();
+    if(!r.ok||!d.ok){out.className='err';out.textContent=d.error||'failed';return;}
+    out.className='ok';
+    const ib=d.idearium?.body;
+    out.textContent=`✓ Idearium :${port}\n`+(ib?.spec?`uuid: ${ib.spec.uuid?.slice(0,8)||'—'}\nphase: ${ib.spec.phase||'—'}`:JSON.stringify(ib,null,2).slice(0,200));
+  }catch(e){out.className='err';out.textContent=`unreachable: ${e.message}`;}
+});
+$('btn-pingi').addEventListener('click',async()=>{
+  const out=$('iout');const port=+$('i-port').value||4800;
+  out.className='';out.textContent='pinging…';
+  try{const r=await fetch(`http://127.0.0.1:${port}/health`);const d=await r.json();out.className='ok';out.textContent=`✓ Idearium :${port}\nv${d.version||'?'} · SNR ${d.snr!==undefined?Math.round(d.snr*100)+'%':'?'}`;}
+  catch(e){out.className='err';out.textContent=`Idearium :${port} unreachable\n${e.message}`;}
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+(async()=>{
+  renderZGuides();
+  renderLibBuiltin();
+  // service check
+  try{const r=await fetch(`${BASE}/api/compile/status`);const d=await r.json();
+    if(d.compilerFound){$('svcdot').classList.add('on');log('architect online · spec-compiler ready');}
+    else log('⚠ spec-compiler not found — place spec-compiler/ adjacent to architect/');
+  }catch(_){log('standalone — architect service offline');}
+  // seed
+  const w=wrap.clientWidth||900;
+  const n1=createNode('layer',  w/2-220,zToY(0),0);n1.label='JAA Store';  n1.sub='persistence · append-only';styleNode(n1);
+  const n2=createNode('node',   w/2-220,zToY(1),1);n2.label='SISO Bus';    n2.sub='event · gate · stream';styleNode(n2);
+  const n3=createNode('gate',   w/2-170,zToY(3),3);n3.label='Core Gate';   n3.sub='validate · SNR 0.80';n3.snr='0.80';n3.fail='schema violation';styleNode(n3);
+  const n4=createNode('node',   w/2-220,zToY(4),4);n4.label='Agent Layer'; n4.sub='ollama · claude · chatgpt';styleNode(n4);
+  const n5=createNode('check',  w/2-170,zToY(5),5);n5.label='SEAM Check';  n5.sub='contract · verdict';n5.snr='0.95';styleNode(n5);
+  const n6=createNode('surface',w/2-220,zToY(6),6);n6.label='API Surface'; n6.sub='CLI + HTTP + UI';styleNode(n6);
+  const n7=createNode('layer',  w/2-220,zToY(7),7);n7.label='SNR Gate';    n7.sub='signal · noise · route';styleNode(n7);
+  edges.push({from:n1.id,to:n2.id},{from:n2.id,to:n3.id},{from:n3.id,to:n4.id},{from:n4.id,to:n5.id},{from:n5.id,to:n6.id},{from:n6.id,to:n7.id});
+  renderEdges();updateBB();
+  window.addEventListener('resize',()=>{renderZGuides();renderAllNodes();});
+})();
+</script>
+</body>
+</html>

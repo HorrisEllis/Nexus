@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.dom.tokens
+type: capability
+id: cg.dom.tokens
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730158
+source: clear-glass.registry-components:cg.dom.tokens
+payload:
+  id: cg.dom.tokens
+  namespace: cg
+  name: dom.tokens
+  version: 3.1.0
+  grammar:
+    - dom tokens
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Token archaeology — detect LLM API patterns
+  params: []
+  tags:
+    - cg
+    - dom
+    - archaeology
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.bus.log
+type: component
+id: guardian.bus.log
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152805
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152805
+lastSeenAt: 1789275152805
+fingerprint: guardian::GET /bus
+payload:
+  id: guardian.bus.log
+  uuid: eac81c8c-651b-4ebb-961d-b3f88e3b1e4c
+  namespace: guardian
+  name: bus.log
+  version: 3.6.2

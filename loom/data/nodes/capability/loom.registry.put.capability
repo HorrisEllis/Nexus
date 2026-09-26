@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.registry.put
+type: capability
+id: loom.registry.put
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730148
+source: loom.registry-components:loom.registry.put
+payload:
+  id: loom.registry.put
+  namespace: loom
+  name: registry.put
+  version: 1.5.0
+  grammar:
+    - registry put
+    - registry-put
+  route:
+    method: POST
+    path: /api/registry/:kind
+  intent: []
+  description: Write a registry entry
+  params: []
+  tags:
+    - loom
+    - write
+  permissions:
+    - system
+  hooks: {}

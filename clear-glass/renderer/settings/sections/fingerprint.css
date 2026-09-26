@@ -1,0 +1,7 @@
+/* renderer/settings/sections/fingerprint.css — Browser fingerprint
+ * v0.39.227: this area's own styles (one CSS file per UI file). Every rule is
+ * scoped to body[data-area="fingerprint"] — set by core.js when the area is shown —
+ * so nothing here can restyle another area. */
+body[data-area="fingerprint"] .kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; }
+body[data-area="fingerprint"] .kv dt { color: var(--ink-dim); }
+body[data-area="fingerprint"] .kv dd { color: var(--ink-hi); overflow-wrap: anywhere; }

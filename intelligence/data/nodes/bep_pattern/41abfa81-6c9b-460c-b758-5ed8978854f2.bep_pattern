@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-41abfa81-6c9b-460c-b758-5ed8978854f2
+type: bep_pattern
+id: 41abfa81-6c9b-460c-b758-5ed8978854f2
+context: 'intelligence crystallised pattern: meta_noise_source'
+intent: null
+summary: >-
+  "ledger.diagnostic.dangling-hook" appears in 50% of all co-occurrence patterns — treat its "always
+  co-occurs" pairings as detector loudness, not a discovered relationship
+system: intelligence
+tags:
+  - bep_patterns
+  - meta_noise_source
+  - cortex/intelligence
+exported_at: 1790367869048
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790367869048
+lastSeenAt: 1790367869048
+fingerprint: null
+payload:
+  uuid: 41abfa81-6c9b-460c-b758-5ed8978854f2
+  signature: meta_noise::ledger.diagnostic.dangling-hook
+  patternType: meta_noise_source
+  subjectType: ledger.diagnostic.dangling-hook
+  share: 0.5
+  pairCount: 6
+  description: >-
+    "ledger.diagnostic.dangling-hook" appears in 50% of all co-occurrence patterns — treat its
+    "always co-occurs" pairings as detector loudness, not a discovered relationship
+  actionable: true
+  crystallised: true
+  source: cortex/intelligence
+  ts: 1790367869044
+  id: d765b871-4fca-4607-9432-166c50a68973

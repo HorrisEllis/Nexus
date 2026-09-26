@@ -1,0 +1,62 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.guardian",
+  "name": "guardian",
+  "label": "Guardian",
+  "dir": "guardian",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.guardian",
+    "scope": [
+      "guardian/",
+      "data/guardian/"
+    ],
+    "versionLine": "3.6.2",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.guardian",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "guardian/server.js",
+    "entryExists": true,
+    "port": 7820,
+    "phase": 2,
+    "critical": true,
+    "optional": false,
+    "healthUrl": "http://127.0.0.1:7820/health"
+  },
+  "data": {
+    "dataDir": "data/guardian",
+    "ledgerDir": "guardian/data/ledger",
+    "nodeIndexDir": "guardian/data/node-index"
+  },
+  "spec": "guardian/spec/",
+  "dependsOn": {
+    "cortex": 13,
+    "intelligence": 9,
+    "clear-glass": 1,
+    "copilot": 1
+  },
+  "sharedLibRequires": 61,
+  "stats": {
+    "jsFiles": 51,
+    "jsLines": 25221
+  },
+  "boundaryFindings": {
+    "count": 24,
+    "sample": [
+      "guardian/agents/index.js -> cortex/memory/jaa-db",
+      "guardian/api-dispatch.js -> cortex/core/raid",
+      "guardian/api-dispatch.js -> intelligence/liminal",
+      "guardian/api-dispatch.js -> cortex/core/raid",
+      "guardian/ask.js -> cortex/memory/jaa-db.js",
+      "guardian/cli.js -> clear-glass/src/downloads",
+      "guardian/lib/dispatcher.js -> cortex/core/raid",
+      "guardian/lib/dispatcher.js -> intelligence/alk",
+      "guardian/lib/gap-hunter.js -> intelligence/gap/hunter.js",
+      "guardian/lib/ncp-handler.js -> intelligence/gap/hunter"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+/* ui/home/areas/assistant.css — Assistant input row, output, ticker.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+#assistant-row{display:flex;gap:8px;align-items:center}
+#assistant-in{
+  flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;color:#e0e8ff;font-family:'Space Grotesk',sans-serif;font-size:13px;
+  padding:9px 13px;outline:none;transition:all .2s;
+}
+#assistant-in::placeholder{color:rgba(255,255,255,.2)}
+#assistant-in:focus{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25)}
+#send-btn{
+  padding:9px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);color:#e0e8ff;font-family:'Space Mono',monospace;
+  font-size:10px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+#send-btn:hover{background:rgba(255,255,255,.14)}
+#assistant-out{
+  font-family:'Space Mono',monospace;font-size:11px;color:rgba(200,220,210,.8);
+  background:rgba(0,0,0,.3);border-radius:6px;padding:9px 11px;
+  max-height:100px;overflow-y:auto;white-space:pre-wrap;line-height:1.5;
+  display:none;border:1px solid rgba(255,255,255,.06);
+}
+#ticker-line{
+  font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2);
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;letter-spacing:.04em;
+}

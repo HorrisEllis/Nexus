@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-98ccfae8-50f1-4074-97f7-8bc42f96d59a
+type: bep_pattern
+id: 98ccfae8-50f1-4074-97f7-8bc42f96d59a
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: >-
+  "ledger.diagnostic.dangling-hook" and "ledger.diagnostic.dangling-hook" co-occur within 5s — 3
+  observations
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790368216515
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368216515
+lastSeenAt: 1790368216515
+fingerprint: null
+payload:
+  uuid: 98ccfae8-50f1-4074-97f7-8bc42f96d59a
+  signature: ledger.diagnostic.dangling-hook::ledger.diagnostic.dangling-hook
+  patternType: co_occurrence
+  typeA: ledger.diagnostic.dangling-hook
+  typeB: ledger.diagnostic.dangling-hook
+  systemA: diagnostic
+  systemB: diagnostic
+  crossSystem: false
+  count: 3
+  confidence: 0.15
+  description: >-
+    "ledger.diagnostic.dangling-hook" and "ledger.diagnostic.dangling-hook" co-occur within 5s — 3
+    observations
+  actionable: false
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790368216317

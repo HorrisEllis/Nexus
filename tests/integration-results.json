@@ -1,0 +1,395 @@
+{
+  "ts": 1789833351840,
+  "pass": 0,
+  "fail": 0,
+  "skip": 77,
+  "total": 77,
+  "online": [],
+  "results": [
+    {
+      "name": "GET /health → {ok,online,total,uptime}",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/status → systems map",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "POST /api/register → registers system, returns registry",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/registry → live system map",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "POST /api/heartbeat → ok",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "POST /api/ledger → persists entry",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/ledger → returns entries with counts",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/recall → full ledger replay",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/recall?system=orchestrator → filtered",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/bus → unified bus log",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/channels → 22 SISO channels",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/cli → CLI reference object",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "POST /api/exec → executes command, returns output",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /ports.js → canonical port map JS",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /ui/idearium → serves idearium UI HTML",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /bridge/health → {ok,bridge,sessions,pendingRequests}",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "GET /bridge/stats → stats object",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "POST /bridge/handshake → token issued for valid secret",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "POST /bridge/handshake → rejects invalid secret",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "POST /bridge/broadcast → accepted",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "GET /bridge/requests → array",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "POST /bridge/request → creates request, uuid in request object",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "POST /bridge/tags → tags entity",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "GET /bridge/contract → interaction contract",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "GET /bridge/subscribe → SSE stream opens",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "GET /health → {status:ok, jaa:{counts}, uptime}",
+      "status": "SKIP",
+      "reason": "cortex offline"
+    },
+    {
+      "name": "GET /contract → cortex interaction contract",
+      "status": "SKIP",
+      "reason": "cortex offline"
+    },
+    {
+      "name": "GET /sse → SSE stream opens",
+      "status": "SKIP",
+      "reason": "cortex offline"
+    },
+    {
+      "name": "GET /api/events → array of events",
+      "status": "SKIP",
+      "reason": "cortex offline"
+    },
+    {
+      "name": "POST /api/event → event accepted, stored",
+      "status": "SKIP",
+      "reason": "cortex offline"
+    },
+    {
+      "name": "GET /api/gaps → gap list",
+      "status": "SKIP",
+      "reason": "cortex offline"
+    },
+    {
+      "name": "POST /api/tags → tags entity",
+      "status": "SKIP",
+      "reason": "cortex offline"
+    },
+    {
+      "name": "GET /health → {ok,uptime,jobs,providers,queued}",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /contract → guardian interaction contract",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /providers → provider list",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /jobs → job list",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /artifacts → artifact list",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /ledger → ledger entries",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /bus → SISO bus log with gates",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "POST /bus/emit → emits to SISO bus",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /events → SSE endpoint exists",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "POST /ledger → ledger entry written",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "GET /health → {ok,version,snr,uptime}",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/contract → full interaction contract",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/stats → stats object with all counts",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/snr → current SNR value",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/snr/history → SNR sample array",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/ideas → creates idea, returns uuid",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/ideas → list with at least 1 idea",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/ideas/:uuid → idea detail with links and openGaps",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/ideas/:uuid/tension → computes tension score",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/ideas/:uuid/phase → advances phase",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/ideas/:uuid/spec → creates spec linked to idea",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/specs → spec list",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/specs/:uuid/check → CI run result",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/specs/:uuid/build → build result with status",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/gaps → creates gap",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/gaps → gap list filtered by status",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/gaps/:uuid/resolve → gap resolved",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "POST /api/snapshots → pushes snapshot",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/snapshots → snapshot list",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/events → event log",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /sse → SSE stream opens, sends ready",
+      "status": "SKIP",
+      "reason": "idearium offline"
+    },
+    {
+      "name": "GET /api/bridge/health → proxied from bridge",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/idearium/health → proxied from idearium",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/cortex/health → proxied from cortex",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/guardian/health → proxied from guardian",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "POST /api/idearium/ideas → proxied idea creation",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /api/guardian/bus → proxied guardian bus",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "Guardian bus.emit → event appears in guardian bus log",
+      "status": "SKIP",
+      "reason": "guardian offline"
+    },
+    {
+      "name": "Bridge broadcast → bridge receives event",
+      "status": "SKIP",
+      "reason": "bridge offline"
+    },
+    {
+      "name": "Idearium idea.create → orchestrator ledger updated",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "Orchestrator recall includes events from all online systems",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "nexus-connect recall() → reads from orchestrator",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "recall?type=filter → type-filtered results",
+      "status": "SKIP",
+      "reason": "orchestrator offline"
+    },
+    {
+      "name": "GET /contract → emerge interaction contract",
+      "status": "SKIP",
+      "reason": "emerge offline"
+    },
+    {
+      "name": "GET /status → emerge status",
+      "status": "SKIP",
+      "reason": "emerge offline"
+    }
+  ]
+}

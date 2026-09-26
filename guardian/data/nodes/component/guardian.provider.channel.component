@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.provider.channel
+type: component
+id: guardian.provider.channel
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152812
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152812
+lastSeenAt: 1789275152812
+fingerprint: guardian::GET /channel
+payload:
+  id: guardian.provider.channel
+  uuid: 729ab418-cfef-4f9d-a6f6-b1de52ca2c69
+  namespace: guardian
+  name: provider.channel
+  version: 3.6.2

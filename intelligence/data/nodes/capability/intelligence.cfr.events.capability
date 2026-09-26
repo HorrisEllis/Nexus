@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.cfr.events
+type: capability
+id: intelligence.cfr.events
+context: intelligence/registry-components.js real capability export
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789250756076
+source: intelligence.registry-components:intelligence.cfr.events
+payload:
+  id: intelligence.cfr.events
+  namespace: intelligence
+  name: cfr.events
+  version: 1.0.0
+  grammar:
+    - cfr events
+    - intelligence cfr
+  route:
+    method: GET
+    path: /cfr/events
+  intent: []
+  description: CFR event ledger, tail
+  params: []
+  tags:
+    - intelligence
+    - ledger
+  permissions:
+    - system
+  hooks: {}

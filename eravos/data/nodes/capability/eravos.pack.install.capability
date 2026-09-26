@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-eravos.pack.install
+type: capability
+id: eravos.pack.install
+context: eravos/registry-components.js real capability export
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789250730185
+source: eravos.registry-components:eravos.pack.install
+payload:
+  id: eravos.pack.install
+  namespace: eravos
+  name: pack.install
+  version: 3.0.0
+  grammar:
+    - eravos install
+  route:
+    method: POST
+    path: /api/pack/install
+  intent: []
+  description: Install a .zip mod pack
+  params: []
+  tags:
+    - eravos
+  permissions:
+    - system
+  hooks: {}

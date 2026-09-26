@@ -1,0 +1,18 @@
+envelope: 1
+uuid: nexus-export-system-ollama
+type: system
+id: ollama
+context: >-
+  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
+  ollama/registry-components.js
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789250730191
+source: nexus.autopilot.KERNELS + registry-components.js
+payload:
+  id: ollama
+  hasCapabilities: true
+  port: 3749
+  spec: ollama/spec/ollama.spec

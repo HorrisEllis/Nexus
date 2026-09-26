@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-emerge.snapshot
+type: capability
+id: emerge.snapshot
+context: emerge/registry-components.js real capability export
+intent: null
+summary: null
+system: emerge
+tags: []
+exported_at: 1789250730116
+source: emerge.registry-components:emerge.snapshot
+payload:
+  id: emerge.snapshot
+  namespace: emerge
+  name: snapshot
+  version: 1.1.0
+  grammar:
+    - snapshot
+    - emerge snapshot
+  route:
+    method: POST
+    path: /api/snapshot
+  intent: []
+  description: Snapshot before applying patch
+  params: []
+  tags:
+    - emerge
+    - snapshot
+  permissions:
+    - system
+  hooks: {}

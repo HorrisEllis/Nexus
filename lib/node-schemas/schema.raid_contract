@@ -1,0 +1,90 @@
+envelope: 1
+uuid: nexus-export-schema-raid_contract
+type: schema
+id: raid_contract
+context: >-
+  lib/node-schemas — shared canonical registry. Grounded in cortex/boot.js's real GET
+  /api/raid/queue route, confirmed directly against live rows this pass.
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789252802359
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    cortex/boot.js's real GET /api/raid/queue — confirmed against
+    data/cortex/memory/raid_contract_queue.json's real, live rows (18 of them). Deliberately NOT
+    unified with `.contract` (status:REAL, grounded in lib/end-state.js's real pursuit-contract
+    shape) — that is a genuinely different real system with a real, required endState field these
+    rows never have and never will under the current implementation. Same collision-naming
+    discipline already applied to ledger/gap/wire elsewhere in this codebase: two real things, one
+    shared English word, kept as two real types rather than silently merged.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real queue-row id
+    status:
+      type: string
+      required: true
+      description: real lifecycle status, e.g. 'fail' | 'queued' | 'complete'
+    intention:
+      type: string
+      required: true
+      description: real intent verb this contract serves, e.g. 'build'
+    forAgent:
+      type: string
+      required: true
+      description: real agent this contract was routed to
+    contract:
+      type: object
+      required: true
+      description: real {content, ...} — the actual prompt/content body dispatched
+    stage:
+      type: string
+      required: false
+      description: real pipeline stage, e.g. 'queued'
+    source:
+      type: string
+      required: false
+      description: real originating system
+    boundary:
+      type: object
+      required: false
+      description: >-
+        real {key, primitive, invariants, principles} primitive/invariant boundary, per §BOUNDARY
+        VIOLATION
+    title:
+      type: string
+      required: false
+      description: real human-readable title
+    dependsOn:
+      type: array
+      required: false
+      description: real dependency-graph edges onto other contracts
+    onFail:
+      type: string
+      required: false
+      description: real failure policy — retry/fallbackAgent/halt
+    retryCount:
+      type: number
+      required: false
+      description: real retry counter
+    compartmentId:
+      type: string
+      required: false
+      description: real RAID compartment id, when this contract runs inside one
+    verdict:
+      type: string
+      required: false
+      description: real verdict recorded once resolved
+    createdAt:
+      type: number
+      required: false
+      description: real creation timestamp
+    updatedAt:
+      type: number
+      required: false
+      description: real last-update timestamp

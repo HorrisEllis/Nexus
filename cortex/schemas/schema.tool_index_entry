@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-schema-tool_index_entry
+type: schema
+id: tool_index_entry
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table. Origin:
+  lib/node-schemas/schema.tool_index_entry.
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252802359
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/tool-index.js's real register()/touch() row shape — confirmed against
+    data/cortex/memory/tool_index.json's real, live rows (86 of them). Genuinely distinct from
+    `.tool` (a tool's own definition): this is metadata ABOUT a tool's real usage, not the tool
+    itself — consumers/intents/edgeCases/calls accumulate over the tool's real lifetime, they aren't
+    declared once like a `.tool` record's description/parameters.
+  fields:
+    id:
+      type: string
+      required: true
+      description: real tool id this entry indexes, e.g. 'read_file'
+    consumers:
+      type: array
+      required: false
+      description: real list of real callers that have used this tool, defaults to []
+    intents:
+      type: array
+      required: false
+      description: real list of intents this tool has been invoked under, defaults to []
+    edgeCases:
+      type: array
+      required: false
+      description: real, bounded (max 50) list of {note, at, consumer} edge cases observed for this tool
+    calls:
+      type: number
+      required: false
+      description: real accumulated call count
+    file:
+      type: string
+      required: false
+      description: real source file this tool's implementation lives in, null when unset
+    dir:
+      type: string
+      required: false
+      description: real source directory, null when unset
+    provides:
+      type: string
+      required: false
+      description: real, human-readable description of what this tool provides
+    updatedAt:
+      type: number
+      required: false
+      description: real last-update timestamp

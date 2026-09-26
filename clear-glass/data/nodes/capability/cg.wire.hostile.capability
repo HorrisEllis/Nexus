@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.wire.hostile
+type: capability
+id: cg.wire.hostile
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730165
+source: clear-glass.registry-components:cg.wire.hostile
+payload:
+  id: cg.wire.hostile
+  namespace: cg
+  name: wire.hostile
+  version: 3.1.0
+  grammar:
+    - wire hostile
+  route:
+    method: POST
+    path: /hook/hostile
+  intent: []
+  description: Hostile detection → fp switch
+  params: []
+  tags:
+    - cg
+    - wire
+    - security
+  permissions:
+    - system
+  hooks: {}

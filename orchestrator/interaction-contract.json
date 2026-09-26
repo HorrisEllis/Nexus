@@ -1,0 +1,26 @@
+{
+  "id": "orchestrator-v1",
+  "version": "1.0.0",
+  "namespace": "orchestrator",
+  "_reconciled_2026_09_13": "MCO18 (Track B item 3 continuation) — orchestrator had no dedicated interaction-contract.json before this (unlike cortex/idearium/guardian/sentinel/architect/nexus-healer, confirmed at session start). Built fresh, reconciled against orchestrator.js's real routes directly. Orchestrator's real proxy routes (/api/<system>/* forwarding to each real system's own port, referenced throughout this session's Track D/§5.2 work) are real but not exhaustively enumerated per-target-system here — orchestrator.js does not define them via a single readable config object this pass had time to fully trace; each target system's own interaction-contract.json is the authoritative route list for what that proxy actually reaches.",
+  "ports": { "http": 9000 },
+  "uuid": "orchestrator-contract-v1-0000-2026-0913-jamesbrooks-001",
+  "role": "Central coordinator — system registry, contract distribution, component-registry init, cross-system proxy routing",
+  "health": { "method": "GET", "path": "/health", "returns": { "ok": true } },
+  "routes": [
+    { "method": "GET", "path": "/api/state" },
+    { "method": "POST", "path": "/api/state/save" },
+    { "method": "GET", "path": "/api/contract" },
+    { "method": "GET", "path": "/api/contract/:system" },
+    { "method": "POST", "path": "/api/contract/validate" },
+    { "method": "ANY", "path": "/api/contract/*", "description": "startsWith — real sub-routes beyond /validate not individually confirmed this pass" },
+    { "method": "ANY", "path": "/api/capabilities/prompt" },
+    { "method": "ANY", "path": "/api/capabilities/resolve" },
+    { "method": "ANY", "path": "/api/officiator/synthesize" },
+    { "method": "ANY", "path": "/api/components", "description": "startsWith — component-registry read surface" },
+    { "method": "ANY", "path": "/api/nexus/knowledge" },
+    { "method": "ANY", "path": "/api/notes" },
+    { "method": "ANY", "path": "/api/system/*", "description": "startsWith — real per-system status/control, sub-paths not individually enumerated" },
+    { "method": "ANY", "path": "/api/<system>/*", "description": "Real cross-system proxy routing (/api/cortex/*, /api/guardian/*, /api/architect/*, /api/idearium/*, etc.) — referenced throughout this session's Track D (§5.2) work; each target system's own interaction-contract.json is the real authority for what's actually reachable through it, not duplicated here" }
+  ]
+}

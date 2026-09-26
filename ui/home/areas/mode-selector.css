@@ -1,0 +1,116 @@
+/* ui/home/areas/mode-selector.css — Mode selector overlay + active-mode indicator.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* ══════════════════════════════════════════════════════════════════════
+   MODE SELECTOR — landing overlay
+   Five modes: orchestrator (Ollama) · claude/chatgpt/gemini/perplexity (NCP)
+   ══════════════════════════════════════════════════════════════════════ */
+#mode-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,6,.97);
+  display:none;
+  backdrop-filter:blur(4px);
+  transition:opacity .25s ease;
+}
+#mode-overlay.open{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#mode-overlay.hidden{opacity:0;pointer-events:none}
+#mode-inner{
+  display:flex;flex-direction:column;align-items:center;gap:40px;
+  padding:48px 0;
+  max-width:1000px;width:100%;
+}
+.mode-eyebrow{
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.25em;color:rgba(255,255,255,.2);text-transform:uppercase;
+}
+.mode-title{
+  font-family:'Space Mono',monospace;font-size:28px;font-weight:700;
+  letter-spacing:.06em;color:rgba(255,255,255,.9);text-align:center;
+}
+.mode-cards{
+  display:flex;flex-wrap:wrap;gap:20px;
+  padding:0 24px;
+}
+.mode-card{
+  flex:1 1 280px;min-width:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:32px 28px 28px;
+  display:flex;flex-direction:column;gap:20px;
+  cursor:pointer;
+  transition:border-color .25s,background .25s,transform .15s,box-shadow .25s;
+  background:rgba(255,255,255,.02);
+  position:relative;overflow:hidden;
+}
+.mode-card::before{
+  content:'';position:absolute;inset:0;border-radius:16px;opacity:0;
+  transition:opacity .25s;
+}
+.mode-card:hover{transform:translateY(-3px)}
+.mode-card.m-orch{--mc:var(--ac);--mg:var(--ac-ghost)}
+.mode-card.m-claude{--mc:#cc44ff;--mg:rgba(204,68,255,.06)}
+.mode-card.m-chatgpt{--mc:var(--ok);--mg:rgba(0,255,136,.06)}
+.mode-card.m-gemini{--mc:#4a9eff;--mg:rgba(74,158,255,.06)}
+.mode-card.m-perplexity{--mc:#818cf8;--mg:rgba(129,140,248,.06)}
+.mode-card:hover{border-color:var(--mc);background:var(--mg);box-shadow:0 0 40px rgba(0,0,0,.4),0 0 0 1px var(--mc) inset,0 16px 40px -8px var(--mg)}
+.mode-card:hover::before{opacity:1;background:radial-gradient(ellipse at 50% 0%,var(--mc) 0%,transparent 70%);opacity:.06}
+.mode-icon{
+  font-size:32px;
+  line-height:1;
+}
+.mode-badge{
+  font-family:'Space Mono',monospace;font-size:8px;font-weight:700;
+  letter-spacing:.18em;padding:3px 10px;border-radius:20px;
+  border:1px solid;color:var(--mc);border-color:var(--mc);
+  background:rgba(255,255,255,.03);
+  display:inline-block;
+  text-transform:uppercase;
+}
+.mode-name{
+  font-family:'Space Mono',monospace;font-size:17px;font-weight:700;
+  letter-spacing:.08em;color:#fff;
+}
+.mode-sub{
+  font-size:12px;color:rgba(255,255,255,.45);line-height:1.6;
+}
+.mode-traits{
+  display:flex;flex-direction:column;gap:7px;margin-top:4px;
+}
+.mode-trait{
+  display:flex;align-items:baseline;gap:8px;
+  font-size:11px;color:rgba(255,255,255,.5);line-height:1.4;
+}
+.mode-trait::before{
+  content:'·';color:var(--mc);flex-shrink:0;font-weight:700;
+}
+.mode-select-btn{
+  margin-top:8px;
+  padding:11px 0;text-align:center;
+  border-radius:9px;
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.04);
+  transition:all .2s;
+}
+.mode-card:hover .mode-select-btn{
+  background:var(--mc);color:#000;border-color:var(--mc);
+  box-shadow:0 0 20px var(--mg);
+}
+
+/* ── Active mode badge in menu button ─────────────────────────────── */
+#mode-indicator{
+  font-family:'Space Mono',monospace;font-size:8px;font-weight:700;
+  letter-spacing:.12em;padding:2px 8px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.35);
+  margin-left:6px;vertical-align:middle;
+}
+body[data-mode='mistral'] #mode-indicator{color:var(--ac);border-color:var(--ac-border)}
+body[data-mode='claude']       #mode-indicator{color:#cc44ff;border-color:rgba(204,68,255,.25)}
+body[data-mode='chatgpt']      #mode-indicator{color:var(--ok);border-color:var(--ok-border)}
+body[data-mode='gemini']       #mode-indicator{color:#4a9eff;border-color:rgba(74,158,255,.25)}
+body[data-mode='perplexity']   #mode-indicator{color:#818cf8;border-color:rgba(129,140,248,.25)}

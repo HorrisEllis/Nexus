@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-dcf7a176-c7ba-4d77-a964-0d48e065ea3f
+type: bep_pattern
+id: dcf7a176-c7ba-4d77-a964-0d48e065ea3f
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.diagnostic.dangling-hook" precedes failures 116 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790367389071
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790367389071
+lastSeenAt: 1790367389071
+fingerprint: null
+payload:
+  uuid: dcf7a176-c7ba-4d77-a964-0d48e065ea3f
+  signature: precursor::ledger.diagnostic.dangling-hook
+  patternType: failure_precursor
+  precursorType: ledger.diagnostic.dangling-hook
+  failureTypes:
+    - intelligence.failure_scan
+  count: 116
+  confidence: 1
+  description: '"ledger.diagnostic.dangling-hook" precedes failures 116 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790367389026

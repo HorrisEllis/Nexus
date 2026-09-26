@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.events
+type: capability
+id: guardian.events
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730128
+source: guardian.registry-components:guardian.events
+payload:
+  id: guardian.events
+  namespace: guardian
+  name: events
+  version: 3.6.2
+  grammar:
+    - events
+    - events
+  route:
+    method: GET
+    path: /events
+  intent: []
+  description: SSE — all guardian bus events
+  params: []
+  tags:
+    - guardian
+    - stream
+  permissions:
+    - system
+  hooks: {}

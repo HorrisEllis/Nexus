@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-schema-schema
+type: schema
+id: schema
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116324011
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    this file's own convention, and hat-forge.js's HAT_SCHEMA / loom's definitions.js — the real,
+    established shape a NEXUS schema object already takes
+  fields:
+    status:
+      type: string
+      required: true
+      description: '''REAL'' | ''OPEN'''
+    source:
+      type: string
+      required: true
+      description: the real file/construction-site this schema is grounded in
+    fields:
+      type: object
+      required: true
+      description: field name -> {type, required, description}

@@ -1,0 +1,108 @@
+envelope: 1
+uuid: nexus-export-schema-failure_mode
+type: schema
+id: failure_mode
+context: >-
+  cortex/schemas — sovereign local copy. cortex/self-heal/index.js + failure-mode-forensics.js are
+  the real writers. Origin: lib/node-schemas/schema.failure_mode.
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789253941194
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    cortex/self-heal/index.js's real _enterFailureMode(gapType, gapUuid, existing) ("Level 4 —
+    failure mode, human action item") writes real jaaDB rows to a real `failure_modes` table, read
+    back via cortex/boot.js's real GET /api/failure-modes (jaaDB.tail('failure_modes', 20)).
+    correction_2026-09-12 — James: "each system needs .failure_mode nodes that use the intelligence
+    system to map the events leading up to a failure mode... delta and sigmas for tension and
+    friction score." The causal context (root/conditions/siblingDanglingHooks) was already being
+    gathered by the same file's own _gatherFailureContext() — real, working, via lib/gap-field.js's
+    explainWhy() -> lib/diagnostic-causal.js's explainFinding() -> intelligence/relational-field —
+    but only ever flattened into a RAID contract's free-text content, never persisted as structured
+    data on the failure_mode record itself. cortex/self-heal/failure-mode-forensics.js now does
+    that: an async, best-effort UPDATE onto the same row once real context resolves (never delays or
+    risks the original synchronous §0.3 write above), adding the fields below.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real failure-mode entry id
+    faultClass:
+      type: string
+      required: true
+      description: real fault classification — the gapType that escalated to this level
+    gapUuid:
+      type: string
+      required: true
+      description: real id of the .gap that escalated into this failure mode
+    friction:
+      type: number
+      required: false
+      description: real friction score carried over from the escalating gap, defaults to 1.0
+    enteredAt:
+      type: number
+      required: true
+      description: real timestamp this failure mode was entered
+    source:
+      type: string
+      required: true
+      description: real originating module — cortex/self-heal/index.js's own MODULE_ID
+    root:
+      type: any
+      required: false
+      description: >-
+        correction_2026-09-12: real root-cause object from lib/diagnostic-causal.js's
+        explainFinding(), when the causal field traced one — added by failure-mode-forensics.js's
+        async enrichment, absent if the causal field had none
+    conditions:
+      type: array
+      required: false
+      description: >-
+        correction_2026-09-12: real, ordered list of precursor conditions/events from the same
+        causal trace — the actual "events leading up to it," not a guess
+    siblingDanglingHooks:
+      type: array
+      required: false
+      description: >-
+        correction_2026-09-12: real dangling hooks found on the same system at the time of failure,
+        may or may not be related — carried over from _gatherFailureContext() unchanged
+    sigmaBefore:
+      type: number
+      required: false
+      description: >-
+        correction_2026-09-12: real average sigma_records reading in the window before this failure,
+        when any were recorded — see failure-mode-forensics.js computeSigmaDelta()
+    sigmaAtEntry:
+      type: number
+      required: false
+      description: >-
+        correction_2026-09-12: real average sigma_records reading in the window immediately before
+        entry, closest to the actual failure
+    sigmaDelta:
+      type: number
+      required: false
+      description: >-
+        correction_2026-09-12: real sigmaAtEntry - sigmaBefore — a rising delta means system-wide
+        tension was climbing into this failure, not assumed causal, just observed
+    debugMacroUuid:
+      type: string
+      required: false
+      description: >-
+        correction_2026-09-12: real id of the .debug_macro generated to reproduce this failure, when
+        conditions were available to build one
+    contextGatherError:
+      type: string
+      required: false
+      description: >-
+        correction_2026-09-12: honest error message if context-gathering itself failed — never
+        silently omitted
+    enrichedAt:
+      type: number
+      required: false
+      description: >-
+        correction_2026-09-12: real timestamp the async enrichment update landed, distinct from
+        enteredAt

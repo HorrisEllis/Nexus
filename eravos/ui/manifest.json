@@ -1,0 +1,220 @@
+{
+  "manifest_version": "1.0.0",
+  "pack_id": "eravos.core",
+  "pack_version": "3.0.0",
+  "pack_type": "mod_pack",
+  "label": "ERAVOS Core",
+  "icon": "🎛",
+  "description": "ERAVOS kernel + 28 mods. Drop-in zip. Opens as file://.",
+  "author": "James Brooks",
+  "kernel_target": "3.0.0",
+  "status": "canonical",
+
+  "permissions": [
+    "audio_out", "audio_in",
+    "midi_in", "midi_out",
+    "bus_publish", "bus_subscribe",
+    "filesystem_read",
+    "network_fetch",
+    "serial_access"
+  ],
+
+  "provides": [
+    "capability.audio_context",
+    "capability.pad_trigger",
+    "capability.sequencer",
+    "capability.timeline",
+    "capability.sample_source",
+    "capability.lfo",
+    "capability.audio_out",
+    "capability.channel_strip",
+    "capability.lead_voice",
+    "capability.sidechain_duck",
+    "capability.master_fx_control",
+    "capability.image_edit",
+    "capability.image_export",
+    "capability.video_edit",
+    "capability.video_export",
+    "capability.serial_io",
+    "capability.hardware_control",
+    "capability.automation_record",
+    "capability.automation_playback",
+    "capability.external_automation"
+  ],
+
+  "requires": [],
+  "dependencies": [],
+
+  "contents": {
+    "manifest": "manifest.json",
+    "shell": "index.html",
+    "kernel": [
+      "kernel/kernel.js",
+      "kernel/intake.js"
+    ],
+    "runtime": [
+      "runtime/canvas-wm.js",
+      "runtime/mod-factory.js"
+    ],
+    "mods": [
+      {
+        "id": "eravos.pads",
+        "label": "Drum Machine",
+        "engine": "mods/pads/pads.engine.js"
+      },
+      {
+        "id": "eravos.sequencer",
+        "label": "Sequencer",
+        "engine": "mods/sequencer/sequencer.engine.js"
+      },
+      {
+        "id": "eravos.timeline",
+        "label": "Timeline",
+        "engine": "mods/timeline/timeline.engine.js"
+      },
+      {
+        "id": "eravos.sample-player",
+        "label": "Sample Player",
+        "engine": "mods/sample-player/sample-player.engine.js"
+      },
+      {
+        "id": "eravos.lfo",
+        "label": "LFO",
+        "engine": "mods/lfo/lfo.engine.js"
+      },
+      {
+        "id": "eravos.wobble-bass",
+        "label": "Wobble Bass",
+        "engine": "mods/wobble-bass/wobble-bass.engine.js"
+      },
+      {
+        "id": "eravos.acid-synth",
+        "label": "Acid Synth",
+        "engine": "mods/acid-synth/acid-synth.engine.js"
+      },
+      {
+        "id": "eravos.reese-bass",
+        "label": "Reese Bass",
+        "engine": "mods/reese-bass/reese-bass.engine.js"
+      },
+      {
+        "id": "eravos.channel",
+        "label": "Channel",
+        "engine": "mods/channel/channel.engine.js"
+      },
+      {
+        "id": "eravos.xy-pad",
+        "label": "XY Controller",
+        "engine": "mods/xy-pad/xy-pad.engine.js"
+      },
+      {
+        "id": "eravos.edm-lab",
+        "label": "EDM Lab",
+        "engine": "mods/edm-lab/edm-lab.engine.js"
+      },
+      {
+        "id": "eravos.contrast-analyser",
+        "label": "Contrast Analyser",
+        "engine": "mods/contrast-analyser/contrast-analyser.engine.js"
+      },
+      {
+        "id": "eravos.bass-drop-builder",
+        "label": "Bass Drop Builder",
+        "engine": "mods/bass-drop-builder/bass-drop-builder.engine.js"
+      },
+      {
+        "id": "eravos.nexus-cortex",
+        "label": "Nexus Cortex",
+        "engine": "mods/nexus-cortex/nexus-cortex.engine.js"
+      },
+      {
+        "id": "eravos.nexus-guardian",
+        "label": "Nexus Guardian",
+        "engine": "mods/nexus-guardian/nexus-guardian.engine.js"
+      },
+      {
+        "id": "eravos.nexus-bridge",
+        "label": "Nexus Bridge",
+        "engine": "mods/nexus-bridge/nexus-bridge.engine.js"
+      },
+      {
+        "id": "eravos.nexus-orchestrator",
+        "label": "Nexus Orchestrator",
+        "engine": "mods/nexus-orchestrator/nexus-orchestrator.engine.js"
+      },
+      {
+        "id": "eravos.nexus-diagnostic",
+        "label": "Nexus Diagnostic",
+        "engine": "mods/nexus-diagnostic/nexus-diagnostic.engine.js"
+      },
+      {
+        "id": "eravos.nexus-architect",
+        "label": "Nexus Architect",
+        "engine": "mods/nexus-architect/nexus-architect.engine.js"
+      },
+      {
+        "id": "eravos.nexus-idearium",
+        "label": "Nexus Idearium",
+        "engine": "mods/nexus-idearium/nexus-idearium.engine.js"
+      },
+      {
+        "id": "eravos.supersaw",
+        "label": "Supersaw",
+        "engine": "mods/supersaw/supersaw.engine.js"
+      },
+      {
+        "id": "eravos.sidechain-compressor",
+        "label": "Sidechain",
+        "engine": "mods/sidechain-compressor/sidechain-compressor.engine.js"
+      },
+      {
+        "id": "eravos.master-fx",
+        "label": "Master FX",
+        "engine": "mods/master-fx/master-fx.engine.js"
+      },
+      {
+        "id": "eravos.photo-editor",
+        "label": "Photo Editor",
+        "engine": "mods/photo-editor/photo-editor.engine.js"
+      },
+      {
+        "id": "eravos.video-editor",
+        "label": "Video Editor",
+        "engine": "mods/video-editor/video-editor.engine.js"
+      },
+      {
+        "id": "eravos.serial-bridge",
+        "label": "Serial Bridge",
+        "engine": "mods/serial-bridge/serial-bridge.engine.js"
+      },
+      {
+        "id": "eravos.macro-automation",
+        "label": "Macro Automation",
+        "engine": "mods/macro-automation/macro-automation.engine.js"
+      },
+      {
+        "id": "eravos.webhook-automation",
+        "label": "Webhook Automation",
+        "engine": "mods/webhook-automation/webhook-automation.engine.js"
+      }
+    ],
+    "specs": [
+      "specs/ERAVOS.kernel.spec",
+      "specs/eravos.mod.pads.spec",
+      "specs/eravos.mod.sequencer.spec",
+      "specs/eravos.mod.timeline.spec",
+      "specs/eravos.mod.sample-player.spec",
+      "specs/eravos.pack.format.spec",
+      "specs/eravos.nexus.build-contract.spec"
+    ]
+  },
+
+  "auto_mount": ["eravos.pads"],
+
+  "install_behavior": {
+    "spawn_at_drop_position": true,
+    "audio_files": "spawn_sample_player",
+    "midi_files":  "spawn_sequencer",
+    "zip_files":   "install_pack"
+  }
+}

@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-loom.contracts.handoff
+type: component
+id: loom.contracts.handoff
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789275153087
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153087
+lastSeenAt: 1789275153087
+fingerprint: loom::POST /api/contracts/:id/handoff
+payload:
+  id: loom.contracts.handoff
+  uuid: bbceab39-eb2a-4b09-a761-621264416a86
+  namespace: loom
+  name: contracts.handoff
+  version: 1.5.0

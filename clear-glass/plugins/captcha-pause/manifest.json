@@ -1,0 +1,23 @@
+{
+  "id": "f4a1e2b3-6c7d-4e8f-9a0b-1c2d3e4f5a6b",
+  "name": "captcha-pause",
+  "version": "1.0.0",
+  "displayName": "CAPTCHA-Aware Pause/Resume",
+  "description": "The real gap named in CLEAR-GLASS-CAPABILITY-BREAKDOWN-2026-08-23.md: 'CLI drives automation, but pop a real UI prompt when a CAPTCHA blocks it, then resume.' Composes the already-real dom.query gate (detection) with a new, real 'block until human clears it' poll loop, surfaced via the already-real toast driver.exec action — not a passive detector, a pause-and-wait primitive.",
+  "author": "James Brooks (Erosmancer)",
+  "entryPoint": "index.js",
+  "permissions": {
+    "network": false,
+    "domStorage": false,
+    "webRequest": false,
+    "hostFs": false
+  },
+  "contributes": {
+    "pause-resume-gate": [
+      {
+        "signature": "plugin:f4a1e2b3-6c7d-4e8f-9a0b-1c2d3e4f5a6b:check-and-wait",
+        "handler": "checkAndWait"
+      }
+    ]
+  }
+}

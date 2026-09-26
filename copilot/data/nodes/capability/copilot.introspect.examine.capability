@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.introspect.examine
+type: capability
+id: copilot.introspect.examine
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730181
+source: copilot.registry-components:copilot.introspect.examine
+payload:
+  id: copilot.introspect.examine
+  namespace: copilot
+  name: introspect.examine
+  version: 2.0.0
+  grammar:
+    - introspect
+    - check your last answer
+    - was that right
+    - examine that response
+  route:
+    method: POST
+    path: /api/introspect
+  intent:
+    - ask
+  description: >-
+    Examine the last answer against REAL signals — reflection score, contract shape, gaps, ledger.
+    Never the model’s own opinion
+  params: []
+  tags:
+    - copilot
+    - introspect
+    - reflection
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: copilot.introspect.examine
+        intent:
+          - ask
+        tags:
+          - read-only
+    out:
+      - id: copilot.introspect.verdict
+        wires_to:
+          - ui.copilot.receive
+        tags:
+          - diagnosis

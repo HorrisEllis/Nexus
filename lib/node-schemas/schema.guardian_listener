@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-schema-guardian_listener
+type: schema
+id: guardian_listener
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116323999
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    guardian/userscript-{claude,chatgpt,gemini,perplexity}.js — identical real GUARDIAN_HEARTBEAT
+    payload, confirmed byte-identical across all four
+  fields:
+    provider:
+      type: string
+      required: true
+      description: >-
+        real provider this listener runs against — 'claude' | 'chatgpt' | 'gemini' | 'perplexity',
+        one const PROVIDER per userscript file
+    tabId:
+      type: string
+      required: true
+      description: >-
+        real, session-ephemeral tab identity — MY_TAB, generated once per tab session and held in
+        sessionStorage only, never persisted cross-restart
+    ts:
+      type: number
+      required: true
+      description: real heartbeat timestamp, sent every HB_MS (8000ms)
+    usage:
+      type: any
+      required: false
+      description: >-
+        real output of detectUsageLimit() — provider-specific usage/rate-limit state, shape not
+        unified across providers
+    chatId:
+      type: string
+      required: false
+      description: real current chat id on the provider's own site, from chatId()
+    claimed:
+      type: boolean
+      required: true
+      description: >-
+        real claim state — whether this tab is currently claimed for job dispatch (isClaimed, set
+        via GUARDIAN_CLAIM messages, sessionStorage TAB_KEY-backed)
+    connState:
+      type: string
+      required: false
+      description: >-
+        real connection state to guardian's NCP endpoint — 'disconnected' | 'ready', not itself sent
+        in the heartbeat payload but held alongside it in the same runtime state

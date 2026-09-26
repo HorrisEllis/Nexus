@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.wire.eros.proxy
+type: capability
+id: cg.wire.eros.proxy
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730164
+source: clear-glass.registry-components:cg.wire.eros.proxy
+payload:
+  id: cg.wire.eros.proxy
+  namespace: cg
+  name: wire.eros.proxy
+  version: 3.1.0
+  grammar:
+    - wire eros proxy
+  route:
+    method: POST
+    path: /eros/*
+  intent: []
+  description: Proxy command to ErosmancerOS
+  params: []
+  tags:
+    - cg
+    - wire
+    - eros
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-resonance_crystal-9990c6dd-a560-43a3-9065-cbdbb4a7c6ef
+type: resonance_crystal
+id: 9990c6dd-a560-43a3-9065-cbdbb4a7c6ef
+context: 'intelligence liminal-space resonance crystal: co_occurrence'
+intent: null
+summary: 'focal point: L1/L2'
+system: intelligence
+tags:
+  - liminal-space
+  - co_occurrence
+exported_at: 1789824849884
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789824849884
+lastSeenAt: 1789824849884
+fingerprint: null
+payload:
+  uuid: 9990c6dd-a560-43a3-9065-cbdbb4a7c6ef
+  focalPoint: L1/L2
+  type: co_occurrence
+  path: evidence_threshold
+  itemCount: 5
+  avgConfidence: 0.95
+  summary: >-
+    Co-occurrence: "intelligence.command.invoked" and "intent.classified" | Co-occurrence:
+    "intelligence.command.invoked" and "ui.copilot.provider" | Co-occurrence:
+    "intelligence.command.invoked" and "ui.copilot.backend"
+  ts: 1789824849884

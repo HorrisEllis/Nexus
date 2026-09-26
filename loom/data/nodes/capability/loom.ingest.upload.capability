@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.ingest.upload
+type: capability
+id: loom.ingest.upload
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730149
+source: loom.registry-components:loom.ingest.upload
+payload:
+  id: loom.ingest.upload
+  namespace: loom
+  name: ingest.upload
+  version: 1.5.0
+  grammar:
+    - ingest upload
+    - ingest-upload
+  route:
+    method: POST
+    path: /api/ingest-upload
+  intent: []
+  description: Ingest via file upload
+  params: []
+  tags:
+    - loom
+    - write
+  permissions:
+    - system
+  hooks: {}

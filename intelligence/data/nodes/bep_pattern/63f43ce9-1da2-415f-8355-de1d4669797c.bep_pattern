@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-63f43ce9-1da2-415f-8355-de1d4669797c
+type: bep_pattern
+id: 63f43ce9-1da2-415f-8355-de1d4669797c
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.ollama.updated" precedes failures 7 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266428
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266428
+lastSeenAt: 1790368266428
+fingerprint: null
+payload:
+  uuid: 63f43ce9-1da2-415f-8355-de1d4669797c
+  signature: precursor::ledger.ollama.updated
+  patternType: failure_precursor
+  precursorType: ledger.ollama.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 7
+  confidence: 0.7
+  description: '"ledger.ollama.updated" precedes failures 7 times — watch this event type'
+  actionable: true
+  crystallised: false
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

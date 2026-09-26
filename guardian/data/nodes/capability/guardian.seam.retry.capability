@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.seam.retry
+type: capability
+id: guardian.seam.retry
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730141
+source: guardian.registry-components:guardian.seam.retry
+payload:
+  id: guardian.seam.retry
+  namespace: guardian
+  name: seam.retry
+  version: 3.6.2
+  grammar:
+    - seam retry
+    - seam-retry
+  route:
+    method: POST
+    path: /seam/retry
+  intent: []
+  description: Retry a failed SEAM chunk
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,12 @@
+{
+  "name": "bridge-os-core",
+  "version": "1.2.0-core",
+  "description": "Bridge OS — vital-only core (identity, core, IME, sngate, data, heartbeat, contracts). No mesh, no transport, no causal, no CLI.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "for f in bridge-*/tests/*.js; do node \"$f\" || exit 1; done"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {}
+}

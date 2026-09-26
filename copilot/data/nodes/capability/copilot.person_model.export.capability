@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.person_model.export
+type: capability
+id: copilot.person_model.export
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730180
+source: copilot.registry-components:copilot.person_model.export
+payload:
+  id: copilot.person_model.export
+  namespace: copilot
+  name: person_model.export
+  version: 2.0.0
+  grammar:
+    - export my model
+    - what do you have on me
+  route:
+    method: GET
+    path: /api/person-model/export
+  intent: []
+  description: Everything held about the user, in one object
+  params: []
+  tags:
+    - copilot
+    - person-model
+  permissions:
+    - user
+  hooks: {}

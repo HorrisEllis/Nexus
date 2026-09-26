@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.health
+type: capability
+id: guardian.health
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730122
+source: guardian.registry-components:guardian.health
+payload:
+  id: guardian.health
+  namespace: guardian
+  name: health
+  version: 3.6.2
+  grammar:
+    - health
+    - health
+  route:
+    method: GET
+    path: /health
+  intent: []
+  description: Guardian health, job counts, provider status
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

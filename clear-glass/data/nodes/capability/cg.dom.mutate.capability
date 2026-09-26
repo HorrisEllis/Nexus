@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.dom.mutate
+type: capability
+id: cg.dom.mutate
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730157
+source: clear-glass.registry-components:cg.dom.mutate
+payload:
+  id: cg.dom.mutate
+  namespace: cg
+  name: dom.mutate
+  version: 3.1.0
+  grammar:
+    - dom mutate
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Mutate DOM node
+  params: []
+  tags:
+    - cg
+    - dom
+  permissions:
+    - system
+  hooks: {}

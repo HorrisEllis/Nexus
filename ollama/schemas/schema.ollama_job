@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-schema-ollama_job
+type: schema
+id: ollama_job
+context: ollama/schemas — ollama-local schema registry
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789200001100
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    ollama/routes/jobs.js's real job shape (POST /api/jobs, /api/jobs/tools), stored in ollama's own
+    lib/state.js, not jaaDB. A third, separate real "job" shape found this session — alongside
+    guardian's job/guardian_job and RAID's contract-shaped queue rows — none unified. Ollama-exclusive,
+    not the shared central .job type.
+  fields:
+    prompt:
+      type: string
+      required: true
+      description: real prompt text
+    model:
+      type: string
+      required: false
+      description: real model override, defaults to state.defaultModel
+    uploadId:
+      type: string
+      required: false
+      description: real reference to a prior POST /api/upload — the file's plaintext is prepended as context
+    maxIterations:
+      type: number
+      required: false
+      description: real cap on tool-loop iterations, for /api/jobs/tools only
+    toolCallLog:
+      type: array
+      required: false
+      description: real log of tool calls made during a tools-enabled job, present only on that path

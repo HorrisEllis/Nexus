@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.macros.run
+type: capability
+id: cg.macros.run
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730174
+source: clear-glass.registry-components:cg.macros.run
+payload:
+  id: cg.macros.run
+  namespace: cg
+  name: macros.run
+  version: 3.1.0
+  grammar:
+    - macros run
+  route:
+    method: IPC
+    path: macros:run
+  intent: []
+  description: Run a real macro against a real agent
+  params: []
+  tags:
+    - cg
+    - macros
+  permissions:
+    - system
+  hooks: {}

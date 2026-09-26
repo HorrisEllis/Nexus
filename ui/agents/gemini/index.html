@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemini Console — NEXUS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+:root{
+  --void:#06050a;--surface:#0e0c15;--panel2:#060d15;
+  --border:#101828;--border2:#1a2840;
+  --text:#d5e8f0;--text2:#7090a8;--text3:#304858;
+  --ac:#4a9eff;--ac-dim:rgba(74,158,255,.1);--ac-glow:rgba(74,158,255,.4);
+  --green:#00ff88;--red:#ff3355;--red-dim:rgba(255,51,85,.1);
+  --amber:#ffaa00;--amber-dim:rgba(255,170,0,.1);
+  --mono:'Space Mono',monospace;--ui:'Space Grotesk',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--void);color:var(--text);font-family:var(--ui);overflow:hidden;font-size:13px}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+#shell{display:grid;grid-template-rows:52px 1fr;height:100vh}
+#topbar{display:flex;align-items:center;gap:14px;padding:0 20px;background:linear-gradient(180deg,var(--panel2),var(--void));border-bottom:1px solid var(--border)}
+.glyph{font-size:22px;color:var(--ac);text-shadow:0 0 16px var(--ac-glow)}
+.title{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.16em}.title b{color:var(--ac)}
+#conn-badge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:20px;border:1px solid var(--border2);color:var(--text3);display:flex;align-items:center;gap:6px;margin-left:auto;transition:all .3s}
+#conn-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+#conn-badge.live{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+#conn-badge.live .dot{background:var(--ac);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 var(--ac-glow)}50%{box-shadow:0 0 0 4px transparent}}
+#main{display:grid;grid-template-columns:220px 1fr 280px;height:100%;overflow:hidden}
+.zone{overflow-y:auto;padding:16px}.zone+.zone{border-left:1px solid var(--border)}
+.zone-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:8px;text-transform:uppercase}
+.zone-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sys-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:11px}
+.sys-key{color:var(--text3);font-size:10px}.sys-val{font-family:var(--mono);font-size:10px;color:var(--text2)}
+.sys-val.ok{color:var(--green)}.sys-val.off{color:var(--red)}
+.tool-btn{display:flex;align-items:center;gap:8px;width:100%;font-family:var(--mono);font-size:10px;font-weight:600;background:transparent;border:1px solid var(--border2);color:var(--text3);padding:7px 10px;border-radius:5px;cursor:pointer;margin-bottom:5px;text-align:left;transition:all .15s}
+.tool-btn:hover{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+.tool-out{font-family:var(--mono);font-size:9px;color:var(--text3);padding:6px 8px;background:var(--surface);border:1px solid var(--border);border-radius:4px;max-height:120px;overflow-y:auto;white-space:pre-wrap;line-height:1.4;margin-bottom:8px}
+textarea.spec-ta{width:100%;min-height:100px;resize:vertical;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px;font-family:var(--mono);font-size:11px;line-height:1.6;outline:none;transition:border-color .2s;margin-bottom:8px}
+textarea.spec-ta:focus{border-color:var(--ac-glow)}
+textarea.spec-ta::placeholder{color:var(--text3)}
+.submit-btn{width:100%;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;background:var(--ac-dim);border:1px solid var(--ac-glow);color:var(--ac);padding:12px;border-radius:6px;cursor:pointer;transition:all .15s;text-align:center}
+.submit-btn:hover{background:rgba(74,158,255,.2)}
+.submit-btn:disabled{opacity:.4;cursor:default}
+.chip{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:14px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:all .15s;user-select:none;margin:0 4px 4px 0;display:inline-block}
+.chip.on{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+.chip:hover{border-color:var(--text3)}
+.vision-zone{border:2px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:12px}
+.vision-zone:hover,.vision-zone.drag{border-color:var(--ac-glow);background:var(--ac-dim)}
+.vision-zone .icon{font-size:24px;margin-bottom:6px;color:var(--text3)}
+.vision-zone .hint{font-size:10.5px;color:var(--text3)}
+.vision-preview{border-radius:6px;overflow:hidden;margin-bottom:8px;border:1px solid var(--border)}
+.vision-preview img{width:100%;display:block}
+.rung{position:relative;padding-left:18px;margin-bottom:12px}
+.rung-line{position:absolute;left:4px;top:14px;bottom:-12px;width:1px;background:var(--border2)}
+.rung-dot{position:absolute;left:0;top:3px;width:9px;height:9px;border-radius:50%;background:var(--void);border:2px solid var(--border2);transition:all .3s}
+.rung-dot.active{border-color:var(--amber);background:var(--amber-dim);animation:rdp 1.2s ease-in-out infinite}
+.rung-dot.verified{border-color:var(--green);background:var(--green)}
+.rung-dot.escalated{border-color:var(--red);background:var(--red)}
+@keyframes rdp{0%,100%{box-shadow:0 0 0 0 rgba(255,170,0,.5)}50%{box-shadow:0 0 0 4px transparent}}
+.rung-title{font-size:11px;color:var(--text);font-weight:500}
+.rung-state{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:2px}
+.rung-state.active{color:var(--amber)}.rung-state.verified{color:var(--green)}.rung-state.escalated{color:var(--red)}
+.vision-badge{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:10px;background:var(--ac-dim);border:1px solid var(--ac-glow);color:var(--ac);display:inline-block;margin-left:5px}
+input.nx-in{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:7px 10px;font-family:var(--mono);font-size:10px;outline:none;margin-bottom:6px;transition:border-color .2s}
+input.nx-in:focus{border-color:var(--ac-glow)}
+.gap-item{padding:6px 10px;border-left:2px solid var(--border2);margin-bottom:5px;font-size:10.5px}
+.gap-item.high{border-left-color:var(--red)}.gap-item.medium{border-left-color:var(--amber)}
+.gap-type{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text2)}
+.gap-body{color:var(--text3);margin-top:2px;font-size:10px;line-height:1.4}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topbar">
+    <span class="glyph">◆</span>
+    <span class="title">GEMINI <b>CONSOLE</b></span>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">vision · multimodal · image-aware RAID routing</span>
+    <div id="conn-badge"><span class="dot"></span><span id="conn-txt">CHECKING</span></div>
+  </div>
+  <div id="main">
+    <!-- System + Tools -->
+    <div class="zone">
+      <div class="zone-label">System</div>
+      <div class="sys-row"><span class="sys-key">Guardian</span><span class="sys-val" id="sv-gd">—</span></div>
+      <div class="sys-row"><span class="sys-key">Cortex</span><span class="sys-val" id="sv-cx">—</span></div>
+      <div class="sys-row"><span class="sys-key">Tab</span><span class="sys-val ok" id="sv-tab">—</span></div>
+      <div class="sys-row"><span class="sys-key">Chat ID</span><span class="sys-val" id="sv-chat">—</span></div>
+      <div class="sys-row"><span class="sys-key">Open Gaps</span><span class="sys-val" id="sv-gaps">—</span></div>
+      <div class="sys-row"><span class="sys-key">Vision Jobs</span><span class="sys-val ac" id="sv-vision">—</span></div>
+
+      <div class="zone-label" style="margin-top:16px">Vision Routing</div>
+      <div style="font-size:10.5px;color:var(--text3);line-height:1.6;margin-bottom:10px">
+        Jobs with images are flagged for Gemini via RAID.<br>
+        Vision-bearing jobs never silently retry text-only.
+      </div>
+      <div class="sys-row"><span class="sys-key">Vision Queue</span><span class="sys-val" id="sv-vqueue">—</span></div>
+      <div class="sys-row"><span class="sys-key">RAID Route</span><span class="sys-val ac" id="sv-raid">gemini → vision</span></div>
+
+      <div class="zone-label" style="margin-top:16px">Tools</div>
+      <button class="tool-btn" onclick="toolGaps()">△ Load Open Gaps</button>
+      <div class="tool-out" id="gaps-tool-out" style="display:none"></div>
+      <button class="tool-btn" onclick="toolJobs()">◈ Vision Jobs</button>
+      <div class="tool-out" id="jobs-tool-out" style="display:none"></div>
+      <button class="tool-btn" onclick="toolRepairDispatch()">⚡ Repair Dispatch</button>
+      <input class="nx-in" id="repair-in" placeholder="problem to fix…" style="margin-top:4px">
+      <div class="tool-out" id="repair-out" style="display:none"></div>
+    </div>
+
+    <!-- Dispatch -->
+    <div class="zone">
+      <div class="zone-label">Vision + Dispatch</div>
+
+      <!-- Image drop zone -->
+      <div class="vision-zone" id="drop-zone"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event)"
+        onclick="document.getElementById('img-input').click()">
+        <div class="icon" id="drop-icon">◆</div>
+        <div class="hint" id="drop-hint">Drop image here · click to attach<br>
+          <span style="font-size:9px">Images are flagged as vision artifacts, not text</span>
+        </div>
+      </div>
+      <div id="vision-preview" style="display:none" class="vision-preview">
+        <img id="preview-img" src="" alt="preview">
+        <div style="padding:6px 8px;font-family:var(--mono);font-size:9px;color:var(--text3);display:flex;justify-content:space-between">
+          <span id="img-info">—</span>
+          <span style="cursor:pointer;color:var(--red)" onclick="clearImage()">✕ remove</span>
+        </div>
+      </div>
+      <input type="file" id="img-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
+
+      <div style="display:flex;flex-wrap:wrap;margin-bottom:8px">
+        <div class="chip on" data-c="vision">vision</div>
+        <div class="chip on" data-c="multimodal">multimodal</div>
+        <div class="chip" data-c="seam">SEAM chunks</div>
+        <div class="chip" data-c="structured">structured output</div>
+      </div>
+
+      <span style="font-size:10px;color:var(--text2);display:block;margin-bottom:5px">Spec or prompt</span>
+      <textarea class="spec-ta" id="spec-in" placeholder="Describe the vision task or paste a spec. Gemini receives attached images as vision artifacts — image generation is detected and routed separately from text."></textarea>
+
+      <div id="chunk-info" style="font-family:var(--mono);font-size:10px;color:var(--text3);padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:5px;margin-bottom:10px">
+        <span><b id="ci-count">1</b> chunk · <b id="ci-img">no image</b> · Gemini 2M ctx</span>
+      </div>
+
+      <button class="submit-btn" id="submit-btn">SUBMIT TO GEMINI →</button>
+      <div id="submit-status" style="font-size:10.5px;color:var(--text2);text-align:center;margin-top:5px;min-height:14px"></div>
+    </div>
+
+    <!-- SEAM queue + gaps -->
+    <div class="zone">
+      <div class="zone-label">SEAM Queue</div>
+      <div id="queue-sel" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px"></div>
+      <div id="ladder"></div>
+      <div id="queue-empty" style="color:var(--text3);font-size:10.5px;text-align:center;padding:20px">
+        No Gemini queues yet
+      </div>
+
+      <div class="zone-label" style="margin-top:16px">Open Gaps</div>
+      <div id="gaps-list"><div style="color:var(--text3);font-size:10px">Loading…</div></div>
+    </div>
+  </div>
+</div>
+<script>
+const GD='http://localhost:7820',ORCH='http://localhost:9000',CX='http://localhost:3748';
+const PROVIDER='gemini';
+let selQueueId=null,allQueues=[],attachedImg=null;
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function api(url,opts){try{const r=await fetch(url,{signal:AbortSignal.timeout(5000),...opts});return r.ok?r.json():null;}catch{return null;}}
+async function post(url,body){return api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
+
+async function refreshSys(){
+  const[prov,gaps]=await Promise.all([api(`${GD}/providers`),api(`${GD}/gaps?status=open&limit=50`)]);
+  const ch=prov?.channels?.[PROVIDER];
+  const badge=document.getElementById('conn-badge');
+  badge.className=ch?'live':'';
+  document.getElementById('conn-txt').textContent=ch?'CONNECTED':'NO TAB';
+  document.getElementById('sv-tab').textContent=ch?(ch.tabId||'—').slice(0,12):'—';
+  document.getElementById('sv-chat').textContent=ch?ch.chatId||'—':'—';
+  await Promise.all([
+    api(`${GD}/health`).then(r=>{const e=document.getElementById('sv-gd');e.className='sys-val '+(r?.ok?'ok':'off');e.textContent=r?.ok?'✓ :7820':'✗ :7820';}),
+    api(`${CX}/health`).then(r=>{const ok=r?.status==='ok'||r?.ok===true;const e=document.getElementById('sv-cx');e.className='sys-val '+(ok?'ok':'off');e.textContent=ok?'✓ :3748':'✗ :3748';})
+  ]);
+  const ga=gaps?.gaps||[];
+  document.getElementById('sv-gaps').textContent=ga.length;
+  renderGaps(ga);
+  // Vision jobs from jobs table
+  const jobs=await api(`${GD}/jobs?limit=50`);
+  const vj=(jobs?.jobs||[]).filter(j=>j.provider===PROVIDER&&j.status!=='complete');
+  document.getElementById('sv-vision').textContent=vj.length+' active';
+  document.getElementById('sv-vqueue').textContent=vj.filter(j=>j.status==='queued').length+' queued';
+}
+
+function renderGaps(gaps){
+  const el=document.getElementById('gaps-list');
+  if(!gaps.length){el.innerHTML='<div style="color:var(--text3);font-size:10px">No open gaps ✓</div>';return;}
+  el.innerHTML=gaps.slice(0,8).map(g=>`
+    <div class="gap-item ${g.severity||'low'}">
+      <div class="gap-type">${esc(g.type||'?')}</div>
+      <div class="gap-body">${esc((g.body||'').slice(0,70))}</div>
+    </div>`).join('');
+}
+
+// Image handling
+function handleDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))handleFile(f);}
+function handleFile(f){
+  if(!f||!f.type.startsWith('image/'))return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    attachedImg={dataUrl:ev.target.result,name:f.name,size:f.size,type:f.type};
+    document.getElementById('preview-img').src=ev.target.result;
+    document.getElementById('vision-preview').style.display='';
+    document.getElementById('img-info').textContent=f.name+' · '+(f.size/1024).toFixed(0)+'KB · '+f.type;
+    document.getElementById('drop-icon').textContent='✓';
+    document.getElementById('drop-hint').textContent='Image attached — will be routed as vision artifact';
+    document.getElementById('ci-img').textContent=f.name.slice(0,16);
+    document.getElementById('ci-img').style.color='var(--ac)';
+  };
+  reader.readAsDataURL(f);
+}
+function clearImage(){attachedImg=null;document.getElementById('vision-preview').style.display='none';document.getElementById('drop-icon').textContent='◆';document.getElementById('drop-hint').innerHTML='Drop image here · click to attach<br><span style="font-size:9px">Images are flagged as vision artifacts, not text</span>';document.getElementById('ci-img').textContent='no image';document.getElementById('ci-img').style.color='';}
+
+document.getElementById('spec-in').addEventListener('input',()=>{
+  const text=document.getElementById('spec-in').value.trim();
+  const est=Math.max(1,/^#+\s+/m.test(text)?(text.match(/^#+\s+/gm)||[]).length:1);
+  document.getElementById('ci-count').textContent=est;
+});
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+
+document.getElementById('submit-btn').addEventListener('click',async()=>{
+  const specText=document.getElementById('spec-in').value.trim();
+  const st=document.getElementById('submit-status');
+  const btn=document.getElementById('submit-btn');
+  if(!specText){st.textContent='Nothing to submit';st.style.color='var(--amber)';return;}
+  const hasImg=!!attachedImg;
+  btn.disabled=true;st.textContent='Submitting…';st.style.color='var(--text2)';
+  const payload={command:'spec',provider:PROVIDER,specText,source:'gemini-console',visionJob:hasImg};
+  if(hasImg){payload.attachedImage={dataUrl:attachedImg.dataUrl,name:attachedImg.name,type:attachedImg.type};}
+  const r=await post(`${GD}/command`,payload);
+  btn.disabled=false;
+  if(r?.ok){st.textContent=`Queue ${r.queueId?.slice(0,8)} — ${r.total} chunks${hasImg?' · vision flagged':''}`;st.style.color='var(--green)';selQueueId=r.queueId;refreshQueues();}
+  else{st.textContent='Failed: '+(r?.error||'guardian unreachable');st.style.color='var(--red)';}
+});
+
+// SEAM ladder
+const SC={QUEUED:'queued',INJECTING:'active',GENERATING:'active',DETECTING:'active',VERIFIED:'verified',RETRYING:'retrying',ESCALATED:'escalated'};
+async function refreshQueues(){
+  const d=await api(`${GD}/seam/queues`);
+  allQueues=(d?.queues||[]).filter(q=>q.provider===PROVIDER);
+  const sel=document.getElementById('queue-sel');
+  const emp=document.getElementById('queue-empty');
+  const lad=document.getElementById('ladder');
+  if(!allQueues.length){sel.innerHTML='';lad.innerHTML='';emp.style.display='';return;}
+  emp.style.display='none';
+  if(!selQueueId||!allQueues.some(q=>q.uuid===selQueueId))selQueueId=allQueues[allQueues.length-1].uuid;
+  sel.innerHTML=allQueues.map(q=>`<div style="font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:12px;border:1px solid ${q.uuid===selQueueId?'var(--ac-glow)':'var(--border2)'};color:${q.uuid===selQueueId?'var(--ac)':'var(--text3)'};cursor:pointer" onclick="selQueueId='${q.uuid}';renderLadder()">${esc((q.title||'untitled').slice(0,14))}</div>`).join('');
+  renderLadder();
+}
+function renderLadder(){
+  const q=allQueues.find(q=>q.uuid===selQueueId);
+  const lad=document.getElementById('ladder');
+  if(!q){lad.innerHTML='';return;}
+  lad.innerHTML=(q.compartments||[]).map((c,i,arr)=>{
+    const cls=SC[c.state]||'queued';
+    const isVision=c.visionJob||c.hasImage;
+    return `<div class="rung">
+      ${i<arr.length-1?'<div class="rung-line"></div>':''}
+      <div class="rung-dot ${cls}"></div>
+      <div class="rung-title">#${c.chunkIdx+1} ${esc(c.chunkTitle||'')}${isVision?'<span class="vision-badge">◆ vision</span>':''}</div>
+      <div class="rung-state ${cls}">${c.state}${c.retries?` · retry ${c.retries}`:''}</div>
+    </div>`;
+  }).join('');
+}
+
+async function toolGaps(){const o=document.getElementById('gaps-tool-out');o.style.display='';o.textContent='⟳';const r=await api(`${GD}/gaps?status=open&limit=10`);o.textContent=(r?.gaps||[]).map(g=>`[${g.severity}] ${g.type}: ${(g.body||'').slice(0,70)}`).join('\n')||'No gaps';}
+async function toolJobs(){const o=document.getElementById('jobs-tool-out');o.style.display='';o.textContent='⟳';const r=await api(`${GD}/jobs?limit=20`);const j=(r?.jobs||[]).filter(j=>j.provider===PROVIDER);o.textContent=j.map(x=>`[${x.status}] ${(x.prompt||'').slice(0,60)}`).join('\n')||'No Gemini jobs';}
+async function toolRepairDispatch(){const p=document.getElementById('repair-in').value.trim();const o=document.getElementById('repair-out');if(!p)return;o.style.display='';o.style.color='var(--amber)';o.textContent='⟳';const r=await post(`${GD}/command`,{command:'diagnose_and_repair',provider:'ollama',prompt:p,source:'gemini-console',meta:{source:'gemini-console'}});o.style.color=r?.jobId?'var(--green)':'var(--red)';o.textContent=r?.jobId?'✓ '+r.jobId.slice(0,12):'✗ '+(r?.error||'failed');}
+
+refreshSys();refreshQueues();setInterval(refreshSys,5000);setInterval(refreshQueues,3000);
+</script>
+</body>
+</html>

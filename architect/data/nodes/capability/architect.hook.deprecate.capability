@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-architect.hook.deprecate
+type: capability
+id: architect.hook.deprecate
+context: architect/registry-components.js real capability export
+intent: null
+summary: null
+system: architect
+tags: []
+exported_at: 1789250730057
+source: architect.registry-components:architect.hook.deprecate
+payload:
+  id: architect.hook.deprecate
+  namespace: architect
+  name: hook.deprecate
+  version: 1.0.0
+  grammar:
+    - hook deprecate
+  route:
+    method: DELETE
+    path: /api/hooks/:id
+  intent: []
+  description: Deprecate or remove hook
+  params: []
+  tags:
+    - architect
+  permissions:
+    - system
+  hooks: {}

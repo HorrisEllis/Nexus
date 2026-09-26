@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-cg.status
+type: capability
+id: cg.status
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730157
+source: clear-glass.registry-components:cg.status
+payload:
+  id: cg.status
+  namespace: cg
+  name: status
+  version: 3.1.0
+  grammar:
+    - status
+  route:
+    method: GET
+    path: /status
+  intent: []
+  description: Full system status — bus sample, agents, listeners, TLS
+  params: []
+  tags:
+    - cg
+  permissions:
+    - system
+  hooks: {}

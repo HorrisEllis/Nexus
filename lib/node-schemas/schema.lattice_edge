@@ -1,0 +1,77 @@
+envelope: 1
+uuid: nexus-export-schema-lattice_edge
+type: schema
+id: lattice_edge
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116324004
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: meta/crystal-lattice.js — _getOrCreateEdge()'s real jaa.insert('lattice_edges', fresh) shape
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real edge id
+    edgeKey:
+      type: string
+      required: true
+      description: real dedup key, '<from>-><to>'
+    from:
+      type: string
+      required: true
+      description: >-
+        real source node identity — domain/verb only, Concept/CompartmentType-ish, not
+        outcome-specific
+    to:
+      type: string
+      required: true
+      description: real target node identity, same convention as from
+    weight:
+      type: number
+      required: true
+      description: real edge weight, starts at 0.5
+    success_rate:
+      type: number
+      required: true
+      description: real running success rate, starts at 0
+    failure_rate:
+      type: number
+      required: true
+      description: real running failure rate, starts at 0
+    successCount:
+      type: number
+      required: true
+      description: real raw success count, starts at 0
+    failureCount:
+      type: number
+      required: true
+      description: real raw failure count, starts at 0
+    totalCount:
+      type: number
+      required: true
+      description: real raw total count, starts at 0
+    decay_rate:
+      type: number
+      required: true
+      description: real decay rate applied per tick, from CRYSTAL_FREQUENCY_THRESHOLD-adjacent env config
+    lastTransitionAt:
+      type: number
+      required: false
+      description: real timestamp of the last transition across this edge, null until one occurs
+    lastTransitionOutcome:
+      type: string
+      required: false
+      description: real outcome of the last transition, null until one occurs
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp
+    updatedAt:
+      type: number
+      required: true
+      description: real last-update timestamp

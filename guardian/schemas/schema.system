@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-schema-system
+type: schema
+id: system
+context: >-
+  guardian/schemas — sovereign local copy. Origin: lib/node-schemas/schema.system (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means guardian
+  does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250533438
+source: nexus.lib.node-export
+payload:
+  status: OPEN
+  source: >-
+    Grounded in loom/scanners/capability-map.js's real SYSTEMS map (guardian is a real, checked
+    entry: 'guardian': 'guardian') and nexus/autopilot.js's per-kernel definitions. Marked OPEN, not
+    REAL — no real code anywhere constructs a persisted "system" record with these fields; SYSTEMS
+    is a plain object literal, not a node file. guardian.node-taxonomy.md marks this 'IS ONE
+    (subject, not writer)' — guardian is itself mapped by other code (capability-map.js), not
+    something guardian authors about itself. This local copy exists purely for guardian's own
+    sovereign schema completeness (every other real system in this taxonomy pass already carries a
+    local schema.system copy; guardian's own copy was found missing here and closed directly).
+  fields:
+    id:
+      type: string
+      required: true
+      description: real system name, matching capability-map.js's own SYSTEMS map key ('guardian')
+    hasCapabilities:
+      type: boolean
+      required: false
+      description: >-
+        whether this system has a real registry-components.js — guardian does
+        (guardian/registry-components.js)
+    port:
+      type: number
+      required: false
+      description: real port this system listens on, when it runs its own server
+    spec:
+      type: string
+      required: false
+      description: real path to this system's own .spec file, when one exists (guardian/spec/guardian.spec)

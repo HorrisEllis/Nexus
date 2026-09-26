@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.person_model.export
+type: component
+id: copilot.person_model.export
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153073
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153073
+lastSeenAt: 1789275153073
+fingerprint: copilot::GET /api/person-model/export
+payload:
+  id: copilot.person_model.export
+  uuid: 4b948292-7caa-4201-a4a0-bd6d11314854
+  namespace: copilot
+  name: person_model.export
+  version: 2.0.0

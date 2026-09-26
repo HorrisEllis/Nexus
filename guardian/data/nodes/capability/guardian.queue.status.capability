@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.queue.status
+type: capability
+id: guardian.queue.status
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730141
+source: guardian.registry-components:guardian.queue.status
+payload:
+  id: guardian.queue.status
+  namespace: guardian
+  name: queue.status
+  version: 3.6.2
+  grammar:
+    - queue status
+    - queue-status
+  route:
+    method: GET
+    path: /queue
+  intent: []
+  description: Physical queue status
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

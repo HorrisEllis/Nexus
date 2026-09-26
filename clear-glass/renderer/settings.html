@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- §REBUILT 2026-09-23 — James: "a beautiful, fully built, settings page
+     with every feature in mind." Shell only; the page is renderer/settings/
+     core.js plus one file per area under renderer/settings/sections/
+     (clear-glass UI1: "one file per UI area, no monoliths").
+     v0.39.227 — James: "each UI area its own file, including its own CSS file
+     per UI file." settings.css now holds shared tokens + frame + shared
+     components only; each area's styles are sections/<id>.css, loaded by
+     core.js when that area is shown and scoped to body[data-area="<id>"].
+     CSP: script-src is now 'self' only — the ~190-line inline <script> the
+     previous version's own CSP comment named as "a real follow-up, not done
+     here" is gone, so 'unsafe-inline' is dropped for scripts. style-src
+     keeps 'unsafe-inline' because section code sets element styles.
+     connect-src 127.0.0.1:* covers /health probes, :7702/contract and the
+     :7704 wire (mesh, automation, Erosmancer proxy). -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self' http://127.0.0.1:*;
+               img-src 'self' data:;
+               frame-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clear Glass Settings</title>
+<link rel="stylesheet" href="settings/settings.css">
+</head>
+<body>
+<div id="titlebar">
+  <span class="mark" aria-hidden="true"></span>
+  <span class="title"><b>Clear Glass</b> settings</span>
+  <button id="close" title="Close settings" aria-label="Close settings">&#x2715;</button>
+</div>
+<div id="shell">
+  <nav id="rail" aria-label="Settings sections"></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<script src="settings/core.js"></script>
+<script src="settings/sections/accounts.js"></script>
+<script src="settings/sections/providers.js"></script>
+<script src="settings/sections/fingerprint.js"></script>
+<script src="settings/sections/mesh.js"></script>
+<script src="settings/sections/automation.js"></script>
+<script src="settings/sections/macros.js"></script>
+<script src="settings/sections/eros.js"></script>
+<script src="settings/sections/suite.js"></script>
+<script src="settings/sections/general.js"></script>
+<script src="settings/sections/autofill.js"></script>
+<script src="settings/sections/privacy.js"></script>
+<script src="settings/sections/downloads.js"></script>
+<script src="settings/sections/connections.js"></script>
+<script src="settings/sections/copilot.js"></script>
+<script src="settings/sections/diagnostics.js"></script>
+<script src="settings/sections/plugins.js"></script>
+<script src="settings/boot.js"></script>
+</body>
+</html>

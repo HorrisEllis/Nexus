@@ -1,0 +1,112 @@
+/* ui/home/areas/rewind.css — Rewind button + overlay.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* Rewind button — inside menu overlay, above rail */
+#rewind-btn{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:20px;
+  background:var(--ac-ghost);border:1px solid var(--ac-dim);
+  color:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.75);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;
+}
+#rewind-btn:hover{background:var(--ac-dim);border-color:var(--ac-border-hi);color:var(--ac)}
+
+/* ── Rewind button in top-bar ── */
+#rewind-btn{
+  pointer-events:auto;
+  margin-left:12px;padding:5px 12px;
+  background:var(--ac-ghost);border:1px solid var(--ac-border);
+  border-radius:20px;color:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.8);
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+#rewind-btn:hover{background:var(--ac-dim);border-color:var(--ac-border-hi);color:var(--ac)}
+
+#rewind-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,5,.85);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+#rewind-overlay.open{opacity:1;pointer-events:auto}
+
+#rewind-panel{
+  width:min(920px,95vw);
+  background:rgba(8,8,18,.95);border:1px solid var(--ac-border);
+  border-radius:16px;overflow:hidden;
+  display:flex;flex-direction:column;
+  transform:translateY(20px);transition:transform .3s ease;
+  max-height:85vh;
+}
+#rewind-overlay.open #rewind-panel{transform:translateY(0)}
+
+#rw-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+#rw-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--ac)}
+#rw-sub{font-size:11px;color:rgba(255,255,255,.3);margin-top:3px}
+#rw-sigma-badge{font-family:'Space Mono',monospace;font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+#rw-close{background:none;border:none;color:rgba(255,255,255,.3);font-size:18px;cursor:pointer;padding:4px 8px;transition:color .2s}
+#rw-close:hover{color:#fff}
+
+/* Timeline canvas wrapper */
+#rw-timeline-wrap{
+  position:relative;padding:20px 22px 10px;flex-shrink:0;
+}
+#rw-canvas{display:block;width:100%;height:120px;cursor:crosshair}
+#rw-hover-tip{
+  position:absolute;pointer-events:none;
+  background:rgba(0,0,16,.92);border:1px solid var(--ac-border-hi);
+  border-radius:6px;padding:7px 10px;
+  font-family:'Space Mono',monospace;font-size:10px;color:#e0e8ff;
+  white-space:nowrap;opacity:0;transition:opacity .15s;
+  top:0;left:0;transform:translate(-50%,-100%);
+}
+#rw-hover-tip.show{opacity:1}
+
+/* Legend */
+#rw-legend{
+  display:flex;gap:20px;padding:0 22px 12px;flex-shrink:0;
+  font-size:10px;color:rgba(255,255,255,.3);align-items:center;
+}
+.rw-leg-item{display:flex;align-items:center;gap:6px}
+.rw-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Detail panel */
+#rw-detail{
+  border-top:1px solid rgba(255,255,255,.06);padding:16px 22px;
+  flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;
+  overflow-y:auto;
+}
+#rw-detail-empty{font-size:12px;color:rgba(255,255,255,.2);font-family:'Space Mono',monospace;text-align:center;padding:20px 0}
+#rw-snap-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+#rw-snap-id{font-size:12px;font-weight:700;color:var(--ac)}
+#rw-snap-trigger{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.07em}
+#rw-snap-stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.rw-stat{display:flex;flex-direction:column;gap:2px}
+.rw-stat-v{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:#fff}
+.rw-stat-l{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em}
+
+#rw-snap-sigma-bar-wrap{margin-bottom:4px}
+#rw-snap-sigma-bar{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+#rw-snap-sigma-fill{height:100%;border-radius:3px;transition:width .4s ease,background .4s ease}
+
+/* Confirm row */
+#rw-confirm-warn{font-size:11px;color:#ffaa00;line-height:1.5;padding:10px 12px;background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.2);border-radius:6px}
+#rw-confirm-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--ac-border-hi);background:var(--ac-ghost);color:var(--ac);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s}
+#rw-confirm-btn:hover{background:var(--ac-border)}
+#rw-confirm-btn.danger{border-color:rgba(255,51,85,.5);background:var(--err-dim);color:var(--err)}
+#rw-confirm-btn.danger:hover{background:rgba(255,51,85,.22)}
+#rw-cancel-btn{padding:10px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.4);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s}
+#rw-cancel-btn:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+
+#rw-status{
+  padding:10px 22px;border-top:1px solid rgba(255,255,255,.05);
+  font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);
+  min-height:36px;flex-shrink:0;display:flex;align-items:center;gap:8px;
+}
+#rw-status.ok{color:var(--ok)}
+#rw-status.err{color:var(--err)}
+#rw-status.working{color:#ffaa00}

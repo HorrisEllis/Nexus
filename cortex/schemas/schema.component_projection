@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-schema-component_projection
+type: schema
+id: component_projection
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table. Origin:
+  lib/node-schemas/schema.component_projection.
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252802345
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/blueprint.js's real per-component projection bundle — confirmed against
+    data/cortex/memory/component_projections.json's real, live rows (294 of them). Each real
+    component gets projected into up to 6 real facets (comp/cli/grammar/ui/config/seam/doc), each
+    carrying its own bp_uuid.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real projection-bundle id
+    componentId:
+      type: string
+      required: true
+      description: real id of the component this bundle projects
+    comp:
+      type: object
+      required: false
+      description: real comp-facet projection, carries its own bp_uuid
+    cli:
+      type: object
+      required: false
+      description: real cli-facet projection, carries its own bp_uuid
+    grammar:
+      type: object
+      required: false
+      description: real grammar-facet projection, carries its own bp_uuid
+    ui:
+      type: object
+      required: false
+      description: real ui-facet projection, carries its own bp_uuid
+    config:
+      type: object
+      required: false
+      description: real config-facet projection
+    seam:
+      type: object
+      required: false
+      description: real seam-facet projection, carries its own bp_uuid
+    doc:
+      type: object
+      required: false
+      description: real doc-facet projection, carries its own bp_uuid
+    ts:
+      type: number
+      required: true
+      description: real timestamp
+    updatedAt:
+      type: number
+      required: false
+      description: real last-update timestamp

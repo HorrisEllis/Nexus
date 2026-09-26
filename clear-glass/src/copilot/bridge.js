@@ -1,0 +1,681 @@
+'use strict';
+/**
+ * src/copilot/bridge.js — Clear Glass Co-pilot Full Integration v3
+ * UUID: cg-copilot-bridge-v3-0000-0000-000000000024
+ *
+ * Co-pilot is fully hooked in. It can:
+ *   - Call every tool in src/copilot/tools.js via the SISO bus
+ *   - Dispatch jobs to Guardian (provider dispatch, SEAM, gaps)
+ *   - Query Cortex (memory, CFR, RAID, gaps, event log)
+ *   - Control the browser (navigate, click, type, screenshot, DOM)
+ *   - Manage agents (contexts, fingerprints, mesh, providers)
+ *   - Manage session state (bookmarks, rewind, cookies)
+ *   - Install/toggle userscripts
+ *   - Set options, run diagnostics, add URL listeners
+ *
+ * Routes:
+ *   1. NEXUS copilot :3750/api/prompt — primary, full consciousness stream
+ *   2. Direct fallback — only if copilot is down AND fallbackApiKey is set
+ *
+ * Tool execution:
+ *   Co-pilot responses are scanned for ```driver and ```tool blocks.
+ *   Each block is dispatched via the SISO bus as events.
+ *   Guardian-specific tools are dispatched directly to Guardian :7820.
+ *   Cortex tools are dispatched directly to Cortex :3748.
+ */
+
+const http   = require('http');
+// §BUGFIX 2026-08-23 — require('node-fetch') was genuinely unguarded and
+// genuinely missing (no node_modules/node-fetch, not in package.json,
+// checked directly) — this crashed the whole module on load. Node 22's
+// own global fetch() (confirmed present: typeof fetch === 'function')
+// is the real, built-in WHATWG-compatible replacement — no require
+// needed at all.
+const fetch  = globalThis.fetch;
+const { randomUUID } = require('crypto');
+const { buildToolsPrompt } = require('./tools');
+
+class CoPilotBridge {
+  constructor({ sse, apiSettings, postEvent }) {
+    this.sse         = sse;
+    this.settings    = apiSettings; // ApiSettings instance — has .copilotDirectUrl(), .guardianDirectUrl() etc.
+    this.postEvent   = postEvent || (() => {});
+
+    this._busEmit    = null;  // injected by main
+    this._domGet     = null;  // injected by main
+    this._streamConn = null;
+    this._connected  = false;
+
+    // These are injected after bootstrap for tool execution
+    this._driver     = null;
+    this._bookmarks  = null;
+    this._rewind     = null;
+    this._vault      = null;
+    this._ctxMgr     = null;
+    this._userscripts= null;
+    this._providerHost = null;
+  }
+
+  // ── Wire everything in after bootstrap ──────────────────────────────────
+  wire({ busEmit, domGet, driver, bookmarks, rewind, vault, ctxMgr, userscripts, providerHost }) {
+    this._busEmit      = busEmit;
+    this._domGet       = domGet;
+    this._driver       = driver;
+    this._bookmarks    = bookmarks;
+    this._rewind       = rewind;
+    this._vault        = vault;
+    this._ctxMgr       = ctxMgr;
+    this._userscripts  = userscripts;
+    this._providerHost = providerHost;
+
+    this._connectStream();
+    this._bridgeBrowserEvents();
+    // §FIXED 2026-09-06 — James, live, from his own real running system:
+    // "thought you took care of bridge man..." Real, serious miss on my
+    // part during the bridge removal — I read this file's own header
+    // comment ("primary, full consciousness stream" -> copilot :3750
+    // directly) and wrongly concluded the whole file bypasses bridge.
+    // It doesn't: _bridgeHandshake() below (removed) retried forever
+    // every 10s against bridge:9999, which is gone, and _bridgeDispatch()
+    // (rewritten below) was the real, live mechanism behind copilot
+    // prompts, guardian commands, and ollama generation — all of it
+    // routed through bridge's now-dead token handshake, meaning every
+    // one of those operations was silently broken, not just noisy.
+    // Fixed at the real root: clear-glass/src/api/settings.js already
+    // had real, working *DirectUrl() methods (copilotDirectUrl,
+    // guardianDirectUrl, ollamaDirectUrl — real distinct ports, already
+    // built, just unused by this file) sitting right next to the
+    // bridge-routed ones. _bridgeDispatch below now calls those
+    // directly instead of relaying through bridge.
+  }
+
+  // ── Primary: send message ────────────────────────────────────────────────
+  async send({ message, agentId = 'default', domContext, systemExtra, requestId }) {
+    const msgId = requestId || randomUUID();
+    this.sse.emit('copilot.thinking', { msgId, agentId, ts: Date.now() });
+
+    // Always get live DOM context
+    if (!domContext && this._domGet) {
+      try { domContext = await this._domGet(agentId); } catch (_) {}
+    }
+
+    let result;
+    try {
+      result = await this._callNexusCopilot({ message, agentId, domContext, systemExtra, msgId });
+    } catch (err) {
+      console.warn(`[${new Date().toISOString()}] [clear-glass/src/copilot/bridge.js] [CoPilot] NEXUS offline, falling back:`, err.message);
+      result = await this._callFallback({ message, agentId, domContext, msgId });
+    }
+
+    const text     = result.text || '';
+    const commands = this._parseCommands(text);
+
+    // Execute all tool calls
+    for (const cmd of commands) {
+      await this._executeCommand(cmd, agentId).catch(err => {
+        console.warn(`[${new Date().toISOString()}] [clear-glass/src/copilot/bridge.js] [CoPilot] Command failed [${cmd.action}]:`, err.message);
+        this.sse.emit('copilot.tool.error', { action: cmd.action, error: err.message, agentId });
+      });
+    }
+
+    this.sse.emit('copilot.response', {
+      msgId, agentId, text, commands,
+      modelUsed:  result.modelUsed || 'unknown',
+      contextLayers: result.contextLayers || 0,
+      ts: Date.now(),
+    });
+
+    this._ingestToNexus({ type: 'clear-glass.copilot.exchange',
+      agentId, msgId, prompt: message.slice(0, 100), ts: Date.now() });
+
+    return { text, commands, msgId };
+  }
+
+  // ── Execute a tool command via bus or direct call ──────────────────────
+  async _executeCommand(cmd, agentId) {
+    const action = cmd.action;
+    const aid    = cmd.agentId || agentId;
+
+    this.sse.emit('copilot.tool.start', { action, agentId: aid, ts: Date.now() });
+
+    // ── Guardian tools — direct to Guardian :7820 ──────────────────────
+    if (action === 'guardian.dispatch') {
+      return this._guardianDispatch(cmd);
+    }
+    if (action === 'guardian.providers') {
+      return this._guardianFetch('/providers');
+    }
+    if (action === 'guardian.jobs') {
+      return this._guardianFetch('/jobs');
+    }
+    if (action === 'guardian.seam') {
+      return this._guardianFetch('/seam/queues');
+    }
+    if (action === 'guardian.gaps') {
+      return this._guardianFetch('/gaps');
+    }
+    if (action === 'guardian.health') {
+      return this._guardianFetch('/health');
+    }
+
+    // ── Cortex tools — direct to Cortex :3748 ─────────────────────────
+    if (action === 'cortex.memory') {
+      return this._cortexFetch('/api/memory', cmd);
+    }
+    if (action === 'cortex.gaps') {
+      return this._cortexFetch('/api/gaps', cmd);
+    }
+    if (action === 'cortex.cfr') {
+      return this._cortexFetch('/cfr/health', cmd);
+    }
+    if (action === 'cortex.raid') {
+      return this._cortexFetch('/api/raid/health', cmd);
+    }
+    if (action === 'cortex.event') {
+      return this._cortexPost('/api/event', cmd);
+    }
+
+    // ── Userscript tools ───────────────────────────────────────────────
+    if (action === 'userscript.list') {
+      return this._userscripts?.list({ agentId: aid });
+    }
+    if (action === 'userscript.inject' && cmd.scriptId) {
+      return this._userscripts?.inject(aid, cmd.scriptId);
+    }
+    if (action === 'userscript.toggle' && cmd.scriptId) {
+      return this._userscripts?.toggle(cmd.scriptId, cmd.enabled);
+    }
+
+    // ── Bookmark tools ─────────────────────────────────────────────────
+    if (action === 'bookmarks.add') {
+      const url = cmd.url || (await this._driver?.exec({ action: 'getUrl', agentId: aid }))?.url;
+      return this._bookmarks?.add({ ...cmd, url, agentId: aid });
+    }
+    if (action === 'bookmarks.remove') {
+      return this._bookmarks?.remove(cmd);
+    }
+    if (action === 'bookmarks.list') {
+      return { bookmarks: this._bookmarks?.list({ agentId: aid, ...cmd }) };
+    }
+    if (action === 'bookmarks.open') {
+      const bks = this._bookmarks?.list({ agentId: aid, query: cmd.query }) || [];
+      if (bks.length) this._busEmit?.('driver.exec', { action: 'navigate', agentId: aid, url: bks[0].url });
+      return { opened: bks[0]?.url };
+    }
+
+    // ── Rewind tools ───────────────────────────────────────────────────
+    if (action === 'rewind.snapshot') {
+      return this._rewind?.snapshot(aid, cmd);
+    }
+    if (action === 'rewind.list') {
+      return { snapshots: this._rewind?.list(aid, cmd.limit || 10) };
+    }
+    if (action === 'rewind.restore') {
+      return this._rewind?.restore({ agentId: aid, ...cmd });
+    }
+
+    // ── Cookie tools ───────────────────────────────────────────────────
+    if (action === 'cookies.save') {
+      const ses = this._ctxMgr?.getSession(aid);
+      return this._vault?.save({ agentId: aid, accountId: cmd.accountId, domain: cmd.domain, cookies: [] });
+    }
+    if (action === 'cookies.restore') {
+      return this._vault?.restore({ agentId: aid, accountId: cmd.accountId });
+    }
+    if (action === 'cookies.health') {
+      const ses = this._ctxMgr?.getSession(aid);
+      return this._vault?.checkTokenHealth(aid, ses);
+    }
+
+    // ── Provider tools ─────────────────────────────────────────────────
+    if (action === 'provider.start' && cmd.providerId) {
+      return this._providerHost?.start(cmd.providerId, { show: cmd.show ?? false });
+    }
+    if (action === 'provider.stop' && cmd.providerId) {
+      return this._providerHost?.stop(cmd.providerId);
+    }
+    if (action === 'provider.list') {
+      return { providers: this._providerHost?.list() };
+    }
+
+    // ── All other tools — route through SISO bus ───────────────────────
+    // driver.exec actions, dom.*, context.*, mesh.*, url.listen, diag.*, options.*, window.*
+    if (this._busEmit) {
+      // Map action name to bus event type
+      const busType = this._actionToBusEvent(action);
+      this._busEmit(busType, { ...cmd, agentId: aid });
+      return { dispatched: busType };
+    }
+
+    // ── Blueprint / component query ────────────────────────────────────────
+    if (action === 'blueprint.query' || action === 'components.list') {
+      try {
+        const bi  = require('../../../lib/blueprint-index');
+        const idx = bi.load();
+        if (!idx) return { error: 'blueprint-index not built' };
+        const q = (cmd.query || '').toLowerCase();
+        if (cmd.systemId) {
+          const sys = idx.systems.find(s => s.systemId === cmd.systemId);
+          return sys ? { ok:true, system: sys } : { error: `system ${cmd.systemId} not found` };
+        }
+        const result = q
+          ? idx.allCLI.filter(c => c.command.includes(q) || c.description.toLowerCase().includes(q))
+          : { totalComponents: idx.totalComponents, systems: idx.systems.map(s => ({ id:s.systemId, label:s.label, port:s.port, count:s.componentCount })) };
+        return { ok: true, result };
+      } catch(e) { return { error: e.message }; }
+    }
+    if (action === 'blueprint.rebuild') {
+      try {
+        const bi = require('../../../lib/blueprint-index');
+        const r  = bi.build();
+        return { ok: r.ok, totalComponents: r.index?.totalComponents };
+      } catch(e) { return { error: e.message }; }
+    }
+
+    return { skipped: action, reason: 'no handler' };
+  }
+
+  // ── Map action name to SISO bus event ────────────────────────────────
+  _actionToBusEvent(action) {
+    const map = {
+      'navigate':          'driver.exec',
+      'click':             'driver.exec',
+      'type':              'driver.exec',
+      'scroll':            'driver.exec',
+      'screenshot':        'driver.exec',
+      'eval':              'driver.exec',
+      'waitFor':           'driver.exec',
+      'back':              'driver.exec',
+      'forward':           'driver.exec',
+      'reload':            'driver.exec',
+      'getUrl':            'driver.exec',
+      'getTitle':          'driver.exec',
+      'inject':            'driver.exec',
+      'picker.enable':     'driver.exec',
+      'picker.disable':    'driver.exec',
+      'record.start':      'driver.exec',
+      'record.stop':       'driver.exec',
+      'network.block':     'driver.exec',
+      'network.intercept': 'driver.exec',
+      'storage.get':       'driver.exec',
+      'storage.set':       'driver.exec',
+      'dom.query':         'dom.query',
+      'dom.mutate':        'dom.mutate',
+      'dom.pick':          'dom.pick',
+      'dom.tokens':        'dom.tokens',
+      'context.create':    'context.create',
+      'context.switch':    'context.switch',
+      'context.list':      'status.request',
+      'context.fp.switch': 'context.fp.switch',
+      'mesh.spawn':        'mesh.spawn',
+      'mesh.route':        'mesh.route',
+      'mesh.send':         'mesh.send',
+      // §BUGFIX 2026-08-29 — mesh.enqueue had no entry here, so any
+      // co-pilot tool call for it fell through to this map's default
+      // ('driver.exec') — a co-pilot-issued ```driver{"action":"mesh.
+      // enqueue",...}``` block was being dispatched as a browser
+      // automation command, not a mesh task. Silent misroute: driver.
+      // exec's real gate would have just ignored the unrecognized
+      // action shape rather than throwing, so this never surfaced as an
+      // error, just as enqueue quietly never working via co-pilot. Now
+      // added to tools.js in the same pass — see that file's own gap note.
+      'mesh.enqueue':      'mesh.enqueue',
+      'url.listen':        'url.listen',
+      'url.listen.remove': 'url.listen.remove',
+      'url.listen.list':   'status.request',
+      'diag.nexus':        'diag.nexus',
+      'diag.page':         'diag.page',
+      'diag.run':          'diag.run',
+      'window.open':       'window.open',
+      'window.close':      'window.close',
+      'window.hide':       'window.hide',
+      'options.get':       'options.get',
+      'options.set':       'options.set',
+    };
+    return map[action] || 'driver.exec';
+  }
+
+  // ── Build system prompt for NEXUS copilot ────────────────────────────
+  // §Phase B 2026-07-20 — tool surface is now EMERGENT: fetched live from
+  // orchestrator's capability-registry (a projection of component-registry),
+  // so anything NEXUS builds at runtime is immediately a usable tool. Falls
+  // back to the static tools.js list only if orchestrator is unreachable —
+  // never leaves Co-pilot with no tools. Cached ~5s to avoid a fetch per turn.
+  async _liveToolsPrompt() {
+    const now = Date.now();
+    if (this._toolsCache && (now - this._toolsCache.ts) < 5000) return this._toolsCache.text;
+    try {
+      const r = await fetch('http://127.0.0.1:9000/api/capabilities/prompt', { timeout: 2000 });
+      if (r.ok) {
+        const text = await r.text();
+        this._toolsCache = { text, ts: now };
+        return text;
+      }
+    } catch (_) { /* fall through to static */ }
+    return buildToolsPrompt(); // static fallback — Co-pilot always has tools
+  }
+
+  async _buildCgContext(agentId, domContext) {
+    const domSection = domContext
+      ? `\n\n## Live Browser DOM (Agent: ${agentId})\n\`\`\`json\n${JSON.stringify(domContext, null, 2).slice(0, 3000)}\n\`\`\``
+      : '';
+    const toolsPrompt = await this._liveToolsPrompt();
+
+    return `## Clear Glass Browser Context
+Agent ID: ${agentId}
+Browser: Clear Glass — NEXUS sovereign browser (Electron/Chromium)
+You are fully in control. Issue tool calls as \`\`\`driver JSON blocks.
+
+${toolsPrompt}${domSection}`;
+  }
+
+  // ── Call NEXUS copilot — routed through Bridge :9999 ─────────────────
+  async _callNexusCopilot({ message, agentId, domContext, systemExtra, msgId }) {
+    const cgContext = await this._buildCgContext(agentId, domContext);
+    const result = await this._bridgeDispatch('copilot', 'copilot.prompt', {
+      prompt:      message,
+      channel:     'clear-glass',
+      sessionId:   agentId,
+      requestId:   msgId,
+      source:      'clear-glass',
+      systemExtra: cgContext + (systemExtra ? '\n\n' + systemExtra : ''),
+    }, 60000);
+    const data = result?.response || result || {};
+    return {
+      text:          data.text || data.response || '',
+      modelUsed:     data.modelUsed || data.provider_used || 'nexus',
+      contextLayers: data.contextLayers || 0,
+      fromStream:    data.fromStream || false,
+    };
+  }
+
+  // ── Fallback: direct API ──────────────────────────────────────────────
+  async _callFallback({ message, agentId, domContext, msgId }) {
+    const s = this.settings.get();
+    if (!s.fallbackApiKey) {
+      return { text: 'NEXUS copilot offline. No fallback API key configured — set one in NEXUS Settings.', modelUsed: 'none' };
+    }
+    const cgContext = await this._buildCgContext(agentId, domContext);
+    const res = await fetch(s.fallbackEndpoint || 'https://api.anthropic.com/v1/messages', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': s.fallbackApiKey, 'anthropic-version': '2023-06-01' },
+      body:    JSON.stringify({
+        model:      s.fallbackModel || 'claude-sonnet-4-6',
+        max_tokens: 4096,
+        system:     cgContext,
+        messages:   [{ role: 'user', content: message }],
+      }),
+      timeout: 60000,
+    });
+    if (!res.ok) throw new Error(`Fallback API error ${res.status}`);
+    const data = await res.json();
+    return { text: data.content?.[0]?.text || '', modelUsed: 'claude-fallback' };
+  }
+
+  // ── Guardian — direct, not routed through Bridge (retired) ───────────
+  async _guardianDispatch({ provider, prompt, sessionId }) {
+    return this._bridgeDispatch('guardian', 'guardian.command', {
+      provider, prompt,
+      sessionId: sessionId || randomUUID(),
+      source: 'clear-glass-copilot',
+    }, 30000);
+  }
+
+  async _guardianFetch(path) {
+    try {
+      return await this._bridgeDispatch('guardian', 'guardian.fetch', { path }, 5000);
+    } catch (err) {
+      return { error: err.message };
+    }
+  }
+
+  // ── Cortex direct calls ───────────────────────────────────────────────
+  async _cortexFetch(path, params = {}) {
+    try {
+      const qs  = Object.keys(params).length
+        ? '?' + new URLSearchParams(params).toString() : '';
+      const res = await fetch(this.settings.cortexUrl(path) + qs, { timeout: 5000 });
+      return res.ok ? res.json() : { error: `Cortex ${path} failed: ${res.status}` };
+    } catch (err) {
+      return { error: err.message };
+    }
+  }
+
+  async _cortexPost(path, body) {
+    try {
+      const res = await fetch(this.settings.cortexUrl(path), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body), timeout: 5000,
+      });
+      return res.ok ? res.json() : { error: `Cortex ${path} failed: ${res.status}` };
+    } catch (err) {
+      return { error: err.message };
+    }
+  }
+
+  // ── Other endpoints ───────────────────────────────────────────────────
+  async build({ description, sessionId, requestId }) {
+    return this._bridgeDispatch('copilot', 'copilot.build', {
+      description, sessionId, requestId: requestId || randomUUID(),
+    }, 120000);
+  }
+
+  async diagnose({ topic, requestId }) {
+    return this._bridgeDispatch('copilot', 'copilot.diagnose', {
+      topic: topic || 'system health', requestId: requestId || randomUUID(),
+    }, 60000);
+  }
+
+  async health() {
+    try {
+      return await this._bridgeDispatch('copilot', 'copilot.health', {}, 3000);
+    } catch (e) { return { ok: false, error: e.message }; }
+  }
+
+  async guardianHealth() {
+    return this._guardianFetch('/health');
+  }
+
+  // ── Ollama — direct, not routed through Bridge (retired) ─────────────
+  async ollamaGenerate({ model, prompt, sessionId }) {
+    return this._bridgeDispatch('ollama', 'ollama.generate', {
+      model: model || 'llama3', prompt, sessionId: sessionId || randomUUID(),
+    }, 120000);
+  }
+
+  // ── Parse tool calls from response ────────────────────────────────────
+  _parseCommands(text) {
+    const commands = [];
+    // Parse ```driver blocks
+    const driverRe = /```driver\s*\n([\s\S]*?)\n```/g;
+    let m;
+    while ((m = driverRe.exec(text)) !== null) {
+      try { commands.push(JSON.parse(m[1].trim())); } catch (_) {}
+    }
+    // Parse ```tool blocks (alias)
+    const toolRe = /```tool\s*\n([\s\S]*?)\n```/g;
+    while ((m = toolRe.exec(text)) !== null) {
+      try { commands.push(JSON.parse(m[1].trim())); } catch (_) {}
+    }
+    return commands;
+  }
+
+  // §BUG FIXED 2026-07-11 — three debugging rounds (2026-06-30 x3) each
+  // disproved the previous theory with real evidence, ending in a
+  // diagnostic fallback that finally proved it conclusively: fetch()
+  // fails against bridge:9999 specifically (ERR_STREAM_PREMATURE_CLOSE,
+  // undici's strict HTTP/1.1 parser reacting to how this particular
+  // server closes connections), while http.request() against the exact
+  // same URL/payload succeeds every time — confirmed live in the
+  // 2026-07-11 boot log ("http.request FALLBACK succeeded where fetch()
+  // failed — status 200"). That log's own conclusion: "Real fix: switch
+  // this function to http.request permanently." This is that fix,
+  // extracted once so both bridge call sites use it instead of trying
+  // fetch() first and eating the failure's latency/log noise every time.
+  _httpPostBridge(url, payload, timeoutMs = 5000, extraHeaders = {}) {
+    return new Promise((resolve, reject) => {
+      const http = require('http');
+      const body = JSON.stringify(payload);
+      const u = new URL(url);
+      const req = http.request({
+        hostname: u.hostname, port: u.port, path: u.pathname, method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body), ...extraHeaders },
+        timeout: timeoutMs,
+      }, r => {
+        let buf = ''; r.on('data', c => buf += c);
+        r.on('end', () => resolve({ status: r.statusCode, ok: r.statusCode >= 200 && r.statusCode < 300, body: buf }));
+      });
+      req.on('error', reject);
+      req.on('timeout', () => { req.destroy(); reject(new Error('http.request timeout')); });
+      req.write(body); req.end();
+    });
+  }
+
+  // §FIXED 2026-09-06 — _bridgeHandshake and _httpPostBridgeAuthed both
+  // removed entirely (see wire()'s own comment above for the full
+  // finding). _httpPostBridgeAuthed only ever existed to attach the
+  // bridge-issued token to a request; with bridge gone and dispatch
+  // below calling each real target directly, nothing needs that token
+  // anymore.
+  // This GET helper is new — every real dispatch before this fix was
+  // POST-only
+  // (routed through bridge's own single /bridge/request shape), but a
+  // direct call to copilot's real /health needs a real GET.
+  _httpGetBridge(url, timeoutMs = 5000) {
+    return new Promise((resolve, reject) => {
+      const http = require('http');
+      const u = new URL(url);
+      const req = http.request({
+        hostname: u.hostname, port: u.port, path: u.pathname + u.search, method: 'GET',
+        timeout: timeoutMs,
+      }, r => {
+        let buf = ''; r.on('data', c => buf += c);
+        r.on('end', () => resolve({ status: r.statusCode, ok: r.statusCode >= 200 && r.statusCode < 300, body: buf }));
+      });
+      req.on('error', reject);
+      req.on('timeout', () => { req.destroy(); reject(new Error('http.request timeout')); });
+      req.end();
+    });
+  }
+
+  // §FIXED 2026-09-06 — _bridgeHandshake removed entirely (see wire()'s
+  // own comment above for the full finding). It only ever existed to
+  // obtain a token _bridgeDispatch needed to talk to bridge — with
+  // bridge gone and dispatch now calling each real target directly,
+  // there is nothing left for a token to authorize.
+
+  // ── Direct dispatch — calls each real target directly, no bridge ─────
+  // Real endpoint map, checked directly against each system's own real
+  // routes rather than guessed: copilot's /api/prompt, /api/build,
+  // /api/diagnose, /health (all confirmed live in copilot/server.js);
+  // guardian's /command (confirmed live in guardian/server.js);
+  // ollama's /api/generate (Ollama's own real, standard REST API,
+  // independent of anything NEXUS-specific).
+  _directTargetFor(target, type) {
+    const map = {
+      'copilot:copilot.prompt':    { url: this.settings.copilotDirectUrl('/api/prompt'),   method: 'POST' },
+      'copilot:copilot.build':     { url: this.settings.copilotDirectUrl('/api/build'),    method: 'POST' },
+      'copilot:copilot.diagnose':  { url: this.settings.copilotDirectUrl('/api/diagnose'), method: 'POST' },
+      'copilot:copilot.health':    { url: this.settings.copilotDirectUrl('/health'),        method: 'GET'  },
+      'guardian:guardian.command': { url: this.settings.guardianDirectUrl('/command'),      method: 'POST' },
+      'ollama:ollama.generate':    { url: this.settings.ollamaDirectUrl('/api/generate'),   method: 'POST' },
+    };
+    return map[`${target}:${type}`] || null;
+  }
+
+  async _bridgeDispatch(target, type, payload, timeout = 30000) {
+    if (target === 'guardian' && type === 'guardian.fetch') {
+      // guardian.fetch's own real path comes from payload.path, not a
+      // fixed map entry — same real guardianDirectUrl(), just a
+      // caller-supplied path instead of one baked into the map above.
+      const res = await this._httpGetBridge(this.settings.guardianDirectUrl(payload.path), timeout);
+      if (!res.ok) throw new Error(`[Guardian] ${payload.path} HTTP ${res.status}`);
+      return JSON.parse(res.body);
+    }
+    const dest = this._directTargetFor(target, type);
+    if (!dest) throw new Error(`[CoPilot] no known direct route for ${target}:${type}`);
+
+    const res = dest.method === 'GET'
+      ? await this._httpGetBridge(dest.url, timeout)
+      : await this._httpPostBridge(dest.url, payload, timeout);
+    if (!res.ok) {
+      let detail = '';
+      try { const errBody = JSON.parse(res.body); detail = errBody?.errors?.join('; ') || errBody?.error || ''; } catch (_) {}
+      throw new Error(`[${target}] ${type} HTTP ${res.status}${detail ? ' — ' + detail : ''}`);
+    }
+    const data = JSON.parse(res.body);
+    return data.result?.response ?? data.result ?? data;
+  }
+
+  // ── NEXUS copilot stream connection ───────────────────────────────────
+  _connectStream() {
+    const copilotPort = this.settings.get().copilotPort || 3750;
+    const connect = () => {
+      try {
+        const req = http.request({
+          hostname: '127.0.0.1', port: copilotPort,
+          path: '/events', headers: { Accept: 'text/event-stream' },
+        }, res => {
+          this._connected = true;
+          this.sse.emit('copilot.stream.connected', { port: copilotPort, ts: Date.now() });
+          let buf = '';
+          res.on('data', chunk => {
+            buf += chunk.toString();
+            const parts = buf.split('\n\n');
+            buf = parts.pop() || '';
+            for (const part of parts) {
+              const line = part.split('\n').find(l => l.startsWith('data:'));
+              if (!line) continue;
+              try {
+                const ev = JSON.parse(line.slice(5));
+                this.sse.emit(`nexus.copilot.${ev.type || 'event'}`, ev.payload || ev);
+              } catch (_) {}
+            }
+          });
+          res.on('end', () => { this._connected = false; setTimeout(connect, 3000); });
+        });
+        req.on('error', () => { this._connected = false; setTimeout(connect, 5000); });
+        req.end();
+        this._streamConn = req;
+      } catch (_) { setTimeout(connect, 5000); }
+    };
+    setTimeout(connect, 2000);
+  }
+
+  // ── Bridge browser events into copilot consciousness ──────────────────
+  _bridgeBrowserEvents() {
+    try {
+      const { on: busOn } = require('../core/bus');
+      const forward = (type) => {
+        busOn(type, (event) => {
+          this._ingestToNexus({ type: `clear-glass.${type}`, ...event.data, ts: Date.now() });
+        });
+      };
+      ['nav.loading', 'nav.loaded', 'driver.result', 'driver.error',
+       'dom.tokens.result', 'url.match', 'mesh.task.complete', 'mesh.error',
+       'diag.complete', 'context.created', 'provider.host.started',
+       'bookmarks.added', 'rewind.snapshotted', 'cookie.health.result'].forEach(forward);
+    } catch (_) {}
+  }
+
+  _ingestToNexus(event) {
+    const copilotPort = this.settings.get().copilotPort || 3750;
+    try {
+      const body = JSON.stringify(event);
+      const req  = http.request({
+        hostname: '127.0.0.1', port: copilotPort,
+        path: '/api/stream/ingest', method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+        timeout: 2000,
+      });
+      req.on('error', () => {});
+      req.write(body); req.end();
+    } catch (_) {}
+  }
+
+  clearHistory(agentId) {
+    this._ingestToNexus({ type: 'clear-glass.copilot.history.cleared', agentId, ts: Date.now() });
+  }
+}
+
+module.exports = CoPilotBridge;

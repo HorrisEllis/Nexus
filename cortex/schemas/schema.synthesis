@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-schema-synthesis
+type: schema
+id: synthesis
+context: >-
+  cortex/schemas — sovereign local copy. Origin: lib/node-schemas/schema.synthesis (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means cortex does
+  not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789235656651
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    cortex/core/raid/officiator.js — synthesizeFromContext()/_synthesizeCore()'s real `synthesized`
+    object (the officiator's own hat output, required-keys list stated verbatim in
+    _buildSynthesisPrompt/synthesizeFromContext's own prompt text)
+  fields:
+    endState:
+      type: string
+      required: false
+      description: real target terminal state for the build this synthesis feeds, null if undetermined
+    conditions:
+      type: any
+      required: false
+      description: real pass/fail conditions for endState, shape not fixed by the officiator itself
+    intent:
+      type: string
+      required: false
+      description: real one-line purpose string, used as submitContract()'s `intention` when submit:true
+    context:
+      type: string
+      required: false
+      description: real synthesized/free-form context text — falls back to the raw input text if absent
+    warpPrimitives:
+      type: any
+      required: false
+      description: real warp primitives list for the build, passed through unchanged to submitContract()
+    axioms:
+      type: any
+      required: false
+      description: >-
+        real 1-5 identity-defining invariants for the resulting compartment, per cos/kernel.js's own
+        convention
+    tools:
+      type: any
+      required: false
+      description: real tools list the officiator determined the build needs
+    compartmentUuid:
+      type: string
+      required: false
+      description: real target compartment this synthesis is for, null if not yet known
+    fileDirectory:
+      type: string
+      required: false
+      description: real destination directory for the resulting artifact
+    fileName:
+      type: string
+      required: false
+      description: real destination filename for the resulting artifact

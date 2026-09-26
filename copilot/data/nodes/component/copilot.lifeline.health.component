@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.lifeline.health
+type: component
+id: copilot.lifeline.health
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153042
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153042
+lastSeenAt: 1789275153042
+fingerprint: copilot::GET /api/lifeline/health
+payload:
+  id: copilot.lifeline.health
+  uuid: ce2a4eda-e04f-4949-877a-ed7fd951e97d
+  namespace: copilot
+  name: lifeline.health
+  version: 2.0.0

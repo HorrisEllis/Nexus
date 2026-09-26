@@ -1,0 +1,74 @@
+envelope: 1
+uuid: nexus-export-schema-file_delta
+type: schema
+id: file_delta
+context: >-
+  versionium/schemas — registered 2026-09-15 per MCO-A
+  (idearium-repository-overhaul-phasemap.spec). Home confirmed versionium/
+  (not cortex/) — see docs/2026-09-15-versionium-cortex-snapshot-migration-
+  decision.md, D1. Deliberately separate from cortex's schema.sigma_record
+  — that table is a live, 707-row component-divergence-score store for a
+  different concept; this is a per-file diff record for the
+  versionium<->idearium bridge (MCO-B).
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789564800000
+source: idearium-repository-overhaul-phasemap.spec:MCO-A
+payload:
+  status: REAL
+  source: >-
+    MCO-B (2026-09-20): versionium/lib/files.js is now the real writer, and
+    writes and reads back real rows in tests/modules/test-mcob-file-
+    versioning.js. Status moved OPEN -> REAL on that proof. Original MCO-A
+    note follows. Registered this pass. No real writer exists yet — will be written by
+    versionium.file.delta.capability once MCO-B lands (this spec's own
+    gate: MET when both schemas are indexed AND one real round-trip row
+    passes each; the round-trip below proves the shape, not a production
+    writer — see tests/modules/test-mco-a-schemas.js MCOA-002). Marked
+    OPEN, not REAL, per §1.1 (nothing exists until proven) — matches this
+    codebase's actual status vocabulary (REAL/OPEN), not the draft's own
+    invented PROPOSED (docs/2026-09-15-versionium-cortex-snapshot-
+    migration-decision.md, D7).
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real delta record id
+    file_path:
+      type: string
+      required: true
+      description: repo-relative path of the file this delta applies to
+    commit_ref:
+      type: string
+      required: true
+      description: "references versionium_commit.uuid — the commit this delta belongs to"
+    diff:
+      type: string
+      required: true
+      description: unified diff against the previous snapshot/delta chain for this file
+    bytes_saved:
+      type: number
+      required: false
+      description: byte-count delta vs storing a full snapshot, for observability only
+    repository:
+      type: string
+      required: false
+      description: "MCO-B — the repository (idearium repo uuid) this delta belongs to; the chain is per repository + path"
+    base_sha256:
+      type: string
+      required: false
+      description: "MCO-B — sha256 of the bytes this diff applies to; checked before applying"
+    result_sha256:
+      type: string
+      required: false
+      description: "MCO-B — sha256 the diff must reproduce; checked after applying, and verified again at write time"
+    result_bytes:
+      type: number
+      required: false
+      description: "MCO-B — byte length of the reproduced file"
+    ts:
+      type: number
+      required: true
+      description: real delta timestamp

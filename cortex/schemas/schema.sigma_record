@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-schema-sigma_record
+type: schema
+id: sigma_record
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table
+  (data/cortex/memory/sigma_records.json). Origin: lib/node-schemas/schema.sigma_record.
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252732519
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/baseline.js + intelligence/cfr/sigma.js — confirmed directly against
+    data/cortex/memory/sigma_records.json's real, live rows this pass (723 of them), not re-derived
+    from the writer source alone. Previously status:OPEN with fields:{} — this is the first honest
+    confirmation.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real record id
+    sigma:
+      type: number
+      required: true
+      description: real composite divergence score
+    type:
+      type: string
+      required: true
+      description: real event/component type this sigma reading is for, e.g. 'component.registered'
+    axes:
+      type: object
+      required: true
+      description: real per-axis breakdown, e.g. {structural, temporal, contextual}
+    reason:
+      type: string
+      required: true
+      description: real classification, e.g. 'nominal'
+    intervalMs:
+      type: number
+      required: false
+      description: real ms since the previous reading for this type
+    cfrState:
+      type: object
+      required: false
+      description: real snapshot of coherence/entropy/friction/resonance at this reading
+    baselineSnap:
+      type: any
+      required: false
+      description: real baseline snapshot reference, null when none captured
+    source:
+      type: string
+      required: true
+      description: real writer id, e.g. 'sigma-writer'
+    ts:
+      type: number
+      required: true
+      description: real timestamp

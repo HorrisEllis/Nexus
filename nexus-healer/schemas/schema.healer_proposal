@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-schema-healer_proposal
+type: schema
+id: healer_proposal
+context: nexus-healer/schemas — nexus-healer-local schema registry
+intent: null
+summary: null
+system: nexus-healer
+tags: []
+exported_at: 1789200001300
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    nexus-healer/api/index.js's real jaaDB 'healer_proposals' table (propose -> evaluate -> merge
+    lifecycle for self-improvement patches). The genuinely unslotted type flagged while mapping
+    nexus-healer against the central 32/33 — doesn't fit .job or .contract. Nexus-healer-exclusive.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real proposal id
+    text:
+      type: string
+      required: true
+      description: real proposed self-improvement text
+    causedBy:
+      type: string
+      required: false
+      description: real triggering id, e.g. a gap or event
+    status:
+      type: string
+      required: true
+      description: "real lifecycle status, e.g. 'proposed' | 'generation-failed' | others per the real evaluate/merge handlers"
+    targetFile:
+      type: string
+      required: false
+      description: real file this proposal's evaluated patch targets
+    generationError:
+      type: string
+      required: false
+      description: real error message when status reflects a failed patch generation

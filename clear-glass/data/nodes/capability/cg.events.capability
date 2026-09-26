@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.events
+type: capability
+id: cg.events
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730157
+source: clear-glass.registry-components:cg.events
+payload:
+  id: cg.events
+  namespace: cg
+  name: events
+  version: 3.1.0
+  grammar:
+    - events
+  route:
+    method: GET
+    path: /events
+  intent: []
+  description: SSE — all SISO bus events
+  params: []
+  tags:
+    - cg
+    - stream
+  permissions:
+    - system
+  hooks: {}

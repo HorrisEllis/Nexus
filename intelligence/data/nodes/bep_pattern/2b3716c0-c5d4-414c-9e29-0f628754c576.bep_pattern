@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-2b3716c0-c5d4-414c-9e29-0f628754c576
+type: bep_pattern
+id: 2b3716c0-c5d4-414c-9e29-0f628754c576
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"intent.classified" precedes failures 7 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790367509221
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790367509221
+lastSeenAt: 1790367509221
+fingerprint: null
+payload:
+  uuid: 2b3716c0-c5d4-414c-9e29-0f628754c576
+  signature: precursor::intent.classified
+  patternType: failure_precursor
+  precursorType: intent.classified
+  failureTypes:
+    - intelligence.failure_scan
+  count: 7
+  confidence: 0.7
+  description: '"intent.classified" precedes failures 7 times — watch this event type'
+  actionable: true
+  crystallised: false
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790367509177

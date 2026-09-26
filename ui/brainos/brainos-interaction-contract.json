@@ -1,0 +1,91 @@
+{
+  "id": "brainos-v1",
+  "version": "0.1.0",
+  "namespace": "brainos",
+  "uuid": "brainos-contract-v1-0000-2026-0903-001",
+  "role": "Live control panel — floating UI overlay, no backend server of its own. All real actions are DOM/browser-side calls into window.BrainOS, described here so co-pilot or any other real caller can discover and drive it without reading nexus/ui/brainos/brainos.js directly.",
+
+  "_honest_scope": "James: 'Interaction contract for the ui to float... that way co-pilot can interact with it.' This is a client-side widget, not an HTTP service — there is no port, no /health. 'routes' below are real JS calls against window.BrainOS (nexus/ui/brainos/brainos.js), not HTTP endpoints. If BrainOS ever gains its own real backend aggregator, THAT gets its own interaction-contract.json in the established server shape (see guardian/interaction-contract.json) — this file should not be stretched to pretend that already exists.",
+
+  "real_data_sources": [
+    {
+      "system": "guardian",
+      "endpoint": "GET /events (SSE)",
+      "confirmed": "guardian/server.js — SISOStream.emit unconditionally calls cockpitBroadcast() for every real bus event; first event on connect is {type:'connected'}"
+    },
+    {
+      "system": "guardian",
+      "endpoint": "GET /commands",
+      "confirmed": "guardian/lib/command-index-extract.js — real source-extraction from guardian/server.js's own literal dispatch code, 50 real commands + 14 named unresolved sub-routers, built 2026-09-03 (docs/command-index-per-system.spec phase 3)"
+    },
+    {
+      "system": "clear-glass",
+      "endpoint": "GET /cli/commands",
+      "confirmed": "clear-glass/src/ipc/bridge.js's _buildCommandIndex() — real, live Express router introspection, not a static file"
+    },
+    {
+      "system": "ollama",
+      "endpoint": "GET /commands",
+      "confirmed": "ollama/lib/command-index.js — real aggregation of all 6 route modules' self-declared commands, 17 real commands, built 2026-09-03 (docs/command-index-per-system.spec phase 2)"
+    },
+    {
+      "system": "bridge",
+      "endpoint": "GET /commands",
+      "confirmed": "bridge/lib/command-index-extract.js — real source-extraction, 17 real commands + 1 named unresolved sub-router (/cfr/*), built 2026-09-03 (docs/command-index-per-system.spec phase 4)"
+    }
+  ],
+
+  "routes": [
+    {
+      "call": "window.BrainOS.mount(opts?)",
+      "opts": ["guardianUrl", "clearGlassUrl", "maxEventRows"],
+      "returns": "the real, mounted panel DOM element",
+      "description": "Idempotent — calling mount() while already mounted returns the existing real panel, does not create a second one. If nexus/ui/brainos/brainos-canvas.js was loaded first, this also mounts the real node canvas inside the panel and feeds it every real SSE event from the SAME connection (no second connection opened)."
+    },
+    {
+      "call": "window.BrainOS.unmount()",
+      "returns": "undefined",
+      "description": "Closes the real EventSource, unmounts the real canvas if present, removes the real panel from the DOM, resets internal state to its real initial shape."
+    },
+    {
+      "call": "window.BrainOS.getState()",
+      "returns": {
+        "mounted": "boolean",
+        "connected": "boolean — real SSE connection state, not assumed true",
+        "eventCount": "number — real events received this session",
+        "commandIndexLoaded": "boolean",
+        "position": "{top, left} real CSS pixel strings, or null if unmounted"
+      },
+      "description": "The one real read path co-pilot or any other caller should use to check panel state — never reach into the DOM or internal _state directly, both are unstable across versions."
+    },
+    {
+      "call": "window.BrainOSCanvas.mount(container)",
+      "returns": "the real, mounted SVG element",
+      "description": "Real node graph — one node per real system (orchestrator.config.json's own real ports list, 14 systems) plus one per real agent/provider (guardian/lib/provider-routing.js's own real KNOWN_PROVIDERS). Normally called by BrainOS.mount() automatically, exposed directly for a caller that wants the canvas without the rest of the panel chrome."
+    },
+    {
+      "call": "window.BrainOSCanvas.pulse(nodeId)",
+      "returns": "undefined",
+      "description": "Triggers one real, bounded CSS pulse animation on the named node. A no-op (never throws, never fabricates) for a node id that doesn't exist."
+    },
+    {
+      "call": "window.BrainOSCanvas.onRealEvent(event)",
+      "returns": "undefined",
+      "description": "Real event router — call with a real event object (the same shape received from guardian's /events SSE) to pulse the matching real node(s). guardian's own node pulses on every call (every event on this stream is guardian's own); an event.provider field additionally pulses that agent's node."
+    },
+    {
+      "call": "window.BrainOSCanvas.getRealSystemIds() / getRealAgentIds()",
+      "returns": "string[]",
+      "description": "The real, current list of node ids this canvas actually renders — the one real source of truth for 'which nodes exist,' never hardcoded elsewhere."
+    }
+  ],
+
+  "known_gaps_this_first_slice_does_not_close": [
+    "topology lines between nodes are real, named, static structural relationships (each with a real source citation, checked in a real <title> tooltip) — NOT a live call trace; docs/brainos-live-control-panel.spec's own canvas_mechanics section already flagged that a live per-call edge-glow mechanism doesn't exist anywhere in this codebase yet",
+    "only guardian's own node and provider-tagged agent nodes get a real, confirmed live PULSE — the other 13 real NEXUS systems' command indexes are now real and fetched (see real_data_sources above), but that is static route metadata, not a live event feed; no confirmed live heartbeat source reaches them today. Wiring a real cross-system event relay is separate, not-yet-scoped future work",
+    "no WebGL canvas yet — this slice is real SVG, not ui/eravos/runtime/alk-gl.js's particle field; reusing that engine is real future work, not attempted here",
+    "no cfr.entropy/coherence/friction field mapping wired yet (docs/brainos-live-control-panel.spec's canvas_mechanics section) — GET /cfr/stream was confirmed live in an earlier session but this slice does not yet subscribe to it",
+    "co-pilot does not yet call any of the routes above — this contract makes that possible, it does not itself wire copilot/server.js to call it",
+    "bridge/server.js and guardian.spec/bridge.spec still carry their own separate, hand-maintained routes: lists alongside the new real, live-extracted /commands endpoints — found and measured as real, stale drift while building phases 3-4 (guardian: 4 declared vs 50 real; bridge: 15 declared vs 17 real), not reconciled by this pass"
+  ]
+}

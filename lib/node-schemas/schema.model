@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-schema-model
+type: schema
+id: model
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116324007
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: ollama/config.js — the one real place model tags live (DEFAULT_MODEL/FALLBACK_MODEL)
+  fields:
+    tag:
+      type: string
+      required: true
+      description: a real, verified Ollama model tag, e.g. "mistral:7b-instruct-q4_K_M"
+    role:
+      type: string
+      required: false
+      description: '''default'' | ''fallback'' — which real config slot this fills'
+    envVar:
+      type: string
+      required: false
+      description: the real env var that overrides this tag, if any

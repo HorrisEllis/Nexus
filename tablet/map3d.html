@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXUS · Brain</title>
+<!--
+  tablet/map3d.html — OB10 of the observability/tablet phasemap (BRAIN rebuild)
+  UUID: nexus-tablet-map3d-v2-0000-2026-0915-001
+
+  §BRAIN REBUILD. James: "it doesn't connect... make it like a brain that
+  tracks events, nodes, data, commands, sse, all activity, but only real
+  activity." Real, traced root cause for "doesn't connect": v1 depended
+  entirely on copilot (:3750) answering a single `jpost('run diagnostics')`
+  prompt for its whole picture — one fragile, LLM-routed call, offline the
+  moment copilot itself wasn't up (exactly what image evidence showed: "
+  co-pilot offline (:3750)"). It also never actually tracked live activity —
+  it re-asked a snapshot question every 15s, nothing more.
+
+  This version's real data comes from the orchestrator (:9000), the one
+  process every other system already registers with and the one already
+  proven always-on in this codebase:
+    • NODES  — GET /api/status  → orchestrator's own SYS registry (real
+      id/label/color/port, real online/offline, real round-trip ms). Not
+      guessed from whichever systems happened to answer a prompt.
+    • EDGES  — GET /api/channels → orchestrator's own declared CHANNELS map
+      (real from→to→description architecture, the same list a human reads
+      to understand how the systems actually talk to each other).
+    • ACTIVITY — GET /nexus-bus/sse → nexus-bus's real firehose
+      (nexus/nexus-bus.js's handleSSE — EVERY event any system emits,
+      replayed 50 deep on connect, not a synthetic poll). Each event pulses
+      its source node, flashes the matching declared edge when one exists,
+      and lands in the activity feed with a short, honest content preview —
+      same truncated-preview convention chunk-dispatch.js / wake-relay.js /
+      guardian/lib/jobs.js already use elsewhere in this codebase, kept
+      consistent here rather than inventing a fourth format.
+
+  §1.1 / §0.1 THE LAW — unchanged from v1. A node with no observed health
+  is grey "unknown," never a confident color; an edge that isn't in the
+  real CHANNELS map is never drawn; if the orchestrator itself is
+  unreachable, this page says so and renders nothing invented. No mocks.
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+  :root{ --bg:#05060a; --panel:#0d0f16cc; --line:#232a38; --ink:#e8edf5; --dim:#8792a6; --faint:#565f70;
+    --ac:#00e5ff; --bad:#ff5d6c; --warn:#f2c14e; --ok:#3ad29f; --mono:'Space Mono',ui-monospace,Menlo,monospace; }
+  *{box-sizing:border-box;} html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--mono);overflow:hidden;}
+  #stage{position:fixed;inset:0;}
+  .hud{position:fixed;z-index:10;font-size:11px;letter-spacing:.05em;}
+  #title{top:16px;left:20px;} #title b{font-size:14px;letter-spacing:.2em;}
+  #title .v{color:var(--dim);}
+  #legend{bottom:16px;left:20px;color:var(--dim);line-height:1.9;}
+  #legend .sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+  #status{top:16px;right:20px;text-align:right;color:var(--dim);}
+  #status b{color:var(--ok);}
+  #status .sse{margin-top:4px;}
+  #status .sse.live{color:var(--ok);} #status .sse.down{color:var(--bad);}
+  #banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;text-align:center;color:var(--warn);font-size:13px;max-width:60%;display:none;}
+  #tip{position:fixed;z-index:15;background:rgba(8,10,18,.95);border:1px solid #2a3040;border-radius:8px;padding:8px 11px;font-size:11px;pointer-events:none;display:none;max-width:260px;}
+  #tip .n{color:var(--ac);font-weight:700;} #tip .r{color:var(--dim);margin-top:3px;}
+  #tip .ev{color:var(--faint);margin-top:6px;border-top:1px solid #232a38;padding-top:6px;}
+  #tip .ev div{margin-top:2px;}
+
+  /* ── activity feed — the "brain" tracking every real event ── */
+  #feed{
+    position:fixed; z-index:10; top:16px; right:20px; margin-top:34px;
+    width:280px; max-height:calc(100% - 100px); overflow-y:auto;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:8px; font-size:10.5px; backdrop-filter:blur(6px);
+  }
+  #feed::-webkit-scrollbar{width:6px;} #feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+  #feed .fh{color:var(--faint);font-size:9px;letter-spacing:.1em;margin-bottom:6px;text-transform:uppercase;}
+  #feed .fl{display:flex;gap:6px;padding:3px 0;border-bottom:1px solid #171b26;align-items:baseline;}
+  #feed .fl:last-child{border-bottom:none;}
+  #feed .ts{color:var(--faint);flex:none;}
+  #feed .src{flex:none;font-weight:700;}
+  #feed .ty{color:var(--dim);flex:none;}
+  #feed .pv{color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+  #feed .empty{color:var(--faint);}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div class="hud" id="title"><b>NEXUS</b> <span class="v">· brain · v1.0</span></div>
+<div class="hud" id="status">connecting…</div>
+<div class="hud" id="legend">
+  <div><span class="sw" style="background:#3ad29f"></span>online</div>
+  <div><span class="sw" style="background:#565f70"></span>offline / unknown</div>
+  <div><span class="sw" style="background:#00e5ff"></span>live activity pulse</div>
+</div>
+<div id="banner"></div>
+<div id="tip"></div>
+<div id="feed"><div class="fh">activity — real, live only</div><div id="feed-body"><div class="empty">connecting to nexus-bus…</div></div></div>
+
+<script type="importmap">{ "imports": { "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js" } }</script>
+<script type="module">
+import * as THREE from 'three';
+
+// §REAL DATA SOURCES ONLY — orchestrator is the one process every other
+// system already registers with (see orchestrator/orchestrator.js's own
+// SYS registry + CHANNELS map). No topology, no color, no edge here is
+// invented — each traces to one of these three real endpoints.
+const ORCH = 'http://127.0.0.1:9000';
+const $ = s => document.querySelector(s);
+
+// ── scene ──
+const canvas = $('#stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
+camera.position.set(0, 0, 46);
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+const key = new THREE.PointLight(0x00e5ff, 0.8, 200); key.position.set(20,20,30); scene.add(key);
+
+function resize(){ const w=innerWidth,h=innerHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+
+const COLORS = { ok:0x3ad29f, bad:0x565f70, pulse:0x00e5ff };
+let group = new THREE.Group(); scene.add(group);
+const raycaster = new THREE.Raycaster(); const mouse = new THREE.Vector2();
+
+// nodeId -> { mesh, sys(real registry entry), pulseUntil, eventCount, lastEvent }
+const NODES = new Map();
+// "from>to" -> { line, mat, flashUntil } — only for real, declared channels
+const EDGES = new Map();
+
+function showBanner(t){ const b=$('#banner'); b.textContent=t; b.style.display='block'; }
+function hideBanner(){ $('#banner').style.display='none'; }
+
+// ── build the real node/edge graph from orchestrator's own registry ──
+async function buildGraph(){
+  let status, channels;
+  try {
+    const [sRes, cRes] = await Promise.all([
+      fetch(`${ORCH}/api/status`, { signal: AbortSignal.timeout(5000) }),
+      fetch(`${ORCH}/api/channels`, { signal: AbortSignal.timeout(5000) }),
+    ]);
+    status = await sRes.json(); channels = await cRes.json();
+  } catch (e) {
+    $('#status').textContent = 'orchestrator offline (:9000)';
+    showBanner('Cannot reach the orchestrator on :9000 — no live data. This brain renders only the real, registered system graph, so it stays empty rather than show a fake one.');
+    return false;
+  }
+  if (!status || !status.ok || !status.systems || !Object.keys(status.systems).length) {
+    $('#status').textContent = 'orchestrator reachable, no systems registered';
+    showBanner('Orchestrator answered but reported zero registered systems. Nothing invented — check orchestrator/orchestrator.js\'s own SYS registry.');
+    return false;
+  }
+  hideBanner();
+
+  const ids = Object.keys(status.systems);
+  const N = ids.length, R = 16;
+  group.clear(); NODES.clear(); EDGES.clear();
+
+  ids.forEach((id, i) => {
+    const sys = status.systems[id]; // { online, ms, label, port, color, data }
+    const phi = Math.acos(1 - 2*(i+0.5)/N), theta = Math.PI*(1+Math.sqrt(5))*i;
+    const p = new THREE.Vector3(R*Math.cos(theta)*Math.sin(phi), R*Math.sin(theta)*Math.sin(phi), R*Math.cos(phi));
+    const geo = new THREE.SphereGeometry(1.3, 24, 24);
+    // real color from the orchestrator's own registry when it has one — the
+    // status/offline overlay (ok/bad) still governs the actual render color;
+    // the registry color is kept on userData for the tooltip only, honest
+    // about which is "declared identity" vs "observed state."
+    const declaredColor = sys.color ? new THREE.Color(sys.color) : null;
+    const mat = new THREE.MeshStandardMaterial({
+      color: sys.online ? COLORS.ok : COLORS.bad,
+      emissive: sys.online ? COLORS.ok : COLORS.bad,
+      emissiveIntensity: sys.online ? 0.35 : 0.12, roughness: 0.4,
+    });
+    const mesh = new THREE.Mesh(geo, mat); mesh.position.copy(p);
+    mesh.userData = { id, label: sys.label || id, online: sys.online, ms: sys.ms, port: sys.port, declaredColor };
+    group.add(mesh);
+    NODES.set(id, { mesh, mat, pos: p, pulseUntil: 0, eventCount: 0, lastEvent: null });
+  });
+
+  // edges — ONLY from orchestrator's real, declared CHANNELS map (§1.1: an
+  // architecture that isn't declared is never drawn as if it were observed).
+  const chans = (channels && channels.channels) || [];
+  chans.forEach(c => {
+    const a = NODES.get(c.from);
+    (c.to || []).forEach(toId => {
+      const b = NODES.get(toId);
+      if (!a || !b) return; // real registry doesn't have both ends — skip, don't invent
+      const key = `${c.from}>${toId}`;
+      if (EDGES.has(key)) return;
+      const mat = new THREE.LineBasicMaterial({ color: 0x2e3646, transparent:true, opacity:0.35 });
+      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([a.pos, b.pos]), mat);
+      line.userData = c;
+      group.add(line);
+      EDGES.set(key, { line, mat, from:c.from, to:toId, flashUntil:0, ch:c.ch, desc:c.desc });
+    });
+  });
+
+  $('#status').innerHTML = `<b>${Object.values(status.systems).filter(s=>s.online).length}</b>/${ids.length} online`;
+  return true;
+}
+
+// ── activity feed — real events only, same truncated-preview convention
+// used elsewhere in this codebase (chunk-dispatch.js / wake-relay.js /
+// guardian/lib/jobs.js's job-creation log) rather than a new format ──
+const FEED_MAX = 60;
+function feedPreview(ev){
+  const p = ev.payload || {};
+  const raw = p.text ?? p.message ?? p.prompt ?? p.reason ?? p.name ?? p.title ?? '';
+  if (raw) return raw.toString().replace(/\s+/g,' ').trim().slice(0, 60);
+  // no obvious text field — fall back to a compact key list so the feed
+  // never shows a blank line for a real event that just has structured data
+  const keys = Object.keys(p).slice(0, 4);
+  return keys.length ? `{${keys.join(', ')}}` : '';
+}
+function pushFeed(ev){
+  const body = $('#feed-body');
+  if (body.querySelector('.empty')) body.innerHTML = '';
+  const time = new Date(ev.ts || Date.now()).toLocaleTimeString('en-GB', { hour12:false });
+  const row = document.createElement('div'); row.className = 'fl';
+  row.innerHTML = `<span class="ts">${time}</span><span class="src" style="color:${nodeColorHex(ev.source)}">${ev.source||'?'}</span><span class="ty">${ev.type}</span><span class="pv">${feedPreview(ev)}</span>`;
+  body.insertBefore(row, body.firstChild);
+  while (body.children.length > FEED_MAX) body.removeChild(body.lastChild);
+}
+function nodeColorHex(id){
+  const n = NODES.get(id);
+  return n ? (n.mesh.userData.online ? '#3ad29f' : '#8792a6') : '#565f70';
+}
+
+// ── connect to the real nexus-bus firehose — every real event, no polling,
+// no synthesized activity. Replays the last 50 on connect (nexus-bus.js's
+// own handleSSE), so the feed isn't empty just because nothing happened in
+// the last few seconds before this page opened. ──
+let es = null, sseAttempts = 0;
+function connectBus(){
+  try { if (es) es.close(); } catch(_){}
+  es = new EventSource(`${ORCH}/nexus-bus/sse`);
+  es.onopen = () => { sseAttempts = 0; };
+  es.onmessage = (e) => {
+    let ev; try { ev = JSON.parse(e.data); } catch(_) { return; }
+    if (ev.type === 'nexus-bus.connected') { setSseState(true); return; }
+    handleEvent(ev);
+  };
+  es.onerror = () => {
+    setSseState(false);
+    sseAttempts++;
+    try { es.close(); } catch(_){}
+    setTimeout(connectBus, Math.min(30000, 2000 * sseAttempts));
+  };
+}
+function setSseState(live){
+  let tag = document.querySelector('#status .sse');
+  if (!tag) { tag = document.createElement('div'); tag.className = 'sse'; $('#status').appendChild(tag); }
+  tag.textContent = live ? 'nexus-bus: live' : 'nexus-bus: reconnecting…';
+  tag.className = 'sse ' + (live ? 'live' : 'down');
+}
+
+function handleEvent(ev){
+  pushFeed(ev);
+  const node = NODES.get(ev.source);
+  if (node) {
+    node.pulseUntil = performance.now() + 1400;
+    node.eventCount++;
+    node.lastEvent = ev;
+  }
+  // flash the real declared edge this event actually traveled, if any —
+  // matched by source system (CHANNELS' own `from`) and event type prefix
+  // against the channel's own `ch` name, so an unrelated event on the same
+  // source never lights up an edge it didn't use.
+  for (const [key, edge] of EDGES) {
+    if (edge.from === ev.source && (ev.type === edge.ch || ev.type.startsWith(edge.ch))) {
+      edge.flashUntil = performance.now() + 1400;
+    }
+  }
+  // causedBy — nexus-bus.js's own event shape carries this when a system
+  // relays in response to another. Real causal edge if both ends exist,
+  // even when it isn't one of the statically declared CHANNELS.
+  if (ev.causedBy && NODES.has(ev.causedBy) && NODES.has(ev.source)) {
+    const causeNode = NODES.get(ev.causedBy);
+    causeNode.pulseUntil = performance.now() + 1400;
+  }
+}
+
+// ── interaction: rotate + hover ──
+let rot = { x:0, y:0 }, drag=false, last={x:0,y:0};
+canvas.addEventListener('pointerdown', e=>{drag=true;last={x:e.clientX,y:e.clientY};});
+addEventListener('pointerup', ()=>drag=false);
+addEventListener('pointermove', e=>{
+  if(drag){ rot.y+=(e.clientX-last.x)*0.005; rot.x+=(e.clientY-last.y)*0.005; last={x:e.clientX,y:e.clientY}; }
+  mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
+  const tip=$('#tip');
+  raycaster.setFromCamera(mouse,camera);
+  const meshes = [...NODES.values()].map(n=>n.mesh);
+  const hit=raycaster.intersectObjects(meshes)[0];
+  if(hit){
+    const d = hit.object.userData; const n = NODES.get(d.id);
+    tip.style.display='block'; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY+14)+'px';
+    const last = n && n.lastEvent;
+    tip.innerHTML = `<div class="n">${d.label}</div>` +
+      `<div class="r">${d.online?`online · ${d.ms}ms`:'offline'} · port ${d.port||'—'}</div>` +
+      `<div class="r">${n ? n.eventCount : 0} event(s) observed this session</div>` +
+      (last ? `<div class="ev"><div>last: ${last.type}</div><div>${feedPreview(last)}</div></div>` : '');
+  } else tip.style.display='none';
+});
+addEventListener('wheel', e=>{ camera.position.z=Math.max(20,Math.min(90,camera.position.z+e.deltaY*0.02)); });
+
+// ── loop ──
+function animate(t){
+  requestAnimationFrame(animate);
+  if(!drag){ rot.y+=0.0015; }
+  group.rotation.x += (rot.x - group.rotation.x)*0.1;
+  group.rotation.y += (rot.y - group.rotation.y)*0.1;
+  const now = performance.now();
+  for (const n of NODES.values()) {
+    const pulsing = now < n.pulseUntil;
+    const s = pulsing ? 1 + Math.sin(now*0.02)*0.25 : 1;
+    n.mesh.scale.setScalar(s);
+    n.mat.emissive.set(pulsing ? COLORS.pulse : (n.mesh.userData.online ? COLORS.ok : COLORS.bad));
+    n.mat.emissiveIntensity = pulsing ? 0.9 : (n.mesh.userData.online ? 0.35 : 0.12);
+  }
+  for (const edge of EDGES.values()) {
+    const flashing = now < edge.flashUntil;
+    edge.mat.color.set(flashing ? COLORS.pulse : 0x2e3646);
+    edge.mat.opacity = flashing ? 0.9 : 0.35;
+  }
+  renderer.render(scene,camera);
+}
+requestAnimationFrame(animate);
+
+// ── boot: build the real graph first, then open the real activity firehose.
+// Graph is rebuilt periodically (systems can come online/offline; the
+// registry itself rarely changes shape) — activity keeps flowing over the
+// one open SSE connection in between, never re-polled. ──
+(async function boot(){
+  const ok = await buildGraph();
+  if (ok) connectBus();
+  setInterval(buildGraph, 30000);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.contract
+type: capability
+id: copilot.contract
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730178
+source: copilot.registry-components:copilot.contract
+payload:
+  id: copilot.contract
+  namespace: copilot
+  name: contract
+  version: 2.0.0
+  grammar:
+    - copilot contract
+  route:
+    method: GET
+    path: /contract
+  intent: []
+  description: Co-pilot interaction contract
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-5c8dc553-45f0-4ee0-8eac-4079239f4174
+type: bep_pattern
+id: 5c8dc553-45f0-4ee0-8eac-4079239f4174
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"ledger.diagnostic.poll.complete" and "ui.copilot.provider" co-occur within 5s — 3 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1789824849887
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789824849887
+lastSeenAt: 1789824849887
+fingerprint: null
+payload:
+  uuid: 5c8dc553-45f0-4ee0-8eac-4079239f4174
+  signature: ledger.diagnostic.poll.complete::ui.copilot.provider
+  patternType: co_occurrence
+  typeA: ledger.diagnostic.poll.complete
+  typeB: ui.copilot.provider
+  systemA: diagnostic
+  systemB: null
+  crossSystem: false
+  count: 3
+  confidence: 0.15
+  description: '"ledger.diagnostic.poll.complete" and "ui.copilot.provider" co-occur within 5s — 3 observations'
+  actionable: false
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1789824849808

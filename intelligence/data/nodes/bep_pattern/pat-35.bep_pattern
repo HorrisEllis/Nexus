@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-35
+type: bep_pattern
+id: pat-35
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"raid.health" and "raid.health" co-occur within 5s — 6 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1789872372169
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789872372169
+lastSeenAt: 1789872372169
+fingerprint: null
+payload:
+  uuid: pat-35
+  signature: raid.health::raid.health
+  patternType: co_occurrence
+  typeA: raid.health
+  typeB: raid.health
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 6
+  confidence: 0.3
+  description: '"raid.health" and "raid.health" co-occur within 5s — 6 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1789872372153

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.mesh.list
+type: capability
+id: cg.mesh.list
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730161
+source: clear-glass.registry-components:cg.mesh.list
+payload:
+  id: cg.mesh.list
+  namespace: cg
+  name: mesh.list
+  version: 3.1.0
+  grammar:
+    - mesh list
+  route:
+    method: GET
+    path: /agents
+  intent: []
+  description: List mesh agents
+  params: []
+  tags:
+    - cg
+    - mesh
+  permissions:
+    - system
+  hooks: {}

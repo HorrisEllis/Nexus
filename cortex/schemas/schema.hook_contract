@@ -1,0 +1,114 @@
+envelope: 1
+uuid: nexus-export-schema-hook_contract
+type: schema
+id: hook_contract
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table
+  (data/cortex/memory/hooks.json, loom's real HookRegistry writes land here). Origin:
+  lib/node-schemas/schema.hook_contract.
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252750310
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    hooks/guardian.hooks.js — GUARDIAN_HOOKS array (original grounding, unchanged) AND loom's real
+    HookRegistry (docs/hooks-migration.spec, 'loom — sole write authority'), confirmed directly this
+    pass against data/cortex/memory/hooks.json's real, live rows (298 of them).
+    correction_2026-09-12: the original field list was accurate for the array shape but never
+    checked against loom's own real, current persisted rows — those wrap each hook in {op, data,
+    causedBy, ts, id} (data being the real hook_contract payload), and status/updatedAt, documented
+    here as top-level, are genuinely nested under a real `meta` object in every live row
+    (meta.status, meta.updatedAt) — not a rewrite of the original claim, an added correction
+    alongside it, same discipline schema.tool already uses for its own agent_tool correction.
+  fields:
+    id:
+      type: string
+      required: true
+      description: real stable hook-declaration id
+    name:
+      type: string
+      required: true
+      description: real kebab-case unique name
+    intent:
+      type: string
+      required: true
+      description: real one-sentence description of what this wire does and why
+    type:
+      type: string
+      required: true
+      description: real hook type — one of 22 real hook types per the file's own header, e.g. 'api'
+    direction:
+      type: string
+      required: true
+      description: real direction — 'unidirectional' | 'bidirectional' | 'broadcast' | 'sink'
+    from:
+      type: object
+      required: true
+      description: real {surface, layer} the hook originates from
+    to:
+      type: object
+      required: true
+      description: real {surface, layer, port?} the hook targets
+    ui:
+      type: object
+      required: false
+      description: >-
+        real UI surfacing info (panel/element/action), where applicable — not present on every real
+        entry checked
+    config:
+      type: object
+      required: false
+      description: real runtime configuration for this hook, e.g. {path, method} for an api-type hook
+    contract:
+      type: object
+      required: true
+      description: >-
+        real {axioms, sideEffects, idempotent, replayable, snrGated, timeout, retryPolicy}
+        behavioral contract
+    references:
+      type: object
+      required: false
+      description: 'real related files/specs/hooks, e.g. {files: [...]}'
+    seam:
+      type: string
+      required: false
+      description: real SEAM component id, only present if this hook participates in a SEAM sequence
+    meta:
+      type: object
+      required: true
+      description: >-
+        correction_2026-09-12: real, live rows nest status/updatedAt/createdAt/causedBy/tags/notes
+        here, not at the top level as originally documented — e.g. {causedBy, createdAt, updatedAt,
+        status, tags, notes}
+    version:
+      type: string
+      required: false
+      description: 'correction_2026-09-12: real field found in every live row, not previously documented'
+    schema:
+      type: object
+      required: false
+      description: >-
+        correction_2026-09-12: real {input, output, errors} I/O schema, found in every live row, not
+        previously documented
+    frictionScore:
+      type: object
+      required: false
+      description: >-
+        correction_2026-09-12: real {latency, failureRate, semanticDistance}, found in every live
+        row, not previously documented
+    routerPolicy:
+      type: object
+      required: false
+      description: >-
+        correction_2026-09-12: real {blockIfFrictionGt, requiresApproval, allowedSources,
+        executionMode}, found in every live row, not previously documented
+    bindings:
+      type: object
+      required: false
+      description: >-
+        correction_2026-09-12: real {cli, event} binding strings, found in every live row, not
+        previously documented

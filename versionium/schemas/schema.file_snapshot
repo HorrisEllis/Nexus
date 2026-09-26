@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-schema-file_snapshot
+type: schema
+id: file_snapshot
+context: >-
+  versionium/schemas — MCO-B (versionium/spec/versionium.file-versioning.spec).
+  A full copy (or a deletion marker) of one file at one repo-snapshot commit.
+  The bytes live in the content-addressed blob store under the versionium
+  data directory, keyed by sha256; this row is the chain entry. Deltas for
+  the same file are file_delta rows.
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789564800000
+source: versionium/lib/files.js
+payload:
+  status: REAL
+  source: >-
+    Written by versionium/lib/files.js record(); read back and verified in
+    tests/modules/test-mcob-file-versioning.js.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: row id
+    repository:
+      type: string
+      required: true
+      description: idearium repo uuid; the chain is per repository + path
+    file_path:
+      type: string
+      required: true
+      description: "repo-relative path (validated - no traversal, no absolute, no backslash)"
+    commit_ref:
+      type: string
+      required: true
+      description: the versionium commit (system idearium.repo) this row belongs to
+    kind:
+      type: string
+      required: true
+      description: "full = a complete copy; deleted = the file no longer exists as of this commit"
+    sha256:
+      type: string
+      required: false
+      description: sha256 of the bytes (null for kind deleted); also the blob key
+    bytes:
+      type: number
+      required: true
+      description: byte length (0 for kind deleted)
+    ts:
+      type: number
+      required: true
+      description: row timestamp

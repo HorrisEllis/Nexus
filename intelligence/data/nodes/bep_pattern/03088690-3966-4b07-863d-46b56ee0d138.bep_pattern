@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-03088690-3966-4b07-863d-46b56ee0d138
+type: bep_pattern
+id: 03088690-3966-4b07-863d-46b56ee0d138
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"chat_response" and "ledger.copilot.event" co-occur within 5s — 402 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790369507770
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790369507770
+lastSeenAt: 1790369507770
+fingerprint: null
+payload:
+  uuid: 03088690-3966-4b07-863d-46b56ee0d138
+  signature: chat_response::ledger.copilot.event
+  patternType: co_occurrence
+  typeA: chat_response
+  typeB: ledger.copilot.event
+  systemA: copilot
+  systemB: null
+  crossSystem: false
+  count: 402
+  confidence: 1
+  description: '"chat_response" and "ledger.copilot.event" co-occur within 5s — 402 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790369507443

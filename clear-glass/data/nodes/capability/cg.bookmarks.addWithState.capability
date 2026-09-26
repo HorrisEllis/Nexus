@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.bookmarks.addWithState
+type: capability
+id: cg.bookmarks.addWithState
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730171
+source: clear-glass.registry-components:cg.bookmarks.addWithState
+payload:
+  id: cg.bookmarks.addWithState
+  namespace: cg
+  name: bookmarks.addWithState
+  version: 3.1.0
+  grammar:
+    - bookmarks addWithState
+  route:
+    method: IPC
+    path: bookmarks:addWithState
+  intent: []
+  description: Bookmark + save real full page state
+  params: []
+  tags:
+    - cg
+    - bookmarks
+    - rewind
+  permissions:
+    - system
+  hooks: {}

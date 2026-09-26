@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head><title>Remote Desktop — Host</title></head>
+<body>
+<h3>Host</h3>
+<p>Session ID: <span id="sid">—</span></p>
+<p>Token: <span id="token">waiting for signaling server…</span></p>
+<p id="netinfo" style="display:none;color:#555"></p>
+<p id="status">connecting…</p>
+<video id="preview" autoplay muted style="width:320px;border:1px solid #ccc"></video>
+
+<!--
+  Core module boundary: routeInput() below is the ONLY place phase-4
+  (host_input_listener_and_injector) plugs in. Verification + real
+  injection happen in bridge-electron/main.js's trusted main process
+  (input-auth.js + input-injector.js) — this renderer never decides
+  whether a frame is real, it only relays what came off the wire and
+  reports back whatever main decided.
+-->
+<script>
+const params = new URLSearchParams(location.search);
+const SIGNAL_URL = params.get('signal') || 'ws://localhost:8080';
+const sessionId = Math.random().toString(36).slice(2, 8);
+document.getElementById('sid').textContent = sessionId;
+
+const statusEl = document.getElementById('status');
+const ws = new WebSocket(SIGNAL_URL);
+let pc;
+
+function routeInput(frame) {
+  if (window.bridgeHost) {
+    window.bridgeHost.injectInput(frame).then((res) => {
+      if (!res.ok) console.warn('[input] rejected:', res.reason);
+    });
+  } else {
+    // No Electron (plain browser) — nothing can actually move a mouse here,
+    // so this is the honest fallback: show what arrived, don't pretend to act on it.
+    console.log('[input, no native backend available]', frame);
+  }
+}
+
+async function startCapturingAndOffer() {
+  statusEl.textContent = 'viewer joined — capturing screen…';
+
+  const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+  document.getElementById('preview').srcObject = stream;
+
+  pc = new RTCPeerConnection({ iceServers: [] }); // LAN only for now
+  stream.getTracks().forEach(track => pc.addTrack(track, stream));
+
+  const inputChannel = pc.createDataChannel('input');
+  inputChannel.onmessage = (e) => routeInput(JSON.parse(e.data));
+
+  pc.onicecandidate = (e) => {
+    if (e.candidate) ws.send(JSON.stringify({ type: 'ice', candidate: e.candidate }));
+  };
+
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  ws.send(JSON.stringify({ type: 'offer', sdp: offer }));
+  statusEl.textContent = 'offer sent — waiting for viewer to answer…';
+}
+
+ws.onopen = () => {
+  ws.send(JSON.stringify({ type: 'join', sessionId, role: 'host' }));
+  statusEl.textContent = 'waiting for a session token…';
+};
+
+ws.onmessage = async (e) => {
+  const msg = JSON.parse(e.data);
+
+  if (msg.type === 'token:issued') {
+    document.getElementById('token').textContent = msg.token;
+    statusEl.textContent = 'ready — give the session ID and token to a viewer';
+    // Hand the token to the trusted main process too — it needs its own
+    // copy to verify incoming input frames. The renderer already shows
+    // this token in plaintext on screen, so this isn't a new exposure.
+    window.bridgeHost?.setSessionToken(msg.token);
+  } else if (msg.type === 'viewer:joined') {
+    // Only now do we capture + offer. Offering before a viewer exists races
+    // an empty session on the signaling server and the offer is dropped —
+    // this event from signal.js is what makes the order correct.
+    startCapturingAndOffer().catch((err) => { statusEl.textContent = `capture failed: ${err.message}`; });
+  } else if (msg.type === 'answer') {
+    await pc.setRemoteDescription(msg.sdp);
+    statusEl.textContent = 'connected';
+  } else if (msg.type === 'ice') {
+    await pc.addIceCandidate(msg.candidate);
+  }
+};
+
+ws.onerror = () => { statusEl.textContent = `could not reach signaling server at ${SIGNAL_URL}`; };
+ws.onclose = () => { if (statusEl.textContent !== 'connected') statusEl.textContent = 'signaling connection closed'; };
+
+// Electron enhancement only — plain-browser host.html works identically
+// without it. If bridgeHost is exposed (see bridge-electron/preload.js),
+// show the LAN address(es) a viewer on another device should type in.
+if (window.bridgeHost) {
+  window.bridgeHost.getNetworkInfo().then(({ addresses, port }) => {
+    const netEl = document.getElementById('netinfo');
+    if (addresses.length) {
+      netEl.style.display = 'block';
+      netEl.textContent = `Give viewers on another device: ws://${addresses[0]}:${port}`;
+    }
+  }).catch(() => {});
+}
+</script>
+</body>
+</html>

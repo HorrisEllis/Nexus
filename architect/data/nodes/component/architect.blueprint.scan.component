@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-architect.blueprint.scan
+type: component
+id: architect.blueprint.scan
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: architect
+tags: []
+exported_at: 1789275153111
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153111
+lastSeenAt: 1789275153111
+fingerprint: architect::POST /api/blueprint/scan
+payload:
+  id: architect.blueprint.scan
+  uuid: 7a658f69-1640-46d2-9f06-d0a1be389b36
+  namespace: architect
+  name: blueprint.scan
+  version: 1.0.0

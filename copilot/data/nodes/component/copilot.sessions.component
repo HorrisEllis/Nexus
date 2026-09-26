@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.sessions
+type: component
+id: copilot.sessions
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153039
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153039
+lastSeenAt: 1789275153039
+fingerprint: copilot::GET /api/sessions
+payload:
+  id: copilot.sessions
+  uuid: 7092dd24-783d-4028-ab11-41481cf1f427
+  namespace: copilot
+  name: sessions
+  version: 2.0.0

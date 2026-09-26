@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-schema-fault
+type: schema
+id: fault
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789117272250
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    cortex/self-heal/fault-taxonomy.js — the real fault_taxonomy row shape, confirmed against the
+    file's own header comment ("Row shape (confirmed against every existing reader)")
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real fault-class record id
+    faultClass:
+      type: string
+      required: true
+      description: >-
+        real fault class name — one of the known level-0/1 classes (stale_module, timeout,
+        api_degraded, queue_saturated, memory_pressure, bottleneck, circuit_breaker, import_error)
+        or a real novel class
+    friction:
+      type: number
+      required: true
+      description: >-
+        real accumulated friction score for this class, bands: NOMINAL 0.0 / ELEVATED 0.4 / HIGH 0.7
+        / FAILURE_MODE 1.0
+    ts:
+      type: number
+      required: true
+      description: real timestamp
+    count:
+      type: number
+      required: true
+      description: real occurrence count for this fault class
+    lastSeen:
+      type: number
+      required: true
+      description: real timestamp of the most recent occurrence
+    precursors:
+      type: array
+      required: false
+      description: real precursor fault classes/events observed before this one, if tracked
+    examples:
+      type: array
+      required: false
+      description: real example occurrences of this fault class
+    successRate:
+      type: number
+      required: false
+      description: real recovery/resolution success rate for this class

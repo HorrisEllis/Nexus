@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXUS</title>
+<link rel="stylesheet" href="/ui/home/home.css">
+<style>
+  /* §GAP CLOSED 2026-07-11 — ui/home/shell.js has existed since Phase 1 of
+     DECOMP.md's plan, written against an entry point ("nexus-home.html")
+     that was never actually created. shell.js could load modules and open
+     an SSE connection, but nothing on disk ever loaded shell.js itself.
+     This is that missing host — thin by design, per shell.js's own header
+     comment: it owns no rendering, only boots modules. */
+  html,body{margin:0;padding:0;height:100%;background:#05070b;color:var(--text,#e8eef7);font-family:'Space Grotesk',sans-serif;overflow:hidden}
+  #shell-root{display:flex;flex-direction:column;height:100%}
+  #shell-rail{display:flex;align-items:center;gap:2px;padding:0 10px;height:40px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(10,13,20,.9);overflow-x:auto}
+  #shell-rail .rail-logo{font-family:var(--mono,monospace);font-size:11px;letter-spacing:.12em;color:var(--ac,#00e5ff);margin-right:14px;flex-shrink:0}
+  #shell-rail button{background:none;border:none;color:var(--text3,#6b7688);font-family:var(--mono,monospace);font-size:10.5px;letter-spacing:.04em;padding:7px 11px;cursor:pointer;border-radius:4px;white-space:nowrap;flex-shrink:0}
+  #shell-rail button:hover{color:var(--text,#e8eef7);background:rgba(255,255,255,.05)}
+  #shell-rail button.active{color:var(--ac,#00e5ff);background:rgba(0,229,255,.08)}
+  #shell-channel-host{flex:1;position:relative;overflow:hidden}
+  .shell-channel-frame{position:absolute;inset:0;width:100%;height:100%;border:none;display:none;background:#05070b}
+  .shell-channel-frame.active{display:block}
+  #shell-channel-host:empty::after{content:'loading…';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text3,#6b7688);font-family:var(--mono,monospace);font-size:12px}
+  /* nerve is an ambient background visualization (same role as the old
+     monolith's #void particle canvas), not a foreground content panel —
+     nerve.css itself only says position:relative/100%/100% (sized to
+     whatever contains it), so this fixes it as a full-viewport backdrop
+     behind the rail and channel host, non-interactive so it never
+     intercepts clicks meant for the UI above it. */
+  #nerve-root{position:fixed!important;inset:0;z-index:0;pointer-events:none;opacity:.5}
+  #shell-root>*{position:relative;z-index:1}
+</style>
+<link rel="stylesheet" href="/ui/tv-shell/nerve/nerve.css">
+<link rel="stylesheet" href="/ui/tv-shell/nerve/nerve.css">
+</head>
+<body>
+<div id="shell-root">
+  <nav id="shell-rail"><span class="rail-logo">⬡ NEXUS</span></nav>
+  <div id="shell-channel-host"></div>
+  <!-- §BUG FIXED 2026-07-11 — nerve.js hard-requires #nerve-canvas
+       (document.getElementById('nerve-canvas').getContext('2d'), no
+       null-guard) and the HUD spans below it. Both live in
+       ui/tv-shell/nerve/nerve.html's own fragment, which shell.js never
+       injected — it only loaded nerve.js's bare script, which threw
+       immediately on a null canvas every time. Markup copied verbatim
+       from nerve.html so nerve.js's existing getElementById calls resolve
+       exactly as it expects. -->
+  <div id="nerve-root">
+    <canvas id="nerve-canvas"></canvas>
+    <div id="nerve-hud">
+      <span id="nerve-regime">stable</span>
+      <span id="nerve-sigma">σ 0.000</span>
+      <span id="nerve-nodes">— nodes</span>
+      <span id="nerve-wires">— wires</span>
+    </div>
+  </div>
+</div>
+<script src="/ui/home/shell.js"></script>
+</body>
+</html>

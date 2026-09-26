@@ -1,0 +1,10 @@
+/* ui/home/areas/log.css — Log channel.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* CH6: Log — full screen event stream */
+#ch-log.active{display:flex;flex-direction:column;padding:52px 70px 110px;gap:8px;overflow:hidden}
+#log-stream{flex:1;overflow-y:auto;font-family:'Space Mono',monospace;font-size:10px;display:flex;flex-direction:column;gap:0}
+.ll{display:flex;gap:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.025)}
+.ll-ts{color:rgba(255,255,255,.18);flex-shrink:0;width:65px}
+.ll-src{color:#00cc6a;flex-shrink:0;min-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ll-msg{color:rgba(255,255,255,.5);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+#log-filter-in{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:11px;padding:7px 10px;outline:none;width:220px}

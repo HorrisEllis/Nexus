@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.status
+type: capability
+id: intelligence.status
+context: intelligence/registry-components.js real capability export
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789250756065
+source: intelligence.registry-components:intelligence.status
+payload:
+  id: intelligence.status
+  namespace: intelligence
+  name: status
+  version: 1.0.0
+  grammar:
+    - status
+    - intelligence status
+  route:
+    method: GET
+    path: /api/intelligence/status
+  intent: []
+  description: Intelligence subsystem health
+  params: []
+  tags:
+    - intelligence
+  permissions:
+    - system
+  hooks: {}

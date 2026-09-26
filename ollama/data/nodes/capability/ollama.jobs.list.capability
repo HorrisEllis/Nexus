@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-ollama.jobs.list
+type: capability
+id: ollama.jobs.list
+context: ollama/registry-components.js real capability export
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789250730189
+source: ollama.registry-components:ollama.jobs.list
+payload:
+  id: ollama.jobs.list
+  namespace: ollama
+  name: jobs.list
+  version: 1.0.0
+  grammar:
+    - ollama jobs
+    - oj
+  route:
+    method: GET
+    path: /api/jobs
+  intent: []
+  description: List recent jobs
+  params: []
+  tags:
+    - ollama
+  permissions:
+    - system
+  hooks: {}

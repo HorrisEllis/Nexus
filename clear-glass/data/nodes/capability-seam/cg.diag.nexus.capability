@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-capability-cg.diag.nexus
+type: capability
+id: cg.diag.nexus
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251076030
+source: clear-glass.seam.registry-components:cg.diag.nexus
+payload:
+  id: cg.diag.nexus
+  namespace: cg
+  name: diag.nexus
+  version: 3.0.0
+  grammar:
+    - diag nexus
+    - diag-nexus
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: NEXUS home UI audit — navigate, assert, screenshot
+  params: []
+  tags:
+    - cg
+    - diagnostic
+    - audit
+  permissions:
+    - system
+  hooks:
+    out:
+      - id: clear-glass.diag.complete
+        wires_to:
+          - cortex.gaps.open
+          - cortex.events.write
+        tags:
+          - diagnostic

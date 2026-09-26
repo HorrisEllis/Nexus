@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.gaps.list
+type: component
+id: guardian.gaps.list
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152853
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152853
+lastSeenAt: 1789275152853
+fingerprint: guardian::GET /gaps
+payload:
+  id: guardian.gaps.list
+  uuid: 3e7a3496-0bf8-4821-88ad-153b25ecfb9d
+  namespace: guardian
+  name: gaps.list
+  version: 3.6.2

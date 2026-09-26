@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.stream.query
+type: capability
+id: copilot.stream.query
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730176
+source: copilot.registry-components:copilot.stream.query
+payload:
+  id: copilot.stream.query
+  namespace: copilot
+  name: stream.query
+  version: 2.0.0
+  grammar:
+    - stream
+    - cs
+  route:
+    method: GET
+    path: /api/stream
+  intent: []
+  description: Query the continuous event stream
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks: {}

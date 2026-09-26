@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.seam.session.create
+type: component
+id: guardian.seam.session.create
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152839
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152839
+lastSeenAt: 1789275152839
+fingerprint: guardian::POST /seam/sessions
+payload:
+  id: guardian.seam.session.create
+  uuid: 874b79a3-1a88-4f0c-a813-009a54fd4df5
+  namespace: guardian
+  name: seam.session.create
+  version: 3.6.2

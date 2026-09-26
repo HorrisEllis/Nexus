@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.artifacts.list
+type: capability
+id: guardian.artifacts.list
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730142
+source: guardian.registry-components:guardian.artifacts.list
+payload:
+  id: guardian.artifacts.list
+  namespace: guardian
+  name: artifacts.list
+  version: 3.6.2
+  grammar:
+    - artifacts list
+    - artifacts-list
+  route:
+    method: GET
+    path: /artifacts
+  intent: []
+  description: SHA-256 deduplicated code artifacts
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

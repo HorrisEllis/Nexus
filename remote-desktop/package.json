@@ -1,0 +1,11 @@
+{
+  "name": "remote-desktop-core",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "signal": "node signal.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

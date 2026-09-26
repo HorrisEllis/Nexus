@@ -1,0 +1,18 @@
+/* idearium/ui/css/agent-blocks.css — Settings → Agents → "what the agent is sent" (0.39.258). Own area, own file. */
+.ab-wrap { font-size: 10px; }
+.ab-note { opacity: .6; line-height: 1.6; margin: 2px 0 8px; }
+.ab-block { border: 1px solid var(--b1); border-radius: 3px; margin: 6px 0; }
+.ab-block.ab-off { opacity: .45; }
+.ab-head { display: flex; align-items: center; gap: 8px; padding: 5px 8px; cursor: pointer; user-select: none; }
+.ab-head .ab-label { flex: 1; }
+.ab-head .ab-tag { opacity: .55; font-size: 9px; }
+.ab-head .ab-edited { color: var(--accent, #7dd3fc); font-size: 9px; }
+.ab-body { display: none; padding: 0 8px 8px; }
+.ab-block.ab-open .ab-body { display: block; }
+.ab-text { width: 100%; box-sizing: border-box; min-height: 90px; resize: vertical; font: 10px/1.5 'IBM Plex Mono', monospace;
+  background: transparent; color: inherit; border: 1px solid var(--b1); border-radius: 3px; padding: 6px; }
+.ab-ph { opacity: .6; margin-top: 4px; }
+.ab-row { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.ab-preview { white-space: pre-wrap; border: 1px solid var(--b1); border-radius: 3px; padding: 8px; margin-top: 8px;
+  max-height: 360px; overflow: auto; font: 10px/1.5 'IBM Plex Mono', monospace; display: none; }
+.ab-status { opacity: .7; margin-left: 6px; }

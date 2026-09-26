@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.speech.available
+type: capability
+id: cg.speech.available
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730173
+source: clear-glass.registry-components:cg.speech.available
+payload:
+  id: cg.speech.available
+  namespace: cg
+  name: speech.available
+  version: 3.1.0
+  grammar:
+    - speech available
+  route:
+    method: IPC
+    path: speech:available
+  intent: []
+  description: Real offline speech engine availability
+  params: []
+  tags:
+    - cg
+    - speech
+  permissions:
+    - system
+  hooks: {}

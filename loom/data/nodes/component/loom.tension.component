@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-loom.tension
+type: component
+id: loom.tension
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789275153106
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153106
+lastSeenAt: 1789275153106
+fingerprint: loom::GET /api/tension
+payload:
+  id: loom.tension
+  uuid: 525b64a2-9891-42ed-8cb1-d03624a17601
+  namespace: loom
+  name: tension
+  version: 1.5.0

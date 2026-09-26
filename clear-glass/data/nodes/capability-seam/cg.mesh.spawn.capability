@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.mesh.spawn
+type: capability
+id: cg.mesh.spawn
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251076021
+source: clear-glass.seam.registry-components:cg.mesh.spawn
+payload:
+  id: cg.mesh.spawn
+  namespace: cg
+  name: mesh.spawn
+  version: 3.0.0
+  grammar:
+    - mesh spawn
+    - mesh-spawn
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Spawn free AI agent in isolated context
+  params: []
+  tags:
+    - cg
+    - mesh
+    - agent
+  permissions:
+    - system
+  hooks: {}

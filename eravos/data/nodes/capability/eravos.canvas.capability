@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-eravos.canvas
+type: capability
+id: eravos.canvas
+context: eravos/registry-components.js real capability export
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789250730183
+source: eravos.registry-components:eravos.canvas
+payload:
+  id: eravos.canvas
+  namespace: eravos
+  name: canvas
+  version: 3.0.0
+  grammar:
+    - eravos
+    - canvas
+    - open canvas
+  route:
+    method: GET
+    path: /
+  intent: []
+  description: Main ERAVOS canvas — mods, wires, transport
+  params: []
+  tags:
+    - eravos
+  permissions:
+    - system
+  hooks: {}

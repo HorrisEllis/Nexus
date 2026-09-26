@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.context.switch
+type: capability
+id: cg.context.switch
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730159
+source: clear-glass.registry-components:cg.context.switch
+payload:
+  id: cg.context.switch
+  namespace: cg
+  name: context.switch
+  version: 3.1.0
+  grammar:
+    - context switch
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Switch active agent context
+  params: []
+  tags:
+    - cg
+    - context
+  permissions:
+    - system
+  hooks: {}

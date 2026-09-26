@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-eravos.catalog.list
+type: capability
+id: eravos.catalog.list
+context: eravos/registry-components.js real capability export
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789250730185
+source: eravos.registry-components:eravos.catalog.list
+payload:
+  id: eravos.catalog.list
+  namespace: eravos
+  name: catalog.list
+  version: 3.0.0
+  grammar:
+    - eravos catalog
+  route:
+    method: GET
+    path: /api/catalog
+  intent: []
+  description: Available mods from registry
+  params: []
+  tags:
+    - eravos
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-ollama.queue.status
+type: capability
+id: ollama.queue.status
+context: ollama/registry-components.js real capability export
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789250730190
+source: ollama.registry-components:ollama.queue.status
+payload:
+  id: ollama.queue.status
+  namespace: ollama
+  name: queue.status
+  version: 1.0.0
+  grammar:
+    - ollama queue
+    - oq
+  route:
+    method: GET
+    path: /api/queue
+  intent: []
+  description: Queue depth and running count
+  params: []
+  tags:
+    - ollama
+  permissions:
+    - system
+  hooks: {}

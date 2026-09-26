@@ -1,0 +1,32 @@
+{
+  "id": "8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f",
+  "name": "adblocker",
+  "version": "1.0.0",
+  "displayName": "Ad Blocker",
+  "description": "Blocks known ad/tracker domains via session.webRequest.onBeforeRequest — the independent path from CLEAR-GLASS-CAPABILITY-BREAKDOWN-2026-08-23.md's §Genuine gaps ('can be built independently as a filter list + webRequest.onBeforeRequest blocker'), not gated on web-extension support.",
+  "author": "James Brooks (Erosmancer)",
+  "entryPoint": "index.js",
+  "permissions": {
+    "network": false,
+    "domStorage": false,
+    "webRequest": true,
+    "hostFs": false
+  },
+  "contributes": {
+    "content-filter": [
+      {
+        "signature": "plugin:8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f:filter-request",
+        "handler": "filterRequest"
+      }
+    ],
+    "toolbar-command": [
+      {
+        "signature": "plugin:8c2f1a90-4e3b-4f1a-9c2d-1a2b3c4d5e6f:toggle-toolbar",
+        "handler": "toggleFromToolbar",
+        "icon": "🛡",
+        "label": "Toggle Ad Blocker",
+        "group": "Plugins"
+      }
+    ]
+  }
+}

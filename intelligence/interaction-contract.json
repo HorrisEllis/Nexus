@@ -1,0 +1,282 @@
+{
+  "id": "intelligence-v1",
+  "version": "1.0.0",
+  "namespace": "intelligence",
+  "_reconciled_2026_09_20": "MCO7f/P2 — real drift found in the prior version, confirmed against intelligence/registry-components.js directly (the live declare() source loom/data/registry.json ingests from), not guessed: prior contract was missing alk/bda/causal/gap/rfr2 entirely and listed several stale /cfr/* and /api/intelligence/* paths no longer real. Routes below are the full, current registry-components.js list.",
+  "ports": {
+    "http": 3753
+  },
+  "uuid": "intelligence-contract-v1-0000-2026-0919-jamesbrooks-001",
+  "role": "Cognition + system-health layer: patterns, failure taxonomy, reuse index, intuition/mastermind/adversarial faculties, unified query, associative lattice, liminal-space, CFR ledger",
+  "health": {
+    "method": "GET",
+    "path": "/health"
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "_componentId": "intelligence.health"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/topo-kernel/stats",
+      "_componentId": "intelligence.topo-kernel"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/telemetry/status",
+      "_componentId": "intelligence.telemetry"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/patterns",
+      "_componentId": "intelligence.patterns"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/context",
+      "_componentId": "intelligence.context"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/status",
+      "_componentId": "intelligence.status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/failures",
+      "_componentId": "intelligence.failures"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/reuse",
+      "_componentId": "intelligence.reuse"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/map",
+      "_componentId": "intelligence.map"
+    },
+    {
+      "method": "POST",
+      "path": "/api/adversarial",
+      "_componentId": "intelligence.adversarial"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/intuition",
+      "_componentId": "intelligence.intuition"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/mastermind",
+      "_componentId": "intelligence.mastermind"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/mastermind/patterns",
+      "_componentId": "intelligence.mastermind.patterns"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/adversarial",
+      "_componentId": "intelligence.faculties.adversarial"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/rca",
+      "_componentId": "intelligence.rca"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/query",
+      "_componentId": "intelligence.query"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/lattice",
+      "_componentId": "intelligence.lattice"
+    },
+    {
+      "method": "GET",
+      "path": "/api/liminal-space/status",
+      "_componentId": "intelligence.liminal-space.status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/liminal-space/list",
+      "_componentId": "intelligence.liminal-space.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/bus",
+      "_componentId": "intelligence.bus"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/crystals",
+      "_componentId": "intelligence.crystals"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/field",
+      "_componentId": "intelligence.cfr.field"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/health",
+      "_componentId": "intelligence.cfr.health"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/events",
+      "_componentId": "intelligence.cfr.events"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/sse",
+      "_componentId": "intelligence.cfr.sse"
+    },
+    {
+      "method": "POST",
+      "path": "/api/framework/create",
+      "_componentId": "intelligence.framework.create"
+    },
+    {
+      "method": "GET",
+      "path": "/sse",
+      "_componentId": "intelligence.sse"
+    },
+    {
+      "method": "GET",
+      "path": "/api/commands",
+      "_componentId": "intelligence.commands"
+    },
+    {
+      "method": "GET",
+      "path": "/api/commands/history",
+      "_componentId": "intelligence.commands.history"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/liminal/analyze",
+      "_componentId": "intelligence.liminal.analyze"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/gap/status",
+      "_componentId": "intelligence.gap.status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/gap/hunt",
+      "_componentId": "intelligence.gap.hunt"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/gap/enrich",
+      "_componentId": "intelligence.gap.enrich"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/gap/verify",
+      "_componentId": "intelligence.gap.verify"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/bda/status",
+      "_componentId": "intelligence.bda.status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/bda/observe",
+      "_componentId": "intelligence.bda.observe"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/bda/reset",
+      "_componentId": "intelligence.bda.reset"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/causal/anomalies",
+      "_componentId": "intelligence.causal.anomalies"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/causal/compound",
+      "_componentId": "intelligence.causal.compound"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/alk/stats",
+      "_componentId": "intelligence.alk.stats"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/alk/decisions",
+      "_componentId": "intelligence.alk.decisions"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/alk/ancestors",
+      "_componentId": "intelligence.alk.ancestors"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/alk/descendants",
+      "_componentId": "intelligence.alk.descendants"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/alk/record",
+      "_componentId": "intelligence.alk.record"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/alk/resolve",
+      "_componentId": "intelligence.alk.resolve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intelligence/alk/rewind",
+      "_componentId": "intelligence.alk.rewind"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/perception",
+      "_componentId": "intelligence.perception"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/telemetry/frame",
+      "_componentId": "intelligence.telemetry.frame"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/rfr2/stats",
+      "_componentId": "intelligence.rfr2.stats"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/rfr2/query",
+      "_componentId": "intelligence.rfr2.query"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/rfr2/trace",
+      "_componentId": "intelligence.rfr2.trace"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/rfr2/descendants",
+      "_componentId": "intelligence.rfr2.descendants"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intelligence/rfr2/children",
+      "_componentId": "intelligence.rfr2.children"
+    }
+  ]
+}

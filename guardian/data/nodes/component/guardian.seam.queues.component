@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.seam.queues
+type: component
+id: guardian.seam.queues
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152834
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152834
+lastSeenAt: 1789275152834
+fingerprint: guardian::GET /seam/queues
+payload:
+  id: guardian.seam.queues
+  uuid: 828f099c-cd5a-4dd5-89d7-483ecb609c73
+  namespace: guardian
+  name: seam.queues
+  version: 3.6.2

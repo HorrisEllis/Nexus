@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.job.dispatch
+type: component
+id: guardian.job.dispatch
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152824
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152824
+lastSeenAt: 1789275152824
+fingerprint: guardian::POST /command
+payload:
+  id: guardian.job.dispatch
+  uuid: 52e36ec2-6e4b-42f6-ad25-b3c0af3505db
+  namespace: guardian
+  name: job.dispatch
+  version: 3.6.2

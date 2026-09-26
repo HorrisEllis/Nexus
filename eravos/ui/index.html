@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERAVOS v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<!-- ════════════════════════════════════════════════════════
+     LOAD ORDER — bottom-up, no ES modules, no build step
+     L0: Kernel primitives (bus, audio, clock, registry)
+     L1: Runtime (WM, ALK-GL, canvas-CFR)
+     L2: Mod engines (logic only, no DOM)
+     L3: Mod factory (UI projections)
+     L4: Shell script (wires everything, locked after this)
+     ════════════════════════════════════════════════════════ -->
+
+<!-- L0: Kernel -->
+<script src="kernel/kernel.js"></script>
+<script src="kernel/intake.js"></script>
+
+<!-- L1: Runtime -->
+<script src="runtime/canvas-wm.js"></script>
+<script src="runtime/alk-gl.js"></script>
+<script src="runtime/canvas-cfr.js"></script>
+<script src="runtime/master-transport.js"></script>
+<script src="runtime/wire-system.js"></script>
+<script src="runtime/precision-clock.js"></script>
+
+<!-- L2: Engines -->
+<script src="mods/pads/pads.engine.js"></script>
+<script src="mods/sequencer/sequencer.engine.js"></script>
+<script src="mods/timeline/timeline.engine.js"></script>
+<script src="mods/sample-player/sample-player.engine.js"></script>
+<script src="mods/edm-lab/edm-lab.engine.js"></script>
+<script src="mods/contrast-analyser/contrast-analyser.engine.js"></script>
+<script src="mods/bass-drop-builder/bass-drop-builder.engine.js"></script>
+<script src="mods/lfo/lfo.engine.js"></script>
+<script src="mods/wobble-bass/wobble-bass.engine.js"></script>
+<script src="mods/acid-synth/acid-synth.engine.js"></script>
+<script src="mods/reese-bass/reese-bass.engine.js"></script>
+<script src="mods/channel/channel.engine.js"></script>
+<script src="mods/xy-pad/xy-pad.engine.js"></script>
+<script src="mods/nexus-shared/nexus-node-core.js"></script>
+<script src="mods/nexus-cortex/nexus-cortex.engine.js"></script>
+<script src="mods/nexus-guardian/nexus-guardian.engine.js"></script>
+<script src="mods/nexus-bridge/nexus-bridge.engine.js"></script>
+<script src="mods/nexus-orchestrator/nexus-orchestrator.engine.js"></script>
+<script src="mods/nexus-diagnostic/nexus-diagnostic.engine.js"></script>
+<script src="mods/nexus-architect/nexus-architect.engine.js"></script>
+<script src="mods/nexus-idearium/nexus-idearium.engine.js"></script>
+
+<script src="mods/supersaw/supersaw.engine.js"></script>
+<script src="mods/sidechain-compressor/sidechain-compressor.engine.js"></script>
+<script src="mods/master-fx/master-fx.engine.js"></script>
+<script src="mods/photo-editor/photo-editor.engine.js"></script>
+<script src="mods/video-editor/video-editor.engine.js"></script>
+<script src="mods/serial-bridge/serial-bridge.engine.js"></script>
+<script src="mods/macro-automation/macro-automation.engine.js"></script>
+<script src="mods/webhook-automation/webhook-automation.engine.js"></script>
+
+<!-- L3: Factory -->
+<script src="runtime/mod-factory.js"></script>
+
+<style>
+/* ══════════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════════ */
+:root {
+  --accent:     #00ff88;
+  --accent2:    #00d4ff;
+  --accent3:    #ff2266;
+  --accent4:    #aa44ff;
+  --accent-rgb: 0,255,136;
+
+  --bg0:#010308; --bg1:#060a12; --bg2:#0b1020;
+  --bg3:#101828; --bg4:#161f30;
+  --b1: #182035; --b2: #243048; --b3: #2e3d58;
+  --white:#eef4ff; --dim:#4a6080; --dim2:#6a88a8;
+
+  --orb:  'Orbitron', monospace;
+  --raj:  'Rajdhani', sans-serif;
+  --mono: 'Share Tech Mono', monospace;
+  --tr:   0.12s cubic-bezier(.4,0,.2,1);
+  --bar:  40px;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html,body { width:100%;height:100%;background:var(--bg0);color:var(--white);font-family:var(--raj,sans-serif);overflow:hidden;user-select:none; }
+
+/* ── MENU BAR ── */
+#menubar {
+  position:fixed;top:0;left:0;right:0;height:var(--bar);
+  background:rgba(6,10,18,.96);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--b1);
+  display:flex;align-items:center;
+  z-index:9000;
+}
+.mb-logo {
+  display:flex;align-items:center;gap:8px;
+  padding:0 16px;height:100%;border-right:1px solid var(--b1);flex-shrink:0;
+}
+.mb-logo-name { font-family:var(--orb);font-size:12px;font-weight:900;letter-spacing:.24em;color:var(--accent); }
+.mb-logo-ver  { font-family:var(--mono);font-size:6px;letter-spacing:.2em;color:var(--dim);align-self:flex-end;margin-bottom:3px; }
+
+
+.mb-item {
+  height:100%;display:flex;align-items:center;padding:0 14px;
+  font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--dim2);
+  cursor:pointer;border-right:1px solid var(--b1);
+  transition:color var(--tr),background var(--tr);flex-shrink:0;
+}
+.mb-item:hover { color:var(--accent);background:rgba(var(--accent-rgb),.04); }
+.mb-item.on    { color:var(--accent); }
+
+#mb-accent { width:2px;height:24px;border-radius:1px;background:var(--accent);box-shadow:0 0 8px var(--accent);margin:0 6px;transition:background .1s,box-shadow .1s;flex-shrink:0; }
+
+#mb-right { margin-left:auto;display:flex;align-items:center;height:100%;border-left:1px solid var(--b1); }
+#mb-drop  { height:100%;display:flex;align-items:center;padding:0 14px;gap:8px;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--dim);border-left:1px solid var(--b1);cursor:default;transition:color var(--tr); }
+#mb-drop.active { color:var(--accent); }
+
+/* ── OPTIONS PANEL ── */
+#opts-panel {
+  position:fixed;top:var(--bar);right:0;width:260px;
+  background:var(--bg1);border:1px solid var(--b2);border-top:none;border-radius:0 0 0 6px;
+  z-index:8999;display:none;flex-direction:column;padding:12px;gap:10px;
+  box-shadow:-4px 8px 32px rgba(0,0,0,.5);
+}
+#opts-panel.open { display:flex; }
+.opts-title { font-family:var(--orb);font-size:8px;font-weight:700;letter-spacing:.2em;color:var(--accent);margin-bottom:2px; }
+.opts-row   { display:flex;align-items:center;gap:8px; }
+.opts-btn   { flex:1;height:24px;border-radius:3px;border:1px solid var(--b2);background:transparent;color:var(--dim2);font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;cursor:pointer;transition:all var(--tr);outline:none; }
+.opts-btn:hover { border-color:var(--accent);color:var(--accent); }
+.opts-div   { height:1px;background:var(--b1); }
+
+/* ── CANVAS — CFR particle field replaces dot-grid ── */
+#canvas {
+  position:fixed;top:var(--bar);left:0;right:0;bottom:0;
+  overflow:hidden;
+  background-color:var(--bg0);
+  /* dot-grid removed by canvas-cfr.js when WebGL2 is available */
+  background-image:radial-gradient(circle,rgba(42,60,88,.42) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+
+/* ── HINT (over particle field) ── */
+#hint {
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  pointer-events:none;transition:opacity .6s;z-index:1;
+}
+#hint.gone { opacity:0; }
+.hint-word { font-family:var(--orb);font-size:72px;font-weight:900;letter-spacing:.18em;color:rgba(var(--accent-rgb),.035); }
+.hint-line { font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:rgba(255,255,255,.12);text-align:center;line-height:2.6; }
+
+/* ── DROP OVERLAY ── */
+#drop-overlay {
+  position:fixed;inset:0;
+  background:rgba(1,3,8,.82);border:2px dashed var(--accent);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  z-index:9900;opacity:0;pointer-events:none;transition:opacity .15s;
+}
+#drop-overlay.active { opacity:1; }
+.drop-icon  { font-size:56px;animation:bob .9s ease-in-out infinite alternate; }
+@keyframes bob { from{transform:translateY(-8px);}to{transform:translateY(8px);} }
+.drop-label { font-family:var(--orb);font-size:13px;font-weight:900;letter-spacing:.3em;color:var(--accent); }
+.drop-sub   { font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim2);text-align:center;line-height:2.4; }
+
+/* ── PERMISSIONS DIALOG ── */
+#perm-dialog {
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.7);z-index:99990;
+}
+#perm-dialog.open { display:flex; }
+.perm-box { background:var(--bg1);border:1px solid var(--b2);border-radius:6px;padding:24px;max-width:380px;width:90%;display:flex;flex-direction:column;gap:14px;box-shadow:0 16px 64px rgba(0,0,0,.6); }
+.perm-title { font-family:var(--orb);font-size:11px;font-weight:900;letter-spacing:.18em;color:var(--accent); }
+.perm-desc  { font-family:var(--mono);font-size:8px;color:var(--dim2);line-height:2; }
+.perm-list  { display:flex;flex-direction:column;gap:4px; }
+.perm-item  { font-family:var(--mono);font-size:8px;color:var(--white);padding:3px 8px;border-radius:3px;background:var(--bg3);border:1px solid var(--b1); }
+.perm-btns  { display:flex;gap:8px; }
+.perm-allow { flex:1;height:28px;border-radius:4px;border:1px solid var(--accent);background:rgba(var(--accent-rgb),.1);color:var(--accent);font-family:var(--mono);font-size:8px;letter-spacing:.1em;cursor:pointer;transition:all var(--tr);outline:none; }
+.perm-allow:hover { background:rgba(var(--accent-rgb),.2); }
+.perm-deny  { flex:1;height:28px;border-radius:4px;border:1px solid var(--b2);background:transparent;color:var(--dim2);font-family:var(--mono);font-size:8px;letter-spacing:.1em;cursor:pointer;transition:all var(--tr);outline:none; }
+.perm-deny:hover  { border-color:var(--accent3);color:var(--accent3); }
+
+/* ── NOTIFICATION ── */
+#notif {
+  position:fixed;bottom:18px;left:50%;
+  transform:translateX(-50%) translateY(40px);
+  background:rgba(6,10,18,.96);border:1px solid var(--accent);
+  color:var(--accent);font-family:var(--mono);font-size:9px;letter-spacing:.12em;
+  padding:5px 18px;border-radius:3px;z-index:9999;opacity:0;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;
+}
+#notif.show { opacity:1;transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ══ MENU BAR ══ -->
+<header id="menubar">
+  <div class="mb-logo">
+    <span class="mb-logo-name">ERAVOS</span>
+    <span class="mb-logo-ver">v3</span>
+  </div>
+
+  <!-- Master transport -->
+  <div id="mb-transport" style="display:flex;align-items:center;gap:0;height:100%;border-right:1px solid var(--b1);">
+    <button id="tp-play"   title="Play / Stop (Space)" style="height:100%;width:38px;border:none;border-right:1px solid var(--b1);background:transparent;color:var(--dim2);font-size:13px;cursor:pointer;transition:all .12s;outline:none;">▶</button>
+    <button id="tp-record" title="Record canvas output" style="height:100%;width:38px;border:none;border-right:1px solid var(--b1);background:transparent;color:var(--accent3);font-size:11px;cursor:pointer;transition:all .12s;outline:none;">⏺</button>
+    <div id="tp-time" style="height:100%;display:flex;align-items:center;padding:0 12px;font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.06em;border-right:1px solid var(--b1);min-width:72px;">0:00.0</div>
+  </div>
+
+  <!-- Add mod -->
+  <div id="mb-add" class="mb-item" title="Add an mod" style="height:100%;display:flex;align-items:center;gap:5px;padding:0 12px;cursor:pointer;border-right:1px solid var(--b1);font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--accent);">
+    <span style="font-size:12px;">+</span><span>ADD MOD</span>
+  </div>
+
+  <!-- Tabs (open instances) -->
+  <div id="mb-tabs" class="mb-item" title="Open mods" style="height:100%;display:flex;align-items:center;gap:5px;padding:0 12px;cursor:pointer;border-right:1px solid var(--b1);font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim2);position:relative;">
+    <span>TABS</span><span id="mb-tabs-count" style="color:var(--dim);">(0)</span><span style="font-size:8px;color:var(--dim);">▾</span>
+  </div>
+
+  <div id="mb-accent"></div>
+  <div id="mb-right">
+    <div class="mb-item" id="mb-opts">OPTIONS</div>
+    <div id="mb-drop"><span>⬇</span><span id="mb-drop-txt">DROP ANYTHING</span></div>
+  </div>
+</header>
+
+<!-- ══ OPTIONS PANEL ══ -->
+<div id="opts-panel">
+  <div class="opts-title">CANVAS</div>
+  <div class="opts-row">
+    <button class="opts-btn" id="opts-clear">CLEAR ALL</button>
+    <button class="opts-btn" id="opts-close">CLOSE</button>
+  </div>
+  <div class="opts-div"></div>
+  <div class="opts-title">REGISTRY <span id="opts-reg-count" style="color:var(--dim2);font-weight:400;font-size:7px;"></span></div>
+  <div id="opts-reg-list" style="display:flex;flex-direction:column;gap:3px;max-height:220px;overflow-y:auto;"></div>
+</div>
+
+<!-- ══ CANVAS — mods live here, CFR field behind ══ -->
+<div id="canvas">
+  <div id="hint">
+    <div class="hint-word">ERAVOS</div>
+    <div class="hint-line">
+      Drop audio · drag to canvas<br>
+      Everything opens where you drop it<br>
+      Mods in the menu → controls + I/O
+    </div>
+  </div>
+</div>
+
+<!-- ══ DROP OVERLAY ══ -->
+<div id="drop-overlay">
+  <div class="drop-icon">⬇</div>
+  <div class="drop-label">DROP TO OPEN</div>
+  <div class="drop-sub">audio · MIDI · plugin zip</div>
+</div>
+
+<!-- ══ PERMISSIONS DIALOG ══ -->
+<div id="perm-dialog">
+  <div class="perm-box">
+    <div class="perm-title" id="perm-title">PERMISSION REQUEST</div>
+    <div class="perm-desc"  id="perm-desc"></div>
+    <div class="perm-list"  id="perm-list"></div>
+    <div class="perm-btns">
+      <button class="perm-allow" id="perm-allow">ALLOW</button>
+      <button class="perm-deny"  id="perm-deny">DENY</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOTIFICATION ══ -->
+<div id="notif"></div>
+
+<!-- ══ MOD CATALOG ══ -->
+<div id="catalog-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9500;display:none;align-items:center;justify-content:center;">
+  <div id="catalog-box" style="width:min(880px,92vw);max-height:84vh;display:flex;flex-direction:column;background:var(--bg1);border:1px solid var(--b2);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.7);overflow:hidden;">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--b1);background:var(--bg2);">
+      <span style="font-family:var(--orb);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);flex:1;">MOD CATALOG</span>
+      <button id="catalog-create-btn" style="background:transparent;border:1px solid var(--accent)55;color:var(--accent);font-family:var(--mono);font-size:8px;letter-spacing:.08em;padding:6px 10px;border-radius:4px;cursor:pointer;">+ CREATE NEW MOD</button>
+      <button id="catalog-close" style="background:transparent;border:none;color:var(--dim2);font-size:16px;cursor:pointer;padding:0 4px;">×</button>
+    </div>
+    <div id="catalog-body" style="flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:18px;"></div>
+  </div>
+</div>
+
+<!-- ══ CREATE NEW MOD ══ -->
+<div id="create-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9600;display:none;align-items:center;justify-content:center;">
+  <div style="width:min(420px,90vw);background:var(--bg1);border:1px solid var(--b2);border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+    <div style="font-family:var(--orb);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);">NEW MOD TEMPLATE</div>
+    <div style="font-family:var(--mono);font-size:7px;color:var(--dim2);line-height:1.6;">Downloads a starter engine.js + schema.json scaffold, matching the convention every other mod follows. Drop them into mods/&lt;id&gt;/ to build from.</div>
+    <label style="font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.08em;">ID (kebab-case)<input id="create-id" placeholder="my-mod" style="width:100%;margin-top:3px;background:var(--bg3);border:1px solid var(--b2);border-radius:3px;color:var(--white);font-family:var(--mono);font-size:9px;padding:6px 8px;"></label>
+    <label style="font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.08em;">LABEL<input id="create-label" placeholder="My Mod" style="width:100%;margin-top:3px;background:var(--bg3);border:1px solid var(--b2);border-radius:3px;color:var(--white);font-family:var(--mono);font-size:9px;padding:6px 8px;"></label>
+    <div style="display:flex;gap:8px;">
+      <label style="flex:1;font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.08em;">ICON<input id="create-icon" placeholder="◆" style="width:100%;margin-top:3px;background:var(--bg3);border:1px solid var(--b2);border-radius:3px;color:var(--white);font-family:var(--mono);font-size:9px;padding:6px 8px;"></label>
+      <label style="flex:1;font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.08em;">ACCENT<input id="create-accent" type="color" value="#00ff88" style="width:100%;margin-top:3px;height:30px;background:var(--bg3);border:1px solid var(--b2);border-radius:3px;cursor:pointer;"></label>
+    </div>
+    <label style="font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.08em;">CATEGORY<input id="create-category" placeholder="Audio — Synths" style="width:100%;margin-top:3px;background:var(--bg3);border:1px solid var(--b2);border-radius:3px;color:var(--white);font-family:var(--mono);font-size:9px;padding:6px 8px;"></label>
+    <div style="display:flex;gap:8px;margin-top:6px;">
+      <button id="create-download" style="flex:1;background:var(--accent);border:none;color:#000;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.08em;padding:8px;border-radius:4px;cursor:pointer;">⬇ DOWNLOAD TEMPLATE</button>
+      <button id="create-cancel" style="background:transparent;border:1px solid var(--b2);color:var(--dim2);font-family:var(--mono);font-size:8px;letter-spacing:.08em;padding:8px 12px;border-radius:4px;cursor:pointer;">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SPAWN CONFIG PROMPT (for mods with declared 'needs') ══ -->
+<div id="needs-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9700;display:none;align-items:center;justify-content:center;">
+  <div id="needs-box" style="width:min(380px,90vw);background:var(--bg1);border:1px solid var(--b2);border-radius:8px;padding:18px;display:flex;flex-direction:column;gap:10px;">
+    <div id="needs-title" style="font-family:var(--orb);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);">CONFIGURE BEFORE ADDING</div>
+    <div id="needs-fields" style="display:flex;flex-direction:column;gap:9px;"></div>
+    <div style="display:flex;gap:8px;margin-top:6px;">
+      <button id="needs-confirm" style="flex:1;background:var(--accent);border:none;color:#000;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.08em;padding:8px;border-radius:4px;cursor:pointer;">+ ADD</button>
+      <button id="needs-cancel" style="background:transparent;border:1px solid var(--b2);color:var(--dim2);font-family:var(--mono);font-size:8px;letter-spacing:.08em;padding:8px 12px;border-radius:4px;cursor:pointer;">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     L4 SHELL — locked. Do not edit after this point.
+     Wires everything. Canvas, drops, menu, CFR field.
+     ══════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── Elements ── */
+const canvasEl  = document.getElementById('canvas');
+const hintEl    = document.getElementById('hint');
+const notifEl   = document.getElementById('notif');
+const mbDropEl  = document.getElementById('mb-drop');
+const dropOvEl  = document.getElementById('drop-overlay');
+
+/* ── Init ── */
+CanvasWM.init(canvasEl);
+WireSystem.init(canvasEl);
+let _windowCount = 0;
+
+/* ── Master transport UI ── */
+const tpPlay   = document.getElementById('tp-play');
+const tpRecord = document.getElementById('tp-record');
+const tpTime   = document.getElementById('tp-time');
+
+tpPlay.addEventListener('click', () => { bootAudio(); MasterTransport.togglePlay(); });
+tpRecord.addEventListener('click', () => { bootAudio(); MasterTransport.record(); });
+
+/* Space = play/stop */
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'&&e.target.tagName!=='INPUT'&&e.target.tagName!=='SELECT'){
+    e.preventDefault(); bootAudio(); MasterTransport.togglePlay();
+  }
+});
+
+/* Transport state bus */
+KERNEL.bus.subscribe('transport:play',()=>{
+  tpPlay.textContent='⏹'; tpPlay.style.color='var(--accent)';
+  CanvasCFR.setFieldPreset('active');
+});
+KERNEL.bus.subscribe('transport:stop',()=>{
+  tpPlay.textContent='▶'; tpPlay.style.color='var(--dim2)';
+  CanvasCFR.setFieldPreset('calm');
+});
+KERNEL.bus.subscribe('transport:record-start',()=>{
+  tpRecord.style.color='#ff2266'; tpRecord.style.textShadow='0 0 8px #ff2266';
+});
+KERNEL.bus.subscribe('transport:record-stop',()=>{
+  tpRecord.style.color='var(--accent3)'; tpRecord.style.textShadow='';
+});
+
+/* Clock display */
+let _clockStart=0, _clockRunning=false;
+KERNEL.bus.subscribe('seq:play',()=>{_clockRunning=true;_clockStart=performance.now();});
+KERNEL.bus.subscribe('seq:stop',()=>{_clockRunning=false;tpTime.textContent='0:00.0';});
+(function _clockLoop(){
+  requestAnimationFrame(_clockLoop);
+  if(!_clockRunning) return;
+  const t=(performance.now()-_clockStart)/1000;
+  const m=Math.floor(t/60),s=Math.floor(t%60),d=Math.floor((t%1)*10);
+  tpTime.textContent=`${m}:${String(s).padStart(2,'0')}.${d}`;
+})();
+
+/* ── Raven voice loader ──────────────────────────────────
+   Drop any of Raven's MP3s and they spawn as named
+   sample players arranged in a grid, ready to wire
+   into the bass drop builder vocal slot.              ── */
+const RAVEN_NAMES = [
+  'Always_be_here_for_you','Days_when_we_re_quiet',
+  'I_really_need_you_to_believe_that','just_listen_to_me_okay',
+  'Please_just_know_matter_what','sometimes',
+  'Todays_going_to_be_a_better_day','we_got_this','we_re_fine',
+  'what_ever_negative_stuff','yesterdays_not_even_a_thing_anymore',
+  'you_re_fine','you_re_not_your_thoughts','I_just_want_you_to_know_that',
+  'Give_your_fucking_head_a_shake','I_m_not_fucking_going_anywhere',
+  'I_love_the_shit_out_of_you','Your_fucking_stuck_with_me'
+];
+
+function _isRavenVoice(name) {
+  const n = name.toLowerCase().replace(/[^a-z0-9]/g,'_');
+  return RAVEN_NAMES.some(r => n.includes(r.toLowerCase().slice(0,12)) || r.toLowerCase().slice(0,12).includes(n.slice(0,8)));
+}
+
+/* When Raven files drop, arrange them in a grid on the right */
+let _ravenGrid = [];
+function _placeRavenSample(result, index) {
+  const cols = 3;
+  const w    = 220, h = 100, gapX = 10, gapY = 8;
+  const cr   = canvasEl.getBoundingClientRect();
+  const col  = index % cols;
+  const row  = Math.floor(index / cols);
+  const x    = cr.width - (cols * (w + gapX)) - 20 + col*(w+gapX);
+  const y    = 30 + row*(h+gapY);
+  return { x: Math.max(10, x), y };
+}
+
+
+let _audioBooted = false;
+function bootAudio() {
+  if (_audioBooted) return;
+  _audioBooted = true;
+  const AC = KERNEL.audio.boot();
+  /* SNR master bus chain — boot immediately after AC */
+  SNRChain.boot(AC, KERNEL.audio.dry);
+  setTimeout(() => {
+    const analyser = KERNEL.audio.analyser();
+    CanvasCFR.connectAnalyser(analyser);
+    _startAccentPulse(analyser);
+  }, 200);
+}
+document.addEventListener('pointerdown', bootAudio, { once:true });
+
+/* ── CFR canvas boot — fires immediately, no interaction needed ── */
+CanvasCFR.boot(canvasEl);
+
+/* ── Notify ── */
+let _nTimer;
+function notify(msg, col) {
+  notifEl.textContent = msg;
+  notifEl.style.borderColor = col || 'var(--accent)';
+  notifEl.style.color       = col || 'var(--accent)';
+  notifEl.classList.add('show');
+  clearTimeout(_nTimer);
+  _nTimer = setTimeout(() => notifEl.classList.remove('show'), 2600);
+}
+notify('Drop anything to begin');
+
+/* ── Accent pulse (audio → accent colour + mb-accent bar) ── */
+function _startAccentPulse(analyser) {
+  const data  = new Uint8Array(analyser.frequencyBinCount);
+  const bar   = document.getElementById('mb-accent');
+  const logo  = document.querySelector('.mb-logo-name');
+  (function loop() {
+    requestAnimationFrame(loop);
+    analyser.getByteFrequencyData(data);
+    let maxB=0, maxV=0, rms=0;
+    for(let i=2;i<data.length;i++) { if(data[i]>maxV){maxV=data[i];maxB=i;} rms+=data[i]*data[i]; }
+    rms = Math.sqrt(rms/data.length)/255;
+    if(rms>.015) {
+      const hue = Math.round(152-(maxB/data.length)*110);
+      const hex  = _hsl2hex(hue, Math.round(80+rms*20), Math.round(50+rms*18));
+      document.documentElement.style.setProperty('--accent', hex);
+      document.documentElement.style.setProperty('--accent-rgb', _hex2rgb(hex));
+      if(bar)  { bar.style.background=hex; bar.style.boxShadow=`0 0 ${6+rms*14}px ${hex}`; }
+      if(logo)   logo.style.color = hex;
+    }
+  })();
+}
+function _hsl2hex(h,s,l){s/=100;l/=100;const a=s*Math.min(l,1-l);const f=n=>{const k=(n+h/30)%12;const c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0');};return`#${f(0)}${f(8)}${f(4)}`;}
+function _hex2rgb(h){return`${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`;}
+
+/* ── Permission dialog ── */
+let _permResolve = null;
+function requestPermission(packId, label, perms) {
+  return new Promise(resolve => {
+    _permResolve = resolve;
+    document.getElementById('perm-title').textContent = 'PERMISSION REQUEST';
+    document.getElementById('perm-desc').textContent  = `"${label}" (${packId}) requests:`;
+    const list = document.getElementById('perm-list'); list.innerHTML='';
+    perms.forEach(p=>{const d=document.createElement('div');d.className='perm-item';d.textContent=p;list.appendChild(d);});
+    document.getElementById('perm-dialog').classList.add('open');
+  });
+}
+document.getElementById('perm-allow').addEventListener('click',()=>{document.getElementById('perm-dialog').classList.remove('open');if(_permResolve){_permResolve(true);_permResolve=null;}});
+document.getElementById('perm-deny').addEventListener('click', ()=>{document.getElementById('perm-dialog').classList.remove('open');if(_permResolve){_permResolve(false);_permResolve=null;}});
+
+/* ── Drop routing ── */
+const NAME_MAP = {
+  'pads':              ['drum','drums','pads','beat','kit'],
+  'sequencer':         ['seq','sequencer','pattern','groove'],
+  'timeline':          ['timeline','tl','arrangement','arrange'],
+  'sample-player':     ['sample','player'],
+  'lfo':               ['lfo','modulate'],
+  'wobble-bass':       ['wobble','wub'],
+  'acid-synth':        ['acid','303'],
+  'reese-bass':        ['reese','dnb'],
+  'channel':           ['channel','mixer','strip','ch'],
+  'xy-pad':            ['xy','xypad','joystick'],
+  'edm-lab':           ['edm','lab','bass','dubstep','neuro'],
+  'contrast-analyser': ['contrast','analyse','analyser','spectrum','compare'],
+  'bass-drop-builder': ['drop','builder'],
+};
+function _nameToOrg(name) {
+  const n = name.toLowerCase();
+  for(const [id,aliases] of Object.entries(NAME_MAP)){if(aliases.some(a=>n.includes(a)))return id;}
+  return null;
+}
+
+let _dc = 0;
+document.addEventListener('dragenter', e=>{e.preventDefault();_dc++;dropOvEl.classList.add('active');mbDropEl.classList.add('active');});
+document.addEventListener('dragleave', ()=>{_dc=Math.max(0,_dc-1);if(!_dc){dropOvEl.classList.remove('active');mbDropEl.classList.remove('active');}});
+document.addEventListener('dragover',  e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';});
+
+document.addEventListener('drop', async e=>{
+  e.preventDefault();
+  _dc=0; dropOvEl.classList.remove('active'); mbDropEl.classList.remove('active');
+  bootAudio();
+  const files = e.dataTransfer.files; if(!files.length) return;
+  const cr  = canvasEl.getBoundingClientRect();
+  const pos = { x:Math.max(8,e.clientX-cr.left-120), y:Math.max(8,e.clientY-cr.top-20) };
+  notify(`⬇ reading ${files.length} file${files.length>1?'s':''}…`);
+  const results = await Intake.ingestAll(files, KERNEL.bus);
+  results.forEach((result,i)=>{
+    const p = { x:pos.x+i*28, y:pos.y+i*22 };
+    if(result.id==='error')       { notify(`⚠ ${result.error}`,'var(--accent3)'); return; }
+    if(result.id==='zip')         { KERNEL.zipImporter.install(result.arrayBuffer,p,requestPermission).then(pack=>{if(pack)notify(`📦 ${pack.manifest.label||result.name} installed`);else notify(`⚠ zip install failed`,'var(--accent3)');});return; }
+    if(result.id==='audio:sample'){
+      if(_isRavenVoice(result.name)){
+        const idx=_ravenGrid.length; _ravenGrid.push(result.name);
+        const rp=_placeRavenSample(result,idx);
+        ModFactory.spawn('sample-player',rp,result);
+      } else {
+        ModFactory.spawn('sample-player',p,result);
+      }
+      return;
+    }
+    if(result.id==='audio:midi'||result.id==='json:pattern'){ ModFactory.spawn('sequencer',p,result); return; }
+    if(result.id==='json:preset'&&result.meta?.parsed?.comp_id){ const pid=result.meta.parsed.comp_id; if(ModFactory.defs().find(d=>d.id===pid)){ModFactory.spawn(pid,p,result);return;} }
+    const pid = _nameToOrg(result.name);
+    if(pid){ ModFactory.spawn(pid,p,result); return; }
+    notify(`${result.icon} ${result.name} (${result.id})`,'var(--dim2)');
+  });
+});
+
+/* ══════════════════════════════════════════════════════
+   DYNAMIC MENU — dropdowns populate on spawn
+   ══════════════════════════════════════════════════════ */
+const tabsBtn      = document.getElementById('mb-tabs');
+const tabsCountEl  = document.getElementById('mb-tabs-count');
+const _instances   = new Map(); /* instanceId → { id, label, icon, accent } */
+let   _openPanel   = null;
+
+function _closeAll() {
+  if(_openPanel){_openPanel.style.display='none';_openPanel._trigger?.classList.remove('on');_openPanel=null;}
+}
+
+/* ── Device lists ── */
+const _audioOutputs = [{id:'default',label:'System Default'}];
+const _audioInputs  = [{id:'default',label:'System Default'}];
+const _midiInputs   = [{id:'none',label:'— none —'}];
+
+function _refreshDevices() {
+  if(navigator.mediaDevices?.enumerateDevices){
+    navigator.mediaDevices.enumerateDevices().then(devices=>{
+      _audioOutputs.length=0; _audioInputs.length=0;
+      _audioOutputs.push({id:'default',label:'System Default'});
+      _audioInputs.push( {id:'default',label:'System Default'});
+      devices.forEach(d=>{
+        if(d.kind==='audiooutput') _audioOutputs.push({id:d.deviceId,label:d.label||`Output ${_audioOutputs.length}`});
+        if(d.kind==='audioinput')  _audioInputs.push( {id:d.deviceId,label:d.label||`Input ${_audioInputs.length}`});
+      });
+    }).catch(()=>{});
+  }
+  if(navigator.requestMIDIAccess){
+    navigator.requestMIDIAccess().then(access=>{
+      _midiInputs.length=0; _midiInputs.push({id:'none',label:'— none —'});
+      access.inputs.forEach(input=>{
+        _midiInputs.push({id:input.id,label:input.name});
+        input.onmidimessage=e=>{
+          const [status,note,vel]=e.data;
+          if((status&0xF0)===0x90&&vel>0) KERNEL.bus.publish('midi:note',{note,velocity:vel/127,channel:(status&0x0F)+1,deviceId:input.id});
+        };
+      });
+      if(_openPanel===tabsListEl) _renderTabs();
+    }).catch(()=>{});
+  }
+}
+_refreshDevices();
+
+/* ── Tabs dropdown — one row per open instance ── */
+const _ioSelections = {};
+
+function _mkIORow(instanceId, labelText, devices, attrName, color) {
+  const row = document.createElement('div'); row.style.cssText='display:flex;flex-direction:column;gap:3px;';
+  const lbl = document.createElement('div'); lbl.style.cssText=`font-family:var(--mono);font-size:6.5px;letter-spacing:.14em;color:${color};opacity:.7;`; lbl.textContent=labelText;
+  const sel = document.createElement('select'); sel.style.cssText=`background:var(--bg3);border:1px solid ${color}44;border-radius:3px;color:var(--white);font-family:var(--mono);font-size:8px;padding:4px 6px;outline:none;cursor:pointer;width:100%;`;
+  if(attrName) sel.dataset[attrName]='1';
+  const savedVal = _ioSelections[instanceId]?.[labelText];
+  devices.forEach(d=>{const o=document.createElement('option');o.value=d.id;o.textContent=d.label;if(d.id===savedVal)o.selected=true;sel.appendChild(o);});
+  sel.addEventListener('click',e=>e.stopPropagation());
+  sel.addEventListener('change',()=>{
+    if(!_ioSelections[instanceId]) _ioSelections[instanceId]={};
+    _ioSelections[instanceId][labelText]=sel.value;
+    KERNEL.bus.publish('mod:io-change',{instanceId,label:labelText,deviceId:sel.value});
+  });
+  row.appendChild(lbl); row.appendChild(sel);
+  return row;
+}
+
+function _raiseInstance(instanceId) {
+  const win=canvasEl.querySelector(`[data-wm-id="${instanceId}"]`);
+  if(win){
+    const z=Math.max(0,...Array.from(canvasEl.querySelectorAll('.wm-win')).map(w=>+w.style.zIndex||0));
+    win.style.zIndex=z+1;
+    win.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  }
+}
+function _collapseInstance(instanceId) {
+  const win=canvasEl.querySelector(`[data-wm-id="${instanceId}"]`);
+  if(win){const btn=win.querySelector('.wm-bar button'); if(btn) btn.click();}
+}
+function _closeInstance(instanceId) {
+  const win=canvasEl.querySelector(`[data-wm-id="${instanceId}"]`);
+  if(win){win.remove();KERNEL.registry.unregister(instanceId);KERNEL.bus.publish('canvas:window-closed',{id:instanceId});}
+}
+
+const tabsListEl = document.createElement('div');
+tabsListEl.dataset.ddPanel='1';
+tabsListEl.style.cssText = `position:fixed;top:var(--bar);display:none;flex-direction:column;min-width:260px;max-height:72vh;overflow-y:auto;background:var(--bg1);border:1px solid var(--b2);border-top:2px solid var(--accent);border-radius:0 0 5px 5px;z-index:9100;box-shadow:0 8px 32px rgba(0,0,0,.6);`;
+tabsListEl._trigger = tabsBtn;
+document.body.appendChild(tabsListEl);
+
+function _renderTabs() {
+  tabsListEl.innerHTML='';
+  tabsCountEl.textContent = `(${_instances.size})`;
+  if(_instances.size===0){
+    const empty=document.createElement('div');
+    empty.style.cssText='padding:14px;font-family:var(--mono);font-size:8px;color:var(--dim);text-align:center;letter-spacing:.06em;';
+    empty.textContent='No mods open — use + ADD MOD';
+    tabsListEl.appendChild(empty);
+    return;
+  }
+  _instances.forEach((inst, instanceId) => {
+    const color = inst.accent || 'var(--accent)';
+    const row=document.createElement('div');
+    row.style.cssText=`display:flex;align-items:center;gap:7px;padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--b1);font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:${color};transition:background .1s;`;
+    row.addEventListener('mouseenter',()=>row.style.background=`${color}0a`);
+    row.addEventListener('mouseleave',()=>row.style.background='');
+
+    const ic=document.createElement('span'); ic.textContent=inst.icon||'◆'; ic.style.fontSize='11px';
+    const lb=document.createElement('span'); lb.textContent=inst.label.toUpperCase(); lb.style.cssText='flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    row.appendChild(ic); row.appendChild(lb);
+
+    const actions=document.createElement('div'); actions.style.cssText='display:flex;gap:3px;';
+    function mkIcoBtn(sym,title,onClick,col){
+      const b=document.createElement('span'); b.textContent=sym; b.title=title;
+      b.style.cssText=`padding:2px 5px;border-radius:3px;color:${col||'var(--dim2)'};opacity:.7;font-size:9px;`;
+      b.addEventListener('mouseenter',()=>{b.style.opacity='1';b.style.background=`${col||color}1a`;});
+      b.addEventListener('mouseleave',()=>{b.style.opacity='.7';b.style.background='';});
+      b.addEventListener('click',e=>{e.stopPropagation();onClick();});
+      return b;
+    }
+    actions.appendChild(mkIcoBtn('⊙','Raise window',()=>{_raiseInstance(instanceId);_closeAll();}));
+    actions.appendChild(mkIcoBtn('▬','Collapse',()=>_collapseInstance(instanceId)));
+    actions.appendChild(mkIcoBtn('×','Close',()=>{_closeInstance(instanceId);},'#ff2266'));
+    row.appendChild(actions);
+    row.addEventListener('click',()=>{_raiseInstance(instanceId);_closeAll();});
+    tabsListEl.appendChild(row);
+
+    const org=KERNEL.registry.get(instanceId);
+    const perms=org?.permissions||[];
+    if(perms.includes('audio_out')||perms.includes('audio_in')||perms.includes('midi_in')){
+      const ioWrap=document.createElement('div');
+      ioWrap.style.cssText='padding:5px 10px 9px 27px;display:flex;flex-direction:column;gap:5px;border-bottom:1px solid var(--b1);background:var(--bg2);';
+      if(perms.includes('audio_out')) ioWrap.appendChild(_mkIORow(instanceId,'AUDIO OUTPUT',_audioOutputs,null,color));
+      if(perms.includes('audio_in'))  ioWrap.appendChild(_mkIORow(instanceId,'AUDIO INPUT', _audioInputs, null,color));
+      if(perms.includes('midi_in'))   ioWrap.appendChild(_mkIORow(instanceId,'MIDI INPUT',  _midiInputs,  'midiSel',color));
+      tabsListEl.appendChild(ioWrap);
+    }
+  });
+}
+
+tabsBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const isOpen=(_openPanel===tabsListEl);
+  _closeAll();
+  if(!isOpen){
+    const r=tabsBtn.getBoundingClientRect();
+    tabsListEl.style.left=r.left+'px';
+    tabsListEl.style.display='flex';
+    tabsBtn.classList.add('on');
+    _openPanel=tabsListEl;
+    _renderTabs();
+  }
+});
+
+/* Close on outside click / ESC */
+document.addEventListener('click',e=>{if(!e.target.closest('#mb-tabs')&&!e.target.closest('#mb-add')&&!e.target.closest('[data-dd-panel]'))_closeAll();});
+document.addEventListener('keydown',e=>{if(e.code==='Escape')_closeAll();});
+
+/* ── Bus wiring ── */
+KERNEL.bus.subscribe('canvas:mod-spawned',({instanceId,id,label,icon,accent})=>{
+  _windowCount++;
+  hintEl.classList.add('gone');
+  const def = ModFactory.defs().find(d=>d.id===id);
+  _instances.set(instanceId, { id, label, icon: icon||def?.icon||'', accent: accent||def?.accent||'var(--accent)' });
+  tabsCountEl.textContent = `(${_instances.size})`;
+  if(_openPanel===tabsListEl) _renderTabs();
+  /* CFR attractor */
+  const win = canvasEl.querySelector(`[data-wm-id="${instanceId}"]`);
+  if(win){const r=win.getBoundingClientRect(),cr=canvasEl.getBoundingClientRect();CanvasCFR.onSpawn(instanceId,r.left-cr.left+r.width/2,r.top-cr.top+r.height/2,def?.accent);}
+  /* Wire system */
+  WireSystem.onSpawn(instanceId);
+});
+
+KERNEL.bus.subscribe('canvas:window-closed',({id})=>{
+  _instances.delete(id);
+  tabsCountEl.textContent = `(${_instances.size})`;
+  if(_openPanel===tabsListEl) _renderTabs();
+  CanvasCFR.onClose(id);
+  WireSystem.onClose(id);
+  _windowCount--;
+  if(_windowCount<=0){_windowCount=0;hintEl.classList.remove('gone');}
+});
+
+KERNEL.bus.subscribe('kernel:fault',({code,message})=>{
+  notify(`⚠ ${code}: ${message}`,'var(--accent3)');
+  CanvasCFR.onFault();
+});
+KERNEL.bus.subscribe('kernel:notify',({message})=>notify(message));
+
+/* ── OPTIONS panel ── */
+let _optsOpen=false;
+document.getElementById('mb-opts').addEventListener('click',()=>{
+  _optsOpen=!_optsOpen;
+  document.getElementById('opts-panel').classList.toggle('open',_optsOpen);
+  if(_optsOpen) _updateRegistry();
+});
+document.getElementById('opts-close').addEventListener('click',()=>{_optsOpen=false;document.getElementById('opts-panel').classList.remove('open');});
+document.getElementById('opts-clear').addEventListener('click',()=>{
+  canvasEl.querySelectorAll('.wm-win').forEach(w=>w.remove());
+  _windowCount=0; hintEl.classList.remove('gone');
+  notify('Canvas cleared');
+});
+function _updateRegistry(){
+  const orgs=KERNEL.registry.all();
+  document.getElementById('opts-reg-count').textContent=`(${orgs.length})`;
+  const list=document.getElementById('opts-reg-list'); list.innerHTML='';
+  orgs.forEach(o=>{const item=document.createElement('div');item.style.cssText='font-family:var(--mono);font-size:6.5px;color:var(--dim2);padding:2px 4px;border-radius:2px;border:1px solid var(--b1);background:var(--bg3);display:flex;align-items:center;gap:6px;';item.innerHTML=`<span style="color:var(--accent)">${o.label}</span><span style="flex:1;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.id}</span>`;list.appendChild(item);});
+}
+document.addEventListener('click',e=>{if(!e.target.closest('#opts-panel')&&!e.target.closest('#mb-opts')){document.getElementById('opts-panel').classList.remove('open');_optsOpen=false;}});
+KERNEL.bus.subscribe('kernel:mod-mounted',  ()=>{if(_optsOpen)_updateRegistry();});
+KERNEL.bus.subscribe('kernel:mod-unmounted',()=>{if(_optsOpen)_updateRegistry();});
+
+/* ══════════════════════════════════════════════════════
+   MOD CATALOG — categories, summaries, "thumbnails"
+   (icon tile in the mod's own accent colour), Add,
+   and Create-New-Mod template download.
+   ══════════════════════════════════════════════════════ */
+const catalogOverlay = document.getElementById('catalog-overlay');
+const catalogBody     = document.getElementById('catalog-body');
+
+function _openCatalog() {
+  catalogBody.innerHTML = '';
+  const defs = ModFactory.defs();
+  const byCategory = new Map();
+  defs.forEach(d => {
+    const cat = d.category || 'Uncategorized';
+    if(!byCategory.has(cat)) byCategory.set(cat, []);
+    byCategory.get(cat).push(d);
+  });
+  const cats = Array.from(byCategory.keys()).sort();
+  cats.forEach(cat => {
+    const section = document.createElement('div');
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--dim);margin-bottom:8px;';
+    hdr.textContent = cat.toUpperCase();
+    section.appendChild(hdr);
+
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;';
+
+    byCategory.get(cat).forEach(d => {
+      const color = d.accent || 'var(--accent)';
+      const card = document.createElement('div');
+      card.style.cssText = `border:1px solid var(--b2);border-radius:6px;background:var(--bg2);overflow:hidden;display:flex;flex-direction:column;`;
+
+      const thumb = document.createElement('div');
+      thumb.style.cssText = `height:64px;display:flex;align-items:center;justify-content:center;font-size:26px;background:linear-gradient(135deg, ${color}22, ${color}05);border-bottom:1px solid ${color}33;`;
+      thumb.textContent = d.icon || '◆';
+
+      const body = document.createElement('div');
+      body.style.cssText = 'padding:9px 10px;display:flex;flex-direction:column;gap:6px;flex:1;';
+
+      const title = document.createElement('div');
+      title.style.cssText = `font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.06em;color:${color};`;
+      title.textContent = d.label;
+
+      const summary = document.createElement('div');
+      summary.style.cssText = 'font-family:var(--mono);font-size:6.5px;color:var(--dim2);line-height:1.5;flex:1;';
+      summary.textContent = d.summary || 'No summary declared yet.';
+
+      body.appendChild(title); body.appendChild(summary);
+
+      if(d.needs && d.needs.length){
+        const needsTag = document.createElement('div');
+        needsTag.style.cssText = 'font-family:var(--mono);font-size:6px;color:var(--dim);letter-spacing:.04em;';
+        needsTag.textContent = 'NEEDS: ' + d.needs.map(n=>n.label).join(', ');
+        body.appendChild(needsTag);
+      } else {
+        const noNeeds = document.createElement('div');
+        noNeeds.style.cssText = 'font-family:var(--mono);font-size:6px;color:var(--dim);opacity:.6;';
+        noNeeds.textContent = 'NEEDS: nothing extra';
+        body.appendChild(noNeeds);
+      }
+
+      const addBtn = document.createElement('button');
+      addBtn.textContent = '+ ADD';
+      addBtn.style.cssText = `background:transparent;border:1px solid ${color}55;color:${color};font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;padding:6px;border-radius:4px;cursor:pointer;`;
+      addBtn.addEventListener('click', () => _addMod(d));
+      body.appendChild(addBtn);
+
+      card.appendChild(thumb); card.appendChild(body);
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    catalogBody.appendChild(section);
+  });
+  catalogOverlay.style.display = 'flex';
+}
+
+function _addMod(def) {
+  if(def.needs && def.needs.length){
+    _openNeedsPrompt(def);
+  } else {
+    bootAudio();
+    ModFactory.spawn(def.id, { x: 80+Math.random()*300, y: 80+Math.random()*140 });
+    catalogOverlay.style.display = 'none';
+  }
+}
+
+document.getElementById('mb-add').addEventListener('click', _openCatalog);
+document.getElementById('catalog-close').addEventListener('click', ()=>catalogOverlay.style.display='none');
+catalogOverlay.addEventListener('click', e => { if(e.target===catalogOverlay) catalogOverlay.style.display='none'; });
+
+/* ── Spawn-config prompt — only shown for mods that
+   explicitly declare what they need ── */
+const needsOverlay = document.getElementById('needs-overlay');
+const needsFields   = document.getElementById('needs-fields');
+const needsTitle    = document.getElementById('needs-title');
+let   _pendingDef   = null;
+
+function _openNeedsPrompt(def) {
+  _pendingDef = def;
+  needsTitle.textContent = `CONFIGURE ${def.label.toUpperCase()}`;
+  needsFields.innerHTML = '';
+  def.needs.forEach(n => {
+    const wrap = document.createElement('label');
+    wrap.style.cssText = 'font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.06em;display:flex;flex-direction:column;gap:3px;';
+    wrap.textContent = n.label;
+    const input = document.createElement('input');
+    input.value = n.default ?? '';
+    input.dataset.key = n.key;
+    input.style.cssText = 'background:var(--bg3);border:1px solid var(--b2);border-radius:3px;color:var(--white);font-family:var(--mono);font-size:9px;padding:6px 8px;';
+    wrap.appendChild(input);
+    needsFields.appendChild(wrap);
+  });
+  needsOverlay.style.display = 'flex';
+}
+
+document.getElementById('needs-confirm').addEventListener('click', () => {
+  if(!_pendingDef) return;
+  const config = {};
+  needsFields.querySelectorAll('input').forEach(inp => { config[inp.dataset.key] = inp.value; });
+  bootAudio();
+  ModFactory.spawn(_pendingDef.id, { x: 80+Math.random()*300, y: 80+Math.random()*140 }, null, config);
+  needsOverlay.style.display = 'none';
+  catalogOverlay.style.display = 'none';
+  _pendingDef = null;
+});
+document.getElementById('needs-cancel').addEventListener('click', () => { needsOverlay.style.display='none'; _pendingDef=null; });
+needsOverlay.addEventListener('click', e => { if(e.target===needsOverlay){needsOverlay.style.display='none';_pendingDef=null;} });
+
+/* ── Create New Mod — downloads a starter schema.json
+   + engine.js scaffold, same shape every other mod uses ── */
+const createOverlay = document.getElementById('create-overlay');
+document.getElementById('catalog-create-btn').addEventListener('click', () => { createOverlay.style.display='flex'; });
+document.getElementById('create-cancel').addEventListener('click', () => { createOverlay.style.display='none'; });
+createOverlay.addEventListener('click', e => { if(e.target===createOverlay) createOverlay.style.display='none'; });
+
+function _downloadText(filename, text) {
+  const blob = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+
+document.getElementById('create-download').addEventListener('click', () => {
+  const id      = (document.getElementById('create-id').value || 'my-mod').trim();
+  const label   = (document.getElementById('create-label').value || 'My Mod').trim();
+  const icon    = (document.getElementById('create-icon').value || '◆').trim();
+  const accent  = document.getElementById('create-accent').value || '#00ff88';
+  const category= (document.getElementById('create-category').value || 'Uncategorized').trim();
+  const exportName = 'Mod_' + id.replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+
+  const engineTpl = `/* ═══════════════════════════════════════════════════════════
+   MOD: ${label}  v0.1.0
+   id: eravos.${id}
+
+   Starter scaffold. Fill in real engine logic, then register
+   it in runtime/mod-factory.js with reg('${id}', {...}),
+   declaring category/summary/needs explicitly (K-8 — state
+   what you require, never assume it).
+   ═══════════════════════════════════════════════════════════ */
+
+window.${exportName} = (() => {
+'use strict';
+
+function mount(instanceId, sBus, audio, config = {}) {
+  const gBus = KERNEL.bus;
+
+  /* TODO: real state + logic */
+  let _state = {};
+
+  KERNEL.registry.register({
+    instanceId,
+    id: 'eravos.${id}',
+    label: '${label}',
+    provides: [],
+    requires: [],
+    permissions: [], // declare explicitly — bus_publish, bus_subscribe, network_fetch, audio_out, etc.
+    hooks: [],
+  });
+
+  return {
+    unmount() {
+      KERNEL.registry.unregister(instanceId);
+    },
+    get state() { return { ..._state }; },
+  };
+}
+
+return { mount };
+})();
+`;
+
+  const schemaTpl = JSON.stringify({
+    schema_version: '1.0.0',
+    id: `eravos.${id}`,
+    label,
+    icon,
+    accent,
+    domain: [category],
+    description: 'TODO — describe what this mod does.',
+    permissions: [],
+    provides: [],
+    requires: [],
+    hooks: [],
+    params: {},
+    ui: { type: 'TODO' },
+  }, null, 2);
+
+  _downloadText(`${id}.engine.js`, engineTpl);
+  _downloadText('schema.json', schemaTpl);
+  createOverlay.style.display = 'none';
+  notify(`⬇ Downloaded ${id}.engine.js + schema.json — drop into mods/${id}/`);
+});
+
+/* ── F-key spawner ── */
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
+  const map={F1:'pads',F2:'sequencer',F3:'timeline',F4:'sample-player',F5:'lfo',F6:'wobble-bass',F7:'acid-synth',F8:'reese-bass',F9:'channel',F10:'xy-pad',F11:'edm-lab',F12:'contrast-analyser'};
+  if(map[e.key]){e.preventDefault();bootAudio();ModFactory.spawn(map[e.key],{x:60+Math.random()*320,y:60+Math.random()*120});}
+});
+
+/* ── Nexus diagnostic nodes — no free F-keys (F1-F12 taken).
+   Spawn manually via the catalog (+ ADD MOD), or call
+   window.spawnNexusNodes() from console for the full set,
+   tiled across the canvas. Nothing auto-spawns anymore —
+   the canvas boots blank. */
+window.spawnNexusNodes = () => {
+  const nodes = ['nexus-cortex','nexus-guardian','nexus-bridge','nexus-orchestrator','nexus-diagnostic','nexus-architect','nexus-idearium'];
+  nodes.forEach((id, i) => ModFactory.spawn(id, { x: 40 + i * 270, y: 40 }));
+};
+
+</script>
+</body>
+</html>

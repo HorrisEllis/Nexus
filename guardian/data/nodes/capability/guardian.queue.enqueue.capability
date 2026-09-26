@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.queue.enqueue
+type: capability
+id: guardian.queue.enqueue
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730141
+source: guardian.registry-components:guardian.queue.enqueue
+payload:
+  id: guardian.queue.enqueue
+  namespace: guardian
+  name: queue.enqueue
+  version: 3.6.2
+  grammar:
+    - queue enqueue
+    - queue-enqueue
+  route:
+    method: POST
+    path: /queue/enqueue
+  intent: []
+  description: Enqueue item to physical queue
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

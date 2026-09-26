@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.contract
+type: component
+id: copilot.contract
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153052
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153052
+lastSeenAt: 1789275153052
+fingerprint: copilot::GET /contract
+payload:
+  id: copilot.contract
+  uuid: 3d021352-6823-4876-b8d0-a12dfe61bdaf
+  namespace: copilot
+  name: contract
+  version: 2.0.0

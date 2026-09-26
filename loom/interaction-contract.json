@@ -1,0 +1,142 @@
+{
+  "id": "loom-v1",
+  "version": "1.5.0",
+  "namespace": "loom",
+  "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from loom/registry-components.js (module.exports, a bare array — this system's own real component list, the same data loom/data/registry.json ingests from every OTHER system). Port 3752 matches loom/compartment.json.",
+  "ports": {
+    "http": 3752
+  },
+  "uuid": "loom-contract-v1-0000-4000-0000-000000000001",
+  "role": "Sovereign component/hook/wire/seam registry + contracts + phasemap aggregation",
+  "health": {
+    "method": "GET",
+    "path": "/health"
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "_componentId": "loom.health"
+    },
+    {
+      "method": "GET",
+      "path": "/api/hooks",
+      "_componentId": "loom.hooks.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/hooks",
+      "_componentId": "loom.hooks.create"
+    },
+    {
+      "method": "POST",
+      "path": "/api/hooks/wire",
+      "_componentId": "loom.hooks.wire"
+    },
+    {
+      "method": "POST",
+      "path": "/api/hooks/unwire",
+      "_componentId": "loom.hooks.unwire"
+    },
+    {
+      "method": "GET",
+      "path": "/api/registry/:kind/:id",
+      "_componentId": "loom.registry.get"
+    },
+    {
+      "method": "POST",
+      "path": "/api/registry/:kind",
+      "_componentId": "loom.registry.put"
+    },
+    {
+      "method": "GET",
+      "path": "/api/graph",
+      "_componentId": "loom.graph"
+    },
+    {
+      "method": "GET",
+      "path": "/api/context-graph",
+      "_componentId": "loom.context.graph"
+    },
+    {
+      "method": "GET",
+      "path": "/api/impact/:id",
+      "_componentId": "loom.impact"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ingest",
+      "_componentId": "loom.ingest"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ingest-upload",
+      "_componentId": "loom.ingest.upload"
+    },
+    {
+      "method": "POST",
+      "path": "/api/scaffold",
+      "_componentId": "loom.scaffold"
+    },
+    {
+      "method": "POST",
+      "path": "/api/contracts",
+      "_componentId": "loom.contracts.create"
+    },
+    {
+      "method": "POST",
+      "path": "/api/contracts/:id/handoff",
+      "_componentId": "loom.contracts.handoff"
+    },
+    {
+      "method": "POST",
+      "path": "/api/contracts/:id/close",
+      "_componentId": "loom.contracts.close"
+    },
+    {
+      "method": "GET",
+      "path": "/api/revisions",
+      "_componentId": "loom.revisions.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/revisions/:id",
+      "_componentId": "loom.revisions.get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/templates",
+      "_componentId": "loom.templates"
+    },
+    {
+      "method": "GET",
+      "path": "/api/phasemap",
+      "_componentId": "loom.phasemap"
+    },
+    {
+      "method": "GET",
+      "path": "/api/phasemap/:system",
+      "_componentId": "loom.phasemap.system"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gaps",
+      "_componentId": "loom.gaps"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gaps/:domain",
+      "_componentId": "loom.gaps.domain"
+    },
+    {
+      "method": "GET",
+      "path": "/api/friction",
+      "_componentId": "loom.friction"
+    },
+    {
+      "method": "GET",
+      "path": "/api/tension",
+      "_componentId": "loom.tension"
+    }
+  ]
+}

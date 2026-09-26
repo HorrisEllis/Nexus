@@ -1,0 +1,6 @@
+/* renderer/settings/sections/providers.css — Provider tabs
+ * v0.39.227: this area's own styles (one CSS file per UI file). Every rule is
+ * scoped to body[data-area="providers"] — set by core.js when the area is shown —
+ * so nothing here can restyle another area. */
+body[data-area="providers"] .row .dot { flex: none; }
+body[data-area="providers"] .row .what .d { font-family: var(--mono); font-size: 11px; }

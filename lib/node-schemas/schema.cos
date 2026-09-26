@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-schema-cos
+type: schema
+id: cos
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116323988
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: cos/kernel.js — the real Compartment class constructor
+  fields:
+    id:
+      type: string
+      required: true
+      description: real, unique compartment id
+    name:
+      type: string
+      required: false
+      description: real human-readable name, defaults to id
+    axioms:
+      type: array
+      required: true
+      description: 1-5 real identity-defining invariant strings
+    llmConfig:
+      type: object
+      required: false
+      description: real {model, host, port} for Ollama

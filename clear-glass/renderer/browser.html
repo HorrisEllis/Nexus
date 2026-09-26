@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- §security 2026-07-02 — CSP for renderer process. Electron warns on no-CSP.
+     unsafe-eval explicitly excluded: no eval() usage, no dynamic code generation.
+     connect-src covers localhost SSE/IPC connections (127.0.0.1 ports).
+     img-src * data: allows favicon fetching and data URIs for tab icons.
+     §TIGHTENED 2026-07-11 — script-src no longer needs 'unsafe-inline': the
+     ~1600-line inline <script> block (all renderer logic) was extracted to
+     browser.js (external, same-origin, loaded via <script src>) as part of
+     breaking this file apart per the same DECOMP.md pattern used for
+     ui/home/index.html. style-src keeps 'unsafe-inline' — inline style="
+     attributes are still used throughout the markup and weren't part of
+     this pass. -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self' http://127.0.0.1:* ws://127.0.0.1:* http://localhost:* ws://localhost:*;
+               img-src 'self' data: https: http:;
+               frame-src 'none'">
+<title>Clear Glass</title>
+<link rel="stylesheet" href="browser.css">
+<!-- 0.39.251 — selector-assign area (element picker → guardian selector map): one JS + one CSS -->
+<link rel="stylesheet" href="selector-assign/selector-assign.css">
+</head>
+<body>
+
+<!-- Tab bar -->
+  <div id="tab-bar" style="display:flex;align-items:center;background:#0e0e18;border-bottom:1px solid rgba(255,255,255,.08);padding:0 6px;height:34px;flex-shrink:0;overflow-x:auto;overflow-y:hidden;gap:2px;">
+    <div id="tab-list" style="display:flex;align-items:center;gap:2px;flex:0 1 auto;overflow-x:auto;min-width:0;"></div>
+    <button id="btn-new-tab" title="New tab" style="flex-shrink:0;background:none;border:none;color:#6a6d82;font-size:16px;padding:0 8px;cursor:pointer;line-height:34px;">+</button>
+    <div style="flex:1;-webkit-app-region:drag;"></div>
+    <div class="chrome-group" style="flex-shrink:0;-webkit-app-region:no-drag;">
+      <button class="nav-btn" id="btn-minimize" title="Minimize to Taskbar">–</button>
+      <button class="nav-btn" id="btn-maximize" title="Maximize">⛶</button>
+      <button class="nav-btn" id="btn-close-tray" title="Close to Tray">✕</button>
+    </div>
+  </div>
+
+<!-- Chrome bar -->
+<div id="chrome">
+  <div class="chrome-group">
+    <button class="nav-btn" id="btn-back"    title="Back">←</button>
+    <button class="nav-btn" id="btn-forward" title="Forward">→</button>
+    <button class="nav-btn" id="btn-reload"  title="Reload">↺</button>
+  </div>
+
+  <div id="url-bar-wrap">
+    <input id="url-bar" type="text" placeholder="Navigate to..." spellcheck="false" autocomplete="off">
+    <!-- §BUILD 2026-08-28 — James: "in firefox the search bar looks
+         like this with the bookmark button at the end, over the search
+         bar inside of it." Same real #btn-bookmark element (unchanged
+         id, unchanged click handler in browser.js:1209) — just moved
+         into the url bar itself and restyled to sit inside it, Firefox-
+         style, instead of the separate status-strip copy it lived in
+         before. Nothing in browser.js needed to change: every existing
+         getElementById('btn-bookmark') call still finds the same
+         element, just in a new position in the DOM. -->
+    <!-- §BUILD 2026-09-02 — James: "remove zoom [from the ⋯ menu], per
+         site zoom, i want it like the 3rd image, inline with the search
+         bar like the bookmarks icon." Chrome's own native per-site zoom
+         control lives right here — a %-readout that only appears once
+         you're off 100%, opening a small popover with -/reset/+ on
+         click. Real per-origin persistence via the already-existing
+         site-settings store (src/site-settings/store.js, wired at
+         site-settings:get/set) — the same store the Site Settings panel
+         itself reads, not a new one. Hidden by default; toggled in
+         applyZoom() below. -->
+    <button id="btn-zoom" class="url-bar-zoom-btn" title="Zoom" style="display:none;">
+      <span id="btn-zoom-pct">100%</span><span class="url-bar-zoom-caret">▾</span>
+    </button>
+    <div id="zoom-popover" style="display:none;position:absolute;top:40px;right:10px;background:var(--bg2,#111);border:1px solid var(--border,#333);border-radius:6px;z-index:100;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,0.4)">
+      <div class="menu-zoom-row">
+        <button data-zoom="out" class="menu-zoom-btn">−</button>
+        <span id="zoom-popover-pct">100%</span>
+        <button data-zoom="in" class="menu-zoom-btn">+</button>
+        <button data-zoom="reset" class="menu-zoom-btn" title="Reset (Ctrl+0)" style="margin-left:auto;font-size:10px;">Reset</button>
+      </div>
+    </div>
+    <button id="btn-bookmark" class="status-bookmark-btn url-bar-bookmark-btn" title="Bookmark this page">★</button>
+  </div>
+
+  <!-- §BUILD 2026-08-30 — James: "maybe adjustable search bar like you
+       can grab the edge?" Real, grabbable handle — drags #url-bar-wrap
+       to an explicit width, overriding its normal flex:1 1 auto
+       auto-grow. Double-click resets back to auto-grow. Persisted via
+       the real cg.options store (urlBarWidthPx), same merge-safe set()
+       every other option already uses — not localStorage, which
+       doesn't exist in this Electron renderer's real persistence
+       story. -->
+  <div id="url-bar-resize-handle" title="Drag to resize · double-click to reset"></div>
+
+  <!-- §BUILD 2026-08-28 — James: "the agent window manager moved to the
+       menu with the 3 dots, same with the fingerprint engine." Both real
+       elements below are UNCHANGED — same ids, same click handlers
+       already wired in browser.js (openIdentityDropdown, agent-badge's
+       own switch logic) — just moved from the main chrome row into the
+       menu panel, hidden by default (display:none), shown only inside
+       the open menu. Zero logic risk: an id-based getElementById never
+       cared where in the DOM its target lives. -->
+  <div id="menu-agent-identity-slot" style="display:none;">
+    <button id="agent-badge" title="Agent context — click to switch">default ▾</button>
+    <button id="identity-badge" title="Browser identity — click to switch fingerprint">🎭 <span id="identity-mode-label">chrome</span> ▾</button>
+  </div>
+
+  <!-- §BUILD 2026-08-30 — James: "those icons need to be completely
+       changed to match the rest of the ui, and moved to the 3 dots
+       menu. need a toolbar editor." The 7 tool buttons that used to
+       live in two fixed chrome-groups here (rewind/providers/
+       userscripts/dom/picker/mesh/diag) are now real, independently
+       movable toolbar items — same real elements, same unchanged ids
+       and click handlers already wired in browser.js, just each now
+       carries data-tool-id/label/icon, and each has a matching entry in
+       src/toolbar/commands.js so applyToolbarPins (browser.js) — the
+       single real pin-driven relocator, merged 2026-08-30 from what used
+       to be two disconnected pin stores — can relocate them at boot.
+       Default location for all 7 is the 3-dot
+       menu (#toolbar-overflow-slot below, hidden holding pen) —
+       rendered there as real icon+label .menu-item rows matching
+       Downloads/History/Settings' existing visual language, not the
+       bare glyph squares this replaces. "Customize Toolbar…" in that
+       same menu opens #toolbar-editor-panel to drag any of them back
+       onto the bar. #toolbar-pinned-tools below is the real drop target
+       for that — empty and hidden until something is actually pinned. -->
+  <div class="chrome-divider" id="tools-divider-l" style="display:none;"></div>
+  <div class="chrome-group" id="toolbar-pinned-tools" style="display:none;"></div>
+  <div class="chrome-divider" id="tools-divider-r" style="display:none;"></div>
+
+  <button id="copilot-toggle" class="active" title="Co-pilot">✦</button>
+  <!-- §MOVED 2026-08-30 — James: was ⋯ at the far end of the bookmarks
+       bar below; now lives next to Co-pilot at the right of the main
+       chrome bar, styled to match btn-options (☰) instead of a bare
+       dot-glyph. Same real id, same click handler in browser.js
+       (bookmark-mgr-btn's positioning is computed off its own
+       getBoundingClientRect() at click time, so it repositions
+       correctly from wherever it actually is — no logic change). -->
+  <button class="nav-btn" id="bookmark-mgr-btn" title="Menu">☰</button>
+
+  <div class="chrome-spacer"></div>
+
+  <!-- Options menu — pinned right -->
+  <button class="nav-btn" id="btn-options"  title="Nexus Options">☰</button>
+</div>
+
+<!-- Bookmarks bar -->
+<div id="bookmarks-bar">
+  <div id="bookmarks-list"></div>
+</div>
+
+<!-- §FIXED 2026-08-23 — James: "the 3 dots do nothing." Real, working
+     dropdown, using the already-real bookmarks.list()/remove()/visit()
+     IPC methods — was previously just a static hint message. -->
+<div id="bookmark-mgr-panel" style="display:none;position:absolute;top:130px;right:12px;width:280px;max-height:360px;overflow-y:auto;background:var(--bg2,#111);border:1px solid var(--border,#333);border-radius:6px;z-index:100;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,0.4)"></div>
+
+<!-- §NEW 2026-08-24 — real downloads manager panel, same real pattern
+     as bookmark-mgr-panel above (list/clearItem/openFolder against the
+     real IPC surface added this session, not a static placeholder). -->
+
+<!-- §BUILD 2026-08-30 — real background-tab manager panel, James:
+     "need a background tab manager." -->
+<div id="bgtabs-panel" style="display:none;position:absolute;top:130px;right:12px;width:340px;max-height:400px;overflow-y:auto;background:var(--bg2,#111);border:1px solid var(--border,#333);border-radius:6px;z-index:100;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,0.4)"></div>
+
+<!-- §NEW 2026-08-24 — real per-site settings panel (permission:media,
+     permission:geolocation, etc — the store the permissions plugin
+     already consults, now with a real place a person can actually see
+     and clear what's been remembered). -->
+<div id="site-settings-panel" style="display:none;position:absolute;top:130px;right:12px;width:340px;max-height:420px;overflow-y:auto;background:var(--bg2,#111);border:1px solid var(--border,#333);border-radius:6px;z-index:100;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,0.4)"></div>
+
+<!-- §PORTED 2026-08-29 — real history panel, from a now-diverged branch. -->
+<div id="history-panel" style="display:none;position:absolute;top:130px;right:12px;width:340px;max-height:440px;overflow-y:auto;background:var(--bg2,#111);border:1px solid var(--border,#333);border-radius:6px;z-index:100;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,0.4)"></div>
+
+<!-- §removed 2026-09-02 — #extensions-panel deleted along with the menu
+     item and _renderExtensionsPanel (browser.js) — see that removal's
+     comment for why. No element opened this panel anymore, so nothing
+     else in this file references its id. -->
+
+<!-- §WIRED 2026-08-23 — James: "agent mesh needs to connect to the
+     agent system for co-pilot." Real, working panel replacing the old
+     fake eval+static-hint handler. -->
+<div id="agent-mesh-panel" style="display:none;position:absolute;top:130px;right:12px;width:220px;max-height:320px;overflow-y:auto;background:var(--bg2,#111);border:1px solid var(--border,#333);border-radius:6px;z-index:100;padding:6px;box-shadow:0 4px 16px rgba(0,0,0,0.4)"></div>
+
+<!-- Status strip -->
+<div id="status-strip">
+  <span title="Connection to the real NEXUS orchestrator"><span class="status-dot" id="dot-nexus"></span>NEXUS</span>
+  <span title="Real-time event stream (SSE) from NEXUS"><span class="status-dot" id="dot-sse"></span>SSE</span>
+  <span title="JA4 — TLS client fingerprint tunnel status. Green: the real TLS proxy's handshake fingerprint is active and healthy. Amber: a real tls.error event fired — the fingerprint tunnel isn't currently masking this browser's TLS signature."><span class="status-dot" id="dot-tls"></span>JA4</span>
+  <span id="status-agent">Agent: default</span>
+  <span id="status-url" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+  <span id="status-health">Health: —</span>
+  <span id="status-cookies">Cookies: —</span>
+</div>
+
+<!-- Main layout -->
+<div id="layout">
+  <!-- Webview -->
+  <div id="webview-wrap">
+    <div id="load-bar"></div>
+    <webview id="wv" src="about:blank" allowpopups webpreferences="contextIsolation=yes"></webview>
+  </div>
+
+  <!-- Co-pilot pane -->
+  <div id="copilot-pane">
+    <div id="copilot-header">
+      <h2>✦ Co-pilot</h2>
+      <span id="copilot-model">Cortex</span>
+      <button id="copilot-clear" title="Clear history">✕</button>
+    </div>
+
+    <div id="copilot-messages">
+      <div class="msg assistant">
+        Co-pilot online. I can see this page's DOM, navigate, pick elements, and build onto Clear Glass. What would you like to do?
+      </div>
+    </div>
+
+    <div id="copilot-input-wrap">
+      <div id="copilot-context-bar">
+        <span class="ctx-tag active" id="ctx-dom"  title="Include DOM context">DOM</span>
+        <span class="ctx-tag"        id="ctx-picks" title="Include picked elements">Picks</span>
+        <span class="ctx-tag"        id="ctx-cookies" title="Include cookie info">Cookies</span>
+      </div>
+      <textarea id="copilot-textarea" placeholder="Ask Co-pilot... (or /build <description>, /diagnose <topic>)" rows="3"></textarea>
+      <button id="copilot-mic-btn" title="Voice input (real, local, offline speech-to-text)">🎤</button>
+      <button id="copilot-send">Send ↵</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOM Archaeology panel -->
+<div id="dom-panel">
+  <div id="dom-panel-header">
+    <h3>⛏ DOM Archaeology</h3>
+    <input id="dom-search" type="text" placeholder="selector or text...">
+    <button id="dom-refresh" class="nav-btn" title="Refresh tree" style="width:22px;height:22px;font-size:11px;">↺</button>
+    <button id="dom-stream-btn" class="nav-btn" title="Stream live DOM mutations to SSE" style="width:22px;height:22px;font-size:11px;">▶</button>
+    <button id="dom-panel-close">✕</button>
+  </div>
+  <div id="dom-tree"><span style="color:var(--text-dim)">Loading DOM...</span></div>
+</div>
+
+<!-- §NEW 2026-08-24 — real find-in-page bar, wired to the new real
+     driver.exec 'findInPage'/'stopFindInPage' actions (Electron's actual
+     webContents.findInPage API). -->
+<div id="find-bar" style="display:none;position:absolute;top:44px;right:12px;z-index:110;background:var(--bg2,#111);border:1px solid var(--border,#333);border-radius:6px;padding:4px 6px;align-items:center;gap:4px;box-shadow:0 4px 16px rgba(0,0,0,0.4)">
+  <input id="find-input" type="text" placeholder="Find in page..." style="background:var(--bg1,#0a0a0a);border:1px solid var(--border,#333);color:var(--text,#ccc);border-radius:4px;padding:3px 6px;font-size:12px;width:160px" />
+  <span id="find-count" style="font-size:10px;color:var(--text-dim,#999);min-width:44px;text-align:center">0/0</span>
+  <button id="find-prev" title="Previous">↑</button>
+  <button id="find-next" title="Next">↓</button>
+  <button id="find-close" title="Close">✕</button>
+</div>
+
+<!-- Rewind panel -->
+<div id="rewind-panel">
+  <div id="rewind-header">
+    <span>⏮ Session Rewind</span>
+    <button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12px;" id="rewind-snap-btn" title="Snapshot now">📍</button>
+    <button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12px;" id="rewind-bookmark-btn" title="Save as a named, findable-later state bookmark">🔖</button>
+    <button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12px;" id="rewind-close">✕</button>
+  </div>
+  <div id="rewind-list"><span style="color:var(--text-dim);font-size:10px;padding:8px;">No snapshots yet.</span></div>
+</div>
+
+<!-- Provider panel -->
+<div id="provider-panel">
+  <div id="provider-header">⟳ NCP Providers</div>
+  <div id="provider-list"></div>
+</div>
+
+<!-- Mesh queue panel -->
+<div id="queue-panel">
+  <div id="queue-header"><span>⊞ Mesh Queue</span><span id="queue-depth-label"></span></div>
+  <div id="queue-list"></div>
+</div>
+
+<!-- Agent window switcher dropdown -->
+<div id="agent-dropdown"></div>
+<div id="identity-dropdown"></div>
+
+<!-- Userscript manager panel -->
+<div id="userscript-panel">
+  <div id="userscript-header">
+    <span>⚙ Userscripts</span>
+    <button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:11px;" id="us-new-btn" title="New script">＋</button>
+    <button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12px;" id="us-close">✕</button>
+  </div>
+  <div id="us-list" style="flex:1;overflow-y:auto;"></div>
+</div>
+
+<!-- §BUILT 2026-09-11 — James: "a way to edit the userscript." list/
+     toggle/inject were already real (see loadUserscripts() in browser.js);
+     edit/create/delete were never called anywhere despite the backend
+     (UserscriptManager) having all three, real and working, since before
+     this session. This modal is the missing editor — a plain textarea
+     over cg.userscripts.source()/edit()/create(), gated by the same
+     readOnly flag the backend already enforces (Guardian scripts are
+     genuinely read-only, not just UI-hidden — edit()/delete() throw
+     server-side too, this modal just avoids offering a control that
+     would fail). -->
+<div id="us-editor-modal">
+  <div id="us-editor-panel">
+    <div id="us-editor-header">
+      <span id="us-editor-title">Edit Userscript</span>
+      <span id="us-editor-readonly-badge" style="display:none;">READ-ONLY (Guardian script)</span>
+      <button id="us-editor-close" title="Close">✕</button>
+    </div>
+    <div id="us-editor-fields">
+      <input id="us-editor-name" type="text" placeholder="Script name">
+      <input id="us-editor-matches" type="text" placeholder="Match pattern(s), comma-separated — e.g. *://*.example.com/*">
+    </div>
+    <textarea id="us-editor-source" spellcheck="false" placeholder="// userscript source"></textarea>
+    <div id="us-editor-footer">
+      <button id="us-editor-delete" style="display:none;">Delete</button>
+      <span style="flex:1;"></span>
+      <button id="us-editor-cancel">Cancel</button>
+      <button id="us-editor-save">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Context menu (right-click on toolbar/page) -->
+<div id="ctx-menu">
+  <!-- §NEW 2026-08-30 — James: only shown when the right-click target is
+       a currently-pinned toolbar command (see ctxPinTarget in
+       browser.js); a page right-click never has anything to unpin. -->
+  <div class="ctx-item" data-action="unpin" style="display:none;">📌 Unpin from toolbar</div>
+  <div class="ctx-item sep" data-action="unpin-sep" style="display:none;"></div>
+  <!-- §fix 2026-09-02 — James: "right clicking on them shows no context
+       menu." A menu WAS actually showing (the generic bookmark/snapshot/
+       pick-element page menu — #chrome's contextmenu listener always
+       fired that one, same as a page right-click), just with nothing
+       toolbar-related in it, which is why it read as no menu at all.
+       This is the entry that was genuinely missing: a direct
+       right-click → Customize Toolbar path, matching Chrome/Firefox's
+       own convention, instead of forcing ⋯ → Customize Toolbar… as the
+       only entry point. Chrome-bar-only (toggled by ctxIsChrome, wired
+       below) — doesn't make sense on a page right-click. -->
+  <div class="ctx-item" data-action="customize-toolbar" style="display:none;">🧰 Customize Toolbar…</div>
+  <div class="ctx-item sep" data-action="customize-toolbar-sep" style="display:none;"></div>
+  <div class="ctx-item" data-action="bookmark">★ Bookmark this page</div>
+  <div class="ctx-item" data-action="snapshot">📍 Rewind snapshot</div>
+  <div class="ctx-item" data-action="pick">◎ Pick element</div>
+  <!-- §BUILT 2026-09-21 — James: "right click, answer question context
+       option." Always shown, same as "pick" right above it — neither is
+       hidden for a chrome-bar right-click (only unpin/customize-toolbar
+       are); the action itself refuses cleanly (below) when ctxPageXY is
+       null, same honest-refusal shape as every other real handler here. -->
+  <div class="ctx-item" data-action="answer-question">✨ Answer this question</div>
+  <div class="ctx-item sep"></div>
+  <div class="ctx-item" data-action="copilot-page">✦ Ask Co-pilot about this page</div>
+  <div class="ctx-item" data-action="tokens">⛏ Scan page tokens</div>
+  <div class="ctx-item sep"></div>
+  <div class="ctx-item" data-action="bg-tab">⬡ Move to background tab</div>
+  <div class="ctx-item" data-action="new-agent">＋ Open in new agent</div>
+  <div class="ctx-item" data-action="find">🔍 Find in page</div>
+  <div class="ctx-item" data-action="print">🖨 Print page</div>
+</div>
+
+<!-- Picks panel -->
+<div id="picks-panel">
+  <div id="picks-header"><span>Picked Elements</span></div>
+  <div id="picks-list"><span style="color:var(--text-dim);font-size:10px;padding:8px;">No picks yet. Use ◎ to pick.</span></div>
+</div>
+
+<!-- Options panel — Nexus options. Window behavior lives here now;
+     bookmarks/userscripts/rewind sections get added here in later phases. -->
+<div id="options-panel">
+  <div id="options-panel-header">
+    <h3>Nexus Options</h3>
+    <button id="options-panel-close">✕</button>
+  </div>
+
+  <div class="opt-section">
+    <h4>Window Behavior</h4>
+    <div class="opt-row">
+      <label for="opt-hide-tray">Close (✕) hides to tray</label>
+      <div class="opt-toggle" id="opt-hide-tray" data-key="hideToTrayOnClose"></div>
+    </div>
+    <div class="opt-row">
+      <label for="opt-copilot-auto">Co-pilot pane open on launch</label>
+      <div class="opt-toggle" id="opt-copilot-auto" data-key="autoOpenCopilotPane"></div>
+    </div>
+  </div>
+
+  <div class="opt-section">
+    <h4>Defaults</h4>
+    <div class="opt-row" style="flex-direction:column; align-items:stretch;">
+      <label style="margin-bottom:6px;">Default start URL (new windows)</label>
+      <input class="opt-text-input" id="opt-default-url" type="text" spellcheck="false" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="opt-section">
+    <h4>NCP Providers</h4>
+    <p style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">Auto-host Guardian NCP tabs inside Clear Glass. No Tampermonkey required.</p>
+    <div id="opt-providers-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+    <p style="font-size:9px;color:var(--text-dim);margin-top:8px;">Set GUARDIAN_DIR env var to point to your Guardian folder.</p>
+  </div>
+
+  <div class="opt-section">
+    <h4>Bookmarks</h4>
+    <p style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">★ button in toolbar bookmarks/unbookmarks the current page. Co-pilot can manage bookmarks by name.</p>
+    <div id="opt-bookmarks-count" style="font-family:var(--mono);font-size:10px;color:var(--accent);"></div>
+    <button class="opt-link-btn" id="opt-clear-bookmarks" style="margin-top:6px;">Clear all bookmarks for this agent…</button>
+  </div>
+
+  <div class="opt-section">
+    <h4>Rewind</h4>
+    <p style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">⏮ button shows session history. Pages are auto-snapshotted on load.</p>
+    <div id="opt-rewind-count" style="font-family:var(--mono);font-size:10px;color:var(--accent);"></div>
+    <button class="opt-link-btn" id="opt-clear-rewind" style="margin-top:6px;">Clear rewind history for this agent…</button>
+  </div>
+
+  <div class="opt-section">
+    <h4>Profile Import</h4>
+    <p style="font-size:10px;color:var(--text-dim);margin-bottom:8px;">Import a Firefox profile to use its fingerprint, user agent, and stored data.</p>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input class="opt-text-input" id="opt-ff-profile-path" type="text" placeholder="Path to Firefox profile dir…" style="flex:1;">
+      <button class="opt-link-btn" id="opt-ff-import-btn" style="white-space:nowrap;">Import</button>
+    </div>
+  </div>
+
+  <div class="opt-section">
+    <h4>System</h4>
+    <button class="opt-link-btn" id="opt-link-api-settings">API Settings…</button>
+    <button class="opt-link-btn" id="opt-link-nexus-audit">Run NEXUS UI Audit</button>
+  </div>
+</div>
+
+<!-- §BUILD 2026-08-30 — real holding pen for the 7 movable toolbar tools,
+     see the note above #toolbar-pinned-tools. display:none on the
+     container only — each real button inside keeps its own real id,
+     title, and (unchanged) click handler; _toolbarItems in browser.js
+     reads data-tool-id/label/icon off these exact nodes and either
+     leaves them here (rendered as a menu row that forwards its click to
+     the real button) or appendChild's the real node onto the bar. -->
+<div id="toolbar-overflow-slot" style="display:none;">
+  <button class="nav-btn" id="btn-rewind" data-tool-id="rewind" data-tool-label="Rewind Session" data-tool-icon="⏮" title="Rewind session">⏮</button>
+  <button class="nav-btn" id="btn-providers" data-tool-id="providers" data-tool-label="NCP Providers" data-tool-icon="⟳" title="NCP Providers">⟳</button>
+  <button class="nav-btn" id="btn-userscripts" data-tool-id="userscripts" data-tool-label="Userscripts" data-tool-icon="✎" title="Userscripts">✎</button>
+  <button class="nav-btn" id="btn-dom" data-tool-id="dom" data-tool-label="DOM Archaeology" data-tool-icon="⛏" title="DOM Archaeology">⛏</button>
+  <span class="chrome-group" id="tool-picker-group" data-tool-id="picker" data-tool-label="Element Picker" data-tool-icon="◎">
+    <button id="picker-btn" title="Element Picker">◎</button>
+    <select id="picker-route" title="Route picks to" style="background:var(--bg-2,#111);color:var(--text-dim,#999);border:1px solid var(--border,#333);font-size:10px;border-radius:4px;height:22px;">
+      <option value="sse">→ SSE</option>
+      <option value="api">→ API</option>
+    </select>
+    <input id="picker-api-url" type="text" placeholder="https://..." style="display:none;width:120px;font-size:10px;background:var(--bg-2,#111);color:var(--text-dim,#999);border:1px solid var(--border,#333);border-radius:4px;height:22px;padding:0 4px;">
+  </span>
+  <!-- §CONVERT 2026-09-06 — James: "convert brainos into the agent mesh
+       ... also clearglass guardian picker." Sibling to tool-picker-group
+       above, same real toggle-button convention: injects a content
+       script (mesh-picker.js, same pattern as guardian-picker.js) that
+       shows AgentMesh's live node/agent pulse (src/mesh/agent-mesh.js's
+       listMeshView()) as a HUD, and can hand a selected node/agent off
+       to the element picker as its target — the actual real replacement
+       for BrainOS's old canvas (see network/install.js's header for what
+       from BrainOS did and didn't come across). Distinct from btn-mesh
+       below (that's the pre-existing co-pilot agent-switch dropdown, an
+       unrelated feature that happens to share the "Agent Mesh" label). -->
+  <button class="nav-btn" id="mesh-picker-btn" data-tool-id="mesh-picker" data-tool-label="Agent Mesh" data-tool-icon="◈" title="Agent Mesh">◈</button>
+  <button class="nav-btn" id="btn-mesh" data-tool-id="mesh" data-tool-label="Agent Mesh" data-tool-icon="⬡" title="Agent Mesh">⬡</button>
+  <button class="nav-btn" id="btn-diag" data-tool-id="diag" data-tool-label="Diagnostics" data-tool-icon="⚕" title="Diagnostics">⚕</button>
+  <!-- §ADDED 2026-09-25 — real backing element for src/toolbar/commands.js's
+       btn-settings entry. James: "WHERE IS IT?" — Settings used to be a
+       palette-only action with no button anywhere to pin or see in the
+       Customize Toolbar dialog's real zones. Same real convention as
+       btn-mesh/btn-diag above: pin/unpin relocates this exact node between
+       #toolbar-pinned-tools and #toolbar-overflow-slot (applyToolbarPins,
+       browser.js); its click handler calls the same cg.window.openSettings()
+       every other Settings entry point already uses. -->
+  <button class="nav-btn" id="btn-settings" data-tool-id="settings" data-tool-label="Settings" data-tool-icon="⚙" title="Settings">⚙</button>
+</div>
+
+<!-- §BUILD 2026-08-30 — real toolbar editor, James: "need a toolbar
+     editor" + image reference to Firefox's own drag-and-drop customize
+     screen. Two real drop zones (Toolbar / Menu) — dragging a chip
+     between them appendChild's the SAME real button node used above
+     into #toolbar-pinned-tools or back into #toolbar-overflow-slot, so
+     nothing about any tool's real logic is duplicated or reimplemented
+     here, only its position. Persisted via cg.options.set
+     ({pinnedToolbarButtons}) (browser.js) — the real backend store,
+     not localStorage — so the layout is the same one src/toolbar/
+     commands.js's defaultPinnedIds() and the ⋯ menu's overflow rows
+     already read, and survives a relaunch. -->
+<div id="toolbar-editor-overlay">
+  <div id="toolbar-editor-panel">
+    <div id="toolbar-editor-header">
+      <h3>Customize Toolbar</h3>
+      <button id="toolbar-editor-close" title="Close">✕</button>
+    </div>
+    <p id="toolbar-editor-hint">Drag tools between the toolbar and the ⋯ menu.</p>
+    <div id="toolbar-editor-zones">
+      <div class="te-zone" id="te-zone-toolbar" data-zone="toolbar">
+        <div class="te-zone-label">Toolbar</div>
+        <div class="te-zone-drop" id="te-drop-toolbar"></div>
+      </div>
+      <div class="te-zone" id="te-zone-menu" data-zone="menu">
+        <div class="te-zone-label">⋯ Menu</div>
+        <div class="te-zone-drop" id="te-drop-menu"></div>
+      </div>
+    </div>
+    <!-- §MERGED 2026-08-29 — replaces the old Ctrl+K Spotlight overlay.
+         These commands have no real toolbar button to pin/unpin (no `id`
+         in src/toolbar/commands.js, just an `action`, or a plugin command
+         with no DOM element) — they never lived on the bar and can't be
+         dragged, so they're listed here as one click-to-run list instead
+         of a second floating search UI. Same TOOLBAR_COMMANDS array, same
+         activateToolbarCommand() dispatch Spotlight used to use. -->
+    <div id="toolbar-editor-actions">
+      <div class="te-zone-label">Actions</div>
+      <div id="te-actions-list"></div>
+    </div>
+    <div id="toolbar-editor-footer">
+      <button class="opt-link-btn" id="toolbar-editor-restore" style="margin-bottom:0;">Restore Defaults</button>
+      <button class="opt-link-btn" id="toolbar-editor-done" style="margin-bottom:0;background:rgba(0,245,255,0.1);border-color:var(--accent);color:var(--accent);">Done</button>
+    </div>
+  </div>
+</div>
+
+<script src="selector-assign/selector-assign.js"></script>
+<script src="browser.js"></script>
+</body>
+</html>

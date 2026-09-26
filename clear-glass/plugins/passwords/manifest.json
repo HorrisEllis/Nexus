@@ -1,0 +1,38 @@
+{
+  "id": "d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a",
+  "name": "passwords",
+  "version": "1.0.0",
+  "displayName": "Password Manager",
+  "description": "Real gap named directly in CLEAR-GLASS-FULL-CHROME-MAP-2026-08-23.md's §7: 'Zero real code anywhere. Genuinely new — credential storage, autofill detection, a real UI.' Encrypted vault (src/passwords/vault.js, AES-256-GCM, same pattern as the real cookie vault) + a real login-form detector (userscript, auto-injected everywhere) + real autofill composing the vault with driver.exec eval.",
+  "author": "James Brooks (Erosmancer)",
+  "entryPoint": "index.js",
+  "permissions": {
+    "network": false,
+    "domStorage": false,
+    "webRequest": false,
+    "hostFs": false
+  },
+  "contributes": {
+    "userscript": [
+      {
+        "signature": "plugin:d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a:form-detector",
+        "handler": "getFormDetectorUserscript"
+      }
+    ],
+    "page-detector": [
+      {
+        "signature": "plugin:d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a:form-detected",
+        "handler": "onFormDetected"
+      }
+    ],
+    "toolbar-command": [
+      {
+        "signature": "plugin:d2e3f4a5-6b7c-4d8e-9f0a-1b2c3d4e5f6a:save-password",
+        "handler": "promptSavePassword",
+        "icon": "🔑",
+        "label": "Save Password for This Site",
+        "group": "Passwords"
+      }
+    ]
+  }
+}

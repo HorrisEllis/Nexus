@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.diagnose
+type: capability
+id: copilot.diagnose
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730177
+source: copilot.registry-components:copilot.diagnose
+payload:
+  id: copilot.diagnose
+  namespace: copilot
+  name: diagnose
+  version: 2.0.0
+  grammar:
+    - diagnose
+    - recursive diagnose
+  route:
+    method: POST
+    path: /api/diagnose
+  intent: []
+  description: Start recursive fractal diagnosis
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks: {}

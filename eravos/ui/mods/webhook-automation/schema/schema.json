@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.webhook-automation",
+  "label": "Webhook Automation",
+  "icon": "🌐",
+  "accent": "#ff2266",
+  "domain": ["automation", "integration", "external"],
+  "description": "Bridges ERAVOS bus events to the outside world. Fires an HTTP request to a webhook URL whenever a chosen bus event occurs (a kick trigger, a pattern change, incoming serial telemetry, etc.) — the standard integration point for external/OS-level automation tools that expose a webhook or HTTP-trigger endpoint (Home Assistant, n8n, Shortcuts' HTTP triggers, Keyboard Maestro web triggers, IFTTT Webhooks, a local script listener). A browser sandbox cannot execute shell commands or control the OS directly — this mod intentionally goes through HTTP so any such external automation can subscribe on its own end. The target server must allow CORS from this page's origin, or the request will be blocked by the browser.",
+  "permissions": ["network_fetch", "bus_publish", "bus_subscribe"],
+  "provides": ["capability.external_automation"],
+  "requires": [],
+  "dependencies": {
+    "runtime": ["kernel/kernel.js"],
+    "browser_apis": ["fetch()"],
+    "external_libs": [],
+    "constraints": [
+      "Requires the target endpoint to send permissive CORS headers, or the browser blocks the response (the request itself may still be delivered server-side even if the browser can't read the response — a no-cors fallback mode is available for fire-and-forget cases).",
+      "Cannot execute local shell commands or control the OS directly from the browser sandbox — this is an HTTP bridge, not a code-exec bridge."
+    ]
+  },
+  "hooks": [
+    { "hook_id": "webhook.hook.trig_in", "direction": "in", "event_type": "pad:trigger", "contract_version": "1.0.0" }
+  ],
+  "params": {
+    "url":         { "type": "string", "default": "" },
+    "method":      { "type": "enum", "options": ["POST", "GET"], "default": "POST" },
+    "triggerTopic":{ "type": "enum", "options": ["pad:trigger", "kernel:bpm-change", "serial:rx", "photo:exported", "video:exported", "org:pumped"], "default": "pad:trigger" },
+    "soundFilter": { "type": "string", "default": "" },
+    "noCors":      { "type": "bool", "default": false },
+    "rateLimitMs": { "type": "int",  "min": 0, "max": 60000, "default": 250 }
+  }
+}

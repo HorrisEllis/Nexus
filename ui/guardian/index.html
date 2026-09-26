@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guardian — NEXUS</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--void:#06050a;--surface:#0e0c15;--panel:#13111e;--border:#211e32;--border2:#2e2a45;--amber:#ffaa00;--amber2:#cc8800;--cyan:#00e5ff;--green:#00ff88;--red:#ff3355;--text:#e0d8ff;--text2:#8a84aa;--text3:#454065;--mono:'Space Mono',monospace;--ui:'Space Grotesk',sans-serif}
+html,body{height:100%;background:var(--void);color:var(--text);font-family:var(--ui);overflow:hidden}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#shell{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh}
+#topbar{height:48px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(6,5,10,.9);backdrop-filter:blur(10px);flex-shrink:0;padding:0 20px;gap:16px}
+#glyph{font-size:22px;color:var(--amber);animation:glyph-pulse 2.5s ease-in-out infinite}
+@keyframes glyph-pulse{0%,100%{opacity:.6;filter:none}50%{opacity:1;filter:drop-shadow(0 0 8px var(--amber))}}
+#gd-title{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.15em;color:var(--amber)}
+#gd-sub{font-size:11px;color:var(--text3);margin-left:auto}
+#health-badge{font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,170,0,.3);color:var(--amber);background:rgba(255,170,0,.08)}
+
+#tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;scrollbar-width:none;background:rgba(6,5,10,.6)}
+#tabs::-webkit-scrollbar{display:none}
+.tab{padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--text2)}
+.tab.on{color:var(--amber);border-bottom-color:var(--amber)}
+
+#content{flex:1;overflow:hidden;display:flex}
+.panel{display:none;flex:1;flex-direction:column;overflow-y:auto;padding:20px;gap:16px;animation:in .2s ease}
+.panel.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* Job stream */
+.job-stream{display:flex;flex-direction:column;gap:8px}
+.job-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;transition:border-color .3s}
+.job-card.streaming{border-color:rgba(0,229,255,.3);animation:stream-pulse 1.5s ease-in-out infinite}
+@keyframes stream-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 16px rgba(0,229,255,.1)}}
+.job-card.complete{border-color:rgba(0,255,136,.2)}
+.job-card.error{border-color:rgba(255,51,85,.2)}
+.jc-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.jc-status{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.jc-status.queued{color:var(--amber);background:rgba(255,170,0,.12)}
+.jc-status.streaming{color:var(--cyan);background:rgba(0,229,255,.12)}
+.jc-status.complete{color:var(--green);background:rgba(0,255,136,.12)}
+.jc-status.error,.jc-status.failed{color:var(--red);background:rgba(255,51,85,.12)}
+.jc-provider{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;margin-left:auto}
+.jc-id{font-family:var(--mono);font-size:9px;color:var(--text3)}
+.jc-prompt{font-size:12px;color:var(--text2);line-height:1.4;margin-bottom:6px}
+.jc-result{font-family:var(--mono);font-size:11px;color:var(--text);line-height:1.5;white-space:pre-wrap;max-height:120px;overflow:hidden;position:relative}
+.jc-result::after{content:'';position:absolute;bottom:0;left:0;right:0;height:24px;background:linear-gradient(transparent,var(--panel))}
+
+/* Dispatch */
+.dispatch-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.field-lbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+textarea,input,select{background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:var(--ui);font-size:13px;padding:10px 13px;outline:none;transition:border-color .2s;width:100%}
+textarea:focus,input:focus,select:focus{border-color:var(--amber2)}
+textarea{resize:vertical;min-height:90px;font-family:var(--mono);font-size:12px;line-height:1.5}
+select option{background:var(--panel)}
+.provider-row{display:flex;gap:8px;flex-wrap:wrap}
+.prov-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:rgba(255,255,255,.03);color:var(--text3);font-family:var(--mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;transition:all .2s}
+.prov-btn:hover{border-color:var(--amber2);color:var(--amber2)}
+.prov-btn.sel{border-color:var(--amber);color:var(--amber);background:rgba(255,170,0,.1)}
+.prov-btn.live{border-color:rgba(0,255,136,.4);color:var(--green)}
+.send-btn{padding:12px 28px;border-radius:8px;border:1px solid var(--amber2);background:rgba(255,170,0,.12);color:var(--amber);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.1em;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.send-btn:hover{background:rgba(255,170,0,.2)}
+.send-btn:active{transform:scale(.98)}
+#result-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11px;color:var(--text2);white-space:pre-wrap;min-height:50px;line-height:1.5;display:none}
+
+/* Gap list */
+.gap-card{border-left:3px solid;padding:10px 14px;margin-bottom:7px;border-radius:0 8px 8px 0;background:var(--surface);animation:in .25s ease}
+.gap-card.high{border-left-color:var(--red)}
+.gap-card.medium{border-left-color:var(--amber)}
+.gap-card.low{border-left-color:var(--text3)}
+.gap-type{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.gap-body{font-size:12px;color:var(--text2);line-height:1.4}
+
+/* Section label */
+.slbl{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.btn-sm{padding:5px 11px;border-radius:6px;border:1px solid var(--border2);background:rgba(255,255,255,.03);color:var(--text2);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .2s}
+.btn-sm:hover{background:rgba(255,255,255,.07)}
+
+/* Artifacts */
+.art-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;font-size:12px;margin-bottom:6px}
+.art-lang{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(0,229,255,.1);color:var(--cyan);text-transform:uppercase;flex-shrink:0}
+.art-name{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.art-prov{font-family:var(--mono);font-size:10px;color:var(--text3)}
+
+*::-webkit-scrollbar{width:3px;height:3px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="shell">
+  <div id="topbar">
+    <span id="glyph">⚡</span>
+    <span id="gd-title">GUARDIAN</span>
+    <span id="gd-sub" class="mono">NCP · :7820</span>
+    <span id="health-badge">CONNECTING</span>
+  </div>
+  <div id="tabs">
+    <button class="tab on" data-t="dispatch" onclick="gt('dispatch')">Dispatch</button>
+    <button class="tab" data-t="jobs" onclick="gt('jobs')">Jobs</button>
+    <button class="tab" data-t="providers" onclick="gt('providers')">Providers</button>
+    <button class="tab" data-t="artifacts" onclick="gt('artifacts')">Artifacts</button>
+    <button class="tab" data-t="gaps" onclick="gt('gaps')">Open Loops</button>
+    <button class="tab" data-t="settings" onclick="gt('settings')">Settings</button>
+  </div>
+  <div id="content">
+
+    <div class="panel on" id="p-dispatch">
+      <div class="dispatch-box">
+        <div>
+          <div class="field-lbl">Provider</div>
+          <div class="provider-row" id="prov-row">
+            <button class="prov-btn sel" data-p="claude" onclick="selProv(this)">Claude</button>
+            <button class="prov-btn" data-p="chatgpt" onclick="selProv(this)">ChatGPT</button>
+            <button class="prov-btn" data-p="ollama" onclick="selProv(this)">Ollama</button>
+            <button class="prov-btn" data-p="gemini" onclick="selProv(this)">Gemini</button>
+            <button class="prov-btn" data-p="perplexity" onclick="selProv(this)">Perplexity</button>
+          </div>
+        </div>
+        <div>
+          <div class="field-lbl">Prompt</div>
+          <textarea id="prompt" placeholder="Enter prompt...&#10;&#10;Jobs are dispatched asynchronously via NCP. No API key needed — a browser tab with the userscript handles delivery."></textarea>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="send-btn" onclick="dispatch()">Send Job</button>
+          <button class="btn-sm" onclick="gt('jobs')">View Jobs →</button>
+        </div>
+        <div id="result-box"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="p-jobs">
+      <div class="slbl">Active Jobs <button class="btn-sm" onclick="loadJobs()">↺ Refresh</button></div>
+      <div id="jobs" class="job-stream"><div style="color:var(--text3);font-size:12px">Loading...</div></div>
+    </div>
+
+    <div class="panel" id="p-providers">
+      <div class="slbl">Connected Providers</div>
+      <div id="provs" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px"></div>
+      <div style="font-size:11px;color:var(--text3);line-height:1.7;margin-top:8px;font-family:var(--mono)">
+        Each AI tab installs a Tampermonkey userscript that opens an SSE connection to :7820/channel.<br>
+        Jobs arrive over SSE. Results POST back to /result. No WebSocket. No TLS. No API key.
+      </div>
+    </div>
+
+    <div class="panel" id="p-artifacts">
+      <div class="slbl">Code Artifacts <button class="btn-sm" onclick="loadArtifacts()">↺</button></div>
+      <div id="arts"></div>
+    </div>
+
+    <div class="panel" id="p-gaps">
+      <div class="slbl">Open Loops <button class="btn-sm" onclick="loadGapsPanel()">↺</button></div>
+      <div id="gaps-panel"></div>
+    </div>
+
+    <div class="panel" id="p-settings">
+      <div class="slbl">Guardian Settings</div>
+      <div id="settings-list" style="font-family:var(--mono);font-size:11px;color:var(--text2)">Loading...</div>
+    </div>
+
+  </div>
+</div>
+<script>
+const BASE = 'http://127.0.0.1:7820';
+let selProvider = 'claude';
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W,H,pts=[],t=0;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+class Pt{constructor(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.2;this.vy=(Math.random()-.5)*.2;this.p=Math.random()*Math.PI*2}}
+function frame(){
+  t+=.015;ctx.clearRect(0,0,W,H);
+  for(let i=0;i<pts.length;i++){
+    pts[i].x+=pts[i].vx;pts[i].y+=pts[i].vy;pts[i].p+=.025;
+    if(pts[i].x<0||pts[i].x>W||pts[i].y<0||pts[i].y>H){pts[i]=new Pt()}
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100){const a=(1-d/100)*.08;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(255,170,0,${a})`;ctx.lineWidth=.5;ctx.stroke()}
+    }
+    ctx.beginPath();ctx.arc(pts[i].x,pts[i].y,1,0,Math.PI*2);
+    ctx.fillStyle=`hsla(35,90%,65%,${.1+Math.sin(pts[i].p)*.08})`;ctx.fill();
+  }
+  requestAnimationFrame(frame);
+}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<60;i++)pts.push(new Pt());
+frame();
+
+async function api(url,opts={}){try{const r=await fetch(BASE+url,{headers:{'Content-Type':'application/json'},...opts});if(!r.ok)throw new Error(r.status);return await r.json()}catch(e){return null}}
+function gt(t){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+t));if(t==='jobs')loadJobs();if(t==='providers')loadProviders();if(t==='artifacts')loadArtifacts();if(t==='gaps')loadGapsPanel();if(t==='settings')loadSettings()}
+function selProv(btn){document.querySelectorAll('.prov-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');selProvider=btn.dataset.p}
+async function dispatch(){
+  const p=document.getElementById('prompt').value.trim();
+  if(!p)return;
+  const rb=document.getElementById('result-box');
+  rb.style.display='block';rb.style.color='var(--text2)';rb.textContent='Dispatching to '+selProvider+'...';
+  const d=await api('/command',{method:'POST',body:JSON.stringify({command:'chat',prompt:p,provider:selProvider})});
+  if(d){rb.textContent=d.jobId?`Job ${d.jobId}\nStatus: ${d.status||'queued'}\nProvider: ${selProvider}`:JSON.stringify(d,null,2)}
+  else{rb.style.color='var(--red)';rb.textContent='Error: Guardian not responding.\nEnsure a '+selProvider+' tab has the userscript installed.'}
+}
+async function loadJobs(){
+  const d=await api('/jobs');const el=document.getElementById('jobs');
+  const jobs=Array.isArray(d)?d:(d?.jobs||[]);
+  if(!jobs.length){el.innerHTML='<div style="color:var(--text3);font-size:12px">No jobs yet</div>';return}
+  el.innerHTML=jobs.slice(0,30).map(j=>`
+    <div class="job-card ${j.status}">
+      <div class="jc-head">
+        <span class="jc-status ${j.status}">${j.status||'unknown'}</span>
+        <span class="jc-id">${(j.id||'').slice(0,12)}</span>
+        <span class="jc-provider">${j.provider||'?'}</span>
+      </div>
+      <div class="jc-prompt">${(j.prompt||j.command||'').slice(0,120)}</div>
+      ${j.result||j.response?`<div class="jc-result">${(j.result||j.response||'').slice(0,300)}</div>`:''}
+    </div>`).join('');
+}
+async function loadProviders(){
+  const d=await api('/providers');const el=document.getElementById('provs');
+  const provs=d?.providers||d?.connected||{};const names=Object.keys(provs);
+  if(!names.length){el.innerHTML='<div style="color:var(--text3);font-size:12px;grid-column:1/-1">No providers connected.<br><br>Open Claude.ai or ChatGPT in a tab and activate the Tampermonkey userscript.</div>';return}
+  el.innerHTML=names.map(n=>`<div style="background:var(--panel);border:1px solid rgba(0,255,136,.2);border-radius:10px;padding:16px;text-align:center"><div class="mono" style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase">${n}</div><div style="font-size:10px;color:var(--green);margin-top:5px">● Connected</div></div>`).join('');
+  // Mark live providers on dispatch tab
+  document.querySelectorAll('.prov-btn').forEach(b=>{b.classList.toggle('live',names.some(n=>n.toLowerCase().includes(b.dataset.p)))});
+}
+async function loadArtifacts(){
+  const d=await api('/artifacts');const el=document.getElementById('arts');
+  const arts=Array.isArray(d)?d:(d?.artifacts||[]);
+  if(!arts.length){el.innerHTML='<div style="color:var(--text3);font-size:12px">No artifacts yet</div>';return}
+  el.innerHTML=arts.slice(0,20).map(a=>`<div class="art-card"><span class="art-lang">${a.lang||a.type||'txt'}</span><span class="art-name">${a.name||a.hash?.slice(0,20)||'artifact'}</span><span class="art-prov">${a.provider||''}</span></div>`).join('');
+}
+async function loadGapsPanel(){
+  const d=await api('/gaps');const el=document.getElementById('gaps-panel');
+  const gaps=Array.isArray(d)?d:(d?.gaps||[]);
+  if(!gaps.length){el.innerHTML='<div style="color:var(--text3);font-size:12px">No open loops — system healthy</div>';return}
+  el.innerHTML=gaps.slice(0,30).map(g=>`<div class="gap-card ${g.severity||'low'}"><div class="gap-type">${g.loop_type||g.type||'gap'} ${g.severity?'· '+g.severity:''}</div><div class="gap-body">${g.body||g.path||''}</div></div>`).join('');
+}
+async function loadSettings(){
+  const d=await api('/settings');const el=document.getElementById('settings-list');
+  if(!d){el.textContent='Settings unavailable';return}
+  const settings=Array.isArray(d)?d:(d?.settings||Object.entries(d||{}).map(([k,v])=>({key:k,value:v})));
+  el.innerHTML=settings.slice(0,30).map(s=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--text3);min-width:180px">${s.key||s.name||''}</span><span>${s.value??''}</span></div>`).join('');
+}
+async function checkHealth(){
+  const d=await api('/health');
+  const badge=document.getElementById('health-badge');
+  if(d?.ok||d?.status==='ok'){badge.textContent='ONLINE';badge.style.color='var(--green)';badge.style.borderColor='rgba(0,255,136,.3)'}
+  else{badge.textContent='OFFLINE';badge.style.color='var(--red)';badge.style.borderColor='rgba(255,51,85,.3)'}
+}
+checkHealth();setInterval(checkHealth,10000);
+try{const es=new EventSource(BASE+'/events');es.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.type?.includes('job'))loadJobs()}catch(_){}};es.onerror=()=>{}}catch(_){}
+</script>
+</body>
+</html>

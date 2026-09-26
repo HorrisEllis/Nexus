@@ -1,0 +1,715 @@
+{
+  "id": "idearium-v1",
+  "version": "1.0.0",
+  "namespace": "idearium",
+  "_reconciled_2026_09_20": "MCO7f/P2 \u2014 regenerated using idearium/api/index.js's own contract.live projection logic (\u00a7PHASE 3 2026-07-10, the same regex that action already runs at request time), not hand-reconciled. Real drift found: static file had 78 routes, live route table has 115 \u2014 37 missing, same failure mode contract.live was built to catch in the first place, just grown since. idearium/schemas/interaction-contract.json (v2.0.0, resources/views/components) is a SEPARATE, richer artifact, not served anywhere, deliberately not touched here \u2014 that is the richer per-system shape James asked to defer until P1/P2/P11 are done.",
+  "ports": {
+    "http": 4800
+  },
+  "uuid": "idearium-contract-v1-0000-2026-0701-jamesbrooks-001",
+  "role": "Spec engine, repo layer (compartment-as-repo, MCO11), ideas/brainstorms, chunk dispatch",
+  "health": {
+    "method": "GET",
+    "path": "/health",
+    "returns": {
+      "ok": true
+    }
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "_action": "health"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "_action": "health"
+    },
+    {
+      "method": "GET",
+      "path": "/api/contract",
+      "_action": "contract.get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/contract/live",
+      "_action": "contract.live"
+    },
+    {
+      "method": "GET",
+      "path": "/api/config",
+      "_action": "config.get"
+    },
+    {
+      "method": "POST",
+      "path": "/api/config",
+      "_action": "config.set"
+    },
+    {
+      "method": "GET",
+      "path": "/api/stats",
+      "_action": "stats.get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/snr",
+      "_action": "snr.current"
+    },
+    {
+      "method": "GET",
+      "path": "/api/snr/history",
+      "_action": "snr.history"
+    },
+    {
+      "method": "GET",
+      "path": "/api/events",
+      "_action": "events.log"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ideas",
+      "_action": "idea.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ideas",
+      "_action": "idea.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/brainstorms",
+      "_action": "brainstorm.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/brainstorms",
+      "_action": "brainstorm.create"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/brainstorms/:uuid",
+      "_action": "brainstorm.delete"
+    },
+    {
+      "method": "POST",
+      "path": "/api/brainstorms/:uuid/promote",
+      "_action": "brainstorm.promote"
+    },
+    {
+      "method": "GET",
+      "path": "/api/specs",
+      "_action": "spec.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/specs",
+      "_action": "spec.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gaps",
+      "_action": "gap.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/gaps",
+      "_action": "gap.open"
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshots",
+      "_action": "snapshot.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/snapshots",
+      "_action": "snapshot.push"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cli/exec",
+      "_action": "cli.exec"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos",
+      "_action": "repo.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos",
+      "_action": "repo.ingest"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects",
+      "_action": "project.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/projects",
+      "_action": "project.upload"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects/:uuid/download",
+      "_action": "project.download"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/projects/:uuid",
+      "_action": "project.delete"
+    },
+    {
+      "method": "GET",
+      "path": "/api/spec-engine/warp-status",
+      "_action": "speceng.warp.status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/spec-engine/templates",
+      "_action": "speceng.templates"
+    },
+    {
+      "method": "GET",
+      "path": "/api/spec-engine/specs",
+      "_action": "speceng.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs",
+      "_action": "speceng.create"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/import",
+      "_action": "spec.import"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/promote",
+      "_action": "spec.promote"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/wizard",
+      "_action": "speceng.wizard"
+    },
+    {
+      "method": "GET",
+      "path": "/api/spec-engine/context",
+      "_action": "speceng.context"
+    },
+    {
+      "method": "POST",
+      "path": "/api/copilot/suggest",
+      "_action": "copilot.suggest"
+    },
+    {
+      "method": "GET",
+      "path": "/sse",
+      "_action": "sse"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ideas/:uuid",
+      "_action": "idea.show"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/ideas/:uuid",
+      "_action": "idea.update"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/ideas/:uuid",
+      "_action": "idea.archive"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ideas/:uuid/tension",
+      "_action": "idea.tension"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ideas/:uuid/link",
+      "_action": "idea.link"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ideas/:uuid/spec",
+      "_action": "idea.spec"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ideas/:uuid/phase",
+      "_action": "idea.phase"
+    },
+    {
+      "method": "GET",
+      "path": "/api/specs/:uuid",
+      "_action": "spec.show"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/specs/:uuid",
+      "_action": "spec.update"
+    },
+    {
+      "method": "POST",
+      "path": "/api/specs/:uuid/check",
+      "_action": "spec.check"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ideas/:uuid/progress",
+      "_action": "idea.progress"
+    },
+    {
+      "method": "POST",
+      "path": "/api/queue/:queueId/progress",
+      "_action": "queue.progress"
+    },
+    {
+      "method": "GET",
+      "path": "/api/queue/:queueId",
+      "_action": "queue.show"
+    },
+    {
+      "method": "POST",
+      "path": "/api/specs/:uuid/build",
+      "_action": "spec.build"
+    },
+    {
+      "method": "GET",
+      "path": "/api/specs/:uuid/export",
+      "_action": "spec.export"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/specs/:uuid",
+      "_action": "spec.archive"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gaps/:uuid",
+      "_action": "gap.show"
+    },
+    {
+      "method": "POST",
+      "path": "/api/gaps/:uuid/resolve",
+      "_action": "gap.resolve"
+    },
+    {
+      "method": "POST",
+      "path": "/api/gaps/:uuid/ignore",
+      "_action": "gap.ignore"
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshots/:uuid",
+      "_action": "snapshot.show"
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshots/:a/diff/:b",
+      "_action": "snapshot.diff"
+    },
+    {
+      "method": "POST",
+      "path": "/api/snapshots/:uuid/restore",
+      "_action": "snapshot.restore"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid",
+      "_action": "repo.show"
+    },
+    {
+      "method": "GET",
+      "path": "/api/spec-engine/specs/:uuid",
+      "_action": "speceng.show"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/build",
+      "_action": "speceng.build"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/chunk/:chunkUuid/complete",
+      "_action": "speceng.chunk.complete"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/chunk/:chunkUuid/fail",
+      "_action": "speceng.chunk.fail"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/chunk/:chunkUuid/agent",
+      "_action": "speceng.chunk.setAgent"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/warp-primitives",
+      "_action": "speceng.setWarpPrimitives"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/archive",
+      "_action": "speceng.archive"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/spec-engine/specs/:uuid",
+      "_action": "speceng.delete"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/restore",
+      "_action": "speceng.restore"
+    },
+    {
+      "method": "POST",
+      "path": "/api/spec-engine/specs/:uuid/expand",
+      "_action": "speceng.expand"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/fork",
+      "_action": "repo.fork"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/repos/:uuid",
+      "_action": "repo.archive"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/lineage",
+      "_action": "repo.lineage"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/file",
+      "_action": "repo.file.read"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/chunk/:chunkUuid",
+      "_action": "repo.chunk.show"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/file",
+      "_action": "repo.file.write"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/repos/:uuid/file",
+      "_action": "repo.file.delete"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/export",
+      "_action": "repo.export"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/index",
+      "_action": "repo.index"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/search",
+      "_action": "repo.search"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/map",
+      "_action": "repo.map"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/chunks",
+      "_action": "repo.chunks.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/chunks/:chunkId",
+      "_action": "repo.chunks.get"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/symbols",
+      "_action": "repo.symbols"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/graph",
+      "_action": "repo.graph"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/graph/traverse",
+      "_action": "repo.graph.traverse"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/graph/cone",
+      "_action": "repo.graph.cone"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/verification",
+      "_action": "repo.verification"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/scan",
+      "_action": "repo.scan"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/chunk",
+      "_action": "repo.chunk.run"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/snapshot",
+      "_action": "repo.snapshot.commit"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/snapshots",
+      "_action": "repo.snapshot.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/snapshots/:commitId",
+      "_action": "repo.snapshot.show"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/snapshots/:commitId/restore",
+      "_action": "repo.snapshot.restore"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/roadmap",
+      "_action": "repo.roadmap.get"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/roadmap/phase",
+      "_action": "repo.roadmap.phase.update"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/hat",
+      "_action": "repo.hat.show"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/hat",
+      "_action": "repo.hat.ensure"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/hat/refresh",
+      "_action": "repo.hat.refresh"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/repos/:uuid/hat",
+      "_action": "repo.hat.revoke"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/agent",
+      "_action": "repo.agent.status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/prompt",
+      "_action": "repo.agent.prompt"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/agent/history",
+      "_action": "repo.agent.history"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/repos/:uuid/agent/history",
+      "_action": "repo.agent.history.clear"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/agent/memory",
+      "_action": "repo.agent.memory.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/memory",
+      "_action": "repo.agent.memory.record"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/repos/:uuid/agent/memory/:obs",
+      "_action": "repo.agent.memory.forget"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/export",
+      "_action": "repo.agent.export"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/import",
+      "_action": "repo.agent.import"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/ci/keys",
+      "_action": "repo.ci.keys.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/ci/keys",
+      "_action": "repo.ci.keys.register"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/repos/:uuid/ci/keys/:alias",
+      "_action": "repo.ci.keys.remove"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/ci/secrets",
+      "_action": "repo.ci.secrets.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/ci/secrets",
+      "_action": "repo.ci.secrets.set"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/repos/:uuid/ci/secrets/:name",
+      "_action": "repo.ci.secrets.remove"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/ci",
+      "_action": "repo.ci.config"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/repos/:uuid/ci",
+      "_action": "repo.ci.setConfig"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/ci/run",
+      "_action": "repo.ci.run"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/ci/runs",
+      "_action": "repo.ci.runs"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/ci/runs/:runId",
+      "_action": "repo.ci.run.show"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/reindex",
+      "_action": "repo.reindex"
+    },
+    {
+      "method": "GET",
+      "path": "/api/spec-engine/specs/:uuid/promote",
+      "_action": "spec.promote"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/injects",
+      "_action": "repo.inject.list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/injects",
+      "_action": "repo.inject.create"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/injects/:id",
+      "_action": "repo.inject.get"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/repos/:uuid/injects/:id",
+      "_action": "repo.inject.edit"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/injects/:id/apply",
+      "_action": "repo.inject.apply"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/injects/:id/reject",
+      "_action": "repo.inject.reject"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/injects/:id/revert",
+      "_action": "repo.inject.revert"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/agent/settings",
+      "_action": "repo.agent.settings.get"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/settings",
+      "_action": "repo.agent.settings.set"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/run",
+      "_action": "repo.run"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/run/capabilities",
+      "_action": "repo.run.capabilities"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ollama/models",
+      "_action": "ollama.models"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/agent/tools",
+      "_action": "repo.agent.tools"
+    },
+    {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/debug",
+      "_action": "repo.agent.debug"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/agent/graph",
+      "_action": "repo.agent.graph"
+    }
+  ]
+}

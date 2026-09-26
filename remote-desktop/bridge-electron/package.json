@@ -1,0 +1,15 @@
+{
+  "name": "bridge-remote-desktop-host",
+  "version": "0.1.0",
+  "description": "Bridge OS remote-desktop host shell — tray, close-to-tray, background hosting.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

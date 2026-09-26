@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-schema-account_identity_index_entry
+type: schema
+id: account_identity_index_entry
+context: >-
+  lib/node-schemas — shared canonical registry. §ADDED 2026-09-12: real, grounded schema already
+  existed as intelligence's own local sovereign copy but was never promoted centrally either (same
+  class of gap as fault/hook_contract). Origin:
+  intelligence/schemas/schema.account_identity_index_entry.
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789252845356
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/schemas.js's own real account_identity_index JAA table — a real, stable UUID per
+    (agent, real detected account), distinct from per-session UUIDs.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real, stable identity id
+    agentId:
+      type: string
+      required: true
+      description: real agent id
+    account:
+      type: string
+      required: true
+      description: real, detected account string
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp
+    lastSeenAt:
+      type: number
+      required: true
+      description: real last-seen timestamp

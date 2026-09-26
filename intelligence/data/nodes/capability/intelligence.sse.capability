@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.sse
+type: capability
+id: intelligence.sse
+context: intelligence/registry-components.js real capability export
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789250756079
+source: intelligence.registry-components:intelligence.sse
+payload:
+  id: intelligence.sse
+  namespace: intelligence
+  name: sse
+  version: 1.0.0
+  grammar:
+    - sse
+    - intelligence sse
+  route:
+    method: GET
+    path: /sse
+  intent: []
+  description: General intelligence event stream
+  params: []
+  tags:
+    - intelligence
+    - sse
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-schema-chat_log
+type: schema
+id: chat_log
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table. Origin:
+  lib/node-schemas/schema.chat_log.
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252802357
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/chat-logger.js's real log() function — 'Logs every AI exchange — NCP, Ollama, direct chat —
+    to JAA's chat_log table' (the file's own header). Confirmed against
+    data/cortex/memory/chat_log.json's one real live row this pass. Referenced throughout this
+    codebase's own changelog history as a first-class real table (e.g. 0.39.49's symmetric
+    prompt+response logging fix).
+  fields:
+    id:
+      type: string
+      required: true
+      description: real row id
+    uuid:
+      type: string
+      required: true
+      description: real chat-exchange id
+    requestId:
+      type: string
+      required: false
+      description: real request id this exchange was part of
+    sessionId:
+      type: string
+      required: false
+      description: real session id
+    prompt:
+      type: string
+      required: true
+      description: real user prompt text
+    response:
+      type: string
+      required: true
+      description: real assistant response text
+    modelUsed:
+      type: string
+      required: false
+      description: real model/provider identifier used for this exchange
+    intent:
+      type: string
+      required: false
+      description: real classified intent for this exchange
+    channel:
+      type: string
+      required: false
+      description: real channel id this exchange happened on
+    componentId:
+      type: string
+      required: false
+      description: real component id that produced this exchange
+    hookId:
+      type: string
+      required: false
+      description: real hook id this exchange routed through
+    contextLayers:
+      type: number
+      required: false
+      description: real count of context layers assembled for this exchange
+    fromStream:
+      type: boolean
+      required: false
+      description: real flag — whether this exchange came from a streaming response
+    ts:
+      type: number
+      required: true
+      description: real timestamp

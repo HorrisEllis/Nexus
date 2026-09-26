@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.prompt.stream
+type: component
+id: copilot.prompt.stream
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153049
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153049
+lastSeenAt: 1789275153049
+fingerprint: copilot::POST /api/prompt/stream
+payload:
+  id: copilot.prompt.stream
+  uuid: ce2ea153-93e7-49a1-92ff-499eaf9026b9
+  namespace: copilot
+  name: prompt.stream
+  version: 2.0.0

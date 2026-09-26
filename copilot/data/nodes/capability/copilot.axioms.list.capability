@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.axioms.list
+type: capability
+id: copilot.axioms.list
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730176
+source: copilot.registry-components:copilot.axioms.list
+payload:
+  id: copilot.axioms.list
+  namespace: copilot
+  name: axioms.list
+  version: 2.0.0
+  grammar:
+    - axioms
+    - list axioms
+  route:
+    method: GET
+    path: /api/axioms
+  intent: []
+  description: List all axioms
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks: {}

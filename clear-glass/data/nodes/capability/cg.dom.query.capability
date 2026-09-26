@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.dom.query
+type: capability
+id: cg.dom.query
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730157
+source: clear-glass.registry-components:cg.dom.query
+payload:
+  id: cg.dom.query
+  namespace: cg
+  name: dom.query
+  version: 3.1.0
+  grammar:
+    - dom query
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Query live DOM tree
+  params: []
+  tags:
+    - cg
+    - dom
+  permissions:
+    - system
+  hooks: {}

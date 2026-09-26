@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-capability-emerge.compile
+type: capability
+id: emerge.compile
+context: emerge/registry-components.js real capability export
+intent: null
+summary: null
+system: emerge
+tags: []
+exported_at: 1789250730115
+source: emerge.registry-components:emerge.compile
+payload:
+  id: emerge.compile
+  namespace: emerge
+  name: compile
+  version: 1.1.0
+  grammar:
+    - compile
+    - emerge compile
+  route:
+    method: POST
+    path: /compile
+  intent:
+    - build
+    - compile
+    - forge
+  description: Compile .emerge spec → T0/T1/T2 pipeline
+  params: []
+  tags:
+    - emerge
+    - build
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: emerge.compiler.receive
+        intent:
+          - build
+          - compile
+          - forge
+        contract: nexus-interaction-contract-v1::emerge
+        tags:
+          - compiler
+    out:
+      - id: emerge.compiler.complete
+        wires_to:
+          - cortex.raid.feedback
+          - guardian.job.dispatch.receive
+        tags:
+          - result

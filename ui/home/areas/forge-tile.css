@@ -1,0 +1,12 @@
+/* ui/home/areas/forge-tile.css — Forge / agent / blueprint tiles.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* Forge tile heartbeat */
+@keyframes forge-pulse{0%{opacity:1;text-shadow:0 0 8px var(--ac)}50%{opacity:.4;text-shadow:none}100%{opacity:1;text-shadow:0 0 8px var(--ac)}}
+#forge-heart{animation:forge-pulse 2.4s ease-in-out infinite;color:var(--ac)}
+
+#tile-forge{border-color:var(--ac-dim)}
+#tile-forge:hover{border-color:var(--ac-border-hi)}
+#tile-agent{border-color:rgba(167,139,250,.1)}
+#tile-agent:hover{border-color:rgba(167,139,250,.3)}
+#tile-blueprint{border-color:rgba(83,74,183,.15)}
+#tile-blueprint:hover{border-color:rgba(83,74,183,.4)}

@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head><title>Remote Desktop — Viewer</title></head>
+<body>
+<h3>Viewer</h3>
+<div>
+  <label>Signal server: <input id="signal" placeholder="ws://192.168.1.x:8080" style="width:220px"></label><br>
+  <label>Session ID: <input id="sid" placeholder="session id"></label><br>
+  <label>Token: <input id="token" placeholder="token from the host" style="width:220px"></label><br>
+  <button id="connect">Connect</button>
+</div>
+<p id="status"></p>
+<video id="remote" autoplay style="width:800px;border:1px solid #ccc"></video>
+
+<script src="input-auth.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+document.getElementById('signal').value = params.get('signal') || 'ws://localhost:8080';
+document.getElementById('sid').value = params.get('session') || '';
+document.getElementById('token').value = params.get('token') || '';
+
+const statusEl = document.getElementById('status');
+let ws, pc, inputChannel, currentToken;
+
+document.getElementById('connect').onclick = () => {
+  const signalUrl = document.getElementById('signal').value.trim();
+  const sessionId = document.getElementById('sid').value.trim();
+  const token = document.getElementById('token').value.trim();
+  if (!signalUrl || !sessionId || !token) {
+    statusEl.textContent = 'signal server, session ID, and token are all required';
+    return;
+  }
+  currentToken = token; // sendInput() below needs this — same token used to join, per-message signing reuses it rather than needing a separate secret
+
+  statusEl.textContent = `connecting to ${signalUrl}…`;
+  ws = new WebSocket(signalUrl);
+  pc = new RTCPeerConnection({ iceServers: [] }); // LAN only for now
+
+  pc.ontrack = (e) => {
+    document.getElementById('remote').srcObject = e.streams[0];
+  };
+  pc.ondatachannel = (e) => {
+    inputChannel = e.channel;
+  };
+  pc.onicecandidate = (e) => {
+    if (e.candidate) ws.send(JSON.stringify({ type: 'ice', candidate: e.candidate }));
+  };
+
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ type: 'join', sessionId, role: 'viewer', token }));
+  };
+
+  ws.onmessage = async (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === 'join:rejected') {
+      statusEl.textContent = `join rejected: ${msg.reason}`;
+      ws.close();
+    } else if (msg.type === 'join:accepted') {
+      statusEl.textContent = 'joined — waiting for host to offer…';
+    } else if (msg.type === 'offer') {
+      await pc.setRemoteDescription(msg.sdp);
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+      ws.send(JSON.stringify({ type: 'answer', sdp: answer }));
+      statusEl.textContent = 'connected';
+    } else if (msg.type === 'ice') {
+      await pc.addIceCandidate(msg.candidate);
+    }
+  };
+
+  ws.onerror = () => { statusEl.textContent = `could not reach ${signalUrl}`; };
+
+  const video = document.getElementById('remote');
+  video.addEventListener('mousemove', (e) => sendInput({ kind: 'mousemove', x: e.offsetX, y: e.offsetY }));
+  video.addEventListener('click', (e) => sendInput({ kind: 'click', x: e.offsetX, y: e.offsetY }));
+  window.addEventListener('keydown', (e) => sendInput({ kind: 'keydown', key: e.key }));
+};
+
+function sendInput(evt) {
+  if (!inputChannel || inputChannel.readyState !== 'open') return;
+  InputAuth.signFrame(evt, currentToken).then((signed) => {
+    inputChannel.send(JSON.stringify(signed));
+  });
+}
+</script>
+</body>
+</html>

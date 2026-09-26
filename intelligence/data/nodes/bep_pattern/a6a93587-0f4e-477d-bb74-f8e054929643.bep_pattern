@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-a6a93587-0f4e-477d-bb74-f8e054929643
+type: bep_pattern
+id: a6a93587-0f4e-477d-bb74-f8e054929643
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"intelligence.command.invoked" and "ui.mode-overlay.opened" co-occur within 5s — 150 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790368266352
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266352
+lastSeenAt: 1790368266352
+fingerprint: null
+payload:
+  uuid: a6a93587-0f4e-477d-bb74-f8e054929643
+  signature: intelligence.command.invoked::ui.mode-overlay.opened
+  patternType: co_occurrence
+  typeA: intelligence.command.invoked
+  typeB: ui.mode-overlay.opened
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 150
+  confidence: 1
+  description: >-
+    "intelligence.command.invoked" and "ui.mode-overlay.opened" co-occur within 5s — 150
+    observations
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790368266308

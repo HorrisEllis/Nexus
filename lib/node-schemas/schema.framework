@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-schema-framework
+type: schema
+id: framework
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116323996
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/framework-builder.js's drop() — real metadata already written per generated
+    framework, reshaped into the real node-export convention
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real uuid, matches the generated .js skeleton's own filename suffix
+    name:
+      type: string
+      required: true
+      description: real framework name — the safeName used for both the .js file and the createXxx() function
+    description:
+      type: string
+      required: false
+      description: real, user/agent-supplied description
+    agent:
+      type: string
+      required: false
+      description: which real agent asked for this framework to be built
+    tags:
+      type: array
+      required: false
+      description: real tags — always includes framework/warp/generated plus any caller-supplied ones
+    codePath:
+      type: string
+      required: true
+      description: real, relative path to the generated .js skeleton this node describes
+    createdAt:
+      type: number
+      required: true
+      description: real timestamp

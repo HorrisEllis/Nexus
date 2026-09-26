@@ -1,0 +1,13 @@
+node_modules/
+data/cortex/memory/
+data/guardian/memory/
+data/intake/
+data/raid/input/
+data/raid/output/
+data/raid/ledger/
+idearium/data/projects/
+idearium/data/specs/
+idearium/data/nodes/
+idearium/data/node-index/
+idearium/repo/repos/
+*.log

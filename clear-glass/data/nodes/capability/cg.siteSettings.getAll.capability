@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.siteSettings.getAll
+type: capability
+id: cg.siteSettings.getAll
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730167
+source: clear-glass.registry-components:cg.siteSettings.getAll
+payload:
+  id: cg.siteSettings.getAll
+  namespace: cg
+  name: siteSettings.getAll
+  version: 3.1.0
+  grammar:
+    - siteSettings getAll
+  route:
+    method: IPC
+    path: site-settings:getAll
+  intent: []
+  description: Get all real settings for an origin
+  params: []
+  tags:
+    - cg
+    - site-settings
+  permissions:
+    - system
+  hooks: {}

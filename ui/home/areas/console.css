@@ -1,0 +1,27 @@
+/* ui/home/areas/console.css — Bottom console bar + fullscreen mode.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* Assistant bar — above channel rail */
+#bot-bar{
+  display:flex;flex-direction:column;gap:8px;
+  background:rgba(6,6,16,.88);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:12px 14px;
+  backdrop-filter:blur(16px);width:100%;
+  transition:all .25s ease;
+}
+#bot-bar-head{display:flex;align-items:center;justify-content:space-between}
+#bot-bar-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.25);text-transform:uppercase}
+#fullscreen-btn{
+  background:none;border:1px solid rgba(255,255,255,.12);border-radius:6px;
+  color:rgba(255,255,255,.4);font-size:13px;line-height:1;padding:4px 7px;cursor:pointer;
+  transition:all .2s;
+}
+#fullscreen-btn:hover{color:var(--ac);border-color:var(--ac-border-hi);background:var(--ac-ghost)}
+/* ── Fullscreen console mode ── */
+#bot-bar.fullscreen{
+  position:fixed;inset:16px;z-index:250;
+  background:rgba(4,4,12,.97);
+}
+#bot-bar.fullscreen #assistant-out{
+  display:block!important;flex:1;max-height:none;font-size:13px;padding:16px;
+}
+#bot-bar.fullscreen #fullscreen-btn{color:var(--ac);border-color:var(--ac-border-hi)}

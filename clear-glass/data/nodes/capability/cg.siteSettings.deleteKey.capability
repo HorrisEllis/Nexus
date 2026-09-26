@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.siteSettings.deleteKey
+type: capability
+id: cg.siteSettings.deleteKey
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730168
+source: clear-glass.registry-components:cg.siteSettings.deleteKey
+payload:
+  id: cg.siteSettings.deleteKey
+  namespace: cg
+  name: siteSettings.deleteKey
+  version: 3.1.0
+  grammar:
+    - siteSettings deleteKey
+  route:
+    method: IPC
+    path: site-settings:deleteKey
+  intent: []
+  description: Delete one real setting key
+  params: []
+  tags:
+    - cg
+    - site-settings
+  permissions:
+    - system
+  hooks: {}

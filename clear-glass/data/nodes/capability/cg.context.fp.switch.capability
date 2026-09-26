@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.context.fp.switch
+type: capability
+id: cg.context.fp.switch
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730159
+source: clear-glass.registry-components:cg.context.fp.switch
+payload:
+  id: cg.context.fp.switch
+  namespace: cg
+  name: context.fp.switch
+  version: 3.1.0
+  grammar:
+    - context fp switch
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Switch fingerprint mode
+  params: []
+  tags:
+    - cg
+    - context
+    - fingerprint
+  permissions:
+    - system
+  hooks: {}

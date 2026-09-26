@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-system-versionium
+type: system
+id: versionium
+context: >-
+  real, checked system record — nexus/autopilot.js kernel defs + versionium/registry-components.js.
+  versionium.node-taxonomy.md notes component/hook/wire/node are NOT USED (a real, separate,
+  already-flagged gap: versionium isn't in capability-map.js's SYSTEMS map, so loom never derives
+  those from it) — that gap doesn't affect capability/command, which versionium declares and owns
+  itself.
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789250756055
+source: nexus.autopilot.KERNELS + registry-components.js
+payload:
+  id: versionium
+  hasCapabilities: true
+  port: 3754
+  spec: versionium/spec/versionium.spec

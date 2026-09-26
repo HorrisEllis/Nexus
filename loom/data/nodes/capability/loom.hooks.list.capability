@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-loom.hooks.list
+type: capability
+id: loom.hooks.list
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730147
+source: loom.registry-components:loom.hooks.list
+payload:
+  id: loom.hooks.list
+  namespace: loom
+  name: hooks.list
+  version: 1.5.0
+  grammar:
+    - hooks list
+    - hooks-list
+  route:
+    method: GET
+    path: /api/hooks
+  intent: []
+  description: List hooks — the registry loom is write authority for
+  params: []
+  tags:
+    - loom
+  permissions:
+    - system
+  hooks: {}

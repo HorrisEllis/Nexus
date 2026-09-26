@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-807a048d-9b65-4795-b18d-296f2021a2ce
+type: bep_pattern
+id: 807a048d-9b65-4795-b18d-296f2021a2ce
+context: 'intelligence crystallised pattern: cross_system_causal'
+intent: null
+summary: >-
+  "intelligence.failure_scan" (copilot) and "ledger.copilot.event" (cortex) co-occur within 5s
+  across two real systems — 6 observations
+system: intelligence
+tags:
+  - bep_patterns
+  - cross_system_causal
+  - cortex/intelligence
+exported_at: 1790367509219
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790367509219
+lastSeenAt: 1790367509219
+fingerprint: null
+payload:
+  uuid: 807a048d-9b65-4795-b18d-296f2021a2ce
+  signature: intelligence.failure_scan::ledger.copilot.event
+  patternType: cross_system_causal
+  typeA: intelligence.failure_scan
+  typeB: ledger.copilot.event
+  systemA: copilot
+  systemB: cortex
+  crossSystem: true
+  count: 6
+  confidence: 0.3
+  description: >-
+    "intelligence.failure_scan" (copilot) and "ledger.copilot.event" (cortex) co-occur within 5s
+    across two real systems — 6 observations
+  actionable: true
+  crystallised: false
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790367509177

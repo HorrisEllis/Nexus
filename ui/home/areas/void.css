@@ -1,0 +1,4 @@
+/* ui/home/areas/void.css — Layer 0 particle void.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* ── Layer 0: particle void ── */
+#void{position:fixed;inset:0;z-index:0}

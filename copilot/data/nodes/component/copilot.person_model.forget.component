@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.person_model.forget
+type: component
+id: copilot.person_model.forget
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153075
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153075
+lastSeenAt: 1789275153075
+fingerprint: copilot::POST /api/person-model/forget
+payload:
+  id: copilot.person_model.forget
+  uuid: a1caa1c5-5ee0-47f0-b96a-877672f3a08d
+  namespace: copilot
+  name: person_model.forget
+  version: 2.0.0

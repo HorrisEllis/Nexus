@@ -1,0 +1,6 @@
+/* ui/home/areas/causal.css — Causal channel.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* ── Causal graph channel ───────────────────────────────── */
+#ch-causal.active{display:flex;flex-direction:column;padding:52px 70px 110px;gap:6px;overflow:hidden}
+#ch-causal canvas{cursor:grab}
+#ch-causal canvas:active{cursor:grabbing}

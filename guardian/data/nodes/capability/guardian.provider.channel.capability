@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.provider.channel
+type: capability
+id: guardian.provider.channel
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730133
+source: guardian.registry-components:guardian.provider.channel
+payload:
+  id: guardian.provider.channel
+  namespace: guardian
+  name: provider.channel
+  version: 3.6.2
+  grammar:
+    - provider channel
+    - provider-channel
+  route:
+    method: GET
+    path: /channel
+  intent: []
+  description: NCP SSE channel — browser tabs connect here
+  params: []
+  tags:
+    - guardian
+    - ncp
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,540 @@
+{
+  "id": "clear-glass-v1",
+  "version": "3.15.0",
+  "namespace": "clear-glass",
+  "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from clear-glass/registry-components.js (module.exports.components), never hand-authored. Port ambiguity RESOLVED (was left open in an earlier pass of this same file): clear-glass/src/main/index.js:1513-1514 confirms directly — the orchestrator contract-handshake polls /contract on SSE_PORT (7701), not IPC_PORT (7702, what registry-components.js itself declares as 'port') or WIRE_PORT (7704, what compartment.json declares). sse:7701 is the real handshake port; the other three are real but serve other purposes. §NOTE: this static file mirrors clear-glass/registry-components.js at the time it was built — the LIVE /contract endpoint (clear-glass/src/main/index.js:1519,1577) serves that module directly, always fresh. This file will drift if registry-components.js changes and this file is not regenerated; it is documentation, not the source of truth.",
+  "ports": {
+    "sse": 7701,
+    "ipc": 7702,
+    "tls": 7703,
+    "wire": 7704
+  },
+  "uuid": "clear-glass-contract-v1-0000-4000-0000-000000000001",
+  "role": "Sovereign NEXUS browser — Electron + Chromium + Firefox fingerprint + TLS JA4 + ErosmancerOS wire",
+  "health": {
+    "method": "GET",
+    "path": "/health"
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "_componentId": "cg.health"
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "_componentId": "cg.status"
+    },
+    {
+      "method": "GET",
+      "path": "/contract",
+      "_componentId": "cg.contract"
+    },
+    {
+      "method": "GET",
+      "path": "/events",
+      "_componentId": "cg.events"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.driver.exec"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.dom.query"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.dom.mutate"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.dom.pick"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.dom.tokens"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.context.create"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.context.switch"
+    },
+    {
+      "method": "GET",
+      "path": "/contexts",
+      "_componentId": "cg.context.list"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.context.fp.switch"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.cookie.save"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.cookie.restore"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.copilot.message"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.mesh.spawn"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.mesh.send"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.mesh.route"
+    },
+    {
+      "method": "GET",
+      "path": "/agents",
+      "_componentId": "cg.mesh.list"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.url.listen"
+    },
+    {
+      "method": "GET",
+      "path": "/listeners",
+      "_componentId": "cg.url.listen.list"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.diag.run"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.diag.nexus"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.window.open"
+    },
+    {
+      "method": "POST",
+      "path": "/cmd",
+      "_componentId": "cg.window.close"
+    },
+    {
+      "method": "GET",
+      "path": "/wire/health",
+      "_componentId": "cg.wire.health"
+    },
+    {
+      "method": "POST",
+      "path": "/eros/*",
+      "_componentId": "cg.wire.eros.proxy"
+    },
+    {
+      "method": "POST",
+      "path": "/bridge/driver",
+      "_componentId": "cg.wire.driver.bridge"
+    },
+    {
+      "method": "POST",
+      "path": "/hook/hostile",
+      "_componentId": "cg.wire.hostile"
+    },
+    {
+      "method": "POST",
+      "path": "/hook/behavior",
+      "_componentId": "cg.wire.behavior"
+    },
+    {
+      "method": "IPC",
+      "path": "calltos:list",
+      "_componentId": "cg.calltos.list"
+    },
+    {
+      "method": "IPC",
+      "path": "calltos:forUrl",
+      "_componentId": "cg.calltos.forUrl"
+    },
+    {
+      "method": "IPC",
+      "path": "calltos:remove",
+      "_componentId": "cg.calltos.remove"
+    },
+    {
+      "method": "IPC",
+      "path": "downloads:listListeners",
+      "_componentId": "cg.downloads.listListeners"
+    },
+    {
+      "method": "IPC",
+      "path": "downloads:registerListener",
+      "_componentId": "cg.downloads.registerListener"
+    },
+    {
+      "method": "IPC",
+      "path": "downloads:updateListener",
+      "_componentId": "cg.downloads.updateListener"
+    },
+    {
+      "method": "IPC",
+      "path": "downloads:removeListener",
+      "_componentId": "cg.downloads.removeListener"
+    },
+    {
+      "method": "IPC",
+      "path": "site-settings:get",
+      "_componentId": "cg.siteSettings.get"
+    },
+    {
+      "method": "IPC",
+      "path": "site-settings:getAll",
+      "_componentId": "cg.siteSettings.getAll"
+    },
+    {
+      "method": "IPC",
+      "path": "site-settings:set",
+      "_componentId": "cg.siteSettings.set"
+    },
+    {
+      "method": "IPC",
+      "path": "site-settings:deleteKey",
+      "_componentId": "cg.siteSettings.deleteKey"
+    },
+    {
+      "method": "IPC",
+      "path": "site-settings:clear",
+      "_componentId": "cg.siteSettings.clear"
+    },
+    {
+      "method": "IPC",
+      "path": "site-settings:listOrigins",
+      "_componentId": "cg.siteSettings.listOrigins"
+    },
+    {
+      "method": "IPC",
+      "path": "history:list",
+      "_componentId": "cg.history.list"
+    },
+    {
+      "method": "IPC",
+      "path": "history:delete",
+      "_componentId": "cg.history.delete"
+    },
+    {
+      "method": "IPC",
+      "path": "history:clear",
+      "_componentId": "cg.history.clear"
+    },
+    {
+      "method": "IPC",
+      "path": "extensions:list",
+      "_componentId": "cg.extensions.list"
+    },
+    {
+      "method": "IPC",
+      "path": "extensions:load",
+      "_componentId": "cg.extensions.load"
+    },
+    {
+      "method": "IPC",
+      "path": "extensions:unload",
+      "_componentId": "cg.extensions.unload"
+    },
+    {
+      "method": "IPC",
+      "path": "extensions:pickDirectory",
+      "_componentId": "cg.extensions.pickDirectory"
+    },
+    {
+      "method": "IPC",
+      "path": "bookmarks:addWithState",
+      "_componentId": "cg.bookmarks.addWithState"
+    },
+    {
+      "method": "IPC",
+      "path": "bookmarks:openWithState",
+      "_componentId": "cg.bookmarks.openWithState"
+    },
+    {
+      "method": "IPC",
+      "path": "rewind:list",
+      "_componentId": "cg.rewind.list"
+    },
+    {
+      "method": "IPC",
+      "path": "rewind:snapshot",
+      "_componentId": "cg.rewind.snapshot"
+    },
+    {
+      "method": "IPC",
+      "path": "rewind:restore",
+      "_componentId": "cg.rewind.restore"
+    },
+    {
+      "method": "IPC",
+      "path": "rewind:clear",
+      "_componentId": "cg.rewind.clear"
+    },
+    {
+      "method": "IPC",
+      "path": "passwords:list",
+      "_componentId": "cg.passwords.list"
+    },
+    {
+      "method": "IPC",
+      "path": "passwords:delete",
+      "_componentId": "cg.passwords.delete"
+    },
+    {
+      "method": "IPC",
+      "path": "speech:available",
+      "_componentId": "cg.speech.available"
+    },
+    {
+      "method": "IPC",
+      "path": "speech:transcribeBuffer",
+      "_componentId": "cg.speech.transcribeBuffer"
+    },
+    {
+      "method": "IPC",
+      "path": "macros:list",
+      "_componentId": "cg.macros.list"
+    },
+    {
+      "method": "IPC",
+      "path": "macros:get",
+      "_componentId": "cg.macros.get"
+    },
+    {
+      "method": "IPC",
+      "path": "macros:run",
+      "_componentId": "cg.macros.run"
+    },
+    {
+      "method": "IPC",
+      "path": "bgtab:open",
+      "_componentId": "cg.bgtab.open"
+    },
+    {
+      "method": "IPC",
+      "path": "bgtab:close",
+      "_componentId": "cg.bgtab.close"
+    },
+    {
+      "method": "IPC",
+      "path": "bgtab:list",
+      "_componentId": "cg.bgtab.list"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:profile:list",
+      "_componentId": "cg.autofill.listProfiles"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:profile:get",
+      "_componentId": "cg.autofill.getProfile"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:profile:create",
+      "_componentId": "cg.autofill.createProfile"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:profile:update",
+      "_componentId": "cg.autofill.updateProfile"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:profile:delete",
+      "_componentId": "cg.autofill.deleteProfile"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:detect",
+      "_componentId": "cg.autofill.detect"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:fill",
+      "_componentId": "cg.autofill.fill"
+    },
+    {
+      "method": "IPC",
+      "path": "screen-qa:detect",
+      "_componentId": "cg.screenQa.detect"
+    },
+    {
+      "method": "IPC",
+      "path": "screen-qa:answer",
+      "_componentId": "cg.screenQa.answer"
+    },
+    {
+      "method": "IPC",
+      "path": "screen-qa:inject",
+      "_componentId": "cg.screenQa.inject"
+    },
+    {
+      "method": "IPC",
+      "path": "screen-qa:element-at",
+      "_componentId": "cg.screenQa.elementAt"
+    },
+    {
+      "method": "IPC",
+      "path": "screen-qa:derive-question",
+      "_componentId": "cg.screenQa.deriveQuestion"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:setDefault",
+      "_componentId": "cg.accounts.setDefault"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:defaults",
+      "_componentId": "cg.accounts.defaults"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:resolve",
+      "_componentId": "cg.accounts.resolve"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:providers",
+      "_componentId": "cg.accounts.portal.providers"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:open",
+      "_componentId": "cg.accounts.portal.open"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:capture",
+      "_componentId": "cg.accounts.portal.capture"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:status",
+      "_componentId": "cg.accounts.portal.status"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:close",
+      "_componentId": "cg.accounts.portal.close"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:signOut",
+      "_componentId": "cg.accounts.portal.signOut"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:credentials",
+      "_componentId": "cg.accounts.portal.credentials"
+    },
+    {
+      "method": "IPC",
+      "path": "accounts:portal:list",
+      "_componentId": "cg.accounts.portal.list"
+    },
+    {
+      "method": "IPC",
+      "path": "vault:status",
+      "_componentId": "cg.vault.status"
+    },
+    {
+      "method": "IPC",
+      "path": "macros:create",
+      "_componentId": "cg.macros.create"
+    },
+    {
+      "method": "IPC",
+      "path": "macros:delete",
+      "_componentId": "cg.macros.delete"
+    },
+    {
+      "method": "IPC",
+      "path": "macros:schema",
+      "_componentId": "cg.macros.schema"
+    },
+    {
+      "method": "POST",
+      "path": "/agent-mesh/send",
+      "_componentId": "cg.mesh.jobSend"
+    },
+    {
+      "method": "GET",
+      "path": "/agent-mesh/job?jobId={jobId}",
+      "_componentId": "cg.mesh.jobStatus"
+    },
+    {
+      "method": "GET",
+      "path": "/agent-mesh/intake",
+      "_componentId": "cg.mesh.jobIntake"
+    },
+    {
+      "method": "GET",
+      "path": "/cli/downloads/responses",
+      "_componentId": "cg.downloads.responses"
+    },
+    {
+      "method": "GET",
+      "path": "/cli/downloads/responses/:id",
+      "_componentId": "cg.downloads.responseItem"
+    },
+    {
+      "method": "IPC",
+      "path": "window:openLibrary",
+      "_componentId": "cg.window.openLibrary"
+    },
+    {
+      "method": "IPC",
+      "path": "window:closeLibrary",
+      "_componentId": "cg.window.closeLibrary"
+    },
+    {
+      "method": "IPC",
+      "path": "downloads:openFile",
+      "_componentId": "cg.downloads.openFile"
+    },
+    {
+      "method": "IPC",
+      "path": "selectors:provider-for-url",
+      "_componentId": "cg.selectors.providerFor"
+    },
+    {
+      "method": "IPC",
+      "path": "selectors:assign",
+      "_componentId": "cg.selectors.assign"
+    }
+  ]
+}

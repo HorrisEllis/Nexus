@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-schema-versionium_commit
+type: schema
+id: versionium_commit
+context: versionium/schemas — versionium-local schema registry
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789200001000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    versionium/lib/engine.js's real commit({message, branch, causedBy, system, state}) function —
+    the genuinely unslotted type flagged while mapping versionium against the central 32/33. Doesn't
+    fit .job (no provider/dispatch shape) or .contract (not a RAID queue row) — versionium-exclusive.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real commit id (same value as commitId)
+    commitId:
+      type: string
+      required: true
+      description: "real id, format 'vtm-' + 8 hex chars"
+    parentId:
+      type: string
+      required: false
+      description: real parent commit id, null for the first commit on a branch
+    branch:
+      type: string
+      required: true
+      description: real branch name, defaults to 'main'
+    system:
+      type: string
+      required: false
+      description: real originating system this commit is attributed to
+    message:
+      type: string
+      required: false
+      description: real commit message
+    causedBy:
+      type: string
+      required: false
+      description: real triggering uuid, e.g. an agent action or contract
+    ts:
+      type: number
+      required: true
+      description: real commit timestamp

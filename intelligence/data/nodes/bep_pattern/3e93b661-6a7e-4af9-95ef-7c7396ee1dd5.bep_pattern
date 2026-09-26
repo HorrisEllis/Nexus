@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-3e93b661-6a7e-4af9-95ef-7c7396ee1dd5
+type: bep_pattern
+id: 3e93b661-6a7e-4af9-95ef-7c7396ee1dd5
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.architect.updated" precedes failures 17 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266392
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266392
+lastSeenAt: 1790368266392
+fingerprint: null
+payload:
+  uuid: 3e93b661-6a7e-4af9-95ef-7c7396ee1dd5
+  signature: precursor::ledger.architect.updated
+  patternType: failure_precursor
+  precursorType: ledger.architect.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 17
+  confidence: 1
+  description: '"ledger.architect.updated" precedes failures 17 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

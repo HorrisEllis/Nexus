@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.job.list
+type: capability
+id: guardian.job.list
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730135
+source: guardian.registry-components:guardian.job.list
+payload:
+  id: guardian.job.list
+  namespace: guardian
+  name: job.list
+  version: 3.6.2
+  grammar:
+    - job list
+    - job-list
+  route:
+    method: GET
+    path: /jobs
+  intent: []
+  description: Active + recent jobs
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

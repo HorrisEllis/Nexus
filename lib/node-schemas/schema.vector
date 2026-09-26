@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-schema-vector
+type: schema
+id: vector
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116324013
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: lib/vector-memory.js — embed()'s real insertItem({metadata}) shape
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real id — refused if missing (embed() returns false without it)
+    text:
+      type: string
+      required: true
+      description: real source text, stored truncated to 200 chars in the index metadata — refused if missing
+    type:
+      type: string
+      required: false
+      description: real caller-supplied type tag, defaults to empty string
+    source:
+      type: string
+      required: false
+      description: real caller-supplied source tag, defaults to empty string
+    table:
+      type: string
+      required: false
+      description: real JAA table this vector indexes content from, defaults to empty string
+    ts:
+      type: number
+      required: false
+      description: real timestamp, defaults to Date.now() at embed time
+    metadata:
+      type: object
+      required: false
+      description: >-
+        real caller-supplied extra fields, spread directly into the stored metadata object —
+        open-ended by design

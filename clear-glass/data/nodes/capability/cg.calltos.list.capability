@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.calltos.list
+type: capability
+id: cg.calltos.list
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730165
+source: clear-glass.registry-components:cg.calltos.list
+payload:
+  id: cg.calltos.list
+  namespace: cg
+  name: calltos.list
+  version: 3.1.0
+  grammar:
+    - calltos list
+  route:
+    method: IPC
+    path: calltos:list
+  intent: []
+  description: List every registered callto
+  params: []
+  tags:
+    - cg
+    - guardian
+    - callto
+  permissions:
+    - system
+  hooks: {}

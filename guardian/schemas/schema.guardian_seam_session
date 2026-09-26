@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-schema-guardian_seam_session
+type: schema
+id: guardian_seam_session
+context: guardian/schemas — guardian-local node-type schema registry
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789117339408
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: guardian/server.js — POST /seam/sessions real jaa.insert('seam_sessions', ...) shape
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real session id
+    title:
+      type: string
+      required: true
+      description: real session title, defaults to 'Untitled'
+    specTitle:
+      type: string
+      required: false
+      description: real associated spec title, defaults to empty string
+    chunks:
+      type: array
+      required: true
+      description: real chunk list, defaults to []
+    activeChunk:
+      type: number
+      required: true
+      description: real index of the currently active chunk, starts at 0
+    provider:
+      type: string
+      required: true
+      description: real target provider, defaults to 'claude'
+    status:
+      type: string
+      required: true
+      description: real session status, starts 'active'
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp

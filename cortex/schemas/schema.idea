@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-schema-idea
+type: schema
+id: idea
+context: >-
+  cortex/schemas — sovereign local copy. Origin: lib/node-schemas/schema.idea (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means cortex does
+  not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789235656629
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    idearium/index.js — IdeaCreateGate.transform()'s real idea object (idearium.idea.create), the
+    only real construction site
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real uuid, assigned at creation
+    slug:
+      type: string
+      required: true
+      description: real, derived from text — lowercase, punctuation stripped, 50 chars max
+    text:
+      type: string
+      required: true
+      description: the real idea text, trimmed
+    tags:
+      type: array
+      required: false
+      description: >-
+        real, user-supplied — the same field this whole schema/export system's own tagged-query
+        support reads from
+    phase:
+      type: string
+      required: true
+      description: >-
+        real phase — starts 'seed', per idearium.spec's real
+        phases:[seed,expanding,tensioned,specced,building,complete]
+    tension:
+      type: number
+      required: true
+      description: real, starts 0, updated by the real tension engine
+    parentIdea:
+      type: any
+      required: false
+      description: real uuid of the idea this one branched from, null if none
+    linkedSpec:
+      type: any
+      required: false
+      description: real spec-engine spec uuid once this idea reaches the spec-compiler phase, null until then
+    resonanceWith:
+      type: array
+      required: false
+      description: real uuids — the associative-lattice edges (_latticeAdd), not the causal graph
+    tensionWith:
+      type: array
+      required: false
+      description: real uuids — ideas in real tension with this one
+    compartment:
+      type: any
+      required: false
+      description: real compartment id once one exists for this idea, null until then
+    source:
+      type: string
+      required: true
+      description: real origin — 'cli' default, or whatever the real caller passed
+    causedBy:
+      type: any
+      required: false
+      description: >-
+        real uuid of the event/idea that caused this one to exist, null if none — the causal-graph
+        edge
+    createdAt:
+      type: number
+      required: true
+      description: real timestamp
+    updatedAt:
+      type: number
+      required: true
+      description: real timestamp
