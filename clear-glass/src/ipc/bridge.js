@@ -1196,9 +1196,39 @@ class IpcBridge {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
       return _autofillDetect(this.dom, this.autofillStore, { agentId, profileId });
     });
-    ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium' } = {}) => {
+    ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
-      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence });
+      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars });
+    });
+
+    // §0.39.265 — James: "expand the job application autofill … maybe add fiverr
+    // and upwork support?" Draft a proposal / cover letter for one job post from
+    // a profile (src/autofill/proposal.js), through the same co-pilot the
+    // on-screen answers use. A draft only — shown to the person, never sent.
+    ipcMain.handle('autofill:proposal', async (e, { profileId, jobPost, platform, length, tone, extra, agentId = 'default' } = {}) => {
+      if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+      if (!this.copilot) return { ok: false, error: 'co-pilot is not connected' };
+      const profile = this.autofillStore.getProfile(profileId);
+      if (!profile) return { ok: false, error: `no autofill profile "${profileId}"` };
+      const { buildProposalPrompt } = require('../autofill/proposal.js');
+      const b = buildProposalPrompt({ profile, jobPost, platform, length, tone, extra });
+      if (b.error) return { ok: false, error: b.error };
+      try {
+        const r = await this.copilot.send({ message: b.prompt, agentId });
+        const text = String((r && (r.text || r.reply || r.message)) || '').trim();
+        return text ? { ok: true, text } : { ok: false, error: 'co-pilot returned no text' };
+      } catch (err) { return { ok: false, error: err.message }; }
+    });
+    // The text of a tab's page (the job post), for the proposal drafter.
+    ipcMain.handle('autofill:readPage', async (e, { agentId = 'default' } = {}) => {
+      if (!this.driver) return { ok: false, error: 'driver unavailable' };
+      try {
+        const [t, u] = await Promise.all([
+          this.driver.exec({ action: 'eval', agentId, code: '(document.querySelector("main,[role=main],article") || document.body).innerText.slice(0, 12000)' }),
+          this.driver.exec({ action: 'getUrl', agentId }).catch(() => ({})),
+        ]);
+        return { ok: true, text: String((t && t.result) || ''), url: (u && u.url) || null };
+      } catch (err) { return { ok: false, error: err.message }; }
     });
 
     // §BUILT 2026-09-21 — screen-qa's UI layer (hotkey, right-click menu,

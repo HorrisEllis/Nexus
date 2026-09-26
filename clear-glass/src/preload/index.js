@@ -312,7 +312,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     updateProfile: (id, updates)  => ipcRenderer.invoke('autofill:profile:update', { id, updates }),
     deleteProfile: (id)           => ipcRenderer.invoke('autofill:profile:delete', { id }),
     detect: (profileId, agentId)  => ipcRenderer.invoke('autofill:detect', { profileId, agentId }),
-    fill:   (profileId, agentId, minConfidence) => ipcRenderer.invoke('autofill:fill', { profileId, agentId, minConfidence }),
+    fill:   (profileId, agentId, minConfidence, vars) => ipcRenderer.invoke('autofill:fill', { profileId, agentId, minConfidence, vars }),
+    // §0.39.265 — cover letters / Upwork & Fiverr proposals (src/autofill/proposal.js)
+    proposal: (payload)   => ipcRenderer.invoke('autofill:proposal', payload),
+    readPage: (agentId)   => ipcRenderer.invoke('autofill:readPage', { agentId }),
   },
 
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job
