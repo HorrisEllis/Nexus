@@ -5391,12 +5391,12 @@
       "schemaVersion": "1.2.0",
       "registeredAt": 1787866831760
     },
-    "nexus.tests.manual-chatgpt-console.playwright": {
-      "id": "nexus.tests.manual-chatgpt-console.playwright",
+    "nexus.tests.manual-chatgpt-console.glass": {
+      "id": "nexus.tests.manual-chatgpt-console.glass",
       "namespace": "nexus.tests",
-      "name": "tests/manual-chatgpt-console.playwright.js",
+      "name": "tests/manual-chatgpt-console.glass.js",
       "version": "1.0.0",
-      "uuid": "nexus-loom-scan-nexus.tests.manual-chatgpt-console.playwright-v1-0000-2026-0804-001",
+      "uuid": "nexus-loom-scan-nexus.tests.manual-chatgpt-console.glass-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
       "registeredAt": 1787866831767
     },

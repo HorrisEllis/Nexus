@@ -8,7 +8,7 @@
  * guardian/ask.js askSync with injected deps, guardian's real ncp-handler for the
  * chunk fields, and idearium's Agent tab feed functions (_agentFeedState / In /
  * Html) extracted from idearium/ui/js/app.js and run as written. The userscript's
- * 500 ms streamer runs in real Chromium: tests/probe/live-stream-chromium.py (GS-20).
+ * 500 ms streamer runs in a real page (Clear Glass's engine): tests/probe/live-stream-chromium.js (GS-20).
  * Nothing is written to the real tree.
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), { spawnSync } = require('child_process');
@@ -179,10 +179,11 @@ test('GS-11', 'every userscript: the job start arms the streamer; the watch mark
 
 (async () => {
   for (const r of pending) await r();
-  const probe = spawnSync('python3', [path.join(ROOT, 'tests/probe/live-stream-chromium.py')], { encoding: 'utf8', timeout: 180000 });
-  if (probe.status === 3 || probe.error) { console.log(`  - GS-20 SKIPPED (not passed): the 500 ms streamer in real Chromium — ${probe.error ? probe.error.message : 'python playwright not installed'}`); skipped++; }
+  // 0.39.262 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright
+  const probe = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/live-stream-chromium.js')], { encoding: 'utf8', timeout: 180000 });
+  if (probe.status === 3 || probe.error) { console.log(`  - GS-20 SKIPPED (not passed): the 500 ms streamer in a real page — ${probe.error ? probe.error.message : 'no page engine (electron not installed)'}`); skipped++; }
   else {
-    try { assert.strictEqual(probe.status, 0, (probe.stdout || '').split('\n').filter(l => /"pass": false|summary/.test(l)).join('\n') || probe.stderr); console.log('  ✓ GS-20 the userscript 500 ms streamer in real Chromium (tests/probe/live-stream-chromium.py)'); passed++; }
+    try { assert.strictEqual(probe.status, 0, (probe.stdout || '').split('\n').filter(l => /"pass": ?false|summary/.test(l)).join('\n') || probe.stderr); console.log('  ✓ GS-20 the userscript 500 ms streamer in a real page, Clear Glass\'s engine (tests/probe/live-stream-chromium.js)'); passed++; }
     catch (e) { console.error(`  ✗ GS-20 the userscript 500 ms streamer in real Chromium\n    ${e.message}`); failed++; }
   }
   console.log(`\n  ${passed} passed · ${failed} failed${skipped ? ` · ${skipped} skipped` : ''}\n`);

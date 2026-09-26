@@ -135,7 +135,8 @@ check("Diagnose's scan endpoint is a real registered route", API.includes("'repo
 check("Re-run's reindex endpoint is a real registered route", API.includes("'repo.reindex'"));
 check('repoBranch() delegates to the pre-existing forkApiRepo, not a second fork path',
   extractFn(APP, 'repoBranch').includes('forkApiRepo('));
-check('repoRun() calls the real repo.run route', /\/run`/.test(extractFn(APP, 'repoRun')) && API.includes("'repo.run'"));
+// 0.39.261 — Run opens a menu of options (repoRun); the chosen option is sent by _runMenuGo()
+check('repoRun() calls the real repo.run route', /_renderRunMenu|_runMenuGo/.test(extractFn(APP, 'repoRun')) && /\/run`/.test(extractFn(APP, '_runMenuGo')) && API.includes("'repo.run'"));
 
 console.log(`\n  ${pass} passed, ${fail} failed\n`);
 process.exitCode = fail === 0 ? 0 : 1;

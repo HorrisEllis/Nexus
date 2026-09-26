@@ -1,6 +1,6 @@
 {
   "id": "clear-glass-v1",
-  "version": "3.15.0",
+  "version": "3.16.0",
   "namespace": "clear-glass",
   "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from clear-glass/registry-components.js (module.exports.components), never hand-authored. Port ambiguity RESOLVED (was left open in an earlier pass of this same file): clear-glass/src/main/index.js:1513-1514 confirms directly — the orchestrator contract-handshake polls /contract on SSE_PORT (7701), not IPC_PORT (7702, what registry-components.js itself declares as 'port') or WIRE_PORT (7704, what compartment.json declares). sse:7701 is the real handshake port; the other three are real but serve other purposes. §NOTE: this static file mirrors clear-glass/registry-components.js at the time it was built — the LIVE /contract endpoint (clear-glass/src/main/index.js:1519,1577) serves that module directly, always fresh. This file will drift if registry-components.js changes and this file is not regenerated; it is documentation, not the source of truth.",
   "ports": {

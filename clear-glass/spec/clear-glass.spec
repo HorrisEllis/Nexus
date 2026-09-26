@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.15.0
+    version:     3.16.0
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -86,6 +86,20 @@ spec:
       HTTP method/path pairs for these would misrepresent the transport.
 
   modules:
+    - id: glass-driver
+      path: clear-glass/src/driver/glass.js · clear-glass/src/driver/glass-host/main.js
+      description: >
+        NEW 0.39.262 — James: "playright? no what is that for? litterally have clearglas".
+        Drive a real page in Clear Glass's own engine from Node. glass.js spawns Electron on
+        glass-host/main.js; the host opens a BrowserWindow per page and speaks the DevTools
+        protocol in-process (webContents.debugger), relaying replies and events over stdio
+        lines prefixed "§G ". Without a display it runs --ozone-platform=headless with
+        offscreen windows. Machines without the Electron binary fall back to any Chromium
+        (GLASS_CHROMIUM) over its DevTools websocket. API: chromium.launch() → newPage({viewport})
+        → goto/evaluate/click/fill/selectOption/keyboard.press/locator/$/$$/$eval/$$eval/
+        waitForSelector/waitForFunction/route/exposeFunction/addInitScript/cdp/screenshot;
+        selectors CSS + text= + :has-text() + a >> b. Proven: tests/modules/test-nexus-atlas-and-glass
+        CG-002 (a wrapped inline element is clicked on its first line box) and every tests/probe/*.js.
     - id: chat-transcripts-index
       path: clear-glass/src/downloads/artifact-chat-index.js · src/ipc/bridge.js /cli/downloads/responses · renderer/library/sections/responses.{js,css}
       description: >
@@ -327,6 +341,19 @@ spec:
         opened: 2026-09-25
 
   version_history:
+    - version: 3.16.0
+      date: 2026-09-26
+      summary: >-
+        MINOR (v0.39.262) — James: "playright? no what is that for? litterally have clearglas". Playwright was a
+        root devDependency for three probe scripts, and python playwright stood behind four more (never installed,
+        so TX-20, GS-20, SA-09 and SA-10 always reported SKIPPED). Clear Glass is already a Chromium: module
+        glass-driver (src/driver/glass.js + src/driver/glass-host/) runs Clear Glass's own Electron as a page host
+        and drives each page through its webContents.debugger — no remote-debugging port, no Playwright, the
+        subset of Playwright's page API the probes used under the same names. Headless on Linux via the ozone
+        headless platform with offscreen windows (a shown window there segfaults Electron 42). All nine real-page
+        probes now run on it; the four skipped suite cases pass (transcript-push 10/10, live-stream 8/8,
+        selector-check 10/10, selector-assign-ui 9/9), agent-blocks 13/13, library window 29/29, menu-library 4/4.
+      versioniumCommitId: null
     - version: 3.15.0
       date: 2026-09-26
       summary: >-

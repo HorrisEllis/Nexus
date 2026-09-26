@@ -1,10 +1,9 @@
-const { chromium } = require('playwright-core');
+// 0.39.262 — manual probe of the :9000 console, driven by Clear Glass's own engine (was playwright-core
+// pointed at a puppeteer Chrome under /home/claude). Usage: node tests/manual-chatgpt-console.glass.js
+const { chromium } = require(require('path').join(__dirname, '..', 'clear-glass', 'src', 'driver', 'glass.js'));
 
 (async () => {
-  const browser = await chromium.launch({
-    executablePath: '/home/claude/.cache/puppeteer/chrome/linux-131.0.6778.204/chrome-linux64/chrome',
-    args: ['--no-sandbox', '--disable-dev-shm-usage'],
-  });
+  const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const consoleErrors = [];
   page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });

@@ -1,4 +1,4 @@
-// Real Chromium probe of Settings → Agents → "what the agent is sent" (idearium/ui/js/agent-blocks.js + css).
+// Real Chromium (Clear Glass's engine) probe of Settings → Agents → "what the agent is sent" (idearium/ui/js/agent-blocks.js + css).
 // The page loads the REAL agent-blocks.js/css; the three routes are served by the REAL lib/repo-prompt-blocks.js and
 // lib/repo-agent.js compose() — same calls as idearium/api/index.js's route cases. Not the full idearium page.
 require(require('path').join(__dirname, '../../lib/test-sandbox.js')).ensure();
@@ -30,8 +30,8 @@ const srv = http.createServer((q, r) => { let d = ''; q.on('data', c => d += c);
 }); });
 let pass = 0, fail = 0; const check = (n, c, x = '') => { if (c) { pass++; console.log('  ✓ ' + n); } else { fail++; console.log('  ✗ ' + n + ' ' + x); } };
 srv.listen(0, '127.0.0.1', async () => {
-  const { chromium } = require(ROOT + '/node_modules/playwright');
-  const br = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
+  const { chromium } = require(ROOT + '/clear-glass/src/driver/glass.js');   // 0.39.262 — Clear Glass's engine, not Playwright
+  const br = await chromium.launch();
   const pg = await br.newPage(); const errs = []; pg.on('pageerror', e => errs.push(e.message));
   await pg.goto(`http://127.0.0.1:${srv.address().port}/`);
   await pg.evaluate(() => renderAgentBlocks({ uuid: 'probe-repo-1' }));

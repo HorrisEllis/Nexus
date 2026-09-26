@@ -1045,6 +1045,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','nexus-self','sync'],                           'nexus-self.sync'],
     ['GET',    ['api','nexus-self','understanding'],                  'nexus-self.understanding'],
     ['GET',    ['api','nexus-self','applies'],                        'nexus-self.applies'],
+    ['GET',    ['api','nexus-self','atlas'],                          'nexus-self.atlas'],     // 0.39.262 — the nexus repo's Home
+    ['POST',   ['api','nexus-self','resolve'],                        'nexus-self.resolve'],   // what an atlas reference opens
+    ['GET',    ['api','nexus-self','file'],                           'nexus-self.file'],      // any text file of the immutable base
     ['POST',   ['api','nexus-self','applies',':id','rollback'],       'nexus-self.rollback'],
     ['GET',    ['api','nexus-self',':system'],                        'nexus-self.system'],
     ['GET',    ['api','nexus-self',':system','spec'],                 'nexus-self.spec'],
@@ -2706,6 +2709,20 @@ async function handle(req, res, route, query, body) {
       os.emit('idearium.nexus-self.rollback', { applyId: params.id, snapshot: r.snapshot });
       _nexusSelfSync({});
       return ok(res, r);
+    }
+    case 'nexus-self.atlas': {
+      const NS = await import('../repo/nexus-self.js');
+      return ok(res, NS.nexusAtlas(getRepoLayer()));
+    }
+    case 'nexus-self.resolve': {
+      const NS = await import('../repo/nexus-self.js');
+      const refs = Array.isArray(body.refs) ? body.refs.map(String) : [];
+      return ok(res, { refs: NS.resolveRefs(getRepoLayer(), refs) });
+    }
+    case 'nexus-self.file': {
+      const NS = await import('../repo/nexus-self.js');
+      const r = NS.fileText(String(query.path || ''));
+      return r.error ? err(res, 404, r.error) : ok(res, r);
     }
     case 'nexus-self.system': {
       const NS = await import('../repo/nexus-self.js');
