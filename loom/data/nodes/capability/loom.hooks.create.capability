@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.hooks.create
+type: capability
+id: loom.hooks.create
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730148
+source: loom.registry-components:loom.hooks.create
+payload:
+  id: loom.hooks.create
+  namespace: loom
+  name: hooks.create
+  version: 1.5.0
+  grammar:
+    - hooks create
+    - hooks-create
+  route:
+    method: POST
+    path: /api/hooks
+  intent: []
+  description: Create/update a hook (write authority)
+  params: []
+  tags:
+    - loom
+    - write
+  permissions:
+    - system
+  hooks: {}

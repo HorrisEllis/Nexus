@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-cg.window.close
+type: capability
+id: cg.window.close
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251076045
+source: clear-glass.seam.registry-components:cg.window.close
+payload:
+  id: cg.window.close
+  namespace: cg
+  name: window.close
+  version: 3.0.0
+  grammar:
+    - window close
+    - window-close
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Close agent window (hides to tray)
+  params: []
+  tags:
+    - cg
+    - window
+  permissions:
+    - system
+  hooks: {}

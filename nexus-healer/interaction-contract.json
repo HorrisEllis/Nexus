@@ -1,0 +1,68 @@
+{
+  "id": "nexus-healer-v1",
+  "version": "0.1.0",
+  "uuid": "nexus-healer-contract-v1-0000-4000-0000-000000000001",
+  "namespace": "nexus-healer",
+  "port": 3755,
+  "transport": {
+    "http": "http://127.0.0.1:3755",
+    "guardian": "http://127.0.0.1:7820"
+  },
+  "resources": {
+    "propose": {
+      "endpoints": {
+        "propose": {
+          "method": "POST",
+          "path": "/proposals",
+          "params": [
+            "text",
+            "causedBy"
+          ]
+        }
+      }
+    },
+    "list": {
+      "endpoints": {
+        "list": {
+          "method": "GET",
+          "path": "/proposals",
+          "params": []
+        }
+      }
+    },
+    "evaluate": {
+      "endpoints": {
+        "evaluate": {
+          "method": "POST",
+          "path": "/proposals/:id/evaluate",
+          "params": [
+            "id",
+            "targetFile"
+          ]
+        }
+      }
+    },
+    "merge": {
+      "endpoints": {
+        "merge": {
+          "method": "POST",
+          "path": "/proposals/:id/merge",
+          "params": [
+            "id"
+          ]
+        }
+      }
+    },
+    "archive": {
+      "endpoints": {
+        "archive": {
+          "method": "POST",
+          "path": "/proposals/:id/archive",
+          "params": [
+            "id"
+          ]
+        }
+      }
+    }
+  }
+}

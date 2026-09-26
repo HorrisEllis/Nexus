@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.state.read
+type: capability
+id: versionium.state.read
+context: versionium/registry-components.js real capability export
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789250756049
+source: versionium.registry-components:versionium.state.read
+payload:
+  id: versionium.state.read
+  namespace: versionium
+  name: state.read
+  version: 3.0.0
+  grammar:
+    - versionium state
+  route:
+    method: GET
+    path: /api/versionium/state/:commitId
+  intent: []
+  description: Direct-restore read of a commit's stored state
+  params: []
+  tags:
+    - versionium
+  permissions:
+    - system
+  hooks: {}

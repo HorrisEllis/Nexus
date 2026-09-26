@@ -1,0 +1,563 @@
+
+<!DOCTYPE html>
+<div style="width:100%;height:680px;position:relative;overflow:hidden">
+<canvas id="c" style="width:100%;height:100%"></canvas>
+<div id="tooltip" style="position:absolute;pointer-events:none;display:none;background:var(--color-background-secondary);border:1px solid var(--color-border-secondary);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--color-text-primary);max-width:200px;line-height:1.5"></div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+const tip = document.getElementById('tooltip');
+
+// fallback if no webgl
+if (!gl) {
+  canvas.style.display = 'none';
+  document.querySelector('div').innerHTML = '<p style="padding:2rem;color:var(--color-text-secondary)">WebGL unavailable — try a modern browser.</p>';
+  throw new Error('no webgl');
+}
+
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+// ── resize ──
+function resize() {
+  const pr = devicePixelRatio || 1;
+  const w = canvas.parentElement.clientWidth;
+  const h = canvas.parentElement.clientHeight;
+  canvas.width = w * pr;
+  canvas.height = h * pr;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+resize();
+new ResizeObserver(resize).observe(canvas.parentElement);
+
+// ── shaders ──
+const VS = `
+attribute vec3 aPos;
+attribute vec3 aCol;
+attribute float aAlpha;
+uniform mat4 uMVP;
+varying vec3 vCol;
+varying float vAlpha;
+void main(){
+  gl_Position = uMVP * vec4(aPos, 1.0);
+  gl_PointSize = 14.0;   // §2026-07-24 — 6.0 was effectively invisible at devicePixelRatio 2
+  vCol = aCol;
+  vAlpha = aAlpha;
+}`;
+
+const FS = `
+precision mediump float;
+varying vec3 vCol;
+varying float vAlpha;
+void main(){
+  gl_FragColor = vec4(vCol, vAlpha);
+}`;
+
+function mkShader(type, src) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  return s;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, VS));
+gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, FS));
+gl.linkProgram(prog);
+gl.useProgram(prog);
+
+const aPos   = gl.getAttribLocation(prog, 'aPos');
+const aCol   = gl.getAttribLocation(prog, 'aCol');
+const aAlpha = gl.getAttribLocation(prog, 'aAlpha');
+const uMVP   = gl.getUniformLocation(prog, 'uMVP');
+
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+gl.enable(gl.DEPTH_TEST);
+
+// ── math ──
+function mat4() { return new Float32Array(16); }
+function identity(m) { for(let i=0;i<16;i++) m[i]=i%5===0?1:0; return m; }
+function multiply(out, a, b) {
+  for(let i=0;i<4;i++) for(let j=0;j<4;j++) {
+    out[j*4+i]=0; for(let k=0;k<4;k++) out[j*4+i]+=a[k*4+i]*b[j*4+k];
+  } return out;
+}
+function perspective(m, fov, asp, near, far) {
+  const f=1/Math.tan(fov/2), nf=1/(near-far);
+  m[0]=f/asp; m[1]=m[2]=m[3]=0;
+  m[4]=0; m[5]=f; m[6]=m[7]=0;
+  m[8]=m[9]=0; m[10]=(far+near)*nf; m[11]=-1;
+  m[12]=m[13]=0; m[14]=2*far*near*nf; m[15]=0;
+  return m;
+}
+function rotX(m, a) {
+  identity(m);
+  m[5]=Math.cos(a); m[6]=Math.sin(a);
+  m[9]=-Math.sin(a); m[10]=Math.cos(a);
+  return m;
+}
+function rotY(m, a) {
+  identity(m);
+  m[0]=Math.cos(a); m[2]=-Math.sin(a);
+  m[8]=Math.sin(a); m[10]=Math.cos(a);
+  return m;
+}
+function translate(m, x, y, z) {
+  identity(m);
+  m[12]=x; m[13]=y; m[14]=z;
+  return m;
+}
+
+// ── scene geometry ──
+// Three rings stacked in Z:
+//   Z=+1.2 : Resonance Engine (outermost, top)
+//   Z= 0   : modules (outer ring)
+//   Z=-0.8 : primitives (inner ring)
+//   Z=-1.8 : kernel (center, deepest)
+
+const PURPLE  = dark ? [0.81,0.77,0.96] : [0.33,0.29,0.72];
+const TEAL    = dark ? [0.62,0.88,0.79] : [0.05,0.43,0.33];
+const AMBER   = dark ? [0.98,0.78,0.46] : [0.73,0.46,0.09];
+const GRAY    = dark ? [0.83,0.82,0.79] : [0.37,0.37,0.35];
+const WHITE   = dark ? [0.93,0.92,0.89] : [0.17,0.17,0.16];
+const SPOKE   = dark ? [0.5,0.5,0.5]   : [0.5,0.5,0.5];
+
+// ── sendPrompt — sends a query to the Guardian dispatch channel ──────────────
+// Falls back to console.log if guardian is offline
+function sendPrompt(text) {
+  fetch('http://localhost:7820/command', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ provider: 'claude', command: 'ask', prompt: text }),
+  })
+  .then(r => r.json())
+  .then(d => console.log('[ALK] dispatched:', d.jobId || d.id || 'ok'))
+  .catch(() => console.log('[ALK] sendPrompt (guardian offline):', text));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   §LIVE DATA 2026-07-24 — James: "No mock. Only real data, the
+   artifact/contract moving through the system, events, chunks."
+
+   WHAT THIS REPLACED: a hardcoded `const nodes = [...]` of 20 hand-placed,
+   hand-labelled nodes ("ALKKernel", "Feed Generator", …) with hand-authored
+   edges. It was a DIAGRAM — a picture of the architecture somebody typed in
+   — rendered convincingly enough to be mistaken for an instrument. It could
+   not go wrong, because it was never right in the first place: it showed the
+   same thing whether NEXUS was healthy, wedged, or not running at all. The
+   original is preserved in git history.
+
+   WHAT IT IS NOW: every node, edge and moving artifact below comes from
+   autopilot's /graph, which reads the live store and the real input/output
+   folders. Nothing here is placeholder, and nothing is padded when a feed is
+   empty — an empty feed renders as STILLNESS, because "nothing is moving" is
+   a real and important state. A brain that always looks busy is a liar.
+
+   SOURCES (all real, all verified against live rows before wiring):
+     nodes    ← union of §B1 cross-process subscription publishers and
+                real event_log sources
+     edges    ← real producer→consumer edges, weighted by observed counts
+     chunks   ← idearium_spec_chunks           (1937 real rows)
+     artifacts← guardian_artifacts             (195 real rows)
+     contracts← live <system>/input|output/*.json with their addenda chain
+     trails   ← raid_trails, real routing paths with real elapsed times
+     cfr      ← cfr_state.json on disk
+
+   POSITIONS are DERIVED, not authored: a stable hash of the system name
+   fixes each node's angle, so the layout is deterministic across reloads
+   (a node does not wander between refreshes) while never being hand-placed.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const GRAPH_URL = (new URLSearchParams(location.search).get('graph'))
+                || 'http://127.0.0.1:7799/graph';
+
+let nodes = [];
+let edges = [];
+let movers = [];          // artifacts/chunks/contracts currently in the system
+let liveState = { connected:false, reason:'connecting…', ts:0, cfr:null };
+
+/* Deterministic angle from a name — same node, same place, every reload. */
+function _angleFor(name){
+  let h = 0;
+  for (let i=0;i<name.length;i++) h = (h*31 + name.charCodeAt(i)) >>> 0;
+  return (h % 3600) / 3600 * Math.PI * 2;
+}
+function _colourFor(n){
+  if (n.stale) return AMBER;                       // published, then went quiet
+  if (n.publishes) return PURPLE;                  // a real §B1 publisher
+  if (n.emitted > 0) return TEAL;                  // emits but never subscribed
+  return GRAY;                                     // present, silent
+}
+
+function applyGraph(g){
+  const sys = g.nodes || [];
+  nodes = sys.map((n, i) => {
+    const a = _angleFor(n.id);
+    // Radius carries meaning: heavier emitters sit closer to the core.
+    const weight = Math.min(1, Math.log2((n.emitted || 0) + 1) / 8);
+    const r = 0.85 - weight * 0.35;
+    return {
+      label: n.id,
+      x: Math.cos(a) * r,
+      y: Math.sin(a) * r,
+      z: -0.8 + weight * 0.9,
+      color: _colourFor(n),
+      r: 0.05 + weight * 0.08,
+      info: `${n.emitted||0} events emitted · ${n.subscriptionTypes||0} subscription types · `
+          + `${n.listeners||0} listeners${n.publishes ? '' : ' · publishes no subscriptions'}`
+          + (n.stale ? ' · STALE' : ''),
+    };
+  });
+
+  const idx = new Map(nodes.map((n,i)=>[n.label,i]));
+  edges = [];
+  for (const e of (g.edges || [])) {
+    const a = idx.get(e.source);
+    if (a === undefined || !e.consumers || !e.consumers.length) continue;
+    for (const c of e.consumers) {
+      const b = idx.get(c);
+      if (b === undefined || b === a) continue;
+      edges.push([a, b, Math.min(0.65, 0.12 + Math.log2(e.weight+1)/14)]);
+    }
+  }
+
+  // Movers — the artifacts and contracts actually in the system right now.
+  const m = g.movement || {};
+  movers = [
+    ...(m.chunks    || []).map(x => ({...x, home:'idearium'})),
+    ...(m.artifacts || []).map(x => ({...x, home:'guardian'})),
+    ...(m.contracts || []).map(x => ({...x, home:x.to || x.from})),
+  ];
+
+  liveState = {
+    connected:true, ts:Date.now(), cfr:g.cfr || null,
+    reason:`${nodes.length} systems · ${edges.length} edges · ${movers.length} in flight`
+         + (g.trailsObserved ? ` · ${(g.trails||[]).length} trails` : ''),
+  };
+}
+
+async function refreshGraph(){
+  try {
+    const r = await fetch(GRAPH_URL, { cache:'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const g = await r.json();
+    applyGraph(g);
+  } catch (e) {
+    // §1.2 — an unreachable feed is STATED, never rendered as an empty
+    // universe. A blank lattice and a dead endpoint must not look identical.
+    liveState = { connected:false, reason:`autopilot unreachable — ${e.message}`, ts:Date.now(), cfr:null };
+    nodes = []; edges = []; movers = [];
+  }
+  rebuildBuffers();
+}
+
+// We'll draw: edges as lines, nodes as billboarded quads (just points for now + labels via overlay)
+function mkBuf(data) {
+  const b = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, b);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+  return b;
+}
+
+// line VBO: pos(3) col(3) alpha(1) per vertex
+function buildLines() {
+  const v = [];
+  for (const [a,b,al] of edges) {
+    const na=nodes[a], nb=nodes[b];
+    const c = SPOKE;
+    v.push(na.x,na.y,na.z,...c,al*0.7);
+    v.push(nb.x,nb.y,nb.z,...c,al*0.7);
+  }
+  return v;
+}
+
+// point VBO
+function buildPoints() {
+  const v = [];
+  for (const n of nodes) {
+    v.push(n.x,n.y,n.z,...n.color,0.95);
+  }
+  // §MOVERS — the artifacts, spec-chunks and contracts actually in the system
+  // right now, each orbiting the system that holds it. These are REAL rows: if
+  // a store is empty nothing is drawn, and that emptiness is the honest
+  // picture rather than a defect in the view.
+  const byHome = new Map();
+  for (const m of movers) {
+    if (!byHome.has(m.home)) byHome.set(m.home, []);
+    byHome.get(m.home).push(m);
+  }
+  const t = performance.now() / 1000;
+  for (const [home, list] of byHome) {
+    const host = nodes.find(n => n.label === home);
+    if (!host) continue;                      // never invent a position
+    list.forEach((m, i) => {
+      const phase = (i / list.length) * Math.PI * 2 + t * 0.25;
+      const orb   = host.r + 0.045 + (i % 3) * 0.018;
+      const col   = m.kind === 'contract'   ? WHITE
+                  : m.kind === 'spec-chunk' ? TEAL
+                  :                           AMBER;
+      v.push(host.x + Math.cos(phase) * orb,
+             host.y + Math.sin(phase) * orb,
+             host.z + 0.05,
+             ...col, 0.75);
+    });
+  }
+  return v;
+}
+
+// depth axis line (Z spine)
+function buildSpine() {
+  const c = dark ? [0.4,0.4,0.4] : [0.6,0.6,0.6];
+  return [
+    0,0,-2.2,...c,0.15,
+    0,0, 1.8,...c,0.15,
+  ];
+}
+
+// ring circles in XY at each Z level
+function buildRings() {
+  const v = [];
+  const levels = [
+    { z:-1.8, r:0,    col:PURPLE, al:0 },
+    { z:-0.8, r:0.65, col:PURPLE, al:0.12 },
+    { z: 0,   r:1.05, col:TEAL,   al:0.10 },
+    { z: 1.2, r:0.75, col:AMBER,  al:0.15 },
+  ];
+  for (const lv of levels) {
+    if (lv.r === 0) continue;
+    const N = 64;
+    for (let i=0;i<N;i++) {
+      const a0 = (i/N)*Math.PI*2, a1 = ((i+1)/N)*Math.PI*2;
+      v.push(Math.cos(a0)*lv.r, Math.sin(a0)*lv.r, lv.z, ...lv.col, lv.al);
+      v.push(Math.cos(a1)*lv.r, Math.sin(a1)*lv.r, lv.z, ...lv.col, lv.al);
+    }
+  }
+  return v;
+}
+
+const STRIDE = 7 * 4; // 7 floats * 4 bytes
+
+// §LIVE — buffers are rebuilt whenever real data arrives. They were const +
+// STATIC_DRAW built once at load, which was correct for a hardcoded diagram
+// and impossible for a live instrument.
+let lineData  = [], pointData = [], spineData = [], ringData = [];
+let lineBuf   = mkBuf([]), pointBuf = mkBuf([]), spineBuf = mkBuf([]), ringBuf = mkBuf([]);
+
+// Points rebuild per frame because movers orbit; lines/spine/rings change
+// only when the graph itself does, so they stay on the slower path.
+function rebuildPoints(){
+  pointData = buildPoints();
+  gl.bindBuffer(gl.ARRAY_BUFFER, pointBuf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pointData), gl.DYNAMIC_DRAW);
+}
+
+function rebuildBuffers(){
+  lineData  = buildLines();
+  pointData = buildPoints();
+  spineData = buildSpine();
+  ringData  = buildRings();
+  for (const [buf,data] of [[lineBuf,lineData],[pointBuf,pointData],[spineBuf,spineData],[ringBuf,ringData]]) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.DYNAMIC_DRAW);
+  }
+}
+
+function bindBuf(buf) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.enableVertexAttribArray(aPos);
+  gl.enableVertexAttribArray(aCol);
+  gl.enableVertexAttribArray(aAlpha);
+  gl.vertexAttribPointer(aPos,   3, gl.FLOAT, false, STRIDE, 0);
+  gl.vertexAttribPointer(aCol,   3, gl.FLOAT, false, STRIDE, 12);
+  gl.vertexAttribPointer(aAlpha, 1, gl.FLOAT, false, STRIDE, 24);
+}
+
+// ── camera ──
+let rotX_ = 0.38, rotY_ = 0.0;
+let autoSpin = true;
+let drag = false, lastX = 0, lastY = 0;
+let hovered = -1;
+
+canvas.addEventListener('mousedown', e => { drag=true; lastX=e.clientX; lastY=e.clientY; autoSpin=false; });
+canvas.addEventListener('mouseup',   () => drag=false);
+canvas.addEventListener('mousemove', e => {
+  if (drag) {
+    rotY_ += (e.clientX - lastX) * 0.008;
+    rotX_ += (e.clientY - lastY) * 0.008;
+    rotX_ = Math.max(-1.2, Math.min(1.2, rotX_));
+    lastX=e.clientX; lastY=e.clientY;
+  }
+  hitTest(e);
+});
+canvas.addEventListener('touchstart', e => { const t=e.touches[0]; drag=true; lastX=t.clientX; lastY=t.clientY; autoSpin=false; e.preventDefault(); }, {passive:false});
+canvas.addEventListener('touchmove',  e => { const t=e.touches[0]; if(drag){rotY_+=(t.clientX-lastX)*0.008; rotX_+=(t.clientY-lastY)*0.008; rotX_=Math.max(-1.2,Math.min(1.2,rotX_)); lastX=t.clientX;lastY=t.clientY;} e.preventDefault(); }, {passive:false});
+canvas.addEventListener('touchend',   () => drag=false);
+
+// ── hit test ──
+function hitTest(e) {
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / rect.width * 2 - 1;
+  const my = 1 - (e.clientY - rect.top) / rect.height * 2;
+
+  const proj = mat4(), rx = mat4(), ry = mat4(), tr = mat4();
+  perspective(proj, 0.9, rect.width/rect.height, 0.1, 20);
+  rotX(rx, rotX_); rotY(ry, rotY_); translate(tr, 0, 0, -4.5);
+  const tmp=mat4(), mvp=mat4();
+  multiply(tmp, tr, ry); multiply(mvp, multiply(mat4(),multiply(mat4(),proj,tr),ry),rx);
+
+  let best=-1, bestD=0.04;
+  for (let i=0;i<nodes.length;i++) {
+    const n=nodes[i];
+    const v=[n.x,n.y,n.z,1];
+    // project
+    const px=mvp[0]*v[0]+mvp[4]*v[1]+mvp[8]*v[2]+mvp[12]*v[3];
+    const py=mvp[1]*v[0]+mvp[5]*v[1]+mvp[9]*v[2]+mvp[13]*v[3];
+    const pw=mvp[3]*v[0]+mvp[7]*v[1]+mvp[11]*v[2]+mvp[15]*v[3];
+    const ndcx=px/pw, ndcy=py/pw;
+    const d=Math.hypot(ndcx-mx, ndcy-my);
+    if (d < bestD) { best=i; bestD=d; }
+  }
+
+  hovered = best;
+  if (best >= 0) {
+    const n = nodes[best];
+    tip.style.display = 'block';
+    tip.style.left = (e.clientX - rect.left + 12) + 'px';
+    tip.style.top  = (e.clientY - rect.top  - 10) + 'px';
+    tip.innerHTML  = `<strong style="color:var(--color-text-primary)">${n.label}</strong><br><span style="color:var(--color-text-secondary);font-size:11px">${n.info}</span>`;
+    canvas.style.cursor = 'pointer';
+  } else {
+    tip.style.display = 'none';
+    canvas.style.cursor = drag ? 'grabbing' : 'grab';
+  }
+}
+
+canvas.addEventListener('click', e => {
+  if (hovered >= 0) {
+    const n = nodes[hovered];
+    sendPrompt('Tell me about ' + n.label + ' in the Associative Lattice: ' + n.info);
+    // Record user interaction as ALK decision via architect API
+    fetch('http://localhost:3747/api/alk/record', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        actor: 'user', intent: 'explore-lattice',
+        payload: { node: n.label, info: n.info },
+      }),
+    }).catch(() => {});
+  }
+});
+
+// ── label overlay ──
+// We use a 2D canvas overlay for labels
+const oc = document.createElement('canvas');
+oc.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none';
+canvas.parentElement.appendChild(oc);
+const ctx2 = oc.getContext('2d');
+
+function drawLabels(mvp, w, h, pr) {
+  oc.width = w * pr; oc.height = h * pr;
+  ctx2.clearRect(0, 0, oc.width, oc.height);
+  ctx2.save();
+  ctx2.scale(pr, pr);
+  for (let i=0;i<nodes.length;i++) {
+    const n = nodes[i];
+    const v = [n.x, n.y, n.z, 1.0];
+    const px = mvp[0]*v[0]+mvp[4]*v[1]+mvp[8]*v[2]+mvp[12];
+    const py = mvp[1]*v[0]+mvp[5]*v[1]+mvp[9]*v[2]+mvp[13];
+    const pw = mvp[3]*v[0]+mvp[7]*v[1]+mvp[11]*v[2]+mvp[15];
+    const sx = (px/pw*0.5+0.5)*w;
+    const sy = (1-py/pw*0.5-0.5)*h;
+
+    const isHov = i === hovered;
+    const sz = isHov ? 13 : (n.r > 0.09 ? 12 : 10);
+    const wt = (n.r > 0.09 || isHov) ? '500' : '400';
+    const col = dark
+      ? (n.color===PURPLE ? '#CECBF6' : n.color===TEAL ? '#9FE1CB' : n.color===AMBER ? '#FAC775' : '#D3D1C7')
+      : (n.color===PURPLE ? '#3C3489' : n.color===TEAL ? '#085041' : n.color===AMBER ? '#633806' : '#444441');
+
+    ctx2.font = `${wt} ${sz}px "Anthropic Sans", system-ui, sans-serif`;
+    ctx2.textAlign = 'center';
+    const offY = (n.z > 0.5) ? -18 : (n.z < -1) ? 22 : -14;
+
+    // background pill for kernel and resonance
+    if (n.r > 0.09 || isHov) {
+      const tw = ctx2.measureText(n.label).width;
+      ctx2.fillStyle = dark ? 'rgba(20,18,40,0.75)' : 'rgba(245,244,240,0.82)';
+      ctx2.beginPath();
+      ctx2.roundRect(sx - tw/2 - 5, sy + offY - sz, tw + 10, sz + 6, 4);
+      ctx2.fill();
+    }
+
+    ctx2.fillStyle = col;
+    ctx2.globalAlpha = isHov ? 1 : 0.9;
+    ctx2.fillText(n.label, sx, sy + offY);
+    ctx2.globalAlpha = 1;
+  }
+  ctx2.restore();
+}
+
+// ── render loop ──
+let t0 = performance.now();
+
+function render(ts) {
+  if (movers.length) rebuildPoints();   // §LIVE — movers orbit, so points refresh per frame
+  requestAnimationFrame(render);
+  const dt = (ts - t0) / 1000; t0 = ts;
+  if (autoSpin) rotY_ += dt * 0.25;
+
+  const w = canvas.clientWidth, h = canvas.clientHeight, pr = devicePixelRatio||1;
+  const proj=mat4(), rx=mat4(), ry=mat4(), tr=mat4(), tmp=mat4(), mvp=mat4();
+  perspective(proj, 0.9, w/h, 0.1, 20);
+  rotX(rx, rotX_); rotY(ry, rotY_); translate(tr, 0, 0, -4.5);
+  multiply(tmp, multiply(mat4(),tr,ry), rx);
+  multiply(mvp, proj, tmp);
+  gl.uniformMatrix4fv(uMVP, false, mvp);
+
+  const bg = dark ? [0.07,0.07,0.065,1] : [0.96,0.96,0.95,1];
+  gl.clearColor(...bg);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  // spine
+  bindBuf(spineBuf);
+  gl.drawArrays(gl.LINES, 0, 2);
+
+  // rings
+  bindBuf(ringBuf);
+  gl.drawArrays(gl.LINES, 0, ringData.length/7);
+
+  // edges
+  bindBuf(lineBuf);
+  gl.drawArrays(gl.LINES, 0, lineData.length/7);
+
+  // nodes as points
+  gl.bindBuffer(gl.ARRAY_BUFFER, pointBuf);
+  gl.enableVertexAttribArray(aPos);
+  gl.enableVertexAttribArray(aCol);
+  gl.enableVertexAttribArray(aAlpha);
+  gl.vertexAttribPointer(aPos,   3, gl.FLOAT, false, STRIDE, 0);
+  gl.vertexAttribPointer(aCol,   3, gl.FLOAT, false, STRIDE, 12);
+  gl.vertexAttribPointer(aAlpha, 1, gl.FLOAT, false, STRIDE, 24);
+  // draw each node as a filled circle using multiple point sizes
+  for (let i=0;i<nodes.length;i++) {
+    // we can't change pointSize per vertex in this setup so we just draw
+  }
+  // §FIX 2026-07-24 — was nodes.length, which silently dropped every mover:
+  // buildPoints() appends artifacts/chunks/contracts AFTER the system nodes,
+  // so a count of nodes.length rendered the systems and discarded the
+  // movement. The buffer had the data; the draw call refused to look at it.
+  // Exactly the "declared but never executed" shape, in a draw call.
+  gl.drawArrays(gl.POINTS, 0, pointData.length / 7);
+
+  drawLabels(mvp, w, h, pr);
+}
+
+requestAnimationFrame(render);
+
+// §LIVE — first fetch immediately, then poll. 4s is deliberate: this reads
+// the store on every call, and a tighter loop would make the observer a load
+// source on the system it is observing.
+refreshGraph();
+setInterval(refreshGraph, 4000);
+</script>

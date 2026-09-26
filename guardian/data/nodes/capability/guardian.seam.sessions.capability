@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.seam.sessions
+type: capability
+id: guardian.seam.sessions
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730140
+source: guardian.registry-components:guardian.seam.sessions
+payload:
+  id: guardian.seam.sessions
+  namespace: guardian
+  name: seam.sessions
+  version: 3.6.2
+  grammar:
+    - seam sessions
+    - seam-sessions
+  route:
+    method: GET
+    path: /seam/sessions
+  intent: []
+  description: SEAM session history
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

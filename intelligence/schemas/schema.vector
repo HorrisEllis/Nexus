@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-schema-vector
+type: schema
+id: vector
+context: >-
+  intelligence/schemas — sovereign local copy. Origin: lib/node-schemas/schema.vector (shared
+  canonical version, may have moved on independently since this copy was made — sovereignty means
+  intelligence does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789235656626
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: lib/vector-memory.js — embed()'s real insertItem({metadata}) shape
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real id — refused if missing (embed() returns false without it)
+    text:
+      type: string
+      required: true
+      description: real source text, stored truncated to 200 chars in the index metadata — refused if missing
+    type:
+      type: string
+      required: false
+      description: real caller-supplied type tag, defaults to empty string
+    source:
+      type: string
+      required: false
+      description: real caller-supplied source tag, defaults to empty string
+    table:
+      type: string
+      required: false
+      description: real JAA table this vector indexes content from, defaults to empty string
+    ts:
+      type: number
+      required: false
+      description: real timestamp, defaults to Date.now() at embed time
+    metadata:
+      type: object
+      required: false
+      description: >-
+        real caller-supplied extra fields, spread directly into the stored metadata object —
+        open-ended by design

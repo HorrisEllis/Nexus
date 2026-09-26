@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.provider.result
+type: capability
+id: guardian.provider.result
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730134
+source: guardian.registry-components:guardian.provider.result
+payload:
+  id: guardian.provider.result
+  namespace: guardian
+  name: provider.result
+  version: 3.6.2
+  grammar:
+    - provider result
+    - provider-result
+  route:
+    method: POST
+    path: /result
+  intent: []
+  description: NCP result from browser tab
+  params: []
+  tags:
+    - guardian
+    - ncp
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.cookie.save
+type: capability
+id: cg.cookie.save
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251076015
+source: clear-glass.seam.registry-components:cg.cookie.save
+payload:
+  id: cg.cookie.save
+  namespace: cg
+  name: cookie.save
+  version: 3.0.0
+  grammar:
+    - cookie save
+    - cookie-save
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Save per-account cookies — AES-256-GCM vault
+  params: []
+  tags:
+    - cg
+    - cookie
+    - vault
+  permissions:
+    - system
+  hooks: {}

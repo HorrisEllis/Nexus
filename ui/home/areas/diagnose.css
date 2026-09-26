@@ -1,0 +1,11 @@
+/* ui/home/areas/diagnose.css — Diagnose channel.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* CH7: Diagnose */
+#ch-diagnose.active{display:flex;flex-direction:column;padding:60px 70px 110px;gap:14px;overflow-y:auto}
+.diag-row{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:16px}
+.diag-name{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;min-width:140px}
+.diag-port{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);min-width:50px}
+.diag-status{font-family:'Space Mono',monospace;font-size:11px;min-width:80px}
+.diag-status.ok{color:var(--ok)}.diag-status.fail{color:var(--err)}.diag-status.checking{color:#ffaa00;animation:pulse .8s ease-in-out infinite}
+.diag-detail{color:rgba(255,255,255,.35);font-size:11px;flex:1}
+.diag-btn{margin-left:auto;flex-shrink:0}

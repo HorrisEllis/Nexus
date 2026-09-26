@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-fb3985cd-b98e-49ce-b459-ac382abdc724
+type: bep_pattern
+id: fb3985cd-b98e-49ce-b459-ac382abdc724
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.loom.updated" precedes failures 25 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266416
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266416
+lastSeenAt: 1790368266416
+fingerprint: null
+payload:
+  uuid: fb3985cd-b98e-49ce-b459-ac382abdc724
+  signature: precursor::ledger.loom.updated
+  patternType: failure_precursor
+  precursorType: ledger.loom.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 25
+  confidence: 1
+  description: '"ledger.loom.updated" precedes failures 25 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

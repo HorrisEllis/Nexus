@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-schema-repo_agent
+type: schema
+id: repo_agent
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: lib/repo-agent-node.js materialise() — the real construction site
+  note: >-
+    LEGACY 2026-09-20: superseded by `agent` (schema.agent). 0.39.189 wrote this type; it is
+    still READ by importAgent() and never written. Distinct from schema.health (RAID).
+    Distinct from schema.health, which is RAID's per-agent health snapshot
+    (dispatchName/online/consecutiveFails/successRate). This is a portable
+    compartment identity: the hat definition, its learned observation set,
+    and optionally its exchange log. The hat uuid travels as _originUuid
+    for provenance only and is never reused on import — importAgent()
+    re-forges, for the same reason hat-forge.importHat() does.
+  fields:
+    schema:
+      type: string
+      required: true
+      description: literal "nexus.repo_agent/1"
+    repo:
+      type: object
+      required: true
+      description: uuid, name, compartmentId of the source repo
+    hat:
+      type: object
+      required: true
+      description: hat DEFINITION (name, seedKey, baseAgent, toolScope, model, personaPrompt, _originUuid) — not its identity
+    observations:
+      type: array
+      required: true
+      description: lib/repo-hat-memory.js rows; dedupKey travels so an import merges rather than duplicates
+    exchanges:
+      type: array
+      required: false
+      description: per-compartment exchange log; not restored by default, since another machine's transcript is evidence, not this compartment's history
+    indexAtExport:
+      type: object
+      required: false
+      description: the atlas/chunk index the persona was grounded against at export time, so an importer can tell whether it still describes reality
+    exportedAt:
+      type: number
+      required: true
+      description: real epoch ms

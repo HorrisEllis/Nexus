@@ -1,0 +1,42 @@
+{
+  "name": "nexus",
+  "version": "0.39.261",
+  "description": "NEXUS — sovereign AI orchestration platform",
+  "author": "James Brooks (Erosmancer)",
+  "license": "MIT",
+  "private": true,
+  "bin": {},
+  "workspaces": [
+    "clear-glass",
+    "architect",
+    "cos",
+    "emerge",
+    "idearium",
+    "siso",
+    "erosmancer/erosmancer-os"
+  ],
+  "scripts": {
+    "test": "node tests/brutal.test.js",
+    "test:all": "node tests/brutal.test.js && node tests/pipeline.test.js && node tests/kernel.test.js && node tests/full.test.js && node tests/modules/run-all.js",
+    "test:int": "node tests/integration.test.js",
+    "start": "node orchestrator.js",
+    "start:all": "node nexus/autopilot.js",
+    "start:core": "node nexus/autopilot.js --only=orchestrator,bridge,cortex,guardian",
+    "autopilot": "node nexus/autopilot.js",
+    "autopilot:status": "node nexus/autopilot.js --status-port=7799",
+    "start:all:cli": "node nexus/autopilot.js --cli",
+    "movement": "node cli/nexus-movement.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "electron": "^42.5.0",
+    "electron-builder": "^26.15.3",
+    "jsdom": "^30.1.0",
+    "playwright": "^1.61.1"
+  },
+  "dependencies": {
+    "js-yaml": "^5.4.2"
+  }
+}

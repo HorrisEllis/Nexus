@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Architecture Builder</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e10;--bg2:#16161a;--bg3:#1e1e24;--bg4:#26262e;
+  --border:#2e2e38;--border2:#3a3a48;
+  --text:#e2e2e8;--text2:#9090a0;--text3:#5a5a6a;
+  --purple:#7f77dd;--teal:#1d9e75;--amber:#ef9f27;--blue:#378add;--red:#e24b4a;--green:#1d9e75;
+  --gate:#534ab7;
+  --radius:8px;
+}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono',ui-monospace,monospace;font-size:13px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* toolbar */
+#toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+#toolbar h1{font-size:12px;font-weight:500;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin-right:4px}
+.sep{width:1px;height:20px;background:var(--border);margin:0 4px}
+.btn{padding:4px 10px;border-radius:5px;border:1px solid var(--border2);background:var(--bg3);color:var(--text);cursor:pointer;font-size:12px;font-family:inherit;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--bg4);border-color:var(--border2)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn.primary:hover{background:#9388e8}
+.btn.danger{background:transparent;border-color:var(--red);color:var(--red)}
+.btn.danger:hover{background:#2a1515}
+#palette{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{padding:3px 9px;border-radius:4px;font-size:11px;cursor:grab;user-select:none;border:1px solid;transition:opacity .15s}
+.chip:hover{opacity:.8}
+.chip[data-type=layer]  {background:#1a1048;border-color:var(--purple);color:#a09af6}
+.chip[data-type=gate]   {background:#12203a;border-color:var(--blue);color:#85b7eb}
+.chip[data-type=node]   {background:#0d2a1e;border-color:var(--teal);color:#9fe1cb}
+.chip[data-type=check]  {background:#2a2010;border-color:var(--amber);color:#fac775}
+.chip[data-type=surface]{background:#1e1e26;border-color:var(--text3);color:var(--text2)}
+.spacer{flex:1}
+
+/* main area */
+#main{display:flex;flex:1;overflow:hidden}
+
+/* canvas */
+#canvas-wrap{flex:1;position:relative;overflow:hidden;cursor:default}
+#canvas{width:100%;height:100%;position:absolute;top:0;left:0}
+#svg-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+
+/* nodes */
+.arch-node{position:absolute;border-radius:var(--radius);border:1px solid;padding:8px 12px;cursor:grab;user-select:none;min-width:110px;max-width:200px;transition:box-shadow .15s}
+.arch-node:hover{box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.arch-node.selected{box-shadow:0 0 0 2px #fff}
+.arch-node.layer  {background:#1a1048;border-color:var(--purple)}
+.arch-node.gate   {background:#12203a;border-color:var(--blue);border-style:dashed}
+.arch-node.node   {background:#0d2a1e;border-color:var(--teal)}
+.arch-node.check  {background:#2a2010;border-color:var(--amber)}
+.arch-node.surface{background:#1e1e26;border-color:var(--text3)}
+.node-label{font-size:12px;font-weight:500;color:var(--text);word-break:break-word}
+.node-sub  {font-size:10px;color:var(--text2);margin-top:2px;word-break:break-word}
+.node-handle{width:10px;height:10px;border-radius:50%;border:1px solid;position:absolute;background:var(--bg);cursor:crosshair;transition:transform .1s}
+.node-handle:hover{transform:scale(1.4)}
+.handle-out{bottom:-5px;left:50%;transform:translateX(-50%)}
+.handle-in {top:-5px;left:50%;transform:translateX(-50%)}
+.handle-out:hover{transform:translateX(-50%) scale(1.4)}
+.node-delete{position:absolute;top:3px;right:5px;font-size:10px;color:var(--text3);cursor:pointer;opacity:0;transition:opacity .1s;line-height:1;padding:1px 3px;border-radius:3px}
+.arch-node:hover .node-delete{opacity:1}
+.node-delete:hover{color:var(--red);background:#2a1515}
+
+/* inline edit */
+.arch-node input, .arch-node textarea{
+  background:transparent;border:none;outline:none;
+  color:var(--text);font-family:inherit;font-size:12px;
+  width:100%;resize:none;
+}
+
+/* side panel */
+#panel{width:240px;background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+#panel-head{padding:10px 12px;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)}
+#panel-body{flex:1;overflow-y:auto;padding:12px}
+.prop-row{margin-bottom:10px}
+.prop-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.prop-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:inherit;font-size:12px;padding:5px 8px;outline:none}
+.prop-input:focus{border-color:var(--purple)}
+.prop-select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);font-family:inherit;font-size:12px;padding:5px 8px;outline:none}
+.color-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.color-dot{width:18px;height:18px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .1s}
+.color-dot:hover,.color-dot.active{border-color:#fff}
+
+/* spec output */
+#spec-panel{background:var(--bg2);border-top:1px solid var(--border);max-height:220px;overflow:hidden;display:flex;flex-direction:column;flex-shrink:0}
+#spec-head{padding:6px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);cursor:pointer}
+#spec-head span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)}
+#spec-body{flex:1;overflow:auto;display:none}
+#spec-body.open{display:block}
+#spec-pre{padding:10px 12px;font-size:11px;color:#9fe1cb;white-space:pre;tab-size:2}
+.copy-btn{margin-left:auto;font-size:10px;padding:2px 7px;border-radius:4px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);cursor:pointer}
+.copy-btn:hover{color:var(--text)}
+
+/* connecting line style */
+.conn-line{stroke:#378add;stroke-width:1.5;fill:none;stroke-dasharray:5 3;opacity:0.6;marker-end:url(#arr)}
+.conn-line.gate-conn{stroke:var(--gate);stroke-dasharray:none;opacity:0.5}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h1>arch builder</h1>
+  <div class="sep"></div>
+  <div id="palette">
+    <span class="chip" data-type="layer"  draggable="true">layer</span>
+    <span class="chip" data-type="gate"   draggable="true">gate</span>
+    <span class="chip" data-type="node"   draggable="true">node</span>
+    <span class="chip" data-type="check"  draggable="true">checkpoint</span>
+    <span class="chip" data-type="surface"draggable="true">surface</span>
+  </div>
+  <div class="sep"></div>
+  <button class="btn" id="btn-connect" title="Toggle connect mode (C)">connect</button>
+  <button class="btn" id="btn-clear-conn">clear edges</button>
+  <div class="spacer"></div>
+  <button class="btn" id="btn-export-svg">svg</button>
+  <button class="btn primary" id="btn-spec">export .spec</button>
+  <button class="btn danger" id="btn-clear">clear all</button>
+</div>
+
+<div id="main">
+  <div id="canvas-wrap">
+    <div id="canvas"></div>
+    <svg id="svg-overlay" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#378add" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <marker id="arr-gate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#534ab7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <g id="edges-g"></g>
+      <line id="drag-line" x1="0" y1="0" x2="0" y2="0" stroke="#378add" stroke-width="1.5" stroke-dasharray="5 3" opacity="0" fill="none"/>
+    </svg>
+  </div>
+
+  <div id="panel">
+    <div id="panel-head">Properties</div>
+    <div id="panel-body">
+      <div id="no-sel" style="color:var(--text3);font-size:11px;padding-top:4px">Select a node to edit</div>
+      <div id="prop-form" style="display:none">
+        <div class="prop-row">
+          <div class="prop-label">label</div>
+          <input class="prop-input" id="prop-label" type="text" placeholder="node name">
+        </div>
+        <div class="prop-row">
+          <div class="prop-label">subtitle</div>
+          <input class="prop-input" id="prop-sub" type="text" placeholder="short description">
+        </div>
+        <div class="prop-row">
+          <div class="prop-label">type</div>
+          <select class="prop-select" id="prop-type">
+            <option value="layer">layer</option>
+            <option value="gate">gate</option>
+            <option value="node">node</option>
+            <option value="check">checkpoint</option>
+            <option value="surface">surface</option>
+          </select>
+        </div>
+        <div class="prop-row">
+          <div class="prop-label">notes / axiom</div>
+          <textarea class="prop-input" id="prop-notes" rows="3" placeholder="axiom, gate rule, description…" style="resize:vertical"></textarea>
+        </div>
+        <div class="prop-row">
+          <div class="prop-label">snr (0–1)</div>
+          <input class="prop-input" id="prop-snr" type="number" min="0" max="1" step="0.05" placeholder="e.g. 0.80">
+        </div>
+        <div class="prop-row">
+          <div class="prop-label">failure mode</div>
+          <input class="prop-input" id="prop-fail" type="text" placeholder="e.g. malformed event">
+        </div>
+        <button class="btn" id="btn-delete-sel" style="width:100%;margin-top:4px">delete node</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="spec-panel">
+  <div id="spec-head">
+    <span id="spec-toggle-icon">▶</span>
+    <span>.spec output</span>
+    <button class="copy-btn" id="btn-copy-spec">copy</button>
+  </div>
+  <div id="spec-body">
+    <pre id="spec-pre">{}</pre>
+  </div>
+</div>
+
+<script>
+// ── state ──
+let nodes = [];   // { id, type, label, sub, notes, snr, fail, x, y, w, h }
+let edges = [];   // { from, to }
+let selected = null;
+let connectMode = false;
+let connectFrom = null;
+let idSeq = 1;
+const canvas = document.getElementById('canvas');
+const wrap   = document.getElementById('canvas-wrap');
+const svg    = document.getElementById('svg-overlay');
+const edgesG = document.getElementById('edges-g');
+const dragLine = document.getElementById('drag-line');
+
+// ── id gen ──
+const uid = () => 'n' + (idSeq++);
+
+// ── type defaults ──
+const DEFAULTS = {
+  layer:   { label:'layer',       sub:'components…', notes:'' },
+  gate:    { label:'gate',        sub:'validate',    notes:'axiom: …', snr:'0.80', fail:'schema violation' },
+  node:    { label:'node',        sub:'role…',       notes:'' },
+  check:   { label:'checkpoint',  sub:'A',           notes:'axiom: …', snr:'0.70', fail:'malformed event' },
+  surface: { label:'surface',     sub:'CLI / UI',    notes:'' },
+};
+
+// ── create node ──
+function createNode(type, x, y) {
+  const def = DEFAULTS[type] || DEFAULTS.node;
+  const n = { id: uid(), type, label: def.label, sub: def.sub, notes: def.notes || '',
+               snr: def.snr || '', fail: def.fail || '', x, y, w: 140, h: 56 };
+  nodes.push(n);
+  renderNode(n);
+  renderEdges();
+  updateSpec();
+  return n;
+}
+
+// ── render single node ──
+function renderNode(n) {
+  let el = document.getElementById(n.id);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = n.id;
+    el.className = 'arch-node ' + n.type;
+    el.innerHTML = `
+      <span class="node-delete" data-id="${n.id}">✕</span>
+      <div class="node-handle handle-in"  data-id="${n.id}" data-role="in"  style="border-color:var(--teal)"></div>
+      <div class="node-label"  data-id="${n.id}" contenteditable="true" spellcheck="false">${n.label}</div>
+      <div class="node-sub"    data-id="${n.id}" contenteditable="true" spellcheck="false">${n.sub}</div>
+      <div class="node-handle handle-out" data-id="${n.id}" data-role="out" style="border-color:var(--blue)"></div>`;
+    canvas.appendChild(el);
+    makeDraggable(el, n);
+    // inline edit
+    el.querySelector('.node-label').addEventListener('input', e => {
+      n.label = e.target.innerText.trim();
+      if (selected === n.id) document.getElementById('prop-label').value = n.label;
+      updateSpec();
+    });
+    el.querySelector('.node-sub').addEventListener('input', e => {
+      n.sub = e.target.innerText.trim();
+      if (selected === n.id) document.getElementById('prop-sub').value = n.sub;
+      updateSpec();
+    });
+    el.querySelector('.node-delete').addEventListener('click', e => {
+      e.stopPropagation();
+      deleteNode(n.id);
+    });
+    el.addEventListener('click', e => {
+      if (e.target.dataset.role) return;
+      selectNode(n.id);
+    });
+    // handle connect
+    el.querySelectorAll('.node-handle').forEach(h => {
+      h.addEventListener('mousedown', e => {
+        e.stopPropagation();
+        if (h.dataset.role === 'out') startConnect(n.id, e);
+        else if (connectMode && connectFrom) finishConnect(n.id);
+      });
+      h.addEventListener('mouseup', e => {
+        e.stopPropagation();
+        if (connectFrom && connectFrom !== n.id) finishConnect(n.id);
+      });
+    });
+  }
+  el.className = 'arch-node ' + n.type + (selected === n.id ? ' selected' : '');
+  el.style.left = n.x + 'px';
+  el.style.top  = n.y + 'px';
+  el.style.width = n.w + 'px';
+}
+
+function renderAllNodes() {
+  nodes.forEach(n => renderNode(n));
+}
+
+// ── drag node ──
+function makeDraggable(el, n) {
+  let ox, oy, sx, sy;
+  el.addEventListener('mousedown', e => {
+    if (e.target.dataset.role || e.target.classList.contains('node-delete') ||
+        e.target.isContentEditable) return;
+    if (connectFrom) return;
+    e.preventDefault();
+    ox = e.clientX; oy = e.clientY;
+    sx = n.x; sy = n.y;
+    const onmove = ev => {
+      n.x = sx + ev.clientX - ox;
+      n.y = sy + ev.clientY - oy;
+      el.style.left = n.x + 'px';
+      el.style.top  = n.y + 'px';
+      renderEdges();
+    };
+    const onup = () => { document.removeEventListener('mousemove', onmove); document.removeEventListener('mouseup', onup); updateSpec(); };
+    document.addEventListener('mousemove', onmove);
+    document.addEventListener('mouseup', onup);
+  });
+}
+
+// ── connect mode ──
+let connectMouseMove = null;
+function startConnect(fromId, e) {
+  connectFrom = fromId;
+  const rect = wrap.getBoundingClientRect();
+  const [cx, cy] = nodeCenter(fromId);
+  dragLine.setAttribute('x1', cx); dragLine.setAttribute('y1', cy);
+  dragLine.setAttribute('x2', e.clientX - rect.left); dragLine.setAttribute('y2', e.clientY - rect.top);
+  dragLine.setAttribute('opacity', '0.7');
+  connectMouseMove = ev => {
+    dragLine.setAttribute('x2', ev.clientX - rect.left);
+    dragLine.setAttribute('y2', ev.clientY - rect.top);
+  };
+  document.addEventListener('mousemove', connectMouseMove);
+  document.addEventListener('mouseup', cancelConnect, { once: true });
+}
+function finishConnect(toId) {
+  if (connectFrom && toId && connectFrom !== toId) {
+    if (!edges.find(e => e.from === connectFrom && e.to === toId)) {
+      edges.push({ from: connectFrom, to: toId });
+    }
+  }
+  cancelConnect();
+  renderEdges();
+  updateSpec();
+}
+function cancelConnect() {
+  connectFrom = null;
+  dragLine.setAttribute('opacity', '0');
+  if (connectMouseMove) { document.removeEventListener('mousemove', connectMouseMove); connectMouseMove = null; }
+}
+
+// ── edges ──
+function nodeCenter(id) {
+  const n = nodes.find(x => x.id === id);
+  if (!n) return [0, 0];
+  return [n.x + n.w / 2, n.y + n.h / 2];
+}
+function renderEdges() {
+  edgesG.innerHTML = '';
+  edges.forEach(e => {
+    const [x1, y1] = nodeCenter(e.from);
+    const [x2, y2] = nodeCenter(e.to);
+    const mid = (y1 + y2) / 2;
+    const fromN = nodes.find(n => n.id === e.from);
+    const isGate = fromN && (fromN.type === 'gate' || fromN.type === 'check');
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', `M${x1},${y1} C${x1},${mid} ${x2},${mid} ${x2},${y2}`);
+    p.setAttribute('class', 'conn-line' + (isGate ? ' gate-conn' : ''));
+    if (isGate) p.setAttribute('marker-end', 'url(#arr-gate)');
+    else p.setAttribute('marker-end', 'url(#arr)');
+    edgesG.appendChild(p);
+  });
+}
+
+// ── select ──
+function selectNode(id) {
+  selected = id;
+  renderAllNodes();
+  const n = nodes.find(x => x.id === id);
+  if (!n) return;
+  document.getElementById('no-sel').style.display = 'none';
+  document.getElementById('prop-form').style.display = 'block';
+  document.getElementById('prop-label').value = n.label;
+  document.getElementById('prop-sub').value   = n.sub;
+  document.getElementById('prop-type').value  = n.type;
+  document.getElementById('prop-notes').value = n.notes;
+  document.getElementById('prop-snr').value   = n.snr;
+  document.getElementById('prop-fail').value  = n.fail;
+}
+canvas.addEventListener('click', e => { if (e.target === canvas) { selected = null; renderAllNodes(); document.getElementById('no-sel').style.display=''; document.getElementById('prop-form').style.display='none'; }});
+
+// ── property panel ──
+['prop-label','prop-sub','prop-type','prop-notes','prop-snr','prop-fail'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    if (!selected) return;
+    const n = nodes.find(x => x.id === selected);
+    if (!n) return;
+    n.label = document.getElementById('prop-label').value;
+    n.sub   = document.getElementById('prop-sub').value;
+    n.type  = document.getElementById('prop-type').value;
+    n.notes = document.getElementById('prop-notes').value;
+    n.snr   = document.getElementById('prop-snr').value;
+    n.fail  = document.getElementById('prop-fail').value;
+    renderNode(n);
+    updateSpec();
+  });
+});
+
+// ── delete ──
+function deleteNode(id) {
+  nodes = nodes.filter(n => n.id !== id);
+  edges = edges.filter(e => e.from !== id && e.to !== id);
+  const el = document.getElementById(id);
+  if (el) el.remove();
+  if (selected === id) { selected = null; document.getElementById('no-sel').style.display=''; document.getElementById('prop-form').style.display='none'; }
+  renderEdges();
+  updateSpec();
+}
+document.getElementById('btn-delete-sel').addEventListener('click', () => { if (selected) deleteNode(selected); });
+
+// ── drag from palette ──
+let dragType = null;
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('dragstart', e => { dragType = chip.dataset.type; e.dataTransfer.effectAllowed = 'copy'; });
+  chip.addEventListener('dragend', () => { dragType = null; });
+});
+wrap.addEventListener('dragover', e => e.preventDefault());
+wrap.addEventListener('drop', e => {
+  e.preventDefault();
+  if (!dragType) return;
+  const rect = wrap.getBoundingClientRect();
+  createNode(dragType, e.clientX - rect.left - 70, e.clientY - rect.top - 28);
+});
+
+// ── double-click to create ──
+wrap.addEventListener('dblclick', e => {
+  if (e.target !== canvas && e.target !== wrap) return;
+  const rect = wrap.getBoundingClientRect();
+  createNode('node', e.clientX - rect.left - 70, e.clientY - rect.top - 28);
+});
+
+// ── connect button ──
+document.getElementById('btn-connect').addEventListener('click', () => {
+  connectMode = !connectMode;
+  document.getElementById('btn-connect').classList.toggle('primary', connectMode);
+  document.getElementById('btn-connect').textContent = connectMode ? 'connecting…' : 'connect';
+  canvas.style.cursor = connectMode ? 'crosshair' : 'default';
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'c' && !e.target.isContentEditable && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    document.getElementById('btn-connect').click();
+  }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && selected && !e.target.isContentEditable && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    deleteNode(selected);
+  }
+});
+
+document.getElementById('btn-clear-conn').addEventListener('click', () => { edges = []; renderEdges(); updateSpec(); });
+document.getElementById('btn-clear').addEventListener('click', () => {
+  if (!confirm('Clear everything?')) return;
+  nodes = []; edges = []; canvas.innerHTML = ''; renderEdges(); updateSpec();
+  selected = null; document.getElementById('no-sel').style.display=''; document.getElementById('prop-form').style.display='none';
+});
+
+// ── spec output ──
+function updateSpec() {
+  const spec = {
+    version: '1.0.0',
+    generated: new Date().toISOString().slice(0,19)+'Z',
+    layers: nodes.filter(n => n.type === 'layer').map(specNode),
+    gates: nodes.filter(n => n.type === 'gate' || n.type === 'check').map(n => ({
+      ...specNode(n),
+      snr: n.snr ? parseFloat(n.snr) : undefined,
+      failureMode: n.fail || undefined,
+    })),
+    nodes: nodes.filter(n => n.type === 'node' || n.type === 'surface').map(specNode),
+    edges: edges.map(e => ({ from: nodeName(e.from), to: nodeName(e.to) })),
+  };
+  document.getElementById('spec-pre').textContent = JSON.stringify(spec, null, 2);
+}
+function specNode(n) {
+  const o = { id: n.id, label: n.label, type: n.type };
+  if (n.sub)   o.sub = n.sub;
+  if (n.notes) o.notes = n.notes;
+  return o;
+}
+function nodeName(id) { const n = nodes.find(x => x.id === id); return n ? n.label : id; }
+
+// spec panel toggle
+document.getElementById('spec-head').addEventListener('click', e => {
+  if (e.target.classList.contains('copy-btn')) return;
+  const body = document.getElementById('spec-body');
+  const open = body.classList.toggle('open');
+  document.getElementById('spec-toggle-icon').textContent = open ? '▼' : '▶';
+});
+document.getElementById('btn-copy-spec').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('spec-pre').textContent).then(() => {
+    const b = document.getElementById('btn-copy-spec');
+    b.textContent = 'copied!'; setTimeout(() => b.textContent = 'copy', 1500);
+  });
+});
+document.getElementById('btn-spec').addEventListener('click', () => {
+  const data = document.getElementById('spec-pre').textContent;
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'architecture.spec.json';
+  a.click();
+});
+
+// ── SVG export ──
+document.getElementById('btn-export-svg').addEventListener('click', () => {
+  const svgEl = document.getElementById('svg-overlay');
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="background:#0e0e10">`;
+  s += `<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#378add" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+  edges.forEach(e => {
+    const [x1,y1]=nodeCenter(e.from),[x2,y2]=nodeCenter(e.to),mid=(y1+y2)/2;
+    s += `<path d="M${x1},${y1} C${x1},${mid} ${x2},${mid} ${x2},${y2}" stroke="#378add" stroke-width="1.5" stroke-dasharray="5 3" fill="none" opacity="0.6" marker-end="url(#arr)"/>`;
+  });
+  nodes.forEach(n => {
+    const cols = { layer:'#1a1048', gate:'#12203a', node:'#0d2a1e', check:'#2a2010', surface:'#1e1e26' };
+    const strk = { layer:'#7f77dd', gate:'#378add', node:'#1d9e75', check:'#ef9f27', surface:'#5a5a6a' };
+    s += `<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="8" fill="${cols[n.type]}" stroke="${strk[n.type]}" stroke-width="1"/>`;
+    s += `<text x="${n.x+12}" y="${n.y+22}" font-family="monospace" font-size="12" font-weight="500" fill="#e2e2e8">${n.label}</text>`;
+    if (n.sub) s += `<text x="${n.x+12}" y="${n.y+38}" font-family="monospace" font-size="10" fill="#9090a0">${n.sub}</text>`;
+  });
+  s += '</svg>';
+  const blob = new Blob([s], {type:'image/svg+xml'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'architecture.svg'; a.click();
+});
+
+// ── seed starter ──
+(function seed() {
+  const w = wrap.clientWidth || 800;
+  const cx = w / 2;
+  const n1 = createNode('layer',   cx-200, 40);  n1.label='System Manifest'; n1.sub='auto-generated · ground truth'; renderNode(n1);
+  const g1 = createNode('gate',    cx-140, 140); g1.label='gate α'; g1.sub='validate against manifest'; g1.snr='0.80'; g1.fail='hook missing'; renderNode(g1);
+  const n2 = createNode('layer',   cx-200, 240); n2.label='UI Schema'; n2.sub='written by you'; renderNode(n2);
+  const g2 = createNode('gate',    cx-140, 340); g2.label='gate β'; g2.sub='output contract'; g2.snr='0.95'; g2.fail='type mismatch'; renderNode(g2);
+  const n3 = createNode('layer',   cx-200, 440); n3.label='Generated Output'; n3.sub='Svelte · TS · bridge'; renderNode(n3);
+  edges.push({from:n1.id,to:g1.id},{from:g1.id,to:n2.id},{from:n2.id,to:g2.id},{from:g2.id,to:n3.id});
+  renderEdges(); updateSpec();
+})();
+
+updateSpec();
+</script>
+</body>
+</html>

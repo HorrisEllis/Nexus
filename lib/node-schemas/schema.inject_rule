@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-schema-inject_rule
+type: schema
+id: inject_rule
+context: >-
+  lib/node-schemas — shared canonical registry. §ADDED 2026-09-19, James: "make it into the node type.
+  ... This needs to be configurable, editable." Distinct from the existing `injection` type (checked
+  first, not assumed different): `injection` is a real, per-call AUDIT RECORD from
+  copilot/tool-runtime.js's makeNcpCallModel — whether priming happened, how many tools, for one
+  outbound NCP dispatch. inject_rule is the opposite direction: real, editable CONFIGURATION for one
+  of copilot's context-assembly injection points — whether it fires at all, and what it says when it
+  does. One records an event that already happened; the other governs what happens next time. Naming
+  it inject_rule rather than reusing `injection` for both was the deliberate fix for exactly the kind
+  of collision the `pat`/`bep_pattern` and `crystal`/`resonance_crystal` mistakes earlier this same
+  session already taught: two real, different things sharing one type name is a competing-truth-layer
+  failure (§10.3), not economy.
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789824600000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    copilot/server.js's five real, already-existing context-injection sites, checked directly, not
+    guessed: _injectUserModel() (prepends user-model.js's buildUserContext()), _injectSessionHistory()
+    (appends last N chat_log rows for a session's first exchange only), _injectRecallContext() (appends
+    top-K /api/recall results above a score threshold), the inline CORTEX MASTERMIND append (appends a
+    truncated mastermind.analysis string), and copilot/lib/agent-tools/tool-guide.js's toolGuide()
+    (the full tool-list block, called from copilot/tool-runtime.js). Every field below is a real,
+    already-hardcoded value at one of those five sites, made editable — not a new behavior invented
+    to round out the schema.
+  fields:
+    id:
+      type: string
+      required: true
+      description: >-
+        real, stable identifier for which of the five real injection sites this rule governs —
+        'user-model' | 'session-history' | 'recall-context' | 'mastermind' | 'tool-guide'. One real
+        node per real site, not a shared blob — editing one never risks another.
+    label:
+      type: string
+      required: true
+      description: human-readable title for this rule, shown wherever rules are listed for editing
+    enabled:
+      type: boolean
+      required: true
+      description: >-
+        real, editable on/off switch. false means the real injection function returns contextText
+        unchanged, skipping this site's own network calls (recall/session-history queries) entirely,
+        not just hiding the output — directly closes "that is way too much to inject"
+    position:
+      type: string
+      required: true
+      description: >-
+        real, observed behavior at each site — 'prepend' (user-model, the one site that goes BEFORE
+        the rest of contextText) or 'append' (session-history, recall-context, mastermind — all three
+        add to the end)
+    template:
+      type: string
+      required: true
+      description: >-
+        editable text template for this site's own real header/wrapper string, e.g.
+        "=== SESSION HISTORY (last {count} exchanges) ===\n{history}" — {placeholders} match real,
+        already-computed values at that site (count, history, results, analysis), never invented ones
+    limits:
+      type: object
+      required: false
+      description: >-
+        real, already-hardcoded tunables at this site, made editable — e.g. session-history's real
+        "last 5 of up to 8 fetched", recall-context's real RECALL_CONTEXT_TOP_K/
+        RECALL_CONTEXT_SCORE_THRESHOLD, mastermind's real 400-char truncation. Absent means "use the
+        real hardcoded default this site already had before this node existed" — a missing/unreadable
+        rule must degrade to that exact prior behavior, never to zero or unbounded
+    source:
+      type: string
+      required: true
+      description: real function/file this rule governs, e.g. "copilot/server.js:_injectSessionHistory"

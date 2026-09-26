@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-398
+type: bep_pattern
+id: pat-398
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"noise" and "noise" co-occur within 5s — 300 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1789872372280
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789872372280
+lastSeenAt: 1789872372280
+fingerprint: null
+payload:
+  uuid: pat-398
+  signature: noise::noise
+  patternType: co_occurrence
+  typeA: noise
+  typeB: noise
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 300
+  confidence: 1
+  description: '"noise" and "noise" co-occur within 5s — 300 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1789872372280

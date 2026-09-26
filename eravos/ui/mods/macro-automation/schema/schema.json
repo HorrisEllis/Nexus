@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.macro-automation",
+  "label": "Macro Automation",
+  "icon": "⏺",
+  "accent": "#ffaa00",
+  "domain": ["automation", "control", "recording"],
+  "description": "Records every parameter change made to a chosen mod in real time — turning any knob, toggle, or select is captured with its exact timing — then plays the whole macro back, re-driving that mod's parameters at the original timing. Loopable, speed-adjustable. This is in-app automation: it drives other ERAVOS mods over the bus, not anything outside the sandbox.",
+  "permissions": ["bus_publish", "bus_subscribe"],
+  "provides": ["capability.automation_record", "capability.automation_playback"],
+  "requires": [],
+  "dependencies": {
+    "runtime": ["kernel/kernel.js", "KERNEL.registry (to list target mods)"],
+    "browser_apis": ["performance.now()"],
+    "external_libs": []
+  },
+  "hooks": [
+    { "hook_id": "macro.hook.drive_out", "direction": "out", "event_type": "ui:config_change", "contract_version": "1.0.0" }
+  ],
+  "params": {
+    "targetInstanceId": { "type": "string", "default": null },
+    "loop":  { "type": "bool",  "default": true },
+    "speed": { "type": "float", "min": 0.25, "max": 4, "default": 1 }
+  }
+}

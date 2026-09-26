@@ -1,0 +1,88 @@
+envelope: 1
+uuid: nexus-export-schema-bep_pattern
+type: schema
+id: bep_pattern
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table
+  (data/cortex/memory/bep_patterns.json). Origin: intelligence/schemas/schema.bep_pattern (same real
+  grounding, cortex is the physical store not the declaring system).
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252761250
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/schemas.js's own real bep_patterns JAA table — a crystallised or candidate
+    behavioral pattern, the real output of pattern crystallisation. A second, real, independently-
+    documented pattern shape alongside the shared central .pat (lib/case-library.js's
+    pattern_signature) — not unified, same fragmentation class as guardian's ledger/gap findings.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real row id
+    signature:
+      type: string
+      required: true
+      description: real pair/sequence this pattern represents
+    patternType:
+      type: string
+      required: true
+      description: >-
+        'cross_system_causal' | 'co_occurrence' | others per scan type (see intelligence/index.js's
+        real scan functions)
+    typeA:
+      type: string
+      required: true
+      description: real event type
+    typeB:
+      type: string
+      required: true
+      description: real event type
+    systemA:
+      type: string
+      required: false
+      description: real originating system, null if not applicable
+    systemB:
+      type: string
+      required: false
+      description: real originating system, null if not applicable
+    crossSystem:
+      type: boolean
+      required: true
+      description: real flag for whether typeA/typeB span two different systems
+    count:
+      type: number
+      required: true
+      description: real, observed occurrence count
+    confidence:
+      type: number
+      required: true
+      description: real 0..1, count-derived, not independently modeled
+    description:
+      type: string
+      required: true
+      description: real, human-readable summary, generated at write time
+    actionable:
+      type: boolean
+      required: true
+      description: real flag
+    crystallised:
+      type: boolean
+      required: true
+      description: real flag — crosses the real threshold for this pattern type
+    noiseTainted:
+      type: boolean
+      required: true
+      description: real suppression flag, set when a pattern is statistically noise, not signal
+    source:
+      type: string
+      required: true
+      description: real writing module id
+    ts:
+      type: number
+      required: true
+      description: real epoch ms

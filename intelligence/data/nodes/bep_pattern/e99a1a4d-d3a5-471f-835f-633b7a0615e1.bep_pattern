@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-e99a1a4d-d3a5-471f-835f-633b7a0615e1
+type: bep_pattern
+id: e99a1a4d-d3a5-471f-835f-633b7a0615e1
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"intent.classified" and "intent.classified" co-occur within 5s — 16 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1789824849934
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789824849934
+lastSeenAt: 1789824849934
+fingerprint: null
+payload:
+  uuid: e99a1a4d-d3a5-471f-835f-633b7a0615e1
+  signature: intent.classified::intent.classified
+  patternType: co_occurrence
+  typeA: intent.classified
+  typeB: intent.classified
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 16
+  confidence: 0.8
+  description: '"intent.classified" and "intent.classified" co-occur within 5s — 16 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1789824849808

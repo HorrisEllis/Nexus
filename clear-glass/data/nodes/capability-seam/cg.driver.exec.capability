@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-capability-cg.driver.exec
+type: capability
+id: cg.driver.exec
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251076002
+source: clear-glass.seam.registry-components:cg.driver.exec
+payload:
+  id: cg.driver.exec
+  namespace: cg
+  name: driver.exec
+  version: 3.0.0
+  grammar:
+    - driver exec
+    - driver-exec
+  route:
+    method: POST
+    path: /cmd
+  intent:
+    - navigate
+    - click
+    - type
+    - eval
+    - screenshot
+  description: Execute ClearDriver browser action
+  params: []
+  tags:
+    - cg
+    - driver
+    - automation
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: clear-glass.driver.exec.receive
+        intent:
+          - navigate
+          - click
+          - type
+          - eval
+          - screenshot
+        contract: nexus-interaction-contract-v1::clear-glass
+        tags:
+          - driver
+    out:
+      - id: clear-glass.driver.result.emit
+        wires_to:
+          - cortex.events.write
+          - guardian.artifacts.list
+        tags:
+          - result

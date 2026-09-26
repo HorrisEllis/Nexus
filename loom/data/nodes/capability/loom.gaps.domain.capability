@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.gaps.domain
+type: capability
+id: loom.gaps.domain
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730153
+source: loom.registry-components:loom.gaps.domain
+payload:
+  id: loom.gaps.domain
+  namespace: loom
+  name: gaps.domain
+  version: 1.5.0
+  grammar:
+    - gaps domain
+    - gaps-domain
+  route:
+    method: GET
+    path: /api/gaps/:domain
+  intent: []
+  description: Open gaps for one domain (system | user-model)
+  params: []
+  tags:
+    - loom
+    - analysis
+  permissions:
+    - system
+  hooks: {}

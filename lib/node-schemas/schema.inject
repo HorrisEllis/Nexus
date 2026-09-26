@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-schema-inject
+type: schema
+id: inject
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: lib/repo-inject.js propose()/apply()/revert() — the real construction sites
+  note: >-
+    One proposed write of one file into one compartment's repo, authored by
+    one agent (agentId = its hat uuid) or by the person. NOT schema.injection
+    or schema.inject_rule — both of those are PROMPT-CONTEXT injection. This
+    is code written INTO a compartment's files. Carries its own undo: before
+    is the file's exact content at apply time (null if the inject created it),
+    so revert does not depend on versionium being up. Apply refuses if the
+    file changed since baseSha256; revert refuses if it changed since
+    contentSha256; both overridable with force.
+  fields:
+    schema:        { type: string, required: true,  description: "literal \"nexus.inject/1\"" }
+    uuid:          { type: string, required: true,  description: "real uuid, also the node file stem" }
+    repoUuid:      { type: string, required: true,  description: "target repo" }
+    compartmentId: { type: string, required: false, description: "the repo's compartment" }
+    agentId:       { type: string, required: false, description: "authoring hat uuid; null when the person authored it" }
+    hatName:       { type: string, required: false, description: "authoring hat name" }
+    path:          { type: string, required: true,  description: "repo-relative, through code-artifact._safeRelative" }
+    syntax:        { type: string, required: false, description: "fence language, normalised" }
+    content:       { type: string, required: true,  description: "the full file content to write" }
+    contentSha256: { type: string, required: true,  description: "sha256 of content" }
+    baseSha256:    { type: string, required: false, description: "sha256 of the file when proposed; null = did not exist" }
+    creates:       { type: boolean, required: true, description: "true if the file did not exist" }
+    before:        { type: string, required: false, description: "exact prior content captured at apply; the undo" }
+    status:        { type: string, required: true,  description: "proposed | applied | rejected | reverted" }
+    source:        { type: object, required: true,  description: "kind agent|person, blockIndex, exchangeTs" }
+    history:       { type: array,  required: true,  description: "every lifecycle event with its time" }

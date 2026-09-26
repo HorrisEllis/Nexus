@@ -1,0 +1,112 @@
+envelope: 1
+uuid: nexus-export-schema-chunk
+type: schema
+id: chunk
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789430000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    One real construction site, read directly, not proposed: idearium/spec-engine/index.js's own
+    chunk object, built in _buildManifest()/addChunk() and mutated through markChunkBuilding() ->
+    completeChunk()/failChunk(). Every field below is a real property already on that object at the
+    moment completeChunk() returns it — nothing invented to round out the shape. The type was
+    missing entirely before this (checked: absent from lib/node-export.js's KNOWN_TYPES AND from
+    this directory), even though a chunk is the single most-written unit in idearium and already has
+    a real on-disk artifact (specs/<specUuid>/NN-<sectionId>-<uuid8>.md) and a real lifecycle
+    enum (CHUNK_STATES). This node is the chunk's identity and lifecycle record; the .md file stays
+    the content artifact. Deliberately NOT folded into `.component` (a static, language-agnostic
+    declaration) or `.job` (guardian's in-flight dispatch) — a chunk is a spec-scoped unit of a
+    manifest with its own verification state, and conflating it with either would be the same
+    same-word-different-thing collision already named for ledger/gap/wire/contract elsewhere.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real chunk uuid — the id this node is filed under, stable for the chunk's whole life
+    specUuid:
+      type: string
+      required: true
+      description: >-
+        real owning manifest uuid — a chunk has no meaning outside its spec; this is the pointer
+        back to loadSpec(). Added explicitly on the node because the in-manifest chunk object knows
+        its parent only by containment, which a standalone exported file cannot carry
+    sectionId:
+      type: string
+      required: true
+      description: real slug identifying the section this chunk builds — the chunk-level reuse key findPriorSection() matches on
+    sectionTitle:
+      type: string
+      required: false
+      description: >-
+        real human title — for an ingested file this is its real relative path (ingestFilesAsSpec
+        sets title to f.path), for an authored spec it is the block heading
+    chunkIdx:
+      type: number
+      required: true
+      description: real ordinal within the manifest — drives file naming and _assembleFullSpec's ordering
+    status:
+      type: string
+      required: true
+      description: >-
+        real CHUNK_STATES value — pending | building | complete | failed | escalated | removed. Same
+        enum the manifest itself stores, not a second vocabulary
+    realPath:
+      type: string
+      required: false
+      description: >-
+        real relative path of the source file this chunk was ingested from (drop/import paths only;
+        null for authored .spec sections, which have no real path). Sanitized at write time — no
+        leading slash, no '..' segment
+    fileName:
+      type: string
+      required: false
+      description: real chunk-store filename (NN-sectionId.md) — the projection name used when realPath is absent
+    filePath:
+      type: string
+      required: false
+      description: real absolute path of the .md artifact on disk, set by completeChunk() only after write verification
+    agent:
+      type: string
+      required: false
+      description: real agent that built this chunk — 'user', 'ingest', 'template', or a provider id
+    agentModel:
+      type: string
+      required: false
+      description: real model string behind that agent ('ingest:drop', an ollama model name) — null when unknown, never guessed
+    attempts:
+      type: number
+      required: false
+      description: real retry count — failChunk() escalates past maxAttempts (3)
+    failureMode:
+      type: string
+      required: false
+      description: real failure reason recorded by failChunk(); null on a complete chunk (cleared, not left stale)
+    byteSize:
+      type: number
+      required: false
+      description: real Buffer.byteLength of the written artifact including its front-matter header, not of content alone
+    contentHash:
+      type: string
+      required: false
+      description: >-
+        real sha256 of the chunk's content as written. Not a field on the in-manifest chunk object —
+        computed at node-write time so an exported .chunk can be checked against its own .md artifact
+        without loading the whole manifest. The manifest's own rootHash covers the set, not the member
+    createdAt:
+      type: number
+      required: false
+      description: real creation timestamp
+    updatedAt:
+      type: number
+      required: false
+      description: real last-mutation timestamp — moves on every state transition
+    completedAt:
+      type: number
+      required: false
+      description: real completion timestamp; null until status is complete

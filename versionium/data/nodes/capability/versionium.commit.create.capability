@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.commit.create
+type: capability
+id: versionium.commit.create
+context: versionium/registry-components.js real capability export
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789250756029
+source: versionium.registry-components:versionium.commit.create
+payload:
+  id: versionium.commit.create
+  namespace: versionium
+  name: commit.create
+  version: 3.0.0
+  grammar:
+    - versionium commit
+    - vc
+  route:
+    method: POST
+    path: /api/versionium/commit
+  intent:
+    - build
+    - write
+    - forge
+  description: Real commit — manual or agent-mesh dispatched
+  params: []
+  tags:
+    - versionium
+    - commit
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: versionium.commit.receive
+        intent:
+          - build
+          - write
+          - forge
+        contract: nexus-interaction-contract-v1::versionium
+        tags:
+          - commit
+    out:
+      - id: versionium.commit.complete
+        wires_to:
+          - cortex.intelligence.pattern
+        tags:
+          - result

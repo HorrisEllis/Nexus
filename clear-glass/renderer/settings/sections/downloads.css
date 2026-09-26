@@ -1,0 +1,5 @@
+/* renderer/settings/sections/downloads.css — Downloads
+ * §BUILT 2026-09-25: this area's own styles (one CSS file per UI file). Every
+ * rule is scoped to body[data-area="downloads"] — set by core.js when the
+ * area is shown — so nothing here can restyle another area. */
+body[data-area="downloads"] .row .what .t { word-break: break-all; }

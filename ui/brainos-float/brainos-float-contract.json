@@ -1,0 +1,31 @@
+{
+  "id": "brainos-float-v1",
+  "version": "0.1.0",
+  "namespace": "brainos-float",
+  "uuid": "brainos-float-contract-v1-0000-2026-0911-001",
+  "role": "Floating agent-control overlay — draggable, hotswappable, no backend of its own. Every action here calls a real, already-existing endpoint on guardian/clear-glass/ollama/copilot; this file describes those calls so co-pilot or any other real caller can discover and drive the panel without reading brainos-float.js directly.",
+
+  "_honest_scope": "James: 'I want that exact ui... rebuilt for the current nexus... no overlapping capabilities... floating above, not hardcoded or inline, interaction contracts to make it hotswappable.' This widget deliberately does NOT reimplement anything real: no second agent registry, no second retry/drain logic, no second pipeline engine, no second job queue. Every tab is a thin, real client against clear-glass/guardian's own already-real HTTP surface (agent-mesh.js v0.39.85-89, guardian/server.js, guardian/userscripts.yaml). A tab can be added or removed by editing TABS in brainos-float.js and this contract together — no rebuild of the shell.",
+
+  "hotswap_mechanism": "window.BrainOSFloat.registerTab({id, label, mount(container, ctx), unmount()}) — a tab is DATA (an object with two functions), not a shell-code change. Any script loaded after brainos-float.js can add or replace a tab by id at runtime; unmounting and remounting the panel re-renders the current tab set from whatever is registered at that moment.",
+
+  "real_data_sources": [
+    { "system": "clear-glass", "base": "http://127.0.0.1:7704", "routes": ["GET /agent-mesh/view", "POST /agent-mesh/spawn", "POST /agent-mesh/route", "GET /agent-mesh/routes", "POST /agent-mesh/routes", "DELETE /agent-mesh/routes/:id", "GET /automation/workflows", "POST /automation/workflows", "PATCH /automation/workflows/:id", "DELETE /automation/workflows/:id", "POST /automation/workflows/:id/run", "GET /automation/log", "GET /userscripts/list", "POST /userscripts/toggle"] },
+    { "system": "guardian", "base": "http://127.0.0.1:7820", "routes": ["GET /providers", "GET /jobs", "GET /events (SSE)"] }
+  ],
+
+  "routes": [
+    { "call": "window.BrainOSFloat.mount(opts?)", "opts": ["clearGlassUrl", "guardianUrl", "startTab"], "returns": "the real, mounted floating panel DOM element", "description": "Idempotent — mounts once, draggable by its own title bar, position not persisted across reloads (a real, stated gap, not silently assumed solved)." },
+    { "call": "window.BrainOSFloat.unmount()", "returns": "undefined", "description": "Calls unmount() on the currently-active tab, closes any real EventSource this panel opened, removes the panel from the DOM." },
+    { "call": "window.BrainOSFloat.registerTab(tab)", "tab_shape": "{id, label, mount(container, ctx), unmount()}", "returns": "undefined", "description": "The real hotswap point. ctx passed to mount() carries {clearGlassUrl, guardianUrl, toast(msg,type)} — a tab never hardcodes a base URL of its own." },
+    { "call": "window.BrainOSFloat.getState()", "returns": { "mounted": "boolean", "activeTab": "string|null" }, "description": "The one real read path for panel state." }
+  ],
+
+  "built_in_tabs": [
+    { "id": "agents", "capability": "list real agent-mesh agents (kind:'agent'+'node' from listMeshView), spawn one, dispatch a prompt", "overlaps_with_nothing": "calls agent-mesh's real endpoints directly, same ones ui/brainos's canvas context menu already uses (v0.39.87) — not a second spawn/dispatch mechanism" },
+    { "id": "pipeline", "capability": "list/add/remove real route-graph edges (from/to/kind/systemPrompt/transform)", "overlaps_with_nothing": "calls the same /agent-mesh/routes endpoints the canvas drag-to-connect uses (v0.39.88/89) — not a second pipeline engine" },
+    { "id": "jobs", "capability": "list real guardian providers (GET /providers) and jobs (GET /jobs)", "overlaps_with_nothing": "read-only view over guardian's own real state — no job creation UI here, that's guardian's own real /command surface" },
+    { "id": "userscripts", "capability": "list and toggle real guardian userscripts (guardian/userscripts.yaml via GET/POST /userscripts/*)", "overlaps_with_nothing": "same real UserscriptManager list()/toggle() the guardian-picker plugin already calls" },
+    { "id": "automation", "capability": "real workflow CRUD + run + log (clear-glass/src/mesh/automation-engine.js, v0.39.89)", "honest_gap": "3 real step types shipped (trigger/agent/delay) — condition/branch/http/notification are named, not-yet-built extensions, same file's own header" }
+  ]
+}

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.health
+type: capability
+id: intelligence.health
+context: intelligence/registry-components.js real capability export
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789250756059
+source: intelligence.registry-components:intelligence.health
+payload:
+  id: intelligence.health
+  namespace: intelligence
+  name: health
+  version: 1.0.0
+  grammar:
+    - health
+    - intelligence health
+  route:
+    method: GET
+    path: /health
+  intent: []
+  description: Intelligence system health
+  params: []
+  tags:
+    - intelligence
+  permissions:
+    - system
+  hooks: {}

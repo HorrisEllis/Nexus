@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-cg.wire.driver.bridge
+type: capability
+id: cg.wire.driver.bridge
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730164
+source: clear-glass.registry-components:cg.wire.driver.bridge
+payload:
+  id: cg.wire.driver.bridge
+  namespace: cg
+  name: wire.driver.bridge
+  version: 3.1.0
+  grammar:
+    - wire driver bridge
+  route:
+    method: POST
+    path: /bridge/driver
+  intent: []
+  description: ClearDriver → ErosmancerOS actions
+  params: []
+  tags:
+    - cg
+    - wire
+    - driver
+  permissions:
+    - system
+  hooks: {}

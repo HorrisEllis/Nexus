@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-emerge.codegen
+type: capability
+id: emerge.codegen
+context: emerge/registry-components.js real capability export
+intent: null
+summary: null
+system: emerge
+tags: []
+exported_at: 1789250730115
+source: emerge.registry-components:emerge.codegen
+payload:
+  id: emerge.codegen
+  namespace: emerge
+  name: codegen
+  version: 1.1.0
+  grammar:
+    - codegen
+    - emerge codegen
+  route:
+    method: POST
+    path: /api/codegen
+  intent: []
+  description: Code generation from spec fragment
+  params: []
+  tags:
+    - emerge
+    - build
+  permissions:
+    - system
+  hooks: {}

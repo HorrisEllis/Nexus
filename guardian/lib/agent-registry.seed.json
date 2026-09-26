@@ -1,0 +1,79 @@
+{
+  "claude": {
+    "id": "claude",
+    "name": "Claude",
+    "url": "https://claude.ai",
+    "color": "#cc785c",
+    "selectors": {
+      "input": "div[contenteditable=\"true\"]",
+      "send": "button[aria-label*=\"Send\"]",
+      "resp": ".font-claude-message"
+    }
+  },
+  "chatgpt": {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "url": "https://chatgpt.com",
+    "color": "#19c37d",
+    "selectors": {
+      "input": "#prompt-textarea",
+      "send": "button[data-testid=\"send-button\"]",
+      "resp": ".markdown.prose"
+    }
+  },
+  "gemini": {
+    "id": "gemini",
+    "name": "Gemini",
+    "url": "https://gemini.google.com",
+    "color": "#4285f4",
+    "selectors": {
+      "input": "rich-textarea .ql-editor",
+      "send": "button.send-button",
+      "resp": "message-content"
+    }
+  },
+  "perplexity": {
+    "id": "perplexity",
+    "name": "Perplexity",
+    "url": "https://perplexity.ai",
+    "color": "#20b2aa",
+    "selectors": {
+      "input": "textarea[placeholder*=\"Ask\"]",
+      "send": "button[aria-label*=\"Submit\"]",
+      "resp": ".prose"
+    }
+  },
+  "mistral": {
+    "id": "mistral",
+    "name": "Mistral",
+    "url": "https://chat.mistral.ai",
+    "color": "#f97316",
+    "selectors": {
+      "input": "textarea",
+      "send": "button[type=\"submit\"]",
+      "resp": ".message-content"
+    }
+  },
+  "deepseek": {
+    "id": "deepseek",
+    "name": "DeepSeek",
+    "url": "https://chat.deepseek.com",
+    "color": "#4d6bfe",
+    "selectors": {
+      "input": "#chat-input",
+      "send": ".ds-button--primary",
+      "resp": ".ds-markdown"
+    }
+  },
+  "grok": {
+    "id": "grok",
+    "name": "Grok",
+    "url": "https://grok.com",
+    "color": "#1da1f2",
+    "selectors": {
+      "input": "textarea",
+      "send": "button[aria-label*=\"Send\"]",
+      "resp": ".message-bubble"
+    }
+  }
+}

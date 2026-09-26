@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.channel",
+  "label": "Channel Strip",
+  "icon": "\ud83c\udf9a",
+  "accent": "#6a88a8",
+  "domain": [
+    "music",
+    "mixing",
+    "routing"
+  ],
+  "description": "Audio channel strip. Gain, pan, mute, solo. VU metering. Receives audio:signal from any organism.",
+  "permissions": [
+    "audio_out",
+    "audio_in",
+    "bus_publish",
+    "bus_subscribe"
+  ],
+  "provides": [
+    "capability.channel_strip"
+  ],
+  "requires": [],
+  "hooks": [
+    {
+      "hook_id": "ch.hook.audio_in",
+      "direction": "in",
+      "event_type": "audio:signal",
+      "contract_version": "1.0.0"
+    },
+    {
+      "hook_id": "ch.hook.bus_out",
+      "direction": "out",
+      "event_type": "bus:send",
+      "contract_version": "1.0.0"
+    }
+  ],
+  "params": {
+    "gain": {
+      "type": "float",
+      "min": 0,
+      "max": 2,
+      "default": 1.0,
+      "unit": ""
+    },
+    "pan": {
+      "type": "float",
+      "min": -1,
+      "max": 1,
+      "default": 0,
+      "unit": ""
+    },
+    "send_rev": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.2,
+      "unit": ""
+    },
+    "send_del": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "unit": ""
+    },
+    "mute": {
+      "type": "bool",
+      "default": false
+    },
+    "solo": {
+      "type": "bool",
+      "default": false
+    }
+  },
+  "ui": {
+    "type": "channel_strip_vertical",
+    "vu_meter": true
+  }
+}

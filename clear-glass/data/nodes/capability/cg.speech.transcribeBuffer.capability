@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.speech.transcribeBuffer
+type: capability
+id: cg.speech.transcribeBuffer
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730173
+source: clear-glass.registry-components:cg.speech.transcribeBuffer
+payload:
+  id: cg.speech.transcribeBuffer
+  namespace: cg
+  name: speech.transcribeBuffer
+  version: 3.1.0
+  grammar:
+    - speech transcribeBuffer
+  route:
+    method: IPC
+    path: speech:transcribeBuffer
+  intent: []
+  description: Real offline audio-buffer transcription
+  params: []
+  tags:
+    - cg
+    - speech
+  permissions:
+    - system
+  hooks: {}

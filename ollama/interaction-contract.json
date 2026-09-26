@@ -1,0 +1,52 @@
+{
+  "id": "ollama-v1",
+  "version": "1.0.0",
+  "namespace": "ollama",
+  "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from ollama/registry-components.js (module.exports.components), never hand-authored. Port 3749 matches registry-components.js's own port field. §NOTE: the LIVE /contract endpoint (ollama/routes/system.js) serves ollama/registry-components.js directly, always fresh — this file is a checked-in documentation mirror, not the source of truth, and will drift if not regenerated after registry-components.js changes.",
+  "ports": {
+    "http": 3749
+  },
+  "uuid": "ollama-contract-v1-0000-4000-0000-000000000001",
+  "role": "Local-first AI inference — model dispatch, queue, health",
+  "health": {
+    "method": "GET",
+    "path": "/health"
+  },
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/api/jobs",
+      "_componentId": "ollama.jobs.dispatch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "_componentId": "ollama.jobs.list"
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs/:id",
+      "_componentId": "ollama.jobs.get"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/jobs/:id",
+      "_componentId": "ollama.jobs.cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/api/queue",
+      "_componentId": "ollama.queue.status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/models",
+      "_componentId": "ollama.models.list"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "_componentId": "ollama.health"
+    }
+  ]
+}

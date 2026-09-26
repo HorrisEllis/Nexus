@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-81
+type: bep_pattern
+id: pat-81
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"a.tick" and "b.tick" co-occur within 5s — 9 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1789872372185
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789872372185
+lastSeenAt: 1789872372185
+fingerprint: null
+payload:
+  uuid: pat-81
+  signature: a.tick::b.tick
+  patternType: co_occurrence
+  typeA: a.tick
+  typeB: b.tick
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 9
+  confidence: 0.45
+  description: '"a.tick" and "b.tick" co-occur within 5s — 9 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1789872372179

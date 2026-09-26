@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-loom.registry.get
+type: component
+id: loom.registry.get
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789275153082
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153082
+lastSeenAt: 1789275153082
+fingerprint: loom::GET /api/registry/:kind/:id
+payload:
+  id: loom.registry.get
+  uuid: 43e3122d-111f-40be-868b-050f43dd5d51
+  namespace: loom
+  name: registry.get
+  version: 1.5.0

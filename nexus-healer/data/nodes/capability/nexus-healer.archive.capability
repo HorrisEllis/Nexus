@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-nexus-healer.archive
+type: capability
+id: nexus-healer.archive
+context: nexus-healer/registry-components.js real capability export
+intent: null
+summary: null
+system: nexus-healer
+tags: []
+exported_at: 1789250730156
+source: nexus-healer.registry-components:nexus-healer.archive
+payload:
+  id: nexus-healer.archive
+  namespace: nexus-healer
+  name: archive
+  version: 0.1.0
+  grammar: []
+  route:
+    method: POST
+    path: /proposals/:id/archive
+  intent: []
+  description: Mark a proposal as rejected.
+  params:
+    - id
+  tags:
+    - nexus-healer
+  permissions:
+    - system
+  hooks: {}

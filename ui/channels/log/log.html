@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXUS · LOG</title>
+<link rel="stylesheet" href="/ui/home/home.css">
+<style>
+  /* §SOVEREIGN CHANNEL 2026-07-11 — this channel is a standalone document,
+     openable and testable on its own (DECOMP.md benefit #3). It reuses
+     home.css for design tokens + existing component classes (.sys-tile,
+     .ch, etc.) rather than forking them, so it always matches the shell's
+     look without duplicating hundreds of class definitions. */
+  html,body{margin:0;padding:0;background:transparent;color:var(--text,#e8eef7);font-family:'Space Grotesk',sans-serif;height:100%}
+  .ch{display:block!important;position:static!important;width:100%;height:100%;animation:none!important}
+  .channel-root{padding:16px;height:100%;box-sizing:border-box;overflow:auto}
+</style>
+</head>
+<body>
+<div class="channel-root">
+<div class="ch" id="ch-log">
+    <div style="display:flex;gap:10px;margin-bottom:8px;align-items:center;flex-shrink:0">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em">Live Log</span>
+      <span id="log-conn-status" style="font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.2)">connecting...</span>
+      <input id="log-filter-in" placeholder="filter..." oninput="logFilter(this.value)" style="width:180px">
+      <select id="log-src-filter" onchange="logFilter(document.getElementById('log-filter-in').value)" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:5px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:3px 6px;outline:none">
+        <option value="">All sources</option>
+        <option value="cortex">Cortex</option>
+        <option value="guardian">Guardian</option>
+        <option value="orchestrator">Orchestrator</option>
+        <option value="gap-loop">Gap Loop</option>
+        <option value="self-heal">Self Heal</option>
+      </select>
+      <button class="btn" onclick="clearLog()" style="margin-left:auto">Clear</button>
+    </div>
+    <div id="log-stream"></div>
+  </div>
+</div>
+<script src="/ui/lib/api.js"></script>
+<script>
+'use strict';
+// §API base ports — same map home/index.html uses (P{...}), duplicated
+// here on purpose: a sovereign channel must not depend on the shell's
+// global scope existing (it may be opened standalone, per DECOMP.md).
+const P={orch:9000,gd:7820,cx:3748,br:9999,idr:4800,em:4242,arch:3747,dg:7825};
+const B={orch:`http://127.0.0.1:${P.orch}`,gd:`http://127.0.0.1:${P.gd}`,cx:`http://127.0.0.1:${P.cx}`,br:`http://127.0.0.1:${P.br}`,idr:`http://127.0.0.1:${P.idr}`,em:`http://127.0.0.1:${P.em}`,arch:`http://127.0.0.1:${P.arch}`,dg:`http://127.0.0.1:${P.dg}`};
+
+// §SOVEREIGN CHANNEL 2026-07-11 — same rationale as overview.html: this
+// channel owns its own copy of state that used to live in shell scope.
+let evCount=0, logFilter_='', logSrcFilter_='';
+const _verifiedSystems = {};
+const CONTRACT_KEY_MAP = {orchestrator:'orch',guardian:'gd',cortex:'cx',idearium:'idr',architect:'arch',emerge:'em',bridge:'br'};
+const SYSTEMS=[
+  {key:'orch',url:`${B.orch}/health`,dot:'sd-orch',tileId:'tile-orch',tileStatus:'ts-orch'},
+  {key:'gd',  url:`${B.orch}/api/guardian/health`, dot:'sd-gd',  tileId:'tile-gd',  tileStatus:'ts-gd'},
+  {key:'cx',  url:`${B.orch}/api/cortex/health`, dot:'sd-cx',  tileId:'tile-cx',  tileStatus:'ts-cx'},
+  {key:'idr', url:`${B.orch}/api/idearium/health`,dot:'sd-idr', tileId:'tile-idr', tileStatus:'ts-idr'},
+  {key:'br',  url:`${B.br}/health`, dot:'sd-br',  tileId:'tile-br',  tileStatus:'ts-br'},
+  {key:'arch',url:`${B.orch}/api/architect/health`,dot:'sd-arch',tileId:'tile-arch',tileStatus:'ts-arch'},
+  {key:'em',  url:`${B.orch}/api/emerge/status`, dot:'sd-em',  tileId:'tile-em',  tileStatus:'ts-em'},
+  {key:'dg',  url:`${B.dg}/status`, tileId:'tile-dg',  tileStatus:'ts-dg'},
+  {key:'forge',url:`${B.orch}/health`,             tileId:'tile-forge',tileStatus:'ts-forge'},
+];
+// flashDot() flashes a topbar system-status dot that lives in the shell,
+// not in this channel's DOM — stubbed to a no-op rather than deleted from
+// the call site, so this stays a drop-in if the channel is later embedded
+// in a shell that does have that dot.
+function flashDot(){}
+
+function logFilter(v){logFilter_=v.toLowerCase()}
+
+function clearLog(){document.getElementById('log-stream').innerHTML='';evCount=0}
+
+function addEvent(d){
+  evCount++;
+  const type=d.type||d.event||'';
+  if (type === 'system.contract.verified') {
+    const sid = d.systemId || d.system || '';
+    _verifiedSystems[sid] = { trust: d.trust, hash: d.hash, ts: Date.now() };
+    const sysEntry = SYSTEMS.find(s => s.key === (CONTRACT_KEY_MAP[sid] || sid));
+    const tile = sysEntry && document.getElementById(sysEntry.tileId);
+    if (tile) tile.style.boxShadow = d.trust === 'VERIFIED' ? '0 0 0 1px rgba(0,255,136,.35) inset' : '0 0 0 1px rgba(255,170,0,.35) inset';
+  }
+  const src=d.source||d.system||'';
+  flashDot(src||type.split('.')[0]);  // flash the source system's dot + tile icon
+  const ts=new Date(d.ts||Date.now()).toISOString().substr(11,8);
+  document.getElementById('ticker-line').textContent=`${ts} · ${src||type} · ${type}`;
+  const srcF=logSrcFilter_||document.getElementById('log-src-filter')?.value||'';
+  if((!logFilter_||type.includes(logFilter_)||src.includes(logFilter_))&&(!srcF||src.includes(srcF)||type.includes(srcF))){
+    const stream=document.getElementById('log-stream');
+    if(!stream)return;
+    const row=document.createElement('div');row.className='ll';
+    row.innerHTML=`<span class="ll-ts">${ts}</span><span class="ll-src">${src}</span><span class="ll-msg">${type}</span>`;
+    stream.prepend(row);
+    if(stream.children.length>500)stream.removeChild(stream.lastChild);
+  }
+}
+
+function addCxEvent(d){
+  const el=document.getElementById('cx-events-el');if(!el)return;
+  evCount++;document.getElementById('cx-ev-count').textContent=evCount;
+  const ts=new Date(d.ts||Date.now()).toISOString().substr(11,8);
+  const row=document.createElement('div');row.className='evt-row';
+  row.innerHTML=`<span class="ev-ts">${ts}</span><span class="ev-src">${d.source||d.system||''}</span><span class="ev-type">${d.type||''}</span>`;
+  el.prepend(row);if(el.children.length>100)el.removeChild(el.lastChild);
+}
+
+// ── init ──────────────────────────────────────────────────────────────────
+try { /* live events arrive via the SSE subscription below, which calls addEvent() directly */ } catch(e) { console.warn('[channel:log] init failed:', e.message); }
+
+// ── this channel's own SSE subscription — sovereign, not dependent on the
+//    shell's single connection (matches DECOMP.md's "each channel can be
+//    opened independently... for debugging"). Shell-embedded use can still
+//    layer postMessage on top later without this needing to change. ──────
+try {
+  const es = new EventSource(`${B.orch}/sse`);
+  es.onmessage = (e) => {
+    try {
+      const d = JSON.parse(e.data);
+      addEvent(d);
+      if (d.type === 'cortex.gap.found' || (d.source||'').includes('cortex')) addCxEvent(d);
+    } catch(_) {}
+  };
+  es.onerror = () => { /* orchestrator not reachable — channel still renders, just static until it is */ };
+} catch(_) {}
+</script>
+</body>
+</html>

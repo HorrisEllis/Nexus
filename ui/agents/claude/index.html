@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claude Console — NEXUS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+:root{
+  --void:#06050a;--surface:#0e0c15;--panel2:#0d0a18;
+  --border:#1e1a2e;--border2:#2a2545;
+  --text:#e0dff5;--text2:#8a86a8;--text3:#4a4768;
+  --ac:#cc44ff;--ac-dim:rgba(204,68,255,.1);--ac-glow:rgba(204,68,255,.4);
+  --green:#00ff88;--red:#ff3355;--red-dim:rgba(255,51,85,.1);
+  --amber:#ffaa00;--amber-dim:rgba(255,170,0,.1);
+  --mono:'Space Mono',monospace;--ui:'Space Grotesk',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--void);color:var(--text);font-family:var(--ui);overflow:hidden;font-size:13px}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+#shell{display:grid;grid-template-rows:48px 1fr;height:100vh}
+#topbar{display:flex;align-items:center;gap:12px;padding:0 16px;background:linear-gradient(180deg,var(--panel2),var(--void));border-bottom:1px solid var(--border)}
+.glyph{font-size:18px;color:var(--ac)}
+.title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em}.title b{color:var(--ac)}
+#conn{font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 10px;border-radius:14px;border:1px solid var(--border2);color:var(--text3);margin-left:auto;display:flex;align-items:center;gap:5px}
+#conn .dot{width:5px;height:5px;border-radius:50%;background:var(--text3)}
+#conn.live{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+#conn.live .dot{background:var(--ac);animation:p 2s ease-in-out infinite}
+@keyframes p{0%,100%{box-shadow:0 0 0 0 var(--ac-glow)}50%{box-shadow:0 0 0 3px transparent}}
+#main{display:grid;grid-template-columns:200px 1fr 240px;height:100%;overflow:hidden}
+.z{overflow-y:auto;padding:14px}.z+.z{border-left:1px solid var(--border)}
+.zl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.zl::after{content:'';flex:1;height:1px;background:var(--border)}
+.sr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:10px}
+.sk{color:var(--text3);font-size:9px}.sv{font-family:var(--mono);font-size:9px;color:var(--text2)}
+.sv.ok{color:var(--green)}.sv.off{color:var(--red)}.sv.ac{color:var(--ac)}
+.tb{display:flex;align-items:center;gap:7px;width:100%;font-family:var(--mono);font-size:9px;font-weight:600;background:transparent;border:1px solid var(--border2);color:var(--text3);padding:6px 9px;border-radius:4px;cursor:pointer;margin-bottom:4px;text-align:left;transition:all .15s}
+.tb:hover{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+.to{font-family:var(--mono);font-size:9px;color:var(--text3);padding:5px 7px;background:var(--surface);border:1px solid var(--border);border-radius:3px;max-height:100px;overflow-y:auto;white-space:pre-wrap;line-height:1.4;margin-bottom:6px}
+input.ni{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:9px;outline:none;margin-bottom:5px}
+input.ni:focus{border-color:var(--ac-glow)}
+/* center — chat layout */
+#zc{display:flex;flex-direction:column;padding:0}
+#msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.msg{padding:8px 10px;border-radius:5px;font-size:11.5px;line-height:1.6}
+.msg.user{background:rgba(204,68,255,.06);border:1px solid rgba(204,68,255,.15);border-left:2px solid var(--ac)}
+.msg.assistant{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-left:2px solid rgba(255,255,255,.1)}
+.msg.system{background:rgba(0,0,0,.3);border:1px solid var(--border);font-family:var(--mono);font-size:9.5px;color:var(--text3)}
+.mr{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--text3);margin-bottom:4px;text-transform:uppercase}
+.msg.user .mr{color:var(--ac)}.msg.assistant .mr{color:rgba(255,255,255,.3)}
+.mt{color:var(--text);white-space:pre-wrap;word-break:break-word}
+.sc{display:inline-block;width:6px;height:12px;background:var(--ac);animation:bl .7s step-end infinite;vertical-align:text-bottom;margin-left:1px}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+#inp{padding:10px;border-top:1px solid var(--border);flex-shrink:0}
+.cbar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.cc{font-family:var(--mono);font-size:8.5px;padding:2px 8px;border-radius:10px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:all .15s;user-select:none}
+.cc:hover{border-color:var(--ac-glow);color:var(--ac)}.cc.on{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+.ir{display:flex;gap:7px;align-items:flex-end}
+textarea#pi{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 10px;font-family:var(--mono);font-size:10px;line-height:1.5;outline:none;resize:none;min-height:44px;max-height:100px;transition:border-color .2s}
+textarea#pi:focus{border-color:var(--ac-glow)}
+textarea#pi::placeholder{color:var(--text3)}
+#sb{font-family:var(--mono);font-size:10px;font-weight:700;background:var(--ac-dim);border:1px solid var(--ac-glow);color:var(--ac);padding:9px 14px;border-radius:5px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+#sb:hover{background:rgba(204,68,255,.2)}
+#sb:disabled{opacity:.4;cursor:default}
+.ss{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:5px;display:flex;gap:10px}
+/* right — tools */
+.gi{padding:5px 8px;border-left:2px solid var(--border2);margin-bottom:5px;font-size:10px}
+.gi.high{border-left-color:var(--red)}.gi.medium{border-left-color:var(--amber)}
+.gt{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--text2)}
+.gb{color:var(--text3);margin-top:1px;font-size:9px;line-height:1.4}
+.gx{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:3px;padding:2px 5px;border:1px solid var(--border2);border-radius:2px;cursor:pointer;display:inline-block;transition:all .15s}
+.gx:hover{border-color:var(--ac-glow);color:var(--ac)}
+.art{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:9.5px}
+.art-name{color:var(--text2);font-family:var(--mono);font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+.art-dl{font-family:var(--mono);font-size:8px;color:var(--text3);cursor:pointer;padding:1px 5px;border:1px solid var(--border2);border-radius:2px;transition:all .15s;flex-shrink:0}
+.art-dl:hover{border-color:var(--ac-glow);color:var(--ac)}
+.rung{position:relative;padding-left:16px;margin-bottom:10px}
+.rd{position:absolute;left:0;top:3px;width:8px;height:8px;border-radius:50%;background:var(--void);border:2px solid var(--border2);transition:all .3s}
+.rd.active{border-color:var(--amber);background:var(--amber-dim);animation:rp 1.2s ease-in-out infinite}
+.rd.verified{border-color:var(--green);background:var(--green)}.rd.escalated{border-color:var(--red);background:var(--red)}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(255,170,0,.5)}50%{box-shadow:0 0 0 3px transparent}}
+.rt{font-size:10px;color:var(--text);font-weight:500}.rs{font-family:var(--mono);font-size:8.5px;color:var(--text3);margin-top:1px}
+.rs.active{color:var(--amber)}.rs.verified{color:var(--green)}.rs.escalated{color:var(--red)}
+.ri{font-family:var(--mono);font-size:7.5px;color:var(--text3);margin-top:2px;opacity:.45;line-height:1.4}
+.rb{font-family:var(--mono);font-size:8.5px;background:var(--amber-dim);border:1px solid rgba(255,170,0,.4);color:var(--amber);padding:2px 8px;border-radius:10px;cursor:pointer;margin-top:4px;transition:all .15s}
+.rb:disabled{opacity:.4;cursor:default}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topbar">
+    <span class="glyph">✦</span>
+    <span class="title">CLAUDE <b>CONSOLE</b></span>
+    <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">200k ctx · SNR · SEAM · constitutional · NCP</span>
+    <div id="conn"><span class="dot"></span><span id="ct">CHECKING</span></div>
+  </div>
+  <div id="main">
+
+    <!-- LEFT: system + tools -->
+    <div class="z">
+      <div class="zl">System</div>
+      <div class="sr"><span class="sk">Guardian</span><span class="sv" id="sv0">—</span></div>
+      <div class="sr"><span class="sk">Cortex</span><span class="sv" id="sv1">—</span></div>
+      <div class="sr"><span class="sk">Orchestrator</span><span class="sv" id="sv2">—</span></div>
+      <div class="sr"><span class="sk">Tab</span><span class="sv ac" id="sv3">—</span></div>
+      <div class="sr"><span class="sk">Chat ID</span><span class="sv" id="sv4">—</span></div>
+      <div class="sr"><span class="sk">Heartbeat</span><span class="sv" id="sv5">—</span></div>
+      <div class="sr"><span class="sk">Open Gaps</span><span class="sv" id="sv6">—</span></div>
+      <div class="sr"><span class="sk">Reflect Contracts</span><span class="sv" id="sv7">—</span></div>
+      <div class="sr"><span class="sk">Active Jobs</span><span class="sv" id="sv8">—</span></div>
+
+      <div class="zl" style="margin-top:14px">Tools</div>
+      <button class="tb" onclick="tool('diagnose')">△ Diagnose System</button>
+      <div class="to" id="to-diagnose" style="display:none"></div>
+      <button class="tb" onclick="tool('gaps')">◈ Open Gaps</button>
+      <div class="to" id="to-gaps" style="display:none"></div>
+      <button class="tb" onclick="tool('reflect')">⬡ Reflection Contracts</button>
+      <div class="to" id="to-reflect" style="display:none"></div>
+      <button class="tb" onclick="tool('memory')">◦ Cortex Memory</button>
+      <div class="to" id="to-memory" style="display:none"></div>
+      <button class="tb" onclick="tool('jobs')">⚡ Active Jobs</button>
+      <div class="to" id="to-jobs" style="display:none"></div>
+      <button class="tb" onclick="tool('artifacts')">↓ Artifacts</button>
+      <div class="to" id="to-artifacts" style="display:none"></div>
+
+      <div class="zl" style="margin-top:12px">Repair</div>
+      <input class="ni" id="ri" placeholder="problem to fix via Mistral…">
+      <button class="tb" onclick="doRepair()">⚡ Dispatch Repair</button>
+      <div class="to" id="to-repair" style="display:none"></div>
+
+      <div class="zl" style="margin-top:12px">Contract</div>
+      <input class="ni" id="ci" placeholder="contract name…">
+      <button class="tb" onclick="createContract()">📋 Create Contract</button>
+      <div class="to" id="to-contract" style="display:none"></div>
+
+      <div class="zl" style="margin-top:12px">CLI</div>
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:5px">
+        <button onclick="cli('gaps')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">gaps</button>
+        <button onclick="cli('jobs')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">jobs</button>
+        <button onclick="cli('health')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">health</button>
+        <button onclick="cli('stats')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">stats</button>
+        <button onclick="cli('providers')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">providers</button>
+        <button onclick="cli('ledger')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">ledger</button>
+        <button onclick="cli('seam')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">seam</button>
+        <button onclick="cli('version')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">version</button>
+      </div>
+      <input class="ni" id="cli-in" placeholder="custom command…">
+      <button class="tb" onclick="cli(document.getElementById('cli-in').value)">▶ Run</button>
+      <div class="to" id="to-cli" style="display:none"></div>
+    </div>
+
+    <!-- CENTER: chat -->
+    <div class="z" id="zc">
+      <div id="msgs">
+        <div id="welcome" style="color:var(--text3);font-size:10.5px;text-align:center;padding:24px;line-height:1.8">
+          <div style="font-size:18px;margin-bottom:6px">✦</div>
+          Claude via NCP · 200k context<br>
+          <span style="font-size:9px">SNR filter · Constitutional AI · SEAM chunking</span>
+        </div>
+      </div>
+      <div id="inp">
+        <div class="cbar">
+          <div class="cc on" data-c="system">system</div>
+          <div class="cc on" data-c="gaps">gaps</div>
+          <div class="cc" data-c="memory">memory</div>
+          <div class="cc" data-c="reflection">reflection</div>
+          <div class="cc" data-c="artifacts">artifacts</div>
+          <div class="cc" data-c="components">components</div>
+        </div>
+        <div class="ir">
+          <textarea id="pi" placeholder="Ask NEXUS via Claude… (Enter to send · Shift+Enter newline)" rows="2"></textarea>
+          <button id="sb" onclick="send()">SEND →</button>
+        </div>
+        <div class="ss"><span id="ss-model">via co-pilot → Claude NCP</span><span id="ss-tok">0 tok</span><span id="ss-st">—</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: SEAM queue + gaps + artifacts -->
+    <div class="z">
+      <div class="zl">SEAM Queue</div>
+      <div id="qsel" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px"></div>
+      <div id="ladder"></div>
+      <div id="qempty" style="color:var(--text3);font-size:10px;text-align:center;padding:16px">No SEAM queues</div>
+
+      <div class="zl" style="margin-top:14px">Open Gaps</div>
+      <div id="glist"><div style="color:var(--text3);font-size:9.5px">Loading…</div></div>
+
+      <div class="zl" style="margin-top:14px">Artifacts</div>
+      <div id="alist"><div style="color:var(--text3);font-size:9.5px">—</div></div>
+    </div>
+
+  </div>
+</div>
+<script>
+const GD='http://localhost:7820',ORCH='http://localhost:9000',CX='http://localhost:3748';
+const PROVIDER='claude';
+let selQ=null,allQ=[],_streaming=false;
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function api(url,opts){try{const r=await fetch(url,{signal:AbortSignal.timeout(6000),...opts});const j=await r.json().catch(()=>null);if(!r.ok&&j&&!j.error)j.error='HTTP '+r.status;return j;}catch(e){return{ok:false,error:'network: '+e.message};}}
+async function post(url,body){return api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
+
+async function refresh(){
+  const[prov,gaps,reflect,jobs,arts]=await Promise.all([
+    api(`${GD}/providers`),api(`${GD}/gaps?status=open&limit=50`),
+    api(`${CX}/api/jaa/reflection_contracts?limit=30`),
+    api(`${GD}/jobs?status=delivered&limit=20`),api(`${GD}/artifacts?limit=20`),
+  ]);
+  const ch=prov?.channels?.[PROVIDER];
+  const conn=document.getElementById('conn');
+  conn.className=ch?'live':'';document.getElementById('ct').textContent=ch?'CONNECTED':'NO TAB';
+  sv(3,ch?(ch.tabId||'—').slice(0,12):'—',!!ch);
+  sv(4,ch?ch.chatId||'—':'—',false);
+  const hb=ch?Math.round((Date.now()-(ch.lastHeartbeat||0))/1000):null;
+  sv(5,hb!==null?(hb<15?'♥ '+hb+'s':'stale '+hb+'s'):'—',hb!==null&&hb<15);
+  await Promise.all([
+    api(`${GD}/health`).then(r=>sv(0,r?.ok?'✓':' ✗',r?.ok)),
+    api(`${CX}/health`).then(r=>{const ok=r?.status==='ok'||r?.ok===true;sv(1,ok?'✓ :3748':'✗ :3748',ok);}),
+    api(`${ORCH}/health`).then(r=>sv(2,r?.ok?'✓ :9000':'✗ :9000',r?.ok)),
+  ]);
+  const ga=gaps?.gaps||[];sv(6,ga.length,ga.length===0);
+  const rc=reflect?.rows||reflect?.result||[];sv(7,rc.filter(c=>c.status==='queued').length+' queued',false);
+  const jb=jobs?.jobs||[];sv(8,jb.length,jb.length===0);
+  renderGaps(ga);renderArtifacts(arts?.artifacts||[]);
+}
+function sv(i,val,ok){const e=document.getElementById('sv'+i);if(e){e.textContent=val;e.className='sv '+(ok===true?'ok':ok===false?'off':'');}}
+
+function renderGaps(gaps){
+  const el=document.getElementById('glist');
+  if(!gaps.length){el.innerHTML='<div style="color:var(--text3);font-size:9.5px">No open gaps ✓</div>';return;}
+  el.innerHTML=gaps.slice(0,8).map(g=>`<div class="gi ${g.severity||'low'}"><div class="gt">${esc(g.type||'?')}</div><div class="gb">${esc((g.body||'').slice(0,65))}</div><span class="gx" onclick="askGap('${esc(g.type||'')}','${esc((g.body||'').slice(0,50))}')">Ask →</span></div>`).join('');
+}
+function renderArtifacts(arts){
+  const el=document.getElementById('alist');
+  if(!arts.length){el.innerHTML='<div style="color:var(--text3);font-size:9.5px">No artifacts</div>';return;}
+  el.innerHTML=arts.slice(0,8).map(a=>`<div class="art"><span class="art-name">${esc(a.specName||a.lang||'artifact')}</span><span class="art-dl" onclick="dlArtifact('${a.hash||a.uuid||''}','${esc(a.specName||'artifact')}')">↓ DL</span></div>`).join('');
+}
+async function dlArtifact(hash,name){
+  const r=await api(`${GD}/artifacts/${hash}`);if(!r)return;
+  const blob=new Blob([JSON.stringify(r,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name+'.json';a.click();
+}
+
+// Tools
+async function tool(id){
+  const o=document.getElementById('to-'+id);o.style.display='';o.textContent='⟳ …';
+  if(id==='diagnose'){const r=await api(`${GD}/health`);o.textContent=JSON.stringify(r?.ok?{ok:true,uptime:r.uptime,jobs:r.jobs}:{ok:false},null,2).slice(0,300);}
+  else if(id==='gaps'){const r=await api(`${GD}/gaps?status=open&limit=15`);o.textContent=(r?.gaps||[]).map(g=>`[${g.severity}] ${g.type}: ${(g.body||'').slice(0,60)}`).join('\n')||'None';}
+  else if(id==='reflect'){const r=await api(`${CX}/api/jaa/reflection_contracts?limit=15`);o.textContent=(r?.rows||r?.result||[]).map(c=>`[${c.status}] ${c.decisionClass||'?'} ${(c.uuid||'').slice(0,8)}`).join('\n')||'None';}
+  else if(id==='memory'){const r=await api(`${CX}/api/jaa/decision_log?limit=10`);o.textContent=(r?.rows||r?.result||[]).map(d=>`[${d.chosen}] ${(d.input||'').slice(0,60)}`).join('\n')||'None';}
+  else if(id==='jobs'){const r=await api(`${GD}/jobs?limit=15`);o.textContent=(r?.jobs||[]).map(j=>`[${j.status}] ${j.provider}: ${(j.prompt||'').slice(0,55)}`).join('\n')||'None';}
+  else if(id==='artifacts'){const r=await api(`${GD}/artifacts?limit=10`);o.textContent=(r?.artifacts||[]).map(a=>`${a.specName||a.lang||'?'} #${(a.hash||'').slice(0,8)}`).join('\n')||'None';}
+}
+async function doRepair(){const p=document.getElementById('ri').value.trim();const o=document.getElementById('to-repair');if(!p)return;o.style.display='';o.style.color='var(--amber)';o.textContent='⟳ dispatching…';const r=await post(`${GD}/command`,{command:'diagnose_and_repair',provider:'ollama',prompt:p,source:'claude-console',meta:{source:'claude-console'}});o.style.color=r?.jobId?'var(--green)':'var(--red)';o.textContent=r?.jobId?'✓ '+r.jobId.slice(0,12)+' → '+r.provider:'✗ '+(r?.error||'failed');}
+async function createContract(){const n=document.getElementById('ci').value.trim();const o=document.getElementById('to-contract');if(!n)return;o.style.display='';o.style.color='var(--amber)';o.textContent='⟳ creating…';const r=await post(`${CX}/api/jaa/reflection_contracts`,{uuid:crypto.randomUUID(),decisionClass:n,loopType:'CAPABILITY',status:'queued',agent:'mistral',priority:'normal',createdAt:Date.now(),updatedAt:Date.now()});o.style.color=r?'var(--green)':'var(--red)';o.textContent=r?'✓ contract created':'✗ failed (check cortex)';}
+async function cli(cmd){if(!cmd?.trim())return;const o=document.getElementById('to-cli');o.style.display='';o.textContent='⟳ '+cmd+'…';const r=await post(`${GD}/cli/exec`,{command:cmd.trim(),source:'claude-console'});const d=r?.result??r??{};o.textContent=typeof d==='string'?d:JSON.stringify(d,null,2).slice(0,400);}
+
+// Chat (routes through co-pilot which dispatches to Claude via NCP)
+async function buildCtx(types){
+  const parts=[];
+  if(types.includes('system')){const[h,pr]=await Promise.all([api(`${GD}/health`),api(`${GD}/providers`)]);parts.push(`[NEXUS] Guardian:${h?.ok?'online':'offline'} Providers:${Object.keys(pr?.channels||{}).join(',')||'none'}`);}
+  if(types.includes('gaps')){const r=await api(`${GD}/gaps?status=open&limit=6`);const g=r?.gaps||[];if(g.length)parts.push('[GAPS]\n'+g.map(x=>`[${x.severity}] ${x.type}: ${(x.body||'').slice(0,70)}`).join('\n'));}
+  if(types.includes('memory')){const r=await api(`${CX}/api/jaa/decision_log?limit=5`);const ro=r?.rows||r?.result||[];if(ro.length)parts.push('[DECISIONS]\n'+ro.map(d=>`[${d.chosen}] ${(d.input||'').slice(0,60)}`).join('\n'));}
+  if(types.includes('reflection')){const r=await api(`${CX}/api/jaa/reflection_contracts?limit=5`);const ro=r?.rows||r?.result||[];if(ro.length)parts.push('[REFLECTION]\n'+ro.map(c=>`[${c.status}] ${c.decisionClass||'?'}`).join('\n'));}
+  if(types.includes('artifacts')){const r=await api(`${GD}/artifacts?limit=5`);const a=r?.artifacts||[];if(a.length)parts.push('[ARTIFACTS]\n'+a.map(x=>x.specName||x.lang||'?').join(', '));}
+  if(types.includes('components')){const r=await api(`${ORCH}/api/components?limit=10`);const c=r?.components||[];if(c.length)parts.push('[COMPONENTS]\n'+c.map(x=>x.id||x.name||'?').join(', '));}
+  return parts.join('\n\n');
+}
+async function pollJob(jobId,ms=120000){const t0=Date.now();while(Date.now()-t0<ms){await new Promise(r=>setTimeout(r,1500));const d=await api(`${GD}/jobs?limit=80`);const j=(d?.jobs||[]).find(x=>x.id===jobId);if(j&&(j.status==='complete'||j.status==='done'))return j;if(j&&j.status==='error')return j;}return null;}
+async function send(){
+  const prompt=document.getElementById('pi').value.trim();if(!prompt||_streaming)return;
+  const types=[...document.querySelectorAll('.cc.on')].map(c=>c.dataset.c);
+  const ctx=await buildCtx(types);
+  addMsg('user',prompt);document.getElementById('pi').value='';
+  const msgEl=addStream('assistant');
+  _streaming=true;
+  const t0=Date.now();
+  try{
+    const prov=await api(`${GD}/providers`);
+    const tabLive=!!prov?.channels?.[PROVIDER];
+    if(tabLive){
+      const fullPrompt=ctx?`[CONTEXT]\n${ctx}\n\n${prompt}`:prompt;
+      const r=await post(`${GD}/command`,{command:'general',provider:PROVIDER,prompt:fullPrompt,source:'claude-console',meta:{source:'claude-console',chatMode:true}});
+      if(r?.jobId){
+        document.getElementById('ss-tok').textContent='→ Claude tab';
+        const job=await pollJob(r.jobId);
+        const text=job?.response||job?.responseText||job?.result||'(no response — check Claude tab)';
+        finalStream(msgEl,text);
+        document.getElementById('ss-tok').textContent='Claude NCP';
+        document.getElementById('ss-st').textContent=((Date.now()-t0)/1000).toFixed(1)+'s';
+      } else {finalStream(msgEl,'✗ dispatch failed: '+(r?.error||'unknown'));}
+    } else {
+      const r=await post(`${ORCH}/api/guardian/copilot/prompt`,{prompt:ctx?`[CONTEXT]\n${ctx}\n\n${prompt}`:prompt,contextOpts:{intent:prompt}});
+      finalStream(msgEl,r?.text||'(no Claude tab — start userscript. Co-pilot fallback: Ollama offline)');
+      document.getElementById('ss-tok').textContent=r?.modelUsed?`co-pilot · ${r.modelUsed}`:'co-pilot (no Claude tab)';
+      document.getElementById('ss-st').textContent=((Date.now()-t0)/1000).toFixed(1)+'s';
+    }
+  }catch(e){finalStream(msgEl,'✗ '+e.message);}
+  _streaming=false;
+}
+function askGap(t,b){document.getElementById('pi').value=`Analyze gap and suggest fix:\nType: ${t}\nBody: ${b}`;send();}
+function addMsg(role,text){const m=document.getElementById('msgs');const w=document.getElementById('welcome');if(w)w.remove();const el=document.createElement('div');el.className='msg '+role;el.innerHTML=`<div class="mr">${role}</div><div class="mt">${esc(text)}</div>`;m.appendChild(el);m.scrollTop=m.scrollHeight;return el;}
+function addStream(role){const m=document.getElementById('msgs');const w=document.getElementById('welcome');if(w)w.remove();const el=document.createElement('div');el.className='msg '+role;el.innerHTML=`<div class="mr">${role}</div><div class="mt"><span class="sc"></span></div>`;m.appendChild(el);m.scrollTop=m.scrollHeight;return el;}
+function finalStream(el,text){const t=el.querySelector('.mt');if(t)t.innerHTML=esc(text);}
+
+// SEAM
+const SC={QUEUED:'',INJECTING:'active',GENERATING:'active',DETECTING:'active',VERIFIED:'verified',RETRYING:'active',ESCALATED:'escalated'};
+async function refreshQ(){const d=await api(`${GD}/seam/queues`);allQ=(d?.queues||[]).filter(q=>q.provider===PROVIDER);const sel=document.getElementById('qsel');const emp=document.getElementById('qempty');const lad=document.getElementById('ladder');if(!allQ.length){sel.innerHTML='';lad.innerHTML='';emp.style.display='';return;}emp.style.display='none';if(!selQ||!allQ.some(q=>q.uuid===selQ))selQ=allQ[allQ.length-1].uuid;sel.innerHTML=allQ.map(q=>`<div style="font-family:var(--mono);font-size:8.5px;padding:2px 7px;border-radius:10px;border:1px solid ${q.uuid===selQ?'var(--ac-glow)':'var(--border2)'};color:${q.uuid===selQ?'var(--ac)':'var(--text3)'};cursor:pointer" onclick="selQ='${q.uuid}';renderL()">${esc((q.title||'untitled').slice(0,12))}</div>`).join('');renderL();}
+function renderL(){const q=allQ.find(q=>q.uuid===selQ);const lad=document.getElementById('ladder');if(!q){lad.innerHTML='';return;}lad.innerHTML=(q.compartments||[]).map((c,i,a)=>{const cls=SC[c.state]||'';return`<div class="rung">${i<a.length-1?'<div style="position:absolute;left:3px;top:12px;bottom:-10px;width:1px;background:var(--border2)"></div>':''}<div class="rd ${cls}"></div><div class="rt">#${c.chunkIdx+1} ${esc(c.chunkTitle||'')}</div><div class="rs ${cls}">${c.state}${c.retries?' · retry '+c.retries:''}</div>${c.seam_id?`<div class="ri">${c.seam_id.slice(0,28)}</div>`:''}</div>`;}).join('');}
+
+document.getElementById('pi').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+document.querySelectorAll('.cc').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+
+refresh();refreshQ();setInterval(refresh,6000);setInterval(refreshQ,3000);
+</script>
+</body>
+</html>

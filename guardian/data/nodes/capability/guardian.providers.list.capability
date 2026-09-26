@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.providers.list
+type: capability
+id: guardian.providers.list
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730133
+source: guardian.registry-components:guardian.providers.list
+payload:
+  id: guardian.providers.list
+  namespace: guardian
+  name: providers.list
+  version: 3.6.2
+  grammar:
+    - providers list
+    - providers-list
+  route:
+    method: GET
+    path: /providers
+  intent: []
+  description: Connected NCP browser tab providers
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

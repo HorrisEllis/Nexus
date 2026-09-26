@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-architect.map
+type: component
+id: architect.map
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: architect
+tags: []
+exported_at: 1789275153113
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153113
+lastSeenAt: 1789275153113
+fingerprint: architect::GET /api/map
+payload:
+  id: architect.map
+  uuid: 5933d25e-b714-41f2-992a-fe421d4b078f
+  namespace: architect
+  name: map
+  version: 1.0.0

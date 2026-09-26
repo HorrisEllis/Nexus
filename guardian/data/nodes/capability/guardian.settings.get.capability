@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.settings.get
+type: capability
+id: guardian.settings.get
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730143
+source: guardian.registry-components:guardian.settings.get
+payload:
+  id: guardian.settings.get
+  namespace: guardian
+  name: settings.get
+  version: 3.6.2
+  grammar:
+    - settings get
+    - settings-get
+  route:
+    method: GET
+    path: /settings
+  intent: []
+  description: Guardian settings
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

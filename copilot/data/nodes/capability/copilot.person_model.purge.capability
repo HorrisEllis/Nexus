@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.person_model.purge
+type: capability
+id: copilot.person_model.purge
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730181
+source: copilot.registry-components:copilot.person_model.purge
+payload:
+  id: copilot.person_model.purge
+  namespace: copilot
+  name: person_model.purge
+  version: 2.0.0
+  grammar:
+    - copilot person_model purge
+  route:
+    method: POST
+    path: /api/person-model/purge
+  intent: []
+  description: HARD DELETE of the whole model. Requires an explicit confirmation string
+  params: []
+  tags:
+    - copilot
+    - person-model
+    - destructive
+  permissions:
+    - user
+  hooks: {}

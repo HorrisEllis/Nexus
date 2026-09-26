@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-a5aae340-aa87-42f1-8fae-ee1c6d3272ee
+type: bep_pattern
+id: a5aae340-aa87-42f1-8fae-ee1c6d3272ee
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"diagnostic.remediation" and "ledger.copilot.event" co-occur within 5s — 75 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1789824849923
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789824849923
+lastSeenAt: 1789824849923
+fingerprint: null
+payload:
+  uuid: a5aae340-aa87-42f1-8fae-ee1c6d3272ee
+  signature: diagnostic.remediation::ledger.copilot.event
+  patternType: co_occurrence
+  typeA: diagnostic.remediation
+  typeB: ledger.copilot.event
+  systemA: copilot
+  systemB: null
+  crossSystem: false
+  count: 75
+  confidence: 1
+  description: '"diagnostic.remediation" and "ledger.copilot.event" co-occur within 5s — 75 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1789824849808

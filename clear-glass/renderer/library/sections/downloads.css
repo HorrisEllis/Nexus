@@ -1,0 +1,45 @@
+/* renderer/library/sections/downloads.css — Library → Downloads only.
+ * Every rule scoped to body[data-area="downloads"] (same rule as Settings' area CSS).
+ * The row reads like Firefox's Library: a file-type tile, the name, "size — site — time",
+ * and a folder button. Tokens come from settings/settings.css. */
+body[data-area="downloads"] .dl { gap: 14px; padding: 12px 18px; }
+body[data-area="downloads"] .dl:hover { background: var(--pane); }
+body[data-area="downloads"] .dl-glyph {
+  width: 40px; height: 44px; flex: none; border-radius: 8px; display: grid; place-items: end center; padding-bottom: 6px;
+  font: 600 9.5px/1 var(--mono); letter-spacing: .04em; color: var(--k, var(--ink-dim));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--k, var(--ink-dim)) 16%, transparent), color-mix(in srgb, var(--k, var(--ink-dim)) 5%, transparent));
+  border: 1px solid color-mix(in srgb, var(--k, var(--ink-dim)) 32%, transparent);
+  clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 0 100%);
+}
+body[data-area="downloads"] .dl-glyph.k-archive { --k: var(--violet); }
+body[data-area="downloads"] .dl-glyph.k-image { --k: var(--ok); }
+body[data-area="downloads"] .dl-glyph.k-doc { --k: var(--warn); }
+body[data-area="downloads"] .dl-glyph.k-code { --k: var(--cyan); }
+body[data-area="downloads"] .dl-glyph.k-exec { --k: var(--bad); }
+body[data-area="downloads"] .dl-glyph.k-media { --k: #ff8ad8; }
+body[data-area="downloads"] .dl-name {
+  display: block; max-width: 100%; border: 0; background: none; padding: 0; text-align: left; cursor: pointer;
+  color: var(--ink-hi); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+body[data-area="downloads"] .dl-name:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 3px; }
+body[data-area="downloads"] .dl-name:disabled { cursor: default; }
+body[data-area="downloads"] .dl .d { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+body[data-area="downloads"] .dl-agent { font-family: var(--mono); font-size: 10.5px; }
+body[data-area="downloads"] .dl-cancelled .dl-name,
+body[data-area="downloads"] .dl-interrupted .dl-name { color: var(--ink-dim); text-decoration: line-through; text-decoration-color: var(--ink-faint); }
+body[data-area="downloads"] .dl-interrupted .d { color: var(--bad); }
+body[data-area="downloads"] .dl-bar { height: 3px; margin-top: 8px; border-radius: 2px; background: var(--pane-2); overflow: hidden; position: relative; }
+body[data-area="downloads"] .dl-bar::after {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 35%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--violet), var(--cyan)); animation: dl-slide 1.3s ease-in-out infinite;
+}
+@keyframes dl-slide { from { left: -35%; } to { left: 100%; } }
+body[data-area="downloads"] .dl-folder { font-size: 15px; padding: 3px 8px; }
+body[data-area="downloads"] .dl .acts { opacity: .75; }
+body[data-area="downloads"] .dl:hover .acts,
+body[data-area="downloads"] .dl:focus-within .acts { opacity: 1; }
+body[data-area="downloads"] .dl-lrows { display: grid; gap: 4px; margin-bottom: 12px; }
+body[data-area="downloads"] .dl-lrow { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border: 1px solid var(--edge); border-radius: var(--r-s); background: rgba(0,0,0,.18); }
+body[data-area="downloads"] .dl-lrow span:nth-child(3) { flex: 1; color: var(--ink-dim); }
+body[data-area="downloads"] .dl-lrow .arrow { color: var(--ink-faint); }
+body[data-area="downloads"] .dl-ladd { display: flex; justify-content: flex-end; margin-top: 12px; }

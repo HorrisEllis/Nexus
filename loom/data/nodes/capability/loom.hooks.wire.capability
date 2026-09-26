@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-capability-loom.hooks.wire
+type: capability
+id: loom.hooks.wire
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730148
+source: loom.registry-components:loom.hooks.wire
+payload:
+  id: loom.hooks.wire
+  namespace: loom
+  name: hooks.wire
+  version: 1.5.0
+  grammar:
+    - hooks wire
+    - hooks-wire
+  route:
+    method: POST
+    path: /api/hooks/wire
+  intent: []
+  description: Wire a hook→hook binding (fromId→toId) — the consumer-edge write path
+  params: []
+  tags:
+    - loom
+    - write
+    - wire
+  permissions:
+    - system
+  hooks: {}

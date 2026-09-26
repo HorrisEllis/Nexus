@@ -1,0 +1,18 @@
+envelope: 1
+uuid: nexus-export-system-guardian
+type: system
+id: guardian
+context: >-
+  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
+  guardian/registry-components.js
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730146
+source: nexus.autopilot.KERNELS + registry-components.js
+payload:
+  id: guardian
+  hasCapabilities: true
+  port: 7820
+  spec: guardian/spec/guardian.spec

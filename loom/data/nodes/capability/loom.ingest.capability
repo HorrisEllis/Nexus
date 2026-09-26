@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.ingest
+type: capability
+id: loom.ingest
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730149
+source: loom.registry-components:loom.ingest
+payload:
+  id: loom.ingest
+  namespace: loom
+  name: ingest
+  version: 1.5.0
+  grammar:
+    - ingest
+    - ingest
+  route:
+    method: POST
+    path: /api/ingest
+  intent: []
+  description: Ingest a component descriptor into the registry
+  params: []
+  tags:
+    - loom
+    - write
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,40 @@
+{
+  "id": "b7c8d9e0-1f2a-4b3c-8d9e-0f1a2b3c4d5e",
+  "name": "zoom",
+  "version": "1.0.0",
+  "displayName": "Page Zoom",
+  "description": "Real gap named directly in CLEAR-GLASS-FULL-CHROME-MAP-2026-08-23.md's §8: 'Zero real code. Electron's webContents.setZoomFactor() is a real, built-in API this could wire to directly — genuinely small, scoped, buildable gap.' Wired via a new real driver.exec 'zoom' action (src/driver/index.js) using the actual native Chromium zoom API, not a CSS hack.",
+  "author": "James Brooks (Erosmancer)",
+  "entryPoint": "index.js",
+  "permissions": {
+    "network": false,
+    "domStorage": false,
+    "webRequest": false,
+    "hostFs": false
+  },
+  "contributes": {
+    "toolbar-command": [
+      {
+        "signature": "plugin:b7c8d9e0-1f2a-4b3c-8d9e-0f1a2b3c4d5e:zoom-in",
+        "handler": "zoomIn",
+        "icon": "➕",
+        "label": "Zoom In",
+        "group": "Page Zoom"
+      },
+      {
+        "signature": "plugin:b7c8d9e0-1f2a-4b3c-8d9e-0f1a2b3c4d5e:zoom-out",
+        "handler": "zoomOut",
+        "icon": "➖",
+        "label": "Zoom Out",
+        "group": "Page Zoom"
+      },
+      {
+        "signature": "plugin:b7c8d9e0-1f2a-4b3c-8d9e-0f1a2b3c4d5e:zoom-reset",
+        "handler": "zoomReset",
+        "icon": "↺",
+        "label": "Reset Zoom",
+        "group": "Page Zoom"
+      }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.health
+type: capability
+id: versionium.health
+context: versionium/registry-components.js real capability export
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789250756054
+source: versionium.registry-components:versionium.health
+payload:
+  id: versionium.health
+  namespace: versionium
+  name: health
+  version: 3.0.0
+  grammar:
+    - versionium health
+  route:
+    method: GET
+    path: /health
+  intent: []
+  description: Versionium health
+  params: []
+  tags:
+    - versionium
+  permissions:
+    - system
+  hooks: {}

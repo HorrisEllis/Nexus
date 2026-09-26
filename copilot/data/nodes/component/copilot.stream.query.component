@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-copilot.stream.query
+type: component
+id: copilot.stream.query
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789275153038
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153038
+lastSeenAt: 1789275153038
+fingerprint: copilot::GET /api/stream
+payload:
+  id: copilot.stream.query
+  uuid: 7d1c179b-5c65-4433-b8fe-372929337fb4
+  namespace: copilot
+  name: stream.query
+  version: 2.0.0

@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-schema-resonance_crystal
+type: schema
+id: resonance_crystal
+context: >-
+  cortex/schemas — sovereign local copy. Cortex is the real host store for this table
+  (data/cortex/memory/resonance_crystals.json). Origin:
+  intelligence/schemas/schema.resonance_crystal (same real grounding, cortex is the physical store
+  not the declaring system).
+intent: null
+summary: null
+system: cortex
+tags: []
+exported_at: 1789252761261
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/liminal-space/index.js — _crystallise()'s real jaaDB.insert('crystals', crystal)
+    shape
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real crystal id
+    focalPoint:
+      type: string
+      required: true
+      description: real focal point this crystallised from (a liminal-space concept, not a domain/verb pair)
+    type:
+      type: string
+      required: true
+      description: real item type that triggered crystallisation
+    path:
+      type: string
+      required: true
+      description: >-
+        how it crystallised — 'evidence_threshold' | 'focal_point_confirmation', per
+        _checkCrystallisation()
+    itemCount:
+      type: number
+      required: true
+      description: real count of interstitial_spaces items that crystallised together
+    avgConfidence:
+      type: number
+      required: true
+      description: real average confidence across those items
+    summary:
+      type: string
+      required: true
+      description: real text summary — first 3 items' text, joined
+    ts:
+      type: number
+      required: true
+      description: real crystallisation timestamp

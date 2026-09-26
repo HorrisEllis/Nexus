@@ -1,0 +1,1 @@
+[{"uuid":"a8caeb55-192f-4657-a4aa-4b0bb37ee35f","nodeId":"loom","type":"system","action":"added","filePath":"/home/claude/work/merged/loom/data/nodes/system/loom.system","ts":1789253181873,"id":"6cb49247-d765-4fe5-ab4b-fb86973c4020"}]

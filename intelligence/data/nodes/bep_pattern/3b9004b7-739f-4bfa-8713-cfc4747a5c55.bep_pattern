@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-3b9004b7-739f-4bfa-8713-cfc4747a5c55
+type: bep_pattern
+id: 3b9004b7-739f-4bfa-8713-cfc4747a5c55
+context: 'intelligence crystallised pattern: bottleneck'
+intent: null
+summary: Gap type "dangling-hook" appears 100 times — recurring bottleneck
+system: intelligence
+tags:
+  - bep_patterns
+  - bottleneck
+  - cortex/intelligence
+exported_at: 1790367987972
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790367987972
+lastSeenAt: 1790367987972
+fingerprint: null
+payload:
+  uuid: 3b9004b7-739f-4bfa-8713-cfc4747a5c55
+  signature: bottleneck::dangling-hook
+  patternType: bottleneck
+  gapType: dangling-hook
+  count: 100
+  confidence: 1
+  description: Gap type "dangling-hook" appears 100 times — recurring bottleneck
+  actionable: true
+  crystallised: true
+  source: cortex/intelligence
+  ts: 1790367987629

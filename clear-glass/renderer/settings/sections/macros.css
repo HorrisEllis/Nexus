@@ -1,0 +1,6 @@
+/* renderer/settings/sections/macros.css — Macros (step builder)
+ * v0.39.227: this area's own styles (one CSS file per UI file). Every rule is
+ * scoped to body[data-area="macros"] — set by core.js when the area is shown —
+ * so nothing here can restyle another area. */
+body[data-area="macros"] .step.eros { border-color: color-mix(in srgb, var(--violet) 45%, transparent); }
+body[data-area="macros"] .step .more { grid-column: 2 / -1; }

@@ -1,0 +1,1274 @@
+:root {
+    --bg-0:     #08080d;
+    --bg-1:     #0e0e18;
+    --bg-2:     #14141f;
+    --bg-3:     #1a1a28;
+    --glass:    rgba(255,255,255,0.03);
+    --border:   rgba(255,255,255,0.06);
+    --accent:   #00f5ff;
+    --accent2:  #7c5cfc;
+    --green:    #00ff9d;
+    --red:      #ff4466;
+    --text:     #c8cad4;
+    --text-dim: #5a5d72;
+    --text-bright: #eef0f8;
+    --mono:     'JetBrains Mono', 'Fira Code', monospace;
+    --chrome-h: 52px;
+    --copilot-w: 340px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ── Scrollbars ─────────────────────────────────────────────────────
+     §NEW 2026-08-30 — James: "the scrollbar, make it beautiful." The
+     `scrollbar-width`/`scrollbar-color` rules already scattered through
+     this file (rewind-list, etc.) are Firefox-only properties — they do
+     nothing in Chromium/Electron, which is why every scrollable panel
+     was still showing the fat default OS scrollbar in the screenshot.
+     Real fix for this engine is ::-webkit-scrollbar. Applied globally
+     (not per-panel) so every scrollable container — copilot pane,
+     rewind/mesh/downloads/history panels, the toolbar editor, ⋯ menu —
+     gets the same thin, rounded, accent-tinted thumb with one rule,
+     instead of thirty near-duplicate per-selector copies. */
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 55%, transparent), color-mix(in srgb, var(--accent2) 55%, transparent));
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.15s;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    background-clip: padding-box;
+    box-shadow: 0 0 6px rgba(0,245,255,0.4);
+  }
+  ::-webkit-scrollbar-corner { background: transparent; }
+
+  body {
+    background: var(--bg-0);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-size: 13px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    -webkit-app-region: no-drag;
+  }
+
+  /* ── Bookmarks bar ─────────────────────────────────────────────────── */
+  #bookmarks-bar {
+    height: 28px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 8px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  #bookmarks-list {
+    flex: 1;
+    display: flex;
+    gap: 4px;
+    overflow: hidden;
+    align-items: center;
+  }
+  .bk-btn {
+    font-size: 11px;
+    padding: 2px 8px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all .12s;
+    flex-shrink: 0;
+  }
+  .bk-btn:hover { background: var(--bg-3); color: var(--accent); border-color: var(--accent); }
+  /* #bookmark-mgr-btn — §MOVED 2026-08-30, now lives in #chrome as a
+     plain .nav-btn (see that class below); no bespoke style needed here
+     anymore. */
+
+  /* ── Rewind panel ─────────────────────────────────────────────────────── */
+  #rewind-panel {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 280px;
+    max-height: 360px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    display: none;
+    flex-direction: column;
+    z-index: 65;
+    overflow: hidden;
+  }
+  #rewind-panel.visible { display: flex; }
+  #rewind-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; font-weight: 600; color: var(--accent);
+    text-transform: uppercase; letter-spacing: .1em;
+  }
+  #rewind-header span { flex: 1; }
+  #rewind-list {
+    flex: 1; overflow-y: auto; padding: 6px;
+    display: flex; flex-direction: column; gap: 3px;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .rewind-item {
+    padding: 5px 8px;
+    background: var(--glass); border: 1px solid var(--border); border-radius: 4px;
+    font-family: var(--mono); font-size: 10px; cursor: pointer;
+    transition: all .1s;
+  }
+  .rewind-item:hover { border-color: var(--accent); color: var(--accent); }
+  .rewind-item .ri-title { color: var(--text-bright); font-size: 11px; margin-bottom: 2px; }
+  .rewind-item .ri-url   { color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rewind-item .ri-ts    { color: var(--text-dim); font-size: 9px; }
+
+  /* ── Userscript manager panel ──────────────────────────────────────────── */
+  #userscript-panel {
+    position: absolute; bottom: 0; right: 0;
+    width: 320px; max-height: 420px;
+    background: var(--bg-1); border: 1px solid var(--border);
+    border-radius: 8px 0 0 0; display: none;
+    flex-direction: column; z-index: 70; overflow: hidden;
+  }
+  #userscript-panel.visible { display: flex; }
+  #userscript-header {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 6px;
+  }
+  #userscript-header span { flex:1; font-size:10px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; }
+  .us-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 10px;
+  }
+  .us-item:last-child { border-bottom: none; }
+  .us-type { color: var(--text-dim); font-size: 9px; }
+  .us-name { flex:1; color: var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .us-toggle { width:22px; height:12px; background:var(--border); border-radius:6px; cursor:pointer;
+    border:none; position:relative; flex-shrink:0; }
+  .us-toggle.on { background:rgba(0,245,255,0.15); border:1px solid var(--accent); }
+  .us-toggle::after { content:''; position:absolute; top:1px; left:1px; width:8px; height:8px;
+    border-radius:50%; background:var(--text-dim); transition:all .1s; }
+  .us-toggle.on::after { left:11px; background:var(--accent); }
+  .us-inject-btn { font-size:9px; padding:2px 6px; background:var(--glass); border:1px solid var(--border);
+    border-radius:3px; color:var(--text-dim); cursor:pointer; }
+  .us-inject-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .us-edit-btn { font-size:9px; padding:2px 6px; background:var(--glass); border:1px solid var(--border);
+    border-radius:3px; color:var(--text-dim); cursor:pointer; }
+  .us-edit-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* ── Userscript editor modal — built 2026-09-11 ────────────────────── */
+  #us-editor-modal {
+    position: fixed; inset: 0; z-index: 200; display: none;
+    background: rgba(0,0,0,0.55); align-items: center; justify-content: center;
+  }
+  #us-editor-modal.visible { display: flex; }
+  #us-editor-panel {
+    width: 640px; max-width: 92vw; height: 520px; max-height: 88vh;
+    background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+  #us-editor-header {
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  #us-editor-title { flex:1; font-size:11px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.08em; }
+  #us-editor-readonly-badge { font-size:9px; color:var(--text-dim); border:1px solid var(--border); border-radius:3px; padding:2px 6px; }
+  #us-editor-close { background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:12px; }
+  #us-editor-close:hover { color:var(--text); }
+  #us-editor-fields { display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid var(--border); }
+  #us-editor-fields input {
+    flex:1; background:var(--bg-2,#111); color:var(--text); border:1px solid var(--border);
+    border-radius:4px; padding:6px 8px; font-family:var(--mono); font-size:10px; outline:none;
+  }
+  #us-editor-fields input:focus { border-color:var(--accent); }
+  #us-editor-fields input:disabled { opacity:0.5; cursor:not-allowed; }
+  #us-editor-source {
+    flex:1; resize:none; background:var(--bg-2,#0b0b0b); color:var(--text);
+    border:none; padding:10px 12px; font-family:var(--mono); font-size:11px; line-height:1.5;
+    outline:none; tab-size:2;
+  }
+  #us-editor-source:disabled { opacity:0.7; cursor:not-allowed; }
+  #us-editor-footer { display:flex; align-items:center; gap:8px; padding:10px 12px; border-top:1px solid var(--border); }
+  #us-editor-footer button {
+    font-size:10px; padding:6px 12px; border-radius:4px; cursor:pointer;
+    background:var(--glass); border:1px solid var(--border); color:var(--text-dim);
+  }
+  #us-editor-footer button:hover { border-color:var(--accent); color:var(--accent); }
+  #us-editor-save { background:rgba(0,245,255,0.1); border-color:var(--accent); color:var(--accent); }
+  #us-editor-delete { color:#ff5577; border-color:#ff5577; }
+  #us-editor-delete:hover { background:rgba(255,85,119,0.1); }
+
+  /* ── Right-click context menu ────────────────────────────────────────── */
+  #ctx-menu {
+    position: fixed; z-index: 9999; background: var(--bg-1);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 4px; min-width: 160px; display: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  #ctx-menu.visible { display: block; }
+  .ctx-item {
+    padding: 6px 12px; font-size: 12px; color: var(--text);
+    cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 8px;
+  }
+  .ctx-item:hover { background: var(--bg-3); color: var(--text-bright); }
+  .ctx-item.sep { border-top: 1px solid var(--border); margin: 2px 0; padding: 0; height: 1px; cursor: default; }
+  .ctx-item.sep:hover { background: none; }
+
+  /* ── Provider panel ─────────────────────────────────────────────────────── */
+  #provider-panel {
+    position: absolute;
+    top: 80px; right: 0;
+    width: 220px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 8px 0 0 8px;
+    display: none;
+    flex-direction: column;
+    z-index: 65;
+    overflow: hidden;
+  }
+  #provider-panel.visible { display: flex; }
+  #provider-header {
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    font-size: 10px; font-weight: 600; color: var(--text-bright);
+    text-transform: uppercase; letter-spacing: .1em;
+  }
+  #provider-list { padding: 6px; display: flex; flex-direction: column; gap: 4px; }
+  .prov-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--glass);
+    font-size: 11px; color: var(--text);
+  }
+  .prov-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
+  .prov-dot.active { background: var(--green); box-shadow: 0 0 4px var(--green); }
+  .prov-name { flex: 1; }
+  .prov-btn {
+    font-size: 10px; padding: 2px 6px;
+    background: var(--glass); border: 1px solid var(--border);
+    border-radius: 4px; cursor: pointer; color: var(--text-dim);
+    transition: all .12s;
+  }
+  .prov-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .prov-btn.active { background: rgba(0,255,157,.1); border-color: var(--green); color: var(--green); }
+
+  /* ── Profile import in Options ──────────────────────────────────────────── */
+  .import-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .import-section h3 { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .import-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .import-btn {
+    flex: 1; padding: 6px 10px; background: var(--glass);
+    border: 1px solid var(--border); border-radius: 6px;
+    color: var(--text); font-size: 11px; cursor: pointer; transition: all .12s;
+    text-align: center;
+  }
+  .import-btn:hover { background: var(--bg-3); border-color: var(--accent); color: var(--accent); }
+
+  /* ── Chrome bar ────────────────────────────────────────────────────── */
+  #chrome {
+    height: var(--chrome-h);
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    flex-shrink: 0;
+    -webkit-app-region: drag;
+    position: relative;
+    z-index: 100;
+  }
+
+  #chrome * { -webkit-app-region: no-drag; }
+
+  .chrome-group {
+    display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+  }
+  .chrome-divider {
+    width: 1px; height: 18px; background: var(--border);
+    flex-shrink: 0; margin: 0 2px;
+  }
+  /* §BUGFIX 2026-08-30 — James: "way too much space, widen the search
+     bar" — repeated after the 2026-08-28 #url-bar-wrap flex pass because
+     that pass never actually shipped (comment above #url-bar-wrap claims
+     flex bumped 3→7; the real rule was still flex:1 1 auto — comment
+     drifted from code, same class of bug this doc's own axioms call
+     out elsewhere). The real cause was never url-bar-wrap's own flex
+     value — it was this rule. Both #url-bar-wrap and .chrome-spacer had
+     flex-grow:1, so #chrome's free space split 50/50 between the search
+     bar and this invisible spacer instead of going to the bar. Verified
+     in DevTools: with both at flex-grow:1 the spacer measured ~180px
+     wide on a 1280px window — that's the visible gap. .chrome-spacer's
+     actual job (per its one caller) is only to pin #btn-options to the
+     right edge, which needs zero flex-grow of its own once url-bar-wrap
+     is the row's only growing item — a lone flex-grow:1 item already
+     consumes all free space and pushes every later sibling flush right.
+
+     §REMOVED 2026-08-30 — James: "i hate that gap to the right of the
+     menu button." Its one caller (the .chrome-spacer div between
+     bookmark-mgr-btn and btn-options in browser.html) is gone now: with
+     bookmark-mgr-btn moved to sit right before btn-options, this
+     min-width:8px spacer was just an extra ~20px hole punched in the
+     middle of that icon cluster — #url-bar-wrap's flex-grow already
+     does the real "push everything else flush right" work by itself
+     (see above), this class was never load-bearing for that. Rule left
+     here, unused, in case a future spacer need wants it back rather
+     than reinventing the same fix. */
+  .chrome-spacer { flex: 0 0 auto; min-width: 8px; }
+
+  .nav-btn {
+    width: 28px; height: 28px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .nav-btn:hover { background: var(--bg-3); color: var(--text-bright); }
+  .nav-btn:active { transform: scale(0.94); }
+
+  /* §BUILD 2026-09-02 — James: "remove the orange border, also its cut
+     off, needs to scale with the window." No rule anywhere previously
+     overrode the platform's default :focus ring on .nav-btn, so
+     Chromium's own default focus outline (orange in this build's
+     rendering, per the screenshot) was drawing — and for #btn-maximize/
+     #btn-close-tray, sitting right at the frameless window's top-right
+     corner, that outline's default outward offset gets clipped by the
+     real OS window edge, which is what read as "cut off." Fixed by
+     killing the default outline and drawing focus as an *inset*
+     box-shadow instead: inset never extends past the button's own box,
+     so it can never be clipped by the window edge, and — since it's
+     sized off the button's own border-box rather than a fixed browser
+     default — it scales correctly with the button at any OS/display
+     scale factor instead of the fixed-px default outline drifting out
+     of alignment. Keyboard-focus visibility is preserved (accessibility
+     requirement — outline:none alone, with nothing replacing it, would
+     silently remove focus visibility for keyboard users), just
+     contained. */
+  .nav-btn:focus { outline: none; }
+  .nav-btn:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+
+  #url-bar {
+    flex: 3 1 160px;
+    height: 40px;
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 40px 0 16px;
+    color: var(--text-bright);
+    font-family: var(--mono);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    min-width: 0;
+    width: 100%;
+  }
+  #url-bar:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,245,255,0.08); }
+
+  /* §BUILD 2026-08-28 — James: "in firefox the search bar looks like
+     this with the bookmark button at the end, over the search bar
+     inside of it. i want that, and a wider search bar." Gives the star
+     button a real anchor to sit inside the bar rather than beside it,
+     matching Firefox's own real layout.
+     §CORRECTION 2026-08-30 — this comment previously claimed the flex
+     weight was "bumped 3→7" here; it wasn't, the rule below was
+     untouched flex:1 1 auto the whole time. The actual width fix was
+     .chrome-spacer competing for the same flex-grow:1 (see its own note
+     above) — fixed there, not here. Left flex:1 1 auto as-is: with
+     .chrome-spacer no longer growing, this is already the row's sole
+     growing element and takes 100% of the free space by itself. */
+  #url-bar-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  /* §BUILD 2026-08-30 — real resize handle. Thin by default (barely
+     visible, matching this app's own "chrome that gets out of the way"
+     language elsewhere), widens and colors on hover so it's genuinely
+     discoverable without adding visual noise when idle. flex:0 0 auto —
+     never grows, never shrinks, fixed 10px hit target regardless of
+     row width. */
+  #url-bar-resize-handle {
+    flex: 0 0 auto;
+    width: 10px;
+    align-self: stretch;
+    cursor: ew-resize;
+    position: relative;
+    -webkit-app-region: no-drag;
+  }
+  #url-bar-resize-handle::after {
+    content: '';
+    position: absolute;
+    left: 50%; top: 20%; bottom: 20%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: var(--border);
+    border-radius: 1px;
+    transition: background 0.15s, width 0.15s;
+  }
+  #url-bar-resize-handle:hover::after,
+  #url-bar-resize-handle.dragging::after {
+    background: var(--accent);
+    width: 3px;
+  }
+  .url-bar-bookmark-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    z-index: 1;
+  }
+
+  /* §BUILD 2026-09-02 — per-site zoom readout, docked inside the url
+     bar just left of the bookmark star (same absolute-positioning
+     pattern .url-bar-bookmark-btn uses). Sits to the left of the star
+     so both fit without colliding; hidden entirely at 100% zoom,
+     matching Chrome's own native address-bar zoom control. */
+  .url-bar-zoom-btn {
+    position: absolute;
+    right: 34px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 2px 4px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    z-index: 1;
+    border-radius: 4px;
+  }
+  .url-bar-zoom-btn:hover { color: var(--text-bright); background: var(--bg-2); }
+  .url-bar-zoom-caret { font-size: 8px; }
+
+  /* §BUILD 2026-08-28 — general menu (repurposed from the old
+     bookmarks-only #bookmark-mgr-panel). Kept deliberately plain/dense
+     to match this bar's existing visual language — no new component
+     system introduced for one menu. */
+  .menu-section { padding: 6px 8px; }
+  .menu-section-label { font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+  .menu-sep { height: 1px; background: var(--border); margin: 2px 0; }
+  .menu-zoom-row { display: flex; align-items: center; gap: 8px; }
+  .menu-zoom-btn {
+    width: 24px; height: 24px;
+    background: var(--bg-2); border: 1px solid var(--border); border-radius: 4px;
+    color: var(--text-bright); font-size: 13px; cursor: pointer; flex-shrink: 0;
+  }
+  .menu-zoom-btn:hover { border-color: var(--accent); }
+  #menu-zoom-pct { font-size: 11px; color: var(--text); min-width: 34px; text-align: center; }
+  .menu-item { padding: 8px; font-size: 11px; color: var(--text); cursor: pointer; }
+  .menu-item:hover { background: var(--bg-2); }
+  .menu-item .menu-kbd { float: right; color: var(--text-dim); font-size: 10px; opacity: .8; } /* 0.39.241 — shortcut hint */
+  #menu-agent-identity-target { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; }
+  #menu-agent-identity-target button { width: 100%; text-align: left; }
+
+  #agent-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(0,245,255,0.08);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 4px;
+    color: var(--accent);
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* §NEW 2026-07-11 — identity/fingerprint switcher, same visual language
+     as #agent-badge on purpose (same row, same interaction pattern —
+     click a badge, get a dropdown), distinct color so it doesn't read as
+     a duplicate of the agent-window switcher next to it. */
+  #identity-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(180,120,255,0.08);
+    border: 1px solid rgba(180,120,255,0.25);
+    border-radius: 4px;
+    color: #b478ff;
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+
+  #picker-btn {
+    width: 28px; height: 28px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    position: relative;
+  }
+  #picker-btn.active {
+    background: rgba(0,245,255,0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 8px rgba(0,245,255,0.3);
+  }
+  #picker-btn:hover { background: var(--bg-3); color: var(--text-bright); }
+
+  #copilot-toggle {
+    width: 28px; height: 28px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  #copilot-toggle.active {
+    background: rgba(124,92,252,0.12);
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+  #copilot-toggle:hover { background: var(--bg-3); color: var(--text-bright); }
+
+  /* ── Status strip ───────────────────────────────────────────────────── */
+  #status-strip {
+    /* §BUGFIX 2026-08-28 — James: "i want the status strip gone."
+       display:none, not deleted from the DOM: every id inside it
+       (dot-nexus, dot-sse, dot-tls, status-agent, status-url,
+       status-health, status-cookies) is a real, live target of real,
+       working JS (connection health polling, TLS fingerprint status,
+       SSE stream status — see browser.js's dot-nexus/dot-sse/dot-tls
+       assignments). Removing the elements outright would throw on the
+       next update tick (null.className), not just visually disappear.
+       Hidden, not deleted — same real data keeps updating invisibly;
+       nothing crashes. */
+    display: none;
+    height: 24px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    gap: 16px;
+    padding: 0 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  /* §2026-08-23 — James: "the fourth image, is where the bookmarks
+     should go." Real, small class, not inline style — inline style
+     would break the real, existing JS toggle (.style.color =
+     isMarked ? '#f5c842' : ''), since clearing to '' falls back to
+     whatever a real CSS rule says, not to a removed inline value. */
+  .status-bookmark-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    display: inline-block;
+    margin-right: 4px;
+  }
+  .status-dot.ok      { background: var(--green); box-shadow: 0 0 4px var(--green); }
+  .status-dot.warn    { background: #ffaa00; }
+  .status-dot.error   { background: var(--red); }
+
+  /* ── Main layout ─────────────────────────────────────────────────────── */
+  #layout {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+  }
+
+  /* ── Webview area ────────────────────────────────────────────────────── */
+  #webview-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+
+  /* ── Agent window switcher dropdown ──────────────────────────────────── */
+  #agent-dropdown {
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    min-width: 200px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    z-index: 200;
+    overflow: hidden;
+    padding: 6px;
+  }
+  #agent-dropdown.visible { display: flex; }
+  .agent-dd-section-label {
+    font-size: 9px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--text-dim); padding: 6px 8px 2px;
+  }
+  .agent-dd-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 8px; border-radius: 6px; cursor: pointer;
+    font-size: 12px; color: var(--text);
+  }
+  .agent-dd-item:hover { background: var(--bg-3); color: var(--text-bright); }
+  .agent-dd-item .dd-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .agent-dd-item.current { color: var(--accent); }
+  .agent-dd-sep { height: 1px; background: var(--border); margin: 4px 2px; }
+
+  /* §NEW 2026-07-11 — identity dropdown, same box/section/item pattern as
+     the agent dropdown above (reuses .agent-dd-section-label/.agent-dd-sep
+     — no need to fork those, they're purely structural), own
+     #identity-dropdown positioning + its own item class so "current mode"
+     highlighting doesn't collide with the agent switcher's "current
+     window" highlighting. */
+  #identity-dropdown {
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    min-width: 200px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    z-index: 200;
+    overflow: hidden;
+    padding: 6px;
+  }
+  #identity-dropdown.visible { display: flex; }
+  .identity-dd-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 8px; border-radius: 6px; cursor: pointer;
+    font-size: 12px; color: var(--text);
+  }
+  .identity-dd-item:hover { background: var(--bg-3); color: var(--text-bright); }
+  .identity-dd-item.current { color: #b478ff; }
+  .identity-dd-item .dd-dot { width: 6px; height: 6px; border-radius: 50%; background: #b478ff; flex-shrink: 0; }
+
+  /* ── Queue panel ──────────────────────────────────────────────────────── */
+  #queue-panel {
+    position: absolute;
+    top: 80px; right: 0;
+    width: 260px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 8px 0 0 8px;
+    display: none;
+    flex-direction: column;
+    z-index: 65;
+    overflow: hidden;
+  }
+  #queue-panel.visible { display: flex; }
+  #queue-header {
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    font-size: 10px; font-weight: 600; color: var(--text-bright);
+    text-transform: uppercase; letter-spacing: .1em;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  #queue-list { padding: 6px; display: flex; flex-direction: column; gap: 4px; max-height: 320px; overflow-y: auto; }
+  .queue-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: 6px; font-size: 11px; color: var(--text);
+    background: var(--glass); border: 1px solid var(--border);
+  }
+  .queue-item .q-status { font-size: 9px; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: .04em; }
+  .queue-item .q-status.idle    { color: var(--text-dim); }
+  .queue-item .q-status.working { color: var(--accent); }
+  .queue-item .q-status.error   { color: #ff4466; }
+  .queue-empty { padding: 16px; text-align: center; font-size: 11px; color: var(--text-dim); }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  webview {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: flex;
+  }
+
+  /* Loading bar */
+  #load-bar {
+    position: absolute;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    width: 0%;
+    transition: width 0.3s, opacity 0.3s;
+    z-index: 10;
+    opacity: 0;
+  }
+  #load-bar.loading { opacity: 1; }
+
+  /* ── Co-pilot pane ───────────────────────────────────────────────────── */
+  #copilot-pane {
+    width: var(--copilot-w);
+    background: var(--bg-1);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: width 0.2s, opacity 0.2s;
+    overflow: hidden;
+  }
+
+  #copilot-pane.hidden {
+    width: 0;
+    opacity: 0;
+    border-left: none;
+  }
+
+  #copilot-header {
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #copilot-header h2 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  #copilot-model {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--accent2);
+    opacity: 0.8;
+  }
+
+  #copilot-clear {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+  #copilot-clear:hover { color: var(--text); background: var(--glass); }
+
+  #copilot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .msg {
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  .msg.user {
+    background: rgba(124,92,252,0.12);
+    border: 1px solid rgba(124,92,252,0.2);
+    color: var(--text-bright);
+    align-self: flex-end;
+    max-width: 90%;
+  }
+
+  .msg.assistant {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 11.5px;
+  }
+
+  .msg.thinking {
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 11px;
+    padding: 6px 10px;
+    background: none;
+    border: none;
+  }
+
+  .msg code {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: var(--bg-0);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  /* §BUILT 2026-09-21 — Screen Q&A preview blocks, rendered inside the
+     existing .msg.assistant container via addMsg's html=true path.
+     Preview-first: "use" is the only thing that ever touches the page. */
+  .sqa-block { display: flex; flex-direction: column; gap: 6px; }
+  .sqa-q { color: var(--accent); font-weight: 600; }
+  .sqa-a { color: var(--text); }
+  .sqa-err { color: var(--red); }
+  .sqa-actions { display: flex; gap: 6px; margin-top: 2px; }
+  .sqa-actions button { font-size: 10px; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-0); color: var(--text); cursor: pointer; }
+  .sqa-actions .sqa-use { border-color: var(--accent); color: var(--accent); }
+  .sqa-done { color: var(--accent2); font-size: 10px; }
+
+  #copilot-input-wrap {
+    padding: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #copilot-context-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .ctx-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(0,245,255,0.06);
+    border: 1px solid rgba(0,245,255,0.15);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+  .ctx-tag:hover { background: rgba(0,245,255,0.12); }
+  /* §FIXED 2026-08-23 — James: "these three buttons, i dont think to
+     anything." Traced it through: the click handlers, real boolean
+     state, and downstream context-inclusion logic all genuinely worked
+     already — the bug was purely visual, a 0.06->0.18 opacity shift
+     that's easy to miss entirely. Made the active state unmistakable:
+     a real, solid fill and bold weight, not a subtle tint. */
+  .ctx-tag.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 700;
+  }
+
+  #copilot-textarea {
+    width: 100%;
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--text-bright);
+    font-family: inherit;
+    font-size: 12px;
+    resize: none;
+    outline: none;
+    min-height: 60px;
+    max-height: 120px;
+    line-height: 1.5;
+    transition: border-color 0.15s;
+  }
+  #copilot-textarea:focus { border-color: var(--accent2); }
+  #copilot-textarea::placeholder { color: var(--text-dim); }
+
+  #copilot-send {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  #copilot-send:hover  { opacity: 0.9; }
+  #copilot-send:active { transform: scale(0.96); }
+
+  /* ── DOM Archaeology panel ───────────────────────────────────────────── */
+  #dom-panel {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 240px;
+    background: var(--bg-1);
+    border-top: 1px solid var(--border);
+    display: none;
+    flex-direction: column;
+    z-index: 50;
+  }
+  #dom-panel.visible { display: flex; }
+
+  #dom-panel-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  #dom-panel-header h3 {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex: 1;
+  }
+
+  #dom-search {
+    background: var(--bg-0);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    outline: none;
+    width: 180px;
+  }
+  #dom-search:focus { border-color: var(--accent); }
+
+  #dom-panel-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+  }
+
+  #dom-tree {
+    flex: 1;
+    overflow: auto;
+    padding: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text);
+    white-space: pre;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .dom-node { padding: 1px 0; cursor: pointer; }
+  .dom-node:hover { color: var(--accent); }
+  .dom-tag  { color: #ff79c6; }
+  .dom-id   { color: var(--accent); }
+  .dom-cls  { color: #8be9fd; }
+  .dom-text { color: var(--text-dim); }
+
+  /* ── Picks sidebar ───────────────────────────────────────────────────── */
+  #picks-panel {
+    position: absolute;
+    bottom: 0; right: calc(var(--copilot-w) + 0px);
+    width: 220px;
+    max-height: 300px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    display: none;
+    flex-direction: column;
+    z-index: 60;
+    overflow: hidden;
+  }
+  #picks-panel.visible { display: flex; }
+
+  #picks-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+  }
+  #picks-header span { flex: 1; }
+
+  #picks-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pick-item {
+    padding: 5px 8px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.1s;
+  }
+  .pick-item:hover { border-color: var(--accent); color: var(--accent); }
+  .pick-item .pick-tag  { color: #ff79c6; }
+  .pick-item .pick-name { color: var(--text-dim); font-size: 9px; margin-top: 2px; }
+
+  /* ── Options panel (Nexus options — window behavior, defaults; future
+        phases add bookmarks/userscripts/rewind sections here) ──────────── */
+  #options-panel {
+    position: absolute;
+    top: 0; right: 0;
+    width: 280px;
+    height: 100%;
+    background: var(--bg-1);
+    border-left: 1px solid var(--border);
+    display: none;
+    flex-direction: column;
+    z-index: 80;
+    overflow-y: auto;
+  }
+  #options-panel.visible { display: flex; }
+
+  #options-panel-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  #options-panel-header h3 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex: 1;
+  }
+  #options-panel-close {
+    background: none; border: none;
+    color: var(--text-dim); cursor: pointer;
+    font-size: 14px; padding: 2px 4px;
+  }
+  #options-panel-close:hover { color: var(--text-bright); }
+
+  .opt-section { padding: 14px; border-bottom: 1px solid var(--border); }
+  .opt-section:last-child { border-bottom: none; }
+  .opt-section h4 {
+    font-size: 9px; font-weight: 600; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;
+  }
+
+  .opt-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 10px;
+  }
+  .opt-row:last-child { margin-bottom: 0; }
+  .opt-row label { font-size: 12px; color: var(--text); flex: 1; }
+
+  .opt-toggle {
+    width: 32px; height: 18px; border-radius: 9px;
+    background: var(--bg-3); border: 1px solid var(--border);
+    cursor: pointer; position: relative; flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .opt-toggle::after {
+    content: ''; position: absolute;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--text-dim); top: 1px; left: 1px;
+    transition: left 0.15s, background 0.15s;
+  }
+  .opt-toggle.on { background: rgba(0,245,255,0.15); border-color: var(--accent); }
+  .opt-toggle.on::after { left: 15px; background: var(--accent); }
+
+  .opt-text-input {
+    width: 100%; background: var(--bg-0); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 8px; color: var(--text-bright);
+    font-family: var(--mono); font-size: 11px; outline: none;
+  }
+  .opt-text-input:focus { border-color: var(--accent); }
+
+  .opt-link-btn {
+    width: 100%; text-align: left;
+    background: var(--glass); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 10px; margin-bottom: 8px;
+    color: var(--text); font-size: 12px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .opt-link-btn:last-child { margin-bottom: 0; }
+  .opt-link-btn:hover { border-color: var(--accent); color: var(--accent-bright); background: var(--bg-3); }
+
+  /* ── Toolbar tool menu rows (⋯ menu — real icon+label rows replacing
+        the bare glyph squares that used to sit in the chrome bar) ────── */
+  .menu-item.tool-row { display: flex; align-items: center; gap: 8px; }
+  .menu-item.tool-row .tool-row-icon { width: 16px; text-align: center; flex-shrink: 0; color: var(--text-dim); }
+  .menu-item.tool-row:hover .tool-row-icon { color: var(--accent); }
+
+  /* ── Toolbar editor ("need a toolbar editor" — same drag-and-drop
+        two-zone shape as Firefox's own customize screen, restyled to
+        this app's own dark/mono visual language instead of borrowing
+        Firefox's icon set) ──────────────────────────────────────────── */
+  #toolbar-editor-overlay {
+    /* §fix 2026-09-02 — James: "customize toolbar also does nothing."
+       Root cause was CSS specificity, not wiring: browser.html had this
+       element's display:none as an *inline* style attribute, which
+       always wins over any stylesheet rule (including this ID+class
+       selector, and even the ID-only version below) unless that rule
+       uses !important. _openToolbarEditor() (browser.js) was correctly
+       populating the drag zones and adding the real .visible class the
+       whole time — the overlay just structurally could never be shown
+       because of where display:none lived. Fixed by moving the hidden
+       state here, the one real place a CSS class toggle can control it,
+       and removing the inline attribute from browser.html. */
+    position: absolute; inset: 0;
+    background: rgba(4,4,8,0.6);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 200;
+  }
+  #toolbar-editor-overlay.visible { display: flex; }
+
+  #toolbar-editor-panel {
+    width: 560px; max-width: 92vw;
+    max-height: 80vh;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  #toolbar-editor-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+  }
+  #toolbar-editor-header h3 {
+    font-size: 11px; font-weight: 600; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.1em; flex: 1;
+  }
+  #toolbar-editor-close {
+    background: none; border: none; color: var(--text-dim);
+    cursor: pointer; font-size: 14px; padding: 2px 4px;
+  }
+  #toolbar-editor-close:hover { color: var(--text-bright); }
+  #toolbar-editor-hint {
+    padding: 10px 16px 0; font-size: 11px; color: var(--text-dim);
+  }
+  #toolbar-editor-zones {
+    display: flex; gap: 12px; padding: 14px 16px; flex: 1; overflow-y: auto;
+  }
+  .te-zone { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .te-zone-label {
+    font-size: 9px; font-weight: 600; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
+  }
+  .te-zone-drop {
+    flex: 1; min-height: 220px;
+    background: var(--bg-0);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: border-color .12s, background .12s;
+  }
+  .te-zone-drop.drag-over { border-color: var(--accent); background: rgba(0,245,255,0.04); }
+  .te-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 12px;
+    cursor: grab;
+    user-select: none;
+    transition: all .12s;
+  }
+  .te-chip:hover { border-color: var(--accent); color: var(--text-bright); }
+  .te-chip.dragging { opacity: .35; }
+  .te-chip .te-chip-icon { width: 16px; text-align: center; color: var(--accent); flex-shrink: 0; }
+  .te-zone-drop:empty::after {
+    content: 'Drop tools here';
+    color: var(--text-dim); font-size: 11px; padding: 8px; display: block;
+  }
+  /* ── Editor "Actions" list — §MERGED 2026-08-29, ex-Spotlight commands
+        that have no toolbar button (no `id` in commands.js) and so can't
+        go in either drag zone above; click-to-run, not drag-to-arrange. */
+  #toolbar-editor-actions {
+    padding: 0 16px 14px;
+    border-top: 1px solid var(--border);
+    margin-top: 2px;
+  }
+  #toolbar-editor-actions .te-zone-label { margin: 12px 0 8px; }
+  #te-actions-list { display: flex; flex-direction: column; gap: 6px; max-height: 140px; overflow-y: auto; }
+  .te-action-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .12s;
+  }
+  .te-action-row:hover { border-color: var(--accent); color: var(--text-bright); }
+  .te-action-row .te-chip-icon { width: 16px; text-align: center; color: var(--accent); flex-shrink: 0; }
+  .te-action-row .te-action-label { flex: 1; }
+  .te-action-row .te-action-group {
+    font-size: 9px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--text-dim); flex-shrink: 0;
+  }
+
+  #toolbar-editor-footer {
+    display: flex; gap: 8px; padding: 12px 16px;
+    border-top: 1px solid var(--border);
+  }
+  #toolbar-editor-footer .opt-link-btn { width: auto; flex: 1; text-align: center; }

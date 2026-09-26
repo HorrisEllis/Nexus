@@ -1,0 +1,63 @@
+/* ui/home/areas/overview.css — Overview channel: system grid tiles + co-pilot tension field.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* ── CHANNEL STYLES ── */
+
+/* CH1: Overview — system grid */
+#ch-overview{padding:60px 70px 80px;overflow:hidden}
+.sys-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-content:start}
+@media(max-width:900px){.sys-grid{grid-template-columns:repeat(2,1fr)}}
+.sys-tile{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px;
+  cursor:pointer;transition:border-color .15s,box-shadow .2s,transform .1s,filter .12s;
+  position:relative;overflow:hidden;-webkit-user-select:none;user-select:none;
+}
+/* Spotlight — pressure. The tile feels physical. */
+.sys-tile::after{
+  content:'';position:absolute;inset:0;border-radius:14px;opacity:0;
+  transition:opacity .2s;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 30%,rgba(255,255,255,.08),transparent 65%);
+}
+.sys-tile:hover{
+  border-color:rgba(var(--ac-rgb),.35);
+  transform:translateY(-1px) scale(1.004);
+  box-shadow:0 0 0 1px rgba(var(--ac-rgb),.12), 0 8px 28px rgba(0,0,0,.4);
+  filter:brightness(1.06);
+}
+.sys-tile:hover::after{opacity:1}
+.sys-tile:active{
+  transform:translateY(1px) scale(0.996) !important;
+  box-shadow:0 0 0 2px rgba(var(--ac-rgb),.3), inset 0 1px 4px rgba(0,0,0,.3) !important;
+  filter:brightness(1.12) !important;
+  transition-duration:.04s !important;
+}
+/* Spotlight — co-pilot directs attention here */
+.sys-tile.spotlight{
+  border-color:var(--ac) !important;
+  box-shadow:0 0 0 2px var(--ac), 0 0 32px rgba(var(--ac-rgb),.35) !important;
+  filter:brightness(1.1);
+  animation:spotlight-pulse 2s ease-in-out infinite;
+}
+@keyframes spotlight-pulse{
+  0%,100%{box-shadow:0 0 0 2px var(--ac), 0 0 20px rgba(var(--ac-rgb),.25);}
+  50%{box-shadow:0 0 0 3px var(--ac), 0 0 44px rgba(var(--ac-rgb),.55), 0 0 70px rgba(var(--ac-rgb),.1);}
+}
+.sys-tile.online{border-color:rgba(255,255,255,.1)}
+.tile-head{display:flex;align-items:center;justify-content:space-between}
+.tile-icon{font-size:20px}
+.tile-port{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.25)}
+.tile-status{font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.tile-status.online{color:var(--ok);background:var(--ok-dim)}
+.tile-status.offline{color:var(--err);background:var(--err-dim)}
+.tile-name{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.tile-desc{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5;flex:1}
+.tile-metrics{display:flex;gap:16px;margin-top:4px}
+.tm-val{font-family:'Space Mono',monospace;font-size:18px;font-weight:700}
+.tm-lbl{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* Tension field — co-pilot writes --cp-tension per tile via inline style
+   Tiles absorb system health as a felt field, not a color change */
+.sys-tile{transition:all .3s,box-shadow .8s ease}
+.sys-tile[style*="--cp-tension"]{
+  box-shadow:0 0 calc(var(--cp-tension,0)*40px) rgba(255,calc(170-var(--cp-tension,0)*170),calc(var(--cp-tension,0)*85),calc(var(--cp-tension,0)*.25)) inset;
+}

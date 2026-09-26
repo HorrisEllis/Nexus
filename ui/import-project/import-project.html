@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS — Upload Project</title>
+<link rel="stylesheet" href="/ui/themes/nexus-dark.css">
+<link rel="stylesheet" href="/ui/import-project/import-project.css">
+<script src="/ui/lib/api.js"></script>
+</head>
+<body>
+
+<div class="ip-shell">
+  <div class="ip-eyebrow">NEXUS · IDEARIUM</div>
+  <h1 class="ip-title">Upload Project</h1>
+
+  <div class="ip-steps">
+    <div class="ip-step active" id="ip-step-dot-1"><span>1</span> Name &amp; goal</div>
+    <div class="ip-step" id="ip-step-dot-2"><span>2</span> Import repository</div>
+    <div class="ip-step" id="ip-step-dot-3"><span>3</span> Done</div>
+  </div>
+
+  <!-- ── Step 1 — prompt: name, goal, example intents ─────────────────────── -->
+  <section class="ip-panel" id="ip-panel-prompt">
+    <label class="ip-label" for="ip-name">Project name</label>
+    <input class="ip-text" id="ip-name" type="text" maxlength="200" placeholder="e.g. checkout-service">
+
+    <label class="ip-label" for="ip-goal">What's the goal?</label>
+    <textarea class="ip-textarea" id="ip-goal" maxlength="2000" rows="3"
+      placeholder="What should be true once this project is imported and worked on?"></textarea>
+    <div class="ip-hint">
+      This becomes the compartment's declared end-state — the real conditions
+      it's resolved against once the repo, its manifest, and a real commit exist.
+    </div>
+
+    <div class="ip-label">Example goals — tap to use</div>
+    <div class="ip-chips" id="ip-chips"><!-- populated from /api/project-import/config --></div>
+
+    <div class="ip-form-actions">
+      <button class="ip-btn" id="ip-start">Continue →</button>
+    </div>
+    <div class="ip-status" id="ip-prompt-status"></div>
+  </section>
+
+  <!-- ── Step 2 — dropzone + Import Repository ─────────────────────────────── -->
+  <section class="ip-panel" id="ip-panel-drop" hidden>
+    <div class="ip-container-note" id="ip-container-note"></div>
+
+    <div class="ip-dropzone" id="ip-dropzone">
+      <div class="ip-dropzone-icon">⬇</div>
+      <div class="ip-dropzone-main" id="ip-dropzone-main">Drop a .zip archive, or click to choose one</div>
+      <div class="ip-dropzone-sub">A single .zip only — text files are imported, bounded per file and per import; binaries and node_modules/.git are skipped, never silently.</div>
+    </div>
+    <input type="file" id="ip-input" class="ip-input" accept=".zip">
+
+    <div class="ip-form-actions">
+      <button class="ip-btn secondary" id="ip-cancel">Cancel</button>
+      <button class="ip-btn" id="ip-import" disabled>Import Repository</button>
+    </div>
+    <div class="ip-status" id="ip-drop-status"></div>
+  </section>
+
+  <!-- ── Step 3 — result ────────────────────────────────────────────────────── -->
+  <div class="ip-result" id="ip-result">
+    <div class="ip-result-row"><span>Repo</span><span id="ip-r-name">—</span></div>
+    <div class="ip-result-row"><span>UUID</span><span id="ip-r-uuid">—</span></div>
+    <div class="ip-result-row"><span>Files ingested</span><span id="ip-r-files">—</span></div>
+    <div class="ip-result-row"><span>Omitted</span><span id="ip-r-omitted">—</span></div>
+    <div class="ip-result-row"><span>Manifest</span><span id="ip-r-manifest">—</span></div>
+    <div class="ip-result-row"><span>project.json</span><span id="ip-r-projectjson">—</span></div>
+    <div class="ip-result-row"><span>Git</span><span id="ip-r-git">—</span></div>
+    <div class="ip-result-row"><span>End-state</span><span id="ip-r-endstate">—</span></div>
+    <div class="ip-omitted" id="ip-r-omitted-list"></div>
+    <div class="ip-result-actions">
+      <a class="ip-btn" id="ip-open-repo" href="#">Open repo →</a>
+      <button class="ip-btn secondary" id="ip-import-another">Import another</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── state ────────────────────────────────────────────────────────────────
+let containerUuid = null;
+let stagedFile = null;
+let intentExamples = [];
+
+const panelPrompt = document.getElementById('ip-panel-prompt');
+const panelDrop    = document.getElementById('ip-panel-drop');
+const result       = document.getElementById('ip-result');
+const dot1 = document.getElementById('ip-step-dot-1');
+const dot2 = document.getElementById('ip-step-dot-2');
+const dot3 = document.getElementById('ip-step-dot-3');
+
+function setStatus(el, text, cls) {
+  el.textContent = text || '';
+  el.className = 'ip-status' + (cls ? ' ' + cls : '');
+}
+
+// ── load example intents from the config endpoint — nothing here is
+// hardcoded copy; if lib/project-import.config.js's INTENT_EXAMPLES
+// changes, this screen changes with it, no redeploy of this file needed. ──
+(async function loadConfig() {
+  const cfg = await get('/api/project-import/config');
+  intentExamples = cfg?.intentExamples || [];
+  const chips = document.getElementById('ip-chips');
+  chips.innerHTML = '';
+  intentExamples.forEach(text => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'ip-chip';
+    chip.textContent = text;
+    chip.addEventListener('click', () => { document.getElementById('ip-goal').value = text; });
+    chips.appendChild(chip);
+  });
+})();
+
+// ── Step 1 -> 2: start() spawns the temporary compartment right away,
+// before any file exists, so it's there to abandon if the user walks
+// away mid-drop (James's own explicit ordering). ──────────────────────────
+document.getElementById('ip-start').addEventListener('click', async () => {
+  const name = document.getElementById('ip-name').value.trim();
+  const goal = document.getElementById('ip-goal').value.trim();
+  const statusEl = document.getElementById('ip-prompt-status');
+  if (!name) { setStatus(statusEl, 'Project name is required.', 'err'); return; }
+  if (!goal) { setStatus(statusEl, 'A goal is required — it becomes the end-state.', 'err'); return; }
+
+  setStatus(statusEl, 'Creating a temporary compartment…', 'busy');
+  const res = await post('/api/project-import/start', { name, goal });
+  if (!res || !res.ok) {
+    setStatus(statusEl, res?.error || 'Could not start — no response from server.', 'err');
+    return;
+  }
+  containerUuid = res.containerUuid;
+  setStatus(statusEl, '', null);
+
+  document.getElementById('ip-container-note').textContent =
+    `Compartment ${res.compartmentId?.slice(0, 8) || '—'} open · intent: ${res.intent?.domain || '?'}.${res.intent?.verb || '?'}`;
+
+  panelPrompt.hidden = true;
+  panelDrop.hidden = false;
+  dot1.classList.remove('active'); dot1.classList.add('done');
+  dot2.classList.add('active');
+});
+
+// ── Step 2: dropzone stages a file — it does NOT upload on drop. The
+// user has to press "Import Repository" explicitly (James: "then a
+// dropzone... once it uploads you can hit 'import repository'" — read
+// as two distinct real actions, not one auto-triggering the other). ──────
+function stageFile(file) {
+  if (!file) return;
+  if (!/\.zip$/i.test(file.name)) {
+    setStatus(document.getElementById('ip-drop-status'), `Not a .zip: ${file.name}`, 'err');
+    return;
+  }
+  stagedFile = file;
+  document.getElementById('ip-dropzone-main').textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB) — ready`;
+  document.getElementById('ip-import').disabled = false;
+  setStatus(document.getElementById('ip-drop-status'), '', null);
+}
+
+const zone = document.getElementById('ip-dropzone');
+const input = document.getElementById('ip-input');
+zone.addEventListener('click', () => input.click());
+input.addEventListener('change', () => stageFile(input.files[0]));
+['dragover', 'dragenter'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('dz-active'); }));
+['dragleave', 'drop'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.remove('dz-active'); }));
+zone.addEventListener('drop', e => { if (e.dataTransfer?.files?.length) stageFile(e.dataTransfer.files[0]); });
+
+// ── "Import Repository" — upload, then finalize (manifest/project.json/
+// .git generated server-side), then open the full repo page. ─────────────
+document.getElementById('ip-import').addEventListener('click', async () => {
+  if (!stagedFile || !containerUuid) return;
+  const statusEl = document.getElementById('ip-drop-status');
+  const importBtn = document.getElementById('ip-import');
+  importBtn.disabled = true;
+
+  setStatus(statusEl, 'Uploading…', 'busy');
+  let contentBase64;
+  try {
+    contentBase64 = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload  = () => resolve(r.result.split(',')[1] || '');
+      r.onerror = reject;
+      r.readAsDataURL(stagedFile);
+    });
+  } catch (e) {
+    setStatus(statusEl, `File read failed: ${e.message}`, 'err');
+    importBtn.disabled = false;
+    return;
+  }
+  if (!contentBase64) { setStatus(statusEl, 'Empty file.', 'err'); importBtn.disabled = false; return; }
+
+  setStatus(statusEl, 'Import uploaded — generating manifest, project.json, and .git…', 'busy');
+  const res = await post(`/api/project-import/${containerUuid}/finalize`,
+    { filename: stagedFile.name, contentBase64 }, 30000);
+
+  if (!res) {
+    setStatus(statusEl, 'No response from server.', 'err');
+    importBtn.disabled = false;
+    return;
+  }
+  if (!res.ok) {
+    setStatus(statusEl, res.error || 'Import did not reach the declared end-state.', 'err');
+    importBtn.disabled = false;
+    return;
+  }
+
+  showResult(res);
+  panelDrop.hidden = true;
+  dot2.classList.remove('active'); dot2.classList.add('done');
+  dot3.classList.add('active');
+
+  // "then opens the full repo page" — navigate there directly; the
+  // result panel (with its own explicit link) stays as a fallback for a
+  // blocked/declined navigation.
+  const uuid = res.repo?.uuid;
+  if (uuid) window.location.hash = `#repo/${uuid}`;
+});
+
+// ── Cancel — abandons the temp compartment before finalize. ──────────────
+document.getElementById('ip-cancel').addEventListener('click', async () => {
+  if (containerUuid) { try { await post(`/api/project-import/${containerUuid}/cancel`, {}); } catch (_) {} }
+  containerUuid = null; stagedFile = null;
+  panelDrop.hidden = true;
+  panelPrompt.hidden = false;
+  dot2.classList.remove('active'); dot1.classList.add('active'); dot1.classList.remove('done');
+  document.getElementById('ip-import').disabled = true;
+  document.getElementById('ip-dropzone-main').textContent = 'Drop a .zip archive, or click to choose one';
+});
+
+// Best-effort cancel if the tab closes mid-flow before finalize — a real
+// safety net alongside project-container.js's own sweepStale(), not a
+// replacement for it (sendBeacon can silently fail to deliver).
+window.addEventListener('beforeunload', () => {
+  if (containerUuid && panelDrop && !panelDrop.hidden) {
+    try { navigator.sendBeacon(`/api/project-import/${containerUuid}/cancel`, new Blob([JSON.stringify({})], { type: 'application/json' })); } catch (_) {}
+  }
+});
+
+function showResult(res) {
+  result.classList.add('show');
+  document.getElementById('ip-r-name').textContent        = res.repo?.name ?? '—';
+  document.getElementById('ip-r-uuid').textContent        = res.repo?.uuid ?? '—';
+  document.getElementById('ip-r-files').textContent       = res.fileCount ?? '—';
+  document.getElementById('ip-r-omitted').textContent     = res.omittedCount ?? 0;
+  document.getElementById('ip-r-manifest').textContent    = res.manifest ? 'written' : '—';
+  document.getElementById('ip-r-projectjson').textContent = res.projectJson ? 'written' : '—';
+  document.getElementById('ip-r-git').textContent         = res.git?.committed ? `${res.git.branch}@${res.git.commit}` : (res.git?.error || '—');
+  document.getElementById('ip-r-endstate').textContent    = res.endState ? `${res.endState.met}/${res.endState.total} met` : '—';
+
+  const list = document.getElementById('ip-r-omitted-list');
+  list.innerHTML = '';
+  (res.omitted || []).forEach(o => {
+    const row = document.createElement('div');
+    row.className = 'ip-omitted-row';
+    row.textContent = `${o.path} — ${o.why}`;
+    list.appendChild(row);
+  });
+
+  document.getElementById('ip-open-repo').href = `#repo/${res.repo?.uuid || ''}`;
+}
+
+document.getElementById('ip-import-another').addEventListener('click', () => {
+  result.classList.remove('show');
+  containerUuid = null; stagedFile = null;
+  document.getElementById('ip-name').value = '';
+  document.getElementById('ip-goal').value = '';
+  panelPrompt.hidden = false;
+  dot1.classList.add('active'); dot1.classList.remove('done');
+  dot2.classList.remove('active', 'done');
+  dot3.classList.remove('active');
+});
+</script>
+
+</body>
+</html>

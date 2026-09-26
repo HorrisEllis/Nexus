@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.job.response
+type: capability
+id: guardian.job.response
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730140
+source: guardian.registry-components:guardian.job.response
+payload:
+  id: guardian.job.response
+  namespace: guardian
+  name: job.response
+  version: 3.6.2
+  grammar:
+    - job response
+    - job-response
+  route:
+    method: GET
+    path: /response/:jobId
+  intent: []
+  description: Full response for a job
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

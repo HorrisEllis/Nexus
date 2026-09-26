@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.lfo",
+  "label": "LFO",
+  "icon": "\u3030",
+  "accent": "#aa44ff",
+  "domain": [
+    "music",
+    "modulation",
+    "control"
+  ],
+  "description": "Low-frequency oscillator. Publishes mod:signal globally. BPM sync mode.",
+  "permissions": [
+    "bus_publish",
+    "bus_subscribe"
+  ],
+  "provides": [
+    "capability.lfo",
+    "capability.mod_signal"
+  ],
+  "requires": [],
+  "hooks": [
+    {
+      "hook_id": "lfo.hook.mod_out",
+      "direction": "out",
+      "event_type": "mod:signal",
+      "contract_version": "1.0.0"
+    }
+  ],
+  "params": {
+    "shape": {
+      "type": "enum",
+      "values": [
+        "sine",
+        "triangle",
+        "square",
+        "sawtooth",
+        "S&H"
+      ],
+      "default": "sine"
+    },
+    "rate": {
+      "type": "float",
+      "min": 0.01,
+      "max": 32,
+      "default": 4,
+      "unit": "Hz"
+    },
+    "depth": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "default": 0.5,
+      "unit": ""
+    },
+    "phase": {
+      "type": "float",
+      "min": 0,
+      "max": 360,
+      "default": 0,
+      "unit": "degrees"
+    },
+    "bipolar": {
+      "type": "bool",
+      "default": true
+    },
+    "sync": {
+      "type": "bool",
+      "default": false
+    }
+  },
+  "ui": {
+    "type": "oscilloscope_interactive"
+  }
+}

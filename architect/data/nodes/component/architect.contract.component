@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-architect.contract
+type: component
+id: architect.contract
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: architect
+tags: []
+exported_at: 1789275153107
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153107
+lastSeenAt: 1789275153107
+fingerprint: architect::GET /api/contract
+payload:
+  id: architect.contract
+  uuid: a4730975-292c-4878-97e5-f6ec4d0f3cee
+  namespace: architect
+  name: contract
+  version: 1.0.0

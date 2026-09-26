@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.sessions
+type: capability
+id: copilot.sessions
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730176
+source: copilot.registry-components:copilot.sessions
+payload:
+  id: copilot.sessions
+  namespace: copilot
+  name: sessions
+  version: 2.0.0
+  grammar:
+    - copilot sessions
+  route:
+    method: GET
+    path: /api/sessions
+  intent: []
+  description: Active co-pilot sessions
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks: {}

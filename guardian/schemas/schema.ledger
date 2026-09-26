@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-schema-ledger
+type: schema
+id: ledger
+context: >-
+  guardian/schemas — sovereign local copy. Origin: lib/node-schemas/schema.ledger (shared canonical
+  version, may have moved on independently since this copy was made — sovereignty means guardian
+  does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789235656463
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: lib/component-ledger.js — write()'s real parameters/row shape
+  fields:
+    system:
+      type: string
+      required: true
+      description: real system name — refused if missing (§1.1)
+    component:
+      type: string
+      required: true
+      description: real component name — refused if missing
+    action:
+      type: string
+      required: true
+      description: real action taken — refused if missing
+    status:
+      type: string
+      required: false
+      description: defaults to 'info'
+    tags:
+      type: array
+      required: false
+      description: real tags, defaults to []
+    detail:
+      type: any
+      required: false
+      description: real free-form detail
+    causedBy:
+      type: string
+      required: false
+      description: real causal chain reference
+    contractUuid:
+      type: string
+      required: false
+      description: real RAID contract this ledger entry traces to
+    session:
+      type: string
+      required: false
+      description: real session id

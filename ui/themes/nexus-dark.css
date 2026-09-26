@@ -1,0 +1,108 @@
+/**
+ * ui/themes/nexus-dark.css
+ * comp_id: nexus.ui.theme.dark
+ * uuid: nexus-theme-dark-v1-0000-2026-0627-jamesbrooks-001
+ *
+ * NEXUS Dark Theme — the default sovereign visual identity.
+ * Import this in any UI. All CSS variables defined here.
+ * No hardcoded colors anywhere else. Everything derives from these vars.
+ *
+ * §AX-6  — No ambiguity. Every color is named and intentional.
+ * §L5    — UI is disposable. Swap this file to change the entire system look.
+ */
+
+:root {
+  /* ── Void / Background ─────────────────────────────────────────────────── */
+  --void:   #00000f;    /* deepest background — canvas, full-screen areas */
+  --ink:    #080814;    /* page background */
+  --plate:  #0d0d1f;    /* card/panel background */
+  --panel:  #111128;    /* nested panel background */
+  --edge:   #1e1e3a;    /* subtle divider */
+  --rim:    #2a2a4a;    /* border, faint structure */
+  --muted:  #4a4a7a;    /* disabled text, timestamps */
+  --dim:    #7070a0;    /* secondary text */
+  --text:   #d0d4f0;    /* primary text */
+  --bright: #eeeeff;    /* headings, emphasis */
+
+  /* ── Accent (animated hue cycle 192→240→192, cyan↔blue-violet) ─────────── */
+  --ac-h: 192;
+  --ac-s: 100%;
+  --ac-l: 56%;
+  --ac:         hsl(var(--ac-h), var(--ac-s), var(--ac-l));
+  --ac-dim:     hsla(var(--ac-h), var(--ac-s), var(--ac-l), .18);
+  --ac-ghost:   hsla(var(--ac-h), var(--ac-s), var(--ac-l), .07);
+  --ac-border:  hsla(var(--ac-h), var(--ac-s), var(--ac-l), .22);
+  --ac-border-hi: hsla(var(--ac-h), var(--ac-s), var(--ac-l), .4);
+  --ac-rgb: 0, 212, 255;   /* for rgba(var(--ac-rgb), alpha) */
+
+  /* ── Status colors — stable, never animated ────────────────────────────── */
+  --ok:         #00ff88;
+  --ok-dim:     rgba(0, 255, 136, .12);
+  --ok-border:  rgba(0, 255, 136, .25);
+  --err:        #ff3355;
+  --err-dim:    rgba(255, 51, 85, .12);
+  --warn:       #ffaa00;
+  --warn-dim:   rgba(255, 170, 0, .12);
+
+  /* ── System identity colors ─────────────────────────────────────────────── */
+  --sys-orch:   #818cf8;   /* orchestrator — indigo */
+  --sys-gd:     #f59e0b;   /* guardian — amber */
+  --sys-cx:     #34d399;   /* cortex — emerald */
+  --sys-br:     #22d3ee;   /* bridge — cyan */
+  --sys-idr:    #4a9eff;   /* idearium — blue */
+  --sys-arch:   #ef9f27;   /* architect — orange */
+  --sys-em:     #a78bfa;   /* emerge — violet */
+  --sys-dg:     #67e8f9;   /* diagnostic — sky */
+  --sys-er:     #a78bfa;   /* eravos — violet */
+  --sys-ol:     #00ff88;   /* ollama — green */
+  --sys-cp:     #cc44ff;   /* copilot — magenta */
+
+  /* ── Co-pilot runtime vars (set by co-pilot dynamically) ───────────────── */
+  --cp-tension:     0;      /* 0-1 CFR sigma, drives felt field on tiles */
+  --cp-focus:       hsl(var(--ac-h), var(--ac-s), var(--ac-l));
+  --cp-focus-alpha: 0.8;
+
+  /* ── Typography ─────────────────────────────────────────────────────────── */
+  --font-mono: 'Space Mono', 'Fira Code', 'Courier New', monospace;
+  --font-body: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  /* §SALVAGED 2026-08-28 — from an earlier NEXUS lineage (v0.53/0.54,
+     src/ui/nexus.css), the one genuinely distinct typographic identity
+     piece this file was missing: a display face for headers/logos/nav
+     tabs, separate from body and mono. That lineage's --display: 'Bebas
+     Neue' — condensed, high-contrast, reads as a wordmark at a glance —
+     is real design work worth keeping even though most of that
+     lineage's own theme (palette, component patterns) is superseded by
+     this file's more principled single-source-of-truth approach
+     (animated HSL accent, explicit "swap this file to reskin
+     everything" philosophy that lineage's CSS didn't have).
+     Optional — nothing is required to adopt it; UI that wants a
+     wordmark-style header/logo can opt in with font-family:
+     var(--font-display), everything else is unaffected. */
+  --font-display: 'Bebas Neue', 'Archivo Black', sans-serif;
+
+  /* ── Geometry ────────────────────────────────────────────────────────────── */
+  --r:    6px;    /* base border-radius */
+  --r-lg: 14px;   /* card border-radius */
+  --gap:  16px;   /* standard spacing unit */
+}
+
+/* ── Accent hue animation ────────────────────────────────────────────────── */
+@property --ac-h { syntax: '<number>'; inherits: true; initial-value: 192; }
+:root { animation: accent-cycle 8s ease-in-out infinite; }
+@keyframes accent-cycle {
+  0%   { --ac-h: 192; }
+  25%  { --ac-h: 210; }
+  50%  { --ac-h: 240; }
+  75%  { --ac-h: 210; }
+  100% { --ac-h: 192; }
+}
+
+/* ── Base reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}

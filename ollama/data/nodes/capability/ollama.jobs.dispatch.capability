@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-capability-ollama.jobs.dispatch
+type: capability
+id: ollama.jobs.dispatch
+context: ollama/registry-components.js real capability export
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789250730189
+source: ollama.registry-components:ollama.jobs.dispatch
+payload:
+  id: ollama.jobs.dispatch
+  namespace: ollama
+  name: jobs.dispatch
+  version: 1.0.0
+  grammar:
+    - ollama dispatch
+    - od
+    - ollama run
+  route:
+    method: POST
+    path: /api/jobs
+  intent:
+    - build
+    - ask
+    - forge
+    - classify
+  description: Queue a job for local model execution
+  params: []
+  tags:
+    - ollama
+    - dispatch
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: ollama.jobs.dispatch.receive
+        intent:
+          - build
+          - ask
+          - forge
+          - classify
+        contract: nexus-interaction-contract-v1::ollama
+        tags:
+          - dispatch
+    out:
+      - id: ollama.jobs.dispatch.complete
+        wires_to:
+          - cortex.raid.feedback
+          - copilot.receive_result
+        tags:
+          - result

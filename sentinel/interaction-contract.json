@@ -1,0 +1,111 @@
+{
+  "id": "sentinel-v1",
+  "version": "0.1.0",
+  "namespace": "sentinel",
+  "uuid": "sentinel-contract-v1-0000-2026-0727-jamesbrooks-001",
+  "role": "Sovereign diagnostic and repair — one authority on system health",
+  "spec": "docs/nexus-sentinel.spec",
+
+  "_note": [
+    "SPEC PHASE S1. The contract is written BEFORE the API exists, deliberately:",
+    "docs/nexus-sentinel.spec makes the contract the single declaration that CLI,",
+    "API and UI all derive from — 'a command that is not in the contract does not",
+    "exist'. Writing the API first and documenting it after is how the four",
+    "existing diagnostic surfaces came to disagree.",
+    "",
+    "Routes below are DECLARED, not yet served (S4). The CLI implements the",
+    "commands against the local store today so it works with the service DOWN —",
+    "which is exactly when a human reaches for it, and is S1's stated gate."
+  ],
+
+  "ports": { "http": 7825 },
+  "health": { "method": "GET", "path": "/health", "returns": { "ok": true } },
+
+  "handshake": {
+    "method": "POST",
+    "path": "/sentinel/handshake",
+    "status": "DECLARED — not served until S4",
+    "description": "Gated handshake. A surface proves it speaks a compatible contract BEFORE it can act, so a stale UI cannot command a changed system.",
+    "request": { "contractUuid": "string", "contractVersion": "string", "surfaceId": "string" },
+    "response": { "ok": "boolean", "token": "string", "expected": "string — the version that WOULD have worked, on refusal" },
+    "law": "A refused handshake is itself a FAULT and is ledgered as one (the_loop step 3). Without that, the most security-relevant event in the system leaves no trace."
+  },
+
+  "routes": [
+    { "method": "GET",  "path": "/health",                "description": "Health of the sentinel itself (§12.6 — what is true now, not that a test once passed)", "status": "LIVE" },
+    { "method": "POST", "path": "/sentinel/handshake",    "description": "Gated contract handshake",                    "status": "DECLARED" },
+    { "method": "GET",  "path": "/sentinel/faults",       "description": "Open faults, read from the ledger",            "status": "DECLARED" },
+    { "method": "GET",  "path": "/sentinel/faults/:uuid", "description": "One fault with its causal ancestry",           "status": "DECLARED" },
+    { "method": "POST", "path": "/sentinel/faults/:uuid/ack", "description": "Acknowledge a fault — a governed write, not UI state", "status": "DECLARED" },
+    { "method": "POST", "path": "/sentinel/repair/:uuid", "description": "Dispatch a repair and VERIFY delivery (SEN-7)", "status": "DECLARED" },
+    { "method": "GET",  "path": "/sentinel/contract",     "description": "This contract, machine-readable",              "status": "DECLARED" }
+  ],
+
+  "commands": [
+    {
+      "cmd": "sentinel contract",
+      "description": "Emit this contract, machine-readable. The surface every other surface derives from.",
+      "output": "contract",
+      "busEvent": "sentinel.cli.contract",
+      "worksOffline": true
+    },
+    {
+      "cmd": "sentinel status",
+      "description": "Health of the sentinel and its inputs — schema coverage, intelligence intake, store reachability",
+      "output": "status",
+      "busEvent": "sentinel.cli.status",
+      "worksOffline": true
+    },
+    {
+      "cmd": "sentinel faults list",
+      "opts": [
+        { "name": "limit",  "type": "number", "description": "max rows (default 20)" },
+        { "name": "system", "type": "string", "description": "filter to one system" },
+        { "name": "all",    "type": "boolean", "description": "include acknowledged" }
+      ],
+      "description": "Open faults from the ledger, newest first",
+      "output": "fault[]",
+      "busEvent": "sentinel.cli.faults.list",
+      "worksOffline": true
+    },
+    {
+      "cmd": "sentinel faults show",
+      "args": [{ "name": "uuid", "type": "string", "required": true }],
+      "description": "One fault, with the CFR conditions it occurred under and its causal ancestry",
+      "output": "fault",
+      "busEvent": "sentinel.cli.faults.show",
+      "worksOffline": true
+    },
+    {
+      "cmd": "sentinel faults ack",
+      "args": [{ "name": "uuid", "type": "string", "required": true }],
+      "opts": [{ "name": "note", "type": "string" }],
+      "description": "Acknowledge a fault — GATED, and written to the ledger so it survives every surface",
+      "output": "ack",
+      "busEvent": "sentinel.cli.faults.ack",
+      "gated": true,
+      "worksOffline": false,
+      "_why": "An acknowledgement is a governed write, not a local opinion. It must reach the ledger or it did not happen (§LAW II)."
+    },
+    {
+      "cmd": "sentinel scan",
+      "args": [{ "name": "system", "type": "string", "required": false }],
+      "description": "Explicit diagnostic sweep — the real cli/diagnose.js, never a second implementation",
+      "output": "scan",
+      "busEvent": "sentinel.cli.scan",
+      "worksOffline": true
+    }
+  ],
+
+  "laws": [
+    "SEN-1 one truth about system health — every other surface is a client",
+    "SEN-3 ledger before action (§LAW II) — a repair nothing recorded did not happen",
+    "SEN-4 every interaction gated; a gate refusal is a first-class ledgered outcome",
+    "SEN-5 the UI owns nothing — notifications live in the ledger, not a tab",
+    "SEN-7 a repair that did not happen cannot report success",
+    "SEN-8 never derive what you can consult (cortex/intelligence)",
+    "SEN-9 decoupled or it does not ship — bus, API, CLI, SSE; never require() another system's internals"
+  ],
+
+  "axioms": ["§1.1", "§1.2", "§10.3", "§16.4", "LAW_II"]
+}

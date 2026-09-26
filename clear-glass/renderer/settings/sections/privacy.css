@@ -1,0 +1,5 @@
+/* renderer/settings/sections/privacy.css — Privacy & data
+ * v0.39.227: this area's own styles (one CSS file per UI file). Every rule is
+ * scoped to body[data-area="privacy"] — set by core.js when the area is shown —
+ * so nothing here can restyle another area. */
+body[data-area="privacy"] .row .what .d { overflow-wrap: anywhere; }

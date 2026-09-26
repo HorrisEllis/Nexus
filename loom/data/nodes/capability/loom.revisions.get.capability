@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-loom.revisions.get
+type: capability
+id: loom.revisions.get
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730152
+source: loom.registry-components:loom.revisions.get
+payload:
+  id: loom.revisions.get
+  namespace: loom
+  name: revisions.get
+  version: 1.5.0
+  grammar:
+    - revisions get
+    - revisions-get
+  route:
+    method: GET
+    path: /api/revisions/:id
+  intent: []
+  description: Read one revision
+  params: []
+  tags:
+    - loom
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.contracts.close
+type: capability
+id: loom.contracts.close
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730150
+source: loom.registry-components:loom.contracts.close
+payload:
+  id: loom.contracts.close
+  namespace: loom
+  name: contracts.close
+  version: 1.5.0
+  grammar:
+    - contracts close
+    - contracts-close
+  route:
+    method: POST
+    path: /api/contracts/:id/close
+  intent: []
+  description: Close a contract
+  params: []
+  tags:
+    - loom
+    - write
+  permissions:
+    - system
+  hooks: {}

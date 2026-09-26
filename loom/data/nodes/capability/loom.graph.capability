@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-loom.graph
+type: capability
+id: loom.graph
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730149
+source: loom.registry-components:loom.graph
+payload:
+  id: loom.graph
+  namespace: loom
+  name: graph
+  version: 1.5.0
+  grammar:
+    - graph
+    - graph
+  route:
+    method: GET
+    path: /api/graph
+  intent: []
+  description: The wire graph — nodes and edges of NEXUS
+  params: []
+  tags:
+    - loom
+  permissions:
+    - system
+  hooks: {}

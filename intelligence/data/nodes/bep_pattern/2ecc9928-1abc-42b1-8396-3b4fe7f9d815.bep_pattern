@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-2ecc9928-1abc-42b1-8396-3b4fe7f9d815
+type: bep_pattern
+id: 2ecc9928-1abc-42b1-8396-3b4fe7f9d815
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.diagnostic.baseline_deviation" precedes failures 8 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266387
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266387
+lastSeenAt: 1790368266387
+fingerprint: null
+payload:
+  uuid: 2ecc9928-1abc-42b1-8396-3b4fe7f9d815
+  signature: precursor::ledger.diagnostic.baseline_deviation
+  patternType: failure_precursor
+  precursorType: ledger.diagnostic.baseline_deviation
+  failureTypes:
+    - intelligence.failure_scan
+  count: 8
+  confidence: 0.8
+  description: '"ledger.diagnostic.baseline_deviation" precedes failures 8 times — watch this event type'
+  actionable: true
+  crystallised: false
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

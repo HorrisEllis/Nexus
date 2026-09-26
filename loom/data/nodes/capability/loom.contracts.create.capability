@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.contracts.create
+type: capability
+id: loom.contracts.create
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730150
+source: loom.registry-components:loom.contracts.create
+payload:
+  id: loom.contracts.create
+  namespace: loom
+  name: contracts.create
+  version: 1.5.0
+  grammar:
+    - contracts create
+    - contracts-create
+  route:
+    method: POST
+    path: /api/contracts
+  intent: []
+  description: Create an interaction contract
+  params: []
+  tags:
+    - loom
+    - write
+  permissions:
+    - system
+  hooks: {}

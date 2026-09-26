@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-1a2c07b3-b47c-4a28-95f5-3ff4f77b40af
+type: bep_pattern
+id: 1a2c07b3-b47c-4a28-95f5-3ff4f77b40af
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: >-
+  "intelligence.command.invoked" and "intelligence.reuse_index_built" co-occur within 5s — 229
+  observations
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790367389061
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790367389061
+lastSeenAt: 1790367389061
+fingerprint: null
+payload:
+  uuid: 1a2c07b3-b47c-4a28-95f5-3ff4f77b40af
+  signature: intelligence.command.invoked::intelligence.reuse_index_built
+  patternType: co_occurrence
+  typeA: intelligence.command.invoked
+  typeB: intelligence.reuse_index_built
+  systemA: null
+  systemB: cortex
+  crossSystem: false
+  count: 229
+  confidence: 1
+  description: >-
+    "intelligence.command.invoked" and "intelligence.reuse_index_built" co-occur within 5s — 229
+    observations
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790367389026

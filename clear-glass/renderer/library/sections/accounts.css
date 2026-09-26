@@ -1,0 +1,2 @@
+/* renderer/library/sections/accounts.css — Library → Accounts only. Scoped to body[data-area="accounts"]. */
+body[data-area="accounts"] .row .acts .chip { font-family: var(--mono); }

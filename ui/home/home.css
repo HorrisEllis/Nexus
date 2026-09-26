@@ -1,0 +1,95 @@
+/* ui/home/home.css — Shared only: reset, layer containers, theme tokens + accent cycle, shared keyframes, shared components used by several channels (.gd-box/.box-*, .btn, form elements, .gap-row, .box-input), scrollbars.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e0e8ff;font-family:'Space Grotesk',sans-serif}
+
+
+/* ── Layer 1: channel content ── */
+#channel{position:fixed;inset:0;z-index:1;overflow:hidden}
+.ch{display:none;width:100%;height:100%;animation:ch-in .35s ease}
+.ch.active{display:flex;flex-direction:column}
+@keyframes ch-in{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+
+/* ── Layer 2: HUD — pointer-events:none at container level always ── */
+#hud{position:fixed;inset:0;z-index:10;pointer-events:none}
+
+@keyframes dot-live{0%,100%{opacity:.4}50%{opacity:1;box-shadow:0 0 5px var(--ok)}}
+
+/* ── Co-pilot spotlight system ───────────────────────────────────────────────
+   Variable-based: co-pilot sets CSS vars, never changes themes or colors.
+   --cp-tension:     0-1  live CFR sigma, drives the "felt" field on tiles
+   --cp-focus:       hex  color of the spotlight ring (default cyan)
+   --cp-focus-alpha: 0-1  intensity of spotlight (default 0.8)
+   Teaching light: .copilot-spotlight pulses around a target element.
+   Co-pilot sets it, UI removes it after the user acts on it.
+   ─────────────────────────────────────────────────────────────────────── */
+:root{
+  /* Co-pilot runtime vars */
+  --cp-tension:0;
+  --cp-focus-alpha:0.8;
+
+  /* Accent RGB components — animated by @keyframes accent-cycle */
+  /* Primary accent (cyan → violet → cyan) — slow, 8s loop */
+  --ac-h:192;          /* hue: 192=cyan, cycles slowly */
+  --ac-s:100%;
+  --ac-l:56%;
+  /* Derived accent — used everywhere var(--ac) was hardcoded */
+  --ac:hsl(var(--ac-h),var(--ac-s),var(--ac-l));
+  --ac-dim:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.18);
+  --ac-ghost:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.07);
+  --ac-border:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.22);
+  --ac-border-hi:hsla(var(--ac-h),var(--ac-s),var(--ac-l),.4);
+  /* Co-pilot spotlight derives from animated accent */
+  --cp-focus:hsl(var(--ac-h),var(--ac-s),var(--ac-l));
+  /* Online green and error red — stable, never animate */
+  --ok:#00ff88;
+  --ok-dim:rgba(0,255,136,.12);
+  --ac-rgb:0,212,255;
+  --ok-border:rgba(0,255,136,.25);
+  --err:#ff3355;
+  --err-dim:rgba(255,51,85,.12);
+}
+
+/* Accent hue cycle — slow RGB drift, 8s, subtle range (192→240→192)
+   Only hue moves. Saturation and lightness stay fixed.
+   Result: cyan ↔ blue-violet, never jarring, always legible.
+   Applied to :root so every var(--ac) consumer animates for free. */
+@keyframes accent-cycle{
+  0%   {--ac-h:192}   /* cyan       #00e5ff */
+  25%  {--ac-h:210}   /* sky-blue   #0099ff */
+  50%  {--ac-h:240}   /* blue-violet #4466ff */
+  75%  {--ac-h:210}   /* sky-blue */
+  100% {--ac-h:192}   /* back to cyan */
+}
+/* @property required for hue interpolation in Chromium */
+@property --ac-h{syntax:'<number>';inherits:true;initial-value:192}
+:root{animation:accent-cycle 8s ease-in-out infinite}
+
+.gd-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.box-head{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:space-between}
+.box-body{flex:1;overflow-y:auto;padding:12px 14px}
+@keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+textarea{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:7px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:11px;padding:10px 12px;outline:none;resize:none;transition:border-color .2s;width:100%;line-height:1.5}
+textarea:focus{border-color:rgba(255,255,255,.25)}
+select{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:7px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:11px;padding:8px 10px;outline:none;width:100%}
+select option{background:#111}
+.btn{padding:9px 18px;border-radius:7px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e0e8ff;font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s}
+.btn:hover{background:rgba(255,255,255,.12)}
+.btn.primary{border-color:rgba(255,170,0,.4);background:rgba(255,170,0,.1);color:#ffaa00}
+.btn.primary:hover{background:rgba(255,170,0,.2)}
+
+.gap-row{padding:8px 10px;border-left:2px solid;margin-bottom:5px;border-radius:0 6px 6px 0;background:rgba(255,255,255,.02);font-size:11px}
+.gap-row.high{border-left-color:var(--err)}
+.gap-row.medium{border-left-color:#ffaa00}
+.gap-row.low{border-left-color:rgba(255,255,255,.15)}
+.gap-type-lbl{font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.gap-body-txt{color:rgba(255,255,255,.5);line-height:1.4}
+
+/* Scrollbars */
+*::-webkit-scrollbar{width:3px;height:3px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+/* Input in box */
+.box-input{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:6px;color:#e0e8ff;font-family:'Space Mono',monospace;font-size:10px;padding:7px 10px;outline:none;width:100%;transition:border-color .2s}
+.box-input:focus{border-color:rgba(255,255,255,.2)}

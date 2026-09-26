@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-schema-guardian_chat_log
+type: schema
+id: guardian_chat_log
+context: guardian/schemas — guardian-local node-type schema registry
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789117339416
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    guardian/lib/ncp-handler.js — real jaa.insert('chat_log', ...) shape, the assistant-response
+    half of the symmetric chat-logger fix (this codebase's own §HONEST GAP note: the prompt half
+    goes through lib/chat-logger.js's real log()+embed path, this raw insert is the response half,
+    kept separate deliberately)
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real chat_log row id
+    jobId:
+      type: string
+      required: true
+      description: real associated guardian job id
+    provider:
+      type: string
+      required: true
+      description: real provider, defaults to 'unknown'
+    prompt:
+      type: string
+      required: true
+      description: real prompt text, truncated to 2000 chars
+    response:
+      type: string
+      required: true
+      description: real response text, truncated to 5000 chars
+    tokensIn:
+      type: number
+      required: true
+      description: real estimated input tokens, prompt.length / 4
+    tokensOut:
+      type: number
+      required: true
+      description: real estimated output tokens, response.length / 4
+    gapCount:
+      type: number
+      required: true
+      description: real count of gaps detected during this exchange
+    chatUrl:
+      type: string
+      required: false
+      description: real source chat url
+    account:
+      type: string
+      required: false
+      description: real account
+    ts:
+      type: number
+      required: true
+      description: real timestamp
+    source:
+      type: string
+      required: true
+      description: real origin, e.g. 'ncp'

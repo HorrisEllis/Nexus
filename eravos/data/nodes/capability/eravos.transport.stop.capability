@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-eravos.transport.stop
+type: capability
+id: eravos.transport.stop
+context: eravos/registry-components.js real capability export
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789250730186
+source: eravos.registry-components:eravos.transport.stop
+payload:
+  id: eravos.transport.stop
+  namespace: eravos
+  name: transport.stop
+  version: 3.0.0
+  grammar:
+    - eravos stop
+  route:
+    method: POST
+    path: /api/transport/stop
+  intent: []
+  description: Stop playback
+  params: []
+  tags:
+    - eravos
+  permissions:
+    - system
+  hooks: {}

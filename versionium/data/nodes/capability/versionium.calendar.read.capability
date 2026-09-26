@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.calendar.read
+type: capability
+id: versionium.calendar.read
+context: versionium/registry-components.js real capability export
+intent: null
+summary: null
+system: versionium
+tags: []
+exported_at: 1789250756053
+source: versionium.registry-components:versionium.calendar.read
+payload:
+  id: versionium.calendar.read
+  namespace: versionium
+  name: calendar.read
+  version: 3.0.0
+  grammar:
+    - versionium calendar
+  route:
+    method: GET
+    path: /api/versionium/calendar/:date
+  intent: []
+  description: Real calendar playback for a given date
+  params: []
+  tags:
+    - versionium
+  permissions:
+    - system
+  hooks: {}

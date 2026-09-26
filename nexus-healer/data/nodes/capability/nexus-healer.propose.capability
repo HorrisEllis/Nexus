@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-nexus-healer.propose
+type: capability
+id: nexus-healer.propose
+context: nexus-healer/registry-components.js real capability export
+intent: null
+summary: null
+system: nexus-healer
+tags: []
+exported_at: 1789250730154
+source: nexus-healer.registry-components:nexus-healer.propose
+payload:
+  id: nexus-healer.propose
+  namespace: nexus-healer
+  name: propose
+  version: 0.1.0
+  grammar: []
+  route:
+    method: POST
+    path: /proposals
+  intent: []
+  description: Record a proposed self-improvement.
+  params:
+    - text
+    - causedBy
+  tags:
+    - nexus-healer
+  permissions:
+    - system
+  hooks: {}

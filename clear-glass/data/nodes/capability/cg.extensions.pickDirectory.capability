@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.extensions.pickDirectory
+type: capability
+id: cg.extensions.pickDirectory
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730171
+source: clear-glass.registry-components:cg.extensions.pickDirectory
+payload:
+  id: cg.extensions.pickDirectory
+  namespace: cg
+  name: extensions.pickDirectory
+  version: 3.1.0
+  grammar:
+    - extensions pickDirectory
+  route:
+    method: IPC
+    path: extensions:pickDirectory
+  intent: []
+  description: Real OS directory picker for extensions
+  params: []
+  tags:
+    - cg
+    - extensions
+  permissions:
+    - system
+  hooks: {}

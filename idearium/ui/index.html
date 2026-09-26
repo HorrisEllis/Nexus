@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDEARIUM — Nexus Idea OS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+:root {
+  --bg:     #07090e;
+  --bg1:    #0b0f18;
+  --bg2:    #0f1520;
+  --bg3:    #141c2e;
+  --panel:  #0d1219;
+  --b0:     rgba(56,189,248,0.06);
+  --b1:     rgba(56,189,248,0.14);
+  --b2:     rgba(56,189,248,0.28);
+  --sky:    #38bdf8;
+  --sky2:   #7dd3fc;
+  --mint:   #34d399;
+  --amber:  #fbbf24;
+  --coral:  #f87171;
+  --violet: #a78bfa;
+  --rose:   #fb7185;
+  --text:   #c4d4ee;
+  --text2:  #607898;
+  --text3:  #334560;
+  --mono:   'IBM Plex Mono', monospace;
+  --sans:   'IBM Plex Sans', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;height:100vh;overflow:hidden}
+body{display:flex;flex-direction:column;position:relative}
+
+/* ════════════════════════════════════════════════════
+   STARRY NIGHT — ambient field behind everything
+   low-opacity swirl + twinkle, never competes with data
+   ════════════════════════════════════════════════════ */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(ellipse 1200px 800px at 70% 8%, rgba(35,55,110,.35) 0%, rgba(10,16,38,.18) 45%, transparent 75%),
+  var(--bg)}
+#starfield canvas{position:absolute;inset:0;width:100%;height:100%}
+.swirl-layer{position:absolute;inset:-20%;opacity:.16;mix-blend-mode:screen;filter:blur(30px) saturate(130%)}
+.swirl-a{background:conic-gradient(from 0deg at 24% 30%, transparent 0deg, #3a5694 40deg, transparent 100deg, transparent 360deg);animation:spin 130s linear infinite}
+.swirl-b{background:conic-gradient(from 180deg at 76% 62%, transparent 0deg, #7dd3fc 30deg, transparent 90deg, transparent 360deg);animation:spin 95s linear infinite reverse}
+.swirl-c{background:conic-gradient(from 90deg at 50% 85%, transparent 0deg, #a78bfa 25deg, transparent 70deg, transparent 360deg);animation:spin 160s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.shoot{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;box-shadow:0 0 8px 2px #fff;top:12%;left:-5%;opacity:0;animation:shoot 14s linear infinite;animation-delay:6s}
+.shoot::after{content:'';position:absolute;right:0;top:0;width:110px;height:1px;background:linear-gradient(to left, rgba(255,255,255,.8), transparent)}
+@keyframes shoot{0%{transform:translate(0,0);opacity:0}3%{opacity:.9}30%{transform:translate(680px,200px);opacity:0}100%{opacity:0}}
+
+/* everything else sits above the field */
+.topbar, .app-shell, .modal-overlay, .toast-area{position:relative;z-index:2}
+
+/* TOPBAR */
+.topbar{height:38px;background:rgba(11,15,24,.88);backdrop-filter:blur(6px);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 14px;gap:16px;flex-shrink:0}
+.logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--sky);letter-spacing:.18em;cursor:pointer}
+.logo span{color:var(--text3)}
+.tb-sep{width:1px;height:18px;background:var(--b1)}
+.tb-stat{font-family:var(--mono);font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px}
+.tb-stat .v{font-weight:500}
+.tb-stat .v.hi{color:var(--coral)}
+.tb-stat .v.ok{color:var(--mint)}
+.tb-stat .v.sky{color:var(--sky)}
+.tb-conn{font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid var(--b1);color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:5px}
+.tb-conn .dot{width:6px;height:6px;border-radius:50%;background:var(--text3)}
+.tb-conn.online{border-color:rgba(52,211,153,.3);color:var(--mint)}
+.tb-conn.online .dot{background:var(--mint);box-shadow:0 0 6px var(--mint)}
+.tb-conn.offline{border-color:rgba(248,113,113,.25);color:var(--coral)}
+.tb-conn.offline .dot{background:var(--coral)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tb-btn{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--text2);cursor:pointer;transition:all .15s}
+.tb-btn:hover{border-color:var(--b2);color:var(--text)}
+.tb-btn.active{background:rgba(56,189,248,.1);border-color:var(--b2);color:var(--sky)}
+/* 0.39.253 — the agent backend switch: ollama · copilot · guardian, same shape as ui/tv-shell's #cp-backend-toggle */
+.ag-backend{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 8px}
+.ag-toggle{display:inline-flex;border:1px solid var(--b1);border-radius:6px;overflow:hidden}
+.ag-toggle-btn{background:transparent;border:none;color:var(--text2);font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;cursor:pointer;transition:all .15s}
+.ag-toggle-btn+.ag-toggle-btn{border-left:1px solid var(--b1)}
+.ag-toggle-btn:hover{color:var(--text)}
+.ag-toggle-btn.ag-toggle-active{background:rgba(56,189,248,.14);color:var(--sky)}
+.ag-select{font-family:var(--mono);font-size:10px;background:var(--bg2);color:var(--text);border:1px solid var(--b1);border-radius:3px;padding:2px 6px;max-width:260px}
+.ag-note{font-size:9px;color:var(--text2);opacity:.8}
+.ag-warn{color:#f59e0b;opacity:1}
+/* §INJECT 2026-09-21 — inject list */
+.inj-act{cursor:pointer;opacity:.7;border-bottom:1px dotted;margin-left:4px}.inj-act:hover{opacity:1}
+.inj-st{font-size:9px;padding:0 4px;border-radius:2px;border:1px solid var(--b1)}
+.inj-proposed{color:var(--sky,#38bdf8)}.inj-applied{color:var(--ok,#4ade80)}.inj-rejected,.inj-reverted{opacity:.55}
+/* §BUILT 2026-09-20 — a control that is present but has no backend yet.
+   Visibly distinct from an enabled button so it never reads as working;
+   still clickable, because a dead disabled button explains nothing. */
+.tb-btn.tb-unwired{border-style:dashed;opacity:.55}
+.tb-btn.tb-unwired:hover{opacity:.8;color:var(--text2)}
+
+/* APP SHELL — nav rail + view area */
+.app-shell{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── TOP TABS (replaces old vertical rail) ── */
+.tabbar{flex-shrink:0;height:44px;background:rgba(11,15,24,.75);border-bottom:1px solid var(--b1);display:flex;align-items:stretch;padding:0 6px;gap:2px;position:relative;z-index:25}
+.tab-btn{background:none;border:none;color:var(--text3);font-family:var(--mono);font-size:12px;letter-spacing:.03em;padding:0 14px;height:100%;cursor:pointer;display:flex;align-items:center;gap:7px;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
+.tab-btn:hover{color:var(--text2)}
+.tab-btn.active{color:var(--sky);border-bottom-color:var(--sky)}
+.tab-icon{font-size:13px;opacity:.85}
+.tab-group{position:relative;display:flex}
+.tab-caret{font-size:8px;margin-left:1px;opacity:.7}
+.tab-dropdown{position:absolute;top:100%;left:0;min-width:180px;background:var(--bg2);border:1px solid var(--b1);border-top:none;border-radius:0 0 10px 10px;box-shadow:0 12px 28px rgba(0,0,0,.45);display:none;flex-direction:column;padding:5px;z-index:30}
+.tab-group:hover .tab-dropdown,.tab-group.open .tab-dropdown{display:flex}
+.tab-sub{background:none;border:none;color:var(--text2);font-family:var(--mono);font-size:12px;padding:8px 10px;text-align:left;cursor:pointer;border-radius:6px;display:flex;align-items:center;gap:9px;width:100%}
+.tab-sub:hover{background:var(--b0);color:var(--text)}
+.tab-sub.active{color:var(--sky);background:rgba(56,189,248,.09)}
+.tab-spacer{flex:1}
+.tab-badge{font-size:9px;padding:1px 6px;border-radius:20px;background:var(--b0);color:var(--text2);letter-spacing:.04em}
+
+.view-area{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.view{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.view.active{display:flex}
+.system-frame{flex:1;width:100%;height:100%;border:0;background:var(--bg,#0a0a12)}
+
+/* ════════════════════════════════════════════════════
+   WELCOME VIEW
+   ════════════════════════════════════════════════════ */
+.welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;overflow-y:auto}
+.welcome-mark{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--text3);margin-bottom:14px}
+.welcome-title{font-family:var(--mono);font-size:34px;font-weight:600;letter-spacing:.12em;color:var(--sky);text-shadow:0 0 30px rgba(56,189,248,.25);margin-bottom:8px}
+.welcome-title span{color:var(--text)}
+.welcome-sub{font-size:13px;color:var(--text2);max-width:520px;text-align:center;line-height:1.7;margin-bottom:24px}
+.welcome-actions{display:flex;gap:12px;margin-bottom:36px}
+.welcome-action-btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em;padding:10px 22px;border-radius:6px;cursor:pointer;transition:all .15s;background:none}
+.welcome-action-btn.primary{border:1px solid var(--sky);color:var(--sky);background:rgba(56,189,248,.08)}
+.welcome-action-btn.primary:hover{background:rgba(56,189,248,.16)}
+.welcome-action-btn.secondary{border:1px solid var(--b1);color:var(--text2)}
+.welcome-action-btn.secondary:hover{border-color:var(--sky);color:var(--sky)}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:920px;width:100%}
+.pillar{background:rgba(13,18,25,.7);border:1px solid var(--b0);border-radius:10px;padding:18px;cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden}
+.pillar:hover{border-color:var(--b2);background:rgba(56,189,248,.04);transform:translateY(-2px)}
+.pillar-step{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em}
+.pillar-icon{font-size:20px;margin:8px 0 10px}
+.pillar-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px}
+.pillar-desc{font-size:11px;color:var(--text2);line-height:1.55}
+.pillar.flow::after{content:'→';position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;z-index:5}
+.pillar:nth-child(3)::after,.pillar:nth-child(6)::after{display:none}
+.welcome-foot{margin-top:30px;font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.08em}
+
+/* ════════════════════════════════════════════════════
+   SHARED panel/list/detail primitives (Ideas view baseline)
+   ════════════════════════════════════════════════════ */
+.body2{flex:1;display:grid;grid-template-columns:1fr 340px;overflow:hidden;gap:1px;background:var(--b0)}
+.left{display:flex;flex-direction:column;overflow:hidden;background:rgba(7,9,14,.55)}
+.right{display:flex;flex-direction:column;overflow:hidden;background:rgba(11,15,24,.6)}
+
+.ph{height:30px;background:rgba(15,21,32,.7);border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0}
+.ph-title{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text2)}
+.ph-badge{margin-left:auto;font-family:var(--mono);font-size:9px;padding:1px 6px;border-radius:2px;border:1px solid var(--b1);color:var(--text3)}
+.ph-badge.live{border-color:rgba(52,211,153,.25);color:var(--mint)}
+.ph-badge.live::before{content:'● ';font-size:7px}
+
+.toolbar{height:36px;border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 10px;gap:6px;flex-shrink:0}
+.mode-btn{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.up-chip{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid var(--b1);background:none;color:var(--text3);cursor:pointer;transition:all .15s}
+.up-chip:hover{border-color:var(--sky);color:var(--text)}
+.mode-btn:hover{color:var(--text2);border-color:var(--b1)}
+.mode-btn.active{border-color:rgba(56,189,248,.35);color:var(--sky);background:rgba(56,189,248,.06)}
+.search-input{flex:1;background:none;border:none;outline:none;font-family:var(--mono);font-size:11px;color:var(--text);caret-color:var(--sky)}
+.search-input::placeholder{color:var(--text3)}
+
+.idea-list{flex:1;overflow-y:auto;padding:8px}
+.idea-list::-webkit-scrollbar{width:3px}
+.idea-list::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+
+.idea-card{background:var(--bg2);border:1px solid var(--b0);border-radius:6px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.idea-card:hover{border-color:var(--b1);background:var(--bg3)}
+.idea-card.selected{border-color:var(--b2);background:rgba(56,189,248,.04)}
+.idea-card.local{border-color:rgba(251,191,36,.25)}
+.idea-card.archived{opacity:.55}
+
+.idea-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:6px 0 0 6px}
+.idea-card.t-high::before{background:var(--coral)}
+.idea-card.t-med::before{background:var(--amber)}
+.idea-card.t-low::before{background:var(--mint)}
+
+.ic-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.ic-name{font-size:13px;font-weight:500;color:var(--text);flex:1;line-height:1.3}
+.ic-status{font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:2px;flex-shrink:0;white-space:nowrap}
+.ic-intent{font-size:11px;color:var(--text2);margin-bottom:7px;line-height:1.5}
+.ic-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ic-tag{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--bg3);border:1px solid var(--b0);padding:1px 5px;border-radius:2px}
+.ic-gap{font-family:var(--mono);font-size:9px;color:var(--coral);display:flex;align-items:center;gap:3px}
+.ic-uuid{font-family:var(--mono);font-size:9px;color:var(--text3)}
+
+.tension-row{display:flex;align-items:center;gap:6px;margin-top:6px}
+.tension-label{font-family:var(--mono);font-size:9px;color:var(--text3);width:50px}
+.tension-track{flex:1;height:3px;background:var(--bg);border-radius:2px;overflow:hidden}
+.tension-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.tension-pct{font-family:var(--mono);font-size:9px;width:28px;text-align:right}
+.stab-mini{display:flex;gap:2px;flex-shrink:0}
+.stab-mini i{width:3px;height:10px;border-radius:1px;background:var(--b1)}
+
+.detail-area{flex:1;overflow-y:auto;padding:12px}
+.detail-area::-webkit-scrollbar{width:3px}
+.detail-area::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+.detail-empty{display:flex;align-items:center;justify-content:center;height:100%;font-family:var(--mono);font-size:11px;color:var(--text3);text-align:center;padding:30px}
+
+.ds{margin-bottom:16px}
+.ds-label{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.ds-value{font-size:12px;color:var(--text);line-height:1.6}
+.ds-mono{font-family:var(--mono);font-size:10px;color:var(--text2);line-height:1.7;white-space:pre-wrap;word-break:break-all}
+
+.tag-row{display:flex;gap:5px;flex-wrap:wrap}
+.tag-pill{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:3px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--sky2)}
+
+.gap-item{border:1px solid var(--b0);border-radius:4px;padding:7px 9px;margin-bottom:5px;background:var(--bg2)}
+.gap-item.open{border-color:rgba(248,113,113,.2)}
+.gap-sev{font-family:var(--mono);font-size:9px;margin-right:6px}
+.gap-desc{font-size:11px;color:var(--text2);margin-top:3px;line-height:1.5}
+.gap-id{font-family:var(--mono);font-size:9px;color:var(--text3)}
+
+.link-item{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--b0);font-size:11px}
+.link-item:last-child{border-bottom:none}
+.link-type{font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:2px}
+.link-type.resonance{background:rgba(56,189,248,.1);color:var(--sky2)}
+.link-type.tension{background:rgba(248,113,113,.1);color:var(--coral)}
+.link-type.causal{background:rgba(167,139,250,.1);color:var(--violet)}
+.link-type.temporal{background:rgba(251,191,36,.1);color:var(--amber)}
+.link-type.semantic{background:rgba(52,211,153,.1);color:var(--mint)}
+
+.action-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.action-btn{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--text2);cursor:pointer;transition:all .15s}
+.action-btn:hover{border-color:var(--b2);color:var(--text)}
+.action-btn.primary{border-color:rgba(56,189,248,.3);color:var(--sky)}
+.action-btn.danger{border-color:rgba(248,113,113,.25);color:var(--coral)}
+
+/* MODAL (shared) */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg1);border:1px solid var(--b2);border-radius:8px;width:520px;max-height:86vh;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.modal-title{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--sky)}
+.field-group{display:flex;flex-direction:column;gap:4px}
+.field-label{font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em}
+.field-input,.field-textarea,.field-select{background:var(--bg2);border:1px solid var(--b1);border-radius:4px;padding:7px 10px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;transition:border-color .15s;width:100%}
+.field-input:focus,.field-textarea:focus,.field-select:focus{border-color:var(--b2)}
+.field-input::placeholder,.field-textarea::placeholder{color:var(--text3)}
+.field-textarea{resize:vertical;min-height:60px;font-family:var(--sans);font-size:12px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px}
+.modal-btn{font-family:var(--mono);font-size:10px;padding:6px 14px;border-radius:4px;border:1px solid var(--b1);background:none;color:var(--text2);cursor:pointer;transition:all .15s}
+.modal-btn.confirm{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.35);color:var(--sky)}
+.modal-btn:hover{border-color:var(--b2);color:var(--text)}
+.modal-btn.danger{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.4);color:var(--coral)}
+.modal-btn.danger:hover{background:rgba(248,113,113,.18);border-color:var(--coral)}
+.modal-btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+
+.gap-log{border-top:1px solid var(--b0);flex-shrink:0}
+.gap-log-inner{max-height:140px;overflow-y:auto;padding:6px 10px}
+.gap-log-inner::-webkit-scrollbar{width:3px}
+.gap-log-inner::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+.gap-log-line{font-family:var(--mono);font-size:10px;color:var(--text2);display:flex;gap:8px;padding:2px 0;border-bottom:1px solid rgba(56,189,248,.04)}
+.gl-ts{color:var(--text3);width:52px;flex-shrink:0}
+.gl-type{width:90px;flex-shrink:0}
+.gl-type.gap{color:var(--coral)}
+.gl-type.snap{color:var(--sky)}
+.gl-type.idea{color:var(--mint)}
+.gl-type.spec{color:var(--violet)}
+.gl-type.err{color:var(--rose)}
+
+.snap-bar{height:32px;border-top:1px solid var(--b0);display:flex;align-items:center;padding:0 12px;gap:8px;background:var(--bg2);flex-shrink:0}
+.snap-input{flex:1;background:none;border:none;outline:none;font-family:var(--mono);font-size:11px;color:var(--text);caret-color:var(--sky)}
+.snap-input::placeholder{color:var(--text3)}
+.snap-btn{font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:3px;border:1px solid rgba(56,189,248,.25);background:rgba(56,189,248,.06);color:var(--sky);cursor:pointer;transition:all .15s}
+.snap-btn:hover{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.4)}
+.snap-btn:disabled{opacity:.4;cursor:not-allowed}
+.snap-latest{font-family:var(--mono);font-size:9px;color:var(--text3)}
+
+/* phase colors — real IDEA_PHASES */
+.st-seed{background:rgba(56,189,248,.1);color:var(--sky2)}
+.st-expanding{background:rgba(52,211,153,.1);color:var(--mint)}
+.st-tensioned{background:rgba(251,191,36,.12);color:var(--amber)}
+.st-specced{background:rgba(167,139,250,.12);color:var(--violet)}
+.st-building{background:rgba(56,189,248,.1);color:var(--sky)}
+.st-build_failed{background:rgba(248,113,113,.12);color:var(--coral)}
+.st-complete{background:rgba(52,211,153,.16);color:var(--mint)}
+.st-archived{background:rgba(100,116,139,.1);color:#64748b}
+
+/* severity colors — real GAP_SEVERITIES */
+.sev-fatal{color:var(--rose)}
+.sev-high{color:var(--coral)}
+.sev-medium{color:var(--amber)}
+.sev-low{color:var(--text3)}
+
+.toast-area{position:fixed;bottom:50px;right:14px;display:flex;flex-direction:column;gap:5px;z-index:400}
+.toast{background:var(--bg2);border:1px solid var(--b1);border-radius:4px;padding:6px 12px;font-family:var(--mono);font-size:10px;color:var(--text2);opacity:0;transform:translateX(16px);animation:ti .2s ease forwards,to .2s ease forwards 2.4s;pointer-events:none}
+@keyframes ti{to{opacity:1;transform:none}}
+@keyframes to{to{opacity:0;transform:translateX(16px)}}
+.toast.ok{border-color:rgba(52,211,153,.3);color:var(--mint)}
+.toast.err{border-color:rgba(248,113,113,.3);color:var(--coral)}
+/* §BUILT 2026-09-20 — James: "the ui needs to use a toast to show
+   progress like a loading bar." A progress toast never uses the base
+   .toast rule's timed fade-out (animation: ti ... , to ... 2.4s) — it's
+   explicitly updated/removed by JS as real chunk-progress events arrive,
+   not on a fixed clock, since chunking a large import can run well past
+   2.4s. */
+.toast.progress{opacity:0;transform:translateX(16px);animation:ti .2s ease forwards;pointer-events:none;min-width:220px}
+.toast-progress-label{margin-bottom:5px}
+.toast-progress-bar{height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+.toast-progress-fill{height:100%;background:var(--sky,#38bdf8);border-radius:2px;transition:width .25s ease;width:0%}
+.toast.progress.err .toast-progress-fill{background:var(--coral)}
+
+.offline-banner{background:rgba(248,113,113,.06);border-bottom:1px solid rgba(248,113,113,.2);color:var(--coral);font-family:var(--mono);font-size:10px;padding:6px 14px;display:none;align-items:center;gap:10px;flex-shrink:0}
+.offline-banner.show{display:flex}
+.offline-banner code{background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;color:var(--sky2)}
+.offline-banner button{margin-left:auto;font-family:var(--mono);font-size:9px;padding:3px 9px;border-radius:3px;border:1px solid rgba(248,113,113,.3);background:none;color:var(--coral);cursor:pointer}
+
+/* ════════════════════════════════════════════════════
+   BRAINSTORM
+   ════════════════════════════════════════════════════ */
+.brain-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.brain-input-row{padding:14px;border-bottom:1px solid var(--b0);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.brain-textarea{width:100%;min-height:70px;background:var(--bg2);border:1px solid var(--b1);border-radius:6px;padding:10px 12px;font-family:var(--sans);font-size:13px;color:var(--text);outline:none;resize:vertical}
+.brain-textarea:focus{border-color:var(--b2)}
+.brain-row-actions{display:flex;gap:8px;align-items:center}
+.brain-tags-input{flex:1;background:var(--bg2);border:1px solid var(--b1);border-radius:4px;padding:6px 10px;font-family:var(--mono);font-size:10px;color:var(--text);outline:none}
+/* §BUILT 2026-09-21 — AI-assist preview, capture-time and per-card. Same
+   preview-first shape everywhere: the suggestion sits here until the
+   person explicitly uses or dismisses it, never auto-applied. */
+.brain-assist-preview{background:var(--bg2);border:1px solid var(--sky);border-radius:6px;padding:10px 12px;margin-top:8px;font-size:12px;color:var(--text);line-height:1.55}
+.brain-assist-preview .bap-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--sky2);margin-bottom:4px}
+.brain-assist-preview .bap-actions{display:flex;gap:8px;margin-top:8px}
+.brain-assist-preview .bap-err{color:var(--coral)}
+.brain-grid{flex:1;overflow-y:auto;padding:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;align-content:start}
+.brain-card{background:var(--bg2);border:1px solid var(--b0);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.brain-card-text{font-size:12px;color:var(--text);line-height:1.55}
+.brain-card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}
+.brain-ts{font-family:var(--mono);font-size:9px;color:var(--text3)}
+
+/* ════════════════════════════════════════════════════
+   SPEC LIBRARY / BUILDER / COMPILER
+   ════════════════════════════════════════════════════ */
+.spec-toolbar{height:36px;border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 10px;gap:8px;flex-shrink:0}
+.spec-list{flex:1;overflow-y:auto;padding:8px}
+.spec-card{background:var(--bg2);border:1px solid var(--b0);border-radius:6px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:all .15s}
+.spec-card:hover{border-color:var(--b1)}
+.spec-card.selected{border-color:var(--b2);background:rgba(56,189,248,.04)}
+.spec-card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.spec-name{font-size:12px;font-weight:500;flex:1}
+.confidence-ring{width:30px;height:30px;flex-shrink:0}
+.section-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}
+.section-chip{font-family:var(--mono);font-size:8px;padding:4px 5px;border-radius:3px;border:1px solid var(--b0);text-align:center;color:var(--text3);background:var(--bg3)}
+.section-chip.done{border-color:rgba(52,211,153,.3);color:var(--mint);background:rgba(52,211,153,.06)}
+.section-chip.missing{border-color:var(--b1);color:var(--text3)}
+.spec-builder{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.builder-section-tabs{display:flex;gap:4px;padding:8px 10px;border-bottom:1px solid var(--b0);flex-wrap:wrap;flex-shrink:0}
+.sec-tab{font-family:var(--mono);font-size:9px;padding:4px 8px;border-radius:3px;border:1px solid var(--b1);background:none;color:var(--text3);cursor:pointer}
+.sec-tab.active{color:var(--sky);border-color:var(--b2);background:rgba(56,189,248,.06)}
+.sec-tab.filled{color:var(--mint)}
+.builder-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.builder-textarea{width:100%;min-height:220px;background:var(--bg2);border:1px solid var(--b1);border-radius:6px;padding:12px;font-family:var(--mono);font-size:11px;color:var(--text);outline:none;resize:vertical;line-height:1.6}
+
+/* ════════════════════════════════════════════════════
+   ARCHITECT — blueprint tree
+   ════════════════════════════════════════════════════ */
+.architect-wrap{flex:1;overflow:auto;padding:20px}
+.blueprint-tree{display:flex;flex-direction:column;gap:0}
+.bp-node{display:flex;align-items:flex-start;gap:10px;position:relative;padding:6px 0 6px 20px}
+.bp-node::before{content:'';position:absolute;left:4px;top:0;bottom:0;width:1px;background:var(--b1)}
+.bp-dot{width:8px;height:8px;border-radius:50%;background:var(--sky);flex-shrink:0;margin-top:5px;box-shadow:0 0 8px rgba(56,189,248,.5);position:relative;z-index:1}
+.bp-dot.gray{background:var(--text3);box-shadow:none}
+.bp-label{font-family:var(--mono);font-size:11px;color:var(--text)}
+.bp-meta{font-family:var(--mono);font-size:9px;color:var(--text3);margin-left:8px}
+.bp-children{margin-left:18px}
+
+/* ════════════════════════════════════════════════════
+   REPO LIBRARY — compartments → repos → files → editor
+   §OVERHAUL 2026-09-17 — James: "completely overhaul the ui...
+   repos per compartment, per project. expand it fully." Replaces
+   the old renderApiRepoPanel flat file list (unusable past a
+   handful of files — the one repo tested against this build has
+   502) with a real tree, and adds the repo library itself: before
+   this there was no way to see "all my repos" anywhere in the UI at
+   all — repos were only reachable by already knowing which idea or
+   spec they came from (see openRepoFor's own header comment).
+   Three panes, not two: rail (compartment → repo) | tree (files of
+   the selected repo) | ide-pane (unchanged — same open/save/dirty
+   logic as before, untouched).
+   ════════════════════════════════════════════════════ */
+/* §NO-SIDEBAR 2026-09-20 — James: "Hide the filter repos when open a repo.
+   No sidebars." Open state is now ONE column, not rail+detail: the rail
+   (and the filter input inside it) is display:none, not narrowed. The repo
+   you're in owns the entire viewport; getting back to the others is the
+   "← All repos" button in the header, which already exists. The closed
+   state is unchanged — still the full-width block grid. */
+.repo-wrap{flex:1;display:grid;grid-template-columns:1fr;overflow:hidden}
+/* ── repo detail: sub-nav (Home/Files/Architect/Phasemap/Intelligence/
+   Settings) + one panel visible at a time. Files' panel alone recreates the
+   old 260px-tree + flex-ide two-column layout the grid used to give it. ── */
+.repo-wrap:not(.repo-open) .repo-detail-body{display:none}
+.repo-wrap.repo-open .repo-rail{display:none}
+.repo-detail-body{display:flex;flex-direction:column;overflow:hidden}
+.repo-subnav{display:flex;gap:4px;padding:8px 10px;border-bottom:1px solid var(--b0);flex-shrink:0}
+.repo-subtab-btn{background:none;border:1px solid transparent;color:var(--text3);font-family:var(--mono);font-size:11px;letter-spacing:.03em;padding:6px 13px;border-radius:5px;cursor:pointer;transition:all .15s}
+.repo-subtab-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.repo-subtab-btn.active{color:var(--text);background:var(--b0);border-color:var(--b1)}
+.repo-subtab-panel{display:none;flex:1;overflow:hidden}
+.repo-subtab-panel.active{display:flex}
+#repo-subtab-files.active{flex-direction:row}
+.repo-subtab-panel:not(#repo-subtab-files){flex-direction:column;overflow-y:auto;padding:18px}
+/* §BLOCKS-2026-09-19 — GitHub-style landing: until a repo is entered, the
+   rail takes the whole view as a grid of blocks and the tree/ide panes are
+   hidden. enterRepoDetail()/exitRepoDetail() toggle this class. (The
+   grid-template-columns override that used to live here is gone — as of
+   §NO-SIDEBAR above, .repo-wrap is single-column in BOTH states.) */
+.repo-back-btn{margin-right:10px}
+.repo-rail-body.block-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:16px}
+.repo-block{background:rgba(255,255,255,.02);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:8px}
+.repo-block:hover{border-color:var(--sky);background:rgba(56,189,248,.05);transform:translateY(-1px)}
+.repo-block-head{display:flex;align-items:center;gap:8px}
+.repo-block-icon{font-size:15px;color:var(--text3)}
+.repo-block-name{font-size:14px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.repo-block-desc{font-family:var(--mono);font-size:10.5px;color:var(--text3);line-height:1.5}
+.repo-block-meta{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:auto;padding-top:4px}
+.repo-block-meta .dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.repo-block-meta .dot.done{background:var(--mint)}
+.repo-block-meta .dot.building{background:var(--sky);animation:pulse-dot 1.6s ease-in-out infinite}
+.repo-block-compartment{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--b0);border-radius:20px;padding:2px 8px;align-self:flex-start}
+.repo-grid-group-label{grid-column:1/-1;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:8px 4px 0;margin-top:4px}
+.repo-grid-group-label:first-child{margin-top:0}
+
+/* ── Pane 1: compartment/repo rail ── */
+.repo-rail{overflow-y:auto;border-right:1px solid var(--b0);display:flex;flex-direction:column}
+.repo-rail-search{padding:8px;border-bottom:1px solid var(--b0);flex-shrink:0}
+.repo-rail-search input{width:100%;background:rgba(5,7,11,.5);border:1px solid var(--b1);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:11px;padding:6px 9px;outline:none;transition:border-color .15s}
+.repo-rail-search input:focus{border-color:var(--sky)}
+.repo-rail-body{flex:1;overflow-y:auto;padding:6px}
+.compartment-group{margin-bottom:2px}
+.compartment-head{display:flex;align-items:center;gap:6px;padding:7px 8px;cursor:pointer;border-radius:5px;user-select:none}
+.compartment-head:hover{background:var(--b0)}
+.compartment-caret{font-family:var(--mono);font-size:8px;color:var(--text3);transition:transform .15s;flex-shrink:0}
+.compartment-group.collapsed .compartment-caret{transform:rotate(-90deg)}
+.compartment-name{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.compartment-count{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--b0);border-radius:20px;padding:1px 7px}
+.compartment-repos{display:flex;flex-direction:column;gap:2px;padding:2px 0 6px 4px}
+.compartment-group.collapsed .compartment-repos{display:none}
+
+.repo-card{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all .15s;position:relative}
+.repo-card:hover{background:var(--b0);border-color:var(--b1)}
+.repo-card.active{background:rgba(56,189,248,.08);border-color:var(--b2)}
+.repo-card.active::before{content:'';position:absolute;left:-4px;top:8px;bottom:8px;width:2px;background:var(--sky);border-radius:2px;box-shadow:0 0 6px var(--sky)}
+.repo-card-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.repo-card-dot.building{background:var(--sky);box-shadow:0 0 5px var(--sky);animation:pulse-dot 1.6s ease-in-out infinite}
+.repo-card-dot.done{background:var(--mint)}
+@keyframes pulse-dot{0%,100%{opacity:.5}50%{opacity:1}}
+.repo-card-body{flex:1;min-width:0}
+.repo-card-name{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.repo-card-meta{font-family:var(--mono);font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* §FIXED 2026-09-20 — James: "the formatting is floaty. make it full
+   size." Was: padding + text-align:center only — a grid ITEM aligns to
+   its container's top-left by default (CSS Grid's align-content:start),
+   so this sat as a small block near the top with the rest of the real,
+   full-height container empty around it. Now fills and centers like
+   .repo-empty (same file, same problem, already solved there) instead of
+   being a second, inconsistent empty-state treatment. grid-column:1/-1 so
+   it spans the full block-grid width rather than sizing to one column's
+   minmax(240px,...) track. */
+.repo-rail-empty{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:100%;min-height:320px;font-family:var(--mono);font-size:12px;color:var(--text3);line-height:1.7;text-align:center}
+
+/* ── Pane 2: file tree of the selected repo ── */
+.file-tree{flex:0 0 260px;overflow-y:auto;padding:8px 6px;border-right:1px solid var(--b0)}
+.tree-toolbar{display:flex;align-items:center;gap:6px;padding:2px 6px 8px}
+.tree-toolbar input{flex:1;background:rgba(5,7,11,.5);border:1px solid var(--b1);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:10.5px;padding:5px 8px;outline:none}
+.tree-toolbar input:focus{border-color:var(--sky)}
+.tree-node{font-family:var(--mono);font-size:11px;color:var(--text2);padding:3px 6px;border-radius:4px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tree-node:hover{background:var(--b0);color:var(--text)}
+.tree-node.dir{color:var(--sky2);font-weight:500}
+.tree-node.file.active{background:rgba(56,189,248,.1);color:var(--sky)}
+.tree-caret{font-size:8px;color:var(--text3);transition:transform .15s;width:8px;flex-shrink:0}
+.tree-indent{display:inline-block}
+.tree-dir.collapsed>.tree-caret{transform:rotate(-90deg)}
+.tree-dir.collapsed+.tree-children{display:none}
+.tree-status-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.tree-status-dot.complete{background:var(--mint)}
+.tree-status-dot.building,.tree-status-dot.pending,.tree-status-dot.verifying{background:var(--amber)}
+.tree-status-dot.failed,.tree-status-dot.escalated{background:var(--coral)}
+.tree-file-name{flex:1;overflow:hidden;text-overflow:ellipsis}
+.tree-file-bytes{color:var(--text3);font-size:9px;flex-shrink:0}
+.tree-file-del{color:var(--text3);font-size:12px;padding:0 3px;flex-shrink:0;opacity:0;transition:opacity .1s}
+.tree-node:hover .tree-file-del{opacity:1}
+.tree-file-del:hover{color:var(--coral)}
+
+/* ── Repo detail strip — above the tree, actions for the selected repo ── */
+.repo-detail-strip{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--b0);flex-shrink:0}
+.repo-detail-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.repo-detail-btn{background:none;border:1px solid var(--b1);border-radius:4px;color:var(--text3);font-size:11px;padding:3px 6px;cursor:pointer;transition:all .15s;line-height:1}
+.repo-detail-btn:hover{border-color:var(--sky);color:var(--sky)}
+.repo-detail-btn.danger:hover{border-color:var(--coral);color:var(--coral)}
+
+.ide-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.ide-tabs{height:30px;border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 10px;gap:8px;flex-shrink:0;font-family:var(--mono);font-size:10px;color:var(--text2)}
+.ide-code{flex:1;overflow:auto;padding:14px;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--text);white-space:pre;background:rgba(5,7,11,.4)}
+.ide-code .ln{color:var(--text3);display:inline-block;width:34px;text-align:right;margin-right:14px;user-select:none}
+.ide-editor{flex:1;overflow:auto;padding:14px;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--text);background:rgba(5,7,11,.4);border:none;outline:none;resize:none;white-space:pre;tab-size:2}
+.ide-editor:focus{background:rgba(5,7,11,.6)}
+.ide-tab-btn{background:var(--bg3,#1a1f2b);border:1px solid var(--b1,#2a2f3b);border-radius:4px;color:var(--text2);font-family:var(--mono);font-size:10px;padding:2px 8px;cursor:pointer;margin-left:auto}
+.ide-tab-btn:hover{border-color:var(--accent,#5af);color:var(--text)}
+.ide-tab-btn.danger:hover{border-color:var(--red,#e25);color:var(--red,#e25)}
+.ide-tab-dirty{color:var(--amber,#e8a233);font-size:9px;margin-left:4px}
+.repo-empty{display:flex;align-items:center;justify-content:center;height:100%;font-family:var(--mono);font-size:11px;color:var(--text3);text-align:center;padding:30px;flex-direction:column;gap:12px}
+
+/* ════════════════════════════════════════════════════
+
+   VERSIONIUM
+   ════════════════════════════════════════════════════ */
+.versionium-wrap{flex:1;display:grid;grid-template-columns:1fr 360px;overflow:hidden}
+
+/* ── PROJECTS ── */
+.projects-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:16px;gap:12px}
+.project-drop{border:1.5px dashed var(--b2);border-radius:12px;padding:24px;text-align:center;color:var(--text2);font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .15s;flex-shrink:0}
+.project-drop:hover,.project-drop.drag{border-color:var(--sky);background:var(--b0);color:var(--text)}
+.project-drop .pd-big{font-size:20px;margin-bottom:6px;display:block}
+.project-toolbar{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.project-toolbar input{flex:1;background:var(--bg2);border:1px solid var(--b1);color:var(--text);border-radius:7px;padding:8px 10px;font-family:var(--mono);font-size:12px}
+.project-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.project-card{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);border:1px solid var(--b1);border-radius:8px;font-family:var(--mono);font-size:12px}
+.project-card .pc-icon{font-size:16px;opacity:.8;flex-shrink:0}
+.project-card .pc-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.project-card .pc-meta{color:var(--text3);font-size:10.5px;white-space:nowrap;flex-shrink:0}
+.project-card button{background:none;border:1px solid var(--b1);color:var(--text2);border-radius:6px;padding:5px 9px;cursor:pointer;font-family:var(--mono);font-size:11px;flex-shrink:0}
+.project-card button:hover{color:var(--text);border-color:var(--b2)}
+.project-card button.danger:hover{color:var(--rose);border-color:var(--rose)}
+.commit-list{overflow-y:auto;padding:10px}
+.commit-card{background:var(--bg2);border:1px solid var(--b0);border-radius:6px;padding:10px 12px;margin-bottom:8px;position:relative;padding-left:24px;cursor:pointer}
+.commit-card:hover{border-color:var(--b1)}
+.commit-card::before{content:'◆';position:absolute;left:8px;top:12px;color:var(--sky);font-size:9px}
+.commit-card::after{content:'';position:absolute;left:11px;top:24px;bottom:-8px;width:1px;background:var(--b1)}
+.commit-card:last-child::after{display:none}
+.commit-id{font-family:var(--mono);font-size:10px;color:var(--sky2)}
+.commit-msg{font-size:12px;color:var(--text);margin:4px 0}
+.commit-stats{font-family:var(--mono);font-size:9px;color:var(--text3);display:flex;gap:10px;flex-wrap:wrap}
+
+/* ── Spec Build Wizard (scoped, imported) ── */
+#view-spec-wizard *{box-sizing:border-box;margin:0;padding:0}#view-spec-wizard{
+    --bg:#0d0d10;--bg2:#16161c;--bg3:#1e1e27;--bg4:#26263200;
+    --border:#2e2e3a;--border2:#3a3a4a;
+    --text:#e8e8f0;--text2:#9090a8;--text3:#5a5a70;
+    --accent:#7c6af7;--accent2:#5d4de0;--accent-glow:rgba(124,106,247,0.15);
+    --green:#3dba7a;--amber:#e8a233;--red:#e25555;--blue:#4a9eed;
+    --radius:8px;--radius2:12px;
+    font-family:'SF Mono','Cascadia Code','Fira Code',monospace;
+  }#view-spec-wizard .app{display:grid;grid-template-columns:260px 1fr 340px;height:100%;overflow:hidden;background:var(--bg);color:var(--text)}#view-spec-wizard /* ── SIDEBAR ── */
+  .sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:1rem 0}#view-spec-wizard .sidebar-header{padding:0 1rem 1rem;border-bottom:1px solid var(--border);margin-bottom:0.5rem}#view-spec-wizard .sidebar-header h1{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);font-weight:600}#view-spec-wizard .sidebar-header p{font-size:13px;color:var(--text);margin-top:4px;font-weight:500}#view-spec-wizard .section-nav{list-style:none;padding:0.25rem 0}#view-spec-wizard .section-nav li{}#view-spec-wizard .nav-item{display:flex;align-items:center;gap:8px;padding:6px 1rem;cursor:pointer;font-size:12px;color:var(--text2);border-left:2px solid transparent;transition:all 0.15s}#view-spec-wizard .nav-item:hover{color:var(--text);background:var(--bg3)}#view-spec-wizard .nav-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-glow)}#view-spec-wizard .nav-item.complete{color:var(--green)}#view-spec-wizard .nav-item.complete .dot{background:var(--green)}#view-spec-wizard .nav-item.active .dot{background:var(--accent)}#view-spec-wizard .dot{width:6px;height:6px;border-radius:50%;background:var(--border2);flex-shrink:0}#view-spec-wizard .nav-group{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);padding:8px 1rem 4px;font-weight:600}#view-spec-wizard /* ── MAIN ── */
+  .main{overflow-y:auto;padding:2rem}#view-spec-wizard .section-block{display:none}#view-spec-wizard .section-block.visible{display:block}#view-spec-wizard .section-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:1.5rem}#view-spec-wizard .field-group{margin-bottom:1.25rem}#view-spec-wizard .field-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:6px}#view-spec-wizard .field-label .req{color:var(--red);font-size:10px}#view-spec-wizard .field-label .hint{color:var(--text3);font-size:11px;font-style:italic}#view-spec-wizard input[type=text], #view-spec-wizard input[type=number], #view-spec-wizard select, #view-spec-wizard textarea{
+    width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);
+    color:var(--text);font-family:inherit;font-size:13px;padding:7px 10px;outline:none;
+    transition:border-color 0.15s;
+  }#view-spec-wizard input[type=text]:focus, #view-spec-wizard input[type=number]:focus, #view-spec-wizard select:focus, #view-spec-wizard textarea:focus{border-color:var(--accent)}#view-spec-wizard textarea{resize:vertical;min-height:80px;line-height:1.5}#view-spec-wizard select option{background:var(--bg2)}#view-spec-wizard .checkbox-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}#view-spec-wizard .checkbox-item{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);
+    border-radius:var(--radius);padding:5px 10px;cursor:pointer;font-size:12px;color:var(--text2);transition:all 0.15s}#view-spec-wizard .checkbox-item:hover{border-color:var(--accent);color:var(--text)}#view-spec-wizard .checkbox-item.checked{border-color:var(--accent);background:var(--accent-glow);color:var(--accent)}#view-spec-wizard .checkbox-item input{display:none}#view-spec-wizard .list-editor{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}#view-spec-wizard .list-item{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}#view-spec-wizard .list-item:last-child{border-bottom:none}#view-spec-wizard .list-item input, #view-spec-wizard .list-item textarea{border:none;border-radius:0;flex:1;background:transparent;padding:6px 10px;font-size:12px}#view-spec-wizard .list-item-num{display:flex;align-items:center;padding:0 8px;font-size:11px;color:var(--text3);background:var(--bg2);border-right:1px solid var(--border);min-width:30px;justify-content:center}#view-spec-wizard .list-item-del{display:flex;align-items:center;padding:0 8px;cursor:pointer;color:var(--text3);border-left:1px solid var(--border);font-size:16px;background:var(--bg2)}#view-spec-wizard .list-item-del:hover{color:var(--red)}#view-spec-wizard .add-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--accent);font-size:12px;font-family:inherit;cursor:pointer;padding:6px 10px;width:100%;border-top:1px solid var(--border)}#view-spec-wizard .add-btn:hover{background:var(--accent-glow)}#view-spec-wizard .module-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);margin-bottom:1rem;overflow:hidden}#view-spec-wizard .module-card-header{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;border-bottom:1px solid var(--border)}#view-spec-wizard .module-card-header:hover{background:rgba(255,255,255,0.02)}#view-spec-wizard .module-card-toggle{color:var(--text3);transition:transform 0.2s;font-size:14px}#view-spec-wizard .module-card.open .module-card-toggle{transform:rotate(90deg)}#view-spec-wizard .module-id-badge{font-size:10px;background:var(--accent-glow);color:var(--accent);padding:2px 8px;border-radius:4px;border:1px solid var(--accent)}#view-spec-wizard .module-name-label{font-size:13px;color:var(--text);flex:1}#view-spec-wizard .module-card-del{color:var(--text3);cursor:pointer;font-size:14px;padding:4px}#view-spec-wizard .module-card-del:hover{color:var(--red)}#view-spec-wizard .module-card-body{padding:12px;display:none}#view-spec-wizard .module-card.open .module-card-body{display:block}#view-spec-wizard .module-field{margin-bottom:1rem}#view-spec-wizard .module-field-label{font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.08em}#view-spec-wizard .event-group{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:0.75rem;overflow:hidden}#view-spec-wizard .event-group-header{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border)}#view-spec-wizard .event-namespace{font-size:12px;color:var(--amber);flex:1}#view-spec-wizard .event-entries{padding:6px 12px}#view-spec-wizard .event-row{display:flex;align-items:center;gap:6px;padding:3px 0}#view-spec-wizard .event-row input{flex:1;background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;font-size:12px;color:var(--text)}#view-spec-wizard .event-row input:focus{border-bottom-color:var(--accent);background:transparent;border-radius:0}#view-spec-wizard .event-del{color:var(--text3);cursor:pointer;font-size:12px}#view-spec-wizard .event-del:hover{color:var(--red)}#view-spec-wizard .constraint-row{display:grid;grid-template-columns:80px 1fr auto;gap:8px;margin-bottom:6px;align-items:start}#view-spec-wizard .type-badge{font-size:11px;padding:4px 8px;border-radius:4px;text-align:center;cursor:pointer;border:1px solid transparent}#view-spec-wizard .type-badge.hard{background:rgba(226,85,85,0.15);color:var(--red);border-color:var(--red)}#view-spec-wizard .type-badge.soft{background:rgba(74,158,237,0.15);color:var(--blue);border-color:var(--blue)}#view-spec-wizard .type-badge.warning{background:rgba(232,162,51,0.15);color:var(--amber);border-color:var(--amber)}#view-spec-wizard .gate-row{margin-bottom:6px}#view-spec-wizard .gate-row input{font-size:12px;font-family:inherit;color:var(--green)}#view-spec-wizard .schema-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:0.75rem;overflow:hidden}#view-spec-wizard .schema-header{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border)}#view-spec-wizard .schema-id{font-size:12px;color:var(--blue);font-weight:600;flex:1}#view-spec-wizard .schema-body{padding:8px 12px}#view-spec-wizard .field-row{display:flex;align-items:center;gap:6px;padding:3px 0}#view-spec-wizard .field-row input:first-child{width:140px;flex:none;color:var(--text);font-size:12px}#view-spec-wizard .field-row input:last-child{flex:1;color:var(--text2);font-size:12px}#view-spec-wizard .nav-btns{display:flex;gap:8px;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}#view-spec-wizard .btn{padding:7px 16px;border-radius:var(--radius);font-family:inherit;font-size:13px;cursor:pointer;border:1px solid;transition:all 0.15s}#view-spec-wizard .btn-primary{background:var(--accent);border-color:var(--accent2);color:#fff}#view-spec-wizard .btn-primary:hover{background:var(--accent2)}#view-spec-wizard .btn-secondary{background:var(--bg3);border-color:var(--border2);color:var(--text2)}#view-spec-wizard .btn-secondary:hover{border-color:var(--accent);color:var(--text)}#view-spec-wizard .btn-danger{background:rgba(226,85,85,0.1);border-color:var(--red);color:var(--red)}#view-spec-wizard .btn-danger:hover{background:var(--red);color:#fff}#view-spec-wizard /* ── OUTPUT ── */
+  .output-pane{background:var(--bg2);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}#view-spec-wizard .output-header{display:flex;align-items:center;gap:8px;padding:12px 1rem;border-bottom:1px solid var(--border);flex-shrink:0}#view-spec-wizard .output-header h2{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);flex:1}#view-spec-wizard .output-controls{display:flex;gap:6px}#view-spec-wizard .output-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text2);font-family:inherit;font-size:11px;padding:4px 10px;cursor:pointer}#view-spec-wizard .output-btn:hover{border-color:var(--accent);color:var(--text)}#view-spec-wizard .output-body{flex:1;overflow:auto}#view-spec-wizard pre{font-family:inherit;font-size:11.5px;line-height:1.7;padding:1rem;color:var(--text);white-space:pre;overflow-x:auto}#view-spec-wizard .spec-key{color:#7c6af7}#view-spec-wizard .spec-string{color:#a8d8a8}#view-spec-wizard .spec-number{color:#f0c27a}#view-spec-wizard .spec-comment{color:#4a4a60}#view-spec-wizard .spec-event{color:#4a9eed}#view-spec-wizard .spec-gate{color:#3dba7a}#view-spec-wizard .spec-dash{color:#9090a8}#view-spec-wizard .stats-bar{display:flex;gap:12px;padding:8px 1rem;border-bottom:1px solid var(--border);flex-shrink:0}#view-spec-wizard .stat{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}#view-spec-wizard .stat-val{color:var(--text);font-weight:600}#view-spec-wizard .stat-dot{width:6px;height:6px;border-radius:50%}#view-spec-wizard .dep-row{display:grid;grid-template-columns:1fr 100px 80px auto;gap:6px;margin-bottom:6px;align-items:center}#view-spec-wizard .axiom-list textarea{min-height:60px;font-size:12px;line-height:1.6}#view-spec-wizard .empty-modules{display:flex;flex-direction:column;align-items:center;padding:2rem;color:var(--text3);text-align:center;gap:8px;border:1px dashed var(--border);border-radius:var(--radius2)}#view-spec-wizard .empty-modules p{font-size:12px}#view-spec-wizard .progress-bar{height:2px;background:var(--border);margin-top:1px}#view-spec-wizard .progress-fill{height:100%;background:var(--accent);transition:width 0.3s}#view-spec-wizard .spec-depth-indicator{display:flex;align-items:center;gap:6px;margin-top:6px}#view-spec-wizard .depth-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}#view-spec-wizard .depth-fill{height:100%;border-radius:2px;transition:width 0.3s}#view-spec-wizard .depth-label{font-size:10px;color:var(--text3);min-width:32px;text-align:right}#view-spec-wizard .tag-input{display:flex;flex-wrap:wrap;gap:5px;padding:5px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);min-height:38px;cursor:text}#view-spec-wizard .tag{display:inline-flex;align-items:center;gap:4px;background:var(--accent-glow);border:1px solid var(--accent);color:var(--accent);font-size:11px;padding:2px 8px;border-radius:4px}#view-spec-wizard .tag-x{cursor:pointer;color:var(--text3)}#view-spec-wizard .tag-x:hover{color:var(--red)}#view-spec-wizard .tag-input-field{background:transparent;border:none;color:var(--text);font-family:inherit;font-size:12px;outline:none;min-width:80px}
+
+</style>
+</head>
+<body>
+
+<div id="starfield">
+  <div class="swirl-layer swirl-a"></div>
+  <div class="swirl-layer swirl-b"></div>
+  <div class="swirl-layer swirl-c"></div>
+  <div class="shoot"></div>
+  <canvas id="star-canvas"></canvas>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo" onclick="setView('welcome')">IDEA<span>RIUM</span></div>
+  <div class="tb-sep"></div>
+  <div class="tb-stat">ideas <span class="v sky" id="stat-ideas">—</span></div>
+  <div class="tb-stat">specs <span class="v" id="stat-specs">—</span></div>
+  <div class="tb-right">
+    <div class="tb-conn offline" id="conn-indicator" onclick="nexusConnect(true)"><span class="dot"></span><span id="conn-label">connecting…</span></div>
+  </div>
+</div>
+
+<!-- OFFLINE BANNER -->
+<div class="offline-banner" id="offline-banner">
+  <span>NEXUS unreachable — start the Idearium service: <code>node service/idearium-service.js</code> (port 4800), or via orchestrator on :9000.</span>
+  <button onclick="nexusConnect(true)">retry</button>
+</div>
+
+<!-- APP SHELL -->
+<div class="app-shell">
+  <nav class="tabbar" id="tabbar">
+    <button class="tab-btn active" data-view="welcome" onclick="setView('welcome')"><span class="tab-icon">⌂</span>Welcome</button>
+
+    <div class="tab-group" data-group="create">
+      <button class="tab-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
+      <div class="tab-dropdown">
+        <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
+        <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
+      </div>
+    </div>
+
+    <!-- §UI 2026-09-20 — James: "Move eravos, architect, and spec builder to
+         build tab. Eravos the organism canvas. Architect the block building
+         canvas for architecture."
+         §UI 2026-09-21 — James: "specs are supposed to use the same repo
+         compartments... remove the spec library from the build tab." Build
+         is now just the three canvases. A spec IS a repo in a compartment,
+         so the Spec Library (a second, parallel list of the same things) is
+         gone: its chunk list / agent assignment / build loop moved into each
+         repo's own Spec subtab (#repo-subtab-spec), and any spec that lacked
+         a repo is adopted into one at boot (_reconcileSpecRepos in
+         api/index.js). The read-only blueprint viewer stays a per-repo
+         Architect subtab. -->
+    <div class="tab-group" data-group="build">
+      <button class="tab-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+      <div class="tab-dropdown">
+        <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
+        <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
+        <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
+      </div>
+    </div>
+
+    <button class="tab-btn" data-view="repo" onclick="setView('repo')"><span class="tab-icon">🗂</span>Repos<span class="tab-badge" id="repo-count-badge"></span></button>
+
+    <div class="tab-spacer"></div>
+  </nav>
+
+  <main class="view-area">
+
+    <!-- ══════════ WELCOME ══════════ -->
+    <section class="view active" id="view-welcome">
+      <div class="welcome">
+        <div class="welcome-mark">NEXUS · IDEA OS · LAYER 9</div>
+        <div class="welcome-title">IDEA<span>RIUM</span></div>
+        <div class="welcome-sub">Log ideas, brainstorm, visit repository or idea, spec and library builder, then architect.</div>
+        <div class="welcome-actions">
+          <button class="welcome-action-btn secondary" onclick="openUploadProjectModal()">Import project</button>
+          <button class="welcome-action-btn primary" onclick="newSpecPrompt()">Start new project</button>
+        </div>
+        <div class="pillars">
+          <div class="pillar flow" onclick="setView('brainstorm')">
+            <div class="pillar-step">01 · CAPTURE</div>
+            <div class="pillar-icon">✎</div>
+            <div class="pillar-name">Brainstorm</div>
+            <div class="pillar-desc">Freeform, tagged, timestamped capture. No structure required yet — just get it down.</div>
+          </div>
+          <div class="pillar flow" onclick="openModal()">
+            <div class="pillar-step">02 · LOG</div>
+            <div class="pillar-icon">◇</div>
+            <div class="pillar-name">Log an Idea</div>
+            <div class="pillar-desc">Promote a thought into a tracked node with phase, tension, and causal ancestry.</div>
+          </div>
+          <div class="pillar" onclick="setView('ideas')">
+            <div class="pillar-step">03 · VISIT</div>
+            <div class="pillar-icon">⌥</div>
+            <div class="pillar-name">Ideas → Repository</div>
+            <div class="pillar-desc">Open an idea or spec and click "open repository" to see its linked repo — repos aren't a separate destination anymore.</div>
+          </div>
+          <div class="pillar flow" onclick="openSpecChoice()">
+            <div class="pillar-step">04 · SPEC</div>
+            <div class="pillar-icon">▦</div>
+            <div class="pillar-name">Spec &amp; Library Builder</div>
+            <div class="pillar-desc">SEAM-chunked sections, compiled with confidence scoring and gap analysis.</div>
+          </div>
+          <div class="pillar" onclick="setView('architect-build')">
+            <div class="pillar-step">05 · ARCHITECT</div>
+            <div class="pillar-icon">⌘</div>
+            <div class="pillar-name">Architect — block canvas</div>
+            <div class="pillar-desc">Assemble architecture as blocks. The read-only blueprint of a compiled spec now lives on that repo's own Architect subtab.</div>
+          </div>
+        </div>
+        <div class="welcome-foot" id="welcome-foot">awaiting connection to nexus idearium service · :4800</div>
+      </div>
+    </section>
+
+    <!-- ══════════ BRAINSTORM ══════════ -->
+    <section class="view" id="view-brainstorm">
+      <div class="ph"><span class="ph-title">Brainstorm</span><span class="ph-badge" id="brain-count-badge">0 entries</span></div>
+      <div class="brain-wrap">
+        <div class="brain-input-row">
+          <textarea class="brain-textarea" id="brain-text" placeholder="type a raw thought... no structure needed yet"></textarea>
+          <div class="brain-row-actions">
+            <input class="brain-tags-input" id="brain-tags" placeholder="tags, comma, separated">
+            <!-- §BUILT 2026-09-21 — James: "brainstorm should have full AI
+                 assistance." Routes through the real, already-wired
+                 copilot-adapter gate (POST /api/copilot/suggest) — that
+                 gate existed with zero UI callers anywhere before this.
+                 Preview-first: the suggestion never overwrites the draft
+                 on its own, same discipline as every other AI-touches-
+                 real-content feature this session (autofill, screen-qa). -->
+            <button class="action-btn" id="brain-assist-btn" onclick="assistBrainstormDraft()">✨ assist</button>
+            <button class="modal-btn confirm" onclick="addBrainstorm()">+ capture</button>
+          </div>
+        </div>
+        <div class="brain-assist-preview" id="brain-assist-preview" style="display:none"></div>
+        <div class="brain-grid" id="brain-grid"></div>
+      </div>
+    </section>
+
+    <!-- ══════════ IDEAS ══════════ -->
+    <section class="view" id="view-ideas">
+      <div class="ph">
+        <span class="ph-title">Ideas</span>
+        <button class="tb-btn" style="margin-left:10px" onclick="openModal()">+ idea</button>
+        <span class="ph-badge live" id="list-badge" style="margin-left:auto">by tension</span>
+      </div>
+      <div class="body2">
+        <div class="left">
+          <div class="toolbar">
+            <input class="search-input" id="search" placeholder="search ideas..." oninput="renderIdeaList()">
+            <button class="mode-btn active" onclick="sortBy('tension',this)">tension ↓</button>
+            <button class="mode-btn" onclick="sortBy('updated',this)">recent</button>
+            <button class="mode-btn" onclick="sortBy('name',this)">a-z</button>
+          </div>
+          <div class="idea-list" id="idea-list"></div>
+          <div class="snap-bar">
+            <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">push</span>
+            <input class="snap-input" id="snap-msg" placeholder="commit message..." onkeydown="if(event.key==='Enter')doSnapshot()">
+            <span class="snap-latest" id="snap-latest"></span>
+            <button class="snap-btn" id="snap-btn" onclick="doSnapshot()">snapshot ◆</button>
+          </div>
+          <div class="gap-log">
+            <div class="ph" style="border-top:1px solid var(--b0)"><span class="ph-title">Event Stream</span><span class="ph-badge" id="sse-badge">connecting</span></div>
+            <div class="gap-log-inner" id="event-log"></div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="ph"><span class="ph-title" id="detail-title">Select an idea</span></div>
+          <div class="detail-area" id="detail-area"><div class="detail-empty">← select an idea to inspect</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ SPEC LIBRARY — REMOVED 2026-09-21 ══════════
+         James: "specs are supposed to use the same repo compartments...
+         remove the spec library from the build tab." Specs are repos: list
+         them in Repos, work on one in that repo's Spec subtab
+         (#repo-subtab-spec, which hosts #spec-builder). -->
+
+    <!-- ══════════ ARCHITECT ══════════ -->
+    <!-- §MOVED 2026-09-20 — the "Architect" blueprint view that used to live
+         here (a global #view-architect listing EVERY compiled spec) is now
+         a per-repo subtab: #repo-subtab-architect, rendered by
+         renderRepoArchitect(repo) against that one repo's own spec. James:
+         "Move architect from build tab to repo sub tabs per repo." -->
+
+    <!-- ══════════ ERAVOS (own system, own port — sovereign iframe) ══════════ -->
+    <section class="view" id="view-eravos">
+      <iframe class="system-frame" src="../../eravos/ui/index.html" title="Eravos"></iframe>
+    </section>
+
+    <!-- ══════════ ARCHITECT BUILD UI (architect/'s own build surface — distinct
+         from the "Architect" blueprint viewer under Build, which reads
+         compiled-spec output; this is the architect system's own real UI) ══════════ -->
+    <section class="view" id="view-architect-build">
+      <iframe class="system-frame" src="../../architect/src/ui/arch-builder.html" title="Architect Build"></iframe>
+    </section>
+
+    <!-- ══════════ REPOSITORY LIBRARY / FILE BROWSER / IDE ══════════ -->
+    <section class="view" id="view-repo">
+      <div class="ph">
+        <button class="tb-btn repo-back-btn" id="repo-back-btn" style="display:none" onclick="exitRepoDetail()">← All repos</button>
+        <span class="ph-title" id="repo-view-title">Repository Library</span>
+        <span class="ph-badge" id="repo-context" style="margin-left:10px"></span>
+        <!-- §FIXED 2026-09-20 — James: "the repo page needs an import repo
+             and create repo buttons instead of the two current ones."
+             Was: "open local nexus folder…" (pickLocalRepo() — client-side
+             preview only, never created a real repo record, a real
+             inconsistency with the button next to it) and "drop repo
+             files…" (a second, different way to do the SAME import). Now
+             one real Import (openUploadProjectModal() — the same complete,
+             already-working zip-import + real compartment flow used
+             elsewhere in this UI) and one real Create (openCreateRepoModal()
+             — genuinely new, see repo.ingest's bare:true path). -->
+        <!-- §BUILT 2026-09-20 — James: "when you click the repo and enter it,
+             i want where the create repo and import repo buttons are to
+             change to run, branch, diagnose." Two groups occupying the same
+             slot; _setRepoToolbarMode() in js/app.js swaps which is shown,
+             driven by the SAME enterRepoDetail()/exitRepoDetail() pair that
+             already owns every other detail-vs-library transition (the back
+             button, the rail collapse, the view title) rather than a second,
+             parallel notion of "am I in a repo". -->
+        <span class="repo-tb-group" id="repo-tb-library" style="margin-left:auto">
+          <button class="tb-btn" onclick="openUploadProjectModal()">Import repo</button>
+          <button class="tb-btn" style="margin-left:6px" onclick="openCreateRepoModal()">Create repo</button>
+        </span>
+        <span class="repo-tb-group" id="repo-tb-detail" style="margin-left:auto;display:none">
+          <!-- §RUN 2026-09-21 — Run executes in a COS test environment
+               (lib/repo-run.js): a branch of the repo's compartment, run in
+               COS's sandbox. Shift+click runs the tests instead. -->
+          <button class="tb-btn" id="repo-tb-run" title="COS run menu — run, boot + probe, test, syntax check, resolve dependencies · shift+click: preselect all tests" onclick="repoRun(event && event.shiftKey ? 'test' : 'run')">Run</button>
+          <button class="tb-btn" style="margin-left:6px" onclick="repoBranch()">Branch</button>
+          <button class="tb-btn" style="margin-left:6px" onclick="repoDiagnose()">Diagnose</button>
+        </span>
+        <input type="file" id="repo-drop-input" multiple style="display:none" onchange="ingestDroppedFiles(this.files)">
+      </div>
+      <div class="repo-wrap" id="repo-wrap">
+        <!-- Pane 1: compartments → repos, GitHub-style landing grid of blocks
+             when nothing is open yet; collapses to a slim rail once you've
+             entered a repo (see .repo-wrap.repo-open in CSS + exitRepoDetail()). -->
+        <div class="repo-rail" id="repo-rail">
+          <div class="repo-rail-search"><input type="text" id="repo-rail-filter" placeholder="filter repos…" oninput="renderRepoLibrary()"></div>
+          <div class="repo-rail-body" id="repo-rail-body"></div>
+        </div>
+
+        <!-- Repo detail: one repo, four subtabs. setRepoSubtab() switches
+             which panel is .active; each panel loads its own data lazily
+             the first time it's shown (see js/app.js §REPO SUBTABS). -->
+        <div class="repo-detail-body" id="repo-detail-body">
+          <nav class="repo-subnav" id="repo-subnav">
+            <button class="repo-subtab-btn active" data-subtab="home" onclick="setRepoSubtab('home')">Home</button>
+            <button class="repo-subtab-btn" data-subtab="idea" onclick="setRepoSubtab('idea')">Idea</button>
+            <button class="repo-subtab-btn" data-subtab="files" onclick="setRepoSubtab('files')">Files</button>
+            <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>
+            <button class="repo-subtab-btn" data-subtab="spec" onclick="setRepoSubtab('spec')">Spec</button>
+            <button class="repo-subtab-btn" data-subtab="phasemap" onclick="setRepoSubtab('phasemap')">Phasemap</button>
+            <button class="repo-subtab-btn" data-subtab="roadmap" onclick="setRepoSubtab('roadmap')">Roadmap</button>
+            <button class="repo-subtab-btn" data-subtab="intelligence" onclick="setRepoSubtab('intelligence')">Intelligence</button>
+            <button class="repo-subtab-btn" data-subtab="agent" onclick="setRepoSubtab('agent')">Agent</button>
+            <button class="repo-subtab-btn" data-subtab="debug" onclick="setRepoSubtab('debug')">Debug</button>
+            <button class="repo-subtab-btn" data-subtab="versionium" onclick="setRepoSubtab('versionium')">Versionium</button>
+            <button class="repo-subtab-btn" data-subtab="settings" onclick="setRepoSubtab('settings')">Settings</button>
+          </nav>
+
+          <!-- HOME — the repo's own README/.spec, or basic identity if neither exists -->
+          <div class="repo-subtab-panel active" id="repo-subtab-home">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- IDEA — §0.39.261: the idea this repo came from, and every way it grows
+               (improve · iterate · expand). Iterations are real IdeaOS ideas linked to
+               it; each can go to the agent or onto the roadmap. js/app.js §IDEA TAB. -->
+          <div class="repo-subtab-panel" id="repo-subtab-idea">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- FILES — unchanged tree + IDE, same open/save/dirty logic as before -->
+          <div class="repo-subtab-panel" id="repo-subtab-files">
+            <div class="file-tree" id="file-tree"><div class="repo-empty">no repository loaded<br><br>pick one from the library on the left<br><br><button class="modal-btn confirm" onclick="pickLocalRepo()">or open local nexus folder</button></div></div>
+            <div class="ide-pane">
+              <div class="ide-tabs" id="ide-tabs">no file open</div>
+              <div class="ide-code" id="ide-code">// click a file in the tree to open it here</div>
+              <textarea class="ide-editor" id="ide-editor" style="display:none" spellcheck="false"></textarea>
+            </div>
+          </div>
+
+          <!-- ARCHITECT — this repo's blueprint: its own spec-engine spec,
+               chunk by chunk. Same renderer the old global Build > Architect
+               view used, scoped to one repo via repo.specUuid. -->
+          <div class="repo-subtab-panel" id="repo-subtab-architect">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- SPEC — this repo's spec-engine spec, as a working surface: chunk
+               status, per-chunk agent for pending chunks, build-remaining, build
+               history, export. Was the right-hand pane of the Build > Spec
+               Library; the mount id (#spec-builder) is unchanged so every
+               renderSpecBuilder()/renderSpecEngineBuilder() caller keeps working.
+               renderRepoSpec() toggles the two children — it must never replace
+               this panel's innerHTML, or #spec-builder disappears. -->
+          <div class="repo-subtab-panel" id="repo-subtab-spec">
+            <div class="detail-empty" id="repo-spec-empty">← select a repo</div>
+            <div class="spec-builder" id="spec-builder" style="display:none"></div>
+          </div>
+
+          <!-- PHASEMAP — real data: MCO2's verification tiers (L0-L8,
+               merged sync+lazy) and MCO1's dependency graph summary.
+               GET /api/repos/:uuid/verification, GET .../graph. -->
+          <div class="repo-subtab-panel" id="repo-subtab-phasemap">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- ROADMAP — the phases in this repo's *phasemap*.spec files as a
+               dependency-ordered roadmap (MCO-E). Edits change the phasemap file
+               itself, the row loom's scanner reads. GET /api/repos/:uuid/roadmap,
+               POST .../roadmap/phase. See js/app.js §ROADMAP. -->
+          <div class="repo-subtab-panel" id="repo-subtab-roadmap">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- INTELLIGENCE — structural scan of THIS repo: dangling hooks
+               (graph edges with no resolvable target), gaps (verification
+               tiers that did not pass + unreferenced files), and tension
+               (symbols with abnormal fan-in/fan-out). All computed from the
+               repo's own real atlas/graph/verification artifacts — see
+               GET /api/repos/:uuid/scan. -->
+          <div class="repo-subtab-panel" id="repo-subtab-intelligence">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- DEBUG — §0.39.261: what is wrong, in one place — failed verification
+               tiers, parse failures, COS run failures, agent errors, live syntax and
+               dependency checks. GET /api/repos/:uuid/debug. js/app.js §DEBUG TAB. -->
+          <div class="repo-subtab-panel" id="repo-subtab-debug">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- AGENT — this compartment's own agent. The CLI composes this
+               repo's hat persona (lib/repo-agent.js) and sends one ordinary
+               prompt; it never switches the host's global agent. Three
+               stacked regions: status/persona, transcript, composer. -->
+          <div class="repo-subtab-panel" id="repo-subtab-agent">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- VERSIONIUM — this repo's snapshots (MCO3, §33): the derived
+               state of the repo at a moment (source hash, git commit,
+               atlas/chunk/graph identity, dependencies, environment, tests,
+               verification), committed to versionium. GET/POST
+               /api/repos/:uuid/snapshot(s). Records state only, not file
+               content — see js/app.js §VERSIONIUM. -->
+          <div class="repo-subtab-panel" id="repo-subtab-versionium">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- SETTINGS — compartment (MCO6's real compartmentId), agent/
+               source provenance, and the repo-level actions (add file,
+               fork, export, archive) moved here from the old file-tree
+               toolbar strip — this is the "repo settings" surface, not
+               a file-tree control. -->
+          <div class="repo-subtab-panel" id="repo-subtab-settings">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ SPEC BUILD WIZARD ══════════ -->
+    <section class="view" id="view-spec-wizard">
+      <div class="app">
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <button onclick="setView('welcome')" style="background:none;border:1px solid var(--border);color:var(--text2);font:inherit;font-size:10px;padding:4px 8px;border-radius:4px;cursor:pointer;margin-bottom:10px">← back</button>
+    <h1>spec-compiler</h1>
+    <p>Build Wizard</p>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <ul class="section-nav" id="nav">
+    <li class="nav-group">Core</li>
+    <li><div class="nav-item active" data-sec="meta"><span class="dot"></span>meta</div></li>
+    <li><div class="nav-item" data-sec="axioms"><span class="dot"></span>axioms</div></li>
+    <li><div class="nav-item" data-sec="deps"><span class="dot"></span>deps</div></li>
+    <li><div class="nav-item" data-sec="constraints"><span class="dot"></span>constraints</div></li>
+    <li class="nav-group">Modules</li>
+    <li><div class="nav-item" data-sec="modules"><span class="dot"></span>modules</div></li>
+    <li class="nav-group">Events &amp; Schema</li>
+    <li><div class="nav-item" data-sec="events"><span class="dot"></span>events</div></li>
+    <li><div class="nav-item" data-sec="schemas"><span class="dot"></span>schemas</div></li>
+    <li class="nav-group">Enforcement</li>
+    <li><div class="nav-item" data-sec="enforcement"><span class="dot"></span>enforcement gates</div></li>
+    <li><div class="nav-item" data-sec="seams"><span class="dot"></span>seams</div></li>
+  </ul>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main" id="main">
+
+<!-- META -->
+<section class="section-block visible" id="sec-meta">
+  <div class="section-title">meta — spec identity</div>
+
+  <div class="field-group">
+    <div class="field-label">name <span class="req">*</span></div>
+    <input type="text" id="meta-name" placeholder="my-system-name" oninput="refresh()">
+  </div>
+  <div class="field-group">
+    <div class="field-label">version <span class="req">*</span></div>
+    <input type="text" id="meta-version" placeholder="1.0.0" oninput="refresh()">
+  </div>
+  <div class="field-group">
+    <div class="field-label">author</div>
+    <input type="text" id="meta-author" placeholder="james-brooks" oninput="refresh()">
+  </div>
+  <div class="field-group">
+    <div class="field-label">uuid <span class="hint">— leave blank to auto-generate</span></div>
+    <input type="text" id="meta-uuid" placeholder="auto-generated" oninput="refresh()">
+  </div>
+  <div class="field-group">
+    <div class="field-label">status</div>
+    <select id="meta-status" onchange="refresh()">
+      <option value="active">active</option>
+      <option value="bootstrapping">bootstrapping</option>
+      <option value="draft">draft</option>
+      <option value="deprecated">deprecated</option>
+      <option value="archived">archived</option>
+    </select>
+  </div>
+  <div class="field-group">
+    <div class="field-label">description</div>
+    <textarea id="meta-description" placeholder="Describe the system purpose, key properties, and invariants..." oninput="refresh()"></textarea>
+  </div>
+  <div class="field-group">
+    <div class="field-label">tagline <span class="hint">— one-liner</span></div>
+    <input type="text" id="meta-tagline" placeholder="Compress intent. Decompress deterministically." oninput="refresh()">
+  </div>
+  <div class="field-group">
+    <div class="field-label">target runtime</div>
+    <div class="checkbox-group" id="meta-runtime">
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-runtime')"><input type="checkbox" value="node">node</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-runtime')"><input type="checkbox" value="browser">browser</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-runtime')"><input type="checkbox" value="deno">deno</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-runtime')"><input type="checkbox" value="bun">bun</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-runtime')"><input type="checkbox" value="worker">worker</label>
+    </div>
+  </div>
+  <div class="field-group">
+    <div class="field-label">language stack</div>
+    <div class="checkbox-group" id="meta-lang">
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-lang')"><input type="checkbox" value="javascript">javascript</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-lang')"><input type="checkbox" value="typescript">typescript</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-lang')"><input type="checkbox" value="python">python</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-lang')"><input type="checkbox" value="rust">rust</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-lang')"><input type="checkbox" value="go">go</label>
+    </div>
+  </div>
+  <div class="field-group">
+    <div class="field-label">paradigm</div>
+    <div class="checkbox-group" id="meta-paradigm">
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-paradigm')"><input type="checkbox" value="SISO">SISO</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-paradigm')"><input type="checkbox" value="functional">functional</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-paradigm')"><input type="checkbox" value="deterministic">deterministic</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-paradigm')"><input type="checkbox" value="cortex-first">cortex-first</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-paradigm')"><input type="checkbox" value="event-driven">event-driven</label>
+      <label class="checkbox-item" onclick="toggleCheck(this,'meta-paradigm')"><input type="checkbox" value="reactive">reactive</label>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-primary" onclick="goTo('axioms')">next → axioms</button>
+  </div>
+</section>
+
+<!-- AXIOMS -->
+<section class="section-block" id="sec-axioms">
+  <div class="section-title">axioms — invariants the system must never violate</div>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:1rem">One axiom per line. Each becomes a bullet in the spec. These drive invariants-engine checks.</p>
+  <div id="axioms-list" class="list-editor"></div>
+  <button class="add-btn" onclick="addAxiom()">+ add axiom</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('meta')">← back</button>
+    <button class="btn btn-primary" onclick="goTo('deps')">next → deps</button>
+  </div>
+</section>
+
+<!-- DEPS -->
+<section class="section-block" id="sec-deps">
+  <div class="section-title">deps — external dependencies</div>
+  <div style="display:grid;grid-template-columns:1fr 110px 90px 70px auto;gap:6px;margin-bottom:6px;font-size:10px;color:var(--text3);padding:0 4px;text-transform:uppercase;letter-spacing:0.08em">
+    <span>name</span><span>version</span><span>purpose</span><span>required</span><span></span>
+  </div>
+  <div id="deps-list"></div>
+  <button class="add-btn" onclick="addDep()">+ add dependency</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('axioms')">← back</button>
+    <button class="btn btn-primary" onclick="goTo('constraints')">next → constraints</button>
+  </div>
+</section>
+
+<!-- CONSTRAINTS -->
+<section class="section-block" id="sec-constraints">
+  <div class="section-title">constraints — hard rules enforced by gates</div>
+  <div id="constraints-list"></div>
+  <button class="add-btn" onclick="addConstraint()">+ add constraint</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('deps')">← back</button>
+    <button class="btn btn-primary" onclick="goTo('modules')">next → modules</button>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="section-block" id="sec-modules">
+  <div class="section-title">modules — system components</div>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:1rem">Each module becomes a KGNode. specDepth is computed from which fields are present.</p>
+  <div id="modules-list"></div>
+  <button class="btn btn-primary" onclick="addModule()" style="width:100%;margin-top:8px">+ add module</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('constraints')">← back</button>
+    <button class="btn btn-primary" onclick="goTo('events')">next → events</button>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="section-block" id="sec-events">
+  <div class="section-title">events — the only communication channel between modules</div>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:1rem">Group events by namespace. Each entry: <code style="color:var(--green);font-size:11px">event.name &#123; field1, field2 &#125;</code></p>
+  <div id="events-list"></div>
+  <button class="add-btn" onclick="addEventGroup()">+ add event namespace</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('modules')">← back</button>
+    <button class="btn btn-primary" onclick="goTo('schemas')">next → schemas</button>
+  </div>
+</section>
+
+<!-- SCHEMAS -->
+<section class="section-block" id="sec-schemas">
+  <div class="section-title">schemas — typed data structures</div>
+  <div id="schemas-list"></div>
+  <button class="add-btn" onclick="addSchema()">+ add schema</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('events')">← back</button>
+    <button class="btn btn-primary" onclick="goTo('enforcement')">next → enforcement</button>
+  </div>
+</section>
+
+<!-- ENFORCEMENT -->
+<section class="section-block" id="sec-enforcement">
+  <div class="section-title">enforcement — gate definitions</div>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:1rem">Declarative rules for the invariants engine. GATE-XXX-NNN format IDs recommended.</p>
+  <div id="enforcement-list"></div>
+  <button class="add-btn" onclick="addGate()">+ add gate</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('schemas')">← back</button>
+    <button class="btn btn-primary" onclick="goTo('seams')">next → seams</button>
+  </div>
+</section>
+
+<!-- SEAMS -->
+<section class="section-block" id="sec-seams">
+  <div class="section-title">seams — cross-module contracts</div>
+  <p style="font-size:12px;color:var(--text2);margin-bottom:1rem">Seams define the interface boundary between modules. They become seam_records in Cortex.</p>
+  <div id="seams-list"></div>
+  <button class="add-btn" onclick="addSeam()">+ add seam</button>
+  <div class="nav-btns">
+    <button class="btn btn-secondary" onclick="goTo('enforcement')">← back</button>
+    <button class="btn btn-primary" onclick="copyOutput()" style="background:var(--green);border-color:var(--green)">⬇ copy .spec output</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ── OUTPUT PANE ── -->
+<aside class="output-pane">
+  <div class="output-header">
+    <h2>live .spec output</h2>
+    <div class="output-controls">
+      <button class="output-btn" onclick="saveToIdearium()">save to idearium</button>
+      <button class="output-btn" onclick="copyOutput()">copy</button>
+      <button class="output-btn" onclick="downloadSpec()">download</button>
+    </div>
+  </div>
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat"><div class="stat-dot" style="background:var(--accent)"></div><span>specDepth </span><span class="stat-val" id="stat-depth">0.0</span></div>
+    <div class="stat"><div class="stat-dot" style="background:var(--green)"></div><span>modules </span><span class="stat-val" id="stat-mods">0</span></div>
+    <div class="stat"><div class="stat-dot" style="background:var(--blue)"></div><span>events </span><span class="stat-val" id="stat-evts">0</span></div>
+    <div class="stat"><div class="stat-dot" style="background:var(--amber)"></div><span>gaps </span><span class="stat-val" id="sw-stat-gaps">0</span></div>
+  </div>
+  <div class="output-body">
+    <pre id="output-pre"><span class="spec-comment"># spec-compiler wizard output
+# fill in the fields on the left to build your .spec</span>
+</pre>
+  </div>
+</aside>
+
+</div>
+
+<script>
+const S = {
+  meta:{ name:'',version:'1.0.0',author:'',uuid:'',status:'active',description:'',tagline:'',runtime:[],lang:[],paradigm:[] },
+  axioms:[],
+  deps:[],
+  constraints:[],
+  modules:[],
+  events:[],  // [{namespace, entries:[]}]
+  schemas:[], // [{id, fields:[{name,type}]}]
+  gates:[],   // enforcement gates
+  seams:[],
+};
+
+let moduleCounter=0, depCounter=0, constraintCounter=0, gateCounter=0, schemaCounter=0, seamCounter=0, eventCounter=0;
+
+// ── Section routing ──
+function goTo(sec){
+  document.querySelectorAll('.section-block').forEach(b=>b.classList.remove('visible'));
+  document.getElementById('sec-'+sec).classList.add('visible');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.classList.remove('active');
+    if(n.dataset.sec===sec) n.classList.add('active');
+  });
+  document.querySelector('.main').scrollTop=0;
+  updateProgress();
+}
+document.querySelectorAll('.nav-item').forEach(n=>n.addEventListener('click',()=>goTo(n.dataset.sec)));
+
+// ── Checkboxes ──
+function toggleCheck(el,group){
+  el.classList.toggle('checked');
+  const val = el.querySelector('input').value;
+  if(group==='meta-runtime'){
+    if(el.classList.contains('checked')) S.meta.runtime.push(val);
+    else S.meta.runtime=S.meta.runtime.filter(v=>v!==val);
+  } else if(group==='meta-lang'){
+    if(el.classList.contains('checked')) S.meta.lang.push(val);
+    else S.meta.lang=S.meta.lang.filter(v=>v!==val);
+  } else if(group==='meta-paradigm'){
+    if(el.classList.contains('checked')) S.meta.paradigm.push(val);
+    else S.meta.paradigm=S.meta.paradigm.filter(v=>v!==val);
+  }
+  refresh();
+}
+
+// ── Meta field sync ──
+['meta-name','meta-version','meta-author','meta-uuid','meta-description','meta-tagline'].forEach(id=>{
+  const key = id.replace('meta-','');
+  document.getElementById(id).addEventListener('input',e=>{
+    S.meta[key]=e.target.value; refresh();
+  });
+});
+document.getElementById('meta-status').addEventListener('change',e=>{
+  S.meta.status=e.target.value; refresh();
+});
+
+// ── Axioms ──
+function renderAxioms(){
+  const list = document.getElementById('axioms-list');
+  if(!S.axioms.length){ list.innerHTML=''; return; }
+  list.innerHTML = S.axioms.map((a,i)=>`
+    <div class="list-item">
+      <span class="list-item-num">${i+1}</span>
+      <input type="text" value="${esc(a)}" placeholder="Nothing silently fails..." oninput="S.axioms[${i}]=this.value;refresh()">
+      <span class="list-item-del" onclick="S.axioms.splice(${i},1);renderAxioms();refresh()">×</span>
+    </div>`).join('');
+}
+function addAxiom(){ S.axioms.push(''); renderAxioms(); refresh(); }
+renderAxioms();
+
+// ── Deps ──
+function renderDeps(){
+  const el = document.getElementById('deps-list');
+  el.innerHTML = S.deps.map((d,i)=>`
+    <div style="display:grid;grid-template-columns:1fr 110px 90px 70px auto;gap:6px;margin-bottom:6px;align-items:center">
+      <input type="text" value="${esc(d.name)}" placeholder="js-yaml" oninput="S.deps[${i}].name=this.value;refresh()">
+      <input type="text" value="${esc(d.version)}" placeholder=">=4.1.0" oninput="S.deps[${i}].version=this.value;refresh()">
+      <input type="text" value="${esc(d.purpose)}" placeholder="yaml parse" oninput="S.deps[${i}].purpose=this.value;refresh()">
+      <select onchange="S.deps[${i}].required=(this.value==='true');refresh()">
+        <option value="true" ${d.required?'selected':''}>required</option>
+        <option value="false" ${!d.required?'selected':''}>optional</option>
+      </select>
+      <span class="list-item-del" onclick="S.deps.splice(${i},1);renderDeps();refresh()" style="padding:0 6px;cursor:pointer;color:var(--text3);font-size:16px">×</span>
+    </div>`).join('');
+}
+function addDep(){ S.deps.push({name:'',version:'',purpose:'',required:true}); renderDeps(); refresh(); }
+
+// ── Constraints ──
+function renderConstraints(){
+  const el = document.getElementById('constraints-list');
+  el.innerHTML = S.constraints.map((c,i)=>`
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:90px 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center">
+        <input type="text" value="${esc(c.id)}" placeholder="CC-001" oninput="S.constraints[${i}].id=this.value;refresh()" style="font-size:12px;color:var(--amber)">
+        <input type="text" value="${esc(c.description)}" placeholder="description..." oninput="S.constraints[${i}].description=this.value;refresh()">
+        <input type="text" value="${esc(c.enforced_by)}" placeholder="[GATE-XXX-001]" oninput="S.constraints[${i}].enforced_by=this.value;refresh()">
+        <div style="display:flex;gap:4px">
+          <span class="type-badge ${c.type}" onclick="cycleConstraintType(${i})">${c.type}</span>
+          <span class="list-item-del" onclick="S.constraints.splice(${i},1);renderConstraints();refresh()" style="padding:4px 6px;cursor:pointer;color:var(--text3);font-size:14px">×</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function cycleConstraintType(i){
+  const types=['hard','soft','warning'];
+  const cur = types.indexOf(S.constraints[i].type);
+  S.constraints[i].type = types[(cur+1)%types.length];
+  renderConstraints(); refresh();
+}
+function addConstraint(){
+  const n = S.constraints.length+1;
+  S.constraints.push({id:`CC-00${n}`,description:'',type:'hard',enforced_by:''});
+  renderConstraints(); refresh();
+}
+
+// ── Modules ──
+function renderModules(){
+  const el = document.getElementById('modules-list');
+  if(!S.modules.length){
+    el.innerHTML='<div class="empty-modules"><p>no modules yet — click + add module to begin</p></div>';
+    return;
+  }
+  el.innerHTML = S.modules.map((m,i)=>`
+    <div class="module-card ${m._open?'open':''}" id="mod-${i}">
+      <div class="module-card-header" onclick="toggleModule(${i})">
+        <span class="module-card-toggle">▶</span>
+        <span class="module-id-badge">${m.id||'MOD-?'}</span>
+        <span class="module-name-label">${m.name||'unnamed module'}</span>
+        <span style="font-size:11px;color:var(--text3)">${specDepth(m).toFixed(1)}</span>
+        <span class="module-card-del" onclick="event.stopPropagation();deleteModule(${i})">×</span>
+      </div>
+      <div class="module-card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div class="module-field">
+            <div class="module-field-label">id</div>
+            <input type="text" value="${esc(m.id)}" placeholder="MOD-NAME" oninput="S.modules[${i}].id=this.value;refreshModule(${i})" style="color:var(--amber)">
+          </div>
+          <div class="module-field">
+            <div class="module-field-label">name</div>
+            <input type="text" value="${esc(m.name)}" placeholder="module-name" oninput="S.modules[${i}].name=this.value;refreshModule(${i})">
+          </div>
+        </div>
+        <div class="module-field">
+          <div class="module-field-label">uuid</div>
+          <input type="text" value="${esc(m.uuid)}" placeholder="auto-generated" oninput="S.modules[${i}].uuid=this.value;refreshModule(${i})" style="font-size:11px;color:var(--text3)">
+        </div>
+        <div class="module-field">
+          <div class="module-field-label">description</div>
+          <textarea oninput="S.modules[${i}].description=this.value;refreshModule(${i})">${esc(m.description)}</textarea>
+        </div>
+
+        <div class="module-field">
+          <div class="module-field-label">exports <span style="color:var(--text3);font-size:10px">— one per line: Fn(arg: Type) → ReturnType</span></div>
+          <div class="list-editor" id="mod-exports-${i}">
+            ${(m.exports||[]).map((e,j)=>`
+              <div class="list-item">
+                <span class="list-item-num">${j+1}</span>
+                <input type="text" value="${esc(e)}" placeholder="fn(arg: Type) → Return" oninput="S.modules[${i}].exports[${j}]=this.value;refreshModule(${i})" style="color:var(--green);font-size:12px">
+                <span class="list-item-del" onclick="S.modules[${i}].exports.splice(${j},1);renderModules();refresh()">×</span>
+              </div>`).join('')}
+          </div>
+          <button class="add-btn" onclick="addModuleItem(${i},'exports')">+ export</button>
+        </div>
+
+        <div class="module-field">
+          <div class="module-field-label">gate_pipeline <span style="color:var(--text3);font-size:10px">— GATE-ID: input → transform → output</span></div>
+          <div class="list-editor" id="mod-gates-${i}">
+            ${(m.gate_pipeline||[]).map((g,j)=>`
+              <div class="list-item">
+                <span class="list-item-num">${j+1}</span>
+                <input type="text" value="${esc(g)}" placeholder="GATE-XXX-001: event → transform → result" oninput="S.modules[${i}].gate_pipeline[${j}]=this.value;refreshModule(${i})" style="color:var(--blue);font-size:12px">
+                <span class="list-item-del" onclick="S.modules[${i}].gate_pipeline.splice(${j},1);renderModules();refresh()">×</span>
+              </div>`).join('')}
+          </div>
+          <button class="add-btn" onclick="addModuleItem(${i},'gate_pipeline')">+ gate</button>
+        </div>
+
+        <div class="module-field">
+          <div class="module-field-label">behavioral_contracts</div>
+          <div class="list-editor" id="mod-contracts-${i}">
+            ${(m.behavioral_contracts||[]).map((c,j)=>`
+              <div class="list-item">
+                <span class="list-item-num">${j+1}</span>
+                <input type="text" value="${esc(c)}" placeholder="Contract statement..." oninput="S.modules[${i}].behavioral_contracts[${j}]=this.value;refreshModule(${i})" style="font-size:12px">
+                <span class="list-item-del" onclick="S.modules[${i}].behavioral_contracts.splice(${j},1);renderModules();refresh()">×</span>
+              </div>`).join('')}
+          </div>
+          <button class="add-btn" onclick="addModuleItem(${i},'behavioral_contracts')">+ contract</button>
+        </div>
+
+        <div class="module-field">
+          <div class="module-field-label">error_paths</div>
+          <div class="list-editor" id="mod-errors-${i}">
+            ${(m.error_paths||[]).map((e,j)=>`
+              <div class="list-item">
+                <span class="list-item-num">${j+1}</span>
+                <input type="text" value="${esc(e)}" placeholder="condition → consequence" oninput="S.modules[${i}].error_paths[${j}]=this.value;refreshModule(${i})" style="color:var(--red);font-size:12px">
+                <span class="list-item-del" onclick="S.modules[${i}].error_paths.splice(${j},1);renderModules();refresh()">×</span>
+              </div>`).join('')}
+          </div>
+          <button class="add-btn" onclick="addModuleItem(${i},'error_paths')">+ error path</button>
+        </div>
+
+        <div class="module-field">
+          <div class="module-field-label">deps <span style="color:var(--text3);font-size:10px">— refs to other modules by name</span></div>
+          <div class="list-editor" id="mod-deps-${i}">
+            ${(m.deps||[]).map((d,j)=>`
+              <div class="list-item">
+                <span class="list-item-num">${j+1}</span>
+                <input type="text" value="${esc(typeof d==='object'?d.name:d)}" placeholder="module-name" oninput="S.modules[${i}].deps[${j}]={name:this.value};refreshModule(${i})" style="font-size:12px">
+                <span class="list-item-del" onclick="S.modules[${i}].deps.splice(${j},1);renderModules();refresh()">×</span>
+              </div>`).join('')}
+          </div>
+          <button class="add-btn" onclick="addModuleItem(${i},'deps')">+ dep</button>
+        </div>
+
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em">specDepth</span>
+            <span style="font-size:11px;color:var(--accent)">${specDepth(m).toFixed(2)}</span>
+            <span style="font-size:10px;color:var(--text3)">${specDepthLabel(specDepth(m))}</span>
+          </div>
+          <div class="depth-bar"><div class="depth-fill" style="width:${specDepth(m)*100}%;background:${depthColor(specDepth(m))}"></div></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function toggleModule(i){ S.modules[i]._open=!S.modules[i]._open; renderModules(); }
+function deleteModule(i){ S.modules.splice(i,1); renderModules(); refresh(); }
+function refreshModule(i){ renderModules(); refresh(); }
+function addModuleItem(i,field){
+  if(!S.modules[i][field]) S.modules[i][field]=[];
+  if(field==='deps') S.modules[i][field].push({name:''});
+  else S.modules[i][field].push('');
+  renderModules(); refresh();
+}
+function addModule(){
+  const n = ++moduleCounter;
+  S.modules.push({
+    id:`MOD-${String.fromCharCode(64+n)}`,name:'',uuid:'',description:'',
+    exports:[],gate_pipeline:[],behavioral_contracts:[],error_paths:[],deps:[],
+    _open:true
+  });
+  renderModules(); refresh();
+}
+function specDepth(m){
+  let d=0;
+  if(m.id) d=Math.max(d,0.0);
+  if(m.name) d=Math.max(d,0.1);
+  if(m.description) d=Math.max(d,0.2);
+  if(m.exports?.length) d=Math.max(d,0.3);
+  if(m.gate_pipeline?.length) d=Math.max(d,0.5);
+  if(m.behavioral_contracts?.length) d=Math.max(d,0.7);
+  if(m.error_paths?.length) d=Math.max(d,0.85);
+  if(m.deps?.length&&m.error_paths?.length&&m.behavioral_contracts?.length&&m.gate_pipeline?.length&&m.exports?.length) d=1.0;
+  return d;
+}
+function specDepthLabel(d){
+  if(d>=1.0) return 'FULL';
+  if(d>=0.85) return 'error_paths';
+  if(d>=0.7) return 'contracts';
+  if(d>=0.5) return 'gates';
+  if(d>=0.3) return 'exports';
+  if(d>=0.2) return 'description';
+  if(d>=0.1) return 'name';
+  return 'id_only';
+}
+function depthColor(d){
+  if(d>=0.85) return 'var(--green)';
+  if(d>=0.5) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+// ── Events ──
+function renderEvents(){
+  const el = document.getElementById('events-list');
+  if(!S.events.length){ el.innerHTML=''; return; }
+  el.innerHTML = S.events.map((g,gi)=>`
+    <div class="event-group">
+      <div class="event-group-header">
+        <span class="event-namespace">
+          <input type="text" value="${esc(g.namespace)}" placeholder="namespace" oninput="S.events[${gi}].namespace=this.value;refresh()" style="background:transparent;border:none;color:var(--amber);font-family:inherit;font-size:12px;outline:none">
+        </span>
+        <span class="list-item-del" onclick="S.events.splice(${gi},1);renderEvents();refresh()" style="cursor:pointer;color:var(--text3);font-size:14px">×</span>
+      </div>
+      <div class="event-entries">
+        ${(g.entries||[]).map((e,ei)=>`
+          <div class="event-row">
+            <input type="text" value="${esc(e)}" placeholder="event.name { field1, field2 }" oninput="S.events[${gi}].entries[${ei}]=this.value;refresh()" style="background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;outline:none;width:100%;padding:3px 0">
+            <span class="event-del" onclick="S.events[${gi}].entries.splice(${ei},1);renderEvents();refresh()">×</span>
+          </div>`).join('')}
+        <button class="add-btn" onclick="S.events[${gi}].entries.push('');renderEvents();refresh()" style="border-top:none;padding:4px 0;font-size:11px">+ event</button>
+      </div>
+    </div>`).join('');
+}
+function addEventGroup(){ S.events.push({namespace:'',entries:['']}); renderEvents(); refresh(); }
+
+// ── Schemas ──
+function renderSchemas(){
+  const el = document.getElementById('schemas-list');
+  el.innerHTML = S.schemas.map((s,si)=>`
+    <div class="schema-card">
+      <div class="schema-header">
+        <input type="text" value="${esc(s.id)}" placeholder="SchemaName" oninput="S.schemas[${si}].id=this.value;refresh()" style="background:transparent;border:none;color:var(--blue);font-family:inherit;font-size:13px;font-weight:600;outline:none;flex:1">
+        <span class="list-item-del" onclick="S.schemas.splice(${si},1);renderSchemas();refresh()" style="cursor:pointer;color:var(--text3);font-size:14px">×</span>
+      </div>
+      <div class="schema-body">
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:6px;margin-bottom:4px;font-size:10px;color:var(--text3);text-transform:uppercase;padding:0 2px">
+          <span>field name</span><span>type</span>
+        </div>
+        ${(s.fields||[]).map((f,fi)=>`
+          <div class="field-row">
+            <input type="text" value="${esc(f.name)}" placeholder="fieldName" oninput="S.schemas[${si}].fields[${fi}].name=this.value;refresh()" style="width:160px;flex:none;color:var(--text);font-size:12px">
+            <input type="text" value="${esc(f.type)}" placeholder="string | number | boolean | Type[]" oninput="S.schemas[${si}].fields[${fi}].type=this.value;refresh()" style="flex:1;color:var(--text2);font-size:12px">
+            <span class="list-item-del" onclick="S.schemas[${si}].fields.splice(${fi},1);renderSchemas();refresh()" style="cursor:pointer;color:var(--text3);font-size:14px;padding:0 6px">×</span>
+          </div>`).join('')}
+        <button class="add-btn" onclick="S.schemas[${si}].fields.push({name:'',type:''});renderSchemas();refresh()" style="font-size:11px">+ field</button>
+      </div>
+    </div>`).join('');
+}
+function addSchema(){ S.schemas.push({id:'',fields:[{name:'',type:''}]}); renderSchemas(); refresh(); }
+
+// ── Enforcement Gates ──
+function renderGates(){
+  const el = document.getElementById('enforcement-list');
+  el.innerHTML = S.gates.map((g,i)=>`
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:110px 130px 1fr auto;gap:8px;margin-bottom:8px;align-items:center">
+        <input type="text" value="${esc(g.id)}" placeholder="GATE-XXX-001" oninput="S.gates[${i}].id=this.value;refresh()" style="color:var(--amber);font-size:12px">
+        <input type="text" value="${esc(g.name)}" placeholder="gate-name" oninput="S.gates[${i}].name=this.value;refresh()" style="font-size:12px">
+        <input type="text" value="${esc(g.description)}" placeholder="What this gate enforces..." oninput="S.gates[${i}].description=this.value;refresh()">
+        <span class="list-item-del" onclick="S.gates.splice(${i},1);renderGates();refresh()" style="cursor:pointer;color:var(--text3);font-size:14px">×</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 90px;gap:8px">
+        <div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">check</div>
+          <input type="text" value="${esc(g.check)}" placeholder="what to verify..." oninput="S.gates[${i}].check=this.value;refresh()" style="font-size:12px;color:var(--green)">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">on_failure</div>
+          <input type="text" value="${esc(g.on_failure)}" placeholder="build failure | log warning | continue" oninput="S.gates[${i}].on_failure=this.value;refresh()" style="font-size:12px">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">severity</div>
+          <select onchange="S.gates[${i}].severity=this.value;refresh()" style="font-size:12px">
+            <option value="fatal" ${g.severity==='fatal'?'selected':''}>fatal</option>
+            <option value="warning" ${g.severity==='warning'?'selected':''}>warning</option>
+            <option value="info" ${g.severity==='info'?'selected':''}>info</option>
+          </select>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function addGate(){
+  const n = ++gateCounter;
+  S.gates.push({id:`GATE-XXX-00${n}`,name:'',description:'',severity:'fatal',check:'',on_failure:'build failure'});
+  renderGates(); refresh();
+}
+
+// ── Seams ──
+function renderSeams(){
+  const el = document.getElementById('seams-list');
+  el.innerHTML = S.seams.map((s,i)=>`
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:150px 1fr auto;gap:8px;margin-bottom:8px">
+        <input type="text" value="${esc(s.name)}" placeholder="SEAM_NAME" oninput="S.seams[${i}].name=this.value;refresh()" style="color:var(--blue);font-size:12px;font-weight:600">
+        <input type="text" value="${esc(s.description)}" placeholder="What this seam connects..." oninput="S.seams[${i}].description=this.value;refresh()">
+        <span class="list-item-del" onclick="S.seams.splice(${i},1);renderSeams();refresh()" style="cursor:pointer;color:var(--text3);font-size:14px">×</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">provider module</div>
+          <input type="text" value="${esc(s.provider)}" placeholder="module-name" oninput="S.seams[${i}].provider=this.value;refresh()" style="font-size:12px">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">consumer module</div>
+          <input type="text" value="${esc(s.consumer)}" placeholder="module-name" oninput="S.seams[${i}].consumer=this.value;refresh()" style="font-size:12px">
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;margin-bottom:3px">contract (exported interface)</div>
+        <textarea oninput="S.seams[${i}].contract=this.value;refresh()" style="min-height:60px;font-size:12px;color:var(--green)">${esc(s.contract||'')}</textarea>
+      </div>
+    </div>`).join('');
+}
+function addSeam(){
+  S.seams.push({name:'',description:'',provider:'',consumer:'',contract:''});
+  renderSeams(); refresh();
+}
+
+// ── Progress ──
+function updateProgress(){
+  const sections=['meta','axioms','deps','constraints','modules','events','schemas','enforcement','seams'];
+  let filled=0;
+  if(S.meta.name&&S.meta.version) filled++;
+  if(S.axioms.some(a=>a)) filled++;
+  if(S.deps.some(d=>d.name)) filled++;
+  if(S.constraints.length) filled++;
+  if(S.modules.length) filled++;
+  if(S.events.length) filled++;
+  if(S.schemas.length) filled++;
+  if(S.gates.length) filled++;
+  if(S.seams.length) filled++;
+  document.getElementById('progress-fill').style.width = (filled/sections.length*100)+'%';
+
+  // mark complete in nav
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    const sec = n.dataset.sec;
+    if(!sec) return;
+    let done=false;
+    if(sec==='meta') done=!!(S.meta.name&&S.meta.version);
+    if(sec==='axioms') done=S.axioms.some(a=>a);
+    if(sec==='deps') done=S.deps.some(d=>d.name);
+    if(sec==='constraints') done=S.constraints.length>0;
+    if(sec==='modules') done=S.modules.length>0;
+    if(sec==='events') done=S.events.length>0;
+    if(sec==='schemas') done=S.schemas.length>0;
+    if(sec==='enforcement') done=S.gates.length>0;
+    if(sec==='seams') done=S.seams.length>0;
+    if(!n.classList.contains('active')) n.classList.toggle('complete',done);
+  });
+}
+
+// ── YAML output ──
+function genUUID(name){
+  const slug = (name||'unknown').replace(/[^a-z0-9]/gi,'-').toLowerCase().slice(0,20);
+  return `${slug}-v1-0000-${new Date().getFullYear()}-0000-000000000001`;
+}
+function esc(s){ return (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escYaml(s){ return (s||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"'); }
+
+function buildYAML(){
+  const m = S.meta;
+  const ind=(n,s)=>' '.repeat(n)+s;
+  const lines=[];
+  lines.push('spec:','');
+  lines.push(ind(2,'meta:'));
+  if(m.name) lines.push(ind(4,`name:        ${m.name}`));
+  if(m.version) lines.push(ind(4,`version:     ${m.version}`));
+  if(m.author) lines.push(ind(4,`author:      ${m.author}`));
+  lines.push(ind(4,`uuid:        ${m.uuid||genUUID(m.name)}`));
+  lines.push(ind(4,`status:      ${m.status||'active'}`));
+  if(m.description){
+    lines.push(ind(4,'description: >'));
+    m.description.split('\n').forEach(l=>lines.push(ind(6,l)));
+  }
+  if(m.tagline) lines.push(ind(4,`tagline:     "${escYaml(m.tagline)}"`));
+  if(m.runtime?.length) lines.push(ind(4,`target_runtime: [${m.runtime.join(', ')}]`));
+  if(m.lang?.length) lines.push(ind(4,`language_stack: [${m.lang.join(', ')}]`));
+  if(m.paradigm?.length) lines.push(ind(4,`paradigm: [${m.paradigm.join(', ')}]`));
+
+  if(S.deps.some(d=>d.name)){
+    lines.push(ind(4,'deps:'));
+    S.deps.filter(d=>d.name).forEach(d=>{
+      lines.push(ind(6,`- name: ${d.name}`));
+      if(d.version) lines.push(ind(8,`version: "${escYaml(d.version)}"`));
+      if(d.required!==undefined) lines.push(ind(8,`required: ${d.required}`));
+      if(d.purpose) lines.push(ind(8,`purpose: ${d.purpose}`));
+    });
+  }
+
+  if(S.constraints.some(c=>c.id)){
+    lines.push(ind(4,'constraints:'));
+    S.constraints.filter(c=>c.id).forEach(c=>{
+      lines.push(ind(6,`- id: ${c.id}`));
+      if(c.description) lines.push(ind(8,`description: ${c.description}`));
+      lines.push(ind(8,`type: ${c.type||'hard'}`));
+      if(c.enforced_by) lines.push(ind(8,`enforced_by: [${c.enforced_by}]`));
+    });
+  }
+
+  if(S.axioms.some(a=>a)){
+    lines.push(ind(4,'axioms:'));
+    S.axioms.filter(a=>a).forEach(a=>lines.push(ind(6,`- "${escYaml(a)}"`)));
+  }
+
+  lines.push('');
+
+  if(S.modules.length){
+    lines.push(ind(2,'modules:'),'');
+    S.modules.forEach(mod=>{
+      lines.push(ind(4,`- id:    ${mod.id||'MOD-UNNAMED'}`));
+      if(mod.name) lines.push(ind(6,`name:  ${mod.name}`));
+      lines.push(ind(6,`uuid:  ${mod.uuid||genUUID(mod.name||mod.id)}`));
+      if(mod.description){
+        lines.push(ind(6,'description: >'));
+        mod.description.split('\n').forEach(l=>lines.push(ind(8,l)));
+      }
+      const fns = [
+        ['exports',mod.exports,e=>`"${escYaml(e)}"`],
+        ['gate_pipeline',mod.gate_pipeline,g=>`"${escYaml(g)}"`],
+        ['behavioral_contracts',mod.behavioral_contracts,c=>c],
+        ['error_paths',mod.error_paths,e=>e],
+      ];
+      fns.forEach(([key,arr,fmt])=>{
+        if(arr?.some(x=>(typeof x==='string'?x:x.name))){
+          lines.push(ind(6,`${key}:`));
+          arr.filter(x=>(typeof x==='string'?x:x.name)).forEach(x=>lines.push(ind(8,`- ${fmt(typeof x==='string'?x:x.name)}`)));
+        }
+      });
+      if(mod.deps?.some(d=>d.name)){
+        lines.push(ind(6,'deps:'));
+        mod.deps.filter(d=>d.name).forEach(d=>lines.push(ind(8,`- name: ${d.name}`)));
+      }
+      lines.push('');
+    });
+  }
+
+  if(S.events.some(g=>g.namespace)){
+    lines.push(ind(2,'events:'));
+    S.events.filter(g=>g.namespace).forEach(g=>{
+      lines.push(ind(4,`${g.namespace}:`));
+      (g.entries||[]).filter(e=>e).forEach(e=>lines.push(ind(6,`- ${e}`)));
+    });
+    lines.push('');
+  }
+
+  if(S.schemas.some(s=>s.id)){
+    lines.push(ind(2,'schemas:'),'');
+    S.schemas.filter(s=>s.id).forEach(s=>{
+      lines.push(ind(4,`- id:    ${s.id}`));
+      if(s.fields?.some(f=>f.name)){
+        lines.push(ind(6,'fields:'));
+        s.fields.filter(f=>f.name).forEach(f=>{
+          const pad = ' '.repeat(Math.max(1,20-f.name.length));
+          lines.push(ind(8,`${f.name}:${pad}${f.type||'string'}`));
+        });
+      }
+      lines.push('');
+    });
+  }
+
+  if(S.gates.some(g=>g.id)){
+    lines.push(ind(2,'enforcement:'));
+    lines.push(ind(4,'gates:'));
+    S.gates.filter(g=>g.id).forEach(g=>{
+      lines.push(ind(6,`- id: ${g.id}`));
+      if(g.name) lines.push(ind(8,`name: ${g.name}`));
+      if(g.description) lines.push(ind(8,`description: ${g.description}`));
+      lines.push(ind(8,`severity: ${g.severity||'fatal'}`));
+      if(g.check) lines.push(ind(8,`check: ${g.check}`));
+      if(g.on_failure) lines.push(ind(8,`on_failure: ${g.on_failure}`));
+    });
+    lines.push('');
+  }
+
+  if(S.seams.some(s=>s.name)){
+    lines.push(ind(2,'seams:'),'');
+    S.seams.filter(s=>s.name).forEach(s=>{
+      lines.push(ind(4,`- name: ${s.name}`));
+      if(s.description) lines.push(ind(6,`description: ${s.description}`));
+      if(s.provider) lines.push(ind(6,`provider: ${s.provider}`));
+      if(s.consumer) lines.push(ind(6,`consumer: ${s.consumer}`));
+      if(s.contract){
+        lines.push(ind(6,'contract: >'));
+        s.contract.split('\n').forEach(l=>lines.push(ind(8,l)));
+      }
+      lines.push('');
+    });
+  }
+
+  return lines.join('\n');
+}
+
+function syntaxHighlight(yaml){
+  return yaml
+    .replace(/^(\s*)(#.*)$/gm,(_,sp,c)=>`${sp}<span class="spec-comment">${c}</span>`)
+    .replace(/^(\s*)([\w_]+)(\s*:)(\s*)/gm,(_,sp,k,colon,after)=>`${sp}<span class="spec-key">${k}</span>${colon}${after}`)
+    .replace(/"([^"]+)"/g,`<span class="spec-string">"$1"</span>`)
+    .replace(/(GATE-[A-Z0-9-]+)/g,`<span class="spec-gate">$1</span>`)
+    .replace(/^\s+- /gm,m=>`${m}`);
+}
+
+function computeStats(){
+  const avgDepth = S.modules.length ? S.modules.reduce((s,m)=>s+specDepth(m),0)/S.modules.length : 0;
+  const evtCount = S.events.reduce((s,g)=>s+(g.entries||[]).filter(e=>e).length,0);
+  const gaps = S.modules.filter(m=>specDepth(m)<0.5).length;
+  return { depth:avgDepth.toFixed(2), mods:S.modules.length, evts:evtCount, gaps };
+}
+
+function refresh(){
+  const yaml = buildYAML();
+  document.getElementById('output-pre').innerHTML = syntaxHighlight(yaml);
+  const stats = computeStats();
+  document.getElementById('stat-depth').textContent = stats.depth;
+  document.getElementById('stat-mods').textContent = stats.mods;
+  document.getElementById('stat-evts').textContent = stats.evts;
+  document.getElementById('sw-stat-gaps').textContent = stats.gaps;
+  updateProgress();
+}
+
+function copyOutput(){
+  const yaml = buildYAML();
+  navigator.clipboard.writeText(yaml).then(()=>{
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'copied!';
+    setTimeout(()=>btn.textContent=orig,1500);
+  }).catch(()=>{
+    const ta = document.createElement('textarea');
+    ta.value=yaml; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  });
+}
+
+function downloadSpec(){
+  const name = (S.meta.name||'my-spec').replace(/[^a-z0-9-]/gi,'-').toLowerCase();
+  const blob = new Blob([buildYAML()],{type:'text/plain'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=name+'.spec';
+  a.click();
+}
+
+refresh();
+
+async function saveToIdearium(){
+  if (!S.meta.name) { toast('meta → name is required before saving','err'); goTo('meta'); return; }
+  try {
+    // §CHANGED 2026-09-21 — James: "specs are supposed to use the same repo
+    // compartments." This used to POST /api/specs (the legacy 9-section store,
+    // which has no repo) then jump to the Spec Library. That library is gone,
+    // and a legacy spec is not reachable from a repo. The wizard's output is a
+    // real .spec document, so it is saved AS one: a repo, in its own
+    // compartment, holding <name>.spec. Same RepoLayer.ingest() every other
+    // repo goes through (POST /api/repos, files[]); ensureCompartment asks
+    // the server to make the compartment, exactly as it does for a spec made
+    // from an idea.
+    const fname = (S.meta.name.replace(/[^a-z0-9._-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'spec') + '.spec';
+    const res = await api('/api/repos', { method:'POST', body: JSON.stringify({
+      name: S.meta.name,
+      files: [{ path: fname, content: buildYAML() }],
+      source: 'spec-wizard',
+      ensureCompartment: true,
+    }) });
+    toast('saved "' + S.meta.name + '" as a repo (' + fname + ')', 'ok');
+    await Promise.all([loadSpecs(), loadApiRepos()]);
+    setView('repo');                       // setView('repo') resets to the library grid...
+    if (res.repo && res.repo.uuid) enterRepoDetail(res.repo.uuid);   // ...so enter the new repo after it
+  } catch(e) { toast('save failed: ' + e.message, 'err'); }
+}
+</script>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ADD IDEA MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">+ New Idea</div>
+    <div class="field-group">
+      <div class="field-label">text — the idea itself</div>
+      <textarea class="field-textarea" id="f-text" placeholder="track what caused what, with meaning and conditions"></textarea>
+    </div>
+    <div class="field-group">
+      <div class="field-label">tags (comma separated)</div>
+      <input class="field-input" id="f-tags" placeholder="causality, nexus, versionium">
+    </div>
+    <div class="field-group">
+      <div class="field-label">compartment (optional)</div>
+      <input class="field-input" id="f-compartment" placeholder="e.g. cortex, guardian, bridge">
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeModal()">cancel</button>
+      <button class="modal-btn confirm" onclick="submitIdea()">add idea</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Spec — template picker (architecture/schemas/checklists/axioms/
+     compartments/genesis/...), build-engine selector (WARP as build logic),
+     and a "map to repo now" fast path for map-first templates
+     (compartments/axioms) that promotes immediately instead of waiting for
+     every chunk to build. Opened from Brainstorm ("+ spec" on a captured
+     thought) and from the Spec Library ("+ new spec"). -->
+<div class="modal-overlay" id="new-spec-modal">
+  <div class="modal">
+    <div class="modal-title">+ New Spec</div>
+    <div class="field-group">
+      <div class="field-label">name <span class="req">*</span></div>
+      <input class="field-input" id="ns-name" placeholder="what is this?">
+    </div>
+    <div class="field-group">
+      <div class="field-label">description</div>
+      <textarea class="field-textarea" id="ns-description" rows="2" placeholder="optional — more context for the agent-built chunks"></textarea>
+    </div>
+    <div class="field-group">
+      <!-- §FILE-TREE-FIRST 2026-09-21 — on by default: the spec's chunks are
+           the project's files (kernel / engine / runtime / test), planned
+           before any content is built. Off = the document-section spec. -->
+      <label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:11px;cursor:pointer">
+        <input type="checkbox" id="ns-file-tree" checked onchange="onNewSpecTemplateChange()" style="margin-top:2px">
+        <span><b style="color:var(--text)">plan the file tree first</b><br>
+        <span style="color:var(--text3)">the agent lists every file by layer — kernel, engine, runtime, test — then builds them bottom-up. A COS template supplies real starting files.</span></span>
+      </label>
+      <div class="field-label">architecture &amp; features — select any combination</div>
+      <div id="ns-templates" style="display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto;border:1px solid var(--b1);border-radius:4px;padding:8px;background:var(--bg2)"></div>
+      <div class="field-hint" id="ns-templates-hint" style="font-size:10px;color:var(--text3);margin-top:4px">COS templates start the file tree with real files. Spec-document templates apply when "plan the file tree first" is off.</div>
+    </div>
+    <div class="field-group">
+      <div class="field-label">build logic</div>
+      <select class="field-select" id="ns-build-engine">
+        <option value="auto">Auto — WARP cache when available, silent fallback to direct agent</option>
+        <option value="warp">WARP (required) — fails loud if WARP isn't loaded, never silently downgrades</option>
+        <option value="direct">Direct agent — skip WARP's cache on purpose (e.g. forced fresh rebuild)</option>
+      </select>
+    </div>
+    <div class="modal-actions" style="flex-wrap:wrap">
+      <button class="modal-btn" onclick="closeNewSpecModal()">cancel</button>
+      <button class="modal-btn confirm" id="ns-map-btn" style="display:none" onclick="submitNewSpec(true)">create + map to repo now</button>
+      <button class="modal-btn confirm" onclick="submitNewSpec(false)">create spec</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Project — name/goal prompt (declares the temp compartment's
+     end-state) -> dropzone -> "Import Repository", generates manifest.json/
+     project.json/.git via lib/project-container.js, then opens the repo
+     view scoped to the new repo. Opened from the Spec Library, next to
+     "+ new spec" — a project is a real repo compartment from the start,
+     same as a spec-first repo, just seeded from an existing zip instead
+     of built chunk-by-chunk. -->
+<div class="modal-overlay" id="delete-repo-modal">
+  <div class="modal">
+    <div class="modal-title" style="color:var(--coral,#ff5c5c)">Delete Repository</div>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--text3);line-height:1.6;margin:0 0 14px">
+      This permanently deletes <strong id="delete-repo-name" style="color:var(--text)"></strong> — content, compartment, history.
+      This cannot be undone.
+    </p>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--text3);margin:0 0 6px">Type <strong style="color:var(--text)">delete</strong> to continue:</p>
+    <input type="text" id="delete-repo-confirm-input" oninput="_onDeleteRepoInput()" placeholder="delete" autocomplete="off" style="width:100%;box-sizing:border-box;font-family:var(--mono);font-size:12px;padding:8px 10px;background:var(--b0);border:1px solid var(--b1);border-radius:5px;color:var(--text)">
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeDeleteRepoModal()">cancel</button>
+      <button class="modal-btn danger" id="delete-repo-confirm-btn" disabled onclick="confirmDeleteRepo()">delete repository</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="upload-project-modal">
+  <div class="modal">
+    <div class="modal-title">Upload Project</div>
+
+    <div id="up-step-prompt">
+      <div class="field-group">
+        <div class="field-label">name <span class="req">*</span></div>
+        <input class="field-input" id="up-name" placeholder="e.g. checkout-service">
+      </div>
+      <div class="field-group">
+        <div class="field-label">goal <span class="req">*</span></div>
+        <textarea class="field-textarea" id="up-goal" rows="2" placeholder="what should be true once this is imported and worked on?"></textarea>
+        <div class="field-hint" style="font-size:10px;color:var(--text3);margin-top:4px">becomes the compartment's declared end-state — evaluated against the real repo, manifest, and commit once import finishes</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">example goals — click to use</div>
+        <div id="up-chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="closeUploadProjectModal()">cancel</button>
+        <button class="modal-btn confirm" onclick="submitUploadProjectStart()">continue →</button>
+      </div>
+    </div>
+
+    <div id="up-step-drop" style="display:none">
+      <div class="field-hint" id="up-container-note" style="font-size:10px;color:var(--text3);margin-bottom:8px"></div>
+      <div class="project-drop" id="up-drop" onclick="document.getElementById('up-file-input').click()">
+        <span class="pd-big">⬇</span>
+        <span id="up-drop-text">drop a .zip archive, or click to choose one</span>
+      </div>
+      <input type="file" id="up-file-input" accept=".zip" style="display:none" onchange="stageUploadProjectFile(this.files[0])">
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="cancelUploadProject()">cancel</button>
+        <button class="modal-btn confirm" id="up-import-btn" disabled onclick="submitUploadProjectImport()">import repository</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §BUILT 2026-09-20 — Create repo modal. Real, distinct from Import
+     above: no source content, POSTs bare:true to /api/repos. -->
+<div class="modal-overlay" id="create-repo-modal">
+  <div class="modal-box">
+    <div class="modal-title">Create repo</div>
+    <div class="field-group">
+      <div class="field-label">name <span class="req">*</span></div>
+      <input class="field-input" id="cr-name" placeholder="e.g. checkout-service" onkeydown="if(event.key==='Enter')submitCreateRepo()">
+      <div class="field-hint" style="font-size:10px;color:var(--text3);margin-top:4px">starts empty — a real repo with nothing built yet, not a template or placeholder content</div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeCreateRepoModal()">cancel</button>
+      <button class="modal-btn confirm" id="cr-create-btn" onclick="submitCreateRepo()">create repo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Generic themed text-prompt — replaces native prompt() for spec name /
+     gap description / archive reason, so they match the rest of the UI
+     instead of dropping into an OS dialog. -->
+<div class="modal-overlay" id="prompt-modal">
+  <div class="modal">
+    <div class="modal-title" id="prompt-modal-title">input</div>
+    <div class="field-group">
+      <div class="field-label" id="prompt-modal-label"></div>
+      <textarea class="field-textarea" id="prompt-modal-input" rows="2"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closePromptModal(null)">cancel</button>
+      <button class="modal-btn confirm" onclick="closePromptModal(document.getElementById('prompt-modal-input').value)">ok</button>
+    </div>
+  </div>
+</div>
+
+<!-- §BUILT 2026-09-20 — Diagnose results. Reads two endpoints that already
+     exist and already return real data: GET /api/repos/:uuid/verification
+     (the import pipeline's own L0-L8 tier results, merged with verify-lazy's
+     L6-L8) and GET /api/repos/:uuid/scan (repo/scan.js). Nothing computed
+     client-side — if a tier is absent, it says absent. -->
+<div class="modal-overlay" id="repo-diagnose-modal">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-title" id="repo-diagnose-title">Diagnose</div>
+    <div id="repo-diagnose-body" style="max-height:60vh;overflow-y:auto;font-size:11px;line-height:1.7"></div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeRepoDiagnose()">close</button>
+      <button class="modal-btn confirm" id="repo-diagnose-reindex" onclick="repoDiagnoseReindex()">re-run pipeline</button>
+    </div>
+  </div>
+</div>
+
+<!-- §INJECT 2026-09-21 — the .inject editor. Proposed content is editable
+     until applied; "current" shows the file as it is now for comparison.
+     Logic in js/app.js openInjectEditor(). -->
+<div class="modal-overlay" id="inject-editor-modal">
+  <div class="modal" style="max-width:900px;width:90vw">
+    <div class="modal-title" id="inj-ed-title">inject</div>
+    <div id="inj-ed-meta" style="font-size:9px;opacity:.6;margin-bottom:6px"></div>
+    <textarea id="inj-ed-content" spellcheck="false" style="width:100%;height:46vh;font-family:var(--mono,monospace);font-size:11px;line-height:1.5;tab-size:2;white-space:pre;background:var(--bg2,#0b1220);color:inherit;border:1px solid var(--b1);border-radius:3px;padding:8px;box-sizing:border-box"></textarea>
+    <pre id="inj-ed-current" style="display:none;max-height:28vh;overflow:auto;font-size:10px;opacity:.75;border:1px dashed var(--b1);border-radius:3px;padding:8px;margin-top:6px;white-space:pre"></pre>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="toggleInjectCurrent()">current file</button>
+      <button class="modal-btn" onclick="closeInjectEditor()">close</button>
+      <button class="modal-btn" id="inj-ed-reject" onclick="agentInjectAction(INJECT_EDITOR_ID,'reject')">reject</button>
+      <button class="modal-btn" id="inj-ed-revert" onclick="agentInjectAction(INJECT_EDITOR_ID,'revert')">revert</button>
+      <button class="modal-btn" id="inj-ed-save" onclick="saveInjectEditor(false)">save</button>
+      <button class="modal-btn confirm" id="inj-ed-apply" onclick="saveInjectEditor(true)">save + apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- Spec builder choice — quick (existing section grid) vs full wizard
+     (meta/axioms/deps/modules/events/schemas/enforcement/seams, matches the
+     real .spec dialect used across the ecosystem, not the generic 9 sections). -->
+<div class="modal-overlay" id="spec-choice-modal">
+  <div class="modal">
+    <div class="modal-title">Build a Spec</div>
+    <div class="modal-actions" style="flex-direction:column;gap:8px;align-items:stretch">
+      <button class="modal-btn confirm" onclick="closeSpecChoice(); newSpecPrompt()">quick — pick templates; creates the spec as a repo in its own compartment</button>
+      <button class="modal-btn confirm" onclick="closeSpecChoice(); setView('spec-wizard')">full wizard — meta, axioms, deps, modules, events, schemas, enforcement, seams</button>
+      <button class="modal-btn" onclick="closeSpecChoice()">cancel</button>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="toast-area" id="toast-area"></div>
+
+<link rel="stylesheet" href="css/agent-blocks.css">
+<script src="js/app.js"></script>
+<script src="js/agent-blocks.js"></script>
+</body>
+</html>

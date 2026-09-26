@@ -1,0 +1,75 @@
+envelope: 1
+uuid: nexus-export-schema-injection
+type: schema
+id: injection
+context: >-
+  copilot/schemas — sovereign local copy. Origin: lib/node-schemas/schema.injection (shared
+  canonical version, may have moved on independently since this copy was made — sovereignty
+  means copilot does not depend on it at runtime, not that the two can never drift). This is
+  also the ONLY real construction site (copilot/tool-runtime.js), so this sovereign copy is
+  the origin, not a downstream copy of behavior defined elsewhere.
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789269378487
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    One real, exact construction site, checked directly: copilot/tool-runtime.js's makeNcpCallModel's
+    inner callModel — the exact function v0.39.122 ("mountain" fix) patched. Every call computes
+    primed = _isFreshlyPrimed(opts.provider), then either reuses convo alone (primed) or builds
+    fullPrompt = [system, _toolInstructions(scoped, {guide:true}), convo].join('\n\n') (not primed) —
+    the real, single place text gets prepended to an outbound NCP dispatch. copilot/tool-runtime.js's
+    makeOllamaCallModel was checked and excluded: ollama-bridge's /api/chat takes a native `tools`
+    param (toolSchemas passed straight through to dispatch()), so that path never text-injects a tool
+    guide at all — there is no second real injection site to fold in.
+  fields:
+    provider:
+      type: string
+      required: true
+      description: >-
+        real target provider this dispatch iteration resolved to — opts.provider as passed into
+        makeNcpCallModel's callModel; 'auto' or unresolved is recorded as-is, never guessed
+    primed:
+      type: boolean
+      required: true
+      description: >-
+        real _isFreshlyPrimed(provider) result for this call — true means convo alone was sent,
+        false means system + tool guide were rebuilt and prepended
+    injectedSystemPrompt:
+      type: boolean
+      required: true
+      description: 'real: whether `system` (messages.find(role===''system'').content) was included this call — always equal to !primed'
+    injectedToolGuide:
+      type: boolean
+      required: true
+      description: >-
+        real: whether _toolInstructions(scoped, {guide:true}) was included this call — recorded as
+        its own field, not folded into injectedSystemPrompt, because the two were two independently-
+        built, previously-uncoordinated pieces (the exact stacking cause of the v0.39.122 bug) — kept
+        distinguishable in case they diverge again
+    toolCount:
+      type: number
+      required: true
+      description: real scoped.length — the number of tools actually offered this call, after opts.toolScope narrowing
+    promptLength:
+      type: number
+      required: true
+      description: >-
+        real fullPrompt.length actually sent this call — the exact figure the mountain bug was
+        measured in (61,809 vs 16,039 chars for the duplicated-guide case)
+    idleMsThreshold:
+      type: number
+      required: true
+      description: >-
+        real PROVIDER_IDLE_MS constant used for this decision (120000, matches clear-glass/src/
+        providers/host.js's own IDLE_TIMEOUT_MS) — recorded so the record explains its own threshold
+        without needing the source read
+    msSinceLastPrimed:
+      type: number
+      required: false
+      description: >-
+        real (Date.now() - _lastPrimedAt.get(provider)) at decision time — the actual evidence behind
+        primed; absent when provider was never primed before (map had no entry)

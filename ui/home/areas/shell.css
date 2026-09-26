@@ -1,0 +1,66 @@
+/* ui/home/areas/shell.css — Menu button + overlay, sys-bar heartbeat dots, top-bar, canvas channel host.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* ── Floating menu button — bottom center, always above everything ── */
+#menu-btn{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  z-index:100;pointer-events:auto;
+  display:flex;align-items:center;gap:10px;
+  padding:11px 22px;
+  background:rgba(6,6,16,.85);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:32px;
+  color:rgba(255,255,255,.75);
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.12em;
+  cursor:pointer;
+  backdrop-filter:blur(16px);
+  transition:background .2s,border-color .2s,color .2s,box-shadow .2s;
+  white-space:nowrap;
+}
+#menu-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);color:#fff}
+#menu-btn.open{
+  background:rgba(10,10,24,.92);border-color:var(--ac-border-hi);color:var(--ac);
+  box-shadow:0 0 24px var(--ac-dim);
+}
+#menu-icon{font-size:15px;transition:transform .35s ease}
+#menu-btn.open #menu-icon{transform:rotate(60deg)}
+#menu-label{transition:color .2s}
+
+/* ── Menu overlay — rises from bottom when open ── */
+#menu-overlay{
+  position:fixed;bottom:72px;left:50%;z-index:90;pointer-events:none;
+  display:flex;flex-direction:column;gap:10px;align-items:center;
+  opacity:0;transform:translateX(-50%) translateY(12px);
+  transition:opacity .25s ease,transform .25s ease;
+  min-width:520px;
+}
+#menu-overlay.open{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+
+/* System status bar — above assistant */
+#sys-bar{
+  display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;
+}
+.spill-group{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.spill{display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);letter-spacing:.07em;text-transform:uppercase}
+.spill-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:all .4s}
+.spill-dot.on{background:var(--ok);animation:dot-live 2.5s ease-in-out infinite}
+.spill-dot.err{background:var(--err)}
+/* Event-driven heartbeat flash — fires when an event arrives from that system */
+.spill-dot.flash{animation:dot-flash .4s ease-out!important}
+@keyframes dot-flash{0%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,136,0),0 0 8px 3px rgba(0,255,136,.9)}50%{box-shadow:0 0 0 6px rgba(0,255,136,0)}100%{opacity:.6;box-shadow:none}}
+.tile-icon.flash{animation:icon-flash .5s ease-out}
+@keyframes icon-flash{0%{filter:drop-shadow(0 0 8px currentColor)}100%{filter:none}}
+
+/* top-bar — only shows when menu open, top of screen */
+#top-bar{
+  position:fixed;top:0;left:0;right:0;height:44px;z-index:90;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;padding:0 18px;gap:12px;
+  pointer-events:none;opacity:0;transition:opacity .25s ease;
+}
+#top-bar.open{opacity:1}
+#ch-name{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.15em;color:#fff}
+#ch-accent{font-family:'Space Mono',monospace;font-size:9px;color:rgba(255,255,255,.3);margin-left:4px}
+
+/* ── Canvas channel ─────────────────────────────────────── */
+#ch-canvas.active{display:flex;flex-direction:column;overflow:hidden}

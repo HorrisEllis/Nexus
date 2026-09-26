@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cg.health
+type: capability
+id: cg.health
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251075988
+source: clear-glass.seam.registry-components:cg.health
+payload:
+  id: cg.health
+  namespace: cg
+  name: health
+  version: 3.0.0
+  grammar:
+    - health
+    - health
+  route:
+    method: GET
+    path: /health
+  intent: []
+  description: Clear Glass health, context count, bus stats
+  params: []
+  tags:
+    - cg
+  permissions:
+    - system
+  hooks: {}

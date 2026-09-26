@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.person_model.forget
+type: capability
+id: copilot.person_model.forget
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730180
+source: copilot.registry-components:copilot.person_model.forget
+payload:
+  id: copilot.person_model.forget
+  namespace: copilot
+  name: person_model.forget
+  version: 2.0.0
+  grammar:
+    - forget that
+  route:
+    method: POST
+    path: /api/person-model/forget
+  intent: []
+  description: Archives a node with a required reason (§0.3 — never a silent delete)
+  params: []
+  tags:
+    - copilot
+    - person-model
+  permissions:
+    - user
+  hooks: {}

@@ -1,0 +1,199 @@
+/* ═══════════════════════════════════════════════════════════
+   ERAVOS CATALOG UI STYLES  v1.0.0
+   catalog/catalog.css
+   Scoped to #eravos-catalog-overlay — no global pollution.
+   ═══════════════════════════════════════════════════════════ */
+
+#eravos-catalog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.62);
+  z-index: 9500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+#eravos-catalog-overlay.open { display: flex; }
+
+#eravos-catalog-box {
+  width: min(900px, 93vw);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg1);
+  border: 1px solid var(--b2);
+  border-radius: 8px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.75);
+  overflow: hidden;
+}
+
+#eravos-catalog-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--b1);
+  background: var(--bg2);
+  flex-shrink: 0;
+}
+
+#eravos-catalog-title {
+  font-family: var(--orb);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--accent);
+  flex: 1;
+}
+
+#eravos-catalog-search {
+  background: var(--bg3);
+  border: 1px solid var(--b2);
+  border-radius: 4px;
+  color: var(--white);
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 5px 9px;
+  outline: none;
+  width: 160px;
+  transition: border-color .15s;
+}
+#eravos-catalog-search:focus { border-color: var(--accent); }
+#eravos-catalog-search::placeholder { color: var(--dim); }
+
+.eravos-catalog-btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .08em;
+  padding: 6px 11px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .15s;
+  opacity: .7;
+}
+.eravos-catalog-btn:hover { background: rgba(0,212,255,.08); opacity: 1; }
+
+#eravos-catalog-close {
+  background: transparent;
+  border: none;
+  color: var(--dim2);
+  font-size: 17px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color .15s;
+}
+#eravos-catalog-close:hover { color: var(--white); }
+
+#eravos-catalog-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.eravos-cat-section-hdr {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .14em;
+  color: var(--dim);
+  margin-bottom: 9px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--b1);
+}
+
+.eravos-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 10px;
+}
+
+.eravos-cat-card {
+  border: 1px solid var(--b2);
+  border-radius: 6px;
+  background: var(--bg2);
+  display: flex;
+  flex-direction: column;
+  transition: border-color .15s, box-shadow .15s;
+  overflow: hidden;
+}
+.eravos-cat-card:hover { border-color: var(--b3); box-shadow: 0 4px 16px rgba(0,0,0,.4); }
+
+.eravos-cat-thumb {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  border-bottom: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+.eravos-cat-body {
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.eravos-cat-label {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.eravos-cat-summary {
+  font-family: var(--mono);
+  font-size: 6.5px;
+  color: var(--dim2);
+  line-height: 1.55;
+  flex: 1;
+}
+
+.eravos-cat-needs {
+  font-family: var(--mono);
+  font-size: 6px;
+  color: var(--dim);
+  letter-spacing: .04em;
+  opacity: .7;
+}
+
+.eravos-cat-source {
+  font-family: var(--mono);
+  font-size: 6px;
+  letter-spacing: .06em;
+  opacity: .5;
+}
+.eravos-cat-source.nexus-build { color: #00ff88; opacity: .8; }
+
+.eravos-cat-add {
+  margin-top: 4px;
+  background: transparent;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: .08em;
+  padding: 6px;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+  opacity: .75;
+}
+.eravos-cat-add:hover { opacity: 1; }
+
+/* Empty state */
+.eravos-cat-empty {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--dim);
+  text-align: center;
+  padding: 40px;
+  letter-spacing: .1em;
+}

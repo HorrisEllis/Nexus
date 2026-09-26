@@ -1,0 +1,148 @@
+{
+  "id": "guardian-v2",
+  "version": "4.0.0-checkpoint",
+  "namespace": "guardian",
+  "port": 7820,
+  "_status": "CHECKPOINT — built for review before replicating this shape to cortex, intelligence, ollama, clear-glass, idearium, loom. Every route below is re-verified against guardian/server.js directly (grep for a real handler), not copied from the v1 contract or guardian.spec's own handshake section unchecked. §HONEST GAP found doing this: guardian.spec's handshake.components (guardian.dispatch → POST /api/guardian/dispatch, guardian.providers → GET /api/guardian/providers, guardian.seam → POST /api/guardian/seam, guardian.ollama.query → POST /api/guardian/ollama) is entirely fictional — none of those four paths exist anywhere in guardian/server.js. Real equivalents substituted below (POST /command is the actual generic dispatch entry — provider is a body field, including 'ollama'; GET /providers, not /api/guardian/providers; GET /seam/queues/* + PUT /seam/sessions/*, not a single POST /seam). Not silently corrected in guardian.spec itself — that's James's file to edit, this just documents the drift found.",
+
+  "primitives": {
+    "Job": {
+      "table": "jobs",
+      "schema": "{ uuid, command, prompt, provider, status, result, gapScore, ts }",
+      "endpoints": {
+        "list":     { "method": "GET",  "path": "/jobs",                    "_confirmed": "guardian/interaction-contract.json (v1, reconciled 2026-09-13)" },
+        "status":   { "method": "GET",  "path": "/status/:jobId" },
+        "response": { "method": "GET",  "path": "/response/:jobId" },
+        "stream":   { "method": "POST", "path": "/stream/:jobId",           "_confirmed": "server.js:1971" },
+        "result":   { "method": "POST", "path": "/result" },
+        "dispatch": { "method": "POST", "path": "/command",                 "body": ["spec", "specText", "provider"], "_confirmed": "server.js:3042" }
+      }
+    },
+    "NCPChannel": {
+      "table": null,
+      "schema": "{ provider, tabId, connected, lastSeen, busy }",
+      "endpoints": {
+        "list":  { "method": "GET",  "path": "/providers" },
+        "spawn": { "method": "POST", "path": "/providers/:name/spawn",      "_confirmed": "server.js:1946" }
+      }
+    },
+    "SeamChunk": {
+      "table": "seam_chunks",
+      "schema": "{ id, specId, tier, prompt, context, gateScore, status }",
+      "endpoints": {
+        "queues":   { "method": "GET", "path": "/seam/queues/*",            "_confirmed": "server.js:1885, startsWith" },
+        "sessions": { "method": "PUT", "path": "/seam/sessions/*",          "_confirmed": "server.js:2082, startsWith" }
+      }
+    },
+    "CFR": {
+      "table": null,
+      "schema": "{ coherence, friction, resonance, entropy, regime, stressCount }",
+      "endpoints": {
+        "state":  { "method": "GET",  "path": "/api/guardian/cfr/state" },
+        "event":  { "method": "POST", "path": "/api/guardian/cfr/event" }
+      }
+    },
+    "Contract": {
+      "endpoints": {
+        "get": { "method": "GET", "path": "/contract" }
+      }
+    }
+  },
+
+  "commands": [
+    {
+      "id": "guardian.dispatch",
+      "grammar": ["guardian dispatch", "dispatch", "d"],
+      "route": { "method": "POST", "path": "/command" },
+      "description": "Dispatch a spec/prompt to a provider (chatgpt, claude, gemini, perplexity, ollama, mistral, deepseek)",
+      "params": [
+        { "name": "specText", "type": "string", "required": true },
+        { "name": "provider", "type": "enum", "values": ["chatgpt", "claude", "gemini", "perplexity", "ollama", "mistral", "deepseek"], "default": "chatgpt" }
+      ]
+    },
+    {
+      "id": "guardian.providers.status",
+      "grammar": ["guardian providers", "providers", "prov"],
+      "route": { "method": "GET", "path": "/providers" },
+      "description": "NCP provider connection status"
+    },
+    {
+      "id": "guardian.providers.spawn",
+      "grammar": ["guardian spawn provider", "spawn provider"],
+      "route": { "method": "POST", "path": "/providers/:name/spawn" },
+      "description": "Spawn a browser tab for a provider that has no active NCP client",
+      "params": [{ "name": "name", "type": "string", "required": true, "in": "path" }]
+    },
+    {
+      "id": "guardian.jobs.list",
+      "grammar": ["guardian jobs", "jobs", "j"],
+      "route": { "method": "GET", "path": "/jobs" },
+      "description": "List jobs by status"
+    },
+    {
+      "id": "guardian.jobs.status",
+      "grammar": ["guardian job status", "job status"],
+      "route": { "method": "GET", "path": "/status/:jobId" },
+      "description": "Status of one dispatched job",
+      "params": [{ "name": "jobId", "type": "string", "required": true, "in": "path" }]
+    },
+    {
+      "id": "guardian.seam.queues",
+      "grammar": ["guardian seam queues", "seam queues"],
+      "route": { "method": "GET", "path": "/seam/queues/*" },
+      "description": "SEAM chunk queue status"
+    },
+    {
+      "id": "guardian.cfr.state",
+      "grammar": ["guardian cfr", "cfr"],
+      "route": { "method": "GET", "path": "/api/guardian/cfr/state" },
+      "description": "Guardian's own CFR coherence/tension/regime snapshot (per-system since the 2026-09-20 ledger split)"
+    }
+  ],
+
+  "sse": {
+    "path": "/events",
+    "bus": "/bus",
+    "emit": "/bus/emit",
+    "events": [
+      "guardian.job.complete", "guardian.job.queued", "guardian.job.dispatched",
+      "guardian.job.failed", "guardian.artifact", "guardian.gaps", "guardian.ledger",
+      "guardian.session.named", "guardian.cfr.gap", "guardian.ncp.connected",
+      "guardian.ncp.disconnected", "guardian.provider.disconnected", "pulse.missed",
+      "contract.structural.fail", "contract.behavioral.fail", "contract.temporal.fail"
+    ]
+  },
+
+  "views": {
+    "dashboard": {
+      "layout": "grid",
+      "regions": {
+        "dispatch": ["DispatchForm"],
+        "status":   ["ProviderList", "JobList"]
+      }
+    }
+  },
+
+  "components": {
+    "DispatchForm": {
+      "data": "guardian.providers.status",
+      "actions": ["guardian.dispatch"],
+      "events": ["guardian.job.dispatched", "guardian.job.complete", "guardian.job.failed"],
+      "_ui_source": "ui/tv-shell/index.html — gd-prov select, gd-prompt textarea, gd-res, gd-provider-status"
+    },
+    "ProviderList": {
+      "data": "guardian.providers.status",
+      "actions": ["guardian.providers.spawn"],
+      "events": ["guardian.ncp.connected", "guardian.ncp.disconnected", "guardian.provider.disconnected"],
+      "live": true,
+      "_ui_source": "ui/tv-shell/index.html — gd-provs-el"
+    },
+    "JobList": {
+      "data": "guardian.jobs.list",
+      "actions": [],
+      "events": ["guardian.job.queued", "guardian.job.dispatched", "guardian.job.complete", "guardian.job.failed"],
+      "live": true,
+      "_ui_source": "ui/tv-shell/index.html — gd-job-count, gd-jobs-el, /api/guardian/events SSE"
+    }
+  }
+}

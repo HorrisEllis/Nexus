@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-16b8055c-5323-456a-a030-8aa31073e61b
+type: bep_pattern
+id: 16b8055c-5323-456a-a030-8aa31073e61b
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"diagnostic.remediation" and "intelligence.command.invoked" co-occur within 5s — 150 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790368266360
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266360
+lastSeenAt: 1790368266360
+fingerprint: null
+payload:
+  uuid: 16b8055c-5323-456a-a030-8aa31073e61b
+  signature: diagnostic.remediation::intelligence.command.invoked
+  patternType: co_occurrence
+  typeA: diagnostic.remediation
+  typeB: intelligence.command.invoked
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 150
+  confidence: 1
+  description: >-
+    "diagnostic.remediation" and "intelligence.command.invoked" co-occur within 5s — 150
+    observations
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790368266308

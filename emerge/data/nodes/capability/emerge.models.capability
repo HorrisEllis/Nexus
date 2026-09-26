@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-emerge.models
+type: capability
+id: emerge.models
+context: emerge/registry-components.js real capability export
+intent: null
+summary: null
+system: emerge
+tags: []
+exported_at: 1789250730121
+source: emerge.registry-components:emerge.models
+payload:
+  id: emerge.models
+  namespace: emerge
+  name: models
+  version: 1.1.0
+  grammar:
+    - models
+    - emerge models
+  route:
+    method: GET
+    path: /api/models
+  intent: []
+  description: Available Ollama models for compilation
+  params: []
+  tags:
+    - emerge
+  permissions:
+    - system
+  hooks: {}

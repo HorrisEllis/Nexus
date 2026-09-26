@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.timeline",
+  "label": "Timeline",
+  "icon": "\ud83d\udcfc",
+  "accent": "#00d4ff",
+  "domain": [
+    "music",
+    "arrangement",
+    "composition"
+  ],
+  "description": "Multi-lane audio arrangement timeline. Drag clips. Zoom. Waveform display.",
+  "permissions": [
+    "audio_out",
+    "audio_in",
+    "bus_publish",
+    "bus_subscribe",
+    "filesystem_read"
+  ],
+  "provides": [
+    "capability.timeline",
+    "capability.clip_store",
+    "capability.seek"
+  ],
+  "requires": [
+    "capability.audio_context"
+  ],
+  "hooks": [
+    {
+      "hook_id": "tl.hook.transport_in",
+      "direction": "in",
+      "event_type": "seq:play",
+      "contract_version": "1.0.0"
+    },
+    {
+      "hook_id": "tl.hook.stop_in",
+      "direction": "in",
+      "event_type": "seq:stop",
+      "contract_version": "1.0.0"
+    },
+    {
+      "hook_id": "tl.hook.clip_play_out",
+      "direction": "out",
+      "event_type": "timeline:clip_play",
+      "contract_version": "1.0.0"
+    }
+  ],
+  "params": {
+    "px_per_sec": {
+      "type": "float",
+      "min": 20,
+      "max": 400,
+      "default": 80,
+      "unit": "px/s"
+    }
+  },
+  "ui": {
+    "type": "horizontal_timeline",
+    "lanes": "dynamic",
+    "waveform": true
+  }
+}

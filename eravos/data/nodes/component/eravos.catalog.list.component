@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-eravos.catalog.list
+type: component
+id: eravos.catalog.list
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789275153030
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153030
+lastSeenAt: 1789275153030
+fingerprint: eravos::GET /api/catalog
+payload:
+  id: eravos.catalog.list
+  uuid: e6b953db-2dac-4ed1-a3da-d99c77fb2fc7
+  namespace: eravos
+  name: catalog.list
+  version: 3.0.0

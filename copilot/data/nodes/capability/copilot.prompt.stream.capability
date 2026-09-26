@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.prompt.stream
+type: capability
+id: copilot.prompt.stream
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730178
+source: copilot.registry-components:copilot.prompt.stream
+payload:
+  id: copilot.prompt.stream
+  namespace: copilot
+  name: prompt.stream
+  version: 2.0.0
+  grammar:
+    - stream ask
+    - cp stream
+  route:
+    method: POST
+    path: /api/prompt/stream
+  intent:
+    - ask
+  description: Streaming SSE prompt — token-by-token, no timeout (P112)
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: copilot.prompt.stream.receive
+        intent:
+          - ask
+        tags:
+          - streaming
+          - sse
+    out:
+      - id: copilot.prompt.stream.chunk
+        wires_to:
+          - ui.copilot.stream
+        tags:
+          - streaming

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-architect.hooks.graph
+type: capability
+id: architect.hooks.graph
+context: architect/registry-components.js real capability export
+intent: null
+summary: null
+system: architect
+tags: []
+exported_at: 1789250730060
+source: architect.registry-components:architect.hooks.graph
+payload:
+  id: architect.hooks.graph
+  namespace: architect
+  name: hooks.graph
+  version: 1.0.0
+  grammar:
+    - hooks graph
+  route:
+    method: GET
+    path: /api/hooks/graph
+  intent: []
+  description: Hook topology graph (json|mermaid)
+  params: []
+  tags:
+    - architect
+  permissions:
+    - system
+  hooks: {}

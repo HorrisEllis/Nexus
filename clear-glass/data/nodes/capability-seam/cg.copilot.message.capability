@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-capability-cg.copilot.message
+type: capability
+id: cg.copilot.message
+context: >-
+  clear-glass/seam/registry-components.js real capability export — a real, distinct,
+  separately-scanned source from clear-glass/registry-components.js (capability-map.js's SYSTEMS map
+  lists 'clear-glass/seam' as its own entry). guardian.node-taxonomy.md's own note: this file is a
+  stale duplicate per capability-map.js's dedupe (same ids, older version in most cases) — kept HERE
+  as its own distinct real record, not merged into or overwriting clear-glass's main capability
+  nodes, so neither real source is silently hidden.
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789251076019
+source: clear-glass.seam.registry-components:cg.copilot.message
+payload:
+  id: cg.copilot.message
+  namespace: cg
+  name: copilot.message
+  version: 3.0.0
+  grammar:
+    - copilot message
+    - copilot-message
+  route:
+    method: POST
+    path: /cmd
+  intent:
+    - ask
+    - build
+    - navigate
+    - diagnose
+    - pick
+  description: Route to Clear Glass co-pilot (Cortex-wired, DOM-aware)
+  params: []
+  tags:
+    - cg
+    - copilot
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: clear-glass.copilot.receive
+        intent:
+          - ask
+          - build
+          - navigate
+          - diagnose
+          - pick
+        contract: nexus-interaction-contract-v1::clear-glass
+        tags:
+          - copilot
+    out:
+      - id: clear-glass.copilot.response.emit
+        wires_to:
+          - cortex.chat.log
+          - cortex.memory.insert
+        tags:
+          - copilot

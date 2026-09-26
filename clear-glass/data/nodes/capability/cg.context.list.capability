@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.context.list
+type: capability
+id: cg.context.list
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730159
+source: clear-glass.registry-components:cg.context.list
+payload:
+  id: cg.context.list
+  namespace: cg
+  name: context.list
+  version: 3.1.0
+  grammar:
+    - context list
+  route:
+    method: GET
+    path: /contexts
+  intent: []
+  description: List agent contexts
+  params: []
+  tags:
+    - cg
+    - context
+  permissions:
+    - system
+  hooks: {}

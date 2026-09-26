@@ -1,0 +1,70 @@
+/* ui/home/areas/rail.css — Channel rail.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* §BUILT 2026-09-20 — wraps #ch-rail + #rail-add-btn so the add-menu
+   dropdown (position:absolute below) anchors to this pair, not the page. */
+#ch-rail-wrap{position:relative;display:flex;align-items:center;gap:8px;pointer-events:auto}
+/* Channel rail — horizontal pill row */
+#ch-rail{
+  display:flex;gap:6px;
+  background:rgba(6,6,16,.88);border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:6px 8px;
+  backdrop-filter:blur(16px);
+}
+.ch-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 14px;border-radius:14px;border:none;
+  background:transparent;color:rgba(255,255,255,.4);
+  font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.07em;
+  cursor:pointer;transition:color .15s,background .15s,transform .08s,box-shadow .15s;
+  white-space:nowrap;position:relative;-webkit-user-select:none;user-select:none;
+}
+.ch-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);transform:translateY(-1px);}
+.ch-btn:active{transform:translateY(1px) scale(0.97);background:rgba(var(--ac-rgb),.12);color:var(--ac);transition-duration:.04s;}
+.ch-btn.on{background:rgba(var(--ac-rgb),.12);color:var(--ac);box-shadow:0 0 0 1px rgba(var(--ac-rgb),.25);}
+.ch-btn.spotlight-rail{
+  color:var(--ac) !important;background:rgba(var(--ac-rgb),.15) !important;
+  box-shadow:0 0 0 1px rgba(var(--ac-rgb),.4), 0 0 14px rgba(var(--ac-rgb),.2) !important;
+  animation:rail-pulse 1.8s ease-in-out infinite;
+}
+@keyframes rail-pulse{
+  0%,100%{box-shadow:0 0 0 1px rgba(var(--ac-rgb),.3);}
+  50%{box-shadow:0 0 0 2px rgba(var(--ac-rgb),.6), 0 0 20px rgba(var(--ac-rgb),.25);}
+}
+.ch-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:all .4s}
+.ch-dot.online{background:var(--ok);animation:dot-live 2.5s ease-in-out infinite}
+
+/* §BUILT 2026-09-20 — James: "make each channel movable, editable,
+   removable, etc." Rendered by renderRail() in index.html; .ch-btn itself
+   is unchanged above, this only adds the drag/edit/remove affordances. */
+.ch-btn{cursor:grab}
+.ch-btn.dragging{opacity:.35;cursor:grabbing}
+.ch-btn.drag-over{box-shadow:inset 2px 0 0 var(--ac),-2px 0 0 var(--ac)}
+.ch-btn-edit,.ch-btn-remove{
+  opacity:0;width:14px;height:14px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;font-size:9px;line-height:1;transition:opacity .12s,background .12s,color .12s;
+  color:rgba(255,255,255,.5);
+}
+.ch-btn:hover .ch-btn-edit,.ch-btn:hover .ch-btn-remove{opacity:1}
+.ch-btn-edit:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9)}
+.ch-btn-remove:hover{background:rgba(255,80,80,.18);color:#ff8080}
+#rail-add-btn{
+  width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.15);
+  background:rgba(6,6,16,.88);color:rgba(255,255,255,.5);font-size:15px;line-height:1;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+#rail-add-btn:hover{color:var(--ac);border-color:var(--ac);background:rgba(var(--ac-rgb),.1)}
+#rail-add-menu{
+  position:absolute;bottom:calc(100% + 8px);right:0;min-width:160px;
+  background:rgba(6,6,16,.95);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  padding:6px;display:none;flex-direction:column;gap:2px;backdrop-filter:blur(16px);
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+#rail-add-menu.open{display:flex}
+.rail-add-item{
+  background:none;border:none;color:rgba(255,255,255,.7);font-family:'Space Mono',monospace;
+  font-size:10px;text-align:left;padding:7px 10px;border-radius:6px;cursor:pointer;transition:all .12s;
+}
+.rail-add-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.rail-add-empty{padding:10px;font-family:'Space Mono',monospace;font-size:9.5px;color:rgba(255,255,255,.35);text-align:center}
+/* ch-rail buttons need pointer-events when rail is visible */
+#ch-rail .ch-btn{pointer-events:auto}

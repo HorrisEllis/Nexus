@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.siteSettings.clear
+type: capability
+id: cg.siteSettings.clear
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730168
+source: clear-glass.registry-components:cg.siteSettings.clear
+payload:
+  id: cg.siteSettings.clear
+  namespace: cg
+  name: siteSettings.clear
+  version: 3.1.0
+  grammar:
+    - siteSettings clear
+  route:
+    method: IPC
+    path: site-settings:clear
+  intent: []
+  description: Clear all real settings for an origin
+  params: []
+  tags:
+    - cg
+    - site-settings
+  permissions:
+    - system
+  hooks: {}

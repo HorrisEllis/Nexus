@@ -1,0 +1,18 @@
+envelope: 1
+uuid: nexus-export-system-clear-glass
+type: system
+id: clear-glass
+context: >-
+  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
+  clear-glass/registry-components.js
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730175
+source: nexus.autopilot.KERNELS + registry-components.js
+payload:
+  id: clear-glass
+  hasCapabilities: true
+  port: 7702
+  spec: clear-glass/spec/clear-glass.spec

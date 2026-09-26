@@ -1,0 +1,64 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.idearium",
+  "name": "idearium",
+  "label": "Idearium",
+  "dir": "idearium",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.idearium",
+    "scope": [
+      "idearium/",
+      "data/idearium/"
+    ],
+    "versionLine": "4.1.0",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.idearium",
+    "axioms": [
+      "cos is the source of all compartments. nothing less."
+    ],
+    "_note_2026_09_20": "This compartmentId (identity-level, per-system) is NOT what 'idearium uses cos' turned out to mean in practice — confirmed with James directly. Real target: idearium spec builds / spawned compilers-workers become real cos compartments (idearium/spec-engine/compiler-t0.js emitStructure(), via lib/agent-tools/tools/sandbox/cos-compartment.js, the same tool copilot already uses), going through cos/host's real SISO gate pipeline, not skipped. This field is left as the shared governing axiom for if/when system-identity-level compartments are built later."
+  },
+  "runtime": {
+    "entry": "idearium/api/index.js",
+    "entryExists": true,
+    "port": 4800,
+    "phase": 3,
+    "critical": false,
+    "optional": false,
+    "healthUrl": "http://127.0.0.1:4800/health"
+  },
+  "data": {
+    "dataDir": "data/idearium",
+    "ledgerDir": "idearium/data/ledger",
+    "nodeIndexDir": "idearium/data/node-index"
+  },
+  "spec": "idearium/spec/",
+  "dependsOn": {
+    "ollama": 2,
+    "intelligence": 3,
+    "cortex": 8
+  },
+  "sharedLibRequires": 25,
+  "stats": {
+    "jsFiles": 33,
+    "jsLines": 13906
+  },
+  "boundaryFindings": {
+    "count": 13,
+    "sample": [
+      "idearium/agent-suite/index.js -> ollama/config.js",
+      "idearium/agent-suite/index.js -> ollama/ollama-runtime",
+      "idearium/api/index.js -> intelligence/spatial/lattice.js",
+      "idearium/api/index.js -> cortex/core/raid",
+      "idearium/api/index.js -> cortex/core/raid",
+      "idearium/api/index.js -> cortex/core/raid",
+      "idearium/api/index.js -> cortex/core/raid",
+      "idearium/api/index.js -> cortex/core/raid",
+      "idearium/index.js -> intelligence/spatial/lattice.js",
+      "idearium/index.js -> intelligence/cfr/ledger"
+    ]
+  }
+}

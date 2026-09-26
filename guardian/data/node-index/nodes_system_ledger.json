@@ -1,0 +1,1 @@
+[{"uuid":"cf670cb8-6e49-4d07-926a-f2a7c3be5006","nodeId":"guardian","type":"system","action":"added","filePath":"/home/claude/work/merged/guardian/data/nodes/system/guardian.system","ts":1789253181848,"id":"92b9fcc1-5d05-4ac7-8371-c7655ce379b6"}]

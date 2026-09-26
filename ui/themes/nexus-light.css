@@ -1,0 +1,22 @@
+/**
+ * ui/themes/nexus-light.css
+ * comp_id: nexus.ui.theme.light
+ * uuid: nexus-theme-light-v1-0000-2026-0627-jamesbrooks-001
+ *
+ * NEXUS Light Theme — swap in for accessibility or presentation contexts.
+ * Overrides the same CSS vars as nexus-dark.css. No other changes needed.
+ */
+
+:root {
+  --void:   #f8f8ff;
+  --ink:    #f0f0f8;
+  --plate:  #e8e8f4;
+  --panel:  #dcdcf0;
+  --edge:   #c4c4e0;
+  --rim:    #b0b0d0;
+  --muted:  #8080b0;
+  --dim:    #6060a0;
+  --text:   #1a1a3a;
+  --bright: #000020;
+  /* Accent and status colors remain the same */
+}

@@ -1,0 +1,17 @@
+envelope: 1
+uuid: nexus-export-system-emerge
+type: system
+id: emerge
+context: >-
+  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
+  emerge/registry-components.js
+intent: null
+summary: null
+system: emerge
+tags: []
+exported_at: 1789250730122
+source: nexus.autopilot.KERNELS + registry-components.js
+payload:
+  id: emerge
+  hasCapabilities: true
+  spec: emerge/spec/emerge.spec

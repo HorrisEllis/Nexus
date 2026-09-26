@@ -1,0 +1,48 @@
+{
+  "id": "diagnostic-v1",
+  "version": "1.0.0",
+  "namespace": "diagnostic",
+  "_built_2026_09_13": "IC10 (docs/2026-08-30-interaction-contract-context-phasemap.spec) — 'pull nexus-diagnostic.js out of its monolith into its own system folder.' The move to diagnostic/ already happened; this file was the missing sovereign-convention piece (every other real system — architect, guardian, cortex, idearium, sentinel, nexus-healer — has one). Routes below are verified directly against diagnostic/nexus-diagnostic.js's real url.pathname checks, not the file's own header comment, which understates the real surface (7 routes claimed, 31 real) — the same class of drift already found and fixed once this session for guardian/interaction-contract.json.",
+  "ports": {
+    "http": 7825
+  },
+  "uuid": "diagnostic-contract-v1-0000-2026-0913-jamesbrooks-001",
+  "role": "System auditing, health/friction/tension monitoring, gap tracking, and self-heal triggering across all sovereign systems",
+  "health": {
+    "method": "GET",
+    "path": "/health",
+    "returns": { "ok": true }
+  },
+  "routes": [
+    { "method": "GET", "path": "/health", "description": "Health check" },
+    { "method": "GET", "path": "/status", "description": "Full system health snapshot" },
+    { "method": "GET", "path": "/cfr/health", "description": "CFR field health" },
+    { "method": "GET", "path": "/cfr/state", "description": "CFR field state" },
+    { "method": "GET", "path": "/cfr/field", "description": "Raw CFR field data" },
+    { "method": "GET", "path": "/audit", "description": "Full audit: requires, syntax, endpoints, ledger health" },
+    { "method": "GET", "path": "/audit/contracts", "description": "Contract-verifier audit" },
+    { "method": "GET", "path": "/audit/health", "description": "Audit-specific health check" },
+    { "method": "GET", "path": "/gaps", "description": "All open gaps across all systems" },
+    { "method": "DELETE", "path": "/gaps/:id", "description": "Dismiss a gap" },
+    { "method": "POST", "path": "/gaps/:id/fix", "description": "Trigger a fix attempt for a gap" },
+    { "method": "GET", "path": "/friction", "description": "Per-system friction scores" },
+    { "method": "GET", "path": "/baseline/:system", "description": "Baseline stats for a system" },
+    { "method": "GET", "path": "/ledger/:system", "description": "Tail of a system's ledger" },
+    { "method": "GET", "path": "/ledger/stream", "description": "SSE stream of ledger writes" },
+    { "method": "GET", "path": "/trace/:x", "description": "Causal trace for a given entity" },
+    { "method": "GET", "path": "/summary/:x", "description": "Summarized diagnostic view" },
+    { "method": "GET", "path": "/decay", "description": "Node/data decay report" },
+    { "method": "GET", "path": "/engines", "description": "Real engine status listing" },
+    { "method": "GET", "path": "/tension", "description": "System-wide tension reading" },
+    { "method": "GET", "path": "/tension/edges", "description": "Tension by relationship edge" },
+    { "method": "GET", "path": "/self-heal", "description": "Self-heal status/history" },
+    { "method": "GET", "path": "/components", "description": "Component registry snapshot" },
+    { "method": "GET", "path": "/components/wires", "description": "Component wire graph" },
+    { "method": "GET", "path": "/seam/map", "description": "SEAM delivery map" },
+    { "method": "GET", "path": "/seam/health", "description": "SEAM delivery health" },
+    { "method": "GET", "path": "/integrity", "description": "Data integrity report" },
+    { "method": "GET", "path": "/integrity/snapshot", "description": "Point-in-time integrity snapshot" },
+    { "method": "POST", "path": "/integrity/accept", "description": "Accept current state as new integrity baseline" },
+    { "method": "GET", "path": "/events", "description": "SSE stream of all diagnostic events" }
+  ]
+}

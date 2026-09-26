@@ -1,0 +1,428 @@
+{
+  "id": "guardian-v1",
+  "version": "3.5.0",
+  "namespace": "guardian",
+  "_reconciled_2026_09_13": "MCO1b — this file and contracts/nexus-interaction-contract.js's SYSTEMS.guardian block had drifted from each other and from guardian/server.js's real routes. Reconciled against server.js directly (grep for every real pathname===/startsWith check), not against either prior file. Findings: (1) both files were partially right, partially stale — neither was the correct source alone. (2) real routes present in server.js but missing from BOTH prior files, now added below: /forge/health, /open/*, /providers/*/spawn, /queue/compartments/*, /cli/exec, /api/guardian/cfr/state, /api/guardian/hooks/summary, /api/guardian/nerve/snapshot, /api/guardian/cfr/event, /api/guardian/organism-queue(+/:id/zip,+/:id/ack), /build, /api/intake(+/verdict,+/promote,+/rollback), /api/copilot/prompt, /chatgpt-mode/query, /command/tools, /wake-job-ack, /guardian-ui/*, /ui/*, /api/account-identity, /channel, /result, /heartbeat, /baseline, /stream/*, /seam/queues/*, /seam/sessions/*, /lab*. (3) a REAL LIVE BUG found, not just doc drift: /memory/ledger, /memory/artifacts, /memory/stats, and bare /ledger were listed here as real routes and are called by real client code (guardian/server.js's own embedded dashboard JS at loadDB()/updateSB(), and guardian/guardian-api.js's memoryStats()/memoryIngest()) — but grepped server.js directly for a handler and none exists. These calls 404 today. Removed from this file's routes (they are not real), left here as a named, open bug for whoever picks it up — implementing the missing handler is out of MCO1's scope (doc-reconciliation only), not silently patched here. (4) contracts/nexus-interaction-contract.js's SYSTEMS.guardian.jobs claimed a per-job route at /jobs/:jobId — wrong; the real per-job routes are /status/:jobId and /response/:jobId, and bare /jobs is a list endpoint, confirmed separately. That central file still needs its own per-system split into MCO3/Track B — this fixes guardian's own copy only.",
+  "ports": {
+    "http": 7820,
+    "wss": 7821,
+    "dropzone": 7822,
+    "memory": 7823
+  },
+  "uuid": "guardian-contract-v1-0000-4000-0000-000000000001",
+  "role": "AI orchestration \u2014 job queue, SISO bus, Forge IDE",
+  "forge_ide": {
+    "path": "/cockpit",
+    "description": "Forge IDE \u2014 SEAM chunker, pipeline, brain, providers"
+  },
+  "health": {
+    "method": "GET",
+    "path": "/health",
+    "returns": {
+      "ok": true,
+      "uptime": 0,
+      "jobs": 0,
+      "providers": {},
+      "queued": {}
+    }
+  },
+  "sse": {
+    "path": "/events",
+    "description": "live job stream"
+  },
+  "siso": {
+    "bus": "/bus",
+    "emit": "/bus/emit",
+    "emits": [
+      "guardian.job.complete",
+      "guardian.artifact",
+      "guardian.gaps",
+      "guardian.job.queued",
+      "guardian.job.dispatched",
+      "guardian.ledger",
+      "guardian.session.named",
+      "guardian.cfr.gap",
+      "contract.structural.fail",
+      "contract.behavioral.fail",
+      "contract.temporal.fail",
+      "guardian.ncp.transcript",
+      "guardian.chat.transcript.recorded",
+      "guardian.job.completed_from_transcript",
+      "guardian.job.gate"
+    ],
+    "consumes": []
+  },
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/health"
+    },
+    {
+      "method": "GET",
+      "path": "/forge/health",
+      "_confirmed": "server.js:1548"
+    },
+    {
+      "method": "GET",
+      "path": "/baseline",
+      "_confirmed": "server.js:1661"
+    },
+    {
+      "method": "GET",
+      "path": "/open/*",
+      "_confirmed": "server.js:1559, startsWith"
+    },
+    {
+      "method": "GET",
+      "path": "/events"
+    },
+    {
+      "method": "GET",
+      "path": "/bus",
+      "params": [
+        "n"
+      ],
+      "description": "SISO bus log"
+    },
+    {
+      "method": "POST",
+      "path": "/bus/emit",
+      "body": [
+        "type",
+        "data"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/command",
+      "body": [
+        "provider",
+        "command",
+        "prompt",
+        "content"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/command/tools",
+      "_confirmed": "server.js:2758"
+    },
+    {
+      "method": "GET",
+      "path": "/jobs",
+      "params": [
+        "status",
+        "limit"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/status/:jobId"
+    },
+    {
+      "method": "GET",
+      "path": "/response/:jobId"
+    },
+    {
+      "method": "GET",
+      "path": "/providers"
+    },
+    {
+      "method": "POST",
+      "path": "/providers/:name/spawn",
+      "_confirmed": "server.js:1946"
+    },
+    {
+      "method": "GET",
+      "path": "/artifacts"
+    },
+    {
+      "method": "GET",
+      "path": "/cockpit",
+      "description": "Forge IDE HTML"
+    },
+    {
+      "method": "GET",
+      "path": "/channel",
+      "description": "NCP — real, server.js:3636",
+      "_confirmed": "server.js:1966"
+    },
+    {
+      "method": "POST",
+      "path": "/result",
+      "description": "NCP",
+      "_confirmed": "server.js:1969"
+    },
+    {
+      "method": "POST",
+      "path": "/heartbeat",
+      "description": "NCP",
+      "_confirmed": "server.js:2061"
+    },
+    {
+      "method": "GET",
+      "path": "/stream/:jobId",
+      "_confirmed": "server.js:1996"
+    },
+    {
+      "method": "POST",
+      "path": "/stream/:jobId",
+      "_confirmed": "server.js:1971"
+    },
+    {
+      "method": "GET",
+      "path": "/seam/queues/*",
+      "_confirmed": "server.js:1885, startsWith"
+    },
+    {
+      "method": "PUT",
+      "path": "/seam/sessions/*",
+      "_confirmed": "server.js:2082, startsWith"
+    },
+    {
+      "method": "PUT",
+      "path": "/queue/compartments/*",
+      "_confirmed": "server.js:2114, startsWith"
+    },
+    {
+      "method": "GET",
+      "path": "/lab*",
+      "description": "Lab Manager",
+      "_confirmed": "server.js:1795, startsWith"
+    },
+    {
+      "method": "POST",
+      "path": "/cli/exec",
+      "_confirmed": "server.js:2250"
+    },
+    {
+      "method": "GET",
+      "path": "/api/guardian/cfr/state",
+      "_confirmed": "server.js:2458"
+    },
+    {
+      "method": "GET",
+      "path": "/api/guardian/hooks/summary",
+      "_confirmed": "server.js:2475"
+    },
+    {
+      "method": "GET",
+      "path": "/api/guardian/nerve/snapshot",
+      "_confirmed": "server.js:2489"
+    },
+    {
+      "method": "POST",
+      "path": "/api/guardian/cfr/event",
+      "_confirmed": "server.js:2500"
+    },
+    {
+      "method": "GET",
+      "path": "/api/guardian/organism-queue",
+      "_confirmed": "server.js:2515"
+    },
+    {
+      "method": "GET",
+      "path": "/api/guardian/organism-queue/:id/zip",
+      "_confirmed": "server.js:2521"
+    },
+    {
+      "method": "POST",
+      "path": "/api/guardian/organism-queue/:id/ack",
+      "_confirmed": "server.js:2530"
+    },
+    {
+      "method": "POST",
+      "path": "/build",
+      "_confirmed": "server.js:2543"
+    },
+    {
+      "method": "GET",
+      "path": "/api/intake",
+      "_confirmed": "server.js:2668"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intake",
+      "_confirmed": "server.js:2621"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intake/verdict",
+      "_confirmed": "server.js:2675"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intake/promote",
+      "_confirmed": "server.js:2683"
+    },
+    {
+      "method": "POST",
+      "path": "/api/intake/rollback",
+      "_confirmed": "server.js:2693"
+    },
+    {
+      "method": "POST",
+      "path": "/api/copilot/prompt",
+      "_confirmed": "server.js:2701"
+    },
+    {
+      "method": "POST",
+      "path": "/chatgpt-mode/query",
+      "_confirmed": "server.js:2739"
+    },
+    {
+      "method": "POST",
+      "path": "/wake-job-ack",
+      "_confirmed": "server.js:2821"
+    },
+    {
+      "method": "GET",
+      "path": "/guardian-ui/*",
+      "_confirmed": "server.js:3109, startsWith"
+    },
+    {
+      "method": "GET",
+      "path": "/ui/*",
+      "_confirmed": "server.js:3121, startsWith"
+    },
+    {
+      "method": "POST",
+      "path": "/api/account-identity",
+      "_confirmed": "server.js:3267"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/health",
+      "description": "CFR field health + regime"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/state",
+      "description": "Full CFR state + graph stats"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/field",
+      "description": "Raw field dimensions"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/nodes",
+      "description": "High-sigma nodes for visualization"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/deltas",
+      "params": [
+        "limit",
+        "minSigma"
+      ],
+      "description": "Recent annotated ledger entries"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/stream",
+      "description": "SSE stream of live ledger entries with CFR"
+    },
+    {
+      "method": "POST",
+      "path": "/cfr/emit",
+      "body": [
+        "type",
+        "payload"
+      ],
+      "description": "Inject synthetic event"
+    },
+    {
+      "method": "GET",
+      "path": "/cfr/replay",
+      "params": [
+        "jobId",
+        "since",
+        "minSigma"
+      ],
+      "description": "Filtered causal replay"
+    },
+    {
+      "method": "GET",
+      "path": "/api/chats",
+      "_confirmed": "server.js _chatTranscripts.route (lib/chat-transcripts.js) — 0.39.254"
+    },
+    {
+      "method": "GET",
+      "path": "/api/chats/versions",
+      "_confirmed": "server.js _chatTranscripts.route (lib/chat-transcripts.js) — 0.39.254"
+    },
+    {
+      "method": "GET",
+      "path": "/api/chats/item/:id",
+      "_confirmed": "server.js _chatTranscripts.route (lib/chat-transcripts.js) — 0.39.254"
+    }
+  ],
+  "cli": {
+    "entry": "guardian/cli.js",
+    "commands": [
+      "/code <provider> <prompt>",
+      "/spec <provider> <file>",
+      "status",
+      "jobs",
+      "providers",
+      "watch <jobId>"
+    ]
+  },
+  "userscripts": [
+    {
+      "file": "guardian/userscript-claude.js",
+      "target": "claude.ai",
+      "install": "Tampermonkey"
+    },
+    {
+      "file": "guardian/userscript-chatgpt.js",
+      "target": "chatgpt.com",
+      "install": "Tampermonkey"
+    }
+  ],
+  "tls": {
+    "cert": "guardian/guardian-cert.pem",
+    "key": "guardian/guardian-key.pem",
+    "note": "visit https://127.0.0.1:7821/ once to accept self-signed cert"
+  },
+  "cfr": {
+    "description": "CFR-\u03a9 field baked into every ledger entry. Every bus.emit is annotated with sigma + delta + frozen CFR snapshot.",
+    "dimensions": [
+      "coherence",
+      "friction",
+      "resonance",
+      "entropy"
+    ],
+    "regimes": [
+      "stable",
+      "resonant",
+      "turbulent",
+      "chaotic"
+    ],
+    "ledger_entry_schema": {
+      "sigma": {
+        "score": "number 0..1",
+        "axes": {
+          "structural": "number",
+          "temporal": "number",
+          "contextual": "number"
+        },
+        "reason": "string"
+      },
+      "delta": {
+        "tension": "number 0..1",
+        "friction": "number 0..1",
+        "slope": "number -1..1"
+      },
+      "cfr": {
+        "coherence": "number 0..1",
+        "friction": "number 0..1",
+        "resonance": "number 0..1",
+        "entropy": "number 0..1",
+        "regime": "string"
+      }
+    }
+  }
+}

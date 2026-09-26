@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-schema-agent
+type: schema
+id: agent
+context: lib/node-schemas - shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789900000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Re-grounded 2026-09-20. `.agent` is an agent MODEL and PERSONALITY with an intent and
+    commands (a repo compartment's living agent maps here: its .hat is the persona, its
+    .intent is what it is for, its commands are what it may issue). It was previously
+    RAID's provider-health snapshot, which is now schema.health. Writer: lib/repo-agent-node.js
+    materialise() (0.39.190; it wrote `.repo_agent` in 0.39.189), proven by a real export/import
+    round trip in tests/modules/test-repo-agent-node.js. REAL for the compartment-agent case;
+    binding to a repo's own .intent node and to .command nodes is not built (intent_ref carries
+    the idea/spec uuid, commands are the hat's toolScope).
+  fields:
+    name:
+      type: string
+      required: true
+      description: the agent's name (for a repo compartment, derived from the repo, as its hat name is)
+    intent:
+      type: string
+      required: true
+      description: what this agent is for - the uuid of its .intent node, or the intent text
+    commands:
+      type: array
+      required: true
+      description: the commands this agent may issue - ids or uuids of .command nodes
+      items: string
+    personality:
+      type: string
+      required: true
+      description: the persona it works under (a hat's composed personaPrompt for a repo agent)
+    hat:
+      type: string
+      required: false
+      description: name or uuid of the .hat this agent maps to
+    scope:
+      type: string
+      required: false
+      description: what the agent is confined to - a compartment id for a repo agent
+    learned:
+      type: array
+      required: false
+      description: observations it has learned working in its scope
+      items: object

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-schema-toolbox
+type: schema
+id: toolbox
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116324013
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/agent-tools/generate-tool-nodes.js — real, live TOOLS registry (lib/agent-tools/index.js) at
+    generation time
+  fields:
+    agent:
+      type: string
+      required: true
+      description: real agent or system this toolbox belongs to (claude/chatgpt/gemini/perplexity today)
+    tools:
+      type: array
+      required: true
+      description: real array of {name, uuid} — uuid points at that tool's own real .tool node file
+    toolCount:
+      type: number
+      required: true
+      description: real count, matches tools.length

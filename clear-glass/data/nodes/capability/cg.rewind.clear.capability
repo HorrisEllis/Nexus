@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.rewind.clear
+type: capability
+id: cg.rewind.clear
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730173
+source: clear-glass.registry-components:cg.rewind.clear
+payload:
+  id: cg.rewind.clear
+  namespace: cg
+  name: rewind.clear
+  version: 3.1.0
+  grammar:
+    - rewind clear
+  route:
+    method: IPC
+    path: rewind:clear
+  intent: []
+  description: Clear real rewind snapshots
+  params: []
+  tags:
+    - cg
+    - rewind
+  permissions:
+    - system
+  hooks: {}

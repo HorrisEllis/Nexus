@@ -1,0 +1,60 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.versionium",
+  "name": "versionium",
+  "label": "Versionium",
+  "dir": "versionium",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.versionium",
+    "scope": [
+      "versionium/"
+    ],
+    "versionLine": "3.2.0",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.versionium",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "versionium/server.js",
+    "entryExists": true,
+    "port": 3754,
+    "phase": 3,
+    "critical": false,
+    "optional": true,
+    "healthUrl": "http://127.0.0.1:3754/health"
+  },
+  "data": {
+    "dataDir": null,
+    "ledgerDir": "versionium/data/ledger",
+    "nodeIndexDir": "versionium/data/node-index"
+  },
+  "spec": "versionium/spec/",
+  "dependsOn": {
+    "intelligence": 4,
+    "cortex": 7,
+    "guardian": 1
+  },
+  "sharedLibRequires": 2,
+  "stats": {
+    "jsFiles": 15,
+    "jsLines": 1742
+  },
+  "boundaryFindings": {
+    "count": 12,
+    "sample": [
+      "versionium/lib/causality.js -> intelligence/cfr/graph.js",
+      "versionium/lib/causality.js -> cortex/memory/jaa-db",
+      "versionium/lib/engine.js -> intelligence/rfr2/kernel",
+      "versionium/lib/engine.js -> intelligence/rfr2/compress",
+      "versionium/lib/engine.js -> intelligence/rfr2/context",
+      "versionium/lib/engine.js -> cortex/memory/jaa-db",
+      "versionium/lib/engine.js -> cortex/memory/jaa-db",
+      "versionium/lib/migrate-idearium-snapshots.js -> cortex/memory/jaa-db",
+      "versionium/lib/migrate-legacy-data.js -> cortex/memory/jaa-db",
+      "versionium/lib/snapshot.js -> cortex/memory/jaa-db"
+    ]
+  }
+}

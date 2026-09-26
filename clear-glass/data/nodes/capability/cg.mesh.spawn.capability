@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.mesh.spawn
+type: capability
+id: cg.mesh.spawn
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730160
+source: clear-glass.registry-components:cg.mesh.spawn
+payload:
+  id: cg.mesh.spawn
+  namespace: cg
+  name: mesh.spawn
+  version: 3.1.0
+  grammar:
+    - mesh spawn
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Spawn free AI agent
+  params: []
+  tags:
+    - cg
+    - mesh
+  permissions:
+    - system
+  hooks: {}

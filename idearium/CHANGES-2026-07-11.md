@@ -1,0 +1,91 @@
+# Idearium — session changes, 2026-07-11
+
+Baseline: `nexus-full-5` + `idearium-fix-patch` (the boundary-engine +
+phase-fix patch). Everything below is applied on top, in order.
+
+## 1. Boundary engine generalized (3 dialects → 1 mechanism)
+`spec-engine/index.js` — the 2026-07-10 boundary detector only understood
+YAML sibling-key repetition. Tested against 10 real uploaded specs; found
+and fixed two real blind spots:
+- Markdown docs (`## N. Title` headers) — were collapsing into one
+  undivided chunk. Added `_detectMarkdownBoundaries`, then fixed two
+  sub-bugs found during testing: shell comments inside fenced code blocks
+  were misread as headers; a lone `# Title` (h1) was outranking the real
+  `##` partition for being shallower.
+- Line-statement DSLs (`domain "name"`, e.g. `genesis.spec`) — same
+  collapse. Added `_detectDeclarationBoundaries`.
+All three detectors tried in sequence; every real file tested now
+decomposes with zero unmatched blocks, zero content loss, `status:complete`.
+
+## 2. Spec Library upload UI
+Added drag-and-drop + an "import .spec…" button to the Spec Library view,
+wired to the `/api/spec-engine/import` route that already existed
+server-side but had no UI path to it.
+
+## 3. Templates expanded
+Added Minimal Kernel / API Service / Event System / Plugin Runtime / AI
+Agent System / Custom to `spec-engine/templates.js` (Full Nexus already
+existed as `genesis`, relabeled). Every new seed file is a verbatim excerpt
+from an already-authored spec — never fabricated — with provenance recorded
+in each seed file's header. Seeding generalized from `_seedMetaFromTemplate`
+(genesis-only, hardcoded to `meta`) to `_seedFromTemplate` (per-template
+`seedSection`); genesis's own behavior is byte-for-byte unchanged.
+
+## 4. Wizard rerouted onto spec-engine
+`#view-spec-wizard`'s `saveToIdearium()` was posting to the legacy
+`/api/specs` system (one blob into a single `intent` section — a second,
+disconnected spec universe). Rerouted to `/api/spec-engine/import` — same
+endpoint as #2, same boundary-engine decomposition, same auto-promote.
+(Correction logged in this file because I initially and incorrectly
+reported this wizard as 0% wired — it wasn't; this was the one real gap.)
+
+## 5. RepoLayer redesigned — content-addressable, not a wrapper
+Old model: RepoLayer kept its own file metadata (path + byte-*length*, no
+actual content) pointing at a second legacy spec object. Redesigned so a
+repo is `{uuid, name, specUuid, rootHash, parent, forks, ...}` — no content
+of its own. `rootHash` (spec-engine's new `computeRootHash`) reuses JAA's
+own documented convention (SHA-256 of canonical JSON, same content → same
+hash) instead of inventing a new one. Buys, verified: free content dedup,
+free zero-copy forking, and one unified ingestion mechanism (`ingestFilesAsSpec`)
+for both promoted specs and raw file drops — previously two separate code
+paths. Also fixed: manual-mode promotion used to fabricate `TODO: not yet
+built` placeholder text for incomplete chunks — a stub presented as content.
+Now a repo's file list shows each chunk's real status instead.
+
+## 6. Copilot adapter — the gate, then the real thing
+Built `copilot-adapter/index.js` to the exact contract specified: a plug
+point (`registerBackend`), a stable `suggest()` shape, honest
+`connected`/`reason` fields. Initially left unconnected on purpose ("stub
+the interface, not the intelligence" — no copilot service was visible in
+what had been uploaded at that point).
+
+Packaging the full project surfaced `nexus/copilot/server.js` — a real,
+1077-line service on :3750 with a genuine `/api/prompt/fulfill` endpoint.
+Registered it as the adapter's real backend. Verified by construction
+(request/response shapes checked against the actual handler) — NOT verified
+live, since this sandbox has no running Guardian/Ollama/copilot process.
+If :3750 isn't up, `suggest()` reports `connected:true` with an honest
+`backend error` reason — never silently degrades to looking like nothing
+was ever registered.
+
+## Verification
+Every claim above was checked by running real code against real files, not
+asserted — see `idearium/spec-engine/index.js`'s test coverage history in
+this conversation, or re-run against the corpus:
+```
+node test_import.mjs <file1.spec> <file2.md> ...
+node test_templates.mjs
+node test_all.mjs   # repo layer + copilot adapter
+```
+
+## Known open items
+- Actual copilot intelligence quality — untested (no live service in this
+  environment). Wiring is real; behavior under load, retry semantics under
+  RAID's weighting, and Guardian/Ollama dependency availability are unverified.
+- Fork *divergence* (editing a fork so its rootHash actually changes) exercises
+  spec-engine's own chunk-editing path, not RepoLayer — untested this pass.
+- The "quick" (non-wizard) spec-choice path still uses the legacy `/api/specs`
+  system — same "second universe" question applies, out of scope this pass.
+- `ideaUuid` param on the raw-drop route (`/api/repos` POST) is a pre-existing
+  dead parameter (declared, never read) — not introduced this session, not
+  fixed either.

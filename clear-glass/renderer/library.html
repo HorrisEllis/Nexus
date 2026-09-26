@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- §BUILT 0.39.241 — James: "need control j to popout a window like the
+     screenshot. thats what it was supposed to look like, the settings ui but
+     with the library. at least make the library style consistent with the rest
+     of clearglass."
+     The Library window. It is the Settings UI: this page loads Settings' own
+     shared stylesheet (settings/settings.css) and runtime (settings/core.js),
+     so the frame, rail, panes, rows, buttons, modals and toasts are the same
+     code, not a lookalike. Each Library area is one JS + one CSS file under
+     library/sections/ (clear-glass UI1: one file per area, CSS per file), and
+     library/boot.js tells the runtime what differs from Settings.
+     Opened by openLibraryWindow() in src/main/index.js: Ctrl+J (downloads),
+     ☰ → Downloads / Library, and the tray's Library entry.
+     Replaces ui/library/ (0.39.239–240), a separate page on :9000 with its own
+     orange terminal styling, opened inside an agent browser window.
+     CSP: identical to settings.html. connect-src covers the bridge on :7702. -->
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self';
+               style-src 'self' 'unsafe-inline';
+               connect-src 'self' http://127.0.0.1:*;
+               img-src 'self' data:;
+               frame-src 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clear Glass Library</title>
+<link rel="stylesheet" href="settings/settings.css">
+</head>
+<body>
+<div id="titlebar">
+  <span class="mark" aria-hidden="true"></span>
+  <span class="title"><b>Clear Glass</b> library</span>
+  <button id="close" title="Close library" aria-label="Close library">&#x2715;</button>
+</div>
+<div id="shell">
+  <nav id="rail" aria-label="Library sections"></nav>
+  <main id="main" tabindex="-1"></main>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<script src="settings/core.js"></script>
+<script src="library/api.js"></script>
+<script src="library/sections/downloads.js"></script>
+<script src="library/sections/responses.js"></script>
+<script src="library/sections/bookmarks.js"></script>
+<script src="library/sections/history.js"></script>
+<script src="library/sections/accounts.js"></script>
+<script src="library/sections/passwords.js"></script>
+<script src="library/sections/autofill.js"></script>
+<script src="library/sections/macros.js"></script>
+<script src="library/boot.js"></script>
+</body>
+</html>

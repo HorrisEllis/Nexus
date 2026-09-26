@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.macros.get
+type: capability
+id: cg.macros.get
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730174
+source: clear-glass.registry-components:cg.macros.get
+payload:
+  id: cg.macros.get
+  namespace: cg
+  name: macros.get
+  version: 3.1.0
+  grammar:
+    - macros get
+  route:
+    method: IPC
+    path: macros:get
+  intent: []
+  description: Get one real macro
+  params: []
+  tags:
+    - cg
+    - macros
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,18 @@
+envelope: 1
+uuid: nexus-export-system-copilot
+type: system
+id: copilot
+context: >-
+  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
+  copilot/registry-components.js
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730183
+source: nexus.autopilot.KERNELS + registry-components.js
+payload:
+  id: copilot
+  hasCapabilities: true
+  port: 3750
+  spec: copilot/spec/copilot.spec

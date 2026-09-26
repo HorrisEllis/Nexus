@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.introspect.retry
+type: capability
+id: copilot.introspect.retry
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730182
+source: copilot.registry-components:copilot.introspect.retry
+payload:
+  id: copilot.introspect.retry
+  namespace: copilot
+  name: introspect.retry
+  version: 2.0.0
+  grammar:
+    - retry the response
+    - try that again
+    - redo that
+  route:
+    method: POST
+    path: /api/introspect/retry
+  intent:
+    - action
+  description: Re-ask carrying the SPECIFIC finding that rejected the last answer, not "try again"
+  params: []
+  tags:
+    - copilot
+    - introspect
+    - reflection
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: copilot.introspect.retry
+        intent:
+          - action
+        tags:
+          - user-initiated
+    out:
+      - id: copilot.introspect.retried
+        wires_to:
+          - lib.reflection.score
+        tags:
+          - diagnosis

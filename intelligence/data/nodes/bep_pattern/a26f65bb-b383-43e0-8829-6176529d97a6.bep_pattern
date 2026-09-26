@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-a26f65bb-b383-43e0-8829-6176529d97a6
+type: bep_pattern
+id: a26f65bb-b383-43e0-8829-6176529d97a6
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.versionium.updated" precedes failures 11 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266410
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266410
+lastSeenAt: 1790368266410
+fingerprint: null
+payload:
+  uuid: a26f65bb-b383-43e0-8829-6176529d97a6
+  signature: precursor::ledger.versionium.updated
+  patternType: failure_precursor
+  precursorType: ledger.versionium.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 11
+  confidence: 1
+  description: '"ledger.versionium.updated" precedes failures 11 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

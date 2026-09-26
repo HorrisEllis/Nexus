@@ -1,0 +1,50 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.clear-glass",
+  "name": "clear-glass",
+  "label": "ClearGlass",
+  "dir": "clear-glass",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.clear-glass",
+    "scope": [
+      "clear-glass/",
+      "data/clear-glass/"
+    ],
+    "versionLine": "3.1.0",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.clear-glass",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "clear-glass/src/main/index.js",
+    "entryExists": true,
+    "port": 7704,
+    "phase": 3,
+    "critical": false,
+    "optional": true,
+    "healthUrl": "http://127.0.0.1:7704/health"
+  },
+  "data": {
+    "dataDir": "data/clear-glass",
+    "ledgerDir": "clear-glass/data/ledger",
+    "nodeIndexDir": "clear-glass/data/node-index"
+  },
+  "spec": "clear-glass/spec/",
+  "dependsOn": {
+    "copilot": 1
+  },
+  "sharedLibRequires": 11,
+  "stats": {
+    "jsFiles": 82,
+    "jsLines": 27535
+  },
+  "boundaryFindings": {
+    "count": 1,
+    "sample": [
+      "clear-glass/src/mesh/agent-mesh.js -> copilot/lifeline.js"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.wire.health
+type: capability
+id: cg.wire.health
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730164
+source: clear-glass.registry-components:cg.wire.health
+payload:
+  id: cg.wire.health
+  namespace: cg
+  name: wire.health
+  version: 3.1.0
+  grammar:
+    - wire health
+  route:
+    method: GET
+    path: /wire/health
+  intent: []
+  description: Wire bridge health
+  params: []
+  tags:
+    - cg
+    - wire
+  permissions:
+    - system
+  hooks: {}

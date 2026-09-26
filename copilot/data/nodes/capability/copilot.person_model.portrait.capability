@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.person_model.portrait
+type: capability
+id: copilot.person_model.portrait
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730178
+source: copilot.registry-components:copilot.person_model.portrait
+payload:
+  id: copilot.person_model.portrait
+  namespace: copilot
+  name: person_model.portrait
+  version: 2.0.0
+  grammar:
+    - what do you know about me
+    - person model
+    - my model
+    - portrait
+    - who am i to you
+  route:
+    method: GET
+    path: /api/person-model/portrait
+  intent:
+    - ask
+  description: Lens reading of the user model — always carries provenance and lens coverage (§LN-7)
+  params: []
+  tags:
+    - copilot
+    - person-model
+    - identity
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: copilot.person_model.read
+        intent:
+          - ask
+        tags:
+          - read-only
+    out:
+      - id: copilot.person_model.reply
+        wires_to:
+          - ui.copilot.receive
+        tags:
+          - response

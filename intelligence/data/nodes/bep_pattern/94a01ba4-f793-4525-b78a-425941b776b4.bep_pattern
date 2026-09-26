@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-94a01ba4-f793-4525-b78a-425941b776b4
+type: bep_pattern
+id: 94a01ba4-f793-4525-b78a-425941b776b4
+context: 'intelligence crystallised pattern: meta_noise_source'
+intent: null
+summary: >-
+  "intelligence.command.invoked" appears in 42% of all co-occurrence patterns — treat its "always
+  co-occurs" pairings as detector loudness, not a discovered relationship
+system: intelligence
+tags:
+  - bep_patterns
+  - meta_noise_source
+  - cortex/intelligence
+exported_at: 1790369857443
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790369857443
+lastSeenAt: 1790369857443
+fingerprint: null
+payload:
+  uuid: 94a01ba4-f793-4525-b78a-425941b776b4
+  signature: meta_noise::intelligence.command.invoked
+  patternType: meta_noise_source
+  subjectType: intelligence.command.invoked
+  share: 0.42
+  pairCount: 38
+  description: >-
+    "intelligence.command.invoked" appears in 42% of all co-occurrence patterns — treat its "always
+    co-occurs" pairings as detector loudness, not a discovered relationship
+  actionable: true
+  crystallised: true
+  source: cortex/intelligence
+  ts: 1790369857443
+  id: 52f32ff7-b1bb-4577-ba79-3bda197460d6

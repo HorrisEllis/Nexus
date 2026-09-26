@@ -1,0 +1,14 @@
+envelope: 1
+uuid: nexus-export-command-cg.url.listen
+type: command
+id: cg.url.listen
+context: clear-glass/registry-components.js real command export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730163
+source: clear-glass.registry-components:cg.url.listen
+payload:
+  method: POST
+  path: /cmd

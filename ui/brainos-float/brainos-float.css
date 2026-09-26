@@ -1,0 +1,85 @@
+/* ui/brainos-float/brainos-float.css — reuses the same real theme tokens
+   already defined in ui/brainos/brainos-app.css (--panel/--border/--text/
+   --idle/--online etc.) — no second color system. If this file is loaded
+   standalone (without brainos-app.css's :root block), it falls back to
+   the same literal values via the var(...,fallback) form below. */
+
+.bf-panel {
+  position: fixed;
+  width: 320px;
+  max-height: 480px;
+  background: var(--panel, #0a0a1c);
+  border: 1px solid var(--border3, #2a2a55);
+  border-radius: 3px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.6);
+  font-family: var(--font, 'Oxanium', monospace);
+  color: var(--text, #c8ccee);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.bf-titlebar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 10px; background: var(--panel2, #0d0d22);
+  border-bottom: 1px solid var(--border, #12122a);
+  cursor: move; user-select: none;
+}
+.bf-title { font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--bridge, #ff6b35); }
+.bf-close { cursor: pointer; color: var(--text2, #525580); font-size: 11px; }
+.bf-close:hover { color: var(--danger, #ff4060); }
+
+.bf-tabbar { display: flex; border-bottom: 1px solid var(--border, #12122a); }
+.bf-tab {
+  flex: 1; padding: 6px 4px; font-size: 8px; font-weight: 700; letter-spacing: .08em;
+  color: var(--text2, #525580); cursor: pointer; text-align: center;
+  border-bottom: 2px solid transparent;
+}
+.bf-tab:hover { color: var(--text, #c8ccee); }
+.bf-tab-act { color: var(--idle, #4fc3f7); border-bottom-color: var(--idle, #4fc3f7); }
+
+.bf-content { flex: 1; overflow-y: auto; padding: 8px; font-size: 9px; }
+.bf-section-label {
+  font-size: 8px; color: var(--text2, #525580); letter-spacing: .08em;
+  text-transform: uppercase; margin-bottom: 6px; font-family: var(--mono, 'DM Mono', monospace);
+}
+.bf-list { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+.bf-row {
+  display: flex; align-items: center; gap: 5px; padding: 4px 6px;
+  background: rgba(255,255,255,.02); border: 1px solid var(--border, #12122a); border-radius: 2px;
+}
+.bf-row-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono, 'DM Mono', monospace); }
+
+.bf-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--offline, #1e1e40); flex-shrink: 0; }
+.bf-dot-online, .bf-dot-alive { background: var(--online, #00e5a0); box-shadow: 0 0 4px var(--online, #00e5a0); }
+.bf-dot-idle { background: var(--idle, #4fc3f7); }
+
+.bf-btn {
+  padding: 2px 7px; font-family: var(--font, 'Oxanium', monospace); font-size: 7px; font-weight: 700;
+  letter-spacing: .06em; border: 1px solid var(--border2, #1e1e40); background: transparent;
+  color: var(--text2, #525580); cursor: pointer; border-radius: 2px; white-space: nowrap;
+}
+.bf-btn:hover { color: var(--text, #c8ccee); border-color: var(--border3, #2a2a55); }
+.bf-btn-g { border-color: var(--online, #00e5a0); color: var(--online, #00e5a0); }
+.bf-btn-danger { border-color: var(--danger, #ff4060); color: var(--danger, #ff4060); }
+
+.bf-input {
+  width: 100%; padding: 4px 6px; margin-bottom: 5px; background: rgba(255,255,255,.03);
+  border: 1px solid var(--border2, #1e1e40); color: var(--text, #c8ccee);
+  font-family: var(--mono, 'DM Mono', monospace); font-size: 9px; border-radius: 2px; outline: none;
+  box-sizing: border-box;
+}
+.bf-input:focus { border-color: var(--idle, #4fc3f7); }
+.bf-form-row { display: flex; gap: 5px; }
+.bf-form-row .bf-input { flex: 1; }
+
+.bf-toast {
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+  padding: 4px 10px; background: var(--panel2, #0d0d22); border: 1px solid var(--border2, #1e1e40);
+  border-radius: 2px; font-size: 8px; font-family: var(--mono, 'DM Mono', monospace);
+  color: var(--text2, #525580); white-space: nowrap;
+}
+.bf-toast-g { border-color: var(--online, #00e5a0); color: var(--online, #00e5a0); }
+.bf-toast-r { border-color: var(--danger, #ff4060); color: var(--danger, #ff4060); }
+.bf-toast-o { border-color: var(--warn, #ffd740); color: var(--warn, #ffd740); }

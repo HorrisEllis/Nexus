@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-e2d6b9f1-1e17-4b1d-8345-a06b5545954a
+type: bep_pattern
+id: e2d6b9f1-1e17-4b1d-8345-a06b5545954a
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"intelligence.command.invoked" precedes failures 173 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790367389065
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790367389065
+lastSeenAt: 1790367389065
+fingerprint: null
+payload:
+  uuid: e2d6b9f1-1e17-4b1d-8345-a06b5545954a
+  signature: precursor::intelligence.command.invoked
+  patternType: failure_precursor
+  precursorType: intelligence.command.invoked
+  failureTypes:
+    - intelligence.failure_scan
+  count: 173
+  confidence: 1
+  description: '"intelligence.command.invoked" precedes failures 173 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790367389026

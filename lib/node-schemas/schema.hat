@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-schema-hat
+type: schema
+id: hat
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789116324000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: lib/hat-forge.js — HAT_SCHEMA (own real schema, this session added exportHat()/importHat())
+  fields:
+    name: string, required — snake_case, unique, not shadowing a real base agent name
+    baseAgent: >-
+      string, required — the agent worn by default, one of: ollama, claude, chatgpt, gemini,
+      mistral, perplexity, deepseek
+    allowedAgents: >-
+      string[], optional — the full real set this hat may draw from; baseAgent must be a member if
+      given
+    toolScope: string[], optional — real registered tool names only; omit for all 37 tools
+    personaPrompt: string, optional — appended to the system prompt when this hat is worn
+    responsibilities: >-
+      array, optional — [{ description, everyMs, prompt }] — real recurring scheduled jobs this hat
+      owns, dispatched via its own agent, findings written to gap-field
+    seedKey: >-
+      string, optional — a permanent ROLE label (snake_case), unique across live hats. Survives
+      every rename. This is what a well-known hat is looked up by; name is for humans, uuid is for
+      references, seedKey is for "whichever hat currently fills this role".
+    model: >-
+      string, optional — a specific, real Ollama model tag this hat dispatches through when worn.
+      Requires "ollama" to be this hat's baseAgent or present in allowedAgents.
+    allowedIntents: >-
+      string[], optional — real verbs from lib/intent-classifier.js's own VERB_PATTERNS only (e.g.
+      build, diagnose, validate, analyze, recall, write). Omit for "any intent, no restriction".

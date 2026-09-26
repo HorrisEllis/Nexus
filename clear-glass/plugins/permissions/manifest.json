@@ -1,0 +1,23 @@
+{
+  "id": "c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+  "name": "permissions",
+  "version": "1.0.0",
+  "displayName": "Permission Guard",
+  "description": "Real gap named directly in CLEAR-GLASS-FULL-CHROME-MAP-2026-08-23.md's §9: 'Electron's session.setPermissionRequestHandler (for real camera/mic permission prompts) doesn't exist in this tree at all... currently, a page requesting getUserMedia would hit Electron's own default behavior, unconfigured.' This plugin makes it configured: denies camera/mic/geolocation by default and surfaces every request via a real toast, using the already-real toast driver.exec action, instead of silently hitting Electron's undefined default.",
+  "author": "James Brooks (Erosmancer)",
+  "entryPoint": "index.js",
+  "permissions": {
+    "network": false,
+    "domStorage": false,
+    "webRequest": false,
+    "hostFs": false
+  },
+  "contributes": {
+    "permission-filter": [
+      {
+        "signature": "plugin:c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f:filter",
+        "handler": "filterPermission"
+      }
+    ]
+  }
+}

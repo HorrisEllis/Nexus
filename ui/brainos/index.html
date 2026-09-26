@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BrainOS</title>
+<!--
+  §REBUILT 2026-09-06 — James: "make this ui, map it all onto the html.
+  anything that doesn't map, remove it." Real BrainOS-main reference
+  (BrainOS-v2.html, 5553 lines) had 10 main tabs + 5 right-panel tabs.
+  Mapped each against real, current nexus capability before keeping or
+  removing anything:
+
+  KEPT (real nexus backing, confirmed):
+    CANVAS     -> already real, brainos-canvas.js's live agent-mesh
+                  rendering (built prior turns), unchanged here.
+    DEPLOY     -> clear-glass's real provider-deploy.js tool
+                  (POST :7704/provider/deploy).
+    BAYES      -> intelligence/cfr's real entropy/coherence/regime
+                  tracking, via diagnostic's real GET :7825/cfr/field.
+    PIPELINE   -> RAID's real dependsOn/onFail contract queue
+                  (cortex/core/raid/contract-intake.js), via a new,
+                  small GET :3748/api/raid/queue endpoint (real data
+                  existed, no query surface existed until this session).
+    AUTOMATION -> clear-glass's real macro.js system, via macros:list/
+                  get/run IPC — found genuinely unreachable from any
+                  renderer (never bridged through contextBridge) and
+                  fixed in preload/index.js this same session.
+    NODE (right panel) -> real detail of whatever node is clicked on
+                  the canvas (brainos-canvas.js's new onNodeClick()).
+    CHAT LOGS (right panel, replacing SESSIONS per James: "we can use
+               the chat logs") -> real chat_log table, via a new,
+               small GET :3748/api/chat-log endpoint (same real gap
+               class as PIPELINE above).
+
+  REMOVED — explicitly, per James's direct instruction — no real
+  current nexus backing, or the backing itself was already retired:
+    CONTROL, KEYS  -> entirely the retired network infrastructure
+                       (E2E key rotation, host bouncing, port mapping)
+                       — James, last session: "DNS/firewall/crypto/
+                       host-rotation is redundant and should be
+                       deleted." Already gone; these tabs would have
+                       controlled nothing real.
+    PLAYWRIGHT     -> James: explicit removal.
+    NETWORK        -> James: explicit removal. (Its one real survivor,
+                       pulse-registry, is already the same data driving
+                       CANVAS's dynamic node list — no separate tab
+                       needed.)
+    HELP           -> James: explicit removal.
+    SESSIONS       -> James: explicit removal, replaced with CHAT LOGS.
+    SNR, DELTAS,
+    BELIEF         -> James: explicit removal. (SNR and DELTAS were the
+                       retired network infra's own filter/delta
+                       tracking; BELIEF was a second, redundant real-
+                       mapping candidate for the same CFR data BAYES
+                       already covers — one tab, not two, for one real
+                       data source.)
+-->
+<link rel="stylesheet" href="/ui/brainos/brainos-app.css">
+</head>
+<body>
+<div id="particles"></div>
+
+<div class="topbar">
+  <div class="tab-nav">
+    <div class="tnav act" data-tab="canvas">CANVAS</div>
+    <div class="tnav" data-tab="deploy">DEPLOY</div>
+    <div class="tnav" data-tab="bayes">BAYES</div>
+    <div class="tnav" data-tab="pipeline">PIPELINE</div>
+    <div class="tnav" data-tab="automation">AUTOMATION</div>
+  </div>
+  <div class="spacer"></div>
+  <span id="clock" style="font-family:var(--mono);font-size:8px;color:var(--text2)">—</span>
+</div>
+
+<div class="main">
+
+  <!-- LEFT SIDEBAR — §RESTRUCTURED 2026-09-12: James, "sidebars are tab
+       dependent not static." Content now swaps per active main tab
+       (setMainTab() in brainos-app.js toggles which .sb-section shows),
+       instead of always showing mesh nodes regardless of tab. -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-section act" id="sb-canvas">
+      <div class="sb-head">Mesh Nodes</div>
+      <div class="node-list" id="node-list">
+        <div class="empty-state">waiting for real data…</div>
+      </div>
+    </div>
+    <div class="sb-section" id="sb-automation">
+      <div class="sb-head">Workflows</div>
+      <div id="auto-wf-list"></div>
+      <button class="hbtn g" id="auto-new" style="width:100%;margin-top:8px">+ NEW WORKFLOW</button>
+    </div>
+  </div>
+
+  <!-- CENTRE — canvas (default) + 4 real panel overlays -->
+  <div class="cw" id="cw">
+    <!-- brainos-canvas.js mounts its real SVG here -->
+    <div id="canvas-host" style="position:absolute; inset:0;"></div>
+    <div class="legend">
+      <div class="leg"><div class="ld" style="background:var(--online)"></div>ALIVE / CONNECTED</div>
+      <div class="leg"><div class="ld" style="background:var(--warn)"></div>IDLE</div>
+      <div class="leg"><div class="ld" style="background:var(--offline)"></div>DEAD / UNKNOWN</div>
+    </div>
+    <div class="log-strip" id="log-strip"></div>
+
+    <!-- DEPLOY — real: POST clear-glass:7704/provider/deploy -->
+    <div class="panel-overlay" id="panel-deploy">
+      <div class="panel-title">⬡ DEPLOY — redeploy a provider's userscript</div>
+      <div class="field-row">
+        <label>Provider</label>
+        <select id="deploy-provider">
+          <option value="claude">claude</option>
+          <option value="chatgpt">chatgpt</option>
+          <option value="gemini">gemini</option>
+          <option value="perplexity">perplexity</option>
+        </select>
+      </div>
+      <button class="hbtn g" id="deploy-btn">↻ REDEPLOY</button>
+      <div id="deploy-result" style="margin-top:10px;font-family:var(--mono);font-size:9px;color:var(--text2)"></div>
+    </div>
+
+    <!-- BAYES — real: GET diagnostic:7825/cfr/field -->
+    <div class="panel-overlay" id="panel-bayes">
+      <div class="panel-title">◈ BAYES — real CFR field state (intelligence/cfr/field.js)</div>
+      <div id="bayes-body">
+        <div class="empty-state">waiting for real data…</div>
+      </div>
+    </div>
+
+    <!-- PIPELINE — real: clear-glass/src/mesh/route-graph.js -->
+    <div class="panel-overlay" id="panel-pipeline">
+      <div class="panel-title">⌁ PIPELINE — real agent-chain builder (clear-glass/src/mesh/route-graph.js)</div>
+      <div id="pipeline-body">
+        <div class="empty-state">waiting for real data…</div>
+      </div>
+    </div>
+
+    <!-- AUTOMATION — real: clear-glass/src/mesh/automation-engine.js -->
+    <div class="panel-overlay" id="panel-automation">
+      <div class="panel-title">▶ AUTOMATION — real workflow engine (clear-glass/src/mesh/automation-engine.js)</div>
+      <div id="automation-body">
+        <div class="empty-state">waiting for real data…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="rpanel">
+    <div class="rp-tabs">
+      <div class="rptab act" data-rtab="node">NODE</div>
+      <div class="rptab" data-rtab="chatlog">CHAT LOGS</div>
+      <div class="rptab" data-rtab="pipeline">PIPELINE</div>
+      <div class="rptab" data-rtab="automation">AUTOMATION</div>
+      <div class="rptab" data-rtab="toolcalls">TOOL CALLS</div>
+    </div>
+    <div class="rp-body act" id="rt-node">
+      <div class="empty-state">click a node on the canvas</div>
+    </div>
+    <div class="rp-body" id="rt-chatlog">
+      <div class="empty-state">waiting for real data…</div>
+    </div>
+    <div class="rp-body" id="rt-pipeline">
+      <div class="empty-state">waiting for real data…</div>
+    </div>
+    <div class="rp-body" id="rt-automation">
+      <div class="empty-state">waiting for real data…</div>
+    </div>
+    <div class="rp-body" id="rt-toolcalls">
+      <div class="empty-state">waiting for real data…</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/ui/brainos/brainos-canvas.js"></script>
+<script src="/ui/brainos/brainos-automation.js"></script>
+<script src="/ui/brainos/brainos-app.js"></script>
+</body>
+</html>

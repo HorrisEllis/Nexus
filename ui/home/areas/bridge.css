@@ -1,0 +1,13 @@
+/* ui/home/areas/bridge.css — Bridge channel.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* CH5: Bridge */
+#ch-bridge.active{display:flex;flex-direction:column;padding:60px 70px 110px;gap:14px;overflow:hidden}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-shrink:0}
+.stat-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;text-align:center}
+.stat-v{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:#fff}
+.stat-l{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;margin-top:5px}
+.node-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
+.node-id{font-family:'Space Mono',monospace;font-size:11px;color:var(--ac);flex-shrink:0;min-width:140px}
+.node-url{color:rgba(255,255,255,.35);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.node-st{font-family:'Space Mono',monospace;font-size:9px;margin-left:auto;flex-shrink:0}
+.node-st.up{color:var(--ok)}.node-st.down{color:var(--err)}

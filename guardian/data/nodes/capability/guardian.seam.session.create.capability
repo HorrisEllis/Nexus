@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.seam.session.create
+type: capability
+id: guardian.seam.session.create
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730141
+source: guardian.registry-components:guardian.seam.session.create
+payload:
+  id: guardian.seam.session.create
+  namespace: guardian
+  name: seam.session.create
+  version: 3.6.2
+  grammar:
+    - seam session create
+    - seam-session-create
+  route:
+    method: POST
+    path: /seam/sessions
+  intent: []
+  description: Create SEAM session
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

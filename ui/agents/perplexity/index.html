@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Perplexity Console — NEXUS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+:root{
+  --void:#06050a;--surface:#0e0c15;--panel2:#0a0c16;
+  --border:#10141e;--border2:#1a2030;
+  --text:#d8e4f0;--text2:#7090a8;--text3:#304050;
+  --ac:#00d4ff;--ac-dim:rgba(0,212,255,.08);--ac-glow:rgba(0,212,255,.4);
+  --green:#00ff88;--red:#ff3355;--red-dim:rgba(255,51,85,.1);
+  --amber:#ffaa00;--amber-dim:rgba(255,170,0,.1);
+  --mono:'Space Mono',monospace;--ui:'Space Grotesk',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--void);color:var(--text);font-family:var(--ui);overflow:hidden;font-size:13px}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+#shell{display:grid;grid-template-rows:48px 1fr;height:100vh}
+#topbar{display:flex;align-items:center;gap:12px;padding:0 16px;background:linear-gradient(180deg,var(--panel2),var(--void));border-bottom:1px solid var(--border)}
+.glyph{font-size:18px;color:var(--ac)}.title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em}.title b{color:var(--ac)}
+#conn{font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 10px;border-radius:14px;border:1px solid var(--border2);color:var(--text3);margin-left:auto;display:flex;align-items:center;gap:5px}
+#conn .dot{width:5px;height:5px;border-radius:50%;background:var(--text3)}
+#conn.live{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+#conn.live .dot{background:var(--ac);animation:p 2s ease-in-out infinite}
+@keyframes p{0%,100%{box-shadow:0 0 0 0 var(--ac-glow)}50%{box-shadow:0 0 0 3px transparent}}
+#main{display:grid;grid-template-columns:200px 1fr 240px;height:100%;overflow:hidden}
+.z{overflow-y:auto;padding:14px}.z+.z{border-left:1px solid var(--border)}
+.zl{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.zl::after{content:'';flex:1;height:1px;background:var(--border)}
+.sr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:10px}
+.sk{color:var(--text3);font-size:9px}.sv{font-family:var(--mono);font-size:9px;color:var(--text2)}
+.sv.ok{color:var(--green)}.sv.off{color:var(--red)}.sv.ac{color:var(--ac)}
+.tb{display:flex;align-items:center;gap:7px;width:100%;font-family:var(--mono);font-size:9px;font-weight:600;background:transparent;border:1px solid var(--border2);color:var(--text3);padding:6px 9px;border-radius:4px;cursor:pointer;margin-bottom:4px;text-align:left;transition:all .15s}
+.tb:hover{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+.to{font-family:var(--mono);font-size:9px;color:var(--text3);padding:5px 7px;background:var(--surface);border:1px solid var(--border);border-radius:3px;max-height:100px;overflow-y:auto;white-space:pre-wrap;line-height:1.4;margin-bottom:6px}
+input.ni{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:6px 9px;font-family:var(--mono);font-size:9px;outline:none;margin-bottom:5px}
+input.ni:focus{border-color:var(--ac-glow)}
+#zc{display:flex;flex-direction:column;padding:0}
+#msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.msg{padding:8px 10px;border-radius:5px;font-size:11.5px;line-height:1.6}
+.msg.user{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);border-left:2px solid var(--ac)}
+.msg.assistant{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-left:2px solid rgba(255,255,255,.1)}
+.mr{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--text3);margin-bottom:4px;text-transform:uppercase}
+.msg.user .mr{color:var(--ac)}
+.mt{color:var(--text);white-space:pre-wrap;word-break:break-word}
+.cit-flag{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:9px;border:1px solid rgba(255,170,0,.4);color:var(--amber);background:var(--amber-dim)}
+#inp{padding:10px;border-top:1px solid var(--border);flex-shrink:0}
+.cbar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.cc{font-family:var(--mono);font-size:8.5px;padding:2px 8px;border-radius:10px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:all .15s;user-select:none}
+.cc.on{border-color:var(--ac-glow);color:var(--ac);background:var(--ac-dim)}
+.ir{display:flex;gap:7px;align-items:flex-end}
+textarea#pi{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--text);padding:8px 10px;font-family:var(--mono);font-size:10px;line-height:1.5;outline:none;resize:none;min-height:44px;max-height:100px;transition:border-color .2s}
+textarea#pi:focus{border-color:var(--ac-glow)}
+textarea#pi::placeholder{color:var(--text3)}
+#sb{font-family:var(--mono);font-size:10px;font-weight:700;background:var(--ac-dim);border:1px solid var(--ac-glow);color:var(--ac);padding:9px 14px;border-radius:5px;cursor:pointer;white-space:nowrap}
+#sb:hover{background:rgba(0,212,255,.15)}
+#sb:disabled{opacity:.4;cursor:default}
+.ss{font-family:var(--mono);font-size:8px;color:var(--text3);margin-top:5px;display:flex;gap:10px}
+.gi{padding:5px 8px;border-left:2px solid var(--border2);margin-bottom:5px;font-size:10px}
+.gi.high{border-left-color:var(--red)}.gi.medium{border-left-color:var(--amber)}
+.gt{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--text2)}.gb{color:var(--text3);margin-top:1px;font-size:9px;line-height:1.4}
+.cit{display:flex;flex-direction:column;gap:2px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:9.5px}
+.cit-n{color:var(--text2);font-family:var(--mono);font-size:9px}
+.cit-q{color:var(--text3);font-size:9px;font-style:italic}
+.cit-empty{color:var(--text3);font-size:9px;display:flex;align-items:center;gap:5px}
+.cit-empty.gap{color:var(--amber)}
+.art{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:9.5px}
+.an{color:var(--text2);font-family:var(--mono);font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+.adl{font-family:var(--mono);font-size:8px;color:var(--text3);cursor:pointer;padding:1px 5px;border:1px solid var(--border2);border-radius:2px;transition:all .15s}
+.adl:hover{border-color:var(--ac-glow);color:var(--ac)}
+.mode-pill{font-family:var(--mono);font-size:7.5px;padding:1px 6px;border-radius:8px;border:1px solid var(--border2);color:var(--text3);margin-left:6px}
+.mode-pill.quick{border-color:rgba(0,212,255,.3);color:var(--ac)}
+.mode-pill.pro{border-color:rgba(255,170,0,.4);color:var(--amber)}
+.mode-pill.research{border-color:rgba(255,51,85,.4);color:var(--red)}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topbar">
+    <span class="glyph">◎</span>
+    <span class="title">PERPLE<b>XITY</b> CONSOLE</span>
+    <span style="font-family:var(--mono);font-size:9px;color:var(--text3)">web-grounded · citations persist independently · quick/pro/research · NCP</span>
+    <div id="conn"><span class="dot"></span><span id="ct">CHECKING</span></div>
+  </div>
+  <div id="main">
+    <div class="z">
+      <div class="zl">System</div>
+      <div class="sr"><span class="sk">Guardian</span><span class="sv" id="sv0">—</span></div>
+      <div class="sr"><span class="sk">Cortex</span><span class="sv" id="sv1">—</span></div>
+      <div class="sr"><span class="sk">Tab</span><span class="sv ac" id="sv2">—</span></div>
+      <div class="sr"><span class="sk">Usage</span><span class="sv" id="sv3">—</span></div>
+      <div class="sr"><span class="sk">Open Gaps</span><span class="sv" id="sv4">—</span></div>
+      <div class="sr"><span class="sk">Active Jobs</span><span class="sv" id="sv5">—</span></div>
+      <div class="sr"><span class="sk">Heartbeat</span><span class="sv" id="sv6">—</span></div>
+      <div class="zl" style="margin-top:14px">Tools</div>
+      <button class="tb" onclick="tool('diagnose')">△ Diagnose</button><div class="to" id="to-diagnose" style="display:none"></div>
+      <button class="tb" onclick="tool('gaps')">◈ Open Gaps</button><div class="to" id="to-gaps" style="display:none"></div>
+      <button class="tb" onclick="tool('jobs')">⚡ Jobs</button><div class="to" id="to-jobs" style="display:none"></div>
+      <button class="tb" onclick="tool('artifacts')">↓ Artifacts</button><div class="to" id="to-artifacts" style="display:none"></div>
+      <button class="tb" onclick="tool('providers')">◦ Providers</button><div class="to" id="to-providers" style="display:none"></div>
+      <div class="zl" style="margin-top:12px">Batch Dispatch</div>
+      <textarea id="batch-in" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:7px;font-family:var(--mono);font-size:9px;resize:none;min-height:52px;outline:none;margin-bottom:5px" placeholder="One question per line → each dispatched as a job"></textarea>
+      <button class="tb" onclick="batch()">▶ Batch Dispatch</button>
+      <div class="to" id="to-batch" style="display:none"></div>
+      <div class="zl" style="margin-top:12px">Repair</div>
+      <input class="ni" id="ri" placeholder="repair prompt…">
+      <button class="tb" onclick="doRepair()">⚡ Dispatch Repair</button>
+      <div class="to" id="to-repair" style="display:none"></div>
+      <div class="zl" style="margin-top:12px">Contract</div>
+      <input class="ni" id="ci" placeholder="contract name…">
+      <button class="tb" onclick="createContract()">📋 Create Contract</button>
+      <div class="to" id="to-contract" style="display:none"></div>
+      <div class="zl" style="margin-top:12px">CLI</div>
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:4px">
+        <button onclick="cli('gaps')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">gaps</button>
+        <button onclick="cli('jobs')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">jobs</button>
+        <button onclick="cli('health')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">health</button>
+        <button onclick="cli('stats')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">stats</button>
+        <button onclick="cli('seam')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">seam</button>
+        <button onclick="cli('ledger')" class="tb" style="padding:2px 6px;margin:0;font-size:8px">ledger</button>
+      </div>
+      <input class="ni" id="cli-in" placeholder="custom command…">
+      <button class="tb" onclick="cli(document.getElementById('cli-in').value)">▶ Run</button>
+      <div class="to" id="to-cli" style="display:none"></div>
+    </div>
+
+    <div class="z" id="zc">
+      <div id="msgs">
+        <div id="welcome" style="color:var(--text3);font-size:10.5px;text-align:center;padding:24px;line-height:1.8">
+          <div style="font-size:18px;margin-bottom:6px">◎</div>
+          Perplexity via NCP · web-grounded<br>
+          <span style="font-size:9px">Quick / Pro / Research mode detected · citations are a first-class artifact</span>
+        </div>
+      </div>
+      <div id="inp">
+        <div class="cbar">
+          <div class="cc on" data-c="system">system</div>
+          <div class="cc on" data-c="gaps">gaps</div>
+          <div class="cc" data-c="memory">memory</div>
+          <div class="cc" data-c="artifacts">artifacts</div>
+          <div class="cc" data-c="structured">structured JSON</div>
+        </div>
+        <div class="ir">
+          <textarea id="pi" placeholder="Ask NEXUS via Perplexity… (Enter to send · Shift+Enter newline)" rows="2"></textarea>
+          <button id="sb" onclick="send()">SEND →</button>
+        </div>
+        <div class="ss"><span id="ss-st">co-pilot → Perplexity NCP</span><span id="ss-tok">—</span></div>
+      </div>
+    </div>
+
+    <div class="z">
+      <div class="zl">Citations</div>
+      <!-- §HONEST-NOTE — these render from the same /artifacts feed as every
+           other console, filtered to lang==='citation'. That tag has to be
+           set by whatever scans Perplexity's responses for sources; this
+           console does not invent citation detection that isn't there. If
+           this always reads empty, that's the thing to check upstream, not
+           a bug in this file. -->
+      <div id="citlist"><div class="cit-empty">Loading…</div></div>
+      <div class="zl" style="margin-top:14px">Open Gaps</div>
+      <div id="glist"><div style="color:var(--text3);font-size:9.5px">Loading…</div></div>
+      <div class="zl" style="margin-top:14px">Other Artifacts</div>
+      <div id="alist"><div style="color:var(--text3);font-size:9.5px">—</div></div>
+    </div>
+  </div>
+</div>
+<script>
+const GD='http://localhost:7820',ORCH='http://localhost:9000',CX='http://localhost:3748';
+const PROVIDER='perplexity';let _streaming=false;
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function api(url,opts){try{const r=await fetch(url,{signal:AbortSignal.timeout(6000),...opts});return r.ok?r.json():null;}catch{return null;}}
+async function post(url,body){return api(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});}
+function sv(i,val,ok){const e=document.getElementById('sv'+i);if(e){e.textContent=val;e.className='sv '+(ok===true?'ok':ok===false?'off':'');}}
+
+async function refresh(){
+  const[prov,gaps]=await Promise.all([api(`${GD}/providers`),api(`${GD}/gaps?status=open&limit=50`)]);
+  const ch=prov?.channels?.[PROVIDER];
+  document.getElementById('conn').className=ch?'live':'';document.getElementById('ct').textContent=ch?'CONNECTED':'NO TAB';
+  sv(2,ch?(ch.tabId||'—').slice(0,12):'—',!!ch);
+  if(ch?.usage){const u=ch.usage;sv(3,u.limited===true?'LIMITED':u.limited==='suspected'?'SUSPECTED':'OK',u.limited!==true);}
+  const hb=ch?Math.round((Date.now()-(ch.lastHeartbeat||0))/1000):null;
+  sv(6,hb!==null?(hb<15?'♥ '+hb+'s':'stale'):'—',hb!==null&&hb<15);
+  await Promise.all([
+    api(`${GD}/health`).then(r=>sv(0,r?.ok?'✓ :7820':'✗ :7820',r?.ok)),
+    api(`${CX}/health`).then(r=>sv(1,r?.ok?'✓ :3748':'✗ :3748',r?.ok)),
+  ]);
+  const ga=gaps?.gaps||[];sv(4,ga.length,ga.length===0);
+  const jobs=await api(`${GD}/jobs?status=delivered&limit=20`);
+  sv(5,(jobs?.jobs||[]).length,(jobs?.jobs||[]).length===0);
+  renderGaps(ga);
+  const arts=await api(`${GD}/artifacts?limit=30`);
+  const all=arts?.artifacts||[];
+  renderCitations(all.filter(a=>a.lang==='citation'));
+  renderArtifacts(all.filter(a=>a.lang!=='citation'));
+}
+function renderGaps(gaps){const el=document.getElementById('glist');if(!gaps.length){el.innerHTML='<div style="color:var(--text3);font-size:9.5px">No open gaps ✓</div>';return;}el.innerHTML=gaps.slice(0,8).map(g=>`<div class="gi ${g.severity||'low'}"><div class="gt">${esc(g.type||'?')}</div><div class="gb">${esc((g.body||'').slice(0,65))}</div></div>`).join('');}
+function renderCitations(cits){
+  const el=document.getElementById('citlist');
+  if(!cits.length){el.innerHTML='<div class="cit-empty gap">No citations tagged yet — check that the citation detector is wired for this provider, see §HONEST-NOTE in this file</div>';return;}
+  el.innerHTML=cits.slice(0,10).map(c=>`<div class="cit"><span class="cit-n">${esc(c.specName||'source')}</span><span class="cit-q" onclick="dlArt('${c.hash||c.uuid||''}','${esc(c.specName||'citation')}')">↓ ${esc((c.content||'').slice(0,50))}…</span></div>`).join('');
+}
+function renderArtifacts(arts){const el=document.getElementById('alist');if(!arts.length){el.innerHTML='<div style="color:var(--text3);font-size:9.5px">No artifacts</div>';return;}el.innerHTML=arts.slice(0,8).map(a=>`<div class="art"><span class="an">${esc(a.specName||a.lang||'artifact')}</span><span class="adl" onclick="dlArt('${a.hash||a.uuid||''}','${esc(a.specName||'artifact')}')">↓ DL</span></div>`).join('');}
+async function dlArt(hash,name){const r=await api(`${GD}/artifacts/${hash}`);if(!r)return;const b=new Blob([JSON.stringify(r,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name+'.json';a.click();}
+
+async function tool(id){const o=document.getElementById('to-'+id);o.style.display='';o.textContent='⟳ …';
+  if(id==='diagnose'){const r=await api(`${GD}/health`);o.textContent=JSON.stringify({ok:r?.ok,uptime:r?.uptime,jobs:r?.jobs},null,2);}
+  else if(id==='gaps'){const r=await api(`${GD}/gaps?status=open&limit=15`);o.textContent=(r?.gaps||[]).map(g=>`[${g.severity}] ${g.type}: ${(g.body||'').slice(0,60)}`).join('\n')||'None';}
+  else if(id==='jobs'){const r=await api(`${GD}/jobs?limit=15`);o.textContent=(r?.jobs||[]).map(j=>`[${j.status}] ${j.provider}: ${(j.prompt||'').slice(0,55)}`).join('\n')||'None';}
+  else if(id==='artifacts'){const r=await api(`${GD}/artifacts?limit=10`);o.textContent=(r?.artifacts||[]).map(a=>`${a.specName||a.lang||'?'} #${(a.hash||'').slice(0,8)}`).join('\n')||'None';}
+  else if(id==='providers'){const r=await api(`${GD}/providers`);o.textContent=JSON.stringify(Object.entries(r?.channels||{}).map(([k,v])=>({provider:k,tab:(v.tabId||'').slice(0,10),hb:Math.round((Date.now()-(v.lastHeartbeat||0))/1000)+'s'})),null,2);}
+}
+async function batch(){const lines=document.getElementById('batch-in').value.trim().split('\n').map(t=>t.trim()).filter(Boolean);const o=document.getElementById('to-batch');if(!lines.length)return;o.style.display='';o.style.color='var(--amber)';o.textContent=`Dispatching ${lines.length} tasks…`;let ok=0,fail=0;for(const t of lines){const r=await post(`${GD}/command`,{command:'code',provider:PROVIDER,prompt:t,source:'perplexity-console',meta:{source:'perplexity-console',task:'batch'}});r?.jobId?ok++:fail++;}o.style.color=fail?'var(--amber)':'var(--green)';o.textContent=`✓ ${ok} dispatched · ${fail} failed`;}
+async function doRepair(){const p=document.getElementById('ri').value.trim();const o=document.getElementById('to-repair');if(!p)return;o.style.display='';o.style.color='var(--amber)';o.textContent='⟳ …';const r=await post(`${GD}/command`,{command:'diagnose_and_repair',provider:'ollama',prompt:p,source:'perplexity-console',meta:{source:'perplexity-console'}});o.style.color=r?.jobId?'var(--green)':'var(--red)';o.textContent=r?.jobId?'✓ '+r.jobId.slice(0,12):'✗ '+(r?.error||'failed');}
+async function createContract(){const n=document.getElementById('ci').value.trim();const o=document.getElementById('to-contract');if(!n)return;o.style.display='';o.style.color='var(--amber)';o.textContent='⟳ …';const r=await post(`${CX}/api/jaa/reflection_contracts`,{uuid:crypto.randomUUID(),decisionClass:n,loopType:'CAPABILITY',status:'queued',agent:'mistral',priority:'normal',createdAt:Date.now(),updatedAt:Date.now()});o.style.color=r?'var(--green)':'var(--red)';o.textContent=r?'✓ contract created':'✗ failed';}
+async function cli(cmd){if(!cmd?.trim())return;const o=document.getElementById('to-cli');o.style.display='';o.textContent='⟳ '+cmd+'…';const r=await post(`${GD}/cli/exec`,{command:cmd.trim(),source:'perplexity-console'});const d=r?.result??r??{};o.textContent=typeof d==='string'?d:JSON.stringify(d,null,2).slice(0,400);}
+
+async function buildCtx(types){const parts=[];
+  if(types.includes('system')){const[h]=await Promise.all([api(`${GD}/health`)]);parts.push(`[NEXUS] Guardian:${h?.ok?'online':'offline'}`);}
+  if(types.includes('gaps')){const r=await api(`${GD}/gaps?status=open&limit=6`);const g=r?.gaps||[];if(g.length)parts.push('[GAPS]\n'+g.map(x=>`[${x.severity}] ${x.type}: ${(x.body||'').slice(0,60)}`).join('\n'));}
+  if(types.includes('memory')){const r=await api(`${CX}/api/jaa/decision_log?limit=5`);const ro=r?.rows||r?.result||[];if(ro.length)parts.push('[DECISIONS]\n'+ro.map(d=>`[${d.chosen}] ${(d.input||'').slice(0,60)}`).join('\n'));}
+  if(types.includes('artifacts')){const r=await api(`${GD}/artifacts?limit=5`);const a=r?.artifacts||[];if(a.length)parts.push('[ARTIFACTS]\n'+a.map(x=>x.specName||x.lang||'?').join(', '));}
+  if(types.includes('structured')){parts.push('[FORMAT: respond with structured JSON only — no prose, no markdown fencing]');}
+  return parts.join('\n\n');
+}
+async function send(){const prompt=document.getElementById('pi').value.trim();if(!prompt||_streaming)return;
+  const types=[...document.querySelectorAll('.cc.on')].map(c=>c.dataset.c);
+  const ctx=await buildCtx(types);
+  addMsg('user',prompt);document.getElementById('pi').value='';
+  const msgEl=addStream('assistant');_streaming=true;const t0=Date.now();
+  try{const r=await post(`${ORCH}/api/guardian/copilot/prompt`,{prompt:ctx?`[CONTEXT]\n${ctx}\n\n${prompt}`:prompt});finalStream(msgEl,r?.text||'(no response)');document.getElementById('ss-tok').textContent=r?.modelUsed||'—';document.getElementById('ss-st').textContent=((Date.now()-t0)/1000).toFixed(1)+'s';}
+  catch(e){finalStream(msgEl,'✗ '+e.message);}
+  _streaming=false;
+}
+function addMsg(role,text){const m=document.getElementById('msgs');const w=document.getElementById('welcome');if(w)w.remove();const el=document.createElement('div');el.className='msg '+role;el.innerHTML=`<div class="mr">${role}</div><div class="mt">${esc(text)}</div>`;m.appendChild(el);m.scrollTop=m.scrollHeight;return el;}
+function addStream(role){const m=document.getElementById('msgs');const w=document.getElementById('welcome');if(w)w.remove();const el=document.createElement('div');el.className='msg '+role;el.innerHTML=`<div class="mr">${role}</div><div class="mt"><span style="display:inline-block;width:6px;height:12px;background:var(--ac);animation:bl .7s step-end infinite;vertical-align:text-bottom"></span></div>`;m.appendChild(el);m.scrollTop=m.scrollHeight;return el;}
+function finalStream(el,text){
+  const t=el.querySelector('.mt');if(!t)return;
+  // §PPLX — zero-sources flag. "Substantive answer with zero sources
+  // flagged as a quality gap" per the card description. Heuristic only:
+  // a long answer with no bracketed citation markers and no fetched
+  // citation artifacts this turn is suspicious for a citations-first
+  // provider. Flagged, not blocked — this console doesn't decide policy.
+  t.innerHTML=esc(text);
+  const looksSubstantive=text.length>300;
+  const hasCitationMarkers=/\[\d+\]/.test(text);
+  if(looksSubstantive&&!hasCitationMarkers){
+    const flag=document.createElement('div');flag.className='cit-flag';flag.textContent='⚠ substantive answer, no citation markers detected';
+    t.appendChild(flag);
+  }
+}
+document.getElementById('pi').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+document.querySelectorAll('.cc').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('on')));
+refresh();setInterval(refresh,6000);
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+envelope: 1
+uuid: nexus-export-system-eravos
+type: system
+id: eravos
+context: >-
+  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
+  eravos/registry-components.js
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789250730186
+source: nexus.autopilot.KERNELS + registry-components.js
+payload:
+  id: eravos
+  hasCapabilities: true
+  port: 3751
+  spec: eravos/spec/eravos.spec

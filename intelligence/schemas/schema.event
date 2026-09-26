@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-schema-event
+type: schema
+id: event
+context: >-
+  intelligence/schemas — sovereign local copy. Origin: lib/node-schemas/schema.event (shared
+  canonical version, may have moved on independently since this copy was made — sovereignty means
+  intelligence does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789235656617
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    cortex/data/snapshots/*.nex — event_log table, real row shape confirmed by direct read of
+    multiple live snapshot rows
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real event id
+    id:
+      type: string
+      required: false
+      description: >-
+        real secondary id field — present on every real row checked, distinct from uuid, role not
+        fully confirmed (possibly a dedup/correlation key)
+    type:
+      type: string
+      required: true
+      description: >-
+        real, governed event type name — e.g. 'intent.classified'. Should match a real
+        *.event-taxonomy.js vocabulary entry where one exists for the source system, but this field
+        itself is not validated against one
+    source:
+      type: string
+      required: true
+      description: real originating component/module string, e.g. 'intent-classifier'
+    ts:
+      type: number
+      required: true
+      description: real timestamp
+    payload:
+      type: object
+      required: false
+      description: real, type-specific event data — shape varies per type, not enforced here

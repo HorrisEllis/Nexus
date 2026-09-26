@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-schema-agent_tool
+type: schema
+id: agent_tool
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789239800000
+source: nexus.lib.node-export
+payload:
+  status: OPEN
+  source: >-
+    lib/agent-tools/naming.js's real agentToolName(provider, agentName, name) ->
+    'provider.agentName.name.agent.tool', and its real parseName() inverse — confirmed via
+    tests/modules/test-tool-naming-convention.js TN-003/TN-009, both passing. Genuinely distinct
+    from .tool, not a formatting variant: parseName() returns a different `kind` ('agent_tool' vs
+    'tool') for this id shape, provider+agent-scoped rather than system-scoped. Marked OPEN, not
+    REAL, because grep across lib/agent-tools/index.js and every registerTool() call site (81 real
+    tools, checked at the 2026-09-12 dotted-naming pass) turned up zero real .agent.tool instances
+    ever constructed or registered — only a single comment referencing the convention. The id
+    grammar is real and tested; the payload shape below is proposed by analogy to schema.tool
+    (same tool-loop, same callable contract), not confirmed against any real instance. Promote to
+    REAL once a real agent-scoped tool is actually built and registered against this convention.
+  fields:
+    provider:
+      type: string
+      required: true
+      description: >-
+        one of naming.js's real VALID_PROVIDERS (claude, chatgpt, gemini, perplexity, deepseek,
+        ollama) — enforced by agentToolName(), not invented here
+    agentName:
+      type: string
+      required: true
+      description: the agent identifier within that provider, e.g. 'default' in chatgpt.default.ask.agent.tool
+    name:
+      type: string
+      required: true
+      description: the tool's own name segment, e.g. 'ask' in chatgpt.default.ask.agent.tool
+    description:
+      type: string
+      required: true
+      description: proposed by analogy to schema.tool — real, model-facing description. Not yet confirmed against a real instance.
+    parameters:
+      type: object
+      required: true
+      description: proposed by analogy to schema.tool — real JSON-schema-shaped {type, properties, required}. Not yet confirmed against a real instance.
+    execute:
+      type: any
+      required: false
+      description: proposed by analogy to schema.tool's code-backed path — not serializable, in-process only. Not yet confirmed against a real instance.
+    steps:
+      type: array
+      required: false
+      description: proposed by analogy to schema.tool's forged-tool path ({call, args, as?}) — not yet confirmed against a real instance.

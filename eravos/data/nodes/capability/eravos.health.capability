@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-eravos.health
+type: capability
+id: eravos.health
+context: eravos/registry-components.js real capability export
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789250730186
+source: eravos.registry-components:eravos.health
+payload:
+  id: eravos.health
+  namespace: eravos
+  name: health
+  version: 3.0.0
+  grammar:
+    - eravos health
+  route:
+    method: GET
+    path: /health
+  intent: []
+  description: ERAVOS health
+  params: []
+  tags:
+    - eravos
+  permissions:
+    - system
+  hooks: {}

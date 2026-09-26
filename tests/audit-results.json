@@ -1,0 +1,611 @@
+{
+  "ts": "2026-09-19T15:56:42.970Z",
+  "pass": 87,
+  "fail": 51,
+  "warn": 0,
+  "results": [
+    {
+      "status": "PASS",
+      "label": "exists: orchestrator/orchestrator.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: nexus/nexus-connect.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: nexus/autopilot.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: guardian/server.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: guardian/agents/co-pilot/index.js",
+      "detail": "MISSING: guardian/agents/co-pilot/index.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: cortex/cortex.js",
+      "detail": "MISSING: cortex/cortex.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: cortex/self-heal/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: cortex/self-heal/escalation.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: intelligence/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: emerge/compiler/pipeline.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: emerge/compiler/emit.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: emerge/compiler/reply-engine.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: emerge/compiler/t2-gate.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: bridge/causal/expectation.js",
+      "detail": "MISSING: bridge/causal/expectation.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: bridge/causal/graph.js",
+      "detail": "MISSING: bridge/causal/graph.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: lib/component-registry.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: lib/grammar-engine.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: lib/blueprint.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: lib/autonomous-loop.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/hot-loader.js",
+      "detail": "MISSING: lib/hot-loader.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/mcp-server.js",
+      "detail": "MISSING: lib/mcp-server.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/mcp-stdio.js",
+      "detail": "MISSING: lib/mcp-stdio.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/user-model.js",
+      "detail": "MISSING: lib/user-model.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/descriptor-projector.js",
+      "detail": "MISSING: lib/descriptor-projector.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: lib/cli-map.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: intelligence/causal/anomaly.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/cfr/sigma.js",
+      "detail": "MISSING: lib/cfr/sigma.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/cfr/ledger.js",
+      "detail": "MISSING: lib/cfr/ledger.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: lib/cfr/graph.js",
+      "detail": "MISSING: lib/cfr/graph.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: idearium/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: architect/service.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/home/index.html"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: ui/emerge-ide.html",
+      "detail": "MISSING: ui/emerge-ide.html"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/index.html"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/catalog/catalog.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/catalog/catalog-ui.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/catalog/catalog.css"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/pack/pack-loader.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/bridge/nexus-bridge.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/runtime/organism-factory.js"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: ui/eravos/kernel/kernel.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "exists: .mcp.json",
+      "detail": "MISSING: .mcp.json"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: docs/mcp.spec"
+    },
+    {
+      "status": "PASS",
+      "label": "exists: docs/mcp-claude-desktop-config.json"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: orchestrator/orchestrator.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: nexus/nexus-connect.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: guardian/server.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: guardian/agents/co-pilot/index.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: cortex/self-heal/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: cortex/self-heal/escalation.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: intelligence/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: emerge/compiler/t2-gate.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: emerge/compiler/pipeline.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: bridge/causal/expectation.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: lib/component-registry.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: lib/grammar-engine.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: lib/blueprint.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: lib/autonomous-loop.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: lib/hot-loader.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: lib/mcp-server.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: lib/mcp-stdio.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: lib/user-model.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: lib/descriptor-projector.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: lib/cli-map.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: intelligence/causal/anomaly.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "syntax: lib/cfr/sigma.js",
+      "detail": "MISSING"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: idearium/index.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: architect/service.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: ui/eravos/catalog/catalog.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: ui/eravos/catalog/catalog-ui.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: ui/eravos/pack/pack-loader.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: ui/eravos/bridge/nexus-bridge.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: ui/eravos/runtime/organism-factory.js"
+    },
+    {
+      "status": "PASS",
+      "label": "syntax: ui/eravos/kernel/kernel.js"
+    },
+    {
+      "status": "FAIL",
+      "label": "guardian boots mcp-server",
+      "detail": "false"
+    },
+    {
+      "status": "PASS",
+      "label": "guardian has /build route (T2 gate)"
+    },
+    {
+      "status": "FAIL",
+      "label": "guardian has /hot-load route (Phase 14/28)",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "guardian has /blueprint/compile (Phase 42)",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "guardian has /autonomous/run (Phase 13)",
+      "detail": "false"
+    },
+    {
+      "status": "PASS",
+      "label": "guardian has organism-queue routes (ERAVOS bridge)"
+    },
+    {
+      "status": "ERROR",
+      "label": "copilot has build intent",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/guardian/agents/co-pilot/index.js'"
+    },
+    {
+      "status": "ERROR",
+      "label": "copilot has token-first _tryDataAnswer",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/guardian/agents/co-pilot/index.js'"
+    },
+    {
+      "status": "ERROR",
+      "label": "copilot grammar engine wired",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/guardian/agents/co-pilot/index.js'"
+    },
+    {
+      "status": "PASS",
+      "label": "t2-gate imports pipeline"
+    },
+    {
+      "status": "PASS",
+      "label": "t2-gate posts to guardian /command"
+    },
+    {
+      "status": "ERROR",
+      "label": "expectation engine wires anomaly engine",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/bridge/causal/expectation.js'"
+    },
+    {
+      "status": "PASS",
+      "label": "escalation has wireAnomalyTrigger (Phase 71.4)"
+    },
+    {
+      "status": "PASS",
+      "label": "component-registry seeds DESCRIPTOR_FIELDS (Phase 40)"
+    },
+    {
+      "status": "PASS",
+      "label": "component-registry auto-projects on register (Phase 40 T1.5)"
+    },
+    {
+      "status": "PASS",
+      "label": "blueprint wires cli-map generation (Phase 40.5)"
+    },
+    {
+      "status": "ERROR",
+      "label": "user-model v2 has confidence decay (Phase 12)",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/lib/user-model.js'"
+    },
+    {
+      "status": "PASS",
+      "label": "grammar-engine has watchComponents (Phase 15)"
+    },
+    {
+      "status": "ERROR",
+      "label": "mcp-server has nexus_build tool",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/lib/mcp-server.js'"
+    },
+    {
+      "status": "ERROR",
+      "label": "mcp-server has nexus_blueprint tool",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/lib/mcp-server.js'"
+    },
+    {
+      "status": "ERROR",
+      "label": "mcp-server has nexus_autonomous_run tool",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/lib/mcp-server.js'"
+    },
+    {
+      "status": "ERROR",
+      "label": "mcp-server has nexus_hot_load tool",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/lib/mcp-server.js'"
+    },
+    {
+      "status": "ERROR",
+      "label": "mcp-stdio imports mcp-server tools",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/lib/mcp-stdio.js'"
+    },
+    {
+      "status": "PASS",
+      "label": "self-heal excludes semantic gaps (Phase 24.3 fix)"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos index loads catalog.js"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos index loads catalog-ui.js"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos index loads pack-loader.js"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos index loads nexus-bridge.js"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos index has no inline catalog block"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos CatalogUI.init called"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos NexusBridge.start called"
+    },
+    {
+      "status": "PASS",
+      "label": "eravos zip routed through PackLoader"
+    },
+    {
+      "status": "PASS",
+      "label": "catalog.js has register/list/search"
+    },
+    {
+      "status": "PASS",
+      "label": "catalog-ui.js has open/close/toggle"
+    },
+    {
+      "status": "PASS",
+      "label": "pack-loader.js validates manifest"
+    },
+    {
+      "status": "PASS",
+      "label": "nexus-bridge.js polls organism-queue"
+    },
+    {
+      "status": "PASS",
+      "label": "organism-factory has register() (Phase 40 dynamic)"
+    },
+    {
+      "status": "PASS",
+      "label": "home has ch-causal channel"
+    },
+    {
+      "status": "PASS",
+      "label": "home has ch-conversations channel"
+    },
+    {
+      "status": "PASS",
+      "label": "home has ch-canvas channel"
+    },
+    {
+      "status": "PASS",
+      "label": "home has ch-emerge channel"
+    },
+    {
+      "status": "FAIL",
+      "label": "home accent animation exists",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "home --ok not circular (green dot fix)",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "home --err not circular",
+      "detail": "false"
+    },
+    {
+      "status": "PASS",
+      "label": "home NEXUS_UI_STATE exposed"
+    },
+    {
+      "status": "FAIL",
+      "label": "home co-pilot sends uiState",
+      "detail": "false"
+    },
+    {
+      "status": "ERROR",
+      "label": "emerge-ide has hot-load button",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/ui/emerge-ide.html'"
+    },
+    {
+      "status": "ERROR",
+      "label": "emerge-ide has spec-load button",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/ui/emerge-ide.html'"
+    },
+    {
+      "status": "FAIL",
+      "label": ".mcp.json is valid JSON",
+      "detail": "invalid JSON: ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/.mcp.json'"
+    },
+    {
+      "status": "ERROR",
+      "label": ".mcp.json has nexus server entry",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/.mcp.json'"
+    },
+    {
+      "status": "PASS",
+      "label": "mcp-claude-desktop-config.json valid"
+    },
+    {
+      "status": "PASS",
+      "label": "blueprint.js has compile()"
+    },
+    {
+      "status": "PASS",
+      "label": "blueprint.js writes to disk before emit"
+    },
+    {
+      "status": "PASS",
+      "label": "blueprint.js sigma calculation"
+    },
+    {
+      "status": "FAIL",
+      "label": "autonomous-loop requires 4 fields",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "autonomous-loop sigma rewind at 0.70",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "autonomous-loop case library query",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "autonomous-loop RAID gate",
+      "detail": "false"
+    },
+    {
+      "status": "FAIL",
+      "label": "autonomous-loop boundary check",
+      "detail": "false"
+    },
+    {
+      "status": "ERROR",
+      "label": "71.1 state reducer pure function",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/bridge/causal/expectation.js'"
+    },
+    {
+      "status": "ERROR",
+      "label": "71.2 ExpectationEngine has define/observe",
+      "detail": "ENOENT: no such file or directory, open '/home/claude/a/nexus-repo/bridge/causal/expectation.js'"
+    },
+    {
+      "status": "PASS",
+      "label": "71.3 anomaly engine classify()"
+    },
+    {
+      "status": "PASS",
+      "label": "71.3 anomaly types cover all 6"
+    },
+    {
+      "status": "PASS",
+      "label": "71.4 wireAnomalyTrigger closes the loop"
+    }
+  ]
+}

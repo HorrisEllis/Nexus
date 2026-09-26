@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.job.build
+type: component
+id: guardian.job.build
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152827
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152827
+lastSeenAt: 1789275152827
+fingerprint: guardian::POST /build
+payload:
+  id: guardian.job.build
+  uuid: 0165bd5f-40ba-4186-8b52-c0d4465f7357
+  namespace: guardian
+  name: job.build
+  version: 3.6.2

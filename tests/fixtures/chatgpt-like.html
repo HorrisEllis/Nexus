@@ -1,0 +1,40 @@
+<!doctype html>
+<!--
+  tests/fixtures/chatgpt-like.html — v0.39.251
+  A saved ChatGPT-shaped conversation page for the selector picker's live check
+  (tests/probe/selector-check-chromium.py). Structure mirrors what
+  guardian/userscript-chatgpt.js already targets on the real site: one wrapper
+  per turn, data-message-author-role on each message, a per-message uuid
+  (data-message-id — must NEVER be used as a selector), the answer body in
+  .markdown.prose, a contenteditable #prompt-textarea, and a send button with
+  data-testid and an svg inside it. Hashed utility classes (css-…, _a1b2c3)
+  are present on purpose: the picker must not build on them.
+-->
+<html><head><meta charset="utf-8"><title>ChatGPT-like</title></head>
+<body>
+<main class="css-9x8k2m">
+  <div class="flex flex-col" id="thread">
+    <article data-testid="conversation-turn-1" class="_a1b2c3">
+      <div data-message-author-role="user" data-message-id="0c7d1f2a-1111-4a4b-9c9d-aaaaaaaaaaaa"><div class="whitespace-pre-wrap">first question</div></div>
+    </article>
+    <article data-testid="conversation-turn-2" class="_a1b2c3">
+      <div data-message-author-role="assistant" data-message-id="0c7d1f2a-2222-4a4b-9c9d-bbbbbbbbbbbb">
+        <div class="markdown prose w-full"><p id="old-p">Older answer, paragraph one.</p><p>Older answer, paragraph two.</p></div>
+      </div>
+    </article>
+    <article data-testid="conversation-turn-3" class="_a1b2c3">
+      <div data-message-author-role="user" data-message-id="0c7d1f2a-3333-4a4b-9c9d-cccccccccccc"><div class="whitespace-pre-wrap">second question</div></div>
+    </article>
+    <article data-testid="conversation-turn-4" class="_a1b2c3">
+      <div data-message-author-role="assistant" data-message-id="0c7d1f2a-4444-4a4b-9c9d-dddddddddddd">
+        <div class="markdown prose w-full"><p id="new-p">Latest answer, paragraph one.</p><p>Latest answer, paragraph <strong id="new-strong">two</strong>.</p></div>
+      </div>
+    </article>
+  </div>
+  <form class="css-7yq1ab">
+    <div id="prompt-textarea" contenteditable="true" class="ProseMirror"><p id="input-p">draft</p></div>
+    <button data-testid="send-button" aria-label="Send prompt" class="css-4kd92z"><svg width="16" height="16"><path id="send-path" d="M1 1L15 8L1 15z"/></svg></button>
+    <button aria-label="Attach" class="css-4kd92z"><svg width="16" height="16"><path d="M2 2h12v12H2z"/></svg></button>
+  </form>
+</main>
+</body></html>

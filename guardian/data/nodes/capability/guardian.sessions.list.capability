@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.sessions.list
+type: capability
+id: guardian.sessions.list
+context: guardian/registry-components.js real capability export
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789250730143
+source: guardian.registry-components:guardian.sessions.list
+payload:
+  id: guardian.sessions.list
+  namespace: guardian
+  name: sessions.list
+  version: 3.6.2
+  grammar:
+    - sessions list
+    - sessions-list
+  route:
+    method: GET
+    path: /sessions
+  intent: []
+  description: NCP session history
+  params: []
+  tags:
+    - guardian
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-2f228693-909a-4e8f-a741-485d2de35847
+type: bep_pattern
+id: 2f228693-909a-4e8f-a741-485d2de35847
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"adversarial.run.complete" and "autopilot.instance_snapshot" co-occur within 5s — 3 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790368216522
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368216522
+lastSeenAt: 1790368216522
+fingerprint: null
+payload:
+  uuid: 2f228693-909a-4e8f-a741-485d2de35847
+  signature: adversarial.run.complete::autopilot.instance_snapshot
+  patternType: co_occurrence
+  typeA: adversarial.run.complete
+  typeB: autopilot.instance_snapshot
+  systemA: null
+  systemB: copilot
+  crossSystem: false
+  count: 3
+  confidence: 0.15
+  description: '"adversarial.run.complete" and "autopilot.instance_snapshot" co-occur within 5s — 3 observations'
+  actionable: false
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790368216317

@@ -1,0 +1,2 @@
+/* renderer/library/sections/macros.css — Library → Macros only. Scoped to body[data-area="macros"]. */
+body[data-area="macros"] .row .what .t { font-family: var(--mono); font-size: 12.5px; }

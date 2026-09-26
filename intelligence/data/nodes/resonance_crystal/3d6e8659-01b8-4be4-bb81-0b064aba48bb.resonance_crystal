@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-resonance_crystal-3d6e8659-01b8-4be4-bb81-0b064aba48bb
+type: resonance_crystal
+id: 3d6e8659-01b8-4be4-bb81-0b064aba48bb
+context: 'intelligence liminal-space resonance crystal: failure_precursor'
+intent: null
+summary: 'focal point: L1/L3'
+system: intelligence
+tags:
+  - liminal-space
+  - failure_precursor
+exported_at: 1790368266437
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266437
+lastSeenAt: 1790368266437
+fingerprint: null
+payload:
+  uuid: 3d6e8659-01b8-4be4-bb81-0b064aba48bb
+  focalPoint: L1/L3
+  type: failure_precursor
+  path: evidence_threshold
+  itemCount: 5
+  avgConfidence: 1
+  summary: >-
+    Pattern "precursor::component.updated" has causal path to failures | Pattern
+    "precursor::ledger.versionium.updated" has causal path to failures | Pattern
+    "precursor::ledger.loom.updated" has causal path to failures
+  ts: 1790368266437

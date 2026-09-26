@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-contract-1b508067-bc0c-4a83-953c-7603c87fdec3
+type: contract
+id: 1b508067-bc0c-4a83-953c-7603c87fdec3
+context: null
+intent: build
+summary: null
+system: cortex
+tags: []
+exported_at: 1789313016005
+source: mco5-demo
+occurrences: 1
+firstSeenAt: 1789313016005
+lastSeenAt: 1789313016005
+fingerprint: null
+payload:
+  uuid: 1b508067-bc0c-4a83-953c-7603c87fdec3
+  status: queued
+  intention: build
+  dir: null
+  language: null
+  stage: queued
+  system: cortex
+  source: mco5-demo
+  sourceDropId: null
+  boundary: null
+  file: null
+  title: null
+  forAgent: null
+  contract:
+    content: 'MCO5 real job: compute the SHA-256 digest of "nexus-mco5-2026-09-13" and report it.'
+  dependsOn: []
+  onFail:
+    action: halt
+  retryCount: 0
+  compartmentId: null
+  verdict: null
+  createdAt: 1789313015992
+  updatedAt: 1789313015992

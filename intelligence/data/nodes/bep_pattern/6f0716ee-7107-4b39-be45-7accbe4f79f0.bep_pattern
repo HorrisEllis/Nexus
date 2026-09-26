@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-6f0716ee-7107-4b39-be45-7accbe4f79f0
+type: bep_pattern
+id: 6f0716ee-7107-4b39-be45-7accbe4f79f0
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"component.updated" precedes failures 123 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266404
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266404
+lastSeenAt: 1790368266404
+fingerprint: null
+payload:
+  uuid: 6f0716ee-7107-4b39-be45-7accbe4f79f0
+  signature: precursor::component.updated
+  patternType: failure_precursor
+  precursorType: component.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 123
+  confidence: 1
+  description: '"component.updated" precedes failures 123 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

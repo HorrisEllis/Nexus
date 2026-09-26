@@ -1,0 +1,60 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.intelligence",
+  "name": "intelligence",
+  "label": "Intelligence",
+  "dir": "intelligence",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.intelligence",
+    "scope": [
+      "intelligence/",
+      "data/intelligence/"
+    ],
+    "versionLine": null,
+    "versionNote": "no per-system version registered yet"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.intelligence",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "intelligence/server.js",
+    "entryExists": true,
+    "port": 3753,
+    "phase": 3,
+    "critical": false,
+    "optional": false,
+    "healthUrl": "http://127.0.0.1:3753/health"
+  },
+  "data": {
+    "dataDir": "data/intelligence",
+    "ledgerDir": "intelligence/data/ledger",
+    "nodeIndexDir": "intelligence/data/node-index"
+  },
+  "spec": "intelligence/spec/",
+  "dependsOn": {
+    "cortex": 10,
+    "guardian": 1
+  },
+  "sharedLibRequires": 24,
+  "stats": {
+    "jsFiles": 76,
+    "jsLines": 18606
+  },
+  "boundaryFindings": {
+    "count": 11,
+    "sample": [
+      "intelligence/alk/index.js -> cortex/versionium/\n  ",
+      "intelligence/cfr/ledger.js -> cortex/memory/jaa-db",
+      "intelligence/gap/predicate.js -> cortex/memory/jaa-db",
+      "intelligence/gap/predicate.js -> cortex/self-heal/fault-taxonomy",
+      "intelligence/index.js -> cortex/memory/jaa-db",
+      "intelligence/lib/domain-nodes.js -> guardian/jaa-store.js",
+      "intelligence/liminal-space/index.js -> cortex/memory/jaa-db",
+      "intelligence/server.js -> cortex/memory/jaa-db.js",
+      "intelligence/server.js -> cortex/memory/jaa-db.js",
+      "intelligence/server.js -> cortex/memory/jaa-db.js"
+    ]
+  }
+}

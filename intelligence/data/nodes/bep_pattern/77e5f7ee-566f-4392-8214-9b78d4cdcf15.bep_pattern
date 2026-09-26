@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-77e5f7ee-566f-4392-8214-9b78d4cdcf15
+type: bep_pattern
+id: 77e5f7ee-566f-4392-8214-9b78d4cdcf15
+context: 'intelligence crystallised pattern: failure_precursor'
+intent: null
+summary: '"ledger.eros.updated" precedes failures 19 times — watch this event type'
+system: intelligence
+tags:
+  - bep_patterns
+  - failure_precursor
+  - cortex/intelligence
+exported_at: 1790368266441
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790368266441
+lastSeenAt: 1790368266441
+fingerprint: null
+payload:
+  uuid: 77e5f7ee-566f-4392-8214-9b78d4cdcf15
+  signature: precursor::ledger.eros.updated
+  patternType: failure_precursor
+  precursorType: ledger.eros.updated
+  failureTypes:
+    - intelligence.failure_scan
+  count: 19
+  confidence: 1
+  description: '"ledger.eros.updated" precedes failures 19 times — watch this event type'
+  actionable: true
+  crystallised: true
+  topFailureType: intelligence.failure_scan
+  source: cortex/intelligence
+  ts: 1790368266308

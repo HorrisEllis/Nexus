@@ -1,0 +1,5 @@
+/* renderer/settings/sections/plugins.css — Plugins
+ * §BUILT 2026-09-25: this area's own styles (one CSS file per UI file). Every
+ * rule is scoped to body[data-area="plugins"] — set by core.js when the
+ * area is shown — so nothing here can restyle another area. */
+body[data-area="plugins"] .row .acts { flex-wrap: wrap; gap: 6px; }

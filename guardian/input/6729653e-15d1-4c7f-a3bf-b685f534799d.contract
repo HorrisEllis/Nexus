@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-contract-6729653e-15d1-4c7f-a3bf-b685f534799d
+type: contract
+id: 6729653e-15d1-4c7f-a3bf-b685f534799d
+context: null
+intent: build
+summary: null
+system: guardian
+tags: []
+exported_at: 1789303176127
+source: b1-synthesize
+occurrences: 1
+firstSeenAt: 1789303176127
+lastSeenAt: 1789303176127
+fingerprint: null
+payload:
+  uuid: 6729653e-15d1-4c7f-a3bf-b685f534799d
+  status: queued
+  intention: build
+  dir: guardian/lib
+  language: null
+  stage: queued
+  system: guardian
+  source: b1-synthesize
+  sourceDropId: null
+  boundary: null
+  file: null
+  title: foo.js
+  forAgent: ollama
+  contract:
+    content: |-
+      [System: guardian]
+
+      [End state] guardian/lib/foo.js exports a real bar() function
+
+      [Conditions] {"pre":["guardian boots"],"post":["bar() returns a real value"]}
+    title: foo.js
+    forAgent: ollama
+    dependsOn: []
+  dependsOn: []
+  onFail:
+    action: retry
+    maxRetries: 2
+  retryCount: 0
+  compartmentId: null
+  verdict: null
+  createdAt: 1789303176127
+  updatedAt: 1789303176127

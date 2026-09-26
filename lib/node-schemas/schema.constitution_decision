@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-schema-constitution_decision
+type: schema
+id: constitution_decision
+context: >-
+  lib/node-schemas — shared canonical registry. Grounded in lib/constitutional-ai.js's own §2.1/§4.3
+  header comments, confirmed directly against live rows this pass.
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1789252802351
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/constitutional-ai.js's real per-request axiom check output — confirmed against
+    data/cortex/memory/constitution_decisions.json's real, live rows (2256 of them). §2.1 of that
+    file's own header: "constitution_decisions table, append-only."
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real decision-record id
+    requestId:
+      type: string
+      required: false
+      description: real request id this decision was made for, null when not tied to one
+    axiom:
+      type: string
+      required: true
+      description: real axiom name checked, e.g. 'USER_AUTONOMY'
+    pass:
+      type: boolean
+      required: true
+      description: real pass/fail result of the check
+    reason:
+      type: string
+      required: true
+      description: real human-readable reason for the result
+    severity:
+      type: string
+      required: true
+      description: real severity of the finding, e.g. 'flag'
+    blast_radius:
+      type: string
+      required: true
+      description: >-
+        real typed blast radius — 'none' | 'local' | 'system' | 'irreversible', per the file's own
+        §4.3
+    cost:
+      type: number
+      required: false
+      description: real estimated cost of the action being checked
+    alternatives:
+      type: array
+      required: false
+      description: real alternative actions offered, if any
+    ts:
+      type: number
+      required: true
+      description: real timestamp

@@ -1,0 +1,42 @@
+/* ui/home/areas/spec-wizard.css — Spec wizard modal.
+   Split from ui/home/home.css at v0.39.227; link order is set by index.html. */
+/* ── Spec wizard modal ────────────────────────────────────────── */
+#spec-wizard-overlay{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.85);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+#spec-wizard-overlay.open{display:flex}
+#spec-wizard{width:min(720px,94vw);max-height:88vh;overflow-y:auto;background:#0e1117;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:32px;display:flex;flex-direction:column;gap:20px}
+.swiz-title{font-size:15px;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.9)}
+.swiz-sub{font-size:12px;color:rgba(255,255,255,.35);margin-top:4px}
+.swiz-agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.swiz-agent{border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:16px;cursor:pointer;transition:all .15s}
+.swiz-agent:hover,.swiz-agent.selected{border-color:var(--ac);background:rgba(255,255,255,.03)}
+.swiz-agent-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.swiz-agent-badge{font-size:9px;letter-spacing:.1em;opacity:.45;margin-bottom:8px}
+.swiz-agent-traits{font-size:11px;color:rgba(255,255,255,.35);line-height:1.7}
+.swiz-agent.m-ollama{--ac:rgba(255,124,56,.7)}
+.swiz-agent.m-chatgpt{--ac:rgba(0,255,136,.6)}
+.swiz-agent.m-claude{--ac:rgba(204,68,255,.6)}
+.swiz-field{display:flex;flex-direction:column;gap:6px}
+.swiz-label{font-size:11px;letter-spacing:.06em;color:rgba(255,255,255,.4)}
+.swiz-input,.swiz-textarea,.swiz-select{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:10px 12px;color:rgba(255,255,255,.85);font-family:inherit;font-size:13px;width:100%;box-sizing:border-box;transition:border-color .15s}
+.swiz-input:focus,.swiz-textarea:focus,.swiz-select:focus{outline:none;border-color:rgba(255,255,255,.2)}
+.swiz-textarea{resize:vertical;min-height:80px}
+.swiz-chunk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.swiz-chunk{border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:12px;font-size:11px}
+.swiz-chunk-title{font-weight:600;color:rgba(255,255,255,.7);margin-bottom:3px}
+.swiz-chunk-desc{color:rgba(255,255,255,.28);line-height:1.5}
+.swiz-chunk-status{font-size:10px;margin-top:6px;opacity:.5}
+.swiz-chunk.complete{border-color:var(--ok-border)}.swiz-chunk.complete .swiz-chunk-status{color:var(--ok);opacity:1}
+.swiz-chunk.building{border-color:rgba(255,124,56,.3)}.swiz-chunk.building .swiz-chunk-status{color:#ff7c38;opacity:1}
+.swiz-chunk.failed{border-color:rgba(255,68,102,.3)}.swiz-chunk.failed .swiz-chunk-status{color:#ff4466;opacity:1}
+.swiz-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.swiz-btn{padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:.06em;transition:all .15s}
+.swiz-btn-primary{background:rgba(255,255,255,.9);color:#0e1117}.swiz-btn-primary:hover{background:#fff}
+.swiz-btn-build{background:rgba(0,255,136,.15);color:var(--ok);border:1px solid rgba(0,255,136,.3)}.swiz-btn-build:hover{background:var(--ok-border)}
+.swiz-btn-cancel{background:transparent;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1)}.swiz-btn-cancel:hover{color:rgba(255,255,255,.7)}
+.swiz-progress-bar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-top:4px}
+.swiz-progress-fill{height:100%;background:var(--ok);border-radius:2px;transition:width .5s}
+.swiz-spec-list{display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto}
+.swiz-spec-item{border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:12px;cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center}
+.swiz-spec-item:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.02)}
+.swiz-spec-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+.swiz-spec-meta{font-size:10px;color:rgba(255,255,255,.3);margin-top:3px}

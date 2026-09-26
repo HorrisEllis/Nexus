@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-loom.friction
+type: capability
+id: loom.friction
+context: loom/registry-components.js real capability export
+intent: null
+summary: null
+system: loom
+tags: []
+exported_at: 1789250730154
+source: loom.registry-components:loom.friction
+payload:
+  id: loom.friction
+  namespace: loom
+  name: friction
+  version: 1.5.0
+  grammar:
+    - friction
+    - friction
+  route:
+    method: GET
+    path: /api/friction
+  intent: []
+  description: Per-system friction score, proxied live from the diagnostic kernel (:7825)
+  params: []
+  tags:
+    - loom
+    - analysis
+  permissions:
+    - system
+  hooks: {}

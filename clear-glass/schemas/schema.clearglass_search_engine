@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-schema-clearglass_search_engine
+type: schema
+id: clearglass_search_engine
+context: clear-glass/schemas — clear-glass-local schema registry
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789200001200
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/agent-tools/tools/clear-glass/search-engine.js — the real, jaaDB-backed 'search_engines'
+    table this session's clearglass.search_engine.tool writes to. Clear-glass-exclusive: no other
+    system registers or resolves named, queryable search-engine templates.
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real row id
+    id:
+      type: string
+      required: true
+      description: real, short, stable engine id a caller registers and searches by
+    name:
+      type: string
+      required: true
+      description: real, human-readable engine name
+    urlTemplate:
+      type: string
+      required: true
+      description: real URL containing a literal {query} placeholder
+    method:
+      type: string
+      required: true
+      description: "'api' (fetches and parses JSON) or 'navigate' (resolves the URL only)"
+    headers:
+      type: object
+      required: false
+      description: real static headers sent with every 'api' request, null otherwise
+    resultsPath:
+      type: string
+      required: false
+      description: real dot-path plucked from an 'api' response, e.g. 'items'
+    derivedFromPick:
+      type: object
+      required: false
+      description: "real {tag, name, sourceUrl} when this engine was registered via register_from_pick, null otherwise"
+    createdAt:
+      type: number
+      required: true
+      description: real creation timestamp
+    _deleted:
+      type: boolean
+      required: true
+      description: real soft-delete flag — a deleted engine is a new row with this true, never a mutation

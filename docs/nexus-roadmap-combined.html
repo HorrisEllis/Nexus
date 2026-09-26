@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NEXUS — Full Phase Roadmap</title>
+<style>
+  :root{
+    --bg:#0a0c0f; --panel:#11151a; --line:#1d242c; --text:#d7dee5; --dim:#6b7682;
+    --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+    --complete:#34d399; --next:#fbbf24; --pending:#3b82f6; --superseded:#6b7682; --accent:#7dd3fc;
+    --decision:#f472b6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:40px 40px;background-attachment:fixed;}
+  header{padding:30px 28px 18px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(10,12,15,.96),rgba(10,12,15,.7));position:sticky;top:0;z-index:10;backdrop-filter:blur(6px);}
+  h1{margin:0;font-size:20px;color:#fff;font-weight:600}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--dim);font-size:12px;margin-top:6px;line-height:1.6}
+  .sub b{color:var(--complete)}
+  .stats{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+  .stat{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .controls{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;align-items:center}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filt{border:1px solid var(--line);background:transparent;color:var(--dim);padding:5px 12px;border-radius:20px;font-family:var(--mono);font-size:11px;cursor:pointer;transition:.15s}
+  .filt:hover{border-color:var(--accent);color:var(--accent)}
+  .filt.active{background:var(--accent);color:#0a0c0f;border-color:var(--accent)}
+  .toggleall{border:1px solid var(--accent);background:transparent;color:var(--accent);padding:5px 12px;border-radius:20px;font-family:var(--mono);font-size:11px;cursor:pointer}
+  .toggleall:hover{background:var(--accent);color:#0a0c0f}
+  .search{flex:1;min-width:160px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 14px;color:var(--text);font-family:var(--mono);font-size:12px}
+  .search:focus{outline:none;border-color:var(--accent)}
+  main{max-width:1040px;margin:0 auto;padding:26px 24px 80px;position:relative}
+  .spine{position:absolute;left:48px;top:0;bottom:0;width:2px;background:var(--line)}
+  .tier-label{color:var(--dim);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:32px 0 14px;padding-left:84px}
+  .tier-label.unification{color:var(--decision);border-left:2px solid var(--decision);padding-left:12px;margin-left:72px;letter-spacing:1px}
+  .row{display:flex;gap:18px;position:relative;margin-bottom:10px}
+  .node{width:96px;flex-shrink:0;padding-top:14px;display:flex;justify-content:center}
+  .marker{width:13px;height:13px;border-radius:50%;border:2px solid var(--bg);box-shadow:0 0 0 2px var(--line);position:relative;z-index:1}
+  .card{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;transition:.15s}
+  .card:hover{border-color:var(--accent)}
+  .card.open{border-color:var(--accent)}
+  .card.decision-card{border-color:rgba(244,114,182,.3)}
+  .card.decision-card:hover,.card.decision-card.open{border-color:var(--decision)}
+  .crow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .ctitle{font-size:13.5px;color:#fff;font-weight:600}
+  .pnum{color:var(--accent);font-weight:700;margin-right:6px}
+  .badge{font-size:10px;padding:2px 8px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;white-space:nowrap}
+  .b-complete{background:rgba(52,211,153,.12);color:var(--complete)}
+  .b-next{background:rgba(251,191,36,.12);color:var(--next)}
+  .b-pending{background:rgba(59,130,246,.12);color:var(--pending)}
+  .b-superseded{background:rgba(107,118,130,.15);color:var(--superseded)}
+  .b-decision{background:rgba(244,114,182,.12);color:var(--decision)}
+  .human{margin-top:8px;font-size:12.5px;color:#c9d6e6;line-height:1.6;background:rgba(125,211,252,.06);border-left:2px solid var(--accent);padding:8px 10px;border-radius:0 6px 6px 0;}
+  .human b{color:var(--accent)}
+  .decision-note{margin-top:8px;font-size:12.5px;color:#f9a8d4;line-height:1.6;background:rgba(244,114,182,.06);border-left:2px solid var(--decision);padding:8px 10px;border-radius:0 6px 6px 0;}
+  .desc{color:var(--dim);font-size:12px;margin-top:9px;line-height:1.6;display:none}
+  .deps{margin-top:9px;font-size:11px;color:var(--dim);display:none;border-top:1px dashed var(--line);padding-top:8px;line-height:1.6}
+  .unlocks{margin-top:6px;font-size:11px;color:var(--dim);display:none;line-height:1.6}
+  .deps b,.unlocks b{color:var(--text)}
+  .card.open .desc,.card.open .deps,.card.open .unlocks{display:block}
+  .correction-tag{font-size:9px;padding:1px 6px;border-radius:6px;background:rgba(52,211,153,.12);color:var(--complete);margin-left:6px;vertical-align:middle;letter-spacing:.5px;text-transform:uppercase}
+  .hidden{display:none !important}
+  footer{text-align:center;color:var(--dim);font-size:11px;padding:24px;border-top:1px solid var(--line)}
+  .audit-box{background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.2);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:11.5px;color:#e2b4d0;line-height:1.7;display:none}
+  .card.open .audit-box{display:block}
+  .audit-box table{width:100%;border-collapse:collapse;margin-top:8px}
+  .audit-box td,.audit-box th{padding:4px 8px;border:1px solid rgba(244,114,182,.2);font-size:11px}
+  .audit-box th{color:var(--decision);font-weight:600}
+  .audit-box .zero{color:#f87171}
+  .audit-box .nonzero{color:var(--complete)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NEXUS <span>// Full Phase Roadmap</span></h1>
+  <div class="sub">
+    Sovereign Cognitive OS — every phase, full technical detail plus plain-English summary.<br>
+    §3.1 bottom-up only · §6.1 Blueprint is the only write authority — CLI/UI/grammar/docs are read-only projections.<br>
+    <b>Phase 10 (Constitutional AI) confirmed complete</b> — Tier 2 (Reflection Engine, User Model track) now unblocked.<br>
+    <b>Phase 31 and Phase 36 confirmed complete</b> — grammar↔intent pre-classification and forge/heal/snapshot now resolve through grammar-engine; Phase 40.5 partially unblocked.<br>
+    Architect re-scored (real service, 666 lines, port :3747) · four-island registry audit · Phases 60–64 (Unification track) tracked.
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="dot" style="background:var(--complete)"></span>15 complete</div>
+    <div class="stat"><span class="dot" style="background:var(--next)"></span>1 next</div>
+    <div class="stat"><span class="dot" style="background:var(--pending)"></span>36 pending</div>
+    <div class="stat"><span class="dot" style="background:var(--superseded)"></span>1 superseded</div>
+    <div class="stat"><span class="dot" style="background:var(--decision)"></span>1 decision gate</div>
+    <div class="stat">54 phases total</div>
+  </div>
+  <div class="controls">
+    <div class="filters" id="filters">
+      <button class="filt active" data-f="all">All</button>
+      <button class="filt" data-f="complete">Complete</button>
+      <button class="filt" data-f="pending">Pending</button>
+      <button class="filt" data-f="superseded">Superseded</button>
+      <button class="filt" data-f="decision">Decision</button>
+    </div>
+    <button class="toggleall" id="expandAll">Expand all</button>
+    <input class="search" id="search" placeholder="search phase name, file, or term…">
+  </div>
+</header>
+
+<main>
+  <div class="spine"></div>
+  <div id="timeline"></div>
+</main>
+<footer>NEXUS v0.9.9 · single integrated phase map · updated 2026-06-20 · click any phase for deps / unlocks / detail</footer>
+
+<script>
+const STATUS_LABEL = {complete:"Complete", next:"Build Next", pending:"Pending", superseded:"Superseded", decision:"Decision Gate"};
+
+const DATA = [
+{tier:"Foundation — complete", items:[
+  {n:"0–8", t:"Foundation through Organs", s:"complete",
+   human:"The base operating system is alive: it remembers things, runs services, watches itself for problems, and can heal small issues on its own. Seven core services are online.",
+   d:"Memory tiers, intelligence core, replay engine (16/16 tests), CFR field, contracts, SEAM pipeline, self-heal organs, heartbeat v2, RSA auth, snapshot system, Bridge circuit breaker, Builder UI, spec-compiler, RAID v6 (9 clusters / 5 NCP providers), grammar engine, liminal space (5 zones), SNR filter, loop-topology, gap-loop.",
+   deps:"bus · jaa · cortex · guardian · idearium · bridge · orchestrator — all online"},
+  {n:"9", t:"Request Handler", s:"complete",
+   human:"Every request passes through one checkpoint: checks intent against the rules, figures out the cost, decides what to do, reflects on whether it was the right call, and learns from it.",
+   d:"Constitutional choke point. A: intent→goal→constitution→cost→outcome. B: grammar→SNR→memory→RAID. C: reflect. D: learn. Cost tiers: READ=0.1 · COMPUTE=0.3 · LLM_LOCAL=0.5 · LLM_REMOTE=0.8 · FORGE=0.9 · IRREVERSIBLE=1.0.",
+   deps:"bus ✓ · jaa ✓ · gap-loop ✓"},
+  {n:"10", t:"Constitutional AI", s:"complete",
+   human:"Gives the system an actual conscience: a fixed set of rules it checks every decision against. If a request conflicts with the rules it gets held for review, not silently denied. Unlocks Reflection, User Model, and the Autonomous Loop.",
+   d:"lib/constitutional-ai.js. Axioms: USER_AUTONOMY (respected unless constitution violated) · REVERSIBILITY (prefer reversible, flag+confirm irreversible) · TRUTH_OVER_COHERENCE (surface uncertainty, never fabricate confidence) · EXPLAINABILITY (every DENY/DEFER/HELD has UUID + human-readable reason). Goal graph: misaligned → HELD not DENIED. Identity kernel read-only except via Phase 11 after N evidence items.",
+   deps:"request-handler ✓ · gap-loop ✓ · jaa ✓",unlocks:"11, 12, 13"},
+  {n:"22", t:"Divergence Watcher + Blackbox Recorder", s:"complete",
+   human:"A flight-recorder for the system. If something starts behaving strangely, it automatically saves a 'before and after' snapshot so it can be diagnosed later.",
+   d:"σ polled every 5s. Fires at ≥0.65 or spike +0.20. 90s cooldown. On divergence: system_state → blackbox_pre (10min compressed) → blackbox_post (30s) → 30-day macro. .nex v1.1.",
+   deps:"cortex ✓ · bus ✓ · jaa ✓"},
+  {n:"23", t:"Stale Module Gap: Named, Typed, Severity-Graded", s:"complete",
+   human:"When a part of the system stops responding, it now names exactly what's stuck and how serious it is, instead of throwing a generic error.",
+   d:"Gap body: [idearium:4800] stale 47s. Severity by criticality + duration. bus.onAny fixed. idearium/core/index.js restored.",
+   deps:"heartbeat ✓ · gap-loop ✓"},
+  {n:"23.5", t:"Idearium Lockdown: Orchestrator as Sole Gateway", s:"complete",
+   human:"Closed a real security hole: Idearium was reachable directly from outside instead of only through the main front door. Auth gate deleted (not disabled), independent tunnel removed, bind fixed 0.0.0.0→127.0.0.1.",
+   d:"Orchestrator is sole trust boundary. Auth gate deleted outright (_verifyKey/_extractToken/_ensureBootKey, key store, key.list/create/revoke routes). Independent Cloudflare tunnel removed. Bind fixed in idearium/api/index.js AND in cli/boot-systems.js's IDEARIUM_BIND env override (same violation, different layer). Verified: :4800 direct → 200 no token · :9000 proxy → 200 · boot log confirms 127.0.0.1 bind · Playwright: zero 401/403s.",
+   deps:"Phase 23 ✓ · orchestrator /api/idearium/* proxy ✓"},
+  {n:"23.6", t:"Gap Lifecycle: Dedup + Auto-Resolve", s:"complete",
+   human:"Fixed a bug where the same problem was being logged 10+ times instead of once. Also now correctly marks a problem resolved when it heals, instead of leaving a stale flag forever.",
+   d:"Root cause: heartbeat minted fresh gap.uuid on every failed probe cycle (30s) for the same path, so escalation cooldown never matched. Fixed: query existing open gap before insert, update in place. Added auto-resolve on probe recovery (did not exist before). Verified (mocked jaaDB): 10 failures collapse into 1 gap · recovery closes it · later re-failure opens fresh gap correctly.",
+   deps:"Phase 23 ✓ · heartbeat ✓ · jaa ✓"},
+  {n:"24", t:"TV Shell: Floating Menu Root Cause", s:"complete",
+   human:"Fixed the floating menu — caused by one invisible typo (stray newline) silently killing the whole script. Found and fixed the exact same bug class a second time in a different file.",
+   d:"Six bugs fixed: literal newline in JS string killed entire script block · all 6 tile tune() indices wrong · tune(7) out of bounds · duplicate CSS transform · z-index stacking during animation · bus.onAny missing. Recurrence in ui/home/index.html: identical bug class — .filter(Boolean).join(' followed by raw newline. Fixed to .join('\\n'). Verified end-to-end with Playwright: zero pageerror events, tile clicks work, nav advances correctly. Two occurrences now closed across two hand-written files (forge-shell.html, home/index.html).",
+   deps:"ui/forge-shell.html ✓ · ui/home/index.html ✓"},
+  {n:"25", t:"RAID Compartment Engine", s:"complete",
+   human:"Every action the system takes happens inside its own sealed-off sandbox first, with a rulebook injected before it starts. If the result is good it's merged in; if it's bad or breaks the rules it's either rewound or thrown away — nothing risky touches the real system directly.",
+   d:"Isolated working memory sandbox per action. Snapshot before every choice (§2.1). Compartments cannot mutate Cortex directly — delta-based commits only. Constraint frame (axioms + architectural laws + risk ceiling + max_resolution_level + injected frameworks + negative crystals + budget + boundary) injected at spawn, enforced throughout, cannot be modified mid-run. Adversary suite: 6 attack classes (syntax/logic/edge-case/state/cross-domain/stress). QA/QC: syntax/schema/type/invariant/replay. PASS → commit delta, update lattice, crystallize, index case. FAIL → rewind to snapshot (recoverable) or delete compartment (frame breach/integrity violation, unrecoverable).",
+   deps:"bus ✓ · jaa ✓ · snapshot ✓",unlocks:"26, 27, 46"},
+  {n:"26", t:"Adversarial Integrity Layer", s:"complete",
+   human:"A tamper-detection system for the system's own memory — every saved state is cryptographically chained to the one before it, so corruption or tampering gets caught immediately. Repeated failure patterns get flagged and actively avoided.",
+   d:"Hash-chained snapshots (cortex_state_hash + prev_snapshot_hash), tamper-evident, verified on every read and at boot via 'nexus integrity check'. Negative crystal promotion when failure_frequency ≥ threshold. Lattice decay on schedule. System-level adversary audit replays last N compartment traces through the full adversary suite.",
+   deps:"Phase 25 ✓ · jaa ✓"},
+  {n:"45", t:"Intent Classifier: RAID Entry Gate", s:"complete",
+   human:"The front door that figures out what you actually want before anything else happens, and locks that understanding in place so it can't get reinterpreted halfway through.",
+   d:"Produces the immutable INTENT object every downstream phase consumes. INTENT fields: uuid · domain · verb · objects · constraints · risk_level · confidence · execution_class · source · raw. Revisable before execution, frozen at execution start. confidence < threshold → intent.low_confidence gap. Used by: compartment spawn · case library query · Guardian dispatch · Phase 31 · Phase 13 · constitutional-ai.",
+   deps:"Phase 25 ✓ · request-handler ✓ · jaa ✓",unlocks:"46, 31"},
+  {n:"46", t:"Queryable Case Library", s:"complete",
+   human:"The system remembers how it solved similar problems before and reuses that experience — like muscle memory for past decisions.",
+   d:"Every PASS compartment trace indexed by intent signature. CASE_MATCH(intent) → ranked cases: high match (≥0.85) full trace seed, medium (≥0.60) skeleton seed, low (<0.60) cold spawn, negative crystal hit → path blocked. Query: nexus cases query/show/stats/decay. Queryable from CLI, Architect UI, Phase 13 autonomous loop, Phase 29 topology, SEAM chunks.",
+   deps:"Phase 25 ✓ · Phase 45 ✓ · jaa ✓",unlocks:"13 (enhanced)"},
+]},
+
+{tier:"Tier 1 — ready now (no pending deps)", items:[
+  {n:"14", t:"Hot Module Loader", s:"pending",
+   human:"Lets you update a running part of the system without restarting everything — tests the new code in quarantine first, proves it safe, then swaps it in live.",
+   d:"Drop → QUARANTINE → PROVE (validateInvariants()) → INTEGRATE → MONITOR (60s). Snapshot before integrate (§2.1). UUID+hook+bus on every module (§5.1).",
+   deps:"bus ✓ · jaa ✓ · snapshot ✓",unlocks:"16, 28, 38"},
+  {n:"15", t:"Grammar Engine: CLI + Component System", s:"next",
+   human:"← BUILD NOW. Wires the 'understand plain commands' engine into everything that needs it — typing, autocomplete, dispatching — so the whole system speaks one consistent language.",
+   d:"Wire grammar into: CLI tab completion · component-registry grammar signatures · guardian dispatch · request-handler Phase B. Grammar tree expands from component-registry on boot.",
+   deps:"grammar-engine ✓ · component-registry ✓ · request-handler ✓ · nexus-repl ✓",unlocks:"16, 31"},
+  {n:"17", t:"Userscript Heartbeat Pulse ♥", s:"pending",
+   human:"A heartbeat icon that visibly beats every time a message moves through the system — so you can see at a glance that things are alive.",
+   d:"♥ in every pill — snaps red on every NCP SSE message. System tile icons flash in TV shell Overview.",
+   deps:"userscript-claude ✓ · guardian/server ✓"},
+  {n:"27", t:"System State VM (NEX-VM/1.0)", s:"pending",
+   human:"A full save-state for the entire running system — like a video game save file — that auto-suspends if things look unstable and resumes cleanly later.",
+   d:"Every .nex: runtime_state + bus_queue (by seam_ts) + module_states + resume_plan. Auto-suspend at σ ≥ 0.80. 7-day retention. Resume: dep-ordered restart → replay bus_queue → verify σ < 0.50 within 60s.",
+   deps:"Phase 25 ✓ · Phase 26 ✓ · snapshot ✓ · divergence-watcher ✓ · replay-engine ✓ · jaa ✓",unlocks:"28, 30"},
+  {n:"31", t:"Grammar ↔ Intent: Structured Pre-Classification", s:"complete",
+   human:"Lets the 'understand plain commands' engine pre-filter before the intent system guesses — clear commands handled faster, unclear ones flagged instead of silently misrouted.",
+   d:"Built: grammar.resolve() carries a real confidence score (full/alias match 0.95, partial scaled by completion ratio, floored 0.3 — was binary match/no-match before). request-handler.js gates on confidence >0.8: above it executes directly, below it falls through to classifier/RAID like any other request. 3 consecutive misfires on the same (componentId, matched) pattern escalates to Idearium review (lib/grammar-misfire-tracker.js) — fixed a real silent field-drop in replay-engine.js's logDecision() along the way (grammarComponentId was being added to the decision object but never reaching decision_log). Deferred, not built: case-library hit/miss-rate feeding back into grammar confidence weights — would need grammar-engine to query case-library's per-signature success_rate, a new coupling not designed yet.",
+   deps:"Phase 45 ✓ · grammar-engine ✓ · raid ✓ · snr-filter ✓ · request-handler ✓",unlocks:"34"},
+  {n:"32", t:"Per-File Sigma Versioning", s:"pending",
+   human:"Every single file gets its own independent undo history — roll back one file without touching anything else, like per-file time travel.",
+   d:"lib/file-versioner.js. Compressed binary diffs, last 10 versions. Rollback: reverse diffs → write → emit → Hot Loader reloads live. Redundancy across JAA, Cortex event_log, Versionium.",
+   deps:"snapshot ✓ · versionium ✓ · jaa ✓ · divergence-watcher ✓"},
+  {n:"33", t:"PID Isolation + In-Memory Cache + Redundant State", s:"pending",
+   human:"Tells the difference between 'a service crashed' and 'its port is unreachable' — two completely different problems that used to look identical.",
+   d:"lib/process-registry.js · lib/state-cache.js. PID tracked in process_registry. Heartbeat checks process.kill(pid,0) AND HTTP independently. State cache every 5s, Cortex shadow every 30s. L1 in-memory · L2 JAA · L3 Cortex event_log. Resolves API_SURFACE_FAILURE: PID alive + HTTP unreachable = port issue; PID dead = crash.",
+   deps:"snapshot ✓ · jaa ✓ · divergence-watcher ✓ · heartbeat ✓",unlocks:"34"},
+  {n:"35", t:"Quick Notes: Synchronized Across All Pills", s:"pending",
+   human:"A sticky-notes box that syncs everywhere instantly — type a note in any panel and it shows up in every other panel, the TV shell, and the CLI at the same time.",
+   d:"300ms debounce → POST → SSE broadcast → re-render. Tag → Idearium idea. Grammar: 'note <text>' → KNOWLEDGE_CAPTURE. Not redundant with standalone notes request — same phase exactly, thin view over Idearium's idea.create/list surface.",
+   deps:"jaa ✓ · guardian/server ✓ · sse ✓ · userscripts ✓",unlocks:"37"},
+  {n:"36", t:"Dynamic CLI Commands from Grammar Engine", s:"complete",
+   human:"Two separate command-line tools that don't talk to each other. This phase merges them so every command works through the same understanding layer, with no restart needed when new commands appear. Resequenced ahead of Phase 40.5, since 40.5's automatic CLI projection has nothing to project for nexus-repl's commands until they're grammar-resolved.",
+   d:"Built: new cli/repl-components.js registers nexus-repl's forge/heal/snapshot into component-registry (real flow: component-registry.register() → grammar-engine.rebuild(), both pre-existing — not the registerCommand()-on-grammar-engine.js / cli-map.json flow this entry originally described, which named a write method on a module whose own header forbids writing (§CR-006) and pointed at Phase 40.5 infrastructure that doesn't exist yet). nexus-repl.js's forge/heal/snapshot now call ge.resolve() before dispatch and attach grammarComponentId/grammarConfidence to the ledger, same field names Phase 31 established. Command bodies unchanged. Verified end-to-end against real mock servers, which is how three pre-existing bugs were caught: log() undefined throughout nexus-repl.js (50 call sites), a sys_color/SYS_COLORS naming mismatch, and gate()'s ledger POST being fire-and-forget (lost the race against process.exit in single-command mode). All fixed. The other ~15 locally-handled nexus-repl commands are not yet migrated — known remainder, not silently dropped.",
+   deps:"grammar-engine ✓ · component-registry ✓ · nexus-repl ✓ · jaa ✓",unlocks:"37, 38, 40.5"},
+  {n:"40", t:"Component Descriptor: The Atomic Unit of Reality", s:"pending",
+   human:"The biggest structural change in the whole roadmap. Makes one single 'descriptor' per capability the only source of truth, and generates the CLI command, UI button, docs, and code automatically from it. Nothing is hand-duplicated again. Also the foundation for multi-role component identity (a component can hold several earned roles at once, each independently tracked) and for SNR-filtering as a reusable primitive, not just RAID's private logic.",
+   d:"Descriptor shape includes uuid (blueprint-namespaced), componentId, type, capabilities[] (verb/noun/input/output/axioms/params), aliases, deps, tier, resolution.max_level. Blueprint UUID namespace roots all tracing (bp_001.comp.*, .cli.*, .ui.*, .grammar.*, .config.*, .seam.*, .doc.*, .axiom.*). Compiler pipeline: T0 spec→descriptors (zero LLM) · T1 scaffold TypeScript (zero LLM) · T1.5 project all views (zero LLM) · T2 LLM fills implementations with descriptor+blueprint fragment as context. Verified gap: SEAM chunk schema doesn't carry componentId at any of 4 levels checked — fix is threading an existing identifier through an existing pipe.\n\nPer seam-component-registry-spec.md and this build cycle's session decisions: comp_types[] stays plural — live registry schema was already ahead of spec v1.0 here. Each role independently earned per Axiom 1, role validation state keyed (comp_id, comp_type) not comp_id alone — one component can be confirmed on role A and drifting on role B simultaneously. Lifecycle (ephemeral vs versioned) becomes a property of role_definitions, not a global setting or a per-instance choice — ephemeral for transient/runtime roles (RAID decisions), versioned for persistent artifacts (ideas, specs, repo state) that Phase 30 and §7.6 need to reconstruct from. SNR filter's tiered-resolution shape (known-fact → pattern → partial-context → unresolved) generalizes into a capability descriptor here, with per-consumer pluggable tier-check implementations — decision engine, load balancer, priority engine, gating system, security system each register their own checks against one shared primitive, projected the same way CLI commands are. First real non-CLI consumer of the descriptor system, folded in here rather than grown as a separate phase. 'Seam' terminology collision resolved: §4's execution-compartment concept renamed 'compartment' — docs/seam.spec already owns 'seam' for the live SEAM chunking/dispatch pipeline (T0/T1/T2), unrelated concept, same word would have been ambiguous.",
+   deps:"emerge/compiler ✓ · seam-queue ✓ · component-registry ✓ · grammar-engine ✓",unlocks:"40.5, 41, 42, 43, 44, 48"},
+  {n:"47", t:"Pattern Engine: Novelty-Aware + Self-Wired", s:"pending",
+   human:"The pattern-recognition system notices a problem once, then goes silent on repeats instead of updating confidence. This phase fixes that, and stops the system's strongest findings from being ignored by the escalation system.",
+   d:"Fixes _scanPatterns()'s if(!existing){insert} with no else branch. Now updates lastSeen/count/confidence/merged failureTypes on recurrence, modeled on guardian/memory.js's existing seenCount/lastSeen pattern. Crystallized precursor patterns now open gaps. Adds user_model_hypotheses/chat_log and trust_scores/agent_signatures/RAID dispatch outcomes as new read sources (currently zero connection to either). Borrows cortex/foundation/cobalt-core.js's proven isNew/count split.",
+   deps:"cortex/intelligence ✓ · gap-loop ✓ · crystal-lattice ✓ · jaa ✓"},
+  {n:"48", t:"CFR ↔ Decision Pipeline + RAID Self-Stabilization", s:"pending",
+   human:"Every decision the system makes (approved, denied, held) has zero effect on the internal health field — a sensor not wired to anything. This phase wires it up. Also where RAID's actual fitness formula for picking the best component/role for a task gets implemented, where a real blind-dispatch bug in the SNR filter gets fixed, and where the hardcoded CLUSTER_CHAINS preference list gets replaced by computed constraint-then-fitness dispatch.",
+   d:"Verified: request-handler.js's OUTCOME.RESOLVED/DENIED/HELD/UNRESOLVED never writes to any CFR ledger, and those event types aren't in lib/cfr/field.js's EVENT_NUDGES table. Two pieces: (1) every OUTCOME.* gets a real EVENT_NUDGES entry — HELD/UNRESOLVED nudged consistent with Phase 11's 'honest uncertainty, not failure' philosophy. (2) RAID chooses diagnose/poll/listen when sigma crosses threshold for a cluster it owns, adjusting only its own state — never mutating another module directly. Also wires snr-filter.js's tier-3 resolution path into Phase 25's lattice_edges and Phase 47's bep_patterns.\n\nRAID's _decide() currently only does intent-cluster matching + weighted success rate — no role/fidelity/health/topology inputs at all. This phase implements the real formula: fitness = SNR_tier_gate(task) → role_confidence(component,role) [fidelity] × health(component) [existing _health snapshot] × topological_proximity(component) [Phase 40.6's _byComponent edge — hard dependency]. Also fixes a live bug in cortex/core/raid/snr-filter.js: tier 3 (open_loop) sets injectContext:true, tier 4 (genuine unknown) does not — novel/unresolved cases currently dispatch with zero causal context, which is the actual mechanism behind 'novel failures get treated as trial-and-error.' Fix forwards the same causedBy/sessionId/jobId chain CFR already tracks into every tier, not just tier 3 — fidelity becomes 'how much context resolves the task,' not 'whether context is attached at all.'\n\ncortex/core/raid/index.js's CLUSTER_CHAINS (e.g. code: ['ollama','chatgpt','claude']) is a hardcoded preference array, not computed — same allow-list problem as the registry's role_definitions fix. Replaced by two layers: (1) constraints — deny-only exclusion, partially already built (_agentAvailable, consecutiveFails>=3, successRate<0.2 checks already in _decide()) — extended to also exclude role status=violated and forbidden_event_types violations; (2) fitness — this phase's formula above, ranking only the surviving (non-excluded) candidates. Agent preference becomes emergent from role_confidence/health instead of array position — re-ranks automatically as roles drift, and new components become eligible the moment they register a role, no array to hand-edit.",
+   deps:"Phase 10 ✓ · Phase 11 ✓ · Phase 40.6 (fitness formula's topological term) · lib/cfr ✓ · cortex/core/raid ✓"},
+  {n:"49", t:"Agent Reachability: Self-Healing Connections", s:"pending",
+   human:"Three 'something's wrong, nobody's reacting' gaps in the same family: a signal that says 'I need a browser tab open' that nothing acts on; an Ollama health-check that works but nothing calls; two code paths doing the same job with no canonical owner decided.",
+   d:"(1) guardian.tab.needed already emits with the right URL and feeds CFR's nudge table — needs a real listener with in-flight guard against duplicates; success confirmation (guardian.provider.connected) already exists and already gates job-flushing. (2) Ollama self-start: ping() exists on ollama-runtime.js and cortex/agents/ollama/index.js but nothing reacts to false — PowerShell spawn following cli/boot-systems.js's Windows diagnose precedent. (3) userscript-ollama.js (browser-side CORS-bypass) and guardian/server.js's _dispatchOllamaNative (server-side direct) now overlap — decide canonical owner. Needs test: unreachable → service starts → becomes reachable → dispatch succeeds, no human in the loop.",
+   deps:"ollama-runtime ✓ · guardian/server.js ✓ · cli/boot-systems.js ✓"},
+  {n:"50", t:"Pattern Graph: Event Causality Over Static Sigma", s:"pending",
+   human:"Right now the system tracks one number (sigma) to say 'something's off.' This replaces that with a graph of which events actually precede which failures, with confidence scores — so it can warn you before the failure happens, not after.",
+   d:"Source: ChatGPT dispatch analysis, 2026-06-19. Current model: current_state - baseline = gap (single scalar). New model: event → event → event → outcome, with edges accumulating confidence — e.g. escalation.level_0 →(120x)→ failure, 82% confidence becomes a watch rule that fires a recommended action (e.g. 'diagnose') BEFORE sigma alone would flag it. Must satisfy Phase 10's TRUTH_OVER_COHERENCE axiom: every triggered watch rule surfaces its full reasoning (observed event, historical precedent count, confidence %, source, recommended action, reversibility, cost) — never fires silently. Surfaces in Phase 29 topology as a card per discovered pattern edge, with one-click Diagnose action.",
+   deps:"Phase 47 · Phase 48 · cortex/intelligence ✓ · gap-loop ✓"},
+]},
+
+{tier:"Tier 2 — needs Tier 1", items:[
+  {n:"11", t:"Reflection Engine", s:"pending",
+   human:"Gives the system a sense of 'did that actually go well?' after every decision — not just pass/fail, but a confidence score. If it keeps feeling unsure about the same kind of decision, it flags itself for review instead of continuing blindly.",
+   d:"lib/reflection.js. UNRESOLVED treated as honest uncertainty, not failure. Every decision scored satisfaction (0–1); satisfaction <0.5 for N decisions → lower RAID score + open loop. Self-model updates via gap system only (§5.3). Feeds BDA → Phase 12.",
+   deps:"Phase 10 · request-handler ✓ · raid ✓ · gap-loop ✓ · jaa ✓",unlocks:"12, 13"},
+  {n:"34", t:"API_SURFACE_FAILURE: Diagnosis and Auto-Resolution", s:"pending",
+   human:"Closes the loop on the 'crashed vs unreachable' detection from Phase 33 — once the system knows which kind of failure it is, this makes it actually diagnose and try to fix it automatically.",
+   d:"Focal point label for 2+ open loops sharing {api, probe, health, degraded, unreachable, port}. Leverage > 1.5 → skip to level 3.5. PID check first. Grammar → DIAGNOSTIC cluster. 3 cycles → blackbox + macro report.",
+   deps:"Phase 31 · Phase 33"},
+  {n:"37", t:"Userscript Rebuild: Unified System + Tool Command Intercept", s:"pending",
+   human:"Rebuilds all six browser userscripts into one unified panel, and lets the system intercept what an AI tries to do mid-conversation — pull it out, run it through the real system, and feed the result back.",
+   d:"Unified pill: ♥ NEXUS | Jobs | Notes | Spec | Log | Intel | Opts. Tool intercept: AI outputs tool_use → MutationObserver → extract → POST with seam_ts → grammar → RAID → system handles → result injected back. Ollama reports tokens, tool calls, metrics, facts to Cortex.",
+   deps:"Phase 35 · Phase 36 · guardian/server ✓ · ollama ✓ · grammar-engine ✓",unlocks:"39"},
+  {n:"40.5", t:"Descriptor-Driven CLI: Capabilities Project Into Commands", s:"pending",
+   human:"Once a capability is described once, this auto-generates its CLI command, grammar aliases, UI form, help text, and docs all at the same time — none hand-written, all staying in sync. The 'one call site' gap is smaller than nexus-cli.js alone — nexus-repl.js's command surface wasn't wired to grammar-engine either (Phase 36's finding, now closed for forge/heal/snapshot), so this phase's automatic projection can now reach those three; the rest of nexus-repl's commands still need migrating before projection reaches them too.",
+   d:"cli-map.json compiled output loaded by Blueprint at boot → grammar tree + REPL dispatch table, zero runtime registration. Generated REPL help text entirely from the descriptor, no hand-written help. Generated forms bridge to Phase 43. Traced directly in the live code: cli/nexus-cli.js's componentId resolution is local-history-only, never forwarded to any Guardian SEAM build call; the actual Guardian /command spec-build body is constructed in orchestrator.js's cliDispatch (manual REPL command, no grammar-engine resolution, no componentId in scope at all). The real gap is two-part: (1) nexus-repl/orchestrator's manual commands need grammar-engine resolution first — Phase 36, now closed for forge/heal/snapshot — before there's a componentId to forward; (2) forwarding that componentId into the SEAM build POST body, one field, one call site, once (1) is in place. Sequence 36 before or alongside 40.5, not after, or 'every command works through the same understanding layer' won't be true when this ships.",
+   deps:"Phase 40 · Phase 36 ✓ (resequenced, closed) · nexus-repl ✓ · grammar-engine ✓ · component-registry ✓",unlocks:"44"},
+  {n:"40.6", t:"CFR Component Edge: Component-to-Component Tracking", s:"pending",
+   human:"Once components carry an ID on every event, the system's existing relationship-tracking layer automatically gains a new way to cluster activity: 'everything that touched Component X' — without building a new tracking system. This is also the missing piece in RAID's fitness formula (Phase 48) — topological proximity can't exist until this edge type does — and it surfaced a separate, real bug: the existing ring buffers it would extend are hardcoded to one size for every system, not config-driven or per-system.",
+   d:"CFR already derives graph edges passively from whatever fields exist on an ingested ledger entry — 4 existing ring-buffered edge types confirmed (_bySession, _byJob, _bySystem, _byType). No _byComponent type exists yet but requires zero new CFR API surface — same ring-buffer pattern, fifth edge type, automatic once componentId flows. Rejected an external proposal to invent new phaseId/traceId fields — CFR's existing causedBy/sessionId/jobId already solve that. Surfaces in Phase 29 (sixth edge type).\n\nTwo findings traced directly in lib/cfr/graph.js: (1) RAID fitness formula (Phase 48) = SNR_tier_gate → role_confidence (fidelity) × health (existing RAID _health snapshot) × topological_proximity — the last term is this phase's _byComponent edge, so Phase 48's fitness scoring is blocked on this landing first. (2) live bug: _bySystem caps at last 100, _byType at last 50, hardcoded identically for every system regardless of actual causal depth needed — same dead-config pattern fixed earlier in RAID/heal-loop. Fix: per-system config (cfr.ringOverrides.<system>.bySystem) with default fallback, plus a self-tuning signal — a new cfr.context_truncated ledger event fires when a context-walk (see SNR filter tier-4 fix) hits an already-evicted node; truncation-rate per system per window becomes the resize trigger, same structural pattern as RAID's existing _updateW weight-learning (tunable numeric state, not identity, so Axiom 2 doesn't block automatic adjustment).",
+   deps:"Phase 40 · Phase 40.5 · lib/cfr/graph.js ✓",unlocks:"48"},
+  {n:"41", t:"Compiler Knowledge Layer: Six Projections from Capabilities", s:"pending",
+   human:"The compiler stops knowing only syntax — it knows architecture before generating any implementation: what exists, why it exists, how it connects, who depends, which axioms, which UI surfaces.",
+   d:"T1.5 stage. Zero LLM. Deterministic. Six projections from capabilities[]: phase map (.md) · manifest (.json, component-registry, hot-loader, grammar-engine at boot) · CLI map (.json, nexus-repl, grammar-engine at boot) · UI component map (.json, Architect Phase 43) · README (.md, humans) · axiom index (.json, constitutional-ai.js). All blueprint UUID namespaced: bp_001.comp.* · bp_001.cli.* · bp_001.ui.* · bp_001.axiom.* · bp_001.doc.*. Each projection = SEAM chunk dispatched first — docs generated before implementation become input to implementation.",
+   deps:"Phase 40 · emerge/compiler ✓ · seam-queue ✓ · versionium ✓",unlocks:"42, 43"},
+]},
+
+{tier:"Tier 3 — needs Tier 2", items:[
+  {n:"12", t:"User Model: Hypotheses, Not Profile", s:"pending",
+   human:"The system builds a working theory of you, not a fixed profile — every observation is a guess with a confidence score that fades over time if not reconfirmed. Nothing about you is ever stored as a hard fact.",
+   d:"Every observation: {uuid, claim, confidence, evidence_count}. Confidence decays 0.1/day. Queryable from request-handler Phase B. Never shared.",
+   deps:"Phase 10 · Phase 11 · bda ✓ · jaa ✓",unlocks:"13"},
+  {n:"16", t:"Idearium ↔ Repo ↔ Spec ↔ Architect", s:"superseded",
+   human:"This phase's job got absorbed into the bigger Phase 38 pipeline — kept here only because later phases still point to it in their dependency chain.",
+   d:"Superseded by Phase 38. Prereq node, kept for Phase 38 dep chain.",
+   deps:"Phase 14 · Phase 15 · idearium ✓ · architect ✓ · versionium ✓"},
+  {n:"38", t:"Unified Pipeline: Idearium + Repo + Spec + Architect + Emerge", s:"pending",
+   human:"Turns a rough idea into running, monitored code through one continuous pipeline — idea gets tagged and scored, becomes a spec, gets built, gets proven safe, gets integrated live, and is watched afterward — with every stage rewindable.",
+   d:"State machine: IDEA→TENSIONED→PROMOTED→SPEC_COMPILING→HOOKED→PROVING→INTEGRATED→MONITORING→COMPLETE|FAILED→REVERTED. 6 layers: Idearium (idea/tension scoring) → Repo (ingest with file tree) → Spec Compiler (T0/T1) → Architect (hooks, new CLI command per hook) → Hot Loader (quarantine/prove/integrate/monitor) → Emerge IDE (live pipeline view, any stage rewindable). Dynamic CLI: nexus forge spec / pipeline status / pipeline run / pipeline rewind.",
+   deps:"Phase 14 · Phase 16 · Phase 36 · idearium ✓ · architect ✓ · emerge-ide ✓",unlocks:"39"},
+  {n:"42", t:"Blueprint: The Loop Closes. The System Reads Itself.", s:"pending",
+   human:"This is the phase where the system starts actually knowing what it is. Everything gets assembled into one single readable file that is the only source of truth. If anything looks out of sync, the fix is always 'recompile from Blueprint,' never 'patch the thing that drifted.'",
+   d:"blueprint.nex.json + blueprint.md — same content, machine- and human-readable. Authority chain: Blueprint→Manifest→Registry · Blueprint→cli-map→Grammar+REPL · Blueprint→axioms→Constitution · Blueprint→config→Runtime · Blueprint→ui-map→Architect. Boot sequence is one read: component-registry, grammar tree+cli-map, axioms, config, UI map, then emit blueprint.loaded. Blueprint sigma: missing from heartbeat → σ+=0.05; σ>0.65 → INTEGRITY gap, recompile suggested. §6.1 enforcement point — once Blueprint exists, any divergent projection is wrong by definition, fixed only by recompile.",
+   deps:"Phase 40 · Phase 41 · emerge/compiler ✓ · jaa ✓ · grammar-engine ✓",unlocks:"43, 44"},
+]},
+
+{tier:"Tier 4 — needs Tier 3", items:[
+  {n:"13", t:"Autonomous Loop: Ollama as Brain", s:"pending",
+   human:"Lets the system run multi-step tasks on its own using a local AI model as the decision-maker — but only inside hard limits: a stated goal, a budget it can't exceed, a written boundary of what it's not allowed to touch, and a defined exit condition.",
+   d:"Four required: Goal · Budget (hard limit) · Boundary (written, not inferred) · Exit. gap-loop is the spine. Rewind if σ > 0.70. Every action carries {autonomous:true, runId, step, causedBy, intent_uuid}. Case library queried via intent signature before each step. LLM synthesis queries routed via Guardian dispatch using Phase 25's hookpoint — compartment FAIL after N retries fires a Guardian job.",
+   deps:"Phase 10 · Phase 11 · Phase 12 · Phase 25 ✓ · Phase 46 ✓ · gap-loop ✓ · ollama ✓ · snapshot ✓"},
+  {n:"28", t:"Build From Inside: Live System Editor", s:"pending",
+   human:"Lets the system edit its own running code from inside itself, three different ways depending on how big the change is — always with a safety snapshot to roll back to if it goes wrong.",
+   d:"Three modes: (1) in-process hot patch with VM snapshot before any edit, (2) spec-first via Phase 38, (3) meta layer via grammar→request-handler→forge→hot-load. Level 3.5 escalation opens failing module source with VM as rollback.",
+   deps:"Phase 14 · Phase 27 · emerge-ide ✓ · architect ✓",unlocks:"29"},
+  {n:"44", t:"Resolution Spectrum: Proven ↔ Adaptive", s:"pending",
+   human:"A dial, per capability, for how much the system is allowed to 'guess' versus only do exactly what's proven safe. Critical actions like rollback are locked to the safest setting; creative tasks are allowed to roam free. Nothing escalates its own ceiling automatically.",
+   d:"Levels: L0 Exact (0 tokens) · L1 Alias (0 tokens) · L2 Grammar (0 tokens, default) · L3 Semantic (tiny tokens, no LLM) · L4 LLM Inference (moderate tokens) · L5 Autonomous (largest tokens). max_level per capability in .spec: critical path=1 (heal/rollback/escalate/snapshot), build=2 (forge/spec/pipeline), search=3, AI dispatch=4, creative=5 (idearium/emerge IDE/spec builder). Slider visible per component in Phase 29 topology view, adjustable at runtime within descriptor ceiling, every change logged with blueprintUuid+causedBy. Suggestions to raise max_level → Idearium review, never auto-applied.",
+   deps:"Phase 40 · Phase 40.5 · Phase 42 · grammar-engine ✓ · raid ✓ · request-handler ✓"},
+]},
+
+{tier:"Tier 5 — needs Tier 4", items:[
+  {n:"39", t:"Realtime Sync: API + SSE + CLI + All Pills", s:"pending",
+   human:"Makes every panel, pill, and terminal show the exact same live state at the same time — jobs, specs, build chunks, notes, sigma, gaps, file versions — with zero polling and a guaranteed correct order of events.",
+   d:"nexus watch / watch jobs / watch sigma / watch <regex>. SEAM ordering enforced at transport layer by seam_ts. Everything visible everywhere.",
+   deps:"Phase 37 · Phase 38 · guardian/server ✓ · orchestrator/sse ✓ · nexus-repl ✓"},
+  {n:"43", t:"Architect as UI Builder: UI Is a Compiler Target", s:"pending",
+   human:"The UI stops being hand-coded HTML files (which is exactly how the same crash-causing bug got written twice — Phase 24). Instead, every screen, button, and form is automatically generated from the same capability description that generates the CLI command and the docs.",
+   d:"Today: SPEC→Backend. After 43: SPEC→Blueprint→Backend→Frontend. The .spec is the source of truth; React/HTML/CSS are generated artifacts. A button click is literally the same grammar.resolve() call as typing the equivalent CLI command. New system → new spec → compile → TV shell gains a channel with zero changes to TV shell HTML. NOTE: Architect already exists as a real, separately-specced service: architect/service.js (666 lines, port :3747), architect/compile-route.js (405 lines), ARCHITECT-SPEC-v1.1.0.md (2201 lines). It has its own Hook Registry (§3), Blueprint/Topology/SNR-gate machinery, and Spec Engine with compress/decompress/synthesize operations (§5.3) — the '.spec as compressed repo' idea is already a designed feature. Phase 43 should be scored against what's actually running. The ui-map.json stub compiler-bridge.js emits is superseded by querying Architect's real Blueprint API directly once Phase 60 lands.",
+   deps:"Phase 40 · Phase 41 · Phase 42 · architect ✓ (real service, :3747) · grammar-engine ✓ · emerge-ide ✓"},
+  {n:"29", t:"Topology View: Live System Graph", s:"pending",
+   human:"A live, visual map of the entire running system — every module as a node, colored by how unstable it is, sized by how busy it is — so you can see problems forming before they become outages.",
+   d:"Live directed graph above TV shell. Nodes = modules (color=σ, size=event volume). Resolution level (Phase 44) shown per node. Gap focal points pulse. Click node → TV shell channel. No polling. Once Phase 40.6 lands, gains a component-to-component edge layer (CFR's fifth edge type) on the same view.",
+   deps:"Phase 15 · Phase 16 · Phase 28 · orchestrator/sse ✓ · gap-loop ✓",unlocks:"30"},
+]},
+
+{tier:"Tier 6 — needs Tier 5", items:[
+  {n:"30", t:"Time-Travel Debugging: Checkpoint Ring + Fork", s:"pending",
+   human:"Full undo for the entire running system, with branching. Roll back to any checkpoint from the last several hours, fork an alternate timeline to test a fix safely, and compare both side by side.",
+   d:"Checkpoint every 10min. Fork a timeline → second runtime on alternate ports. Diff both in topology view. Jump to moment before divergence → replay forward deterministically. Checkpoints annotated with seam_ts + blueprintUuid at capture.",
+   deps:"Phase 27 · Phase 29 · replay-engine ✓ · divergence-watcher ✓"},
+]},
+
+{tier:"── TIER 3 UNIFICATION ─────────────────────────────────────────", tierClass:"unification", items:[
+  {n:"60", t:"Retire ui-map.json Stub — Query Architect's Real Blueprint API", s:"pending",
+   human:"compiler-bridge.js currently writes a hand-rolled ui-map.json stub labeled 'phase: 43'. Architect already has real Blueprint/Topology endpoints — call those instead of stubbing. Removes one fake artifact in favor of a real one.",
+   d:"compiler-bridge.js's compileIdeariumSpec() writes a hand-rolled ui-map.json stub labeled phase: 43. Architect already has real Blueprint/Topology endpoints. Call those instead. One fake artifact retired in favor of the real service that already exists. Independent of the rest of the unification track — cheap, any time.",
+   deps:"Phase 51 (compiler repoint ✓) · architect/service.js ✓",unlocks:"63"},
+  {n:"61", t:"Backfill hooks/*.hooks.js — Full SEAM Coverage", s:"pending",
+   human:"Every action declared in idearium/interaction-contract.json needs a matching entry in hooks/idearium.hooks.js with a real seam.componentId. Same backfill applies to cortex, guardian, and bridge hooks. Right now the live system is mostly invisible to Architect.",
+   d:"Audit findings:\n• hooks/idearium.hooks.js: 3 hooks declared, 1 real seam.componentId — STALE (20+ real actions exist: every repo.* route, spec.create, snapshot.restore/pull, watch — none declared)\n• hooks/architect.hooks.js: 3 hooks declared, 1 real seam.componentId\n• hooks/cortex.hooks.js: 7 hooks declared, 0 real seam.componentIds\n• hooks/guardian.hooks.js: 8 hooks declared, 0 real seam.componentIds\n• hooks/bridge.hooks.js: 3 hooks declared, 0 real seam.componentIds\n• hooks/orchestrator.hooks.js: 5 hooks declared, 0 real seam.componentIds\nMechanical but real — this is what makes each subsystem's actual current surface visible to Architect at all. Note: idearium/registry-components.js (confirmed present in the live repo) already backfills idearium's real API surface into lib/component-registry.js directly — a different file than hooks/idearium.hooks.js, addressing the same underlying invisibility via the Phase 62 canonical pick rather than this phase's originally-named target. Worth confirming whether that supersedes this row of the audit before building the rest.",
+   deps:"hooks/idearium.hooks.js ✓ (stale) · idearium/interaction-contract.json ✓ (current)",
+   audit:true},
+  {n:"62", t:"One Registry, Not Three — Decision Gate", s:"decision",
+   isDecision:true,
+   human:"This is the actual ask ('every system hooked to the component and seam system') and it requires picking which of three existing registries is canonical before any code gets written. Wrong call here gets expensive to undo once Phases 63 and 64 depend on it.",
+   d:"Three registries exist today with no shared code:\n1. lib/component-registry.js — live runtime registry, namespace.name ids, JAA-persisted. Already consumed by grammar-engine, CLI, orchestrator.\n2. hooks/*.hooks.js — declarative per-hook map with seam:{componentId, intentId}. Only feeds architect/service.js via seedArchitectRegistry(). Nothing else reads it.\n3. architect/service.js's own HookRegistry — separate in-memory/JAA registry, POST /api/hooks. Architect's own UI/API only.\n(Plus spec-parser spec-style modules[] → kg-builder.js → chunk/index.js — compile-time KnowledgeGraph, spec-compiler only.)\n\nDecision options:\n• lib/component-registry.js canonical — runtime + CLI already depend on it. Architect HookRegistry becomes a thin sync projection.\n• Architect HookRegistry canonical — richer schema (hook types, SNR gating, seam.intentId alongside componentId), has a 2201-line spec behind it (ARCHITECT-SPEC-v1.1.0.md §3). lib/component-registry becomes a thin projection.\n\nWhichever is chosen: the other becomes a thin sync/projection, not a second source of truth. Duplicating registries was exactly the problem this phase exists to close.",
+   deps:"Phase 61 · lib/component-registry.js ✓ · architect HookRegistry ✓ · hooks/*.hooks.js ✓",unlocks:"63, 64"},
+  {n:"63", t:"kg-builder.js Nodes Resolve to Registry Component IDs", s:"pending",
+   human:"The Chunk's subject carries a spec-internal MOD-XXX id today. Once Phase 62 picks a canonical registry, buildChunk() should resolve that node's real component id from it, so a Tier 2/3 LLM's output has a real runtime address to land at instead of floating as spec-only metadata.",
+   d:"Currently: Chunk's subject carries a spec-internal MOD-XXX id. After Phase 62: buildChunk() resolves (or mints) the node's real component id from the canonical registry — literal mechanism behind 'give the LLMs a smaller work area, and map each component to the core.' This is what makes SEAM chunks addressable by the runtime, not just the spec-compiler.",
+   deps:"Phase 62 · kg-builder.js ✓ · chunk/index.js ✓"},
+  {n:"64", t:"grammar-engine Reads the Unified Registry's Hooks", s:"pending",
+   human:"Once one registry exists, grammar-engine.js should resolve CLI/dynamic commands against it directly rather than only the narrower component-registry slice it reads today — this is what makes the 'dynamic grammar engine' actually dynamic across every subsystem, not just the ones that happened to register early.",
+   d:"lib/grammar-engine.js currently resolves against lib/component-registry.js only — a narrower slice that doesn't include Architect's hook schema or the per-hook seam.intentId field. Once Phase 62 establishes a canonical unified registry, grammar-engine reads the full hook surface. This is the completion of the 'dynamic grammar engine' goal: dynamic across every subsystem, not just early registrants.",
+   deps:"Phase 62 · Phase 63 · lib/grammar-engine.js ✓"},
+
+  {n:"65", t:"cli.js: Unified User-Interaction Console", s:"pending",
+   human:"Right now there are three separate places to talk to NEXUS — nexus-cli.js, nexus-repl.js, and home-ui's floating System Console — and none of them share state, history, or tool access. This phase makes cli.js the one console: a real co-pilot backed by Guardian, with the same tool/context access an LLM dispatched through RAID would have, hooked directly into home-ui's floating menu button instead of that button driving its own separate, weaker dispatch path.",
+   d:"Three real, separately-verified gaps this phase closes, not assumed: (1) home-ui's asSend() had its own parallel, weaker dispatch logic — hardcoded provider:'ollama' regardless of RAID's actual routing decision (fixed this session, but only patches the symptom — the floating console still doesn't share cli.js's command surface, history, or grammar resolution at all). (2) cli.js needs real tool/context access for an LLM co-pilot — not just text-prompt-in, text-out, but the same context-builder (lib/context-builder.js, already used by nexus-repl's `context` command) plus whatever tools RAID's dispatched agent would have. (3) The floating menu button (home-ui's #fullscreen-btn / #bot-bar) needs to become a thin client over cli.js's actual session — not a separate implementation that happens to look similar. Build order: (a) cli.js gains a real co-pilot mode — prompt goes through /api/request like everything else now does (post-fix), with full RAID/grammar/SNR routing, not a hardcoded provider; (b) cli.js exposes its session (history, current context, last N exchanges) over a small local API home-ui can read; (c) home-ui's floating console becomes a thin iframe/API client onto that session instead of asSend()'s standalone logic. Phase 36/40.5's descriptor-driven CLI work is a direct prerequisite — a unified console without unified command resolution just moves the fragmentation, doesn't remove it.",
+   deps:"Phase 36 (partial — forge/heal/snapshot registered) · Phase 40.5 · lib/context-builder.js ✓ · cortex/core/raid ✓ · lib/request-handler.js ✓ (RAID-routing fix shipped this session)",
+   unlocks:"Phase 37 (Userscript Rebuild's unified pill is the same problem one layer up — browser tabs instead of cli.js/home-ui)"},
+
+  {n:"66", t:".spec Container Import: Idearium Spec Library + Push/Pull CI/CD", s:"complete",
+   human:"The export half of this already works — a project-level .spec can be a fully self-contained, compressed archive of the whole repo, verified round-trip this session (decode the archive block, SHA-256 matches the original zip exactly, zip integrity passes). This phase is the other half: Idearium needs to be able to read one of these back in — parse it, register its blocks into the spec library — plus a real push/pull CLI so this becomes an actual CI/CD path, not a one-off export.",
+   d:"Three real, scoped pieces: (1) Idearium import — given a .spec file in this format (YAML header spec-drift.js already reads fast, blocks manifest, archive payload), parse the header for meta/version, decode+verify the archive against archive_sha256 before touching anything (§1.2 — corrupt input must fail loud, not silently partially-import), then register each entry in `blocks` into Idearium's spec library the same way spec.create already works (idearium/api/index.js). (2) Push — a CLI command that builds a fresh nexus-system.spec the way this session's generator script did (manifest + zip + base64), POSTs it to idearium's import endpoint. (3) Pull — the inverse: fetch a named spec from the library, decode its archive, write it back out as a real directory tree. Round-trip (push → pull → diff against original) is the actual test criterion, not just 'it parses'.\n\nDONE: built in a parallel session, found and adopted this session — lib/spec-container.js + idearium/repo/watcher.js, 9/9 + 9/9 tests passing, verified end-to-end (boots clean, real 23MB file ingested in 2.67s, correct hash, shows up in repo list immediately). My own standalone scripts/import-spec.js was retired in favor of this — same purpose, theirs is DRY (shared verify+decode module) and has the auto-watch path mine didn't.",
+   deps:"Phase 38 (Unified Pipeline's Repo layer is the natural home for the import handler) ✓ · idearium/api/index.js ✓ (spec.create exists) ✓",
+   unlocks:"Phase 27 (System State VM) and Phase 32 (Per-File Sigma Versioning) both gain a real, portable container format once this exists — not just in-process .nex snapshots"},
+
+  {n:"67", t:"MCP Tool Bridge: NEXUS Routes as Claude-Callable Tools", s:"pending",
+   human:"Right now getting Claude to check something in NEXUS means Claude running raw grep/bash commands across the whole repo every single time — expensive, and it rediscovers the same things repeatedly instead of NEXUS's own accumulated context (cortex's case-library, pattern-crystallisation) doing the work once and being reused. This phase wraps NEXUS's existing routes as real MCP tools, so a connected Claude session calls e.g. nexus.search or nexus.copilot directly instead of re-exploring the filesystem from scratch.",
+   d:"Three real, scoped pieces: (1) An MCP server wrapper exposing a handful of NEXUS routes as tools — guardian's /copilot/prompt is the obvious first one, since it already does context-building + RAID-gated execution + cortex memory; a search/grep-over-repo tool is the second, since that's the actual token-cost driver today. (2) A registered contract for the calling source (cortex/contract/index.js — same pattern as 'copilot', not a bypass of it) with its own rate limits and allowed_actions, so a connected Claude session goes through the same RAID-gated approval path as every other tool-caller, not a privileged backdoor. (3) Hard prerequisite, not a detail: NEXUS has to actually be running somewhere persistent for an MCP bridge to have anything to call — every live test this session (the co-pilot end-to-end proof, the snapshot fix verification) booted guardian fresh and tore it down, because this sandbox doesn't keep background processes alive between tool calls. This phase doesn't start until that's solved.",
+   deps:"guardian/agents/co-pilot ✓ (built this session) · cortex/contract/index.js ✓ · a persistent NEXUS deployment (not yet true in this environment)",
+   unlocks:"Every future Claude session working on this codebase, not just a roadmap phase — this is infrastructure, not a feature"},
+
+  {n:"68", t:"co-pilot.js: cli.js Renamed and Expanded — Full System Capacity, Custom Commands, Workflow Automation", s:"pending",
+   human:"cli.js becomes co-pilot.js — not just a rename, a real expansion: every CLI command NEXUS has (and ones that don't exist yet), a config file for adding custom commands/tools per agent, and a real automation layer — pipelines, scheduling, feedback loops, intent-routed step chains, fully customizable triggers/conditions/if-thens, with explicit fallback routing when a step fails. All of it driven by the event ledger, same as everything else this session has been wired to.",
+   d:"Real foundation already exists for part of this, checked before scoping rather than assumed: cortex/automation/engine.js (124 lines, real, backed by cortex/data/workflow_runs.jsonl) already runs agent_call / jaa_insert / wait / condition steps. That's the seed for the pipeline/workflow piece — extend it (trigger types beyond manual invocation, fallback routing on step failure, scheduling) rather than build a second automation engine alongside it. What's genuinely new, not extending anything: (1) the renamed/merged co-pilot.js itself, consuming every registered component-registry command (Phase 36/40.5's descriptor work, not a hardcoded list) plus a config file defining custom per-agent commands/tools; (2) toggleable visibility options — e.g. whether ollama or other agents can see the console — needs a real permission surface, not assumed to fall out of the above; (3) intent-routed step chains with if/then branching is a meaningfully bigger scope than engine.js's current linear step list — needs its own design pass before building, not assumed to be a small addition.",
+   deps:"Phase 36 (partial) · Phase 40.5 · cortex/automation/engine.js ✓ (extend, don't duplicate) · cortex/contract/index.js ✓ · this session's RAID _approveTool gate ✓",
+   unlocks:"Phase 65 (cli.js: Unified User-Interaction Console) — this phase IS that one, scoped further once the automation/workflow piece got named explicitly. Phase 65's entry stands as the narrower 'unify the three consoles' version; this is what it grows into."},
+
+  {n:"69", t:"/agentname Live Mirror Chat — Real-Time Bidirectional Userscript Streaming", s:"pending",
+   human:"/chatgpt in co-pilot.js opens a live mirrored session with the actual chatgpt.com tab — what you type streams into the real chat input in the browser, and ChatGPT's response streams back into the CLI in real time, the same way the CLI input already mirrors. Not a one-shot dispatch like forge/copilot — an ongoing, two-way, live conversation channel.",
+   d:"Checked before scoping: NCP (lib/ncp.js) is purely job-dispatch shaped — prompt in, full response back out, no raw passthrough/streaming-mirror mode exists anywhere in it or in guardian/server.js. This is genuinely new work, not an extension of something already there. Needs: (1) a new NCP message type for live keystroke/token streaming, not the existing request/response job shape; (2) the userscript side (guardian/userscript-chatgpt.js etc.) reading the live DOM response as it streams, not waiting for completion the way job dispatch does; (3) a CLI-side rendering mode that handles partial/streaming text instead of one final printed block. Real risk worth flagging up front: this is the deepest browser-DOM-dependent piece in the whole roadmap — userscript selectors are already the most fragile part of the existing system (confirmed by this session's own chatgpt-connection debugging earlier), and a live-streaming mirror depends on DOM structure staying stable mid-response, not just at job completion.",
+   deps:"Phase 68 (co-pilot.js needs to exist first — this is a command inside it, not standalone) · lib/ncp.js ✓ (extend with a new message type, don't replace) · guardian/userscript-*.js ✓ (DOM-streaming capability is new, the connection itself isn't)"},
+
+  {n:"70", t:"SEAM Persistence + Escalation Ladder: Cortex Contract, Userscript Resume, RAID-Diagnostic-Ollama Failure Chain", s:"pending",
+   human:"Two real gaps confirmed by reading the code directly, plus a requested failure-handling chain. SEAM queue state currently lives only in guardian's own local storage — cortex (the system's actual memory layer) has no visibility into it, and the userscript tracks its position in plain in-memory variables that a tab refresh wipes out completely. Separately: when a chunk dispatch fails, there's no real escalation path — it should retry through RAID, then diagnostic, then ollama trying different strategies, escalating each time, and as a true last resort opening a fresh browser tab and handing the whole context to Claude.",
+   d:"Three real pieces, sequenced: (1) Cortex-side queue persistence — queue_compartments/seam_sessions currently only exist in guardian's local JAA; needs a real contract file in cortex itself so queue state survives a guardian restart and is visible to the rest of the system, not guardian-private. (2) Userscript-side resume — currentJobId and the seam_queue_id/chunk_idx/total fields are plain in-memory `let`s right now (checked directly in guardian/userscript-chatgpt.js); sessionStorage is explicitly marked 'intentionally ephemeral' for tab identity only. Needs localStorage-backed position tracking so a tab refresh mid-run resumes instead of losing all progress. (3) The escalation ladder itself — chunk fails → RAID retry (this session's _approveTool is the real gate to route this through, not a new mechanism) → if the queue/status still hasn't moved, diagnostic tool runs (service/nexus-diagnostic.js's real /gaps/:uuid/fix route, already proxied this session) → ollama tries different strategies using working memory, checking back in with RAID and escalating each attempt → last resort: open a new browser tab, paste full context to Claude. The first two pieces are bounded and buildable now. The third is four distinct subsystems wired together (RAID retry plumbing, diagnostic integration, ollama adaptive strategy selection, a genuinely new tab-open-and-paste mechanism) and needs its own design pass before code, same discipline Phase 40 got — not assumed to be a quick addition on top of (1) and (2).",
+   deps:"cortex/core/raid _approveTool ✓ (built this session) · service/nexus-diagnostic.js ✓ · guardian/userscript-chatgpt.js ✓ · Phase 49 (Agent Reachability) is related but narrower — reachability specifically, not this full failure chain",
+   unlocks:"docs/seam-queue.spec — written this session as the first spec for SEAM queue at all (previously unspecced), gate built and proven live, persistence/escalation explicitly marked not-yet-built rather than assumed"},
+]},
+];
+
+function auditTable(d){
+  if(!d) return '';
+  return `<div class="audit-box"><b style="color:var(--decision)">SEAM Coverage Audit</b>
+<table>
+<tr><th>File</th><th>Hooks declared</th><th>Real seam.componentId</th></tr>
+<tr><td>hooks/idearium.hooks.js</td><td>3</td><td class="zero">1 — STALE (20+ real actions undeclared)</td></tr>
+<tr><td>hooks/architect.hooks.js</td><td>3</td><td class="zero">1</td></tr>
+<tr><td>hooks/cortex.hooks.js</td><td>7</td><td class="zero">0</td></tr>
+<tr><td>hooks/guardian.hooks.js</td><td>8</td><td class="zero">0</td></tr>
+<tr><td>hooks/bridge.hooks.js</td><td>3</td><td class="zero">0</td></tr>
+<tr><td>hooks/orchestrator.hooks.js</td><td>5</td><td class="zero">0</td></tr>
+</table>
+<br><b>Registry island map:</b>
+<table>
+<tr><th>System</th><th>What it is</th><th>Consumed by</th></tr>
+<tr><td>lib/component-registry.js</td><td>Live runtime, namespace.name ids, JAA-persisted</td><td>lib/grammar-engine.js · CLI · orchestrator :9000</td></tr>
+<tr><td>hooks/*.hooks.js (6 files)</td><td>Declarative per-hook map, seam:{componentId,intentId}</td><td>architect/service.js only (seedArchitectRegistry)</td></tr>
+<tr><td>architect HookRegistry</td><td>Separate in-memory/JAA, POST /api/hooks</td><td>Architect's own UI/API only</td></tr>
+<tr><td>kg-builder.js nodes</td><td>Compile-time KnowledgeGraph, MOD-XXX ids</td><td>spec-compiler only</td></tr>
+</table></div>`;
+}
+
+const timeline = document.getElementById('timeline');
+DATA.forEach(group=>{
+  const tierDiv = document.createElement('div');
+  const tl = group.tierClass
+    ? `<div class="tier-label ${group.tierClass}">${group.tier}</div>`
+    : `<div class="tier-label">${group.tier}</div>`;
+  tierDiv.innerHTML = tl;
+
+  group.items.forEach(item=>{
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.dataset.status = item.s;
+    row.dataset.search = (item.t+' '+item.n+' '+(item.human||'')+' '+(item.d||'')).toLowerCase();
+    const markerColor = item.s === 'decision' ? 'var(--decision)' : `var(--${item.s})`;
+    const corrTag = item.n === '43' ? '<span class="correction-tag">re-scored</span>' : '';
+    const badgeClass = item.s === 'decision' ? 'b-decision' : `b-${item.s}`;
+    const statusLabel = STATUS_LABEL[item.s] || item.s;
+    const decisionNote = item.isDecision ? `<div class="decision-note">⚠ This phase requires an architectural decision before any code is written. Wrong call here makes Phases 63 and 64 expensive to undo. The options are documented inside — read before building.</div>` : '';
+    const depsHtml = item.deps ? `<div class="deps"><b>Deps:</b> ${item.deps}</div>` : '';
+    const unlocksHtml = item.unlocks ? `<div class="unlocks"><b>Unlocks:</b> ${item.unlocks}</div>` : '';
+    const auditHtml = item.audit ? auditTable(true) : '';
+    const cardClass = item.isDecision ? 'card decision-card' : 'card';
+    row.innerHTML = `
+      <div class="node"><div class="marker" style="background:${markerColor};box-shadow:0 0 0 2px var(--line),0 0 14px ${markerColor}"></div></div>
+      <div class="${cardClass}">
+        <div class="crow">
+          <div class="ctitle"><span class="pnum">${item.n}</span>${item.t}${corrTag}</div>
+          <span class="badge ${badgeClass}">${statusLabel}</span>
+        </div>
+        <div class="human"><b>In plain terms:</b> ${item.human||''}</div>
+        ${decisionNote}
+        <div class="desc">${(item.d||'').replace(/\n/g,'<br>')}</div>
+        ${depsHtml}
+        ${unlocksHtml}
+        ${auditHtml}
+      </div>`;
+    row.querySelector('.card').addEventListener('click', e=>{
+      e.currentTarget.classList.toggle('open');
+    });
+    tierDiv.appendChild(row);
+  });
+  timeline.appendChild(tierDiv);
+});
+
+document.getElementById('filters').addEventListener('click', e=>{
+  if(!e.target.classList.contains('filt')) return;
+  document.querySelectorAll('.filt').forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  applyFilters();
+});
+
+document.getElementById('search').addEventListener('input', applyFilters);
+
+function applyFilters(){
+  const f = document.querySelector('.filt.active').dataset.f;
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  document.querySelectorAll('.row').forEach(r=>{
+    const statusOk = f==='all' || r.dataset.status===f;
+    const searchOk = !q || r.dataset.search.includes(q);
+    r.classList.toggle('hidden', !(statusOk && searchOk));
+  });
+  document.querySelectorAll('.tier-label').forEach(label=>{
+    let next = label.nextElementSibling, anyVisible=false;
+    while(next && next.classList.contains('row')){
+      if(!next.classList.contains('hidden')) anyVisible = true;
+      next = next.nextElementSibling;
+    }
+    label.classList.toggle('hidden', !anyVisible);
+  });
+}
+
+let expanded = false;
+document.getElementById('expandAll').addEventListener('click', e=>{
+  expanded = !expanded;
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('open', expanded));
+  e.target.textContent = expanded ? 'Collapse all' : 'Expand all';
+});
+</script>
+</body>
+</html>

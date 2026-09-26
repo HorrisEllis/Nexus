@@ -1,0 +1,173 @@
+{
+  "name": "nexus-final",
+  "version": "0.9.9",
+  "_superseded_by": "lib/version.js \u2014 this file is a frozen historical snapshot (Day 1-3 session log, pre-Phase-numbering scheme, pre-organs architecture). It is NOT kept in sync with current system state and should not be read as current. lib/version.js is the canonical, actively-maintained version registry as of system v0.7.8 / Phase 12.",
+  "uuid": "nexus-system-v2-1-0000-4000-0000-000000000001",
+  "hookId": "nexus.system:v2.1:s0001",
+  "description": "NEXUS ecosystem \u2014 SISO+JAA foundation, gated cross-system orchestration",
+  "axioms": [
+    "A",
+    "X",
+    "I",
+    "O",
+    "M",
+    "S",
+    "-",
+    "v",
+    "1",
+    ".",
+    "0",
+    " ",
+    "\u2014",
+    " ",
+    "a",
+    "l",
+    "l",
+    " ",
+    "2",
+    "9",
+    " ",
+    "l",
+    "a",
+    "w",
+    "s",
+    " ",
+    "e",
+    "n",
+    "f",
+    "o",
+    "r",
+    "c",
+    "e",
+    "d"
+  ],
+  "layer": "system",
+  "siso": {
+    "version": "1.0.0",
+    "source": "canonical",
+    "path": "siso/"
+  },
+  "jaa": {
+    "version": "1.0.0",
+    "source": "canonical",
+    "path": "jaa/"
+  },
+  "systems": {
+    "orchestrator": {
+      "port": 9000,
+      "uuid": "nexus-orchestrator-v2-0-0",
+      "file": "orchestrator.js"
+    },
+    "cortex": {
+      "port": 3748,
+      "uuid": "cortex-boot-v2-0000",
+      "file": "cortex/boot.js"
+    },
+    "guardian": {
+      "port": 7820,
+      "uuid": "guardian-server-v3-5",
+      "file": "guardian/server.js"
+    },
+    "idearium": {
+      "port": 4800,
+      "uuid": "idearium-api-v1-0000",
+      "file": "idearium/api/index.js"
+    },
+    "emerge": {
+      "port": 4242,
+      "uuid": "emerge-ide-v1-0-0",
+      "file": "emerge-ide.js"
+    },
+    "bridge": {
+      "port": 9999,
+      "uuid": "nexus-bridge-v1-0000-4000-0000-000000000001",
+      "file": "bridge/index.js",
+      "boots": "first",
+      "role": "connective_tissue"
+    },
+    "architect": {
+      "port": 3747,
+      "uuid": "architect-service-v1-0000-4000",
+      "file": "architect/service.js"
+    },
+    "diagnostic": {
+      "port": 7825,
+      "uuid": "nexus-diagnostic-service-v1-0000-4000-0000-000000000001",
+      "file": "service/nexus-diagnostic.js"
+    }
+  },
+  "axiom_violations_fixed": [
+    "\u00a71.2 \u2014 silent catch blocks in cortex, guardian, emerge now log to nc.gate()",
+    "\u00a72.2 \u2014 orchestrator ledger persisted to data/ledger/orchestrator.jsonl",
+    "\u00a75.2 \u2014 cortex, guardian, idearium, orchestrator all register with bridge on boot",
+    "\u00a75.1 \u2014 every nexus-connect call has a UUID via randomUUID()",
+    "\u00a78.3 \u2014 canonical SISO installed from upload, siso/core/ extended cleanly",
+    "\u00a73.1 \u2014 cortex boot gated: storage\u2192core\u2192deps\u2192poll\u2192server\u2192bridge",
+    "\u00a75.4 \u2014 version 2.1.0 consistent across manifest",
+    "\u00a75.7 guardian inline SISO replaced with canonical bus wired to cortex+bridge+orchestrator on every emit()",
+    "\u00a75.2 guardian, idearium, cortex, orchestrator all register with bridge on boot \u2014 verified 2 sessions active",
+    "\u00a72.3 guardian bus log observable via GET /bus \u2014 logs every event with seq, ts, claimed, system"
+  ],
+  "tests": {
+    "kernel": "142/142 passing",
+    "pipeline": "68/68 passing"
+  },
+  "features": [
+    "nexus-repl.js: bus command",
+    "forge UI: 5 system status dots",
+    "bridge SSE subscription in forge",
+    "orchestrator SSE subscription in forge",
+    "/api/bus unified bus log across all systems"
+  ],
+  "userscript": {
+    "version": "9.0.0",
+    "lines": 859,
+    "tabs": [
+      "Log",
+      "Usage",
+      "Gaps",
+      "Arts",
+      "SEAM",
+      "API"
+    ],
+    "removed": [
+      "PA tab (\u2192 CLI)",
+      "Queue tab (\u2192 CLI)",
+      "Settings tab (\u2192 API tab)",
+      "inline SEAM parser replaced with clean version"
+    ],
+    "added": [
+      "Auto-error detection (truncation, refusal, context limit, SEAM FAIL)",
+      "Auto-retry with forensic context (2 attempts)",
+      "Usage tracking (tokens/job/session + per-job history)",
+      "\u00a75.2 bus wiring: every significant event \u2192 orchestrator + bridge + cortex",
+      "Heartbeat-based tab claim (stale tab detection)",
+      "CLI hint panel in every tab"
+    ]
+  },
+  "spec": "docs/NEXUS-SPEC.md",
+  "session_log": [
+    "Day 1 S1: First principles architecture \u2014 SISO+JAA canonical, 142/142 tests",
+    "Day 1 S2: Axiom audit \u2014 \u00a75.2 bridge registration, \u00a72.2 ledger persistence, \u00a78.3 SISO",
+    "Day 1 S3: Idearium completion \u2014 spec.build, ESS gap engine, pipeline, kernels panel",
+    "Day 1 S4: Contracts + integration tests \u2014 74 tests, /api/register, /api/recall",
+    "Day 1 S5: Watchdog + indicators \u2014 live dots, spawn crash fixed, nexus> watchdog",
+    "Day 2 S1: Diagnostic sequencer \u2014 cli/diagnose.js, NEXUS-SPEC.md living spec",
+    "Day 2 S6: Gated boot sequences \u2014 lib/boot-sequence.js, every system HARD/SOFT gates, orchestrator starts systems one by one, auto-diagnose on HALT",
+    "Day 2 S7: Guardian HTTP/WSS decoupled \u2014 HTTP boots standalone, WSS is SOFT phase. ensureCert() throws not exits. diagnose knows HARD vs SOFT with auto-install. All wss.on deferred via onWss().",
+    "Day 2 S8: Replaced ws/WebSocket with NCP (lib/ncp.js) \u2014 SSE+fetch, zero deps. Added lib/heartbeat.js (Bridge OS immune system), lib/node-ledger.js (UNKNOWN\u2192CANDIDATE\u2192MEMBER\u2192SUSPENDED\u2192DEAD trust state machine). Orchestrator now uses HeartbeatManager + PulseListener :7777 UDP. Every system announces itself via UDP pulse. No hardcoded registration. No TLS required for userscripts.",
+    "Day 2 S9: Ledgers as learning system. lib/event-ledger.js \u2014 every bus.emit across all systems writes to event_log.jsonl before routing. Baseline learning (avgInterval, consistency per event type). Anomaly detection via sigma deviation. Invariant scanner (co-occurrence, failure precursors). Four pipeline gaps fixed: guardian writes agent_calls to cortex, emerge compile results logged to orchestrator, job.complete writes to cortex memory, RAID hook in cortex event handler.",
+    "Day 2 S3 (session 3): SEAM pipeline. guardian/lib/seam-queue.js \u2014 state machine QUEUED\u2192VERIFIED, 3 retry strategies (context/shorter/forensic), \u00a7LAW II throughout. guardian/lib/spec-parser.js \u2014 .spec \u2192 prerequisite block + chunks with SEAM contracts. guardian/userscript-chatgpt.js \u2014 v8.3 full UI on NCP transport, ChatGPT DOM selectors. guardian/server.js \u2014 /command with SEAM queue dispatch, spec parsing, artifact file output to data/output/{date}/{jobId}/. Fixed jaa.query\u2192jaa.all throughout. 68/68 pipeline tests.",
+    "Day 3 S4 (session 4, this session): Pill fixed (WebSocket remnant removed, connState strings corrected). Cortex context pull before job dispatch. ?CORTEX: post-response command parser. _log syncs err/gap/job/ok to server event-ledger. Forge duplicate tabs removed, Brain SEAM panel shows live queues, Queue SEAM button added. nexus-chat-v4.html NCP edition. /version auto-update endpoint. diagnose.js adds seam-queue, spec-parser, detector, NCP, version, SEAM live checks. 142/142 kernel, 68/68 pipeline.",
+    "Session test (Dusk PA continued): SEAM 1 \u2014 lib/ess.js (ESS kernel: hash store, callto, resolve, unresolve, binding log). lib/ico.js (ICO pipe: axioms, SNR+delta+sigma, compartment, invariant, ledger, crystal). 47 data folders. SEAM 2 \u2014 ESS wired into RAID (content-addressed dispatch, UNRESOLVE\u2192gap). SEAM 3 \u2014 lib/queue.js (physical file queue: uuid.pending.md, crash replay, tags, conversation log). SEAM 4 \u2014 lib/baseline.js (per-kernel baseline: sigma deviation\u2192gap, failure mode ledger with friction). All wired into guardian. diagnose.js baseline friction checks. 142/142 kernel, 61/61 pipeline."
+  ],
+  "open_gaps": [
+    "guardian/dropzone-persist.js missing (optional)",
+    "guardian/spec-namer.js missing (optional)",
+    "cortex/guardian/emerge not tested live (need Windows TLS + native deps)",
+    "Run all 5 systems concurrently to verify 74/74 integration tests",
+    "Wire diagnose.js failures \u2192 idearium gaps (auto-create)"
+  ],
+  "phase": "23.7",
+  "updated": "2026-06-24"
+}

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.agent.calibrate
+type: capability
+id: copilot.agent.calibrate
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730182
+source: copilot.registry-components:copilot.agent.calibrate
+payload:
+  id: copilot.agent.calibrate
+  namespace: copilot
+  name: agent.calibrate
+  version: 2.0.0
+  grammar:
+    - calibrate agent
+    - find the limit
+  route:
+    method: POST
+    path: /api/agents/calibrate
+  intent: []
+  description: Binary-search an agent’s real input limit from live probes
+  params: []
+  tags:
+    - copilot
+    - agents
+    - capability
+  permissions:
+    - user
+  hooks: {}

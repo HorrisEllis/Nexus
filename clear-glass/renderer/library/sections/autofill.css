@@ -1,0 +1,9 @@
+/* renderer/library/sections/autofill.css — Library → Autofill only. Scoped to body[data-area="autofill"]. */
+body[data-area="autofill"] .af-acts { display: flex; gap: 8px; }
+body[data-area="autofill"] .af-out { display: grid; gap: 4px; font-family: var(--mono); font-size: 12px; }
+body[data-area="autofill"] .af-line { color: var(--ink-dim); }
+body[data-area="autofill"] .af-line.ok,
+body[data-area="autofill"] .af-line.c-high { color: var(--ok); }
+body[data-area="autofill"] .af-line.c-medium { color: var(--warn); }
+body[data-area="autofill"] .af-line.bad,
+body[data-area="autofill"] .af-line.c-low { color: var(--bad); }

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.person_model.review
+type: capability
+id: copilot.person_model.review
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730179
+source: copilot.registry-components:copilot.person_model.review
+payload:
+  id: copilot.person_model.review
+  namespace: copilot
+  name: person_model.review
+  version: 2.0.0
+  grammar:
+    - review queue
+    - what have you noticed
+    - pending observations
+  route:
+    method: GET
+    path: /api/person-model/review
+  intent: []
+  description: Observations the co-pilot has proposed about the user — pending, never claims (§IP-5)
+  params: []
+  tags:
+    - copilot
+    - person-model
+    - review
+  permissions:
+    - system
+  hooks: {}

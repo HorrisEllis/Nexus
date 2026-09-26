@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "id": "eravos.xy-pad",
+  "label": "XY Controller",
+  "icon": "\u271b",
+  "accent": "#00d4ff",
+  "domain": [
+    "music",
+    "modulation",
+    "control",
+    "performance"
+  ],
+  "description": "Two-axis modulation surface. Publishes mod:xy globally. Trail fades. Snap-to-center mode.",
+  "permissions": [
+    "bus_publish",
+    "bus_subscribe"
+  ],
+  "provides": [
+    "capability.mod_signal"
+  ],
+  "requires": [],
+  "hooks": [
+    {
+      "hook_id": "xy.hook.mod_out",
+      "direction": "out",
+      "event_type": "mod:xy",
+      "contract_version": "1.0.0"
+    }
+  ],
+  "params": {
+    "x_dest": {
+      "type": "string",
+      "default": "cutoff",
+      "description": "Parameter name for X axis"
+    },
+    "y_dest": {
+      "type": "string",
+      "default": "depth",
+      "description": "Parameter name for Y axis"
+    },
+    "snap_center": {
+      "type": "bool",
+      "default": false
+    }
+  },
+  "ui": {
+    "type": "xy_surface",
+    "trail": true,
+    "snap": true
+  }
+}

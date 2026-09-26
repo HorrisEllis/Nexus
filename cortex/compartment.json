@@ -1,0 +1,63 @@
+{
+  "schema": "nexus.compartment/1",
+  "id": "nexus.cortex",
+  "name": "cortex",
+  "label": "Cortex",
+  "dir": "cortex",
+  "repo": {
+    "kind": "virtual",
+    "id": "repo.nexus.cortex",
+    "scope": [
+      "cortex/"
+    ],
+    "versionLine": "3.5.0",
+    "versionNote": "from lib/version.js modules"
+  },
+  "cos": {
+    "compartmentId": "cos.nexus.cortex",
+    "axioms": []
+  },
+  "runtime": {
+    "entry": "cortex/boot.js",
+    "entryExists": true,
+    "port": 3748,
+    "phase": 1,
+    "critical": true,
+    "optional": false,
+    "healthUrl": "http://127.0.0.1:3748/health"
+  },
+  "data": {
+    "dataDir": "cortex/data",
+    "ledgerDir": "cortex/data/ledger",
+    "nodeIndexDir": "cortex/data/node-index"
+  },
+  "spec": "cortex/spec/",
+  "dependsOn": {
+    "intelligence": 5,
+    "idearium": 1,
+    "copilot": 2,
+    "guardian": 1,
+    "versionium": 1,
+    "loom": 1
+  },
+  "sharedLibRequires": 51,
+  "stats": {
+    "jsFiles": 39,
+    "jsLines": 10777
+  },
+  "boundaryFindings": {
+    "count": 11,
+    "sample": [
+      "cortex/core/raid/contract-intake.js -> intelligence/cfr/ledger",
+      "cortex/core/raid/contract-intake.js -> idearium/spec-engine/index.js",
+      "cortex/core/raid/contract-intake.js -> copilot/lifeline.js",
+      "cortex/core/raid/index.js -> intelligence/cfr/sigma",
+      "cortex/core/raid/index.js -> intelligence/bda",
+      "cortex/core/raid/officiator.js -> copilot/lifeline.js",
+      "cortex/memory/causal-lookup.js -> intelligence/cfr/graph.js",
+      "cortex/memory/jaa-db.js -> guardian/jaa-store",
+      "cortex/self-heal/escalation.js -> intelligence/telemetry-codec/engines.js",
+      "cortex/snapshot/index.js -> versionium/lib/snapshot.js"
+    ]
+  }
+}

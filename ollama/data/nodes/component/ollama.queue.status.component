@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-ollama.queue.status
+type: component
+id: ollama.queue.status
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: ollama
+tags: []
+exported_at: 1789275153035
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275153035
+lastSeenAt: 1789275153035
+fingerprint: ollama::GET /api/queue
+payload:
+  id: ollama.queue.status
+  uuid: 6fd7e28e-da3c-4427-905c-6d664b66e96e
+  namespace: ollama
+  name: queue.status
+  version: 1.0.0

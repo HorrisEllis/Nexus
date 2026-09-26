@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-36
+type: bep_pattern
+id: pat-36
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"heartbeat.tick" and "heartbeat.tick" co-occur within 5s — 6 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1789872372171
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1789872372171
+lastSeenAt: 1789872372171
+fingerprint: null
+payload:
+  uuid: pat-36
+  signature: heartbeat.tick::heartbeat.tick
+  patternType: co_occurrence
+  typeA: heartbeat.tick
+  typeB: heartbeat.tick
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 6
+  confidence: 0.3
+  description: '"heartbeat.tick" and "heartbeat.tick" co-occur within 5s — 6 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1789872372153

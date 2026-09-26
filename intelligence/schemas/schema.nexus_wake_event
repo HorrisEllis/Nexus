@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-schema-nexus_wake_event
+type: schema
+id: nexus_wake_event
+context: intelligence/schemas — intelligence-local schema registry
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789200001600
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    intelligence/schemas.js's own real nexus_wake_events JAA table — "hey nexus, ..." moments,
+    captured server-side, whether or not anything was live-listening.
+  fields:
+    id:
+      type: string
+      required: true
+      description: real row id
+    request:
+      type: string
+      required: true
+      description: real text after the wake phrase
+    agent:
+      type: string
+      required: false
+      description: real agent this wake concerns, null if unknown
+    chatUrl:
+      type: string
+      required: false
+      description: real chat URL, null if unknown
+    account:
+      type: string
+      required: false
+      description: real account, null if unknown
+    sessionId:
+      type: string
+      required: false
+      description: real session id, null if unknown
+    role:
+      type: string
+      required: true
+      description: "'user' | 'assistant'"
+    ts:
+      type: number
+      required: true
+      description: real epoch ms
+    consumed:
+      type: boolean
+      required: true
+      description: real flag — whether something was live-listening and handled this wake
+    answer:
+      type: string
+      required: false
+      description: real answer text, null until consumed

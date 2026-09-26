@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-cg.copilot.message
+type: capability
+id: cg.copilot.message
+context: clear-glass/registry-components.js real capability export
+intent: null
+summary: null
+system: clear-glass
+tags: []
+exported_at: 1789250730160
+source: clear-glass.registry-components:cg.copilot.message
+payload:
+  id: cg.copilot.message
+  namespace: cg
+  name: copilot.message
+  version: 3.1.0
+  grammar:
+    - copilot message
+  route:
+    method: POST
+    path: /cmd
+  intent: []
+  description: Route to Clear Glass co-pilot
+  params: []
+  tags:
+    - cg
+    - copilot
+  permissions:
+    - system
+  hooks: {}

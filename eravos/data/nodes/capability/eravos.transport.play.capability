@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-eravos.transport.play
+type: capability
+id: eravos.transport.play
+context: eravos/registry-components.js real capability export
+intent: null
+summary: null
+system: eravos
+tags: []
+exported_at: 1789250730186
+source: eravos.registry-components:eravos.transport.play
+payload:
+  id: eravos.transport.play
+  namespace: eravos
+  name: transport.play
+  version: 3.0.0
+  grammar:
+    - eravos play
+  route:
+    method: POST
+    path: /api/transport/play
+  intent: []
+  description: Start playback
+  params: []
+  tags:
+    - eravos
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.person_model.connect
+type: capability
+id: copilot.person_model.connect
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730180
+source: copilot.registry-components:copilot.person_model.connect
+payload:
+  id: copilot.person_model.connect
+  namespace: copilot
+  name: person_model.connect
+  version: 2.0.0
+  grammar:
+    - copilot person_model connect
+  route:
+    method: POST
+    path: /api/person-model/connect
+  intent: []
+  description: Typed edge between two model nodes — supports/tensions/causes/co_occurs
+  params: []
+  tags:
+    - copilot
+    - person-model
+    - lattice
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.axioms.add
+type: capability
+id: copilot.axioms.add
+context: copilot/registry-components.js real capability export
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1789250730176
+source: copilot.registry-components:copilot.axioms.add
+payload:
+  id: copilot.axioms.add
+  namespace: copilot
+  name: axioms.add
+  version: 2.0.0
+  grammar:
+    - add axiom
+  route:
+    method: POST
+    path: /api/axioms/add
+  intent: []
+  description: Add a runtime axiom
+  params: []
+  tags:
+    - copilot
+  permissions:
+    - system
+  hooks: {}

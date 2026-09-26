@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.adversarial
+type: capability
+id: intelligence.adversarial
+context: intelligence/registry-components.js real capability export
+intent: null
+summary: null
+system: intelligence
+tags: []
+exported_at: 1789250756073
+source: intelligence.registry-components:intelligence.adversarial
+payload:
+  id: intelligence.adversarial
+  namespace: intelligence
+  name: adversarial
+  version: 1.0.0
+  grammar:
+    - adversarial
+    - intelligence adversarial
+  route:
+    method: POST
+    path: /api/adversarial
+  intent: []
+  description: 'Inner-critic: reconcile intuition vs mastermind'
+  params: []
+  tags:
+    - intelligence
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-schema-guardian_queue_compartment
+type: schema
+id: guardian_queue_compartment
+context: guardian/schemas — guardian-local node-type schema registry
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789117339415
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: guardian/server.js — POST /queue/compartments real jaa.insert('queue_compartments', ...) shape
+  fields:
+    uuid:
+      type: string
+      required: true
+      description: real compartment id — caller-supplied body.id if given, else randomUUID()
+    queueId:
+      type: string
+      required: true
+      description: real parent queue id
+    chunkIdx:
+      type: number
+      required: true
+      description: real chunk index within the queue
+    chunkTitle:
+      type: string
+      required: false
+      description: real chunk title
+    state:
+      type: string
+      required: true
+      description: >-
+        real gated state — QUEUED | INJECTED | GENERATING | STABLE | VERIFIED | FAILED | RETRYING,
+        defaults to 'QUEUED'
+    provider:
+      type: string
+      required: false
+      description: real target provider for this chunk
+    retries:
+      type: number
+      required: true
+      description: real retry counter, defaults to 0
+    detection:
+      type: any
+      required: false
+      description: real detection/failure-report data, null if none
+    ts:
+      type: number
+      required: true
+      description: real timestamp

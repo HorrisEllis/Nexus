@@ -1,0 +1,239 @@
+/* ui/import-project/import-project.css
+ * Uses only real tokens already defined in /ui/themes/nexus-dark.css —
+ * no new color system introduced. */
+
+.ip-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px 20px;
+  background: var(--ink);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.ip-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.ip-title {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--bright);
+  margin: 0;
+}
+
+.ip-dropzone {
+  width: min(640px, 90vw);
+  min-height: 260px;
+  border: 1px dashed var(--rim);
+  border-radius: 10px;
+  background: var(--plate);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 32px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+.ip-dropzone.dz-active {
+  border-color: var(--ac);
+  background: var(--ac-ghost);
+}
+
+.ip-dropzone-icon {
+  font-size: 34px;
+  color: var(--dim);
+}
+
+.ip-dropzone-main {
+  font-size: 15px;
+  color: var(--text);
+}
+
+.ip-dropzone-sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.ip-input { display: none; }
+
+.ip-status {
+  width: min(640px, 90vw);
+  min-height: 20px;
+  font-size: 13px;
+  color: var(--dim);
+  text-align: center;
+}
+
+.ip-status.ok   { color: var(--ok); }
+.ip-status.err  { color: var(--err); }
+.ip-status.busy { color: var(--ac); }
+
+.ip-result {
+  width: min(640px, 90vw);
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: none;
+}
+.ip-result.show { display: block; }
+
+.ip-result-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--edge);
+}
+.ip-result-row:last-child { border-bottom: none; }
+.ip-result-row span:first-child { color: var(--muted); }
+.ip-result-row span:last-child  { color: var(--text); }
+
+.ip-result-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+.ip-btn {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--ac-border);
+  background: var(--ac-dim);
+  color: var(--bright);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+.ip-btn:hover { background: var(--ac-ghost); border-color: var(--ac-border-hi); }
+.ip-btn.secondary {
+  border-color: var(--rim);
+  background: transparent;
+  color: var(--dim);
+}
+
+.ip-omitted {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--muted);
+  max-height: 120px;
+  overflow-y: auto;
+}
+.ip-omitted-row { padding: 2px 0; }
+
+/* ── added §UPLOAD-PROJECT 2026-09-15 — step indicator, prompt panel, chips ── */
+
+.ip-steps {
+  width: min(640px, 90vw);
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.ip-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--edge);
+}
+.ip-step span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--rim);
+  font-size: 10px;
+}
+.ip-step.active { color: var(--bright); border-color: var(--ac-border); }
+.ip-step.active span { border-color: var(--ac-border); background: var(--ac-dim); }
+.ip-step.done { color: var(--dim); }
+.ip-step.done span { background: var(--ok); border-color: var(--ok); }
+
+.ip-panel {
+  width: min(640px, 90vw);
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ip-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.ip-text, .ip-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--ink);
+  border: 1px solid var(--rim);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  padding: 8px 10px;
+  resize: vertical;
+}
+.ip-text:focus, .ip-textarea:focus { outline: none; border-color: var(--ac-border); }
+
+.ip-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.ip-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ip-chip {
+  font-size: 12px;
+  color: var(--dim);
+  background: transparent;
+  border: 1px solid var(--rim);
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+.ip-chip:hover { border-color: var(--ac-border); color: var(--bright); background: var(--ac-ghost); }
+
+.ip-form-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+.ip-form-actions .ip-btn { flex: 1; }
+
+.ip-container-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.ip-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

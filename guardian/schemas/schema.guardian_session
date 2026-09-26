@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-schema-guardian_session
+type: schema
+id: guardian_session
+context: guardian/schemas — guardian-local node-type schema registry
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789116573652
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    guardian/server.js — guardian.session.named SISOGate (canonical write path) + POST
+    /api/account-identity (account_uuid/tab_id only), reconciled 2026-09-11
+  fields:
+    id:
+      type: string
+      required: true
+      description: real primary key — randomUUID(), used at both real write sites now
+    chat_id:
+      type: string
+      required: true
+      description: real chat id — the key both write sites look up existing rows by
+    chat_url:
+      type: string
+      required: false
+      description: real chat url
+    provider:
+      type: string
+      required: false
+      description: real provider, defaults to 'claude' at insert time
+    account:
+      type: string
+      required: false
+      description: real account
+    account_uuid:
+      type: string
+      required: false
+      description: >-
+        real resolved account-identity uuid — only set via /api/account-identity, from
+        lib/account-identity-index.js
+    tab_id:
+      type: string
+      required: false
+      description: real originating tab id — only set via /api/account-identity
+    name:
+      type: string
+      required: false
+      description: real human-assigned session name — only set via guardian.session.named
+    token_total:
+      type: number
+      required: false
+      description: real running token count, defaults to 0 at insert — only set via guardian.session.named
+    started_ts:
+      type: number
+      required: false
+      description: real creation timestamp — set by guardian.session.named at insert
+    created_ts:
+      type: number
+      required: false
+      description: >-
+        real creation timestamp — set by /api/account-identity at insert; same real concept as
+        started_ts, still two names because the two insert paths create different rows for different
+        first-touch events, not reconciled into one insert path (real, left as-is — see §NOT
+        RECONCILED below)
+    updated_ts:
+      type: number
+      required: true
+      description: real last-write timestamp, set by both write sites on update

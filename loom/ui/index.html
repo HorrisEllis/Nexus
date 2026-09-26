@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOOM — Nexus Weave OS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+/* FORKED 2026-07-05 from idearium/ui/index.html - same token system, same
+   fonts, same starfield/topbar/rail/view shell. This is a fork, not a
+   lookalike: --sky (idearium's cyan) is swapped for Loom's own registered
+   brand color (#33bb88, teal - see loom/server.js's register() call),
+   everything else in the token set is unchanged since those are semantic
+   status colors, not idearium-specific branding. */
+:root {
+  --bg:     #07090e;
+  --bg1:    #0b0f18;
+  --bg2:    #0f1520;
+  --bg3:    #141c2e;
+  --panel:  #0d1219;
+  --b0:     rgba(51,187,136,0.06);
+  --b1:     rgba(51,187,136,0.14);
+  --b2:     rgba(51,187,136,0.28);
+  --sky:    #33bb88;
+  --sky2:   #5fd9ab;
+  --mint:   #34d399;
+  --amber:  #fbbf24;
+  --coral:  #f87171;
+  --violet: #a78bfa;
+  --rose:   #fb7185;
+  --text:   #c4eede;
+  --text2:  #608a76;
+  --text3:  #335044;
+  --mono:   'IBM Plex Mono', monospace;
+  --sans:   'IBM Plex Sans', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;height:100vh;overflow:hidden}
+body{display:flex;flex-direction:column;position:relative}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:var(--b1);border-radius:3px}
+
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(ellipse 1200px 800px at 70% 8%, rgba(20,60,45,.35) 0%, rgba(8,20,16,.18) 45%, transparent 75%),
+  var(--bg)}
+.swirl-layer{position:absolute;inset:-20%;opacity:.14;mix-blend-mode:screen;filter:blur(30px) saturate(130%)}
+.swirl-a{background:conic-gradient(from 0deg at 24% 30%, transparent 0deg, #237a5c 40deg, transparent 100deg, transparent 360deg);animation:spin 130s linear infinite}
+.swirl-b{background:conic-gradient(from 180deg at 76% 62%, transparent 0deg, #5fd9ab 30deg, transparent 90deg, transparent 360deg);animation:spin 95s linear infinite reverse}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.topbar, .app-shell, .toast-area{position:relative;z-index:2}
+.topbar{height:38px;background:rgba(11,15,24,.88);backdrop-filter:blur(6px);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 14px;gap:16px;flex-shrink:0}
+.logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--sky);letter-spacing:.18em;cursor:pointer}
+.logo span{color:var(--text3)}
+.tb-sep{width:1px;height:18px;background:var(--b1)}
+.tb-stat{font-family:var(--mono);font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px}
+.tb-stat .v{font-weight:500;color:var(--sky)}
+.tb-conn{font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid var(--b1);color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:auto}
+.tb-conn .dot{width:6px;height:6px;border-radius:50%;background:var(--text3)}
+.tb-conn.online{border-color:rgba(52,211,153,.3);color:var(--mint)}
+.tb-conn.online .dot{background:var(--mint);box-shadow:0 0 6px var(--mint)}
+.tb-conn.offline{border-color:rgba(248,113,113,.25);color:var(--coral)}
+.tb-conn.offline .dot{background:var(--coral)}
+
+.offline-banner{display:none;background:rgba(248,113,113,.1);border-bottom:1px solid rgba(248,113,113,.25);color:var(--coral);font-family:var(--mono);font-size:10px;padding:6px 14px;align-items:center;gap:10px;position:relative;z-index:3}
+.offline-banner.show{display:flex}
+.offline-banner button{font-family:var(--mono);font-size:9px;background:none;border:1px solid var(--coral);color:var(--coral);padding:2px 8px;border-radius:3px;cursor:pointer}
+
+.app-shell{flex:1;display:flex;overflow:hidden}
+.rail{width:56px;background:rgba(11,15,24,.7);border-right:1px solid var(--b1);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px;flex-shrink:0}
+.rail-btn{width:40px;height:40px;border-radius:8px;border:1px solid transparent;background:none;color:var(--text3);font-family:var(--mono);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;position:relative}
+.rail-btn:hover{color:var(--text2);background:var(--b0)}
+.rail-btn.active{color:var(--sky);background:rgba(51,187,136,.08);border-color:var(--b2)}
+.rail-btn .rail-label{position:absolute;left:50px;top:50%;transform:translateY(-50%);background:var(--bg2);border:1px solid var(--b1);padding:3px 8px;border-radius:4px;font-size:9px;letter-spacing:.08em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s;z-index:50}
+.rail-btn:hover .rail-label{opacity:1}
+.rail-sep{width:28px;height:1px;background:var(--b1);margin:4px 0}
+
+.view-area{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.view{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.view.active{display:flex}
+
+.welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;overflow-y:auto}
+.welcome-mark{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--text3);margin-bottom:14px}
+.welcome-title{font-family:var(--mono);font-size:34px;font-weight:600;letter-spacing:.12em;color:var(--sky);text-shadow:0 0 30px rgba(51,187,136,.25);margin-bottom:8px}
+.welcome-title span{color:var(--text)}
+.welcome-sub{font-size:13px;color:var(--text2);max-width:520px;text-align:center;line-height:1.7;margin-bottom:36px}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:920px;width:100%}
+.pillar{background:rgba(13,18,25,.7);border:1px solid var(--b0);border-radius:10px;padding:18px;cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden}
+.pillar:hover{border-color:var(--b2);background:rgba(51,187,136,.04);transform:translateY(-2px)}
+.pillar-step{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em}
+.pillar-icon{font-size:20px;margin:8px 0 10px}
+.pillar-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px}
+.pillar-desc{font-size:11px;color:var(--text2);line-height:1.55}
+.pillar.flow::after{content:'→';position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;z-index:5}
+.pillar:nth-child(3)::after{display:none}
+
+.body2{flex:1;display:grid;grid-template-columns:1fr 340px;overflow:hidden;gap:1px;background:var(--b0)}
+.left{display:flex;flex-direction:column;overflow:hidden;background:rgba(7,9,14,.55)}
+.right{display:flex;flex-direction:column;overflow:hidden;background:rgba(11,15,24,.6)}
+.ph{height:30px;background:rgba(15,21,32,.7);border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0}
+.ph-title{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text2)}
+.ph-badge{margin-left:auto;font-family:var(--mono);font-size:9px;padding:1px 6px;border-radius:2px;border:1px solid var(--b1);color:var(--text3)}
+.ph-badge.live{border-color:rgba(52,211,153,.25);color:var(--mint)}
+.ph-badge.live::before{content:'● ';font-size:7px}
+.pbody{flex:1;overflow-y:auto;padding:12px}
+
+.kind-tabs{display:flex;gap:4px;padding:0 12px 10px}
+.kind-tab{font-family:var(--mono);font-size:10px;padding:5px 10px;border-radius:6px;border:1px solid var(--b1);color:var(--text3);cursor:pointer;background:none}
+.kind-tab.active{color:var(--sky);border-color:var(--b2);background:var(--b0)}
+.reg-item{padding:9px 11px;border:1px solid var(--b0);border-radius:6px;margin-bottom:6px;font-family:var(--mono);font-size:11px}
+.reg-item .id{color:var(--text)}
+.reg-item .meta{color:var(--text3);font-size:10px;margin-top:2px}
+.empty{color:var(--text3);font-size:11px;padding:24px 10px;text-align:center;line-height:1.6}
+
+.field{margin-bottom:12px}
+.field label{display:block;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.08em;margin-bottom:5px;text-transform:uppercase}
+.field input{width:100%;background:var(--panel);border:1px solid var(--b1);border-radius:6px;color:var(--text);padding:8px 10px;font-family:var(--sans);font-size:12px}
+.field input:focus{outline:none;border-color:var(--sky)}
+.templates{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.tpl-card{border:1px solid var(--b1);border-radius:8px;padding:10px;cursor:pointer;transition:.15s}
+.tpl-card:hover{border-color:var(--b2)}
+.tpl-card.selected{border-color:var(--sky);background:var(--b0)}
+.tpl-card .label{font-weight:500;font-size:12px;color:var(--text)}
+.tpl-card .desc{color:var(--text2);font-size:10px;margin-top:4px;line-height:1.4}
+.op-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--b0);border-radius:6px;margin-bottom:6px;font-family:var(--mono);font-size:11px}
+.op-row input[type=checkbox]{accent-color:var(--sky);width:14px;height:14px;flex-shrink:0}
+.op-row .verb{color:var(--sky);min-width:56px}
+.op-row .path{color:var(--text2);flex:1}
+.btn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;padding:9px 18px;border-radius:6px;border:1px solid var(--b2);color:var(--sky);background:var(--b0);cursor:pointer}
+.btn:hover{background:var(--sky);color:var(--bg)}
+.result-ok{border:1px solid var(--b2);background:var(--b0);border-radius:8px;padding:10px;font-family:var(--mono);font-size:10px;margin-top:12px;line-height:1.6;color:var(--mint)}
+.result-err{border:1px solid var(--coral);background:rgba(248,113,113,.08);border-radius:8px;padding:10px;font-family:var(--mono);font-size:11px;margin-top:12px;color:var(--coral)}
+
+.rev-item{border:1px solid var(--b0);border-radius:8px;padding:10px;margin-bottom:8px}
+.rev-item .label{font-weight:500;font-size:12px;color:var(--text)}
+.rev-item .diff{font-family:var(--mono);font-size:10px;color:var(--text2);margin-top:6px}
+.diff .add{color:var(--mint)} .diff .rem{color:var(--coral)} .diff .chg{color:var(--amber)}
+.ingest-form{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--b0)}
+.ingest-form input{flex:1;background:var(--panel);border:1px solid var(--b1);border-radius:6px;color:var(--text);padding:6px 8px;font-family:var(--mono);font-size:11px}
+.dropzone{margin:12px;padding:28px 16px;border:2px dashed var(--b1);border-radius:10px;text-align:center;cursor:pointer;transition:.15s;font-family:var(--mono)}
+.dropzone:hover, .dropzone.dragover{border-color:var(--sky);background:var(--b0)}
+.dropzone .dz-icon{font-size:22px;color:var(--text3);margin-bottom:8px}
+.dropzone.dragover .dz-icon{color:var(--sky)}
+.dropzone .dz-title{font-size:12px;color:var(--text)}
+.dropzone .dz-sub{font-size:10px;color:var(--text3);margin-top:4px}
+.dropzone input[type=file]{display:none}
+.upload-progress{margin:0 12px 12px;height:3px;background:var(--b1);border-radius:2px;overflow:hidden;display:none}
+.upload-progress.active{display:block}
+.upload-progress .bar{height:100%;background:var(--sky);width:0%;transition:width .15s}
+
+#event-log{border-top:1px solid var(--b1);background:rgba(7,9,14,.7);overflow-y:auto;font-family:var(--mono);font-size:10px;padding:8px 16px;flex-shrink:0;height:110px}
+.ev{padding:2px 0;color:var(--text2)}
+.ev .t{color:var(--text3);margin-right:8px}
+.ev .type{color:var(--sky)}
+</style>
+</head>
+<body>
+
+<div id="starfield">
+  <div class="swirl-layer swirl-a"></div>
+  <div class="swirl-layer swirl-b"></div>
+</div>
+
+<div class="topbar">
+  <div class="logo">L<span>OOM</span></div>
+  <div class="tb-sep"></div>
+  <div class="tb-stat">components <span class="v" id="tb-components">-</span></div>
+  <div class="tb-stat">revisions <span class="v" id="tb-revisions">-</span></div>
+  <div class="tb-conn offline" id="conn-indicator"><span class="dot"></span><span id="conn-label">connecting…</span></div>
+</div>
+
+<div class="offline-banner" id="offline-banner">
+  <span>LOOM unreachable — start it: <code>node loom/server.js</code> (port 3752)</span>
+  <button onclick="location.reload()">retry</button>
+</div>
+
+<div class="app-shell">
+  <nav class="rail">
+    <button class="rail-btn active" data-view="welcome" onclick="setView('welcome')">⌂<span class="rail-label">Welcome</span></button>
+    <div class="rail-sep"></div>
+    <button class="rail-btn" data-view="registry" onclick="setView('registry')">◇<span class="rail-label">Registry</span></button>
+    <button class="rail-btn" data-view="scaffold" onclick="setView('scaffold')">✎<span class="rail-label">Scaffold</span></button>
+    <button class="rail-btn" data-view="iterations" onclick="setView('iterations')">▦<span class="rail-label">Iterations</span></button>
+    <button class="rail-btn" data-view="roadmap" onclick="setView('roadmap')">◈<span class="rail-label">Roadmap</span></button>
+    <button class="rail-btn" data-view="gaps" onclick="setView('gaps')">◬<span class="rail-label">Gaps</span></button>
+    <button class="rail-btn" data-view="map" onclick="setView('map')">⬡<span class="rail-label">Map</span></button>
+  </nav>
+
+  <main class="view-area">
+
+    <section class="view active" id="view-welcome">
+      <div class="welcome">
+        <div class="welcome-mark">NEXUS · WEAVE OS</div>
+        <div class="welcome-title">LO<span>OM</span></div>
+        <div class="welcome-sub">Component · hook · wire · seam registry, with a scaffold engine and iteration archive underneath. One operations list projects into a real CLI, API, and contract — the same principle Architect states for specs, applied here to systems.</div>
+        <div class="pillars">
+          <div class="pillar flow" onclick="setView('registry')">
+            <div class="pillar-step">01 — SURVEY</div>
+            <div class="pillar-icon">◇</div>
+            <div class="pillar-name">Registry</div>
+            <div class="pillar-desc">Every component, hook, wire, and seam currently declared — live, not cached.</div>
+          </div>
+          <div class="pillar flow" onclick="setView('scaffold')">
+            <div class="pillar-step">02 — BUILD</div>
+            <div class="pillar-icon">✎</div>
+            <div class="pillar-name">Scaffold</div>
+            <div class="pillar-desc">Pick a template, check off the operations you want, generate a real CLI + API + contract.</div>
+          </div>
+          <div class="pillar" onclick="setView('iterations')">
+            <div class="pillar-step">03 — ARCHIVE</div>
+            <div class="pillar-icon">▦</div>
+            <div class="pillar-name">Iterations</div>
+            <div class="pillar-desc">Drop in old build zips — sha256 identity, real file diff against the last one, lineage tracked.</div>
+          </div>
+          <div class="pillar" onclick="setView('roadmap')">
+            <div class="pillar-step">04 — BECOME</div>
+            <div class="pillar-icon">◈</div>
+            <div class="pillar-name">Roadmap</div>
+            <div class="pillar-desc">Every phase across every phasemap, split by system — not just what NEXUS is, what it's becoming.</div>
+          </div>
+          <div class="pillar" onclick="setView('gaps')">
+            <div class="pillar-step">05 — QUESTION</div>
+            <div class="pillar-icon">◬</div>
+            <div class="pillar-name">Gaps</div>
+            <div class="pillar-desc">Where NEXUS is currently uncertain about itself — system anomalies and user-model ambiguity, one agnostic field.</div>
+          </div>
+        </div>
+        <div class="welcome-foot">loom/server.js :3752</div>
+      </div>
+    </section>
+
+    <section class="view" id="view-registry">
+      <div class="body2" style="grid-template-columns:1fr">
+        <div class="left">
+          <div class="ph"><span class="ph-title">Registry</span><span class="ph-badge live" id="reg-count-badge"></span></div>
+          <div class="kind-tabs" id="kind-tabs" style="padding-top:10px">
+            <button class="kind-tab active" data-kind="component">components</button>
+            <button class="kind-tab" data-kind="hook">hooks</button>
+            <button class="kind-tab" data-kind="wire">wires</button>
+            <button class="kind-tab" data-kind="seam">seams</button>
+          </div>
+          <div class="pbody" id="reg-list"><div class="empty">loading…</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-scaffold">
+      <div class="body2">
+        <div class="left">
+          <div class="ph"><span class="ph-title">Scaffold a system</span></div>
+          <div class="pbody">
+            <div class="templates" id="templates"></div>
+            <div class="field"><label>name</label><input id="s-name" placeholder="widget-store"></div>
+            <div style="display:flex;gap:10px">
+              <div class="field" style="flex:1"><label>port</label><input id="s-port" placeholder="4501"></div>
+              <div class="field" style="flex:2"><label>purpose</label><input id="s-purpose" placeholder="what this system does"></div>
+            </div>
+            <label style="display:block;font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.08em;margin:14px 0 8px;text-transform:uppercase">operations — uncheck to drop one</label>
+            <div id="op-list"></div>
+            <div style="margin-top:14px"><button class="btn" id="scaffold-btn">Scaffold system</button></div>
+            <div id="scaffold-result"></div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="ph"><span class="ph-title">What gets written</span></div>
+          <div class="pbody" style="font-family:var(--mono);font-size:10px;color:var(--text2);line-height:1.9">
+            <div>docs/&lt;name&gt;.spec.md</div>
+            <div>cli/index.js</div>
+            <div>api/index.js</div>
+            <div>registry-components.js</div>
+            <div>interaction-contract.json</div>
+            <div style="margin-top:10px;color:var(--text3)">+ registers the component and one hook per operation into this same registry — visible in the Registry view immediately.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-iterations">
+      <div class="body2" style="grid-template-columns:1fr">
+        <div class="left">
+          <div class="ph"><span class="ph-title">Iterations (zips)</span></div>
+          <div class="dropzone" id="dropzone">
+            <div class="dz-icon">▤</div>
+            <div class="dz-title">Drag a build zip here, or click to browse</div>
+            <div class="dz-sub">sha256 identity · real file diff vs. last iteration · nothing typed</div>
+            <input type="file" id="file-input" accept=".zip">
+          </div>
+          <div class="upload-progress" id="upload-progress"><div class="bar" id="upload-bar"></div></div>
+          <div class="pbody" id="rev-list"><div class="empty">no revisions ingested yet</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-roadmap">
+      <div class="body2" style="grid-template-columns:1fr">
+        <div class="left">
+          <div class="ph"><span class="ph-title">Roadmap — what each system is becoming</span><span class="ph-badge live" id="roadmap-summary-badge"></span></div>
+          <div class="kind-tabs" id="roadmap-filter-tabs" style="padding-top:10px">
+            <button class="kind-tab active" data-status="">all</button>
+            <button class="kind-tab" data-status="done">done</button>
+            <button class="kind-tab" data-status="in-progress">in progress</button>
+            <button class="kind-tab" data-status="pending">pending</button>
+          </div>
+          <div class="pbody" id="roadmap-list"><div class="empty">loading…</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-gaps">
+      <div class="body2" style="grid-template-columns:1fr">
+        <div class="left">
+          <div class="ph"><span class="ph-title">Gap field — where NEXUS is uncertain about itself</span><span class="ph-badge live" id="gaps-summary-badge"></span></div>
+          <div class="kind-tabs" id="gaps-filter-tabs" style="padding-top:10px">
+            <button class="kind-tab active" data-domain="">all</button>
+            <button class="kind-tab" data-domain="system">system</button>
+            <button class="kind-tab" data-domain="user-model">user-model</button>
+          </div>
+          <div class="pbody" id="gaps-list"><div class="empty">loading…</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-map">
+      <div class="body2" style="grid-template-columns:1.4fr 1fr">
+        <div class="left">
+          <div class="ph"><span class="ph-title">NEXUS — 12 systems</span><span class="ph-badge live" id="map-summary-badge"></span></div>
+          <div class="pbody" id="map-graph-wrap" style="overflow:auto"><div class="empty">loading…</div></div>
+        </div>
+        <div class="left">
+          <div class="ph"><span class="ph-title" id="map-detail-title">Select a system to zoom in</span></div>
+          <div class="pbody" id="map-detail"><div class="empty">nothing selected</div></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="event-log"></div>
+
+<script>
+async function api(path, opts) {
+  try { const r = await fetch(path, opts); return await r.json(); }
+  catch (e) { return { ok: false, error: e.message }; }
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function setView(v) {
+  document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active', el.id==='view-'+v));
+  document.querySelectorAll('.rail-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
+}
+
+function appendEventLog(ev) {
+  const log = document.getElementById('event-log');
+  const time = new Date(ev.ts||Date.now()).toLocaleTimeString('en-GB',{hour12:false});
+  const row = document.createElement('div');
+  row.className = 'ev';
+  row.innerHTML = `<span class="t">${time}</span><span class="type">${esc(ev.type||'event')}</span> ${esc(JSON.stringify(ev).slice(0,140))}`;
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+}
+function setConnected(ok) {
+  const ind = document.getElementById('conn-indicator');
+  const banner = document.getElementById('offline-banner');
+  ind.classList.toggle('online', ok);
+  ind.classList.toggle('offline', !ok);
+  document.getElementById('conn-label').textContent = ok ? 'connected' : 'offline';
+  banner.classList.toggle('show', !ok);
+}
+function connectEvents() {
+  const es = new EventSource('/events');
+  es.onopen = () => setConnected(true);
+  es.onerror = () => setConnected(false);
+  es.onmessage = (e) => {
+    try {
+      const d = JSON.parse(e.data);
+      appendEventLog(d);
+      if (d.type && d.type.startsWith('loom.registry')) loadRegistry();
+      if (d.type === 'loom.revision.ingested') loadRevisions();
+      if (d.type === 'loom.system.scaffolded') loadRegistry();
+    } catch(_) {}
+  };
+}
+
+let activeKind = 'component';
+document.getElementById('kind-tabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('.kind-tab'); if (!btn) return;
+  document.querySelectorAll('.kind-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); activeKind = btn.dataset.kind; loadRegistry();
+});
+async function loadRegistry() {
+  const d = await api(`/api/registry/${activeKind}`);
+  const list = document.getElementById('reg-list');
+  if (!d.ok) { list.innerHTML = `<div class="empty">error loading registry</div>`; return; }
+  const records = Object.values(d.records || {});
+  document.getElementById('reg-count-badge').textContent = records.length;
+  if (activeKind === 'component') document.getElementById('tb-components').textContent = records.length;
+  if (!records.length) { list.innerHTML = `<div class="empty">no ${activeKind}s registered yet</div>`; return; }
+  list.innerHTML = records.map(r => `
+    <div class="reg-item"><div class="id">${esc(r.id || r.name)}</div>
+    <div class="meta">${esc(r.version || '')} ${r.uuid ? '· ' + esc(r.uuid.slice(0,24)) + '…' : ''}</div></div>`).join('');
+}
+async function refreshComponentCount() {
+  const d = await api('/api/registry/component');
+  if (d.ok) document.getElementById('tb-components').textContent = Object.keys(d.records||{}).length;
+}
+
+let currentOps = [];
+async function loadTemplates() {
+  const d = await api('/api/templates'); if (!d.ok) return;
+  const wrap = document.getElementById('templates');
+  wrap.innerHTML = d.templates.map(t => `
+    <div class="tpl-card" data-id="${esc(t.id)}"><div class="label">${esc(t.label)}</div><div class="desc">${esc(t.description)}</div></div>`).join('');
+  wrap.querySelectorAll('.tpl-card').forEach(card => {
+    card.addEventListener('click', () => {
+      wrap.querySelectorAll('.tpl-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      const tpl = d.templates.find(t => t.id === card.dataset.id);
+      currentOps = tpl.operations.map(op => ({ ...op, _checked: true }));
+      renderOps();
+    });
+  });
+}
+function renderOps() {
+  const wrap = document.getElementById('op-list');
+  if (!currentOps.length) { wrap.innerHTML = '<div class="empty">pick a template above</div>'; return; }
+  wrap.innerHTML = currentOps.map((op, i) => `
+    <label class="op-row"><input type="checkbox" ${op._checked?'checked':''} data-i="${i}">
+    <span class="verb">${esc(op.verb)}</span><span class="path">${esc(op.method)} ${esc(op.apiPath)}</span></label>`).join('');
+  wrap.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => { currentOps[+cb.dataset.i]._checked = cb.checked; });
+  });
+}
+document.getElementById('scaffold-btn').addEventListener('click', async () => {
+  const name = document.getElementById('s-name').value.trim();
+  const port = parseInt(document.getElementById('s-port').value, 10);
+  const purpose = document.getElementById('s-purpose').value.trim();
+  const operations = currentOps.filter(o => o._checked).map(({_checked, ...op}) => op);
+  const resultEl = document.getElementById('scaffold-result');
+  if (!name || !port || !operations.length) {
+    resultEl.innerHTML = '<div class="result-err">name, port, and at least one operation are required</div>'; return;
+  }
+  const d = await api('/api/scaffold', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name, port, purpose, operations }) });
+  resultEl.innerHTML = d.ok
+    ? `<div class="result-ok">scaffolded <b>${esc(name)}</b> — ${d.written.length} files written, ${d.registered.hooks.length} hooks registered</div>`
+    : `<div class="result-err">${esc(d.error || 'scaffold failed')}</div>`;
+  if (d.ok) { loadRegistry(); refreshComponentCount(); }
+});
+
+async function loadRevisions() {
+  const d = await api('/api/revisions');
+  const list = document.getElementById('rev-list');
+  document.getElementById('tb-revisions').textContent = d.ok ? d.revisions.length : '-';
+  if (!d.ok || !d.revisions.length) { list.innerHTML = '<div class="empty">no revisions ingested yet</div>'; return; }
+  list.innerHTML = d.revisions.sort((a,b)=>b.ingestedAt-a.ingestedAt).map(r => `
+    <div class="rev-item"><div class="label">${esc(r.label)}</div>
+    <div class="diff">${(r.byteSize/1024/1024).toFixed(1)}MB · ${r.fileCount} files
+    ${r.diff.firstRevision ? ' · first revision' : `<br><span class="add">+${r.diff.addedCount}</span> <span class="rem">-${r.diff.removedCount}</span> <span class="chg">~${r.diff.changedCount}</span> vs parent`}
+    </div></div>`).join('');
+}
+// ── Real drag-and-drop upload — no typed paths, ever. Browsers (Windows
+// included) never expose a real filesystem path for a dropped or picked
+// file, only the bytes — so this uploads the actual file to
+// /api/ingest-upload instead of asking for a path the browser can't give.
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('file-input');
+['dragenter','dragover'].forEach(ev => dropzone.addEventListener(ev, e => {
+  e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover');
+}));
+['dragleave','drop'].forEach(ev => dropzone.addEventListener(ev, e => {
+  e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragover');
+}));
+dropzone.addEventListener('drop', e => {
+  const file = e.dataTransfer.files[0];
+  if (file) uploadZip(file);
+});
+dropzone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) uploadZip(fileInput.files[0]);
+  fileInput.value = '';
+});
+
+function uploadZip(file) {
+  if (!/\.zip$/i.test(file.name)) {
+    appendEventLog({ type: 'ingest.error', error: `${file.name} is not a .zip` });
+    return;
+  }
+  const progress = document.getElementById('upload-progress');
+  const bar = document.getElementById('upload-bar');
+  progress.classList.add('active'); bar.style.width = '0%';
+
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', '/api/ingest-upload');
+  xhr.setRequestHeader('X-Filename', encodeURIComponent(file.name));
+  xhr.upload.onprogress = (e) => {
+    if (e.lengthComputable) bar.style.width = Math.round((e.loaded / e.total) * 100) + '%';
+  };
+  xhr.onload = () => {
+    progress.classList.remove('active');
+    try {
+      const d = JSON.parse(xhr.responseText);
+      if (d.ok) loadRevisions();
+      else appendEventLog({ type: 'ingest.error', error: d.error });
+    } catch (e) { appendEventLog({ type: 'ingest.error', error: 'bad response from server' }); }
+  };
+  xhr.onerror = () => { progress.classList.remove('active'); appendEventLog({ type: 'ingest.error', error: 'upload failed' }); };
+  xhr.send(file);
+}
+
+// §LP3 — roadmap view. Same api()/esc() helpers as registry/scaffold, same
+// .reg-item/.kind-tab styling — this is a fourth pane, not a new UI.
+let roadmapData = null, roadmapFilter = '';
+const STATUS_DOT = { done: 'var(--mint)', 'in-progress': 'var(--sky2)', pending: 'var(--amber)' };
+
+async function loadRoadmap() {
+  const d = await api('/api/phasemap');
+  if (!d.ok) { document.getElementById('roadmap-list').innerHTML = '<div class="empty">roadmap unavailable</div>'; return; }
+  roadmapData = d;
+  document.getElementById('roadmap-summary-badge').textContent = d.summary.text;
+  renderRoadmap();
+}
+
+let roadmapExpanded = new Set(); // real, per-system expand state
+
+function renderRoadmap() {
+  if (!roadmapData) return;
+  const el = document.getElementById('roadmap-list');
+  const systems = Object.keys(roadmapData.bySystem).sort((a, b) => roadmapData.bySystem[b].length - roadmapData.bySystem[a].length);
+  el.innerHTML = systems.map(sys => {
+    let list = roadmapData.bySystem[sys];
+    if (roadmapFilter) list = list.filter(p => p.status === roadmapFilter);
+    if (!list.length) return '';
+    const done = list.filter(p => p.status === 'done').length;
+    const expanded = roadmapExpanded.has(sys);
+    const shown = expanded ? list : list.slice(0, 12);
+    // §FIXED 2026-08-23 — James, from a real, live screenshot: "i can't
+    // even read it at all." Real cause: every phase for a system was
+    // joined into one inline block with &nbsp;&nbsp; — no real line
+    // breaks. Each phase is now its own real, block-level row.
+    const rows = shown.map(p =>
+      `<div style="padding:3px 0;border-bottom:1px solid var(--b0);display:flex;gap:8px;align-items:baseline">
+        <span style="color:${STATUS_DOT[p.status] || 'var(--text3)'};flex-shrink:0">●</span>
+        <span style="flex:1">${esc(p.id)}</span>
+        <span style="color:var(--text3);font-size:9px;flex-shrink:0">${esc(p.map)}</span>
+      </div>`
+    ).join('');
+    const toggle = list.length > 12
+      ? `<div class="reg-item" style="cursor:pointer;text-align:center;color:var(--sky2)" onclick="roadmapExpanded.${expanded ? 'delete' : 'add'}('${esc(sys)}');renderRoadmap()">${expanded ? '▲ show fewer' : `▼ show all ${list.length}`}</div>`
+      : '';
+    return `<div class="reg-item">
+      <div class="id">${esc(sys)} <span style="color:var(--text3)">— ${done}/${list.length} done</span></div>
+      <div class="meta" style="margin-top:6px">${rows}</div>
+    </div>${toggle}`;
+  }).join('') || '<div class="empty">no phases match this filter</div>';
+}
+
+document.getElementById('roadmap-filter-tabs').addEventListener('click', e => {
+  const btn = e.target.closest('.kind-tab'); if (!btn) return;
+  document.querySelectorAll('#roadmap-filter-tabs .kind-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  roadmapFilter = btn.dataset.status;
+  renderRoadmap();
+});
+
+loadRegistry(); loadTemplates(); loadRevisions(); loadRoadmap(); loadGaps(); loadMapSystems(); connectEvents();
+
+// §2026-08-09 — gap field view. Same pattern as roadmap above: one fetch,
+// one filter-tab set, .reg-item styling reused verbatim.
+let gapsData = null, gapsFilter = '';
+const SEVERITY_DOT = { critical: 'var(--coral)', high: 'var(--coral)', medium: 'var(--amber)', low: 'var(--text3)' };
+
+async function loadGaps() {
+  const d = await api(gapsFilter ? `/api/gaps/${encodeURIComponent(gapsFilter)}` : '/api/gaps');
+  if (!d.ok) { document.getElementById('gaps-list').innerHTML = '<div class="empty">gap field unavailable</div>'; return; }
+  gapsData = d;
+  document.getElementById('gaps-summary-badge').textContent = `${d.count} open gap${d.count === 1 ? '' : 's'} — ${d.domain}`;
+  renderGaps();
+}
+
+function renderGaps() {
+  if (!gapsData) return;
+  const el = document.getElementById('gaps-list');
+  const gaps = gapsData.gaps || [];
+  if (!gaps.length) { el.innerHTML = '<div class="empty">no open gaps — clean</div>'; return; }
+  el.innerHTML = gaps.map(g => `<div class="reg-item">
+      <div class="id"><span style="color:${SEVERITY_DOT[g.severity] || 'var(--text3)'}">●</span> ${esc(g.type)} <span style="color:var(--text3)">(${esc(g.domain)} · ${esc(g.source || 'unknown')})</span></div>
+      <div class="meta">${esc(g.body || '')} — ${g.occurrences || 1}× seen, last ${new Date(g.lastSeenAt || g.detectedAt).toLocaleString()}</div>
+    </div>`).join('');
+}
+
+document.getElementById('gaps-filter-tabs').addEventListener('click', e => {
+  const btn = e.target.closest('.kind-tab'); if (!btn) return;
+  document.querySelectorAll('#gaps-filter-tabs .kind-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  gapsFilter = btn.dataset.domain;
+  loadGaps();
+});
+
+// §R5 2026-08-12 — the zoomable node map. NEXUS -> 12 systems (derived
+// live from the real graph's component_id namespaces, not hardcoded) ->
+// zoom into one for its real declared hooks (with real status — the
+// "look at architect" gate), open gaps, and history. A rendering layer
+// over /api/graph + /api/component/:system + R4's history, not a
+// seventh data source.
+// §FIXED 2026-08-23 — James: "a system has to have a server.js to be
+// considered a system in loom." Confirmed directly, not guessed: every
+// real top-level directory checked for an actual .listen() call (not
+// just the literal filename "server.js" — cortex/boot.js, architect/
+// service.js, idearium/api/index.js, emerge/emerge-ide.js, and
+// orchestrator/orchestrator.js all genuinely run a real HTTP server
+// under a different real filename). This is the real, confirmed list —
+// component_id namespace prefixes like lib/tests/scripts/cli/hooks/cos/
+// siso/warp/meta/ui/tablet/nexus-healer/clear-glass are real, shared
+// code, not real systems, and are correctly excluded now.
+const REAL_SYSTEMS = new Set([
+  'guardian', 'ollama', 'intelligence', 'eravos', 'copilot', 'bridge',
+  'loom', 'cortex', 'orchestrator', 'idearium', 'architect', 'emerge',
+  'diagnostic',
+]);
+
+async function loadMapSystems() {
+  const d = await api('/api/graph');
+  if (!d.ok) { document.getElementById('map-graph-wrap').innerHTML = '<div class="empty">graph unavailable</div>'; return; }
+
+  const nodeSystem = {}; // hook id -> system name (only real systems kept)
+  const systems = new Set();
+  (d.graph.nodes || []).forEach(n => {
+    const m = (n.component_id || '').match(/^nexus\.([a-z0-9_-]+)\./);
+    if (m && REAL_SYSTEMS.has(m[1])) { systems.add(m[1]); nodeSystem[n.id] = m[1]; }
+  });
+  const list = [...systems].sort();
+  document.getElementById('map-summary-badge').textContent = `${list.length} systems`;
+
+  // Real system-to-system edges — a wire connects two HOOKS (real, confirmed
+  // shape from loom/schema/registry.js's graph()); a wire between hooks
+  // belonging to different systems implies a real inter-system connection.
+  // No new backend endpoint needed — this aggregates data /api/graph
+  // already returns, client-side.
+  const edgeSet = new Map(); // "a|b" (sorted) -> count
+  (d.graph.edges || []).forEach(e => {
+    const sa = nodeSystem[e.from], sb = nodeSystem[e.to];
+    if (!sa || !sb || sa === sb) return;
+    const key = [sa, sb].sort().join('|');
+    edgeSet.set(key, (edgeSet.get(key) || 0) + 1);
+  });
+
+  renderMapGraph(list, edgeSet);
+}
+
+function renderMapGraph(systems, edgeSet) {
+  const wrap = document.getElementById('map-graph-wrap');
+  if (!systems.length) { wrap.innerHTML = '<div class="empty">no systems found</div>'; return; }
+
+  const W = 640, H = 640, cx = W / 2, cy = H / 2, r = Math.min(W, H) / 2 - 70;
+  const pos = {};
+  systems.forEach((s, i) => {
+    const angle = (i / systems.length) * 2 * Math.PI - Math.PI / 2;
+    pos[s] = { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+  });
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;min-height:500px" id="map-svg">`;
+
+  // Real wires — one line per distinct system-pair that has at least one
+  // real hook-to-hook wire between them, thickness scaled to real count.
+  for (const [key, count] of edgeSet) {
+    const [a, b] = key.split('|');
+    if (!pos[a] || !pos[b]) continue;
+    const w = Math.min(1 + Math.log2(count + 1), 5);
+    svg += `<line x1="${pos[a].x}" y1="${pos[a].y}" x2="${pos[b].x}" y2="${pos[b].y}" stroke="var(--b2)" stroke-width="${w}" opacity="0.55"><title>${esc(a)} \u2194 ${esc(b)} \u2014 ${count} real wire(s)</title></line>`;
+  }
+
+  // Real blocks — each system, clickable, opens the same real, already-
+  // built loadMapDetail() the flat list used.
+  systems.forEach(s => {
+    const p = pos[s];
+    svg += `<g class="map-node" style="cursor:pointer" onclick="loadMapDetail('${esc(s)}')">
+      <circle cx="${p.x}" cy="${p.y}" r="34" fill="var(--bg2)" stroke="var(--sky)" stroke-width="1.5" />
+      <text x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle" font-family="var(--mono)" font-size="9" fill="var(--sky2)">${esc(s)}</text>
+    </g>`;
+  });
+
+  svg += `</svg>`;
+  wrap.innerHTML = svg;
+}
+
+// Real repository path per system — NOT always system-name === directory
+// name (diagnostic genuinely lives at service/nexus-diagnostic.js, not a
+// diagnostic/ directory; cortex's real entry is boot.js, not server.js).
+// Confirmed directly for every real system, not assumed.
+const SYSTEM_PATHS = {
+  guardian: 'guardian/server.js', ollama: 'ollama/server.js',
+  intelligence: 'intelligence/server.js', eravos: 'eravos/server.js',
+  copilot: 'copilot/server.js', bridge: 'bridge/server.js',
+  loom: 'loom/server.js', cortex: 'cortex/boot.js',
+  orchestrator: 'orchestrator/orchestrator.js', idearium: 'idearium/api/index.js',
+  architect: 'architect/service.js', emerge: 'emerge/emerge-ide.js',
+  diagnostic: 'service/nexus-diagnostic.js',
+};
+
+async function loadMapDetail(system) {
+  document.getElementById('map-detail-title').textContent = system;
+  document.getElementById('map-detail').innerHTML = '<div class="empty">loading…</div>';
+  const d = await api(`/api/component/${encodeURIComponent(system)}`);
+  if (!d.ok) { document.getElementById('map-detail').innerHTML = '<div class="empty">unavailable</div>'; return; }
+  const parts = [];
+  if (SYSTEM_PATHS[system]) {
+    parts.push(`<div class="reg-item"><div class="id">📁 ${esc(SYSTEM_PATHS[system])}</div><div class="meta">real repository entry point — this system's compartment</div></div>`);
+  }
+  if (d.declared) {
+    parts.push(`<div class="reg-item"><div class="id">declared hooks — ${d.declared.activeCount}/${d.declared.totalCount} active</div></div>`);
+    parts.push(...d.declared.hooks.map(h => {
+      const dot = h.status === 'active' ? 'var(--ok, #4caf50)' : 'var(--text3)';
+      return `<div class="reg-item"><div class="id"><span style="color:${dot}">●</span> ${esc(h.name)} <span style="color:var(--text3)">(${esc(h.status || 'unknown')})</span></div><div class="meta">${esc((h.intent || '').slice(0, 140))}</div></div>`;
+    }));
+  } else {
+    parts.push('<div class="empty">no hand-declared hooks file for this system — structural graph only</div>');
+  }
+  parts.push(`<div class="reg-item"><div class="id">${d.gapCount} open gap${d.gapCount === 1 ? '' : 's'}</div></div>`);
+  parts.push(`<div class="reg-item"><div class="id">${d.historyCount} recent ledger entries</div></div>`);
+  document.getElementById('map-detail').innerHTML = parts.join('');
+}
+</script>
+</body>
+</html>

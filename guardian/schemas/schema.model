@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-schema-model
+type: schema
+id: model
+context: >-
+  guardian/schemas — sovereign local copy. Origin: lib/node-schemas/schema.model (shared
+  canonical version, may have moved on independently since this copy was made — sovereignty means
+  guardian does not depend on it at runtime, not that the two can never drift).
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789239046422
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    ollama/config.js — the one real place model tags live (DEFAULT_MODEL/FALLBACK_MODEL).
+    Guardian's own use: guardian.node-taxonomy.md marks this READS — guardian never authors a
+    standalone .model record itself, it only ever sees a model tag as a field inside a hat
+    (guardian/lib/jobs.js calls hatForge.get(name), and a hat's own model field is an Ollama tag).
+    Materialized as a local copy for the same reason schema.hat already has one despite guardian
+    also being READS-only for hats: guardian resolves every type it touches, read or write,
+    without a runtime dependency on lib/node-schemas.js. Leaving model out while hat was already
+    in would have been an inconsistent, unexplained gap in guardian's own sovereign set.
+  fields:
+    tag:
+      type: string
+      required: true
+      description: a real, verified Ollama model tag, e.g. "mistral:7b-instruct-q4_K_M"
+    role:
+      type: string
+      required: false
+      description: "'default' | 'fallback' — which real config slot this fills"
+    envVar:
+      type: string
+      required: false
+      description: the real env var that overrides this tag, if any

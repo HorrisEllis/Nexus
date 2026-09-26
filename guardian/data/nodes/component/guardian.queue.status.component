@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-export-component-guardian.queue.status
+type: component
+id: guardian.queue.status
+context: cortex/tools/table-materializer.js — decompiled from cortex JAA table "components"
+intent: null
+summary: null
+system: guardian
+tags: []
+exported_at: 1789275152844
+source: cortex.table-materializer.components
+occurrences: 1
+firstSeenAt: 1789275152844
+lastSeenAt: 1789275152844
+fingerprint: guardian::GET /queue
+payload:
+  id: guardian.queue.status
+  uuid: b7dd6974-37c4-4091-8fc4-6cd000d8916a
+  namespace: guardian
+  name: queue.status
+  version: 3.6.2
