@@ -59,6 +59,24 @@ async function handle(req, res, { method, pathname, url }) {
     return true;
   }
 
+  // 0.39.263 — content ahead of record(), in batches under the per-request cap
+  if (pathname === '/api/versionium/files/stage' && method === 'POST') {
+    const b = await body(req, res); if (b === null) return true;
+    try { json(res, 200, files.stage({ contents: b.contents })); } catch (e) { fail(res, e); }
+    return true;
+  }
+
+  // 0.39.263 — which commits hold this path, and at what content (newest first)
+  if (pathname === '/api/versionium/files/versions' && method === 'GET') {
+    try {
+      const p = url.searchParams.get('path');
+      if (!p) throw new files.FilesError('BAD_INPUT', 'path is required');
+      const list = files.versions(p, { repository: url.searchParams.get('repository') || null, limit: parseInt(url.searchParams.get('limit'), 10) || 200 });
+      json(res, 200, { ok: true, path: p, count: list.length, versions: list });
+    } catch (e) { fail(res, e); }
+    return true;
+  }
+
   if (pathname === '/api/versionium/files/limits' && method === 'GET') {
     json(res, 200, { ok: true, ...files.limits() });
     return true;

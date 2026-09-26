@@ -2572,8 +2572,12 @@ function snapFieldRows(rec) {
       ? `STALE — the indexes below describe older source (${(sh.mismatched || []).length} changed, ${(sh.missing || []).length} missing${(sh.mismatched || []).length ? ': ' + sh.mismatched.slice(0, 3).join(', ') : ''})`
       : 'indexes match the files on disk'}` });
 
+  // 0.39.263 — a repo's history is versionium's (versionCommit); records from before carry gitCommit
+  const vc = m.versionCommit;
+  if (vc && !gone(vc)) rows.push({ key: 'version', ok: true, text: `versionium · ${vc.branch || '?'} · ${vc.parentKnown ? (vc.parent ? `after ${_short(vc.parent, 12)}` : 'first version') : 'parent not asked'}` });
+  else if (vc) rows.push({ key: 'version', ok: false, text: reason(vc) });
   const g = m.gitCommit;
-  if (gone(g)) rows.push({ key: 'git', ok: false, text: reason(g) });
+  if (g && gone(g)) rows.push({ key: 'git', ok: false, text: reason(g) });
   else if (g) rows.push({ key: 'git', ok: !g.dirty, warn: !!g.dirty, text: `${_short(g.commit, 10)} · ${g.branch || '?'}${g.dirty ? ' · working tree has uncommitted changes' : ' · clean'}` });
 
   const a = m.atlasVersion;
@@ -2626,7 +2630,7 @@ function snapDiffLines(cur, prev) {
     // not move when a file is edited without a reindex — comparing it would
     // report "same" for a repo whose files changed.
     source: m.sourceHash?.available ? (m.sourceHash.diskHash || m.sourceHash.value) : null,
-    git: m.gitCommit?.available ? m.gitCommit.commit : null,
+    git: m.gitCommit?.available ? m.gitCommit.commit : null,   // pre-0.39.263 records
     atlas: m.atlasVersion?.available ? m.atlasVersion.sha256 : null,
     chunks: m.chunkIndexVersion?.available ? m.chunkIndexVersion.sha256 : null,
     graph: m.graphVersion?.available ? m.graphVersion.sha256 : null,

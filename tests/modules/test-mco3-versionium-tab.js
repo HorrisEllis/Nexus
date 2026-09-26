@@ -198,8 +198,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(new RegExp('snapshot ' + ID1).test(toastText()), toastText());
   });
   await t('the new snapshot opens automatically with all nine §33 fields shown', () => {
-    const keys = [...panel().querySelectorAll('#snap-detail span')].map(s => s.textContent).filter(x => /^(source|git|atlas|chunks|graph|deps|env|tests|verify)$/.test(x));
-    assert.deepStrictEqual(keys, ['source', 'git', 'atlas', 'chunks', 'graph', 'deps', 'env', 'tests', 'verify']);
+    const keys = [...panel().querySelectorAll('#snap-detail span')].map(s => s.textContent).filter(x => /^(source|version|git|atlas|chunks|graph|deps|env|tests|verify)$/.test(x));
+    // 0.39.263 — §33's git commit is the repo's versionium chain ('version'); no .git is read
+    assert.deepStrictEqual(keys, ['source', 'version', 'atlas', 'chunks', 'graph', 'deps', 'env', 'tests', 'verify']);
   });
   await t('displayed values are the record\'s real values, not placeholders', () => {
     const mr = rec1.mustRecord; const tx = text();
@@ -210,9 +211,10 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     assert.ok(tx.includes(`${mr.testState.testsRun}/${mr.testState.testsFound} run`), 'test counts');
     assert.ok(tx.includes('L0✓') && tx.includes('L8–'), 'tier marks (L8 not_applicable shows –)');
   });
-  await t('an unavailable field shows its stated reason, not a blank or a 0', () => {
-    assert.strictEqual(rec1.mustRecord.gitCommit.available, false);
-    assert.ok(text().includes(rec1.mustRecord.gitCommit.reason), 'git reason missing');
+  await t('the version row names the repo\'s versionium branch — its history, not a .git', () => {
+    assert.strictEqual(rec1.mustRecord.versionCommit.source, 'versionium');
+    assert.strictEqual(rec1.mustRecord.gitCommit, undefined);
+    assert.ok(text().includes(`versionium · ${rec1.mustRecord.versionCommit.branch}`), 'version row missing');
   });
   await t('HTML in the snapshot message is escaped, not injected', () => {
     assert.strictEqual(panel().querySelectorAll('img').length, 0, 'an <img> was injected');

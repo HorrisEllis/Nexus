@@ -135,6 +135,14 @@ spec:
         --format=%H against the .spec file at scan time), not just a
         timestamp — turns "when did this change" into "and here's the
         actual commit," which git already has and nothing here reads yet.
+        SUPERSEDED 0.39.263 — James: "loom depends on the .git i want
+        versionium to hold the history for each repo." The row now carries
+        versionCommit / versionRepository / versionAt: the VERSIONIUM commit
+        whose copy of the .spec has exactly the bytes on disk (GET
+        /api/versionium/files/versions), or versionCommit:null with
+        versionReason. idearium commits every nexus/<system> repo to
+        versionium on each sync, so docs/*.spec live in the core repo's
+        history. No git is run and no .git is read.
         (2) James: "a revision system, dropzone for old archives, date and
         time as source of truth if versions are absent." Checked first:
         loom/ingest/index.js + loom/ui/index.html's Iterations dropzone are

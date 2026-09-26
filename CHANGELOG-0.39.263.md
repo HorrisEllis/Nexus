@@ -1,6 +1,6 @@
 # NEXUS 0.39.263: Nexus is one repo, its Home is the Nexus atlas, and Clear Glass replaces Playwright
 
-**Date:** 2026-09-26 · clear-glass 3.16.0 → 3.17.0
+**Date:** 2026-09-26 · clear-glass 3.16.0 → 3.17.0 · versionium 3.2.0 → 3.3.0
 
 James:
 
@@ -87,6 +87,49 @@ Clear Glass is already a Chromium, so it now drives the pages itself.
 - `tests/manual-chatgpt-console.playwright.js` became `tests/manual-chatgpt-console.glass.js`.
 - Root devDependencies are now electron, electron-builder and jsdom. The lockfile went from 468 to 462 packages.
 
+## Versionium holds every repo's history; loom no longer reads .git
+
+James: *"loom depends on the .git i want versionium to hold the history for each repo."*
+
+Before this, two runtime paths read git:
+- loom's phasemap history stamped each phase transition with `git log -1 -- <spec>`;
+- idearium's repo snapshots recorded `gitCommit`, the HEAD of a `.git` inside the repo directory.
+
+Neither does any more.
+
+**Every repo's history is its versionium chain**
+- A repo's history is its snapshots on branch `repo-<uuid>` in versionium, with the files attached. Versionium already had this layer; nothing new stores history elsewhere.
+- **Nexus repos:** each sync commits every new or changed `nexus/<system>` repo, and the `nexus` index, to versionium with its files (`sync({ commitVersion })`, wired in the API).
+  - An unchanged sync commits nothing.
+  - A failed commit is recorded on the repo as `versionError` and retried by the next sync.
+  - The `nexus` index now goes through the import pipeline too, so it can be versioned.
+- **Snapshot record:** §33's commit field is now `versionCommit`: `{ source: 'versionium', branch, parent, parentKnown }`, where the parent is the previous version from the file layer's plan.
+  - `snapshot.js` no longer imports `child_process`.
+  - Records from before this release still show their `gitCommit`.
+  - The Versionium tab shows a "version" row.
+
+**Versionium 3.3.0: two new routes**
+- `POST /api/versionium/files/stage` puts content into the blob store ahead of `record()`.
+  - It works in batches under `FILE_MAX_RECORD_BYTES`, and the sha256 is computed by versionium, not taken from the caller.
+  - `record()` takes staged content for any file whose bytes are already stored.
+  - So a repo's first version can be any size: core's first version was 98 MB against a 32 MB request cap. It was refused before; now it is staged and recorded (15 s in the sandbox run).
+- `GET /api/versionium/files/versions?path=` lists every commit that wrote a path, newest first, with the file's sha256 as of each commit, including deletions.
+
+**Loom**
+- `persistHistory()` now stamps each transition with the versionium commit whose copy of the spec has exactly the bytes on disk: `versionCommit`, `versionRepository` and `versionAt`.
+- When versionium has no such version, it records `versionCommit: null` with `versionReason`.
+- It asks through `lib/nexus-client` (the API), once per spec file per run. Once versionium is unreachable it stops asking, rather than waiting on a timeout for every file.
+- `persistHistory()` is now async and single-flight, so two overlapping calls cannot write the same transition twice.
+
+**Also fixed:** `materialize()` deleted the `spec-graph.json` the pipeline writes (since 0.39.246). It is now in the PRESERVE set.
+
+**Sandbox run, with a real versionium on :3754 and a real idearium**
+- guardian: three chained versions (183 → 184 → 183 files) as a probe file was added, then removed; `files/versions` shows the add and the delete.
+- core's first version (98 MB) was staged and recorded.
+- loom's lookup returned `vtm-23fce093` for `docs/2026-08-22-session-full-phasemap.spec`.
+
+**Still using git, deliberately:** `scripts/precommit-check.js` and `scripts/run-verification-manifest.cjs`, which are developer tools for the git checkout itself.
+
 ## Tests
 
 `tests/modules/test-nexus-atlas-and-glass.test.js`: 8/8, registered in run-all.
@@ -101,6 +144,31 @@ Clear Glass is already a Chromium, so it now drives the pages itself.
 | UI-002 | one nexus card; back from a system goes to nexus |
 | CG-001 | no Playwright, no Python probe, every probe drives Clear Glass |
 | CG-002 | a real page: wrapped-element click, fill, `:has-text`, `text=`, events, screenshot size |
+
+`tests/modules/test-versionium-repo-history.test.js`: 7/7, registered in run-all.
+
+| Case | What it covers |
+|---|---|
+| VH-001 | staged content is recorded and verified by hash |
+| VH-002 | `versions()` lists commits newest first, including a deletion |
+| VH-101 | a version over the request cap is staged in batches, and still refused when staging isn't possible |
+| VH-201 | the first sync versions every repo and the index |
+| VH-202 | an unchanged sync commits nothing; a changed one commits only that system and the index |
+| VH-203 | a failed commit is recorded and retried |
+| VH-301 | nothing in the history path runs git |
+
+Other suites for this part:
+
+| Suite | Result |
+|---|---|
+| test-mco3-repo-snapshot | 39/0 (was 37/1: the `spec-graph.json` fix) |
+| test-mco3-versionium-tab | 32/0 |
+| loom phasemap-map | 12/1; its new versionium test passes, and the one failure is also failing without this change |
+| mcob-file-versioning | 33/0 |
+| mcob-snapshot-restore | 30/0 |
+| mcoc-import-baseline | 25/0 |
+| versionium-sovereign | 11/0 |
+| vsb1 | 5/0 |
 
 Suites that changed, all passing:
 

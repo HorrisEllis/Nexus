@@ -271,25 +271,56 @@ function summary() {
  * everything on every call, same discipline gap-field's dedup already
  * established (reused, not reinvented, per this phase's own gate).
  *
- * Each transition row also carries the real git commit that produced it,
- * where one can be found (James: "utilizes the git commit history?") —
- * `git log -1 --format=%H` against the owning .spec file at write time.
- * Best-effort: a phase changed by an uncommitted edit still gets logged,
- * just without a hash (§1.2 — a missing correlation is stated, not hidden
- * behind a fabricated one).
+ * Each transition row also carries the version that holds it, where one can
+ * be found (James: "utilizes the git commit history?"). §0.39.263 — James:
+ * "loom depends on the .git i want versionium to hold the history for each
+ * repo." The version is no longer a git commit: it is the VERSIONIUM commit
+ * whose copy of the owning .spec file has exactly the bytes on disk now
+ * (GET /api/versionium/files/versions — the nexus repos commit every system's
+ * files to versionium on each sync). No .git is read. Best-effort: a phase
+ * changed by an edit versionium has not recorded yet still gets logged, with
+ * versionCommit null and the reason (§1.2 — a missing correlation is stated,
+ * not hidden behind a fabricated one).
+ *
+ * persistHistory() is async (it asks versionium over the API, never by reading
+ * versionium's files): await it for { ok, written, total }.
  */
 const TABLE = 'phasemap_history';
 function _jaa() { try { return require('../../cortex/memory/jaa-db').jaaDB; } catch (_) { return null; } }
-function _gitHashFor(specFile) {
-  try {
-    const { execFileSync } = require('child_process');
-    const full = path.join(DOCS, specFile + '.spec');
-    const out = execFileSync('git', ['log', '-1', '--format=%H', '--', full], { cwd: ROOT, encoding: 'utf8', timeout: 3000 });
-    return out.trim() || null;
-  } catch (_) { return null; }
+// the version of one .spec file: the newest versionium commit whose copy has these exact bytes
+async function _versionFor(specFile, { client } = {}) {
+  const full = path.join(DOCS, specFile + '.spec');
+  let sha;
+  try { sha = require('crypto').createHash('sha256').update(fs.readFileSync(full)).digest('hex'); }
+  catch (e) { return { versionCommit: null, versionReason: `spec not readable: ${e.code || e.message}` }; }
+  const rel = path.relative(ROOT, full).split(path.sep).join('/');
+  let r;
+  try { r = await (client || require('../../lib/nexus-client')).get('versionium', `/api/versionium/files/versions?path=${encodeURIComponent(rel)}`, { timeout: 4000 }); }
+  catch (e) { return { versionCommit: null, versionReason: `versionium unreachable: ${String(e.message).slice(0, 120)}` }; }
+  const hit = (r && r.versions || []).find(v => v.sha256 === sha);
+  if (!hit) return { versionCommit: null, versionReason: (r && r.versions || []).length ? 'this content is not recorded in versionium yet' : 'versionium holds no version of this file yet' };
+  return { versionCommit: hit.commitId, versionRepository: hit.repository, versionAt: hit.wall || null };
 }
 
+let _persisting = null;   // single flight: two overlapping calls must not both write the same transition
 function persistHistory(opts = {}) {
+  if (_persisting) return _persisting;
+  _persisting = _persistHistory(opts).finally(() => { _persisting = null; });
+  return _persisting;
+}
+async function _persistHistory(opts = {}) {
+  // one versionium question per .spec file per run (a map holds many phases); once
+  // versionium is unreachable, every later file gets the same stated reason, not a timeout each
+  const vcache = new Map(); let down = null;
+  const versionOf = async (map) => {
+    if (down) return { versionCommit: null, versionReason: down };
+    if (!vcache.has(map)) {
+      const v = await _versionFor(map, { client: opts.client });
+      if (/^versionium unreachable/.test(v.versionReason || '')) down = v.versionReason;
+      vcache.set(map, v);
+    }
+    return vcache.get(map);
+  };
   const jaa = opts.jaa || _jaa();
   if (!jaa) return { ok: false, reason: 'cortex unavailable' };
 
@@ -324,7 +355,7 @@ function persistHistory(opts = {}) {
         map: p.map, phaseId: p.id, title: p.title,
         status: p.status, priorStatus: priorStatus || null,
         systems: p.systems, dependsOn: p.dependsOn || null,
-        commitHash: _gitHashFor(p.map),
+        ...(await versionOf(p.map)),   // 0.39.263 — versionium, not git
         recordedAt: Date.now(),
       });
       written++;
@@ -343,4 +374,4 @@ function historyFor(map, id, opts = {}) {
   } catch (_) { return []; }
 }
 
-module.exports = { loadAll, parsePhasemapText, isPhasemapFile, forSystem, summary, persistHistory, historyFor, TABLE, MODULE_ID: 'loom-phasemap-map', VERSION: '1.0.0' };
+module.exports = { loadAll, parsePhasemapText, isPhasemapFile, forSystem, summary, persistHistory, _versionFor, historyFor, TABLE, MODULE_ID: 'loom-phasemap-map', VERSION: '1.0.0' };

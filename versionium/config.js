@@ -44,5 +44,5 @@ module.exports = {
 
   // ── Identity (not tunable) ─────────────────────────────────────────────
   SYSTEM_ID: 'versionium',
-  VERSION:   '3.0.0',
+  VERSION:   '3.3.0',
 };

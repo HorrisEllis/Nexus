@@ -1,6 +1,6 @@
 {
   "id": "versionium-v1",
-  "version": "3.0.0",
+  "version": "3.3.0",
   "namespace": "versionium",
   "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from versionium/registry-components.js (module.exports.components), never hand-authored. Port 3754 matches both registry-components.js and versionium/compartment.json. §NOTE: the LIVE /contract endpoint (versionium/routes/system.js) serves versionium/registry-components.js directly, always fresh — this file is a checked-in documentation mirror, not the source of truth, and will drift if not regenerated after registry-components.js changes.",
   "ports": {
@@ -62,6 +62,16 @@
       "method": "GET",
       "path": "/api/versionium/files/content",
       "_componentId": "versionium.files.content"
+    },
+    {
+      "method": "POST",
+      "path": "/api/versionium/files/stage",
+      "_componentId": "versionium.files.stage"
+    },
+    {
+      "method": "GET",
+      "path": "/api/versionium/files/versions",
+      "_componentId": "versionium.files.versions"
     },
     {
       "method": "GET",

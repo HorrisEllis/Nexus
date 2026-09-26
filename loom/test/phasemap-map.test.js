@@ -86,9 +86,9 @@ async function main() {
   });
 
   await check('persistHistory() is idempotent — a second call with nothing changed writes zero rows', async () => {
-    const r1 = pm.persistHistory();
+    const r1 = await pm.persistHistory();
     assert.strictEqual(r1.ok, true);
-    const r2 = pm.persistHistory();
+    const r2 = await pm.persistHistory();
     assert.strictEqual(r2.changed, 0, 'a second call with no real status change must write nothing');
   });
 
@@ -97,7 +97,7 @@ async function main() {
     const { jaaDB } = require('../../cortex/memory/jaa-db');
     const fakeStatus = target.status === 'done' ? 'pending' : 'done';
     jaaDB.insert(pm.TABLE, { map: target.map, phaseId: target.id, title: target.title, status: fakeStatus, priorStatus: null, systems: target.systems, dependsOn: null, commitHash: null, recordedAt: Date.now() - 5000 });
-    const r = pm.persistHistory();
+    const r = await pm.persistHistory();
     assert.ok(r.changed >= 1, 'a seeded prior state that disagrees with the real current status must be detected as a real change');
   });
 
@@ -121,10 +121,30 @@ async function main() {
     const collisions = Object.entries(byBareId).filter(([id, maps]) => maps.length > 1);
     if (collisions.length === 0) return; // nothing to test against right now — not a failure
     const [dupId, maps] = collisions[0];
-    pm.persistHistory();
+    await pm.persistHistory();
     const h0 = pm.historyFor(maps[0], dupId);
     const h1 = pm.historyFor(maps[1], dupId);
     assert.ok(h0.length >= 1 && h1.length >= 1, 'both same-named phases across different maps must have their OWN independent history, not one overwriting the other');
+  });
+
+  // §0.39.263 — James: "loom depends on the .git i want versionium to hold the history for each repo"
+  await check('a transition is stamped with the VERSIONIUM commit holding the spec\'s current bytes — no git, no .git read', async () => {
+    const target = pm.loadAll().phases[0];
+    const full = require('path').join(__dirname, '..', '..', 'docs', target.map + '.spec');
+    const sha = require('crypto').createHash('sha256').update(require('fs').readFileSync(full)).digest('hex');
+    const asked = [];
+    const client = { get: async (sys, url) => { asked.push([sys, url]); return { ok: true, versions: [
+      { repository: 'nexus-id-repo-core', commitId: 'vtm-newer', sha256: 'f'.repeat(64), wall: 3 },   // a later, different content
+      { repository: 'nexus-id-repo-core', commitId: 'vtm-match', sha256: sha, wall: 2 },
+    ] }; } };
+    const v = await pm._versionFor(target.map, { client });
+    assert.deepStrictEqual([v.versionCommit, v.versionRepository], ['vtm-match', 'nexus-id-repo-core'], 'the version whose bytes are the file on disk, not merely the newest');
+    assert.strictEqual(asked[0][0], 'versionium');
+    assert.ok(asked[0][1].includes(encodeURIComponent('docs/' + target.map + '.spec')), asked[0][1]);
+    const none = await pm._versionFor(target.map, { client: { get: async () => { throw new Error('ECONNREFUSED'); } } });
+    assert.strictEqual(none.versionCommit, null); assert.ok(/versionium unreachable/.test(none.versionReason));
+    const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'scanners', 'phasemap-map.js'), 'utf8');
+    assert.ok(!/execFileSync\(\s*'git'|execSync\(\s*['"`]git|\.git['"\/]/.test(src.replace(/^\s*\*.*$/gm, '')), 'loom\'s phasemap scanner does not call git or read .git');
   });
 
   console.log(`\n${pass} passed, ${fail} failed\n`);

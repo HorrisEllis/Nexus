@@ -638,6 +638,7 @@ function _fileLayers(repoUuid) {
       limits,
       plan: (tree) => _vcall('POST', '/api/versionium/files/plan', { repository: repoUuid, tree }, 30000),
       record: ({ commitId, tree, contents, mode }) => _vcall('POST', '/api/versionium/files/record', { repository: repoUuid, commitId, tree, contents, mode }, 120000),
+      stage: (contents) => _vcall('POST', '/api/versionium/files/stage', { contents }, 120000),   // 0.39.263 — a first version larger than one request
     },
     // for restoring from one
     layer: {
@@ -4460,6 +4461,22 @@ function _nexusSelfSync({ only = null, force = false } = {}) {
       const r = await NS.sync(getRepoLayer(), se, {
         only, force, log: (m) => console.log(m),
         onSystem: (x) => { try { os.broadcast('idearium.nexus-self.sync', { system: x.system, status: x.status, error: x.error || null }); } catch (_) {} },
+        // 0.39.263 — each repo's history lives in versionium (branch repo-<uuid>), not in a .git
+        commitVersion: async ({ repo, system, snapshot }) => {
+          const dir = _repoDiskDir(repo.uuid);
+          if (!dir) return { ok: false, error: 'repo directory not resolvable' };
+          const { commitRepoSnapshot } = await import('../repo/snapshot.js');
+          const r = await commitRepoSnapshot({
+            repo, repoDir: dir, message: `${system === '(nexus)' ? 'nexus index' : 'nexus/' + system} @ snapshot ${String(snapshot).slice(0, 12)}`,
+            causedBy: 'idearium.nexus-self.sync', fileLayer: _fileLayers(repo.uuid).fileLayer, snapshotMode: _snapshotMode(),
+            commit: async (payload) => {
+              const c = await _versionium('POST', '/api/versionium/commit', payload, 60000);
+              if (!c.ok) return { error: c.error };
+              return c.data?.commit || { error: c.data?.error || 'versionium returned no commit' };
+            },
+          });
+          return r.ok ? { ok: true, commitId: r.commit.commitId } : { ok: false, error: `${r.code}: ${r.error}` };
+        },
       });
       _nexusSelfLast = { at: Date.now(), ok: r.ok, snapshot: r.snapshot, ms: r.ms, changed: r.systems.filter(x => x.status !== 'unchanged').map(x => `${x.system}:${x.status}`), understanding: r.understanding };
       if (_nexusSelfLast.changed.length) console.log(`[idearium/nexus-self] synced in ${r.ms}ms — ${_nexusSelfLast.changed.join(', ')}${r.understanding && r.understanding.improved && r.understanding.improved.length ? ` · understanding improved: ${r.understanding.improved.join(', ')}` : ''}${r.understanding && r.understanding.regressed && r.understanding.regressed.length ? ` · regressed: ${r.understanding.regressed.join(', ')}` : ''}`);

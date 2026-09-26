@@ -258,6 +258,12 @@ function record({ repository, commitId, tree: t, contents = [], mode = 'delta' }
 
   // what needs content, and is it there and is it what the tree says
   const changed = entries.filter(e => !baseMap.has(e.path) || baseMap.get(e.path).sha256 !== e.sha256);
+  // 0.39.263 — content staged ahead (stage(), in batches under the per-request cap) is
+  // taken from the blob store: content-addressed, re-verified by getBlob
+  for (const e of changed) {
+    if (provided.has(e.path) || !HEX64.test(e.sha256) || !fs.existsSync(blobPath(e.sha256))) continue;
+    try { provided.set(e.path, getBlob(e.sha256, e.path)); } catch (_) { /* corrupt staged copy: stays missing */ }
+  }
   const missing = changed.filter(e => !provided.has(e.path)).map(e => e.path);
   if (missing.length) return { ok: false, code: 'MISSING_CONTENT', missing };
   for (const e of changed) {
@@ -326,4 +332,43 @@ function limits() {
   return { maxFileBytes: config.FILE_MAX_BYTES, maxRecordBytes: config.FILE_MAX_RECORD_BYTES, keyframeInterval: config.FILE_KEYFRAME_INTERVAL };
 }
 
-module.exports = { plan, record, tree, content, limits, treeHash, sha256, validPath, FilesError, T_FULL, T_DELTA, REPO_SYSTEM };
+/**
+ * stage({ contents:[{path, content_b64}] }) — put file content into the blob store
+ * ahead of record(), so a repo whose first version is larger than one request
+ * (FILE_MAX_RECORD_BYTES) is recorded in batches. Content-addressed and verified:
+ * the sha256 is computed here, never taken from the caller. A staged blob no
+ * commit ever references is inert. 0.39.263.
+ */
+function stage({ contents = [] } = {}) {
+  let staged = 0, already = 0, bytes = 0;
+  const out = [];
+  for (const c of contents) {
+    if (!c || !validPath(c.path)) throw new FilesError('BAD_PATH', `unsafe or invalid path in contents: ${JSON.stringify(c && c.path)}`);
+    const buf = Buffer.from(String(c.content_b64 || ''), 'base64');
+    if (buf.length > config.FILE_MAX_BYTES) throw new FilesError('TOO_LARGE', `${c.path} is ${buf.length} bytes, over the ${config.FILE_MAX_BYTES} limit`);
+    const sha = sha256(buf);
+    if (putBlob(buf, sha)) { staged++; bytes += buf.length; } else already++;
+    out.push({ path: c.path, sha256: sha });
+  }
+  return { ok: true, staged, already, bytes, files: out };
+}
+
+/**
+ * versions(file, { repository }) — every commit in which this path was written
+ * (or deleted), newest first: [{ repository, commitId, sha256, kind, wall }].
+ * sha256 is the file's content AS OF that commit (a delta row's result hash), so
+ * a caller holding a file's bytes can find the version that holds exactly them —
+ * what loom used `git log -1 -- <file>` for (0.39.263, James: "loom depends on
+ * the .git i want versionium to hold the history for each repo").
+ */
+function versions(file, { repository = null, limit = 200 } = {}) {
+  if (!validPath(file)) throw new FilesError('BAD_PATH', `unsafe or invalid path: ${JSON.stringify(file)}`);
+  const match = (r) => r.file_path === file && (!repository || r.repository === repository);
+  const out = [];
+  for (const r of jaaDB.query(T_FULL, match, ALL)) out.push({ repository: r.repository, commitId: r.commit_ref, sha256: r.sha256 || null, kind: r.kind === 'deleted' ? 'deleted' : 'full', ts: r.ts });
+  for (const r of jaaDB.query(T_DELTA, match, ALL)) out.push({ repository: r.repository, commitId: r.commit_ref, sha256: r.result_sha256, kind: 'delta', ts: r.ts });
+  for (const v of out) { const c = getCommit(v.commitId); v.wall = c ? c.wall : v.ts; v.message = c ? c.message : null; delete v.ts; }
+  return out.sort((a, b) => (b.wall || 0) - (a.wall || 0)).slice(0, limit);
+}
+
+module.exports = { plan, record, stage, tree, content, limits, versions, treeHash, sha256, validPath, FilesError, T_FULL, T_DELTA, REPO_SYSTEM };

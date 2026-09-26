@@ -176,9 +176,9 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
  * Yields to the event loop between systems so a boot-time sync never holds
  * idearium's /health (the 0.39.260 lesson).
  */
-export async function sync(rl, se, { only = null, force = false, log = () => {}, onSystem = null } = {}) {
+export async function sync(rl, se, { only = null, force = false, log = () => {}, onSystem = null, commitVersion = null, liveRoot = undefined } = {}) {
   const t0 = Date.now();
-  const snap0 = store.snapshot();
+  const snap0 = store.snapshot(liveRoot ? { liveRoot } : {});   // liveRoot: tests sync a small tree, never the real one
   const snap = store.loadSnapshot(snap0.hash);
   const comps = ensureCompartments();
 
@@ -210,7 +210,9 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
       rl.replaceSpec(parent.uuid, m.uuid);
     }
     if (parent) {
-      rl.materialize(parent.uuid);
+      const pm = rl.materialize(parent.uuid);
+      // indexed like every repo (0.39.263), so it can be a versionium version too
+      if (pm && pm.dir) { try { runImportPipeline(rl.get(parent.uuid), pm.dir, { runtimeProof: false, lazyTests: false }); } catch (_) {} }
       rl.annotate(parent.uuid, { immutable: true, nexusSelf: { role: 'parent', hash: parentHash, snapshot: snap.hash, children: repoBySystem, syncedAt: Date.now() } });
     }
   }
@@ -218,6 +220,34 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
   if (parent) for (const uuid of Object.values(repoBySystem)) {
     const r = rl.get(uuid);
     if (r && r.nexusSelf && r.nexusSelf.parentRepo !== parent.uuid) rl.annotate(uuid, { nexusSelf: { ...r.nexusSelf, parentRepo: parent.uuid } });
+  }
+
+  // §0.39.263 — James: "i want versionium to hold the history for each repo." Every
+  // repo whose content is not yet a versionium version (a new or changed system, the
+  // parent index, or one synced before this existed) gets a repo snapshot WITH its
+  // files — its history lives in versionium, branch repo-<uuid>, not in any .git.
+  // commitVersion is injected (the API passes versionium's commit + file layer), so
+  // this module knows nothing of HTTP. A failure is recorded on the repo, never fatal.
+  const versions = [];
+  if (commitVersion) {
+    const all = [...Object.entries(repoBySystem).filter(([n]) => !only || only.includes(n)).map(([n, u]) => [n, u]), ...(parent ? [['(nexus)', parent.uuid]] : [])];
+    for (const [name, uuid] of all) {
+      const r = rl.get(uuid);
+      if (!r || !r.nexusSelf || (r.nexusSelf.versionCommit && r.nexusSelf.versionOf === r.nexusSelf.hash)) continue;
+      await new Promise(res => setImmediate(res));
+      let v;
+      try { v = await commitVersion({ repo: r, system: name, snapshot: snap.hash }); }
+      catch (e) { v = { ok: false, error: e.message }; }
+      const fresh = rl.get(uuid);
+      const ns = { ...fresh.nexusSelf };
+      if (v && v.ok) {
+        ns.versionCommit = v.commitId; ns.versionOf = ns.hash; ns.versionError = null;
+        if (Array.isArray(ns.versions) && ns.versions.length) ns.versions = [...ns.versions.slice(0, -1), { ...ns.versions[ns.versions.length - 1], versionCommit: v.commitId }];
+      } else ns.versionError = (v && v.error) || 'versionium did not answer';
+      rl.annotate(uuid, { nexusSelf: ns });
+      versions.push({ system: name, repoUuid: uuid, ok: !!(v && v.ok), commitId: v && v.commitId || null, error: v && !v.ok ? v.error : null });
+      if (!(v && v.ok)) log(`[${MODULE_ID}] ${name}: versionium commit failed — ${v && v.error}`);
+    }
   }
 
   // Measured after every sync that changed anything (or the first ever) —
@@ -234,7 +264,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     snapshot: snap.hash, snapshotCreated: snap0.created, stats: snap0.stats, understanding: understanding && { improved: understanding.improved, regressed: understanding.regressed, delta: understanding.delta, totals: understanding.totals },
     parentRepo: parent ? parent.uuid : null,
     compartments: { parent: comps.parent ? comps.parent.id : null, children: Object.fromEntries(Object.entries(comps.children).map(([k, v]) => [k, v.id])), errors: comps.errors },
-    systems: results, ms: Date.now() - t0,
+    systems: results, versions, ms: Date.now() - t0,
   };
 }
 
