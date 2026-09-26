@@ -5,6 +5,7 @@ data/intake/
 data/raid/input/
 data/raid/output/
 data/raid/ledger/
+data/loom/loom_events.buffer.jsonl
 idearium/data/projects/
 idearium/data/specs/
 idearium/data/nodes/
