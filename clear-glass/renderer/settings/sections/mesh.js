@@ -13,7 +13,7 @@
  * uses, not a second engine (§10.3).
  */
 (function () {
-  const { cg, h, call, wire, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, toggle, onLeave, section } = window.CGS;
+  const { cg, h, call, wire, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, toggle, onLeave, section, goto } = window.CGS;
 
   // §EXPANDED 2026-09-26 — James: "expand … agent mesh." Every pane below is a
   // real wire route in src/main/index.js: /agent-mesh/view (network nodes),
@@ -29,18 +29,39 @@
   }
 
   section({
-    id: 'mesh', group: 'Agents', icon: '\u2B21', label: 'Agent mesh',
+    id: 'mesh', group: 'Accounts & agents', icon: '\u2B21', label: 'Agent mesh',
     keywords: 'mesh spawn route pipeline feedback queue health constraints raid jobs intake nodes diagnose transform',
     blurb: 'The agents Clear Glass can drive in their own background tabs, what\u2019s running now, and the routes that pass one agent\u2019s answer to another.',
+    related: ['accounts', 'providers'],
     async render({ rerender }) {
       const m = await call(() => cg.mesh.list(), 'mesh');
       const [accounts, defaults] = await Promise.all([cg.accounts.list().catch(() => []), cg.accounts.defaults().catch(() => ({}))]);
       const label = (id) => { const a = accounts.find(x => x.id === id); return a ? a.label : (id ? id.slice(0, 8) + '…' : 'default'); };
 
+      // §0.39.265 — linked to Accounts & sign-in: the account chip opens that
+      // provider's accounts, and "Open tab" asks which account when there are several.
+      const acctsFor = (key) => accounts.filter(x => (x.agentKeys || []).includes(key));
+      const openTab = (a) => async (e) => {
+        const mine = acctsFor(a.id);
+        let accountId;
+        if (mine.length > 1) {
+          const pick = select(mine.map(x => ({ value: x.id, label: x.label })), defaults[a.id] || mine[0].id);
+          const ok = await modal({ title: `Open ${a.name} as\u2026`, body: [field('Account', pick, 'Each account has its own signed-in session.')],
+            actions: [{ label: 'Open tab', primary: true, run: () => true }] });
+          if (!ok) return;
+          accountId = pick.value;
+        } else if (mine.length === 1) accountId = mine[0].id;
+        await busy(e.currentTarget, async () => {
+          const r = await wire('/agent-mesh/spawn', { method: 'POST', body: { agentKey: a.id, accountId } });
+          toast(`${a.name} tab ready${accountId ? ` as \u201C${label(accountId)}\u201D` : ''} (${r.contextId})`); rerender();
+        });
+      };
       const registry = pane({ title: 'Agents', sub: `${m.registry.length} available \u00B7 ${m.queueDepth} queued`, flush: true, body: m.registry.map(a => {
-        const r = row(a.name, a.url, chip(defaults[a.id] ? `default: ${label(defaults[a.id])}` : 'no default account', defaults[a.id] ? 'ok' : 'plain'),
-          btn('Open tab', (e) => busy(e.currentTarget, async () => { const r = await wire('/agent-mesh/spawn', { method: 'POST', body: { agentKey: a.id } }); toast(`${a.name} tab ready (${r.contextId})`); rerender(); }), 'sm'));
-        r.style.setProperty('--prov', a.color || 'var(--cyan)'); r.prepend(h('span', { class: 'dot' })); return r;
+        const n = acctsFor(a.id).length;
+        const acct = h('button', { class: 'link-btn', title: 'Accounts & sign-in', onclick: () => goto('accounts', a.id),
+          text: defaults[a.id] ? `default: ${label(defaults[a.id])}` : n ? `${n} account${n === 1 ? '' : 's'}, no default` : 'no account \u2014 add one' });
+        const r = row(a.name, a.url, acct, btn('Open tab', openTab(a), 'sm'));
+        r.style.setProperty('--prov', a.color || 'var(--cyan)'); r.prepend(h('span', { class: 'dot' })); r.dataset.anchor = a.id; return r;
       }) });
 
       const diagnose = (provider, agentId) => async (e) => busy(e.currentTarget, async () => {
@@ -55,6 +76,7 @@
           `${s.key} \u00B7 ${label(s.accountId)}`, `${s.contextId} \u00B7 ${s.taskCount} task${s.taskCount === 1 ? '' : 's'} \u00B7 last used ${ago(s.lastUsed)}${s.constraints ? ` \u00B7 ${constraintText(s.constraints)}` : ''}`,
           chip(s.status, s.status === 'error' ? 'bad' : s.status === 'working' ? 'warn' : 'ok'),
           h('span', { class: 'health', title: `health ${s.health}` }, h('span', { style: { width: `${Math.max(0, Math.min(100, s.health))}%`, background: s.health > 60 ? 'var(--ok)' : s.health > 30 ? 'var(--warn)' : 'var(--bad)' } })),
+          s.accountId ? h('button', { class: 'link-btn', onclick: () => goto('accounts', s.key), text: 'account' }) : null,
           btn('Check page', diagnose(s.key, s.contextId), 'sm'));
         return r;
       }) : empty('No mesh agents running. Open a tab above or dispatch through Guardian.') });

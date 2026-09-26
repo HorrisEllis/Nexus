@@ -836,12 +836,15 @@ async function _startWire() {
       }
 
       if (u === '/agent-mesh/spawn' && req.method === 'POST') {
-        const { agentKey } = parsed;
+        const { agentKey, accountId } = parsed;
         if (!agentKey) { res.writeHead(400); return res.end(JSON.stringify({ ok: false, error: 'agentKey required' })); }
         try {
-          const state = await mesh.spawn(agentKey);
+          // §0.39.265 — Settings › Accounts opens a mesh tab AS an account: the
+          // same deterministic mesh-<provider>-<account> id Guardian uses, so a
+          // second click reuses that tab and two accounts get two tabs.
+          const state = await mesh.spawn(agentKey, accountId ? { accountId, contextId: `mesh-${agentKey}-${accountId}` } : {});
           res.writeHead(200);
-          return res.end(JSON.stringify({ ok: true, agentKey, contextId: state.contextId }));
+          return res.end(JSON.stringify({ ok: true, agentKey, accountId: state.accountId || null, contextId: state.contextId }));
         } catch (e) {
           res.writeHead(502);
           return res.end(JSON.stringify({ ok: false, error: e.message }));

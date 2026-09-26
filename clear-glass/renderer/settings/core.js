@@ -132,8 +132,9 @@
     return h('div', { class: 'row' }, h('div', { class: 'what' }, h('div', { class: 't', text: title }), desc ? h('div', { class: 'd', text: desc }) : null),
       h('div', { class: 'acts' }, acts));
   }
-  function pane({ title, sub, tools, body, flush, prov, cls }) {
+  function pane({ title, sub, tools, body, flush, prov, cls, anchor }) {
     const p = h('section', { class: `pane${prov ? ' prov' : ''}${cls ? ' ' + cls : ''}` });
+    if (anchor) p.dataset.anchor = anchor;   // goto(section, anchor) scrolls here
     if (prov) p.style.setProperty('--prov', prov);
     if (title) p.append(h('div', { class: 'pane-head' }, prov ? h('span', { class: 'dot' }) : null,
       h('div', { class: 'grow' }, h('h2', { text: title }), sub ? h('div', { class: 'sub', text: sub }) : null), tools || null));
@@ -164,7 +165,9 @@
 
   // ── sections + router ───────────────────────────────────────────────────
   const sections = [];
-  const GROUPS = ['Identity', 'Agents', 'Browser', 'System'];
+  // §0.39.265 — James: "Accounts & sign-in, Provider tabs, Agent mesh — can you
+  // consolidate or link these?" They share one group now, side by side.
+  const GROUPS = ['Accounts & agents', 'Agents', 'Browser', 'System'];
   function section(def) { sections.push(def); }
 
   // §LIBRARY 0.39.241 — the Library window (renderer/library.html) runs on this
@@ -190,6 +193,27 @@
   }
   function onLeave(fn) { pollers.push(fn); }
 
+  // goto(id, anchor) — open a section and bring the pane marked `anchor` into
+  // view (e.g. goto('accounts', 'claude') lands on Claude's accounts).
+  let pendingAnchor = null;
+  function goto(id, anchor) { pendingAnchor = anchor || null; return show(id); }
+  function _focusAnchor(page) {
+    if (!pendingAnchor) return;
+    const el = page.querySelector(`[data-anchor="${CSS.escape(pendingAnchor)}"]`);
+    pendingAnchor = null;
+    if (!el) return;
+    // A cosmetic step — it must never turn a rendered page into an error box.
+    try { if (el.scrollIntoView) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (_) {}
+    el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600);
+  }
+  // A section's `related: [ids]` renders as links under its heading.
+  function _relatedStrip(def) {
+    const rel = (def.related || []).map(r => sections.find(s => s.id === r)).filter(Boolean);
+    if (!rel.length) return null;
+    return h('nav', { class: 'related', 'aria-label': 'Related settings' }, h('span', { text: 'Related' }),
+      rel.map(s => h('button', { class: 'rel-link', onclick: () => goto(s.id) }, h('span', { 'aria-hidden': 'true', text: s.icon || '' }), h('span', { text: s.label }))));
+  }
+
   async function show(id) {
     const def = sections.find(s => s.id === id) || sections[0];
     pollers.forEach(f => { try { f(); } catch (_) {} }); pollers = [];
@@ -212,7 +236,7 @@
     document.body.dataset.area = def.id;   // modals live on body, outside #main — scope area CSS from body
     loadAreaCss(def.id);
     const tools = h('div', { class: 'tools' });
-    main.append(h('header', { class: 'page-head' }, h('h1', { text: def.label }), def.blurb ? h('p', { text: def.blurb }) : null, tools));
+    main.append(h('header', { class: 'page-head' }, h('h1', { text: def.label }), def.blurb ? h('p', { text: def.blurb }) : null, _relatedStrip(def), tools));
     const page = h('div', { class: 'page' }, keep.length ? keep : h('div', { class: 'loading', text: 'Loading…' }));
     main.append(page);
     if (scroll) main.scrollTop = scroll;
@@ -222,6 +246,7 @@
       if (current !== def.id) return;
       page.replaceChildren(...[].concat(nodes || []));
       if (scroll) main.scrollTop = scroll;
+      _focusAnchor(page);
     } catch (e) {
       if (current !== def.id) return;
       page.replaceChildren(h('div', { class: 'err-box' }, h('div', { style: { flex: 1 } },
@@ -269,5 +294,5 @@
   }
 
   window.CGS = { cg, h, unwrap, call, wire, toast, fail, busy, modal, confirmDo, field, toggle, row, pane, btn, chip, empty, ago, copy,
-    agentOptions, select, section, show, onLeave, boot, query, current: () => current, WIRE_PORT };
+    agentOptions, select, section, show, goto, onLeave, boot, query, current: () => current, WIRE_PORT };
 })();

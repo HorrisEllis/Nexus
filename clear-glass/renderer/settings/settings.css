@@ -168,3 +168,16 @@ pre.out { font-family: var(--mono); font-size: 11.5px; background: rgba(0,0,0,.3
   #main { padding: 20px 16px 60px; }
   .step { grid-template-columns: 1fr; }
 }
+
+/* §0.39.265 — Related strip (a section's `related` links) and goto()'s landing highlight */
+.page-head .related { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; font-size: 12px; color: var(--ink-faint); }
+.page-head .related > span { margin-right: 2px; text-transform: uppercase; letter-spacing: .06em; font-size: 10.5px; }
+.rel-link { display: inline-flex; gap: 6px; align-items: center; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--edge-hi);
+  background: transparent; color: var(--ink-dim); cursor: pointer; font: inherit; }
+.rel-link:hover { color: var(--ink-hi); border-color: var(--cyan); }
+.link-btn { border: 0; background: none; padding: 0; color: var(--cyan); cursor: pointer; font: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.link-btn:hover { color: var(--ink-hi); }
+.pane.flash, .row.flash { animation: pane-flash 1.6s ease-out; }
+@keyframes pane-flash { 0% { box-shadow: 0 0 0 2px var(--cyan); } 100% { box-shadow: 0 0 0 2px transparent; } }
+.what .links { margin-top: 3px; font-size: 12px; color: var(--ink-faint); }
+.pane-tools { display: inline-flex; align-items: center; gap: 12px; } .pane-links { font-size: 12px; color: var(--ink-faint); }

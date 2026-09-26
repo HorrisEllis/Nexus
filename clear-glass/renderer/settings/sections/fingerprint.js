@@ -17,7 +17,7 @@
   const { cg, h, call, toast, busy, pane, row, btn, chip, toggle, field, select, agentOptions, section } = window.CGS;
 
   section({
-    id: 'fingerprint', group: 'Identity', icon: '\u2317', label: 'Browser fingerprint',
+    id: 'fingerprint', group: 'Browser', icon: '\u2317', label: 'Browser fingerprint',
     keywords: 'fingerprint user agent firefox chrome safari identity spoof',
     blurb: 'Switch the browser identity a tab presents. Applies to the tab\u2019s context immediately.',
     async render() {
