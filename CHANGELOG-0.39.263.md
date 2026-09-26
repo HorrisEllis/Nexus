@@ -163,6 +163,22 @@ James: *"ideas promoted to specs get a repo."* A first cut of this release gave 
   - there is no Compartment tab, and the badge reads 1;
   - a promoted brainstorm opens in Create › Ideas with the lanes, and the repo count does not change.
 
+## UI URLs: `/ui/<system>/`, not `/<system>/ui`
+
+James: *`{"ok":false,"error":"route not found: GET /idearium/ui"}` … should be /ui/idearium.*
+
+Two pages built their iframe URLs from the file layout (`idearium/ui/`, `eravos/ui/`) instead of the route the orchestrator serves (`/ui/<system>/`).
+
+| Page | Was | Now |
+|---|---|---|
+| `ui/tv-shell/index.html`, full Idearium channel | `../../idearium/ui` → `GET /idearium/ui`, a 404 | `../idearium/` → `/ui/idearium/` |
+| `idearium/ui/index.html`, Build › Eravos canvas | `../../eravos/ui/index.html`, a 404 under the orchestrator and on :4800 | `../eravos/` → `/ui/eravos/` |
+
+- When idearium runs standalone (not under `/ui/`), the Eravos canvas loads the orchestrator's `/ui/eravos/`.
+- Verified against a real orchestrator: the old paths return 404 (`route not found`), and the new ones return 200 (IDEARIUM, ERAVOS v3).
+- The `<system>/ui/…` strings in JSON such as `loom/data/registry.json` are file paths, not URLs. The code really lives there, so they stay as they are.
+- New test: `test-nexus-atlas-and-glass` UI-003 fails on any page whose `src`/`href`/`location` climbs to `<system>/ui`.
+
 ## Tests
 
 `tests/modules/test-nexus-atlas-and-glass.test.js`: 8/8, registered in run-all.

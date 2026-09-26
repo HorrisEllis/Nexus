@@ -37,6 +37,15 @@
 // ════════════════════════════════════════════════════
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
+// 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
+// the Eravos canvas cannot resolve ../eravos/ against this server: use the orchestrator's.
+(() => {
+  try {
+    if (typeof location === 'undefined' || /^\/ui\//.test(location.pathname)) return;
+    const set = () => { const f = document.getElementById('eravos-frame'); if (f) f.src = `${location.protocol}//${location.hostname}:9000/ui/eravos/`; };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', set); else set();
+  } catch (_) {}
+})();
 const API_CANDIDATES = [...new Set([
   ...(typeof location !== 'undefined' && /^https?:$/.test(location.protocol) && !/^\/api\/idearium/.test(location.pathname) ? [location.origin] : []),
   'http://127.0.0.1:4800', 'http://127.0.0.1:9000/api/idearium',
