@@ -266,3 +266,27 @@ spec:
       tests/modules/test-agent-tools-and-graph.test.js 13/13 (C/D parts: a real repo through the repo layer and a stub
       copilot on :3750; the CLI helpers run from app.js); test-repo-agent, test-repo-agent-provider, test-repo-context
       updated for the intended changes. 13 mutations, each caught.
+  built_2026_09_26_compartment_recursive_tabs:
+    shipped: "0.39.261"
+    versionium: null
+    asked_by: >-
+      James: "in idearium can you make the tabs much more recursive, deep and expanded fully? interconnected. i want
+      ideas once promoted to move to the compartment idea section for brainstorming, problem solving, expanding, and
+      improving".
+    found: >-
+      Promote turned a brainstorm into an idea and stopped: the idea landed in the flat Ideas list with nowhere to work
+      it. Tabs were two one-level dropdowns (Create, Build); nothing nested and nothing linked across views.
+    change: >-
+      idearium.workbench (lib/idea-workbench.js, pure): members (ideas in the Compartment, parentIdea makes ideas
+      recursive) and entries (lane brainstorm|problem|expand|improve — closed set, unknown lane is a hard error;
+      parentUuid nests to any depth; links[] cross-reference any entry or idea, walked both ways). Tables
+      idearium_workbench_members / idearium_workbench_entries (JAA). Routes GET /api/workbench, GET|POST
+      /api/ideas/:uuid/workbench, POST .../workbench/admit, PATCH|DELETE /api/workbench/:uuid, POST .../spawn (entry →
+      child idea, causal link, seeded lane), POST .../assist (copilot per lane, preview-first). brainstorm.promote admits
+      the new idea and seeds its Brainstorm lane; SSE workbench.changed. UI (ui/js/compartment.js,
+      idearium.ui.compartment): Compartment view (recursive idea tree, lane columns, link mode, fold, resolve, move lane,
+      spin out, links view); Compartment tab dropdown recurses idea → child idea → lanes as flyouts; "Expand all"
+      swaps the tab bar for a full navigator tree (views, ideas, compartment ideas + lanes, repos + every subtab).
+    tests: >-
+      idearium/test/idea-workbench.test.js 10/10; idearium/test/compartment-ui.smoke.cjs (jsdom); live API run on an
+      isolated data dir: promote → add → nested add → bad lane refused → spawn → link → index → cascade delete.

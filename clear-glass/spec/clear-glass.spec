@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.15.0
+    version:     3.16.0
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -327,6 +327,26 @@ spec:
         opened: 2026-09-25
 
   version_history:
+    - version: 3.16.0
+      date: 2026-09-26
+      summary: >-
+        MINOR (v0.39.261) — James: "fix [renderer] unhandledrejection GUEST_VIEW_MANAGER_CALL ERR_CONNECTION_REFUSED
+        127.0.0.1:900 … make the macros way more user friendly … expand the copilot settings … add new button to the
+        plugins section with webextension support … expand per site settings … make a clearglass hat for the copilot
+        cli … make it jaa. no json … expand the autofill section, agent mesh and brainos." (1) renderer/browser.js: every
+        <webview>.loadURL() Promise was dropped; navigation now goes through navigate(), failures render one in-view page
+        with a NEXUS port-typo hint (:900 → :9000), ERR_ABORTED (-3) is not an error. (2) cg.storage.jaa
+        (src/storage/jaa.js): options, API settings, site settings, history, downloads, bookmarks, autofill,
+        fingerprints and passwords move to JAA tables (JaaKV / JaaRows); legacy JSON imported once, left on disk.
+        (3) cg.copilot.hat (src/copilot/hat.js) — the clear_glass hat in lib/hat-forge, composed per call; cg.renderer.
+        copilot-cli — route bar + slash commands; fix: driver commands from a reply executed twice; /build /diagnose had
+        no preload path. (4) Macros: recorder → cg.macros.recording, templates, sentence steps, edit/duplicate.
+        (5) cg.plugins.webextensions — Chrome extensions from folder/.zip/.crx into every persistent session.
+        (6) Site settings area; contentFilter='off' enforced in webrequest-adapter. (7) Autofill, Agent mesh expanded;
+        BrainOS Float gains NODES / MESH JOBS / MACROS / AUTOFILL / SITES via registerTab. Tests: storage-jaa 5,
+        copilot-cli 10, webextensions 7, content-filter-exempt 1, brainos-float-cg 6; settings suite 38/38.
+      components_added: [cg.storage.jaa, cg.copilot.hat, cg.renderer.copilot-cli, cg.macros.recording, cg.plugins.webextensions]
+      versioniumCommitId: null
     - version: 3.15.0
       date: 2026-09-26
       summary: >-
