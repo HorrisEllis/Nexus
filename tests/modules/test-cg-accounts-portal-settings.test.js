@@ -355,6 +355,10 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
         vault: { status: () => ok({ cookies: vault.keyStatus(), passwords: pv.keyStatus() }) },
         options: { get: () => ok(o2.get()), set: (p) => ok(o2.set(p)) },
         toolbar: { commands: () => ok(require(path.join(CG, 'src/toolbar/commands.js')).TOOLBAR_COMMANDS || []) },
+        shortcuts: (() => { const R = require(path.join(CG, 'src/shortcuts/registry.js')); let ov = {};
+          const view = () => ({ bindings: R.effective(ov), overrides: ov, actions: R.ACTIONS, defaults: R.DEFAULT_BINDINGS });
+          return { list: () => ok(view()), set: (a, act) => { const r = R.bind(ov, a, act); if (r.error) return ok(r); ov = r.overrides; calls.push(['shortcut', a, act]); return ok({ ...view(), replaced: r.replaced }); },
+            remove: (a) => { ov = R.unbind(ov, a).overrides; return ok(view()); }, reset: () => { ov = {}; return ok(view()); } }; })(),
         providers: { list: () => ok([{ id: 'claude', name: 'Claude', url: 'https://claude.ai', running: true, status: 'loaded', color: '#cc785c' }]), start: () => ok({}), stop: () => ok({}), show: () => ok({}), deploy: () => ok({}) },
         context: { switchFingerprint: (d) => ok({ ok: true, agentId: d.agentId, mode: d.mode, ua: 'UA' }) },
         mesh: { list: () => ok({ registry: REGISTRY, agents: [{ key: 'claude', contextId: 'mesh-claude-x', accountId: A.id, status: 'idle', health: 90, taskCount: 1, lastUsed: Date.now() }], queueDepth: 0 }) },
@@ -398,7 +402,7 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
     });
     await test('UI-05', 'every section renders without an error box against the fake backend', async () => {
       const ids = [...w.document.querySelectorAll('.rail-item')].map(b => b.dataset.id);
-      assert.deepStrictEqual(ids, ['accounts', 'providers', 'mesh', 'automation', 'macros', 'eros', 'suite', 'fingerprint', 'general', 'autofill', 'privacy', 'sites', 'downloads', 'connections', 'copilot', 'diagnostics', 'plugins']);
+      assert.deepStrictEqual(ids, ['accounts', 'providers', 'mesh', 'automation', 'macros', 'eros', 'suite', 'fingerprint', 'general', 'shortcuts', 'autofill', 'privacy', 'sites', 'downloads', 'connections', 'copilot', 'diagnostics', 'plugins']);
       for (const id of ids) {
         w.CGS.show(id); await settle(); await settle();
         const err = w.document.querySelector('#main .err-box');
@@ -442,6 +446,22 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
       assert.strictEqual(w.CGS.current(), 'accounts');
       assert.ok(w.document.querySelector('#main .pane[data-anchor="claude"]'), 'Claude accounts pane is the anchor');
       assert.ok(!w.document.querySelector('#main .err-box'), 'landing on an anchor never breaks the page');
+    });
+    // §0.39.265 — Keyboard shortcuts: press keys to bind; a macro can have a key.
+    await test('UI-09', 'Keyboard shortcuts: pressing keys in the capture box binds them (macros too); plain typing keys are refused', async () => {
+      w.CGS.show('shortcuts'); for (let i = 0; i < 6 && !w.document.querySelector('#main .kbd-set'); i++) await settle();
+      assert.ok(!w.document.querySelector('#main .err-box'), 'renders');
+      const macroRow = [...w.document.querySelectorAll('#main .row')].find(r => r.textContent.includes('Run macro \u201Capply\u201D'));
+      assert.ok(macroRow, 'every macro is listed');
+      [...macroRow.querySelectorAll('button')].find(b => b.textContent === 'Set key').click(); await settle();
+      const box = w.document.querySelector('.modal .capture');
+      const press = (init) => box.dispatchEvent(new w.KeyboardEvent('keydown', { bubbles: true, cancelable: true, ...init }));
+      press({ key: 'k' });
+      assert.match(w.document.querySelector('.modal .blurb').textContent, /steal ordinary typing/);
+      press({ key: 'K', code: 'KeyK', ctrlKey: true, shiftKey: true });
+      assert.strictEqual([...box.querySelectorAll('kbd')].map(k => k.textContent).join('+'), 'Ctrl+Shift+K');
+      [...w.document.querySelectorAll('.modal button')].find(b => b.textContent === 'Save').click(); await settle(); await settle();
+      assert.ok(calls.some(c => c[0] === 'shortcut' && c[1] === 'Ctrl+Shift+K' && c[2] === 'macro:apply'), 'saved through cg.shortcuts.set');
     });
   }
 

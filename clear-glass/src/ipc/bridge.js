@@ -1276,6 +1276,12 @@ class IpcBridge {
     ipcMain.handle('listeners:decay:get',  async ()    => this.options?.getListenerDecay());
     ipcMain.handle('listeners:decay:set',  async (e, d) => this.options?.setListenerDecay(d || {}));
     ipcMain.handle('listeners:decay:run',  async ()    => this.options?.decayListeners());
+
+    // §0.39.265 — keyboard shortcuts (src/shortcuts/registry.js; caught in main, see main/index.js)
+    ipcMain.handle('shortcuts:list',   async () => ({ ...(this.options?.getShortcuts() || { bindings: {}, overrides: {} }), actions: require('../shortcuts/registry').ACTIONS, defaults: require('../shortcuts/registry').DEFAULT_BINDINGS }));
+    ipcMain.handle('shortcuts:set',    async (e, d) => this.options?.setShortcut(d.accel, d.action));
+    ipcMain.handle('shortcuts:remove', async (e, d) => this.options?.removeShortcut(d.accel));
+    ipcMain.handle('shortcuts:reset',  async () => this.options?.resetShortcuts());
     ipcMain.handle('listeners:get',        async (e, d) => this.options?.getListener(d.id));
     ipcMain.handle('listeners:register',   async (e, d) => this.options?.registerListener(d));
     ipcMain.handle('listeners:update',     async (e, d) => this.options?.updateListener(d.id, d.updates));

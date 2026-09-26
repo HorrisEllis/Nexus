@@ -1986,6 +1986,61 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     else if (e.key === 'ArrowRight') { e.preventDefault(); if (wv.canGoForward()) wv.goForward(); }
   });
 
+  // ── Keyboard shortcuts — §0.39.265 ─────────────────────────────────────
+  // The main process catches every shortcut (in this chrome AND inside the
+  // page — src/main/index.js, bindings from src/shortcuts/registry.js plus
+  // Settings › Keyboard shortcuts) and sends this window the browser actions.
+  // Each action calls the same function its button or menu item uses.
+  let _recordingMacro = false;
+  async function _shortcutAutofill() {
+    const [settings, profiles] = await Promise.all([cg.api.get().catch(() => ({})), cg.autofill.listProfiles().catch(() => [])]);
+    const pid = settings.screenQaProfileId || (profiles && profiles[0] && profiles[0].id);
+    if (!pid) { addMsg('assistant', 'Autofill: add a profile in Settings \u203A Autofill & answers first.'); return; }
+    const r = await cg.autofill.fill(pid, agentId).catch(e => ({ error: e.message }));
+    addMsg('assistant', r && r.error ? `Autofill: ${r.error}` : `Autofill: ${(r && (r.filled ?? (r.results || []).length)) || 0} field(s) filled.`);
+  }
+  const SHORTCUT_ACTIONS = {
+    'tab.new':        () => _tabs.newTab(),
+    'tab.close':      () => _tabs.closeTab(_tabs.activeId),
+    'tab.reopen':     () => _tabs.reopenClosed(),
+    'tab.next':       () => { const ids = _tabs.tabs.map(t => t.id); _tabs.switchTo(ids[(ids.indexOf(_tabs.activeId) + 1) % ids.length]); },
+    'tab.prev':       () => { const ids = _tabs.tabs.map(t => t.id); _tabs.switchTo(ids[(ids.indexOf(_tabs.activeId) - 1 + ids.length) % ids.length]); },
+    'tab.last':       () => { const last = _tabs.tabs[_tabs.tabs.length - 1]; if (last) _tabs.switchTo(last.id); },
+    'page.reload':    () => wv.reload(),
+    'page.back':      () => { if (wv.canGoBack()) wv.goBack(); },
+    'page.forward':   () => { if (wv.canGoForward()) wv.goForward(); },
+    'page.find':      () => openFindBar(),
+    'page.print':     () => cg.driver.exec({ action: 'print', agentId }),
+    'page.zoomIn':    () => applyZoom(_zoomFactor + 0.1),
+    'page.zoomOut':   () => applyZoom(_zoomFactor - 0.1),
+    'page.zoomReset': () => applyZoom(1.0),
+    'page.address':   () => { urlBar.focus(); urlBar.select(); },
+    'page.fullscreen':() => cg.window.fullscreen(agentId),
+    'cg.bookmark':    () => document.getElementById('btn-bookmark').click(),
+    'cg.history':     () => _openPanelFromMenu('history-panel', () => _renderHistoryPanel('')),
+    'cg.copilot':     () => copilotToggle && copilotToggle.click(),
+    'cg.rewind':      () => document.getElementById('btn-rewind')?.click(),
+    'cg.picker':      () => pickerBtn.click(),
+    'cg.autofill':    () => _shortcutAutofill(),
+    'cg.macroRecord': async () => {
+      if (!_recordingMacro) {
+        const r = await cg.macros.recordStart(agentId).catch(e => ({ error: e.message }));
+        if (r && r.error) return addMsg('assistant', `Recording: ${r.error}`);
+        _recordingMacro = true; addMsg('assistant', '\u25CF Recording a macro \u2014 press the shortcut again to stop.');
+      } else {
+        _recordingMacro = false;
+        const r = await cg.macros.recordStop(agentId).catch(e => ({ error: e.message }));
+        addMsg('assistant', r && r.error ? `Recording: ${r.error}` : `Recording stopped${r && r.steps ? ` \u2014 ${r.steps.length} step(s)` : ''}. Save it in Settings \u203A Macros.`);
+      }
+    },
+  };
+  cg.shortcuts?.onAction(({ action, result }) => {
+    if (result) { addMsg('assistant', result.ok === false ? `Shortcut: ${result.error}` : result.text || 'Done.'); return; }
+    const fn = SHORTCUT_ACTIONS[action];
+    if (!fn) return;
+    Promise.resolve().then(fn).catch(e => addMsg('assistant', `Shortcut failed: ${e.message}`));
+  });
+
   // §LIBRARY 0.39.241 — the Downloads dropdown that lived here (2026-08-24, with
   // its Download Listeners form from 2026-08-28) is replaced by the Library
   // window's Downloads area (renderer/library/sections/downloads.js), which has

@@ -100,6 +100,9 @@ const DEFAULTS = {
   // fired or been re-armed for disableAfterDays is switched off; one left off
   // by decay until removeAfterDays is deleted. A pinned listener never decays.
   listenerDecay: { enabled: true, disableAfterDays: 14, removeAfterDays: 30 },
+  // §0.39.265 — keyboard shortcuts: the user's changes on top of
+  // src/shortcuts/registry.js's defaults ({ accel: action | null }).
+  shortcuts: {},
 
   // §2026-08-28 — James: "a download listener for artifacts." Real,
   // separate registry from `listeners` above — a download isn't tied to
@@ -730,6 +733,38 @@ class NexusOptions {
    * here since a listener firing on the wrong page is a real, visible
    * mistake in a way userscript over-matching mostly isn't.
    */
+  // ── Keyboard shortcuts — §0.39.265 ──────────────────────────────────────
+  // Stored as overrides only; src/shortcuts/registry.js owns the defaults and
+  // the rules (one key → one action, one action → one key, no bare typing keys).
+  getShortcuts() {
+    const R = require('../shortcuts/registry');
+    return { bindings: R.effective(this.data.shortcuts || {}), overrides: { ...(this.data.shortcuts || {}) } };
+  }
+
+  setShortcut(accel, action) {
+    const R = require('../shortcuts/registry');
+    const r = R.bind(this.data.shortcuts || {}, accel, action);
+    if (r.error) return { error: r.error };
+    this.data = { ...this.data, shortcuts: r.overrides };
+    this._persist();
+    return { ...this.getShortcuts(), replaced: r.replaced };
+  }
+
+  removeShortcut(accel) {
+    const R = require('../shortcuts/registry');
+    const r = R.unbind(this.data.shortcuts || {}, accel);
+    if (r.error) return { error: r.error };
+    this.data = { ...this.data, shortcuts: r.overrides };
+    this._persist();
+    return this.getShortcuts();
+  }
+
+  resetShortcuts() {
+    this.data = { ...this.data, shortcuts: {} };
+    this._persist();
+    return this.getShortcuts();
+  }
+
   // ── Listener decay — §0.39.265 ───────────────────────────────────────────
 
   /** touchListener — a listener fired (kind 'fired') or was armed on a page ('seen'). */

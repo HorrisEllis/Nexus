@@ -226,6 +226,16 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     decay:     { get: () => ipcRenderer.invoke('listeners:decay:get'), set: (patch) => ipcRenderer.invoke('listeners:decay:set', patch), run: () => ipcRenderer.invoke('listeners:decay:run') },
   },
 
+  // §0.39.265 — keyboard shortcuts. The main process catches the keys (in the
+  // chrome and inside pages) and sends a window its browser actions here.
+  shortcuts: {
+    list:     ()               => ipcRenderer.invoke('shortcuts:list'),
+    set:      (accel, action)  => ipcRenderer.invoke('shortcuts:set', { accel, action }),
+    remove:   (accel)          => ipcRenderer.invoke('shortcuts:remove', { accel }),
+    reset:    ()               => ipcRenderer.invoke('shortcuts:reset'),
+    onAction: (cb) => { const f = (_e, d) => cb(d); ipcRenderer.on('shortcut:action', f); return () => ipcRenderer.removeListener('shortcut:action', f); },
+  },
+
   agents: {
     list: () => ipcRenderer.invoke('agents:list'),
   },

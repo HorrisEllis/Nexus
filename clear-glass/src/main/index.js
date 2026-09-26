@@ -2446,19 +2446,58 @@ function closeLibraryWindow() {
   if (libraryWin && !libraryWin.isDestroyed()) libraryWin.close();
 }
 
-// Ctrl+J opens the Library at Downloads from anywhere in Clear Glass — the
-// browser chrome AND the page inside it. A page's keystrokes never reach
-// browser.js (the webview is its own renderer), so the key is taken in the main
-// process for every web contents Clear Glass creates. Ctrl+Shift+J stays DevTools.
-function _isLibraryKey(input) {
-  return input && input.type === 'keyDown' && (input.control || input.meta) && !input.shift && !input.alt &&
-         String(input.key).toLowerCase() === 'j';
+// ── Keyboard shortcuts — §0.39.265 ─────────────────────────────────────────
+// James: "add keyboard shortcuts including macro support." A page's keystrokes
+// never reach browser.js (the webview is its own renderer), so shortcuts are
+// taken here, in the main process, for every web contents Clear Glass creates:
+// the chrome of an agent window AND the page inside it. The bindings are
+// src/shortcuts/registry.js's defaults plus Settings › Keyboard shortcuts.
+//   macro:<name>   runs the macro in the window the key was pressed in
+//   workflow:<id>  runs that Automation workflow
+//   cg.library / cg.settings open those windows
+//   anything else  is sent to that window's renderer ('shortcut:action')
+// (This replaces the Ctrl+J-only handler: Ctrl+J is cg.library's default.)
+// Ctrl+Shift+J / Ctrl+Shift+I / F12 stay DevTools (openAgentWindow).
+const Shortcuts = require('../shortcuts/registry');
+function _agentWindowFor(contents) {
+  const host = contents.hostWebContents || contents;   // a <webview> page → the window that embeds it
+  for (const [agentId, win] of windows) if (!win.isDestroyed() && win.webContents === host) return { agentId, win };
+  return null;
+}
+function _runShortcut(action, accel, owner) {
+  const tell = (result) => { if (owner && !owner.win.isDestroyed()) owner.win.webContents.send('shortcut:action', { action, accel, result }); };
+  if (action === 'cg.library') return openLibraryWindow('downloads');
+  if (action === 'cg.settings') return openSettingsWindow();
+  if (action.startsWith('macro:')) {
+    const name = action.slice(6);
+    return Promise.resolve(macroTool.execute({ action: 'run', name, agentId: owner ? owner.agentId : 'default' }))
+      .then(r => tell(r && r.error ? { ok: false, error: r.error } : { ok: true, text: `Ran macro \u201C${name}\u201D` }))
+      .catch(e => tell({ ok: false, error: e.message }));
+  }
+  if (action.startsWith('workflow:')) {
+    if (!mesh) return tell({ ok: false, error: 'the agent mesh is not ready' });
+    return Promise.resolve(mesh.runWorkflow(action.slice(9), 'shortcut'))
+      .then(r => tell(r && r.ok === false ? { ok: false, error: r.error } : { ok: true, text: 'Workflow ran' }))
+      .catch(e => tell({ ok: false, error: e.message }));
+  }
+  if (owner) owner.win.webContents.send('shortcut:action', { action, accel });
 }
 app.on('web-contents-created', (_e, contents) => {
   contents.on('before-input-event', (event, input) => {
-    if (!_isLibraryKey(input)) return;
+    if (!input || input.type !== 'keyDown' || input.isAutoRepeat) return;
+    const accel = Shortcuts.accelFromInput(input);
+    if (!accel) return;
+    const host = contents.hostWebContents || contents;
+    if (settingsWin && !settingsWin.isDestroyed() && host === settingsWin.webContents) return;   // Settings records new shortcuts
+    let bindings;
+    try { bindings = nexusOptions ? nexusOptions.getShortcuts().bindings : Shortcuts.DEFAULT_BINDINGS; } catch (_) { bindings = Shortcuts.DEFAULT_BINDINGS; }
+    const action = bindings[accel];
+    if (!action) return;
+    const owner = _agentWindowFor(contents);
+    // outside an agent window (the Library) only the window-opening shortcuts apply
+    if (!owner && action !== 'cg.library' && action !== 'cg.settings') return;
     event.preventDefault();
-    openLibraryWindow('downloads');
+    try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
 });
 

@@ -168,6 +168,7 @@ const SUITES = [
   'test-cg-accounts-portal-settings.test.js', // §0.39.223 — Clear Glass account authority, login portals, sealed vault keys, settings rebuild
   'test-cg-listener-decay.test.js',          // §0.39.265 — page listeners fade: switched off when idle, deleted later; Keep exempts
   'test-cg-bookmark-account-state.test.js',  // §0.39.265 — ★ dialog: account check mark + rewind page state; account windows
+  'test-cg-shortcuts.test.js',               // §0.39.265 — keyboard shortcuts everywhere, macros and workflows on a key
   'test-provider-host-respawn.js',
   'test-userscript-mixed-content-fix.js',
   'test-contract-handshake-paths.js',

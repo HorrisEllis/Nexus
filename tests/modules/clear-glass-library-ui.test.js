@@ -83,9 +83,15 @@ async function main() {
   check('…it loads renderer/library.html, with the area as the hash (library.html#downloads)',
     /libraryWin\.loadFile\(path\.join\(__dirname, '\.\.\/\.\.\/renderer\/library\.html'\), hash \? \{ hash \} : undefined\)/.test(MAIN));
   check('…an area name is checked before it reaches executeJavaScript', /LIBRARY_AREA_RE = \/\^\[a-z\]\{1,24\}\$\//.test(MAIN) && /LIBRARY_AREA_RE\.test\(area \|\| ''\)/.test(MAIN));
+  // §0.39.265 — Ctrl+J is now the cg.library default of the general shortcut
+  // handler (src/shortcuts/registry.js), still caught in main for every web contents.
+  const SC = require(path.join(__dirname, '../../clear-glass/src/shortcuts/registry.js'));
   check('Ctrl+J is taken in the main process for EVERY web contents (chrome and page), and opens Downloads',
-    /app\.on\('web-contents-created'[\s\S]{0,200}before-input-event[\s\S]{0,200}_isLibraryKey\(input\)[\s\S]{0,120}openLibraryWindow\('downloads'\)/.test(MAIN));
-  check('…Ctrl+Shift+J is left to DevTools', /function _isLibraryKey\(input\)[\s\S]{0,200}!input\.shift/.test(MAIN) && /\['i','j'\]\.includes\(input\.key\.toLowerCase\(\)\)/.test(MAIN));
+    SC.DEFAULT_BINDINGS['Ctrl+J'] === 'cg.library' &&
+    /app\.on\('web-contents-created'[\s\S]{0,200}before-input-event/.test(MAIN) &&
+    /if \(action === 'cg\.library'\) return openLibraryWindow\('downloads'\);/.test(MAIN) &&
+    /if \(!owner && action !== 'cg\.library'/.test(MAIN));
+  check('…Ctrl+Shift+J is left to DevTools', !SC.DEFAULT_BINDINGS['Ctrl+Shift+J'] && /\['i','j'\]\.includes\(input\.key\.toLowerCase\(\)\)/.test(MAIN));
   check('the tray\'s Library entry opens the same window, not ui/library/ in an agent window',
     /label: '⬡ Library',\s+accelerator: 'CmdOrCtrl\+J', click: \(\) => openLibraryWindow\('downloads'\)/.test(MAIN) && !/nexus-library/.test(MAIN));
   check('window:openLibrary / window:closeLibrary / downloads:openFile exist on BOTH sides (bridge handler + preload)',
