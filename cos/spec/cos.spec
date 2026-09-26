@@ -376,3 +376,28 @@ spec:
   #   - the real §63 plugin spec, if it exists somewhere outside this
   #     repo or in someone's memory, reconciled here rather than
   #     silently left dangling forever.
+
+  # ## ADDENDUM 2026-09-26 (0.39.264) — the test VM, for any repo
+  # James: "i need help setting the vm up. either a batch file or just in the packages. or invent
+  # a js alternative. needs to be able to create a test env for any repo."
+  # Drift closed: testenv's VM needed a LINUX host (9p/virtfs) and a hand-made image — on Windows
+  # it could never be offered. Now:
+  #   testenv/tar.js        repo → read-only tar disk (/dev/vdb), pure JS ustar+PAX; 9p kept as opt-in
+  #   testenv/detect.js     plan(repo): install + the repo's own test command + test files, for
+  #                         node/python/go/rust/ruby/php/make, with the evidence for each
+  #   testenv/host.js       QEMU found off PATH (COS_QEMU_DIR, PATH, Program Files\qemu, brew…);
+  #                         base.json manifest in the user cache (never in the tree)
+  #   testenv/index.js      install online → QMP set_link nic0 off → offline proven in the guest →
+  #                         suite + files; TCG fallback when WHPX/KVM is not really there
+  #   testenv/provision.js  base image in JS: Debian cloud image + cloud-init NoCloud seed served over
+  #                         HTTP (SMBIOS ds=nocloud-net), qemu-ga + Node + Python (+go/ruby/php/rust),
+  #                         verified by a second boot; the old base is kept as base.prev.qcow2
+  #   testenv/setup-vm.bat / setup-vm.sh   one command, winget installs QEMU on Windows
+  #   testenv/setup-job.js  the same from Idearium's Run menu (POST /api/cos/testenv/setup)
+  #   compartment/qemu-runtime.js  opt-in cpu, shareDisk, nic id, smbios seed, serial log,
+  #                         kernel/initrd boot, resolved binaries — existing VMs boot unchanged
+  # Proven: test-cos-testenv 29/29; test-cos-testenv-any-repo 65/65 incl. a REAL QEMU (TCG) boot of
+  # a guest built from the host's kernel + busybox + qemu-ga + node (tests/helpers/cos-mini-guest.js):
+  # npm test and per-file tests ran behind the cut network. NOT proven here: provision.js against a
+  # real Debian download (no internet from the build machine) — its seed/cloud-init path is tested
+  # with a real HTTP seed server and an emulated first boot.

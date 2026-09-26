@@ -546,7 +546,7 @@ const ATLAS_DIR = 'docs/atlases';
 
 let _pathIndexFor = null, _pathIndex = null;   // snapshot hash -> { byPath, byBase, dirs }
 function _index(snap) {
-  if (_pathIndexFor === snap.hash && _pathIndex) return _pathIndex;
+  if (snap.hash && _pathIndexFor === snap.hash && _pathIndex) return _pathIndex;
   const byPath = new Map(), byBase = new Map(), dirs = new Set();
   for (const [sys, list] of Object.entries(snap.files)) {
     for (const [p, sha, size] of list) {
@@ -558,6 +558,7 @@ function _index(snap) {
       for (let i = 1; i < parts.length; i++) dirs.add(parts.slice(0, i).join('/'));
     }
   }
+  if (!snap.hash) return { byPath, byBase, dirs };
   _pathIndexFor = snap.hash; _pathIndex = { byPath, byBase, dirs };
   return _pathIndex;
 }
@@ -596,11 +597,23 @@ export function fileText(relPath) {
  */
 export function resolveRefs(rl, refs) {
   const snap = _headSnap();
-  const out = {};
-  if (!snap) { for (const r of refs || []) out[r] = null; return out; }
-  const idx = _index(snap);
+  if (!snap) { const out = {}; for (const r of refs || []) out[r] = null; return out; }
   const repos = rl.list({ includeArchived: true }).filter(r => r.nexusSelf && r.nexusSelf.role === 'system');
   const repoOf = (sys) => { const r = repos.find(x => x.nexusSelf.system === sys); return r ? r.uuid : null; };
+  return resolveWith(_index(snap), refs, repoOf);
+}
+
+/**
+ * indexOf(filesBySystem) — the path index resolveWith() reads, from
+ * { system: [[path, sha, size], …] } (a snapshot's .files). §0.39.264: exported
+ * so the atlas test resolves every reference against the REAL tree with the
+ * exact code the page uses.
+ */
+export function indexOf(filesBySystem) { return _index({ hash: null, files: filesBySystem }); }
+
+/** resolveWith(idx, refs, repoOf) — resolveRefs' rules, over any index. */
+export function resolveWith(idx, refs, repoOf = () => null) {
+  const out = {};
   const sysHit = (s) => ({ kind: 'system', system: s.name, repoUuid: repoOf(s.name), path: null });
   const fileHit = (p) => { const h = idx.byPath.get(p); return { kind: /\.md$/i.test(p) ? 'doc' : 'file', system: h.system, repoUuid: repoOf(h.system), path: p }; };
   for (const raw of (refs || []).slice(0, 2000)) {
@@ -610,6 +623,8 @@ export function resolveRefs(rl, refs) {
     if (port) { const s = systems.SYSTEMS.find(x => x.port === +port[1]); hit = s ? sysHit(s) : null; out[raw] = hit; continue; }
     if (/^nexus\/?$/i.test(r)) { out[raw] = { kind: 'nexus', system: null, repoUuid: null, path: null }; continue; }   // the atlas's own root
     r = r.replace(/^nexus\./, '').replace(/^\.\//, '');
+    // §0.39.264 — a glob (docs/*-phasemap.spec, tests/modules/test-*.js) opens the directory it lives in
+    if (r.includes('*')) { const dir = r.slice(0, r.indexOf('*')).replace(/\/[^/]*$/, ''); out[raw] = dir && idx.dirs.has(dir) ? { kind: 'dir', system: systems.ownerOf(dir), repoUuid: repoOf(systems.ownerOf(dir)), path: dir, glob: r } : null; continue; }
     const bare = r.replace(/\/+$/, '');
     const sys = systems.get(bare) || systems.SYSTEMS.find(s => (s.dirs || []).includes(bare));
     if (sys && !r.includes('.')) hit = sysHit(sys);

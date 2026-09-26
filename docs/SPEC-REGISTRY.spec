@@ -1599,3 +1599,9 @@ spec:
     version history — worth its own archive-or-keep decision, not rushed
     here). Full rationale per file:
     `_archive/superseded-docs-2026-09-10/README.md`.
+    
+    ## §REGISTERED 2026-09-26 — 0.39.264 COS test VM + Nexus atlas phasemap
+    
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec` | 1.0.0 | built (0.39.264) | The COS test VM for any repo (tar disk, detect, provision, setup, network cut), the written-out Nexus atlas with nested atlases for every system, Create/Build only inside a repo, Eravos new organism → Idearium idea/spec. T1–T3 were built before the map; the drift is recorded in the spec. ErosmancerOS starting with Clear Glass came mid-release and is addended to `erosmancer/spec/erosmancer.spec` and `clear-glass/spec/clear-glass.spec`. |

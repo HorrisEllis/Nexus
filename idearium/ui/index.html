@@ -570,6 +570,8 @@ body{display:flex;flex-direction:column;position:relative}
 h3.nx-link{text-decoration:none}
 .nx-unres{opacity:.75;text-decoration:line-through dotted rgba(255,255,255,.25)}
 .nx-live{font-family:var(--mono);font-size:10px;color:var(--mint);margin:-2px 0 6px}
+body:not(.in-repo) .nest-only{display:none!important}
+.nx-toc{border:1px solid var(--b1);border-radius:6px;padding:8px 10px;margin:0 0 14px;columns:2 260px;font-size:11px;line-height:1.7}.nx-toc>div:first-child{column-span:all}.nx-toc-h2{font-weight:600}.nx-nested,.nx-nested-repo{color:var(--sky)}
 .nx-crumbs{font-size:12px;margin:0 0 10px}.nx-dim{color:var(--text3);font-size:10px}
 .nx-ops{margin-top:18px}.nx-ops>summary{cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--text2)}
 .nx-sys-atlas>summary{cursor:pointer}
@@ -674,8 +676,10 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
 <div class="topbar">
   <div class="logo" onclick="setView('welcome')">IDEA<span>RIUM</span></div>
   <div class="tb-sep"></div>
-  <div class="tb-stat">ideas <span class="v sky" id="stat-ideas">—</span></div>
-  <div class="tb-stat">specs <span class="v" id="stat-specs">—</span></div>
+  <!-- §0.39.264 — James: "this in idearium needs to only show in nested compartments/repos." The counters,
+       Create and Build show only inside a repo (body.in-repo, set by app.js _syncNestScope). -->
+  <div class="tb-stat nest-only">ideas <span class="v sky" id="stat-ideas">—</span></div>
+  <div class="tb-stat nest-only">specs <span class="v" id="stat-specs">—</span></div>
   <div class="tb-right">
     <div class="tb-conn offline" id="conn-indicator" onclick="nexusConnect(true)"><span class="dot"></span><span id="conn-label">connecting…</span></div>
   </div>
@@ -692,7 +696,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
   <nav class="tabbar" id="tabbar">
     <button class="tab-btn active" data-view="welcome" onclick="setView('welcome')"><span class="tab-icon">⌂</span>Welcome</button>
 
-    <div class="tab-group" data-group="create">
+    <div class="tab-group nest-only" data-group="create">
       <button class="tab-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
       <div class="tab-dropdown">
         <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
@@ -716,7 +720,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
          a repo is adopted into one at boot (_reconcileSpecRepos in
          api/index.js). The read-only blueprint viewer stays a per-repo
          Architect subtab. -->
-    <div class="tab-group" data-group="build">
+    <div class="tab-group nest-only" data-group="build">
       <button class="tab-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
       <div class="tab-dropdown">
         <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
@@ -745,7 +749,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
           <button class="welcome-action-btn primary" onclick="newSpecPrompt()">Start new project</button>
         </div>
         <div class="pillars">
-          <div class="pillar flow" onclick="setView('brainstorm')">
+          <div class="pillar flow nest-only" onclick="setView('brainstorm')">
             <div class="pillar-step">01 · CAPTURE</div>
             <div class="pillar-icon">✎</div>
             <div class="pillar-name">Brainstorm</div>
@@ -757,7 +761,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <div class="pillar-name">Log an Idea</div>
             <div class="pillar-desc">Promote a thought into a tracked node with phase, tension, and causal ancestry.</div>
           </div>
-          <div class="pillar" onclick="setView('ideas')">
+          <div class="pillar nest-only" onclick="setView('ideas')">
             <div class="pillar-step">03 · VISIT</div>
             <div class="pillar-icon">⌥</div>
             <div class="pillar-name">Ideas → Repository</div>
@@ -769,7 +773,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <div class="pillar-name">Spec &amp; Library Builder</div>
             <div class="pillar-desc">SEAM-chunked sections, compiled with confidence scoring and gap analysis.</div>
           </div>
-          <div class="pillar" onclick="setView('architect-build')">
+          <div class="pillar nest-only" onclick="setView('architect-build')">
             <div class="pillar-step">05 · ARCHITECT</div>
             <div class="pillar-icon">⌘</div>
             <div class="pillar-name">Architect — block canvas</div>

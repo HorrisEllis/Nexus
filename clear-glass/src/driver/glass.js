@@ -134,9 +134,14 @@ function chromiumTransport(bin) {
   return {
     kind: 'chromium', ready, events,
     open: async (w, h) => {
-      const { targetId } = await raw('Target.createTarget', { url: 'about:blank', width: w, height: h });
+      // §0.39.264 — Chromium 141 refuses width/height on a target that is not a new window
+      // ("Target position can only be set for new windows"): make the target, then size its viewport.
+      let targetId;
+      try { ({ targetId } = await raw('Target.createTarget', { url: 'about:blank', width: w, height: h })); }
+      catch (e) { if (!/new windows/i.test(e.message)) throw e; ({ targetId } = await raw('Target.createTarget', { url: 'about:blank' })); }
       const { sessionId } = await raw('Target.attachToTarget', { targetId, flatten: true });
       sessions.set(sessionId, targetId); pageSession.set(targetId, sessionId);
+      await raw('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile: false }, sessionId).catch(() => {});
       return targetId;
     },
     send: (page, method, params) => method === 'Glass.setSize' ? Promise.resolve({}) : raw(method, params, pageSession.get(page)),

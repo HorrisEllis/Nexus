@@ -290,3 +290,17 @@ spec:
     tests: >-
       idearium/test/idea-workbench.test.js 10/10; idearium/test/compartment-ui.smoke.cjs (jsdom); live API run on an
       isolated data dir: promote → add → nested add → bad lane refused → spawn → link → index → cascade delete.
+
+  # ## ADDENDUM 2026-09-26 (0.39.264)
+  # 1. Create, Build and the ideas/specs counters show only inside a repo (James: "this in idearium
+  #    needs to only show in nested compartments/repos"): .nest-only + body.in-repo (_syncNestScope in
+  #    ui/js/app.js); the navigator nests them under the open repo. Top level: Welcome + Repos.
+  # 2. The nexus repo's Home atlas is written out (docs/atlases/nexus-atlas.md) with a contents list and,
+  #    under each system, links into its nested atlas and its repo; new atlases for orchestrator,
+  #    architect, eravos, core. nexus-self.js resolveWith()/indexOf() exported (the page's rules, testable);
+  #    a glob reference opens its directory; code spans are no longer mangled by emphasis.
+  # 3. GET /api/cos/testenv + POST /api/cos/testenv/setup (cos/testenv/setup-job.js); the Run menu offers
+  #    "Set up the test VM" and its VM option runs the repo's plan; tests found by every convention.
+  # 4. A new Eravos organism arrives from the Eravos frame (postMessage, frame-checked) as an idea, or
+  #    the New Spec dialog filled in and linked to it.
+  # Proven: tests/probe/nexus-atlas-home.js 17/17 in a real browser; test-nexus-atlas-refs 45/45.

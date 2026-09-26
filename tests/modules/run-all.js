@@ -69,7 +69,8 @@ const SUITES = [
   'test-repo-agent-provider.js',
   'test-cos-testenv.js',
   'test-cos-testenv-any-repo.js',
-  'test-cg-eros-supervisor.js',     // §0.39.264 — ErosmancerOS starts, connects and stops with Clear Glass (real tsx + Chromium where available)   // §0.39.264 — the VM for any repo: tar disk, detect, provision, setup job, real QEMU boot where available
+  'test-cg-eros-supervisor.js',
+  'test-nexus-atlas-refs.test.js',  // §0.39.264 — every reference in the written-out atlases resolves against the real tree     // §0.39.264 — ErosmancerOS starts, connects and stops with Clear Glass (real tsx + Chromium where available)   // §0.39.264 — the VM for any repo: tar disk, detect, provision, setup job, real QEMU boot where available
   'test-repo-chunks-tool.js',
   'test-repo-context.js',
   'test-runtime-proof.js',

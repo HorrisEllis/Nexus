@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/nexus-atlas-home.js — 0.39.263.
+ * tests/probe/nexus-atlas-home.js — 0.39.263, extended in 0.39.264 (the written-out atlas, nested atlases, Create/Build only inside a repo).
  * James: "nexus is the repo, not 15, just nexus, then clicking inside of it, shows the rest of
  * them in … the nexus atlas, wire that completely in as the homepage of the nexus repo, and
  * everything referenced can be opened in idearium, including each system."
@@ -42,6 +42,11 @@ const freePort = () => new Promise((resolve) => { const s = net.createServer(); 
     const shot = (n) => SHOTS ? pg.screenshot({ path: path.join(SHOTS, n) }) : null;
     await pg.goto(base + '/');
     await pg.waitForFunction(() => typeof API_REPOS !== 'undefined' && API_REPOS.length > 0, null, { timeout: 20000 });
+    // §0.39.264 — "this in idearium needs to only show in nested compartments/repos"
+    const vis = () => pg.evaluate(() => { const d = (el) => el ? getComputedStyle(el).display !== 'none' : null;
+      return { create: d(document.querySelector('.tab-group[data-group="create"]')), build: d(document.querySelector('.tab-group[data-group="build"]')), counters: d(document.getElementById('stat-ideas').parentElement) }; });
+    const top = await vis();
+    P.case('top level: no Create, no Build, no ideas/specs counters — they belong to a repo', top.create === false && top.build === false && top.counters === false, top);
     await pg.evaluate(() => setView('repo'));
     await pg.waitForSelector('.repo-block', { timeout: 15000 });
     const cards = await pg.$$eval('.repo-block .repo-block-name', xs => xs.map(x => x.textContent));
@@ -54,6 +59,21 @@ const freePort = () => new Promise((resolve) => { const s = net.createServer(); 
       links: document.querySelectorAll('#nx-atlas-doc .nx-link').length, live: document.querySelectorAll('.nx-live').length }));
     P.case("its Home is docs/atlases/nexus-atlas.md with every system as a block and live numbers under each module", /NEXUS/.test(home.h1 || '') && home.systems >= 14 && home.live >= 8 && home.links >= 40, home);
     await shot('2-atlas.png');
+    const inside = await vis();
+    P.case('inside a repo: Create, Build and the counters appear', inside.create && inside.build && inside.counters, inside);
+    await pg.evaluate(() => toggleTabTree(true));
+    const tree = await pg.evaluate(() => { const t = document.getElementById('tab-tree'); const top = [...t.children].map(c => (c.querySelector(':scope > .tt-head .tt-label') || c.querySelector(':scope > .tt-label') || {}).textContent).filter(Boolean);
+      return { top, nested: /work in this repo/.test(t.textContent) && /Eravos — organism canvas/.test(t.textContent) }; });
+    P.case('the navigator nests Create and Build under the open repo, not at its top level', !tree.top.includes('Create') && !tree.top.includes('Build') && tree.nested, tree);
+    await pg.evaluate(() => toggleTabTree(false));
+    // §0.39.264 — "expand it completely … each reference a link to either open the nested or file"
+    const toc = await pg.evaluate(() => ({ entries: document.querySelectorAll('#nx-atlas-doc .nx-toc [data-to]').length, nested: document.querySelectorAll('#nx-atlas-doc .nx-nested').length, words: document.getElementById('nx-atlas-doc').innerText.split(/\s+/).length }));
+    P.case('the atlas is written out, with a contents list and a way into every system\'s nested atlas', toc.entries > 30 && toc.nested >= 14 && toc.words > 5000, toc);
+    await pg.click('#nx-atlas-doc .nx-nested[data-doc="docs/atlases/core-atlas.md"]');
+    await pg.waitForFunction(() => /core-atlas\.md/.test((document.querySelector('.nx-crumbs') || {}).innerText || '') && document.querySelectorAll('#repo-subtab-home .nx-doc .nx-link').length > 50, null, { timeout: 20000 });
+    P.case('"open its atlas" opens that system\'s nested atlas in place, its references live', true, { crumbs: await pg.evaluate(() => document.querySelector('.nx-crumbs').innerText.split('\n')[0]) });
+    await pg.evaluate(() => nexusAtlasHome());
+    await pg.waitForSelector('#nx-atlas-doc .nx-link', { timeout: 30000 });
 
     await pg.click('#nx-atlas-doc code.nx-file:has-text("guardian/lib/node-registry.js")');
     await pg.waitForFunction(() => typeof ACTIVE_API_FILE !== 'undefined' && ACTIVE_API_FILE === 'guardian/lib/node-registry.js' && document.getElementById('ide-editor').value.length > 0, null, { timeout: 20000 });

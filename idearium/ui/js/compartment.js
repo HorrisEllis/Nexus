@@ -387,8 +387,24 @@ function renderTabTree() {
   const repoSubtabs = [...document.querySelectorAll('.repo-subtab-btn[data-subtab]')].map(b => [b.dataset.subtab, b.textContent.trim()]);
   // a repo is its subtabs; nexus also holds its systems (0.39.263 — "the rest are nested in the nexus repo")
   const systemsOf = (r) => (r.nexusSelf && r.nexusSelf.role === 'parent') ? repos.filter(x => x.nexusSelf && x.nexusSelf.role === 'system').sort((a, b) => a.name.localeCompare(b.name)) : [];
+  // §0.39.264 — Create and Build live inside the repo you are in (James: "only show in nested
+  // compartments/repos"), not at the top of the tree
+  const openUuid = (typeof REPO_DETAIL_OPEN !== 'undefined' && REPO_DETAIL_OPEN && typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO) ? CURRENT_API_REPO.uuid : null;
+  if (openUuid) {   // the repo you are in (and nexus, when it is a system of nexus) is shown open, so its Create/Build are visible
+    TT_COLLAPSED.delete(`repo:${openUuid}`);
+    const cur = CURRENT_API_REPO;
+    if (cur && cur.nexusSelf && cur.nexusSelf.role === 'system') for (const r of (typeof API_REPOS !== 'undefined' ? API_REPOS : [])) if (r.nexusSelf && r.nexusSelf.role === 'parent') TT_COLLAPSED.delete(`repo:${r.uuid}`);
+  }
+  const workBranches = (r) => r.uuid !== openUuid ? '' : `<div class="tt-sep">work in this repo</div>` +
+    branch(`create:${r.uuid}`, '✎', 'Create',
+      leaf('✎', 'Brainstorm', "setView('brainstorm')", `<span class="tt-n">${(typeof BRAINSTORMS !== 'undefined' ? BRAINSTORMS : []).filter(b => !b.promoted).length || ''}</span>`) +
+      branch('ideas', '◇', 'Ideas', ideas.slice(0, 200).map(i => leaf('◇', _wbShort(i.text, 40), `setView('ideas');selectIdea('${i.uuid}')`)).join('') || '<div class="tt-empty">none</div>', "setView('ideas')")) +
+    branch(`build:${r.uuid}`, '▦', 'Build',
+      leaf('◈', 'Eravos — organism canvas', "setView('eravos')") +
+      leaf('⌘', 'Architect — block canvas', "setView('architect-build')") +
+      leaf('▤', 'Spec Builder', "setView('spec-wizard')"));
   const repoNode = (r) => branch(`repo:${r.uuid}`, '▣', _wbShort(r.name || r.uuid, 36),
-    repoSubtabs.map(([id, label]) => leaf('·', label, `tabTreeOpenRepo('${r.uuid}','${id}')`)).join('') +
+    repoSubtabs.map(([id, label]) => leaf('·', label, `tabTreeOpenRepo('${r.uuid}','${id}')`)).join('') + workBranches(r) +
     (systemsOf(r).length ? `<div class="tt-sep">systems</div>` + systemsOf(r).map(repoNode).join('') : ''),
     `tabTreeOpenRepo('${r.uuid}','home')`);
   const repos = (typeof API_REPOS !== 'undefined' ? API_REPOS : []).filter(r => !r.archived);
@@ -396,13 +412,6 @@ function renderTabTree() {
   el.innerHTML = `
     <div class="tt-top"><span>NAVIGATOR</span><button class="tt-close" onclick="toggleTabTree(false)" title="collapse to tabs">⊟</button></div>
     ${leaf('⌂', 'Welcome', "setView('welcome')")}
-    ${branch('create', '✎', 'Create',
-      leaf('✎', 'Brainstorm', "setView('brainstorm')", `<span class="tt-n">${(typeof BRAINSTORMS !== 'undefined' ? BRAINSTORMS : []).filter(b => !b.promoted).length || ''}</span>`) +
-      branch('ideas', '◇', 'Ideas', ideas.slice(0, 200).map(i => leaf('◇', _wbShort(i.text, 40), `setView('ideas');selectIdea('${i.uuid}')`)).join('') || '<div class="tt-empty">none</div>', "setView('ideas')"))}
-    ${branch('build', '▦', 'Build',
-      leaf('◈', 'Eravos — organism canvas', "setView('eravos')") +
-      leaf('⌘', 'Architect — block canvas', "setView('architect-build')") +
-      leaf('▤', 'Spec Builder', "setView('spec-wizard')"))}
     ${branch('repos', '🗂', 'Repos', repos.filter(r => !(r.nexusSelf && r.nexusSelf.role === 'system')).map(repoNode).join('') || '<div class="tt-empty">none</div>', "setView('repo')")}`;
 }
 

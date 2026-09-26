@@ -1665,6 +1665,7 @@ function openRepoFor(ideaUuid, specUuid, label) {
   // a block — this entry point skips the grid on purpose (already know which
   // repo, or that none exists yet), matching the old pre-grid behavior.
   REPO_DETAIL_OPEN = true;
+  _syncNestScope();
   document.getElementById('repo-wrap').classList.add('repo-open');
   document.getElementById('repo-back-btn').style.display = '';
   document.getElementById('repo-view-title').textContent = 'Repository';
@@ -1796,8 +1797,19 @@ function toggleCompartment(key) {
 }
 // Entering from a grid block: open detail mode (rail collapses to the
 // compact list, tree + ide panes reappear), then select the repo as before.
+// §0.39.264 — James: "this in idearium needs to only show in nested compartments/repos."
+// Create, Build and the ideas/specs counters belong to the repo you are in: they
+// show (index.html .nest-only) only while a repo is open, and the navigator nests
+// them under that repo instead of listing them at the top level.
+function _syncNestScope() {
+  document.body.classList.toggle('in-repo', !!REPO_DETAIL_OPEN);
+  const nestViews = ['brainstorm', 'ideas', 'eravos', 'architect-build', 'spec-wizard'];
+  if (!REPO_DETAIL_OPEN && nestViews.includes(((document.querySelector('.view.active') || {}).id || '').replace(/^view-/, ''))) setView('repo');
+  if (typeof renderTabTree === 'function') renderTabTree();
+}
 function enterRepoDetail(uuid) {
   REPO_DETAIL_OPEN = true;
+  _syncNestScope();
   document.getElementById('repo-wrap').classList.add('repo-open');
   document.getElementById('repo-back-btn').style.display = '';
   document.getElementById('repo-view-title').textContent = 'Repository';
@@ -1812,6 +1824,7 @@ function exitRepoDetail() {
   if (typeof NX_DOC_TRAIL !== 'undefined' && NX_DOC_TRAIL.length) return nexusAtlasHome();
   REPO_DETAIL_OPEN = false;
   CURRENT_API_REPO = null; ACTIVE_API_FILE = null; API_FILE_DIRTY = false; CURRENT_REPO_SUBTAB = null;
+  _syncNestScope();
   document.getElementById('repo-wrap').classList.remove('repo-open');
   document.getElementById('repo-back-btn').style.display = 'none';
   document.getElementById('repo-view-title').textContent = 'Repository Library';

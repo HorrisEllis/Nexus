@@ -21,9 +21,13 @@ const NX_DOC_TRAIL = [];   // docs opened from the atlas, for the breadcrumb
 // ── a small markdown renderer: what the atlases use, nothing more ──────────
 function _nxInline(s) {
   let h = escapeHtml(s);
-  h = h.replace(/`([^`]+)`/g, (_m, c) => `<code class="nx-ref" data-ref="${c}">${c}</code>`);
+  // §0.39.264 — code spans are set aside before emphasis runs, so a `docs/*-phasemap.spec`
+  // keeps its asterisk instead of turning into <em> inside the reference
+  const codes = [];
+  h = h.replace(/`([^`]+)`/g, (_m, c) => { codes.push(c); return `\u0000${codes.length - 1}\u0000`; });
   h = h.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   h = h.replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?!\w)/g, '$1<em>$2</em>');
+  h = h.replace(/\u0000(\d+)\u0000/g, (_m, i) => `<code class="nx-ref" data-ref="${codes[+i]}">${codes[+i]}</code>`);
   h = h.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_m, t, u) => /^https?:/.test(u) ? `<a href="${u}" target="_blank" rel="noopener">${t}</a>` : `<span class="nx-ref" data-ref="${u}">${t}</span>`);
   h = h.replace(/(^|[\s(])(:\d{4,5})(?=[\s),.;]|$)/g, (_m, a, p) => `${a}<span class="nx-ref" data-ref="${p}">${p}</span>`);
   h = h.replace(/(^|[\s(])([\w.-]+-atlas\.md)(?=[\s),.;]|$)/g, (_m, a, f) => `${a}<span class="nx-ref" data-ref="${f}">${f}</span>`);
@@ -147,6 +151,7 @@ async function nexusOpenDoc(p) {
   el.innerHTML = `<div class="nx-crumbs">${crumbs.join(' › ')} <span class="nx-dim">· read-only, snapshot ${escapeHtml(String(r.snapshot || '').slice(0, 8))} · nexus/${escapeHtml(r.system)}</span>
       <button class="action-btn" style="float:right" onclick='nexusOpenRef(${JSON.stringify({ kind: 'file', system: r.system, path: r.path })})'>open in editor</button></div>
     <div class="nx-doc">${/\.md$/i.test(p) ? nxMarkdown(r.content) : `<pre class="nx-pre">${escapeHtml(r.content)}</pre>`}</div>`;
+  nxToc(el.querySelector('.nx-doc'));
   nxWireRefs(el);
 }
 function nexusDocBack(i) { const p = NX_DOC_TRAIL[i]; NX_DOC_TRAIL.length = i; nexusOpenDoc(p); }
@@ -194,19 +199,45 @@ async function renderNexusAtlasHome(repo, el) {
     <div class="nx-sys-grid">${blocks}</div>
     <div class="nx-doc" id="nx-atlas-doc">${a.doc ? nxMarkdown(a.doc.content) : `<div class="detail-empty">${escapeHtml(a.docError || 'no atlas document')}</div>`}</div>
     <details class="nx-ops"><summary>snapshot · understanding · system graph · compartments · applied changes</summary><div id="nx-ops-body"><div class="detail-empty">loading…</div></div></details>`;
-  // live numbers under each module heading of the document
+  // live numbers under each module heading of the document, and (§0.39.264)
+  // the way into that system's own atlas — "open the nested"
   for (const h of el.querySelectorAll('#nx-atlas-doc h3[data-module]')) {
     const name = h.dataset.module;
     const s = bySys[name] || bySys[{ 'ollama': 'ollama-bridge' }[name]];
     if (!s) continue;
     const strip = document.createElement('div');
     strip.className = 'nx-live';
-    strip.textContent = `live · ${_nxSysStrip(s)}`;
+    strip.innerHTML = `live · ${escapeHtml(_nxSysStrip(s))}${s.atlasDoc ? ` · <span class="nx-link nx-nested" data-doc="${escapeHtml(s.atlasDoc)}" title="${escapeHtml(s.atlasDoc)}">open its atlas ›</span>` : ''} · <span class="nx-link nx-nested-repo" title="open nexus/${escapeHtml(s.system)}">open the repo ›</span>`;
+    const nested = strip.querySelector('.nx-nested');
+    if (nested) nested.onclick = (ev) => { ev.stopPropagation(); nexusOpenDoc(nested.dataset.doc); };
+    strip.querySelector('.nx-nested-repo').onclick = (ev) => { ev.stopPropagation(); nexusOpenRef({ kind: 'system', system: s.system, repoUuid: s.repoUuid }); };
     h.after(strip);
   }
+  nxToc(el.querySelector('#nx-atlas-doc'));
   const ops = el.querySelector('details.nx-ops');
   ops.addEventListener('toggle', () => { if (ops.open && typeof _nexusOpsInto === 'function') _nexusOpsInto(document.getElementById('nx-ops-body'), repo); }, { once: true });
   await nxWireRefs(el);
+}
+
+/**
+ * nxToc(docEl) — §0.39.264: a contents list of the document's sections (h2, and
+ * the h3 modules under them) at its top; each entry scrolls to its section.
+ * The atlas is long now — this is how it is read without scrolling blind.
+ */
+function nxToc(docEl) {
+  if (!docEl) return;
+  const hs = [...docEl.querySelectorAll('h2.nx-h, h3.nx-h')];
+  if (hs.length < 4) return;
+  const toc = document.createElement('div');
+  toc.className = 'nx-toc';
+  let html = '<div class="nx-dim" style="font-size:10px;letter-spacing:.08em">CONTENTS</div>';
+  hs.forEach((h, i) => {
+    h.id = h.id || `nx-sec-${i}`;
+    html += `<div class="nx-toc-${h.tagName.toLowerCase()}" style="padding-left:${h.tagName === 'H3' ? 14 : 0}px"><span class="nx-link" data-to="${h.id}">${escapeHtml(h.textContent)}</span></div>`;
+  });
+  toc.innerHTML = html;
+  toc.querySelectorAll('[data-to]').forEach(a => { a.onclick = () => { const t = document.getElementById(a.dataset.to); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }; });
+  docEl.prepend(toc);
 }
 
 /** a system repo's atlas document, rendered with live references, for its Home */
@@ -216,6 +247,7 @@ async function nxSystemAtlasDoc(target, docPath) {
   try {
     const r = await api(`/api/nexus-self/file?path=${encodeURIComponent(docPath)}`, {}, 15000);
     target.innerHTML = `<div class="nx-doc">${nxMarkdown(r.content)}</div>`;
+    nxToc(target.querySelector('.nx-doc'));
     nxWireRefs(target);
   } catch (e) { target.textContent = e.message; }
 }

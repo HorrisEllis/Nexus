@@ -1,228 +1,352 @@
 # NEXUS — Sovereign Multi-System Kernel
 
-> **status: partial map** · 13 systems identified, 10 with their own atlas file (2 deeply grounded: loom, architecture-spec) · each system is a module of NEXUS; each module is its own modular system with components — same shape, one more zoom level out
+> **status: full map (0.39.264)** · 14 systems (13 kernels + core), every top-level directory placed, every system with an atlas of its own · each system is a module of NEXUS, and each module is its own modular system with components: the same shape, one zoom level further out.
 
 **Author:** James Brooks (Erosmancer) · rheon.world
 
 ---
 
-## What It Is
+## How to read this atlas
 
-NEXUS is the top zoom level. Every system below (loom, intelligence, guardian, clear-glass, versionium, warp, and the rest) is, from here, a module — the same relationship a system has to its own components, one level further out. This atlas doesn't re-describe any of them; it indexes them, and links to each one's own atlas for the real depth.
+This page is the Home of the `nexus` repo in Idearium. Everything written in code style here, every file-tree line, every port like :9000 and every name ending in -atlas.md is a live link, resolved against the immutable snapshot by [the resolver](idearium/repo/nexus-self.js) the page calls:
 
-This document is honest about its own incompleteness on purpose: most systems below are cited at the depth the zip listing and a handful of read files support, not at the depth loom's own atlas reaches. Padding every row to look equally thorough would be the same failure this whole pattern exists to prevent.
+- a **system** name such as `guardian` or `ollama-bridge` opens that system's repo, nested under `nexus`, and its Home starts with the system's own atlas;
+- a **file** such as `lib/nexus-self/systems.js` opens in its system repo's editor, on that file;
+- a **directory** such as `cos/testenv/` opens its repo's Files tab, filtered to it;
+- a **document**, any Markdown file, renders right here with its own references live, so `guardian-atlas.md` opens the nested atlas in place and the breadcrumb brings you back.
 
----
-
-## File Structure
-
-```
-NEXUS/
-  loom/                the registry authority — component/hook/wire, real, deeply mapped
-  intelligence/         cognition layer consolidation (port :3753), real .spec read
-  guardian/               the AI engine, real node-registry.js watcher pattern read
-  clear-glass/              sovereign browser, real .spec read
-  versionium/                 commit/history/restore/calendar API, real .spec read
-  warp/                          the event spine every genesis.spec domain binds to
-  genesis.spec                     the sovereign-system grammar (not a folder — a template)
-  emerge/                            signal-physics grammar + spec-compiler module
-  cortex/                              referenced by every system above; not read directly
-  architecture-spec/                     this scaffold pattern itself — the one fully built+tested system
-  idearium/                                the spec-engine + repo/project system — see hook below
-```
-
-| Path | Node kind it holds | Contains |
-|---|---|---|
-| each system folder | component, hook, wire (per that system's own `.spec`) | one real subsystem — see its own atlas |
-| `idearium/data/projects/<repo-id>/atlas.json` | none — idearium's own machine index, not our node schema | idearium's real, auto-generated per-project file/component index — see hook below |
+Under each system heading below, the page adds that system's live numbers from the last sync (files, versions, phases, symbols, import resolution) and two links: into its nested atlas, and into its repo. A reference the snapshot does not hold is struck through and says so; it is never guessed. [The page itself](idearium/ui/js/nexus-atlas.js) renders this Markdown, and [a test](tests/modules/test-nexus-atlas-refs.test.js) renders it the same way and resolves every reference against the real tree, so a dead link here fails the build rather than waiting for someone to click it.
 
 ---
 
-## Hook: idearium repo/project metadata
+## What NEXUS is
 
-<!-- This is the real integration point for "each system a repo
-     compartment," confirmed against a real file this session:
-     idearium/data/projects/nexus-id-repo-3a82e21b/atlas.json -->
+NEXUS is a personal AI operating system built as one Node.js monorepo. It does not call AI providers through API keys. It drives real provider chats in browser tabs (ChatGPT, Claude, Gemini, Perplexity, DeepSeek) and local models through Ollama, and it wraps that dispatch in everything an operating system would give a program: a registry of what exists, a memory of what happened, version control of every change, a diagnostic layer that watches every system, a sandboxed place to run code, and a design surface where new systems are specified before they are built.
 
-Idearium already generates a real `atlas.json` per project it tracks — a different, complementary shape from this document:
+The top zoom level is this repo. One level in are fourteen systems. Thirteen are kernels: each is a process with its own port, its own entry file, its own data folder and its own spec, started by [autopilot](nexus/autopilot.js) in dependency order. The fourteenth, `core`, is everything no kernel owns: the shared libraries in `lib/`, the event fabric (`warp/`, `siso/`, `nexus/nexus-bus.js`), the Compartment OS in `cos/`, the command line in `cli/`, the tests, the docs, and the UI shells. Who owns which file is decided in exactly one place, `lib/nexus-self/systems.js`, and everything that splits NEXUS into systems (the snapshot, the per-system repos in Idearium, the apply gate) goes through its ownerOf().
 
-```json
-{
-  "repository": "nexus-id-repo-3a82e21b",
-  "generatedAt": 1790022783631,
-  "fileCount": 3,
-  "byLanguage": { "javascript": 2, "markdown": 1 },
-  "byKind": { "component": 3 },
-  "failedCount": 0,
-  "tree": { "...": "recursive dir structure, per-file language/status/symbolCount/lineCount/kind" },
-  "components": [ { "path": "...", "kind": "component", "language": "...", "symbolCount": 0 } ]
-}
-```
+The systems never import each other's internals. They talk over HTTP, over the event bus, and through declared contracts: every system ships a `registry-components.js` listing its routes as components, an `interaction-contract.json` generated from it, and a .spec describing what it is supposed to be. Loom keeps the combined registry of components, hooks and wires, which is how NEXUS stays aware of its own shape. The rules that govern all of it are written down in `docs/AXIOMS-v3.1.md`, distilled for daily work in `docs/CLAUDE.md`, and every session starts by reading `docs/SESSION-PROTOCOL.md`.
 
-**The real path to "each system a repo compartment":** once a NEXUS system is its own idearium project (not just a folder in the monorepo), it already produces this file with no new code — idearium's ingest/chunk pipeline generates it automatically. `nexus-atlas-aggregate.js` (built and tested this session) rolls N of these into one NEXUS-wide summary:
-
-```
-node -e "
-const { aggregate } = require('./nexus-atlas-aggregate.js');
-console.log(aggregate({ loom: loomAtlasJson, guardian: guardianAtlasJson, ... }));
-"
-```
-
-Tested this session against the one real `atlas.json` found (`nexus-id-repo-3a82e21b`, fileCount: 3) plus one clearly-labeled synthetic second system — correctly summed to `totalFiles: 15`, merged `byLanguage`/`byKind` counts across both. **Not yet done:** no NEXUS system currently has its own idearium project/atlas.json — this tool is ready for that day, not proof that day has arrived.
+This atlas is the narrative map. Each system's own atlas in `docs/atlases/` is the next zoom level. Idearium's machine atlas, an atlas.json per repo written by [the import pipeline](idearium/repo/import-pipeline.js), is the level below that: every file, its language, its symbols. [The aggregator](architecture-spec/registry/nexus-atlas-aggregate.js) rolls those per-repo files up into the numbers at the top of this page.
 
 ---
 
-## Architecture
+## The shape: kernels, phases, ports
 
-### Spine
+Autopilot boots NEXUS in four phases. A phase does not start until every kernel in the one before it answers its /health route, or its timeout expires loudly. The order is not arbitrary. It came from boot logs in which all twelve kernels starting in the same instant produced connection-refused storms and one memory spike that took down a renderer, as the comment above the kernel list in [autopilot](nexus/autopilot.js) records.
 
-Two real, distinct spines exist depending which layer you're looking at: `WARP` (per `genesis.spec`, every domain in a WARP-native system binds to its five primitives — Event/Gate/Stream/StreamLog/Axiom) for systems built on the sovereign-system grammar, and no confirmed single spine for `loom` specifically (its own atlas already states this honestly). Not every system in this list has been checked for which one applies.
-
-### Governing axioms
-
-| Name | Statement | Rationale |
-|---|---|---|
-| `AX-013` | living-model sections — a `.spec` is edited in place, not written once | confirmed real in `loom.spec`; this convention had been calling it `SPEC_IS_LIVING_MODEL` before finding loom already had a real code for it |
-| `SOVEREIGN` / `AGNOSTIC` / `NOTHING_INLINE` / `SPINE_IS_WARP` | see `genesis.spec` in full | the grammar every WARP-native system is checked against |
-
-### Boundaries (documentation clarity)
-
-| Term | Definition | Distinguished from |
-|---|---|---|
-| This document (`nexus-atlas.md`) | a narrative index of systems, for a human to read | `idearium`'s `atlas.json` — a machine-readable per-project file index, auto-generated, no prose |
-
-### Seams (cut points)
-
-Real, confirmed this session — idearium's own chunk objects already carry a `seam_id` field: `"idearium.spec-engine:v1:chunk:<specUuid>:<sectionId>"` — a real, addressable cut-point per ingested file/section, exactly matching the "cut here" definition rather than the narrower isolation-only one.
-
-| ID | Location | Between | Cut type | Isolation |
+| phase | system | port | entry | why it is in this phase |
 |---|---|---|---|---|
-| `idearium.spec-engine:v1:chunk:<uuid>:<sectionId>` | any ingested file, per idearium's real chunker | one file/section ↔ the next | boundary | — |
+| 1 | `cortex` | :3748 | `cortex/boot.js` | the memory core and the data root every other system writes into; it comes up before its writers |
+| 2 | `orchestrator` | :9000 | `orchestrator/orchestrator.js` | registration authority, the unified API and SSE surface, and the UI server |
+| 2 | `guardian` | :7820 | `guardian/server.js` | the AI engine; the orchestrator's gap relay dials it |
+| 2 | `diagnostic` | :7825 | `diagnostic/nexus-diagnostic.js` | reads every ledger; the gap relay's other dial target |
+| 3 | `idearium` | :4800 | `idearium/api/index.js` | ideas, specs and repos, including the `nexus` repo this page lives in |
+| 3 | `architect` | :3747 | `architect/service.js` | hook registry, blueprints, the block canvas |
+| 3 | `eravos` | :3751 | `eravos/server.js` | the organism canvas and its kernel |
+| 3 | `intelligence` | :3753 | `intelligence/server.js` | the cognition layer: CFR, sigma, causal field, RFR2 |
+| 3 | `ollama-bridge` | :3749 | `ollama/server.js` | local model dispatch, isolated from guardian |
+| 3 | `versionium` | :3754 | `versionium/server.js` | causal version control |
+| 3 | `copilot` | :3750 | `copilot/server.js` | intent, context and the tool loop |
+| 3 | `loom` | :3752 | `loom/server.js` | the component, hook and wire registry |
+| 3 | `clear-glass` | :7704 | `clear-glass/src/main/index.js` | the Electron browser that holds the provider tabs |
+| — | `core` | none | none | shared code; it runs inside whichever kernel requires it |
 
-### Sovereignty (cross-system contract)
-
-| Other system | May read | May never write | Enforced by |
-|---|---|---|---|
-| any | each system's own compiled lattice / atlas.json | another system's `data/`, `.architecture/nodes/`, ledger | process boundary, per-system — not independently verified for every system in this list |
-
-### Pulse / Self-diagnostics / Config layers / Phases / Component status
-
-Not aggregated at this zoom level — each belongs to one system, not to NEXUS as a whole. See that system's own atlas.
+Phase 4 holds the optional `intelligence/consumer.js`. The critical kernels are cortex, orchestrator, guardian and diagnostic: if one of them cannot come up, autopilot says so and NEXUS is not considered booted. The others are optional in the sense that NEXUS runs without them, not that they are unimportant.
 
 ---
 
-## The Modules
+## File structure
 
-<!-- One entry per system NEXUS actually contains. Depth here is
-     capped at what this session actually read — see each system's
-     note for how far that went. -->
+Every top-level directory of the tree, with the system that owns it. Directories that are runtime state (any data folder, node_modules, .git, _archive) are never part of the snapshot and are not listed.
 
-### loom
+```
+nexus/
+  orchestrator/          orchestrator — root coordinator :9000
+  cortex/                cortex — memory core, organs, RAID :3748
+  guardian/              guardian — AI engine, provider tabs, jobs :7820
+  idearium/              idearium — ideas, specs, repos, this page :4800
+  architect/             architect — hooks, blueprints, block canvas :3747
+  diagnostic/            diagnostic — ledgers, gaps, heal loop :7825
+  eravos/                eravos — organism canvas kernel :3751
+  intelligence/          intelligence — CFR, sigma, RFR2, causal :3753
+  ollama/                ollama-bridge — local models :3749
+  versionium/            versionium — causal version control :3754
+  copilot/               copilot — intent, context, tool loop :3750
+  loom/                  loom — component/hook/wire registry :3752
+  clear-glass/           clear-glass — the sovereign browser :7704
+  lib/                   core — shared libraries (375 files)
+  cos/                   core — Compartment OS: compartments, branches, runtimes, test VM
+  cli/                   core — the nexus command line
+  nexus/                 core — autopilot, the bus, query and connect layers
+  warp/                  core — the five-primitive event spine
+  siso/                  core — single input, single output: Event, Gate, Stream
+  jaa/                   core — the JAA table schema
+  contracts/             core — the NEXUS interaction contract and contract nodes
+  hooks/                 core — per-system hook declarations
+  seams/                 core — seam contracts and the port table
+  auth/                  core — the sovereign auth layer (keys, policy)
+  security/              core — the signed signaling envelope
+  meta/                  core — domain-agnostic measurement (confidence, lattice)
+  mesh/                  core — networking daemons ported from BrainOS
+  remote-desktop/        core — remote desktop host, viewer, bridge-os-core
+  emerge/                core — the .eg DSL runtime and spec compiler
+  erosmancer/            core — ErosmancerOS, CDP browser automation
+  cockpit/               core — the forge IDE spec and its core
+  nexus-healer/          core — healer proposals, scaffolded system
+  architecture-spec/     core — the scaffold every new system is built on
+  service/               core — ICO kernel service wrappers
+  sentinel/              core — the sentinel's interaction contract
+  scripts/               core — verification and release scripts
+  skills/                core — session skills (changelog, persona)
+  tablet/                core — tablet homepage and 3D map
+  ui/                    core — UI shells: home, tv-shell, brainos, eravos canvas
+  docs/                  core — axioms, specs, phasemaps, handoffs, atlases
+  tests/                 core — every suite and its runners
+```
 
-**id:** `nexus.loom` · **own atlas:** `loom-atlas.md` (built, real, this session)
-Registry authority — component/hook/wire, the phasemap section, cortex-sync, ingest, system-scaffold. Deeply mapped; see its own atlas for full depth.
+Each directory is described in its own section: the thirteen kernels under **The modules**, and every `core` directory under **core, directory by directory**.
 
-### intelligence
+---
 
-**id:** `nexus.intelligence` · **own atlas:** `intelligence-atlas.md`
-Port `:3753`. Consolidates `cortex/intelligence/`, `meta/cfr/` (the real sigma/friction/regime math), and `lib/baseline.js` into one system. Its own spec's first line: *"this spec is the map-first + spec-it step James asked for explicitly, before any file moves."*
+## How work moves through NEXUS
 
-### guardian
+The systems are easiest to understand by following the four things NEXUS does all day.
 
-**id:** `nexus.guardian` · **own atlas:** `guardian-atlas.md`
-The AI engine — NCP browser-tab providers, RAID routing, SEAM chunk dispatch. `guardian/lib/node-registry.js` is the real source `architecture-spec`'s own `watcher.js` generalizes from.
+### How a prompt is answered
 
-### clear-glass
+A prompt starts in a UI: the home shell in `ui/home/index.html`, the TV shell, Idearium's Agent tab in `idearium/ui/js/app.js`, or the command line in `cli/nexus-cli.js`. It reaches `copilot` over HTTP. Copilot decides what the prompt is (its intent router in `copilot/lib/grammar-router.js`), assembles context from memory and from the repo it concerns (`lib/repo-context.js`, `copilot/lib/copilot-context.js`), and chooses a backend: a local model through `ollama-bridge`, or a provider tab through `guardian`. When tools are allowed, copilot runs the tool loop in `copilot/tool-runtime.js` against the registered tools in `lib/agent-tools/`.
 
-**id:** `nexus.clear-glass` · **own atlas:** `clear-glass-atlas.md`
-Sovereign NEXUS browser — Electron + Chromium + Firefox fingerprint + ErosmancerOS wire. **79 real components (v3.9.0)** as of `registry-components.js` directly — `clear-glass.spec` itself is stale at v3.1.0/67, a real, repeated version-drift pattern (4 independent real files disagreeing). TR1 (repo-derived agentId in dispatch) active — patched, isolated-tested, not yet integration-verified.
+Guardian turns the request into a job (`guardian/lib/jobs.js`) and hands it to its dispatcher (`guardian/lib/dispatcher.js`), which finds or opens the tab the job belongs to through the dispatch pool (`guardian/lib/dispatch-pool.js`). The tab lives in `clear-glass`, the Electron browser, and a provider userscript such as `guardian/userscript-chatgpt.js` types the prompt, watches the reply, streams it back in chunks, and pushes the settled transcript. Guardian's gate trail (`guardian/lib/gate-trail.js`) records every step a job passes, so a failure names the gate it stopped at. The reply is written through the response sink (`guardian/lib/response-sink.js`), versioned as a transcript (`guardian/lib/chat-transcripts.js`), and remembered by `cortex`.
 
-### versionium
+### How a repo is built and changed
 
-**id:** `nexus.versionium` · **own atlas:** `versionium-atlas.md`
-Causal version control — real commit/history/restore/calendar API. Its own spec states plainly that `GET /api/versionium/history` exists *"so a system's commit history... has a live source instead of a hand-maintained one"* — directly validates this atlas's own `Version History` section design.
+An idea becomes a spec in `idearium`, and a spec becomes a repo with its own compartment in `cos/`. The import pipeline in `idearium/repo/import-pipeline.js` parses a repo's files, writes the per-repo atlas, chunks and verifies it, and builds the code graph (`idearium/repo/graph.js`) and spec graph (`idearium/repo/spec-graph.js`). NEXUS is itself one of these repos: `idearium/repo/nexus-self.js` snapshots the live tree into content-addressed blobs (`lib/nexus-self/store.js`), splits it into one repo per system, and lets an edit happen only on a COS branch (`lib/nexus-self/branch.js`) that is run and tested before the apply gate (`lib/nexus-self/apply.js`) lets it back into the live files.
+
+Running happens through the COS run menu in `lib/cos-run.js`: run the entry, boot it and probe its health, run the tests, check syntax, resolve dependencies. The strongest option is a real virtual machine (`cos/testenv/index.js`): an ephemeral Linux guest on a throwaway overlay of a base image, the repo handed in as a read-only tar disk (`cos/testenv/tar.js`), dependencies installed online, the network then cut over QMP and the cut proven from inside the guest before any test runs. `cos/testenv/detect.js` decides what "test this repo" means for any repo, and `cos/testenv/provision.js` makes the base image; on Windows, `cos/testenv/setup-vm.bat` does the whole setup.
+
+### How NEXUS heals
+
+`diagnostic` reads every system's ledger on a timer and computes sigma, friction and drift per system (`diagnostic/nexus-diagnostic.js`). A deviation becomes a gap. The heal loop (`diagnostic/nexus-heal-loop.js`) classifies the gap, has `architect` propose a blueprint for the fix, sends the patch work to `guardian`, snapshots before and after in `versionium`, and either closes the gap or escalates it. Loom's wiring checks feed the same path: `diagnostic/wire-integrity.js` decides which dangling hooks are real gaps and which are simply files nothing requires.
+
+### How NEXUS knows itself
+
+`loom` holds the registry. At bootstrap (`loom/bootstrap.js`) it scans the whole tree for real require and import edges (`loom/scanners/source-map.js`), runs the hand maps in `loom/maps/` for edges a scanner cannot see (HTTP calls, spawned processes, postMessage), maps capabilities and specs (`loom/scanners/capability-map.js`, `loom/scanners/spec-map.js`), and reports anything declared but served by nothing. The phasemap scanner (`loom/scanners/phasemap-map.js`) reads every phasemap spec (`docs/*-phasemap.spec`) and stamps each transition with the Versionium commit that holds the spec's bytes. `intelligence` measures the result, and this atlas is the part of that self-knowledge written for a person.
+
+---
+
+## Governing law
+
+The axioms are immutable law in `docs/AXIOMS-v3.1.md`; earlier versions stay beside it (`docs/AXIOMS-v3.0.md`, `docs/AXIOMS-v2.0.md`, `docs/AXIOMS-v1.0.md`) because nothing is lost. `docs/CLAUDE.md` distills five standing rules every change follows: map before build, in a `docs/*-phasemap.spec`; reuse before build; update loom's registry with real wires; add a dated addendum to every spec a change touches, and register new specs in `docs/SPEC-REGISTRY.spec`; and archive instead of delete. Evidence discipline sits over all of it: a route, a wire or a claim is not real until it is checked against the source, and nothing fails silently.
+
+Two axioms shape the code most visibly. Sovereignty (§5.9, §5.10) is why systems talk only through contracts: `contracts/nexus-interaction-contract.js` is the single table of every endpoint, port, event name and CLI command, and each system's `interaction-contract.json` is derived from its own `registry-components.js`. SISO (§14) is why cross-system features are pipelines of pure gates over immutable events: the pattern lives in `siso/`, its hardened successor with digests and axioms in `warp/`, and its persistence in the JAA tables defined by `jaa/schema.sql`.
+
+The process rules are as concrete. `docs/SESSION-PROTOCOL.md` exists because sessions once worked on isolated zip snapshots and silently forked; it is why the delivered zip always carries the .git folder. `lib/version.js` is the single source of every version number, with a dated entry per release; `package.json` follows it. Tests register in `tests/modules/run-all.js` and must never write to the tree, which `lib/test-sandbox.js` enforces by giving every suite a throwaway data root.
+
+---
+
+## The modules
+
+One section per system. The page adds each system's live numbers under its heading, with links into its nested atlas and its repo.
+
+### orchestrator
+
+The root coordinator, and the one front door every UI, CLI and external consumer uses. `orchestrator/orchestrator.js` is a single process on :9000 that executes commands against every system's API, exposes a unified API surface over all of them, streams every live event through one SSE endpoint, and serves each system's UI under /ui/ by name, hot-swapped, including Idearium's own UI from `idearium/ui/` and the Architect canvases from `architect/src/ui/`. Its spec, `orchestrator/spec/orchestrator.spec`, puts the discipline in one line: the orchestrator never does business logic; it routes, verifies and coordinates.
+
+Its library is where the system-wide concerns live. `orchestrator/lib/contract-handshake.js` and `orchestrator/lib/contract-poller.js` verify every registered system's interaction contract and mark it verified, degraded, mismatched or unreachable. `orchestrator/lib/ui-registry.js` is the UI handshake. `orchestrator/lib/spec-drift.js` compares specs against code. `orchestrator/lib/pulse.js` is the pulse system, `orchestrator/lib/sigma-writer.js` and `orchestrator/lib/sigma-compaction.js` produce and roll up sigma records, and `orchestrator/lib/versionium-auto-commit.js` commits to `versionium` when sigma says a change is significant. `orchestrator/lib/mcp-server.js` and `orchestrator/lib/mcp-stdio.js` expose NEXUS's tools over MCP. `orchestrator/lib/peer-relay.js` bridges to remote systems, and `orchestrator/lib/hot-loader.js` swaps modules without a restart.
+
+It owns its declared components in `orchestrator/orchestrator-contract.json` and `orchestrator/interaction-contract.json`, and its configuration in `orchestrator/orchestrator.config.json`. The next zoom level is `orchestrator-atlas.md`.
 
 ### cortex
 
-**id:** `nexus.cortex` · **own atlas:** `cortex-atlas.md`
-The memory and brain — six organs boot in sequence (gap-finder → healer → self-heal → orion → raid → heartbeat), connected only by events.
+The memory core, and since the 2026-07-24 storage decision the data root the other systems write into, which is why it boots first. `cortex/boot.js` brings up six organs in a fixed sequence (gap finder, healer, self-heal, orion, RAID, heartbeat), and the organs never call each other: they subscribe to and emit events. Memory lives in `cortex/memory/`: the JAA table layer in `cortex/memory/jaa-db.js`, relevance and decay in `cortex/memory/relevance.js` and `cortex/memory/decay.js`, tiers in `cortex/memory/tiers.js`, and compaction and deduplication in `cortex/memory/table-compactor.js` and `cortex/memory/table-deduplicator.js`.
 
-### ollama-bridge
+RAID, the routing authority every request passes through (§5.2, §9.1), lives in `cortex/core/raid/`: it writes the ledger entry before anything is dispatched, and it is where contracts are taken in and officiated (`cortex/core/raid/contract-intake.js`, `cortex/core/raid/contract-boundary.js`). Cortex's configuration is `cortex/config.js`, its personas `cortex/personas.js`, its schemas `cortex/schemas/`, and its spec `cortex/spec/cortex.spec`. The next zoom level is `cortex-atlas.md`.
 
-**id:** `nexus.ollama-bridge` · **own atlas:** `ollama-atlas.md`
-Sovereign local model dispatch, deliberately isolated from guardian. Its own real history includes a spec-coverage-breaking name mismatch (`ollama` vs `ollama-bridge`), fixed 2026-09-01.
+### guardian
 
-### copilot
+The AI engine and NEXUS's only point of contact with AI providers: no API keys, no external inference calls, browser tabs only. `guardian/server.js` on :7820 receives jobs, and `guardian/lib/` is where they are handled: `guardian/lib/jobs.js` and `guardian/lib/dispatcher.js` for the job lifecycle, `guardian/lib/dispatch-pool.js` and `guardian/lib/dispatch-ladder.js` for choosing a tab, `guardian/lib/ncp.js` and `guardian/lib/ncp-handler.js` for the NCP protocol the userscripts speak, `guardian/lib/agent-registry.js` and `guardian/lib/selector-map.js` for each provider's page selectors, `guardian/lib/wake-loop.js` for an agent's "hey nexus" to NEXUS, and `guardian/lib/node-registry.js` for its JAA-backed node types, the watcher pattern `architecture-spec` generalizes.
 
-**id:** `nexus.copilot` · **own atlas:** `copilot-atlas.md`
-Intelligence layer — separated deliberately from guardian's dispatch. Can answer from Cortex memory alone if guardian is down.
-
-### diagnostic
-
-**id:** `nexus.diagnostic` (unconfirmed) · **own atlas:** `diagnostic-atlas.md`
-Not confirmed as a standalone system — real scattered pieces exist (`clear-glass/src/diagnostic/`, a `nexus-diagnostic` UI organism, a real ledger directory) but no central spec was found. The `:7825` "diagnostic kernel" `loom.spec` references remains unlocated.
-
-### warp
-
-**id:** `nexus.warp`
-The event spine every `genesis.spec`-native domain binds to (Event/Gate/Stream/StreamLog/Axiom). Referenced constantly, not read directly this session.
-
-### genesis.spec
-
-**id:** `nexus.genesis`
-Not a running system — a template/grammar every new sovereign system is meant to scaffold from. `status: proposed`, not yet promoted to active or wired into idearium's promote-menu (a real, still-open gap named in `architecture-spec.spec`'s own AS3).
-
-### emerge
-
-**id:** `nexus.emerge`
-Signal-physics grammar (`sigma`/`delta`/`slope`/`polarity`) plus the real `spec-compiler` module (T0–T3 pipeline, Cortex-query-first). Naming question still open between you and me — see earlier in this session.
-
-### architecture-spec
-
-**id:** `nexus.architecture-spec` · **own atlas:** `architecture-spec-atlas.md`
-The one system in this list that's fully built and tested, not just read — schema, lattice compiler, registry watcher, friction/tension, decompose, and the registry API. Real numbers throughout, not descriptions of intended numbers.
+The provider side is the userscripts: `guardian/userscript-chatgpt.js`, `guardian/userscript-claude.js`, `guardian/userscript-gemini.js`, `guardian/userscript-perplexity.js` and `guardian/userscript-deepseek.js`, declared in `guardian/userscripts.yaml`. Its commands live in `guardian/commands/`, its routes in `guardian/routes/`, and its spec in `guardian/spec/guardian.spec`. The next zoom level is `guardian-atlas.md`.
 
 ### idearium
 
-**id:** `nexus.idearium` · **own atlas:** `idearium-atlas.md`
-Spec-engine (10-block chunking, file-tree-first scaffolding, COS archetype templates) plus the real per-project `atlas.json` this document hooks into.
+Where work begins and where this page lives. `idearium/api/index.js` on :4800 serves ideas, brainstorms, specs, repos and their compartments, and `idearium/ui/` is the whole Idearium interface: Welcome, Create (Brainstorm, Ideas), Build (the Eravos organism canvas, the Architect block canvas, the Spec Builder), and Repos, where each repo opens into tabs for its Home, Idea, Files, Agent, Run and Debug. `idearium/ui/js/app.js` is the interface, `idearium/ui/js/nexus-atlas.js` renders this atlas, `idearium/ui/js/compartment.js` draws compartments, and `idearium/ui/js/agent-blocks.js` edits exactly what an agent is sent.
+
+The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking it into blocks (`idearium/spec-engine/blocks.yaml`), dispatching each chunk to guardian (`idearium/spec-engine/chunk-dispatch.js`), and planning a file tree first when asked. The repo layer in `idearium/repo/` imports, snapshots, watches and graphs repos; `idearium/repo/nexus-self.js` is what makes NEXUS one of them. Its spec is `idearium/spec/idearium.spec`, with the roadmap and graph specs beside it. The next zoom level is `idearium-atlas.md`.
+
+### architect
+
+The design surface for hooks and blueprints. `architect/service.js` on :3747 boots in a fixed order (JAA, then the hook registry, then blueprints, SNR and translation, then HTTP, then registration with the orchestrator), and serves the hook registry: named, typed, wireable contracts between systems. A blueprint is a path scanned into a map of gaps and components. `architect/compile-route.js` bridges the block canvas to the spec compiler, turning canvas JSON into a compiled spec and, on request, into an Idearium spec. The canvases themselves are `architect/src/ui/arch-builder.html`, `architect/src/ui/spec-builder.html` and `architect/src/ui/alk-lattice.html`.
+
+Its node schemas live in `architect/schemas/`, and its spec `architect/spec/architect.spec` records a three-way version drift honestly instead of hiding it. The next zoom level is `architect-atlas.md`.
+
+### diagnostic
+
+The system that watches the others. `diagnostic/nexus-diagnostic.js` on :7825 reads every system's ledger on a timer, computes sigma, friction and drift, detects gaps (baseline deviations, missing heartbeats, stuck queues), and serves them live. `diagnostic/nexus-heal-loop.js` is the closed loop from a detected gap to a resolved one, and `diagnostic/wire-integrity.js` classifies loom's dangling hooks so the boot log reports real gaps instead of hundreds of unwired root files. Diagnostic has no spec of its own yet, and its atlas says so. The next zoom level is `diagnostic-atlas.md`.
+
+### eravos
+
+The organism canvas, and a sovereign system rather than a UI folder. `eravos/server.js` on :3751 hosts a kernel, a runtime, a mod registry, a wire system, an audio engine, a catalog, a pack loader and a bridge to NEXUS; RAID routes compose, visualize and sequence intents here, and guardian delivers built mods here. The canvas runs in the browser from `eravos/ui/`: the kernel in `eravos/ui/kernel/kernel.js`, the runtime in `eravos/ui/runtime/`, the catalog in `eravos/ui/catalog/catalog-ui.js`, and each mod in `eravos/ui/mods/`. Its law is `eravos/ui/specs/ERAVOS.kernel.spec`: nothing exists until it is registered, and every connection between mods is a wire owned by the wire registry.
+
+The canvas Idearium embeds is served from a second copy, `ui/eravos/`, which calls its mods organisms (`ui/eravos/catalog/catalog-ui.js`). The two copies have drifted apart and are two contracts until someone reconciles them; the drift is named under **Known drift** below. The catalog's New button in both copies now starts a new organism in Idearium, as an idea or a spec. The next zoom level is `eravos-atlas.md`.
+
+### intelligence
+
+The cognition layer, consolidated from three places that had no single home. `intelligence/server.js` on :3753 serves it, and `intelligence/index.js` gathers it. CFR, the causal friction record with its field, graph, delta, sigma and ledger, is `intelligence/cfr/`; RFR2, the relational field kernel, is `intelligence/rfr2/`; the causal layer is `intelligence/causal/`; the mastermind that combines them is `intelligence/mastermind.js`; and the baseline every deviation is measured against is `intelligence/baseline.js`. Its spec, `intelligence/spec/intelligence.spec`, was written as the map-first step before any file moved. The next zoom level is `intelligence-atlas.md`.
+
+### ollama-bridge
+
+Local model dispatch, deliberately isolated from guardian: if guardian goes down, local models keep answering, and a slow model never blocks guardian. `ollama/server.js` on :3749 is a sovereign HTTP wrapper around Ollama; `ollama/lib/ollama-client.js` talks to the Ollama daemon, `ollama/lib/dispatch.js` runs requests, and `ollama/ollama-runtime.js` manages the runtime. RAID routes to it by name. Its folder is `ollama/` while its system name is `ollama-bridge`, a mismatch its spec (`ollama/spec/ollama.spec`) records after it once made a spec-coverage check report the spec missing. The next zoom level is `ollama-atlas.md`.
+
+### versionium
+
+Causal version control: temporal replay, calendar playback, sigma-gated commits. `versionium/server.js` on :3754 became a sovereign system on 2026-09-02, out of a library that lived inside cortex. `versionium/lib/engine.js` is the engine, `versionium/lib/store.js` and `versionium/lib/snapshot.js` the storage, `versionium/lib/causality.js` the causal links between commits, and `versionium/lib/files.js` the per-file versions that loom's phasemap scanner reads instead of git. Its routes are `versionium/routes/versionium.js`, `versionium/routes/files.js` and `versionium/routes/system.js`, and every sync of the `nexus` repo commits there. The next zoom level is `versionium-atlas.md`.
+
+### copilot
+
+Intelligence as opposed to dispatch: copilot receives intent, assembles context, routes through RAID, and answers, and if guardian is down it can still answer from memory. `copilot/server.js` on :3750 serves it. `copilot/lifeline.js` decides which backend answers a prompt, `copilot/tool-runtime.js` runs the tool loop, `copilot/lib/self-model.js` and `copilot/lib/nexus-awareness.js` are what copilot knows about NEXUS, `copilot/lib/capabilities.js` is what it can do, and `copilot/diagnostics.js`, `copilot/movement-map.js` and `copilot/optimizer.js` measure and improve the whole system. Its spec is `copilot/spec/copilot.spec`. The next zoom level is `copilot-atlas.md`.
+
+### loom
+
+The registry authority. `loom/server.js` on :3752 serves the registry of components, hooks and wires that every other system declares into, and `loom/schema/` defines those records (`loom/schema/component.js`, `loom/schema/hook.js`, `loom/schema/wire.js`, `loom/schema/driver.js`). `loom/bootstrap.js` rebuilds the registry from source: the scanners in `loom/scanners/` find real edges, the hand maps in `loom/maps/` add the edges a scanner cannot see, and the result is checked for wires whose endpoints do not exist. The phasemap section of loom, `loom/scanners/phasemap-map.js`, is the roadmap of every system. Its spec is `loom/spec/loom.spec`, and it is the most deeply mapped system in NEXUS. The next zoom level is `loom-atlas.md`.
+
+### clear-glass
+
+The sovereign browser: Electron and Chromium, with its own fingerprint control, and the place every provider tab lives. `clear-glass/src/main/index.js` starts it; `clear-glass/src/` holds the browser's subsystems (accounts, cookies, downloads, the DevTools-protocol driver in `clear-glass/src/driver/`, providers, userscripts, site settings), `clear-glass/renderer/` its windows (the browser, Settings, the Library), and `clear-glass/plugins/` its plugins. It serves its control API on port 7704 and streams on 7701. `clear-glass/registry-components.js` is its live contract, the largest in NEXUS, and `clear-glass/spec/clear-glass.spec` was written from that contract rather than from scratch. The next zoom level is `clear-glass-atlas.md`.
+
+### core
+
+Everything no kernel owns. Core has no port and no entry: its code runs inside whichever kernel requires it, and its documents and tests describe and check every system. It is by far the largest system by file count, because `lib/` alone is 375 files, `tests/` is 470, and `docs/` is 280. The directories below are its components, one zoom level down; the full map of each is in `core-atlas.md`.
 
 ---
 
-## Modules Not Yet Mapped
+## core, directory by directory
 
-Real per the zip listing, never opened this session: `orchestrator`, `eravos`, `mesh`, `remote-desktop` / `bridge-os-core`, `erosmancer`, `spatial-ris`, `bridge-os` (the separate repo, not this monorepo).
+#### `lib/` — the shared libraries
+
+The code more than one kernel needs. The groups that matter most: the agent layer (`lib/agent-router.js`, `lib/agent-tools/`, `lib/agent-system/`, `lib/repo-agent.js`, `lib/repo-hat.js`, `lib/repo-prompt-blocks.js`, `lib/repo-inject.js`, `lib/repo-context.js`); ledgers and events (`lib/ledger-writer.js`, `lib/ledger-fanin/`, `lib/event-types.js`, `lib/warp-bus.js`); the registries (`lib/component-registry.js`, `lib/capability-registry.js`, `lib/hook-registry.js`, `lib/schema-registry.js`, `lib/tool-index.js`); diagnosis (`lib/diagnostic-engines.js`, `lib/diag-engines/`, `lib/fault-log.js`, `lib/gap-field.js`); COS glue (`lib/cos-bridge.js`, `lib/cos-run.js`, `lib/repo-run.js`, `lib/compartment-engine.js`); NEXUS as a repo (`lib/nexus-self/`); and the rules every test lives under (`lib/test-sandbox.js`, `lib/version.js`).
+
+#### `cos/` — the Compartment OS
+
+Isolated sandboxes with their own process, network and runtime boundary, persistent state on disk, and real snapshots. `cos/kernel.js` and `cos/manager.js` run compartments; `cos/archetype/registry.js` holds the sixteen archetypes a compartment can be (web server, test runner, sandbox browser, AI agent, and the rest) and `cos/blueprint/registry.js` the multi-role blueprints; `cos/playground/branch.js` forks a compartment's files into branches that are run and compared; `cos/runtime/run.js` runs JavaScript in a clean environment with ports shifted and network isolated; `cos/compartment/qemu-runtime.js` gives a compartment a hardware-virtualized guest; `cos/vault/` is its encrypted store with `cos/vaultd/server.js` as an optional daemon. `cos/testenv/` is the test environment for any repo: `cos/testenv/index.js` runs it, `cos/testenv/detect.js` plans it, `cos/testenv/provision.js` makes the VM's base image, and `cos/testenv/setup-vm.bat` and `cos/testenv/setup-vm.sh` set the VM up in one command. Its spec is `cos/spec/cos.spec`, beside the design document `cos/spec/cos-design-v1.7.0.md`.
+
+#### `cli/` — the command line
+
+`cli/nexus-cli.js` is the grammar-driven command line, `cli/nexus-repl.js` the interactive shell, `cli/boot-systems.js` the ordered boot the orchestrator used before autopilot, and `cli/diagnose.js` runs every diagnostic engine against one system's ledger. The rest are maintenance tools: `cli/data-audit.js`, `cli/find-orphans.js`, `cli/purge-pollution.js`, `cli/semantic-dedup.js`, `cli/compact.js`. Its spec is `cli/spec/cli.spec`.
+
+#### `nexus/` — autopilot and the fabric
+
+`nexus/autopilot.js` starts and supervises every kernel in phases. `nexus/nexus-bus.js` is the common event fabric every system emits to; `nexus/nexus-query.js` is one query interface over every system; `nexus/nexus-connect.js` is the universal cross-system call with a UUID on every call; `nexus/nexus-knowledge.js` and `nexus/nexus-cfr-influence.js` join knowledge and CFR influence.
+
+#### `warp/` and `siso/` — the spine
+
+`siso/` is SISO, the coding model credited to Jonathan Bailey: every function one input and one output, state in the data structure, transformation as events (`siso/Gate.js`, `siso/Stream.js`, `siso/StreamLog.js`, `siso/spec/siso.spec`). `warp/` is the standalone devkit built on that idea, with five primitives, Event, Gate, Stream, StreamLog and Axiom (`warp/core/`), content digests and a delta cache for dispatch (`warp/dispatch/`), and its spec `warp/spec/warp.spec`. NEXUS imports WARP; WARP never imports NEXUS.
+
+#### `jaa/` — the tables
+
+`jaa/schema.sql` and `jaa/schema-full.sql` define the JAA tables: every row has a UUID and hook fields, and state is a row, never an in-place mutation. The live implementation is `cortex/memory/jaa-db.js`, and guardian keeps its own in `guardian/jaa-store.js`.
+
+#### `contracts/`, `hooks/`, `seams/` — the declared connections
+
+`contracts/nexus-interaction-contract.js` is the one table of every endpoint, port, SSE event and command; `contracts/nodes/` holds the contract node types (axioms, gaps, faults, edges, ledgers, verification contracts). `hooks/index.js` is the living hook registry with one file per system (`hooks/guardian.hooks.js`, `hooks/cortex.hooks.js`, and the rest) and `hooks/side-effect-parser.js` to find undeclared side effects. `seams/seam-contracts.js` declares every seam and the port table.
+
+#### `auth/`, `security/` — identity and trust
+
+`auth/index.js` is the sovereign authentication layer: an RSA keypair per client, signed requests, and a policy in `auth/policy.json`, with `auth/client.js` for callers. `security/signaling-envelope.js` signs the remote-desktop signaling channel so a replayed or hijacked session is refused.
+
+#### `meta/` — measurement
+
+`meta/index.js` gathers modules that measure, detect, classify and score without knowing what NEXUS is: `meta/confidence.js` and `meta/crystal-lattice.js`, the crystallization and lattice mechanism.
+
+#### `mesh/` — networking
+
+Daemons ported from BrainOS and kept optional: DNS, dynamic DNS, a reverse proxy and a firewall in `mesh/lib/`, started by `mesh/daemons.js` and configured in `mesh/config.js`, with `mesh/install.js` for the host side.
+
+#### `remote-desktop/` — remote control of a machine
+
+A host (`remote-desktop/host.html`), a viewer (`remote-desktop/viewer.html`), input authorization and injection (`remote-desktop/input-auth.js`, `remote-desktop/input-injector.js`), a signaling server (`remote-desktop/signal.js`), an Electron bridge (`remote-desktop/bridge-electron/main.js`), and the vendored `remote-desktop/bridge-os-core/` for identity and key storage. Its spec, `remote-desktop/remote-desktop.spec`, orders the work as a bottom-up phasemap.
+
+#### `emerge/` — the DSL runtime
+
+Emerge reads .eg files, a declarative language with a 569-keyword vocabulary: tokenizer, parser gated on signal-to-noise, kernel and emitter (`emerge/emerge-kernel.js`), with Ollama-backed code generation for the gaps (`emerge/emerge-codegen-v2.js`). Its spec compiler in `emerge/compiler/` runs the T0 to T3 pipeline, querying cortex first (`emerge/cortex-query/`). Specs: `emerge/spec/emerge.spec` and `emerge/SPEC_COMPILER.spec`.
+
+#### `erosmancer/`, `cockpit/`, `nexus-healer/` — adjacent systems
+
+`erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript browser-automation platform over the Chrome DevTools Protocol for flows userscripts cannot handle (`erosmancer/spec/erosmancer.spec`). `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js`. `nexus-healer/` is a system scaffolded by loom's generator that holds healer proposals (`nexus-healer/api/index.js`, `nexus-healer/docs/nexus-healer.spec.md`).
+
+#### `architecture-spec/` — how a new system is scaffolded
+
+The base every new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice that proves what connects (`architecture-spec/registry/lattice.js`), with friction and decomposition (`architecture-spec/registry/friction.js`, `architecture-spec/registry/decompose.js`) and the atlas tools (`architecture-spec/registry/create-atlas.js`, `architecture-spec/registry/edit-atlas.js`). Its atlas is `architecture-spec-atlas.md`.
+
+#### `service/`, `sentinel/`, `scripts/`, `skills/`, `tablet/`
+
+`service/guardian-service.js` and `service/idearium-service.js` boot a kernel as a supervised service with every lifecycle event in its ledger. `sentinel/interaction-contract.json` is the sentinel's contract; its command is `cli/sentinel.js`. `scripts/` holds release and verification tools (`scripts/verify-boot.js`, `scripts/verify-wires.js`, `scripts/precommit-check.js`, `scripts/run-verification-manifest.cjs`). `skills/` holds session skills, among them `skills/nexus-session-changelog/SKILL.md`. `tablet/` is the tablet homepage (`tablet/index.html`) and its 3D map (`tablet/map3d.html`).
+
+#### `ui/` — the shells
+
+The home shell (`ui/home/index.html`), the TV shell (`ui/tv-shell/`), BrainOS and its floating panel (`ui/brainos/`, `ui/brainos-float/`), the control panel (`ui/control-panel/index.html`), the Eravos canvas Idearium embeds (`ui/eravos/index.html`), the provider agents' pages (`ui/agents/`), and shared UI code (`ui/api.js`, `ui/ports.js`, `ui/pulse.js`). The orchestrator serves each one under /ui/.
+
+#### `docs/` — the written record
+
+Axioms (`docs/AXIOMS-v3.1.md`), the working agreement (`docs/CLAUDE.md`), the session protocol (`docs/SESSION-PROTOCOL.md`), the spec registry (`docs/SPEC-REGISTRY.spec`), dated phasemaps (this release's is `docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec`), handoffs (`docs/2026-09-26b-handoff.md`), the changelog (`docs/CHANGELOG.md`), and the atlases in `docs/atlases/`.
+
+#### `tests/` — the proof
+
+`tests/modules/` holds one suite per component, run by `tests/modules/run-all.js`; `tests/brutal.test.js`, `tests/kernel.test.js` and `tests/full.test.js` are the older whole-system suites; `tests/probe/` drives real pages; `tests/helpers/` holds shared fixtures, among them `tests/helpers/cos-mini-guest.js`, which assembles a real Linux guest from the host's own kernel so the COS VM can be proven with a real boot.
 
 ---
 
-## Build & Run Reference
+## Cross-cutting concerns
 
-No single NEXUS-wide boot command confirmed this session — each system boots independently on its own port (loom `:3752`, intelligence `:3753`, versionium `:3754`, clear-glass ports `7701-7704`).
+### Contracts and registration
+
+Every kernel declares its routes as components in its own `registry-components.js` (for example `idearium/registry-components.js`), and the orchestrator verifies each system's contract at registration and on a poll (`orchestrator/lib/contract-handshake.js`). A route that is declared but served by nothing is a finding, reported by loom's capability scanner, never a silent pass. `lib/component-registry.js` records every registration in the component ledger.
+
+### Events and ledgers
+
+Every system writes its own ledger through `lib/ledger-writer.js`, and `lib/ledger-fanin/` joins all of them into one stream that intelligence, autopilot, copilot and logging subscribe to once. `lib/event-types.js` is the event-type registry. The rule from §9.2 is that the ledger entry is written before the thing it records is dispatched.
+
+### Data and persistence
+
+Runtime state lives in data folders at any depth, never in the snapshot and never committed. The single place that decides where a system's data goes is `lib/ledger-writer.js` with the data root cortex owns; tests get their own throwaway root from `lib/test-sandbox.js`. JAA tables (`cortex/memory/jaa-db.js`) are the store for rows; Versionium holds the history of files.
+
+### Versions and releases
+
+`lib/version.js` is the single source of every version: the platform release and each system's own semver, with a dated entry explaining every bump. `package.json` follows it. Every release also has a changelog at the root, this one `CHANGELOG-0.39.264.md`, and its record in Versionium.
+
+---
+
+## Build and run reference
+
+- Start everything: `nexus/autopilot.js` through the start:all script in `package.json`, or only the core kernels with start:core.
+- Run the module suites: `tests/modules/run-all.js`; the whole-system suites through the test:all script.
+- Set up the COS test VM: `cos/testenv/setup-vm.bat` on Windows, `cos/testenv/setup-vm.sh` elsewhere, or the cos:vm-setup script; the run menu in Idearium also offers it when the VM is missing.
+- Rebuild loom's registry: `loom/bootstrap.js`.
+- Check wiring and boot: `scripts/verify-wires.js`, `scripts/verify-boot.js`.
+
+---
+
+## Known drift
+
+Named here so nobody mistakes it for a design (§12.5, §13.4):
+
+- **Two Eravos canvases.** `eravos/ui/` (mods, served by the eravos system) and `ui/eravos/` (organisms, served by the orchestrator and embedded in Idearium) diverged. Both got the same 0.39.264 change; they are still two contracts.
+- **Stale references in older system atlases.** The atlas reference test lists, for each older atlas, the references the tree no longer has; `clear-glass-atlas.md` and `idearium-atlas.md` have the most. The atlases written in 0.39.264 have none.
+- **Diagnostic has no spec.** Its atlas says what exists instead.
+- **Two run-all lists.** `tests/modules/run-all.js` and the root `run-all.js` are copies kept in step by hand.
 
 ---
 
 ## Version History
 
-**Source:** hand-maintained — this document itself, first authored this session. No live Versionium wiring for NEXUS-as-a-whole confirmed.
+**Source:** this document, and Versionium's commit of it on every `nexus` sync.
 
-| Commit | Message |
+| release | what changed here |
 |---|---|
-| — | First NEXUS-level atlas authored, hooked into idearium's real atlas.json shape, aggregator built and tested against one real + one synthetic system |
-| 0.39.255 | `lib/chat-logger.js` honours the test sandbox: `require('./test-sandbox.js').ensure()`, then `NEXUS_DATA_ROOT/chat-logs`, as `lib/ledger-writer.js` and guardian's `code-artifact.js` already do. Before this, every suite that reached guardian's completion path left `data/chat-logs/<date>-<id>.jsonl` in the real tree. A production process still writes `data/chat-logs/`. |
-
-
-### 0.39.257 — shared libraries
-- `lib/agent-tools/tool-root.js`: a run's `context.repoDir` makes the repo the default root for `read_file`, `file_tree` and `search_files`. `where: "nexus"` reads NEXUS itself. The containment check is unchanged. `runToolLoop` passes `context` to `executeTool`, which passes it to `tool.execute(args, opts)`, and a failed model call ends a run as a failure.
-- `lib/agent-tools/tool-catalog.js`: every registered tool in a named group, with none left over, for `/tools`, `/help` and copilot's `/api/tools/list`.
-- `lib/repo-context.js`: reads `graph.json` for file connections, and gives the project map when nothing matches.
-- `lib/test-sandbox.js`: covers `COPILOT_INJECTION_DIR`.
-
-### 0.39.263 — this document is the nexus repo's Home
-- In idearium, Nexus is one repo, `nexus`. Its Home tab renders this file from the immutable snapshot (`idearium/ui/js/nexus-atlas.js`).
-- Every system is a block at the top, and each module heading here gets that system's live numbers.
-- Every reference in this document opens in idearium: a system opens its repo, a file opens in its repo's editor, an `*-atlas.md` renders in place, and a directory opens its repo's Files tab.
-- A reference the snapshot does not have is marked, never guessed: `POST /api/nexus-self/resolve`.
-- Each system repo's Home starts with its own atlas from `docs/atlases/`.
+| — | first NEXUS-level atlas: an index of 13 systems, hooked into Idearium's per-repo atlas shape; the pre-0.39.264 text is kept in docs/atlases/_archive/ (outside the snapshot, in git) |
+| 0.39.263 | this document became the `nexus` repo's Home in Idearium; every reference in it resolves and opens |
+| 0.39.264 | written out in full: every system and every top-level directory, how work moves through NEXUS, the governing law, cross-cutting concerns, known drift; atlases added for `orchestrator`, `architect`, `eravos` and `core` so every system opens into a nested atlas; routes and data folders link to the code that owns them; a contents list; every reference checked against the real tree by `tests/modules/test-nexus-atlas-refs.test.js` |
 
 ---
 
