@@ -1006,12 +1006,14 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
       const gv  = readVer('userscript-chatgpt.js');
       const gmv = readVer('userscript-gemini.js');
       const ppv = readVer('userscript-perplexity.js');
+      const dsv = readVer('userscript-deepseek.js');
       if (!cv) return { ok:false, msg:'userscript-claude.js: @version missing' };
       if (!gv) return { ok:false, msg:'userscript-chatgpt.js: @version missing' };
       console.log('[guardian versions] claude=' + cv + ' chatgpt=' + gv +
         (gmv ? ' gemini=' + gmv : ' gemini=NOT_INSTALLED') +
-        (ppv ? ' perplexity=' + ppv : ' perplexity=NOT_INSTALLED'));
-      return { ok: true, versions: { claude:cv, chatgpt:gv, gemini:gmv||null, perplexity:ppv||null } };
+        (ppv ? ' perplexity=' + ppv : ' perplexity=NOT_INSTALLED') +
+        (dsv ? ' deepseek=' + dsv : ' deepseek=NOT_INSTALLED'));
+      return { ok: true, versions: { claude:cv, chatgpt:gv, gemini:gmv||null, perplexity:ppv||null, deepseek:dsv||null } };
     }
   });
 

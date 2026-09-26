@@ -60,7 +60,7 @@ const DEFAULT_START_URL = 'http://127.0.0.1:9000/';
 // this version, then stamps it current so a person who deliberately sets
 // 'about:blank' afterward (a real, valid choice) is never overwritten
 // again.
-const OPTIONS_SCHEMA_VERSION = 1;
+const OPTIONS_SCHEMA_VERSION = 2;   // v2 (0.39.265): autoStartOnBoot reset once — see load()
 
 const DEFAULTS = {
   // Window behavior
@@ -140,11 +140,15 @@ const DEFAULTS = {
   // NCP_PROVIDERS exactly (checked directly, not guessed) — a provider
   // added there later needs a matching entry here, same one-source-of-
   // truth discipline that file's own header already states for itself.
+  // §0.39.265 — defaults are the providers/registry.js DEFAULT_AUTOSTART (ChatGPT
+  // and DeepSeek at boot, the rest on first use), and main/index.js now READS
+  // this (autoBootList) — before, it read only CG_AUTOBOOT_PROVIDERS.
   autoStartOnBoot: {
-    claude:     true,
+    claude:     false,
     chatgpt:    true,
-    gemini:     true,
-    perplexity: true,
+    gemini:     false,
+    perplexity: false,
+    deepseek:   true,
   },
 
   // §BL24 2026-08-23 — James: "also have the ability to disable opening
@@ -214,9 +218,19 @@ class NexusOptions {
         // never runs again for this file.
         const onDiskVersion = raw._schemaVersion || 0;
         if (onDiskVersion < OPTIONS_SCHEMA_VERSION) {
-          if (raw.defaultStartUrl === 'about:blank' || raw.defaultStartUrl === undefined) {
+          // each step runs only for the version it belongs to — v1 is the start URL
+          if (onDiskVersion < 1 && (raw.defaultStartUrl === 'about:blank' || raw.defaultStartUrl === undefined)) {
             this.data.defaultStartUrl = DEFAULT_START_URL;
             console.log(`[NexusOptions] migrated defaultStartUrl 'about:blank' -> '${DEFAULT_START_URL}' (schema v${onDiskVersion} -> v${OPTIONS_SCHEMA_VERSION})`);
+          }
+          // §0.39.265 (v2) — autoStartOnBoot was saved and shown but never read:
+          // boot opened ChatGPT alone whatever it said (every stored copy says
+          // "all four on", the old default). It is read now, so it is reset once
+          // to what actually happened, plus DeepSeek — not to four resident tabs
+          // nobody asked for.
+          if (onDiskVersion < 2) {
+            this.data.autoStartOnBoot = { ...DEFAULTS.autoStartOnBoot };
+            console.log('[NexusOptions] autoStartOnBoot reset to the real defaults (ChatGPT + DeepSeek at boot, the rest on first use)');
           }
           this.data._schemaVersion = OPTIONS_SCHEMA_VERSION;
           this._persist();

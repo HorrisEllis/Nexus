@@ -1794,8 +1794,8 @@ const server = http.createServer(async (req, res) => {
       // already prevents a false positive regardless of which verb
       // matched, so widening the verb list doesn't widen what actually
       // triggers a switch.
-      const switchM = prompt.match(/\b(?:switch\s+(?:\S+\s+)?to|change\s+(?:\S+\s+)?to|use|route to)\s+(claude|chatgpt|gemini|perplexity|clear[- ]?glass|\w+)\s*(agent|model)?\b/i);
-      const KNOWN_AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'clear glass', 'clear-glass', 'clearglass'];
+      const switchM = prompt.match(/\b(?:switch\s+(?:\S+\s+)?to|change\s+(?:\S+\s+)?to|use|route to)\s+(claude|chatgpt|gemini|perplexity|deepseek|clear[- ]?glass|\w+)\s*(agent|model)?\b/i);
+      const KNOWN_AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek', 'clear glass', 'clear-glass', 'clearglass'];
       const switchTarget = switchM ? switchM[1].toLowerCase() : null;
 
       // §FIXED 2026-08-22 — James, live: "change to guardian" got the
@@ -1832,7 +1832,7 @@ const server = http.createServer(async (req, res) => {
           // generic "pick whichever's live" behavior — "switch to guardian
           // using chatgpt" means "route through guardian, specifically to
           // chatgpt," not "pick guardian's own default."
-          const namedMatch = prompt.match(/\b(claude|chatgpt|gemini|perplexity)\b/gi);
+          const namedMatch = prompt.match(/\b(claude|chatgpt|gemini|perplexity|deepseek)\b/gi);
           const namedAgent = namedMatch?.map(m => m.toLowerCase()).find(a => a !== switchTarget && live.has(a));
           const pick = namedAgent || DEFAULT_FALLBACK.find(a => live.has(a));
           if (!pick) {

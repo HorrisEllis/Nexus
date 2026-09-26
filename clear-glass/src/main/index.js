@@ -1350,7 +1350,10 @@ async function bootstrap() {
   // startup — the real RAM cost this was built to cut (3 fewer resident
   // Chromium renderer processes at boot, in the common case where they
   // don't all get used every session).
-  const autoBootSetting = (process.env.CG_AUTOBOOT_PROVIDERS || 'chatgpt').trim();
+  // §0.39.265 — the Provider tabs page's "Start … with Clear Glass" toggles
+  // (NexusOptions.autoStartOnBoot) decide now; CG_AUTOBOOT_PROVIDERS still wins
+  // when set. Defaults: ChatGPT + DeepSeek (providers/registry.js DEFAULT_AUTOSTART).
+  const autoBootSetting = require('../providers/registry').autoBootList(process.env.CG_AUTOBOOT_PROVIDERS, nexusOptions.get().autoStartOnBoot);
   if (autoBootSetting === 'none' || autoBootSetting === '') {
     console.log('[ClearGlass] NCP auto-boot: skipped (lazy-only — providers start on first real use). Set CG_AUTOBOOT_PROVIDERS to pre-warm specific providers.');
   } else {
@@ -1480,7 +1483,11 @@ async function bootstrap() {
   // unwanted resource/behavior change to existing installs). Best-effort:
   // never blocks or fails boot (§1.2) — a dead deepseek tab just falls back
   // to on-demand spawn() the same as before this existed.
-  mesh.spawn('deepseek').catch((e) => emit('mesh.boot_spawn.error', { agentKey: 'deepseek', error: e.message }));
+  // §0.39.265 — removed. This opened a MESH tab (driven by Clear Glass's own DOM
+  // selectors), not a provider tab: guardian could never dispatch to it, and it
+  // showed up as "deepseek · Default — deepseek" under Agent mesh → Running now.
+  // DeepSeek now opens at boot as a real NCP provider tab (providers/registry.js
+  // DEFAULT_AUTOSTART), carrying guardian/userscript-deepseek.js.
 
   // 11. Diagnostic engine — Playwright-equivalent on ClearDriver
   const diag = new DiagnosticEngine({ driver, dom, sse: { emit: (t, d) => emit(t, d) } });

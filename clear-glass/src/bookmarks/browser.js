@@ -1128,7 +1128,7 @@
     try {
       const res = await fetch('http://127.0.0.1:3750/api/agent/current');
       const cur = await res.json();
-      const agents = ['auto', 'claude', 'chatgpt', 'gemini', 'perplexity'];
+      const agents = ['auto', 'claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
       panel.innerHTML = `
         <div style="padding:6px 4px;font-size:11px;color:var(--text-dim,#999);border-bottom:1px solid var(--border,#333);margin-bottom:6px">
           Current: <b style="color:var(--text,#ccc)">${(cur.agent || 'auto').replace(/</g,'&lt;')}</b>${cur.hatName ? ` (${cur.hatName.replace(/</g,'&lt;')})` : ''}
