@@ -127,6 +127,10 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // §0.39.265 — the orchestrator's contract poller asks every sovereign system
+  // for GET /contract; intelligence had none, so each boot logged
+  // "contract.unreachable — intelligence (HTTP 404)". Same shape as eravos.
+  if (pathname === '/contract') { json(res, 200, require('./registry-components.js')); return; }
   if (pathname === '/api/commands') { json(res, 200, { ok: true, commands: require('./registry-components.js') }); return; }
 
   // §WIRED 2026-08-22 — James named this gap directly: the static

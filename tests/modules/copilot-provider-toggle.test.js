@@ -128,8 +128,13 @@ test('T-011', "POST /api/prompt's handler computes a real resolvedProvider from 
 
 test('T-012', "/api/prompt's real lifeline.route() call actually passes resolvedProvider through, not the old, ignored body.provider", () => {
   const idx = SRC.indexOf("method === 'POST' && p === '/api/prompt'");
-  const block = SRC.slice(idx, idx + 13000);
-  assert.ok(/provider:\s*resolvedProvider/.test(block), "expected the real lifeline.route() call in this handler to use resolvedProvider");
+  // 0.39.265 — was SRC.slice(idx, idx + 13000): the handler grew and its
+  // lifeline.route() call sits ~17k characters in, so this failed on correct
+  // code (the boot "VITALS CHECK FAILED" item). Read to the next route instead.
+  const end = SRC.indexOf("if (method ===", idx + 1);
+  assert.ok(idx > 0 && end > idx, '/api/prompt handler not found');
+  const block = SRC.slice(idx, end);
+  assert.ok(/await _lifeline\.route\([^;]*provider:\s*resolvedProvider/.test(block), "expected the real lifeline.route() call in this handler to use resolvedProvider");
 });
 
 test('T-013', "ui/tv-shell/menu.js sends the real, current toggle/dropdown state on every /api/prompt call, not a hardcoded or missing value", () => {

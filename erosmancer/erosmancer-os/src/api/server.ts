@@ -646,7 +646,7 @@ server.listen(PORT, () => {
   // ── Register with NEXUS Bridge on boot ───────────────────────────────────
   // Announces ErosmancerOS as a live module so the bridge knows it's up,
   // indicators go green, and /eros/* proxy routes become active.
-  const BRIDGE_URL = process.env.BRIDGE_URL ?? "http://127.0.0.1:3747";
+  const BRIDGE_URL = process.env.BRIDGE_URL ?? "";
   const EROS_UUID  = `eros-os-${randomUUID().slice(0, 8)}`;
 
   const registerWithBridge = async (attempt = 1): Promise<void> => {
@@ -701,6 +701,12 @@ server.listen(PORT, () => {
     }
   };
 
+  // §0.39.265 — the NEXUS Bridge is gone (:3747 is architect now, and nothing
+  // serves /hook/register), so the default target only ever answered 404 five
+  // times and gave up. Clear Glass registers ErosmancerOS with the orchestrator
+  // itself (clear-glass/src/main — "ErosmancerOS registered with orchestrator
+  // :9000"). Register with a bridge only when one is named explicitly.
+  if (!process.env.BRIDGE_URL) return;
   // Slight delay so bridge has time to init its /hook/register route
   setTimeout(() => registerWithBridge(), 1500);
 });

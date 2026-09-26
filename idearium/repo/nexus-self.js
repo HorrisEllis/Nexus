@@ -193,7 +193,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     catch (e) { res = { system: name, status: 'failed', error: e.message }; }
     results.push(res);
     if (onSystem) { try { onSystem(res); } catch (_) {} }
-    if (res.status !== 'unchanged') log(`[${MODULE_ID}] ${name}: ${res.status}${res.error ? ` — ${res.error}` : ''}${res.files ? ` · ${res.files} files · pipeline ${res.pipeline}` : ''}`);
+    if (res.status !== 'unchanged') log(`[${MODULE_ID}] ${name}: ${res.status}${res.error ? ` — ${res.error}` : ''}${res.files ? ` · ${res.files} files · pipeline ${res.pipeline}${res.pipelineError ? ` — ${res.pipelineError}` : ''}` : ''}`);
   }
 
   const repoBySystem = {};

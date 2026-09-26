@@ -78,6 +78,9 @@ const CONTRACT_PATHS = {
   // a real, honest 404 whose plain-text body ("Not found") isn't valid
   // JSON, hence the parse error James saw.
   versionium:     '/contract',
+  // §0.39.265 — same class again: intelligence (:3753) fell through to
+  // '/api/contract' and 404'd on every boot. It now serves GET /contract.
+  intelligence:   '/contract',
 };
 
 function contractPathFor(systemId) {

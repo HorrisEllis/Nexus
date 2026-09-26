@@ -169,7 +169,7 @@ const SYSTEMS = {
   // nothing recent.
   'clear-glass':{ port: 7704, dataDir: 'data/clear-glass', healthPath: '/status',  label: 'Clear Glass', optional: true, preferHeartbeat: true },
   // §MONITOR-03: UI surfaces — probed as virtual systems, no dataDir
-  'forge-shell':{ port: 9000, dataDir: 'data/orchestrator', healthPath: '/ui/forge-shell.html',
+  'forge-shell':{ port: 9000, dataDir: 'data/orchestrator', healthPath: '/ui/forge-shell/forge-shell.html',
     label: 'Forge Shell', virtual: true, optional: true,
     // Forge shell is served by orchestrator — it's healthy when orch is healthy
     // We track it separately to surface in the diagnostic tile
@@ -1031,7 +1031,9 @@ function startService() {
 
     // 5. Forge Shell availability check — it's a UI, not a service
     // Healthy when orchestrator is healthy and the file exists
-    const forgeFile = path.join(ROOT, 'ui', 'forge-shell.html');
+    // §0.39.265 — the shell moved into its own folder (ui/forge-shell/); this
+    // still looked for ui/forge-shell.html and warned "missing" on every boot.
+    const forgeFile = path.join(ROOT, 'ui', 'forge-shell', 'forge-shell.html');
     const forgeShellExists = fs.existsSync(forgeFile);
     const orchState = systemState['orchestrator'] || {};
     const forgeHealthy = forgeShellExists && orchState.online;
@@ -1039,8 +1041,8 @@ function startService() {
       const gapKey = 'forge-shell:unavailable';
       if (!_remediatedGaps.has(gapKey)) {
         _remediatedGaps.add(gapKey);
-        const reason = !forgeShellExists ? 'ui/forge-shell.html missing' : 'orchestrator offline';
-        _logRemediation({ action: 'forge_shell_unavailable', reason, fix: forgeShellExists ? 'Start orchestrator' : 'Deploy ui/forge-shell.html' });
+        const reason = !forgeShellExists ? 'ui/forge-shell/forge-shell.html missing' : 'orchestrator offline';
+        _logRemediation({ action: 'forge_shell_unavailable', reason, fix: forgeShellExists ? 'Start orchestrator' : 'Deploy ui/forge-shell/forge-shell.html' });
         console.log(`[diagnostic] ⚠  forge-shell unavailable — ${reason}`);
       }
     } else {
