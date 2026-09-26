@@ -10,7 +10,8 @@ idearium/data/projects/
 idearium/data/specs/
 idearium/data/nodes/
 idearium/data/node-index/
-idearium/data/nexus-self/   # 0.39.265 — materialized copies of the tree per nexus-self sync (~150 MB), rebuilt on every sync
+# 0.39.265 — materialized copies of the tree per nexus-self sync (~150 MB), rebuilt on every sync
+idearium/data/nexus-self/
 idearium/repo/repos/
 *.log
 
