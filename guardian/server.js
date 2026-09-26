@@ -638,6 +638,7 @@ const { requestSync } = createChatSync({ bus, ncp });
 // module-scope semantics. cockpitBroadcast is a hoisted function declaration
 // (defined further down) so it's already a valid reference here.
 const pendingQueue = new Map(); // provider → job[] (legacy fallback for non-pool paths)
+let _chatTranscriptsRef = null;  // 0.39.259 — set once chat-transcripts is created (below); read by the dispatcher's chatFor
 // §BUILT 2026-09-19 — guardian owns the agent registry and the mesh-first escalation ladder.
 // Mesh -> archaeology/DOM-mapping repair -> userscript (NCP) -> user (picker). Default GUARDIAN_TRANSPORT=ncp-only.
 // §2026-09-23 — Clear Glass owns accounts (James: "yes clearglass"); the registry asks it instead of its own list.
@@ -673,6 +674,9 @@ const {
 } = wireGuardianCore({
   bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent: _postEvent,
   ladder: _ladder, completeFromMesh: _completeFromMesh,
+  // 0.39.259 — late-bound: _chatTranscripts is created below, after the job store exists; a job is only
+  // dispatched once boot has finished, by which time it is set.
+  chatFor: (job) => (_chatTranscriptsRef ? _chatTranscriptsRef.chatFor(job) : null),
 });
 
 // §BUILT 2026-09-19 — agent-initiated wake for MESH-delivered jobs (the userscript path answers its own): when a mesh job's
@@ -697,6 +701,7 @@ require('./lib/gate-trail.js').attach({ bus, jobs });
 const _chatTranscripts = require('./lib/chat-transcripts.js').createChatTranscripts({ bus, jobs, ncp,
   complete: (job, text, chatUrl) => _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl, source: 'transcript' }) });
 _chatTranscripts.attach();
+_chatTranscriptsRef = _chatTranscripts;
 
 // §BUILT 2026-09-11 — James: "persistent and doesn't leave until it's
 // delivered." createJobStore() (guardian/lib/jobs.js, this same pass)

@@ -87,6 +87,14 @@ class DispatchPool extends EventEmitter {
     this._flush(provider);
   }
 
+  // ── providerOf(jobId) — which provider's slot this job holds, or null.
+  // 0.39.259 — a completion that arrives without a provider (every userscript
+  // GUARDIAN_COMPLETE before this release) can still free the slot it holds.
+  providerOf(jobId) {
+    for (const [provider, active] of this._active) if (active.has(jobId)) return provider;
+    return null;
+  }
+
   // ── release(provider, jobId) — give a slot back without counting an outcome.
   // §0.39.247 — for a job that was handed a slot but NOT delivered (no tab
   // connected, stale socket, timed out and requeued). It goes back on

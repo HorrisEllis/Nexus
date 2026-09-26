@@ -99,8 +99,14 @@ function createNCPMessageHandler(deps) {
   // (`if (!nc)`, `_evLedger?.record(...)`), not required here.
 
   function _handleNCPMessage(msg) {
-    const { type, jobId, provider, tabId, text, content, lang, hash,
+    const { type, jobId, tabId, text, content, lang, hash,
             gaps, error, gate, chatUrl, chatId, account, hatUsed } = msg;
+    // 0.39.259 — the userscripts' GUARDIAN_COMPLETE / GUARDIAN_ERROR / GUARDIAN_PROGRESS bodies carry no `provider`
+    // (ncpPost adds chatUrl + account only). guardian.job.complete then went out with provider undefined,
+    // dispatch-pool-bridge dropped it as malformed, and the one chatgpt slot was never released: job 2 completed,
+    // job 3 was created and never dispatched ("only works once"). The job knows its own provider.
+    const _jobForProvider = jobId ? jobs.get(jobId) : null;
+    const provider = msg.provider || (_jobForProvider && _jobForProvider.provider) || undefined;
 
     // ── §5.2 Cortex write — every significant userscript event reaches cortex ──
     // Fire-and-forget: timeout 2s, never block the NCP response.
@@ -185,6 +191,32 @@ function createNCPMessageHandler(deps) {
         if (jobId) {
           const finalText = text || content || '';
           const job = jobs.get(jobId);
+
+          // 0.39.259 — an EMPTY completion from a tab is not a reply. James's run: job 2 was sent into the
+          // same chat, ChatGPT rendered the new assistant turn empty for a moment, the watch read '' three
+          // times as "stable" and completed the job with 0 chars; the real reply landed in the transcript
+          // 10 s later, but the job was already 'complete' so the transcript path skipped it, and the Agent
+          // tab showed "job completed but carried no response text". Now: withhold it, keep the job open,
+          // and let the transcript (guardian/lib/chat-transcripts.js) complete it with the real text.
+          // Bounded — if no transcript carries a reply within EMPTY_REPLY_GRACE_MS the job fails loudly.
+          if (!String(finalText).trim() && msg.source !== 'transcript' && job
+              && job.status !== 'complete' && job.status !== 'error' && job.status !== 'failed'
+              && !findActiveSeamCompartment(jobId)) {
+            const graceMs = parseInt(process.env.GUARDIAN_EMPTY_REPLY_GRACE_MS || '120000', 10);
+            updateJob(jobId, { status: 'awaiting_transcript', emptyCompletionAt: Date.now(), ...(chatUrl ? { chatUrl } : {}) });
+            console.warn(`[guardian] job ${String(jobId).slice(0, 8)} — the ${provider || '?'} tab reported an EMPTY reply; withheld, waiting up to ${Math.round(graceMs / 1000)}s for the chat transcript to carry the real one`);
+            bus.emit('guardian.job.progress', { jobId, provider, stage: 'empty-reply-withheld', how: 'waiting for the chat transcript', chatUrl: chatUrl || null, ts: Date.now() });
+            const t = setTimeout(() => {
+              const j = jobs.get(jobId);
+              if (!j || j.status !== 'awaiting_transcript') return;
+              const err = `the ${provider || 'provider'} tab reported an empty reply and no chat transcript carried one within ${Math.round(graceMs / 1000)}s`;
+              updateJob(jobId, { status: 'error', error: err, failedAt: Date.now() });
+              console.warn(`[guardian] job ${String(jobId).slice(0, 8)} — ${err}`);
+              bus.emit('guardian.job.error', { jobId, provider, agentId: j.agentId || null, error: err, gate: 'empty_reply' });
+            }, graceMs);
+            if (t && t.unref) t.unref();
+            break;
+          }
 
           // ── SEAM queue routing ────────────────────────────────────────────
           // A SEAM-dispatched chunk's jobId is never in the `jobs` Map (that's
@@ -587,8 +619,15 @@ function createNCPMessageHandler(deps) {
       // §SUBMIT-EVIDENCE 2026-09-23 — stage reports from the page, so a run's
       // log shows WHERE a job stopped rather than going quiet after dispatch.
       case 'GUARDIAN_PROGRESS':
+        // 0.39.259 — 'resuming-chat': the tab is loading the job's own chat (dispatcher.js resumeChatUrl) and
+        // will disconnect for the reload; the dispatcher must not requeue the job for that. Any later stage
+        // from the job means the tab is back, so a real disconnect after it is handled as before.
+        if (jobId && jobs.get(jobId)) {
+          if (msg.stage === 'resuming-chat') updateJob(jobId, { resumingChatAt: Date.now(), resumeChatUrl: msg.how || null });
+          else if (jobs.get(jobId).resumingChatAt) updateJob(jobId, { resumingChatAt: null });
+        }
         // 0.39.244 — anchor/mutations/generating: the page's own evidence (the node read, how much it changed)
-        bus.emit('guardian.job.progress', { jobId: msg.jobId, stage: msg.stage, how: msg.how, chatUrl: msg.chatUrl, anchor: msg.anchor || null, mutations: msg.mutations ?? null, generating: msg.generating ?? null });
+        bus.emit('guardian.job.progress', { jobId: msg.jobId, provider, stage: msg.stage, how: msg.how, chatUrl: msg.chatUrl, anchor: msg.anchor || null, mutations: msg.mutations ?? null, generating: msg.generating ?? null });
         break;
 
       case 'GUARDIAN_ERROR':

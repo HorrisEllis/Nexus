@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh } = deps;   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor } = deps;   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -155,9 +155,17 @@ function createDispatcher(deps) {
   // the same bounded-retry path the idle-timeout uses; a fresh tab
   // reconnecting (as ClearGlass's re-spawn-and-reinject already does,
   // separately, within seconds) picks the requeued job back up normally.
+  // 0.39.259 — a tab that navigates to the job's own chat (resumeChatUrl, below) reloads and
+  // disconnects ON PURPOSE; it carries the job across the load itself. Requeueing it here would send
+  // the prompt twice. Bounded: after RESUME_GRACE_MS the disconnect is treated as real again.
+  const RESUME_GRACE_MS = parseInt(process.env.GUARDIAN_RESUME_GRACE_MS || '60000', 10);
   bus.on('guardian.provider.disconnected', (ev) => { const { provider } = _payload(ev);
     for (const job of _watchedJobs.values()) {
       if (job.provider !== provider) continue;
+      if (job.resumingChatAt && Date.now() - job.resumingChatAt < RESUME_GRACE_MS) {
+        console.log(`[guardian] ${job.id} → ${provider}: tab disconnected while opening the job's chat — expected, not requeued`);
+        continue;
+      }
       _watchedJobs.delete(job.id);
       _requeueOrFail(job, `provider '${provider}' disconnected mid-flight`, job.dispatchedAt ? (Date.now() - job.dispatchedAt) : 0);
     }
@@ -449,11 +457,20 @@ function createDispatcher(deps) {
     // (pushTab by agentId, wait for the repo tab, fall back after 60 s) is
     // removed — see the §ONE-TAB note above _doDispatch. The job keeps its
     // agentId so the reply is still filed under the repo that asked.
+    // 0.39.259 — James: "conversations need back and forth, also persistent chaturl". A repo agent's job
+    // carries the chat that agent was last talking in; the tab opens it before typing, so every turn lands
+    // in one conversation — across a guardian restart or a tab that wandered to another chat.
+    // GUARDIAN_RESUME_CHAT=0 turns it off (every job runs wherever the tab is, as before).
+    let resumeChatUrl = null;
+    if (typeof chatFor === 'function' && process.env.GUARDIAN_RESUME_CHAT !== '0') {
+      try { resumeChatUrl = chatFor(job) || null; } catch (e) { console.warn(`[guardian] ${job.id}: chat lookup failed (job runs where the tab is): ${e.message}`); }
+    }
     const payload = {
       type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
       provider: job.provider, prompt: job.prompt, content: job.content,
       tools: job.tools || null,
       hat: job.hat || null,
+      resumeChatUrl,
     };
     const sent = ncp.pushActive(job.provider, payload);
     const via = job.agentId ? `the ${job.provider} tab, for ${job.agentId}` : `the ${job.provider} tab`;
@@ -472,7 +489,7 @@ function createDispatcher(deps) {
     // target, not a broadcast count), so the old "(N clients)" phrasing was
     // stale — always printed "(1 client)" and implied a fan-out that no
     // longer happens. Says what actually occurred instead.
-    console.log(`[guardian] dispatched ${job.id} → ${job.provider} via NCP (${via})`);
+    console.log(`[guardian] dispatched ${job.id} → ${job.provider} via NCP (${via})${resumeChatUrl ? ` · chat ${resumeChatUrl}` : ''}`);
     try {
       const alk = require('../../intelligence/alk');
       alk.record({

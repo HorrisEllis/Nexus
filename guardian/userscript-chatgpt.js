@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — ChatGPT v10.0
 // @namespace    nexus.guardian.chatgpt
-// @version      10.9.0
+// @version      10.10.0
 // @description  Guardian v10 — ChatGPT: full feature parity with Claude v10. IndexedDB
 //               kernel, SHA-256 dedup, intelligence injection, SEAM, NEXUS module,
 //               memory/RAID/self-heal hooks, structured output detection, tool intercept.
@@ -27,7 +27,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'chatgpt';
-const VERSION    = '10.9.0';
+const VERSION    = '10.10.0';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -549,7 +549,9 @@ function _builtInResponseEl() {
   return all.length ? all[all.length - 1] : null;
 }
 function _isGenerating() {
-  return !!document.querySelector('[data-is-streaming="true"], .text-streaming, [class*="loading"]');
+  // 0.39.259 — the composer's stop button is ChatGPT's own "still answering" signal; it exists
+  // from submit until the reply ends, including the empty moment before the first token.
+  return !!document.querySelector('[data-is-streaming="true"], .text-streaming, [class*="loading"], button[data-testid="stop-button"], button[aria-label="Stop streaming"], button[aria-label="Stop generating"]');
 }
 function injectText(text, opts = {}) {
   // §NEXUS-WAKE 2026-08-18 — one-line hook (HOOKUP.md §3): if the outgoing
@@ -720,7 +722,9 @@ function startWatch(jobId, prompt, retryCount = 0) {
       }
       _watchTimer = setTimeout(checkStable, 600); return;
     }
-    if (text === lastText && !_isGenerating()) {
+    // 0.39.259 — an empty turn is never a stable reply: a follow-up in an existing chat renders the new
+    // assistant turn empty for a moment, and three empty reads used to complete the job with 0 chars.
+    if (text && text === lastText && !_isGenerating()) {
       stableCount++;
       if (stableCount >= 3) {
         const ms = Date.now() - _watchStart;
@@ -1234,6 +1238,58 @@ function connect() {
   };
 }
 
+// §RESUME-CHAT 0.39.259 — James: "conversations need back and forth, also persistent chaturl".
+// Guardian sends a repo agent's job with resumeChatUrl: the chat that agent was last talking in
+// (guardian/lib/chat-transcripts.js chatFor). If this tab is somewhere else, the job is carried
+// across the page load in sessionStorage, the tab opens that chat, and the job runs there once the
+// page has rendered it — one conversation per agent, across restarts. Guardian is told first
+// ('resuming-chat'), so the reload's disconnect is not mistaken for a dead tab and the job is not
+// sent twice. The carried job is used once and expires after 2 minutes.
+const _RESUME_KEY = 'nexus_resume_job_' + PROVIDER;
+const _normPath = (p) => String(p || '').replace(/\/+$/, '') || '/';
+function _nexusOpenJobChat(msg) {
+  if (!msg || !msg.resumeChatUrl) return false;
+  let u; try { u = new URL(msg.resumeChatUrl); } catch (_) { return false; }
+  if (u.host !== location.host || _normPath(u.pathname) === _normPath(location.pathname)) return false;
+  try { sessionStorage.setItem(_RESUME_KEY, JSON.stringify({ msg, path: _normPath(u.pathname), ts: Date.now() })); }
+  catch (_) { return false; }   // cannot carry the job across a load: run it where the tab is
+  send({ type:'GUARDIAN_PROGRESS', jobId:msg.jobId, stage:'resuming-chat', how:u.href, chatUrl:location.href, ts:Date.now() });
+  _log('job', "Opening the agent's chat", `${u.pathname} · #${String(msg.jobId).slice(0,8)}`);
+  setTimeout(() => location.assign(u.href), 300);   // let the progress report leave before the page unloads
+  return true;
+}
+let _nexusResumeChecked = false;
+function _nexusResumeCarriedJob() {
+  if (_nexusResumeChecked) return;
+  _nexusResumeChecked = true;
+  let st = null;
+  try { st = JSON.parse(sessionStorage.getItem(_RESUME_KEY) || 'null'); sessionStorage.removeItem(_RESUME_KEY); } catch (_) { st = null; }
+  if (!st || !st.msg || !st.msg.jobId || Date.now() - (st.ts || 0) > 120000) return;
+  const msg = st.msg;
+  const landed = _normPath(location.pathname) === st.path;
+  const t0 = Date.now();
+  (function waitReady() {
+    const composer = document.querySelector('[contenteditable="true"]') || document.querySelector('textarea');
+    let turns = 0; try { turns = (_nexusGetFullChat().messages || []).length; } catch (_) {}
+    // The chat's earlier turns must be on the page before the job starts: the reply watch and the
+    // transcript streamer both count what was there before this job's own turn.
+    if ((!composer || (landed && !turns)) && Date.now() - t0 < 20000) { setTimeout(waitReady, 400); return; }
+    if (!composer) {
+      send({ type:'GUARDIAN_ERROR', jobId:msg.jobId, gate:'resume',
+             error:`opened ${st.path} for this job, but no input appeared within 20s`, chatUrl:location.href, account:getAccount() });
+      return;
+    }
+    if (jobActive && currentJobId && currentJobId !== msg.jobId) {
+      send({ type:'GUARDIAN_ERROR', jobId:msg.jobId, gate:'tab_busy',
+             error:`this ${PROVIDER} tab took job ${currentJobId} while opening the chat for ${msg.jobId}`, chatUrl:location.href, account:getAccount() });
+      return;
+    }
+    // resume-chat-missing: the chat is gone (deleted, or the account changed) — the job runs in the chat the page opened instead
+    send({ type:'GUARDIAN_PROGRESS', jobId:msg.jobId, stage: landed ? 'resumed-chat' : 'resume-chat-missing', how:location.href, chatUrl:location.href, ts:Date.now() });
+    currentJobId = msg.jobId; _txJobStart(msg); handleJob(msg);
+  })();
+}
+
 function _handleServerMessage(msg) {
   switch(msg.type) {
     case 'NCP_READY':
@@ -1241,6 +1297,7 @@ function _handleServerMessage(msg) {
       setConnState('ready');
       _log('ok', `Ready · ${msg.provider||PROVIDER}`, NCP_CHANNEL);
       toast('Guardian connected ✓', 'success', 2000);
+      _nexusResumeCarriedJob();   // 0.39.259 — a job carried across a load into its chat
       break;
     case 'GUARDIAN_CLAIM':
       if (msg.tabId===MY_TAB||msg.tabId==='any') {
@@ -1269,6 +1326,7 @@ function _handleServerMessage(msg) {
           error:`this ${PROVIDER} tab is still answering job ${currentJobId} — refused job ${msg.jobId} rather than overwrite it` });
         break;
       }
+      if (_nexusOpenJobChat(msg)) break;   // 0.39.259 — the tab reloads into the agent's chat and runs the job there
       currentJobId = msg.jobId; _txJobStart(msg); handleJob(msg); break;
     case 'NEXUS_CONTEXT_RESPONSE':
       if (msg.context) { _intelligenceCtx = msg.context; _log('sys','Context updated from server'); }
@@ -1289,9 +1347,14 @@ function _handleServerMessage(msg) {
 let _lastPath = location.pathname;
 setInterval(() => {
   if (location.pathname !== _lastPath) {
+    const _prev = _lastPath;
     _lastPath = location.pathname;
     _sessionId = null; // reset session chain on navigation
-    if (currentJobId) stopWatch();
+    // 0.39.259 — a new chat getting its URL (home → temporary id → real id) is the SAME conversation
+    // the running job was typed into; stopping the watch there left every first job of a new chat
+    // to the transcript path alone. Only leaving a real chat for another one ends the watch.
+    const _forming = _prev === '/' || /\/c\/WEB(:|%3A)/i.test(_prev);
+    if (currentJobId && !_forming) stopWatch();
     _log('sys', `Nav → ${chatId()}`);
     setTimeout(() => sendDOMMap(), 1000);
   }

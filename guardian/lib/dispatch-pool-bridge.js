@@ -43,16 +43,27 @@ function wireDispatchPoolRelease(bus, pool) {
     throw new Error('[dispatch-pool-bridge] pool with .complete()/.fail() is required');
   }
 
+  // §0.39.259 — a payload with a jobId but no provider used to be dropped here as
+  // malformed. Every userscript completion arrived that way, so the job's slot
+  // (cap 1 per browser provider) was never freed and the NEXT job waited forever.
+  // Not a guess: the pool itself records which provider's slot the job holds.
+  const _providerFor = (payload) => payload.provider
+    || (typeof pool.providerOf === 'function' ? pool.providerOf(payload.jobId) : null);
+
   bus.on('guardian.job.complete', (ev) => {
     const payload = _payload(ev);
-    if (!payload || !payload.provider || !payload.jobId) return; // §AX-2: malformed payload, not our job to guess
-    pool.complete(payload.provider, payload.jobId);
+    if (!payload || !payload.jobId) return; // §AX-2: no job id, nothing to release
+    const provider = _providerFor(payload);
+    if (!provider) return;                  // holds no slot
+    pool.complete(provider, payload.jobId);
   });
 
   bus.on('guardian.job.error', (ev) => {
     const payload = _payload(ev);
-    if (!payload || !payload.provider || !payload.jobId) return;
-    pool.fail(payload.provider, payload.jobId, payload.error || 'unknown');
+    if (!payload || !payload.jobId) return;
+    const provider = _providerFor(payload);
+    if (!provider) return;
+    pool.fail(provider, payload.jobId, payload.error || 'unknown');
   });
 
   return { wired: true };

@@ -217,7 +217,7 @@ test('TX-17', 'guardian/server.js wires it: created with the real bus + jobs, at
 });
 
 test('TX-18', 'every provider userscript pushes GUARDIAN_TRANSCRIPT and stamps agentId on sync results; versions bumped together', () => {
-  const want = { chatgpt: '10.9.0', claude: '10.9.0', gemini: '10.8.0', perplexity: '10.8.0', deepseek: '10.8.0' };
+  const want = { chatgpt: '10.10.0', claude: '10.10.0', gemini: '10.8.1', perplexity: '10.8.1', deepseek: '10.8.1' };
   for (const [p, v] of Object.entries(want)) {
     const s = fs.readFileSync(path.join(ROOT, `guardian/userscript-${p}.js`), 'utf8');
     assert.ok(/type: 'GUARDIAN_TRANSCRIPT'/.test(s), `${p}: no transcript push`);

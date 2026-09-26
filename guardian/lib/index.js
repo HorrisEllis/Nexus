@@ -44,7 +44,7 @@ const wireDispatchPoolRelease = require('./dispatch-pool-bridge');
  * this file does not create a bus or an NCP server, those stay owned by
  * server.js's boot sequence exactly as before.
  */
-function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent, ladder, completeFromMesh }) {
+function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL, postEvent, ladder, completeFromMesh, chatFor }) {
   for (const [name, v] of Object.entries({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL })) {
     if (!v) throw new Error(`[guardian/lib] wireGuardianCore missing required dependency: ${name}`);
   }
@@ -59,7 +59,7 @@ function wireGuardianCore({ bus, ncp, pendingQueue, cockpitBroadcast, NEXUS_URL,
     updateJob: jobStore.updateJob, bus, ncp, pendingQueue, cockpitBroadcast,
     dispatchToMistral: providerRouter._dispatchToMistral,
     dispatchToDeepseek: providerRouter._dispatchToDeepseek,
-    ladder, completeFromMesh,
+    ladder, completeFromMesh, chatFor,
   });
 
   wireDispatchPoolRelease(bus, dispatcher.pool); // the leak fix — every completion path frees its slot now
