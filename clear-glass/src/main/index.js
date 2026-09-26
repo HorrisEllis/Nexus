@@ -728,7 +728,7 @@ async function _startWire() {
     // this entire time; this was the actual block.
     if (req.method === 'OPTIONS') {
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, PUT, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Nexus-Token');
       res.writeHead(204);
       return res.end();
     }
@@ -883,71 +883,21 @@ async function _startWire() {
         return res.end(JSON.stringify(result));
       }
 
-      // §BUILT — Automation engine real HTTP surface, same thin-pass-
-      // through convention as the routes above.
-      if (u === '/automation/workflows' && req.method === 'GET') {
-        res.writeHead(200);
-        return res.end(JSON.stringify({ ok: true, workflows: mesh.listWorkflows() }));
-      }
-      if (u === '/automation/workflows' && req.method === 'POST') {
-        const result = mesh.createWorkflow(parsed);
-        res.writeHead(result.ok ? 200 : 400);
-        return res.end(JSON.stringify(result));
-      }
-      if (u.match(/^\/automation\/workflows\/[^/]+$/) && req.method === 'PATCH') {
-        const id = u.split('/').pop();
-        const result = mesh.updateWorkflow(id, parsed);
-        res.writeHead(result.ok ? 200 : 404);
-        return res.end(JSON.stringify(result));
-      }
-      if (u.match(/^\/automation\/workflows\/[^/]+$/) && req.method === 'DELETE') {
-        const id = u.split('/').pop();
-        const result = mesh.removeWorkflow(id);
-        res.writeHead(result.ok ? 200 : 404);
-        return res.end(JSON.stringify(result));
-      }
-      if (u.match(/^\/automation\/workflows\/[^/]+\/run$/) && req.method === 'POST') {
-        const id = u.split('/')[3];
-        try {
-          const result = await mesh.runWorkflow(id, 'manual');
-          res.writeHead(result.ok ? 200 : 500);
-          return res.end(JSON.stringify(result));
-        } catch (e) {
-          res.writeHead(500);
-          return res.end(JSON.stringify({ ok: false, error: e.message }));
-        }
-      }
-      if ((u === '/automation/log' || u.startsWith('/automation/log?')) && req.method === 'GET') {
-        // §0.39.265 — ?workflowId= narrows it to one workflow's runs
-        const q = new URL(u, 'http://x').searchParams;
-        res.writeHead(200);
-        return res.end(JSON.stringify({ ok: true, log: mesh.getAutomationLog(parseInt(q.get('limit'), 10) || 50, q.get('workflowId') || null) }));
-      }
-      // §BUILT — per-step CRUD, the real Tasker-style step editor's
-      // backend (James: "like tasker and automate").
-      if (u.match(/^\/automation\/workflows\/[^/]+\/steps$/) && req.method === 'POST') {
-        const id = u.split('/')[3];
-        const result = mesh.addWorkflowStep(id, parsed);
-        res.writeHead(result.ok ? 200 : 400);
-        return res.end(JSON.stringify(result));
-      }
-      if (u.match(/^\/automation\/workflows\/[^/]+\/steps\/[^/]+$/) && req.method === 'PATCH') {
-        const parts = u.split('/'); const id = parts[3], stepId = parts[5];
-        const result = mesh.updateWorkflowStep(id, stepId, parsed);
-        res.writeHead(result.ok ? 200 : 404);
-        return res.end(JSON.stringify(result));
-      }
-      if (u.match(/^\/automation\/workflows\/[^/]+\/steps\/[^/]+$/) && req.method === 'DELETE') {
-        const parts = u.split('/'); const id = parts[3], stepId = parts[5];
-        const result = mesh.removeWorkflowStep(id, stepId);
-        res.writeHead(result.ok ? 200 : 404);
-        return res.end(JSON.stringify(result));
-      }
-      if (u.match(/^\/automation\/workflows\/[^/]+\/steps\/[^/]+\/move$/) && req.method === 'POST') {
-        const parts = u.split('/'); const id = parts[3], stepId = parts[5];
-        const result = mesh.moveWorkflowStep(id, stepId, parsed?.dir);
-        res.writeHead(result.ok ? 200 : 404);
-        return res.end(JSON.stringify(result));
+      // §BUILT — Automation engine real HTTP surface. §0.39.265 — every
+      // /automation/* route lives in src/automation/routes.js (shared with the
+      // tests): workflows and steps, runs and cancel, catalogue, templates,
+      // import/export, validate, one-off steps, events, webhooks, cron preview.
+      // Local pages only, except webhooks (they carry their own secret).
+      if (u.startsWith('/automation/')) {
+        const r = await require('../automation/routes.js').handle(mesh && mesh._automation, { method: req.method, url: u, body: parsed, headers: req.headers, rawBody: body }, {
+          getMacro: (name) => macroTool.execute({ action: 'get', name }),
+          openPath: (dir) => shell.openPath(dir),
+          pages: {
+            list: () => listBackgroundTabs().filter(t => /^auto-/.test(t.agentId)),
+            act: (page, action) => _automationBrowser({ page, action }),
+          },
+        });
+        if (r) { res.writeHead(r.status); return res.end(JSON.stringify(r.body)); }
       }
 
       // §BL24 2026-08-23 — James: "a command/tool to disable and re-
@@ -1440,11 +1390,19 @@ async function bootstrap() {
   mesh = new AgentMesh({ ctxMgr, driver, vault, accounts: nexusOptions, sse: { emit: (t, d) => emit(t, d) } });
   await mesh.init();
   // §0.39.265 — workflow steps that run a macro or show a notification
+  // §0.39.265 — and browser steps (a hidden automation page per workflow, or an
+  // open window) and agent steps that wait for the reply.
   try {
     mesh._automation?.setHooks({
       runMacroFn: ({ name, agentId, params }) => macroTool.execute({ action: 'run', name, agentId, params }),
       notifyFn: ({ title, body }) => { const { Notification } = require('electron'); if (Notification.isSupported()) new Notification({ title, body: body || '' }).show(); },
+      browserFn: (a) => _automationBrowser(a),
+      askAgentFn: async ({ agentKey, prompt }) => {
+        const r = await mesh.route({ prompt, preferAgent: agentKey });
+        return r && typeof r === 'object' ? { text: r.text ?? r.reply ?? r.response ?? '', agentKey: r.agentKey || agentKey } : { text: String(r ?? '') };
+      },
     });
+    setTimeout(() => { try { mesh._automation?.emitEvent('app.start', { at: Date.now() }); } catch (_) {} }, 3000);
   } catch (e) { console.warn(`[ClearGlass] automation hooks not set: ${e.message}`); }
 
   // §BUILT 2026-09-23 — login portals: per-account provider sign-in in the
@@ -2309,11 +2267,52 @@ function hideAppToTray() {
   // app itself stays running — tray icon remains
 }
 
+// ── Automation pages — §0.39.265 ───────────────────────────────────────────
+// A workflow's browser steps run on its own hidden page, "auto-<id>" (a
+// background tab: same chrome as an agent window, never shown unless asked),
+// in the persist:automation session — so a site signed in once stays signed
+// in for every run. A step can instead name an open window ("default", or an
+// agent id). Every action goes through the one driver (src/driver/index.js).
+async function _automationBrowser({ page, action, args = {}, settings = {} }) {
+  const isAuto = /^auto-/.test(String(page || ''));
+  if (isAuto && action === 'close') return closeBackgroundTab(page);
+  if (isAuto && !bgTabs.has(page)) {
+    const part = /^persist:[\w-]{1,60}$/.test(settings.partition || '') ? settings.partition : 'persist:automation';
+    await openBackgroundTab({ agentId: page, url: 'about:blank', partition: part, webviewPartition: part });
+    if (settings.showPage) bgTabs.get(page)?.show();
+    const t0 = Date.now();                                   // its webview appears once browser.html has run
+    while (Date.now() - t0 < 15000) {
+      if (driver._getWebContents(page)) break;
+      await new Promise(r => setTimeout(r, 150));
+    }
+    if (!driver._getWebContents(page)) throw new Error('the automation page did not start (no webview after 15 s)');
+  }
+  if (action === 'show') {
+    const win = windows.get(page) || bgTabs.get(page);
+    if (!win) throw new Error(`no page "${page}"`);
+    win.show(); win.focus();
+    return { shown: page };
+  }
+  if (action === 'close') throw new Error('a workflow can only close its own automation pages');
+  if (action === 'cookies.get' || action === 'cookies.clear') {
+    const wc = driver._getWebContents(page);
+    if (!wc) throw new Error(`No webcontents for agent: ${page}`);
+    if (action === 'cookies.get') return { cookies: await wc.session.cookies.get(args.url ? { url: args.url } : {}) };
+    await wc.session.clearStorageData({ storages: ['cookies'] });
+    return { ok: true };
+  }
+  if (action === 'storage.get') {
+    const r = await driver.exec({ action, agentId: page, ...args });
+    return r && typeof r === 'object' && 'result' in r ? { value: r.result } : r;
+  }
+  return driver.exec({ action, agentId: page, ...args });
+}
+
 // ── Background tabs — same chrome as an agent window, never shown ─────────
 // "Move to background tab" carries a URL into a hidden window under a new
 // agentId, freeing the visible window to navigate elsewhere while the
 // background context keeps running (mesh/automation use).
-async function openBackgroundTab({ agentId, url = 'about:blank', partition } = {}) {
+async function openBackgroundTab({ agentId, url = 'about:blank', partition, webviewPartition } = {}) {
   agentId = agentId || randomUUID();
   if (bgTabs.has(agentId)) { bgTabs.get(agentId).focus?.(); return { agentId, url, reused: true }; }
 
@@ -2348,6 +2347,9 @@ async function openBackgroundTab({ agentId, url = 'about:blank', partition } = {
     query: {
       agentId, ssePort: SSE_PORT, ipcPort: IPC_PORT, url: url || '',
       wvPreload: 'file://' + path.join(__dirname, '../preload/webview-bridge.js'),
+      // §0.39.265 — the <webview> keeps the app's default session unless told
+      // otherwise; automation pages give it theirs (persist:automation).
+      ...(webviewPartition ? { wvPartition: webviewPartition } : {}),
     },
   });
 
@@ -2489,7 +2491,35 @@ function _runShortcut(action, accel, owner) {
   }
   if (owner) owner.win.webContents.send('shortcut:action', { action, accel });
 }
+// §0.39.265 — workflow event triggers: "I open a page" and "a download finishes".
+// Pages a workflow drives itself (auto-* windows) never fire page.visited.
+const _automationSessions = new WeakSet();
+function _automationEvents(contents) {
+  contents.on('did-finish-load', () => {
+    try {
+      if (!mesh || !mesh._automation) return;
+      const url = contents.getURL();
+      if (!/^https?:/i.test(url)) return;
+      const host = contents.hostWebContents || null;
+      const hostWin = host ? BrowserWindow.fromWebContents(host) : BrowserWindow.fromWebContents(contents);
+      if (hostWin && /\bauto-/.test(hostWin.getTitle())) return;
+      if (!host && contents.getType() !== 'webview') return;   // only page content, not the app's own windows
+      mesh._automation.emitEvent('page.visited', { url, title: contents.getTitle() });
+    } catch (_) {}
+  });
+  const ses = contents.session;
+  if (ses && !_automationSessions.has(ses)) {
+    _automationSessions.add(ses);
+    ses.on('will-download', (_ev, item) => {
+      item.once('done', (_e2, state) => {
+        if (state !== 'completed' || !mesh || !mesh._automation) return;
+        try { mesh._automation.emitEvent('download.done', { file: item.getFilename(), path: item.getSavePath(), url: item.getURL(), bytes: item.getTotalBytes() }); } catch (_) {}
+      });
+    });
+  }
+}
 app.on('web-contents-created', (_e, contents) => {
+  try { _automationEvents(contents); } catch (_) {}
   contents.on('before-input-event', (event, input) => {
     if (!input || input.type !== 'keyDown' || input.isAutoRepeat) return;
     const accel = Shortcuts.accelFromInput(input);

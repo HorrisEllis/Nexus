@@ -104,6 +104,9 @@
   // (see src/preload/webview-bridge.js for why the old require('electron')
   // trick inside injected page scripts didn't work).
   if (wvPreload) wv.setAttribute('preload', wvPreload);
+  // §0.39.265 — automation pages run in their own session (persist:automation)
+  const wvPartition = params.get('wvPartition') || '';
+  if (wvPartition && /^persist:[\w-]{1,60}$/.test(wvPartition)) wv.setAttribute('partition', wvPartition);
 
   // §NEW 2026-07-04: main process navigates this window in place when the
   // orchestrator's wire /open call targets the already-open default window

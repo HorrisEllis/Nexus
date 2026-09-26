@@ -145,6 +145,8 @@ const SUITES = [
   'test-dispatcher-deepseek-ncp.js',
   'route-graph.test.js',
   'automation-engine.test.js',
+  'automation-v2.test.js',                // §0.39.265 — workflows v2: DOM steps, data, loops, triggers, runs, tools
+  'automation-settings-ui.test.js',       // §0.39.265 — Settings → Automation against a real engine
   'brainos-app-hostile.test.js',
   'guardian-hostile-file-read.test.js',
   'guardian-hostile-body-dos.test.js',

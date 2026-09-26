@@ -214,6 +214,9 @@ const FILES = [
   ['lib/agent-tools/tools/clear-glass/userscripts.js', 'nexus.lib.agent-tools.tools.clear-glass-userscripts', []],
   ['lib/agent-tools/tools/clear-glass/tab-visibility.js', 'nexus.lib.agent-tools.tools.clear-glass-tab-visibility', []],
   ['lib/agent-tools/tools/clear-glass/provider-deploy.js', 'nexus.lib.agent-tools.tools.clear-glass-provider-deploy', []],
+  // §0.39.265 — workflows over Clear Glass's wire (/automation/*), and a page agents drive with the same DOM steps
+  ['lib/agent-tools/tools/clear-glass/automation.js', 'nexus.lib.agent-tools.tools.clear-glass-automation', ['nexus.clear-glass.main']],
+  ['lib/agent-tools/tools/clear-glass/browser-automation.js', 'nexus.lib.agent-tools.tools.clear-glass-browser', ['nexus.lib.agent-tools.tools.clear-glass-automation']],
   // §NEW 2026-09-06 — real, confirmed gaps found while mapping tool
   // coverage for guardian/ncp/agent-mesh (clear-glass and macros
   // already had real tools; erosmancer already reachable through

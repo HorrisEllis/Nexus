@@ -51,10 +51,14 @@
     { type: 'agent',     label: 'Agent' },
     { type: 'delay',     label: 'Delay' },
     { type: 'command',   label: 'Command' },
-    { type: 'branch',    label: 'Branch / Parallel' },
     { type: 'http',      label: 'HTTP Request' },
-    { type: 'notification', label: 'Notification' },
+    { type: 'notify',    label: 'Notification' },
   ];
+  // §0.39.265 — 'branch' and 'notification' were offered here but the engine
+  // never ran either (it knows 'notify'; a step it does not know fails the run).
+  // The browser, read-the-page, wait-until, variables, loop, file, sub-workflow
+  // … steps have their forms in Clear Glass → Settings → Automation; a step of
+  // those types made there shows here by its summary and is kept as it is.
   // §STYLED 2026-09-11 — James: "like this. nothing less" (reference
   // screenshot's color-coded, iconed step rows). Reuses this app's own
   // existing real tokens (--warn/--relay/--idle/--online/--bridge/
@@ -72,8 +76,8 @@
     agent:        { icon: '◆', color: 'var(--idle)' },
     delay:        { icon: '⏱', color: 'var(--online)' },
     command:      { icon: '⌘', color: 'var(--online)' },
-    branch:       { icon: '∨', color: 'var(--relay)' },
     http:         { icon: '○', color: 'var(--danger)' },
+    notify:       { icon: '▲', color: 'var(--bridge)' },
     notification: { icon: '▲', color: 'var(--bridge)' },
   };
   // No longer-disabled list — every real step type automation-engine.js
@@ -146,10 +150,9 @@
       case 'agent':     return `${esc(c.agentKey || '?')}: “${esc((c.prompt || '').slice(0, 60))}”`;
       case 'delay':     return `${c.ms || 0}ms`;
       case 'command':   return `${esc(c.method || 'GET')} ${esc(c.system || '?')}${esc(c.endpoint || '/health')}`;
-      case 'branch':    return `${esc(c.mode || 'parallel')} · ${(c.agentKeys || []).join(', ') || '?'}`;
       case 'http':      return `${esc(c.method || 'GET')} ${esc(c.url || '?')}`;
-      case 'notification': return `${esc(c.type || 'bus')}: “${esc((c.message || '').slice(0, 60))}”`;
-      default:          return '';
+      case 'notify':    return `“${esc((c.title || '').slice(0, 40))}”${c.body ? ` — ${esc(String(c.body).slice(0, 50))}` : ''}`;
+      default:          return `${esc(step.type)} — edit in Clear Glass → Settings → Automation`;
     }
   }
 
@@ -185,17 +188,6 @@
           </div>
           <div class="field-row"><label>Endpoint</label><input data-cfg="endpoint" value="${esc(c.endpoint || '/health')}"></div>
           <div class="field-row"><label>Body (POST, JSON)</label><input data-cfg="body" value="${esc(c.body || '')}"></div>`;
-      case 'branch':
-        return `
-          <div class="field-row"><label>Mode</label>
-            <select data-cfg="mode">${['parallel', 'sequential', 'race'].map((m) => `<option ${c.mode === m ? 'selected' : ''}>${m}</option>`).join('')}</select>
-          </div>
-          <div class="field-row"><label>Agents (comma list)</label><input data-cfg-list="agentKeys" value="${esc((c.agentKeys || []).join(','))}" placeholder="e.g. claude,deepseek"></div>
-          <div class="field-row"><label>Prompt</label><input data-cfg="prompt" value="${esc(c.prompt || '')}"></div>
-          <div class="field-row"><label>Merge strategy</label>
-            <select data-cfg="mergeStrategy">${['first_wins', 'all', 'none'].map((m) => `<option ${c.mergeStrategy === m ? 'selected' : ''}>${m}</option>`).join('')}</select>
-          </div>
-          <div class="lr-meta" style="margin-top:2px">note: mode controls dispatch order only — no real merge/race is evaluated (see automation-engine.js header)</div>`;
       case 'http':
         return `
           <div class="field-row"><label>URL</label><input data-cfg="url" value="${esc(c.url || '')}" placeholder="https://…"></div>
@@ -204,15 +196,10 @@
           </div>
           <div class="field-row"><label>Body (JSON)</label><input data-cfg="body" value="${esc(c.body || '')}"></div>
           <div class="field-row"><label>Expected status</label><input type="number" data-cfg="expectedStatus" value="${esc(c.expectedStatus || 200)}"></div>`;
-      case 'notification':
+      case 'notify':
         return `
-          <div class="field-row"><label>Channel</label>
-            <select data-cfg="type">${['bus', 'console'].map((t) => `<option ${c.type === t ? 'selected' : ''}>${t}</option>`).join('')}</select>
-          </div>
-          <div class="field-row"><label>Message</label><input data-cfg="message" value="${esc(c.message || '')}"></div>
-          <div class="field-row"><label>Level</label>
-            <select data-cfg="level">${['info', 'warn', 'error'].map((l) => `<option ${c.level === l ? 'selected' : ''}>${l}</option>`).join('')}</select>
-          </div>`;
+          <div class="field-row"><label>Title</label><input data-cfg="title" value="${esc(c.title || '{{workflow}}')}"></div>
+          <div class="field-row"><label>Message</label><input data-cfg="body" value="${esc(c.body || '')}"></div>`;
       default: return '';
     }
   }

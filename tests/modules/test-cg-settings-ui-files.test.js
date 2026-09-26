@@ -21,7 +21,7 @@ const css = fs.readdirSync(path.join(S, 'sections')).filter(f => f.endsWith('.cs
       const ids = [...src.matchAll(/section\(\{\s*id: '([a-z]+)'/g)].map(m => m[1]);
       assert.deepStrictEqual(ids, [f.replace(/\.js$/, '')], `${f} registers ${ids.join(', ')}`);
     }
-    assert.strictEqual(js.length, 14);
+    assert.strictEqual(js.length, 18);   // 14 at v0.39.227; areas added since
   });
   await test('UF-02', 'one CSS file per JS file, and no orphan CSS', () => {
     assert.deepStrictEqual(css.map(f => f.replace(/\.css$/, '')).sort(), js.map(f => f.replace(/\.js$/, '')).sort());
