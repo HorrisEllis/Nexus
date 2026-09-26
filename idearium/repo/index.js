@@ -701,7 +701,9 @@ export class RepoLayer {
   _enrich(r) {
     const idea = (this.os && r.ideaUuid && this.os.idea) ? this.os.idea(r.ideaUuid) : null;
     let manifest = null, filesError = null;
-    try { manifest = this.se ? this.se.loadSpec(r.specUuid) : null; }
+    // §0.39.265 — metadata only (no chunk content), cached until the manifest changes:
+    // a list of every repo used to parse every repo's full manifest, core's alone ~20 MB.
+    try { manifest = this.se ? (typeof this.se.loadSpecMeta === 'function' ? this.se.loadSpecMeta(r.specUuid) : this.se.loadSpec(r.specUuid)) : null; }
     catch (e) { filesError = `spec ${r.specUuid} unreadable: ${e.message}`; }
     // §BUG FIXED 2026-07-11 — removed chunks (deleteFile → removeChunk)
     // were still showing up in the repo's file listing — the whole point
