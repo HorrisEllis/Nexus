@@ -1,0 +1,24 @@
+envelope: 1
+uuid: nexus-export-injection-ef7eba3b-1023-45d3-b6d4-5cf277d10ca2
+type: injection
+id: ef7eba3b-1023-45d3-b6d4-5cf277d10ca2
+context: copilot/tool-runtime.js makeNcpCallModel callModel
+intent: null
+summary: null
+system: copilot
+tags: []
+exported_at: 1790406568881
+source: copilot.tool-runtime.makeNcpCallModel
+occurrences: 1
+firstSeenAt: 1790406568881
+lastSeenAt: 1790406568881
+fingerprint: null
+payload:
+  provider: chatgpt
+  primed: false
+  composed: true
+  injectedSystemPrompt: false
+  injectedToolGuide: false
+  toolCount: 102
+  promptLength: 24
+  idleMsThreshold: 120000

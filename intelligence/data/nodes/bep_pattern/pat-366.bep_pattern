@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-366
+type: bep_pattern
+id: pat-366
+context: 'intelligence crystallised pattern: bottleneck'
+intent: null
+summary: Gap type "stale_module" appears 6 times — recurring bottleneck
+system: intelligence
+tags:
+  - bep_patterns
+  - bottleneck
+  - cortex/intelligence
+exported_at: 1790408076096
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790408076096
+lastSeenAt: 1790408076096
+fingerprint: null
+payload:
+  uuid: pat-366
+  signature: bottleneck::stale_module
+  patternType: bottleneck
+  gapType: stale_module
+  count: 6
+  confidence: 0.6
+  description: Gap type "stale_module" appears 6 times — recurring bottleneck
+  actionable: true
+  crystallised: true
+  source: cortex/intelligence
+  ts: 1790408076095

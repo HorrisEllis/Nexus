@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-bep_pattern-pat-108
+type: bep_pattern
+id: pat-108
+context: 'intelligence crystallised pattern: co_occurrence'
+intent: null
+summary: '"noise" and "x.tick" co-occur within 5s — 42 observations'
+system: intelligence
+tags:
+  - bep_patterns
+  - co_occurrence
+  - cortex/intelligence
+exported_at: 1790408346137
+source: intelligence.domain-nodes
+occurrences: 1
+firstSeenAt: 1790408346137
+lastSeenAt: 1790408346137
+fingerprint: null
+payload:
+  uuid: pat-108
+  signature: noise::x.tick
+  patternType: co_occurrence
+  typeA: noise
+  typeB: x.tick
+  systemA: null
+  systemB: null
+  crossSystem: false
+  count: 42
+  confidence: 1
+  description: '"noise" and "x.tick" co-occur within 5s — 42 observations'
+  actionable: true
+  crystallised: true
+  noiseTainted: false
+  source: cortex/intelligence
+  ts: 1790408346135
