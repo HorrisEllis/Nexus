@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/clearglass-menu-library.js — 0.39.262 (was clearglass-menu-library.py, v0.39.240/241).
+ * tests/probe/clearglass-menu-library.js — 0.39.263 (was clearglass-menu-library.py, v0.39.240/241).
  * James: "also needs to be clearglass library... added to the 3 lines menu."
  * Loads Clear Glass's REAL renderer/browser.html + browser.js in Clear Glass's own engine, with
  * window.ClearGlass stood in by an object built from the real preload's namespaces (every method

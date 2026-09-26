@@ -3,3 +3,5 @@
  * rule is scoped to body[data-area="plugins"] — set by core.js when the
  * area is shown — so nothing here can restyle another area. */
 body[data-area="plugins"] .row .acts { flex-wrap: wrap; gap: 6px; }
+body[data-area="plugins"] .wx-pick { display: flex; gap: 8px; margin: 6px 0 10px; }
+body[data-area="plugins"] .check { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-dim); margin-top: 8px; }

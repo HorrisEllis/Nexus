@@ -34,6 +34,8 @@
 
 const path   = require('path');
 const fs     = require('fs');
+const { JaaRows } = require('../storage/jaa');
+const _stores = new Map(); // <dir>/jaa → JaaStore
 const crypto = require('crypto');
 const { normalizeOrigin } = require('../site-settings/store');
 
@@ -59,21 +61,32 @@ class PasswordVault {
       fs.mkdirSync(this.dir, { recursive: true });
       this._k = loadVaultKey({ name: 'password-vault', legacyPassphrase: VAULT_KEY, dir: this.dir, safeStorage: this._safeStorage });
       this.key = this._k.key;
-      if (fs.existsSync(this.path)) {
-        this.entries = JSON.parse(fs.readFileSync(this.path, 'utf8'));
-      } else {
-        this._persist();
-      }
+      this.entries = this._rows().load();
     } catch (err) {
       console.warn('[PasswordVault] load error:', err.message);
     }
     return this.entries;
   }
 
+  // §JAA 2026-09-26 — James: "make it jaa. no json." Same shape as the cookie
+  // vault: the vault's own JaaStore in <dir>/jaa (so a vault opened on a
+  // different dir never shares rows), one row per saved login. Rows hold
+  // the same encrypted blob as before; passwords.json is imported once and
+  // left on disk.
+  _rows() {
+    if (this._jaa) return this._jaa;
+    const dir = path.join(this.dir, 'jaa');
+    const open = () => {
+      // One store per directory per process: two vaults on the same dir must see each other's writes.
+      if (!_stores.has(dir)) _stores.set(dir, new (require('../../../guardian/jaa-store.js').JaaStore)(dir, { settings: false }));
+      return _stores.get(dir);
+    };
+    return (this._jaa = new JaaRows('passwords', { legacyFile: this.path, store: open }));
+  }
+
   _persist() {
     try {
-      fs.mkdirSync(this.dir, { recursive: true });
-      fs.writeFileSync(this.path, JSON.stringify(this.entries, null, 2));
+      this._rows().replaceAll(this.entries);
     } catch (err) {
       console.warn('[PasswordVault] persist error:', err.message);
     }

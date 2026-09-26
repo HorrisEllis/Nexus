@@ -547,29 +547,56 @@ class ClearDriver {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
 
-    await this._evalJs(wc, `
+    // §IMPROVED 2026-09-26 — selectors a replay can actually find again
+    // (id, name, data-testid, aria-label, else a short nth-of-type path, all
+    // checked unique), the field type (so src/macros/recording.js can keep
+    // passwords out of the macro), Enter keys only, and the start url.
+    // Listeners are installed once per page; a second start just resets.
+    const startUrl = await this._evalJs(wc, `
       window.__cgRecording = [];
-      ['click','input','change','keydown','scroll','submit'].forEach(type => {
-        document.addEventListener(type, (e) => {
-          const el  = e.target;
-          const sel = el.id ? '#' + el.id : el.tagName.toLowerCase() + (el.className ? '.' + el.className.split(' ')[0] : '');
-          window.__cgRecording.push({
-            type, sel,
-            value: el.value,
-            ts: Date.now(),
-          });
-        }, true);
-      });
+      if (!window.__cgRecorderInstalled) {
+        window.__cgRecorderInstalled = true;
+        const esc = (v) => (window.CSS && CSS.escape) ? CSS.escape(v) : String(v).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+        const uniq = (s) => { try { return document.querySelectorAll(s).length === 1; } catch (_) { return false; } };
+        const selOf = (el) => {
+          if (!el || el.nodeType !== 1) return null;
+          if (el.id && uniq('#' + esc(el.id))) return '#' + esc(el.id);
+          const tag = el.tagName.toLowerCase();
+          for (const a of ['name', 'data-testid', 'data-test', 'aria-label', 'placeholder']) {
+            const v = el.getAttribute(a);
+            if (v) { const s = tag + '[' + a + '="' + v.replace(/"/g, '\\"') + '"]'; if (uniq(s)) return s; }
+          }
+          const parts = []; let cur = el;
+          while (cur && cur.nodeType === 1 && parts.length < 5) {
+            if (cur.id && uniq('#' + esc(cur.id))) { parts.unshift('#' + esc(cur.id)); break; }
+            const t = cur.tagName.toLowerCase(); const p = cur.parentElement;
+            const same = p ? [...p.children].filter(c => c.tagName === cur.tagName) : [];
+            parts.unshift(same.length > 1 ? t + ':nth-of-type(' + (same.indexOf(cur) + 1) + ')' : t);
+            const s = parts.join(' > '); if (uniq(s)) return s;
+            cur = p;
+          }
+          return parts.join(' > ');
+        };
+        ['click','input','change','keydown','submit'].forEach(type => {
+          document.addEventListener(type, (e) => {
+            if (!window.__cgRecording) return;
+            if (type === 'keydown' && e.key !== 'Enter') return;
+            const el = e.target;
+            window.__cgRecording.push({ type, sel: selOf(el), value: el && el.value, inputType: el && el.type, key: e.key, url: location.href, ts: Date.now() });
+          }, true);
+        });
+      }
+      location.href;
     `);
 
-    return { recording: true };
+    return { recording: true, startUrl };
   }
 
   async _recordStop(agentId) {
     const wc = this._getWebContents(agentId);
     if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
 
-    const recording = await this._evalJs(wc, 'window.__cgRecording || []');
+    const recording = await this._evalJs(wc, '(() => { const r = window.__cgRecording || []; window.__cgRecording = null; return r; })()');
     this.sse.emit('driver.recording', { agentId, recording, ts: Date.now() });
     return { recording };
   }

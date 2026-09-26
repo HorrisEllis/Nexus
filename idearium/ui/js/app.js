@@ -35,7 +35,7 @@
 // /api/events, /sse · POST /api/ideas, /api/gaps, /api/snapshots, etc.
 // Tries direct :4800, falls back to orchestrator proxy at :9000/api/idearium
 // ════════════════════════════════════════════════════
-// §0.39.262 — the idearium that served this page comes first: an idearium on
+// §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
 const API_CANDIDATES = [...new Set([
   ...(typeof location !== 'undefined' && /^https?:$/.test(location.protocol) && !/^\/api\/idearium/.test(location.pathname) ? [location.origin] : []),
@@ -175,6 +175,7 @@ function refreshOnEvent(ev) {
   // every time this happens again.
   const t = ev.type.startsWith('idearium.') ? ev.type.slice('idearium.'.length) : ev.type;
   if (t.startsWith('idea.'))   { loadIdeas(); }
+  if (t.startsWith('workbench.') && typeof loadCompartment === 'function') { loadCompartment(); }
   if (t.startsWith('gap.'))    { loadGaps(); }
   // §BUG FIXED 2026-07-15 — spec-engine's own chunk events are named
   // 'idearium.spec-engine.chunk.complete'/'.queued', which — unlike every
@@ -272,7 +273,8 @@ const LINK_TYPES    = ['resonance','tension','causal','temporal','semantic'];
 const SECTION_IDS   = ['intent','api_callto','module_hooks','cli_spec','schemas','gap_contract','failure_modes','tests','phase_map'];
 
 async function loadAll() {
-  await Promise.all([loadIdeas(), loadGaps(), loadSpecs(), loadSnapshots(), loadStats(), loadApiRepos(), loadBrainstorms()]);
+  await Promise.all([loadIdeas(), loadGaps(), loadSpecs(), loadSnapshots(), loadStats(), loadApiRepos(), loadBrainstorms(),
+    typeof loadCompartment === 'function' ? loadCompartment() : null]);
 }
 // §BUILT 2026-09-03 — real data/-backed load, replacing the old
 // localStorage.getItem at module-load time. Same shape (array of
@@ -413,6 +415,8 @@ function setView(v) {
   // a repo was left open last visit — openRepoFor() (idea/spec → repo) is
   // the only path that should skip straight to detail mode.
   if (v === 'repo') { exitRepoDetail(); }
+  if (v === 'compartment' && typeof renderCompartmentDetail === 'function') { renderCompartmentTree(); renderCompartmentDetail(); }
+  document.querySelectorAll('.tt-leaf').forEach(l => l.classList.remove('active'));
 }
 
 // Top-tab subnav dropdowns (Create ▾ / Build ▾) — hover works via CSS,
@@ -562,6 +566,7 @@ function renderDetail(idea) {
     html += `<div class="ds"><div class="ds-label">spec</div><button class="action-btn primary" onclick="createSpecForIdea('${idea.uuid}')">+ create spec from this idea</button></div>`;
   }
 
+  html += `<div class="ds"><div class="ds-label">idea compartment</div><button class="action-btn primary" onclick="admitToCompartment('${idea.uuid}')">work in compartment → brainstorm · problems · expand · improve</button></div>`;
   html += `<div class="ds"><div class="ds-label">repository</div><button class="action-btn" onclick="openRepoFor('${idea.uuid}', null, '${escapeHtml(idea.text||idea.uuid).replace(/'/g,"\\'").slice(0,40)}')">open repository →</button></div>`;
 
   if (openGaps.length) {
@@ -747,10 +752,12 @@ async function deleteBrainstorm(id) {
 async function promoteBrainstorm(id) {
   if (!CONNECTED) { toast('connect to nexus to promote','err'); return; }
   try {
-    await api(`/api/brainstorms/${id}/promote`, { method: 'POST' });
+    const r = await api(`/api/brainstorms/${id}/promote`, { method: 'POST' });
     await loadBrainstorms();
     await loadIdeas();
-    toast('promoted to idea','ok');
+    toast('promoted — now in the Compartment','ok');
+    // §BUILT 2026-09-26 — a promoted idea moves to the Compartment to be worked.
+    if (r.idea?.uuid && typeof openCompartmentIdea === 'function') { await loadCompartment(); openCompartmentIdea(r.idea.uuid); }
   } catch(e) { toast(e.message,'err'); }
 }
 function renderBrainstorms() {
@@ -764,7 +771,7 @@ function renderBrainstorms() {
         <span class="brain-ts">${new Date(b.ts).toLocaleString()}</span>
       </div>
       <div class="action-row">
-        ${b.promoted ? `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>` : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → idea</button>`}
+        ${b.promoted ? (b.ideaUuid ? `<button class="action-btn" style="color:var(--mint)" onclick="openCompartmentIdea('${b.ideaUuid}')">promoted ✓ · open in compartment →</button>` : `<span class="ic-tag" style="color:var(--mint)">promoted ✓</span>`) : `<button class="action-btn primary" onclick="promoteBrainstorm('${b.uuid}')">promote → compartment</button>`}
         ${b.promoted ? '' : `<button class="action-btn" onclick="assistBrainstormCard('${b.uuid}')">✨ refine</button>`}
         <button class="action-btn" onclick='openNewSpecModal({name:${JSON.stringify(b.text.slice(0,60))}, description:${JSON.stringify(b.text)}})'>+ spec</button>
         <button class="action-btn danger" onclick="deleteBrainstorm('${b.uuid}')">discard</button>
@@ -832,9 +839,11 @@ async function assistBrainstormCard(uuid) {
     // match what was actually promoted, not left silently diverging.
     if (!CONNECTED) { toast('connect to nexus to promote', 'err'); return; }
     try {
-      await api(`/api/brainstorms/${uuid}/promote`, { method: 'POST', body: JSON.stringify({ text }) });
+      const r = await api(`/api/brainstorms/${uuid}/promote`, { method: 'POST', body: JSON.stringify({ text }) });
       await loadBrainstorms();
-      toast('promoted to idea', 'ok');
+      await loadIdeas();
+      toast('promoted — now in the Compartment', 'ok');
+      if (r.idea?.uuid && typeof openCompartmentIdea === 'function') { await loadCompartment(); openCompartmentIdea(r.idea.uuid); }
     } catch (e) { toast(e.message, 'err'); }
   }});
 }
@@ -1663,7 +1672,7 @@ function renderRepoLibrary() {
   // §0.39.261 — the Nexus repos (one parent + one per system, each in its own
   // nested COS compartment) are one group, shown first: Nexus managing itself.
   const NEXUS_KEY = 'nexus';
-  // §0.39.262 — "nexus is the repo, not 15, just nexus": the system repos are
+  // §0.39.263 — "nexus is the repo, not 15, just nexus": the system repos are
   // opened from inside it (its atlas Home), so the library lists only the parent —
   // plus, in the compact list, the system you are in, under it. A filter that
   // names a system still finds it.
@@ -1748,7 +1757,7 @@ function enterRepoDetail(uuid) {
 // Back button: return to the landing grid. Closes whatever file was open —
 // re-entering a repo always starts from its tree, same as a fresh visit.
 function exitRepoDetail() {
-  // §0.39.262 — a nexus system is inside the nexus repo: back goes to nexus, then to the library
+  // §0.39.263 — a nexus system is inside the nexus repo: back goes to nexus, then to the library
   if (CURRENT_API_REPO && CURRENT_API_REPO.nexusSelf && CURRENT_API_REPO.nexusSelf.role === 'system' && typeof nexusAtlasHome === 'function' && _nxParent()) return nexusAtlasHome();
   if (typeof NX_DOC_TRAIL !== 'undefined' && NX_DOC_TRAIL.length) return nexusAtlasHome();
   REPO_DETAIL_OPEN = false;
@@ -2094,7 +2103,7 @@ const _nsDelta = (cur, prev, k, higherBetter = true) => {
 async function renderNexusHome(repo, el) {
   el.innerHTML = `<div class="detail-empty">loading Nexus…</div>`;
   const stillHere = () => CURRENT_API_REPO?.uuid === repo.uuid && CURRENT_REPO_SUBTAB === 'home';
-  // §0.39.262 — the nexus repo's Home is the Nexus atlas (ui/js/nexus-atlas.js);
+  // §0.39.263 — the nexus repo's Home is the Nexus atlas (ui/js/nexus-atlas.js);
   // the operational panels below live in its collapsible "snapshot · …" section.
   if (repo.nexusSelf.role === 'parent') return renderNexusAtlasHome(repo, el);
   return _nexusSystemHome(repo, el, stillHere);

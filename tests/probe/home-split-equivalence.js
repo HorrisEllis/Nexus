@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/home-split-equivalence.js — 0.39.262 (was home-split-equivalence.py, v0.39.228).
+ * tests/probe/home-split-equivalence.js — 0.39.263 (was home-split-equivalence.py, v0.39.228).
  * Proves the ui/home split (one JS + one CSS per area) changed nothing but the stored-mode boot
  * bug. A real page in Clear Glass's own engine, the repo served over HTTP, every non-local
  * request aborted identically on both sides.

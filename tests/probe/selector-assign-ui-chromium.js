@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/selector-assign-ui-chromium.js — 0.39.262 (was selector-assign-ui-chromium.py, 0.39.251).
+ * tests/probe/selector-assign-ui-chromium.js — 0.39.263 (was selector-assign-ui-chromium.py, 0.39.251).
  * The Clear Glass selector-assign area's whole flow in a real page — Clear Glass's own engine:
  * a pick is offered → the live check result is shown (selector, matches) → Assign → guardian's
  * answer is shown (recorded, verified, tabs pushed). Then an older answer → the refusal and the

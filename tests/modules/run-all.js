@@ -297,7 +297,8 @@ const SUITES = [
   'test-back-and-forth.test.js',     // 0.39.259 — turns 2+ of a conversation complete; each agent keeps its chat
   'test-dangling-hooks-and-idearium-load.test.js', // 0.39.260 — dangling-hook flood, large-import idearium stall, real idearium health in the UI
   'test-nexus-self-and-cos-run.test.js', // 0.39.261 — Nexus as immutable repos in nested compartments, the COS run menu + JS runtime, tool calls, glyphs, in-house zip/http/ws
-  'test-nexus-atlas-and-glass.test.js',  // 0.39.262 — one nexus repo whose Home is the Nexus atlas (every reference opens in idearium); Clear Glass's engine replaces Playwright
+  'test-nexus-atlas-and-glass.test.js',  // 0.39.263 — one nexus repo whose Home is the Nexus atlas (every reference opens in idearium); Clear Glass's engine replaces Playwright
+  'brainos-float-cg.test.js', // 0.39.262 — BrainOS Float Clear Glass tabs + pre-mount registration fix
   'test-agent-tools-and-graph.test.js', // 0.39.257 — every tool (enforced), /tools /debug /graph, the graph in context
   'test-live-stream-and-gates.test.js', // 0.39.256 — 500 ms transcript streaming + gate-specific errors (GS-20 in Clear Glass's engine)     // 0.39.254 — every provider chat, one versioned record per chat (TX-20 in Clear Glass's engine)
   'test-one-tab-e2e.test.js',        // 0.39.247 — real guardian, one tab: job → reply → .response   // 0.39.245 — spec-engine/manifest phase 1: file list → wire-check → manifest + registry

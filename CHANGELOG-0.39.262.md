@@ -1,112 +1,120 @@
-# NEXUS 0.39.262: Nexus is one repo, its Home is the Nexus atlas, and Clear Glass replaces Playwright
+# NEXUS 0.39.262: Idearium Compartment + recursive tabs; Clear Glass on JAA, copilot hat CLI, macros, WebExtensions, site settings
 
-**Date:** 2026-09-26 · clear-glass 3.15.0 → 3.16.0
+**Date:** 2026-09-26 · idearium (workbench, UI), clear-glass 3.15.0 → 3.16.0, ui/brainos-float
 
-James:
+James, live on 0.39.260:
 
-> *"playright? no what is that for? litterally have clearglas... also nexus is the repo, not 15, just nexus, then clicking inside of it, shows the rest of them in maybe architecture or no, the nexus atlas, wire that completely in as the homepage of the nexus repo, and everything referenced can be opened in idearium, including each system."*
+> *"in idearium can you make the tabs much more recursive, deep and expanded fully? interconnected. i want ideas once promoted to move to the compartment idea section for brainstorming, problem solving, expanding, and improving"*
+>
+> *"in clearglass. can you fix this? also make the macros way more user friendly? expand the copilot settings. add new button to the plugins section with webextension support. expand per site settings. make a clearglass hat for the copilot cli … also with clearglass, make it jaa. no json. cookies only. expand the autofill section, agent mesh and brainos."*
 
-## Nexus is one repo
+## Fixed: `unhandledrejection GUEST_VIEW_MANAGER_CALL … ERR_CONNECTION_REFUSED (-102) 'http://127.0.0.1:900/'`
 
-**The library**
-- The library shows one card, `nexus`, instead of 15.
-- The 14 system repos are opened from inside it.
-- While you are in a system, the compact list shows it under nexus.
-- A filter that names a system still finds it.
-- Back from a system goes to nexus; back from nexus goes to the library.
+- **Cause:** `<webview>.loadURL()` returns a Promise that rejects when a navigation fails. All nine call sites in `renderer/browser.js` dropped it, so every failed navigation reached the global `unhandledrejection` handler (error toast + `errors:report`).
+- `:900` is not in any code. It was typed. The `:9000` ERR_ABORTED (-3) in the same log is the default start page being superseded by that typed navigation, which is normal.
+- **Fix:** all navigation goes through `navigate()`, which consumes the rejection. `did-fail-load` (main frame only) shows one in-view page: the URL, the error, Retry, and for a refused local port one keystroke from a NEXUS port, "Did you mean http://127.0.0.1:9000/?". The address bar and history keep the URL that failed, not the error page.
 
-**The Home tab is the Nexus atlas**
-- Nexus's Home renders `docs/atlases/nexus-atlas.md`, read from the immutable snapshot (`idearium/ui/js/nexus-atlas.js`, loaded after app.js).
-- Every system is a block at the top, showing its files, versions, loom phases done/total, symbols, resolution and port. Clicking a block opens that system.
-- Each `### <system>` module heading in the document gets a live line with the same numbers.
-- The operational panels from 0.39.261 are in a collapsible section below: snapshot and sync, understanding, system graph, compartments, applied changes.
+## Idearium: the Compartment
 
-**Everything referenced opens in idearium**
-- The page collects its references: code spans, file-tree lines, `:port`s and `*-atlas.md` names.
-- They are resolved in one request, `POST /api/nexus-self/resolve` (`resolveRefs` in `idearium/repo/nexus-self.js`).
-- What each kind opens:
+- **Promote now lands somewhere:** a promoted brainstorm becomes an idea *in the Compartment*, with its text seeding the Brainstorm lane, and the UI opens it there.
+- **Four lanes per idea:** Brainstorm, Problem solving, Expand, Improve. Entries nest to any depth (reply ↳), move between lanes, resolve, fold, delete with their subtree.
+- **Recursive across ideas:** ◆ on any entry spins it out into its own idea, a child of this one, linked causally, with its own four lanes.
+- **Interconnected:** ⇄ links an entry to any entry or idea. Links are shown as chips and walked both ways (the Links view lists spun-out ideas, links out, links in, and the idea graph).
+- **Copilot per lane:** ✨ asks copilot to work the entry in its lane's terms (break down / expand / improve…). You pick which suggestions to keep; they are added one level deeper. Nothing is stored without that pick.
+- **Tabs:** the Compartment tab's dropdown nests idea → spun-out idea → lanes as flyouts, as deep as the idea tree goes. **Expand all (⊞)** replaces the tab bar with a full navigator tree: every view, every idea, every compartment idea and lane, every repo and every repo subtab.
+- Model: `idearium/lib/idea-workbench.js` (pure). Store: JAA tables `idearium_workbench_members`, `idearium_workbench_entries`. Routes under `/api/workbench` and `/api/ideas/:uuid/workbench`.
+- An unknown lane is refused with a 400, never defaulted.
 
-| Reference | Opens |
-|---|---|
-| system name, `nexus.<system>`, `:port`, a system's directory | that system's repo |
-| file | its system repo, Files tab, with the file open in the editor |
-| `*.md` doc | rendered in place with a breadcrumb; its own references are live too |
-| directory | its system repo's Files tab |
-| `NEXUS/` | the nexus Home |
+## Clear Glass: JAA, no JSON files
 
-- Indented file-tree lines resolve as full paths: `guardian/` → `lib/` → `node-registry.js` is `guardian/lib/node-registry.js`.
-- A bare name like `loom.spec` prefers the copy inside the system it is named after (`loom/spec/loom.spec` over `docs/loom.spec`). The other copies are listed in the link's tooltip.
-- A path the snapshot does not have is marked struck-through with the tooltip "not in the snapshot". It is never guessed.
-- A plain term such as `sigma` or `AX-013` is left as text.
+- Cookies were already on JAA (0.39.243). Everything else wrote its own `<name>.json` on every change: options, API settings, site settings, history, downloads, bookmarks, autofill profiles, fingerprints, saved passwords.
+- All of them now go through `src/storage/jaa.js`: one JaaStore at `~/.clear-glass/jaa`, one table per store, one row per record. Only changed rows are written. History and downloads order by their own timestamps, so a new entry doesn't rewrite 5000 rows.
+- The password vault, like the cookie vault, keeps its own store in its own directory.
+- Old files are imported once, marked in `cg_jaa_meta`, and **left on disk**.
+- **Stated limit:** JaaStore itself snapshots each table as `<table>.json` inside `jaa/`. That is its storage format. "No JSON" here means no store owns a JSON file; it does not mean the database stops writing JSON.
 
-**Each system's Home starts with its own atlas**
-- It shows `docs/atlases/<system>-atlas.md`, found by the system's name or by the directory it owns (`ollama-atlas.md` for ollama-bridge), with its references live.
-- A breadcrumb `nexus › <system>` sits at the top.
+## Clear Glass: the co-pilot pane wears the Clear Glass hat
 
-**New routes**
-- `GET /api/nexus-self/atlas`: the document, per-system numbers, and architecture-spec's `nexus-atlas-aggregate` roll-up of every synced system's `atlas.json`.
-- `POST /api/nexus-self/resolve`
-- `GET /api/nexus-self/file?path=`: any text file of the immutable base, read-only.
+- **Route bar:** the TV UI floating menu's toggle (ollama | copilot | guardian), plus the NCP agent dropdown and a 🎩 hat chip.
+- **CLI** in the style of Idearium's agent CLI:
+  - `/help` `/status` `/backend` `/agent` `/hat [on|off]` `/forge` `/persona` `/ctx` `/run` `/go` `/back` `/reload` `/site` `/macro` `/cookies` `/build` `/diagnose` `/history` `/clear` `/settings`
+  - ↑/↓ recalls earlier inputs, Tab completes a command.
+- **The hat:** `clear_glass` in `lib/hat-forge`, found by its role (seedKey), forged on first `/forge`. Until then a built-in persona is used.
+  - Like Idearium's repo agents, the persona is composed into each call. backend/agent are per-call fields (the same ones the TV menu sends).
+  - Wearing it in the browser never changes what copilot wears anywhere else.
+- **Fixed:** every ```driver command in a reply ran twice. The main process ran it, then `browser.js` ran it again through `cg.driver.exec`.
+  - Now the main process is the only executor.
+  - With auto-run off, commands are proposed and run on `/run`.
+- **Fixed:** `/build` and `/diagnose` always failed. Their IPC handlers existed, but the preload never exposed them.
 
-**Also fixed:** the UI connected to the hardcoded `:4800` even when a different idearium served it. The idearium that served the page is now tried first.
+## Clear Glass: Settings
 
-## Playwright is gone: Clear Glass drives the pages
+- **Co-pilot:**
+  - the default route
+  - the hat: status, Forge, persona editor, model
+  - DOM on/off and budget, timeout
+  - auto-run of proposed actions, the route line under replies, history size
+  - channel, fallback endpoint and model
+  - the CLI reference
+- **Macros:**
+  - **Record** from a tab. The driver's recorder now builds unique selectors. `src/macros/recording.js` turns the recording into steps, and a password becomes a `{{password}}` parameter, never a stored value.
+  - Templates: log in, fill a form, search, open and screenshot.
+  - Steps read as sentences and have labelled fields.
+  - Parameters are found in the `{{…}}` placeholders.
+  - Edit: if the new version is refused, the old one is restored. Duplicate is also available.
+  - Missing url/selector is flagged before save.
+  - Run offers an explicit "rewind snapshot first" choice.
+- **Plugins → Add WebExtension:** Chrome extensions (MV2/MV3) from a folder, a `.zip` or a `.crx` (CRX2/3 header stripped).
+  - Loaded into the default session and every persistent tab session as it is created. The registry is in JAA.
+  - Controls: enable/disable, reinstall, remove. Remove deletes only a copy Clear Glass unpacked.
+  - Electron's refusal or its warnings show on the extension's row.
+  - Electron supports part of the `chrome.*` API. The page says so.
+- **Site settings** (new area; it was one pane in Privacy):
+  - 15 permissions, each Default/Allow/Block
+  - zoom
+  - content blocking on/off per site
+  - any other stored key, editable
+  - add a site, copy settings to another site, filter
+  - Every control is enforced: `permission:*` by the permissions plugin, `zoomFactor` by the browser, and `contentFilter='off'` by a new exemption in `webrequest-adapter.js`.
+- **Autofill:**
+  - all 25 fields the store accepts, grouped (the editor had 12)
+  - completeness
+  - duplicate
+  - **Fill a tab** with a match preview first. It never submits.
+  - try an on-screen answer
+- **Agent mesh:**
+  - health bars and readable constraints
+  - per-agent page check (`/agent-mesh/diagnose`)
+  - dispatch shows the reply text and supports a fallback order
+  - routes with `{{output}}` transforms and a pipeline summary
+  - Jobs (`/agent-mesh/intake`), Network nodes (`/agent-mesh/view`)
+  - live refresh
 
-Playwright was a root devDependency for three probe scripts. Four more probes needed Python playwright, which was never installed, so TX-20, GS-20, SA-09 and SA-10 always reported SKIPPED.
+## BrainOS Float
 
-Clear Glass is already a Chromium, so it now drives the pages itself.
-
-**`clear-glass/src/driver/glass.js` plus `glass-host/main.js`**
-- Node starts Clear Glass's Electron on the host script.
-- Each page is a BrowserWindow, driven through its own `webContents.debugger`: the DevTools protocol spoken in-process, with no remote-debugging port.
-- With no display on Linux it runs `--ozone-platform=headless` with offscreen windows. A shown window under the headless platform segfaults Electron 42.
-- A machine without the Electron binary can point it at any Chromium (`GLASS_CHROMIUM`), driven over the DevTools websocket.
-- The API is the subset of Playwright's that the probes used, under the same names, so a probe changes one line:
-  - `launch`, `newPage`, `goto`, `evaluate`
-  - `click` (on an inline element's first line box, so a wrapped link is hit)
-  - `fill`, `selectOption`, `keyboard.press`, `locator`, `$`/`$$`/`$eval`/`$$eval`
-  - `waitForSelector`/`Function`/`LoadState`
-  - `route` (the Fetch domain), `exposeFunction` (Runtime bindings), `addInitScript`, `cdp`, `screenshot`
-  - selectors: CSS, `text=`, `:has-text()` and `a >> b`
-
-**Every real-page probe now runs on it**
-
-| Probe | Result |
-|---|---|
-| `transcript-push-chromium.js` (TX-20) | 10/10 |
-| `live-stream-chromium.js` (GS-20) | 8/8 |
-| `selector-check-chromium.js` (SA-09) | 10/10 |
-| `selector-assign-ui-chromium.js` (SA-10) | 9/9 |
-| `agent-blocks-chromium.js` | 13/13 |
-| `clearglass-library-window.js` | 29/29 |
-| `clearglass-menu-library.js` | 4/4 |
-| `nexus-atlas-home.js` (new: a real idearium, in a sandbox) | 8/8 |
-
-- `home-split-equivalence.js` is ported, but its reference commit `30a0c24` predates this checkout's history, so it reports SKIPPED here, as the Python version would have.
-- The six `.py` probes are deleted. The shared probe helper is `tests/probe/_glass-probe.js`.
-- `tests/manual-chatgpt-console.playwright.js` became `tests/manual-chatgpt-console.glass.js`.
-- Root devDependencies are now electron, electron-builder and jsdom. The lockfile went from 468 to 462 packages.
+- New tabs **NODES, MESH JOBS, MACROS, AUTOFILL, SITES**, added through the panel's own `registerTab` hotswap point (`ui/brainos-float/brainos-float-cg.js`). The contract is updated.
+- **Fixed:** a tab registered before `mount()` silently removed all five built-in tabs.
 
 ## Tests
 
-`tests/modules/test-nexus-atlas-and-glass.test.js`: 8/8, registered in run-all.
+- **New, all passing:**
+  - `clear-glass/test/storage-jaa.test.js` 5
+  - `clear-glass/test/copilot-cli.test.js` 10, including the real hat forge on an isolated JAA dir
+  - `clear-glass/test/webextensions.test.js` 7
+  - `clear-glass/test/content-filter-exempt.test.js` 1
+  - `tests/modules/brainos-float-cg.test.js` 6, registered in `run-all.js`
+  - `idearium/test/idea-workbench.test.js` 10
+  - `idearium/test/compartment-ui.smoke.cjs`
+- **`tests/modules/test-cg-accounts-portal-settings.test.js`: 38/38.**
+  - It failed on 0.39.260 (UI-05) because its section list and fake backend predated Downloads and Plugins. Both are updated.
+  - Before that fix, UI-05 stopped at the list and never rendered any section.
+- **Still passing:** `clear-glass-autofill` 16, `nexus-options-autoboot` 15, `test-response-downloads` 9, `test-cookie-vault-jaa` 7, `clear-glass-screen-qa` 26, clear-glass `bus` and `watchdog`.
+- **Failing on 0.39.260 too, unchanged:**
+  - `clear-glass-accounts`: 1 (send() accountId)
+  - clear-glass `network-install`: 5
+  - `test-brainos-real-access-path`: BRA-001, BRA-002B
 
-| Group | What it covers |
-|---|---|
-| AT-001 | every kind of atlas reference resolves to what it names; an unknown one resolves to null |
-| AT-002 | the Home is the atlas from the base, every system listed with its own atlas doc |
-| AT-003 | a live edit does not show until the next snapshot |
-| AT-004 | routes are registered before `:system` |
-| UI-001 | markdown and file-tree references |
-| UI-002 | one nexus card; back from a system goes to nexus |
-| CG-001 | no Playwright, no Python probe, every probe drives Clear Glass |
-| CG-002 | a real page: wrapped-element click, fill, `:has-text`, `text=`, events, screenshot size |
+## Not verified here
 
-Suites that changed, all passing:
-
-| Suite | Result |
-|---|---|
-| test-chat-transcripts | 31/0 (TX-20 now runs) |
-| test-live-stream-and-gates | 13/0 (GS-20 now runs) |
-| test-cg-selector-assign | 9/0 (SA-09 and SA-10 now run; SA-06 is still SKIPPED, because its 0.39.250 base commit is not in this history) |
-| version-sync-and-registry | 28/2, the same two failures as before this release (lib/version.js lists idearium 4.8.0 while idearium reports 4.7.0) |
+- **Not run in a real Electron window:** the WebExtension loading and the recorder. Both were exercised against fake sessions and a fake driver in tests.
+- **Not run against a live copilot and guardian:** the co-pilot CLI's routing.

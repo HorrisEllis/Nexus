@@ -4,3 +4,13 @@
  * so nothing here can restyle another area. */
 body[data-area="mesh"] textarea { min-height: 88px; }
 body[data-area="mesh"] .row .what .d { overflow-wrap: anywhere; }
+
+/* §EXPANDED 2026-09-26 */
+body[data-area="mesh"] .health { display: inline-block; width: 64px; height: 6px; border-radius: 3px; background: var(--pane-2); overflow: hidden; }
+body[data-area="mesh"] .health > span { display: block; height: 100%; }
+body[data-area="mesh"] .live-tog { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-dim); }
+body[data-area="mesh"] .answer { margin-top: 12px; border: 1px solid var(--edge); border-radius: var(--r-m); padding: 10px 12px; }
+body[data-area="mesh"] .ans-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin-bottom: 6px; }
+body[data-area="mesh"] .ans-text { white-space: pre-wrap; line-height: 1.5; }
+body[data-area="mesh"] .raw { margin-top: 8px; }
+body[data-area="mesh"] .raw summary { font-size: 11px; color: var(--ink-faint); cursor: pointer; }

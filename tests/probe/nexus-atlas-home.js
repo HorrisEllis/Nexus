@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/nexus-atlas-home.js — 0.39.262.
+ * tests/probe/nexus-atlas-home.js — 0.39.263.
  * James: "nexus is the repo, not 15, just nexus, then clicking inside of it, shows the rest of
  * them in … the nexus atlas, wire that completely in as the homepage of the nexus repo, and
  * everything referenced can be opened in idearium, including each system."

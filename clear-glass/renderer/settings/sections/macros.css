@@ -4,3 +4,25 @@
  * so nothing here can restyle another area. */
 body[data-area="macros"] .step.eros { border-color: color-mix(in srgb, var(--violet) 45%, transparent); }
 body[data-area="macros"] .step .more { grid-column: 2 / -1; }
+
+/* §REBUILT 2026-09-26 — friendlier builder: step cards that read as sentences,
+   labelled fields, templates, recording state. */
+body[data-area="macros"] .step { grid-template-columns: 26px 1fr auto; align-items: start; }
+body[data-area="macros"] .step.bad { border-color: var(--bad); }
+body[data-area="macros"] .step-main { display: grid; gap: 8px; min-width: 0; }
+body[data-area="macros"] .step-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+body[data-area="macros"] .step-top select { max-width: 200px; }
+body[data-area="macros"] .step-say { color: var(--ink-hi); font-size: 12.5px; flex: 1; min-width: 160px; }
+body[data-area="macros"] .step-fields { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+body[data-area="macros"] .step-more summary { font-size: 11px; color: var(--ink-faint); cursor: pointer; }
+body[data-area="macros"] .step-more input { margin-top: 6px; width: 100%; }
+body[data-area="macros"] .step-tools { display: flex; flex-direction: column; gap: 2px; }
+body[data-area="macros"] .step-add { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+body[data-area="macros"] .param-chips { display: flex; gap: 6px; flex-wrap: wrap; min-height: 22px; align-items: center; }
+body[data-area="macros"] .tpl-list { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+body[data-area="macros"] .tpl { display: grid; gap: 4px; text-align: left; padding: 12px; border-radius: var(--r-m); border: 1px solid var(--edge); background: var(--pane); color: var(--ink); cursor: pointer; }
+body[data-area="macros"] .tpl span { color: var(--ink-dim); font-size: 12px; }
+body[data-area="macros"] .tpl.on { border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, transparent); }
+body[data-area="macros"] .blurb.rec { color: var(--bad); }
+body[data-area="macros"] .step-read { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+body[data-area="macros"] .check { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-dim); }

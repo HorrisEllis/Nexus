@@ -179,7 +179,7 @@ test('GS-11', 'every userscript: the job start arms the streamer; the watch mark
 
 (async () => {
   for (const r of pending) await r();
-  // 0.39.262 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright
+  // 0.39.263 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright
   const probe = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/live-stream-chromium.js')], { encoding: 'utf8', timeout: 180000 });
   if (probe.status === 3 || probe.error) { console.log(`  - GS-20 SKIPPED (not passed): the 500 ms streamer in a real page — ${probe.error ? probe.error.message : 'no page engine (electron not installed)'}`); skipped++; }
   else {

@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.16.0
+    version:     3.17.0
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -89,7 +89,7 @@ spec:
     - id: glass-driver
       path: clear-glass/src/driver/glass.js · clear-glass/src/driver/glass-host/main.js
       description: >
-        NEW 0.39.262 — James: "playright? no what is that for? litterally have clearglas".
+        NEW 0.39.263 (clear-glass 3.17.0) — James: "playright? no what is that for? litterally have clearglas".
         Drive a real page in Clear Glass's own engine from Node. glass.js spawns Electron on
         glass-host/main.js; the host opens a BrowserWindow per page and speaks the DevTools
         protocol in-process (webContents.debugger), relaying replies and events over stdio
@@ -341,10 +341,10 @@ spec:
         opened: 2026-09-25
 
   version_history:
-    - version: 3.16.0
+    - version: 3.17.0
       date: 2026-09-26
       summary: >-
-        MINOR (v0.39.262) — James: "playright? no what is that for? litterally have clearglas". Playwright was a
+        MINOR (v0.39.263) — James: "playright? no what is that for? litterally have clearglas". Playwright was a
         root devDependency for three probe scripts, and python playwright stood behind four more (never installed,
         so TX-20, GS-20, SA-09 and SA-10 always reported SKIPPED). Clear Glass is already a Chromium: module
         glass-driver (src/driver/glass.js + src/driver/glass-host/) runs Clear Glass's own Electron as a page host
@@ -353,6 +353,26 @@ spec:
         headless platform with offscreen windows (a shown window there segfaults Electron 42). All nine real-page
         probes now run on it; the four skipped suite cases pass (transcript-push 10/10, live-stream 8/8,
         selector-check 10/10, selector-assign-ui 9/9), agent-blocks 13/13, library window 29/29, menu-library 4/4.
+      versioniumCommitId: null
+    - version: 3.16.0
+      date: 2026-09-26
+      summary: >-
+        MINOR (v0.39.262) — James: "fix [renderer] unhandledrejection GUEST_VIEW_MANAGER_CALL ERR_CONNECTION_REFUSED
+        127.0.0.1:900 … make the macros way more user friendly … expand the copilot settings … add new button to the
+        plugins section with webextension support … expand per site settings … make a clearglass hat for the copilot
+        cli … make it jaa. no json … expand the autofill section, agent mesh and brainos." (1) renderer/browser.js: every
+        <webview>.loadURL() Promise was dropped; navigation now goes through navigate(), failures render one in-view page
+        with a NEXUS port-typo hint (:900 → :9000), ERR_ABORTED (-3) is not an error. (2) cg.storage.jaa
+        (src/storage/jaa.js): options, API settings, site settings, history, downloads, bookmarks, autofill,
+        fingerprints and passwords move to JAA tables (JaaKV / JaaRows); legacy JSON imported once, left on disk.
+        (3) cg.copilot.hat (src/copilot/hat.js) — the clear_glass hat in lib/hat-forge, composed per call; cg.renderer.
+        copilot-cli — route bar + slash commands; fix: driver commands from a reply executed twice; /build /diagnose had
+        no preload path. (4) Macros: recorder → cg.macros.recording, templates, sentence steps, edit/duplicate.
+        (5) cg.plugins.webextensions — Chrome extensions from folder/.zip/.crx into every persistent session.
+        (6) Site settings area; contentFilter='off' enforced in webrequest-adapter. (7) Autofill, Agent mesh expanded;
+        BrainOS Float gains NODES / MESH JOBS / MACROS / AUTOFILL / SITES via registerTab. Tests: storage-jaa 5,
+        copilot-cli 10, webextensions 7, content-filter-exempt 1, brainos-float-cg 6; settings suite 38/38.
+      components_added: [cg.storage.jaa, cg.copilot.hat, cg.renderer.copilot-cli, cg.macros.recording, cg.plugins.webextensions]
       versioniumCommitId: null
     - version: 3.15.0
       date: 2026-09-26

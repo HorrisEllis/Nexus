@@ -17,7 +17,7 @@
  *   - the area follows the one-JS-one-CSS rule, every rule scoped.
  *   - renderer/selector-check.js in a real page (tests/probe/selector-check-chromium.js),
  *     and the area's whole UI flow (tests/probe/selector-assign-ui-chromium.js), both driven
- *     by Clear Glass's own engine (0.39.262 — was python playwright). Without the engine
+ *     by Clear Glass's own engine (0.39.263 — was python playwright). Without the engine
  *     (electron not installed) it is reported SKIPPED, never passed.
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http');

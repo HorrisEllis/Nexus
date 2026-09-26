@@ -1,4 +1,4 @@
-// 0.39.262 — manual probe of the :9000 console, driven by Clear Glass's own engine (was playwright-core
+// 0.39.263 — manual probe of the :9000 console, driven by Clear Glass's own engine (was playwright-core
 // pointed at a puppeteer Chrome under /home/claude). Usage: node tests/manual-chatgpt-console.glass.js
 const { chromium } = require(require('path').join(__dirname, '..', 'clear-glass', 'src', 'driver', 'glass.js'));
 

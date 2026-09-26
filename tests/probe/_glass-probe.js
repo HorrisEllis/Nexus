@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/_glass-probe.js — what every real-page probe shares. 0.39.262.
+ * tests/probe/_glass-probe.js — what every real-page probe shares. 0.39.263.
  * The probes drive Clear Glass's own engine (clear-glass/src/driver/glass.js), not
  * Playwright. Output protocol, read by the suites that spawn them:
  *   one JSON line per case  {"case": name, "pass": bool, ...detail}

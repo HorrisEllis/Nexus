@@ -111,7 +111,7 @@ function preloadShape() {
       return Promise.resolve(/list$/i.test(m)?[]:{ok:true}); }; }
     for (const m of __s.__top) window.ClearGlass[m]=(...a)=>{ window.__calls.push(['cg.'+m,a]); return Promise.resolve({ok:true}); };`;
 
-  // 0.39.262 — Clear Glass's own engine (Electron) drives the page; Playwright is gone from the root.
+  // 0.39.263 — Clear Glass's own engine (Electron) drives the page; Playwright is gone from the root.
   const { chromium } = require(path.join(CG, 'src/driver/glass.js'));
   const browser = await chromium.launch();
   const pg = await browser.newPage({ viewport: { width: 1180, height: 820 } });

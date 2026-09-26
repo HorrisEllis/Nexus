@@ -83,3 +83,11 @@
 .bf-toast-g { border-color: var(--online, #00e5a0); color: var(--online, #00e5a0); }
 .bf-toast-r { border-color: var(--danger, #ff4060); color: var(--danger, #ff4060); }
 .bf-toast-o { border-color: var(--warn, #ffd740); color: var(--warn, #ffd740); }
+
+/* §BUILT 2026-09-26 — Clear Glass tabs (brainos-float-cg.js) */
+.bf-health { display: inline-block; width: 54px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; margin-right: 6px; }
+.bf-health > span { display: block; height: 100%; background: #00e5ff; }
+.bf-out { margin: 6px 0 0; max-height: 160px; overflow: auto; white-space: pre-wrap; font: 10px/1.5 'Space Mono', monospace; color: rgba(0,229,255,.75); background: rgba(0,0,0,.3); border-radius: 6px; padding: 6px 8px; }
+.bf-out:empty { display: none; }
+.bf-st { font: 9px 'Space Mono', monospace; padding: 1px 6px; border-radius: 8px; background: rgba(255,255,255,.06); color: rgba(255,255,255,.6); margin-right: 4px; }
+.bf-st-done { color: #00ff88; } .bf-st-error { color: #ff2266; }

@@ -18,6 +18,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaKV } = require('../storage/jaa');
 const { randomUUID } = require('crypto');
 const { defaultPinnedIds } = require('../toolbar/commands');
 
@@ -192,9 +193,8 @@ class NexusOptions {
 
   async load() {
     try {
-      fs.mkdirSync(path.dirname(OPTIONS_PATH), { recursive: true });
-      if (fs.existsSync(OPTIONS_PATH)) {
-        const raw = JSON.parse(fs.readFileSync(OPTIONS_PATH, 'utf8'));
+      const raw = this._kv().load();
+      if (Object.keys(raw).length) {
         this.data = { ...DEFAULTS, ...raw };
 
         // §BUGFIX 2026-09-25 — one-time migration, real and versioned, not
@@ -262,9 +262,14 @@ class NexusOptions {
   // when a caller needs "the" account for a given agent and didn't say
   // which.
 
-  /** _persist() — the one real place this store writes to disk. */
+  // §JAA 2026-09-26 — James: "with clearglass, make it jaa. no json." Rows live in
+  // the Clear Glass JAA store (src/storage/jaa.js); the old nexus-options.json is imported
+  // once on first load and left on disk.
+  _kv() { return this._jaa || (this._jaa = new JaaKV('cg_options', { legacyFile: OPTIONS_PATH })); }
+
+  /** _persist() — the one real place this store writes: one JAA row per option key. */
   _persist() {
-    fs.writeFileSync(OPTIONS_PATH, JSON.stringify(this.data, null, 2), 'utf8');
+    this._kv().replaceAll(this.data);
   }
 
   listAccounts() {

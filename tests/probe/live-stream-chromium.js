@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/live-stream-chromium.js — 0.39.262 (was live-stream-chromium.py, v0.39.256).
+ * tests/probe/live-stream-chromium.js — 0.39.263 (was live-stream-chromium.py, v0.39.256).
  * James: "supposed to stream it live as it happens."
  * Proves the userscripts' §STREAM block in a real page — Clear Glass's own engine — on the
  * ChatGPT-like fixture at a real chat URL, with the real code extracted from

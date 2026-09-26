@@ -1,7 +1,7 @@
 // idearium/ui/js/nexus-atlas.js — the nexus repo's Home is the Nexus atlas.
 // comp_id: nexus.idearium.ui.nexus-atlas
 //
-// §0.39.262 — James: "nexus is the repo, not 15, just nexus, then clicking inside of
+// §0.39.263 — James: "nexus is the repo, not 15, just nexus, then clicking inside of
 // it, shows the rest of them in … the nexus atlas, wire that completely in as the
 // homepage of the nexus repo, and everything referenced can be opened in idearium,
 // including each system."

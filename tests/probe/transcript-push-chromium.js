@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/transcript-push-chromium.js — 0.39.262 (was transcript-push-chromium.py, 0.39.254/255).
+ * tests/probe/transcript-push-chromium.js — 0.39.263 (was transcript-push-chromium.py, 0.39.254/255).
  * The userscript's §TRANSCRIPT block in a real page — Clear Glass's own engine — on the
  * ChatGPT-like fixture at a real chat URL: the block, chatId, _nexusGetFullChat and
  * _isGenerating are extracted from guardian/userscript-chatgpt.js; only ncpPost is stubbed

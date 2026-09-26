@@ -1,6 +1,6 @@
 'use strict';
 /**
- * tests/probe/selector-check-chromium.js — 0.39.262 (was selector-check-chromium.py, v0.39.251).
+ * tests/probe/selector-check-chromium.js — 0.39.263 (was selector-check-chromium.py, v0.39.251).
  * Proves clear-glass/renderer/selector-check.js in a real page — Clear Glass's own engine —
  * on a saved ChatGPT-like page (tests/fixtures/chatgpt-like.html), against the real producer
  * and the real consumer, not copies of them:

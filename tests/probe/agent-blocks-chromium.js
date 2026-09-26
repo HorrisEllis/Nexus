@@ -30,7 +30,7 @@ const srv = http.createServer((q, r) => { let d = ''; q.on('data', c => d += c);
 }); });
 let pass = 0, fail = 0; const check = (n, c, x = '') => { if (c) { pass++; console.log('  ✓ ' + n); } else { fail++; console.log('  ✗ ' + n + ' ' + x); } };
 srv.listen(0, '127.0.0.1', async () => {
-  const { chromium } = require(ROOT + '/clear-glass/src/driver/glass.js');   // 0.39.262 — Clear Glass's engine, not Playwright
+  const { chromium } = require(ROOT + '/clear-glass/src/driver/glass.js');   // 0.39.263 — Clear Glass's engine, not Playwright
   const br = await chromium.launch();
   const pg = await br.newPage(); const errs = []; pg.on('pageerror', e => errs.push(e.message));
   await pg.goto(`http://127.0.0.1:${srv.address().port}/`);

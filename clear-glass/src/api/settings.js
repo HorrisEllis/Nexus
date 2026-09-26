@@ -11,6 +11,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaKV } = require('../storage/jaa');
 
 const SETTINGS_PATH = path.join(
   process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'nexus-settings.json'
@@ -45,6 +46,20 @@ const DEFAULTS = {
   fallbackModel:   'claude-sonnet-4-6',
   fallbackEndpoint: 'https://api.anthropic.com/v1/messages',
 
+  // §BUILT 2026-09-26 — James: "expand the copilot settings… make a
+  // clearglass hat for the copilot cli." Per-call routing, the same three
+  // positions as ui/tv-shell/menu.js (ollama | copilot | guardian + NCP
+  // agent), the Clear Glass hat, and what each call carries.
+  copilotBackend:        'copilot',  // ollama | copilot | guardian
+  copilotAgent:          'claude',   // NCP agent when backend is guardian
+  copilotWearHat:        true,       // compose the clear_glass hat's persona into every call
+  copilotAutoRunCommands: true,      // run ```driver blocks from a reply; off = show them, run on confirm
+  copilotDomContext:     true,       // include the live DOM by default
+  copilotDomMaxChars:    3000,       // DOM snapshot budget per call
+  copilotTimeoutMs:      60000,      // one call's ceiling
+  copilotHistoryMax:     200,        // CLI input history kept per window
+  copilotShowRoute:      true,       // show backend/model under each reply
+
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job
   // applications, answering on screen questions... full ui to
   // configure this." Real, persistent — this file, not a second store.
@@ -57,15 +72,16 @@ const DEFAULTS = {
 class ApiSettings {
   constructor() { this.data = { ...DEFAULTS }; }
 
+  // §JAA 2026-09-26 — James: "with clearglass, make it jaa. no json." Rows live in
+  // the Clear Glass JAA store (src/storage/jaa.js); the old nexus-settings.json is imported
+  // once on first load and left on disk.
+  _kv() { return this._jaa || (this._jaa = new JaaKV('cg_api_settings', { legacyFile: SETTINGS_PATH })); }
+
   async load() {
     try {
-      fs.mkdirSync(path.dirname(SETTINGS_PATH), { recursive: true });
-      if (fs.existsSync(SETTINGS_PATH)) {
-        const raw = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
-        this.data = { ...DEFAULTS, ...raw };
-      } else {
-        fs.writeFileSync(SETTINGS_PATH, JSON.stringify(this.data, null, 2), 'utf8');
-      }
+      const raw = this._kv().load();
+      this.data = { ...DEFAULTS, ...raw };
+      if (!Object.keys(raw).length) this._kv().replaceAll(this.data);
     } catch (err) {
       console.warn('[Settings] Load error:', err.message);
     }
@@ -73,7 +89,7 @@ class ApiSettings {
 
   async set(updates) {
     this.data = { ...this.data, ...updates };
-    fs.writeFileSync(SETTINGS_PATH, JSON.stringify(this.data, null, 2), 'utf8');
+    this._kv().replaceAll(this.data);
     return { ok: true };
   }
 

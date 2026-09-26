@@ -382,7 +382,7 @@ test('TX-30', 'end to end: the transcript completes the job through the REAL han
   assert.deepStrictEqual([late.found, late.jobId, late.text], [true, job.id, 'Hello — ready to work on the ERAVOS v3-17 catalog.'], JSON.stringify(late));
 });
 
-// 0.39.262 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright
+// 0.39.263 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright
 const probe = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/transcript-push-chromium.js')], { encoding: 'utf8', timeout: 180000 });
 if (probe.status === 3 || probe.error) { console.log(`  - TX-20 SKIPPED (not passed): the userscript push in a real page — ${probe.error ? probe.error.message : 'no page engine (electron not installed)'}`); skipped++; }
 else test('TX-20', 'the userscript §TRANSCRIPT block in a real page, Clear Glass\'s engine (tests/probe/transcript-push-chromium.js)', () => {

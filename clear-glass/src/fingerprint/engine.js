@@ -11,6 +11,7 @@
 
 const path = require('path');
 const fs   = require('fs');
+const { JaaKV } = require('../storage/jaa');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
 
 // Firefox UA pool — realistic, versioned
@@ -86,11 +87,14 @@ class FingerprintEngine {
     this.profiles = new Map();
   }
 
+  // §JAA 2026-09-26 — one JAA row per agent's profile (src/storage/jaa.js);
+  // fingerprints.json is imported once and left on disk.
+  _kv() { return this._jaa || (this._jaa = new JaaKV('cg_fingerprints', { legacyFile: this.profilesPath })); }
+
   async load() {
     try {
-      fs.mkdirSync(path.dirname(this.profilesPath), { recursive: true });
-      if (fs.existsSync(this.profilesPath)) {
-        const raw = JSON.parse(fs.readFileSync(this.profilesPath, 'utf8'));
+      const raw = this._kv().load();
+      if (Object.keys(raw).length) {
         for (const [id, profile] of Object.entries(raw)) {
           this.profiles.set(id, profile);
         }
@@ -104,7 +108,7 @@ class FingerprintEngine {
   async save() {
     const obj = {};
     for (const [id, profile] of this.profiles) obj[id] = profile;
-    fs.writeFileSync(this.profilesPath, JSON.stringify(obj, null, 2), 'utf8');
+    this._kv().replaceAll(obj);
   }
 
   // ── Profile management ─────────────────────────────────────────────────
