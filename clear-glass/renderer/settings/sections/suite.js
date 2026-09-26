@@ -35,15 +35,58 @@
     if (r) { toast('Download listener added'); rerender(); }
   }
 
+  // ── Page-listener decay — §0.39.265 ─────────────────────────────────────
+  // James: "Page listeners -> needs decay." A listener that stops firing fades:
+  // switched off after `disableAfterDays`, deleted at `removeAfterDays`.
+  const DAY = 86400000;
+  const inDays = (ts) => { const d = Math.ceil((ts - Date.now()) / DAY); return d <= 0 ? 'today' : d === 1 ? 'in 1 day' : `in ${d} days`; };
+  const decayText = (d) => !d ? '' : d.enabled ? `Unused listeners switch off after ${d.disableAfterDays} days and are deleted after ${d.removeAfterDays}.` : 'Decay is off \u2014 listeners are kept until you delete them.';
+
+  function listenerRow(l, rerender) {
+    const dz = l.decay || {};
+    const used = l.lastFiredAt ? `fired ${ago(l.lastFiredAt)} (${l.fireCount || 0}\u00D7)` : 'never fired';
+    const fate = l.pinned ? 'kept \u2014 never fades'
+      : l.decayedAt ? (dz.removeAt ? `switched off by decay \u00B7 deleted ${inDays(dz.removeAt)}` : 'switched off by decay')
+      : !l.enabled ? 'off' : dz.fadesAt ? `fades ${inDays(dz.fadesAt)}` : '';
+    const pct = Math.round((dz.strength ?? 1) * 100);
+    const bar = h('span', { class: 'health', title: `${pct}% \u2014 ${fate}` }, h('span', { style: { width: `${pct}%`, background: pct > 50 ? 'var(--ok)' : pct > 20 ? 'var(--warn)' : 'var(--bad)' } }));
+    const r = row(l.label || l.urlPattern, `${l.eventType} on ${l.urlPattern} \u2192 ${targetLabel(l.linkTarget)} \u00B7 ${used}${fate ? ` \u00B7 ${fate}` : ''}`,
+      l.decayedAt ? chip('faded', 'warn') : null, bar,
+      h('label', { class: 'keep', title: 'Keep: never decays' }, toggle(!!l.pinned, async (on) => { await call(() => cg.listeners.update(l.id, { pinned: on }), 'keep listener'); rerender(); }, 'Keep this listener'), h('span', { text: 'Keep' })),
+      toggle(l.enabled, async (on) => { await call(() => cg.listeners.update(l.id, { enabled: on }), 'update listener'); rerender(); }, 'Listener enabled'),
+      btn('Delete', async () => { if (await confirmDo('Delete listener?', `Stops watching ${l.urlPattern}.`, 'Delete')) { await busy(null, () => call(() => cg.listeners.remove(l.id), 'delete')); rerender(); } }, 'sm danger'));
+    if (l.decayedAt) r.classList.add('faded');
+    return r;
+  }
+
+  async function decaySettings(d, rerender) {
+    const on = h('input', { type: 'checkbox', checked: d.enabled });
+    const off = h('input', { type: 'number', min: 1, value: d.disableAfterDays });
+    const del = h('input', { type: 'number', min: 2, value: d.removeAfterDays });
+    const r = await modal({ title: 'Page listener decay', body: [
+      h('p', { class: 'blurb', text: 'A listener stays alive while it fires or is re-armed by the picker. When it goes quiet it fades: first switched off, then deleted. Listeners marked Keep, and ones you switched off yourself, are never deleted.' }),
+      h('label', { class: 'row', style: { padding: 0, borderTop: 0 } }, on, h('span', { text: 'Let unused listeners fade' })),
+      h('div', { class: 'grid' }, field('Switch off after (days idle)', off), field('Delete after (days idle)', del, 'Must be more than the switch-off time')),
+    ], actions: [
+      { label: 'Clean up now', run: async () => { const x = await call(() => cg.listeners.decay.run(), 'decay'); toast(`${x.disabled.length} switched off, ${x.removed.length} deleted`); return true; } },
+      { label: 'Save', primary: true, run: async () => {
+        const x = await call(() => cg.listeners.decay.set({ enabled: on.checked, disableAfterDays: +off.value, removeAfterDays: +del.value }), 'save decay');
+        if (x && x.error) throw new Error(x.error);
+        return true;
+      } }] });
+    if (r) rerender();
+  }
+
   section({
     id: 'suite', group: 'Agents', icon: '\u25CE', label: 'Agent suite',
     keywords: 'guardian plugin picker listener callto custom agent userscript download watch',
     blurb: 'Sites you\u2019ve turned into agents, elements Guardian watches or can act on, what happens to downloads, and the scripts injected into pages.',
     async render({ rerender }) {
-      const [custom, listeners, dls, calltos, scripts] = await Promise.all([
+      const [custom, listeners, dls, calltos, scripts, decay] = await Promise.all([
         cg.customAgents.list().catch(e => ({ error: e.message })), cg.listeners.list().catch(e => ({ error: e.message })),
         cg.downloads.listListeners().catch(e => ({ error: e.message })), cg.calltos.list().catch(e => ({ error: e.message })),
         cg.userscripts.list().catch(e => ({ error: e.message })),
+        cg.listeners.decay ? cg.listeners.decay.get().catch(() => null) : null,
       ]);
       const guard = (x, fn) => (x && x.error) ? h('div', { class: 'err-box', text: x.error }) : fn(x || []);
       const pickerHint = 'Capture new ones with the Guardian picker (\u25CE) on the page itself.';
@@ -52,10 +95,8 @@
         pane({ title: 'Custom agents', sub: pickerHint, flush: true, body: guard(custom, list => list.length ? list.map(a => row(a.agentName, `${a.origin} \u00B7 in ${a.input.selector} \u00B7 out ${a.output.selector}`, chip(a.enabled ? 'enabled' : 'off', a.enabled ? 'ok' : 'plain')))
           : empty('No custom agents. Pick an input box and a response area on any chat site to add one.')) }),
 
-        pane({ title: 'Page listeners', sub: pickerHint, flush: true, body: guard(listeners, list => list.length ? list.map(l => row(l.label || l.urlPattern,
-          `${l.eventType} on ${l.urlPattern} \u2192 ${targetLabel(l.linkTarget)}`,
-          toggle(l.enabled, (on) => call(() => cg.listeners.update(l.id, { enabled: on }), 'update listener'), 'Listener enabled'),
-          btn('Delete', async () => { if (await confirmDo('Delete listener?', `Stops watching ${l.urlPattern}.`, 'Delete')) { await busy(null, () => call(() => cg.listeners.remove(l.id), 'delete')); rerender(); } }, 'sm danger')))
+        pane({ title: 'Page listeners', sub: `${pickerHint} ${decayText(decay)}`, tools: decay ? btn('Decay settings', () => decaySettings(decay, rerender), 'sm') : null,
+          flush: true, body: guard(listeners, list => list.length ? list.map(l => listenerRow(l, rerender))
           : empty('No page listeners.')) }),
 
         pane({ title: 'Download listeners', tools: btn('Add', () => newDownloadListener(rerender), 'sm'), flush: true, body: guard(dls, list => list.length ? list.map(l => row(l.filenamePattern || 'Every download',

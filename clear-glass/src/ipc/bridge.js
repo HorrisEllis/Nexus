@@ -1265,7 +1265,15 @@ class IpcBridge {
     // listener-modal save path is wired to this instead of only setting
     // activeListeners.set(...) in memory — that wiring is TX16's own next
     // slice, named honestly as not done in this pass.
-    ipcMain.handle('listeners:list',       async ()    => this.options?.listListeners());
+    // §0.39.265 — each listener comes back with its decay state (strength, fadesAt, removeAt).
+    ipcMain.handle('listeners:list',       async ()    => {
+      if (!this.options) return [];
+      this.options.decayListeners();
+      return this.options.listListeners().map(l => ({ ...l, decay: this.options.listenerStrength(l) }));
+    });
+    ipcMain.handle('listeners:decay:get',  async ()    => this.options?.getListenerDecay());
+    ipcMain.handle('listeners:decay:set',  async (e, d) => this.options?.setListenerDecay(d || {}));
+    ipcMain.handle('listeners:decay:run',  async ()    => this.options?.decayListeners());
     ipcMain.handle('listeners:get',        async (e, d) => this.options?.getListener(d.id));
     ipcMain.handle('listeners:register',   async (e, d) => this.options?.registerListener(d));
     ipcMain.handle('listeners:update',     async (e, d) => this.options?.updateListener(d.id, d.updates));
@@ -1354,6 +1362,7 @@ class IpcBridge {
             if (urlPattern && this.options) {
               this.options.registerListener({
                 urlPattern,
+                pageListenerId: d.listenerId,
                 fingerprint: { selector: d.config.selector, xpath: d.config.xpath },
                 eventType: d.config.mode,
                 label: d.config.label,
@@ -1366,6 +1375,8 @@ class IpcBridge {
           }
         } else if (d.type === 'guardian.listener.event' && d.listenerId) {
           this._routeGuardianListenerEvent(d.listenerId, d.eventData);
+          // §0.39.265 — firing keeps a listener alive (listener decay)
+          try { this.options?.touchListener(d.listenerId, 'fired'); } catch (_) {}
         } else if (d.type === 'guardian.callto.added' && d.callto?.id) {
           // §2026-08-29 — James: "a tool that links guardian directly to
           // dom elements." Real gap closed: guardian-picker.js's "ADD TO

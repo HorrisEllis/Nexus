@@ -96,6 +96,10 @@ const DEFAULTS = {
   // convention as accounts below, for the same reason — a real delete needs
   // a key that can actually disappear, which set()'s merge can never do).
   listeners: {},
+  // §0.39.265 — James: "Page listeners -> needs decay." A listener that has not
+  // fired or been re-armed for disableAfterDays is switched off; one left off
+  // by decay until removeAfterDays is deleted. A pinned listener never decays.
+  listenerDecay: { enabled: true, disableAfterDays: 14, removeAfterDays: 30 },
 
   // §2026-08-28 — James: "a download listener for artifacts." Real,
   // separate registry from `listeners` above — a download isn't tied to
@@ -599,11 +603,27 @@ class NexusOptions {
    * a person just configured should fire the next time its page loads,
    * not require a second "turn it on" step.
    */
-  registerListener({ urlPattern, fingerprint, eventType, calltoId, label, matchCriteria, linkTarget } = {}) {
+  registerListener({ urlPattern, fingerprint, eventType, calltoId, label, matchCriteria, linkTarget, pageListenerId } = {}) {
     if (!urlPattern)  return { error: 'urlPattern required' };
     if (!fingerprint) return { error: 'fingerprint required' };
-    const id  = randomUUID();
     const now = Date.now();
+    // §0.39.265 — the picker announces a listener every time it starts one, so
+    // the same element on the same site used to be saved again on every
+    // start and never went away. The same (site, element, event) is now one
+    // listener: re-arming it refreshes that record instead of adding another.
+    const same = Object.values(this.data.listeners || {}).find(l => l.urlPattern === urlPattern
+      && (l.fingerprint && l.fingerprint.selector) === fingerprint.selector && l.eventType === (eventType || 'mutation'));
+    if (same) {
+      const refreshed = { ...same, label: label || same.label, matchCriteria: matchCriteria || same.matchCriteria,
+        linkTarget: linkTarget || same.linkTarget, pageListenerId: pageListenerId || same.pageListenerId || null,
+        lastSeenAt: now, updatedAt: now,
+        // a listener switched off by decay comes back when it is armed again; one you switched off stays off
+        ...(same.decayedAt ? { enabled: true, decayedAt: null } : {}) };
+      this.data = { ...this.data, listeners: { ...this.data.listeners, [same.id]: refreshed } };
+      this._persist();
+      return { ...refreshed, reused: true };
+    }
+    const id  = randomUUID();
     const listener = {
       id, urlPattern, fingerprint, eventType: eventType || 'mutation',
       // §EXTENDED 2026-08-28 — James, live, in guardian-picker.js's real
@@ -619,6 +639,8 @@ class NexusOptions {
       label: label || null,
       matchCriteria: matchCriteria || null,
       linkTarget: linkTarget || null,
+      pageListenerId: pageListenerId || null,
+      pinned: false, fireCount: 0, lastFiredAt: null, lastSeenAt: now, decayedAt: null,
       enabled: true, createdAt: now, updatedAt: now,
     };
     this.data = { ...this.data, listeners: { ...this.data.listeners, [id]: listener } };
@@ -669,7 +691,11 @@ class NexusOptions {
       ...(updates.fingerprint !== undefined ? { fingerprint: updates.fingerprint } : {}),
       ...(updates.eventType !== undefined ? { eventType: updates.eventType } : {}),
       ...(updates.calltoId !== undefined ? { calltoId: updates.calltoId } : {}),
-      ...(updates.enabled !== undefined ? { enabled: !!updates.enabled } : {}),
+      ...(updates.enabled !== undefined ? { enabled: !!updates.enabled, decayedAt: null } : {}),
+      ...(updates.pinned !== undefined ? { pinned: !!updates.pinned } : {}),
+      ...(updates.label !== undefined ? { label: updates.label || null } : {}),
+      // switching a listener on by hand restarts its decay clock
+      ...(updates.enabled === true ? { lastSeenAt: Date.now() } : {}),
       updatedAt: Date.now(),
     };
     this.data = { ...this.data, listeners: { ...this.data.listeners, [id]: updated } };
@@ -704,6 +730,72 @@ class NexusOptions {
    * here since a listener firing on the wrong page is a real, visible
    * mistake in a way userscript over-matching mostly isn't.
    */
+  // ── Listener decay — §0.39.265 ───────────────────────────────────────────
+
+  /** touchListener — a listener fired (kind 'fired') or was armed on a page ('seen'). */
+  touchListener(idOrPageId, kind = 'fired') {
+    const l = this.data.listeners?.[idOrPageId]
+      || Object.values(this.data.listeners || {}).find(x => x.pageListenerId && x.pageListenerId === idOrPageId);
+    if (!l) return null;
+    const now = Date.now();
+    const next = { ...l, lastSeenAt: now, ...(kind === 'fired' ? { lastFiredAt: now, fireCount: (l.fireCount || 0) + 1 } : {}) };
+    this.data = { ...this.data, listeners: { ...this.data.listeners, [l.id]: next } };
+    this._persist();
+    return { ...next };
+  }
+
+  getListenerDecay() {
+    return { ...DEFAULTS.listenerDecay, ...(this.data.listenerDecay || {}) };
+  }
+
+  setListenerDecay(patch = {}) {
+    const cur = this.getListenerDecay();
+    const num = (v, d) => (Number.isFinite(+v) && +v > 0 ? Math.round(+v) : d);
+    const next = {
+      enabled: patch.enabled !== undefined ? !!patch.enabled : cur.enabled,
+      disableAfterDays: num(patch.disableAfterDays, cur.disableAfterDays),
+      removeAfterDays: num(patch.removeAfterDays, cur.removeAfterDays),
+    };
+    if (next.removeAfterDays <= next.disableAfterDays) return { error: 'removeAfterDays must be more than disableAfterDays' };
+    this.data = { ...this.data, listenerDecay: next };
+    this._persist();
+    return next;
+  }
+
+  /**
+   * listenerStrength(l) — 1 when just used, falling linearly to 0 at the
+   * point decay switches it off. `fadesAt` is when that happens (null when
+   * pinned or decay is off); `removeAt` is when a decayed listener is deleted.
+   */
+  listenerStrength(l, now = Date.now()) {
+    const cfg = this.getListenerDecay();
+    const DAY = 86400000;
+    const last = Math.max(l.lastFiredAt || 0, l.lastSeenAt || 0, l.createdAt || 0);
+    if (l.pinned || !cfg.enabled) return { strength: 1, lastActiveAt: last, fadesAt: null, removeAt: null };
+    const fadesAt = last + cfg.disableAfterDays * DAY;
+    return { strength: Math.max(0, Math.min(1, (fadesAt - now) / (cfg.disableAfterDays * DAY))), lastActiveAt: last, fadesAt, removeAt: last + cfg.removeAfterDays * DAY };
+  }
+
+  /**
+   * decayListeners(now) — switch off listeners idle past disableAfterDays,
+   * delete ones decay switched off that stay idle past removeAfterDays.
+   * A listener switched off BY HAND is never deleted by decay.
+   */
+  decayListeners(now = Date.now()) {
+    const cfg = this.getListenerDecay();
+    const out = { disabled: [], removed: [] };
+    if (!cfg.enabled) return out;
+    const next = { ...(this.data.listeners || {}) };
+    for (const l of Object.values(next)) {
+      if (l.pinned) continue;
+      const { fadesAt, removeAt } = this.listenerStrength(l, now);
+      if (l.decayedAt && now >= removeAt) { delete next[l.id]; out.removed.push(l.id); }
+      else if (l.enabled && now >= fadesAt) { next[l.id] = { ...l, enabled: false, decayedAt: now, updatedAt: now }; out.disabled.push(l.id); }
+    }
+    if (out.disabled.length || out.removed.length) { this.data = { ...this.data, listeners: next }; this._persist(); }
+    return out;
+  }
+
   findListenersForUrl(url) {
     if (!url) return [];
     return this.listListeners().filter(l => {

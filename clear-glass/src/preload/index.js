@@ -223,6 +223,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     update:    (id, updates)  => ipcRenderer.invoke('listeners:update', { id, updates }),
     remove:    (id)           => ipcRenderer.invoke('listeners:remove', { id }),
     forUrl:    (url)          => ipcRenderer.invoke('listeners:forUrl', { url }),
+    decay:     { get: () => ipcRenderer.invoke('listeners:decay:get'), set: (patch) => ipcRenderer.invoke('listeners:decay:set', patch), run: () => ipcRenderer.invoke('listeners:decay:run') },
   },
 
   agents: {
