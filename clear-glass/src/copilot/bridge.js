@@ -90,18 +90,31 @@ class CoPilotBridge {
   }
 
   // ── Primary: send message ────────────────────────────────────────────────
-  async send({ message, agentId = 'default', domContext, systemExtra, requestId }) {
-    const msgId = requestId || randomUUID();
-    this.sse.emit('copilot.thinking', { msgId, agentId, ts: Date.now() });
+  // §BUILT 2026-09-26 — per-call route (backend/agent/hat) from the CLI or
+  // settings; see src/copilot/hat.js for why the hat is composed per call
+  // instead of switching copilot's global agent.
+  _route({ backend, agent, hat } = {}) {
+    const s = this.settings.get();
+    const b = ['ollama', 'copilot', 'guardian'].includes(backend) ? backend : (s.copilotBackend || 'copilot');
+    return { backend: b, agent: b === 'guardian' ? (agent || s.copilotAgent || 'claude') : undefined,
+      hat: typeof hat === 'boolean' ? hat : s.copilotWearHat !== false };
+  }
 
-    // Always get live DOM context
-    if (!domContext && this._domGet) {
+  async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, noDom }) {
+    const msgId = requestId || randomUUID();
+    const route = this._route({ backend, agent, hat });
+    this.sse.emit('copilot.thinking', { msgId, agentId, route, ts: Date.now() });
+
+    // Live DOM context unless the caller (or the setting) turned it off
+    if (!domContext && !noDom && this.settings.get().copilotDomContext !== false && this._domGet) {
       try { domContext = await this._domGet(agentId); } catch (_) {}
     }
+    const persona = require('./hat').personaFor(route.hat);
+    if (persona) systemExtra = persona + (systemExtra ? '\n\n' + systemExtra : '');
 
     let result;
     try {
-      result = await this._callNexusCopilot({ message, agentId, domContext, systemExtra, msgId });
+      result = await this._callNexusCopilot({ message, agentId, domContext, systemExtra, msgId, route });
     } catch (err) {
       console.warn(`[${new Date().toISOString()}] [clear-glass/src/copilot/bridge.js] [CoPilot] NEXUS offline, falling back:`, err.message);
       result = await this._callFallback({ message, agentId, domContext, msgId });
@@ -110,8 +123,13 @@ class CoPilotBridge {
     const text     = result.text || '';
     const commands = this._parseCommands(text);
 
-    // Execute all tool calls
-    for (const cmd of commands) {
+    // Execute all tool calls — here, and only here (§FIX 2026-09-26: the
+    // renderer used to run res.commands a second time via cg.driver.exec,
+    // so every copilot click/type happened twice). With auto-run off the
+    // commands come back unexecuted and the pane offers Run per command
+    // (copilot:exec → execCommand below).
+    const autoRun = this.settings.get().copilotAutoRunCommands !== false;
+    for (const cmd of autoRun ? commands : []) {
       await this._executeCommand(cmd, agentId).catch(err => {
         console.warn(`[${new Date().toISOString()}] [clear-glass/src/copilot/bridge.js] [CoPilot] Command failed [${cmd.action}]:`, err.message);
         this.sse.emit('copilot.tool.error', { action: cmd.action, error: err.message, agentId });
@@ -128,7 +146,14 @@ class CoPilotBridge {
     this._ingestToNexus({ type: 'clear-glass.copilot.exchange',
       agentId, msgId, prompt: message.slice(0, 100), ts: Date.now() });
 
-    return { text, commands, msgId };
+    return { text, commands, executed: autoRun, msgId, route: { ...route, modelUsed: result.modelUsed || null } };
+  }
+
+  /** Run one command the person confirmed from the pane (auto-run off). */
+  async execCommand(cmd, agentId) {
+    if (!cmd || !cmd.action) return { ok: false, error: 'command has no action' };
+    try { return { ok: true, result: await this._executeCommand(cmd, agentId) ?? null }; }
+    catch (err) { this.sse.emit('copilot.tool.error', { action: cmd.action, error: err.message, agentId }); return { ok: false, error: err.message }; }
   }
 
   // ── Execute a tool command via bus or direct call ──────────────────────
@@ -356,8 +381,9 @@ class CoPilotBridge {
   }
 
   async _buildCgContext(agentId, domContext) {
+    const domMax = Number(this.settings.get().copilotDomMaxChars) || 3000;
     const domSection = domContext
-      ? `\n\n## Live Browser DOM (Agent: ${agentId})\n\`\`\`json\n${JSON.stringify(domContext, null, 2).slice(0, 3000)}\n\`\`\``
+      ? `\n\n## Live Browser DOM (Agent: ${agentId})\n\`\`\`json\n${JSON.stringify(domContext, null, 2).slice(0, domMax)}\n\`\`\``
       : '';
     const toolsPrompt = await this._liveToolsPrompt();
 
@@ -370,16 +396,21 @@ ${toolsPrompt}${domSection}`;
   }
 
   // ── Call NEXUS copilot — routed through Bridge :9999 ─────────────────
-  async _callNexusCopilot({ message, agentId, domContext, systemExtra, msgId }) {
+  async _callNexusCopilot({ message, agentId, domContext, systemExtra, msgId, route = this._route() }) {
     const cgContext = await this._buildCgContext(agentId, domContext);
+    const s = this.settings.get();
     const result = await this._bridgeDispatch('copilot', 'copilot.prompt', {
       prompt:      message,
-      channel:     'clear-glass',
+      channel:     s.copilotChannel || 'clear-glass',
       sessionId:   agentId,
       requestId:   msgId,
       source:      'clear-glass',
       systemExtra: cgContext + (systemExtra ? '\n\n' + systemExtra : ''),
-    }, 60000);
+      // Same per-call fields ui/tv-shell/menu.js sends to /api/prompt.
+      backend:     route.backend,
+      provider:    route.backend === 'guardian' ? route.agent : route.backend,
+      agent:       route.agent,
+    }, Number(s.copilotTimeoutMs) || 60000);
     const data = result?.response || result || {};
     return {
       text:          data.text || data.response || '',
