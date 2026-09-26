@@ -2005,7 +2005,11 @@ async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank' } =
       const contentFilterSigs = pluginHost.getSignaturesForType('content-filter');
       if (contentFilterSigs.length > 0) {
         const { attachContentFilters } = require('../plugins/webrequest-adapter');
-        attachContentFilters(session.fromPartition(partition), pluginHost.bus, { signatures: contentFilterSigs });
+        attachContentFilters(session.fromPartition(partition), pluginHost.bus, {
+          signatures: contentFilterSigs,
+          // Settings → Site settings → "Content blocking: off for this site"
+          exempt: (pageUrl) => siteSettings?.get(pageUrl, 'contentFilter') === 'off',
+        });
       }
     } catch (err) {
       console.warn(`[ClearGlass/Plugins] content-filter wiring failed for ${agentId}:`, err.message);

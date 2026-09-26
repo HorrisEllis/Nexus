@@ -1,0 +1,11 @@
+/* renderer/settings/sections/sites.css — Site settings
+ * One CSS file per UI file; every rule scoped to body[data-area="sites"]. */
+body[data-area="sites"] .chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+body[data-area="sites"] .perm-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+body[data-area="sites"] .sub-h { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin: 16px 0 8px; font-weight: 600; }
+body[data-area="sites"] .sub-h:first-child { margin-top: 0; }
+body[data-area="sites"] .kv-list { display: grid; gap: 6px; }
+body[data-area="sites"] .kv { display: grid; grid-template-columns: minmax(120px, 200px) 1fr auto; gap: 8px; align-items: center; margin-top: 6px; }
+body[data-area="sites"] .kv code { font-family: var(--mono); font-size: 12px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; }
+body[data-area="sites"] .check { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ink-dim); }
+body[data-area="sites"] .pane-head input[type=search] { width: 200px; }

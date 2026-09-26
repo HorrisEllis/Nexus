@@ -38,6 +38,7 @@
     return {
       clearGlassUrl: _state.opts.clearGlassUrl,
       guardianUrl: _state.opts.guardianUrl,
+      cliUrl: _state.opts.cliUrl,   // §2026-09-26 — Clear Glass IPC REST (/cli/*): macros, autofill, site settings
       toast: _toast,
     };
   }
@@ -96,9 +97,16 @@
     _state.opts = {
       clearGlassUrl: opts.clearGlassUrl || 'http://127.0.0.1:7704',
       guardianUrl: opts.guardianUrl || 'http://127.0.0.1:7820',
+      cliUrl: opts.cliUrl || 'http://127.0.0.1:7702',
     };
 
-    if (!_tabs.size) _registerBuiltInTabs();
+    // §FIX 2026-09-26 — was `if (!_tabs.size) _registerBuiltInTabs()`: any tab
+    // registered before mount (brainos-float-cg.js) silently removed all five
+    // built-ins. Built-ins now always register first; tabs registered earlier
+    // are re-applied on top, adding new ids or overriding a built-in by id.
+    const early = new Map(_tabs); _tabs.clear();
+    _registerBuiltInTabs();
+    for (const [id, t] of early) _tabs.set(id, t);
 
     const titleBar = _el('div', { class: 'bf-titlebar' }, [
       _el('span', { class: 'bf-title', text: '⬢ BRAINOS · CONTROL' }),

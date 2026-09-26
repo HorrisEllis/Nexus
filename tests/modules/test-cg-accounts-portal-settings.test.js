@@ -366,7 +366,7 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
         copilot: { hat: () => ok({ ok: true, exists: true, name: 'clear_glass', baseAgent: 'copilot', personaPrompt: 'P', uuid: '00000000-0000-4000-8000-000000000000' }) }, userscripts: { list: () => ok([{ id: 'u', name: 'guardian-claude', enabled: true, matches: ['*'], readOnly: true }]) },
         autofill: { listProfiles: () => ok([{ id: 'p1', label: 'Jobs', fields: { email: 'j@x.io' }, documents: {}, updatedAt: Date.now() }]) },
         api: { get: () => ok({ ipcPort: 7702, hasFallbackKey: false }), set: () => ok({ ok: true }) },
-        passwords: { list: () => ok(pv.list()) }, siteSettings: { listOrigins: () => ok([]) }, history: {},
+        passwords: { list: () => ok(pv.list()) }, siteSettings: { listOrigins: () => ok(['https://x.io']), getAll: () => ok({ zoomFactor: 1.25, 'permission:media': 'allow', contentFilter: 'off', custom: 1 }) }, history: {},
         errors: { recent: () => ok({ ok: true, errors: [] }) }, speech: { available: () => ok({ ok: false }) },
       };
       for (const s of [...html.matchAll(/<script src="([^"]+)"/g)].map(m => m[1])) w.eval(fs.readFileSync(path.join(CG, 'renderer', s), 'utf8'));
@@ -398,7 +398,7 @@ const REGISTRY = [{ id: 'claude', name: 'Claude', url: 'https://claude.ai', colo
     });
     await test('UI-05', 'every section renders without an error box against the fake backend', async () => {
       const ids = [...w.document.querySelectorAll('.rail-item')].map(b => b.dataset.id);
-      assert.deepStrictEqual(ids, ['accounts', 'providers', 'fingerprint', 'mesh', 'automation', 'macros', 'eros', 'suite', 'general', 'autofill', 'privacy', 'downloads', 'connections', 'copilot', 'diagnostics', 'plugins']);
+      assert.deepStrictEqual(ids, ['accounts', 'providers', 'fingerprint', 'mesh', 'automation', 'macros', 'eros', 'suite', 'general', 'autofill', 'privacy', 'sites', 'downloads', 'connections', 'copilot', 'diagnostics', 'plugins']);
       for (const id of ids) {
         w.CGS.show(id); await settle(); await settle();
         const err = w.document.querySelector('#main .err-box');

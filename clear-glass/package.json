@@ -9,7 +9,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "NODE_ENV=development electron .",
-    "test": "node test/bus.test.js && node test/storage-jaa.test.js && node test/copilot-cli.test.js && node test/webextensions.test.js && node test/watchdog.test.js && node test/downloads-intake-bridge.test.js && node test/userscripts-manifest.test.js && node test/network-install.test.js",
+    "test": "node test/bus.test.js && node test/storage-jaa.test.js && node test/copilot-cli.test.js && node test/webextensions.test.js && node test/content-filter-exempt.test.js && node test/watchdog.test.js && node test/downloads-intake-bridge.test.js && node test/userscripts-manifest.test.js && node test/network-install.test.js",
     "test:bus": "node test/bus.test.js",
     "test:storage-jaa": "node test/storage-jaa.test.js",
     "test:watchdog": "node test/watchdog.test.js",
