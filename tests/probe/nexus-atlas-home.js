@@ -92,6 +92,18 @@ const freePort = () => new Promise((resolve) => { const s = net.createServer(); 
     P.case('a promoted brainstorm is an idea, worked in Create › Ideas — it gets no repo (only a spec does)', promoted.view === 'view-ideas' && promoted.lanes === 4 && promoted.repos === reposBefore, { ...promoted, reposBefore });
     await shot('6-promoted-idea.png');
 
+    // 0.39.263 — "it says 15 ideas and 15 repos … ideas, once promoted to spec should move to the idea tab in the actual repo"
+    const counts1 = await pg.evaluate(() => ({ ideas: document.getElementById('stat-ideas').textContent, specs: document.getElementById('stat-specs').textContent, listed: [...document.querySelectorAll('#idea-list .idea-card')].map(c => c.textContent.trim().split('\n')[0].trim()) }));
+    P.case('the ideas and specs counts leave out Nexus\'s own system repos (their "Repo: nexus/…" ideas and snapshot specs)', counts1.ideas === '1' && counts1.specs === '0' && counts1.listed.length === 1 && !counts1.listed.some(t => /Repo: nexus/.test(t)), counts1);
+    const ideaUuid = await pg.evaluate(() => IDEAS.find(i => /probe idea/.test(i.text)).uuid);
+    const said = await pg.evaluate(async (u) => { const t = []; const orig = window.toast; window.toast = (m, k) => { t.push(`${k || ''}:${m}`); return orig(m, k); }; createSpecForIdea(u); await new Promise(r => setTimeout(r, 800)); const ft = document.getElementById('ns-file-tree'); if (ft) ft.checked = false; /* the file-tree plan needs an agent; none runs in this sandbox */ await submitNewSpec(false); window.toast = orig; return t; }, ideaUuid);
+    if (said.some(x => /^err:/.test(x))) console.error('TOASTS', JSON.stringify(said));
+    await pg.waitForSelector('#repo-subtab-idea .cmp-host .cmp-lane', { timeout: 30000 });
+    const specced = await pg.evaluate((u) => ({ repo: CURRENT_API_REPO && CURRENT_API_REPO.ideaUuid === u, tab: CURRENT_REPO_SUBTAB, lanes: document.querySelectorAll('#repo-subtab-idea .cmp-lane').length,
+      stillListed: getFilteredIdeas().some(i => i.uuid === u), ideas: document.getElementById('stat-ideas').textContent, specs: document.getElementById('stat-specs').textContent }), ideaUuid);
+    P.case('an idea made into a spec moves to its repo\'s Idea tab (lanes there) and leaves the Ideas list', specced.repo && specced.tab === 'idea' && specced.lanes === 4 && !specced.stillListed && specced.ideas === '0' && specced.specs === '1', specced);
+    await shot('7-specced-idea-in-repo.png');
+
     P.case('no page errors', errs.length === 0, { errors: errs });
   } finally {
     if (b) await b.close();

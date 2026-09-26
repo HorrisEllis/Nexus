@@ -163,6 +163,26 @@ James: *"ideas promoted to specs get a repo."* A first cut of this release gave 
   - there is no Compartment tab, and the badge reads 1;
   - a promoted brainstorm opens in Create › Ideas with the lanes, and the repo count does not change.
 
+## A spec's idea lives in its repo; the counts are yours
+
+James: *"it says 15 ideas and 15 repos can you fix that? also ideas, once promoted to spec should move to the idea tab in the actual repo of the idea/spec?"*
+
+**What was wrong**
+- Each of Nexus's system repos carries a "Repo: nexus/…" idea and a spec per synced version.
+- Those filled the Ideas list and the ideas and specs counts in the header.
+- An idea that became a spec also stayed in the Ideas list.
+
+**What changed**
+- **Ideas list and ideas count:** only ideas that have no repo yet. An idea with a repo is a spec, and it lives in that repo's Idea tab.
+- **Pointer to the specs:** a line under the list says how many ideas are specs, and takes you to Repos.
+- **Specs count:** leaves out Nexus's own system specs (every version of every system repo).
+- **Making a spec from an idea:** lands on the new repo's Idea tab, with the idea's lanes, instead of its Home tab.
+- **Inside a repo:** the lanes no longer offer "open in Ideas", since the idea is not there any more.
+
+**Tested:** `tests/probe/nexus-atlas-home.js`, 12/12 in a real idearium.
+- After the Nexus sync, only the one real idea counts: ideas 1, specs 0, and no "Repo: nexus/…" in the list.
+- After making it a spec, the page is on the new repo's Idea tab with the four lanes, the idea has left the list, and the header reads ideas 0 and specs 1.
+
 ## UI URLs: `/ui/<system>/`, not `/<system>/ui`
 
 James: *`{"ok":false,"error":"route not found: GET /idearium/ui"}` … should be /ui/idearium.*
