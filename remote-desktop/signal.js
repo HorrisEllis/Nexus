@@ -14,7 +14,7 @@
 // same module, two ways to launch it. Direct `node signal.js` still works
 // unchanged (see the require.main check at the bottom).
 
-const { WebSocketServer } = require('ws');
+const { WebSocketServer } = require('../lib/nano-ws.js');   // §0.39.261 — in-house RFC 6455 server (lib/nano-ws.js), was ws
 const { createSessionAuthority } = require('./session-token');
 
 function send(ws, msg) {

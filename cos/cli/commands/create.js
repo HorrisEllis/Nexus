@@ -39,7 +39,7 @@ const { toSlug }      = require('../../host/gates/compartment.js');
  * @returns {object} the created compartment
  */
 function createCompartment(host, config) {
-  const { name, purpose, runtimeId, networkIsolated = true } = config;
+  const { name, purpose, runtimeId, networkIsolated = true, parentId = null } = config;
 
   // Validate early so we can throw synchronously for callers that expect it
   if (!name) throw new Error('create: name is required');
@@ -62,7 +62,7 @@ function createCompartment(host, config) {
 
   // Dispatch through the gate — depth-first sync, gate runs before this returns
   host.bus.emit('host:compartment:create', {
-    name, purpose, runtimeId, networkIsolated,
+    name, purpose, runtimeId, networkIsolated, parentId,
     store:  host.store,
     sysmap: host.sysmap,
   });

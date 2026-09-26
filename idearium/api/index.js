@@ -339,6 +339,9 @@ async function _reconcileSpecRepos() {
   for (const r of repos) {
     if (r.specUuid) covered.add(r.specUuid);
     if (r.promotedFromSpec) covered.add(r.promotedFromSpec);
+    // §0.39.261 — earlier immutable versions of a repo (RepoLayer.replaceSpec,
+    // the Nexus self-repos) are that repo's history, not orphans to adopt.
+    for (const h of r.specHistory || []) if (h && h.specUuid) covered.add(h.specUuid);
   }
   const liveHashes = new Set(repos.filter(r => r.status !== 'archived' && r.rootHash).map(r => r.rootHash));
 
@@ -360,6 +363,7 @@ async function _reconcileSpecRepos() {
         specUuid: manifest.uuid,
         source: 'spec.reconcile',
         parent: manifest.ideaUuid || null,
+        ideaUuid: manifest.ideaUuid || null,   // §0.39.261 — the idea this spec came from becomes the repo's own idea
         compartmentId: _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name),
       });
       if (result.error) { failed.push({ specUuid: manifest.uuid, name: manifest.name, error: result.error }); continue; }
@@ -457,6 +461,7 @@ async function _promoteSpecToRepo(ideaOS, se, specUuid, mode = 'emerge') {
     specUuid: manifest.uuid,
     source: `promote:${mode}`,
     parent: manifest.ideaUuid || null,
+    ideaUuid: manifest.ideaUuid || null,   // §0.39.261 — the idea this spec came from becomes the repo's own idea
     promotedFromSpec: specUuid,
     compartmentId: _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name),
   });
@@ -1034,9 +1039,35 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','injects',':id','apply'], 'repo.inject.apply'],
     ['POST',   ['api','repos',    ':uuid','injects',':id','reject'],'repo.inject.reject'],
     ['POST',   ['api','repos',    ':uuid','injects',':id','revert'],'repo.inject.revert'],
+    // §0.39.261 — Nexus as repos inside Nexus (idearium/repo/nexus-self.js,
+    // lib/nexus-self/*). Static paths first so they never match :system.
+    ['GET',    ['api','nexus-self'],                                  'nexus-self.status'],
+    ['POST',   ['api','nexus-self','sync'],                           'nexus-self.sync'],
+    ['GET',    ['api','nexus-self','understanding'],                  'nexus-self.understanding'],
+    ['GET',    ['api','nexus-self','applies'],                        'nexus-self.applies'],
+    ['POST',   ['api','nexus-self','applies',':id','rollback'],       'nexus-self.rollback'],
+    ['GET',    ['api','nexus-self',':system'],                        'nexus-self.system'],
+    ['GET',    ['api','nexus-self',':system','spec'],                 'nexus-self.spec'],
+    ['GET',    ['api','nexus-self',':system','branches'],             'nexus-self.branch.list'],
+    ['POST',   ['api','nexus-self',':system','branch'],               'nexus-self.branch.create'],
+    ['GET',    ['api','nexus-self',':system','branch',':id'],         'nexus-self.branch.get'],
+    ['DELETE', ['api','nexus-self',':system','branch',':id'],         'nexus-self.branch.destroy'],
+    ['GET',    ['api','nexus-self',':system','branch',':id','file'],  'nexus-self.branch.file.get'],
+    ['PUT',    ['api','nexus-self',':system','branch',':id','file'],  'nexus-self.branch.file.put'],
+    ['DELETE', ['api','nexus-self',':system','branch',':id','file'],  'nexus-self.branch.file.delete'],
+    ['POST',   ['api','nexus-self',':system','branch',':id','plan'],  'nexus-self.branch.plan'],
+    ['POST',   ['api','nexus-self',':system','branch',':id','apply'], 'nexus-self.branch.apply'],
     // §RUN 2026-09-21 — run/test the repo in a COS test environment (lib/repo-run.js)
     ['POST',   ['api','repos',    ':uuid','run'],                   'repo.run'],
     ['GET',    ['api','repos',    ':uuid','run','capabilities'],    'repo.run.capabilities'],
+    ['GET',    ['api','repos',    ':uuid','run','options'],         'repo.run.options'],   // §0.39.261 — the COS run menu (lib/cos-run.js)
+    // §0.39.261 — the repo's own idea (the Idea tab) and one place for what is wrong (the Debug tab)
+    ['GET',    ['api','repos',    ':uuid','idea'],                          'repo.idea.get'],
+    ['PATCH',  ['api','repos',    ':uuid','idea'],                          'repo.idea.update'],
+    ['POST',   ['api','repos',    ':uuid','idea','iterations'],             'repo.idea.iteration.create'],
+    ['POST',   ['api','repos',    ':uuid','idea','iterations',':id','status'],  'repo.idea.iteration.status'],
+    ['POST',   ['api','repos',    ':uuid','idea','iterations',':id','roadmap'], 'repo.idea.iteration.roadmap'],
+    ['GET',    ['api','repos',    ':uuid','debug'],                         'repo.debug'],
     ['GET',    ['api','repos',    ':uuid','agent','settings'],      'repo.agent.settings.get'],
     ['POST',   ['api','repos',    ':uuid','agent','settings'],      'repo.agent.settings.set'],
     // 0.39.258 — the prompt blocks: everything the agent is sent besides its persona, edited here (lib/repo-prompt-blocks.js)
@@ -2648,23 +2679,258 @@ async function handle(req, res, route, query, body) {
       return ok(res, RA.status({ repo, repoDir: _repoDiskDir(params.uuid) }));
     }
 
+    // ── §0.39.261 — the Nexus repo (Nexus, managed from inside Nexus) ────────
+    case 'nexus-self.status': {
+      const NS = await import('../repo/nexus-self.js');
+      const sg = NS.readSystemGraph();
+      return ok(res, { ...NS.status(getRepoLayer()), syncing: !!_nexusSelfSyncing, lastSync: _nexusSelfLast,
+        systemGraph: sg ? { snapshot: sg.snapshot, edges: sg.edges.map(e => ({ from: e.from, to: e.to, count: e.count, examples: e.examples })), missing: sg.missing, broken: sg.broken.slice(0, 100), bySystem: sg.bySystem } : null });
+    }
+    case 'nexus-self.sync': {
+      const only = Array.isArray(body.only) ? body.only.map(String) : null;
+      const p = _nexusSelfSync({ only, force: !!body.force });
+      if (body.wait) { const r = await p; return r.error ? err(res, 500, r.error) : ok(res, r); }
+      return ok(res, { started: true, alreadyRunning: p !== _nexusSelfStartedNow });
+    }
+    case 'nexus-self.understanding': {
+      const NS = await import('../repo/nexus-self.js');
+      const hist = NS.readUnderstanding({ limit: parseInt(query.n, 10) || 50 });
+      return ok(res, { latest: hist[hist.length - 1] || null, history: hist.map(h => ({ at: h.at, snapshot: h.snapshot, totals: h.totals, improved: h.improved, regressed: h.regressed })) });
+    }
+    case 'nexus-self.applies': {
+      return ok(res, { applies: _require('../../lib/nexus-self/apply.js').listApplies().slice(0, parseInt(query.n, 10) || 50) });
+    }
+    case 'nexus-self.rollback': {
+      const r = _require('../../lib/nexus-self/apply.js').rollback(params.id, { reason: body.reason || '' });
+      if (!r.ok) return err(res, 409, [...(r.errors || []), ...(r.conflicts || []).map(c => `${c.path}: ${c.why}`)].join('; ') || 'rollback refused');
+      os.emit('idearium.nexus-self.rollback', { applyId: params.id, snapshot: r.snapshot });
+      _nexusSelfSync({});
+      return ok(res, r);
+    }
+    case 'nexus-self.system': {
+      const NS = await import('../repo/nexus-self.js');
+      const v = NS.systemView(getRepoLayer(), params.system);
+      return v.error ? err(res, 404, v.error) : ok(res, v);
+    }
+    case 'nexus-self.spec': {
+      const NS = await import('../repo/nexus-self.js');
+      const r = NS.specText(params.system, String(query.path || ''));
+      return r.error ? err(res, 404, r.error) : ok(res, r);
+    }
+    case 'nexus-self.branch.list': case 'nexus-self.branch.create': case 'nexus-self.branch.get':
+    case 'nexus-self.branch.destroy': case 'nexus-self.branch.file.get': case 'nexus-self.branch.file.put':
+    case 'nexus-self.branch.file.delete': case 'nexus-self.branch.plan': case 'nexus-self.branch.apply': {
+      const SYS = _require('../../lib/nexus-self/systems.js');
+      if (!SYS.get(params.system)) return err(res, 404, `unknown system: ${params.system}`);
+      const NSB = _require('../../lib/nexus-self/branch.js');
+      const comp = _require('../../lib/cos-bridge.js').getCompartment(`nexus-self-${params.system}`);
+      if (!comp) return err(res, 409, `no compartment for ${params.system} yet — sync the Nexus repo first`);
+      if (action === 'nexus-self.branch.list') return ok(res, { branches: NSB.list(comp) });
+      if (action === 'nexus-self.branch.create') {
+        try { return ok(res, { branch: NSB.create({ system: params.system, compartment: comp, label: body.label || null }) }); }
+        catch (e) { return err(res, 409, e.message); }
+      }
+      const br = NSB.get(comp, params.id);
+      if (!br) return err(res, 404, `branch not found: ${params.id}`);
+      if (action === 'nexus-self.branch.get') {
+        const ch = NSB.changes(br).map(c => ({ path: c.path, op: c.op, bytes: c.content ? c.content.length : 0 }));
+        return ok(res, { branch: br, changes: ch });
+      }
+      if (action === 'nexus-self.branch.destroy') return ok(res, NSB.destroy(comp, br.id));
+      if (action === 'nexus-self.branch.file.get') {
+        const f = NSB.readFile(br, String(query.path || ''));
+        if (f.error) return err(res, 404, f.error);
+        return ok(res, { ...f, diff: query.diff ? NSB.diffText(br, f.path) : undefined });
+      }
+      if (action === 'nexus-self.branch.file.put') {
+        const w = NSB.writeFile(br, String(body.path || ''), body.content);
+        return w.error ? err(res, 400, w.error) : ok(res, w);
+      }
+      if (action === 'nexus-self.branch.file.delete') {
+        const d = NSB.deleteFile(br, String(query.path || body.path || ''));
+        return d.error ? err(res, 400, d.error) : ok(res, d);
+      }
+      const AP = _require('../../lib/nexus-self/apply.js');
+      const changes = NSB.changes(br);
+      if (action === 'nexus-self.branch.plan') {
+        const p = AP.plan({ system: params.system, base: br.base, changes });
+        return ok(res, { ok: p.ok, errors: p.errors, conflicts: p.conflicts, items: p.items.map(({ _buf, ...i }) => i) });
+      }
+      // apply — the gate. The branch must have been RUN (any COS run option)
+      // since its last change unless the caller explicitly waives it.
+      const lastRun = (br.runs || []).slice(-1)[0];
+      const newest = changes.length ? Math.max(...changes.filter(c => c.op !== 'delete').map(c => { try { return fs.statSync(path.join(br.root, c.path)).mtimeMs; } catch (_) { return 0; } }), 0) : 0;
+      if (!body.skipRunCheck && (!lastRun || (lastRun.recordedAt || 0) < newest)) {
+        return err(res, 409, 'run the branch first (COS run menu) — it has changed since its last run. Pass skipRunCheck:true to apply without one.');
+      }
+      if (!body.skipRunCheck && lastRun && lastRun.passed === false) {
+        return err(res, 409, `the branch's last run failed (${lastRun.option || lastRun.mode || 'run'}) — fix it, or pass skipRunCheck:true to apply anyway`);
+      }
+      const r = AP.apply({ system: params.system, base: br.base, changes, reason: body.reason || '', by: 'idearium' });
+      if (!r.ok) return err(res, 409, [...(r.errors || []), ...(r.conflicts || []).map(c => `CONFLICT ${c.path}: ${c.why}`)].join('; '));
+      os.emit('idearium.nexus-self.apply', { system: params.system, applyId: r.applyId, snapshot: r.snapshot, paths: r.applied.map(i => i.path) });
+      if (!body.keepBranch) NSB.destroy(comp, br.id);
+      const synced = await _nexusSelfSync({ only: [params.system] });
+      return ok(res, { ...r, synced: synced.systems || null, understanding: synced.understanding || null });
+    }
+
     // §RUN 2026-09-21 — James: "use cos for the test environment." Forks the
     // repo's files into a branch of its REAL COS compartment and runs there
     // through COS's SandboxRunner (clean env, timeout, output cap).
     case 'repo.run.capabilities': {
       const TE = _require('../../cos/testenv/index.js');
-      return ok(res, TE.capabilities());
+      return ok(res, { ...TE.capabilities(), runtime: _require('../../cos/runtime/run.js').capabilities() });
     }
+    // §0.39.261 — James: "the run button in cos to work fully … like a bunch of
+    // options for cos." The menu is computed per repo (lib/cos-run.js): what can
+    // run, and for what cannot, why.
+    case 'repo.run.options': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const CR = _require('../../lib/cos-run.js');
+      const dir = repo.nexusSelf ? null : _repoDiskDir(params.uuid);
+      let branches = [];
+      if (repo.nexusSelf && repo.nexusSelf.role === 'system') {
+        const comp = _require('../../lib/cos-bridge.js').getCompartment(`nexus-self-${repo.nexusSelf.system}`);
+        if (comp) branches = _require('../../lib/nexus-self/branch.js').list(comp).map(b => ({ id: b.id, label: b.label, createdAt: b.createdAt, runs: (b.runs || []).length }));
+      }
+      return ok(res, { repoUuid: params.uuid, nexusSystem: repo.nexusSelf ? repo.nexusSelf.system || null : null, branches, options: CR.options(repo, dir) });
+    }
+    // ── §0.39.261 — IDEA: the idea a repo was made from, and every way it
+    // grows. James: "once a idea is a spec, move the idea section to the repo
+    // … a full idea tab and section for improving/iterating or expanding the
+    // project." An iteration is a real IdeaOS idea (tags repo:<uuid>,
+    // kind:<improve|iterate|expand>), causally linked to the repo's idea, so it
+    // lives in the same idea graph, lattice and SNR as every other idea.
+    case 'repo.idea.get': case 'repo.idea.update': case 'repo.idea.iteration.create':
+    case 'repo.idea.iteration.status': case 'repo.idea.iteration.roadmap': {
+      const layer = getRepoLayer();
+      const repo = layer.get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      let idea = repo.ideaUuid ? os.idea(repo.ideaUuid) : null;
+      if (!idea) {   // older repos minted no idea, or it was lost: give it one, once
+        os.emit('idearium.idea.create', { text: `Repo: ${repo.name}`, tags: [`repo:${repo.uuid}`], source: 'repo-ingest' });
+        idea = os.db.ideas[os.db.ideas.length - 1];
+        if (idea) { os.emit('idearium.idea.phase', { uuid: idea.uuid, phase: 'specced' }); layer.annotate(repo.uuid, { ideaUuid: idea.uuid }); }
+      }
+      if (!idea) return err(res, 500, 'could not resolve or create this repo\'s idea');
+      const KINDS = ['improve', 'iterate', 'expand'];
+      const STATUS_TO_PHASE = { open: 'seed', doing: 'building', done: 'complete', dropped: 'archived' };
+      const PHASE_TO_STATUS = { seed: 'open', expanding: 'open', tensioned: 'open', specced: 'open', building: 'doing', complete: 'done', archived: 'dropped' };
+      const tag = (i, k) => ((i.tags || []).find(t => String(t).startsWith(`${k}:`)) || '').slice(k.length + 1) || null;
+      const iterations = () => os.db.ideas.filter(i => (i.tags || []).includes(`repo:${repo.uuid}`) && i.uuid !== idea.uuid)
+        .map(i => ({ uuid: i.uuid, text: i.text, kind: tag(i, 'kind'), status: PHASE_TO_STATUS[i.phase] || 'open', phase: i.phase, roadmapPhase: tag(i, 'phase'), tension: i.tension ?? null, createdAt: i.createdAt, updatedAt: i.updatedAt }))
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      if (action === 'repo.idea.get') {
+        const links = (os.db.links || []).filter(l => l.fromUuid === idea.uuid || l.toUuid === idea.uuid).length;
+        return ok(res, { repoUuid: repo.uuid, idea: { uuid: idea.uuid, text: idea.text, phase: idea.phase, tags: idea.tags || [], tension: idea.tension ?? null, createdAt: idea.createdAt, updatedAt: idea.updatedAt, links }, iterations: iterations(), kinds: KINDS, statuses: Object.keys(STATUS_TO_PHASE) });
+      }
+      if (action === 'repo.idea.update') {
+        const text = String(body.text || '').trim();
+        if (!text) return err(res, 400, 'text is required');
+        os.emit('idearium.idea.update', { uuid: idea.uuid, fields: { text } });
+        return ok(res, { idea: os.idea(idea.uuid) });
+      }
+      if (action === 'repo.idea.iteration.create') {
+        const kind = String(body.kind || '');
+        const text = String(body.text || '').trim();
+        if (!KINDS.includes(kind)) return err(res, 400, `kind must be one of ${KINDS.join(', ')}`);
+        if (!text) return err(res, 400, 'text is required');
+        os.emit('idearium.idea.create', { text, tags: [`repo:${repo.uuid}`, `kind:${kind}`], source: 'repo-idea' });
+        const it = os.db.ideas[os.db.ideas.length - 1];
+        if (!it || it.text !== text) return err(res, 500, 'the iteration was not created');
+        os.emit('idearium.idea.link', { fromUuid: it.uuid, toUuid: idea.uuid, linkType: 'causal' });
+        os.broadcast('idearium.repo.idea', { repoUuid: repo.uuid, iteration: it.uuid, kind });
+        return ok(res, { iteration: iterations().find(x => x.uuid === it.uuid) });
+      }
+      const it = os.idea(params.id);
+      if (!it || !(it.tags || []).includes(`repo:${repo.uuid}`)) return err(res, 404, `no iteration ${params.id} on this repo`);
+      if (action === 'repo.idea.iteration.status') {
+        const phase = STATUS_TO_PHASE[body.status];
+        if (!phase) return err(res, 400, `status must be one of ${Object.keys(STATUS_TO_PHASE).join(', ')}`);
+        os.emit('idearium.idea.phase', { uuid: it.uuid, phase });
+        return ok(res, { iteration: iterations().find(x => x.uuid === it.uuid) });
+      }
+      // roadmap — the iteration becomes a real phase in the repo's phasemap file
+      if (tag(it, 'phase')) return err(res, 409, `already on the roadmap as ${tag(it, 'phase')}`);
+      const dir = _repoDiskDir(repo.uuid);
+      const { collectPhasemaps, addPhase, RoadmapError } = await import('../repo/roadmap.js');
+      const maps = dir ? collectPhasemaps(repo, dir).maps : [];
+      const target = maps.find(m => m.path === body.map) || maps[0] || null;
+      const mapPath = target ? target.path : 'roadmap-phasemap.spec';
+      let added;
+      try { added = addPhase({ text: target ? target.text : null, mapName: mapPath.split('/').pop().replace(/\.spec$/, ''), title: it.text.split('\n')[0].slice(0, 80), does: it.text, prefix: ({ improve: 'IM', iterate: 'IT', expand: 'EX' })[tag(it, 'kind')] || 'IT' }); }
+      catch (e) { if (e instanceof RoadmapError) return err(res, 400, e.message, { code: e.code }); throw e; }
+      const w = layer.writeTextFile(repo.uuid, mapPath, added.text);
+      if (w.error) return err(res, w.code === 'IMMUTABLE' ? 409 : 500, `could not write ${mapPath}: ${w.error}`);
+      os.emit('idearium.idea.update', { uuid: it.uuid, fields: { tags: [...(it.tags || []), `phase:${added.id}`] } });
+      os.emit('idearium.repo.roadmap.updated', { repoUuid: repo.uuid, map: mapPath, phase: added.id, status: 'pending', via: w.via });
+      return ok(res, { iteration: iterations().find(x => x.uuid === it.uuid), map: mapPath, phase: added.id });
+    }
+
+    // ── §0.39.261 — DEBUG: everything that is wrong with this repo, in one read.
+    // James: "a tab for debugging." Each part is read from where it already
+    // lives (the pipeline's verification + indexes, the COS run history, the
+    // agent's exchange log) or checked live (syntax, dependencies) — nothing
+    // here is a second copy of a result that could drift from its source.
+    case 'repo.debug': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      const read = (f) => { try { return JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')); } catch (_) { return null; } };
+      const ver = read('verification.json'), lazy = read('verification.lazy.json');
+      const tiers = [...((ver && ver.tiers) || []), ...((lazy && lazy.tiers) || [])];
+      const failedTiers = tiers.filter(t => t && t.passed === false && t.status !== 'not_applicable')
+        .map(t => ({ level: t.level, name: t.name, failures: (t.failures || t.results || []).filter(x => !x || x.status !== 'passed').slice(0, 20) }));
+      const filesIdx = read('indexes/files.json') || [];
+      const parseFailures = filesIdx.filter(f => f.status === 'failed').map(f => ({ path: f.path, error: f.error || f.reason || null })).slice(0, 200);
+      const runs = loadTable('idearium_repo_runs').filter(r => r.repoUuid === repo.uuid).sort((a, b) => b.ts - a.ts).slice(0, 20);
+      let agentErrors = [];
+      try { agentErrors = _require('../../lib/repo-agent.js').history(repo.uuid, 200).filter(x => !x.ok).slice(0, 20).map(x => ({ ts: x.ts, message: x.message.slice(0, 300), error: x.error, backend: x.backend })); } catch (_) {}
+      const CR = _require('../../lib/cos-run.js'), RT = _require('../../cos/runtime/run.js');
+      let files = [];
+      try { files = CR.repoFiles(repo, dir); } catch (_) {}
+      const js = files.filter(f => RT.JS_EXT.has(path.extname(f)));
+      let syntax = null, deps = null;
+      if (dir && fs.existsSync(dir)) {
+        try { const s = await RT.syntaxCheck(dir, { files: js.filter(f => fs.existsSync(path.join(dir, f))) }); syntax = { checked: s.checked, failed: s.results.filter(r => !r.ok).slice(0, 100) }; } catch (e) { syntax = { error: e.message }; }
+        if (repo.nexusSelf && repo.nexusSelf.role === 'system') {
+          const sg = (await import('../repo/nexus-self.js')).readSystemGraph();
+          const mine = sg ? sg.broken.filter(b => b.system === repo.nexusSelf.system) : [];
+          deps = sg ? { summary: sg.bySystem[repo.nexusSelf.system] || null, brokenRelative: mine.map(b => ({ file: b.from, specifier: b.spec })), packages: sg.missing.filter(m => m.systems.includes(repo.nexusSelf.system)).map(m => ({ name: m.name, via: 'missing', usedBy: m.count })) } : null;
+        } else {
+          try { const d = RT.resolveDeps(dir, { files }); deps = { summary: d.summary, brokenRelative: d.brokenRelative, packages: d.packages.filter(p => p.via === 'missing') }; } catch (e) { deps = { error: e.message }; }
+        }
+      }
+      return ok(res, { repoUuid: repo.uuid, verification: ver ? { status: ver.status, level: ver.level } : null, failedTiers, parseFailures, runs, agentErrors, syntax, deps, checkedAt: Date.now() });
+    }
+
     case 'repo.run': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
-      const RR = _require('../../lib/repo-run.js');
-      const r = await RR.run({ repo, repoDir: _repoDiskDir(params.uuid), mode: body.mode === 'test' ? 'test' : 'run',
-        entry: body.entry || null, timeoutMs: Math.min(parseInt(body.timeoutMs, 10) || 30000, 300000), keepBranch: !!body.keepBranch,
-        testBackend: ['auto', 'process', 'vm'].includes(body.backend) ? body.backend : 'auto' });
+      const CR = _require('../../lib/cos-run.js');
+      // pre-0.39.261 callers send { mode: 'run'|'test', entry }
+      const option = body.option || (body.mode === 'test' ? 'test.all' : body.entry ? 'run.file' : 'run.entry');
+      let compartment = null, nexusBranch = null;
+      if (repo.nexusSelf && repo.nexusSelf.role === 'system') {
+        compartment = _require('../../lib/cos-bridge.js').getCompartment(`nexus-self-${repo.nexusSelf.system}`);
+        if (body.branch) {
+          nexusBranch = compartment ? _require('../../lib/nexus-self/branch.js').get(compartment, body.branch) : null;
+          if (!nexusBranch) return err(res, 404, `branch not found: ${body.branch}`);
+        }
+      } else if (repo.compartmentId) compartment = _require('../../lib/cos-bridge.js').getCompartment(repo.compartmentId);
+      const r = await CR.run({ repo, repoDir: repo.nexusSelf ? null : _repoDiskDir(params.uuid), compartment, option,
+        file: body.file || body.entry || null, script: body.script || null,
+        timeoutMs: Math.min(parseInt(body.timeoutMs, 10) || 30000, 300000), keepBranch: !!body.keepBranch, nexusBranch });
       if (!r.ok) return err(res, 422, (r.errors || ['run failed']).join('; '));
-      os.emit('idearium.repo.run', { repoUuid: params.uuid, mode: r.mode, passed: r.passed, failed: r.failed });
-      return ok(res, { repoUuid: params.uuid, ...r });
+      os.emit('idearium.repo.run', { repoUuid: params.uuid, option: r.option, passed: r.passed, failed: r.failed });
+      // kept for the Debug tab: what ran, where, and what failed (the tail of each failing run's stderr)
+      try {
+        appendRow('idearium_repo_runs', { uuid: `run-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid: params.uuid, option: r.option, label: r.label, where: r.where,
+          passed: r.passed, failed: r.failed, allPassed: r.allPassed, durationMs: r.durationMs, branch: body.branch || null, ts: Date.now(),
+          failures: (r.runs || []).filter(x => !x.passed).slice(0, 10).map(x => ({ file: x.file, exitCode: x.exitCode ?? null, error: x.error || null, stderr: String(x.stderr || '').slice(-600), health: x.health && !x.health.ok ? x.health.error || null : null })) });
+      } catch (_) { /* the run's own result is returned regardless */ }
+      return ok(res, { repoUuid: params.uuid, ...r, mode: option === 'test.all' ? 'test' : 'run' });
     }
 
     // ── §INJECT 2026-09-21 — .inject nodes ─────────────────────────────────
@@ -3453,6 +3719,7 @@ async function handle(req, res, route, query, body) {
             specUuid: manifest.uuid,
             source: 'spec.create.auto',
             parent: manifest.ideaUuid || null,
+            ideaUuid: manifest.ideaUuid || null,   // §0.39.261 — the idea this spec came from becomes the repo's own idea
             promotedFromSpec: null,
             compartmentId: _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name),
           });
@@ -4004,7 +4271,34 @@ function _startBuildQueuePoller(port) {
   return timer; // real handle — lets a caller (or a test) stop this poller; startAPI() itself never needs to
 }
 
-export { _startBuildQueuePoller, _buildingSpecs, _reconcileSpecRepos, getRepoLayer, _ollamaModels }; // getRepoLayer: the real layer, exported so tests exercise the production write path, not a fake
+// §0.39.261 — one Nexus-repo sync at a time; later callers share the running one.
+let _nexusSelfSyncing = null, _nexusSelfLast = null, _nexusSelfStartedNow = null;
+function _nexusSelfSync({ only = null, force = false } = {}) {
+  if (_nexusSelfSyncing) { _nexusSelfStartedNow = null; return _nexusSelfSyncing; }
+  _nexusSelfSyncing = (async () => {
+    try {
+      const se = getSpecEngine();
+      if (!se) return { error: 'spec-engine not ready' };
+      const NS = await import('../repo/nexus-self.js');
+      const os = getIdeaOS();
+      const r = await NS.sync(getRepoLayer(), se, {
+        only, force, log: (m) => console.log(m),
+        onSystem: (x) => { try { os.broadcast('idearium.nexus-self.sync', { system: x.system, status: x.status, error: x.error || null }); } catch (_) {} },
+      });
+      _nexusSelfLast = { at: Date.now(), ok: r.ok, snapshot: r.snapshot, ms: r.ms, changed: r.systems.filter(x => x.status !== 'unchanged').map(x => `${x.system}:${x.status}`), understanding: r.understanding };
+      if (_nexusSelfLast.changed.length) console.log(`[idearium/nexus-self] synced in ${r.ms}ms — ${_nexusSelfLast.changed.join(', ')}${r.understanding && r.understanding.improved && r.understanding.improved.length ? ` · understanding improved: ${r.understanding.improved.join(', ')}` : ''}${r.understanding && r.understanding.regressed && r.understanding.regressed.length ? ` · regressed: ${r.understanding.regressed.join(', ')}` : ''}`);
+      return r;
+    } catch (e) {
+      console.error(`[idearium/nexus-self] sync failed: ${e.message}`);
+      _nexusSelfLast = { at: Date.now(), ok: false, error: e.message };
+      return { error: e.message };
+    } finally { _nexusSelfSyncing = null; }
+  })();
+  _nexusSelfStartedNow = _nexusSelfSyncing;
+  return _nexusSelfSyncing;
+}
+
+export { _startBuildQueuePoller, _buildingSpecs, _reconcileSpecRepos, getRepoLayer, _ollamaModels, _nexusSelfSync }; // getRepoLayer: the real layer, exported so tests exercise the production write path, not a fake
 
 export function startAPI() {
   const os = getIdeaOS();
@@ -4378,6 +4672,20 @@ export function startAPI() {
     // separate build mechanism; the same one, just self-triggered
     // instead of waiting for someone to click a button.
     _startBuildQueuePoller(PORT);
+
+    // §0.39.261 — keep the Nexus repo current: a background sync shortly after
+    // boot, then every NEXUS_SELF_SYNC_MS (default 10 min). Unchanged systems
+    // cost one hash-cache pass (~0.1 s); the sync yields between systems and
+    // stages, so /health keeps answering. Off in test processes (a test must
+    // not snapshot the real tree) and with NEXUS_SELF_AUTOSYNC=0.
+    if (process.env.NEXUS_SELF_AUTOSYNC !== '0' && !_require('../../lib/test-sandbox.js').isTestProcess()) {
+      const every = Math.max(60000, parseInt(process.env.NEXUS_SELF_SYNC_MS, 10) || 600000);
+      const first = setTimeout(() => { _nexusSelfSync({}); }, parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 20000);
+      const t = setInterval(() => { _nexusSelfSync({}); }, every);
+      if (first.unref) first.unref();
+      if (t.unref) t.unref();
+      console.log(`[idearium/nexus-self] Nexus repo sync scheduled — first in ${Math.round((parseInt(process.env.NEXUS_SELF_FIRST_SYNC_MS, 10) || 20000) / 1000)}s, then every ${Math.round(every / 60000)} min`);
+    }
   });
 
   server.on('error', e => {

@@ -52,7 +52,10 @@ async function main() {
   const HTML = fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'index.html'), 'utf8');
   const API = fs.readFileSync(path.join(ROOT, 'idearium', 'api', 'index.js'), 'utf8');
   check('the Run button is wired (not .tb-unwired)', /id="repo-tb-run"(?![^>]*tb-unwired)/.test(HTML) && /tb-btn" id="repo-tb-run"/.test(HTML));
-  check('the repo.run route calls lib/repo-run.js', /case 'repo\.run'[\s\S]{0,400}repo-run\.js/.test(API));
+  // §0.39.261 — the route now runs the COS run menu (lib/cos-run.js), which forks
+  // into the same COS compartment branch; lib/repo-run.js remains a library
+  // (runtime-proof uses it) and is still exercised directly above.
+  check('the repo.run route calls the COS run menu (lib/cos-run.js)', /case 'repo\.run'[\s\S]{0,400}cos-run\.js/.test(API));
 
   fs.rmSync(repoDir, { recursive: true, force: true }); fs.rmSync(empty, { recursive: true, force: true });
   console.log(`\n  ${pass} passed, ${fail} failed\n`);

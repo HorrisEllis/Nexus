@@ -31,7 +31,10 @@ const DOCS = process.env.NEXUS_PHASEMAP_DIR || path.join(ROOT, 'docs');
 // Systems phases get tagged to (matched against phase text, case-insensitive).
 const SYSTEMS = ['cortex', 'guardian', 'bridge', 'orchestrator', 'loom', 'copilot',
   'clear-glass', 'idearium', 'emerge', 'architect', 'raid', 'intelligence',
-  'gemini', 'agent', 'tablet', 'diagnostic', 'chunk', 'replay', 'snapshot'];
+  'gemini', 'agent', 'tablet', 'diagnostic', 'chunk', 'replay', 'snapshot',
+  // §0.39.261 — three supervised kernels loom never tagged, so their phases
+  // were invisible per system (each Nexus self-repo's Phasemap tab was empty).
+  'eravos', 'versionium', 'ollama'];
 
 // §FIXED 2026-09-20 (MCO-E) — was /[A-Z]{1,3}\d+_.../, which cannot match a
 // hyphenated id like `MCO-A_schemas`, so the overhaul phasemaps' own phases

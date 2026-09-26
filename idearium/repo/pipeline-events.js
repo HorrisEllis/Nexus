@@ -34,6 +34,7 @@ export const PIPELINE_EVENTS = Object.freeze([
   { type: 'atlas:build:complete',       stage: 'atlas',  scope: 'run',  bus: true },
   { type: 'chunk:decompose:start',      stage: 'chunk',  scope: 'run',  bus: true },
   { type: 'chunk:decompose:complete',   stage: 'chunk',  scope: 'run',  bus: true },
+  { type: 'chunk:glyphs:complete',      stage: 'chunk',  scope: 'run',  bus: true },   // 0.39.261 — each chunk's glyph (lib/chunk-glyph.js) written to indexes/glyphs.json
   { type: 'chunk:verify:complete',      stage: 'verify', scope: 'run',  bus: true },
   { type: 'chunk:verify:failed',        stage: 'verify', scope: 'run',  bus: true },
   { type: 'index:build:complete',       stage: 'index',  scope: 'run',  bus: true },

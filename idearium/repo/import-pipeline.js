@@ -68,6 +68,8 @@ import { makeEmitter } from './pipeline-events.js';
 // projection. scheduleLazyVerification() itself never blocks — see that
 // module's own header.
 import { scheduleLazyVerification } from './verify-lazy.js';
+// §0.39.261 — each chunk's glyph: its most compressed semantic form (lib/chunk-glyph.js)
+import chunkGlyph from '../../lib/chunk-glyph.js';
 
 // lib/languages.js is CJS and idearium is type:module — Node's own
 // interop exposes module.exports as the default, so this is a plain
@@ -337,6 +339,30 @@ function buildAtlas(repo, parsed) {
     failedCount: parsed.filter(p => p.status === 'failed').length,
     tree, components,
   };
+}
+
+// ── GLYPHS — the compressed semantic form of every chunk ─────────────────
+function writeGlyphs(repoDir, parsed, chunks) {
+  const out = path.join(repoDir, 'indexes', 'glyphs.json');
+  const prev = loadJsonSafe(out) || {};
+  const prevBy = prev.byChunk || {};
+  const linesOf = new Map(parsed.map(p => [p.path, (p.content || '').split('\n')]));
+  const textOf = (c) => { const l = linesOf.get(c.file); return l ? l.slice(Math.max(0, c.range.start_line - 1), c.range.end_line).join('\n') : ''; };
+  const df = chunkGlyph.documentFrequencies(parsed.filter(p => !/\.(?:[cm]?[jt]sx?|json|ya?ml)$/i.test(p.path)).map(p => p.content || ''));
+  const byChunk = {};
+  let reused = 0, made = 0, chars = 0, glyphChars = 0;
+  for (const c of chunks) {
+    const h = c.hash && c.hash.content;
+    const old = prevBy[c.id];
+    let g;
+    if (old && h && old.hash === h && old.v === chunkGlyph.VERSION) { g = old; reused++; }
+    else { const r = chunkGlyph.glyph({ file: c.file, text: textOf(c), df }); g = { hash: h || null, v: chunkGlyph.VERSION, glyph: r.glyph, kind: r.kind, chars: r.chars, ratio: r.ratio, file: c.file, range: c.range }; made++; }
+    byChunk[c.id] = g; chars += g.chars || 0; glyphChars += (g.glyph || '').length;
+  }
+  const summary = { chunks: chunks.length, made, reused, chars, glyphChars, ratio: glyphChars ? +(chars / glyphChars).toFixed(1) : null };
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  fs.writeFileSync(out, JSON.stringify({ version: chunkGlyph.VERSION, generatedAt: Date.now(), summary, byChunk }), 'utf8');
+  return summary;
 }
 
 // ── CHUNKS (L3) — one chunk per top-level symbol, else one whole-file chunk.
@@ -632,6 +658,14 @@ function _runImportPipeline(repo, repoDir, emit, opts = {}) {
     changedFilePaths = changedFiles.map(f => f.path);
     fs.writeFileSync(path.join(chunkDir, 'index.json'), JSON.stringify(chunks.map(({ content, ...c }) => c), null, 2), 'utf8');
     emit('chunk:decompose:complete', { chunks: chunks.length, incremental });
+    // §0.39.261 GLYPHS — James: "leverage the most compressed semantix or
+    // linguistics for the chunks." One glyph per chunk (lib/chunk-glyph.js),
+    // cached by the chunk's content hash so an incremental import recomputes
+    // only what changed. Prose terms are ranked against this repo's own corpus
+    // (tf-idf), so a glyph names what is distinctive HERE. Non-fatal: a failed
+    // glyph pass costs the compressed view, never the import.
+    try { result.glyphs = writeGlyphs(repoDir, parsed, chunks); emit('chunk:glyphs:complete', result.glyphs); }
+    catch (e) { console.error(`[${MODULE_ID}] chunk glyphs failed (non-fatal): ${e.message}`); }
   } catch (e) {
     console.error(`[${MODULE_ID}] repository:chunk:failed — ${e.message}`);
     return { ...result, state: 'FAULT', parse: summarizeParse(parsed), atlas, error: `chunk failed: ${e.message}` };
@@ -744,6 +778,7 @@ function _runImportPipeline(repo, repoDir, emit, opts = {}) {
       lazyScheduled = scheduleLazyVerification({
         repoDir, repository: repo.uuid, graph: graphObj, changedFiles: changedFilePaths,
         runtimeProof: opts.runtimeProof !== false, // 0.39.246 — execution graph on by default; a caller may opt out
+        runTests: opts.lazyTests !== false,         // 0.39.261 — L6 test runs; off for repos whose tests cannot run alone (Nexus self-repos)
       });
     } catch (e) {
       console.error(`[${MODULE_ID}] repository:lazy-verification-schedule:failed — ${e.message}`);

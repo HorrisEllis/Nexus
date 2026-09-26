@@ -761,23 +761,58 @@ export function dependencyCone(graph, { start, depth = 5 } = {}) {
 }
 
 /** affected(graph, files[]) — the union cone for a whole changeset.
- *  This is what MCO2's lazy verification tiers are meant to scope to. */
-export function affected(graph, files = []) {
-  const fileIds = new Set();
-  const unresolved = [];
-  let truncated = false;
-  for (const f of files) {
-    const cone = dependencyCone(graph, { start: f });
-    if (!cone.found) continue;
-    for (const n of cone.files) fileIds.add(n.id);
-    unresolved.push(...cone.unresolved);
-    truncated = truncated || cone.truncated;
-  }
+ *  This is what MCO2's lazy verification tiers are meant to scope to.
+ *
+ *  §PERF 0.39.261 — was one dependencyCone() per changed file, and each of
+ *  those rebuilt the node index, ran two traversals and scanned every edge
+ *  twice for chunks/symbols it then threw away: O(changed × graph). A first
+ *  import has every file changed, so Nexus's 1791-file core slice spent 20 s
+ *  here, synchronously. The union of depth-limited cones from each start is
+ *  exactly a multi-source BFS with the same depth limit (a node is within
+ *  depth d of SOME start iff it is within d of the nearest one), so this is
+ *  the same answer in one pass over the graph. dependencyCone() itself is
+ *  unchanged for single-file callers. */
+export function affected(graph, files = [], { depth = 5 } = {}) {
   const nodeById = new Map(graph.nodes.map(n => [n.id, n]));
+  const byFrom = indexEdges(graph);
+  const starts = [];
+  for (const f of files) {
+    let id = f;
+    if (!nodeById.has(id)) {
+      if (nodeById.has(nodeId('file', f))) id = nodeId('file', f);
+      else if (nodeById.has(nodeId('chunk', f))) id = nodeId('chunk', f);
+      else continue;
+    }
+    const n = nodeById.get(id);
+    starts.push(n.kind === 'chunk' ? nodeId('file', n.file) : id);
+  }
+  const unresolvedSeen = new Set();
+  const unresolved = [];
+  const walk = (relation) => {
+    const seen = new Set(starts);
+    let frontier = [...seen];
+    for (let d = 0; d < depth && frontier.length; d++) {
+      const next = [];
+      for (const id of frontier) {
+        for (const e of (byFrom.get(id) || [])) {
+          if (e.relation !== relation) continue;
+          if (e.resolution === 'unresolved') {
+            const k = `${e.from}|${e.to}|${e.specifier || ''}`;
+            if (!unresolvedSeen.has(k)) { unresolvedSeen.add(k); unresolved.push({ ...e, depth: d + 1 }); }
+          }
+          if (e.to && !seen.has(e.to)) { seen.add(e.to); next.push(e.to); }
+        }
+      }
+      frontier = next;
+    }
+    return seen;
+  };
+  const fileIds = walk(INVERSE.depends_on);   // everything that depends on a changed file (the cone)
+  walk('depends_on');                         // only for the unresolved edges the cone's own imports hit
   return {
     inputs: files,
     files: [...fileIds].map(id => nodeById.get(id)).filter(Boolean),
-    unresolved, truncated,
+    unresolved, truncated: false,
   };
 }
 

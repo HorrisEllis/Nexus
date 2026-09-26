@@ -18,7 +18,7 @@ import path from 'path';
 import crypto from 'crypto';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const AdmZip = require('adm-zip');
+const AdmZip = require('../../lib/zip.js');   // §0.39.261 — in-house (was adm-zip)
 
 let passed = 0, failed = 0;
 function ok(id, desc, cond) {

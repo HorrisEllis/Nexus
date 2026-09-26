@@ -23,7 +23,7 @@
 'use strict';
 
 const http    = require('http');
-const express = require('express');
+const express = require('../../lib/micro-http.js');   // §0.39.261 — in-house express subset (lib/micro-http.js), was express
 const { randomUUID } = require('crypto');
 
 const NEXUS_ORCH_PORT   = parseInt(process.env.ORCHESTRATOR_PORT  || '9000');

@@ -783,7 +783,7 @@ body{display:flex;flex-direction:column;position:relative}
           <!-- §RUN 2026-09-21 — Run executes in a COS test environment
                (lib/repo-run.js): a branch of the repo's compartment, run in
                COS's sandbox. Shift+click runs the tests instead. -->
-          <button class="tb-btn" id="repo-tb-run" title="run in a COS test environment · shift+click: run tests" onclick="repoRun(event && event.shiftKey ? 'test' : 'run')">Run</button>
+          <button class="tb-btn" id="repo-tb-run" title="COS run menu — run, boot + probe, test, syntax check, resolve dependencies · shift+click: preselect all tests" onclick="repoRun(event && event.shiftKey ? 'test' : 'run')">Run</button>
           <button class="tb-btn" style="margin-left:6px" onclick="repoBranch()">Branch</button>
           <button class="tb-btn" style="margin-left:6px" onclick="repoDiagnose()">Diagnose</button>
         </span>
@@ -804,6 +804,7 @@ body{display:flex;flex-direction:column;position:relative}
         <div class="repo-detail-body" id="repo-detail-body">
           <nav class="repo-subnav" id="repo-subnav">
             <button class="repo-subtab-btn active" data-subtab="home" onclick="setRepoSubtab('home')">Home</button>
+            <button class="repo-subtab-btn" data-subtab="idea" onclick="setRepoSubtab('idea')">Idea</button>
             <button class="repo-subtab-btn" data-subtab="files" onclick="setRepoSubtab('files')">Files</button>
             <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>
             <button class="repo-subtab-btn" data-subtab="spec" onclick="setRepoSubtab('spec')">Spec</button>
@@ -811,12 +812,20 @@ body{display:flex;flex-direction:column;position:relative}
             <button class="repo-subtab-btn" data-subtab="roadmap" onclick="setRepoSubtab('roadmap')">Roadmap</button>
             <button class="repo-subtab-btn" data-subtab="intelligence" onclick="setRepoSubtab('intelligence')">Intelligence</button>
             <button class="repo-subtab-btn" data-subtab="agent" onclick="setRepoSubtab('agent')">Agent</button>
+            <button class="repo-subtab-btn" data-subtab="debug" onclick="setRepoSubtab('debug')">Debug</button>
             <button class="repo-subtab-btn" data-subtab="versionium" onclick="setRepoSubtab('versionium')">Versionium</button>
             <button class="repo-subtab-btn" data-subtab="settings" onclick="setRepoSubtab('settings')">Settings</button>
           </nav>
 
           <!-- HOME — the repo's own README/.spec, or basic identity if neither exists -->
           <div class="repo-subtab-panel active" id="repo-subtab-home">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- IDEA — §0.39.261: the idea this repo came from, and every way it grows
+               (improve · iterate · expand). Iterations are real IdeaOS ideas linked to
+               it; each can go to the agent or onto the roadmap. js/app.js §IDEA TAB. -->
+          <div class="repo-subtab-panel" id="repo-subtab-idea">
             <div class="detail-empty">← select a repo</div>
           </div>
 
@@ -871,6 +880,13 @@ body{display:flex;flex-direction:column;position:relative}
                repo's own real atlas/graph/verification artifacts — see
                GET /api/repos/:uuid/scan. -->
           <div class="repo-subtab-panel" id="repo-subtab-intelligence">
+            <div class="detail-empty">← select a repo</div>
+          </div>
+
+          <!-- DEBUG — §0.39.261: what is wrong, in one place — failed verification
+               tiers, parse failures, COS run failures, agent errors, live syntax and
+               dependency checks. GET /api/repos/:uuid/debug. js/app.js §DEBUG TAB. -->
+          <div class="repo-subtab-panel" id="repo-subtab-debug">
             <div class="detail-empty">← select a repo</div>
           </div>
 

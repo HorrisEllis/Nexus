@@ -294,9 +294,9 @@ const path       = require('path');
 const os         = require('os');
 const { execSync } = require('child_process');
 
-// ── Optional deps ─────────────────────────────────────────────────────────────
-let express, multer;
-try { express = require('express'); multer = require('multer'); } catch (_) {}
+// §0.39.261 — express and multer were loaded here "optionally" and never used
+// (uploads go through guardian/artifact-upload.js, routing through node:http);
+// removed with them from package.json.
 
 // ── SISOStream — hoisted here so bus is available before any module code runs ─
 // §5.7 single event bus. Must be declared before NCP callbacks, gate registrations,

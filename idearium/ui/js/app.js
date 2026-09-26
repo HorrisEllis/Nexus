@@ -1655,15 +1655,20 @@ function renderRepoLibrary() {
   }
   const q = (document.getElementById('repo-rail-filter')?.value || '').toLowerCase().trim();
   const groups = new Map(); // compartmentId (or '') -> repos[]
+  // §0.39.261 — the Nexus repos (one parent + one per system, each in its own
+  // nested COS compartment) are one group, shown first: Nexus managing itself.
+  const NEXUS_KEY = 'nexus · immutable · nested compartments';
   for (const r of API_REPOS) {
     if (q && !r.name.toLowerCase().includes(q)) continue;
-    const key = r.compartmentId || '';
+    const key = r.nexusSelf ? NEXUS_KEY : (r.compartmentId || '');
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(r);
   }
+  if (groups.has(NEXUS_KEY)) groups.get(NEXUS_KEY).sort((a, b) => (a.nexusSelf.role === 'parent' ? -1 : b.nexusSelf.role === 'parent' ? 1 : a.name.localeCompare(b.name)));
   if (!groups.size) { body.innerHTML = `<div class="repo-rail-empty">no repos match "${escapeHtml(q)}"</div>`; return; }
-  // Uncategorized last, others by first-repo recency (newest activity first)
+  // Nexus first, Uncategorized last, others by first-repo recency (newest activity first)
   const keys = [...groups.keys()].sort((a, b) => {
+    if (a === NEXUS_KEY) return -1; if (b === NEXUS_KEY) return 1;
     if (!a) return 1; if (!b) return -1;
     return Math.max(...groups.get(b).map(r=>r.updatedAt||0)) - Math.max(...groups.get(a).map(r=>r.updatedAt||0));
   });
@@ -1671,7 +1676,7 @@ function renderRepoLibrary() {
     // ── Landing grid: every compartment as a labeled section, every repo
     // in it as a block. No collapsing here — the point is to see all of it.
     body.innerHTML = keys.map(key => {
-      const repos = groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+      const repos = key === NEXUS_KEY ? groups.get(key) : groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
       const label = key ? key : 'Uncategorized';
       return `
         <div class="repo-grid-group-label">${escapeHtml(label)} · ${repos.length}</div>
@@ -1680,8 +1685,8 @@ function renderRepoLibrary() {
           return `
           <div class="repo-block" onclick="enterRepoDetail('${r.uuid}')">
             <div class="repo-block-head"><span class="repo-block-icon">⌥</span><span class="repo-block-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</span></div>
-            <div class="repo-block-desc">${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}</div>
-            <div class="repo-block-meta"><span class="dot ${dotClass}"></span><span>${escapeHtml(r.phase||'idle')}</span></div>
+            <div class="repo-block-desc">${r.nexusSelf ? (r.nexusSelf.role === 'parent' ? `${Object.keys(r.nexusSelf.children || {}).length} systems · snapshot ${escapeHtml(String(r.nexusSelf.snapshot || '').slice(0, 8))}` : `${r.nexusSelf.fileCount || r.fileCount} files · ${(r.nexusSelf.versions || []).length} version(s) · immutable`) : `${r.fileCount} files${r.promotedFromSpec ? ' · from spec' : ''}`}</div>
+            <div class="repo-block-meta"><span class="dot ${r.nexusSelf ? 'done' : dotClass}"></span><span>${r.nexusSelf ? `immutable · synced ${r.nexusSelf.syncedAt ? new Date(r.nexusSelf.syncedAt).toLocaleTimeString() : '—'}` : escapeHtml(r.phase||'idle')}</span></div>
           </div>`;
         }).join('')}`;
     }).join('');
@@ -1689,7 +1694,7 @@ function renderRepoLibrary() {
   }
   // ── Compact list: used once a repo is open, for quick switching ──
   body.innerHTML = keys.map(key => {
-    const repos = groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+    const repos = key === NEXUS_KEY ? groups.get(key) : groups.get(key).slice().sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
     const label = key ? key : 'Uncategorized';
     const collapsed = REPO_RAIL_COLLAPSED.has(key);
     return `
@@ -1794,6 +1799,8 @@ function renderCurrentRepoSubtab() {
   else if (CURRENT_REPO_SUBTAB === 'roadmap') renderRepoRoadmap(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'intelligence') renderRepoIntelligence(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'agent') renderRepoAgent(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'idea') renderRepoIdea(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'debug') renderRepoDebug(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'versionium') renderRepoVersionium(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'settings') renderRepoSettings(CURRENT_API_REPO);
 }
@@ -1810,6 +1817,7 @@ function renderRepoSpec(repo) {
   const empty = document.getElementById('repo-spec-empty');
   const mount = document.getElementById('spec-builder');
   if (!empty || !mount || !repo) return;
+  if (repo.nexusSelf && repo.nexusSelf.role === 'system') { mount.style.display = 'none'; empty.style.display = ''; return renderNexusSpec(repo, empty); }
   const say = (html) => { mount.style.display = 'none'; empty.style.display = ''; empty.innerHTML = html; };
 
   const specUuid = repo.specUuid || repo.promotedFromSpec || null;
@@ -1839,6 +1847,7 @@ function renderRepoSpec(repo) {
 async function renderRepoHome(repo) {
   const el = document.getElementById('repo-subtab-home');
   if (!el) return;
+  if (repo && repo.nexusSelf) return renderNexusHome(repo, el);
   const homeFile = (repo.files || []).find(f => /(^|\/)readme\.md$/i.test(f.path))
                  || (repo.files || []).find(f => /\.spec$/i.test(f.path));
   const identity = `
@@ -1869,6 +1878,7 @@ async function renderRepoHome(repo) {
 async function renderRepoPhasemap(repo) {
   const el = document.getElementById('repo-subtab-phasemap');
   if (!el) return;
+  if (repo && repo.nexusSelf && repo.nexusSelf.role === 'system') return renderNexusPhasemap(repo, el);
   el.innerHTML = `<div class="detail-empty">loading…</div>`;
   let verification = null, verificationError = null, graph = null, graphError = null;
   try { verification = await api(`/api/repos/${repo.uuid}/verification`, {}, 15000); }
@@ -1910,6 +1920,344 @@ async function renderRepoPhasemap(repo) {
     : `<div class="ds"><div class="ds-label">graphs — code · execution · spec</div><div class="ds-mono">code       ${st(g.code)}  ${codeTxt}\nexecution  ${st(g.execution)}  ${execTxt}\nspec       ${st(g.spec)}  ${specTxt}</div></div>`;
 
   el.innerHTML = verificationHtml + graphHtml;
+}
+
+// ── §0.39.261 IDEA TAB — James: "once a idea is a spec, move the idea section to
+// the repo instead … a full idea tab and section for improving/iterating or
+// expanding the project." The repo's own idea (editable), and its iterations:
+// improve (make what exists better) · iterate (another pass on the same thing)
+// · expand (new ground). Each iteration can go to the agent as a task, or onto
+// the roadmap as a real phase in the repo's phasemap.
+const _IDEA_KIND = { improve: { label: 'improve', color: 'var(--mint)' }, iterate: { label: 'iterate', color: 'var(--accent,#7dd3fc)' }, expand: { label: 'expand', color: 'var(--amber,#fbbf24)' } };
+async function renderRepoIdea(repo) {
+  const el = document.getElementById('repo-subtab-idea');
+  if (!el || !repo) return;
+  el.innerHTML = '<div class="detail-empty">loading idea…</div>';
+  let r;
+  try { r = await api(`/api/repos/${repo.uuid}/idea`); }
+  catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
+  if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'idea') return;
+  const it = r.iterations;
+  const by = (k) => it.filter(x => x.kind === k);
+  const row = (x) => `<div class="pend-row" style="padding:6px 0;border-bottom:1px solid var(--b0)">
+      <div style="display:flex;gap:8px;align-items:baseline"><span style="font-family:var(--mono);font-size:9px;color:${(_IDEA_KIND[x.kind] || {}).color || 'var(--text3)'}">${escapeHtml(x.kind || '—')}</span>
+        <span style="flex:1;white-space:pre-wrap;font-size:11px">${escapeHtml(x.text)}</span>
+        <select onchange="repoIdeaStatus('${x.uuid}', this.value)" style="font-size:10px">${r.statuses.map(s => `<option ${s === x.status ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div style="display:flex;gap:6px;margin-top:4px;font-size:10px">
+        <button class="action-btn" onclick="repoIdeaToAgent('${x.uuid}')">send to agent</button>
+        ${x.roadmapPhase ? `<span style="opacity:.7;font-family:var(--mono)">on roadmap · ${escapeHtml(x.roadmapPhase)}</span>` : `<button class="action-btn" onclick="repoIdeaToRoadmap('${x.uuid}')">add to roadmap</button>`}
+        <span style="opacity:.45;margin-left:auto">${new Date(x.createdAt).toLocaleString()}</span></div></div>`;
+  el.innerHTML = `
+    <div class="ds"><div class="ds-label">the idea · ${escapeHtml(r.idea.phase)}${r.idea.tension != null ? ` · tension ${Number(r.idea.tension).toFixed(2)}` : ''} · ${r.idea.links} link(s)</div>
+      <textarea id="repo-idea-text" class="field-textarea" rows="3" spellcheck="false">${escapeHtml(r.idea.text)}</textarea>
+      <div class="action-row"><button class="action-btn" onclick="repoIdeaSave()">save idea</button></div></div>
+    <div class="ds"><div class="ds-label">grow it</div>
+      <div style="display:flex;gap:6px;margin-bottom:6px">${r.kinds.map(k => `<label style="font-size:11px"><input type="radio" name="repo-idea-kind" value="${k}" ${k === 'expand' ? 'checked' : ''}> ${k}</label>`).join('')}</div>
+      <textarea id="repo-idea-new" class="field-textarea" rows="3" spellcheck="false" placeholder="improve: what should be better · iterate: another pass on something · expand: where the project goes next"></textarea>
+      <div class="action-row"><button class="action-btn" onclick="repoIdeaAdd()">add</button><button class="action-btn" onclick="repoIdeaAdd(true)">add + send to agent</button></div></div>
+    ${r.kinds.map(k => `<div class="ds"><div class="ds-label">${k} · ${by(k).length}</div>${by(k).map(row).join('') || '<div class="ds-mono" style="opacity:.5">none yet</div>'}</div>`).join('')}`;
+}
+async function repoIdeaSave() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { await api(`/api/repos/${repo.uuid}/idea`, { method: 'PATCH', body: JSON.stringify({ text: document.getElementById('repo-idea-text').value }) }); toast('idea saved'); }
+  catch (e) { toast(e.message, 'err'); }
+}
+async function repoIdeaAdd(send = false) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  const kind = (document.querySelector('input[name="repo-idea-kind"]:checked') || {}).value || 'expand';
+  const text = document.getElementById('repo-idea-new').value.trim();
+  if (!text) return toast('write the iteration first', 'err');
+  let r;
+  try { r = await api(`/api/repos/${repo.uuid}/idea/iterations`, { method: 'POST', body: JSON.stringify({ kind, text }) }); }
+  catch (e) { return toast(e.message, 'err'); }
+  if (send) return repoIdeaToAgent(r.iteration.uuid, r.iteration);
+  renderRepoIdea(repo);
+}
+async function repoIdeaStatus(id, status) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { await api(`/api/repos/${repo.uuid}/idea/iterations/${id}/status`, { method: 'POST', body: JSON.stringify({ status }) }); }
+  catch (e) { toast(e.message, 'err'); }
+}
+async function repoIdeaToRoadmap(id) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { const r = await api(`/api/repos/${repo.uuid}/idea/iterations/${id}/roadmap`, { method: 'POST', body: '{}' }); toast(`on the roadmap as ${r.phase} (${r.map})`); renderRepoIdea(repo); }
+  catch (e) { toast(e.message, 'err'); }
+}
+// The agent gets the iteration as a task in its own words, in the Agent tab's
+// CLI (so the exchange is logged there like any other), and the iteration moves
+// to "doing".
+async function repoIdeaToAgent(id, known = null) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  let x = known;
+  if (!x) { try { x = (await api(`/api/repos/${repo.uuid}/idea`)).iterations.find(i => i.uuid === id); } catch (_) {} }
+  if (!x) return toast('iteration not found', 'err');
+  const verb = { improve: 'Improve this project', iterate: 'Iterate on this project', expand: 'Expand this project' }[x.kind] || 'Work on this project';
+  await repoIdeaStatus(x.uuid, 'doing');
+  setRepoSubtab('agent');
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
+  for (let i = 0; i < 40 && !document.getElementById('agent-input'); i++) await wait(100);
+  const ta = document.getElementById('agent-input');
+  if (!ta) return toast('the Agent tab did not open', 'err');
+  ta.value = `${verb}: ${x.text}\n\nStart from the project as it is — look before you change anything.`;
+  agentSend();
+}
+
+// ── §0.39.261 DEBUG TAB — James: "a tab for debugging." One read of everything
+// that is wrong (GET /api/repos/:uuid/debug), each part from where it lives, and
+// the actions that act on it: re-run a check, run the tests, hand it to the agent.
+async function renderRepoDebug(repo) {
+  const el = document.getElementById('repo-subtab-debug');
+  if (!el || !repo) return;
+  el.innerHTML = '<div class="detail-empty">checking…</div>';
+  let d;
+  try { d = await api(`/api/repos/${repo.uuid}/debug`, {}, 120000); }
+  catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
+  if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'debug') return;
+  _debugLast = d;
+  const bad = (n) => `<span style="color:${n ? 'var(--coral)' : 'var(--mint)'}">${n}</span>`;
+  const deps = d.deps || {};
+  const nBroken = (deps.brokenRelative || []).length, nMissing = (deps.packages || []).length;
+  const nSyntax = d.syntax && d.syntax.failed ? d.syntax.failed.length : 0;
+  const lastRun = d.runs[0];
+  el.innerHTML = `
+    <div class="ds"><div class="ds-label">at a glance · checked ${new Date(d.checkedAt).toLocaleTimeString()}</div><div class="ds-mono">syntax errors        ${bad(nSyntax)}${d.syntax ? ` of ${d.syntax.checked} JS files` : ''}
+broken imports       ${bad(nBroken)}
+missing packages     ${bad(nMissing)}
+parse failures       ${bad(d.parseFailures.length)}
+failed tiers         ${bad(d.failedTiers.length)}${d.verification ? ` (verification ${escapeHtml(d.verification.status || '')} · ${escapeHtml(d.verification.level || '')})` : ' (not through the pipeline yet)'}
+last COS run         ${lastRun ? `${escapeHtml(lastRun.label || lastRun.option)} — ${lastRun.allPassed ? '<span style="color:var(--mint)">passed</span>' : `<span style="color:var(--coral)">${lastRun.failed} failed</span>`} · ${new Date(lastRun.ts).toLocaleString()}` : 'none'}
+agent errors         ${bad(d.agentErrors.length)}</div>
+      <div class="action-row"><button class="action-btn" onclick="renderRepoDebug(CURRENT_API_REPO)">re-check</button><button class="action-btn" onclick="repoRun('test')">run tests…</button><button class="action-btn" onclick="repoDebugToAgent()">hand this to the agent</button></div></div>
+    ${nSyntax ? `<div class="ds"><div class="ds-label">syntax errors</div><div class="ds-mono">${d.syntax.failed.map(f => `${escapeHtml(f.file)}${f.line ? `:${f.line}` : ''}  ${escapeHtml(f.error)}`).join('\n')}</div></div>` : ''}
+    ${nBroken || nMissing ? `<div class="ds"><div class="ds-label">imports that resolve to nothing</div><div class="ds-mono">${(deps.brokenRelative || []).map(b => `${escapeHtml(b.file)} → ${escapeHtml(b.specifier)}`).join('\n')}${nMissing ? `${nBroken ? '\n\n' : ''}not installed: ${escapeHtml(deps.packages.map(p => p.name).join(', '))}` : ''}</div></div>` : ''}
+    ${d.parseFailures.length ? `<div class="ds"><div class="ds-label">files the pipeline could not parse</div><div class="ds-mono">${d.parseFailures.map(f => `${escapeHtml(f.path)}${f.error ? `  ${escapeHtml(String(f.error).slice(0, 160))}` : ''}`).join('\n')}</div></div>` : ''}
+    ${d.failedTiers.length ? `<div class="ds"><div class="ds-label">verification tiers that failed</div><div class="ds-mono">${d.failedTiers.map(t => `${escapeHtml(t.level)} ${escapeHtml(t.name || '')}${t.failures.length ? '\n' + t.failures.slice(0, 8).map(f => `  · ${escapeHtml(typeof f === 'string' ? f : (f.file || '') + ' ' + (f.error || f.reason || JSON.stringify(f)).slice(0, 200))}`).join('\n') : ''}`).join('\n')}</div></div>` : ''}
+    <div class="ds"><div class="ds-label">COS runs · ${d.runs.length}</div>${d.runs.map(r => `<div class="ds-mono" style="border-bottom:1px solid var(--b0);padding:4px 0">${r.allPassed ? '✓' : '✗'} ${escapeHtml(r.label || r.option)} · ${r.passed} passed ${r.failed} failed · ${r.durationMs}ms · ${new Date(r.ts).toLocaleString()}${(r.failures || []).map(f => `\n   ${escapeHtml(f.file)} exit ${f.exitCode ?? '—'} ${escapeHtml(f.error || f.health || '')}${f.stderr ? '\n   ' + escapeHtml(_stderrGist(f.stderr)) : ''}`).join('')}</div>`).join('') || '<div class="ds-mono" style="opacity:.5">no runs yet — Run opens the COS run menu</div>'}</div>
+    <div class="ds"><div class="ds-label">agent errors · ${d.agentErrors.length}</div>${d.agentErrors.map(a => `<div class="ds-mono" style="border-bottom:1px solid var(--b0);padding:4px 0">${new Date(a.ts).toLocaleString()} · ${escapeHtml(a.backend || '')}\n  asked: ${escapeHtml(a.message)}\n  <span style="color:var(--coral)">${escapeHtml(a.error || '')}</span></div>`).join('') || '<div class="ds-mono" style="opacity:.5">none</div>'}</div>`;
+}
+let _debugLast = null;
+// the line of a failing run's stderr that says what went wrong (an Error line and
+// the first stack frame in the project), not whatever happened to be printed last
+function _stderrGist(stderr) {
+  const lines = String(stderr || '').split('\n').map(l => l.trimEnd()).filter(Boolean);
+  const i = lines.findIndex(l => /\b(?:[A-Z][a-z]+)?Error\b|Cannot find|ERR_|failed|✗/.test(l) && !/^\s*at /.test(l));
+  if (i === -1) return lines.slice(-3).join('\n');
+  const frame = lines.slice(i + 1).find(l => /^\s*at /.test(l) && !/node:internal/.test(l));
+  return [lines[i], frame].filter(Boolean).join('\n').slice(0, 400);
+}
+async function repoDebugToAgent() {
+  const d = _debugLast; if (!d) return;
+  const lines = [];
+  for (const f of (d.syntax && d.syntax.failed) || []) lines.push(`syntax: ${f.file}${f.line ? ':' + f.line : ''} ${f.error}`);
+  for (const b of (d.deps && d.deps.brokenRelative) || []) lines.push(`broken import: ${b.file} -> ${b.specifier}`);
+  for (const p of (d.deps && d.deps.packages) || []) lines.push(`missing package: ${p.name}`);
+  for (const f of d.parseFailures) lines.push(`parse failure: ${f.path}${f.error ? ' ' + f.error : ''}`);
+  const r = d.runs.find(x => !x.allPassed);
+  if (r) for (const f of r.failures || []) lines.push(`failing run (${r.label || r.option}): ${f.file} exit ${f.exitCode}${f.stderr ? ' — ' + _stderrGist(f.stderr).replace(/\n\s*/g, ' / ') : ''}`);
+  if (!lines.length) return toast('nothing to hand over — the checks are clean');
+  setRepoSubtab('agent');
+  for (let i = 0; i < 40 && !document.getElementById('agent-input'); i++) await new Promise(res => setTimeout(res, 100));
+  const ta = document.getElementById('agent-input'); if (!ta) return;
+  ta.value = `Debug this project. These are the real findings from its Debug tab:\n${lines.slice(0, 40).map(l => '- ' + l).join('\n')}\n\nFind the cause of each before changing anything, and say which you could not fix.`;
+  agentSend();
+}
+
+// ── §0.39.261 NEXUS REPOS — Nexus, managed from inside Nexus ─────────────────
+// The parent repo "nexus" and one immutable repo per system (autopilot kernels
+// + core), each in its own nested COS compartment. Home = the system's atlas,
+// its understanding over time and its edit branches; Phasemap = loom's phases
+// for that system; Spec = the system's own .spec files. GET /api/nexus-self/*.
+const _nsFmt = (n) => (n === null || n === undefined) ? '—' : (typeof n === 'number' && !Number.isInteger(n) ? n.toFixed(3) : String(n));
+const _nsDelta = (cur, prev, k, higherBetter = true) => {
+  if (!prev || prev[k] === undefined || cur[k] === undefined || cur[k] === prev[k]) return '';
+  const d = cur[k] - prev[k]; const good = higherBetter ? d > 0 : d < 0;
+  return ` <span style="color:${good ? 'var(--mint)' : 'var(--coral)'}">${d > 0 ? '+' : ''}${_nsFmt(+d.toFixed(4))}</span>`;
+};
+
+async function renderNexusHome(repo, el) {
+  el.innerHTML = `<div class="detail-empty">loading Nexus…</div>`;
+  const stillHere = () => CURRENT_API_REPO?.uuid === repo.uuid && CURRENT_REPO_SUBTAB === 'home';
+  if (repo.nexusSelf.role === 'parent') {
+    let st, und, ap;
+    try { [st, und, ap] = await Promise.all([api('/api/nexus-self'), api('/api/nexus-self/understanding'), api('/api/nexus-self/applies')]); }
+    catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
+    if (!stillHere()) return;
+    const L = und.latest;
+    const tree = (n, d = 0) => n ? `${'  '.repeat(d)}${d ? '└ ' : ''}${n.name}  [${n.state}]\n` + (n.children || []).map(c => tree(c, d + 1)).join('') : '';
+    el.innerHTML = `
+      <div class="ds"><div class="ds-label">nexus · immutable base</div><div class="ds-mono">snapshot ${escapeHtml(String(st.head || '—'))}
+${(st.history || []).length} snapshot(s) recorded · ${st.syncing ? 'syncing now…' : st.lastSync ? `last sync ${new Date(st.lastSync.at).toLocaleString()} (${st.lastSync.ms || '—'} ms)${st.lastSync.error ? ' — ' + escapeHtml(st.lastSync.error) : ''}` : 'not synced in this idearium process yet'}
+edits: branch a system (its Home tab) → run it (Run menu) → apply through the gate</div>
+        <div class="action-row"><button class="action-btn" onclick="nexusSelfSync()">sync now</button></div></div>
+      <div class="ds"><div class="ds-label">systems</div><div class="ds-mono">${st.systems.map(x => `${x.system.padEnd(14)} ${String(x.fileCount).padStart(5)} files  ${x.versions} version(s)  ${x.repoUuid ? '' : '(not synced)'}`).join('\n')}</div></div>
+      <div class="ds"><div class="ds-label">understanding — what Nexus knows about itself</div><div class="ds-mono">${L ? `symbols ${_nsFmt(L.totals.symbols)} · graph edges ${_nsFmt(L.totals.graphEdges)} · cross-system ${_nsFmt(L.totals.crossSystemEdges)} · nexus-level resolution ${_nsFmt(L.totals.nexusResolution)} (per-system ${_nsFmt(L.totals.resolution)})
+genuine gaps: ${_nsFmt(L.totals.brokenImports)} broken import(s) · ${_nsFmt(L.totals.missingPackages)} missing package import(s)
+parse failures ${_nsFmt(L.totals.parseFailures)} · specs ${_nsFmt(L.totals.specs)} · spec entries ${_nsFmt(L.totals.specEntries)} · phases done ${_nsFmt(L.totals.phasesDone)}/${_nsFmt(L.totals.phasesTotal)}
+${L.improved && L.improved.length ? `improved: ${L.improved.join(', ')}` : 'improved: —'}${L.regressed && L.regressed.length ? `\nregressed: ${L.regressed.join(', ')}` : ''}
+${und.history.length} measurement(s) since ${new Date(und.history[0].at).toLocaleDateString()}` : 'no measurement yet — sync once'}</div></div>
+      <div class="ds"><div class="ds-label">system graph — who depends on whom (cross-system imports, resolved against the snapshot)</div><div class="ds-mono">${st.systemGraph ? `${st.systemGraph.edges.map(e => `${e.from.padEnd(14)} → ${e.to.padEnd(14)} ${String(e.count).padStart(4)}`).join('\n')}
+
+genuine gaps: ${st.systemGraph.broken.length} broken relative import(s) · ${st.systemGraph.missing.length} package(s) not installed${st.systemGraph.missing.length ? ` (${escapeHtml(st.systemGraph.missing.map(m => m.name).join(', '))})` : ''}
+${st.systemGraph.broken.slice(0, 20).map(b => `  ${escapeHtml(b.from)} → ${escapeHtml(b.spec)}`).join('\n')}` : 'built on the next sync'}</div></div>
+      <div class="ds"><div class="ds-label">compartments (COS, nested)</div><div class="ds-mono">${escapeHtml(tree(st.compartments) || 'not created yet')}</div></div>
+      <div class="ds"><div class="ds-label">applied changes</div>${(ap.applies || []).length ? ap.applies.map(a => `<div class="pend-row" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--b0)"><span style="font-family:var(--mono);font-size:10px">${escapeHtml(a.id)} · ${escapeHtml(a.system)} · ${a.items.length} file(s) · ${escapeHtml(a.status)} · ${new Date(a.at).toLocaleString()}${a.reason ? ' — ' + escapeHtml(a.reason) : ''}</span>${a.status === 'applied' ? `<button class="action-btn" onclick="nexusSelfRollback('${a.id}')">roll back</button>` : ''}</div>`).join('') : '<div class="ds-mono">none yet</div>'}</div>`;
+    return;
+  }
+  let v;
+  try { v = await api(`/api/nexus-self/${encodeURIComponent(repo.nexusSelf.system)}`); }
+  catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
+  let br = { branches: [] };
+  try { br = await api(`/api/nexus-self/${encodeURIComponent(v.system)}/branches`); } catch (_) {}
+  if (!stillHere()) return;
+  const a = v.atlas || {};
+  const U = v.understanding.latest, P = v.understanding.previous;
+  const kv = (o) => Object.entries(o || {}).sort((x, y) => y[1] - x[1]).map(([k, n]) => `${k} ${n}`).join(' · ');
+  el.innerHTML = `
+    <div class="ds"><div class="ds-label">nexus/${escapeHtml(v.system)} · immutable</div><div class="ds-mono">${escapeHtml((v.def.dirs || ['everything no kernel owns']).join(', '))}${v.def.entry ? `\nentry ${escapeHtml(v.def.entry)} · port :${v.def.port}` : ''}
+snapshot ${escapeHtml(String(v.repo?.snapshot || '—').slice(0, 16))} · ${v.repo?.fileCount ?? '—'} files · ${(v.repo?.versions || []).length} version(s) · synced ${v.repo?.syncedAt ? new Date(v.repo.syncedAt).toLocaleString() : '—'}</div></div>
+    <div class="ds"><div class="ds-label">atlas</div>${a.error ? `<div class="ds-mono">${escapeHtml(a.error)}</div>` : `<div class="ds-mono">${a.fileCount} files parsed${a.failedCount ? ` · ${a.failedCount} failed` : ''}
+languages  ${escapeHtml(kv(a.byLanguage))}
+kinds      ${escapeHtml(kv(a.byKind))}
+
+${(a.dirs || []).slice(0, 24).map(d => `${d.dir.padEnd(34)} ${String(d.files).padStart(4)} files ${String(d.symbols).padStart(5)} symbols  ${escapeHtml(kv(d.kinds))}`).join('\n')}
+
+largest (by symbols)
+${(a.topComponents || []).map(c => `  ${escapeHtml(c.path)}  ${c.symbolCount} · ${escapeHtml(c.kind)}`).join('\n')}</div>`}</div>
+    <div class="ds"><div class="ds-label">understanding${P ? ' · change since last measurement' : ''}</div><div class="ds-mono">${U ? `symbols ${_nsFmt(U.symbols)}${_nsDelta(U, P, 'symbols')} · graph ${_nsFmt(U.graphNodes)} nodes / ${_nsFmt(U.graphEdges)} edges${_nsDelta(U, P, 'graphEdges')}
+unresolved ${_nsFmt(U.unresolved)}${_nsDelta(U, P, 'unresolved', false)} · resolution ${_nsFmt(U.resolution)}${_nsDelta(U, P, 'resolution')} · parse failures ${_nsFmt(U.parseFailures)}${_nsDelta(U, P, 'parseFailures', false)}
+specs ${_nsFmt(U.specs)}${_nsDelta(U, P, 'specs')} · spec entries ${_nsFmt(U.specEntries)} · spec↔code disagreements ${_nsFmt(U.specDisagreements)}${_nsDelta(U, P, 'specDisagreements', false)}
+phases ${_nsFmt(U.phasesDone)}/${_nsFmt(U.phasesTotal)} done${_nsDelta(U, P, 'phasesDone')} · verification ${escapeHtml(U.verification || '—')}
+${v.understanding.history.length} measurement(s)` : 'not measured yet'}</div></div>
+    <div class="ds"><div class="ds-label">edit branches (COS, compartment nexus-self-${escapeHtml(v.system)})</div>
+      ${(br.branches || []).map(b => `<div class="pend-row" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--b0)"><span style="font-family:var(--mono);font-size:10px">${escapeHtml(b.label)} · ${escapeHtml(b.id)} · base ${escapeHtml(b.base.slice(0, 8))} · ${(b.runs || []).length} run(s)</span><button class="action-btn" onclick="nexusBranchOpen('${escapeHtml(v.system)}','${b.id}')">open</button></div>`).join('') || '<div class="ds-mono">no branches</div>'}
+      <div class="action-row"><button class="action-btn" onclick="nexusBranchNew('${escapeHtml(v.system)}')">new branch</button></div></div>`;
+}
+
+async function renderNexusPhasemap(repo, el) {
+  el.innerHTML = `<div class="detail-empty">loading loom phases…</div>`;
+  let v;
+  try { v = await api(`/api/nexus-self/${encodeURIComponent(repo.nexusSelf.system)}`); }
+  catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
+  if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'phasemap') return;
+  const p = v.phases;
+  const col = (st) => st === 'done' ? 'var(--mint)' : st === 'in-progress' ? 'var(--amber,#fbbf24)' : 'var(--text3)';
+  el.innerHTML = `<div class="ds"><div class="ds-label">loom phasemap · ${escapeHtml(v.system)} · tags ${escapeHtml((p.tags || []).join(', ') || '—')}</div>
+      <div class="ds-mono">${p.total} phases · ${p.done} done · ${p.inProgress} in progress · ${p.pending} pending · across ${Object.keys(p.maps).length} phasemap(s)</div></div>` +
+    Object.entries(p.maps).sort((a, b) => b[0].localeCompare(a[0])).map(([map, list]) => `<div class="ds"><div class="ds-label">${escapeHtml(map)} · ${list.filter(x => x.status === 'done').length}/${list.length}</div>` +
+      list.map(ph => `<div class="pend-row" style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--b0)"><span style="font-family:var(--mono);font-size:10px">${escapeHtml(ph.id)}${ph.title ? ' — ' + escapeHtml(ph.title) : ''}${(ph.dependsOn || []).length ? ` <span style="color:var(--text3)">← ${escapeHtml(ph.dependsOn.join(', '))}</span>` : ''}</span><span style="font-family:var(--mono);font-size:10px;color:${col(ph.status)}">${escapeHtml(ph.status)}</span></div>`).join('') + `</div>`).join('');
+}
+
+async function renderNexusSpec(repo, el) {
+  el.innerHTML = `loading ${escapeHtml(repo.nexusSelf.system)}'s specs…`;
+  let v;
+  try { v = await api(`/api/nexus-self/${encodeURIComponent(repo.nexusSelf.system)}`); }
+  catch (e) { el.innerHTML = escapeHtml(e.message); return; }
+  if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'spec') return;
+  const sp = v.specs;
+  el.innerHTML = `<div style="text-align:left"><div class="ds"><div class="ds-label">${escapeHtml(v.system)} · .spec files in ${escapeHtml((sp.dirs || []).join(', '))} · ${sp.specs.length}</div>
+    ${sp.specs.map(x => `<div class="pend-row" style="padding:3px 0;border-bottom:1px solid var(--b0);cursor:pointer" onclick="nexusSpecOpen('${escapeHtml(v.system)}','${escapeHtml(x.path)}')"><span style="font-family:var(--mono);font-size:10px">${escapeHtml(x.path)}${x.title ? ' — ' + escapeHtml(x.title) : ''} <span style="color:var(--text3)">${Math.round(x.bytes / 1024)} KB</span></span></div>`).join('') || '<div class="ds-mono">this system has no .spec files</div>'}</div>
+    <div class="ds"><div class="ds-label" id="nexus-spec-title">read-only (immutable) — pick a spec</div><div class="ds-mono" id="nexus-spec-body" style="max-height:520px;overflow:auto"></div></div></div>`;
+}
+async function nexusSpecOpen(system, p) {
+  const body = document.getElementById('nexus-spec-body'); if (!body) return;
+  body.textContent = 'loading…';
+  try { const r = await api(`/api/nexus-self/${encodeURIComponent(system)}/spec?path=${encodeURIComponent(p)}`); document.getElementById('nexus-spec-title').textContent = `${p} · read-only (immutable)`; body.textContent = r.content; }
+  catch (e) { body.textContent = e.message; }
+}
+
+async function nexusSelfSync() {
+  try { await api('/api/nexus-self/sync', { method: 'POST', body: JSON.stringify({}) }); toast('Nexus repo sync started'); }
+  catch (e) { toast(e.message, 'err'); }
+}
+async function nexusSelfRollback(id) {
+  if (!confirm(`Roll back ${id}? The live files it changed return to their state before it.`)) return;
+  try { await api(`/api/nexus-self/applies/${encodeURIComponent(id)}/rollback`, { method: 'POST', body: JSON.stringify({ reason: 'rolled back from idearium' }) }); toast(`${id} rolled back`); renderCurrentRepoSubtab(); }
+  catch (e) { toast(e.message, 'err'); }
+}
+async function nexusBranchNew(system) {
+  const label = prompt(`New edit branch of nexus/${system} — label:`, `${system} edit`);
+  if (label === null) return;
+  try { const r = await api(`/api/nexus-self/${encodeURIComponent(system)}/branch`, { method: 'POST', body: JSON.stringify({ label }) }); nexusBranchOpen(system, r.branch.id); }
+  catch (e) { toast(e.message, 'err'); }
+}
+
+// The branch editor: one system's files at the branch's base, editable. Its
+// changes are what the apply gate receives; Run uses the COS run menu with this
+// branch preselected.
+let _nsBranch = null;
+async function nexusBranchOpen(system, id) {
+  _nsBranch = { system, id };
+  document.getElementById('repo-diagnose-title').textContent = `nexus/${system} · branch ${id}`;
+  document.getElementById('repo-diagnose-reindex').style.display = 'none';
+  document.getElementById('repo-diagnose-modal').classList.add('open');
+  await _nsBranchRender();
+}
+async function _nsBranchRender(openPath = null, content = null, diff = null) {
+  const B = _nsBranch; if (!B) return;
+  const body = document.getElementById('repo-diagnose-body');
+  let r;
+  try { r = await api(`/api/nexus-self/${encodeURIComponent(B.system)}/branch/${B.id}`); }
+  catch (e) { body.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
+  const files = (CURRENT_API_REPO?.files || []).map(f => f.path);
+  const lastRun = (r.branch.runs || []).slice(-1)[0];
+  body.innerHTML = `
+    <div style="font-size:11px;opacity:.8;margin-bottom:6px">base ${escapeHtml(r.branch.base.slice(0, 16))} · ${r.changes.length} change(s) · last run: ${lastRun ? `${escapeHtml(lastRun.option || lastRun.mode || 'run')} ${lastRun.passed ? '✓ passed' : '✗ failed'} ${new Date(lastRun.recordedAt).toLocaleTimeString()}` : 'none'}</div>
+    ${r.changes.map(c => `<div style="font-family:var(--mono);font-size:10px;cursor:pointer" onclick="_nsBranchLoad('${escapeHtml(c.path)}', true)">${c.op === 'add' ? '+' : c.op === 'delete' ? '−' : '~'} ${escapeHtml(c.path)}</div>`).join('')}
+    <div style="display:flex;gap:6px;margin:8px 0"><input id="ns-br-path" list="ns-br-files" placeholder="${escapeHtml(B.system === 'core' ? 'lib/…' : B.system + '/…')}" value="${escapeHtml(openPath || '')}" style="flex:1"><datalist id="ns-br-files">${files.slice(0, 3000).map(f => `<option value="${escapeHtml(f)}">`).join('')}</datalist>
+      <button class="action-btn" onclick="_nsBranchLoad(document.getElementById('ns-br-path').value)">open</button>
+      <button class="action-btn" onclick="_nsBranchSave()">save</button>
+      <button class="action-btn" onclick="_nsBranchDelete()">delete file</button></div>
+    <textarea id="ns-br-text" spellcheck="false" style="width:100%;height:260px;font-family:var(--mono);font-size:11px">${escapeHtml(content || '')}</textarea>
+    ${diff ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;font-size:10px;margin:6px 0">${escapeHtml(diff)}</pre>` : ''}
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+      <button class="action-btn" onclick="_nsBranchRun()">Run…</button>
+      <button class="action-btn" onclick="_nsBranchPlan()">plan (dry run)</button>
+      <button class="modal-btn confirm" onclick="_nsBranchApply()">apply to live Nexus</button>
+      <button class="action-btn" onclick="_nsBranchDiscard()">discard branch</button></div>
+    <div id="ns-br-out" style="margin-top:8px;font-size:11px"></div>`;
+}
+async function _nsBranchLoad(p, withDiff = false) {
+  const B = _nsBranch; if (!B || !p) return;
+  try { const r = await api(`/api/nexus-self/${encodeURIComponent(B.system)}/branch/${B.id}/file?path=${encodeURIComponent(p)}${withDiff ? '&diff=1' : ''}`); await _nsBranchRender(r.path, r.content, r.diff || null); }
+  catch (e) { await _nsBranchRender(p, '', null); document.getElementById('ns-br-out').textContent = `${e.message} — type content and save to add it as a new file`; }
+}
+async function _nsBranchSave() {
+  const B = _nsBranch; const p = document.getElementById('ns-br-path').value; const content = document.getElementById('ns-br-text').value;
+  try { await api(`/api/nexus-self/${encodeURIComponent(B.system)}/branch/${B.id}/file`, { method: 'PUT', body: JSON.stringify({ path: p, content }) }); await _nsBranchLoad(p, true); toast(`saved ${p} on the branch`); }
+  catch (e) { document.getElementById('ns-br-out').textContent = e.message; }
+}
+async function _nsBranchDelete() {
+  const B = _nsBranch; const p = document.getElementById('ns-br-path').value;
+  if (!p || !confirm(`Delete ${p} on this branch?`)) return;
+  try { await api(`/api/nexus-self/${encodeURIComponent(B.system)}/branch/${B.id}/file?path=${encodeURIComponent(p)}`, { method: 'DELETE' }); await _nsBranchRender(); }
+  catch (e) { document.getElementById('ns-br-out').textContent = e.message; }
+}
+async function _nsBranchRun() {
+  const B = _nsBranch;
+  await repoRun('run');
+  if (_runMenu) { _runMenu.presetBranch = B.id; _renderRunMenu(); const sel = document.getElementById('run-menu-branch'); if (sel) sel.value = B.id; }
+}
+async function _nsBranchPlan() {
+  const B = _nsBranch; const out = document.getElementById('ns-br-out');
+  try { const r = await api(`/api/nexus-self/${encodeURIComponent(B.system)}/branch/${B.id}/plan`, { method: 'POST', body: '{}' });
+    out.innerHTML = r.ok ? `<span style="color:var(--mint)">plan ok</span> — ${r.items.map(i => `${i.op} ${escapeHtml(i.path)}`).join(', ')}` : `<span style="color:var(--coral)">refused</span> — ${escapeHtml([...r.errors, ...r.conflicts.map(c => `CONFLICT ${c.path}: ${c.why}`)].join('; '))}`; }
+  catch (e) { out.textContent = e.message; }
+}
+async function _nsBranchApply() {
+  const B = _nsBranch; const out = document.getElementById('ns-br-out');
+  const reason = prompt('Apply this branch to the live Nexus tree. Reason (kept in the apply record and the ledger):', '');
+  if (reason === null) return;
+  out.textContent = 'applying…';
+  try { const r = await api(`/api/nexus-self/${encodeURIComponent(B.system)}/branch/${B.id}/apply`, { method: 'POST', body: JSON.stringify({ reason }) }, 300000);
+    out.innerHTML = `<span style="color:var(--mint)">applied ${escapeHtml(r.applyId)}</span> — ${r.applied.length} file(s) · new snapshot ${escapeHtml(r.snapshot.slice(0, 12))}${r.understanding && r.understanding.improved && r.understanding.improved.length ? ` · understanding improved: ${escapeHtml(r.understanding.improved.join(', '))}` : ''}`;
+    _nsBranch = null; await loadApiRepos?.(); }
+  catch (e) { out.innerHTML = `<span style="color:var(--coral)">${escapeHtml(e.message)}</span>`; }
+}
+async function _nsBranchDiscard() {
+  const B = _nsBranch;
+  if (!confirm(`Discard branch ${B.id}? Its edits are deleted; the live tree is untouched.`)) return;
+  try { await api(`/api/nexus-self/${encodeURIComponent(B.system)}/branch/${B.id}`, { method: 'DELETE' }); document.getElementById('repo-diagnose-modal').classList.remove('open'); _nsBranch = null; renderCurrentRepoSubtab(); }
+  catch (e) { document.getElementById('ns-br-out').textContent = e.message; }
 }
 
 // ── INTELLIGENCE — structural scan of THIS repo: dangling hooks, gaps,
@@ -2684,22 +3032,72 @@ function repoBranch() {
 // §RUN 2026-09-21 — through COS: the repo is forked into a branch of its
 // compartment and run in COS's sandbox (lib/repo-run.js). Results render in
 // the diagnose modal: per target, exit code, time, and the tail of output.
+// §0.39.261 — James: "the run button in cos to work fully … ask what id like to
+// do. like a bunch of options for cos." Run opens the COS run menu for this repo
+// (GET /api/repos/:uuid/run/options, lib/cos-run.js): every option, grouped,
+// with the reason beside any that cannot run here. A Nexus system repo also
+// picks which edit branch to run (the apply gate reads that run).
+let _runMenu = null;
 async function repoRun(mode = 'run') {
   const repo = _requireCurrentRepo('run');
   if (!repo) return;
   const body = document.getElementById('repo-diagnose-body');
-  document.getElementById('repo-diagnose-title').textContent = `${mode === 'test' ? 'Test' : 'Run'} — ${repo.name || repo.uuid} (COS test environment)`;
+  document.getElementById('repo-diagnose-title').textContent = `Run — ${repo.name || repo.uuid} (COS)`;
   document.getElementById('repo-diagnose-reindex').style.display = 'none';
-  body.innerHTML = '<div style="opacity:.6">forking into a COS branch and running…</div>';
+  body.innerHTML = '<div style="opacity:.6">reading the run menu…</div>';
   document.getElementById('repo-diagnose-modal').classList.add('open');
-  let r;
-  try { r = await api(`/api/repos/${repo.uuid}/run`, { method: 'POST', body: JSON.stringify({ mode }) }, 320000); }
+  let m;
+  try { m = await api(`/api/repos/${repo.uuid}/run/options`, {}, 30000); }
   catch (e) { body.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
-  body.innerHTML = `<div style="margin-bottom:4px;opacity:.75">backend: <b>${escapeHtml(r.backend || '?')}</b> — ${escapeHtml(r.backendReason || '')}</div><div style="margin-bottom:8px">${escapeHtml(r.reason)} · compartment ${escapeHtml(String(r.compartmentId).slice(0, 8))} · branch ${escapeHtml(r.branchId)}${r.branchKept ? ' (kept)' : ' (discarded)'} · ` +
-    `<b style="color:${r.allPassed ? 'var(--ok,#4ade80)' : 'var(--bad,#f87171)'}">${r.passed} passed, ${r.failed} failed</b></div>` +
-    r.runs.map(x => `<div style="margin:10px 0 4px"><span style="color:${x.passed ? 'var(--ok,#4ade80)' : 'var(--bad,#f87171)'}">${x.passed ? '✓' : '✗'}</span> ${escapeHtml(x.file)} <span style="opacity:.6">[${escapeHtml(x.runtimeId)}] exit ${x.exitCode === null ? '—' : x.exitCode} · ${x.durationMs}ms${x.killedByTimeout ? ' · TIMED OUT' : ''}${x.killedByOutputLimit ? ' · OUTPUT LIMIT' : ''}</span></div>` +
+  _runMenu = { repo, ...m, selected: mode === 'test' ? 'test.all' : ((m.options.find(o => o.available) || {}).id || null) };
+  _renderRunMenu();
+}
+
+function _renderRunMenu() {
+  const M = _runMenu; if (!M) return;
+  const body = document.getElementById('repo-diagnose-body');
+  const groups = { run: 'Run', test: 'Test', check: 'Check' };
+  const sel = M.options.find(o => o.id === M.selected);
+  const btn = (o) => `<button class="action-btn" style="text-align:left;display:block;width:100%;margin:3px 0;padding:6px 8px;${o.id === M.selected ? 'outline:1px solid var(--accent,#a78bfa);' : ''}${o.available ? '' : 'opacity:.45;'}" ${o.available ? `onclick="_runMenu.selected='${o.id}';_renderRunMenu()"` : 'disabled'}>
+      <b>${escapeHtml(o.label)}</b><div style="font-size:10px;opacity:.75;white-space:normal">${escapeHtml(o.available ? o.description : o.reason)}</div></button>`;
+  let html = `<div style="display:flex;gap:14px;align-items:flex-start">`;
+  html += `<div style="flex:1;min-width:0">` + Object.entries(groups).map(([g, label]) =>
+    `<div style="margin:6px 0 2px;opacity:.6;font-size:10px;letter-spacing:.08em">${label.toUpperCase()}</div>` + M.options.filter(o => o.group === g).map(btn).join('')).join('') + `</div>`;
+  html += `<div style="width:42%;min-width:220px">`;
+  if (sel) {
+    html += `<div style="margin-bottom:6px"><b>${escapeHtml(sel.label)}</b></div>`;
+    if (sel.needs && sel.needs.includes('file')) html += `<div style="font-size:10px;opacity:.7">file</div><select id="run-menu-file" style="width:100%">${sel.choices.map(c => `<option>${escapeHtml(c)}</option>`).join('')}</select>`;
+    if (sel.needs && sel.needs.includes('script')) html += `<div style="font-size:10px;opacity:.7">script</div><select id="run-menu-script" style="width:100%">${sel.choices.map(c => `<option value="${escapeHtml(c.name)}" ${c.runnable ? '' : 'disabled'}>${escapeHtml(c.name)} — ${escapeHtml(c.cmd)}${c.runnable ? '' : ' (needs a shell)'}</option>`).join('')}</select>`;
+    if (M.nexusSystem) html += `<div style="font-size:10px;opacity:.7;margin-top:6px">run on</div><select id="run-menu-branch" style="width:100%"><option value="">the immutable base (no edits)</option>${(M.branches || []).map(b => `<option value="${escapeHtml(b.id)}" ${M.presetBranch === b.id ? 'selected' : ''}>${escapeHtml(b.label)} · ${escapeHtml(b.id)}</option>`).join('')}</select>`;
+    html += `<div style="font-size:10px;opacity:.7;margin-top:6px">time limit (s)</div><input id="run-menu-timeout" type="number" min="5" max="300" value="${sel.id === 'boot.probe' ? 45 : 30}" style="width:80px">`;
+    if (!M.nexusSystem) html += `<label style="display:block;font-size:10px;margin-top:6px"><input type="checkbox" id="run-menu-keep"> keep the COS branch afterwards</label>`;
+    html += `<div style="margin-top:10px"><button class="modal-btn confirm" onclick="_runMenuGo()">Run</button></div>`;
+  }
+  html += `</div></div>`;
+  body.innerHTML = `<div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
+}
+
+async function _runMenuGo() {
+  const M = _runMenu; if (!M) return;
+  const out = document.getElementById('run-menu-result');
+  const val = (id) => { const el = document.getElementById(id); return el ? (el.type === 'checkbox' ? el.checked : el.value) : null; };
+  const payload = { option: M.selected, file: val('run-menu-file') || undefined, script: val('run-menu-script') || undefined,
+    branch: (M.presetBranch = val('run-menu-branch') || '') || undefined, keepBranch: !!val('run-menu-keep'), timeoutMs: (parseInt(val('run-menu-timeout'), 10) || 30) * 1000 };
+  out.innerHTML = '<div style="opacity:.6">running in COS…</div>';
+  out.scrollIntoView({ block: 'nearest' });
+  let r;
+  try { r = await api(`/api/repos/${M.repo.uuid}/run`, { method: 'POST', body: JSON.stringify(payload) }, 330000); }
+  catch (e) { out.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
+  const col = (ok) => ok ? 'var(--ok,#4ade80)' : 'var(--bad,#f87171)';
+  out.innerHTML = `<div style="margin-bottom:6px;opacity:.8">${escapeHtml(r.label || r.option)} · ${escapeHtml(r.where || '')} · ${r.durationMs}ms · <b style="color:${col(r.allPassed)}">${r.passed} passed, ${r.failed} failed</b></div>` +
+    (r.report && r.report.packages ? `<pre style="white-space:pre-wrap;max-height:200px;overflow:auto;margin:0 0 8px">${escapeHtml(r.report.packages.map(p => `${p.via.padEnd(8)} ${p.name}  (${p.usedBy} file${p.usedBy === 1 ? '' : 's'})`).join('\n'))}${r.report.brokenRelative.length ? '\n\nbroken relative imports:\n' + escapeHtml(r.report.brokenRelative.map(b => `${b.file} → ${b.specifier}`).join('\n')) : ''}</pre>` : '') +
+    r.runs.map(x => `<div style="margin:8px 0 3px"><span style="color:${col(x.passed)}">${x.passed ? '✓' : '✗'}</span> ${escapeHtml(x.file)} <span style="opacity:.6">${x.exitCode === undefined ? '' : `exit ${x.exitCode === null ? '—' : x.exitCode}`}${x.durationMs ? ` · ${x.durationMs}ms` : ''}${x.killedByTimeout ? ' · TIMED OUT' : ''}${x.killedByOutputLimit ? ' · OUTPUT LIMIT' : ''}${x.external ? ` · external ${escapeHtml(x.runtime)}` : ''}</span></div>` +
+      (x.health ? `<div style="font-size:10px;opacity:.85">health: ${x.health.ok ? `<span style="color:${col(true)}">${x.health.status} on :${x.health.port.actual} (asked :${x.health.port.requested}) after ${x.health.afterMs}ms</span>` : `<span style="color:${col(false)}">${escapeHtml(x.health.error || String(x.health.status))}</span>`}</div>` : '') +
+      ((x.portMap || []).length ? `<div style="font-size:10px;opacity:.6">ports: ${x.portMap.map(p => `:${p.requested}→:${p.actual}`).join(' ')}</div>` : '') +
+      ((x.refused || []).length ? `<div style="font-size:10px;opacity:.6">network isolation refused: ${escapeHtml(x.refused.slice(0, 8).join(', '))}${x.refused.length > 8 ? ' …' : ''}</div>` : '') +
+      (x.error ? `<div style="color:${col(false)}">${escapeHtml(x.error)}</div>` : '') +
       (x.stdout ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;opacity:.8;margin:0">${escapeHtml(x.stdout.slice(-4000))}</pre>` : '') +
-      (x.stderr ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;color:var(--bad,#f87171);margin:0">${escapeHtml(x.stderr.slice(-4000))}</pre>` : '')).join('');
+      (x.stderr ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;color:${col(false)};margin:0">${escapeHtml(x.stderr.slice(-4000))}</pre>` : '')).join('');
 }
 
 // Diagnose — two real reads, rendered exactly as returned. A repo that has
@@ -2831,7 +3229,18 @@ function _agentFeedIn(p) {
   if (p.mutations != null) st.mutations = p.mutations;
   if (p.generating != null) st.generating = p.generating;
   // 0.39.256 — reset: the tab re-read the reply and it is not a continuation of what was shown; replace it
-  if (p.event === 'chunk' && typeof p.text === 'string') { st.text = p.reset ? p.text : st.text + p.text; st.textLen = p.fullLen || st.text.length; }
+  // 0.39.261 — James saw the reply three times over: a tab can stream one job from two readers (the
+  // transcript streamer, then the reply watch, which restarted from 0 and sent the whole reply as a
+  // "delta"). A chunk that IS the whole reply (its length is fullLen), or that restates what is shown
+  // and continues it, replaces; a chunk the shown text already ends with is a repeat and is dropped.
+  if (p.event === 'chunk' && typeof p.text === 'string') {
+    const t = p.text;
+    if (p.reset || (p.fullLen && t.length === p.fullLen) || (st.text && t.startsWith(st.text))) st.text = t;
+    else if (st.text && st.text.endsWith(t)) { /* repeat of the tail — already shown */ }
+    else st.text = st.text + t;
+    if (p.fullLen && st.text.length > p.fullLen) st.text = st.text.slice(-p.fullLen);   // never show more than the reply is
+    st.textLen = p.fullLen || st.text.length;
+  }
   st.updated = Date.now();
   // 0.39.256 — guardian.job.gate (guardian/lib/gate-trail.js): the gate this job is at, and why it stopped there.
   if (p.event === 'gate') st.gate = { label: p.label, state: p.state, detail: p.detail, fix: p.fix };
@@ -2863,9 +3272,17 @@ function _agentFeedHtml(uuid) {
   const live = st.text ? `<div style="margin-top:6px;white-space:pre-wrap;max-height:120px;overflow-y:auto;border-left:2px solid var(--accent,#7dd3fc);padding-left:8px;opacity:.85">${escapeHtml(st.text.slice(-4000))}</div>` : '';
   return head + (rows ? `<div style="margin-top:6px;max-height:140px;overflow-y:auto" data-feed-rows>${rows}</div>` : '') + live;
 }
+function _agentFeedSummary(uuid) {
+  const st = _agentFeedState(uuid);
+  if (!st.jobId) return '· idle';
+  return `· ${st.generating ? '● generating' : '○ idle'} · job ${String(st.jobId).slice(0, 8)}${st.gate ? ` · gate ${st.gate.label || ''} ${st.gate.state || ''}` : ''}${st.textLen ? ` · ${st.textLen}ch` : ''}`;
+}
 function _agentFeedPaint(uuid) {
   const el = document.getElementById('agent-feed');
   if (!el || el.dataset.repo !== uuid) return;
+  const sum = document.getElementById('agent-feed-summary'); if (sum) sum.textContent = _agentFeedSummary(uuid);
+  const panel = document.getElementById('agent-feed-panel');
+  if (panel && !panel.open) return;   // collapsed: the summary line is all that shows — no repaint of the body
   el.innerHTML = _agentFeedHtml(uuid);
   const rows = el.querySelector('[data-feed-rows]'); if (rows) rows.scrollTop = rows.scrollHeight;
 }
@@ -2921,10 +3338,17 @@ exchanges  ${st.exchanges || 0}</div>
 
   const injHtml = '';
 
+  // 0.39.261 — James: the job feed "stays out of the cli window, and it's collapsable". The provider
+  // tab's live trail (gates, chunks, anchor) is diagnostic; the CLI below is the conversation. The
+  // panel is a <details>, collapsed by default, remembered per viewer; its summary line keeps the
+  // one thing worth seeing at a glance (generating / idle, last gate).
+  let feedOpen = false;
+  try { feedOpen = localStorage.getItem('idearium.agentFeedOpen') === '1'; } catch (_) {}
   el.innerHTML = head + memHtml + injHtml + `
-    <div class="ds"><div class="ds-label">live · provider tab</div>
+    <details class="ds" id="agent-feed-panel" ${feedOpen ? 'open' : ''} ontoggle="try{localStorage.setItem('idearium.agentFeedOpen', this.open ? '1' : '0')}catch(_){} if (this.open) _agentFeedPaint('${escapeHtml(repo.uuid)}')">
+      <summary class="ds-label" style="cursor:pointer">live · provider tab <span id="agent-feed-summary" style="opacity:.7;text-transform:none;letter-spacing:0">${escapeHtml(_agentFeedSummary(repo.uuid))}</span></summary>
       <div id="agent-feed" data-repo="${escapeHtml(repo.uuid)}" style="font-size:10px;font-family:var(--mono,monospace);padding:4px 0">${_agentFeedHtml(repo.uuid)}</div>
-    </div>
+    </details>
     <div class="ds"><div class="ds-label">cli</div>
       ${AGENT_SETTINGS.get(repo.uuid)
         ? _agentBackendHtml(AGENT_SETTINGS.get(repo.uuid), _agentBackendOf(AGENT_SETTINGS.get(repo.uuid)) === 'ollama' ? await _ollamaModelList() : null)
@@ -3988,6 +4412,7 @@ const _repoPipelineStage = {
   'atlas:build:complete':     { label: 'atlas built',                   pct: 40  },
   'chunk:decompose:start':    { label: 'chunking…',                     pct: 45  },
   'chunk:decompose:complete': { label: 'chunked',                       pct: 65  },
+  'chunk:glyphs:complete':    { label: 'glyphs written',                pct: 70  },   // 0.39.261
   'chunk:verify:complete':    { label: 'verified',                      pct: 80  },
   'index:build:complete':     { label: 'index built',                   pct: 90  },
   'graph:build:complete':     { label: 'code graph built',              pct: 96  },

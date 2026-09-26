@@ -65,6 +65,29 @@ export class RepoLayer {
     this.dataDir = dataDir || createRequire(import.meta.url)('../lib/data-dir.cjs').ideariumDataDir();   // §SANDBOX 2026-09-25 — idearium/lib/data-dir.cjs decides (test processes get a temp root).
     this.reposFile = path.join(this.dataDir, REPOS_FILE_NAME);
     this.repos = this._load();
+    this._migrateBuildingDefault();
+  }
+
+  // §0.39.261 — every repo made before this version was stamped 'building' at
+  // creation (and so was the "Repo: x" idea minted for it), whether anything
+  // was building or not. At construction (boot) nothing is building yet, so a
+  // repo still carrying the old default — and its auto-minted idea — moves to
+  // 'specced'. The build queue sets 'building' again the moment real work
+  // starts. Ideas a person wrote are never touched (source must be repo-ingest).
+  _migrateBuildingDefault() {
+    try {
+      let moved = 0;
+      for (const r of this.repos.repos) if (r.phase === 'building') { r.phase = 'specced'; moved++; }
+      const ideas = this.os && this.os.db && Array.isArray(this.os.db.ideas) ? this.os.db.ideas : null;
+      let ideasMoved = 0;
+      if (ideas) {
+        const repoIdeas = new Set(this.repos.repos.map(r => r.ideaUuid).filter(Boolean));
+        for (const i of ideas) if (i.phase === 'building' && i.source === 'repo-ingest' && repoIdeas.has(i.uuid)) { i.phase = 'specced'; ideasMoved++; }
+        if (ideasMoved) syncTable('idearium_ideas', ideas, 'uuid');
+      }
+      if (moved) this._save();
+      if (moved || ideasMoved) console.log(`[idearium/repo] ${moved} repo(s) and ${ideasMoved} repo idea(s) moved from the old 'building' default to 'specced'`);
+    } catch (e) { console.warn(`[idearium/repo] building-default migration skipped: ${e.message}`); }
   }
 
   // §BUILT 2026-09-06 — James: "files in the compartment/repo are
@@ -293,6 +316,7 @@ export class RepoLayer {
     return sourceFiles.sourcePathSet(sourceFiles.loadSourceManifest(dir)).has(relPath);
   }
   writeSourceBytes(repoUuid, relPath, buffer) {
+    { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
     const dir = this._sourceDir(repoUuid); if (!dir) return { error: 'repo not found' };
     const r = sourceFiles.setSourceFile(dir, relPath, buffer);
     return r.ok ? { ok: true } : { error: r.error };
@@ -309,6 +333,7 @@ export class RepoLayer {
   // §BYTE-FIDELITY note). Source code written by lib/repo-inject.js needs the
   // exact bytes; every existing caller passes nothing and is unchanged.
   writeTextFile(repoUuid, relPath, text, opts = {}) {
+    { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
     if (typeof text !== 'string') return { error: 'text must be a string' };
     if (this.isSourceOwned(repoUuid, relPath)) {
       this.writeFile(repoUuid, relPath, text, { defer: true, preserveWhitespace: !!opts.preserveWhitespace }); // chunk in step; a chunk problem is not this write's failure
@@ -322,6 +347,7 @@ export class RepoLayer {
   }
 
   deleteSourceFile(repoUuid, relPath) {
+    { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
     const dir = this._sourceDir(repoUuid); if (!dir) return { error: 'repo not found' };
     const r = sourceFiles.removeSourceFile(dir, relPath);
     return r.ok ? { ok: true } : { error: r.error };
@@ -369,7 +395,7 @@ export class RepoLayer {
   // idearium/data/projects/<repoUuid> — persisted on the repo record so
   // every later materialize() (including quiet ones after an edit) keeps
   // using it. null for every existing caller — purely additive.
-  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, bare = false } = {}) {
+  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, bare = false, ideaUuid: fromIdea = null } = {}) {
     if (!name) return { error: 'repo name required' };
     if (!this.se) return { error: 'repo layer has no spec-engine — cannot store content' };
 
@@ -435,17 +461,32 @@ export class RepoLayer {
 
     // repoUuid already generated above, before ingestFilesAsSpec() ran
 
-    // idea lifecycle tracking — unchanged, still owned by IdeaOS, not content
+    // idea lifecycle tracking — still owned by IdeaOS, not content.
+    // §0.39.261 — James: "not make the default state for repos, building …
+    // once a idea is a spec, move the idea section to the repo." Two changes:
+    //   1. an idea the caller names (the idea this repo was made FROM — the
+    //      spec wizard and the idea->spec flow pass it) becomes the repo's own
+    //      idea: linked, moved to 'specced', not duplicated by a new "Repo: x"
+    //      idea. The Idea tab then shows and grows THAT idea.
+    //   2. the phase a repo starts in is 'specced' (IDEA_PHASES: it has a spec,
+    //      nothing is building). 'building' is set by what actually builds —
+    //      the build queue and the spec build route — never assumed.
     let ideaUuid = null;
     try {
-      if (this.os && typeof this.os.createIdea === 'function') {
-        const idea = this.os.createIdea({ text: `Repo: ${name}`, phase: 'building', source: 'repo-ingest' });
+      const known = fromIdea && this.os && this.os.db && Array.isArray(this.os.db.ideas) ? this.os.db.ideas.find(i => i.uuid === fromIdea) : null;
+      if (known) {
+        ideaUuid = known.uuid;
+        if (['seed', 'expanding', 'tensioned'].includes(known.phase)) { known.phase = 'specced'; known.updatedAt = Date.now(); }
+        syncTable('idearium_ideas', this.os.db.ideas, 'uuid');
+      } else if (this.os && typeof this.os.createIdea === 'function') {
+        const idea = this.os.createIdea({ text: `Repo: ${name}`, phase: 'specced', source: 'repo-ingest' });
         ideaUuid = idea?.uuid || null;
       } else if (this.os && this.os.db && Array.isArray(this.os.db.ideas)) {
         ideaUuid = randomUUID();
         this.os.db.ideas.push({
-          uuid: ideaUuid, text: `Repo: ${name}`, phase: 'building',
+          uuid: ideaUuid, text: `Repo: ${name}`, phase: 'specced',
           tension: 0.5, parent, createdAt: Date.now(), source: 'repo-ingest',
+          tags: [], resonanceWith: [], tensionWith: [],
         });
         // §GAP FIXED 2026-07-14 — this push had no matching save anywhere;
         // it only ever reached disk if some unrelated IdeaOS gate happened
@@ -474,7 +515,7 @@ export class RepoLayer {
       parent,                                 // fork lineage
       forks:     [],
       source,                                 // 'drop' | 'fork' | 'cli' | 'promote:emerge' | 'promote:manual'
-      phase:     'building',
+      phase:     'specced',                    // §0.39.261 — was 'building' for every repo, building or not
       createdAt: Date.now(),
       updatedAt: Date.now(),
       status:    'active',
@@ -513,12 +554,59 @@ export class RepoLayer {
   fork(repoUuid, newName) {
     const src = this.repos.repos.find(r => r.uuid === repoUuid);
     if (!src) return { error: 'repo not found' };
+    // §IMMUTABLE 0.39.261 — a free fork shares src.specUuid, so a write on the
+    // fork would edit the immutable repo's own spec. Immutable content is
+    // branched in COS instead.
+    { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
     return this.ingest({
       name: newName || `${src.name}-fork`,
       specUuid: src.specUuid,
       source: 'fork',
       parent: repoUuid,
     });
+  }
+
+  // §IMMUTABLE 0.39.261 — James: "a nexus repo in idearium, that immutable".
+  // A repo with immutable:true (the per-system Nexus repos, lib/nexus-self)
+  // refuses every content mutation through this layer. Its content changes
+  // only by moving to a new snapshot (replaceSpec, called by the sync), and
+  // edits reach the live tree only through the apply gate
+  // (lib/nexus-self/apply.js) from a COS branch.
+  _immutableError(repoUuid) {
+    const r = this.repos.repos.find(x => x.uuid === repoUuid);
+    if (r && r.immutable) {
+      return `repo "${r.name}" is immutable — edit on a COS branch (POST /api/nexus-self/${r.nexusSelf?.system || '<system>'}/branch) and apply through the gate`;
+    }
+    return null;
+  }
+
+  /** annotate(repoUuid, fields) — set repo-record metadata (immutable, nexusSelf). Content is never touched here. */
+  annotate(repoUuid, fields = {}) {
+    const r = this.repos.repos.find(x => x.uuid === repoUuid);
+    if (!r) return { error: 'repo not found' };
+    const ALLOWED = ['immutable', 'nexusSelf', 'ideaUuid'];
+    for (const k of ALLOWED) if (Object.prototype.hasOwnProperty.call(fields, k)) r[k] = fields[k];
+    r.updatedAt = Date.now();
+    this._save();
+    return { ok: true, repo: r };
+  }
+
+  /**
+   * replaceSpec(repoUuid, specUuid) — point a repo at a new, already-complete
+   * spec (a new immutable version of its content). The previous spec is kept
+   * on disk and listed in r.specHistory; nothing is edited in place.
+   */
+  replaceSpec(repoUuid, specUuid) {
+    const r = this.repos.repos.find(x => x.uuid === repoUuid);
+    if (!r) return { error: 'repo not found' };
+    let manifest;
+    try { manifest = this.se.loadSpec(specUuid); } catch (e) { return { error: `spec ${specUuid} unreadable: ${e.message}` }; }
+    r.specHistory = [...(r.specHistory || []), { specUuid: r.specUuid, rootHash: r.rootHash, until: Date.now() }];
+    r.specUuid = manifest.uuid;
+    r.rootHash = manifest.rootHash;
+    r.updatedAt = Date.now();
+    this._save();
+    return { ok: true, repo: r };
   }
 
   // ── queries for the UI ──────────────────────────────────────────────────────
@@ -672,6 +760,7 @@ export class RepoLayer {
   // refresh(), instead of once per file. Default behavior is unchanged: every
   // existing caller still gets the immediate, never-stale projection.
   writeFile(repoUuid, relPath, content, opts = {}) {
+    { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
     if (typeof content !== 'string') return { error: 'content must be a string' };
     try {
       const { manifest, chunk, clean } = this._resolveChunk(repoUuid, relPath);
@@ -695,6 +784,7 @@ export class RepoLayer {
   }
 
   deleteFile(repoUuid, relPath, opts = {}) {
+    { const im = this._immutableError(repoUuid); if (im) return { error: im, code: 'IMMUTABLE' }; }
     try {
       const { manifest, chunk } = this._resolveChunk(repoUuid, relPath);
       if (!chunk) return { error: `file not found in repo: ${relPath}` };

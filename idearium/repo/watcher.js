@@ -125,7 +125,7 @@ export class RepoWatcher {
     }
 
     try {
-      const AdmZip = require('adm-zip');
+      const AdmZip = require('../../lib/zip.js');   // §0.39.261 — in-house, was adm-zip
       const zip = new AdmZip(verified.archiveBuffer);
       const files = zip.getEntries().filter(e => !e.isDirectory).map(e => ({
         path: e.entryName, bytes: e.header.size,
@@ -151,7 +151,7 @@ export class RepoWatcher {
   _extractFileList(zipPath) {
     // try adm-zip
     try {
-      const AdmZip = require('adm-zip');
+      const AdmZip = require('../../lib/zip.js');   // §0.39.261 — in-house, was adm-zip
       const zip = new AdmZip(zipPath);
       return zip.getEntries().filter(e => !e.isDirectory).map(e => {
         const isSpec = /\.spec(\.md)?$/i.test(e.entryName);
