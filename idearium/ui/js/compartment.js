@@ -79,7 +79,7 @@ async function openCompartmentIdea(uuid, { lane, keepLane, quiet } = {}) {
 async function admitToCompartment(uuid) { return openIdeaLanes(uuid); }
 
 /** the idea's repo if it is a spec (its Idea tab), else the idea in Create › Ideas — the lanes are in both */
-function _repoOfIdea(ideaUuid) { return (API_REPOS || []).find(r => r.ideaUuid === ideaUuid && r.status !== 'archived') || null; }
+function _repoOfIdea(ideaUuid) { return typeof ideaRepoOf === 'function' ? ideaRepoOf(ideaUuid) : null; }
 async function openIdeaLanes(ideaUuid, { lane } = {}) {
   WBC.ideaUuid = ideaUuid; WBC.lane = lane || 'all';
   const repo = _repoOfIdea(ideaUuid);
@@ -130,7 +130,6 @@ function renderCompartmentDetail() {
   if (title) title.textContent = _wbShort(d.idea.text, 60);
   // 0.39.263 — hosted in a repo's Idea tab or an idea's detail, where the idea's text is already shown above
   const inRepo = !!el.closest('#repo-subtab-idea') || !!el.closest('#view-ideas');
-  const inIdeas = !!el.closest('#view-ideas');
 
   const crumbs = [...(d.path || []), { ideaUuid: d.idea.uuid, text: d.idea.text }]
     .map((p, i, a) => i === a.length - 1
@@ -157,7 +156,7 @@ function renderCompartmentDetail() {
       <div class="cmp-idea-meta">
         <span class="ic-tag">${_wbEsc(d.idea.phase || 'seed')}</span>
         ${(d.idea.tags || []).map(t => `<span class="ic-tag">#${_wbEsc(t)}</span>`).join('')}
-        ${inIdeas ? '' : `<button class="action-btn" onclick="setView('ideas');selectIdea('${d.idea.uuid}')">open in Ideas</button>`}
+        ${inRepo ? '' : `<button class="action-btn" onclick="setView('ideas');selectIdea('${d.idea.uuid}')">open in Ideas</button>`}
       </div>
       ${WBC.linking ? `<div class="cmp-linking">link mode — click any entry or idea to link it · <button class="action-btn" onclick="cancelCompartmentLink()">cancel</button></div>` : ''}
     </div>

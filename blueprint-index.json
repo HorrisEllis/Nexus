@@ -1,11 +1,11 @@
 {
   "format": "NEX-BLUEPRINT-INDEX/1.0",
-  "uuid": "bpi_0fce4102",
+  "uuid": "bpi_44a9a0cb",
   "version": "1.0.0",
-  "builtAt": 1790369500192,
+  "builtAt": 1790413913977,
   "builtBy": "blueprint-index",
   "systemCount": 11,
-  "totalComponents": 213,
+  "totalComponents": 220,
   "systems": [
     {
       "systemId": "orchestrator",
@@ -31,7 +31,7 @@
       "systemId": "guardian",
       "label": "Guardian",
       "port": 7820,
-      "componentCount": 33,
+      "componentCount": 36,
       "components": [
         {
           "id": "guardian.health",
@@ -194,6 +194,60 @@
           "grammar": [
             "provider result",
             "provider-result"
+          ]
+        },
+        {
+          "id": "guardian.chats.list",
+          "name": "chats.list",
+          "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)",
+          "route": {
+            "method": "GET",
+            "path": "/api/chats"
+          },
+          "tags": [
+            "guardian",
+            "chats",
+            "memory"
+          ],
+          "grammar": [
+            "chats list",
+            "chats-list"
+          ]
+        },
+        {
+          "id": "guardian.chats.versions",
+          "name": "chats.versions",
+          "description": "Every version of one chat (?key=provider:chatId), newest first",
+          "route": {
+            "method": "GET",
+            "path": "/api/chats/versions"
+          },
+          "tags": [
+            "guardian",
+            "chats",
+            "memory"
+          ],
+          "grammar": [
+            "chats versions",
+            "chats-versions"
+          ]
+        },
+        {
+          "id": "guardian.chats.item",
+          "name": "chats.item",
+          "description": "One chat version: the full transcript from its .response file",
+          "route": {
+            "method": "GET",
+            "path": "/api/chats/item/:id"
+          },
+          "tags": [
+            "guardian",
+            "chats",
+            "memory"
+          ],
+          "grammar": [
+            "chats item",
+            "chats-item"
           ]
         },
         {
@@ -730,6 +784,60 @@
           "tags": [
             "guardian",
             "ncp"
+          ]
+        },
+        {
+          "command": "chats-list",
+          "aliases": [
+            "chats list",
+            "chats-list"
+          ],
+          "usage": "chats-list",
+          "method": "GET",
+          "path": "/api/chats",
+          "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)",
+          "componentId": "guardian.chats.list",
+          "systemId": "guardian",
+          "tags": [
+            "guardian",
+            "chats",
+            "memory"
+          ]
+        },
+        {
+          "command": "chats-versions",
+          "aliases": [
+            "chats versions",
+            "chats-versions"
+          ],
+          "usage": "chats-versions",
+          "method": "GET",
+          "path": "/api/chats/versions",
+          "description": "Every version of one chat (?key=provider:chatId), newest first",
+          "componentId": "guardian.chats.versions",
+          "systemId": "guardian",
+          "tags": [
+            "guardian",
+            "chats",
+            "memory"
+          ]
+        },
+        {
+          "command": "chats-item",
+          "aliases": [
+            "chats item",
+            "chats-item"
+          ],
+          "usage": "chats-item",
+          "method": "GET",
+          "path": "/api/chats/item/:id",
+          "description": "One chat version: the full transcript from its .response file",
+          "componentId": "guardian.chats.item",
+          "systemId": "guardian",
+          "tags": [
+            "guardian",
+            "chats",
+            "memory"
           ]
         },
         {
@@ -1271,6 +1379,39 @@
           "hookId": null
         },
         {
+          "componentId": "guardian.chats.list",
+          "label": "chats.list",
+          "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)",
+          "intents": [
+            "chats list",
+            "chats-list"
+          ],
+          "contract": null,
+          "hookId": null
+        },
+        {
+          "componentId": "guardian.chats.versions",
+          "label": "chats.versions",
+          "description": "Every version of one chat (?key=provider:chatId), newest first",
+          "intents": [
+            "chats versions",
+            "chats-versions"
+          ],
+          "contract": null,
+          "hookId": null
+        },
+        {
+          "componentId": "guardian.chats.item",
+          "label": "chats.item",
+          "description": "One chat version: the full transcript from its .response file",
+          "intents": [
+            "chats item",
+            "chats-item"
+          ],
+          "contract": null,
+          "hookId": null
+        },
+        {
           "componentId": "guardian.job.list",
           "label": "job.list",
           "description": "Active + recent jobs",
@@ -1537,7 +1678,7 @@
       "systemId": "copilot",
       "label": "Co-pilot",
       "port": 3750,
-      "componentCount": 33,
+      "componentCount": 35,
       "components": [
         {
           "id": "copilot.prompt",
@@ -1554,6 +1695,37 @@
             "ask",
             "copilot",
             "cp"
+          ]
+        },
+        {
+          "id": "copilot.tools.list",
+          "name": "tools.list",
+          "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)",
+          "route": {
+            "method": "GET",
+            "path": "/api/tools/list"
+          },
+          "tags": [
+            "copilot"
+          ],
+          "grammar": [
+            "tools",
+            "list tools"
+          ]
+        },
+        {
+          "id": "copilot.tools.run",
+          "name": "tools.run",
+          "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope",
+          "route": {
+            "method": "POST",
+            "path": "/api/tools/run"
+          },
+          "tags": [
+            "copilot"
+          ],
+          "grammar": [
+            "run tool"
           ]
         },
         {
@@ -2113,6 +2285,37 @@
           "path": "/api/prompt",
           "description": "Primary entry — all co-pilot interactions",
           "componentId": "copilot.prompt",
+          "systemId": "copilot",
+          "tags": [
+            "copilot"
+          ]
+        },
+        {
+          "command": "tools-list",
+          "aliases": [
+            "tools",
+            "list tools"
+          ],
+          "usage": "tools-list",
+          "method": "GET",
+          "path": "/api/tools/list",
+          "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)",
+          "componentId": "copilot.tools.list",
+          "systemId": "copilot",
+          "tags": [
+            "copilot"
+          ]
+        },
+        {
+          "command": "tools-run",
+          "aliases": [
+            "run tool"
+          ],
+          "usage": "tools-run",
+          "method": "POST",
+          "path": "/api/tools/run",
+          "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope",
+          "componentId": "copilot.tools.run",
           "systemId": "copilot",
           "tags": [
             "copilot"
@@ -2926,6 +3129,27 @@
           ],
           "contract": "nexus-interaction-contract-v1::copilot",
           "hookId": "copilot.prompt.receive"
+        },
+        {
+          "componentId": "copilot.tools.list",
+          "label": "tools.list",
+          "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)",
+          "intents": [
+            "tools",
+            "list tools"
+          ],
+          "contract": null,
+          "hookId": null
+        },
+        {
+          "componentId": "copilot.tools.run",
+          "label": "tools.run",
+          "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope",
+          "intents": [
+            "run tool"
+          ],
+          "contract": null,
+          "hookId": null
         },
         {
           "componentId": "copilot.stream.query",
@@ -5399,7 +5623,7 @@
       "systemId": "clear-glass",
       "label": "Clear Glass",
       "port": 7701,
-      "componentCount": 102,
+      "componentCount": 104,
       "components": [
         {
           "id": "cg.health",
@@ -6994,7 +7218,7 @@
         {
           "id": "cg.downloads.responses",
           "name": "downloads.responses",
-          "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
+          "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
           "route": {
             "method": "GET",
             "path": "/cli/downloads/responses"
@@ -7012,7 +7236,7 @@
         {
           "id": "cg.downloads.responseItem",
           "name": "downloads.responseItem",
-          "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record",
+          "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record",
           "route": {
             "method": "GET",
             "path": "/cli/downloads/responses/:id"
@@ -7076,6 +7300,42 @@
           ],
           "grammar": [
             "downloads openFile"
+          ]
+        },
+        {
+          "id": "cg.selectors.providerFor",
+          "name": "selectors.providerFor",
+          "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector",
+          "route": {
+            "method": "IPC",
+            "path": "selectors:provider-for-url"
+          },
+          "tags": [
+            "cg",
+            "selectors",
+            "picker",
+            "providers"
+          ],
+          "grammar": [
+            "selectors providerFor"
+          ]
+        },
+        {
+          "id": "cg.selectors.assign",
+          "name": "selectors.assign",
+          "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page",
+          "route": {
+            "method": "IPC",
+            "path": "selectors:assign"
+          },
+          "tags": [
+            "cg",
+            "selectors",
+            "picker",
+            "guardian"
+          ],
+          "grammar": [
+            "selectors assign"
           ]
         }
       ],
@@ -8678,7 +8938,7 @@
           "usage": "downloads-responses",
           "method": "GET",
           "path": "/cli/downloads/responses",
-          "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
+          "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
           "componentId": "cg.downloads.responses",
           "systemId": "cg",
           "tags": [
@@ -8696,7 +8956,7 @@
           "usage": "downloads-responseitem",
           "method": "GET",
           "path": "/cli/downloads/responses/:id",
-          "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record",
+          "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record",
           "componentId": "cg.downloads.responseItem",
           "systemId": "cg",
           "tags": [
@@ -8755,6 +9015,42 @@
             "cg",
             "downloads",
             "library"
+          ]
+        },
+        {
+          "command": "selectors-providerfor",
+          "aliases": [
+            "selectors providerFor"
+          ],
+          "usage": "selectors-providerfor",
+          "method": "IPC",
+          "path": "selectors:provider-for-url",
+          "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector",
+          "componentId": "cg.selectors.providerFor",
+          "systemId": "cg",
+          "tags": [
+            "cg",
+            "selectors",
+            "picker",
+            "providers"
+          ]
+        },
+        {
+          "command": "selectors-assign",
+          "aliases": [
+            "selectors assign"
+          ],
+          "usage": "selectors-assign",
+          "method": "IPC",
+          "path": "selectors:assign",
+          "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page",
+          "componentId": "cg.selectors.assign",
+          "systemId": "cg",
+          "tags": [
+            "cg",
+            "selectors",
+            "picker",
+            "guardian"
           ]
         }
       ],
@@ -9733,7 +10029,7 @@
         {
           "componentId": "cg.downloads.responses",
           "label": "downloads.responses",
-          "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
+          "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
           "intents": [
             "downloads responses"
           ],
@@ -9743,7 +10039,7 @@
         {
           "componentId": "cg.downloads.responseItem",
           "label": "downloads.responseItem",
-          "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record",
+          "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record",
           "intents": [
             "downloads responseItem"
           ],
@@ -9776,6 +10072,26 @@
           "description": "Open a completed download with the OS default app (Library → Downloads, click the name)",
           "intents": [
             "downloads openFile"
+          ],
+          "contract": null,
+          "hookId": null
+        },
+        {
+          "componentId": "cg.selectors.providerFor",
+          "label": "selectors.providerFor",
+          "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector",
+          "intents": [
+            "selectors providerFor"
+          ],
+          "contract": null,
+          "hookId": null
+        },
+        {
+          "componentId": "cg.selectors.assign",
+          "label": "selectors.assign",
+          "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page",
+          "intents": [
+            "selectors assign"
           ],
           "contract": null,
           "hookId": null
@@ -9945,6 +10261,60 @@
       "tags": [
         "guardian",
         "ncp"
+      ]
+    },
+    {
+      "command": "chats-list",
+      "aliases": [
+        "chats list",
+        "chats-list"
+      ],
+      "usage": "chats-list",
+      "method": "GET",
+      "path": "/api/chats",
+      "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)",
+      "componentId": "guardian.chats.list",
+      "systemId": "guardian",
+      "tags": [
+        "guardian",
+        "chats",
+        "memory"
+      ]
+    },
+    {
+      "command": "chats-versions",
+      "aliases": [
+        "chats versions",
+        "chats-versions"
+      ],
+      "usage": "chats-versions",
+      "method": "GET",
+      "path": "/api/chats/versions",
+      "description": "Every version of one chat (?key=provider:chatId), newest first",
+      "componentId": "guardian.chats.versions",
+      "systemId": "guardian",
+      "tags": [
+        "guardian",
+        "chats",
+        "memory"
+      ]
+    },
+    {
+      "command": "chats-item",
+      "aliases": [
+        "chats item",
+        "chats-item"
+      ],
+      "usage": "chats-item",
+      "method": "GET",
+      "path": "/api/chats/item/:id",
+      "description": "One chat version: the full transcript from its .response file",
+      "componentId": "guardian.chats.item",
+      "systemId": "guardian",
+      "tags": [
+        "guardian",
+        "chats",
+        "memory"
       ]
     },
     {
@@ -10330,6 +10700,37 @@
       "path": "/api/prompt",
       "description": "Primary entry — all co-pilot interactions",
       "componentId": "copilot.prompt",
+      "systemId": "copilot",
+      "tags": [
+        "copilot"
+      ]
+    },
+    {
+      "command": "tools-list",
+      "aliases": [
+        "tools",
+        "list tools"
+      ],
+      "usage": "tools-list",
+      "method": "GET",
+      "path": "/api/tools/list",
+      "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)",
+      "componentId": "copilot.tools.list",
+      "systemId": "copilot",
+      "tags": [
+        "copilot"
+      ]
+    },
+    {
+      "command": "tools-run",
+      "aliases": [
+        "run tool"
+      ],
+      "usage": "tools-run",
+      "method": "POST",
+      "path": "/api/tools/run",
+      "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope",
+      "componentId": "copilot.tools.run",
       "systemId": "copilot",
       "tags": [
         "copilot"
@@ -13174,7 +13575,7 @@
       "usage": "downloads-responses",
       "method": "GET",
       "path": "/cli/downloads/responses",
-      "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
+      "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
       "componentId": "cg.downloads.responses",
       "systemId": "cg",
       "tags": [
@@ -13192,7 +13593,7 @@
       "usage": "downloads-responseitem",
       "method": "GET",
       "path": "/cli/downloads/responses/:id",
-      "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record",
+      "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record",
       "componentId": "cg.downloads.responseItem",
       "systemId": "cg",
       "tags": [
@@ -13251,6 +13652,42 @@
         "cg",
         "downloads",
         "library"
+      ]
+    },
+    {
+      "command": "selectors-providerfor",
+      "aliases": [
+        "selectors providerFor"
+      ],
+      "usage": "selectors-providerfor",
+      "method": "IPC",
+      "path": "selectors:provider-for-url",
+      "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector",
+      "componentId": "cg.selectors.providerFor",
+      "systemId": "cg",
+      "tags": [
+        "cg",
+        "selectors",
+        "picker",
+        "providers"
+      ]
+    },
+    {
+      "command": "selectors-assign",
+      "aliases": [
+        "selectors assign"
+      ],
+      "usage": "selectors-assign",
+      "method": "IPC",
+      "path": "selectors:assign",
+      "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page",
+      "componentId": "cg.selectors.assign",
+      "systemId": "cg",
+      "tags": [
+        "cg",
+        "selectors",
+        "picker",
+        "guardian"
       ]
     }
   ],
@@ -13817,6 +14254,39 @@
       "hookId": null
     },
     {
+      "componentId": "guardian.chats.list",
+      "label": "chats.list",
+      "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)",
+      "intents": [
+        "chats list",
+        "chats-list"
+      ],
+      "contract": null,
+      "hookId": null
+    },
+    {
+      "componentId": "guardian.chats.versions",
+      "label": "chats.versions",
+      "description": "Every version of one chat (?key=provider:chatId), newest first",
+      "intents": [
+        "chats versions",
+        "chats-versions"
+      ],
+      "contract": null,
+      "hookId": null
+    },
+    {
+      "componentId": "guardian.chats.item",
+      "label": "chats.item",
+      "description": "One chat version: the full transcript from its .response file",
+      "intents": [
+        "chats item",
+        "chats-item"
+      ],
+      "contract": null,
+      "hookId": null
+    },
+    {
       "componentId": "guardian.job.list",
       "label": "job.list",
       "description": "Active + recent jobs",
@@ -14093,6 +14563,27 @@
       ],
       "contract": "nexus-interaction-contract-v1::copilot",
       "hookId": "copilot.prompt.receive"
+    },
+    {
+      "componentId": "copilot.tools.list",
+      "label": "tools.list",
+      "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)",
+      "intents": [
+        "tools",
+        "list tools"
+      ],
+      "contract": null,
+      "hookId": null
+    },
+    {
+      "componentId": "copilot.tools.run",
+      "label": "tools.run",
+      "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope",
+      "intents": [
+        "run tool"
+      ],
+      "contract": null,
+      "hookId": null
     },
     {
       "componentId": "copilot.stream.query",
@@ -15909,7 +16400,7 @@
     {
       "componentId": "cg.downloads.responses",
       "label": "downloads.responses",
-      "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
+      "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind",
       "intents": [
         "downloads responses"
       ],
@@ -15919,7 +16410,7 @@
     {
       "componentId": "cg.downloads.responseItem",
       "label": "downloads.responseItem",
-      "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record",
+      "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record",
       "intents": [
         "downloads responseItem"
       ],
@@ -15952,6 +16443,26 @@
       "description": "Open a completed download with the OS default app (Library → Downloads, click the name)",
       "intents": [
         "downloads openFile"
+      ],
+      "contract": null,
+      "hookId": null
+    },
+    {
+      "componentId": "cg.selectors.providerFor",
+      "label": "selectors.providerFor",
+      "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector",
+      "intents": [
+        "selectors providerFor"
+      ],
+      "contract": null,
+      "hookId": null
+    },
+    {
+      "componentId": "cg.selectors.assign",
+      "label": "selectors.assign",
+      "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page",
+      "intents": [
+        "selectors assign"
       ],
       "contract": null,
       "hookId": null
@@ -16160,6 +16671,11 @@
         "description": "Connected NCP browser tab providers"
       },
       {
+        "componentId": "guardian.chats.list",
+        "systemId": "guardian",
+        "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)"
+      },
+      {
         "componentId": "guardian.job.list",
         "systemId": "guardian",
         "description": "Active + recent jobs"
@@ -16178,6 +16694,11 @@
         "componentId": "guardian.sessions.list",
         "systemId": "guardian",
         "description": "NCP session history"
+      },
+      {
+        "componentId": "copilot.tools.list",
+        "systemId": "copilot",
+        "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)"
       },
       {
         "componentId": "copilot.axioms.list",
@@ -16319,6 +16840,93 @@
         "componentId": "guardian.provider.result",
         "systemId": "guardian",
         "description": "NCP result from browser tab"
+      }
+    ],
+    "chats list": [
+      {
+        "componentId": "guardian.chats.list",
+        "systemId": "guardian",
+        "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)"
+      }
+    ],
+    "chats": [
+      {
+        "componentId": "guardian.chats.list",
+        "systemId": "guardian",
+        "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)"
+      },
+      {
+        "componentId": "guardian.chats.versions",
+        "systemId": "guardian",
+        "description": "Every version of one chat (?key=provider:chatId), newest first"
+      },
+      {
+        "componentId": "guardian.chats.item",
+        "systemId": "guardian",
+        "description": "One chat version: the full transcript from its .response file"
+      }
+    ],
+    "chats-list": [
+      {
+        "componentId": "guardian.chats.list",
+        "systemId": "guardian",
+        "description": "Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)"
+      }
+    ],
+    "chats versions": [
+      {
+        "componentId": "guardian.chats.versions",
+        "systemId": "guardian",
+        "description": "Every version of one chat (?key=provider:chatId), newest first"
+      }
+    ],
+    "versions": [
+      {
+        "componentId": "guardian.chats.versions",
+        "systemId": "guardian",
+        "description": "Every version of one chat (?key=provider:chatId), newest first"
+      }
+    ],
+    "chats version": [
+      {
+        "componentId": "guardian.chats.versions",
+        "systemId": "guardian",
+        "description": "Every version of one chat (?key=provider:chatId), newest first"
+      }
+    ],
+    "chats-versions": [
+      {
+        "componentId": "guardian.chats.versions",
+        "systemId": "guardian",
+        "description": "Every version of one chat (?key=provider:chatId), newest first"
+      }
+    ],
+    "chats-version": [
+      {
+        "componentId": "guardian.chats.versions",
+        "systemId": "guardian",
+        "description": "Every version of one chat (?key=provider:chatId), newest first"
+      }
+    ],
+    "chats item": [
+      {
+        "componentId": "guardian.chats.item",
+        "systemId": "guardian",
+        "description": "One chat version: the full transcript from its .response file"
+      }
+    ],
+    "item": [
+      {
+        "componentId": "guardian.chats.item",
+        "systemId": "guardian",
+        "description": "One chat version: the full transcript from its .response file"
+      }
+    ],
+    "chats-item": [
+      {
+        "componentId": "guardian.chats.item",
+        "systemId": "guardian",
+        "description": "One chat version: the full transcript from its .response file"
       }
     ],
     "job list": [
@@ -17156,6 +17764,82 @@
         "componentId": "copilot.prompt",
         "systemId": "copilot",
         "description": "Primary entry — all co-pilot interactions"
+      }
+    ],
+    "tools": [
+      {
+        "componentId": "copilot.tools.list",
+        "systemId": "copilot",
+        "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)"
+      }
+    ],
+    "tool": [
+      {
+        "componentId": "copilot.tools.list",
+        "systemId": "copilot",
+        "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)"
+      },
+      {
+        "componentId": "copilot.tools.run",
+        "systemId": "copilot",
+        "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope"
+      }
+    ],
+    "list tools": [
+      {
+        "componentId": "copilot.tools.list",
+        "systemId": "copilot",
+        "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)"
+      }
+    ],
+    "list tool": [
+      {
+        "componentId": "copilot.tools.list",
+        "systemId": "copilot",
+        "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)"
+      }
+    ],
+    "tools-list": [
+      {
+        "componentId": "copilot.tools.list",
+        "systemId": "copilot",
+        "description": "Every registered tool, grouped, in plain language (?q= search, ?scope= marks a caller's scope)"
+      }
+    ],
+    "run tool": [
+      {
+        "componentId": "copilot.tools.run",
+        "systemId": "copilot",
+        "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope"
+      }
+    ],
+    "run": [
+      {
+        "componentId": "copilot.tools.run",
+        "systemId": "copilot",
+        "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope"
+      },
+      {
+        "componentId": "ollama.jobs.dispatch",
+        "systemId": "ollama",
+        "description": "Queue a job for local model execution"
+      },
+      {
+        "componentId": "cg.diag.run",
+        "systemId": "clear-glass",
+        "description": "Run diagnostic suite"
+      },
+      {
+        "componentId": "cg.macros.run",
+        "systemId": "clear-glass",
+        "description": "Run a real macro against a real agent"
+      }
+    ],
+    "tools-run": [
+      {
+        "componentId": "copilot.tools.run",
+        "systemId": "copilot",
+        "description": "Run one tool through executeTool (config gate, fault history, event log); refused outside the caller's scope"
       }
     ],
     "stream": [
@@ -18447,23 +19131,6 @@
         "componentId": "ollama.jobs.dispatch",
         "systemId": "ollama",
         "description": "Queue a job for local model execution"
-      }
-    ],
-    "run": [
-      {
-        "componentId": "ollama.jobs.dispatch",
-        "systemId": "ollama",
-        "description": "Queue a job for local model execution"
-      },
-      {
-        "componentId": "cg.diag.run",
-        "systemId": "clear-glass",
-        "description": "Run diagnostic suite"
-      },
-      {
-        "componentId": "cg.macros.run",
-        "systemId": "clear-glass",
-        "description": "Run a real macro against a real agent"
       }
     ],
     "jobs-dispatch": [
@@ -20337,12 +21004,12 @@
       {
         "componentId": "cg.downloads.responses",
         "systemId": "clear-glass",
-        "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
+        "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
       },
       {
         "componentId": "cg.downloads.responseItem",
         "systemId": "clear-glass",
-        "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record"
+        "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record"
       },
       {
         "componentId": "cg.downloads.openFile",
@@ -21900,49 +22567,49 @@
       {
         "componentId": "cg.downloads.responses",
         "systemId": "clear-glass",
-        "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
+        "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
       }
     ],
     "responses": [
       {
         "componentId": "cg.downloads.responses",
         "systemId": "clear-glass",
-        "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
+        "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
       }
     ],
     "downloads response": [
       {
         "componentId": "cg.downloads.responses",
         "systemId": "clear-glass",
-        "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
+        "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
       }
     ],
     "downloads-responses": [
       {
         "componentId": "cg.downloads.responses",
         "systemId": "clear-glass",
-        "description": "Agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
+        "description": "Agent chats (one row per chat at its newest version; ?versions=all lists every version, ?chatKey=provider:chatId one chat), agent replies and provider-tab downloads in the downloads index, each filed under its agent; filters agentId, jobId, provider, kind"
       }
     ],
     "downloads responseitem": [
       {
         "componentId": "cg.downloads.responseItem",
         "systemId": "clear-glass",
-        "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record"
+        "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record"
       }
     ],
     "responseitem": [
       {
         "componentId": "cg.downloads.responseItem",
         "systemId": "clear-glass",
-        "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record"
+        "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record"
       }
     ],
     "downloads-responseitem": [
       {
         "componentId": "cg.downloads.responseItem",
         "systemId": "clear-glass",
-        "description": "One downloads-index item in full: the reply text and code blocks, or the downloaded file record"
+        "description": "One downloads-index item in full: a chat transcript version, the reply text and code blocks, or the downloaded file record"
       }
     ],
     "window openlibrary": [
@@ -22007,6 +22674,60 @@
         "systemId": "clear-glass",
         "description": "Open a completed download with the OS default app (Library → Downloads, click the name)"
       }
+    ],
+    "selectors providerfor": [
+      {
+        "componentId": "cg.selectors.providerFor",
+        "systemId": "clear-glass",
+        "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector"
+      }
+    ],
+    "selectors": [
+      {
+        "componentId": "cg.selectors.providerFor",
+        "systemId": "clear-glass",
+        "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector"
+      },
+      {
+        "componentId": "cg.selectors.assign",
+        "systemId": "clear-glass",
+        "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page"
+      }
+    ],
+    "providerfor": [
+      {
+        "componentId": "cg.selectors.providerFor",
+        "systemId": "clear-glass",
+        "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector"
+      }
+    ],
+    "selectors-providerfor": [
+      {
+        "componentId": "cg.selectors.providerFor",
+        "systemId": "clear-glass",
+        "description": "Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick is offered as a provider selector"
+      }
+    ],
+    "selectors assign": [
+      {
+        "componentId": "cg.selectors.assign",
+        "systemId": "clear-glass",
+        "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page"
+      }
+    ],
+    "assign": [
+      {
+        "componentId": "cg.selectors.assign",
+        "systemId": "clear-glass",
+        "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page"
+      }
+    ],
+    "selectors-assign": [
+      {
+        "componentId": "cg.selectors.assign",
+        "systemId": "clear-glass",
+        "description": "Record a picked, live-checked input/send/reply selector in guardian's selector map (POST :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from another provider's page"
+      }
     ]
   },
   "errors": [
@@ -22015,5 +22736,5 @@
       "error": "registry not found: bridge/registry-components.js"
     }
   ],
-  "buildMs": 31
+  "buildMs": 214
 }

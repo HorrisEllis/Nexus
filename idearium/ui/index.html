@@ -856,14 +856,16 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
 
     <!-- ══════════ ERAVOS (own system, own port — sovereign iframe) ══════════ -->
     <section class="view" id="view-eravos">
-      <iframe class="system-frame" src="../../eravos/ui/index.html" title="Eravos"></iframe>
+      <!-- 0.39.263 — eravos's UI is served at /ui/eravos/ (was ../../eravos/ui/index.html → /eravos/ui/index.html, a 404
+           under the orchestrator and on idearium's own :4800). Standalone, app.js points it at the orchestrator's /ui/eravos/. -->
+      <iframe class="system-frame" id="eravos-frame" src="../eravos/" title="Eravos"></iframe>
     </section>
 
     <!-- ══════════ ARCHITECT BUILD UI (architect/'s own build surface — distinct
          from the "Architect" blueprint viewer under Build, which reads
          compiled-spec output; this is the architect system's own real UI) ══════════ -->
     <section class="view" id="view-architect-build">
-      <iframe class="system-frame" src="../../architect/src/ui/arch-builder.html" title="Architect Build"></iframe>
+      <iframe class="system-frame" id="architect-frame" src="../architect/arch-builder.html" title="Architect Build"></iframe>
     </section>
 
     <!-- ══════════ REPOSITORY LIBRARY / FILE BROWSER / IDE ══════════ -->

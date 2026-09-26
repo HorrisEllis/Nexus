@@ -126,6 +126,32 @@ async function main() {
     assert.ok(html.indexOf('<script src="js/nexus-atlas.js">') > html.indexOf('<script src="js/app.js">'), 'loaded after app.js');
   });
 
+  await test('UI-003', 'no page loads a system UI at /<system>/ui — the orchestrator serves them at /ui/<system>/', () => {
+    // James: '{"ok":false,"error":"route not found: GET /idearium/ui"} … should be /ui/idearium'.
+    // A browser URL (src/href/location/iframe) must never climb out of /ui/ to <system>/ui:
+    // that is a file path on disk (idearium/ui/, eravos/ui/), not a route.
+    const offenders = [];
+    const walk = (dir) => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (['node_modules', '.git', 'data', 'undefined', '_archive', 'unintegrated'].includes(e.name)) continue;
+        const f = path.join(dir, e.name);
+        if (e.isDirectory()) { walk(f); continue; }
+        if (!/\.(html|js)$/.test(e.name) || /[\\/]tests?[\\/]/.test(f)) continue;
+        const src = fs.readFileSync(f, 'utf8');
+        for (const m of src.matchAll(/(?:src|href|location|\.src)\s*=\s*["'`]((?:\.\.\/)+|\/)([a-z-]+)\/(?:src\/)?ui(?:[\/"'`?#])/g)) {
+          if (m[2] !== 'ui') offenders.push(`${path.relative(ROOT, f)}: ${m[0]}`);
+        }
+      }
+    };
+    for (const d of ['ui', 'idearium/ui', 'clear-glass/renderer', 'guardian', 'cockpit']) if (fs.existsSync(path.join(ROOT, d))) walk(path.join(ROOT, d));
+    assert.deepStrictEqual(offenders, []);
+    const tv = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/index.html'), 'utf8');
+    assert.ok(tv.includes("f.src='../idearium/'"), 'tv-shell loads /ui/idearium/');
+    assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('src="../eravos/"'), 'the Eravos canvas loads /ui/eravos/');
+    assert.ok(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('src="../architect/arch-builder.html"'), 'the Architect canvas loads /ui/architect/');
+    assert.ok(/SYSTEM_UI_DIRS = \{ idearium: .*architect: \{ dir: \['architect', 'src', 'ui'\]/.test(fs.readFileSync(path.join(ROOT, 'orchestrator/orchestrator.js'), 'utf8')), 'the orchestrator serves /ui/architect/ from architect/src/ui/');
+  });
+
   // ── CG-0xx ─────────────────────────────────────────────────────────────
   await test('CG-001', 'Playwright is not a root package, no probe is python, and every real-page probe drives Clear Glass', () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));

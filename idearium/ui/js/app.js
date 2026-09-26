@@ -37,6 +37,19 @@
 // ════════════════════════════════════════════════════
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
+// 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
+// the Eravos and Architect canvases cannot resolve ../<system>/ against this server: use the orchestrator's.
+(() => {
+  try {
+    if (typeof location === 'undefined' || /^\/ui\//.test(location.pathname)) return;
+    const orch = `${location.protocol}//${location.hostname}:9000/ui`;
+    const set = () => {
+      const e = document.getElementById('eravos-frame'); if (e) e.src = `${orch}/eravos/`;
+      const a = document.getElementById('architect-frame'); if (a) a.src = `${orch}/architect/arch-builder.html`;
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', set); else set();
+  } catch (_) {}
+})();
 const API_CANDIDATES = [...new Set([
   ...(typeof location !== 'undefined' && /^https?:$/.test(location.protocol) && !/^\/api\/idearium/.test(location.pathname) ? [location.origin] : []),
   'http://127.0.0.1:4800', 'http://127.0.0.1:9000/api/idearium',
@@ -304,6 +317,7 @@ async function loadApiRepos() {
   try {
     API_REPOS = (await api('/api/repos')).repos || [];
     renderRepoLibrary();
+    updateStats(); if (document.getElementById('idea-list')) renderIdeaList();   // 0.39.263 — which ideas have a repo
     if (CURRENT_API_REPO) {
       const fresh = API_REPOS.find(r => r.uuid === CURRENT_API_REPO.uuid);
       if (fresh) { CURRENT_API_REPO = fresh; renderApiRepoPanel(fresh); }
@@ -388,13 +402,36 @@ function buildSpecHistoryHtml(specUuid) {
 }
 
 
+// §0.39.263 — James: "it says 15 ideas and 15 repos … ideas, once promoted to spec should
+// move to the idea tab in the actual repo." An idea that has a repo (it is a spec) lives in
+// that repo's Idea tab: it leaves the Ideas list and the ideas count. Nexus's own system
+// repos (each carries a "Repo: nexus/…" idea and a spec per synced version) are not the
+// person's ideas or specs, so neither count includes them.
+function ideaRepoOf(ideaUuid) {
+  return (typeof API_REPOS !== 'undefined' ? API_REPOS : []).find(r => r.ideaUuid === ideaUuid && r.status !== 'archived') || null;
+}
+function _nexusSelfIds() {
+  const specs = new Set(), ideas = new Set();
+  for (const r of (typeof API_REPOS !== 'undefined' ? API_REPOS : [])) {
+    if (!r.nexusSelf) continue;
+    if (r.ideaUuid) ideas.add(r.ideaUuid);
+    for (const u of [r.specUuid, r.promotedFromSpec, ...(r.specHistory || []).map(h => h && h.specUuid)]) if (u) specs.add(u);
+  }
+  return { specs, ideas };
+}
+function openIdeasCount() { return IDEAS.filter(i => i.phase !== 'archived' && !ideaRepoOf(i.uuid)).length; }
+function userSpecsCount() {
+  const nx = _nexusSelfIds();
+  return SPECS.filter(s => !nx.specs.has(s.uuid) && !(s.ideaUuid && nx.ideas.has(s.ideaUuid))).length;
+}
+
 function updateStats() {
   // §UI 2026-09-20 — James: "Remove open gaps, snr, from top." The topbar
   // strip is now ideas + specs only. GAPS/STATS are still loaded and still
   // real — open gaps remain per-idea in renderDetail(), and snr is still
   // the versionium/snapshot metric — only the two global counters are gone.
-  document.getElementById('stat-ideas').textContent = IDEAS.filter(i=>i.phase!=='archived').length || 0;
-  document.getElementById('stat-specs').textContent = SPECS.length || 0;
+  document.getElementById('stat-ideas').textContent = openIdeasCount() || 0;
+  document.getElementById('stat-specs').textContent = userSpecsCount() || 0;
   document.getElementById('brain-count-badge').textContent = `${BRAINSTORMS.length} entries`;
   document.getElementById('snap-btn').disabled = !CONNECTED;
 }
@@ -463,7 +500,7 @@ function sortBy(s, btn) {
 
 function getFilteredIdeas() {
   const q = (document.getElementById('search').value||'').toLowerCase();
-  let pool = IDEAS.filter(i => i.phase !== 'archived');
+  let pool = IDEAS.filter(i => i.phase !== 'archived' && !ideaRepoOf(i.uuid));   // 0.39.263 — a spec's idea lives in its repo
   if (q) pool = pool.filter(i => (i.text||'').toLowerCase().includes(q) || (i.tags||[]).some(t=>t.toLowerCase().includes(q)));
   return pool.sort((a,b) => {
     if (CURRENT_SORT==='tension') return (b.tension||0)-(a.tension||0);
@@ -476,8 +513,11 @@ function renderIdeaList() {
   const list = document.getElementById('idea-list');
   const items = getFilteredIdeas();
   list.innerHTML = '';
+  // 0.39.263 — ideas that became specs are in their repos' Idea tabs; say how many, and take you there
+  const inRepos = IDEAS.filter(i => i.phase !== 'archived' && ideaRepoOf(i.uuid) && !_nexusSelfIds().ideas.has(i.uuid)).length;
+  const specNote = inRepos ? `<div class="ideas-in-repos" style="padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--text3);cursor:pointer" onclick="setView('repo')">${inRepos > 1 ? `${inRepos} ideas are specs — in their repos' Idea tabs →` : `1 idea is a spec — in its repo's Idea tab →`}</div>` : '';
   if (!items.length) {
-    list.innerHTML = `<div style="padding:20px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3)">${CONNECTED ? 'no ideas yet — click + idea' : 'not connected to nexus'}</div>`;
+    list.innerHTML = `<div style="padding:20px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3)">${CONNECTED ? 'no ideas yet — click + idea' : 'not connected to nexus'}</div>` + specNote;
     return;
   }
   for (const idea of items) {
@@ -510,6 +550,7 @@ function renderIdeaList() {
     `;
     list.appendChild(card);
   }
+  if (specNote) list.insertAdjacentHTML('beforeend', specNote);
 }
 
 function selectIdea(uuid) {
@@ -1475,6 +1516,7 @@ async function submitNewSpec(mapToRepo) {
         await loadSpecs(); await loadApiRepos();
         if (ideaUuid) await loadIdeas(); // picks up the idea's new phase + linkedSpec
         openRepoFor(ideaUuid || null, manifest.uuid, name);
+        if (ideaUuid) setRepoSubtab('idea');   // 0.39.263 — the idea moves to its repo's Idea tab
         return;
       } catch (e) { toast(`spec created, map-to-repo failed: ${e.message}`, 'err'); }
     }
@@ -1511,6 +1553,7 @@ async function submitNewSpec(mapToRepo) {
     // The Spec Library used to be where a new spec showed up. It is a repo
     // now, so land in it — same as the "map to repo now" branch above.
     openRepoFor(ideaUuid || null, manifest.uuid, name);
+    if (ideaUuid) { setRepoSubtab('idea'); toast('the idea is a spec now — it lives in its repo\'s Idea tab', 'ok'); }   // 0.39.263
   } catch (e) { toast(e.message, 'err'); }
 }
 function createSpecForIdea(ideaUuid) {

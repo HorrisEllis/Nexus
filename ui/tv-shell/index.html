@@ -880,7 +880,8 @@ function tune(n){
   if(chId==='ch-orch-full'){const f=document.getElementById('orch-full-iframe');if(f&&!f.src.endsWith('/orchestrator'))f.src='../orchestrator';}
   if(chId==='ch-gd-full'){const f=document.getElementById('gd-full-iframe');if(f&&!f.src.endsWith('/guardian'))f.src='../guardian';}
   if(chId==='ch-cx-full'){const f=document.getElementById('cx-full-iframe');if(f&&!f.src.endsWith('/cortex'))f.src='../cortex';}
-  if(chId==='ch-idr-full'){const f=document.getElementById('idr-full-iframe');if(f&&!f.src.endsWith('/idearium/ui'))f.src='../../idearium/ui';}
+  // 0.39.263 — idearium's UI is served at /ui/idearium/ (was '../../idearium/ui' → GET /idearium/ui, a 404)
+  if(chId==='ch-idr-full'){const f=document.getElementById('idr-full-iframe');if(f&&!f.src.includes('/ui/idearium/'))f.src='../idearium/';}
   if(chId==='ch-br-full'){const f=document.getElementById('br-full-iframe');if(f&&!f.src.endsWith('/bridge'))f.src='../bridge';}
   if(chId==='ch-chatgpt-agent'){const f=document.getElementById('chatgpt-agent-iframe');if(f&&!f.src.endsWith('agents/chatgpt/index.html'))f.src='../agents/chatgpt/index.html';}
   if(chId==='ch-claude-agent'){const f=document.getElementById('claude-agent-iframe');if(f&&!f.src.endsWith('agents/claude/index.html'))f.src='../agents/claude/index.html';}

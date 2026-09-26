@@ -1,0 +1,74 @@
+{
+  "stats": {
+    "orchestrator.boot.started": {
+      "count": 1,
+      "lastTs": 1790413856627,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "orchestrator.phase.ok": {
+      "count": 7,
+      "lastTs": 1790413914126,
+      "intervals": [
+        2,
+        15,
+        44,
+        1,
+        2,
+        57413
+      ],
+      "totalMs": 57477
+    },
+    "orchestrator.ui.open_failed": {
+      "count": 1,
+      "lastTs": 1790413913751,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "orchestrator.ui.opened": {
+      "count": 1,
+      "lastTs": 1790413913757,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "orchestrator.booted": {
+      "count": 1,
+      "lastTs": 1790413914115,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "orchestrator.systems.sequence.started": {
+      "count": 1,
+      "lastTs": 1790413914120,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "orchestrator.system.starting": {
+      "count": 1,
+      "lastTs": 1790413914120,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "orchestrator.boot.complete": {
+      "count": 1,
+      "lastTs": 1790413914129,
+      "intervals": [],
+      "totalMs": 0
+    },
+    "system.registered": {
+      "count": 2,
+      "lastTs": 1790413914141,
+      "intervals": [
+        11
+      ],
+      "totalMs": 11
+    },
+    "orchestrator.pulse": {
+      "count": 1,
+      "lastTs": 1790413914148,
+      "intervals": [],
+      "totalMs": 0
+    }
+  },
+  "baseline": {}
+}
