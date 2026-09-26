@@ -137,6 +137,7 @@ const handMapped = [
   ...require('./maps/ui-map').FILES.map(f => f[0]),
   ...require('./maps/raid-events-and-tools-map').FILES.map(f => f[0]),
   ...require('./maps/accounts-authority-map').FILES.map(f => f[0]),
+  ...require('./maps/cos-testenv-map').FILES.map(f => f[0]),     // §0.39.264
   'loom/agent-suite/index.js',
 ];
 console.log('\nscanning whole tree from source (real require/import edges only)...\n');
@@ -259,6 +260,10 @@ console.log(`  wires:      ${mappedCC.wires.length} ok`);
 console.log('\nmapping ui files...\n');
 const mappedUi = mapUi(driver);
 const mappedAccounts = mapAccountsAuthority(driver); // §0.39.223 — account authority / login portals / sealed vaults
+// §0.39.264 — the COS test VM + Eravos "new organism" → Idearium (require, spawn, HTTP and postMessage edges)
+const mappedCosTestenv = require('./maps/cos-testenv-map').mapCosTestenv(driver);
+console.log(`  cos-testenv: ${mappedCosTestenv.components.length} components, ${mappedCosTestenv.hooks.length} hooks, ${mappedCosTestenv.wires.length} wires`);
+if (mappedCosTestenv.failures.length) { console.log(`  cos-testenv FAILURES: ${mappedCosTestenv.failures.length}`); for (const f of mappedCosTestenv.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedCosTestenv.failures.length; }
 console.log(`  components: ${mappedUi.components.length} ok`);
 console.log(`  hooks:      ${mappedUi.hooks.length} ok`);
 console.log(`  wires:      ${mappedUi.wires.length} ok`);

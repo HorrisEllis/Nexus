@@ -1,6 +1,6 @@
 {
   "name": "nexus",
-  "version": "0.39.263",
+  "version": "0.39.264",
   "description": "NEXUS — sovereign AI orchestration platform",
   "author": "James Brooks (Erosmancer)",
   "license": "MIT",
@@ -25,7 +25,9 @@
     "autopilot": "node nexus/autopilot.js",
     "autopilot:status": "node nexus/autopilot.js --status-port=7799",
     "start:all:cli": "node nexus/autopilot.js --cli",
-    "movement": "node cli/nexus-movement.js"
+    "movement": "node cli/nexus-movement.js",
+    "cos:vm-setup": "node cos/testenv/provision.js",
+    "cos:vm-status": "node cos/testenv/provision.js --status"
   },
   "engines": {
     "node": ">=18.0.0"

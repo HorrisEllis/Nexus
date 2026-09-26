@@ -3174,7 +3174,48 @@ function _renderRunMenu() {
     html += `<div style="margin-top:10px"><button class="modal-btn confirm" onclick="_runMenuGo()">Run</button></div>`;
   }
   html += `</div></div>`;
+  // §0.39.264 — the VM option names what is missing; offer to set it up right here
+  const vmOpt = M.options.find(o => o.id === 'test.vm' && !o.available && o.setup);
+  if (vmOpt) html += `<div id="vm-setup" style="margin-top:10px;border-top:1px solid var(--border,#333);padding-top:8px">${_vmSetupHtml(null)}</div>`;
   body.innerHTML = `<div id="run-menu-result" style="margin-bottom:10px"></div>` + html;
+  if (vmOpt) _vmSetupPoll(true);
+}
+
+// ── §0.39.264 — set up the COS test VM from the run menu ─────────────────
+// James: "i need help setting the vm up." POST /api/cos/testenv/setup starts
+// cos/testenv/provision.js in the background (QEMU via winget on Windows if you
+// tick it; a Debian cloud image made into the base, verified by booting it);
+// GET /api/cos/testenv is polled for its progress. The same thing runs from a
+// terminal: cos\testenv\setup-vm.bat (Windows) or cos/testenv/setup-vm.sh.
+let _vmSetupTimer = null;
+function _vmSetupHtml(st) {
+  const running = st && st.state === 'running';
+  const last = st && st.log && st.log.length ? st.log.slice(-14).map(e => escapeHtml(e.msg || '')).join('\n') : '';
+  const col = st && st.state === 'failed' ? 'var(--bad,#f87171)' : st && st.state === 'done' ? 'var(--ok,#4ade80)' : 'inherit';
+  return `<div style="font-size:10px;opacity:.6;letter-spacing:.08em">TEST VM</div>
+    ${st && st.vm && st.vm.ok ? `<div style="color:var(--ok,#4ade80);margin:4px 0">ready — ${escapeHtml(st.vm.baseImage || '')}</div><button class="action-btn" onclick="repoRun()">reload the run menu</button>` : `
+    <div style="font-size:10px;opacity:.8;margin:4px 0;white-space:normal">${escapeHtml(st && st.vm ? st.vm.reason : 'checking…')}</div>
+    ${running ? '' : `<label style="display:block;font-size:10px"><input type="checkbox" id="vm-setup-qemu" checked> install QEMU if it is missing (Windows: winget)</label>
+    <div style="font-size:10px;margin:3px 0">extra runtimes: ${['go', 'ruby', 'php', 'rust'].map(x => `<label style="margin-right:8px"><input type="checkbox" class="vm-setup-extra" value="${x}"> ${x}</label>`).join('')}</div>
+    <button class="action-btn" onclick="_vmSetupStart()">Set up the test VM</button>
+    <span style="font-size:10px;opacity:.6"> 5–40 min · downloads ~350 MB · or run ${escapeHtml((st && st.vm && st.vm.setup) || 'cos/testenv/setup-vm')}</span>`}`}
+    ${st && st.state !== 'idle' ? `<div style="font-size:10px;margin-top:6px;color:${col}">${escapeHtml(st.state)}${st.result && st.result.error ? ` — ${escapeHtml(st.result.error)}` : ''}</div>` : ''}
+    ${last ? `<pre style="white-space:pre-wrap;max-height:180px;overflow:auto;font-size:10px;opacity:.85;margin:4px 0 0">${last}</pre>` : ''}`;
+}
+async function _vmSetupPoll(once) {
+  clearTimeout(_vmSetupTimer);
+  const el = document.getElementById('vm-setup'); if (!el) return;
+  let st; try { st = await api('/api/cos/testenv', {}, 20000); } catch (e) { el.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
+  el.innerHTML = _vmSetupHtml(st);
+  if (st.state === 'running') _vmSetupTimer = setTimeout(() => _vmSetupPoll(), 2000);
+  else if (!once && st.state === 'done') toast('the test VM is ready', 'ok');
+}
+async function _vmSetupStart() {
+  const extras = [...document.querySelectorAll('.vm-setup-extra:checked')].map(x => x.value);
+  const installQemu = !!(document.getElementById('vm-setup-qemu') || {}).checked;
+  try { await api('/api/cos/testenv/setup', { method: 'POST', body: JSON.stringify({ installQemu, extras }) }, 20000); }
+  catch (e) { toast(`VM setup did not start: ${e.message}`, 'err'); return; }
+  _vmSetupPoll();
 }
 
 async function _runMenuGo() {
@@ -3190,6 +3231,7 @@ async function _runMenuGo() {
   catch (e) { out.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
   const col = (ok) => ok ? 'var(--ok,#4ade80)' : 'var(--bad,#f87171)';
   out.innerHTML = `<div style="margin-bottom:6px;opacity:.8">${escapeHtml(r.label || r.option)} · ${escapeHtml(r.where || '')} · ${r.durationMs}ms · <b style="color:${col(r.allPassed)}">${r.passed} passed, ${r.failed} failed</b></div>` +
+    (r.report && r.report.vm ? `<div style="font-size:10px;opacity:.75;margin-bottom:6px">VM · accelerator ${escapeHtml(String(r.report.vm.accel))} · network ${escapeHtml(String(r.report.vm.network))}${r.report.vm.network === 'install' ? ` (cut after install — offline ${r.report.vm.offlineVerified ? 'verified' : 'NOT verified'})` : ''} · repo in by ${escapeHtml(String(r.report.vm.share))}</div>` : '') +
     (r.report && r.report.packages ? `<pre style="white-space:pre-wrap;max-height:200px;overflow:auto;margin:0 0 8px">${escapeHtml(r.report.packages.map(p => `${p.via.padEnd(8)} ${p.name}  (${p.usedBy} file${p.usedBy === 1 ? '' : 's'})`).join('\n'))}${r.report.brokenRelative.length ? '\n\nbroken relative imports:\n' + escapeHtml(r.report.brokenRelative.map(b => `${b.file} → ${b.specifier}`).join('\n')) : ''}</pre>` : '') +
     r.runs.map(x => `<div style="margin:8px 0 3px"><span style="color:${col(x.passed)}">${x.passed ? '✓' : '✗'}</span> ${escapeHtml(x.file)} <span style="opacity:.6">${x.exitCode === undefined ? '' : `exit ${x.exitCode === null ? '—' : x.exitCode}`}${x.durationMs ? ` · ${x.durationMs}ms` : ''}${x.killedByTimeout ? ' · TIMED OUT' : ''}${x.killedByOutputLimit ? ' · OUTPUT LIMIT' : ''}${x.external ? ` · external ${escapeHtml(x.runtime)}` : ''}</span></div>` +
       (x.health ? `<div style="font-size:10px;opacity:.85">health: ${x.health.ok ? `<span style="color:${col(true)}">${x.health.status} on :${x.health.port.actual} (asked :${x.health.port.requested}) after ${x.health.afterMs}ms</span>` : `<span style="color:${col(false)}">${escapeHtml(x.health.error || String(x.health.status))}</span>`}</div>` : '') +
@@ -4583,4 +4625,33 @@ window.addEventListener('load', () => {
   nexusConnect();
   handleNexusDeepLink();
   setInterval(() => { if (CONNECTED) loadStats(); else nexusConnect(); }, 15000);
+});
+
+// ── 0.39.264 — a new Eravos organism starts here, as an idea or a spec ─────
+// James: "instead of download, it should create a idea or spec for a new
+// organism." Eravos (Build › Eravos, an iframe) posts { type:
+// 'nexus:organism.create', mode:'idea'|'spec', organism, text, tags }; only a
+// message from that frame is taken. The idea is made with Idearium's own API;
+// for 'spec' the New Spec dialog opens filled in and linked to the idea, so the
+// spec, its repo and its compartment are made exactly as any other spec's are.
+window.addEventListener('message', async (ev) => {
+  const d = ev.data;
+  if (!d || d.type !== 'nexus:organism.create') return;
+  const frame = document.getElementById('eravos-frame');
+  if (!frame || ev.source !== frame.contentWindow) { console.warn('[idearium] organism.create ignored: not from the Eravos frame'); return; }
+  const o = d.organism || {};
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(String(o.id || ''))) { toast('Eravos sent an organism without a valid id', 'err'); return; }
+  try {
+    const r = await api('/api/ideas', { method: 'POST', body: JSON.stringify({ text: String(d.text || `ERAVOS ${d.kind || 'organism'}: ${o.label} (${o.id})`), tags: Array.isArray(d.tags) ? d.tags.slice(0, 12) : ['eravos', 'organism'] }) });
+    const idea = r.idea;
+    await loadIdeas();
+    if (d.mode === 'spec') {
+      await openNewSpecModal({ name: o.label || o.id, description: String(d.text || ''), ideaUuid: idea && idea.uuid });
+      toast(`${o.label || o.id}: idea made — finish the spec in the dialog`, 'ok');
+    } else {
+      setView('ideas');
+      if (idea) selectIdea(idea.uuid);
+      toast(`${o.label || o.id}: new idea in Create › Ideas`, 'ok');
+    }
+  } catch (e) { toast(`could not create the ${d.kind || 'organism'} idea: ${e.message}`, 'err'); }
 });

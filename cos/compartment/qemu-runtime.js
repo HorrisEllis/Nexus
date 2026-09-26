@@ -53,6 +53,12 @@ const crypto = require('crypto');
 const QEMU_BIN     = process.platform === 'win32' ? 'qemu-system-x86_64.exe' : 'qemu-system-x86_64';
 const QEMU_IMG_BIN = process.platform === 'win32' ? 'qemu-img.exe'           : 'qemu-img';
 
+// §0.39.264 — the binaries as found on this host (cos/testenv/host.js: COS_QEMU_DIR,
+// PATH, then the default install folders — a fresh `winget install QEMU` is not on
+// the PATH of an already-running Nexus). Falls back to the bare names above.
+function qemuSystemBin() { try { const h = require('../testenv/host.js').qemu(); if (h.found) return h.system; } catch (_) {} return QEMU_BIN; }
+function qemuImgBin()    { try { const h = require('../testenv/host.js').qemu(); if (h.found) return h.img; } catch (_) {} return QEMU_IMG_BIN; }
+
 // ─── Errors ────────────────────────────────────────────────────────────────────
 
 class QemuRuntimeError extends Error {
@@ -190,7 +196,7 @@ function resolveVmConfig(entryFile, env = {}, compartmentRoot = process.cwd()) {
 
 function _runQemuImg(args) {
   try {
-    return execFileSync(QEMU_IMG_BIN, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    return execFileSync(qemuImgBin(), args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });
   } catch (e) {
     const stderr = (e.stderr || e.message || '').toString().trim();
     throw new QemuRuntimeError(`qemu-img ${args[0]} failed: ${stderr}`, { args, stderr });
@@ -309,6 +315,10 @@ function buildQemuArgs(vmConfig, compartmentId, name) {
   args.push('-machine', `${vmConfig.machineType},accel=${accel}`);
   args.push('-m', String(vmConfig.ramMB));
   args.push('-smp', String(vmConfig.cpus));
+  // §0.39.264 — optional CPU model. Test VMs use 'max': every feature the
+  // accelerator can offer (TCG's default qemu64 lacks SSE4.2/POPCNT, which
+  // current Node builds expect). Unset → QEMU's default, as before.
+  if (vmConfig.cpu) args.push('-cpu', String(vmConfig.cpu));
   args.push('-rtc', 'base=localtime');
   args.push('-no-user-config');
 
@@ -324,7 +334,9 @@ function buildQemuArgs(vmConfig, compartmentId, name) {
   // Network
   if (vmConfig.network === 'nat') {
     args.push('-netdev', 'user,id=net0');
-    args.push('-device', 'virtio-net-pci,netdev=net0');
+    // id=nic0 lets QMP `set_link nic0 off` cut the network mid-run (cos/testenv:
+    // dependencies install online, then the tests run with the cable pulled).
+    args.push('-device', 'virtio-net-pci,netdev=net0,id=nic0');
   } else {
     // 'none' — matches archetype default (isolated: true). No -netdev at
     // all means no network device is even presented to the guest.
@@ -385,6 +397,23 @@ function buildQemuArgs(vmConfig, compartmentId, name) {
       share = { kind: 'vvfat' };
     }
   }
+  // §0.39.264 — a read-only raw disk the guest reads with `tar -xf /dev/vdb`
+  // (cos/testenv/tar.js). Works on every host QEMU runs on, unlike 9p.
+  if (vmConfig.shareDisk) {
+    args.push('-drive', `file=${vmConfig.shareDisk},format=raw,if=virtio,readonly=on`);
+    share = { kind: 'disk', device: '/dev/vdb' };
+  }
+  // A base can be a kernel + initramfs pair instead of a bootable disk (a test
+  // VM's manifest "boot": { kernel, initrd, append }) — direct kernel boot.
+  if (vmConfig.kernel) {
+    args.push('-kernel', vmConfig.kernel);
+    if (vmConfig.initrd) args.push('-initrd', vmConfig.initrd);
+    if (vmConfig.append) args.push('-append', String(vmConfig.append));
+  }
+  // cloud-init NoCloud seed over the user-mode network (cos/testenv/provision.js)
+  if (vmConfig.smbiosSerial) args.push('-smbios', `type=1,serial=${vmConfig.smbiosSerial}`);
+  // the guest's console, to a file — what the setup shows while a base image is made
+  if (vmConfig.serialLog) args.push('-serial', `file:${vmConfig.serialLog}`);
   args.push('-pidfile', path.join(vmConfig.vmStateDir, 'qemu.pid'));
   return { args, qmp, qga, share, vncDisplayNum, accel, accelReason: reason };
 }
@@ -517,7 +546,7 @@ function resolveSpawnSpec(opts) {
   const { args, qmp, vncDisplayNum, accel, accelReason } = buildQemuArgs(vmConfig, compartmentId, name);
 
   return {
-    bin: QEMU_BIN,
+    bin: qemuSystemBin(),
     args,
     extra: { vmConfig, qmp, vncDisplayNum, accel, accelReason },
   };
@@ -618,7 +647,7 @@ function reapOrphan(vmStateDir) {
 }
 
 module.exports = {
-  QEMU_BIN, QEMU_IMG_BIN,
+  QEMU_BIN, QEMU_IMG_BIN, qemuSystemBin, qemuImgBin,
   QemuRuntimeError,
   QMPClient,
   pickAccelerator,

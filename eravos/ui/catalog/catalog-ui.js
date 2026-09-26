@@ -63,7 +63,7 @@ function init(mountEl) {
   const createBtn = document.createElement('button');
   createBtn.className = 'eravos-catalog-btn';
   createBtn.textContent = '+ NEW';
-  createBtn.title = 'Download a starter mod scaffold';
+  createBtn.title = 'Start a new mod in Idearium — as an idea or a spec';
   createBtn.addEventListener('click', _openCreateFlow);
 
   const closeBtn = document.createElement('button');
@@ -300,7 +300,57 @@ function _openNeedsPrompt(o) {
   document.body.appendChild(overlay);
 }
 
-/* ── Create new mod scaffold ─────────────────────────── */
+/* ── New mod → an Idearium idea or spec ─────────────────
+   0.39.264 — James: "instead of download, it should create a idea or spec for
+   a new mod." The old flow downloaded a starter engine.js + schema.json
+   (superseded; it is in git history at 34c7753). A new mod now starts where
+   every other piece of work starts: as an idea in Idearium, or straight away as
+   a spec — which Idearium makes into a repo with its own COS compartment.
+
+   Inside Idearium (this page is its Build › Eravos frame) the request goes to
+   the parent page by postMessage, and Idearium does it with its own API and
+   opens the result (the new idea, or the New Spec dialog filled in). Standalone,
+   the page calls Idearium's API itself (base: localStorage 'eravos.idearium.base',
+   default http://127.0.0.1:4800) and opens Idearium on the result.            */
+
+function _ideariumBase() {
+  try { return (localStorage.getItem('eravos.idearium.base') || 'http://127.0.0.1:4800').replace(/\/+$/, ''); }
+  catch (_) { return 'http://127.0.0.1:4800'; }
+}
+
+function _describe(o) {
+  return `ERAVOS mod: ${o.label} (${o.id})` + (o.what ? ` — ${o.what}` : '')
+    + `\n\nConvention: mods/${o.id}/ with ${o.id}.engine.js (mount(instanceId, sBus, audio, config) → { unmount }),`
+    + ` registered in KERNEL.registry with hooks ${o.id}.hook.in / ${o.id}.hook.out, and schema.json for its input/output payloads.`
+    + ` Category: ${o.category}. Icon: ${o.icon}.`;
+}
+
+async function _createInIdearium(mode, o, statusEl) {
+  const payload = { type: 'nexus:organism.create', mode, kind: 'mod', organism: o, text: _describe(o),
+                    tags: ['eravos', 'mod', `mod:${o.id}`, `category:${o.category}`] };
+  // Embedded in Idearium: it owns ideas and specs, so it does the work and navigates.
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage(payload, '*');
+    return { handedOff: true };
+  }
+  // Standalone: call Idearium directly.
+  const base = _ideariumBase();
+  const post = async (p, body) => {
+    const r = await fetch(base + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status} from ${p}`);
+    return j.data || j;
+  };
+  statusEl.textContent = 'creating the idea in Idearium…';
+  const made = await post('/api/ideas', { text: payload.text, tags: payload.tags });
+  const idea = made.idea || made;
+  if (mode === 'spec') {
+    statusEl.textContent = 'making it a spec (and its repo)…';
+    await post('/api/spec-engine/specs', { name: o.label, description: payload.text, ideaUuid: idea.uuid, fileTree: false });
+  }
+  window.open(`${base}/ui/idearium/`, '_blank');
+  return { idea };
+}
 
 function _openCreateFlow() {
   const overlay = document.createElement('div');
@@ -311,19 +361,20 @@ function _openCreateFlow() {
 
   const title = document.createElement('div');
   title.style.cssText = 'font-family:var(--orb);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--accent);';
-  title.textContent = 'NEW MOD SCAFFOLD';
+  title.textContent = 'NEW MOD';
 
   const desc = document.createElement('div');
   desc.style.cssText = 'font-family:var(--mono);font-size:7px;color:var(--dim2);line-height:1.6;';
-  desc.textContent = 'Downloads a starter engine.js + schema.json that matches the ERAVOS mod convention. Drop them into mods/<id>/ and build from there.';
+  desc.textContent = 'Starts the mod in Idearium: as an idea to grow, or straight away as a spec — a repo with its own compartment, built to the ERAVOS mod convention (mods/<id>/).';
 
-  function mkField(labelText, placeholder, id) {
+  function mkField(labelText, placeholder, id, multiline) {
     const wrap = document.createElement('label');
     wrap.style.cssText = 'font-family:var(--mono);font-size:7px;color:var(--dim);letter-spacing:.08em;display:flex;flex-direction:column;gap:3px;';
     wrap.textContent = labelText;
-    const inp = document.createElement('input');
+    const inp = document.createElement(multiline ? 'textarea' : 'input');
     inp.id = id; inp.placeholder = placeholder;
-    inp.style.cssText = 'width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:3px;color:var(--white);font-family:var(--mono);font-size:9px;padding:6px 8px;';
+    if (multiline) inp.rows = 3;
+    inp.style.cssText = 'width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:3px;color:var(--white);font-family:var(--mono);font-size:9px;padding:6px 8px;resize:vertical;';
     wrap.appendChild(inp);
     return wrap;
   }
@@ -332,119 +383,58 @@ function _openCreateFlow() {
   box.appendChild(desc);
   box.appendChild(mkField('ID (kebab-case)', 'my-mod', '_create-id'));
   box.appendChild(mkField('LABEL', 'My Mod', '_create-label'));
+  box.appendChild(mkField('WHAT IT DOES', 'one or two sentences — this becomes the idea', '_create-what', true));
   box.appendChild(mkField('ICON', '◆', '_create-icon'));
   box.appendChild(mkField('CATEGORY', 'Custom', '_create-cat'));
 
+  const status = document.createElement('div');
+  status.style.cssText = 'font-family:var(--mono);font-size:7px;color:var(--dim2);min-height:9px;';
+
+  const read = () => ({
+    id:       (document.getElementById('_create-id')?.value    || 'my-mod').trim().replace(/\s+/g, '-').toLowerCase(),
+    label:    (document.getElementById('_create-label')?.value || 'My Mod').trim(),
+    what:     (document.getElementById('_create-what')?.value  || '').trim(),
+    icon:     (document.getElementById('_create-icon')?.value  || '◆').trim(),
+    category: (document.getElementById('_create-cat')?.value   || 'Custom').trim(),
+  });
+  const close = () => { if (overlay.parentNode) document.body.removeChild(overlay); };
+  const go = async (mode, btn) => {
+    const o = read();
+    if (!/^[a-z0-9][a-z0-9-]*$/.test(o.id)) { status.style.color = 'var(--red,#f66)'; status.textContent = 'ID must be kebab-case: letters, digits and dashes'; return; }
+    btn.disabled = true; status.style.color = ''; status.textContent = 'sending to Idearium…';
+    try { await _createInIdearium(mode, o, status); close(); }
+    catch (e) { btn.disabled = false; status.style.color = 'var(--red,#f66)'; status.textContent = `Idearium did not take it: ${e.message} — is Idearium running at ${_ideariumBase()}?`; }
+  };
+
   const btns = document.createElement('div');
   btns.style.cssText = 'display:flex;gap:8px;margin-top:4px;';
-
-  const dlBtn = document.createElement('button');
-  dlBtn.style.cssText = 'flex:1;background:var(--accent);border:none;color:#000;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.08em;padding:8px;border-radius:4px;cursor:pointer;';
-  dlBtn.textContent = '⬇ DOWNLOAD SCAFFOLD';
-  dlBtn.addEventListener('click', () => {
-    const id       = (document.getElementById('_create-id')?.value    || 'my-mod').trim().replace(/\s+/g, '-').toLowerCase();
-    const label    = (document.getElementById('_create-label')?.value  || 'My Mod').trim();
-    const icon     = (document.getElementById('_create-icon')?.value   || '◆').trim();
-    const category = (document.getElementById('_create-cat')?.value    || 'Custom').trim();
-
-    // Generate engine.js scaffold
-    const engineSrc = `/* ═══════════════════════════════════════════════════════════
-   MOD: ${label.toUpperCase()}  v0.1.0
-   id: ${id}
-   ═══════════════════════════════════════════════════════════ */
-
-window.${_toCamelCase(id)}Engine = (() => {
-'use strict';
-
-function mount(instanceId, sBus, audio, config = {}) {
-  const gBus = KERNEL.bus;
-
-  // Register mod in KERNEL registry
-  KERNEL.registry.register({
-    instanceId,
-    id: '${id}',
-    label: '${label}',
-    icon: '${icon}',
-    hooks: [
-      { hook_id: '${id}.hook.out', direction: 'out', event_type: '${id}:output', contract_version: '1.0.0' },
-      { hook_id: '${id}.hook.in',  direction: 'in',  event_type: '${id}:input',  contract_version: '1.0.0' },
-    ],
-    provides: [],
-    requires: [],
-    permissions: [],
-  });
-
-  // Subscribe to transport
-  const unsubPlay = sBus.subscribe('transport:play',  () => _start());
-  const unsubStop = sBus.subscribe('transport:stop',  () => _stop());
-
-  function _start() {
-    // TODO: start logic
-  }
-
-  function _stop() {
-    // TODO: stop logic
-  }
-
-  // Sync state to UI
-  function _sync(state) {
-    sBus.publish('org:state_sync', state);
-  }
-
-  return {
-    unmount() {
-      unsubPlay();
-      unsubStop();
-      KERNEL.registry.unregister(instanceId);
-    },
+  const mkBtn = (text, primary, onClick) => {
+    const b = document.createElement('button');
+    b.style.cssText = primary
+      ? 'flex:1;background:var(--accent);border:none;color:#000;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.08em;padding:8px;border-radius:4px;cursor:pointer;'
+      : 'flex:1;background:transparent;border:1px solid var(--accent);color:var(--accent);font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.08em;padding:8px;border-radius:4px;cursor:pointer;';
+    b.textContent = text;
+    b.addEventListener('click', () => onClick(b));
+    return b;
   };
-}
-
-return { mount };
-})();
-`;
-
-    const schemaSrc = JSON.stringify({
-      "$schema": "http://json-schema.org/draft-07/schema",
-      "title": label,
-      "description": `Schema for ${id} mod`,
-      "type": "object",
-      "properties": {
-        "output": { "type": "object", "description": "Output payload" },
-        "input":  { "type": "object", "description": "Input payload" }
-      }
-    }, null, 2);
-
-    _download(`${id}.engine.js`, engineSrc);
-    setTimeout(() => _download('schema.json', schemaSrc), 200);
-    document.body.removeChild(overlay);
-  });
+  const ideaBtn = mkBtn('✎ CREATE IDEA', true, (b) => go('idea', b));
+  const specBtn = mkBtn('▤ CREATE SPEC', false, (b) => go('spec', b));
 
   const cancelBtn = document.createElement('button');
   cancelBtn.style.cssText = 'background:transparent;border:1px solid var(--b2);color:var(--dim2);font-family:var(--mono);font-size:8px;letter-spacing:.08em;padding:8px 12px;border-radius:4px;cursor:pointer;';
   cancelBtn.textContent = 'CANCEL';
-  cancelBtn.addEventListener('click', () => document.body.removeChild(overlay));
+  cancelBtn.addEventListener('click', close);
 
-  overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
 
-  btns.appendChild(dlBtn);
+  btns.appendChild(ideaBtn);
+  btns.appendChild(specBtn);
   btns.appendChild(cancelBtn);
   box.appendChild(btns);
+  box.appendChild(status);
   overlay.appendChild(box);
   document.body.appendChild(overlay);
 }
 
-function _download(filename, content) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function _toCamelCase(id) {
-  return id.split('-').map((s, i) => i === 0 ? s : s[0].toUpperCase() + s.slice(1)).join('');
-}
-
-return { init, open, close, toggle, refresh, isOpen };
+return { init, open, close, toggle, refresh, isOpen, createInIdearium: _createInIdearium, describe: _describe };
 })();

@@ -753,6 +753,8 @@ const CAPS = {
 // Route → required capability
 const ROUTE_CAP = {
   'health':           null,              // public — no auth required
+  'cos.testenv.status': CAPS.READ_IDEAS,
+  'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
   'contract.get':     null,              // public — contract is always readable
   'stats.get':        null,              // public — non-sensitive, required by boot verify (§1.2 HALT fix)
   'snr.current':      CAPS.READ_IDEAS,
@@ -1087,6 +1089,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','run'],                   'repo.run'],
     ['GET',    ['api','repos',    ':uuid','run','capabilities'],    'repo.run.capabilities'],
     ['GET',    ['api','repos',    ':uuid','run','options'],         'repo.run.options'],   // §0.39.261 — the COS run menu (lib/cos-run.js)
+    // §0.39.264 — the COS test VM: what is there, and setting it up from the run menu (cos/testenv/setup-job.js)
+    ['GET',    ['api','cos','testenv'],                          'cos.testenv.status'],
+    ['POST',   ['api','cos','testenv','setup'],                  'cos.testenv.setup'],
     // §0.39.261 — the repo's own idea (the Idea tab) and one place for what is wrong (the Debug tab)
     ['GET',    ['api','repos',    ':uuid','idea'],                          'repo.idea.get'],
     ['PATCH',  ['api','repos',    ':uuid','idea'],                          'repo.idea.update'],
@@ -2961,6 +2966,17 @@ async function handle(req, res, route, query, body) {
     // §0.39.261 — James: "the run button in cos to work fully … like a bunch of
     // options for cos." The menu is computed per repo (lib/cos-run.js): what can
     // run, and for what cannot, why.
+    // §0.39.264 — James: "i need help setting the vm up." The run menu's "Set up
+    // the test VM" starts cos/testenv/provision.js in the background and polls this.
+    case 'cos.testenv.status':
+      return ok(res, _require('../../cos/testenv/setup-job.js').status());
+    case 'cos.testenv.setup': {
+      const SJ = _require('../../cos/testenv/setup-job.js');
+      const st = SJ.start({ installQemu: !!body.installQemu, extras: Array.isArray(body.extras) ? body.extras : [], node: body.node || null });
+      os.emit('idearium.cos.testenv.setup', { state: st.state, args: st.args || null });
+      return ok(res, st);
+    }
+
     case 'repo.run.options': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
