@@ -42,7 +42,7 @@ test('T-005', 'null stays null — no fabricated edge', () => {
 });
 
 test('T-006', 'the guard is actually present in orchestrator.js (not just here)', () => {
-  const src = fs.readFileSync(path.join(__dirname, '../../orchestrator.js'), 'utf8');
+  const src = fs.readFileSync(path.join(__dirname, '../../orchestrator/orchestrator.js'), 'utf8');
   assert.ok(/rawCause === system\)\s*\?\s*null\s*:\s*rawCause/.test(src),
     'orchestrator.js ledgerWrite must null self-causedBy');
 });

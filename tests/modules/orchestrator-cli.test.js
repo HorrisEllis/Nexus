@@ -42,7 +42,7 @@ async function runAll() {
 let currentHandler = (req, res) => { res.writeHead(404); res.end('{}'); };
 const fakeCortex = http.createServer((req, res) => currentHandler(req, res));
 
-// §BUGFIX 2026-08-25 — was '../../orchestrator.js'. orchestrator.js was
+// §BUGFIX 2026-08-25 — was '../../orchestrator/orchestrator.js'. orchestrator.js was
 // moved to orchestrator/orchestrator.js during this session's own BL11
 // (repo-root file consolidation) — this test file was missed in that
 // move's own consumer trace at the time. Every one of this file's 11

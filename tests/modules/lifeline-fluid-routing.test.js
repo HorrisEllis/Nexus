@@ -1,4 +1,6 @@
 'use strict';
+// §0.39.282 — route() persists through lib/chat-logger (NEXUS_DATA_ROOT): sandboxed, or it writes data/copilot/ for real.
+require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
 const { EventEmitter } = require('events');
 

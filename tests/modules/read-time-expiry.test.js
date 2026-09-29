@@ -42,12 +42,13 @@ test('RX-4', 'ISO-string timestamps parse as well as epoch numbers', () => {
 });
 
 test('RX-5', 'an untracked table is left alone', () => {
-  const r = D.isExpired('memory_unified', { ts: hAgo(9999) }, NOW);
+  const r = D.isExpired('a_table_no_tier_names', { ts: hAgo(9999) }, NOW);
   assert.strictEqual(r.expired, false);
   assert.ok(/not tier-managed/.test(r.reason));
-  // memory_unified is the corpus push-recall actually searches, and it is
-  // outside TABLE_TIERS entirely. Recorded here so the gap has a test.
-  assert.strictEqual(TABLE_TIERS.memory_unified, undefined);
+  // §0.39.282 — this used memory_unified, the gap it recorded ("outside TABLE_TIERS entirely"). That gap is closed:
+  // cortex/memory/tiers.js puts memory_unified in the 'long' tier (current memory, never expires). Pinned here.
+  assert.strictEqual(TABLE_TIERS.memory_unified, 'long');
+  assert.strictEqual(D.isExpired('memory_unified', { ts: hAgo(9999) }, NOW).expired, false);
 });
 
 test('RX-6', 'liveRows applies the same predicate, and drops tombstones too', () => {

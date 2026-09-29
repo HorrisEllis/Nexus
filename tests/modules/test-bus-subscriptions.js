@@ -186,7 +186,7 @@ test('T-B1-012', 'publishPeriodically publishes immediately and returns an unref
 test('T-B1-013', 'PUBLISHERS ARE WIRED: cortex and orchestrator both start the publisher, and both do it AFTER their listeners exist', () => {
   const fs2 = require('fs');
   const cortex = fs2.readFileSync(path.join(__dirname, '../../cortex/boot.js'), 'utf8');
-  const orch   = fs2.readFileSync(path.join(__dirname, '../../orchestrator.js'), 'utf8');
+  const orch   = fs2.readFileSync(path.join(__dirname, '../../orchestrator/orchestrator.js'), 'utf8');
 
   assert.ok(/_startSubscriptionPublisher\(\)/.test(cortex), 'cortex must call the publisher');
   assert.ok(/publishPeriodically\(\{\s*systemId: SYSTEM/.test(cortex), 'cortex must publish under its own SYSTEM id');
@@ -204,7 +204,7 @@ test('T-B1-013', 'PUBLISHERS ARE WIRED: cortex and orchestrator both start the p
 
 test('T-B1-014', 'a publisher failing to start can never take its system down — both wirings contain the failure loudly', () => {
   const fs2 = require('fs');
-  for (const [name, file] of [['cortex', '../../cortex/boot.js'], ['orchestrator', '../../orchestrator.js']]) {
+  for (const [name, file] of [['cortex', '../../cortex/boot.js'], ['orchestrator', '../../orchestrator/orchestrator.js']]) {
     const src = fs2.readFileSync(path.join(__dirname, file), 'utf8');
     const fn = src.slice(src.indexOf('function _startSubscriptionPublisher'), src.indexOf('function _startSubscriptionPublisher') + 900);
     assert.ok(/try\s*\{/.test(fn) && /catch/.test(fn), `${name}'s publisher must be try/caught — observability must never block boot`);
