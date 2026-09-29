@@ -16,7 +16,7 @@ import WebSocket, { WebSocketServer }     from "ws";
 import { randomUUID }                     from "crypto";
 
 import { ErosmancerOS }                   from "../index.ts";
-import { BehaviorEngine, BEHAVIOR_PROFILES } from "../behavior/index.ts";
+import { BehaviorEngine, BEHAVIOR_PROFILES, curvedPath } from "../behavior/index.ts";
 import { RoutingEngine }                  from "../routing/index.ts";
 import { DOMObserver, ShadowDOMMapper }   from "../observer/index.ts";
 import { ScriptReplayQueue }              from "../replay/index.ts";
@@ -357,6 +357,44 @@ function gauss(mu: number, sigma: number): number {
   return mu + sigma * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+// ─── /api/input — 0.39.279: a virtual pointer at coordinates ─────────────────
+// James: "copilot interact on clearglass using a virtual input through erosmanceros … a interaction field for xyz
+// coords". Clear Glass's driver (pointer via "eros") sends the x/y of a field target; this moves a real CDP cursor to
+// it along the behaviour engine's curved path, then presses / double-clicks / right-clicks / scrolls / types.
+// { tabId, x, y, action: move|click|double|right|scroll|type, text?, deltaY? } -> { ok, x, y, action, steps }
+const _lastPointer = new Map<string, { x: number; y: number }>();
+app.post("/api/input", async (req, res) => {
+  if (!requireOS(res)) return;
+  const { tabId, x, y, action = "click", text, deltaY = 300 } = req.body ?? {};
+  if (!tabId) { res.status(400).json({ ok: false, error: "tabId required" }); return; }
+  if (![x, y].every(v => typeof v === "number" && Number.isFinite(v))) { res.status(400).json({ ok: false, error: "x and y (numbers, viewport pixels) required" }); return; }
+  if (!["move", "click", "double", "right", "scroll", "type"].includes(action)) { res.status(400).json({ ok: false, error: `action must be move|click|double|right|scroll|type` }); return; }
+  if (action === "type" && typeof text !== "string") { res.status(400).json({ ok: false, error: "action type needs text" }); return; }
+  try {
+    let sid = getSession(tabId);
+    if (!sid) sid = await os!.attachTab(tabId);
+    const cdp = <T = any>(method: string, params?: Record<string, unknown>) => os!.bridge.send<T>(method, params, sid);
+    const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
+    const path = curvedPath(_lastPointer.get(tabId) ?? null, { x, y }, action === "move" ? 18 : 12);
+    for (const p of path) { await cdp("Input.dispatchMouseEvent", { type: "mouseMoved", x: p.x, y: p.y, button: "none" }); await wait(8 + Math.random() * 10); }
+    _lastPointer.set(tabId, { x, y });
+    const press = async (button: string, clickCount: number) => {
+      await cdp("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button, clickCount });
+      await wait(45 + Math.random() * 45);
+      await cdp("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button, clickCount });
+    };
+    if (action === "click" || action === "type") await press("left", 1);
+    else if (action === "double") { await press("left", 1); await wait(60); await press("left", 2); }
+    else if (action === "right") await press("right", 1);
+    else if (action === "scroll") await cdp("Input.dispatchMouseEvent", { type: "mouseWheel", x, y, deltaX: 0, deltaY: Number(deltaY) || 300 });
+    if (action === "type") { await wait(80); for (const ch of String(text)) { await cdp("Input.insertText", { text: ch }); await wait(25 + Math.random() * 40); } }
+    push({ type: "input", tabId, x, y, action });
+    res.json({ ok: true, x, y, action, steps: path.length });
+  } catch (e) {
+    res.status(502).json({ ok: false, error: (e as Error).message });
+  }
+});
 
 app.post("/api/human-type", async (req, res) => {
   if (!requireOS(res)) return;

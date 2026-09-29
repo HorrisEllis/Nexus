@@ -80,6 +80,12 @@ class ClearDriver {
       case 'setValue':       return this._setValue(agentId, args);
       case 'pressKey':       return this._pressKey(agentId, args);
       case 'upload':         return this._upload(agentId, args);
+      // §0.39.279 — the interaction field (src/page/field.js): see the page as numbered x/y/z targets, point at one
+      case 'field':          return this._field(agentId, args);
+      case 'fieldOff':       return this._fieldOff(agentId);
+      case 'at':             return this._at(agentId, args);
+      case 'spotlight':      return this._spotlight(agentId, args);
+      case 'pointer':        return this._pointer(agentId, args);
       default:
         throw new Error(`Unknown driver action: ${action}`);
     }
@@ -743,6 +749,119 @@ class ClearDriver {
 
   async _evalJs(wc, code, worldId) {
     return wc.executeJavaScript(code, true);
+  }
+
+  // ── The interaction field (§0.39.279) ─────────────────────────────────
+  // James: "a interaction field for xyz coords to help the agents see and navigate the ui in clearglass … virtual
+  // input through erosmanceros … spotlight injected css". field() maps the page into numbered targets (box, centre, z =
+  // layers covering it) and can draw them; pointer() acts on a target number or x/y with a real input event — native
+  // (webContents.sendInputEvent, a curved human-paced path) or through ErosmancerOS (CDP Input.*, its behaviour engine's
+  // own path), after a spotlight on the target so James sees what is about to be pressed. The last field per agent is
+  // kept so "pointer n:3" needs no second read.
+  _fieldMaps() { return this.__fieldMaps || (this.__fieldMaps = new Map()); }
+  _pointerAt() { return this.__pointerAt || (this.__pointerAt = new Map()); }
+
+  async _field(agentId, { overlay = false, grid, max, offscreen, limit, all } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const F = require('../page/field');
+    const opts = Object.fromEntries(Object.entries({ overlay: !!overlay, grid, max, offscreen }).filter(([, v]) => v !== undefined));
+    const map = await this._evalJs(wc, F.fieldScript(opts));
+    this._fieldMaps().set(agentId, { ...map, at: Date.now() });
+    try { this.sse.emit('field.map', { agentId, url: map.url, targets: map.targets.length, overlay: map.overlay, ts: Date.now() }); } catch (_) {}
+    return { ...map, text: F.describe(map, { limit: limit || 60, all: !!all }) };
+  }
+
+  async _fieldOff(agentId) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    return this._evalJs(wc, require('../page/field').fieldOffScript());
+  }
+
+  async _at(agentId, { x, y, limit } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (![x, y].every(Number.isFinite)) throw new Error('at requires x and y (viewport pixels)');
+    return this._evalJs(wc, require('../page/field').atScript({ x, y, limit }));
+  }
+
+  async _spotlight(agentId, { n, selector, x, y, w, h, label, ttl, color, dim, off } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const F = require('../page/field');
+    let opts = { selector, x, y, w, h, label, ttl, color, dim, off };
+    if (n !== undefined && !selector) {
+      const t = F.target(this._fieldMaps().get(agentId), n);
+      if (!t) throw new Error(`no target #${n} — call field first`);
+      opts = { ...opts, selector: t.selector, label: label || `#${t.n} ${t.name || t.tag}` };
+    }
+    const r = await this._evalJs(wc, F.spotlightScript(opts));
+    try { this.sse.emit('field.spotlight', { agentId, ...opts, ok: r && r.ok, ts: Date.now() }); } catch (_) {}
+    return r;
+  }
+
+  /**
+   * pointer({ n | x,y | selector, do: 'move'|'click'|'double'|'right'|'scroll'|'type', text, deltaY, via, spotlight })
+   * (`do`, not `action`: the driver command's own name is already `action` — 'pointer')
+   * via 'native' (default) — sendInputEvent along a curved path from where the pointer last was;
+   * via 'eros' — ErosmancerOS's /api/input over the DevTools protocol (this.erosInput, wired by main/index.js).
+   */
+  async _pointer(agentId, { n, x, y, selector, do: action = 'click', text, deltaY = 300, via = 'native', spotlight = true, label } = {}) {
+    if (!['move', 'click', 'double', 'right', 'scroll', 'type'].includes(action)) throw new Error(`pointer "do" must be move|click|double|right|scroll|type, not "${action}"`);
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const F = require('../page/field');
+    let tgt = null;
+    if (n !== undefined) {
+      tgt = F.target(this._fieldMaps().get(agentId), n);
+      if (!tgt) throw new Error(`no target #${n} — call field first (the map is per page; call it again after the page changes)`);
+      if (tgt.z < 0) throw new Error(`target #${n} is off-screen — scroll (pointer action "scroll") and call field again`);
+      x = tgt.cx; y = tgt.cy;
+    } else if (selector) {
+      const pos = await this._evalJs(wc, `(function(){ const el = document.querySelector(${JSON.stringify(selector)}); if (!el) return null;
+        el.scrollIntoView({ block: 'center', inline: 'center' }); const r = el.getBoundingClientRect(); return { x: Math.round(r.left + r.width/2), y: Math.round(r.top + r.height/2) }; })()`);
+      if (!pos) throw new Error(`Element not found: ${selector}`);
+      x = pos.x; y = pos.y;
+    }
+    if (![x, y].every(Number.isFinite)) throw new Error('pointer needs n (a field target), selector, or x and y');
+    // what is actually under the point: a covered target is reported, never silently clicked through
+    const under = await this._evalJs(wc, F.atScript({ x, y, limit: 3 })).catch(() => null);
+    if (spotlight && action !== 'move') {
+      await this._evalJs(wc, F.spotlightScript({ x: x - 14, y: y - 14, w: 28, h: 28, label: label || (tgt ? `#${tgt.n} ${action}` : `${action} (${x},${y})`), ttl: 1500, dim: false })).catch(() => {});
+      await this._sleep(250);
+    }
+    if (via === 'eros') {
+      if (typeof this.erosInput !== 'function') throw new Error('ErosmancerOS input is not wired in this Clear Glass (via "native" works without it)');
+      let url = null; try { url = wc.getURL(); } catch (_) {}
+      const r = await this.erosInput(agentId, url, { x, y, action, text, deltaY });
+      return { via: 'eros', x, y, action, target: tgt ? { n: tgt.n, name: tgt.name } : null, under: under && under.stack, result: r };
+    }
+    const from = this._pointerAt().get(agentId);
+    for (const p of F.pointerPath(from, { x, y }, { steps: action === 'move' ? 18 : 12 })) {
+      wc.sendInputEvent({ type: 'mouseMove', x: p.x, y: p.y });
+      await this._sleep(8 + Math.random() * 10);
+    }
+    this._pointerAt().set(agentId, { x, y });
+    const press = async (button, clickCount) => {
+      wc.sendInputEvent({ type: 'mouseDown', x, y, button, clickCount });
+      await this._sleep(45 + Math.random() * 45);
+      wc.sendInputEvent({ type: 'mouseUp', x, y, button, clickCount });
+    };
+    if (action === 'click' || action === 'type') await press('left', 1);
+    else if (action === 'double') { await press('left', 1); await this._sleep(60); await press('left', 2); }
+    else if (action === 'right') await press('right', 1);
+    // a positive deltaY moves the page DOWN (Electron's wheel delta is the opposite sign)
+    else if (action === 'scroll') wc.sendInputEvent({ type: 'mouseWheel', x, y, deltaX: 0, deltaY: -deltaY, wheelTicksX: 0, wheelTicksY: deltaY > 0 ? -1 : 1 });
+    if (action === 'type') {
+      if (typeof text !== 'string') throw new Error('pointer action "type" needs text');
+      await this._sleep(80);
+      for (const ch of text) {
+        wc.sendInputEvent({ type: 'char', keyCode: ch });
+        await this._sleep(25 + Math.random() * 40);
+      }
+    }
+    return { via: 'native', x, y, action, target: tgt ? { n: tgt.n, name: tgt.name, z: tgt.z } : null, under: under && under.stack,
+      covered: !!(tgt && tgt.z > 0), note: tgt && tgt.z > 0 ? `#${tgt.n} is covered by ${tgt.z} layer(s) — the event went to what is on top (see under)` : undefined };
   }
 
   _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

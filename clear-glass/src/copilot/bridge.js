@@ -835,7 +835,9 @@ ${toolsPrompt}${domSection}`;
       ['nav.loading', 'nav.loaded', 'driver.result', 'driver.error',
        'dom.tokens.result', 'url.match', 'mesh.task.complete', 'mesh.error',
        'diag.complete', 'context.created', 'provider.host.started',
-       'bookmarks.added', 'rewind.snapshotted', 'cookie.health.result'].forEach(forward);
+       'bookmarks.added', 'rewind.snapshotted', 'cookie.health.result',
+       // 0.39.279 — the interaction field: NEXUS's nerve sees what an agent mapped and pointed at, as it happens
+       'field.map', 'field.spotlight'].forEach(forward);
     } catch (_) {}
   }
 
@@ -892,6 +894,7 @@ CoPilotBridge.DRIVER_ACTIONS = new Set([
   'screenshot', 'toast', 'eval', 'zoom', 'findInPage', 'stopFindInPage', 'print', 'getUrl', 'getTitle', 'back', 'forward',
   'reload', 'cookies.get', 'cookies.set', 'cookies.clear', 'storage.get', 'storage.set', 'network.block',
   'network.intercept', 'picker.enable', 'picker.disable', 'inject', 'record.start', 'record.stop', 'readPage',
+  'field', 'fieldOff', 'at', 'spotlight', 'pointer',   // 0.39.279 — the interaction field (src/page/field.js)
 ]);
 
 module.exports = CoPilotBridge;

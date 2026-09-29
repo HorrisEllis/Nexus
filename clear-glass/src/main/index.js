@@ -611,6 +611,10 @@ function _startAutopilotActivityHeartbeat() {
 
 let _wireServer = null;
 
+// §0.39.279 — the driver's "pointer via eros" (src/driver/index.js _pointer) reaches ErosmancerOS through the wire's
+// own tab resolver; set by _startWire, read by the driver. Null until the wire is up.
+let _erosInputFn = null;
+
 async function _startWire() {
   // ── ErosmancerOS proxy helper — defined first, needed for /api/connect ──
   function _proxyEros(method, urlPath, body, timeout = 15000) {
@@ -707,6 +711,15 @@ async function _startWire() {
     _agentTabCache.set(agentId, entry);
     return entry;
   }
+
+  _erosInputFn = async (agentId, currentUrl, { x, y, action = 'click', text, deltaY } = {}) => {
+    if (erosSupervisor && !erosSupervisor.connected) { try { await erosSupervisor.connect({ tries: 2 }); } catch (_) {} }
+    const tab = await _resolveErosTab(agentId, currentUrl);
+    if (!tab || !tab.tabId) throw new Error('No ErosmancerOS tab for this agent — is ErosmancerOS connected to Clear Glass (Settings → ErosmancerOS)?');
+    const up = await _proxyEros('POST', '/api/input', { tabId: tab.tabId, x, y, action, text, deltaY }, 60000);
+    if (up.status >= 400) throw new Error((up.body && up.body.error) || `ErosmancerOS /api/input ${up.status}`);
+    return up.body;
+  };
 
   // ── HTTP server ──────────────────────────────────────────────────────────
   _wireServer = http.createServer((req, res) => {
@@ -1216,6 +1229,7 @@ async function bootstrap() {
 
   // 6. ClearDriver — sovereign automation, no Playwright
   driver = new ClearDriver({ ctxMgr, dom, vault, sse: { emit: (t, d) => emit(t, d) } });
+  driver.erosInput = (...a) => (_erosInputFn ? _erosInputFn(...a) : Promise.reject(new Error('the ErosmancerOS wire is not started yet')));
 
   // 7. URL listener — glob/regex per-agent request hooks
   urlListener = new UrlListener({ sse: { emit: (t, d) => emit(t, d) }, ctxMgr });

@@ -18,6 +18,12 @@
  */
 
 const TOOLS = [
+  // ── The interaction field (0.39.279) — see the page as numbered x/y/z targets, then act on a number ──
+  { name: 'field',            cat: 'field',    desc: 'Map the page: every clickable/typable thing numbered, with centre (x,y) and z (0 = on top; >0 = covered). overlay:true draws the numbers', params: { overlay: 'boolean?', offscreen: 'boolean?' } },
+  { name: 'pointer',          cat: 'field',    desc: 'Act on field target n (or x,y): do click|double|right|move|scroll|type (text), via native|eros (human-paced ErosmancerOS input)', params: { n: 'number?', x: 'number?', y: 'number?', do: 'string?', text: 'string?', via: 'string?' } },
+  { name: 'at',               cat: 'field',    desc: 'What is under a point, top layer first', params: { x: 'number', y: 'number' } },
+  { name: 'spotlight',        cat: 'field',    desc: 'Show James what you are looking at: a ring + label on target n / selector / x,y,w,h (off:true clears)', params: { n: 'number?', selector: 'string?', label: 'string?' } },
+  { name: 'fieldOff',         cat: 'field',    desc: 'Remove the drawn field and spotlight', params: {} },
   // ── Browser ────────────────────────────────────────────────────────────
   { name: 'navigate',         cat: 'browser',  desc: 'Navigate to URL', params: { url: 'string', agentId: 'string?' } },
   { name: 'click',            cat: 'browser',  desc: 'Click element by selector or coords', params: { selector: 'string?', x: 'number?', y: 'number?' } },
