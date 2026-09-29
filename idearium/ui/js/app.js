@@ -3618,6 +3618,14 @@ function openRepoDesktop(repoUuid) {
   if (!w) toast('the desktop window was blocked — allow pop-ups for idearium', 'err');
 }
 
+// §0.39.279 — the settings console (ui/settings.html): idearium's config and every repo's agent / prompt / hat /
+// compartment / desktop settings in one window, served by idearium itself.
+function openSettingsConsole(repoUuid) {
+  if (!API_BASE) { toast('idearium is offline — the settings console is served by it', 'err'); return; }
+  const w = window.open(`${API_BASE}/settings.html${repoUuid ? `?repo=${encodeURIComponent(repoUuid)}` : ''}`, 'idearium-settings', 'width=1280,height=900');
+  if (!w) toast('the settings window was blocked — allow pop-ups for idearium', 'err');
+}
+
 function renderRepoSettings(repo) {
   const el = document.getElementById('repo-subtab-settings');
   if (!el) return;
@@ -3631,7 +3639,7 @@ function renderRepoSettings(repo) {
     <div class="ds"><div class="ds-label">environment</div><div class="ds-mono">${escapeHtml(branchLine)}</div>
       <div class="action-row">
         ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button>` : ''}
-        <button class="action-btn" onclick="setView('settings-console')" title="Every compartment and agent setting in one place">⚙ settings console</button>
+        <button class="action-btn" onclick="openSettingsConsole('${repo.uuid}')" title="Every compartment and agent setting in one place">⚙ settings console</button>
       </div></div>
     <div class="ds"><div class="ds-label">agent / provenance</div><div class="ds-mono">source ${escapeHtml(repo.source || 'unknown')}\nspec ${repo.specUuid || '—'}\nidea ${repo.ideaUuid || '—'}\npromoted from ${repo.promotedFromSpec || '—'}</div></div>
     <div class="ds"><div class="ds-label">repository</div>

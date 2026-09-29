@@ -140,6 +140,18 @@ const SCHEMA = {
     import_baseline: { default: true, copilot_writable: true, type: 'boolean' },
   },
 
+  // §0.39.279 — James: "each new repo, if applicable could create a branch of the original, to save resources …
+  // open it like a desktop environment". How a code repo is made (a branch of the original — cos/workspace — or a
+  // separate copy), and what a repo's desktop VM gets (cos/workspace startDesktop). The settings console edits these.
+  repos: {
+    code_repo_mode: { default: 'branch', enum: ['branch', 'copy'], copilot_writable: true, type: 'string' },
+  },
+  desktop: {
+    ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },
+    cpus:    { default: 2, min: 1, max: 32, copilot_writable: true, type: 'number' },
+    network: { default: 'nat', enum: ['nat', 'none'], copilot_writable: true, type: 'string' },
+  },
+
   cicd: {
     push_enabled: { default: false, copilot_writable: true,  type: 'boolean' },
     pull_enabled: { default: false, copilot_writable: true,  type: 'boolean' },

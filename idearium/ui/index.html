@@ -785,6 +785,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
   <div class="tb-stat nest-only">ideas <span class="v sky" id="stat-ideas">—</span></div>
   <div class="tb-stat nest-only">specs <span class="v" id="stat-specs">—</span></div>
   <div class="tb-right">
+    <!-- §0.39.279 — the settings console: every idearium, compartment and agent setting in one window -->
+    <button class="tb-conn" style="cursor:pointer" title="Settings console — idearium, every repo's agent, prompt, hat, compartment and desktop" onclick="openSettingsConsole(typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO ? CURRENT_API_REPO.uuid : null)">⚙ settings</button>
     <div class="tb-conn offline" id="conn-indicator" onclick="nexusConnect(true)"><span class="dot"></span><span id="conn-label">connecting…</span></div>
   </div>
 </div>

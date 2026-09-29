@@ -158,7 +158,8 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
   await t('WS-23', 'idearium: the Code button makes a branch (worktree + child compartment) unless told not to; desktop routes; the viewer page', () => {
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     assert.match(api, /cosBridge\.branchWorkspace\(\{ originDir: _repoDiskDir\(_origin\.uuid\), name: manifest\.name \}\)/);
-    assert.match(api, /body\.branch !== false && process\.env\.IDEARIUM_CODE_REPO_MODE !== 'copy'/);
+    assert.match(api, /_origin && body\.branch !== false && _mode !== 'copy'/);
+    assert.match(api, /process\.env\.IDEARIUM_CODE_REPO_MODE \|\| .*getIdeariumValue\('repos\.code_repo_mode'\)/);
     assert.match(api, /parentId: parent/);
     assert.match(api, /materializeDir: branchInfo\.dir, branchOf: _origin\.uuid, branch: branchInfo\.branch/);
     for (const r of ["'repo.desktop.status'", "'repo.desktop.start'", "'repo.desktop.stop'", "'repo.branches'"]) assert.ok(api.includes(r), r);
