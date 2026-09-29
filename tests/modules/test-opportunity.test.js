@@ -365,6 +365,17 @@ async function run() {
     assert.deepStrictEqual([shown.skills, shown.minSalary], [['node', 'rust'], 100000]);
   });
 
+  // §0.39.282 — a .docx resume read through lib/zip-ingest.js (was adm-zip, a removed package: every .docx import failed)
+  await t('OP-DOCX', 'a .docx resume imports: text, email and suggested skills from word/document.xml, with no adm-zip', async () => {
+    const f = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'opp-docx-')), 'cv.docx');
+    require('child_process').execFileSync('python3', ['-c', `import zipfile;z=zipfile.ZipFile(${JSON.stringify(f)},'w');z.writestr('[Content_Types].xml','<Types/>');z.writestr('word/document.xml','<w:document><w:body><w:p><w:r><w:t>Jane Doe jane@example.com</w:t></w:r></w:p><w:p><w:r><w:t>Skills: javascript, react</w:t></w:r></w:p></w:body></w:document>');z.close()`]);
+    const r = await require('../../lib/opportunity/index.js').importResume(f);
+    assert.ok(r.ok, r.error);
+    assert.strictEqual(r.email, 'jane@example.com');
+    assert.ok(r.suggestedSkills.includes('javascript') && r.suggestedSkills.includes('react'));
+    assert.ok(!/require\(['"]adm-zip['"]\)/.test(fs.readFileSync(path.join(__dirname, '../../lib/opportunity/index.js'), 'utf8')));
+  });
+
   console.log(`\n${passed} passed, ${failed} failed`);
   try { require('../../cortex/memory/jaa-db.js').jaaDB._store().flushAll(); } catch (_) {}
   process.exit(failed ? 1 : 0);
