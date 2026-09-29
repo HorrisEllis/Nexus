@@ -153,7 +153,8 @@ const SCHEMA = {
     // (a new one, or never set) fell to a hard-coded chatgpt in lib/repo-agent.js defaultProvider(). This is who answers
     // for such a repo: ollama · auto (copilot decides) · a guardian agent name. Empty = the old behaviour (guardian's first
     // provider). Checked against the live provider list when read, not a fixed list here.
-    default_provider: { default: '', copilot_writable: false, type: 'string' },
+    // §0.39.282 — James: "Ollama should be default I feel like." A repo with no provider of its own goes to ollama.
+    default_provider: { default: 'ollama', copilot_writable: false, type: 'string' },
   },
   desktop: {
     ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },
