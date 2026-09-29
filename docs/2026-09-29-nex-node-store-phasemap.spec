@@ -482,7 +482,7 @@ spec:
 
     N28_live_run_findings:
       layer: automation
-      status: OPEN
+      status: "(1) FIXED 0.39.282 — root cause measured: every lib/cos-bridge.js call built a whole new COS host (reload the entire state file, rebuild the system map, re-upsert every compartment, re-register every gate), and every mountPath rewrote the whole store even when nothing changed; ensureCompartments makes one or two calls per system dir. Now one host per process, reused while its state file is unchanged (another process's write or a new COS_DATA_ROOT reloads), and an identical remount is a no-op. Bench, 300 compartments / 510 KB state: unchanged compartments step 34–36 s → 1–2 ms. test-cos-mount-idempotent 8/8. Also fixed: a mount made writable again stayed in the read-only list. (2) spec drift: 0 (release 0.39.282). (3) ChatGPT sign-in: James's action. (4) RAID gate fail-open: waiting on James."
       depends_on: []
       does: >-
         From the live boot log: (1) idearium drops OFFLINE every 10 minutes during the nexus-self sync — the compartments

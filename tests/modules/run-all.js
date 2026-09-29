@@ -40,6 +40,7 @@ const SUITES = [
   'test-shadow.test.js',   // 0.39.282 N22 — a step's shadow (what must exist after it); every absence is a gap + a liminal item; manage/plan runs read incomplete
   'test-draft-review.test.js',   // 0.39.282 N23 — each chunk in a fresh chat; an Ollama draft is reviewed by a guardian agent in one plain conversation
   'test-import-history.test.js',   // 0.39.282 N27 — release zips → one dated snapshot commit each on history/snapshots, real .git history into refs/import, provenance in trailers, resumable
+  'test-cos-mount-idempotent.test.js',   // 0.39.282 N28 — one COS host per process; an identical remount is a no-op (idearium OFFLINE every 10 min: 34 s → 2 ms)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272
