@@ -113,7 +113,7 @@ spec:
 
     BS2_file_states:
       layer: library
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS2-01
       depends_on: []
       files: [idearium/repo/file-state.js, tests/modules/test-build-surface.test.js]
       does: >-
@@ -123,7 +123,7 @@ spec:
 
     BS3_baseline_deviation:
       layer: library
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS3-01
       depends_on: [BS2]
       files: [idearium/repo/deviation.js, tests/modules/test-build-surface.test.js]
       does: >-
@@ -134,7 +134,7 @@ spec:
 
     BS4_environment_check:
       layer: library
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS4-01, BS4-02
       depends_on: []
       files: [cos/testenv/environment.js, tests/modules/test-build-surface.test.js]
       does: >-
@@ -146,7 +146,7 @@ spec:
 
     BS5_spec_to_phasemap:
       layer: library
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS5-01…BS5-03
       depends_on: []
       files: [idearium/repo/spec-plan.js, tests/modules/test-build-surface.test.js]
       does: >-
@@ -158,7 +158,7 @@ spec:
 
     BS6_build_plan:
       layer: library
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS6-01
       depends_on: [BS5]
       files: [idearium/repo/build-plan.js, tests/modules/test-build-surface.test.js]
       does: >-
