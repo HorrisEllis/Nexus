@@ -174,6 +174,20 @@ async function main() {
       check('with no bridge the list is unavailable, with the reason — never a guessed list', okDown, JSON.stringify(down));
     }
   }
+  // §0.39.282 — James, live: "was supposed to be ollama, set in the settings." A repo with no provider of its own
+  // answers with the global choice (idearium config repos.default_provider → setDefaultProviderSource), never a literal.
+  {
+    const RAx = require('../../lib/repo-agent.js');
+    const fresh = `fresh-${Date.now()}`;
+    RAx.setDefaultProviderSource(() => 'ollama');
+    check('a repo with no settings row answers with the global default (ollama)', RAx.getProvider(fresh) === 'ollama', RAx.getProvider(fresh));
+    RAx.setDefaultProviderSource(() => 'no-such-provider');
+    check('a stale global default falls back to a live provider, never an unknown one', RAx.providers().includes(RAx.getProvider(fresh)));
+    RAx.setDefaultProviderSource(null);
+    const core = require('../../idearium/lib/config-core.cjs');
+    check('repos.default_provider is a real config key the settings console lists', core.resolve('repos.default_provider').def.type === 'string');
+    check('idearium registers the source at boot', /setDefaultProviderSource\(\(\) => \{ try \{ return getIdeariumValue\('repos\.default_provider'\)/.test(fs.readFileSync(path.join(__dirname, '../../idearium/api/index.js'), 'utf8')));
+  }
   check('the CLI has /provider, documented in /help', APP.includes("case 'provider':") && /'\s*\/provider \[name\]/.test(APP));   // 0.39.257 — /help regrouped
 
   fs.rmSync(process.env.NEXUS_INJECT_DIR, { recursive: true, force: true });
