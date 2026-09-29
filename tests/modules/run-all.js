@@ -34,6 +34,7 @@ const SUITES = [
   'test-cg-copilot-verbs.test.js',       // 0.39.280 — BS17: "visit X" with no model; loose driver blocks repaired; unreadable reported
   'test-economy.test.js',                // 0.39.281 — EC0–EC5, EC7, EC9: policy, ledger, gate, token limits, router, staging by tier, learned build order, ErosmancerOS input
   'test-economy-guardian.test.js',       // 0.39.281 — EC6: guardian's dispatcher waits / stops / falls back by the economy; every outcome recorded
+  'test-guardian-json-routes.test.js',   // 0.39.282 — the real guardian answers provider/login, economy and intake once (was: json undefined, 404 then crash)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272
