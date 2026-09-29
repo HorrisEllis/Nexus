@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-eravos.transport.play
 type: capability
 id: eravos.transport.play
-context: eravos/registry-components.js real capability export
+context: eravos/registry-components.js — declared capability
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730186
-source: eravos.registry-components:eravos.transport.play
+system: null
+tags:
+  - eravos
+  - capability
+exported_at: 1790684787174
+source: eravos/registry-components.js:eravos.transport.play
+occurrences: 1
+firstSeenAt: 1789250730186
+lastSeenAt: 1790684787174
+fingerprint: c22f6100a82e87c03dfcae1f
 payload:
+  intent: []
+  grammar:
+    - eravos play
+  tags:
+    - eravos
   id: eravos.transport.play
   namespace: eravos
   name: transport.play
   version: 3.0.0
-  grammar:
-    - eravos play
   route:
     method: POST
     path: /api/transport/play
-  intent: []
   description: Start playback
   params: []
-  tags:
-    - eravos
   permissions:
     - system
   hooks: {}

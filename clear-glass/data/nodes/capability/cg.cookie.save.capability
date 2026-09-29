@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.cookie.save
 type: capability
 id: cg.cookie.save
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730159
-source: clear-glass.registry-components:cg.cookie.save
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786636
+source: clear-glass/registry-components.js:cg.cookie.save
+occurrences: 1
+firstSeenAt: 1789250730159
+lastSeenAt: 1790684786636
+fingerprint: 67ffc03edd9562be90a2fc2d
 payload:
-  id: cg.cookie.save
-  namespace: cg
-  name: cookie.save
-  version: 3.1.0
+  intent: []
   grammar:
     - cookie save
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Save per-account cookies
-  params: []
   tags:
     - cg
     - cookie
+  id: cg.cookie.save
+  namespace: cg
+  name: cookie.save
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Save per-account cookies
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-CKI-001

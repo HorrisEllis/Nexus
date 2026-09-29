@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.settings.reset
 type: capability
 id: guardian.settings.reset
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730146
-source: guardian.registry-components:guardian.settings.reset
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787218
+source: guardian/registry-components.js:guardian.settings.reset
+occurrences: 1
+firstSeenAt: 1789250730146
+lastSeenAt: 1790684787218
+fingerprint: 22917de286b5ef6d3bd2f90b
 payload:
-  id: guardian.settings.reset
-  namespace: guardian
-  name: settings.reset
-  version: 3.6.2
+  intent: []
   grammar:
     - settings reset
     - settings-reset
+  tags:
+    - guardian
+  id: guardian.settings.reset
+  namespace: guardian
+  name: settings.reset
+  version: 3.14.0
   route:
     method: POST
     path: /settings/reset
-  intent: []
   description: Reset settings to defaults
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

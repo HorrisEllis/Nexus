@@ -2,17 +2,33 @@ envelope: 1
 uuid: nexus-export-system-architect
 type: system
 id: architect
-context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  architect/registry-components.js
+context: architect — the system record, regenerated from architect/registry-components.js
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730069
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - architect
+  - system
+exported_at: 1790684786611
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730069
+lastSeenAt: 1790684786611
+fingerprint: 76a0f92695f04919608b2867
 payload:
   id: architect
-  hasCapabilities: true
+  kernel: architect
   port: 3747
+  entry: architect/service.js
   spec: architect/spec/architect.spec
+  label: null
+  purpose: null
+  hasCapabilities: true
+  capabilities: 17
+  commands: 17
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: architect/registry-components.js
+    served: null
+    errors: []

@@ -2,31 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-copilot.person_model.chain
 type: capability
 id: copilot.person_model.chain
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730180
-source: copilot.registry-components:copilot.person_model.chain
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786873
+source: copilot/registry-components.js:copilot.person_model.chain
+occurrences: 1
+firstSeenAt: 1789250730180
+lastSeenAt: 1790684786873
+fingerprint: 845ea4cd69ad13f754502ba2
 payload:
-  id: copilot.person_model.chain
-  namespace: copilot
-  name: person_model.chain
-  version: 2.0.0
+  intent: []
   grammar:
     - model history
     - session chain
-  route:
-    method: GET
-    path: /api/person-model/chain
-  intent: []
-  description: Session hash-chain integrity — reports breaks, attributed to the session
-  params: []
   tags:
     - copilot
     - person-model
     - integrity
+  id: copilot.person_model.chain
+  namespace: copilot
+  name: person_model.chain
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/person-model/chain
+  description: Session hash-chain integrity — reports breaks, attributed to the session
+  params: []
   permissions:
     - system
   hooks: {}

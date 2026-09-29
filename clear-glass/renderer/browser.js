@@ -905,6 +905,39 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     clearMessages: () => { copilotMsgs.replaceChildren(); },
   }) : null;
 
+  // §0.39.278 — a reply is ESCAPED before it becomes markup. Before this, res.text went into innerHTML raw: a page the
+  // co-pilot read could put <img onerror=…> into its reply. Now that replies are kept and replayed on open
+  // (restoreConversation), that would be a stored injection — so every reply, live or replayed, goes through here.
+  // §0.39.280 BS17 — the pane names the command a block carries (the bridge runs it, or reports it as unreadable)
+  function _driverLabel(raw) {
+    const t = String(raw || '').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+    const a = (t.match(/["']?action["']?\s*:\s*["']?([\w.]+)/) || t.match(/["']?name["']?\s*:\s*["']?([\w.]+)/) || [])[1];
+    const u = (t.match(/["']?url["']?\s*:\s*["']?([^"',}\s]+)/) || [])[1];
+    return a ? `[driver: ${a}${u ? ' ' + u.slice(0, 60) : ''}]` : '[driver command]';
+  }
+  function formatReply(text) {
+    return String(text || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/```(?:driver|tool)\s*([\s\S]*?)```/g, (_m, raw) => `<span style="color:var(--accent);font-family:var(--mono);font-size:10px;">${_driverLabel(raw)}</span>`)   // §0.39.280 BS17 — which command, not just "sent"
+      .replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  }
+
+  // §0.39.278 — the pane's conversation is kept (src/copilot/chat-store.js); opening the pane shows it again.
+  async function restoreConversation() {
+    if (!cg.copilot || typeof cg.copilot.history !== 'function') return;
+    try {
+      const r = await cg.copilot.history(agentId, 100);
+      if (!r || r.ok === false || !Array.isArray(r.turns) || !r.turns.length) return;
+      copilotMsgs.replaceChildren();
+      for (const t of r.turns) {
+        if (t.role === 'user') addMsg('user', t.text);
+        else addMsg('assistant', formatReply(t.text), true);
+      }
+      addMsg('route', `restored ${r.turns.length} message${r.turns.length === 1 ? '' : 's'} · /new starts a fresh conversation`);
+    } catch (_) { /* nothing kept yet, or the store is unreachable — the pane starts empty as before */ }
+  }
+  restoreConversation();
+
   copilotInput.addEventListener('keydown', (e) => {
     if (cli && cli.onKey(e, copilotInput)) return;
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -982,12 +1015,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra, noDom: !ctxDom, ...(cli ? cli.route() : {}) });
       removeThinking();
 
-      // Format response with code blocks
-      const formatted = res.text
-        .replace(/```driver[\s\S]*?```/g, m => `<span style="color:var(--accent);font-family:var(--mono);font-size:10px;">[driver command sent]</span>`)
-        .replace(/`([^`]+)`/g, '<code>$1</code>');
-
-      addMsg('assistant', formatted, true);
+      addMsg('assistant', formatReply(res.text), true);
       if (res.route && cli && cli.state.showRoute !== false) {
         const r = res.route;
         addMsg('route', `${r.backend}${r.agent ? ' · ' + r.agent : ''}${r.hat ? ' · 🎩' : ''}${r.modelUsed ? ' · ' + r.modelUsed : ''}${(res.commands || []).length ? ` · ${res.commands.length} command${res.commands.length === 1 ? '' : 's'}${res.executed === false ? ' proposed' : ' run'}` : ''}`);
@@ -2680,6 +2708,17 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       // (btn-settings, src/toolbar/commands.js) with its own backing
       // button and click handler, so `cmd.id` above already returns
       // before this switch is ever reached for it — this case was dead.
+      case 'capture-opportunity': {
+        // 0.39.272 — lib/opportunity capture() via copilot; the tab is read by its own agentId, nothing is typed.
+        fetch('http://127.0.0.1:3750/api/opportunity/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ agentId }) })
+          .then(r => r.json())
+          .then(r => {
+            const msg = r.ok ? `${r.created ? 'Captured' : 'Already tracked'}: "${r.title}" — ${r.stage}${r.score !== undefined ? `, score ${r.score}` : ''} (${String(r.id).slice(0, 8)})` : `Capture failed: ${r.error}`;
+            toast(msg, r.ok ? 'success' : 'error', 5000); addMsg('assistant', msg);
+          })
+          .catch(err => { toast(`Capture failed — copilot :3750 unreachable (${err.message})`, 'error', 5000); });
+        break;
+      }
       // §NEW 2026-08-24 — the permanent fix for "toolbar accumulated too
       // many pins over time": restore pinnedToolbarButtons to exactly the
       // backend registry's defaultPinned set, in one action, instead of

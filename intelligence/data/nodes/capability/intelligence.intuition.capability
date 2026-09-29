@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.intuition
+type: capability
+id: intelligence.intuition
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787393
+source: intelligence/registry-components.js:intelligence.intuition
+occurrences: 1
+firstSeenAt: 1790684787393
+lastSeenAt: 1790684787393
+fingerprint: 162081ecca24f68af8df2767
+payload:
+  intent: []
+  grammar:
+    - intuition
+    - intelligence intuition
+  tags:
+    - intelligence
+    - cognition
+  id: intelligence.intuition
+  namespace: intelligence
+  name: intuition
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/intuition
+  description: INTUITION fast-path answer
+  params: []
+  permissions:
+    - system
+  hooks:
+    out:
+      - id: intelligence.intuition.answer
+        wires_to:
+          - copilot.prompt.receive_result
+        tags:
+          - answer

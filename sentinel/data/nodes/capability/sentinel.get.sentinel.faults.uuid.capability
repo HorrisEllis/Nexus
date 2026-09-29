@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-sentinel.get.sentinel.faults.uuid
+type: capability
+id: sentinel.get.sentinel.faults.uuid
+context: sentinel/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - sentinel
+  - capability
+exported_at: 1790684787517
+source: sentinel/interaction-contract.json:sentinel.get.sentinel.faults.uuid
+occurrences: 1
+firstSeenAt: 1790684787517
+lastSeenAt: 1790684787517
+fingerprint: c6b979d734fa6f650b85452c
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - sentinel
+    - interaction-contract
+  id: sentinel.get.sentinel.faults.uuid
+  namespace: sentinel
+  name: /sentinel/faults/:uuid
+  version: 0.1.0
+  route:
+    method: GET
+    path: /sentinel/faults/:uuid
+  description: One fault with its causal ancestry

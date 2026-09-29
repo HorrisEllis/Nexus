@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.context
 type: capability
 id: intelligence.context
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756064
-source: intelligence.registry-components:intelligence.context
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787387
+source: intelligence/registry-components.js:intelligence.context
+occurrences: 1
+firstSeenAt: 1789250756064
+lastSeenAt: 1790684787387
+fingerprint: 565c40b84b5c9e54310422bb
 payload:
+  intent: []
+  grammar:
+    - context
+    - intelligence context
+  tags:
+    - intelligence
   id: intelligence.context
   namespace: intelligence
   name: context
   version: 1.0.0
-  grammar:
-    - context
-    - intelligence context
   route:
     method: GET
     path: /api/intelligence/context
-  intent: []
   description: Assembled intelligence context
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

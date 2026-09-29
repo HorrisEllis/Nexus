@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.window.open
 type: capability
 id: cg.window.open
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730164
-source: clear-glass.registry-components:cg.window.open
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786654
+source: clear-glass/registry-components.js:cg.window.open
+occurrences: 1
+firstSeenAt: 1789250730164
+lastSeenAt: 1790684786654
+fingerprint: 45528925862c12c3f26b89f4
 payload:
-  id: cg.window.open
-  namespace: cg
-  name: window.open
-  version: 3.1.0
+  intent: []
   grammar:
     - window open
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Open agent browser window
-  params: []
   tags:
     - cg
     - window
+  id: cg.window.open
+  namespace: cg
+  name: window.open
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Open agent browser window
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-WIN-001

@@ -2,17 +2,33 @@ envelope: 1
 uuid: nexus-export-system-eravos
 type: system
 id: eravos
-context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  eravos/registry-components.js
+context: eravos — the system record, regenerated from eravos/registry-components.js
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730186
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - eravos
+  - system
+exported_at: 1790684787190
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730186
+lastSeenAt: 1790684787190
+fingerprint: 236f7e6f184d3356b65ce6bd
 payload:
   id: eravos
-  hasCapabilities: true
+  kernel: eravos
   port: 3751
+  entry: eravos/server.js
   spec: eravos/spec/eravos.spec
+  label: ERAVOS
+  purpose: Sovereign canvas. Mods, wires, audio, spatial.
+  hasCapabilities: true
+  capabilities: 12
+  commands: 12
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: eravos/registry-components.js
+    served: null
+    errors: []

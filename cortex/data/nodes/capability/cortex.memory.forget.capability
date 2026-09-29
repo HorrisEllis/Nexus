@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.memory.forget
+type: capability
+id: cortex.memory.forget
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787083
+source: cortex/registry-components.js:cortex.memory.forget
+occurrences: 1
+firstSeenAt: 1790684787083
+lastSeenAt: 1790684787083
+fingerprint: fbcd5024e2a21107bd44443c
+payload:
+  intent: []
+  grammar:
+    - memory forget
+  tags:
+    - cortex
+    - memory
+  id: cortex.memory.forget
+  namespace: cortex
+  name: memory.forget
+  version: 3.5.0
+  route:
+    method: POST
+    path: /api/memory/forget
+  description: Archive memory row (never delete)
+  params: []
+  permissions:
+    - system
+  hooks: {}

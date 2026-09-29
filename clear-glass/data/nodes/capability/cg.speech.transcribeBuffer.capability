@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.speech.transcribeBuffer
 type: capability
 id: cg.speech.transcribeBuffer
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730173
-source: clear-glass.registry-components:cg.speech.transcribeBuffer
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786688
+source: clear-glass/registry-components.js:cg.speech.transcribeBuffer
+occurrences: 1
+firstSeenAt: 1789250730173
+lastSeenAt: 1790684786688
+fingerprint: b55666ecc52681d46f3c6563
 payload:
-  id: cg.speech.transcribeBuffer
-  namespace: cg
-  name: speech.transcribeBuffer
-  version: 3.1.0
+  intent: []
   grammar:
     - speech transcribeBuffer
-  route:
-    method: IPC
-    path: speech:transcribeBuffer
-  intent: []
-  description: Real offline audio-buffer transcription
-  params: []
   tags:
     - cg
     - speech
+  id: cg.speech.transcribeBuffer
+  namespace: cg
+  name: speech.transcribeBuffer
+  version: 3.17.0
+  route:
+    method: IPC
+    path: speech:transcribeBuffer
+  description: Real offline audio-buffer transcription
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

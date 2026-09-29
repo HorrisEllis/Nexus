@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.templates.reset
+type: capability
+id: copilot.opportunity.templates.reset
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786914
+source: copilot/registry-components.js:copilot.opportunity.templates.reset
+occurrences: 1
+firstSeenAt: 1790684786914
+lastSeenAt: 1790684786914
+fingerprint: ee26ca12de106fd64382eb7e
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity templates reset
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.templates.reset
+  namespace: copilot
+  name: opportunity.templates.reset
+  version: 2.0.0
+  route:
+    method: DELETE
+    path: /api/opportunity/templates/:id
+  description: Reset a drafting template to its default
+  params: []
+  permissions:
+    - user
+  hooks: {}

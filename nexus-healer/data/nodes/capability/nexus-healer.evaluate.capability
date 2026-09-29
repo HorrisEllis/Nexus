@@ -2,31 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-nexus-healer.evaluate
 type: capability
 id: nexus-healer.evaluate
-context: nexus-healer/registry-components.js real capability export
+context: nexus-healer/registry-components.js — declared capability
 intent: null
 summary: null
-system: nexus-healer
-tags: []
-exported_at: 1789250730155
-source: nexus-healer.registry-components:nexus-healer.evaluate
+system: null
+tags:
+  - nexus-healer
+  - capability
+exported_at: 1790684787485
+source: nexus-healer/registry-components.js:nexus-healer.evaluate
+occurrences: 1
+firstSeenAt: 1789250730155
+lastSeenAt: 1790684787485
+fingerprint: e1c8192d35acbe59862b01f1
 payload:
+  intent: []
+  grammar: []
+  tags:
+    - nexus-healer
   id: nexus-healer.evaluate
   namespace: nexus-healer
   name: evaluate
   version: 0.1.0
-  grammar: []
   route:
     method: POST
     path: /proposals/:id/evaluate
-  intent: []
   description: >-
     Generate a real patch via forge (RAID-routed) for the given targetFile, run against the isolated
     evaluation pipeline.
   params:
     - id
     - targetFile
-  tags:
-    - nexus-healer
   permissions:
     - system
-  hooks: {}

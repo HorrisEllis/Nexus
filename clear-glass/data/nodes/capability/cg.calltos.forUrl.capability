@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.calltos.forUrl
 type: capability
 id: cg.calltos.forUrl
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730165
-source: clear-glass.registry-components:cg.calltos.forUrl
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786665
+source: clear-glass/registry-components.js:cg.calltos.forUrl
+occurrences: 1
+firstSeenAt: 1789250730165
+lastSeenAt: 1790684786665
+fingerprint: b7a3e02f10bd07189ef5c72e
 payload:
-  id: cg.calltos.forUrl
-  namespace: cg
-  name: calltos.forUrl
-  version: 3.1.0
+  intent: []
   grammar:
     - calltos forUrl
-  route:
-    method: IPC
-    path: calltos:forUrl
-  intent: []
-  description: Find calltos registered for a given origin
-  params: []
   tags:
     - cg
     - guardian
     - callto
+  id: cg.calltos.forUrl
+  namespace: cg
+  name: calltos.forUrl
+  version: 3.17.0
+  route:
+    method: IPC
+    path: calltos:forUrl
+  description: Find calltos registered for a given origin
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-architect.hooks.validate
 type: capability
 id: architect.hooks.validate
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730060
-source: architect.registry-components:architect.hooks.validate
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786580
+source: architect/registry-components.js:architect.hooks.validate
+occurrences: 1
+firstSeenAt: 1789250730060
+lastSeenAt: 1790684786580
+fingerprint: 3236728135064d8118ff1a33
 payload:
+  intent: []
+  grammar:
+    - hooks validate
+  tags:
+    - architect
   id: architect.hooks.validate
   namespace: architect
   name: hooks.validate
   version: 1.0.0
-  grammar:
-    - hooks validate
   route:
     method: GET
     path: /api/hooks/validate
-  intent: []
   description: Validate all hooks against invariants
   params: []
-  tags:
-    - architect
   permissions:
     - system
   hooks: {}

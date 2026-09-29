@@ -478,6 +478,7 @@ function _legacySend(ws, obj) {  // legacy WebSocket send — not used by NCP pa
   try { if (ws?.readyState === 1) ws.send(JSON.stringify(obj)); } catch(_) {}
 }
 
+const _providerLogin = { set: (k, v) => require('./lib/provider-login.js').set(v) };   // §0.39.280 BS16 — guardian/lib/provider-login.js
 function broadcast(obj) {
   ncp.broadcast(obj);
 }
@@ -699,6 +700,8 @@ const _wakeLoop = _wakeLoopMod.createWakeLoop({
   log: (m) => console.log(`[guardian/wake] ${m}`),
 });
 bus.on('guardian.job.complete', (d) => { _wakeLoop.handleComplete({ jobId: d && (d.data ? d.data.jobId : d.jobId) }) /* 0.39.247 — SISOStream passes {type,data} */.catch((e) => console.warn(`[guardian/wake] ${e.message}`)); });
+// §0.39.279 — a wake in a chat no job owns: answered from the settled transcript, as a wake-reply job into that chat
+bus.on('guardian.ncp.transcript', (d) => { const p = (d && d.data) || d || {}; _wakeLoop.handleTranscript(p, { listJobs: () => [...jobs.values()] }).catch((e) => console.warn(`[guardian/wake] ${e.message}`)); });
 
 // §BUILT 0.39.254 — every provider chat, logged into Clear Glass's downloads index as
 // one versioned transcript per chat (guardian/lib/chat-transcripts.js). Userscripts
@@ -835,6 +838,16 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(HTTP_PORT, '127.0.0.1', async () => {
+  // §0.39.271 X2 — Guardian hosts the node types (NODE-TAXONOMY.md): its hats and agents
+  // are regenerated from every forged hat, then its node registry (per-type folder watcher
+  // + _ledger.jsonl + JAA index) starts over guardian/data/nodes. Before this the registry
+  // was never booted and no .hat/.agent node existed. Off the request path; a failure is
+  // logged, never fatal.
+  setTimeout(() => {
+    try { const r = require('../lib/system-nodes.js').sync({ only: ['guardian'] }); console.log(`[guardian] nodes: ${JSON.stringify(r.systems.guardian ? { written: r.systems.guardian.written, commands: r.systems.guardian.commands } : {})} · hats/agents ${r.guardian ? r.guardian.written + ' written, ' + r.guardian.unchanged + ' unchanged' : 'skipped'}${r.errors.length ? ' · ' + r.errors.join('; ') : ''}`); }
+    catch (e) { console.warn(`[guardian] node sync failed (non-fatal): ${e.message}`); }
+    try { require('./lib/node-registry.js').start({}); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
+  }, 3000);
   // Mesh subsystem relocated 2026-09-03 to clear-glass/src/network/
   // (James: "DNS/firewall/crypto/host-rotation/reverse-proxy maybe
   // recycle to clearglass" — moved as one whole unit, see that folder's
@@ -2943,6 +2956,26 @@ function handleExtendedRoutes(req, res, url, method) {
   // promotion into the tree is a separate, gated step. Guardian STAGES and
   // never applies — arrival is not acceptance (§IP-5). All the real work is
   // lib/intake.js; these routes are the surface, not a second copy (§10.3).
+  // §0.39.280 BS16 — a provider tab's login state, reported by the chat-stream prelude (guardian/userscript-chat-stream.js
+  // watchLogin). 'wall' = that provider cannot answer until the person signs in: said on the bus and to every NCP client,
+  // and kept so a job waiting for that provider can say why. A dismissed nag ('modal') is recorded, not alarmed.
+  if (method === 'POST' && url.pathname === '/api/provider/login') {
+    bodyJ(req).then(body => {
+      const provider = String((body && body.provider) || '').toLowerCase();
+      const state = String((body && body.state) || '');
+      if (!provider || !['ok', 'modal', 'wall', 'signed-out', 'unknown'].includes(state)) return json(res, 400, { ok: false, error: 'provider and state (ok | modal | wall | signed-out | unknown) are required' });
+      const rec = { provider, state, dismissed: !!body.dismissed, text: body.text ? String(body.text).slice(0, 200) : null, url: body.url || null, at: Date.now() };
+      _providerLogin.set(provider, rec);
+      if (state === 'wall') { bus.emit('guardian.provider.login_required', rec); broadcast({ type: 'provider.login_required', ...rec }); console.warn(`[guardian] ${provider} needs a sign-in in its Clear Glass tab — its jobs wait (${rec.text || rec.url || ''})`); }
+      else bus.emit('guardian.provider.login_state', rec);
+      return json(res, 200, { ok: true, ...rec });
+    }).catch(e => json(res, 400, { ok: false, error: e.message }));
+    return;
+  }
+  if (method === 'GET' && url.pathname === '/api/provider/login') {
+    return json(res, 200, { ok: true, providers: require('./lib/provider-login.js').all() });
+  }
+
   if (method === 'POST' && url.pathname === '/api/intake') {
     bodyJ(req).then(body => {
       const intake = require('../lib/intake.js');
@@ -3417,7 +3450,8 @@ function handleExtendedRoutes(req, res, url, method) {
         // §CODE-ARTIFACT 2026-09-19 — the file this job's code belongs in,
         // and the fence language to trust. Both optional: absent means the
         // completion listener captures nothing, exactly as before.
-        fileName: body.fileName, syntax: body.syntax });
+        fileName: body.fileName, syntax: body.syntax,
+        hatInPrompt: typeof body.hatInPrompt === 'string' ? body.hatInPrompt : null });   // §0.39.269 — persona already in the prompt
       dispatchJob(job);
       pRes(res, 200, { ok:true, jobId: job.id, status: job.status, provider });
 

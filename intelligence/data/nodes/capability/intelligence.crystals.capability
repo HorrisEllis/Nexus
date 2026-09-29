@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.crystals
+type: capability
+id: intelligence.crystals
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787395
+source: intelligence/registry-components.js:intelligence.crystals
+occurrences: 1
+firstSeenAt: 1790684787395
+lastSeenAt: 1790684787395
+fingerprint: 370bae7136093ea6fc2e7fd7
+payload:
+  intent: []
+  grammar:
+    - crystals
+    - intelligence crystals
+  tags:
+    - intelligence
+  id: intelligence.crystals
+  namespace: intelligence
+  name: crystals
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/crystals
+  description: Crystals-derived pattern list (precursor/outcome/count/confidence)
+  params: []
+  permissions:
+    - system
+  hooks: {}

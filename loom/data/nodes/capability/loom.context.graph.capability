@@ -2,29 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-loom.context.graph
 type: capability
 id: loom.context.graph
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730149
-source: loom.registry-components:loom.context.graph
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787455
+source: loom/registry-components.js:loom.context.graph
+occurrences: 1
+firstSeenAt: 1789250730149
+lastSeenAt: 1790684787455
+fingerprint: fb52a4e323844d34e8e1f559
 payload:
-  id: loom.context.graph
-  namespace: loom
-  name: context.graph
-  version: 1.5.0
+  intent: []
   grammar:
     - context graph
     - context-graph
+  tags:
+    - loom
+  id: loom.context.graph
+  namespace: loom
+  name: context.graph
+  version: 1.5.1
   route:
     method: GET
     path: /api/context-graph
-  intent: []
   description: Context graph for a scope
   params: []
-  tags:
-    - loom
   permissions:
     - system
-  hooks: {}

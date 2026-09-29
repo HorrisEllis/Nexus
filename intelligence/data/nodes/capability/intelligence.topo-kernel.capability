@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.topo-kernel
 type: capability
 id: intelligence.topo-kernel
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756060
-source: intelligence.registry-components:intelligence.topo-kernel
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787384
+source: intelligence/registry-components.js:intelligence.topo-kernel
+occurrences: 1
+firstSeenAt: 1789250756060
+lastSeenAt: 1790684787384
+fingerprint: 4542e5b6be9847c4debce197
 payload:
+  intent: []
+  grammar:
+    - topo-kernel
+    - intelligence topo-kernel
+  tags:
+    - intelligence
   id: intelligence.topo-kernel
   namespace: intelligence
   name: topo-kernel
   version: 1.0.0
-  grammar:
-    - topo-kernel
-    - intelligence topo-kernel
   route:
     method: GET
     path: /api/intelligence/topo-kernel/stats
-  intent: []
   description: Sovereign SISO topology kernel — signal/field/shape/trust stats
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

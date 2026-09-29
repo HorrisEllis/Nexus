@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.templates
+type: capability
+id: copilot.opportunity.templates
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786913
+source: copilot/registry-components.js:copilot.opportunity.templates
+occurrences: 1
+firstSeenAt: 1790684786913
+lastSeenAt: 1790684786913
+fingerprint: a83f9eeb0533ce6f60fed938
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity templates
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.templates
+  namespace: copilot
+  name: opportunity.templates
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/opportunity/templates
+  description: Drafting templates (editable; placeholders are data)
+  params: []
+  permissions:
+    - system
+  hooks: {}

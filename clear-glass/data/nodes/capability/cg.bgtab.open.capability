@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.bgtab.open
 type: capability
 id: cg.bgtab.open
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730174
-source: clear-glass.registry-components:cg.bgtab.open
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786690
+source: clear-glass/registry-components.js:cg.bgtab.open
+occurrences: 1
+firstSeenAt: 1789250730174
+lastSeenAt: 1790684786690
+fingerprint: 633b2dc04e73df3afc319a34
 payload:
-  id: cg.bgtab.open
-  namespace: cg
-  name: bgtab.open
-  version: 3.1.0
+  intent: []
   grammar:
     - bgtab open
-  route:
-    method: IPC
-    path: bgtab:open
-  intent: []
-  description: Open a real background service tab
-  params: []
   tags:
     - cg
     - bgtab
+  id: cg.bgtab.open
+  namespace: cg
+  name: bgtab.open
+  version: 3.17.0
+  route:
+    method: IPC
+    path: bgtab:open
+  description: Open a real background service tab
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

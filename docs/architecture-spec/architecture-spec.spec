@@ -396,3 +396,10 @@ spec:
         nodes sorted by provider, RS1 repo settings sections, GC1 global
         component reuse store, the last grounded directly in §17.10).
       versioniumCommitId: null
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# "all data are nodes" — per-system command/capability/system nodes are now generated from the tree by
+# lib/system-nodes.js (docs/system-nodes.spec), marked declared vs served, archived (never deleted) when their
+# source goes, and readable at the orchestrator's GET /api/nodes/:type (the route this spec plans at /nodes/:type).
+# Guardian hosts .hat and .agent and boots its per-type registry (watcher + ledger + JAA index). AS1 (a registry
+# watcher for every system) stays open: only Guardian's watcher runs.

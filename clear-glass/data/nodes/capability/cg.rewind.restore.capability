@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.rewind.restore
 type: capability
 id: cg.rewind.restore
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730172
-source: clear-glass.registry-components:cg.rewind.restore
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786684
+source: clear-glass/registry-components.js:cg.rewind.restore
+occurrences: 1
+firstSeenAt: 1789250730172
+lastSeenAt: 1790684786684
+fingerprint: 67c289dbef356b551c76ccfd
 payload:
-  id: cg.rewind.restore
-  namespace: cg
-  name: rewind.restore
-  version: 3.1.0
+  intent: []
   grammar:
     - rewind restore
-  route:
-    method: IPC
-    path: rewind:restore
-  intent: []
-  description: Restore a real rewind snapshot
-  params: []
   tags:
     - cg
     - rewind
+  id: cg.rewind.restore
+  namespace: cg
+  name: rewind.restore
+  version: 3.17.0
+  route:
+    method: IPC
+    path: rewind:restore
+  description: Restore a real rewind snapshot
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

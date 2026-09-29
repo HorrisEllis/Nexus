@@ -2,30 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-loom.impact
 type: capability
 id: loom.impact
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730149
-source: loom.registry-components:loom.impact
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787456
+source: loom/registry-components.js:loom.impact
+occurrences: 1
+firstSeenAt: 1789250730149
+lastSeenAt: 1790684787456
+fingerprint: 35d7e6caab756aa31fb6b98d
 payload:
-  id: loom.impact
-  namespace: loom
-  name: impact
-  version: 1.5.0
+  intent: []
   grammar:
     - impact
     - impact
-  route:
-    method: GET
-    path: /api/impact/:id
-  intent: []
-  description: Blast-radius / impact query for a component
-  params: []
   tags:
     - loom
     - analysis
+  id: loom.impact
+  namespace: loom
+  name: impact
+  version: 1.5.1
+  route:
+    method: GET
+    path: /api/impact/:id
+  description: Blast-radius / impact query for a component
+  params: []
   permissions:
     - system
-  hooks: {}

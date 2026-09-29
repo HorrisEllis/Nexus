@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.gap.enrich
+type: capability
+id: intelligence.gap.enrich
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787406
+source: intelligence/registry-components.js:intelligence.gap.enrich
+occurrences: 1
+firstSeenAt: 1790684787406
+lastSeenAt: 1790684787406
+fingerprint: bb3f9c548de8d299e78eb571
+payload:
+  intent: []
+  grammar:
+    - gap enrich
+    - intelligence gap
+  tags:
+    - intelligence
+    - gap-detection
+  id: intelligence.gap.enrich
+  namespace: intelligence
+  name: gap.enrich
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/gap/enrich
+  description: Attach a checkable predicate + truth-floor to a raw gap
+  params: []
+  permissions:
+    - system
+  hooks: {}

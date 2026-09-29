@@ -49,6 +49,7 @@ import crypto from 'crypto';
 import { writeRepositoryNode } from './repo-node.js';
 
 const MODULE_ID = 'idearium/repo/import-pipeline';
+const CHUNKER_VERSION = codeIntel.CHUNKER_VERSION;   // a file chunked by an older chunker is re-chunked
 
 // §MCO1 — static import, deliberately not a dynamic one. A dynamic
 // import() would have forced runImportPipeline() to become async, and
@@ -58,7 +59,7 @@ const MODULE_ID = 'idearium/repo/import-pipeline';
 // is the tail wagging the dog (§16.6 — the architecture decides, not the
 // call site's convenience). Both files are ESM in the same package, so a
 // plain import costs nothing here.
-import { buildGraph, writeGraph } from './graph.js';
+import { buildGraph, writeGraph, resolveSpecifier } from './graph.js';
 import { buildSpecGraph, writeSpecGraph } from './spec-graph.js';
 import { makeEmitter } from './pipeline-events.js';
 
@@ -75,6 +76,10 @@ import chunkGlyph from '../../lib/chunk-glyph.js';
 // interop exposes module.exports as the default, so this is a plain
 // import, not a createRequire shim.
 import languages from '../../lib/languages.js';
+// §0.39.273 CB1-CB3 — structural chunker v2, chunk cards and the search index (lib/code-intel/, CJS: Node's interop
+// exposes module.exports as the default, same as languages.js above). See
+// docs/2026-09-27-idearium-codebase-toolkit-phasemap.spec for the measurements that motivated it.
+import codeIntel from '../../lib/code-intel/index.js';
 
 // ── language detection (§1 file discovery / language detection) ──────────
 // §DERIVED + EXPANDED 2026-09-20 — James: "Expand into the other
@@ -199,7 +204,10 @@ function braceDepth(src) {
   return depth;
 }
 
-// Top-level-only, deterministic regex per language family — not an AST.
+// §SUPERSEDED 0.39.273 (kept, not deleted — §0.3): these patterns matched at ANY indentation (`^\s*`), so a
+// nested function became a chunk boundary and cut its enclosing function mid-body (1054 of 3584 measured chunks).
+// Symbols and boundaries now come from lib/code-intel/chunker.js, which only cuts at statement starts of the level
+// it is chunking. SYMBOL_PATTERNS is no longer read by parseFile(); it stays for anything importing the idea.
 const SYMBOL_PATTERNS = {
   javascript: [
     /^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s*\*?\s+([A-Za-z0-9_$]+)/,
@@ -257,7 +265,7 @@ function classifyKind(filePath) {
 }
 
 // ── PARSE (L2) ─────────────────────────────────────────────────────────────
-function parseFile(repoDir, relPath) {
+function parseFile(repoDir, relPath, prev = null) {
   const abs = path.join(repoDir, relPath);
   const language = detectLanguage(relPath);
   let content;
@@ -275,19 +283,21 @@ function parseFile(repoDir, relPath) {
   if (!language) {
     // unrecognized extension — not a failure, just unclassified; still
     // observable/indexable/chunkable as a single whole-file unit.
-    return { path: relPath, language: null, status: 'unsupported', observable: true, indexable: true, chunkable: true, symbols: [], lineCount: lines.length, content, contentHash };
+    let plan = null;
+    try { plan = codeIntel.planChunks(content, 'text').chunks; } catch (_) { plan = null; }
+    return { path: relPath, language: null, status: 'unsupported', observable: true, indexable: true, chunkable: true, symbols: [], lineCount: lines.length, content, contentHash, plan };
   }
 
-  const patterns = SYMBOL_PATTERNS[language] || null;
-  const symbols = [];
-  if (patterns) {
-    for (let i = 0; i < lines.length; i++) {
-      for (const re of patterns) {
-        const m = lines[i].match(re);
-        if (m && m[1]) { symbols.push({ name: m[1], line: i + 1 }); break; }
-      }
-    }
+  // §0.39.273 — the structural plan: chunk boundaries + top-level symbols, from lib/code-intel/chunker.js. A file
+  // whose content AND chunker version match the previous run keeps its previous symbols and is not re-planned (its
+  // chunks are reused as-is by CHUNKING, which applies the same test).
+  let plan;
+  if (prev && prev.hash === contentHash && Array.isArray(prev.symbols)) plan = { chunks: null, symbols: prev.symbols, reused: true };
+  else {
+    try { plan = codeIntel.planChunks(content, language); }
+    catch (e) { plan = { chunks: [], symbols: [], fallback: `plan failed: ${e.message}` }; }
   }
+  const symbols = plan.symbols.map(s => ({ name: s.name, line: s.line, kind: s.kind, exported: !!s.exported }));
 
   let braceBalance = null;
   if (BRACE_LANGS.has(language)) braceBalance = braceDepth(content);
@@ -299,11 +309,21 @@ function parseFile(repoDir, relPath) {
     observable: true, indexable: true,
     chunkable: syntaxOk, // §10 on_failure — malformed files are observable/indexable but NOT chunked
     symbols, lineCount: lines.length, content, contentHash,
+    plan: plan.chunks, planFallback: plan.fallback || null,
   };
 }
 
 function parse(repoDir, files) {
-  return files.map(f => parseFile(repoDir, f.path));
+  // §0.39.273 — what the previous run already knew, per file (same chunker only): hash + symbols
+  const prev = new Map();
+  try {
+    const pf = JSON.parse(fs.readFileSync(path.join(repoDir, 'indexes', 'files.json'), 'utf8'));
+    const ps = JSON.parse(fs.readFileSync(path.join(repoDir, 'indexes', 'symbols.json'), 'utf8'));
+    const symBy = new Map();
+    for (const x of ps) { if (!symBy.has(x.file)) symBy.set(x.file, []); symBy.get(x.file).push({ name: x.name, line: x.line, kind: x.kind || null, exported: !!x.exported }); }
+    for (const f of pf) if (f.chunker === CHUNKER_VERSION && f.contentHash) prev.set(f.path, { hash: f.contentHash, symbols: symBy.get(f.path) || [] });
+  } catch (_) { /* first run, or an index from before 0.39.273: everything is planned */ }
+  return files.map(f => parseFile(repoDir, f.path, prev.get(f.path) || null));
 }
 
 function summarizeParse(parsed) {
@@ -365,33 +385,37 @@ function writeGlyphs(repoDir, parsed, chunks) {
   return summary;
 }
 
-// ── CHUNKS (L3) — one chunk per top-level symbol, else one whole-file chunk.
-// A symbol's chunk runs from its own start line to the line before the
-// NEXT top-level symbol (or EOF) — never cuts mid-body. A leading
-// preamble before the first symbol (imports, etc.) becomes its own
-// chunk rather than being silently dropped.
+// ── CHUNKS (L3) — §0.39.273 v2: the structural plan from lib/code-intel/chunker.js. Boundaries are statement
+// starts of the level being chunked (never mid-body); a declaration's doc comment and decorators open its own chunk;
+// a unit over the size cap is split at its own members/cases; small neighbours merge; every line is in exactly one
+// chunk. A chunk's id is derived from its KEY (kind + qualified name, + an ordinal only among same-named chunks), so
+// adding a function above another no longer renumbers every id below it.
 function chunkFile(repo, parsed, chunkDir) {
   if (!parsed.chunkable) return [];
   const lines = (parsed.content || '').split('\n');
-  const bounds = parsed.symbols.length
-    ? parsed.symbols.map((s, i) => ({ startLine: s.line, endLine: (parsed.symbols[i + 1]?.line ?? lines.length + 1) - 1, symbol: s.name }))
-    : [{ startLine: 1, endLine: lines.length, symbol: null }];
+  const plan = Array.isArray(parsed.plan) && parsed.plan.length
+    ? parsed.plan
+    : [{ start: 1, end: lines.length, kind: 'block', name: null, qualifiedName: null, parentQName: null, symbol: null, exported: false, defines: [], declLine: null, signature: null, forced: false, key: 'block:@1' }];
+  const idOf = (key) => `chunk-${sha256(`${repo.uuid}:${parsed.path}:${key}`).slice(0, 16)}`;
+  const byQName = new Map();
+  for (const b of plan) if (b.qualifiedName && !byQName.has(b.qualifiedName)) byQName.set(b.qualifiedName, idOf(b.key));
 
-  const chunks = [];
-  if (bounds.length && bounds[0].startLine > 1) chunks.push({ startLine: 1, endLine: bounds[0].startLine - 1, symbol: null });
-  chunks.push(...bounds);
-
-  return chunks.map((b, idx) => {
-    const text = lines.slice(b.startLine - 1, b.endLine).join('\n');
-    const id = `chunk-${sha256(`${repo.uuid}:${parsed.path}:${idx}`).slice(0, 16)}`;
+  return plan.map((b, idx) => {
+    const text = lines.slice(b.start - 1, b.end).join('\n');
+    const id = idOf(b.key);
     const fileName = `${parsed.path.replace(/[\\/]/g, '__')}__${idx}.json`;
+    const parentId = b.parentQName ? (byQName.get(b.parentQName) || null) : null;
     const chunk = {
       id, repository: repo.uuid, file: parsed.path,
-      range: { start_line: b.startLine, end_line: b.endLine },
-      symbols: b.symbol ? [b.symbol] : [],
-      parent: null, tags: [], relations: [], dependencies: [], contracts: [], tests: [],
+      range: { start_line: b.start, end_line: b.end },
+      symbols: Array.isArray(b.symbolNames) ? b.symbolNames : (b.symbol ? [b.symbol] : []),
+      parent: parentId && parentId !== id ? parentId : null, tags: [], relations: [], dependencies: [], contracts: [], tests: [],
       hash: { content: sha256(text) },
       status: text.trim().length ? 'complete' : 'empty',
+      // §0.39.273 — what the chunk is, from the plan (lib/code-intel/chunker.js)
+      key: b.key, kind: b.kind, name: b.name || null, qualifiedName: b.qualifiedName || null,
+      declLine: b.declLine, signature: b.signature || null, exported: !!b.exported, defines: b.defines || [],
+      language: parsed.language || null, forced: !!b.forced, chunker: CHUNKER_VERSION,
     };
     fs.writeFileSync(path.join(chunkDir, fileName), JSON.stringify({ ...chunk, content: text }, null, 2), 'utf8');
     return { ...chunk, _file: fileName };
@@ -474,10 +498,12 @@ function verify(repoDir, parsed, chunks) {
 
 // ── INDEX (L5) — deterministic address resolution, not raw source ──────────
 function buildIndexes(parsed, chunks) {
-  const files = parsed.map(p => ({ path: p.path, language: p.language, status: p.status, contentHash: p.contentHash || null, chunkCount: chunks.filter(c => c.file === p.path).length }));
+  const countBy = new Map();
+  for (const c of chunks) countBy.set(c.file, (countBy.get(c.file) || 0) + 1);
+  const files = parsed.map(p => ({ path: p.path, language: p.language, status: p.status, contentHash: p.contentHash || null, chunkCount: countBy.get(p.path) || 0, lineCount: p.lineCount, chunker: CHUNKER_VERSION }));
   const symbols = [];
-  for (const p of parsed) for (const s of p.symbols) symbols.push({ name: s.name, file: p.path, line: s.line });
-  const chunkIndex = chunks.map(c => ({ id: c.id, file: c.file, range: c.range, symbols: c.symbols, hash: c.hash.content }));
+  for (const p of parsed) for (const s of p.symbols) symbols.push({ name: s.name, file: p.path, line: s.line, ...(s.kind ? { kind: s.kind } : {}), ...(s.exported ? { exported: true } : {}) });
+  const chunkIndex = chunks.map(c => ({ id: c.id, file: c.file, range: c.range, symbols: c.symbols, hash: c.hash.content, kind: c.kind || null, name: c.qualifiedName || null, parent: c.parent || null }));
   return { files, symbols, chunks: chunkIndex };
 }
 
@@ -624,7 +650,8 @@ function _runImportPipeline(repo, repoDir, emit, opts = {}) {
     const prevFilesPath = path.join(repoDir, 'indexes', 'files.json');
     const prevHashByFile = {};
     if (fs.existsSync(prevFilesPath)) {
-      for (const f of JSON.parse(fs.readFileSync(prevFilesPath, 'utf8'))) if (f.contentHash) prevHashByFile[f.path] = f.contentHash;
+      // §0.39.273 — a file chunked by another chunker version is not "known": it is re-chunked once
+      for (const f of JSON.parse(fs.readFileSync(prevFilesPath, 'utf8'))) if (f.contentHash && f.chunker === CHUNKER_VERSION) prevHashByFile[f.path] = f.contentHash;
     }
 
     const currentPaths = new Set(parsed.map(p => p.path));
@@ -747,6 +774,27 @@ function _runImportPipeline(repo, repoDir, emit, opts = {}) {
     emit('spec:graph:failed', { error: e.message });
   }
 
+  // §0.39.273 CB2/CB3 — a card per chunk (kind, qualified name, signature, doc, summary, neighbours, what it uses
+  // and what uses it, each with its basis) and the BM25 search index, written to indexes/cards.json and
+  // indexes/search.json (lib/code-intel). Placed after GRAPHING for the same reason GRAPHING follows INDEXING: it
+  // resolves imports against the index just written. Non-fatal by the same rule (invariant I5): a failed pass costs
+  // the cards and the ranked search, never the import — and it is stated on the result.
+  let intelSummary = null;
+  try {
+    const fileSet = new Set(indexes.files.map(f => f.path));
+    let glyphs = null;
+    try { glyphs = (JSON.parse(fs.readFileSync(path.join(repoDir, 'indexes', 'glyphs.json'), 'utf8')) || {}).byChunk || null; } catch (_) { glyphs = null; }
+    intelSummary = codeIntel.buildIntel({
+      repoDir, files: parsed.filter(p => typeof p.content === 'string'), chunks, glyphs,
+      resolve: (spec, fromFile, language) => resolveSpecifier(spec, fromFile, language, fileSet),
+    });
+    emit('intel:build:complete', { cards: intelSummary.cards && intelSummary.cards.chunks, ms: (intelSummary.cards && intelSummary.cards.ms) || null });
+  } catch (e) {
+    console.error(`[${MODULE_ID}] repository:intel:failed — ${e.message}`);
+    intelSummary = { ok: false, error: e.message };
+    emit('intel:build:failed', { error: e.message });
+  }
+
   // §MCO2 DEEPENING — L4 (semantic) and L5 (dependency) extend verify()'s
   // L0-L3 now that indexes.symbols/chunks (INDEXING) and the graph
   // (GRAPHING, just above) both exist. Merged into the SAME
@@ -808,6 +856,7 @@ function _runImportPipeline(repo, repoDir, emit, opts = {}) {
     indexes: { fileCount: indexes.files.length, symbolCount: indexes.symbols.length, chunkCount: indexes.chunks.length },
     graph: graphSummary,
     specGraph: specGraphSummary, // 0.39.246 — spec graph (spec-graph.json)
+    intel: intelSummary,         // 0.39.273 — chunk cards + search index (indexes/cards.json, indexes/search.json)
     lazyVerification: lazyScheduled, // §MCO2 — L6-L8 status; see verification.lazy.json
   };
 

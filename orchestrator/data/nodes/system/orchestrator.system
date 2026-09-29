@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-system-orchestrator
+type: system
+id: orchestrator
+context: orchestrator — the system record, regenerated from orchestrator/interaction-contract.json
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - system
+exported_at: 1790684787516
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1790684787516
+lastSeenAt: 1790684787516
+fingerprint: 60da187bdcd95f3722b4f96a
+payload:
+  id: orchestrator
+  kernel: orchestrator
+  port: 9000
+  entry: orchestrator/orchestrator.js
+  spec: orchestrator/spec/orchestrator.spec
+  label: orchestrator
+  purpose: >-
+    Central coordinator — system registry, contract distribution, component-registry init,
+    cross-system proxy routing
+  hasCapabilities: true
+  capabilities: 14
+  commands: 14
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: orchestrator/interaction-contract.json
+    served: null
+    errors: []

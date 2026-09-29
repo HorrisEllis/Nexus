@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.macros.delete
+type: capability
+id: cg.macros.delete
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786728
+source: clear-glass/registry-components.js:cg.macros.delete
+occurrences: 1
+firstSeenAt: 1790684786728
+lastSeenAt: 1790684786728
+fingerprint: d3e072a8e2ad738f8b10b2f4
+payload:
+  intent: []
+  grammar:
+    - macros delete
+  tags:
+    - cg
+    - macros
+  id: cg.macros.delete
+  namespace: cg
+  name: macros.delete
+  version: 3.17.0
+  route:
+    method: IPC
+    path: macros:delete
+  description: Delete a macro (soft-delete, audit trail kept)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

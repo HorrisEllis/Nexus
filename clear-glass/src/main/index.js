@@ -38,6 +38,7 @@
  */
 
 const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, session, shell } = require('electron');
+const CompartmentWindow = require('./compartment-window.js');
 const path   = require('path');
 const http   = require('http');
 const { randomUUID } = require('crypto');
@@ -62,7 +63,7 @@ const MODULE_UUID = randomUUID();
 // glass.spec's meta.version independently exhibited. All three synced
 // to 3.9.0 (3.8.0 baseline + this session's real additions) together;
 // see clear-glass.spec's version_history for what's actually new.
-const CG_VERSION  = '3.17.0';
+const CG_VERSION  = '3.18.0';
 
 // ── Headless / tray-only mode ─────────────────────────────────────────────
 // CG_HEADLESS=1  OR  --headless in argv → no BrowserWindow, tray only.
@@ -611,6 +612,10 @@ function _startAutopilotActivityHeartbeat() {
 
 let _wireServer = null;
 
+// §0.39.279 — the driver's "pointer via eros" (src/driver/index.js _pointer) reaches ErosmancerOS through the wire's
+// own tab resolver; set by _startWire, read by the driver. Null until the wire is up.
+let _erosInputFn = null;
+
 async function _startWire() {
   // ── ErosmancerOS proxy helper — defined first, needed for /api/connect ──
   function _proxyEros(method, urlPath, body, timeout = 15000) {
@@ -707,6 +712,15 @@ async function _startWire() {
     _agentTabCache.set(agentId, entry);
     return entry;
   }
+
+  _erosInputFn = async (agentId, currentUrl, { x, y, action = 'click', text, deltaY } = {}) => {
+    if (erosSupervisor && !erosSupervisor.connected) { try { await erosSupervisor.connect({ tries: 2 }); } catch (_) {} }
+    const tab = await _resolveErosTab(agentId, currentUrl);
+    if (!tab || !tab.tabId) throw new Error('No ErosmancerOS tab for this agent — is ErosmancerOS connected to Clear Glass (Settings → ErosmancerOS)?');
+    const up = await _proxyEros('POST', '/api/input', { tabId: tab.tabId, x, y, action, text, deltaY }, 60000);
+    if (up.status >= 400) throw new Error((up.body && up.body.error) || `ErosmancerOS /api/input ${up.status}`);
+    return up.body;
+  };
 
   // ── HTTP server ──────────────────────────────────────────────────────────
   _wireServer = http.createServer((req, res) => {
@@ -1216,6 +1230,7 @@ async function bootstrap() {
 
   // 6. ClearDriver — sovereign automation, no Playwright
   driver = new ClearDriver({ ctxMgr, dom, vault, sse: { emit: (t, d) => emit(t, d) } });
+  driver.erosInput = (...a) => (_erosInputFn ? _erosInputFn(...a) : Promise.reject(new Error('the ErosmancerOS wire is not started yet')));
 
   // 7. URL listener — glob/regex per-agent request hooks
   urlListener = new UrlListener({ sse: { emit: (t, d) => emit(t, d) }, ctxMgr });
@@ -1600,6 +1615,9 @@ async function bootstrap() {
 
   // 14.5. Wire — ErosmancerOS registration + :7704 HTTP server (non-fatal)
   _startWire().catch(err => console.warn(`[ClearGlass/Wire] start failed (non-fatal): ${err.message}`));
+
+  // 14.9. §0.39.280 — window controls for idearium's compartment windows (main/compartment-window.js)
+  try { CompartmentWindow.registerIpc(ipcMain, BrowserWindow); } catch (e) { console.warn(`[ClearGlass] compartment-window ipc: ${e.message}`); }
 
   // 15. IPC bridge — HTTP command endpoint :IPC_PORT + ipcMain handlers
   ipcBridge = new IpcBridge({
@@ -2537,6 +2555,7 @@ app.on('web-contents-created', (_e, contents) => {
     event.preventDefault();
     try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
+  try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
 });
 
 // ── Shutdown ───────────────────────────────────────────────────────────────

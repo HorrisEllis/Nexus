@@ -1,6 +1,6 @@
 # loom — Sovereign Component / Hook / Wire Registry
 
-> **v1.5.0 (active)** · 7 modules · the registry every phasemap/spec-drift/capability check in NEXUS already depends on · L0 registry predates its own L3/L4 surface by unknown time — first added API access 2026-07-02
+> **v1.5.1 (active)** · 7 modules · the registry every phasemap/spec-drift/capability check in NEXUS already depends on · L0 registry predates its own L3/L4 surface by unknown time — first added API access 2026-07-02
 
 **Author:** James Brooks (Erosmancer) · rheon.world
 **License:** matches the parent NEXUS repository's license
@@ -353,7 +353,9 @@ Real phasemap aggregation scanner. `loadAll()` / `forSystem(system)` are, per `l
 
 **How it works internally**
 
-Not read directly this session.
+`loom/scanners/phasemap-map.js` exports `loadAll`, `forSystem`, `summary`, `historyFor`, `persistHistory`, `isPhasemapFile` and `parsePhasemapText`. `parsePhasemapText` turns one phasemap's text into phase rows (key-form phases and list-form `- id: X1` phases). Two other systems read phasemaps through it rather than parsing them again: `idearium/repo/roadmap.js` (a repo's roadmap) and the phases manager. The rest of the file, including how `loadAll` finds and tags each phasemap, is not described here.
+
+A phase's `depends_on` is read by the file's `_list()` helper, which accepts three forms: a flow list `[A, B]`, a comma list `A, B` and a dash list `- A - B`. The rule for the end of a list changed in 0.39.275: a flow list ends at its own `]`, and whatever follows is a YAML comment. Before that, `depends_on: [S3, C1]  # why` was read as the items `S3` and `C1] # why`, so the edge to `C1` was lost and a phase could show as ready while `C1` was still open. A block or bare list has no `]`, so only a trailing ` # …` is cut there. Resolving a name to a phase (including a phase in another phasemap) is not done here; that belongs to `idearium/repo/roadmap.js`.
 
 **HTTP routes**
 
@@ -419,6 +421,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
 | — | main | ingest and system-scaffold endpoints wired | James Brooks | 2026-07-05 | both built earlier, never connected |
 | — | main | /api/phasemap[/:system] wired | James Brooks | 2026-08-08 | scanner existed as pure lib module, never had an endpoint |
 | 1.5.0 | main | First .spec written for loom | James Brooks | 2026-09-01 | closing one of 11 real gaps orchestrator/lib/spec-drift.js's live check reported |
+| 1.5.1 | main | phasemap-map `_list()` ends a flow list at its `]`; a trailing `# comment` is no longer a dependency | James Brooks | 2026-09-28 | staging-self-heal S4's edge to C1 was being dropped (0.39.275) |
 
 **Known caveats:** loom's own spec-map scanner doesn't see loom's own spec (SM2); loom's emitted-event vocabulary is unenumerated (LM1-events) — both real, both open as of `loom.spec`'s own `gaps.as_of: 2026-09-01`.
 

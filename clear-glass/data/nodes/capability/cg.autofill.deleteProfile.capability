@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.autofill.deleteProfile
+type: capability
+id: cg.autofill.deleteProfile
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786700
+source: clear-glass/registry-components.js:cg.autofill.deleteProfile
+occurrences: 1
+firstSeenAt: 1790684786700
+lastSeenAt: 1790684786700
+fingerprint: 9477a0e77719f646db9491f4
+payload:
+  intent: []
+  grammar:
+    - autofill deleteProfile
+  tags:
+    - cg
+    - autofill
+  id: cg.autofill.deleteProfile
+  namespace: cg
+  name: autofill.deleteProfile
+  version: 3.17.0
+  route:
+    method: IPC
+    path: autofill:profile:delete
+  description: Delete a real autofill profile
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

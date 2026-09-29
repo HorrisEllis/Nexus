@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-command-guardian.get.api.guardian.organism.queue
+type: command
+id: guardian.get.api.guardian.organism.queue
+context: guardian command — NOT declared · served
+intent: null
+summary: null
+system: null
+tags:
+  - guardian
+  - command
+  - served
+exported_at: 1790684787221
+source: guardian/lib/command-index-extract.js (guardian/server.js)
+occurrences: 1
+firstSeenAt: 1790684787221
+lastSeenAt: 1790684787221
+fingerprint: c51ec7aaff8068ba37f651f9
+payload:
+  method: GET
+  path: /api/guardian/organism-queue
+  declared: false
+  served: true
+  description: null
+  grammar: []
+  capability: null

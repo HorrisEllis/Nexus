@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-capability-cg.mesh.jobSend
+type: capability
+id: cg.mesh.jobSend
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786730
+source: clear-glass/registry-components.js:cg.mesh.jobSend
+occurrences: 1
+firstSeenAt: 1790684786730
+lastSeenAt: 1790684786730
+fingerprint: 6d34a91286e4a87465c964e5
+payload:
+  intent: []
+  grammar:
+    - mesh jobSend
+  tags:
+    - cg
+    - mesh
+    - jobs
+    - intake
+  id: cg.mesh.jobSend
+  namespace: cg
+  name: mesh.jobSend
+  version: 3.17.0
+  route:
+    method: POST
+    path: /agent-mesh/send
+  description: >-
+    Guardian hands Clear Glass a job it CLAIMED on its .job; the intake verifies the claim via
+    guardian /jobs?id= before queueing (idempotent by jobId)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

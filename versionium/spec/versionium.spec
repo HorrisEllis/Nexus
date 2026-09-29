@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        versionium
-    version:     3.3.0
+    version:     3.4.0   # 0.39.279 MINOR — branch fork points (see the S0 addendum); this line was left at 3.3.0 — synced in 0.39.280 (§5.4). Previous 3.3.0:
     status:      active
     canonical_implementation: versionium/lib/engine.js
     canonical_http_surface:
@@ -387,3 +387,16 @@ spec:
         config.VERSION and registry-components V brought from 3.0.0 to
         this version (they had never followed 3.1.0 / 3.2.0).
       versioniumCommitId: null
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# GET /api/versionium/history takes ?branch= and ?n= (with n: the NEWEST n, newest first; without: unchanged).
+# Every repo list now asks for its own branch — the first-200-in-store-order answer hid every repo's new
+# snapshots once 200 repo commits existed in total. Idearium's nexus repo shows all of NEXUS's versions.
+
+# ── ADDENDUM 2026-09-29 (0.39.279) — docs/2026-09-28-staging-self-heal-phasemap.spec S0 (closes design gap V2) ──
+# A branch records where it forked from. engine.createBranch({ branch, from, causedBy }) writes forkedFrom
+# { branch, commitId } + forkedAt on the branch row and starts it at the fork commit, so its first commit's parentId is
+# the fork point (before: null). commit({ from }) does the same on a new branch's first commit; an existing branch is
+# never re-forked; an unknown source is refused ("no such commit or branch …", reason first). engine.branches(),
+# engine.forkPoint(). Routes: POST /api/versionium/commit takes `from`; GET/POST /api/versionium/branches. First user:
+# lib/code-edit.js stage() — repo-<uuid>@staging forked from repo-<uuid>. Proven by tests/modules/test-staging-s0-s1.test.js.

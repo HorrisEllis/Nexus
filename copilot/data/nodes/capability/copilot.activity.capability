@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.activity
+type: capability
+id: copilot.activity
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786994
+source: copilot/registry-components.js:copilot.activity
+occurrences: 1
+firstSeenAt: 1790684786994
+lastSeenAt: 1790684786994
+fingerprint: b8c4d2bee75bd05c05a94d86
+payload:
+  intent: []
+  grammar:
+    - what have you been up to
+    - activity
+  tags:
+    - copilot
+  id: copilot.activity
+  namespace: copilot
+  name: activity
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/activity
+  description: What copilot has been up to (?hours=, ?since=, &text=1)
+  params: []
+  permissions:
+    - system
+  hooks: {}

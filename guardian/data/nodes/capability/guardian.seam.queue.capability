@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.seam.queue
 type: capability
 id: guardian.seam.queue
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730140
-source: guardian.registry-components:guardian.seam.queue
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787211
+source: guardian/registry-components.js:guardian.seam.queue
+occurrences: 1
+firstSeenAt: 1789250730140
+lastSeenAt: 1790684787211
+fingerprint: 6feb221357f8b9ebe52f9898
 payload:
-  id: guardian.seam.queue
-  namespace: guardian
-  name: seam.queue
-  version: 3.6.2
+  intent: []
   grammar:
     - seam queue
     - seam-queue
+  tags:
+    - guardian
+  id: guardian.seam.queue
+  namespace: guardian
+  name: seam.queue
+  version: 3.14.0
   route:
     method: GET
     path: /seam/queues/:id
-  intent: []
   description: Single SEAM queue detail
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

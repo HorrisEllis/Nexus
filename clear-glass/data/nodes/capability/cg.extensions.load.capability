@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.extensions.load
 type: capability
 id: cg.extensions.load
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730169
-source: clear-glass.registry-components:cg.extensions.load
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786678
+source: clear-glass/registry-components.js:cg.extensions.load
+occurrences: 1
+firstSeenAt: 1789250730169
+lastSeenAt: 1790684786678
+fingerprint: acaf733c3870fc08fec4a873
 payload:
-  id: cg.extensions.load
-  namespace: cg
-  name: extensions.load
-  version: 3.1.0
+  intent: []
   grammar:
     - extensions load
-  route:
-    method: IPC
-    path: extensions:load
-  intent: []
-  description: Load a real unpacked extension
-  params: []
   tags:
     - cg
     - extensions
+  id: cg.extensions.load
+  namespace: cg
+  name: extensions.load
+  version: 3.17.0
+  route:
+    method: IPC
+    path: extensions:load
+  description: Load a real unpacked extension
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

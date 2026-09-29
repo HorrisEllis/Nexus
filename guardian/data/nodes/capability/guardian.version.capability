@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.version
 type: capability
 id: guardian.version
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730128
-source: guardian.registry-components:guardian.version
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787205
+source: guardian/registry-components.js:guardian.version
+occurrences: 1
+firstSeenAt: 1789250730128
+lastSeenAt: 1790684787205
+fingerprint: 78c79cdbf86d4262ba78f161
 payload:
-  id: guardian.version
-  namespace: guardian
-  name: version
-  version: 3.6.2
+  intent: []
   grammar:
     - version
     - version
+  tags:
+    - guardian
+  id: guardian.version
+  namespace: guardian
+  name: version
+  version: 3.14.0
   route:
     method: GET
     path: /version
-  intent: []
   description: Guardian + userscript versions
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

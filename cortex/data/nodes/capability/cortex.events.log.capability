@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.events.log
+type: capability
+id: cortex.events.log
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787084
+source: cortex/registry-components.js:cortex.events.log
+occurrences: 1
+firstSeenAt: 1790684787084
+lastSeenAt: 1790684787084
+fingerprint: a0b5901325f85e1d63546d26
+payload:
+  intent: []
+  grammar:
+    - events log
+  tags:
+    - cortex
+  id: cortex.events.log
+  namespace: cortex
+  name: events.log
+  version: 3.5.0
+  route:
+    method: GET
+    path: /api/events
+  description: Query event log
+  params: []
+  permissions:
+    - system
+  hooks: {}

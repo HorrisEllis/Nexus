@@ -35,6 +35,12 @@
 }
 #menu-overlay.open{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
 
+/* §0.39.280 — James: "when importing a repo the system rewind menu pops up when clicking continue". A closed
+   #menu-overlay is invisible (opacity 0, pointer-events none) but #rewind-btn / #inspect-btn / #settings-btn set
+   pointer-events:auto, which a child keeps even when its parent has none — so three invisible buttons sat at the
+   bottom centre over every channel, the full Idearium iframe's modals included. Closed means nothing in it is hit. */
+#menu-overlay:not(.open), #menu-overlay:not(.open) *{pointer-events:none !important}
+
 /* System status bar — above assistant */
 #sys-bar{
   display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;

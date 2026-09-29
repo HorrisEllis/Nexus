@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.channel
+type: capability
+id: copilot.channel
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684787002
+source: copilot/registry-components.js:copilot.channel
+occurrences: 1
+firstSeenAt: 1790684787002
+lastSeenAt: 1790684787002
+fingerprint: 5630d433ab6696b452c81b3e
+payload:
+  intent: []
+  grammar:
+    - copilot channel
+  tags:
+    - copilot
+  id: copilot.channel
+  namespace: copilot
+  name: channel
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/channel
+  description: Set the channel on every session
+  params: []
+  permissions:
+    - system
+  hooks: {}

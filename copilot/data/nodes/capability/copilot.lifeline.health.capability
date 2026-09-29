@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-copilot.lifeline.health
 type: capability
 id: copilot.lifeline.health
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730177
-source: copilot.registry-components:copilot.lifeline.health
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786860
+source: copilot/registry-components.js:copilot.lifeline.health
+occurrences: 1
+firstSeenAt: 1789250730177
+lastSeenAt: 1790684786860
+fingerprint: f561ff87dfee386773e113b2
 payload:
+  intent: []
+  grammar:
+    - lifeline health
+  tags:
+    - copilot
   id: copilot.lifeline.health
   namespace: copilot
   name: lifeline.health
   version: 2.0.0
-  grammar:
-    - lifeline health
   route:
     method: GET
     path: /api/lifeline/health
-  intent: []
   description: Lifeline provider health
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

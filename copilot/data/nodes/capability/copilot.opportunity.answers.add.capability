@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.answers.add
+type: capability
+id: copilot.opportunity.answers.add
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786899
+source: copilot/registry-components.js:copilot.opportunity.answers.add
+occurrences: 1
+firstSeenAt: 1790684786899
+lastSeenAt: 1790684786899
+fingerprint: 6dde0ca1040ff1c49ebfae0d
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity answers add
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.answers.add
+  namespace: copilot
+  name: opportunity.answers.add
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/answers
+  description: James adds an approved answer
+  params: []
+  permissions:
+    - user
+  hooks: {}

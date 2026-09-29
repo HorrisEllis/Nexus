@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.files.content
+type: capability
+id: versionium.files.content
+context: versionium/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787524
+source: versionium/registry-components.js:versionium.files.content
+occurrences: 1
+firstSeenAt: 1790684787524
+lastSeenAt: 1790684787524
+fingerprint: 3dd6c0049b4f0915db07050d
+payload:
+  intent: []
+  grammar:
+    - versionium files content
+  tags:
+    - versionium
+    - files
+  id: versionium.files.content
+  namespace: versionium
+  name: files.content
+  version: 3.3.0
+  route:
+    method: GET
+    path: /api/versionium/files/content
+  description: One file's exact bytes as of a commit, every chain step verified
+  params: []
+  permissions:
+    - system
+  hooks: {}

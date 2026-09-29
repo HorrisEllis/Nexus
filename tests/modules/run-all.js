@@ -18,6 +18,22 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-cg-copilot-no-api.test.js',      // 0.39.274 — the Clear Glass pane: copilot, else Ollama / Guardian directly; no API
+  'test-code-intel.test.js',             // 0.39.273 — structural chunker v2, chunk cards, search, grep (lib/code-intel)
+  'test-code-edit.test.js',              // 0.39.273 — edit engine, inject delete/defer, real-bytes reads (lib/code-edit.js)
+  'test-code-tools.test.js',             // 0.39.273 — /api/repos/:uuid/code/* and the eleven agent code tools
+  'test-tool-layers-and-pane-memory.test.js', // 0.39.278 — tools as layers (nexus.tools → tools_expand); the co-pilot pane keeps its conversation
+  'test-chat-ledger-stream.test.js',     // 0.39.278 — every chat streamed live (mutations, not polling) into the download manager's chat ledger
+  'test-cg-field.test.js',               // 0.39.279 — Clear Glass interaction field: numbered x/y/z targets, virtual pointer (native / ErosmancerOS), spotlight
+  'test-cos-workspace.test.js',          // 0.39.279 — COS workspaces: code repo as a git worktree branch, VM disk overlay, desktop VM
+  'test-settings-console.test.js',       // 0.39.279 — idearium settings console: layered config + every repo's agent/prompt/hat/compartment
+  'test-staging-s0-s1.test.js',          // 0.39.279 — staging self-heal S0 (versionium fork points) + S1 (code-edit stage/promote)
+  'test-compartment-window.test.js',     // 0.39.280 — BS0: idearium pop-outs as frameless compartment windows in Clear Glass
+  'test-build-surface.test.js',          // 0.39.280 — BS2–BS7: file states, deviation, environment, spec → phasemap, build plan, routes
+  'test-build-surface-2.test.js',        // 0.39.280 — BS13 a chosen provider is honoured; BS15 deleting a code repo tells its original
+  'test-cg-copilot-verbs.test.js',       // 0.39.280 — BS17: "visit X" with no model; loose driver blocks repaired; unreadable reported
+  'clear-glass-agent-surface.test.js',   // 0.39.272
+  'test-opportunity.test.js',            // 0.39.272
   'jaa-db.test.js',
   'test-p1-fanin-live.js',
   'test-p2-snapshot-sigma.js',
@@ -82,6 +98,8 @@ const SUITES = [
   'flush-redundancy.test.js',
   'admin-server-routes.test.js',
   'orchestrator-cli.test.js',
+  'test-c0-cfr-collapse-anchor.test.js',
+  'test-c1-compound-failure-mode.test.js',
   'interaction-contract.test.js',
   'uid.test.js',
   'alk.test.js',
@@ -315,6 +333,17 @@ const SUITES = [
   'test-repo-git.test.js',  // 0.39.265 — real git for repos: remote, commit, push, pull (changed files back into the repo), clone, SSH keygen; Git & CI tab
   'test-cos-remote.test.js',  // 0.39.265 — compartment remotes: push/pull a COS compartment to a folder or ssh host, two machines, in-sync/ahead/behind/diverged
   'test-cos-remote-api.test.js',  // 0.39.265 — the same through a real idearium API: a repo's compartment pushed, pulled elsewhere, edits back into the repo, clone
+  'test-nexus-self-visible.test.js',  // 0.39.266 — immutable nexus repos refuse Delete; ones already archived are restored by the sync; the library refills on nexus-self events
+  'test-nexus-inject-approval.test.js',  // 0.39.266 — agent code on a nexus repo waits for approval, then goes through the apply gate into the live tree; revert = gate rollback
+  'test-jaa-deletes-stick.test.js',  // 0.39.266 — a row deleted by one process stays deleted (compaction stuck at 7,176 → 19,788 rows/h before)
+  'test-nexus-specs-and-ideas-cleanup.test.js',  // 0.39.266 — nexus repos are not ideas; one spec per nexus repo; removing a spec deletes it
+  'test-registry-harness.test.js',  // 0.39.266 — loom's registry as the agent's harness: events, find/card/read, a ~2.7k-char first message
+  'test-component-store.test.js',   // 0.39.266 — the component store: folders, pinned deps, reuse by contract/prompt, harness
+  'test-ollama-activity.test.js',  // 0.39.266 — num_ctx sized to every prompt; every model call logged; nexus-live capped
+  'test-agent-hat-agnostic.test.js',  // 0.39.267–268 — one provider list; a build wears its hat on copilot/ollama/guardian; RAID reads the worn hat; activity recall; code captured with fences
+  'test-one-idearium-phases-nodes.test.js',  // 0.39.271 — /idearium/ redirect, versionium newest-first per repo, one bar, Phases manager, living spec, COS suite + every test + debug reports, copilot contract, per-system nodes + guardian .hat/.agent
+  'test-agent-memory.test.js',        // 0.39.269 — agent memory over the Clear Glass download manager: record on every backend, recall before every call; loom map
+  'test-chat-per-agent.test.js',  // 0.39.266 — each repo agent gets its own chat (they all shared one)
   'test-versionium-repo-history.test.js', // 0.39.263 — every repo's history in versionium (staged big versions, files/versions), nexus repos committed on sync, loom reads versionium not git
   'brainos-float-cg.test.js', // 0.39.262 — BrainOS Float Clear Glass tabs + pre-mount registration fix
   'test-agent-tools-and-graph.test.js', // 0.39.257 — every tool (enforced), /tools /debug /graph, the graph in context

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-sentinel.post.sentinel.handshake
+type: capability
+id: sentinel.post.sentinel.handshake
+context: sentinel/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - sentinel
+  - capability
+exported_at: 1790684787517
+source: sentinel/interaction-contract.json:sentinel.post.sentinel.handshake
+occurrences: 1
+firstSeenAt: 1790684787517
+lastSeenAt: 1790684787517
+fingerprint: 4bdb29727d21c47ecbf6b532
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - sentinel
+    - interaction-contract
+  id: sentinel.post.sentinel.handshake
+  namespace: sentinel
+  name: /sentinel/handshake
+  version: 0.1.0
+  route:
+    method: POST
+    path: /sentinel/handshake
+  description: Gated contract handshake

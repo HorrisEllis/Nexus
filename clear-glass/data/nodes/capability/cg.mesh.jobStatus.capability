@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-capability-cg.mesh.jobStatus
+type: capability
+id: cg.mesh.jobStatus
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786731
+source: clear-glass/registry-components.js:cg.mesh.jobStatus
+occurrences: 1
+firstSeenAt: 1790684786731
+lastSeenAt: 1790684786731
+fingerprint: 2d4f75b13ea76a54fb0408ea
+payload:
+  intent: []
+  grammar:
+    - mesh jobStatus
+  tags:
+    - cg
+    - mesh
+    - jobs
+    - intake
+  id: cg.mesh.jobStatus
+  namespace: cg
+  name: mesh.jobStatus
+  version: 3.17.0
+  route:
+    method: GET
+    path: /agent-mesh/job?jobId={jobId}
+  description: >-
+    Status of a mesh job; survives a Clear Glass restart as clear_glass_restarted (sent:null, never
+    resend)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

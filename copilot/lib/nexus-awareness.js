@@ -85,9 +85,38 @@ async function answerAbout(prompt, opts = {}) {
   const p = (prompt || '').toLowerCase();
   if (/\b(what('?s| is) wrong|what's broken|any (problems|issues|gaps)|diagnos)/.test(p)) return whatsWrong(opts);
   if (/\b(rundown|overview|system status|state of (the )?system|how is nexus|tell me about (the )?system)\b/.test(p)) return systemRundown(opts);
+  // 0.39.272 — the browser, the opportunity pipeline and the memory atlas are part of NEXUS's state too.
+  if (/\b(what('?s| is) open in (clear ?glass|the browser)|clear ?glass (status|state)|which tabs( are open)?|browser (status|state))\b/.test(p)) return clearGlassState(opts);
+  if (/\bwhat needs me\b|\b(jobs?|applications?|opportunit\w*|fiverr|upwork|gigs?)\b.*\b(status|pipeline|waiting|pending|needs? me|queue)\b/.test(p)) return opportunityState();
+  if (/\b(what (memory|memories) (do you have|exist|is there)|memory directory|where (is|does) .* (memory|remember)|what do you remember\b(?! about))/.test(p)) return memoryDirectory();
   if (/\bversions?\b/.test(p)) { const r = systemRundown(opts); return { text: `Versions: ${Object.entries(r.versions).filter(([, v]) => typeof v === 'string').map(([k, v]) => `${k} ${v}`).join(', ')}.`, versions: r.versions }; }
   return null;   // not a nexus-state question — let the normal path handle it
 }
 
+async function clearGlassState() {
+  const port = process.env.CLEARGL_IPC_PORT || 7702;
+  try {
+    const r = await fetch(`http://127.0.0.1:${port}/cli/state`, { signal: AbortSignal.timeout(4000) });
+    const st = await r.json();
+    if (!st.ok) return { text: `Clear Glass answered but not with its state: ${st.error || r.status}` };
+    const tabs = (st.agents || []).map(a => `${a.agentId}${a.background ? ' (bg)' : ''}: ${a.error ? 'unreadable' : `${a.title || '?'} — ${a.url || ''}`}`);
+    return { text: `Clear Glass: ${tabs.length} tab(s)${tabs.length ? ' — ' + tabs.join('; ') : ''}. ${(st.accounts || []).length} account(s), ${(st.autofillProfiles || []).length} autofill profile(s), ${(st.macros || []).length} macro(s).${(st.blind || []).length ? ` Unreadable: ${st.blind.map(b => b.source).join(', ')}.` : ''}`, state: st };
+  } catch (e) { return { text: `Clear Glass is not reachable on :${port} (${e.message}) — it may not be running.`, error: e.message }; }
+}
+function opportunityState() {
+  try {
+    const s = require('../../lib/opportunity').status();
+    const stages = Object.entries(s.byStage).filter(([, n]) => n).map(([k, n]) => `${k} ${n}`).join(', ');
+    return { text: s.total ? `${s.total} opportunities: ${stages}.${s.needsYou.length ? ` Waiting on you: ${s.needsYou.slice(0, 5).map(x => `${x.stage.toLowerCase()} "${x.title}"${x.company ? ` at ${x.company}` : ''}`).join('; ')}.` : ' Nothing is waiting on you.'}` : 'The opportunity pipeline is empty — set a profile and run a cycle (node cli/opportunity.js).', status: s };
+  } catch (e) { return { text: `Opportunity pipeline unreadable: ${e.message}`, error: e.message }; }
+}
+function memoryDirectory() {
+  try {
+    const d = require('../../lib/context-atlas.js').directory({ counts: true });
+    const full = d.tables.filter(t => (t.rows || 0) > 0 && t.searchedByDefault).sort((a, b) => (b.rows || 0) - (a.rows || 0)).slice(0, 12);
+    return { text: `Memory: ${d.tables.length} tables in cortex's store, plus the repo graphs, the system blueprint, every .spec and CHANGELOG. Largest: ${full.map(t => `${t.table} (${t.rows})`).join(', ') || 'none yet'}. Search all of it with nexus.context.tool.`, directory: d };
+  } catch (e) { return { text: `Context atlas unreadable: ${e.message}`, error: e.message }; }
+}
+
 function _clearCache() { _cache = {}; _cacheAt = {}; }
-module.exports = { systemRundown, whatsWrong, answerAbout, _clearCache, MODULE_ID: 'copilot-nexus-awareness', VERSION: '1.0.0' };
+module.exports = { systemRundown, whatsWrong, answerAbout, clearGlassState, opportunityState, memoryDirectory, _clearCache, MODULE_ID: 'copilot-nexus-awareness', VERSION: '1.0.0' };

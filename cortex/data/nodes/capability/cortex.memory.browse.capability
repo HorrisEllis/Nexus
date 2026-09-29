@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.memory.browse
+type: capability
+id: cortex.memory.browse
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787081
+source: cortex/registry-components.js:cortex.memory.browse
+occurrences: 1
+firstSeenAt: 1790684787081
+lastSeenAt: 1790684787081
+fingerprint: 557f8a9adf4930948bfd9eff
+payload:
+  intent: []
+  grammar:
+    - memory browse
+  tags:
+    - cortex
+    - memory
+  id: cortex.memory.browse
+  namespace: cortex
+  name: memory.browse
+  version: 3.5.0
+  route:
+    method: GET
+    path: /api/memory
+  description: Browse any JAA table
+  params: []
+  permissions:
+    - system
+  hooks: {}

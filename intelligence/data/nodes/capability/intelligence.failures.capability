@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.failures
 type: capability
 id: intelligence.failures
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756065
-source: intelligence.registry-components:intelligence.failures
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787388
+source: intelligence/registry-components.js:intelligence.failures
+occurrences: 1
+firstSeenAt: 1789250756065
+lastSeenAt: 1790684787388
+fingerprint: 362d44688772b32bdb04b993
 payload:
+  intent: []
+  grammar:
+    - failures
+    - intelligence failures
+  tags:
+    - intelligence
   id: intelligence.failures
   namespace: intelligence
   name: failures
   version: 1.0.0
-  grammar:
-    - failures
-    - intelligence failures
   route:
     method: GET
     path: /api/intelligence/failures
-  intent: []
   description: Failure mode index
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

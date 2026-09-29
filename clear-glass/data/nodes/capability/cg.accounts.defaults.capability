@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.accounts.defaults
+type: capability
+id: cg.accounts.defaults
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786710
+source: clear-glass/registry-components.js:cg.accounts.defaults
+occurrences: 1
+firstSeenAt: 1790684786710
+lastSeenAt: 1790684786710
+fingerprint: f99481acebbf006058651f5e
+payload:
+  intent: []
+  grammar:
+    - accounts defaults
+  tags:
+    - cg
+    - accounts
+  id: cg.accounts.defaults
+  namespace: cg
+  name: accounts.defaults
+  version: 3.17.0
+  route:
+    method: IPC
+    path: accounts:defaults
+  description: Per-provider default account map
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

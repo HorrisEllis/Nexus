@@ -349,3 +349,27 @@ James: *"supposed to stream it live as it happens. do you think a delay between 
 Each job carries `gates` (the trail) and `gate` (`describe()`: "stopped at gate 7/8 "reply appears" (chatgpt): … — …"). `GET /status/:jobId` serves both. `ask.js` failures and timeouts say the gate. A job the dispatcher marks `failed` now returns at once instead of after the caller's whole timeout. `guardian.job.gate` feeds the Agent tab.
 
 Tests: `test-live-stream-and-gates` 13/13, plus Chromium 8/8. 13 mutations, each caught.
+
+## Chats stream live, by mutation, not by polling (3.16.0, v0.39.278)
+
+James: *"guardian is polling, but it shouldn't be, live streams the dom mutation live to the download manager, that way we don't lose progress. including you expanding elements for your thoughts."*
+
+**What polled.** Each provider script re-checked every 5s whether the main element had been replaced, and while a job held the tab it read the whole chat every 500ms to stream GUARDIAN_CHUNKs. The transcript itself went out only after 5s without a change (or every 60s at most), so a reply in progress, a thinking block or a tab closed mid-answer was not kept.
+
+**Now.** `guardian/userscript-chat-stream.js`, a shared prelude loaded like `guardian/userscript-nexus-wake.js`, attaches window.NexusChatStream. Each provider script calls start({ provider, read, generating }). Its MutationObserver on the chat coalesces a burst (150ms from the first mutation, so a long reply is sent as it grows), reads the chat with the provider's own reader, and sends only what changed since Clear Glass last **acknowledged** to POST :7702/cli/downloads/ledger (Clear Glass atlas 3.19.0). A failed send is not marked sent: it retries with backoff and the next change carries everything since the last ack; pagehide sends what is pending. Collapsed "Thought process" / "Thought for …" toggles are opened once each, and the Claude and ChatGPT readers keep that text in thinking, apart from the reply. The prelude uses no interval.
+
+In the five provider scripts, the re-attach is a MutationObserver on the page body, and the job stream reads on the transcript's own mutations (_txStreamKick, 150ms coalescing). The settled transcript (GUARDIAN_TRANSCRIPT, 3.12.0) and job completion from it (3.13.0) are unchanged. Heartbeats and the status and navigation checks are connection keepalive, not chat reads, and stay as they were.
+
+**Limits.** Gemini, Perplexity and DeepSeek have no verified human-turn selector, so their ledger holds the newest reply as turn 0 (each version is still a line in the file). The thinking toggles are found by their label, which is not checked against the live claude.ai or chatgpt.com DOM here. Tampermonkey installs have no prelude, so they keep the settled transcript only.
+
+## Gemini and DeepSeek read the whole conversation; "hey nexus" is answered from any chat (3.17.0, v0.39.279)
+
+James: *"can you fix gemini and deepseek"* and *"i want the agents to be able to use hey nexus, its detected but the response from nexus isnt injected as a job."*
+
+**Gemini and DeepSeek.** Until now both readers returned only the newest reply, as turn 0. `guardian/userscript-gemini.js` now reads the page's user-query and model-response turns (AI Studio: ms-chat-turn), in page order, with the thinking in model-thoughts kept apart from the reply. `guardian/userscript-deepseek.js` reads every .ds-message: a reply is the one carrying .ds-markdown outside the thinking block, and the thinking is .ds-think-content. A page with no turns falls back to the newest reply, marked partial, exactly as before. DeepSeek's chat id is now the session id from the /a/chat/s/ path rather than the whole path. These selectors are built to the pages' known shapes and proven on pages of those shapes (`tests/probe/gemini-deepseek-reader-chromium.js` 11/11); they have not been checked against the live sites from here.
+
+**"hey nexus" from any chat.** The wake loop answered a wake only when it was in the reply to a guardian job that completed. An agent talking in a chat no job owns (a conversation James opened, or a reply the job path never completed) had its wake detected by the page and answered by nothing. `guardian/lib/wake-loop.js` now also reads each settled transcript. When the newest turn is the agent's and starts a line with a wake, it is answered as a wake-reply job typed into that same chat (the job carries chatUrl, and `guardian/lib/dispatcher.js` resumes that chat). This happens once per turn and never while the reply is still streaming. The depth cap counts the run of NEXUS answers the agent was just sent. When both paths see the same wake, each path defers once to the other, so it is answered once. Repo agents now get a one-line wake hint in their prompt blocks. Tests: `tests/modules/test-guardian-wake.js` 21/21.
+
+## The provider login wall (v0.39.280)
+
+James: *"chatgpt had a login prompt, hoping we can automate if that happens."* The shared chat-stream prelude (`guardian/userscript-chat-stream.js`, 1.1.0) watches each provider tab's sign-in state. A dismissible nag (ChatGPT's "Stay logged out") is closed automatically. A real login wall (sign-in buttons or a login form and no composer) is reported to guardian (POST /api/provider/login); guardian keeps it (`guardian/lib/provider-login.js`), says it on the bus and to every connected client, and a job waiting for that provider says it needs a sign-in instead of timing out as an empty reply. NEXUS never types a password. Test: `tests/probe/login-wall-chromium.js`.

@@ -158,10 +158,14 @@ class LoomAgentSuite {
    *  and out of scope for this standalone LOOM package — see Phase 142). */
   generateWithOllama(system, prompt, { model = 'mistral:7b-instruct-q4_K_M', timeoutMs = 120000 } = {}) {
     return new Promise((resolve) => {
-      const body = JSON.stringify({
-        model, prompt: `${system}\n\n${prompt}`, stream: false,
-        options: { temperature: 0.3, num_predict: 2048 },
-      });
+      // §0.39.266 — num_ctx sized to the prompt; the call recorded (lib/ollama-activity.js)
+      const OA = require('../../lib/ollama-activity.js');
+      const _full = `${system}\n\n${prompt}`;
+      const _ctx = OA.withNumCtx({ temperature: 0.3, num_predict: 2048 }, _full.length);
+      const _t0 = Date.now();
+      const _resolve = resolve;
+      resolve = (r) => { OA.record({ caller: 'loom/agent-suite', op: 'generate', model, promptChars: _full.length, numCtx: _ctx.numCtx, ms: Date.now() - _t0, ok: !!(r && r.ok), error: r && !r.ok ? r.error : undefined, warning: _ctx.warning }); _resolve(r); };
+      const body = JSON.stringify({ model, prompt: _full, stream: false, options: _ctx.options });
       const req = http.request({
         hostname: '127.0.0.1', port: OLLAMA_PORT, path: '/api/generate', method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },

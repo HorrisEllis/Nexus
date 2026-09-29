@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.sources
+type: capability
+id: copilot.opportunity.sources
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786890
+source: copilot/registry-components.js:copilot.opportunity.sources
+occurrences: 1
+firstSeenAt: 1790684786890
+lastSeenAt: 1790684786890
+fingerprint: 04fb5518e9f8946edd3b364a
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity sources
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.sources
+  namespace: copilot
+  name: opportunity.sources
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/opportunity/sources
+  description: Source types (public job APIs) and the configured sources
+  params: []
+  permissions:
+    - system
+  hooks: {}

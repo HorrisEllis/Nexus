@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-eravos.mod.list
 type: capability
 id: eravos.mod.list
-context: eravos/registry-components.js real capability export
+context: eravos/registry-components.js — declared capability
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730184
-source: eravos.registry-components:eravos.mod.list
+system: null
+tags:
+  - eravos
+  - capability
+exported_at: 1790684787167
+source: eravos/registry-components.js:eravos.mod.list
+occurrences: 1
+firstSeenAt: 1789250730184
+lastSeenAt: 1790684787167
+fingerprint: 2e5ca1a7b927fc877d8cee36
 payload:
+  intent: []
+  grammar:
+    - eravos mods
+  tags:
+    - eravos
   id: eravos.mod.list
   namespace: eravos
   name: mod.list
   version: 3.0.0
-  grammar:
-    - eravos mods
   route:
     method: GET
     path: /api/mods
-  intent: []
   description: List all mounted mods
   params: []
-  tags:
-    - eravos
   permissions:
     - system
   hooks: {}

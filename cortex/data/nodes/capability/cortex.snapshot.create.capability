@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.snapshot.create
+type: capability
+id: cortex.snapshot.create
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787085
+source: cortex/registry-components.js:cortex.snapshot.create
+occurrences: 1
+firstSeenAt: 1790684787085
+lastSeenAt: 1790684787085
+fingerprint: c172591ec8a0a57b19b5f91b
+payload:
+  intent: []
+  grammar:
+    - snapshot create
+  tags:
+    - cortex
+    - snapshot
+  id: cortex.snapshot.create
+  namespace: cortex
+  name: snapshot.create
+  version: 3.5.0
+  route:
+    method: POST
+    path: /api/snapshots/create
+  description: Create snapshot
+  params: []
+  permissions:
+    - system
+  hooks: {}

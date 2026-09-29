@@ -153,9 +153,58 @@ async function _autoCommit(trigger) {
   return commit;
 }
 
-function commit({ message, branch = 'main', causedBy = null, system = null, state = null } = {}) {
+/**
+ * createBranch({ branch, from, causedBy }) — §0.39.279, staging-self-heal S0 (closes S-1 / spec gap V2). A branch is
+ * born AT a commit: its row records forkedFrom { branch, commitId } and starts with headCommitId = that commit, so the
+ * branch's first commit has the fork point as its parent — "restore to where staging began" is one lookup, not a
+ * guess. `from` is a commitId, or a branch name (its current head). An existing branch is never re-forked.
+ * -> { ok, branch, forkedFrom, headCommitId, created } | { ok:false, error }
+ */
+function createBranch({ branch, from = 'main', causedBy = null } = {}) {
+  if (!branch || typeof branch !== 'string') return { ok: false, error: 'branch name required' };
+  const existing = jaaDB.query('versionium_branches', r => r.branch === branch, 1)[0];
+  if (existing) return { ok: true, created: false, branch, forkedFrom: existing.forkedFrom || null, headCommitId: existing.headCommitId || null };
+  let fork = null;
+  if (from) {
+    const asCommit = jaaDB.query('versionium_commits', r => r.commitId === from, 1)[0];
+    if (asCommit) fork = { branch: asCommit.branch, commitId: asCommit.commitId };
+    else {
+      const src = jaaDB.query('versionium_branches', r => r.branch === from, 1)[0];
+      // the reason first: callers over HTTP see a truncated body (lib/nexus-client keeps 160 characters)
+      if (!src) return { ok: false, error: `no such commit or branch "${from}" to fork "${branch}" from` };
+      fork = { branch: src.branch, commitId: src.headCommitId || null };
+    }
+  }
+  const now = Date.now();
+  jaaDB.insert('versionium_branches', { uuid: branch + ':branch', branch, headCommitId: fork ? fork.commitId : null,
+    forkedFrom: fork, forkedAt: now, causedBy, createdAt: now, updatedAt: now, source: MODULE_ID });
+  try {
+    require('../../cortex/memory/jaa-db').jaaDB.insert('event_log', { uuid: uid(), type: 'versionium.branched',
+      payload: { branch, forkedFrom: fork }, source: MODULE_ID, causedBy, ts: now });
+  } catch (_) { /* the shared causal log is best-effort, as for commits */ }
+  return { ok: true, created: true, branch, forkedFrom: fork, headCommitId: fork ? fork.commitId : null };
+}
+
+/** branches() -> every branch with its head and fork point */
+function branches() {
+  return jaaDB.query('versionium_branches', () => true, 10000).map(b => ({ branch: b.branch, headCommitId: b.headCommitId || null,
+    forkedFrom: b.forkedFrom || null, forkedAt: b.forkedAt || null, createdAt: b.createdAt || null, updatedAt: b.updatedAt || null }));
+}
+
+/** forkPoint(branch) -> { branch, commitId } the branch was born at, or null (main, or a branch made before 0.39.279) */
+function forkPoint(branch) {
+  const b = jaaDB.query('versionium_branches', r => r.branch === branch, 1)[0];
+  return (b && b.forkedFrom) || null;
+}
+
+function commit({ message, branch = 'main', causedBy = null, system = null, state = null, from = null } = {}) {
   const now       = Date.now();
   const commitId  = 'vtm-' + uid().slice(0, 8);
+  // §0.39.279 (S0) — the first commit on a NEW branch asked to fork `from` a commit/branch records the fork point first
+  if (from && !jaaDB.query('versionium_branches', r => r.branch === branch, 1).length) {
+    const f = createBranch({ branch, from, causedBy });
+    if (!f.ok) throw new Error(f.error);
+  }
   const branches  = jaaDB.query('versionium_branches', r => r.branch === branch, 1);
   const parentId  = branches[0]?.headCommitId || null;
   const realMsg   = message || 'manual commit';
@@ -216,4 +265,4 @@ function getState(commitId) {
   return { commit: row, state: row.state };
 }
 
-module.exports = { init, stop, setDeps, commit, restore, calendar, getState };
+module.exports = { init, stop, setDeps, commit, restore, calendar, getState, createBranch, branches, forkPoint };

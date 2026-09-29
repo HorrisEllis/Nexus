@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.answers.remove
+type: capability
+id: copilot.opportunity.answers.remove
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786903
+source: copilot/registry-components.js:copilot.opportunity.answers.remove
+occurrences: 1
+firstSeenAt: 1790684786903
+lastSeenAt: 1790684786903
+fingerprint: 90c30fe19140cca8113a3c4a
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity answers remove
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.answers.remove
+  namespace: copilot
+  name: opportunity.answers.remove
+  version: 2.0.0
+  route:
+    method: DELETE
+    path: /api/opportunity/answers/:id
+  description: Remove an answer
+  params: []
+  permissions:
+    - user
+  hooks: {}

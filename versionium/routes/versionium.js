@@ -23,10 +23,11 @@ function _emitEvent(type, payload) {
 async function handle(req, res, { method, pathname, url }) {
   if (pathname === '/api/versionium/commit' && method === 'POST') {
     const body = await readBody(req);
-    const { message, branch, causedBy, system, state } = body || {};
+    const { message, branch, causedBy, system, state, from } = body || {};
     if (!message) { json(res, 400, { ok: false, error: 'message is required' }); return true; }
     try {
-      const commit = engine.commit({ message, branch, causedBy, system: system || null, state: state ?? null });
+      // §0.39.279 (staging-self-heal S0) — `from`: the first commit of a new branch records where it forked from
+      const commit = engine.commit({ message, branch, causedBy, system: system || null, state: state ?? null, from: from || null });
       _emitEvent('versionium.committed', { commitId: commit.commitId, branch: commit.branch, system: commit.system });
       json(res, 200, { ok: true, commit });
     } catch (e) {
@@ -35,13 +36,34 @@ async function handle(req, res, { method, pathname, url }) {
     return true;
   }
 
+  // §0.39.279 (staging-self-heal S0) — branches with their fork points; POST makes one AT a commit (or a branch's head)
+  if (pathname === '/api/versionium/branches' && method === 'GET') {
+    json(res, 200, { ok: true, branches: engine.branches() });
+    return true;
+  }
+  if (pathname === '/api/versionium/branches' && method === 'POST') {
+    const body = await readBody(req);
+    const r = engine.createBranch({ branch: body && body.branch, from: body && body.from !== undefined ? body.from : 'main', causedBy: (body && body.causedBy) || null });
+    if (r.ok && r.created) _emitEvent('versionium.branched', { branch: r.branch, forkedFrom: r.forkedFrom });
+    json(res, r.ok ? 200 : 400, r);
+    return true;
+  }
+
   if (pathname === '/api/versionium/history') {
     const system = url.searchParams.get('system') || null;
+    // §0.39.271 V1 — ?branch= and ?n= added (additive; defaults unchanged) so the
+    // orchestrator's old /api/cortex/versionium/log?n=&branch= can be answered here.
+    const branch = url.searchParams.get('branch') || null;
+    // With an explicit ?n= the NEWEST n come back, newest first (a log); without it the
+    // original behaviour stands (the first 200 in store order) — every existing caller.
+    const nParam = parseInt(url.searchParams.get('n'), 10);
+    const n = Math.max(1, Math.min(1000, nParam || 200));
     try {
-      const rows = system
-        ? jaaDB.query('versionium_commits', r => r.system === system, 200)
-        : jaaDB.query('versionium_commits', () => true, 200);
-      json(res, 200, { ok: true, system, count: rows.length, commits: rows });
+      const match = r => (!system || r.system === system) && (!branch || r.branch === branch);
+      const rows = nParam
+        ? jaaDB.query('versionium_commits', match, 1e6).sort((a, b) => (b.wall || 0) - (a.wall || 0)).slice(0, n)
+        : jaaDB.query('versionium_commits', match, n);
+      json(res, 200, { ok: true, system, branch, count: rows.length, commits: rows });
     } catch (e) {
       json(res, 500, { ok: false, error: `versionium history query failed: ${e.message}` });
     }

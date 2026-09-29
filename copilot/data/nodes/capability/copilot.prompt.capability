@@ -2,37 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-copilot.prompt
 type: capability
 id: copilot.prompt
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730175
-source: copilot.registry-components:copilot.prompt
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786854
+source: copilot/registry-components.js:copilot.prompt
+occurrences: 1
+firstSeenAt: 1789250730175
+lastSeenAt: 1790684786854
+fingerprint: f52e4b0bb606d3e77ff60892
 payload:
-  id: copilot.prompt
-  namespace: copilot
-  name: prompt
-  version: 2.0.0
+  intent: []
   grammar:
     - ask
     - copilot
     - cp
+  tags:
+    - copilot
+  id: copilot.prompt
+  namespace: copilot
+  name: prompt
+  version: 2.0.0
   route:
     method: POST
     path: /api/prompt
-  intent:
-    - ask
-    - build
-    - diagnose
-    - navigate
-    - note
-    - tool
-    - action
   description: Primary entry — all co-pilot interactions
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks:

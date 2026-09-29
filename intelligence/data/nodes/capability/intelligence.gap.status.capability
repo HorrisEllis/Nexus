@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.gap.status
+type: capability
+id: intelligence.gap.status
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787405
+source: intelligence/registry-components.js:intelligence.gap.status
+occurrences: 1
+firstSeenAt: 1790684787405
+lastSeenAt: 1790684787405
+fingerprint: 0b6c31d0159f3e45bfa9d49e
+payload:
+  intent: []
+  grammar:
+    - gap status
+    - intelligence gap
+  tags:
+    - intelligence
+    - gap-detection
+  id: intelligence.gap.status
+  namespace: intelligence
+  name: gap.status
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/gap/status
+  description: Gap-lifecycle ledger stats + registered predicate types
+  params: []
+  permissions:
+    - system
+  hooks: {}

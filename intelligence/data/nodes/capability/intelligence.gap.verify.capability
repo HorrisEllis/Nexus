@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.gap.verify
+type: capability
+id: intelligence.gap.verify
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787407
+source: intelligence/registry-components.js:intelligence.gap.verify
+occurrences: 1
+firstSeenAt: 1790684787407
+lastSeenAt: 1790684787407
+fingerprint: a867062705cc504ebaf51c58
+payload:
+  intent: []
+  grammar:
+    - gap verify
+    - intelligence gap
+  tags:
+    - intelligence
+    - gap-detection
+  id: intelligence.gap.verify
+  namespace: intelligence
+  name: gap.verify
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/gap/verify
+  description: Verify closure of a gap (predicate + artifact, both required)
+  params: []
+  permissions:
+    - system
+  hooks: {}

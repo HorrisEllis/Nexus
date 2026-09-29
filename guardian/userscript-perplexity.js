@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — Perplexity v10.0
 // @namespace    nexus.guardian.perplexity
-// @version      10.8.2
+// @version      10.9.0
 // @description  Guardian v10 — Perplexity: protocol parity with Claude/ChatGPT/Gemini
 //               v10 (NCP handshake, IndexedDB kernel, SHA-256 dedup, tab-claim, SEAM
 //               jobs, intelligence injection, usage detection) built around
@@ -29,7 +29,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'perplexity';
-const VERSION     = '10.8.2';
+const VERSION     = '10.9.0';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -252,7 +252,7 @@ function _getSendBtn() {
 // blind.
 function _nexusGetFullChat() {
   const el = findResponseEl();
-  const text = el ? (el.innerText || el.textContent || '').trim() : '';
+  const text = el ? _replyText(el) : '';
   const messages = text ? [{ role: 'assistant', text }] : [];
   return { provider: PROVIDER, chatId: chatId(), url: location.href, extractedAt: Date.now(), messages, partial: true, note: 'no verified human-turn selector for this provider yet — assistant\'s last response only' };
 }
@@ -300,6 +300,9 @@ function _nexusPushTranscript(forced) {
     .catch(() => {});
 }
 function _txSchedule() {
+  // §0.39.278 — the job stream reads on the same mutation, not on a timer. Guarded: the transcript push must not
+  // depend on the stream block (a failure there never stops a chat from settling and being sent).
+  try { if (typeof _txStreamKick === 'function') _txStreamKick(); } catch (_) {}
   const now = Date.now();
   if (!_txFirstPending) _txFirstPending = now;
   if (_txTimer) clearTimeout(_txTimer);
@@ -320,7 +323,15 @@ function _nexusTranscriptStart() {
   if (typeof MutationObserver === 'undefined' || typeof document === 'undefined') return;
   _nexusTranscriptAttach();
   // SPA navigation can replace <main>; re-attach to the live one.
-  setInterval(() => { if (!_txTarget || !_txTarget.isConnected || _txTarget === document.body) _nexusTranscriptAttach(); }, 5000);
+  // §0.39.278 — James: "guardian is polling, but it shouldn't be". Was a 5s setInterval; now the page's own mutation
+  // of <body>'s children says when <main> went away.
+  new MutationObserver(() => { if (!_txTarget || !_txTarget.isConnected || _txTarget === document.body) _nexusTranscriptAttach(); })
+    .observe(document.body, { childList: true, subtree: true });
+  // §0.39.278 — the live ledger: every change of this chat, reply and thinking, streamed to Clear Glass's download
+  // manager as it happens (guardian/userscript-chat-stream.js, the shared prelude; absent under Tampermonkey).
+  try {
+    if (window.NexusChatStream) window.NexusChatStream.start({ provider: PROVIDER, read: _nexusGetFullChat, generating: _isGenerating, agentId: NEXUS_AGENT_ID });
+  } catch (e) { console.warn('[guardian] chat stream not started:', e && e.message); }
 }
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(_nexusTranscriptStart, 1500));
@@ -331,21 +342,27 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined') {
 // watch streams GUARDIAN_CHUNKs only when it finds the reply node, and on ChatGPT it
 // anchors on the composer (reply 0ch), so nothing ever streamed. The transcript
 // reader above reads the reply correctly, so while this tab holds a job it is read
-// every _TX_STREAM_MS and sent as GUARDIAN_CHUNKs for that job — the same message the
+// on each change of the page (0.39.278: mutation-driven, coalesced _TX_STREAM_MS; was a
+// 500ms poll) and sent as GUARDIAN_CHUNKs for that job — the same message the
 // watch sends, so guardian, the /events feed and idearium's Agent tab need nothing new.
 // The reply is the assistant turn right after the job's own user turn (the first user
 // turn past those on the page when the job arrived that contains the prompt's head),
 // so an earlier answer is never streamed as this one. A rewrite that is not a
 // continuation (markdown re-rendered) is sent whole with reset: true. When the watch
 // streams for a job itself, this yields: one stream per job.
-const _TX_STREAM_MS = 500;
+const _TX_STREAM_MS = 150;   // §0.39.278 — coalescing after a mutation, not a polling period (was a 500ms setInterval)
 let _txJob = null, _txWatchStreamed = null, _txStreamTimer = null;
 function _txJobStart(msg) {
   let users = 0;
   try { users = (_nexusGetFullChat().messages || []).filter(m => m.role === 'user').length; } catch (_) {}
   const head = String((msg && (msg.prompt || msg.content)) || '').replace(/\s+/g, ' ').trim().slice(0, 80);
   _txJob = { jobId: msg && msg.jobId, users, head, sent: '' };
-  if (!_txStreamTimer) _txStreamTimer = setInterval(_txStreamTick, _TX_STREAM_MS);
+  _txStreamKick();
+}
+// §0.39.278 — read the reply when the page changes (called from the transcript's MutationObserver), once per burst.
+function _txStreamKick() {
+  if (!_txJob || _txStreamTimer) return;
+  _txStreamTimer = setTimeout(() => { _txStreamTimer = null; _txStreamTick(); }, _TX_STREAM_MS);
 }
 function _txReplyFor(job, messages) {
   let seen = 0;
@@ -361,7 +378,7 @@ function _txReplyFor(job, messages) {
 }
 function _txStreamTick() {
   const job = _txJob;
-  if (!job || currentJobId !== job.jobId) { clearInterval(_txStreamTimer); _txStreamTimer = null; _txJob = null; return; }
+  if (!job || currentJobId !== job.jobId) { clearTimeout(_txStreamTimer); _txStreamTimer = null; _txJob = null; return; }
   if (_txWatchStreamed === job.jobId) return;
   let chat;
   try { chat = _nexusGetFullChat(); } catch (_) { return; }
@@ -398,6 +415,35 @@ function _nexusAnchor(el) {
   }
   return { path: path.join(' > '), tag: el.tagName.toLowerCase(), attrs, textLen: (el.innerText || el.textContent || '').length, children: el.childElementCount };
 }
+// §0.39.267 — James: "guardian isn't capturing the code from chatgpt." innerText is what the page SHOWS: a rendered
+// code block reads "JavaScript\n<code>" with its ``` fences gone, so lib/extract-code.js found no code block and every
+// code chunk failed ("no fenced code block found in the response"). The reply is read with each <pre> put back as a
+// fenced block — language from the code element's class, else the block's header label — the rest stays innerText.
+function _replyText(el) {
+  if (!el) return '';
+  const full = (el.innerText || el.textContent || '');
+  let out = full;
+  try {
+    for (const pre of el.querySelectorAll('pre')) {
+      const codeEl = pre.querySelector('code') || pre;
+      const code = (codeEl.textContent || '').replace(/\n+$/, '');
+      if (!code.trim()) continue;
+      const cls = String(codeEl.className || '') + ' ' + String(pre.className || '');
+      let lang = (cls.match(/(?:language|lang)-([\w+#.-]+)/) || [])[1] || '';
+      const preTxt = (pre.innerText || '').replace(/\n+$/, '');
+      if (!lang) {
+        const first = preTxt.split('\n')[0].trim();
+        if (first && first.length < 24 && !/[;{}()=]/.test(first) && !code.startsWith(first)) lang = first.toLowerCase();
+      }
+      const fenced = '```' + lang + '\n' + code + '\n```';
+      if (preTxt && out.includes(preTxt)) out = out.replace(preTxt, fenced);
+      else if (out.includes(code)) out = out.replace(code, fenced);
+      else out += '\n\n' + fenced;
+    }
+  } catch (_) { return full.trim(); }
+  return out.trim();
+}
+
 function findResponseEl() {
   const answers = document.querySelectorAll('.prose, [data-testid="answer"], .answer-text, .result__content');
   return answers.length ? answers[answers.length - 1] : null;
@@ -653,7 +699,7 @@ function startWatch(jobId, prompt, retryCount = 0) {
   // a completion must be a different element, or different text.
   let _sawNew = false;
   const _baseEl   = findResponseEl();
-  const _baseText = _baseEl ? (_baseEl.innerText || _baseEl.textContent || '').trim() : '';
+  const _baseText = _baseEl ? _replyText(_baseEl) : '';
   const mode = detectSearchMode();
   const maxMs = mode === 'research' ? 600000 : 180000; // 10min research, 3min quick/pro
   let lastText = '', stableCount = 0, _lastChunkLen = 0;
@@ -684,7 +730,7 @@ function startWatch(jobId, prompt, retryCount = 0) {
       }
       _watchTimer = setTimeout(checkStable, 600); return;
     }
-    const text = (el.innerText || el.textContent || '').trim();
+    const text = _replyText(el);
     // Still showing the previous answer: this job has produced nothing yet.
     // §1.2 — after NO_REPLY_MS say so loudly rather than return a stale reply.
     // §WATCH-EVIDENCE 2026-09-23 — the reply WAS on screen and guardian still

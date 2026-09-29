@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.versionium.log
+type: capability
+id: cortex.versionium.log
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787086
+source: cortex/registry-components.js:cortex.versionium.log
+occurrences: 1
+firstSeenAt: 1790684787086
+lastSeenAt: 1790684787086
+fingerprint: 74dd2068488c3f182c101a2c
+payload:
+  intent: []
+  grammar:
+    - versionium log
+  tags:
+    - cortex
+  id: cortex.versionium.log
+  namespace: cortex
+  name: versionium.log
+  version: 3.5.0
+  route:
+    method: GET
+    path: /api/versionium/log
+  description: MOVED to versionium :3754 GET /api/versionium/history — cortex answers with a moved notice
+  params: []
+  permissions:
+    - system
+  hooks: {}

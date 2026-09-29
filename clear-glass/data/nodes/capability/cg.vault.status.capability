@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.vault.status
+type: capability
+id: cg.vault.status
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786725
+source: clear-glass/registry-components.js:cg.vault.status
+occurrences: 1
+firstSeenAt: 1790684786725
+lastSeenAt: 1790684786725
+fingerprint: aa30659c2797bbfefde6fd16
+payload:
+  intent: []
+  grammar:
+    - vault status
+  tags:
+    - cg
+    - vault
+    - security
+  id: cg.vault.status
+  namespace: cg
+  name: vault.status
+  version: 3.17.0
+  route:
+    method: IPC
+    path: vault:status
+  description: Which key protects each vault — OS-sealed (safeStorage) or legacy
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.extensions.list
 type: capability
 id: cg.extensions.list
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730169
-source: clear-glass.registry-components:cg.extensions.list
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786678
+source: clear-glass/registry-components.js:cg.extensions.list
+occurrences: 1
+firstSeenAt: 1789250730169
+lastSeenAt: 1790684786678
+fingerprint: 2114b52553b470468ded0677
 payload:
-  id: cg.extensions.list
-  namespace: cg
-  name: extensions.list
-  version: 3.1.0
+  intent: []
   grammar:
     - extensions list
-  route:
-    method: IPC
-    path: extensions:list
-  intent: []
-  description: List real loaded Chrome extensions
-  params: []
   tags:
     - cg
     - extensions
+  id: cg.extensions.list
+  namespace: cg
+  name: extensions.list
+  version: 3.17.0
+  route:
+    method: IPC
+    path: extensions:list
+  description: List real loaded Chrome extensions
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-eravos.contract
 type: capability
 id: eravos.contract
-context: eravos/registry-components.js real capability export
+context: eravos/registry-components.js — declared capability
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730186
-source: eravos.registry-components:eravos.contract
+system: null
+tags:
+  - eravos
+  - capability
+exported_at: 1790684787177
+source: eravos/registry-components.js:eravos.contract
+occurrences: 1
+firstSeenAt: 1789250730186
+lastSeenAt: 1790684787177
+fingerprint: 89cbee9743ad7b963dcbec4f
 payload:
+  intent: []
+  grammar:
+    - eravos contract
+  tags:
+    - eravos
   id: eravos.contract
   namespace: eravos
   name: contract
   version: 3.0.0
-  grammar:
-    - eravos contract
   route:
     method: GET
     path: /contract
-  intent: []
   description: ERAVOS interaction contract
   params: []
-  tags:
-    - eravos
   permissions:
     - system
   hooks: {}

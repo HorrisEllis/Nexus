@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.components
+type: capability
+id: diagnostic.get.components
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787108
+source: diagnostic/interaction-contract.json:diagnostic.get.components
+occurrences: 1
+firstSeenAt: 1790684787108
+lastSeenAt: 1790684787108
+fingerprint: 17268298d5e7d4475ed85e44
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.components
+  namespace: diagnostic
+  name: /components
+  version: 1.0.0
+  route:
+    method: GET
+    path: /components
+  description: Component registry snapshot

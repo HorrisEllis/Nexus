@@ -200,7 +200,7 @@ function createJobStore() {
     return done;
   }
 
-  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax, canonical, reuse, join = true }) {
+  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax, canonical, reuse, join = true, hatInPrompt = null, chatUrl = null }) {
     const fingerprint = require('./job-retry.js').fingerprint({ provider, agentId, canonical, prompt });
     if (join !== false && provider !== 'ollama') {
       const twin = _twin(fingerprint, { reuse });
@@ -215,13 +215,20 @@ function createJobStore() {
     // §ACK-INJECTION-FIX — computed once at creation, not per-dispatch-
     // retry, so a job's persona stays stable across any real redelivery.
     const repoHat = _repoJobHat(agentId);
-    const hat = repoHat !== undefined ? repoHat : _suggestJobHat(prompt);
+    // §0.39.269 — hatInPrompt: the caller already put this hat's persona in the prompt (idearium's chunk builds wear
+    // the_builder or the repo hat themselves). Guessing a hat from the words would prepend a second persona — the
+    // "[the_builder] You build, bottom-up…" header stacked on top of the same text.
+    const hat = repoHat !== undefined ? repoHat
+      : (typeof hatInPrompt === 'string' && hatInPrompt.trim()) ? { name: hatInPrompt.trim(), personaPrompt: '', toolScope: [], source: 'caller', personaInPrompt: true }
+      : _suggestJobHat(prompt);
     const job = {
       id, command, provider, prompt, content: content || null, source: source || null,
       tools: Array.isArray(tools) ? tools : null,
       // 2026-09-19: which account/agent tab this job belongs to, an optional transport pin ('ncp' = the userscript, never the
       // mesh: a wake reply to a HUMAN must land in the tab they typed in), and wake recursion depth (loop guard).
       accountId: accountId || null, agentId: agentId || null, transport: transport || null, wakeDepth: wakeDepth || 0,
+      // §0.39.279 — the chat this job must be typed into (a wake answered from a chat no job owns goes back to THAT chat)
+      chatUrl: chatUrl || null,
       // §CODE-ARTIFACT 2026-09-19 — James: "Each job needs to list file
       // name. Then the listener listens for the code and uses the file
       // name for the artifact. And coding syntax." The requester is the

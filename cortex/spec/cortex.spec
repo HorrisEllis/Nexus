@@ -289,3 +289,9 @@ spec:
       memory_pressure fault class: pressure→L1 (+0.20), critical→L3 (+0.50),
       ok→recordSuccess decay. Built from the 2026-07-20 live 0xC0000409
       double-crash log, where the event fired with zero consumers.
+
+  # ## ADDENDUM 2026-09-27 (0.39.267) — RAID's intent contract reads the worn hat
+  # docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec (H4).
+  # contract-intake rows carry `hat`; acknowledge() calls checkAgentIntentContract(forAgent, intention, { hat }). With a
+  # hat, that hat's allowedIntents decide whoever wears it; a hat that is not live is refused. Without one, the old rule
+  # (any hat naming the agent) stands. speceng.build sends the hat on its RAID observability contract.

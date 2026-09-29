@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-copilot.person_model.health
 type: capability
 id: copilot.person_model.health
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730181
-source: copilot.registry-components:copilot.person_model.health
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786880
+source: copilot/registry-components.js:copilot.person_model.health
+occurrences: 1
+firstSeenAt: 1789250730181
+lastSeenAt: 1790684786880
+fingerprint: 88026cb48f8c7f6977e69301
 payload:
+  intent: []
+  grammar:
+    - copilot person_model health
+  tags:
+    - copilot
+    - person-model
   id: copilot.person_model.health
   namespace: copilot
   name: person_model.health
   version: 2.0.0
-  grammar:
-    - copilot person_model health
   route:
     method: GET
     path: /api/person-model/health
-  intent: []
   description: Person-model stats + chain state
   params: []
-  tags:
-    - copilot
-    - person-model
   permissions:
     - system
   hooks: {}

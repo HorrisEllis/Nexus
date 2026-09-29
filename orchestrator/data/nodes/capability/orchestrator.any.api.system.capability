@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.any.api.system
+type: capability
+id: orchestrator.any.api.system
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787513
+source: orchestrator/interaction-contract.json:orchestrator.any.api.system
+occurrences: 1
+firstSeenAt: 1790684787513
+lastSeenAt: 1790684787513
+fingerprint: 4f5fbd1ce43b753e8237b6d7
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.any.api.system
+  namespace: orchestrator
+  name: /api/system/*
+  version: 1.0.0
+  route:
+    method: ANY
+    path: /api/system/*
+  description: startsWith — real per-system status/control, sub-paths not individually enumerated

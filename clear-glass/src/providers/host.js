@@ -198,11 +198,17 @@ class ProviderHost {
   // module is its own file on disk, just like the GM shim is its own file.
   // Missing/unreadable is non-fatal: providers boot without "hey nexus"
   // rather than not booting at all.
+  // §0.39.278 — a second shared prelude, the same way: guardian/userscript-chat-stream.js (window.NexusChatStream) —
+  // each provider chat streamed live, mutation by mutation, into this app's download manager (chat ledger). Each file
+  // loads on its own: one missing never stops the other.
   _loadSharedPrelude() {
     if (!this.guardianDir) return '';
-    const p = path.join(this.guardianDir, 'userscript-nexus-wake.js');
-    try { return fs.readFileSync(p, 'utf8'); }
-    catch (e) { _logWarn(`[ProviderHost] nexus-wake prelude not loaded: ${e.message}`); return ''; }
+    const out = [];
+    for (const f of ['userscript-nexus-wake.js', 'userscript-chat-stream.js']) {
+      try { out.push(fs.readFileSync(path.join(this.guardianDir, f), 'utf8')); }
+      catch (e) { _logWarn(`[ProviderHost] ${f} prelude not loaded: ${e.message}`); }
+    }
+    return out.join('\n;\n');
   }
 
   // ── Inject GM shim + userscript into a window ───────────────────────────

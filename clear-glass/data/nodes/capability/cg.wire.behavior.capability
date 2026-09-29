@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.wire.behavior
 type: capability
 id: cg.wire.behavior
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730165
-source: clear-glass.registry-components:cg.wire.behavior
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786662
+source: clear-glass/registry-components.js:cg.wire.behavior
+occurrences: 1
+firstSeenAt: 1789250730165
+lastSeenAt: 1790684786662
+fingerprint: 8655f237b14e697f2ef0108d
 payload:
-  id: cg.wire.behavior
-  namespace: cg
-  name: wire.behavior
-  version: 3.1.0
+  intent: []
   grammar:
     - wire behavior
-  route:
-    method: POST
-    path: /hook/behavior
-  intent: []
-  description: Behavior plan → Cortex intelligence
-  params: []
   tags:
     - cg
     - wire
     - intelligence
+  id: cg.wire.behavior
+  namespace: cg
+  name: wire.behavior
+  version: 3.17.0
+  route:
+    method: POST
+    path: /hook/behavior
+  description: Behavior plan → Cortex intelligence
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

@@ -297,4 +297,5 @@ function bootProbe({ cwd, file, expectPort = null, healthPath = '/health', bootT
   });
 }
 
-module.exports = { capabilities, runNode, runEnv, syntaxCheck, resolveDeps, bootProbe, readPortMap, tsFlag, PACKAGES_ROOT, NEXUS_ROOT, JS_EXT, TS_EXT };
+// nodeArgsFor exported 0.39.271 (lib/cos-run.js test.suite: `node --test` gets the same preload)
+module.exports = { capabilities, runNode, runEnv, nodeArgsFor, syntaxCheck, resolveDeps, bootProbe, readPortMap, tsFlag, PACKAGES_ROOT, NEXUS_ROOT, JS_EXT, TS_EXT };

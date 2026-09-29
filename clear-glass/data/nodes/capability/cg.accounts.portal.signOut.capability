@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-capability-cg.accounts.portal.signOut
+type: capability
+id: cg.accounts.portal.signOut
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786721
+source: clear-glass/registry-components.js:cg.accounts.portal.signOut
+occurrences: 1
+firstSeenAt: 1790684786721
+lastSeenAt: 1790684786721
+fingerprint: 3f41af603acd7425f3e7247b
+payload:
+  intent: []
+  grammar:
+    - accounts portal signOut
+  tags:
+    - cg
+    - accounts
+    - portal
+    - vault
+  id: cg.accounts.portal.signOut
+  namespace: cg
+  name: accounts.portal.signOut
+  version: 3.17.0
+  route:
+    method: IPC
+    path: accounts:portal:signOut
+  description: Clear the account's partition and delete its vault copy
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

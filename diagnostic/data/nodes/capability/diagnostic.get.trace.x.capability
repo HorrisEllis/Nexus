@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.trace.x
+type: capability
+id: diagnostic.get.trace.x
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787105
+source: diagnostic/interaction-contract.json:diagnostic.get.trace.x
+occurrences: 1
+firstSeenAt: 1790684787105
+lastSeenAt: 1790684787105
+fingerprint: faa55158e2c6df2664f16ada
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.trace.x
+  namespace: diagnostic
+  name: /trace/:x
+  version: 1.0.0
+  route:
+    method: GET
+    path: /trace/:x
+  description: Causal trace for a given entity

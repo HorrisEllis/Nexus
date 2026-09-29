@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.cookie.restore
 type: capability
 id: cg.cookie.restore
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730160
-source: clear-glass.registry-components:cg.cookie.restore
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786639
+source: clear-glass/registry-components.js:cg.cookie.restore
+occurrences: 1
+firstSeenAt: 1789250730160
+lastSeenAt: 1790684786639
+fingerprint: 82a15145d3ee3f20f27e7272
 payload:
-  id: cg.cookie.restore
-  namespace: cg
-  name: cookie.restore
-  version: 3.1.0
+  intent: []
   grammar:
     - cookie restore
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Restore cookies from vault
-  params: []
   tags:
     - cg
     - cookie
+  id: cg.cookie.restore
+  namespace: cg
+  name: cookie.restore
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Restore cookies from vault
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-CKI-002

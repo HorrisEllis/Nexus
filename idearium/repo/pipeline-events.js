@@ -41,6 +41,8 @@ export const PIPELINE_EVENTS = Object.freeze([
   { type: 'graph:build:complete',       stage: 'graph',  scope: 'run',  bus: true },
   { type: 'spec:graph:complete',        stage: 'spec',   scope: 'run',  bus: true }, // 0.39.246 — specification graph
   { type: 'spec:graph:failed',          stage: 'spec',   scope: 'run',  bus: true },
+  { type: 'intel:build:complete',       stage: 'intel',  scope: 'run',  bus: true }, // 0.39.273 — chunk cards + search index (lib/code-intel)
+  { type: 'intel:build:failed',         stage: 'intel',  scope: 'run',  bus: true },
 ]);
 
 const BY_TYPE = new Map(PIPELINE_EVENTS.map(e => [e.type, e]));

@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-versionium.history.list
 type: capability
 id: versionium.history.list
-context: versionium/registry-components.js real capability export
+context: versionium/registry-components.js — declared capability
 intent: null
 summary: null
-system: versionium
-tags: []
-exported_at: 1789250756043
-source: versionium.registry-components:versionium.history.list
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787521
+source: versionium/registry-components.js:versionium.history.list
+occurrences: 1
+firstSeenAt: 1789250756043
+lastSeenAt: 1790684787521
+fingerprint: b1ba1c6acbd61bac4f23d6d3
 payload:
-  id: versionium.history.list
-  namespace: versionium
-  name: history.list
-  version: 3.0.0
+  intent: []
   grammar:
     - versionium history
     - vh
+  tags:
+    - versionium
+  id: versionium.history.list
+  namespace: versionium
+  name: history.list
+  version: 3.3.0
   route:
     method: GET
     path: /api/versionium/history
-  intent: []
   description: Real commit history, optionally filtered by system
   params: []
-  tags:
-    - versionium
   permissions:
     - system
   hooks: {}

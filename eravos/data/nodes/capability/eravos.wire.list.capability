@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-eravos.wire.list
 type: capability
 id: eravos.wire.list
-context: eravos/registry-components.js real capability export
+context: eravos/registry-components.js — declared capability
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730184
-source: eravos.registry-components:eravos.wire.list
+system: null
+tags:
+  - eravos
+  - capability
+exported_at: 1790684787170
+source: eravos/registry-components.js:eravos.wire.list
+occurrences: 1
+firstSeenAt: 1789250730184
+lastSeenAt: 1790684787170
+fingerprint: 14308f42c29336df90cd4c39
 payload:
+  intent: []
+  grammar:
+    - eravos wire list
+  tags:
+    - eravos
   id: eravos.wire.list
   namespace: eravos
   name: wire.list
   version: 3.0.0
-  grammar:
-    - eravos wire list
   route:
     method: GET
     path: /api/wires
-  intent: []
   description: List all wires
   params: []
-  tags:
-    - eravos
   permissions:
     - system
   hooks: {}

@@ -2,30 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-guardian.provider.result
 type: capability
 id: guardian.provider.result
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730134
-source: guardian.registry-components:guardian.provider.result
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787208
+source: guardian/registry-components.js:guardian.provider.result
+occurrences: 1
+firstSeenAt: 1789250730134
+lastSeenAt: 1790684787208
+fingerprint: 70a579d44da2682e990b2355
 payload:
-  id: guardian.provider.result
-  namespace: guardian
-  name: provider.result
-  version: 3.6.2
+  intent: []
   grammar:
     - provider result
     - provider-result
-  route:
-    method: POST
-    path: /result
-  intent: []
-  description: NCP result from browser tab
-  params: []
   tags:
     - guardian
     - ncp
+  id: guardian.provider.result
+  namespace: guardian
+  name: provider.result
+  version: 3.14.0
+  route:
+    method: POST
+    path: /result
+  description: NCP result from browser tab
+  params: []
   permissions:
     - system
   hooks: {}

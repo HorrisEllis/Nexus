@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.gaps.summary
 type: capability
 id: guardian.gaps.summary
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730143
-source: guardian.registry-components:guardian.gaps.summary
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787216
+source: guardian/registry-components.js:guardian.gaps.summary
+occurrences: 1
+firstSeenAt: 1789250730143
+lastSeenAt: 1790684787216
+fingerprint: 5b70a9ee6cc771640b3c1812
 payload:
-  id: guardian.gaps.summary
-  namespace: guardian
-  name: gaps.summary
-  version: 3.6.2
+  intent: []
   grammar:
     - gaps summary
     - gaps-summary
+  tags:
+    - guardian
+  id: guardian.gaps.summary
+  namespace: guardian
+  name: gaps.summary
+  version: 3.14.0
   route:
     method: GET
     path: /gaps/summary
-  intent: []
   description: Gap summary by type + severity
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

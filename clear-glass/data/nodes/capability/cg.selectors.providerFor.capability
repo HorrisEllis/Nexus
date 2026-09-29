@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-capability-cg.selectors.providerFor
+type: capability
+id: cg.selectors.providerFor
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786733
+source: clear-glass/registry-components.js:cg.selectors.providerFor
+occurrences: 1
+firstSeenAt: 1790684786733
+lastSeenAt: 1790684786733
+fingerprint: 38d6505f8d849d12d80c008a
+payload:
+  intent: []
+  grammar:
+    - selectors providerFor
+  tags:
+    - cg
+    - selectors
+    - picker
+    - providers
+  id: cg.selectors.providerFor
+  namespace: cg
+  name: selectors.providerFor
+  version: 3.17.0
+  route:
+    method: IPC
+    path: selectors:provider-for-url
+  description: >-
+    Which NCP provider a page belongs to (src/providers/registry.js hosts) — decides whether a pick
+    is offered as a provider selector
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

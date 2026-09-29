@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-eravos.mod.remove
 type: capability
 id: eravos.mod.remove
-context: eravos/registry-components.js real capability export
+context: eravos/registry-components.js — declared capability
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730184
-source: eravos.registry-components:eravos.mod.remove
+system: null
+tags:
+  - eravos
+  - capability
+exported_at: 1790684787168
+source: eravos/registry-components.js:eravos.mod.remove
+occurrences: 1
+firstSeenAt: 1789250730184
+lastSeenAt: 1790684787168
+fingerprint: 7cf71b476d3182d5684b4206
 payload:
+  intent: []
+  grammar:
+    - eravos mod remove
+  tags:
+    - eravos
   id: eravos.mod.remove
   namespace: eravos
   name: mod.remove
   version: 3.0.0
-  grammar:
-    - eravos mod remove
   route:
     method: DELETE
     path: /api/mods/:uuid
-  intent: []
   description: Remove an mod
   params: []
-  tags:
-    - eravos
   permissions:
     - system
   hooks: {}

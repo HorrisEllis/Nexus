@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-ollama.jobs.get
 type: capability
 id: ollama.jobs.get
-context: ollama/registry-components.js real capability export
+context: ollama/registry-components.js — declared capability
 intent: null
 summary: null
-system: ollama
-tags: []
-exported_at: 1789250730190
-source: ollama.registry-components:ollama.jobs.get
+system: null
+tags:
+  - ollama
+  - capability
+exported_at: 1790684787498
+source: ollama/registry-components.js:ollama.jobs.get
+occurrences: 1
+firstSeenAt: 1789250730190
+lastSeenAt: 1790684787498
+fingerprint: 48f19fc96cfb86cc8854e6bc
 payload:
+  intent: []
+  grammar:
+    - ollama jobs get
+  tags:
+    - ollama
   id: ollama.jobs.get
   namespace: ollama
   name: jobs.get
   version: 1.0.0
-  grammar:
-    - ollama jobs get
   route:
     method: GET
     path: /api/jobs/:id
-  intent: []
   description: Get single job by id
   params: []
-  tags:
-    - ollama
   permissions:
     - system
   hooks: {}

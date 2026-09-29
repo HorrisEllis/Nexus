@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.status
+type: capability
+id: copilot.opportunity.status
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786880
+source: copilot/registry-components.js:copilot.opportunity.status
+occurrences: 1
+firstSeenAt: 1790684786880
+lastSeenAt: 1790684786880
+fingerprint: ca43f9981100e0267ae9dbde
+payload:
+  intent: []
+  grammar:
+    - job status
+    - applications
+    - what needs me
+    - opportunity status
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.status
+  namespace: copilot
+  name: opportunity.status
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/opportunity/status
+  description: 'Job/freelance pipeline: counts per stage and what waits on James'
+  params: []
+  permissions:
+    - system
+  hooks: {}

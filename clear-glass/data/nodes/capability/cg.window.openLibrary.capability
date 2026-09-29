@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-capability-cg.window.openLibrary
+type: capability
+id: cg.window.openLibrary
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786732
+source: clear-glass/registry-components.js:cg.window.openLibrary
+occurrences: 1
+firstSeenAt: 1790684786732
+lastSeenAt: 1790684786732
+fingerprint: d077f11c2420d3b75130b71a
+payload:
+  intent: []
+  grammar:
+    - window openLibrary
+  tags:
+    - cg
+    - window
+    - library
+  id: cg.window.openLibrary
+  namespace: cg
+  name: window.openLibrary
+  version: 3.17.0
+  route:
+    method: IPC
+    path: window:openLibrary
+  description: >-
+    Open (or focus) the Library window at an area — downloads, responses, bookmarks, history,
+    accounts, passwords, autofill, macros
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

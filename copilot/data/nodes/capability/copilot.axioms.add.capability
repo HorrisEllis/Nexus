@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-copilot.axioms.add
 type: capability
 id: copilot.axioms.add
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730176
-source: copilot.registry-components:copilot.axioms.add
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786859
+source: copilot/registry-components.js:copilot.axioms.add
+occurrences: 1
+firstSeenAt: 1789250730176
+lastSeenAt: 1790684786859
+fingerprint: 24892bc8be9ac038f475fb9f
 payload:
+  intent: []
+  grammar:
+    - add axiom
+  tags:
+    - copilot
   id: copilot.axioms.add
   namespace: copilot
   name: axioms.add
   version: 2.0.0
-  grammar:
-    - add axiom
   route:
     method: POST
     path: /api/axioms/add
-  intent: []
   description: Add a runtime axiom
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

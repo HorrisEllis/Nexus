@@ -398,7 +398,8 @@ export class IdeaOS {
     // to match. Real fix: call the system directly, per the 410's own
     // stated instruction, not a guessed port — nx.get() already resolves
     // 'versionium' via that same real config.
-    const rows = await nx.get('versionium', `/api/versionium/history?system=idearium`);
+    // §0.39.271 V1 — ?n= returns the NEWEST n (without it: the first 200 in store order).
+    const rows = await nx.get('versionium', `/api/versionium/history?system=idearium&n=${Math.max(1, Math.min(1000, n || 20))}`);
     if (rows?.error) return { error: rows.error };
     // Same enrichment as commitSnapshot() above, derived from each row's
     // stored `state` instead of live db — historical commits, not "now".
@@ -426,7 +427,7 @@ export class IdeaOS {
   async snapshot(commitId) {
     // §FIX 2026-09-03 — same real 410 as snapshots() above; see that
     // method's comment for the full finding.
-    const rows = await nx.get('versionium', `/api/versionium/history?system=idearium`);
+    const rows = await nx.get('versionium', `/api/versionium/history?system=idearium&n=1000`);
     if (rows?.error) return null;
     return (rows.commits || []).find(s => s.commitId === commitId || s.uuid === commitId) || null;
   }

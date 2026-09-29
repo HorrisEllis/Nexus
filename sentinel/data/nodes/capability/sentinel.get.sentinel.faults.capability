@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-sentinel.get.sentinel.faults
+type: capability
+id: sentinel.get.sentinel.faults
+context: sentinel/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - sentinel
+  - capability
+exported_at: 1790684787517
+source: sentinel/interaction-contract.json:sentinel.get.sentinel.faults
+occurrences: 1
+firstSeenAt: 1790684787517
+lastSeenAt: 1790684787517
+fingerprint: 90abbd605e1856d8a0463951
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - sentinel
+    - interaction-contract
+  id: sentinel.get.sentinel.faults
+  namespace: sentinel
+  name: /sentinel/faults
+  version: 0.1.0
+  route:
+    method: GET
+    path: /sentinel/faults
+  description: Open faults, read from the ledger

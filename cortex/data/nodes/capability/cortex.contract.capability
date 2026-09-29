@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.contract
+type: capability
+id: cortex.contract
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787079
+source: cortex/registry-components.js:cortex.contract
+occurrences: 1
+firstSeenAt: 1790684787079
+lastSeenAt: 1790684787079
+fingerprint: 6add87d90ce9e298e181696d
+payload:
+  intent: []
+  grammar:
+    - contract
+  tags:
+    - cortex
+  id: cortex.contract
+  namespace: cortex
+  name: contract
+  version: 3.5.0
+  route:
+    method: GET
+    path: /contract
+  description: Cortex interaction contract
+  params: []
+  permissions:
+    - system
+  hooks: {}

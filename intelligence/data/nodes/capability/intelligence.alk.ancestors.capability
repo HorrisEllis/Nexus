@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.alk.ancestors
+type: capability
+id: intelligence.alk.ancestors
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787411
+source: intelligence/registry-components.js:intelligence.alk.ancestors
+occurrences: 1
+firstSeenAt: 1790684787411
+lastSeenAt: 1790684787411
+fingerprint: fa899d547f71b1563a744e5c
+payload:
+  intent: []
+  grammar:
+    - alk ancestors
+    - intelligence alk
+  tags:
+    - intelligence
+    - alk
+  id: intelligence.alk.ancestors
+  namespace: intelligence
+  name: alk.ancestors
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/alk/ancestors
+  description: ALK — causedBy chain, nearest-first
+  params: []
+  permissions:
+    - system
+  hooks: {}

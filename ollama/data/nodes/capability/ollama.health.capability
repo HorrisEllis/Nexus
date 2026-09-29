@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-ollama.health
 type: capability
 id: ollama.health
-context: ollama/registry-components.js real capability export
+context: ollama/registry-components.js — declared capability
 intent: null
 summary: null
-system: ollama
-tags: []
-exported_at: 1789250730190
-source: ollama.registry-components:ollama.health
+system: null
+tags:
+  - ollama
+  - capability
+exported_at: 1790684787500
+source: ollama/registry-components.js:ollama.health
+occurrences: 1
+firstSeenAt: 1789250730190
+lastSeenAt: 1790684787500
+fingerprint: 377e06a31fccf5d4ce05f485
 payload:
+  intent: []
+  grammar:
+    - ollama health
+  tags:
+    - ollama
   id: ollama.health
   namespace: ollama
   name: health
   version: 1.0.0
-  grammar:
-    - ollama health
   route:
     method: GET
     path: /health
-  intent: []
   description: Ollama bridge health
   params: []
-  tags:
-    - ollama
   permissions:
     - system
   hooks: {}

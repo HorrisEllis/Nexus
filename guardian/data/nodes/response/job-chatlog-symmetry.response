@@ -10,11 +10,11 @@ tags:
   - provider:claude
   - status:complete
   - source:ncp
-exported_at: 1790427744287
+exported_at: 1790684821013
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1790427744287
-lastSeenAt: 1790427744287
+firstSeenAt: 1790684821013
+lastSeenAt: 1790684821013
 fingerprint: null
 payload:
   jobId: job-chatlog-symmetry
@@ -38,4 +38,4 @@ payload:
       queued: true
   prompt: a real, distinctive test prompt about narwhals
   command: ask
-  ts: 1790427744285
+  ts: 1790684821010

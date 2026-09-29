@@ -2,31 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-loom.scaffold
 type: capability
 id: loom.scaffold
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730150
-source: loom.registry-components:loom.scaffold
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787458
+source: loom/registry-components.js:loom.scaffold
+occurrences: 1
+firstSeenAt: 1789250730150
+lastSeenAt: 1790684787458
+fingerprint: e1542e886f65f1dee9718f6a
 payload:
-  id: loom.scaffold
-  namespace: loom
-  name: scaffold
-  version: 1.5.0
+  intent: []
   grammar:
     - scaffold
     - scaffold
-  route:
-    method: POST
-    path: /api/scaffold
-  intent: []
-  description: Scaffold a new system from a spec
-  params: []
   tags:
     - loom
     - write
     - build
+  id: loom.scaffold
+  namespace: loom
+  name: scaffold
+  version: 1.5.1
+  route:
+    method: POST
+    path: /api/scaffold
+  description: Scaffold a new system from a spec
+  params: []
   permissions:
     - system
-  hooks: {}

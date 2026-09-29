@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.screenQa.inject
+type: capability
+id: cg.screenQa.inject
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786705
+source: clear-glass/registry-components.js:cg.screenQa.inject
+occurrences: 1
+firstSeenAt: 1790684786705
+lastSeenAt: 1790684786705
+fingerprint: 60f968346d7ae2a9f2f342ab
+payload:
+  intent: []
+  grammar:
+    - screenQa inject
+  tags:
+    - cg
+    - screen-qa
+  id: cg.screenQa.inject
+  namespace: cg
+  name: screenQa.inject
+  version: 3.17.0
+  route:
+    method: IPC
+    path: screen-qa:inject
+  description: Write a chosen answer into one real field
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

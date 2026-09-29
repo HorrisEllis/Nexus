@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.any.api.capabilities.resolve
+type: capability
+id: orchestrator.any.api.capabilities.resolve
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787512
+source: orchestrator/interaction-contract.json:orchestrator.any.api.capabilities.resolve
+occurrences: 1
+firstSeenAt: 1790684787512
+lastSeenAt: 1790684787512
+fingerprint: cfb911fb13ff740eef5e7fc2
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.any.api.capabilities.resolve
+  namespace: orchestrator
+  name: /api/capabilities/resolve
+  version: 1.0.0
+  route:
+    method: ANY
+    path: /api/capabilities/resolve
+  description: null

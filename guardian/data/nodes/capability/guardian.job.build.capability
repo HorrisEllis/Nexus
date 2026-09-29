@@ -2,30 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-guardian.job.build
 type: capability
 id: guardian.job.build
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730139
-source: guardian.registry-components:guardian.job.build
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787210
+source: guardian/registry-components.js:guardian.job.build
+occurrences: 1
+firstSeenAt: 1789250730139
+lastSeenAt: 1790684787210
+fingerprint: fbfa75c74dfa1e39451b1247
 payload:
-  id: guardian.job.build
-  namespace: guardian
-  name: job.build
-  version: 3.6.2
+  intent: []
   grammar:
     - job build
     - job-build
-  route:
-    method: POST
-    path: /build
-  intent: []
-  description: Full T0→T1→T2 build pipeline from spec
-  params: []
   tags:
     - guardian
     - build
+  id: guardian.job.build
+  namespace: guardian
+  name: job.build
+  version: 3.14.0
+  route:
+    method: POST
+    path: /build
+  description: Full T0→T1→T2 build pipeline from spec
+  params: []
   permissions:
     - system
   hooks: {}

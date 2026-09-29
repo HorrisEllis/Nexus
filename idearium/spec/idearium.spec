@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        idearium
-    version:     4.7.0   # §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
+    version:     4.11.0   # §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
                          # (DOM mutations, the reply's node anchor, stages, streaming text) via
                          # guardian-stream onFeed → os.broadcast (SSE only); late-reply lookup
                          # takes the guardian jobId. Previous — 4.3.0 §0.39.241 (MINOR, two new routes) — GET/POST /api/repos/:uuid/agent/late:
@@ -304,3 +304,69 @@ spec:
   # 4. A new Eravos organism arrives from the Eravos frame (postMessage, frame-checked) as an idea, or
   #    the New Spec dialog filled in and linked to it.
   # Proven: tests/probe/nexus-atlas-home.js 17/17 in a real browser; test-nexus-atlas-refs 45/45.
+
+  # ## ADDENDUM 2026-09-27 (0.39.267–269) — the hat on any backend, memory in builds, no Eravos in New Spec
+  # docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec (H2, H3, G5, M5).
+  # 1. Providers are lib/agent-providers.js (copilot, ollama, every guardian userscript on disk) — GET /api/agent-providers;
+  #    the per-chunk select reads it, gains "default" (the repo's Agent-tab switch and hat), a hand pick is pinned
+  #    (chunk.agentPinned), "" un-pins, unknown names refused.
+  # 2. speceng.build and the codebase planners go through _buildIdentity(specUuid): a repo's spec wears the repo hat and
+  #    builds on the repo's switch and Ollama model; a spec with no repo wears the_builder. buildChunkWithAgent resolves
+  #    'copilot' first and records the provider that answered. Builds default to DEFAULT_MODEL (not the 7b).
+  # 3. Memory: before a chunk goes out, lib/agent-memory.js recall() — the agent's own exchanges from the download
+  #    manager and the files already finished in this spec (exports/requires) — sits between the hat and the prompt,
+  #    beside WARP's cache key, not in it. Guardian is sent agentId (repo-<uuid>), hatInPrompt and fileName; Ollama
+  #    answers are recorded. The build response names agentId and the memory used.
+  # 4. New Spec lists no Eravos mods (GET /api/spec-engine/templates?include=eravos still does).
+
+  # ## ADDENDUM 2026-09-27 (0.39.270) — the Idearium atlas, rewritten from the code
+  # docs/2026-09-27-idearium-atlas-phasemap.spec (mapped before building). docs/atlases/idearium-atlas.md now describes
+  # the system as it is: the process and its stores, the 7 views and 13 repo tabs, the Agent tab end to end (the hat,
+  # one message's path, the backend switch, the 14 prompt blocks, context, both kinds of memory, the 109 tools and 3
+  # scopes, every command, injects, the live feed, late replies, Settings → Agents, where its state lives, its 37
+  # routes), ideas → specs → one chunk's build, repos (import, tiers L0–L8, snapshots, run, git/CI), NEXUS inside
+  # Idearium, the 217 routes by group and the event names. Every reference resolves; test-nexus-atlas-refs now holds it
+  # to 0 dead references. The earlier atlas is archived (docs/atlases/_archive/idearium-atlas.pre-0.39.270.md).
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# Idearium is one app: the top bar is always Welcome + Repos; Create and Build are the last two entries of the
+# open repo's own tab row, and their views carry a bar back to the repo ("two ideariums" — James).
+# Phasemap + Roadmap are one Phases tab (idearium/repo/phases.js, docs/phases-manager.spec): every phasemap form,
+# board/layers/table/maps, status, add, and build (Versionium snapshot first, then the repo's agent). Phasemap's
+# verification tiers + graphs moved to the Intelligence tab. The Spec tab shows the living spec first
+# (idearium/repo/living-spec.js); the spec-engine chunk builder is under "build manifest". Routes added:
+# repo.phases.{get,runs,status,add,build}, repo.living-spec, nexus-self.{versions,snapshot}. Repo snapshot lists
+# read the repo's own versionium branch, newest first (they read the first 200 commits of every repo). The run
+# route takes `from` (continue a test.all) and keeps each failure's debug report.
+
+# ── ADDENDUM 2026-09-27 (0.39.273) — docs/2026-09-27-idearium-codebase-toolkit-phasemap.spec, docs/code-intel.spec ──
+# James: "I want idearium solid for building codebases. Fully built, enterprise grade. Agent tools completely solid,
+# all context is easy to search and understand for each chunk."
+# 1. Chunks are structural (lib/code-intel/chunker.js 2.0.0): never cut mid-body, a declaration's doc opens its chunk,
+#    ≤150 lines (split at members / cases / sub-headings), every line once, ids from kind + qualified name. Measured
+#    on 0.39.272: 1054 of 3584 chunks began at a nested function and 984 ended in the next symbol's doc.
+# 2. Every chunk has a card (indexes/cards.json): kind, qualified name, signature, doc, one-line summary, neighbours,
+#    what it uses and what uses it — each with its basis (import | same-file | name) — and its tests. A BM25 index
+#    (indexes/search.json) makes the code itself searchable, not only symbol names and paths.
+# 3. Routes: GET/POST /api/repos/:uuid/code/:op (idearium/repo/code-api.js) — overview, tree, search, grep, chunk,
+#    outline, read, definition, changes; edit, write, delete, move, batch, check. Every write is an .inject (review mode
+#    stacks a later edit onto the pending proposal; auto mode applies all-or-nothing); a syntax-breaking write is
+#    refused unless force. /api/repos/:uuid/search and /chunks are unchanged.
+# 4. The repo page has a Code tab (search by meaning or exact text; any chunk's card and code; links follow uses).
+# 5. Agents: eleven idearium.code_*.tool tools; the harness scope lists code_map/search/chunk/read/edit/write/check +
+#    loom.find (loom.read/write stay allowed, no longer listed); the persona and the card block name them.
+# 6. RepoLayer.readTextFile/deleteTextFile: an imported file is read and deleted as its real bytes, not its chunk (a
+#    chunk of a file over max_chunk_bytes is a truncated reading — proposing an edit against it wrote the truncation).
+
+# ── ADDENDUM 2026-09-29 (0.39.280) — the build surface (docs/2026-09-29-build-surface-phasemap.spec) ──
+# repo/file-state.js (BS2), repo/deviation.js (BS3: from the baseline and since the last version, recalculated on every
+# repo snapshot and on a major file change — config repos.deviation_major_files / _fraction), repo/spec-plan.js (BS5:
+# the agent writes <spec>-phasemap.spec, bottom-up by layer with the axioms; validated by loom's parser; refused if not
+# bottom-up), repo/build-plan.js (BS6: gates mapped → snapshot → dispatched → replied → landed → closed; the ledger
+# per step). api/build-surface.js (BS7): GET files/state, GET|POST deviation, GET|POST environment,
+# POST environment/setup, GET|POST spec/plan, POST spec/build, GET plan, POST manage — every write-side step behind a
+# Versionium snapshot. UI (BS8–BS11, BS18): Files states + Manage, the Spec tab's build bar, Phases ▶, Settings
+# environment + the console embedded (settings.html?embed=1), the plan panel, Start building, Sync & CI theme,
+# window-chrome.js for the pop-outs. BS13: _buildIdentity builds a code spec with no repo as its original, else the
+# repo-agent default. BS15: deleting a spec.codegen repo clears its document spec's codeSpecUuid (kept in
+# codeRetired), unlinks the shared hat and removes a branch's worktree (branch kept).

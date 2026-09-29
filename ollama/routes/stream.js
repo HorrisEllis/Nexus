@@ -49,6 +49,11 @@ async function handle(req, res, { method, pathname }) {
       let ch = state.channels.get(channelId);
       if (!ch) { ch = { history: [], lastActivity: Date.now() }; state.channels.set(channelId, ch); }
       ch.history.push({ role: 'context', content: String(body.context), ts: Date.now() });
+      // §0.39.266 — copilot's nerve push adds a context line every 5 s to 'nexus-live' and nothing reads it; the push
+      // also counts as activity, so the hourly sweep never removed it. Context lines are capped (newest kept).
+      const CAP = parseInt(process.env.OLLAMA_CHANNEL_CONTEXT_CAP || '200', 10);
+      const ctxIdx = ch.history.reduce((a, h, i) => (h.role === 'context' ? (a.push(i), a) : a), []);
+      if (ctxIdx.length > CAP) { const drop = new Set(ctxIdx.slice(0, ctxIdx.length - CAP)); ch.history = ch.history.filter((_, i) => !drop.has(i)); }
       ch.lastActivity = Date.now();
       json(res, 200, { ok: true, channelId, turns: ch.history.length });
     } catch (e) {
@@ -92,7 +97,12 @@ async function handle(req, res, { method, pathname }) {
       'Connection': 'keep-alive', 'Access-Control-Allow-Origin': '*',
     });
 
-    const reqBody = JSON.stringify({ model, prompt: fullPrompt, stream: true });
+    // §0.39.266 — num_ctx sized to the whole channel history; the call recorded in the activity log
+    const OA = require('../../lib/ollama-activity.js');
+    const _ctx = OA.withNumCtx({}, fullPrompt.length);
+    const _t0 = Date.now();
+    const _rec = (ok, error) => OA.record({ caller: `bridge channel ${channelId}`, op: 'stream', model, promptChars: fullPrompt.length, numCtx: _ctx.numCtx, ms: Date.now() - _t0, ok, error, warning: _ctx.warning });
+    const reqBody = JSON.stringify({ model, prompt: fullPrompt, stream: true, options: _ctx.options });
     const u = new URL(`${OLLAMA_HOST}/api/generate`);
     let assembled = '';
     const upstream = http.request({
@@ -111,6 +121,7 @@ async function handle(req, res, { method, pathname }) {
           if (parsed.response) assembled += parsed.response;
           res.write(`data: ${JSON.stringify({ channelId, chunk: parsed.response || '', done: !!parsed.done, ts: Date.now() })}\n\n`);
           if (parsed.done) {
+            _rec(true);
             ch.history.push({ role: 'assistant', content: assembled, ts: Date.now() });
             ch.lastActivity = Date.now();
             res.end();
@@ -120,6 +131,7 @@ async function handle(req, res, { method, pathname }) {
       upstreamRes.on('end', () => { try { res.end(); } catch (_) {} });
     });
     upstream.on('error', e => {
+      _rec(false, e.message);
       res.write(`data: ${JSON.stringify({ channelId, error: `ollama unreachable: ${e.message}`, done: true, ts: Date.now() })}\n\n`);
       res.end();
     });

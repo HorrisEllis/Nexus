@@ -179,6 +179,8 @@ async function _callOllama(prompt, context, opts = {}) {
       intent:      opts.intent || 'ask',
       componentId: 'copilot.analysis',
       hookId:      'copilot.analysis.to-ollama',
+      agentId:     opts.agentId || 'copilot',          // §0.39.269 — the bridge files the exchange under copilot's memory
+      ...(opts.intent === 'adversarial-probe' ? { record: false } : {}),
       requestId:   opts.requestId,
       sessionId:   opts.sessionId,
       maxTokens:   1024,
@@ -202,7 +204,14 @@ async function _callOllama(prompt, context, opts = {}) {
  * @returns { text, modelUsed, intent, contextLayers, source }
  */
 async function answer(prompt, session, stream = [], opts = {}) {
-  const context = await assembleContext(prompt, stream, session);
+  let context = await assembleContext(prompt, stream, session);
+  // §0.39.269 — copilot's own memory (lib/agent-memory.js, over the download manager). Not for the self-test.
+  if (opts.intent !== 'adversarial-probe') {
+    try {
+      const mem = await require('../lib/agent-memory.js').recall({ agentId: 'copilot', query: prompt, budget: 2000 });
+      if (mem.text) context = `${context}\n${mem.text}`;
+    } catch (_) { /* memory is context, never a reason not to answer */ }
+  }
   const layers  = context.split('\n').filter(Boolean).length;
 
   const text = await _callOllama(prompt, context, {

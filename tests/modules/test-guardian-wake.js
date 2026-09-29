@@ -182,6 +182,60 @@ const read = (p) => fs.readFileSync(path.join(__dirname, '../..', p), 'utf8');
     assert.ok(/bus\.on\('guardian\.job\.complete'[\s\S]{0,120}_wakeLoop\.handleComplete/.test(server));
   });
 
+  // ── 0.39.279 — a wake in a chat no job owns, answered from the settled transcript ──
+  const chatOf = (msgs, o = {}) => ({ chatId: 'c1', url: 'https://claude.ai/chat/c1', settled: true, generating: false, messages: msgs, ...o });
+  const T = { jobGraceMs: 0 };
+  await test('WK-040', '0.39.279 — an agent\'s "hey nexus" in a chat with no job is answered as a wake-reply job typed into THAT chat', async () => {
+    const h = loop({});
+    const r = await h.wl.handleTranscript({ provider: 'claude', tabId: 't1', agentId: 'repo-x', chat: chatOf([{ role: 'user', text: 'fix the lock' }, { role: 'assistant', text: 'Checking.\n\nhey nexus, is the build green?' }]) }, T);
+    assert.strictEqual(r.replied, 'reply-1', JSON.stringify(r));
+    const c = h.created[0];
+    assert.deepStrictEqual([c.command, c.provider, c.transport, c.agentId, c.chatUrl, c.wakeDepth, c.join], ['wake-reply', 'claude', 'ncp', 'repo-x', 'https://claude.ai/chat/c1', 1, false]);
+    assert.ok(c.prompt.startsWith('[NEXUS] answer to your "hey nexus, is the build green?"'));
+    assert.deepStrictEqual(h.dispatched, ['reply-1']);
+    assert.ok(h.events.some(e => e[0] === 'guardian.wake.replied' && e[1].via === 'transcript'));
+  });
+  await test('WK-041', '0.39.279 — not while the reply streams; not James\'s own turn; not a turn without a wake; once per turn', async () => {
+    const h = loop({});
+    const w = [{ role: 'assistant', text: 'hey nexus, status?' }];
+    assert.strictEqual((await h.wl.handleTranscript({ provider: 'claude', chat: chatOf(w, { generating: true }) }, T)).skipped, 'not_settled');
+    assert.strictEqual((await h.wl.handleTranscript({ provider: 'claude', chat: chatOf(w, { settled: false }) }, T)).skipped, 'not_settled');
+    assert.strictEqual((await h.wl.handleTranscript({ provider: 'claude', chat: chatOf([{ role: 'user', text: 'hey nexus, status?' }]) }, T)).skipped, 'last_turn_not_the_agent');
+    assert.strictEqual((await h.wl.handleTranscript({ provider: 'claude', chat: chatOf([{ role: 'assistant', text: 'nexus is fine' }]) }, T)).skipped, 'no_wake');
+    assert.ok((await h.wl.handleTranscript({ provider: 'claude', chat: chatOf(w) }, T)).replied);
+    assert.strictEqual((await h.wl.handleTranscript({ provider: 'claude', chat: chatOf(w) }, T)).skipped, 'already_handled');
+    assert.strictEqual(h.asked.length, 1);
+  });
+  await test('WK-042', '0.39.279 — the same wake seen by both paths is answered once: a job\'s reply is left to the job path', async () => {
+    const jobs = { m1: meshJob({ provider: 'claude', transport: 'ncp', responseText: 'Checking.\n\nhey nexus, is the build green?' }) };
+    const h = loop(jobs);
+    await h.wl.handleComplete({ jobId: 'm1' });
+    const r = await h.wl.handleTranscript({ provider: 'claude', chat: chatOf([{ role: 'assistant', text: 'Checking.\n\nhey nexus, is the build green?' }]) }, { jobGraceMs: 0, listJobs: () => Object.values(jobs) });
+    assert.strictEqual(r.skipped, 'job_path');
+    // the other order: the transcript answered first, then the job completes with the same wake
+    const h2 = loop({ m9: meshJob({ id: 'm9', provider: 'gemini', transport: 'ncp', responseText: 'hey nexus, which tests fail?' }) });
+    assert.ok((await h2.wl.handleTranscript({ provider: 'gemini', chat: chatOf([{ role: 'assistant', text: 'hey nexus, which tests fail?' }]) }, T)).replied);
+    assert.strictEqual((await h2.wl.handleComplete({ jobId: 'm9' })).skipped, 'answered_from_transcript');
+    assert.strictEqual(h2.asked.length, 1);
+  });
+  await test('WK-043', '0.39.279 — loop guard on the transcript path: depth is the run of [NEXUS] answers the agent was just sent', async () => {
+    const h = loop({}, { maxDepth: 2 });
+    const nx = (q) => ({ role: 'user', text: `[NEXUS] answer to your "hey nexus, ${q}"\n\nx` });
+    const msgs = [{ role: 'assistant', text: 'hey nexus, a?' }, nx('a?'), { role: 'assistant', text: 'hey nexus, b?' }, nx('b?'), { role: 'assistant', text: 'hey nexus, c?' }];
+    const r = await h.wl.handleTranscript({ provider: 'claude', chat: chatOf(msgs) }, T);
+    assert.strictEqual(r.refused, 'max_depth'); assert.strictEqual(h.asked.length, 0);
+    const r2 = await h.wl.handleTranscript({ provider: 'claude', chat: chatOf(msgs.slice(2)) }, T);
+    assert.strictEqual(r2.replied && h.created[0].wakeDepth, 2);
+  });
+  await test('WK-044', '0.39.279 — plumbing: createJob keeps chatUrl, the dispatcher types a job into the chat it names, server listens to transcripts', () => {
+    const jobsSrc = read('guardian/lib/jobs.js');
+    assert.ok(/hatInPrompt = null, chatUrl = null \}\)/.test(jobsSrc) && /chatUrl: chatUrl \|\| null,/.test(jobsSrc));
+    const disp = read('guardian/lib/dispatcher.js');
+    assert.ok(/if \(job\.chatUrl && process\.env\.GUARDIAN_RESUME_CHAT !== '0'\)/.test(disp) && /resumableChatUrl\(job\.provider, job\.chatUrl\)/.test(disp));
+    const server = read('guardian/server.js');
+    assert.ok(/bus\.on\('guardian\.ncp\.transcript'[\s\S]{0,160}_wakeLoop\.handleTranscript/.test(server));
+  });
+
   console.log(`\n   ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.draft
+type: capability
+id: copilot.opportunity.draft
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786892
+source: copilot/registry-components.js:copilot.opportunity.draft
+occurrences: 1
+firstSeenAt: 1790684786892
+lastSeenAt: 1790684786892
+fingerprint: 3ca85884dfc865eca748b29f
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity draft
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.draft
+  namespace: copilot
+  name: opportunity.draft
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/:id/draft
+  description: Draft cover letter / proposal / Fiverr reply / follow-up from the editable templates
+  params: []
+  permissions:
+    - system
+  hooks: {}

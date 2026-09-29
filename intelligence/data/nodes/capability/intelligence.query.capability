@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.query
+type: capability
+id: intelligence.query
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787394
+source: intelligence/registry-components.js:intelligence.query
+occurrences: 1
+firstSeenAt: 1790684787394
+lastSeenAt: 1790684787394
+fingerprint: 1c935fa12355a17b4e20d454
+payload:
+  intent: []
+  grammar:
+    - query
+    - intelligence query
+  tags:
+    - intelligence
+  id: intelligence.query
+  namespace: intelligence
+  name: query
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/query
+  description: 'Unified query surface: what is happening with <about>'
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.mesh.send
 type: capability
 id: cg.mesh.send
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730160
-source: clear-glass.registry-components:cg.mesh.send
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786642
+source: clear-glass/registry-components.js:cg.mesh.send
+occurrences: 1
+firstSeenAt: 1789250730160
+lastSeenAt: 1790684786642
+fingerprint: 9b21e183c8d3ba9198d55a52
 payload:
-  id: cg.mesh.send
-  namespace: cg
-  name: mesh.send
-  version: 3.1.0
+  intent: []
   grammar:
     - mesh send
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Send prompt to mesh agent
-  params: []
   tags:
     - cg
     - mesh
+  id: cg.mesh.send
+  namespace: cg
+  name: mesh.send
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Send prompt to mesh agent
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-MSH-002

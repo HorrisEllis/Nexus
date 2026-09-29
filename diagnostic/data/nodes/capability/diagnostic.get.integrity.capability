@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.integrity
+type: capability
+id: diagnostic.get.integrity
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787109
+source: diagnostic/interaction-contract.json:diagnostic.get.integrity
+occurrences: 1
+firstSeenAt: 1790684787109
+lastSeenAt: 1790684787109
+fingerprint: 13f0c1759e827dd5ae848396
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.integrity
+  namespace: diagnostic
+  name: /integrity
+  version: 1.0.0
+  route:
+    method: GET
+    path: /integrity
+  description: Data integrity report

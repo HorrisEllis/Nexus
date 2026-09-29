@@ -10,11 +10,11 @@ tags:
   - bep_patterns
   - bottleneck
   - cortex/intelligence
-exported_at: 1790427445512
+exported_at: 1790684773458
 source: intelligence.domain-nodes
 occurrences: 1
-firstSeenAt: 1790427445512
-lastSeenAt: 1790427445512
+firstSeenAt: 1790684773458
+lastSeenAt: 1790684773458
 fingerprint: null
 payload:
   uuid: pat-371
@@ -27,4 +27,4 @@ payload:
   actionable: true
   crystallised: true
   source: cortex/intelligence
-  ts: 1790427445512
+  ts: 1790684773457

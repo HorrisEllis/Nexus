@@ -28,3 +28,17 @@
 {"_system":"orchestrator","_ts":1790414002396,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"recall.verify","type":"HARD","ms":3,"seqId":"4c627ed7"}}
 {"_system":"orchestrator","_ts":1790414002397,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"ui.hotswap","type":"SOFT","ms":19,"seqId":"4c627ed7"}}
 {"_system":"orchestrator","_ts":1790414002398,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"cli.terminal","type":"SOFT","ms":0,"seqId":"4c627ed7"}}
+{"_system":"orchestrator","_ts":1790684782558,"type":"orchestrator.boot.started","payload":{"systemId":"orchestrator","port":19533,"version":"2.2.1","phases":7,"seqId":"34675262","ts":1790684782542}}
+{"_system":"orchestrator","_ts":1790684782562,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"server.bound","type":"HARD","ms":1,"seqId":"34675262"}}
+{"_system":"orchestrator","_ts":1790684782564,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"ledger.writable","type":"HARD","ms":0,"seqId":"34675262"}}
+{"_system":"orchestrator","_ts":1790684782577,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"health.verify","type":"HARD","ms":29,"seqId":"34675262"}}
+{"_system":"orchestrator","_ts":1790684782619,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"recall.verify","type":"HARD","ms":5,"seqId":"34675262"}}
+{"_system":"orchestrator","_ts":1790684782620,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"ui.hotswap","type":"SOFT","ms":35,"seqId":"34675262"}}
+{"_system":"orchestrator","_ts":1790684782621,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"cli.terminal","type":"SOFT","ms":0,"seqId":"34675262"}}
+{"_system":"orchestrator","_ts":1790684782688,"type":"orchestrator.boot.started","payload":{"systemId":"orchestrator","port":19534,"version":"2.2.1","phases":7,"seqId":"09e826dc","ts":1790684782669}}
+{"_system":"orchestrator","_ts":1790684782692,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"server.bound","type":"HARD","ms":0,"seqId":"09e826dc"}}
+{"_system":"orchestrator","_ts":1790684782694,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"ledger.writable","type":"HARD","ms":0,"seqId":"09e826dc"}}
+{"_system":"orchestrator","_ts":1790684782707,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"health.verify","type":"HARD","ms":32,"seqId":"09e826dc"}}
+{"_system":"orchestrator","_ts":1790684782744,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"recall.verify","type":"HARD","ms":4,"seqId":"09e826dc"}}
+{"_system":"orchestrator","_ts":1790684782749,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"ui.hotswap","type":"SOFT","ms":26,"seqId":"09e826dc"}}
+{"_system":"orchestrator","_ts":1790684782753,"type":"orchestrator.phase.ok","payload":{"systemId":"orchestrator","phase":"cli.terminal","type":"SOFT","ms":0,"seqId":"09e826dc"}}

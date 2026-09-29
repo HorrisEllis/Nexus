@@ -8,8 +8,7 @@
  * renderer/settings/sections/system.js — Connections, Co-pilot, Diagnostics
  * §BUILT 2026-09-23. Connections + co-pilot: src/api/settings.js (ApiSettings,
  * the same file-backed store the old page used — not a second config
- * mechanism). The fallback key is write-only from here: getPublic() never
- * returns it, only hasFallbackKey. Diagnostics: errors:recent, vault key
+ * mechanism). (§0.39.274: the API-key fallback is gone — nothing here holds a key.) Diagnostics: errors:recent, vault key
  * status, the live /contract, speech availability.
  */
 (function () {

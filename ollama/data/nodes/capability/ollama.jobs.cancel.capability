@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-ollama.jobs.cancel
 type: capability
 id: ollama.jobs.cancel
-context: ollama/registry-components.js real capability export
+context: ollama/registry-components.js — declared capability
 intent: null
 summary: null
-system: ollama
-tags: []
-exported_at: 1789250730190
-source: ollama.registry-components:ollama.jobs.cancel
+system: null
+tags:
+  - ollama
+  - capability
+exported_at: 1790684787498
+source: ollama/registry-components.js:ollama.jobs.cancel
+occurrences: 1
+firstSeenAt: 1789250730190
+lastSeenAt: 1790684787498
+fingerprint: 806b23798cfdd4c520d3d610
 payload:
+  intent: []
+  grammar:
+    - ollama jobs cancel
+  tags:
+    - ollama
   id: ollama.jobs.cancel
   namespace: ollama
   name: jobs.cancel
   version: 1.0.0
-  grammar:
-    - ollama jobs cancel
   route:
     method: DELETE
     path: /api/jobs/:id
-  intent: []
   description: Cancel a queued job
   params: []
-  tags:
-    - ollama
   permissions:
     - system
   hooks: {}

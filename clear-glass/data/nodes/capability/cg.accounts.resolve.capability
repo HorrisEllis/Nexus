@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.accounts.resolve
+type: capability
+id: cg.accounts.resolve
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786711
+source: clear-glass/registry-components.js:cg.accounts.resolve
+occurrences: 1
+firstSeenAt: 1790684786711
+lastSeenAt: 1790684786711
+fingerprint: b12cfc1626a77dd41cc84966
+payload:
+  intent: []
+  grammar:
+    - accounts resolve
+  tags:
+    - cg
+    - accounts
+  id: cg.accounts.resolve
+  namespace: cg
+  name: accounts.resolve
+  version: 3.17.0
+  route:
+    method: IPC
+    path: accounts:resolve
+  description: Resolve the account a dispatch to this provider would use (never auto-creates)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

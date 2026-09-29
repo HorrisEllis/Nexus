@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.agent.switch
+type: capability
+id: copilot.agent.switch
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786946
+source: copilot/registry-components.js:copilot.agent.switch
+occurrences: 1
+firstSeenAt: 1790684786946
+lastSeenAt: 1790684786946
+fingerprint: 866f9cc989a317438d1ffeab
+payload:
+  intent: []
+  grammar:
+    - switch agent
+    - wear hat
+  tags:
+    - copilot
+  id: copilot.agent.switch
+  namespace: copilot
+  name: agent.switch
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/agent/switch
+  description: Switch the worn agent/hat, then check it is reachable
+  params: []
+  permissions:
+    - system
+  hooks: {}

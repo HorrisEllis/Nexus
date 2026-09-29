@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.downloads.registerListener
 type: capability
 id: cg.downloads.registerListener
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730166
-source: clear-glass.registry-components:cg.downloads.registerListener
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786669
+source: clear-glass/registry-components.js:cg.downloads.registerListener
+occurrences: 1
+firstSeenAt: 1789250730166
+lastSeenAt: 1790684786669
+fingerprint: f1911214e85c27ce98b8a87c
 payload:
-  id: cg.downloads.registerListener
-  namespace: cg
-  name: downloads.registerListener
-  version: 3.1.0
+  intent: []
   grammar:
     - downloads registerListener
-  route:
-    method: IPC
-    path: downloads:registerListener
-  intent: []
-  description: Register a real download listener
-  params: []
   tags:
     - cg
     - downloads
     - listener
+  id: cg.downloads.registerListener
+  namespace: cg
+  name: downloads.registerListener
+  version: 3.17.0
+  route:
+    method: IPC
+    path: downloads:registerListener
+  description: Register a real download listener
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

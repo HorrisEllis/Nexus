@@ -135,6 +135,12 @@ try { ({ _bootSystems } = require('../cli/boot-systems')); } catch(e) { console.
 // .open()/.startAutoSave()/.getAllBaselines()/.getAllStats()/.scanInvariants()
 // surface, plus .handleCFRRoute() for the /cfr/* debugger routes mounted below.
 try { ({ createCFRLedger } = require('../intelligence/cfr/ledger')); } catch(e) { console.warn('[orchestrator] cfr ledger not found:', e.message); createCFRLedger = null; }
+// C0 (staging-self-heal phasemap) — anchored gaps need lib/gap-field.js, the
+// one real report() entry point (not re-derived, §16.5 already applied once
+// in cortex/gap-finder; a second inline dedup/insert would be exactly the
+// duplication that file was written to remove).
+let gapField;
+try { gapField = require('../lib/gap-field'); } catch (e) { console.warn('[orchestrator] gap-field not found:', e.message); gapField = null; }
 
 // ── NEXUS INTERCONNECT LAYER ──────────────────────────────────────────────────
 const nexusBus       = (() => { try { return require('../nexus/nexus-bus');           } catch(e) { console.warn('[orc] nexus-bus:',e.message); return null; } })();
@@ -475,6 +481,38 @@ function _getEventLedger(system) {
           if (SIGNAL_TYPES.has(gap.type)) return;
           console.warn(`[orchestrator][cfr:${system}] ${gap.type}: ${gap.message}`);
         } catch(_) {}
+
+        // §C0 (staging-self-heal phasemap, decided 2026-09-28) — ONLY
+        // 'cfr.collapse' becomes a real gap for now. 'sigma.spike' is left
+        // as a log line above: the real firing rate of either type against
+        // SIGMA_GAP_THRESHOLD/CFR_COLLAPSE_THRESHOLD has not been observed
+        // in this environment, and gap-field's dedup (type+source, one open
+        // row, occurrence bump) means a high-rate type would still be safe
+        // as ONE gap, not a flood — but "safe" was not enough to widen this
+        // without seeing it. 'delta.tension' stays dropped, as it already
+        // was (§CFR-WIRE-02's own reason above still holds: a field metric,
+        // not an actionable gap). Revisit sigma.spike once cfr.collapse's
+        // real rate is seen.
+        //
+        // The anchor is the PAIR (ledgerSystem, entryUuid), not the gap's
+        // own uuid: this system's ledger and causal graph are what C1 will
+        // walk, and `system` (this closure's own createCFRLedger arg, not
+        // re-derived) is the only correct value — gap.entry._system would be
+        // the emitting sub-source, not the ledger this entry lives in.
+        // causedBy is the ledger entry's own uuid (gap.entry.uuid, written
+        // by intelligence/cfr/ledger.js at record time), never inferred
+        // from timestamp or type (§I9 — no invented causal identity).
+        try {
+          if (gap.type !== 'cfr.collapse' || !gapField || !gap.entry) return;
+          gapField.report({
+            type: gap.type,
+            body: gap.message,
+            source: `cfr.ledger.${system}`,
+            domain: 'system',
+            severity: gap.severity >= 0.75 ? 'high' : gap.severity >= 0.4 ? 'medium' : 'low',
+            meta: { ledgerSystem: system, causedBy: gap.entry.uuid, cfrRegime: gap.entry.cfr?.regime },
+          });
+        } catch (e) { console.warn(`[orchestrator][cfr:${system}] gap-field report failed:`, e.message); }
       },
     });
     ledger.open();
@@ -978,7 +1016,21 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   // ── CFR-Ω routes — orchestrator's own field debugger ────────────────────
   // §CFR-WIRE-03: same handleCFRRoute() contract as cortex/guardian/bridge.
   if (u.pathname.startsWith('/cfr')) {
-    if (_eventLedger && _eventLedger.handleCFRRoute && _eventLedger.handleCFRRoute(req, res, u)) return;
+    // §C1 (staging-self-heal phasemap, D2=a decided 2026-09-28) — the compound
+    // chain lookup can name WHICH system's ledger/graph to read. Each system has
+    // its own ledger and its own CausalGraph, and a C0 anchor is the pair
+    // (ledgerSystem, entryUuid): cortex (a different process) cannot reach
+    // _eventLedgers, so it asks over this route. Only an ALREADY-EXISTING
+    // ledger is used (_eventLedgers.get, never _getEventLedger — that lazily
+    // creates a ledger + directory for any name it is handed). An unknown
+    // system is an explicit ok:false, never a silent fall-back to the
+    // orchestrator's own graph: the wrong graph would be an invented chain (I9).
+    const _c1sys = (M==='GET' && u.pathname.startsWith('/cfr/compound/') && u.searchParams) ? u.searchParams.get('system') : null;
+    if (_c1sys) {
+      const target = _eventLedgers.get(_c1sys);
+      if (!target || !target.handleCFRRoute) return json(res, 200, { ok: false, error: `no ledger for system '${_c1sys}'` });
+      if (target.handleCFRRoute(req, res, u)) return;
+    } else if (_eventLedger && _eventLedger.handleCFRRoute && _eventLedger.handleCFRRoute(req, res, u)) return;
   }
   if (M==='POST' && u.pathname==='/api/nexus/query') {
     if (!nexusQuery) return json(res,503,{ok:false,error:'nexus-query not loaded'});
@@ -1234,6 +1286,25 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     if (tvShellCandidate && fs.existsSync(tvShellCandidate) && fs.statSync(tvShellCandidate).isFile()) {
       return serveFile(res, tvShellCandidate);
     }
+    // §0.39.271 R1 (docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec) —
+    // James's screenshot: ":9000 → route not found: GET /idearium/". The TV shell is
+    // served at "/", so its relative '../idearium/' resolves to /idearium/, a
+    // DIRECTORY — the two file checks above never match a directory. A top-level
+    // segment that names a UI directory (under ui/, or a system UI served under
+    // /ui/<name>/ above: idearium, architect) is redirected to /ui/<path>, where the
+    // /ui handler already serves it. Anything else still falls to the 404 below.
+    const first = relPath.split('/')[0];
+    const SYSTEM_UI_NAMES = ['idearium', 'architect'];
+    let isUiDir = SYSTEM_UI_NAMES.includes(first);
+    if (!isUiDir && first) {
+      const d = _safePath(UI_ROOT, first);
+      try { isUiDir = !!(d && fs.statSync(d).isDirectory()); } catch (_) { isUiDir = false; }
+    }
+    if (isUiDir && first !== 'api') {
+      const target = '/ui/' + relPath + (first === relPath && !relPath.endsWith('/') ? '/' : '') + (u.search || '');
+      res.writeHead(302, { Location: target, 'Cache-Control': 'no-store' });
+      return res.end();
+    }
   }
 
   // ────────────────────────────────────────────────────────────────────────
@@ -1430,6 +1501,21 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     const remotePath = '/' + parts.slice(3).join('/') + (u.search || '');
     relay.proxyToRemote(peerId, remotePath, req, res);
     return; // relay handles response
+  }
+
+  // ── §0.39.271 X3 — every system's nodes (lib/system-nodes.js) ───────────────
+  // GET  /api/nodes                         counts per type and per system
+  // GET  /api/nodes/:type?system=&q=&limit=&full=1   one type across every system
+  // GET  /api/nodes/:type/:id?system=       one node (its envelope)
+  // POST /api/nodes/sync {only?, dryRun?}   regenerate now
+  if (top === 'api' && sub === 'nodes') {
+    const SN = require('../lib/system-nodes.js');
+    const parts = (rest || '').split('/').filter(Boolean).map(decodeURIComponent);
+    if (M === 'GET' && !parts.length) return json(res, 200, { ok: true, ...SN.index() });
+    if (M === 'POST' && parts[0] === 'sync') { const b = await readBody(req); return json(res, 200, SN.sync({ only: Array.isArray(b.only) ? b.only : null, dryRun: !!b.dryRun })); }
+    if (M === 'GET' && parts.length === 1) return json(res, 200, { ok: true, type: parts[0], nodes: SN.list({ type: parts[0], system: QS.get('system') || null, q: QS.get('q') || null, limit: Math.min(5000, parseInt(QS.get('limit'), 10) || 500), full: QS.get('full') === '1' }) });
+    if (M === 'GET' && parts.length === 2) { const n = SN.get(parts[0], parts[1], { system: QS.get('system') || null }); return n ? json(res, 200, { ok: true, node: n }) : json(res, 404, { ok: false, error: `no ${parts[0]} node ${parts[1]}` }); }
+    return json(res, 404, { ok: false, error: `route not found: ${M} ${u.pathname}` });
   }
 
   // ── File push — /api/push/* ───────────────────────────────────────────────
@@ -2021,8 +2107,11 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     if (M==='GET'  && action==='files' && !action2) return json(res,200,await GET('cortex',`/api/files?n=${QS.get('n')||200}`));
     if (M==='GET'  && action==='files' && action2==='get') return json(res,200,await GET('cortex',`/api/files/get?hash=${QS.get('hash')||''}`));
     if (M==='POST' && action==='files' && action2==='upload') return json(res,200,await POST('cortex','/api/files/upload',await readBody(req)));
-    if (M==='GET'  && action==='versionium' && action2==='log') return json(res,200,await GET('cortex',`/api/versionium/log?n=${QS.get('n')||50}${QS.get('branch')?'&branch='+QS.get('branch'):''}`));
-    if (M==='POST' && action==='versionium' && action2==='commit') return json(res,200,await POST('cortex','/api/versionium/commit',await readBody(req)));
+    // §0.39.271 V1 — versionium left cortex (§VS1); cortex answers these with "moved to
+    // :3754". The two proxies kept their paths and now call versionium itself; its
+    // list is /api/versionium/history (there is no /log), which takes n and branch.
+    if (M==='GET'  && action==='versionium' && action2==='log') return json(res,200,await GET('versionium',`/api/versionium/history?n=${encodeURIComponent(QS.get('n')||50)}${QS.get('branch')?'&branch='+encodeURIComponent(QS.get('branch')):''}`));
+    if (M==='POST' && action==='versionium' && action2==='commit') return json(res,200,await POST('versionium','/api/versionium/commit',await readBody(req)));
     if (M==='GET'  && action==='projects')         return json(res,200,await GET('cortex','/api/projects'));
     if (M==='POST' && action==='ess' && action2==='analyse') return json(res,200,await POST('cortex','/api/ess/analyse',await readBody(req)));
     if (M==='GET'  && action==='tags')             return json(res,200,await GET('cortex',`/api/tags?entityId=${QS.get('entityId')||''}`));
@@ -2931,6 +3020,16 @@ if (nexusBus) {
 
 const BIND_HOST = process.env.NEXUS_BIND_HOST || '127.0.0.1'; // §REMOTE-15
 server.listen(PORT, BIND_HOST, async () => {
+  // §0.39.271 X1 — every system's capability/command/system nodes regenerated from the tree
+  // (lib/system-nodes.js). Idempotent: unchanged nodes are not rewritten. Off the request
+  // path, never fatal.
+  setTimeout(() => {
+    try {
+      const r = require('../lib/system-nodes.js').sync({ agents: false });
+      const w = Object.values(r.systems).reduce((n, v) => n + v.written, 0), a = Object.values(r.systems).reduce((n, v) => n + v.archived, 0);
+      console.log(`[orchestrator] system nodes: ${Object.keys(r.systems).length} systems · ${w} written · ${a} archived · ${r.ms}ms${r.errors.length ? ' · ' + r.errors.join('; ') : ''}`);
+    } catch (e) { console.warn(`[orchestrator] system node sync failed (non-fatal): ${e.message}`); }
+  }, 4000);
   // BootSequence hoisted to top-level
 
   // ════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.gap.hunt
+type: capability
+id: intelligence.gap.hunt
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787406
+source: intelligence/registry-components.js:intelligence.gap.hunt
+occurrences: 1
+firstSeenAt: 1790684787406
+lastSeenAt: 1790684787406
+fingerprint: 55481f3a73e4d14ff78f19a3
+payload:
+  intent: []
+  grammar:
+    - gap hunt
+    - intelligence gap
+  tags:
+    - intelligence
+    - gap-detection
+  id: intelligence.gap.hunt
+  namespace: intelligence
+  name: gap.hunt
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/gap/hunt
+  description: GapHunter v3 — 8-type gap taxonomy applied to a text
+  params: []
+  permissions:
+    - system
+  hooks: {}

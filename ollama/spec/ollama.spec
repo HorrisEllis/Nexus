@@ -264,3 +264,10 @@ spec:
       date: 2026-06-27
       summary: "Original build, matches live code@1.0.0 — no drift found this pass."
       versioniumCommitId: null
+
+  # ## ADDENDUM 2026-09-27 (0.39.269) — the bridge is where Ollama's memory is written
+  # docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec (M2).
+  # POST /api/jobs takes agentId, compartmentId, repoUuid, record. Every completed job is recorded to the Clear Glass
+  # download manager under its agent (lib/agent-memory.js record → response-sink + chat index + chat-logger), not
+  # awaited. Not recorded: intent adversarial-probe, intent tool-loop (the caller records the final answer), record:false.
+  # dispatch.js exports _remember for tests.

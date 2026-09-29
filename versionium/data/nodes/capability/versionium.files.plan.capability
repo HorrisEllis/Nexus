@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.files.plan
+type: capability
+id: versionium.files.plan
+context: versionium/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787523
+source: versionium/registry-components.js:versionium.files.plan
+occurrences: 1
+firstSeenAt: 1790684787523
+lastSeenAt: 1790684787523
+fingerprint: e22d2c84dedad4f9342911ed
+payload:
+  intent: []
+  grammar:
+    - versionium files plan
+  tags:
+    - versionium
+    - files
+  id: versionium.files.plan
+  namespace: versionium
+  name: files.plan
+  version: 3.3.0
+  route:
+    method: POST
+    path: /api/versionium/files/plan
+  description: Which file contents versionium needs for a repo tree, and which paths were deleted
+  params: []
+  permissions:
+    - system
+  hooks: {}

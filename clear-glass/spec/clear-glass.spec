@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.17.0
+    version:     3.21.0   # 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -596,3 +596,64 @@ spec:
   # last error, recent output) and POST /eros-supervisor/start (start, or reconnect if running).
   # Settings → ErosmancerOS shows who started it, offers Start/Reconnect, and its DevTools port
   # field defaults to Clear Glass's real port (was a hard-coded 9222; Clear Glass opens 9333).
+
+  # ## ADDENDUM 2026-09-27 (0.39.269) — the download manager is agent memory
+  # docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec (M1–M5). No Clear Glass code changed.
+  # James: "everything is supposed to persist with agents. using the download manager." The downloads list
+  # (src/downloads/store.js) and the chat/artifact index (src/downloads/artifact-chat-index.js) now receive every
+  # backend's exchanges, not only Guardian's: lib/agent-memory.js record() writes Ollama and copilot exchanges through
+  # guardian/lib/response-sink.js (downloads entry, pending queue when Clear Glass is closed) and recordResponse() (same
+  # raw shape as guardian/lib/code-artifact.js). recall() reads the index back (queryItems by agentId, readItem) as the
+  # agent's memory. The Library's Responses tab therefore shows Ollama replies too, filed by agent.
+
+  # ## ADDENDUM 2026-09-27 (0.39.274) — the co-pilot pane has no API fallback
+  # James: "nexus settings are depreciated. fix it. copilot, is either ollama or guardian. no api".
+  # src/copilot/bridge.js _ask(): copilot :3750 first (unless "Route through NEXUS co-pilot" is off); when it is
+  # unreachable the pane answers through Ollama (ollama/ollama-runtime.js, model = copilotOllamaModel or
+  # ollama/config.js DEFAULT_MODEL) or a Guardian agent (:7820 /command, then /jobs?id= until complete) — guardian first
+  # when the route is guardian, Ollama first otherwise; a follow-up tool-results round stays on the backend that
+  # answered. When nothing answers, the reply names what was tried and why. The Anthropic-key fallback
+  # (_callFallback, fallbackApiKey/fallbackModel/fallbackEndpoint, the "Offline fallback" settings pane) is removed; a
+  # saved key is dropped on load and refused on set. ollamaGenerate() no longer posts to :3749/api/generate (a route
+  # the NEXUS ollama service does not serve). The pane's greeting no longer claims "online" before anything answered.
+  # Proven by tests/modules/test-cg-copilot-no-api.test.js (NA-001..NA-006).
+
+  # ## ADDENDUM 2026-09-29 (0.39.278) — the chat ledger; the co-pilot pane remembers
+  # James: "maybe use the download manager in clearglass for the chat ledgers … live streams the dom mutation live to
+  # the download manager, that way we don't lose progress. including you expanding elements for your thoughts."
+  # 1. src/downloads/chat-ledger.js: one append-only ledger per chat (ledgers/<chatKey>.jsonl under the downloads
+  #    index root). A head line, then one delta line per change: per turn whole text or appended text (add at), thinking
+  #    the same way. Never rewritten; a torn last line is skipped on replay; an append at an offset the ledger does not
+  #    hold is refused with the lengths it holds (resync) and nothing is written. Routes: POST /cli/downloads/ledger,
+  #    GET /cli/downloads/ledgers, GET /cli/downloads/ledgers/:chatKey. Each chat is one downloads entry, kind
+  #    chat-ledger, in_progress while generating. Written only by this process (sovereign); pages post to it directly.
+  # 2. src/providers/host.js injects guardian/userscript-chat-stream.js as a second shared prelude (each loads alone).
+  # 3. src/copilot/chat-store.js: the pane's conversation in this app's JAA store (cg_copilot_chat, cg_copilot_conv),
+  #    ≤ 400 turns per conversation; recent turns go with every call to any backend (copilotHistoryTurns,
+  #    copilotHistoryChars, oldest dropped first and said); "Nothing answered" is not stored; copilotRemember off keeps
+  #    nothing; mirrored into the ledger as provider copilot. IPC copilot:history (restore on open) and
+  #    copilot:newConversation (/new; the old one is kept).
+  # 4. copilotToolSurface 'layered' (default): Clear Glass's actions by name + nexus.tools.tool / nexus.tools_expand.tool;
+  #    the orchestrator's capability prompt is not fetched per turn ('full' restores it).
+  # 5. The pane escapes every reply before innerHTML (formatReply), live and restored — a kept reply cannot inject.
+  # Proven by tests/modules/test-chat-ledger-stream.test.js and tests/modules/test-tool-layers-and-pane-memory.test.js.
+
+  # ## ADDENDUM 2026-09-29 (0.39.279) — the interaction field (src/page/field.js)
+  # James: "a interaction field for xyz coords to help the agents see and navigate the ui in clearglass … virtual input
+  # through erosmanceros … spotlight injected css". Driver actions: field {overlay, offscreen} (every interactive element
+  # numbered with box, centre x/y and z = layers covering its centre; overlay + grid in a pointer-events:none layer;
+  # a text map), fieldOff, at {x,y}, spotlight {n|selector|x,y,w,h, label, ttl, off}, pointer {n|x,y|selector, do:
+  # click|double|right|move|scroll|type, text, via: native|eros}. native = sendInputEvent on a curved path; eros =
+  # ErosmancerOS POST /api/input through main/index.js's tab resolver (driver.erosInput). A covered target is reported,
+  # an off-screen one refused. field.map / field.spotlight are bus events forwarded to NEXUS. clearglass.browser.tool
+  # exposes field / pointer / spotlight. Proven by tests/modules/test-cg-field.test.js and tests/probe/field-chromium.js.
+
+  # ## ADDENDUM 2026-09-29 (0.39.280) — compartment windows and co-pilot verbs (build-surface phasemap BS0, BS17)
+  # main/compartment-window.js: every <webview>'s popups go through setWindowOpenHandler; idearium's /desktop.html and
+  # /settings.html (loopback only) open frameless, #0a0b10 before paint, resizable, min 480×320, no menu, with
+  # preload/compartment-window.js (window.nexusWindow minimize / maximize / close / pin → ipc compartment-window:control
+  # on the SENDER's window). Every other popup keeps Electron's default. copilot/verbs.js: loose ```driver blocks
+  # repaired (bare keys, single quotes, trailing commas, a bare url, https:// added), an unreadable one returned as a
+  # FAILED result (was dropped silently); "visit / go to / open <site>" navigates with no model and answers with the
+  # page's title, url and field targets; the pane labels a block by the command it carries. Proven by
+  # tests/modules/test-compartment-window.test.js and tests/modules/test-cg-copilot-verbs.test.js.

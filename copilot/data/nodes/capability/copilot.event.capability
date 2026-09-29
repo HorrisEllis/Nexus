@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.event
+type: capability
+id: copilot.event
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786958
+source: copilot/registry-components.js:copilot.event
+occurrences: 1
+firstSeenAt: 1790684786958
+lastSeenAt: 1790684786958
+fingerprint: 4ef55f94754360f657c26ce4
+payload:
+  intent: []
+  grammar:
+    - copilot event
+  tags:
+    - copilot
+  id: copilot.event
+  namespace: copilot
+  name: event
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/event
+  description: Add one event to the stream
+  params: []
+  permissions:
+    - system
+  hooks: {}

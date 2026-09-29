@@ -976,6 +976,8 @@ const server = http.createServer(async (req, res) => {
   // during extraction (POST /api/person-model/correct has no
   // registry-components.js entry).
   if (await require('./routes/person-model.js').handle(req, res, { method, url, pathname: p, json, readBody })) return;
+  // 0.39.272 — /api/opportunity/* (jobs, gigs, Fiverr/Upwork leads), /api/context/* (the context atlas), /api/learned/* (what copilot learned in Clear Glass)
+  if (await require('./routes/opportunity.js').handle(req, res, { method, url, pathname: p, json, readBody })) return;
 
   if (p === '/contract') { json(res, 200, require('./registry-components')); return; }
 
@@ -1405,7 +1407,14 @@ const server = http.createServer(async (req, res) => {
     // its own default toolset. tool_config's own internal design already
     // gates its dangerous half (loosening always needs the user, regardless
     // of who calls it), so offering it here doesn't bypass that protection.
-    const DEFAULT_CHAT_TOOLS = ['read_file', 'search_files', 'diagnose', 'system_priority', 'intent_hat', 'self_repair', 'agent_chat', 'tool_config', 'agent_notes', 'nexus_wake_events', 'framework_builder', 'intelligence_query', 'clear_glass_dom_archaeology', 'clear_glass_userscripts', 'clear_glass_tab_visibility', 'clear_glass_automation', 'clear_glass_browser'];
+    const DEFAULT_CHAT_TOOLS = ['read_file', 'search_files', 'diagnose', 'system_priority', 'intent_hat', 'self_repair', 'agent_chat', 'tool_config', 'agent_notes', 'nexus_wake_events', 'framework_builder', 'intelligence_query', 'clear_glass_dom_archaeology', 'clear_glass_userscripts', 'clear_glass_tab_visibility', 'clear_glass_automation', 'clear_glass_browser',
+      // 0.39.272 — James: "i want copilot completely aware of clearglass … all of it" / "so he can do everything clearglass
+      // can do?". Every Clear Glass tool in the ordinary chat, plus the atlas, the opportunity pipeline and what it learned.
+      // Cost, stated: the tool manifest in each chat prompt grows by these entries.
+      'clearglass.browser.tool', 'clearglass.learned.tool', 'nexus.context.tool', 'nexus.opportunity.tool',
+      'browser_action', 'macro', 'rewind_replay', 'agent_mesh_route', 'bookmarks_manage', 'history_manage', 'account_manage',
+      'site_settings_manage', 'autofill_manage', 'clear_glass_provider_deploy', 'clear_glass_command_index',
+      'clear_glass_stream_bridge', 'clearglass.search_engine.tool'];
     if (DEFAULT_CHAT_TOOLS.length) {
       const agentToolsForManifest = require('../lib/agent-tools/index.js');
       const manifest = DEFAULT_CHAT_TOOLS
@@ -2234,6 +2243,55 @@ const server = http.createServer(async (req, res) => {
     } catch (e) { json(res, 500, { ok: false, error: e.message }); }
     return;
   }
+  // §0.39.271 C1 — declared in registry-components since 2026-08-19, never served (every call
+  // fell to the 404). The modules were real and tested: lib/introspect.js, lib/agent-capability.js.
+  if (method === 'POST' && p === '/api/introspect') {
+    try {
+      const b = await readBody(req);
+      const r = await require('../lib/introspect.js').examine({ prompt: b.prompt, response: b.response, requestId: b.requestId || null, sessionId: b.sessionId || null, userSaidWrong: !!b.userSaidWrong, intent: b.intent || null });
+      json(res, 200, { ok: true, ...r });
+    } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+  if (method === 'POST' && p === '/api/introspect/retry') {
+    try {
+      const b = await readBody(req);
+      if (!b.prompt || !b.response) return json(res, 400, { ok: false, error: 'prompt and response (the answer being retried) are required' });
+      const r = await require('../lib/introspect.js').retry({ prompt: b.prompt, response: b.response, requestId: b.requestId || null, sessionId: b.sessionId || null, intent: b.intent || null,
+        // the retry goes out the way any copilot prompt does (lifeline's cascade), carrying the finding
+        dispatchFn: async (retryPrompt) => { const l = await _lifeline.route(retryPrompt, { intent: b.intent || 'ask', sessionId: b.sessionId || null, channel: 'copilot-introspect-retry' }); if (!l || !l.ok) throw new Error((l && l.error) || 'no provider answered'); return l.text; } });
+      json(res, 200, { ok: r.ok !== false, ...r });
+    } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+  if (method === 'GET' && p === '/api/introspect/health') {
+    try { json(res, 200, require('../lib/introspect.js').health()); } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+  if (method === 'GET' && p === '/api/agents/capability') {
+    try {
+      const AC = require('../lib/agent-capability.js');
+      const agent = new URL(req.url, 'http://x').searchParams.get('agent');
+      json(res, 200, agent ? { ok: true, ...AC.profile(agent), chunk: AC.chunkFor(agent) } : { ok: true, agents: AC.all(), health: AC.health() });
+    } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+
+  // §0.39.267 — what copilot has been up to, structured (the same records intuition's "what have you been up to" reads).
+  // ?hours=N (default 6) or ?since=<ms epoch>; &text=1 adds the sentence form.
+  if (method === 'GET' && p === '/api/activity') {
+    try {
+      const recall = require('./lib/activity-recall.js');
+      const u = new URL(req.url, 'http://x');
+      const hours = parseFloat(u.searchParams.get('hours') || '6');
+      const sinceMs = u.searchParams.get('since') ? parseInt(u.searchParams.get('since'), 10) : Date.now() - (Number.isFinite(hours) ? hours : 6) * 3600000;
+      const r = recall.recall({ sinceMs, stream: _stream.slice(-200) });
+      if (u.searchParams.get('text')) r.text = recall.format(r, { label: `in the last ${hours} hour${hours === 1 ? '' : 's'}` });
+      json(res, 200, { ok: true, ...r });
+    } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+
   if (method === 'GET' && p === '/api/prompt/resolve') {
     json(res, 200, { ok: true, ...resolveDefaultBackend(config.DEFAULT_PROVIDER) });
     return;
@@ -2258,12 +2316,12 @@ const server = http.createServer(async (req, res) => {
     let body = ''; req.on('data', c => body += c);
     req.on('end', async () => {
       try {
-        const { name, args, context, scope } = JSON.parse(body || '{}');
+        const { name, args, context, scope, agent } = JSON.parse(body || '{}');   // 0.39.272 — agent: who is calling (clear-glass-copilot, idearium…); default idearium, as before
         if (!name) { json(res, 400, { ok: false, error: 'name required' }); return; }
         if (Array.isArray(scope) && scope.length && !scope.includes(name)) { json(res, 403, { ok: false, error: `"${name}" is outside this caller's tool scope — not run` }); return; }
         const agentTools = require('../lib/agent-tools/index.js');
         if (!agentTools.TOOLS.has(name)) { json(res, 404, { ok: false, error: `no tool "${name}"` }); return; }
-        const result = await agentTools.executeTool(name, args || {}, { context: context || null, agent: 'idearium' });
+        const result = await agentTools.executeTool(name, args || {}, { context: context || null, agent: (typeof agent === 'string' && agent) ? agent.slice(0, 64) : 'idearium' });
         json(res, 200, { ok: !(result && result.error), name, result });
       } catch (e) { json(res, 500, { ok: false, error: e.message }); }
     });
@@ -2437,7 +2495,7 @@ const server = http.createServer(async (req, res) => {
           const toolRuntime = require('./tool-runtime');
           const T = body.tools;
           const scope = Array.isArray(T.scope) && T.scope.length ? T.scope : undefined;   // undefined = every registered tool
-          const context = T.repoDir ? { repoDir: String(T.repoDir), agentId: body.agentId || null } : null;
+          const context = (T.repoDir || T.repoUuid) ? { repoDir: T.repoDir ? String(T.repoDir) : null, agentId: body.agentId || null, repoUuid: T.repoUuid ? String(T.repoUuid) : null } : null;   // 0.39.266 — repoUuid: the harness tools know their repo without the model passing it
           const identity = typeof T.identity === 'string' && T.identity.trim() ? T.identity.trim() : null;
           const maxIterations = Math.min(Math.max(parseInt(T.maxIterations, 10) || 6, 1), 12);
           // 0.39.258 — composed: the caller (idearium's repo agent) built the whole prompt from blocks the person
@@ -2466,7 +2524,7 @@ const server = http.createServer(async (req, res) => {
             model_used: body.backend === 'ollama' ? (olModel || null) : undefined, toolCallLog, tools: toolsInfo, requestId });
           return;
         }
-        const result = await dispatchFn(prompt, { canonical: body.backend === 'guardian' && typeof body.canonical === 'string' ? body.canonical : undefined, provider: body.agent || undefined, agentId: body.backend === 'guardian' ? (body.agentId || undefined) : undefined, timeoutMs: body.backend === 'guardian' ? (body.timeoutMs || undefined) : undefined, model: olModel, requestId, sessionId });
+        const result = await dispatchFn(prompt, { canonical: body.backend === 'guardian' && typeof body.canonical === 'string' ? body.canonical : undefined, provider: body.agent || undefined, agentId: body.agentId || undefined, compartmentId: body.backend === 'ollama' ? (body.compartmentId || undefined) : undefined, repoUuid: body.backend === 'ollama' ? (body.repoUuid || undefined) : undefined, timeoutMs: body.backend === 'guardian' ? (body.timeoutMs || undefined) : undefined, model: olModel, requestId, sessionId });
         if (result?.ok || result?.text) {
           json(res, 200, { ok: true, text: result.text, provider_used: body.backend === 'guardian' ? (result.provider || body.agent) : 'ollama', model_used: body.backend === 'ollama' ? (result.model || olModel || null) : undefined, requestId });
         } else {
@@ -2722,6 +2780,8 @@ server.listen(PORT, () => {
   setTimeout(_connectCortexStream, 2000);
   setTimeout(_connectGuardianStream, 3000);
   setTimeout(_connectIdeariumStream, 4000);
+  // 0.39.272 — the opportunity cycle on James's own schedule (profile.schedule.everyMinutes; 0 = off, the default)
+  setTimeout(() => { try { require('./routes/opportunity.js').startScheduler(); } catch (e) { console.warn(`[copilot] opportunity scheduler not started: ${e.message}`); } }, 6000);
 
   // §RAID-FIX 2026-09-16 — James: "raid also needs to stop failing, i
   // dont think its using... ncp." Real, traced gap: register() above

@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-architect.contract
 type: capability
 id: architect.contract
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730051
-source: architect.registry-components:architect.contract
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786563
+source: architect/registry-components.js:architect.contract
+occurrences: 1
+firstSeenAt: 1789250730051
+lastSeenAt: 1790684786563
+fingerprint: ca4ed7335d399f65e48aee2b
 payload:
+  intent: []
+  grammar:
+    - contract
+  tags:
+    - architect
   id: architect.contract
   namespace: architect
   name: contract
   version: 1.0.0
-  grammar:
-    - contract
   route:
     method: GET
     path: /api/contract
-  intent: []
   description: Architect interaction contract
   params: []
-  tags:
-    - architect
   permissions:
     - system
   hooks: {}

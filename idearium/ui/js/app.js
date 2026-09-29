@@ -33,26 +33,36 @@
 // NEXUS API CLIENT — wired to the real Idearium service (idearium/api/index.js)
 // Real routes: GET /api/ideas, /api/specs, /api/gaps, /api/snapshots, /api/stats,
 // /api/events, /sse · POST /api/ideas, /api/gaps, /api/snapshots, etc.
-// Tries direct :4800, falls back to orchestrator proxy at :9000/api/idearium
+// Talks to idearium directly (:4800). §0.39.266 — no orchestrator-proxy fallback (see API_CANDIDATES).
 // ════════════════════════════════════════════════════
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
 // 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
 // the Eravos and Architect canvases cannot resolve ../<system>/ against this server: use the orchestrator's.
+// §0.39.271 — the two frames start at about:blank (data-src holds the relative path):
+// loading ../eravos/ before this ran was a 404 on :4800 on every page load.
 (() => {
   try {
-    if (typeof location === 'undefined' || /^\/ui\//.test(location.pathname)) return;
+    if (typeof location === 'undefined') return;
+    const underUi = /^\/ui\//.test(location.pathname);
     const orch = `${location.protocol}//${location.hostname}:9000/ui`;
     const set = () => {
-      const e = document.getElementById('eravos-frame'); if (e) e.src = `${orch}/eravos/`;
-      const a = document.getElementById('architect-frame'); if (a) a.src = `${orch}/architect/arch-builder.html`;
+      const e = document.getElementById('eravos-frame'); if (e) e.src = underUi ? e.dataset.src : `${orch}/eravos/`;
+      const a = document.getElementById('architect-frame'); if (a) a.src = underUi ? a.dataset.src : `${orch}/architect/arch-builder.html`;
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', set); else set();
   } catch (_) {}
 })();
+// §0.39.266 — James: "is it the sse? or the orchastrator? why is it need the orchastrator?" It is not
+// needed: the page's API is idearium itself. Two candidates are gone:
+//   · the orchestrator proxy (:9000/api/idearium) — its /health is idearium's, so it passed the probe,
+//     but it routes no /api/*: /api/idearium/api/repos → 404. After a slow moment the reconnect could
+//     land there and every list failed until a reload.
+//   · the page's own origin when the orchestrator serves it (/ui/idearium/) — the orchestrator's /health
+//     fans out to every system (up to 3 s) and is never idearium's anyway.
 const API_CANDIDATES = [...new Set([
-  ...(typeof location !== 'undefined' && /^https?:$/.test(location.protocol) && !/^\/api\/idearium/.test(location.pathname) ? [location.origin] : []),
-  'http://127.0.0.1:4800', 'http://127.0.0.1:9000/api/idearium',
+  ...(typeof location !== 'undefined' && /^https?:$/.test(location.protocol) && !/^\/(api|ui)\//.test(location.pathname) ? [location.origin] : []),
+  'http://127.0.0.1:4800',
 ])];
 let API_BASE = null;
 let CONNECTED = false;
@@ -197,6 +207,8 @@ function refreshOnEvent(ev) {
   // the same way, instead of adding one narrow special case per event
   // every time this happens again.
   const t = ev.type.startsWith('idearium.') ? ev.type.slice('idearium.'.length) : ev.type;
+  if (typeof fileStatesOnEvent === 'function') fileStatesOnEvent(ev);   // §0.39.280 BS8
+  if (typeof planPanelOnEvent === 'function') planPanelOnEvent(ev);     // §0.39.280 BS11
   if (t.startsWith('idea.'))   { loadIdeas(); }
   if (t.startsWith('workbench.') && typeof loadCompartment === 'function') { loadCompartment(); }
   if (t.startsWith('gap.'))    { loadGaps(); }
@@ -268,10 +280,21 @@ function refreshOnEvent(ev) {
       && CURRENT_REPO_SUBTAB === 'roadmap' && !ROADMAP_EDITING) {
     renderRepoRoadmap(CURRENT_API_REPO);
   }
+  // §0.39.271 P4 — the Phases tab (js/phases.js) repaints on a phase edit or a build step
+  if (typeof phasesOnEvent === 'function') phasesOnEvent(t, ev.payload);
   if (t === 'repo.snapshot.committed' && CURRENT_API_REPO && ev.payload?.repoUuid === CURRENT_API_REPO.uuid
       && CURRENT_REPO_SUBTAB === 'versionium') {
     renderRepoVersionium(CURRENT_API_REPO);
   }
+  // §0.39.266 — the nexus-self sync creates/updates the Nexus repos after boot (first run
+  // 20s in, core ~1,800 files); without this the library stayed empty until a reload.
+  // §0.39.266 — loom.write.tool proposed a file on a nexus repo: the approval prompt opens for it, like a reply's inject
+  if (t === 'repo.inject.proposed' && ev.payload && ev.payload.approval && ev.payload.status === 'proposed'
+      && CURRENT_API_REPO && ev.payload.repoUuid === CURRENT_API_REPO.uuid && typeof NEXUS_APPROVAL_QUEUE !== 'undefined') {
+    if (!NEXUS_APPROVAL_QUEUE.includes(ev.payload.inject)) NEXUS_APPROVAL_QUEUE.push(ev.payload.inject);
+    setTimeout(_nexusApprovalNext, 0);
+  }
+  if (t.startsWith('nexus-self.')) { clearTimeout(refreshOnEvent._nx); refreshOnEvent._nx = setTimeout(loadApiRepos, 800); }   // one reload per burst (one event per system)
   if (t.startsWith('repo.')) {
     loadApiRepos().then(() => {
       if (CURRENT_API_REPO && ev.payload?.repoUuid === CURRENT_API_REPO.uuid) {
@@ -316,7 +339,7 @@ async function loadGaps()     { try { GAPS  = (await api('/api/gaps')).gaps  || 
 // read it, and the topbar count uses it. A refresh re-renders whichever of those
 // two subtabs is open, and only those — an open builder is no longer painted
 // into a hidden pane on every SSE chunk event.
-async function loadSpecs()    { try { SPECS = (await api('/api/specs')).specs|| []; if (CURRENT_REPO_SUBTAB === 'architect' || CURRENT_REPO_SUBTAB === 'spec') renderCurrentRepoSubtab(); } catch(e){ console.warn('[idearium] loadSpecs failed:', e.message); toast('failed to load specs: '+e.message,'err'); } }
+async function loadSpecs()    { try { loadAgentOptions(); SPECS = (await api('/api/specs')).specs|| []; if (CURRENT_REPO_SUBTAB === 'architect' || CURRENT_REPO_SUBTAB === 'spec') renderCurrentRepoSubtab(); } catch(e){ console.warn('[idearium] loadSpecs failed:', e.message); toast('failed to load specs: '+e.message,'err'); } }
 async function loadSnapshots(){ try { SNAPSHOTS = (await api('/api/snapshots')).snapshots || []; renderVersionium(); } catch(e){ console.warn('[idearium] loadSnapshots failed:', e.message); } }
 async function loadStats()    { try { STATS = (await api('/api/stats')).stats; } catch(e){ console.warn('[idearium] loadStats failed:', e.message); } updateStats(); }
 // Ideas/Repo merge: repos are no longer their own rail tab — they're looked
@@ -465,6 +488,29 @@ function setView(v) {
   if (v === 'repo') { exitRepoDetail(); }
   if (v === 'compartment' && typeof renderCompartmentDetail === 'function') { renderCompartmentTree(); renderCompartmentDetail(); }
   document.querySelectorAll('.tt-leaf').forEach(l => l.classList.remove('active'));
+  _syncNestCtx(v);
+}
+
+// §0.39.271 N1 — Create/Build open from the repo's own tab row; their views keep the
+// repo in view with one bar that leads back, so leaving the repo row never looks like
+// a second Idearium. The top bar stays Welcome + Repos.
+const NEST_VIEW_LABEL = { brainstorm: 'Create › Brainstorm', ideas: 'Create › Ideas', eravos: 'Build › Eravos — organism canvas', 'architect-build': 'Build › Architect — block canvas', 'spec-wizard': 'Build › Spec Builder' };
+function _syncNestCtx(v) {
+  const bar = document.getElementById('nest-ctx');
+  if (!bar) return;
+  const show = !!NEST_VIEW_LABEL[v] && typeof REPO_DETAIL_OPEN !== 'undefined' && REPO_DETAIL_OPEN && CURRENT_API_REPO;
+  bar.classList.toggle('show', !!show);
+  if (show) {
+    document.getElementById('nest-ctx-text').textContent = `${CURRENT_API_REPO.name} · ${NEST_VIEW_LABEL[v]}`;
+    document.querySelectorAll('.tab-btn[data-view="repo"]').forEach(b => b.classList.add('active'));
+  }
+}
+function backToRepo() {
+  // setView('repo') would exitRepoDetail() — this returns to the OPEN repo instead.
+  document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.id === 'view-repo'));
+  document.querySelectorAll('.tab-btn, .tab-sub').forEach(b => b.classList.toggle('active', b.dataset.view === 'repo'));
+  document.querySelectorAll('.tab-group-btn').forEach(b => b.classList.remove('active'));
+  _syncNestCtx('repo');
 }
 
 // Top-tab subnav dropdowns (Create ▾ / Build ▾) — hover works via CSS,
@@ -692,11 +738,12 @@ async function archiveIdea(uuid) {
 // chunks being dispatched. The repo record stays; loadSpecs() then re-renders
 // the Spec subtab, which shows the removed state with a restore button.
 async function deleteSpec(uuid, name) {
-  if (!confirm(`remove spec "${name}"?\n\nit stops building and drops out of spec listings. the repo stays. nothing on disk is deleted — this can be undone from the repo's Spec tab.`)) return;
+  // §0.39.266 (D2) — removing a spec deletes it; the one exception is a spec that is a live repo's content.
+  if (!confirm(`remove spec "${name}"?\n\nit is deleted from disk. if it is a repo's content, it is only stopped, and goes when the repo is deleted.`)) return;
   try {
-    await api(`/api/spec-engine/specs/${uuid}`, { method: 'DELETE' });
+    const r = await api(`/api/spec-engine/specs/${uuid}`, { method: 'DELETE' });
     if (SELECTED_SPEC === uuid) SELECTED_SPEC = null;
-    toast('spec removed', 'ok');
+    toast(r.purged ? 'spec deleted' : (r.note || 'spec stopped'), 'ok');
     await loadSpecs();
   } catch(e) { toast(e.message, 'err'); }
 }
@@ -1044,7 +1091,8 @@ function renderSpecEngineBuilder(spec) {
                 // shows its real, already-fixed agent as text instead.
                 c.status === 'pending'
                   ? `<select class="agent-select" style="font-family:var(--mono);font-size:11px;background:var(--bg2,#1a1a1a);color:var(--text2);border:1px solid var(--b0);border-radius:3px;padding:1px 4px" onchange="setChunkAgent('${spec.uuid}','${c.uuid}',this.value)">
-                      ${AGENT_OPTIONS.map(a => `<option value="${a}" ${a===c.agent?'selected':''}>${a}</option>`).join('')}
+                      <option value="" ${c.agentPinned?'':'selected'} title="the repo's Agent-tab switch and hat; a spec with no repo uses ${escapeHtml(c.agent||'its own agent')} wearing the_builder">default</option>
+                      ${AGENT_OPTIONS.map(a => `<option value="${a}" ${c.agentPinned&&a===c.agent?'selected':''}>${a}</option>`).join('')}
                     </select>`
                   : `<span style="color:var(--text3)">${escapeHtml(c.agent||'')}${c.agentModel&&c.agentModel.startsWith('template')?' (template)':''}</span>`
               }
@@ -1076,7 +1124,7 @@ function renderSpecEngineBuilder(spec) {
           // document spec's next step is its code: Generate code plans the files
           // from the spec and builds each one (speceng.codegen → a code spec).
           done === chunks.length && chunks.length && !spec.fileTree && !building
-            ? (spec.codeSpecUuid
+            ? ((spec.codeSpecUuid && SPECS.some(s => s.uuid === spec.codeSpecUuid))   // §0.39.280 BS15 — a code spec that is gone offers a new one
                 ? `<button class="action-btn primary" onclick="openCodeSpec('${spec.uuid}')">open the code →</button>`
                 : `<button class="action-btn primary" id="codegen-btn" onclick="generateCode('${spec.uuid}')">generate code →</button>`)
             : `<button class="action-btn primary" ${building||done===chunks.length?'disabled':''} onclick="createRepoThenBuild('${spec.uuid}')">${building?'building…':(done===chunks.length?(spec.fileTree?'all files built':'all chunks built'):(spec.fileTree?'build remaining files':'build remaining chunks'))}</button>`
@@ -1095,7 +1143,14 @@ function renderSpecEngineBuilder(spec) {
 // list buildChunkWithAgent() actually checks against). Not a guess: an
 // agent offered here that agent-suite doesn't recognize would be a UI
 // promising a destination that doesn't exist.
-const AGENT_OPTIONS = ['ollama', 'mistral', 'claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
+// §0.39.267 — filled from GET /api/agent-providers (lib/agent-providers.js: copilot, ollama, and every guardian agent on
+// disk). This literal is only what shows before that answers.
+let AGENT_OPTIONS = ['copilot', 'ollama', 'claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
+let _AGENT_OPTIONS_LOADED = false;
+async function loadAgentOptions() {
+  if (_AGENT_OPTIONS_LOADED) return;
+  try { const r = await api('/api/agent-providers'); if (r && Array.isArray(r.providers) && r.providers.length) { AGENT_OPTIONS = r.providers; _AGENT_OPTIONS_LOADED = true; } } catch (_) {}
+}
 
 // §BUILT 2026-09-03 — per-chunk agent reassignment, PENDING chunks only
 // (the select in renderSpecEngineBuilder only renders for pending chunks
@@ -1291,11 +1346,8 @@ async function openNewSpecModal({ name = '', description = '', ideaUuid = null }
   const groups = [
     ['COS archetypes — one compartment, real starting files', templates.filter(t => t.source === 'cos-archetype')],
     ['COS blueprints — several roles, one directory each', templates.filter(t => t.source === 'cos-blueprint')],
-    // §BUILT 2026-09-21 — James: "add eravos organisms to architecture &
-    // features — select any combination." Same real shape as a COS
-    // archetype (one compartment, real starting files), read live from
-    // eravos/ui/mods/ by lib/file-tree-plan.js's listEravosMods().
-    ['Eravos mods — one mod, real starting files (schema + engine)', templates.filter(t => t.source === 'eravos-mod')],
+    // §0.39.267 — James: "the eravos options need to be removed from this prompt." The API no longer lists
+    // eravos mods here (GET /api/spec-engine/templates?include=eravos still does).
     ['spec-document templates', templates.filter(t => !String(t.source || '').startsWith('cos-') && t.source !== 'eravos-mod')],
   ].filter(([, list]) => list.length);
   wrap.innerHTML = groups.map(([title, list]) =>
@@ -1941,6 +1993,7 @@ function selectApiRepo(uuid) {
 let CURRENT_REPO_SUBTAB = null;
 
 function setRepoSubtab(name) {
+  if (name === 'roadmap' || name === 'phasemap') name = 'phases';   // §0.39.271 P4 — one tab now
   CURRENT_REPO_SUBTAB = name;
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
@@ -1951,10 +2004,12 @@ function renderCurrentRepoSubtab() {
   if (!CURRENT_API_REPO) return;
   if (CURRENT_REPO_SUBTAB === 'home') renderRepoHome(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'files') renderApiRepoPanel(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'code') renderRepoCode(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'architect') renderRepoArchitect(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'spec') renderRepoSpec(CURRENT_API_REPO);
-  else if (CURRENT_REPO_SUBTAB === 'phasemap') renderRepoPhasemap(CURRENT_API_REPO);
-  else if (CURRENT_REPO_SUBTAB === 'roadmap') renderRepoRoadmap(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'phases') renderRepoPhases(CURRENT_API_REPO);
+  else if (CURRENT_REPO_SUBTAB === 'phasemap') renderRepoPhasemap(CURRENT_API_REPO);   // no button since 0.39.271 (merged into Phases)
+  else if (CURRENT_REPO_SUBTAB === 'roadmap') renderRepoRoadmap(CURRENT_API_REPO);     // no button since 0.39.271 (merged into Phases)
   else if (CURRENT_REPO_SUBTAB === 'intelligence') renderRepoIntelligence(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'agent') renderRepoAgent(CURRENT_API_REPO);
   else if (CURRENT_REPO_SUBTAB === 'idea') renderRepoIdea(CURRENT_API_REPO);
@@ -1976,6 +2031,10 @@ function renderRepoSpec(repo) {
   const empty = document.getElementById('repo-spec-empty');
   const mount = document.getElementById('spec-builder');
   if (!empty || !mount || !repo) return;
+  // §0.39.271 S2 — the living spec first (js/living-spec.js); what follows is the build manifest.
+  if (typeof renderLivingSpec === 'function') renderLivingSpec(repo);
+  const manifest = document.getElementById('repo-build-manifest');
+  if (manifest) manifest.style.display = repo.nexusSelf ? 'none' : '';   // a nexus repo is built from its files, not a chunk manifest
   if (repo.nexusSelf && repo.nexusSelf.role === 'system') { mount.style.display = 'none'; empty.style.display = ''; return renderNexusSpec(repo, empty); }
   const say = (html) => { mount.style.display = 'none'; empty.style.display = ''; empty.innerHTML = html; };
 
@@ -2010,7 +2069,9 @@ async function renderRepoHome(repo) {
   const homeFile = (repo.files || []).find(f => /(^|\/)readme\.md$/i.test(f.path))
                  || (repo.files || []).find(f => /\.spec$/i.test(f.path));
   const identity = `
-    <div class="ds"><div class="ds-label">repository</div><div class="ds-mono">${escapeHtml(repo.name)}\nuuid ${repo.uuid}\nsource ${escapeHtml(repo.source || 'unknown')}${repo.createdAt ? '\n' + new Date(repo.createdAt).toLocaleString() : ''}</div></div>`;
+    <div class="ds"><div class="ds-label">repository</div><div class="ds-mono">${escapeHtml(repo.name)}\nuuid ${repo.uuid}\nsource ${escapeHtml(repo.source || 'unknown')}${repo.createdAt ? '\n' + new Date(repo.createdAt).toLocaleString() : ''}</div></div>
+    <div id="repo-build-start"></div>`;   // §0.39.280 BS11 — the build-start area (plan-panel.js)
+  setTimeout(() => { if (typeof renderBuildStart === 'function') renderBuildStart(repo); }, 0);
   if (!homeFile) {
     el.innerHTML = identity + `<div class="detail-empty">no README.md or .spec file in this repo yet</div>`;
     return;
@@ -2034,10 +2095,14 @@ async function renderRepoHome(repo) {
 // and MCO1's real dependency graph summary. Both are honest about a repo
 // that hasn't been through the import pipeline yet (404, shown as such —
 // never faked as "all green").
-async function renderRepoPhasemap(repo) {
-  const el = document.getElementById('repo-subtab-phasemap');
+// §0.39.271 P4 — the Phasemap tab is merged into Phases. What this function showed for an
+// ordinary repo (verification tiers + the three graphs) was never phases: it now paints
+// into the Intelligence tab (opts.el / opts.subtab). Kept whole, not deleted (§0.3).
+async function renderRepoPhasemap(repo, opts = {}) {
+  const el = opts.el || document.getElementById('repo-subtab-phasemap');
+  const SUB = opts.subtab || 'phasemap';
   if (!el) return;
-  if (repo && repo.nexusSelf && repo.nexusSelf.role === 'system') return renderNexusPhasemap(repo, el);
+  if (!opts.el && repo && repo.nexusSelf && repo.nexusSelf.role === 'system') return renderNexusPhasemap(repo, el);
   el.innerHTML = `<div class="detail-empty">loading…</div>`;
   let verification = null, verificationError = null, graph = null, graphError = null;
   try { verification = await api(`/api/repos/${repo.uuid}/verification`, {}, 15000); }
@@ -2047,7 +2112,7 @@ async function renderRepoPhasemap(repo) {
   try { graph = await api(`/api/repos/${repo.uuid}/graphs`, {}, 15000); }
   catch (e) { graphError = e.message; }
   // repo switched away while these were in flight — don't paint stale data
-  if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'phasemap') return;
+  if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== SUB) return;
 
   const tierRow = (t) => `<div class="pend-row" style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--b0)">
     <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${escapeHtml(t.level)} · ${escapeHtml(t.name || '')}</span>
@@ -2197,10 +2262,86 @@ agent errors         ${bad(d.agentErrors.length)}</div>
     ${nBroken || nMissing ? `<div class="ds"><div class="ds-label">imports that resolve to nothing</div><div class="ds-mono">${(deps.brokenRelative || []).map(b => `${escapeHtml(b.file)} → ${escapeHtml(b.specifier)}`).join('\n')}${nMissing ? `${nBroken ? '\n\n' : ''}not installed: ${escapeHtml(deps.packages.map(p => p.name).join(', '))}` : ''}</div></div>` : ''}
     ${d.parseFailures.length ? `<div class="ds"><div class="ds-label">files the pipeline could not parse</div><div class="ds-mono">${d.parseFailures.map(f => `${escapeHtml(f.path)}${f.error ? `  ${escapeHtml(String(f.error).slice(0, 160))}` : ''}`).join('\n')}</div></div>` : ''}
     ${d.failedTiers.length ? `<div class="ds"><div class="ds-label">verification tiers that failed</div><div class="ds-mono">${d.failedTiers.map(t => `${escapeHtml(t.level)} ${escapeHtml(t.name || '')}${t.failures.length ? '\n' + t.failures.slice(0, 8).map(f => `  · ${escapeHtml(typeof f === 'string' ? f : (f.file || '') + ' ' + (f.error || f.reason || JSON.stringify(f)).slice(0, 200))}`).join('\n') : ''}`).join('\n')}</div></div>` : ''}
+    ${(() => { const lf = d.runs.find(x => !x.allPassed && (x.failures || []).some(f => f.debug)); return lf ? `<div class="ds"><div class="ds-label">failures of the last failing run — ${escapeHtml(lf.label || lf.option)} · ${new Date(lf.ts).toLocaleString()}</div>${lf.failures.filter(f => f.debug).map(f => debugReportHtml(f.debug, f.file)).join('')}</div>` : ''; })()}
     <div class="ds"><div class="ds-label">COS runs · ${d.runs.length}</div>${d.runs.map(r => `<div class="ds-mono" style="border-bottom:1px solid var(--b0);padding:4px 0">${r.allPassed ? '✓' : '✗'} ${escapeHtml(r.label || r.option)} · ${r.passed} passed ${r.failed} failed · ${r.durationMs}ms · ${new Date(r.ts).toLocaleString()}${(r.failures || []).map(f => `\n   ${escapeHtml(f.file)} exit ${f.exitCode ?? '—'} ${escapeHtml(f.error || f.health || '')}${f.stderr ? '\n   ' + escapeHtml(_stderrGist(f.stderr)) : ''}`).join('')}</div>`).join('') || '<div class="ds-mono" style="opacity:.5">no runs yet — Run opens the COS run menu</div>'}</div>
     <div class="ds"><div class="ds-label">agent errors · ${d.agentErrors.length}</div>${d.agentErrors.map(a => `<div class="ds-mono" style="border-bottom:1px solid var(--b0);padding:4px 0">${new Date(a.ts).toLocaleString()} · ${escapeHtml(a.backend || '')}\n  asked: ${escapeHtml(a.message)}\n  <span style="color:var(--coral)">${escapeHtml(a.error || '')}</span></div>`).join('') || '<div class="ds-mono" style="opacity:.5">none</div>'}</div>`;
 }
 let _debugLast = null;
+
+// ── CODE — §0.39.273 CB4/CB5. The same surface the agents use (/api/repos/:uuid/code/*, idearium/repo/code-api.js):
+// search by meaning or exact text, and any chunk's card — kind, signature, doc, what it uses and what uses it (each
+// with how that was found), its tests and runtime proof, and its code. Read-only here; agents write through code_edit.
+let _codeState = { uuid: null, q: '', mode: 'search', hits: null, card: null };
+async function renderRepoCode(repo) {
+  const el = document.getElementById('repo-subtab-code');
+  if (!el || !repo) return;
+  if (_codeState.uuid !== repo.uuid) _codeState = { uuid: repo.uuid, q: '', mode: 'search', hits: null, card: null, overview: null };
+  if (!_codeState.overview) {
+    el.innerHTML = '<div class="detail-empty">reading the index…</div>';
+    try { _codeState.overview = await api(`/api/repos/${repo.uuid}/code/overview`, {}, 120000); }
+    catch (e) { el.innerHTML = `<div class="detail-empty">${escapeHtml(e.message)}</div>`; return; }
+    if (CURRENT_API_REPO?.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
+  }
+  const o = _codeState.overview;
+  const st = _codeState;
+  const hitRow = (h) => `<div class="ds-mono code-hit" style="border-bottom:1px solid var(--b0);padding:5px 0;cursor:pointer" onclick="codeOpenChunk('${escapeHtml(h.id || h.chunkId || '')}')">`
+    + `<span style="color:var(--sky2)">${escapeHtml(h.file)}:${h.range ? `${h.range.start_line}-${h.range.end_line}` : h.line}</span> ${h.kind ? `<span style="opacity:.6">${escapeHtml(h.kind)}</span> ` : ''}${escapeHtml(h.name || '')}`
+    + `${h.summary ? `\n  ${escapeHtml(h.summary)}` : ''}${(h.snippet || []).map(x => `\n  <span style="opacity:.7">${x.line}: ${escapeHtml(x.text)}</span>`).join('')}${h.text != null ? `\n  <span style="opacity:.8">${escapeHtml(h.text)}</span>` : ''}</div>`;
+  const c = st.card;
+  const link = (id, label) => `<a href="#" style="color:var(--sky2);text-decoration:none" onclick="codeOpenChunk('${escapeHtml(id)}');return false">${escapeHtml(label)}</a>`;
+  const cardHtml = !c ? '' : `<div class="ds"><div class="ds-label">${escapeHtml(c.card.kind)} · ${escapeHtml(c.card.qualifiedName || c.card.name || c.card.file)} · ${escapeHtml(c.card.file)}:${escapeHtml(c.card.lines)}${c.stale ? ' · <span style="color:var(--coral)">stale</span>' : ''}</div><div class="ds-mono">${escapeHtml(c.card.summary || '')}
+${c.card.signature ? `signature  ${escapeHtml(c.card.signature)}\n` : ''}${c.card.doc ? `doc        ${escapeHtml(c.card.doc)}\n` : ''}${c.card.exported ? 'exported\n' : ''}uses       ${(c.card.uses || []).map(u => `${link(u.chunkId, u.name)} <span style="opacity:.5">(${escapeHtml(u.basis)})</span>`).join(', ') || '—'}${c.card.usesTotal > (c.card.uses || []).length ? ` +${c.card.usesTotal - c.card.uses.length}` : ''}
+used by    ${(c.card.usedBy || []).map(u => `${link(u.chunkId, u.name || u.file)} <span style="opacity:.5">(${escapeHtml(u.basis)})</span>`).join(', ') || '—'}${c.card.usedByTotal > (c.card.usedBy || []).length ? ` +${c.card.usedByTotal - c.card.usedBy.length}` : ''}
+tests      ${(c.card.tests || []).map(t => link(t, t)).join(', ') || '—'}${c.proof ? `   runtime proof: ${escapeHtml(c.proof.proof)}${c.proof.stale ? ' (stale)' : ''}` : ''}
+around     ${['parent', 'prev', 'next'].map(k => c.around && c.around[k] ? `${k} ${link(c.around[k].id, c.around[k].name || c.around[k].kind)}` : null).filter(Boolean).join(' · ') || '—'}</div>
+      <pre style="margin:6px 0 0;font-size:11px;line-height:1.5;background:var(--b0);padding:6px 8px;border-radius:4px;overflow:auto;max-height:520px">${escapeHtml(c.text || '')}</pre>${c.more ? `<div class="ds-mono" style="opacity:.6">${escapeHtml(c.more)}</div>` : ''}</div>`;
+  el.innerHTML = `
+    <div class="ds"><div class="ds-label">${o.files} files · ${o.chunks} chunks · ${o.lines} lines · writes: ${escapeHtml(o.repo.writeMode)}${o.repo.pendingProposals ? ` · <span style="color:var(--amber, #e6b450)">${o.repo.pendingProposals} pending proposal(s)</span>` : ''}</div>
+      <div class="ds-mono">${escapeHtml((o.languages || []).join(' · '))}
+${(o.mostUsed || []).slice(0, 5).map(m => `${escapeHtml(m.file)}  used from ${m.usedFrom}`).join('\n')}</div>
+      <div class="action-row" style="gap:6px">
+        <input id="code-q" class="field-input" style="flex:1;min-width:220px" placeholder="what the code does, a name, or exact text" value="${escapeHtml(st.q)}" onkeydown="if(event.key==='Enter')codeRunSearch()">
+        <select id="code-mode" class="field-input" style="width:auto" onchange="_codeState.mode=this.value"><option value="search"${st.mode === 'search' ? ' selected' : ''}>by meaning</option><option value="grep"${st.mode === 'grep' ? ' selected' : ''}>exact text</option></select>
+        <button class="action-btn" onclick="codeRunSearch()">search</button>
+      </div></div>
+    ${cardHtml}
+    ${st.hits ? `<div class="ds"><div class="ds-label">${st.hits.length} result(s)${st.more ? ` · ${escapeHtml(st.more)}` : ''}</div>${st.hits.map(hitRow).join('') || '<div class="ds-mono" style="opacity:.5">nothing matched</div>'}</div>` : ''}`;
+}
+async function codeRunSearch() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  const q = (document.getElementById('code-q') || {}).value || '';
+  _codeState.q = q.trim(); _codeState.mode = (document.getElementById('code-mode') || {}).value || 'search';
+  if (!_codeState.q) return;
+  try {
+    if (_codeState.mode === 'grep') {
+      const r = await api(`/api/repos/${repo.uuid}/code/grep?pattern=${encodeURIComponent(_codeState.q)}&limit=60`, {}, 60000);
+      _codeState.hits = (r.matches || []).map(m => ({ ...m, id: m.chunkId })); _codeState.more = r.more || null;
+    } else {
+      const r = await api(`/api/repos/${repo.uuid}/code/search?q=${encodeURIComponent(_codeState.q)}&limit=20`, {}, 60000);
+      _codeState.hits = r.hits || []; _codeState.more = r.more || null;
+    }
+  } catch (e) { toast(e.message, 'err'); return; }
+  renderRepoCode(repo);
+}
+async function codeOpenChunk(id) {
+  const repo = CURRENT_API_REPO; if (!repo || !id) return;
+  try { _codeState.card = await api(`/api/repos/${repo.uuid}/code/chunk?id=${encodeURIComponent(id)}`, {}, 60000); }
+  catch (e) { toast(e.message, 'err'); return; }
+  renderRepoCode(repo);
+}
+// §0.39.271 T3 — one failure's debug report (lib/cos-debug-report.js): the error, the frames
+// that land in the repo with their source lines, and what the failure usually means
+function debugReportHtml(dbg, file) {
+  if (!dbg) return '';
+  const frames = (dbg.frames || []).map(f => `<div style="margin:4px 0 2px"><span style="color:var(--sky2)">${escapeHtml(f.file)}:${f.line}${f.col ? ':' + f.col : ''}</span>${f.fn ? ` <span style="opacity:.6">${escapeHtml(f.fn)}</span>` : ''}${f.inRepo ? '' : ' <span style="opacity:.5">(outside the run directory)</span>'}</div>` +
+    (f.excerpt ? `<pre style="margin:0;font-size:10px;line-height:1.5;background:var(--b0);padding:4px 6px;border-radius:4px;overflow:auto">${f.excerpt.map(x => `<span style="${x.at ? 'color:var(--coral)' : 'opacity:.7'}">${String(x.n).padStart(4)} ${x.at ? '▶' : ' '} ${escapeHtml(x.text)}</span>`).join('\n')}</pre>` : '')).join('');
+  return `<div style="border-left:2px solid var(--coral);padding:4px 0 4px 8px;margin:6px 0;font-family:var(--mono);font-size:10.5px">
+    <div><b style="color:var(--coral)">✗ ${escapeHtml(file || dbg.file || '')}</b>${dbg.exitCode != null ? ` <span style="opacity:.6">exit ${dbg.exitCode}</span>` : ''}${dbg.timedOut ? ' <span style="color:var(--amber)">timed out</span>' : ''}</div>
+    ${dbg.error ? `<div style="color:var(--text);margin:3px 0">${escapeHtml(dbg.error)}</div>` : ''}
+    ${(dbg.errorLines || []).slice(1, 4).map(l => `<div style="opacity:.7">${escapeHtml(l)}</div>`).join('')}
+    ${frames}${dbg.outside ? `<div style="opacity:.5;margin-top:3px">${dbg.outside} frame(s) outside the repo (runtime, node_modules)</div>` : ''}
+    ${dbg.hint ? `<div style="color:var(--amber);margin-top:4px">${escapeHtml(dbg.hint)}</div>` : ''}</div>`;
+}
 // the line of a failing run's stderr that says what went wrong (an Error line and
 // the first stack frame in the project), not whatever happened to be printed last
 function _stderrGist(stderr) {
@@ -2218,7 +2359,12 @@ async function repoDebugToAgent() {
   for (const p of (d.deps && d.deps.packages) || []) lines.push(`missing package: ${p.name}`);
   for (const f of d.parseFailures) lines.push(`parse failure: ${f.path}${f.error ? ' ' + f.error : ''}`);
   const r = d.runs.find(x => !x.allPassed);
-  if (r) for (const f of r.failures || []) lines.push(`failing run (${r.label || r.option}): ${f.file} exit ${f.exitCode}${f.stderr ? ' — ' + _stderrGist(f.stderr).replace(/\n\s*/g, ' / ') : ''}`);
+  if (r) for (const f of r.failures || []) {
+    // §0.39.271 T3 — the debug report goes with it: the error, and where in the repo it happened
+    const dbg = f.debug;
+    const at = dbg && dbg.frames && dbg.frames.find(x => x.inRepo);
+    lines.push(`failing run (${r.label || r.option}): ${f.file} exit ${f.exitCode}${dbg && dbg.error ? ` — ${dbg.error}` : f.stderr ? ' — ' + _stderrGist(f.stderr).replace(/\n\s*/g, ' / ') : ''}${at ? ` — at ${at.file}:${at.line}${at.excerpt ? ` \`${(at.excerpt.find(x => x.at) || {}).text || ''}\`` : ''}` : ''}${dbg && dbg.hint ? ` (${dbg.hint})` : ''}`);
+  }
   if (!lines.length) return toast('nothing to hand over — the checks are clean');
   setRepoSubtab('agent');
   for (let i = 0; i < 40 && !document.getElementById('agent-input'); i++) await new Promise(res => setTimeout(res, 100));
@@ -2446,8 +2592,17 @@ async function _nsBranchDiscard() {
 // ordinary state — not an error — so the endpoint returns ok:true with
 // scanned:false and a reason. (It must NOT return ok:false: api() above
 // throws on that, which would make this empty state unreachable.)
+// §0.39.271 P4 — Intelligence = the scan (unchanged, #intel-scan) + the verification
+// tiers and graphs that used to be the Phasemap tab (#intel-verify).
 async function renderRepoIntelligence(repo) {
-  const el = document.getElementById('repo-subtab-intelligence');
+  const host = document.getElementById('repo-subtab-intelligence');
+  if (!host) return;
+  host.innerHTML = `<div id="intel-scan"></div><div id="intel-verify"><div class="detail-empty">loading verification…</div></div>`;
+  renderRepoPhasemap(repo, { el: document.getElementById('intel-verify'), subtab: 'intelligence' });
+  return _renderRepoIntelligenceScan(repo);
+}
+async function _renderRepoIntelligenceScan(repo) {
+  const el = document.getElementById('intel-scan');
   if (!el) return;
   const forUuid = repo.uuid;
   el.innerHTML = `<div class="detail-empty">scanning…</div>`;
@@ -2835,10 +2990,71 @@ async function renderRepoVersionium(repo) {
     ? `<div class="ds"><div class="ds-label">snapshots (${snaps.length}) · newest first</div>${snaps.map(row).join('')}</div>`
     : `<div class="ds"><div class="ds-label">snapshots</div><div class="ds-mono">none yet for this repo.\n\nA snapshot needs the repo to have been through the import pipeline (chunked). If it has not been, taking one will say so.</div></div>`;
 
-  el.innerHTML = actions + listBlock + `<div id="snap-detail"></div>`;
+  // §0.39.271 V2 — the nexus repo's one file is its index (NEXUS.md). NEXUS itself is
+  // versioned per system and in the immutable base, so this tab shows all of that first.
+  const isNexusParent = repo.nexusSelf && repo.nexusSelf.role === 'parent';
+  el.innerHTML = (isNexusParent ? `<div id="nx-versions"><div class="detail-empty">reading every system's versions…</div></div>` : '')
+    + actions.replace('>snapshot<', isNexusParent ? '>snapshot the index only (NEXUS.md)<' : '>snapshot<')
+    + listBlock + `<div id="snap-detail"></div>`;
+  if (isNexusParent) renderNexusVersionium(forUuid, stale);
   if (SNAP_OPEN && SNAP_OPEN.repoUuid === forUuid && snaps.some(s => s.commitId === SNAP_OPEN.commitId)) {
     openRepoSnapshot(forUuid, SNAP_OPEN.commitId, snaps);
   }
+}
+
+// §0.39.271 V2 — GET /api/nexus-self/versions: one row per system repo (its versions in
+// versionium, latest, files kept), the immutable base's snapshot history, and one button
+// that snapshots every system (POST /api/nexus-self/snapshot).
+async function renderNexusVersionium(forUuid, stale) {
+  const box = document.getElementById('nx-versions');
+  if (!box) return;
+  let v;
+  try { v = await api('/api/nexus-self/versions', {}, 20000); }
+  catch (e) {
+    if (stale()) return;
+    box.innerHTML = `<div class="ds"><div class="ds-label">all of nexus · versionium</div><div class="ds-mono">could not read versions: ${escapeHtml(e.message)}\n\nversionium (:3754) holds them — is it running?</div></div>`;
+    return;
+  }
+  if (stale()) return;
+  const t = v.totals || {};
+  const row = (x) => {
+    const l = x.latest;
+    return `<div class="snap-row" style="padding:6px 8px;border-bottom:1px solid var(--b0);cursor:pointer;display:grid;grid-template-columns:130px 70px 90px 1fr 150px;gap:8px;align-items:center;font-family:var(--mono);font-size:10.5px"
+        onclick="enterRepoDetail('${escapeHtml(x.repoUuid)}');setTimeout(()=>setRepoSubtab('versionium'),60)" title="open nexus/${escapeHtml(x.system)}'s own Versionium tab">
+      <span style="color:var(--text)">${escapeHtml(x.system)}</span>
+      <span style="color:${x.versions ? 'var(--mint)' : 'var(--coral)'}">${x.versions} ver.</span>
+      <span style="color:var(--text3)">${x.fileCount} files</span>
+      <span style="color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l ? escapeHtml(l.commitId) + ' · ' + escapeHtml(l.message || '') + (l.files ? ' · ' + l.files.count + ' kept' : '') : (x.versionError ? '<span style="color:var(--coral)">' + escapeHtml(x.versionError) + '</span>' : 'not versioned yet')}</span>
+      <span style="color:var(--text3);text-align:right">${l ? escapeHtml(_snapWhen(l.ts)) : ''}</span>
+    </div>`;
+  };
+  const base = v.base || {};
+  box.innerHTML = `<div class="ds"><div class="ds-label">all of nexus · versionium — ${t.systems || 0} systems · ${t.versions || 0} versions · ${t.files || 0} files</div>
+      <div class="action-row" style="gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <input id="nx-snap-msg" type="text" placeholder="message for every system's snapshot (optional)" maxlength="200"
+          style="flex:1;min-width:200px;background:var(--b0);border:1px solid var(--b1);color:var(--text);font-family:var(--mono);font-size:11px;padding:6px 8px;border-radius:5px">
+        <button class="action-btn" id="nx-snap-all" onclick="snapshotAllNexus('${forUuid}')">◉ snapshot every system</button>
+      </div>
+      ${(t.unversioned || []).length ? `<div class="ds-mono" style="color:var(--amber);margin-bottom:6px">not versioned yet: ${escapeHtml(t.unversioned.join(', '))}</div>` : ''}
+      ${(v.systems || []).map(row).join('')}
+      <div style="font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-top:6px">each system's files are kept in its own versions (first copy, then diffs) · click a system for its history, diffs and restore</div>
+    </div>
+    <div class="ds"><div class="ds-label">immutable base — ${(base.history || []).length} snapshot(s) of the live tree</div>
+      <div class="ds-mono">head ${escapeHtml(String(base.head || '—').slice(0, 16))}
+${(base.history || []).slice().reverse().slice(0, 12).map(h => `${escapeHtml(String(h.hash || h.snapshot || h).slice(0, 16))}  ${h.at ? new Date(h.at).toLocaleString() : ''}  ${h.files != null ? h.files + ' files' : ''}`).join('\n')}</div></div>`;
+}
+
+async function snapshotAllNexus(parentUuid) {
+  const btn = document.getElementById('nx-snap-all');
+  const msg = (document.getElementById('nx-snap-msg') || {}).value || '';
+  if (btn) { btn.disabled = true; btn.textContent = '◉ snapshotting…'; }
+  try {
+    const r = await api('/api/nexus-self/snapshot', { method: 'POST', body: JSON.stringify(msg.trim() ? { message: msg.trim() } : {}) }, 300000);
+    const bad = (r.results || []).filter(x => !x.ok);
+    toast(`${(r.results || []).length - bad.length} system(s) snapshotted${bad.length ? ` · ${bad.length} failed: ${bad.map(b => b.system + ' (' + (b.code || b.error) + ')').join(', ')}` : ''}`, bad.length ? 'err' : 'ok');
+  } catch (e) { toast(`snapshot every system failed: ${e.message}`, 'err'); }
+  if (btn) { btn.disabled = false; btn.textContent = '◉ snapshot every system'; }
+  if (CURRENT_API_REPO?.uuid === parentUuid && CURRENT_REPO_SUBTAB === 'versionium') renderRepoVersionium(CURRENT_API_REPO);
 }
 
 async function takeRepoSnapshot(uuid) {
@@ -2999,6 +3215,15 @@ ${res.note ? '\n' + escapeHtml(res.note) : ''}</div>${undo}`;
 // settings tab for the compartments. per repo." The Agent tab is the CLI; how
 // the agent is CONFIGURED (which model wears the hat, its persona, what it has
 // learned, where its code lands) belongs with the rest of this repo's settings.
+// §CODER-LINK 0.39.276 — the repo the Code button makes wears the ORIGINAL repo's hat and uses its agent settings.
+// One line on both agent views says so, and links to where they are edited.
+function _sharedAgentNote(st) {
+  if (!st || !st.sharedFrom) return '';
+  const o = (typeof API_REPOS !== 'undefined' ? API_REPOS : []).find(r => r.uuid === st.sharedFrom);
+  const label = o ? escapeHtml(o.name || o.uuid) : escapeHtml(st.sharedFrom);
+  return `<div style="margin:6px 0;font-size:10px;border-left:2px solid var(--b1);padding-left:8px">this repo wears the hat of <span style="cursor:pointer;text-decoration:underline" onclick="selectApiRepo('${escapeHtml(st.sharedFrom)}')">${label}</span> — the backend switch, Ollama model, tool scope and prompt blocks are that repo's. Change them there; what this repo's agent learns is kept there too.</div>`;
+}
+
 async function renderRepoAgentSettings(repo) {
   const el = document.getElementById('repo-agents-section');
   if (!el) return;
@@ -3020,6 +3245,7 @@ indexed    ${idx.indexed ? `${idx.fileCount ?? '?'} files · ${idx.chunkCount ??
 learned    ${mem.total} observation${mem.total === 1 ? '' : 's'}
 exchanges  ${st.exchanges || 0}
 toolScope  ${st.toolScopeEnforced ? 'enforced' : 'NOT enforced on this path'}</div>
+      ${_sharedAgentNote(st)}
       <div style="margin:8px 0;font-size:10px">wearing the hat:
         ${_agentBackendHtml(cfg, _agentBackendOf(cfg) === 'ollama' ? await _ollamaModelList() : null)}
         <div class="ag-note" style="margin-top:4px">ollama — a local model · copilot — copilot picks which one answers (only these settings decide what is sent) · guardian — through that agent's tab; every output lands the same way.</div>
@@ -3387,25 +3613,52 @@ async function cosRemoteClone(name) {
   openCosRemoteBrowse();
 }
 
+// §0.39.279 — James: "once its generated, you can open it like a desktop environment". The viewer page boots the VM
+// (POST /api/repos/:uuid/desktop) and draws its screen; a Clear Glass window when idearium runs inside it.
+function openRepoDesktop(repoUuid) {
+  if (!API_BASE) { toast('idearium is offline — the desktop is served by it', 'err'); return; }
+  // served by idearium itself (same origin as its /api), wherever this UI was loaded from
+  const w = window.open(`${API_BASE}/desktop.html?repo=${encodeURIComponent(repoUuid)}`, `desktop-${repoUuid}`, 'width=1320,height=860');
+  if (!w) toast('the desktop window was blocked — allow pop-ups for idearium', 'err');
+}
+
+// §0.39.279 — the settings console (ui/settings.html): idearium's config and every repo's agent / prompt / hat /
+// compartment / desktop settings in one window, served by idearium itself.
+function openSettingsConsole(repoUuid) {
+  if (!API_BASE) { toast('idearium is offline — the settings console is served by it', 'err'); return; }
+  const w = window.open(`${API_BASE}/settings.html${repoUuid ? `?repo=${encodeURIComponent(repoUuid)}` : ''}`, 'idearium-settings', 'width=1280,height=900');
+  if (!w) toast('the settings window was blocked — allow pop-ups for idearium', 'err');
+}
+
 function renderRepoSettings(repo) {
   const el = document.getElementById('repo-subtab-settings');
   if (!el) return;
   const compartmentLine = repo.compartmentId
     ? `compartment ${repo.compartmentId}`
     : `compartment — none attached`;
+  // §0.39.279 — the repo's environment: its VM as a desktop (cos/workspace), and whether it is a branch of another repo
+  const branchLine = repo.branchOf ? `branch ${repo.branch || '—'} of repo ${repo.branchOf}\nfiles: a git worktree of the original (shared history); VM disk: an overlay of the original's` : 'its own files and compartment';
   el.innerHTML = `
     <div class="ds"><div class="ds-label">compartment</div><div class="ds-mono">${escapeHtml(compartmentLine)}</div></div>
+    <div class="ds"><div class="ds-label">environment</div><div class="ds-mono">${escapeHtml(branchLine)}</div>
+      <div class="action-row">
+        ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button>` : ''}
+        <button class="action-btn" onclick="openSettingsConsole('${repo.uuid}')" title="Every compartment and agent setting in one place">⚙ settings console</button>
+      </div></div>
     <div class="ds"><div class="ds-label">agent / provenance</div><div class="ds-mono">source ${escapeHtml(repo.source || 'unknown')}\nspec ${repo.specUuid || '—'}\nidea ${repo.ideaUuid || '—'}\npromoted from ${repo.promotedFromSpec || '—'}</div></div>
     <div class="ds"><div class="ds-label">repository</div>
       <div class="action-row">
-        <button class="action-btn" onclick="addApiRepoFile('${repo.uuid}')">+ add file</button>
-        <button class="action-btn" onclick="forkApiRepo('${repo.uuid}')">⑂ fork</button>
+        ${repo.immutable ? '' : `<button class="action-btn" onclick="addApiRepoFile('${repo.uuid}')">+ add file</button>
+        <button class="action-btn" onclick="forkApiRepo('${repo.uuid}')">⑂ fork</button>`}
         <button class="action-btn" onclick="exportApiRepo()">⇩ export .zip</button>
-        <button class="action-btn danger" onclick="openDeleteRepoModal()">✕ delete</button>
+        ${repo.immutable ? '<span class="ds-mono" title="0.39.266 — its lifecycle belongs to the nexus-self sync">immutable — edit on a COS branch, apply through the gate</span>' : '<button class="action-btn danger" onclick="openDeleteRepoModal()">✕ delete</button>'}
       </div>
     </div>
+    <div id="repo-env-section"></div>
+    ${typeof repoSettingsConsoleEmbed === 'function' ? repoSettingsConsoleEmbed(repo) : ''}
     <div id="repo-agents-section"></div>`;
   renderRepoAgentSettings(repo);
+  if (typeof renderRepoEnvironment === 'function') renderRepoEnvironment(repo);   // §0.39.280 BS10
 }
 
 // Renders the selected repo as a real, nested, expanded-by-default file
@@ -3435,7 +3688,8 @@ function renderApiRepoPanel(repo) {
 
   // dir path -> { __dir:true, children:{} } | { __dir:false, ...file }
   const root = {};
-  for (const f of (repo.files || [])) {
+  // §0.39.280 BS8 — files that exist only as a proposal are listed too, greyed (file-manage.js)
+  for (const f of [...(repo.files || []), ...(typeof pendingOnlyFiles === 'function' ? pendingOnlyFiles(repo) : [])]) {
     const parts = f.path.split('/');
     let node = root;
     let acc = '';
@@ -3463,8 +3717,9 @@ function renderApiRepoPanel(repo) {
         const active = ACTIVE_API_FILE === entry.__path ? ' active' : '';
         const statusDot = entry.status ? `<span class="tree-status-dot ${entry.status}" title="${escapeHtml(entry.status)}"></span>` : '';
         const compTag = entry.comp_id ? ` <span style="color:var(--violet);font-size:9px">▸${escapeHtml(entry.comp_id)}</span>` : '';
-        const delBtn = canDelete ? `<span class="tree-file-del" title="delete" onclick="event.stopPropagation();deleteApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">×</span>` : '';
-        html += `<div class="tree-node file${active}" onclick="openApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">${indent}${statusDot||'📄'}<span class="tree-file-name">${escapeHtml(name)}${compTag}</span><span class="tree-file-bytes">${entry.bytes||0}b</span>${delBtn}</div>`;
+        const delBtn = canDelete && !entry.__pendingOnly ? `<span class="tree-file-del" title="delete" onclick="event.stopPropagation();deleteApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">×</span>` : '';
+        const fsm = typeof fileStateMark === 'function' ? fileStateMark(entry.__path) : { cls: '', mark: '' };
+        html += `<div class="tree-node file${active}${fsm.cls}" onclick="openApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">${indent}${statusDot||'📄'}<span class="tree-file-name">${escapeHtml(name)}${compTag}</span>${fsm.mark}<span class="tree-file-bytes">${entry.__pendingOnly ? 'proposed' : `${entry.bytes||0}b`}</span>${delBtn}</div>`;
       }
     }
     return html;
@@ -3475,7 +3730,7 @@ function renderApiRepoPanel(repo) {
   // those are repo-level actions, not file-tree controls, and the file
   // tree is now specifically the Files subtab's content.
   tree.innerHTML = `
-    <div style="padding:8px 10px 4px;font-family:var(--mono);font-size:9px;color:var(--text3);line-height:1.5" id="repo-badge">${escapeHtml(repo.name)} — ${statusLine}</div>
+    <div style="padding:8px 10px 4px;font-family:var(--mono);font-size:9px;color:var(--text3);line-height:1.5" id="repo-badge">${escapeHtml(repo.name)} — ${statusLine}${typeof fileStatesSummary === 'function' && fileStatesSummary() ? `<br><span class="fs-summary">${escapeHtml(fileStatesSummary())}</span>` : ''}</div>
     <div class="tree-toolbar"><input type="text" id="tree-file-filter" placeholder="filter files…" oninput="renderApiRepoPanel(CURRENT_API_REPO)"></div>
     <div>${treeHtml}</div>`;
   // client-side file filter (kept simple — text match on path, re-render
@@ -3498,6 +3753,7 @@ function renderApiRepoPanel(repo) {
       if (children) children.style.display = anyVisible ? '' : 'none';
     });
   }
+  if (typeof loadFileStates === 'function') loadFileStates(repo);   // §0.39.280 BS8 — async; repaints when it lands
 }
 function toggleTreeDir(path) {
   if (REPO_TREE_COLLAPSED.has(path)) REPO_TREE_COLLAPSED.delete(path); else REPO_TREE_COLLAPSED.add(path);
@@ -3809,12 +4065,13 @@ async function _vmSetupStart() {
   _vmSetupPoll();
 }
 
-async function _runMenuGo() {
+async function _runMenuGo(from = 0) {
   const M = _runMenu; if (!M) return;
   const out = document.getElementById('run-menu-result');
   const val = (id) => { const el = document.getElementById(id); return el ? (el.type === 'checkbox' ? el.checked : el.value) : null; };
   const payload = { option: M.selected, file: val('run-menu-file') || undefined, script: val('run-menu-script') || undefined,
-    branch: (M.presetBranch = val('run-menu-branch') || '') || undefined, keepBranch: !!val('run-menu-keep'), timeoutMs: (parseInt(val('run-menu-timeout'), 10) || 30) * 1000 };
+    branch: (M.presetBranch = val('run-menu-branch') || '') || undefined, keepBranch: !!val('run-menu-keep'), timeoutMs: (parseInt(val('run-menu-timeout'), 10) || 30) * 1000,
+    from: typeof from === 'number' && from > 0 ? from : undefined };   // §0.39.271 T2 — continue a test.all the time budget cut short
   out.innerHTML = '<div style="opacity:.6">running in COS…</div>';
   out.scrollIntoView({ block: 'nearest' });
   let r;
@@ -3822,6 +4079,8 @@ async function _runMenuGo() {
   catch (e) { out.innerHTML = `<div style="color:var(--bad,#f87171)">${escapeHtml(e.message)}</div>`; return; }
   const col = (ok) => ok ? 'var(--ok,#4ade80)' : 'var(--bad,#f87171)';
   out.innerHTML = `<div style="margin-bottom:6px;opacity:.8">${escapeHtml(r.label || r.option)} · ${escapeHtml(r.where || '')} · ${r.durationMs}ms · <b style="color:${col(r.allPassed)}">${r.passed} passed, ${r.failed} failed</b></div>` +
+    (r.report && r.report.tests ? `<div style="font-size:10px;opacity:.8;margin-bottom:6px">${r.report.tests.ran} of ${r.report.tests.total} test file(s) ran (from #${r.report.tests.from + 1}, ${r.report.tests.concurrency} at a time)${r.report.tests.notRun ? ` · <b style="color:var(--amber,#fbbf24)">${r.report.tests.notRun} not reached in ${Math.round(r.report.tests.budgetMs / 1000)} s</b> <button class="action-btn" onclick="_runMenuGo(${r.report.tests.next})">run the next ${r.report.tests.notRun}</button>` : ''}</div>` : '') +
+    (r.report && r.report.suite ? `<div style="font-size:10px;opacity:.8;margin-bottom:6px">suite: ${escapeHtml(r.report.suite.steps.join(' · '))}${r.report.suite.refusals.length ? ` · not run here: ${escapeHtml(r.report.suite.refusals.join('; '))}` : ''}</div>` : '') +
     (r.report && r.report.vm ? `<div style="font-size:10px;opacity:.75;margin-bottom:6px">VM · accelerator ${escapeHtml(String(r.report.vm.accel))} · network ${escapeHtml(String(r.report.vm.network))}${r.report.vm.network === 'install' ? ` (cut after install — offline ${r.report.vm.offlineVerified ? 'verified' : 'NOT verified'})` : ''} · repo in by ${escapeHtml(String(r.report.vm.share))}</div>` : '') +
     (r.report && r.report.packages ? `<pre style="white-space:pre-wrap;max-height:200px;overflow:auto;margin:0 0 8px">${escapeHtml(r.report.packages.map(p => `${p.via.padEnd(8)} ${p.name}  (${p.usedBy} file${p.usedBy === 1 ? '' : 's'})`).join('\n'))}${r.report.brokenRelative.length ? '\n\nbroken relative imports:\n' + escapeHtml(r.report.brokenRelative.map(b => `${b.file} → ${b.specifier}`).join('\n')) : ''}</pre>` : '') +
     r.runs.map(x => `<div style="margin:8px 0 3px"><span style="color:${col(x.passed)}">${x.passed ? '✓' : '✗'}</span> ${escapeHtml(x.file)} <span style="opacity:.6">${x.exitCode === undefined ? '' : `exit ${x.exitCode === null ? '—' : x.exitCode}`}${x.durationMs ? ` · ${x.durationMs}ms` : ''}${x.killedByTimeout ? ' · TIMED OUT' : ''}${x.killedByOutputLimit ? ' · OUTPUT LIMIT' : ''}${x.external ? ` · external ${escapeHtml(x.runtime)}` : ''}</span></div>` +
@@ -3829,6 +4088,7 @@ async function _runMenuGo() {
       ((x.portMap || []).length ? `<div style="font-size:10px;opacity:.6">ports: ${x.portMap.map(p => `:${p.requested}→:${p.actual}`).join(' ')}</div>` : '') +
       ((x.refused || []).length ? `<div style="font-size:10px;opacity:.6">network isolation refused: ${escapeHtml(x.refused.slice(0, 8).join(', '))}${x.refused.length > 8 ? ' …' : ''}</div>` : '') +
       (x.error ? `<div style="color:${col(false)}">${escapeHtml(x.error)}</div>` : '') +
+      (x.debug ? debugReportHtml(x.debug, x.file) : '') +
       (x.stdout ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;opacity:.8;margin:0">${escapeHtml(x.stdout.slice(-4000))}</pre>` : '') +
       (x.stderr ? `<pre style="white-space:pre-wrap;max-height:160px;overflow:auto;color:${col(false)};margin:0">${escapeHtml(x.stderr.slice(-4000))}</pre>` : '')).join('');
 }
@@ -4059,6 +4319,7 @@ indexed    ${idx.indexed ? `${idx.fileCount ?? '?'} files · ${idx.chunkCount ??
 learned    ${mem.total} observation${mem.total === 1 ? '' : 's'}${kindCounts ? ` (${kindCounts})` : ''}
 exchanges  ${st.exchanges || 0}</div>
     </div>
+    ${_sharedAgentNote(st)}
     <div style="margin:6px 0;font-size:10px;opacity:.6">hat, teaching, export/import and inject mode live in <span style="cursor:pointer;text-decoration:underline" onclick="setRepoSubtab('settings')">Settings → Agents</span>${st.exists ? '' : ' — no hat forged yet'}</div>
 `;
 
@@ -4190,6 +4451,20 @@ function _agentSettle(line, r) {
     ? [r.hatName, r.providerUsed || r.provider, r.modelUsed, r.elapsedMs ? `${Math.round(r.elapsedMs / 100) / 10}s` : null, r.late ? 'late — from the Responses index' : null, r.viaCopilot ? `copilot → ${r.viaCopilot.backend}${r.viaCopilot.agent ? ' ' + r.viaCopilot.agent : ''}` : null].filter(Boolean).join(' · ')
     : (r.hatName || null);
   line.detail = _agentDetail(r);
+  // §0.39.266 — James: "just prompt for approval." Code the agent wrote for a Nexus repo
+  // is proposed, never applied; the approval prompt opens on it now, one inject at a time.
+  const I = ok && r.injects;
+  if (I && I.approval) {
+    const ids = (I.injects || []).filter(x => x.status === 'proposed').map(x => x.uuid);
+    if (ids.length) { NEXUS_APPROVAL_QUEUE.push(...ids.filter(id => !NEXUS_APPROVAL_QUEUE.includes(id))); setTimeout(_nexusApprovalNext, 0); }
+  }
+}
+// §0.39.266 — pending approvals (inject uuids) for the repo open in the Agent tab
+const NEXUS_APPROVAL_QUEUE = [];
+function _nexusApprovalNext() {
+  if (document.getElementById('inject-editor-modal').classList.contains('open')) return;   // one prompt at a time
+  const id = NEXUS_APPROVAL_QUEUE.shift();
+  if (id) openInjectEditor(id);
 }
 function _agentRerender(uuid) { if (CURRENT_API_REPO && CURRENT_API_REPO.uuid === uuid) renderRepoAgent(CURRENT_API_REPO); }
 
@@ -4262,7 +4537,10 @@ function _agentDetail(r) {
     const ids = Array.isArray(c.chunkIds) ? c.chunkIds : [];
     // 0.39.257 — the graph: connections for matched files, or the project map when nothing matched
     const g = c.graph || null;
-    const head = ids.length
+    // §0.39.266 — the harness sends a registry card (what the question names), never code; the agent reads the rest
+    const head = c.kind === 'card' && Array.isArray(c.cards) && c.cards.length
+      ? `context: registry card of ${c.cards.map(x => x.id).join(', ')} · ${c.chars || 0} chars — the agent reads code with loom.read.tool`
+      : ids.length
       ? `context: ${ids.length} chunk${ids.length === 1 ? '' : 's'} · ${files.length} file${files.length === 1 ? '' : 's'} · ${c.chars || 0} chars${c.dropped ? ` · ${c.dropped} dropped for budget` : ''}${g && g.connections ? ` · graph: ${g.connections} connection${g.connections === 1 ? '' : 's'}` : ''}`
       : g && g.overview ? `context: project map from the graph (${g.files} files) — the question named no code`
       : `context: none${c.reason ? ` — ${c.reason}` : ''}`;
@@ -4420,6 +4698,8 @@ const AGENT_CLI_HELP = [
   '  /scope all|project            which tools it may use: all (default) or this project\'s own set',
   '  /graph [file]                 how the project connects; with a file, what it imports and what imports it',
   '  /context on|off               include this project\'s code and graph with your questions (on by default)',
+  '  /recall <words>               search EVERY memory system and graph (chats, fixes, gaps, learned facts, specs, changelogs, this graph)',
+  '  /atlas                        where NEXUS keeps memory: every table with its size and the tool that reads it',
   '',
   'RUN & CHECK',
   '  /run   /test                  run this project in a COS branch (same as the Run button)',
@@ -4442,9 +4722,9 @@ const AGENT_CLI_HELP = [
   '',
   '/help shows this · ↑↓ recalls what you typed · short forms: /? /h /st /t /dbg /hist · a mistyped command suggests the closest',
 ].join('\n');
-const AGENT_CLI_ALIASES = { '?': 'help', h: 'help', st: 'status', t: 'tools', tool: 'tools', dbg: 'debug', hist: 'history', ctx: 'context', diag: 'diagnose' };
+const AGENT_CLI_ALIASES = { '?': 'help', h: 'help', st: 'status', t: 'tools', tool: 'tools', dbg: 'debug', hist: 'history', ctx: 'context', diag: 'diagnose', find: 'recall', search: 'recall', mem: 'recall' };
 const AGENT_CLI_COMMANDS = ['help', 'debug', 'tools', 'scope', 'graph', 'context', 'run', 'test', 'diagnose', 'status', 'provider', 'model', 'hat', 'forge',
-  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert'];
+  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert', 'recall', 'atlas'];
 /** The closest known command to a typo (edit distance ≤ 2), or null. */
 function _agentClosest(cmd) {
   const d = (a, b) => { const m = [...Array(b.length + 1).keys()]; for (let i = 1; i <= a.length; i++) { let prev = m[0]; m[0] = i;
@@ -4511,6 +4791,18 @@ async function agentCommand(line) {
       case 'graph': {
         const r = await api(`/api/repos/${uuid}/agent/graph${arg ? `?file=${encodeURIComponent(arg)}` : ''}`);
         _cli(uuid, r.text, arg ? `connections of ${r.file}` : `project map · ${r.files} files`); break;
+      }
+      // 0.39.272 — the context atlas (lib/context-atlas.js): one search across every memory system and graph
+      case 'recall': {
+        if (!arg) { _cli(uuid, 'usage: /recall <words> — e.g. /recall tab claim race   /recall sequencer clock'); break; }
+        const r = await api(`/api/repos/${uuid}/context?q=${encodeURIComponent(arg)}&limit=15`);
+        _cli(uuid, r.hits.length ? r.hits.map(h => `[${h.source}${h.id ? ' ' + String(h.id).slice(0, 40) : ''}] ${h.snippet}`).join('\n\n') : `nothing matched "${arg}" (searched ${r.searched.length} sources)`,
+          `${r.total} match(es) across ${Object.keys(r.bySource).length} source(s)`); break;
+      }
+      case 'atlas': {
+        const d = await api('/api/context/directory');
+        const rows = d.tables.filter(t => t.rows !== 0).map(t => `${t.table.padEnd(28)} ${String(t.rows ?? '?').padStart(6)}  ${t.what || ''}${t.tool ? `  → ${t.tool}` : ''}${t.searchedByDefault ? '' : '  (opt-in)'}`);
+        _cli(uuid, [...d.sources.filter(x => x.source !== 'jaa').map(x => `${x.source.padEnd(28)}        ${x.what}`), '', ...rows].join('\n'), `memory atlas · ${d.tables.length} tables`); break;
       }
       case 'run': case 'test': { renderRepoAgent(repo); return repoRun(cmd); }
       case 'diagnose': { renderRepoAgent(repo); return repoDiagnose(); }
@@ -4624,8 +4916,10 @@ async function agentSetMode(mode) {
 async function agentInjectAction(id, action, force = false) {
   if (!CURRENT_API_REPO) return;
   try {
-    const r = await api(`/api/repos/${CURRENT_API_REPO.uuid}/injects/${id}/${action}`, { method: 'POST', body: JSON.stringify({ force }) });
-    toast(`${r.inject.status}: ${r.inject.path}`, 'ok');
+    const r = await api(`/api/repos/${CURRENT_API_REPO.uuid}/injects/${id}/${action}`, { method: 'POST', body: JSON.stringify({ force }) }, 300000);
+    toast(r.gate ? `${r.inject.status}: ${r.inject.path} — live tree, nexus/${r.gate.system}${r.gate.applyId ? ` (${r.gate.applyId})` : ''}` : `${r.inject.status}: ${r.inject.path}`, 'ok');
+    // §0.39.266 — an approval decided: on to the next one waiting
+    if (r.inject && r.inject.target && r.inject.target.kind === 'nexus-gate' && (action === 'apply' || action === 'reject') && INJECT_EDITOR_ID === id) { closeInjectEditor(); renderRepoAgent(CURRENT_API_REPO); return; }
   } catch (e) {
     // A conflict is a real, specific refusal; offer the override rather than hiding it.
     // Typing the word is deliberate friction: forcing discards a newer edit.
@@ -4651,9 +4945,9 @@ async function openInjectEditor(id, newPath = null) {
   const uuid = CURRENT_API_REPO.uuid;
   const $ = x => document.getElementById(x);
   INJECT_EDITOR_ID = id; INJECT_EDITOR_PATH = newPath;
-  let n = null, current = null;
+  let n = null, current = null, gate = null;
   try {
-    if (id) { const r = await api(`/api/repos/${uuid}/injects/${id}`); n = r.inject; current = r.current; }
+    if (id) { const r = await api(`/api/repos/${uuid}/injects/${id}`, {}, 60000); n = r.inject; current = r.current; gate = r.gate || null; }
     else {
       try { const f = await api(`/api/repos/${uuid}/file?path=${encodeURIComponent(newPath)}`); current = f.content ?? null; } catch (_) { current = null; }
     }
@@ -4671,9 +4965,38 @@ async function openInjectEditor(id, newPath = null) {
   $('inj-ed-apply').style.display = editable ? '' : 'none';
   $('inj-ed-reject').style.display = n && n.status === 'proposed' ? '' : 'none';
   $('inj-ed-revert').style.display = n && n.status === 'applied' ? '' : 'none';
+  _injectGatePanel(n, gate);
   $('inject-editor-modal').classList.add('open');
 }
-function closeInjectEditor() { document.getElementById('inject-editor-modal').classList.remove('open'); INJECT_EDITOR_ID = null; }
+// §0.39.266 — a nexus-gate inject: the editor becomes the approval prompt. It says which
+// system's live files change, shows the diff against the live tree and the gate's plan,
+// and "approve → live tree" is the only way the code lands. A plan error blocks approval;
+// a conflict goes through the existing type-"force" path.
+function _injectGatePanel(n, gate) {
+  const el = document.getElementById('inj-ed-gate');
+  const btn = document.getElementById('inj-ed-apply');
+  const isGate = !!(n && n.target && n.target.kind === 'nexus-gate');
+  btn.textContent = isGate ? 'approve → live tree' : 'save + apply';
+  btn.disabled = false;
+  if (!isGate) { el.style.display = 'none'; el.innerHTML = ''; return; }
+  el.style.display = '';
+  if (n.status !== 'proposed') {
+    el.innerHTML = `<div class="ds-mono" style="font-size:10px">nexus/${escapeHtml(n.target.system)} · ${escapeHtml(n.status)}${n.applyId ? ` · gate apply ${escapeHtml(n.applyId)}` : ''}${n.approvedBy ? ` · approved by ${escapeHtml(n.approvedBy)}` : ''}${n.status === 'applied' ? ' · revert rolls that apply back' : ''}</div>`;
+    return;
+  }
+  const g = gate || {};
+  const plan = g.plan || { ok: false, errors: ['no preview'], conflicts: [] };
+  const problems = [...(plan.errors || []), ...(plan.conflicts || []).map(c => `CONFLICT ${c.path}: ${c.why}`)];
+  if ((plan.errors || []).length) btn.disabled = true;
+  const diff = String(g.diff || '').split('\n').map(l => `<div style="color:${l.startsWith('+') ? 'var(--good,#4ade80)' : l.startsWith('-') ? 'var(--bad,#f87171)' : 'inherit'}">${escapeHtml(l)}</div>`).join('');
+  el.innerHTML = `<div style="border:1px solid var(--accent,#38bdf8);border-radius:3px;padding:8px;font-size:10px">
+      <div style="font-weight:600;margin-bottom:4px">approval needed — ${g.creates ? 'creates' : 'changes'} <span class="ds-mono">${escapeHtml(g.path || n.path)}</span> in the live Nexus tree (system <b>${escapeHtml(g.system || n.target.system)}</b>)</div>
+      <div style="opacity:.7;margin-bottom:6px">approve writes it through the apply gate (recorded, revertible), snapshots, and resyncs nexus/${escapeHtml(g.system || n.target.system)}. ${NEXUS_APPROVAL_QUEUE.length ? `${NEXUS_APPROVAL_QUEUE.length} more waiting.` : ''}</div>
+      ${problems.length ? `<div style="color:var(--bad,#f87171);margin-bottom:6px">${problems.map(escapeHtml).join('<br>')}</div>` : `<div style="color:var(--good,#4ade80);margin-bottom:6px">gate plan: ok</div>`}
+      <div class="ds-mono" style="max-height:24vh;overflow:auto;white-space:pre;font-size:10px">${diff || '<span style="opacity:.6">(no line changes)</span>'}</div>
+    </div>`;
+}
+function closeInjectEditor() { document.getElementById('inject-editor-modal').classList.remove('open'); INJECT_EDITOR_ID = null; setTimeout(_nexusApprovalNext, 0); }
 function toggleInjectCurrent() { const c = document.getElementById('inj-ed-current'); c.style.display = c.style.display === 'none' ? '' : 'none'; }
 
 async function saveInjectEditor(andApply = false) {
@@ -4795,7 +5118,19 @@ async function openApiRepoFile(repoUuid, filePath) {
   renderApiRepoPanel(CURRENT_API_REPO);
   document.getElementById('ide-tabs').innerHTML = `${escapeHtml(filePath)}` +
     `<span class="ide-tab-dirty" id="ide-dirty" style="display:none">● unsaved</span>` +
-    `<button class="ide-tab-btn" onclick="saveApiRepoFile()">save</button>`;
+    `<button class="ide-tab-btn" onclick="saveApiRepoFile()">save</button>` +
+    `<button class="ide-tab-btn ide-manage-btn" onclick="openManagePanel()" title="hand this file (or the selected lines) to the repo's agent: expand, iterate, refactor, rebuild, debug, test, document, review, explain">manage ▾</button>`;
+  // §0.39.280 BS8 — a file that exists only as a proposal: show the proposal, read-only
+  const _fs = typeof fileStateOf === 'function' ? fileStateOf(filePath) : null;
+  if (_fs && _fs.state === 'pending' && _fs.pending && _fs.pending.length) {
+    try {
+      const inj = await api(`/api/repos/${repoUuid}/injects/${encodeURIComponent(_fs.pending[0])}`, {}, 15000);
+      const node = inj.inject || inj;
+      _showIdeEditor(false);
+      document.getElementById('ide-code').textContent = `// PENDING — this file exists only as a proposal (${_fs.pending[0]}); approve it in the Agent tab\n\n${node.content || ''}`;
+    } catch (e) { _showIdeEditor(false); document.getElementById('ide-code').textContent = `// pending proposal ${_fs.pending[0]} could not be read: ${e.message}`; }
+    return;
+  }
   // §TIMEOUT FIX 2026-07-15 — file reads share the repo's own spec-engine
   // manifest with whatever chunk-import is currently running (completeChunk
   // does synchronous readFileSync/writeFileSync per chunk — see
@@ -4932,11 +5267,15 @@ async function confirmDeleteRepo() {
   const uuid = CURRENT_API_REPO.uuid;
   const name = CURRENT_API_REPO.name;
   try {
-    await api(`/api/repos/${uuid}`, { method: 'DELETE' });
+    const r = await api(`/api/repos/${uuid}`, { method: 'DELETE' });
     closeDeleteRepoModal();
     exitRepoDetail(); // lands back on the main repo library, not a dead detail panel
     await loadApiRepos();
-    toast(`deleted "${name}"`, 'ok');
+    // §0.39.280 BS15 — a code repo's original is told (server: _codeRepoRetired); say so, and re-read the specs so its
+    // "generate code" is offered again instead of "open the code" pointing at nothing
+    const o = r && r.original;
+    if (o) { try { await loadSpecs(); } catch (_) {} }
+    toast(`deleted "${name}"${o ? ` — ${o.of ? `"${o.of.name}" knows` : 'its spec knows'}: Code can build a new one${o.worktree && o.worktree.ok ? ` · worktree removed, branch ${o.worktree.branch} kept` : ''}` : ''}`, 'ok');
   } catch (e) {
     toast('delete failed: ' + e.message, 'err');
   }

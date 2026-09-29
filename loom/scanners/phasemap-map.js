@@ -190,6 +190,9 @@ function parsePhasemapText(text, name) {
       // space-join because _tagSystem() genuinely wants one flat string.
       const bodyLines = phaseLines.join('\n');
       const dep = (bodyLines.match(/depends_on:\s*\[?([^\]\n]+)/) || [])[1] || '';
+      // §0.39.271 P1 — the fields a phases manager shows. Read at the phase's own
+      // field indent only (a nested `closes:` inside a `does:` block is not the phase's).
+      const f = _fields(phaseLines.slice(1), _indent(lines[i]) + 2);
       out.push({
         id, map: name,
         title: id.replace(/_/g, ' '),
@@ -200,9 +203,106 @@ function parsePhasemapText(text, name) {
         // header line, the `status:` key's line (-1 if it has none) and the
         // first line of the next phase. Not part of loadAll()'s output.
         line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
+        name: f.name || f.does || null, closes: _list(f.closes), files: _list(f.files), form: 'key',
       });
     }
+  // §0.39.271 P1 — the LIST form. Since 0.39.260 phasemaps are also written as
+  //     phases:
+  //       - id: T1
+  //         name: tar disk
+  //         status: built
+  //         depends_on: [T3]
+  // and none of those phases were visible to loom's roadmap or Idearium's Roadmap
+  // tab (PHASE_RE needs `  X1_slug:`). Same output shape; key-form ids win if a file
+  // somehow has both. Status: the same markers as above first, then the plain words
+  // these files use (built / built-before-mapped / done → done; active / building /
+  // in progress / partial → in-progress; anything else → pending).
+  // Only entries of a `phases:` list are phases — an `- id:` in any other list (a
+  // drift log's `entries:`, a registry) is not. Found on the real tree: SESSION1, an
+  // `entries:` row of the observability map, read as a phase and given a status.
+  const inPhases = new Array(lines.length).fill(false);
+  for (let i = 0; i < lines.length; i++) {
+    if (!/^\s*phases:\s*$/.test(lines[i])) continue;
+    const at = _indent(lines[i]);
+    for (let k = i + 1; k < lines.length; k++) {
+      if (lines[k].trim() !== '' && _indent(lines[k]) <= at) break;
+      inPhases[k] = true;
+    }
+  }
+  const seen = new Set(out.map(p => p.id));
+  for (let i = 0; i < lines.length; i++) {
+    const m = inPhases[i] && lines[i].match(LIST_ID_RE);
+    if (!m) continue;
+    const id = m[2].replace(/^["']|["']$/g, '');
+    if (seen.has(id)) continue;
+    const ind = m[1].length;
+    let bodyEnd = i + 1;
+    while (bodyEnd < lines.length && bodyEnd < i + 80) {
+      const l = lines[bodyEnd];
+      if (l.trim() !== '' && _indent(l) <= ind) break;
+      bodyEnd++;
+    }
+    const phaseLines = lines.slice(i, bodyEnd);
+    const f = _fields(phaseLines.slice(1), ind + 2);
+    const sIdx = phaseLines.findIndex((l, k) => k > 0 && _indent(l) === ind + 2 && /^\s*status:/.test(l));
+    const sv = sIdx === -1 ? '' : phaseLines.slice(sIdx, sIdx + 4).join(' ');
+    const word = String(f.status || '').trim().replace(/^["']/, '').toLowerCase();
+    const status = /\bNOT STARTED\b/i.test(sv) ? 'pending'
+      : /←\s*DONE\b|✓\s*DONE\b|#\s*DONE\b|\bCOMPLETE\b/.test(sv) ? 'done'
+      : /status:\s*[>|]?-?\s*["']?\s*DONE\b/.test(sv) ? 'done'
+      : /^(built|done|complete|completed|shipped|closed)\b/.test(word) ? 'done'
+      : /IN PROGRESS/.test(sv) || /^(active|building|in[- ]progress|partial|started|wip)\b/.test(word) ? 'in-progress'
+      : 'pending';
+    const deps = _list(f.depends_on);
+    out.push({
+      id, map: name,
+      title: f.name ? `${id} ${String(f.name).replace(/\s+/g, ' ').trim()}` : id,
+      status,
+      systems: _tagSystem(phaseLines.join(' ')),
+      dependsOn: deps.length ? deps.join(', ') : null,
+      line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
+      name: f.name || null, closes: _list(f.closes), files: _list(f.files), form: 'list',
+    });
+    seen.add(id);
+  }
   return out;
+}
+
+// ── §0.39.271 P1 helpers ────────────────────────────────────────────────────
+const LIST_ID_RE = /^(\s*)-\s+id:\s*(\S+)\s*$/;
+function _indent(l) { return (/^(\s*)/.exec(l) || ['', ''])[1].length; }
+/** _fields(lines, at) — the `key: value` fields at exactly indent `at`; a value runs
+ *  over the lines indented deeper than its key (block scalars and wrapped flow lists). */
+function _fields(lines, at) {
+  const out = {};
+  for (let k = 0; k < lines.length; k++) {
+    const l = lines[k];
+    if (_indent(l) !== at) continue;
+    const m = l.match(/^\s*([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$/);
+    if (!m) continue;
+    const parts = [m[2].replace(/^[>|][-+]?\s*$/, '')];
+    let e = k + 1;
+    while (e < lines.length && (lines[e].trim() === '' || _indent(lines[e]) > at)) { parts.push(lines[e].trim()); e++; }
+    const v = parts.join(' ').replace(/\s+/g, ' ').trim();
+    if (!(m[1] in out)) out[m[1]] = v;
+    k = e - 1;
+  }
+  return out;
+}
+/** _list("[A, B]" | "A, B" | "- A - B") -> ['A','B'] (empty for nothing). */
+function _list(v) {
+  if (v == null) return [];
+  let raw = String(v).trim();
+  // §FIXED 2026-09-28 — a flow list ends at its own `]`; what follows is a YAML comment, not another
+  // item. `depends_on: [S3, C1]  # why` was read as the items `S3` and `C1] # why`, so the edge to C1
+  // was lost and the phase could read as ready while C1 was still open (staging-self-heal S4). A block
+  // or bare list has no `]`, so only a ` # …` tail is cut there.
+  if (raw.startsWith('[')) { const close = raw.indexOf(']'); if (close !== -1) raw = raw.slice(0, close + 1); }
+  else raw = raw.replace(/\s+#.*$/, '');
+  const s = raw.replace(/^\[|\]$/g, '');
+  if (!s) return [];
+  const items = s.startsWith('- ') ? s.split(/\s+-\s+/).map(x => x.replace(/^-\s*/, '')) : s.split(',');
+  return items.map(x => x.trim().replace(/^["']|["']$/g, '')).filter(Boolean);
 }
 
 /**

@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-response-mem-cecd83c5-b659-431a-a2fe-f7f6016ee44c
+type: response
+id: mem-cecd83c5-b659-431a-a2fe-f7f6016ee44c
+context: guardian agent response — durable return-point record
+intent: null
+summary: ollama complete (15 chars)
+system: guardian
+tags:
+  - provider:ollama
+  - status:complete
+  - source:idearium.agent-suite
+  - agent:idearium
+exported_at: 1790684941842
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1790684941842
+lastSeenAt: 1790684941842
+fingerprint: null
+payload:
+  jobId: mem-cecd83c5-b659-431a-a2fe-f7f6016ee44c
+  provider: ollama
+  agentId: idearium
+  status: complete
+  text: built by ollama
+  chars: 15
+  contentHash: 40a21b856200347e2311eda21fc57fd7a44fcd86d023d5d5c89c8aa9a928d126
+  source: idearium.agent-suite
+  sinks:
+    sse:
+      ok: false
+      detail: no bus
+    ledger:
+      ok: false
+      detail: no ledger available
+    downloads:
+      ok: false
+      detail: 'clear-glass unreachable: connect ECONNREFUSED 127.0.0.1:7702'
+      queued: true
+  prompt: write lib/c.js
+  command: chunk
+  ts: 1790684941833

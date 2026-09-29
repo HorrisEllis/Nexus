@@ -94,6 +94,7 @@ const TABLES = [
   // §0.2.0 — repo-scoped (every row keyed by a repoUuid)
   'repo_agent_log',
   'repo_agent_settings',
+  'repo_agent_links',   // §0.39.276 — a code repo's link to its original repo's agent
   'repo_hat_memory',
 ];
 

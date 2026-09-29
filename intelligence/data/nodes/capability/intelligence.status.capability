@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.status
 type: capability
 id: intelligence.status
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756065
-source: intelligence.registry-components:intelligence.status
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787387
+source: intelligence/registry-components.js:intelligence.status
+occurrences: 1
+firstSeenAt: 1789250756065
+lastSeenAt: 1790684787387
+fingerprint: 32b9251d863980fed06791ef
 payload:
+  intent: []
+  grammar:
+    - status
+    - intelligence status
+  tags:
+    - intelligence
   id: intelligence.status
   namespace: intelligence
   name: status
   version: 1.0.0
-  grammar:
-    - status
-    - intelligence status
   route:
     method: GET
     path: /api/intelligence/status
-  intent: []
   description: Intelligence subsystem health
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

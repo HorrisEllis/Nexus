@@ -106,3 +106,15 @@ payload:
       description: >-
         correction_2026-09-12: real timestamp the async enrichment update landed, distinct from
         enteredAt
+    compound:
+      type: any
+      required: false
+      description: >-
+        correction_2026-09-28 (staging-self-heal phasemap C1): chain-scoped compound reading from
+        intelligence/causal/compound.js, stored under its OWN key, never merged into the system-wide
+        sigmaBefore/sigmaAtEntry/sigmaDelta above (I10). Shape: {status: analyzed|unavailable, reason,
+        class: ripple|wave|tidal|null, factors, sigmaProgression, deltaProgression, peakSigma, rootUuid,
+        anchor: {ledgerSystem, entryUuid}}. status unavailable (no anchor, unknown system, entry not in that
+        system graph, orchestrator unreachable) carries a reason and class null — never a ripple (I8/I9).
+        A ripple has no CausalRecord by design: class ripple with factors/progressions null. rootUuid is
+        the chain TRUE ROOT analyzeChain walked to, which may differ from anchor.entryUuid.

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.telemetry.frame
+type: capability
+id: intelligence.telemetry.frame
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787414
+source: intelligence/registry-components.js:intelligence.telemetry.frame
+occurrences: 1
+firstSeenAt: 1790684787414
+lastSeenAt: 1790684787414
+fingerprint: 45456b928b3ed4a40d4572fe
+payload:
+  intent: []
+  grammar:
+    - telemetry frame
+    - intelligence telemetry
+  tags:
+    - intelligence
+    - telemetry
+  id: intelligence.telemetry.frame
+  namespace: intelligence
+  name: telemetry.frame
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/telemetry/frame
+  description: Telemetry-codec Slope/Stability/Oscillation/Drift frame over the CFR field's own 4 dimensions
+  params: []
+  permissions:
+    - system
+  hooks: {}

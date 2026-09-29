@@ -2,30 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-loom.tension
 type: capability
 id: loom.tension
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730154
-source: loom.registry-components:loom.tension
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787466
+source: loom/registry-components.js:loom.tension
+occurrences: 1
+firstSeenAt: 1789250730154
+lastSeenAt: 1790684787466
+fingerprint: 3bbee8600cbc2f3b3b4a250c
 payload:
-  id: loom.tension
-  namespace: loom
-  name: tension
-  version: 1.5.0
+  intent: []
   grammar:
     - tension
     - tension
-  route:
-    method: GET
-    path: /api/tension
-  intent: []
-  description: Per-system tension (friction + gap accumulation), proxied live from the diagnostic kernel
-  params: []
   tags:
     - loom
     - analysis
+  id: loom.tension
+  namespace: loom
+  name: tension
+  version: 1.5.1
+  route:
+    method: GET
+    path: /api/tension
+  description: Per-system tension (friction + gap accumulation), proxied live from the diagnostic kernel
+  params: []
   permissions:
     - system
-  hooks: {}

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.answers.approve
+type: capability
+id: copilot.opportunity.answers.approve
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786902
+source: copilot/registry-components.js:copilot.opportunity.answers.approve
+occurrences: 1
+firstSeenAt: 1790684786902
+lastSeenAt: 1790684786902
+fingerprint: 0040029e9f19daedb9bddac5
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity answers approve
+  tags:
+    - copilot
+    - opportunity
+    - user-only
+  id: copilot.opportunity.answers.approve
+  namespace: copilot
+  name: opportunity.answers.approve
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/answers/:id/approve
+  description: Approve a drafted answer for reuse
+  params: []
+  permissions:
+    - user
+  hooks: {}

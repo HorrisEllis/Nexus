@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.autofill.createProfile
+type: capability
+id: cg.autofill.createProfile
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786699
+source: clear-glass/registry-components.js:cg.autofill.createProfile
+occurrences: 1
+firstSeenAt: 1790684786699
+lastSeenAt: 1790684786699
+fingerprint: 3b2f9e3ee5ae90f6ec6c3c29
+payload:
+  intent: []
+  grammar:
+    - autofill createProfile
+  tags:
+    - cg
+    - autofill
+  id: cg.autofill.createProfile
+  namespace: cg
+  name: autofill.createProfile
+  version: 3.17.0
+  route:
+    method: IPC
+    path: autofill:profile:create
+  description: Create a real autofill profile
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

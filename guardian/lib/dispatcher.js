@@ -402,7 +402,7 @@ function createDispatcher(deps) {
       if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
       pendingQueue.get(job.provider).push(job);
       updateJob(job.id, { status: 'queued', queuedAt: Date.now(),
-        queueReason: `waiting for ${job.provider} NCP channel` });
+        queueReason: (() => { try { return require('./provider-login.js').blockedReason(job.provider); } catch (_) { return null; } })() || `waiting for ${job.provider} NCP channel` });   // §0.39.280 BS16
       console.log(`[guardian] queued ${job.id} — waiting for ${job.provider} userscript`);
       bus.emit('guardian.job.queued', { jobId: job.id, provider: job.provider });
       const provUrls = {
@@ -504,12 +504,19 @@ function createDispatcher(deps) {
     if (typeof chatFor === 'function' && process.env.GUARDIAN_RESUME_CHAT !== '0') {
       try { resumeChatUrl = chatFor(job) || null; } catch (e) { console.warn(`[guardian] ${job.id}: chat lookup failed (job runs where the tab is): ${e.message}`); }
     }
+    // §0.39.279 — a job that names its chat (a wake answered from that chat's transcript) goes back to it, whatever
+    // chat the agent last used; only a real, resumable chat URL of this provider is honoured.
+    if (job.chatUrl && process.env.GUARDIAN_RESUME_CHAT !== '0') {
+      try { resumeChatUrl = require('./chat-transcripts.js').resumableChatUrl(job.provider, job.chatUrl) || resumeChatUrl; } catch (_) {}
+    }
     const payload = {
       type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
       provider: job.provider, prompt: job.prompt, content: job.content,
       tools: job.tools || null,
       hat: job.hat || null,
       resumeChatUrl,
+      // §0.39.266 — the agent has no chat of its own yet: the tab opens a new one (and does not wait for earlier turns)
+      newChat: !!(resumeChatUrl && require('./chat-transcripts.js').isNewChatUrl(resumeChatUrl)),
     };
     const sent = ncp.pushActive(job.provider, payload);
     const via = job.agentId ? `the ${job.provider} tab, for ${job.agentId}` : `the ${job.provider} tab`;

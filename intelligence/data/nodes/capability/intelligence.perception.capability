@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.perception
+type: capability
+id: intelligence.perception
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787414
+source: intelligence/registry-components.js:intelligence.perception
+occurrences: 1
+firstSeenAt: 1790684787414
+lastSeenAt: 1790684787414
+fingerprint: 1d0569b5038695cea67946aa
+payload:
+  intent: []
+  grammar:
+    - perception
+    - intelligence perception
+  tags:
+    - intelligence
+    - perception
+  id: intelligence.perception
+  namespace: intelligence
+  name: perception
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/perception
+  description: >-
+    ALK-Perception — composite behavioral state (COGNITIVE_LOAD/GENUINE_FLOW/CONCEALMENT/etc) from
+    live CFR+gap telemetry
+  params: []
+  permissions:
+    - system
+  hooks: {}

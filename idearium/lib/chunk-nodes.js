@@ -251,6 +251,28 @@ export function removeChunkNode(chunkUuid) {
   }
 }
 
+/**
+ * removeChunkNodes(chunkUuids) -> count — §0.39.266. removeChunkNode() for many at once, one directory
+ * read. Used when a whole spec is purged: every nexus/core version wrote ~1,700 .chunk nodes and none
+ * were ever removed.
+ */
+export function removeChunkNodes(chunkUuids) {
+  const want = new Set((chunkUuids || []).filter(Boolean));
+  if (!want.size) return 0;
+  let n = 0;
+  try {
+    const dir = _nodesDir(_cfg());
+    if (!fs.existsSync(dir)) return 0;
+    for (const f of fs.readdirSync(dir)) {
+      if (!f.endsWith('.chunk')) continue;
+      const id = f.slice(0, -'.chunk'.length).split('.').pop();
+      if (!want.has(id)) continue;
+      try { fs.unlinkSync(path.join(dir, f)); n++; } catch (_) {}
+    }
+  } catch (e) { console.warn(`[${MODULE_ID}] §1.2 bulk chunk node removal failed (non-fatal): ${e.message}`); }
+  return n;
+}
+
 /** listChunkNodes({ tags }) -> every real .chunk node, optionally tag-filtered. */
 export function listChunkNodes({ tags } = {}) {
   try {

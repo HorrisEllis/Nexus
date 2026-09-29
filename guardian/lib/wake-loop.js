@@ -73,8 +73,20 @@ function createCopilotAsk({ url = process.env.COPILOT_URL || 'http://127.0.0.1:3
   });
 }
 
-function createWakeLoop({ askCopilot, createJob, dispatchJob, getJob, bus = { emit() {} }, maxDepth = parseInt(process.env.GUARDIAN_WAKE_MAX_DEPTH || '3', 10), log = () => {} } = {}) {
+function createWakeLoop({ askCopilot, createJob, dispatchJob, getJob, bus = { emit() {} }, maxDepth = parseInt(process.env.GUARDIAN_WAKE_MAX_DEPTH || '3', 10), log = () => {}, answeredTtlMs = 10 * 60e3, now = Date.now } = {}) {
   const handled = new Set();
+  // §0.39.279 — one answer per wake when BOTH paths see the same turn (a job's completion and that chat's transcript).
+  // Each path records the asks it answered; the other path yields to a matching record ONCE (consumed), within
+  // answeredTtlMs. Two different jobs asking the same thing are still both answered (the job path never yields to itself).
+  const answeredBy = { job: new Map(), transcript: new Map() };
+  const _k = (provider, ask) => `${provider}|${String(ask || '').replace(/\s+/g, ' ').trim().toLowerCase()}`;
+  function _yield(other, provider, ask) {
+    const m = answeredBy[other], k = _k(provider, ask), t = m.get(k);
+    for (const [x, ts] of m) if (now() - ts >= answeredTtlMs) m.delete(x);
+    if (t && now() - t < answeredTtlMs) { m.delete(k); return true; }
+    return false;
+  }
+  function _record(path, provider, ask) { answeredBy[path].set(_k(provider, ask), now()); }
   async function handleComplete({ jobId }) {
     if (!jobId || handled.has(jobId)) return { skipped: 'already_handled' };
     const job = getJob(jobId);
@@ -89,6 +101,8 @@ function createWakeLoop({ askCopilot, createJob, dispatchJob, getJob, bus = { em
       bus.emit('guardian.wake.refused', { jobId, provider: job.provider, depth, reason: 'max_depth' });
       return { refused: 'max_depth', depth };
     }
+    if (_yield('transcript', job.provider, ask)) return { skipped: 'answered_from_transcript' };
+    _record('job', job.provider, ask);
     bus.emit('guardian.wake.detected', { jobId, provider: job.provider, agentId: job.agentId || null, depth, ask: ask.slice(0, 200) });
     const ans = await askCopilot(ask, { sessionId: `wake-${job.agentId || job.provider}`, provider: job.provider });
     if (!ans || !ans.ok || !ans.text) {
@@ -104,6 +118,57 @@ function createWakeLoop({ askCopilot, createJob, dispatchJob, getJob, bus = { em
     bus.emit('guardian.wake.replied', { jobId, replyJobId: reply.id, provider: job.provider, depth: depth + 1 });
     return { replied: reply.id, depth: depth + 1 };
   }
-  return { handleComplete, extractWake, _handled: handled };
+
+  /**
+   * handleTranscript({ provider, tabId, agentId, chat }) — §0.39.279. James: "i want the agents to be able to use hey
+   * nexus, its detected but the response from nexus isnt injected as a job." handleComplete only answers a wake inside
+   * the reply to a guardian JOB. An agent talking in a chat no job owns (a conversation James opened, a reply the job
+   * path never completed) had its "hey nexus" detected by the page (userscript-nexus-wake checkMessage) and answered by
+   * nothing. Here the settled transcript is read: the newest turn, if it is the agent's and starts a line with a wake,
+   * is answered as a wake-reply job typed into THAT chat (job.chatUrl). Once per turn. A turn that is some job's reply
+   * is left to handleComplete (it waits jobGraceMs for the job path first). Depth = how many "[NEXUS] answer to your"
+   * turns in a row the agent has just been sent, capped like the job path.
+   */
+  const handledTurns = new Set();
+  const _norm = (t) => String(t || '').replace(/\s+/g, ' ').trim();
+  async function handleTranscript({ provider, tabId = null, agentId = null, chat } = {}, { jobGraceMs = 3000, listJobs = null, sleep = (ms) => new Promise(r => setTimeout(r, ms)) } = {}) {
+    if (!chat || !provider || !chat.chatId || chat.chatId === 'home') return { skipped: 'no_chat' };
+    if (chat.settled === false || chat.generating === true) return { skipped: 'not_settled' };
+    const msgs = Array.isArray(chat.messages) ? chat.messages : [];
+    const i = msgs.length - 1;
+    const last = msgs[i];
+    if (!last || last.role !== 'assistant') return { skipped: 'last_turn_not_the_agent' };
+    const ask = extractWake(last.text || '');
+    if (!ask) return { skipped: 'no_wake' };
+    const key = `${provider}|${chat.chatId}|${i}|${_norm(ask).slice(0, 120)}`;
+    if (handledTurns.has(key)) return { skipped: 'already_handled' };
+    handledTurns.add(key);
+    // a job's reply: the job path answers it (handleComplete) — give it the grace period to claim it
+    if (jobGraceMs) await sleep(jobGraceMs);
+    const turn = _norm(last.text);
+    const owned = (listJobs ? listJobs() : []).find(j => j && j.provider === provider && j.responseText && handled.has(j.id)
+      && (_norm(j.responseText).includes(turn.slice(0, 200)) || turn.includes(_norm(j.responseText).slice(0, 200))));
+    if (owned) return { skipped: 'job_path', jobId: owned.id };
+    if (_yield('job', provider, ask)) return { skipped: 'job_path' };
+    _record('transcript', provider, ask);
+    let depth = 0;
+    for (let k = i - 1; k >= 0; k -= 2) { const u = msgs[k]; if (u && u.role === 'user' && /^\s*\[NEXUS\] answer to your/.test(u.text || '')) depth++; else break; }
+    if (depth >= maxDepth) {
+      bus.emit('guardian.wake.refused', { provider, chatId: chat.chatId, depth, reason: 'max_depth', via: 'transcript' });
+      return { refused: 'max_depth', depth };
+    }
+    bus.emit('guardian.wake.detected', { provider, agentId, chatId: chat.chatId, depth, ask: ask.slice(0, 200), via: 'transcript' });
+    const ans = await askCopilot(ask, { sessionId: `wake-${agentId || provider}`, provider });
+    if (!ans || !ans.ok || !ans.text) {
+      bus.emit('guardian.wake.failed', { provider, chatId: chat.chatId, error: (ans && ans.error) || 'empty answer', via: 'transcript' });
+      return { failed: (ans && ans.error) || 'empty answer' };
+    }
+    const reply = createJob({ command: 'wake-reply', provider, prompt: frameReply(ask, ans.text), source: 'copilot',
+      agentId: agentId || null, wakeDepth: depth + 1, transport: 'ncp', chatUrl: chat.url || null, join: false });
+    dispatchJob(reply);
+    bus.emit('guardian.wake.replied', { provider, chatId: chat.chatId, replyJobId: reply.id, depth: depth + 1, via: 'transcript' });
+    return { replied: reply.id, depth: depth + 1 };
+  }
+  return { handleComplete, handleTranscript, extractWake, _handled: handled, _handledTurns: handledTurns };
 }
 module.exports = { createWakeLoop, createCopilotAsk, extractWake, frameReply };

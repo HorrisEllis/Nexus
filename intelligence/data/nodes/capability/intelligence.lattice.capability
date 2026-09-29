@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.lattice
+type: capability
+id: intelligence.lattice
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787395
+source: intelligence/registry-components.js:intelligence.lattice
+occurrences: 1
+firstSeenAt: 1790684787395
+lastSeenAt: 1790684787395
+fingerprint: 661b2128dde2fab3a2d5ed71
+payload:
+  intent: []
+  grammar:
+    - lattice
+    - intelligence lattice
+  tags:
+    - intelligence
+  id: intelligence.lattice
+  namespace: intelligence
+  name: lattice
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/lattice
+  description: 'System associative lattice: co-activation neighbours/clusters'
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.cycle
+type: capability
+id: copilot.opportunity.cycle
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786890
+source: copilot/registry-components.js:copilot.opportunity.cycle
+occurrences: 1
+firstSeenAt: 1790684786890
+lastSeenAt: 1790684786890
+fingerprint: 37be828180bd44a866ba3bbe
+payload:
+  intent: []
+  grammar:
+    - find jobs
+    - job cycle
+    - run the job search
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.cycle
+  namespace: copilot
+  name: opportunity.cycle
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/cycle
+  description: Fetch sources, score, shortlist, draft the top N, due follow-ups
+  params: []
+  permissions:
+    - system
+  hooks: {}

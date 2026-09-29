@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.faculties.adversarial
+type: capability
+id: intelligence.faculties.adversarial
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787394
+source: intelligence/registry-components.js:intelligence.faculties.adversarial
+occurrences: 1
+firstSeenAt: 1790684787394
+lastSeenAt: 1790684787394
+fingerprint: 08c750a507a8d8c12aa023e9
+payload:
+  intent: []
+  grammar:
+    - faculties adversarial
+    - intelligence faculties
+  tags:
+    - intelligence
+    - cognition
+  id: intelligence.faculties.adversarial
+  namespace: intelligence
+  name: faculties.adversarial
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/adversarial
+  description: Inner-critic over intuition vs mastermind (cortex-compatible path)
+  params: []
+  permissions:
+    - system
+  hooks: {}

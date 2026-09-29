@@ -2,29 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-loom.templates
 type: capability
 id: loom.templates
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730152
-source: loom.registry-components:loom.templates
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787463
+source: loom/registry-components.js:loom.templates
+occurrences: 1
+firstSeenAt: 1789250730152
+lastSeenAt: 1790684787463
+fingerprint: d5edc828b062f30464ca6c8e
 payload:
-  id: loom.templates
-  namespace: loom
-  name: templates
-  version: 1.5.0
+  intent: []
   grammar:
     - templates
     - templates
+  tags:
+    - loom
+  id: loom.templates
+  namespace: loom
+  name: templates
+  version: 1.5.1
   route:
     method: GET
     path: /api/templates
-  intent: []
   description: Available scaffold templates
   params: []
-  tags:
-    - loom
   permissions:
     - system
-  hooks: {}

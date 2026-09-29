@@ -2,15 +2,33 @@ envelope: 1
 uuid: nexus-export-system-nexus-healer
 type: system
 id: nexus-healer
-context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  nexus-healer/registry-components.js
+context: nexus-healer — the system record, regenerated from nexus-healer/registry-components.js
 intent: null
 summary: null
-system: nexus-healer
-tags: []
-exported_at: 1789250730156
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - nexus-healer
+  - system
+exported_at: 1790684787491
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730156
+lastSeenAt: 1790684787491
+fingerprint: e280075c1d9bb1696108a636
 payload:
   id: nexus-healer
+  kernel: null
+  port: null
+  entry: null
+  spec: null
+  label: null
+  purpose: null
   hasCapabilities: true
+  capabilities: 5
+  commands: 5
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: nexus-healer/registry-components.js
+    served: null
+    errors: []

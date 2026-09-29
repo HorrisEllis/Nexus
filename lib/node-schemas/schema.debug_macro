@@ -66,3 +66,9 @@ payload:
       type: boolean
       required: true
       description: honestly false until a real event-replay executor exists — see status:OPEN above
+    compoundClass:
+      type: string
+      required: false
+      description: >-
+        correction_2026-09-28 (staging-self-heal phasemap C1): ripple|wave|tidal, present ONLY when the
+        originating failure_mode compound.status was analyzed; absent when unavailable (I8).

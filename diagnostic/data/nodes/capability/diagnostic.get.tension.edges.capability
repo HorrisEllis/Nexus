@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.tension.edges
+type: capability
+id: diagnostic.get.tension.edges
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787107
+source: diagnostic/interaction-contract.json:diagnostic.get.tension.edges
+occurrences: 1
+firstSeenAt: 1790684787107
+lastSeenAt: 1790684787107
+fingerprint: 13955181a79a8385675e0ee9
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.tension.edges
+  namespace: diagnostic
+  name: /tension/edges
+  version: 1.0.0
+  route:
+    method: GET
+    path: /tension/edges
+  description: Tension by relationship edge

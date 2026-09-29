@@ -1,0 +1,147 @@
+{
+  "format": "NEX-SNAP/1.0",
+  "snapId": "eea6d06c-3b11-471e-87ce-ee8bc2f5092d",
+  "type": "manual",
+  "tables": {
+    "working_memory": [],
+    "active_traces": [],
+    "cortex_memory": [],
+    "gaps": [],
+    "event_log": [],
+    "sigma_records": [],
+    "sigma_rollups": [],
+    "meta_observations": [],
+    "sigma_live": [],
+    "component_ledger": [],
+    "cfr_tension_history": [],
+    "constitution_decisions": [],
+    "chat_log": [],
+    "schema_drift": [],
+    "crystals": [],
+    "bep_patterns": [],
+    "trust_scores": [],
+    "fix_map": [],
+    "memory_unified": [],
+    "interstitial_spaces": [],
+    "hooks": [],
+    "tool_index": [],
+    "raid_contract_queue": [],
+    "intake_drops": [],
+    "fault_taxonomy": [],
+    "forge_patches": [],
+    "raid_tunables": [],
+    "decay_log": [],
+    "settings": [
+      {
+        "id": "3fe60615-5ee7-4e6e-8d99-dc0c6f531914",
+        "key": "session_greeting_enabled",
+        "value": "true",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "04f1c7ea-55a0-4384-bb37-ddbd8d941d8c",
+        "key": "session_greeting_text",
+        "value": "Guardian session initialising. Please ask me: \"What are we calling this session?\" — then wait for my answer before we begin.",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "3a682128-3aff-4334-a271-b0a3bfc77927",
+        "key": "scan_debounce_ms",
+        "value": "1500",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "78166ed2-93c0-417f-84b5-8b537a8e50cf",
+        "key": "artifact_max",
+        "value": "500",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "86d692f2-3ba7-4406-ac37-1d9d0b55a9da",
+        "key": "gap_min_score",
+        "value": "0.25",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "6934be4e-ce90-4cde-95c0-52ce3592b2a2",
+        "key": "gap_taxonomy_version",
+        "value": "3.0.0",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "30a79033-22a8-49ea-84c9-621bd2434eaa",
+        "key": "pa_enabled",
+        "value": "true",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "5df06116-bcfa-4169-9e40-d9975aea3782",
+        "key": "memory_auto_push",
+        "value": "true",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "6e332afb-0fab-4bde-a950-604a9fd0d6c1",
+        "key": "dropzone_auto_upload",
+        "value": "true",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "401ca06f-66a6-484f-b470-1336a6a1e85b",
+        "key": "stream_log_level",
+        "value": "EVENTS",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "a3dc7c56-89b6-4788-a039-a64b63471e58",
+        "key": "lan_host",
+        "value": "0.0.0.0",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "4e50a242-a28e-400c-877f-25aff7a2af02",
+        "key": "greeting_delay_ms",
+        "value": "1200",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "41384eeb-2b0b-4efd-b9ae-687ae873294e",
+        "key": "poll_interval_ms",
+        "value": "500",
+        "updated_ts": 1790684803812
+      },
+      {
+        "id": "7a30e639-c6ed-47d2-9177-b22b90e7d80d",
+        "key": "stable_count_threshold",
+        "value": "5",
+        "updated_ts": 1790684803812
+      }
+    ],
+    "components": [],
+    "compaction_log": [],
+    "dedup_log": []
+  },
+  "hashVersion": 2,
+  "systemStates": {
+    "guardian": {
+      "ok": true,
+      "state": {
+        "cfr_state": {
+          "coherence": 0.9,
+          "friction": 0.1,
+          "resonance": 0.5,
+          "entropy": 0.05
+        },
+        "event_stats": {
+          "stats": {
+            "real": 1
+          },
+          "baseline": {}
+        }
+      }
+    }
+  },
+  "cortex_state_hash": "5ff4d32f4971c30af0864b88c8091e9523504796549162f3cb9de659833210f9",
+  "prev_snapshot_hash": "5ff4d32f4971c30af0864b88c8091e9523504796549162f3cb9de659833210f9",
+  "createdAt": 1790684803824
+}

@@ -2,34 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-guardian.copilot.prompt
 type: capability
 id: guardian.copilot.prompt
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730146
-source: guardian.registry-components:guardian.copilot.prompt
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787218
+source: guardian/registry-components.js:guardian.copilot.prompt
+occurrences: 1
+firstSeenAt: 1789250730146
+lastSeenAt: 1790684787218
+fingerprint: 2fa8200c0b985e6c6edb9199
 payload:
-  id: guardian.copilot.prompt
-  namespace: guardian
-  name: copilot.prompt
-  version: 3.6.2
+  intent: []
   grammar:
     - copilot prompt
     - copilot-prompt
-  route:
-    method: POST
-    path: /api/copilot/prompt
-  intent:
-    - ask
-    - build
-    - diagnose
-    - note
-  description: Route to co-pilot :3750/api/prompt
-  params: []
   tags:
     - guardian
     - copilot
+  id: guardian.copilot.prompt
+  namespace: guardian
+  name: copilot.prompt
+  version: 3.14.0
+  route:
+    method: POST
+    path: /api/copilot/prompt
+  description: Route to co-pilot :3750/api/prompt
+  params: []
   permissions:
     - system
   hooks:

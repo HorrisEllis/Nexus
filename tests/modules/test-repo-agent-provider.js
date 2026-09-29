@@ -27,7 +27,7 @@ async function main() {
   const layer = api.getRepoLayer();
 
   // ── the provider list is guardian's own userscripts ──
-  const onDisk = fs.readdirSync(path.join(ROOT, 'guardian')).map(f => (f.match(/^userscript-([a-z0-9-]+)\.js$/) || [])[1]).filter(n => n && !['memory', 'nexus-wake'].includes(n));
+  const onDisk = fs.readdirSync(path.join(ROOT, 'guardian')).map(f => (f.match(/^userscript-([a-z0-9-]+)\.js$/) || [])[1]).filter(n => n && !['memory', 'nexus-wake', 'chat-stream'].includes(n));   // 0.39.279 — shared preludes are not agents
   check('browser providers are exactly guardian\'s userscripts on disk', JSON.stringify(RA.guardianProviders()) === JSON.stringify(onDisk.sort()));
   check('chatgpt, gemini and deepseek are all available', ['chatgpt', 'gemini', 'deepseek'].every(p => RA.providers().includes(p)));
   check('a browser provider routes through guardian', JSON.stringify(RA.routeFor('deepseek')) === JSON.stringify({ backend: 'guardian', agent: 'deepseek' }));

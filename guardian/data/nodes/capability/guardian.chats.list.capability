@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.chats.list
+type: capability
+id: guardian.chats.list
+context: guardian/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787209
+source: guardian/registry-components.js:guardian.chats.list
+occurrences: 1
+firstSeenAt: 1790684787209
+lastSeenAt: 1790684787209
+fingerprint: 585e0d84a02c9a56a3234a7f
+payload:
+  intent: []
+  grammar:
+    - chats list
+    - chats-list
+  tags:
+    - guardian
+    - chats
+    - memory
+  id: guardian.chats.list
+  namespace: guardian
+  name: chats.list
+  version: 3.14.0
+  route:
+    method: GET
+    path: /api/chats
+  description: Every logged chat at its newest version (?agentId ?provider ?q=text recall ?limit)
+  params: []
+  permissions:
+    - system
+  hooks: {}

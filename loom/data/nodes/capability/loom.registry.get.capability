@@ -2,29 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-loom.registry.get
 type: capability
 id: loom.registry.get
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730148
-source: loom.registry-components:loom.registry.get
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787453
+source: loom/registry-components.js:loom.registry.get
+occurrences: 1
+firstSeenAt: 1789250730148
+lastSeenAt: 1790684787453
+fingerprint: aca73f3a7ece04b7e0f0561f
 payload:
-  id: loom.registry.get
-  namespace: loom
-  name: registry.get
-  version: 1.5.0
+  intent: []
   grammar:
     - registry get
     - registry-get
+  tags:
+    - loom
+  id: loom.registry.get
+  namespace: loom
+  name: registry.get
+  version: 1.5.1
   route:
     method: GET
     path: /api/registry/:kind/:id
-  intent: []
   description: Read a registry entry (component/seam/wire)
   params: []
-  tags:
-    - loom
   permissions:
     - system
-  hooks: {}

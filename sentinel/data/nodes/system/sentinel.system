@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-system-sentinel
+type: system
+id: sentinel
+context: sentinel — the system record, regenerated from sentinel/interaction-contract.json
+intent: null
+summary: null
+system: null
+tags:
+  - sentinel
+  - system
+exported_at: 1790684787519
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1790684787519
+lastSeenAt: 1790684787519
+fingerprint: 3f0ae40cfa68d192a96dd1f9
+payload:
+  id: sentinel
+  kernel: null
+  port: 7825
+  entry: null
+  spec: null
+  label: sentinel
+  purpose: Sovereign diagnostic and repair — one authority on system health
+  hasCapabilities: true
+  capabilities: 7
+  commands: 7
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: sentinel/interaction-contract.json
+    served: null
+    errors: []

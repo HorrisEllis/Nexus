@@ -2,30 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-loom.phasemap.system
 type: capability
 id: loom.phasemap.system
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730153
-source: loom.registry-components:loom.phasemap.system
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787464
+source: loom/registry-components.js:loom.phasemap.system
+occurrences: 1
+firstSeenAt: 1789250730153
+lastSeenAt: 1790684787464
+fingerprint: fd2875e743ed861da4b1c739
 payload:
-  id: loom.phasemap.system
-  namespace: loom
-  name: phasemap.system
-  version: 1.5.0
+  intent: []
   grammar:
     - phasemap system
     - phasemap-system
-  route:
-    method: GET
-    path: /api/phasemap/:system
-  intent: []
-  description: One system's roadmap — done/pending phase breakdown
-  params: []
   tags:
     - loom
     - analysis
+  id: loom.phasemap.system
+  namespace: loom
+  name: phasemap.system
+  version: 1.5.1
+  route:
+    method: GET
+    path: /api/phasemap/:system
+  description: One system's roadmap — done/pending phase breakdown
+  params: []
   permissions:
     - system
-  hooks: {}

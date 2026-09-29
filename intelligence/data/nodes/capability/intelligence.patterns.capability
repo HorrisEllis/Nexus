@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.patterns
 type: capability
 id: intelligence.patterns
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756063
-source: intelligence.registry-components:intelligence.patterns
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787386
+source: intelligence/registry-components.js:intelligence.patterns
+occurrences: 1
+firstSeenAt: 1789250756063
+lastSeenAt: 1790684787386
+fingerprint: 5e22dec5b9f6911ee2ba3d68
 payload:
+  intent: []
+  grammar:
+    - patterns
+    - intelligence patterns
+  tags:
+    - intelligence
   id: intelligence.patterns
   namespace: intelligence
   name: patterns
   version: 1.0.0
-  grammar:
-    - patterns
-    - intelligence patterns
   route:
     method: GET
     path: /api/intelligence/patterns
-  intent: []
   description: Crystallised behavioral patterns
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

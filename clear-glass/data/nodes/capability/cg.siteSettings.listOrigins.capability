@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.siteSettings.listOrigins
 type: capability
 id: cg.siteSettings.listOrigins
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730168
-source: clear-glass.registry-components:cg.siteSettings.listOrigins
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786675
+source: clear-glass/registry-components.js:cg.siteSettings.listOrigins
+occurrences: 1
+firstSeenAt: 1789250730168
+lastSeenAt: 1790684786675
+fingerprint: 80090b901d19d331bd329ce3
 payload:
-  id: cg.siteSettings.listOrigins
-  namespace: cg
-  name: siteSettings.listOrigins
-  version: 3.1.0
+  intent: []
   grammar:
     - siteSettings listOrigins
-  route:
-    method: IPC
-    path: site-settings:listOrigins
-  intent: []
-  description: List every real origin with settings
-  params: []
   tags:
     - cg
     - site-settings
+  id: cg.siteSettings.listOrigins
+  namespace: cg
+  name: siteSettings.listOrigins
+  version: 3.17.0
+  route:
+    method: IPC
+    path: site-settings:listOrigins
+  description: List every real origin with settings
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

@@ -2,33 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-versionium.commit.create
 type: capability
 id: versionium.commit.create
-context: versionium/registry-components.js real capability export
+context: versionium/registry-components.js — declared capability
 intent: null
 summary: null
-system: versionium
-tags: []
-exported_at: 1789250756029
-source: versionium.registry-components:versionium.commit.create
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787520
+source: versionium/registry-components.js:versionium.commit.create
+occurrences: 1
+firstSeenAt: 1789250756029
+lastSeenAt: 1790684787520
+fingerprint: a146883994346b1de0b86849
 payload:
-  id: versionium.commit.create
-  namespace: versionium
-  name: commit.create
-  version: 3.0.0
+  intent: []
   grammar:
     - versionium commit
     - vc
-  route:
-    method: POST
-    path: /api/versionium/commit
-  intent:
-    - build
-    - write
-    - forge
-  description: Real commit — manual or agent-mesh dispatched
-  params: []
   tags:
     - versionium
     - commit
+  id: versionium.commit.create
+  namespace: versionium
+  name: commit.create
+  version: 3.3.0
+  route:
+    method: POST
+    path: /api/versionium/commit
+  description: Real commit — manual or agent-mesh dispatched
+  params: []
   permissions:
     - system
   hooks:

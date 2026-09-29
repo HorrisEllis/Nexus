@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.rca
+type: capability
+id: intelligence.rca
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787394
+source: intelligence/registry-components.js:intelligence.rca
+occurrences: 1
+firstSeenAt: 1790684787394
+lastSeenAt: 1790684787394
+fingerprint: 1041e647b5bd50307f5f78a9
+payload:
+  intent: []
+  grammar:
+    - rca
+    - intelligence rca
+  tags:
+    - intelligence
+  id: intelligence.rca
+  namespace: intelligence
+  name: rca
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/rca
+  description: Root cause analysis entries over open gaps
+  params: []
+  permissions:
+    - system
+  hooks: {}

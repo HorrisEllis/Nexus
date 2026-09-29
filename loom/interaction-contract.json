@@ -1,6 +1,6 @@
 {
   "id": "loom-v1",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "namespace": "loom",
   "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from loom/registry-components.js (module.exports, a bare array — this system's own real component list, the same data loom/data/registry.json ingests from every OTHER system). Port 3752 matches loom/compartment.json.",
   "ports": {

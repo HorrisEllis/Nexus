@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-capability-cg.mesh.jobIntake
+type: capability
+id: cg.mesh.jobIntake
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786731
+source: clear-glass/registry-components.js:cg.mesh.jobIntake
+occurrences: 1
+firstSeenAt: 1790684786731
+lastSeenAt: 1790684786731
+fingerprint: df08b9f7f73b0b9b98e1ff18
+payload:
+  intent: []
+  grammar:
+    - mesh jobIntake
+  tags:
+    - cg
+    - mesh
+    - jobs
+    - intake
+  id: cg.mesh.jobIntake
+  namespace: cg
+  name: mesh.jobIntake
+  version: 3.17.0
+  route:
+    method: GET
+    path: /agent-mesh/intake
+  description: >-
+    Jobs Clear Glass has taken in from guardian (only jobs guardian claimed for it on their .job),
+    with each <jobId>.intake record
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

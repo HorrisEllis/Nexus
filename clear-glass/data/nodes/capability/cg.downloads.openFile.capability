@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.downloads.openFile
+type: capability
+id: cg.downloads.openFile
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786733
+source: clear-glass/registry-components.js:cg.downloads.openFile
+occurrences: 1
+firstSeenAt: 1790684786733
+lastSeenAt: 1790684786733
+fingerprint: ffc69d76cf8449bd04bb324b
+payload:
+  intent: []
+  grammar:
+    - downloads openFile
+  tags:
+    - cg
+    - downloads
+    - library
+  id: cg.downloads.openFile
+  namespace: cg
+  name: downloads.openFile
+  version: 3.17.0
+  route:
+    method: IPC
+    path: downloads:openFile
+  description: Open a completed download with the OS default app (Library → Downloads, click the name)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

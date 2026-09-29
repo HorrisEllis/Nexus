@@ -18,6 +18,12 @@
  */
 
 const TOOLS = [
+  // ── The interaction field (0.39.279) — see the page as numbered x/y/z targets, then act on a number ──
+  { name: 'field',            cat: 'field',    desc: 'Map the page: every clickable/typable thing numbered, with centre (x,y) and z (0 = on top; >0 = covered). overlay:true draws the numbers', params: { overlay: 'boolean?', offscreen: 'boolean?' } },
+  { name: 'pointer',          cat: 'field',    desc: 'Act on field target n (or x,y): do click|double|right|move|scroll|type (text), via native|eros (human-paced ErosmancerOS input)', params: { n: 'number?', x: 'number?', y: 'number?', do: 'string?', text: 'string?', via: 'string?' } },
+  { name: 'at',               cat: 'field',    desc: 'What is under a point, top layer first', params: { x: 'number', y: 'number' } },
+  { name: 'spotlight',        cat: 'field',    desc: 'Show James what you are looking at: a ring + label on target n / selector / x,y,w,h (off:true clears)', params: { n: 'number?', selector: 'string?', label: 'string?' } },
+  { name: 'fieldOff',         cat: 'field',    desc: 'Remove the drawn field and spotlight', params: {} },
   // ── Browser ────────────────────────────────────────────────────────────
   { name: 'navigate',         cat: 'browser',  desc: 'Navigate to URL', params: { url: 'string', agentId: 'string?' } },
   { name: 'click',            cat: 'browser',  desc: 'Click element by selector or coords', params: { selector: 'string?', x: 'number?', y: 'number?' } },
@@ -36,6 +42,14 @@ const TOOLS = [
   { name: 'picker.disable',   cat: 'browser',  desc: 'Disable element picker', params: {} },
   { name: 'record.start',     cat: 'browser',  desc: 'Start recording user actions for replay', params: {} },
   { name: 'record.stop',      cat: 'browser',  desc: 'Stop recording, return action sequence', params: {} },
+  // 0.39.272 — read the page, and the form actions typing alone could not do. Results come back to you.
+  { name: 'readPage',         cat: 'browser',  desc: 'What is on the page: text, headings, links, every form field (label + selector), every button', params: { maxText: 'number?' } },
+  { name: 'state',            cat: 'browser',  desc: 'Everything Clear Glass is doing: open tabs with url/title, providers, accounts, autofill profiles, macros, userscripts', params: {} },
+  { name: 'setValue',         cat: 'browser',  desc: 'Set a field\'s whole value at once (long answers; React/Vue inputs register it)', params: { selector: 'string', value: 'string' } },
+  { name: 'select',           cat: 'browser',  desc: 'Choose a <select> option by value or visible text', params: { selector: 'string', value: 'string?', text: 'string?' } },
+  { name: 'check',            cat: 'browser',  desc: 'Set a checkbox/radio to a definite state', params: { selector: 'string', checked: 'boolean?' } },
+  { name: 'upload',           cat: 'browser',  desc: 'Put file(s) from this machine into a file input (resume, portfolio)', params: { selector: 'string', paths: 'string[]' } },
+  { name: 'pressKey',         cat: 'browser',  desc: 'Press a key (Enter, Tab, Escape...)', params: { key: 'string', modifiers: 'string[]?' } },
 
   // ── DOM ────────────────────────────────────────────────────────────────
   { name: 'dom.query',        cat: 'dom',      desc: 'Query live DOM tree by selector or get full tree', params: { selector: 'string?', tree: 'boolean?' } },
@@ -118,6 +132,15 @@ const TOOLS = [
   { name: 'userscript.list',  cat: 'system',   desc: 'List all installed userscripts', params: { agentId: 'string?' } },
   { name: 'userscript.inject',cat: 'system',   desc: 'Inject a userscript into an agent tab', params: { agentId: 'string', scriptId: 'string' } },
   { name: 'userscript.toggle',cat: 'system',   desc: 'Enable or disable a userscript', params: { scriptId: 'string', enabled: 'boolean' } },
+
+  // ── NEXUS (0.39.272) — the memory atlas and the opportunity pipeline, run through copilot's tool gate ─────────
+  { name: 'context.directory', cat: 'nexus',   desc: 'Every memory system and graph NEXUS has, with row counts and how to query each', params: {} },
+  { name: 'context.search',   cat: 'nexus',    desc: 'Search every memory system and graph at once; hits cite their source', params: { query: 'string', sources: 'string[]?', limit: 'number?' } },
+  { name: 'opportunity.status', cat: 'nexus',  desc: 'Job/freelance pipeline: counts per stage, what needs you', params: {} },
+  { name: 'opportunity.cycle', cat: 'nexus',   desc: 'Fetch job sources, score against the profile, shortlist, draft the top ones', params: { draft: 'number?' } },
+  { name: 'opportunity.list', cat: 'nexus',    desc: 'List opportunities by stage', params: { stage: 'string?', limit: 'number?' } },
+  { name: 'opportunity.capture', cat: 'nexus', desc: 'Capture the job/gig on the current page into the pipeline', params: { agentId: 'string?' } },
+  { name: 'opportunity.prepare', cat: 'nexus', desc: 'Open the application page and fill it (autofill + answer bank + drafts) — stops before submit', params: { id: 'string' } },
 ];
 
 // Build tool registry by name for fast lookup
@@ -135,6 +158,8 @@ function buildToolsPrompt() {
   out += 'Issue tool calls as ```driver JSON blocks. Multiple calls allowed per response.\n\n';
   out += '```driver\n{ "action": "navigate", "url": "https://example.com" }\n```\n\n';
   out += '```driver\n{ "action": "guardian.dispatch", "provider": "claude", "prompt": "Write a test" }\n```\n\n';
+  out += 'Every result comes back to you in the next message. Read before you act: readPage, then setValue/select/check by the selectors it gave you.\n';
+  out += 'Any NEXUS agent tool can also be called as a ```tool block: {"name": "<tool name>", "arguments": {...}}.\n\n';
 
   for (const [cat, tools] of Object.entries(bycat)) {
     out += `### ${cat.charAt(0).toUpperCase() + cat.slice(1)}\n`;
@@ -147,4 +172,21 @@ function buildToolsPrompt() {
   return out;
 }
 
-module.exports = { TOOLS, BY_NAME, buildToolsPrompt };
+/**
+ * buildCompactToolsPrompt() — §0.39.278. The layered surface: Clear Glass's own actions by name only (one line per
+ * category), and the two layer tools for everything else. The full list above is ~7.9k characters — too much for the
+ * local 3B model on every turn; a model that needs an action's parameters asks for readPage / the category instead.
+ */
+function buildCompactToolsPrompt() {
+  const bycat = {};
+  for (const t of TOOLS) (bycat[t.cat] = bycat[t.cat] || []).push(t.name);
+  let out = '## Tools\nClear Glass actions (```driver {"action":"<name>", ...}```):\n';
+  for (const [cat, names] of Object.entries(bycat)) out += `- ${cat}: ${names.join(', ')}\n`;
+  out += '\nEvery other NEXUS tool, as layers (```tool {"name":"…","arguments":{…}}```):\n';
+  out += '1. nexus.tools.tool — the categories of tools (id, count)\n';
+  out += '2. nexus.tools_expand.tool {"category":"<id>"} — that category\'s tools with their parameters\n';
+  out += '3. call the tool by its name\n';
+  return out;
+}
+
+module.exports = { TOOLS, BY_NAME, buildToolsPrompt, buildCompactToolsPrompt };

@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.macros.create
+type: capability
+id: cg.macros.create
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786726
+source: clear-glass/registry-components.js:cg.macros.create
+occurrences: 1
+firstSeenAt: 1790684786726
+lastSeenAt: 1790684786726
+fingerprint: 5543d59bc27842478469d7a8
+payload:
+  intent: []
+  grammar:
+    - macros create
+  tags:
+    - cg
+    - macros
+  id: cg.macros.create
+  namespace: cg
+  name: macros.create
+  version: 3.17.0
+  route:
+    method: IPC
+    path: macros:create
+  description: Create a macro through macro.js's own validation (step builder)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

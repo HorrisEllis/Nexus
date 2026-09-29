@@ -2,31 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-copilot.person_model.meaning
 type: capability
 id: copilot.person_model.meaning
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730180
-source: copilot.registry-components:copilot.person_model.meaning
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786872
+source: copilot/registry-components.js:copilot.person_model.meaning
+occurrences: 1
+firstSeenAt: 1789250730180
+lastSeenAt: 1790684786872
+fingerprint: bc08d3d0a58d41eb6a31b44f
 payload:
-  id: copilot.person_model.meaning
-  namespace: copilot
-  name: person_model.meaning
-  version: 2.0.0
+  intent: []
   grammar:
     - what does mean to me
     - meaning of
-  route:
-    method: GET
-    path: /api/person-model/meaning
-  intent: []
-  description: Meaning-web lens — a projection over the lattice, not a nested graph
-  params: []
   tags:
     - copilot
     - person-model
     - lens
+  id: copilot.person_model.meaning
+  namespace: copilot
+  name: person_model.meaning
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/person-model/meaning
+  description: Meaning-web lens — a projection over the lattice, not a nested graph
+  params: []
   permissions:
     - system
   hooks: {}

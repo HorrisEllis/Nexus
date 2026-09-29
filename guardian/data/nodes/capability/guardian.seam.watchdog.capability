@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.seam.watchdog
 type: capability
 id: guardian.seam.watchdog
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730141
-source: guardian.registry-components:guardian.seam.watchdog
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787213
+source: guardian/registry-components.js:guardian.seam.watchdog
+occurrences: 1
+firstSeenAt: 1789250730141
+lastSeenAt: 1790684787213
+fingerprint: 59cfd99d98aa17ac2a4d2d11
 payload:
-  id: guardian.seam.watchdog
-  namespace: guardian
-  name: seam.watchdog
-  version: 3.6.2
+  intent: []
   grammar:
     - seam watchdog
     - seam-watchdog
+  tags:
+    - guardian
+  id: guardian.seam.watchdog
+  namespace: guardian
+  name: seam.watchdog
+  version: 3.14.0
   route:
     method: GET
     path: /seam/watchdog/status
-  intent: []
   description: SEAM watchdog + stall detection
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

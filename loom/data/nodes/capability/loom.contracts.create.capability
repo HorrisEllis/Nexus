@@ -2,30 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-loom.contracts.create
 type: capability
 id: loom.contracts.create
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730150
-source: loom.registry-components:loom.contracts.create
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787459
+source: loom/registry-components.js:loom.contracts.create
+occurrences: 1
+firstSeenAt: 1789250730150
+lastSeenAt: 1790684787459
+fingerprint: b083fc2a633df425e4e37bb6
 payload:
-  id: loom.contracts.create
-  namespace: loom
-  name: contracts.create
-  version: 1.5.0
+  intent: []
   grammar:
     - contracts create
     - contracts-create
-  route:
-    method: POST
-    path: /api/contracts
-  intent: []
-  description: Create an interaction contract
-  params: []
   tags:
     - loom
     - write
+  id: loom.contracts.create
+  namespace: loom
+  name: contracts.create
+  version: 1.5.1
+  route:
+    method: POST
+    path: /api/contracts
+  description: Create an interaction contract
+  params: []
   permissions:
     - system
-  hooks: {}

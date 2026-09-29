@@ -2,31 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-loom.hooks.unwire
 type: capability
 id: loom.hooks.unwire
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730148
-source: loom.registry-components:loom.hooks.unwire
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787453
+source: loom/registry-components.js:loom.hooks.unwire
+occurrences: 1
+firstSeenAt: 1789250730148
+lastSeenAt: 1790684787453
+fingerprint: 6b317ced57e16a50357bdd39
 payload:
-  id: loom.hooks.unwire
-  namespace: loom
-  name: hooks.unwire
-  version: 1.5.0
+  intent: []
   grammar:
     - hooks unwire
     - hooks-unwire
-  route:
-    method: POST
-    path: /api/hooks/unwire
-  intent: []
-  description: Remove a hook binding
-  params: []
   tags:
     - loom
     - write
     - wire
+  id: loom.hooks.unwire
+  namespace: loom
+  name: hooks.unwire
+  version: 1.5.1
+  route:
+    method: POST
+    path: /api/hooks/unwire
+  description: Remove a hook binding
+  params: []
   permissions:
     - system
-  hooks: {}

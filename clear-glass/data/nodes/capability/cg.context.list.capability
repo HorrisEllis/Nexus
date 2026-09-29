@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.context.list
 type: capability
 id: cg.context.list
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730159
-source: clear-glass.registry-components:cg.context.list
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786634
+source: clear-glass/registry-components.js:cg.context.list
+occurrences: 1
+firstSeenAt: 1789250730159
+lastSeenAt: 1790684786634
+fingerprint: 601c4f6e6c54066e836a172a
 payload:
-  id: cg.context.list
-  namespace: cg
-  name: context.list
-  version: 3.1.0
+  intent: []
   grammar:
     - context list
-  route:
-    method: GET
-    path: /contexts
-  intent: []
-  description: List agent contexts
-  params: []
   tags:
     - cg
     - context
+  id: cg.context.list
+  namespace: cg
+  name: context.list
+  version: 3.17.0
+  route:
+    method: GET
+    path: /contexts
+  description: List agent contexts
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

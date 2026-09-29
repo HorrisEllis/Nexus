@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-ollama.models.list
 type: capability
 id: ollama.models.list
-context: ollama/registry-components.js real capability export
+context: ollama/registry-components.js — declared capability
 intent: null
 summary: null
-system: ollama
-tags: []
-exported_at: 1789250730190
-source: ollama.registry-components:ollama.models.list
+system: null
+tags:
+  - ollama
+  - capability
+exported_at: 1790684787499
+source: ollama/registry-components.js:ollama.models.list
+occurrences: 1
+firstSeenAt: 1789250730190
+lastSeenAt: 1790684787499
+fingerprint: 64dd0e08f3dbefd6e90b2024
 payload:
+  intent: []
+  grammar:
+    - ollama models
+    - om
+  tags:
+    - ollama
   id: ollama.models.list
   namespace: ollama
   name: models.list
   version: 1.0.0
-  grammar:
-    - ollama models
-    - om
   route:
     method: GET
     path: /api/models
-  intent: []
   description: Available local models
   params: []
-  tags:
-    - ollama
   permissions:
     - system
   hooks: {}

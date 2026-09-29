@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.screenQa.answer
+type: capability
+id: cg.screenQa.answer
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786704
+source: clear-glass/registry-components.js:cg.screenQa.answer
+occurrences: 1
+firstSeenAt: 1790684786704
+lastSeenAt: 1790684786704
+fingerprint: 4a3302674af49e33ddd617d0
+payload:
+  intent: []
+  grammar:
+    - screenQa answer
+  tags:
+    - cg
+    - screen-qa
+  id: cg.screenQa.answer
+  namespace: cg
+  name: screenQa.answer
+  version: 3.17.0
+  route:
+    method: IPC
+    path: screen-qa:answer
+  description: Answer a real question through the real copilot bridge (text only — never writes to the page)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

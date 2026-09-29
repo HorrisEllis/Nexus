@@ -2,29 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-loom.gaps
 type: capability
 id: loom.gaps
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730153
-source: loom.registry-components:loom.gaps
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787465
+source: loom/registry-components.js:loom.gaps
+occurrences: 1
+firstSeenAt: 1789250730153
+lastSeenAt: 1790684787465
+fingerprint: a7a1319fc02c9f9ae0148229
 payload:
-  id: loom.gaps
-  namespace: loom
-  name: gaps
-  version: 1.5.0
+  intent: []
   grammar:
     - gaps
     - gaps
+  tags:
+    - loom
+  id: loom.gaps
+  namespace: loom
+  name: gaps
+  version: 1.5.1
   route:
     method: GET
     path: /api/gaps
-  intent: []
   description: Every open gap, system + user-model domains, agnostic pipeline
   params: []
-  tags:
-    - loom
   permissions:
     - system
-  hooks: {}

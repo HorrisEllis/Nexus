@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.audit
+type: capability
+id: diagnostic.get.audit
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787100
+source: diagnostic/interaction-contract.json:diagnostic.get.audit
+occurrences: 1
+firstSeenAt: 1790684787100
+lastSeenAt: 1790684787100
+fingerprint: 9c869a65971147ac17870570
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.audit
+  namespace: diagnostic
+  name: /audit
+  version: 1.0.0
+  route:
+    method: GET
+    path: /audit
+  description: 'Full audit: requires, syntax, endpoints, ledger health'

@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.health
 type: capability
 id: guardian.health
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730122
-source: guardian.registry-components:guardian.health
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787200
+source: guardian/registry-components.js:guardian.health
+occurrences: 1
+firstSeenAt: 1789250730122
+lastSeenAt: 1790684787200
+fingerprint: 8cff9c6ccfa42c88c1566ae9
 payload:
-  id: guardian.health
-  namespace: guardian
-  name: health
-  version: 3.6.2
+  intent: []
   grammar:
     - health
     - health
+  tags:
+    - guardian
+  id: guardian.health
+  namespace: guardian
+  name: health
+  version: 3.14.0
   route:
     method: GET
     path: /health
-  intent: []
   description: Guardian health, job counts, provider status
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

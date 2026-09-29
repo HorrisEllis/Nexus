@@ -2,30 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-copilot.prompt.stream
 type: capability
 id: copilot.prompt.stream
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730178
-source: copilot.registry-components:copilot.prompt.stream
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786866
+source: copilot/registry-components.js:copilot.prompt.stream
+occurrences: 1
+firstSeenAt: 1789250730178
+lastSeenAt: 1790684786866
+fingerprint: c97ba8e79f9d27440d085cde
 payload:
+  intent: []
+  grammar:
+    - stream ask
+    - cp stream
+  tags:
+    - copilot
   id: copilot.prompt.stream
   namespace: copilot
   name: prompt.stream
   version: 2.0.0
-  grammar:
-    - stream ask
-    - cp stream
   route:
     method: POST
     path: /api/prompt/stream
-  intent:
-    - ask
   description: Streaming SSE prompt — token-by-token, no timeout (P112)
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks:

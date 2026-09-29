@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.self.heal
+type: capability
+id: diagnostic.get.self.heal
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787108
+source: diagnostic/interaction-contract.json:diagnostic.get.self.heal
+occurrences: 1
+firstSeenAt: 1790684787108
+lastSeenAt: 1790684787108
+fingerprint: 204907a0dd9b64963bd3dd46
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.self.heal
+  namespace: diagnostic
+  name: /self-heal
+  version: 1.0.0
+  route:
+    method: GET
+    path: /self-heal
+  description: Self-heal status/history

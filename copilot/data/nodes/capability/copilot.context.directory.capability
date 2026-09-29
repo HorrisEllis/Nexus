@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.context.directory
+type: capability
+id: copilot.context.directory
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786922
+source: copilot/registry-components.js:copilot.context.directory
+occurrences: 1
+firstSeenAt: 1790684786922
+lastSeenAt: 1790684786922
+fingerprint: a6bba30bbbafaa6b046f9d09
+payload:
+  intent: []
+  grammar:
+    - what do you remember
+    - memory directory
+    - where is memory
+  tags:
+    - copilot
+    - context
+    - memory
+  id: copilot.context.directory
+  namespace: copilot
+  name: context.directory
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/context/directory
+  description: 'Every memory system and graph: tables, row counts, what each is, which tool reads it'
+  params: []
+  permissions:
+    - system
+  hooks: {}

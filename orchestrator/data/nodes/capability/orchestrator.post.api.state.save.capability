@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.post.api.state.save
+type: capability
+id: orchestrator.post.api.state.save
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787511
+source: orchestrator/interaction-contract.json:orchestrator.post.api.state.save
+occurrences: 1
+firstSeenAt: 1790684787511
+lastSeenAt: 1790684787511
+fingerprint: e8cd48987e97d08aa2db229e
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.post.api.state.save
+  namespace: orchestrator
+  name: /api/state/save
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/state/save
+  description: null

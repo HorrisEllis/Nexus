@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.causal.compound
+type: capability
+id: intelligence.causal.compound
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787409
+source: intelligence/registry-components.js:intelligence.causal.compound
+occurrences: 1
+firstSeenAt: 1790684787409
+lastSeenAt: 1790684787409
+fingerprint: 83b07bf0fb529247f14b5e30
+payload:
+  intent: []
+  grammar:
+    - causal compound
+    - intelligence causal
+  tags:
+    - intelligence
+    - causal
+  id: intelligence.causal.compound
+  namespace: intelligence
+  name: causal.compound
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/causal/compound
+  description: Compounding Effects Engine — classify ripple/wave/tidal cascades from a ledger entry
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.siteSettings.set
 type: capability
 id: cg.siteSettings.set
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730168
-source: clear-glass.registry-components:cg.siteSettings.set
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786672
+source: clear-glass/registry-components.js:cg.siteSettings.set
+occurrences: 1
+firstSeenAt: 1789250730168
+lastSeenAt: 1790684786672
+fingerprint: 51ecb47c71fbaf5fff359983
 payload:
-  id: cg.siteSettings.set
-  namespace: cg
-  name: siteSettings.set
-  version: 3.1.0
+  intent: []
   grammar:
     - siteSettings set
-  route:
-    method: IPC
-    path: site-settings:set
-  intent: []
-  description: Set a real per-origin setting
-  params: []
   tags:
     - cg
     - site-settings
+  id: cg.siteSettings.set
+  namespace: cg
+  name: siteSettings.set
+  version: 3.17.0
+  route:
+    method: IPC
+    path: site-settings:set
+  description: Set a real per-origin setting
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

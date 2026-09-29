@@ -2,33 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-emerge.hot.load
 type: capability
 id: emerge.hot.load
-context: emerge/registry-components.js real capability export
+context: emerge/registry-components.js — declared capability
 intent: null
 summary: null
-system: emerge
-tags: []
-exported_at: 1789250730115
-source: emerge.registry-components:emerge.hot.load
+system: null
+tags:
+  - emerge
+  - capability
+exported_at: 1790684787139
+source: emerge/registry-components.js:emerge.hot.load
+occurrences: 1
+firstSeenAt: 1789250730115
+lastSeenAt: 1790684787139
+fingerprint: 230eb5d281dca28d92bf5f88
 payload:
+  intent: []
+  grammar:
+    - hot load
+    - emerge hot
+  tags:
+    - emerge
+    - hot-load
   id: emerge.hot.load
   namespace: emerge
   name: hot.load
   version: 1.1.0
-  grammar:
-    - hot load
-    - emerge hot
   route:
     method: POST
     path: /api/hot-load
-  intent:
-    - deploy
-    - patch
-    - hot-load
   description: Hot-patch a running module (QUARANTINE→PROVE→INTEGRATE→MONITOR)
   params: []
-  tags:
-    - emerge
-    - hot-load
   permissions:
     - system
   hooks:

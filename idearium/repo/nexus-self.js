@@ -81,7 +81,8 @@ export function ensureCompartments() {
 }
 
 function _findRepo(rl, pred) {
-  return rl.list({ includeArchived: true }).find(pred) || null;
+  const all = rl.list({ includeArchived: true }).filter(pred);
+  return all.find(r => r.status !== 'archived') || all[0] || null;   // §0.39.266 — an active row wins over an archived twin
 }
 
 function _parentReadme(snap, repoBySystem) {
@@ -124,7 +125,7 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
   let repoUuid, status;
   const baseDir = path.join(store.storeRoot(), 'repos');
   if (!existing) {
-    const r = rl.ingest({ name: repoName(system), files: textFiles, source: 'nexus-self', parent: null, compartmentId: compartment ? compartment.id : null, materializeBaseDir: baseDir });
+    const r = rl.ingest({ name: repoName(system), files: textFiles, source: 'nexus-self', parent: null, compartmentId: compartment ? compartment.id : null, materializeBaseDir: baseDir, noIdea: true });
     if (r.error) return { system, status: 'failed', error: r.error };
     repoUuid = r.repo.uuid; status = 'created';
   } else {
@@ -134,6 +135,9 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
     catch (e) { return { system, status: 'failed', repoUuid, error: `spec version failed: ${e.message}` }; }
     const rs = rl.replaceSpec(repoUuid, manifest.uuid);
     if (rs.error) return { system, status: 'failed', repoUuid, error: rs.error };
+    // §0.39.266 (D2) — one spec per nexus repo: the version just replaced is purged. Its history is not
+    // lost: every version is a snapshot in the immutable store and a versionium commit.
+    if (typeof rl.purgeSpecsOf === 'function') rl.purgeSpecsOf(repoUuid);
   }
 
   await tick();
@@ -179,9 +183,46 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
  */
 export async function sync(rl, se, { only = null, force = false, log = () => {}, onSystem = null, commitVersion = null, liveRoot = undefined } = {}) {
   const t0 = Date.now();
+  // §0.39.266 — James's machine: idearium OFFLINE ~30 s every 10 min, on syncs that changed nothing (an
+  // unchanged sync is 236 ms here). Each step is timed so a slow sync names its own slow step.
+  const timing = {};
+  let _tStep = Date.now();
+  const lap = (k) => { const n = Date.now(); timing[k] = (timing[k] || 0) + (n - _tStep); _tStep = n; };
   const snap0 = store.snapshot(liveRoot ? { liveRoot } : {});   // liveRoot: tests sync a small tree, never the real one
+  lap('snapshot');
   const snap = store.loadSnapshot(snap0.hash);
+  lap('loadSnapshot');
   const comps = ensureCompartments();
+  lap('compartments');
+
+  // §0.39.266 — heal: a Nexus repo archived by Delete (before RepoLayer.archive
+  // refused immutable repos) is invisible to list() yet still "existing" to
+  // _findRepo, so an unchanged hash left it hidden forever. Restore it — unless
+  // an active twin for the same role/system exists, which is then the one used.
+  const restored = [];
+  if (typeof rl.restore === 'function') {
+    const all = rl.list({ includeArchived: true }).filter(r => r.nexusSelf);
+    const key = (r) => `${r.nexusSelf.role}:${r.nexusSelf.system || ''}`;
+    const active = new Set(all.filter(r => r.status !== 'archived').map(key));
+    for (const r of all) {
+      if (r.status !== 'archived' || active.has(key(r))) continue;
+      const x = rl.restore(r.uuid);
+      if (x.ok && x.restored) { restored.push({ uuid: r.uuid, name: r.name }); active.add(key(r)); log(`[${MODULE_ID}] restored archived ${r.name} (${r.uuid})`); }
+    }
+  }
+
+  // §0.39.266 — James: "right now there is 15 and 15 but supposed to only be nexus and the nested repos."
+  // Nexus repos made before noIdea existed each minted a "Repo: nexus/…" idea and kept every spec
+  // version. Both go: the auto-minted idea, and every spec version but the current one.
+  const cleaned = { ideas: 0, specs: 0 };
+  for (const r of rl.list({ includeArchived: true }).filter(x => x.nexusSelf)) {
+    if (typeof rl.dropAutoIdea === 'function' && rl.dropAutoIdea(r.uuid)) cleaned.ideas++;
+    if (typeof rl.purgeSpecsOf === 'function') cleaned.specs += rl.purgeSpecsOf(r.uuid).length;
+  }
+  // orphans too: every re-registration of a nexus repo minted a fresh "Repo: nexus/…" idea and left the old one
+  if (typeof rl.dropRepoIdeasNamed === 'function') cleaned.ideas += rl.dropRepoIdeasNamed([PARENT_REPO, ...systems.names().map(repoName)]);
+  lap('cleanup');
+  if (cleaned.ideas || cleaned.specs) log(`[${MODULE_ID}] cleaned nexus repos: ${cleaned.ideas} auto-made idea(s) removed, ${cleaned.specs} old spec version(s) purged`);
 
   // parent repo — an index of the systems (its one file is regenerated per snapshot)
   let parent = _findRepo(rl, r => r.nexusSelf && r.nexusSelf.role === 'parent');
@@ -197,6 +238,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     if (res.status !== 'unchanged') log(`[${MODULE_ID}] ${name}: ${res.status}${res.error ? ` — ${res.error}` : ''}${res.files ? ` · ${res.files} files · pipeline ${res.pipeline}${res.pipelineError ? ` — ${res.pipelineError}` : ''}` : ''}`);
   }
 
+  lap('systems');
   const repoBySystem = {};
   for (const r of rl.list({ includeArchived: true })) if (r.nexusSelf && r.nexusSelf.role === 'system') repoBySystem[r.nexusSelf.system] = r.uuid;
   const readme = _parentReadme(snap, repoBySystem);
@@ -204,11 +246,12 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
   if (!parent || parent.nexusSelf.hash !== parentHash) {
     const files = [{ path: 'NEXUS.md', content: readme }];
     if (!parent) {
-      const r = rl.ingest({ name: PARENT_REPO, files, source: 'nexus-self', compartmentId: comps.parent ? comps.parent.id : null });
+      const r = rl.ingest({ name: PARENT_REPO, files, source: 'nexus-self', compartmentId: comps.parent ? comps.parent.id : null, noIdea: true });
       if (!r.error) parent = rl.get(r.repo.uuid);
     } else {
       const m = se.ingestFilesAsSpec({ name: PARENT_REPO, files, author: 'nexus-self', repoUuid: parent.uuid });
       rl.replaceSpec(parent.uuid, m.uuid);
+      if (typeof rl.purgeSpecsOf === 'function') rl.purgeSpecsOf(parent.uuid);
     }
     if (parent) {
       const pm = rl.materialize(parent.uuid);
@@ -217,6 +260,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
       rl.annotate(parent.uuid, { immutable: true, nexusSelf: { role: 'parent', hash: parentHash, snapshot: snap.hash, children: repoBySystem, syncedAt: Date.now() } });
     }
   }
+  lap('parent');
   // children point back at the parent
   if (parent) for (const uuid of Object.values(repoBySystem)) {
     const r = rl.get(uuid);
@@ -251,6 +295,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     }
   }
 
+  lap('versions');
   // Measured after every sync that changed anything (or the first ever) —
   // see recordUnderstanding() below.
   let understanding = null;
@@ -260,8 +305,10 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     try { understanding = recordUnderstanding(rl, snap.hash, sg); } catch (e) { understanding = { error: e.message }; }
   }
 
+  lap('understanding');
   return {
-    ok: results.every(r => r.status !== 'failed'),
+    timing, stats0: snap0.stats,
+    ok: results.every(r => r.status !== 'failed'), restored, cleaned,
     snapshot: snap.hash, snapshotCreated: snap0.created, stats: snap0.stats, understanding: understanding && { improved: understanding.improved, regressed: understanding.regressed, delta: understanding.delta, totals: understanding.totals },
     parentRepo: parent ? parent.uuid : null,
     compartments: { parent: comps.parent ? comps.parent.id : null, children: Object.fromEntries(Object.entries(comps.children).map(([k, v]) => [k, v.id])), errors: comps.errors },

@@ -307,6 +307,52 @@ function docsDir(files) {
     assert.ok(/UTF-8/.test(why['bad-phasemap.spec'])); assert.ok(/regular file/.test(why['link-phasemap.spec'])); assert.ok(/not on disk/.test(why['gone-phasemap.spec']));
   });
 
+  // §0.39.275 — the dependency graph across two specs written the same day (2026-09-28).
+  console.log('\n── dependency graph: trailing comments and cross-spec references ──');
+  const listMap = (phases) => `spec:\n  meta:\n    name: x\n  phases:\n${phases}`;
+  await t('DG-1 a `# comment` after a flow list is not part of the last dependency', () => {
+    const loomScan = require(path.join(ROOT, 'loom/scanners/phasemap-map.js'));
+    const p = loomScan.parsePhasemapText(listMap('    - id: A\n    - id: B\n    - id: C\n      depends_on: [A, B]  # B is optional, never ripple\n'), 'm').find(x => x.id === 'C');
+    assert.strictEqual(p.dependsOn, 'A, B');
+    const r = rm.buildRoadmap({ projectId: 'p', maps: [{ path: 'm-phasemap.spec', text: listMap('    - id: A\n    - id: B\n    - id: C\n      depends_on: [A, B]  # why\n') }] });
+    const c = r.phases.find(x => x.phase_key === 'C');
+    assert.strictEqual(c.depends_on.length, 2, 'both edges survive');
+    assert.deepStrictEqual(c.unresolved_deps, []);
+    assert.ok(!r.warnings.some(w => w.type === 'unresolved_dependency'));
+  });
+  await t('DG-2 "<map words> <phase>" resolves to the one phase in the one other map, and orders it', () => {
+    const a = { path: 'docs/2026-09-28-staging-phasemap.spec', text: listMap('    - id: S0\n    - id: C1\n') };
+    const b = { path: 'docs/2026-09-28-graph-phasemap.spec', text: listMap('    - id: B0\n    - id: B1\n      depends_on: [B0, staging S0]\n    - id: C1\n') };
+    const r = rm.buildRoadmap({ projectId: 'p', maps: [b, a] });          // the dependent map is listed FIRST
+    const b1 = r.phases.find(x => x.phase_key === 'B1'); const s0 = r.phases.find(x => x.phase_key === 'S0' && x.map === a.path);
+    assert.ok(b1.depends_on.includes(s0.uuid), 'B1 -> staging S0');
+    assert.deepStrictEqual(b1.unresolved_deps, []);
+    assert.ok(s0.order < b1.order, 'the dependency sorts first');
+    assert.ok(b1.blocked_by.includes(s0.uuid) && !b1.ready, 'B1 waits on an unfinished phase in the other spec');
+    assert.ok(!r.warnings.some(w => w.type === 'unresolved_dependency'));
+  });
+  await t('DG-3 a bare key is never guessed across maps, and an ambiguous or unknown qualifier stays unresolved', () => {
+    const a = { path: 'a-staging-phasemap.spec', text: listMap('    - id: C1\n') };
+    const c = { path: 'c-other-phasemap.spec', text: listMap('    - id: C1\n') };
+    const b = { path: 'b-graph-phasemap.spec', text: listMap('    - id: C1\n    - id: X\n      depends_on: [C1, staging C9, phasemap C1, staging C1]\n') };
+    const r = rm.buildRoadmap({ projectId: 'p', maps: [a, b, c] });
+    const x = r.phases.find(p => p.phase_key === 'X' && p.map === b.path);
+    assert.deepStrictEqual(x.depends_on, [`p:${b.path}:C1`, `p:${a.path}:C1`], 'bare C1 = its own map; "staging C1" = the one other map named staging');
+    // "phasemap" names BOTH other maps, so it is not guessed; C9 exists in no map
+    assert.deepStrictEqual(x.unresolved_deps.sort(), ['phasemap C1', 'staging C9']);
+    assert.strictEqual(r.warnings.filter(w => w.type === 'unresolved_dependency' && w.phase === 'X').length, 2);
+  });
+  await t("DG-4 today's two real specs: B1 waits on staging S0 and S4 waits on C1", () => {
+    const D = path.join(ROOT, 'docs');
+    const names = ['2026-09-28-graph-build-context-settings-memory-phasemap.spec', '2026-09-28-staging-self-heal-phasemap.spec'];
+    if (!names.every(n => fs.existsSync(path.join(D, n)))) return;        // the pair is only there while these maps are
+    const r = rm.buildRoadmap({ projectId: 'p', maps: names.map(n => ({ path: `docs/${n}`, text: fs.readFileSync(path.join(D, n), 'utf8') })) });
+    const at = (n, k) => r.phases.find(p => p.map === `docs/${names[n]}` && p.phase_key === k);
+    assert.ok(at(0, 'B1').depends_on.includes(at(1, 'S0').uuid));
+    assert.ok(at(1, 'S4').depends_on.includes(at(1, 'C1').uuid));
+    assert.ok(!r.warnings.some(w => w.type === 'unresolved_dependency' && /staging S0|C1\]/.test(w.token)));
+  });
+
   console.log('\n── wiring (structural — the routes are exercised over HTTP) ──');
   const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
   await t('both routes are registered and the edit route reads the file back after writing', () => {

@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.accounts.portal.open
+type: capability
+id: cg.accounts.portal.open
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786713
+source: clear-glass/registry-components.js:cg.accounts.portal.open
+occurrences: 1
+firstSeenAt: 1790684786713
+lastSeenAt: 1790684786713
+fingerprint: 19be65244f06459026204584
+payload:
+  intent: []
+  grammar:
+    - accounts portal open
+  tags:
+    - cg
+    - accounts
+    - portal
+  id: cg.accounts.portal.open
+  namespace: cg
+  name: accounts.portal.open
+  version: 3.17.0
+  route:
+    method: IPC
+    path: accounts:portal:open
+  description: Open a provider sign-in window in the account's own mesh partition
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.any.api.nexus.knowledge
+type: capability
+id: orchestrator.any.api.nexus.knowledge
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787513
+source: orchestrator/interaction-contract.json:orchestrator.any.api.nexus.knowledge
+occurrences: 1
+firstSeenAt: 1790684787513
+lastSeenAt: 1790684787513
+fingerprint: ef3218587c2b3e5150643d84
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.any.api.nexus.knowledge
+  namespace: orchestrator
+  name: /api/nexus/knowledge
+  version: 1.0.0
+  route:
+    method: ANY
+    path: /api/nexus/knowledge
+  description: null

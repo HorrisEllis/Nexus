@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.autofill.fill
+type: capability
+id: cg.autofill.fill
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786702
+source: clear-glass/registry-components.js:cg.autofill.fill
+occurrences: 1
+firstSeenAt: 1790684786702
+lastSeenAt: 1790684786702
+fingerprint: 8bcbdf3c2bf14166915073c9
+payload:
+  intent: []
+  grammar:
+    - autofill fill
+  tags:
+    - cg
+    - autofill
+  id: cg.autofill.fill
+  namespace: cg
+  name: autofill.fill
+  version: 3.17.0
+  route:
+    method: IPC
+    path: autofill:fill
+  description: Fill real form fields from an autofill profile
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

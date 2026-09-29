@@ -7,7 +7,10 @@ const nodeIndex   = require('../../lib/node-index.js');
 
 const DEFAULT_NODES_DIR = path.join(__dirname, '..', 'data', 'nodes');
 let NODES_DIR = DEFAULT_NODES_DIR;
-const GUARDIAN_NODE_TYPES = Object.freeze(['tool', 'agent', 'command', 'event', 'intent', 'response']);
+// §0.39.271 X2 — 'hat' added: Guardian hosts the agent types (NODE-TAXONOMY.md rows 1 and 5);
+// lib/system-nodes.js writes guardian/data/nodes/{hat,agent} from every forged hat. capability
+// and system are Guardian's own generated nodes (lib/system-nodes.js), indexed here too.
+const GUARDIAN_NODE_TYPES = Object.freeze(['tool', 'agent', 'hat', 'command', 'capability', 'system', 'event', 'intent', 'response']);
 const LEDGER_FILE = '_ledger.jsonl';
 
 let _bus = null;
@@ -24,7 +27,9 @@ function _appendLedger(type, entry) {
   catch (e) { console.error(`[guardian/node-registry] ledger write failed for ${type}: ${e.message}`); }
 }
 
-function _idFromFilename(filename) { return path.basename(filename).split('.')[0]; }
+// §0.39.271 — the id is the name without its LAST extension: "guardian.baseline.command" is
+// guardian.baseline (split('.')[0] made every dotted id "guardian", so a removal dropped the wrong node)
+function _idFromFilename(filename) { const b = path.basename(filename); const i = b.lastIndexOf('.'); return i > 0 ? b.slice(0, i) : b; }
 
 function _processFile(type, filePath) {
   const filename = path.basename(filePath);

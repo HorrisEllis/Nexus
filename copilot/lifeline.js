@@ -132,9 +132,21 @@ function _estimateConfidence(text = '', prompt = '') {
 // ── Route to Ollama ───────────────────────────────────────────────────────────
 async function _tryOllama(prompt, opts = {}) {
   try {
+    // §0.39.269 — memory: an uncomposed prompt (copilot's own chat, via route()) is given what this agent has done
+    // before, from the download manager. A composed prompt (idearium's repo agent) carries its own memory block.
+    if (opts.memory === true) {
+      try {
+        const mem = await require('../lib/agent-memory.js').recall({ agentId: opts.memoryAgent || opts.agentId || 'copilot', query: prompt });
+        if (mem.text) prompt = `${mem.text}\n\n${prompt}`;
+      } catch (_) { /* memory is context, never a reason not to answer */ }
+    }
     // Submit job
     const job = await _post(`${OL_URL}/api/jobs`, {
       prompt,
+      // §0.39.269 — the bridge records the finished exchange to the download manager under this agent.
+      agentId:       opts.memoryAgent || opts.agentId || 'copilot',
+      compartmentId: opts.compartmentId || undefined,
+      repoUuid:      opts.repoUuid || undefined,
       // §BUGFIX 2026-07-04: was hardcoded to 'mistral:7b' — ollama-bridge's
       // own FALLBACK_MODEL, not its DEFAULT_MODEL (qwen2.5-coder:7b, the
       // one the CLI's own onboarding tells users to `ollama pull`). If a
@@ -671,7 +683,10 @@ async function route(prompt, opts = {}) {
     });
   } catch (_) { /* event pipeline unreachable — the real route proceeds regardless, §1.2 non-blocking */ }
 
-  const result = await _routeInner(prompt, { ...opts, requestId });
+  // §0.39.269 — copilot's own conversation is one agent with one memory (lib/agent-memory.js, over the download
+  // manager): recalled before Ollama answers (_tryOllama, memory:true) and recorded under 'copilot' afterwards.
+  // Its own field, not agentId: an agentId makes _tryGuardian skip the "is that tab connected?" check (a repo-tab rule).
+  const result = await _routeInner(prompt, { ...opts, requestId, memoryAgent: opts.memoryAgent || opts.agentId || 'copilot', memory: opts.memory !== false });
 
   try {
     if (et) {

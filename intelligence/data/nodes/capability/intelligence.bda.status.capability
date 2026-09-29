@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.bda.status
+type: capability
+id: intelligence.bda.status
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787407
+source: intelligence/registry-components.js:intelligence.bda.status
+occurrences: 1
+firstSeenAt: 1790684787407
+lastSeenAt: 1790684787407
+fingerprint: 582f5c8efc775bda1bf34536
+payload:
+  intent: []
+  grammar:
+    - bda status
+    - intelligence bda
+  tags:
+    - intelligence
+    - cognition
+  id: intelligence.bda.status
+  namespace: intelligence
+  name: bda.status
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/bda/status
+  description: Behavioral Drift Analyzer — current per-role pendulum/regime state
+  params: []
+  permissions:
+    - system
+  hooks: {}

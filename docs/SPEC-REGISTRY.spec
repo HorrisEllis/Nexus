@@ -1605,3 +1605,49 @@ spec:
     | spec | version | status | governs |
     |---|---|---|---|
     | `docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec` | 1.0.0 | built (0.39.264) | The COS test VM for any repo (tar disk, detect, provision, setup, network cut), the written-out Nexus atlas with nested atlases for every system, Create/Build only inside a repo, Eravos new organism → Idearium idea/spec. T1–T3 were built before the map; the drift is recorded in the spec. ErosmancerOS starting with Clear Glass came mid-release and is addended to `erosmancer/spec/erosmancer.spec` and `clear-glass/spec/clear-glass.spec`. |
+    
+    ## §REGISTERED 2026-09-27 — 0.39.267–269 agent hat, agent memory, download manager
+    
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec` | 1.0.0 | built (0.39.267–269) | What Ollama was doing (copilot's self-test) and cutting it to 1 call / 10 min; intuition's crashes; vector memory reaching Ollama; copilot's "what have you been up to" (activity recall); one provider list; chunk and codebase builds wearing the repo hat (else the_builder) on ollama / copilot / a guardian agent; RAID's intent check reading the worn hat; guardian capturing code with its fences; the ChatGPT A/B chooser; agent memory as the Clear Glass download manager (record on every backend, recall before every call). Phases O–M were built before the map — the drift is recorded in the spec; X1 is the axioms pass. Addenda in copilot, idearium, guardian, ollama, clear-glass, loom and cortex specs. |
+    | `docs/agent-memory.spec` | 1.0.0 | built (0.39.269) | lib/agent-memory.js — record/recall over the Clear Glass download manager, any backend. |
+    | `docs/agent-providers.spec` | 1.0.0 | built (0.39.267) | lib/agent-providers.js — the one list of who can wear a hat; copilot resolved, never guessed. |
+    | `docs/activity-recall.spec` | 1.0.0 | built (0.39.267) | copilot/lib/activity-recall.js — "what have you been up to", from records. |
+    
+    ## §REGISTERED 2026-09-27 — 0.39.270 Idearium atlas
+    
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-27-idearium-atlas-phasemap.spec` | 1.0.0 | built (0.39.270) | docs/atlases/idearium-atlas.md rewritten from the code (the Agent tab end to end, the 13 repo tabs, the build path, the 217 routes), the old one archived, the atlas reference test holding it to 0 dead references, the Nexus atlas's Idearium paragraph corrected. Mapped before building. |
+    
+    ## §REGISTERED 2026-09-27 — 0.39.271 one Idearium, Phases, living spec, COS debugging, nodes
+    
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec` | 1.0.0 | built (0.39.271) | The :9000 /idearium/ redirect; Versionium's repo lists (their own branch, newest first — they were the first 200 commits of every repo) and the whole-NEXUS Versionium view; one Idearium bar; the Phases manager (Roadmap + Phasemap, every phasemap form, build = snapshot then agent); the Spec tab as the living spec; COS suite / every test / debug reports; copilot's declared = served; per-system nodes + Guardian's .hat/.agent. Mapped before building. |
+    | `docs/system-nodes.spec` | 1.0.0 | built (0.39.271) | lib/system-nodes.js — every system's capability/command/system nodes from the tree (declared vs served), Guardian's .hat/.agent, GET /api/nodes. |
+    | `docs/phases-manager.spec` | 1.0.0 | built (0.39.271) | idearium/repo/phases.js — the Phases tab's model and routes; builds snapshot first. |
+    | `docs/living-spec.spec` | 1.0.0 | built (0.39.271) | idearium/repo/living-spec.js — the repo's spec folder, parsed (meta, sections, version history, gaps, addenda). |
+    | `docs/cos-debug-report.spec` | 1.0.0 | built (0.39.271) | lib/cos-debug-report.js — a failed run's error, repo frames and source lines. |
+
+    
+    ## §REGISTERED 2026-09-27 — 0.39.273 Idearium codebase toolkit
+    
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-27-idearium-codebase-toolkit-phasemap.spec` | 1.0.0 | built (0.39.273) | Idearium solid for building codebases: the measured chunker defects (1054 of 3584 chunks cut mid-body, 984 docs split from their symbol, chunks to 1253 lines), chunker v2, chunk cards, the search index, the edit engine, the code API and tools. Mapped before building. |
+    | `docs/code-intel.spec` | 1.0.0 | built (0.39.273) | lib/code-intel (structural chunker v2, cards, BM25 search, grep), lib/code-edit.js, idearium/repo/code-api.js (/api/repos/:uuid/code/*), the eleven idearium.code_*.tool agent tools; the inject delete op and RepoLayer's real-bytes read/delete. |
+
+    ## §REGISTERED 2026-09-28 — mapped on 0.39.274 (docs only, nothing built)
+
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-28-staging-self-heal-phasemap.spec` | 1.0.0 | C0, C1 (0.39.277), S0, S1 (0.39.279) built; S2 onward open | Staging as the missing piece of the autonomous loop: branch fork point, code-edit stage/promote, heal loop onto staging, verify gate, score (compound), before/after tension, promote/auto-rewind, feedback, compound → failure-mode mapping, loom L1, atlases A1. |
+    | `docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec` | 1.1.0 | mapped, not built | Revised 0.39.277 for sovereignty (I12: every system self-contained, crossings only by declared contract; SV0 census in the graph, SV1 contracts, SV2 data, SV3 code) and re-grounded on 0.39.276 (D2: the linked code repo vs build-in-place). A dependency graph per repo (global-symbol + load-order + uses_member + SCCs); builds in the source repo, uncommitted, snapshot per chunk, path-gated; one identity and one compose so every build wears the hat with context locked on; graph-ordered chunk phases with contract-diff acceptance; full enterprise per-repo settings (identity, context, build, gates, promote, quotas, security, audit, export); memory bounded by rate, per-process tables, one writer per table. Atlas + loom map per file; L1/A1/X1 inside every phase. |
+
+    ## §REGISTERED 2026-09-29 — mapped and built on 0.39.280
+
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-29-build-surface-phasemap.spec` | 1.0.0 | BS0–BS11, BS13–BS19 built (0.39.280); BS12 = the release | The build surface: compartment windows, the rewind hit-test fix, file states, baseline deviation, environment check and options, spec → bottom-up phasemap with the axioms, build plan with gates, their API and UI (Files Manage, Spec build bar, plan panel, Start building, Settings environment), provider sovereignty, honest git errors, code-repo retirement, the provider login wall, co-pilot browser verbs, Sync & CI theme, the co-pilot user guide. |

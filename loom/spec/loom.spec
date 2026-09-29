@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        loom
-    version:     1.5.0
+    version:     1.5.1
     foundation:  nexus-system-foundation@1.1.0
     port:        3752
     uuid:        nexus-loom-v1-0000-2026-0901-jamesbrooks-001
@@ -156,3 +156,27 @@ spec:
       date: 2026-09-01
       summary: "First real .spec authored, matching live code@1.5.0 exactly (no version bump required)."
       versioniumCommitId: null
+    - version: 1.5.1
+      date: 2026-09-28
+      summary: "PATCH (0.39.275): phasemap-map _list() ends a flow list at its own ] — a trailing # comment is not a dependency."
+      versioniumCommitId: null
+
+  # ## ADDENDUM 2026-09-27 (0.39.269) — loom/maps/agent-memory-map.js
+  # Maps lib/agent-providers.js, lib/agent-memory.js, copilot/lib/activity-recall.js with their real require edges
+  # (and agent-providers → copilot/server, HTTP), plus the consumer edges from hand-mapped files the scanner skips
+  # (copilot/lifeline, copilot/server, ollama/lib/dispatch, idearium/api, idearium/spec-engine). Declares two hooks that
+  # were missing on existing components: nexus.lib.extract-code.export (hand-mapped with no requirer in its map, so its
+  # 7 consumers' wires had no endpoint) and nexus.copilot.server.import (nothing could wire into copilot's server).
+  # Fresh-bootstrap comparison 0.39.268 → 0.39.269: unresolved wires 112 → 104. bootstrap excludes the map's files.
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# parsePhasemapText also reads list-form phases ("- id: X1" inside a phases: block — name, status words, depends_on,
+# closes, files) and returns name/closes/files/form for key-form phases too. loom/maps/one-idearium-map.js maps
+# idearium/repo/phases.js, idearium/repo/living-spec.js, lib/cos-debug-report.js, lib/system-nodes.js with wires.
+
+# ── ADDENDUM 2026-09-28 (0.39.275) — loom/scanners/phasemap-map.js _list() ──
+# A flow list ends at its own `]`; whatever follows is a YAML comment, not another item. `depends_on: [S3, C1]  # why`
+# was read as the items `S3` and `C1] # why`, so the edge to C1 was lost and the phase (staging-self-heal S4) could
+# read as ready while C1 was still open. A block or bare list has no `]`, so only a ` # …` tail is cut there.
+# parsePhasemapText's other output is unchanged. Proven by tests/modules/test-moce-roadmap.js DG-1 (loom's parser
+# and idearium's roadmap over the same text). loom 1.5.0 -> 1.5.1 (PATCH: no new route or component).

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.prepare
+type: capability
+id: copilot.opportunity.prepare
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786894
+source: copilot/registry-components.js:copilot.opportunity.prepare
+occurrences: 1
+firstSeenAt: 1790684786894
+lastSeenAt: 1790684786894
+fingerprint: 08efe8fb084e0a1a09d12a18
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity prepare
+  tags:
+    - copilot
+    - opportunity
+    - clear-glass
+  id: copilot.opportunity.prepare
+  namespace: copilot
+  name: opportunity.prepare
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/:id/prepare
+  description: Open the application in Clear Glass and fill it; stops before submit
+  params: []
+  permissions:
+    - system
+  hooks: {}

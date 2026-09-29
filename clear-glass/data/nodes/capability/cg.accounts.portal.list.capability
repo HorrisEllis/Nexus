@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.accounts.portal.list
+type: capability
+id: cg.accounts.portal.list
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786724
+source: clear-glass/registry-components.js:cg.accounts.portal.list
+occurrences: 1
+firstSeenAt: 1790684786724
+lastSeenAt: 1790684786724
+fingerprint: 808c96648c721a263076a7e9
+payload:
+  intent: []
+  grammar:
+    - accounts portal list
+  tags:
+    - cg
+    - accounts
+    - portal
+  id: cg.accounts.portal.list
+  namespace: cg
+  name: accounts.portal.list
+  version: 3.17.0
+  route:
+    method: IPC
+    path: accounts:portal:list
+  description: List open sign-in windows
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

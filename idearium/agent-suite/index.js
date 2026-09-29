@@ -242,8 +242,12 @@ export async function generateWithOllama(system, prompt, { model = _OLLAMA_FALLB
 
   if (!runtime) {
     // Direct HTTP fallback if runtime not available
-    const body = JSON.stringify({ model, prompt: `${system}\n\n${prompt}`, stream: false,
-      options: { temperature: 0.3, num_predict: 2048 } });
+    // §0.39.266 — num_ctx sized to the prompt; the call recorded (lib/ollama-activity.js)
+    const OA = _require('../../lib/ollama-activity.js');
+    const _full = `${system}\n\n${prompt}`;
+    const _ctx = OA.withNumCtx({ temperature: 0.3, num_predict: 2048 }, _full.length);
+    const _t0 = Date.now();
+    const body = JSON.stringify({ model, prompt: _full, stream: false, options: _ctx.options });
     const r = await new Promise((resolve) => {
       const req = http.request({
         hostname: '127.0.0.1', port: OLLAMA_PORT, path: '/api/generate',
@@ -263,6 +267,7 @@ export async function generateWithOllama(system, prompt, { model = _OLLAMA_FALLB
       req.write(body);
       req.end();
     });
+    OA.record({ caller: 'idearium/agent-suite', op: 'generate', model, promptChars: _full.length, numCtx: _ctx.numCtx, ms: Date.now() - _t0, ok: !!r.ok, error: r.ok ? undefined : r.error, warning: _ctx.warning });
     return r;
   }
 
@@ -299,45 +304,81 @@ export async function generateWithOllama(system, prompt, { model = _OLLAMA_FALLB
 // real provider goes to guardian's /command with THAT exact provider, not
 // a substituted one. An unrecognized agent is now a real, loud error —
 // never a silent redirect to whichever provider happened to be hardcoded.
-const REAL_GUARDIAN_PROVIDERS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
+// §0.39.267 — was a hardcoded REAL_GUARDIAN_PROVIDERS list. The list is lib/agent-providers.js now (guardian's
+// userscripts on disk + copilot + ollama), the same one repo-agent, WARP's cascade and the UI read.
+const _providers = () => _require('../../lib/agent-providers.js');
 
-export async function buildChunkWithAgent(chunkPrompt, { preferAgent = 'ollama' } = {}) {
+const BUILDER_SYSTEM = 'You are a precise technical spec writer for the NEXUS sovereign AI orchestration system. Write only the requested section content — no preamble.';
+
+/**
+ * wearHat(hat, prompt) — the hat's persona on top of the chunk prompt. The same composition every backend gets,
+ * so a hat means the same thing whichever model wears it. No hat → the prompt unchanged.
+ */
+export function wearHat(hat, prompt) {
+  const persona = hat && typeof hat.personaPrompt === 'string' ? hat.personaPrompt.trim() : '';
+  if (!persona) return prompt;
+  return `${persona}\n\n---\n\n${prompt}`;
+}
+
+/**
+ * buildChunkWithAgent(prompt, { preferAgent, hat, model })
+ *
+ * §0.39.267 — James: "the agent hat is meant to be agnostic, ollama/guardian/copilot."
+ *   preferAgent  'copilot' | 'ollama' (alias 'mistral') | any guardian agent on disk (alias 'auto' → copilot).
+ *                'copilot' asks copilot where its default goes and sends there; if copilot can't say, nothing is sent.
+ *   hat          { name, personaPrompt, ... } — worn on whichever backend answers (wearHat above).
+ *   model        an Ollama tag, used only when the answer comes from ollama (the repo's Agent-tab model setting).
+ * Returns { ok, text, agent, model, hat, via } or { ok, queued, jobId, agent, hat, via } or { ok:false, error }.
+ * `agent` is always the real provider that answered — never 'copilot' — so a chunk's provenance stays true.
+ */
+export async function buildChunkWithAgent(chunkPrompt, { preferAgent = 'ollama', hat = null, model = null,
+  agentId = null, compartmentId = null, repoUuid = null, memory = '', fileName = null, syntax = null } = {}) {
+  // §0.39.269 — memory (lib/agent-memory.js recall, computed by the caller: this agent's earlier work from the download
+  // manager + the files already built in its compartment) sits between the hat and the chunk prompt, on every backend.
+  // It is NOT part of the prompt WARP caches on — the caller passes it beside the prompt, not in it.
+  const withMemory = memory && String(memory).trim() ? `${String(memory).trim()}\n\n${chunkPrompt}` : chunkPrompt;
+  const P = _providers();
+  const r = await P.resolve(preferAgent);
+  if (!r.ok) return { ok: false, error: r.error };
+  const provider = r.provider;
+  const via = r.via || null;
+  const hatName = hat && hat.name ? hat.name : null;
+
   // 1. Local model — no guardian round-trip.
-  if (preferAgent === 'ollama' || preferAgent === 'mistral') {
-    const r = await generateWithOllama(
-      'You are a precise technical spec writer for the NEXUS sovereign AI orchestration system. Write only the requested section content — no preamble.',
-      chunkPrompt,
-      { model: _OLLAMA_FALLBACK, timeoutMs: 120000 }
-    );
-    if (r.ok && r.text) return { ok: true, text: r.text, agent: 'ollama', model: r.model };
-    return { ok: false, error: `ollama dispatch failed: ${r.error}` };
-  }
-
-  // 2. Any real guardian-reachable provider — dispatched to exactly the
-  // agent that was actually requested, not a hardcoded stand-in.
-  if (REAL_GUARDIAN_PROVIDERS.includes(preferAgent)) {
-    const r = await _http(GUARDIAN_PORT, 'POST', '/command', {
-      command: 'spec', provider: preferAgent, prompt: chunkPrompt,
-      // §FIXED 2026-09-21 — guardian's /command reads body.source (top level) for
-      // its RAID contract lookup; source only inside meta always resolved to the
-      // proof-gated _default and every chunk was denied. meta.source stays for the
-      // job's own provenance record.
-      source: 'idearium',
-      meta: { source: 'idearium.agent-suite', task: 'spec_chunk' },
-    }, 300000); // 5min — browser-agent NCP dispatch can be slow
-    if (r.ok && r.data?.jobId) {
-      // Job was queued — caller polls (pollGuardianJob), same real contract
-      // this function has always returned for a queued job.
-      return { ok: true, queued: true, jobId: r.data.jobId, agent: preferAgent };
+  if (provider === 'ollama') {
+    const system = hat && hat.personaPrompt ? `${hat.personaPrompt.trim()}\n\n${BUILDER_SYSTEM}` : BUILDER_SYSTEM;
+    // §0.39.267 — was _OLLAMA_FALLBACK (the 7b), which on James's 4 GB GPU timed out at 120 s on a single file
+    // ("huihui_ai/qwen2.5-coder-abliterate:7b timed out after 120000ms"). The repo's Agent-tab model, else the default.
+    const m = (typeof model === 'string' && model.trim()) ? model.trim() : _OLLAMA_DEFAULT;
+    const g = await generateWithOllama(system, withMemory, { model: m, timeoutMs: 120000 });
+    if (g.ok && g.text) {
+      // Direct to Ollama (not the bridge), so the exchange is recorded here — the download manager, under the agent.
+      try {
+        _require('../../lib/agent-memory.js').record({ agentId: agentId || 'idearium', provider: 'ollama', model: g.model || m,
+          prompt: chunkPrompt, response: g.text, compartmentId, repoUuid, path: fileName, kind: 'chunk', source: 'idearium.agent-suite' }).catch(() => {});
+      } catch (_) {}
+      return { ok: true, text: g.text, agent: 'ollama', model: g.model || m, hat: hatName, via };
     }
-    return { ok: false, error: `${preferAgent} dispatch failed: ${r.data?.error || r.error || 'unknown error'}` };
+    return { ok: false, error: `ollama dispatch failed: ${g.error}${via ? ' (copilot resolved to ollama)' : ''}`, hat: hatName, via };
   }
 
-  // 3. A genuinely unrecognized agent name — a real, named error, never a
-  // silent substitution. The caller (or WARP's cascade) decides what to
-  // try next; this function no longer decides that FOR them by pretending
-  // an unknown agent was actually chatgpt or claude.
-  return { ok: false, error: `unknown agent "${preferAgent}" — real, dispatchable agents are: ollama, mistral, ${REAL_GUARDIAN_PROVIDERS.join(', ')}` };
+  // 2. A guardian browser agent — exactly the one that was asked for (or that copilot resolved to).
+  const q = await _http(GUARDIAN_PORT, 'POST', '/command', {
+    command: 'spec', provider, prompt: wearHat(hat, withMemory),
+    // §FIXED 2026-09-21 — guardian's /command reads body.source (top level) for its RAID contract lookup.
+    source: 'idearium',
+    // §0.39.269 — filed in the download manager under the agent that asked (one tab either way, since 0.39.247);
+    // the persona is already in the prompt, so guardian adds no guessed hat; the file it is for, for code capture.
+    ...(agentId ? { agentId } : {}),
+    ...(hatName ? { hatInPrompt: hatName } : {}),
+    ...(fileName ? { fileName } : {}), ...(syntax ? { syntax } : {}),
+    meta: { source: 'idearium.agent-suite', task: 'spec_chunk', hat: hatName, via },
+  }, 300000); // 5min — browser-agent NCP dispatch can be slow
+  if (q.ok && q.data?.jobId) {
+    // Job was queued — caller polls (pollGuardianJob).
+    return { ok: true, queued: true, jobId: q.data.jobId, agent: provider, hat: hatName, via };
+  }
+  return { ok: false, error: `${provider} dispatch failed: ${q.data?.error || q.error || 'unknown error'}${via ? ' (copilot resolved to it)' : ''}`, hat: hatName, via };
 }
 
 // ── Wizard question builder — Qwen drives the spec wizard ─────────────────────
@@ -347,7 +388,7 @@ export async function getNextWizardQuestion(specMeta, answeredSections) {
     { id: 'name',        q: 'What is the name of this component?' },
     { id: 'type',        q: 'What type is it? (component / service / engine / bridge / agent)' },
     { id: 'description', q: 'What does it do in one sentence?' },
-    { id: 'agent',       q: 'Which agent should build it? (ollama=Mistral local, chatgpt, claude)' },
+    { id: 'agent',       q: 'Which agent should wear the hat and build it? (copilot, ollama, or a guardian agent: chatgpt, claude, gemini, …)' },
     { id: 'purpose',     q: 'What problem does it solve? Why does it need to exist in NEXUS?' },
     { id: 'axioms',      q: 'Which axioms does it enforce? (e.g. §2.1, §5.1, §1.2)' },
   ].filter(q => !answeredSections[q.id]);
@@ -375,7 +416,7 @@ export async function getNextWizardQuestion(specMeta, answeredSections) {
 export default {
   getSystemContext, queryCortexMemory, getExistingSpecs,
   getGaps, dispatchRepair, getIdeas,
-  generateWithOllama, buildChunkWithAgent, getNextWizardQuestion,
+  generateWithOllama, buildChunkWithAgent, wearHat, getNextWizardQuestion,
   listRepositories, getRepository, getRepositoryMap, getRepositorySymbols,
   getRepositoryChunks, getRepositoryChunk, getRepositoryFile,
   getRepositoryVerification, editRepositoryFile, deleteRepositoryFile,

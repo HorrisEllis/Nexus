@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.templates.set
+type: capability
+id: copilot.opportunity.templates.set
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786913
+source: copilot/registry-components.js:copilot.opportunity.templates.set
+occurrences: 1
+firstSeenAt: 1790684786913
+lastSeenAt: 1790684786913
+fingerprint: 37c92293312c91d41007df3a
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity templates set
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.templates.set
+  namespace: copilot
+  name: opportunity.templates.set
+  version: 2.0.0
+  route:
+    method: PUT
+    path: /api/opportunity/templates/:id
+  description: Edit a drafting template
+  params: []
+  permissions:
+    - user
+  hooks: {}

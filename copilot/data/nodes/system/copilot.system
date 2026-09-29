@@ -2,17 +2,34 @@ envelope: 1
 uuid: nexus-export-system-copilot
 type: system
 id: copilot
-context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  copilot/registry-components.js
+context: copilot — the system record, regenerated from copilot/registry-components.js
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730183
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - copilot
+  - system
+exported_at: 1790684787076
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730183
+lastSeenAt: 1790684787076
+fingerprint: 890c7340133c1327e6148391
 payload:
   id: copilot
-  hasCapabilities: true
+  kernel: copilot
   port: 3750
+  entry: copilot/server.js
   spec: copilot/spec/copilot.spec
+  label: COPILOT
+  purpose: Sovereign co-pilot. Continuous stream. Dual cognition.
+  hasCapabilities: true
+  capabilities: 81
+  commands: 81
+  declaredNotServed:
+    - POST /api/agents/calibrate
+  servedNotDeclared: 0
+  sources:
+    declared: copilot/registry-components.js
+    served: null
+    errors: []

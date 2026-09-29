@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-capability-cg.selectors.assign
+type: capability
+id: cg.selectors.assign
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786734
+source: clear-glass/registry-components.js:cg.selectors.assign
+occurrences: 1
+firstSeenAt: 1790684786734
+lastSeenAt: 1790684786734
+fingerprint: 9848a7ad81a6eaa32b5a2739
+payload:
+  intent: []
+  grammar:
+    - selectors assign
+  tags:
+    - cg
+    - selectors
+    - picker
+    - guardian
+  id: cg.selectors.assign
+  namespace: cg
+  name: selectors.assign
+  version: 3.17.0
+  route:
+    method: IPC
+    path: selectors:assign
+  description: >-
+    Record a picked, live-checked input/send/reply selector in guardian's selector map (POST
+    :7820/api/agents/:id/selectors, source picker); refused without evidence or with evidence from
+    another provider's page
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

@@ -540,3 +540,15 @@ spec:
     the work surface supplies the minimum source, the model reasons, the
     tool executes, the compartment isolates, Guardian verifies, Git
     preserves, the atlas remaps, and the cycle starts again at MAP.
+
+  # ── ADDENDUM 2026-09-27 (0.39.273) — chunks (§11), indexes (§14), search — docs/code-intel.spec ────────────
+  # §11 chunk schema, additive: key, kind, name, qualifiedName, parent (the containing chunk's id — was always null),
+  #   declLine, signature, exported, defines, language, forced, chunker. `symbols` lists every top-level declaration
+  #   the chunk holds (a group of one-line helpers holds several). Chunk ids are sha(repo:file:KEY), not :INDEX.
+  # §10/§11 boundaries: statement starts of the level being chunked only (lib/code-intel/structure.js gives every
+  #   line its brace depth, bracket depth and whether it starts a statement) — the "never cuts mid-body" claim now
+  #   holds and is measured by tests/modules/test-code-intel.test.js CI-601 on idearium's own source.
+  # §14 indexes, additive: indexes/cards.json (a card per chunk) and indexes/search.json (BM25 term vectors, cached by
+  #   hash). files.json entries carry chunker + lineCount; a file chunked by another chunker version is re-chunked.
+  # §20 events: intel:build:complete, intel:build:failed (idearium/repo/pipeline-events.js).
+  # §38 mutation: /api/repos/:uuid/code/* writes go through .injects and RepoLayer, and are reindexed once per call.

@@ -2,20 +2,33 @@ envelope: 1
 uuid: nexus-export-system-intelligence
 type: system
 id: intelligence
-context: >-
-  real, checked system record — nexus/autopilot.js kernel defs +
-  intelligence/registry-components.js. intelligence.node-taxonomy.md notes component/hook/wire/node
-  are NOT USED (a real, separate, already-flagged gap: intelligence isn't in capability-map.js's
-  SYSTEMS map, so loom never derives those from it) — that gap doesn't affect capability/command,
-  which intelligence declares and owns itself.
+context: intelligence — the system record, regenerated from intelligence/registry-components.js
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756082
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - intelligence
+  - system
+exported_at: 1790684787449
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250756082
+lastSeenAt: 1790684787449
+fingerprint: e5cd390658cdf7bc753da0fe
 payload:
   id: intelligence
-  hasCapabilities: true
+  kernel: intelligence
   port: 3753
+  entry: intelligence/server.js
   spec: intelligence/spec/intelligence.spec
+  label: null
+  purpose: null
+  hasCapabilities: true
+  capabilities: 53
+  commands: 53
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: intelligence/registry-components.js
+    served: null
+    errors: []

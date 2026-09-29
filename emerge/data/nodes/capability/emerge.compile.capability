@@ -2,33 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-emerge.compile
 type: capability
 id: emerge.compile
-context: emerge/registry-components.js real capability export
+context: emerge/registry-components.js — declared capability
 intent: null
 summary: null
-system: emerge
-tags: []
-exported_at: 1789250730115
-source: emerge.registry-components:emerge.compile
+system: null
+tags:
+  - emerge
+  - capability
+exported_at: 1790684787136
+source: emerge/registry-components.js:emerge.compile
+occurrences: 1
+firstSeenAt: 1789250730115
+lastSeenAt: 1790684787136
+fingerprint: 2efcfadbdfc901e4b85662a9
 payload:
+  intent: []
+  grammar:
+    - compile
+    - emerge compile
+  tags:
+    - emerge
+    - build
   id: emerge.compile
   namespace: emerge
   name: compile
   version: 1.1.0
-  grammar:
-    - compile
-    - emerge compile
   route:
     method: POST
     path: /compile
-  intent:
-    - build
-    - compile
-    - forge
   description: Compile .emerge spec → T0/T1/T2 pipeline
   params: []
-  tags:
-    - emerge
-    - build
   permissions:
     - system
   hooks:

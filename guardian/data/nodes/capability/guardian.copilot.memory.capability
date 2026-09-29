@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.copilot.memory
 type: capability
 id: guardian.copilot.memory
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730146
-source: guardian.registry-components:guardian.copilot.memory
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787219
+source: guardian/registry-components.js:guardian.copilot.memory
+occurrences: 1
+firstSeenAt: 1789250730146
+lastSeenAt: 1790684787219
+fingerprint: e6ff6c9c29871a985210e28c
 payload:
-  id: guardian.copilot.memory
-  namespace: guardian
-  name: copilot.memory
-  version: 3.6.2
+  intent: []
   grammar:
     - copilot memory
     - copilot-memory
+  tags:
+    - guardian
+  id: guardian.copilot.memory
+  namespace: guardian
+  name: copilot.memory
+  version: 3.14.0
   route:
     method: POST
     path: /api/copilot/memory
-  intent: []
   description: Co-pilot memory operations
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

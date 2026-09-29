@@ -308,3 +308,55 @@ Every version is kept. A chat keeps the agent it was first filed under. `recordR
 **The Library.** `/cli/downloads/responses` lists a chat once, at its newest version with `versions`; `?versions=all` lists every version and `?chatKey=` one chat. Library → Responses shows a chat row (☰, `chat · v2 (2 versions) · 4 messages`), opens it as a conversation (prompt / reply), and a version picker opens any earlier version.
 
 Tests: `test-chat-transcripts` TX-01–TX-10 (the index, each guard mutation-checked); `tests/probe/clearglass-library-window.js` 29/29 in real Chromium, with 4 new chat checks.
+
+## Every chat, kept live in the download manager; the co-pilot pane remembers (3.19.0, v0.39.278)
+
+James: *"maybe use the download manager in clearglass for the chat ledgers. also said guardian is polling, but it shouldn't be, live streams the dom mutation live to the download manager, that way we don't lose progress. including you expanding elements for your thoughts."*
+
+**The chat ledger** (`clear-glass/src/downloads/chat-ledger.js`). One append-only file per chat, ledgers/<chatKey>.jsonl, under the downloads index root (the COS compartment clearglass-downloads-index, so a COS snapshot carries it with the .response files). The first line is a head; every change after it is one delta line: per turn, the whole text (text) or what was appended (add at at), and the thinking the same way (thinking / thinkingAdd at thinkingAt), plus generating. Nothing written is rewritten, and a torn last line (a crash mid-write) is skipped on replay. An append at an offset the ledger does not hold is refused with the lengths it does hold (resync), and the page resends that turn whole, so a lost delta can never splice text into the wrong place. readChat() replays a chat and lists its code blocks with the path on the fence (a fence with the path after the language, js src/file.js).
+
+| route | what |
+|---|---|
+| POST /cli/downloads/ledger | one delta from a page (guardian atlas 3.16.0, `guardian/userscript-chat-stream.js`) |
+| GET /cli/downloads/ledgers | every chat, newest first (?agentId=, ?provider=) |
+| GET /cli/downloads/ledgers/:chatKey | one chat, replayed, with its code blocks |
+
+Each chat is also one entry in the downloads list (kind: 'chat-ledger'): in progress while the page is generating, completed when it stops, its size growing as it is written. The versioned transcript (3.15.0) is unchanged; the ledger is the live layer under it.
+
+**The co-pilot pane remembers** (`clear-glass/src/copilot/chat-store.js`). The pane's conversation is kept in Clear Glass's own JAA store (cg_copilot_chat, one current conversation per window in cg_copilot_conv, at most 400 turns each) and mirrored into the ledger as provider copilot. Every call carries the recent turns (copilotHistoryTurns 10, copilotHistoryChars 4,000, oldest left out first and the prompt says so), whichever backend answers: copilot, Ollama or a Guardian agent. "Nothing answered" is not stored as the assistant's turn. The pane restores the conversation when it opens (IPC copilot:history); /new starts another and keeps the old one (copilot:newConversation). copilotRemember: false keeps nothing.
+
+**The pane's tools, layered.** By default (copilotToolSurface: 'layered') a call lists Clear Glass's own actions by name and the two layer tools (nexus.tools.tool → nexus.tools_expand.tool), and does not ask the orchestrator. The whole capability prompt (about 7.9k characters every turn) was more than the local 3B model could use; 'full' brings it back.
+
+**Replies are escaped.** A reply went into the pane's innerHTML raw, so a page the co-pilot read could put markup into it. With replies kept and replayed, that would be a stored injection. Every reply, live or restored, now goes through formatReply(), which escapes first.
+
+**The prelude.** `clear-glass/src/providers/host.js` injects `guardian/userscript-chat-stream.js` before each provider script, next to `guardian/userscript-nexus-wake.js`. Either one can fail to load without stopping the other.
+
+Tests: test-chat-ledger-stream 14/14, test-tool-layers-and-pane-memory 14/14; the stream checked in headless Chromium (a reply streamed word by word, 5 coalesced posts, the thinking toggle opened and kept apart).
+
+## The interaction field: the page as numbered x/y/z targets, a virtual pointer, a spotlight (3.20.0, v0.39.279)
+
+James: *"i also want to be able to have copilot interact on clearglass using a virtual input through erosmanceros, nexus nerve, spotlight injected css into web pages, and a interaction field for xyz coords to help the agents see and navigate the ui in clearglass. I really need to get a job, and i want to be able to automate as much as possible."*
+
+readPage says what is on a page; nothing said where. A model that cannot see pixels could only act through selectors, and a small model's selector is often wrong or names something hidden behind a cookie banner. `clear-glass/src/page/field.js` is that view:
+
+| driver action | what it does |
+|---|---|
+| field {overlay, offscreen} | every interactive element numbered 1…n with its box, its centre (x, y) and z: how many layers cover its centre (0 = on top and clickable, more than 0 = under a banner or modal, -1 = off-screen). Also its name (label, aria-label, text), role, a selector and CSS z-index. With overlay the numbers, outlines and a labelled grid are drawn in a layer that takes no clicks. The result carries a text map a small model reads: #3 button "Apply now" (412,580) 120×32 z0. |
+| at {x, y} | the stack under one point, top first |
+| spotlight {n or selector or x,y,w,h, label} | a ring and a label on the target, the rest of the page dimmed, so James sees what the agent is about to do |
+| pointer {n or x,y or selector, do, text, via} | acts on a target with real input. do is click, double, right, move, scroll or type. via native uses sendInputEvent along a curved, human-paced path from where the pointer last was. via eros uses ErosmancerOS's new /api/input (the behaviour engine's own path over the DevTools protocol), reached through the wire's tab resolver in `clear-glass/src/main/index.js`. A covered target is reported, never silently clicked through; an off-screen one is refused with "scroll first". |
+| fieldOff | removes everything drawn |
+
+The last field per tab is kept, so "pointer n 3" needs no second read. field and spotlight events go on the bus and are forwarded to NEXUS (the nerve) with the other browser events. The co-pilot pane lists the actions in its compact tool list, and `lib/agent-tools/tools/clear-glass/browser.js` exposes field, pointer and spotlight to every agent, returning the text map rather than 150 objects.
+
+Tests: `tests/modules/test-cg-field.test.js` 13/13 (the driver with a fake page, the tool, the Eros route and its wiring), and `tests/probe/field-chromium.js` 12/12 in Clear Glass's own engine.
+
+## Compartment windows and a co-pilot that browses (v0.39.280)
+
+James: *"can you have the electron popup windows for the desktop envirement and settings, be in a borderless windowed and possible a manipulatable cos compartment so i can drag it around and resize it? keep the theme consistent."* · *"i told it to visit google.com and it ran the blue command but nothing happened. its meant to be the ais browser"*.
+
+**Compartment windows** (`clear-glass/src/main/compartment-window.js`). Idearium runs in a webview; its pop-outs for a repo's desktop and the settings console now open frameless, dark from the first paint, resizable from every edge, with no menu bar. The page's own title bar is the drag handle and carries pin, minimize, maximize and close, which reach the window through a small preload (`clear-glass/src/preload/compartment-window.js`). Every other pop-up is unchanged.
+
+**The co-pilot browses** (`clear-glass/src/copilot/verbs.js`). "visit google.com", "go to …", "open … and …" go there without asking a model and answer with the page's title, address and numbered targets; anything asked after it goes to the model with that page in hand. A driver block the model wrote loosely is repaired and run; one that still cannot be read comes back as a failed result the model and you both see (it used to be dropped while the pane said it was sent). The pane names the command each block carried. The full user guide is in `docs/atlases/copilot-atlas.md`.
+
+Tests: `tests/modules/test-compartment-window.test.js`, `tests/modules/test-cg-copilot-verbs.test.js`.

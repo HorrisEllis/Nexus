@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.context.search
+type: capability
+id: copilot.context.search
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786923
+source: copilot/registry-components.js:copilot.context.search
+occurrences: 1
+firstSeenAt: 1790684786923
+lastSeenAt: 1790684786923
+fingerprint: 2dcec6ee48c74a988ec9626b
+payload:
+  intent: []
+  grammar:
+    - search memory
+    - remember when
+    - find context
+  tags:
+    - copilot
+    - context
+    - memory
+  id: copilot.context.search
+  namespace: copilot
+  name: context.search
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/context/search
+  description: One search across every memory system and graph (?q=&sources=&limit=&repoDir=)
+  params: []
+  permissions:
+    - system
+  hooks: {}

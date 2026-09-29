@@ -3,16 +3,43 @@ uuid: nexus-export-system-guardian
 type: system
 id: guardian
 context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  guardian/registry-components.js
+  guardian — the system record, regenerated from guardian/registry-components.js and
+  guardian/lib/command-index-extract.js (guardian/server.js)
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730146
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - guardian
+  - system
+exported_at: 1790684787259
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730146
+lastSeenAt: 1790684787259
+fingerprint: 9c8d44f28d7396e94729a72c
 payload:
   id: guardian
-  hasCapabilities: true
+  kernel: guardian
   port: 7820
+  entry: guardian/server.js
   spec: guardian/spec/guardian.spec
+  label: null
+  purpose: null
+  hasCapabilities: true
+  capabilities: 36
+  commands: 62
+  declaredNotServed:
+    - GET /api/chats
+    - GET /api/chats/item/:id
+    - GET /api/chats/versions
+    - GET /response/:jobId
+    - GET /seam/queues/:id
+    - GET /settings
+    - GET /status/:jobId
+    - POST /api/copilot/memory
+    - POST /settings/reset
+  servedNotDeclared: 26
+  sources:
+    declared: guardian/registry-components.js
+    served: guardian/lib/command-index-extract.js (guardian/server.js)
+    errors: []

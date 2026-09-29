@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.context.create
 type: capability
 id: cg.context.create
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730158
-source: clear-glass.registry-components:cg.context.create
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786631
+source: clear-glass/registry-components.js:cg.context.create
+occurrences: 1
+firstSeenAt: 1789250730158
+lastSeenAt: 1790684786631
+fingerprint: 577deef44a50fd586ec35f1b
 payload:
-  id: cg.context.create
-  namespace: cg
-  name: context.create
-  version: 3.1.0
+  intent: []
   grammar:
     - context create
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Create isolated Chromium partition
-  params: []
   tags:
     - cg
     - context
+  id: cg.context.create
+  namespace: cg
+  name: context.create
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Create isolated Chromium partition
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-CTX-001

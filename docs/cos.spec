@@ -376,3 +376,25 @@ spec:
   #   - the real §63 plugin spec, if it exists somewhere outside this
   #     repo or in someone's memory, reconciled here rather than
   #     silently left dangling forever.
+
+# ── ADDENDUM 2026-09-29 (0.39.279) — workspaces: a repo as a branch of the original, and its desktop ──
+# James: "have cos create the vm environment, and each new repo, if applicable could create a branch of the original,
+# to save resources … once its generated, you can open it like a desktop environment". cos/workspace/index.js:
+# branchWorkspace (the original made its OWN git repository — never a worktree of the tree it sits in — then a worktree
+# on nexus/<name>; reused; uncommitted work snapshotted), listBranches, removeBranch (branch kept), branchDisk (qcow2
+# overlay backed by the original's disk), startDesktop / desktopStatus / stopDesktop (headless VM from
+# <root>/.cos-desktop/desktop.qcow2, an overlay of the original repo's desktop disk when it has one else the base image;
+# the repo copied in through the guest agent; the disk kept on stop). qemu-runtime: headless display also on a
+# websocket (5700+N), desktopPorts(). provision.js --with desktop (xfce + lightdm autologin). lib/cos-bridge.js is the
+# door (branchWorkspace, listBranches, desktop). Proven by tests/modules/test-cos-workspace.test.js (real git; QEMU
+# faked) — no VM was booted in the release environment.
+
+# ── ADDENDUM 2026-09-29 (0.39.280) — honest VM and git failures (build-surface phasemap BS0, BS14) ──
+# startDesktop watches its launch: a VM that exits within 15 s on a hardware accelerator (whpx / hvf / kvm) is retried
+# ONCE under tcg (cpu qemu64 + SSE4.2/POPCNT) and says so (desktopStatus().accelFallback with the first attempt's
+# stderr); a second exit is reported with QEMU's own words. stopDesktop marks the session stopping first (no retry).
+# Every git call in cos/workspace runs with core.autocrlf=false / core.safecrlf=false (no CRLF warnings), a 10-minute
+# timeout and 64 MB of output; gitWhy() reports git's error lines, never its warnings. lib/cos-bridge.js removeBranch.
+# cos/testenv/environment.js (BS4): check(repoDir) — downloaded / configured / VM, the install plan, and options() —
+# the environment option catalogue. Proven by tests/modules/test-cos-workspace.test.js WS-13, WS-14 and
+# tests/modules/test-build-surface.test.js BS4-*.

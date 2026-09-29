@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.post.integrity.accept
+type: capability
+id: diagnostic.post.integrity.accept
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787109
+source: diagnostic/interaction-contract.json:diagnostic.post.integrity.accept
+occurrences: 1
+firstSeenAt: 1790684787109
+lastSeenAt: 1790684787109
+fingerprint: ba847f486aaae811791fa994
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.post.integrity.accept
+  namespace: diagnostic
+  name: /integrity/accept
+  version: 1.0.0
+  route:
+    method: POST
+    path: /integrity/accept
+  description: Accept current state as new integrity baseline

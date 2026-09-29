@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.any.api.capabilities.prompt
+type: capability
+id: orchestrator.any.api.capabilities.prompt
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787512
+source: orchestrator/interaction-contract.json:orchestrator.any.api.capabilities.prompt
+occurrences: 1
+firstSeenAt: 1790684787512
+lastSeenAt: 1790684787512
+fingerprint: e34a811aa8e72197267fb070
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.any.api.capabilities.prompt
+  namespace: orchestrator
+  name: /api/capabilities/prompt
+  version: 1.0.0
+  route:
+    method: ANY
+    path: /api/capabilities/prompt
+  description: null

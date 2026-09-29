@@ -140,3 +140,9 @@ spec:
       - "EVENTS — live SSE event stream"
       - "COMPONENTS — full component registry browser"
       - "UI SESSIONS — connected UIs, types, heartbeat status"
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# A top-level UI directory ref (/idearium/, /guardian …) redirects to /ui/<path> — the TV shell at "/" resolved
+# '../idearium/' to /idearium/ and got "route not found". /api/cortex/versionium/{log,commit} call versionium
+# (cortex answered "moved"). New: GET /api/nodes, /api/nodes/:type, /api/nodes/:type/:id, POST /api/nodes/sync
+# (lib/system-nodes.js); every system's nodes are regenerated 4 s after boot.

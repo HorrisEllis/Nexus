@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        guardian
-    version:     3.14.0   # 0.39.256 MINOR — lib/gate-trail.js: every failure names its gate (/status gate + gates, ask.js errors, guardian.job.gate); userscripts stream the reply from the transcript every 500 ms. Previous 3.13.0: 0.39.255 MINOR — a job completes from its chat transcript (settled, not generating; GUARDIAN_JOB_DONE first; one GUARDIAN_COMPLETE path); a chat is filed under the job whose prompt it holds; repo jobs wear their repo hat, never the_builder; a late tab error cannot undo a completion. Previous 3.12.0: 0.39.254 MINOR — every provider chat logged into Clear Glass's downloads index as one versioned transcript per chat (lib/chat-transcripts.js, GUARDIAN_TRANSCRIPT + every /sync result), GET /api/chats[/versions|/item/:id]; userscripts push settled transcripts. Previous 3.11.1: 0.39.252 PATCH — agent "hey nexus" answered ONCE, by lib/wake-loop.js, from the COMPLETED reply of any job (was mesh only), as a wake-reply job sent into the same tab; the page and Clear Glass's relay no longer answer it. Previous 3.11.0: 0.39.249 MINOR — selector map: GET/POST /api/agents/:id/selectors, GUARDIAN_SELECTORS pushed on every NCP connect and change (lib/selector-map.js). Previous 3.10.0: 0.39.247 MINOR — one tab, one job at a time (userscript busy guard), every reply back (see CHANGELOG-0.39.247.md); this line was left at 3.9.5 while lib/version.js and registry-components.js moved, synced in 0.39.248. Previous 3.9.5: 0.39.244 PATCH — agentId jobs pass the shared-tab fail-fast; /events job frames carry payload+agentId; userscripts report the node anchor. Previous 3.9.4: 0.39.242 PATCH — jaa-store.js opts.settings:false. Previous 3.9.3: 0.39.241 PATCH — code-artifact.js: ARTIFACT_DIR honours the test sandbox / NEXUS_DATA_ROOT; no "not indexed" warning per reply when better-sqlite3 is simply absent
+    version:     3.18.0   # 0.39.280 MINOR — provider login wall (userscript-chat-stream 1.1.0 watchLogin; /api/provider/login; lib/provider-login.js). 3.15.0–3.17.0 (0.39.277–0.39.279) were recorded in lib/version.js and this spec's addenda but this line was not moved — synced here (§5.4). Previous 3.14.0:    0.39.256 MINOR — lib/gate-trail.js: every failure names its gate (/status gate + gates, ask.js errors, guardian.job.gate); userscripts stream the reply from the transcript every 500 ms. Previous 3.13.0: 0.39.255 MINOR — a job completes from its chat transcript (settled, not generating; GUARDIAN_JOB_DONE first; one GUARDIAN_COMPLETE path); a chat is filed under the job whose prompt it holds; repo jobs wear their repo hat, never the_builder; a late tab error cannot undo a completion. Previous 3.12.0: 0.39.254 MINOR — every provider chat logged into Clear Glass's downloads index as one versioned transcript per chat (lib/chat-transcripts.js, GUARDIAN_TRANSCRIPT + every /sync result), GET /api/chats[/versions|/item/:id]; userscripts push settled transcripts. Previous 3.11.1: 0.39.252 PATCH — agent "hey nexus" answered ONCE, by lib/wake-loop.js, from the COMPLETED reply of any job (was mesh only), as a wake-reply job sent into the same tab; the page and Clear Glass's relay no longer answer it. Previous 3.11.0: 0.39.249 MINOR — selector map: GET/POST /api/agents/:id/selectors, GUARDIAN_SELECTORS pushed on every NCP connect and change (lib/selector-map.js). Previous 3.10.0: 0.39.247 MINOR — one tab, one job at a time (userscript busy guard), every reply back (see CHANGELOG-0.39.247.md); this line was left at 3.9.5 while lib/version.js and registry-components.js moved, synced in 0.39.248. Previous 3.9.5: 0.39.244 PATCH — agentId jobs pass the shared-tab fail-fast; /events job frames carry payload+agentId; userscripts report the node anchor. Previous 3.9.4: 0.39.242 PATCH — jaa-store.js opts.settings:false. Previous 3.9.3: 0.39.241 PATCH — code-artifact.js: ARTIFACT_DIR honours the test sandbox / NEXUS_DATA_ROOT; no "not indexed" warning per reply when better-sqlite3 is simply absent
     foundation:  nexus-system-foundation@1.0.0
     port:        7820
     uuid:        nexus-guardian-v3-0000-2026-0615-jamesbrooks-001
@@ -520,3 +520,48 @@ spec:
       or a turn James typed is never streamed as the job's; 16 changes → 4 chunks whose deltas add up to the reply; reset;
       yields to the watch; stops with the job; the next job streams its own). 13 mutations, each caught.
 
+
+  # ## ADDENDUM 2026-09-27 (0.39.268–269) — code captured with its fences; the A/B chooser; hatInPrompt
+  # docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec (G1, G3, M5).
+  # 1. Every userscript (chatgpt, claude, gemini, deepseek, perplexity) reads the reply with _replyText(el): each <pre>
+  #    becomes a ``` fenced block (language from language-* or the block's header), the rest is innerText. Used for the
+  #    job watch, its baseline and the chat sync. innerText had dropped the fences — every code chunk failed extraction.
+  # 2. userscript-chatgpt: while "Which response do you prefer?" is open, a job waits (GUARDIAN_PROGRESS
+  #    waiting-for-choice) and fails with that reason at the no-reply limit. Guardian never picks.
+  # 3. POST /command accepts hatInPrompt: "<hat>" — the caller already put that persona in the prompt; the job wears it
+  #    with an empty persona instead of a guessed hat (the doubled "[the_builder] You build…" header).
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# Guardian hosts the agent node types: guardian/data/nodes/{hat,agent} are regenerated at boot from every forged
+# hat (lib/system-nodes.js — agent payload name, intent, commands, personality), and guardian/lib/node-registry.js
+# (per-type watcher + _ledger.jsonl + JAA index) now starts at boot — it never had. 'hat', 'capability' and
+# 'system' joined GUARDIAN_NODE_TYPES; _idFromFilename keeps dotted ids whole. Command nodes mark declared vs
+# served (served read by guardian/lib/command-index-extract.js).
+
+# ── ADDENDUM 2026-09-29 (0.39.278) — chats stream live by mutation; nothing polls the chat ──
+# James: "guardian is polling, but it shouldn't be, live streams the dom mutation live to the download manager".
+# guardian/userscript-chat-stream.js (shared prelude, window.NexusChatStream, composed into all five providers): the
+# chat's MutationObserver coalesces a burst (150 ms), reads with the provider's reader and POSTs only what changed since
+# Clear Glass acknowledged to :7702/cli/downloads/ledger; unacked means unsent (backoff retry, pagehide flush); thinking
+# toggles opened once each, thinking kept apart from the reply (Claude, ChatGPT readers). No interval.
+# The provider scripts' 5 s re-attach interval is a MutationObserver on the body; the job stream (GUARDIAN_CHUNK) reads on
+# the transcript's own mutations (_txStreamKick, guarded so the transcript push never depends on it). The settled
+# GUARDIAN_TRANSCRIPT and job completion from it are unchanged. Userscripts: claude/chatgpt 10.12.0, gemini/perplexity/
+# deepseek 10.9.0 (userscripts.yaml synced to the scripts' own @version).
+
+# ── ADDENDUM 2026-09-29 (0.39.279) — Gemini/DeepSeek full readers; "hey nexus" answered from any chat ──
+# userscript-gemini: user-query / model-response (AI Studio ms-chat-turn) in page order, thinking (model-thoughts) apart;
+# userscript-deepseek: every .ds-message, reply = .ds-markdown outside .ds-think-content, chat id = /s/<id>. No turns →
+# the newest reply, partial:true, as before. Both 10.10.0. lib/wake-loop.js handleTranscript: the settled transcript's
+# newest turn, the agent's, starting a line with a wake → a wake-reply job into that chat (createJob chatUrl, resumed by
+# the dispatcher); once per turn; depth = the run of [NEXUS] answers just sent; the job and transcript paths defer to
+# each other once. server.js listens to guardian.ncp.transcript. Proven by tests/modules/test-guardian-wake.js WK-040…044
+# and tests/probe/gemini-deepseek-reader-chromium.js (pages built to the documented shapes, not the live sites).
+
+# ## ADDENDUM 2026-09-29 (0.39.280) — the provider login wall (docs/2026-09-29-build-surface-phasemap.spec BS16)
+# James: "chatgpt had a login prompt, hoping we can automate if that happens." userscript-chat-stream.js 1.1.0:
+# loginState(doc) → ok | signed-out | modal (a dismissible sign-in nag: "Stay logged out", "Maybe later" …) | wall (no
+# composer and sign-in controls or a login form); watchLogin() (started by start()) closes a modal and reports every
+# change to POST /api/provider/login. guardian/lib/provider-login.js keeps the last state per provider; a wall is
+# emitted (guardian.provider.login_required) and broadcast, and the dispatcher's queue reason for that provider's jobs
+# names the sign-in. GET /api/provider/login. NEXUS never types a password. Proven by tests/probe/login-wall-chromium.js.

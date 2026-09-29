@@ -43,6 +43,78 @@ const nodeExport = require('../../lib/node-export');
 
 const MODULE_ID = 'cortex.self-heal.failure-mode-forensics';
 
+const COMPOUND_TIMEOUT_MS = 2500;
+
+/**
+ * fetchCompoundViaOrchestrator(anchor) — default compound fetcher (C1, D2=a).
+ * The per-system ledgers and their CausalGraphs live in the ORCHESTRATOR
+ * process; cortex reaches them through GET /cfr/compound/:uuid?system=<s>.
+ * Resolves to the route's JSON body, or { ok:false, error } — never throws
+ * and never hangs past COMPOUND_TIMEOUT_MS (I8: the hook must not delay or
+ * risk the failure_modes row).
+ */
+function fetchCompoundViaOrchestrator(anchor, timeoutMs = COMPOUND_TIMEOUT_MS, baseUrl) {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = (v) => { if (!done) { done = true; resolve(v); } };
+    try {
+      const http = require('http');
+      const base = new URL(baseUrl || require('../config').OR_URL);
+      const q = `/cfr/compound/${encodeURIComponent(anchor.entryUuid)}?system=${encodeURIComponent(anchor.ledgerSystem)}`;
+      const req = http.request({ hostname: base.hostname, port: base.port, path: q, method: 'GET', timeout: timeoutMs }, (res) => {
+        let buf = '';
+        res.setEncoding('utf8');
+        res.on('data', (d) => { buf += d; });
+        res.on('end', () => {
+          try { finish(JSON.parse(buf)); }
+          catch (e) { finish({ ok: false, error: `unparseable response (HTTP ${res.statusCode}): ${e.message}` }); }
+        });
+      });
+      req.on('timeout', () => { req.destroy(); finish({ ok: false, error: `orchestrator did not answer within ${timeoutMs}ms` }); });
+      req.on('error', (e) => finish({ ok: false, error: `orchestrator unreachable: ${e.message}` }));
+      req.end();
+    } catch (e) { finish({ ok: false, error: e.message }); }
+  });
+}
+
+/**
+ * computeCompound(anchor, fetcher) — the chain-scoped reading (I8/I9/I10).
+ * Returns the `compound` object stored on the failure_modes row:
+ *   status 'analyzed'    → class ripple|wave|tidal (+ factors/progressions for
+ *                          wave/tidal; a ripple has NO CausalRecord by design,
+ *                          so those are null and the ripple is carried by class)
+ *   status 'unavailable' → reason; class/factors stay null. NEVER a ripple.
+ */
+async function computeCompound(anchor, fetcher = fetchCompoundViaOrchestrator) {
+  const unavailable = (reason) => ({
+    status: 'unavailable', reason, class: null, factors: null,
+    sigmaProgression: null, deltaProgression: null, peakSigma: null,
+    rootUuid: null, anchor: anchor || null,
+  });
+  if (!anchor || !anchor.ledgerSystem || !anchor.entryUuid) {
+    return unavailable('no anchor: gap carries no (ledgerSystem, entryUuid) pair');
+  }
+  let r;
+  try { r = await fetcher(anchor); }
+  catch (e) { return unavailable(`compound lookup failed: ${e.message}`); }
+  if (!r || r.ok !== true) return unavailable((r && r.error) || 'compound lookup returned no result');
+  if (!r.class) return unavailable('compound engine returned no class');
+  const rec = r.record || null;
+  return {
+    status: 'analyzed',
+    reason: null,
+    class: r.class,
+    factors: rec ? (rec.compoundingFactors || []) : null,
+    sigmaProgression: rec ? (rec.sigmaProgression || null) : null,
+    deltaProgression: rec ? (rec.deltaProgression || null) : null,
+    peakSigma: rec && typeof rec.peakSigma === 'number' ? rec.peakSigma : null,
+    // analyzeChain walks to the TRUE ROOT and analyzes from there — the
+    // record describes that root's chain, which may not be the anchor entry.
+    rootUuid: rec ? ((rec.rootCause && rec.rootCause.uuid) || rec.rootUuid || null) : null,
+    anchor,
+  };
+}
+
 /**
  * computeSigmaDelta(enteredAt, windowMs) — real avg sigma in the window
  * immediately before entry vs the window before that, from the real,
@@ -80,7 +152,7 @@ function computeSigmaDelta(enteredAt, windowMs = 10 * 60 * 1000) {
  * real conditions to compose — an empty macro would misrepresent "we
  * found nothing" as "here is the reproduction," which §1.2 forbids.
  */
-function generateDebugMacro(gapType, gapUuid, ctx, failureModeUuid) {
+function generateDebugMacro(gapType, gapUuid, ctx, failureModeUuid, compound) {
   const conditions = Array.isArray(ctx.conditions) ? ctx.conditions : [];
   if (!conditions.length && !ctx.root) return null;
 
@@ -104,6 +176,8 @@ function generateDebugMacro(gapType, gapUuid, ctx, failureModeUuid) {
     runCount: 0,
     executable: false,
   };
+  // §C1 — class annotated ONLY when analyzed; unavailable adds nothing (I8).
+  if (compound && compound.status === 'analyzed') payload.compoundClass = compound.class;
   try {
     const filePath = nodeExport.exportToFile('debug_macro', id, payload, {
       context: `real precursor causal chain traced by lib/diagnostic-causal.js's explainFinding() for gapUuid=${gapUuid} — see schema.debug_macro's own status:OPEN for why this isn't auto-playable yet`,
@@ -127,9 +201,12 @@ function generateDebugMacro(gapType, gapUuid, ctx, failureModeUuid) {
  * synchronous failure_modes insert has already happened and is never
  * delayed or risked by anything in here.
  */
-async function enrichFailureMode(gapType, gapUuid, entryUuid, gatherContext) {
+async function enrichFailureMode(gapType, gapUuid, entryUuid, gatherContext, compoundFetcher) {
   const ctx = await gatherContext(gapType, gapUuid);
   const sigma = computeSigmaDelta(Date.now());
+  // §C1 — chain-scoped reading, stored under its OWN key (I10), never
+  // merged into the system-wide sigma keys below. computeCompound never throws.
+  const compound = await computeCompound(ctx.anchor, compoundFetcher);
 
   const update = {
     root: ctx.root || null,
@@ -138,11 +215,12 @@ async function enrichFailureMode(gapType, gapUuid, entryUuid, gatherContext) {
     sigmaBefore: sigma.sigmaBefore,
     sigmaAtEntry: sigma.sigmaAtEntry,
     sigmaDelta: sigma.sigmaDelta,
+    compound,
     enrichedAt: Date.now(),
   };
   if (ctx.gatherError) update.contextGatherError = ctx.gatherError;
 
-  const macro = generateDebugMacro(gapType, gapUuid, ctx, entryUuid);
+  const macro = generateDebugMacro(gapType, gapUuid, ctx, entryUuid, compound);
   if (macro) update.debugMacroUuid = macro.id;
 
   try { jaaDB.update('failure_modes', { uuid: entryUuid }, update); }
@@ -164,7 +242,7 @@ async function enrichFailureMode(gapType, gapUuid, entryUuid, gatherContext) {
     console.warn(`[${MODULE_ID}] failure_mode node export failed: ${e.message}`);
   }
 
-  return { ok: true, sigma, hasDebugMacro: !!macro };
+  return { ok: true, sigma, compound, hasDebugMacro: !!macro };
 }
 
-module.exports = { MODULE_ID, computeSigmaDelta, generateDebugMacro, enrichFailureMode };
+module.exports = { MODULE_ID, computeSigmaDelta, generateDebugMacro, enrichFailureMode, computeCompound, fetchCompoundViaOrchestrator };

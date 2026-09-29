@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.reword
+type: capability
+id: copilot.reword
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786985
+source: copilot/registry-components.js:copilot.reword
+occurrences: 1
+firstSeenAt: 1790684786985
+lastSeenAt: 1790684786985
+fingerprint: f6da3215c6a19fbc257807ee
+payload:
+  intent: []
+  grammar:
+    - copilot reword
+  tags:
+    - copilot
+  id: copilot.reword
+  namespace: copilot
+  name: reword
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/reword
+  description: Reword a text (lib/reword)
+  params: []
+  permissions:
+    - system
+  hooks: {}

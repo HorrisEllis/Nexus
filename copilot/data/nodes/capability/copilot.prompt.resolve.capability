@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.prompt.resolve
+type: capability
+id: copilot.prompt.resolve
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786997
+source: copilot/registry-components.js:copilot.prompt.resolve
+occurrences: 1
+firstSeenAt: 1790684786997
+lastSeenAt: 1790684786997
+fingerprint: 2752435b692fbdc1ac38113f
+payload:
+  intent: []
+  grammar:
+    - copilot prompt resolve
+  tags:
+    - copilot
+  id: copilot.prompt.resolve
+  namespace: copilot
+  name: prompt.resolve
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/prompt/resolve
+  description: Which backend a prompt with no backend would go to
+  params: []
+  permissions:
+    - system
+  hooks: {}

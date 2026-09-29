@@ -2,29 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-loom.health
 type: capability
 id: loom.health
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730147
-source: loom.registry-components:loom.health
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787451
+source: loom/registry-components.js:loom.health
+occurrences: 1
+firstSeenAt: 1789250730147
+lastSeenAt: 1790684787451
+fingerprint: dd1a179c912fabca93cd1d71
 payload:
-  id: loom.health
-  namespace: loom
-  name: health
-  version: 1.5.0
+  intent: []
   grammar:
     - health
     - health
+  tags:
+    - loom
+  id: loom.health
+  namespace: loom
+  name: health
+  version: 1.5.1
   route:
     method: GET
     path: /health
-  intent: []
   description: Loom health — hooks.total + components.total it owns
   params: []
-  tags:
-    - loom
   permissions:
     - system
-  hooks: {}

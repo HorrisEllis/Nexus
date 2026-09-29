@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.post.gaps.id.fix
+type: capability
+id: diagnostic.post.gaps.id.fix
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787104
+source: diagnostic/interaction-contract.json:diagnostic.post.gaps.id.fix
+occurrences: 1
+firstSeenAt: 1790684787104
+lastSeenAt: 1790684787104
+fingerprint: a8527700f91446ef92142730
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.post.gaps.id.fix
+  namespace: diagnostic
+  name: /gaps/:id/fix
+  version: 1.0.0
+  route:
+    method: POST
+    path: /gaps/:id/fix
+  description: Trigger a fix attempt for a gap

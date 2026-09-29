@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.profile.set
+type: capability
+id: copilot.opportunity.profile.set
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786881
+source: copilot/registry-components.js:copilot.opportunity.profile.set
+occurrences: 1
+firstSeenAt: 1790684786881
+lastSeenAt: 1790684786881
+fingerprint: 76005742aab0e94527b8954c
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity profile set
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.profile.set
+  namespace: copilot
+  name: opportunity.profile.set
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/profile
+  description: Update the job profile (merge)
+  params: []
+  permissions:
+    - user
+  hooks: {}

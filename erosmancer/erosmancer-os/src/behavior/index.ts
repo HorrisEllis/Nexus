@@ -79,6 +79,29 @@ function bezierPoint(
   };
 }
 
+/**
+ * curvedPath(from, to, steps, jitter) — 0.39.279: the same cubic-Bezier movement moveSteps() plans, exported for
+ * /api/input (a pointer driven by coordinates from Clear Glass's interaction field). Ends exactly on `to`.
+ */
+export function curvedPath(
+  from: { x: number; y: number } | null,
+  to: { x: number; y: number },
+  steps = 14,
+  jitter = 1.5
+): Array<{ x: number; y: number }> {
+  const a = from ?? { x: to.x - randBetween(80, 220), y: to.y - randBetween(40, 140) };
+  const cp1 = { x: a.x + (to.x - a.x) * 0.3 + randBetween(-60, 60), y: a.y + randBetween(-60, 60) };
+  const cp2 = { x: a.x + (to.x - a.x) * 0.7 + randBetween(-60, 60), y: to.y + randBetween(-60, 60) };
+  const out: Array<{ x: number; y: number }> = [];
+  for (let i = 1; i <= steps; i++) {
+    const p = bezierPoint(a, cp1, cp2, to, i / steps);
+    if (i < steps) { p.x += randBetween(-jitter, jitter); p.y += randBetween(-jitter, jitter); }
+    out.push({ x: Math.round(p.x), y: Math.round(p.y) });
+  }
+  out[out.length - 1] = { x: Math.round(to.x), y: Math.round(to.y) };
+  return out;
+}
+
 // ─── Profiles ────────────────────────────────────────────────
 
 export const BEHAVIOR_PROFILES: Record<BehaviorProfileName, BehaviorProfile> = {

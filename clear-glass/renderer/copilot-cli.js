@@ -41,10 +41,11 @@
     '  /cookies                        cookie count for this page',
     '  /build <description>  /diagnose [topic]',
     '  /history  /clear  /settings',
+    '  /new                            a fresh conversation (the current one is kept)',
     'anything else is a message to co-pilot',
   ];
   const ALIASES = { '?': 'help', h: 'help', st: 'status', b: 'backend', a: 'agent', be: 'backend', p: 'persona', hist: 'history', cls: 'clear', s: 'site', m: 'macro', diag: 'diagnose' };
-  const COMMANDS = ['help', 'status', 'backend', 'agent', 'hat', 'forge', 'persona', 'ctx', 'run', 'go', 'back', 'forward', 'reload', 'site', 'macro', 'cookies', 'build', 'diagnose', 'history', 'clear', 'settings'];
+  const COMMANDS = ['help', 'status', 'backend', 'agent', 'hat', 'forge', 'persona', 'ctx', 'run', 'go', 'back', 'forward', 'reload', 'site', 'macro', 'cookies', 'build', 'diagnose', 'history', 'clear', 'settings', 'new'];
 
   function create({ cg, agentId, wv, print, getCtx, setCtx, sendMessage, clearMessages, normalizeUrl, navigate }) {
     const state = { backend: 'copilot', agent: 'claude', hat: true, pending: [], history: [], pos: -1, historyMax: 200, hatName: 'clear_glass', autoRun: true, showRoute: true };
@@ -258,6 +259,13 @@
           }
           case 'history': print('cli', state.history.slice(-30).map((h, i, a) => `${String(state.history.length - a.length + i + 1).padStart(4)}  ${h}`).join('\n') || 'empty'); break;
           case 'clear': clearMessages(); break;
+          // §0.39.278 — the pane's conversation is kept (src/copilot/chat-store.js); /new starts another, the old one stays stored
+          case 'new': {
+            const r = cg.copilot.newConversation ? await cg.copilot.newConversation(agentId).catch(e => ({ ok: false, error: e.message })) : { ok: false, error: 'not available' };
+            if (r && r.ok !== false) { clearMessages(); print('cli', 'new conversation — the previous one is kept'); }
+            else print('cli', `could not start a new conversation: ${(r && r.error) || 'unknown'}`);
+            break;
+          }
           case 'settings': cg.window.openSettings(); break;
           default: print('cli', `unknown command /${head} — /help`);
         }

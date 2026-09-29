@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.bridge.deliver
+type: capability
+id: copilot.bridge.deliver
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786966
+source: copilot/registry-components.js:copilot.bridge.deliver
+occurrences: 1
+firstSeenAt: 1790684786966
+lastSeenAt: 1790684786966
+fingerprint: cfb342517868eadc1978a62d
+payload:
+  intent: []
+  grammar:
+    - copilot bridge deliver
+  tags:
+    - copilot
+  id: copilot.bridge.deliver
+  namespace: copilot
+  name: bridge.deliver
+  version: 2.0.0
+  route:
+    method: POST
+    path: /bridge/deliver
+  description: Delivery from the retired Bridge path — still called
+  params: []
+  permissions:
+    - system
+  hooks: {}

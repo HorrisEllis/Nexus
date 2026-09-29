@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.cfr.health
 type: capability
 id: intelligence.cfr.health
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756075
-source: intelligence.registry-components:intelligence.cfr.health
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787398
+source: intelligence/registry-components.js:intelligence.cfr.health
+occurrences: 1
+firstSeenAt: 1789250756075
+lastSeenAt: 1790684787398
+fingerprint: 45b2842e09e38816c97e5e9c
 payload:
+  intent: []
+  grammar:
+    - cfr health
+    - intelligence cfr
+  tags:
+    - intelligence
   id: intelligence.cfr.health
   namespace: intelligence
   name: cfr.health
   version: 1.0.0
-  grammar:
-    - cfr health
-    - intelligence cfr
   route:
     method: GET
     path: /cfr/health
-  intent: []
   description: CFR ledger health
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

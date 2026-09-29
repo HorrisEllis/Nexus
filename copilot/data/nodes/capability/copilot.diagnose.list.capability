@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-copilot.diagnose.list
 type: capability
 id: copilot.diagnose.list
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730177
-source: copilot.registry-components:copilot.diagnose.list
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786864
+source: copilot/registry-components.js:copilot.diagnose.list
+occurrences: 1
+firstSeenAt: 1789250730177
+lastSeenAt: 1790684786864
+fingerprint: c27e59d9d821847cfbb14198
 payload:
+  intent: []
+  grammar:
+    - copilot diagnose list
+  tags:
+    - copilot
   id: copilot.diagnose.list
   namespace: copilot
   name: diagnose.list
   version: 2.0.0
-  grammar:
-    - copilot diagnose list
   route:
     method: GET
     path: /api/diagnose/list
-  intent: []
   description: List past diagnosis sessions
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.person_model.correct
+type: capability
+id: copilot.person_model.correct
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684787005
+source: copilot/registry-components.js:copilot.person_model.correct
+occurrences: 1
+firstSeenAt: 1790684787005
+lastSeenAt: 1790684787005
+fingerprint: 0abbcbc94bacb3e278c63dba
+payload:
+  intent: []
+  grammar:
+    - copilot person_model correct
+  tags:
+    - copilot
+    - person-model
+  id: copilot.person_model.correct
+  namespace: copilot
+  name: person_model.correct
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/person-model/correct
+  description: Correct a person-model node
+  params: []
+  permissions:
+    - user
+  hooks: {}

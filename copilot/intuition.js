@@ -14,6 +14,16 @@
  */
 
 const http = require('http');
+
+// §0.39.267 — _getBP() was called 6× in this file but only defined in copilot/server.js, so every
+// blueprint-backed answer (systems, components, cli, seam, "what is X", self-awareness) threw
+// ReferenceError. Same lazy loader as server.js.
+let _blueprintIndex = null;
+function _getBP() {
+  if (_blueprintIndex) return _blueprintIndex;
+  try { _blueprintIndex = require('../lib/blueprint-index'); return _blueprintIndex; } catch (_) { return null; }
+}
+
 const CX_URL = process.env.CORTEX_URL || 'http://127.0.0.1:3748';
 const INTEL_URL = process.env.INTELLIGENCE_URL || 'http://127.0.0.1:3753'; // intelligence is sovereign (moved out of cortex 2026-09-19)
 const ORCH_URL  = process.env.ORCHESTRATOR_URL || 'http://127.0.0.1:9000'; // the CFR field/ledger authority
@@ -56,6 +66,18 @@ const SIGMA_RE = /^(sigma|cfr|field state|what'?s sigma)\b/i;
  */
 async function answer(prompt, session, stream = []) {
   const lower = prompt.toLowerCase().trim();
+
+  // ── Activity recall ─────────────────────────────────────────────────────────
+  // §0.39.267 — "what have you been up to?" / "what's ollama been doing?" — answered from what copilot
+  // records (ollama activity log, self-test, scheduler, triggers, chat_log, repo_agent_log), never generated.
+  // Before the greeting check so "hey, what have you been up to" lands here.
+  try {
+    const recall = require('./lib/activity-recall.js');
+    if (recall.matches(prompt)) {
+      const r = recall.answer(prompt, stream);
+      if (r) { delete r.recall; return r; }
+    }
+  } catch (_) { /* recall is best-effort; fall through to the normal paths */ }
 
   // ── Greeting ────────────────────────────────────────────────────────────────
   if (GREETING_RE.test(lower) || CONVERSATIONAL_RE.test(lower)) {
@@ -196,7 +218,9 @@ async function answer(prompt, session, stream = []) {
   // ── CLI route lookup (e.g. "/gaps" or "job.dispatch") ──────────────────
   const routeMatch = ROUTE_RE.exec(prompt.trim());
   if (routeMatch) {
-    const word = routeMatch[1].toLowerCase();
+    // §0.39.267 — ROUTE_RE has two alternatives: "/word" fills group 1, "what is|find|… word" fills group 3.
+    // Reading only [1] threw on every "what is X" prompt (caught by copilot/adversarial's hostile probe every run).
+    const word = (routeMatch[1] || routeMatch[3]).toLowerCase();
     const bi   = _getBP();
     // Try grammar index first (fastest)
     const gramHits = bi?.lookupGrammar(word) || [];

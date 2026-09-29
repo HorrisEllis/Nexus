@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.diag.nexus
 type: capability
 id: cg.diag.nexus
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730163
-source: clear-glass.registry-components:cg.diag.nexus
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786651
+source: clear-glass/registry-components.js:cg.diag.nexus
+occurrences: 1
+firstSeenAt: 1789250730163
+lastSeenAt: 1790684786651
+fingerprint: b2457d9272360cd6c9db1cb9
 payload:
-  id: cg.diag.nexus
-  namespace: cg
-  name: diag.nexus
-  version: 3.1.0
+  intent: []
   grammar:
     - diag nexus
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: NEXUS home UI audit
-  params: []
   tags:
     - cg
     - diagnostic
+  id: cg.diag.nexus
+  namespace: cg
+  name: diag.nexus
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: NEXUS home UI audit
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-DGN-002

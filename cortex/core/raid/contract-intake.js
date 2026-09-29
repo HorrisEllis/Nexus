@@ -444,6 +444,7 @@ function submitContract(contract, opts = {}) {
     file: contract.file || null,
     title: contract.title || null,
     forAgent: contract.forAgent || opts.forAgent || null,
+    hat: contract.hat || opts.hat || null,   // §0.39.267 — the hat being worn; acknowledge() checks ITS intents, whoever wears it
     contract,                              // the real, full contract object — the end-state lives inside it
     dependsOn: Array.isArray(opts.dependsOn) ? opts.dependsOn.slice() : [],
     onFail: opts.onFail || {
@@ -553,7 +554,7 @@ function acknowledge(queueId, { system } = {}) {
   if (row.forAgent && row.intention) {
     try {
       const { checkAgentIntentContract } = require('../../../lib/agent-intent-contract.js');
-      const check = checkAgentIntentContract(row.forAgent, row.intention);
+      const check = checkAgentIntentContract(row.forAgent, row.intention, { hat: row.hat || null });
       if (!check.ok) {
         jaaDB.update(TABLE, queueId, { status: STATUS.BLOCKED, updatedAt: Date.now(), blockReason: `intent contract refused: ${check.reason}` });
         _raidLedger.record('raid.contract.rejected', { queueId, forAgent: row.forAgent, intention: row.intention, reason: check.reason }, { source: 'raid', causedBy: queueId });

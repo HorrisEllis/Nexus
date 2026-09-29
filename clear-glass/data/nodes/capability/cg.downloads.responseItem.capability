@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-capability-cg.downloads.responseItem
+type: capability
+id: cg.downloads.responseItem
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786732
+source: clear-glass/registry-components.js:cg.downloads.responseItem
+occurrences: 1
+firstSeenAt: 1790684786732
+lastSeenAt: 1790684786732
+fingerprint: d8b937e5e84235b30d096ad6
+payload:
+  intent: []
+  grammar:
+    - downloads responseItem
+  tags:
+    - cg
+    - downloads
+    - responses
+    - agent
+  id: cg.downloads.responseItem
+  namespace: cg
+  name: downloads.responseItem
+  version: 3.17.0
+  route:
+    method: GET
+    path: /cli/downloads/responses/:id
+  description: >-
+    One downloads-index item in full: a chat transcript version, the reply text and code blocks, or
+    the downloaded file record
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

@@ -2,17 +2,35 @@ envelope: 1
 uuid: nexus-export-system-clear-glass
 type: system
 id: clear-glass
-context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  clear-glass/registry-components.js
+context: clear-glass — the system record, regenerated from clear-glass/registry-components.js
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730175
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - clear-glass
+  - system
+exported_at: 1790684786846
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730175
+lastSeenAt: 1790684786846
+fingerprint: 5cd4ad6c463d04171d1809b8
 payload:
   id: clear-glass
-  hasCapabilities: true
+  kernel: clear-glass
   port: 7702
+  entry: null
   spec: clear-glass/spec/clear-glass.spec
+  label: CLEAR-GLASS
+  purpose: >-
+    Sovereign NEXUS browser. SISO-native →E→E→. Electron + Chromium + Firefox fingerprint + TLS JA4
+    + ErosmancerOS wire.
+  hasCapabilities: true
+  capabilities: 104
+  commands: 86
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: clear-glass/registry-components.js
+    served: null
+    errors: []
