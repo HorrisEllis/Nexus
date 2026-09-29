@@ -908,10 +908,17 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
   // §0.39.278 — a reply is ESCAPED before it becomes markup. Before this, res.text went into innerHTML raw: a page the
   // co-pilot read could put <img onerror=…> into its reply. Now that replies are kept and replayed on open
   // (restoreConversation), that would be a stored injection — so every reply, live or replayed, goes through here.
+  // §0.39.280 BS17 — the pane names the command a block carries (the bridge runs it, or reports it as unreadable)
+  function _driverLabel(raw) {
+    const t = String(raw || '').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+    const a = (t.match(/["']?action["']?\s*:\s*["']?([\w.]+)/) || t.match(/["']?name["']?\s*:\s*["']?([\w.]+)/) || [])[1];
+    const u = (t.match(/["']?url["']?\s*:\s*["']?([^"',}\s]+)/) || [])[1];
+    return a ? `[driver: ${a}${u ? ' ' + u.slice(0, 60) : ''}]` : '[driver command]';
+  }
   function formatReply(text) {
     return String(text || '')
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/```driver[\s\S]*?```/g, () => `<span style="color:var(--accent);font-family:var(--mono);font-size:10px;">[driver command sent]</span>`)
+      .replace(/```(?:driver|tool)\s*([\s\S]*?)```/g, (_m, raw) => `<span style="color:var(--accent);font-family:var(--mono);font-size:10px;">${_driverLabel(raw)}</span>`)   // §0.39.280 BS17 — which command, not just "sent"
       .replace(/`([^`\n]+)`/g, '<code>$1</code>');
   }
 

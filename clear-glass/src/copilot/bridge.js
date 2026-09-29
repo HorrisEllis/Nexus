@@ -130,6 +130,21 @@ class CoPilotBridge {
       this._remember(agentId, 'user', message);
     }
 
+    // §0.39.280 BS17 — James: "i told it to visit google.com … nothing happened". Going to a site needs no model: the
+    // browser goes there and says what is on the page. Anything asked after it ("… and what do you see") is answered
+    // by the model WITH that page in hand.
+    const intent = this._driver ? require('./verbs.js').browseIntent(message) : null;
+    if (intent) {
+      const went = await this._browse(intent.url, agentId);
+      if (!intent.rest || !went.ok) {
+        if (remember) this._remember(agentId, 'assistant', went.text, { via: 'browser' });
+        this.sse.emit('copilot.response', { msgId, agentId, text: went.text, commands: [went.command], modelUsed: 'browser', ts: Date.now() });
+        return { text: went.text, commands: [went.command], results: [went.result], executed: true, msgId, route: { ...route, modelUsed: 'browser' } };
+      }
+      message = `${intent.rest}\n\n[you are on ${went.url} — "${went.title}". The page:\n${went.map}]`;
+      domContext = null;
+    }
+
     const result = await this._ask({ message, agentId, domContext, systemExtra, msgId, route });
 
     let text       = result.text || '';
@@ -151,6 +166,11 @@ class CoPilotBridge {
     for (let round = 0; autoRun; round++) {
       const roundResults = [];
       for (const cmd of commands) {
+        if (cmd && cmd.__unreadable) {   // §0.39.280 BS17 — said, never swallowed
+          roundResults.push({ tool: 'driver', ok: false, error: `${cmd.error}: ${cmd.__unreadable}` });
+          this.sse.emit('copilot.tool.error', { action: 'driver', error: cmd.error, agentId });
+          continue;
+        }
         const label = cmd.action || cmd.name || '?';
         try {
           const r = await this._executeCommand(cmd, agentId);
@@ -191,6 +211,21 @@ class CoPilotBridge {
       agentId, msgId, prompt: message.slice(0, 100), ts: Date.now() });
 
     return { text, commands: allCommands, results, executed: autoRun, msgId, route: { ...route, modelUsed: result.modelUsed || null } };
+  }
+
+  // §0.39.280 BS17 — navigate, then read what is there (title, url, the interaction field's targets as text)
+  async _browse(url, agentId) {
+    const command = { action: 'navigate', url };
+    let result;
+    try { result = await this._driver.exec({ ...command, agentId }); }
+    catch (e) { return { ok: false, command, result: { ok: false, error: e.message }, text: `Could not open ${url}: ${e.message}` }; }
+    if (result && (result.ok === false || result.error)) return { ok: false, command, result, text: `Could not open ${url}: ${result.error || 'the browser refused'}` };
+    let title = '', here = url, map = '';
+    try { const t = await this._driver.exec({ action: 'getTitle', agentId }); title = (t && (t.title || t.result)) || ''; } catch (_) {}
+    try { const u = await this._driver.exec({ action: 'getUrl', agentId }); here = (u && (u.url || u.result)) || url; } catch (_) {}
+    try { const f = await this._driver.exec({ action: 'field', agentId, overlay: false }); map = f && (f.text || (f.targets ? require('../page/field.js').describe(f, { limit: 25 }) : '')) || ''; } catch (_) {}
+    const text = `Opened ${title ? `"${title}" — ` : ''}${here}.${map ? `\nOn the page (numbered — say "click #3", "type into #2 …"):\n${map.split('\n').slice(0, 25).join('\n')}` : ''}`;
+    return { ok: true, command, result, title, url: here, map, text };
   }
 
   // 0.39.272 — one compact message per round: each result as JSON, capped so a page read cannot flood the chat.
@@ -666,19 +701,9 @@ ${toolsPrompt}${domSection}`;
 
   // ── Parse tool calls from response ────────────────────────────────────
   _parseCommands(text) {
-    const commands = [];
-    // Parse ```driver blocks
-    const driverRe = /```driver\s*\n([\s\S]*?)\n```/g;
-    let m;
-    while ((m = driverRe.exec(text)) !== null) {
-      try { commands.push(JSON.parse(m[1].trim())); } catch (_) {}
-    }
-    // Parse ```tool blocks (alias)
-    const toolRe = /```tool\s*\n([\s\S]*?)\n```/g;
-    while ((m = toolRe.exec(text)) !== null) {
-      try { commands.push(JSON.parse(m[1].trim())); } catch (_) {}
-    }
-    return commands;
+    // §0.39.280 BS17 — src/copilot/verbs.js: a loose block is repaired, an unreadable one comes back as { __unreadable }
+    // and is REPORTED by the round loop (was: catch (_) {} — the pane said "sent" and nothing ran)
+    return require('./verbs.js').parseCommands(text);
   }
 
   // §BUG FIXED 2026-07-11 — three debugging rounds (2026-06-30 x3) each

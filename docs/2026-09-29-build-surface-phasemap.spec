@@ -278,9 +278,9 @@ spec:
 
     BS17_copilot_browser_verbs:
       layer: automation
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-cg-copilot-verbs.test.js 6/6 (real CoPilotBridge, fake driver + copilot); clear-glass-agent-surface 16/16 unchanged
       depends_on: []
-      files: [clear-glass/src/copilot/bridge.js, clear-glass/renderer/browser.js]
+      files: [clear-glass/src/copilot/verbs.js, clear-glass/src/copilot/bridge.js, clear-glass/renderer/browser.js]
       does: >-
         "i told it to visit google.com and it ran the blue command but nothing happened". _parseCommands dropped a
         ```driver block that was not strict JSON (catch (_) {}), while the pane still said "[driver command sent]".
