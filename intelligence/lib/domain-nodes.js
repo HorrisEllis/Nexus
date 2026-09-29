@@ -78,8 +78,11 @@ const nodeSchemas = require('../../lib/node-schemas.js');
 const { JaaStore } = require('../../guardian/jaa-store.js');
 
 const MODULE_ID = 'intelligence-domain-nodes';
-const NODES_ROOT = path.join(__dirname, '..', 'data', 'nodes');
-const NODE_INDEX_DIR = path.join(__dirname, '..', 'data', 'node-index');
+// §0.39.282 — INTELLIGENCE_NODES_DIR (the test sandbox sets it; distinct from config.js's INTELLIGENCE_DATA_DIR): suites rewrote intelligence/data/nodes/bep_pattern and
+// the node index in the real tree.
+const DATA_DIR = process.env.INTELLIGENCE_NODES_DIR || path.join(__dirname, '..', 'data');
+const NODES_ROOT = path.join(DATA_DIR, 'nodes');
+const NODE_INDEX_DIR = path.join(DATA_DIR, 'node-index');
 
 // One lazily-created, per-system JaaStore — matches lib/node-index.js's
 // own documented pattern for a caller that wants its own sovereign

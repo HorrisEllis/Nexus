@@ -251,7 +251,7 @@ async function writeFailureGaps(failures, moduleName) {
 async function writeCortexUnreachableGap(moduleName) {
   // This only runs if every write attempt failed — Cortex is truly down.
   // Log locally so the next session can see what happened.
-  const logPath = path.join(process.cwd(), 'writeback-failures.jsonl');
+  const logPath = path.join(process.env.NEXUS_DATA_ROOT || process.cwd(), 'writeback-failures.jsonl');   // §0.39.282 sandbox-aware
   const entry   = JSON.stringify({
     ts:         Date.now(),
     moduleName,
