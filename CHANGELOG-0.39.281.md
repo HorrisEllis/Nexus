@@ -26,7 +26,7 @@ bounded, spaced, kept out of quiet hours, and visible.
 |---|---|---|
 | map | 0ffc097 | the phasemap, EC0–EC11, with what exists read first and the exclusion stated |
 | EC0–EC4 | ca68401 | lib/economy: policy, usage ledger, gate, token constraints, learning router |
-| EC5 | 700f7df | staging by economy + the policy store |
+| EC5 | 700f7df | staging by economy + the policy store (it also swept in four guardian/data response nodes a test run wrote; untracked in a later commit) |
 | EC6 | 46a2ce8 | guardian enforces the economy at dispatch and records every outcome |
 | — | be94276 | revert: test-run state that EC6's commit swept in (data/**, two versionium snapshots) — nothing of it was code |
 | EC7 | ddfdf76 | the learning router orders builds nobody chose a provider for |
