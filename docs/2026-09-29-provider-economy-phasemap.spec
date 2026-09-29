@@ -49,7 +49,7 @@ spec:
   phases:
     EC0_policy_model:
       layer: foundation
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC0-*"
       depends_on: []
       files:
         - "lib/economy/policy.js"
@@ -63,7 +63,7 @@ spec:
 
     EC1_usage_ledger:
       layer: foundation
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC1-*"
       depends_on: []
       files:
         - "lib/economy/ledger.js"
@@ -75,7 +75,7 @@ spec:
 
     EC2_gate:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC2-*"
       depends_on: [EC0, EC1]
       files:
         - "lib/economy/gate.js"
@@ -87,7 +87,7 @@ spec:
 
     EC3_token_constraints:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC3-*"
       depends_on: [EC1]
       files:
         - "lib/economy/tokens.js"
@@ -101,7 +101,7 @@ spec:
 
     EC4_learning_router:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC4-*"
       depends_on: [EC0, EC1, EC3]
       files:
         - "lib/economy/router.js"
