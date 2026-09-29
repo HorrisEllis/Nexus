@@ -402,7 +402,7 @@ function createDispatcher(deps) {
       if (!pendingQueue.has(job.provider)) pendingQueue.set(job.provider, []);
       pendingQueue.get(job.provider).push(job);
       updateJob(job.id, { status: 'queued', queuedAt: Date.now(),
-        queueReason: `waiting for ${job.provider} NCP channel` });
+        queueReason: (() => { try { return require('./provider-login.js').blockedReason(job.provider); } catch (_) { return null; } })() || `waiting for ${job.provider} NCP channel` });   // §0.39.280 BS16
       console.log(`[guardian] queued ${job.id} — waiting for ${job.provider} userscript`);
       bus.emit('guardian.job.queued', { jobId: job.id, provider: job.provider });
       const provUrls = {

@@ -139,7 +139,7 @@ components:
     id: guardian-chat-stream
     name: "Live chat stream"
     file: userscript-chat-stream.js
-    version: "1.0.0"   # 0.39.278 — every chat streamed live (DOM mutations → Clear Glass download manager chat ledger)
+    version: "1.1.0"   # 0.39.278 — every chat streamed live (DOM mutations → Clear Glass download manager chat ledger); 1.1.0 (0.39.280) — login wall: nag dismissed, wall reported
     matches: []                # not independently injectable — see standalone
     grants: []
     standalone: false

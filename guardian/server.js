@@ -478,6 +478,7 @@ function _legacySend(ws, obj) {  // legacy WebSocket send — not used by NCP pa
   try { if (ws?.readyState === 1) ws.send(JSON.stringify(obj)); } catch(_) {}
 }
 
+const _providerLogin = { set: (k, v) => require('./lib/provider-login.js').set(v) };   // §0.39.280 BS16 — guardian/lib/provider-login.js
 function broadcast(obj) {
   ncp.broadcast(obj);
 }
@@ -2955,6 +2956,26 @@ function handleExtendedRoutes(req, res, url, method) {
   // promotion into the tree is a separate, gated step. Guardian STAGES and
   // never applies — arrival is not acceptance (§IP-5). All the real work is
   // lib/intake.js; these routes are the surface, not a second copy (§10.3).
+  // §0.39.280 BS16 — a provider tab's login state, reported by the chat-stream prelude (guardian/userscript-chat-stream.js
+  // watchLogin). 'wall' = that provider cannot answer until the person signs in: said on the bus and to every NCP client,
+  // and kept so a job waiting for that provider can say why. A dismissed nag ('modal') is recorded, not alarmed.
+  if (method === 'POST' && url.pathname === '/api/provider/login') {
+    bodyJ(req).then(body => {
+      const provider = String((body && body.provider) || '').toLowerCase();
+      const state = String((body && body.state) || '');
+      if (!provider || !['ok', 'modal', 'wall', 'signed-out', 'unknown'].includes(state)) return json(res, 400, { ok: false, error: 'provider and state (ok | modal | wall | signed-out | unknown) are required' });
+      const rec = { provider, state, dismissed: !!body.dismissed, text: body.text ? String(body.text).slice(0, 200) : null, url: body.url || null, at: Date.now() };
+      _providerLogin.set(provider, rec);
+      if (state === 'wall') { bus.emit('guardian.provider.login_required', rec); broadcast({ type: 'provider.login_required', ...rec }); console.warn(`[guardian] ${provider} needs a sign-in in its Clear Glass tab — its jobs wait (${rec.text || rec.url || ''})`); }
+      else bus.emit('guardian.provider.login_state', rec);
+      return json(res, 200, { ok: true, ...rec });
+    }).catch(e => json(res, 400, { ok: false, error: e.message }));
+    return;
+  }
+  if (method === 'GET' && url.pathname === '/api/provider/login') {
+    return json(res, 200, { ok: true, providers: require('./lib/provider-login.js').all() });
+  }
+
   if (method === 'POST' && url.pathname === '/api/intake') {
     bodyJ(req).then(body => {
       const intake = require('../lib/intake.js');

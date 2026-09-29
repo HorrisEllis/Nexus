@@ -28,7 +28,7 @@
 
 (function (root) {
   'use strict';
-  const VERSION = '1.0.0';
+  const VERSION = '1.1.0';   // 1.1.0 (0.39.280): loginState / watchLogin
   const COALESCE_MS = 150;
   const RETRY_MS = [1000, 2000, 5000, 10000, 30000];
 
@@ -195,6 +195,7 @@
     // leaving the page: send what is pending now
     root.addEventListener && root.addEventListener('pagehide', () => { core.flush(); });
     document.addEventListener && document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') core.flush(); });
+    if (opts.login !== false) { try { watchLogin({ provider: opts.provider }); } catch (_) {} }   // §0.39.280 BS16
     _live = core;
     return core;
   }
@@ -219,7 +220,55 @@
     return { text: reply, thinking };
   }
 
-  const api = { VERSION, create, start, expandThinking, thinkingOf, splitThinking, withThinking, THINK_RE };
+  // ── §0.39.280 BS16 — the login wall ─────────────────────────────────────────────────────────────────────────────
+  // James: "chatgpt had a login prompt, hoping we can automate if that happens." Two different things:
+  //   modal  a dismissible "sign in?" nag over a page that still works (ChatGPT's "Stay logged out", "Maybe later") —
+  //          closed automatically, and reported
+  //   wall   the provider will not answer until someone signs in (a login page; sign-in buttons and no composer) —
+  //          reported to guardian (POST /api/provider/login), which holds that provider's jobs and says why instead of
+  //          timing out as an "empty response". NEXUS never types a password: signing in stays the person's (Clear
+  //          Glass's own password manager can fill it for them).
+  const DISMISS_RE = /^(stay logged out|continue without (signing|logging) in|maybe later|not now|no thanks|dismiss|close)$/i;
+  const SIGNIN_RE = /^(log ?in|sign ?in|sign ?up|continue with (google|apple|microsoft|email)|get started)$/i;
+  const COMPOSER_SEL = 'textarea, [contenteditable="true"], #prompt-textarea, .ProseMirror, rich-textarea';
+  function _label(el) { return String((el && (el.getAttribute && (el.getAttribute('aria-label') || '')) || '') || (el && el.textContent) || '').replace(/\s+/g, ' ').trim(); }
+  function _visible(el) { if (!el || !el.getBoundingClientRect) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }
+  function loginState(doc) {
+    doc = doc || (typeof document !== 'undefined' ? document : null);
+    if (!doc || !doc.querySelectorAll) return { state: 'unknown' };
+    const dialogs = [...doc.querySelectorAll('[role="dialog"], [role="alertdialog"], dialog[open], [data-testid*="modal" i]')].filter(_visible);
+    for (const d of dialogs) {
+      const text = _label(d);
+      if (!/log ?in|sign ?in|sign ?up|account/i.test(text)) continue;
+      const dismiss = [...d.querySelectorAll('button, a, [role="button"]')].find(b => DISMISS_RE.test(_label(b)));
+      if (dismiss) return { state: 'modal', dismiss, text: text.slice(0, 160) };
+    }
+    const composer = [...doc.querySelectorAll(COMPOSER_SEL)].some(_visible);
+    const signin = [...doc.querySelectorAll('button, a, [role="button"]')].filter(b => _visible(b) && SIGNIN_RE.test(_label(b)));
+    const passwordField = [...doc.querySelectorAll('input[type="password"], input[type="email"][autocomplete*="username"]')].some(_visible);
+    if (!composer && (signin.length || passwordField)) return { state: 'wall', text: signin.map(_label).slice(0, 4).join(' · ') || 'a sign-in form' };
+    return { state: signin.length ? 'signed-out' : 'ok' };   // signed-out: the page works without an account (ChatGPT does)
+  }
+  let _loginLast = null;
+  function watchLogin({ provider, report = null, dismiss = true, doc = null } = {}) {
+    doc = doc || (typeof document !== 'undefined' ? document : null);
+    if (!doc || typeof MutationObserver === 'undefined') return null;
+    const post = report || _poster((root.__NEXUS_GUARDIAN_URL || 'http://127.0.0.1:7820') + '/api/provider/login');
+    let pending = null;
+    const check = () => {
+      pending = null;
+      const st = loginState(doc);
+      if (st.state === 'modal' && dismiss) { try { st.dismiss.click(); } catch (_) {} }
+      const key = `${st.state}`;
+      if (key === _loginLast) return st;
+      _loginLast = key;
+      post({ provider, state: st.state, dismissed: st.state === 'modal' && dismiss, text: st.text || null, url: (root.location && root.location.href) || null, at: Date.now() });
+      return st;
+    };
+    new MutationObserver(() => { if (!pending) pending = setTimeout(check, 400); }).observe(doc.body || doc, { childList: true, subtree: true });
+    return check();
+  }
+  const api = { VERSION, create, start, expandThinking, thinkingOf, splitThinking, withThinking, THINK_RE, loginState, watchLogin };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (root) root.NexusChatStream = api;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

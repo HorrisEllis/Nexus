@@ -265,9 +265,9 @@ spec:
 
     BS16_provider_login_wall:
       layer: automation
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/login-wall-chromium.js 7/7; chat-stream-chromium 7/7, test-guardian-wake 21/21, test-chat-ledger-stream 16/16 unchanged
       depends_on: []
-      files: [guardian/userscript-chat-stream.js, guardian/server.js, guardian/lib/dispatcher.js]
+      files: [guardian/userscript-chat-stream.js (1.1.0), guardian/lib/provider-login.js, guardian/server.js, guardian/lib/dispatcher.js, guardian/userscripts.yaml]
       does: >-
         "chatgpt had a login prompt, hoping we can automate if that happens." The shared chat-stream prelude detects a
         provider's logged-out state (login/sign-up buttons, auth modal, no composer) and its dismissible "stay logged
