@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.context.session
+type: capability
+id: copilot.context.session
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790698456523
+source: copilot/registry-components.js:copilot.context.session
+occurrences: 1
+firstSeenAt: 1790698456523
+lastSeenAt: 1790698456523
+fingerprint: cb6761c50dc210592a6a2873
+payload:
+  intent: []
+  grammar:
+    - copilot context session
+  tags:
+    - copilot
+  id: copilot.context.session
+  namespace: copilot
+  name: context.session
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/context/:id
+  description: The context snapshot copilot would send for a session
+  params: []
+  permissions:
+    - system
+  hooks: {}

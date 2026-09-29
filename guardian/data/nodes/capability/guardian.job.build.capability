@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787210
+exported_at: 1790698456581
 source: guardian/registry-components.js:guardian.job.build
 occurrences: 1
 firstSeenAt: 1789250730139
-lastSeenAt: 1790684787210
-fingerprint: fbfa75c74dfa1e39451b1247
+lastSeenAt: 1790698456581
+fingerprint: 2d02b66071166622e82640ba
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: guardian.job.build
   namespace: guardian
   name: job.build
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /build

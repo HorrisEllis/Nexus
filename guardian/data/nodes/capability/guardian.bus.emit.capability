@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787207
+exported_at: 1790698456571
 source: guardian/registry-components.js:guardian.bus.emit
 occurrences: 1
 firstSeenAt: 1789250730132
-lastSeenAt: 1790684787207
-fingerprint: e94373073fee71d1fb50cd36
+lastSeenAt: 1790698456571
+fingerprint: 3c1a2ad56c173e7f2b400780
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.bus.emit
   namespace: guardian
   name: bus.emit
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /bus/emit

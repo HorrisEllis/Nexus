@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787212
+exported_at: 1790698456587
 source: guardian/registry-components.js:guardian.seam.session.create
 occurrences: 1
 firstSeenAt: 1789250730141
-lastSeenAt: 1790684787212
-fingerprint: 1cfeb2888c08e40e60432e32
+lastSeenAt: 1790698456587
+fingerprint: 058adb8867ab7832fdafc29f
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.seam.session.create
   namespace: guardian
   name: seam.session.create
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /seam/sessions

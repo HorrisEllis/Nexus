@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787209
+exported_at: 1790698456576
 source: guardian/registry-components.js:guardian.chats.item
 occurrences: 1
 firstSeenAt: 1790684787209
-lastSeenAt: 1790684787209
-fingerprint: e1319e146bd0920ab6242bb8
+lastSeenAt: 1790698456576
+fingerprint: fa2f21117e11b27b5865eec1
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: guardian.chats.item
   namespace: guardian
   name: chats.item
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /api/chats/item/:id

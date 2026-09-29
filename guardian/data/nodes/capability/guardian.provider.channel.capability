@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787208
+exported_at: 1790698456573
 source: guardian/registry-components.js:guardian.provider.channel
 occurrences: 1
 firstSeenAt: 1789250730133
-lastSeenAt: 1790684787208
-fingerprint: 01138d5838962401a5810a1f
+lastSeenAt: 1790698456573
+fingerprint: d60f4a1ff60222c46744cdf1
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: guardian.provider.channel
   namespace: guardian
   name: provider.channel
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /channel

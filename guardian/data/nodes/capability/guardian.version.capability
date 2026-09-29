@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787205
+exported_at: 1790698456569
 source: guardian/registry-components.js:guardian.version
 occurrences: 1
 firstSeenAt: 1789250730128
-lastSeenAt: 1790684787205
-fingerprint: 78c79cdbf86d4262ba78f161
+lastSeenAt: 1790698456569
+fingerprint: bb4b471d6f125a3babb37167
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.version
   namespace: guardian
   name: version
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /version

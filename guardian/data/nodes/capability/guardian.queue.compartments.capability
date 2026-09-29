@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787214
+exported_at: 1790698456590
 source: guardian/registry-components.js:guardian.queue.compartments
 occurrences: 1
 firstSeenAt: 1789250730142
-lastSeenAt: 1790684787214
-fingerprint: 55428656a48f7d8b5129881d
+lastSeenAt: 1790698456590
+fingerprint: bf67f58a441cf249783cfcbb
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.queue.compartments
   namespace: guardian
   name: queue.compartments
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /queue/compartments

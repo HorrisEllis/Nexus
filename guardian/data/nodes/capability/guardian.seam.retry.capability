@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787213
+exported_at: 1790698456587
 source: guardian/registry-components.js:guardian.seam.retry
 occurrences: 1
 firstSeenAt: 1789250730141
-lastSeenAt: 1790684787213
-fingerprint: 524516a034163eb01ccf5c5b
+lastSeenAt: 1790698456587
+fingerprint: b3410795d38a348c1ba4ab75
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.seam.retry
   namespace: guardian
   name: seam.retry
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /seam/retry

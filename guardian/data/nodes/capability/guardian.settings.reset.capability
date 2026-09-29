@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787218
+exported_at: 1790698456594
 source: guardian/registry-components.js:guardian.settings.reset
 occurrences: 1
 firstSeenAt: 1789250730146
-lastSeenAt: 1790684787218
-fingerprint: 22917de286b5ef6d3bd2f90b
+lastSeenAt: 1790698456594
+fingerprint: 489b8ab8df88c497fafcd4ce
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.settings.reset
   namespace: guardian
   name: settings.reset
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /settings/reset

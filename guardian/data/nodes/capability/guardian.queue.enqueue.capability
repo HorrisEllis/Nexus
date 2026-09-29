@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787214
+exported_at: 1790698456589
 source: guardian/registry-components.js:guardian.queue.enqueue
 occurrences: 1
 firstSeenAt: 1789250730141
-lastSeenAt: 1790684787214
-fingerprint: 7133160031089174cf096f4c
+lastSeenAt: 1790698456589
+fingerprint: 140478e068bdd97319035eef
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.queue.enqueue
   namespace: guardian
   name: queue.enqueue
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /queue/enqueue

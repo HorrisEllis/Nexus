@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787210
+exported_at: 1790698456581
 source: guardian/registry-components.js:guardian.job.status
 occurrences: 1
 firstSeenAt: 1789250730139
-lastSeenAt: 1790684787210
-fingerprint: 3dad13d16602fd5c4366a943
+lastSeenAt: 1790698456581
+fingerprint: 5e359e832d359e5200284e38
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.job.status
   namespace: guardian
   name: job.status
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /status/:jobId

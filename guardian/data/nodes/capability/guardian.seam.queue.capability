@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787211
+exported_at: 1790698456585
 source: guardian/registry-components.js:guardian.seam.queue
 occurrences: 1
 firstSeenAt: 1789250730140
-lastSeenAt: 1790684787211
-fingerprint: 6feb221357f8b9ebe52f9898
+lastSeenAt: 1790698456585
+fingerprint: 81594d96249141f8a5b9e253
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.seam.queue
   namespace: guardian
   name: seam.queue
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /seam/queues/:id
