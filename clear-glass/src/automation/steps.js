@@ -75,6 +75,11 @@ const CATALOGUE = [
       { key: 'key', label: 'Key', type: 'text', placeholder: 'Enter, Tab, Escape, ArrowDown …', default: 'Enter', when: { action: ['press', 'storage_get', 'storage_set'] }, help: 'For localStorage: the storage key' },
       { key: 'deltaY', label: 'Scroll by (pixels)', type: 'number', default: 600, when: { action: ['scroll'] } },
       { key: 'code', label: 'JavaScript', type: 'code', placeholder: 'return document.querySelectorAll(".job").length', required: true, when: { action: ['eval'] }, help: 'Runs in the page; `return` a value to keep it' },
+      // §0.39.281 EC9 — James: "the jobs types using ErosmancerOS". Additive: the same click / hover / type, sent as real input through
+      // ErosmancerOS (the driver's pointer, via 'eros' → POST /api/input) for pages that ignore in-page events. Default unchanged.
+      { key: 'input', label: 'Input', type: 'select', default: 'page', when: { action: ['click', 'hover', 'type'] }, options: [
+        { value: 'page', label: 'in the page (events in the page)' }, { value: 'erosmancer', label: 'ErosmancerOS (real mouse and keyboard input)' }],
+        help: 'ErosmancerOS input needs it running and connected (Settings → ErosmancerOS). The step says which path ran.' },
       { key: 'waitAfterMs', label: 'Then wait', type: 'duration', default: 0 },
     ] },
   { type: 'extract', group: 'Browser', icon: '⛏', label: 'Read from the page',

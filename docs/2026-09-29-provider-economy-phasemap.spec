@@ -169,7 +169,7 @@ spec:
 
     EC9_input_path_in_editors:
       layer: ui
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — reused, not rebuilt: the step goes to the driver's pointer action with via 'eros' (driver/index.js → main's erosInput → ErosmancerOS /api/input), the path Clear Glass already had; proof: tests/modules/test-economy.test.js EC9-01; automation-v2 18/18 and automation-settings-ui 8/8 unchanged"
       depends_on: []
       files:
         - "clear-glass/src/automation/steps.js"

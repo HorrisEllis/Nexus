@@ -743,6 +743,12 @@ class AutomationEngine {
     if (!this._browser) throw new Error('browser steps need Clear Glass running (no browser here)');
     return this._browser({ page, workflowId: wf.id, workflowName: wf.name, action, args, settings: wf.settings || {} });
   }
+  // §0.39.281 EC9 — real input through ErosmancerOS; the result says which path ran (never silently the other one)
+  async _erosInput(wf, page, args) {
+    const r = await this._drive(wf, page, 'pointer', { ...args, via: 'eros' });
+    if (r && (r.ok === false || r.error)) throw new Error(`ErosmancerOS input failed: ${r.error || 'refused'} — the step was not sent in the page instead`);
+    return { ...(r && typeof r === 'object' ? r : { result: r }), inputPath: 'erosmancer' };
+  }
   async _evalIn(wf, page, script) {
     const r = await this._drive(wf, page, 'eval', { code: script });
     const v = r && typeof r === 'object' && 'result' in r ? r.result : r;
@@ -780,8 +786,9 @@ class AutomationEngine {
         out = await this._drive(wf, page, 'navigate', { url });
         break;
       }
-      case 'click': { const p = await center(); out = await this._drive(wf, page, 'click', p); break; }
-      case 'hover': { const p = await center(); out = await this._drive(wf, page, 'hover', p); break; }
+      // §0.39.281 EC9 — input 'erosmancer': the same point, as real input through the driver's pointer (via 'eros')
+      case 'click': { const p = await center(); out = cfg.input === 'erosmancer' ? await this._erosInput(wf, page, { ...p, do: 'click' }) : await this._drive(wf, page, 'click', p); break; }
+      case 'hover': { const p = await center(); out = cfg.input === 'erosmancer' ? await this._erosInput(wf, page, { ...p, do: 'move' }) : await this._drive(wf, page, 'hover', p); break; }
       case 'dom_click': out = await act('click'); break;
       case 'fill': out = await act('fill', cfg.value == null ? '' : cfg.value); break;
       case 'select': out = await act('select', cfg.value); break;
@@ -789,6 +796,12 @@ class AutomationEngine {
       case 'upload_text': out = await act('upload_text', { name: cfg.fileName || 'file.txt', content: cfg.value == null ? '' : String(cfg.value) }); break;
       case 'highlight': out = await this._evalIn(wf, page, DOM.highlight({ selector: sel })); break;
       case 'type': {
+        if (cfg.input === 'erosmancer') {
+          if (!sel) throw new Error('typing through ErosmancerOS needs the element to type into');
+          const p = await center();
+          out = await this._erosInput(wf, page, { ...p, do: 'type', text: String(cfg.value == null ? '' : cfg.value) });
+          break;
+        }
         if (sel) await act('focus');
         out = await this._drive(wf, page, 'type', { text: String(cfg.value == null ? '' : cfg.value), delay: cfg.delay || 40 });
         break;

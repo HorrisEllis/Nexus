@@ -65,4 +65,37 @@ module.exports = async function ({ t, ROOT, assert }) {
     assert.match(rec.routedBy, /^economy router: build: \w+ drew .* \(\d+ build records\)$/);
     assert.deepStrictEqual(providersFor({ preferredProvider: 'chatgpt', seam_id: 'x' }, null), ['chatgpt'], 'a choice is never overridden (I1)');
   });
+
+  await t('EC9-01', 'browser steps with input "erosmancer": click/hover/type go to the driver as pointer via eros at the element centre; "page" is unchanged; a refusal fails the step, never sent in the page instead', async () => {
+    const { AutomationEngine } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
+    const calls = [];
+    let refuse = false;
+    const fn = async ({ action, args }) => {
+      calls.push({ action, args });
+      if (action === 'eval') return { result: { x: 10, y: 20, width: 40, height: 10 } };
+      if (action === 'pointer' && refuse) return { ok: false, error: 'eros not attached' };
+      return { ok: true };
+    };
+    const e = new AutomationEngine({}); e.setHooks({ browserFn: fn });
+    const last = () => calls.filter(c => c.action !== 'eval').pop();
+    let r = await e.runStep({ type: 'browser', config: { action: 'click', selector: '#go', input: 'erosmancer' } });
+    assert.strictEqual(r.ok, true, r.error);
+    assert.deepStrictEqual(last(), { action: 'pointer', args: { x: 30, y: 25, do: 'click', via: 'eros' } });
+    assert.strictEqual(r.output.inputPath, 'erosmancer', 'the result says which path ran');
+    r = await e.runStep({ type: 'browser', config: { action: 'hover', selector: '#go', input: 'erosmancer' } });
+    assert.strictEqual(last().args.do, 'move');
+    r = await e.runStep({ type: 'browser', config: { action: 'type', selector: '#q', value: 'hello', input: 'erosmancer' } });
+    assert.deepStrictEqual([last().action, last().args.do, last().args.text], ['pointer', 'type', 'hello']);
+    r = await e.runStep({ type: 'browser', config: { action: 'click', selector: '#go' } });
+    assert.deepStrictEqual([r.ok, last().action], [true, 'click'], 'page input is unchanged');
+    r = await e.runStep({ type: 'browser', config: { action: 'type', value: 'x', input: 'erosmancer' } });
+    assert.ok(!r.ok && /needs the element/.test(r.error));
+    refuse = true; const n = calls.length;
+    r = await e.runStep({ type: 'browser', config: { action: 'click', selector: '#go', input: 'erosmancer' } });
+    assert.ok(!r.ok && /ErosmancerOS input failed: eros not attached/.test(r.error));
+    assert.ok(!calls.slice(n).some(c => c.action === 'click'), 'no silent fall back to page input');
+    const STEPS = require(path.join(ROOT, 'clear-glass/src/automation/steps.js'));
+    const f = JSON.stringify(STEPS).includes('erosmancer');
+    assert.ok(f, 'the Input field is offered in the step editor');
+  });
 };
