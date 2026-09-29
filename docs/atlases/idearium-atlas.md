@@ -423,3 +423,23 @@ Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-wo
 ## Copyright
 
 Copyright © 2026 James Brooks (Erosmancer). Part of the rheon.world / NEXUS ecosystem.
+
+## The build surface: plan, build, manage, environment (v0.39.280)
+
+James: *"i want each spec to have the entire build split into phases, chunked, bottom up, and with the axioms … click on a spec in the spec tab and have it built. phases the same way. click a file in the files tab and have a button that says manage … the plan … showing progress, and expandable tasks, to show the event ledger and activity. maybe use the gates as progress"* and *"map first, everything still pending into phases, into nexus' phasemap, then begin bottom up, then one by one."* The map is `docs/2026-09-29-build-surface-phasemap.spec` (BS0–BS19); each phase names its proof.
+
+**Build a spec** (Spec tab). The open spec has a build bar. With no phasemap yet, **▶ Build this spec** asks the repo's agent to split the whole build into phases, chunked and bottom-up by layer (foundation, library, api, cli, automation, ui), each carrying the axioms from `docs/AXIOMS-v3.1.md` that bind it, written next to the spec as a phasemap file (`idearium/repo/spec-plan.js`). The map is read by loom's own parser and refused when a phase depends on a higher layer, has no layer or names no proof. Then **▶ Build next** builds the first ready phase, and each phase row has its own ▶. Every build takes a Versionium snapshot first. The Phases tab has ▶ on every card too.
+
+**The plan panel** (`idearium/ui/js/plan-panel.js`). A floating panel you can drag and resize: every step in build order, ✓ done, ◌ current, ○ next, with its gates as a progress bar (mapped, snapshot, sent, replied, landed, closed). Expanding a step shows its event ledger (each run's state, snapshot, agent, files and reply). Below it, plans and file jobs and the repo's activity. It is a projection of the phase runs (`idearium/repo/build-plan.js`) and updates live. The Home tab has a **Start building** card listing the specs with their progress.
+
+**Files** (`idearium/ui/js/file-manage.js`). Each file shows its state against the repo's last version (`idearium/repo/file-state.js`): M modified, N new, D deleted, P a proposal waiting, S staged. A file that exists only as a proposal is listed greyed. **manage ▾** hands the open file, or the selected lines, to the repo's agent with one of ten actions (expand, iterate, refactor, rebuild, debug, test, document, optimize, review, explain), a note, and related code from the Code tab's search. The agent fetches the rest itself.
+
+**Baseline deviation** (`idearium/repo/deviation.js`). How far the repo has moved from its baseline snapshot and since its last version, as two numbers, never one score. Recalculated on every repo snapshot and whenever a file write, delete, applied proposal or code-API write adds up to a major change (config repos.deviation_major_files, repos.deviation_major_fraction). Each record says why and when; the Spec tab shows the latest.
+
+**Environment** (Settings tab, `idearium/ui/js/repo-environment.js`, `cos/testenv/environment.js`). A check: are the files downloaded (missing or different ones named), is the codebase configured (a Node project's dependencies checked on disk; others said as unknown here), does the VM image have what the codebase needs. The install and test plan derived from the repo's own manifests. Every environment option (runtimes, package sets, services, network, RAM, CPUs, disk, accelerator, variables, ports, test command and timeout, desktop), saved on the repo. **Set up environment** runs the VM setup with the extras this codebase needs. The settings console's repo view is embedded below.
+
+**Routes** (`idearium/api/build-surface.js`): GET files/state; GET and POST deviation; GET and POST environment, POST environment/setup; GET and POST spec/plan, POST spec/build; GET plan; POST manage — each under /api/repos/:uuid/.
+
+**Deleting a code repo** now tells its original: the document spec forgets it (the old one is listed in codeRetired), so Code builds a new one, the shared hat link goes, and a branch's worktree is removed while its git branch stays. **Who builds**: a code spec whose repo is missing builds as its original, and a chosen provider is the only one tried (`lib/seam/adapters/warp-cascade.js`). **Pop-outs**: the desktop viewer and settings console carry a compartment title bar (`idearium/ui/js/window-chrome.js`) and one dark theme; the Sync & CI tab uses the same dark controls as every other tab.
+
+Tests: `tests/modules/test-build-surface.test.js`, `tests/modules/test-build-surface-2.test.js`, and the UI in a real page (`tests/probe/build-surface-ui-chromium.js`).

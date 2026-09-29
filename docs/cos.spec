@@ -388,3 +388,13 @@ spec:
 # websocket (5700+N), desktopPorts(). provision.js --with desktop (xfce + lightdm autologin). lib/cos-bridge.js is the
 # door (branchWorkspace, listBranches, desktop). Proven by tests/modules/test-cos-workspace.test.js (real git; QEMU
 # faked) — no VM was booted in the release environment.
+
+# ── ADDENDUM 2026-09-29 (0.39.280) — honest VM and git failures (build-surface phasemap BS0, BS14) ──
+# startDesktop watches its launch: a VM that exits within 15 s on a hardware accelerator (whpx / hvf / kvm) is retried
+# ONCE under tcg (cpu qemu64 + SSE4.2/POPCNT) and says so (desktopStatus().accelFallback with the first attempt's
+# stderr); a second exit is reported with QEMU's own words. stopDesktop marks the session stopping first (no retry).
+# Every git call in cos/workspace runs with core.autocrlf=false / core.safecrlf=false (no CRLF warnings), a 10-minute
+# timeout and 64 MB of output; gitWhy() reports git's error lines, never its warnings. lib/cos-bridge.js removeBranch.
+# cos/testenv/environment.js (BS4): check(repoDir) — downloaded / configured / VM, the install plan, and options() —
+# the environment option catalogue. Proven by tests/modules/test-cos-workspace.test.js WS-13, WS-14 and
+# tests/modules/test-build-surface.test.js BS4-*.

@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        idearium
-    version:     4.7.0   # §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
+    version:     4.11.0   # §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
                          # (DOM mutations, the reply's node anchor, stages, streaming text) via
                          # guardian-stream onFeed → os.broadcast (SSE only); late-reply lookup
                          # takes the guardian jobId. Previous — 4.3.0 §0.39.241 (MINOR, two new routes) — GET/POST /api/repos/:uuid/agent/late:
@@ -357,3 +357,16 @@ spec:
 #    loom.find (loom.read/write stay allowed, no longer listed); the persona and the card block name them.
 # 6. RepoLayer.readTextFile/deleteTextFile: an imported file is read and deleted as its real bytes, not its chunk (a
 #    chunk of a file over max_chunk_bytes is a truncated reading — proposing an edit against it wrote the truncation).
+
+# ── ADDENDUM 2026-09-29 (0.39.280) — the build surface (docs/2026-09-29-build-surface-phasemap.spec) ──
+# repo/file-state.js (BS2), repo/deviation.js (BS3: from the baseline and since the last version, recalculated on every
+# repo snapshot and on a major file change — config repos.deviation_major_files / _fraction), repo/spec-plan.js (BS5:
+# the agent writes <spec>-phasemap.spec, bottom-up by layer with the axioms; validated by loom's parser; refused if not
+# bottom-up), repo/build-plan.js (BS6: gates mapped → snapshot → dispatched → replied → landed → closed; the ledger
+# per step). api/build-surface.js (BS7): GET files/state, GET|POST deviation, GET|POST environment,
+# POST environment/setup, GET|POST spec/plan, POST spec/build, GET plan, POST manage — every write-side step behind a
+# Versionium snapshot. UI (BS8–BS11, BS18): Files states + Manage, the Spec tab's build bar, Phases ▶, Settings
+# environment + the console embedded (settings.html?embed=1), the plan panel, Start building, Sync & CI theme,
+# window-chrome.js for the pop-outs. BS13: _buildIdentity builds a code spec with no repo as its original, else the
+# repo-agent default. BS15: deleting a spec.codegen repo clears its document spec's codeSpecUuid (kept in
+# codeRetired), unlinks the shared hat and removes a branch's worktree (branch kept).

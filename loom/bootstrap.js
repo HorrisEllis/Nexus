@@ -142,6 +142,7 @@ const handMapped = [
   ...require('./maps/one-idearium-map').FILES.map(f => f[0]),    // §0.39.271
   ...require('./maps/idearium-codebase-map').FILES.map(f => f[0]), // §0.39.273
   ...require('./maps/chat-ledger-map').FILES.map(f => f[0]),     // §0.39.278
+  ...require('./maps/build-surface-map').FILES.map(f => f[0]),   // §0.39.280
   'loom/agent-suite/index.js',
 ];
 console.log('\nscanning whole tree from source (real require/import edges only)...\n');
@@ -299,6 +300,10 @@ if (mappedCodebase.failures.length) { console.log(`  idearium-codebase FAILURES:
 const mappedChatLedger = require('./maps/chat-ledger-map').mapChatLedger(driver);
 console.log(`  chat-ledger: ${mappedChatLedger.components.length} components, ${mappedChatLedger.hooks.length} hooks, ${mappedChatLedger.wires.length} wires`);
 if (mappedChatLedger.failures.length) { console.log(`  chat-ledger FAILURES: ${mappedChatLedger.failures.length}`); for (const f of mappedChatLedger.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedChatLedger.failures.length; }
+// §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec): HTTP, preload and deps edges included
+const mappedBuildSurface = require('./maps/build-surface-map').mapBuildSurface(driver);
+console.log(`  build-surface: ${mappedBuildSurface.components.length} components, ${mappedBuildSurface.hooks.length} hooks, ${mappedBuildSurface.wires.length} wires`);
+if (mappedBuildSurface.failures.length) { console.log(`  build-surface FAILURES: ${mappedBuildSurface.failures.length}`); for (const f of mappedBuildSurface.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedBuildSurface.failures.length; }
 console.log(`  components: ${mappedUi.components.length} ok`);
 console.log(`  hooks:      ${mappedUi.hooks.length} ok`);
 console.log(`  wires:      ${mappedUi.wires.length} ok`);

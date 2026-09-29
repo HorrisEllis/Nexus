@@ -85,8 +85,14 @@ spec:
       layer: ui
       status: DONE 2026-09-29 (0.39.280) — built before this map was asked for; proof below
       depends_on: []
-      files: [clear-glass/src/main/compartment-window.js, clear-glass/src/preload/compartment-window.js, clear-glass/src/main/index.js,
-              idearium/ui/js/window-chrome.js, idearium/ui/settings.html, idearium/ui/desktop.html, cos/workspace/index.js]
+      files:
+        - "clear-glass/src/main/compartment-window.js"
+        - "clear-glass/src/preload/compartment-window.js"
+        - "clear-glass/src/main/index.js"
+        - "idearium/ui/js/window-chrome.js"
+        - "idearium/ui/settings.html"
+        - "idearium/ui/desktop.html"
+        - "cos/workspace/index.js"
       does: >-
         idearium's /desktop.html and /settings.html popups from Clear Glass's webview open frameless, NEXUS-dark,
         resizable from every edge, draggable by a compartment-styled title bar (pin / minimize / maximize / close);
@@ -101,7 +107,10 @@ spec:
       layer: ui
       status: DONE 2026-09-29 (0.39.280) — root cause found and proven; built before this map was asked for
       depends_on: []
-      files: [ui/tv-shell/tv-shell.css, ui/home/areas/shell.css, tests/probe/menu-overlay-hit-chromium.js]
+      files:
+        - "ui/tv-shell/tv-shell.css"
+        - "ui/home/areas/shell.css"
+        - "tests/probe/menu-overlay-hit-chromium.js"
       does: >-
         "when importing a repo the system rewind menu pops up when clicking continue". A closed #menu-overlay is
         opacity 0 / pointer-events none, but #rewind-btn, #inspect-btn and #settings-btn set pointer-events:auto, which a
@@ -113,9 +122,11 @@ spec:
 
     BS2_file_states:
       layer: library
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS2-01
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS2-01"
       depends_on: []
-      files: [idearium/repo/file-state.js, tests/modules/test-build-surface.test.js]
+      files:
+        - "idearium/repo/file-state.js"
+        - "tests/modules/test-build-surface.test.js"
       does: >-
         fileStates({ files, injects, lastVersion }) → per path: committed · modified (differs from the last Versionium
         version's hash) · new (on disk, in no version) · pending (a proposed inject; a new file that exists only as a
@@ -123,9 +134,11 @@ spec:
 
     BS3_baseline_deviation:
       layer: library
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS3-01
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS3-01"
       depends_on: [BS2]
-      files: [idearium/repo/deviation.js, tests/modules/test-build-surface.test.js]
+      files:
+        - "idearium/repo/deviation.js"
+        - "tests/modules/test-build-surface.test.js"
       does: >-
         deviation({ baseline, current, files }) — how far a repo has moved from its baseline snapshot: files added /
         removed / changed, bytes and lines moved, as fractions of the baseline; and from its last version. isMajor(change)
@@ -134,9 +147,11 @@ spec:
 
     BS4_environment_check:
       layer: library
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS4-01, BS4-02
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS4-01, BS4-02"
       depends_on: []
-      files: [cos/testenv/environment.js, tests/modules/test-build-surface.test.js]
+      files:
+        - "cos/testenv/environment.js"
+        - "tests/modules/test-build-surface.test.js"
       does: >-
         check(repoDir, { files }) — downloaded (every manifest file on disk, hashes match, none missing) and configured
         (per stack: manifest present, dependencies installed — node_modules against the lockfile, a venv, go.sum …),
@@ -146,9 +161,11 @@ spec:
 
     BS5_spec_to_phasemap:
       layer: library
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS5-01…BS5-03
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS5-01…BS5-03"
       depends_on: []
-      files: [idearium/repo/spec-plan.js, tests/modules/test-build-surface.test.js]
+      files:
+        - "idearium/repo/spec-plan.js"
+        - "tests/modules/test-build-surface.test.js"
       does: >-
         planPrompt({ spec, specPath, axioms }) — what the repo agent is asked: split the whole build of THIS spec into
         phases, chunked, bottom-up by layer (I1), each with does / files / depends_on / proof, carrying the axioms that
@@ -158,9 +175,11 @@ spec:
 
     BS6_build_plan:
       layer: library
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS6-01
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface.test.js BS6-01"
       depends_on: [BS5]
-      files: [idearium/repo/build-plan.js, tests/modules/test-build-surface.test.js]
+      files:
+        - "idearium/repo/build-plan.js"
+        - "tests/modules/test-build-surface.test.js"
       does: >-
         buildPlan({ phases, runs, events }) — the plan as a projection (I4): ordered steps, each with its gates as
         progress (mapped → snapshot → dispatched → replied → landed → verified → closed), its current gate, and its event
@@ -168,9 +187,14 @@ spec:
 
     BS7_api:
       layer: api
-      status: DONE 2026-09-29 (0.39.280) — idearium/api/build-surface.js + 11 routes; proof: tests/modules/test-build-surface.test.js BS7-01…BS7-05 (real router, versionium down on purpose)
+      status: "DONE 2026-09-29 (0.39.280) — idearium/api/build-surface.js + 11 routes; proof: tests/modules/test-build-surface.test.js BS7-01…BS7-05 (real router, versionium down on purpose)"
       depends_on: [BS2, BS3, BS4, BS5, BS6]
-      files: [idearium/api/index.js, idearium/api/build-surface.js, idearium/repo/index.js (annotate: environment), idearium/lib/config-core.cjs (repos.deviation_major_files / _fraction), tests/modules/test-build-surface.api.js]
+      files:
+        - "idearium/api/index.js"
+        - "idearium/api/build-surface.js"
+        - "idearium/repo/index.js (annotate: environment)"
+        - "idearium/lib/config-core.cjs (repos.deviation_major_files / _fraction)"
+        - "tests/modules/test-build-surface.api.js"
       does: >-
         GET /api/repos/:uuid/files/state · GET|POST /api/repos/:uuid/deviation (recalculate) + recalculation on every
         repo snapshot (a version) and on a major file change · GET /api/repos/:uuid/environment (check + plan + options)
@@ -180,9 +204,12 @@ spec:
 
     BS8_files_ui:
       layer: ui
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)"
       depends_on: [BS7]
-      files: [idearium/ui/js/app.js, idearium/ui/js/file-manage.js, idearium/ui/index.html]
+      files:
+        - "idearium/ui/js/app.js"
+        - "idearium/ui/js/file-manage.js"
+        - "idearium/ui/index.html"
       does: >-
         Files tab: pending files greyed (a proposal-only file is listed, greyed, italic), modified / new / staged marked.
         A "Manage" button on the open file: expand · iterate · refactor · rebuild · debug · test · document · explain ·
@@ -191,9 +218,11 @@ spec:
 
     BS9_spec_and_phase_build_ui:
       layer: ui
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)"
       depends_on: [BS7]
-      files: [idearium/ui/js/living-spec.js, idearium/ui/js/phases.js]
+      files:
+        - "idearium/ui/js/living-spec.js"
+        - "idearium/ui/js/phases.js"
       does: >-
         Spec tab: a Build bar on the open spec (James's screenshot) — "plan phases" when it has no phasemap, then its
         phases in build order with ▶ build next / ▶ a phase, and the deviation line. Phases tab: ▶ on every row, not
@@ -201,9 +230,12 @@ spec:
 
     BS10_settings_and_environment_ui:
       layer: ui
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)"
       depends_on: [BS7]
-      files: [idearium/ui/js/repo-environment.js, idearium/ui/js/app.js, idearium/ui/settings.html (?embed=1)]
+      files:
+        - "idearium/ui/js/repo-environment.js"
+        - "idearium/ui/js/app.js"
+        - "idearium/ui/settings.html (?embed=1)"
       does: >-
         The repo's Settings tab contains its console view (settings.html?repo=<uuid>&embed=1: no nav, no chrome) and an
         Environment section: the check (downloaded / configured, each item with its reason), the install plan, the
@@ -211,9 +243,12 @@ spec:
 
     BS11_plan_panel:
       layer: ui
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)"
       depends_on: [BS7, BS9]
-      files: [idearium/ui/js/plan-panel.js, idearium/ui/index.html, idearium/ui/js/app.js (Home: #repo-build-start)]
+      files:
+        - "idearium/ui/js/plan-panel.js"
+        - "idearium/ui/index.html"
+        - "idearium/ui/js/app.js (Home: #repo-build-start)"
       does: >-
         A plan panel (like Claude Code's): the open repo's build steps, ✓ done / ◌ current / ○ next, a gate bar per
         step, each expandable to its event ledger and activity; live on the repo's events. Also the build-start area:
@@ -228,9 +263,11 @@ spec:
     # command but nothing happened. its meant to be the ais browser …"
     BS13_provider_sovereignty:
       layer: library
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface-2.test.js BS13-01, BS13-02; test-warp-cascade-provider-fallback 7/7 (WCF-004/006 now pin the new contract)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface-2.test.js BS13-01, BS13-02; test-warp-cascade-provider-fallback 7/7 (WCF-004/006 now pin the new contract)"
       depends_on: []
-      files: [lib/seam/adapters/warp-cascade.js, idearium/api/index.js (_buildIdentity)]
+      files:
+        - "lib/seam/adapters/warp-cascade.js"
+        - "idearium/api/index.js (_buildIdentity)"
       does: >-
         Read, not assumed: the code spec's build had no provider (its repo was not found by specUuid, so
         _buildIdentity returned provider null) and warp-cascade then let RAID pick first and fell through
@@ -242,9 +279,10 @@ spec:
 
     BS14_branch_git_honest:
       layer: library
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-cos-workspace.test.js WS-14 (13/13)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-cos-workspace.test.js WS-14 (13/13)"
       depends_on: []
-      files: [cos/workspace/index.js]
+      files:
+        - "cos/workspace/index.js"
       does: >-
         "branch of nexus-id not made (git worktree failed: warning: in the working copy of 'atlas.json', LF will be
         replaced by CRLF …)". The failure text was git's CRLF warnings, cut before the real reason. Every git call the
@@ -254,9 +292,12 @@ spec:
 
     BS15_code_repo_delete:
       layer: api
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface-2.test.js BS15-01 (real router)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface-2.test.js BS15-01 (real router)"
       depends_on: []
-      files: [idearium/api/index.js (repo.archive), lib/repo-hat.js, lib/cos-bridge.js]
+      files:
+        - "idearium/api/index.js (repo.archive)"
+        - "lib/repo-hat.js"
+        - "lib/cos-bridge.js"
       does: >-
         Deleting a code repo tells its original: the document spec's codeSpecUuid is cleared (so Code builds a new one),
         the hat link is removed, a branch's worktree is removed (its git branch kept — nothing lost), and the event
@@ -265,9 +306,14 @@ spec:
 
     BS16_provider_login_wall:
       layer: automation
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/login-wall-chromium.js 7/7; chat-stream-chromium 7/7, test-guardian-wake 21/21, test-chat-ledger-stream 16/16 unchanged
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/probe/login-wall-chromium.js 7/7; chat-stream-chromium 7/7, test-guardian-wake 21/21, test-chat-ledger-stream 16/16 unchanged"
       depends_on: []
-      files: [guardian/userscript-chat-stream.js (1.1.0), guardian/lib/provider-login.js, guardian/server.js, guardian/lib/dispatcher.js, guardian/userscripts.yaml]
+      files:
+        - "guardian/userscript-chat-stream.js (1.1.0)"
+        - "guardian/lib/provider-login.js"
+        - "guardian/server.js"
+        - "guardian/lib/dispatcher.js"
+        - "guardian/userscripts.yaml"
       does: >-
         "chatgpt had a login prompt, hoping we can automate if that happens." The shared chat-stream prelude detects a
         provider's logged-out state (login/sign-up buttons, auth modal, no composer) and its dismissible "stay logged
@@ -278,9 +324,12 @@ spec:
 
     BS17_copilot_browser_verbs:
       layer: automation
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-cg-copilot-verbs.test.js 6/6 (real CoPilotBridge, fake driver + copilot); clear-glass-agent-surface 16/16 unchanged
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-cg-copilot-verbs.test.js 6/6 (real CoPilotBridge, fake driver + copilot); clear-glass-agent-surface 16/16 unchanged"
       depends_on: []
-      files: [clear-glass/src/copilot/verbs.js, clear-glass/src/copilot/bridge.js, clear-glass/renderer/browser.js]
+      files:
+        - "clear-glass/src/copilot/verbs.js"
+        - "clear-glass/src/copilot/bridge.js"
+        - "clear-glass/renderer/browser.js"
       does: >-
         "i told it to visit google.com and it ran the blue command but nothing happened". _parseCommands dropped a
         ```driver block that was not strict JSON (catch (_) {}), while the pane still said "[driver command sent]".
@@ -292,9 +341,10 @@ spec:
 
     BS18_sync_ci_theme:
       layer: ui
-      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js BS18 (computed styles equal .field-input; 11/11)
+      status: "DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js BS18 (computed styles equal .field-input; 11/11)"
       depends_on: []
-      files: [idearium/ui/index.html (#repo-subtab-git rules)]
+      files:
+        - "idearium/ui/index.html (#repo-subtab-git rules)"
       does: >-
         The Sync & CI tab drawn with the same primitives as every other repo tab (.ds cards, mono labels, action rows,
         the dark tokens) instead of its own light/inline styles.
@@ -302,9 +352,11 @@ spec:
 
     BS19_copilot_atlas_guide:
       layer: ui
-      status: DONE 2026-09-29 (0.39.280) — docs/atlases/copilot-atlas.md "Quick Start — the user guide"; proof: tests/modules/test-nexus-atlas-refs.test.js 51/51 with copilot-atlas.md now held to the strict rule
+      status: "DONE 2026-09-29 (0.39.280) — docs/atlases/copilot-atlas.md \"Quick Start — the user guide\"; proof: tests/modules/test-nexus-atlas-refs.test.js 51/51 with copilot-atlas.md now held to the strict rule"
       depends_on: [BS17]
-      files: [docs/atlases/copilot-atlas.md, tests/modules/test-nexus-atlas-refs.test.js]
+      files:
+        - "docs/atlases/copilot-atlas.md"
+        - "tests/modules/test-nexus-atlas-refs.test.js"
       does: >-
         The copilot atlas expanded into a user guide: what the co-pilot is (the AI's browser), every way to talk to it
         (panes, backends, /commands), what it can do in Clear Glass (navigate, the interaction field, pointer, spotlight,
@@ -317,7 +369,12 @@ spec:
       layer: automation
       status: OPEN
       depends_on: [BS8, BS9, BS10, BS11, BS13, BS14, BS15, BS16, BS17, BS18, BS19]
-      files: [lib/version.js, CHANGELOG-0.39.280.md, docs/*-atlas.md, idearium/spec, tests/run-all.js]
+      files:
+        - "lib/version.js"
+        - "CHANGELOG-0.39.280.md"
+        - "docs/*-atlas.md"
+        - "idearium/spec"
+        - "tests/run-all.js"
       does: >-
         Versions bumped everywhere they persist (§5.4), the changelog, every touched atlas and spec addendum, tests
         registered, regression against 0.39.279, a Versionium record of the release, this map's phases closed with proof.

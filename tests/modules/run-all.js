@@ -28,6 +28,10 @@ const SUITES = [
   'test-cos-workspace.test.js',          // 0.39.279 — COS workspaces: code repo as a git worktree branch, VM disk overlay, desktop VM
   'test-settings-console.test.js',       // 0.39.279 — idearium settings console: layered config + every repo's agent/prompt/hat/compartment
   'test-staging-s0-s1.test.js',          // 0.39.279 — staging self-heal S0 (versionium fork points) + S1 (code-edit stage/promote)
+  'test-compartment-window.test.js',     // 0.39.280 — BS0: idearium pop-outs as frameless compartment windows in Clear Glass
+  'test-build-surface.test.js',          // 0.39.280 — BS2–BS7: file states, deviation, environment, spec → phasemap, build plan, routes
+  'test-build-surface-2.test.js',        // 0.39.280 — BS13 a chosen provider is honoured; BS15 deleting a code repo tells its original
+  'test-cg-copilot-verbs.test.js',       // 0.39.280 — BS17: "visit X" with no model; loose driver blocks repaired; unreadable reported
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272
   'jaa-db.test.js',

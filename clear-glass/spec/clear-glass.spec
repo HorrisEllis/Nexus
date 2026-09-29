@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.17.0
+    version:     3.21.0   # 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -647,3 +647,13 @@ spec:
   # ErosmancerOS POST /api/input through main/index.js's tab resolver (driver.erosInput). A covered target is reported,
   # an off-screen one refused. field.map / field.spotlight are bus events forwarded to NEXUS. clearglass.browser.tool
   # exposes field / pointer / spotlight. Proven by tests/modules/test-cg-field.test.js and tests/probe/field-chromium.js.
+
+  # ## ADDENDUM 2026-09-29 (0.39.280) — compartment windows and co-pilot verbs (build-surface phasemap BS0, BS17)
+  # main/compartment-window.js: every <webview>'s popups go through setWindowOpenHandler; idearium's /desktop.html and
+  # /settings.html (loopback only) open frameless, #0a0b10 before paint, resizable, min 480×320, no menu, with
+  # preload/compartment-window.js (window.nexusWindow minimize / maximize / close / pin → ipc compartment-window:control
+  # on the SENDER's window). Every other popup keeps Electron's default. copilot/verbs.js: loose ```driver blocks
+  # repaired (bare keys, single quotes, trailing commas, a bare url, https:// added), an unreadable one returned as a
+  # FAILED result (was dropped silently); "visit / go to / open <site>" navigates with no model and answers with the
+  # page's title, url and field targets; the pane labels a block by the command it carries. Proven by
+  # tests/modules/test-compartment-window.test.js and tests/modules/test-cg-copilot-verbs.test.js.

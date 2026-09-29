@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        versionium
-    version:     3.3.0
+    version:     3.4.0   # 0.39.279 MINOR — branch fork points (see the S0 addendum); this line was left at 3.3.0 — synced in 0.39.280 (§5.4). Previous 3.3.0:
     status:      active
     canonical_implementation: versionium/lib/engine.js
     canonical_http_surface:

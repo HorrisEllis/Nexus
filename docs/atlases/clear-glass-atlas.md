@@ -350,3 +350,13 @@ readPage says what is on a page; nothing said where. A model that cannot see pix
 The last field per tab is kept, so "pointer n 3" needs no second read. field and spotlight events go on the bus and are forwarded to NEXUS (the nerve) with the other browser events. The co-pilot pane lists the actions in its compact tool list, and `lib/agent-tools/tools/clear-glass/browser.js` exposes field, pointer and spotlight to every agent, returning the text map rather than 150 objects.
 
 Tests: `tests/modules/test-cg-field.test.js` 13/13 (the driver with a fake page, the tool, the Eros route and its wiring), and `tests/probe/field-chromium.js` 12/12 in Clear Glass's own engine.
+
+## Compartment windows and a co-pilot that browses (v0.39.280)
+
+James: *"can you have the electron popup windows for the desktop envirement and settings, be in a borderless windowed and possible a manipulatable cos compartment so i can drag it around and resize it? keep the theme consistent."* · *"i told it to visit google.com and it ran the blue command but nothing happened. its meant to be the ais browser"*.
+
+**Compartment windows** (`clear-glass/src/main/compartment-window.js`). Idearium runs in a webview; its pop-outs for a repo's desktop and the settings console now open frameless, dark from the first paint, resizable from every edge, with no menu bar. The page's own title bar is the drag handle and carries pin, minimize, maximize and close, which reach the window through a small preload (`clear-glass/src/preload/compartment-window.js`). Every other pop-up is unchanged.
+
+**The co-pilot browses** (`clear-glass/src/copilot/verbs.js`). "visit google.com", "go to …", "open … and …" go there without asking a model and answer with the page's title, address and numbered targets; anything asked after it goes to the model with that page in hand. A driver block the model wrote loosely is repaired and run; one that still cannot be read comes back as a failed result the model and you both see (it used to be dropped while the pane said it was sent). The pane names the command each block carried. The full user guide is in `docs/atlases/copilot-atlas.md`.
+
+Tests: `tests/modules/test-compartment-window.test.js`, `tests/modules/test-cg-copilot-verbs.test.js`.
