@@ -45,7 +45,9 @@ require.cache[require.resolve('../../cortex/memory/jaa-db')] = {
 
 const snap = require('../../cortex/snapshot/index');
 
-function reset() { resetStore(); }
+// §0.39.282 — the snapshot INDEX (backup_records) moved to versionium's own store (versionium/lib/snapshot.js §ROLE
+// SPLIT, D3); only the subject tables stayed in cortex's jaa-db mocked above. reset() clears both, in the sandbox.
+function reset() { resetStore(); require('../../versionium/lib/store').jaaDB.delete('backup_records', {}); }
 
 (async () => {
 
@@ -146,7 +148,7 @@ await test('T-011', 'empty chain (no snapshots yet) reports cleanly, never throw
 });
 
 function _findSnapPath(snapId) {
-  const record = _store.backup_records.find(r => r.snapId === snapId);
+  const record = require('../../versionium/lib/store').jaaDB.get('backup_records', { snapId });   // §0.39.282 the index is versionium's
   return record.snapPath;
 }
 

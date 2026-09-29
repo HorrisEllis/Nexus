@@ -1,4 +1,6 @@
 'use strict';
+// §0.39.282 — starts NEXUS processes: into the test sandbox first (test-test-sandbox's rule), so nothing writes real data.
+require('../../lib/test-sandbox.js').ensure();
 /**
  * tests/modules/test-cos-workspace.test.js — 0.39.279. cos/workspace: a repo as a BRANCH of the original, its VM disk as
  * an overlay of the original's, and its desktop. James: "have cos create the vm environment, and each new repo, if

@@ -1,4 +1,6 @@
 'use strict';
+// §0.39.282 — starts NEXUS processes: into the test sandbox first (test-test-sandbox's rule), so nothing writes real data.
+require('../../lib/test-sandbox.js').ensure();
 /**
  * tests/modules/test-one-tab-e2e.test.js — 0.39.247
  * James: "repo-agent jobs must use ONE ChatGPT tab ... and the reply must

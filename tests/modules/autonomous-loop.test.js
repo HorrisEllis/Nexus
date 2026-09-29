@@ -121,8 +121,8 @@ require.cache[require.resolve('../../cortex/snapshot')] = {
 };
 
 // ── Mock nexus-bus ────────────────────────────────────────────────────────────
-require.cache[require.resolve('../../nexus-bus')] = {
-  id: '../../nexus-bus', filename: '../../nexus-bus', loaded: true,
+require.cache[require.resolve('../../nexus/nexus-bus')] = {
+  id: '../../nexus/nexus-bus', filename: '../../nexus/nexus-bus', loaded: true,
   exports: { emit: () => {} },
 };
 

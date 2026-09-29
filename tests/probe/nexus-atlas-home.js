@@ -1,4 +1,6 @@
 'use strict';
+// §0.39.282 — starts NEXUS processes: into the test sandbox first (test-test-sandbox's rule), so nothing writes real data.
+require('../../lib/test-sandbox.js').ensure();
 /**
  * tests/probe/nexus-atlas-home.js — 0.39.263, extended in 0.39.264 (the written-out atlas, nested atlases, Create/Build only inside a repo).
  * James: "nexus is the repo, not 15, just nexus, then clicking inside of it, shows the rest of

@@ -986,6 +986,18 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // §0.39.282 — `node orchestrator.js raid` (cliRaid) asks for /api/raid/status; the route lived in the removed
+  // cortex/foundation/admin-server.js and never moved here, so the CLI always said "Cortex offline". Restored from the
+  // live engine: version, health, learned weights.
+  if (p === '/api/raid/status') {
+    try {
+      const raid = require('./core/raid');
+      const plain = (m) => (m instanceof Map ? Object.fromEntries(m) : (m || {}));
+      json(res, 200, { ok: true, version: raid.VERSION, health: plain(raid._health), weights: plain(raid._weights), regime: _field.regime });
+    } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+
   if (p === '/api/raid/health') {
     json(res, 200, { ok: true, health: _raidHealth, transports: _raidTransport, regime: _field.regime });
     return;
