@@ -86,8 +86,8 @@ test('ICW-005', 'nothing requires it — the retirement is safe, verified rather
 
 test('ICW-006', 'what was worth keeping was HARVESTED first, not deleted with it (§16.5 delete, but only after)', () => {
   for (const m of ['causality', 'sigma', 'adapter', 'kernel', 'forge']) {
-    assert.ok(fs.existsSync(path.join(ROOT, 'meta/rfr2', m, 'index.js')),
-      `${m} must survive in meta/rfr2 — retiring the ancestor must not lose the capability`);
+    assert.ok(fs.existsSync(path.join(ROOT, 'intelligence/rfr2', m, 'index.js')   /* §0.39.282 rfr2 moved meta/ -> intelligence/ (intelligence.spec) */),
+      `${m} must survive in intelligence/rfr2 — retiring the ancestor must not lose the capability`);
   }
 });
 
