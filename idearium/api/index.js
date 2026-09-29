@@ -583,6 +583,20 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 
 // §0.39.271 — one repo snapshot, as POST /api/repos/:uuid/snapshot takes it (moved here
 // from that route unchanged). Returns { ok, data } or { ok:false, status, error, extra }.
+// §0.39.280 — what api/build-surface.js is given: this server's own helpers, nothing new
+function _buildSurfaceDeps() {
+  return {
+    getRepoLayer, repoDir: _repoDiskDir, versionium: _versionium, loadTable, appendRow, require: _require,
+    emit: (t, d) => getIdeaOS().emit(t, d), RI: () => _require('../../lib/repo-inject.js'),
+    config: (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } },
+    snapshot: (uuid, b) => _commitRepoSnapshotFor(uuid, b), phaseBuild: _phaseBuild, phaseRuns: _phaseRuns,
+  };
+}
+// §0.39.280 BS3 — "baseline deviation needs to recaclute each version or major file change"
+function _deviationAfter(uuid, kind) {
+  import('./build-surface.js').then(BS => (kind === 'version' ? BS.afterVersion(_buildSurfaceDeps(), uuid) : BS.afterFileChange(_buildSurfaceDeps(), uuid))).catch(() => {});
+}
+
 async function _commitRepoSnapshotFor(uuid, body = {}) {
   const repo = getRepoLayer().get(uuid);
   if (!repo) return { ok: false, status: 404, error: `repo not found: ${uuid}` };
@@ -609,6 +623,7 @@ async function _commitRepoSnapshotFor(uuid, body = {}) {
     repoUuid: uuid, commitId: result.commit.commitId,
     sourceFresh: result.record.mustRecord.sourceHash.fresh ?? null,
   });
+  _deviationAfter(uuid, 'version');
   return { ok: true, data: {
     repoUuid: uuid, commitId: result.commit.commitId, branch: result.commit.branch,
     system: result.commit.system, mustRecord: verifyMustRecord(result.record), record: result.record,
@@ -1113,6 +1128,11 @@ const ROUTE_CAP = {
   'config.reset':     CAPS.WRITE_IDEAS,
   'settings.console': CAPS.READ_IDEAS,
   'settings.console.repo': CAPS.READ_IDEAS,
+  // §0.39.280 — build surface
+  'repo.files.state': CAPS.READ_IDEAS, 'repo.deviation.get': CAPS.READ_IDEAS, 'repo.deviation.recalc': CAPS.WRITE_IDEAS,
+  'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
+  'repo.spec.plan.get': CAPS.READ_IDEAS, 'repo.spec.plan': CAPS.WRITE_IDEAS, 'repo.spec.build': CAPS.WRITE_IDEAS,
+  'repo.plan': CAPS.READ_IDEAS, 'repo.file.manage': CAPS.WRITE_IDEAS,
 };
 
 // Key-based auth removed — Idearium is internal-only, reached solely
@@ -1358,6 +1378,18 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','status'],       'repo.phases.status'],
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['POST',   ['api','repos',    ':uuid','phases','build'],        'repo.phases.build'],
+    // §0.39.280 — the build surface (docs/2026-09-29-build-surface-phasemap.spec BS7; logic in api/build-surface.js)
+    ['GET',    ['api','repos',    ':uuid','files','state'],         'repo.files.state'],
+    ['GET',    ['api','repos',    ':uuid','deviation'],             'repo.deviation.get'],
+    ['POST',   ['api','repos',    ':uuid','deviation'],             'repo.deviation.recalc'],
+    ['GET',    ['api','repos',    ':uuid','environment'],           'repo.environment.get'],
+    ['POST',   ['api','repos',    ':uuid','environment'],           'repo.environment.set'],
+    ['POST',   ['api','repos',    ':uuid','environment','setup'],   'repo.environment.setup'],
+    ['GET',    ['api','repos',    ':uuid','spec','plan'],           'repo.spec.plan.get'],
+    ['POST',   ['api','repos',    ':uuid','spec','plan'],           'repo.spec.plan'],
+    ['POST',   ['api','repos',    ':uuid','spec','build'],          'repo.spec.build'],
+    ['GET',    ['api','repos',    ':uuid','plan'],                  'repo.plan'],
+    ['POST',   ['api','repos',    ':uuid','manage'],                'repo.file.manage'],
     // §CI 2026-09-20 — CI/CD per compartment. cos/ci/index.js owns the
     // pipeline; these are idearium's surface onto it, scoped to a repo
     // (which is what carries the compartmentId).
@@ -2887,6 +2919,7 @@ async function handle(req, res, route, query, body) {
         return err(res, status, result.error);
       }
       os.emit('idearium.repo.file.write', { repoUuid: params.uuid, path: result.path, created: result.created });
+      _deviationAfter(params.uuid, 'files');
       return ok(res, result);
     }
 
@@ -2899,6 +2932,7 @@ async function handle(req, res, route, query, body) {
         return err(res, status, result.error);
       }
       os.emit('idearium.repo.file.delete', { repoUuid: params.uuid, path: result.path });
+      _deviationAfter(params.uuid, 'files');
       return ok(res, result);
     }
 
@@ -3634,6 +3668,7 @@ async function handle(req, res, route, query, body) {
         // §0.39.279 (staging S1) — a staged change is a versionium commit on repo-<uuid>@staging
         record: async (payload) => { const r = await _versionium('POST', '/api/versionium/commit', payload); if (!r.ok) return { error: r.error }; return (r.data && r.data.commit) || { error: (r.data && r.data.error) || 'versionium returned no commit' }; } });
       if (r.status >= 400) return err(res, r.status, r.body.error, Object.fromEntries(Object.entries(r.body).filter(([k]) => k !== 'error')));
+      if (req.method === 'POST') _deviationAfter(params.uuid, 'files');   // §0.39.280 BS3 — a code write may be a major change
       return ok(res, r.body);
     }
 
@@ -3771,6 +3806,7 @@ async function handle(req, res, route, query, body) {
           if (!owned()) return err(res, 404, `inject not found in this repo: ${params.id}`);
           const r = RI.apply(params.id, { layer, force: !!body.force, approvedBy: body.approvedBy || 'idearium' });
           if (r.ok) os.emit('idearium.repo.inject.applied', { repoUuid: params.uuid, inject: params.id, path: r.inject.path });
+          if (r.ok) _deviationAfter(params.uuid, 'files');
           // §0.39.266 — approved into the live Nexus tree: say so, and bring that system's repo to the new snapshot
           if (r.ok && r.gate) {
             os.emit('idearium.nexus-self.apply', { system: r.gate.system, applyId: r.gate.applyId, snapshot: r.gate.snapshot, paths: [r.inject.path], inject: params.id });
@@ -4485,6 +4521,27 @@ async function handle(req, res, route, query, body) {
       if (!w.ok) return err(res, w.status || 500, w.error, { code: w.code || 'WRITE_FAILED' });
       getIdeaOS().emit('idearium.repo.roadmap.updated', { repoUuid: params.uuid, map: mapPath, phase: add.id, added: true, via: w.via });
       return ok(res, { repoUuid: params.uuid, map: mapPath, id: add.id, via: w.via, applyId: w.applyId || null });
+    }
+    // §0.39.280 — the build surface (api/build-surface.js); each returns { status, json }
+    case 'repo.files.state': case 'repo.deviation.get': case 'repo.deviation.recalc': case 'repo.environment.get':
+    case 'repo.environment.set': case 'repo.environment.setup': case 'repo.spec.plan.get': case 'repo.spec.plan':
+    case 'repo.spec.build': case 'repo.plan': case 'repo.file.manage': {
+      const BS = await import('./build-surface.js');
+      const d = _buildSurfaceDeps();
+      const u = params.uuid;
+      const r = action === 'repo.files.state' ? await BS.filesState(d, u)
+        : action === 'repo.deviation.get' ? await BS.deviationGet(d, u)
+        : action === 'repo.deviation.recalc' ? await BS.deviationRecalc(d, u)
+        : action === 'repo.environment.get' ? await BS.environmentGet(d, u)
+        : action === 'repo.environment.set' ? await BS.environmentSet(d, u, body)
+        : action === 'repo.environment.setup' ? await BS.environmentSetup(d, u)
+        : action === 'repo.spec.plan.get' ? await BS.specPlanGet(d, u, query.path)
+        : action === 'repo.spec.plan' ? await BS.specPlan(d, u, body || {})
+        : action === 'repo.spec.build' ? await BS.specBuild(d, u, body || {})
+        : action === 'repo.plan' ? await BS.plan(d, u, { map: query.map || null })
+        : await BS.manage(d, u, body || {});
+      if (!r.json.ok) { const { ok: _o, error, ...detail } = r.json; return err(res, r.status, error, Object.keys(detail).length ? detail : null); }
+      return ok(res, r.json.data);
     }
     case 'repo.phases.build': {
       const repo = getRepoLayer().get(params.uuid);

@@ -168,9 +168,9 @@ spec:
 
     BS7_api:
       layer: api
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — idearium/api/build-surface.js + 11 routes; proof: tests/modules/test-build-surface.test.js BS7-01…BS7-05 (real router, versionium down on purpose)
       depends_on: [BS2, BS3, BS4, BS5, BS6]
-      files: [idearium/api/index.js, tests/modules/test-build-surface.test.js]
+      files: [idearium/api/index.js, idearium/api/build-surface.js, idearium/repo/index.js (annotate: environment), idearium/lib/config-core.cjs (repos.deviation_major_files / _fraction), tests/modules/test-build-surface.api.js]
       does: >-
         GET /api/repos/:uuid/files/state · GET|POST /api/repos/:uuid/deviation (recalculate) + recalculation on every
         repo snapshot (a version) and on a major file change · GET /api/repos/:uuid/environment (check + plan + options)

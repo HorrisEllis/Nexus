@@ -145,6 +145,10 @@ const SCHEMA = {
   // separate copy), and what a repo's desktop VM gets (cos/workspace startDesktop). The settings console edits these.
   repos: {
     code_repo_mode: { default: 'branch', enum: ['branch', 'copy'], copilot_writable: true, type: 'string' },
+    // §0.39.280 BS3 — "baseline deviation needs to recaclute each version or major file change": a file change is
+    // major (and recalculates) at this many files, or this fraction of the tree, moved since the last recalculation
+    deviation_major_files:    { default: 10, min: 1, max: 100000, copilot_writable: true, type: 'number' },
+    deviation_major_fraction: { default: 0.1, min: 0.001, max: 1, copilot_writable: true, type: 'number' },
   },
   desktop: {
     ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },
