@@ -46,7 +46,7 @@ async function main() {
     const all = P.all();
     assert.deepStrictEqual(all.slice(0, 2), ['copilot', 'ollama']);
     for (const g of ['chatgpt', 'claude', 'gemini', 'perplexity', 'deepseek']) assert.ok(all.includes(g), g);
-    assert.ok(!all.includes('memory') && !all.includes('nexus-wake'), 'non-agent userscripts are not agents');
+    assert.ok(!all.includes('memory') && !all.includes('nexus-wake') && !all.includes('chat-stream'), 'non-agent userscripts are not agents');
     assert.strictEqual(P.normalize('Mistral'), 'ollama');
     assert.strictEqual(P.normalize('auto'), 'copilot');
     assert.strictEqual(P.backendOf('gemini'), 'guardian');

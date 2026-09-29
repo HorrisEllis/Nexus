@@ -242,11 +242,42 @@ function _getSendBtn() {
 // response only. Full multi-turn extraction needs a real, verified
 // selector added the same way findResponseEl()'s own was — not invented
 // blind.
+// §0.39.279 — James: "can you fix gemini and deepseek." The whole conversation, both sides, in page order:
+// gemini.google.com renders each turn as a <user-query> / <model-response> element (the reply body in
+// message-content, the thinking in <model-thoughts>, opened by userscript-chat-stream.js's "Show thinking" toggle);
+// AI Studio renders <ms-chat-turn> with a .user / .model container. Not checked against the live pages from here: when
+// no user turn is found the reader falls back to the last reply alone (partial: true), exactly as before.
+function _gmText(el) { return el ? _replyText(el) : ''; }
 function _nexusGetFullChat() {
+  const messages = [];
+  for (const el of document.querySelectorAll('user-query, model-response, ms-chat-turn')) {
+    const tag = el.tagName.toLowerCase();
+    let role, body, think = null;
+    if (tag === 'user-query') { role = 'user'; body = el.querySelector('.query-text, .query-content') || el; }
+    else if (tag === 'model-response') {
+      role = 'assistant';
+      think = el.querySelector('model-thoughts');
+      body = el.querySelector('message-content .markdown, message-content, .model-response-text, .response-content') || el;
+    } else {
+      const c = el.querySelector('.chat-turn-container') || el;
+      role = c.classList.contains('user') || el.getAttribute('data-turn-role') === 'User' ? 'user' : 'assistant';
+      think = el.querySelector('ms-thought-chunk, .thought-panel, mat-expansion-panel');
+      body = el.querySelector('.turn-content, ms-cmark-node') || el;
+    }
+    let text = _gmText(body);
+    let thinking = '';
+    if (think) {
+      const inner = think.querySelector('.thoughts-content, .thoughts-body, [class*="thoughts-content"], .mat-expansion-panel-body') || null;
+      thinking = inner ? (inner.innerText || '').trim() : '';
+      if (thinking && body.contains(think)) text = text.replace(thinking, '').replace(/^\s*(show thinking|hide thinking|thinking)\s*\n/i, '').trim();
+    }
+    if (!text && !thinking) continue;
+    messages.push({ role, text, ...(thinking ? { thinking } : {}) });
+  }
+  if (messages.some(m => m.role === 'user')) return { provider: PROVIDER, chatId: chatId(), url: location.href, extractedAt: Date.now(), messages };
   const el = findResponseEl();
   const text = el ? _replyText(el) : '';
-  const messages = text ? [{ role: 'assistant', text }] : [];
-  return { provider: PROVIDER, chatId: chatId(), url: location.href, extractedAt: Date.now(), messages, partial: true, note: 'no verified human-turn selector for this provider yet — assistant\'s last response only' };
+  return { provider: PROVIDER, chatId: chatId(), url: location.href, extractedAt: Date.now(), messages: text ? [{ role: 'assistant', text }] : [], partial: true, note: 'no <user-query>/<model-response> turns found on this page — assistant\'s last response only' };
 }
 
 function handleSyncRequest(msg) {

@@ -114,7 +114,7 @@ async function main() {
     assert.match(text, /Available tools: idearium\.code_map\.tool, idearium\.code_search\.tool, idearium\.code_chunk\.tool, idearium\.code_read\.tool, idearium\.code_edit\.tool, idearium\.code_write\.tool, idearium\.code_check\.tool, loom\.find\.tool/);
     assert.match(text, /Also: idearium\.code_grep\.tool/);
     // 0.39.278 — the other tools are reached as layers (nexus.tools.tool lists the categories), or found with loom.find
-    assert.match(text, /More tools, by category: nexus\.tools\.tool lists them, nexus\.tools_expand\.tool .*; or loom\.find\.tool kind "tool"/);
+    assert.match(text, /More tools: nexus\.tools\.tool → nexus\.tools_expand\.tool .*, or loom\.find\.tool kind "tool"/);
     assert.ok(!/function acquireFlushLock/.test(text), 'no code in the first message');
     assert.ok(!/\{tools\}|\{tool_guide\}/.test(text));
     assert.ok(text.length < 3000, `first message ${text.length} chars`);

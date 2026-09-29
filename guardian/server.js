@@ -699,6 +699,8 @@ const _wakeLoop = _wakeLoopMod.createWakeLoop({
   log: (m) => console.log(`[guardian/wake] ${m}`),
 });
 bus.on('guardian.job.complete', (d) => { _wakeLoop.handleComplete({ jobId: d && (d.data ? d.data.jobId : d.jobId) }) /* 0.39.247 — SISOStream passes {type,data} */.catch((e) => console.warn(`[guardian/wake] ${e.message}`)); });
+// §0.39.279 — a wake in a chat no job owns: answered from the settled transcript, as a wake-reply job into that chat
+bus.on('guardian.ncp.transcript', (d) => { const p = (d && d.data) || d || {}; _wakeLoop.handleTranscript(p, { listJobs: () => [...jobs.values()] }).catch((e) => console.warn(`[guardian/wake] ${e.message}`)); });
 
 // §BUILT 0.39.254 — every provider chat, logged into Clear Glass's downloads index as
 // one versioned transcript per chat (guardian/lib/chat-transcripts.js). Userscripts

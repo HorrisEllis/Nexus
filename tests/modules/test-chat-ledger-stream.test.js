@@ -203,7 +203,7 @@ async function t(id, name, fn) {
     assert.strictEqual(RA.getToolScope(U), 'harness');
     const text = RA.fillListedTools('Available tools: {tools}\n{tool_guide}', U);
     assert.ok(text.includes(RA.CAPTURE_NOTE));
-    assert.match(text, /More tools, by category: nexus\.tools\.tool lists them/);
+    assert.match(text, /More tools: nexus\.tools\.tool → nexus\.tools_expand\.tool/);
     const run = async (n, a) => { const r = await A.executeTool(n, a, {}); return r && r.result !== undefined ? r.result : r; };
     const l1 = await run('nexus.tools.tool', {});
     assert.match(l1.note, /captured automatically/);

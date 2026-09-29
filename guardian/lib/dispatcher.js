@@ -504,6 +504,11 @@ function createDispatcher(deps) {
     if (typeof chatFor === 'function' && process.env.GUARDIAN_RESUME_CHAT !== '0') {
       try { resumeChatUrl = chatFor(job) || null; } catch (e) { console.warn(`[guardian] ${job.id}: chat lookup failed (job runs where the tab is): ${e.message}`); }
     }
+    // §0.39.279 — a job that names its chat (a wake answered from that chat's transcript) goes back to it, whatever
+    // chat the agent last used; only a real, resumable chat URL of this provider is honoured.
+    if (job.chatUrl && process.env.GUARDIAN_RESUME_CHAT !== '0') {
+      try { resumeChatUrl = require('./chat-transcripts.js').resumableChatUrl(job.provider, job.chatUrl) || resumeChatUrl; } catch (_) {}
+    }
     const payload = {
       type: 'GUARDIAN_JOB', jobId: job.id, command: job.command,
       provider: job.provider, prompt: job.prompt, content: job.content,

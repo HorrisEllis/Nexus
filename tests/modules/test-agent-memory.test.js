@@ -110,13 +110,15 @@ async function main() {
     assert.strictEqual(IDX.queryItems(_root, { agentId: 'copilot-s9' }).length, 1, 'no agentId → the copilot session remembers it');
   });
 
-  await test('M-005', "the Agent tab's 'memory' block: sent when there is memory, left out when there is none, present for saved block lists", () => {
+  await test('M-005', "the Agent tab's 'memory' block: off by default (0.39.279 — fetched with nexus.context.tool); when on, sent when there is memory, left out when there is none", () => {
     const PB = require('../../lib/repo-prompt-blocks.js');
-    assert.ok(PB.DEFAULT_BLOCKS.some(b => b.id === 'memory' && b.enabled));
-    const withMem = PB.render({ persona: 'P', message: 'Q', memory: '[MEMORY — x]\nstuff\n[END MEMORY]' });
+    assert.ok(PB.DEFAULT_BLOCKS.some(b => b.id === 'memory' && !b.enabled), 'memory is fetched by tool, not pasted, by default');
+    assert.ok(!PB.render({ persona: 'P', message: 'Q', memory: 'stuff' }).used.includes('memory'));
+    const on = PB.DEFAULT_BLOCKS.map(b => (b.id === 'memory' ? { ...b, enabled: true } : b));
+    const withMem = PB.render({ persona: 'P', blocks: on, message: 'Q', memory: '[MEMORY — x]\nstuff\n[END MEMORY]' });
     assert.ok(withMem.used.includes('memory'));
     assert.ok(withMem.text.indexOf('[MEMORY') > withMem.text.indexOf('P') && withMem.text.indexOf('[MEMORY') < withMem.text.indexOf('Q'), 'persona, memory, question');
-    const without = PB.render({ persona: 'P', message: 'Q', memory: '' });
+    const without = PB.render({ persona: 'P', blocks: on, message: 'Q', memory: '' });
     assert.ok(!without.used.includes('memory'));
   });
 

@@ -102,7 +102,7 @@
 
   // A toggle is only a thinking toggle when it sits inside a chat TURN and outside the composer/header: ChatGPT's
   // model picker can read "Thinking" and is an aria-expanded button too — it must never be clicked.
-  const TURN_SEL = '[data-message-author-role], [data-testid*="turn"], [data-test-render-count], .font-claude-message, article';
+  const TURN_SEL = '[data-message-author-role], [data-testid*="turn"], [data-test-render-count], .font-claude-message, article, model-response, ms-chat-turn, .ds-message';
   const NOT_SEL = 'form, header, nav, [contenteditable="true"], [role="menu"], [role="dialog"]';
   function _inTurn(b) { return !!(b.closest && b.closest(TURN_SEL) && !b.closest(NOT_SEL)); }
 
