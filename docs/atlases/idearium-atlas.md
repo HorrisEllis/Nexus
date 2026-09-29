@@ -395,6 +395,22 @@ NEXUS-as-a-repo is proven by `tests/modules/test-nexus-self-and-cos-run.test.js`
 
 ---
 
+## The settings console, code repos as branches, the repo desktop, staging (v0.39.279)
+
+James: *"can you have a full enterprise grade settings menu that encompassed all the idearium compartment and agent settings"* and *"have cos create the vm environment, and each new repo, if applicable could create a branch of the original, to save resources, can you also make it so once its generated, you can open it like a desktop environment?"*
+
+**The settings console** (`idearium/ui/settings.html`, opened from ⚙ settings in the top bar or a repo's settings tab). The left side lists the global configuration, every repo and every branch. The global page shows each key of idearium's layered config with where its value comes from: the schema default, the config file, or a runtime override. Numbers are checked against their bounds as they are typed, and a runtime override can be reset. A repo has four tabs. Agent covers the provider, the Ollama model (the installed list), the tool scope and the inject mode. Prompt covers every block, on or off, with its text, a reset and a live preview of the first message. Hat shows the persona it wears. Compartment and desktop shows the COS compartment, its branch or original, and the desktop VM. Edits wait in a save bar, and Save sends each one to the route that already owns that setting. A branch shows its original's agent settings read-only with a link there. It reads GET /api/settings/console for the list and GET /api/settings/console/:uuid for one repo. Each source is read on its own, and one that cannot be read is named rather than shown empty. Two new config groups: repos.code_repo_mode (branch or copy) and desktop.ram_mb, desktop.cpus, desktop.network.
+
+**Code repos as branches.** When a repo owns the document spec, the Code button's repo is a branch of it (`cos/workspace/index.js` through `lib/cos-bridge.js`). Its files are a git worktree of the original's folder on branch nexus/name, so both share one history, and its compartment is a child of the original's. The original is first made its own git repository with a baseline commit, never a worktree of the tree it sits in. The repo record carries branchOf and branch. body.branch false, repos.code_repo_mode copy, no original or no git all give the separate copy as before, and the response says why.
+
+**The repo desktop** (`idearium/ui/desktop.html`). POST /api/repos/:uuid/desktop boots the compartment's VM headless, and the page draws its screen with noVNC over QEMU's websocket. The VM's disk is a copy-on-write overlay of the original repo's desktop disk when there is one, otherwise of the base image made by `cos/testenv/provision.js` with the desktop option. The repo's files are copied in once the guest agent answers. GET the same route for status, DELETE to power the VM off; its disk is kept. GET /api/repos/:uuid/branches lists an original's branches.
+
+**Staging** (staging self-heal S1, `docs/2026-09-28-staging-self-heal-phasemap.spec`). An edit, write, delete, move or batch sent to /api/repos/:uuid/code with stage true is committed to the repo's staging branch in Versionium, caused by the gap, and the repo itself is not touched. GET code/staged lists staged batches by commit. POST code/promote applies one, all-or-nothing, and a file changed since staging is a conflict, not an overwrite. `lib/code-edit.js` does the work over the inject trail in `lib/repo-inject.js`.
+
+**What the agent is sent.** Repo prompt blocks are version 1.2.0 (`lib/repo-prompt-blocks.js`). Memory, the context atlas and the memory directory are off by default: one short block names nexus.context.tool, which fetches them on demand, and one line tells a browser agent it can start a line with "hey nexus". The first message stays under 3,000 characters.
+
+Tests: `tests/modules/test-settings-console.test.js`, `tests/modules/test-cos-workspace.test.js` and `tests/modules/test-staging-s0-s1.test.js`, plus the console in a real page (`tests/probe/settings-console-chromium.js`).
+
 ## What Is Not Built, or Not Yet Proven
 
 - **Hats on copilot's own switch.** A hat can be worn on any backend in the Agent tab and in builds. Copilot's own global hat switch still sets the agent to the hat's base agent.

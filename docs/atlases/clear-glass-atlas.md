@@ -332,3 +332,21 @@ Each chat is also one entry in the downloads list (kind: 'chat-ledger'): in prog
 **The prelude.** `clear-glass/src/providers/host.js` injects `guardian/userscript-chat-stream.js` before each provider script, next to `guardian/userscript-nexus-wake.js`. Either one can fail to load without stopping the other.
 
 Tests: test-chat-ledger-stream 14/14, test-tool-layers-and-pane-memory 14/14; the stream checked in headless Chromium (a reply streamed word by word, 5 coalesced posts, the thinking toggle opened and kept apart).
+
+## The interaction field: the page as numbered x/y/z targets, a virtual pointer, a spotlight (3.20.0, v0.39.279)
+
+James: *"i also want to be able to have copilot interact on clearglass using a virtual input through erosmanceros, nexus nerve, spotlight injected css into web pages, and a interaction field for xyz coords to help the agents see and navigate the ui in clearglass. I really need to get a job, and i want to be able to automate as much as possible."*
+
+readPage says what is on a page; nothing said where. A model that cannot see pixels could only act through selectors, and a small model's selector is often wrong or names something hidden behind a cookie banner. `clear-glass/src/page/field.js` is that view:
+
+| driver action | what it does |
+|---|---|
+| field {overlay, offscreen} | every interactive element numbered 1…n with its box, its centre (x, y) and z: how many layers cover its centre (0 = on top and clickable, more than 0 = under a banner or modal, -1 = off-screen). Also its name (label, aria-label, text), role, a selector and CSS z-index. With overlay the numbers, outlines and a labelled grid are drawn in a layer that takes no clicks. The result carries a text map a small model reads: #3 button "Apply now" (412,580) 120×32 z0. |
+| at {x, y} | the stack under one point, top first |
+| spotlight {n or selector or x,y,w,h, label} | a ring and a label on the target, the rest of the page dimmed, so James sees what the agent is about to do |
+| pointer {n or x,y or selector, do, text, via} | acts on a target with real input. do is click, double, right, move, scroll or type. via native uses sendInputEvent along a curved, human-paced path from where the pointer last was. via eros uses ErosmancerOS's new /api/input (the behaviour engine's own path over the DevTools protocol), reached through the wire's tab resolver in `clear-glass/src/main/index.js`. A covered target is reported, never silently clicked through; an off-screen one is refused with "scroll first". |
+| fieldOff | removes everything drawn |
+
+The last field per tab is kept, so "pointer n 3" needs no second read. field and spotlight events go on the bus and are forwarded to NEXUS (the nerve) with the other browser events. The co-pilot pane lists the actions in its compact tool list, and `lib/agent-tools/tools/clear-glass/browser.js` exposes field, pointer and spotlight to every agent, returning the text map rather than 150 objects.
+
+Tests: `tests/modules/test-cg-field.test.js` 13/13 (the driver with a fake page, the tool, the Eros route and its wiring), and `tests/probe/field-chromium.js` 12/12 in Clear Glass's own engine.

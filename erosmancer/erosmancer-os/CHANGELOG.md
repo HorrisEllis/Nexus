@@ -4,6 +4,27 @@ All verified changes only. Nothing pretends.
 
 ---
 
+## [0.2.0] — 2026-09-29 — NEXUS 0.39.279: a virtual pointer at coordinates
+
+**Why:** James wanted the co-pilot to work Clear Glass "using a virtual input through erosmanceros … a interaction field
+for xyz coords". Clear Glass's interaction field (clear-glass/src/page/field.js) names each target by its x/y centre;
+this is the input half.
+
+### Added
+- `POST /api/input` `{ tabId, x, y, action: move|click|double|right|scroll|type, text?, deltaY? }` — attaches the tab,
+  moves a real CDP cursor to (x, y) along the behaviour engine's curved path (from where it last was on that tab), then
+  presses / double-clicks / right-clicks / scrolls / types (`Input.insertText` per character). Pushes an `input` event.
+  Validates every field and answers `{ ok:false, error }` with the reason.
+- `curvedPath(from, to, steps, jitter)` exported from `src/behavior/index.ts` — the same cubic-Bézier movement
+  `moveSteps()` plans, ending exactly on the target.
+
+### Verified
+- `tsc --noEmit`: no new errors (the only error is the existing TS6059 rootDir/tests configuration).
+- Not run against a live browser here; Clear Glass reaches it through `driver.erosInput` (main/index.js), which is
+  unit-tested with the route faked (tests/modules/test-cg-field.test.js DP-05, ER-01).
+
+---
+
 ## [0.1.0] — 2026-04-08 — Initial Architecture
 
 **Status:** Foundation complete. No production deployments.

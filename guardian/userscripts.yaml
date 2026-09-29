@@ -63,7 +63,7 @@ components:
     id: guardian-gemini
     name: "Guardian — Gemini"
     file: userscript-gemini.js
-    version: "10.9.0"   # 0.39.278 — synced to the script (was 10.7.0 here); chat stream by mutation, not polling. 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating, GUARDIAN_JOB_DONE. 0.39.254 — was 10.1.0 here while the script was 10.4.0; +GUARDIAN_TRANSCRIPT push
+    version: "10.10.0"   # 0.39.279 — reads both sides of the chat (thinking apart). 0.39.278 — synced to the script (was 10.7.0 here); chat stream by mutation, not polling. 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating, GUARDIAN_JOB_DONE. 0.39.254 — was 10.1.0 here while the script was 10.4.0; +GUARDIAN_TRANSCRIPT push
     matches: ["https://gemini.google.com/*", "https://aistudio.google.com/*"]
     grants: [GM_xmlhttpRequest, GM_getValue, GM_setValue]
     standalone: true
@@ -91,7 +91,7 @@ components:
     id: guardian-deepseek
     name: "Guardian — DeepSeek"
     file: userscript-deepseek.js
-    version: "10.9.0"   # 0.39.278 — synced to the script (was 10.7.0 here); chat stream by mutation, not polling. 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating, GUARDIAN_JOB_DONE. 0.39.254 — was 1.0.0 here while the script was 10.4.0; +GUARDIAN_TRANSCRIPT push
+    version: "10.10.0"   # 0.39.279 — reads both sides of the chat (thinking apart). 0.39.278 — synced to the script (was 10.7.0 here); chat stream by mutation, not polling. 0.39.256 — +500 ms transcript streamer. 0.39.255 — +settled/generating, GUARDIAN_JOB_DONE. 0.39.254 — was 1.0.0 here while the script was 10.4.0; +GUARDIAN_TRANSCRIPT push
     matches: ["https://chat.deepseek.com/*"]
     grants: [GM_xmlhttpRequest, GM_getValue, GM_setValue]
     standalone: true

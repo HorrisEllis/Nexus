@@ -120,6 +120,10 @@ A real bug found by this system's own migration smoke test (`test-versionium-mig
 
 ---
 
+## Branches remember where they came from (3.4.0, v0.39.279)
+
+Staging self-heal S0 (`docs/2026-09-28-staging-self-heal-phasemap.spec`), closing design gap V2. A branch's row used to record its head only, so its first commit had no parent and "restore to where staging began" had to be guessed. createBranch with a branch and a source (a commit id, or a branch whose head is used) records forkedFrom and forkedAt and starts the branch at that commit, so the first commit on the branch is the fork point's child. A commit that names a source does the same on a new branch's first commit. An existing branch is never re-forked, and an unknown source is refused with the reason first. branches() and forkPoint() read them back; the routes are GET and POST /api/versionium/branches, and POST /api/versionium/commit takes the source too. The first user is the staging branch of each repo (`lib/code-edit.js` stage), forked from the repo's own snapshot branch. Tests: `tests/modules/test-staging-s0-s1.test.js`.
+
 ## Build & Run Reference
 
 Not confirmed.

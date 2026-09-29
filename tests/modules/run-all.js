@@ -24,6 +24,10 @@ const SUITES = [
   'test-code-tools.test.js',             // 0.39.273 — /api/repos/:uuid/code/* and the eleven agent code tools
   'test-tool-layers-and-pane-memory.test.js', // 0.39.278 — tools as layers (nexus.tools → tools_expand); the co-pilot pane keeps its conversation
   'test-chat-ledger-stream.test.js',     // 0.39.278 — every chat streamed live (mutations, not polling) into the download manager's chat ledger
+  'test-cg-field.test.js',               // 0.39.279 — Clear Glass interaction field: numbered x/y/z targets, virtual pointer (native / ErosmancerOS), spotlight
+  'test-cos-workspace.test.js',          // 0.39.279 — COS workspaces: code repo as a git worktree branch, VM disk overlay, desktop VM
+  'test-settings-console.test.js',       // 0.39.279 — idearium settings console: layered config + every repo's agent/prompt/hat/compartment
+  'test-staging-s0-s1.test.js',          // 0.39.279 — staging self-heal S0 (versionium fork points) + S1 (code-edit stage/promote)
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272
   'jaa-db.test.js',

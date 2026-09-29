@@ -376,3 +376,15 @@ spec:
   #   - the real §63 plugin spec, if it exists somewhere outside this
   #     repo or in someone's memory, reconciled here rather than
   #     silently left dangling forever.
+
+# ── ADDENDUM 2026-09-29 (0.39.279) — workspaces: a repo as a branch of the original, and its desktop ──
+# James: "have cos create the vm environment, and each new repo, if applicable could create a branch of the original,
+# to save resources … once its generated, you can open it like a desktop environment". cos/workspace/index.js:
+# branchWorkspace (the original made its OWN git repository — never a worktree of the tree it sits in — then a worktree
+# on nexus/<name>; reused; uncommitted work snapshotted), listBranches, removeBranch (branch kept), branchDisk (qcow2
+# overlay backed by the original's disk), startDesktop / desktopStatus / stopDesktop (headless VM from
+# <root>/.cos-desktop/desktop.qcow2, an overlay of the original repo's desktop disk when it has one else the base image;
+# the repo copied in through the guest agent; the disk kept on stop). qemu-runtime: headless display also on a
+# websocket (5700+N), desktopPorts(). provision.js --with desktop (xfce + lightdm autologin). lib/cos-bridge.js is the
+# door (branchWorkspace, listBranches, desktop). Proven by tests/modules/test-cos-workspace.test.js (real git; QEMU
+# faked) — no VM was booted in the release environment.

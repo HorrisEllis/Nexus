@@ -548,3 +548,12 @@ spec:
 # the transcript's own mutations (_txStreamKick, guarded so the transcript push never depends on it). The settled
 # GUARDIAN_TRANSCRIPT and job completion from it are unchanged. Userscripts: claude/chatgpt 10.12.0, gemini/perplexity/
 # deepseek 10.9.0 (userscripts.yaml synced to the scripts' own @version).
+
+# ── ADDENDUM 2026-09-29 (0.39.279) — Gemini/DeepSeek full readers; "hey nexus" answered from any chat ──
+# userscript-gemini: user-query / model-response (AI Studio ms-chat-turn) in page order, thinking (model-thoughts) apart;
+# userscript-deepseek: every .ds-message, reply = .ds-markdown outside .ds-think-content, chat id = /s/<id>. No turns →
+# the newest reply, partial:true, as before. Both 10.10.0. lib/wake-loop.js handleTranscript: the settled transcript's
+# newest turn, the agent's, starting a line with a wake → a wake-reply job into that chat (createJob chatUrl, resumed by
+# the dispatcher); once per turn; depth = the run of [NEXUS] answers just sent; the job and transcript paths defer to
+# each other once. server.js listens to guardian.ncp.transcript. Proven by tests/modules/test-guardian-wake.js WK-040…044
+# and tests/probe/gemini-deepseek-reader-chromium.js (pages built to the documented shapes, not the live sites).

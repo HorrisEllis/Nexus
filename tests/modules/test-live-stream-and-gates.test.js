@@ -164,7 +164,7 @@ test('GS-10', 'Agent tab: streamed chunks build the live text (a reset replaces 
 });
 
 test('GS-11', 'every userscript: the job start arms the streamer; the watch marks itself when it streams; versions bumped together', () => {
-  const want = { chatgpt: '10.12.0', claude: '10.12.0', gemini: '10.9.0', perplexity: '10.9.0', deepseek: '10.9.0' };   // 0.39.278 — mutation-driven
+  const want = { chatgpt: '10.12.0', claude: '10.12.0', gemini: '10.10.0', perplexity: '10.9.0', deepseek: '10.10.0' };   // 0.39.278 — mutation-driven; 0.39.279 — gemini/deepseek read both sides
   for (const [p, v] of Object.entries(want)) {
     const s = fs.readFileSync(path.join(ROOT, `guardian/userscript-${p}.js`), 'utf8');
     assert.ok(s.includes('currentJobId = msg.jobId; _txJobStart(msg); handleJob(msg); break;'), `${p}: job start not armed`);

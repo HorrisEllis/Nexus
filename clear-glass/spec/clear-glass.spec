@@ -637,3 +637,13 @@ spec:
   #    the orchestrator's capability prompt is not fetched per turn ('full' restores it).
   # 5. The pane escapes every reply before innerHTML (formatReply), live and restored — a kept reply cannot inject.
   # Proven by tests/modules/test-chat-ledger-stream.test.js and tests/modules/test-tool-layers-and-pane-memory.test.js.
+
+  # ## ADDENDUM 2026-09-29 (0.39.279) — the interaction field (src/page/field.js)
+  # James: "a interaction field for xyz coords to help the agents see and navigate the ui in clearglass … virtual input
+  # through erosmanceros … spotlight injected css". Driver actions: field {overlay, offscreen} (every interactive element
+  # numbered with box, centre x/y and z = layers covering its centre; overlay + grid in a pointer-events:none layer;
+  # a text map), fieldOff, at {x,y}, spotlight {n|selector|x,y,w,h, label, ttl, off}, pointer {n|x,y|selector, do:
+  # click|double|right|move|scroll|type, text, via: native|eros}. native = sendInputEvent on a curved path; eros =
+  # ErosmancerOS POST /api/input through main/index.js's tab resolver (driver.erosInput). A covered target is reported,
+  # an off-screen one refused. field.map / field.spotlight are bus events forwarded to NEXUS. clearglass.browser.tool
+  # exposes field / pointer / spotlight. Proven by tests/modules/test-cg-field.test.js and tests/probe/field-chromium.js.

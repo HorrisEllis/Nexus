@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — DeepSeek v1.0
 // @namespace    nexus.guardian.deepseek
-// @version      10.9.0
+// @version      10.10.0
 // @description  Guardian - DeepSeek: NCP v10 protocol parity (handshake, IndexedDB
 //               kernel, SHA-256 dedup, tab-claim, SEAM jobs, intelligence injection,
 //               usage detection) cloned from userscript-perplexity.js per reuse-
@@ -34,7 +34,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'deepseek';
-const VERSION     = '10.9.0';
+const VERSION     = '10.10.0';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
