@@ -3,3 +3,14 @@
  * scoped to body[data-area="eros"] — set by core.js when the area is shown —
  * so nothing here can restyle another area. */
 body[data-area="eros"] pre.out { max-height: 200px; }
+
+/* §0.39.281 EC10 — the workbench */
+body[data-area="eros"] .wb-views { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid var(--line, #2a2f3a); }
+body[data-area="eros"] .wb-view { background: none; border: 0; border-bottom: 2px solid transparent; color: inherit; opacity: .7; padding: 6px 12px; cursor: pointer; font: inherit; }
+body[data-area="eros"] .wb-view.on { opacity: 1; border-bottom-color: var(--accent, #7aa2f7); }
+body[data-area="eros"] .wb-bar { display: flex; gap: 8px; margin-bottom: 10px; }
+body[data-area="eros"] .wb-bar input { flex: 1; min-width: 0; }
+body[data-area="eros"] .wb-nodes { max-height: 420px; overflow: auto; }
+body[data-area="eros"] .wb-check { display: block; margin-top: 10px; }
+body[data-area="eros"] .wb-result pre.out, body[data-area="eros"] .wb-detail pre.out { max-height: 320px; margin-top: 10px; }
+body[data-area="eros"] .wb-tab .acts select { width: auto; }

@@ -581,7 +581,7 @@ app.post("/api/shadow/map", async (req, res) => {
 
 app.get("/api/replay/frames", (_req, res) => {
   if (!replay) { res.status(503).json({ ok: false, error: "Not connected" }); return; }
-  res.json({ ok: true, snapshot: replay.snapshot() });
+  res.json({ ok: true, snapshot: replay.snapshot(), frames: replay.list() });   // §0.39.281 EC10: frames listed (additive)
 });
 
 app.post("/api/replay/:frameId", async (req, res) => {

@@ -182,10 +182,13 @@ spec:
 
     EC10_eros_workbench:
       layer: ui
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — drift, stated: GET /api/replay/frames returned counts only, so frames could not be picked; erosmancer-os gains ScriptReplayQueue.list() and the route adds frames beside the unchanged snapshot (additive). Proof: tests/modules/test-eros-workbench.test.js 6/6; erosmancer-os replay tests 29/29; tsc errors unchanged (5 pre-existing rootDir); test-cg-settings-ui-files 6/6"
       depends_on: []
       files:
         - "clear-glass/renderer/settings/sections/eros.js"
+        - "clear-glass/renderer/settings/sections/eros.css"
+        - "erosmancer/erosmancer-os/src/replay/index.ts (list(), added in the build — see status)"
+        - "erosmancer/erosmancer-os/src/api/server.ts (frames beside snapshot)"
       does: >-
         "A huge editor for ErosmancerOS", additively: the ErosmancerOS page gains the views it lacks — its tabs (attach
         / detach), the node registry (search, inspect), a command console (one /api/execute against a tab, the result
