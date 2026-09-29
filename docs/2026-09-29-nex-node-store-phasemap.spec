@@ -464,7 +464,7 @@ spec:
 
     N27_history_import_from_700_zips:
       layer: foundation
-      status: OPEN
+      status: "BUILT 0.39.282 — cli/import-history.js (pure Node + the git CLI; runs on Windows): scan (sha256, root, version, newest-entry date, .git) → version order → one snapshot commit per zip on history/snapshots dated to the zip (node_modules, data/, nested .git left out; a tree already on the branch = duplicate, no commit) + a zip's real .git fetched into refs/import/<sha12>/*; provenance in commit trailers; YAML report in .git/nexus-history-import/; rerun skips by Zip-Sha256; a release found later is appended and flagged; --rebuild reorders and keeps the old branch; never touches the current branch (join with merge -s ours, printed). lib/zip.js now reads/writes entry dates. Test: test-import-history 14/14. Measured on the real 0.39.278–0.39.282 zips: 5 in 8 s (~20 min for 700)."
       depends_on: []
       files:
         - "cli/import-history.js (new, runs on James's machine where the zips are)"
