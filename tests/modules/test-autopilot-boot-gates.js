@@ -1,4 +1,5 @@
 'use strict';
+// run-all: timeout 180000   (§0.39.282 — waits through real autopilot boot phases; ~82s alone, past the 60s default)
 // §SANDBOX 2026-09-25 — this test starts real NEXUS processes; they inherit a throwaway data root from here (lib/test-sandbox.js).
 require('../../lib/test-sandbox.js').ensure();
 /**

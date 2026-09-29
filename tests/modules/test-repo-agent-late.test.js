@@ -1,4 +1,5 @@
 'use strict';
+// run-all: timeout 180000   (§0.39.282 — boots real guardian/idearium processes; ~92s alone, past the 60s default)
 /**
  * tests/modules/test-repo-agent-late.test.js — v0.39.241
  * James (0.39.239's open item): the idearium Agent tab should pick up a reply

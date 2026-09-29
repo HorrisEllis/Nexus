@@ -35,6 +35,7 @@ const SUITES = [
   'test-economy.test.js',                // 0.39.281 — EC0–EC5, EC7, EC9: policy, ledger, gate, token limits, router, staging by tier, learned build order, ErosmancerOS input
   'test-economy-guardian.test.js',       // 0.39.281 — EC6: guardian's dispatcher waits / stops / falls back by the economy; every outcome recorded
   'test-guardian-json-routes.test.js',   // 0.39.282 — the real guardian answers provider/login, economy and intake once (was: json undefined, 404 then crash)
+  'test-run-all-process-group.test.js',   // 0.39.282 N29 — a suite's whole process group dies with it (orphaned servers caused full-run-only failures)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272
@@ -481,12 +482,18 @@ async function runSuite(file) {
     // means anything it spawns before touching a store is covered too, and
     // no two suites share leftovers.
     const sb = require('../../lib/test-sandbox.js').childEnv();
+    // §0.39.282 N29 — each suite runs in its OWN process group, and the whole group is killed when the suite ends or
+    // times out. Killing only the suite's pid left the servers it started (guardian, autopilot, orchestrator) running,
+    // still holding ports and writing, and the suites after it talked to them: failures that showed only in a full run.
+    const group = process.platform !== 'win32';
     const proc = spawn('node', [path.join(MODULES_DIR, file)], {
       cwd: path.join(__dirname, '../..'),
       stdio: ['ignore', 'pipe', 'pipe'],
       env: sb.env,
+      detached: group,
     });
-    proc.on('close', sb.cleanup);
+    const killGroup = () => { try { if (group) process.kill(-proc.pid, 'SIGKILL'); else proc.kill('SIGKILL'); } catch (_) { /* already gone */ } };
+    proc.on('close', () => { killGroup(); sb.cleanup(); });
 
     let out = '';
     let settled = false;
@@ -501,12 +508,15 @@ async function runSuite(file) {
     // by hand. §1.2 — an unbounded wait is never acceptable; a suite that
     // cannot finish in a real, generous window is reported as hung, not
     // silently waited on forever.
-    const SUITE_TIMEOUT_MS = 60000;
+    // §0.39.282 — a suite that genuinely needs longer says so in its own header ("run-all: timeout <ms>"), read here,
+    // so no list of slow suites lives in this file. Default 60s.
+    let SUITE_TIMEOUT_MS = 60000;
+    try { const m = fs.readFileSync(path.join(MODULES_DIR, file), 'utf8').slice(0, 4000).match(/run-all:\s*timeout\s+(\d+)/); if (m) SUITE_TIMEOUT_MS = Math.min(600000, parseInt(m[1], 10)); } catch (_) {}
     const timer = setTimeout(() => {
       if (settled) return;
       settled = true;
-      proc.kill('SIGKILL');
-      console.log(`\n  ⧖ ${file} TIMED OUT after ${SUITE_TIMEOUT_MS}ms — force-killed, not counted as passing\n`);
+      killGroup();
+      console.log(`\n  ⧖ ${file} TIMED OUT after ${SUITE_TIMEOUT_MS}ms — force-killed with everything it started, not counted as passing\n`);
       totalFailed += 1;
       results.push({ file, passed: 0, failed: 1, code: null, crashed: false, timedOut: true });
       resolve();

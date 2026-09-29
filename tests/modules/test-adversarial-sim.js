@@ -33,9 +33,11 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
+// §0.39.282 — lib/component-ledger.js writes under NEXUS_DATA_ROOT (the sandbox's data root in a test), else <repo>/data.
+const LEDGER_DATA_ROOT = process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data');
 const { purgeTestRows } = require('./_purge-test-rows');
 const q = require('../../lib/contract-queue.js');
-const rmLedger = (s) => { try { fs.rmSync(path.join(ROOT, 'data/ledger', s), { recursive: true, force: true }); } catch (_) {} };
+const rmLedger = (s) => { try { fs.rmSync(path.join(LEDGER_DATA_ROOT, 'ledger', s), { recursive: true, force: true }); } catch (_) {} };
 const rmBox = (s) => { try { fs.rmSync(path.join(ROOT, s), { recursive: true, force: true }); } catch (_) {} };
 
 // ── BUG 1 (UC2.4): a system name became a filesystem path, unchecked ────────
@@ -117,7 +119,7 @@ test('AS-007', 'LEDGER ROWS ARE CAPPED — a 2MB payload was previously accepted
     assert.ok(r.detail.preview.length <= r.detail.cappedAt);
 
     const day = new Date().toISOString().slice(0, 10);
-    const lines = fs.readFileSync(path.join(ROOT, 'data/ledger', S, `${S}.c`, `${day}.jsonl`), 'utf8').trim().split('\n');
+    const lines = fs.readFileSync(path.join(LEDGER_DATA_ROOT, 'ledger', S, `${S}.c`, `${day}.jsonl`), 'utf8').trim().split('\n');
     assert.strictEqual(lines.length, 1, 'and the jsonl file must stay one row per line');
     assert.ok(lines[0].length < 20000, `the persisted row must be capped, got ${lines[0].length} bytes`);
   } finally { rmLedger(S); purgeTestRows(S); }
@@ -176,7 +178,7 @@ test('AS-012', 'REGRESSION GUARD: embedded newlines in detail cannot split a jso
   try {
     write({ system: S, component: `${S}.c`, action: 'a', detail: 'line1\nline2\nline3' });
     const day = new Date().toISOString().slice(0, 10);
-    const lines = fs.readFileSync(path.join(ROOT, 'data/ledger', S, `${S}.c`, `${day}.jsonl`), 'utf8').trim().split('\n');
+    const lines = fs.readFileSync(path.join(LEDGER_DATA_ROOT, 'ledger', S, `${S}.c`, `${day}.jsonl`), 'utf8').trim().split('\n');
     assert.strictEqual(lines.length, 1, 'a newline inside detail must not corrupt the file');
     assert.doesNotThrow(() => JSON.parse(lines[0]));
   } finally { rmLedger(S); purgeTestRows(S); }
@@ -276,7 +278,7 @@ test('AS-019', 'REGRESSION GUARD: unicode and emoji round-trip through the ledge
   try {
     write({ system: S, component: `${S}.c`, action: 'unicode', detail: payload });
     const day = new Date().toISOString().slice(0, 10);
-    const row = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/ledger', S, `${S}.c`, `${day}.jsonl`), 'utf8').trim());
+    const row = JSON.parse(fs.readFileSync(path.join(LEDGER_DATA_ROOT, 'ledger', S, `${S}.c`, `${day}.jsonl`), 'utf8').trim());
     assert.strictEqual(row.detail, payload, 'unicode must survive the round trip byte-for-byte');
   } finally { rmLedger(S); purgeTestRows(S); }
 });

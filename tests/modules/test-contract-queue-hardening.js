@@ -34,6 +34,8 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
+// §0.39.282 — lib/component-ledger.js writes under NEXUS_DATA_ROOT (the sandbox's data root in a test), else <repo>/data.
+const LEDGER_DATA_ROOT = process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data');
 const q = require('../../lib/contract-queue.js');
 
 // Collision-proof system names so nothing touches a real system's folders.
@@ -149,7 +151,7 @@ try {
     q.accept(B, c.uuid);
     q.complete(B, c.uuid, { ok: true });
     const day = new Date().toISOString().slice(0, 10);
-    const bDir = path.join(ROOT, 'data/ledger', B, `${B}.queue`, `${day}.jsonl`);
+    const bDir = path.join(LEDGER_DATA_ROOT, 'ledger', B, `${B}.queue`, `${day}.jsonl`);
     assert.ok(fs.existsSync(bDir), `queue movement must reach the canonical ledger: ${bDir}`);
     const rows = fs.readFileSync(bDir, 'utf8').trim().split('\n').map(l => JSON.parse(l));
     const mine = rows.filter(r => r.detail && r.detail.uuid === c.uuid);
@@ -231,7 +233,7 @@ try {
 
 } finally {
   for (const d of [A, B]) fs.rmSync(path.join(ROOT, d), { recursive: true, force: true });
-  for (const d of [A, B]) fs.rmSync(path.join(ROOT, 'data/ledger', d), { recursive: true, force: true });
+  for (const d of [A, B]) fs.rmSync(path.join(LEDGER_DATA_ROOT, 'ledger', d), { recursive: true, force: true });
   // §2026-07-24 — the JAA mirror leaked even though the day files were removed.
   try { require('./_purge-test-rows').purgeTestRows(TAG); } catch (_) {}
 }

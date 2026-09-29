@@ -31,8 +31,10 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
+// §0.39.282 — lib/component-ledger.js writes under NEXUS_DATA_ROOT (the sandbox's data root in a test), else <repo>/data.
+const LEDGER_DATA_ROOT = process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data');
 const SYS = `icowt-${Date.now()}`; // collision-proof canonical dir for this run
-const CANON_SYS_DIR = path.join(ROOT, 'data/ledger', SYS);
+const CANON_SYS_DIR = path.join(LEDGER_DATA_ROOT, 'ledger', SYS);
 
 let ico, tmpRoot;
 
