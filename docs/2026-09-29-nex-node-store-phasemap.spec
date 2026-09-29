@@ -6,7 +6,7 @@ spec:
     release:  "0.39.281 (base) → from 0.39.282, one phase at a time"
     uuid:     nexus-nex-node-store-phasemap-v1-0000-2026-0929-jamesbrooks-001
     owner:    "lib.nexstore (new) · lib.node-export · lib.node-schemas · versionium · loom.schema.registry · intelligence.lattice · intelligence.rfr2.kernel · intelligence.cfr · cortex.core.raid"
-    status:   "mapped, not built — every phase open (extended 2026-09-29 with N14–N20: failure-mode field, contract history, settings without iframes, data migration, hardcode census, suite triage, desktop login). Working name 'nexstore' (James to name it; a rename is one find-and-replace before N1)"
+    status:   "mapped, not built — every phase open (extended 2026-09-29 with N14–N20: failure-mode field, contract history, settings without iframes, data migration, hardcode census, suite triage, desktop login; and N21–N29: event-gated steps, shadow/negative-space reasoning, ollama-first build + agent review, YAML node types only, the Manage surface, contract-built work surface/TV UI, 700-zip history import, live-run findings, full-run-only failures). Working name 'nexstore' (James to name it; a rename is one find-and-replace before N1)"
     axioms:   "docs/AXIOMS-v3.1.md — §0.3 (nothing lost), §3.1, §3.3, §3.4, §8.6 (reuse), §10.1 (one write authority), §10.2 (projections derived), §10.3 (one source of truth per system), §17.5 (provenance)"
     relates:  "Generalises docs/2026-09-11-sovereign-node-architecture-phasemap.spec (draft: each system's own node schemas, sovereign) — that map says WHAT each system's nodes are; this one is WHERE and HOW they are stored. Both stay; neither replaces the other (§12.5: two contracts, surfaced)."
     origin: >
@@ -316,7 +316,7 @@ spec:
 
     N19_suite_triage_and_known_gaps:
       layer: automation
-      status: "IN PROGRESS 2026-09-29 — 24 of 81 failing files fixed so far (commits 6b0ef02, 07bf7a0, 31cbb13 and later); the rest go on the register with reasons"
+      status: "MOSTLY DONE 2026-09-29 — 57 of 81 files fixed; the other 24 are on tests/known-gaps.yaml (44 cases, each with kind + reason) and run-all reports them apart (e65b313). Full run: 4771 passed, 45 failed = 30 known + 15 NEW in 9 suites that only fail inside the full run — see N29."
       depends_on: []
       files:
         - "tests/known-gaps.yaml (each entry a gap node: file, failing count allowed, kind, reason)"
@@ -330,12 +330,18 @@ spec:
         clear-glass/data/nodes/capability/*.capability re-exported with a new exported_at on every load (104 tracked files
         churn); data/ledger/copilot/copilot.introspect, data/ledger/orchestrator.jsonl,
         data/orchestrator/ledger/cfr/event_log.jsonl and data/vector-index written outside NEXUS_DATA_ROOT; guardian response
-        nodes written to guardian/data/nodes/response from a test (test-one-tab-e2e OT-06).
+        nodes written to guardian/data/nodes/response from a test (test-one-tab-e2e OT-06). CLOSED 0.39.282: seven
+        hard-wired data/ ledger paths follow NEXUS_DATA_ROOT (67b6f6b), LEDGER_STORE_ROOT sandboxed (eb50cba),
+        system-nodes sync is a dry run on the real tree under tests (76ed6fb), response nodes sandboxed. STILL OPEN (seen in
+        the full run): intelligence/data/node-index + nodes/bep_pattern + resonance_crystal, guardian/input/*.contract,
+        writeback-failures.jsonl — each written by some suite outside the sandbox; find the writer, give it a STORES key.
+        Also: 472 test files exist, run-all registers 402 — the ~66 unregistered ones (incl. copilot-confidence,
+        clear-glass-accounts, copilot.test, ui-self-diagnosis) are either registered or archived with a reason.
       proof: "run-all green apart from registered gaps; each gap names its reason"
 
     N20_desktop_login:
       layer: automation
-      status: OPEN
+      status: "DONE 0.39.282 (4b0ffe5) — settings desktop.user/password (nexus/nexus), chpasswd at provision, guest-agent guest-set-user-password every boot, shown in the viewer, idearium atlas lists it. Test: test-cos-workspace WS-14 (not a separate file)."
       depends_on: []
       files:
         - "cos/testenv/provision.js"
@@ -348,6 +354,157 @@ spec:
         provision time), set it on already-built images through qemu-guest-agent (guest-set-user-password) when the desktop
         starts, and show the login in the desktop viewer.
       proof: "tests/modules/test-desktop-login.test.js (the cloud-init/provision script sets it; the viewer shows it; the guest-agent call is made for an image without one)"
+
+    # ── 2026-09-29 (later) — James, after the live run: "Shouldn't generate empty. Why not gate each step with events.
+    #    What about using shadow and negative space reasoning? Can you map all of this also? Also the manage button …
+    #    Ollama should be default … No more json. Only yaml node types using and expanding the taxonomy. What if we have
+    #    ollama build all of the files first … each chunk uses a new chat … then hands it off … to an agent to check and
+    #    expand … I have 700 nexus zips. Some with .git a lot without. I want to import the full (mostly) history."
+
+    N21_no_empty_generation_event_gates:
+      layer: automation
+      status: OPEN
+      depends_on: [N14]
+      files:
+        - "lib/step-gate.js (new — one gate every build step passes through)"
+        - "lib/extract-code.js, guardian/lib/code-artifact.js, guardian/lib/response-sink.js (the steps that produced the 0-byte state.js)"
+        - "idearium/api/build-surface.js + idearium/ui/js/plan-panel.js (a step shows gated/blocked, never 'replied' on nothing)"
+      does: >-
+        Live evidence: Idearium Files showed src/kernel/state.js at 0 bytes while its plan job said "replied" — the reply was
+        a refusal ("I can't safely rebuild …") plus an empty fence, and every stage passed it on. Each step (dispatch →
+        reply → extract → write → verify) becomes an explicit gate that EMITS an event (step.passed / step.blocked, with
+        the reason and the causal id of the step before) and the next step starts only on step.passed. Gate rules are
+        nodes (I9), not literals: a file write refuses 0 bytes, a reply that reports its own failure (lifeline's
+        self-failure detector, 0.39.282) is blocked as a refusal not a result, an extracted file must parse for its
+        language. A blocked step is a failure_mode node (N14) with its conditions, and goes back to the queue with the
+        reason, never written.
+      proof: "a refusal + empty fence reply produces step.blocked, no 0-byte file, the job shows 'blocked: refusal' — end to end through the real guardian sink"
+
+    N22_shadow_and_negative_space_reasoning:
+      layer: intelligence
+      status: OPEN
+      depends_on: [N21, N14]
+      files:
+        - "lib/step-gate.js (the expectation half)"
+        - "intelligence/ (reuse: relational-field, gap-field explainWhy, liminal-space — the in-between items)"
+      does: >-
+        SHADOW: before a step runs, it declares what it expects to exist afterwards (files and their paths from the build
+        plan, fields of the node it writes, the events it will emit) — a shadow node. NEGATIVE SPACE: after it runs, the
+        gate reads the DIFFERENCE between shadow and what actually exists: the file that was planned and never written,
+        the event that should have fired and was silent, the field that is absent. Absence becomes data (a gap node with
+        kind: absent, pointing at the shadow), not an unnoticed hole. Liminal-space already holds "unresolved in-between
+        items per focal point" — the negative-space findings land there, so intelligence reasons over what did not
+        happen as well as what did.
+      proof: "a plan with 5 files where 4 are written yields exactly one absent-gap naming the fifth; silence of an expected event within its window yields one"
+
+    N23_ollama_first_build_then_agent_review:
+      layer: automation
+      status: "PARTLY — ollama is the default provider now (1413ca0); the pipeline below is OPEN"
+      depends_on: [N21]
+      files:
+        - "lib/repo-agent.js, idearium/api/build-surface.js (build plan → chunks)"
+        - "ollama/lib/ollama-client.js, lib/ollama-activity.js (numCtxFor: 4096 floor, 16384 cap for a 4 GB GPU)"
+        - "lib/seam/adapters/warp-cascade.js (the hand-off)"
+      does: >-
+        Stage 1 — Ollama drafts EVERY file of the build plan, best it can, one chunk per FRESH chat (the chunk's spec,
+        its interfaces, the files it depends on — nothing else), so each chunk has the whole window. Context: already
+        auto-sized per prompt; the "4k" is the floor. Raise OLLAMA_NUM_CTX_MAX only as far as the model + VRAM hold
+        (on 4 GB: a 7B q4 model at 8k–16k; past that Ollama spills to CPU and slows sharply) — the chunking is what
+        keeps each prompt small, not the window. Stage 2 — the drafts go to a guardian agent as a review job: check
+        against the spec, fix, expand where needed, reply in the same file fences. Through the existing guardian/tab
+        channel as a normal conversation the person can join and talk in directly. Each draft and each review is a
+        node linked to its chunk (provenance: who wrote which line, first).
+        NOT BUILT, stated: a "semantic randomizer" that rewrites the hand-off so automated traffic reads as a human to
+        the provider — that is disguising automation to evade a provider's detection, excluded in this project since
+        0.39.27x and stays excluded. The hand-off is honest text sent through the channel the person uses.
+      proof: "a 3-file plan: 3 ollama draft nodes (fresh chats, recorded windows), one review job, final files carry both provenance links"
+
+    N24_no_json_yaml_node_types_only:
+      layer: foundation
+      status: OPEN
+      depends_on: [N2, N7, N18]
+      does: >-
+        James: "No more json. Only yaml node types using and expanding the taxonomy." Census every JSON file the system
+        WRITES (registry.json, interaction-contract.json, *_ledger.json node indexes, config, jobs, manifests) and every
+        one it reads as configuration. Each becomes a node type (existing in lib/node-schemas where one fits, a new
+        schema.<type> where not — the taxonomy grows, never a free-form file). JSON stays only where an outside format
+        requires it (package.json, an HTTP body on the wire) — listed with that reason. Wire: the NEX log (N1) stores the
+        node; .yaml is the view (N7).
+      proof: "the census lists every JSON writer; each has a node type or a stated external reason; a new JSON writer fails a census test"
+
+    N25_manage_button_enterprise:
+      layer: interface
+      status: OPEN
+      depends_on: []
+      files:
+        - "idearium/ui/js/file-manage.js (+ its css)"
+      does: >-
+        James: "the manage button. Can you make it beautiful like the rest of idearium. Like enterprise grade, fully
+        built." Rebuild the file-manage surface in the settings-console language (window-chrome, one dark theme,
+        breathing room): a table of the repo's files with state (pending/greyed, written, deviated, staged), size, last
+        writer (ollama / agent / person — provenance), bulk select, filter and search, per-file actions (open, diff vs
+        baseline, re-generate, stage, promote, archive — never delete), and a detail pane with the file's causal history
+        (N15). Empty/zero-byte files are marked, never shown as done (N21).
+      proof: "tests/probe/*-chromium.js drives it: every action reaches its real route; a 0-byte file shows 'empty'"
+
+    N26_work_surface_and_tv_ui_from_contracts:
+      layer: interface
+      status: OPEN
+      depends_on: [N25]
+      files:
+        - "ui/contract-renderer.js (exists: renders any interaction contract as a working UI)"
+        - "ui/tv-shell/"
+      does: >-
+        James (message cut at "needs to have an op…"): "maybe work surface? also the tv ui. you can have the system make
+        you any custom ui you want, using the interaction contract." A work surface: one page composed at run time from
+        the contracts of the systems a task touches (contract-renderer already turns a contract into cards, route forms,
+        SSE monitor) — panels picked by the task, not hand-coded. The TV UI gets the same composition. Open question for
+        James: what the cut-off "op…" was (options? an open …?).
+      proof: "a surface built for a repo task lists exactly the routes of the systems its plan touches"
+
+    N27_history_import_from_700_zips:
+      layer: foundation
+      status: OPEN
+      depends_on: []
+      files:
+        - "cli/import-history.js (new, runs on James's machine where the zips are)"
+      does: >-
+        James: "I have 700 nexus zips. Some with .git a lot without. I want to import the full (mostly) history." Per zip:
+        sha256, extract to temp, read the version (lib/version.js system, else package.json), date (newest entry mtime).
+        (a) A zip WITH .git: fetch its commits into refs/import/<zip-sha> — real history, real authors and dates, deduped
+        by git itself. (b) A zip WITHOUT .git: one snapshot commit of its tree (data/, node_modules, .git excluded),
+        ordered by version then date, on an orphan branch history/snapshots; identical trees collapse (same tree hash =
+        no new commit, recorded as a duplicate). Every zip becomes a provenance node (zip name, sha256, version, date,
+        source: git|snapshot, commit id, duplicate-of) so the import is traceable and resumable (skip a sha already
+        done). Then one merge commit joins history/snapshots under the current main as a second parent — no rewrite of
+        existing history. Versionium indexes the snapshot commits as positions. Idempotent: running it twice adds nothing.
+      proof: "a fixture of 5 zips (2 with .git, 3 without, one duplicate) → 2 imported ref sets, 2 snapshot commits, 1 duplicate node, rerun adds 0"
+
+    N28_live_run_findings:
+      layer: automation
+      status: OPEN
+      depends_on: []
+      does: >-
+        From the live boot log: (1) idearium drops OFFLINE every 10 minutes during the nexus-self sync — the compartments
+        step runs 17–23 s synchronously and blocks the event loop; move it to chunks yielding to the loop (or a worker)
+        and measure the loop lag. (2) Spec drift: eravos spec 3.17.0 vs code 3.18.0, copilot 3.6.0 vs 3.7.0 — addend
+        the specs. (3) ChatGPT tab was in logged-out guest mode (a person's action: sign in). (4) The RAID intent gate
+        fails OPEN on a check error — a design choice to confirm with James (fail closed is safer).
+      proof: "event-loop lag under 200 ms across a sync; spec versions match code"
+
+    N29_full_run_only_failures:
+      layer: automation
+      status: OPEN
+      depends_on: [N19]
+      does: >-
+        Nine suites pass (or were not run) alone but fail inside the full run (4771/45): queue.test.js (1),
+        test-repo-agent-late (timeout), test-idearium-cjs-under-esm (1), test-autopilot-boot-gates (timeout),
+        test-contract-queue-hardening (1), test-sentinel-cli (1), test-adversarial-sim (3), test-ico-ledger-writethrough
+        (3), test-one-tab-e2e (3; 8/0 alone). Root-cause each (ordering, shared port, leftover state, timeout budget)
+        before any is registered — a failure that only shows under load is still a failure.
+      proof: "full run: 0 unregistered failures"
+
+    # ── HANDOFF: docs/2026-09-29-handoff.md says where this stands and what to ask next.
 
   risks:
     - "A storage engine's bugs are in crash recovery and fsync behaviour (Windows differs from Linux). N1's crash test runs on every platform the system ships on before anything adopts it."
