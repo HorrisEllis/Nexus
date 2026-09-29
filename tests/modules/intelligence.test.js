@@ -113,6 +113,10 @@ function feedFiller(n, type = 'noise') {
 
 function resetAll() {
   resetStore();
+  // §0.39.282 — wait until the clock has moved past this millisecond. The previous test's scan left its cursor at
+  // Date.now(); events fed in the SAME millisecond carried ts === cursor and were treated as already scanned, so C2
+  // saw no pattern row at all (flaked about 1 run in 3). A spin of at most 1 ms makes "time only moves forward" true.
+  const t = Date.now(); while (Date.now() <= t) { /* spin ≤ 1 ms */ }
   // _patternScanCursor has no setter exported deliberately (boot hydration is
   // the only legitimate writer). Tests don't need to reset it — as long as
   // every timestamp used below is real Date.now()-anchored, real wall-clock
