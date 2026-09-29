@@ -44,7 +44,8 @@ test('T-003', 'the optimizer is wired to the intelligence layer it composes (§t
 test('T-004', 'the graph joins the rest of NEXUS (edges to cfr, jaa-db, mastermind)', () => {
   const allDeps = new Set();
   for (const [, , reqs] of FILES) for (const d of reqs) allDeps.add(d);
-  for (const ext of ['nexus.meta.cfr.field', 'nexus.cortex.jaa-db', 'nexus.intelligence.mastermind']) {
+  // §0.39.282 — CFR moved from meta/ into intelligence/ (intelligence.spec); the id followed it.
+  for (const ext of ['nexus.intelligence.cfr.field', 'nexus.cortex.jaa-db', 'nexus.intelligence.mastermind']) {
     assert.ok(allDeps.has(ext), `the arc must connect to ${ext} (everything connects)`);
   }
 });

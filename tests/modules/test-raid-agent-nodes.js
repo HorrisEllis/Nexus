@@ -57,7 +57,13 @@ function run() {
   });
 
   test('RAN-004B', 'the real fallback chain now includes perplexity/deepseek, appended after James\'s own explicit, stated preference order — not assumed to outrank it', () => {
-    assert.ok(/const chain = \['ollama', 'chatgpt', 'gemini', 'claude', 'perplexity', 'deepseek'\];/.test(raidSrc));
+    // §0.39.282 — the preference order itself moved (chatgpt, gemini, ollama, claude); what this case guards is that the two
+    // newer agents are APPENDED after the stated order, never ahead of it — so it checks that, not one pinned order.
+    const m = raidSrc.match(/const chain = \[([^\]]+)\];/);
+    assert.ok(m, 'fallback chain present');
+    const chain = [...m[1].matchAll(/'([^']+)'/g)].map(x => x[1]);
+    assert.deepStrictEqual(chain.slice(-2), ['perplexity', 'deepseek'], chain.join(','));
+    for (const a of ['ollama', 'chatgpt', 'gemini', 'claude']) assert.ok(chain.indexOf(a) > -1 && chain.indexOf(a) < chain.indexOf('perplexity'), a);
   });
 
   // ── generate-agent-nodes.js — structural + real, dependency-free parts ────

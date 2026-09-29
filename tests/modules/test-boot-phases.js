@@ -1,4 +1,5 @@
 'use strict';
+require('../../lib/test-sandbox.js').ensure();   // §0.39.282 reads real entry files; sandboxed so nothing it touches reaches the tree
 const assert = require('assert');
 const http = require('http');
 let passed = 0, failed = 0;

@@ -23,6 +23,8 @@ module.exports = [
   _c('patterns',     'GET',  '/api/intelligence/patterns',          'Crystallised behavioral patterns'),
   _c('context',      'GET',  '/api/intelligence/context',           'Assembled intelligence context'),
   _c('status',       'GET',  '/api/intelligence/status',            'Intelligence subsystem health'),
+  // §0.39.282 — served by intelligence/index.js since the 2026-09-19 move, never declared (test-intelligence-organs-move IOM-007).
+  _c('event',        'POST', '/api/intelligence/event',             'Feed an event for immediate analysis (event_log row + failure scan on errors)'),
   _c('failures',     'GET',  '/api/intelligence/failures',          'Failure mode index'),
   _c('reuse',        'GET',  '/api/intelligence/reuse',             'Reuse index'),
   _c('map',          'GET',  '/api/intelligence/map',               'Real, live loom map'),

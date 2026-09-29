@@ -15,7 +15,16 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
+require(path.join(ROOT, 'lib/test-sandbox.js')).ensure();
 const reg = require(path.join(ROOT, 'lib/schema-registry'));
+// §0.39.282 — in the sandbox raid_decisions starts empty, so a derived schema had no fields and T-009/T-011 read
+// undefined. Seed two real-shaped rows (the fields every RAID decision carries) so the schema is derived from data.
+{
+  const { jaaDB } = require(path.join(ROOT, 'cortex/memory/jaa-db'));
+  if (!jaaDB.query('raid_decisions', () => true, 1).length) {
+    for (const approved of [true, false]) jaaDB.insert('raid_decisions', { uuid: require('crypto').randomUUID(), intention: 'test', agent: 'ollama', approved, score: 0.5, createdAt: new Date().toISOString() });
+  }
+}
 
 test('T-001', 'deriveSchema reads REAL rows and returns fields (§0.1 from data, not invented)', () => {
   const d = reg.deriveSchema('raid_decisions');
