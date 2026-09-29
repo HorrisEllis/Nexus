@@ -1311,6 +1311,11 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','symbols'],       'repo.symbols'],
     // §24-26 graph (MCO1) — idearium/spec/idearium.repo-graph.spec
     ['GET',    ['api','repos',    ':uuid','graph'],          'repo.graph'],
+    // §0.39.279 — the repo's VM as a desktop (cos/workspace via lib/cos-bridge.js) and its branches
+    ['GET',    ['api','repos',    ':uuid','desktop'],        'repo.desktop.status'],
+    ['POST',   ['api','repos',    ':uuid','desktop'],        'repo.desktop.start'],
+    ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
+    ['GET',    ['api','repos',    ':uuid','branches'],       'repo.branches'],
     ['GET',    ['api','repos',    ':uuid','graph','traverse'], 'repo.graph.traverse'],
     ['GET',    ['api','repos',    ':uuid','graph','cone'],   'repo.graph.cone'],
     // 0.39.246 — the other two of the three graphs (code · execution · spec)
@@ -2909,6 +2914,33 @@ async function handle(req, res, route, query, body) {
     //    on-disk output. Contract: idearium/spec/idearium.repo-graph.spec.
     //    Read-only, same shape as repo.map above; never rebuilds on the
     //    fly (POST .../reindex is the one real rebuild path, §10.1).
+    // §0.39.279 — James: "once its generated, you can open it like a desktop environment". The repo's compartment
+    // boots its VM headless (a branch repo's disk is an overlay of its original's); the viewer (ui/desktop.html, noVNC
+    // over QEMU's websocket) is opened in Clear Glass. A repo with no compartment, or no base image, is told why.
+    case 'repo.desktop.status':
+    case 'repo.desktop.start':
+    case 'repo.desktop.stop': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!repo.compartmentId) return err(res, 409, 'this repo has no COS compartment — its desktop lives in one');
+      const cosBridge = _require('../../lib/cos-bridge.js');
+      const act = action.endsWith('start') ? 'start' : action.endsWith('stop') ? 'stop' : 'status';
+      const origin = repo.branchOf ? getRepoLayer().get(repo.branchOf) : null;
+      const r = cosBridge.desktop(repo.compartmentId, { action: act, workDir: act === 'start' ? _repoDiskDir(params.uuid) : null, name: repo.name,
+        originNameOrId: origin && origin.compartmentId, ramMB: body.ramMB, cpus: body.cpus, network: body.network });
+      if (!r.ok) return err(res, 502, r.error || 'desktop failed', r);
+      const p = r.ports || {};
+      return ok(res, { ...r, repoUuid: repo.uuid, branchOf: repo.branchOf || null, branch: repo.branch || null,
+        viewer: p.wsPort ? `/desktop.html?port=${p.wsPort}&title=${encodeURIComponent(repo.name)}&repo=${encodeURIComponent(repo.uuid)}` : null });
+    }
+    case 'repo.branches': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      const all = ((getRepoLayer().repos && getRepoLayer().repos.repos) || []).filter(x => x.branchOf === repo.uuid);
+      return ok(res, { repoUuid: repo.uuid, worktrees: dir ? _require('../../lib/cos-bridge.js').listBranches(dir) : [],
+        repos: all.map(x => ({ uuid: x.uuid, name: x.name, branch: x.branch || null, dir: x.materializeDir || null })) });
+    }
     case 'repo.graph': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -4664,12 +4696,37 @@ async function handle(req, res, route, query, body) {
       try { FTP.writeTreeNode(manifest); }
       catch (e) { console.warn(`[speceng.codegen] .filetree node write failed (code spec still created): ${e.message}`); }
       // Its repo, the same way speceng.create makes one — so the files land somewhere real as they build.
-      let repoUuid = null;
+      // §0.39.279 — James: "each new repo, if applicable could create a branch of the original, to save resources".
+      // When a repo owns the document spec (the original), the code repo is a BRANCH of it: its files a git worktree of
+      // the original's directory (branch nexus/<name>), its compartment a CHILD of the original's (so its VM disk is a
+      // copy-on-write overlay of the original's — cos/workspace). body.branch === false, or no original, or no git →
+      // a separate copy with its own compartment, as before (and the reason is in the response).
+      let repoUuid = null, branchInfo = null;
+      const _origin = (() => { try { return ((getRepoLayer().repos && getRepoLayer().repos.repos) || []).find(x => x.specUuid === doc.uuid && x.status !== 'archived' && x.source !== 'spec.codegen') || null; } catch (_) { return null; } })();
+      if (_origin && body.branch !== false && process.env.IDEARIUM_CODE_REPO_MODE !== 'copy') {
+        try {
+          const cosBridge = _require('../../lib/cos-bridge.js');
+          const ws = cosBridge.branchWorkspace({ originDir: _repoDiskDir(_origin.uuid), name: manifest.name });
+          branchInfo = ws.ok ? { ...ws, originUuid: _origin.uuid } : { ok: false, error: ws.error, originUuid: _origin.uuid };
+          if (!ws.ok) console.warn(`[speceng.codegen] branch of ${_origin.uuid.slice(0, 8)} not made (${ws.error}) — a separate copy instead`);
+        } catch (e) { branchInfo = { ok: false, error: e.message }; }
+      }
+      const _branchCompartment = () => {
+        const parent = _origin && _origin.compartmentId;
+        if (!parent) return _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name);
+        try {
+          const cosBridge = _require('../../lib/cos-bridge.js');
+          const c = cosBridge.createCompartment({ name: cosBridge.uniqueName(`idearium-repo-${manifest.uuid.slice(0, 8)}`), purpose: `${manifest.name} — branch of ${_origin.name}`, networkIsolated: true, parentId: parent });
+          return c.ok ? c.compartment.id : _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name);
+        } catch (_) { return _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name); }
+      };
       try {
+        const branched = !!(branchInfo && branchInfo.ok);
         const r = getRepoLayer().ingest({
           name: manifest.name, specUuid: manifest.uuid, source: 'spec.codegen',
           parent: doc.ideaUuid || null, ideaUuid: doc.ideaUuid || null, promotedFromSpec: doc.uuid,
-          compartmentId: _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name),
+          compartmentId: branched ? _branchCompartment() : _ensureCompartment(`idearium-repo-${manifest.uuid.slice(0, 8)}`, manifest.name),
+          ...(branched ? { materializeDir: branchInfo.dir, branchOf: _origin.uuid, branch: branchInfo.branch } : {}),
         });
         if (r.error) console.warn(`[speceng.codegen] repo creation failed, code spec still created: ${r.error}`);
         else { repoUuid = (r.repo && r.repo.uuid) || null; if (r.repo) _linkCodeRepo({ ...r.repo, source: 'spec.codegen', promotedFromSpec: doc.uuid }); }
@@ -4677,6 +4734,7 @@ async function handle(req, res, route, query, body) {
       os.emit('idearium.spec-engine.codegen', { specUuid: doc.uuid, codeSpecUuid: manifest.uuid, repoUuid, files: planned.files.length, planSource: planned.planSource });
       console.log(`[speceng.codegen] "${doc.name}" → ${planned.files.length} file(s) planned (${planned.planSource}) · code spec ${manifest.uuid.slice(0, 8)}`);
       return ok(res, { manifest: se.loadSpec(manifest.uuid), repoUuid,
+        branch: branchInfo ? (branchInfo.ok ? { of: branchInfo.originUuid, branch: branchInfo.branch, dir: branchInfo.dir } : { made: false, reason: branchInfo.error }) : null,
         plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers } });
     }
 
@@ -5568,6 +5626,21 @@ export function startAPI() {
         console.error('[API] static asset handler error (non-fatal):', e.message);
         try { res.writeHead(500); res.end('internal error'); } catch (_) {}
       }
+      return;
+    }
+
+    // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
+    // not a directory listing — nothing else under ui/ is served as a page.
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html')) {
+      try {
+        const { readFileSync, existsSync } = await import('fs');
+        const { join, dirname } = await import('path');
+        const { fileURLToPath } = await import('url');
+        const page = join(dirname(fileURLToPath(import.meta.url)), '..', 'ui', cleanUrl.slice(1));
+        if (!existsSync(page)) { res.writeHead(404); res.end('not found'); return; }
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end(readFileSync(page, 'utf8'));
+      } catch (e) { try { res.writeHead(500); res.end('internal error'); } catch (_) {} }
       return;
     }
 

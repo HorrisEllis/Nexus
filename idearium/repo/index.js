@@ -454,7 +454,7 @@ export class RepoLayer {
   // idearium/data/projects/<repoUuid> — persisted on the repo record so
   // every later materialize() (including quiet ones after an edit) keeps
   // using it. null for every existing caller — purely additive.
-  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, bare = false, ideaUuid: fromIdea = null, noIdea = false } = {}) {
+  ingest({ name, specUuid = null, files = [], source = 'drop', parent = null, promotedFromSpec = null, compartmentId = null, materializeBaseDir = null, materializeDir = null, branchOf = null, branch = null, bare = false, ideaUuid: fromIdea = null, noIdea = false } = {}) {
     if (!name) return { error: 'repo name required' };
     if (!this.se) return { error: 'repo layer has no spec-engine — cannot store content' };
 
@@ -583,7 +583,10 @@ export class RepoLayer {
       // null for every path except project-import's finalize call — see
       // materialize()'s own header for why this field, once set, is
       // honored for the repo's whole lifetime rather than just this call.
-      materializeDir: materializeBaseDir ? path.join(materializeBaseDir, repoUuid) : null,
+      materializeDir: materializeDir || (materializeBaseDir ? path.join(materializeBaseDir, repoUuid) : null),
+      // §0.39.279 — a repo made as a BRANCH of another (cos/workspace branchWorkspace): its files are a git worktree of
+      // the original's directory on `branch`; null for every other repo.
+      ...(branchOf ? { branchOf, branch: branch || null } : {}),
     };
     this.repos.repos.push(repo);
 

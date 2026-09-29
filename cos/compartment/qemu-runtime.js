@@ -297,6 +297,12 @@ function derivePort(compartmentId, base, span) {
   return base + (hash.readUInt16BE(0) % span);
 }
 
+/** desktopPorts(compartmentId) -> { display, vncPort, wsPort } — where a headless VM's screen is (§0.39.279). */
+function desktopPorts(compartmentId) {
+  const display = derivePort(String(compartmentId), 0, 100);
+  return { display, vncPort: 5900 + display, wsPort: 5700 + display };
+}
+
 // ─── Argv construction ──────────────────────────────────────────────────────────
 
 /**
@@ -348,7 +354,9 @@ function buildQemuArgs(vmConfig, compartmentId, name) {
   if (vmConfig.headless) {
     args.push('-display', 'none');
     vncDisplayNum = derivePort(compartmentId, 0, 100); // VNC display N == port 5900+N
-    args.push('-vnc', `127.0.0.1:${vncDisplayNum}`);
+    // §0.39.279 — the same display as a websocket on 5700+N, so the desktop viewer (idearium/ui/desktop.html, noVNC)
+    // opens it in Clear Glass without a separate VNC client. Loopback only, like the VNC port.
+    args.push('-vnc', `127.0.0.1:${vncDisplayNum},websocket=${5700 + vncDisplayNum}`);
   } else {
     args.push('-display', process.platform === 'linux' ? 'gtk' : 'default');
   }
@@ -648,6 +656,7 @@ function reapOrphan(vmStateDir) {
 
 module.exports = {
   QEMU_BIN, QEMU_IMG_BIN, qemuSystemBin, qemuImgBin,
+  derivePort, desktopPorts,
   QemuRuntimeError,
   QMPClient,
   pickAccelerator,

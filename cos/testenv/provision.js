@@ -52,6 +52,9 @@ const EXTRA_PACKAGES = {
   ruby: ['ruby-full', 'ruby-bundler'],
   php: ['php-cli', 'composer'],
   rust: ['cargo', 'rustc'],
+  // §0.39.279 — James: "once its generated, you can open it like a desktop environment". A light desktop the VM boots
+  // straight into (lightdm autologin as user nexus), shown by the desktop viewer over QEMU's VNC websocket.
+  desktop: ['xfce4', 'xfce4-terminal', 'lightdm', 'xserver-xorg', 'dbus-x11', 'firefox-esr', 'mousepad'],
 };
 
 function _q() { return require('../compartment/qemu-runtime.js'); }
@@ -79,6 +82,11 @@ corepack enable >/dev/null 2>&1 || true
 say "node $(node -v) installed"
 systemctl enable qemu-guest-agent >/dev/null 2>&1 || true
 ${extras.includes('rust') ? 'say "rust: $(cargo --version 2>&1)"' : ''}
+${extras.includes('desktop') ? `id nexus >/dev/null 2>&1 || useradd -m -s /bin/bash nexus
+mkdir -p /etc/lightdm/lightdm.conf.d
+printf '[Seat:*]\\nautologin-user=nexus\\nautologin-session=xfce\\n' > /etc/lightdm/lightdm.conf.d/50-nexus.conf
+systemctl set-default graphical.target >/dev/null 2>&1 || true
+say "desktop: xfce + lightdm, autologin as nexus"` : ''}
 # later boots are test runs: no datasource search, no network wait
 touch /etc/cloud/cloud-init.disabled
 systemctl disable systemd-networkd-wait-online.service >/dev/null 2>&1 || true
@@ -97,6 +105,7 @@ php=$(php -r 'echo PHP_VERSION;' 2>/dev/null)
 cargo=$(cargo --version 2>/dev/null | cut -d' ' -f2)
 qga=$(qemu-ga --version 2>/dev/null | awk '{print $NF}')
 kernel=$(uname -r)
+desktop=$(systemctl get-default 2>/dev/null)
 os=$(. /etc/os-release; echo "$PRETTY_NAME")"
 sync
 curl -fsS -m 20 -X POST --data-binary "$REPORT" "$SEED"done >/dev/null 2>&1 || true

@@ -3609,14 +3609,30 @@ async function cosRemoteClone(name) {
   openCosRemoteBrowse();
 }
 
+// §0.39.279 — James: "once its generated, you can open it like a desktop environment". The viewer page boots the VM
+// (POST /api/repos/:uuid/desktop) and draws its screen; a Clear Glass window when idearium runs inside it.
+function openRepoDesktop(repoUuid) {
+  if (!API_BASE) { toast('idearium is offline — the desktop is served by it', 'err'); return; }
+  // served by idearium itself (same origin as its /api), wherever this UI was loaded from
+  const w = window.open(`${API_BASE}/desktop.html?repo=${encodeURIComponent(repoUuid)}`, `desktop-${repoUuid}`, 'width=1320,height=860');
+  if (!w) toast('the desktop window was blocked — allow pop-ups for idearium', 'err');
+}
+
 function renderRepoSettings(repo) {
   const el = document.getElementById('repo-subtab-settings');
   if (!el) return;
   const compartmentLine = repo.compartmentId
     ? `compartment ${repo.compartmentId}`
     : `compartment — none attached`;
+  // §0.39.279 — the repo's environment: its VM as a desktop (cos/workspace), and whether it is a branch of another repo
+  const branchLine = repo.branchOf ? `branch ${repo.branch || '—'} of repo ${repo.branchOf}\nfiles: a git worktree of the original (shared history); VM disk: an overlay of the original's` : 'its own files and compartment';
   el.innerHTML = `
     <div class="ds"><div class="ds-label">compartment</div><div class="ds-mono">${escapeHtml(compartmentLine)}</div></div>
+    <div class="ds"><div class="ds-label">environment</div><div class="ds-mono">${escapeHtml(branchLine)}</div>
+      <div class="action-row">
+        ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button>` : ''}
+        <button class="action-btn" onclick="setView('settings-console')" title="Every compartment and agent setting in one place">⚙ settings console</button>
+      </div></div>
     <div class="ds"><div class="ds-label">agent / provenance</div><div class="ds-mono">source ${escapeHtml(repo.source || 'unknown')}\nspec ${repo.specUuid || '—'}\nidea ${repo.ideaUuid || '—'}\npromoted from ${repo.promotedFromSpec || '—'}</div></div>
     <div class="ds"><div class="ds-label">repository</div>
       <div class="action-row">
