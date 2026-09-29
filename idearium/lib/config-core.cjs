@@ -159,6 +159,12 @@ const SCHEMA = {
     ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },
     cpus:    { default: 2, min: 1, max: 32, copilot_writable: true, type: 'number' },
     network: { default: 'nat', enum: ['nat', 'none'], copilot_writable: true, type: 'string' },
+    // §0.39.282 N20 — James: "the desktop environment needs to either ask, or give me the login. or use a generic password
+    // listed in the atlas." The VM's desktop account: set when the image is made (provision --with desktop), re-applied
+    // through the guest agent every time a desktop boots (so images made before this get it too), shown in the viewer.
+    // A local, throwaway VM login — generic by design (idearium/docs atlas lists it); change it here.
+    user:     { default: 'nexus', copilot_writable: false, type: 'string' },
+    password: { default: 'nexus', copilot_writable: false, type: 'string' },
   },
 
   cicd: {

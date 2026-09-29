@@ -72,6 +72,11 @@ class GuestAgentClient {
 
   ping(timeoutMs = 5000) { return this.execute('guest-ping', undefined, { timeoutMs }); }
 
+  /** §0.39.282 N20 — guest-set-user-password: sets a guest account's password (plain text, sent base64 as QGA requires). */
+  setUserPassword(username, password, timeoutMs = 10000) {
+    return this.execute('guest-set-user-password', { username, password: Buffer.from(String(password), 'utf8').toString('base64'), crypted: false }, { timeoutMs });
+  }
+
   /**
    * run(path, args, { timeoutMs, env, pollMs }) -> { exitCode, signal, stdout, stderr, timedOut }
    * guest-exec starts the process; guest-exec-status is polled until exited.

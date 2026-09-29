@@ -180,7 +180,7 @@ function desktopDisk(stateRoot) { return path.join(stateRoot, DESKTOP_DIR, 'desk
 const EARLY_EXIT_MS = 15000;
 
 function startDesktop({ compartmentId, name = 'repo', workDir, stateRoot, originStateRoot = null, baseImage = null, ramMB = 4096, cpus = 2,
-                        network = 'nat', _qemu = null, _spawn = null, _ga = null, _host = null, _runImg = null } = {}) {
+                        network = 'nat', login = null, _qemu = null, _spawn = null, _ga = null, _host = null, _runImg = null } = {}) {
   if (!compartmentId) return { ok: false, error: 'compartmentId required' };
   const live = _sessions.get(compartmentId);
   if (live && live.exited === null) return { ok: true, reused: true, ...desktopStatus(compartmentId) };
@@ -221,7 +221,8 @@ function startDesktop({ compartmentId, name = 'repo', workDir, stateRoot, origin
   catch (e) { return { ok: false, error: `${/buildQemuArgs|vmConfig/.test(e.message) ? 'could not build the VM' : 'qemu did not start'}: ${e.message}` }; }
   const { built } = first;
   const sess = { compartmentId, name, disk, backing, branchedFrom: backing === originDisk ? 'original' : 'base', startedAt: Date.now(), exited: null,
-    stderr: '', repoIn: workDir ? 'pending' : 'none', repoError: null, accel: built.accel, accelFallback: null,
+    stderr: '', repoIn: workDir ? 'pending' : 'none', repoError: null, login: login && /^[a-z_][a-z0-9_-]{0,31}$/.test(String(login.user || '')) ? { user: String(login.user), password: String(login.password || ''), applied: 'pending' }
+      : (login && login.user ? { user: null, password: null, applied: `refused: '${String(login.user).slice(0, 40)}' is not a valid login name` } : null), accel: built.accel, accelFallback: null,
     ports: { display: built.vncDisplayNum, vncPort: 5900 + built.vncDisplayNum, wsPort: 5700 + built.vncDisplayNum }, proc: first.proc, built };
   const watch = (proc, canRetry) => {
     if (proc.stderr && proc.stderr.on) proc.stderr.on('data', d => { if (sess.stderr.length < 20000) sess.stderr += d; });
@@ -244,12 +245,24 @@ function startDesktop({ compartmentId, name = 'repo', workDir, stateRoot, origin
   };
   watch(first.proc, true);
   _sessions.set(compartmentId, sess);
+  // §0.39.282 N20 — the desktop account gets its known password through the guest agent on every boot, so an image
+  // made before provision set one (useradd left it passwordless) still has the login the viewer shows.
+  if (sess.login && sess.login.user) {
+    const GA = _ga || require('../compartment/guest-agent.js');
+    Promise.resolve().then(async () => {
+      const agent = await GA.connectWhenReady(sess.built.qga, { timeoutMs: 600000 });
+      try { await agent.setUserPassword(sess.login.user, sess.login.password); sess.login.applied = 'set'; }
+      catch (e) { sess.login.applied = `failed: ${String(e.message || e).slice(0, 160)}`; }
+      try { agent.close(); } catch (_) {}
+    }).catch((e) => { sess.login.applied = `failed: ${String(e.message || e).slice(0, 160)}`; });
+  }
   if (workDir) {
     const GA = _ga || require('../compartment/guest-agent.js');
-    const dest = `/home/nexus/${slug(name)}`;
+    const home = sess.login && sess.login.user ? `/home/${sess.login.user}` : '/home/nexus';
+    const dest = `${home}/${slug(name)}`;
     const cmd = share === '9p'
       ? `mkdir -p ${dest} && mount -t 9p -o trans=virtio,version=9p2000.L cos_share ${dest}`
-      : `mkdir -p ${dest} && (tar -xf /dev/vdb -C ${dest} --no-same-owner 2>/dev/null || tar -xf /dev/vdb -C ${dest}) && chown -R nexus ${dest} 2>/dev/null; true`;
+      : `mkdir -p ${dest} && (tar -xf /dev/vdb -C ${dest} --no-same-owner 2>/dev/null || tar -xf /dev/vdb -C ${dest}) && chown -R ${sess.login && sess.login.user ? sess.login.user : 'nexus'} ${dest} 2>/dev/null; true`;
     Promise.resolve().then(async () => {
       const agent = await GA.connectWhenReady(sess.built.qga, { timeoutMs: 600000 });
       const r = await agent.run('/bin/sh', ['-c', cmd], { timeoutMs: 180000 });
@@ -267,7 +280,7 @@ function desktopStatus(compartmentId) {
   if (!s) return { compartmentId, state: 'none', ports: desktopFor(compartmentId) };
   const state = s.exited !== null ? 'stopped' : (s.repoIn === 'pending' ? 'booting' : 'running');
   return { compartmentId, state, ports: s.ports, disk: s.disk, backing: s.backing, branchedFrom: s.branchedFrom, accel: s.accel, accelFallback: s.accelFallback || null, repoIn: s.repoIn,
-    repoError: s.repoError, startedAt: s.startedAt, exitCode: s.exited, error: s.exited !== null && s.exited !== 0 ? s.stderr.trim().split('\n').slice(-3).join(' ') : null };
+    repoError: s.repoError, login: s.login || null, startedAt: s.startedAt, exitCode: s.exited, error: s.exited !== null && s.exited !== 0 ? s.stderr.trim().split('\n').slice(-3).join(' ') : null };
 }
 
 /** stopDesktop(compartmentId) — powers the VM off; its disk (the branch's changes) is kept (§0.3). */

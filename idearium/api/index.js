@@ -3070,7 +3070,8 @@ async function handle(req, res, route, query, body) {
       const r = cosBridge.desktop(repo.compartmentId, { action: act, workDir: act === 'start' ? _repoDiskDir(params.uuid) : null, name: repo.name,
         originNameOrId: origin && origin.compartmentId,
         ...(() => { const v = (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } };   // settings console → desktop.*
-          return { ramMB: body.ramMB || v('desktop.ram_mb'), cpus: body.cpus || v('desktop.cpus'), network: body.network || v('desktop.network') }; })() });
+          return { ramMB: body.ramMB || v('desktop.ram_mb'), cpus: body.cpus || v('desktop.cpus'), network: body.network || v('desktop.network'),
+            login: { user: v('desktop.user') || 'nexus', password: v('desktop.password') || 'nexus' } }; })() });   // §0.39.282 N20
       if (!r.ok) return err(res, 502, r.error || 'desktop failed', r);
       const p = r.ports || {};
       return ok(res, { ...r, repoUuid: repo.uuid, branchOf: repo.branchOf || null, branch: repo.branch || null,
@@ -3564,7 +3565,9 @@ async function handle(req, res, route, query, body) {
     }
     case 'cos.testenv.setup': {
       const SJ = _require('../../cos/testenv/setup-job.js');
-      const st = SJ.start({ installQemu: !!body.installQemu, extras: Array.isArray(body.extras) ? body.extras : [], node: body.node || null });
+      const v = (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } };
+      const st = SJ.start({ installQemu: !!body.installQemu, extras: Array.isArray(body.extras) ? body.extras : [], node: body.node || null,
+        login: { user: v('desktop.user'), password: v('desktop.password') } });   // §0.39.282 N20
       os.emit('idearium.cos.testenv.setup', { state: st.state, args: st.args || null });
       return ok(res, st);
     }

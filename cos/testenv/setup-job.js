@@ -35,7 +35,7 @@ function hostInfo() {
   return out;
 }
 
-function start({ installQemu = false, extras = [], node = null, _spawn = spawn, _script = PROVISION } = {}) {
+function start({ installQemu = false, extras = [], node = null, login = null, _spawn = spawn, _script = PROVISION } = {}) {
   if (job.state === 'running') return status();
   const args = [_script, '--json'];
   if (installQemu) args.push('--install-qemu');
@@ -46,7 +46,9 @@ function start({ installQemu = false, extras = [], node = null, _spawn = spawn, 
   const me = job;
   const push = (e) => { me.log.push(e); if (me.log.length > MAX_LOG) me.log.splice(0, me.log.length - MAX_LOG); };
   let child;
-  try { child = _spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true }); }
+  // §0.39.282 N20 — the desktop account (settings desktop.user/password) reaches provision.js through its env, never argv
+  const env = { ...process.env, ...(login && login.user ? { COS_DESKTOP_USER: String(login.user) } : {}), ...(login && login.password ? { COS_DESKTOP_PASSWORD: String(login.password) } : {}) };
+  try { child = _spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, env }); }
   catch (e) { me.state = 'failed'; me.endedAt = Date.now(); me.result = { ok: false, error: `could not start the setup: ${e.message}` }; return status(); }
   me.pid = child.pid || null;
   let buf = '';
