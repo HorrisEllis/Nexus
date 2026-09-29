@@ -156,7 +156,7 @@ spec:
 
     EC8_economy_console:
       layer: ui
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/probe/economy-console-chromium.js 9/9 (answers made by the real lib/economy); settings-console probe and suite unchanged"
       depends_on: [EC6]
       files:
         - "idearium/ui/settings.html (Economy page)"

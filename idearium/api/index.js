@@ -1172,6 +1172,7 @@ const ROUTE_CAP = {
   'config.reset':     CAPS.WRITE_IDEAS,
   'settings.console': CAPS.READ_IDEAS,
   'settings.console.repo': CAPS.READ_IDEAS,
+  'economy.get': CAPS.READ_IDEAS, 'economy.set': CAPS.WRITE_IDEAS, 'economy.view': CAPS.READ_IDEAS,   // §0.39.281 EC8
   // §0.39.280 — build surface
   'repo.files.state': CAPS.READ_IDEAS, 'repo.deviation.get': CAPS.READ_IDEAS, 'repo.deviation.recalc': CAPS.WRITE_IDEAS,
   'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
@@ -1202,6 +1203,11 @@ function matchRoute(method, url) {
     // Writes go to the routes that already own each setting (config, agent/settings, agent/blocks, desktop).
     ['POST',   ['api','config','reset'],              'config.reset'],
     ['GET',    ['api','settings','console'],          'settings.console'],
+    // §0.39.281 EC8 — the provider economy lives in guardian (lib/economy/*, guardian/lib/economy-guard.js); the settings
+    // console reaches it through here, same-origin — a proxy, not a second copy (§10.1)
+    ['GET',    ['api','economy'],                     'economy.get'],
+    ['POST',   ['api','economy'],                     'economy.set'],
+    ['GET',    ['api','economy',':what'],             'economy.view'],
     ['GET',    ['api','settings','console',':uuid'],  'settings.console.repo'],
     ['POST',   ['api','config'],          'config.set'],
     ['GET',    ['api','stats'],           'stats.get'],
@@ -4568,6 +4574,20 @@ async function handle(req, res, route, query, body) {
       getIdeaOS().emit('idearium.repo.roadmap.updated', { repoUuid: params.uuid, map: mapPath, phase: add.id, added: true, via: w.via });
       return ok(res, { repoUuid: params.uuid, map: mapPath, id: add.id, via: w.via, applyId: w.applyId || null });
     }
+    // §0.39.281 EC8 — the economy, from guardian (the one owner)
+    case 'economy.get': case 'economy.set': case 'economy.view': {
+      const what = action === 'economy.view' ? String(params.what || '') : '';
+      if (what && !['usage', 'limits', 'routing'].includes(what)) return err(res, 404, `no economy view "${what}" — usage, limits or routing`);
+      const qs = what === 'limits' && query.days ? `?days=${encodeURIComponent(query.days)}` : what === 'routing' && query.jobType ? `?jobType=${encodeURIComponent(query.jobType)}` : '';
+      try {
+        const d = action === 'economy.set'
+          ? await _nexusClient.post('guardian', '/api/economy', { policy: (body && body.policy) || body || {}, by: (body && body.by) || 'settings-console' }, { timeout: 10000 })
+          : await _nexusClient.get('guardian', `/api/economy${what ? '/' + what : ''}${qs}`, { timeout: 10000 });
+        const { ok: _o, ...rest } = d || {};
+        return ok(res, rest);
+      } catch (e) { return err(res, 502, `guardian (:7820) could not be asked about the economy: ${e.message}`); }
+    }
+
     // §0.39.280 — the build surface (api/build-surface.js); each returns { status, json }
     case 'repo.files.state': case 'repo.deviation.get': case 'repo.deviation.recalc': case 'repo.environment.get':
     case 'repo.environment.set': case 'repo.environment.setup': case 'repo.spec.plan.get': case 'repo.spec.plan':
