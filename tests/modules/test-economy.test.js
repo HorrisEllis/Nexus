@@ -33,7 +33,7 @@ function seeded(seed = 7) { let s = seed; return () => { s = (s * 1103515245 + 1
     const { policy, dropped } = P.normalize({ providers: { chatgpt: { tier: 'metered', limits: { jobsPerHour: 999999999, minGapMs: 'x' }, quietHours: [23, 7], onLimit: 'fallback:ollama' }, 'BAD NAME': {} },
       jobTypes: { build: { tiers: ['local', 'bogus'] }, dance: {} }, router: { explore: 5 } }, ['chatgpt', 'ollama']);
     const c = policy.providers.chatgpt;
-    assert.deepStrictEqual([c.tier, c.limits.jobsPerHour, c.limits.concurrent, c.quietHours, c.onLimit], ['metered', 100000, 4, [23, 7], 'fallback:ollama']);
+    assert.deepStrictEqual([c.tier, c.limits.jobsPerHour, c.limits.concurrent, c.quietHours, c.onLimit], ['metered', 100000, 0, [23, 7], 'fallback:ollama']);
     assert.deepStrictEqual(policy.jobTypes.build.tiers, ['local']);
     assert.strictEqual(policy.router.explore, 1);
     assert.deepStrictEqual(dropped.sort(), ['jobTypes.dance', 'providers.BAD NAME', 'providers.chatgpt.limits.minGapMs'].sort());

@@ -128,10 +128,12 @@ spec:
 
     EC6_guardian_enforcement:
       layer: api
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — guardian/lib/economy-guard.js; proof: tests/modules/test-economy-guardian.test.js 5/5 (the real dispatcher); guardian suites unchanged against 0.39.280. Concurrency limits default to 0 (none): the dispatch pool already runs one job per tab"
       depends_on: [EC1, EC2, EC3]
       files:
+        - "guardian/lib/economy-guard.js"
         - "guardian/lib/dispatcher.js"
+        - "guardian/lib/index.js"
         - "guardian/server.js"
       does: >-
         The dispatcher asks the gate before sending a browser-provider job: wait → the job stays queued with the reason
