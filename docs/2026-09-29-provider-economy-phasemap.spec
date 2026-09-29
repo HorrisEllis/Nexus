@@ -115,7 +115,7 @@ spec:
 
     EC5_staging_by_economy:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — lib/economy/store.js (the policy file) + fromReply stage; proof: tests/modules/test-economy.test.js EC5-01…03; 13 inject / agent / staging / code-edit suites unchanged"
       depends_on: [EC0]
       files:
         - "lib/repo-inject.js (fromReply: stageFor option)"
