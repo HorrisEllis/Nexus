@@ -93,7 +93,7 @@ function _latticeLink(a, b, w = 0.7, t = 'associated') {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-export const VERSION   = '4.13.0';   // 0.39.282 synced (default_provider, desktop login, blocked jobs). §0.39.281 synced — had stayed at 4.7.0 while package.json moved to 4.11.0.   // §5.4 fix 2026-08-08 — was 3.0.0, drifted from canonical lib/version.js's services.idearium (3.2.0)
+export const VERSION   = '4.14.0';   // 0.39.283 synced (draft review, shadow, Manage workbench). 0.39.282 synced (default_provider, desktop login, blocked jobs). §0.39.281 synced — had stayed at 4.7.0 while package.json moved to 4.11.0.   // §5.4 fix 2026-08-08 — was 3.0.0, drifted from canonical lib/version.js's services.idearium (3.2.0)
                                      // §2026-09-22 — real bump: eravos mods in the New Spec picker + Brainstorm AI assistance. See idearium.spec's meta.version comment.
                                      // §5.4 fix 2026-09-13 — same drift recurred: idearium/package.json had moved
                                      // on to 4.1.0 through the 2026-09-03 "idearium 3.3.0" session and beyond,
