@@ -198,7 +198,9 @@ async function onJob(msg) {
   await test('OT-06 each entry\'s file exists, inside the isolated copy, holding that repo\'s reply', () => {
     for (const e of entries) {
       assert.ok(fs.existsSync(e.savePath), `missing ${e.savePath}`);
-      assert.ok(e.savePath.startsWith(COPY), `written outside the isolated copy: ${e.savePath}`);
+      // §0.39.282 — the test sandbox (GUARDIAN_RESPONSE_NODES_DIR) is also isolated: inside the copy or the sandbox, never the repo.
+      assert.ok(e.savePath.startsWith(COPY) || (process.env.NEXUS_TEST_SANDBOX && e.savePath.startsWith(process.env.NEXUS_TEST_SANDBOX)), `written outside the isolated copy: ${e.savePath}`);
+      assert.ok(!e.savePath.startsWith(ROOT + path.sep), `written into the real repo: ${e.savePath}`);
       const i = repos.indexOf(e.agentId);
       assert.ok(fs.readFileSync(e.savePath, 'utf8').includes(`reply to [build chunk ${i} for ${e.agentId}]`), `wrong reply in ${e.savePath}`);
     }
