@@ -43,7 +43,9 @@ test('T-004', 'the user-model injects BEFORE session-history + recall (grounds t
 });
 
 test('T-005', 'the injection is non-fatal — helper is wrapped so a model failure never breaks a response (§1.2)', () => {
-  const fn = SERVER.slice(SERVER.indexOf('function _injectUserModel'), SERVER.indexOf('function _injectUserModel') + 400);
+  // §0.39.282 — was a fixed 400-char window; the inject-rule check (0.39.258 blocks) pushed the catch past it. The body, to its end:
+  const at = SERVER.indexOf('function _injectUserModel');
+  const fn = SERVER.slice(at, SERVER.indexOf('\n}\n', at) + 2);
   assert.ok(/try\s*\{/.test(fn) && /catch/.test(fn), 'the helper must swallow model errors, returning contextText unchanged');
 });
 

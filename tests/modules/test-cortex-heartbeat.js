@@ -44,7 +44,8 @@ test('CHB-001', '_startHeartbeat exists and is called from the register success 
 test('CHB-002', 'the heartbeat interval is 10s, matching every other system (guardian/idearium/copilot/ollama-bridge) — not a bespoke interval', () => {
   const fnMatch = BOOT_SRC.match(/function _startHeartbeat\s*\([^)]*\)\s*\{[\s\S]*?\n\}/);
   assert.ok(fnMatch, '_startHeartbeat body must be locatable');
-  assert.ok(/,\s*10000\)/.test(fnMatch[0]), 'interval must be 10000ms');
+  // §0.39.282 — the heartbeat moved onto the shared pulse client (createPulse({ intervalMs })); still 10 s.
+  assert.ok(/,\s*10000\)/.test(fnMatch[0]) || /intervalMs:\s*10000\b/.test(fnMatch[0]), 'interval must be 10000ms');
 });
 
 test('CHB-003', 'a double _register() retry cannot double-start the heartbeat interval', () => {
