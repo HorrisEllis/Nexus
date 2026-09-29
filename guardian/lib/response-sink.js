@@ -329,6 +329,10 @@ function emitToStream(rec, { bus, done = true } = {}) {
       // fully backward compatible, not a second event shape.
       bus.emit('guardian.job.complete', {
         jobId: rec.jobId, provider: rec.provider, chars: (rec.text || '').length,
+        // §0.39.282 — the text itself (and the chat it came from). guardian/server.js's guardian.job.complete gate stores
+        // jobs.response and logs "<n>ch" from data.text; without it every NCP job was recorded with an empty response and
+        // "0ch · chat=(none reported)" (James's live log), though the .response node held the reply.
+        text: rec.text || '', ...(rec.chatUrl ? { chatUrl: rec.chatUrl } : {}),
         source: rec.source || 'response-sink',
         ...(rec.gaps !== undefined ? { gaps: rec.gaps } : {}),
         ...(rec.gapDrift !== undefined ? { gapDrift: rec.gapDrift } : {}),

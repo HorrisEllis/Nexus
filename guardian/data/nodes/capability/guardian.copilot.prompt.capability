@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787218
+exported_at: 1790698456594
 source: guardian/registry-components.js:guardian.copilot.prompt
 occurrences: 1
 firstSeenAt: 1789250730146
-lastSeenAt: 1790684787218
-fingerprint: 2fa8200c0b985e6c6edb9199
+lastSeenAt: 1790698456594
+fingerprint: ab339a562ae2fe03ff9a1dab
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: guardian.copilot.prompt
   namespace: guardian
   name: copilot.prompt
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /api/copilot/prompt

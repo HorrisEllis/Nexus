@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787217
+exported_at: 1790698456593
 source: guardian/registry-components.js:guardian.settings.get
 occurrences: 1
 firstSeenAt: 1789250730143
-lastSeenAt: 1790684787217
-fingerprint: e0a168ddc41312b58466a3a2
+lastSeenAt: 1790698456593
+fingerprint: 1c91f6823f0f6acf2dc76f42
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.settings.get
   namespace: guardian
   name: settings.get
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /settings

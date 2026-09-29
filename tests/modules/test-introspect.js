@@ -140,8 +140,10 @@ function test(id, name, fn) {
   // ── Wiring ────────────────────────────────────────────────────────────────
   await test('IS-014', 'the correction regex is ONE constant \u2014 detector and retry cannot drift', () => {
     const srv = require('fs').readFileSync(path.join(ROOT, 'copilot', 'server.js'), 'utf8');
-    assert.ok(/const CORRECTION_RE =/.test(srv), 'the pattern must be a single named constant');
-    const inlineCopies = (srv.match(/that'\?s wrong/g) || []).length;
+    // §0.39.282 — the constant moved into copilot/config.js (settings out of server.js); server.js reads it from there.
+    const cfg = require('fs').readFileSync(path.join(ROOT, 'copilot', 'config.js'), 'utf8');
+    assert.ok(/const CORRECTION_RE = config\.CORRECTION_RE/.test(srv) && /CORRECTION_RE:/.test(cfg), 'the pattern must be a single named constant');
+    const inlineCopies = (srv.match(/that'\?s wrong/g) || []).length + (cfg.match(/that'\?s wrong/g) || []).length;
     assert.strictEqual(inlineCopies, 1,
       'two copies of the correction pattern means a phrase can log a correction without triggering a retry');
   });

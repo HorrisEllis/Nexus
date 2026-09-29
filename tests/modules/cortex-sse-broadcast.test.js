@@ -10,11 +10,11 @@ let passed=0, failed=0;
   await new Promise(r => srv.listen(0,'127.0.0.1',r));
   const port = srv.address().port;
 
-  // T-001: /events endpoint exists and accepts SSE
+  // T-001: /sse exists and accepts SSE (§0.39.282 — the endpoint is /sse, as its consumers use; /events never existed)
   await new Promise((resolve) => {
-    const req = http.get({hostname:'127.0.0.1',port,path:'/events',headers:{Accept:'text/event-stream'}}, res => {
+    const req = http.get({hostname:'127.0.0.1',port,path:'/sse',headers:{Accept:'text/event-stream'}}, res => {
       const ok = res.statusCode === 200 && /event-stream/.test(res.headers['content-type']||'');
-      console.log(ok ? '  ✓ T-001 /events serves text/event-stream' : '  ✗ T-001 /events wrong content-type');
+      console.log(ok ? '  ✓ T-001 /sse serves text/event-stream' : '  ✗ T-001 /sse wrong content-type');
       ok ? passed++ : failed++;
       // T-002: a POSTed event reaches this subscriber
       let received = false;

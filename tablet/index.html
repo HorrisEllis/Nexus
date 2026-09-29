@@ -201,30 +201,29 @@
 </div>
 
 <script>
-const COPILOT = `http://127.0.0.1:3750`;
+// §0.39.282 — no per-system address lives here. Copilot's is resolved from autopilot like every other system's.
+let COPILOT = null;
 // §TABLET-SPEC connection law: "the tablet talks to ONE endpoint, autopilot
 // resolves the rest" — no hardcoded port map (the hard-pointer anti-pattern RAID
 // eliminated). Systems are resolved from autopilot's status server (:7799); the
 // static metadata below is a LABELED FALLBACK only (icons/labels/cli + last-
 // resort ports), used when autopilot's status server is unreachable so the
 // tablet still renders, honestly degraded.
-const AUTOPILOT = `http://127.0.0.1:7799`;
+const AUTOPILOT = `http://127.0.0.1:${new URLSearchParams(location.search).get('port') || 7799}`;
 
 const SYSTEM_META = {
   orchestrator:{ label:'Orchestrator', icon:'⬡', cli:'/orchestrator', desc:'Root kernel · SSE bus' },
   guardian:    { label:'Guardian',     icon:'⚡', cli:'/guardian',     desc:'NCP channel · AI jobs' },
   cortex:      { label:'Cortex',       icon:'◈', cli:'/cortex',       desc:'Memory · gaps · RAID' },
   idearium:    { label:'Idearium',     icon:'◐', cli:'/idearium',     desc:'Idea lattice · specs' },
-  bridge:      { label:'Bridge',       icon:'⟁', cli:'/bridge',       desc:'P2P trust relay' },
   loom:        { label:'Loom',         icon:'◈', cli:'/nexus',        desc:'Registry · versions · roadmap' },
   copilot:     { label:'Co-pilot',     icon:'✦', cli:'/copilot',      desc:'Senses · acts · fixes' },
   architect:   { label:'Architect',    icon:'△', cli:'/architect',    desc:'Topology declarer' },
   diagnostic:  { label:'Diagnostic',   icon:'⊕', cli:'/diagnose',     desc:'Live health checks' },
 };
-const FALLBACK_PORTS = { orchestrator:9000, guardian:7820, cortex:3748, idearium:4800, bridge:9999, loom:3752, copilot:3750, architect:3747, diagnostic:7825 };
 
 let SYSTEMS = [];
-let RESOLVED_VIA = 'fallback';
+let RESOLVED_VIA = 'unresolved';
 
 async function resolveSystems(){
   // ONE endpoint: autopilot's status server lists every kernel + its status.
@@ -235,14 +234,18 @@ async function resolveSystems(){
       RESOLVED_VIA = 'autopilot';
       SYSTEMS = Object.keys(j.kernels).map(id => {
         const meta = SYSTEM_META[id] || { label:id.charAt(0).toUpperCase()+id.slice(1), icon:'●', cli:`/${id}`, desc:'' };
-        return { id, ...meta, port:FALLBACK_PORTS[id]||'—', _live:j.kernels[id] };
+        return { id, ...meta, port:j.kernels[id].port||'—', _live:j.kernels[id] };
       });
-      for (const id of ['copilot','loom']) if (!SYSTEMS.find(s=>s.id===id)) SYSTEMS.push({ id, ...SYSTEM_META[id], port:FALLBACK_PORTS[id] });
+      const cp = j.kernels.copilot && j.kernels.copilot.port;
+      COPILOT = cp ? `http://127.0.0.1:${cp}` : null;
       return;
     }
-  } catch { /* autopilot unreachable — labeled fallback below */ }
-  RESOLVED_VIA = 'fallback';
-  SYSTEMS = ['orchestrator','guardian','cortex','idearium','bridge','loom','copilot'].map(id => ({ id, ...SYSTEM_META[id], port:FALLBACK_PORTS[id] }));
+  } catch { /* autopilot unreachable — stated below, never a guessed port map */ }
+  // Honestly degraded: the systems are listed by name so the page still renders, but with no address — nothing
+  // here knows a port autopilot did not report.
+  RESOLVED_VIA = 'unresolved';
+  SYSTEMS = Object.keys(SYSTEM_META).map(id => ({ id, ...SYSTEM_META[id], port:'—' }));
+  COPILOT = null;
 }
 const CORE_PANELS = ['summary','event stream','snapshots','diagnostics','edge cases','api map','databases','files','tests','config','user model','controls'];
 const LOOM_EXTRA  = ['cortex','versions','repository','roadmap'];
@@ -252,7 +255,7 @@ const grid=$('#grid'), sysview=$('#sysview'), panels=$('#panels');
 let lastDiag=null, curSys=null;
 window.__nexusNotes = window.__nexusNotes || {};
 
-async function jpost(prompt){ try{ const r=await fetch(`${COPILOT}/api/prompt`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})}); return await r.json(); }catch{ return null; } }
+async function jpost(prompt){ if(!COPILOT) return null; try{ const r=await fetch(`${COPILOT}/api/prompt`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})}); return await r.json(); }catch{ return null; } }
 const cssId = s => s.replace(/\s+/g,'-');
 const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
 
@@ -312,7 +315,7 @@ $('#cliIn').addEventListener('keydown',async e=>{
   const out=$('#cliOut');
   out.textContent=`nexus ${curSys.cli} ${cmd}\n…`;
   const res=await jpost(`${curSys.cli} ${cmd}`);
-  out.textContent=`nexus ${curSys.cli} ${cmd}\n`+((res&&res.text)?res.text:'(no response — is co-pilot running on :3750?)');
+  out.textContent=`nexus ${curSys.cli} ${cmd}\n`+((res&&res.text)?res.text:`(no response — is co-pilot running? (${COPILOT||'autopilot did not report its address'}))`);
   e.target.value='';
 });
 
@@ -333,7 +336,7 @@ function fillPanel(sys,kind,body){
       <div class="row"><span class="k">open gaps</span><span class="v">${d.gaps?d.gaps.open:'—'}</span></div>
       <div class="row"><span class="k">CFR regime</span><span class="v">${d.regime?d.regime.state:'—'}</span></div>
       <div class="row"><span class="k">concerns</span><span class="v">${(d.summary&&d.summary.concerns.length)?d.summary.concerns.join(', '):'none'}</span></div>`
-      :`<div class="empty">No live diagnostics — is co-pilot running on :3750?</div>`;
+      :`<div class="empty">No live diagnostics — is co-pilot running? (${COPILOT||'autopilot did not report its address'})</div>`;
   } else if(kind==='diagnostics'){
     content=d&&d.decisions?`<div class="row"><span class="k">decisions</span><span class="v">${d.decisions.recent.length}</span></div>
       <div class="row"><span class="k">denied</span><span class="v">${d.decisions.denied}</span></div>
@@ -408,7 +411,7 @@ function fillPanel(sys,kind,body){
       }catch{ out.textContent=' (autopilot :7799 unreachable)'; } });
   } else if(kind==='user model'){
     jpost('user model').then(r=>{ const el=$(`#um-${sys.id}`); if(!el)return;
-      el.textContent = r && r.hypotheses ? `${r.hypotheses.length} tracked (confidence-weighted)` : (r && r.text ? r.text : 'unavailable (co-pilot :3750?)'); });
+      el.textContent = r && r.hypotheses ? `${r.hypotheses.length} tracked (confidence-weighted)` : (r && r.text ? r.text : `unavailable (co-pilot ${COPILOT||'address unknown'})`); });
   } else if(kind==='controls'){
     const sp=$(`#spawn-${sys.id}`), tc=$(`#touch-${sys.id}`), out=$(`#ctlout-${sys.id}`);
     if(sp)sp.addEventListener('click',async()=>{ out.textContent=' spawning…'; try{ const r=await fetch(`${AUTOPILOT}/spawn/${sys.id}`,{method:'POST',signal:AbortSignal.timeout(8000)}); const j=await r.json(); out.textContent=j&&j.ok?' spawned':' '+((j&&j.error)||'failed'); }catch{ out.textContent=' (autopilot :7799 unreachable)'; } });
@@ -437,7 +440,7 @@ function tick(){ $('#clock').textContent=new Date().toLocaleTimeString([], {hour
   await resolveSystems();
   renderGrid(); refreshHealth(); tick();
   // show how systems were resolved (autopilot vs fallback) — honest provenance
-  const st=$('#pulse'); if(st && RESOLVED_VIA==='fallback') st.title='systems from fallback list — autopilot status server (:7799) unreachable';
+  const st=$('#pulse'); if(st && RESOLVED_VIA==='unresolved') st.title=`no addresses — autopilot status server (${AUTOPILOT}) unreachable`;
   setInterval(refreshHealth,15000); setInterval(tick,10000);
 })();
 </script>

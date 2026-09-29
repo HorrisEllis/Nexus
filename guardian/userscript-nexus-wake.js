@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // guardian/userscript-nexus-wake.js — "Hey nexus" in any agent tab
 // UUID: nexus-wake-v1-0000-2026-0818-001
-// Version: 1.1.0   (0.39.252 — checkMessage reports only; agent wakes are answered by guardian/lib/wake-loop.js)
+// Version: 1.2.0   (0.39.282 — a second "hey nexus" after an injected answer is intercepted again: _injectAndTrack). Previous 1.1.0 (0.39.252 — checkMessage reports only; agent wakes are answered by guardian/lib/wake-loop.js)
 // Component: guardian.userscript.nexus-wake
 // Hook: guardian.userscript.nexus-wake:v1:p0001
 //
@@ -149,6 +149,15 @@
     const mode = (ctx.hintMode || HINT_MODE_DEFAULTS[provider] || 'once');
     let hintSent = false;
     let installed = false;
+    // §0.39.282 — restored (tests/modules/test-nexus-wake.js NW-020/033/034 describe it; this copy never had it). The
+    // injected answer stays in the composer, and WAKE_RE is anchored at the start, so a second "hey nexus" typed after
+    // it was not intercepted and went to the real model. What was injected is remembered and stripped before parseWake.
+    let _lastInjectedAnswer = null;
+    function _injectAndTrack(text) {
+      if (typeof injectText !== 'function') return;
+      try { injectText(text); _lastInjectedAnswer = text; }
+      catch (e) { log(`[nexus-wake] injectText failed: ${e.message}`); }
+    }
 
     // ── The listener ────────────────────────────────────────────────────────
     // Capture-phase keydown on the document. Capture matters: the host app's
@@ -162,7 +171,11 @@
                          el.closest?.('[contenteditable="true"]');
       if (!isComposer) return;
 
-      const text = (el.isContentEditable ? el.textContent : el.value) || '';
+      let text = (el.isContentEditable ? el.textContent : el.value) || '';
+      if (_lastInjectedAnswer) {
+        const lead = text.replace(/^\s+/, ''), prev = _lastInjectedAnswer.trim();
+        if (prev && lead.startsWith(prev)) text = lead.slice(prev.length);   // the leftover answer, not the user's words
+      }
       const { addressed, ask } = parseWake(text);
       if (!addressed) return;   // ordinary turn — hands off entirely
 
@@ -213,10 +226,7 @@
             // here (add submit() after injectText()) — named explicitly
             // rather than guessed at silently, given the real cost
             // difference between the two.
-            if (typeof injectText === 'function') {
-              try { injectText(answer); }
-              catch (e) { log(`[nexus-wake] injectText failed: ${e.message}`); }
-            }
+            _injectAndTrack(answer);
           }
           // §1.2 — a miss is STATED. A wake word that silently does nothing is
           // indistinguishable from one that was not recognised, and the user

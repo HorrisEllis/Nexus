@@ -149,6 +149,11 @@ const SCHEMA = {
     // major (and recalculates) at this many files, or this fraction of the tree, moved since the last recalculation
     deviation_major_files:    { default: 10, min: 1, max: 100000, copilot_writable: true, type: 'number' },
     deviation_major_fraction: { default: 0.1, min: 0.001, max: 1, copilot_writable: true, type: 'number' },
+    // §0.39.282 — James, live: "was supposed to be ollama, set in the settings." A repo with no provider of its own
+    // (a new one, or never set) fell to a hard-coded chatgpt in lib/repo-agent.js defaultProvider(). This is who answers
+    // for such a repo: ollama · auto (copilot decides) · a guardian agent name. Empty = the old behaviour (guardian's first
+    // provider). Checked against the live provider list when read, not a fixed list here.
+    default_provider: { default: '', copilot_writable: false, type: 'string' },
   },
   desktop: {
     ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },

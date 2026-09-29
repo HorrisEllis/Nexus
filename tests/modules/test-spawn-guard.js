@@ -13,13 +13,21 @@ const ap = require('../../nexus/autopilot.js');
 // Electron in-sandbox, so we drive the guard directly through the exported
 // _state and assert the short-circuit — the exact logic that failed live.
 
+// §0.39.282 — clear-glass was promoted to always-on (nexus/autopilot.js §onDemand, "onDemand/idleTimeoutMs removed"), so
+// no configured kernel is on-demand today. The guard is still the real code path for any kernel that is, so the cases
+// drive it through a fixture kernel added to the real KERNELS list (only the short-circuit paths run; nothing spawns).
+const FIXTURE = { name: 'spawn-guard-fixture', onDemand: true, idleTimeoutMs: 600000 };
 function findOnDemand() {
-  return ap.KERNELS.find(k => k.onDemand);
+  let k = ap.KERNELS.find(x => x.onDemand);
+  if (!k) { ap.KERNELS.push(FIXTURE); ap._state[FIXTURE.name] = ap._state[FIXTURE.name] || { status: 'dormant', lastActivity: 0 }; k = FIXTURE; }
+  return k;
 }
 
-test('T-001', 'an on-demand kernel exists to guard (clear-glass)', () => {
+test('T-001', 'the on-demand guard is still reachable (a configured on-demand kernel, or the fixture), and clear-glass is always-on', () => {
   const k = findOnDemand();
-  assert.ok(k, 'expected at least one onDemand kernel');
+  assert.ok(k && typeof ap.requestSpawn === 'function');
+  const cg = ap.KERNELS.find(x => x.name === 'clear-glass');
+  if (cg) assert.ok(!cg.onDemand, 'clear-glass is always-on since its promotion');
 });
 
 for (const state of ['starting', 'online', 'running', 'stable']) {

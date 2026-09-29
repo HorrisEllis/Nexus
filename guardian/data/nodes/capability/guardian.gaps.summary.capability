@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787216
+exported_at: 1790698456592
 source: guardian/registry-components.js:guardian.gaps.summary
 occurrences: 1
 firstSeenAt: 1789250730143
-lastSeenAt: 1790684787216
-fingerprint: 5b70a9ee6cc771640b3c1812
+lastSeenAt: 1790698456592
+fingerprint: a152683e943622233e2bbfa3
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.gaps.summary
   namespace: guardian
   name: gaps.summary
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /gaps/summary

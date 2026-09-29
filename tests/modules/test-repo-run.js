@@ -1,4 +1,6 @@
 'use strict';
+// §0.39.282 — starts NEXUS processes: into the test sandbox first (test-test-sandbox's rule), so nothing writes real data.
+require('../../lib/test-sandbox.js').ensure();
 /**
  * tests/modules/test-repo-run.js — §2026-09-21 Run/Test through COS.
  * Real BranchEngine + real SandboxRunner; a temp repo with a passing test, a

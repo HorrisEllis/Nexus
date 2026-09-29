@@ -44,6 +44,11 @@
       "_componentId": "intelligence.status"
     },
     {
+      "method": "POST",
+      "path": "/api/intelligence/event",
+      "_componentId": "intelligence.event"
+    },
+    {
       "method": "GET",
       "path": "/api/intelligence/failures",
       "_componentId": "intelligence.failures"

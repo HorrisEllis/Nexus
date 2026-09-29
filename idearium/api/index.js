@@ -23,6 +23,9 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+// §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
+// James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
+try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
 
 // §AX-010 2026-07-10 — idearium hardcoded 127.0.0.1:9000 in four places
 // (ledger x2, register, heartbeat). Resolve the orchestrator from

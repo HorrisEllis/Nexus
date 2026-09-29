@@ -187,7 +187,7 @@ const components=[
   _c('agent.current','GET','/api/agent/current','Which agent copilot is wearing now',{grammar:['current agent']}),
   _c('agent.switch','POST','/api/agent/switch','Switch the worn agent/hat, then check it is reachable',{grammar:['switch agent','wear hat']}),
   _c('sessions.get','GET','/api/sessions/:id','One session (404 when unknown)'),
-  _c('context.get','GET','/api/context/:id','The context snapshot copilot would send for a session'),
+  _c('context.session','GET','/api/context/:id','The context snapshot copilot would send for a session'),
   _c('event','POST','/api/event','Add one event to the stream'),
   _c('bridge.deliver','POST','/bridge/deliver','Delivery from the retired Bridge path — still called'),
   _c('queue.health','GET','/api/queue/health','Every work queue\'s health'),

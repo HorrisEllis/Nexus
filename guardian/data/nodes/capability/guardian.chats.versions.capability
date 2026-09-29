@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787209
+exported_at: 1790698456575
 source: guardian/registry-components.js:guardian.chats.versions
 occurrences: 1
 firstSeenAt: 1790684787209
-lastSeenAt: 1790684787209
-fingerprint: 10bf4fc572109f007ceb824c
+lastSeenAt: 1790698456575
+fingerprint: f0e06ae0f1e2807a2d54c4ab
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: guardian.chats.versions
   namespace: guardian
   name: chats.versions
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /api/chats/versions

@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787210
+exported_at: 1790698456579
 source: guardian/registry-components.js:guardian.job.dispatch
 occurrences: 1
 firstSeenAt: 1789250730135
-lastSeenAt: 1790684787210
-fingerprint: 35a20e1bd4404f74297f3979
+lastSeenAt: 1790698456579
+fingerprint: 9004a48f86a854a61f1fd202
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: guardian.job.dispatch
   namespace: guardian
   name: job.dispatch
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /command

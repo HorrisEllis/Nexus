@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787216
+exported_at: 1790698456593
 source: guardian/registry-components.js:guardian.sessions.list
 occurrences: 1
 firstSeenAt: 1789250730143
-lastSeenAt: 1790684787216
-fingerprint: e37cdd708202a14811905ee4
+lastSeenAt: 1790698456593
+fingerprint: 4e0d400473ecbea4247f8206
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.sessions.list
   namespace: guardian
   name: sessions.list
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /sessions

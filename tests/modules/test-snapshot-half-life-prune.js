@@ -32,7 +32,9 @@ function test(id, desc, fn) {
 }
 
 const snapshot = require(path.join(ROOT, 'cortex/snapshot/index.js'));
-const { jaaDB } = require(path.join(ROOT, 'cortex/memory/jaa-db.js'));
+// §0.39.282 — the snapshot index (backup_records) is versionium's own store since D3 (versionium/lib/snapshot.js
+// §ROLE SPLIT); reading cortex's jaa-db found no rows. Isolated by the test sandbox (VERSIONIUM_DATA_DIR).
+const { jaaDB } = require(path.join(ROOT, 'versionium/lib/store.js'));
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const NOW = Date.now();

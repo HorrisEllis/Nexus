@@ -796,10 +796,15 @@ function _getPerPidMemoryMB(pids) {
 function _statusSnapshot() {
   const out = {};
   for (const [name, s] of Object.entries(_state)) {
+    // §0.39.282 — each kernel's own address, read from its declared healthUrl, so a client (the tablet) resolves every
+    // system through this ONE endpoint instead of carrying a port map of its own.
+    const k = ALL_KERNELS.find(x => x.name === name);
+    let port = null; try { if (k && k.healthUrl) port = Number(new URL(k.healthUrl).port) || null; } catch (_) {}
     out[name] = {
       status: s.status, restarts: s.restarts,
       crashesInWindow: s.crashes.length, lastExit: s.lastExit,
       downSince: s.downSince, pid: s.proc?.pid || null,
+      healthUrl: (k && k.healthUrl) || null, port,
     };
   }
   return out;
@@ -1215,7 +1220,7 @@ function _handleGraphRead(req, res) {
     // CFR for colouring — read from disk so it survives a wedged cortex.
     let cfr = null;
     try {
-      const p = path.join(ROOT, 'data', 'guardian', 'ledger', 'cfr', 'cfr_state.json');
+      const p = path.join(process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data'), 'guardian', 'ledger', 'cfr', 'cfr_state.json');
       if (fs.existsSync(p)) {
         cfr = JSON.parse(fs.readFileSync(p, 'utf8'));
         // cfr_state.json persists the four axes only — `regime` is DERIVED,

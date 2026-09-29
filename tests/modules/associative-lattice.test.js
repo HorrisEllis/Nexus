@@ -18,7 +18,9 @@ async function testAsync(id, desc, fn) {
 // in a test process) rather than mocking it away, because the fallback
 // IS real, documented, production behavior for this module, not a test
 // convenience — verifying it is the point. Buffer file cleaned up after.
-const BUFFER_FILE = path.join(__dirname, '../../data/lattice/relationship_lattice.buffer.jsonl');
+// §0.39.282 — lib/cortex-write.js writes under NEXUS_DATA_ROOT (the test sandbox) now, not the real data/.
+require('../../lib/test-sandbox.js').ensure();
+const BUFFER_FILE = path.join(process.env.NEXUS_DATA_ROOT || path.join(__dirname, '../../data'), 'lattice/relationship_lattice.buffer.jsonl');
 try { fs.unlinkSync(BUFFER_FILE); } catch (_) {}
 
 const lattice = require('../../intelligence/lattice/associative-lattice.js');

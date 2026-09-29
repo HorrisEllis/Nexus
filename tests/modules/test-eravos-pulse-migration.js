@@ -20,7 +20,7 @@ function run() {
   const src = fs.readFileSync(path.join(__dirname, '../../eravos/server.js'), 'utf8');
 
   test('ER-001', 'eravos/server.js now requires nexus-connect.js', () => {
-    assert.ok(/require\(['"]\.\.\/nexus-connect['"]\)/.test(src));
+    assert.ok(/require\(['"]\.\.\/(nexus\/)?nexus-connect['"]\)/.test(src));   // §0.39.282 nexus-connect.js lives in nexus/ now
   });
 
   test('ER-002', 'the old hand-rolled register() body (raw http.request to /api/register, retry-on-error-only) is gone', () => {

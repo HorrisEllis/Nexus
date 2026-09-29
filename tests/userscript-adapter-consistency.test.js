@@ -38,6 +38,12 @@ const FILES = {
   perplexity: 'guardian/userscript-perplexity.js',
 };
 
+// Shared, provider-neutral code that legitimately names another provider's token. Each allowance is the exact text
+// it excuses, with its reason — not a blanket skip of the fingerprint.
+const ANCHOR_ATTRS = { text: "['data-message-id', 'data-message-author-role', 'data-testid', 'data-is-streaming', 'id']",
+  reason: '_nexusAnchor describes any DOM anchor with one generic attribute list, the same in every adapter (§ANCHOR 0.39.244)' };
+const ALLOW = { claude: [ANCHOR_ATTRS], gemini: [ANCHOR_ATTRS], perplexity: [ANCHOR_ATTRS] };
+
 function run() {
   let failed = false;
   const providers = Object.keys(FILES);
@@ -48,7 +54,12 @@ function run() {
       console.warn(`⚠  SKIP — ${FILES[owner]} not found`);
       continue;
     }
-    const content = fs.readFileSync(filePath, 'utf8');
+    // §0.39.282 — fingerprints are checked against CODE: comments are stripped first. The provider files cross-reference
+    // each other in their fix notes ("same fix as userscript-chatgpt.js"), which is provenance, not contamination.
+    // Line comments go first: a header line like "// @match https://gemini.google.com/*" would otherwise open a block
+    // comment that swallows the whole adapter. Then block comments, then the shared-code allowances (ALLOW, below).
+    let content = fs.readFileSync(filePath, 'utf8').replace(/(^|[^:'"`\\])\/\/.*$/gm, '$1').replace(/\/\*[\s\S]*?\*\//g, '');
+    for (const a of (ALLOW[owner] || [])) content = content.split(a.text).join('');
 
     for (const other of providers) {
       if (other === owner) continue;

@@ -82,9 +82,12 @@ t('map: nexus-co is the root — parent: null, immutable: true', () => {
   assert(core.immutable === true, 'nexus-co must be immutable: true');
 }, { invariant: true });
 
-t('map: all 8 NEXUS systems are registered', () => {
-  const required = ['nexus-or','nexus-br','nexus-cx','nexus-gu','nexus-id','nexus-ar','nexus-em','nexus-di'];
+// §0.39.282 — bridge (nexus-br) was retired 2026-09-06 and its entry removed (lib/uid/component-map.js §RETIRED); the
+// other seven are required, and the retired one must stay out.
+t('map: the 7 live NEXUS systems are registered, the retired bridge is not', () => {
+  const required = ['nexus-or','nexus-cx','nexus-gu','nexus-id','nexus-ar','nexus-em','nexus-di'];
   for (const id of required) assert(COMPONENT_MAP[id], `${id} missing from map`);
+  assert(!COMPONENT_MAP['nexus-br'], 'nexus-br (bridge) was retired and must not come back unannounced');
 }, { invariant: true });
 
 // ── §B: uid() format ─────────────────────────────────────────────────────────

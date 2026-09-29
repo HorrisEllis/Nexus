@@ -27,7 +27,7 @@ const { jaaDB } = require(path.join(ROOT, 'cortex/memory/jaa-db'));
 
   await test('T-002', 'a successful tool call persists a decision record to cortex', async () => {
     const tag = `p1-t002-${Date.now()}`;
-    await at.executeTool('read_file', { path: 'lib/version.js' }, { source: tag });
+    await at.executeTool('read_file', { path: 'package.json' }   /* §0.39.282 lib/version.js is past read_file's 256 KB limit now */, { source: tag });
     const rows = (jaaDB.query('raid_decisions', () => true, 9999) || []).filter(r => r.source === tag);
     assert.ok(rows.length >= 1, 'a decision row must be persisted');
     assert.strictEqual(rows[0].outcome, 'executed');
@@ -53,7 +53,7 @@ const { jaaDB } = require(path.join(ROOT, 'cortex/memory/jaa-db'));
 
   await test('T-005', 'recording is NON-BLOCKING — a tool still returns even if the record path is unavailable', async () => {
     // read_file returns real content; the decision record is a side-channel.
-    const r = await at.executeTool('read_file', { path: 'lib/version.js' }, { source: 'p1-t005' });
+    const r = await at.executeTool('read_file', { path: 'package.json' }   /* §0.39.282 lib/version.js is past read_file's 256 KB limit now */, { source: 'p1-t005' });
     assert.ok(r && (r.content || r.path), 'the tool result must come back regardless of recording');
   });
 

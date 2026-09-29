@@ -34,8 +34,12 @@ test('T-003', 'a missing faculty is reported, not thrown (§1.2)', () => {
   assert.ok(r.report);
 });
 test('T-004', 'idempotent — does not double-init already-running intelligence', () => {
-  const running = { getState: () => ({ running: true }), readFieldForFriction: () => {} };
+  // §0.39.282 — autopilot no longer starts intelligence at all (the real instance lives in cortex's supervised process),
+  // so it cannot double-init: nothing on the instance that starts it is ever called, and wired says so.
+  let starts = 0;
+  const running = { getState: () => ({ running: true }), readFieldForFriction: () => {}, start: () => { starts++; }, init: () => { starts++; } };
   const r = ai.wireIntelligence({ intelligence: running, snapshotAlreadyAttached: true });
-  assert.ok(r.wired.some(w => /already running/.test(w)), 'detected already-running');
+  assert.strictEqual(starts, 0, 'never starts intelligence');
+  assert.ok(r.wired.some(w => /not started here/.test(w)), r.wired.join(' | '));
 });
 console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);

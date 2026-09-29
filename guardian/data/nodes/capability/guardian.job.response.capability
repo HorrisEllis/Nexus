@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787211
+exported_at: 1790698456582
 source: guardian/registry-components.js:guardian.job.response
 occurrences: 1
 firstSeenAt: 1789250730140
-lastSeenAt: 1790684787211
-fingerprint: 10432f2f43ff71769f4c9ade
+lastSeenAt: 1790698456582
+fingerprint: 62b8d9d6e3cb8dfaa31ff216
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.job.response
   namespace: guardian
   name: job.response
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /response/:jobId

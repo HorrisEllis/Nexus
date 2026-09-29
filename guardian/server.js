@@ -68,7 +68,7 @@ const { wireGuardianCore } = require('./lib');
 // Sigma deviations → gap.found in JAA
 const _baseline = createBaseline({
   name:           'guardian',
-  ledgerDir:      require('path').join(__dirname, '../data/guardian/ledger'),
+  ledgerDir:      require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger'),
   failuresDir:    require('path').join(__dirname, '../data/guardian/failures'),
   invariantDir:   require('path').join(__dirname, '../data/guardian/invariant'),
   baselineN:      20,
@@ -1111,7 +1111,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     fn: async () => {
       try {
         const fs  = require('fs'), rp = require('path');
-        const dir = rp.join(__dirname,'..','data','guardian','ledger','boot');
+        const dir = rp.join(process.env.NEXUS_DATA_ROOT || rp.join(__dirname,'..','data'),'guardian','ledger','boot');
         fs.mkdirSync(dir,{recursive:true});
         fs.appendFileSync(rp.join(dir,'events.ndjson'),
           JSON.stringify({type:'guardian.boot',version:'3.6.1',pid:process.pid,ts:Date.now()})+'\n');
@@ -1205,7 +1205,7 @@ function _kernelEmit(type, data, ts) {
 // point was correct and stands). Existing memory_store files migrated
 // once by copy; originals left untouched (§7.4 archived, not discarded).
 const _evLedger = createCFRLedger({
-  ledgerDir: require('path').join(__dirname, '..', 'data', 'guardian', 'ledger', 'cfr'),
+  ledgerDir: require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger', 'cfr'),
   systemId:  'guardian',
   onEvent:   null, // downstream consumers can add onEvent hooks here
   onGap: (gap) => {
@@ -1245,7 +1245,7 @@ _evLedger.startAutoSave(60000);
 // than needing a separate archive/reference scheme.
 try {
   const snap = require('../cortex/snapshot/index.js');
-  const _ledgerCfrDir = require('path').join(__dirname, '..', 'data', 'guardian', 'ledger', 'cfr');
+  const _ledgerCfrDir = require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger', 'cfr');
   snap.registerStateProvider('guardian', {
     capture: () => {
       const read = (f) => { try { return JSON.parse(fs.readFileSync(require('path').join(_ledgerCfrDir, f), 'utf8')); } catch (_) { return null; } };
@@ -1695,6 +1695,19 @@ function pRes(res, status, data) { res.writeHead(status, { 'Content-Type':'appli
 // bodyJ's 30 real callers already handles for a JSON.parse failure, so
 // this needed zero changes anywhere else.
 const MAX_BODY_BYTES = 10 * 1024 * 1024;
+// §0.39.282 — the one JSON responder. 21 routes (provider/login from 0.39.280, economy from 0.39.281) called json(res, …)
+// and guardian never defined it: POST /api/provider/login (sent by every provider tab) threw "json is not defined" and
+// took guardian down (James's live log, 2026-09-29: crash-restart on every sign-in report).
+function json(res, status, body) {
+  // returns true: handleExtendedRoutes() must answer true for a route it handled, or the 404 fallback writes a second
+  // response and guardian dies on ERR_HTTP_HEADERS_SENT (routes here do `return json(...)`).
+  if (res.headersSent) return true;
+  const s = JSON.stringify(body);
+  res.writeHead(status, { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(s) });
+  res.end(s);
+  return true;
+}
+
 function bodyJ(req) {
   return new Promise((resolve, reject) => {
     let b = ''; let bytes = 0; let rejected = false;
@@ -2975,7 +2988,7 @@ function handleExtendedRoutes(req, res, url, method) {
       bus.emit('guardian.economy.policy', { by: r.policy.updatedBy, dropped: r.dropped });
       return json(res, 200, { ok: true, policy: r.policy, dropped: r.dropped });
     }).catch(e => json(res, 400, { ok: false, error: e.message }));
-    return;
+    return true;   // §0.39.282 handled (async): a bare return fell through to the 404 fallback
   }
   if (url.pathname === '/api/economy/usage' && method === 'GET') {
     const L = require('../lib/economy/ledger.js');
@@ -3011,7 +3024,7 @@ function handleExtendedRoutes(req, res, url, method) {
       else bus.emit('guardian.provider.login_state', rec);
       return json(res, 200, { ok: true, ...rec });
     }).catch(e => json(res, 400, { ok: false, error: e.message }));
-    return;
+    return true;   // §0.39.282 handled (async): a bare return fell through to the 404 fallback
   }
   if (method === 'GET' && url.pathname === '/api/provider/login') {
     return json(res, 200, { ok: true, providers: require('./lib/provider-login.js').all() });
@@ -4084,7 +4097,11 @@ server.on('request', (req, res) => {
     res.setHeader('Access-Control-Allow-Headers','Content-Type');
   }
   if (req.method==='OPTIONS'){res.writeHead(204,{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET,POST,PUT,DELETE,OPTIONS','Access-Control-Allow-Headers':'Content-Type'});res.end();return;}
-  if (handleExtendedRoutes(req,res,url,req.method)) return;
+  // §0.39.282 — handleExtendedRoutes() ends with an explicit `return false` when no route matched; everything else is a
+  // route that handled the request. 24 async routes (bodyJ().then(…); return;) and every `return pRes(…)` returned
+  // undefined, so the 404 fallback answered first (POST /api/intake from Clear Glass's download capture got 404) and
+  // the real answer then threw ERR_HTTP_HEADERS_SENT. Only an explicit false falls through now.
+  if (handleExtendedRoutes(req,res,url,req.method) !== false) return;
   for (const listener of _origListeners) listener.call(server,req,res);
 });
 

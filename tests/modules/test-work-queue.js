@@ -179,7 +179,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   });
 
   await test('WQ-016', 'ollama is serialised to ONE generation \u2014 3 concurrent model contexts caused the OOM', () => {
-    const ol = require('fs').readFileSync(path.join(ROOT, 'ollama', 'server.js'), 'utf8');
+    const ol = require('fs').readFileSync(path.join(ROOT, 'ollama', 'config.js')   /* §0.39.282 settings moved out of server.js into config.js */, 'utf8');
     assert.ok(/OLLAMA_MAX_CONCURRENT \|\| '1'/.test(ol), 'the default must be 1, not 3');
     assert.ok(/was never measured, it was assumed/.test(ol),
       'the reason for the old number must be stated \u2014 it was an assumption, and that is why it is being changed');

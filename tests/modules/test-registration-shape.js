@@ -18,7 +18,8 @@ const ROOT = path.join(__dirname, '../..');
 // THE canonical normalizer — the one reader every registration path now uses.
 const { normalizeDeclarations: norm } = require(path.join(ROOT, 'lib/component-registry'));
 
-const SYSTEMS = ['architect', 'bridge', 'clear-glass', 'copilot', 'cortex', 'emerge', 'eravos', 'guardian', 'idearium', 'loom', 'ollama'];
+// §0.39.282 — bridge is retired (no bridge/ in the tree); intelligence declares its own set since the organs moved out of cortex.
+const SYSTEMS = ['architect', 'clear-glass', 'copilot', 'cortex', 'emerge', 'eravos', 'guardian', 'idearium', 'intelligence', 'loom', 'ollama'];
 
 test('T-001', 'every system registry-components file normalizes to a non-empty component array', () => {
   for (const sys of SYSTEMS) {
@@ -46,7 +47,11 @@ test('T-003', 'CORTEX: exports a bare array AND its 39 components are now readab
   const rc = require(path.join(ROOT, 'cortex', 'registry-components.js'));
   assert.ok(Array.isArray(rc), 'cortex exports a bare array');
   const comps = norm(rc);
-  assert.ok(comps.length >= 39, `cortex must declare its full set (got ${comps.length})`);
+  // §0.39.282 — the 39 were split when the intelligence organs left cortex: cortex keeps its own, intelligence declares the
+  // rest in intelligence/registry-components.js. Both must be readable; together they cover at least the old 39.
+  const intel = norm(require(path.join(ROOT, 'intelligence', 'registry-components.js')));
+  assert.ok(comps.length > 0 && intel.length > 0, `cortex (${comps.length}) and intelligence (${intel.length}) both declare components`);
+  assert.ok(comps.length + intel.length >= 39, `cortex + intelligence must cover the full set (got ${comps.length + intel.length})`);
 });
 
 test('T-004', 'cortex/boot.js reads its components via the canonical normalizer (not ad-hoc shape logic)', () => {

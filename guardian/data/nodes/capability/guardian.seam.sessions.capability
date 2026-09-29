@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787212
+exported_at: 1790698456586
 source: guardian/registry-components.js:guardian.seam.sessions
 occurrences: 1
 firstSeenAt: 1789250730140
-lastSeenAt: 1790684787212
-fingerprint: 563cc07bcc22069fcba93c01
+lastSeenAt: 1790698456586
+fingerprint: 1902c1940aab08ac0a573126
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.seam.sessions
   namespace: guardian
   name: seam.sessions
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /seam/sessions

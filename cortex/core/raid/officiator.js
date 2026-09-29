@@ -136,8 +136,17 @@ function _parseSynthesizedContract(text) {
 // persisted-dedup (markOfficiated(), this session's own earlier fix)
 // moved to sit around the shared core rather than inside it, since
 // that's specific to the artifact-triggered path, not synthesis itself.
+// §0.39.282 — who synthesizes is RAID's decision, not a literal. It was 'claude' in five places: with Claude not
+// connected, every staged drop failed ("no real agent response (forAgent=claude)", James's live log, every 20 s).
+// decideForContract ranks only agents RAID's health says are available; an explicit opts.forAgent still wins.
+function _agentFor(opts = {}, what = 'synthesize a contract from a staged artifact') {
+  if (opts.forAgent) return opts.forAgent;
+  try { const d = require('./index.js').decideForContract({ intention: what }); return (d && d.agent) || null; } catch (_) { return null; }
+}
+
 async function _synthesizeCore(prompt, opts = {}) {
-  const forAgent = opts.forAgent || 'claude';
+  const forAgent = _agentFor(opts);
+  if (!forAgent) return { ok: false, reason: 'RAID found no available agent to synthesize with' };
   const hat = hatForge.get('the_officiator');
   if (!hat) {
     return { ok: false, reason: 'the_officiator hat is not seeded — run lib/hat-seed.js\'s seedHats() first' };
@@ -210,7 +219,7 @@ async function synthesizeFromContext(contextText, opts = {}) {
       content: (synthesized.context || contextText.slice(0, 200))
         + `\n\nWhen finished, verify your work against the real end-state above (not a guess), then report exactly "SEAM VERDICT: PASS" if it genuinely holds, or "SEAM VERDICT: FAIL" with what's still wrong if it doesn't.`,
       title: synthesized.fileName || null,
-      forAgent: opts.dispatchTo || opts.forAgent || 'claude',
+      forAgent: opts.dispatchTo || _agentFor(opts),
       endState: synthesized.endState ?? null,
       conditions: synthesized.conditions ?? null,
       warpPrimitives: synthesized.warpPrimitives ?? null,
@@ -222,7 +231,7 @@ async function synthesizeFromContext(contextText, opts = {}) {
     {
       source: 'officiator-synthesis-tool',
       intention: synthesized.intent || 'build',
-      forAgent: opts.dispatchTo || opts.forAgent || 'claude',
+      forAgent: opts.dispatchTo || _agentFor(opts),
       sourceDropId: null,
     },
   );
@@ -230,7 +239,7 @@ async function synthesizeFromContext(contextText, opts = {}) {
 }
 
 async function officiate(drop, opts = {}) {
-  const forAgent = opts.forAgent || 'claude';
+  const forAgent = _agentFor(opts);
   const core = await _synthesizeCore(_buildSynthesisPrompt(drop), { ...opts, forAgent });
   if (!core.ok) return core;
   const synthesized = core.synthesized;

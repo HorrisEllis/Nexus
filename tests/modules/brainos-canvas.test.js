@@ -15,7 +15,7 @@ const dom = new JSDOM('<!doctype html><html><body></body></html>', { url: 'http:
 global.window = dom.window;
 global.document = dom.window.document;
 
-require('../../nexus/ui/brainos/brainos-canvas.js');
+require('../../ui/brainos/brainos-canvas.js');
 const Canvas = dom.window.BrainOSCanvas;
 
 let passed = 0, failed = 0;

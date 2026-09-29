@@ -11,6 +11,9 @@
  * ports block and every port literal found tree-wide, not assumed.
  */
 const path = require('path');
+// §0.39.282 — in a test process, point VERSIONIUM_DATA_DIR / NEXUS_SNAP_DIR at the sandbox BEFORE DATA_DIR is computed
+// below (idearium/lib/data-dir.cjs does the same). In production ensure() is a no-op.
+try { require('../lib/test-sandbox.js').ensure(); } catch (_) {}
 
 module.exports = {
   // ── Network ────────────────────────────────────────────────────────────

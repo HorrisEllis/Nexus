@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787208
+exported_at: 1790698456574
 source: guardian/registry-components.js:guardian.provider.result
 occurrences: 1
 firstSeenAt: 1789250730134
-lastSeenAt: 1790684787208
-fingerprint: 70a579d44da2682e990b2355
+lastSeenAt: 1790698456574
+fingerprint: 2ab3a427f2dbdaa2c72a8376
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: guardian.provider.result
   namespace: guardian
   name: provider.result
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: POST
     path: /result

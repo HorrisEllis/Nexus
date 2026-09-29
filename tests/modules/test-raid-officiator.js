@@ -31,10 +31,11 @@ async function test(id, desc, fn) {
 }
 
 let _mockResponse = null;
+let _lastProvider = null;
 require.cache[require.resolve(path.join(ROOT, 'copilot/lifeline.js'))] = {
   id: 'copilot/lifeline.js', filename: 'copilot/lifeline.js', loaded: true,
   exports: {
-    dispatchToNcpAgent: async () => _mockResponse,
+    dispatchToNcpAgent: async (_p, o) => { _lastProvider = (o && o.provider) || null; return _mockResponse; },
     route: async () => ({ ok: false }),
     health: async () => ({ ok: false }),
     extractExplicitAgent: () => null,
@@ -230,6 +231,17 @@ await test('OFF-013', 'officiate() (the artifact-triggered path) carries the sam
   const result = await officiator.officiate(drop);
   const row = raid.listQueue().find(r => r.uuid === result.queueId);
   assert.ok(row.contract.content.includes('SEAM VERDICT: PASS'));
+});
+
+
+// §0.39.282 — no forAgent → RAID decides (decideForContract, available agents only), never the old literal 'claude'
+await test('OFF-RAID', 'no forAgent: the agent is RAID\'s pick, not a hard-coded claude', async () => {
+  const raidCore = require(path.join(ROOT, 'cortex/core/raid/index.js'));
+  const expected = raidCore.decideForContract({ intention: 'synthesize a contract from a staged artifact' }).agent;
+  _lastProvider = null;
+  await officiator.synthesizeFromContext('a pasted spec describing a real utility');
+  assert.strictEqual(_lastProvider, expected, `dispatched to ${_lastProvider}, RAID picked ${expected}`);
+  assert.ok(!/\|\| 'claude'/.test(require('fs').readFileSync(path.join(ROOT, 'cortex/core/raid/officiator.js'), 'utf8')), 'no literal claude fallback left');
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);

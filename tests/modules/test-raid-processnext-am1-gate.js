@@ -36,6 +36,7 @@ require.cache[require.resolve('../../cortex/memory/jaa-db')] = {
     uid: () => require('crypto').randomUUID(),
     jaaDB: {
       query:  (t, fn, n) => (_store[t] || []).filter(fn).slice(0, n || 999),
+      reloadTable: () => {},   // §0.39.282 — lib/hat-forge refreshes before it reads; without it the gate's check threw and failed open
       insert: (t, r) => { (_store[t] = _store[t] || []).push(r); return r; },
       update: (t, id, patch) => {
         const row = (_store[t] || []).find(r => r.uuid === id);

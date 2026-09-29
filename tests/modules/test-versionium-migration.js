@@ -9,7 +9,7 @@ function test(id, desc, fn) {
   catch(e) { console.error(`  ✗ ${id} ${desc}\n    ${e.stack}`); failed++; }
 }
 
-const versionium = require('../../cortex/versionium/index.js');
+const versionium = require('../../versionium/lib/engine.js')   // §0.39.282 moved wholesale (§VS1, versionium/lib/engine.js header);
 
 test('V-001', 'commit() accepts and stores a system field', () => {
   const c = versionium.commit({ message: 'test commit', system: 'guardian' });

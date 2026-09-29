@@ -55,6 +55,9 @@ function runWatch(src, { previous, reply = null, afterMs = 1700, noReplyMs = 600
     if (reply !== null) setTimeout(() => { el = { innerText: reply }; }, afterMs);
     const sandbox = {
       findResponseEl: () => el,
+      // §0.39.282 — startWatch reads the reply through each userscript's _replyText(el) (added with the both-sides
+      // readers, 0.39.279); the fake tab's element is plain text, so the helper is its innerText.
+      _replyText: (x) => (x && x.innerText ? String(x.innerText).trim() : ''),
       _isGenerating: () => false,                 // settled, as a finished previous answer is
       send: (m) => { sent.push(m); if (m.type === 'GUARDIAN_ERROR') resolve({ sent, done: null }); },
       getAccount: () => 'acct',
@@ -172,8 +175,11 @@ async function main() {
   // 0.39.241 — the literal moved into agentIdFor(), shared with findLate/adoptLate (the Responses index files replies under the same id).
   check('repo-agent derives a per-repo agentId for guardian dispatches',
     /payload\.agentId = agentIdFor\(repo\.uuid\)/.test(RA) && /function agentIdFor\(repoUuid\) \{ return `repo-\$\{repoUuid\}`; \}/.test(RA));
-  check('copilot forwards agentId to guardian only on the guardian backend',
-    /agentId: body\.backend === 'guardian' \? \(body\.agentId \|\| undefined\) : undefined/.test(fs.readFileSync(path.join(ROOT, 'copilot', 'server.js'), 'utf8')));
+  // §0.39.282 — was "only on the guardian backend". Since 0.39.269 agent memory works on any backend: lifeline.js
+  // recalls memory by opts.agentId whichever backend answers, so copilot forwards agentId on every backend (0.39.277).
+  check('copilot forwards agentId on every backend (agent memory is per agent, not per backend)',
+    /dispatchFn\(prompt, \{[^\n]*agentId: body\.agentId \|\| undefined/.test(fs.readFileSync(path.join(ROOT, 'copilot', 'server.js'), 'utf8'))
+    && /recall\(\{ agentId: opts\.memoryAgent \|\| opts\.agentId/.test(fs.readFileSync(path.join(ROOT, 'copilot', 'lifeline.js'), 'utf8')));
   // §ONE-TAB 0.39.247 — replaces the 0.39.237/TR1 per-repo tab checks: every
   // job, repo or not, goes to the provider's one active tab.
   check('the dispatcher sends every job, agentId or not, to the provider\'s one active tab',
@@ -242,7 +248,7 @@ async function main() {
   }
   const NH = fs.readFileSync(path.join(ROOT, 'guardian', 'lib', 'ncp-handler.js'), 'utf8');
   check('guardian routes stage reports from the page',
-    /case 'GUARDIAN_PROGRESS'[\s\S]{0,240}guardian\.job\.progress/.test(NH));
+    /case 'GUARDIAN_PROGRESS'[\s\S]{0,1200}bus\.emit\('guardian\.job\.progress'/.test(NH));   // §0.39.282 window widened: 0.39.259's resuming-chat handling sits between
   check('guardian logs one line per job stage, naming the chat',
     /guardian\.job\.progress[\s\S]{0,300}chat=/.test(fs.readFileSync(path.join(ROOT, 'guardian', 'server.js'), 'utf8')));
 

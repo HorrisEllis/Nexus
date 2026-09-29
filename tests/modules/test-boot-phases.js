@@ -1,4 +1,5 @@
 'use strict';
+require('../../lib/test-sandbox.js').ensure();   // §0.39.282 reads real entry files; sandboxed so nothing it touches reaches the tree
 const assert = require('assert');
 const http = require('http');
 let passed = 0, failed = 0;
@@ -46,16 +47,26 @@ test('T-004', 'the REAL kernel table plans in the intended order: cortex → orc
   const plan = _phasePlan(ALL_KERNELS);
   assert.deepStrictEqual(plan[0].kernels.map(k => k.name), ['cortex']);
   assert.deepStrictEqual(plan[1].kernels.map(k => k.name).sort(),
-    ['bridge', 'diagnostic', 'guardian', 'orchestrator']);
+    ['diagnostic', 'guardian', 'orchestrator']);   // §0.39.282 bridge is retired (no kernel entry)
   assert.ok(plan[2].kernels.map(k => k.name).includes('copilot'));
-  assert.deepStrictEqual(plan[3].kernels.map(k => k.name), ['emerge']);
-  // clear-glass must NOT appear anywhere — it's onDemand
-  for (const p of plan) assert.ok(!p.kernels.some(k => k.name === 'clear-glass'));
+  // §0.39.282 — the table moved on, deliberately, and this pinned the old one: emerge's consumer was retired (archived;
+  // test-emerge-direct-compile EM-005) so phase 4 is intelligence-consumer; and clear-glass is no longer onDemand — it
+  // is supervised in phase 3 (nexus/autopilot.js: "no longer despawns from under a live dispatch"), health on :7704.
+  assert.deepStrictEqual(plan[3].kernels.map(k => k.name), ['intelligence-consumer']);
+  const cg = plan[2].kernels.find(k => k.name === 'clear-glass');
+  assert.ok(cg && !cg.onDemand && /:7704\/health$/.test(cg.healthUrl), 'clear-glass supervised in phase 3, health on the wire port');
 });
 
 test('T-005', 'every always-on kernel except emerge declares a healthUrl (emerge has no HTTP surface)', () => {
   for (const k of ALL_KERNELS.filter(k => !k.onDemand)) {
-    if (k.name === 'emerge') { assert.strictEqual(k.healthUrl, undefined); continue; }
+    // §0.39.282 — intelligence-consumer (intelligence/consumer.js, a bus consumer, phase 4) never listens either; like
+    // emerge it has no HTTP surface to gate on. Each exception is checked to really have none.
+    if (k.name === 'emerge' || k.name === 'intelligence-consumer') {
+      assert.strictEqual(k.healthUrl, undefined);
+      const src = require('fs').readFileSync(require('path').join(__dirname, '../..', (k.args || [])[0] || ''), 'utf8');
+      assert.ok(!/\.listen\(|createServer\(/.test(src), `${k.name} has no HTTP server`);
+      continue;
+    }
     assert.ok(k.healthUrl, `${k.name} missing healthUrl — its phase gate would be a no-op`);
     assert.ok(Number.isFinite(k.phase), `${k.name} missing phase`);
   }

@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787208
+exported_at: 1790698456572
 source: guardian/registry-components.js:guardian.providers.list
 occurrences: 1
 firstSeenAt: 1789250730133
-lastSeenAt: 1790684787208
-fingerprint: 3e4657424a331c4fd57cd181
+lastSeenAt: 1790698456572
+fingerprint: 6b7630325e0f76bdf3faea45
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.providers.list
   namespace: guardian
   name: providers.list
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /providers

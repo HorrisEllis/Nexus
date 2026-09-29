@@ -9,12 +9,12 @@ system: null
 tags:
   - guardian
   - capability
-exported_at: 1790684787200
+exported_at: 1790698456567
 source: guardian/registry-components.js:guardian.health
 occurrences: 1
 firstSeenAt: 1789250730122
-lastSeenAt: 1790684787200
-fingerprint: 8cff9c6ccfa42c88c1566ae9
+lastSeenAt: 1790698456567
+fingerprint: 1212a4e8e96347c8d38c0dac
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: guardian.health
   namespace: guardian
   name: health
-  version: 3.14.0
+  version: 3.19.0
   route:
     method: GET
     path: /health

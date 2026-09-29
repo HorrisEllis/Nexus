@@ -43,8 +43,11 @@ const SRC = fs.readFileSync(path.join(ROOT, 'diagnostic/nexus-diagnostic.js'), '
 
 test('DHP-001', 'the nonexistent escalation.escalate() call is GONE — it never existed and never worked', () => {
   assert.ok(!/escModule\.escalate\(/.test(SRC), 'escalate() call must be removed');
-  assert.ok(!/require\(['"]\.\.\/cortex\/self-heal/.test(SRC),
-    'the cross-directory require of cortex internals must be gone — it is also a prerequisite for self-heal becoming sovereign');
+  // §0.39.282 — narrowed to the escalation ladder this case is about. §R7 (2026-08-12) deliberately added a require of
+  // cortex/self-heal/fault-taxonomy as the REAL tension scorer (replacing the phantom cortex/healer); self-heal moving
+  // out of cortex is its own sovereignty phase, not this fix.
+  assert.ok(!/require\(['"]\.\.\/cortex\/self-heal\/(escalation|index)/.test(SRC),
+    'the cross-directory require of the self-heal escalation ladder must be gone');
 });
 
 test('DHP-002', 'escalation.js genuinely has no escalate() — proving the original call could never have worked', () => {
@@ -97,13 +100,12 @@ test('DHP-007', 'the redundant fallback that retried the SAME failing endpoint i
 
 test('DHP-008', 'the missing cortex/healer canonical scorer is now LOUD (§1.2), warn-once, instead of a silent crude fallback', () => {
   assert.ok(/_tensionWarned/.test(SRC), 'must warn once rather than per-gap');
-  assert.ok(/is MISSING/.test(SRC) && /crude severity fallback/.test(SRC),
+  // §0.39.282 — §R7 replaced the phantom cortex/healer with the real scorer (cortex/self-heal/fault-taxonomy scoreTension);
+  // the warning now fires only if THAT is unreachable, and still says the numbers are degraded.
+  assert.ok(/unreachable/.test(SRC) && /crude severity fallback/.test(SRC),
     'the log must say the numbers are degraded, not merely that a require failed');
-  // And confirm the phantom is genuinely absent, so this test fails loudly if
-  // someone adds the module and forgets to remove the warning.
-  let exists = true;
-  try { require.resolve('../../cortex/healer/index'); } catch (_) { exists = false; }
-  assert.strictEqual(exists, false, 'cortex/healer/index.js still does not exist — if it now does, delete the warning and use the real scorer');
+  assert.ok(/require\('\.\.\/cortex\/self-heal\/fault-taxonomy'\)\.scoreTension/.test(SRC), 'the real scorer is used');
+  assert.strictEqual(typeof require('../../cortex/self-heal/fault-taxonomy').scoreTension, 'function', 'and it exists');
 });
 
 test('DHP-009', 'intelligence/gap/predicate.js no longer depends on the phantom — the last of the two files this comment named as broken, now fixed to match what §R7 already did for nexus-diagnostic.js on 2026-08-12', () => {
