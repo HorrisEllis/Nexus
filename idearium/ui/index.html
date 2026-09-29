@@ -423,6 +423,23 @@ body{display:flex;flex-direction:column;position:relative}
 .ls-ver b{color:var(--mint);font-weight:500}
 .ls-raw{white-space:pre;overflow:auto;max-height:70vh;font-family:var(--mono);font-size:10.5px;color:var(--text2);background:var(--b0);padding:10px;border-radius:6px}
 .ls-err{font-family:var(--mono);font-size:10.5px;color:var(--amber);margin:4px 0}
+/* §0.39.280 BS9 — the spec's build bar */
+.ls-build{margin:10px 0 6px;border:1px solid rgba(56,189,248,.25);border-radius:10px;padding:10px 12px;background:rgba(56,189,248,.04)}
+.ls-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;color:var(--text2)}
+.ls-bar code{color:var(--sky2)}
+.ls-go{background:var(--sky);color:#04121c;border:0;border-radius:7px;padding:7px 14px;font:700 11px var(--mono);letter-spacing:.04em;cursor:pointer}
+.ls-go:disabled{opacity:.45;cursor:default}
+.ls-mini{background:none;border:1px solid var(--b0);border-radius:6px;color:var(--text2);font:10px var(--mono);padding:3px 8px;cursor:pointer}
+.ls-mini:hover{border-color:var(--sky);color:var(--sky2)}
+.ls-phases{margin-top:8px}.ls-phases summary{cursor:pointer;font:10px var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.ls-ph{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--b0);font:10.5px var(--mono);color:var(--text2)}
+.ls-ph.done{opacity:.55}.ls-ph.next{color:var(--text)}
+.ls-ph-mark{width:14px;color:var(--mint)}.ls-ph.next .ls-ph-mark{color:var(--sky)}
+.ls-ph-layer{width:78px;font-size:9.5px;text-transform:uppercase}.ls-ph-id{color:var(--text3);width:44px}.ls-ph-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ls-ph-ax{font-size:9px;color:var(--violet)}
+.ls-dev{margin-top:8px;font:10px var(--mono);color:var(--text3)}.ls-dev b{color:var(--amber)}
+.ph-quick{margin-left:auto;background:none;border:1px solid rgba(52,211,153,.35);color:var(--mint);border-radius:5px;font-size:9px;padding:0 6px;cursor:pointer}
+.ph-quick:hover{background:rgba(52,211,153,.12)}
 @media (max-width:1000px){.ls-wrap{grid-template-columns:1fr}.ls-files{position:static;max-height:none;flex-direction:row;flex-wrap:wrap}}
 /* ── §0.39.271 P4 — Phases manager (js/phases.js) ── */
 #repo-subtab-phases{overflow:auto}
@@ -582,6 +599,55 @@ body{display:flex;flex-direction:column;position:relative}
 .tree-status-dot.building,.tree-status-dot.pending,.tree-status-dot.verifying{background:var(--amber)}
 .tree-status-dot.failed,.tree-status-dot.escalated{background:var(--coral)}
 .tree-file-name{flex:1;overflow:hidden;text-overflow:ellipsis}
+.tree-node.file.fs-row-pending{opacity:.45;font-style:italic}
+.tree-node.file.fs-row-deleted{opacity:.45;text-decoration:line-through}
+.tree-node.file.fs-row-modified .tree-file-name,.tree-node.file.fs-row-new .tree-file-name{color:var(--amber)}
+.fs-tag{font:600 8.5px/1.5 var(--mono);padding:0 4px;border-radius:3px;margin-left:4px;border:1px solid var(--b1,rgba(255,255,255,.12));color:var(--text3);flex-shrink:0}
+.fs-tag.fs-modified,.fs-tag.fs-new{color:var(--amber);border-color:rgba(230,180,80,.4)}
+.fs-tag.fs-pending{color:var(--text3);border-style:dashed}
+.fs-tag.fs-staged{color:var(--violet);border-color:rgba(167,139,250,.4)}
+.fs-tag.fs-deleted{color:var(--coral)}
+.fs-summary{color:var(--amber)}
+.ide-manage-btn{margin-left:auto;color:var(--sky2)!important;border-color:rgba(56,189,248,.35)!important}
+.manage-modal{width:min(760px,94vw);max-height:90vh;overflow:auto}
+.manage-actions{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin:10px 0 14px}
+.manage-act{display:flex;flex-direction:column;gap:2px;text-align:left;padding:8px 10px;border-radius:8px;border:1px solid var(--b0);background:rgba(255,255,255,.02);color:var(--text);cursor:pointer;font-family:var(--mono)}
+.manage-act b{font-size:11px;font-weight:600}.manage-act span{font-size:9.5px;color:var(--text3)}
+.manage-act:hover{border-color:rgba(56,189,248,.4)}.manage-act.on{border-color:var(--sky);background:rgba(56,189,248,.1)}
+.manage-hits{max-height:180px;overflow:auto;margin-top:6px}
+.manage-hit{display:block;font:10.5px/1.6 var(--mono);color:var(--text2);padding:2px 0;cursor:pointer}
+/* §0.39.280 BS11 — the plan panel and the build-start card */
+#plan-panel{position:fixed;top:90px;right:18px;width:420px;height:min(78vh,760px);min-width:300px;min-height:220px;resize:both;overflow:hidden;z-index:250;display:none;flex-direction:column;background:#141518;border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);font-family:var(--mono)}
+#plan-panel.open{display:flex}#plan-panel.wide{width:min(900px,92vw)}
+.pp-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);cursor:move;user-select:none}
+.pp-title{font:600 13px system-ui,sans-serif;color:#e8e8ea}.pp-sub{font-size:10px;color:var(--text3)}.pp-grow{flex:1}
+.pp-map{max-width:150px;background:#1c1d21;color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:6px;font:10px var(--mono);padding:2px 4px}
+.pp-btn{background:none;border:0;color:var(--text3);font-size:13px;cursor:pointer;padding:2px 5px}.pp-btn:hover{color:#fff}
+.pp-body{flex:1;overflow:auto;padding:8px 14px 14px}
+.pp-progress{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin:4px 0 10px;overflow:hidden}.pp-progress div{height:100%;background:var(--mint)}
+.pp-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:10px 0 6px;cursor:default}
+.pp-task{border-radius:6px}.pp-row{display:flex;align-items:center;gap:8px;padding:5px 4px;cursor:pointer;border-radius:6px}.pp-row:hover{background:rgba(255,255,255,.035)}
+.pp-mark{width:14px;text-align:center;color:var(--text3)}.pp-task.done .pp-mark{color:var(--text2)}.pp-task.cur .pp-mark{color:var(--sky)}
+.pp-name{flex:1;font:12.5px/1.35 system-ui,sans-serif;color:#dcdce0;min-width:0}.pp-task.done .pp-name{text-decoration:line-through;color:var(--text3)}
+.pp-layer{font-size:9px;color:var(--violet);text-transform:uppercase}
+.pp-gates{display:flex;gap:2px}.pp-g{width:9px;height:4px;border-radius:1px;background:rgba(255,255,255,.1)}.pp-g.on{background:var(--mint)}.pp-g.cur{background:var(--sky);animation:pulse 1.2s ease-in-out infinite}.pp-g.bad{background:var(--coral)}
+.pp-detail{margin:2px 0 8px 26px;padding:6px 8px;border-left:2px solid rgba(56,189,248,.35);font-size:10.5px;color:var(--text2)}
+.pp-meta{color:var(--text3);margin-bottom:6px}.pp-go{background:var(--sky);color:#04121c;border:0;border-radius:6px;font:700 10px var(--mono);padding:4px 10px;cursor:pointer;margin-bottom:6px}
+.pp-led{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}.pp-led-t{color:var(--text3);font-size:9.5px;margin-right:6px}
+.pp-led-s{font-size:9.5px;padding:0 5px;border-radius:3px;border:1px solid rgba(255,255,255,.12);margin-right:6px}
+.pp-building{color:var(--sky)}.pp-replied{color:var(--mint)}.pp-failed,.pp-refused{color:var(--coral)}
+.pp-led-d{color:var(--text2)}.pp-reply pre{white-space:pre-wrap;max-height:220px;overflow:auto;font-size:10px;color:var(--text2);background:rgba(0,0,0,.25);padding:6px;border-radius:4px}
+.pp-led-empty,.pp-empty{color:var(--text3);font-size:10.5px;padding:6px 0}.pp-act{font-size:10.5px;color:var(--text2);padding:3px 0}
+.bs-card{border:1px solid rgba(56,189,248,.28);background:linear-gradient(180deg,rgba(56,189,248,.07),rgba(56,189,248,.02));border-radius:12px;padding:14px 16px;margin:0 0 12px}
+.bs-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.bs-title{font:700 14px system-ui,sans-serif;color:var(--text)}.bs-sub{font-size:11px;color:var(--text3);margin:3px 0 10px}
+.bs-spec{display:grid;grid-template-columns:1fr 150px 120px auto;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--b0)}
+.bs-spec-name{font:12px var(--mono);color:var(--text)}.bs-spec-name small{display:block;color:var(--text3);font-size:9.5px}.bs-spec-state{font:10.5px var(--mono);color:var(--text2)}
+.bs-bar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}.bs-bar div{height:100%;background:var(--mint)}
+.repo-settings-embed{width:100%;height:720px;border:1px solid var(--b0);border-radius:8px;background:#0a0b10;margin-top:6px}
+.env-group{margin:8px 0}.env-gname{font:600 9.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:4px}
+.env-row{display:grid;grid-template-columns:minmax(200px,1fr) minmax(200px,1.2fr);gap:12px;align-items:center;padding:5px 0;border-bottom:1px solid var(--b0)}
+.env-k{font:11px var(--mono);color:var(--text)}.env-d{font-size:10px;color:var(--text3)}
+.env-c{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.env-in{max-width:280px}.env-chk{font:10.5px var(--mono);color:var(--text2)}
 .tree-file-bytes{color:var(--text3);font-size:9px;flex-shrink:0}
 .tree-file-del{color:var(--text3);font-size:12px;padding:0 3px;flex-shrink:0;opacity:0;transition:opacity .1s}
 .tree-node:hover .tree-file-del{opacity:1}
@@ -2287,5 +2353,8 @@ async function saveToIdearium(){
 <script src="js/nexus-atlas.js"></script>
 <script src="js/phases.js"></script>
 <script src="js/living-spec.js"></script>
+<script src="js/file-manage.js"></script>
+<script src="js/repo-environment.js"></script>
+<script src="js/plan-panel.js"></script>
 </body>
 </html>

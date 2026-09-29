@@ -71,7 +71,17 @@
 </style>
 </head>
 <body>
-<script src="js/window-chrome.js" data-kind="settings" data-title="Settings console"></script>
+<script>
+  // §0.39.280 BS10 — ?embed=1: this console's repo view inside the repo's own Settings tab (an iframe): no nav, no
+  // window title bar; everything else — the tabs, the save bar, every route — is the same page.
+  if (new URLSearchParams(location.search).get('embed') === '1') document.documentElement.classList.add('embed');
+</script>
+<style>
+  html.embed .app { grid-template-columns: 1fr; height: 100vh; margin-top: 0; }
+  html.embed nav { display: none; }
+  html.embed .head { padding-top: 8px; }
+</style>
+<script>if (!document.documentElement.classList.contains('embed')) document.write('<script src="js/window-chrome.js" data-kind="settings" data-title="Settings console"><\/script>');</script>
 <div class="app">
   <nav>
     <header><h1>⚙ Settings console</h1><input id="q" type="search" placeholder="Filter repos and settings…" autocomplete="off"></header>

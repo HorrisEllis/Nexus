@@ -180,7 +180,7 @@ spec:
 
     BS8_files_ui:
       layer: ui
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
       depends_on: [BS7]
       files: [idearium/ui/js/app.js, idearium/ui/js/file-manage.js, idearium/ui/index.html]
       does: >-
@@ -191,7 +191,7 @@ spec:
 
     BS9_spec_and_phase_build_ui:
       layer: ui
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
       depends_on: [BS7]
       files: [idearium/ui/js/living-spec.js, idearium/ui/js/phases.js]
       does: >-
@@ -201,9 +201,9 @@ spec:
 
     BS10_settings_and_environment_ui:
       layer: ui
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
       depends_on: [BS7]
-      files: [idearium/ui/js/app.js, idearium/ui/settings.html]
+      files: [idearium/ui/js/repo-environment.js, idearium/ui/js/app.js, idearium/ui/settings.html (?embed=1)]
       does: >-
         The repo's Settings tab contains its console view (settings.html?repo=<uuid>&embed=1: no nav, no chrome) and an
         Environment section: the check (downloaded / configured, each item with its reason), the install plan, the
@@ -211,9 +211,9 @@ spec:
 
     BS11_plan_panel:
       layer: ui
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js 10/10 (real page, real modules and CSS, stub API in the shapes BS7 returns)
       depends_on: [BS7, BS9]
-      files: [idearium/ui/js/plan-panel.js, idearium/ui/index.html]
+      files: [idearium/ui/js/plan-panel.js, idearium/ui/index.html, idearium/ui/js/app.js (Home: #repo-build-start)]
       does: >-
         A plan panel (like Claude Code's): the open repo's build steps, ✓ done / ◌ current / ○ next, a gate bar per
         step, each expandable to its event ledger and activity; live on the repo's events. Also the build-start area:

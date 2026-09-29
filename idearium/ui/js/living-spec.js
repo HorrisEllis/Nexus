@@ -67,8 +67,9 @@ A living spec is the repo's model of itself, edited as the code changes (docs/ar
         <div class="ls-name">${escapeHtml(m.name || o.path.split('/').pop())}${m.version ? ` <span style="color:var(--mint);font-size:11px">v${escapeHtml(String(m.version))}</span>` : ''}</div>
         <div class="ls-kv">${metaKeys.filter(k => !['name', 'version'].includes(k)).map(k => `<div>${escapeHtml(k)}</div><div>${escapeHtml(String(m[k]).slice(0, 600))}</div>`).join('')}<div>file</div><div>${escapeHtml(o.path)}${o.system ? ` · nexus/${escapeHtml(o.system)} (immutable base)` : ''}</div></div>
         ${p.error ? `<div class="ls-err">not valid YAML at line ${p.error.line ?? '?'}: ${escapeHtml(p.error.message)} — shown from its text</div>` : ''}
-      </div><div class="ls-tabs">${tabs}</div>${body}`;
+      </div><div id="ls-build" class="ls-build">${_lsBuildHtml()}</div><div class="ls-tabs">${tabs}</div>${body}`;
   }
+  if (o && !o.error && LSBUILD.key !== `${LSPEC.uuid}::${o.path}`) specBuildLoad(o.path);
   el.innerHTML = `<div class="ds"><div class="ds-label">living spec — ${d.specs.length} file${d.specs.length === 1 ? '' : 's'} in the spec folder${d.scope === 'nexus-all' ? ' (each system\'s own)' : ''}</div>
     <div class="ls-wrap"><div class="ls-files">${files}</div><div>${main}</div></div></div>`;
 }
@@ -92,3 +93,87 @@ function _lsTree(v, depth) {
 
 function livingSpecOpen(p) { if (CURRENT_API_REPO) renderLivingSpec(CURRENT_API_REPO, p); }
 function livingSpecView(v) { LSPEC.view = v; _lsPaint(); }
+
+// ── §0.39.280 BS9 — build the open spec ──────────────────────────────────────
+// James (on a screenshot of this tab): "i want to have a build button." · "i want each spec to have the entire build
+// split into phases, chunked, bottom up, and with the axioms" · "click on a spec in the spec tab and have it built.
+// phases the same way." The spec's phasemap (<spec>-phasemap.spec, idearium/repo/spec-plan.js) is written by the
+// repo's agent on "plan"; then its phases build one at a time, bottom-up, each after a Versionium snapshot
+// (POST /api/repos/:uuid/spec/build → the Phases manager's build). Deviation from the baseline is shown here too.
+const LSBUILD = { key: null, plan: null, dev: null, busy: false, error: null };
+const _LS_LAYER_COLOR = { foundation: 'var(--violet)', library: 'var(--sky)', api: 'var(--mint)', cli: 'var(--amber)', automation: 'var(--amber)', ui: 'var(--coral)' };
+
+async function specBuildLoad(specPath) {
+  const repo = CURRENT_API_REPO; if (!repo || !specPath) return;
+  const key = `${repo.uuid}::${specPath}`;
+  Object.assign(LSBUILD, { key, plan: null, error: null });
+  try {
+    const [plan, dev] = await Promise.all([
+      api(`/api/repos/${repo.uuid}/spec/plan?path=${encodeURIComponent(specPath)}`, {}, 30000),
+      api(`/api/repos/${repo.uuid}/deviation`, {}, 60000).catch(() => null),
+    ]);
+    if (LSBUILD.key !== key) return;
+    LSBUILD.plan = plan; LSBUILD.dev = dev;
+  } catch (e) { if (LSBUILD.key === key) LSBUILD.error = e.message; }
+  const el = document.getElementById('ls-build'); if (el) el.innerHTML = _lsBuildHtml();
+}
+
+function _lsDevLine() {
+  const d = LSBUILD.dev; if (!d) return '';
+  const pct = (x) => `${(x * 100).toFixed(1)}%`;
+  const b = d.fromBaseline, v = d.sinceVersion;
+  return `<div class="ls-dev" title="recalculated on every version and every major file change (${escapeHtml(d.reason || '')}, ${new Date(d.ts || d.at).toLocaleString()})">deviation — from baseline ${b ? `<b>${pct(b.fraction)}</b> (${b.added}+ ${b.removed}− ${b.changed}~)` : '<i>no baseline yet</i>'} · since last version ${v ? `<b>${pct(v.fraction)}</b> (${v.added}+ ${v.removed}− ${v.changed}~)` : '—'} <button class="ls-mini" onclick="specDeviationRecalc()">recalculate</button></div>`;
+}
+
+function _lsBuildHtml() {
+  const p = LSBUILD.plan;
+  if (LSBUILD.error) return `<div class="ls-bar"><span class="ls-err">build plan: ${escapeHtml(LSBUILD.error)}</span></div>`;
+  if (!p) return `<div class="ls-bar"><span style="color:var(--text3)">reading the build plan…</span></div>`;
+  if (!p.exists) return `<div class="ls-bar">
+      <button class="ls-go" ${LSBUILD.busy ? 'disabled' : ''} onclick="specPlanAsk()">▶ Build this spec</button>
+      <span>first its phases: the repo's agent splits the whole build into phases — chunked, bottom-up (${escapeHtml((p.layers || []).join(' → '))}), with the axioms (§3.1 §3.3 §3.4 …) — into <code>${escapeHtml(p.mapPath)}</code></span></div>${_lsDevLine()}`;
+  const next = p.phases.find(x => x.id === p.next);
+  const done = p.phases.filter(x => x.status === 'done' || x.status === 'complete').length;
+  const rows = p.phases.map(x => {
+    const complete = x.status === 'done' || x.status === 'complete';
+    return `<div class="ls-ph ${complete ? 'done' : ''} ${x.id === p.next ? 'next' : ''}">
+      <span class="ls-ph-mark">${complete ? '✓' : x.id === p.next ? '◌' : '○'}</span>
+      <span class="ls-ph-layer" style="color:${_LS_LAYER_COLOR[x.layer] || 'var(--text3)'}">${escapeHtml(x.layer || '?')}</span>
+      <span class="ls-ph-id">${escapeHtml(x.key)}</span><span class="ls-ph-name" title="${escapeHtml(x.does || '')}">${escapeHtml(x.id.split('_').slice(1).join(' '))}</span>
+      ${x.axioms.length ? `<span class="ls-ph-ax" title="axioms">${escapeHtml(x.axioms.join(' '))}</span>` : ''}
+      ${complete ? '' : `<button class="ls-mini" ${LSBUILD.busy ? 'disabled' : ''} onclick="specBuildPhase('${escapeHtml(x.id)}')">▶ build</button>`}</div>`;
+  }).join('');
+  return `<div class="ls-bar">
+      <button class="ls-go" ${LSBUILD.busy || !next || !p.valid ? 'disabled' : ''} onclick="specBuildPhase(null)">▶ Build next${next ? ` · ${escapeHtml(next.key)} (${escapeHtml(next.layer)})` : ''}</button>
+      <span>${done} of ${p.phases.length} phases done · <code>${escapeHtml(p.mapPath)}</code>${p.specChanged ? ' · <span style="color:var(--amber)">the spec changed since it was planned</span>' : ''}</span>
+      <button class="ls-mini" onclick="openPlanPanel && openPlanPanel({ map: '${escapeHtml(p.mapPath)}' })">plan ▸</button>
+      <button class="ls-mini" onclick="specPlanAsk(true)" title="ask the agent to plan it again; the current map stays in versionium">re-plan</button></div>
+    ${p.valid ? '' : `<div class="ls-err">not a valid bottom-up map — ${escapeHtml(p.problems.slice(0, 4).join(' · '))}</div>`}
+    <details class="ls-phases" ${done < p.phases.length ? 'open' : ''}><summary>phases, bottom-up</summary>${rows}</details>${_lsDevLine()}`;
+}
+
+async function specPlanAsk(replan = false) {
+  const repo = CURRENT_API_REPO; if (!repo || !LSPEC.path) return;
+  LSBUILD.busy = true; document.getElementById('ls-build').innerHTML = _lsBuildHtml();
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/spec/plan`, { method: 'POST', body: JSON.stringify({ path: LSPEC.path, replan }) }, 60000);
+    toast(`planning ${LSPEC.path}: snapshot ${String(r.snapshot).slice(0, 12)} taken · the agent is writing ${r.mapPath}`, 'ok');
+    if (typeof openPlanPanel === 'function') openPlanPanel({ map: r.mapPath });
+  } catch (e) { toast(`not planned: ${e.message}`, 'err'); }
+  LSBUILD.busy = false; specBuildLoad(LSPEC.path);
+}
+async function specBuildPhase(phase) {
+  const repo = CURRENT_API_REPO; if (!repo || !LSPEC.path) return;
+  LSBUILD.busy = true; document.getElementById('ls-build').innerHTML = _lsBuildHtml();
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/spec/build`, { method: 'POST', body: JSON.stringify({ path: LSPEC.path, phase }) }, 120000);
+    toast(`${r.phase} (${r.layer}): snapshot ${String(r.snapshot).slice(0, 12)} · ${r.targetName}'s agent is building it`, 'ok');
+    if (typeof openPlanPanel === 'function') openPlanPanel({ map: r.mapPath, focus: r.runId });
+  } catch (e) { toast(`not built: ${e.message}`, 'err'); }
+  LSBUILD.busy = false; specBuildLoad(LSPEC.path);
+}
+async function specDeviationRecalc() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { LSBUILD.dev = await api(`/api/repos/${repo.uuid}/deviation`, { method: 'POST', body: '{}' }, 120000); const el = document.getElementById('ls-build'); if (el) el.innerHTML = _lsBuildHtml(); }
+  catch (e) { toast(e.message, 'err'); }
+}

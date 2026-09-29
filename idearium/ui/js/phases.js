@@ -133,6 +133,7 @@ function _phCard(p) {
       ${p.blocked_by.length && p.status !== 'complete' ? `<span style="color:var(--amber)">blocked by ${p.blocked_by.length}</span>` : p.ready ? '<span style="color:var(--mint)">ready</span>' : ''}
       ${(p.closes || []).length ? `<span>closes ${escapeHtml(p.closes.join(' '))}</span>` : ''}
       ${run ? `<span style="color:${_PH_RUN_COLOR[run.state] || 'var(--text3)'}">build ${escapeHtml(run.state)}</span>` : ''}
+      ${p.status !== 'complete' ? `<button class="ph-quick" title="snapshot, then the repo's agent builds it" ${PHASES.busy ? 'disabled' : ''} onclick="event.stopPropagation();phasesBuildQuick('${escapeHtml(p.map)}','${escapeHtml(p.phase_key)}')">▶</button>` : ''}
     </div></div>`;
 }
 
@@ -293,4 +294,18 @@ function phasesOnEvent(t, payload) {
   if (payload && payload.repoUuid && payload.repoUuid !== CURRENT_API_REPO.uuid) return;
   clearTimeout(phasesOnEvent._t);
   phasesOnEvent._t = setTimeout(() => renderRepoPhases(CURRENT_API_REPO, { keepScroll: true }), 400);
+}
+
+// §0.39.280 BS9 — James: "click on a spec in the spec tab and have it built. phases the same way." ▶ on every card:
+// the same build as the detail pane (snapshot first, then the repo's agent), without opening it.
+async function phasesBuildQuick(map, phase) {
+  const uuid = PHASES.uuid; if (!uuid || PHASES.busy) return;
+  PHASES.busy = true;
+  try {
+    const r = await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ map, phase }) }, 120000);
+    toast(`${phase}: snapshot ${r.snapshot} taken · ${r.targetName}'s agent is building it`, 'ok');
+    if (typeof openPlanPanel === 'function') openPlanPanel({ map, focus: r.runId });
+  } catch (e) { toast(`${phase} not built: ${e.message}`, 'err'); }
+  PHASES.busy = false;
+  if (CURRENT_API_REPO) renderRepoPhases(CURRENT_API_REPO, { keepScroll: true });
 }

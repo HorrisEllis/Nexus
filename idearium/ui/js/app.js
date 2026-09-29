@@ -207,6 +207,8 @@ function refreshOnEvent(ev) {
   // the same way, instead of adding one narrow special case per event
   // every time this happens again.
   const t = ev.type.startsWith('idearium.') ? ev.type.slice('idearium.'.length) : ev.type;
+  if (typeof fileStatesOnEvent === 'function') fileStatesOnEvent(ev);   // §0.39.280 BS8
+  if (typeof planPanelOnEvent === 'function') planPanelOnEvent(ev);     // §0.39.280 BS11
   if (t.startsWith('idea.'))   { loadIdeas(); }
   if (t.startsWith('workbench.') && typeof loadCompartment === 'function') { loadCompartment(); }
   if (t.startsWith('gap.'))    { loadGaps(); }
@@ -2067,7 +2069,9 @@ async function renderRepoHome(repo) {
   const homeFile = (repo.files || []).find(f => /(^|\/)readme\.md$/i.test(f.path))
                  || (repo.files || []).find(f => /\.spec$/i.test(f.path));
   const identity = `
-    <div class="ds"><div class="ds-label">repository</div><div class="ds-mono">${escapeHtml(repo.name)}\nuuid ${repo.uuid}\nsource ${escapeHtml(repo.source || 'unknown')}${repo.createdAt ? '\n' + new Date(repo.createdAt).toLocaleString() : ''}</div></div>`;
+    <div class="ds"><div class="ds-label">repository</div><div class="ds-mono">${escapeHtml(repo.name)}\nuuid ${repo.uuid}\nsource ${escapeHtml(repo.source || 'unknown')}${repo.createdAt ? '\n' + new Date(repo.createdAt).toLocaleString() : ''}</div></div>
+    <div id="repo-build-start"></div>`;   // §0.39.280 BS11 — the build-start area (plan-panel.js)
+  setTimeout(() => { if (typeof renderBuildStart === 'function') renderBuildStart(repo); }, 0);
   if (!homeFile) {
     el.innerHTML = identity + `<div class="detail-empty">no README.md or .spec file in this repo yet</div>`;
     return;
@@ -3650,8 +3654,11 @@ function renderRepoSettings(repo) {
         ${repo.immutable ? '<span class="ds-mono" title="0.39.266 — its lifecycle belongs to the nexus-self sync">immutable — edit on a COS branch, apply through the gate</span>' : '<button class="action-btn danger" onclick="openDeleteRepoModal()">✕ delete</button>'}
       </div>
     </div>
+    <div id="repo-env-section"></div>
+    ${typeof repoSettingsConsoleEmbed === 'function' ? repoSettingsConsoleEmbed(repo) : ''}
     <div id="repo-agents-section"></div>`;
   renderRepoAgentSettings(repo);
+  if (typeof renderRepoEnvironment === 'function') renderRepoEnvironment(repo);   // §0.39.280 BS10
 }
 
 // Renders the selected repo as a real, nested, expanded-by-default file
@@ -3681,7 +3688,8 @@ function renderApiRepoPanel(repo) {
 
   // dir path -> { __dir:true, children:{} } | { __dir:false, ...file }
   const root = {};
-  for (const f of (repo.files || [])) {
+  // §0.39.280 BS8 — files that exist only as a proposal are listed too, greyed (file-manage.js)
+  for (const f of [...(repo.files || []), ...(typeof pendingOnlyFiles === 'function' ? pendingOnlyFiles(repo) : [])]) {
     const parts = f.path.split('/');
     let node = root;
     let acc = '';
@@ -3709,8 +3717,9 @@ function renderApiRepoPanel(repo) {
         const active = ACTIVE_API_FILE === entry.__path ? ' active' : '';
         const statusDot = entry.status ? `<span class="tree-status-dot ${entry.status}" title="${escapeHtml(entry.status)}"></span>` : '';
         const compTag = entry.comp_id ? ` <span style="color:var(--violet);font-size:9px">▸${escapeHtml(entry.comp_id)}</span>` : '';
-        const delBtn = canDelete ? `<span class="tree-file-del" title="delete" onclick="event.stopPropagation();deleteApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">×</span>` : '';
-        html += `<div class="tree-node file${active}" onclick="openApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">${indent}${statusDot||'📄'}<span class="tree-file-name">${escapeHtml(name)}${compTag}</span><span class="tree-file-bytes">${entry.bytes||0}b</span>${delBtn}</div>`;
+        const delBtn = canDelete && !entry.__pendingOnly ? `<span class="tree-file-del" title="delete" onclick="event.stopPropagation();deleteApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">×</span>` : '';
+        const fsm = typeof fileStateMark === 'function' ? fileStateMark(entry.__path) : { cls: '', mark: '' };
+        html += `<div class="tree-node file${active}${fsm.cls}" onclick="openApiRepoFile('${repo.uuid}','${entry.__path.replace(/'/g,"\\'")}')">${indent}${statusDot||'📄'}<span class="tree-file-name">${escapeHtml(name)}${compTag}</span>${fsm.mark}<span class="tree-file-bytes">${entry.__pendingOnly ? 'proposed' : `${entry.bytes||0}b`}</span>${delBtn}</div>`;
       }
     }
     return html;
@@ -3721,7 +3730,7 @@ function renderApiRepoPanel(repo) {
   // those are repo-level actions, not file-tree controls, and the file
   // tree is now specifically the Files subtab's content.
   tree.innerHTML = `
-    <div style="padding:8px 10px 4px;font-family:var(--mono);font-size:9px;color:var(--text3);line-height:1.5" id="repo-badge">${escapeHtml(repo.name)} — ${statusLine}</div>
+    <div style="padding:8px 10px 4px;font-family:var(--mono);font-size:9px;color:var(--text3);line-height:1.5" id="repo-badge">${escapeHtml(repo.name)} — ${statusLine}${typeof fileStatesSummary === 'function' && fileStatesSummary() ? `<br><span class="fs-summary">${escapeHtml(fileStatesSummary())}</span>` : ''}</div>
     <div class="tree-toolbar"><input type="text" id="tree-file-filter" placeholder="filter files…" oninput="renderApiRepoPanel(CURRENT_API_REPO)"></div>
     <div>${treeHtml}</div>`;
   // client-side file filter (kept simple — text match on path, re-render
@@ -3744,6 +3753,7 @@ function renderApiRepoPanel(repo) {
       if (children) children.style.display = anyVisible ? '' : 'none';
     });
   }
+  if (typeof loadFileStates === 'function') loadFileStates(repo);   // §0.39.280 BS8 — async; repaints when it lands
 }
 function toggleTreeDir(path) {
   if (REPO_TREE_COLLAPSED.has(path)) REPO_TREE_COLLAPSED.delete(path); else REPO_TREE_COLLAPSED.add(path);
@@ -5108,7 +5118,19 @@ async function openApiRepoFile(repoUuid, filePath) {
   renderApiRepoPanel(CURRENT_API_REPO);
   document.getElementById('ide-tabs').innerHTML = `${escapeHtml(filePath)}` +
     `<span class="ide-tab-dirty" id="ide-dirty" style="display:none">● unsaved</span>` +
-    `<button class="ide-tab-btn" onclick="saveApiRepoFile()">save</button>`;
+    `<button class="ide-tab-btn" onclick="saveApiRepoFile()">save</button>` +
+    `<button class="ide-tab-btn ide-manage-btn" onclick="openManagePanel()" title="hand this file (or the selected lines) to the repo's agent: expand, iterate, refactor, rebuild, debug, test, document, review, explain">manage ▾</button>`;
+  // §0.39.280 BS8 — a file that exists only as a proposal: show the proposal, read-only
+  const _fs = typeof fileStateOf === 'function' ? fileStateOf(filePath) : null;
+  if (_fs && _fs.state === 'pending' && _fs.pending && _fs.pending.length) {
+    try {
+      const inj = await api(`/api/repos/${repoUuid}/injects/${encodeURIComponent(_fs.pending[0])}`, {}, 15000);
+      const node = inj.inject || inj;
+      _showIdeEditor(false);
+      document.getElementById('ide-code').textContent = `// PENDING — this file exists only as a proposal (${_fs.pending[0]}); approve it in the Agent tab\n\n${node.content || ''}`;
+    } catch (e) { _showIdeEditor(false); document.getElementById('ide-code').textContent = `// pending proposal ${_fs.pending[0]} could not be read: ${e.message}`; }
+    return;
+  }
   // §TIMEOUT FIX 2026-07-15 — file reads share the repo's own spec-engine
   // manifest with whatever chunk-import is currently running (completeChunk
   // does synchronous readFileSync/writeFileSync per chunk — see
