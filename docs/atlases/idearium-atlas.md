@@ -456,10 +456,10 @@ James: *"economy tags for each provider. With staging branches … using the tok
 - **Token limits:** a graph of input tokens by outcome per provider, with the learned safe limit marked.
 - **Not included, on purpose.**
 
-Changes queue until **Save**, which sends them as one POST. Guardian holds the policy; idearium proxies to it (GET and POST `/api/economy`, GET `/api/economy/usage|limits|routing`).
+Changes queue until **Save**, which sends them as one POST. Guardian holds the policy; idearium proxies to it (GET and POST /api/economy; GET /api/economy/usage, /limits and /routing).
 
-**Staging by economy.** When a repo applies agent code automatically, a reply from a provider in a stage tier (by default: local, i.e. ollama) is staged on `repo-<uuid>@staging` as a Versionium commit, caused by `economy:<tier>:<provider>`. It is not written into the repo. Promote it with the existing code/promote. If Versionium fails, nothing is written and the reason is said. Repos in review mode are unchanged.
+**Staging by economy.** When a repo applies agent code automatically, a reply from a provider in a stage tier (by default: local, i.e. ollama) is staged on the repo's staging branch (repo-&lt;uuid&gt;@staging) as a Versionium commit, caused by economy:&lt;tier&gt;:&lt;provider&gt;. It is not written into the repo. Promote it with the existing code/promote. If Versionium fails, nothing is written and the reason is said. Repos in review mode are unchanged.
 
-**Who builds, when nobody chose.** Once the usage record holds enough build outcomes, a build with no chosen provider is ordered by what has worked. The seam record's `routedBy` says so and names the scores. A chosen provider is still the only one tried.
+**Who builds, when nobody chose.** Once the usage record holds enough build outcomes, a build with no chosen provider is ordered by what has worked. The seam record's routedBy field says so and names the scores. A chosen provider is still the only one tried.
 
 Tests: `tests/modules/test-economy.test.js`, `tests/probe/economy-console-chromium.js`.

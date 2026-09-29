@@ -109,7 +109,17 @@ system 0.39.281 · guardian 3.19.0 · idearium 4.12.0 · clear-glass 3.22.0 · e
 New: test-economy (11: EC0–EC5, EC7, EC9), test-economy-guardian (5, the real dispatcher), test-eros-workbench (6), probe
 economy-console-chromium (9). Repaired: version-sync-and-registry (30/30).
 
-REGRESSION
+**Regression against 0.39.280.** The full list was run, 461 files plus the 3 new ones, each with its own HOME, in clean
+copies of 5fc197b and of this release. Results:
+- **Failing:** 82 on 0.39.280, 80 now.
+- **One new failure, caught and fixed before handing back:** test-nexus-atlas-refs. My idearium atlas section put routes
+  and tokens in code spans, which that atlas's strict rule forbids; they are plain text now, and the file passes 51/51.
+- **Now passing:** version-sync-and-registry (repaired above) and intelligence.test.js. intelligence.test.js failed one of
+  9 on 0.39.280 and passed all 9 here. I changed nothing it touches, so I do not claim it as a fix.
+- **No other changes.** The 80 remaining failures fail identically on 0.39.280.
+
+Note: my 0.39.280 list included tests/modules/test-atlas-references.test.js, which has never existed in git. It was
+counted as failing on both sides last time; it is dropped from the list now.
 
 ## Not done / not proven here
 
