@@ -23,8 +23,10 @@ const HTML = fs.readFileSync(path.join(ROOT, 'tablet/map3d.html'), 'utf8');
   });
 
   await test('T-002', 'OB9: nodes come from the REAL movement graph (OB3), not invented', () => {
-    assert.ok(/graph\.nodes/.test(HTML), 'nodes from the movement graph');
-    assert.ok(/report\.movement/.test(HTML), 'reads the live movement report');
+    // §0.39.282 — OB10 brain rebuild: nodes are the orchestrator's own SYS registry (/api/status), edges only its declared
+    // CHANNELS (/api/channels), activity the nexus-bus firehose — not copilot's one LLM-routed diagnostics prompt.
+    assert.ok(/\/api\/status/.test(HTML) && /status\.systems/.test(HTML), 'nodes from the real system registry');
+    assert.ok(/\/api\/channels/.test(HTML) && /nexus-bus\/sse/.test(HTML), 'edges from declared channels, activity from the bus');
   });
 
   await test('T-003', 'OB9: node color derives from the bottleneck score (OB4)', () => {
@@ -33,8 +35,9 @@ const HTML = fs.readFileSync(path.join(ROOT, 'tablet/map3d.html'), 'utf8');
   });
 
   await test('T-004', 'OB9: THE NO-FAKE LAW — unknown is grey, never a confident zero (§1.1)', () => {
-    assert.ok(/honest grey, not fake green|not observed/.test(HTML), 'unknown must not render as fake-healthy');
-    assert.ok(/COLORS\.unknown/.test(HTML), 'an explicit unknown color exists');
+    // §0.39.282 — OB10: a node with no observed health is the grey 'offline / unknown' swatch, never the ok colour.
+    assert.ok(/grey "unknown," never a confident color/.test(HTML) && /offline \/ unknown/.test(HTML), 'unknown must not render as fake-healthy');
+    assert.ok(/sys\.online \? COLORS\.ok : COLORS\.bad/.test(HTML), 'only an observed-online node gets the ok colour');
   });
 
   await test('T-005', 'OB9: empty topology → says so, does NOT invent one (§0.1)', () => {

@@ -36,6 +36,9 @@ class FakeEl {
   appendChild(c) { this.children.push(c); return c; }
   getBoundingClientRect() { return { x: 0, y: 0, width: 1, height: 1 }; }
   remove() {}
+  // §0.39.282 — mount() wires pan/zoom/click listeners on the svg now; the fake records them, never fires them.
+  addEventListener(type, fn) { (this.listeners = this.listeners || []).push(type); }
+  removeEventListener() {}
 }
 
 function run() {
