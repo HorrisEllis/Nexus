@@ -38,6 +38,9 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     hatEnsure:  () => ipcRenderer.invoke('copilot:hatEnsure'),
     hatUpdate:  (patch) => ipcRenderer.invoke('copilot:hatUpdate', patch),
     exec:       (cmd, agentId) => ipcRenderer.invoke('copilot:exec', { cmd, agentId }),
+    // §0.39.278 — the pane's kept conversation
+    history:    (agentId, limit) => ipcRenderer.invoke('copilot:history', { agentId, limit }),
+    newConversation: (agentId) => ipcRenderer.invoke('copilot:newConversation', { agentId }),
     // handlers existed in ipc/bridge.js; the pane's /build and /diagnose had no preload path to them
     build:      (payload) => ipcRenderer.invoke('copilot:build', payload),
     diagnose:   (payload) => ipcRenderer.invoke('copilot:diagnose', payload),

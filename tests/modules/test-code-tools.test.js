@@ -226,13 +226,13 @@ async function main() {
 
   console.log('\n── the agent tools ────────────────────────────────────');
   const T = require(path.join(ROOT, 'lib/agent-tools/tools/idearium/code.js'));
-  await t('CT-401', 'registered in the tool registry, in the Files & code group, with a guide note each', () => {
+  await t('CT-401', 'registered in the tool registry, in the Code group (0.39.278), with a guide note each', () => {
     const AT = require(path.join(ROOT, 'lib/agent-tools/index.js'));
     const C = require(path.join(ROOT, 'lib/agent-tools/tool-catalog.js'));
     const G = require(path.join(ROOT, 'lib/agent-tools/tool-guide.js'));
     for (const n of T.CODE_TOOLS) {
       assert.ok(AT.TOOLS.has(n), `${n} not registered`);
-      assert.strictEqual(C.groupOf(n).id, 'files', `${n} group`);
+      assert.strictEqual(C.groupOf(n).id, 'code', `${n} group`);
       assert.ok(G.toolGuide([n]).includes(n), `${n} has no guide note`);
     }
     assert.strictEqual(T.CODE_TOOLS.length, 11);
@@ -243,7 +243,7 @@ async function main() {
     for (const n of T.CODE_TOOLS) assert.ok(RH.REPO_TOOL_SCOPE.includes(n), `${n} not in REPO_TOOL_SCOPE`);
     for (const n of T.READ_ONLY) assert.ok(RA.ALWAYS_IN_SCOPE.includes(n));
     assert.ok(!RA.ALWAYS_IN_SCOPE.includes('idearium.code_edit.tool'), 'a write tool was widened into every scope');
-    assert.deepStrictEqual(RA.listedTools(), [...T.LISTED, 'loom.find.tool']);
+    assert.deepStrictEqual(RA.listedTools(), [...T.LISTED, 'loom.find.tool', 'nexus.tools.tool', 'nexus.tools_expand.tool']);
   });
 
   // a server that routes exactly as idearium/api/index.js does for these paths

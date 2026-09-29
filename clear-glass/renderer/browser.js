@@ -905,6 +905,32 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     clearMessages: () => { copilotMsgs.replaceChildren(); },
   }) : null;
 
+  // §0.39.278 — a reply is ESCAPED before it becomes markup. Before this, res.text went into innerHTML raw: a page the
+  // co-pilot read could put <img onerror=…> into its reply. Now that replies are kept and replayed on open
+  // (restoreConversation), that would be a stored injection — so every reply, live or replayed, goes through here.
+  function formatReply(text) {
+    return String(text || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/```driver[\s\S]*?```/g, () => `<span style="color:var(--accent);font-family:var(--mono);font-size:10px;">[driver command sent]</span>`)
+      .replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  }
+
+  // §0.39.278 — the pane's conversation is kept (src/copilot/chat-store.js); opening the pane shows it again.
+  async function restoreConversation() {
+    if (!cg.copilot || typeof cg.copilot.history !== 'function') return;
+    try {
+      const r = await cg.copilot.history(agentId, 100);
+      if (!r || r.ok === false || !Array.isArray(r.turns) || !r.turns.length) return;
+      copilotMsgs.replaceChildren();
+      for (const t of r.turns) {
+        if (t.role === 'user') addMsg('user', t.text);
+        else addMsg('assistant', formatReply(t.text), true);
+      }
+      addMsg('route', `restored ${r.turns.length} message${r.turns.length === 1 ? '' : 's'} · /new starts a fresh conversation`);
+    } catch (_) { /* nothing kept yet, or the store is unreachable — the pane starts empty as before */ }
+  }
+  restoreConversation();
+
   copilotInput.addEventListener('keydown', (e) => {
     if (cli && cli.onKey(e, copilotInput)) return;
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -982,12 +1008,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       const res = await cg.copilot.send({ message: text, agentId, domContext, systemExtra, noDom: !ctxDom, ...(cli ? cli.route() : {}) });
       removeThinking();
 
-      // Format response with code blocks
-      const formatted = res.text
-        .replace(/```driver[\s\S]*?```/g, m => `<span style="color:var(--accent);font-family:var(--mono);font-size:10px;">[driver command sent]</span>`)
-        .replace(/`([^`]+)`/g, '<code>$1</code>');
-
-      addMsg('assistant', formatted, true);
+      addMsg('assistant', formatReply(res.text), true);
       if (res.route && cli && cli.state.showRoute !== false) {
         const r = res.route;
         addMsg('route', `${r.backend}${r.agent ? ' · ' + r.agent : ''}${r.hat ? ' · 🎩' : ''}${r.modelUsed ? ' · ' + r.modelUsed : ''}${(res.commands || []).length ? ` · ${res.commands.length} command${res.commands.length === 1 ? '' : 's'}${res.executed === false ? ' proposed' : ' run'}` : ''}`);

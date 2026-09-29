@@ -22,6 +22,7 @@ const SCRIPT = `(() => {
   window.__posts = []; window.__guardianUp = true;
   async function ncpPost(url, data) { window.__posts.push(JSON.parse(JSON.stringify(data))); return window.__guardianUp ? { ok: true } : null; }
   ${extract(US, 'chatId')}
+  ${extract(US, '_replyText')}
   ${extract(US, '_nexusGetFullChat')}
   ${extract(US, '_isGenerating')}
   ${BLOCK}

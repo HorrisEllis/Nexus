@@ -8,6 +8,10 @@
  * block). Only `send` is stubbed — it records the GUARDIAN_CHUNKs that would go to guardian —
  * and `currentJobId` is the page's own variable, as in the userscript.
  * Usage: node tests/probe/live-stream-chromium.js   (exit 0 = all pass, 3 = no page engine)
+ *
+ * 0.39.278 — James: "guardian is polling, but it shouldn't be". The streamer is no longer a 500 ms setInterval: the
+ * transcript's MutationObserver calls _txStreamKick() (in the userscript, from _txSchedule), which reads once per burst
+ * after _TX_STREAM_MS (150 ms). This probe wires the same observer to the same function.
  */
 const { start, extract } = require('./_glass-probe.js');
 const P = start();
@@ -17,7 +21,7 @@ const FIXTURE = P.read('tests/fixtures/chatgpt-like.html');
 const m = /\/\/ §STREAM 0\.39\.256[\s\S]*?\nfunction _txStreamTick\(\) \{[\s\S]*?\n\}\n/.exec(US);
 if (!m) { console.error('could not extract the §STREAM block'); process.exit(1); }
 const STREAM = m[0];
-if (!STREAM.includes('const _TX_STREAM_MS = 500;')) { console.error('§STREAM no longer streams at 500 ms'); process.exit(1); }
+if (!STREAM.includes('function _txStreamKick()') || /setInterval\(_txStreamTick/.test(STREAM)) { console.error('§STREAM is not mutation-driven (0.39.278)'); process.exit(1); }
 
 const SCRIPT = `(() => {
   const PROVIDER = 'chatgpt';
@@ -25,9 +29,12 @@ const SCRIPT = `(() => {
   function send(o) { window.__sent.push(JSON.parse(JSON.stringify(o))); }
   let currentJobId = null;
   ${extract(US, 'chatId')}
+  ${extract(US, '_replyText')}
   ${extract(US, '_nexusGetFullChat')}
   ${extract(US, '_isGenerating')}
   ${STREAM}
+  // the userscript's _txSchedule() calls _txStreamKick() from the transcript's MutationObserver on <main>
+  new MutationObserver(() => _txStreamKick()).observe(document.querySelector('main') || document.body, { childList: true, subtree: true, characterData: true });
   window.__startJob = (msg) => { currentJobId = msg.jobId; _txJobStart(msg); };
   window.__endJob = () => { currentJobId = null; };
   window.__watchStreams = (id) => { _txWatchStreamed = id; };
@@ -69,8 +76,8 @@ const ADD = (args) => { const d = document.createElement('div'); d.setAttribute(
   s = await sent();
   const final = await pg.evaluate(() => document.getElementById('reply').innerText.trim());
   const joined = s.map(x => x.text).join('');
-  P.case('streams at the 500 ms cadence (16 changes → a handful of chunks) and the deltas add up to the reply',
-    s.length >= 2 && s.length <= 6 && joined === final && s.every(x => x.type === 'GUARDIAN_CHUNK' && x.jobId === 'job-1' && x.source === 'transcript' && x.reset === false) && s[s.length - 1].full === final,
+  P.case('streams on the page\'s own mutations, coalesced (16 changes → fewer chunks) and the deltas add up to the reply',
+    s.length >= 2 && s.length < 16 && joined === final && s.every(x => x.type === 'GUARDIAN_CHUNK' && x.jobId === 'job-1' && x.source === 'transcript' && x.reset === false) && s[s.length - 1].full === final,
     { chunks: s.length, joined_len: joined.length, final_len: final.length });
 
   await pg.evaluate(() => { document.getElementById('reply').textContent = 'Rewritten: the kernel owns the bus.'; });

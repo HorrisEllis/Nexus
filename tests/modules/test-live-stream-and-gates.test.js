@@ -164,14 +164,15 @@ test('GS-10', 'Agent tab: streamed chunks build the live text (a reset replaces 
 });
 
 test('GS-11', 'every userscript: the job start arms the streamer; the watch marks itself when it streams; versions bumped together', () => {
-  const want = { chatgpt: '10.11.1', claude: '10.11.1', gemini: '10.8.2', perplexity: '10.8.2', deepseek: '10.8.2' };
+  const want = { chatgpt: '10.12.0', claude: '10.12.0', gemini: '10.9.0', perplexity: '10.9.0', deepseek: '10.9.0' };   // 0.39.278 — mutation-driven
   for (const [p, v] of Object.entries(want)) {
     const s = fs.readFileSync(path.join(ROOT, `guardian/userscript-${p}.js`), 'utf8');
     assert.ok(s.includes('currentJobId = msg.jobId; _txJobStart(msg); handleJob(msg); break;'), `${p}: job start not armed`);
     // 0.39.261 — the watch still marks itself; its FIRST chunk for a job now restates the whole reply
     // with reset (the transcript streamer may have sent part of it already — James saw it tripled).
     assert.ok(s.includes("const _first = typeof _txWatchStreamed === 'undefined' || _txWatchStreamed !== jobId; _txWatchStreamed = jobId; send({ type:'GUARDIAN_CHUNK', jobId, text:_first ? text : delta, full:text, reset:"), `${p}: watch does not mark itself (or does not reset on its first chunk)`);
-    assert.ok(/const _TX_STREAM_MS = 500;/.test(s), `${p}: cadence`);
+    // 0.39.278 — no longer a 500 ms poll: the transcript's MutationObserver kicks the streamer (150 ms coalescing)
+    assert.ok(/const _TX_STREAM_MS = 150;/.test(s) && /function _txStreamKick\(\)/.test(s) && !/setInterval\(_txStreamTick/.test(s), `${p}: cadence`);
     const esc = v.replace(/\./g, '\\.');
     assert.ok(new RegExp(`// @version\\s+${esc}\\b`).test(s) && new RegExp(`const VERSION\\s*=\\s*'${esc}'`).test(s), `${p}: not ${v}`);
   }
@@ -181,10 +182,10 @@ test('GS-11', 'every userscript: the job start arms the streamer; the watch mark
   for (const r of pending) await r();
   // 0.39.263 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright
   const probe = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/live-stream-chromium.js')], { encoding: 'utf8', timeout: 180000 });
-  if (probe.status === 3 || probe.error) { console.log(`  - GS-20 SKIPPED (not passed): the 500 ms streamer in a real page — ${probe.error ? probe.error.message : 'no page engine (electron not installed)'}`); skipped++; }
+  if (probe.status === 3 || probe.error) { console.log(`  - GS-20 SKIPPED (not passed): the mutation-driven streamer in a real page — ${probe.error ? probe.error.message : 'no page engine (electron not installed)'}`); skipped++; }
   else {
-    try { assert.strictEqual(probe.status, 0, (probe.stdout || '').split('\n').filter(l => /"pass": ?false|summary/.test(l)).join('\n') || probe.stderr); console.log('  ✓ GS-20 the userscript 500 ms streamer in a real page, Clear Glass\'s engine (tests/probe/live-stream-chromium.js)'); passed++; }
-    catch (e) { console.error(`  ✗ GS-20 the userscript 500 ms streamer in real Chromium\n    ${e.message}`); failed++; }
+    try { assert.strictEqual(probe.status, 0, (probe.stdout || '').split('\n').filter(l => /"pass": ?false|summary/.test(l)).join('\n') || probe.stderr); console.log('  ✓ GS-20 the userscript mutation-driven streamer in a real page, Clear Glass\'s engine (tests/probe/live-stream-chromium.js)'); passed++; }
+    catch (e) { console.error(`  ✗ GS-20 the userscript mutation-driven streamer in real Chromium\n    ${e.message}`); failed++; }
   }
   console.log(`\n  ${passed} passed · ${failed} failed${skipped ? ` · ${skipped} skipped` : ''}\n`);
   process.exit(failed ? 1 : 0);

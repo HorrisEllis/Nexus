@@ -141,6 +141,7 @@ const handMapped = [
   ...require('./maps/agent-memory-map').FILES.map(f => f[0]),    // §0.39.269
   ...require('./maps/one-idearium-map').FILES.map(f => f[0]),    // §0.39.271
   ...require('./maps/idearium-codebase-map').FILES.map(f => f[0]), // §0.39.273
+  ...require('./maps/chat-ledger-map').FILES.map(f => f[0]),     // §0.39.278
   'loom/agent-suite/index.js',
 ];
 console.log('\nscanning whole tree from source (real require/import edges only)...\n');
@@ -294,6 +295,10 @@ if (mappedOneIdearium.failures.length) { console.log(`  one-idearium FAILURES: $
 const mappedCodebase = require('./maps/idearium-codebase-map').mapIdeariumCodebase(driver);
 console.log(`  idearium-codebase: ${mappedCodebase.components.length} components, ${mappedCodebase.hooks.length} hooks, ${mappedCodebase.wires.length} wires`);
 if (mappedCodebase.failures.length) { console.log(`  idearium-codebase FAILURES: ${mappedCodebase.failures.length}`); for (const f of mappedCodebase.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedCodebase.failures.length; }
+// §0.39.278 — the live chat ledger, the page-side stream that feeds it (HTTP), the pane's kept conversation
+const mappedChatLedger = require('./maps/chat-ledger-map').mapChatLedger(driver);
+console.log(`  chat-ledger: ${mappedChatLedger.components.length} components, ${mappedChatLedger.hooks.length} hooks, ${mappedChatLedger.wires.length} wires`);
+if (mappedChatLedger.failures.length) { console.log(`  chat-ledger FAILURES: ${mappedChatLedger.failures.length}`); for (const f of mappedChatLedger.failures.slice(0, 6)) console.log(`    ${JSON.stringify(f).slice(0, 200)}`); failures += mappedChatLedger.failures.length; }
 console.log(`  components: ${mappedUi.components.length} ok`);
 console.log(`  hooks:      ${mappedUi.hooks.length} ok`);
 console.log(`  wires:      ${mappedUi.wires.length} ok`);

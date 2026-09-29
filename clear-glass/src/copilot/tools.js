@@ -166,4 +166,21 @@ function buildToolsPrompt() {
   return out;
 }
 
-module.exports = { TOOLS, BY_NAME, buildToolsPrompt };
+/**
+ * buildCompactToolsPrompt() — §0.39.278. The layered surface: Clear Glass's own actions by name only (one line per
+ * category), and the two layer tools for everything else. The full list above is ~7.9k characters — too much for the
+ * local 3B model on every turn; a model that needs an action's parameters asks for readPage / the category instead.
+ */
+function buildCompactToolsPrompt() {
+  const bycat = {};
+  for (const t of TOOLS) (bycat[t.cat] = bycat[t.cat] || []).push(t.name);
+  let out = '## Tools\nClear Glass actions (```driver {"action":"<name>", ...}```):\n';
+  for (const [cat, names] of Object.entries(bycat)) out += `- ${cat}: ${names.join(', ')}\n`;
+  out += '\nEvery other NEXUS tool, as layers (```tool {"name":"…","arguments":{…}}```):\n';
+  out += '1. nexus.tools.tool — the categories of tools (id, count)\n';
+  out += '2. nexus.tools_expand.tool {"category":"<id>"} — that category\'s tools with their parameters\n';
+  out += '3. call the tool by its name\n';
+  return out;
+}
+
+module.exports = { TOOLS, BY_NAME, buildToolsPrompt, buildCompactToolsPrompt };

@@ -349,3 +349,15 @@ James: *"supposed to stream it live as it happens. do you think a delay between 
 Each job carries `gates` (the trail) and `gate` (`describe()`: "stopped at gate 7/8 "reply appears" (chatgpt): … — …"). `GET /status/:jobId` serves both. `ask.js` failures and timeouts say the gate. A job the dispatcher marks `failed` now returns at once instead of after the caller's whole timeout. `guardian.job.gate` feeds the Agent tab.
 
 Tests: `test-live-stream-and-gates` 13/13, plus Chromium 8/8. 13 mutations, each caught.
+
+## Chats stream live, by mutation, not by polling (3.16.0, v0.39.278)
+
+James: *"guardian is polling, but it shouldn't be, live streams the dom mutation live to the download manager, that way we don't lose progress. including you expanding elements for your thoughts."*
+
+**What polled.** Each provider script re-checked every 5s whether the main element had been replaced, and while a job held the tab it read the whole chat every 500ms to stream GUARDIAN_CHUNKs. The transcript itself went out only after 5s without a change (or every 60s at most), so a reply in progress, a thinking block or a tab closed mid-answer was not kept.
+
+**Now.** `guardian/userscript-chat-stream.js`, a shared prelude loaded like `guardian/userscript-nexus-wake.js`, attaches window.NexusChatStream. Each provider script calls start({ provider, read, generating }). Its MutationObserver on the chat coalesces a burst (150ms from the first mutation, so a long reply is sent as it grows), reads the chat with the provider's own reader, and sends only what changed since Clear Glass last **acknowledged** to POST :7702/cli/downloads/ledger (Clear Glass atlas 3.19.0). A failed send is not marked sent: it retries with backoff and the next change carries everything since the last ack; pagehide sends what is pending. Collapsed "Thought process" / "Thought for …" toggles are opened once each, and the Claude and ChatGPT readers keep that text in thinking, apart from the reply. The prelude uses no interval.
+
+In the five provider scripts, the re-attach is a MutationObserver on the page body, and the job stream reads on the transcript's own mutations (_txStreamKick, 150ms coalescing). The settled transcript (GUARDIAN_TRANSCRIPT, 3.12.0) and job completion from it (3.13.0) are unchanged. Heartbeats and the status and navigation checks are connection keepalive, not chat reads, and stay as they were.
+
+**Limits.** Gemini, Perplexity and DeepSeek have no verified human-turn selector, so their ledger holds the newest reply as turn 0 (each version is still a line in the file). The thinking toggles are found by their label, which is not checked against the live claude.ai or chatgpt.com DOM here. Tampermonkey installs have no prelude, so they keep the settled transcript only.

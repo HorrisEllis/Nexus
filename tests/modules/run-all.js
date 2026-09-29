@@ -22,6 +22,8 @@ const SUITES = [
   'test-code-intel.test.js',             // 0.39.273 — structural chunker v2, chunk cards, search, grep (lib/code-intel)
   'test-code-edit.test.js',              // 0.39.273 — edit engine, inject delete/defer, real-bytes reads (lib/code-edit.js)
   'test-code-tools.test.js',             // 0.39.273 — /api/repos/:uuid/code/* and the eleven agent code tools
+  'test-tool-layers-and-pane-memory.test.js', // 0.39.278 — tools as layers (nexus.tools → tools_expand); the co-pilot pane keeps its conversation
+  'test-chat-ledger-stream.test.js',     // 0.39.278 — every chat streamed live (mutations, not polling) into the download manager's chat ledger
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272
   'jaa-db.test.js',

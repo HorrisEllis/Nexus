@@ -308,3 +308,27 @@ Every version is kept. A chat keeps the agent it was first filed under. `recordR
 **The Library.** `/cli/downloads/responses` lists a chat once, at its newest version with `versions`; `?versions=all` lists every version and `?chatKey=` one chat. Library → Responses shows a chat row (☰, `chat · v2 (2 versions) · 4 messages`), opens it as a conversation (prompt / reply), and a version picker opens any earlier version.
 
 Tests: `test-chat-transcripts` TX-01–TX-10 (the index, each guard mutation-checked); `tests/probe/clearglass-library-window.js` 29/29 in real Chromium, with 4 new chat checks.
+
+## Every chat, kept live in the download manager; the co-pilot pane remembers (3.19.0, v0.39.278)
+
+James: *"maybe use the download manager in clearglass for the chat ledgers. also said guardian is polling, but it shouldn't be, live streams the dom mutation live to the download manager, that way we don't lose progress. including you expanding elements for your thoughts."*
+
+**The chat ledger** (`clear-glass/src/downloads/chat-ledger.js`). One append-only file per chat, ledgers/<chatKey>.jsonl, under the downloads index root (the COS compartment clearglass-downloads-index, so a COS snapshot carries it with the .response files). The first line is a head; every change after it is one delta line: per turn, the whole text (text) or what was appended (add at at), and the thinking the same way (thinking / thinkingAdd at thinkingAt), plus generating. Nothing written is rewritten, and a torn last line (a crash mid-write) is skipped on replay. An append at an offset the ledger does not hold is refused with the lengths it does hold (resync), and the page resends that turn whole, so a lost delta can never splice text into the wrong place. readChat() replays a chat and lists its code blocks with the path on the fence (a fence with the path after the language, js src/file.js).
+
+| route | what |
+|---|---|
+| POST /cli/downloads/ledger | one delta from a page (guardian atlas 3.16.0, `guardian/userscript-chat-stream.js`) |
+| GET /cli/downloads/ledgers | every chat, newest first (?agentId=, ?provider=) |
+| GET /cli/downloads/ledgers/:chatKey | one chat, replayed, with its code blocks |
+
+Each chat is also one entry in the downloads list (kind: 'chat-ledger'): in progress while the page is generating, completed when it stops, its size growing as it is written. The versioned transcript (3.15.0) is unchanged; the ledger is the live layer under it.
+
+**The co-pilot pane remembers** (`clear-glass/src/copilot/chat-store.js`). The pane's conversation is kept in Clear Glass's own JAA store (cg_copilot_chat, one current conversation per window in cg_copilot_conv, at most 400 turns each) and mirrored into the ledger as provider copilot. Every call carries the recent turns (copilotHistoryTurns 10, copilotHistoryChars 4,000, oldest left out first and the prompt says so), whichever backend answers: copilot, Ollama or a Guardian agent. "Nothing answered" is not stored as the assistant's turn. The pane restores the conversation when it opens (IPC copilot:history); /new starts another and keeps the old one (copilot:newConversation). copilotRemember: false keeps nothing.
+
+**The pane's tools, layered.** By default (copilotToolSurface: 'layered') a call lists Clear Glass's own actions by name and the two layer tools (nexus.tools.tool → nexus.tools_expand.tool), and does not ask the orchestrator. The whole capability prompt (about 7.9k characters every turn) was more than the local 3B model could use; 'full' brings it back.
+
+**Replies are escaped.** A reply went into the pane's innerHTML raw, so a page the co-pilot read could put markup into it. With replies kept and replayed, that would be a stored injection. Every reply, live or restored, now goes through formatReply(), which escapes first.
+
+**The prelude.** `clear-glass/src/providers/host.js` injects `guardian/userscript-chat-stream.js` before each provider script, next to `guardian/userscript-nexus-wake.js`. Either one can fail to load without stopping the other.
+
+Tests: test-chat-ledger-stream 14/14, test-tool-layers-and-pane-memory 14/14; the stream checked in headless Chromium (a reply streamed word by word, 5 coalesced posts, the thinking toggle opened and kept apart).

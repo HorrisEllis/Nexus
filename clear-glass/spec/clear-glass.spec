@@ -617,3 +617,23 @@ spec:
   # saved key is dropped on load and refused on set. ollamaGenerate() no longer posts to :3749/api/generate (a route
   # the NEXUS ollama service does not serve). The pane's greeting no longer claims "online" before anything answered.
   # Proven by tests/modules/test-cg-copilot-no-api.test.js (NA-001..NA-006).
+
+  # ## ADDENDUM 2026-09-29 (0.39.278) — the chat ledger; the co-pilot pane remembers
+  # James: "maybe use the download manager in clearglass for the chat ledgers … live streams the dom mutation live to
+  # the download manager, that way we don't lose progress. including you expanding elements for your thoughts."
+  # 1. src/downloads/chat-ledger.js: one append-only ledger per chat (ledgers/<chatKey>.jsonl under the downloads
+  #    index root). A head line, then one delta line per change: per turn whole text or appended text (add at), thinking
+  #    the same way. Never rewritten; a torn last line is skipped on replay; an append at an offset the ledger does not
+  #    hold is refused with the lengths it holds (resync) and nothing is written. Routes: POST /cli/downloads/ledger,
+  #    GET /cli/downloads/ledgers, GET /cli/downloads/ledgers/:chatKey. Each chat is one downloads entry, kind
+  #    chat-ledger, in_progress while generating. Written only by this process (sovereign); pages post to it directly.
+  # 2. src/providers/host.js injects guardian/userscript-chat-stream.js as a second shared prelude (each loads alone).
+  # 3. src/copilot/chat-store.js: the pane's conversation in this app's JAA store (cg_copilot_chat, cg_copilot_conv),
+  #    ≤ 400 turns per conversation; recent turns go with every call to any backend (copilotHistoryTurns,
+  #    copilotHistoryChars, oldest dropped first and said); "Nothing answered" is not stored; copilotRemember off keeps
+  #    nothing; mirrored into the ledger as provider copilot. IPC copilot:history (restore on open) and
+  #    copilot:newConversation (/new; the old one is kept).
+  # 4. copilotToolSurface 'layered' (default): Clear Glass's actions by name + nexus.tools.tool / nexus.tools_expand.tool;
+  #    the orchestrator's capability prompt is not fetched per turn ('full' restores it).
+  # 5. The pane escapes every reply before innerHTML (formatReply), live and restored — a kept reply cannot inject.
+  # Proven by tests/modules/test-chat-ledger-stream.test.js and tests/modules/test-tool-layers-and-pane-memory.test.js.

@@ -79,6 +79,14 @@
       const channel = h('input', { type: 'text', value: s.copilotChannel || 'clear-glass' });
       channel.addEventListener('change', () => save({ copilotChannel: channel.value.trim() || 'clear-glass' }, 'Channel saved').catch(onFail));
 
+      // ── §0.39.278 — memory and the tool surface ──────────────────────
+      const histTurns = num(s.copilotHistoryTurns ?? 10, { min: 0, max: 100 });
+      histTurns.addEventListener('change', () => save({ copilotHistoryTurns: Math.max(0, Number(histTurns.value) || 0) }, 'Turns per message saved').catch(onFail));
+      const histChars = num(s.copilotHistoryChars ?? 4000, { min: 500, max: 50000, step: 500 });
+      histChars.addEventListener('change', () => save({ copilotHistoryChars: Math.max(500, Number(histChars.value) || 4000) }, 'History budget saved').catch(onFail));
+      const surface = select(['layered', 'full'], s.copilotToolSurface === 'full' ? 'full' : 'layered');
+      surface.addEventListener('change', () => save({ copilotToolSurface: surface.value }, 'Tool list saved').catch(onFail));
+
       // ── when copilot is down (§0.39.274 — no API key; Ollama or Guardian directly) ──
       const ollamaModel = h('input', { type: 'text', value: s.copilotOllamaModel || '', placeholder: 'default (ollama/config.js)' });
       ollamaModel.addEventListener('change', () => save({ copilotOllamaModel: ollamaModel.value.trim() }, 'Ollama model saved').catch(onFail));
@@ -93,6 +101,12 @@
             row('RAID routing', 'Picks the provider by task type and health.', toggle(s.raidEnabled !== false, (on) => save({ raidEnabled: on })))),
         ] }),
         pane({ title: 'Clear Glass hat', sub: 'A NEXUS hat (lib/hat-forge): a persona the co-pilot wears for the browser.', body: hatBody }),
+        pane({ title: 'Conversation', sub: 'Kept in Clear Glass (and in the download manager\u2019s chat ledger), so a reload, a restart or copilot restarting loses nothing. /new starts a fresh one.', flush: true, body: [
+          row('Remember the conversation', 'Keep each window\u2019s conversation and send the recent turns with every message, whichever backend answers.', toggle(s.copilotRemember !== false, (on) => save({ copilotRemember: on }))),
+          row('Turns per message', 'How many earlier turns each message carries.', histTurns),
+          row('History budget', 'Characters for those turns; the oldest are left out first.', histChars),
+          row('Tool list', 'layered: Clear Glass\u2019s actions + nexus.tools.tool / tools_expand (small, fits a local model). full: the orchestrator\u2019s whole capability list every turn.', surface),
+        ] }),
         pane({ title: 'Each message carries', flush: true, body: [
           row('Live page DOM', 'The DOM chip in the pane starts on or off with this.', toggle(s.copilotDomContext !== false, (on) => save({ copilotDomContext: on }))),
           row('DOM budget', 'Characters of DOM snapshot per message.', domMax),

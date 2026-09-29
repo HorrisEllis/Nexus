@@ -59,6 +59,12 @@ const DEFAULTS = {
   copilotTimeoutMs:      60000,      // one call's ceiling
   copilotHistoryMax:     200,        // CLI input history kept per window
   copilotShowRoute:      true,       // show backend/model under each reply
+  // §0.39.278 — James: "its dumb, isnt persistent". The pane's conversation is kept (src/copilot/chat-store.js, Clear
+  // Glass's own JAA store) and the recent turns go with every call, whichever backend answers.
+  copilotRemember:       true,       // keep the pane's conversation and send the recent turns with each call
+  copilotHistoryTurns:   10,         // how many earlier turns each call carries
+  copilotHistoryChars:   4000,       // their budget; the oldest are left out first, and the prompt says so
+  copilotToolSurface:    'layered',  // layered = Clear Glass's own actions + nexus.tools.tool / tools_expand; full = the orchestrator's whole capability prompt
 
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job
   // applications, answering on screen questions... full ui to

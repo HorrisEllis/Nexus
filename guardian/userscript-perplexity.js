@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — Perplexity v10.0
 // @namespace    nexus.guardian.perplexity
-// @version      10.8.2
+// @version      10.9.0
 // @description  Guardian v10 — Perplexity: protocol parity with Claude/ChatGPT/Gemini
 //               v10 (NCP handshake, IndexedDB kernel, SHA-256 dedup, tab-claim, SEAM
 //               jobs, intelligence injection, usage detection) built around
@@ -29,7 +29,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'perplexity';
-const VERSION     = '10.8.2';
+const VERSION     = '10.9.0';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -300,6 +300,9 @@ function _nexusPushTranscript(forced) {
     .catch(() => {});
 }
 function _txSchedule() {
+  // §0.39.278 — the job stream reads on the same mutation, not on a timer. Guarded: the transcript push must not
+  // depend on the stream block (a failure there never stops a chat from settling and being sent).
+  try { if (typeof _txStreamKick === 'function') _txStreamKick(); } catch (_) {}
   const now = Date.now();
   if (!_txFirstPending) _txFirstPending = now;
   if (_txTimer) clearTimeout(_txTimer);
@@ -320,7 +323,15 @@ function _nexusTranscriptStart() {
   if (typeof MutationObserver === 'undefined' || typeof document === 'undefined') return;
   _nexusTranscriptAttach();
   // SPA navigation can replace <main>; re-attach to the live one.
-  setInterval(() => { if (!_txTarget || !_txTarget.isConnected || _txTarget === document.body) _nexusTranscriptAttach(); }, 5000);
+  // §0.39.278 — James: "guardian is polling, but it shouldn't be". Was a 5s setInterval; now the page's own mutation
+  // of <body>'s children says when <main> went away.
+  new MutationObserver(() => { if (!_txTarget || !_txTarget.isConnected || _txTarget === document.body) _nexusTranscriptAttach(); })
+    .observe(document.body, { childList: true, subtree: true });
+  // §0.39.278 — the live ledger: every change of this chat, reply and thinking, streamed to Clear Glass's download
+  // manager as it happens (guardian/userscript-chat-stream.js, the shared prelude; absent under Tampermonkey).
+  try {
+    if (window.NexusChatStream) window.NexusChatStream.start({ provider: PROVIDER, read: _nexusGetFullChat, generating: _isGenerating, agentId: NEXUS_AGENT_ID });
+  } catch (e) { console.warn('[guardian] chat stream not started:', e && e.message); }
 }
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(_nexusTranscriptStart, 1500));
@@ -331,21 +342,27 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined') {
 // watch streams GUARDIAN_CHUNKs only when it finds the reply node, and on ChatGPT it
 // anchors on the composer (reply 0ch), so nothing ever streamed. The transcript
 // reader above reads the reply correctly, so while this tab holds a job it is read
-// every _TX_STREAM_MS and sent as GUARDIAN_CHUNKs for that job — the same message the
+// on each change of the page (0.39.278: mutation-driven, coalesced _TX_STREAM_MS; was a
+// 500ms poll) and sent as GUARDIAN_CHUNKs for that job — the same message the
 // watch sends, so guardian, the /events feed and idearium's Agent tab need nothing new.
 // The reply is the assistant turn right after the job's own user turn (the first user
 // turn past those on the page when the job arrived that contains the prompt's head),
 // so an earlier answer is never streamed as this one. A rewrite that is not a
 // continuation (markdown re-rendered) is sent whole with reset: true. When the watch
 // streams for a job itself, this yields: one stream per job.
-const _TX_STREAM_MS = 500;
+const _TX_STREAM_MS = 150;   // §0.39.278 — coalescing after a mutation, not a polling period (was a 500ms setInterval)
 let _txJob = null, _txWatchStreamed = null, _txStreamTimer = null;
 function _txJobStart(msg) {
   let users = 0;
   try { users = (_nexusGetFullChat().messages || []).filter(m => m.role === 'user').length; } catch (_) {}
   const head = String((msg && (msg.prompt || msg.content)) || '').replace(/\s+/g, ' ').trim().slice(0, 80);
   _txJob = { jobId: msg && msg.jobId, users, head, sent: '' };
-  if (!_txStreamTimer) _txStreamTimer = setInterval(_txStreamTick, _TX_STREAM_MS);
+  _txStreamKick();
+}
+// §0.39.278 — read the reply when the page changes (called from the transcript's MutationObserver), once per burst.
+function _txStreamKick() {
+  if (!_txJob || _txStreamTimer) return;
+  _txStreamTimer = setTimeout(() => { _txStreamTimer = null; _txStreamTick(); }, _TX_STREAM_MS);
 }
 function _txReplyFor(job, messages) {
   let seen = 0;
@@ -361,7 +378,7 @@ function _txReplyFor(job, messages) {
 }
 function _txStreamTick() {
   const job = _txJob;
-  if (!job || currentJobId !== job.jobId) { clearInterval(_txStreamTimer); _txStreamTimer = null; _txJob = null; return; }
+  if (!job || currentJobId !== job.jobId) { clearTimeout(_txStreamTimer); _txStreamTimer = null; _txJob = null; return; }
   if (_txWatchStreamed === job.jobId) return;
   let chat;
   try { chat = _nexusGetFullChat(); } catch (_) { return; }

@@ -537,3 +537,14 @@ spec:
 # (per-type watcher + _ledger.jsonl + JAA index) now starts at boot — it never had. 'hat', 'capability' and
 # 'system' joined GUARDIAN_NODE_TYPES; _idFromFilename keeps dotted ids whole. Command nodes mark declared vs
 # served (served read by guardian/lib/command-index-extract.js).
+
+# ── ADDENDUM 2026-09-29 (0.39.278) — chats stream live by mutation; nothing polls the chat ──
+# James: "guardian is polling, but it shouldn't be, live streams the dom mutation live to the download manager".
+# guardian/userscript-chat-stream.js (shared prelude, window.NexusChatStream, composed into all five providers): the
+# chat's MutationObserver coalesces a burst (150 ms), reads with the provider's reader and POSTs only what changed since
+# Clear Glass acknowledged to :7702/cli/downloads/ledger; unacked means unsent (backoff retry, pagehide flush); thinking
+# toggles opened once each, thinking kept apart from the reply (Claude, ChatGPT readers). No interval.
+# The provider scripts' 5 s re-attach interval is a MutationObserver on the body; the job stream (GUARDIAN_CHUNK) reads on
+# the transcript's own mutations (_txStreamKick, guarded so the transcript push never depends on it). The settled
+# GUARDIAN_TRANSCRIPT and job completion from it are unchanged. Userscripts: claude/chatgpt 10.12.0, gemini/perplexity/
+# deepseek 10.9.0 (userscripts.yaml synced to the scripts' own @version).

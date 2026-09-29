@@ -37,7 +37,9 @@ const http   = require('http');
 // needed at all.
 const fetch  = globalThis.fetch;
 const { randomUUID } = require('crypto');
-const { buildToolsPrompt } = require('./tools');
+const { buildToolsPrompt, buildCompactToolsPrompt } = require('./tools');
+// §0.39.278 — the pane's conversation, kept in Clear Glass's own store (sovereign; see chat-store.js)
+const chatStore = require('./chat-store');
 
 class CoPilotBridge {
   constructor({ sse, apiSettings, postEvent }) {
@@ -116,6 +118,18 @@ class CoPilotBridge {
     const persona = require('./hat').personaFor(route.hat);
     if (persona) systemExtra = persona + (systemExtra ? '\n\n' + systemExtra : '');
 
+    // §0.39.278 — the conversation so far goes with the call, whichever backend answers (copilot, Ollama, Guardian).
+    // Read BEFORE this message is stored, so the message is never repeated inside its own history.
+    const remember = this.settings.get().copilotRemember !== false;
+    if (remember) {
+      const s0 = this.settings.get();
+      let history = '';
+      try { history = chatStore.historyBlock({ agentId, turns: Number(s0.copilotHistoryTurns) || 10, chars: Number(s0.copilotHistoryChars) || 4000 }); }
+      catch (e) { console.warn('[CoPilot] history unavailable:', e.message); }
+      if (history) systemExtra = (systemExtra ? systemExtra + '\n\n' : '') + history;
+      this._remember(agentId, 'user', message);
+    }
+
     const result = await this._ask({ message, agentId, domContext, systemExtra, msgId, route });
 
     let text       = result.text || '';
@@ -162,6 +176,9 @@ class CoPilotBridge {
       if (!commands.length) break;
     }
     if (!autoRun) allCommands.push(...commands);
+
+    // "Nothing answered" is the bridge talking, not the assistant — it is not stored as the assistant's turn.
+    if (remember && result.via !== 'none') this._remember(agentId, 'assistant', text, { via: result.via || null, model: result.modelUsed || null });
 
     this.sse.emit('copilot.response', {
       msgId, agentId, text, commands: allCommands,
@@ -457,7 +474,9 @@ class CoPilotBridge {
     const domSection = domContext
       ? `\n\n## Live Browser DOM (Agent: ${agentId})\n\`\`\`json\n${JSON.stringify(domContext, null, 2).slice(0, domMax)}\n\`\`\``
       : '';
-    const toolsPrompt = await this._liveToolsPrompt();
+    // §0.39.278 — 'layered' (default): Clear Glass's own actions by name + the two layer tools; the orchestrator is not
+    // asked. Its whole capability prompt on every turn was more than the local 3B model could use. 'full' keeps it.
+    const toolsPrompt = this.settings.get().copilotToolSurface === 'full' ? await this._liveToolsPrompt() : buildCompactToolsPrompt();
 
     // 0.39.272 — said on every turn, whichever catalog answered (the orchestrator's live capability prompt predates these).
     const always = [
@@ -837,6 +856,32 @@ ${toolsPrompt}${domSection}`;
 
   clearHistory(agentId) {
     this._ingestToNexus({ type: 'clear-glass.copilot.history.cleared', agentId, ts: Date.now() });
+  }
+
+  // ── The pane's kept conversation (§0.39.278) ────────────────────────────
+  // Stored in Clear Glass's own JAA store (chat-store.js) and mirrored into the download manager's chat ledger
+  // (src/downloads/chat-ledger.js), so the pane's conversation is listed and recoverable next to every provider chat.
+  _remember(agentId, role, text, extra = {}) {
+    let row = null;
+    try { row = chatStore.append({ agentId, role, text, ...extra }); }
+    catch (e) { console.warn('[CoPilot] could not keep the turn:', e.message); return null; }
+    if (row) {
+      try {
+        require('../downloads/chat-ledger').appendTurn({ provider: 'copilot', chatId: row.conversationId, agentId,
+          role, text: row.text, via: extra.via || null, final: true, source: 'copilot-pane' });
+      } catch (_) { /* the ledger is a second copy — the pane's own store already has the turn */ }
+    }
+    return row;
+  }
+
+  /** conversation(agentId) -> { conversationId, turns } — what the pane renders when it opens. */
+  conversation(agentId = 'default', limit = 100) { return chatStore.list({ agentId, limit }); }
+
+  /** newConversation(agentId) -> the new conversation id; the previous one stays stored (/new). */
+  newConversation(agentId = 'default') {
+    const id = chatStore.startNew(agentId);
+    this.clearHistory(agentId);
+    return { conversationId: id };
   }
 }
 

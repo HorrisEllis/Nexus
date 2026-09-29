@@ -280,6 +280,48 @@ class IpcBridge {
     // routes are that read side, for the Library window's Responses tab. The root
     // comes from the index's own defaultRoot(), the same call guardian's writer
     // makes, so both sides address the same compartment. Read-only.
+    // §0.39.278 — the live chat ledger (src/downloads/chat-ledger.js). James: "live streams the dom mutation live to
+    // the download manager, that way we don't lose progress." Each provider tab's MutationObserver
+    // (guardian/userscript-chat-stream.js) POSTs what changed; it is appended to that chat's ledger at once. The chat
+    // is also ONE entry in the downloads list (kind 'chat-ledger'): in progress while the page is generating,
+    // completed when it settles — so Ctrl+J shows every chat being written, next to every file.
+    const _ledgerDownloads = new Map();   // chatKey -> downloads record id
+    const _ledgerEntry = (r, d) => {
+      if (!this.downloads || !r || !r.ok) return;
+      const state = r.generating ? 'in_progress' : 'completed';
+      let id = _ledgerDownloads.get(r.chatKey);
+      if (!id) {
+        const had = this.downloads.list({}).find(x => x.kind === 'chat-ledger' && x.savePath === r.file);
+        id = had ? had.id : this.downloads.add({ kind: 'chat-ledger', filename: `${d.provider} chat ${d.chatId}`.slice(0, 120), url: d.url || null,
+          savePath: r.file, mimeType: 'application/x-ndjson', agentId: d.agentId || null, provider: d.provider, source: 'chat-stream', state }).id;
+        _ledgerDownloads.set(r.chatKey, id);
+      }
+      let bytes = 0; try { bytes = require('fs').statSync(r.file).size; } catch (_) {}
+      this.downloads.updateState(id, state, { bytes });
+    };
+    this.app.post('/cli/downloads/ledger', (req, res) => {
+      try {
+        const d = req.body || {};
+        const r = require('../downloads/chat-ledger.js').applyDelta(d);
+        // any appended line — text, or only generating → false — updates the entry (in progress → completed)
+        if (r.ok && r.appended) { try { _ledgerEntry(r, d); } catch (_) { /* the list entry is a view; the ledger line is written */ } }
+        const { file, ...out } = r;
+        res.status(r.ok || r.resync ? 200 : 400).json(out);
+      } catch (e) { res.status(503).json({ ok: false, error: `chat ledger unavailable: ${e.message}` }); }
+    });
+    this.app.get('/cli/downloads/ledgers', (req, res) => {
+      try {
+        const q = req.query || {};
+        res.json({ ok: true, ledgers: require('../downloads/chat-ledger.js').listLedgers({ agentId: q.agentId, provider: q.provider || undefined, limit: q.limit }).map(({ file, ...x }) => x) });
+      } catch (e) { res.status(503).json({ ok: false, error: `chat ledger unavailable: ${e.message}` }); }
+    });
+    this.app.get('/cli/downloads/ledgers/:chatKey', (req, res) => {
+      try {
+        const c = require('../downloads/chat-ledger.js').readChat({ chatKey: req.params.chatKey });
+        if (!c) return res.status(404).json({ ok: false, error: `no ledger for ${req.params.chatKey}` });
+        res.json({ ok: true, chat: c });
+      } catch (e) { res.status(503).json({ ok: false, error: `chat ledger unavailable: ${e.message}` }); }
+    });
     const _responsesRoot = () => require('../downloads/artifact-chat-index.js').defaultRoot();
     this.app.get('/cli/downloads/responses', (req, res) => {
       try {
@@ -726,6 +768,15 @@ class IpcBridge {
     ipcMain.handle('copilot:hatEnsure', async () => require('../copilot/hat').ensure());
     ipcMain.handle('copilot:hatUpdate', async (e, patch) => require('../copilot/hat').update(patch || {}));
     ipcMain.handle('copilot:exec', async (e, { cmd, agentId } = {}) => (this.copilot ? this.copilot.execCommand(cmd, agentId) : { ok: false, error: 'co-pilot bridge not wired' }));
+    // §0.39.278 — the pane's kept conversation (src/copilot/chat-store.js): restore on open, /new starts another.
+    ipcMain.handle('copilot:history', async (e, { agentId, limit } = {}) => {
+      try { return { ok: true, ...require('../copilot/chat-store').list({ agentId: agentId || 'default', limit: limit || 100 }) }; }
+      catch (err) { return { ok: false, error: err.message, turns: [] }; }
+    });
+    ipcMain.handle('copilot:newConversation', async (e, { agentId } = {}) => {
+      try { return { ok: true, conversationId: require('../copilot/chat-store').startNew(agentId || 'default') }; }
+      catch (err) { return { ok: false, error: err.message }; }
+    });
     ipcMain.handle('copilot:send', async (e, d) => {
       if (this.copilot) {
         try {
