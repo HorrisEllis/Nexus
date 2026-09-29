@@ -46,4 +46,23 @@ module.exports = async function ({ t, ROOT, assert }) {
     const rv = await RI.fromReply({ layer, repo, text: reply, stage: { causedBy: 'x', record: async () => ({ commitId: 'nope' }) } });
     assert.deepStrictEqual([rv.staged, rv.injects[0].status], [undefined, 'proposed']);
   });
+
+  await t('EC7-01', 'builds with no chosen provider: below minRecords the fixed chain; with enough build outcomes the learned order (what worked first), said in routedBy; a chosen provider still wins', () => {
+    const { providersFor } = require(path.join(ROOT, 'lib/seam/adapters/warp-cascade.js'));
+    const L = require(path.join(ROOT, 'lib/economy/ledger.js'));
+    const rec0 = { seam_id: 'x' };
+    assert.deepStrictEqual(providersFor(rec0, null), ['ollama', 'chatgpt', 'claude']);
+    assert.strictEqual(rec0.routedBy, undefined);
+    const now = Date.now();
+    for (let i = 0; i < 15; i++) { L.record({ provider: 'chatgpt', jobType: 'build', outcome: 'failed', at: now - i * 1000 }); L.record({ provider: 'claude', jobType: 'build', outcome: 'ok', at: now - i * 1000 }); }
+    S.save({ providers: { chatgpt: { limits: { minGapMs: 0, jobsPerHour: 0, jobsPerDay: 0, tokensPerDay: 0 } }, claude: { limits: { minGapMs: 0, jobsPerHour: 0, jobsPerDay: 0, tokensPerDay: 0 } } } }, ['ollama', 'chatgpt', 'claude'], { by: 'test' });
+    const rec = { seam_id: 'x' };
+    const order = providersFor(rec, null);
+    // providers with no build records yet are explored (their posterior is flat), so the head may be one of them; the
+    // learned part is that the provider that failed every build ranks below the one that succeeded every time
+    let before = 0; for (let k = 0; k < 20; k++) { const o = providersFor({ seam_id: 'x' }, null); if (o.indexOf('claude') < o.indexOf('chatgpt')) before++; }
+    assert.ok(before >= 19, `claude before chatgpt in ${before}/20`);
+    assert.match(rec.routedBy, /^economy router: build: \w+ drew .* \(\d+ build records\)$/);
+    assert.deepStrictEqual(providersFor({ preferredProvider: 'chatgpt', seam_id: 'x' }, null), ['chatgpt'], 'a choice is never overridden (I1)');
+  });
 };

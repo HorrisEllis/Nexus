@@ -145,7 +145,7 @@ spec:
 
     EC7_router_in_builds:
       layer: api
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC7-01; test-warp-cascade-provider-fallback 7/7 and test-file-tree-plan (62/63, the same one failing on 0.39.280) unchanged"
       depends_on: [EC4]
       files:
         - "lib/seam/adapters/warp-cascade.js"
