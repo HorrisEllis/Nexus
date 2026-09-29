@@ -316,7 +316,7 @@ spec:
 
     N19_suite_triage_and_known_gaps:
       layer: automation
-      status: "MOSTLY DONE 2026-09-29 — 57 of 81 files fixed; the other 24 are on tests/known-gaps.yaml (44 cases, each with kind + reason) and run-all reports them apart (e65b313). Full run: 4771 passed, 45 failed = 30 known + 15 NEW in 9 suites that only fail inside the full run — see N29."
+      status: "DONE 0.39.282 — 57 of 81 files fixed; 24 on tests/known-gaps.yaml with kind + reason; run-all reports them apart. Full run (404 suites, chunked): 0 unregistered failures — 30 known cases in 20 files. OPEN follow-ups: ~66 test files not registered in run-all; retire gaps as they close."
       depends_on: []
       files:
         - "tests/known-gaps.yaml (each entry a gap node: file, failing count allowed, kind, reason)"
@@ -494,7 +494,7 @@ spec:
 
     N29_full_run_only_failures:
       layer: automation
-      status: "ROOT-CAUSED 0.39.282 (b6189c2): run-all killed a timed-out suite's pid but not the servers it started — now a process group, killed on timeout and exit (test-run-all-process-group); two slow suites state their budget in their header; lib/queue.js retry() tie fixed; five tests followed the data root. A clean full run to confirm is still owed (the last one hit the background time limit)."
+      status: "ROOT-CAUSED 0.39.282 (b6189c2): run-all killed a timed-out suite's pid but not the servers it started — now a process group, killed on timeout and exit (test-run-all-process-group); two slow suites state their budget in their header; lib/queue.js retry() tie fixed; five tests followed the data root. Confirmed: full run 0 unregistered failures; the last cause was guardian's downloads queue resolving to /tmp (shared by every sandbox), fixed 02e5105."
       depends_on: [N19]
       does: >-
         Nine suites pass (or were not run) alone but fail inside the full run (4771/45): queue.test.js (1),

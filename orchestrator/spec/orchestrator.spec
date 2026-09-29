@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        orchestrator
-    version:     2.2.1
+    version:     2.2.2   # 0.39.282 PATCH — CFR ledgers and data/ledger follow NEXUS_DATA_ROOT. Previous 2.2.1:
     foundation:  nexus-system-foundation@1.0.0
     port:        9000
     uuid:        nexus-orchestrator-v2-0000-2026-0615-jamesbrooks-001
@@ -146,3 +146,8 @@ spec:
 # '../idearium/' to /idearium/ and got "route not found". /api/cortex/versionium/{log,commit} call versionium
 # (cortex answered "moved"). New: GET /api/nodes, /api/nodes/:type, /api/nodes/:type/:id, POST /api/nodes/sync
 # (lib/system-nodes.js); every system's nodes are regenerated 4 s after boot.
+
+# ── ADDENDUM 2026-09-29 (0.39.282) — orchestrator 2.2.2 ──
+# The per-system CFR ledgers and the orchestrator ledger dir follow NEXUS_DATA_ROOT. Under tests a spawned
+# orchestrator had resumed the REAL coherence state, so a cfr.collapse never anchored its gap (test-c0-cfr-collapse-
+# anchor). lib/system-nodes.js sync is a dry run on the real tree when a test process calls it.

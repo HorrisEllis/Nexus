@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        cortex
-    version:     3.5.0
+    version:     3.6.0   # 0.39.282 MINOR — /api/raid/status restored; /api/event broadcasts to /sse; the RAID officiator asks RAID who synthesizes; contract intake per-system dirs follow RAID_SYSTEMS_ROOT. Previous 3.5.0:
     foundation:  nexus-system-foundation@1.0.0
     port:        3748
     uuid:        nexus-cortex-v3-0000-2026-0615-jamesbrooks-001
@@ -295,3 +295,10 @@ spec:
   # contract-intake rows carry `hat`; acknowledge() calls checkAgentIntentContract(forAgent, intention, { hat }). With a
   # hat, that hat's allowedIntents decide whoever wears it; a hat that is not live is refused. Without one, the old rule
   # (any hat naming the agent) stands. speceng.build sends the hat on its RAID observability contract.
+
+# ── ADDENDUM 2026-09-29 (0.39.282) — cortex 3.6.0 ──
+# /api/raid/status (version, health, weights from the real engine) had not moved into cortex/boot.js when the admin
+# server was removed, so the orchestrator's raid CLI always said cortex was offline. POST /api/event now reaches /sse
+# subscribers. cortex/core/raid/officiator.js picks its synthesizer with RAID decideForContract (or opts.forAgent)
+# instead of five literal 'claude' defaults. contract-intake resolves <system>/input|output under RAID_SYSTEMS_ROOT
+# (the test sandbox sets it) and its CFR ledger under NEXUS_DATA_ROOT.

@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        copilot
-    version:     3.6.0   # 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
+    version:     3.7.1   # 0.39.282 PATCH — a self-reported failure floors confidence; duplicate component id context.get → context.session; module-builder resolves on the full token intersection. Previous 3.7.0: 0.39.258 MINOR — body.tools.composed, raw Ollama prompt, GET /api/prompt/resolve. Previous 3.6.0: 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
     foundation:  nexus-system-foundation@1.0.0
     port:        3750
     uuid:        nexus-copilot-v2-0000-2026-0627-jamesbrooks-001
@@ -349,3 +349,11 @@ spec:
 # /api/agents/capability are served (lib/introspect.js, lib/agent-capability.js were real and never mounted);
 # POST /api/agents/calibrate stays declared, marked served:false (it needs a live probe). 16 served routes were
 # added to registry-components.js; interaction-contract.json's port corrected 4850 → 3750.
+
+# ── ADDENDUM 2026-09-29 (0.39.282) — copilot 3.7.1 ──
+# Spec caught up: 3.7.0 (0.39.258 — body.tools.composed sends the caller's prompt as-is with {tools}/{tool_guide}
+# filled, follow-ups are only tool results in the caller's template, Ollama gets a raw prompt, GET
+# /api/prompt/resolve) was never written here (orchestrator spec-drift: spec 3.6.0, code 3.7.0). 3.7.1: an answer that
+# says it failed ("could not determine", "unable to find") floors confidence the way an empty one does, so it
+# escalates; the second context.get (GET /api/context/:id) is context.session; module-builder _resolveExistingTarget
+# resolves when exactly one id is in every token's candidate set.

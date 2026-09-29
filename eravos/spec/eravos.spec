@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        eravos
-    version:     3.17.0   # §2026-09-20 bump — app layer (mods/runtime/specs/
+    version:     3.18.0   # 0.39.264 MINOR — catalog + NEW creates an Idearium idea or spec instead of downloading engine.js + schema.json (spec caught up 0.39.282). Previous 3.17.0: §2026-09-20 bump — app layer (mods/runtime/specs/
                           # kernel/behaviors/workspace/index.html/manifest.json)
                           # replaced wholesale with the v3-17 standalone catalog
                           # export. server.js, config.js, registry-components.js,
@@ -102,3 +102,7 @@ spec:
     - "mod.spawn rejects an unknown mod id with explicit error, never silent pass"
     - "wire.connect rejects a wire between two hooks with incompatible schemas"
     - "pack.install validates zip contents against mod schema before mounting"
+
+# ── ADDENDUM 2026-09-29 (0.39.282) — eravos 3.18.0 ──
+# Spec caught up (orchestrator spec-drift: spec 3.17.0, code 3.18.0): since 0.39.264 the catalog's + NEW creates an
+# Idearium idea or spec (CREATE IDEA / CREATE SPEC) instead of downloading engine.js and schema.json.
