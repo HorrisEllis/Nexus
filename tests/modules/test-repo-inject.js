@@ -183,6 +183,10 @@ async function run() {
   if (srv) {
     try {
       const repoWithComp = { ...repo, compartmentId: repo.compartmentId || 'cos.test.inject' };
+      // §0.39.282 — ollama is the default provider now, and economy staging (0.39.281 EC5) stages an ollama reply on the
+      // repo's staging branch instead of applying it. This section proves the direct review/auto paths, so it names a
+      // guardian agent (the staging path has its own suite, test-economy).
+      RA.setProvider(repo.uuid, 'chatgpt');
       reply2 = 'Done.\n```js src/agent.js\nexport default 42;\n```';
       const d1 = await RA.dispatch({ repo: repoWithComp, repoDir: null, message: 'write agent.js', layer });
       check('the agent is told its code is written into the project', (prompts[0].prompt || '').includes('Code you write for this project is written into it'));

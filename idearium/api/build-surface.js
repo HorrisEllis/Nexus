@@ -186,7 +186,8 @@ export async function specPlan(deps, uuid, body) {
   Promise.resolve().then(() => RA.dispatch({ repo: r.repo, repoDir: r.dir, message: p.message, provider: body.provider || null, layer: deps.getRepoLayer() }))
     .then(async (res) => {
       const after = await _specMap(deps, r.repo, r.dir, specPath);
-      const state = res && res.ok ? 'replied' : 'failed';
+      // §0.39.282 N21 — a reply blocked at its gate (a refusal) is 'blocked', never 'replied'
+      const state = res && res.ok ? (res.injects && res.injects.blocked ? 'blocked' : 'replied') : 'failed';
       deps.appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, runId, repoUuid: uuid, targetRepo: uuid, map: m.mapPath, phase: 'PLAN', state, snapshot: snap.data.commitId,
         error: res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : (after.exists && !after.v.ok ? `the phasemap came back but is not valid: ${after.v.problems.slice(0, 3).join('; ')}` : (!after.exists ? `no ${m.mapPath} came back (it may be waiting for approval in the Agent tab)` : null)),
         injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null, ts: Date.now() });
@@ -281,7 +282,8 @@ export async function manage(deps, uuid, body = {}) {
   const RA = deps.require('../../lib/repo-agent.js');
   Promise.resolve().then(() => RA.dispatch({ repo: r.repo, repoDir: r.dir, message, provider: body.provider || null, layer: deps.getRepoLayer() }))
     .then((res) => {
-      const state = res && res.ok ? 'replied' : 'failed';
+      // §0.39.282 N21 — a reply blocked at its gate (a refusal) is 'blocked', never 'replied'
+      const state = res && res.ok ? (res.injects && res.injects.blocked ? 'blocked' : 'replied') : 'failed';
       deps.appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, ...base, state, snapshot: snap.data.commitId, error: res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : null,
         injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null, ts: Date.now() });
       deps.emit('idearium.repo.file.manage', { ...base, state });

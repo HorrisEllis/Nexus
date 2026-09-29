@@ -36,6 +36,7 @@ const SUITES = [
   'test-economy-guardian.test.js',       // 0.39.281 — EC6: guardian's dispatcher waits / stops / falls back by the economy; every outcome recorded
   'test-guardian-json-routes.test.js',   // 0.39.282 — the real guardian answers provider/login, economy and intake once (was: json undefined, 404 then crash)
   'test-run-all-process-group.test.js',   // 0.39.282 N29 — a suite's whole process group dies with it (orphaned servers caused full-run-only failures)
+  'test-step-gate.test.js',   // 0.39.282 N21 — every build step passes a gate (rule nodes); a refusal is blocked, never 'replied'; no empty file is written
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272

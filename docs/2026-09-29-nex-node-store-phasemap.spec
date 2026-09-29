@@ -363,7 +363,7 @@ spec:
 
     N21_no_empty_generation_event_gates:
       layer: automation
-      status: OPEN
+      status: "BUILT 0.39.282 (first slice) — lib/step-gate.js + rule nodes lib/step-gates/{reply.accept,code.write}.step_gate (schema.step_gate, KNOWN_TYPES step_gate); gated in lib/repo-inject.js fromReply (reply, then each file) and lib/repo-agent.js (a code-less refusal); plan/manage jobs read 'blocked' not 'replied'; events step.passed/step.blocked on nexus-bus with causedBy = the step before. Test: test-step-gate 15/15 (the live refusal end to end). OPEN in this phase: gating dispatch and verify steps, a failure_mode node per block (N14), JS/TS parse checks (json/yaml only today), and holding (on_block: hold) instead of dropping."
       depends_on: [N14]
       files:
         - "lib/step-gate.js (new — one gate every build step passes through)"
@@ -494,7 +494,7 @@ spec:
 
     N29_full_run_only_failures:
       layer: automation
-      status: OPEN
+      status: "ROOT-CAUSED 0.39.282 (b6189c2): run-all killed a timed-out suite's pid but not the servers it started — now a process group, killed on timeout and exit (test-run-all-process-group); two slow suites state their budget in their header; lib/queue.js retry() tie fixed; five tests followed the data root. A clean full run to confirm is still owed (the last one hit the background time limit)."
       depends_on: [N19]
       does: >-
         Nine suites pass (or were not run) alone but fail inside the full run (4771/45): queue.test.js (1),
