@@ -3630,7 +3630,9 @@ async function handle(req, res, route, query, body) {
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const { handleCode } = await import('../repo/code-api.js');
       const r = await handleCode({ method: req.method, op: params.op, layer: getRepoLayer(), repo, uuid: params.uuid, dir, query, body: body || {},
-        emit: (type, payload) => { try { os.emit(type, payload); } catch (_) { /* the write already happened */ } }, tool: (body && body._tool) || query._tool || null });
+        emit: (type, payload) => { try { os.emit(type, payload); } catch (_) { /* the write already happened */ } }, tool: (body && body._tool) || query._tool || null,
+        // §0.39.279 (staging S1) — a staged change is a versionium commit on repo-<uuid>@staging
+        record: async (payload) => { const r = await _versionium('POST', '/api/versionium/commit', payload); if (!r.ok) return { error: r.error }; return (r.data && r.data.commit) || { error: (r.data && r.data.error) || 'versionium returned no commit' }; } });
       if (r.status >= 400) return err(res, r.status, r.body.error, Object.fromEntries(Object.entries(r.body).filter(([k]) => k !== 'error')));
       return ok(res, r.body);
     }

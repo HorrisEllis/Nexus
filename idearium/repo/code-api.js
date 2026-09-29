@@ -256,7 +256,7 @@ function prepare(ctx, op, state) {
  * runOps(ctx, ops, { dryRun, force }) — the one write path behind edit/write/delete/move/batch.
  * All ops are computed first (nothing is written if any fails), checked for syntax, then committed together.
  */
-function runOps(ctx, ops, { dryRun = false, force = false } = {}) {
+async function runOps(ctx, ops, { dryRun = false, force = false, stage = false, causedBy = null } = {}) {
   const E = CE();
   if (!Array.isArray(ops) || !ops.length) return bad(400, 'ops is required (a non-empty list)');
   if (ops.length > 50) return bad(400, 'at most 50 operations per call');
@@ -290,6 +290,19 @@ function runOps(ctx, ops, { dryRun = false, force = false } = {}) {
   }
   if (dryRun) return ok({ ok: true, dryRun: true, files: view, ops: reports });
   const hat = _hat(ctx);
+  // §0.39.279 (staging-self-heal S1) — stage:true commits the change to repo-<uuid>@staging (versionium) and leaves the
+  // repo untouched until code/promote. A Nexus repo keeps its approval gate instead.
+  if (stage) {
+    if (ctx.repo.nexusSelf) return bad(409, 'a Nexus repo\'s code goes through its approval gate — staging is for project repos', { nothingWritten: true });
+    const st = await E.stage({ layer: ctx.layer, RI: RI(), repo: ctx.repo, hat, changes: files.map(f => (f.deleted ? { path: f.path, delete: true } : { path: f.path, content: f.after })),
+      causedBy, record: ctx.record, source: { tool: ctx.tool || null } });
+    if (!st.ok) return bad(409, (st.errors || ['staging failed']).join('; '), { nothingWritten: true });
+    for (const f of st.files) ctx.emit && ctx.emit('idearium.repo.code.staged', { repoUuid: ctx.uuid, path: f.path, op: f.op, inject: f.inject, branch: st.branch, commitId: st.commit.commitId, causedBy });
+    const byPath = new Map(st.files.map(f => [f.path, f]));
+    return ok({ ok: true, mode: 'stage', status: 'staged', branch: st.branch, commit: st.commit, causedBy,
+      files: view.map(v => ({ ...v, inject: (byPath.get(v.path) || {}).inject || null })), ops: reports,
+      next: `the repo is unchanged — POST code/promote {"commitId":"${st.commit.commitId}"} applies it` });
+  }
   const c = E.commit({ layer: ctx.layer, RI: RI(), repo: ctx.repo, hat, changes: files.map(f => (f.deleted ? { path: f.path, delete: true } : { path: f.path, content: f.after })),
     source: { tool: ctx.tool || null } });
   if (!c.ok) return bad(409, (c.errors || ['commit failed']).join('; '), { rolledBack: c.rolledBack || [], nothingWritten: true });
@@ -301,14 +314,36 @@ function runOps(ctx, ops, { dryRun = false, force = false } = {}) {
     next: c.mode === 'auto' ? 'the repo is reindexed — code_check runs the syntax check and the related tests' : null });
 }
 
+const _stg = (b) => ({ stage: bool(b.stage), causedBy: b.causedBy || null });
 function edit(ctx) {
   const b = ctx.body || {};
-  return runOps(ctx, [{ ...b, op: 'edit' }], { dryRun: bool(b.dryRun), force: bool(b.force) });
+  return runOps(ctx, [{ ...b, op: 'edit' }], { dryRun: bool(b.dryRun), force: bool(b.force), ..._stg(b) });
 }
-function write(ctx) { const b = ctx.body || {}; return runOps(ctx, [{ ...b, op: 'write' }], { dryRun: bool(b.dryRun), force: bool(b.force) }); }
-function del(ctx) { const b = ctx.body || {}; return runOps(ctx, [{ path: b.path || ctx.query.path, op: 'delete' }], { dryRun: bool(b.dryRun) }); }
-function move(ctx) { const b = ctx.body || {}; return runOps(ctx, [{ ...b, op: 'move' }], { dryRun: bool(b.dryRun), force: bool(b.force) }); }
-function batch(ctx) { const b = ctx.body || {}; return runOps(ctx, b.ops, { dryRun: bool(b.dryRun), force: bool(b.force) }); }
+function write(ctx) { const b = ctx.body || {}; return runOps(ctx, [{ ...b, op: 'write' }], { dryRun: bool(b.dryRun), force: bool(b.force), ..._stg(b) }); }
+function del(ctx) { const b = ctx.body || {}; return runOps(ctx, [{ path: b.path || ctx.query.path, op: 'delete' }], { dryRun: bool(b.dryRun), ..._stg(b) }); }
+function move(ctx) { const b = ctx.body || {}; return runOps(ctx, [{ ...b, op: 'move' }], { dryRun: bool(b.dryRun), force: bool(b.force), ..._stg(b) }); }
+function batch(ctx) { const b = ctx.body || {}; return runOps(ctx, b.ops, { dryRun: bool(b.dryRun), force: bool(b.force), ..._stg(b) }); }
+
+/** staged(ctx) — every staged batch of this repo, by versionium commit: its files, cause and when. */
+function staged(ctx) {
+  const rows = RI().list(ctx.uuid, { status: 'staged', limit: 10000 });
+  const by = new Map();
+  for (const n of rows) {
+    const k = (n.staging && n.staging.commitId) || '(unrecorded)';
+    if (!by.has(k)) by.set(k, { commitId: k, branch: (n.staging && n.staging.branch) || null, causedBy: (n.staging && n.staging.causedBy) || null, stagedAt: n.stagedAt, files: [] });
+    by.get(k).files.push({ path: n.path, op: n.op || 'write', inject: n.uuid });
+  }
+  return ok({ ok: true, repoUuid: ctx.uuid, batches: [...by.values()].sort((a, b) => (b.stagedAt || 0) - (a.stagedAt || 0)) });
+}
+
+/** promote(ctx) — { commitId | injects, force } → the staged batch applied, all-or-nothing (lib/code-edit.js promote). */
+function promote(ctx) {
+  const b = ctx.body || {};
+  const r = CE().promote({ layer: ctx.layer, RI: RI(), repo: ctx.repo, injects: Array.isArray(b.injects) ? b.injects : null, commitId: b.commitId || null, approvedBy: b.approvedBy || 'promote', force: bool(b.force) });
+  if (!r.ok) return bad(r.conflict ? 409 : 400, (r.errors || ['promote failed']).join('; '), { rolledBack: r.rolledBack || [] });
+  for (const f of r.files) ctx.emit && ctx.emit('idearium.repo.code.changed', { repoUuid: ctx.uuid, path: f.path, op: f.op, status: 'applied', inject: f.inject, promoted: b.commitId || true });
+  return ok({ ok: true, promoted: r.files, ...(r.warning ? { warning: r.warning } : {}) });
+}
 
 /**
  * check(ctx) — { paths?, tests? } → syntax diagnostics for each file (working version), and with tests:true the tests
@@ -373,8 +408,8 @@ async function _runRelatedTests(ctx, paths, max) {
 }
 
 export const ROUTES = Object.freeze({
-  GET: { overview, tree, search: searchCode, grep, chunk, outline, read, definition, changes },
-  POST: { edit, write, delete: del, move, batch, check },
+  GET: { overview, tree, search: searchCode, grep, chunk, outline, read, definition, changes, staged },
+  POST: { edit, write, delete: del, move, batch, check, promote },
 });
 
 /**

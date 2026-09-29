@@ -23,15 +23,29 @@ function _emitEvent(type, payload) {
 async function handle(req, res, { method, pathname, url }) {
   if (pathname === '/api/versionium/commit' && method === 'POST') {
     const body = await readBody(req);
-    const { message, branch, causedBy, system, state } = body || {};
+    const { message, branch, causedBy, system, state, from } = body || {};
     if (!message) { json(res, 400, { ok: false, error: 'message is required' }); return true; }
     try {
-      const commit = engine.commit({ message, branch, causedBy, system: system || null, state: state ?? null });
+      // §0.39.279 (staging-self-heal S0) — `from`: the first commit of a new branch records where it forked from
+      const commit = engine.commit({ message, branch, causedBy, system: system || null, state: state ?? null, from: from || null });
       _emitEvent('versionium.committed', { commitId: commit.commitId, branch: commit.branch, system: commit.system });
       json(res, 200, { ok: true, commit });
     } catch (e) {
       json(res, 500, { ok: false, error: `versionium commit failed: ${e.message}` });
     }
+    return true;
+  }
+
+  // §0.39.279 (staging-self-heal S0) — branches with their fork points; POST makes one AT a commit (or a branch's head)
+  if (pathname === '/api/versionium/branches' && method === 'GET') {
+    json(res, 200, { ok: true, branches: engine.branches() });
+    return true;
+  }
+  if (pathname === '/api/versionium/branches' && method === 'POST') {
+    const body = await readBody(req);
+    const r = engine.createBranch({ branch: body && body.branch, from: body && body.from !== undefined ? body.from : 'main', causedBy: (body && body.causedBy) || null });
+    if (r.ok && r.created) _emitEvent('versionium.branched', { branch: r.branch, forkedFrom: r.forkedFrom });
+    json(res, r.ok ? 200 : 400, r);
     return true;
   }
 

@@ -392,3 +392,11 @@ spec:
 # GET /api/versionium/history takes ?branch= and ?n= (with n: the NEWEST n, newest first; without: unchanged).
 # Every repo list now asks for its own branch — the first-200-in-store-order answer hid every repo's new
 # snapshots once 200 repo commits existed in total. Idearium's nexus repo shows all of NEXUS's versions.
+
+# ── ADDENDUM 2026-09-29 (0.39.279) — docs/2026-09-28-staging-self-heal-phasemap.spec S0 (closes design gap V2) ──
+# A branch records where it forked from. engine.createBranch({ branch, from, causedBy }) writes forkedFrom
+# { branch, commitId } + forkedAt on the branch row and starts it at the fork commit, so its first commit's parentId is
+# the fork point (before: null). commit({ from }) does the same on a new branch's first commit; an existing branch is
+# never re-forked; an unknown source is refused ("no such commit or branch …", reason first). engine.branches(),
+# engine.forkPoint(). Routes: POST /api/versionium/commit takes `from`; GET/POST /api/versionium/branches. First user:
+# lib/code-edit.js stage() — repo-<uuid>@staging forked from repo-<uuid>. Proven by tests/modules/test-staging-s0-s1.test.js.

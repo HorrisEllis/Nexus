@@ -171,21 +171,64 @@ spec:
   phases:
     - id: S0
       name: fork point recorded at branch creation; fix parentId-follows-branch
-      status: open
-      files: [versionium/lib/engine.js, versionium/lib/store.js, versionium/spec/versionium.spec]
+      status: CLOSED 2026-09-29 (0.39.279) — code landed, real test passing (below)
+      files: [versionium/lib/engine.js, versionium/routes/versionium.js, versionium/spec/versionium.spec]
       closes: [S-1]
       note: >-
         Read first: the spec says parentId follows the most recent snapshot in the idearium path and the
         branch head in cortex/versionium. Confirm which path the repo-<uuid> branches use before editing.
+      findings: >-
+        Read, not recalled. versionium/lib/engine.js commit() already takes parentId from the NAMED branch's head
+        (versionium_branches row), so parentId-follows-branch holds on the path the repo-<uuid> branches use
+        (idearium/repo/snapshot.js commits every repo snapshot on branch repo-<uuid> through POST
+        /api/versionium/commit). What was missing is spec gap V2: a new branch's row recorded no fork point and its
+        first commit had parentId null. store.js needed no change (the branch row is schemaless JAA).
+      landed:
+        - >-
+          engine.createBranch({ branch, from, causedBy }) — the branch row carries forkedFrom { branch, commitId }
+          and forkedAt, and starts with headCommitId = the fork commit, so the first commit on the branch is the
+          fork point's child. `from` is a commit id or a branch (its head). An existing branch is never re-forked.
+          The reason comes first in the error ("no such commit or branch …") because HTTP callers see a truncated
+          body. engine.branches(), engine.forkPoint(branch). commit({ from }) forks on a new branch's first commit.
+        - >-
+          routes: POST /api/versionium/commit takes `from`; GET/POST /api/versionium/branches.
+      proof: >-
+        tests/modules/test-staging-s0-s1.test.js S0-01 (fork at a branch head; first staged commit's parent is the
+        fork point; the original branch is not moved) and S0-02 (fork from a commit id, commit({from}), no re-fork,
+        unknown source refused with the reason first). The 12 existing versionium / code-edit / inject suites
+        give identical results before and after.
     - id: S1
       name: code-edit stage mode + promote()
-      status: open
-      files: [lib/code-edit.js, lib/repo-inject.js, tests/modules/test-code-edit.test.js]
+      status: CLOSED 2026-09-29 (0.39.279) — code landed, real test passing (below)
+      files: [lib/code-edit.js, lib/repo-inject.js, idearium/repo/code-api.js, idearium/api/index.js, tests/modules/test-staging-s0-s1.test.js]
       closes: [S-2]
       depends_on: [S0]
       note: >-
         stage = commit to repo-<uuid>@staging with causedBy; promote(branch, commitId) is the single real
         apply into the repo and the same path S6 uses to restore.
+      landed:
+        - >-
+          lib/repo-inject.js — status 'staged' (proposed on a branch: out of the review queue, not in the tree);
+          stage(id, { branch, causedBy, commitId }), setStagingCommit(); apply() and reject() accept 'staged'.
+          A Nexus repo's inject is refused (it keeps its approval gate, I4).
+        - >-
+          lib/code-edit.js 1.1.0 — stage({ …, causedBy, record }) is async: every change proposed and staged, then
+          ONE versionium commit on repo-<uuid>@staging (system 'staging', state = the files with their inject ids
+          and base/content hashes), forked from repo-<uuid> through S0; a repo with no versionium history yet forks
+          from nothing and the result says forkedFrom: null. The recorder may answer { error } or throw; either way
+          every inject this call staged is rejected and the reason returned (I5). No recorder = refused.
+          promote({ commitId | injects }) applies the batch all-or-nothing with the auto path's rollback; a file
+          changed since it was staged is a conflict, never an overwrite (unless forced).
+        - >-
+          idearium/repo/code-api.js — any edit/write/delete/move/batch with stage:true (and causedBy) goes to
+          staging; GET code/staged lists batches by commit; POST code/promote { commitId | injects, force }.
+          idearium/api/index.js passes the recorder (POST /api/versionium/commit).
+      proof: >-
+        tests/modules/test-staging-s0-s1.test.js S1-01…S1-04 with the REAL repo-inject over a Map-backed layer and
+        the real versionium engine: staged = a commit on the staging branch caused by the gap, repo untouched, not
+        in the review queue; promote lands both files; a conflict keeps the newer edit and rolls back what was
+        applied; an unrecorded stage leaves nothing staged. S1-20 through idearium's real router: stage:true
+        refused with nothingWritten when versionium cannot record it; code/staged and code/promote answer.
     - id: S2
       name: heal loop lands its output on staging
       status: open
