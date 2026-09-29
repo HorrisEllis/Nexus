@@ -305,6 +305,10 @@ export async function manage(deps, uuid, body = {}) {
         error: res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : (absent ? `the reply did not bring back ${absent.join(', ')}` : null),
         injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null, ts: Date.now() });
       deps.emit('idearium.repo.file.manage', { ...base, state });
+      // §0.39.282 N23 — an Ollama draft of a writing action is reviewed by a guardian agent (same as a phase build)
+      if (shadow && typeof deps.reviewDraft === 'function')
+        deps.reviewDraft({ r: res, state, absent, target: r.repo, base, commitId: snap.data.commitId, req: { message }, note: body.note || '', message })
+          .catch(e => console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`));
     })
     .catch((e) => { if (shadow) SH.drop(shadow); deps.appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, ...base, state: 'failed', error: e.message, ts: Date.now() }); });
   return ok({ ...base, state: 'building', snapshot: snap.data.commitId, promptChars: message.length, message, ...(shadow ? { shadow: { id: shadow.id, expects: shadow.expects } } : {}) });

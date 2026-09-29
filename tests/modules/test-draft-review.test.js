@@ -73,6 +73,19 @@ async function run() {
     core.resolve('repos.draft_then_review').def.default === true && core.resolve('repos.review_provider').def.type === 'string');
   check('DR-23 the plan panel labels reviewing / reviewed / skipped', /reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped'/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/plan-panel.js'), 'utf8')));
 
+  // manage runs hand a draft to review too (idearium build-surface → deps.reviewDraft, the same _reviewDraft)
+  const BS = await import(path.join(ROOT, 'idearium', 'api', 'build-surface.js'));
+  const reviews = [];
+  const mk = (res) => ({ getRepoLayer: () => ({ get: () => ({ uuid: 'r-dr', name: 'dr' }), readTextFile: () => ({ content: 'x\n' }) }), repoDir: () => '/tmp/none',
+    snapshot: async () => ({ ok: true, data: { commitId: 'c1' } }), appendRow: () => {}, emit: () => {},
+    require: (p) => p.endsWith('repo-agent.js') ? { dispatch: async () => res } : require(path.join(ROOT, 'idearium', 'api', p)),
+    reviewDraft: async (a) => { reviews.push(a); return null; } });
+  await BS.manage(mk({ ok: true, providerUsed: 'ollama', injects: { injects: [{ path: 'src/a.js', uuid: 'i1' }], refused: [], unresolved: [] } }), 'r-dr', { path: 'src/a.js', action: 'rebuild', note: 'keep it' });
+  await BS.manage(mk({ ok: true, text: 'prose' }), 'r-dr', { path: 'src/a.js', action: 'explain' });
+  await new Promise(r => setTimeout(r, 60));
+  check('DR-24 a manage run hands its result to the same review (writing actions only), with the file\'s run as base and James\'s note',
+    reviews.length === 1 && reviews[0].base.map === 'file:src/a.js' && reviews[0].base.phase === 'REBUILD' && reviews[0].note === 'keep it' && reviews[0].state === 'replied', JSON.stringify(reviews.map(x => x.base)));
+
   console.log(`\n  ${pass} passed, ${fail} failed\n`);
   process.exitCode = fail === 0 ? 0 : 1;
   setTimeout(() => process.exit(process.exitCode), 200);

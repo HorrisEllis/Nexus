@@ -434,7 +434,7 @@ spec:
 
     N25_manage_button_enterprise:
       layer: interface
-      status: OPEN
+      status: "BUILT 0.39.282 — the Manage workbench (idearium/ui/js/file-manage.js + css/file-manage.css, the idearium tokens): the file with its state, lines, size and waiting proposals; actions in three groups (change · fix & prove · understand), each marked WRITES or READS; scope whole file / lines with a live preview of exactly those lines; instructions; related code search with picks; who does it (the repo's providers); the pipeline stated before sending (snapshot → agent → gate → shadow → review of an Ollama draft — steps that do not apply are struck through); this file's history of runs (newest first, review runs linked, states and reasons, absent files); Esc / Ctrl+Enter anywhere while open. Manage runs now get the same Ollama-draft review as phase builds (deps.reviewDraft). Old .manage-* rules in index.html retired (a note points here). Probe: tests/probe/manage-workbench-chromium.js 13/13 (+ screenshots); build-surface probe 11/11; DR-24. OPEN: diff vs baseline per file, per-file actions beyond the agent (stage/promote/archive) in the same surface."
       depends_on: []
       files:
         - "idearium/ui/js/file-manage.js (+ its css)"

@@ -691,6 +691,7 @@ async function _reviewDraft({ r, state, absent, target, base, commitId, req, not
 // §0.39.280 — what api/build-surface.js is given: this server's own helpers, nothing new
 function _buildSurfaceDeps() {
   return {
+    reviewDraft: _reviewDraft,   // §0.39.282 N23 — manage runs hand an Ollama draft to a reviewing agent too
     getRepoLayer, repoDir: _repoDiskDir, versionium: _versionium, loadTable, appendRow, require: _require,
     emit: (t, d) => getIdeaOS().emit(t, d), RI: () => _require('../../lib/repo-inject.js'),
     config: (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } },
