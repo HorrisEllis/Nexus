@@ -363,7 +363,7 @@ spec:
 
     N21_no_empty_generation_event_gates:
       layer: automation
-      status: "BUILT 0.39.282 (first slice) — lib/step-gate.js + rule nodes lib/step-gates/{reply.accept,code.write}.step_gate (schema.step_gate, KNOWN_TYPES step_gate); gated in lib/repo-inject.js fromReply (reply, then each file) and lib/repo-agent.js (a code-less refusal); plan/manage jobs read 'blocked' not 'replied'; events step.passed/step.blocked on nexus-bus with causedBy = the step before. Test: test-step-gate 15/15 (the live refusal end to end). OPEN in this phase: gating dispatch and verify steps, a failure_mode node per block (N14), JS/TS parse checks (json/yaml only today), and holding (on_block: hold) instead of dropping."
+      status: "BUILT 0.39.282 (first slice) — lib/step-gate.js + rule nodes lib/step-gates/{reply.accept,code.write}.step_gate (schema.step_gate, KNOWN_TYPES step_gate); gated in lib/repo-inject.js fromReply (reply, then each file) and lib/repo-agent.js (a code-less refusal); plan/manage jobs read 'blocked' not 'replied'; events step.passed/step.blocked on nexus-bus with causedBy = the step before. Test: test-step-gate 15/15 (the live refusal end to end). Slice 2: JS parses through Node's own --check (ESM as .mjs, else .cjs — Node 22 passes a .js with ESM + an error); TS stays unchecked (type stripping passes broken TS, fails valid enums); every block is a gap step.blocked.<step>.<check> (lib/gap-field.js — the road into self-heal failure modes), one open gap per step+check, repeats bumped; test 18/18. OPEN: the verify step (read-back after write — N22's shadow covers it), on_block: hold, a dispatch gate."
       depends_on: [N14]
       files:
         - "lib/step-gate.js (new — one gate every build step passes through)"

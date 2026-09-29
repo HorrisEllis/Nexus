@@ -40,9 +40,23 @@ async function run() {
     && SG.check('code.write', { path: 'c.json', content: '{"a":1}' }).ok && !SG.check('code.write', { path: 'c.yaml', content: 'a: [1' }).ok
     && SG.check('code.write', { path: 'x.rs', content: 'fn main() {' }).ok);
   check('SG-07 a step with no rule node passes and says it is ungated', SG.check('no.such.step', {}).ungated === true);
+  // §N21 slice 2 — JS parses through Node's own --check (ESM as .mjs, else .cjs; a plain .js with ESM + an error passes
+  // `node --check` under Node 22's module detection, which is why it is never checked as .js); TS stays unchecked.
+  check('SG-09 broken ESM and CJS JavaScript are blocked; valid ESM/CJS pass; TypeScript is not claimed checked',
+    !SG.check('code.write', { path: 'a.js', content: 'export function f( {\n' }).ok && !SG.check('code.write', { path: 'c.js', content: 'module.exports = (;\n' }).ok
+    && SG.check('code.write', { path: 'b.js', content: 'import fs from "fs";\nexport const a = 1;\n' }).ok && SG.check('code.write', { path: 'd.cjs', content: 'module.exports = require("x");\n' }).ok
+    && SG.check('code.write', { path: 'e.ts', content: 'let x: = 1' }).ok);
   const g = SG.gate('code.write', { path: 'e.js', content: '' }, { causedBy: 'cause-1' });
   const ev = seen.find(e => e.payload && e.payload.eventId === g.eventId);
   check('SG-08 gate() emits step.blocked on nexus-bus with the reasons and the causal id', !!ev && ev.type === 'step.blocked' && ev.causedBy === 'cause-1' && ev.payload.reasons.length === 1);
+  const GF = require(path.join(ROOT, 'lib', 'gap-field.js'));
+  const gaps = GF.openGaps ? GF.openGaps() : [];
+  const gapRow = (Array.isArray(gaps) ? gaps : (gaps.gaps || [])).find(x => x.type === 'step.blocked.code.write.file-non-empty');
+  check('SG-08b a block is also a gap (step.blocked.<step>.<check>) naming the path and the event — the road into failure modes',
+    !!g.gapId && !!gapRow && gapRow.location === 'e.js' && (gapRow.meta || {}).eventId === g.eventId, JSON.stringify(gapRow || g).slice(0, 300));
+  const again = SG.gate('code.write', { path: 'e2.js', content: '' });
+  const bumped = (GF.openGaps() || []).filter(x => x.type === 'step.blocked.code.write.file-non-empty');
+  check('SG-08c repeats bump the one open gap instead of piling up', bumped.length === 1 && (bumped[0].occurrences || 1) >= 2 && again.gapId === g.gapId, JSON.stringify(bumped).slice(0, 200));
 
   // ── SG-1x end to end through the real repo layer ──
   const api = await import(path.join(ROOT, 'idearium', 'api', 'index.js'));

@@ -18,4 +18,4 @@ payload:
     - id: file-parses
       kind: parses
       # languages checked here; any other syntax passes this check (it is not proof, just not checkable yet)
-      languages: [json, yaml, yml]
+      languages: [json, yaml, yml, js, mjs, cjs]
