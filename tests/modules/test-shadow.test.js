@@ -74,7 +74,7 @@ async function run() {
 
   // ── SH-2x phase builds (idearium/api/index.js _phaseBuild — structural, as test-one-idearium-phases-nodes P3 reads it) ──
   const api = require('fs').readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-  const pb = api.slice(api.indexOf('async function _phaseBuild('), api.indexOf('// §0.39.271 — one repo snapshot'));
+  const pb = api.slice(api.indexOf('async function _phaseBuild('), api.indexOf('async function _reviewDraft('));   // _phaseBuild alone (the N23 review follows it)
   check('SH-20 a phase build declares its shadow from the files the phase names, before the agent is asked',
     pb.indexOf("SH.declare({ step: 'phase.build', expects: { files: expectFiles }") > 0 && pb.indexOf('SH.declare(') < pb.indexOf('RA.dispatch(') && /\(node\.files \|\| \[\]\)\.map\(f => String\(f\)\.split/.test(pb));
   check('SH-21 it settles on a reply, drops on a failure, and reads blocked / incomplete / replied',

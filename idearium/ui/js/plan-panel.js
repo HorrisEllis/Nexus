@@ -17,7 +17,7 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 const PLANP = { uuid: null, map: null, data: null, runs: [], open: new Set(), focus: null, wide: false };
-const _PLAN_GATE_LABEL = { mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', landed: 'landed', closed: 'closed' };
+const _PLAN_GATE_LABEL = { mapped: 'mapped', snapshot: 'snapshot', dispatched: 'sent', replied: 'replied', blocked: 'blocked', incomplete: 'incomplete', reviewing: 'reviewing', reviewed: 'reviewed', skipped: 'skipped', landed: 'landed', closed: 'closed' };
 
 function _planEl() {
   let el = document.getElementById('plan-panel');

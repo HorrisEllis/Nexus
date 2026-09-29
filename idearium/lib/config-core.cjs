@@ -155,6 +155,11 @@ const SCHEMA = {
     // provider). Checked against the live provider list when read, not a fixed list here.
     // §0.39.282 — James: "Ollama should be default I feel like." A repo with no provider of its own goes to ollama.
     default_provider: { default: 'ollama', copilot_writable: false, type: 'string' },
+    // §0.39.282 N23 — James: "What if we have ollama build all of the files first, the best it can. Then send them to an
+    // agent, to check and expand if needed." A phase Ollama drafted goes to a guardian agent for review in a normal
+    // conversation (lib/draft-review.js). review_provider: which agent reviews ('' = guardian's first provider).
+    draft_then_review: { default: true, copilot_writable: false, type: 'boolean' },
+    review_provider:   { default: '', copilot_writable: false, type: 'string' },
   },
   desktop: {
     ram_mb:  { default: 4096, min: 512, max: 65536, copilot_writable: true, type: 'number' },

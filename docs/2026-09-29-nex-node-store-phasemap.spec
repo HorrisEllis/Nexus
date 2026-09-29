@@ -399,7 +399,7 @@ spec:
 
     N23_ollama_first_build_then_agent_review:
       layer: automation
-      status: "PARTLY — ollama is the default provider now (1413ca0); the pipeline below is OPEN"
+      status: "BUILT 0.39.282 (phase builds) — ollama default (1413ca0); each phase build is its own FRESH chat (repo-agent dispatch { session } → repo-agent-<uuid>-<runId>, checked on the wire); when Ollama drafted it (providerUsed/backend ollama, or staged by the economy) idearium _reviewDraft hands the drafted files — full content from their inject nodes — to a guardian agent (repos.review_provider, '' = guardian's first; never ollama/auto) as one plain conversation (lib/draft-review.js reviewMessage: what is needed, the draft fenced by path, what the draft never produced, James's note), in its own chat, with its own shadow (phase.review). The draft stays on the staging branch as provenance; the review run links it (draftRunId); states reviewing/reviewed/incomplete/blocked/skipped. repos.draft_then_review turns it off. Test: test-draft-review 11/11. OPEN: the same for manage actions and plan runs; a person joining the review conversation from the Agent tab; line-level provenance (which lines the reviewer changed)."
       depends_on: [N21]
       files:
         - "lib/repo-agent.js, idearium/api/build-surface.js (build plan → chunks)"

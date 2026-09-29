@@ -38,6 +38,7 @@ const SUITES = [
   'test-run-all-process-group.test.js',   // 0.39.282 N29 — a suite's whole process group dies with it (orphaned servers caused full-run-only failures)
   'test-step-gate.test.js',   // 0.39.282 N21 — every build step passes a gate (rule nodes); a refusal is blocked, never 'replied'; no empty file is written
   'test-shadow.test.js',   // 0.39.282 N22 — a step's shadow (what must exist after it); every absence is a gap + a liminal item; manage/plan runs read incomplete
+  'test-draft-review.test.js',   // 0.39.282 N23 — each chunk in a fresh chat; an Ollama draft is reviewed by a guardian agent in one plain conversation
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272
   'test-opportunity.test.js',            // 0.39.272
