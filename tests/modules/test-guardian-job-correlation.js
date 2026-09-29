@@ -55,6 +55,9 @@ function runWatch(src, { previous, reply = null, afterMs = 1700, noReplyMs = 600
     if (reply !== null) setTimeout(() => { el = { innerText: reply }; }, afterMs);
     const sandbox = {
       findResponseEl: () => el,
+      // §0.39.282 — startWatch reads the reply through each userscript's _replyText(el) (added with the both-sides
+      // readers, 0.39.279); the fake tab's element is plain text, so the helper is its innerText.
+      _replyText: (x) => (x && x.innerText ? String(x.innerText).trim() : ''),
       _isGenerating: () => false,                 // settled, as a finished previous answer is
       send: (m) => { sent.push(m); if (m.type === 'GUARDIAN_ERROR') resolve({ sent, done: null }); },
       getAccount: () => 'acct',

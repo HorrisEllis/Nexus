@@ -1,0 +1,48 @@
+# tests/known-gaps.yaml — every test file that fails for a known, stated reason (docs/2026-09-29-nex-node-store-phasemap.spec N19).
+# Each entry is a gap node: the file, how many cases may fail (a count above it is a NEW failure), the kind, and why.
+# kinds: missing-module (tests code that is not in the tree) · stale-ui · unbuilt (the test specifies a feature never built)
+#        · needs-live-service (a real guardian/provider/live data) · real-bug (known, not yet fixed).
+# IN PROGRESS: the triage is still going; entries with failing: null get their count from the final run.
+type: gap_register
+version: 0.1.0
+gaps:
+  - file: tests/modules/copilot-confidence.test.js
+    failing: 2
+    kind: unbuilt
+    reason: "T-003 and T-005 specify a {grounded:true} option (a 0.7 confidence floor for tool-grounded answers) that copilot/lifeline.js _estimateConfidence never had, and nothing passes grounded. T-001, T-002 and T-004 pass (T-004 was a real bug, fixed 0.39.282)."
+  - file: tests/modules/clear-glass-accounts.test.js
+    failing: 1
+    kind: needs-live-service
+    reason: "\"send() persists cookies under the same resolved accountId\" needs a real agent reply: guardian running with a connected provider. The other 11 cases pass without one."
+  - file: tests/modules/copilot.test.js
+    failing: null
+    kind: missing-module
+    reason: "Tests guardian/agents/co-pilot.js (bus polling, RAID-gated tool calls), which is not in this repository and was not in the 0.39.258 upload either; the co-pilot is its own system now (copilot/, clear-glass/src/copilot/). Needs rewriting against copilot/lifeline.js + copilot/tool-runtime.js, not a path fix."
+  - file: tests/modules/brainos-canvas.test.js
+    failing: null
+    kind: stale-ui
+    reason: "Written for the pre-v2 BrainOS (nexus/ui/brainos/). The path is fixed (ui/brainos/brainos-canvas.js, 0.39.282), but BrainOS v2 builds its nodes differently: BC-002/BC-003 expect one node per orchestrator.config.json system and find none by that rule."
+  - file: tests/modules/brainos-panel.test.js
+    failing: null
+    kind: missing-module
+    reason: "Tests nexus/ui/brainos/brainos.js, the floating panel removed in the BrainOS v2 rebuild (ui/brainos/ has brainos-app.js, not brainos.js; brainos-app.js says the floating panel \"isn't used here\")."
+  - file: tests/modules/brainos-panel-canvas-integration.test.js
+    failing: null
+    kind: missing-module
+    reason: "Tests the wiring between nexus/ui/brainos/brainos.js (removed in the v2 rebuild) and brainos-canvas.js."
+  - file: tests/modules/admin-server-routes.test.js
+    failing: null
+    kind: missing-module
+    reason: "Tests cortex/foundation/admin-server.js, removed before the 0.39.258 upload. Its /api/raid/status route had not moved to cortex/boot.js, so `node orchestrator.js raid` always reported cortex offline; the route is restored there in 0.39.282 (real engine: version, health, weights). This file still needs rewriting against cortex/boot.js."
+  - file: tests/modules/flush-redundancy.test.js
+    failing: null
+    kind: missing-module
+    reason: "Tests cortex/flush-redundancy.js (runFlush: redundant gaps/patterns purge), which is not in the tree and has no successor (no runFlush anywhere)."
+  - file: tests/modules/healer.test.js
+    failing: null
+    kind: missing-module
+    reason: "Reads cortex/healer/index.js, which is not in the tree; nexus-healer/ holds the healer's api/cli/spec but no cortex/healer module. docs/healer.spec describes it."
+  - file: tests/modules/test-intelligence-bridge.js
+    failing: null
+    kind: missing-module
+    reason: "Tests cortex/core/raid/intelligence-bridge.js, specified in docs/intelligence-bridge.spec but not in the tree."
