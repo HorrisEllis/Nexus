@@ -60,6 +60,12 @@ const RESUMABLE = {
   chatgpt: { host: /(^|\.)chatgpt\.com$|(^|\.)chat\.openai\.com$/, path: /^\/c\/[A-Za-z0-9-]+$/ },
   claude:  { host: /(^|\.)claude\.ai$/,                             path: /^\/chat\/[A-Za-z0-9-]+$/ },
 };
+// §0.39.266 — where a provider starts a NEW conversation. James's log: the nexus agent and the nexus/core agent
+// both dispatched into chatgpt.com/c/6ab92781… — an agent with no chat yet had its first job typed into whatever
+// chat the tab was showing (another agent's), and learnJobChat then filed that chat as its own.
+const NEW_CHAT = { chatgpt: 'https://chatgpt.com/', claude: 'https://claude.ai/new' };
+function newChatUrl(provider) { return NEW_CHAT[provider] || null; }
+function isNewChatUrl(url) { return Object.values(NEW_CHAT).includes(String(url || '')); }
 function resumableChatUrl(provider, url) {
   const rule = RESUMABLE[provider];
   if (!rule || !url) return null;
@@ -125,17 +131,31 @@ function createChatTranscripts({ bus, jobs, ncp, complete, rootFn, index, log = 
    * after a restart, the newest transcript filed under the agent in the downloads
    * index — that index is on disk, so the conversation survives a reboot.
    */
+  // §0.39.266 — one chat per agent: a chat another agent already holds is not this agent's
+  function _heldByAnother(provider, agentId, url) {
+    for (const [k, v] of _chatByAgent) if (v.url === url && k !== `${provider}|${agentId}` && k.startsWith(`${provider}|`)) return k.slice(provider.length + 1);
+    return null;
+  }
+  function _own(job, url) {
+    if (!url) return null;
+    const other = _heldByAnother(job.provider, job.agentId, url);
+    if (!other) return url;
+    log.log && log.log(`[${MODULE_ID}] ${job.agentId}: its last ${job.provider} chat is ${other}'s — starting its own`);
+    _chatByAgent.delete(`${job.provider}|${job.agentId}`);
+    return null;
+  }
+  /** chatFor(job) -> this agent's chat URL; a NEW-chat URL when it has none of its own yet (§0.39.266); null when not a resumable agent job. */
   function chatFor(job) {
     if (!job || !job.agentId || !RESUMABLE[job.provider]) return null;
     const hit = _chatByAgent.get(`${job.provider}|${job.agentId}`);
-    if (hit) return hit.url;
+    if (hit) return _own(job, hit.url) || newChatUrl(job.provider);
     try {
       const row = idx.listChats(root(), { agentId: job.agentId, provider: job.provider, limit: 1 })[0];
-      if (!row) return null;
+      if (!row) return newChatUrl(job.provider);
       const it = typeof idx.readItem === 'function' ? idx.readItem(root(), row.id) : null;
-      const url = resumableChatUrl(job.provider, it && it.raw && it.raw.url);
+      const url = _own(job, resumableChatUrl(job.provider, it && it.raw && it.raw.url));
       if (url) rememberAgentChat(job.provider, job.agentId, url);
-      return url;
+      return url || newChatUrl(job.provider);
     } catch (e) {
       log.warn && log.warn(`[${MODULE_ID}] could not read ${job.agentId}'s last ${job.provider} chat from the index: ${e.message}`);
       return null;
@@ -304,4 +324,4 @@ function createChatTranscripts({ bus, jobs, ncp, complete, rootFn, index, log = 
   return { record, attach, route, learnJobChat, chatFor, rememberAgentChat, replyFor, stats };
 }
 
-module.exports = { createChatTranscripts, chatPathOf, matchJobs, resumableChatUrl, MODULE_ID, VERSION };
+module.exports = { createChatTranscripts, chatPathOf, matchJobs, resumableChatUrl, newChatUrl, isNewChatUrl, MODULE_ID, VERSION };

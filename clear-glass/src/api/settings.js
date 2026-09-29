@@ -40,11 +40,11 @@ const DEFAULTS = {
   // ── Bridge auth token (issued after handshake) ───────────────────────
   bridgeToken: '',
 
-  // ── Fallback only — used when NEXUS copilot is unreachable ────────────
-  // (Set these in NEXUS copilot's own config, not here.)
-  fallbackApiKey:  '',
-  fallbackModel:   'claude-sonnet-4-6',
-  fallbackEndpoint: 'https://api.anthropic.com/v1/messages',
+  // ── When copilot :3750 is down — §0.39.274 ─────────────────────────────
+  // James: "copilot, is either ollama or guardian. no api". The Anthropic-key fallback
+  // (fallbackApiKey / fallbackModel / fallbackEndpoint) is gone; a saved key is dropped on load.
+  // The pane answers through Ollama or a Guardian agent directly (src/copilot/bridge.js _ask).
+  copilotOllamaModel: '',     // '' = ollama/config.js DEFAULT_MODEL
 
   // §BUILT 2026-09-26 — James: "expand the copilot settings… make a
   // clearglass hat for the copilot cli." Per-call routing, the same three
@@ -80,14 +80,20 @@ class ApiSettings {
   async load() {
     try {
       const raw = this._kv().load();
+      // §0.39.274 — no paid-API fallback: a key saved by an earlier build is not kept around
+      const RETIRED = ['fallbackApiKey', 'fallbackModel', 'fallbackEndpoint'];
+      const had = RETIRED.some(k => k in raw);
+      for (const k of RETIRED) delete raw[k];
       this.data = { ...DEFAULTS, ...raw };
-      if (!Object.keys(raw).length) this._kv().replaceAll(this.data);
+      if (!Object.keys(raw).length || had) this._kv().replaceAll(this.data);
     } catch (err) {
       console.warn('[Settings] Load error:', err.message);
     }
   }
 
   async set(updates) {
+    const { fallbackApiKey: _k, fallbackModel: _m, fallbackEndpoint: _e, ...clean } = updates || {};   // §0.39.274 retired
+    updates = clean;
     this.data = { ...this.data, ...updates };
     this._kv().replaceAll(this.data);
     return { ok: true };
@@ -96,8 +102,8 @@ class ApiSettings {
   get() { return { ...this.data }; }
 
   getPublic() {
-    const { fallbackApiKey: _, ...safe } = this.data;
-    return { ...safe, hasFallbackKey: !!this.data.fallbackApiKey };
+    const { fallbackApiKey: _, ...safe } = this.data;   // never returned, even if one slipped in
+    return safe;
   }
 
   // Convenience helpers used by other modules

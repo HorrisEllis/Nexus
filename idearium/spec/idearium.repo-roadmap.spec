@@ -86,3 +86,19 @@ spec:
     - 'roadmaps across repos, or the NEXUS docs/ phasemaps (loom serves those)'
     - 'module_path (needs MCO-D zoom levels)'
     - 'authorship of an edit: the comment records a date, not who'
+
+# ── ADDENDUM 2026-09-28 (0.39.275) — cross-spec dependencies (idearium/repo/roadmap.js buildRoadmap) ──
+# A phase can wait on a phase in a DIFFERENT spec, written "<map words> <phase>" — for example
+# `depends_on: [B0, staging S0]` in graph-build-context-settings-memory, meaning phase S0 of the staging-self-heal map.
+# Both specs of one day reuse C0/C1/L1/A1/X1, so a bare key across maps is NEVER guessed. Rule, applied in a second
+# pass after every map has been read and before layering:
+#   1. the token has two or more words; the last is the phase, the rest name a map (case-insensitive substring of
+#      the map's name);
+#   2. the words must match exactly ONE other map (not the phase's own), and that map must have exactly ONE phase
+#      with that id or key;
+#   3. then the edge is added (depends_on, so ordering / layers / blocked_by / ready follow) and the
+#      unresolved_dependency warning for it is removed. Anything less exact stays an unresolved_dependency, as before.
+# The dependent map may be listed before the map it waits on; order in the maps array does not matter.
+# The trailing-comment fix that keeps `depends_on: [A, B]  # why` from swallowing a `]` lives in loom's _list().
+# Proven by tests/modules/test-moce-roadmap.js DG-1..DG-4 (DG-4 reads the two real 2026-09-28 phasemaps in docs/).
+# idearium 4.9.0 -> 4.9.1 (lib/version.js services.idearium).

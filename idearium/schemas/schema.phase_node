@@ -91,3 +91,27 @@ payload:
       required: false
       description: "MCO-E - depends_on tokens that are not a phase in this map (a spec file name, an ambiguous key)"
       items: string
+    name:
+      type: string
+      required: false
+      description: "0.39.271 P2 - the phase's name:/does: text, when it has one"
+    closes:
+      type: array
+      required: false
+      description: "0.39.271 P2 - the missing-list ids (M1, M2 ...) this phase says it closes"
+      items: string
+    files:
+      type: array
+      required: false
+      description: "0.39.271 P2 - the files the phase names"
+      items: string
+    systems:
+      type: array
+      required: false
+      description: "0.39.271 P2 - loom's system tags for the phase"
+      items: string
+    form:
+      type: string
+      required: false
+      enum: [key, list]
+      description: "0.39.271 P2 - written as `  X1_slug:` (key) or `- id: X1` (list)"

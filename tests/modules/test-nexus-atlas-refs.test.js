@@ -79,7 +79,8 @@ async function main() {
   }
 
   // ── every reference resolves ──
-  const OURS = ['nexus-atlas.md', 'orchestrator-atlas.md', 'architect-atlas.md', 'eravos-atlas.md', 'core-atlas.md'];
+  // §0.39.270 — idearium-atlas.md rewritten from the code (docs/2026-09-27-idearium-atlas-phasemap.spec) and held to the same rule.
+  const OURS = ['nexus-atlas.md', 'orchestrator-atlas.md', 'architect-atlas.md', 'eravos-atlas.md', 'core-atlas.md', 'idearium-atlas.md'];
   let total = 0;
   for (const f of OURS) {
     if (!fs.existsSync(path.join(atlasDir, f))) { check(`${f} exists`, false); continue; }

@@ -401,3 +401,10 @@ spec:
   # npm test and per-file tests ran behind the cut network. NOT proven here: provision.js against a
   # real Debian download (no internet from the build machine) — its seed/cloud-init path is tested
   # with a real HTTP seed server and an emulated first boot.
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# The Run menu: "Run the test suite" runs the repo's own test command on the process backend when it is one
+# program with arguments (no shell; a script needing one is left to the VM and says so); "Run all tests" runs every
+# runnable test, 4 at a time, inside a time budget, and continues from where the budget stopped; every failure
+# carries a debug report (lib/cos-debug-report.js: the error, the repo frames, their source lines). nexus/core
+# offers Nexus's root package.json scripts; systems with no process say so instead of "no entry to boot".

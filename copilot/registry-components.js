@@ -112,6 +112,38 @@ const components=[
   }),
   _c('person_model.health','GET','/api/person-model/health','Person-model stats + chain state',{tags:['person-model']}),
 
+  // ── OPPORTUNITY + CONTEXT ATLAS (0.39.272) ─────────────────────────────
+  _c('opportunity.status','GET','/api/opportunity/status','Job/freelance pipeline: counts per stage and what waits on James',{grammar:['job status','applications','what needs me','opportunity status'],tags:['opportunity']}),
+  _c('opportunity.profile.get','GET','/api/opportunity/profile','The job profile: skills, roles, floor, sources, per-platform policy',{tags:['opportunity']}),
+  _c('opportunity.profile.set','POST','/api/opportunity/profile','Update the job profile (merge)',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.import_resume','POST','/api/opportunity/import-resume','Read a resume (.pdf/.docx/.txt/.md) into the profile; suggests skills',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.sources','GET','/api/opportunity/sources','Source types (public job APIs) and the configured sources',{tags:['opportunity']}),
+  _c('opportunity.cycle','POST','/api/opportunity/cycle','Fetch sources, score, shortlist, draft the top N, due follow-ups',{grammar:['find jobs','job cycle','run the job search'],tags:['opportunity']}),
+  _c('opportunity.rescore','POST','/api/opportunity/rescore','Re-rank everything not yet past SHORTLISTED after a profile change',{tags:['opportunity']}),
+  _c('opportunity.followups','POST','/api/opportunity/followups','Mark submitted applications with no response past followUpDays and draft follow-ups',{tags:['opportunity']}),
+  _c('opportunity.list','GET','/api/opportunity/list','List opportunities (?stage=&kind=&q=&limit=)',{tags:['opportunity']}),
+  _c('opportunity.capture','POST','/api/opportunity/capture','Capture the job/gig/message open in a Clear Glass tab into the pipeline',{tags:['opportunity','clear-glass']}),
+  _c('opportunity.show','GET','/api/opportunity/:id','One opportunity with its ledger and policy',{tags:['opportunity']}),
+  _c('opportunity.approve','POST','/api/opportunity/:id/approve','James approves an application (user-only; approves the answers it used)',{tags:['opportunity','user-only'],permissions:['user']}),
+  _c('opportunity.dismiss','POST','/api/opportunity/:id/dismiss','Dismiss an opportunity',{tags:['opportunity']}),
+  _c('opportunity.draft','POST','/api/opportunity/:id/draft','Draft cover letter / proposal / Fiverr reply / follow-up from the editable templates',{tags:['opportunity']}),
+  _c('opportunity.draft.edit','PUT','/api/opportunity/:id/draft/:kind','James edits a draft; the edit is what gets used',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.prepare','POST','/api/opportunity/:id/prepare','Open the application in Clear Glass and fill it; stops before submit',{tags:['opportunity','clear-glass']}),
+  _c('opportunity.prepare_reply','POST','/api/opportunity/:id/prepare-reply','Type the approved reply into a Fiverr/Upwork thread; stops before send',{tags:['opportunity','clear-glass']}),
+  _c('opportunity.submit','POST','/api/opportunity/:id/submit','James submits a prepared application (presses the button, checks for confirmation)',{tags:['opportunity','user-only'],permissions:['user']}),
+  _c('opportunity.mark','POST','/api/opportunity/:id/mark','Record a response: RESPONDED / INTERVIEW / OFFER / REJECTED / ARCHIVED',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.answers','GET','/api/opportunity/answers','The answer bank for application questions',{tags:['opportunity']}),
+  _c('opportunity.answers.add','POST','/api/opportunity/answers','James adds an approved answer',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.answers.approve','POST','/api/opportunity/answers/:id/approve','Approve a drafted answer for reuse',{tags:['opportunity','user-only'],permissions:['user']}),
+  _c('opportunity.answers.remove','DELETE','/api/opportunity/answers/:id','Remove an answer',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.templates','GET','/api/opportunity/templates','Drafting templates (editable; placeholders are data)',{tags:['opportunity']}),
+  _c('opportunity.templates.set','PUT','/api/opportunity/templates/:id','Edit a drafting template',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.templates.reset','DELETE','/api/opportunity/templates/:id','Reset a drafting template to its default',{tags:['opportunity'],permissions:['user']}),
+  _c('opportunity.recipes.set','PUT','/api/opportunity/recipes/:host','Per-site selectors: replySelector, submitSelector',{tags:['opportunity']}),
+  _c('context.directory','GET','/api/context/directory','Every memory system and graph: tables, row counts, what each is, which tool reads it',{grammar:['what do you remember','memory directory','where is memory'],tags:['context','memory']}),
+  _c('context.search','GET','/api/context/search','One search across every memory system and graph (?q=&sources=&limit=&repoDir=)',{grammar:['search memory','remember when','find context'],tags:['context','memory']}),
+  _c('context.get','GET','/api/context/get','The whole record behind a context hit (?source=&id=)',{tags:['context','memory']}),
+
   // ── INTROSPECT + RETRY ──────────────────────────────────────────────────
   _c('introspect.examine','POST','/api/introspect',
     'Examine the last answer against REAL signals — reflection score, contract shape, gaps, ledger. Never the model\u2019s own opinion',{
@@ -138,10 +170,34 @@ const components=[
     grammar:['agent limits','what can chatgpt take','agent capability','chunk size'],
     tags:['agents','capability','measured']
   }),
-  _c('agent.calibrate','POST','/api/agents/calibrate',
-    'Binary-search an agent\u2019s real input limit from live probes',{
-    grammar:['calibrate agent','find the limit'],tags:['agents','capability'],permissions:['user']
-  }),
+  // §0.39.271 C1 — NOT SERVED, kept (§0.3). lib/agent-capability.js calibrate() needs a probe(size)
+  // that sends a live prompt of N tokens to the agent; no such probe is wired, and a
+  // guessed one would spend real quota. Limits are measured from real outcomes (record())
+  // and read at GET /api/agents/capability.
+  Object.assign(_c('agent.calibrate','POST','/api/agents/calibrate',
+    'Binary-search an agent\u2019s real input limit from live probes — NOT SERVED: no live probe is wired',{
+    grammar:['calibrate agent','find the limit'],tags:['agents','capability','not-served'],permissions:['user']
+  }),{served:false,notServed:'lib/agent-capability.js calibrate() needs a live probe(size) function; none is wired'}),
+
+  // ── §0.39.271 C1 — served by copilot/server.js, missing from this registry ──
+  // (declared ≠ served both ways: these 16 answered but were not declared; a registry
+  // missing them left their command/capability nodes unwritten).
+  _c('events','GET','/events','Server-sent events for the copilot UI',{tags:['sse']}),
+  _c('agent.suite','GET','/api/agent/suite','The current agent and every hat',{grammar:['agent suite','hats']}),
+  _c('agent.current','GET','/api/agent/current','Which agent copilot is wearing now',{grammar:['current agent']}),
+  _c('agent.switch','POST','/api/agent/switch','Switch the worn agent/hat, then check it is reachable',{grammar:['switch agent','wear hat']}),
+  _c('sessions.get','GET','/api/sessions/:id','One session (404 when unknown)'),
+  _c('context.get','GET','/api/context/:id','The context snapshot copilot would send for a session'),
+  _c('event','POST','/api/event','Add one event to the stream'),
+  _c('bridge.deliver','POST','/bridge/deliver','Delivery from the retired Bridge path — still called'),
+  _c('queue.health','GET','/api/queue/health','Every work queue\'s health'),
+  _c('reword','POST','/api/reword','Reword a text (lib/reword)'),
+  _c('activity','GET','/api/activity','What copilot has been up to (?hours=, ?since=, &text=1)',{grammar:['what have you been up to','activity']}),
+  _c('prompt.resolve','GET','/api/prompt/resolve','Which backend a prompt with no backend would go to'),
+  _c('prompt.tools','POST','/api/prompt/tools','A prompt with the full tool loop (all 109 tools unless a scope is given)',{grammar:['use tools']}),
+  _c('channel','POST','/api/channel','Set the channel on every session'),
+  _c('observe','POST','/api/observe','A UI confusion signal into the user model'),
+  _c('person_model.correct','POST','/api/person-model/correct','Correct a person-model node',{tags:['person-model'],permissions:['user']}),
 
   // ── LEDGER WIRE ─────────────────────────────────────────────────────────
   _c('ledger.stream','GET','/ledger/stream',

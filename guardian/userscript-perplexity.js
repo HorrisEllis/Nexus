@@ -252,7 +252,7 @@ function _getSendBtn() {
 // blind.
 function _nexusGetFullChat() {
   const el = findResponseEl();
-  const text = el ? (el.innerText || el.textContent || '').trim() : '';
+  const text = el ? _replyText(el) : '';
   const messages = text ? [{ role: 'assistant', text }] : [];
   return { provider: PROVIDER, chatId: chatId(), url: location.href, extractedAt: Date.now(), messages, partial: true, note: 'no verified human-turn selector for this provider yet — assistant\'s last response only' };
 }
@@ -398,6 +398,35 @@ function _nexusAnchor(el) {
   }
   return { path: path.join(' > '), tag: el.tagName.toLowerCase(), attrs, textLen: (el.innerText || el.textContent || '').length, children: el.childElementCount };
 }
+// §0.39.267 — James: "guardian isn't capturing the code from chatgpt." innerText is what the page SHOWS: a rendered
+// code block reads "JavaScript\n<code>" with its ``` fences gone, so lib/extract-code.js found no code block and every
+// code chunk failed ("no fenced code block found in the response"). The reply is read with each <pre> put back as a
+// fenced block — language from the code element's class, else the block's header label — the rest stays innerText.
+function _replyText(el) {
+  if (!el) return '';
+  const full = (el.innerText || el.textContent || '');
+  let out = full;
+  try {
+    for (const pre of el.querySelectorAll('pre')) {
+      const codeEl = pre.querySelector('code') || pre;
+      const code = (codeEl.textContent || '').replace(/\n+$/, '');
+      if (!code.trim()) continue;
+      const cls = String(codeEl.className || '') + ' ' + String(pre.className || '');
+      let lang = (cls.match(/(?:language|lang)-([\w+#.-]+)/) || [])[1] || '';
+      const preTxt = (pre.innerText || '').replace(/\n+$/, '');
+      if (!lang) {
+        const first = preTxt.split('\n')[0].trim();
+        if (first && first.length < 24 && !/[;{}()=]/.test(first) && !code.startsWith(first)) lang = first.toLowerCase();
+      }
+      const fenced = '```' + lang + '\n' + code + '\n```';
+      if (preTxt && out.includes(preTxt)) out = out.replace(preTxt, fenced);
+      else if (out.includes(code)) out = out.replace(code, fenced);
+      else out += '\n\n' + fenced;
+    }
+  } catch (_) { return full.trim(); }
+  return out.trim();
+}
+
 function findResponseEl() {
   const answers = document.querySelectorAll('.prose, [data-testid="answer"], .answer-text, .result__content');
   return answers.length ? answers[answers.length - 1] : null;
@@ -653,7 +682,7 @@ function startWatch(jobId, prompt, retryCount = 0) {
   // a completion must be a different element, or different text.
   let _sawNew = false;
   const _baseEl   = findResponseEl();
-  const _baseText = _baseEl ? (_baseEl.innerText || _baseEl.textContent || '').trim() : '';
+  const _baseText = _baseEl ? _replyText(_baseEl) : '';
   const mode = detectSearchMode();
   const maxMs = mode === 'research' ? 600000 : 180000; // 10min research, 3min quick/pro
   let lastText = '', stableCount = 0, _lastChunkLen = 0;
@@ -684,7 +713,7 @@ function startWatch(jobId, prompt, retryCount = 0) {
       }
       _watchTimer = setTimeout(checkStable, 600); return;
     }
-    const text = (el.innerText || el.textContent || '').trim();
+    const text = _replyText(el);
     // Still showing the previous answer: this job has produced nothing yet.
     // §1.2 — after NO_REPLY_MS say so loudly rather than return a stale reply.
     // §WATCH-EVIDENCE 2026-09-23 — the reply WAS on screen and guardian still

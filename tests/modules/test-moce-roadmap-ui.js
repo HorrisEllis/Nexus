@@ -80,7 +80,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   window.eval(fs.readFileSync(path.join(UI, 'js/app.js'), 'utf8') + `
     window.__ui = {
       use(r) { API_BASE = 'http://localhost:4800'; CONNECTED = true; CURRENT_API_REPO = r; API_REPOS = [r]; },
-      open() { setRepoSubtab('roadmap'); },
+      // 0.39.271 — setRepoSubtab('roadmap') now opens Phases; the kept Roadmap renderer is driven directly
+      open() { CURRENT_REPO_SUBTAB = 'roadmap'; document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === 'repo-subtab-roadmap')); renderRepoRoadmap(CURRENT_API_REPO); },
       sub(n) { setRepoSubtab(n); },
       event(ev) { return refreshOnEvent(ev); },
       pick(sel, value) { sel.value = value; return setRoadmapPhaseStatus(sel); },
@@ -92,8 +93,11 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const diskStatus = (dir, file, id) => loom.parsePhasemapText(fs.readFileSync(path.join(dir, file), 'utf8'), 'm').find(p => p.id === id).status;
 
   console.log('\n── structure ────────────────────────────────────────────');
-  await t('a Roadmap nav button and its panel exist; every nav button still has a panel', () => {
-    assert.ok(q('.repo-subtab-btn[data-subtab="roadmap"]') && panel());
+  // §0.39.271 P4 — Roadmap and Phasemap are one "Phases" tab now; the Roadmap panel and its
+  // renderer are kept (what this file exercises), reached by setRepoSubtab('roadmap') → 'phases'.
+  await t('the Phases nav button replaces Roadmap; the Roadmap panel is kept; every nav button still has a panel', () => {
+    assert.ok(q('.repo-subtab-btn[data-subtab="phases"]') && q('#repo-subtab-phases'));
+    assert.ok(!q('.repo-subtab-btn[data-subtab="roadmap"]') && panel());
     for (const b of qa('.repo-subtab-btn')) assert.ok(q(`#repo-subtab-${b.dataset.subtab}`), b.dataset.subtab);
   });
 

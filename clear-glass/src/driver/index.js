@@ -73,6 +73,13 @@ class ClearDriver {
       case 'inject':         return this._inject(agentId, args);
       case 'record.start':   return this._recordStart(agentId, args);
       case 'record.stop':    return this._recordStop(agentId);
+      // 0.39.259 — what an agent needs to fill a real form without writing its own script each time.
+      case 'readPage':       return this._readPage(agentId, args);
+      case 'select':         return this._select(agentId, args);
+      case 'check':          return this._check(agentId, args);
+      case 'setValue':       return this._setValue(agentId, args);
+      case 'pressKey':       return this._pressKey(agentId, args);
+      case 'upload':         return this._upload(agentId, args);
       default:
         throw new Error(`Unknown driver action: ${action}`);
     }
@@ -599,6 +606,121 @@ class ClearDriver {
     const recording = await this._evalJs(wc, '(() => { const r = window.__cgRecording || []; window.__cgRecording = null; return r; })()');
     this.sse.emit('driver.recording', { agentId, recording, ts: Date.now() });
     return { recording };
+  }
+
+  // ── 0.39.259 — read the page, and the form actions typing alone could not do ─────────────────────────────────
+  // readPage: clear-glass/src/page/reader.js — url, title, budgeted text, headings, links, every field with its label
+  // and a selector these actions accept, every button. One eval, one shape.
+  async _readPage(agentId, { maxText, maxLinks, maxFields, maxButtons } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    const reader = require('../page/reader');
+    const opts = Object.fromEntries(Object.entries({ maxText, maxLinks, maxFields, maxButtons }).filter(([, v]) => typeof v === 'number'));
+    const raw = await this._evalJs(wc, reader.pageScript(opts));
+    return reader.normalize(raw, opts);
+  }
+
+  // select: a <select> cannot be typed into reliably (typing jumps between options by first letter). Sets the option
+  // whose value OR visible text matches, then fires input+change so the page's own framework sees it.
+  async _select(agentId, { selector, value, text } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!selector) throw new Error('select requires selector');
+    if (value === undefined && text === undefined) throw new Error('select requires value or text');
+    const r = await this._evalJs(wc, `(function(){
+      const el = document.querySelector(${JSON.stringify(selector)});
+      if (!el) return { ok:false, error:'element not found' };
+      if (el.tagName !== 'SELECT') return { ok:false, error:'not a <select> (it is <' + el.tagName.toLowerCase() + '>)' };
+      const want = ${JSON.stringify(value === undefined ? null : String(value))}, wantText = ${JSON.stringify(text === undefined ? null : String(text).toLowerCase())};
+      const opt = [...el.options].find(o => (want !== null && o.value === want) || (wantText !== null && o.textContent.trim().toLowerCase() === wantText))
+               || (wantText !== null ? [...el.options].find(o => o.textContent.trim().toLowerCase().includes(wantText)) : null);
+      if (!opt) return { ok:false, error:'no option matches', options:[...el.options].map(o => o.textContent.trim()).slice(0,50) };
+      el.value = opt.value;
+      el.dispatchEvent(new Event('input', { bubbles:true })); el.dispatchEvent(new Event('change', { bubbles:true }));
+      return { ok:true, value: opt.value, text: opt.textContent.trim() };
+    })()`);
+    if (!r || r.ok === false) throw new Error(`select ${selector}: ${(r && r.error) || 'failed'}${r && r.options ? ' — options: ' + r.options.join(' | ') : ''}`);
+    return r;
+  }
+
+  // check: checkbox/radio to a definite state (a click toggles, so clicking an already-checked box unchecks it).
+  async _check(agentId, { selector, checked = true } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!selector) throw new Error('check requires selector');
+    const r = await this._evalJs(wc, `(function(){
+      const el = document.querySelector(${JSON.stringify(selector)});
+      if (!el) return { ok:false, error:'element not found' };
+      const want = ${JSON.stringify(!!checked)};
+      if (el.checked !== want) el.click();
+      if (el.checked !== want) { el.checked = want; el.dispatchEvent(new Event('change', { bubbles:true })); }
+      return { ok: el.checked === want, checked: el.checked };
+    })()`);
+    if (!r || !r.ok) throw new Error(`check ${selector}: ${(r && r.error) || 'state did not change'}`);
+    return r;
+  }
+
+  // setValue: long answers (a cover letter) typed key by key take minutes and trip per-key handlers. Sets the value
+  // through the element's native setter (so React/Vue-controlled inputs register it), then fires input+change.
+  async _setValue(agentId, { selector, value = '' } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!selector) throw new Error('setValue requires selector');
+    const r = await this._evalJs(wc, `(function(){
+      const el = document.querySelector(${JSON.stringify(selector)});
+      if (!el) return { ok:false, error:'element not found' };
+      const v = ${JSON.stringify(String(value))};
+      el.focus && el.focus();
+      if (el.isContentEditable) { el.textContent = v; }
+      else {
+        const proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+        const setter = Object.getOwnPropertyDescriptor(proto, 'value');
+        if (setter && setter.set) setter.set.call(el, v); else el.value = v;
+      }
+      el.dispatchEvent(new Event('input', { bubbles:true })); el.dispatchEvent(new Event('change', { bubbles:true }));
+      el.blur && el.blur();
+      return { ok:true, length: v.length };
+    })()`);
+    if (!r || !r.ok) throw new Error(`setValue ${selector}: ${(r && r.error) || 'failed'}`);
+    return r;
+  }
+
+  async _pressKey(agentId, { key = 'Enter', modifiers = [] } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    wc.sendInputEvent({ type: 'keyDown', keyCode: key, modifiers });
+    if (key.length === 1) wc.sendInputEvent({ type: 'char', keyCode: key, modifiers });
+    wc.sendInputEvent({ type: 'keyUp', keyCode: key, modifiers });
+    return { pressed: key, modifiers };
+  }
+
+  // upload: a file input cannot be filled by typing or by script (browsers forbid setting .value). The one real way
+  // is the DevTools protocol's DOM.setFileInputFiles, reached through webContents.debugger. Paths are on THIS
+  // machine. If another client holds the debugger, attach fails and that is reported, not worked around.
+  async _upload(agentId, { selector, paths } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) throw new Error(`No webcontents for agent: ${agentId}`);
+    if (!selector) throw new Error('upload requires selector');
+    const files = (Array.isArray(paths) ? paths : [paths]).filter(Boolean).map(String);
+    if (!files.length) throw new Error('upload requires paths (one or more files on this machine)');
+    const fs = require('fs');
+    const missing = files.filter(p => !fs.existsSync(p));
+    if (missing.length) throw new Error(`upload: file(s) not found: ${missing.join(', ')}`);
+    const dbg = wc.debugger;
+    let attachedHere = false;
+    if (!dbg.isAttached()) {
+      try { dbg.attach('1.3'); attachedHere = true; }
+      catch (e) { throw new Error(`upload: could not attach the DevTools debugger (${e.message}) — another client may hold it`); }
+    }
+    try {
+      const { root } = await dbg.sendCommand('DOM.getDocument', { depth: 0 });
+      const { nodeId } = await dbg.sendCommand('DOM.querySelector', { nodeId: root.nodeId, selector });
+      if (!nodeId) throw new Error(`upload: element not found: ${selector}`);
+      await dbg.sendCommand('DOM.setFileInputFiles', { nodeId, files });
+      return { ok: true, selector, files };
+    } finally {
+      if (attachedHere) { try { dbg.detach(); } catch (_) {} }
+    }
   }
 
   // ── Internals ──────────────────────────────────────────────────────────

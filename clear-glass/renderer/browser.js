@@ -2680,6 +2680,17 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       // (btn-settings, src/toolbar/commands.js) with its own backing
       // button and click handler, so `cmd.id` above already returns
       // before this switch is ever reached for it — this case was dead.
+      case 'capture-opportunity': {
+        // 0.39.272 — lib/opportunity capture() via copilot; the tab is read by its own agentId, nothing is typed.
+        fetch('http://127.0.0.1:3750/api/opportunity/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ agentId }) })
+          .then(r => r.json())
+          .then(r => {
+            const msg = r.ok ? `${r.created ? 'Captured' : 'Already tracked'}: "${r.title}" — ${r.stage}${r.score !== undefined ? `, score ${r.score}` : ''} (${String(r.id).slice(0, 8)})` : `Capture failed: ${r.error}`;
+            toast(msg, r.ok ? 'success' : 'error', 5000); addMsg('assistant', msg);
+          })
+          .catch(err => { toast(`Capture failed — copilot :3750 unreachable (${err.message})`, 'error', 5000); });
+        break;
+      }
       // §NEW 2026-08-24 — the permanent fix for "toolbar accumulated too
       // many pins over time": restore pinnedToolbarButtons to exactly the
       // backend registry's defaultPinned set, in one action, instead of

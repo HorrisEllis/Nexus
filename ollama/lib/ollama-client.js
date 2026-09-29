@@ -27,8 +27,14 @@ async function checkOllama() {
 // Ollama's real /api/chat (not /api/generate — that endpoint has no
 // tools param) with tools declared. qwen2.5-coder confirmed to support
 // Ollama's native tool-calling before this was built, not assumed.
-function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs) {
-  const body = JSON.stringify({ model, messages, tools: toolSchemas, stream: false });
+function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller = 'ollama-bridge.tools') {
+  // §0.39.266 — num_ctx sized to the conversation + tool schemas; every call recorded (lib/ollama-activity.js)
+  const OA = require('../../lib/ollama-activity.js');
+  const chars = JSON.stringify(messages || []).length + JSON.stringify(toolSchemas || []).length;
+  const ctx = OA.withNumCtx({}, chars);
+  const body = JSON.stringify({ model, messages, tools: toolSchemas, stream: false, options: ctx.options });
+  const t0 = Date.now();
+  const done = (ok, error) => OA.record({ caller, op: 'chat+tools', model, promptChars: chars, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
   return new Promise((resolve, reject) => {
     const u = new URL(`${OLLAMA_HOST}/api/chat`);
     const req = http.request({
@@ -42,27 +48,30 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs) {
         try {
           const parsed = JSON.parse(d);
           const msg = parsed.message || {};
+          done(true);
           resolve({
             text: msg.content || '',
             toolCalls: (msg.tool_calls || []).map(tc => ({
               id: tc.id, name: tc.function?.name, arguments: tc.function?.arguments,
             })),
           });
-        } catch (e) { reject(e); }
+        } catch (e) { done(false, e.message); reject(e); }
       });
     });
-    req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('ollama chat request timeout')); });
+    req.on('error', (e) => { done(false, e.message); reject(e); });
+    req.on('timeout', () => { req.destroy(); done(false, 'timeout'); reject(new Error('ollama chat request timeout')); });
     req.write(body);
     req.end();
   });
 }
 
-function callOllamaRaw(model, prompt, maxTokens, timeoutMs) {
-  const body = JSON.stringify({
-    model, prompt, stream: false,
-    options: { num_predict: maxTokens || 2048, temperature: 0.2 },
-  });
+function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'ollama-bridge.job') {
+  // §0.39.266 — num_ctx sized to the prompt; every call recorded (lib/ollama-activity.js)
+  const OA = require('../../lib/ollama-activity.js');
+  const ctx = OA.withNumCtx({ num_predict: maxTokens || 2048, temperature: 0.2 }, String(prompt || '').length, maxTokens || 2048);
+  const body = JSON.stringify({ model, prompt, stream: false, options: ctx.options });
+  const t0 = Date.now();
+  const done = (ok, error) => OA.record({ caller, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
   return new Promise((resolve, reject) => {
     const u   = new URL(`${OLLAMA_HOST}/api/generate`);
     const req = http.request({
@@ -74,12 +83,12 @@ function callOllamaRaw(model, prompt, maxTokens, timeoutMs) {
       let d = '';
       r.on('data', c => d += c);
       r.on('end', () => {
-        try { resolve(JSON.parse(d).response || ''); }
-        catch (e) { reject(e); }
+        try { const out = JSON.parse(d); if (out.error) { done(false, out.error); return reject(new Error(out.error)); } done(true); resolve(out.response || ''); }
+        catch (e) { done(false, e.message); reject(e); }
       });
     });
-    req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('ollama request timeout')); });
+    req.on('error', (e) => { done(false, e.message); reject(e); });
+    req.on('timeout', () => { req.destroy(); done(false, 'timeout'); reject(new Error('ollama request timeout')); });
     req.end(body);
   });
 }

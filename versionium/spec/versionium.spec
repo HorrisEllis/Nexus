@@ -387,3 +387,8 @@ spec:
         config.VERSION and registry-components V brought from 3.0.0 to
         this version (they had never followed 3.1.0 / 3.2.0).
       versioniumCommitId: null
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# GET /api/versionium/history takes ?branch= and ?n= (with n: the NEWEST n, newest first; without: unchanged).
+# Every repo list now asks for its own branch — the first-200-in-store-order answer hid every repo's new
+# snapshots once 200 repo commits existed in total. Idearium's nexus repo shows all of NEXUS's versions.

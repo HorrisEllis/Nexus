@@ -200,7 +200,7 @@ function createJobStore() {
     return done;
   }
 
-  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax, canonical, reuse, join = true }) {
+  function createJob({ command, provider, prompt, content, source, tools, accountId, agentId, transport, wakeDepth, fileName, syntax, canonical, reuse, join = true, hatInPrompt = null }) {
     const fingerprint = require('./job-retry.js').fingerprint({ provider, agentId, canonical, prompt });
     if (join !== false && provider !== 'ollama') {
       const twin = _twin(fingerprint, { reuse });
@@ -215,7 +215,12 @@ function createJobStore() {
     // §ACK-INJECTION-FIX — computed once at creation, not per-dispatch-
     // retry, so a job's persona stays stable across any real redelivery.
     const repoHat = _repoJobHat(agentId);
-    const hat = repoHat !== undefined ? repoHat : _suggestJobHat(prompt);
+    // §0.39.269 — hatInPrompt: the caller already put this hat's persona in the prompt (idearium's chunk builds wear
+    // the_builder or the repo hat themselves). Guessing a hat from the words would prepend a second persona — the
+    // "[the_builder] You build, bottom-up…" header stacked on top of the same text.
+    const hat = repoHat !== undefined ? repoHat
+      : (typeof hatInPrompt === 'string' && hatInPrompt.trim()) ? { name: hatInPrompt.trim(), personaPrompt: '', toolScope: [], source: 'caller', personaInPrompt: true }
+      : _suggestJobHat(prompt);
     const job = {
       id, command, provider, prompt, content: content || null, source: source || null,
       tools: Array.isArray(tools) ? tools : null,

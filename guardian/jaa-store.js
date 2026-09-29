@@ -104,6 +104,10 @@ class JaaStore {
     this._dirty   = new Set();  // tables needing flush
     this._timers  = new Map();  // table → setTimeout handle
     this._pendingDeletes = new Map(); // table → Set<id> deleted by this process since its last flush
+    // §0.39.266 — table → Set<id> this process inserted/updated since its last flush. Only these are
+    // this process's to write back; a clean row that is gone from disk was deleted by another process
+    // (compaction, a delete elsewhere) and is dropped, not resurrected. See _flush.
+    this._dirtyIds = new Map();
     this._closed  = false;
     // §2026-07-24 — optional selective-load allowlist. See _loadAll(). Omitted
     // = load everything (unchanged behavior). Declared = preload only these;
@@ -150,6 +154,7 @@ class JaaStore {
     const id  = row.id || row.key || _uuid();
     const r   = { ...row, id };
     tbl.set(id, r);
+    this._markDirty(table, id);
     this._schedule(table);
     return r;
   }
@@ -164,6 +169,7 @@ class JaaStore {
         if (existing[keyField] === key) {
           const updated = { ...existing, ...row, id };
           tbl.set(id, updated);
+          this._markDirty(table, id);
           this._schedule(table);
           return updated;
         }
@@ -210,6 +216,7 @@ class JaaStore {
     for (const [id, row] of tbl) {
       if (_matches(row, where)) {
         tbl.set(id, { ...row, ...values });
+        this._markDirty(table, id);
         n++;
       }
     }
@@ -458,6 +465,31 @@ class JaaStore {
    * archived in place, not removed). A consumer relying on real deletes
    * propagating correctly across processes would need more than this.
    */
+  _markDirty(table, id) {
+    let s = this._dirtyIds.get(table);
+    if (!s) { s = new Set(); this._dirtyIds.set(table, s); }
+    s.add(id);
+  }
+
+  /**
+   * _dropDeletedElsewhere(table, diskIds) — §0.39.266. A row this process holds that is neither on disk
+   * nor written by this process since its last flush was deleted by another process. Before this, every
+   * process wrote its whole in-memory view back on each flush, so orchestrator's table-compactor deleted
+   * the same 7,176 event_log rows every 10 minutes and they were back seconds later (event_log 7,176 →
+   * 19,788 in an hour on James's machine). Returns how many were dropped.
+   */
+  _dropDeletedElsewhere(table, diskIds) {
+    const tbl = this._tables.get(table);
+    if (!tbl) return 0;
+    const mine = this._dirtyIds.get(table);
+    let n = 0;
+    for (const id of [...tbl.keys()]) {
+      if (diskIds.has(id) || (mine && mine.has(id))) continue;
+      tbl.delete(id); n++;
+    }
+    return n;
+  }
+
   reloadTable(name) {
     // §FIX 2026-09-20 — James, from a real pasted log: intelligence/routes.js's
     // freshReader() throttles this to at most once per second PER POLLED
@@ -471,20 +503,25 @@ class JaaStore {
     // refresh, not a boot; _loadTable()'s cold-load callers (_loadAll(),
     // _table()'s on-demand branch) still log, since that IS worth knowing
     // once per process.
-    this._loadTable(name, { silent: true });
+    this._loadTable(name, { silent: true, prune: true });
   }
 
-  _loadTable(name, { silent = false } = {}) {
+  _loadTable(name, { silent = false, prune = false } = {}) {
     const file = this._file(name);
     if (!fs.existsSync(file)) return;
     try {
       const rows = JSON.parse(fs.readFileSync(file, 'utf8'));
       const tbl  = this._table(name);
       if (Array.isArray(rows)) {
+        const mine = this._dirtyIds.get(name);
+        const diskIds = new Set();
         for (const row of rows) {
           const id = row.id || row.key || _uuid();
+          diskIds.add(id);
+          if (mine && mine.has(id)) continue;   // an unflushed local write is newer than disk
           tbl.set(id, { ...row, id });
         }
+        if (prune) this._dropDeletedElsewhere(name, diskIds);
         if (!silent) console.log(`[jaa] Loaded ${tbl.size} rows — ${name}`);
       }
     } catch (e) {
@@ -561,12 +598,19 @@ class JaaStore {
         if (fs.existsSync(file)) {
           const onDisk = JSON.parse(fs.readFileSync(file, 'utf8'));
           if (Array.isArray(onDisk)) {
+            const mine = this._dirtyIds.get(table);
+            const diskIds = new Set();
             for (const row of onDisk) {
               const id = row.id || row.key;
               if (id == null) continue;
+              diskIds.add(id);
               if (deletedByMe && deletedByMe.has(id)) continue; // respect this process's own pending delete
-              if (!tbl.has(id)) tbl.set(id, { ...row, id }); // only fill in what THIS process doesn't already know about — do not clobber an in-flight local edit with an older on-disk copy
+              if (mine && mine.has(id)) continue;               // this process's own unflushed write wins
+              tbl.set(id, { ...row, id });                       // §0.39.266 — disk is fresher than a clean in-memory copy
             }
+            // §0.39.266 — and a clean row that is no longer on disk was deleted by another process
+            const dropped = this._dropDeletedElsewhere(table, diskIds);
+            if (dropped && process.env.JAA_DEBUG) console.log(`[jaa] ${table}: dropped ${dropped} row(s) deleted by another process`);
           }
         }
       } catch (e) {
@@ -592,6 +636,7 @@ class JaaStore {
       try {
         fs.writeFileSync(tmpFile, JSON.stringify(rows, null, 0), 'utf8');
         fs.renameSync(tmpFile, file);
+        this._dirtyIds.delete(table);   // §0.39.266 — written; from here disk is the truth for these rows
       } catch (e) {
         console.error(`[jaa] Flush error (${table}): ${e.message}`);
         try { fs.unlinkSync(tmpFile); } catch (_) {} // best-effort cleanup, don't mask the real error

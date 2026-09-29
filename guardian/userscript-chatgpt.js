@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Guardian — ChatGPT v10.0
 // @namespace    nexus.guardian.chatgpt
-// @version      10.11.0
+// @version      10.11.1
 // @description  Guardian v10 — ChatGPT: full feature parity with Claude v10. IndexedDB
 //               kernel, SHA-256 dedup, intelligence injection, SEAM, NEXUS module,
 //               memory/RAID/self-heal hooks, structured output detection, tool intercept.
@@ -27,7 +27,7 @@ const CORTEX_URL  = 'http://127.0.0.1:3748';
 const INTELLIGENCE_URL = 'http://127.0.0.1:3753'; // intelligence is its own sovereign system (moved out of cortex 2026-09-19)
 const ORCH_URL    = 'http://127.0.0.1:9000';
 const PROVIDER    = 'chatgpt';
-const VERSION    = '10.11.0';
+const VERSION    = '10.11.1';
 // §P113: exponential backoff 3s→30s — eliminates SSE flood on disconnect
 const RECONNECT_MIN_MS = 3000;
 const RECONNECT_MAX_MS = 30000;
@@ -527,6 +527,47 @@ function _lastMatch(sel) {
   try { const all = document.querySelectorAll(sel); return all.length ? all[all.length - 1] : null; }
   catch (_) { return null; }   // a bad selector from the map must not break the watch
 }
+// §0.39.267 — James: "guardian isn't capturing the code from chatgpt." innerText is what the page SHOWS: a rendered
+// code block reads "JavaScript\n<code>" with its ``` fences gone, so lib/extract-code.js found no code block and every
+// code chunk failed ("no fenced code block found in the response"). The reply is read with each <pre> put back as a
+// fenced block — language from the code element's class, else the block's header label — the rest stays innerText.
+// §0.39.267 — ChatGPT's A/B preference chooser is open (the chat won't take a new message until one is picked).
+function _pendingChoice() {
+  try {
+    for (const b of document.querySelectorAll('button')) {
+      const t = (b.textContent || '').trim();
+      if (/^I prefer this response$/i.test(t) || /^Response [12] is better$/i.test(t)) return true;
+    }
+    const main = document.querySelector('main');
+    return !!(main && /Which response do you prefer\?/.test(main.innerText || ''));
+  } catch (_) { return false; }
+}
+
+function _replyText(el) {
+  if (!el) return '';
+  const full = (el.innerText || el.textContent || '');
+  let out = full;
+  try {
+    for (const pre of el.querySelectorAll('pre')) {
+      const codeEl = pre.querySelector('code') || pre;
+      const code = (codeEl.textContent || '').replace(/\n+$/, '');
+      if (!code.trim()) continue;
+      const cls = String(codeEl.className || '') + ' ' + String(pre.className || '');
+      let lang = (cls.match(/(?:language|lang)-([\w+#.-]+)/) || [])[1] || '';
+      const preTxt = (pre.innerText || '').replace(/\n+$/, '');
+      if (!lang) {
+        const first = preTxt.split('\n')[0].trim();
+        if (first && first.length < 24 && !/[;{}()=]/.test(first) && !code.startsWith(first)) lang = first.toLowerCase();
+      }
+      const fenced = '```' + lang + '\n' + code + '\n```';
+      if (preTxt && out.includes(preTxt)) out = out.replace(preTxt, fenced);
+      else if (out.includes(code)) out = out.replace(code, fenced);
+      else out += '\n\n' + fenced;
+    }
+  } catch (_) { return full.trim(); }
+  return out.trim();
+}
+
 function findResponseEl() {
   const m = _nexusMap;
   if (m && m.verified && m.verified.resp) { const el = _lastMatch(m.selectors.resp); if (el) return el; }
@@ -669,7 +710,7 @@ function startWatch(jobId, prompt, retryCount = 0) {
   // a completion must be a different element, or different text.
   let _sawNew = false;
   const _baseEl   = findResponseEl();
-  const _baseText = _baseEl ? (_baseEl.innerText || _baseEl.textContent || '').trim() : '';
+  const _baseText = _baseEl ? _replyText(_baseEl) : '';
   setJobBar(true, prompt, jobId);
 
   let lastText = '', stableCount = 0;
@@ -700,7 +741,7 @@ function startWatch(jobId, prompt, retryCount = 0) {
       }
       _watchTimer = setTimeout(checkStable, 600); return;
     }
-    const text = (el.innerText || el.textContent || '').trim();
+    const text = _replyText(el);
     // Still showing the previous answer: this job has produced nothing yet.
     // §1.2 — after NO_REPLY_MS say so loudly rather than return a stale reply.
     // §WATCH-EVIDENCE 2026-09-23 — the reply WAS on screen and guardian still
@@ -972,6 +1013,16 @@ async function handleJob(msg) {
     const toolsHdr = composed ? '' : _buildToolsHeader(scopedTools);
 
     const finalText = toolsHdr + (hatHdr || intelHdr || legacyCtx) + text;
+    // §0.39.267 — ChatGPT's A/B test ("You're giving feedback on a new version of ChatGPT. Which response do you
+    // prefer?") holds the chat until someone picks. A job injected under it sat unsent in the composer (James's
+    // screenshot: the retry waiting in the box). Wait for the pick, say so, and fail with that reason if it never comes.
+    if (_pendingChoice()) {
+      send({ type:'GUARDIAN_PROGRESS', jobId, stage:'waiting-for-choice', how:'ChatGPT is asking which response you prefer — pick one in the tab to continue', chatUrl:location.href, ts:Date.now() });
+      _log('gap', 'Pick a response', `#${String(jobId).slice(0,8)} · ChatGPT A/B choice is open`);
+      const _limit = (typeof NO_REPLY_MS !== 'undefined') ? NO_REPLY_MS : 180000, _t0 = Date.now();
+      while (_pendingChoice() && Date.now() - _t0 < _limit) await new Promise(r => setTimeout(r, 1000));
+      if (_pendingChoice()) throw new Error(`ChatGPT is waiting for a choice between two responses ("Which response do you prefer?") — nothing was sent after ${Math.round((Date.now() - _t0) / 1000)}s`);
+    }
     if (!injectText(finalText, { composed })) throw new Error('Input not found — no contenteditable');
 
     send({ type:'GUARDIAN_DELIVERED', jobId, chatUrl:location.href, account:getAccount(), requestId:jobId });
@@ -1273,7 +1324,8 @@ function _nexusResumeCarriedJob() {
     let turns = 0; try { turns = (_nexusGetFullChat().messages || []).length; } catch (_) {}
     // The chat's earlier turns must be on the page before the job starts: the reply watch and the
     // transcript streamer both count what was there before this job's own turn.
-    if ((!composer || (landed && !turns)) && Date.now() - t0 < 20000) { setTimeout(waitReady, 400); return; }
+    // §0.39.266 — a new chat (msg.newChat) has no earlier turns to wait for
+    if ((!composer || (landed && !turns && !msg.newChat)) && Date.now() - t0 < 20000) { setTimeout(waitReady, 400); return; }
     if (!composer) {
       send({ type:'GUARDIAN_ERROR', jobId:msg.jobId, gate:'resume',
              error:`opened ${st.path} for this job, but no input appeared within 20s`, chatUrl:location.href, account:getAccount() });
@@ -2000,7 +2052,7 @@ function _nexusGetMessages() {
   // it's the actual mechanism, same way data-testid is for claude.ai.
   const all = [...document.querySelectorAll('[data-message-author-role]')];
   for (const el of all) {
-    const text = (el.innerText || el.textContent || '').trim();
+    const text = _replyText(el);
     if (!text || text.length < 5) continue;
     const isHuman = el.getAttribute('data-message-author-role') === 'user';
     msgs.push({ role: isHuman ? 'user' : 'assistant', text: text.slice(0, 2000) });
@@ -2015,7 +2067,7 @@ function _nexusGetFullChat() {
   const all = [...document.querySelectorAll('[data-message-author-role]')];
   const messages = [];
   for (const el of all) {
-    const text = (el.innerText || el.textContent || '').trim();
+    const text = _replyText(el);
     if (!text) continue;
     const isHuman = el.getAttribute('data-message-author-role') === 'user';
     messages.push({ role: isHuman ? 'user' : 'assistant', text });

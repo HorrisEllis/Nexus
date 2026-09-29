@@ -183,8 +183,9 @@ async function run() {
       st.exists === true && st.compartmentId === REPO.compartmentId &&
       st.memory.total >= 1 && st.sessionId === RA.sessionIdFor(REPO.uuid));
     // 0.39.257 — the scope is now enforced for a named backend (copilot's tool loop, allowedTools); not for 'auto'.
-    check('status reports the tool scope (all by default) and that it is enforced exactly when a named backend answers',
-      st.toolScope === 'all' && st.toolScopeEnforced === (RA.getProvider(REPO.uuid) !== 'auto'));
+    // 0.39.266 — 'harness' by default (every tool allowed, five listed)
+    check('status reports the tool scope (harness by default) and that it is enforced exactly when a named backend answers',
+      st.toolScope === 'harness' && st.toolScopeEnforced === (RA.getProvider(REPO.uuid) !== 'auto'));
 
   } finally {
     // ── Cleanup — no pollution, the rule this session already had to enforce ──

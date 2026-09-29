@@ -259,3 +259,9 @@ spec:
     - 'No LLM anywhere in this module.'
     - 'No second copy of source. The graph stores ids and line numbers, never content (§14 atlas constraint, applied one layer down).'
     - 'Not the work surface (§27-28). Assembling the minimum sufficient context an agent receives is the next piece and depends on this one.'
+
+# ── ADDENDUM 2026-09-27 (0.39.273) ───────────────────────────────────────────────────────────────────────
+# Chunk cards (lib/code-intel/cards.js, indexes/cards.json) list what each chunk USES and what uses it, found by name
+# and labelled with their basis (import | same-file | name). They are NOT graph edges and do not change this graph's
+# vocabulary: `calls` / `called_by` stay declared unsupported here, because a by-name reference is not a resolved
+# call. The graph's chunk nodes gain nothing; chunk ids are now derived from the chunk's key (stable across edits).

@@ -112,7 +112,11 @@ export function createWarpChunkDispatch(as, { raid = null, axioms = [], pollTime
     // those working paths for having "no fenced code block", which
     // would be true and also completely wrong to reject on.
     generate: async (provider, record, lastFailure) => {
-      const dispatchOpts = { preferAgent: provider, retryContext: lastFailure || null };
+      // §0.39.267 — the hat and the Ollama model ride on the record, so every provider in the cascade wears the same hat.
+      const dispatchOpts = { preferAgent: provider, retryContext: lastFailure || null, hat: record.hat || null, model: record.model || null,
+        // §0.39.269 — memory and routing ride beside the prompt (not in it, so the cache key is the contract alone)
+        memory: record.memory || '', agentId: record.agentId || null, compartmentId: record.compartmentId || null,
+        repoUuid: record.repoUuid || null, fileName: record.fileName || null, syntax: record.syntax || null };
       const result = await as.buildChunkWithAgent(record.prompt, dispatchOpts);
       if (!result?.ok) throw new Error(result?.error || `${provider} dispatch failed`);
       let text;
@@ -187,6 +191,10 @@ export function createWarpChunkDispatch(as, { raid = null, axioms = [], pollTime
       // this record, since generate() above only sees record, not opts.
       expectCode: !!opts.expectCode,
       allowMultipleFiles: !!opts.allowMultipleFiles,
+      hat: opts.hat || null,       // §0.39.267 — not in the cache key: the same prompt is the same contract, whoever wears it
+      model: opts.model || null,
+      memory: opts.memory || '', agentId: opts.agentId || null, compartmentId: opts.compartmentId || null,
+      repoUuid: opts.repoUuid || null, fileName: opts.fileName || null, syntax: opts.syntax || null,
     };
     try {
       const result = await warpDispatch(record, opts.axioms || axioms);

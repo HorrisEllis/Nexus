@@ -122,6 +122,11 @@ const COMPONENTS = [
   _comp('repo.agent.memory.list',   'GET',   '/api/repos/:uuid/agent/memory',       'What this agent has learned working on the project', { tags: ['agent'] }),
   _comp('repo.agent.memory.record', 'POST',  '/api/repos/:uuid/agent/memory',       "Teach this agent something, and re-compose its live persona", { tags: ['agent'] }),
   _comp('repo.agent.memory.forget', 'DELETE','/api/repos/:uuid/agent/memory/:obs',  'Forget one observation, and drop it from the persona', { tags: ['agent'] }),
+  // 0.39.272 — the context atlas: every memory system and graph behind one search
+  _comp('context.directory',        'GET',   '/api/context/directory',              'Every memory system and graph NEXUS keeps: tables, row counts, what each is, which tool reads it', { tags: ['context','memory'] }),
+  _comp('context.search',           'GET',   '/api/context/search',                 'Search every memory system and graph at once (?q=&sources=&limit=); hits cite source + id', { tags: ['context','memory'] }),
+  _comp('context.get',              'GET',   '/api/context/get',                    'The whole record behind a context hit (?source=&id=)', { tags: ['context','memory'] }),
+  _comp('repo.context.search',      'GET',   '/api/repos/:uuid/context',            "Context search scoped to this repo: its import graph and its agent's learned memory, plus everything else", { tags: ['context','agent'] }),
   _comp('repo.inject.list',        'GET',   '/api/repos/:uuid/injects',               "This compartment's .inject nodes and its inject mode", { tags: ['agent','inject'] }),
   _comp('repo.inject.create',      'POST',  '/api/repos/:uuid/injects',               'Propose (optionally apply) a write of one file into this compartment', { tags: ['agent','inject'] }),
   _comp('repo.inject.get',         'GET',   '/api/repos/:uuid/injects/:id',           'One .inject with the file as it is now', { tags: ['agent','inject'] }),

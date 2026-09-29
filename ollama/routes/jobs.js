@@ -53,6 +53,12 @@ async function handle(req, res, { method, url, pathname }) {
       requestId:   body.requestId   || crypto.randomUUID(),
       sessionId:   body.sessionId   || null,
       intent:      body.intent      || 'ask',
+      // §0.39.269 — who is remembering this exchange (lib/agent-memory.js): the job is recorded to the download
+      // manager under this agent when it completes. record:false opts out (a probe, a throwaway call).
+      agentId:       body.agentId       || null,
+      compartmentId: body.compartmentId || null,
+      repoUuid:      body.repoUuid      || null,
+      record:        body.record !== false,
       status:      'queued',
       queuedAt:    Date.now(),
     };

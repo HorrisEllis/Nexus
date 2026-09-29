@@ -4,7 +4,7 @@
  * UUID: nexus-copilot-context-v2-0000-4000-0000-000000000001
  * Version: 2.0.0
  *
- * Seven sensing layers — from raw events to predictive intent.
+ * Nine sensing layers — from raw events to predictive intent, the browser and the opportunity pipeline (L7-L8 0.39.272).
  * Assembled as a single system snapshot for injection into any model call.
  *
  * Layer 0 — live event bus          (SSE /events · bus.sample)
@@ -14,6 +14,8 @@
  * Layer 4 — CFR-Ω field state       (coherence · friction · entropy · regime)
  * Layer 5 — memory & artifact graph (chat_log · decisions · artifact names)
  * Layer 6 — predictive intent       (gap patterns · session velocity · Qwen triage)
+ * Layer 7 — Clear Glass browser     (open tabs · url/title · providers · accounts · autofill · macros) 0.39.272
+ * Layer 8 — opportunities           (job/freelance pipeline counts · what waits on James) 0.39.272
  *
  * §1.1 Nothing exists until proven — every layer degrades gracefully
  * §1.2 Nothing silently fails — every layer timeout is logged
@@ -39,6 +41,8 @@ const LAYER_BUDGETS = {
   4: 200,  // CFR field
   5: 280,  // memory + artifacts
   6: 180,  // predictive intent
+  7: 160,  // clear glass browser
+  8: 60,   // opportunities
 };
 
 // ── HTTP helpers ──────────────────────────────────────────────────────────────
@@ -280,6 +284,43 @@ async function _layer5_memory() {
   return lines.join('\n');
 }
 
+// ── Layer 7: Clear Glass — the browser, as it is right now (0.39.272) ────────────────
+// James, 2026-09-27: "i want copilot completely aware of clearglass." Every other layer described NEXUS's services;
+// none said which tabs are open, what page each is on, which accounts and autofill profiles exist, or that the
+// browser is down. One GET to Clear Glass's own /cli/state (ipc/agent-routes.js), which already degrades per source.
+const CG_URL = process.env.CLEARGL_IPC_URL || `http://127.0.0.1:${process.env.CLEARGL_IPC_PORT || 7702}`;
+async function _layer7_clearglass() {
+  const st = await _get(`${CG_URL}/cli/state`, 3500);
+  if (!st || !st.ok) return '  Clear Glass: not reachable on :7702 (not running, or a build older than 0.39.272) — use clearglass.browser.tool action "state" to re-check';
+  const lines = [];
+  const agents = st.agents || [];
+  lines.push(`  tabs (${agents.length}):`);
+  for (const a of agents.slice(0, 8)) lines.push(`    ${a.agentId}${a.background ? ' [bg]' : ''} — ${a.error ? 'unreadable: ' + _trunc(a.error, 8) : (_trunc(a.title || '', 8) || '?') + ' ' + (a.url || '')}`);
+  const prov = Array.isArray(st.providers) ? st.providers : [];
+  if (prov.length) lines.push(`  providers: ${prov.slice(0, 8).map(p => `${p.id || p.providerId || p.name}${p.hosted || p.running ? '●' : '○'}`).join(' ')}`);
+  if ((st.accounts || []).length) lines.push(`  accounts: ${st.accounts.map(a => a.name || a.id).slice(0, 8).join(', ')}`);
+  if ((st.autofillProfiles || []).length) lines.push(`  autofill profiles: ${st.autofillProfiles.map(p => p.name || p.id).slice(0, 6).join(', ')}`);
+  if ((st.macros || []).length) lines.push(`  macros: ${st.macros.slice(0, 10).join(', ')}`);
+  if ((st.blind || []).length) lines.push(`  unreadable: ${st.blind.map(b => b.source).join(', ')}`);
+  lines.push('  act with clearglass.browser.tool (state/read/act/sequence/autofill/questions; channels/invoke = anything the window can do); results come back in the call');
+  if (st.ipcChannels) lines.push(`  ${st.ipcChannels} Clear Glass capabilities reachable by name (clearglass.browser.tool channels)`);
+  try {
+    const L = require('../../lib/cg-learning.js').summary();
+    if (L.observations) lines.push(`  learned: ${L.hosts.length} site(s), ${L.observations} action(s), ${L.hosts.reduce((n, h) => n + h.healed, 0)} healed, ${L.flows} flow(s) — clearglass.learned.tool`);
+  } catch (_) { /* learning store unreadable — the layer still reports the browser */ }
+  return lines.join('\n');
+}
+
+// ── Layer 8: Opportunities — the job/freelance pipeline (0.39.272) ─────────────────
+async function _layer8_opportunity() {
+  try {
+    const s = require('../../lib/opportunity').status();
+    if (!s.total) return '  pipeline empty — no profile or no cycle run yet (nexus.opportunity.tool: profile, then cycle)';
+    const stages = Object.entries(s.byStage).filter(([, n]) => n).map(([k, n]) => `${k} ${n}`).join(' · ');
+    return [`  ${s.total} tracked: ${stages}`, s.needsYou.length ? `  needs James: ${s.needsYou.slice(0, 4).map(x => `${x.stage} "${_trunc(x.title, 6)}"`).join('; ')}` : '  nothing waiting on James'].join('\n');
+  } catch (e) { return `  opportunity pipeline unreadable: ${e.message}`; }
+}
+
 // ── Layer 6: Predictive intent ────────────────────────────────────────────────
 
 async function _layer6_predict(eventBuffer = [], opts = {}) {
@@ -325,7 +366,7 @@ async function _layer6_predict(eventBuffer = [], opts = {}) {
 // ── Master snapshot assembler ─────────────────────────────────────────────────
 
 /**
- * assemble() — gather all 7 layers concurrently, return structured snapshot.
+ * assemble() — gather all 9 layers concurrently, return structured snapshot.
  *
  * @param {object} opts
  *   eventBuffer  — co-pilot's live event ring buffer
@@ -338,7 +379,7 @@ async function assemble(opts = {}) {
   const {
     eventBuffer = [],
     intent      = null,
-    layers      = [0, 1, 2, 3, 4, 5, 6],
+    layers      = [0, 1, 2, 3, 4, 5, 6, 7, 8],
     timeoutMs   = 3000,
   } = opts;
 
@@ -350,6 +391,8 @@ async function assemble(opts = {}) {
     'L4 — CFR-Ω Field State',
     'L5 — Memory & Artifacts',
     'L6 — Predictive Intent',
+    'L7 — Clear Glass Browser',
+    'L8 — Opportunities',
   ];
 
   const runners = [
@@ -360,6 +403,8 @@ async function assemble(opts = {}) {
     () => _layer4_cfr(),
     () => _layer5_memory(),
     () => _layer6_predict(eventBuffer, { intent }),
+    () => _layer7_clearglass(),
+    () => _layer8_opportunity(),
   ];
 
   // Run all layers concurrently with individual timeouts

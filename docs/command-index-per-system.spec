@@ -149,7 +149,8 @@ spec:
           six modules produces the real index.
         file: "ollama/lib/command-index.js (new, aggregator) + each routes/*.js gets a `commands` export (small addition, 6 files)"
         served_at: "GET /commands (new)"
-        status: SPECCED
+        # 0.39.271 — status corrected (was SPECCED): ollama/lib/command-index.js exists and ollama/server.js serves GET /commands.
+        status: DONE
 
       - system: guardian
         dispatch_shape: >
@@ -171,13 +172,15 @@ spec:
           real proof this mechanism catches real drift.
         file: "guardian/lib/command-index-extract.js (new)"
         served_at: "GET /commands (new)"
-        status: SPECCED
+        # 0.39.271 — status corrected (was SPECCED): built and served (guardian/server.js GET /commands); guardian.spec already said DONE.
+        status: DONE
 
       - system: bridge
         dispatch_shape: "16 real inline method checks, same shape as guardian, smaller (bridge/server.js, confirmed by grep)"
         mechanism: "same source-extraction approach as guardian — same mechanism, not a sixth new one, because it is genuinely the same dispatch shape"
         file: "bridge/lib/command-index-extract.js (new — deliberately not shared code with guardian's version until guardian's is proven; see build_order)"
         served_at: "GET /commands (new)"
+        # 0.39.271 — there is no bridge/ directory in the tree; this entry stays for the record (§0.3), not buildable as written.
         status: SPECCED
 
   # ────────────────────────────────────────────────────────────────
@@ -241,3 +244,15 @@ spec:
       file and to build_order's phase number, not a claim that the
       index exists yet. This is the "update the spec models first"
       step; the phases above are what makes each pointer real.
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — the command index is physical nodes ──────
+# James: "i wanted a command index for each system and exactly like gaurdian where all data, commands, etc are
+# physical node types." This spec's indexes were JSON served over HTTP; the node files that later appeared in
+# <sys>/data/nodes/{command,capability,system} came from one uncommitted export (2026-09-12) and drifted.
+# lib/system-nodes.js (docs/system-nodes.spec) now writes, for every system with a registry-components.js or an
+# interaction-contract.json (16 today), one .command node per DECLARED ∪ SERVED route, marked declared and served —
+# SERVED read from this spec's own extractors (guardian, ollama) and idearium's ROUTES table. Regenerated at
+# orchestrator boot and by `node cli/nodes.js sync`; `node cli/nodes.js drift` lists declared-not-served and
+# served-not-declared per system; GET /api/nodes/command on the orchestrator reads them. Phases 2 and 3 above
+# corrected to DONE (both were built); phase 4 (bridge) has no bridge/ directory to build in.
+# Map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec (X1–X4).

@@ -80,8 +80,9 @@ const CODE_EXT = new Set(['.js', '.cjs', '.mjs']);
 // Those are user data, not this system. Excluded by path, not by name (a
 // directory called 'repos' elsewhere is legitimate code). Env overrides are
 // honored so a relocated repo store is still excluded.
-const SKIP_PATHS = new Set(['idearium/repo/repos', 'idearium/data'].concat(
-  [process.env.NEXUS_PROJECT_IMPORT_REPO_DIR, process.env.IDEARIUM_DATA_DIR]
+// 0.39.266 (C3) — components/ is the store of what WARP BUILT (lib/component-store.js), not Nexus source (CI3).
+const SKIP_PATHS = new Set(['idearium/repo/repos', 'idearium/data', 'components'].concat(
+  [process.env.NEXUS_PROJECT_IMPORT_REPO_DIR, process.env.IDEARIUM_DATA_DIR, process.env.NEXUS_COMPONENTS_DIR]
     .filter(Boolean)
     .map(p => path.relative(ROOT, path.resolve(p)).replace(/\\/g, '/'))
     .filter(p => p && !p.startsWith('..') && !path.isAbsolute(p))
@@ -96,6 +97,24 @@ function idFor(rel) {
   let p = rel.replace(/\\/g, '/').replace(/\.(js|cjs|mjs)$/, '');
   p = p.replace(/\/index$/, '');
   return 'nexus.' + p.split('/').filter(Boolean).join('.');
+}
+
+// §0.39.266 — EVENTS. James: "use the component registry as the wiring harness … that way it makes the
+// registry a map and event bus." Until now the registry held only require/import edges (hook types
+// direct/api/callto — no event hooks), so "who hears X?" meant reading code. An event name is a string
+// literal with a '.' or ':' in it (this tree's convention: idearium.repo.chunk.progress, intake:file) —
+// which also keeps Node's own 'data' / 'end' / 'close' out. Emits: emit/broadcast/publish/fire(…) incl.
+// emit(new Event('x')). Listens: .on/.once/.subscribe/.addListener/.listen(…) and SISO gate
+// `signature: 'x'`. Static, like the require edges: an event name built at runtime is not captured.
+const EVENT_NAME = `([a-z][\\w-]*(?:[.:][\\w-]+)+)`;
+const RX_EMIT_EVENT = new RegExp(`\\b(?:emit|broadcast|publish|emitEvent|_emit|fire|dispatchEvent)\\(\\s*(?:new\\s+Event\\(\\s*)?['"]${EVENT_NAME}['"]`, 'g');
+const RX_LISTEN_EVENT = new RegExp(`\\.(?:on|once|subscribe|addListener|listen|onEvent)\\(\\s*['"]${EVENT_NAME}['"]`, 'g');
+const RX_GATE_SIGNATURE = new RegExp(`\\bsignature\\s*[:=]\\s*['"]${EVENT_NAME}['"]`, 'g');
+
+/** eventsOf(strippedSrc) -> { emits:[name], listens:[name] } */
+function eventsOf(src) {
+  const grab = (rxs) => { const out = new Set(); for (const rx of rxs) { rx.lastIndex = 0; let m; while ((m = rx.exec(src)) !== null) out.add(m[1]); } return [...out].sort(); };
+  return { emits: grab([RX_EMIT_EVENT]), listens: grab([RX_LISTEN_EVENT, RX_GATE_SIGNATURE]) };
 }
 
 function stripNonCode(src) {
@@ -203,7 +222,7 @@ function scanTree({ excludePaths = [] } = {}) {
     }
 
     const id = pathToId.get(rel);
-    FILES.push([rel, id, [...deps].filter(d => d !== id).sort()]);
+    FILES.push([rel, id, [...deps].filter(d => d !== id).sort(), eventsOf(src)]);   // §0.39.266 4th: events
   }
 
   return {
@@ -213,6 +232,7 @@ function scanTree({ excludePaths = [] } = {}) {
       excluded: excludePaths.length,
       withEdges: FILES.filter(f => f[2].length > 0).length,
       totalEdges: FILES.reduce((n, f) => n + f[2].length, 0),
+      withEvents: FILES.filter(f => f[3] && (f[3].emits.length || f[3].listens.length)).length,
       dynamicRequiresNotCaptured: dynamicHits,
       unresolvedSpecifiers: unresolved,
       unreadable,
@@ -296,7 +316,65 @@ function mapSource(driver, FILES) {
     }
   }
 
+  // §0.39.266 — event hooks and emit→listen wires. Only an event with BOTH an emitter and a listener in
+  // the scanned tree gets hooks: a hook no wire reaches is what the diagnostic reports as dangling, and
+  // the whole-tree .export flood (§FIXED 2026-08-13 above) is not repeated with 669 emit-only events.
+  // Those still exist — eventMap() gives every file's emits/listens, wired or not.
+  const byEvent = new Map();
+  for (const [, id, , ev] of FILES) {
+    if (!ev) continue;
+    for (const name of ev.emits) { if (!byEvent.has(name)) byEvent.set(name, { e: new Set(), l: new Set() }); byEvent.get(name).e.add(id); }
+    for (const name of ev.listens) { if (!byEvent.has(name)) byEvent.set(name, { e: new Set(), l: new Set() }); byEvent.get(name).l.add(id); }
+  }
+  results.eventHooks = []; results.eventWires = [];
+  for (const [name, { e, l }] of byEvent) {
+    if (!e.size || !l.size) continue;
+    const hook = (id, dir) => {
+      const hid = `${id}.${dir === 'out' ? 'emit' : 'on'}.${name}`;
+      const r = driver.declare('hook', {
+        id: hid, component_id: id, name: `${dir === 'out' ? 'emit' : 'on'} ${name}`, type: 'event', direction: dir,
+        uuid: `nexus-loom-scan-${id}-${dir === 'out' ? 'emit' : 'on'}-${name}-v1-0000-2026-0927-001`,
+      });
+      (r.ok ? results.eventHooks : results.failures).push({ id: hid, r });
+      return hid;
+    };
+    // a file hearing its own event is not a wire between components — and a hook with no wire dangles, so
+    // hooks are declared only for components that are in at least one cross-component pair
+    const pairs = [];
+    for (const from of e) for (const to of l) if (from !== to) pairs.push([from, to]);
+    if (!pairs.length) continue;
+    const hOut = new Map(), hIn = new Map();
+    for (const [from, to] of pairs) {
+      if (!hOut.has(from)) hOut.set(from, hook(from, 'out'));
+      if (!hIn.has(to)) hIn.set(to, hook(to, 'in'));
+    }
+    for (const [from, to] of pairs) {
+      const fh = hOut.get(from), th = hIn.get(to);
+      const r = driver.declare('wire', {
+        id: `source.event.${name}.${from}--${to}`, from_hook_id: fh, to_hook_id: th,
+        intent: `${name}: ${from} emits, ${to} listens`, type: 'event',
+        uuid: `nexus-loom-scan-event-${name}-${from}--${to}-v1-0000-2026-0927-001`,
+      });
+      (r.ok ? results.eventWires : results.failures).push({ event: name, from, to, r });
+    }
+  }
   return results;
 }
 
-module.exports = { scanTree, mapSource, idFor, stripNonCode, ROOT, SKIP_DIRS, SKIP_PATHS, skippedIdPrefixes };
+/**
+ * eventMap(FILES) -> { byFile: { id: {emits, listens} }, byEvent: { name: {emitters:[id], listeners:[id]} } }
+ * §0.39.266 — every event, wired or not: what a component's registry card shows, and what
+ * registry.find('event name') answers.
+ */
+function eventMap(FILES) {
+  const byFile = {}, byEvent = {};
+  for (const [, id, , ev] of FILES) {
+    if (!ev || (!ev.emits.length && !ev.listens.length)) continue;
+    byFile[id] = ev;
+    for (const n of ev.emits) (byEvent[n] = byEvent[n] || { emitters: [], listeners: [] }).emitters.push(id);
+    for (const n of ev.listens) (byEvent[n] = byEvent[n] || { emitters: [], listeners: [] }).listeners.push(id);
+  }
+  return { byFile, byEvent };
+}
+
+module.exports = { scanTree, mapSource, eventMap, eventsOf, idFor, stripNonCode, ROOT, SKIP_DIRS, SKIP_PATHS, skippedIdPrefixes };

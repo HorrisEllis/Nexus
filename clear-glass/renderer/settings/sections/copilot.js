@@ -4,8 +4,8 @@
  *
  * v0.39.227 — split out of sections/system.js. Connections + co-pilot use
  * src/api/settings.js (ApiSettings — now JAA-backed, src/storage/jaa.js).
- * The fallback key is write-only from here: getPublic() never returns it,
- * only hasFallbackKey.
+ * §0.39.274 — no API-key fallback any more: when copilot is down the pane goes to Ollama or
+ * the Guardian agent directly (src/copilot/bridge.js _ask).
  *
  * §EXPANDED 2026-09-26 — James: "expand the copilot settings… make a
  * clearglass hat for the copilot cli." Now covers every real knob the
@@ -25,7 +25,6 @@
     { value: 'guardian', label: 'guardian — a specific NCP agent' },
   ];
   const AGENTS = ['claude', 'chatgpt', 'gemini', 'perplexity', 'deepseek'];
-  const FALLBACK_MODELS = ['claude-sonnet-5', 'claude-opus-5-5', 'claude-haiku-4-5-20251001', 'claude-sonnet-4-6', 'claude-opus-4-6'];
 
   function num(value, { min, max, step = 1 }) {
     return h('input', { type: 'number', value: String(value), min: String(min), max: String(max), step: String(step) });
@@ -33,7 +32,7 @@
 
   section({
     id: 'copilot', group: 'System', icon: '✦', label: 'Co-pilot',
-    keywords: 'copilot raid routing channel fallback api key model offline hat persona cli backend guardian ollama agent dom context timeout history commands',
+    keywords: 'copilot raid routing channel offline ollama model hat persona cli backend guardian ollama agent dom context timeout history commands',
     blurb: 'Who answers, the Clear Glass hat it wears, what each message carries, and whether proposed actions run on their own. Every choice here is the default — the pane’s CLI can change it per window.',
     async render({ rerender }) {
       const s = await call(() => cg.api.get(), 'settings');
@@ -80,13 +79,9 @@
       const channel = h('input', { type: 'text', value: s.copilotChannel || 'clear-glass' });
       channel.addEventListener('change', () => save({ copilotChannel: channel.value.trim() || 'clear-glass' }, 'Channel saved').catch(onFail));
 
-      // ── fallback ──────────────────────────────────────────────────────
-      const key = h('input', { type: 'password', autocomplete: 'off', placeholder: s.hasFallbackKey ? 'A key is saved — type to replace it' : 'sk-ant-…' });
-      const models = FALLBACK_MODELS.includes(s.fallbackModel) || !s.fallbackModel ? FALLBACK_MODELS : [s.fallbackModel, ...FALLBACK_MODELS];
-      const model = select(models, s.fallbackModel || FALLBACK_MODELS[0]);
-      model.addEventListener('change', () => save({ fallbackModel: model.value }, 'Model saved').catch(onFail));
-      const endpoint = h('input', { type: 'text', value: s.fallbackEndpoint || 'https://api.anthropic.com/v1/messages' });
-      endpoint.addEventListener('change', () => save({ fallbackEndpoint: endpoint.value.trim() || 'https://api.anthropic.com/v1/messages' }, 'Endpoint saved').catch(onFail));
+      // ── when copilot is down (§0.39.274 — no API key; Ollama or Guardian directly) ──
+      const ollamaModel = h('input', { type: 'text', value: s.copilotOllamaModel || '', placeholder: 'default (ollama/config.js)' });
+      ollamaModel.addEventListener('change', () => save({ copilotOllamaModel: ollamaModel.value.trim() }, 'Ollama model saved').catch(onFail));
 
       const help = (window.CGCopilotCLI && window.CGCopilotCLI.HELP) || [];
 
@@ -94,14 +89,14 @@
         pane({ title: 'Route', sub: 'The default for new windows. The pane’s toggle, /backend and /agent change it for one window.', body: [
           h('div', { class: 'grid' }, field('Default backend', backend), agentField),
           h('div', { class: 'flush-rows' },
-            row('Route through NEXUS co-pilot', 'Dual cognition, 7-layer context and every NEXUS tool. Off means fallback-only.', toggle(s.useCortex !== false, (on) => save({ useCortex: on }))),
+            row('Route through NEXUS co-pilot', 'Dual cognition, 7-layer context and every NEXUS tool. Off: straight to Ollama or the Guardian agent.', toggle(s.useCortex !== false, (on) => save({ useCortex: on }))),
             row('RAID routing', 'Picks the provider by task type and health.', toggle(s.raidEnabled !== false, (on) => save({ raidEnabled: on })))),
         ] }),
         pane({ title: 'Clear Glass hat', sub: 'A NEXUS hat (lib/hat-forge): a persona the co-pilot wears for the browser.', body: hatBody }),
         pane({ title: 'Each message carries', flush: true, body: [
           row('Live page DOM', 'The DOM chip in the pane starts on or off with this.', toggle(s.copilotDomContext !== false, (on) => save({ copilotDomContext: on }))),
           row('DOM budget', 'Characters of DOM snapshot per message.', domMax),
-          row('Timeout', 'Seconds before a message gives up and tries the fallback.', timeout),
+          row('Timeout', 'Seconds a backend gets before the pane tries the next one (copilot → Ollama / Guardian).', timeout),
         ] }),
         pane({ title: 'Actions', flush: true, body: [
           row('Run proposed actions on their own', 'Off: the pane lists each ```driver command and runs it only on /run. Every run still takes a rewind snapshot where the action supports it.', toggle(s.copilotAutoRunCommands !== false, (on) => save({ copilotAutoRunCommands: on }))),
@@ -110,11 +105,8 @@
         ] }),
         pane({ title: 'Session', body: h('div', { class: 'grid' }, field('Co-pilot channel', channel, 'Sessions are grouped under this name in NEXUS')) }),
         help.length ? pane({ title: 'CLI', sub: 'Type these in the pane. Tab completes, ↑/↓ walks history.', body: h('pre', { class: 'out', text: help.join('\n') }) }) : null,
-        pane({ title: 'Offline fallback', sub: s.hasFallbackKey ? 'A key is saved.' : 'No key saved — fallback is off.', body: [
-          h('div', { class: 'grid' }, field('Anthropic API key', key), field('Model', model), field('Endpoint', endpoint)),
-          h('div', { style: { marginTop: '10px', display: 'flex', gap: '8px' } },
-            btn('Save key', (e) => busy(e.currentTarget, async () => { if (!key.value.trim()) throw new Error('Paste a key first.'); await save({ fallbackApiKey: key.value.trim() }); toast('Fallback key saved'); rerender(); }), 'primary'),
-            s.hasFallbackKey ? btn('Remove key', (e) => busy(e.currentTarget, async () => { await save({ fallbackApiKey: '' }); toast('Fallback key removed'); rerender(); }), 'danger') : null),
+        pane({ title: 'When the co-pilot service is down', sub: 'The pane answers through Ollama or a Guardian agent directly — guardian first when the route is guardian, Ollama first otherwise. No API key, no external API.', body: [
+          h('div', { class: 'grid' }, field('Ollama model', ollamaModel, 'Empty = NEXUS\'s default model')),
         ] }),
       ].filter(Boolean);
     },

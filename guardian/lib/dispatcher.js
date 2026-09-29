@@ -510,6 +510,8 @@ function createDispatcher(deps) {
       tools: job.tools || null,
       hat: job.hat || null,
       resumeChatUrl,
+      // §0.39.266 — the agent has no chat of its own yet: the tab opens a new one (and does not wait for earlier turns)
+      newChat: !!(resumeChatUrl && require('./chat-transcripts.js').isNewChatUrl(resumeChatUrl)),
     };
     const sent = ncp.pushActive(job.provider, payload);
     const via = job.agentId ? `the ${job.provider} tab, for ${job.agentId}` : `the ${job.provider} tab`;

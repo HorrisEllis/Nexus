@@ -54,12 +54,21 @@ async function listModels() {
 // generation, the request hangs indefinitely with the same dead silence.
 // Both are now real, named errors instead of an indefinite hang.
 function streamGenerate(opts, onToken, onDone, onError) {
-  const fail = (msg) => { if (onError) onError(new Error(msg)); else console.error(new Error(msg)); };
+  // §0.39.266 — num_ctx sized to system + prompt; the call recorded (lib/ollama-activity.js) on done and on failure
+  const OA = require('../lib/ollama-activity.js');
+  const _system = opts.system || 'You are an expert Emerge language assistant. Emerge is a signal-processing specification language. Respond concisely in Emerge grammar where possible.';
+  const _chars = _system.length + String(opts.prompt || '').length;
+  const _ctx = OA.withNumCtx({ temperature: opts.temperature??0.2, num_predict: opts.max_tokens??2048 }, _chars, opts.max_tokens??2048);
+  const _t0 = Date.now();
+  let _recorded = false;
+  const _rec = (ok, error) => { if (_recorded) return; _recorded = true; OA.record({ caller: opts.caller || 'ollama-runtime.stream', op: 'stream', model: opts.model, promptChars: _chars, numCtx: _ctx.numCtx, ms: Date.now() - _t0, ok, error, warning: _ctx.warning }); };
+  const _onDone = onDone; onDone = (...a) => { _rec(true); if (_onDone) return _onDone(...a); };
+  const fail = (msg) => { _rec(false, msg); if (onError) onError(new Error(msg)); else console.error(new Error(msg)); };
 
   const body = JSON.stringify({
     model: opts.model, prompt: opts.prompt, stream: true,
-    system: opts.system || 'You are an expert Emerge language assistant. Emerge is a signal-processing specification language. Respond concisely in Emerge grammar where possible.',
-    options: { temperature: opts.temperature??0.2, num_predict: opts.max_tokens??2048 },
+    system: _system,
+    options: _ctx.options,
   });
   const url = new URL(`${ENDPOINT}/api/generate`);
   const req = http.request({

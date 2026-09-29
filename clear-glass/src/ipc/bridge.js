@@ -13,6 +13,8 @@
 const http    = require('http');
 const express = require('../../../lib/micro-http.js');   // §0.39.261 — in-house express subset (lib/micro-http.js), was express
 const { ipcMain, session, Notification } = require('electron');
+// 0.39.272 — record every ipcMain.handle channel as it is registered, so /cli/invoke reaches the same handler (ipc/handler-registry.js)
+require('./handler-registry').install(ipcMain);
 const { emit, on, Event, getBus } = require('../core/bus');
 const { randomUUID: uuidv4 } = require('crypto'); // §BUGFIX 2026-08-23 — the real 'uuid' npm package was never installed (checked node_modules and package.json directly); this crashed every real file that required it, including boot-critical ones. Node's own built-in produces the identical UUID format, zero dependency.
 const { detectFields: _autofillDetect, fillFields: _autofillFill } = require('../autofill/matcher.js');
@@ -424,6 +426,17 @@ class IpcBridge {
     // directly (not just the on-disk copy) so a caller always gets the
     // truly-current set without needing filesystem access.
     this.app.get('/cli/commands', (req, res) => res.json(this._buildCommandIndex()));
+
+    // 0.39.272 — the synchronous agent surface: POST /cli/driver (the driver's result in the response, not on SSE),
+    // POST /cli/page/read, GET /cli/state, and GET/POST /cli/invoke (every IPC channel by name, same handler).
+    // See ipc/agent-routes.js and ipc/handler-registry.js for why each exists.
+    require('./agent-routes').install(this.app, {
+      driver: this.driver, providerHost: this.providerHost, options: this.options, autofillStore: this.autofillStore,
+      macroTool: this.macroTool, userscripts: this.userscripts, downloads: this.downloads, ctxMgr: this.ctxMgr, mesh: this.mesh,
+      webExtensions: this.webExtensions || null, handlers: require('./handler-registry'),
+      listAgents: () => require('../main/index').listOpenAgents?.() || { windows: [], bgTabs: [] },
+      listBgTabs: () => require('../main/index').listBackgroundTabs?.() || [],
+    });
 
     // §CLI-COMMANDS 2026-08-30, continued — James: "cli commands." Real,
     // genuinely uncovered write/action operations, each reviewed for

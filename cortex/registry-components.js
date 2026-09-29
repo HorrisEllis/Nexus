@@ -48,7 +48,9 @@ module.exports = [
   _c('snapshot.create',       'POST', '/api/snapshots/create',         'Create snapshot', {tags:['snapshot']}),
   _c('snapshot.rollback',     'POST', '/api/snapshots/rollback',       'Rollback to snapshot', {tags:['snapshot']}),
   // ── Versionium ─────────────────────────────────────────────────────────
-  _c('versionium.log',        'GET',  '/api/versionium/log',           'Version commit log'),
+  // §0.39.271 V1 — kept, not deleted (§0.3): cortex answers this with "moved to versionium
+  // :3754" since §VS1. The list lives at versionium GET /api/versionium/history.
+  _c('versionium.log',        'GET',  '/api/versionium/log',           'MOVED to versionium :3754 GET /api/versionium/history — cortex answers with a moved notice'),
   // ── Chat log ───────────────────────────────────────────────────────────
   _c('chat.log',              'GET',  '/api/chat-log',                 'Co-pilot conversation log'),
   // ── Search ─────────────────────────────────────────────────────────────

@@ -174,7 +174,7 @@ function _attemptLevel3(gapType, gapUuid) {
 // the synchronous failure_modes write below so a slow/unavailable causal
 // field can never delay the one thing that must never be lost (§0.3).
 async function _gatherFailureContext(gapType, gapUuid) {
-  const ctx = { gapType, gapUuid, root: null, conditions: [], siblingDanglingHooks: [], file: null, dir: null, system: null, detail: null, expected: null };
+  const ctx = { gapType, gapUuid, root: null, conditions: [], siblingDanglingHooks: [], file: null, dir: null, system: null, detail: null, expected: null, anchor: null };
   let gapRow = null;
   try {
     const gapField = require('../../lib/gap-field');
@@ -184,6 +184,13 @@ async function _gatherFailureContext(gapType, gapUuid) {
       ctx.file = gapRow.file || gapRow.modulePath || null;
       ctx.dir = ctx.file ? require('path').dirname(ctx.file) : null;
       ctx.detail = gapRow.body || gapRow.detail || null;
+      // §C1 (I9) — the anchor is ONLY the explicit pair C0 wrote onto the gap:
+      // meta.ledgerSystem + causedBy (a ledger entry uuid). Never derived from
+      // gap.source (C0 sets that to 'cfr.ledger.<system>', not a system id),
+      // timestamps, labels or types. No pair = anchor stays null.
+      const _ls = gapRow.meta && gapRow.meta.ledgerSystem;
+      const _cb = gapRow.causedBy || (gapRow.meta && gapRow.meta.causedBy) || null;
+      if (_ls && _cb) ctx.anchor = { ledgerSystem: _ls, entryUuid: _cb };
     }
     const why = await gapField.explainWhy(gapUuid, {});
     if (why?.ok && why.why?.available) {

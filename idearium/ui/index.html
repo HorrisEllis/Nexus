@@ -398,6 +398,98 @@ body{display:flex;flex-direction:column;position:relative}
 .repo-wrap.repo-open .repo-rail{display:none}
 .repo-detail-body{display:flex;flex-direction:column;overflow:hidden}
 .repo-subnav{display:flex;gap:4px;padding:8px 10px;border-bottom:1px solid var(--b0);flex-shrink:0}
+/* ── §0.39.271 S2 — living spec (js/living-spec.js) ── */
+.ls-wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:12px;align-items:start;margin-bottom:10px}
+.ls-files{display:flex;flex-direction:column;gap:3px;position:sticky;top:0;max-height:calc(100vh - 230px);overflow:auto}
+.ls-file{font-family:var(--mono);font-size:10.5px;color:var(--text2);padding:6px 8px;border:1px solid transparent;border-radius:6px;cursor:pointer;word-break:break-all}
+.ls-file:hover{border-color:var(--b1);color:var(--text)}
+.ls-file.on{border-color:var(--sky);color:var(--sky);background:rgba(56,189,248,.07)}
+.ls-file small{display:block;color:var(--text3);font-size:9px;margin-top:2px}
+.ls-head{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.ls-name{font-family:var(--mono);font-size:14px;color:var(--text)}
+.ls-kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:3px 10px;font-family:var(--mono);font-size:10.5px}
+.ls-kv>div:nth-child(odd){color:var(--text3)}
+.ls-kv>div:nth-child(even){color:var(--text2);white-space:pre-wrap;word-break:break-word}
+.ls-tabs{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0}
+.ls-tab{background:none;border:1px solid var(--b1);color:var(--text3);font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:10px;cursor:pointer}
+.ls-tab.on{color:var(--sky);border-color:var(--sky)}
+.ls-sec{border:1px solid var(--b0);border-radius:7px;margin-bottom:6px;background:rgba(15,21,32,.5)}
+.ls-sec>summary{font-family:var(--mono);font-size:11px;color:var(--text);padding:7px 10px;cursor:pointer}
+.ls-sec>summary span{color:var(--text3);margin-left:8px;font-size:9.5px}
+.ls-tree{font-family:var(--mono);font-size:10.5px;color:var(--text2);padding:4px 12px 10px;line-height:1.55}
+.ls-tree .k{color:var(--sky2)}.ls-tree .n{color:var(--amber)}.ls-tree .s{color:var(--text2);white-space:pre-wrap}
+.ls-tree .i{padding-left:14px;border-left:1px solid var(--b0)}
+.ls-ver{display:grid;grid-template-columns:90px minmax(0,1fr);gap:4px 10px;font-family:var(--mono);font-size:10.5px;padding:6px 0;border-bottom:1px solid var(--b0)}
+.ls-ver b{color:var(--mint);font-weight:500}
+.ls-raw{white-space:pre;overflow:auto;max-height:70vh;font-family:var(--mono);font-size:10.5px;color:var(--text2);background:var(--b0);padding:10px;border-radius:6px}
+.ls-err{font-family:var(--mono);font-size:10.5px;color:var(--amber);margin:4px 0}
+@media (max-width:1000px){.ls-wrap{grid-template-columns:1fr}.ls-files{position:static;max-height:none;flex-direction:row;flex-wrap:wrap}}
+/* ── §0.39.271 P4 — Phases manager (js/phases.js) ── */
+#repo-subtab-phases{overflow:auto}
+.ph-wrap{display:flex;flex-direction:column;gap:10px;padding:2px}
+.ph-head{display:flex;flex-direction:column;gap:6px}
+.ph-title{font-family:var(--mono);font-size:12px;color:var(--text);letter-spacing:.04em}
+.ph-title span{color:var(--text3);margin-left:8px;font-size:10.5px}
+.ph-bar{height:5px;background:var(--b0);border-radius:3px;overflow:hidden}.ph-bar>div{height:100%;background:linear-gradient(90deg,var(--mint),var(--sky))}
+.ph-bar.small{height:3px;margin:6px 0}
+.ph-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ph-chip{font-family:var(--mono);font-size:10px;border:1px solid var(--b1);border-radius:10px;padding:2px 8px;color:var(--text2)}
+.ph-chip b{font-weight:600;margin-left:3px}
+.ph-via{font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-left:auto}
+.ph-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--mono);font-size:10.5px;color:var(--text2)}
+.ph-tools input[type=text]{flex:1;min-width:180px}
+.ph-tools input[type=text],.ph-tools select,.ph-add input,.ph-add textarea,.ph-add select,.ph-detail select,.ph-detail textarea{background:var(--b0);border:1px solid var(--b1);color:var(--text);font-family:var(--mono);font-size:10.5px;padding:5px 7px;border-radius:5px}
+.ph-views{display:flex;border:1px solid var(--b1);border-radius:6px;overflow:hidden}
+.ph-view{background:none;border:none;color:var(--text3);font-family:var(--mono);font-size:10.5px;padding:5px 10px;cursor:pointer}
+.ph-view.on{background:rgba(56,189,248,.12);color:var(--sky)}
+.ph-main{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}
+.ph-main.with-detail{grid-template-columns:minmax(0,1fr) 360px}
+.ph-board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ph-col{background:rgba(15,21,32,.55);border:1px solid var(--b0);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:6px;min-height:80px}
+.ph-col-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 4px}
+.ph-col-head span{color:var(--text3);margin-left:4px}
+.ph-card,.ph-mapcard{background:var(--bg2);border:1px solid var(--b0);border-radius:7px;padding:7px 8px;cursor:pointer;transition:border-color .12s}
+.ph-card:hover,.ph-mapcard:hover{border-color:var(--b2)}
+.ph-card.open{border-color:var(--sky);box-shadow:0 0 0 1px rgba(56,189,248,.25)}
+.ph-card-top{display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:10px}
+.ph-key{font-family:var(--mono);font-weight:600}
+.ph-map{color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
+.ph-card-title{font-size:11.5px;color:var(--text);margin:4px 0;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ph-card-foot{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
+.ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
+.ph-maps{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.ph-mappath{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px;word-break:break-all}
+.ph-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:10.5px}
+.ph-table th{text-align:left;color:var(--text3);font-weight:500;padding:5px 6px;border-bottom:1px solid var(--b1);cursor:pointer;white-space:nowrap;position:sticky;top:0;background:var(--bg1)}
+.ph-table td{padding:5px 6px;border-bottom:1px solid var(--b0);color:var(--text2);vertical-align:top}
+.ph-table tr{cursor:pointer}.ph-table tr:hover td,.ph-table tr.open td{background:var(--b0)}
+.ph-empty{font-family:var(--mono);font-size:10px;color:var(--text3);padding:4px}
+.ph-count{font-family:var(--mono);font-size:9.5px;color:var(--text3);margin:6px 2px}
+.ph-detail{position:sticky;top:0;background:var(--bg2);border:1px solid var(--b1);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:7px;max-height:calc(100vh - 220px);overflow:auto}
+.ph-d-head{display:flex;justify-content:space-between;align-items:center}
+.ph-x{background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer}
+.ph-d-title{font-size:13px;color:var(--text);line-height:1.4}
+.ph-d-meta{font-family:var(--mono);font-size:9.5px;color:var(--text3);word-break:break-all}
+.ph-d-row{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;color:var(--text2)}
+.ph-d-row>label{color:var(--text3);min-width:74px}
+.ph-files code,.ph-run code{font-size:9.5px;background:var(--b0);padding:1px 4px;border-radius:3px;word-break:break-all}
+.ph-link{cursor:pointer;text-decoration:underline dotted}
+.ph-d-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);border-top:1px solid var(--b0);padding-top:7px;margin-top:3px}
+.ph-d-note{font-family:var(--mono);font-size:9.5px;color:var(--text3);line-height:1.6}
+.ph-run{font-family:var(--mono);font-size:10px;color:var(--text2);display:flex;flex-direction:column;gap:4px}
+.ph-run pre{white-space:pre-wrap;max-height:240px;overflow:auto;font-size:9.5px;color:var(--text2);background:var(--b0);padding:6px;border-radius:4px}
+.ph-add{display:flex;flex-direction:column;gap:6px}
+@media (max-width:1100px){.ph-board{grid-template-columns:repeat(2,minmax(0,1fr))}.ph-main.with-detail{grid-template-columns:1fr}.ph-detail{position:static;max-height:none}}
+/* §0.39.271 N1 — Create/Build live in the repo's own tab row; the nest-ctx bar leads back from their views */
+.repo-subnav-sep{width:1px;background:var(--b1);margin:4px 6px;align-self:stretch}
+.repo-subnav .tab-group-inrepo .tab-dropdown{top:calc(100% + 2px);border-top:1px solid var(--b1);border-radius:8px}
+.repo-subgroup-btn{background:none;border:1px solid transparent;color:var(--text3);font-family:var(--mono);font-size:11px;letter-spacing:.03em;padding:6px 13px;border-radius:5px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.repo-subgroup-btn:hover{color:var(--text)}
+.repo-subnav .tab-group-btn.active{color:var(--sky);border-color:var(--b1);background:rgba(56,189,248,.07)}
+#nest-ctx{display:none;align-items:center;gap:10px;padding:6px 14px;border-bottom:1px solid var(--b0);font-family:var(--mono);font-size:11px;color:var(--text3);background:var(--bg2)}
+#nest-ctx.show{display:flex}
+#nest-ctx button{background:none;border:1px solid var(--b1);color:var(--text2);font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:5px;cursor:pointer}
+#nest-ctx button:hover{color:var(--text);border-color:var(--sky)}
 .repo-subtab-btn{background:none;border:1px solid transparent;color:var(--text3);font-family:var(--mono);font-size:11px;letter-spacing:.03em;padding:6px 13px;border-radius:5px;cursor:pointer;transition:all .15s}
 .repo-subtab-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .repo-subtab-btn.active{color:var(--text);background:var(--b0);border-color:var(--b1)}
@@ -708,13 +800,6 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
   <nav class="tabbar" id="tabbar">
     <button class="tab-btn active" data-view="welcome" onclick="setView('welcome')"><span class="tab-icon">⌂</span>Welcome</button>
 
-    <div class="tab-group nest-only" data-group="create">
-      <button class="tab-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
-      <div class="tab-dropdown">
-        <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
-        <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
-      </div>
-    </div>
 
     <!-- §0.39.263 — James: "should not be a compartments tab, repos are compartments."
          The Compartment tab (main's 0.39.262) is gone: an idea worked in the four
@@ -732,14 +817,11 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
          a repo is adopted into one at boot (_reconcileSpecRepos in
          api/index.js). The read-only blueprint viewer stays a per-repo
          Architect subtab. -->
-    <div class="tab-group nest-only" data-group="build">
-      <button class="tab-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
-      <div class="tab-dropdown">
-        <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
-        <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
-        <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
-      </div>
-    </div>
+    <!-- §0.39.271 N1 — James: "its like there are two ideariums or something. like it only has
+         those options, and then when i clikc on the repos it shows all 4 tabs at the top."
+         Create and Build still belong only to a repo (0.39.264), but they no longer appear in
+         THIS bar when a repo opens: they are the last two entries of the open repo's own tab
+         row (#repo-subnav). This bar is always Welcome + Repos. -->
 
     <button class="tab-btn" data-view="repo" onclick="setView('repo')"><span class="tab-icon">🗂</span>Repos<span class="tab-badge" id="repo-count-badge"></span></button>
 
@@ -749,6 +831,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
   <aside class="tab-tree" id="tab-tree"></aside>
 
   <main class="view-area">
+    <div id="nest-ctx"><button onclick="backToRepo()">← back to the repo</button><span id="nest-ctx-text"></span></div>
 
     <!-- ══════════ WELCOME ══════════ -->
     <section class="view active" id="view-welcome">
@@ -876,14 +959,14 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
     <section class="view" id="view-eravos">
       <!-- 0.39.263 — eravos's UI is served at /ui/eravos/ (was ../../eravos/ui/index.html → /eravos/ui/index.html, a 404
            under the orchestrator and on idearium's own :4800). Standalone, app.js points it at the orchestrator's /ui/eravos/. -->
-      <iframe class="system-frame" id="eravos-frame" src="../eravos/" title="Eravos"></iframe>
+      <iframe class="system-frame" id="eravos-frame" src="about:blank" data-src="../eravos/" title="Eravos"></iframe>
     </section>
 
     <!-- ══════════ ARCHITECT BUILD UI (architect/'s own build surface — distinct
          from the "Architect" blueprint viewer under Build, which reads
          compiled-spec output; this is the architect system's own real UI) ══════════ -->
     <section class="view" id="view-architect-build">
-      <iframe class="system-frame" id="architect-frame" src="../architect/arch-builder.html" title="Architect Build"></iframe>
+      <iframe class="system-frame" id="architect-frame" src="about:blank" data-src="../architect/arch-builder.html" title="Architect Build"></iframe>
     </section>
 
     <!-- ══════════ REPOSITORY LIBRARY / FILE BROWSER / IDE ══════════ -->
@@ -941,16 +1024,35 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn active" data-subtab="home" onclick="setRepoSubtab('home')">Home</button>
             <button class="repo-subtab-btn" data-subtab="idea" onclick="setRepoSubtab('idea')">Idea</button>
             <button class="repo-subtab-btn" data-subtab="files" onclick="setRepoSubtab('files')">Files</button>
+            <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="search the code by meaning, read any chunk's card (0.39.273)">Code</button>
             <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>
             <button class="repo-subtab-btn" data-subtab="spec" onclick="setRepoSubtab('spec')">Spec</button>
-            <button class="repo-subtab-btn" data-subtab="phasemap" onclick="setRepoSubtab('phasemap')">Phasemap</button>
-            <button class="repo-subtab-btn" data-subtab="roadmap" onclick="setRepoSubtab('roadmap')">Roadmap</button>
+            <!-- §0.39.271 P4 — James: "i want the roadmap and phases combined into a fully enterprise
+                 grade manager." Phasemap + Roadmap are one tab. Their panels stay below (renderers
+                 kept); Phasemap's verification/graphs now show in Intelligence. -->
+            <button class="repo-subtab-btn" data-subtab="phases" onclick="setRepoSubtab('phases')">Phases</button>
             <button class="repo-subtab-btn" data-subtab="intelligence" onclick="setRepoSubtab('intelligence')">Intelligence</button>
             <button class="repo-subtab-btn" data-subtab="agent" onclick="setRepoSubtab('agent')">Agent</button>
             <button class="repo-subtab-btn" data-subtab="debug" onclick="setRepoSubtab('debug')">Debug</button>
             <button class="repo-subtab-btn" data-subtab="versionium" onclick="setRepoSubtab('versionium')">Versionium</button>
             <button class="repo-subtab-btn" data-subtab="git" onclick="setRepoSubtab('git')">Sync &amp; CI</button>
             <button class="repo-subtab-btn" data-subtab="settings" onclick="setRepoSubtab('settings')">Settings</button>
+            <span class="repo-subnav-sep" title="this repo's canvases — they open as views of their own"></span>
+          <div class="tab-group tab-group-inrepo" data-group="create">
+            <button class="repo-subgroup-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
+            <div class="tab-dropdown">
+              <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
+              <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
+            </div>
+          </div>
+          <div class="tab-group tab-group-inrepo" data-group="build">
+            <button class="repo-subgroup-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+            <div class="tab-dropdown">
+              <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
+              <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
+              <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
+            </div>
+          </div>
           </nav>
 
           <!-- HOME — the repo's own README/.spec, or basic identity if neither exists -->
@@ -978,6 +1080,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
           <!-- ARCHITECT — this repo's blueprint: its own spec-engine spec,
                chunk by chunk. Same renderer the old global Build > Architect
                view used, scoped to one repo via repo.specUuid. -->
+          <div class="repo-subtab-panel" id="repo-subtab-code"></div>
           <div class="repo-subtab-panel" id="repo-subtab-architect">
             <div class="detail-empty">← select a repo</div>
           </div>
@@ -989,14 +1092,27 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
                renderSpecBuilder()/renderSpecEngineBuilder() caller keeps working.
                renderRepoSpec() toggles the two children — it must never replace
                this panel's innerHTML, or #spec-builder disappears. -->
+          <!-- SPEC — §0.39.271 S2, James: "the spec tab is for the .spec in the spec folder, the
+               living model." The living spec comes first (GET /api/repos/:uuid/living-spec,
+               js/living-spec.js); the spec-engine chunk builder that was this tab is kept below it
+               as the build manifest. -->
           <div class="repo-subtab-panel" id="repo-subtab-spec">
-            <div class="detail-empty" id="repo-spec-empty">← select a repo</div>
-            <div class="spec-builder" id="spec-builder" style="display:none"></div>
+            <div id="repo-living-spec"></div>
+            <details class="ds" id="repo-build-manifest">
+              <summary class="ds-label" style="cursor:pointer">build manifest — the spec-engine chunks this repo is built from</summary>
+              <div class="detail-empty" id="repo-spec-empty">← select a repo</div>
+              <div class="spec-builder" id="spec-builder" style="display:none"></div>
+            </details>
           </div>
 
           <!-- PHASEMAP — real data: MCO2's verification tiers (L0-L8,
                merged sync+lazy) and MCO1's dependency graph summary.
                GET /api/repos/:uuid/verification, GET .../graph. -->
+          <!-- PHASES — every phasemap of this repo (a nexus repo: of NEXUS) as one manager:
+               summary, map cards, Board / Layers / Table, a detail pane, status, add, build
+               (Versionium snapshot first, then the repo's agent). GET /api/repos/:uuid/phases,
+               POST .../phases/{status,add,build}. js/app.js §PHASES. -->
+          <div class="repo-subtab-panel" id="repo-subtab-phases"></div>
           <div class="repo-subtab-panel" id="repo-subtab-phasemap">
             <div class="detail-empty">← select a repo</div>
           </div>
@@ -2129,6 +2245,8 @@ async function saveToIdearium(){
   <div class="modal" style="max-width:900px;width:90vw">
     <div class="modal-title" id="inj-ed-title">inject</div>
     <div id="inj-ed-meta" style="font-size:9px;opacity:.6;margin-bottom:6px"></div>
+    <!-- §0.39.266 — approval prompt for agent code on a Nexus repo: what approving writes into the live tree -->
+    <div id="inj-ed-gate" style="display:none;margin-bottom:6px"></div>
     <textarea id="inj-ed-content" spellcheck="false" style="width:100%;height:46vh;font-family:var(--mono,monospace);font-size:11px;line-height:1.5;tab-size:2;white-space:pre;background:var(--bg2,#0b1220);color:inherit;border:1px solid var(--b1);border-radius:3px;padding:8px;box-sizing:border-box"></textarea>
     <pre id="inj-ed-current" style="display:none;max-height:28vh;overflow:auto;font-size:10px;opacity:.75;border:1px dashed var(--b1);border-radius:3px;padding:8px;margin-top:6px;white-space:pre"></pre>
     <div class="modal-actions">
@@ -2165,5 +2283,7 @@ async function saveToIdearium(){
 <script src="js/compartment.js"></script>
 <script src="js/agent-blocks.js"></script>
 <script src="js/nexus-atlas.js"></script>
+<script src="js/phases.js"></script>
+<script src="js/living-spec.js"></script>
 </body>
 </html>

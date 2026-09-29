@@ -171,7 +171,7 @@ The provider side is the userscripts: `guardian/userscript-chatgpt.js`, `guardia
 
 ### idearium
 
-Where work begins and where this page lives. `idearium/api/index.js` on :4800 serves ideas, brainstorms, specs, repos and their compartments, and `idearium/ui/` is the whole Idearium interface: Welcome, Create (Brainstorm, Ideas), Build (the Eravos organism canvas, the Architect block canvas, the Spec Builder), and Repos, where each repo opens into tabs for its Home, Idea, Files, Agent, Run and Debug. `idearium/ui/js/app.js` is the interface, `idearium/ui/js/nexus-atlas.js` renders this atlas, `idearium/ui/js/compartment.js` draws compartments, and `idearium/ui/js/agent-blocks.js` edits exactly what an agent is sent.
+Where work begins and where this page lives. `idearium/api/index.js` on :4800 serves ideas, brainstorms, specs, repos and their compartments, and `idearium/ui/` is the whole Idearium interface: Welcome and Repos, where each repo opens into 12 tabs: Home, Idea, Files, Architect, Spec (the living spec), Phases (every phasemap as one manager), Intelligence, Agent, Debug, Versionium, Sync & CI and Settings, then Create (Brainstorm, Ideas) and Build (the Eravos organism canvas, the Architect block canvas, the Spec Builder), which belong to the open repo. The Agent tab is the repo's own agent, a hat forged for that one project that answers on Ollama, through copilot or through a browser agent, remembers its work in the Clear Glass download manager, and proposes its code as injects. `idearium/ui/js/app.js` is the interface, `idearium/ui/js/nexus-atlas.js` renders this atlas, `idearium/ui/js/compartment.js` draws compartments, and `idearium/ui/js/agent-blocks.js` edits exactly what an agent is sent.
 
 The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking it into blocks (`idearium/spec-engine/blocks.yaml`), dispatching each chunk to guardian (`idearium/spec-engine/chunk-dispatch.js`), and planning a file tree first when asked. The repo layer in `idearium/repo/` imports, snapshots, watches and graphs repos; `idearium/repo/nexus-self.js` is what makes NEXUS one of them. Its spec is `idearium/spec/idearium.spec`, with the roadmap and graph specs beside it. The next zoom level is `idearium-atlas.md`.
 
@@ -214,6 +214,10 @@ The registry authority. `loom/server.js` on :3752 serves the registry of compone
 ### clear-glass
 
 The sovereign browser: Electron and Chromium, with its own fingerprint control, and the place every provider tab lives. `clear-glass/src/main/index.js` starts it; `clear-glass/src/` holds the browser's subsystems (accounts, cookies, downloads, the DevTools-protocol driver in `clear-glass/src/driver/`, providers, userscripts, site settings), `clear-glass/renderer/` its windows (the browser, Settings, the Library), and `clear-glass/plugins/` its plugins. It serves its control API on port 7704 and streams on 7701. `clear-glass/registry-components.js` is its live contract, the largest in NEXUS, and `clear-glass/spec/clear-glass.spec` was written from that contract rather than from scratch. The next zoom level is `clear-glass-atlas.md`.
+
+### components
+
+The component store: every file WARP builds through Idearium, kept in `components/` as one folder per component version with its dependencies pinned by id and version, and asked before any new build spends a token. `lib/component-store.js` is the store; `idearium/api/index.js` writes to it and reads from it in the build path; agents find stored components with the registry harness in `lib/registry-harness.js`. It has no port and no process of its own, and loom never scans it because it is built output rather than Nexus source. The next zoom level is `components-atlas.md`.
 
 ### core
 
@@ -332,7 +336,7 @@ Runtime state lives in data folders at any depth, never in the snapshot and neve
 Named here so nobody mistakes it for a design (§12.5, §13.4):
 
 - **Two Eravos canvases.** `eravos/ui/` (mods, served by the eravos system) and `ui/eravos/` (organisms, served by the orchestrator and embedded in Idearium) diverged. Both got the same 0.39.264 change; they are still two contracts.
-- **Stale references in older system atlases.** The atlas reference test lists, for each older atlas, the references the tree no longer has; `clear-glass-atlas.md` and `idearium-atlas.md` have the most. The atlases written in 0.39.264 have none.
+- **Stale references in older system atlases.** The atlas reference test lists, for each older atlas, the references the tree no longer has; `clear-glass-atlas.md` has the most. The atlases written in 0.39.264, and `idearium-atlas.md` rewritten in 0.39.270, have none, and the test fails if one appears.
 - **Diagnostic has no spec.** Its atlas says what exists instead.
 - **Two run-all lists.** `tests/modules/run-all.js` and the root `run-all.js` are copies kept in step by hand.
 

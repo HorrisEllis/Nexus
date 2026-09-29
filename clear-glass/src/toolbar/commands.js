@@ -91,6 +91,10 @@ const TOOLBAR_COMMANDS = [
   // (New Agent Window, Move to Background Tab, Maximize / Restore, Mesh Queue,
   // Reset toolbar to defaults) left the palette. The Customize Toolbar
   // dialog's own "Restore Defaults" button still resets the pins.
+  // 0.39.272 — the page James is looking at (a job post, an Upwork gig, a Fiverr buyer message) into the opportunity
+  // pipeline: copilot :3750 POST /api/opportunity/capture reads this tab through /cli/page/read, scores it, and says
+  // where it landed. A palette action (no toolbar button), in the Tools group.
+  { action: 'capture-opportunity', icon: '✚', label: 'Capture job / gig / lead to NEXUS', group: 'Tools' },
 ];
 
 function defaultPinnedIds() {

@@ -835,6 +835,16 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(HTTP_PORT, '127.0.0.1', async () => {
+  // §0.39.271 X2 — Guardian hosts the node types (NODE-TAXONOMY.md): its hats and agents
+  // are regenerated from every forged hat, then its node registry (per-type folder watcher
+  // + _ledger.jsonl + JAA index) starts over guardian/data/nodes. Before this the registry
+  // was never booted and no .hat/.agent node existed. Off the request path; a failure is
+  // logged, never fatal.
+  setTimeout(() => {
+    try { const r = require('../lib/system-nodes.js').sync({ only: ['guardian'] }); console.log(`[guardian] nodes: ${JSON.stringify(r.systems.guardian ? { written: r.systems.guardian.written, commands: r.systems.guardian.commands } : {})} · hats/agents ${r.guardian ? r.guardian.written + ' written, ' + r.guardian.unchanged + ' unchanged' : 'skipped'}${r.errors.length ? ' · ' + r.errors.join('; ') : ''}`); }
+    catch (e) { console.warn(`[guardian] node sync failed (non-fatal): ${e.message}`); }
+    try { require('./lib/node-registry.js').start({}); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
+  }, 3000);
   // Mesh subsystem relocated 2026-09-03 to clear-glass/src/network/
   // (James: "DNS/firewall/crypto/host-rotation/reverse-proxy maybe
   // recycle to clearglass" — moved as one whole unit, see that folder's
@@ -3417,7 +3427,8 @@ function handleExtendedRoutes(req, res, url, method) {
         // §CODE-ARTIFACT 2026-09-19 — the file this job's code belongs in,
         // and the fence language to trust. Both optional: absent means the
         // completion listener captures nothing, exactly as before.
-        fileName: body.fileName, syntax: body.syntax });
+        fileName: body.fileName, syntax: body.syntax,
+        hatInPrompt: typeof body.hatInPrompt === 'string' ? body.hatInPrompt : null });   // §0.39.269 — persona already in the prompt
       dispatchJob(job);
       pRes(res, 200, { ok:true, jobId: job.id, status: job.status, provider });
 

@@ -67,7 +67,10 @@ async function t(name, fn) {
     assert.strictEqual(r.chunks[0].file, 'src/poller.js');
     assert.ok(r.chunks[0].symbols.includes('pollQueue'));
     assert.ok(r.chunks[0].text.includes('a.length + 100'), r.chunks[0].text);
-    assert.ok(/\[src\/poller\.js:\d+-\d+ · pollQueue · runtime proof: none recorded\]/.test(r.block), r.block);
+    // 0.39.273 — the lazy pass (drained above) runs this repo's test under coverage, so the label may already be
+    // "passed"; what matters is that a label is there and names the chunk (was pinned to "none recorded" — stale
+    // since the execution graph went on by default in 0.39.246)
+    assert.ok(/\[src\/poller\.js:\d+-\d+ · pollQueue · runtime proof: (none recorded|passed)\]/.test(r.block), r.block);
   });
   await t('words are matched inside camelCase and snake_case names ("poll queue" finds pollQueue)', () => {
     assert.strictEqual(RC.retrieve({ repoDir: A.dir, message: 'what does the poll queue do' }).chunks[0].file, 'src/poller.js');
@@ -101,7 +104,11 @@ async function t(name, fn) {
     pipeline.runImportPipeline(A.repo, A.dir);
     const r = RC.retrieve({ repoDir: A.dir, message: 'pollQueue' });
     assert.ok(/runtime proof: stale/.test(r.block) || /runtime proof: none recorded/.test(r.block), r.block);
-    assert.ok(!/runtime proof: passed/.test(r.block.split('flushBuffer')[0]), 'a proof vouched for code that changed');
+    // 0.39.273 — chunker v2 gives module.exports its own chunk (unchanged, so its proof legitimately stands); the
+    // claim under test is about the CHANGED chunk, so it is checked on that chunk, not on "everything before flushBuffer"
+    const changed = r.chunks.find(c => (c.symbols || []).includes('pollQueue'));
+    assert.ok(changed, 'the pollQueue chunk was not retrieved');
+    assert.notStrictEqual(changed.proof, 'passed', 'a proof vouched for code that changed');
   });
   await t('no index, no directory: a reason, not a throw', () => {
     fs.mkdirSync(path.join(TMP, 'bare'), { recursive: true });
@@ -117,6 +124,14 @@ async function t(name, fn) {
   });
 
   console.log('\n── in the dispatch: what really goes to the model ───────');
+  // 0.39.273 — these assert CODE retrieval in the first message, which is the 'all' / 'project' scopes' context.
+  // Since 0.39.266 the default scope is 'harness' (a registry card, no code), so they failed on every run after it;
+  // the scope they test is now set explicitly rather than relying on a default that moved.
+  // Pre-fetched code is also its own prompt block, OFF by default since 0.39.266 (lib/repo-prompt-blocks.js
+  // context-code) — turned on here for the two repos under test, the way a person turns it on in the Agent tab.
+  RA.setToolScope(A.repo.uuid, 'all'); RA.setToolScope(B.repo.uuid, 'all');
+  const PB = require(path.join(ROOT, 'lib/repo-prompt-blocks.js'));
+  for (const u of [A.repo.uuid, B.repo.uuid]) PB.setBlocks(u, [{ id: 'context-code', enabled: true }]);
   const before = seen.prompts.length;
   const d1 = await RA.dispatch({ repo: A.repo, repoDir: A.dir, message: 'explain flushBuffer' });
   const prompt1 = seen.prompts[before];

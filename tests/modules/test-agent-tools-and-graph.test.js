@@ -166,8 +166,10 @@ function makeRepo() {
   }).catch(e => { console.log(`  ! cannot bind :3750 — ${e.message}`); return null; });
   if (!srv) { failed++; }
   else {
-    await test('AT-08', 'a fresh compartment\'s tool scope is "all" (James: "everything, at least for now"); a guardian dispatch sends tools: every tool, the hat as identity, this repo\'s dir', async () => {
-      assert.strictEqual(RA.getToolScope(U), 'all');
+    // 0.39.266 — the default is 'harness': every tool still ALLOWED (scope 'all' on the wire, James: "everything"),
+    // only the five registry-harness tools LISTED in the prompt ("thats way too much to inject when we have tools").
+    await test('AT-08', 'a fresh compartment\'s tool scope is "harness": a guardian dispatch sends tools: every tool allowed, the hat as identity, this repo\'s dir', async () => {
+      assert.strictEqual(RA.getToolScope(U), 'harness');
       RA.setProvider(U, 'chatgpt'); bodies.length = 0;
       const out = await RA.dispatch({ repo, repoDir, message: 'what boots the factory?', noContext: true });
       const b = bodies[0];
@@ -179,6 +181,8 @@ function makeRepo() {
       assert.strictEqual(b.tools.composed, true);
       assert.strictEqual(b.tools.resultTemplate, require('../../lib/repo-prompt-blocks.js').DEFAULT_BLOCKS.find(x => x.id === 'tool-result').text);
       assert.deepStrictEqual([out.ok, out.toolCalls[0].name], [true, 'read_file']);
+      assert.strictEqual(b.tools.repoUuid, U, '0.39.266 — the harness tools learn their repo from the context');
+      assert.ok(!/\{tools\}|\{tool_guide\}/.test(b.prompt), 'harness: the tool placeholders are filled before copilot sees them');
     });
     await test('AT-09', '/scope project sends the hat\'s own list (enforced); ollama gets tools too; auto resolves through copilot and gets them as well (0.39.258)', async () => {
       assert.strictEqual(RA.setToolScope(U, 'nope').ok, false);

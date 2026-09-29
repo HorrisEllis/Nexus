@@ -329,3 +329,23 @@ spec:
     tests: >-
       test-agent-tools-and-graph AT-03/04/05/13; test-copilot-tool-runtime 12, test-copilot-tools-guardian-ncp-mesh 9,
       copilot-handshake-dispatch 12, test-lifeline-guardian-timeout 5 unchanged and passing.
+
+  # ## ADDENDUM 2026-09-27 (0.39.267–269) — the self-test, intuition, activity recall, memory
+  # docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec (O1, O2, H1, M3).
+  # 1. adversarial.js: the 5 hostile prompts test intuition only (the Ollama side could never fail them); the status
+  #    cross-check is the one Ollama call. Every NEXUS_ADVERSARIAL_INTERVAL_MS (default 600000; 0 = off); _running reset
+  #    in finally. Was 6 generations every 60 s — all of Ollama's work in James's log.
+  # 2. intuition.js: ROUTE_RE group 3 ("what is X") and its own _getBP loader — every blueprint answer used to throw.
+  # 3. lib/activity-recall.js (nexus.copilot.lib.activity-recall): "what have you been up to" / "what's ollama been
+  #    doing" / "/activity" answered from records (ollama activity, self-test, chat_log, repo_agent_log, scheduler,
+  #    triggers, stream), checked before the greeting; GET /api/activity?hours=N[&text=1].
+  # 4. Memory (lib/agent-memory.js): copilot's own chat is one agent, 'copilot'. lifeline route() recalls before Ollama
+  #    answers (memory:true) and names the agent as memoryAgent — NOT agentId, which makes _tryGuardian skip its
+  #    "is that tab connected?" pre-check. analysis.js recalls (not for the self-test) and files as 'copilot'.
+  #    /api/prompt forwards agentId/compartmentId to Ollama as well as Guardian.
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# Declared = served. POST /api/introspect, /api/introspect/retry, GET /api/introspect/health and
+# /api/agents/capability are served (lib/introspect.js, lib/agent-capability.js were real and never mounted);
+# POST /api/agents/calibrate stays declared, marked served:false (it needs a live probe). 16 served routes were
+# added to registry-components.js; interaction-contract.json's port corrected 4850 → 3750.

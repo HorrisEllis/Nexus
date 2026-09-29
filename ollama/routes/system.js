@@ -29,6 +29,14 @@ async function handle(req, res, { method, pathname }) {
     return true;
   }
 
+  // §0.39.266 — James: "don't even know what ollama is doing?" Every model call Nexus makes (this bridge's jobs and
+  // channels, and the modules that call Ollama directly) — lib/ollama-activity.js. ?n=50
+  if (method === 'GET' && pathname === '/api/activity') {
+    const OA = require('../../lib/ollama-activity.js');
+    const n = parseInt(new URL(req.url, 'http://x').searchParams.get('n') || '50', 10);
+    json(res, 200, { ok: true, numCtx: { min: OA.MIN, max: OA.MAX }, activity: OA.tail(n) });
+    return true;
+  }
   if (pathname === '/health') {
     json(res, 200, {
       ok: state.ollamaOnline,

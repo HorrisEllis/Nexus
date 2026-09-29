@@ -14,7 +14,7 @@
  * guardian/architect/cortex use.
  */
 
-const V = '1.5.0';
+const V = '1.5.1';
 const NS = 'loom';
 function _c(id, method, path, desc, opts = {}) {
   return {

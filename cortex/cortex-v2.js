@@ -1025,7 +1025,8 @@ async function cmdCalltoDispatch(agent, prompt, flags = {}) {
 // ── versionium ────────────────────────────────────────────────────────────────
 async function _versioniumCommits(n) {
   try {
-    const r = await get('/api/versionium/history', VERSIONIUM_BASE);
+    // §0.39.271 V1 — n= → versionium answers with the newest n (without it, the first 200 stored).
+    const r = await get(`/api/versionium/history?n=${Math.max(1, Math.min(1000, n || 50))}`, VERSIONIUM_BASE);
     // versionium stamps commits with `wall` (its causal clock), not `ts`; normalise so the printers work.
     const rows = (Array.isArray(r && r.commits) ? r.commits : []).map(c => ({ ...c, ts: c.wall ?? c.ts }));
     return rows.sort((x, y) => (y.ts || 0) - (x.ts || 0)).slice(0, n);   // newest first

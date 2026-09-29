@@ -50,7 +50,7 @@ async function dispatchJob(job) {
   const cascade = ({ event }) => runCascade({
     providers: ['ollama'],
     maxAttempts: 1,
-    generate: () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs),
+    generate: () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs, `bridge job ${String(job.uuid).slice(0, 8)}${job.intent ? ` (${job.intent})` : ''}${job.sessionId ? ` for ${job.sessionId}` : ''}`),   // §0.39.266 — whose job it is, in the activity log
     validate: (output) => ({ ok: true, output }), // hard-axiom filtering happens in unifiedDispatch itself
   }).then(r => ({ ok: r.ok, output: r.output, attempts: r.attempts }));
 
@@ -100,6 +100,7 @@ async function dispatchJob(job) {
       requestId: job.requestId, intent: job.intent, warpSource: job.warpSource,
     });
     writeToCortex(job);
+    _remember(job, model);
   } catch (e) {
     job.status = 'failed';
     job.error = e.message;
@@ -108,6 +109,20 @@ async function dispatchJob(job) {
   }
   finishJob(job);
   return job;
+}
+
+// §0.39.269 — James: "ollama is supposed to have persistent memory ... using the download manager." Every completed
+// bridge job is recorded there (lib/agent-memory.js → the same response-sink + chat index Guardian uses), under the
+// agent that asked — whoever the caller was. Not awaited: memory never delays an answer. The self-test is not memory.
+function _remember(job, model) {
+  if (!job || job.record === false || job.intent === 'adversarial-probe' || job.intent === 'tool-loop' || !job.result) return;   // a tool-loop round is not an exchange; its caller records the final answer
+  try {
+    require('../../lib/agent-memory.js').record({
+      agentId: job.agentId || (job.sessionId ? `copilot-${job.sessionId}` : (job.componentId || 'ollama')),
+      provider: 'ollama', model, prompt: job.prompt, response: job.result, jobId: job.uuid,
+      compartmentId: job.compartmentId || null, repoUuid: job.repoUuid || null, intent: job.intent, source: 'ollama-bridge',
+    }).catch(e => console.warn(`[ollama] memory record failed for job ${String(job.uuid).slice(0, 8)}: ${e.message}`));
+  } catch (e) { console.warn(`[ollama] memory unavailable: ${e.message}`); }
 }
 
 function finishJob(job) {
@@ -157,4 +172,4 @@ function writeToCortex(job) {
   } catch (_) {}
 }
 
-module.exports = { dispatchJob, pump, writeToCortex };
+module.exports = { dispatchJob, pump, writeToCortex, _remember };

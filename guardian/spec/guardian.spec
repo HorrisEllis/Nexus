@@ -520,3 +520,20 @@ spec:
       or a turn James typed is never streamed as the job's; 16 changes → 4 chunks whose deltas add up to the reply; reset;
       yields to the watch; stops with the job; the next job streams its own). 13 mutations, each caught.
 
+
+  # ## ADDENDUM 2026-09-27 (0.39.268–269) — code captured with its fences; the A/B chooser; hatInPrompt
+  # docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec (G1, G3, M5).
+  # 1. Every userscript (chatgpt, claude, gemini, deepseek, perplexity) reads the reply with _replyText(el): each <pre>
+  #    becomes a ``` fenced block (language from language-* or the block's header), the rest is innerText. Used for the
+  #    job watch, its baseline and the chat sync. innerText had dropped the fences — every code chunk failed extraction.
+  # 2. userscript-chatgpt: while "Which response do you prefer?" is open, a job waits (GUARDIAN_PROGRESS
+  #    waiting-for-choice) and fails with that reason at the no-reply limit. Guardian never picks.
+  # 3. POST /command accepts hatInPrompt: "<hat>" — the caller already put that persona in the prompt; the job wears it
+  #    with an empty persona instead of a guessed hat (the doubled "[the_builder] You build…" header).
+
+# ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
+# Guardian hosts the agent node types: guardian/data/nodes/{hat,agent} are regenerated at boot from every forged
+# hat (lib/system-nodes.js — agent payload name, intent, commands, personality), and guardian/lib/node-registry.js
+# (per-type watcher + _ledger.jsonl + JAA index) now starts at boot — it never had. 'hat', 'capability' and
+# 'system' joined GUARDIAN_NODE_TYPES; _idFromFilename keeps dotted ids whole. Command nodes mark declared vs
+# served (served read by guardian/lib/command-index-extract.js).
