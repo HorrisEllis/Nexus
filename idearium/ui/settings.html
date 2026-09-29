@@ -19,10 +19,11 @@
 <style>
   :root { --bg:#0a0b10; --panel:#11131b; --panel2:#161925; --line:#242838; --text:#e6e8f0; --dim:#8a90a6; --faint:#5b6178;
           --accent:#7c9cff; --ok:#34d399; --warn:#fbbf24; --bad:#f87171; --mono: ui-monospace, SFMono-Regular, Menlo, monospace; }
-  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --bg:#f6f7fb; --panel:#ffffff; --panel2:#f0f2f8; --line:#dfe3ee; --text:#161a26; --dim:#5b6278; --faint:#8a90a6; } }
+  /* §0.39.280 — one theme: NEXUS dark, whatever the OS scheme (James: "keep the theme consistent") */
+  :root { color-scheme: dark; }
   * { box-sizing: border-box; }
   html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:13px/1.45 system-ui, -apple-system, Segoe UI, sans-serif; }
-  .app { display:grid; grid-template-columns: 280px 1fr; height:100vh; }
+  .app { display:grid; grid-template-columns: 280px 1fr; height:calc(100vh - var(--chrome-h, 0px)); margin-top:var(--chrome-h, 0px); }
   nav { background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; }
   nav header { padding:14px 14px 8px; } nav h1 { margin:0 0 8px; font-size:15px; }
   nav input { width:100%; padding:7px 9px; border-radius:7px; border:1px solid var(--line); background:var(--panel2); color:var(--text); font:inherit; }
@@ -70,6 +71,7 @@
 </style>
 </head>
 <body>
+<script src="js/window-chrome.js" data-kind="settings" data-title="Settings console"></script>
 <div class="app">
   <nav>
     <header><h1>⚙ Settings console</h1><input id="q" type="search" placeholder="Filter repos and settings…" autocomplete="off"></header>

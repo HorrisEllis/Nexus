@@ -14,6 +14,8 @@
   :root { --bg:#0b0d12; --panel:#12151d; --line:#232838; --text:#e5e7ef; --dim:#8b91a5; --ok:#34d399; --warn:#fbbf24; --bad:#f87171; --accent:#38bdf8; }
   * { box-sizing: border-box; }
   html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:13px/1.4 system-ui, sans-serif; }
+  :root { color-scheme: dark; }
+  body { padding-top:var(--chrome-h, 0px); }
   header { display:flex; align-items:center; gap:10px; padding:8px 12px; background:var(--panel); border-bottom:1px solid var(--line); }
   header h1 { font-size:14px; margin:0; font-weight:600; }
   .pill { font:11px ui-monospace, monospace; padding:2px 8px; border-radius:999px; border:1px solid var(--line); color:var(--dim); }
@@ -21,11 +23,12 @@
   .spacer { flex:1; }
   button { background:#1b2030; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:5px 10px; cursor:pointer; font:inherit; }
   button:hover { border-color:var(--accent); }
-  #screen { position:absolute; top:44px; left:0; right:0; bottom:0; }
-  #msg { position:absolute; inset:44px 0 0 0; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--dim); padding:24px; white-space:pre-line; pointer-events:none; }
+  #screen { position:absolute; top:calc(var(--chrome-h, 0px) + 44px); left:0; right:0; bottom:0; }
+  #msg { position:absolute; inset:calc(var(--chrome-h, 0px) + 44px) 0 0 0; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--dim); padding:24px; white-space:pre-line; pointer-events:none; }
 </style>
 </head>
 <body>
+<script src="js/window-chrome.js" data-kind="desktop" data-title="Repo desktop"></script>
 <header>
   <h1 id="title">Repo desktop</h1>
   <span id="state" class="pill">connecting</span>
@@ -60,7 +63,7 @@
   function describe(s) {
     if (!s) return;
     if (s.ports && s.ports.wsPort) port = s.ports.wsPort;
-    $info.textContent = [s.branchedFrom ? `disk: branch of ${s.branchedFrom}` : null, s.repoIn && s.repoIn.startsWith('/') ? `files: ${s.repoIn}` : s.repoIn === 'pending' ? 'copying files…' : null, s.accel ? `accel ${s.accel}` : null].filter(Boolean).join(' · ');
+    $info.textContent = [s.branchedFrom ? `disk: branch of ${s.branchedFrom}` : null, s.repoIn && s.repoIn.startsWith('/') ? `files: ${s.repoIn}` : s.repoIn === 'pending' ? 'copying files…' : null, s.accel ? `accel ${s.accel}${s.accelFallback ? ` (${s.accelFallback.from} failed)` : ''}` : null, s.repoIn === 'failed' ? `files: failed — ${s.repoError || ''}` : null].filter(Boolean).join(' · ');
   }
 
   let RFB = null, rfb = null, fit = true;
@@ -74,7 +77,24 @@
     rfb = new RFB(document.getElementById('screen'), `ws://127.0.0.1:${port}`);
     rfb.scaleViewport = fit; rfb.resizeSession = true; rfb.focusOnClick = true;
     rfb.addEventListener('connect', () => { setState('connected', 'ok'); say(''); });
-    rfb.addEventListener('disconnect', (e) => { setState(e.detail.clean ? 'disconnected' : 'unreachable', e.detail.clean ? '' : 'bad'); say(e.detail.clean ? 'Disconnected.' : `Could not reach the VM's screen on port ${port}.\nIs it running? Start VM, then Reconnect.`); });
+    rfb.addEventListener('connect', () => { tries = 0; });
+    rfb.addEventListener('disconnect', (e) => { if (e.detail.clean) { setState('disconnected'); say('Disconnected.'); return; } whyUnreachable(); });
+  }
+
+  // §0.39.280 — "unreachable" said nothing about WHY (James's screenshot: port 5724, accel whpx). Ask the VM's status:
+  // QEMU exited → its own last stderr lines; still booting → try again (the screen is up once QEMU is, the desktop a
+  // little later); a hardware accelerator that failed and was retried in software → said.
+  let tries = 0;
+  async function whyUnreachable() {
+    let s = null; try { s = await api('GET'); describe(s); } catch (_) {}
+    if (s && s.state === 'stopped') { setState('VM exited', 'bad'); say(`The VM exited (code ${s.exitCode}).${s.error ? `\nQEMU said: ${s.error}` : ''}${s.accelFallback ? `\n(${s.accelFallback.from} failed first: ${s.accelFallback.reason})` : ''}\nStart VM to try again.`); return; }
+    if (s && (s.state === 'booting' || s.state === 'running') && tries < 20) {
+      tries++; setState('waiting for screen', 'warn');
+      say(`The VM is ${s.state}; its screen is not up yet on port ${port} (try ${tries}/20).${s.accelFallback ? `\n${s.accelFallback.from} failed — running in software (tcg), slower.` : ''}`);
+      setTimeout(connect, 3000); return;
+    }
+    setState('unreachable', 'bad');
+    say(`Could not reach the VM's screen on port ${port}.\n${s && s.state === 'none' ? 'The VM is not running — Start VM.' : 'Is it running? Start VM, then Reconnect.'}`);
   }
 
   document.getElementById('start').onclick = async () => {
@@ -83,7 +103,7 @@
     catch (e) { setState('failed', 'bad'); say(e.message); }
   };
   document.getElementById('stop').onclick = async () => { try { await api('DELETE'); if (rfb) rfb.disconnect(); setState('stopped'); say('VM powered off. Its disk is kept.'); } catch (e) { say(e.message); } };
-  document.getElementById('reconnect').onclick = connect;
+  document.getElementById('reconnect').onclick = () => { tries = 0; connect(); };
   document.getElementById('cad').onclick = () => rfb && rfb.sendCtrlAltDel();
   document.getElementById('scale').onclick = (e) => { fit = !fit; e.target.textContent = `Fit: ${fit ? 'on' : 'off'}`; if (rfb) rfb.scaleViewport = fit; };
 

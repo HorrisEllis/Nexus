@@ -128,6 +128,28 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     assert.strictEqual(W.desktopStatus('never').state, 'none');
   });
 
+  await t('WS-13', '0.39.280: a VM that dies at once on whpx is retried once in software (tcg) and said; a second death is reported with QEMU\'s words', async () => {
+    const F = fakes();
+    F.q.buildQemuArgs = (cfg) => ({ args: ['-accel', String(cfg.accelerator)], qga: { transport: 'tcp', port: 1 }, vncDisplayNum: 9, accel: cfg.accelerator || 'whpx', cfg });
+    const r = W.startDesktop({ compartmentId: 'c-whpx', stateRoot: path.join(tmp, 'c-whpx'), baseImage: path.join(tmp, 'orig.qcow2'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: (a) => fs.writeFileSync(a[a.length - 1], 'ov') });
+    assert.ok(r.ok && r.accel === 'whpx');
+    F.spawned[0].p.stderr.emit('data', 'qemu: WHPX: Failed to emulate MMIO access\n');
+    F.spawned[0].p.emit('exit', 1);
+    assert.strictEqual(F.spawned.length, 2, 'retried once');
+    assert.deepStrictEqual(F.spawned[1].args, ['-accel', 'tcg']);
+    let s = W.desktopStatus('c-whpx');
+    assert.strictEqual(s.state, 'running');
+    assert.deepStrictEqual([s.accel, s.accelFallback.from, /WHPX/.test(s.accelFallback.reason)], ['tcg', 'whpx', true]);
+    F.spawned[1].p.stderr.emit('data', 'qemu: could not open disk\n');
+    F.spawned[1].p.emit('exit', 1);
+    assert.strictEqual(F.spawned.length, 2, 'never a third try');
+    s = W.desktopStatus('c-whpx');
+    assert.deepStrictEqual([s.state, s.exitCode], ['stopped', 1]);
+    assert.match(s.error, /could not open disk/);
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/desktop.html'), 'utf8');
+    assert.match(page, /async function whyUnreachable\(\)/, 'the viewer asks why instead of only saying unreachable');
+  });
+
   // ── wiring ──────────────────────────────────────────────────────────────
   await t('WS-20', 'qemu-runtime: a headless VM\'s screen is also a websocket on 5700+N; desktopPorts says where', () => {
     const q = require(path.join(ROOT, 'cos/compartment/qemu-runtime.js'));
