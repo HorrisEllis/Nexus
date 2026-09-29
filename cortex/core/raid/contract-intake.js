@@ -55,7 +55,9 @@ const RAID_INPUT_DIR = process.env.RAID_INPUT_DIR || path.join(__dirname, '../..
 function _resolveInputDir(system) {
   if (!system) return null;
   const fs = require('fs');
-  const dir = path.join(__dirname, '../../../', system, 'input');
+  // §0.39.282 — RAID_SYSTEMS_ROOT (the test sandbox sets it) instead of always the repo: tests wrote .contract files
+  // into the real guardian/input/.
+  const dir = path.join(process.env.RAID_SYSTEMS_ROOT || path.join(__dirname, '../../../'), system, 'input');
   return fs.existsSync(dir) ? dir : null;
 }
 
@@ -220,7 +222,7 @@ const RAID_OUTPUT_DIR = process.env.RAID_OUTPUT_DIR || path.join(__dirname, '../
 function _resolveOutputDir(system) {
   if (!system) return null;
   const fs = require('fs');
-  const dir = path.join(__dirname, '../../../', system, 'output');
+  const dir = path.join(process.env.RAID_SYSTEMS_ROOT || path.join(__dirname, '../../../'), system, 'output');
   return fs.existsSync(dir) ? dir : null;
 }
 

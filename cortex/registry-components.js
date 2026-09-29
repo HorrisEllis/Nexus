@@ -4,7 +4,7 @@
  * comp_id: nexus.cortex.registry
  * uuid: nexus-cortex-registry-v1-0000-2026-0627-jamesbrooks-001
  */
-const V = '3.5.0'; const NS = 'cortex';   // §5.4 fix 2026-08-08 — was 3.2.0, drifted from canonical lib/version.js's services.cortex (3.5.0)
+const V = '3.6.0'; const NS = 'cortex';   // 0.39.282: 3.5.0 -> 3.6.0 (raid status route, /sse broadcast, officiator via RAID). §5.4 fix 2026-08-08 — was 3.2.0, drifted from canonical lib/version.js's services.cortex (3.5.0)
 function _c(id, method, path, desc, opts={}) {
   return { id:`${NS}.${id}`, namespace:NS, name:id, version:V,
     grammar: opts.grammar||[id.replace(/\./g,' ')],

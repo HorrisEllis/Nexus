@@ -63,7 +63,8 @@ function _ga() { return require('../compartment/guest-agent.js'); }
 // ── cloud-init ──────────────────────────────────────────────────────────────
 
 /** the guest-side provisioning script: every step reports; the last report carries the versions */
-function provisionScript({ node = 'lts', extras = [] } = {}) {
+function _sq(v) { return `'${String(v).replace(/'/g, `'\\''`)}'`; }   // one shell word, single-quoted
+function provisionScript({ node = 'lts', extras = [], login = { user: 'nexus', password: 'nexus' } } = {}) {
   return `#!/bin/sh
 # cos-testenv provisioning — written by nexus cos/testenv/provision.js
 SEED="$(cat /run/cos-seed-url 2>/dev/null)"
@@ -82,11 +83,16 @@ corepack enable >/dev/null 2>&1 || true
 say "node $(node -v) installed"
 systemctl enable qemu-guest-agent >/dev/null 2>&1 || true
 ${extras.includes('rust') ? 'say "rust: $(cargo --version 2>&1)"' : ''}
-${extras.includes('desktop') ? `id nexus >/dev/null 2>&1 || useradd -m -s /bin/bash nexus
+${extras.includes('desktop') ? `U=${_sq(login.user)}
+id "$U" >/dev/null 2>&1 || useradd -m -s /bin/bash "$U"
+# §0.39.282 N20 — the account has a known password (settings desktop.user/password; the atlas lists the default), so
+# the screen locker, sudo and a re-login all work; before, useradd left it passwordless and locked.
+printf '%s:%s\\n' "$U" ${_sq(login.password)} | chpasswd || fail "set the desktop password"
+usermod -aG sudo "$U" >/dev/null 2>&1 || true
 mkdir -p /etc/lightdm/lightdm.conf.d
-printf '[Seat:*]\\nautologin-user=nexus\\nautologin-session=xfce\\n' > /etc/lightdm/lightdm.conf.d/50-nexus.conf
+printf '[Seat:*]\\nautologin-user=%s\\nautologin-session=xfce\\n' "$U" > /etc/lightdm/lightdm.conf.d/50-nexus.conf
 systemctl set-default graphical.target >/dev/null 2>&1 || true
-say "desktop: xfce + lightdm, autologin as nexus"` : ''}
+say "desktop: xfce + lightdm, autologin as $U (password set)"` : ''}
 # later boots are test runs: no datasource search, no network wait
 touch /etc/cloud/cloud-init.disabled
 systemctl disable systemd-networkd-wait-online.service >/dev/null 2>&1 || true
@@ -113,10 +119,17 @@ say "done — powering off"
 `;
 }
 
-function userData({ node = 'lts', extras = [], seedUrl }) {
+/** §0.39.282 N20 — the desktop account: opts.login (idearium passes settings desktop.user/password), else
+ *  COS_DESKTOP_USER / COS_DESKTOP_PASSWORD, else the generic nexus/nexus the atlas lists. */
+function desktopLogin(login = null, env = process.env) {
+  const user = (login && login.user) || env.COS_DESKTOP_USER || 'nexus';
+  if (!/^[a-z_][a-z0-9_-]{0,31}$/.test(user)) throw new Error(`desktop user '${user}' is not a valid login name`);
+  return { user, password: (login && login.password) || env.COS_DESKTOP_PASSWORD || 'nexus' };
+}
+function userData({ node = 'lts', extras = [], seedUrl, login = null }) {
   const pkgs = ['qemu-guest-agent', 'python3', 'python3-venv', 'python3-pip', 'git', 'build-essential', 'make', 'ca-certificates', 'curl', 'xz-utils', 'tar', 'unzip',
     ...extras.flatMap(e => EXTRA_PACKAGES[e] || [])];
-  const script = provisionScript({ node, extras });
+  const script = provisionScript({ node, extras, login: desktopLogin(login) });
   const indent = (s, n) => s.split('\n').map(l => (l ? ' '.repeat(n) + l : l)).join('\n');
   return `#cloud-config
 hostname: cos-testenv
@@ -263,7 +276,7 @@ async function provision(opts = {}, onEvent = () => {}) {
     onDone: (kv) => { done = kv; if (kv.status !== 'ok') failedStep = kv.step || 'unknown'; },
   });
   const seedUrl = `http://${guestHost}:${srv.address().port}/`;
-  ud = userData({ node: opts.node || 'lts', extras, seedUrl });
+  ud = userData({ node: opts.node || 'lts', extras, seedUrl, login: opts.login || null });
 
   // 5. first boot — online, cloud-init does the work
   const stateDir = path.join(home, 'provision');
@@ -386,4 +399,4 @@ async function main() {
 
 if (require.main === module) main().catch(e => { console.error(`[cos-testenv] crashed: ${e.stack || e.message}`); process.exit(1); });
 
-module.exports = { provision, userData, provisionScript, seedServer, download, installQemu, DEFAULT_IMAGE_URL, EXTRA_PACKAGES };
+module.exports = { provision, userData, provisionScript, desktopLogin, seedServer, download, installQemu, DEFAULT_IMAGE_URL, EXTRA_PACKAGES };

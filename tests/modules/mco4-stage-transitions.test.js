@@ -108,7 +108,11 @@ await test('T-003', 'system-specific contract writes its output into the REAL pe
   // guardian/output is a real directory on disk (created alongside this
   // change) — this proves per-system routing end-to-end, not just the
   // isolated-temp-dir fallback path T-001 already covers.
-  const guardianOutputDir = path.join(__dirname, '../../guardian/output');
+  // §0.39.282 — the per-system dirs resolve under RAID_SYSTEMS_ROOT (the sandbox sets it; production: the repo), so the
+  // test makes guardian/output THERE instead of writing into the real tree. Same routing proven.
+  const sysRoot = process.env.RAID_SYSTEMS_ROOT || path.join(__dirname, '../..');
+  const guardianOutputDir = path.join(sysRoot, 'guardian', 'output');
+  fs.mkdirSync(guardianOutputDir, { recursive: true });
   assert.ok(fs.existsSync(guardianOutputDir), 'guardian/output must be a real directory for this test to mean anything');
 
   const before = fs.readdirSync(guardianOutputDir).length;

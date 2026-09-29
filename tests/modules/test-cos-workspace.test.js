@@ -92,8 +92,10 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     const spawned = [], ran = [];
     const q = { qemuSystemBin: () => 'qemu-system-x86_64', buildQemuArgs: (cfg, id) => ({ args: ['-disk', cfg.disk, '-share', String(cfg.shareDir || cfg.shareDisk)], qga: { transport: 'tcp', port: 1 }, vncDisplayNum: 7, accel: 'tcg', cfg }) };
     const spawn = (bin, args) => { const p = new EventEmitter(); p.stderr = new EventEmitter(); p.kill = () => p.emit('exit', 0); spawned.push({ bin, args, p }); return p; };
-    const ga = { connectWhenReady: async () => ({ run: async (sh, a) => { ran.push(a[1]); return { exitCode: 0, stdout: '', stderr: '' }; }, close() {} }) };
-    return { q, spawn, ga, spawned, ran };
+    const pw = [];
+    const ga = { connectWhenReady: async () => ({ run: async (sh, a) => { ran.push(a[1]); return { exitCode: 0, stdout: '', stderr: '' }; },
+      setUserPassword: async (u, p) => { pw.push([u, p]); return {}; }, close() {} }) };
+    return { q, spawn, ga, spawned, ran, pw };
   }
 
   await t('WS-11', 'startDesktop: boots from an overlay of the ORIGINAL\'s desktop disk when it has one, headless on VNC+websocket; copies the repo in', async () => {
@@ -115,6 +117,31 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     assert.match(F.ran[0], /\/home\/nexus\/lock-service/);
     assert.ok(W.startDesktop({ compartmentId: 'c-branch', _qemu: F.q, _spawn: F.spawn }).reused, 'a running desktop is reused, never a second VM');
     assert.strictEqual(F.spawned.length, 1);
+  });
+
+  await t('WS-14', '0.39.282 N20: the desktop account gets its password through the guest agent, the status shows the login, a bad name is refused', async () => {
+    const F = fakes();
+    const r = W.startDesktop({ compartmentId: 'c-login', name: 'Pw', workDir: first.dir, stateRoot: path.join(tmp, 'c-login'), baseImage: path.join(tmp, 'orig.qcow2'),
+      login: { user: 'dev', password: 's3cret' }, _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: (a) => fs.writeFileSync(a[a.length - 1], 'ov') });
+    assert.ok(r.ok, JSON.stringify(r));
+    await new Promise(res => setTimeout(res, 20));
+    assert.deepStrictEqual(F.pw, [['dev', 's3cret']]);
+    const s = W.desktopStatus('c-login');
+    assert.deepStrictEqual(s.login, { user: 'dev', password: 's3cret', applied: 'set' });
+    assert.strictEqual(s.repoIn, '/home/dev/pw', 'the repo lands in that account\'s home');
+    const bad = W.startDesktop({ compartmentId: 'c-badlogin', stateRoot: path.join(tmp, 'c-badlogin'), baseImage: path.join(tmp, 'orig.qcow2'),
+      login: { user: 'x; rm -rf /', password: 'p' }, _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: (a) => fs.writeFileSync(a[a.length - 1], 'ov') });
+    await new Promise(res => setTimeout(res, 20));
+    assert.strictEqual(F.pw.length, 1, 'no password call for an invalid name');
+    assert.match(W.desktopStatus('c-badlogin').login.applied, /refused/);
+    const P = require(path.join(ROOT, 'cos/testenv/provision.js'));
+    const sh = P.provisionScript({ extras: ['desktop'], login: P.desktopLogin({ user: 'nexus', password: "it's" }) });
+    assert.match(sh, /printf '%s:%s\\n' "\$U" 'it'\\''s' \| chpasswd/);
+    assert.deepStrictEqual(P.desktopLogin(null, {}), { user: 'nexus', password: 'nexus' }, 'the generic default the atlas lists');
+    assert.throws(() => P.desktopLogin({ user: 'Bad User' }), /not a valid login name/);
+    const cfg = require(path.join(ROOT, 'idearium/lib/config-core.cjs'));
+    const schema = cfg.SCHEMA || cfg.schema || cfg.CONFIG_SCHEMA;
+    if (schema && schema.desktop) assert.ok(schema.desktop.user && schema.desktop.password, 'desktop.user / desktop.password are settings');
   });
 
   await t('WS-12', 'no original disk → the base image; no base image → told how to make one; stop keeps the disk', async () => {
@@ -180,7 +207,9 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     const P = require(path.join(ROOT, 'cos/testenv/provision.js'));
     const u = P.userData({ extras: ['desktop'], seedUrl: 'http://s/' });
     assert.ok(['xfce4', 'lightdm', 'firefox-esr'].every(p => u.includes(`  - ${p}`)));
-    assert.match(u, /autologin-user=nexus\\nautologin-session=xfce/);
+    assert.match(u, /U='nexus'/);   // §0.39.282 N20 the account comes from desktopLogin() (settings desktop.user)
+    assert.match(u, /autologin-user=%s\\nautologin-session=xfce\\n' "\$U"/);
+    assert.match(u, /chpasswd/);
     assert.match(u, /systemctl set-default graphical\.target/);
     assert.ok(!/xfce4|lightdm/.test(P.userData({ extras: [], seedUrl: 'http://s/' })));
   });

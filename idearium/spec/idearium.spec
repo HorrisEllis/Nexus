@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        idearium
-    version:     4.12.0   # §0.39.281 (MINOR, new routes) — /api/economy proxy and the Provider economy page (docs/2026-09-29-provider-economy-phasemap.spec). Previous: 4.11.0 §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
+    version:     4.14.0   # §0.39.283 (MINOR, new config keys) — repos.draft_then_review / repos.review_provider; each phase build in a fresh chat; the shadow on manage, plan and phase runs; the Manage workbench. Previous 4.13.0:   # §0.39.282 (MINOR, new config keys) — repos.default_provider (default ollama); desktop.user / desktop.password; plan and manage jobs read blocked when the reply is blocked at its step gate. Previous 4.12.0: §0.39.281 (MINOR, new routes) — /api/economy proxy and the Provider economy page (docs/2026-09-29-provider-economy-phasemap.spec). Previous: 4.11.0 §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
                          # (DOM mutations, the reply's node anchor, stages, streaming text) via
                          # guardian-stream onFeed → os.broadcast (SSE only); late-reply lookup
                          # takes the guardian jobId. Previous — 4.3.0 §0.39.241 (MINOR, two new routes) — GET/POST /api/repos/:uuid/agent/late:
@@ -382,3 +382,20 @@ spec:
 # existing code/promote. EC7: a build with no chosen provider is ordered by the learning router once the ledger holds
 # enough build outcomes (seamRecord.routedBy says so). Proven by tests/modules/test-economy.test.js and
 # tests/probe/economy-console-chromium.js.
+
+# ── ADDENDUM 2026-09-29 (0.39.282) — idearium 4.13.0 ──
+# repos.default_provider decides who answers a repo that chose no provider; its default is ollama (James: "Ollama
+# should be default"), and clearing it restores guardian's first agent. desktop.user / desktop.password (default nexus
+# / nexus) are the repo desktop VM's login: set at provisioning, applied through the guest agent on every boot, shown
+# in ui/desktop.html. A plan or manage job whose reply fails reply.accept (lib/step-gate.js — a refusal with no code)
+# reads blocked, with the reason, never replied; no empty file is written (code.write).
+
+# ── ADDENDUM 2026-09-29 (0.39.283) — idearium 4.14.0 ──
+# Each phase build asks in a FRESH chat (repo-agent dispatch { session } = its runId). When Ollama drafted a phase or
+# a writing manage action, the drafted files (full content from their inject nodes) go to a guardian agent in one
+# plain conversation (lib/draft-review.js; repos.review_provider, '' = guardian's first; repos.draft_then_review turns
+# it off); the review is its own run linked by draftRunId, with its own shadow. Every manage, plan and phase run
+# declares its shadow (lib/shadow.js): what must come back; an absence is a gap and a liminal item, and the run reads
+# incomplete. Run states: blocked, incomplete, reviewing, reviewed, skipped. The Manage modal is a workbench
+# (idearium/ui/js/file-manage.js, css/file-manage.css): actions grouped and marked WRITES/READS, line scope with a
+# live preview, related code, who does it, the pipeline stated before sending, the file's run history.

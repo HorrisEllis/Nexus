@@ -70,7 +70,9 @@ test('SC-004', 'GATE: `sentinel status` returns REAL data with the service DOWN 
   assert.strictEqual(data.store.reachable, true, 'must read cortex directly, not via a service');
   assert.ok(data.contract.commands >= 6);
   // Real coverage numbers from the live store, not placeholders.
-  assert.ok(data.intake && typeof data.intake.coveragePct === 'number', 'must report real intake coverage');
+  // §0.39.282 — in the sandbox the store is empty: 0 of 0 writes has no percentage, and null says so honestly. It was a
+  // number before only because this read the REAL store (LEDGER_STORE_ROOT was not sandboxed).
+  assert.ok(data.intake && (typeof data.intake.coveragePct === 'number' || (data.intake.coveragePct === null && data.intake.canonicalWrites === 0)), 'must report real intake coverage');
   assert.ok(data.schema && typeof data.schema.rows === 'number', 'must report real schema coverage');
 });
 

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-schema-step_gate
+type: schema
+id: step_gate
+context: lib/node-schemas — shared canonical registry. Added 0.39.282 (docs/2026-09-29-nex-node-store-phasemap.spec N21).
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1790712000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/step-gate.js reads every lib/step-gates/*.step_gate node (and STEP_GATES_DIR when set) and runs its checks
+    before a build step hands its output on. James, 2026-09-29: "Shouldn't generate empty. Why not gate each step with
+    events." A step that fails a check emits step.blocked (with the reasons and the causal id of the step before) and
+    its output is not written; one that passes emits step.passed. The rules are data here, not literals in code (I9).
+  fields:
+    step:
+      type: string
+      required: true
+      description: the step this node gates, e.g. reply.accept or code.write
+    checks:
+      type: array
+      required: true
+      description: >-
+        ordered checks; each has kind (non_empty | not_refusal | parses), an id, and its own params
+        (non_empty.min_chars; not_refusal.phrases; parses.languages)
+    on_block:
+      type: string
+      required: false
+      description: what happens to the output when blocked (drop | hold); default drop — never written

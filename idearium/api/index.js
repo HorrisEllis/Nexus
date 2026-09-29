@@ -612,20 +612,78 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
-  Promise.resolve().then(() => RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message, backend, agent, provider, layer: getRepoLayer() }))
+  // §0.39.282 N22 — the phase's shadow: every file the phase names must come back (written, staged or proposed). An
+  // absence is a gap + a liminal item (lib/shadow.js) and the run reads 'incomplete', naming what never arrived.
+  const SH = _require('../../lib/shadow.js');
+  const expectFiles = [...new Set((node.files || []).map(f => String(f).split(/[\s(]/)[0]).filter(f => f && /[\w-]\.[\w]+$/.test(f)))];
+  const shadow = expectFiles.length ? SH.declare({ step: 'phase.build', expects: { files: expectFiles }, subject: { repoUuid: target.uuid, map, phase, runId }, causedBy: `idearium.phases.build:${runId}` }) : null;
+  // §0.39.282 N23 — each phase is its own chunk in its own FRESH chat (session = runId), so a small local model gets its
+  // whole window for this phase, not the running history of every phase before it.
+  Promise.resolve().then(() => RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message, backend, agent, provider, layer: getRepoLayer(), session: runId }))
     .then((r) => {
       const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
-      const row = { uuid: `${runId}-${r && r.ok ? 'replied' : 'failed'}`, ...base, state: r && r.ok ? 'replied' : 'failed', snapshot: commitId,
-        error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : null, provider: r && (r.providerUsed || r.provider) || null,
+      // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
+      let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
+      let absent = null;
+      if (shadow) {
+        if (state !== 'replied') SH.drop(shadow);
+        else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
+      }
+      const row = { uuid: `${runId}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}),
+        error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
+        provider: r && (r.providerUsed || r.provider) || null,
         reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
       appendRow('idearium_phase_runs', row);
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId });
+      _reviewDraft({ r, state, absent, target, base, commitId, req, note, message }).catch(e => console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`));
     })
     .catch((e) => {
+      if (shadow) SH.drop(shadow);
       appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, ...base, state: 'failed', snapshot: commitId, error: e.message, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'failed', snapshot: commitId });
     });
-  return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length } };
+  return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
+    ...(shadow ? { shadow: { id: shadow.id, expects: shadow.expects } } : {}) } };
+}
+
+// §0.39.282 N23 — Ollama drafted the phase: a guardian agent reviews the draft (lib/draft-review.js) in one plain
+// conversation, then its files apply by the repo's mode. The review is its own run (draftRunId links it to the draft)
+// with its own shadow (the phase's files must come back). Settings: repos.draft_then_review, repos.review_provider.
+async function _reviewDraft({ r, state, absent, target, base, commitId, req, note, message }) {
+  const v = (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } };
+  if (v('repos.draft_then_review') === false) return null;
+  if (!['replied', 'incomplete'].includes(state)) return null;
+  const DR = _require('../../lib/draft-review.js');
+  if (!DR.wasDraftedLocally(r)) return null;
+  const RA = _require('../../lib/repo-agent.js');
+  const RI = _require('../../lib/repo-inject.js');
+  const files = DR.draftFiles(r, RI);
+  if (!files.length) return null;
+  const reviewer = DR.reviewerFor(v('repos.review_provider') || '', RA);
+  const reviewRunId = `${base.runId}-review`;
+  const rbase = { ...base, runId: reviewRunId, draftRunId: base.runId, title: `review of ${base.title || base.phase}` };
+  if (!reviewer) {
+    appendRow('idearium_phase_runs', { uuid: `${reviewRunId}-skipped`, ...rbase, state: 'skipped', error: 'no guardian agent to review the draft (none connected; set repos.review_provider)', ts: Date.now() });
+    return null;
+  }
+  const text = DR.reviewMessage({ repoName: target.name, title: base.title || base.phase, need: req && req.message ? req.message : message, files, absent: absent || [], note });
+  appendRow('idearium_phase_runs', { uuid: `${reviewRunId}-started`, ...rbase, state: 'reviewing', reviewer, draftFiles: files.map(f => f.path), snapshot: commitId, promptChars: text.length, ts: Date.now() });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...rbase, state: 'reviewing', reviewer });
+  const SH = _require('../../lib/shadow.js');
+  const shadow = SH.declare({ step: 'phase.review', expects: { files: [...new Set([...files.map(f => f.path), ...(absent || [])])] }, subject: { repoUuid: target.uuid, map: base.map, phase: base.phase, runId: reviewRunId }, causedBy: `idearium.phases.build:${base.runId}` });
+  let rr;
+  try { rr = await RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }); }
+  catch (e) { rr = { ok: false, error: e.message }; }
+  let rstate = rr && rr.ok ? (rr.injects && rr.injects.blocked ? 'blocked' : 'reviewed') : 'failed';
+  let rabsent = null;
+  if (rstate !== 'reviewed') SH.drop(shadow);
+  else { const got = SH.settle(shadow, { files: ((rr.injects && rr.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { rstate = 'incomplete'; rabsent = got.absent.files; } }
+  appendRow('idearium_phase_runs', { uuid: `${reviewRunId}-${rstate}`, ...rbase, state: rstate, reviewer, snapshot: commitId, ...(rabsent ? { absent: rabsent } : {}),
+    error: rr && !rr.ok ? String(rr.error || 'review failed').slice(0, 500) : (rabsent ? `the review did not bring back ${rabsent.join(', ')}` : null),
+    provider: rr && (rr.providerUsed || rr.provider) || reviewer, reply: rr && rr.text ? String(rr.text).slice(0, 4000) : null,
+    injects: rr && rr.injects ? { injected: (rr.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, ts: Date.now() });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...rbase, state: rstate, reviewer });
+  return { state: rstate, reviewer };
 }
 
 // §0.39.271 — one repo snapshot, as POST /api/repos/:uuid/snapshot takes it (moved here
@@ -633,6 +691,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 // §0.39.280 — what api/build-surface.js is given: this server's own helpers, nothing new
 function _buildSurfaceDeps() {
   return {
+    reviewDraft: _reviewDraft,   // §0.39.282 N23 — manage runs hand an Ollama draft to a reviewing agent too
     getRepoLayer, repoDir: _repoDiskDir, versionium: _versionium, loadTable, appendRow, require: _require,
     emit: (t, d) => getIdeaOS().emit(t, d), RI: () => _require('../../lib/repo-inject.js'),
     config: (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } },
@@ -3070,7 +3129,8 @@ async function handle(req, res, route, query, body) {
       const r = cosBridge.desktop(repo.compartmentId, { action: act, workDir: act === 'start' ? _repoDiskDir(params.uuid) : null, name: repo.name,
         originNameOrId: origin && origin.compartmentId,
         ...(() => { const v = (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } };   // settings console → desktop.*
-          return { ramMB: body.ramMB || v('desktop.ram_mb'), cpus: body.cpus || v('desktop.cpus'), network: body.network || v('desktop.network') }; })() });
+          return { ramMB: body.ramMB || v('desktop.ram_mb'), cpus: body.cpus || v('desktop.cpus'), network: body.network || v('desktop.network'),
+            login: { user: v('desktop.user') || 'nexus', password: v('desktop.password') || 'nexus' } }; })() });   // §0.39.282 N20
       if (!r.ok) return err(res, 502, r.error || 'desktop failed', r);
       const p = r.ports || {};
       return ok(res, { ...r, repoUuid: repo.uuid, branchOf: repo.branchOf || null, branch: repo.branch || null,
@@ -3564,7 +3624,9 @@ async function handle(req, res, route, query, body) {
     }
     case 'cos.testenv.setup': {
       const SJ = _require('../../cos/testenv/setup-job.js');
-      const st = SJ.start({ installQemu: !!body.installQemu, extras: Array.isArray(body.extras) ? body.extras : [], node: body.node || null });
+      const v = (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } };
+      const st = SJ.start({ installQemu: !!body.installQemu, extras: Array.isArray(body.extras) ? body.extras : [], node: body.node || null,
+        login: { user: v('desktop.user'), password: v('desktop.password') } });   // §0.39.282 N20
       os.emit('idearium.cos.testenv.setup', { state: st.state, args: st.args || null });
       return ok(res, st);
     }

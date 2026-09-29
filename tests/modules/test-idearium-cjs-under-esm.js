@@ -73,6 +73,9 @@ test('ICU-007', 'REGRESSION GUARD: no other file under idearium/ has the same bu
   function walk(dir) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       if (entry.name === 'node_modules') continue;
+      // §0.39.282 — idearium/repo/repos/ holds the REPOS idearium manages (gitignored runtime content, e.g. an imported
+      // eravos organism's src/osc.js), not idearium's own code; their module style is theirs.
+      if (entry.name === 'repos' && path.basename(dir) === 'repo') continue;
       const full = path.join(dir, entry.name);
       // §0.39.265 — idearium/data holds materialized copies of OTHER code (repos
       // made from imports and the nexus-self sync of the whole tree, gitignored),

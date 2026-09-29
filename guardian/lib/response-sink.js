@@ -77,7 +77,14 @@ const NODES_DIR = process.env.GUARDIAN_RESPONSE_NODES_DIR || path.join(__dirname
 // refused). Replayed in order on the next successful post — a response
 // is never missing from the downloads manager just because the browser
 // was closed when it arrived.
-const DOWNLOADS_PENDING = path.join(path.dirname(path.dirname(NODES_DIR)), 'downloads-pending.jsonl');
+// §0.39.282 N29 — beside an overridden NODES_DIR, not two levels up: in the test sandbox NODES_DIR is
+// /tmp/<sandbox>/guardian-response-nodes, so two levels up was /tmp itself — ONE queue shared by every sandbox, and a
+// suite replayed another suite's queued entries into its own downloads index (test-one-tab-e2e OT-04..06, full run only).
+// Two levels up only for the <data>/nodes/response layout (production: guardian/data/); any other override keeps the
+// queue beside its nodes dir, inside whatever owns it.
+const DOWNLOADS_PENDING = path.basename(path.dirname(NODES_DIR)) === 'nodes'
+  ? path.join(path.dirname(path.dirname(NODES_DIR)), 'downloads-pending.jsonl')
+  : path.join(path.dirname(NODES_DIR), 'downloads-pending.jsonl');
 
 const CG_IPC_PORT = parseInt(process.env.CLEARGL_IPC_PORT || '7702', 10);
 

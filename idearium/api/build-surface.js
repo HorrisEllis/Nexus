@@ -183,16 +183,22 @@ export async function specPlan(deps, uuid, body) {
   deps.appendRow('idearium_phase_runs', { uuid: `${runId}-started`, runId, repoUuid: uuid, targetRepo: uuid, map: m.mapPath, phase: 'PLAN', title: `plan ${specPath}`, state: 'building', snapshot: snap.data.commitId, spec: specPath, specSha256: p.specSha256, ts: Date.now() });
   deps.emit('idearium.repo.phase.run', { runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state: 'building', snapshot: snap.data.commitId });
   const RA = deps.require('../../lib/repo-agent.js');
+  // §0.39.282 N22 — the shadow of a plan run: its phasemap must come back
+  const SH = deps.require('../../lib/shadow.js');
+  const shadow = SH.declare({ step: 'spec.plan', expects: { files: [m.mapPath] }, subject: { repoUuid: uuid, spec: specPath, runId } });
   Promise.resolve().then(() => RA.dispatch({ repo: r.repo, repoDir: r.dir, message: p.message, provider: body.provider || null, layer: deps.getRepoLayer() }))
     .then(async (res) => {
       const after = await _specMap(deps, r.repo, r.dir, specPath);
-      const state = res && res.ok ? 'replied' : 'failed';
+      if (res && res.ok && !(res.injects && res.injects.blocked)) SH.settle(shadow, { files: [...((res.injects && res.injects.injects) || []).map(i => i.path || i.file), ...(after.exists ? [m.mapPath] : [])].filter(Boolean) });
+      else SH.drop(shadow);
+      // §0.39.282 N21 — a reply blocked at its gate (a refusal) is 'blocked', never 'replied'
+      const state = res && res.ok ? (res.injects && res.injects.blocked ? 'blocked' : 'replied') : 'failed';
       deps.appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, runId, repoUuid: uuid, targetRepo: uuid, map: m.mapPath, phase: 'PLAN', state, snapshot: snap.data.commitId,
         error: res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : (after.exists && !after.v.ok ? `the phasemap came back but is not valid: ${after.v.problems.slice(0, 3).join('; ')}` : (!after.exists ? `no ${m.mapPath} came back (it may be waiting for approval in the Agent tab)` : null)),
         injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null, ts: Date.now() });
       deps.emit('idearium.repo.phase.run', { runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state });
     })
-    .catch((e) => { deps.appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state: 'failed', error: e.message, ts: Date.now() }); });
+    .catch((e) => { SH.drop(shadow); deps.appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state: 'failed', error: e.message, ts: Date.now() }); });
   return ok({ repoUuid: uuid, runId, spec: specPath, mapPath: m.mapPath, snapshot: snap.data.commitId, state: 'building', promptChars: p.message.length });
 }
 export async function specBuild(deps, uuid, body) {
@@ -276,16 +282,34 @@ export async function manage(deps, uuid, body = {}) {
   if (!snap.ok) return bad(snap.status === 409 ? 409 : 502, `not started: the Versionium snapshot before it failed — ${snap.error}`, { code: 'NO_SNAPSHOT' });
   const runId = `manage-${Date.now().toString(36)}`;
   const base = { runId, repoUuid: uuid, targetRepo: uuid, map: `file:${file}`, phase: action.toUpperCase(), title: `${action} ${where}` };
+  // §0.39.282 N22 — the shadow: a writing action must bring ${file} back (written, staged or proposed). What does not come
+  // back is an absence (lib/shadow.js → a gap + a liminal item), and the run reads 'incomplete', not 'replied'.
+  const SH = deps.require('../../lib/shadow.js');
+  const shadow = ['explain', 'review'].includes(action) ? null : SH.declare({ step: `manage.${action}`, expects: { files: [file] }, subject: { repoUuid: uuid, file, runId } });
   deps.appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: snap.data.commitId, promptChars: message.length, ts: Date.now() });
   deps.emit('idearium.repo.file.manage', { ...base, state: 'building' });
   const RA = deps.require('../../lib/repo-agent.js');
   Promise.resolve().then(() => RA.dispatch({ repo: r.repo, repoDir: r.dir, message, provider: body.provider || null, layer: deps.getRepoLayer() }))
     .then((res) => {
-      const state = res && res.ok ? 'replied' : 'failed';
-      deps.appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, ...base, state, snapshot: snap.data.commitId, error: res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : null,
+      // §0.39.282 N21 — a reply blocked at its gate (a refusal) is 'blocked', never 'replied'
+      let state = res && res.ok ? (res.injects && res.injects.blocked ? 'blocked' : 'replied') : 'failed';
+      let absent = null;
+      if (shadow) {
+        if (state !== 'replied') SH.drop(shadow);
+        else {
+          const got = SH.settle(shadow, { files: ((res.injects && res.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) });
+          if (!got.ok) { state = 'incomplete'; absent = got.absent.files; }
+        }
+      }
+      deps.appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, ...base, state, snapshot: snap.data.commitId, ...(absent ? { absent } : {}),
+        error: res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : (absent ? `the reply did not bring back ${absent.join(', ')}` : null),
         injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null, ts: Date.now() });
       deps.emit('idearium.repo.file.manage', { ...base, state });
+      // §0.39.282 N23 — an Ollama draft of a writing action is reviewed by a guardian agent (same as a phase build)
+      if (shadow && typeof deps.reviewDraft === 'function')
+        deps.reviewDraft({ r: res, state, absent, target: r.repo, base, commitId: snap.data.commitId, req: { message }, note: body.note || '', message })
+          .catch(e => console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`));
     })
-    .catch((e) => deps.appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, ...base, state: 'failed', error: e.message, ts: Date.now() }));
-  return ok({ ...base, state: 'building', snapshot: snap.data.commitId, promptChars: message.length, message });
+    .catch((e) => { if (shadow) SH.drop(shadow); deps.appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, ...base, state: 'failed', error: e.message, ts: Date.now() }); });
+  return ok({ ...base, state: 'building', snapshot: snap.data.commitId, promptChars: message.length, message, ...(shadow ? { shadow: { id: shadow.id, expects: shadow.expects } } : {}) });
 }

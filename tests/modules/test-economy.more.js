@@ -12,7 +12,8 @@ module.exports = async function ({ t, ROOT, assert }) {
     writeTextFile: (u, p, c) => { files.set(p, c); return { ok: true }; }, deleteTextFile: (u, p) => { files.delete(p); return { ok: true }; }, refresh: () => ({ ok: true }) };
   const repo = { uuid: `econ-${Date.now()}`, name: 'econ' };
   RI.setMode(repo.uuid, 'auto');
-  const reply = 'Here:\n```js src/a.js\nnew\n```\n';
+  // §0.39.282 — real JavaScript: the code.write gate (N21) parse-checks js now, and a bare `new` is a syntax error
+  const reply = 'Here:\n```js src/a.js\nexport const a = "new";\n```\n';
 
   await t('EC5-01', 'the policy store: defaults when nothing is stored; a save keeps the previous policy and says who changed it', () => {
     const d = S.load(['ollama', 'chatgpt']);
@@ -34,7 +35,7 @@ module.exports = async function ({ t, ROOT, assert }) {
     assert.strictEqual(files.get('src/a.js'), 'old\n', 'untouched until promoted');
     assert.deepStrictEqual([commits.length, commits[0].causedBy, commits[0].system], [1, 'economy:local:ollama', 'staging']);
     const direct = await RI.fromReply({ layer, repo, text: reply, stage: null });
-    assert.strictEqual(direct.injects[0].status, 'applied'); assert.strictEqual(files.get('src/a.js'), 'new\n');
+    assert.strictEqual(direct.injects[0].status, 'applied'); assert.strictEqual(files.get('src/a.js'), 'export const a = "new";\n');
   });
 
   await t('EC5-03', 'versionium failing → nothing written, the reason said; review mode is unchanged (proposals wait, nothing staged)', async () => {

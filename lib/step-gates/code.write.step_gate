@@ -1,0 +1,21 @@
+envelope: 1
+uuid: nexus-step-gate-code-write
+type: step_gate
+id: code.write
+context: lib/step-gates — the gate each extracted file passes before it is proposed, staged or written (0.39.282 N21).
+intent: No file is ever written empty, and no file of a language we can check is written unparseable.
+summary: An empty fenced block became a 1-byte file proposal; a half-streamed block could be written as broken code.
+system: nexus
+tags: [step_gate, build]
+source: docs/2026-09-29-nex-node-store-phasemap.spec#N21
+payload:
+  step: code.write
+  on_block: drop
+  checks:
+    - id: file-non-empty
+      kind: non_empty
+      min_chars: 1
+    - id: file-parses
+      kind: parses
+      # languages checked here; any other syntax passes this check (it is not proof, just not checkable yet)
+      languages: [json, yaml, yml, js, mjs, cjs]

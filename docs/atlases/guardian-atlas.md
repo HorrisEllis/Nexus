@@ -397,3 +397,7 @@ A provider someone chose is never swapped silently.
 **Not built, on purpose:** anything that makes automated provider chats look like a person typing (forced human timing, a mandatory randomizer, decoy questions). The limits and quiet hours are the answer to sign-outs: automated load on a browser account stays bounded and visible.
 
 Tests: `tests/modules/test-economy-guardian.test.js` (the real dispatcher), `tests/modules/test-economy.test.js`.
+
+## 0.39.282 — guardian 3.19.1
+
+Crash-restart fixed: the provider sign-in route (`guardian/server.js`), which every provider tab calls, and the economy routes called json(), which was never defined. json() is now defined beside bodyJ, and the dispatcher treats only an explicit false from the extended routes as "no route". Before, async routes answered 404 first and then crashed. A job's reply is recorded: the job.complete event from `guardian/lib/response-sink.js` now carries the text and the chat url, where before the log said "0ch · chat=(none reported)". The ledger, boot and CFR directories follow the data root. The queue of downloads that Clear Glass could not take sits beside the response nodes (in production that is `guardian/data`; in a test, inside that test's own sandbox). `tests/modules/test-guardian-json-routes.test.js` boots the real server and calls every one of these routes.

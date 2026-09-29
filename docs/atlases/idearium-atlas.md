@@ -463,3 +463,11 @@ Changes queue until **Save**, which sends them as one POST. Guardian holds the p
 **Who builds, when nobody chose.** Once the usage record holds enough build outcomes, a build with no chosen provider is ordered by what has worked. The seam record's routedBy field says so and names the scores. A chosen provider is still the only one tried.
 
 Tests: `tests/modules/test-economy.test.js`, `tests/probe/economy-console-chromium.js`.
+
+## The desktop login, and who answers by default (v0.39.282)
+
+James: *"the desktop environment needs to either ask, or give me the login. or use a generic password listed in the atlas."*
+
+**Desktop login: user nexus, password nexus.** This is the generic default for every repo desktop VM. Change it in Settings → Global → desktop.user and desktop.password. `cos/testenv/provision.js` run with the desktop option sets it with chpasswd and adds the account to sudo. It also works through the environment variables COS_DESKTOP_USER and COS_DESKTOP_PASSWORD, which is how idearium's "Set up the test VM" passes the settings. Every desktop boot applies the setting again through the guest agent (its guest-set-user-password command, `cos/compartment/guest-agent.js`), so an image made before 0.39.282 gets it too, even though its account had no password. The viewer (`idearium/ui/desktop.html`) shows the login; clicking it copies the password. It also says whether the setting took. An invalid login name is refused before it reaches any shell (`cos/workspace/index.js`).
+
+**Who answers a repo that chose no provider**: Settings → Global → repos.default_provider, which is ollama by default (`lib/repo-agent.js`). Clearing it restores the old fallback: guardian's first provider.
