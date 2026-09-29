@@ -235,6 +235,11 @@ function _resolveExistingTarget(description, opts = {}) {
   }
 
   if (candidateSets.length >= 2) {
+    // §0.39.282 — the FULL intersection first: one id every referenced token points at is the description's target
+    // ("connect the eravos wire" -> eravos.wire.connect, though "connect" alone also names copilot.person_model.connect
+    // and "eravos wire" alone also names eravos.wire.list). Still refuses when that intersection is empty or not one.
+    const all = [...candidateSets[0]].filter(id => candidateSets.every(set => set.has(id)));
+    if (all.length === 1) return _hydrateTarget({ found: true, componentId: all[0], system: loomMap.resolveSystem(all[0]) }, loomMap, opts);
     // Intersect every pair of candidate sets that share at least one real
     // id — a real, present token narrowing the search, not a coincidence.
     const counts = new Map();

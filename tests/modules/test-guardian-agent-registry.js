@@ -92,10 +92,13 @@ test('AGT-006', 'getAgent(id) returns the real, exact registered record, and nul
 });
 
 test('AGT-007', 'each real registration triggers a real disk write via _persist() — mocked here, but the real call site is exercised', () => {
-  const before = _writes.length;
+  // §0.39.282 — _persist() writes one JAA row per option key now (store.js:291), flushed on JaaStore's debounce, not a
+  // synchronous fs.writeFileSync — so the call site is observed on _persist itself, which still runs for real.
   const store = new NexusOptions();
+  const real = store._persist.bind(store); let calls = 0;
+  store._persist = () => { calls++; return real(); };
   store.registerAgent({ agentName: 'persist-check', origin: 'https://d.com', input: { selector: '#p' }, output: { selector: '#q' } });
-  assert.ok(_writes.length > before, 'expected registerAgent() to call the real _persist() path (mocked here, real in production)');
+  assert.ok(calls > 0, 'expected registerAgent() to call the real _persist() path');
 });
 
 // ── Structural checks — the picker UI and IPC relay (Electron/DOM-dependent) ──

@@ -165,7 +165,9 @@ async function run() {
   const APP = fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'js', 'app.js'), 'utf8');
   check('the picker has a file-tree-first switch, on by default', /id="ns-file-tree" checked/.test(HTML));
   check('the picker groups COS archetypes, COS blueprints and document templates', APP.includes("'cos-archetype'") && APP.includes("'cos-blueprint'") && APP.includes('spec-document templates'));
-  check('the New Spec modal groups eravos mods as their own "architecture & features" category', /Eravos mods.*real starting files/.test(APP));
+  // §0.39.282 — James, 0.39.267: "the eravos options need to be removed from this prompt." The picker leaves them out;
+  // GET /api/spec-engine/templates?include=eravos still lists them.
+  check('the New Spec modal leaves eravos mods out (0.39.267), the templates API still offers them on request', !/Eravos mods/.test(APP) && /t\.source !== 'eravos-mod'/.test(APP));
   check('create sends fileTree and waits long enough for a real plan', /fileTree \}\),\s*\}, fileTree \? 180000/.test(APP));
 
   // One unparseable schema takes the whole tool registry down ("tool registry
