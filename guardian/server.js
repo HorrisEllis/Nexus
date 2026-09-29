@@ -68,7 +68,7 @@ const { wireGuardianCore } = require('./lib');
 // Sigma deviations → gap.found in JAA
 const _baseline = createBaseline({
   name:           'guardian',
-  ledgerDir:      require('path').join(__dirname, '../data/guardian/ledger'),
+  ledgerDir:      require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger'),
   failuresDir:    require('path').join(__dirname, '../data/guardian/failures'),
   invariantDir:   require('path').join(__dirname, '../data/guardian/invariant'),
   baselineN:      20,
@@ -1111,7 +1111,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     fn: async () => {
       try {
         const fs  = require('fs'), rp = require('path');
-        const dir = rp.join(__dirname,'..','data','guardian','ledger','boot');
+        const dir = rp.join(process.env.NEXUS_DATA_ROOT || rp.join(__dirname,'..','data'),'guardian','ledger','boot');
         fs.mkdirSync(dir,{recursive:true});
         fs.appendFileSync(rp.join(dir,'events.ndjson'),
           JSON.stringify({type:'guardian.boot',version:'3.6.1',pid:process.pid,ts:Date.now()})+'\n');
@@ -1205,7 +1205,7 @@ function _kernelEmit(type, data, ts) {
 // point was correct and stands). Existing memory_store files migrated
 // once by copy; originals left untouched (§7.4 archived, not discarded).
 const _evLedger = createCFRLedger({
-  ledgerDir: require('path').join(__dirname, '..', 'data', 'guardian', 'ledger', 'cfr'),
+  ledgerDir: require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger', 'cfr'),
   systemId:  'guardian',
   onEvent:   null, // downstream consumers can add onEvent hooks here
   onGap: (gap) => {
@@ -1245,7 +1245,7 @@ _evLedger.startAutoSave(60000);
 // than needing a separate archive/reference scheme.
 try {
   const snap = require('../cortex/snapshot/index.js');
-  const _ledgerCfrDir = require('path').join(__dirname, '..', 'data', 'guardian', 'ledger', 'cfr');
+  const _ledgerCfrDir = require('path').join((process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', 'data')), 'guardian', 'ledger', 'cfr');
   snap.registerStateProvider('guardian', {
     capture: () => {
       const read = (f) => { try { return JSON.parse(fs.readFileSync(require('path').join(_ledgerCfrDir, f), 'utf8')); } catch (_) { return null; } };

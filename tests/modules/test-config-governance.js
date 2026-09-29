@@ -39,7 +39,7 @@ const { createCFRLedger } = require('../../intelligence/cfr/ledger.js');
 // Collision-proof system name so the canonical tree write can never touch
 // a real system's ledger, and is removable at the end.
 const SYS = `cfggov-${Date.now()}`;
-const CANON_DIR = path.join(ROOT, 'data/ledger', SYS);
+const CANON_DIR = path.join(process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data'), 'ledger', SYS);   // §0.39.282 lib/component-ledger.js follows the data root
 
 function freshCfrLedger() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cfggov-'));

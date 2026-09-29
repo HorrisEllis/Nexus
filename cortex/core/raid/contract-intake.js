@@ -248,7 +248,7 @@ const TABLE = 'raid_contract_queue';
 // call (checked directly in intelligence/cfr/ledger.js), so no explicit
 // open() needed here.
 const _raidLedger = createCFRLedger({
-  ledgerDir: require('path').join(__dirname, '..', '..', '..', 'data', 'raid', 'ledger', 'cfr'),
+  ledgerDir: require('path').join(process.env.NEXUS_DATA_ROOT || require('path').join(__dirname, '..', '..', '..', 'data'), 'raid', 'ledger', 'cfr'),
   systemId:  'raid',
 });
 

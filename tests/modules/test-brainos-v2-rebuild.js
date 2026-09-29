@@ -32,9 +32,12 @@ function run() {
     assert.deepStrictEqual(tabs.sort(), ['automation', 'bayes', 'canvas', 'deploy', 'pipeline'].sort());
   });
 
-  test('BV2-002', 'exactly the 2 real, mapped right-panel tabs exist — no more, no fewer', () => {
+  test('BV2-002', 'the real, mapped right-panel tabs exist — each with its own panel, none a dead tab', () => {
+    // §0.39.282 — pipeline, automation and tool-calls were added after the v2 rebuild, each on a real source
+    // (automation: clear-glass/src/mesh/automation-engine.js). The invariant kept: node + chatlog, every tab has a body.
     const tabs = [...html.matchAll(/data-rtab="([a-z]+)"/g)].map((m) => m[1]);
-    assert.deepStrictEqual(tabs.sort(), ['chatlog', 'node'].sort());
+    assert.deepStrictEqual(tabs.slice().sort(), ['automation', 'chatlog', 'node', 'pipeline', 'toolcalls']);
+    for (const t of tabs) assert.ok(html.includes(`id="rt-${t}"`), `tab ${t} has no rt-${t} panel`);
   });
 
   test('BV2-003', 'every explicitly-removed tab/panel id is genuinely absent from the real HTML', () => {

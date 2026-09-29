@@ -28,7 +28,8 @@ const NEW_DIR = path.join(ROOT, 'data/guardian/ledger/cfr');
 const SRC = fs.readFileSync(path.join(ROOT, 'guardian/server.js'), 'utf8');
 
 test('GCC-001', "guardian/server.js's CFR ledgerDir points INSIDE the data root, not the source tree", () => {
-  assert.ok(/ledgerDir:\s*require\('path'\)\.join\(__dirname,\s*'\.\.',\s*'data',\s*'guardian',\s*'ledger',\s*'cfr'\)/.test(SRC),
+  // §0.39.282 — <data root>/guardian/ledger/cfr, where the data root is NEXUS_DATA_ROOT (sandbox) or <repo>/data.
+  assert.ok(/ledgerDir:\s*require\('path'\)\.join\(\(process\.env\.NEXUS_DATA_ROOT \|\| require\('path'\)\.join\(__dirname, '\.\.', 'data'\)\), 'guardian', 'ledger', 'cfr'\)/.test(SRC),
     'ledgerDir must be data/guardian/ledger/cfr');
   assert.ok(!/ledgerDir:\s*require\('path'\)\.join\(__dirname,\s*'memory_store'\)/.test(SRC),
     'the old source-tree ledgerDir must be gone');

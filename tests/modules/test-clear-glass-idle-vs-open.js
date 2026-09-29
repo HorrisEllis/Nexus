@@ -89,8 +89,11 @@ test('CGI-004', 'REAL touchActivity() resets lastActivity — the exact function
 test('CGI-005', 'REAL idle-reaper math: a kernel touched moments ago is NOT past idleTimeoutMs; one that was never touched after a long-ago spawn IS', () => {
   delete require.cache[require.resolve(AUTOPILOT_PATH)];
   const mod = require(AUTOPILOT_PATH);
-  const kernel = mod.ALL_KERNELS.find(k => k.name === 'clear-glass');
-  assert.strictEqual(kernel.idleTimeoutMs, 10 * 60 * 1000, 'precondition: 10 minute idle timeout, as configured');
+  // §0.39.282 — clear-glass is always-on now: it has no idle timeout, so the reaper can never take an open window (the
+  // original bug, closed at the root). The reaper math is still checked for any on-demand kernel, with the old 10 minutes.
+  const cg = mod.ALL_KERNELS.find(k => k.name === 'clear-glass');
+  assert.ok(cg && !cg.onDemand && !cg.idleTimeoutMs, 'clear-glass is always-on: not on-demand, no idle timeout');
+  const kernel = { idleTimeoutMs: 10 * 60 * 1000 };
 
   // Reproduces the exact bug: spawned 11 minutes ago, window has been open
   // and in active use the whole time (simulated by a touch 30s ago, as the

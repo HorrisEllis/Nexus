@@ -444,7 +444,7 @@ function registryAll() {
 // ── Per-system ledger — §2.2 persisted to disk + in-memory ring ─────────────
 // §2.2: Storage device is the source of truth. Survives restart.
 const LEDGER_MAX  = 200;
-const LEDGER_DIR  = path.join(ROOT, 'data', 'ledger');
+const LEDGER_DIR  = path.join(process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data'), 'ledger');   // §0.39.282 sandbox-aware
 const LEDGER_FILE = path.join(LEDGER_DIR, 'orchestrator.jsonl');
 
 // §LAW II — module-scope event ledger: every ledgerWrite goes here first
@@ -466,7 +466,7 @@ const _eventLedgers = new Map(); // system -> CFR ledger instance
 function _getEventLedger(system) {
   if (!createCFRLedger) return null;
   if (_eventLedgers.has(system)) return _eventLedgers.get(system);
-  const dir = path.join(ROOT, 'data', system, 'ledger', 'cfr');
+  const dir = path.join(process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data'), system, 'ledger', 'cfr');   // §0.39.282 the sandbox's data root under tests
   let ledger = null;
   try {
     ledger = createCFRLedger({
@@ -3055,7 +3055,7 @@ server.listen(PORT, BIND_HOST, async () => {
   ownSeq.phase({ name:'ledger.writable', type:'HARD',
     label:'Ledger directory writable (§2.1)',
     fn: async () => {
-      const ledgerDir = path.join(ROOT, 'data', 'ledger');
+      const ledgerDir = LEDGER_DIR;
       fs.mkdirSync(ledgerDir, { recursive: true });
       const testFile = path.join(ledgerDir, '.boot-test');
       fs.writeFileSync(testFile, String(Date.now()));

@@ -33,7 +33,8 @@ function main() {
 
   test('the real registration code exists and targets the real, correct ledger path', () => {
     assert.ok(src.includes("registerStateProvider('guardian'"), 'guardian must register itself, not rely on being registered externally');
-    assert.ok(src.includes("'data', 'guardian', 'ledger', 'cfr'"), 'must point at the real, confirmed location of the real CFR ledger files');
+    // §0.39.282 — the data root is NEXUS_DATA_ROOT when set (the test sandbox), else <repo>/data; the path under it is unchanged.
+    assert.ok(/NEXUS_DATA_ROOT[^\n]*'guardian', 'ledger', 'cfr'/.test(src), 'must point at the real, confirmed location of the real CFR ledger files');
   });
 
   test('registration failure is handled loudly but non-fatally (guardian must still boot)', () => {

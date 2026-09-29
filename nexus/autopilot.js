@@ -1215,7 +1215,7 @@ function _handleGraphRead(req, res) {
     // CFR for colouring — read from disk so it survives a wedged cortex.
     let cfr = null;
     try {
-      const p = path.join(ROOT, 'data', 'guardian', 'ledger', 'cfr', 'cfr_state.json');
+      const p = path.join(process.env.NEXUS_DATA_ROOT || path.join(ROOT, 'data'), 'guardian', 'ledger', 'cfr', 'cfr_state.json');
       if (fs.existsSync(p)) {
         cfr = JSON.parse(fs.readFileSync(p, 'utf8'));
         // cfr_state.json persists the four axes only — `regime` is DERIVED,
