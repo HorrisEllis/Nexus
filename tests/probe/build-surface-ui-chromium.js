@@ -14,7 +14,7 @@ const posts = [];
 const css = (P.read('idearium/ui/index.html').match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '';
 const page = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
 <div id="file-tree"></div><div id="ide-tabs"></div><div id="ide-code"></div><textarea id="ide-editor"></textarea>
-<div id="repo-living-spec"></div><div id="repo-build-start"></div><div id="repo-env-section"></div>
+<div id="repo-living-spec"></div><div id="repo-subtab-git"><div class="ds"><input id="gi"><select id="gs"><option>x</option></select><textarea id="gt"></textarea><pre id="gp">log</pre></div></div><input id="ref" class="field-input"><div id="repo-build-start"></div><div id="repo-env-section"></div>
 <script>
 const API_BASE = '';
 let CURRENT_API_REPO = { uuid: '${U}', name: 'lock', files: [{ path: 'src/a.js', bytes: 10 }, { path: 'src/b.js', bytes: 5 }] };
@@ -89,6 +89,10 @@ srv.listen(0, '127.0.0.1', async () => {
   await pg.evaluate(() => { const i = [...document.querySelectorAll('.env-row')].find(r => r.querySelector('.env-k').textContent === 'cpus').querySelector('input'); i.value = '6'; i.dispatchEvent(new Event('change')); return envSave(); });
   const ep = posts.find(x => x[0].endsWith('/environment'));
   P.case('BS10: an edited option is saved with the others kept', ep && ep[1].options.cpus === '6' && ep[1].options.ramMB === 2048, { body: ep && ep[1] });
+  // BS18
+  const th = await pg.evaluate(() => { const cs = (id) => getComputedStyle(document.getElementById(id)); const ref = cs('ref');
+    return { ref: [ref.backgroundColor, ref.color, ref.fontFamily], gi: [cs('gi').backgroundColor, cs('gi').color, cs('gi').fontFamily], gs: cs('gs').backgroundColor, gt: cs('gt').backgroundColor, gp: cs('gp').color, body: getComputedStyle(document.body).backgroundColor }; });
+  P.case('BS18: Sync & CI controls wear the shared field style (same background, text colour, font as .field-input)', JSON.stringify(th.gi) === JSON.stringify(th.ref) && th.gs === th.ref[0] && th.gt === th.ref[0] && th.gp !== 'rgb(0, 0, 0)', th);
   P.case('no page errors', errs.length === 0, { errs });
   await b.close(); srv.close(); P.done();
 });

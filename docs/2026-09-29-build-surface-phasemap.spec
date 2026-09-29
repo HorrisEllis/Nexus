@@ -292,9 +292,9 @@ spec:
 
     BS18_sync_ci_theme:
       layer: ui
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/probe/build-surface-ui-chromium.js BS18 (computed styles equal .field-input; 11/11)
       depends_on: []
-      files: [idearium/ui/js/app.js, idearium/ui/index.html]
+      files: [idearium/ui/index.html (#repo-subtab-git rules)]
       does: >-
         The Sync & CI tab drawn with the same primitives as every other repo tab (.ds cards, mono labels, action rows,
         the dark tokens) instead of its own light/inline styles.
