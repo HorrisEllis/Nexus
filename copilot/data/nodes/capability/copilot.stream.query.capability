@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-copilot.stream.query
 type: capability
 id: copilot.stream.query
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730176
-source: copilot.registry-components:copilot.stream.query
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786855
+source: copilot/registry-components.js:copilot.stream.query
+occurrences: 1
+firstSeenAt: 1789250730176
+lastSeenAt: 1790684786855
+fingerprint: f9a8fa227bb21e4d861fe1a4
 payload:
+  intent: []
+  grammar:
+    - stream
+    - cs
+  tags:
+    - copilot
   id: copilot.stream.query
   namespace: copilot
   name: stream.query
   version: 2.0.0
-  grammar:
-    - stream
-    - cs
   route:
     method: GET
     path: /api/stream
-  intent: []
   description: Query the continuous event stream
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

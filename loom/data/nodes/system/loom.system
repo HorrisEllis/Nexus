@@ -2,17 +2,33 @@ envelope: 1
 uuid: nexus-export-system-loom
 type: system
 id: loom
-context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  loom/registry-components.js
+context: loom — the system record, regenerated from loom/registry-components.js
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730154
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - loom
+  - system
+exported_at: 1790684787481
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730154
+lastSeenAt: 1790684787481
+fingerprint: d6b014cb7410e2da9689d203
 payload:
   id: loom
-  hasCapabilities: true
+  kernel: loom
   port: 3752
+  entry: loom/server.js
   spec: loom/spec/loom.spec
+  label: null
+  purpose: null
+  hasCapabilities: true
+  capabilities: 25
+  commands: 25
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: loom/registry-components.js
+    served: null
+    errors: []

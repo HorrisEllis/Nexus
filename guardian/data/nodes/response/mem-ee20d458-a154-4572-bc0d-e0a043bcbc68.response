@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-response-mem-ee20d458-a154-4572-bc0d-e0a043bcbc68
+type: response
+id: mem-ee20d458-a154-4572-bc0d-e0a043bcbc68
+context: guardian agent response — durable return-point record
+intent: null
+summary: ollama complete (6 chars)
+system: guardian
+tags:
+  - provider:ollama
+  - status:complete
+  - source:repo-agent
+  - agent:repo-nexus-id-repo-65d9fb37
+exported_at: 1790684779913
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1790684779913
+lastSeenAt: 1790684779913
+fingerprint: null
+payload:
+  jobId: mem-ee20d458-a154-4572-bc0d-e0a043bcbc68
+  provider: ollama
+  agentId: repo-nexus-id-repo-65d9fb37
+  status: complete
+  text: answer
+  chars: 6
+  contentHash: 0db52f4076c082518412afd3dd3576e2cb0c63703fd7fed5e23ade60efef31d9
+  source: repo-agent
+  sinks:
+    sse:
+      ok: false
+      detail: no bus
+    ledger:
+      ok: false
+      detail: no ledger available
+    downloads:
+      ok: false
+      detail: 'clear-glass unreachable: connect ECONNREFUSED 127.0.0.1:7702'
+      queued: true
+  prompt: hi
+  command: agent
+  ts: 1790684779908

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.rfr2.stats
+type: capability
+id: intelligence.rfr2.stats
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787415
+source: intelligence/registry-components.js:intelligence.rfr2.stats
+occurrences: 1
+firstSeenAt: 1790684787415
+lastSeenAt: 1790684787415
+fingerprint: 7646c81a8aafecf50fad60af
+payload:
+  intent: []
+  grammar:
+    - rfr2 stats
+    - intelligence rfr2
+  tags:
+    - intelligence
+    - rfr2
+  id: intelligence.rfr2.stats
+  namespace: intelligence
+  name: rfr2.stats
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/rfr2/stats
+  description: RFR2 live kernel stats — event/edge counts since this process started listening
+  params: []
+  permissions:
+    - system
+  hooks: {}

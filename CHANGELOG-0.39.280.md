@@ -36,9 +36,9 @@ nothing happened … the copilot atlas … as a user guide … the theme for ide
   none) but its REWIND / INSPECT / SETTINGS buttons set pointer-events:auto — which a child keeps. Three invisible buttons sat
   at the bottom centre over every channel, including Idearium's import modal. Closed now means nothing in it is hit.
   `tests/probe/menu-overlay-hit-chromium.js`: 2/4 before, 4/4 after.
-- **"Why Claude? set to ChatGPT."** The code spec's build had no provider (its repo was not found by spec), and the WARP
-  cascade let RAID pick and then fell through ollama → chatgpt → claude. A chosen provider is now the only one tried, and a
-  code spec with no repo builds as its original (else the repo-agent default). The two tests that pinned the old
+- **"Why Claude? set to ChatGPT."** The chunk asked for chatgpt, but the WARP cascade, when that attempt failed, fell
+  through to the next providers — ollama, then claude. A chosen provider is now the only one tried; its failure is reported
+  as its own. A code spec whose repo was not found builds as its original's choice. The two tests that pinned the old
   fall-through (WCF-004, WCF-006) now pin the new contract, with the reason.
 - **"git worktree failed: warning: … LF will be replaced by CRLF".** The reason shown was git's CRLF warnings, cut before the
   real error. Git now runs without line-ending conversion or warnings, with a 10-minute timeout for large trees, and reports
@@ -90,7 +90,13 @@ userscript-chat-stream 1.1.0. Provider userscripts unchanged.
 
 New: test-compartment-window (5), test-build-surface (13), test-build-surface-2 (3), test-cg-copilot-verbs (6); probes
 menu-overlay-hit-chromium (4), build-surface-ui-chromium (11), login-wall-chromium (7). Extended: test-cos-workspace
-(WS-13, WS-14). Regression against 0.39.279: see the release commit.
+(WS-13, WS-14).
+
+**Regression against 0.39.279** (the full list, 462 files, each run with its own HOME): 84 failing before, 82 after. The run
+caught two things this release broke, both fixed before handing back: clear-glass-library-ui (a source check's 200-character
+window — the compartment-window hook moved after the shortcut handler) and test-agent-hat-agnostic H-010 (a default
+provider in _buildIdentity would have outranked a chunk's own agent — removed; the cascade fix is the real one). Two
+previously failing files now pass (test-cg-eros-supervisor, test-guardian-retry-novelty-installs). No new failures.
 
 ## Not done / not proven here
 

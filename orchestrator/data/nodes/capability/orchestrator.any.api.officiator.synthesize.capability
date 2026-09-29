@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.any.api.officiator.synthesize
+type: capability
+id: orchestrator.any.api.officiator.synthesize
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787512
+source: orchestrator/interaction-contract.json:orchestrator.any.api.officiator.synthesize
+occurrences: 1
+firstSeenAt: 1790684787512
+lastSeenAt: 1790684787512
+fingerprint: 3b47598010a0a0b69359a1ae
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.any.api.officiator.synthesize
+  namespace: orchestrator
+  name: /api/officiator/synthesize
+  version: 1.0.0
+  route:
+    method: ANY
+    path: /api/officiator/synthesize
+  description: null

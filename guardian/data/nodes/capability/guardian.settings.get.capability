@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.settings.get
 type: capability
 id: guardian.settings.get
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730143
-source: guardian.registry-components:guardian.settings.get
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787217
+source: guardian/registry-components.js:guardian.settings.get
+occurrences: 1
+firstSeenAt: 1789250730143
+lastSeenAt: 1790684787217
+fingerprint: e0a168ddc41312b58466a3a2
 payload:
-  id: guardian.settings.get
-  namespace: guardian
-  name: settings.get
-  version: 3.6.2
+  intent: []
   grammar:
     - settings get
     - settings-get
+  tags:
+    - guardian
+  id: guardian.settings.get
+  namespace: guardian
+  name: settings.get
+  version: 3.14.0
   route:
     method: GET
     path: /settings
-  intent: []
   description: Guardian settings
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

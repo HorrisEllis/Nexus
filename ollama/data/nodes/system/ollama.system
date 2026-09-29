@@ -3,16 +3,34 @@ uuid: nexus-export-system-ollama
 type: system
 id: ollama
 context: >-
-  real, checked system record — capability-map.js SYSTEMS map + nexus/autopilot.js kernel defs +
-  ollama/registry-components.js
+  ollama — the system record, regenerated from ollama/registry-components.js and
+  ollama/lib/command-index.js (ollama/routes/*.js)
 intent: null
 summary: null
-system: ollama
-tags: []
-exported_at: 1789250730191
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - ollama
+  - system
+exported_at: 1790684787510
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250730191
+lastSeenAt: 1790684787510
+fingerprint: 70c80a7ad5ac1333104a6c6b
 payload:
   id: ollama
-  hasCapabilities: true
+  kernel: ollama-bridge
   port: 3749
+  entry: ollama/server.js
   spec: ollama/spec/ollama.spec
+  label: OLLAMA
+  purpose: Sovereign local model bridge. Isolated from Guardian.
+  hasCapabilities: true
+  capabilities: 7
+  commands: 17
+  declaredNotServed: []
+  servedNotDeclared: 10
+  sources:
+    declared: ollama/registry-components.js
+    served: ollama/lib/command-index.js (ollama/routes/*.js)
+    errors: []

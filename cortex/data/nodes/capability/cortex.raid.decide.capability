@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.raid.decide
+type: capability
+id: cortex.raid.decide
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787084
+source: cortex/registry-components.js:cortex.raid.decide
+occurrences: 1
+firstSeenAt: 1790684787084
+lastSeenAt: 1790684787084
+fingerprint: 175bee3fe5fa80f12ac87d93
+payload:
+  intent: []
+  grammar:
+    - raid decide
+  tags:
+    - cortex
+    - routing
+  id: cortex.raid.decide
+  namespace: cortex
+  name: raid.decide
+  version: 3.5.0
+  route:
+    method: POST
+    path: /api/raid/decide
+  description: Route intent to best agent/component
+  params: []
+  permissions:
+    - system
+  hooks:
+    in:
+      - id: cortex.raid.receive
+        intent:
+          - build
+          - ask
+          - forge
+          - classify
+        contract: nexus-interaction-contract-v1::cortex
+        tags:
+          - raid
+    out:
+      - id: cortex.raid.feedback
+        wires_to:
+          - ollama.jobs.dispatch.receive
+          - guardian.job.dispatch.receive
+        tags:
+          - routing

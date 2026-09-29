@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.autofill.updateProfile
+type: capability
+id: cg.autofill.updateProfile
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786700
+source: clear-glass/registry-components.js:cg.autofill.updateProfile
+occurrences: 1
+firstSeenAt: 1790684786700
+lastSeenAt: 1790684786700
+fingerprint: 27ac2e076cd3e9ed372950b5
+payload:
+  intent: []
+  grammar:
+    - autofill updateProfile
+  tags:
+    - cg
+    - autofill
+  id: cg.autofill.updateProfile
+  namespace: cg
+  name: autofill.updateProfile
+  version: 3.17.0
+  route:
+    method: IPC
+    path: autofill:profile:update
+  description: Update a real autofill profile
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

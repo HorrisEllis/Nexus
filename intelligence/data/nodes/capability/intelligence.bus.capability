@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.bus
+type: capability
+id: intelligence.bus
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787395
+source: intelligence/registry-components.js:intelligence.bus
+occurrences: 1
+firstSeenAt: 1790684787395
+lastSeenAt: 1790684787395
+fingerprint: 68d242551445969c07981d7e
+payload:
+  intent: []
+  grammar:
+    - bus
+    - intelligence bus
+  tags:
+    - intelligence
+  id: intelligence.bus
+  namespace: intelligence
+  name: bus
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/bus
+  description: Allowlisted event intake for in-process organs (liminal-space)
+  params: []
+  permissions:
+    - system
+  hooks: {}

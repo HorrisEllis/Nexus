@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.bus.emit
 type: capability
 id: guardian.bus.emit
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730132
-source: guardian.registry-components:guardian.bus.emit
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787207
+source: guardian/registry-components.js:guardian.bus.emit
+occurrences: 1
+firstSeenAt: 1789250730132
+lastSeenAt: 1790684787207
+fingerprint: e94373073fee71d1fb50cd36
 payload:
-  id: guardian.bus.emit
-  namespace: guardian
-  name: bus.emit
-  version: 3.6.2
+  intent: []
   grammar:
     - bus emit
     - bus-emit
+  tags:
+    - guardian
+  id: guardian.bus.emit
+  namespace: guardian
+  name: bus.emit
+  version: 3.14.0
   route:
     method: POST
     path: /bus/emit
-  intent: []
   description: Emit event onto bus
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

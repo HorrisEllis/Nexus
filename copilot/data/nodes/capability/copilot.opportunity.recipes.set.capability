@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.recipes.set
+type: capability
+id: copilot.opportunity.recipes.set
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786919
+source: copilot/registry-components.js:copilot.opportunity.recipes.set
+occurrences: 1
+firstSeenAt: 1790684786919
+lastSeenAt: 1790684786919
+fingerprint: 3f8753f3ca1984a1fe913b0d
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity recipes set
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.recipes.set
+  namespace: copilot
+  name: opportunity.recipes.set
+  version: 2.0.0
+  route:
+    method: PUT
+    path: /api/opportunity/recipes/:host
+  description: 'Per-site selectors: replySelector, submitSelector'
+  params: []
+  permissions:
+    - system
+  hooks: {}

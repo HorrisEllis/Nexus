@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.any.api.notes
+type: capability
+id: orchestrator.any.api.notes
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787513
+source: orchestrator/interaction-contract.json:orchestrator.any.api.notes
+occurrences: 1
+firstSeenAt: 1790684787513
+lastSeenAt: 1790684787513
+fingerprint: 3877d061dceb3dc9f5e1e481
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.any.api.notes
+  namespace: orchestrator
+  name: /api/notes
+  version: 1.0.0
+  route:
+    method: ANY
+    path: /api/notes
+  description: null

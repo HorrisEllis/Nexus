@@ -2,31 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-copilot.person_model.accept
 type: capability
 id: copilot.person_model.accept
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730179
-source: copilot.registry-components:copilot.person_model.accept
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786870
+source: copilot/registry-components.js:copilot.person_model.accept
+occurrences: 1
+firstSeenAt: 1789250730179
+lastSeenAt: 1790684786870
+fingerprint: 50a3f2e5ac505e8c77b8e8bf
 payload:
-  id: copilot.person_model.accept
-  namespace: copilot
-  name: person_model.accept
-  version: 2.0.0
+  intent: []
   grammar:
     - accept observation
-  route:
-    method: POST
-    path: /api/person-model/accept
-  intent:
-    - action
-  description: USER-ONLY. Promotes an observation to a stated claim. No agent path exists (§IP-5)
-  params: []
   tags:
     - copilot
     - person-model
     - review
+  id: copilot.person_model.accept
+  namespace: copilot
+  name: person_model.accept
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/person-model/accept
+  description: USER-ONLY. Promotes an observation to a stated claim. No agent path exists (§IP-5)
+  params: []
   permissions:
     - user
   hooks:

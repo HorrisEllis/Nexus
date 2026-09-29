@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.events
+type: capability
+id: cortex.events
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787079
+source: cortex/registry-components.js:cortex.events
+occurrences: 1
+firstSeenAt: 1790684787079
+lastSeenAt: 1790684787079
+fingerprint: 7de8599427863a5c2417f2f1
+payload:
+  intent: []
+  grammar:
+    - events
+  tags:
+    - cortex
+    - stream
+  id: cortex.events
+  namespace: cortex
+  name: events
+  version: 3.5.0
+  route:
+    method: GET
+    path: /events
+  description: SSE — all cortex events
+  params: []
+  permissions:
+    - system
+  hooks: {}

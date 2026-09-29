@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.sessions.list
 type: capability
 id: guardian.sessions.list
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730143
-source: guardian.registry-components:guardian.sessions.list
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787216
+source: guardian/registry-components.js:guardian.sessions.list
+occurrences: 1
+firstSeenAt: 1789250730143
+lastSeenAt: 1790684787216
+fingerprint: e37cdd708202a14811905ee4
 payload:
-  id: guardian.sessions.list
-  namespace: guardian
-  name: sessions.list
-  version: 3.6.2
+  intent: []
   grammar:
     - sessions list
     - sessions-list
+  tags:
+    - guardian
+  id: guardian.sessions.list
+  namespace: guardian
+  name: sessions.list
+  version: 3.14.0
   route:
     method: GET
     path: /sessions
-  intent: []
   description: NCP session history
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

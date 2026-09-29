@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.job.response
 type: capability
 id: guardian.job.response
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730140
-source: guardian.registry-components:guardian.job.response
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787211
+source: guardian/registry-components.js:guardian.job.response
+occurrences: 1
+firstSeenAt: 1789250730140
+lastSeenAt: 1790684787211
+fingerprint: 10432f2f43ff71769f4c9ade
 payload:
-  id: guardian.job.response
-  namespace: guardian
-  name: job.response
-  version: 3.6.2
+  intent: []
   grammar:
     - job response
     - job-response
+  tags:
+    - guardian
+  id: guardian.job.response
+  namespace: guardian
+  name: job.response
+  version: 3.14.0
   route:
     method: GET
     path: /response/:jobId
-  intent: []
   description: Full response for a job
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

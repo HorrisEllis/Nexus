@@ -10,11 +10,11 @@ tags:
   - provider:claude
   - status:complete
   - source:ncp
-exported_at: 1790427743670
+exported_at: 1790684820364
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1790427743670
-lastSeenAt: 1790427743670
+firstSeenAt: 1790684820364
+lastSeenAt: 1790684820364
 fingerprint: null
 payload:
   jobId: job-with-artifacts-1
@@ -41,4 +41,4 @@ payload:
       queued: true
   prompt: write a function
   command: code
-  ts: 1790427743641
+  ts: 1790684820328

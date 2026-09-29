@@ -2,31 +2,41 @@ envelope: 1
 uuid: nexus-export-capability-copilot.agent.calibrate
 type: capability
 id: copilot.agent.calibrate
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730182
-source: copilot.registry-components:copilot.agent.calibrate
+system: null
+tags:
+  - copilot
+  - capability
+  - not-served
+exported_at: 1790684786937
+source: copilot/registry-components.js:copilot.agent.calibrate
+occurrences: 1
+firstSeenAt: 1789250730182
+lastSeenAt: 1790684786937
+fingerprint: ae7b5cde5a9aecb020a6765b
 payload:
-  id: copilot.agent.calibrate
-  namespace: copilot
-  name: agent.calibrate
-  version: 2.0.0
+  intent: []
   grammar:
     - calibrate agent
     - find the limit
-  route:
-    method: POST
-    path: /api/agents/calibrate
-  intent: []
-  description: Binary-search an agent’s real input limit from live probes
-  params: []
   tags:
     - copilot
     - agents
     - capability
+    - not-served
+  id: copilot.agent.calibrate
+  namespace: copilot
+  name: agent.calibrate
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/agents/calibrate
+  description: 'Binary-search an agent’s real input limit from live probes — NOT SERVED: no live probe is wired'
+  params: []
   permissions:
     - user
   hooks: {}
+  served: false
+  notServed: lib/agent-capability.js calibrate() needs a live probe(size) function; none is wired

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.raid.health
+type: capability
+id: cortex.raid.health
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787085
+source: cortex/registry-components.js:cortex.raid.health
+occurrences: 1
+firstSeenAt: 1790684787085
+lastSeenAt: 1790684787085
+fingerprint: 625277ba34ff79d6c3ccee48
+payload:
+  intent: []
+  grammar:
+    - raid health
+  tags:
+    - cortex
+  id: cortex.raid.health
+  namespace: cortex
+  name: raid.health
+  version: 3.5.0
+  route:
+    method: GET
+    path: /api/raid/health
+  description: RAID agent health + weights
+  params: []
+  permissions:
+    - system
+  hooks: {}

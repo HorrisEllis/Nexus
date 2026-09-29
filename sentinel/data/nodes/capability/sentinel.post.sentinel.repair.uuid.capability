@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-sentinel.post.sentinel.repair.uuid
+type: capability
+id: sentinel.post.sentinel.repair.uuid
+context: sentinel/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - sentinel
+  - capability
+exported_at: 1790684787518
+source: sentinel/interaction-contract.json:sentinel.post.sentinel.repair.uuid
+occurrences: 1
+firstSeenAt: 1790684787518
+lastSeenAt: 1790684787518
+fingerprint: 47fa7a7055805792e570369b
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - sentinel
+    - interaction-contract
+  id: sentinel.post.sentinel.repair.uuid
+  namespace: sentinel
+  name: /sentinel/repair/:uuid
+  version: 0.1.0
+  route:
+    method: POST
+    path: /sentinel/repair/:uuid
+  description: Dispatch a repair and VERIFY delivery (SEN-7)

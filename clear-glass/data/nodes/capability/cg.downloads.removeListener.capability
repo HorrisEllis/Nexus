@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.downloads.removeListener
 type: capability
 id: cg.downloads.removeListener
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730167
-source: clear-glass.registry-components:cg.downloads.removeListener
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786670
+source: clear-glass/registry-components.js:cg.downloads.removeListener
+occurrences: 1
+firstSeenAt: 1789250730167
+lastSeenAt: 1790684786670
+fingerprint: b2679519e402b976d5fdcade
 payload:
-  id: cg.downloads.removeListener
-  namespace: cg
-  name: downloads.removeListener
-  version: 3.1.0
+  intent: []
   grammar:
     - downloads removeListener
-  route:
-    method: IPC
-    path: downloads:removeListener
-  intent: []
-  description: Remove a download listener
-  params: []
   tags:
     - cg
     - downloads
     - listener
+  id: cg.downloads.removeListener
+  namespace: cg
+  name: downloads.removeListener
+  version: 3.17.0
+  route:
+    method: IPC
+    path: downloads:removeListener
+  description: Remove a download listener
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

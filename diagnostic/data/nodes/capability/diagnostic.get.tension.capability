@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.tension
+type: capability
+id: diagnostic.get.tension
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787107
+source: diagnostic/interaction-contract.json:diagnostic.get.tension
+occurrences: 1
+firstSeenAt: 1790684787107
+lastSeenAt: 1790684787107
+fingerprint: 601ece2ff3de0add7eddc340
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.tension
+  namespace: diagnostic
+  name: /tension
+  version: 1.0.0
+  route:
+    method: GET
+    path: /tension
+  description: System-wide tension reading

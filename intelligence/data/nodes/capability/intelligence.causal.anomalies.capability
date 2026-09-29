@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.causal.anomalies
+type: capability
+id: intelligence.causal.anomalies
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787408
+source: intelligence/registry-components.js:intelligence.causal.anomalies
+occurrences: 1
+firstSeenAt: 1790684787408
+lastSeenAt: 1790684787408
+fingerprint: eff562200fb63427c2f0c22e
+payload:
+  intent: []
+  grammar:
+    - causal anomalies
+    - intelligence causal
+  tags:
+    - intelligence
+    - causal
+  id: intelligence.causal.anomalies
+  namespace: intelligence
+  name: causal.anomalies
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/causal/anomalies
+  description: Anomaly Engine — missing/unexpected event, timeout, causal_gap, path_mismatch
+  params: []
+  permissions:
+    - system
+  hooks: {}

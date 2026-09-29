@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-sentinel.post.sentinel.faults.uuid.ack
+type: capability
+id: sentinel.post.sentinel.faults.uuid.ack
+context: sentinel/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - sentinel
+  - capability
+exported_at: 1790684787517
+source: sentinel/interaction-contract.json:sentinel.post.sentinel.faults.uuid.ack
+occurrences: 1
+firstSeenAt: 1790684787517
+lastSeenAt: 1790684787517
+fingerprint: cd73431360666d2006b2bc0b
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - sentinel
+    - interaction-contract
+  id: sentinel.post.sentinel.faults.uuid.ack
+  namespace: sentinel
+  name: /sentinel/faults/:uuid/ack
+  version: 0.1.0
+  route:
+    method: POST
+    path: /sentinel/faults/:uuid/ack
+  description: Acknowledge a fault — a governed write, not UI state

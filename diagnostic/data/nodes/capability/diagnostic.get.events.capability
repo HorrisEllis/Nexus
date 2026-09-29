@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.events
+type: capability
+id: diagnostic.get.events
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787109
+source: diagnostic/interaction-contract.json:diagnostic.get.events
+occurrences: 1
+firstSeenAt: 1790684787109
+lastSeenAt: 1790684787109
+fingerprint: a1e01b0a7a891b83dd807d32
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.events
+  namespace: diagnostic
+  name: /events
+  version: 1.0.0
+  route:
+    method: GET
+    path: /events
+  description: SSE stream of all diagnostic events

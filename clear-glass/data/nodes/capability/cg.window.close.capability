@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.window.close
 type: capability
 id: cg.window.close
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730164
-source: clear-glass.registry-components:cg.window.close
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786656
+source: clear-glass/registry-components.js:cg.window.close
+occurrences: 1
+firstSeenAt: 1789250730164
+lastSeenAt: 1790684786656
+fingerprint: 042d8b6533652e6b446a6008
 payload:
-  id: cg.window.close
-  namespace: cg
-  name: window.close
-  version: 3.1.0
+  intent: []
   grammar:
     - window close
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Close agent window to tray
-  params: []
   tags:
     - cg
     - window
+  id: cg.window.close
+  namespace: cg
+  name: window.close
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Close agent window to tray
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-WIN-002

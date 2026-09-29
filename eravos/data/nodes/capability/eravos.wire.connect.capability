@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-eravos.wire.connect
 type: capability
 id: eravos.wire.connect
-context: eravos/registry-components.js real capability export
+context: eravos/registry-components.js — declared capability
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730184
-source: eravos.registry-components:eravos.wire.connect
+system: null
+tags:
+  - eravos
+  - capability
+exported_at: 1790684787169
+source: eravos/registry-components.js:eravos.wire.connect
+occurrences: 1
+firstSeenAt: 1789250730184
+lastSeenAt: 1790684787169
+fingerprint: 40699192fe8a88affa7ce5e1
 payload:
+  intent: []
+  grammar:
+    - eravos wire
+  tags:
+    - eravos
   id: eravos.wire.connect
   namespace: eravos
   name: wire.connect
   version: 3.0.0
-  grammar:
-    - eravos wire
   route:
     method: POST
     path: /api/wires
-  intent: []
   description: Connect two mod hooks
   params: []
-  tags:
-    - eravos
   permissions:
     - system
   hooks: {}

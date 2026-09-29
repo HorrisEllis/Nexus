@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.bda.observe
+type: capability
+id: intelligence.bda.observe
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787408
+source: intelligence/registry-components.js:intelligence.bda.observe
+occurrences: 1
+firstSeenAt: 1790684787408
+lastSeenAt: 1790684787408
+fingerprint: 96e1d65dcaa08e45b219a13e
+payload:
+  intent: []
+  grammar:
+    - bda observe
+    - intelligence bda
+  tags:
+    - intelligence
+    - cognition
+  id: intelligence.bda.observe
+  namespace: intelligence
+  name: bda.observe
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/bda/observe
+  description: Feed one utterance to BDA — signals, regime, drift/gap events
+  params: []
+  permissions:
+    - system
+  hooks: {}

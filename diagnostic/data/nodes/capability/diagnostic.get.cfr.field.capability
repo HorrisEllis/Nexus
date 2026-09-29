@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.cfr.field
+type: capability
+id: diagnostic.get.cfr.field
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787096
+source: diagnostic/interaction-contract.json:diagnostic.get.cfr.field
+occurrences: 1
+firstSeenAt: 1790684787096
+lastSeenAt: 1790684787096
+fingerprint: e1245a8f42aef737c6d7686a
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.cfr.field
+  namespace: diagnostic
+  name: /cfr/field
+  version: 1.0.0
+  route:
+    method: GET
+    path: /cfr/field
+  description: Raw CFR field data

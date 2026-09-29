@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-versionium.restore.read
 type: capability
 id: versionium.restore.read
-context: versionium/registry-components.js real capability export
+context: versionium/registry-components.js — declared capability
 intent: null
 summary: null
-system: versionium
-tags: []
-exported_at: 1789250756047
-source: versionium.registry-components:versionium.restore.read
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787521
+source: versionium/registry-components.js:versionium.restore.read
+occurrences: 1
+firstSeenAt: 1789250756047
+lastSeenAt: 1790684787521
+fingerprint: f283946a0deef42d705fc412
 payload:
+  intent: []
+  grammar:
+    - versionium restore
+  tags:
+    - versionium
   id: versionium.restore.read
   namespace: versionium
   name: restore.read
-  version: 3.0.0
-  grammar:
-    - versionium restore
+  version: 3.3.0
   route:
     method: GET
     path: /api/versionium/restore/:commitId
-  intent: []
   description: Real temporal replay — read-only
   params: []
-  tags:
-    - versionium
   permissions:
     - system
   hooks: {}

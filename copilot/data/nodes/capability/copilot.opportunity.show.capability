@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.show
+type: capability
+id: copilot.opportunity.show
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786891
+source: copilot/registry-components.js:copilot.opportunity.show
+occurrences: 1
+firstSeenAt: 1790684786891
+lastSeenAt: 1790684786891
+fingerprint: 097b0378a3408967655fb961
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity show
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.show
+  namespace: copilot
+  name: opportunity.show
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/opportunity/:id
+  description: One opportunity with its ledger and policy
+  params: []
+  permissions:
+    - system
+  hooks: {}

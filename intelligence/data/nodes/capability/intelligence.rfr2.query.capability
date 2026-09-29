@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.rfr2.query
+type: capability
+id: intelligence.rfr2.query
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787416
+source: intelligence/registry-components.js:intelligence.rfr2.query
+occurrences: 1
+firstSeenAt: 1790684787416
+lastSeenAt: 1790684787416
+fingerprint: 0ce40e7b32ef0ff5970a92b5
+payload:
+  intent: []
+  grammar:
+    - rfr2 query
+    - intelligence rfr2
+  tags:
+    - intelligence
+    - rfr2
+  id: intelligence.rfr2.query
+  namespace: intelligence
+  name: rfr2.query
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/rfr2/query
+  description: RFR2 Causal Query Language (CQL) — FIND events|edges|chains WHERE ...
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.prompt.tools
+type: capability
+id: copilot.prompt.tools
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786999
+source: copilot/registry-components.js:copilot.prompt.tools
+occurrences: 1
+firstSeenAt: 1790684786999
+lastSeenAt: 1790684786999
+fingerprint: 6786bc4b41ce104c46e86bd6
+payload:
+  intent: []
+  grammar:
+    - use tools
+  tags:
+    - copilot
+  id: copilot.prompt.tools
+  namespace: copilot
+  name: prompt.tools
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/prompt/tools
+  description: A prompt with the full tool loop (all 109 tools unless a scope is given)
+  params: []
+  permissions:
+    - system
+  hooks: {}

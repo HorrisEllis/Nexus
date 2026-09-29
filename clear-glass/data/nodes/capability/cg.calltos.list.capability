@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.calltos.list
 type: capability
 id: cg.calltos.list
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730165
-source: clear-glass.registry-components:cg.calltos.list
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786663
+source: clear-glass/registry-components.js:cg.calltos.list
+occurrences: 1
+firstSeenAt: 1789250730165
+lastSeenAt: 1790684786663
+fingerprint: 8f23d9c49d308b72574aea23
 payload:
-  id: cg.calltos.list
-  namespace: cg
-  name: calltos.list
-  version: 3.1.0
+  intent: []
   grammar:
     - calltos list
-  route:
-    method: IPC
-    path: calltos:list
-  intent: []
-  description: List every registered callto
-  params: []
   tags:
     - cg
     - guardian
     - callto
+  id: cg.calltos.list
+  namespace: cg
+  name: calltos.list
+  version: 3.17.0
+  route:
+    method: IPC
+    path: calltos:list
+  description: List every registered callto
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

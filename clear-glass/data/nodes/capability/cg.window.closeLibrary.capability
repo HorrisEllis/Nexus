@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.window.closeLibrary
+type: capability
+id: cg.window.closeLibrary
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786733
+source: clear-glass/registry-components.js:cg.window.closeLibrary
+occurrences: 1
+firstSeenAt: 1790684786733
+lastSeenAt: 1790684786733
+fingerprint: cfc7036f4802bac6878d8e7a
+payload:
+  intent: []
+  grammar:
+    - window closeLibrary
+  tags:
+    - cg
+    - window
+    - library
+  id: cg.window.closeLibrary
+  namespace: cg
+  name: window.closeLibrary
+  version: 3.17.0
+  route:
+    method: IPC
+    path: window:closeLibrary
+  description: Close the Library window
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

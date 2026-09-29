@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.bgtab.close
 type: capability
 id: cg.bgtab.close
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730174
-source: clear-glass.registry-components:cg.bgtab.close
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786695
+source: clear-glass/registry-components.js:cg.bgtab.close
+occurrences: 1
+firstSeenAt: 1789250730174
+lastSeenAt: 1790684786695
+fingerprint: 392a662e6089ec5aebbdd593
 payload:
-  id: cg.bgtab.close
-  namespace: cg
-  name: bgtab.close
-  version: 3.1.0
+  intent: []
   grammar:
     - bgtab close
-  route:
-    method: IPC
-    path: bgtab:close
-  intent: []
-  description: Close a real background tab
-  params: []
   tags:
     - cg
     - bgtab
+  id: cg.bgtab.close
+  namespace: cg
+  name: bgtab.close
+  version: 3.17.0
+  route:
+    method: IPC
+    path: bgtab:close
+  description: Close a real background tab
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

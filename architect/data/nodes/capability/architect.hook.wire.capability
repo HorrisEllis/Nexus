@@ -2,32 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-architect.hook.wire
 type: capability
 id: architect.hook.wire
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730058
-source: architect.registry-components:architect.hook.wire
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786576
+source: architect/registry-components.js:architect.hook.wire
+occurrences: 1
+firstSeenAt: 1789250730058
+lastSeenAt: 1790684786576
+fingerprint: 0a7f0adf073b53d86e7e9e36
 payload:
+  intent: []
+  grammar:
+    - hook wire
+  tags:
+    - architect
+    - wires
   id: architect.hook.wire
   namespace: architect
   name: hook.wire
   version: 1.0.0
-  grammar:
-    - hook wire
   route:
     method: POST
     path: /api/hooks/wire
-  intent:
-    - wire
-    - connect
-    - bind
   description: Wire two hooks together
   params: []
-  tags:
-    - architect
-    - wires
   permissions:
     - system
   hooks:

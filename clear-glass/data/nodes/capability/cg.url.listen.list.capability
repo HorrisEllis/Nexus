@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.url.listen.list
 type: capability
 id: cg.url.listen.list
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730163
-source: clear-glass.registry-components:cg.url.listen.list
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786649
+source: clear-glass/registry-components.js:cg.url.listen.list
+occurrences: 1
+firstSeenAt: 1789250730163
+lastSeenAt: 1790684786649
+fingerprint: 43cdec1f08aa7a54b49592b2
 payload:
-  id: cg.url.listen.list
-  namespace: cg
-  name: url.listen.list
-  version: 3.1.0
+  intent: []
   grammar:
     - url listen list
-  route:
-    method: GET
-    path: /listeners
-  intent: []
-  description: List active listeners
-  params: []
   tags:
     - cg
     - listener
+  id: cg.url.listen.list
+  namespace: cg
+  name: url.listen.list
+  version: 3.17.0
+  route:
+    method: GET
+    path: /listeners
+  description: List active listeners
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

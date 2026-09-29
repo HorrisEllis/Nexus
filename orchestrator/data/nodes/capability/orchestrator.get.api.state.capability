@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.get.api.state
+type: capability
+id: orchestrator.get.api.state
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787511
+source: orchestrator/interaction-contract.json:orchestrator.get.api.state
+occurrences: 1
+firstSeenAt: 1790684787511
+lastSeenAt: 1790684787511
+fingerprint: 676d62d7577aace6f31de222
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.get.api.state
+  namespace: orchestrator
+  name: /api/state
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/state
+  description: null

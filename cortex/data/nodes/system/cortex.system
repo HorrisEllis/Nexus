@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-system-cortex
+type: system
+id: cortex
+context: cortex — the system record, regenerated from cortex/registry-components.js
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - system
+exported_at: 1790684787093
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1790684787093
+lastSeenAt: 1790684787093
+fingerprint: 449817fcd43ea32710a98f02
+payload:
+  id: cortex
+  kernel: cortex
+  port: 3748
+  entry: cortex/boot.js
+  spec: cortex/spec/cortex.spec
+  label: null
+  purpose: null
+  hasCapabilities: true
+  capabilities: 23
+  commands: 23
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: cortex/registry-components.js
+    served: null
+    errors: []

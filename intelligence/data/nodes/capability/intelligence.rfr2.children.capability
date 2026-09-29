@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.rfr2.children
+type: capability
+id: intelligence.rfr2.children
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787417
+source: intelligence/registry-components.js:intelligence.rfr2.children
+occurrences: 1
+firstSeenAt: 1790684787417
+lastSeenAt: 1790684787417
+fingerprint: 8fbf0ffbd2a8fc8fd2e6eb48
+payload:
+  intent: []
+  grammar:
+    - rfr2 children
+    - intelligence rfr2
+  tags:
+    - intelligence
+    - rfr2
+  id: intelligence.rfr2.children
+  namespace: intelligence
+  name: rfr2.children
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/rfr2/children
+  description: RFR2 relationship traversal — direct children of an event
+  params: []
+  permissions:
+    - system
+  hooks: {}

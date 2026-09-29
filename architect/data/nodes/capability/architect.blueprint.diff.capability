@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-architect.blueprint.diff
 type: capability
 id: architect.blueprint.diff
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730064
-source: architect.registry-components:architect.blueprint.diff
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786587
+source: architect/registry-components.js:architect.blueprint.diff
+occurrences: 1
+firstSeenAt: 1789250730064
+lastSeenAt: 1790684786587
+fingerprint: c56911a144191d664e1f17ec
 payload:
+  intent: []
+  grammar:
+    - blueprint diff
+  tags:
+    - architect
   id: architect.blueprint.diff
   namespace: architect
   name: blueprint.diff
   version: 1.0.0
-  grammar:
-    - blueprint diff
   route:
     method: POST
     path: /api/blueprint/diff
-  intent: []
   description: Diff two blueprints
   params: []
-  tags:
-    - architect
   permissions:
     - system
   hooks: {}

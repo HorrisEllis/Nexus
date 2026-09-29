@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.files.versions
+type: capability
+id: versionium.files.versions
+context: versionium/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787524
+source: versionium/registry-components.js:versionium.files.versions
+occurrences: 1
+firstSeenAt: 1790684787524
+lastSeenAt: 1790684787524
+fingerprint: b4be363322cd7e90e912b067
+payload:
+  intent: []
+  grammar:
+    - versionium files versions
+  tags:
+    - versionium
+    - files
+  id: versionium.files.versions
+  namespace: versionium
+  name: files.versions
+  version: 3.3.0
+  route:
+    method: GET
+    path: /api/versionium/files/versions
+  description: >-
+    Every commit that wrote a path, newest first, with the file's sha256 as of each — the history
+    loom reads instead of git (0.39.263)
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -2,31 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-architect.hook.register
 type: capability
 id: architect.hook.register
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730056
-source: architect.registry-components:architect.hook.register
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786567
+source: architect/registry-components.js:architect.hook.register
+occurrences: 1
+firstSeenAt: 1789250730056
+lastSeenAt: 1790684786567
+fingerprint: cf3e96e340fc9e981b8d3ebd
 payload:
+  intent: []
+  grammar:
+    - hook register
+  tags:
+    - architect
+    - hooks
   id: architect.hook.register
   namespace: architect
   name: hook.register
   version: 1.0.0
-  grammar:
-    - hook register
   route:
     method: POST
     path: /api/hooks
-  intent:
-    - register
-    - declare
   description: Register a new hook
   params: []
-  tags:
-    - architect
-    - hooks
   permissions:
     - system
   hooks:

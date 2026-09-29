@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.ledger.stream
+type: capability
+id: diagnostic.get.ledger.stream
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787105
+source: diagnostic/interaction-contract.json:diagnostic.get.ledger.stream
+occurrences: 1
+firstSeenAt: 1790684787105
+lastSeenAt: 1790684787105
+fingerprint: 67b8092803fc4a8bc4ef2075
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.ledger.stream
+  namespace: diagnostic
+  name: /ledger/stream
+  version: 1.0.0
+  route:
+    method: GET
+    path: /ledger/stream
+  description: SSE stream of ledger writes

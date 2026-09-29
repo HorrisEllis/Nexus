@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.agent.suite
+type: capability
+id: copilot.agent.suite
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786943
+source: copilot/registry-components.js:copilot.agent.suite
+occurrences: 1
+firstSeenAt: 1790684786943
+lastSeenAt: 1790684786943
+fingerprint: 83609cb7f3c8fdae8ae04cac
+payload:
+  intent: []
+  grammar:
+    - agent suite
+    - hats
+  tags:
+    - copilot
+  id: copilot.agent.suite
+  namespace: copilot
+  name: agent.suite
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/agent/suite
+  description: The current agent and every hat
+  params: []
+  permissions:
+    - system
+  hooks: {}

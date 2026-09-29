@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.liminal.analyze
+type: capability
+id: intelligence.liminal.analyze
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787405
+source: intelligence/registry-components.js:intelligence.liminal.analyze
+occurrences: 1
+firstSeenAt: 1790684787405
+lastSeenAt: 1790684787405
+fingerprint: 43e66980c8bb49badfb92fa0
+payload:
+  intent: []
+  grammar:
+    - liminal analyze
+    - intelligence liminal
+  tags:
+    - intelligence
+    - gap-detection
+  id: intelligence.liminal.analyze
+  namespace: intelligence
+  name: liminal.analyze
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/liminal/analyze
+  description: >-
+    Liminal — 12 domain-agnostic gap detectors
+    (code/assumption/contrastive/structural/shadow/negative_space/relational/oscillatory/existential/field/music/reversal)
+  params: []
+  permissions:
+    - system
+  hooks: {}

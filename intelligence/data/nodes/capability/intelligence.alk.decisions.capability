@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.alk.decisions
+type: capability
+id: intelligence.alk.decisions
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787410
+source: intelligence/registry-components.js:intelligence.alk.decisions
+occurrences: 1
+firstSeenAt: 1790684787410
+lastSeenAt: 1790684787410
+fingerprint: 10c360233a30faaba5be0f89
+payload:
+  intent: []
+  grammar:
+    - alk decisions
+    - intelligence alk
+  tags:
+    - intelligence
+    - alk
+  id: intelligence.alk.decisions
+  namespace: intelligence
+  name: alk.decisions
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/alk/decisions
+  description: ALK — query decisions by actor/intent/time window
+  params: []
+  permissions:
+    - system
+  hooks: {}

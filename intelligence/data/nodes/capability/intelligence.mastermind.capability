@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.mastermind
+type: capability
+id: intelligence.mastermind
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787393
+source: intelligence/registry-components.js:intelligence.mastermind
+occurrences: 1
+firstSeenAt: 1790684787393
+lastSeenAt: 1790684787393
+fingerprint: d87f2992e47ed7a68aac7a12
+payload:
+  intent: []
+  grammar:
+    - mastermind
+    - intelligence mastermind
+  tags:
+    - intelligence
+    - cognition
+  id: intelligence.mastermind
+  namespace: intelligence
+  name: mastermind
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/mastermind
+  description: MASTERMIND strategic/causal analysis
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.mastermind.patterns
+type: capability
+id: intelligence.mastermind.patterns
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787394
+source: intelligence/registry-components.js:intelligence.mastermind.patterns
+occurrences: 1
+firstSeenAt: 1790684787394
+lastSeenAt: 1790684787394
+fingerprint: bc69da465891be4a7072a90e
+payload:
+  intent: []
+  grammar:
+    - mastermind patterns
+    - intelligence mastermind
+  tags:
+    - intelligence
+    - cognition
+  id: intelligence.mastermind.patterns
+  namespace: intelligence
+  name: mastermind.patterns
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/mastermind/patterns
+  description: Recurring causal-shape detection (RFR2 delta engine)
+  params: []
+  permissions:
+    - system
+  hooks: {}

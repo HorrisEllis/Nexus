@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.mark
+type: capability
+id: copilot.opportunity.mark
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786898
+source: copilot/registry-components.js:copilot.opportunity.mark
+occurrences: 1
+firstSeenAt: 1790684786898
+lastSeenAt: 1790684786898
+fingerprint: 136a746596e993b8abee55ef
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity mark
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.mark
+  namespace: copilot
+  name: opportunity.mark
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/:id/mark
+  description: 'Record a response: RESPONDED / INTERVIEW / OFFER / REJECTED / ARCHIVED'
+  params: []
+  permissions:
+    - user
+  hooks: {}

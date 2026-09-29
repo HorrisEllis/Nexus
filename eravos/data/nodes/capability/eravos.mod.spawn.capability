@@ -2,32 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-eravos.mod.spawn
 type: capability
 id: eravos.mod.spawn
-context: eravos/registry-components.js real capability export
+context: eravos/registry-components.js — declared capability
 intent: null
 summary: null
-system: eravos
-tags: []
-exported_at: 1789250730184
-source: eravos.registry-components:eravos.mod.spawn
+system: null
+tags:
+  - eravos
+  - capability
+exported_at: 1790684787164
+source: eravos/registry-components.js:eravos.mod.spawn
+occurrences: 1
+firstSeenAt: 1789250730184
+lastSeenAt: 1790684787164
+fingerprint: d5e029cc2daad422d66a6fce
 payload:
+  intent: []
+  grammar:
+    - eravos spawn
+    - spawn mod
+  tags:
+    - eravos
   id: eravos.mod.spawn
   namespace: eravos
   name: mod.spawn
   version: 3.0.0
-  grammar:
-    - eravos spawn
-    - spawn mod
   route:
     method: POST
     path: /api/mods
-  intent:
-    - compose
-    - visualize
-    - spawn
   description: Spawn an mod by id onto the canvas
   params: []
-  tags:
-    - eravos
   permissions:
     - system
   hooks:

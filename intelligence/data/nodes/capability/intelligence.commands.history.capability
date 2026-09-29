@@ -2,31 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.commands.history
 type: capability
 id: intelligence.commands.history
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756081
-source: intelligence.registry-components:intelligence.commands.history
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787404
+source: intelligence/registry-components.js:intelligence.commands.history
+occurrences: 1
+firstSeenAt: 1789250756081
+lastSeenAt: 1790684787404
+fingerprint: aac0b7ce100dab10295eaa7d
 payload:
+  intent: []
+  grammar:
+    - commands history
+    - intelligence commands
+  tags:
+    - intelligence
   id: intelligence.commands.history
   namespace: intelligence
   name: commands.history
   version: 1.0.0
-  grammar:
-    - commands history
-    - intelligence commands
   route:
     method: GET
     path: /api/commands/history
-  intent: []
   description: >-
     Real, persistent, queryable log of every command actually invoked — distinct from the static
     list above
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

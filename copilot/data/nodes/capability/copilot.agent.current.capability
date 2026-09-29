@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.agent.current
+type: capability
+id: copilot.agent.current
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786945
+source: copilot/registry-components.js:copilot.agent.current
+occurrences: 1
+firstSeenAt: 1790684786945
+lastSeenAt: 1790684786945
+fingerprint: eaf8688cc033c376d7e7e59c
+payload:
+  intent: []
+  grammar:
+    - current agent
+  tags:
+    - copilot
+  id: copilot.agent.current
+  namespace: copilot
+  name: agent.current
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/agent/current
+  description: Which agent copilot is wearing now
+  params: []
+  permissions:
+    - system
+  hooks: {}

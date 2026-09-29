@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.diag.run
 type: capability
 id: cg.diag.run
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730163
-source: clear-glass.registry-components:cg.diag.run
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786650
+source: clear-glass/registry-components.js:cg.diag.run
+occurrences: 1
+firstSeenAt: 1789250730163
+lastSeenAt: 1790684786650
+fingerprint: 038be5a9292373a655f7b512
 payload:
-  id: cg.diag.run
-  namespace: cg
-  name: diag.run
-  version: 3.1.0
+  intent: []
   grammar:
     - diag run
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Run diagnostic suite
-  params: []
   tags:
     - cg
     - diagnostic
+  id: cg.diag.run
+  namespace: cg
+  name: diag.run
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Run diagnostic suite
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-DGN-001

@@ -2,34 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-guardian.job.dispatch
 type: capability
 id: guardian.job.dispatch
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730135
-source: guardian.registry-components:guardian.job.dispatch
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787210
+source: guardian/registry-components.js:guardian.job.dispatch
+occurrences: 1
+firstSeenAt: 1789250730135
+lastSeenAt: 1790684787210
+fingerprint: 35a20e1bd4404f74297f3979
 payload:
-  id: guardian.job.dispatch
-  namespace: guardian
-  name: job.dispatch
-  version: 3.6.2
+  intent: []
   grammar:
     - job dispatch
     - job-dispatch
-  route:
-    method: POST
-    path: /command
-  intent:
-    - build
-    - ask
-    - forge
-    - compile
-  description: Dispatch job to provider (raw or SEAM)
-  params: []
   tags:
     - guardian
     - dispatch
+  id: guardian.job.dispatch
+  namespace: guardian
+  name: job.dispatch
+  version: 3.14.0
+  route:
+    method: POST
+    path: /command
+  description: Dispatch job to provider (raw or SEAM)
+  params: []
   permissions:
     - system
   hooks:

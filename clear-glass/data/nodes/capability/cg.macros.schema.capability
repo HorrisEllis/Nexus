@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.macros.schema
+type: capability
+id: cg.macros.schema
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786730
+source: clear-glass/registry-components.js:cg.macros.schema
+occurrences: 1
+firstSeenAt: 1790684786730
+lastSeenAt: 1790684786730
+fingerprint: 26064c40feeece78fa764b09
+payload:
+  intent: []
+  grammar:
+    - macros schema
+  tags:
+    - cg
+    - macros
+    - eros
+  id: cg.macros.schema
+  namespace: cg
+  name: macros.schema
+  version: 3.17.0
+  route:
+    method: IPC
+    path: macros:schema
+  description: Real browser_action enum + erosmancer actions + behavior profiles for the step builder
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

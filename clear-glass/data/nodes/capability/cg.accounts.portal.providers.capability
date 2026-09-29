@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.accounts.portal.providers
+type: capability
+id: cg.accounts.portal.providers
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786712
+source: clear-glass/registry-components.js:cg.accounts.portal.providers
+occurrences: 1
+firstSeenAt: 1790684786712
+lastSeenAt: 1790684786712
+fingerprint: b463ef7b405a10b88f0bc99c
+payload:
+  intent: []
+  grammar:
+    - accounts portal providers
+  tags:
+    - cg
+    - accounts
+    - portal
+  id: cg.accounts.portal.providers
+  namespace: cg
+  name: accounts.portal.providers
+  version: 3.17.0
+  route:
+    method: IPC
+    path: accounts:portal:providers
+  description: Providers a login portal can open, with their sign-in urls
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

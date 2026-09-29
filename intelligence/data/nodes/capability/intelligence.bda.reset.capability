@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.bda.reset
+type: capability
+id: intelligence.bda.reset
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787408
+source: intelligence/registry-components.js:intelligence.bda.reset
+occurrences: 1
+firstSeenAt: 1790684787408
+lastSeenAt: 1790684787408
+fingerprint: 06c6fe563bee0e15523d4c05
+payload:
+  intent: []
+  grammar:
+    - bda reset
+    - intelligence bda
+  tags:
+    - intelligence
+    - cognition
+  id: intelligence.bda.reset
+  namespace: intelligence
+  name: bda.reset
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/bda/reset
+  description: Reset BDA session state
+  params: []
+  permissions:
+    - system
+  hooks: {}

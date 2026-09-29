@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.any.api.contract
+type: capability
+id: orchestrator.any.api.contract
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787512
+source: orchestrator/interaction-contract.json:orchestrator.any.api.contract
+occurrences: 1
+firstSeenAt: 1790684787512
+lastSeenAt: 1790684787512
+fingerprint: 2873010a9830a209d81c3b40
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.any.api.contract
+  namespace: orchestrator
+  name: /api/contract/*
+  version: 1.0.0
+  route:
+    method: ANY
+    path: /api/contract/*
+  description: startsWith — real sub-routes beyond /validate not individually confirmed this pass

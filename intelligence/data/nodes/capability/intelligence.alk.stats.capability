@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.alk.stats
+type: capability
+id: intelligence.alk.stats
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787409
+source: intelligence/registry-components.js:intelligence.alk.stats
+occurrences: 1
+firstSeenAt: 1790684787409
+lastSeenAt: 1790684787409
+fingerprint: 9f8b222ee3ea16e533c51f0e
+payload:
+  intent: []
+  grammar:
+    - alk stats
+    - intelligence alk
+  tags:
+    - intelligence
+    - alk
+  id: intelligence.alk.stats
+  namespace: intelligence
+  name: alk.stats
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/alk/stats
+  description: ALK — decision counts by actor/intent, reversal count
+  params: []
+  permissions:
+    - system
+  hooks: {}

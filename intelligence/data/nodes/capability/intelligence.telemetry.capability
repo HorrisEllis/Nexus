@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.telemetry
 type: capability
 id: intelligence.telemetry
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756062
-source: intelligence.registry-components:intelligence.telemetry
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787385
+source: intelligence/registry-components.js:intelligence.telemetry
+occurrences: 1
+firstSeenAt: 1789250756062
+lastSeenAt: 1790684787385
+fingerprint: eac72a32caff367c761c9eed
 payload:
+  intent: []
+  grammar:
+    - telemetry
+    - intelligence telemetry
+  tags:
+    - intelligence
   id: intelligence.telemetry
   namespace: intelligence
   name: telemetry
   version: 1.0.0
-  grammar:
-    - telemetry
-    - intelligence telemetry
   route:
     method: GET
     path: /api/intelligence/telemetry/status
-  intent: []
   description: Telemetry-codec runtime module status
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

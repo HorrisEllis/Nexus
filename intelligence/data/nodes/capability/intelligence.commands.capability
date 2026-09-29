@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.commands
 type: capability
 id: intelligence.commands
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756080
-source: intelligence.registry-components:intelligence.commands
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787403
+source: intelligence/registry-components.js:intelligence.commands
+occurrences: 1
+firstSeenAt: 1789250756080
+lastSeenAt: 1790684787403
+fingerprint: 9769d7b75cfd6febb402c13d
 payload:
+  intent: []
+  grammar:
+    - commands
+    - intelligence commands
+  tags:
+    - intelligence
   id: intelligence.commands
   namespace: intelligence
   name: commands
   version: 1.0.0
-  grammar:
-    - commands
-    - intelligence commands
   route:
     method: GET
     path: /api/commands
-  intent: []
   description: Real, dynamic command list — this registry, live
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

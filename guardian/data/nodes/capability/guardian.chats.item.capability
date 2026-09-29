@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.chats.item
+type: capability
+id: guardian.chats.item
+context: guardian/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787209
+source: guardian/registry-components.js:guardian.chats.item
+occurrences: 1
+firstSeenAt: 1790684787209
+lastSeenAt: 1790684787209
+fingerprint: e1319e146bd0920ab6242bb8
+payload:
+  intent: []
+  grammar:
+    - chats item
+    - chats-item
+  tags:
+    - guardian
+    - chats
+    - memory
+  id: guardian.chats.item
+  namespace: guardian
+  name: chats.item
+  version: 3.14.0
+  route:
+    method: GET
+    path: /api/chats/item/:id
+  description: 'One chat version: the full transcript from its .response file'
+  params: []
+  permissions:
+    - system
+  hooks: {}

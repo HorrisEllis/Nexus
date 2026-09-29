@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-copilot.health
 type: capability
 id: copilot.health
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730178
-source: copilot.registry-components:copilot.health
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786867
+source: copilot/registry-components.js:copilot.health
+occurrences: 1
+firstSeenAt: 1789250730178
+lastSeenAt: 1790684786867
+fingerprint: e2e30c27d12bbed36ee77bc6
 payload:
+  intent: []
+  grammar:
+    - copilot health
+  tags:
+    - copilot
   id: copilot.health
   namespace: copilot
   name: health
   version: 2.0.0
-  grammar:
-    - copilot health
   route:
     method: GET
     path: /health
-  intent: []
   description: Co-pilot health
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

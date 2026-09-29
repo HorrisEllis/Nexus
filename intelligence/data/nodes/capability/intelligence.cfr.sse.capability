@@ -2,30 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.cfr.sse
 type: capability
 id: intelligence.cfr.sse
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756077
-source: intelligence.registry-components:intelligence.cfr.sse
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787400
+source: intelligence/registry-components.js:intelligence.cfr.sse
+occurrences: 1
+firstSeenAt: 1789250756077
+lastSeenAt: 1790684787400
+fingerprint: 3353097e1b8f8e4f87ca73bc
 payload:
+  intent: []
+  grammar:
+    - cfr sse
+    - intelligence cfr
+  tags:
+    - intelligence
+    - sse
   id: intelligence.cfr.sse
   namespace: intelligence
   name: cfr.sse
   version: 1.0.0
-  grammar:
-    - cfr sse
-    - intelligence cfr
   route:
     method: GET
     path: /cfr/sse
-  intent: []
   description: Real-time CFR event stream
   params: []
-  tags:
-    - intelligence
-    - sse
   permissions:
     - system
   hooks: {}

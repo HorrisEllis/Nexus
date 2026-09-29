@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.rescore
+type: capability
+id: copilot.opportunity.rescore
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786890
+source: copilot/registry-components.js:copilot.opportunity.rescore
+occurrences: 1
+firstSeenAt: 1790684786890
+lastSeenAt: 1790684786890
+fingerprint: c51b3e89232e227318986114
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity rescore
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.rescore
+  namespace: copilot
+  name: opportunity.rescore
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/rescore
+  description: Re-rank everything not yet past SHORTLISTED after a profile change
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.followups
+type: capability
+id: copilot.opportunity.followups
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786891
+source: copilot/registry-components.js:copilot.opportunity.followups
+occurrences: 1
+firstSeenAt: 1790684786891
+lastSeenAt: 1790684786891
+fingerprint: 75c64d5886c2bd296c4e3a91
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity followups
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.followups
+  namespace: copilot
+  name: opportunity.followups
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/followups
+  description: Mark submitted applications with no response past followUpDays and draft follow-ups
+  params: []
+  permissions:
+    - system
+  hooks: {}

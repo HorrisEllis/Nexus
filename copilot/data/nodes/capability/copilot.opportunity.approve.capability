@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.approve
+type: capability
+id: copilot.opportunity.approve
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786891
+source: copilot/registry-components.js:copilot.opportunity.approve
+occurrences: 1
+firstSeenAt: 1790684786891
+lastSeenAt: 1790684786891
+fingerprint: 848ae7698b6e62a11ea8b9ef
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity approve
+  tags:
+    - copilot
+    - opportunity
+    - user-only
+  id: copilot.opportunity.approve
+  namespace: copilot
+  name: opportunity.approve
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/:id/approve
+  description: James approves an application (user-only; approves the answers it used)
+  params: []
+  permissions:
+    - user
+  hooks: {}

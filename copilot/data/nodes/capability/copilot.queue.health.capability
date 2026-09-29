@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.queue.health
+type: capability
+id: copilot.queue.health
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786972
+source: copilot/registry-components.js:copilot.queue.health
+occurrences: 1
+firstSeenAt: 1790684786972
+lastSeenAt: 1790684786972
+fingerprint: fd1f15b431c4f275e7685336
+payload:
+  intent: []
+  grammar:
+    - copilot queue health
+  tags:
+    - copilot
+  id: copilot.queue.health
+  namespace: copilot
+  name: queue.health
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/queue/health
+  description: Every work queue's health
+  params: []
+  permissions:
+    - system
+  hooks: {}

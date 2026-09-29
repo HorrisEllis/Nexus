@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-guardian.chats.versions
+type: capability
+id: guardian.chats.versions
+context: guardian/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787209
+source: guardian/registry-components.js:guardian.chats.versions
+occurrences: 1
+firstSeenAt: 1790684787209
+lastSeenAt: 1790684787209
+fingerprint: 10bf4fc572109f007ceb824c
+payload:
+  intent: []
+  grammar:
+    - chats versions
+    - chats-versions
+  tags:
+    - guardian
+    - chats
+    - memory
+  id: guardian.chats.versions
+  namespace: guardian
+  name: chats.versions
+  version: 3.14.0
+  route:
+    method: GET
+    path: /api/chats/versions
+  description: Every version of one chat (?key=provider:chatId), newest first
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-orchestrator.post.api.contract.validate
+type: capability
+id: orchestrator.post.api.contract.validate
+context: orchestrator/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - orchestrator
+  - capability
+exported_at: 1790684787512
+source: orchestrator/interaction-contract.json:orchestrator.post.api.contract.validate
+occurrences: 1
+firstSeenAt: 1790684787512
+lastSeenAt: 1790684787512
+fingerprint: e8fa995980d76c8b4e953d8b
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - orchestrator
+    - interaction-contract
+  id: orchestrator.post.api.contract.validate
+  namespace: orchestrator
+  name: /api/contract/validate
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/contract/validate
+  description: null

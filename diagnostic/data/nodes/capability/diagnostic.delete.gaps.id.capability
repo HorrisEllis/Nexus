@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.delete.gaps.id
+type: capability
+id: diagnostic.delete.gaps.id
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787104
+source: diagnostic/interaction-contract.json:diagnostic.delete.gaps.id
+occurrences: 1
+firstSeenAt: 1790684787104
+lastSeenAt: 1790684787104
+fingerprint: 033c2709c13ac3fca5bc8742
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.delete.gaps.id
+  namespace: diagnostic
+  name: /gaps/:id
+  version: 1.0.0
+  route:
+    method: DELETE
+    path: /gaps/:id
+  description: Dismiss a gap

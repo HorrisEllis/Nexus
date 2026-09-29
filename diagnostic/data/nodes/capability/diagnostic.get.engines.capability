@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.engines
+type: capability
+id: diagnostic.get.engines
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787107
+source: diagnostic/interaction-contract.json:diagnostic.get.engines
+occurrences: 1
+firstSeenAt: 1790684787107
+lastSeenAt: 1790684787107
+fingerprint: 39f5f89e8a15ecb00c21b3a3
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.engines
+  namespace: diagnostic
+  name: /engines
+  version: 1.0.0
+  route:
+    method: GET
+    path: /engines
+  description: Real engine status listing

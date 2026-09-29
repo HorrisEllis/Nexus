@@ -2,36 +2,42 @@ envelope: 1
 uuid: nexus-export-capability-copilot.agent.capability
 type: capability
 id: copilot.agent.capability
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730182
-source: copilot.registry-components:copilot.agent.capability
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786936
+source: copilot/registry-components.js:copilot.agent.capability
+occurrences: 1
+firstSeenAt: 1789250730182
+lastSeenAt: 1790684786936
+fingerprint: 9b50f3676de419af7615418f
 payload:
-  id: copilot.agent.capability
-  namespace: copilot
-  name: agent.capability
-  version: 2.0.0
+  intent: []
   grammar:
     - agent limits
     - what can chatgpt take
     - agent capability
     - chunk size
-  route:
-    method: GET
-    path: /api/agents/capability
-  intent: []
-  description: >-
-    Per-agent limits MEASURED from real outcomes, with the basis attached — declared vendor figures
-    are marked unverified
-  params: []
   tags:
     - copilot
     - agents
     - capability
     - measured
+  id: copilot.agent.capability
+  namespace: copilot
+  name: agent.capability
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/agents/capability
+  description: >-
+    Per-agent limits MEASURED from real outcomes, with the basis attached — declared vendor figures
+    are marked unverified
+  params: []
   permissions:
     - system
   hooks: {}

@@ -393,8 +393,9 @@ function _buildIdentity(specUuid) {
     compartmentId: repo ? (repo.compartmentId || null) : null,
     hat: hat ? { name: hat.name, uuid: hat.uuid || null, personaPrompt: (repo ? _require('../../lib/repo-hat.js').wearable(hat, repo) : hat).personaPrompt || '' } : null,
     hatSource,
-    // §0.39.280 BS13 — never "nobody chose": no repo at all → the repo agent's own default (chatgpt when guardian has it)
-    provider: provider ? normalize(provider) : (() => { try { const d = _require('../../lib/repo-agent.js').defaultProvider(); return d && d !== 'auto' ? normalize(d) : null; } catch (_) { return null; } })(),
+    // §0.39.280 BS13 — no repo (and no original) → null on purpose: the chunk's own agent, then the manifest's, then
+    // chatgpt decide (chunk build, preferAgent chain) — a default here would outrank a per-chunk choice (H-010).
+    provider: provider ? normalize(provider) : null,
     model,
   };
 }

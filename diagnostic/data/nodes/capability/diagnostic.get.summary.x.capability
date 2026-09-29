@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.summary.x
+type: capability
+id: diagnostic.get.summary.x
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787106
+source: diagnostic/interaction-contract.json:diagnostic.get.summary.x
+occurrences: 1
+firstSeenAt: 1790684787106
+lastSeenAt: 1790684787106
+fingerprint: 118a4fb8e53d812cffe36c7f
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.summary.x
+  namespace: diagnostic
+  name: /summary/:x
+  version: 1.0.0
+  route:
+    method: GET
+    path: /summary/:x
+  description: Summarized diagnostic view

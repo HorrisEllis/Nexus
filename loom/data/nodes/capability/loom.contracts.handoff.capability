@@ -2,30 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-loom.contracts.handoff
 type: capability
 id: loom.contracts.handoff
-context: loom/registry-components.js real capability export
+context: loom/registry-components.js — declared capability
 intent: null
 summary: null
-system: loom
-tags: []
-exported_at: 1789250730150
-source: loom.registry-components:loom.contracts.handoff
+system: null
+tags:
+  - loom
+  - capability
+exported_at: 1790684787460
+source: loom/registry-components.js:loom.contracts.handoff
+occurrences: 1
+firstSeenAt: 1789250730150
+lastSeenAt: 1790684787460
+fingerprint: 598b941cca1a80630d457fcd
 payload:
-  id: loom.contracts.handoff
-  namespace: loom
-  name: contracts.handoff
-  version: 1.5.0
+  intent: []
   grammar:
     - contracts handoff
     - contracts-handoff
-  route:
-    method: POST
-    path: /api/contracts/:id/handoff
-  intent: []
-  description: Hand off a contract
-  params: []
   tags:
     - loom
     - write
+  id: loom.contracts.handoff
+  namespace: loom
+  name: contracts.handoff
+  version: 1.5.1
+  route:
+    method: POST
+    path: /api/contracts/:id/handoff
+  description: Hand off a contract
+  params: []
   permissions:
     - system
-  hooks: {}

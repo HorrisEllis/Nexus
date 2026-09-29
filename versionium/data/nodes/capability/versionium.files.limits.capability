@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.files.limits
+type: capability
+id: versionium.files.limits
+context: versionium/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787523
+source: versionium/registry-components.js:versionium.files.limits
+occurrences: 1
+firstSeenAt: 1790684787523
+lastSeenAt: 1790684787523
+fingerprint: 70b71246cc70b178d2d0674d
+payload:
+  intent: []
+  grammar:
+    - versionium files limits
+  tags:
+    - versionium
+    - files
+  id: versionium.files.limits
+  namespace: versionium
+  name: files.limits
+  version: 3.3.0
+  route:
+    method: GET
+    path: /api/versionium/files/limits
+  description: Per-file size cap, per-record cap and keyframe interval
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.alk.resolve
+type: capability
+id: intelligence.alk.resolve
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787413
+source: intelligence/registry-components.js:intelligence.alk.resolve
+occurrences: 1
+firstSeenAt: 1790684787413
+lastSeenAt: 1790684787413
+fingerprint: 32fc8a9da2a56175cee7ba8c
+payload:
+  intent: []
+  grammar:
+    - alk resolve
+    - intelligence alk
+  tags:
+    - intelligence
+    - alk
+  id: intelligence.alk.resolve
+  namespace: intelligence
+  name: alk.resolve
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/alk/resolve
+  description: ALK — attach an outcome to a decision
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-copilot.stream.ingest
 type: capability
 id: copilot.stream.ingest
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730176
-source: copilot.registry-components:copilot.stream.ingest
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786856
+source: copilot/registry-components.js:copilot.stream.ingest
+occurrences: 1
+firstSeenAt: 1789250730176
+lastSeenAt: 1790684786856
+fingerprint: 68b195190e9d3b3fe0b381b3
 payload:
+  intent: []
+  grammar:
+    - copilot stream ingest
+  tags:
+    - copilot
   id: copilot.stream.ingest
   namespace: copilot
   name: stream.ingest
   version: 2.0.0
-  grammar:
-    - copilot stream ingest
   route:
     method: POST
     path: /api/stream/ingest
-  intent: []
   description: Push events into co-pilot stream
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.events
+type: capability
+id: copilot.events
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786938
+source: copilot/registry-components.js:copilot.events
+occurrences: 1
+firstSeenAt: 1790684786938
+lastSeenAt: 1790684786938
+fingerprint: 94095c50801ce3f77cdd0ae0
+payload:
+  intent: []
+  grammar:
+    - copilot events
+  tags:
+    - copilot
+    - sse
+  id: copilot.events
+  namespace: copilot
+  name: events
+  version: 2.0.0
+  route:
+    method: GET
+    path: /events
+  description: Server-sent events for the copilot UI
+  params: []
+  permissions:
+    - system
+  hooks: {}

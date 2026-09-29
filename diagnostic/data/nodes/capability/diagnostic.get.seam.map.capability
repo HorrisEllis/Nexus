@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.seam.map
+type: capability
+id: diagnostic.get.seam.map
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787108
+source: diagnostic/interaction-contract.json:diagnostic.get.seam.map
+occurrences: 1
+firstSeenAt: 1790684787108
+lastSeenAt: 1790684787108
+fingerprint: 5ce70bd6a4da0fecfc041864
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.seam.map
+  namespace: diagnostic
+  name: /seam/map
+  version: 1.0.0
+  route:
+    method: GET
+    path: /seam/map
+  description: SEAM delivery map

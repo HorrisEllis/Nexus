@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.bus.log
 type: capability
 id: guardian.bus.log
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730132
-source: guardian.registry-components:guardian.bus.log
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787207
+source: guardian/registry-components.js:guardian.bus.log
+occurrences: 1
+firstSeenAt: 1789250730132
+lastSeenAt: 1790684787207
+fingerprint: 69716503e66c526a63317514
 payload:
-  id: guardian.bus.log
-  namespace: guardian
-  name: bus.log
-  version: 3.6.2
+  intent: []
   grammar:
     - bus log
     - bus-log
+  tags:
+    - guardian
+  id: guardian.bus.log
+  namespace: guardian
+  name: bus.log
+  version: 3.14.0
   route:
     method: GET
     path: /bus
-  intent: []
   description: Recent SISO bus log
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

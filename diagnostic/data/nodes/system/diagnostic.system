@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-system-diagnostic
+type: system
+id: diagnostic
+context: diagnostic — the system record, regenerated from diagnostic/interaction-contract.json
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - system
+exported_at: 1790684787133
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1790684787133
+lastSeenAt: 1790684787133
+fingerprint: b5bcb710d05c15bc13341df3
+payload:
+  id: diagnostic
+  kernel: diagnostic
+  port: 7825
+  entry: diagnostic/nexus-diagnostic.js
+  spec: null
+  label: diagnostic
+  purpose: >-
+    System auditing, health/friction/tension monitoring, gap tracking, and self-heal triggering
+    across all sovereign systems
+  hasCapabilities: true
+  capabilities: 30
+  commands: 30
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: diagnostic/interaction-contract.json
+    served: null
+    errors: []

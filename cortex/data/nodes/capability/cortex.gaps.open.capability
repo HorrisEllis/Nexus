@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.gaps.open
+type: capability
+id: cortex.gaps.open
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787083
+source: cortex/registry-components.js:cortex.gaps.open
+occurrences: 1
+firstSeenAt: 1790684787083
+lastSeenAt: 1790684787083
+fingerprint: 4b1768d70f52b443b9abffa6
+payload:
+  intent: []
+  grammar:
+    - gaps open
+  tags:
+    - cortex
+    - gaps
+  id: cortex.gaps.open
+  namespace: cortex
+  name: gaps.open
+  version: 3.5.0
+  route:
+    method: POST
+    path: /api/gaps
+  description: Open a new gap
+  params: []
+  permissions:
+    - system
+  hooks: {}

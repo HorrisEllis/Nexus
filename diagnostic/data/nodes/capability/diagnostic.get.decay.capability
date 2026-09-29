@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.decay
+type: capability
+id: diagnostic.get.decay
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787107
+source: diagnostic/interaction-contract.json:diagnostic.get.decay
+occurrences: 1
+firstSeenAt: 1790684787107
+lastSeenAt: 1790684787107
+fingerprint: 37b2f067b5df446ab267ff5e
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.decay
+  namespace: diagnostic
+  name: /decay
+  version: 1.0.0
+  route:
+    method: GET
+    path: /decay
+  description: Node/data decay report

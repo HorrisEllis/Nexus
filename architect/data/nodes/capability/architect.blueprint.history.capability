@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-architect.blueprint.history
 type: capability
 id: architect.blueprint.history
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730067
-source: architect.registry-components:architect.blueprint.history
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786590
+source: architect/registry-components.js:architect.blueprint.history
+occurrences: 1
+firstSeenAt: 1789250730067
+lastSeenAt: 1790684786590
+fingerprint: 229ea4906372e0c88e4e05d8
 payload:
+  intent: []
+  grammar:
+    - blueprint history
+  tags:
+    - architect
   id: architect.blueprint.history
   namespace: architect
   name: blueprint.history
   version: 1.0.0
-  grammar:
-    - blueprint history
   route:
     method: GET
     path: /api/blueprint/history
-  intent: []
   description: Blueprint change history
   params: []
-  tags:
-    - architect
   permissions:
     - system
   hooks: {}

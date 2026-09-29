@@ -34,7 +34,7 @@ async function t(id, name, fn) {
     assert.deepStrictEqual(providersFor({ seam_id: 'x' }, null), ['ollama', 'chatgpt', 'claude']);
   });
 
-  await t('BS13-02', 'a code spec whose repo is missing builds as its ORIGINAL (codeFor); no repo at all → the repo agent default, never null', () => {
+  await t('BS13-02', 'a code spec whose repo is missing builds as its ORIGINAL (codeFor); no repo and no original → left to the chunk', () => {
     const RA = require(path.join(ROOT, 'lib/repo-agent.js'));
     RA.setProvider(orig.uuid, RA.providers().includes('gemini') ? 'gemini' : RA.providers()[0]);
     const want = RA.getProvider(orig.uuid);
@@ -44,9 +44,7 @@ async function t(id, name, fn) {
     const who = api._buildIdentity(codeSpec.uuid);
     assert.strictEqual(who.repoUuid, orig.uuid, 'the original repo');
     assert.strictEqual(who.provider, require(path.join(ROOT, 'lib/agent-providers.js')).normalize(want));
-    const none = api._buildIdentity(null);
-    const d = RA.defaultProvider();
-    assert.strictEqual(none.provider, d === 'auto' ? null : require(path.join(ROOT, 'lib/agent-providers.js')).normalize(d));
+    assert.strictEqual(api._buildIdentity(null).provider, null, 'no repo, no original: left to the chunk (H-010)');
   });
 
   await t('BS15-01', 'deleting a code repo: the document spec forgets it (kept in codeRetired), the response names the original', async () => {

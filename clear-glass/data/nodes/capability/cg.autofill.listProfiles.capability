@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.autofill.listProfiles
+type: capability
+id: cg.autofill.listProfiles
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786697
+source: clear-glass/registry-components.js:cg.autofill.listProfiles
+occurrences: 1
+firstSeenAt: 1790684786697
+lastSeenAt: 1790684786697
+fingerprint: 05487a717647a2c06d4948ba
+payload:
+  intent: []
+  grammar:
+    - autofill listProfiles
+  tags:
+    - cg
+    - autofill
+  id: cg.autofill.listProfiles
+  namespace: cg
+  name: autofill.listProfiles
+  version: 3.17.0
+  route:
+    method: IPC
+    path: autofill:profile:list
+  description: List real AutofillProfile records
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

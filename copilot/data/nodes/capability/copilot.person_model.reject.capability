@@ -2,30 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-copilot.person_model.reject
 type: capability
 id: copilot.person_model.reject
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730179
-source: copilot.registry-components:copilot.person_model.reject
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786871
+source: copilot/registry-components.js:copilot.person_model.reject
+occurrences: 1
+firstSeenAt: 1789250730179
+lastSeenAt: 1790684786871
+fingerprint: 7d3d6fa9c15fadb2a33f4ecd
 payload:
-  id: copilot.person_model.reject
-  namespace: copilot
-  name: person_model.reject
-  version: 2.0.0
+  intent: []
   grammar:
     - reject observation
-  route:
-    method: POST
-    path: /api/person-model/reject
-  intent: []
-  description: Rejects a proposed observation. A reason is required (§IP-6)
-  params: []
   tags:
     - copilot
     - person-model
     - review
+  id: copilot.person_model.reject
+  namespace: copilot
+  name: person_model.reject
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/person-model/reject
+  description: Rejects a proposed observation. A reason is required (§IP-6)
+  params: []
   permissions:
     - user
   hooks: {}

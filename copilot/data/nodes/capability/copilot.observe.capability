@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.observe
+type: capability
+id: copilot.observe
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684787004
+source: copilot/registry-components.js:copilot.observe
+occurrences: 1
+firstSeenAt: 1790684787004
+lastSeenAt: 1790684787004
+fingerprint: efe8d7ba07ec226c1648e9f2
+payload:
+  intent: []
+  grammar:
+    - copilot observe
+  tags:
+    - copilot
+  id: copilot.observe
+  namespace: copilot
+  name: observe
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/observe
+  description: A UI confusion signal into the user model
+  params: []
+  permissions:
+    - system
+  hooks: {}

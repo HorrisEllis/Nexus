@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.memory.working
+type: capability
+id: cortex.memory.working
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787083
+source: cortex/registry-components.js:cortex.memory.working
+occurrences: 1
+firstSeenAt: 1790684787083
+lastSeenAt: 1790684787083
+fingerprint: f9f19c0ed5d71019db2744e0
+payload:
+  intent: []
+  grammar:
+    - memory working
+  tags:
+    - cortex
+  id: cortex.memory.working
+  namespace: cortex
+  name: memory.working
+  version: 3.5.0
+  route:
+    method: GET
+    path: /api/memory/working
+  description: Working memory snapshot
+  params: []
+  permissions:
+    - system
+  hooks: {}

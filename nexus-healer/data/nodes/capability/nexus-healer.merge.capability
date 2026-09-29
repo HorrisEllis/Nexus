@@ -2,28 +2,33 @@ envelope: 1
 uuid: nexus-export-capability-nexus-healer.merge
 type: capability
 id: nexus-healer.merge
-context: nexus-healer/registry-components.js real capability export
+context: nexus-healer/registry-components.js — declared capability
 intent: null
 summary: null
-system: nexus-healer
-tags: []
-exported_at: 1789250730155
-source: nexus-healer.registry-components:nexus-healer.merge
+system: null
+tags:
+  - nexus-healer
+  - capability
+exported_at: 1790684787486
+source: nexus-healer/registry-components.js:nexus-healer.merge
+occurrences: 1
+firstSeenAt: 1789250730155
+lastSeenAt: 1790684787486
+fingerprint: 57e81e9d2029d911c7e6652a
 payload:
+  intent: []
+  grammar: []
+  tags:
+    - nexus-healer
   id: nexus-healer.merge
   namespace: nexus-healer
   name: merge
   version: 0.1.0
-  grammar: []
   route:
     method: POST
     path: /proposals/:id/merge
-  intent: []
   description: Deliberate, explicit commit.
   params:
     - id
-  tags:
-    - nexus-healer
   permissions:
     - system
-  hooks: {}

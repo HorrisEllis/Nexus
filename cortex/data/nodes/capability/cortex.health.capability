@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.health
+type: capability
+id: cortex.health
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787079
+source: cortex/registry-components.js:cortex.health
+occurrences: 1
+firstSeenAt: 1790684787079
+lastSeenAt: 1790684787079
+fingerprint: 58d4352ff7630d02c471b463
+payload:
+  intent: []
+  grammar:
+    - health
+  tags:
+    - cortex
+  id: cortex.health
+  namespace: cortex
+  name: health
+  version: 3.5.0
+  route:
+    method: GET
+    path: /health
+  description: Cortex health + JAA stats
+  params: []
+  permissions:
+    - system
+  hooks: {}

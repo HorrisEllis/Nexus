@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.driver.exec
 type: capability
 id: cg.driver.exec
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730157
-source: clear-glass.registry-components:cg.driver.exec
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786625
+source: clear-glass/registry-components.js:cg.driver.exec
+occurrences: 1
+firstSeenAt: 1789250730157
+lastSeenAt: 1790684786625
+fingerprint: c4b9e2dd1902f63713ee287c
 payload:
-  id: cg.driver.exec
-  namespace: cg
-  name: driver.exec
-  version: 3.1.0
+  intent: []
   grammar:
     - driver exec
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Execute ClearDriver browser action
-  params: []
   tags:
     - cg
     - driver
     - automation
+  id: cg.driver.exec
+  namespace: cg
+  name: driver.exec
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Execute ClearDriver browser action
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-DRV-001

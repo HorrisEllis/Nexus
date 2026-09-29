@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.memory.search
+type: capability
+id: cortex.memory.search
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787082
+source: cortex/registry-components.js:cortex.memory.search
+occurrences: 1
+firstSeenAt: 1790684787082
+lastSeenAt: 1790684787082
+fingerprint: 3728f7f2e2424abe40407f42
+payload:
+  intent: []
+  grammar:
+    - memory search
+  tags:
+    - cortex
+    - memory
+  id: cortex.memory.search
+  namespace: cortex
+  name: memory.search
+  version: 3.5.0
+  route:
+    method: POST
+    path: /api/memory/search
+  description: Semantic search across memory
+  params: []
+  permissions:
+    - system
+  hooks: {}

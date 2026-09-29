@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.cfr.field
 type: capability
 id: intelligence.cfr.field
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756074
-source: intelligence.registry-components:intelligence.cfr.field
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787396
+source: intelligence/registry-components.js:intelligence.cfr.field
+occurrences: 1
+firstSeenAt: 1789250756074
+lastSeenAt: 1790684787396
+fingerprint: 5cec8f1ada2395b0ec74e027
 payload:
+  intent: []
+  grammar:
+    - cfr field
+    - intelligence cfr
+  tags:
+    - intelligence
   id: intelligence.cfr.field
   namespace: intelligence
   name: cfr.field
   version: 1.0.0
-  grammar:
-    - cfr field
-    - intelligence cfr
   route:
     method: GET
     path: /cfr/field
-  intent: []
   description: CFR field state (coherence/friction/resonance/entropy)
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

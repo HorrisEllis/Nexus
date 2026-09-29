@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.mesh.list
 type: capability
 id: cg.mesh.list
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730161
-source: clear-glass.registry-components:cg.mesh.list
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786645
+source: clear-glass/registry-components.js:cg.mesh.list
+occurrences: 1
+firstSeenAt: 1789250730161
+lastSeenAt: 1790684786645
+fingerprint: 7efae2e1150e0496a1fffb4e
 payload:
-  id: cg.mesh.list
-  namespace: cg
-  name: mesh.list
-  version: 3.1.0
+  intent: []
   grammar:
     - mesh list
-  route:
-    method: GET
-    path: /agents
-  intent: []
-  description: List mesh agents
-  params: []
   tags:
     - cg
     - mesh
+  id: cg.mesh.list
+  namespace: cg
+  name: mesh.list
+  version: 3.17.0
+  route:
+    method: GET
+    path: /agents
+  description: List mesh agents
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

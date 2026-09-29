@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.health
+type: capability
+id: diagnostic.get.health
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787095
+source: diagnostic/interaction-contract.json:diagnostic.get.health
+occurrences: 1
+firstSeenAt: 1790684787095
+lastSeenAt: 1790684787095
+fingerprint: 7df70f30d0e8353b176051e2
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.health
+  namespace: diagnostic
+  name: /health
+  version: 1.0.0
+  route:
+    method: GET
+    path: /health
+  description: Health check

@@ -2,35 +2,39 @@ envelope: 1
 uuid: nexus-export-capability-copilot.person_model.state
 type: capability
 id: copilot.person_model.state
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730179
-source: copilot.registry-components:copilot.person_model.state
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786871
+source: copilot/registry-components.js:copilot.person_model.state
+occurrences: 1
+firstSeenAt: 1789250730179
+lastSeenAt: 1790684786871
+fingerprint: 3d093c2100008a77fba2cd9b
 payload:
-  id: copilot.person_model.state
-  namespace: copilot
-  name: person_model.state
-  version: 2.0.0
+  intent: []
   grammar:
     - remember about me
     - i am
     - my value
     - my goal
-  route:
-    method: POST
-    path: /api/person-model/state
-  intent:
-    - note
-    - action
-  description: The user states something about themselves — the ONLY route into trigger/sensitive/boundary
-  params: []
   tags:
     - copilot
     - person-model
     - identity
+  id: copilot.person_model.state
+  namespace: copilot
+  name: person_model.state
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/person-model/state
+  description: The user states something about themselves — the ONLY route into trigger/sensitive/boundary
+  params: []
   permissions:
     - user
   hooks:

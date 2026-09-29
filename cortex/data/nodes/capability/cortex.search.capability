@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.search
+type: capability
+id: cortex.search
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787086
+source: cortex/registry-components.js:cortex.search
+occurrences: 1
+firstSeenAt: 1790684787086
+lastSeenAt: 1790684787086
+fingerprint: eaab66ebd200f335ae1cb539
+payload:
+  intent: []
+  grammar:
+    - search
+  tags:
+    - cortex
+  id: cortex.search
+  namespace: cortex
+  name: search
+  version: 3.5.0
+  route:
+    method: GET
+    path: /api/search
+  description: Cross-table search
+  params: []
+  permissions:
+    - system
+  hooks: {}

@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.bookmarks.openWithState
 type: capability
 id: cg.bookmarks.openWithState
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730172
-source: clear-glass.registry-components:cg.bookmarks.openWithState
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786682
+source: clear-glass/registry-components.js:cg.bookmarks.openWithState
+occurrences: 1
+firstSeenAt: 1789250730172
+lastSeenAt: 1790684786682
+fingerprint: 8ec0e241b2e5a91d83226ad0
 payload:
-  id: cg.bookmarks.openWithState
-  namespace: cg
-  name: bookmarks.openWithState
-  version: 3.1.0
+  intent: []
   grammar:
     - bookmarks openWithState
-  route:
-    method: IPC
-    path: bookmarks:openWithState
-  intent: []
-  description: Open a bookmark and restore its real saved state
-  params: []
   tags:
     - cg
     - bookmarks
     - rewind
+  id: cg.bookmarks.openWithState
+  namespace: cg
+  name: bookmarks.openWithState
+  version: 3.17.0
+  route:
+    method: IPC
+    path: bookmarks:openWithState
+  description: Open a bookmark and restore its real saved state
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

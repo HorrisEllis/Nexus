@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.alk.rewind
+type: capability
+id: intelligence.alk.rewind
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787413
+source: intelligence/registry-components.js:intelligence.alk.rewind
+occurrences: 1
+firstSeenAt: 1790684787413
+lastSeenAt: 1790684787413
+fingerprint: 2f08ca0880515493304beda2
+payload:
+  intent: []
+  grammar:
+    - alk rewind
+    - intelligence alk
+  tags:
+    - intelligence
+    - alk
+  id: intelligence.alk.rewind
+  namespace: intelligence
+  name: alk.rewind
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/alk/rewind
+  description: ALK — control-Z a decision (immutable original, reversedBy marker)
+  params: []
+  permissions:
+    - system
+  hooks: {}

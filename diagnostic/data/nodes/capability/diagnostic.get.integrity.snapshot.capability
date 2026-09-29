@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.integrity.snapshot
+type: capability
+id: diagnostic.get.integrity.snapshot
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787109
+source: diagnostic/interaction-contract.json:diagnostic.get.integrity.snapshot
+occurrences: 1
+firstSeenAt: 1790684787109
+lastSeenAt: 1790684787109
+fingerprint: 304a0b744552e02bb9ca7c31
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.integrity.snapshot
+  namespace: diagnostic
+  name: /integrity/snapshot
+  version: 1.0.0
+  route:
+    method: GET
+    path: /integrity/snapshot
+  description: Point-in-time integrity snapshot

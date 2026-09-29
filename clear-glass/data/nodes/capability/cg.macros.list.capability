@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.macros.list
 type: capability
 id: cg.macros.list
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730173
-source: clear-glass.registry-components:cg.macros.list
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786688
+source: clear-glass/registry-components.js:cg.macros.list
+occurrences: 1
+firstSeenAt: 1789250730173
+lastSeenAt: 1790684786688
+fingerprint: bdfac104b4d59afdb9030e69
 payload:
-  id: cg.macros.list
-  namespace: cg
-  name: macros.list
-  version: 3.1.0
+  intent: []
   grammar:
     - macros list
-  route:
-    method: IPC
-    path: macros:list
-  intent: []
-  description: List real stored macros (real erosmancer integration where used)
-  params: []
   tags:
     - cg
     - macros
+  id: cg.macros.list
+  namespace: cg
+  name: macros.list
+  version: 3.17.0
+  route:
+    method: IPC
+    path: macros:list
+  description: List real stored macros (real erosmancer integration where used)
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

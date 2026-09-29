@@ -2,28 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-cg.status
 type: capability
 id: cg.status
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730157
-source: clear-glass.registry-components:cg.status
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786620
+source: clear-glass/registry-components.js:cg.status
+occurrences: 1
+firstSeenAt: 1789250730157
+lastSeenAt: 1790684786620
+fingerprint: bef8ae4d67b88da5099d1f07
 payload:
+  intent: []
+  grammar:
+    - status
+  tags:
+    - cg
   id: cg.status
   namespace: cg
   name: status
-  version: 3.1.0
-  grammar:
-    - status
+  version: 3.17.0
   route:
     method: GET
     path: /status
-  intent: []
   description: Full system status — bus sample, agents, listeners, TLS
   params: []
-  tags:
-    - cg
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

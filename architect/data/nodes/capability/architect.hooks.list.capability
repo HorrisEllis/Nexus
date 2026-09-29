@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-architect.hooks.list
 type: capability
 id: architect.hooks.list
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730052
-source: architect.registry-components:architect.hooks.list
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786565
+source: architect/registry-components.js:architect.hooks.list
+occurrences: 1
+firstSeenAt: 1789250730052
+lastSeenAt: 1790684786565
+fingerprint: efd99d8e93e56da83a9ca3bc
 payload:
+  intent: []
+  grammar:
+    - hooks list
+  tags:
+    - architect
   id: architect.hooks.list
   namespace: architect
   name: hooks.list
   version: 1.0.0
-  grammar:
-    - hooks list
   route:
     method: GET
     path: /api/hooks
-  intent: []
   description: Hook registry — all declared hooks
   params: []
-  tags:
-    - architect
   permissions:
     - system
   hooks: {}

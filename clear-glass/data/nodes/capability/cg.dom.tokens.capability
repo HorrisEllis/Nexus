@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.dom.tokens
 type: capability
 id: cg.dom.tokens
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730158
-source: clear-glass.registry-components:cg.dom.tokens
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786630
+source: clear-glass/registry-components.js:cg.dom.tokens
+occurrences: 1
+firstSeenAt: 1789250730158
+lastSeenAt: 1790684786630
+fingerprint: 9c6c2791d1f451478e2ce661
 payload:
-  id: cg.dom.tokens
-  namespace: cg
-  name: dom.tokens
-  version: 3.1.0
+  intent: []
   grammar:
     - dom tokens
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Token archaeology — detect LLM API patterns
-  params: []
   tags:
     - cg
     - dom
     - archaeology
+  id: cg.dom.tokens
+  namespace: cg
+  name: dom.tokens
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Token archaeology — detect LLM API patterns
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

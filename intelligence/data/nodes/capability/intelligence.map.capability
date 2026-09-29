@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.map
 type: capability
 id: intelligence.map
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756069
-source: intelligence.registry-components:intelligence.map
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787392
+source: intelligence/registry-components.js:intelligence.map
+occurrences: 1
+firstSeenAt: 1789250756069
+lastSeenAt: 1790684787392
+fingerprint: 27ac0a8761de6fbc13e76e85
 payload:
+  intent: []
+  grammar:
+    - map
+    - intelligence map
+  tags:
+    - intelligence
   id: intelligence.map
   namespace: intelligence
   name: map
   version: 1.0.0
-  grammar:
-    - map
-    - intelligence map
   route:
     method: GET
     path: /api/intelligence/map
-  intent: []
   description: Real, live loom map
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

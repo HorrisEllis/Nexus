@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.events
 type: capability
 id: cg.events
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730157
-source: clear-glass.registry-components:cg.events
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786622
+source: clear-glass/registry-components.js:cg.events
+occurrences: 1
+firstSeenAt: 1789250730157
+lastSeenAt: 1790684786622
+fingerprint: e2b3a39c28686bda1aa1a952
 payload:
-  id: cg.events
-  namespace: cg
-  name: events
-  version: 3.1.0
+  intent: []
   grammar:
     - events
-  route:
-    method: GET
-    path: /events
-  intent: []
-  description: SSE — all SISO bus events
-  params: []
   tags:
     - cg
     - stream
+  id: cg.events
+  namespace: cg
+  name: events
+  version: 3.17.0
+  route:
+    method: GET
+    path: /events
+  description: SSE — all SISO bus events
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

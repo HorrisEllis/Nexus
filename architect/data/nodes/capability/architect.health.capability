@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-architect.health
 type: capability
 id: architect.health
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730045
-source: architect.registry-components:architect.health
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786554
+source: architect/registry-components.js:architect.health
+occurrences: 1
+firstSeenAt: 1789250730045
+lastSeenAt: 1790684786554
+fingerprint: 9253394cbef23222290b61cd
 payload:
+  intent: []
+  grammar:
+    - health
+  tags:
+    - architect
   id: architect.health
   namespace: architect
   name: health
   version: 1.0.0
-  grammar:
-    - health
   route:
     method: GET
     path: /health
-  intent: []
   description: Architect health + hook counts
   params: []
-  tags:
-    - architect
   permissions:
     - system
   hooks: {}

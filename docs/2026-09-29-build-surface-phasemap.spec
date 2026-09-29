@@ -273,8 +273,10 @@ spec:
         _buildIdentity returned provider null) and warp-cascade then let RAID pick first and fell through
         ollama → chatgpt → claude. A chosen provider (the chunk's, the repo's, or its ORIGINAL's for a code repo) is
         the only browser provider tried — never a fall-through to one nobody chose; ollama stays the local fallback
-        only when nothing was chosen. _buildIdentity finds a code spec's original through codeFor / promotedFromSpec and
-        otherwise uses lib/repo-agent.js defaultProvider() (chatgpt when guardian has it).
+        only when nothing was chosen. _buildIdentity finds a code spec's original through codeFor / promotedFromSpec; with
+        no repo and no original it stays null on purpose, so the chunk's own agent, the manifest's, then chatgpt decide
+        (a default there would outrank a per-chunk choice — tests/modules/test-agent-hat-agnostic.test.js H-010 caught it
+        in the regression run and was right).
       proof: tests/modules/test-build-surface-2.test.js BS13-*
 
     BS14_branch_git_honest:
@@ -367,7 +369,7 @@ spec:
 
     BS12_release:
       layer: automation
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.280) — full suite against 0.39.279 (462 files): 84 failing before, 82 after; the 2 this release broke (clear-glass-library-ui, test-agent-hat-agnostic H-010) fixed; 2 more fixed (test-cg-eros-supervisor, test-guardian-retry-novelty-installs); no new failures"
       depends_on: [BS8, BS9, BS10, BS11, BS13, BS14, BS15, BS16, BS17, BS18, BS19]
       files:
         - "lib/version.js"

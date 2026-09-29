@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.gaps
+type: capability
+id: diagnostic.get.gaps
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787102
+source: diagnostic/interaction-contract.json:diagnostic.get.gaps
+occurrences: 1
+firstSeenAt: 1790684787102
+lastSeenAt: 1790684787102
+fingerprint: 0ec3ff234188c71a030ddaa6
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.gaps
+  namespace: diagnostic
+  name: /gaps
+  version: 1.0.0
+  route:
+    method: GET
+    path: /gaps
+  description: All open gaps across all systems

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.cfr.health
+type: capability
+id: diagnostic.get.cfr.health
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787095
+source: diagnostic/interaction-contract.json:diagnostic.get.cfr.health
+occurrences: 1
+firstSeenAt: 1790684787095
+lastSeenAt: 1790684787095
+fingerprint: 704e990535612caad33bf338
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.cfr.health
+  namespace: diagnostic
+  name: /cfr/health
+  version: 1.0.0
+  route:
+    method: GET
+    path: /cfr/health
+  description: CFR field health

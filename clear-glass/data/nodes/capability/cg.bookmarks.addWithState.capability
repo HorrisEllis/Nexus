@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.bookmarks.addWithState
 type: capability
 id: cg.bookmarks.addWithState
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730171
-source: clear-glass.registry-components:cg.bookmarks.addWithState
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786681
+source: clear-glass/registry-components.js:cg.bookmarks.addWithState
+occurrences: 1
+firstSeenAt: 1789250730171
+lastSeenAt: 1790684786681
+fingerprint: 3ce0df6ce6cf06c770d4f8d6
 payload:
-  id: cg.bookmarks.addWithState
-  namespace: cg
-  name: bookmarks.addWithState
-  version: 3.1.0
+  intent: []
   grammar:
     - bookmarks addWithState
-  route:
-    method: IPC
-    path: bookmarks:addWithState
-  intent: []
-  description: Bookmark + save real full page state
-  params: []
   tags:
     - cg
     - bookmarks
     - rewind
+  id: cg.bookmarks.addWithState
+  namespace: cg
+  name: bookmarks.addWithState
+  version: 3.17.0
+  route:
+    method: IPC
+    path: bookmarks:addWithState
+  description: Bookmark + save real full page state
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

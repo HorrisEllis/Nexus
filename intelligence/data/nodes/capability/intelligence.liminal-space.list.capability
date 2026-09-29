@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.liminal-space.list
+type: capability
+id: intelligence.liminal-space.list
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787395
+source: intelligence/registry-components.js:intelligence.liminal-space.list
+occurrences: 1
+firstSeenAt: 1790684787395
+lastSeenAt: 1790684787395
+fingerprint: 49c4ded05d222427bb40c24d
+payload:
+  intent: []
+  grammar:
+    - liminal-space list
+    - intelligence liminal-space
+  tags:
+    - intelligence
+  id: intelligence.liminal-space.list
+  namespace: intelligence
+  name: liminal-space.list
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/liminal-space/list
+  description: Liminal-space items (optionally by focalPoint)
+  params: []
+  permissions:
+    - system
+  hooks: {}

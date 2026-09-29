@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.answers
+type: capability
+id: copilot.opportunity.answers
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786899
+source: copilot/registry-components.js:copilot.opportunity.answers
+occurrences: 1
+firstSeenAt: 1790684786899
+lastSeenAt: 1790684786899
+fingerprint: d7e911ec6acce966342d9e28
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity answers
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.answers
+  namespace: copilot
+  name: opportunity.answers
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/opportunity/answers
+  description: The answer bank for application questions
+  params: []
+  permissions:
+    - system
+  hooks: {}

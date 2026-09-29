@@ -2539,7 +2539,6 @@ function _automationEvents(contents) {
 }
 app.on('web-contents-created', (_e, contents) => {
   try { _automationEvents(contents); } catch (_) {}
-  try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
   contents.on('before-input-event', (event, input) => {
     if (!input || input.type !== 'keyDown' || input.isAutoRepeat) return;
     const accel = Shortcuts.accelFromInput(input);
@@ -2556,6 +2555,7 @@ app.on('web-contents-created', (_e, contents) => {
     event.preventDefault();
     try { _runShortcut(action, accel, owner); } catch (e) { console.warn(`[shortcuts] ${accel} → ${action} failed: ${e.message}`); }
   });
+  try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
 });
 
 // ── Shutdown ───────────────────────────────────────────────────────────────

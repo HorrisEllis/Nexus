@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.sessions.get
+type: capability
+id: copilot.sessions.get
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786947
+source: copilot/registry-components.js:copilot.sessions.get
+occurrences: 1
+firstSeenAt: 1790684786947
+lastSeenAt: 1790684786947
+fingerprint: e4bdabe32b4ac580153eb37c
+payload:
+  intent: []
+  grammar:
+    - copilot sessions get
+  tags:
+    - copilot
+  id: copilot.sessions.get
+  namespace: copilot
+  name: sessions.get
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/sessions/:id
+  description: One session (404 when unknown)
+  params: []
+  permissions:
+    - system
+  hooks: {}

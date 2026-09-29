@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.rewind.clear
 type: capability
 id: cg.rewind.clear
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730173
-source: clear-glass.registry-components:cg.rewind.clear
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786685
+source: clear-glass/registry-components.js:cg.rewind.clear
+occurrences: 1
+firstSeenAt: 1789250730173
+lastSeenAt: 1790684786685
+fingerprint: 761bd2ce4a0e10494208bb7f
 payload:
-  id: cg.rewind.clear
-  namespace: cg
-  name: rewind.clear
-  version: 3.1.0
+  intent: []
   grammar:
     - rewind clear
-  route:
-    method: IPC
-    path: rewind:clear
-  intent: []
-  description: Clear real rewind snapshots
-  params: []
   tags:
     - cg
     - rewind
+  id: cg.rewind.clear
+  namespace: cg
+  name: rewind.clear
+  version: 3.17.0
+  route:
+    method: IPC
+    path: rewind:clear
+  description: Clear real rewind snapshots
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

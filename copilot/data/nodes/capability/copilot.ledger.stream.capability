@@ -2,31 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-copilot.ledger.stream
 type: capability
 id: copilot.ledger.stream
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730182
-source: copilot.registry-components:copilot.ledger.stream
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684787011
+source: copilot/registry-components.js:copilot.ledger.stream
+occurrences: 1
+firstSeenAt: 1789250730182
+lastSeenAt: 1790684787011
+fingerprint: 0a4542fedd291c81baec07d6
 payload:
-  id: copilot.ledger.stream
-  namespace: copilot
-  name: ledger.stream
-  version: 2.0.0
+  intent: []
   grammar:
     - copilot ledger stream
-  route:
-    method: GET
-    path: /ledger/stream
-  intent: []
-  description: Canonical component-ledger rows as SSE — the cross-process wire autopilot consumes
-  params: []
   tags:
     - copilot
     - ledger
     - sse
     - observability
+  id: copilot.ledger.stream
+  namespace: copilot
+  name: ledger.stream
+  version: 2.0.0
+  route:
+    method: GET
+    path: /ledger/stream
+  description: Canonical component-ledger rows as SSE — the cross-process wire autopilot consumes
+  params: []
   permissions:
     - system
   hooks:

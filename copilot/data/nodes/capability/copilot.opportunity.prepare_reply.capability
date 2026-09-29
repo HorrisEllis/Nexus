@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.prepare_reply
+type: capability
+id: copilot.opportunity.prepare_reply
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786895
+source: copilot/registry-components.js:copilot.opportunity.prepare_reply
+occurrences: 1
+firstSeenAt: 1790684786895
+lastSeenAt: 1790684786895
+fingerprint: 756f4ada2b76392f52557520
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity prepare_reply
+  tags:
+    - copilot
+    - opportunity
+    - clear-glass
+  id: copilot.opportunity.prepare_reply
+  namespace: copilot
+  name: opportunity.prepare_reply
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/:id/prepare-reply
+  description: Type the approved reply into a Fiverr/Upwork thread; stops before send
+  params: []
+  permissions:
+    - system
+  hooks: {}

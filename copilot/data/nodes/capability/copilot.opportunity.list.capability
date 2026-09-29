@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.list
+type: capability
+id: copilot.opportunity.list
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786891
+source: copilot/registry-components.js:copilot.opportunity.list
+occurrences: 1
+firstSeenAt: 1790684786891
+lastSeenAt: 1790684786891
+fingerprint: 37d2afa6b7a4be4fb8539cd7
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity list
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.list
+  namespace: copilot
+  name: opportunity.list
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/opportunity/list
+  description: List opportunities (?stage=&kind=&q=&limit=)
+  params: []
+  permissions:
+    - system
+  hooks: {}

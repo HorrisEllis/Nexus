@@ -2,28 +2,36 @@ envelope: 1
 uuid: nexus-export-capability-cg.contract
 type: capability
 id: cg.contract
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730157
-source: clear-glass.registry-components:cg.contract
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786621
+source: clear-glass/registry-components.js:cg.contract
+occurrences: 1
+firstSeenAt: 1789250730157
+lastSeenAt: 1790684786621
+fingerprint: 790c60b372e67511c6f57185
 payload:
+  intent: []
+  grammar:
+    - contract
+  tags:
+    - cg
   id: cg.contract
   namespace: cg
   name: contract
-  version: 3.1.0
-  grammar:
-    - contract
+  version: 3.17.0
   route:
     method: GET
     path: /contract
-  intent: []
   description: Clear Glass interaction contract
   params: []
-  tags:
-    - cg
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

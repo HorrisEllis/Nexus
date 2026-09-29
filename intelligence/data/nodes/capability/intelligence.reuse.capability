@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-intelligence.reuse
 type: capability
 id: intelligence.reuse
-context: intelligence/registry-components.js real capability export
+context: intelligence/registry-components.js — declared capability
 intent: null
 summary: null
-system: intelligence
-tags: []
-exported_at: 1789250756068
-source: intelligence.registry-components:intelligence.reuse
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787389
+source: intelligence/registry-components.js:intelligence.reuse
+occurrences: 1
+firstSeenAt: 1789250756068
+lastSeenAt: 1790684787389
+fingerprint: cb134e246325f85545492a8d
 payload:
+  intent: []
+  grammar:
+    - reuse
+    - intelligence reuse
+  tags:
+    - intelligence
   id: intelligence.reuse
   namespace: intelligence
   name: reuse
   version: 1.0.0
-  grammar:
-    - reuse
-    - intelligence reuse
   route:
     method: GET
     path: /api/intelligence/reuse
-  intent: []
   description: Reuse index
   params: []
-  tags:
-    - intelligence
   permissions:
     - system
   hooks: {}

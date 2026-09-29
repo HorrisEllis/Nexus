@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.files.tree
+type: capability
+id: versionium.files.tree
+context: versionium/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787524
+source: versionium/registry-components.js:versionium.files.tree
+occurrences: 1
+firstSeenAt: 1790684787524
+lastSeenAt: 1790684787524
+fingerprint: 6d2eab89c07ae5b2bf4bafd3
+payload:
+  intent: []
+  grammar:
+    - versionium files tree
+  tags:
+    - versionium
+    - files
+  id: versionium.files.tree
+  namespace: versionium
+  name: files.tree
+  version: 3.3.0
+  route:
+    method: GET
+    path: /api/versionium/files/tree
+  description: Files (path, sha256, bytes) and tree hash as of a commit
+  params: []
+  permissions:
+    - system
+  hooks: {}

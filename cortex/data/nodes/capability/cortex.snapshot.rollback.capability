@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-cortex.snapshot.rollback
+type: capability
+id: cortex.snapshot.rollback
+context: cortex/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - cortex
+  - capability
+exported_at: 1790684787085
+source: cortex/registry-components.js:cortex.snapshot.rollback
+occurrences: 1
+firstSeenAt: 1790684787085
+lastSeenAt: 1790684787085
+fingerprint: 033840915ed8095ded6af16f
+payload:
+  intent: []
+  grammar:
+    - snapshot rollback
+  tags:
+    - cortex
+    - snapshot
+  id: cortex.snapshot.rollback
+  namespace: cortex
+  name: snapshot.rollback
+  version: 3.5.0
+  route:
+    method: POST
+    path: /api/snapshots/rollback
+  description: Rollback to snapshot
+  params: []
+  permissions:
+    - system
+  hooks: {}

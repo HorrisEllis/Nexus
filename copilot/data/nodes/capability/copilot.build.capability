@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-copilot.build
 type: capability
 id: copilot.build
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730177
-source: copilot.registry-components:copilot.build
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786862
+source: copilot/registry-components.js:copilot.build
+occurrences: 1
+firstSeenAt: 1789250730177
+lastSeenAt: 1790684786862
+fingerprint: c16b7ec81a6a5e8e9cbd5fc1
 payload:
+  intent: []
+  grammar:
+    - build
+    - co-pilot build
+  tags:
+    - copilot
   id: copilot.build
   namespace: copilot
   name: build
   version: 2.0.0
-  grammar:
-    - build
-    - co-pilot build
   route:
     method: POST
     path: /api/build
-  intent: []
   description: Build a new module from description
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

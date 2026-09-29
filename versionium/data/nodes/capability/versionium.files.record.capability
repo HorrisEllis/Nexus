@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.files.record
+type: capability
+id: versionium.files.record
+context: versionium/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787523
+source: versionium/registry-components.js:versionium.files.record
+occurrences: 1
+firstSeenAt: 1790684787523
+lastSeenAt: 1790684787523
+fingerprint: d44a6fad2a8a776eaa5a7a37
+payload:
+  intent: []
+  grammar:
+    - versionium files record
+  tags:
+    - versionium
+    - files
+  id: versionium.files.record
+  namespace: versionium
+  name: files.record
+  version: 3.3.0
+  route:
+    method: POST
+    path: /api/versionium/files/record
+  description: Attach a repo tree's files (full copy or proven delta) to an existing repo-snapshot commit
+  params: []
+  permissions:
+    - system
+  hooks: {}

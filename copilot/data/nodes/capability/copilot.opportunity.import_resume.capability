@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.import_resume
+type: capability
+id: copilot.opportunity.import_resume
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786890
+source: copilot/registry-components.js:copilot.opportunity.import_resume
+occurrences: 1
+firstSeenAt: 1790684786890
+lastSeenAt: 1790684786890
+fingerprint: e7ff81a7226bd6df1a770af1
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity import_resume
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.import_resume
+  namespace: copilot
+  name: opportunity.import_resume
+  version: 2.0.0
+  route:
+    method: POST
+    path: /api/opportunity/import-resume
+  description: Read a resume (.pdf/.docx/.txt/.md) into the profile; suggests skills
+  params: []
+  permissions:
+    - user
+  hooks: {}

@@ -2,35 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-ollama.jobs.dispatch
 type: capability
 id: ollama.jobs.dispatch
-context: ollama/registry-components.js real capability export
+context: ollama/registry-components.js — declared capability
 intent: null
 summary: null
-system: ollama
-tags: []
-exported_at: 1789250730189
-source: ollama.registry-components:ollama.jobs.dispatch
+system: null
+tags:
+  - ollama
+  - capability
+exported_at: 1790684787496
+source: ollama/registry-components.js:ollama.jobs.dispatch
+occurrences: 1
+firstSeenAt: 1789250730189
+lastSeenAt: 1790684787496
+fingerprint: a45edbf3279e443956ae2d30
 payload:
-  id: ollama.jobs.dispatch
-  namespace: ollama
-  name: jobs.dispatch
-  version: 1.0.0
+  intent: []
   grammar:
     - ollama dispatch
     - od
     - ollama run
-  route:
-    method: POST
-    path: /api/jobs
-  intent:
-    - build
-    - ask
-    - forge
-    - classify
-  description: Queue a job for local model execution
-  params: []
   tags:
     - ollama
     - dispatch
+  id: ollama.jobs.dispatch
+  namespace: ollama
+  name: jobs.dispatch
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/jobs
+  description: Queue a job for local model execution
+  params: []
   permissions:
     - system
   hooks:

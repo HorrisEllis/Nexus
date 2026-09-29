@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-copilot.axioms.remove
 type: capability
 id: copilot.axioms.remove
-context: copilot/registry-components.js real capability export
+context: copilot/registry-components.js — declared capability
 intent: null
 summary: null
-system: copilot
-tags: []
-exported_at: 1789250730177
-source: copilot.registry-components:copilot.axioms.remove
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786860
+source: copilot/registry-components.js:copilot.axioms.remove
+occurrences: 1
+firstSeenAt: 1789250730177
+lastSeenAt: 1790684786860
+fingerprint: b2ceedbbcc409133f12920dd
 payload:
+  intent: []
+  grammar:
+    - remove axiom
+  tags:
+    - copilot
   id: copilot.axioms.remove
   namespace: copilot
   name: axioms.remove
   version: 2.0.0
-  grammar:
-    - remove axiom
   route:
     method: POST
     path: /api/axioms/remove
-  intent: []
   description: Remove a runtime axiom
   params: []
-  tags:
-    - copilot
   permissions:
     - system
   hooks: {}

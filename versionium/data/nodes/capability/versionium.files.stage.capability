@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-versionium.files.stage
+type: capability
+id: versionium.files.stage
+context: versionium/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - versionium
+  - capability
+exported_at: 1790684787524
+source: versionium/registry-components.js:versionium.files.stage
+occurrences: 1
+firstSeenAt: 1790684787524
+lastSeenAt: 1790684787524
+fingerprint: 7c8d1f0e5e975ee9e1997b90
+payload:
+  intent: []
+  grammar:
+    - versionium files stage
+  tags:
+    - versionium
+    - files
+  id: versionium.files.stage
+  namespace: versionium
+  name: files.stage
+  version: 3.3.0
+  route:
+    method: POST
+    path: /api/versionium/files/stage
+  description: >-
+    Put file content into the blob store ahead of record(), in batches under the per-request cap
+    (0.39.263)
+  params: []
+  permissions:
+    - system
+  hooks: {}

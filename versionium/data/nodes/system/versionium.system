@@ -2,20 +2,33 @@ envelope: 1
 uuid: nexus-export-system-versionium
 type: system
 id: versionium
-context: >-
-  real, checked system record — nexus/autopilot.js kernel defs + versionium/registry-components.js.
-  versionium.node-taxonomy.md notes component/hook/wire/node are NOT USED (a real, separate,
-  already-flagged gap: versionium isn't in capability-map.js's SYSTEMS map, so loom never derives
-  those from it) — that gap doesn't affect capability/command, which versionium declares and owns
-  itself.
+context: versionium — the system record, regenerated from versionium/registry-components.js
 intent: null
 summary: null
-system: versionium
-tags: []
-exported_at: 1789250756055
-source: nexus.autopilot.KERNELS + registry-components.js
+system: null
+tags:
+  - versionium
+  - system
+exported_at: 1790684787532
+source: nexus.lib.system-nodes
+occurrences: 1
+firstSeenAt: 1789250756055
+lastSeenAt: 1790684787532
+fingerprint: 72e05f68892e27803fd32098
 payload:
   id: versionium
-  hasCapabilities: true
+  kernel: versionium
   port: 3754
+  entry: versionium/server.js
   spec: versionium/spec/versionium.spec
+  label: VERSIONIUM
+  purpose: Sovereign causal version control — commit/restore/calendar/state, real per-system history.
+  hasCapabilities: true
+  capabilities: 13
+  commands: 13
+  declaredNotServed: []
+  servedNotDeclared: 0
+  sources:
+    declared: versionium/registry-components.js
+    served: null
+    errors: []

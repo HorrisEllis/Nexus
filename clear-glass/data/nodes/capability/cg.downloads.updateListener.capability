@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.downloads.updateListener
 type: capability
 id: cg.downloads.updateListener
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730167
-source: clear-glass.registry-components:cg.downloads.updateListener
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786670
+source: clear-glass/registry-components.js:cg.downloads.updateListener
+occurrences: 1
+firstSeenAt: 1789250730167
+lastSeenAt: 1790684786670
+fingerprint: ad3228107db4a618e903fe2e
 payload:
-  id: cg.downloads.updateListener
-  namespace: cg
-  name: downloads.updateListener
-  version: 3.1.0
+  intent: []
   grammar:
     - downloads updateListener
-  route:
-    method: IPC
-    path: downloads:updateListener
-  intent: []
-  description: Update a download listener
-  params: []
   tags:
     - cg
     - downloads
     - listener
+  id: cg.downloads.updateListener
+  namespace: cg
+  name: downloads.updateListener
+  version: 3.17.0
+  route:
+    method: IPC
+    path: downloads:updateListener
+  description: Update a download listener
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: null

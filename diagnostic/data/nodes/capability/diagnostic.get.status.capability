@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.status
+type: capability
+id: diagnostic.get.status
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787095
+source: diagnostic/interaction-contract.json:diagnostic.get.status
+occurrences: 1
+firstSeenAt: 1790684787095
+lastSeenAt: 1790684787095
+fingerprint: b7a2f01311af7af269e08a4c
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.status
+  namespace: diagnostic
+  name: /status
+  version: 1.0.0
+  route:
+    method: GET
+    path: /status
+  description: Full system health snapshot

@@ -2,29 +2,37 @@ envelope: 1
 uuid: nexus-export-capability-cg.dom.query
 type: capability
 id: cg.dom.query
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730157
-source: clear-glass.registry-components:cg.dom.query
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786626
+source: clear-glass/registry-components.js:cg.dom.query
+occurrences: 1
+firstSeenAt: 1789250730157
+lastSeenAt: 1790684786626
+fingerprint: 484b678a7121fc8ec12c1414
 payload:
-  id: cg.dom.query
-  namespace: cg
-  name: dom.query
-  version: 3.1.0
+  intent: []
   grammar:
     - dom query
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: Query live DOM tree
-  params: []
   tags:
     - cg
     - dom
+  id: cg.dom.query
+  namespace: cg
+  name: dom.query
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: Query live DOM tree
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-DOM-001

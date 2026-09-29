@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.baseline.system
+type: capability
+id: diagnostic.get.baseline.system
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787105
+source: diagnostic/interaction-contract.json:diagnostic.get.baseline.system
+occurrences: 1
+firstSeenAt: 1790684787105
+lastSeenAt: 1790684787105
+fingerprint: c1c4a967d35bccf26ab16437
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.baseline.system
+  namespace: diagnostic
+  name: /baseline/:system
+  version: 1.0.0
+  route:
+    method: GET
+    path: /baseline/:system
+  description: Baseline stats for a system

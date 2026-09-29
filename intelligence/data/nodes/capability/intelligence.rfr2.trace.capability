@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.rfr2.trace
+type: capability
+id: intelligence.rfr2.trace
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787416
+source: intelligence/registry-components.js:intelligence.rfr2.trace
+occurrences: 1
+firstSeenAt: 1790684787416
+lastSeenAt: 1790684787416
+fingerprint: 986bf18c1be247b5239f7f6b
+payload:
+  intent: []
+  grammar:
+    - rfr2 trace
+    - intelligence rfr2
+  tags:
+    - intelligence
+    - rfr2
+  id: intelligence.rfr2.trace
+  namespace: intelligence
+  name: rfr2.trace
+  version: 1.0.0
+  route:
+    method: GET
+    path: /api/intelligence/rfr2/trace
+  description: RFR2 relationship traversal — trace an event to its causal root
+  params: []
+  permissions:
+    - system
+  hooks: {}

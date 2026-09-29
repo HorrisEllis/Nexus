@@ -2,30 +2,38 @@ envelope: 1
 uuid: nexus-export-capability-cg.mesh.route
 type: capability
 id: cg.mesh.route
-context: clear-glass/registry-components.js real capability export
+context: clear-glass/registry-components.js — declared capability
 intent: null
 summary: null
-system: clear-glass
-tags: []
-exported_at: 1789250730160
-source: clear-glass.registry-components:cg.mesh.route
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786643
+source: clear-glass/registry-components.js:cg.mesh.route
+occurrences: 1
+firstSeenAt: 1789250730160
+lastSeenAt: 1790684786643
+fingerprint: d9a431e4b7c261b8a91bf894
 payload:
-  id: cg.mesh.route
-  namespace: cg
-  name: mesh.route
-  version: 3.1.0
+  intent: []
   grammar:
     - mesh route
-  route:
-    method: POST
-    path: /cmd
-  intent: []
-  description: RAID-route to healthiest agent
-  params: []
   tags:
     - cg
     - mesh
     - raid
+  id: cg.mesh.route
+  namespace: cg
+  name: mesh.route
+  version: 3.17.0
+  route:
+    method: POST
+    path: /cmd
+  description: RAID-route to healthiest agent
+  params: []
   permissions:
     - system
   hooks: {}
+  tier: T2
+  typecode: CG-MSH-003

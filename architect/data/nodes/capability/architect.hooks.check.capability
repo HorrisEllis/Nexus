@@ -2,28 +2,34 @@ envelope: 1
 uuid: nexus-export-capability-architect.hooks.check
 type: capability
 id: architect.hooks.check
-context: architect/registry-components.js real capability export
+context: architect/registry-components.js — declared capability
 intent: null
 summary: null
-system: architect
-tags: []
-exported_at: 1789250730061
-source: architect.registry-components:architect.hooks.check
+system: null
+tags:
+  - architect
+  - capability
+exported_at: 1790684786582
+source: architect/registry-components.js:architect.hooks.check
+occurrences: 1
+firstSeenAt: 1789250730061
+lastSeenAt: 1790684786582
+fingerprint: 8439dddc8974ad65a1199353
 payload:
+  intent: []
+  grammar:
+    - hooks check
+  tags:
+    - architect
   id: architect.hooks.check
   namespace: architect
   name: hooks.check
   version: 1.0.0
-  grammar:
-    - hooks check
   route:
     method: POST
     path: /api/hooks/check
-  intent: []
   description: Check hook against constraints
   params: []
-  tags:
-    - architect
   permissions:
     - system
   hooks: {}

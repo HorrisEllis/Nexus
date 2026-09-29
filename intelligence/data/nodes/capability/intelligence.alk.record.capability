@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-capability-intelligence.alk.record
+type: capability
+id: intelligence.alk.record
+context: intelligence/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - intelligence
+  - capability
+exported_at: 1790684787413
+source: intelligence/registry-components.js:intelligence.alk.record
+occurrences: 1
+firstSeenAt: 1790684787413
+lastSeenAt: 1790684787413
+fingerprint: 67e366553ec27375a50eb99d
+payload:
+  intent: []
+  grammar:
+    - alk record
+    - intelligence alk
+  tags:
+    - intelligence
+    - alk
+  id: intelligence.alk.record
+  namespace: intelligence
+  name: alk.record
+  version: 1.0.0
+  route:
+    method: POST
+    path: /api/intelligence/alk/record
+  description: ALK — record a decision node {actor,intent,payload,causedBy}
+  params: []
+  permissions:
+    - system
+  hooks: {}

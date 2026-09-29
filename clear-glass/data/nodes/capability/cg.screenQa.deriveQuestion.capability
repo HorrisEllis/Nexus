@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.screenQa.deriveQuestion
+type: capability
+id: cg.screenQa.deriveQuestion
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786708
+source: clear-glass/registry-components.js:cg.screenQa.deriveQuestion
+occurrences: 1
+firstSeenAt: 1790684786708
+lastSeenAt: 1790684786708
+fingerprint: 7e53e95a5c5fbb30e9663576
+payload:
+  intent: []
+  grammar:
+    - screenQa deriveQuestion
+  tags:
+    - cg
+    - screen-qa
+  id: cg.screenQa.deriveQuestion
+  namespace: cg
+  name: screenQa.deriveQuestion
+  version: 3.17.0
+  route:
+    method: IPC
+    path: screen-qa:derive-question
+  description: Derive a question from one real field's metadata (label/aria-label/placeholder/name)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

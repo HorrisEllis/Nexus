@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.accounts.portal.close
+type: capability
+id: cg.accounts.portal.close
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786720
+source: clear-glass/registry-components.js:cg.accounts.portal.close
+occurrences: 1
+firstSeenAt: 1790684786720
+lastSeenAt: 1790684786720
+fingerprint: 245e45be2759da965b75e894
+payload:
+  intent: []
+  grammar:
+    - accounts portal close
+  tags:
+    - cg
+    - accounts
+    - portal
+  id: cg.accounts.portal.close
+  namespace: cg
+  name: accounts.portal.close
+  version: 3.17.0
+  route:
+    method: IPC
+    path: accounts:portal:close
+  description: Close an open sign-in window
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

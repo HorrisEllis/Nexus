@@ -2,29 +2,35 @@ envelope: 1
 uuid: nexus-export-capability-guardian.seam.sessions
 type: capability
 id: guardian.seam.sessions
-context: guardian/registry-components.js real capability export
+context: guardian/registry-components.js — declared capability
 intent: null
 summary: null
-system: guardian
-tags: []
-exported_at: 1789250730140
-source: guardian.registry-components:guardian.seam.sessions
+system: null
+tags:
+  - guardian
+  - capability
+exported_at: 1790684787212
+source: guardian/registry-components.js:guardian.seam.sessions
+occurrences: 1
+firstSeenAt: 1789250730140
+lastSeenAt: 1790684787212
+fingerprint: 563cc07bcc22069fcba93c01
 payload:
-  id: guardian.seam.sessions
-  namespace: guardian
-  name: seam.sessions
-  version: 3.6.2
+  intent: []
   grammar:
     - seam sessions
     - seam-sessions
+  tags:
+    - guardian
+  id: guardian.seam.sessions
+  namespace: guardian
+  name: seam.sessions
+  version: 3.14.0
   route:
     method: GET
     path: /seam/sessions
-  intent: []
   description: SEAM session history
   params: []
-  tags:
-    - guardian
   permissions:
     - system
   hooks: {}

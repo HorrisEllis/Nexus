@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-capability-diagnostic.get.friction
+type: capability
+id: diagnostic.get.friction
+context: diagnostic/interaction-contract.json — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - diagnostic
+  - capability
+exported_at: 1790684787105
+source: diagnostic/interaction-contract.json:diagnostic.get.friction
+occurrences: 1
+firstSeenAt: 1790684787105
+lastSeenAt: 1790684787105
+fingerprint: 61d018a90f5581f51e710c37
+payload:
+  intent: []
+  grammar: []
+  tags:
+    - diagnostic
+    - interaction-contract
+  id: diagnostic.get.friction
+  namespace: diagnostic
+  name: /friction
+  version: 1.0.0
+  route:
+    method: GET
+    path: /friction
+  description: Per-system friction scores

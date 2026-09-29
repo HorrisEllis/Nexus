@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-capability-cg.screenQa.elementAt
+type: capability
+id: cg.screenQa.elementAt
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790684786706
+source: clear-glass/registry-components.js:cg.screenQa.elementAt
+occurrences: 1
+firstSeenAt: 1790684786706
+lastSeenAt: 1790684786706
+fingerprint: 1e10481d4e1b3fdd995d716c
+payload:
+  intent: []
+  grammar:
+    - screenQa elementAt
+  tags:
+    - cg
+    - screen-qa
+  id: cg.screenQa.elementAt
+  namespace: cg
+  name: screenQa.elementAt
+  version: 3.17.0
+  route:
+    method: IPC
+    path: screen-qa:element-at
+  description: The real field at a window-relative point — the right-click path's own target
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

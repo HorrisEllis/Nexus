@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-capability-copilot.opportunity.profile.get
+type: capability
+id: copilot.opportunity.profile.get
+context: copilot/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - copilot
+  - capability
+exported_at: 1790684786881
+source: copilot/registry-components.js:copilot.opportunity.profile.get
+occurrences: 1
+firstSeenAt: 1790684786881
+lastSeenAt: 1790684786881
+fingerprint: ec4d4c89769c15a21595889c
+payload:
+  intent: []
+  grammar:
+    - copilot opportunity profile get
+  tags:
+    - copilot
+    - opportunity
+  id: copilot.opportunity.profile.get
+  namespace: copilot
+  name: opportunity.profile.get
+  version: 2.0.0
+  route:
+    method: GET
+    path: /api/opportunity/profile
+  description: 'The job profile: skills, roles, floor, sources, per-platform policy'
+  params: []
+  permissions:
+    - system
+  hooks: {}
