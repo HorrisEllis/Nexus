@@ -373,3 +373,27 @@ James: *"can you fix gemini and deepseek"* and *"i want the agents to be able to
 ## The provider login wall (v0.39.280)
 
 James: *"chatgpt had a login prompt, hoping we can automate if that happens."* The shared chat-stream prelude (`guardian/userscript-chat-stream.js`, 1.1.0) watches each provider tab's sign-in state. A dismissible nag (ChatGPT's "Stay logged out") is closed automatically. A real login wall (sign-in buttons or a login form and no composer) is reported to guardian (POST /api/provider/login); guardian keeps it (`guardian/lib/provider-login.js`), says it on the bus and to every connected client, and a job waiting for that provider says it needs a sign-in instead of timing out as an empty reply. NEXUS never types a password. Test: `tests/probe/login-wall-chromium.js`.
+
+## The provider economy at dispatch (v0.39.281)
+
+James: *"What if we have economy tags for each provider … extensive configurable options … I got soft signed out of ChatGPT."* The map is `docs/2026-09-29-provider-economy-phasemap.spec` (EC0–EC11).
+
+**What it is.** Every provider has a tier: local, free, subscription or metered. Each has limits (jobs per hour, jobs per day, tokens per day, concurrent jobs, the least gap between two jobs), quiet hours, and what to do at a limit: wait, stop, or go to a fallback provider you name. Each job type (build, chat, plan, manage, heal, wake, automation) says which tiers may take it. The rules live in `lib/economy/` (`policy.js`, `gate.js`, `store.js`, which saves `policy.json` and keeps `policy.prev.json`).
+
+**At dispatch** (`guardian/lib/economy-guard.js`, called by `guardian/lib/dispatcher.js` before a job joins the pool):
+- **Allow.** The job is dispatched.
+- **Wait.** The job stays queued, its queue reason says why ("economy: …"), and it is sent when the wait ends. Event: `guardian.economy.wait`.
+- **Stop.** The job fails with the reason.
+- **Fallback.** The job moves to the provider you configured, the job record says so (`economyFallback`), and it is checked again. Event: `guardian.economy.fallback`.
+
+A provider someone chose is never swapped silently.
+
+**What is recorded.** Every outcome (ok, truncated, failed, timeout, sign-in wall) is one line in `<data>/economy/usage-YYYY-MM-DD.jsonl`, with provider, job type, job id, estimated tokens in and out, time taken and model. `lib/economy/ledger.js` is the only writer. From that record:
+- **Token limits** (`lib/economy/tokens.js`) are learned per provider: the largest input that came back whole, the smallest that did not, and a safe limit below it. Each is an estimate (`estimate-v1`) and says how many records it rests on.
+- **The router** (`lib/economy/router.js`) scores providers by how often they succeed, their cost and their speed.
+
+**Routes:** GET and POST `/api/economy` (the policy), GET `/api/economy/usage`, `/api/economy/limits` and `/api/economy/routing`.
+
+**Not built, on purpose:** anything that makes automated provider chats look like a person typing (forced human timing, a mandatory randomizer, decoy questions). The limits and quiet hours are the answer to sign-outs: automated load on a browser account stays bounded and visible.
+
+Tests: `tests/modules/test-economy-guardian.test.js` (the real dispatcher), `tests/modules/test-economy.test.js`.

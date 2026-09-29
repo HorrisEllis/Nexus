@@ -360,3 +360,21 @@ James: *"can you have the electron popup windows for the desktop envirement and 
 **The co-pilot browses** (`clear-glass/src/copilot/verbs.js`). "visit google.com", "go to …", "open … and …" go there without asking a model and answer with the page's title, address and numbered targets; anything asked after it goes to the model with that page in hand. A driver block the model wrote loosely is repaired and run; one that still cannot be read comes back as a failed result the model and you both see (it used to be dropped while the pane said it was sent). The pane names the command each block carried. The full user guide is in `docs/atlases/copilot-atlas.md`.
 
 Tests: `tests/modules/test-compartment-window.test.js`, `tests/modules/test-cg-copilot-verbs.test.js`.
+
+## ErosmancerOS in workflows, and its workbench (v0.39.281)
+
+James: *"Can we enforce have the jobs types using ErosmancerOS"* and *"What about having a huge editor for the ErosmancerOS? Only if it these are additive."*
+
+**Input on browser steps** (Settings → Automation, `src/automation/steps.js`). Click, hover and type steps have an **Input** choice:
+- **In the page** (the default): events inside the page, as before.
+- **ErosmancerOS**: real mouse and keyboard input through the driver's pointer (`via: 'eros'`, so ErosmancerOS's `/api/input`), at the element's centre. Typing this way needs the element's selector. If ErosmancerOS refuses, the step fails and says why; it is never quietly sent in the page instead. The step's output names the path (`inputPath: 'erosmancer'`).
+
+**The workbench** (Settings → ErosmancerOS → Workbench, `renderer/settings/sections/eros.js`). It sits below the existing panes, which are unchanged, and has four views:
+- **Tabs:** open one, attach one (primary, shadow or proxy), close one.
+- **Nodes:** search the registry, inspect a node, send it to the console.
+- **Console:** send one command (click, type, hover, scroll, evaluate, navigate, screenshot) to an attached tab, or tick **Plan only** to see what would run without sending anything.
+- **Replay:** the recorded frames, each with its commands and how often it was replayed; replay one with a delay.
+
+Everything goes through Clear Glass's `/eros/*` wire. The console sends no behaviour profile of its own. ErosmancerOS 0.3.0 now lists its replay frames (`GET /api/replay/frames` returns `frames` beside the snapshot).
+
+Tests: `tests/modules/test-economy.test.js` EC9-01, `tests/modules/test-eros-workbench.test.js`.

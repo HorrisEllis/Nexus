@@ -6,7 +6,7 @@ spec:
     release:  "0.39.280 (base) → 0.39.281"
     uuid:     nexus-provider-economy-phasemap-v1-0000-2026-0929-jamesbrooks-001
     owner:    "lib.economy · guardian.lib.dispatcher · lib.seam.adapters.warp-cascade · lib.repo-inject · idearium.ui.settings · clear-glass.mesh.automation-engine · clear-glass.renderer.settings.eros"
-    status:   "mapped; every phase open; built bottom-up, one at a time, each proven before the next"
+    status:   "built 0.39.281 — EC0–EC11 closed bottom-up, one at a time, each with its proof (CHANGELOG-0.39.281.md has the commits)"
     axioms:   "docs/AXIOMS-v3.1.md — §3.1, §3.3, §3.4, §0.3, §8.6 (reuse), §10.1 (one write authority), §10.2 (projections derived), §16.5 (delete before you add → here: add only where nothing exists), §17.5 (provenance)"
     origin: >
       James, 2026-09-29: "What if we have economy tags for each provider. With staging branches. Like id love an
@@ -198,7 +198,7 @@ spec:
 
     EC11_release:
       layer: automation
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — versions (system 0.39.281, guardian 3.19.0, idearium 4.12.0, clear-glass 3.22.0, erosmancer-os 0.3.0, provider-economy 1.0.0; clear-glass and idearium version points re-synced), addenda, SPEC-REGISTRY, atlases, loom/maps/economy-map.js, run-all; regression against 0.39.280 in CHANGELOG-0.39.281.md"
       depends_on: [EC5, EC6, EC7, EC8, EC9, EC10]
       files:
         - "lib/version.js"

@@ -1651,3 +1651,9 @@ spec:
     | spec | version | status | governs |
     |---|---|---|---|
     | `docs/2026-09-29-build-surface-phasemap.spec` | 1.0.0 | BS0–BS11, BS13–BS19 built (0.39.280); BS12 = the release | The build surface: compartment windows, the rewind hit-test fix, file states, baseline deviation, environment check and options, spec → bottom-up phasemap with the axioms, build plan with gates, their API and UI (Files Manage, Spec build bar, plan panel, Start building, Settings environment), provider sovereignty, honest git errors, code-repo retirement, the provider login wall, co-pilot browser verbs, Sync & CI theme, the co-pilot user guide. |
+
+    ## §REGISTERED 2026-09-29 — mapped and built on 0.39.281
+
+    | spec | version | status | governs |
+    |---|---|---|---|
+    | `docs/2026-09-29-provider-economy-phasemap.spec` | 1.0.0 | EC0–EC10 built (0.39.281); EC11 = the release | The provider economy: tiers and limits per provider (lib/economy policy, usage ledger, gate), learned token limits (estimate-v1), the learning router (Thompson sampling, only when nobody chose), staging by tier, guardian enforcement at dispatch (wait / stop / a configured fallback, never a silent swap), the settings console's Provider economy page, browser steps with ErosmancerOS input, the ErosmancerOS workbench. Excludes, on purpose, anything that disguises automation as a person typing. Code version: lib/version.js modules['provider-economy']. |

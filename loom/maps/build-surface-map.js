@@ -70,6 +70,15 @@ function mapBuildSurface(driver) {
       (r.ok ? results.hooks : results.failures).push({ id: `${id}.import`, r });
     }
   }
+  // §0.39.281 — a consumer whose edge is not a require() (the dispatcher's deps, a UI script over HTTP) has no import
+  // hook from the scan, so its wire had no end (4 of this map's wires failed on 0.39.280, reported there as 25 wires).
+  // Declare it; one that already exists is refused as a duplicate — that is fine.
+  for (const consumer of new Set(CONSUMERS.map(c => c[0]))) {
+    if (own.has(consumer)) continue;
+    const r = driver.declare('hook', { id: `${consumer}.import`, component_id: consumer, name: 'import', type: 'direct', direction: 'in', uuid: `nexus-loom-map-${consumer}-import-v1-0000-2026-0929-002` });
+    if (r.ok) results.hooks.push({ id: `${consumer}.import`, r });
+    else if (!(r.failures || []).every(f => f.axiomId === 'loom.unique-id')) results.failures.push({ id: `${consumer}.import`, r });
+  }
   let n = 0;
   for (const [consumer, dep] of CONSUMERS) {
     n++;
