@@ -126,8 +126,11 @@ function syntaxForFileName(name) {
 function extractCodeBlocks(text) {
   if (!text || typeof text !== 'string') return [];
   const { extractCode } = require('../../lib/extract-code.js');
-  const r = extractCode(text, { allowMultiple: true, allowEmpty: true });
+  let r = extractCode(text, { allowMultiple: true, allowEmpty: true });
   if (!r.ok) return [];
+  // §0.39.282 — every block empty with the file between the fences (James's live run: "code blocks 2/2 written … code
+  // artifact NOT captured: no-code-block"): the shared extractor's split-fence recovery, when it applies.
+  if (r.blocks.every(b => !b.code.trim())) { const r2 = extractCode(text, { allowMultiple: true }); if (r2.ok && r2.recovered) r = r2; }
   return r.blocks.map(b => ({
     index: b.index,
     info: b.info,

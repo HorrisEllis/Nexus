@@ -174,5 +174,18 @@ t('EC-041 both callers agree on the same reply', () => {
   assert.strictEqual(mine[0].code, theirs.blocks[0].code);
 });
 
+t('§0.39.282 split fences (James\'s live ChatGPT reply): every fence empty, the file between them → recovered, both extractors', () => {
+  const reply = '```javascript\n```\nmodule.exports = Object.freeze({});\n```\n```';
+  const r = extractCode(reply);
+  assert.strictEqual(r.ok, true, r.error);
+  assert.strictEqual(r.recovered, 'split_fences');
+  assert.deepStrictEqual([r.code, r.lang, r.ext], ['module.exports = Object.freeze({});', 'javascript', '.js']);
+  const CA = require('../../guardian/lib/code-artifact.js');
+  const picked = CA.pickBlock(CA.extractCodeBlocks(reply), { fileName: 'src/kernel/state.js' });
+  assert.strictEqual(picked.block && picked.block.code, 'module.exports = Object.freeze({});');
+  // two separate runs between empty fences stay ambiguous — never guessed
+  assert.strictEqual(extractCode('```js\n```\nA\n```\n```\nB\n```\n```').ok, false);
+});
+
 console.log(`\n${fail === 0 ? '✓' : '✗'} extract-code: ${pass} passed, ${fail} failed\n`);
 process.exit(fail === 0 ? 0 : 1);
