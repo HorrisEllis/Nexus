@@ -382,7 +382,7 @@ spec:
 
     N22_shadow_and_negative_space_reasoning:
       layer: intelligence
-      status: "BUILT 0.39.282 (first adopters) — lib/shadow.js: declare(step, expects {files, events, fields}) / settle(actual) / drop; each absence → gap absent.<step>.<kind> (lib/gap-field.js) + liminal-space item at L1/L3 caused by the shadow; shadow.declared / shadow.settled on nexus-bus; a shadow is working memory until it settles (I0). Adopted: idearium manage actions (a writing action must bring its file back; the run reads 'incomplete' naming what is absent) and spec plan runs (the phasemap must come back). Test: test-shadow 14/14. OPEN: phase builds (deps.phaseBuild — the plan's files per phase), expected fields on written nodes, a timed window for expected events (settle reads the bus since declare)."
+      status: "BUILT 0.39.282 (first adopters) — lib/shadow.js: declare(step, expects {files, events, fields}) / settle(actual) / drop; each absence → gap absent.<step>.<kind> (lib/gap-field.js) + liminal-space item at L1/L3 caused by the shadow; shadow.declared / shadow.settled on nexus-bus; a shadow is working memory until it settles (I0). Adopted: idearium manage actions (a writing action must bring its file back; the run reads 'incomplete' naming what is absent) and spec plan runs (the phasemap must come back). Phase builds too: _phaseBuild's shadow is the files the phase names; a reply without them reads 'incomplete' (and a gate-blocked one 'blocked'). Test: test-shadow 16/16. OPEN: expected fields on written nodes, a timed window for expected events (settle reads the bus since declare)."
       depends_on: [N21, N14]
       files:
         - "lib/step-gate.js (the expectation half)"

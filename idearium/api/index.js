@@ -612,20 +612,35 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
+  // §0.39.282 N22 — the phase's shadow: every file the phase names must come back (written, staged or proposed). An
+  // absence is a gap + a liminal item (lib/shadow.js) and the run reads 'incomplete', naming what never arrived.
+  const SH = _require('../../lib/shadow.js');
+  const expectFiles = [...new Set((node.files || []).map(f => String(f).split(/[\s(]/)[0]).filter(f => f && /[\w-]\.[\w]+$/.test(f)))];
+  const shadow = expectFiles.length ? SH.declare({ step: 'phase.build', expects: { files: expectFiles }, subject: { repoUuid: target.uuid, map, phase, runId }, causedBy: `idearium.phases.build:${runId}` }) : null;
   Promise.resolve().then(() => RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message, backend, agent, provider, layer: getRepoLayer() }))
     .then((r) => {
       const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
-      const row = { uuid: `${runId}-${r && r.ok ? 'replied' : 'failed'}`, ...base, state: r && r.ok ? 'replied' : 'failed', snapshot: commitId,
-        error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : null, provider: r && (r.providerUsed || r.provider) || null,
+      // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
+      let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
+      let absent = null;
+      if (shadow) {
+        if (state !== 'replied') SH.drop(shadow);
+        else { const got = SH.settle(shadow, { files: ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
+      }
+      const row = { uuid: `${runId}-${state}`, ...base, state, snapshot: commitId, ...(absent ? { absent } : {}),
+        error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
+        provider: r && (r.providerUsed || r.provider) || null,
         reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
       appendRow('idearium_phase_runs', row);
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId });
     })
     .catch((e) => {
+      if (shadow) SH.drop(shadow);
       appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, ...base, state: 'failed', snapshot: commitId, error: e.message, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'failed', snapshot: commitId });
     });
-  return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length } };
+  return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
+    ...(shadow ? { shadow: { id: shadow.id, expects: shadow.expects } } : {}) } };
 }
 
 // §0.39.271 — one repo snapshot, as POST /api/repos/:uuid/snapshot takes it (moved here
