@@ -219,10 +219,104 @@ spec:
         step, each expandable to its event ledger and activity; live on the repo's events. Also the build-start area:
         one place to begin (pick a spec → plan → build next), on the repo's Home tab.
 
+    # ── added 2026-09-29, James's fourth message (mapped before any of it was built) ─────────────────────────────
+    # "always map first, no redundancy, always update the atlas and bump versions when handing back." · "build the theme
+    # for idearium sync and ci tab. i don't like when its inconsistent. why claude? set to chatgpt. it hasn't build one
+    # line yet. chatgpt had a login prompt, hoping we can automate if that happens. if i delete a code repo, the
+    # original needs to know, and i cant remove or click build a replacement. also need to update the copilot atlas
+    # immensely to expand it, so i can use it as a user guide. … i told it to visit google.com and it ran the blue
+    # command but nothing happened. its meant to be the ais browser …"
+    BS13_provider_sovereignty:
+      layer: library
+      status: OPEN
+      depends_on: []
+      files: [lib/seam/adapters/warp-cascade.js, idearium/api/index.js (_buildIdentity)]
+      does: >-
+        Read, not assumed: the code spec's build had no provider (its repo was not found by specUuid, so
+        _buildIdentity returned provider null) and warp-cascade then let RAID pick first and fell through
+        ollama → chatgpt → claude. A chosen provider (the chunk's, the repo's, or its ORIGINAL's for a code repo) is
+        the only browser provider tried — never a fall-through to one nobody chose; ollama stays the local fallback
+        only when nothing was chosen. _buildIdentity finds a code spec's original through codeFor / promotedFromSpec and
+        otherwise uses lib/repo-agent.js defaultProvider() (chatgpt when guardian has it).
+      proof: tests/modules/test-build-surface-2.test.js BS13-*
+
+    BS14_branch_git_honest:
+      layer: library
+      status: OPEN
+      depends_on: []
+      files: [cos/workspace/index.js]
+      does: >-
+        "branch of nexus-id not made (git worktree failed: warning: in the working copy of 'atlas.json', LF will be
+        replaced by CRLF …)". The failure text was git's CRLF warnings, cut before the real reason. Every git call the
+        workspace makes runs with core.autocrlf=false and core.safecrlf=false (no conversion, no warning), and a failure
+        reports git's last error line, not its first warning.
+      proof: tests/modules/test-cos-workspace.test.js WS-14
+
+    BS15_code_repo_delete:
+      layer: api
+      status: OPEN
+      depends_on: []
+      files: [idearium/api/index.js (repo.archive), lib/repo-hat.js, lib/cos-bridge.js]
+      does: >-
+        Deleting a code repo tells its original: the document spec's codeSpecUuid is cleared (so Code builds a new one),
+        the hat link is removed, a branch's worktree is removed (its git branch kept — nothing lost), and the event
+        says which original it was. The response names all of it.
+      proof: tests/modules/test-build-surface-2.test.js BS15-*
+
+    BS16_provider_login_wall:
+      layer: automation
+      status: OPEN
+      depends_on: []
+      files: [guardian/userscript-chat-stream.js, guardian/server.js, guardian/lib/dispatcher.js]
+      does: >-
+        "chatgpt had a login prompt, hoping we can automate if that happens." The shared chat-stream prelude detects a
+        provider's logged-out state (login/sign-up buttons, auth modal, no composer) and its dismissible "stay logged
+        out" modal. A dismissible modal is closed automatically; a real login wall is reported to guardian
+        (provider.login_required) so the job waits and says why, instead of timing out as "empty response". No
+        password is typed by NEXUS: signing in stays the person's (Clear Glass's own password manager can fill it).
+      proof: tests/probe/login-wall-chromium.js; tests/modules/test-guardian-wake.js unchanged
+
+    BS17_copilot_browser_verbs:
+      layer: automation
+      status: OPEN
+      depends_on: []
+      files: [clear-glass/src/copilot/bridge.js, clear-glass/renderer/browser.js]
+      does: >-
+        "i told it to visit google.com and it ran the blue command but nothing happened". _parseCommands dropped a
+        ```driver block that was not strict JSON (catch (_) {}), while the pane still said "[driver command sent]".
+        Now: a block a small model writes loosely (bare keys, single quotes, a url without https://) is repaired and
+        run; one that still cannot be read comes back as a FAILED result with the text, never silence. "visit / go to /
+        open <site>" runs navigate itself (no model needed) and answers with what is on the page (title, url, the
+        interaction field's first targets). The pane shows which command ran and whether it worked.
+      proof: tests/modules/test-cg-copilot-verbs.test.js
+
+    BS18_sync_ci_theme:
+      layer: ui
+      status: OPEN
+      depends_on: []
+      files: [idearium/ui/js/app.js, idearium/ui/index.html]
+      does: >-
+        The Sync & CI tab drawn with the same primitives as every other repo tab (.ds cards, mono labels, action rows,
+        the dark tokens) instead of its own light/inline styles.
+      proof: tests/probe/build-surface-ui-chromium.js (the tab's computed colours against the shared tokens)
+
+    BS19_copilot_atlas_guide:
+      layer: ui
+      status: OPEN
+      depends_on: [BS17]
+      files: [docs/copilot-atlas.md (or the copilot atlas that exists), tests/modules/test-nexus-atlas-refs.test.js]
+      does: >-
+        The copilot atlas expanded into a user guide: what the co-pilot is (the AI's browser), every way to talk to it
+        (panes, backends, /commands), what it can do in Clear Glass (navigate, the interaction field, pointer, spotlight,
+        macros, workflows, downloads, ledgers), recipes (job listings: search, open, read, fill, track; freelance
+        work through Idearium: a client spec → phases → build → deliver), and what to do when something fails. Every
+        code span names a real file.
+      proof: tests/modules/test-nexus-atlas-refs.test.js
+
     BS12_release:
       layer: automation
       status: OPEN
-      depends_on: [BS8, BS9, BS10, BS11]
+      depends_on: [BS8, BS9, BS10, BS11, BS13, BS14, BS15, BS16, BS17, BS18, BS19]
       files: [lib/version.js, CHANGELOG-0.39.280.md, docs/*-atlas.md, idearium/spec, tests/run-all.js]
       does: >-
         Versions bumped everywhere they persist (§5.4), the changelog, every touched atlas and spec addendum, tests
