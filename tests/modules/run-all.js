@@ -590,18 +590,51 @@ async function main() {
     await runSuite(suite);
   }
 
+  // §0.39.282 N19 — tests/known-gaps.yaml: every file that fails for a known, STATED reason, with how many cases may
+  // fail. A registered file at or under its count is a KNOWN GAP (reported, with its kind and reason, never silent);
+  // over its count it is a failure like any other; a registered file that now passes is reported so its entry can be
+  // retired. A timeout is never excused. --strict ignores the register entirely.
+  const gaps = _loadKnownGaps();
+  let knownFailed = 0;
+  const closed = [];
+  for (const r of results) {
+    const g = gaps.get(r.file);
+    if (!g || r.timedOut) continue;
+    if (r.failed === 0 && !r.crashed) { closed.push(r.file); continue; }
+    if (r.failed <= g.failing) { r.known = g; knownFailed += r.failed; }
+  }
+
   console.log('\n══ MODULE TEST RESULTS ══════════════════════════════');
   for (const r of results) {
-    const status = r.timedOut ? '⧖' : r.crashed ? '✗' : (r.failed === 0 ? '✓' : '✗');
-    const note = r.timedOut ? ' TIMED OUT — force-killed' : r.crashed ? ` CRASHED (exit ${r.code}, no summary — see output above)` : '';
+    const status = r.timedOut ? '⧖' : r.known ? '◌' : r.crashed ? '✗' : (r.failed === 0 ? '✓' : '✗');
+    const note = r.timedOut ? ' TIMED OUT — force-killed' : r.known ? ` KNOWN GAP (${r.known.kind}, ≤${r.known.failing})` : r.crashed ? ` CRASHED (exit ${r.code}, no summary — see output above)` : '';
     console.log(`  ${status} ${r.file.padEnd(40)} ${r.passed} passed  ${r.failed} failed${note}`);
   }
   console.log('─'.repeat(55));
-  console.log(`  TOTAL: ${totalPassed} passed  ${totalFailed} failed`);
-  const crashedSuites = results.filter(r => r.crashed);
+  console.log(`  TOTAL: ${totalPassed} passed  ${totalFailed} failed${knownFailed ? `  (${knownFailed} of them known gaps, ${totalFailed - knownFailed} new)` : ''}`);
+  const crashedSuites = results.filter(r => r.crashed && !r.known);
   if (crashedSuites.length) console.log(`  CRASHED (not counted in totals as passing): ${crashedSuites.map(r => r.file).join(', ')}`);
+  const known = results.filter(r => r.known);
+  if (known.length) {
+    console.log(`\n  KNOWN GAPS (tests/known-gaps.yaml) — ${known.length} file(s), ${knownFailed} case(s):`);
+    for (const r of known) console.log(`    ◌ ${r.file} [${r.known.kind}] ${String(r.known.reason).slice(0, 160)}${String(r.known.reason).length > 160 ? '…' : ''}`);
+  }
+  if (closed.length) console.log(`\n  GAPS NOW PASSING — retire these entries from tests/known-gaps.yaml: ${closed.join(', ')}`);
 
-  if (totalFailed > 0) process.exitCode = 1;
+  if (totalFailed - knownFailed > 0) process.exitCode = 1;
+}
+
+function _loadKnownGaps() {
+  const out = new Map();
+  if (process.argv.includes('--strict')) return out;
+  try {
+    const doc = require('js-yaml').load(fs.readFileSync(path.join(__dirname, '..', 'known-gaps.yaml'), 'utf8'));
+    for (const g of (doc && doc.gaps) || []) {
+      if (!g || !g.file || typeof g.failing !== 'number') continue;
+      out.set(path.relative(MODULES_DIR, path.join(__dirname, '../..', g.file)).split(path.sep).join('/'), g);
+    }
+  } catch (e) { console.log(`  [run-all] tests/known-gaps.yaml unreadable (${e.message}) — every failure counts`); }
+  return out;
 }
 
 main().catch(e => { console.error(e); process.exitCode = 1; });

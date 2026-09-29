@@ -21,7 +21,9 @@ const UI_ROOT = path.join(ROOT, 'ui'); // matches orchestrator/orchestrator.js's
 
 function run() {
   test('BRA-001', 'the old, stray, misplaced nexus/ wrapper directory is genuinely gone', () => {
-    assert.ok(!fs.existsSync(path.join(ROOT, 'nexus')), 'nexus/ should no longer exist — its 4 real files were relocated, not duplicated');
+    // §0.39.282 — nexus/ is a real directory again (autopilot.js, nexus-bus.js, nexus-connect.js live there). What this
+    // case guards is the stray BrainOS copy under it: its UI files were relocated to ui/brainos/, not duplicated.
+    assert.ok(!fs.existsSync(path.join(ROOT, 'nexus', 'ui')), 'nexus/ui/ should no longer exist — its BrainOS files were relocated to ui/brainos/, not duplicated');
   });
 
   test('BRA-002', '§UPDATED 2026-09-06 (BrainOS v2 rebuild) — the real, current BrainOS files exist at the correct location', () => {

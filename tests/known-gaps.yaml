@@ -1,48 +1,143 @@
 # tests/known-gaps.yaml — every test file that fails for a known, stated reason (docs/2026-09-29-nex-node-store-phasemap.spec N19).
-# Each entry is a gap node: the file, how many cases may fail (a count above it is a NEW failure), the kind, and why.
-# kinds: missing-module (tests code that is not in the tree) · stale-ui · unbuilt (the test specifies a feature never built)
-#        · needs-live-service (a real guardian/provider/live data) · real-bug (known, not yet fixed).
-# IN PROGRESS: the triage is still going; entries with failing: null get their count from the final run.
+# Each entry is a gap node: the file, how many cases may fail (a count ABOVE it is a new failure and fails the run), the
+# kind, and why. tests/modules/run-all.js reads this: a registered file failing at or under its count is reported as a
+# KNOWN GAP, not a failure; a registered file that now passes is reported so the entry can be retired (archived, §0.3).
+# A file that crashes before printing a summary counts as 1 failing (run-all's own rule).
+# kinds: missing-module (tests code that is not in the tree) · missing-archive (asserts an _archive/ path; the archive was
+#        not part of the 0.39.258 upload, so §0.3's "archived, not deleted" cannot be shown from this tree)
+#        · stale-ui · unbuilt (the test specifies a feature never built) · needs-live-data (a running system or a real,
+#        migrated store) · needs-live-service (a real guardian/provider) · spec-drift (tied to a mapped phase)
+#        · decision (needs James's call) · regression (a feature a rebuild dropped).
 type: gap_register
-version: 0.1.0
+version: 1.0.0
 gaps:
-  - file: tests/modules/copilot-confidence.test.js
-    failing: 2
-    kind: unbuilt
-    reason: "T-003 and T-005 specify a {grounded:true} option (a 0.7 confidence floor for tool-grounded answers) that copilot/lifeline.js _estimateConfidence never had, and nothing passes grounded. T-001, T-002 and T-004 pass (T-004 was a real bug, fixed 0.39.282)."
-  - file: tests/modules/clear-glass-accounts.test.js
-    failing: 1
-    kind: needs-live-service
-    reason: "\"send() persists cookies under the same resolved accountId\" needs a real agent reply: guardian running with a connected provider. The other 11 cases pass without one."
-  - file: tests/modules/copilot.test.js
-    failing: null
-    kind: missing-module
-    reason: "Tests guardian/agents/co-pilot.js (bus polling, RAID-gated tool calls), which is not in this repository and was not in the 0.39.258 upload either; the co-pilot is its own system now (copilot/, clear-glass/src/copilot/). Needs rewriting against copilot/lifeline.js + copilot/tool-runtime.js, not a path fix."
-  - file: tests/modules/brainos-canvas.test.js
-    failing: null
-    kind: stale-ui
-    reason: "Written for the pre-v2 BrainOS (nexus/ui/brainos/). The path is fixed (ui/brainos/brainos-canvas.js, 0.39.282), but BrainOS v2 builds its nodes differently: BC-002/BC-003 expect one node per orchestrator.config.json system and find none by that rule."
-  - file: tests/modules/brainos-panel.test.js
-    failing: null
-    kind: missing-module
-    reason: "Tests nexus/ui/brainos/brainos.js, the floating panel removed in the BrainOS v2 rebuild (ui/brainos/ has brainos-app.js, not brainos.js; brainos-app.js says the floating panel \"isn't used here\")."
-  - file: tests/modules/brainos-panel-canvas-integration.test.js
-    failing: null
-    kind: missing-module
-    reason: "Tests the wiring between nexus/ui/brainos/brainos.js (removed in the v2 rebuild) and brainos-canvas.js."
-  - file: tests/modules/admin-server-routes.test.js
-    failing: null
-    kind: missing-module
-    reason: "Tests cortex/foundation/admin-server.js, removed before the 0.39.258 upload. Its /api/raid/status route had not moved to cortex/boot.js, so `node orchestrator.js raid` always reported cortex offline; the route is restored there in 0.39.282 (real engine: version, health, weights). This file still needs rewriting against cortex/boot.js."
-  - file: tests/modules/flush-redundancy.test.js
-    failing: null
-    kind: missing-module
-    reason: "Tests cortex/flush-redundancy.js (runFlush: redundant gaps/patterns purge), which is not in the tree and has no successor (no runFlush anywhere)."
-  - file: tests/modules/healer.test.js
-    failing: null
-    kind: missing-module
-    reason: "Reads cortex/healer/index.js, which is not in the tree; nexus-healer/ holds the healer's api/cli/spec but no cortex/healer module. docs/healer.spec describes it."
-  - file: tests/modules/test-intelligence-bridge.js
-    failing: null
-    kind: missing-module
-    reason: "Tests cortex/core/raid/intelligence-bridge.js, specified in docs/intelligence-bridge.spec but not in the tree."
+- file: tests/modules/copilot-confidence.test.js
+  failing: 2
+  kind: unbuilt
+  reason: T-003 and T-005 specify a {grounded:true} option (a 0.7 confidence floor for tool-grounded answers) that copilot/lifeline.js
+    _estimateConfidence never had, and nothing passes grounded. T-001, T-002 and T-004 pass (T-004 was a real bug, fixed 0.39.282).
+- file: tests/modules/clear-glass-accounts.test.js
+  failing: 1
+  kind: needs-live-service
+  reason: '"send() persists cookies under the same resolved accountId" needs a real agent reply: guardian running with a connected
+    provider. The other 11 cases pass without one.'
+- file: tests/modules/copilot.test.js
+  failing: 7
+  kind: missing-module
+  reason: Tests guardian/agents/co-pilot.js (bus polling, RAID-gated tool calls), which is not in this repository and was
+    not in the 0.39.258 upload either; the co-pilot is its own system now (copilot/, clear-glass/src/copilot/). Needs rewriting
+    against copilot/lifeline.js + copilot/tool-runtime.js, not a path fix.
+- file: tests/modules/brainos-canvas.test.js
+  failing: 1
+  kind: stale-ui
+  reason: 'Written for the pre-v2 BrainOS (nexus/ui/brainos/). The path is fixed (ui/brainos/brainos-canvas.js, 0.39.282),
+    but BrainOS v2 builds its nodes differently: BC-002/BC-003 expect one node per orchestrator.config.json system and find
+    none by that rule. Crashes after BC-004 with no summary, so run-all counts it as 1.'
+- file: tests/modules/brainos-panel.test.js
+  failing: 1
+  kind: missing-module
+  reason: Tests nexus/ui/brainos/brainos.js, the floating panel removed in the BrainOS v2 rebuild (ui/brainos/ has brainos-app.js,
+    not brainos.js; brainos-app.js says the floating panel "isn't used here").
+- file: tests/modules/brainos-panel-canvas-integration.test.js
+  failing: 1
+  kind: missing-module
+  reason: Tests the wiring between nexus/ui/brainos/brainos.js (removed in the v2 rebuild) and brainos-canvas.js.
+- file: tests/modules/admin-server-routes.test.js
+  failing: 1
+  kind: missing-module
+  reason: 'Tests cortex/foundation/admin-server.js, removed before the 0.39.258 upload. Its /api/raid/status route had not
+    moved to cortex/boot.js, so `node orchestrator.js raid` always reported cortex offline; the route is restored there in
+    0.39.282 (real engine: version, health, weights). This file still needs rewriting against cortex/boot.js.'
+- file: tests/modules/flush-redundancy.test.js
+  failing: 1
+  kind: missing-module
+  reason: 'Tests cortex/flush-redundancy.js (runFlush: redundant gaps/patterns purge), which is not in the tree and has no
+    successor (no runFlush anywhere).'
+- file: tests/modules/healer.test.js
+  failing: 1
+  kind: missing-module
+  reason: Reads cortex/healer/index.js, which is not in the tree; nexus-healer/ holds the healer's api/cli/spec but no cortex/healer
+    module. docs/healer.spec describes it.
+- file: tests/modules/test-intelligence-bridge.js
+  failing: 1
+  kind: missing-module
+  reason: Tests cortex/core/raid/intelligence-bridge.js, specified in docs/intelligence-bridge.spec but not in the tree.
+- file: tests/modules/ui-self-diagnosis.test.js
+  failing: 4
+  kind: unbuilt
+  reason: Specifies a 'ui-gated-interaction-then-effect' expectation in copilot/lib/expectation-watcher.js DEFAULT_EXPECTATIONS
+    (a gated click whose effect never fires, a handler that throws, an async rejection → self-diagnosed, naming the control).
+    No such expectation exists in the tree and nothing emits the UI interaction events it would watch — either never built
+    in this copy or lost before the 0.39.258 upload. T-003 (no false positive) passes trivially.
+- file: tests/modules/test-tablet-homepage.js
+  failing: 1
+  kind: missing-module
+  reason: Reads tablet/homepage.html, which is not in the tree (tablet/ holds index.html and map3d.html only).
+- file: tests/modules/test-alk-lattice-live.js
+  failing: 2
+  kind: needs-live-data
+  reason: ALL-002/ALL-003 call the real /graph of a running associative-lattice store and require real systems and real artifact/chunk
+    rows; the sandbox store is empty by design. The 8 structural cases pass.
+- file: tests/modules/test-brainos-real-access-path.js
+  failing: 1
+  kind: missing-archive
+  reason: 'BRA-002B: brainos.js/brainos.css under _archive/2026-09-06-brainos-floating-panel-superseded/ — there is no _archive/
+    directory in this repository (never committed; not in the 0.39.258 upload). Restoring it from James''s machine closes
+    this; the live-location half of each check passes.'
+- file: tests/modules/test-emerge-direct-compile.js
+  failing: 1
+  kind: missing-archive
+  reason: 'EM-005: _archive/2026-09-06-emerge-consumer-retired/consumer.js — there is no _archive/ directory in this repository
+    (never committed; not in the 0.39.258 upload). Restoring it from James''s machine closes this; the live-location half
+    of each check passes.'
+- file: tests/modules/test-network-infra-retired.js
+  failing: 1
+  kind: missing-archive
+  reason: 'NIR-002: _archive/2026-09-06-brainos-network-infra-retired/ — there is no _archive/ directory in this repository
+    (never committed; not in the 0.39.258 upload). Restoring it from James''s machine closes this; the live-location half
+    of each check passes.'
+- file: tests/modules/test-system-check-emerge-stale-entry.js
+  failing: 1
+  kind: missing-archive
+  reason: 'SCE-004: _archive/2026-09-06-emerge-consumer-retired/consumer.js — there is no _archive/ directory in this repository
+    (never committed; not in the 0.39.258 upload). Restoring it from James''s machine closes this; the live-location half
+    of each check passes.'
+- file: tests/modules/test-guardian-cfr-consolidation.js
+  failing: 2
+  kind: needs-live-data
+  reason: GCC-003/GCC-004 need guardian/memory_store originals and the migrated event_stats.json on disk (James's machine);
+    neither is in the repository. GCC-001 (ledgerDir under the data root, now NEXUS_DATA_ROOT-aware), GCC-002 and GCC-005
+    pass.
+- file: tests/modules/test-guardian-data-sovereignty.js
+  failing: 3
+  kind: needs-live-data
+  reason: DF1-003/006/007 read the migrated data/guardian/memory/ledger.json (≥60 rows); data/ is never committed. The structural
+    cases pass.
+- file: tests/modules/test-map3d.js
+  failing: 1
+  kind: regression
+  reason: 'T-003: the OB10 brain rebuild of tablet/map3d.html (nodes from orchestrator /api/status, edges from /api/channels,
+    activity from the nexus-bus SSE) dropped OB4''s bottleneck colouring. Restoring it means reading bottlenecks from copilot
+    diagnostics per node; T-002/T-004 were moved to the OB10 invariants (0.39.282).'
+- file: tests/modules/test-node-schemas.js
+  failing: 2
+  kind: spec-drift
+  reason: 'NS-003/NS-012 expect the failure_mode schema to be sourced from lib/ico.js logFailure(); the schema was corrected
+    2026-09-12 to cortex/self-heal''s failure_modes rows (+ failure-mode-forensics causal fields), and an ico.js failure record
+    lacks uuid/faultClass/gapUuid/enteredAt. Two failure records for one concept: unified by N14 (failure-mode field) in docs/2026-09-29-nex-node-store-phasemap.spec.'
+- file: tests/modules/test-tablet-container-api.js
+  failing: 2
+  kind: decision
+  reason: 'T2-012: the tablet''s ''exactly one write verb'' law (POST /run-tests) vs the spawn and touch controls and the
+    copilot prompt POST the page gained later — amend the law or remove the controls (James). The per-system ports half of
+    the law is fixed (0.39.282). T2-001 needs a real components table with rows (needs-live-data).'
+- file: tests/modules/test-tablet-ledger-api.js
+  failing: 1
+  kind: decision
+  reason: 'T1-012: same ''one write verb'' law as T2-012 (4 POSTs: run-tests, spawn, touch, copilot prompt). Zero per-system
+    ports now holds.'
+- file: tests/modules/test-tablet-graph-api.js
+  failing: 5
+  kind: needs-live-data
+  reason: T4-001/002/003 need a real event_log and cfr_state.json (sandboxed empty). T4-008/T4-011 look for the BRAIN view
+    (data-v="brain", animateTrails) in tablet/index.html; the brain moved to tablet/map3d.html in the OB10 rebuild (stale-ui).
