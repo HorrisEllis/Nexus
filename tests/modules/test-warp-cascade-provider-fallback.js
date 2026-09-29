@@ -81,9 +81,11 @@ async function run() {
     assert.strictEqual(order[0], 'deepseek');
   });
 
-  test('WCF-004', 'providersFor still includes the LAW_I fallback chain after the preferred provider', () => {
+  // §0.39.280 BS13 — contract changed on purpose (James: "why claude? set to chatgpt"): a chosen provider is the only one
+  // tried; the fallback chain applies only when nothing was chosen (WCF-005).
+  test('WCF-004', 'providersFor with a preferred provider tries ONLY that provider — no fall-through to one nobody chose', () => {
     const order = providersFor({ preferredProvider: 'gemini', seam_id: 'x' }, null);
-    assert.deepStrictEqual(order, ['gemini', 'ollama', 'chatgpt', 'claude']);
+    assert.deepStrictEqual(order, ['gemini']);
   });
 
   test('WCF-005', 'providersFor with no preference at all is unchanged from before this fix', () => {
@@ -93,7 +95,7 @@ async function run() {
 
   test('WCF-006', "providersFor doesn't duplicate a preferred provider already in the base list", () => {
     const order = providersFor({ preferredProvider: 'claude', seam_id: 'x' }, null);
-    assert.deepStrictEqual(order, ['claude', 'ollama', 'chatgpt']);
+    assert.deepStrictEqual(order, ['claude']);   // §0.39.280 BS13 — only the chosen one
   });
 
   test('WCF-007', 'warp-build-dispatch.js threads opts.preferAgent into the record as preferredProvider', () => {

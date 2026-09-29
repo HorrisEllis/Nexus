@@ -36,9 +36,24 @@ const MODULE_ID = 'nexus.cos.workspace';
 const VERSION = '1.0.0';
 const BRANCH_PREFIX = 'nexus/';
 
+// §0.39.280 BS14 — James's log: "git worktree failed: warning: in the working copy of 'atlas.json', LF will be replaced by
+// CRLF …". On Windows every git call printed a CRLF warning per file, and the reason shown was the first 300 characters
+// of that — the real failure (often the 60s timeout on a 90 MB tree) was cut off. Now: no line-ending conversion and no
+// warning (core.autocrlf / core.safecrlf off, per call — the person's own git config is untouched), 10 minutes for a
+// large tree, and gitWhy() reports git's own error lines, never its warnings.
+const GIT_TIMEOUT_MS = 600000;
 function _git(args, { cwd, git = 'git', env } = {}) {
-  return execFileSync(git, args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 60000, windowsHide: true,
+  return execFileSync(git, ['-c', 'core.autocrlf=false', '-c', 'core.safecrlf=false', ...args], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+    timeout: GIT_TIMEOUT_MS, windowsHide: true, maxBuffer: 64 * 1024 * 1024,
     env: { ...process.env, GIT_TERMINAL_PROMPT: '0', ...(env || {}) } }).trim();
+}
+/** gitWhy(error) — why a git call failed, in git's words: its error lines (warnings dropped), or the timeout/exit. */
+function gitWhy(e) {
+  if (!e) return 'unknown';
+  if (e.code === 'ETIMEDOUT' || e.signal === 'SIGTERM') return `git timed out after ${GIT_TIMEOUT_MS / 1000}s`;
+  const lines = String(e.stderr || '').split(/\r?\n/).map(l => l.trim()).filter(l => l && !/^warning:/i.test(l) && !/^hint:/i.test(l));
+  const msg = lines.slice(-3).join(' | ') || (e.status != null ? `git exited ${e.status}` : String(e.message || e).split('\n')[0]);
+  return msg.slice(0, 400);
 }
 function _real(p) { try { return fs.realpathSync(p); } catch (_) { return path.resolve(p); } }
 
@@ -95,7 +110,7 @@ function branchWorkspace({ originDir, name, root = null, git = 'git' } = {}) {
     try { _git(['rev-parse', '--verify', '--quiet', `refs/heads/${branch}`], { cwd: originDir, git }); hasBranch = true; } catch (_) {}
     _git(hasBranch ? ['worktree', 'add', '-q', dir, branch] : ['worktree', 'add', '-q', '-b', branch, dir, 'HEAD'], { cwd: originDir, git });
     return { ok: true, dir, branch, originDir, base: own.head, reused: false };
-  } catch (e) { return { ok: false, error: `git worktree failed: ${(e.stderr || e.message || '').toString().trim().slice(0, 300)}` }; }
+  } catch (e) { return { ok: false, error: `git worktree failed: ${gitWhy(e)}` }; }
 }
 
 /** listBranches(originDir) -> [{ dir, branch, head }] — the original's worktrees other than itself */
@@ -121,7 +136,7 @@ function removeBranch({ originDir, dir, deleteBranch = false, git = 'git' } = {}
     _git(['worktree', 'remove', '--force', dir], { cwd: originDir, git });
     if (deleteBranch && w.branch) _git(['branch', '-D', w.branch], { cwd: originDir, git });
     return { ok: true, removed: dir, branch: w.branch, branchKept: !deleteBranch };
-  } catch (e) { return { ok: false, error: (e.stderr || e.message || '').toString().trim().slice(0, 300) }; }
+  } catch (e) { return { ok: false, error: gitWhy(e) }; }
 }
 
 /**
@@ -264,5 +279,5 @@ function stopDesktop(compartmentId) {
   return { ok: true, state: 'stopping', kept: s.disk };
 }
 
-module.exports = { MODULE_ID, VERSION, BRANCH_PREFIX, DESKTOP_DIR, slug, gitAvailable, ownRepo, branchWorkspace, listBranches, removeBranch, branchDisk, desktopFor,
+module.exports = { gitWhy, MODULE_ID, VERSION, BRANCH_PREFIX, DESKTOP_DIR, slug, gitAvailable, ownRepo, branchWorkspace, listBranches, removeBranch, branchDisk, desktopFor,
   desktopDisk, startDesktop, desktopStatus, stopDesktop, _sessions };

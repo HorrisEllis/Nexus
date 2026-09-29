@@ -1124,7 +1124,7 @@ function renderSpecEngineBuilder(spec) {
           // document spec's next step is its code: Generate code plans the files
           // from the spec and builds each one (speceng.codegen → a code spec).
           done === chunks.length && chunks.length && !spec.fileTree && !building
-            ? (spec.codeSpecUuid
+            ? ((spec.codeSpecUuid && SPECS.some(s => s.uuid === spec.codeSpecUuid))   // §0.39.280 BS15 — a code spec that is gone offers a new one
                 ? `<button class="action-btn primary" onclick="openCodeSpec('${spec.uuid}')">open the code →</button>`
                 : `<button class="action-btn primary" id="codegen-btn" onclick="generateCode('${spec.uuid}')">generate code →</button>`)
             : `<button class="action-btn primary" ${building||done===chunks.length?'disabled':''} onclick="createRepoThenBuild('${spec.uuid}')">${building?'building…':(done===chunks.length?(spec.fileTree?'all files built':'all chunks built'):(spec.fileTree?'build remaining files':'build remaining chunks'))}</button>`
@@ -5267,11 +5267,15 @@ async function confirmDeleteRepo() {
   const uuid = CURRENT_API_REPO.uuid;
   const name = CURRENT_API_REPO.name;
   try {
-    await api(`/api/repos/${uuid}`, { method: 'DELETE' });
+    const r = await api(`/api/repos/${uuid}`, { method: 'DELETE' });
     closeDeleteRepoModal();
     exitRepoDetail(); // lands back on the main repo library, not a dead detail panel
     await loadApiRepos();
-    toast(`deleted "${name}"`, 'ok');
+    // §0.39.280 BS15 — a code repo's original is told (server: _codeRepoRetired); say so, and re-read the specs so its
+    // "generate code" is offered again instead of "open the code" pointing at nothing
+    const o = r && r.original;
+    if (o) { try { await loadSpecs(); } catch (_) {} }
+    toast(`deleted "${name}"${o ? ` — ${o.of ? `"${o.of.name}" knows` : 'its spec knows'}: Code can build a new one${o.worktree && o.worktree.ok ? ` · worktree removed, branch ${o.worktree.branch} kept` : ''}` : ''}`, 'ok');
   } catch (e) {
     toast('delete failed: ' + e.message, 'err');
   }

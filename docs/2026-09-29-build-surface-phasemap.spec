@@ -228,7 +228,7 @@ spec:
     # command but nothing happened. its meant to be the ais browser …"
     BS13_provider_sovereignty:
       layer: library
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface-2.test.js BS13-01, BS13-02; test-warp-cascade-provider-fallback 7/7 (WCF-004/006 now pin the new contract)
       depends_on: []
       files: [lib/seam/adapters/warp-cascade.js, idearium/api/index.js (_buildIdentity)]
       does: >-
@@ -242,7 +242,7 @@ spec:
 
     BS14_branch_git_honest:
       layer: library
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-cos-workspace.test.js WS-14 (13/13)
       depends_on: []
       files: [cos/workspace/index.js]
       does: >-
@@ -254,7 +254,7 @@ spec:
 
     BS15_code_repo_delete:
       layer: api
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — proof: tests/modules/test-build-surface-2.test.js BS15-01 (real router)
       depends_on: []
       files: [idearium/api/index.js (repo.archive), lib/repo-hat.js, lib/cos-bridge.js]
       does: >-

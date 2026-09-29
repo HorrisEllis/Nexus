@@ -328,9 +328,51 @@ function _linkCodeRepo(codeRepo) {
  * and goes to the repo's Agent-tab switch position (copilot | ollama | a guardian agent) unless the caller or a
  * pinned per-chunk choice says otherwise. The Ollama model is the repo's Agent-tab model setting.
  */
+// §0.39.280 BS15 — James: "if i delete a code repo, the original needs to know, and i cant remove or click build a
+// replacement." A code repo (spec.codegen) going away is told to everything that pointed at it: the document spec it was
+// generated from forgets it (codeSpecUuid cleared — Code plans a new one — and the retired one is listed in
+// codeRetired, nothing lost), the shared-hat link goes, and a branch's git worktree is removed while its branch (its
+// commits) stays. Returns what it did; never throws (the delete itself already happened).
+function _codeRepoRetired(repo) {
+  if (!repo || repo.source !== 'spec.codegen') return null;
+  const out = { of: null, spec: null, hatUnlinked: false, worktree: null };
+  try {
+    const se = getSpecEngine();
+    const docUuid = repo.promotedFromSpec || null;
+    if (se && docUuid) {
+      const doc = se.loadSpec(docUuid);
+      if (doc.codeSpecUuid && doc.codeSpecUuid === repo.specUuid) {
+        doc.codeRetired = [...(doc.codeRetired || []), { specUuid: doc.codeSpecUuid, repoUuid: repo.uuid, at: Date.now() }].slice(-50);
+        delete doc.codeSpecUuid; doc.updatedAt = Date.now(); se.saveSpec(doc);
+        out.spec = { uuid: docUuid, codeSpecCleared: true };
+      } else out.spec = { uuid: docUuid, codeSpecCleared: false };
+      const rows = (getRepoLayer().repos && getRepoLayer().repos.repos) || [];
+      const origin = rows.find(x => x.specUuid === docUuid && x.status !== 'archived' && x.source !== 'spec.codegen');
+      if (origin) out.of = { uuid: origin.uuid, name: origin.name };
+    }
+  } catch (e) { out.specError = e.message; }
+  try { out.hatUnlinked = !!_require('../../lib/repo-hat.js').unlinkCoder(repo.uuid).ok; } catch (_) {}
+  if (repo.branchOf && repo.materializeDir) {
+    try { out.worktree = _require('../../lib/cos-bridge.js').removeBranch({ originDir: _repoDiskDir(repo.branchOf), dir: repo.materializeDir }); }
+    catch (e) { out.worktree = { ok: false, error: e.message }; }
+  }
+  try { getIdeaOS().emit('idearium.repo.code.retired', { repoUuid: repo.uuid, originUuid: out.of ? out.of.uuid : repo.branchOf || null, specUuid: repo.specUuid || null, docSpecUuid: out.spec ? out.spec.uuid : null, worktree: out.worktree ? !!out.worktree.ok : null }); } catch (_) {}
+  return out;
+}
+
 function _buildIdentity(specUuid) {
   let repo = null;
   try { const L = getRepoLayer(); repo = ((L.repos && L.repos.repos) || []).find(x => x.specUuid === specUuid && x.status !== 'archived') || null; } catch (_) {}
+  // §0.39.280 BS13 — a code spec whose repo was not made (or not found) builds as its ORIGINAL: the repo that owns the
+  // document spec it was generated from (manifest.codeFor). Before this the identity was empty, no provider was chosen,
+  // and warp-cascade let RAID pick — James: "why claude? set to chatgpt."
+  if (!repo && specUuid) {
+    try {
+      const doc = getSpecEngine() && getSpecEngine().loadSpec(specUuid);
+      const from = doc && (doc.codeFor || doc.promotedFromSpec);
+      if (from) { const L = getRepoLayer(); repo = ((L.repos && L.repos.repos) || []).find(x => x.specUuid === from && x.status !== 'archived') || null; }
+    } catch (_) {}
+  }
   let hat = null, hatSource = null, provider = null, model = null;
   if (repo) {
     _linkCodeRepo(repo);
@@ -351,7 +393,8 @@ function _buildIdentity(specUuid) {
     compartmentId: repo ? (repo.compartmentId || null) : null,
     hat: hat ? { name: hat.name, uuid: hat.uuid || null, personaPrompt: (repo ? _require('../../lib/repo-hat.js').wearable(hat, repo) : hat).personaPrompt || '' } : null,
     hatSource,
-    provider: provider ? normalize(provider) : null,
+    // §0.39.280 BS13 — never "nobody chose": no repo at all → the repo agent's own default (chatgpt when guardian has it)
+    provider: provider ? normalize(provider) : (() => { try { const d = _require('../../lib/repo-agent.js').defaultProvider(); return d && d !== 'auto' ? normalize(d) : null; } catch (_) { return null; } })(),
     model,
   };
 }
@@ -2847,9 +2890,11 @@ async function handle(req, res, route, query, body) {
     }
 
     case 'repo.archive': {
+      const before = getRepoLayer().get(params.uuid);
       const result = getRepoLayer().archive(params.uuid);
       if (result.error) return err(res, result.code === 'IMMUTABLE' ? 409 : 404, result.error);
-      return ok(res, result);
+      const original = before ? _codeRepoRetired(before) : null;   // §0.39.280 BS15
+      return ok(res, { ...result, ...(original ? { original } : {}) });
     }
 
     case 'repo.lineage':

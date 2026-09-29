@@ -150,6 +150,19 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     assert.match(page, /async function whyUnreachable\(\)/, 'the viewer asks why instead of only saying unreachable');
   });
 
+  await t('WS-14', '0.39.280 BS14: git errors are git\'s own error lines, never its CRLF warnings; a CRLF-configured git makes the branch without warnings', () => {
+    const warn = Array.from({ length: 40 }, (_, i) => `warning: in the working copy of 'f${i}.json', LF will be replaced by CRLF the next time Git touches it`).join('\n');
+    assert.strictEqual(W.gitWhy({ stderr: warn + '\nfatal: \'nexus/x\' is already checked out at \'/y\'', status: 128 }), "fatal: 'nexus/x' is already checked out at '/y'");
+    assert.strictEqual(W.gitWhy({ stderr: warn, status: 1 }), 'git exited 1', 'only warnings → the exit status, not the warnings');
+    assert.match(W.gitWhy({ code: 'ETIMEDOUT' }), /timed out after 600s/);
+    const o = path.join(tmp, 'crlf-orig'); fs.mkdirSync(o, { recursive: true });
+    fs.writeFileSync(path.join(o, 'atlas.json'), '{"a":1}\n');
+    const prev = process.env.GIT_CONFIG_PARAMETERS;
+    process.env.GIT_CONFIG_PARAMETERS = "'core.autocrlf'='true' 'core.safecrlf'='warn'";   // what a Windows git config does
+    try { const r = W.branchWorkspace({ originDir: o, name: 'crlf code' }); assert.ok(r.ok, JSON.stringify(r)); }
+    finally { if (prev === undefined) delete process.env.GIT_CONFIG_PARAMETERS; else process.env.GIT_CONFIG_PARAMETERS = prev; }
+  });
+
   // ── wiring ──────────────────────────────────────────────────────────────
   await t('WS-20', 'qemu-runtime: a headless VM\'s screen is also a websocket on 5700+N; desktopPorts says where', () => {
     const q = require(path.join(ROOT, 'cos/compartment/qemu-runtime.js'));
