@@ -4,6 +4,21 @@ All verified changes only. Nothing pretends.
 
 ---
 
+## [0.3.0] — 2026-09-29 — NEXUS 0.39.281: replay frames listed
+
+**Why:** Clear Glass's ErosmancerOS workbench (Settings → ErosmancerOS → Workbench) lists replay frames so one can be
+replayed. `GET /api/replay/frames` answered counts only, so no frame could be picked.
+
+### Added
+- `ScriptReplayQueue.list()` — every frame, newest first, as `{ frameId, tabId, commands (count), checkpoint,
+  createdAt, replayCount, replaying }`. The commands themselves stay in the queue.
+- `GET /api/replay/frames` returns `frames: list()` beside the unchanged `snapshot`.
+
+### Verified
+- `tests/replay.test.ts` 29/29. `tsc --noEmit`: the same 5 rootDir errors as 0.2.0 (tests outside src), no new ones.
+
+---
+
 ## [0.2.0] — 2026-09-29 — NEXUS 0.39.279: a virtual pointer at coordinates
 
 **Why:** James wanted the co-pilot to work Clear Glass "using a virtual input through erosmanceros … a interaction field

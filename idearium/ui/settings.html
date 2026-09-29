@@ -67,6 +67,12 @@
   .toast.on { display:block; } .toast.bad { border-color:var(--bad); color:var(--bad); } .toast.ok { border-color:var(--ok); }
   .empty { color:var(--dim); padding:40px; text-align:center; }
   .kv { font:12px var(--mono); color:var(--dim); white-space:pre-wrap; padding:10px 14px; }
+  /* §0.39.281 EC8 — the economy page */
+  .econ-lims { display:flex; flex-wrap:wrap; gap:10px 16px; padding:6px 0 4px; }
+  .econ-lim { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--dim); }
+  .econ-lim input[type=number] { width:90px; } .econ-lim select { min-width:140px; }
+  .econ-chk { font:12px var(--mono); color:var(--dim); margin-right:10px; }
+  .econ-graph { width:100%; max-width:640px; height:auto; margin-top:8px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; }
   @media (max-width: 760px) { .app { grid-template-columns: 1fr; } nav { max-height:40vh; } .row { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -136,10 +142,12 @@ function renderNav() {
   const originals = repos.filter(r => !r.branchOf), branches = repos.filter(r => r.branchOf);
   const tagsOf = (r) => [r.nexusSelf ? '<span class="tag warn">nexus</span>' : '', r.branchOf ? '<span class="tag acc">branch</span>' : '', r.provider ? `<span class="tag">${esc(r.provider)}</span>` : ''].join('');
   $('nav').innerHTML = `<div class="navgroup">Idearium</div>` + item(CUR.kind === 'global', 'data-global="1"', 'Global configuration', `<span class="tag">${(CONSOLE.config.keys || []).length}</span>`)
+    + item(CUR.kind === 'economy', 'data-economy="1"', 'Provider economy', '<span class="tag acc">limits · learning</span>')
     + `<div class="navgroup">Repos · compartments (${originals.length})</div>` + (originals.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') || '<div class="kv">none match</div>')
     + (branches.length ? `<div class="navgroup">Branches (${branches.length})</div>` + branches.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') : '');
   for (const b of $('nav').querySelectorAll('[data-repo]')) b.onclick = () => go('repo', b.dataset.repo);
   const g = $('nav').querySelector('[data-global]'); if (g) g.onclick = () => go('global');
+  const ec = $('nav').querySelector('[data-economy]'); if (ec) ec.onclick = () => go('economy');
 }
 $('q').oninput = () => { renderNav(); if (CUR.kind === 'global') render(); };
 
@@ -152,6 +160,7 @@ function go(kind, uuid = null) {
 }
 
 async function load(uuid) {
+  if (ECON) ECON._stale = true;   // §0.39.281 — the economy page re-reads guardian after a save
   try {
     CONSOLE = await api('/api/settings/console');
     DETAIL = uuid ? await api(`/api/settings/console/${encodeURIComponent(uuid)}`) : null;
@@ -178,6 +187,7 @@ function readCtl(el, k) {
 
 // ── views ──
 function render() {
+  if (CUR.kind === 'economy') return renderEconomy();
   if (CUR.kind === 'global' || !DETAIL) return renderGlobal();
   return renderRepo();
 }
@@ -205,6 +215,95 @@ function renderGlobal() {
     });
   }
   for (const b of $('body').querySelectorAll('[data-reset]')) b.onclick = async () => { try { await post('/api/config/reset', { key: b.dataset.reset, actor: 'settings-console' }); toast(`${b.dataset.reset} reset`, 'ok'); load(null); } catch (e) { toast(e.message, 'bad'); } };
+}
+
+// ── §0.39.281 EC8 — the provider economy (docs/2026-09-29-provider-economy-phasemap.spec) ──
+// James: "economy tags for each provider. With staging branches. Like id love an extensive configurable options for this.
+// … the tokenizer and graphs to learn token constraints … Smart economy like dynamically evolving and learning routing."
+// Everything here is read from guardian (GET /api/economy, /usage, /limits, /routing, through idearium) and every edit
+// is one POST /api/economy patch, queued in the save bar like every other setting.
+let ECON = null, ECON_PATCH = {};
+function _econPatch(fn, label) {
+  fn(ECON_PATCH);
+  queue('economy', 'provider economy', () => post('/api/economy', { policy: ECON_PATCH, by: 'settings-console' }).then(() => { ECON_PATCH = {}; }));
+}
+function _econGraph(series, lim) {
+  const pts = (series || []).slice(-300); if (!pts.length) return '<div class="kv">no jobs recorded yet</div>';
+  const W = 520, H = 120, maxY = Math.max(lim && lim.minBad || 0, ...pts.map(p => p.tokensIn), 100) * 1.1;
+  const t0 = pts[0].at, t1 = pts[pts.length - 1].at || t0 + 1;
+  const X = (t) => 30 + (W - 40) * ((t - t0) / Math.max(1, t1 - t0)), Y = (v) => H - 14 - (H - 24) * (v / maxY);
+  const col = { ok: 'var(--ok)', truncated: 'var(--warn)', failed: 'var(--bad)', timeout: 'var(--bad)', login: 'var(--accent)' };
+  const line = (v, c, label) => v ? `<line x1="30" x2="${W - 10}" y1="${Y(v)}" y2="${Y(v)}" stroke="${c}" stroke-dasharray="4 3"/><text x="${W - 12}" y="${Y(v) - 3}" text-anchor="end" fill="${c}" font-size="9">${label} ${v}</text>` : '';
+  return `<svg viewBox="0 0 ${W} ${H}" class="econ-graph" role="img" aria-label="input tokens by outcome">
+    <line x1="30" x2="30" y1="6" y2="${H - 14}" stroke="var(--line)"/><line x1="30" x2="${W - 10}" y1="${H - 14}" y2="${H - 14}" stroke="var(--line)"/>
+    <text x="2" y="12" fill="var(--faint)" font-size="9">${Math.round(maxY)}</text><text x="2" y="${H - 14}" fill="var(--faint)" font-size="9">0</text>
+    ${line(lim && lim.safeLimit, 'var(--ok)', 'safe')}${line(lim && lim.minBad, 'var(--bad)', 'failed at')}
+    ${pts.map(p => `<circle cx="${X(p.at).toFixed(1)}" cy="${Y(p.tokensIn).toFixed(1)}" r="2.6" fill="${col[p.outcome] || 'var(--dim)'}"><title>${esc(p.outcome)} · ${p.tokensIn} tokens · ${new Date(p.at).toLocaleString()}</title></circle>`).join('')}</svg>`;
+}
+async function renderEconomy() {
+  $('title').textContent = 'Provider economy';
+  $('sub').innerHTML = 'What each provider costs you, how much it may be used, what happens at a limit, which work is staged, and what NEXUS has learned from every job. Lives in guardian; this page edits it.';
+  $('tabs').innerHTML = '';
+  if (!ECON || ECON._stale) {
+    $('body').innerHTML = '<div class="empty">Reading the economy from guardian…</div>';
+    try {
+      const [pol, usage, limits, routing] = await Promise.all([api('/api/economy'), api('/api/economy/usage'), api('/api/economy/limits'), api('/api/economy/routing')]);
+      ECON = { pol, usage: usage.usage || {}, limits, routing };
+    } catch (e) { $('body').innerHTML = `<div class="empty">Could not read the economy: ${esc(e.message)}<br>It is served by guardian (:7820) — is it running?</div>`; return; }
+  }
+  const P = ECON.pol.policy, TIERS = ECON.pol.tiers, JT = ECON.pol.jobTypes, LIM = ECON.pol.limits;
+  const names = Object.keys(P.providers || {}).sort();
+  const opt = (v, cur) => `<option ${v === cur ? 'selected' : ''}>${esc(v)}</option>`;
+  const provRow = (n) => {
+    const p = P.providers[n], u = ECON.usage[n] || {}, L = p.limits || {};
+    const lim = (k, label, unit = '') => `<label class="econ-lim"><span>${label}</span><input type="number" min="${LIM[k].min}" max="${LIM[k].max}" value="${k === 'minGapMs' ? Math.round((L[k] || 0) / 1000) : (L[k] || 0)}" data-econ-lim="${esc(n)}:${k}">${unit}</label>`;
+    const gate = u.gate ? `<span class="tag ${u.gate.verdict === 'allow' ? 'ok' : 'warn'}" title="${esc(u.gate.reason || '')}">${esc(u.gate.verdict === 'allow' ? 'open' : u.gate.verdict)}</span>` : '';
+    const bar = (a, b) => b ? `${a}/${b}` : `${a}`;
+    return `<div class="block"><div class="bh"><span class="lbl"><b>${esc(n)}</b> ${gate}</span>
+        <select data-econ-tier="${esc(n)}">${TIERS.map(t => opt(t, p.tier)).join('')}</select>
+        <label class="switch" title="use this provider at all"><input type="checkbox" data-econ-on="${esc(n)}" ${p.enabled ? 'checked' : ''}><span></span></label></div>
+      <div class="kv">now: ${bar(u.lastHour || 0, L.jobsPerHour)} this hour · ${bar(u.lastDay || 0, L.jobsPerDay)} today · ${bar(u.tokensDay || 0, L.tokensPerDay)} tokens today${u.inFlight ? ` · ${u.inFlight} running` : ''}${u.gate && u.gate.reason ? ` — ${esc(u.gate.reason)}` : ''}</div>
+      <div class="econ-lims">${lim('jobsPerHour', 'jobs / hour')}${lim('jobsPerDay', 'jobs / day')}${lim('tokensPerDay', 'tokens / day')}${lim('minGapMs', 'gap between jobs', 's')}${lim('concurrent', 'at once')}
+        <label class="econ-lim"><span>quiet hours</span><input type="number" min="0" max="23" placeholder="from" value="${p.quietHours ? p.quietHours[0] : ''}" data-econ-q="${esc(n)}:0">–<input type="number" min="0" max="23" placeholder="to" value="${p.quietHours ? p.quietHours[1] : ''}" data-econ-q="${esc(n)}:1"></label>
+        <label class="econ-lim"><span>at a limit</span><select data-econ-onlimit="${esc(n)}">${['wait', 'stop', ...names.filter(x => x !== n).map(x => `fallback:${x}`)].map(v => opt(v, p.onLimit)).join('')}</select></label></div>
+      <div class="d">0 = no limit. "fallback:x" sends the job to x only when this provider is at a limit — it never replaces a provider you chose otherwise.</div></div>`;
+  };
+  const jtRow = (t) => { const j = P.jobTypes[t] || { tiers: [] };
+    return `<div class="row"><div><div class="k">${esc(t)}</div></div><div class="ctl">${TIERS.map(x => `<label class="econ-chk"><input type="checkbox" data-econ-jt="${esc(t)}:${x}" ${(j.tiers || []).includes(x) ? 'checked' : ''}> ${x}</label>`).join('')}</div>
+      <div class="ctl"><select data-econ-prefer="${esc(t)}"><option value="">prefer: none</option>${names.map(n => `<option ${j.prefer === n ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></div></div>`; };
+  const lims = ECON.limits.limits || {}, series = ECON.limits.series || {};
+  const limCard = (k) => { const l = lims[k];
+    return `<div class="block"><div class="bh"><span class="lbl"><b>${esc(k)}</b> <span class="tag">${esc(l.confidence)} · ${l.records} jobs</span></span></div>
+      <div class="kv">safe limit ${l.safeLimit ?? '—'} · largest ok ${l.maxOk ?? '—'} · smallest failure ${l.minBad ?? '—'} · p50 ${l.p50 ?? '—'} · p95 ${l.p95 ?? '—'}\n${esc(l.basis)}</div>${_econGraph(series[l.provider], l)}</div>`; };
+  const sc = ECON.routing.scores || {}, ex = ECON.routing.example || {};
+  $('body').innerHTML = `
+    <div class="card"><h3><span class="grow">Providers — tier, limits, quiet hours, what happens at a limit</span><span class="tag">${names.length}</span></h3>${names.map(provRow).join('') || '<div class="empty">no providers</div>'}</div>
+    <div class="card"><h3><span class="grow">Job types — which tiers each may use</span></h3><div class="note">A build may be kept to local and free providers, a chat allowed anywhere. "prefer" is used when nobody chose a provider.</div>${JT.map(jtRow).join('')}</div>
+    <div class="card"><h3><span class="grow">Staging by economy</span></h3><div class="note">Code written by a provider in these tiers goes to the repo's staging branch (Versionium, repo-&lt;uuid&gt;@staging) and waits for promote, instead of being applied — for repos in auto mode. Review-mode repos wait anyway.</div>
+      <div class="row"><div class="k">stage output from</div><div class="ctl">${TIERS.map(x => `<label class="econ-chk"><input type="checkbox" data-econ-stage="${x}" ${(P.stageTiers || []).includes(x) ? 'checked' : ''}> ${x}</label>`).join('')}</div><div></div></div></div>
+    <div class="card"><h3><span class="grow">Learning router</span></h3><div class="note">When nobody chose a provider, NEXUS picks from what has actually worked (success, speed, cost), trying less-proven providers now and then. It starts once there are enough recorded builds.</div>
+      <div class="row"><div><div class="k">explore</div><div class="d">0 = always the best so far · 1 = try widely</div></div><div class="ctl"><input type="number" step="0.05" min="0" max="1" value="${P.router.explore}" data-econ-router="explore"></div><div></div></div>
+      <div class="row"><div><div class="k">min records</div><div class="d">build outcomes needed before it routes</div></div><div class="ctl"><input type="number" min="0" max="100000" value="${P.router.minRecords}" data-econ-router="minRecords"></div><div></div></div>
+      <div class="kv">${Object.values(sc).length ? Object.values(sc).sort((a, b) => (a.jobType + a.provider).localeCompare(b.jobType + b.provider)).map(x => `${x.jobType.padEnd(10)} ${x.provider.padEnd(12)} success ${x.success} · ${x.ok} ok / ${x.bad} not · ${x.medianMs != null ? Math.round(x.medianMs / 1000) + 's' : '—'} median · cost ×${x.cost}`).join('\n') : 'no outcomes recorded yet'}${ex.why ? `\n\nnow, for a build: ${esc(ex.why)}` : ''}</div></div>
+    <div class="card"><h3><span class="grow">Token limits learned from real jobs</span><span class="tag">${esc(ECON.limits.method || '')} · last ${ECON.limits.days || 30} days</span></h3><div class="note">Every job's input size and how it ended (● ok · ● truncated · ● failed/timeout · ● login). The safe limit sits below the smallest input that failed. Token counts are estimates (no vendor tokenizer is bundled).</div>
+      ${Object.keys(lims).length ? Object.keys(lims).sort().map(limCard).join('') : '<div class="empty">No jobs recorded yet — limits appear as work runs.</div>'}</div>
+    <div class="card"><h3><span class="grow">Not included, on purpose</span></h3><div class="note">Nothing here makes automated jobs look like you typing (timing tricks, forced rewording, decoy questions). That would be working around the providers' automated-use checks with your own account at risk. Limits and quiet hours above are what keep automated load on a signed-in account reasonable.</div></div>`;
+  const B = $('body');
+  const P0 = (n) => (ECON_PATCH.providers = ECON_PATCH.providers || {}, ECON_PATCH.providers[n] = ECON_PATCH.providers[n] || {});
+  for (const el of B.querySelectorAll('[data-econ-tier]')) el.onchange = () => { el.classList.add('dirty'); _econPatch(() => { P0(el.dataset.econTier).tier = el.value; }); };
+  for (const el of B.querySelectorAll('[data-econ-on]')) el.onchange = () => _econPatch(() => { P0(el.dataset.econOn).enabled = el.checked; });
+  for (const el of B.querySelectorAll('[data-econ-lim]')) el.oninput = () => { const [n, k] = el.dataset.econLim.split(':'); const v = Number(el.value); if (!Number.isFinite(v)) return el.classList.add('bad');
+    el.classList.remove('bad'); el.classList.add('dirty'); _econPatch(() => { const q = P0(n); q.limits = q.limits || {}; q.limits[k] = k === 'minGapMs' ? Math.round(v * 1000) : v; }); };
+  for (const el of B.querySelectorAll('[data-econ-q]')) el.oninput = () => { const n = el.dataset.econQ.split(':')[0];
+    const a = B.querySelector(`[data-econ-q="${n}:0"]`).value, b = B.querySelector(`[data-econ-q="${n}:1"]`).value; el.classList.add('dirty');
+    _econPatch(() => { P0(n).quietHours = a === '' && b === '' ? null : [Number(a), Number(b)]; }); };
+  for (const el of B.querySelectorAll('[data-econ-onlimit]')) el.onchange = () => _econPatch(() => { P0(el.dataset.econOnlimit).onLimit = el.value; });
+  const jt = (t) => (ECON_PATCH.jobTypes = ECON_PATCH.jobTypes || {}, ECON_PATCH.jobTypes[t] = ECON_PATCH.jobTypes[t] || {});
+  for (const el of B.querySelectorAll('[data-econ-jt]')) el.onchange = () => { const t = el.dataset.econJt.split(':')[0];
+    _econPatch(() => { jt(t).tiers = [...B.querySelectorAll(`[data-econ-jt^="${t}:"]`)].filter(x => x.checked).map(x => x.dataset.econJt.split(':')[1]); }); };
+  for (const el of B.querySelectorAll('[data-econ-prefer]')) el.onchange = () => _econPatch(() => { jt(el.dataset.econPrefer).prefer = el.value || null; });
+  for (const el of B.querySelectorAll('[data-econ-stage]')) el.onchange = () => _econPatch(() => { ECON_PATCH.stageTiers = [...B.querySelectorAll('[data-econ-stage]')].filter(x => x.checked).map(x => x.dataset.econStage); });
+  for (const el of B.querySelectorAll('[data-econ-router]')) el.oninput = () => _econPatch(() => { ECON_PATCH.router = { ...(ECON_PATCH.router || {}), [el.dataset.econRouter]: Number(el.value) }; });
 }
 
 const TABS = [['agent', 'Agent'], ['prompt', 'Prompt'], ['hat', 'Hat'], ['env', 'Compartment & desktop']];

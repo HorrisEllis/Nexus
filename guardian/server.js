@@ -478,6 +478,7 @@ function _legacySend(ws, obj) {  // legacy WebSocket send — not used by NCP pa
   try { if (ws?.readyState === 1) ws.send(JSON.stringify(obj)); } catch(_) {}
 }
 
+const _economyGuard = require('./lib/economy-guard.js').createEconomyGuard();   // §0.39.281 EC6 — the provider economy at dispatch
 const _providerLogin = { set: (k, v) => require('./lib/provider-login.js').set(v) };   // §0.39.280 BS16 — guardian/lib/provider-login.js
 function broadcast(obj) {
   ncp.broadcast(obj);
@@ -689,7 +690,9 @@ const {
   answerFirst: (job) => (_jobRetryRef ? _jobRetryRef.answerFirst(job) : null),
   erosType: (job) => _erosTypist.type(job),
   completeWith: (job, text, chatUrl, source) => _completeJobWith(job, text, chatUrl, source),
+  economy: _economyGuard,   // §0.39.281 EC6
 });
+_economyGuard.attach(bus, (id) => jobs.get(id));
 
 // §BUILT 2026-09-19 — agent-initiated wake for MESH-delivered jobs (the userscript path answers its own): when a mesh job's
 // answer contains a line starting "hey nexus," ask the co-pilot and reply with a 'wake-reply' job in the same agent tab.
@@ -2959,6 +2962,44 @@ function handleExtendedRoutes(req, res, url, method) {
   // §0.39.280 BS16 — a provider tab's login state, reported by the chat-stream prelude (guardian/userscript-chat-stream.js
   // watchLogin). 'wall' = that provider cannot answer until the person signs in: said on the bus and to every NCP client,
   // and kept so a job waiting for that provider can say why. A dismissed nag ('modal') is recorded, not alarmed.
+  // §0.39.281 EC6/EC3/EC4 — the provider economy: its policy (the one writer: lib/economy/store.js), usage against each
+  // limit, the token limits learned from the ledger, and the learning router's scores — all read on request, nothing cached.
+  if (url.pathname === '/api/economy' && method === 'GET') {
+    const E = require('../lib/economy/store.js');
+    return json(res, 200, { ok: true, policy: E.load(), tiers: require('../lib/economy/policy.js').TIERS, jobTypes: require('../lib/economy/policy.js').JOB_TYPES, limits: require('../lib/economy/policy.js').LIMITS });
+  }
+  if (url.pathname === '/api/economy' && method === 'POST') {
+    bodyJ(req).then(body => {
+      const r = require('../lib/economy/store.js').save((body && body.policy) || body || {}, null, { by: (body && body.by) || 'api' });
+      _economyGuard.invalidate();
+      bus.emit('guardian.economy.policy', { by: r.policy.updatedBy, dropped: r.dropped });
+      return json(res, 200, { ok: true, policy: r.policy, dropped: r.dropped });
+    }).catch(e => json(res, 400, { ok: false, error: e.message }));
+    return;
+  }
+  if (url.pathname === '/api/economy/usage' && method === 'GET') {
+    const L = require('../lib/economy/ledger.js');
+    const pol = require('../lib/economy/store.js').load();
+    const now = Date.now(); const rows = L.records({ since: now - 86400000 });
+    const usage = {};
+    for (const [p, v] of Object.entries(pol.providers || {})) usage[p] = { ...L.usage(p, now, rows), tier: v.tier, limits: v.limits, enabled: v.enabled, gate: require('../lib/economy/gate.js').decide({ provider: p, jobType: 'chat' }, { policy: pol, usage: L.usage(p, now, rows), now }) };
+    return json(res, 200, { ok: true, usage, at: now });
+  }
+  if (url.pathname === '/api/economy/limits' && method === 'GET') {
+    const L = require('../lib/economy/ledger.js'); const T = require('../lib/economy/tokens.js');
+    const days = Math.min(90, Math.max(1, parseInt(url.searchParams.get('days'), 10) || 30));
+    const rows = L.records({ since: Date.now() - days * 86400000 });
+    return json(res, 200, { ok: true, days, method: T.METHOD, limits: T.learn(rows), series: T.series(rows) });
+  }
+  if (url.pathname === '/api/economy/routing' && method === 'GET') {
+    const L = require('../lib/economy/ledger.js'); const R = require('../lib/economy/router.js');
+    const pol = require('../lib/economy/store.js').load();
+    const rows = L.records({ since: Date.now() - 30 * 86400000 });
+    const jobType = url.searchParams.get('jobType') || 'build';
+    const cands = Object.keys(pol.providers || {}).filter(p => p !== 'ollama' || true);
+    return json(res, 200, { ok: true, scores: R.scores(rows, pol), example: R.choose(jobType, cands, { policy: pol, records: rows, allowed: (p) => require('../lib/economy/gate.js').decide({ provider: p, jobType }, { policy: pol, usage: L.usage(p, Date.now(), rows) }).verdict === 'allow' }) });
+  }
+
   if (method === 'POST' && url.pathname === '/api/provider/login') {
     bodyJ(req).then(body => {
       const provider = String((body && body.provider) || '').toLowerCase();

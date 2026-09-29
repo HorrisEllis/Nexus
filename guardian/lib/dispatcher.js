@@ -52,7 +52,7 @@ const _payload = (e) => (e && typeof e === 'object' && typeof e.type === 'string
 
 function createDispatcher(deps) {
   const { updateJob, bus, ncp, pendingQueue, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek, pingTimeoutMs, completionTimeoutMs,
-          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith } = deps;   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
+          ladder, completeFromMesh, chatFor, answerFirst, erosType, completeWith, economy } = deps;   // 0.39.281: optional economy — guardian/lib/economy-guard.js   // 0.39.265: optional answerFirst(job) / erosType(job) / completeWith(job, text, chatUrl, source) — guardian/lib/job-retry.js, eros-typist.js   // 0.39.259: optional chatFor(job) -> the agent's chat URL (guardian/lib/chat-transcripts.js)   // 2026-09-19: optional mesh-first ladder (guardian/lib/dispatch-ladder.js)
   for (const [name, fn] of Object.entries({ updateJob, bus, ncp, cockpitBroadcast, dispatchToMistral, dispatchToDeepseek })) {
     if (!fn) throw new Error(`[dispatcher] missing required dependency: ${name}`);
   }
@@ -181,6 +181,31 @@ function createDispatcher(deps) {
     if (!job) return;
     if (job.status === 'retry_wait') { console.log(`[guardian] ${job.id}: waiting to retry — guardian/lib/job-retry.js sends it when its backoff ends`); return; }
     if (_inPool.has(job.id)) { console.log(`[guardian] ${job.id}: already queued or running — not dispatched twice`); return; }
+    // §0.39.281 EC6 — the provider economy (lib/economy/*): wait, stop, or the fallback the person configured
+    if (economy && typeof economy.check === 'function') {
+      let d = null; try { d = economy.check(job); } catch (e) { console.warn(`[guardian/economy] check failed (dispatching as before): ${e.message}`); }
+      if (d && d.verdict === 'wait') {
+        updateJob(job.id, { status: 'queued', queuedAt: Date.now(), queueReason: `economy: ${d.reason}` });
+        bus.emit('guardian.economy.wait', { jobId: job.id, provider: job.provider, ms: d.ms, reason: d.reason });
+        console.log(`[guardian/economy] ${job.id} → ${job.provider} waits ${Math.round(d.ms / 1000)}s — ${d.reason}`);
+        const t = setTimeout(() => dispatchJob(job), Math.max(1000, d.ms)); if (t.unref) t.unref();
+        return;
+      }
+      if (d && d.verdict === 'stop') {
+        updateJob(job.id, { status: 'failed', failedAt: Date.now(), failReason: `economy: ${d.reason}` });
+        bus.emit('guardian.job.error', { jobId: job.id, provider: job.provider, agentId: job.agentId || null, error: `economy: ${d.reason}` });
+        return;
+      }
+      if (d && d.verdict === 'fallback' && d.provider && d.provider !== job.provider) {
+        const from = job.provider;
+        const moved = updateJob(job.id, { provider: d.provider, economyFallback: { from, to: d.provider, reason: d.reason, at: Date.now() } }) || job;
+        bus.emit('guardian.economy.fallback', { jobId: job.id, from, to: d.provider, reason: d.reason });
+        console.log(`[guardian/economy] ${job.id}: ${from} → ${d.provider} — ${d.reason}`);
+        job = moved; job.provider = d.provider;
+        if (economy.check(job).verdict !== 'allow') return dispatchJob(job);   // the fallback's own limits apply too
+      }
+      try { economy.begin(job); } catch (_) {}
+    }
     _inPool.add(job.id);
     // §P11: route through dispatch pool — per-provider semaphore, job stealing.
     // Slot release is NOT here — see dispatch-pool-bridge.js's header for why.

@@ -443,3 +443,23 @@ James: *"i want each spec to have the entire build split into phases, chunked, b
 **Deleting a code repo** now tells its original: the document spec forgets it (the old one is listed in codeRetired), so Code builds a new one, the shared hat link goes, and a branch's worktree is removed while its git branch stays. **Who builds**: a code spec whose repo is missing builds as its original, and a chosen provider is the only one tried (`lib/seam/adapters/warp-cascade.js`). **Pop-outs**: the desktop viewer and settings console carry a compartment title bar (`idearium/ui/js/window-chrome.js`) and one dark theme; the Sync & CI tab uses the same dark controls as every other tab.
 
 Tests: `tests/modules/test-build-surface.test.js`, `tests/modules/test-build-surface-2.test.js`, and the UI in a real page (`tests/probe/build-surface-ui-chromium.js`).
+
+## Provider economy (v0.39.281)
+
+James: *"economy tags for each provider. With staging branches … using the tokenizer and graphs to learn token constraints … Smart economy like dynamically evolving and learning routing."* The map is `docs/2026-09-29-provider-economy-phasemap.spec`.
+
+**Settings → Provider economy** (`idearium/ui/settings.html`) has six cards:
+- **Providers:** tier, on/off, every limit, quiet hours, and what happens at a limit, each with live usage beside it.
+- **Job types:** which tiers each may use.
+- **Staging:** which tiers' code is staged, not applied.
+- **Learning router:** exploration, and how many records it needs before it orders builds.
+- **Token limits:** a graph of input tokens by outcome per provider, with the learned safe limit marked.
+- **Not included, on purpose.**
+
+Changes queue until **Save**, which sends them as one POST. Guardian holds the policy; idearium proxies to it (GET and POST /api/economy; GET /api/economy/usage, /limits and /routing).
+
+**Staging by economy.** When a repo applies agent code automatically, a reply from a provider in a stage tier (by default: local, i.e. ollama) is staged on the repo's staging branch (repo-&lt;uuid&gt;@staging) as a Versionium commit, caused by economy:&lt;tier&gt;:&lt;provider&gt;. It is not written into the repo. Promote it with the existing code/promote. If Versionium fails, nothing is written and the reason is said. Repos in review mode are unchanged.
+
+**Who builds, when nobody chose.** Once the usage record holds enough build outcomes, a build with no chosen provider is ordered by what has worked. The seam record's routedBy field says so and names the scores. A chosen provider is still the only one tried.
+
+Tests: `tests/modules/test-economy.test.js`, `tests/probe/economy-console-chromium.js`.

@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        idearium
-    version:     4.11.0   # §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
+    version:     4.12.0   # §0.39.281 (MINOR, new routes) — /api/economy proxy and the Provider economy page (docs/2026-09-29-provider-economy-phasemap.spec). Previous: 4.11.0 §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
                          # (DOM mutations, the reply's node anchor, stages, streaming text) via
                          # guardian-stream onFeed → os.broadcast (SSE only); late-reply lookup
                          # takes the guardian jobId. Previous — 4.3.0 §0.39.241 (MINOR, two new routes) — GET/POST /api/repos/:uuid/agent/late:
@@ -370,3 +370,15 @@ spec:
 # window-chrome.js for the pop-outs. BS13: _buildIdentity builds a code spec with no repo as its original, else the
 # repo-agent default. BS15: deleting a spec.codegen repo clears its document spec's codeSpecUuid (kept in
 # codeRetired), unlinks the shared hat and removes a branch's worktree (branch kept).
+
+# ## ADDENDUM 2026-09-29 (0.39.281) — the Provider economy page (docs/2026-09-29-provider-economy-phasemap.spec EC5, EC7, EC8)
+# api/index.js: GET|POST /api/economy and GET /api/economy/:what (usage | limits | routing) proxy to guardian (one
+# authority for the policy). ui/settings.html → Provider economy: every provider's tier, enabled, limits (jobs per hour
+# / day, tokens per day, concurrent, min gap), quiet hours and on-limit action; job types and their allowed tiers; stage
+# tiers; the router's exploration and minimum records; live usage against each limit; learned token limits drawn as a
+# graph (input tokens by outcome, the safe limit marked); the router's scores; what is not included, on purpose. Changes
+# queue and save as one POST. EC5: a reply from a stage-tier provider (default: local) in an auto-inject repo is staged
+# on repo-<uuid>@staging (a Versionium commit, causedBy economy:<tier>:<provider>) instead of applied; promote is the
+# existing code/promote. EC7: a build with no chosen provider is ordered by the learning router once the ledger holds
+# enough build outcomes (seamRecord.routedBy says so). Proven by tests/modules/test-economy.test.js and
+# tests/probe/economy-console-chromium.js.

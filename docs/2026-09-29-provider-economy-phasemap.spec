@@ -6,7 +6,7 @@ spec:
     release:  "0.39.280 (base) → 0.39.281"
     uuid:     nexus-provider-economy-phasemap-v1-0000-2026-0929-jamesbrooks-001
     owner:    "lib.economy · guardian.lib.dispatcher · lib.seam.adapters.warp-cascade · lib.repo-inject · idearium.ui.settings · clear-glass.mesh.automation-engine · clear-glass.renderer.settings.eros"
-    status:   "mapped; every phase open; built bottom-up, one at a time, each proven before the next"
+    status:   "built 0.39.281 — EC0–EC11 closed bottom-up, one at a time, each with its proof (CHANGELOG-0.39.281.md has the commits)"
     axioms:   "docs/AXIOMS-v3.1.md — §3.1, §3.3, §3.4, §0.3, §8.6 (reuse), §10.1 (one write authority), §10.2 (projections derived), §16.5 (delete before you add → here: add only where nothing exists), §17.5 (provenance)"
     origin: >
       James, 2026-09-29: "What if we have economy tags for each provider. With staging branches. Like id love an
@@ -49,7 +49,7 @@ spec:
   phases:
     EC0_policy_model:
       layer: foundation
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC0-*"
       depends_on: []
       files:
         - "lib/economy/policy.js"
@@ -63,7 +63,7 @@ spec:
 
     EC1_usage_ledger:
       layer: foundation
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC1-*"
       depends_on: []
       files:
         - "lib/economy/ledger.js"
@@ -75,7 +75,7 @@ spec:
 
     EC2_gate:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC2-*"
       depends_on: [EC0, EC1]
       files:
         - "lib/economy/gate.js"
@@ -87,7 +87,7 @@ spec:
 
     EC3_token_constraints:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC3-*"
       depends_on: [EC1]
       files:
         - "lib/economy/tokens.js"
@@ -101,7 +101,7 @@ spec:
 
     EC4_learning_router:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC4-*"
       depends_on: [EC0, EC1, EC3]
       files:
         - "lib/economy/router.js"
@@ -115,7 +115,7 @@ spec:
 
     EC5_staging_by_economy:
       layer: library
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — lib/economy/store.js (the policy file) + fromReply stage; proof: tests/modules/test-economy.test.js EC5-01…03; 13 inject / agent / staging / code-edit suites unchanged"
       depends_on: [EC0]
       files:
         - "lib/repo-inject.js (fromReply: stageFor option)"
@@ -128,10 +128,12 @@ spec:
 
     EC6_guardian_enforcement:
       layer: api
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — guardian/lib/economy-guard.js; proof: tests/modules/test-economy-guardian.test.js 5/5 (the real dispatcher); guardian suites unchanged against 0.39.280. Concurrency limits default to 0 (none): the dispatch pool already runs one job per tab"
       depends_on: [EC1, EC2, EC3]
       files:
+        - "guardian/lib/economy-guard.js"
         - "guardian/lib/dispatcher.js"
+        - "guardian/lib/index.js"
         - "guardian/server.js"
       does: >-
         The dispatcher asks the gate before sending a browser-provider job: wait → the job stays queued with the reason
@@ -143,7 +145,7 @@ spec:
 
     EC7_router_in_builds:
       layer: api
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/modules/test-economy.test.js EC7-01; test-warp-cascade-provider-fallback 7/7 and test-file-tree-plan (62/63, the same one failing on 0.39.280) unchanged"
       depends_on: [EC4]
       files:
         - "lib/seam/adapters/warp-cascade.js"
@@ -154,7 +156,7 @@ spec:
 
     EC8_economy_console:
       layer: ui
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — proof: tests/probe/economy-console-chromium.js 9/9 (answers made by the real lib/economy); settings-console probe and suite unchanged"
       depends_on: [EC6]
       files:
         - "idearium/ui/settings.html (Economy page)"
@@ -167,7 +169,7 @@ spec:
 
     EC9_input_path_in_editors:
       layer: ui
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — reused, not rebuilt: the step goes to the driver's pointer action with via 'eros' (driver/index.js → main's erosInput → ErosmancerOS /api/input), the path Clear Glass already had; proof: tests/modules/test-economy.test.js EC9-01; automation-v2 18/18 and automation-settings-ui 8/8 unchanged"
       depends_on: []
       files:
         - "clear-glass/src/automation/steps.js"
@@ -180,10 +182,13 @@ spec:
 
     EC10_eros_workbench:
       layer: ui
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — drift, stated: GET /api/replay/frames returned counts only, so frames could not be picked; erosmancer-os gains ScriptReplayQueue.list() and the route adds frames beside the unchanged snapshot (additive). Proof: tests/modules/test-eros-workbench.test.js 6/6; erosmancer-os replay tests 29/29; tsc errors unchanged (5 pre-existing rootDir); test-cg-settings-ui-files 6/6"
       depends_on: []
       files:
         - "clear-glass/renderer/settings/sections/eros.js"
+        - "clear-glass/renderer/settings/sections/eros.css"
+        - "erosmancer/erosmancer-os/src/replay/index.ts (list(), added in the build — see status)"
+        - "erosmancer/erosmancer-os/src/api/server.ts (frames beside snapshot)"
       does: >-
         "A huge editor for ErosmancerOS", additively: the ErosmancerOS page gains the views it lacks — its tabs (attach
         / detach), the node registry (search, inspect), a command console (one /api/execute against a tab, the result
@@ -193,7 +198,7 @@ spec:
 
     EC11_release:
       layer: automation
-      status: OPEN
+      status: "DONE 2026-09-29 (0.39.281) — versions (system 0.39.281, guardian 3.19.0, idearium 4.12.0, clear-glass 3.22.0, erosmancer-os 0.3.0, provider-economy 1.0.0; clear-glass and idearium version points re-synced), addenda, SPEC-REGISTRY, atlases, loom/maps/economy-map.js, run-all; regression against 0.39.280 in CHANGELOG-0.39.281.md"
       depends_on: [EC5, EC6, EC7, EC8, EC9, EC10]
       files:
         - "lib/version.js"

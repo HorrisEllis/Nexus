@@ -263,6 +263,14 @@ export class ScriptReplayQueue extends EventEmitter<ReplayEvents> {
       .sort((a, b) => b.createdAt - a.createdAt);
   }
 
+  /** §0.39.281 EC10 — every frame, newest first, as a summary (the workbench lists them; commands stay here). */
+  list(): Array<{ frameId: string; tabId: string; commands: number; checkpoint: Checkpoint; createdAt: number; replayCount: number; replaying: boolean }> {
+    return [...this.frames.values()]
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .map((f) => ({ frameId: f.frameId, tabId: f.tabId, commands: f.commands.length, checkpoint: f.checkpoint,
+        createdAt: f.createdAt, replayCount: f.replayCount, replaying: this.replayInProgress.has(f.frameId) }));
+  }
+
   snapshot(): {
     totalFrames:  number;
     activeTabs:   number;

@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.21.0   # 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
+    version:     3.22.0   # 0.39.281 MINOR — browser steps with ErosmancerOS input; the ErosmancerOS workbench. Previous: 3.21.0 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -657,3 +657,14 @@ spec:
   # FAILED result (was dropped silently); "visit / go to / open <site>" navigates with no model and answers with the
   # page's title, url and field targets; the pane labels a block by the command it carries. Proven by
   # tests/modules/test-compartment-window.test.js and tests/modules/test-cg-copilot-verbs.test.js.
+
+  # ## ADDENDUM 2026-09-29 (0.39.281) — ErosmancerOS input and the workbench (provider-economy phasemap EC9, EC10)
+  # src/automation/steps.js: browser steps click / hover / type gain Input (page | erosmancer). mesh/automation-engine.js
+  # sends 'erosmancer' to the driver's pointer action with via 'eros' (driver → main's erosInput → ErosmancerOS
+  # /api/input) at the element's centre; type needs a selector. A refusal fails the step — it is never sent in the page
+  # instead — and the output carries inputPath: 'erosmancer'. renderer/settings/sections/eros.js: a Workbench pane (the
+  # other panes unchanged) over the /eros/* proxy — Tabs (open, attach with a role, close), Nodes (search, inspect, use in
+  # console), Console (one /api/execute or its plan only; no behaviour profile of its own), Replay (frames, replay one
+  # with a delay). erosmancer-os 0.3.0: ScriptReplayQueue.list(); GET /api/replay/frames adds frames beside the snapshot.
+  # Version points synced: CG_VERSION (was 3.18.0), registry-components V and interaction-contract version (were
+  # 3.17.0). Proven by tests/modules/test-economy.test.js EC9-01 and tests/modules/test-eros-workbench.test.js.
