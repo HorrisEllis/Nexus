@@ -302,9 +302,9 @@ spec:
 
     BS19_copilot_atlas_guide:
       layer: ui
-      status: OPEN
+      status: DONE 2026-09-29 (0.39.280) — docs/atlases/copilot-atlas.md "Quick Start — the user guide"; proof: tests/modules/test-nexus-atlas-refs.test.js 51/51 with copilot-atlas.md now held to the strict rule
       depends_on: [BS17]
-      files: [docs/copilot-atlas.md (or the copilot atlas that exists), tests/modules/test-nexus-atlas-refs.test.js]
+      files: [docs/atlases/copilot-atlas.md, tests/modules/test-nexus-atlas-refs.test.js]
       does: >-
         The copilot atlas expanded into a user guide: what the co-pilot is (the AI's browser), every way to talk to it
         (panes, backends, /commands), what it can do in Clear Glass (navigate, the interaction field, pointer, spotlight,
