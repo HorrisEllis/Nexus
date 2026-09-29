@@ -114,10 +114,11 @@ test('MF-9', 'the first capture is a BASELINE and is never scored', () => {
 });
 
 test('MF-10', 'runs on real NEXUS systems', () => {
-  const m = M.capture('meta');
-  assert.ok(m.ok && m.fileCount > 20, `expected a real meta/ manifest, got ${m.fileCount}`);
-  assert.ok(m.complete, 'meta/ should hash completely');
-  const same = M.diff(m, M.capture('meta'));
+  // §0.39.282 — meta/ became intelligence/ (the organs moved; meta/ keeps 4 files); the check follows the real system.
+  const m = M.capture('intelligence');
+  assert.ok(m.ok && m.fileCount > 20, `expected a real intelligence/ manifest, got ${m.fileCount}`);
+  assert.ok(m.complete, 'intelligence/ should hash completely');
+  const same = M.diff(m, M.capture('intelligence'));
   assert.strictEqual(same.changed.length, 0, 'two captures of an idle tree must show no change');
   assert.strictEqual(M.sigma(same).band, 'STABLE');
 });

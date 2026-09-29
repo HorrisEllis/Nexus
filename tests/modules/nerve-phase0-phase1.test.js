@@ -29,8 +29,8 @@ function test(desc, fn) {
   catch(e) { console.error(`  ✗ ${desc}\n    ${e.message}`); failed++; }
 }
 
-const hooks  = require('/home/claude/nexus_fixed/hooks/index.js');
-const nerve  = require('/home/claude/nexus_fixed/lib/nerve/index.js');
+const hooks  = require(require('path').join(__dirname, '..', '..', 'hooks/index.js'));
+const nerve  = require(require('path').join(__dirname, '..', '..', 'lib/nerve/index.js'));
 
 // ── Phase 0 — pulse hooks present ─────────────────────────────────────────────
 
@@ -53,13 +53,13 @@ test('P0-03 copilot heartbeat hook routes to orchestrator', () => {
 });
 
 test('P0-04 copilot server.js calls startHeartbeat on successful registration', () => {
-  const src = require('fs').readFileSync('/home/claude/nexus_fixed/copilot/server.js', 'utf8');
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'copilot/server.js'), 'utf8');
   assert.ok(src.includes('startHeartbeat'), 'copilot/server.js must call startHeartbeat');
   assert.ok(src.includes('nexus-connect'),  'must require nexus-connect for startHeartbeat');
 });
 
 test('P0-05 ollama server.js calls startHeartbeat on successful registration', () => {
-  const src = require('fs').readFileSync('/home/claude/nexus_fixed/ollama/server.js', 'utf8');
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'ollama/server.js'), 'utf8');
   assert.ok(src.includes('startHeartbeat'), 'ollama/server.js must call startHeartbeat');
 });
 

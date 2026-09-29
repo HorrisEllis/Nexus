@@ -439,6 +439,9 @@ const server = http.createServer(async (req, res) => {
     // event_log write and JSON response above are unchanged.
     try { bus.emit(row.type, body.payload || {}, { source: row.source, causedBy: row.causedBy }); }
     catch (e) { console.warn(`[cortex] bus.emit failed for ${row.type}: ${e.message}`); }
+    // §0.39.282 — and to /sse subscribers (cli/nexus-repl.js, cortex-v2.js): the channel broadcast only wake events,
+    // so an event posted here was logged but never seen live (tests/modules/cortex-sse-broadcast.test.js T-002).
+    _cortexSSEBroadcast({ id: row.id, type: row.type, payload: body.payload || {}, source: row.source, causedBy: row.causedBy, ts: row.ts });
     json(res, 200, { ok: true, id: row.id });
     return;
   }

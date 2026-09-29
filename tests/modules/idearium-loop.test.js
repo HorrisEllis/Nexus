@@ -54,7 +54,10 @@ assert(pending === manifest.chunks.length - 1,
 // SPECS_ROOT is `idearium/data/specs` (spec-engine/index.js:45) — NOT
 // `data/idearium/specs`. Verified by reading the constant, after this test
 // first failed against my assumed path. The code was right; the guess wasn't.
-const specDir = path.join(process.cwd(), 'idearium', 'data', 'specs', manifest.uuid);
+// §0.39.282 — spec-engine now asks idearium/lib/data-dir.cjs (2026-09-25), which the test sandbox points at a temp
+// root; this line still looked under idearium/data and failed L3/L4 though the files were written. Ask the same place.
+const { createRequire } = await import('module');
+const specDir = path.join(createRequire(import.meta.url)('../../idearium/lib/data-dir.cjs').ideariumDataDir(), 'specs', manifest.uuid);
 const dirExists = fs.existsSync(specDir);
 assert(dirExists, 'L3 spec directory exists on disk', specDir);
 

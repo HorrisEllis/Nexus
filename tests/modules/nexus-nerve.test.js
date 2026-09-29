@@ -47,7 +47,7 @@ function updatePressures(nodes, wires, sigma) {
 }
 
 // ── Real hooks/index.js data ──────────────────────────────────────────────
-const hooks  = require('/home/claude/new_nexus/extracted/hooks/index.js');
+const hooks  = require(require('path').join(__dirname, '..', '..', 'hooks/index.js'));
 const raw    = hooks.allHooks();
 const REAL_WIRES = filterWires(raw.filter(w => w.type === 'event-bus' || w.type === 'stream'));
 
@@ -112,9 +112,13 @@ test('NNT-09 unknown regime falls back to stable color', () => {
   assert.ok(regimeColor('unknown').includes('0,245,255'));
 });
 
-test('NNT-10 real hooks/summary summary contains 80 hooks across 10 systems', () => {
+// §0.39.282 — pinned 80 hooks when the registry held 80; it holds 157 now and the pin failed on every addition.
+// It now checks what the summary claims against the hooks themselves: the totals add up, and 10 systems.
+test('NNT-10 real hooks/summary: the total is the sum of its parts, across 10 systems', () => {
   const s = hooks.summary();
-  assert.strictEqual(s.total, 80);
+  assert.ok(s.total > 0);
+  assert.strictEqual(Object.values(s.byType).reduce((a, b) => a + b, 0), s.total, 'byType adds up to total');
+  assert.ok(s.active + s.deprecated + s.seed <= s.total, 'active + deprecated + seed within total');
   assert.strictEqual(s.systems, 10);
 });
 

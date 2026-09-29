@@ -48,7 +48,7 @@ async function main() {
 
   await new Promise(resolve => server.listen(17820, resolve));
 
-  const tool = require('/home/claude/nexus-current-1/nexus/lib/agent-tools/tools/browser/browser-action.js');
+  const tool = require(require('path').join(__dirname, '..', '..', 'lib/agent-tools/tools/browser/browser-action.js'));
 
   await (async () => {
     test('screenshot is a real, listed action', () => {

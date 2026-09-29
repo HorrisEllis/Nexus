@@ -115,6 +115,10 @@ function _estimateConfidence(text = '', prompt = '') {
 
   // Hedging language = lower confidence
   const hedges = ['i think', 'i believe', 'might be', 'not sure', 'unclear', "i don't know", 'uncertain', 'i am not able', "i can't", 'as an ai'];
+  // §0.39.282 — an answer that says it failed ("I could not determine the answer") scored 0.76 and was never escalated
+  // (copilot-confidence T-004). A self-reported failure is real uncertainty: it floors low, like an empty reply.
+  const failed = ['could not determine', "couldn't determine", 'could not find', "couldn't find", 'unable to determine', 'unable to find', 'i was unable', 'no way to know', 'not enough information'];
+  if (failed.some(f => text.toLowerCase().includes(f))) return 0.3;
   const hedgeCount = hedges.filter(h => text.toLowerCase().includes(h)).length;
   score -= hedgeCount * 0.1;
 
@@ -718,4 +722,4 @@ async function health() {
   };
 }
 
-module.exports = { route, health, MODULE_ID, VERSION, CONFIDENCE_THRESHOLD, extractExplicitAgent, dispatchToNcpAgent: _tryGuardian, dispatchToOllama: _tryOllama };
+module.exports = { route, health, MODULE_ID, VERSION, CONFIDENCE_THRESHOLD, extractExplicitAgent, dispatchToNcpAgent: _tryGuardian, dispatchToOllama: _tryOllama, _estimateConfidence };   // §0.39.282 _estimateConfidence exported for its tests

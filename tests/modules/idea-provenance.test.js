@@ -84,9 +84,12 @@ test('IP-8', 're-proposing a REJECTED idea is flagged, not silently landed', () 
 });
 
 test('IP-9', 'legacy untagged ideas are counted as UNTAGGED, never guessed into a bucket', () => {
+  // §0.39.282 — this relied on the live tree's own legacy ideas; the test sandbox (lib/test-sandbox.js) gives it an
+  // empty store, so it seeds one legacy row of the shape pre-provenance ideas have (freeform tags, no origin).
+  require(path.join(__dirname, '../../cortex/memory/jaa-db.js')).jaaDB.insert(P.TABLE, { id: `legacy-${Date.now()}`, title: 'a legacy idea', tags: ['ui', 'someday'], status: 'open' });
   const s = P.stats();
   assert.strictEqual(s.ok, true);
-  assert.ok(s.untagged > 0, 'this tree has pre-existing freeform-tagged ideas');
+  assert.ok(s.untagged > 0, 'a legacy freeform-tagged idea is present');
   assert.ok(s.untaggedNote && /NOT counted as user or agent/.test(s.untaggedNote));
   const bucketed = Object.values(s.byOrigin).reduce((a, b) => a + b, 0);
   assert.strictEqual(bucketed + s.untagged, s.total, 'every row is either tagged or counted untagged — none vanish');

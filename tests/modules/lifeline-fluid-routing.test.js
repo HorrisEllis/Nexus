@@ -89,8 +89,10 @@ async function test(id, desc, fn) {
   // The old test asserted only that _post was CALLED with '/command'. It
   // never checked the outcome — so it passed while the feature could not
   // work. These now assert the endpoint that returns real text.
+  // §0.39.282 — guardian's GET /providers is a flat map of name → 'connected' | 'null' (lifeline.js §BUGFIX 2026-08-28);
+  // the fake still answered {connected:true} objects, so every explicit dispatch looked not connected.
   await test('T-004', 'route() bypasses Ollama and dispatches straight to the named agent when connected', async () => {
-    _providersResponse = { providers: { chatgpt: { connected: true } } };
+    _providersResponse = { providers: { chatgpt: 'connected' } };
     _commandResponse = { ok: true, text: 'hello from chatgpt' };
     _commandCalls = [];
     const r = await lifeline.route('I want to talk to chatgpt about my code');
@@ -101,7 +103,7 @@ async function test(id, desc, fn) {
   });
 
   await test('T-005', '_tryGuardian posts to /api/copilot/prompt (now real, returns text) not /command (returns only a jobId)', async () => {
-    _providersResponse = { providers: { claude: { connected: true } } };
+    _providersResponse = { providers: { claude: 'connected' } };
     _commandResponse = { ok: true, text: 'hi' };
     _commandCalls = [];
     await lifeline.route('talk to claude please');
@@ -110,7 +112,7 @@ async function test(id, desc, fn) {
   });
 
   await test('T-006', '_tryGuardian returns null (not a fabricated success) when NCP reports not connected', async () => {
-    _providersResponse = { providers: { chatgpt: { connected: false } } };
+    _providersResponse = { providers: { chatgpt: 'null' } };
     _commandCalls = [];
     // route() falls through to the normal cascade when the explicit
     // dispatch fails — Ollama isn't mocked to succeed here, so this

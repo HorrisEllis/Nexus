@@ -1,5 +1,5 @@
-const { unifiedDispatch } = require('/home/claude/nexus/warp/dispatch/index.js');
-const { PopulationStore } = require('/home/claude/nexus/warp/dispatch/population.js');
+const { unifiedDispatch } = require(require('path').join(__dirname, '..', '..', 'warp/dispatch/index.js'));
+const { PopulationStore } = require(require('path').join(__dirname, '..', '..', 'warp/dispatch/population.js'));
 
 function makeCrystallizer() {
   const store = new Map();

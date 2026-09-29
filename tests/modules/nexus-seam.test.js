@@ -93,7 +93,7 @@ test('SEAM-10 Detector.delta returns score for axiom checking', () => {
 
 test('SEAM-11 guardian server imports from lib/seam (not its own lib/)', () => {
   const src = require('fs').readFileSync(
-    '/home/claude/nexus_fixed/guardian/server.js', 'utf8');
+    require('path').join(__dirname, '..', '..', 'guardian/server.js'), 'utf8');
   assert.ok(src.includes("require('../lib/seam/queue.js')"),
     'guardian must require SEAM from lib/seam/queue.js');
   assert.ok(!src.includes("require('./lib/seam-queue')"),
@@ -101,9 +101,10 @@ test('SEAM-11 guardian server imports from lib/seam (not its own lib/)', () => {
 });
 
 test('SEAM-12 ollama server has SEAM Detector integration', () => {
+  // §0.39.282 — ollama's dispatch moved from server.js into ollama/lib/dispatch.js; the detector went with it.
   const src = require('fs').readFileSync(
-    '/home/claude/nexus_fixed/ollama/server.js', 'utf8');
-  assert.ok(src.includes("require('../lib/seam/detector.js')"),
+    require('path').join(__dirname, '..', '..', 'ollama/lib/dispatch.js'), 'utf8');
+  assert.ok(src.includes("require('../../lib/seam/detector.js')"),
     'ollama must require SEAM detector from lib/seam/');
   assert.ok(src.includes('seamScore'), 'ollama must write seamScore on jobs');
 });
