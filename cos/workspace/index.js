@@ -30,7 +30,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const { execFileSync, execFile } = require('child_process');
 
 const MODULE_ID = 'nexus.cos.workspace';
 const VERSION = '1.0.0';
@@ -91,6 +91,62 @@ function ownRepo(dir, { git = 'git' } = {}) {
   return { ok: true, created, head };
 }
 
+// §0.39.284 W1 — James's log: idearium OFFLINE for 3.5 minutes (14 missed pulses, its own build trigger refused on :4800)
+// while speceng.codegen branched a 91 MB original: the sync git above holds idearium's event loop for the whole run.
+// The *Async twins run the same steps with execFile, so the server keeps answering while git works. The sync ones
+// stay for their other callers (§0.3); the steps and the results are the same.
+function _gitAsync(args, { cwd, git = 'git', env } = {}) {
+  return new Promise((resolve, reject) => {
+    execFile(git, ['-c', 'core.autocrlf=false', '-c', 'core.safecrlf=false', ...args], { cwd, encoding: 'utf8',
+      timeout: GIT_TIMEOUT_MS, windowsHide: true, maxBuffer: 64 * 1024 * 1024,
+      env: { ...process.env, GIT_TERMINAL_PROMPT: '0', ...(env || {}) } }, (e, stdout, stderr) => {
+      if (e) { e.stderr = stderr; e.stdout = stdout; if (e.killed && !e.signal) e.signal = 'SIGTERM'; return reject(e); }
+      resolve(String(stdout).trim());
+    });
+  });
+}
+async function gitAvailableAsync({ git = 'git' } = {}) { try { await _gitAsync(['--version'], { git }); return true; } catch (_) { return false; } }
+async function ownRepoAsync(dir, { git = 'git' } = {}) {
+  let top = null;
+  try { top = _real(await _gitAsync(['rev-parse', '--show-toplevel'], { cwd: dir, git })); } catch (_) {}
+  const id = ['-c', 'user.name=NEXUS', '-c', 'user.email=nexus@localhost'];
+  let created = false;
+  if (top !== _real(dir)) { await _gitAsync(['init', '-q'], { cwd: dir, git }); created = true; }
+  let head = null;
+  try { head = await _gitAsync(['rev-parse', 'HEAD'], { cwd: dir, git }); } catch (_) {}
+  let dirty = false;
+  try { dirty = !!(await _gitAsync(['status', '--porcelain'], { cwd: dir, git })); } catch (_) {}
+  if (!head || dirty) {
+    await _gitAsync(['add', '-A'], { cwd: dir, git });
+    await _gitAsync([...id, 'commit', '-q', '--allow-empty', '-m', head ? 'nexus: snapshot before branching' : 'nexus: baseline (COS branch point)'], { cwd: dir, git });
+    head = await _gitAsync(['rev-parse', 'HEAD'], { cwd: dir, git });
+  }
+  return { ok: true, created, head };
+}
+async function listBranchesAsync(originDir, { git = 'git' } = {}) {
+  let out = '';
+  try { out = await _gitAsync(['worktree', 'list', '--porcelain'], { cwd: originDir, git }); } catch (_) { return []; }
+  return _parseWorktrees(out, originDir);
+}
+/** branchWorkspaceAsync — branchWorkspace without holding the event loop (same arguments, same result). */
+async function branchWorkspaceAsync({ originDir, name, root = null, git = 'git' } = {}) {
+  if (!originDir || !fs.existsSync(originDir) || !fs.statSync(originDir).isDirectory()) return { ok: false, error: `the original's directory does not exist: ${originDir}` };
+  if (!(await gitAvailableAsync({ git }))) return { ok: false, error: 'git is not installed — the branch needs it (the repo can still be made as a copy)' };
+  const s = slug(name);
+  const branch = BRANCH_PREFIX + s;
+  const dir = path.join(root || `${originDir.replace(/[\\/]+$/, '')}.branches`, s);
+  try {
+    const own = await ownRepoAsync(originDir, { git });
+    const existing = (await listBranchesAsync(originDir, { git })).find(w => w.branch === branch);
+    if (existing && fs.existsSync(existing.dir)) return { ok: true, dir: existing.dir, branch, originDir, base: own.head, reused: true };
+    fs.mkdirSync(path.dirname(dir), { recursive: true });
+    let hasBranch = false;
+    try { await _gitAsync(['rev-parse', '--verify', '--quiet', `refs/heads/${branch}`], { cwd: originDir, git }); hasBranch = true; } catch (_) {}
+    await _gitAsync(hasBranch ? ['worktree', 'add', '-q', dir, branch] : ['worktree', 'add', '-q', '-b', branch, dir, 'HEAD'], { cwd: originDir, git });
+    return { ok: true, dir, branch, originDir, base: own.head, reused: false };
+  } catch (e) { return { ok: false, error: `git worktree failed: ${gitWhy(e)}` }; }
+}
+
 /**
  * branchWorkspace({ originDir, name, root }) -> { ok, dir, branch, originDir, base, reused } | { ok:false, error }
  * root: where branches live (default <originDir>.branches/). An existing worktree of the same branch is reused.
@@ -117,6 +173,9 @@ function branchWorkspace({ originDir, name, root = null, git = 'git' } = {}) {
 function listBranches(originDir, { git = 'git' } = {}) {
   let out = '';
   try { out = _git(['worktree', 'list', '--porcelain'], { cwd: originDir, git }); } catch (_) { return []; }
+  return _parseWorktrees(out, originDir);
+}
+function _parseWorktrees(out, originDir) {
   const rows = [];
   let cur = null;
   for (const l of out.split('\n')) {
@@ -292,5 +351,5 @@ function stopDesktop(compartmentId) {
   return { ok: true, state: 'stopping', kept: s.disk };
 }
 
-module.exports = { gitWhy, MODULE_ID, VERSION, BRANCH_PREFIX, DESKTOP_DIR, slug, gitAvailable, ownRepo, branchWorkspace, listBranches, removeBranch, branchDisk, desktopFor,
+module.exports = { gitWhy, branchWorkspaceAsync, ownRepoAsync, listBranchesAsync, gitAvailableAsync, MODULE_ID, VERSION, BRANCH_PREFIX, DESKTOP_DIR, slug, gitAvailable, ownRepo, branchWorkspace, listBranches, removeBranch, branchDisk, desktopFor,
   desktopDisk, startDesktop, desktopStatus, stopDesktop, _sessions };

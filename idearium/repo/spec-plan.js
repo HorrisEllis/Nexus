@@ -140,3 +140,152 @@ export function nextReady(phases, isComplete = (p) => p.status === 'done' || p.s
   const byKey = new Map(phases.map(p => [p.key, p]));
   return orderPhases(phases).find(p => !isComplete(p) && p.depends_on.every(d => { const q = byKey.get(_short(d)); return !q || isComplete(q); })) || null;
 }
+
+// ── §0.39.284 W2 — a plan that always lands ─────────────────────────────────
+// James's Plan panel: three plan runs "replied … no …-phasemap.spec came back". A small local model (a 3B coder,
+// 4k context) answers but does not write the addressed block. Two ways the map still lands, both with provenance:
+//   planFromReply(text)   the agent wrote the map in its reply without the addressed block → taken from the text
+//   derivePlan(...)       the agent wrote no usable map → the plan is derived from the spec's own sections, one phase
+//                         per section (small ones grouped), its layer read from the section's name and text. A
+//                         mechanical reading of the spec, never presented as the agent's: meta.planned_by says so.
+
+const _SKIP = /^(meta|version_?history|history|changelog|gaps|open_gaps|known_gaps|addend(a|um)|notes?|references?|glossary|provenance|origin|uuid|name|version|status|date|owner|license)$/i;
+// order matters: the first rule whose words appear in the section's name (then its text) sets its layer
+const _LAYER_RULES = [
+  ['ui', /\b(ui|ux|view|views|panel|panels|page|pages|screen|canvas|render|renderer|widget|display|theme|css|html|layout|visual|dashboard|window|frontend|gui|animation|graph_view)\b/i],
+  ['cli', /\b(cli|command|commands|terminal|shell|repl|argv|flags?)\b/i],
+  ['automation', /\b(automation|loop|loops|schedul\w*|cron|daemon|watch\w*|trigger\w*|job|jobs|worker|queue|pipeline|autopilot|heal\w*|agent|agents)\b/i],
+  ['api', /\b(api|apis|route|routes|endpoint\w*|http|rest|server|rpc|websocket|protocol|contract|ports?|bridge|ipc|sse)\b/i],
+  ['foundation', /\b(primitive\w*|types?|schema\w*|model|models|data|state|config\w*|constant\w*|values?|enums?|identity|ids?|storage|store|persistence|format|spec|axioms?|kernel|core|foundation|invariants?|structures?|records?)\b/i],
+  ['library', /./],
+];
+const _AXIOMS_BY_LAYER = { foundation: ['§3.1', '§1.1', '§1.3', '§0.3'], library: ['§3.1', '§8.6', '§1.3', '§12.1'], api: ['§3.4', '§1.1', '§12.1', '§17.5'],
+  cli: ['§3.4', '§1.1', '§12.1'], automation: ['§3.4', '§1.1', '§12.1', '§0.3'], ui: ['§3.4', '§1.3', '§12.1'] };
+
+function _layerOf(key, text) {
+  // the section's NAME decides when it names a layer; otherwise its text, by which layer's words it uses most
+  const name = String(key).replace(/[_.-]+/g, ' ');
+  for (const [layer, re] of _LAYER_RULES) if (layer !== 'library' && re.test(name)) return layer;
+  if (/\b(engine|graph|lib|library|module|runtime|process\w*|compute|algorithm|logic|service|manager|registry)\b/i.test(name)) return 'library';
+  const body = String(text || '').slice(0, 2000).replace(/[_.-]+/g, ' ');
+  let best = 'library', hits = 1;
+  for (const [layer, re] of _LAYER_RULES) {
+    if (layer === 'library') continue;
+    const n = (body.match(new RegExp(re.source, 'gi')) || []).length;
+    if (n > hits) { best = layer; hits = n; }
+  }
+  return hits >= 3 ? best : 'library';
+}
+const _snake = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 40) || 'part';
+const _oneLine = (s, n = 220) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
+const _q = (s) => JSON.stringify(String(s));
+
+/** sectionsOf(specText) -> [{ key, line, text }] — the spec's own top-level sections with their text (YAML or not). */
+export function sectionsOf(specText) {
+  const src = String(specText || '');
+  const lines = src.split('\n');
+  // the body's keys: under a single root (spec:, x:) they sit at 2 spaces; a flat file has them at 0
+  const tops = lines.map((l, i) => ({ l, i })).filter(x => /^[A-Za-z_][\w.-]*:/.test(x.l));
+  const rootOnly = tops.length === 1;
+  const re = rootOnly ? /^ {2}[A-Za-z_][\w.-]*:/ : /^[A-Za-z_][\w.-]*:/;
+  const heads = lines.map((l, i) => ({ l, i })).filter(x => re.test(x.l) && !/^\s*#/.test(x.l));
+  const out = [];
+  for (let k = 0; k < heads.length; k++) {
+    const key = heads[k].l.trim().split(':')[0];
+    const end = k + 1 < heads.length ? heads[k + 1].i : lines.length;
+    out.push({ key, line: heads[k].i + 1, text: lines.slice(heads[k].i, end).join('\n') });
+  }
+  // markdown specs: ## headings
+  if (!out.length) {
+    const h = lines.map((l, i) => ({ l, i })).filter(x => /^#{1,3}\s+\S/.test(x.l));
+    for (let k = 0; k < h.length; k++) {
+      const end = k + 1 < h.length ? h[k + 1].i : lines.length;
+      out.push({ key: h[k].l.replace(/^#+\s+/, '').trim(), line: h[k].i + 1, text: lines.slice(h[k].i, end).join('\n') });
+    }
+  }
+  return out.filter(s => !_SKIP.test(s.key));
+}
+
+/**
+ * derivePlan({ specPath, specText, mapPath, prefix, maxPhases, reason }) -> { ok, text, phases, sections, problems }
+ * One phase per section, ordered bottom-up; consecutive small sections of one layer are grouped so the map stays
+ * within maxPhases. Each phase depends on the one before it in its own layer and on the top of the layer below.
+ */
+export function derivePlan({ specPath, specText = '', mapPath = phasemapPathFor(specPath), prefix = null, maxPhases = 24, reason = 'derived from the spec' } = {}) {
+  const id = prefix || (path.posix.basename(specPath).replace(/\.spec$/i, '').replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase() || 'P');
+  const secs = sectionsOf(specText).map((s, i) => ({ ...s, order: i, layer: _layerOf(s.key, s.text) }));
+  if (!secs.length) return { ok: false, problems: ['the spec has no sections to plan from'], sections: [] };
+  // group: within a layer, merge neighbours until the phase count fits
+  const byLayer = LAYERS.map(L => secs.filter(s => s.layer === L));
+  let groups = byLayer.map(list => list.map(s => [s]));
+  const count = () => groups.reduce((n, g) => n + g.length, 0);
+  while (count() > maxPhases) {
+    // merge the two smallest neighbours in the layer with the most groups
+    const li = groups.reduce((best, g, i) => (g.length > groups[best].length ? i : best), 0);
+    const g = groups[li]; if (g.length < 2) break;
+    let bi = 0, bsz = Infinity;
+    for (let k = 0; k + 1 < g.length; k++) { const sz = g[k].reduce((n, s) => n + s.text.length, 0) + g[k + 1].reduce((n, s) => n + s.text.length, 0); if (sz < bsz) { bsz = sz; bi = k; } }
+    g.splice(bi, 2, [...g[bi], ...g[bi + 1]]);
+  }
+  const phases = []; let n = 0; let lastOfLower = null;
+  LAYERS.forEach((L, li) => {
+    let prevInLayer = null;
+    for (const grp of groups[li]) {
+      const keys = grp.map(s => s.key);
+      const pid = `${id}${n++}_${_snake(keys.length > 1 ? `${keys[0]}_and_${keys.length - 1}_more` : keys[0])}`;
+      const deps = [prevInLayer, prevInLayer ? null : lastOfLower].filter(Boolean);
+      const lines = grp.map(s => `§${s.key} (line ${s.line})`).join(', ');
+      const first = _oneLine(grp[0].text.split('\n').slice(1).join(' '), 200);
+      phases.push({ id: pid, layer: L, depends_on: deps, sections: keys, does: `Build what the spec states in ${lines}${first ? ` — ${first}` : ''}.`,
+        proof: `A test that proves ${keys.join(', ')} as the spec states it, against the real code (no mock): §1.1, §12.1.` });
+      prevInLayer = pid;
+    }
+    if (prevInLayer) lastOfLower = prevInLayer;
+  });
+  const now = new Date().toISOString();
+  const text = [
+    'spec:',
+    '  meta:',
+    `    name: ${path.posix.basename(mapPath).replace(/\.spec$/, '')}`,
+    `    spec: ${specPath}`,
+    `    spec_sha256: ${sha(specText)}`,
+    '    axioms: docs/AXIOMS-v3.1.md §3.1 §3.3 §3.4 §1.1 §1.3 §0.3 §8.6 §12.1 §17.5',
+    '    planned_by: idearium/repo/spec-plan.js derivePlan',
+    `    planned_at: ${now}`,
+    `    reason: ${_q(reason)}`,
+    `    note: ${_q('One phase per section of the spec, its layer read from the section. Refine any phase, or ask the agent to plan again (replan) — this map is versioned.')}`,
+    '  phases:',
+    ...phases.flatMap(p => [
+      `    ${p.id}:`,
+      `      layer: ${p.layer}`,
+      '      status: OPEN',
+      `      depends_on: [${p.depends_on.join(', ')}]`,
+      `      axioms: [${_AXIOMS_BY_LAYER[p.layer].join(', ')}]`,
+      `      sections: [${p.sections.map(s => _snake(s)).join(', ')}]`,
+      '      files: []',
+      '      does: >-',
+      `        ${p.does}`,
+      '      proof: >-',
+      `        ${p.proof}`,
+      '',
+    ]),
+  ].join('\n');
+  const v = validatePlan(text, path.posix.basename(mapPath).replace(/\.spec$/, ''));
+  return { ok: v.ok, problems: v.problems, text, phases: v.phases, sections: secs.length };
+}
+
+/** planFromReply(reply, name) -> { ok, text } | null — a phasemap the agent wrote in its reply text (fenced or bare). */
+export function planFromReply(reply, name = 'phasemap') {
+  const src = String(reply || '');
+  const cands = [];
+  const fence = /```[^\n]*\n([\s\S]*?)```/g; let m;
+  while ((m = fence.exec(src))) if (/^\s*phases:/m.test(m[1])) cands.push(m[1]);
+  const bare = src.search(/^spec:\s*$/m);
+  if (bare !== -1) cands.push(src.slice(bare).split(/\n```/)[0]);
+  for (const c of cands) {
+    const text = c.replace(/\s+$/, '') + '\n';
+    const v = validatePlan(text, name);
+    if (v.ok) return { ok: true, text, phases: v.phases };
+  }
+  return null;
+}

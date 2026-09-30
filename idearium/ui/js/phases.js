@@ -107,7 +107,9 @@ function _phPaint() {
   if (!d.phases.length) {
     body = `<div class="ds"><div class="ds-label">no phases</div><div class="ds-mono">${d.scope.source === 'nexus'
       ? 'No phasemap in the NEXUS snapshot tags this system. Phasemaps are docs/*phasemap*.spec.'
-      : 'This repo has no *phasemap*.spec file. "+ phase" starts roadmap-phasemap.spec; an idea iteration can also be added from the Idea tab.'}${(d.skipped || []).length ? `\n\nnot read:\n${d.skipped.map(x => `${x.path} — ${x.reason}`).join('\n')}` : ''}</div></div>`;
+      : 'This repo has no *phasemap*.spec file yet. Plan a spec below (its phases land here), "+ phase" starts roadmap-phasemap.spec, or add an idea iteration from the Idea tab.'}${(d.skipped || []).length ? `\n\nnot read:\n${d.skipped.map(x => `${x.path} — ${x.reason}`).join('\n')}` : ''}</div></div>
+      ${d.scope.source === 'nexus' ? '' : '<div class="ds" id="ph-plan-specs"><div class="ds-label">plan a spec</div><div class="ds-mono">reading the specs…</div></div>'}`;
+    if (d.scope.source !== 'nexus') setTimeout(_phPlanSpecs, 0);
   } else if (PHASES.view === 'maps') body = _phMaps(d);
   else if (PHASES.view === 'table') body = _phTable(list);
   else if (PHASES.view === 'layers') body = _phLayers(list);
@@ -308,4 +310,36 @@ async function phasesBuildQuick(map, phase) {
   } catch (e) { toast(`${phase} not built: ${e.message}`, 'err'); }
   PHASES.busy = false;
   if (CURRENT_API_REPO) renderRepoPhases(CURRENT_API_REPO, { keepScroll: true });
+}
+
+
+// §0.39.284 W2 — James: "the phases tab needs to populate with the plan". An empty tab lists the repo's specs, each
+// with "plan from the spec" (derived at once, no agent) and "ask the agent" (the Spec tab's Build this spec).
+async function _phPlanSpecs() {
+  const el = document.getElementById('ph-plan-specs'); const repo = CURRENT_API_REPO; if (!el || !repo) return;
+  let specs = [];
+  try { specs = ((await api(`/api/repos/${repo.uuid}/living-spec`, {}, 20000)).specs || []); } catch (e) { el.querySelector('.ds-mono').textContent = `could not read the specs: ${e.message}`; return; }
+  if (!specs.length) { el.querySelector('.ds-mono').textContent = 'no .spec file in this repo yet — add one in the Files tab, then plan it here.'; return; }
+  el.innerHTML = `<div class="ds-label">plan a spec — its phases land here</div>` + specs.slice(0, 20).map(s => `<div class="ph-plan-row">
+      <span class="ph-plan-name">${escapeHtml(s.path.split('/').pop())}<small>${escapeHtml(s.path)}</small></span>
+      <button class="action-btn" onclick="phPlanDerive('${escapeHtml(s.path)}')" title="one phase per section of the spec, bottom-up — no agent, written now">⚡ plan from the spec</button>
+      <button class="action-btn" onclick="phPlanAgent('${escapeHtml(s.path)}')" title="the repo's agent plans it; if it writes no map, the plan is derived">▶ ask the agent</button></div>`).join('');
+}
+async function phPlanDerive(specPath) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/spec/plan`, { method: 'POST', body: JSON.stringify({ path: specPath, derive: true }) }, 60000);
+    toast(`${r.mapPath}: ${r.phases} phases`, 'ok');
+    renderPhasesRefresh();
+  } catch (e) { toast(`not planned: ${e.message}`, 'err'); }
+}
+async function phPlanAgent(specPath) {
+  setRepoSubtab('spec');
+  await renderLivingSpec(CURRENT_API_REPO, specPath);
+  await specBuildLoad(specPath);
+  specPlanAsk();
+}
+function renderPhasesRefresh() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  if (typeof renderRepoPhases === 'function') renderRepoPhases(repo, { keepScroll: true });
 }

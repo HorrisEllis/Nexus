@@ -4975,7 +4975,7 @@ async function handle(req, res, route, query, body) {
       if (_origin && body.branch !== false && _mode !== 'copy') {
         try {
           const cosBridge = _require('../../lib/cos-bridge.js');
-          const ws = cosBridge.branchWorkspace({ originDir: _repoDiskDir(_origin.uuid), name: manifest.name });
+          const ws = await cosBridge.branchWorkspaceAsync({ originDir: _repoDiskDir(_origin.uuid), name: manifest.name });   // §0.39.284 W1 — never the sync git in a request
           branchInfo = ws.ok ? { ...ws, originUuid: _origin.uuid } : { ok: false, error: ws.error, originUuid: _origin.uuid };
           if (!ws.ok) console.warn(`[speceng.codegen] branch of ${_origin.uuid.slice(0, 8)} not made (${ws.error}) — a separate copy instead`);
         } catch (e) { branchInfo = { ok: false, error: e.message }; }
