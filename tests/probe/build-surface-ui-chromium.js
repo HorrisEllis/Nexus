@@ -11,7 +11,7 @@ const P = start();
 const ROOT = P.ROOT;
 const U = 'r1';
 const posts = [];
-const css = (P.read('idearium/ui/index.html').match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '';
+const css = P.read('idearium/ui/css/nexus-theme.css') + '\n' + (P.read('idearium/ui/index.html').match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '';
 const page = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
 <div id="file-tree"></div><div id="ide-tabs"></div><div id="ide-code"></div><textarea id="ide-editor"></textarea>
 <div id="repo-living-spec"></div><div id="repo-subtab-git"><div class="ds"><input id="gi"><select id="gs"><option>x</option></select><textarea id="gt"></textarea><pre id="gp">log</pre></div></div><input id="ref" class="field-input"><div id="repo-build-start"></div><div id="repo-env-section"></div>

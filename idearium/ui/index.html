@@ -4,27 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IDEARIUM — Nexus Idea OS</title>
+<link rel="stylesheet" href="css/nexus-theme.css">
+<script src="js/theme.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+/* §0.39.284 W5 — James: "make all the css in idearium consistent with the main ui". idearium's tokens keep their names
+   (every rule below reads them) and take their values from css/nexus-theme.css — the main UI's palette (ui/themes/
+   nexus-dark.css) by default, or the one chosen in the settings console (config ui.theme / ui.accent / ui.motion).
+   The values they had before are the 'midnight' palette there, kept. */
 :root {
-  --bg:     #07090e;
-  --bg1:    #0b0f18;
-  --bg2:    #0f1520;
-  --bg3:    #141c2e;
-  --panel:  #0d1219;
-  --b0:     rgba(56,189,248,0.06);
-  --b1:     rgba(56,189,248,0.14);
-  --b2:     rgba(56,189,248,0.28);
-  --sky:    #38bdf8;
-  --sky2:   #7dd3fc;
-  --mint:   #34d399;
-  --amber:  #fbbf24;
-  --coral:  #f87171;
-  --violet: #a78bfa;
+  --bg:     var(--nx-ink);
+  --bg1:    var(--nx-plate);
+  --bg2:    var(--nx-panel);
+  --bg3:    var(--nx-edge);
+  --panel:  var(--nx-card);
+  --b0:     var(--ac-ghost);
+  --b1:     var(--ac-dim);
+  --b2:     var(--ac-border-hi);
+  --sky:    var(--ac);
+  --sky2:   var(--ac-soft);
+  --mint:   var(--nx-emerald);
+  --amber:  var(--nx-warn);
+  --coral:  var(--nx-err);
+  --violet: var(--nx-violet);
   --rose:   #fb7185;
-  --text:   #c4d4ee;
-  --text2:  #607898;
-  --text3:  #334560;
+  --text:   var(--nx-text);
+  --text2:  var(--nx-dim);
+  --text3:  var(--nx-muted);
   --mono:   'IBM Plex Mono', monospace;
   --sans:   'IBM Plex Sans', sans-serif;
 }
@@ -62,7 +68,8 @@ body{display:flex;flex-direction:column;position:relative}
 .tb-stat .v.hi{color:var(--coral)}
 .tb-stat .v.ok{color:var(--mint)}
 .tb-stat .v.sky{color:var(--sky)}
-.tb-conn{font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid var(--b1);color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:5px}
+.tb-conn{background:none;transition:border-color .15s,color .15s;font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid var(--b1);color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:5px}
+button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .tb-conn .dot{width:6px;height:6px;border-radius:50%;background:var(--text3)}
 .tb-conn.online{border-color:rgba(52,211,153,.3);color:var(--mint)}
 .tb-conn.online .dot{background:var(--mint);box-shadow:0 0 6px var(--mint)}
@@ -647,18 +654,18 @@ body{display:flex;flex-direction:column;position:relative}
 .ide-manage-btn{margin-left:auto;color:var(--sky2)!important;border-color:rgba(56,189,248,.35)!important}
 /* §0.39.282 N25 — the Manage workbench is styled by css/file-manage.css (.mg-*). The old .manage-modal/.manage-act/.manage-hit rules (0.39.280) styled a modal that no longer exists; the class names stay on the new markup only as stable hooks for tests. */
 /* §0.39.280 BS11 — the plan panel and the build-start card */
-#plan-panel{position:fixed;top:90px;right:18px;width:420px;height:min(78vh,760px);min-width:300px;min-height:220px;resize:both;overflow:hidden;z-index:250;display:none;flex-direction:column;background:#141518;border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);font-family:var(--mono)}
+#plan-panel{position:fixed;top:90px;right:18px;width:420px;height:min(78vh,760px);min-width:300px;min-height:220px;resize:both;overflow:hidden;z-index:250;display:none;flex-direction:column;background:var(--nx-card);border:1px solid var(--nx-rim);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);font-family:var(--mono)}
 #plan-panel.open{display:flex}#plan-panel.wide{width:min(900px,92vw)}
 .pp-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);cursor:move;user-select:none}
-.pp-title{font:600 13px system-ui,sans-serif;color:#e8e8ea}.pp-sub{font-size:10px;color:var(--text3)}.pp-grow{flex:1}
-.pp-map{max-width:150px;background:#1c1d21;color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:6px;font:10px var(--mono);padding:2px 4px}
+.pp-title{font:600 13px system-ui,sans-serif;color:var(--nx-bright)}.pp-sub{font-size:10px;color:var(--text3)}.pp-grow{flex:1}
+.pp-map{max-width:150px;background:var(--nx-card2);color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:6px;font:10px var(--mono);padding:2px 4px}
 .pp-btn{background:none;border:0;color:var(--text3);font-size:13px;cursor:pointer;padding:2px 5px}.pp-btn:hover{color:#fff}
 .pp-body{flex:1;overflow:auto;padding:8px 14px 14px}
 .pp-progress{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin:4px 0 10px;overflow:hidden}.pp-progress div{height:100%;background:var(--mint)}
 .pp-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:10px 0 6px;cursor:default}
 .pp-task{border-radius:6px}.pp-row{display:flex;align-items:center;gap:8px;padding:5px 4px;cursor:pointer;border-radius:6px}.pp-row:hover{background:rgba(255,255,255,.035)}
 .pp-mark{width:14px;text-align:center;color:var(--text3)}.pp-task.done .pp-mark{color:var(--text2)}.pp-task.cur .pp-mark{color:var(--sky)}
-.pp-name{flex:1;font:12.5px/1.35 system-ui,sans-serif;color:#dcdce0;min-width:0}.pp-task.done .pp-name{text-decoration:line-through;color:var(--text3)}
+.pp-name{flex:1;font:12.5px/1.35 system-ui,sans-serif;color:var(--nx-text);min-width:0}.pp-task.done .pp-name{text-decoration:line-through;color:var(--text3)}
 .pp-layer{font-size:9px;color:var(--violet);text-transform:uppercase}
 .pp-gates{display:flex;gap:2px}.pp-g{width:9px;height:4px;border-radius:1px;background:rgba(255,255,255,.1)}.pp-g.on{background:var(--mint)}.pp-g.cur{background:var(--sky);animation:pulse 1.2s ease-in-out infinite}.pp-g.bad{background:var(--coral)}
 .pp-detail{margin:2px 0 8px 26px;padding:6px 8px;border-left:2px solid rgba(56,189,248,.35);font-size:10.5px;color:var(--text2)}

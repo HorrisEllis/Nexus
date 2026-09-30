@@ -122,13 +122,22 @@ spec:
 
     W5_theme_and_css:
       layer: ui
-      status: OPEN
+      status: DONE
       depends_on: [W4_navigation]
-      files: [idearium/ui/index.html, idearium/ui/settings.html]
+      files: [idearium/ui/css/nexus-theme.css, idearium/ui/js/theme.js, idearium/lib/config-core.cjs, idearium/ui/index.html, idearium/ui/settings.html, idearium/ui/css/work-surface.css]
       does: >-
         idearium's tokens follow the main NEXUS UI's (nexus/ui) so both read as one system; the Settings tab's
         themes are rebuilt as named palettes (the main UI's first), previewed, applied live, and kept.
       proof: "a Chromium probe: switching a theme changes the tokens and survives a reload"
+      built: >-
+        2026-09-30. css/nexus-theme.css: the main UI's palette (ui/themes/nexus-dark.css, token for token — a test fails
+        if they drift), 'midnight' (idearium's look before, kept) and 'graphite'; the main UI's cyan accent, cycling as
+        it does there, or fixed (cyan/violet/emerald/amber); motion full/reduced. idearium's and the settings console's
+        own tokens now read from it. config ui.theme/ui.accent/ui.motion (POST /api/config — API and CLI first); the
+        console's new Appearance page (palette cards with previews, accent chips, motion) applies at once and saves.
+        Light is not offered: idearium has hard-coded dark surfaces in many places; a light palette would look broken.
+        test-idearium-theme 15/15; the coding-flow probe 15/15 (default ink #080814; Graphite applies, saves, and the
+        idearium page follows it after a reload).
 
     W6_release:
       layer: ui

@@ -98,7 +98,7 @@ async function _ideariumAlive(base) {
 async function nexusConnect(manual=false) {
   setConnUI('connecting');
   for (const base of API_CANDIDATES) {
-    if (await _ideariumAlive(base)) { API_BASE = base; CONNECTED = true; setConnUI('online', base); await loadAll(); openSSE(); _startHealthWatch(); return true; }
+    if (await _ideariumAlive(base)) { API_BASE = base; CONNECTED = true; setConnUI('online', base); if (window.IdeariumTheme) IdeariumTheme.load(base); await loadAll(); openSSE(); _startHealthWatch(); return true; }
   }
   CONNECTED = false; API_BASE = null; setConnUI('offline');
   _startHealthWatch();

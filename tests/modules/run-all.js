@@ -43,6 +43,7 @@ const SUITES = [
   'test-history-import-job.test.js',   // 0.39.283 N30 — the archive drop box: idearium runs cli/import-history.js as a child job; /import-archives and "import my archives" open it (idearium CLI and the Clear Glass pane)
   'test-plan-lands.test.js',   // 0.39.284 W2 — the plan always lands: the agent's map, its reply's, or derived from the spec's sections; CLI repo plan/phases/build
   'test-work-surface.test.js',   // 0.39.284 W3 — the work surface: changed files as diffs (from .inject nodes), the run that made each, the tools given and used
+  'test-idearium-theme.test.js',   // 0.39.284 W5 — one look: idearium and the settings console on the main UI's palette (css/nexus-theme.css), config ui.*
   'test-cos-mount-idempotent.test.js',   // 0.39.282 N28 — one COS host per process; an identical remount is a no-op (idearium OFFLINE every 10 min: 34 s → 2 ms)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272

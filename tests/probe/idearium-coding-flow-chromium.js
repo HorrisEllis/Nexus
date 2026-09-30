@@ -119,6 +119,24 @@ const SPEC = ['spec:', '  meta:', '    name: kernel', '  primitives:', '    Port
     const applied = ((file.data || file).injects || []).filter(x => x.path === 'src/graph.js' && x.status === 'applied').length;
     P.case('W3: Apply on the card writes the file (the inject is applied) and the card turns applied', applied === 1, { applied });
     await shot('5-applied.png');
+    // ── W5 the look: idearium in the main UI's palette; the settings console's Appearance switches it live ──
+    const tok = await pg.evaluate(() => { const cs = getComputedStyle(document.documentElement); return { theme: document.documentElement.dataset.theme, ink: cs.getPropertyValue('--nx-ink').trim(), bg: getComputedStyle(document.body).backgroundColor }; });
+    P.case('W5: idearium paints in the main UI\'s palette by default (ink #080814)', tok.theme === 'nexus' && tok.ink === '#080814' && tok.bg === 'rgb(8, 8, 20)', tok);
+    const sp = await b.newPage({ viewport: { width: 1300, height: 900 } }); sp.on('pageerror', e => errs.push(`settings: ${e.message}`));
+    await sp.goto(base + '/settings.html?view=appearance');
+    await sp.waitForSelector('[data-theme-pick="graphite"]', { timeout: 15000 });
+    if (SHOTS) await sp.screenshot({ path: path.join(SHOTS, '6-appearance.png') });
+    await sp.click('[data-theme-pick="graphite"]');
+    await sp.waitForTimeout(600);
+    const cfg = await J('GET', '/api/config');
+    const after = await sp.evaluate(() => ({ theme: document.documentElement.dataset.theme, bg: getComputedStyle(document.body).backgroundColor, on: (document.querySelector('.ap-card.on .ap-name') || {}).textContent }));
+    P.case('W5: Appearance → Graphite applies at once and is saved to idearium\'s config (ui.theme)', after.theme === 'graphite' && after.bg === 'rgb(17, 17, 19)' && /Graphite/.test(after.on) && ((cfg.data || cfg).config.ui.theme === 'graphite'), { after, saved: (cfg.data || cfg).config.ui });
+    await sp.click('[data-accent-pick="violet"]'); await sp.waitForTimeout(400);
+    if (SHOTS) await sp.screenshot({ path: path.join(SHOTS, '7-appearance-graphite.png') });
+    await pg.goto(base + '/'); await pg.waitForFunction(() => typeof API_REPOS !== 'undefined' && API_REPOS.length > 0, null, { timeout: 30000 }); await pg.waitForTimeout(500);
+    const idTheme = await pg.evaluate(() => ({ theme: document.documentElement.dataset.theme, accent: document.documentElement.dataset.accent }));
+    P.case('W5: idearium, reloaded, follows the choice (graphite · violet) — one look everywhere', idTheme.theme === 'graphite' && idTheme.accent === 'violet', idTheme);
+    await J('POST', '/api/config', { key: 'ui.theme', value: 'nexus' }); await J('POST', '/api/config', { key: 'ui.accent', value: 'cycle' });
     P.case('no page errors', errs.length === 0, { errs: errs.slice(0, 5) });
   } catch (e) { P.case('probe ran', false, { error: e.stack }); }
   finally {

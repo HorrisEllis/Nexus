@@ -12,7 +12,7 @@ const P = start();
 const ROOT = P.ROOT;
 const U = 'r1';
 const posts = [];
-const css = ((P.read('idearium/ui/index.html').match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '') + '\n' + P.read('idearium/ui/css/file-manage.css');
+const css = P.read('idearium/ui/css/nexus-theme.css') + '\n' + ((P.read('idearium/ui/index.html').match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '') + '\n' + P.read('idearium/ui/css/file-manage.css');
 const code = Array.from({ length: 40 }, (_, i) => i === 11 ? 'export function acquire(key, ttlMs) {' : i === 12 ? '  return store.set(key, Date.now() + ttlMs);' : i === 13 ? '}' : `// line ${i + 1} of the lock service`).join('\n') + '\n';
 const page = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body style="background:var(--bg);margin:0;height:100vh">
 <textarea id="ide-editor" style="position:absolute;left:-9999px;top:0;width:10px;height:10px"></textarea>

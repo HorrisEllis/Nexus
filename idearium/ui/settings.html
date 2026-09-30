@@ -16,13 +16,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Settings console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/nexus-theme.css">
+<script src="js/theme.js"></script>
 <style>
-  :root { --bg:#0a0b10; --panel:#11131b; --panel2:#161925; --line:#242838; --text:#e6e8f0; --dim:#8a90a6; --faint:#5b6178;
-          --accent:#7c9cff; --ok:#34d399; --warn:#fbbf24; --bad:#f87171; --mono: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  /* §0.39.284 W5 — James: "rebuild the themes for the settings tab" · "consistent with the main ui". The console's own
+     tokens now come from css/nexus-theme.css (the main UI's palette, or the one chosen under Appearance). Before 0.39.284
+     it had a palette of its own (#0a0b10 / #7c9cff accent) that matched neither idearium nor the main UI. */
+  :root { --bg:var(--nx-ink); --panel:var(--nx-card); --panel2:var(--nx-card2); --line:var(--nx-edge); --text:var(--nx-text); --dim:var(--nx-dim); --faint:var(--nx-muted);
+          --accent:var(--ac); --ok:var(--nx-emerald); --warn:var(--nx-warn); --bad:var(--nx-err); --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .ap-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:12px; padding:14px; }
+  .ap-card { border:1px solid var(--line); border-radius:10px; padding:10px; cursor:pointer; background:var(--panel2); transition:border-color .18s, transform .18s, box-shadow .18s; text-align:left; color:var(--text); font:inherit; }
+  .ap-card:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,.35); }
+  .ap-card.on { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent), 0 10px 26px rgba(0,0,0,.35); }
+  .ap-name { font-weight:600; margin:8px 0 2px; display:flex; gap:8px; align-items:center; } .ap-desc { color:var(--dim); font-size:12px; }
+  .ap-prev { border-radius:7px; overflow:hidden; border:1px solid rgba(255,255,255,.06); font:10px/1.5 var(--mono); }
+  .ap-bar { display:flex; gap:10px; padding:6px 8px; } .ap-bar b { font-weight:600; } .ap-body { padding:6px 8px; display:grid; gap:4px; }
+  .ap-ln { padding:0 6px; border-radius:3px; } .ap-sw { display:flex; gap:4px; padding:6px 8px 8px; } .ap-sw i { width:16px; height:16px; border-radius:4px; display:inline-block; }
+  .ap-chips { display:flex; gap:8px; flex-wrap:wrap; padding:14px; }
+  .ap-chip { display:flex; align-items:center; gap:7px; border:1px solid var(--line); border-radius:999px; padding:5px 12px 5px 6px; background:var(--panel2); color:var(--text); cursor:pointer; font:inherit; transition:border-color .15s; }
+  .ap-chip.on { border-color:var(--accent); } .ap-chip i { width:16px; height:16px; border-radius:50%; display:inline-block; }
+  .ap-cycle { background:conic-gradient(hsl(192 100% 56%), hsl(240 100% 66%), hsl(192 100% 56%)); animation:apSpin 4s linear infinite; } @keyframes apSpin { to { transform:rotate(360deg); } }
   /* §0.39.280 — one theme: NEXUS dark, whatever the OS scheme (James: "keep the theme consistent") */
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
-  html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:13px/1.45 system-ui, -apple-system, Segoe UI, sans-serif; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:13px/1.45 'IBM Plex Sans', system-ui, -apple-system, Segoe UI, sans-serif; }
   .app { display:grid; grid-template-columns: 280px 1fr; height:calc(100vh - var(--chrome-h, 0px)); margin-top:var(--chrome-h, 0px); }
   nav { background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; }
   nav header { padding:14px 14px 8px; } nav h1 { margin:0 0 8px; font-size:15px; }
@@ -143,11 +161,13 @@ function renderNav() {
   const tagsOf = (r) => [r.nexusSelf ? '<span class="tag warn">nexus</span>' : '', r.branchOf ? '<span class="tag acc">branch</span>' : '', r.provider ? `<span class="tag">${esc(r.provider)}</span>` : ''].join('');
   $('nav').innerHTML = `<div class="navgroup">Idearium</div>` + item(CUR.kind === 'global', 'data-global="1"', 'Global configuration', `<span class="tag">${(CONSOLE.config.keys || []).length}</span>`)
     + item(CUR.kind === 'economy', 'data-economy="1"', 'Provider economy', '<span class="tag acc">limits · learning</span>')
+    + item(CUR.kind === 'appearance', 'data-appearance="1"', 'Appearance', `<span class="tag">${esc((window.IdeariumTheme && IdeariumTheme.current().theme) || 'nexus')}</span>`)
     + `<div class="navgroup">Repos · compartments (${originals.length})</div>` + (originals.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') || '<div class="kv">none match</div>')
     + (branches.length ? `<div class="navgroup">Branches (${branches.length})</div>` + branches.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') : '');
   for (const b of $('nav').querySelectorAll('[data-repo]')) b.onclick = () => go('repo', b.dataset.repo);
   const g = $('nav').querySelector('[data-global]'); if (g) g.onclick = () => go('global');
   const ec = $('nav').querySelector('[data-economy]'); if (ec) ec.onclick = () => go('economy');
+  const ap = $('nav').querySelector('[data-appearance]'); if (ap) ap.onclick = () => go('appearance');
 }
 $('q').oninput = () => { renderNav(); if (CUR.kind === 'global') render(); };
 
@@ -188,6 +208,7 @@ function readCtl(el, k) {
 // ── views ──
 function render() {
   if (CUR.kind === 'economy') return renderEconomy();
+  if (CUR.kind === 'appearance') return renderAppearance();
   if (CUR.kind === 'global' || !DETAIL) return renderGlobal();
   return renderRepo();
 }
@@ -215,6 +236,46 @@ function renderGlobal() {
     });
   }
   for (const b of $('body').querySelectorAll('[data-reset]')) b.onclick = async () => { try { await post('/api/config/reset', { key: b.dataset.reset, actor: 'settings-console' }); toast(`${b.dataset.reset} reset`, 'ok'); load(null); } catch (e) { toast(e.message, 'bad'); } };
+}
+
+// ── §0.39.284 W5 — Appearance: the palette, the accent, the motion — idearium config ui.theme / ui.accent / ui.motion ──
+// James: "can you rebuild the themes for the settings tab for idearium" · "make all the css in idearium consistent with
+// the main ui". A choice applies at once (this window, and every idearium window of this browser through storage) and is
+// saved to idearium's config (POST /api/config — the same key the CLI and the API set), so other machines follow it.
+const AP_THEMES = [
+  { id: 'nexus', name: 'NEXUS', desc: 'The main NEXUS UI — void, ink and plate, the cyan accent.', c: { bg: '#080814', card: '#0d0d1f', edge: '#1e1e3a', text: '#d0d4f0', dim: '#7070a0', ok: '#00ff88', err: '#ff3355', warn: '#ffaa00' }, main: true },
+  { id: 'midnight', name: 'Midnight', desc: 'idearium\'s look before 0.39.284 — navy, sky, soft coral.', c: { bg: '#07090e', card: '#0d1219', edge: '#141c2e', text: '#c4d4ee', dim: '#607898', ok: '#34d399', err: '#f87171', warn: '#fbbf24' } },
+  { id: 'graphite', name: 'Graphite', desc: 'Neutral greys, like an editor — the code stands out.', c: { bg: '#111113', card: '#17171a', edge: '#26262b', text: '#e4e4e8', dim: '#8e8e99', ok: '#3fb950', err: '#f85149', warn: '#d29922' } },
+];
+const AP_ACCENTS = [['cycle', 'Cycling', 'the main UI\'s slow cyan → blue-violet'], ['cyan', 'Cyan', 'hsl 192'], ['violet', 'Violet', ''], ['emerald', 'Emerald', ''], ['amber', 'Amber', '']];
+const AP_ACC_COLOR = { cyan: 'hsl(192 100% 56%)', violet: 'hsl(255 90% 70%)', emerald: 'hsl(158 64% 52%)', amber: 'hsl(40 96% 56%)' };
+async function apSet(key, value) {
+  const cur = IdeariumTheme.current(); cur[key] = value;
+  IdeariumTheme.apply(cur); renderAppearance(); renderNav();
+  try { await post('/api/config', { key: `ui.${key}`, value, actor: 'settings-console' }); toast(`${key}: ${value} — saved to idearium's config`, 'ok'); }
+  catch (e) { toast(`applied here, not saved: ${e.message}`, 'bad'); }
+}
+function renderAppearance() {
+  $('title').textContent = 'Appearance';
+  $('sub').innerHTML = 'One look for every idearium page and this console — the main NEXUS UI\'s by default. Saved as <span class="tag">ui.theme</span> <span class="tag">ui.accent</span> <span class="tag">ui.motion</span> in idearium\'s config (also <code>POST /api/config</code>).';
+  $('tabs').innerHTML = '';
+  const cur = IdeariumTheme.current();
+  const acc = cur.accent === 'cycle' ? 'hsl(192 100% 56%)' : AP_ACC_COLOR[cur.accent];
+  const card = (t) => `<button class="ap-card ${cur.theme === t.id ? 'on' : ''}" data-theme-pick="${t.id}">
+      <div class="ap-prev" style="background:${t.c.bg};color:${t.c.text}">
+        <div class="ap-bar" style="background:${t.c.card};border-bottom:1px solid ${t.c.edge}"><b style="color:${acc}">IDEARIUM</b><span style="color:${t.c.dim}">Repos</span><span style="color:${acc};border-bottom:2px solid ${acc}">Build</span></div>
+        <div class="ap-body"><span style="color:${t.c.dim}">src/graph.js <b style="color:${t.c.ok}">+6</b> <b style="color:${t.c.err}">−1</b></span>
+          <span class="ap-ln" style="background:${t.c.ok}22;color:${t.c.text}">+ export function addNode(id) {</span><span class="ap-ln" style="background:${t.c.err}22;color:${t.c.text}">− return null;</span></div>
+        <div class="ap-sw">${[t.c.bg, t.c.card, t.c.edge, acc, t.c.ok, t.c.warn, t.c.err].map(c => `<i style="background:${c}"></i>`).join('')}</div></div>
+      <div class="ap-name">${esc(t.name)}${t.main ? '<span class="tag acc">main UI</span>' : ''}${cur.theme === t.id ? '<span class="tag ok">in use</span>' : ''}</div><div class="ap-desc">${esc(t.desc)}</div></button>`;
+  $('body').innerHTML = `<div class="card"><h3><span class="grow">Palette</span><span class="tag">${esc(cur.theme)}</span></h3><div class="ap-grid">${AP_THEMES.map(card).join('')}</div></div>
+    <div class="card"><h3><span class="grow">Accent</span><span class="tag">${esc(cur.accent)}</span></h3><div class="ap-chips">${AP_ACCENTS.map(([id, n, d]) => `<button class="ap-chip ${cur.accent === id ? 'on' : ''}" data-accent-pick="${id}" title="${esc(d)}"><i class="${id === 'cycle' ? 'ap-cycle' : ''}" style="${id === 'cycle' ? '' : `background:${AP_ACC_COLOR[id]}`}"></i>${esc(n)}</button>`).join('')}</div></div>
+    <div class="card"><h3><span class="grow">Motion</span><span class="tag">${esc(cur.motion)}</span></h3>
+      <div class="row"><div><div class="k">ui.motion</div><div class="d">the sliding tab ink, fading views, the cycling accent. Reduced stops them all.</div></div>
+        <div class="ctl"><label class="switch"><input type="checkbox" id="ap-motion" ${cur.motion === 'full' ? 'checked' : ''}><span></span></label> ${cur.motion === 'full' ? 'full' : 'reduced'}</div><div class="ctl"></div></div></div>`;
+  for (const b of $('body').querySelectorAll('[data-theme-pick]')) b.onclick = () => apSet('theme', b.dataset.themePick);
+  for (const b of $('body').querySelectorAll('[data-accent-pick]')) b.onclick = () => apSet('accent', b.dataset.accentPick);
+  $('ap-motion').onchange = (e) => apSet('motion', e.target.checked ? 'full' : 'reduced');
 }
 
 // ── §0.39.281 EC8 — the provider economy (docs/2026-09-29-provider-economy-phasemap.spec) ──
@@ -414,7 +475,9 @@ const wire = {
 };
 
 (function start() {
+  if (window.IdeariumTheme) IdeariumTheme.load('').then(() => { if (CUR.kind === 'appearance') renderAppearance(); });
   const repo = new URLSearchParams(location.search).get('repo');
+  if (new URLSearchParams(location.search).get('view') === 'appearance') CUR = { kind: 'appearance', uuid: null, tab: 'agent' };
   if (repo) CUR = { kind: 'repo', uuid: repo, tab: 'agent' };
   load(repo);
 })();
