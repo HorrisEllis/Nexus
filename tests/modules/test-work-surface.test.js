@@ -77,6 +77,11 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     const c2 = g2.json.files.find(x => x.path === 'src/lock.js');
     check('WS-12 Apply (the card\'s button) writes it; the card then reads applied, same diff, offering revert', a.status === 200 && c2.status === 'applied' && c2.added === 2 && c2.removed === 1
       && c2.actions.join() === 'revert' && /module\.exports = 2/.test(L.readTextFile(u, 'src/lock.js').content), JSON.stringify(a.json).slice(0, 200));
+    const ed = await api._route('POST', `/api/repos/${u}/manage`, { path: 'src/lock.js', action: 'edit', from: 1, to: 1, note: 'rename to value' });
+    check('WS-14 a card\'s ✎ edit is a Manage "edit" of the picked lines — accepted (here refused only for want of a Versionium snapshot, never for the action)',
+      !/action must be one of/.test(JSON.stringify(ed.json)) && (ed.status === 200 || /snapshot/i.test(JSON.stringify(ed.json))), JSON.stringify(ed.json).slice(0, 200));
+    const wsjs = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/work-surface.js'), 'utf8');
+    check('WS-15 the card asks the agent: picked lines + one instruction → POST …/manage action edit', /action: 'edit', from: from \|\| undefined/.test(wsjs) && /function wsPickLine/.test(wsjs));
     check('WS-13 an unknown repo is a 404', (await api._route('GET', '/api/repos/nexus-id-repo-nope/worksurface')).status === 404);
 
     // ── WS-2x wiring ──

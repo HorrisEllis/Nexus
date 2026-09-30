@@ -54,7 +54,10 @@ function _wsCard(f, i) {
       <span class="ws-plus">+${f.added}</span><span class="ws-minus">−${f.removed}</span>${acts}
     </div>
     ${open ? `<div class="ws-meta">${f.by ? `${escapeHtml(f.by)} · ` : ''}${f.at ? new Date(f.at).toLocaleString() : ''}${f.run ? ` · ${escapeHtml(f.run.phase || '')} run ${escapeHtml(String(f.run.runId).slice(-8))} (${escapeHtml(f.run.state || '')})` : ''}${f.history ? ` · ${f.history} earlier change${f.history === 1 ? '' : 's'}` : ''}${f.lines ? ` · ${f.lines} lines` : ''}</div>
-      <div class="ws-diff">${_wsDiffHtml(f.diff)}</div>` : ''}
+      <div class="ws-diff" onclick="wsPickLine(event,'${escapeHtml(f.path)}')">${_wsDiffHtml(f.diff)}</div>
+      ${f.op === 'delete' ? '' : `<div class="ws-ask"><span>lines</span><input class="ws-n" id="ws-from-${escapeHtml(f.id)}" placeholder="from"><input class="ws-n" id="ws-to-${escapeHtml(f.id)}" placeholder="to">
+        <input class="ws-q" id="ws-q-${escapeHtml(f.id)}" placeholder="ask the agent for a small change here — click a line number to pick it" onkeydown="if(event.key==='Enter')wsAsk('${escapeHtml(f.id)}','${escapeHtml(f.path)}')">
+        <button class="ws-act ws-act-apply" onclick="wsAsk('${escapeHtml(f.id)}','${escapeHtml(f.path)}')">✎ edit</button></div>`}` : ''}
   </div>`;
 }
 
@@ -101,4 +104,27 @@ async function wsAct(id, action) {
     toast(`${action}: done`, 'ok');
   } catch (e) { toast(`${action} failed: ${e.message}`, 'err'); }
   wsLoad(document.getElementById('pp-ws'));
+}
+
+// §0.39.284 — James: "hook the agents into the worksurface, to edit or modify small amounts of code at a time". Click a
+// line number (the new side) to pick it — a second click widens the range; the ask goes to the repo's agent as a Manage
+// 'edit' of just those lines (POST /api/repos/:uuid/manage — a snapshot first, the run on the Plan, its change a new card).
+function wsPickLine(ev, p) {
+  const g = ev.target.closest('.ws-g'); if (!g || !g.textContent.trim()) return;
+  const n = parseInt(g.textContent, 10); if (!Number.isFinite(n)) return;
+  const card = ev.target.closest('.ws-card'); const f = (WSURF.data.files || []).find(x => x.path === p); if (!card || !f) return;
+  const a = document.getElementById(`ws-from-${f.id}`), b = document.getElementById(`ws-to-${f.id}`);
+  if (!a.value || (a.value && b.value)) { a.value = n; b.value = ''; } else { const x = +a.value; a.value = Math.min(x, n); b.value = Math.max(x, n); }
+  const q = document.getElementById(`ws-q-${f.id}`); if (q) q.focus();
+}
+async function wsAsk(id, p) {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  const q = document.getElementById(`ws-q-${id}`); const note = (q && q.value || '').trim();
+  if (!note) { toast('say what to change', 'err'); return; }
+  const from = document.getElementById(`ws-from-${id}`).value, to = document.getElementById(`ws-to-${id}`).value;
+  try {
+    const r = await api(`/api/repos/${repo.uuid}/manage`, { method: 'POST', body: JSON.stringify({ path: p, action: 'edit', from: from || undefined, to: to || from || undefined, note }) }, 60000);
+    toast(`the agent is editing ${p}${from ? ` lines ${from}–${to || from}` : ''} (run ${String(r.runId || '').slice(-8)}) — its change lands here`, 'ok');
+    if (q) q.value = '';
+  } catch (e) { toast(`not sent: ${e.message}`, 'err'); }
 }

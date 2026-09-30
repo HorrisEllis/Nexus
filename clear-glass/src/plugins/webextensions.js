@@ -73,6 +73,30 @@ function displayName(dir, m) {
   } catch (_) { return m.name; }
 }
 
+// §0.39.284 — James's log: the same "ExtensionLoadWarning … Manifest version 2 is deprecated · Permission 'cookies' is
+// unknown" block printed dozens of times. Every Clear Glass session (each provider tab and context has its own) loads the
+// enabled extensions, and Electron warns on every load. The warning is about the extension itself (an MV2 manifest —
+// updating the extension to MV3 is the only real cure), so it is said ONCE per extension folder, with how many sessions
+// repeat it counted, never dropped silently.
+const _warnedExt = new Map();
+function _onceExtensionWarnings() {
+  if (process.__cgExtWarnOnce) return;
+  process.__cgExtWarnOnce = true;
+  const orig = process.emitWarning.bind(process);
+  process.emitWarning = function (warning, ...rest) {
+    const type = typeof rest[0] === 'string' ? rest[0] : (rest[0] && rest[0].type) || (warning && warning.name);
+    const text = String(warning && warning.message ? warning.message : warning);
+    if (type === 'ExtensionLoadWarning') {
+      const dir = (text.match(/extension at (.+?):/) || [])[1] || text.slice(0, 120);
+      const n = (_warnedExt.get(dir) || 0) + 1;
+      _warnedExt.set(dir, n);
+      if (n > 1) return;   // said once; later sessions repeat the same words
+      return orig(`${text}\n  (said once — every Clear Glass session loads this extension; updating it to Manifest V3 is what removes the warning)`, ...rest);
+    }
+    return orig(warning, ...rest);
+  };
+}
+
 class WebExtensionHost {
   constructor({ session = null, app = null } = {}) {
     this.session = session;   // electron.session
@@ -92,6 +116,7 @@ class WebExtensionHost {
   /** Attach to Electron: load into the default session and every session created from now on. */
   attach() {
     if (!this.session) return;
+    _onceExtensionWarnings();
     this._track(this.session.defaultSession, 'default');
     if (this.app && this.app.on) this.app.on('session-created', (ses) => this._track(ses));
   }

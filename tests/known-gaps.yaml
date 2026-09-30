@@ -141,3 +141,10 @@ gaps:
   kind: needs-live-data
   reason: T4-001/002/003 need a real event_log and cfr_state.json (sandboxed empty). T4-008/T4-011 look for the BRAIN view
     (data-v="brain", animateTrails) in tablet/index.html; the brain moved to tablet/map3d.html in the OB10 rebuild (stale-ui).
+- file: tests/modules/architect-spec-builder-theme.test.js
+  failing: 7
+  kind: spec-drift
+  reason: 'architect/src/ui/spec-builder.html was themed (0.39.2xx) with idearium''s literal hex tokens; 0.39.284 W5 moved
+    idearium onto css/nexus-theme.css (the main UI''s palette), so its :root now reads var(--nx-*) and those seven "traced to
+    idearium" checks have no hex to compare. The builder''s values are the ''midnight'' palette, kept. Mapped:
+    docs/2026-09-30-idearium-coding-flow-phasemap.spec W7 (retheme the spec builder onto the shared theme, then retire this).'

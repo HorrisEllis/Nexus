@@ -139,6 +139,25 @@ spec:
         test-idearium-theme 15/15; the coding-flow probe 15/15 (default ink #080814; Graphite applies, saves, and the
         idearium page follows it after a reload).
 
+    W7_next_mapped_2026_09_30:
+      layer: ui
+      status: OPEN
+      depends_on: [W5_theme_and_css]
+      files: [architect/src/ui/spec-builder.html, idearium/ui/js/app.js, lib/component-registry.js, loom/, clear-glass/src/]
+      does: >-
+        James, 2026-09-30 (at 98% of the weekly budget — mapped, not built): (1) the architect spec builder onto
+        css/nexus-theme.css (tests/known-gaps.yaml architect-spec-builder-theme); (2) "the architect tab should be the
+        component registry and loom style map for the wiring, building a idea, into a spec is supposed to create a
+        component registry, as the architecture doc, identicle to what nexus and loom has, a full map for wiring, ids,
+        types, relation, consumers, orphans, node types, data dir" — reuse loom/scanners/source-map.js (scanTree, idFor),
+        loom's registry schema (component/hook/wire), lib/component-registry.js, loom/scanners/dangling-report.js
+        (orphans) and wiring-gaps.js over the repo's OWN tree, persisted as the repo's .architecture node; (3) "can we
+        have the plan, be phases" — the Plan panel's steps are already the phasemap's phases; make its header name the
+        map and its phases' layers as groups; (4) Clear Glass: consolidate "Accounts & sign-in", "Provider tabs" and
+        "Agent mesh" into one Providers page, with a small live guardian widget per provider (its idearium agents, jobs
+        running and queued, economy limits, login state).
+      proof: "each item its own test + probe when built"
+
     W6_release:
       layer: ui
       status: OPEN

@@ -36,3 +36,8 @@
 .ws-tool-note{font-size:9.5px;color:var(--text3);margin:4px 0}.ws-tool-note code{color:var(--text2)}
 .ws-calls{max-height:180px;overflow:auto;margin-top:4px}.ws-call{font-size:9.5px;color:var(--text2);padding:1px 0}.ws-call span{opacity:.6}.ws-call i{color:var(--text3)}.ws-call.bad{color:#f85149}
 #plan-panel.wide .ws-diff{max-height:640px}
+/* §0.39.284 — ask the agent for a small change from the card; a line number picks the lines */
+.ws-diff .ws-g{cursor:pointer}.ws-diff .ws-g:hover{color:var(--ac)}
+.ws-ask{display:flex;align-items:center;gap:6px;padding:6px 10px;border-top:1px solid rgba(255,255,255,.06);background:var(--nx-card2);font-size:10px;color:var(--text3)}
+.ws-ask input{background:var(--nx-void);border:1px solid var(--nx-rim);color:var(--text);font:10.5px var(--mono);border-radius:5px;padding:3px 6px}
+.ws-ask .ws-n{width:48px}.ws-ask .ws-q{flex:1;min-width:0}.ws-ask input:focus{outline:none;border-color:var(--ac)}
