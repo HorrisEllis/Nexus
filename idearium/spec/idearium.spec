@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        idearium
-    version:     4.14.0   # §0.39.283 (MINOR, new config keys) — repos.draft_then_review / repos.review_provider; each phase build in a fresh chat; the shadow on manage, plan and phase runs; the Manage workbench. Previous 4.13.0:   # §0.39.282 (MINOR, new config keys) — repos.default_provider (default ollama); desktop.user / desktop.password; plan and manage jobs read blocked when the reply is blocked at its step gate. Previous 4.12.0: §0.39.281 (MINOR, new routes) — /api/economy proxy and the Provider economy page (docs/2026-09-29-provider-economy-phasemap.spec). Previous: 4.11.0 §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
+    version:     4.15.0   # §0.39.284 (MINOR, new routes + config keys) — /api/repos/:uuid/worksurface; /api/history/import (+ upload, /archive-import.html); spec/plan {derive:true} and its fallbacks; ui.theme / ui.accent / ui.motion. Previous 4.14.0: # §0.39.283 (MINOR, new config keys) — repos.draft_then_review / repos.review_provider; each phase build in a fresh chat; the shadow on manage, plan and phase runs; the Manage workbench. Previous 4.13.0:   # §0.39.282 (MINOR, new config keys) — repos.default_provider (default ollama); desktop.user / desktop.password; plan and manage jobs read blocked when the reply is blocked at its step gate. Previous 4.12.0: §0.39.281 (MINOR, new routes) — /api/economy proxy and the Provider economy page (docs/2026-09-29-provider-economy-phasemap.spec). Previous: 4.11.0 §0.39.280 (MINOR, new routes) — the build surface (docs/2026-09-29-build-surface-phasemap.spec). 4.8.0–4.10.0 (0.39.274–0.39.279) moved lib/version.js and the addenda but not this line — synced here (§5.4). Previous 4.7.0:    §0.39.257 (MINOR, new routes) — Agent tab: every tool (enforced), /tools /scope /debug /graph /run /test /diagnose, plain-language /help with aliases and closest-match; GET/POST /api/repos/:uuid/agent/tools|debug|graph. Previous 4.6.1: §0.39.256 (PATCH) — Agent tab live feed: streamed chunks build the reply live (reset replaces it), guardian.job.gate rows + the gate in the header. Previous 4.6.0: §0.39.253 (MINOR, new route) — three-way agent backend switch (ollama/copilot/guardian, no checkbox), per-compartment Ollama model, GET /api/ollama/models. Previous 4.5.0: §0.39.248 (MINOR, new route) — sync only: 0.39.245 (spec-engine manifest, 4.4.0) and 0.39.246 (responses to the downloads manager, repo-import graphs, 4.5.0) bumped idearium/package.json alone; this, index.js and lib/version.js stayed at 4.3.1.
                          # (DOM mutations, the reply's node anchor, stages, streaming text) via
                          # guardian-stream onFeed → os.broadcast (SSE only); late-reply lookup
                          # takes the guardian jobId. Previous — 4.3.0 §0.39.241 (MINOR, two new routes) — GET/POST /api/repos/:uuid/agent/late:
@@ -399,3 +399,24 @@ spec:
 # incomplete. Run states: blocked, incomplete, reviewing, reviewed, skipped. The Manage modal is a workbench
 # (idearium/ui/js/file-manage.js, css/file-manage.css): actions grouped and marked WRITES/READS, line scope with a
 # live preview, related code, who does it, the pipeline stated before sending, the file's run history.
+
+# ── ADDENDUM 2026-09-30 (0.39.284) — idearium 4.15.0 ──
+# Map: docs/2026-09-30-idearium-coding-flow-phasemap.spec (W0–W6) and docs/2026-09-29-nex-node-store-phasemap.spec (N30).
+# James: "most important. get it coding the projects" · "the phases tab needs to populate with the plan" · "below the plan
+# … the worksurface" · "the create and build tabs … back to the main navbar" · "consistent with the main ui".
+#   W1  speceng.codegen branches the original with cos/workspace branchWorkspaceAsync (execFile) — the sync git on a
+#       91 MB tree had held the event loop 3.5 minutes (OFFLINE, the build trigger refused on :4800).
+#   W2  a plan run always lands a phasemap: the agent's file, else a map in its reply text (planFromReply), else one
+#       DERIVED from the spec's own sections (spec-plan.js derivePlan; meta.planned_by/reason/planned_at). An invalid
+#       agent map is kept as <map>.agent-draft.txt. POST /api/repos/:uuid/spec/plan {derive:true} = at once. CLI:
+#       idearium repo plan <repo> <spec> [--derive|--dry] · repo plan --dry --file <spec> · repo phases · repo build.
+#   W3  GET /api/repos/:uuid/worksurface — a projection over .inject nodes and idearium_phase_runs: each changed file
+#       (newest state), its unified diff against the file before it was applied (or as it is now), +/−, the run that
+#       made it, its actions; the tools given (scope, listed) and every call made. Phase and plan runs keep their tool
+#       calls (tools on the row). UI: js/work-surface.js + css/work-surface.css under the Plan panel.
+#   W4  Create and Build on the main bar (not the repo tab row); Build ▾ → Build this repo (Home's Start building +
+#       the Plan panel). A sliding ink under the active tab; dropdowns animate; views fade in.
+#   W5  css/nexus-theme.css (the main UI's palette, token for token; 'midnight' = the look before; 'graphite'),
+#       js/theme.js; config ui.theme / ui.accent / ui.motion; the settings console's Appearance page.
+#   N30 GET|POST /api/history/import, PUT /api/history/import/upload, /archive-import.html (lib/history-import-job.js
+#       runs cli/import-history.js as a child); /import-archives in the Agent CLI; the Clear Glass pane's intent.
