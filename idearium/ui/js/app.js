@@ -3624,6 +3624,18 @@ function openRepoDesktop(repoUuid) {
 
 // §0.39.279 — the settings console (ui/settings.html): idearium's config and every repo's agent / prompt / hat /
 // compartment / desktop settings in one window, served by idearium itself.
+// §0.39.283 N30 — James: "give copilot a command … i want to import my archives of nexus. have it pull up a drop box
+// ui and run the command". The drop box (ui/archive-import.html), served by idearium: /import-archives in the CLI,
+// or plainly "import my archives", opens it.
+function openArchiveImport() {
+  if (!API_BASE) { toast('idearium is offline — the archive import is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/archive-import.html`, 'idearium-archive-import', 'width=1120,height=880');
+  if (!w) toast('the archive import window was blocked — allow pop-ups for idearium', 'err');
+  return w;
+}
+/** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
+const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;
+
 function openSettingsConsole(repoUuid) {
   if (!API_BASE) { toast('idearium is offline — the settings console is served by it', 'err'); return; }
   const w = window.open(`${API_BASE}/settings.html${repoUuid ? `?repo=${encodeURIComponent(repoUuid)}` : ''}`, 'idearium-settings', 'width=1280,height=900');
@@ -4399,6 +4411,13 @@ async function agentSend(override = null) {
   const lines = _agentTranscript(uuid);
   if (!override) { _agentInputHistory(uuid).push(message); AGENT_HIST_POS.delete(uuid); }
   if (!override && message.startsWith('/')) { ta.value = ''; return agentCommand(message); }
+  if (!override && ARCHIVE_IMPORT_INTENT.test(message)) {   // §0.39.283 N30 — a command in plain words
+    ta.value = '';
+    lines.push({ role: 'you', text: message });
+    _cli(uuid, openArchiveImport() ? 'opened the archive import — drop your NEXUS zips (or a folder) there; it shows the order first, then imports' : 'could not open the archive import window', 'import-archives');
+    renderRepoAgent(CURRENT_API_REPO);
+    return;
+  }
 
   if (!override) lines.push({ role: 'you', text: message });
   const line = { role: 'agent', text: 'thinking…', meta: null };
@@ -4715,6 +4734,9 @@ const AGENT_CLI_HELP = [
   '  /forget <id>                  remove one thing it learned',
   '  /history [n]   /export   /import <path>   /clear',
   '',
+  'NEXUS ITSELF',
+  '  /import-archives               drop your NEXUS release zips (or a folder) — each becomes a dated commit of NEXUS history',
+  '',
   'CODE IT WRITES',
   '  /mode review|auto             its code waits for you (review) or is written on arrival (auto)',
   '  /injects [status]   /inject <path>   /open <id>',
@@ -4724,7 +4746,7 @@ const AGENT_CLI_HELP = [
 ].join('\n');
 const AGENT_CLI_ALIASES = { '?': 'help', h: 'help', st: 'status', t: 'tools', tool: 'tools', dbg: 'debug', hist: 'history', ctx: 'context', diag: 'diagnose', find: 'recall', search: 'recall', mem: 'recall' };
 const AGENT_CLI_COMMANDS = ['help', 'debug', 'tools', 'scope', 'graph', 'context', 'run', 'test', 'diagnose', 'status', 'provider', 'model', 'hat', 'forge',
-  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert', 'recall', 'atlas'];
+  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert', 'recall', 'atlas', 'import-archives'];
 /** The closest known command to a typo (edit distance ≤ 2), or null. */
 function _agentClosest(cmd) {
   const d = (a, b) => { const m = [...Array(b.length + 1).keys()]; for (let i = 1; i <= a.length; i++) { let prev = m[0]; m[0] = i;
@@ -4769,6 +4791,10 @@ async function agentCommand(line) {
   try {
     switch ((cmd || '').toLowerCase()) {
       case 'help': case '?': _cli(uuid, AGENT_CLI_HELP); break;
+      // §0.39.283 N30 — the archive import drop box
+      case 'import-archives': case 'archives': case 'archive': {
+        _cli(uuid, openArchiveImport() ? 'opened the archive import — drop your NEXUS zips (or a folder); "Check the order" first, then Import' : 'could not open the archive import window'); break;
+      }
       // 0.39.257 — tools, scope, debug, graph, run/test/diagnose
       case 'tools': {
         const r = await api(`/api/repos/${uuid}/agent/tools${arg ? `?q=${encodeURIComponent(arg)}` : ''}`, {}, 15000);

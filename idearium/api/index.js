@@ -1179,6 +1179,9 @@ const CAPS = {
 const ROUTE_CAP = {
   'health':           null,              // public — no auth required
   'cos.testenv.status': CAPS.READ_IDEAS,
+  'history.import.status': CAPS.READ_IDEAS,
+  'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
+  'history.import.upload': CAPS.ADMIN,    // writes a dropped zip into the data root's history-import inbox
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
   'cos.install.status': CAPS.READ_IDEAS,
   'cos.install':        CAPS.ADMIN,       // installs software on the host (winget / brew / apt), only on a click
@@ -1585,6 +1588,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','run','options'],         'repo.run.options'],   // §0.39.261 — the COS run menu (lib/cos-run.js)
     // §0.39.264 — the COS test VM: what is there, and setting it up from the run menu (cos/testenv/setup-job.js)
     ['GET',    ['api','cos','testenv'],                          'cos.testenv.status'],
+    // §0.39.283 N30 — importing NEXUS history from release zips (lib/history-import-job.js → cli/import-history.js)
+    ['GET',    ['api','history','import'],                       'history.import.status'],
+    ['POST',   ['api','history','import'],                       'history.import.start'],
+    ['PUT',    ['api','history','import','upload'],              'history.import.upload'],
     ['POST',   ['api','cos','testenv','setup'],                  'cos.testenv.setup'],
     ['GET',    ['api','cos','install'],                          'cos.install.status'],   // §0.39.265
     ['POST',   ['api','cos','install'],                          'cos.install'],
@@ -3610,6 +3617,22 @@ async function handle(req, res, route, query, body) {
     // run, and for what cannot, why.
     // §0.39.264 — James: "i need help setting the vm up." The run menu's "Set up
     // the test VM" starts cos/testenv/provision.js in the background and polls this.
+    // §0.39.283 N30 — James: "give copilot a command … import my archives of nexus. have it pull up a drop box ui and
+    // run the command". The drop box (ui/archive-import.html) uploads (or names) zips; the import runs as a child
+    // process so idearium never blocks; the page polls the status.
+    case 'history.import.status':
+      return ok(res, _require('../../lib/history-import-job.js').status());
+    case 'history.import.start': {
+      const HJ = _require('../../lib/history-import-job.js');
+      const st = HJ.start({ paths: Array.isArray(body.paths) ? body.paths : [], folder: body.folder || null, dryRun: !!body.dryRun, rebuild: !!body.rebuild, recursive: !!body.recursive });
+      os.emit('idearium.history.import', { state: st.state, dryRun: !!body.dryRun, inputs: st.inputs || 0 });
+      return st.state === 'failed' ? err(res, 400, (st.result && st.result.error) || 'could not start', st) : ok(res, st);
+    }
+    case 'history.import.upload': {
+      const HJ = _require('../../lib/history-import-job.js');
+      const r = await HJ.saveUpload(query.name, req);
+      return r.ok ? ok(res, r) : err(res, 400, r.error || 'upload failed');
+    }
     case 'cos.testenv.status':
       return ok(res, _require('../../cos/testenv/setup-job.js').status());
     // §0.39.265 — install what a run needs, on the person's click (cos/testenv/installer.js)
@@ -5891,7 +5914,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html')) {
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html')) {
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');
@@ -5950,7 +5973,8 @@ export function startAPI() {
 
     const query = parseQuery(req.url);
     let body = {};
-    if (['POST','PATCH','PUT','DELETE'].includes(req.method)) {
+    // §0.39.283 N30 — a dropped zip streams straight to disk; it is not a JSON body
+    if (['POST','PATCH','PUT','DELETE'].includes(req.method) && route.action !== 'history.import.upload') {
       try { body = await readBody(req); }
       catch (e) { return err(res, 400, 'body parse failed', e.message); }
     }

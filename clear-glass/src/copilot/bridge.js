@@ -133,9 +133,11 @@ class CoPilotBridge {
     // §0.39.280 BS17 — James: "i told it to visit google.com … nothing happened". Going to a site needs no model: the
     // browser goes there and says what is on the page. Anything asked after it ("… and what do you see") is answered
     // by the model WITH that page in hand.
-    const intent = this._driver ? require('./verbs.js').browseIntent(message) : null;
+    const V = require('./verbs.js');
+    const intent = this._driver ? (V.archiveImportIntent(message) || V.browseIntent(message)) : null;   // §0.39.283 N30 — the archive drop box first
     if (intent) {
       const went = await this._browse(intent.url, agentId);
+      if (intent.kind === 'archive-import' && went.ok) went.text = 'Opened the NEXUS archive import. Drop your release zips (or a folder) — "Check the order" first, then Import; each zip becomes a dated commit on history/snapshots.';
       if (!intent.rest || !went.ok) {
         if (remember) this._remember(agentId, 'assistant', went.text, { via: 'browser' });
         this.sse.emit('copilot.response', { msgId, agentId, text: went.text, commands: [went.command], modelUsed: 'browser', ts: Date.now() });

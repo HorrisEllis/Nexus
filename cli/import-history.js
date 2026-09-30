@@ -30,7 +30,8 @@
  * (-s ours keeps your tree exactly; the imported commits become ancestors). --rebuild starts history/snapshots over in
  * full order and keeps the old one as history/snapshots-prev-<time> (nothing lost).
  *
- * Options: --into <git dir> · --branch <name> (history/snapshots) · --dry-run · --rebuild · --recursive ·
+ * Options: --into <git dir> · --branch <name> (history/snapshots) · --dry-run · --rebuild · --recursive · --list <file> ·
+ *          --jsonl (one JSON line per event, for a job) ·
  *          --author "Name <email>" (default: the repo's git user) · --keep-data (include data/) · --json
  */
 const fs = require('fs');
@@ -56,6 +57,8 @@ function parseArgs(argv) {
     else if (a === '--recursive') o.recursive = true;
     else if (a === '--keep-data') o.keepData = true;
     else if (a === '--json') o.json = true;
+    else if (a === '--jsonl') o.jsonl = true;
+    else if (a === '--list') { const f = argv[++i]; o.inputs.push(...fs.readFileSync(f, 'utf8').split(/\r?\n/).map(x => x.trim()).filter(Boolean)); }   // paths, one per line (700 paths overflow a Windows command line)   // §0.39.283 N30 — one JSON line per event, for a job (lib/history-import-job.js) to follow
     else if (a === '--help' || a === '-h') o.help = true;
     else o.inputs.push(a);
   }
@@ -235,9 +238,12 @@ function run(opts, log = console.log) {
   const zips = listZips(opts.inputs || [], !!opts.recursive);
   if (!zips.length) return { ok: false, error: 'no .zip files found in what was given' };
   log(`[import-history] scanning ${zips.length} zip(s)…`);
-  const scans = orderScans(zips.map((z, i) => { const s = scanZip(z); if ((i + 1) % 25 === 0) log(`  scanned ${i + 1}/${zips.length}`); return s; }));
+  const ev = typeof opts.onEvent === 'function' ? opts.onEvent : () => {};
+  ev({ phase: 'scan', total: zips.length });
+  const scans = orderScans(zips.map((z, i) => { const s = scanZip(z); ev({ phase: 'scanned', i: i + 1, total: zips.length, zip: s.name }); if ((i + 1) % 25 === 0) log(`  scanned ${i + 1}/${zips.length}`); return s; }));
   if (opts.dryRun) {
     for (const s of scans) log(`  ${s.version || '?.?.?'}  ${s.date}  ${s.hasGit ? 'git ' : '    '} ${s.name}${s.error ? `  ERROR ${s.error}` : ''}`);
+    ev({ phase: 'order', order: scans.map(s => ({ zip: s.name, version: s.version, date: s.date, hasGit: s.hasGit, error: s.error || null, sha256: s.sha256 })) });
     return { ok: true, dryRun: true, into, branch, scanned: scans, results: [], counts: {} };
   }
   if (opts.rebuild && git(into, ['rev-parse', '--verify', '-q', `refs/heads/${branch}`], { allowFail: true })) {
@@ -251,6 +257,7 @@ function run(opts, log = console.log) {
   scans.forEach((s, i) => {
     const r = importOne(into, s, ctx);
     results.push({ zip: s.name, sha256: s.sha256, version: s.version, date: s.date, hasGit: s.hasGit, ...r });
+    ev({ phase: 'zip', i: i + 1, total: scans.length, ...results[results.length - 1] });
     log(`  [${i + 1}/${scans.length}] ${r.status.padEnd(9)} ${s.version || '?'} ${s.name}${r.duplicateOf ? ` = ${r.duplicateOf.slice(0, 10)}` : ''}${r.commit ? ` → ${r.commit.slice(0, 10)}` : ''}${r.gitRefs ? ` (+ ${r.gitRefs})` : ''}${r.error ? ` — ${r.error}` : ''}${r.note ? ` — ${r.note}` : ''}`);
   });
   const counts = results.reduce((m, r) => { m[r.status] = (m[r.status] || 0) + 1; return m; }, {});
@@ -272,7 +279,10 @@ if (require.main === module) {
     console.log(fs.readFileSync(__filename, 'utf8').split('\n').slice(2, 38).join('\n').replace(/^ \* ?/gm, ''));
     process.exit(o.help ? 0 : 1);
   }
-  const r = run(o, o.json ? () => {} : console.log);
+  if (o.jsonl) o.onEvent = (e) => process.stdout.write(JSON.stringify({ event: e }) + '\n');
+  const r = run(o, (o.json || o.jsonl) ? () => {} : console.log);
   if (o.json) process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+  if (o.jsonl) process.stdout.write(JSON.stringify({ result: { ok: r.ok, error: r.error || null, dryRun: !!r.dryRun, into: r.into, branch: r.branch, tip: r.tip || null, counts: r.counts || {}, report: r.report || null,
+    results: (r.results || []).map(x => ({ zip: x.zip, version: x.version, date: x.date, hasGit: x.hasGit, status: x.status, commit: x.commit || null, duplicateOf: x.duplicateOf || null, gitRefs: x.gitRefs || null, error: x.error || null, note: x.note || null })) } }) + '\n');
   if (!r.ok) { if (!o.json) console.error(`[import-history] ${r.error || 'some zips failed — see the report'}`); process.exitCode = 1; }
 }
