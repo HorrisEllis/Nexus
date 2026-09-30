@@ -1,0 +1,96 @@
+/**
+ * idearium/ui/css/nexus-theme.css — one theme for idearium and its settings console, the main NEXUS UI's.
+ * §0.39.284 W5 · Map: docs/2026-09-30-idearium-coding-flow-phasemap.spec (W5_theme_and_css)
+ * UUID: nexus-idearium-ui-theme-v1-0000-2026-0930-jamesbrooks-001
+ *
+ * James: "can you make all the css in idearium consistent with the main ui" · "rebuild the themes for the settings tab".
+ * The main UI's identity is ui/themes/nexus-dark.css (void · ink · plate · panel · edge · rim · muted · dim · text ·
+ * bright, a cyan accent whose hue cycles 192→240, stable ok/err/warn). idearium is served from its own origin (:4800), so
+ * it cannot link that file; its values are here under --nx-*, and tests/modules/test-idearium-theme.test.js fails if the
+ * two ever differ. idearium/ui/index.html and settings.html name their own tokens FROM these, so a palette changes
+ * everything at once.
+ *
+ * Palettes (<html data-theme>):  nexus (default — the main UI) · midnight (idearium's look before 0.39.284, kept, §0.3) ·
+ * graphite (neutral dark). Accent (<html data-accent>): cycle (the main UI's slow hue cycle) · cyan · violet · emerald ·
+ * amber. Motion (<html data-motion>): full · reduced. Chosen in the settings console (config ui.theme / ui.accent /
+ * ui.motion — API and CLI first: POST /api/config), applied by js/theme.js on every idearium page.
+ */
+
+:root, :root[data-theme="nexus"] {
+  --nx-void:   #00000f;
+  --nx-ink:    #080814;
+  --nx-plate:  #0d0d1f;
+  --nx-panel:  #111128;
+  --nx-edge:   #1e1e3a;
+  --nx-rim:    #2a2a4a;
+  --nx-muted:  #4a4a7a;
+  --nx-dim:    #7070a0;
+  --nx-text:   #d0d4f0;
+  --nx-bright: #eeeeff;
+  --nx-ok:     #00ff88;
+  --nx-err:    #ff3355;
+  --nx-warn:   #ffaa00;
+  --nx-violet: #a78bfa;   /* --sys-em */
+  --nx-emerald:#34d399;   /* --sys-cx */
+  --nx-card:   #0d0d1f;   /* raised surfaces (panels, cards) */
+  --nx-card2:  #111128;
+}
+:root[data-theme="midnight"] {
+  --nx-void:   #05070b;
+  --nx-ink:    #07090e;
+  --nx-plate:  #0b0f18;
+  --nx-panel:  #0f1520;
+  --nx-edge:   #141c2e;
+  --nx-rim:    #1e2a40;
+  --nx-muted:  #334560;
+  --nx-dim:    #607898;
+  --nx-text:   #c4d4ee;
+  --nx-bright: #e6f0ff;
+  --nx-ok:     #34d399;
+  --nx-err:    #f87171;
+  --nx-warn:   #fbbf24;
+  --nx-violet: #a78bfa;
+  --nx-emerald:#34d399;
+  --nx-card:   #0d1219;
+  --nx-card2:  #141c2e;
+}
+:root[data-theme="graphite"] {
+  --nx-void:   #0b0b0c;
+  --nx-ink:    #111113;
+  --nx-plate:  #17171a;
+  --nx-panel:  #1d1d21;
+  --nx-edge:   #26262b;
+  --nx-rim:    #34343a;
+  --nx-muted:  #5c5c66;
+  --nx-dim:    #8e8e99;
+  --nx-text:   #e4e4e8;
+  --nx-bright: #ffffff;
+  --nx-ok:     #3fb950;
+  --nx-err:    #f85149;
+  --nx-warn:   #d29922;
+  --nx-violet: #bc8cff;
+  --nx-emerald:#3fb950;
+  --nx-card:   #17171a;
+  --nx-card2:  #1d1d21;
+}
+
+/* ── the accent: the main UI's cyan, its hue a registered property so it can cycle ─────────────────────────── */
+@property --ac-h { syntax: '<number>'; inherits: true; initial-value: 192; }
+:root { --ac-h: 192; --ac-s: 100%; --ac-l: 56%; }
+:root[data-accent="violet"]  { --ac-h: 255; --ac-s: 90%; --ac-l: 70%; }
+:root[data-accent="emerald"] { --ac-h: 158; --ac-s: 64%; --ac-l: 52%; }
+:root[data-accent="amber"]   { --ac-h: 40;  --ac-s: 96%; --ac-l: 56%; }
+:root {
+  --ac:           hsl(var(--ac-h), var(--ac-s), var(--ac-l));
+  --ac-soft:      hsl(var(--ac-h), var(--ac-s), 74%);
+  --ac-dim:       hsla(var(--ac-h), var(--ac-s), var(--ac-l), .18);
+  --ac-ghost:     hsla(var(--ac-h), var(--ac-s), var(--ac-l), .07);
+  --ac-border:    hsla(var(--ac-h), var(--ac-s), var(--ac-l), .22);
+  --ac-border-hi: hsla(var(--ac-h), var(--ac-s), var(--ac-l), .4);
+}
+/* the main UI's slow cycle (ui/home/home.css accent-cycle): cyan → sky → blue-violet → sky → cyan, 8 s */
+@keyframes nx-accent-cycle { 0% { --ac-h: 192; } 25% { --ac-h: 210; } 50% { --ac-h: 240; } 75% { --ac-h: 210; } 100% { --ac-h: 192; } }
+:root[data-accent="cycle"] { animation: nx-accent-cycle 8s ease-in-out infinite; }
+:root[data-motion="reduced"] { animation: none !important; }
+:root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before, :root[data-motion="reduced"] *::after {
+  animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }

@@ -46,12 +46,15 @@ const write = (dir, p, c) => { fs.mkdirSync(path.dirname(path.join(dir, p)), { r
     assert.ok(/GET\('versionium',`\/api\/versionium\/history\?n=/.test(orch) && /POST\('versionium','\/api\/versionium\/commit'/.test(orch));
   });
 
-  await t('N1 the global bar holds no Create/Build; they live in the repo tab row', () => {
+  // §0.39.284 W4 — superseded: James, 2026-09-30, "the create and build tabs should be removed from the repos and moved
+  // back to the main navbar". N1's rule is kept here, inverted, so the move is on record (§0.3).
+  await t('N1 (0.39.284 W4) Create/Build are on the main bar again, not in the repo tab row; Build opens with "Build this repo"', () => {
     const html = read('idearium/ui/index.html');
     const bar = html.slice(html.indexOf('<nav class="tabbar"'), html.indexOf('</nav>', html.indexOf('<nav class="tabbar"')));
-    assert.ok(!/data-group="create"|data-group="build"/.test(bar));
+    assert.ok(/data-group="create"/.test(bar) && /data-group="build"/.test(bar));
+    assert.ok(/onclick="openBuildFlow\(\)"/.test(bar), 'Build ▾ starts with the repo\'s build flow');
     const sub = html.slice(html.indexOf('<nav class="repo-subnav"'), html.indexOf('</nav>', html.indexOf('<nav class="repo-subnav"')));
-    assert.ok(/data-group="create"/.test(sub) && /data-group="build"/.test(sub) && /data-subtab="phases"/.test(sub));
+    assert.ok(!/data-group="create"|data-group="build"/.test(sub) && /data-subtab="phases"/.test(sub));
     assert.ok(!/data-subtab="roadmap"|data-subtab="phasemap"/.test(sub), 'Phasemap + Roadmap are one tab');
   });
 

@@ -4,27 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IDEARIUM — Nexus Idea OS</title>
+<link rel="stylesheet" href="css/nexus-theme.css">
+<script src="js/theme.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+/* §0.39.284 W5 — James: "make all the css in idearium consistent with the main ui". idearium's tokens keep their names
+   (every rule below reads them) and take their values from css/nexus-theme.css — the main UI's palette (ui/themes/
+   nexus-dark.css) by default, or the one chosen in the settings console (config ui.theme / ui.accent / ui.motion).
+   The values they had before are the 'midnight' palette there, kept. */
 :root {
-  --bg:     #07090e;
-  --bg1:    #0b0f18;
-  --bg2:    #0f1520;
-  --bg3:    #141c2e;
-  --panel:  #0d1219;
-  --b0:     rgba(56,189,248,0.06);
-  --b1:     rgba(56,189,248,0.14);
-  --b2:     rgba(56,189,248,0.28);
-  --sky:    #38bdf8;
-  --sky2:   #7dd3fc;
-  --mint:   #34d399;
-  --amber:  #fbbf24;
-  --coral:  #f87171;
-  --violet: #a78bfa;
+  --bg:     var(--nx-ink);
+  --bg1:    var(--nx-plate);
+  --bg2:    var(--nx-panel);
+  --bg3:    var(--nx-edge);
+  --panel:  var(--nx-card);
+  --b0:     var(--ac-ghost);
+  --b1:     var(--ac-dim);
+  --b2:     var(--ac-border-hi);
+  --sky:    var(--ac);
+  --sky2:   var(--ac-soft);
+  --mint:   var(--nx-emerald);
+  --amber:  var(--nx-warn);
+  --coral:  var(--nx-err);
+  --violet: var(--nx-violet);
   --rose:   #fb7185;
-  --text:   #c4d4ee;
-  --text2:  #607898;
-  --text3:  #334560;
+  --text:   var(--nx-text);
+  --text2:  var(--nx-dim);
+  --text3:  var(--nx-muted);
   --mono:   'IBM Plex Mono', monospace;
   --sans:   'IBM Plex Sans', sans-serif;
 }
@@ -62,7 +68,8 @@ body{display:flex;flex-direction:column;position:relative}
 .tb-stat .v.hi{color:var(--coral)}
 .tb-stat .v.ok{color:var(--mint)}
 .tb-stat .v.sky{color:var(--sky)}
-.tb-conn{font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid var(--b1);color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:5px}
+.tb-conn{background:none;transition:border-color .15s,color .15s;font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid var(--b1);color:var(--text3);cursor:pointer;display:flex;align-items:center;gap:5px}
+button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .tb-conn .dot{width:6px;height:6px;border-radius:50%;background:var(--text3)}
 .tb-conn.online{border-color:rgba(52,211,153,.3);color:var(--mint)}
 .tb-conn.online .dot{background:var(--mint);box-shadow:0 0 6px var(--mint)}
@@ -109,6 +116,25 @@ body{display:flex;flex-direction:column;position:relative}
 .tab-sub:hover{background:var(--b0);color:var(--text)}
 .tab-sub.active{color:var(--sky);background:rgba(56,189,248,.09)}
 .tab-spacer{flex:1}
+/* §0.39.284 W4 — James: "make the navigation more dynamic. i like when its less static." A sliding ink under the active
+   tab (js: _navInk), dropdowns that open instead of appearing, views and repo tabs that fade in. */
+.tabbar,.repo-subnav{position:relative}
+.nav-ink{position:absolute;bottom:0;height:2px;border-radius:2px;background:var(--sky);box-shadow:0 0 12px rgba(56,189,248,.55);transition:left .32s cubic-bezier(.2,.8,.2,1),width .32s cubic-bezier(.2,.8,.2,1),opacity .2s;pointer-events:none;opacity:0}
+.nav-ink.on{opacity:1}
+.tabbar .tab-btn.active{border-bottom-color:transparent}
+.tab-btn{transition:color .18s,background .18s,transform .18s}.tab-btn:hover{background:rgba(255,255,255,.025)}
+.tab-btn:active{transform:translateY(1px)}
+.tab-dropdown{display:flex!important;opacity:0;visibility:hidden;transform:translateY(-6px) scale(.98);transform-origin:top left;transition:opacity .16s,transform .16s,visibility 0s linear .16s}
+.tab-group:hover .tab-dropdown,.tab-group.open .tab-dropdown{opacity:1;visibility:visible;transform:none;transition:opacity .16s,transform .16s}
+.tab-group.dismissed .tab-dropdown{opacity:0;visibility:hidden;transform:translateY(-6px) scale(.98)}
+.tab-sub{transition:background .12s,color .12s,padding-left .12s}.tab-sub:hover{padding-left:14px}
+.tab-sub-lead{align-items:flex-start}.tab-sub-lead small{display:block;font-size:9.5px;color:var(--text3);margin-top:2px;white-space:normal;line-height:1.3}
+.tab-sub-lead .tab-icon{color:var(--sky)}.tab-sub-sep{height:1px;background:var(--b1);margin:4px 6px}
+.bs-flash{animation:bsFlash 1.4s ease}@keyframes bsFlash{0%,60%{box-shadow:0 0 0 2px rgba(56,189,248,.55)}100%{box-shadow:none}}
+.view.active{animation:viewIn .26s cubic-bezier(.2,.8,.2,1)}
+.repo-subtab-panel.active{animation:viewIn .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.nav-ink,.tab-dropdown,.view.active,.repo-subtab-panel.active{transition:none;animation:none}}
 .tab-badge{font-size:9px;padding:1px 6px;border-radius:20px;background:var(--b0);color:var(--text2);letter-spacing:.04em}
 
 .view-area{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -467,6 +493,9 @@ body{display:flex;flex-direction:column;position:relative}
 .ph-chip{font-family:var(--mono);font-size:10px;border:1px solid var(--b1);border-radius:10px;padding:2px 8px;color:var(--text2)}
 .ph-chip b{font-weight:600;margin-left:3px}
 .ph-via{font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-left:auto}
+.ph-plan-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--b1)}
+.ph-plan-name{flex:1;font-family:var(--mono);font-size:11px;color:var(--text)}.ph-plan-name small{display:block;color:var(--text3);font-size:9.5px}
+.ls-waiting{color:var(--amber);animation:lsPulse 1.6s ease-in-out infinite}@keyframes lsPulse{50%{opacity:.55}}
 .ph-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:var(--mono);font-size:10.5px;color:var(--text2)}
 .ph-tools input[type=text]{flex:1;min-width:180px}
 .ph-tools input[type=text],.ph-tools select,.ph-add input,.ph-add textarea,.ph-add select,.ph-detail select,.ph-detail textarea{background:var(--b0);border:1px solid var(--b1);color:var(--text);font-family:var(--mono);font-size:10.5px;padding:5px 7px;border-radius:5px}
@@ -625,18 +654,18 @@ body{display:flex;flex-direction:column;position:relative}
 .ide-manage-btn{margin-left:auto;color:var(--sky2)!important;border-color:rgba(56,189,248,.35)!important}
 /* §0.39.282 N25 — the Manage workbench is styled by css/file-manage.css (.mg-*). The old .manage-modal/.manage-act/.manage-hit rules (0.39.280) styled a modal that no longer exists; the class names stay on the new markup only as stable hooks for tests. */
 /* §0.39.280 BS11 — the plan panel and the build-start card */
-#plan-panel{position:fixed;top:90px;right:18px;width:420px;height:min(78vh,760px);min-width:300px;min-height:220px;resize:both;overflow:hidden;z-index:250;display:none;flex-direction:column;background:#141518;border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);font-family:var(--mono)}
+#plan-panel{position:fixed;top:90px;right:18px;width:420px;height:min(78vh,760px);min-width:300px;min-height:220px;resize:both;overflow:hidden;z-index:250;display:none;flex-direction:column;background:var(--nx-card);border:1px solid var(--nx-rim);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);font-family:var(--mono)}
 #plan-panel.open{display:flex}#plan-panel.wide{width:min(900px,92vw)}
 .pp-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);cursor:move;user-select:none}
-.pp-title{font:600 13px system-ui,sans-serif;color:#e8e8ea}.pp-sub{font-size:10px;color:var(--text3)}.pp-grow{flex:1}
-.pp-map{max-width:150px;background:#1c1d21;color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:6px;font:10px var(--mono);padding:2px 4px}
+.pp-title{font:600 13px system-ui,sans-serif;color:var(--nx-bright)}.pp-sub{font-size:10px;color:var(--text3)}.pp-grow{flex:1}
+.pp-map{max-width:150px;background:var(--nx-card2);color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:6px;font:10px var(--mono);padding:2px 4px}
 .pp-btn{background:none;border:0;color:var(--text3);font-size:13px;cursor:pointer;padding:2px 5px}.pp-btn:hover{color:#fff}
 .pp-body{flex:1;overflow:auto;padding:8px 14px 14px}
 .pp-progress{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin:4px 0 10px;overflow:hidden}.pp-progress div{height:100%;background:var(--mint)}
 .pp-sec{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin:10px 0 6px;cursor:default}
 .pp-task{border-radius:6px}.pp-row{display:flex;align-items:center;gap:8px;padding:5px 4px;cursor:pointer;border-radius:6px}.pp-row:hover{background:rgba(255,255,255,.035)}
 .pp-mark{width:14px;text-align:center;color:var(--text3)}.pp-task.done .pp-mark{color:var(--text2)}.pp-task.cur .pp-mark{color:var(--sky)}
-.pp-name{flex:1;font:12.5px/1.35 system-ui,sans-serif;color:#dcdce0;min-width:0}.pp-task.done .pp-name{text-decoration:line-through;color:var(--text3)}
+.pp-name{flex:1;font:12.5px/1.35 system-ui,sans-serif;color:var(--nx-text);min-width:0}.pp-task.done .pp-name{text-decoration:line-through;color:var(--text3)}
 .pp-layer{font-size:9px;color:var(--violet);text-transform:uppercase}
 .pp-gates{display:flex;gap:2px}.pp-g{width:9px;height:4px;border-radius:1px;background:rgba(255,255,255,.1)}.pp-g.on{background:var(--mint)}.pp-g.cur{background:var(--sky);animation:pulse 1.2s ease-in-out infinite}.pp-g.bad{background:var(--coral)}
 .pp-detail{margin:2px 0 8px 26px;padding:6px 8px;border-left:2px solid rgba(56,189,248,.35);font-size:10.5px;color:var(--text2)}
@@ -900,6 +929,26 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
          row (#repo-subnav). This bar is always Welcome + Repos. -->
 
     <button class="tab-btn" data-view="repo" onclick="setView('repo')"><span class="tab-icon">🗂</span>Repos<span class="tab-badge" id="repo-count-badge"></span></button>
+    <!-- §0.39.284 W4 — James: "the create and build tabs should be removed from the repos and moved back to the main
+         navbar." They sit here again (0.39.271 N1 had moved them into the open repo's tab row). With a repo open they
+         act on it (the "← back to the repo" bar returns to it); Build opens with the repo's own build flow first. -->
+    <div class="tab-group" data-group="create">
+      <button class="tab-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
+      <div class="tab-dropdown">
+        <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
+        <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
+      </div>
+    </div>
+    <div class="tab-group" data-group="build">
+      <button class="tab-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+      <div class="tab-dropdown tab-dropdown-deep">
+        <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
+        <div class="tab-sub-sep"></div>
+        <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
+        <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
+        <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
+      </div>
+    </div>
 
     <div class="tab-spacer"></div>
     <button class="tab-btn" id="tab-tree-toggle" title="expand every tab into a full navigator tree" onclick="toggleTabTree()"><span class="tab-icon">⊞</span>Expand all</button>
@@ -1113,22 +1162,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn" data-subtab="versionium" onclick="setRepoSubtab('versionium')">Versionium</button>
             <button class="repo-subtab-btn" data-subtab="git" onclick="setRepoSubtab('git')">Sync &amp; CI</button>
             <button class="repo-subtab-btn" data-subtab="settings" onclick="setRepoSubtab('settings')">Settings</button>
-            <span class="repo-subnav-sep" title="this repo's canvases — they open as views of their own"></span>
-          <div class="tab-group tab-group-inrepo" data-group="create">
-            <button class="repo-subgroup-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
-            <div class="tab-dropdown">
-              <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
-              <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
-            </div>
-          </div>
-          <div class="tab-group tab-group-inrepo" data-group="build">
-            <button class="repo-subgroup-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
-            <div class="tab-dropdown">
-              <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
-              <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
-              <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
-            </div>
-          </div>
+            <!-- §0.39.284 W4 — Create and Build went back to the main bar (James: "the create and build tabs should be removed
+                 from the repos and moved back to the main navbar"). They still act on the open repo. -->
           </nav>
 
           <!-- HOME — the repo's own README/.spec, or basic identity if neither exists -->
@@ -2356,6 +2391,7 @@ async function saveToIdearium(){
 
 <link rel="stylesheet" href="css/agent-blocks.css">
 <link rel="stylesheet" href="css/file-manage.css">
+<link rel="stylesheet" href="css/work-surface.css">
 <script src="js/app.js"></script>
 <script src="js/compartment.js"></script>
 <script src="js/agent-blocks.js"></script>
@@ -2365,5 +2401,6 @@ async function saveToIdearium(){
 <script src="js/file-manage.js"></script>
 <script src="js/repo-environment.js"></script>
 <script src="js/plan-panel.js"></script>
+<script src="js/work-surface.js"></script>
 </body>
 </html>

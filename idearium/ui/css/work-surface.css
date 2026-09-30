@@ -1,0 +1,38 @@
+/* idearium/ui/css/work-surface.css — §0.39.284 W3: the work surface under the Plan (idearium/ui/js/work-surface.js).
+   A diff view in the manner of the Claude Code panel James pointed at: one card per file, +N −M, green/red lines. */
+.pp-ws{margin-top:14px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07)}
+.ws-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ws-sum{font-size:10.5px;color:var(--text2)}.ws-grow{flex:1}
+.ws-plus{color:#3fb950;font-weight:600}.ws-minus{color:#f85149;font-weight:600}
+.ws-f{background:none;border:1px solid rgba(255,255,255,.1);color:var(--text3);font:10px var(--mono);border-radius:5px;padding:1px 7px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.ws-f:hover{color:var(--text)}.ws-f.on{color:#04121c;background:var(--sky);border-color:var(--sky)}
+.ws-note{font-size:10px;color:var(--text3);margin:2px 0 6px}
+.ws-empty{font-size:10.5px;color:var(--text3);padding:10px 2px}
+.ws-card{border:1px solid rgba(255,255,255,.09);border-radius:8px;margin:0 0 8px;overflow:hidden;background:var(--nx-void);transition:border-color .2s}
+.ws-card:hover{border-color:rgba(255,255,255,.18)}
+.ws-head{display:flex;align-items:center;gap:7px;padding:7px 10px;cursor:pointer;background:var(--nx-card2);font-size:11px;user-select:none}
+.ws-chev{color:var(--text3);width:10px}.ws-ico{font:700 8.5px var(--mono);color:#e3b341;background:rgba(227,179,65,.12);border-radius:3px;padding:1px 3px;min-width:16px;text-align:center}
+.ws-name{color:var(--nx-bright);font-weight:600}.ws-dir{color:var(--text3);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ws-chip{font-size:9px;border-radius:10px;padding:0 6px;border:1px solid rgba(255,255,255,.14);color:var(--text2)}
+.ws-new{color:#3fb950;border-color:rgba(63,185,80,.4)}.ws-delchip{color:#f85149;border-color:rgba(248,81,73,.4)}
+.ws-st-proposed,.ws-st-staged{color:var(--amber);border-color:rgba(251,191,36,.4)}.ws-st-applied{color:#3fb950;border-color:rgba(63,185,80,.35)}
+.ws-st-reverted,.ws-st-rejected{color:var(--text3)}
+.ws-act{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--text);font:10px var(--mono);border-radius:5px;padding:1px 8px;cursor:pointer}
+.ws-act:hover{background:rgba(255,255,255,.12)}.ws-act-apply,.ws-act-promote{border-color:rgba(63,185,80,.5);color:#3fb950}.ws-act-reject,.ws-act-revert{color:#f0883e}
+.ws-meta{font-size:9.5px;color:var(--text3);padding:4px 10px;border-top:1px solid rgba(255,255,255,.05);background:var(--nx-void)}
+.ws-diff{font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;max-height:520px;overflow:auto;border-top:1px solid rgba(255,255,255,.05)}
+.ws-ln{display:flex;white-space:pre;min-width:max-content}
+.ws-g{width:38px;flex:none;text-align:right;padding-right:8px;color:#6e7681;user-select:none}
+.ws-s{width:14px;flex:none;color:#6e7681;user-select:none}.ws-t{padding-right:12px;color:var(--nx-text)}
+.ws-add{background:rgba(46,160,67,.15)}.ws-add .ws-s,.ws-add .ws-g{color:#3fb950;background:rgba(46,160,67,.12)}
+.ws-del{background:rgba(248,81,73,.13)}.ws-del .ws-s,.ws-del .ws-g{color:#f85149;background:rgba(248,81,73,.1)}
+.ws-hunk{background:rgba(56,139,253,.1)}.ws-hunk .ws-t{color:#79c0ff}.ws-more .ws-t{color:var(--text3);font-style:italic}
+.ws-nodiff{font-size:10.5px;color:var(--text3);padding:8px 10px}
+.ws-tools{border:1px solid rgba(255,255,255,.08);border-radius:8px;margin:0 0 10px;padding:6px 10px;background:rgba(56,189,248,.035)}
+.ws-tools-head{font-size:10.5px;color:var(--text2);cursor:pointer;user-select:none}.ws-tools-head b{color:var(--sky)}
+.ws-tool-row{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 4px}
+.ws-tool{font-size:9.5px;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:1px 7px;color:var(--text3)}
+.ws-tool.used{color:var(--mint);border-color:rgba(52,211,153,.45)}.ws-tool b{margin-left:4px;color:var(--text)}
+.ws-tool-note{font-size:9.5px;color:var(--text3);margin:4px 0}.ws-tool-note code{color:var(--text2)}
+.ws-calls{max-height:180px;overflow:auto;margin-top:4px}.ws-call{font-size:9.5px;color:var(--text2);padding:1px 0}.ws-call span{opacity:.6}.ws-call i{color:var(--text3)}.ws-call.bad{color:#f85149}
+#plan-panel.wide .ws-diff{max-height:640px}

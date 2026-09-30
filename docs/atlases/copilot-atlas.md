@@ -39,6 +39,7 @@ picks), **guardian** (a browser agent — best for writing and reasoning), **cle
 | You type | What happens |
 |---|---|
 | **visit google.com** · **go to indeed.com** · **open https://www.upwork.com/nx/find-work/** | The browser goes there **without asking a model**, then answers with the page title, its address and a numbered list of what you can click or type into (`clear-glass/src/copilot/verbs.js`, 0.39.280). |
+| **import my archives** · **/import-archives** · **load the nexus zips** | Opens idearium's archive drop box (`archive-import.html` on idearium's port) in the pane's browser **without asking a model**. Drop NEXUS release zips or a folder there; *Check the order*, then *Import* runs `cli/import-history.js` as a background job (0.39.284, N30; `clear-glass/src/copilot/verbs.js` `archiveImportIntent`, checked before *visit*). |
 | **open indeed.com and find remote support jobs** | Goes there first, then the model gets your request **with that page in hand**. |
 | **click #3** · **type "remote" into #2** · **press Enter** | The model turns it into a driver command; the pane shows which one ran, e.g. **[driver: click #3]**. A command the model wrote badly is repaired, or reported as unreadable — never silently skipped. |
 | **what does this form want?** | It reads the page (readPage) and answers. |

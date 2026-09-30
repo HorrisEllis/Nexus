@@ -504,6 +504,38 @@ spec:
         before any is registered — a failure that only shows under load is still a failure.
       proof: "full run: 0 unregistered failures"
 
+    N30_archive_import_dropbox_and_copilot_command:
+      layer: interface
+      status: BUILT
+      depends_on: [N27]
+      files:
+        - "cli/import-history.js (--jsonl: one line per zip + the result, for a job to follow)"
+        - "lib/history-import-job.js (new — the import as a background child process, like cos/testenv/setup-job.js)"
+        - "idearium/api/index.js (GET|POST /api/history/import, PUT /api/history/import/upload, the /archive-import.html page)"
+        - "idearium/ui/archive-import.html (new — the drop box)"
+        - "idearium/ui/js/app.js (the /import-archives command; 'import my archives' opens it too)"
+        - "clear-glass/src/copilot/verbs.js (the co-pilot pane: 'import my archives' opens the drop box)"
+        - "clear-glass/src/copilot/bridge.js (the pane checks the archive intent before 'visit')"
+        - "loom/maps/one-idearium-map.js (the api → job wire and the job → CLI spawn wire, which the scanner cannot see)"
+        - "tests/modules/test-history-import-job.test.js (18) · tests/probe/archive-import-chromium.js (7, real Chromium)"
+      does: >-
+        James, 2026-09-29: "can you make a simple drop box ui? actually, can you give copilot a command, or something. like
+        i want to import my archives of nexus. have it pull up a drop box ui and run the command?" A command in the places
+        James talks to the system — Idearium's CLI (/import-archives, or plainly "import my archives") and the Clear Glass
+        co-pilot pane — opens one drop box page. Drop zips or a whole folder (in Electron / Clear Glass a dropped file
+        carries its real path, so nothing is copied; in a plain browser each zip is streamed to a local inbox first), or
+        paste a folder path. It shows the order first (a dry run), then imports: cli/import-history.js as a background
+        child process (idearium never blocks on 700 zips), live per-zip progress, the counts, the report path, and the one
+        merge command. The import target is the NEXUS checkout idearium runs from.
+      proof: "a real import of fixture zips through the job (child process, progress lines, result); the page in a real browser: drop → dry run → import → per-zip rows; the CLI command and the intent open it"
+      built: >-
+        2026-09-29. test-history-import-job 18/18 (the job for real into a scratch repo: the order, the import, a re-run
+        that skips every zip; uploads into the sandboxed inbox; bad names and missing paths refused with the reason;
+        idearium's real router; the CLI command, the plain-words intent and the Clear Glass pane). The probe, 7/7 in real
+        Chromium: three zips dropped as browser File objects (so they upload), "Check the order" shows 0.39.100, .150,
+        .200 and writes nothing, Import commits them in that order on history/snapshots, James's branch untouched, the
+        merge command shown. One job at a time; a second start returns the running one.
+
     # ── HANDOFF: docs/2026-09-29-handoff.md says where this stands and what to ask next.
 
   risks:

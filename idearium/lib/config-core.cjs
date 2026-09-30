@@ -173,6 +173,15 @@ const SCHEMA = {
     password: { default: 'nexus', copilot_writable: false, type: 'string' },
   },
 
+  // §0.39.284 W5 — James: "can you make all the css in idearium consistent with the main ui" · "rebuild the themes for
+  // the settings tab". The look of every idearium page (css/nexus-theme.css, applied by js/theme.js). 'nexus' is the
+  // main UI's palette (ui/themes/nexus-dark.css); 'midnight' is idearium's look before 0.39.284, kept (§0.3).
+  ui: {
+    theme:  { default: 'nexus', enum: ['nexus', 'midnight', 'graphite'], copilot_writable: true, type: 'string' },
+    accent: { default: 'cycle', enum: ['cycle', 'cyan', 'violet', 'emerald', 'amber'], copilot_writable: true, type: 'string' },
+    motion: { default: 'full', enum: ['full', 'reduced'], copilot_writable: true, type: 'string' },
+  },
+
   cicd: {
     push_enabled: { default: false, copilot_writable: true,  type: 'boolean' },
     pull_enabled: { default: false, copilot_writable: true,  type: 'boolean' },

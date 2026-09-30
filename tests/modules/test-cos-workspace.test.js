@@ -77,6 +77,39 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
   });
 
   // ── the VM half ─────────────────────────────────────────────────────────
+  await t('WS-05', '0.39.284 W1: branchWorkspaceAsync gives the same branch as the sync one (a new original, a new name, a reuse)', async () => {
+    const o2 = path.join(tmp, 'projects', 'orig-async');
+    fs.mkdirSync(o2, { recursive: true }); fs.writeFileSync(path.join(o2, 'a.txt'), 'a\n');
+    const r = await W.branchWorkspaceAsync({ originDir: o2, name: 'Async Thing' });
+    assert.ok(r.ok, JSON.stringify(r));
+    assert.strictEqual(r.branch, 'nexus/async-thing');
+    assert.strictEqual(r.reused, false);
+    assert.strictEqual(fs.realpathSync(git(o2, 'rev-parse', '--show-toplevel')), fs.realpathSync(o2));
+    assert.strictEqual(fs.readFileSync(path.join(r.dir, 'a.txt'), 'utf8'), 'a\n');
+    const again = await W.branchWorkspaceAsync({ originDir: o2, name: 'Async Thing' });
+    assert.ok(again.ok && again.reused && again.dir === r.dir, JSON.stringify(again));
+    const same = W.branchWorkspace({ originDir: o2, name: 'Async Thing' });
+    assert.ok(same.ok && same.reused && same.dir === r.dir, 'the sync one sees the async one\'s branch');
+    assert.deepStrictEqual((await W.listBranchesAsync(o2)).map(b => b.branch), W.listBranches(o2).map(b => b.branch));
+    const bad = await W.branchWorkspaceAsync({ originDir: path.join(tmp, 'nope'), name: 'x' });
+    assert.strictEqual(bad.ok, false);
+  });
+
+  await t('WS-06', '0.39.284 W1: while git works (a slow git), the event loop keeps running — timers fire; the sync one would starve them', async () => {
+    const slow = path.join(tmp, 'slow-git.js');
+    fs.writeFileSync(slow, `#!/usr/bin/env node\nconst a=process.argv.slice(2);const {execFileSync}=require('child_process');\nconst t=Date.now();while(Date.now()-t<250){}\ntry{process.stdout.write(execFileSync('git',a,{cwd:process.cwd(),encoding:'utf8',stdio:['ignore','pipe','pipe']}));}catch(e){process.stderr.write(String(e.stderr||''));process.exit(e.status||1);}\n`);
+    fs.chmodSync(slow, 0o755);
+    const o3 = path.join(tmp, 'projects', 'orig-slow');
+    fs.mkdirSync(o3, { recursive: true }); fs.writeFileSync(path.join(o3, 'b.txt'), 'b\n');
+    let ticks = 0; const iv = setInterval(() => ticks++, 20);
+    const r = await W.branchWorkspaceAsync({ originDir: o3, name: 'slow', git: slow });
+    clearInterval(iv);
+    assert.ok(r.ok, JSON.stringify(r));
+    assert.ok(ticks >= 20, `the timer fired ${ticks} times while git ran (several 250 ms calls)`);
+    const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    assert.match(api, /await cosBridge\.branchWorkspaceAsync\(\{ originDir: _repoDiskDir\(_origin\.uuid\), name: manifest\.name \}\)/);
+  });
+
   await t('WS-10', 'branchDisk: a qcow2 overlay backed by the original\'s disk; kept if it exists; no backing = said', () => {
     const backing = path.join(tmp, 'orig.qcow2'); fs.writeFileSync(backing, 'x');
     const calls = [];
@@ -223,7 +256,7 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
 
   await t('WS-23', 'idearium: the Code button makes a branch (worktree + child compartment) unless told not to; desktop routes; the viewer page', () => {
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
-    assert.match(api, /cosBridge\.branchWorkspace\(\{ originDir: _repoDiskDir\(_origin\.uuid\), name: manifest\.name \}\)/);
+    assert.match(api, /cosBridge\.branchWorkspaceAsync\(\{ originDir: _repoDiskDir\(_origin\.uuid\), name: manifest\.name \}\)/);
     assert.match(api, /_origin && body\.branch !== false && _mode !== 'copy'/);
     assert.match(api, /process\.env\.IDEARIUM_CODE_REPO_MODE \|\| .*getIdeariumValue\('repos\.code_repo_mode'\)/);
     assert.match(api, /parentId: parent/);

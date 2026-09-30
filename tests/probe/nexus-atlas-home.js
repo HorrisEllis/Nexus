@@ -48,7 +48,8 @@ const freePort = () => new Promise((resolve) => { const s = net.createServer(); 
     const vis = () => pg.evaluate(() => { const d = (el) => el ? getComputedStyle(el).display !== 'none' : null;
       return { create: d(document.querySelector('.tab-group[data-group="create"]')), build: d(document.querySelector('.tab-group[data-group="build"]')), counters: d(document.getElementById('stat-ideas').parentElement) }; });
     const top = await vis();
-    P.case('top level: no Create, no Build, no ideas/specs counters — they belong to a repo', top.create === false && top.build === false && top.counters === false, top);
+    // §0.39.284 W4 — Create and Build are on the main bar again (James: "moved back to the main navbar"); the counters stay a repo's
+    P.case('top level: Create and Build on the main bar; no ideas/specs counters — they belong to a repo', top.create === true && top.build === true && top.counters === false, top);
     await pg.evaluate(() => setView('repo'));
     await pg.waitForSelector('.repo-block', { timeout: 15000 });
     const cards = await pg.$$eval('.repo-block .repo-block-name', xs => xs.map(x => x.textContent));

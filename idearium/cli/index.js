@@ -36,6 +36,9 @@
  *   idearium gap open --description "..." [--type unresolved] [--severity medium] [--idea <uuid>]
  *   idearium gap resolve <uuid> [--resolution "..."]
  *   idearium gap ignore <uuid> [--reason "..."]
+ *   idearium repo plan <repo> <spec path> [--derive] [--replan] [--dry]   (0.39.284 W2)
+ *   idearium repo phases <repo> <spec path>
+ *   idearium repo build <repo> <spec path> [--phase <id>]
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -64,6 +67,13 @@ function repoLayer() {
 // not the first. short() on a real repo uuid printed "nexus-id" for
 // every single repo in the list, identical, useless. shortRepo() takes
 // the real distinguishing suffix instead.
+function _findRepo(prefix) {
+  const repos = repoLayer().list({ includeArchived: true });
+  const repo = repos.find(r => r.uuid === prefix) || repos.find(r => r.uuid.startsWith(prefix)) || repos.find(r => r.uuid.endsWith(prefix))
+    || repos.find(r => r.name === prefix);
+  if (!repo) die(`repo not found: ${prefix}`);
+  return repo;
+}
 function shortRepo(uuid) { return uuid?.split('-repo-')[1] || short(uuid); }
 
 // §BUG FOUND BY RUNNING IT 2026-09-03 — every other command in this file
@@ -578,6 +588,72 @@ const COMMANDS = {
     console.log(`${mint('✓')} archived ${bold(repo.name)}  ${dim(shortRepo(repo.uuid))}`);
   },
 
+  // ── §0.39.284 W2 — plan a spec, see its phases, build the next one ────────────
+  // James: "remember its alwasy cli and api first" · "get it coding the projects". The same routes the Spec tab and
+  // the Plan panel use (POST /api/repos/:uuid/spec/plan, GET …/spec/plan, POST …/spec/build). --dry derives the plan
+  // from the spec here, with no server and nothing written.
+  async 'repo.plan'(os, { positional, flags }) {
+    const [prefix, specPath0] = positional;
+    // --dry --file <spec>: plan a spec file on disk (no repo, no server) — e.g. before importing it
+    if (flags.dry && typeof flags.file === 'string') {
+      const fs = await import('fs');
+      if (!fs.existsSync(flags.file)) die(`no such file: ${flags.file}`);
+      const SP = await import('../repo/spec-plan.js');
+      const d = SP.derivePlan({ specPath: flags.file.replace(/\\/g, '/'), specText: fs.readFileSync(flags.file, 'utf8'), reason: 'idearium repo plan --dry --file' });
+      if (!d.ok) die(`not plannable: ${(d.problems || []).join('; ')}`);
+      header(`plan of ${flags.file} — derived from ${d.sections} section(s), not written (--dry)`);
+      for (const ph of SP.orderPhases(d.phases)) console.log(`  ${dim(ph.layer.padEnd(10))} ${bold(ph.id)}  ${gray(ph.depends_on.join(', ') || '—')}`);
+      console.log('');
+      return;
+    }
+    const specPath = specPath0;
+    if (!prefix || !specPath) die('usage: idearium repo plan <repo> <spec path> [--derive] [--replan] [--dry] [--provider <p>]  |  repo plan --dry --file <spec file>');
+    const repo = _findRepo(prefix);
+    if (flags.dry) {
+      const SP = await import('../repo/spec-plan.js');
+      const r = repoLayer().readTextFile(repo.uuid, specPath);
+      if (!r || r.error || typeof r.content !== 'string') die(`no spec ${specPath} in ${repo.name}`);
+      const d = SP.derivePlan({ specPath, specText: r.content, reason: 'idearium repo plan --dry' });
+      if (!d.ok) die(`not plannable: ${(d.problems || []).join('; ')}`);
+      header(`plan of ${specPath} — derived from ${d.sections} section(s), not written (--dry)`);
+      for (const ph of SP.orderPhases(d.phases)) console.log(`  ${dim(ph.layer.padEnd(10))} ${bold(ph.id)}  ${gray(ph.depends_on.join(', ') || '—')}`);
+      console.log('');
+      return;
+    }
+    try {
+      const res = await _localApi('POST', `/api/repos/${repo.uuid}/spec/plan`, { path: specPath, derive: !!flags.derive, replan: !!flags.replan, provider: flags.provider || null });
+      const d = res.data || res;
+      if (d.plannedBy === 'derived') console.log(`${mint('✓')} ${d.mapPath} written — ${d.phases} phase(s), derived from the spec`);
+      else console.log(`${sky('→')} the agent is planning ${specPath} (${d.runId}); it lands in ${d.mapPath} — from the agent, its reply, or derived from the spec. ${dim(`idearium repo phases ${shortRepo(repo.uuid)} ${specPath}`)}`);
+    } catch (e) { die(`plan failed (is idearium running on :${IDEARIUM_PORT}?): ${e.message}`); }
+  },
+
+  async 'repo.phases'(os, { positional }) {
+    const [prefix, specPath] = positional;
+    if (!prefix || !specPath) die('usage: idearium repo phases <repo> <spec path>');
+    const repo = _findRepo(prefix);
+    try {
+      const res = await _localApi('GET', `/api/repos/${repo.uuid}/spec/plan?path=${encodeURIComponent(specPath)}`);
+      const d = res.data || res;
+      if (!d.exists) { console.log(gray(`  no plan yet — idearium repo plan ${shortRepo(repo.uuid)} ${specPath}`)); return; }
+      header(`${d.mapPath} — ${d.phases.length} phase(s)${d.valid ? '' : coral(' (not valid)')}`);
+      for (const ph of d.phases) console.log(`  ${ph.id === d.next ? mint('◌') : (ph.status === 'done' || ph.status === 'complete') ? mint('✓') : gray('○')} ${dim(ph.layer.padEnd(10))} ${bold(ph.id)}`);
+      if (d.next) console.log(`\n  next: ${bold(d.next)} — ${dim(`idearium repo build ${shortRepo(repo.uuid)} ${specPath}`)}`);
+      console.log('');
+    } catch (e) { die(`could not read the plan (is idearium running on :${IDEARIUM_PORT}?): ${e.message}`); }
+  },
+
+  async 'repo.build'(os, { positional, flags }) {
+    const [prefix, specPath] = positional;
+    if (!prefix || !specPath) die('usage: idearium repo build <repo> <spec path> [--phase <id>] [--provider <p>]');
+    const repo = _findRepo(prefix);
+    try {
+      const res = await _localApi('POST', `/api/repos/${repo.uuid}/spec/build`, { path: specPath, phase: flags.phase || null, provider: flags.provider || null });
+      const d = res.data || res;
+      console.log(`${sky('→')} building ${bold(d.phase)} (${d.layer}) of ${d.mapPath}${d.runId ? ` — run ${d.runId}` : ''}`);
+    } catch (e) { die(`build failed (is idearium running on :${IDEARIUM_PORT}?): ${e.message}`); }
+  },
+
   // ── idearium gap ───────────────────────────────────────────────────────────
 
   async 'gap.list'(os, { flags }) {
@@ -743,7 +819,7 @@ async function main() {
     console.log(`  ${sky('spec')}   new | show | list | check | export`);
     console.log(`  ${sky('speceng')} list | show <uuid> | build <uuid> | chunk-agent <spec> <chunk> <agent>`);
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
-    console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid>`);
+    console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);
     console.log(`  ${sky('push')}   [--message "..."] [--branch main]`);
     console.log(`  ${sky('log')}    [--n 20]`);

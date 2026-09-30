@@ -15,6 +15,7 @@
  *   parseCommands(text)      every ```driver / ```tool block, in order, through the two above
  *   browseIntent(message)    "visit google.com", "go to https://x", "open indeed.com and …" → { url, rest } | null —
  *                            the one verb that needs no model at all
+ *   archiveImportIntent(msg) "import my archives", "/import-archives" → idearium's archive drop box (0.39.283 N30)
  *   label(raw)               what the pane shows for a block: "[driver: navigate https://google.com]"
  * Pure; bridge.js runs what these return.
  */
@@ -67,6 +68,15 @@ function browseIntent(message) {
   return { url: normalize({ action: 'navigate', url: m[1].replace(/[.,!?]+$/, '') }).url, rest: (m[2] || '').trim() };
 }
 
+// §0.39.283 N30 — James: "give copilot a command … i want to import my archives of nexus. have it pull up a drop box ui
+// and run the command". "/import-archives", "import my archives", "load the nexus zips" → idearium's drop box page.
+const ARCHIVE_RE = /^\s*\/(?:import-archives|archives?)\b|\b(?:import|bring\s+in|load|restore)\b[^.\n]{0,40}\b(?:archives?|zips?|nexus\s+history)\b/i;
+function archiveImportIntent(message, env = process.env) {
+  if (!ARCHIVE_RE.test(String(message || ''))) return null;
+  const port = parseInt(env.IDEARIUM_PORT || '4800', 10);
+  return { kind: 'archive-import', url: `http://127.0.0.1:${port}/archive-import.html`, rest: '' };
+}
+
 function label(raw) {
   const c = parseBlock(raw);
   if (c && c.__unreadable) return '[driver: unreadable — reported]';
@@ -76,4 +86,4 @@ function label(raw) {
   return `[driver: ${what}${arg ? ` ${String(arg).slice(0, 60)}` : ''}]`;
 }
 
-module.exports = { parseBlock, normalize, parseCommands, browseIntent, label, ALIASES };
+module.exports = { parseBlock, normalize, parseCommands, browseIntent, archiveImportIntent, label, ALIASES };

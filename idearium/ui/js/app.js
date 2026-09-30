@@ -98,7 +98,7 @@ async function _ideariumAlive(base) {
 async function nexusConnect(manual=false) {
   setConnUI('connecting');
   for (const base of API_CANDIDATES) {
-    if (await _ideariumAlive(base)) { API_BASE = base; CONNECTED = true; setConnUI('online', base); await loadAll(); openSSE(); _startHealthWatch(); return true; }
+    if (await _ideariumAlive(base)) { API_BASE = base; CONNECTED = true; setConnUI('online', base); if (window.IdeariumTheme) IdeariumTheme.load(base); await loadAll(); openSSE(); _startHealthWatch(); return true; }
   }
   CONNECTED = false; API_BASE = null; setConnUI('offline');
   _startHealthWatch();
@@ -482,6 +482,7 @@ function setView(v) {
     if (groupBtn) groupBtn.classList.toggle('active', views.includes(v));
     g.classList.remove('open');
   });
+  _dismissTabGroups();
   // Clicking the Repos tab itself always lands on the landing grid, even if
   // a repo was left open last visit — openRepoFor() (idea/spec → repo) is
   // the only path that should skip straight to detail mode.
@@ -524,6 +525,54 @@ function toggleTabGroup(e, btn) {
 document.addEventListener('click', () => {
   document.querySelectorAll('.tab-group.open').forEach(g => g.classList.remove('open'));
 });
+
+// §0.39.284 W4 — James: "this is hard to understand how to actually build the code base" · "get it coding the
+// projects". Build ▾ → "Build this repo": the open repo's Home tab (its specs, each with plan + build) with the Plan
+// panel open beside it, the work surface under the plan. No repo open → the library, told to pick one.
+function _dismissTabGroups() {
+  // a menu entry was chosen: close it even while the pointer still rests on it (:hover), until the pointer leaves
+  document.querySelectorAll('.tab-group').forEach(g => {
+    g.classList.remove('open');
+    if (g.matches(':hover')) { g.classList.add('dismissed'); g.addEventListener('mouseleave', () => g.classList.remove('dismissed'), { once: true }); }
+  });
+}
+function openBuildFlow() {
+  _dismissTabGroups();
+  if (typeof CURRENT_API_REPO === 'undefined' || !CURRENT_API_REPO || !REPO_DETAIL_OPEN) {
+    setView('repo');
+    toast('pick the repo to build — then Build ▾ → Build this repo (or its Home tab: Start building)', 'ok');
+    return;
+  }
+  backToRepo();
+  setRepoSubtab('home');
+  if (typeof renderBuildStart === 'function') renderBuildStart(CURRENT_API_REPO);
+  if (typeof openPlanPanel === 'function') openPlanPanel();
+  setTimeout(() => { const el = document.getElementById('repo-build-start'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('bs-flash'); setTimeout(() => el.classList.remove('bs-flash'), 1400); } }, 120);
+}
+
+// §0.39.284 W4 — the sliding ink under the active tab of each bar ("make the navigation more dynamic"). It follows
+// whatever marks a tab active (setView, setRepoSubtab, a group's view), so no caller has to know about it.
+function _navInk(bar) {
+  if (!bar) return;
+  let ink = bar.querySelector(':scope > .nav-ink');
+  if (!ink) { ink = document.createElement('span'); ink.className = 'nav-ink'; bar.appendChild(ink); }
+  const act = bar.querySelector(':scope > .tab-btn.active, :scope > .tab-group > .tab-group-btn.active, :scope > .repo-subtab-btn.active');
+  if (!act || !act.offsetParent) { ink.classList.remove('on'); return; }
+  const b = bar.getBoundingClientRect(), r = act.getBoundingClientRect();
+  ink.style.left = `${r.left - b.left + bar.scrollLeft + 8}px`; ink.style.width = `${Math.max(0, r.width - 16)}px`;
+  ink.classList.add('on');
+}
+function _navInkAll() { _navInk(document.getElementById('tabbar')); _navInk(document.getElementById('repo-subnav')); }
+(function _navInkWatch() {
+  const start = () => {
+    const mo = new MutationObserver(() => requestAnimationFrame(_navInkAll));
+    for (const id of ['tabbar', 'repo-subnav']) { const el = document.getElementById(id); if (el) mo.observe(el, { subtree: true, attributes: true, attributeFilter: ['class'] }); }
+    addEventListener('resize', () => requestAnimationFrame(_navInkAll));
+    document.addEventListener('transitionend', (e) => { if (e.target && e.target.classList && e.target.classList.contains('repo-wrap')) _navInkAll(); });
+    _navInkAll();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
 
 // ════════════════════════════════════════════════════
 // EVENT LOG
@@ -3624,6 +3673,18 @@ function openRepoDesktop(repoUuid) {
 
 // §0.39.279 — the settings console (ui/settings.html): idearium's config and every repo's agent / prompt / hat /
 // compartment / desktop settings in one window, served by idearium itself.
+// §0.39.283 N30 — James: "give copilot a command … i want to import my archives of nexus. have it pull up a drop box
+// ui and run the command". The drop box (ui/archive-import.html), served by idearium: /import-archives in the CLI,
+// or plainly "import my archives", opens it.
+function openArchiveImport() {
+  if (!API_BASE) { toast('idearium is offline — the archive import is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/archive-import.html`, 'idearium-archive-import', 'width=1120,height=880');
+  if (!w) toast('the archive import window was blocked — allow pop-ups for idearium', 'err');
+  return w;
+}
+/** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
+const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;
+
 function openSettingsConsole(repoUuid) {
   if (!API_BASE) { toast('idearium is offline — the settings console is served by it', 'err'); return; }
   const w = window.open(`${API_BASE}/settings.html${repoUuid ? `?repo=${encodeURIComponent(repoUuid)}` : ''}`, 'idearium-settings', 'width=1280,height=900');
@@ -4399,6 +4460,13 @@ async function agentSend(override = null) {
   const lines = _agentTranscript(uuid);
   if (!override) { _agentInputHistory(uuid).push(message); AGENT_HIST_POS.delete(uuid); }
   if (!override && message.startsWith('/')) { ta.value = ''; return agentCommand(message); }
+  if (!override && ARCHIVE_IMPORT_INTENT.test(message)) {   // §0.39.283 N30 — a command in plain words
+    ta.value = '';
+    lines.push({ role: 'you', text: message });
+    _cli(uuid, openArchiveImport() ? 'opened the archive import — drop your NEXUS zips (or a folder) there; it shows the order first, then imports' : 'could not open the archive import window', 'import-archives');
+    renderRepoAgent(CURRENT_API_REPO);
+    return;
+  }
 
   if (!override) lines.push({ role: 'you', text: message });
   const line = { role: 'agent', text: 'thinking…', meta: null };
@@ -4715,6 +4783,9 @@ const AGENT_CLI_HELP = [
   '  /forget <id>                  remove one thing it learned',
   '  /history [n]   /export   /import <path>   /clear',
   '',
+  'NEXUS ITSELF',
+  '  /import-archives               drop your NEXUS release zips (or a folder) — each becomes a dated commit of NEXUS history (also /archives, /archive)',
+  '',
   'CODE IT WRITES',
   '  /mode review|auto             its code waits for you (review) or is written on arrival (auto)',
   '  /injects [status]   /inject <path>   /open <id>',
@@ -4724,7 +4795,7 @@ const AGENT_CLI_HELP = [
 ].join('\n');
 const AGENT_CLI_ALIASES = { '?': 'help', h: 'help', st: 'status', t: 'tools', tool: 'tools', dbg: 'debug', hist: 'history', ctx: 'context', diag: 'diagnose', find: 'recall', search: 'recall', mem: 'recall' };
 const AGENT_CLI_COMMANDS = ['help', 'debug', 'tools', 'scope', 'graph', 'context', 'run', 'test', 'diagnose', 'status', 'provider', 'model', 'hat', 'forge',
-  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert', 'recall', 'atlas'];
+  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert', 'recall', 'atlas', 'import-archives'];
 /** The closest known command to a typo (edit distance ≤ 2), or null. */
 function _agentClosest(cmd) {
   const d = (a, b) => { const m = [...Array(b.length + 1).keys()]; for (let i = 1; i <= a.length; i++) { let prev = m[0]; m[0] = i;
@@ -4769,6 +4840,10 @@ async function agentCommand(line) {
   try {
     switch ((cmd || '').toLowerCase()) {
       case 'help': case '?': _cli(uuid, AGENT_CLI_HELP); break;
+      // §0.39.283 N30 — the archive import drop box
+      case 'import-archives': case 'archives': case 'archive': {
+        _cli(uuid, openArchiveImport() ? 'opened the archive import — drop your NEXUS zips (or a folder); "Check the order" first, then Import' : 'could not open the archive import window'); break;
+      }
       // 0.39.257 — tools, scope, debug, graph, run/test/diagnose
       case 'tools': {
         const r = await api(`/api/repos/${uuid}/agent/tools${arg ? `?q=${encodeURIComponent(arg)}` : ''}`, {}, 15000);

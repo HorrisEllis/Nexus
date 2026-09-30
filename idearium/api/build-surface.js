@@ -13,7 +13,8 @@
  *   environmentSet  POST /api/repos/:uuid/environment          save the repo's options (normalized, dropped keys named)
  *   environmentSetup POST /api/repos/:uuid/environment/setup   the VM setup job with the extras this repo needs
  *   specPlanGet     GET  /api/repos/:uuid/spec/plan?path=      the spec's phasemap: validated, ordered, next ready
- *   specPlan        POST /api/repos/:uuid/spec/plan            ask the repo's agent to write it (BS5)
+ *   specPlan        POST /api/repos/:uuid/spec/plan            ask the repo's agent to write it (BS5); it always lands (W2):
+ *                                                              the reply text, else derived from the spec; {derive:true} = now
  *   specBuild       POST /api/repos/:uuid/spec/build           build the next ready phase (or the one named)
  *   plan            GET  /api/repos/:uuid/plan[?map=]          BS6: steps, gates, ledgers
  *   manage          POST /api/repos/:uuid/manage               one file (or lines of it) handed to the agent (BS8)
@@ -176,6 +177,12 @@ export async function specPlan(deps, uuid, body) {
   if (!spec || spec.error || typeof spec.content !== 'string') return bad(404, `no spec ${specPath} in this repo`);
   const m = await _specMap(deps, r.repo, r.dir, specPath);
   if (m.exists && !body.replan) return bad(409, `${m.mapPath} exists already — build from it, or ask again with replan:true (the old one is kept in versionium)`, { code: 'PLAN_EXISTS', mapPath: m.mapPath });
+  // §0.39.284 W2 — {derive:true}: the plan from the spec's own sections, now, without the agent (CLI / API first)
+  if (body.derive) {
+    const d = await _landDerived(deps, r.repo, specPath, spec.content, m, 'asked for directly (derive:true)');
+    if (!d.ok) return bad(422, d.error, { code: 'NOT_DERIVED', problems: d.problems || [] });
+    return ok({ repoUuid: uuid, spec: specPath, mapPath: m.mapPath, state: 'replied', plannedBy: 'derived', phases: d.phases, snapshot: d.snapshot || null });
+  }
   const p = m.SP.planPrompt({ repo: r.repo, specPath, specText: spec.content, mapPath: m.mapPath });
   const snap = await deps.snapshot(uuid, { message: `before planning ${specPath}`, causedBy: `idearium.spec.plan:${specPath}` });
   if (!snap.ok) return bad(snap.status === 409 ? 409 : 502, `not planned: the Versionium snapshot before it failed — ${snap.error}`, { code: 'NO_SNAPSHOT' });
@@ -188,18 +195,60 @@ export async function specPlan(deps, uuid, body) {
   const shadow = SH.declare({ step: 'spec.plan', expects: { files: [m.mapPath] }, subject: { repoUuid: uuid, spec: specPath, runId } });
   Promise.resolve().then(() => RA.dispatch({ repo: r.repo, repoDir: r.dir, message: p.message, provider: body.provider || null, layer: deps.getRepoLayer() }))
     .then(async (res) => {
-      const after = await _specMap(deps, r.repo, r.dir, specPath);
+      let after = await _specMap(deps, r.repo, r.dir, specPath);
+      // §0.39.284 W2 — the map lands even when the agent did not write it: from its reply text, else derived from the spec
+      let plannedBy = after.exists && after.v.ok ? 'agent' : null, landNote = null;
+      if (!plannedBy) {
+        const land = await _landFallback(deps, r.repo, specPath, spec.content, m, after, res);
+        plannedBy = land.plannedBy; landNote = land.note;
+        after = await _specMap(deps, r.repo, r.dir, specPath);
+      }
       if (res && res.ok && !(res.injects && res.injects.blocked)) SH.settle(shadow, { files: [...((res.injects && res.injects.injects) || []).map(i => i.path || i.file), ...(after.exists ? [m.mapPath] : [])].filter(Boolean) });
       else SH.drop(shadow);
       // §0.39.282 N21 — a reply blocked at its gate (a refusal) is 'blocked', never 'replied'
-      const state = res && res.ok ? (res.injects && res.injects.blocked ? 'blocked' : 'replied') : 'failed';
+      const landed = after.exists && after.v.ok;
+      const state = landed ? 'replied' : (res && res.ok ? (res.injects && res.injects.blocked ? 'blocked' : 'replied') : 'failed');
       deps.appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, runId, repoUuid: uuid, targetRepo: uuid, map: m.mapPath, phase: 'PLAN', state, snapshot: snap.data.commitId,
-        error: res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : (after.exists && !after.v.ok ? `the phasemap came back but is not valid: ${after.v.problems.slice(0, 3).join('; ')}` : (!after.exists ? `no ${m.mapPath} came back (it may be waiting for approval in the Agent tab)` : null)),
-        injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null, ts: Date.now() });
+        plannedBy, note: landNote, phases: landed ? after.v.phases.length : 0,
+        error: landed ? null : res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : (after.exists && !after.v.ok ? `the phasemap came back but is not valid: ${after.v.problems.slice(0, 3).join('; ')}` : (!after.exists ? `no ${m.mapPath} came back (it may be waiting for approval in the Agent tab)` : null)),
+        injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null,
+        tools: (await import('../repo/work-surface.js')).toolsBrief(res), ts: Date.now() });
       deps.emit('idearium.repo.phase.run', { runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state });
     })
     .catch((e) => { SH.drop(shadow); deps.appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state: 'failed', error: e.message, ts: Date.now() }); });
   return ok({ repoUuid: uuid, runId, spec: specPath, mapPath: m.mapPath, snapshot: snap.data.commitId, state: 'building', promptChars: p.message.length });
+}
+// §0.39.284 W2 — the fallbacks, in order: the agent's map from its reply text, then the plan derived from the spec.
+// An invalid map the agent DID write is kept beside it (<map>.agent-draft.txt), never overwritten silently (§0.3).
+async function _landFallback(deps, repo, specPath, specText, m, after, res) {
+  const name = path.posix.basename(m.mapPath).replace(/\.spec$/, '');
+  if (after.exists && !after.v.ok) {
+    try { deps.getRepoLayer().writeTextFile(repo.uuid, m.mapPath.replace(/\.spec$/, '.agent-draft.txt'), after.text); } catch (_) {}
+  }
+  const fromReply = res && res.text ? m.SP.planFromReply(res.text, name) : null;
+  if (fromReply) {
+    const w = deps.getRepoLayer().writeTextFile(repo.uuid, m.mapPath, fromReply.text);
+    if (w && !w.error) return { plannedBy: 'agent-reply', note: 'the agent wrote the map in its reply, not as the addressed file — taken from the reply' };
+  }
+  const why = !res || !res.ok ? `the agent failed (${String((res && res.error) || 'no reply').slice(0, 160)})`
+    : after.exists ? `the agent's map was not valid (${after.v.problems.slice(0, 2).join('; ')}) — kept as ${m.mapPath.replace(/\.spec$/, '.agent-draft.txt')}`
+    : 'the agent replied without a map';
+  const d = await _landDerived(deps, repo, specPath, specText, m, why, { snapshot: false });
+  return d.ok ? { plannedBy: 'derived', note: `${why}; the plan was derived from the spec's ${d.sections} section(s)` } : { plannedBy: null, note: `${why}; deriving failed: ${d.error}` };
+}
+async function _landDerived(deps, repo, specPath, specText, m, reason, { snapshot = true } = {}) {
+  const d = m.SP.derivePlan({ specPath, specText, mapPath: m.mapPath, reason });
+  if (!d.ok) return { ok: false, error: `the spec could not be planned from its sections: ${(d.problems || []).slice(0, 3).join('; ')}`, problems: d.problems };
+  let snap = null;
+  if (snapshot && m.exists) {
+    const sn = await deps.snapshot(repo.uuid, { message: `before deriving the plan of ${specPath}`, causedBy: `idearium.spec.plan.derive:${specPath}` });
+    if (!sn.ok) return { ok: false, error: `not written: the Versionium snapshot before it failed — ${sn.error}` };
+    snap = sn.data.commitId;
+  }
+  const w = deps.getRepoLayer().writeTextFile(repo.uuid, m.mapPath, d.text);
+  if (!w || w.error) return { ok: false, error: `could not write ${m.mapPath}: ${(w && w.error) || 'unknown'}` };
+  deps.emit('idearium.repo.spec.planned', { repoUuid: repo.uuid, spec: specPath, map: m.mapPath, plannedBy: 'derived', phases: d.phases.length, reason });
+  return { ok: true, phases: d.phases.length, sections: d.sections, snapshot: snap };
 }
 export async function specBuild(deps, uuid, body) {
   const r = _repo(deps, uuid); if (r.error) return r.error;

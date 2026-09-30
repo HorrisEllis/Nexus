@@ -100,7 +100,7 @@ function livingSpecView(v) { LSPEC.view = v; _lsPaint(); }
 // phases the same way." The spec's phasemap (<spec>-phasemap.spec, idearium/repo/spec-plan.js) is written by the
 // repo's agent on "plan"; then its phases build one at a time, bottom-up, each after a Versionium snapshot
 // (POST /api/repos/:uuid/spec/build → the Phases manager's build). Deviation from the baseline is shown here too.
-const LSBUILD = { key: null, plan: null, dev: null, busy: false, error: null };
+const LSBUILD = { key: null, plan: null, dev: null, busy: false, error: null, waiting: false };
 const _LS_LAYER_COLOR = { foundation: 'var(--violet)', library: 'var(--sky)', api: 'var(--mint)', cli: 'var(--amber)', automation: 'var(--amber)', ui: 'var(--coral)' };
 
 async function specBuildLoad(specPath) {
@@ -131,7 +131,9 @@ function _lsBuildHtml() {
   if (!p) return `<div class="ls-bar"><span style="color:var(--text3)">reading the build plan…</span></div>`;
   if (!p.exists) return `<div class="ls-bar">
       <button class="ls-go" ${LSBUILD.busy ? 'disabled' : ''} onclick="specPlanAsk()">▶ Build this spec</button>
-      <span>first its phases: the repo's agent splits the whole build into phases — chunked, bottom-up (${escapeHtml((p.layers || []).join(' → '))}), with the axioms (§3.1 §3.3 §3.4 …) — into <code>${escapeHtml(p.mapPath)}</code></span></div>${_lsDevLine()}`;
+      <button class="ls-mini" ${LSBUILD.busy ? 'disabled' : ''} onclick="specPlanDerive()" title="no agent: one phase per section of this spec, its layer read from the section — written at once, refine it later">⚡ plan from the spec now</button>
+      <span>first its phases: the repo's agent splits the whole build into phases — chunked, bottom-up (${escapeHtml((p.layers || []).join(' → '))}), with the axioms (§3.1 §3.3 §3.4 …) — into <code>${escapeHtml(p.mapPath)}</code>. If the agent writes none, the plan is derived from the spec's sections.</span></div>
+    ${LSBUILD.waiting ? `<div class="ls-dev ls-waiting">the agent is planning… this updates when <code>${escapeHtml(p.mapPath)}</code> lands</div>` : ''}${_lsDevLine()}`;
   const next = p.phases.find(x => x.id === p.next);
   const done = p.phases.filter(x => x.status === 'done' || x.status === 'complete').length;
   const rows = p.phases.map(x => {
@@ -159,8 +161,32 @@ async function specPlanAsk(replan = false) {
     const r = await api(`/api/repos/${repo.uuid}/spec/plan`, { method: 'POST', body: JSON.stringify({ path: LSPEC.path, replan }) }, 60000);
     toast(`planning ${LSPEC.path}: snapshot ${String(r.snapshot).slice(0, 12)} taken · the agent is writing ${r.mapPath}`, 'ok');
     if (typeof openPlanPanel === 'function') openPlanPanel({ map: r.mapPath });
+    _specPlanWatch(LSPEC.path);
   } catch (e) { toast(`not planned: ${e.message}`, 'err'); }
   LSBUILD.busy = false; specBuildLoad(LSPEC.path);
+}
+// §0.39.284 W2 — the plan lands (the agent's, its reply's, or derived); watch for it so the tab fills without a click
+let _specPlanTimer = null;
+function _specPlanWatch(specPath, tries = 60) {
+  clearTimeout(_specPlanTimer); LSBUILD.waiting = true;
+  _specPlanTimer = setTimeout(async () => {
+    if (LSPEC.path !== specPath) { LSBUILD.waiting = false; return; }
+    await specBuildLoad(specPath);
+    if (LSBUILD.plan && LSBUILD.plan.exists) { LSBUILD.waiting = false; const el = document.getElementById('ls-build'); if (el) el.innerHTML = _lsBuildHtml(); toast(`${LSBUILD.plan.mapPath}: ${LSBUILD.plan.phases.length} phases — the Phases tab has them`, 'ok'); if (typeof renderPhasesRefresh === 'function') renderPhasesRefresh(); return; }
+    if (tries > 1) _specPlanWatch(specPath, tries - 1); else LSBUILD.waiting = false;
+  }, 5000);
+}
+async function specPlanDerive(specPath = LSPEC.path) {
+  const repo = CURRENT_API_REPO; if (!repo || !specPath) return null;
+  LSBUILD.busy = true; const el0 = document.getElementById('ls-build'); if (el0) el0.innerHTML = _lsBuildHtml();
+  let r = null;
+  try {
+    r = await api(`/api/repos/${repo.uuid}/spec/plan`, { method: 'POST', body: JSON.stringify({ path: specPath, derive: true }) }, 60000);
+    toast(`${r.mapPath}: ${r.phases} phases, derived from the spec — build them bottom-up`, 'ok');
+    if (typeof renderPhasesRefresh === 'function') renderPhasesRefresh();
+  } catch (e) { toast(`not planned: ${e.message}`, 'err'); }
+  LSBUILD.busy = false; if (LSPEC.path === specPath) specBuildLoad(specPath);
+  return r;
 }
 async function specBuildPhase(phase) {
   const repo = CURRENT_API_REPO; if (!repo || !LSPEC.path) return;
