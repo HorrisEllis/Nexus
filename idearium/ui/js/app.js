@@ -4784,7 +4784,7 @@ const AGENT_CLI_HELP = [
   '  /history [n]   /export   /import <path>   /clear',
   '',
   'NEXUS ITSELF',
-  '  /import-archives               drop your NEXUS release zips (or a folder) — each becomes a dated commit of NEXUS history',
+  '  /import-archives               drop your NEXUS release zips (or a folder) — each becomes a dated commit of NEXUS history (also /archives, /archive)',
   '',
   'CODE IT WRITES',
   '  /mode review|auto             its code waits for you (review) or is written on arrival (auto)',
