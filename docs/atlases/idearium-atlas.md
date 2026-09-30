@@ -482,23 +482,23 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 3. **Plan** a spec, in any of these places:
    - **Spec tab:** "▶ Build this spec" asks the agent; "⚡ plan from the spec now" plans at once, without the agent.
    - **An empty Phases tab:** one row per spec.
-   - **CLI:** `idearium repo plan <repo> <spec> [--derive]`.
+   - **CLI:** idearium repo plan &lt;repo&gt; &lt;spec&gt; [--derive] (idearium/cli/index.js).
 4. **Build** the next phase:
    - Spec tab: "▶ Build next".
    - Phases tab: ▶.
-   - CLI: `idearium repo build <repo> <spec>`.
+   - CLI: idearium repo build &lt;repo&gt; &lt;spec&gt;.
 5. **Watch the work surface** under the plan: every file the agent wrote, as a diff.
 
 **The plan always lands** (`idearium/repo/spec-plan.js`, `idearium/api/build-surface.js`).
-- **The order it tries:** the agent's `<spec>-phasemap.spec`; else a map the agent wrote in its reply text; else a map **derived from the spec's own sections**.
+- **The order it tries:** the agent's &lt;spec&gt;-phasemap.spec; else a map the agent wrote in its reply text; else a map **derived from the spec's own sections**.
   - A derived map has one phase per section, with small sections grouped.
   - Each phase's layer is read from the section's name and text, bottom-up, with dependencies chained.
-  - Its `meta` says `planned_by`, `reason` and `planned_at`.
-- **An invalid map the agent wrote** is kept as `<map>.agent-draft.txt`; it is never overwritten.
-- **`POST /api/repos/:uuid/spec/plan {derive:true}`** plans at once. `idearium repo plan --dry --file <spec>` previews a spec file without writing.
+  - Its meta says planned_by, reason and planned_at.
+- **An invalid map the agent wrote** is kept as &lt;map&gt;.agent-draft.txt; it is never overwritten.
+- **POST /api/repos/:uuid/spec/plan {derive:true}** plans at once. idearium repo plan --dry --file &lt;spec&gt; previews a spec file without writing.
 
-**The work surface** (`GET /api/repos/:uuid/worksurface`, `idearium/repo/work-surface.js`, `ui/js/work-surface.js`). It is a projection over the `.inject` nodes and the run rows:
-- **One card per file.** Each card shows the file's newest state, `+added −removed`, the diff in green and red, who wrote it, and the run that made it.
+**The work surface** (GET /api/repos/:uuid/worksurface, `idearium/repo/work-surface.js`, `idearium/ui/js/work-surface.js`). It is a projection over the .inject nodes (`lib/repo-inject.js`) and the run rows:
+- **One card per file.** Each card shows the file's newest state, +added −removed, the diff in green and red, who wrote it, and the run that made it.
 - **Actions per card:** **Apply** / **Reject** (proposed), **Revert** (applied), **Promote** (staged).
 - **The tools strip:** the tool scope, the tools the agent is given, and every call it made, ✓ or ✗ with the error. Phase and plan runs now keep their tool calls.
 
@@ -506,9 +506,9 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Create and Build are back on the main bar**, not the repo's tab row. With a repo open, they act on it.
 - A sliding ink marks the active tab, dropdowns animate, and views fade in.
 
-**Speed.** Making a code repo no longer freezes idearium. The branch of the original used to run git synchronously, which held a 91 MB repo's request for 3½ minutes and showed idearium OFFLINE. It now runs async (`cos/workspace branchWorkspaceAsync`).
+**Speed.** Making a code repo no longer freezes idearium. The branch of the original used to run git synchronously, which held a 91 MB repo's request for 3½ minutes and showed idearium OFFLINE. It now runs async (branchWorkspaceAsync in `cos/workspace/index.js`).
 
-**One look** (`ui/css/nexus-theme.css`, `ui/js/theme.js`).
+**One look** (`idearium/ui/css/nexus-theme.css`, `idearium/ui/js/theme.js`).
 - **Palettes:**
   - **NEXUS** (the default) is the main UI's palette, token for token (`ui/themes/nexus-dark.css`).
   - **Midnight** is idearium's look before this release.
@@ -517,6 +517,6 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Motion:** full or reduced.
 - **Where to set them:**
   - Settings console → **Appearance**, which applies at once in every idearium window.
-  - Config `ui.theme`, `ui.accent` and `ui.motion` through `POST /api/config`.
+  - Config ui.theme, ui.accent and ui.motion through POST /api/config (`idearium/lib/config-core.cjs`).
 
-**Tests:** `test-plan-lands`, `test-work-surface`, `test-idearium-theme`, `test-cos-workspace` (WS-05/06); probe `tests/probe/idearium-coding-flow-chromium.js` (the real page on a real idearium).
+**Tests:** `tests/modules/test-plan-lands.test.js`, `tests/modules/test-work-surface.test.js`, `tests/modules/test-idearium-theme.test.js`, `tests/modules/test-cos-workspace.test.js` (WS-05/06); probe `tests/probe/idearium-coding-flow-chromium.js` (the real page on a real idearium).
