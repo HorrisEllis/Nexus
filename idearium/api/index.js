@@ -513,6 +513,13 @@ async function _reconcileSpecRepos() {
 }
 
 // ── §0.39.271 P2/P3 — Phases manager helpers ───────────────────────────────
+// §0.39.284 W3 — a reply's tool calls, small enough to keep on its run row (same shape as work-surface.js toolsBrief)
+function _toolsBrief(r) {
+  const T = r && Array.isArray(r.toolCalls) ? r.toolCalls : null;
+  if (!T) return null;
+  return T.slice(0, 40).map(t => ({ name: String(t.name || '?'), ok: t.ok !== false, error: t.error ? String(t.error).slice(0, 200) : null,
+    args: (() => { try { return JSON.stringify(t.arguments || {}).slice(0, 200); } catch (_) { return null; } })() }));
+}
 // Runs are append-only rows (one per state change) in idearium_phase_runs; the
 // latest row of each runId is the run.
 function _phaseRuns(repoUuid) {
@@ -633,6 +640,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : null)),
         provider: r && (r.providerUsed || r.provider) || null,
         reply: r && r.text ? String(r.text).slice(0, 4000) : null, injects: inj, elapsedMs: r && r.elapsedMs || null, ts: Date.now() };
+      // §0.39.284 W3 — the tool calls of this run are kept on it, so the work surface can show what the agent used
+      try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
       appendRow('idearium_phase_runs', row);
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId });
       _reviewDraft({ r, state, absent, target, base, commitId, req, note, message }).catch(e => console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`));
@@ -1180,6 +1189,7 @@ const ROUTE_CAP = {
   'health':           null,              // public — no auth required
   'cos.testenv.status': CAPS.READ_IDEAS,
   'history.import.status': CAPS.READ_IDEAS,
+  'repo.worksurface': CAPS.READ_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,    // writes a dropped zip into the data root's history-import inbox
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
@@ -1535,6 +1545,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','agent','memory'],  'repo.agent.memory.record'],
     ['DELETE', ['api','repos',    ':uuid','agent','memory',':obs'], 'repo.agent.memory.forget'],
     // §INJECT 2026-09-21 — .inject nodes: agent code into this compartment (lib/repo-inject.js)
+    ['GET',    ['api','repos',    ':uuid','worksurface'],           'repo.worksurface'],   // §0.39.284 W3 — changed files as diffs + tools
     ['GET',    ['api','repos',    ':uuid','injects'],               'repo.inject.list'],
     ['POST',   ['api','repos',    ':uuid','injects'],               'repo.inject.create'],
     ['GET',    ['api','repos',    ':uuid','injects',':id'],         'repo.inject.get'],
@@ -3902,6 +3913,23 @@ async function handle(req, res, route, query, body) {
     }
 
     // ── §INJECT 2026-09-21 — .inject nodes ─────────────────────────────────
+    // §0.39.284 W3 — the work surface (idearium/repo/work-surface.js): every file the agent changed, with its diff, the
+    // run that made it, and the tools the agent has and used. A projection — it stores nothing.
+    case 'repo.worksurface': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const WS = await import('../repo/work-surface.js');
+      const RI = _require('../../lib/repo-inject.js');
+      const RA = _require('../../lib/repo-agent.js');
+      const layer = getRepoLayer();
+      const rows = loadTable('idearium_phase_runs').filter(r => r.repoUuid === params.uuid || r.targetRepo === params.uuid);
+      let listed = [], scope = null;
+      try { scope = RA.getToolScope(params.uuid); listed = RA.listedTools(); } catch (_) {}
+      const out = WS.workSurface({ injects: RI.list(params.uuid, { limit: 1000 }), runs: rows, listed, scope,
+        readCurrent: (p) => { const r = layer.readTextFile(params.uuid, p); return r && !r.error && typeof r.content === 'string' ? r.content : null; },
+        unifiedDiff: _require('../../lib/code-edit.js').unifiedDiff, limit: Math.min(200, parseInt(query.limit || '60', 10) || 60) });
+      return ok(res, { repoUuid: params.uuid, ...out });
+    }
     case 'repo.inject.list': case 'repo.inject.create': case 'repo.inject.get':
     case 'repo.inject.edit': case 'repo.inject.apply': case 'repo.inject.reject':
     case 'repo.inject.revert': case 'repo.agent.settings.get': case 'repo.agent.settings.set':

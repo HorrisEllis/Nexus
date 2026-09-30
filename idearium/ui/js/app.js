@@ -482,6 +482,7 @@ function setView(v) {
     if (groupBtn) groupBtn.classList.toggle('active', views.includes(v));
     g.classList.remove('open');
   });
+  _dismissTabGroups();
   // Clicking the Repos tab itself always lands on the landing grid, even if
   // a repo was left open last visit — openRepoFor() (idea/spec → repo) is
   // the only path that should skip straight to detail mode.
@@ -524,6 +525,54 @@ function toggleTabGroup(e, btn) {
 document.addEventListener('click', () => {
   document.querySelectorAll('.tab-group.open').forEach(g => g.classList.remove('open'));
 });
+
+// §0.39.284 W4 — James: "this is hard to understand how to actually build the code base" · "get it coding the
+// projects". Build ▾ → "Build this repo": the open repo's Home tab (its specs, each with plan + build) with the Plan
+// panel open beside it, the work surface under the plan. No repo open → the library, told to pick one.
+function _dismissTabGroups() {
+  // a menu entry was chosen: close it even while the pointer still rests on it (:hover), until the pointer leaves
+  document.querySelectorAll('.tab-group').forEach(g => {
+    g.classList.remove('open');
+    if (g.matches(':hover')) { g.classList.add('dismissed'); g.addEventListener('mouseleave', () => g.classList.remove('dismissed'), { once: true }); }
+  });
+}
+function openBuildFlow() {
+  _dismissTabGroups();
+  if (typeof CURRENT_API_REPO === 'undefined' || !CURRENT_API_REPO || !REPO_DETAIL_OPEN) {
+    setView('repo');
+    toast('pick the repo to build — then Build ▾ → Build this repo (or its Home tab: Start building)', 'ok');
+    return;
+  }
+  backToRepo();
+  setRepoSubtab('home');
+  if (typeof renderBuildStart === 'function') renderBuildStart(CURRENT_API_REPO);
+  if (typeof openPlanPanel === 'function') openPlanPanel();
+  setTimeout(() => { const el = document.getElementById('repo-build-start'); if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('bs-flash'); setTimeout(() => el.classList.remove('bs-flash'), 1400); } }, 120);
+}
+
+// §0.39.284 W4 — the sliding ink under the active tab of each bar ("make the navigation more dynamic"). It follows
+// whatever marks a tab active (setView, setRepoSubtab, a group's view), so no caller has to know about it.
+function _navInk(bar) {
+  if (!bar) return;
+  let ink = bar.querySelector(':scope > .nav-ink');
+  if (!ink) { ink = document.createElement('span'); ink.className = 'nav-ink'; bar.appendChild(ink); }
+  const act = bar.querySelector(':scope > .tab-btn.active, :scope > .tab-group > .tab-group-btn.active, :scope > .repo-subtab-btn.active');
+  if (!act || !act.offsetParent) { ink.classList.remove('on'); return; }
+  const b = bar.getBoundingClientRect(), r = act.getBoundingClientRect();
+  ink.style.left = `${r.left - b.left + bar.scrollLeft + 8}px`; ink.style.width = `${Math.max(0, r.width - 16)}px`;
+  ink.classList.add('on');
+}
+function _navInkAll() { _navInk(document.getElementById('tabbar')); _navInk(document.getElementById('repo-subnav')); }
+(function _navInkWatch() {
+  const start = () => {
+    const mo = new MutationObserver(() => requestAnimationFrame(_navInkAll));
+    for (const id of ['tabbar', 'repo-subnav']) { const el = document.getElementById(id); if (el) mo.observe(el, { subtree: true, attributes: true, attributeFilter: ['class'] }); }
+    addEventListener('resize', () => requestAnimationFrame(_navInkAll));
+    document.addEventListener('transitionend', (e) => { if (e.target && e.target.classList && e.target.classList.contains('repo-wrap')) _navInkAll(); });
+    _navInkAll();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
 
 // ════════════════════════════════════════════════════
 // EVENT LOG

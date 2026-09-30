@@ -211,7 +211,8 @@ export async function specPlan(deps, uuid, body) {
       deps.appendRow('idearium_phase_runs', { uuid: `${runId}-${state}`, runId, repoUuid: uuid, targetRepo: uuid, map: m.mapPath, phase: 'PLAN', state, snapshot: snap.data.commitId,
         plannedBy, note: landNote, phases: landed ? after.v.phases.length : 0,
         error: landed ? null : res && !res.ok ? String(res.error || 'agent failed').slice(0, 500) : (after.exists && !after.v.ok ? `the phasemap came back but is not valid: ${after.v.problems.slice(0, 3).join('; ')}` : (!after.exists ? `no ${m.mapPath} came back (it may be waiting for approval in the Agent tab)` : null)),
-        injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null, ts: Date.now() });
+        injects: res && res.injects ? { injected: (res.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50) } : null, reply: res && res.text ? String(res.text).slice(0, 4000) : null,
+        tools: (await import('../repo/work-surface.js')).toolsBrief(res), ts: Date.now() });
       deps.emit('idearium.repo.phase.run', { runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state });
     })
     .catch((e) => { SH.drop(shadow); deps.appendRow('idearium_phase_runs', { uuid: `${runId}-failed`, runId, repoUuid: uuid, map: m.mapPath, phase: 'PLAN', state: 'failed', error: e.message, ts: Date.now() }); });

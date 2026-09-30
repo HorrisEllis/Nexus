@@ -90,9 +90,9 @@ spec:
 
     W3_work_surface:
       layer: api
-      status: OPEN
+      status: DONE
       depends_on: [W2_plan_always_lands]
-      files: [idearium/repo/work-surface.js, idearium/api/index.js, idearium/ui/js/work-surface.js, idearium/ui/css/work-surface.css, idearium/ui/js/plan-panel.js]
+      files: [idearium/repo/work-surface.js, idearium/api/index.js, idearium/api/build-surface.js, idearium/ui/js/work-surface.js, idearium/ui/css/work-surface.css, idearium/ui/js/plan-panel.js, loom/maps/one-idearium-map.js]
       does: >-
         GET /api/repos/:uuid/worksurface — every file the agent changed (its .inject nodes, newest state per path),
         with +added / −removed counts and the unified diff (before → content), the status (proposed / staged /
@@ -105,7 +105,7 @@ spec:
 
     W4_navigation:
       layer: ui
-      status: OPEN
+      status: DONE
       depends_on: [W3_work_surface]
       files: [idearium/ui/index.html, idearium/ui/js/app.js]
       does: >-
@@ -113,6 +113,12 @@ spec:
         this repo" first: the three steps (plan the spec → phases → build the next phase) on the open repo, with the
         Plan panel and work surface. The bars move: a sliding underline under the active tab, and the views fade in.
       proof: "a Chromium probe: the main bar has Create and Build, the repo row does not; the Build flow opens"
+      built: >-
+        2026-09-30, with W3. tests/probe/idearium-coding-flow-chromium.js 12/12 on a REAL idearium (own port, sandboxed
+        stores): the main bar Welcome · Repos · Create · Build, the ink moves with the active tab, an empty Phases tab
+        plans the spec in place (5 phases, bottom-up), Build ▾ opens animated with "Build this repo" first, which lands
+        on Home's Start building with the Plan panel and the work surface (two diff cards, +/−, Apply/Reject/Revert, the
+        tools strip), and Apply writes the file. test-work-surface 14/14; test-one-idearium-phases-nodes N1 inverted.
 
     W5_theme_and_css:
       layer: ui

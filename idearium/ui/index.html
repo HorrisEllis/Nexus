@@ -109,6 +109,25 @@ body{display:flex;flex-direction:column;position:relative}
 .tab-sub:hover{background:var(--b0);color:var(--text)}
 .tab-sub.active{color:var(--sky);background:rgba(56,189,248,.09)}
 .tab-spacer{flex:1}
+/* §0.39.284 W4 — James: "make the navigation more dynamic. i like when its less static." A sliding ink under the active
+   tab (js: _navInk), dropdowns that open instead of appearing, views and repo tabs that fade in. */
+.tabbar,.repo-subnav{position:relative}
+.nav-ink{position:absolute;bottom:0;height:2px;border-radius:2px;background:var(--sky);box-shadow:0 0 12px rgba(56,189,248,.55);transition:left .32s cubic-bezier(.2,.8,.2,1),width .32s cubic-bezier(.2,.8,.2,1),opacity .2s;pointer-events:none;opacity:0}
+.nav-ink.on{opacity:1}
+.tabbar .tab-btn.active{border-bottom-color:transparent}
+.tab-btn{transition:color .18s,background .18s,transform .18s}.tab-btn:hover{background:rgba(255,255,255,.025)}
+.tab-btn:active{transform:translateY(1px)}
+.tab-dropdown{display:flex!important;opacity:0;visibility:hidden;transform:translateY(-6px) scale(.98);transform-origin:top left;transition:opacity .16s,transform .16s,visibility 0s linear .16s}
+.tab-group:hover .tab-dropdown,.tab-group.open .tab-dropdown{opacity:1;visibility:visible;transform:none;transition:opacity .16s,transform .16s}
+.tab-group.dismissed .tab-dropdown{opacity:0;visibility:hidden;transform:translateY(-6px) scale(.98)}
+.tab-sub{transition:background .12s,color .12s,padding-left .12s}.tab-sub:hover{padding-left:14px}
+.tab-sub-lead{align-items:flex-start}.tab-sub-lead small{display:block;font-size:9.5px;color:var(--text3);margin-top:2px;white-space:normal;line-height:1.3}
+.tab-sub-lead .tab-icon{color:var(--sky)}.tab-sub-sep{height:1px;background:var(--b1);margin:4px 6px}
+.bs-flash{animation:bsFlash 1.4s ease}@keyframes bsFlash{0%,60%{box-shadow:0 0 0 2px rgba(56,189,248,.55)}100%{box-shadow:none}}
+.view.active{animation:viewIn .26s cubic-bezier(.2,.8,.2,1)}
+.repo-subtab-panel.active{animation:viewIn .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.nav-ink,.tab-dropdown,.view.active,.repo-subtab-panel.active{transition:none;animation:none}}
 .tab-badge{font-size:9px;padding:1px 6px;border-radius:20px;background:var(--b0);color:var(--text2);letter-spacing:.04em}
 
 .view-area{flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}
@@ -903,6 +922,26 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
          row (#repo-subnav). This bar is always Welcome + Repos. -->
 
     <button class="tab-btn" data-view="repo" onclick="setView('repo')"><span class="tab-icon">🗂</span>Repos<span class="tab-badge" id="repo-count-badge"></span></button>
+    <!-- §0.39.284 W4 — James: "the create and build tabs should be removed from the repos and moved back to the main
+         navbar." They sit here again (0.39.271 N1 had moved them into the open repo's tab row). With a repo open they
+         act on it (the "← back to the repo" bar returns to it); Build opens with the repo's own build flow first. -->
+    <div class="tab-group" data-group="create">
+      <button class="tab-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
+      <div class="tab-dropdown">
+        <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
+        <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
+      </div>
+    </div>
+    <div class="tab-group" data-group="build">
+      <button class="tab-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+      <div class="tab-dropdown tab-dropdown-deep">
+        <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
+        <div class="tab-sub-sep"></div>
+        <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
+        <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
+        <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
+      </div>
+    </div>
 
     <div class="tab-spacer"></div>
     <button class="tab-btn" id="tab-tree-toggle" title="expand every tab into a full navigator tree" onclick="toggleTabTree()"><span class="tab-icon">⊞</span>Expand all</button>
@@ -1116,22 +1155,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn" data-subtab="versionium" onclick="setRepoSubtab('versionium')">Versionium</button>
             <button class="repo-subtab-btn" data-subtab="git" onclick="setRepoSubtab('git')">Sync &amp; CI</button>
             <button class="repo-subtab-btn" data-subtab="settings" onclick="setRepoSubtab('settings')">Settings</button>
-            <span class="repo-subnav-sep" title="this repo's canvases — they open as views of their own"></span>
-          <div class="tab-group tab-group-inrepo" data-group="create">
-            <button class="repo-subgroup-btn tab-group-btn" data-views="brainstorm,ideas" onclick="toggleTabGroup(event,this)"><span class="tab-icon">✎</span>Create<span class="tab-caret">▾</span></button>
-            <div class="tab-dropdown">
-              <button class="tab-sub" data-view="brainstorm" onclick="setView('brainstorm')"><span class="tab-icon">✎</span>Brainstorm</button>
-              <button class="tab-sub" data-view="ideas" onclick="setView('ideas')"><span class="tab-icon">◇</span>Ideas</button>
-            </div>
-          </div>
-          <div class="tab-group tab-group-inrepo" data-group="build">
-            <button class="repo-subgroup-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
-            <div class="tab-dropdown">
-              <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
-              <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
-              <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
-            </div>
-          </div>
+            <!-- §0.39.284 W4 — Create and Build went back to the main bar (James: "the create and build tabs should be removed
+                 from the repos and moved back to the main navbar"). They still act on the open repo. -->
           </nav>
 
           <!-- HOME — the repo's own README/.spec, or basic identity if neither exists -->
@@ -2359,6 +2384,7 @@ async function saveToIdearium(){
 
 <link rel="stylesheet" href="css/agent-blocks.css">
 <link rel="stylesheet" href="css/file-manage.css">
+<link rel="stylesheet" href="css/work-surface.css">
 <script src="js/app.js"></script>
 <script src="js/compartment.js"></script>
 <script src="js/agent-blocks.js"></script>
@@ -2368,5 +2394,6 @@ async function saveToIdearium(){
 <script src="js/file-manage.js"></script>
 <script src="js/repo-environment.js"></script>
 <script src="js/plan-panel.js"></script>
+<script src="js/work-surface.js"></script>
 </body>
 </html>

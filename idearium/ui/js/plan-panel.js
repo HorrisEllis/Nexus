@@ -108,8 +108,11 @@ function _planPaint() {
     <div class="pp-sec">tasks</div>
     ${steps.length ? steps.map(task).join('') : '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>'}
     ${other.length ? `<div class="pp-sec">plans and file jobs</div>${other.map(r => `<div class="pp-act"><span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.title || `${r.phase} ${r.map}`)} <span class="pp-led-t">${new Date(r.ts).toLocaleTimeString()}</span>${r.error ? `<div style="color:var(--coral);font-size:10px">${escapeHtml(r.error)}</div>` : ''}</div>`).join('')}` : ''}
-    <details class="pp-actwrap"><summary class="pp-sec">activity · ${activity.length}</summary>${activity.map(r => `<div class="pp-act"><span class="pp-led-t">${new Date(r.ts).toLocaleString()}</span> <span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.phase || '')} <span style="opacity:.6">${escapeHtml(String(r.map || '').split('/').pop())}</span></div>`).join('')}</details>`;
+    <details class="pp-actwrap"><summary class="pp-sec">activity · ${activity.length}</summary>${activity.map(r => `<div class="pp-act"><span class="pp-led-t">${new Date(r.ts).toLocaleString()}</span> <span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.phase || '')} <span style="opacity:.6">${escapeHtml(String(r.map || '').split('/').pop())}</span></div>`).join('')}</details>
+    <div id="pp-ws" class="pp-ws"></div>`;
   PLANP.focus = null;
+  // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
+  if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
 }
 function planToggle(key) { if (PLANP.open.has(key)) PLANP.open.delete(key); else PLANP.open.add(key); _planPaint(); }
 async function planBuild(map, phase) {
@@ -125,7 +128,7 @@ async function planBuild(map, phase) {
 let _planT = null;
 function planPanelOnEvent(ev) {
   const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
-  if (!/^repo\.(phase\.run|file\.manage|deviation|roadmap\.updated|inject\.applied)/.test(t)) return;
+  if (!/^repo\.(phase\.run|file\.manage|deviation|roadmap\.updated|inject\.|spec\.planned)/.test(t)) return;
   const el = document.getElementById('plan-panel'); if (!el || !el.classList.contains('open')) return;
   const u = ev.payload && ev.payload.repoUuid; if (u && PLANP.uuid && u !== PLANP.uuid) return;
   clearTimeout(_planT); _planT = setTimeout(loadPlanPanel, 500);
