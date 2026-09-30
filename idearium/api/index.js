@@ -1190,6 +1190,8 @@ const ROUTE_CAP = {
   'cos.testenv.status': CAPS.READ_IDEAS,
   'history.import.status': CAPS.READ_IDEAS,
   'repo.worksurface': CAPS.READ_IDEAS,
+  'repo.architecture': CAPS.READ_IDEAS,
+  'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,    // writes a dropped zip into the data root's history-import inbox
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
@@ -1545,7 +1547,9 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','agent','memory'],  'repo.agent.memory.record'],
     ['DELETE', ['api','repos',    ':uuid','agent','memory',':obs'], 'repo.agent.memory.forget'],
     // §INJECT 2026-09-21 — .inject nodes: agent code into this compartment (lib/repo-inject.js)
-    ['GET',    ['api','repos',    ':uuid','worksurface'],           'repo.worksurface'],   // §0.39.284 W3 — changed files as diffs + tools
+    ['GET',    ['api','repos',    ':uuid','worksurface'],           'repo.worksurface'],
+    ['GET',    ['api','repos',    ':uuid','architecture'],          'repo.architecture'],         // §0.39.284 W7 — the repo's component registry + wiring map
+    ['POST',   ['api','repos',    ':uuid','architecture'],          'repo.architecture.write'],   // §0.39.284 W3 — changed files as diffs + tools
     ['GET',    ['api','repos',    ':uuid','injects'],               'repo.inject.list'],
     ['POST',   ['api','repos',    ':uuid','injects'],               'repo.inject.create'],
     ['GET',    ['api','repos',    ':uuid','injects',':id'],         'repo.inject.get'],
@@ -3915,6 +3919,24 @@ async function handle(req, res, route, query, body) {
     // ── §INJECT 2026-09-21 — .inject nodes ─────────────────────────────────
     // §0.39.284 W3 — the work surface (idearium/repo/work-surface.js): every file the agent changed, with its diff, the
     // run that made it, and the tools the agent has and used. A projection — it stores nothing.
+    // §0.39.284 W7 — the repo's own component registry and wiring map, in loom's shape (idearium/repo/architecture.js over
+    // the repo's code-intel index). POST writes it into the repo as ARCHITECTURE.json — the architecture doc, versioned.
+    case 'repo.architecture': case 'repo.architecture.write': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const AR = await import('../repo/architecture.js');
+      const intel = _require('../../lib/code-intel/index.js').load(_repoDiskDir(params.uuid));
+      const a = AR.architecture(intel, { repoName: repo.name });
+      if (a.error) return err(res, 409, a.error, { code: 'NO_INDEX' });
+      if (route.action === 'repo.architecture.write') {
+        const doc = { schema: 'nexus.architecture/1', repo: { uuid: repo.uuid, name: repo.name }, generatedAt: new Date().toISOString(), generatedBy: 'idearium/repo/architecture.js', ...a };
+        const w = getRepoLayer().writeTextFile(params.uuid, 'ARCHITECTURE.json', JSON.stringify(doc, null, 1) + '\n');
+        if (!w || w.error) return err(res, 500, `could not write ARCHITECTURE.json: ${(w && w.error) || 'unknown'}`);
+        getIdeaOS().emit('idearium.repo.architecture.written', { repoUuid: params.uuid, ...a.stats });
+        return ok(res, { repoUuid: params.uuid, written: 'ARCHITECTURE.json', stats: a.stats });
+      }
+      return ok(res, { repoUuid: params.uuid, ...a });
+    }
     case 'repo.worksurface': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);

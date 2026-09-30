@@ -157,6 +157,13 @@ spec:
         "Agent mesh" into one Providers page, with a small live guardian widget per provider (its idearium agents, jobs
         running and queued, economy limits, login state).
       proof: "each item its own test + probe when built"
+      built: >-
+        Item 2 BUILT 2026-09-30: idearium/repo/architecture.js over the repo's lib/code-intel index — loom's registry
+        shape (components with loom's id rule, export/import hooks, wires dependency → consumer), consumers and requires
+        per component, external packages, orphans, bottom-up breaches (§3.1), data dirs, node types; GET|POST
+        /api/repos/:uuid/architecture (POST writes ARCHITECTURE.json into the repo, with provenance); the Architect tab
+        shows it first (stats, the wiring map in layer columns, the registry table, the lists), the spec blueprint
+        below. test-repo-architecture 8/8; the coding-flow probe 16/16. Items 1, 3, 4 stay open.
 
     W6_release:
       layer: ui

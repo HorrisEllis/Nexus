@@ -520,3 +520,5 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied â€
   - Config ui.theme, ui.accent and ui.motion through POST /api/config (`idearium/lib/config-core.cjs`).
 
 **Tests:** `tests/modules/test-plan-lands.test.js`, `tests/modules/test-work-surface.test.js`, `tests/modules/test-idearium-theme.test.js`, `tests/modules/test-cos-workspace.test.js` (WS-05/06); probe `tests/probe/idearium-coding-flow-chromium.js` (the real page on a real idearium).
+
+**The Architect tab is the repo's component registry** (`idearium/repo/architecture.js`, 0.39.284). It is read from the repo's code index (`lib/code-intel/index.js`) and shaped like loom's registry: one component per file with loom's id rule, export/import hooks, and wires from dependency to consumer. It also lists consumers and requires, external packages, orphans, bottom-up breaches, data dirs and node types. "write ARCHITECTURE.json" saves it into the repo as the architecture doc. API: GET|POST /api/repos/:uuid/architecture. Test: `tests/modules/test-repo-architecture.test.js`.
