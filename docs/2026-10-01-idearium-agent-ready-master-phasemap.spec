@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.3.0
+    version:  1.4.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -493,6 +493,19 @@ spec:
         and decisions — never guessed without a source. Agents query it through CX1 (memory step); James can read,
         correct and delete any of it. Local only — it never leaves the machine.
       proof: "three of his messages → observation nodes, each citing its quote; an agent query returns the matching one"
+    IL1_spec_library_as_ideas:
+      layer: library
+      status: OPEN
+      depends_on: [FT1_file_tools_merge_patch_drop, DI1_chunking_for_data_ingestion]
+      files: [idearium/api/index.js, lib/zip-ingest.js, idearium/spec-engine/index.js]
+      does: >-
+        James (verbatim), sending his spec library (171 files, 23 duplicate groups): "my goal is to build these,
+        eventually. im, the idea guy." Drop a zip of specs → each unique document (by content hash, duplicates folded
+        with every path kept) becomes an Idearium idea with its spec attached (.md/.spec as text, .docx/.pdf extracted,
+        diagrams kept as attachments), tagged by family (NEXUS lineage · product · personal · diagram) and linked to the
+        repo systems it already overlaps. Stored on this machine only (data/, never committed): a personal or IP
+        document is never pushed anywhere. An executable inside the zip is listed, never imported.
+      proof: "the zip → N ideas with no duplicates; a .docx's text is searchable; the .exe is listed and skipped"
     FT1_file_tools_merge_patch_drop:
       layer: library
       status: OPEN
@@ -577,3 +590,7 @@ spec:
 # CG1 answered: an account per hat, or per URL — consistency first, another only on fallback, recorded. GL1 the
 # gate → verify → check → fix → back-through loop. UM1 Nexus understands James (observations with their source quotes,
 # queryable by agents, his to correct).
+
+## ADDENDUM 2026-10-01 — 1.4.0
+# IL1: James's spec library becomes ideas in Idearium (local, deduplicated, by family). Catalogue written for him; the
+# nearest product to done is ModuleForge (cli/decompose.js + the component registry already do its core).
