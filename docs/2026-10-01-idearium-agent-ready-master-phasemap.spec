@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
     owner:    idearium · lib · cortex.self-heal · guardian · loom · docs
-    status:   "MAPPED 2026-10-01 — PF1–PF5 built (0.39.288); everything else open, built bottom-up one phase at a time"
+    status:   "MAPPED 2026-10-01 — PF1–PF5 built (0.39.288); CT1 built (0.39.289); 1.1.0 adds James's later messages of the day; everything else open"
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §17.5 every output has provenance, §10.1 one write authority per data type.
     origin: >
@@ -21,6 +21,32 @@ spec:
       failure-mode field; Iterate in the Files Manage menu as compounding layers (a verified chunk only edited when
       meaningful or additive); the compartment's hat agent wired to the COS build surface; the component registry able
       to move components and the code follow, added to the architecture doc.
+
+    origin_1_1_0: >
+      James, later 2026-10-01 (verbatim): "adding a idea or phase, creates a phasemap, but doesn't create the code. when
+      its blocked, i need to be able to do something about that. what about combining idea with phase tab. love the
+      phase tab. hate the phasemap being in the files, like need to be able to sort it or change the file structure,
+      the component registry, but also, need to have the component registry a chunk in the chunking, number 11 …
+      please get the agents building more stable. ollama has been known to cut off blocks, unless you fixed that. one
+      more thing, can you make the code tab more about the code? maybe migrate the search to the files tab, or
+      something? just getting cramped, and overwhelming to try to use, i also want the panel and the work surface panel
+      to be their own panels, have the pan always open when its doing something, and have a little tab in the side of
+      the screen to click on to expand the it again. if it gets cut off, what about injecting the cut off part into the
+      agent, and having it finish it. like the compounding. also i feel the chunking is immensly powerful for data
+      injestion, or my intuition is ringing the leverage bell … the agents need to be able to find any context, with as
+      little injected as possible. i also want you to give the agents, access to clearglass, but more fluid. like
+      anything that it doesn't know, will query the project first, all the memory, and then clearglass to search the
+      web." — and: "last to map, just to map so it's not lost. please … clearglass is supposed to support multiple
+      accounts of the same website, maybe add private windows also. we also need to have agent tools for the files,
+      like merging zips, running patches, etc. like if i have a patch or some loose files from you, and then i can drag
+      and drop into the project and have it safely merged, like github. like I need this to build full projects. maybe
+      rebuild the promote to spec menu. like use the systems architecture, the components registry and node
+      architecture for the default, then need like, web application stack, android app, desktop application, literally
+      everything i could need for fiverr and automating projects, upwork, or any way to get money … then i want the run
+      button to let me run the code base in a isolated ssh or, cli. likke the codebase copies, or maybe uses the push or
+      pull commands to copy it into the desktop envirement. also want way more options for envirements." — and: "also can
+      you add a wrapper around clearglass so i can drag it around and also have the url search bar dynamically change
+      size with the window size."
 
   rules_for_every_phase:
     sovereign: >-
@@ -301,7 +327,173 @@ spec:
       status: "OPEN — 0.39.288 released with PF1–PF5"
       does: "each phase: version bump, CHANGELOG, atlas, loom wires, SPEC-REGISTRY, tests registered, the full run."
 
+    # ── 1.1.0 — James's later messages, 2026-10-01 ────────────────────────────────────────────────────────────────
+    CT1_cut_replies_are_finished:
+      layer: library
+      status: DONE (0.39.289)
+      files: [lib/reply-continuation.js, ollama/lib/ollama-client.js, ollama/config.js, idearium/spec-engine/chunk-dispatch.js, copilot/server.js, lib/repo-agent.js]
+      does: >-
+        "if it gets cut off, what about injecting the cut off part into the agent, and having it finish it." The cut
+        part is kept, its tail shown back, the same agent continues, the parts stitched (overlap and a re-opened fence
+        removed), up to N rounds; still cut is said. Root causes found in the Ollama path: a 45 s TOTAL timeout on a
+        non-streaming call (James's "ollama · 46s · blocked: empty"), a thinking model's answer read as '' (now retried
+        with think:false), done_reason 'length' dropped, num_predict 2048. Now streamed with an IDLE timeout under a
+        10-minute cap; copilot's and the repo agent's waits follow it.
+      proof: tests/modules/test-reply-continuation.test.js 7/7; test-ollama-activity 5/5
+    BK1_blocked_is_actionable:
+      layer: interface
+      status: OPEN
+      depends_on: [CT1_cut_replies_are_finished, DT2_failure_mode_field]
+      files: [idearium/ui/js/app.js (phases board), idearium/api/index.js (repo.phases.build)]
+      does: >-
+        "when its blocked, i need to be able to do something about that." A blocked phase build shows its failure class
+        (DT2) and the actions that fit it: continue (CT1, when cut), retry with another agent or model (the route),
+        edit the ask and retry, open it in the Agent tab, mark it done by hand. Each action is a route + CLI first.
+      proof: "a blocked build (stub): each action reaches its route and the phase leaves blocked"
+    BK2_phase_build_writes_code:
+      layer: library
+      status: OPEN
+      depends_on: [BK1_blocked_is_actionable, CI1_compounding_iterate]
+      files: [idearium/api/index.js, idearium/repo/phases.js, lib/repo-inject.js]
+      does: >-
+        "adding a idea or phase, creates a phasemap, but doesn't create the code." A phase build's reply is parsed for
+        files (the plan's extraction, W2) and lands as staged .inject proposals on the work surface — code, not only the
+        phasemap status line. Nothing written outside the gate (CI1).
+      proof: "a stub agent reply with two files → two staged proposals tied to the phase"
+    UI6_idea_and_phases_one_tab:
+      layer: interface
+      status: OPEN
+      files: [idearium/ui/js/app.js]
+      does: >-
+        "what about combining idea with phase tab. love the phase tab." One tab: the idea and its four lanes on top,
+        the phases board under it; adding to a lane or the board feeds the same phasemap.
+      proof: "chromium probe: one tab, both surfaces, a new lane entry can become a phase"
+    UI7_phasemaps_out_of_files_and_tree_ops:
+      layer: interface
+      status: OPEN
+      depends_on: [RM1_registry_driven_moves]
+      files: [idearium/ui/js/app.js (Files), idearium/repo/phases.js]
+      does: >-
+        "hate the phasemap being in the files, like need to be able to sort it or change the file structure, the
+        component registry." The repo's phasemap is shown in Phases, not as a loose file in the Files tree (it stays a
+        real file — §0.3 — under a docs path the tree folds away). The tree sorts (name, layer, state, size, recent) and
+        restructures through the registry: drag a file or folder → RM1's plan → staged move with imports rewritten.
+      proof: "the tree hides the phasemap and sorts; a drag produces RM1's dry-run plan"
+    DT4b_registry_chunk_in_repo_chunking:
+      layer: library
+      status: OPEN
+      depends_on: [DT4_registry_block_to_nodes]
+      files: [idearium/repo/import-pipeline.js, idearium/repo/architecture.js, idearium/spec-engine/index.js]
+      does: >-
+        "need to have the component registry a chunk in the chunking, number 11." Spec templates have it since
+        0.39.286 (block 11). An imported repo's chunking gains it too: after its files are chunked, one registry chunk
+        (architecture.js's projection, written as nodes) — so every repo, built or imported, carries its own registry.
+      proof: "an imported fixture repo has a registry chunk whose nodes match the projection"
+    UI8_code_tab_is_code:
+      layer: interface
+      status: OPEN
+      files: [idearium/ui/js/app.js, idearium/ui/js/file-manage.js]
+      does: >-
+        "can you make the code tab more about the code? maybe migrate the search to the files tab … just getting
+        cramped, and overwhelming." Code shows the code (editor, symbols, used-from); search by meaning moves to Files
+        with the tree; tools fold into one menu.
+      proof: "static check: search lives in Files; the Code tab renders editor + symbols only"
+    UI9_plan_and_work_surface_panels:
+      layer: interface
+      status: OPEN
+      files: [idearium/ui/js/plan-panel.js, idearium/ui/js/work-surface.js, idearium/ui/css/]
+      does: >-
+        "i also want the panel and the work surface panel to be their own panels, have the pan always open when its
+        doing something, and have a little tab in the side of the screen to click on to expand the it again." Two
+        docked panels; each opens itself while work runs (a work.* event, J0) and collapses to an edge tab.
+      proof: "chromium probe: a running build opens the panel; collapse leaves an edge tab that reopens it"
+    CX1_context_cascade:
+      layer: library
+      status: OPEN
+      depends_on: [DT3_failure_modes_routes_and_preflight]
+      files: [lib/repo-context.js, lib/code-intel/, lib/agent-memory.js, lib/agent-tools/tools/clear-glass/search-engine.js, lib/agent-tools/tools/query/]
+      does: >-
+        "the agents need to be able to find any context, with as little injected as possible … anything that it doesn't
+        know, will query the project first, all the memory, and then clearglass to search the web." Answer to "the
+        agents have access to this also right?": partly — the repo agent gets keyword retrieval over the repo's chunks
+        (lib/repo-context.js) and the tools its scope lists; the code-intel index (files, chunks, symbols, used-from) is
+        not yet a tool it can ask. Build: one `find_context` tool, asked by the agent (not pre-injected): 1 the
+        project's code-intel index (symbol, used-from, chunk), 2 memory (agent memory, chat ledger, fault log, notes),
+        3 Clear Glass web search — each step only when the previous found nothing, every hit with its source.
+        Injection shrinks to the task + a one-line pointer to the tool.
+      proof: "a stub agent asks for a symbol → code-intel hit; an unknown term → memory, then a web search (stubbed)"
+    DI1_chunking_for_data_ingestion:
+      layer: library
+      status: OPEN
+      depends_on: [DT1_persistence_census]
+      files: [idearium/repo/import-pipeline.js, lib/zip-ingest.js, lib/node-schemas/]
+      does: >-
+        "i feel the chunking is immensly powerful for data injestion." The chunker generalised past code: documents,
+        CSV/JSON datasets, chat exports, mail, PDFs — each chunk a node with its source, glyph and links, searchable by
+        CX1. Every ingest is a node of what came in and when (provenance).
+      proof: "a CSV and a chat export ingest into chunk nodes; CX1 finds a row by meaning"
+    CG1_clear_glass_accounts_and_private:
+      layer: interface
+      status: OPEN
+      files: [clear-glass/src/]
+      does: >-
+        "clearglass is supposed to support multiple accounts of the same website, maybe add private windows also." One
+        session partition per account per site (named, switchable per tab), and private windows (in-memory partition,
+        nothing written). Guardian providers can bind a job to an account.
+      proof: "two tabs of one site in two partitions keep separate cookies; a private window leaves nothing on disk"
+    CG2_clear_glass_drag_wrapper_and_fluid_url_bar:
+      layer: interface
+      status: OPEN
+      files: [clear-glass/src/ (the frameless window's chrome and its toolbar)]
+      does: >-
+        James (verbatim): "can you add a wrapper around clearglass so i can drag it around and also have the url search
+        bar dynamically change size with the window size." The frameless window gets a drag region (the tab strip and
+        the toolbar's empty space, -webkit-app-region: drag; buttons and the URL field no-drag), and the URL bar flexes
+        with the window (flex: 1 1 auto, a min and max width) instead of a fixed width.
+      proof: "chromium probe at 3 window widths: the URL field's width follows; the drag region is present and buttons stay clickable"
+    FT1_file_tools_merge_patch_drop:
+      layer: library
+      status: OPEN
+      depends_on: [CI1_compounding_iterate]
+      files: [lib/agent-tools/tools/, lib/zip-ingest.js, idearium/api/index.js, idearium/ui/js/app.js]
+      does: >-
+        "agent tools for the files, like merging zips, running patches, etc. like if i have a patch or some loose files
+        from you, and then i can drag and drop into the project and have it safely merged, like github." Drop a zip, a
+        .patch/.diff, or loose files onto a repo → a merge proposal: per-file diff against the current tree, new / changed
+        / conflicting / identical, a three-way merge where a base is known (versionium), conflicts shown, nothing
+        applied until accepted; applied as one versionium commit with the drop as its provenance. The same as agent
+        tools (merge_zip, apply_patch, stage_files) and CLI.
+      proof: "a patch applies cleanly; a zip with one conflicting file is held with the conflict shown; undo restores"
+    TP1_promote_to_spec_templates:
+      layer: library
+      status: OPEN
+      files: [idearium/spec-engine/templates.js, idearium/spec-engine/templates/, idearium/ui/js/app.js]
+      does: >-
+        "rebuild the promote to spec menu. like use the systems architecture, the components registry and node
+        architecture for the default, then need like, web application stack, android app, desktop application,
+        literally everything i could need for fiverr and automating projects, upwork." The promote menu as a catalogue:
+        the default is genesis (systems architecture + registry + nodes); then project templates — web app (front,
+        API, DB, auth, deploy), landing site, REST/GraphQL API, Android app, desktop app (Electron/Tauri), CLI tool,
+        browser extension, scraper/automation bot, data pipeline, Discord/Telegram bot, Chrome-free static site —
+        each a genesis extension with its own blocks, file tree and tests, so a client job starts from a real skeleton.
+      proof: "each template seeds a spec whose build_order tree passes the template's own test"
+    EN1_run_isolated_and_environments:
+      layer: library
+      status: OPEN
+      depends_on: [HC1_hat_agent_to_cos_build]
+      files: [lib/cos-bridge.js, lib/cos-run.js, versionium/, idearium/repo/]
+      does: >-
+        "i want the run button to let me run the code base in a isolated ssh or, cli. likke the codebase copies, or
+        maybe uses the push or pull commands to copy it into the desktop envirement. also want way more options for
+        envirements." Run copies the repo into an isolated environment by versionium pull (no shared folder), opens a
+        shell (in-page terminal / SSH) there, and runs. Environment choices: the COS VM, a container, a plain sandbox
+        dir, a remote host over SSH; per-language images (Node, Python, Android SDK, .NET …); push the result back as a
+        proposal (FT1).
+      proof: "Run on a fixture: the copy is pulled into a sandbox, the command's output streams, the tree is untouched"
+
   decisions_waiting_on_james:
+    - "CG1 — whether a provider job may pick an account by itself, or only one James bound to it."
+    - "EN1 — remote SSH hosts: which ones, and where their keys live (proposed: the Clear Glass vault, never in the repo)."
     - "AG1 — which install/account the coding-agent CLI runs on, and whether it may write without the CI1 gate (proposed: never)."
     - >-
       RAID default in idearium/spec-engine/chunk-dispatch.js (its require never ran in ESM; builds always pass an
@@ -313,3 +505,8 @@ spec:
 # event-loop stall 3.0 s → 0.27 s, total 10.4 s → 6.3 s (the rest is the pipeline: PF7). A cold repo list reads the
 # meta sidecar instead of the 20 MB manifest. The vitals check's 10-block assertion moved to 11 (registry last).
 # tests/modules/test-nexus-self-incremental.test.js 5/5; test-nexus-specs-and-ideas-cleanup 8/8.
+
+## ADDENDUM 2026-10-01 — 1.1.0, James's later messages mapped; CT1 built (0.39.289)
+# CT1: Ollama streamed with an idle timeout (10-minute cap), thinking-only replies retried with think:false, a cut reply
+# finished by the same agent (lib/reply-continuation.js) in the bridge and in chunk dispatch. Mapped, not built: BK1,
+# BK2, UI6–UI9, DT4b, CX1, DI1, CG1, CG2, FT1, TP1, EN1. The rule to quote James is in docs/CLAUDE.md.

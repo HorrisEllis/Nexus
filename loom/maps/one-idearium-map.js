@@ -71,6 +71,9 @@ const CONSUMERS = [
   [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/pipeline-routing.js'), 'idearium/spec-engine/chunk-dispatch.js _walkRoute + _dispatchChunkOnce (_req) — classify, breaker, shouldFallback'],
   // §0.39.288 PF2/PF5 — nexus-self is handed the engine and the repo layer (injected, never imported), so the scanner sees neither edge
   ['nexus.idearium.repo.nexus-self', I('idearium/spec-engine/index.js'), 'idearium/repo/nexus-self.js syncSystem — updateIngestedSpecAsync, ingestFilesAsSpecAsync on the injected engine'],
+  // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)
+  [I('ollama/lib/ollama-client.js'), I('lib/reply-continuation.js'), 'ollama/lib/ollama-client.js callOllamaRaw — a reply stopped at num_predict (or in an open fence) is continued and stitched (require inside the function)'],
+  [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/reply-continuation.js'), 'idearium/spec-engine/chunk-dispatch.js _dispatchChunkOnce — looksCut/complete before the detector judges'],
   ['nexus.idearium.repo.nexus-self', I('idearium/repo/index.js'), 'idearium/repo/nexus-self.js syncSystem — rl.specUpdatedInPlace / replaceSpec / purgeSpecsOf on the injected repo layer'],
 ];
 // the job requires only node built-ins, so the scanner gave it no import hook for the spawn wire to land on

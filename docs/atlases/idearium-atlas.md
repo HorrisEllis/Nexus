@@ -511,6 +511,12 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied â€
 - **Record:** the hops are kept on the chunk.
 - **Where to see and set it:** the routing API (show, plan per block, reset breakers), the idearium CLI's routing command, and Settings â†’ **Routing & fallback**. Its config keys are listed in `idearium/lib/config-core.cjs`.
 
+**Cut replies are finished** (0.39.289, `lib/reply-continuation.js`). When a reply stops part-way, the agent is shown the end of what it wrote and continues from there, and the two parts are stitched together:
+- **When it counts as cut:** Ollama stopped at its token limit, a code block was opened and never closed, or the reply ends mid-statement.
+- **Where it runs:** in the Ollama bridge (`ollama/lib/ollama-client.js`), and in spec chunk dispatch before the detector judges the reply.
+- **Ollama's limits:** generation is streamed. Its timeout counts silence, under a 10-minute cap on the whole generation. A thinking model that answers nothing is asked again with thinking off.
+- Test: `tests/modules/test-reply-continuation.test.js`.
+
 **The Nexus repo sync** (0.39.288, `idearium/repo/nexus-self.js`). It runs 20 s after boot, then every 10 minutes.
 - **One changed file:** a nexus system whose file set did not change is updated in place. Only the chunks whose content moved are rewritten, in the same spec (the in-place update in `idearium/spec-engine/index.js`).
 - **Files added or removed:** the system is re-ingested whole, yielding to the server every 50 files, and the old version is purged.

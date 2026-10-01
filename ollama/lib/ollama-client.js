@@ -65,32 +65,89 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
   });
 }
 
-function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'ollama-bridge.job') {
-  // §0.39.266 — num_ctx sized to the prompt; every call recorded (lib/ollama-activity.js)
+// §0.39.289 — James: "ollama has been known to cut off blocks … if it gets cut off, what about injecting the cut off
+// part into the agent, and having it finish it." Three causes, measured in this function:
+//   1. a non-streaming request with a 45 s TOTAL timeout — a local model writing a whole phase was killed at 45 s
+//      (James's phase build: "ollama · 46s · blocked: empty"). Now streamed: the timeout is IDLE (no token for
+//      timeoutMs), under a total cap (config.RAW_GENERATE_TOTAL_MS, 10 min).
+//   2. `out.response || ''` — a thinking model (qwen3, deepseek-r1 …) that spent its budget in `thinking` returned
+//      '' and the job read as an empty reply. Now: thinking with no answer → one retry with think:false.
+//   3. done_reason 'length' was dropped — a reply cut at num_predict landed as if complete. Now it is continued
+//      (lib/reply-continuation.js: the tail is shown back, the model continues, the parts are stitched).
+function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
   const OA = require('../../lib/ollama-activity.js');
-  const ctx = OA.withNumCtx({ num_predict: maxTokens || 2048, temperature: 0.2 }, String(prompt || '').length, maxTokens || 2048);
-  const body = JSON.stringify({ model, prompt, stream: false, options: ctx.options });
+  const want = maxTokens || config.DEFAULT_MAX_TOKENS;
+  const ctx = OA.withNumCtx({ num_predict: want, temperature: 0.2 }, String(prompt || '').length, want);
+  const body = JSON.stringify({ model, prompt, stream: true, options: ctx.options, ...(extra.think === false ? { think: false } : {}) });
   const t0 = Date.now();
   const done = (ok, error) => OA.record({ caller, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
   return new Promise((resolve, reject) => {
+    let text = '', thinking = '', buf = '', settled = false, idle = null;
+    const total = setTimeout(() => fail(`ollama generate exceeded ${Math.round(config.RAW_GENERATE_TOTAL_MS / 1000)} s in total`), config.RAW_GENERATE_TOTAL_MS);
+    const fail = (msg) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); try { req.destroy(); } catch (_) {} done(false, msg); reject(new Error(msg)); };
+    const ok = (o) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); done(true); resolve({ text, thinking, doneReason: o.done_reason || null, evalCount: o.eval_count || null }); };
+    const arm = () => { clearTimeout(idle); idle = setTimeout(() => fail(`ollama sent nothing for ${idleMs || config.RAW_GENERATE_TIMEOUT_MS} ms (idle timeout) — ${text.length} chars received`), idleMs || config.RAW_GENERATE_TIMEOUT_MS); };
     const u   = new URL(`${OLLAMA_HOST}/api/generate`);
     const req = http.request({
       hostname: u.hostname, port: u.port || 11434,
       path: u.pathname, method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
-      timeout: timeoutMs || config.RAW_GENERATE_TIMEOUT_MS,
     }, r => {
-      let d = '';
-      r.on('data', c => d += c);
+      if (r.statusCode < 200 || r.statusCode >= 300) {
+        let e = ''; r.on('data', c => e += c);
+        r.on('end', () => { let d = e; try { d = JSON.parse(e).error || e; } catch (_) {} fail(`ollama HTTP ${r.statusCode} for model "${model}": ${d}`); });
+        return;
+      }
+      r.on('data', c => {
+        arm();
+        buf += c.toString();
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          let o; try { o = JSON.parse(line); } catch (_) { continue; }
+          if (o.error) return fail(`ollama generation error for model "${model}": ${o.error}`);
+          if (o.response) text += o.response;
+          if (o.thinking) thinking += o.thinking;
+          if (o.done) return ok(o);
+        }
+      });
       r.on('end', () => {
-        try { const out = JSON.parse(d); if (out.error) { done(false, out.error); return reject(new Error(out.error)); } done(true); resolve(out.response || ''); }
-        catch (e) { done(false, e.message); reject(e); }
+        // the last line can arrive without its newline — an error object included ({"error":"model not found"})
+        if (buf.trim()) {
+          let o = null; try { o = JSON.parse(buf); } catch (_) {}
+          if (o && o.error) return fail(`ollama generation error for model "${model}": ${o.error}`);
+          if (o && o.response) text += o.response;
+          if (o && o.thinking) thinking += o.thinking;
+          if (o && o.done) return ok(o);
+        }
+        if (!settled) ok({ done_reason: 'stream-ended' });
       });
     });
-    req.on('error', (e) => { done(false, e.message); reject(e); });
-    req.on('timeout', () => { req.destroy(); done(false, 'timeout'); reject(new Error('ollama request timeout')); });
+    req.on('error', (e) => fail(e.message));
+    arm();
     req.end(body);
   });
+}
+
+// For Ollama the provider's own signal is trusted: continue on done_reason 'length' or an unclosed code fence —
+// never on a prose guess (each continuation is a whole local generation).
+function _ollamaCut(text, { doneReason } = {}) {
+  if (doneReason === 'length') return { cut: true, reason: 'token limit (done_reason: length)' };
+  if (((String(text || '').match(/^\s*```/gm) || []).length) % 2 === 1) return { cut: true, reason: 'code fence opened and not closed' };
+  return { cut: false, reason: null };
+}
+
+async function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'ollama-bridge.job') {
+  let first = await _generateOnce(model, prompt, maxTokens, timeoutMs, caller);
+  if (!first.text.trim() && first.thinking.trim()) {
+    console.warn(`[ollama-bridge] ${model}: ${first.thinking.length} chars of thinking and no answer (${first.doneReason || 'done'}) — asking again with think:false`);
+    first = await _generateOnce(model, prompt, maxTokens, timeoutMs, `${caller} (think:false)`, { think: false });
+  }
+  const RC = require('../../lib/reply-continuation.js');
+  const out = await RC.complete((p) => _generateOnce(model, p, maxTokens, timeoutMs, `${caller} (continue)`), prompt,
+    { first, maxRounds: config.CONTINUE_MAX_ROUNDS, isCut: _ollamaCut });
+  if (out.rounds) console.log(`[ollama-bridge] ${model}: reply continued ${out.rounds}× (${out.reasons.join('; ')})${out.cut ? ' — STILL CUT after the last round' : ''}`);
+  return out.text;
 }
 
 // Real agent-tools loop, separate from the raw call — a tool-enabled
@@ -106,4 +163,4 @@ async function dispatchWithTools(prompt, model, maxIterations) {
   );
 }
 
-module.exports = { checkOllama, callOllamaChatWithTools, callOllamaRaw, dispatchWithTools };
+module.exports = { checkOllama, callOllamaChatWithTools, callOllamaRaw, dispatchWithTools, _generateOnce, _ollamaCut };

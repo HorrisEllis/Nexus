@@ -353,6 +353,7 @@ const SUITES = [
   'test-repo-git.test.js',  // 0.39.265 — real git for repos: remote, commit, push, pull (changed files back into the repo), clone, SSH keygen; Git & CI tab
   'test-cos-remote.test.js',  // 0.39.265 — compartment remotes: push/pull a COS compartment to a folder or ssh host, two machines, in-sync/ahead/behind/diverged
   'test-cos-remote-api.test.js',  // 0.39.265 — the same through a real idearium API: a repo's compartment pushed, pulled elsewhere, edits back into the repo, clone
+  'test-reply-continuation.test.js',  // 0.39.289 — a cut reply is finished (tail shown back, stitched); Ollama streamed with an idle timeout; thinking-only → think:false
   'test-nexus-self-incremental.test.js',  // 0.39.288 PF1–PF5 — nexus-self updates a spec in place (one changed file ≠ 2,000 rewritten), yielding ingest, changed paths logged, manifest meta sidecar for cold reads
   'test-nexus-self-visible.test.js',  // 0.39.266 — immutable nexus repos refuse Delete; ones already archived are restored by the sync; the library refills on nexus-self events
   'test-nexus-inject-approval.test.js',  // 0.39.266 — agent code on a nexus repo waits for approval, then goes through the apply gate into the live tree; revert = gate rollback

@@ -222,6 +222,24 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
       continue;
     }
 
+    // §0.39.289 — a reply cut mid-way is FINISHED, not asked for again whole (the same limit cut it again, then the
+    // chunk moved to another provider): the tail is shown back to the same agent, it continues, the parts are
+    // stitched (lib/reply-continuation.js). Then the detector judges the whole.
+    let continued = null;
+    try {
+      const RC = _req('../../lib/reply-continuation.js');
+      if (RC.looksCut(dispatchResult.text).cut) {
+        const call = async (p) => {
+          let r = await dispatchFn(p, opts);
+          if (r && r.queued) { const pr = await _pollGuardianJob(r.jobId); r = pr.ok ? { ok: true, text: pr.text } : { ok: false, error: pr.error }; }
+          if (!r || !r.ok) throw new Error((r && r.error) || 'no reply');
+          return { text: r.text };
+        };
+        continued = await RC.complete(call, prompt, { first: { text: dispatchResult.text }, maxRounds: opts.continueRounds || 2 });
+        if (continued.rounds) dispatchResult = { ...dispatchResult, text: continued.text };
+      }
+    } catch (e) { console.warn(`[chunk-dispatch] continuation skipped (the reply is judged as it came): ${e.message}`); }
+
     comp.detecting(dispatchResult.text);
     const { passed, detection } = comp.evaluate();
 
@@ -240,6 +258,7 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
         cost:     dispatchResult.cost,
         cacheHit: dispatchResult.cacheHit,
         digest:   dispatchResult.digest,
+        continued: continued && continued.rounds ? { rounds: continued.rounds, reasons: continued.reasons, stillCut: continued.cut } : null,
       };
     }
     if (comp.state === STATE.ESCALATED) {
