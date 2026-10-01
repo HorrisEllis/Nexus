@@ -511,6 +511,13 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied â€
 - **Record:** the hops are kept on the chunk.
 - **Where to see and set it:** the routing API (show, plan per block, reset breakers), the idearium CLI's routing command, and Settings â†’ **Routing & fallback**. Its config keys are listed in `idearium/lib/config-core.cjs`.
 
+**The Nexus repo sync** (0.39.288, `idearium/repo/nexus-self.js`). It runs 20 s after boot, then every 10 minutes.
+- **One changed file:** a nexus system whose file set did not change is updated in place. Only the chunks whose content moved are rewritten, in the same spec (the in-place update in `idearium/spec-engine/index.js`).
+- **Files added or removed:** the system is re-ingested whole, yielding to the server every 50 files, and the old version is purged.
+- **The log:** the sync log names the files whose content changed, and the time each step took.
+- **Cold reads:** each spec keeps a manifest.meta.json beside its manifest (chunk content stripped, stamped with the manifest's size and time). The repo list reads it after a boot instead of the whole manifest; a stale stamp means a full read.
+- Test: `tests/modules/test-nexus-self-incremental.test.js`.
+
 **The registry block** (0.39.286). A new spec has 11 chunks; the 11th, **registry**, follows build_order and waits on it. In a repo, the Architect tab's **write the registry** writes the architecture doc and the registry as nodes in Guardian's layout:
 - **What:** one node file per fact under the repo's nodes folder, in the envelope of `lib/node-export.js`.
 - **Node types:** component, hook, wire, event, command (routes and CLI), contract (the doorway), system.

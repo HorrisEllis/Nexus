@@ -6,7 +6,8 @@
 // every nexus/core change kept a new ~55 MB spec version forever; removing a spec only flagged it.
 //
 //   SC-001  a nexus repo mints no idea
-//   SC-002  a changed system keeps exactly one spec on disk (the replaced version is purged, chunk nodes too)
+//   SC-002  a changed system keeps exactly one spec on disk (the replaced version is purged, chunk nodes too).
+//           0.39.288: the change adds a file — a same-set change is updated in place (test-nexus-self-incremental).
 //   SC-003  nexus repos made before this: their auto idea is removed and old versions purged by the next sync
 //   SC-004  an idea a person wrote is never removed by the cleanup
 //   SC-005  purgeSpec removes the directory and the cortex mirror rows
@@ -59,7 +60,10 @@ async function main() {
     const core = () => nexus().find(r => r.nexusSelf.system === 'core');
     const first = core().specUuid;
     const firstChunks = (se.loadSpecMeta(first).chunks || []).map(c => c.uuid);
+    // 0.39.288 PF5 — a changed file with the same file set updates the spec IN PLACE (one spec, same uuid —
+    // tests/modules/test-nexus-self-incremental.test.js); a new version is made when the set moves, as here.
     w('lib/util.js', 'module.exports = 4;\n');
+    w('lib/added.js', 'module.exports = 5;\n');
     await NS.sync(rl, se, { only, liveRoot: live });
     const now = core();
     assert.notStrictEqual(now.specUuid, first, 'a new version was made');

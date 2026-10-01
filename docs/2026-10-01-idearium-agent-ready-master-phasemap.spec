@@ -1,0 +1,315 @@
+spec:
+  meta:
+    name:     idearium-agent-ready-master
+    version:  1.0.0
+    date:     2026-10-01
+    release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
+    uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
+    owner:    idearium · lib · cortex.self-heal · guardian · loom · docs
+    status:   "MAPPED 2026-10-01 — PF1–PF5 built (0.39.288); everything else open, built bottom-up one phase at a time"
+    axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
+              §1.2 nothing silently fails, §17.5 every output has provenance, §10.1 one write authority per data type.
+    origin: >
+      James, 2026-10-01: "include, everything else from today and map it all, phase it all, make sure to keep it all
+      sovereign, and use node types and databases for data. update all the maps, atlas', .specs, and loom component
+      registry. maybe also performance optimization. running really bad. also the settings in idearium. it takes
+      forever to load the repos on boot … maybe move some of the agent settings to the agents tab, not sure but it needs
+      to be rethemed to fit the rest of page. and needs collapse. map it all, dont miss anything you've need to get done
+      still from earlier. so close to being able to use you, as an agent inside idearium."
+      Earlier the same day: History + Save into the Manage menu; desktop environment options into the button of that
+      name, the desktop borderless; failure modes and the fault taxonomy wired into idearium through routes, tied to the
+      failure-mode field; Iterate in the Files Manage menu as compounding layers (a verified chunk only edited when
+      meaningful or additive); the compartment's hat agent wired to the COS build surface; the component registry able
+      to move components and the code follow, added to the architecture doc.
+
+  rules_for_every_phase:
+    sovereign: >-
+      Local first. Nothing a phase builds needs a network service to work: providers are routes on the one guardian
+      dispatch, ollama is the floor, every store is on this machine (jaa tables under data/, node files in Guardian's
+      layout). A phase that would need an outside service names it and keeps working without it.
+    data: >-
+      Every record a phase persists is a node type (lib/node-schemas schema.<type>, the lib/node-export.js envelope,
+      Guardian's nodes/<type>/<id>.<type> layout) or a row in a jaa table with one write authority (§10.1). No new
+      free-form JSON file (N24). A JSON file kept for an outside format says why.
+    surface: "API first, then the CLI (idearium/cli), then the UI — the UI only reads what the API serves."
+    registry: "every new module lands in loom/maps with its real require/consumer wires; atlas + SPEC-REGISTRY updated."
+
+  found:
+    - >-
+      Boot (James's log, 0.39.286): idearium is ready at +5 s; at +20 s the nexus-self sync starts and, for ONE changed
+      core file, re-ingests all of nexus/core — ~2,000 chunk .md files and ~2,000 .chunk nodes written, the old ~2,000
+      of each deleted, a 20 MB manifest re-serialised — 45 s of "systems" on his disk (61 s total at 16:13). Measured
+      here on the real tree: the spec step held the loop 3–4 s by itself; the first repo list after a boot then parsed
+      every manifest whole (core's ~20 MB) to throw the content away. The repo list and the settings console waited
+      behind both.
+    - "vitals (0.39.286): tests/spec-engine-yaml-import.test.js still asserted 10 blocks — the registry block made 11."
+    - >-
+      Failure-mode substrate exists, unjoined: cortex/self-heal/fault-taxonomy.js (sole writer of fault_taxonomy),
+      lib/fault-log.js (fault_log, richly tagged, causedBy), cortex/self-heal/index.js (failure_modes, read by cortex
+      GET /api/failure-modes), cortex/self-heal/failure-mode-forensics.js (causal context onto the row), schemas
+      lib/node-schemas/schema.failure_mode + schema.fault; and on the idearium side chunk.failureMode (free text) and
+      lib/pipeline-routing.js classify() (empty · truncated · refused · timeout · provider-down · rate-limit · login ·
+      unknown). Nothing carries a chunk's failure into fault_log, and nothing reads the taxonomy before a build.
+    - >-
+      Iterate/baseline substrate exists: BS2/BS3 file states + baseline deviation (0.39.280), the Manage workbench
+      (idearium/ui/js/file-manage.js, N25), file versions through versionium (idearium/ui/js/file-versions.js — its
+      "history" is injected as an extra editor tab by a MutationObserver, apart from save and manage ▾).
+    - >-
+      Registry substrate: idearium/repo/architecture.js (components/hooks/wires/routes/cli/events, toNodes → the repo's
+      nodes/<type>/<id>.<type>), loom/scanners/source-map.js (idFor), loom/scanners/dangling-report.js (orphans).
+    - >-
+      The repo Settings tab is the settings console in an iframe (idearium/ui/js/repo-environment.js
+      repoSettingsConsoleEmbed → settings.html?embed=1): its own chrome, no collapse, the agent's "who answers" and
+      "tools" cards beside compartment/desktop settings (N16 maps the iframe's removal).
+
+  phases:
+    M0_map:
+      layer: foundation
+      status: DONE
+      files: [docs/2026-10-01-idearium-agent-ready-master-phasemap.spec, docs/SPEC-REGISTRY.spec]
+      does: "This map, registered; every open item from today and before named here or pointed at its own map."
+
+    # ── layer 0 — performance (boot, sync, reads) ─────────────────────────────────────────────────────────────────
+    PF1_sync_names_its_slow_step:
+      layer: foundation
+      status: DONE (0.39.288)
+      files: [idearium/repo/nexus-self.js]
+      does: "syncSystem times read · spec · sources · materialize · pipeline · annotate per system; the sync log carries them."
+      proof: tests/modules/test-nexus-self-incremental.test.js NI-002 (steps on the result)
+    PF2_yielding_ingest:
+      layer: library
+      status: DONE (0.39.288)
+      files: [idearium/spec-engine/index.js]
+      does: >-
+        ingestFilesAsSpecAsync — the same ingest split into begin · per-file · finish, yielding every 50 files; the sync
+        one is the same three steps without the yields (one code path). On the default export the API uses.
+      proof: NI-001 (same chunks as the sync ingest; on the default export)
+    PF3_snapshot_names_changed_files:
+      layer: library
+      status: DONE (0.39.288)
+      files: [lib/nexus-self/store.js, idearium/api/index.js]
+      does: >-
+        snapshot stats carry changed (content moved, not just mtime) and removed paths; the sync log prints them, so the
+        file that churns on every boot of James's machine is named by the next boot.
+      proof: NI-004
+    PF4_manifest_meta_sidecar:
+      layer: library
+      status: DONE (0.39.288)
+      files: [idearium/spec-engine/index.js]
+      does: >-
+        saveSpec writes manifest.meta.json (chunk content stripped, stamped with manifest.json's size+mtime);
+        loadSpecMeta and listSpecs take it on a cold read while the stamp matches, the full parse otherwise.
+      proof: NI-005 (taken while it matches; a manifest written some other way is parsed whole)
+    PF5_in_place_spec_update:
+      layer: library
+      status: DONE (0.39.288)
+      files: [idearium/spec-engine/index.js, idearium/repo/index.js, idearium/repo/nexus-self.js]
+      does: >-
+        updateIngestedSpecAsync: same file set → only the chunks whose content moved are rewritten (same chunk, file and
+        node id), one save, nodes written for those chunks only; RepoLayer.specUpdatedInPlace follows the root hash. A
+        different file set → the whole re-ingest (yielding) and the D2 purge, as before. Measured on the real core:
+        spec step 4.3 s → 0.21 s, longest loop stall 3.0 s → 0.27 s.
+      proof: NI-002, NI-003; test-nexus-specs-and-ideas-cleanup SC-002 (the change now adds a file)
+    PF6_boot_sync_yields_to_the_person:
+      layer: library
+      status: OPEN
+      depends_on: [PF5]
+      files: [idearium/api/index.js (the nexus-self scheduler), lib/resource-state (existing pressure reading)]
+      does: >-
+        The first sync waits until the UI's first repo list has been served (or 60 s), and any sync skips its cycle
+        while the machine is under memory pressure — shown as "deferred" with the reason (merges J7 of
+        docs/2026-10-01-work-visibility-job-reuse-phasemap.spec).
+      proof: "a stub pressure reading defers the cycle with a reason; the first list is served before the sync starts"
+    PF7_pipeline_scoped_to_changes:
+      layer: library
+      status: OPEN
+      depends_on: [PF5]
+      files: [idearium/repo/import-pipeline.js]
+      does: >-
+        The import pipeline is already incremental for chunks (§35); intel:build and parse re-run over every file
+        (2.8 s of 5 s for one changed core file). Scope them to the changed files and merge into the previous indexes.
+      proof: "one changed file of a 2,000-file repo: intel rebuild touches that file only; same indexes as a full run"
+    PF8_settings_console_one_cheap_read:
+      layer: api
+      status: OPEN
+      files: [idearium/api/index.js settings.console, idearium/ui/settings.html]
+      does: >-
+        settings.console reads guardian's provider list once per request (not 2× per repo), returns timing in `blind`,
+        and the page renders the nav from the repo rows before the detail read finishes.
+      proof: "17 repos: one provider read; the nav paints before the detail"
+    PF9_boot_memory_census:
+      layer: foundation
+      status: OPEN
+      files: [cortex/memory/jaa-db.js callers, lib/decay-*]
+      does: >-
+        cortex loads cfr_tension_history (12k rows) and event_log (27k rows) whole at boot, in three processes. Census
+        what each reader needs; tail-load or decay the rest (nothing deleted — compacted, §0.3). Versionium's boot stall
+        (orchestrator /cfr/field timing out at 3 s) measured in the same pass.
+      proof: "boot RSS per process before/after; the readers' tests unchanged"
+    PF10_clear_glass_err_aborted_9000:
+      layer: interface
+      status: OPEN
+      files: [clear-glass/src/]
+      does: "Clear Glass loads :9000 before orchestrator answers → ERR_ABORTED; wait on /health with a stated retry."
+      proof: "a late orchestrator: the window loads after it answers, the wait is logged"
+
+    # ── layer 1 — data: node types and databases ──────────────────────────────────────────────────────────────────
+    DT1_persistence_census:
+      layer: foundation
+      status: OPEN
+      depends_on: [M0_map]
+      files: [lib/node-schemas/, tests/modules/ (a census test)]
+      does: >-
+        Task #21 + N24 as one census: every thing a system persists — each jaa table, each JSON file written — gets its
+        node type or its stated outside reason; a new JSON writer fails the census test. Starts with guardian (jobs,
+        sessions, economy) and idearium (repos, specs' manifest — manifest.meta.json included, named as a cache view).
+      proof: "the census lists every writer; each has a type or a reason; a planted new writer fails it"
+    DT2_failure_mode_field:
+      layer: library
+      status: OPEN
+      depends_on: [DT1_persistence_census]
+      files: [lib/fault-log.js, lib/pipeline-routing.js, idearium/spec-engine/index.js, idearium/spec-engine/chunk-dispatch.js]
+      does: >-
+        Task #22 + N14. A chunk that fails gets a structured failureMode beside the free text: { class (classify()),
+        provider, model, jobType, hop, attempt, causedBy (the hop/job id) } and one lib/fault-log.js record (system
+        idearium, component = the chunk's comp_id, causedBy the job) — fault-taxonomy.js's raiseFriction stays the one
+        writer of fault_taxonomy (§10.1). The trajectory (what led to it) is the routing hops already on the chunk plus
+        failure-mode-forensics' causal context.
+      proof: "a stub provider failing with a refusal: chunk.failureMode.class 'refused', one fault_log row tagged with it"
+    DT3_failure_modes_routes_and_preflight:
+      layer: api
+      status: OPEN
+      depends_on: [DT2_failure_mode_field]
+      files: [idearium/api/index.js, idearium/cli/index.js, lib/fault-log.js]
+      does: >-
+        GET /api/faults?repo=&chunk=&jobType=&class= (fault_log), GET /api/failure-modes (cortex's, proxied — not a
+        copy), GET /api/fault-taxonomy; `idearium faults [list|show|taxonomy]`. Pre-flight ("before each action, check
+        for relevant failure modes"): a chunk build reads the known faults for its jobType and provider — the prompt
+        names them (bounded, deduped), and learned routing (RG5) already lowers a provider that keeps failing.
+      proof: "routes over seeded fault_log rows; a build prompt for a jobType with a known refusal names it"
+    DT4_registry_block_to_nodes:
+      layer: library
+      status: OPEN
+      depends_on: [DT1_persistence_census]
+      files: [idearium/spec-engine/index.js, idearium/repo/architecture.js]
+      does: >-
+        The registry block's built text (block 11) is parsed into the same node envelopes toNodes() writes, so a spec's
+        own registry and the code's projection compare node for node (drift = the difference).
+      proof: "a registry chunk with 3 components → 3 .component nodes; a drift report against the code projection"
+    DT5_pipeline_routing_spec:
+      layer: foundation
+      status: OPEN
+      files: [lib/pipeline-routing.spec]
+      does: "spec-drift lists 'pipeline-routing: no spec' — the module's own spec (modes, classes, breaker, learned)."
+      proof: "spec-drift no longer lists it"
+    DT6_node_store:
+      layer: foundation
+      status: OPEN
+      does: "N0–N18 of docs/2026-09-29-nex-node-store-phasemap.spec — the NEX node store; referenced, not duplicated."
+
+    # ── layer 2 — library: how work compounds ─────────────────────────────────────────────────────────────────────
+    CI1_compounding_iterate:
+      layer: library
+      status: OPEN
+      depends_on: [DT2_failure_mode_field]
+      files: [lib/file-states.js (BS2/BS3), lib/step-gate.js, idearium/api/index.js, lib/node-schemas/]
+      does: >-
+        A verified chunk/file becomes a locked baseline (.baseline node: hash, tests that proved it, who). Iterate builds
+        the next layer on it: an additive change passes the gate; a deletion or rewrite of baseline lines needs a stated
+        reason + a passing test or a reviewer, else it is held as a draft (.change_proposal node), never applied
+        silently. Each layer records what it built on (causedBy the baseline).
+      proof: "additive diff passes; a rewrite with no reason is held as a draft; with reason + green test it applies"
+    RM1_registry_driven_moves:
+      layer: library
+      status: OPEN (PLANNED in docs/architecture-spec/architecture-spec.spec until built)
+      depends_on: [DT4_registry_block_to_nodes]
+      files: [lib/registry-move.js (new), idearium/repo/architecture.js, loom/scanners/source-map.js]
+      does: >-
+        Move a component in the registry → plan(): the file move plus every import rewritten, computed from the wires
+        (deterministic, no model); dry-run first; apply as one staged change; re-project the architecture; run the
+        repo's tests. The agent is called only for refs the wires cannot see (dynamic requires, string paths) — named
+        in the plan. Code stays the truth; the registry is the lever.
+      proof: "a fixture repo: move lib/a.js → core/a.js, both consumers rewritten, tests green, nodes re-projected"
+    HC1_hat_agent_to_cos_build:
+      layer: library
+      status: OPEN
+      files: [lib/repo-hat.js, lib/cos-bridge.js, idearium/api/index.js]
+      does: >-
+        The compartment's hat agent can run a build on the COS surface: its changes land in the compartment's VM
+        workspace (the branch repo of 0.39.27x), the build/test runs there, the result comes back as a job with
+        provenance — the same guardian job as any other dispatch.
+      proof: "a stub COS: a hat job writes into the VM workspace and returns the run's exit + output"
+    J_work_visibility_and_reuse:
+      layer: library
+      status: OPEN
+      does: "J0–J7 of docs/2026-10-01-work-visibility-job-reuse-phasemap.spec (J7 folded into PF6)."
+
+    # ── layer 3 — agent: using an outside coding agent inside idearium ─────────────────────────────────────────────
+    AG1_coding_agent_provider:
+      layer: library
+      status: OPEN — decision for James (which account the CLI runs on)
+      depends_on: [DT2_failure_mode_field, CI1_compounding_iterate]
+      files: [lib/agent-providers.js, guardian/lib/jobs.js, idearium/spec-engine/chunk-dispatch.js]
+      does: >-
+        "so close to being able to use you as an agent inside idearium." A provider that runs a coding-agent CLI the
+        person has installed (e.g. Claude Code, `claude -p`, in the repo's workspace) as a guardian job: the job's
+        prompt is the chunk/phase, its output is diffs through the CI1 gate, its failures go through DT2. A local
+        process on the person's own install and account — openly an automated agent, never presented as a person.
+        Routing treats it as one more provider (fallback chain, breaker, learned scores).
+      proof: "a stub CLI: a phase job runs in the workspace, its diff goes through the gate, the hop is on the chunk"
+
+    # ── layer 4 — interface ────────────────────────────────────────────────────────────────────────────────────────
+    UI1_history_and_save_in_manage:
+      layer: interface
+      status: OPEN
+      files: [idearium/ui/js/app.js (the editor tabs), idearium/ui/js/file-versions.js, idearium/ui/js/file-manage.js]
+      does: >-
+        "history" leaves the editor tab row (no more MutationObserver injection): Version history is an item of the
+        manage ▾ menu, and save sits right next to manage ▾, one button style (ide-tab-btn).
+      proof: "static check: no injected history tab; the manage menu lists Version history; save precedes manage"
+    UI2_desktop_environment_menu:
+      layer: interface
+      status: OPEN
+      files: [idearium/ui/js/repo-environment.js, idearium/ui/js/app.js, idearium/ui/css/]
+      does: "The desktop environment options live in the 'Desktop environment' button's menu; the desktop window is borderless."
+      proof: "static check + chromium probe: one menu, no frame"
+    UI3_settings_tab_retheme_collapse:
+      layer: interface
+      status: OPEN
+      depends_on: [PF8_settings_console_one_cheap_read]
+      files: [idearium/ui/settings.html, idearium/ui/js/repo-environment.js, idearium/ui/js/app.js]
+      does: >-
+        The repo Settings tab in the page's own theme (the idearium tokens, not the console's chrome), each card
+        collapsible (state kept per viewer), and the agent's cards — who answers, tools, hat, prompt blocks — moved to
+        the Agents tab, which is where the agent is used. Starts the iframe's removal (N16).
+      proof: "chromium probe: cards collapse; agent cards render under Agents; every write reaches its route"
+    UI4_w7_open_items:
+      layer: interface
+      status: OPEN
+      does: >-
+        W7 items 1, 3, 4 of docs/2026-09-30-idearium-coding-flow-phasemap.spec: architect spec builder on
+        css/nexus-theme.css; the Plan header names the map and groups by layer; Clear Glass Providers page with a
+        guardian widget per provider.
+    UI5_work_surface_from_contracts:
+      layer: interface
+      status: OPEN
+      does: "N26 of the node-store map — the work surface / TV UI rendered from interaction contracts."
+
+    # ── release, and what waits on James ───────────────────────────────────────────────────────────────────────────
+    R1_release_per_phase:
+      layer: foundation
+      status: "OPEN — 0.39.288 released with PF1–PF5"
+      does: "each phase: version bump, CHANGELOG, atlas, loom wires, SPEC-REGISTRY, tests registered, the full run."
+
+  decisions_waiting_on_james:
+    - "AG1 — which install/account the coding-agent CLI runs on, and whether it may write without the CI1 gate (proposed: never)."
+    - >-
+      RAID default in idearium/spec-engine/chunk-dispatch.js (its require never ran in ESM; builds always pass an
+      agent). Proposed: delete the dead branch and say so in the routing spec, rather than turn RAID on silently.
+    - "PF6 — the first-sync delay (proposed: after the first repo list, or 60 s, whichever comes first)."
+
+## ADDENDUM 2026-10-01 — PF1–PF5 built (0.39.288)
+# Measured on the real tree (sandbox store): core update with an unchanged file set — spec 4.3 s → 0.21 s, longest
+# event-loop stall 3.0 s → 0.27 s, total 10.4 s → 6.3 s (the rest is the pipeline: PF7). A cold repo list reads the
+# meta sidecar instead of the 20 MB manifest. The vitals check's 10-block assertion moved to 11 (registry last).
+# tests/modules/test-nexus-self-incremental.test.js 5/5; test-nexus-specs-and-ideas-cleanup 8/8.

@@ -673,6 +673,22 @@ export class RepoLayer {
     return { ok: true, repo: r };
   }
 
+  /**
+   * specUpdatedInPlace(repoUuid) — §0.39.288 PF5. The repo's own spec was brought up to date in place
+   * (spec-engine updateIngestedSpecAsync): same spec uuid, new root hash. The row follows the manifest.
+   */
+  specUpdatedInPlace(repoUuid) {
+    const r = this.repos.repos.find(x => x.uuid === repoUuid);
+    if (!r || !r.specUuid) return { error: 'repo not found or has no spec' };
+    let meta;
+    try { meta = typeof this.se.loadSpecMeta === 'function' ? this.se.loadSpecMeta(r.specUuid) : this.se.loadSpec(r.specUuid); }
+    catch (e) { return { error: `spec ${r.specUuid} unreadable: ${e.message}` }; }
+    r.rootHash = meta.rootHash;
+    r.updatedAt = Date.now();
+    this._save();
+    return { ok: true, repo: r };
+  }
+
   // ── queries for the UI ──────────────────────────────────────────────────────
   list(filter = {}) {
     let rs = this.repos.repos.filter(r => r.status !== 'archived' || filter.includeArchived);

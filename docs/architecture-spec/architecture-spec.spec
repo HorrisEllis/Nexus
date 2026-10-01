@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.8.0
+    version:     0.8.1
     extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.1.0 — the default template of a system spec since 0.39.286
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
@@ -273,8 +273,9 @@ spec:
   # ── 0.8.0 — routing (docs/2026-10-01-routing-registry-genesis-phasemap.spec RG1–RG4) ──────────────────────────────────
   routing:
     module:    lib/pipeline-routing.js — policyFrom, plan, classify, shouldFallback, breaker
-    config:    idearium routing.* — mode (fixed | chain | local-first | economy), chain, fallback_on, max_hops,
-               attempts_per_hop, breaker_threshold, breaker_cooldown_ms, skip_open
+    config:    idearium routing.* — mode (learned | fixed | chain | local-first | economy; learned the default since
+               0.39.287 — the route ordered per chunk type by what has worked, Ollama per model), chain, ollama_models,
+               learn_min_records, fallback_on, max_hops, attempts_per_hop, breaker_threshold, breaker_cooldown_ms, skip_open
     surfaces:  GET /api/routing · GET /api/routing/plan?block=&agent= · POST /api/routing/breaker/reset · `idearium routing`
                · the settings console's Routing & fallback page
     provenance: "every hop kept on the chunk (chunk.route — provider, outcome, class, ms) — spec-engine recordChunkRoute"
@@ -323,8 +324,23 @@ spec:
         opened: 2026-09-22
         closed: 2026-10-01
       # AS4 ("BPM for health scoring") moved to the archive: no BPM-based scorer exists anywhere in NEXUS.
+      - id: AS5
+        type: planned
+        summary: >-
+          PLANNED, NOT BUILT — registry-driven moves (docs/2026-10-01-idearium-agent-ready-master-phasemap.spec RM1).
+          James, 2026-10-01: "make the component registry have the ability to move the components around and have the
+          agent move it in the code." Moving a component in the registry plans the file move and rewrites every import
+          from the registry's own wires — deterministic, no model; a dry run first, then one staged change, the
+          architecture re-projected and the repo's tests run. The agent is asked only for references the wires cannot
+          see (dynamic requires, string paths), each named in the plan. Code stays the truth; the registry is the lever
+          that moves it. Moves here from gaps to a real section when it is built.
+        opened: 2026-10-01
 
   version_history:
+    - version: 0.8.1
+      date: 2026-10-01
+      summary: >-
+        routing names the learned mode (0.39.287); AS5 — registry-driven moves, planned (master phasemap RM1).
     - version: 0.8.0
       date: 2026-10-01
       summary: >-

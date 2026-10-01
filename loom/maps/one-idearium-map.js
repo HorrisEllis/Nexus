@@ -69,6 +69,9 @@ const CONSUMERS = [
   // §0.39.286 RG — routing and fallback: the API plans each chunk's route, chunk-dispatch walks it, the CLI shows it
   ['nexus.idearium.api', I('lib/pipeline-routing.js'), 'idearium/api/index.js _routingPolicy, routing.show/plan/breaker.reset, speceng.build plan()'],
   [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/pipeline-routing.js'), 'idearium/spec-engine/chunk-dispatch.js _walkRoute + _dispatchChunkOnce (_req) — classify, breaker, shouldFallback'],
+  // §0.39.288 PF2/PF5 — nexus-self is handed the engine and the repo layer (injected, never imported), so the scanner sees neither edge
+  ['nexus.idearium.repo.nexus-self', I('idearium/spec-engine/index.js'), 'idearium/repo/nexus-self.js syncSystem — updateIngestedSpecAsync, ingestFilesAsSpecAsync on the injected engine'],
+  ['nexus.idearium.repo.nexus-self', I('idearium/repo/index.js'), 'idearium/repo/nexus-self.js syncSystem — rl.specUpdatedInPlace / replaceSpec / purgeSpecsOf on the injected repo layer'],
 ];
 // the job requires only node built-ins, so the scanner gave it no import hook for the spawn wire to land on
 const BOUNDARY_IMPORTS = [I('lib/history-import-job.js')];
