@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.7.0
+    version:  1.7.1
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -404,6 +404,21 @@ spec:
         cramped, and overwhelming." Code shows the code (editor, symbols, used-from); search by meaning moves to Files
         with the tree; tools fold into one menu.
       proof: "static check: search lives in Files; the Code tab renders editor + symbols only"
+    UI11_nav_and_look_restored:
+      layer: interface
+      status: OPEN
+      depends_on: [UI8_code_tab_is_code]
+      files: [idearium/ui/index.html, idearium/ui/css/, idearium/ui/js/app.js]
+      does: >-
+        James, 2026-10-01 (screenshots of the Code tab and the Build menu): "code tab isn't different... also it looks bad,
+        the top nav bar. idearium used to look a lot nicer." Two problems:
+          - Rows: the top bar stacks four rows (brand · Welcome/Repos/Create/Build · REPOSITORY with All repos and
+            Run/Branch/Diagnose · the 13 repo tabs), and the Build dropdown opens over the repo tabs.
+          - Look: thin, low-contrast type on the starfield.
+        Compare against the 0.39.27x look James liked (git history of idearium/ui/css) and restore it. Fold the repo bar
+        into the tab row. Group the 13 tabs (UI6 Idea+Phases, UI10 Debug+Intelligence cut two). Give the dropdowns a solid
+        panel. UI8 lands first.
+      proof: "chromium screenshots before/after at 1920 and 1280; the tab row fits one line; the dropdown never covers a tab it is not about"
     UI9_plan_and_work_surface_panels:
       layer: interface
       status: OPEN
