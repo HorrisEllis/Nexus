@@ -238,7 +238,8 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
     // else state === RETRYING — loop continues, buildRetryPrompt() picks it up next iteration
   }
 
-  return { ok: false, escalated: true, detection: comp.detection, attempts, error: 'exceeded outer wall-clock attempt cap' };
+  // §0.39.284 — say WHY every attempt was refused (the detector's own summary), not only that the cap was reached
+  return { ok: false, escalated: true, detection: comp.detection, attempts, error: `exceeded outer wall-clock attempt cap${comp.detection && comp.detection.summary ? ` — last check: ${comp.detection.summary}` : ''}` };
 }
 
 // §BUILT 2026-09-03 — James: "set default to chatgpt, fallback gemini."

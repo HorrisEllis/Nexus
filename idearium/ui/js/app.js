@@ -1304,6 +1304,8 @@ async function generateCode(specUuid) {
   const code = r.manifest;
   const n = (code.chunks || []).length, pre = (code.chunks || []).filter(c => c.status === 'complete').length;
   toast(r.existing ? 'opening the code that was already generated' : `${n} file(s) planned${r.plan && r.plan.planSource ? ` (${r.plan.planSource})` : ''}${pre ? ` · ${pre} from templates` : ''} — building them now`, 'ok');
+  // §0.39.284 — show the build as it happens: the Plan panel lists each file and its state
+  setTimeout(() => { if (typeof openPlanPanel === 'function' && CURRENT_API_REPO) openPlanPanel(); }, 1200);
   await loadSpecs();
   await loadApiRepos();
   selectSpec(code.uuid);
@@ -5229,6 +5231,23 @@ async function openApiRepoFile(repoUuid, filePath) {
     _showIdeEditor(true);
     const ta = document.getElementById('ide-editor');
     ta.value = r.content;
+    // 0.39.284 — an empty file a code build has not written yet: say so, with its chunk's state, instead of a blank editor
+    if (!r.content) {
+      const specUuid = CURRENT_API_REPO && (CURRENT_API_REPO.specUuid || CURRENT_API_REPO.promotedFromSpec);
+      if (specUuid) {
+        try {
+          const s = await api(`/api/spec-engine/specs/${specUuid}`, {}, 15000);
+          const m = s.manifest || s.spec || s;
+          const ch = (m.chunks || []).find(c => c.file && c.file.path === filePath);
+          if (ch && ch.status !== 'complete') {
+            _showIdeEditor(false);
+            document.getElementById('ide-code').textContent = `// not built yet — its chunk is ${ch.status}${ch.error ? ` (${ch.error})` : ''}.\n// The Plan panel shows the build; "build the rest / retry" runs it again.`;
+            if (typeof openPlanPanel === 'function') openPlanPanel();
+            return;
+          }
+        } catch (_) { /* the editor stays empty */ }
+      }
+    }
     ta.oncancel = null;
     ta.oninput = () => { API_FILE_DIRTY = true; const d = document.getElementById('ide-dirty'); if (d) d.style.display = ''; };
   } catch (e) {
