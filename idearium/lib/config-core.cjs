@@ -185,7 +185,10 @@ const SCHEMA = {
   // §0.39.286 RG2 (docs/2026-10-01-routing-registry-genesis-phasemap.spec) — James: "full options for fallback logic,
   // routing". Read by lib/pipeline-routing.js policyFrom(); used by every spec chunk build (speceng.build).
   routing: {
-    mode:                { default: 'chain', enum: ['fixed', 'chain', 'local-first', 'economy'], copilot_writable: true, type: 'string' },
+    mode:                { default: 'learned', enum: ['learned', 'fixed', 'chain', 'local-first', 'economy'], copilot_writable: true, type: 'string' },
+    // §0.39.287 — each Ollama model listed is its own candidate (ollama:<model>), learned per chunk type
+    ollama_models:       { default: '', copilot_writable: true, type: 'string' },
+    learn_min_records:   { default: 4, min: 1, max: 1000, copilot_writable: true, type: 'number' },
     chain:               { default: 'ollama,gemini,chatgpt,claude,deepseek', copilot_writable: true, type: 'string' },
     fallback_on:         { default: 'empty,truncated,refused,timeout,provider-down,rate-limit,unknown', copilot_writable: true, type: 'string' },
     max_hops:            { default: 3, min: 1, max: 10, copilot_writable: true, type: 'number' },

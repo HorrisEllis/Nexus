@@ -51,6 +51,8 @@ const BOUNDARY_EXPORTS = [
   I('idearium/repo/work-surface.js'), I('idearium/repo/architecture.js'),
   // §0.39.286 RG1 — the routing policy, reached through createRequire from ESM (idearium/api, chunk-dispatch, the CLI)
   I('lib/pipeline-routing.js'),
+  // §0.39.290 IL1 — reached only by await import() / createRequire
+  I('idearium/lib/spec-library-import.js'),   // lib/spec-library.js gets its export hook from the scanner (a literal require)
 ];
 
 // Consumers that are HAND-MAPPED elsewhere (the scanner skips them): [consumer id, dependency id, where].
@@ -69,6 +71,20 @@ const CONSUMERS = [
   // §0.39.286 RG — routing and fallback: the API plans each chunk's route, chunk-dispatch walks it, the CLI shows it
   ['nexus.idearium.api', I('lib/pipeline-routing.js'), 'idearium/api/index.js _routingPolicy, routing.show/plan/breaker.reset, speceng.build plan()'],
   [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/pipeline-routing.js'), 'idearium/spec-engine/chunk-dispatch.js _walkRoute + _dispatchChunkOnce (_req) — classify, breaker, shouldFallback'],
+  // §0.39.288 PF2/PF5 — nexus-self is handed the engine and the repo layer (injected, never imported), so the scanner sees neither edge
+  ['nexus.idearium.repo.nexus-self', I('idearium/spec-engine/index.js'), 'idearium/repo/nexus-self.js syncSystem — updateIngestedSpecAsync, ingestFilesAsSpecAsync on the injected engine'],
+  // §0.39.291 PV1–PV3 — verify + prove: the API reaches the verifier by _require; agent-suite reaches the hardened Ollama
+  // client by _require (createRequire) — edges the scanner cannot see
+  ['nexus.idearium.api', I('lib/build-verify.js'), 'idearium/api/index.js repo.verify / repo.prove (_verifyRepo, _proveLoop) — verify + repairText'],
+  [I('idearium/agent-suite/index.js'), I('ollama/lib/ollama-client.js'), 'idearium/agent-suite/index.js generateWithOllama — callOllamaRaw (streamed, idle timeout, think:false, continuation)'],
+  // §0.39.290 IL1 — the spec library: the API and the CLI reach the importer by await import(); it reaches the scanner by createRequire
+  ['nexus.idearium.api', I('idearium/lib/spec-library-import.js'), 'idearium/api/index.js spec-library.import / spec-library.list (await import)'],
+  [I('idearium/cli/index.js'), I('idearium/lib/spec-library-import.js'), 'idearium/cli/index.js spec-library.import (no server) / spec-library.list (await import)'],
+  [I('idearium/lib/spec-library-import.js'), I('lib/spec-library.js'), 'idearium/lib/spec-library-import.js importLibrary — scan + convert (createRequire)'],
+  // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)
+  [I('ollama/lib/ollama-client.js'), I('lib/reply-continuation.js'), 'ollama/lib/ollama-client.js callOllamaRaw — a reply stopped at num_predict (or in an open fence) is continued and stitched (require inside the function)'],
+  [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/reply-continuation.js'), 'idearium/spec-engine/chunk-dispatch.js _dispatchChunkOnce — looksCut/complete before the detector judges'],
+  ['nexus.idearium.repo.nexus-self', I('idearium/repo/index.js'), 'idearium/repo/nexus-self.js syncSystem — rl.specUpdatedInPlace / replaceSpec / purgeSpecsOf on the injected repo layer'],
 ];
 // the job requires only node built-ins, so the scanner gave it no import hook for the spawn wire to land on
 const BOUNDARY_IMPORTS = [I('lib/history-import-job.js')];

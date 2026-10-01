@@ -829,10 +829,14 @@ function sseSend(res, event, data) {
 // runToolLoop needs a plain (jobRef) => { text, toolCalls } resolver; the
 // streaming poll above is tied to an HTTP res. Same /api/jobs/:id status shape,
 // no streaming side-effects. Carries tool_calls through if ollama returns them.
+// §0.39.289 — was a fixed 90 s: the bridge now streams a local generation (idle timeout, 10-minute total cap) and
+// continues a cut reply, so a long file took longer than this wait and was handed back half-written. The wait follows
+// the bridge's own cap (it fails the job itself on an idle model — this loop is not the timeout anymore).
+const OLLAMA_JOB_MAX_WAIT_S = parseInt(process.env.COPILOT_OLLAMA_MAX_WAIT_S || '660', 10);
 async function _pollOllamaJobHeadless(jobRef) {
   const jobId = jobRef?.jobId || jobRef;
   if (!jobId) return { text: '', toolCalls: null };
-  const MAX_WAIT = 90;
+  const MAX_WAIT = OLLAMA_JOB_MAX_WAIT_S;
   let lastText = '';
   for (let i = 0; i < MAX_WAIT; i++) {
     await new Promise(r => setTimeout(r, 1000));
@@ -853,7 +857,7 @@ async function _pollOllamaJobHeadless(jobRef) {
 
 async function _streamOllamaJob(jobId, res, sessionId) {
   let lastText = '';
-  const MAX_WAIT = 90; // seconds
+  const MAX_WAIT = OLLAMA_JOB_MAX_WAIT_S; // seconds (§0.39.289 — was 90)
   for (let i = 0; i < MAX_WAIT; i++) {
     await new Promise(r => setTimeout(r, 1000));
     try {

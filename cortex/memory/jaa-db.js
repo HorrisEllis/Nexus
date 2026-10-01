@@ -173,6 +173,9 @@ const jaaDB = {
   delete(table, where)           { return _getStore().delete(table, where); },
   count(table, where)            { return _getStore().count(table, where); },
   reloadTable(table)              { return _getStore().reloadTable(table); },
+  // §0.39.291 — writes are debounced; a hand-off to another process that reads the disk (a server a test or a CLI starts)
+  // flushes first. Returns the number of tables written.
+  flush()                         { const s = _getStore(); if (typeof s.flushAll === 'function') { s.flushAll(); return true; } return false; },
   uid()                          { return _uid(); },
   // raw store access for modules that need it
   _store()                       { return _getStore(); },

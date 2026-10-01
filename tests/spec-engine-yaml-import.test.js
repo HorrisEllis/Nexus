@@ -48,13 +48,19 @@ const SPEC_ENGINE_URL = pathToFileURL(path.join(__dirname, '..', 'idearium', 'sp
 function main() {
   const script = `
     import(${JSON.stringify(SPEC_ENGINE_URL)}).then(se => {
-      if (!Array.isArray(se.SPEC_SECTIONS) || se.SPEC_SECTIONS.length !== 10) {
+      if (!Array.isArray(se.SPEC_SECTIONS) || se.SPEC_SECTIONS.length !== 11) {
         console.error('FAIL: SPEC_SECTIONS did not load correctly — ' + JSON.stringify(se.SPEC_SECTIONS));
         process.exit(1);
       }
       const meta = se.SPEC_SECTIONS.find(b => b.id === 'meta');
       if (!meta || !meta.agent) {
         console.error('FAIL: meta block missing or has no real agent field — ' + JSON.stringify(meta));
+        process.exit(1);
+      }
+      // 0.39.286: block 11 'registry' (the component registry / interaction contract) comes last, after build_order.
+      const last = se.SPEC_SECTIONS[se.SPEC_SECTIONS.length - 1];
+      if (last.id !== 'registry' || !(last.dependsOn || []).includes('build_order')) {
+        console.error('FAIL: registry block missing, not last, or not depending on build_order — ' + JSON.stringify(last));
         process.exit(1);
       }
       console.log('PASS');
@@ -84,7 +90,7 @@ function main() {
   if (!output.includes('PASS')) {
     throw new Error(`expected PASS in a clean-process import of spec-engine/index.js, got: ${output}`);
   }
-  console.log('PASS: spec-engine/index.js imports cleanly in a fresh process — SPEC_SECTIONS has all 10 real blocks, each with a real agent field');
+  console.log('PASS: spec-engine/index.js imports cleanly in a fresh process — SPEC_SECTIONS has all 11 real blocks (registry last), each with a real agent field');
 }
 
 try { main(); console.log('ALL PASS'); process.exit(0); }

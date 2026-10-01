@@ -719,14 +719,36 @@ export function loadSpec(specUuid) {
 // READ-ONLY by contract — the object is shared between callers; anything that
 // mutates and saves must use loadSpec().
 const _metaCache = new Map();   // specUuid -> { mtimeMs, size, meta }
+
+// §0.39.288 PF4 — James: "it takes forever to load the repos on boot." The cache above is in memory, so the
+// first repo list after a boot parsed every manifest whole (nexus/core's ~20 MB) to throw the content away.
+// saveSpec() now also writes manifest.meta.json — the same manifest with chunk content stripped, stamped with
+// the manifest's own size and mtime. A cold read takes the sidecar when the stamp still matches the file;
+// anything that wrote manifest.json some other way moves the stamp, and the full parse runs as before.
+const META_SIDECAR = 'manifest.meta.json';
+function _stripContent(m) { return { ...m, chunks: (m.chunks || []).map(({ content, ...c }) => c) }; }
+function _writeMetaSidecar(specDir, manifest) {
+  try {
+    const st = fs.statSync(path.join(specDir, 'manifest.json'));
+    const tmp = path.join(specDir, `${META_SIDECAR}.${process.pid}.tmp`);
+    fs.writeFileSync(tmp, JSON.stringify({ of: { size: st.size, mtimeMs: st.mtimeMs }, meta: _stripContent(manifest) }));
+    fs.renameSync(tmp, path.join(specDir, META_SIDECAR));
+  } catch (e) { console.warn(`[${MODULE_ID}] meta sidecar not written for ${manifest.uuid} (non-fatal — the full parse still works): ${e.message}`); }
+}
+function _readMetaSidecar(specUuid, st) {
+  try {
+    const sc = JSON.parse(fs.readFileSync(path.join(SPECS_ROOT, specUuid, META_SIDECAR), 'utf8'));
+    return sc && sc.of && sc.of.size === st.size && sc.of.mtimeMs === st.mtimeMs && sc.meta ? sc.meta : null;
+  } catch (_) { return null; }
+}
+
 export function loadSpecMeta(specUuid) {
   const manifestPath = path.join(SPECS_ROOT, specUuid, 'manifest.json');
   let st;
   try { st = fs.statSync(manifestPath); } catch (_) { throw new Error(`spec ${specUuid} not found`); }
   const hit = _metaCache.get(specUuid);
   if (hit && hit.mtimeMs === st.mtimeMs && hit.size === st.size) return hit.meta;
-  const m = loadSpec(specUuid);
-  const meta = { ...m, chunks: (m.chunks || []).map(({ content, ...c }) => c) };
+  const meta = _readMetaSidecar(specUuid, st) || _stripContent(loadSpec(specUuid));
   _metaCache.set(specUuid, { mtimeMs: st.mtimeMs, size: st.size, meta });
   return meta;
 }
@@ -760,6 +782,7 @@ export function saveSpec(manifest) {
   // §2.1 disk before behavior — the write cortex mirrors below can lag or
   // fail without losing anything; this line is the one that must not.
   fs.writeFileSync(path.join(specDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
+  _writeMetaSidecar(specDir, manifest);
 
   // Cortex mirror — queryable index over the same manifest, not a second
   // source of truth (§2.2 unchanged: disk is still what loadSpec() reads).
@@ -844,7 +867,7 @@ export function listSpecs({ includeDeleted = false } = {}) {
       const st = fs.statSync(mp);
       let hit = _summaryCache.get(entry.name);
       if (!hit || hit.mtimeMs !== st.mtimeMs || hit.size !== st.size) {
-        hit = { mtimeMs: st.mtimeMs, size: st.size, summary: _summarize(loadSpec(entry.name)) };
+        hit = { mtimeMs: st.mtimeMs, size: st.size, summary: _summarize(_readMetaSidecar(entry.name, st) || loadSpec(entry.name)) };
         _summaryCache.set(entry.name, hit);
       }
       // §NEW 2026-07-16 — see deleteSpec() below. Soft-deleted specs stay on
@@ -1083,6 +1106,11 @@ export function completeChunk(specUuid, chunkUuid, content, { preserveWhitespace
   // lie about its own state.
   chunk.jobId       = null;
   chunk.dispatchDir = null;
+  // §0.39.291 PV2 — a repaired file's repair moves to its history: what failed, in which round, what replaced it
+  if (chunk.repair) {
+    chunk.repairHistory = [...(chunk.repairHistory || []), { ...chunk.repair, previous: undefined, previousChars: String(chunk.repair.previous || '').length, fixedAt: Date.now(), byteSize: chunk.byteSize }].slice(-20);
+    delete chunk.repair;
+  }
 
   // Update spec progress
   manifest.doneChunks  = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
@@ -1390,6 +1418,61 @@ function _buildManifestEntryPrompt(manifest, chunk, systemContext = '') {
 }
 
 export function buildChunkPrompt(manifest, chunk, systemContext = '') {
+  const base = _buildChunkPromptBase(manifest, chunk, systemContext);
+  return chunk.repair ? `${base}\n\n${repairBlock(chunk)}` : base;
+}
+
+/**
+ * repairBlock(chunk) — §0.39.291 PV2. James: "gate, verify, check, if failed, send back and fix it, then back
+ * through." A file that failed verification goes back to its agent WITH the failure: the exact errors (the line, the
+ * test's actual/expected, what the test asks) and the file as it is now. Before this, a retried chunk kept its failure
+ * as priorFailure and nothing ever showed it to the agent — it rewrote the file blind.
+ */
+export function repairBlock(chunk) {
+  const r = chunk.repair || {};
+  const prev = String(r.previous || '');
+  return [
+    `THIS FILE FAILED VERIFICATION${r.round ? ` (round ${r.round})` : ''} — fix it.`,
+    `Change what the failures below name and keep everything that works. Write the whole file again, complete.`,
+    `If a test describes behaviour this file does not have, make the file do what the test asks.`,
+    ``,
+    `THE FAILURES:`,
+    String(r.failures || '(none recorded)').slice(0, 8000),
+    prev ? `\nTHE FILE AS IT IS NOW (${chunk.realPath || chunk.sectionId}):\n\`\`\`\n${prev.slice(0, 20000)}${prev.length > 20000 ? '\n… (truncated)' : ''}\n\`\`\`` : '',
+  ].filter(x => x !== '').join('\n');
+}
+
+/**
+ * markForRepair(specUuid, items) — items: [{ realPath, failures (text), round }]. Each file's chunk goes back to
+ * pending with `repair` set; one save. -> { marked: [realPath], unknown: [realPath] }. A file the spec does not build
+ * (a test the agent did not write, a file by hand) is returned in `unknown` — never silently dropped.
+ */
+export function markForRepair(specUuid, items = []) {
+  const manifest = loadSpec(specUuid);
+  const byPath = new Map(manifest.chunks.filter(c => c.realPath).map(c => [c.realPath, c]));
+  const marked = [], unknown = [];
+  for (const it of items) {
+    const c = byPath.get(it.realPath);
+    if (!c) { unknown.push(it.realPath); continue; }
+    c.repair = { round: it.round || 1, failures: String(it.failures || ''), previous: String(c.content || ''), at: Date.now() };
+    c.priorFailure = String(it.failures || '').split('\n')[0].slice(0, 300) || c.failureMode || null;
+    c.status = CHUNK_STATES.PENDING;
+    c.attempts = 0;
+    c.failureMode = null;
+    c.jobId = null; c.dispatchDir = null;
+    c.updatedAt = Date.now();
+    marked.push(it.realPath);
+  }
+  if (marked.length) {
+    manifest.doneChunks = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
+    manifest.progress = manifest.totalChunks ? Math.round((manifest.doneChunks / manifest.totalChunks) * 100) : 0;
+    if (manifest.status === 'complete') manifest.status = 'building';
+    saveSpec(manifest);
+  }
+  return { marked, unknown };
+}
+
+function _buildChunkPromptBase(manifest, chunk, systemContext = '') {
   if (chunk.manifestEntry) return _buildManifestEntryPrompt(manifest, chunk, systemContext);
   if (chunk.file && chunk.realPath) return _buildFilePrompt(manifest, chunk, systemContext);
   const completedChunks = manifest.chunks
@@ -1439,6 +1522,8 @@ export default {
   recoverOrphanedChunks,
   buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec, purgeSpec,   // purgeSpec: 0.39.266 (D2)
   computeRootHash, findByRootHash, ingestFilesAsSpec, addChunk, removeChunk,
+  ingestFilesAsSpecAsync, updateIngestedSpecAsync,
+  markForRepair, repairBlock,   // 0.39.291 PV2   // 0.39.288 PF2/PF5 — nexus-self reaches them through this default export
   reconstructSpecText,
   SPEC_SECTIONS, CHUNK_STATES, WARP_PRIMITIVES: [...WARP_PRIMITIVES],
   MODULE_ID, VERSION, COMP_ID,
@@ -1628,6 +1713,66 @@ export function removeChunk(specUuid, chunkUuid) {
 }
 
 export function ingestFilesAsSpec({ name, files = [], author = 'ingest', repoUuid = null } = {}) {
+  const { manifest, specDir, now0 } = _ingestBegin({ name, files, author });
+  files.forEach((f, i) => _ingestFileInto(manifest, specDir, f, i));
+  return _ingestFinish(manifest, { repoUuid, now0 });
+}
+
+// §0.39.288 PF2 — the same ingest, yielding to the event loop every `yieldEvery` files. A nexus-self sync of core
+// (~2,000 files) held idearium's loop for 3–4 s here and far longer on a slow disk, so the repo list and the
+// settings console waited behind it on boot. Same manifest, same chunk files, same single final save.
+export async function ingestFilesAsSpecAsync({ name, files = [], author = 'ingest', repoUuid = null, yieldEvery = 50 } = {}) {
+  const { manifest, specDir, now0 } = _ingestBegin({ name, files, author });
+  for (let i = 0; i < files.length; i++) {
+    _ingestFileInto(manifest, specDir, files[i], i);
+    if ((i + 1) % yieldEvery === 0) await new Promise(r => setImmediate(r));
+  }
+  return _ingestFinish(manifest, { repoUuid, now0 });
+}
+
+function _cleanRealPath(p) {
+  const clean = String(p || '')
+    .replace(/^\/+/, '')
+    .split('/')
+    .filter((seg) => seg && seg !== '.' && seg !== '..')
+    .join('/');
+  return clean || null;
+}
+
+// §0.39.288 PF5 — an ingested spec brought up to date IN PLACE. A nexus-self sync re-ingested all of nexus/core
+// (~2,000 chunk files and ~2,000 .chunk nodes written, then the old ~2,000 of each deleted) for one changed file,
+// every boot — 45 s of disk churn on James's machine. When the file set is the same, only the chunks whose
+// content moved are rewritten (same chunk, same file, same node id), and the manifest is saved once. Returns
+// null — and touches nothing — when the set differs or the spec is not a finished ingest; the caller then
+// does the full re-ingest as before. History is not lost: every version is a snapshot in the immutable store
+// and a versionium commit, and the chunk's own attempts/updatedAt record the rewrite.
+export async function updateIngestedSpecAsync({ specUuid, files = [], repoUuid = null, yieldEvery = 50 } = {}) {
+  let manifest;
+  try { manifest = loadSpec(specUuid); } catch (_) { return null; }
+  if (!manifest || manifest.ingesting || manifest.deleted || !Array.isArray(manifest.chunks)) return null;
+  if (manifest.chunks.length !== files.length) return null;
+  const byPath = new Map();
+  manifest.chunks.forEach((c, i) => { if (c.realPath) byPath.set(c.realPath, i); });
+  if (byPath.size !== files.length) return null;
+  const idx = [];
+  for (const f of files) { const i = byPath.get(_cleanRealPath(f.path)); if (i == null) return null; idx.push(i); }
+  const specDir = path.join(SPECS_ROOT, manifest.uuid);
+  const now0 = Date.now();
+  const changed = [];
+  for (let k = 0; k < files.length; k++) {
+    const f = files[k], i = idx[k], c = manifest.chunks[i];
+    const next = typeof f.content === 'string' ? f.content.trim() : '';
+    if (c.status === CHUNK_STATES.COMPLETE && c.content === next && c.filePath && fs.existsSync(c.filePath)) continue;
+    _ingestFileInto(manifest, specDir, f, i);
+    changed.push(c);
+    if (changed.length % yieldEvery === 0) await new Promise(r => setImmediate(r));
+  }
+  if (!changed.length) return { manifest, changed: 0, inPlace: true };
+  _ingestFinish(manifest, { repoUuid, now0, onlyChunks: changed });
+  return { manifest, changed: changed.length, inPlace: true };
+}
+
+function _ingestBegin({ name, files = [], author = 'ingest' } = {}) {
   if (!files.length) throw new Error('ingestFilesAsSpec: at least one file required');
   // §MCO-F 2026-09-15 — the drop path's own real chunk cap (distinct from
   // lib/project-import.config.js's ZIP.maxFiles, which only bounds the
@@ -1687,71 +1832,69 @@ export function ingestFilesAsSpec({ name, files = [], author = 'ingest', repoUui
   saveSpec(manifest);
 
   const specDir = path.join(SPECS_ROOT, manifest.uuid);
-  const now0 = Date.now();
-  files.forEach((f, i) => {
-    const chunk = manifest.chunks[i];
-    chunk.agent = 'ingest'; chunk.agentModel = 'ingest:drop';
-    chunk.attempts = (chunk.attempts || 0) + 1;
-    // §REALPATH 2026-09-15 — James: "idearium needs to import the files to the
-    // repo, not just chunk." repo/index.js and materialize() prefer realPath
-    // over the chunk store's numbered fileName, so a dropped file lands at its
-    // real path/extension. Sanitized: no leading '/', no '..' segment, so a
-    // crafted f.path cannot escape the materialize outDir.
-    const clean = String(f.path || '')
-      .replace(/^\/+/, '')
-      .split('/')
-      .filter((seg) => seg && seg !== '.' && seg !== '..')
-      .join('/');
-    chunk.realPath = clean || null;
+  return { manifest, specDir, now0: Date.now() };
+}
 
-    // §FIXED 2026-09-19 — a file with no captured content is a real failure of
-    // this ingest, never a fabricated placeholder marked COMPLETE (§1.2).
-    if (!(f.content && f.content.trim().length > 0)) {
-      chunk.status = chunk.attempts >= 3 ? CHUNK_STATES.ESCALATED : CHUNK_STATES.FAILED;
-      chunk.failureMode = `no text content captured for ${f.path} — binary, empty, or unreadable at ingest time`;
-      chunk.jobId = null; chunk.dispatchDir = null;
-      chunk.updatedAt = Date.now();
-      console.warn(`[${MODULE_ID}] §1.2 chunk ${chunk.sectionId} ${chunk.status}: ${chunk.failureMode}`);
-      return;
-    }
+function _ingestFileInto(manifest, specDir, f, i, { preserveWhitespace = false, agent = 'ingest', agentModel = 'ingest:drop' } = {}) {
+  const chunk = manifest.chunks[i];
+  chunk.agent = agent; chunk.agentModel = agentModel;
+  chunk.attempts = (chunk.attempts || 0) + 1;
+  // §REALPATH 2026-09-15 — James: "idearium needs to import the files to the
+  // repo, not just chunk." repo/index.js and materialize() prefer realPath
+  // over the chunk store's numbered fileName, so a dropped file lands at its
+  // real path/extension. Sanitized: no leading '/', no '..' segment, so a
+  // crafted f.path cannot escape the materialize outDir.
+  chunk.realPath = _cleanRealPath(f.path);
 
-    const finalContent = f.content.trim();
-    const filePath = path.join(specDir, `${String(chunk.chunkIdx).padStart(2,'0')}-${chunk.sectionId}-${chunk.uuid.slice(0,8)}.md`);
-    const fileContent = [
-      `---`,
-      `chunk_uuid: ${chunk.uuid}`,
-      `spec_uuid: ${manifest.uuid}`,
-      `section: ${chunk.sectionId}`,
-      `title: ${chunk.sectionTitle}`,
-      `comp_id: ${chunk.comp_id}`,
-      `seam_id: ${chunk.seam_id}`,
-      `contract_id: ${chunk.contract_id}`,
-      `agent: ${chunk.agent}`,
-      `model: ${chunk.agentModel || 'unknown'}`,
-      `status: complete`,
-      `completed_at: ${new Date().toISOString()}`,
-      `---`,
-      ``,
-      finalContent,
-    ].join('\n');
-    fs.writeFileSync(filePath, fileContent, 'utf8');
-    // §1.1 — the artifact must exist on disk before the chunk is marked complete.
-    if (!fs.existsSync(filePath)) {
-      chunk.status = CHUNK_STATES.FAILED;
-      chunk.failureMode = 'file write verification failed — artifact not found after write';
-      chunk.updatedAt = Date.now();
-      return;
-    }
-    chunk.status      = CHUNK_STATES.COMPLETE;
-    chunk.filePath    = filePath;
-    chunk.content     = finalContent;
-    chunk.byteSize    = Buffer.byteLength(fileContent);
-    chunk.updatedAt   = Date.now();
-    chunk.completedAt = Date.now();
-    chunk.failureMode = null;
+  // §FIXED 2026-09-19 — a file with no captured content is a real failure of
+  // this ingest, never a fabricated placeholder marked COMPLETE (§1.2).
+  if (!(f.content && f.content.trim().length > 0)) {
+    chunk.status = chunk.attempts >= 3 ? CHUNK_STATES.ESCALATED : CHUNK_STATES.FAILED;
+    chunk.failureMode = `no text content captured for ${f.path} — binary, empty, or unreadable at ingest time`;
     chunk.jobId = null; chunk.dispatchDir = null;
-  });
+    chunk.updatedAt = Date.now();
+    console.warn(`[${MODULE_ID}] §1.2 chunk ${chunk.sectionId} ${chunk.status}: ${chunk.failureMode}`);
+    return;
+  }
 
+  const finalContent = preserveWhitespace ? f.content : f.content.trim();
+  const filePath = path.join(specDir, `${String(chunk.chunkIdx).padStart(2,'0')}-${chunk.sectionId}-${chunk.uuid.slice(0,8)}.md`);
+  const fileContent = [
+    `---`,
+    `chunk_uuid: ${chunk.uuid}`,
+    `spec_uuid: ${manifest.uuid}`,
+    `section: ${chunk.sectionId}`,
+    `title: ${chunk.sectionTitle}`,
+    `comp_id: ${chunk.comp_id}`,
+    `seam_id: ${chunk.seam_id}`,
+    `contract_id: ${chunk.contract_id}`,
+    `agent: ${chunk.agent}`,
+    `model: ${chunk.agentModel || 'unknown'}`,
+    `status: complete`,
+    `completed_at: ${new Date().toISOString()}`,
+    `---`,
+    ``,
+    finalContent,
+  ].join('\n');
+  fs.writeFileSync(filePath, fileContent, 'utf8');
+  // §1.1 — the artifact must exist on disk before the chunk is marked complete.
+  if (!fs.existsSync(filePath)) {
+    chunk.status = CHUNK_STATES.FAILED;
+    chunk.failureMode = 'file write verification failed — artifact not found after write';
+    chunk.updatedAt = Date.now();
+    return;
+  }
+  chunk.status      = CHUNK_STATES.COMPLETE;
+  chunk.filePath    = filePath;
+  chunk.content     = finalContent;
+  chunk.byteSize    = Buffer.byteLength(fileContent);
+  chunk.updatedAt   = Date.now();
+  chunk.completedAt = Date.now();
+  chunk.failureMode = null;
+  chunk.jobId = null; chunk.dispatchDir = null;
+}
+
+function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunks = null, label = 'ingested' } = {}) {
   manifest.doneChunks   = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
   manifest.failedChunks = manifest.chunks.filter(c => c.status === CHUNK_STATES.FAILED || c.status === CHUNK_STATES.ESCALATED).length;
   manifest.progress     = manifest.totalChunks ? Math.round((manifest.doneChunks / manifest.totalChunks) * 100) : 0;
@@ -1768,8 +1911,11 @@ export function ingestFilesAsSpec({ name, files = [], author = 'ingest', repoUui
 
   // §CHUNK-NODE — one pass at the end, after the save it records (never before:
   // a node claiming a completion that never persisted would be a lie).
-  chunkNodes.writeManifestChunkNodes(manifest, { repoUuid });
-  console.log(`[${MODULE_ID}] ✓ ingested ${manifest.doneChunks}/${manifest.totalChunks} file(s) into "${manifest.name}" in ${Date.now() - now0}ms`);
+  if (onlyChunks) { for (const c of onlyChunks) if (c.status !== 'removed') chunkNodes.writeChunkNode(c, manifest.uuid, { specName: manifest.name, force: true, repoUuid }); }
+  else chunkNodes.writeManifestChunkNodes(manifest, { repoUuid });
+  console.log(onlyChunks
+    ? `[${MODULE_ID}] ✓ updated ${onlyChunks.length} of ${manifest.totalChunks} chunk(s) of "${manifest.name}" in place in ${Date.now() - now0}ms`
+    : `[${MODULE_ID}] ✓ ${label} ${manifest.doneChunks}/${manifest.totalChunks} ${label === 'ingested' ? 'file(s)' : 'block(s)'} into "${manifest.name}" in ${Date.now() - now0}ms`);
   // One progress event, not one per file: the loop above is synchronous, so
   // per-file events would only have queued up and flushed together anyway.
   import('../index.js').then(({ getIdeaOS }) => {
@@ -1837,7 +1983,9 @@ const { chunkDocument, structuralProfile, slug: _slug, SPLIT_THRESHOLD_CHARS } =
 // zero-token, since the content is already authored, but not a shortcut
 // around the contract: every chunk is still written to disk and verified
 // like any agent-built one, just instantly instead of after a dispatch.
-export function importSpec({ name, specText, author = 'import' }) {
+// §0.39.290 IL1 — bannerRe: where this document's sections start, when it is not in the `# BLOCK N —` dialect
+// (lib/spec-library.js convert(): Markdown ## or # headings). The text itself is never rewritten.
+export function importSpec({ name, specText, author = 'import', bannerRe = null, type = 'system', description = 'imported from .spec' }) {
   if (!specText || !specText.trim()) throw new Error('importSpec: specText required');
   const specName = name || (specText.match(/name:\s*(\S+)/)?.[1]) || `imported-${Date.now()}`;
 
@@ -1845,7 +1993,7 @@ export function importSpec({ name, specText, author = 'import' }) {
   // the byte-fidelity self-check all now live in lib/chunker/index.js
   // (chunkDocument). This is the same logic that used to be inline here —
   // moved, not reimplemented, so idearium isn't the only caller of it.
-  const { queue, byteFidelity, blocksFound } = chunkDocument(specText);
+  const { queue, byteFidelity, blocksFound } = chunkDocument(specText, bannerRe ? { bannerRe } : {});
   const roundtrip = byteFidelity.verified;
   if (!roundtrip) {
     console.warn(`[idearium.spec-engine] importSpec: byte-fidelity check FAILED for "${specName}" — ` +
@@ -1854,36 +2002,32 @@ export function importSpec({ name, specText, author = 'import' }) {
   }
 
   const sections = queue.map(q => ({ id: q.id, title: q.title, desc: q.desc }));
-  const manifest = _buildManifest({ name: specName, type: 'system', description: 'imported from .spec', author, sections });
+  const manifest = _buildManifest({ name: specName, type, description, author, sections });
 
+  // §0.39.290 — every block is completed IN MEMORY and the manifest saved once (the ingest's own path:
+  // _ingestFileInto/_ingestFinish). It was markChunkBuilding + completeChunk + loadSpec + saveSpec per block: a
+  // 112-section spec rewrote its whole manifest ~300 times — James's spec library (150 documents) took minutes and
+  // held the loop. Same chunk files (same front matter, the same "imported block" tag), same fields, one save.
+  manifest.ingesting = true;
+  saveSpec(manifest);
+  const specDir = path.join(SPECS_ROOT, manifest.uuid);
+  const now0 = Date.now();
   const filled = [];
   for (const q of queue) {
-    const chunk = manifest.chunks.find(c => c.sectionId === q.id);
-    if (!chunk) continue; // sections[] and queue[] are built 1:1 — should never miss
-    markChunkBuilding(manifest.uuid, chunk.uuid, { agent: 'import', model: 'import:.spec' });
+    const i = manifest.chunks.findIndex(c => c.sectionId === q.id);
+    if (i < 0) continue; // sections[] and queue[] are built 1:1 — should never miss
     const tag = q.sourceKey ? `imported: ${q.sourceBlock} → ${q.sourceKey}` : `imported block: ${q.sourceBlock}`;
-    completeChunk(manifest.uuid, chunk.uuid, `<!-- ${tag} -->\n\n${q.content}`, { preserveWhitespace: true });
-    const fresh = loadSpec(manifest.uuid);
-    const fc = fresh.chunks.find(c => c.uuid === chunk.uuid);
-    if (fc) {
-      fc.agent = 'import';
-      fc.agentModel = 'import:.spec';
-      // §COGNITIVE SEAM 2026-07-14 — "complexity is a shape, not a scalar."
-      // Real counts (deps/hookEvents/failureModes/invariantRefs) from the
-      // chunk's own content, kept as a vector, not collapsed to one score —
-      // enforcement (small, high invariant fan-out) vs kernel (large, spread
-      // across categories) need different handling, not the same number.
-      fc.structuralProfile = structuralProfile(q.content);
-    }
-    saveSpec(fresh);
+    const chunk = manifest.chunks[i];
+    // an imported block is a section of the document, not a file of a repo: no path, so realPath stays null
+    _ingestFileInto(manifest, specDir, { path: '', content: `<!-- ${tag} -->\n\n${q.content}` }, i, { preserveWhitespace: true, agent: 'import', agentModel: 'import:.spec' });
+    // §COGNITIVE SEAM 2026-07-14 — "complexity is a shape, not a scalar." (structuralProfile, unchanged)
+    chunk.structuralProfile = structuralProfile(q.content);
     filled.push(q.id);
   }
-
-  const out = loadSpec(manifest.uuid);
-  out.importedBlocks = queue.map(q => q.sourceBlock).filter((v, i, a) => a.indexOf(v) === i);
-  out.importedUnmatched = [];   // every block now produces at least one chunk — nothing to lose
-  out.byteFidelity = byteFidelity;
-  saveSpec(out);
+  manifest.importedBlocks = queue.map(q => q.sourceBlock).filter((v, i, a) => a.indexOf(v) === i);
+  manifest.importedUnmatched = [];   // every block now produces at least one chunk — nothing to lose
+  manifest.byteFidelity = byteFidelity;
+  const out = _ingestFinish(manifest, { now0, label: 'imported' });
   return { manifest: out, blocksFound, sectionsFilled: filled, unmatched: [], byteFidelity: out.byteFidelity };
 }
 

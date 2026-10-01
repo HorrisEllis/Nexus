@@ -109,6 +109,10 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
   if (existing && !force && existing.nexusSelf.hash === sysSnap.hash) {
     return { system, status: 'unchanged', repoUuid: existing.uuid, hash: sysSnap.hash };
   }
+  // §0.39.288 PF1 — each step of a changed system is timed (steps.*), so the sync log names which one holds the loop
+  const steps = {};
+  let _ts = Date.now();
+  const step = (k) => { const n = Date.now(); steps[k] = (steps[k] || 0) + (n - _ts); _ts = n; };
   const entries = store.filesOf(snap, system);
   if (!entries.length) return { system, status: 'failed', error: 'no files for this system in the snapshot' };
 
@@ -120,6 +124,7 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
     if (text) textFiles.push({ path: rel, content: buf.toString('utf8') });
   }
   if (!textFiles.length) return { system, status: 'failed', error: 'no text files to index' };
+  step('read');
 
   await tick();
   let repoUuid, status;
@@ -130,15 +135,30 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
     repoUuid = r.repo.uuid; status = 'created';
   } else {
     repoUuid = existing.uuid; status = 'updated';
+    // §0.39.288 PF5 — same file set: only the changed chunks are rewritten, in the spec the repo already has
+    let inPlace = null;
+    if (existing.specUuid && typeof se.updateIngestedSpecAsync === 'function' && typeof rl.specUpdatedInPlace === 'function') {
+      try { inPlace = await se.updateIngestedSpecAsync({ specUuid: existing.specUuid, files: textFiles, repoUuid }); }
+      catch (e) { inPlace = null; console.warn(`[${MODULE_ID}] ${system}: in-place spec update failed, re-ingesting whole — ${e.message}`); }
+    }
+    if (inPlace) { const u = rl.specUpdatedInPlace(repoUuid); if (u.error) inPlace = null; else steps.inPlaceChunks = inPlace.changed; }
     let manifest;
-    try { manifest = se.ingestFilesAsSpec({ name: repoName(system), files: textFiles, author: 'nexus-self', repoUuid }); }
-    catch (e) { return { system, status: 'failed', repoUuid, error: `spec version failed: ${e.message}` }; }
-    const rs = rl.replaceSpec(repoUuid, manifest.uuid);
-    if (rs.error) return { system, status: 'failed', repoUuid, error: rs.error };
-    // §0.39.266 (D2) — one spec per nexus repo: the version just replaced is purged. Its history is not
-    // lost: every version is a snapshot in the immutable store and a versionium commit.
-    if (typeof rl.purgeSpecsOf === 'function') rl.purgeSpecsOf(repoUuid);
+    if (!inPlace) {
+      // §0.39.288 PF2 — the yielding ingest when the engine has it: a changed core (~2,000 files) no longer holds the loop
+      try {
+        manifest = typeof se.ingestFilesAsSpecAsync === 'function'
+          ? await se.ingestFilesAsSpecAsync({ name: repoName(system), files: textFiles, author: 'nexus-self', repoUuid })
+          : se.ingestFilesAsSpec({ name: repoName(system), files: textFiles, author: 'nexus-self', repoUuid });
+      }
+      catch (e) { return { system, status: 'failed', repoUuid, error: `spec version failed: ${e.message}` }; }
+      const rs = rl.replaceSpec(repoUuid, manifest.uuid);
+      if (rs.error) return { system, status: 'failed', repoUuid, error: rs.error };
+      // §0.39.266 (D2) — one spec per nexus repo: the version just replaced is purged. Its history is not
+      // lost: every version is a snapshot in the immutable store and a versionium commit.
+      if (typeof rl.purgeSpecsOf === 'function') rl.purgeSpecsOf(repoUuid);
+    }
   }
+  step('spec');
 
   await tick();
   // Source layer: every real file, binaries included, byte-exact. Files the
@@ -152,14 +172,17 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
   // §0.39.265 — async: yields while writing (core is ~1,800 files) so /health keeps answering
   const ws = typeof rl.writeSourcesAsync === 'function' ? await rl.writeSourcesAsync(repoUuid, realFiles) : rl.writeSources(repoUuid, realFiles);
   if (!ws.ok) return { system, status: 'failed', repoUuid, error: `source write: ${ws.error}` };
+  step('sources');
   await tick();
   const mat = rl.materialize(repoUuid);
   if (mat.error) return { system, status: 'failed', repoUuid, error: `materialize: ${mat.error}` };
+  step('materialize');
   await tick();
 
   let pipeline = null;
   try { pipeline = runImportPipeline(rl.get(repoUuid), mat.dir, { runtimeProof: false, lazyTests: false, onEvent }); }
   catch (e) { pipeline = { state: 'FAULT', error: e.message }; }
+  step('pipeline');
 
   const prevVersions = existing?.nexusSelf?.versions || [];
   rl.annotate(repoUuid, {
@@ -172,7 +195,8 @@ export async function syncSystem(rl, se, { system, snap, compartment = null, par
       versions: [...prevVersions, { hash: sysSnap.hash, snapshot: snap.hash, at: Date.now() }].slice(-100),
     },
   });
-  return { system, status, repoUuid, hash: sysSnap.hash, files: entries.length, pipeline: pipeline ? pipeline.state : null, pipelineError: pipeline && pipeline.error };
+  step('annotate');
+  return { system, status, repoUuid, hash: sysSnap.hash, files: entries.length, pipeline: pipeline ? pipeline.state : null, pipelineError: pipeline && pipeline.error, steps };
 }
 
 /**
@@ -234,6 +258,7 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
     try { res = await syncSystem(rl, se, { system: name, snap, compartment: comps.children[name], parentRepoUuid: parent ? parent.uuid : null, force }); }
     catch (e) { res = { system: name, status: 'failed', error: e.message }; }
     results.push(res);
+    if (res.steps) for (const [k, v] of Object.entries(res.steps)) timing[`${name}.${k}`] = v;
     if (onSystem) { try { onSystem(res); } catch (_) {} }
     if (res.status !== 'unchanged') log(`[${MODULE_ID}] ${name}: ${res.status}${res.error ? ` — ${res.error}` : ''}${res.files ? ` · ${res.files} files · pipeline ${res.pipeline}${res.pipelineError ? ` — ${res.pipelineError}` : ''}` : ''}`);
   }

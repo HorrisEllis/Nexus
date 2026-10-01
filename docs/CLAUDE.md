@@ -44,6 +44,15 @@ They are law here. AXIOMS-v3.1 governs; this is the operational distillation.
 - **Tests:** register in `tests/modules/run-all.js`; silence `[jaa]`-style logs
   or the runner miscounts. Suite must stay green.
 
+## James's voice (2026-10-01)
+
+James: "can you make it a rule to quote me, in the versions, changelogs, like i want my voice to be here. I have no
+job, or portfolio. i want this as much me as possible. you're the coder."
+
+- Every version line in `lib/version.js`, every `CHANGELOG-*.md`, and every phasemap's `origin` opens with James's
+  own words, quoted verbatim — his spelling, his phrasing, not cleaned up. Then what was built, and the proof.
+- The idea, the direction and the calls are his; say so. The code is the coder's job; the project is his work.
+
 ## Evidence discipline (§0.1, §1.1)
 
 - Evidence over memory. Verify against the actual file/behavior before asserting.

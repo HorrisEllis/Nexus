@@ -235,6 +235,18 @@ export async function getIdeas(phase = null) {
 // ── Ollama generation — Mistral for reasoning, Qwen for quick ────────────────
 // This is what builds each chunk locally without needing a browser tab.
 export async function generateWithOllama(system, prompt, { model = _OLLAMA_FALLBACK, timeoutMs = 120000 } = {}) {
+  // §0.39.291 — James: "ollama has been known to cut off blocks" / his phase build "ollama · 46s · blocked: empty".
+  // This path (every Ollama chunk build) had a 120 s TOTAL timer, a 2048-token cap, dropped done_reason 'length' and
+  // read a thinking model's answer as ''. It now goes through the one hardened client (ollama/lib/ollama-client.js
+  // callOllamaRaw, 0.39.289): streamed, timeoutMs is the IDLE limit under a 10-minute cap, thinking-only → think:false,
+  // a cut reply continued. The older runtime below stays only for when that client cannot load.
+  try {
+    const OC = _require('../../ollama/lib/ollama-client.js');
+    const text = await OC.callOllamaRaw(model, prompt, null, Math.min(timeoutMs, 120000), 'idearium/agent-suite', { system, temperature: 0.3 });
+    return String(text || '').trim() ? { ok: true, text: String(text).trim(), model } : { ok: false, error: `${model} returned an empty reply`, model };
+  } catch (e) {
+    if (!/Cannot find module/.test(e.message)) return { ok: false, error: `${model}: ${e.message}`, model };
+  }
   const runtime = (() => {
     try { return _require('../../ollama/ollama-runtime'); }
     catch { return null; }

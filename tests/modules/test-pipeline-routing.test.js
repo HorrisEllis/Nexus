@@ -20,7 +20,7 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
   try {
     const PR = require(path.join(ROOT, 'lib/pipeline-routing.js'));
     PR.breaker.reset();
-    const pol = PR.policyFrom({ chain: 'ollama,gemini,chatgpt,claude', max_hops: 3 });
+    const pol = PR.policyFrom({ mode: 'chain', chain: 'ollama,gemini,chatgpt,claude', max_hops: 3 });
     const blk = { id: 'api', agent: 'claude', fallback: ['deepseek'] };
     const r1 = PR.plan({ preferAgent: 'chatgpt', block: blk, policy: pol });
     check('PR-01 chain: the chosen agent, the block\'s own fallback, then the chain — de-duplicated, capped at max_hops', r1.route.map(x => x.provider).join() === 'chatgpt,deepseek,ollama' && r1.beyond.join() === 'gemini,claude', JSON.stringify(r1));
@@ -41,8 +41,8 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     let t = 1000;
     const bp = PR.policyFrom({ breaker_threshold: 2, breaker_cooldown_ms: 500 });
     PR.breaker.failure('gemini', 'provider-down', bp, t); PR.breaker.failure('gemini', 'provider-down', bp, t);
-    const skipped = PR.plan({ preferAgent: 'gemini', policy: PR.policyFrom({ chain: 'ollama' }), now: t + 10 });
-    const after = PR.plan({ preferAgent: 'gemini', policy: PR.policyFrom({ chain: 'ollama' }), now: t + 600 });
+    const skipped = PR.plan({ preferAgent: 'gemini', policy: PR.policyFrom({ mode: 'chain', chain: 'ollama' }), now: t + 10 });
+    const after = PR.plan({ preferAgent: 'gemini', policy: PR.policyFrom({ mode: 'chain', chain: 'ollama' }), now: t + 600 });
     PR.breaker.failure('claude', 'truncated', bp, t); PR.breaker.failure('claude', 'truncated', bp, t);
     check('PR-07 breaker: two failures open it, the plan skips it (with why), it closes after the cooldown; a truncated reply does not count against the provider',
       skipped.route[0].provider === 'ollama' && /breaker open/.test(skipped.skipped[0].why) && after.route[0].provider === 'gemini' && !PR.breaker.state('claude', t).open, JSON.stringify({ skipped, after: after.route }));
@@ -63,22 +63,52 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
     check('PR-12 login stops the walk on the first hop (it needs you) and the error names every hop', !w2.ok && w2.route.length === 1 && w2.route[0].class === 'login' && /every route hop failed \(chatgpt: login\)/.test(w2.error), JSON.stringify(w2.route));
     PR.breaker.reset();
 
+    // ── PR-3x learned (0.39.287): Ollama per model, outcomes per chunk type, the learned order ──
+    const lp = PR.policyFrom({ chain: 'ollama,gemini', ollama_models: 'qwen2.5-coder:3b,qwen2.5-coder:7b', learn_min_records: 4 });
+    const cold = PR.plan({ preferAgent: 'chatgpt', block: { id: 'api' }, policy: lp, records: [] });
+    check('PR-31 learned is the default; Ollama becomes one candidate per model; below the evidence threshold it keeps the chain order and says so',
+      PR.DEFAULTS.mode === 'learned' && cold.route.map(r => r.provider).join() === 'chatgpt,ollama:qwen2.5-coder:3b,ollama:qwen2.5-coder:7b' && /learning build:api — 0\/4/.test(cold.route[0].why), JSON.stringify(cold.route));
+    const recs = [
+      ...Array(12).fill({ jobType: 'build:api', provider: 'ollama:qwen2.5-coder:3b', outcome: 'truncated' }),
+      ...Array(12).fill({ jobType: 'build:api', provider: 'ollama:qwen2.5-coder:7b', outcome: 'ok' }),
+      ...Array(12).fill({ jobType: 'build:api', provider: 'chatgpt', outcome: 'failed' }),
+      ...Array(12).fill({ jobType: 'build:file.js', provider: 'ollama:qwen2.5-coder:3b', outcome: 'ok' }),
+    ];
+    const warm = PR.plan({ preferAgent: 'chatgpt', block: { id: 'api' }, policy: lp, records: recs });
+    const fileJs = PR.plan({ chunk: { realPath: 'src/a.js' }, policy: lp, records: recs });
+    check('PR-32 with outcomes recorded, the model that works for THIS chunk type goes first (7b for api; 3b for .js files), with why',
+      warm.route[0].provider === 'ollama:qwen2.5-coder:7b' && /12 ok \/ 0 failed/.test(warm.route[0].why) && warm.route[1].provider === 'gemini' && warm.route[2].provider === 'chatgpt' && fileJs.jobType === 'build:file.js' && fileJs.route[0].provider === 'ollama:qwen2.5-coder:3b',
+      JSON.stringify({ warm: warm.route, js: fileJs.route }));
+    const L = PR.learned({ records: recs });
+    check('PR-33 learned(): per chunk type, each provider:model ranked by success', L['build:api'][0].provider === 'ollama:qwen2.5-coder:7b' && L['build:api'].some(x => x.provider === 'chatgpt' && x.failed === 12) && L['build:file.js'].length === 1);
+    const before = require(path.join(ROOT, 'lib/economy/ledger.js')).records().filter(r => r.jobType === 'build:integration').length;
+    const fm = async (prompt, o) => (o.model === 'qwen2.5-coder:7b' ? { ok: true, text: good, agent: 'ollama' } : { ok: false, error: 'reply was empty' });
+    const w3 = await dispatchChunkWithVerification('Describe the integration points of this component in prose.', chunk, fm, { route: ['ollama:qwen2.5-coder:3b', 'ollama:qwen2.5-coder:7b'], policy: PR.policyFrom({ attempts_per_hop: 1 }) });
+    const after2 = require(path.join(ROOT, 'lib/economy/ledger.js')).records().filter(r => r.jobType === 'build:integration');
+    check('PR-34 the walk passes each hop\'s model to the agent and records every hop to the ledger under the chunk type (3b failed, 7b ok)',
+      w3.ok && w3.route.length === 2 && w3.route[1].provider === 'ollama:qwen2.5-coder:7b' && after2.length - before === 2
+      && after2.some(r => r.provider === 'ollama:qwen2.5-coder:3b' && r.outcome === 'failed') && after2.some(r => r.provider === 'ollama:qwen2.5-coder:7b' && r.outcome === 'ok' && r.model === 'qwen2.5-coder:7b'),
+      JSON.stringify({ ok: w3.ok, route: w3.route, n: after2.length - before }));
+    PR.breaker.reset();
+
     // ── PR-2x API, config, wiring ──
     process.env.NEXUS_VERSIONIUM_URL = 'http://127.0.0.1:9';
     const api = await import(path.join(ROOT, 'idearium', 'api', 'index.js'));
     let g = await api._route('GET', '/api/routing');
     for (let i = 0; i < 20 && g.status !== 200; i++) { await new Promise(x => setTimeout(x, 250)); g = await api._route('GET', '/api/routing'); }
     const gd = g.json.data || g.json;
-    check('PR-21 GET /api/routing: the policy, the modes and classes, and a route for every block', g.status === 200 && gd.policy.mode === 'chain' && gd.modes.length === 4 && gd.blocks.length >= 10 && gd.blocks.every(b => Array.isArray(b.route) && b.route.length), JSON.stringify(gd).slice(0, 300));
+    check('PR-21 GET /api/routing: the policy (learned by default), the modes and classes, and a route for every block', g.status === 200 && gd.policy.mode === 'learned' && gd.modes.length === 5 && gd.blocks.length >= 10 && gd.blocks.every(b => Array.isArray(b.route) && b.route.length), JSON.stringify(gd).slice(0, 300));
     const s = await api._route('POST', '/api/config', { key: 'routing.mode', value: 'local-first' });
     const pl = await api._route('GET', '/api/routing/plan?block=api&agent=chatgpt');
     const pd = pl.json.data || pl.json;
     check('PR-22 POST /api/config routing.mode=local-first → the plan follows (ollama first)', s.status === 200 && pl.status === 200 && pd.mode === 'local-first' && pd.route[0].provider === 'ollama', JSON.stringify(pd).slice(0, 200));
-    await api._route('POST', '/api/config', { key: 'routing.mode', value: 'chain' });
+    await api._route('POST', '/api/config', { key: 'routing.mode', value: 'learned' });
     check('PR-23 an unknown block is a 404 naming the blocks', (await api._route('GET', '/api/routing/plan?block=nope')).status === 404);
     const idx = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     check('PR-24 speceng.build plans the route and keeps it on the chunk (no hard-coded chatgpt → gemini hop)', /lib\/pipeline-routing\.js'\)\.plan\(\{ preferAgent, block:/.test(idx) && /se\.recordChunkRoute\(params\.uuid, chunk\.uuid, result\.route\)/.test(idx)
       && !/fallbackAgent = body\.fallbackAgent \|\| \(preferAgent === 'chatgpt' \? 'gemini' : null\)/.test(idx));
+    const lr = await api._route('GET', '/api/routing/learned');
+    check('PR-26 GET /api/routing/learned: what each provider:model has done per chunk type', lr.status === 200 && (lr.json.data || lr.json).learned && (lr.json.data || lr.json).learned['build:integration'], JSON.stringify(lr.json).slice(0, 200));
     const st = fs.readFileSync(path.join(ROOT, 'idearium/ui/settings.html'), 'utf8');
     check('PR-25 the settings console has Routing & fallback, reading /api/routing and saving routing.*', /async function renderRouting\(\)/.test(st) && /api\('\/api\/routing'\)/.test(st) && /key: `routing\.\$\{key\}`/.test(st));
   } catch (e) { fail++; console.log(`  ✗ crashed: ${e.stack}`); }

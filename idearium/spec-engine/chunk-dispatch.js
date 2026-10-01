@@ -148,6 +148,7 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
     total:        opts.total || 1,
     jaa,
     busEmit:      opts.busEmit || (() => {}),
+    kind:         chunk.realPath ? 'file' : null,   // §0.39.291 — a file chunk is judged as a file (lib/seam/detector.js)
   });
 
   const maxWallClockAttempts = opts.attemptsPerHop || 6; // §0.39.286 routing.attempts_per_hop · strategy ladder + watchdog ceilings already bound this internally; this is an outer safety cap, not the real limit
@@ -222,6 +223,24 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
       continue;
     }
 
+    // §0.39.289 — a reply cut mid-way is FINISHED, not asked for again whole (the same limit cut it again, then the
+    // chunk moved to another provider): the tail is shown back to the same agent, it continues, the parts are
+    // stitched (lib/reply-continuation.js). Then the detector judges the whole.
+    let continued = null;
+    try {
+      const RC = _req('../../lib/reply-continuation.js');
+      if (RC.looksCut(dispatchResult.text).cut) {
+        const call = async (p) => {
+          let r = await dispatchFn(p, opts);
+          if (r && r.queued) { const pr = await _pollGuardianJob(r.jobId); r = pr.ok ? { ok: true, text: pr.text } : { ok: false, error: pr.error }; }
+          if (!r || !r.ok) throw new Error((r && r.error) || 'no reply');
+          return { text: r.text };
+        };
+        continued = await RC.complete(call, prompt, { first: { text: dispatchResult.text }, maxRounds: opts.continueRounds || 2 });
+        if (continued.rounds) dispatchResult = { ...dispatchResult, text: continued.text };
+      }
+    } catch (e) { console.warn(`[chunk-dispatch] continuation skipped (the reply is judged as it came): ${e.message}`); }
+
     comp.detecting(dispatchResult.text);
     const { passed, detection } = comp.evaluate();
 
@@ -240,6 +259,7 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
         cost:     dispatchResult.cost,
         cacheHit: dispatchResult.cacheHit,
         digest:   dispatchResult.digest,
+        continued: continued && continued.rounds ? { rounds: continued.rounds, reasons: continued.reasons, stillCut: continued.cut } : null,
       };
     }
     if (comp.state === STATE.ESCALATED) {
@@ -291,18 +311,23 @@ async function _walkRoute(chunkPrompt, chunk, dispatchFn, opts) {
   for (let i = 0; i < opts.route.length; i++) {
     const provider = typeof opts.route[i] === 'string' ? opts.route[i] : opts.route[i].provider;
     const t0 = Date.now();
-    const r = await _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, { ...opts, preferAgent: provider, fallbackAgent: null, route: null, attemptsPerHop: policy.attemptsPerHop });
+    // §0.39.287 — a hop may name a model (ollama:<model>): the agent is the provider, the model rides along
+    const model = PR.modelOf(provider);
+    const r = await _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, { ...opts, preferAgent: PR.baseOf(provider), ...(model ? { model } : {}), fallbackAgent: null, route: null, attemptsPerHop: policy.attemptsPerHop });
     const ms = Date.now() - t0;
+    const jobType = opts.jobType || PR.jobTypeOf(chunk);
     if (r.queued) { hops.push({ provider, outcome: 'queued', ms, jobId: r.jobId || null }); return { ...r, route: hops }; }
     if (r.ok) {
       PR.breaker.success(provider);
       hops.push({ provider, outcome: 'ok', ms, attempts: r.attempts });
+      if (!r.cacheHit) PR.recordHop({ jobType, provider, outcome: 'ok', ms });   // §0.39.287 — every real hop teaches the learned mode (a cache hit is not the model's work)
       return { ...r, agent: r.agent || provider, route: hops, primaryAgent: hops.length > 1 ? hops[0].provider : undefined, primaryError: hops.length > 1 ? hops[0].error : undefined };
     }
     const cls = PR.classify(r);
     PR.breaker.failure(provider, cls, policy);
     const go = i < opts.route.length - 1 && PR.shouldFallback(cls, policy);
     hops.push({ provider, outcome: 'failed', class: cls, error: r.error || (r.detection && r.detection.summary) || null, ms, attempts: r.attempts, next: go ? 'fallback' : 'stop' });
+    PR.recordHop({ jobType, provider, outcome: 'failed', class: cls, ms, error: hops[hops.length - 1].error });
     last = r;
     if (go) console.warn(`[chunk-dispatch] ${provider} failed '${chunk.sectionId || chunk.title}' (${cls}) — next: ${typeof opts.route[i + 1] === 'string' ? opts.route[i + 1] : opts.route[i + 1].provider}`);
     if (!go) break;

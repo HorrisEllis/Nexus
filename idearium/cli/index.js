@@ -41,7 +41,12 @@
  *   idearium repo build <repo> <spec path> [--phase <id>]
  *   idearium routing [show]                       (0.39.286 RG2) the routing policy, breakers, the route per block
  *   idearium routing plan [--block id] [--agent a]  the route one chunk would take
- *   idearium routing set <key> <value>            mode|chain|fallback_on|max_hops|attempts_per_hop|breaker_threshold|breaker_cooldown_ms|skip_open
+ *   idearium routing set <key> <value>            mode|chain|ollama_models|learn_min_records|fallback_on|max_hops|attempts_per_hop|breaker_threshold|breaker_cooldown_ms|skip_open
+ *   idearium routing learned [--type build:api]   (0.39.287) what each provider:model has done per chunk type
+ *   idearium verify <repo>                        (0.39.291 PV1) do the repo's files work? parses · resolves · its own tests in COS
+ *   idearium prove <repo> [--rounds 3] [--cancel] (0.39.291 PV3) build → verify → send failures back → again, until proven
+ *   idearium spec-library import <zip> [--dry-run] (0.39.290 IL1) a zip of specs → ideas + specs (duplicates folded, programs refused)
+ *   idearium spec-library [--family product]      what the library holds
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -106,13 +111,41 @@ async function _routingLocal() {
   return { PR, policy: PR.policyFrom((cfg.getConfig() || {}).routing || {}), blocks: se.SPEC_SECTIONS };
 }
 
-function _localApi(method, path, body = null) {
+// §0.39.290 — a raw upload (a zip) to the running idearium; long timeout (a big library converts for a while)
+function _localUpload(path, buf) {
+  return new Promise((resolve, reject) => {
+    const req = http.request({ hostname: '127.0.0.1', port: IDEARIUM_PORT, path, method: 'PUT',
+      headers: { 'Content-Type': 'application/zip', 'Content-Length': buf.length }, timeout: 600000 }, (res) => {
+      let data = ''; res.on('data', d => data += d);
+      res.on('end', () => { try { const p = JSON.parse(data); res.statusCode >= 400 ? reject(new Error(p.error || `HTTP ${res.statusCode}`)) : resolve(p); } catch (e) { reject(new Error(`unparseable response: ${e.message}`)); } });
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+    req.end(buf);
+  });
+}
+
+function _verdictTag(v) { return v === 'proven' ? mint('PROVEN') : v === 'parses' ? amber('PARSES — not proven') : v === 'stalled' ? coral('STALLED') : v ? coral(String(v).toUpperCase()) : gray('…'); }
+function _printVerify(repo, r) {
+  header(`verify ${repo.name} — ${r.files} file(s) · ${Math.round((r.ms || 0) / 100) / 10} s`);
+  const c = r.checks || {};
+  const line = (k, x) => console.log(`  ${k.padEnd(9)} ${!x ? gray('—') : x.ran === false ? gray(`not run — ${x.why}`) : x.failed ? coral(`${x.failed} failed`) : mint('ok')}${x && x.ran !== false && x.checked != null ? dim(` (${x.checked} checked)`) : ''}`);
+  line('syntax', c.syntax); line('data', c.data); line('python', c.python);
+  console.log(`  ${'imports'.padEnd(9)} ${!c.deps ? gray('—') : c.deps.ran === false ? gray(`not run — ${c.deps.why}`) : (c.deps.missing || c.deps.brokenRelative) ? coral(`${c.deps.brokenRelative} broken · ${c.deps.missing} missing`) : mint('ok')}`);
+  console.log(`  ${'tests'.padEnd(9)} ${!c.tests ? gray('—') : c.tests.ran === false ? gray(`not run — ${c.tests.why}`) : c.tests.failed ? coral(`${c.tests.failed} of ${c.tests.runs} failed`) : mint(`${c.tests.passed} passed`)}`);
+  for (const f of (r.failures || []).slice(0, 20)) console.log(`    ${coral(f.kind.padEnd(10))} ${f.file || '(project)'}${f.line ? `:${f.line}` : ''}  ${gray(String(f.error).slice(0, 120))}`);
+  console.log(`
+  ${_verdictTag(r.verdict)}  ${r.why}
+`);
+}
+
+function _localApi(method, path, body = null, timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
     const payload = body ? JSON.stringify(body) : null;
     const req = http.request({
       hostname: '127.0.0.1', port: IDEARIUM_PORT, path, method,
       headers: { 'Content-Type': 'application/json', ...(payload ? { 'Content-Length': Buffer.byteLength(payload) } : {}) },
-      timeout: 10000,
+      timeout: timeoutMs,
     }, (res) => {
       let data = ''; res.on('data', d => data += d);
       res.on('end', () => {
@@ -698,6 +731,18 @@ const COMMANDS = {
     if (pl.beyond.length) console.log(`  ${gray(`beyond max_hops: ${pl.beyond.join(', ')}`)}`);
     console.log('');
   },
+  async 'routing.learned'(os, { flags }) {
+    const { PR } = await _routingLocal();
+    const L = PR.learned({ jobType: flags.type || null });
+    const keys = Object.keys(L).sort();
+    if (!keys.length) { console.log(gray('\n  nothing learned yet — every chunk build records its outcome; learned mode uses them from routing.learn_min_records on\n')); return; }
+    header('learned — per chunk type, best first');
+    for (const k of keys) {
+      console.log(`  ${bold(k)}`);
+      for (const r of L[k]) console.log(`    ${(r.success >= 0.5 ? mint : coral)(`${Math.round(r.success * 100)}%`.padStart(4))}  ${r.provider.padEnd(34)} ${dim(`${r.ok} ok · ${r.failed} failed${r.medianMs ? ` · ${Math.round(r.medianMs / 1000)}s` : ''}`)}`);
+    }
+    console.log('');
+  },
   async 'routing.set'(os, { positional }) {
     const [key, ...v] = positional;
     if (!key || !v.length) die('usage: idearium routing set <key> <value>');
@@ -706,6 +751,96 @@ const COMMANDS = {
     const value = /^(true|false)$/.test(raw) ? raw === 'true' : (/^\d+$/.test(raw) ? Number(raw) : raw);
     cfg.setConfig(`routing.${key}`, value, { actor: 'cli' });
     console.log(`${mint('✓')} routing.${key} = ${JSON.stringify(value)}`);
+  },
+
+  // ── idearium verify / prove (0.39.291 PV1–PV4) ─────────────────────────────────
+  // James: "Conrinue it first. Make sure it's enterprise grade." Through the running idearium (the builds need its agents).
+  async 'verify'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium verify <repo>');
+    const repo = _findRepo(positional[0]);
+    // its tests run inside this call — a long wait
+    let r; try { r = await _localApi('POST', `/api/repos/${repo.uuid}/verify`, {}, 600000); } catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (verification runs in its COS)' : ''}`); }
+    _printVerify(repo, r);
+    process.exitCode = r.verdict === 'failed' ? 1 : 0;
+  },
+  async 'prove'(os, { positional, flags }) {
+    if (!positional[0]) die('usage: idearium prove <repo> [--rounds 3] [--cancel]');
+    const repo = _findRepo(positional[0]);
+    try {
+      if (flags.cancel) { const c = await _localApi('POST', `/api/repos/${repo.uuid}/prove/cancel`, {}); console.log(`${mint('✓')} cancelling ${c.run.uuid}`); return; }
+      const s = await _localApi('POST', `/api/repos/${repo.uuid}/prove`, { rounds: flags.rounds ? Number(flags.rounds) : 3 });
+      header(`prove ${repo.name} — ${s.alreadyRunning ? 'following the run already working' : `up to ${s.run.maxRounds} round(s)`}`);
+      let shown = 0, last = '';
+      for (;;) {
+        await new Promise(r => setTimeout(r, 2000));
+        const g = await _localApi('GET', `/api/repos/${repo.uuid}/prove`);
+        const run = g.run; if (!run) die('the run disappeared');
+        for (; shown < run.rounds.length; shown++) {
+          const rr = run.rounds[shown];
+          if (rr.verdict === null && run.state === 'running') break;   // not finished yet
+          console.log(`  round ${rr.round}  ${_verdictTag(rr.verdict)}  ${dim(`${rr.built} built · ${rr.reused} reused${rr.repaired && rr.repaired.length ? ` · sent back: ${rr.repaired.join(', ')}` : ''}`)}`);
+          for (const f of (rr.failures || []).slice(0, 8)) console.log(`    ${coral(f.kind.padEnd(10))} ${f.file || '(project)'}${f.line ? `:${f.line}` : ''}  ${gray(String(f.error).slice(0, 110))}`);
+        }
+        const cur = run.rounds[run.rounds.length - 1];
+        const now = run.state === 'running' && cur ? `  round ${cur.round} — ${cur.current ? `building ${cur.current}` : 'verifying'} (${cur.built} built)` : '';
+        if (now && now !== last) { console.log(gray(now)); last = now; }
+        if (run.state !== 'running') {
+          console.log(`
+  ${_verdictTag(run.verdict)}  ${run.why}
+`);
+          process.exitCode = run.verdict === 'proven' ? 0 : 1;
+          return;
+        }
+      }
+    } catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the build uses its agents)' : ''}`); }
+  },
+
+  // ── idearium spec-library (0.39.290 IL1) ─────────────────────────────────────
+  // James: "need a way to import these and convert them." Through the running idearium when it is up (one writer of
+  // the ideas); without it, the same import runs here.
+  async 'spec-library'(os, args) {
+    if ((args.positional || [])[0] === 'import') return COMMANDS['spec-library.import'](os, { ...args, positional: args.positional.slice(1) });
+    return COMMANDS['spec-library.list'](os, args);
+  },
+  async 'spec-library.import'(os, { positional, flags }) {
+    const file = positional[0];
+    if (!file) die('usage: idearium spec-library import <zip> [--dry-run]');
+    const fsm = await import('fs'); const pathm = await import('path');
+    if (!fsm.existsSync(file)) die(`not found: ${file}`);
+    const buf = fsm.readFileSync(file);
+    const dry = !!(flags['dry-run'] || flags.dryRun);
+    let r;
+    try { r = await _localUpload(`/api/spec-library/import?name=${encodeURIComponent(pathm.basename(file))}${dry ? '&dryRun=1' : ''}`, buf); }
+    catch (e) {
+      if (!/ECONNREFUSED|timeout/.test(e.message)) die(e.message);
+      console.log(gray('  idearium is not running — importing here'));
+      const { importLibrary } = await import('../lib/spec-library-import.js');
+      const se = await import('../spec-engine/index.js');
+      r = await importLibrary({ buf, name: pathm.basename(file), dryRun: dry, se, os });
+      if (!r.ok) die(r.error);
+      r.added = r.added.map(x => ({ title: x.title, family: x.family, kind: x.kind, dialect: x.dialect, sections: x.sections }));
+    }
+    header(`spec library — ${dry ? 'dry run' : 'imported'} · ${r.stats.files} files read · ${r.stats.unique} unique · ${r.stats.duplicates} duplicates folded`);
+    const by = {}; for (const a of r.added) (by[a.family] = by[a.family] || []).push(a);
+    for (const [fam, list] of Object.entries(by)) {
+      console.log(`  ${bold(fam)} ${dim(`(${list.length})`)}`);
+      for (const a of list.slice(0, 40)) console.log(`    ${a.kind.padEnd(8)} ${String(a.title).slice(0, 70).padEnd(70)} ${dim(a.dialect + (a.sections ? ` · ${a.sections} sections` : ''))}`);
+      if (list.length > 40) console.log(dim(`    … ${list.length - 40} more`));
+    }
+    for (const s of r.skipped || []) console.log(`  ${coral('skipped')} ${s.path} ${dim('— ' + s.why)}`);
+    for (const f of r.failed || []) console.log(`  ${coral('failed')}  ${f.title} ${dim('— ' + f.error)}`);
+    if ((r.merged || []).length) console.log(dim(`  ${r.merged.length} already in the library gained new paths`));
+    if (!r.added.length && !dry) console.log(gray('  nothing new — every document is already in the library'));
+    console.log('');
+  },
+  async 'spec-library.list'(os, { flags }) {
+    const { listLibrary } = await import('../lib/spec-library-import.js');
+    const rows = listLibrary({ family: flags.family || null, kind: flags.kind || null });
+    if (!rows.length) { console.log(gray('\n  the spec library is empty — idearium spec-library import <zip>\n')); return; }
+    header(`spec library — ${rows.length} document(s)`);
+    for (const r of rows.sort((a, b) => (a.family + a.title).localeCompare(b.family + b.title)))
+      console.log(`  ${r.family.padEnd(9)} ${r.kind.padEnd(8)} ${String(r.title).slice(0, 64).padEnd(64)} ${dim(r.specUuid ? `${r.sections} sections` : r.kind)}`);
+    console.log('');
   },
 
   // ── idearium gap ───────────────────────────────────────────────────────────
@@ -875,7 +1010,7 @@ async function main() {
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
     console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);
-    console.log(`  ${sky('routing')} [show] | plan [--block id] [--agent a] | set <key> <value>`);
+    console.log(`  ${sky('routing')} [show] | plan [--block id] [--agent a] | learned | set <key> <value>`);
     console.log(`  ${sky('push')}   [--message "..."] [--branch main]`);
     console.log(`  ${sky('log')}    [--n 20]`);
     console.log(`  ${sky('status')}`);

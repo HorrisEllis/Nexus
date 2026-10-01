@@ -504,11 +504,43 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 
 **Routing & fallback** (0.39.286, `lib/pipeline-routing.js`). Every spec chunk is built along a route:
 - **Order:** the chosen agent, then the block's own fallback list (in `idearium/spec-engine/blocks.yaml`), then the global chain.
-- **Modes:** fixed, chain, local-first, economy.
+- **Modes:** learned (the default since 0.39.287), fixed, chain, local-first, economy.
+- **Learned:** each Ollama model listed in the config is its own candidate. Every hop is recorded per chunk type (a spec block, or a file extension). Once there is enough evidence, the route puts the provider or model that works for that kind of chunk first. Untried ones sit in the middle, and ones that keep failing (or truncating) sink. See it with the idearium CLI's routing learned command or the settings page.
 - **Failures:** each failed hop is classed (empty, truncated, refused, timeout, provider-down, rate-limit, login, unknown) and moves on only if the fallback-on setting names its class. Login never moves on.
 - **Breaker:** a provider failing several times in a row is skipped for a cooldown.
 - **Record:** the hops are kept on the chunk.
 - **Where to see and set it:** the routing API (show, plan per block, reset breakers), the idearium CLI's routing command, and Settings → **Routing & fallback**. Its config keys are listed in `idearium/lib/config-core.cjs`.
+
+**Does it work: verify and prove** (0.39.291, `lib/build-verify.js`). Open the Plan panel's **does it work** section.
+- **✓ verify** checks every file parses and every import resolves, then runs the project's own tests in an isolated COS branch.
+  - **Verdicts:** failed · parses (not proven, and it says why) · proven.
+  - **Failures:** each lands on one file with the exact error. A failing test is traced to the code it loads, with actual/expected and what the test asks.
+- **▶ build & prove** builds every file one at a time, verifies, and sends each failing file back to its agent with the failure, for up to 3 rounds.
+  - **During a repair,** reuse is skipped, and a failed version is never reused.
+  - **Every round is recorded.**
+- **The same from the CLI:** the idearium CLI's verify and prove commands.
+- **Tests:** `tests/modules/test-build-verify.test.js` and `tests/modules/test-prove-loop.test.js` (the real server with a model that writes a bug and fixes it).
+
+**The spec library** (0.39.290). This is the Welcome screen's **Import specs** (`idearium/ui/spec-library.html`), or the idearium CLI's spec-library import command.
+- **What it does:** drop a zip of specs and each unique document becomes an idea, linked to a spec split by the document's own headings.
+- **What it handles:** duplicates are folded, zips inside are opened, programs are refused, and a project folder stays one unit.
+- **Groups:** nexus, product, personal or diagram, decided by each document's own name.
+- **What's kept:** the zip and every original file. Importing again only adds what's new.
+- **Code:** `lib/spec-library.js` (scanning and converting) and `idearium/lib/spec-library-import.js` (ideas, specs, the library index).
+- **Test:** `tests/modules/test-spec-library.test.js`.
+
+**Cut replies are finished** (0.39.289, `lib/reply-continuation.js`). When a reply stops part-way, the agent is shown the end of what it wrote and continues from there, and the two parts are stitched together:
+- **When it counts as cut:** Ollama stopped at its token limit, a code block was opened and never closed, or the reply ends mid-statement.
+- **Where it runs:** in the Ollama bridge (`ollama/lib/ollama-client.js`), and in spec chunk dispatch before the detector judges the reply.
+- **Ollama's limits:** generation is streamed. Its timeout counts silence, under a 10-minute cap on the whole generation. A thinking model that answers nothing is asked again with thinking off.
+- Test: `tests/modules/test-reply-continuation.test.js`.
+
+**The Nexus repo sync** (0.39.288, `idearium/repo/nexus-self.js`). It runs 20 s after boot, then every 10 minutes.
+- **One changed file:** a nexus system whose file set did not change is updated in place. Only the chunks whose content moved are rewritten, in the same spec (the in-place update in `idearium/spec-engine/index.js`).
+- **Files added or removed:** the system is re-ingested whole, yielding to the server every 50 files, and the old version is purged.
+- **The log:** the sync log names the files whose content changed, and the time each step took.
+- **Cold reads:** each spec keeps a manifest.meta.json beside its manifest (chunk content stripped, stamped with the manifest's size and time). The repo list reads it after a boot instead of the whole manifest; a stale stamp means a full read.
+- Test: `tests/modules/test-nexus-self-incremental.test.js`.
 
 **The registry block** (0.39.286). A new spec has 11 chunks; the 11th, **registry**, follows build_order and waits on it. In a repo, the Architect tab's **write the registry** writes the architecture doc and the registry as nodes in Guardian's layout:
 - **What:** one node file per fact under the repo's nodes folder, in the envelope of `lib/node-export.js`.

@@ -226,6 +226,28 @@ function _chunkContract(chunk) {
   return chunk.file ? { path: chunk.file.path || chunk.realPath, layer: chunk.file.layer || '', purpose: chunk.file.purpose || '' }
                     : { path: chunk.realPath, layer: '', purpose: chunk.sectionDesc || '' };
 }
+/**
+ * _fileContentFromReply(chunk, text) — §0.39.291. What an agent's reply becomes when the chunk IS a file. Agents answer
+ * in fenced blocks ("```js … ```"); the file is the code inside, never the fence. Found by the proof run
+ * (tests/modules/test-prove-loop.test.js): a direct Ollama build saved package.json as "```json\n{…}\n```" — not JSON —
+ * and test files with the fence in them; only the WARP path with expectCode extracted, and only for code extensions.
+ * Prose files (.md, .txt) keep their own fences: only a reply that is ONE fenced block around the whole file loses the
+ * wrapper. -> { ok, content } | { ok:false, error } (an unclosed fence is a cut reply, never written as a file).
+ */
+function _fileContentFromReply(chunk, text) {
+  const t = String(text || '');
+  if (!chunk || !chunk.realPath || !/```/.test(t)) return { ok: true, content: t };
+  const ext = path.extname(chunk.realPath).toLowerCase();
+  const whole = t.trim().match(/^```[\w+.-]*[ \t]*\n([\s\S]*?)\n?```$/);
+  if (['.md', '.markdown', '.txt', '.mdx', '.rst'].includes(ext)) return { ok: true, content: whole && !/```/.test(whole[1]) ? whole[1] + '\n' : t };
+  try {
+    const { extractCode } = _require('../../lib/extract-code.js');
+    const x = extractCode(t, { allowMultiple: false });
+    if (x.ok && typeof x.code === 'string' && x.code.trim()) return { ok: true, content: x.code.endsWith('\n') ? x.code : x.code + '\n' };
+    return { ok: false, error: `the reply for ${chunk.realPath} has no usable code block: ${x.error || x.reason || 'empty'}` };
+  } catch (e) { return { ok: false, error: `could not read the code out of the reply: ${e.message}` }; }
+}
+
 function _storeBuilt(manifest, chunk, content, { prompt = null, agent = null, source = null } = {}) {
   if (!chunk || !chunk.realPath || !content) return null;
   try {
@@ -746,6 +768,153 @@ async function _commitRepoSnapshotFor(uuid, body = {}) {
   } };
 }
 
+// ── §0.39.291 PV1–PV3 — verify and prove ─────────────────────────────────────────────────────────────────────────────
+const PROOF_TABLE = 'idearium_proof_runs';
+const _proofs = new Map();   // repoUuid -> the live run (one per repo)
+
+function _compactFailure(f) {
+  return { file: f.file, kind: f.kind, error: f.error, line: f.line || null, test: f.test || null, suspect: !!f.suspect,
+    excerpt: f.excerpt ? String(f.excerpt).slice(0, 600) : null, output: f.output ? String(f.output).slice(-600) : null };
+}
+function _compartmentOf(repo) {
+  try { return repo.compartmentId ? _require('../../lib/cos-bridge.js').getCompartment(repo.compartmentId) : null; } catch (_) { return null; }
+}
+async function _verifyRepo(repo) {
+  const BV = _require('../../lib/build-verify.js');
+  const mat = getRepoLayer().materialize(repo.uuid);   // the files as the spec has them now — never a stale copy
+  const dir = mat && !mat.error ? mat.dir : _repoDiskDir(repo.uuid);
+  return BV.verify({ repo, repoDir: dir, compartment: _compartmentOf(repo) });
+}
+function _recordVerify(repo, v, how, extra = {}) {
+  try {
+    appendRow('idearium_repo_runs', { uuid: `run-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid: repo.uuid, option: `verify:${how}`, label: `verify — ${v.verdict}`,
+      passed: v.verdict === 'failed' ? 0 : 1, failed: v.failures.length, allPassed: v.verdict === 'proven', verdict: v.verdict, why: v.why, durationMs: v.ms, ts: Date.now(),
+      failures: v.failures.slice(0, 10).map(_compactFailure), checks: v.checks, ...extra });
+  } catch (_) { /* the verification's own result stands regardless */ }
+}
+function _proofView(run) {
+  const { cancel, ...rest } = run;
+  return { ...rest, cancelling: !!cancel };
+}
+function _saveProof(run) {
+  try { syncTable(PROOF_TABLE, [_proofView(run)]); } catch (e) { console.warn(`[idearium/prove] could not record the run (it continues): ${e.message}`); }
+}
+// one route, called in-process — the proof run builds through exactly what the UI and the queue call (routing, gates,
+// continuation, provenance), never a second build path
+async function _callRoute(action, params = {}, body = {}, query = {}) {
+  let status = 200, out = null;
+  const res = { writeHead(c) { status = c; return this; }, setHeader() {}, end(b) { try { out = JSON.parse(b); } catch (_) { out = { ok: false, error: String(b || '').slice(0, 300) }; } } };
+  try { await handle({ method: 'POST', headers: {}, url: '', on() {} }, res, { action, params }, query, body); }
+  catch (e) { return { status: 500, ok: false, error: e.message }; }
+  return { status, ...(out || { ok: false, error: 'no response' }) };
+}
+
+function _startProof(repo, { rounds = 3, maxBuildsPerRound = 400 } = {}) {
+  const run = { uuid: `proof-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`, repoUuid: repo.uuid, repoName: repo.name, specUuid: repo.specUuid,
+    state: 'running', verdict: null, why: null, maxRounds: rounds, rounds: [], startedAt: Date.now(), endedAt: null, cancel: false };
+  _proofs.set(repo.uuid, run);
+  _buildingSpecs.add(repo.specUuid);   // the queue never builds a spec a proof run is building (one writer)
+  _saveProof(run);
+  const os = getIdeaOS();
+  os.emit('idearium.repo.prove.started', { repoUuid: repo.uuid, run: run.uuid, rounds });
+  _proveLoop(run, { maxBuildsPerRound }).catch(e => {
+    run.state = 'error'; run.why = `the proof run stopped on an error: ${e.message}`; console.error(`[idearium/prove] ${repo.uuid}: ${e.stack || e.message}`);
+  }).finally(() => {
+    run.endedAt = Date.now();
+    _buildingSpecs.delete(repo.specUuid);
+    _saveProof(run);
+    try { os.emit('idearium.repo.prove.done', { repoUuid: repo.uuid, run: run.uuid, state: run.state, verdict: run.verdict, rounds: run.rounds.length }); } catch (_) {}
+  });
+  return run;
+}
+
+const PROOF_CHUNK_WAIT_MS = parseInt(process.env.IDEARIUM_PROVE_CHUNK_WAIT_MS || '', 10) || 20 * 60 * 1000;
+// one file's build, waited for: until it leaves building/verifying, the run is cancelled, or the wait runs out
+async function _waitChunk(run, chunkUuid, { pollMs = 1000 } = {}) {
+  const se = getSpecEngine();
+  const until = Date.now() + PROOF_CHUNK_WAIT_MS;
+  while (Date.now() < until) {
+    if (run.cancel) return { cancelled: true };
+    let c = null;
+    try { c = (se.loadSpecMeta(run.specUuid).chunks || []).find(x => x.uuid === chunkUuid); } catch (_) {}
+    if (!c) return { status: 'missing' };
+    if (c.status !== 'building' && c.status !== 'verifying') return { status: c.status, failureMode: c.failureMode || null };
+    await new Promise(r => setTimeout(r, pollMs));
+  }
+  return { timedOut: true };
+}
+
+async function _proveLoop(run, { maxBuildsPerRound }) {
+  const se = getSpecEngine();
+  const os = getIdeaOS();
+  const BV = _require('../../lib/build-verify.js');
+  for (let round = 1; round <= run.maxRounds; round++) {
+    const rr = { round, startedAt: Date.now(), built: 0, reused: 0, stalled: null, verdict: null, why: null, failures: [], repaired: [], notBuiltBySpec: [] };
+    run.rounds.push(rr);
+    // 1 — build every pending file, ONE AT A TIME: speceng.build starts a dispatch and returns, so each file is waited
+    // for before the next — in layer order, so every file's prompt carries the files already built beneath it
+    for (let i = 0; i < maxBuildsPerRound; i++) {
+      if (run.cancel) { run.state = 'cancelled'; run.why = `cancelled in round ${round}`; rr.endedAt = Date.now(); return; }
+      const r = await _callRoute('speceng.build', { uuid: run.specUuid }, {});
+      if (r.done) break;
+      if (r.ok === false) { rr.stalled = r.error || `build returned ${r.status}`; break; }
+      if (r.reused) { rr.reused++; continue; }
+      rr.current = r.sectionTitle || r.sectionId || null;
+      _saveProof(run);
+      const w = await _waitChunk(run, r.chunkUuid);
+      if (w.cancelled) { run.state = 'cancelled'; run.why = `cancelled in round ${round} while ${rr.current} was building`; rr.endedAt = Date.now(); return; }
+      if (w.timedOut) { rr.stalled = `${rr.current} was still building after ${Math.round(PROOF_CHUNK_WAIT_MS / 60000)} min — its agent did not answer`; break; }
+      rr.built++;
+      if (w.status !== 'complete') (rr.buildFailures = rr.buildFailures || []).push({ file: rr.current, status: w.status, why: w.failureMode || null });
+    }
+    rr.current = null;
+    if (rr.stalled) {
+      rr.verdict = 'stalled'; rr.endedAt = Date.now();
+      run.state = 'stalled'; run.verdict = 'failed';
+      run.why = `round ${round}: the build stalled — ${rr.stalled}`;
+      return;
+    }
+    // 2 — verify the files as built
+    const repo = getRepoLayer().get(run.repoUuid);
+    const v = await _verifyRepo(repo);
+    rr.verdict = v.verdict; rr.why = v.why; rr.checks = v.checks; rr.ms = v.ms;
+    rr.failures = v.failures.slice(0, 50).map(_compactFailure);
+    _recordVerify(repo, v, 'prove', { proofRun: run.uuid, round });
+    os.emit('idearium.repo.prove.round', { repoUuid: run.repoUuid, run: run.uuid, round, verdict: v.verdict, failures: v.failures.length, built: rr.built });
+    if (v.verdict !== 'failed') {
+      rr.endedAt = Date.now();
+      run.state = 'done'; run.verdict = v.verdict;
+      run.why = v.verdict === 'proven' ? `proven in ${round} round(s) — ${v.why}` : `every file parses and resolves (round ${round}), not proven: ${v.checks.tests ? v.checks.tests.why : 'no tests'}`;
+      return;
+    }
+    if (round === run.maxRounds) {
+      rr.endedAt = Date.now();
+      run.state = 'done'; run.verdict = 'failed';
+      run.why = `still failing after ${round} round(s): ${v.why}`;
+      return;
+    }
+    // 3 — send each failing file back with its exact failures; the version that failed is never reused
+    const manifest = se.loadSpec(run.specUuid);
+    const items = Object.entries(v.byFile).filter(([f]) => f !== '(project)').map(([f, list]) => ({ realPath: f, failures: BV.repairText(list), round: round + 1 }));
+    const mr = se.markForRepair(run.specUuid, items);
+    rr.repaired = mr.marked; rr.notBuiltBySpec = mr.unknown;
+    try {
+      const CS = _require('../../lib/component-store.js');
+      for (const f of mr.marked) {
+        const c = manifest.chunks.find(x => x.realPath === f);
+        if (c && c.content) CS.markFailed({ project: manifest.name, path: f, content: c.content, reason: (items.find(i => i.realPath === f) || {}).failures || 'failed verification' });
+      }
+    } catch (e) { console.warn(`[idearium/prove] component store not told (reuse is still skipped for repairs): ${e.message}`); }
+    rr.endedAt = Date.now();
+    _saveProof(run);
+    if (!mr.marked.length) {
+      run.state = 'done'; run.verdict = 'failed';
+      run.why = `round ${round}: every failure is in a file the spec does not build (${mr.unknown.slice(0, 5).join(', ')}${v.byFile['(project)'] ? ', or the project as a whole' : ''}) — nothing to send back`;
+      return;
+    }
+  }
+}
+
 function _repoDiskDir(repoUuid) {
   const repo = getRepoLayer().get(repoUuid);
   if (!repo) return null;
@@ -1201,7 +1370,9 @@ const ROUTE_CAP = {
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
-  'history.import.upload': CAPS.ADMIN,    // writes a dropped zip into the data root's history-import inbox
+  'history.import.upload': CAPS.ADMIN,
+  'spec-library.import':  CAPS.WRITE_IDEAS,   // §0.39.290 IL1
+  'spec-library.list':    CAPS.READ_IDEAS,    // writes a dropped zip into the data root's history-import inbox
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
   'cos.install.status': CAPS.READ_IDEAS,
   'cos.install':        CAPS.ADMIN,       // installs software on the host (winget / brew / apt), only on a click
@@ -1255,6 +1426,7 @@ const ROUTE_CAP = {
   'config.get':       CAPS.READ_IDEAS,
   'routing.show':     CAPS.READ_IDEAS,
   'routing.plan':     CAPS.READ_IDEAS,
+  'routing.learned':  CAPS.READ_IDEAS,
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -1290,6 +1462,7 @@ function matchRoute(method, url) {
     // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
+    ['GET',    ['api','routing','learned'], 'routing.learned'],   // §0.39.287 what each model/provider has done per chunk type
     ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
     // §0.39.279 — the settings console (ui/settings.html): every idearium, compartment and agent setting in one read.
     // Writes go to the routes that already own each setting (config, agent/settings, agent/blocks, desktop).
@@ -1602,6 +1775,11 @@ function matchRoute(method, url) {
     ['POST',   ['api','nexus-self',':system','branch',':id','apply'], 'nexus-self.branch.apply'],
     // §RUN 2026-09-21 — run/test the repo in a COS test environment (lib/repo-run.js)
     ['POST',   ['api','repos',    ':uuid','run'],                   'repo.run'],
+    // §0.39.291 PV1/PV3 — does the code work? one verification; and the proof run (build → verify → repair, N rounds)
+    ['POST',   ['api','repos',    ':uuid','verify'],                'repo.verify'],
+    ['POST',   ['api','repos',    ':uuid','prove'],                 'repo.prove'],
+    ['GET',    ['api','repos',    ':uuid','prove'],                 'repo.prove.status'],
+    ['POST',   ['api','repos',    ':uuid','prove','cancel'],        'repo.prove.cancel'],
     // §0.39.266 — the registry harness (lib/registry-harness.js): what a repo agent navigates instead of injected code
     // §0.39.266 (C1) — the component store (lib/component-store.js)
     ['GET',    ['api','components'],                                 'components.list'],
@@ -1625,6 +1803,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','history','import'],                       'history.import.status'],
     ['POST',   ['api','history','import'],                       'history.import.start'],
     ['PUT',    ['api','history','import','upload'],              'history.import.upload'],
+    // §0.39.290 IL1 — James's spec library: PUT the zip's raw bytes (?name=&dryRun=1); each unique document an idea + spec
+    ['PUT',    ['api','spec-library','import'],                  'spec-library.import'],
+    ['GET',    ['api','spec-library'],                           'spec-library.list'],
     ['POST',   ['api','cos','testenv','setup'],                  'cos.testenv.setup'],
     ['GET',    ['api','cos','install'],                          'cos.install.status'],   // §0.39.265
     ['POST',   ['api','cos','install'],                          'cos.install'],
@@ -1845,6 +2026,10 @@ async function handle(req, res, route, query, body) {
       }
       return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(),
         blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
+    }
+    case 'routing.learned': {
+      const PR = _require('../../lib/pipeline-routing.js');
+      return ok(res, { policy: _routingPolicy(), learned: PR.learned({ jobType: query.jobType || null }) });
     }
     case 'routing.breaker.reset': {
       const PR = _require('../../lib/pipeline-routing.js');
@@ -3700,6 +3885,27 @@ async function handle(req, res, route, query, body) {
       os.emit('idearium.history.import', { state: st.state, dryRun: !!body.dryRun, inputs: st.inputs || 0 });
       return st.state === 'failed' ? err(res, 400, (st.result && st.result.error) || 'could not start', st) : ok(res, st);
     }
+    // §0.39.290 IL1 — "need a way to import these and convert them." (lib/spec-library.js + idearium/lib/spec-library-import.js)
+    case 'spec-library.import': {
+      const chunks = []; let size = 0;
+      try {
+        for await (const c of req) { size += c.length; if (size > 512 * 1024 * 1024) return err(res, 413, 'zip over 512 MB'); chunks.push(c); }
+      } catch (e) { return err(res, 400, `upload failed: ${e.message}`); }
+      if (!size) return err(res, 400, 'send the zip as the request body (PUT, raw bytes)');
+      const { importLibrary } = await import('../lib/spec-library-import.js');
+      const se = getSpecEngine();
+      const r = await importLibrary({ buf: Buffer.concat(chunks), name: query.name || 'specs.zip', dryRun: query.dryRun === '1' || query.dryRun === 'true', se, os });
+      if (!r.ok) return err(res, 400, r.error);
+      os.emit('idearium.spec-library.imported', { dryRun: r.dryRun, ...(r.summary || {}), unique: r.stats.unique });
+      // the full rows are large; the listing route serves them — the import answers with the counts and what failed
+      return ok(res, { dryRun: r.dryRun, upload: r.upload, stats: r.stats, summary: r.summary, skipped: r.skipped, merged: r.merged, failed: r.failed,
+        added: r.added.map(x => ({ title: x.title, family: x.family, kind: x.kind, dialect: x.dialect, sections: x.sections, ideaUuid: x.ideaUuid, specUuid: x.specUuid, path: x.paths[0] })) });
+    }
+    case 'spec-library.list': {
+      const { listLibrary } = await import('../lib/spec-library-import.js');
+      const rows = listLibrary({ family: query.family || null, kind: query.kind || null });
+      return ok(res, { count: rows.length, library: rows.map(({ files, ...r }) => ({ ...r, fileCount: files ? files.length : null })) });
+    }
     case 'history.import.upload': {
       const HJ = _require('../../lib/history-import-job.js');
       const r = await HJ.saveUpload(query.name, req);
@@ -3941,6 +4147,47 @@ async function handle(req, res, route, query, body) {
         runs.push({ file: f, ok: !!r.ok, passed: r.ok ? !!r.allPassed : false, error: r.ok ? undefined : (r.errors || []).join('; '), exitCode: one.exitCode ?? null, tail: String(one.stderr || one.stdout || '').slice(-800) });
       }
       return ok(res, { id: c.id, tests: runs, allPassed: runs.every(x => x.passed) });
+    }
+
+    // §0.39.291 PV1 — James: "Conrinue it first. Make sure it's enterprise grade." One verification of the repo's files
+    // as they are on disk: parses · resolves · its own tests in an isolated COS branch (lib/build-verify.js).
+    case 'repo.verify': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (repo.nexusSelf) return err(res, 400, 'a Nexus system is verified by its own suite — use Run');
+      if (_proofs.get(params.uuid) && _proofs.get(params.uuid).state === 'running') return err(res, 409, 'a proof run is working on this repo — its rounds verify as they go (GET …/prove)');
+      const v = await _verifyRepo(repo);
+      _recordVerify(repo, v, 'verify');
+      os.emit('idearium.repo.verify', { repoUuid: repo.uuid, verdict: v.verdict, failures: v.failures.length });
+      return ok(res, { repoUuid: repo.uuid, ...v, failures: v.failures.map(_compactFailure) });
+    }
+    // §0.39.291 PV3 — the proof run: build every pending file, verify, send each failing file back with its exact
+    // failure, again — until proven, the round bound, or a build that stalls. Background; follow it with GET.
+    case 'repo.prove': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!repo.specUuid) return err(res, 400, 'this repo has no spec to build from');
+      const se = getSpecEngine();
+      if (!se) return err(res, 503, 'spec-engine not ready');
+      let m; try { m = se.loadSpecMeta(repo.specUuid); } catch (e) { return err(res, 404, `spec not found: ${repo.specUuid}`); }
+      if (!m.fileTree && !(m.chunks || []).some(c => c.realPath)) return err(res, 400, 'this spec builds documents, not files — "Generate code" makes its code spec first');
+      const cur = _proofs.get(repo.uuid);
+      if (cur && cur.state === 'running') return ok(res, { started: false, alreadyRunning: true, run: _proofView(cur) });
+      if (_buildingSpecs.has(repo.specUuid)) return err(res, 409, 'this spec is being built right now — try again when that build returns');
+      const rounds = Math.max(1, Math.min(parseInt(body.rounds, 10) || 3, 10));
+      const run = _startProof(repo, { rounds, maxBuildsPerRound: Math.max(1, Math.min(parseInt(body.maxBuilds, 10) || 400, 2000)) });
+      return ok(res, { started: true, run: _proofView(run) });
+    }
+    case 'repo.prove.status': {
+      const live = _proofs.get(params.uuid);
+      const rows = loadTable(PROOF_TABLE).filter(r => r.repoUuid === params.uuid).sort((a, b) => b.startedAt - a.startedAt);
+      return ok(res, { run: live ? _proofView(live) : (rows[0] || null), history: rows.slice(0, 20).map(r => ({ uuid: r.uuid, state: r.state, verdict: r.verdict, rounds: (r.rounds || []).length, startedAt: r.startedAt, endedAt: r.endedAt })) });
+    }
+    case 'repo.prove.cancel': {
+      const live = _proofs.get(params.uuid);
+      if (!live || live.state !== 'running') return err(res, 404, 'no proof run is working on this repo');
+      live.cancel = true;
+      return ok(res, { cancelling: true, run: _proofView(live) });
     }
 
     case 'repo.run': {
@@ -5342,7 +5589,9 @@ async function handle(req, res, route, query, body) {
         // in some other spec; if so, complete this chunk from that content and
         // never dispatch. Content-addressed on the section contract, not the
         // spec identity. Opt-out via body.noReuse for a deliberate fresh build.
-        if (!body.noReuse) {
+        // §0.39.291 PV2 — a file under repair (it failed verification) is never answered from a store or a prior section:
+        // either would hand back the version that failed. It goes to its agent with the failure (buildChunkPrompt's repair block).
+        if (!body.noReuse && !chunk.repair) {
           // §0.39.266 (C2) — a stored component with this exact contract: its bytes, 0 tokens. Unlike
           // findPriorSection below, this survives the spec it was built in being purged.
           const stored = _storedFor(chunk);
@@ -5379,7 +5628,7 @@ async function handle(req, res, route, query, body) {
         const chunkPrompt   = se.buildChunkPrompt(manifest, chunk, systemContext);
         // §0.39.266 (C2) — the same prompt built before (WARP's exact-cache key), answered from the store: a crystal
         // that outlives warp-crystals.json and the spec it was built in.
-        if (!body.noReuse && chunk.realPath) {
+        if (!body.noReuse && !chunk.repair && chunk.realPath) {
           const stored = _storedFor(chunk, { prompt: chunkPrompt });
           if (stored) {
             se.completeChunk(params.uuid, chunk.uuid, stored.content, { preserveWhitespace: true });
@@ -5420,7 +5669,7 @@ async function handle(req, res, route, query, body) {
         const routingPolicy = _routingPolicy(body.routing || {});
         const routePlan = Array.isArray(body.route) && body.route.length
           ? { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [] }
-          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, policy: routingPolicy });
+          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, chunk, policy: routingPolicy });
         if (body.fallbackAgent && !routePlan.route.some(r => r.provider === body.fallbackAgent)) routePlan.route.splice(1, 0, { provider: body.fallbackAgent, why: 'given by the call' });
         const fallbackAgent = null;   // the route carries the fallbacks now (0.39.286); kept so nothing below changes shape
 
@@ -5494,8 +5743,8 @@ async function handle(req, res, route, query, body) {
         } catch (e) { memoryInfo = { error: e.message }; }
         const route = { hat: who.hat, model: who.model, memory, agentId: who.agentId, compartmentId: who.compartmentId, repoUuid: who.repoUuid, fileName: chunk.realPath || null };
         const dispatchFn = warpFn
-          ? (prompt, dispatchOpts) => warpFn(prompt, { ...dispatchOpts, chunkTitle: chunk.title || chunk.sectionId, expectCode, ...route })
-          : (prompt, dispatchOpts) => as.buildChunkWithAgent(prompt, { ...dispatchOpts, ...route });
+          ? (prompt, dispatchOpts) => warpFn(prompt, { ...dispatchOpts, chunkTitle: chunk.title || chunk.sectionId, expectCode, ...route, ...(dispatchOpts && dispatchOpts.model ? { model: dispatchOpts.model } : {}) })
+          : (prompt, dispatchOpts) => as.buildChunkWithAgent(prompt, { ...dispatchOpts, ...route, ...(dispatchOpts && dispatchOpts.model ? { model: dispatchOpts.model } : {}) });   // §0.39.287 a hop's model (ollama:<model>) wins over the hat's
 
         dispatchChunkWithVerification(chunkPrompt, chunk, dispatchFn,
           {
@@ -5539,8 +5788,11 @@ async function handle(req, res, route, query, body) {
               });
             } catch (_) { /* best-effort, see above */ }
           }
+          // §0.39.291 — a file chunk is the code inside the reply's fence, not the fence
+          const fileOut = result.ok && !result.queued && result.text ? _fileContentFromReply(chunk, result.text) : null;
+          if (fileOut && !fileOut.ok) { se.failChunk(params.uuid, chunk.uuid, fileOut.error); return; }
           if (result.ok && !result.queued && result.text) {
-            se.completeChunk(params.uuid, chunk.uuid, result.text);
+            se.completeChunk(params.uuid, chunk.uuid, fileOut.content);
             const stored = _storeBuilt(manifest, chunk, se.loadSpec(params.uuid).chunks.find(c => c.uuid === chunk.uuid)?.content || result.text,
                                        { prompt: chunkPrompt, agent: result.agent || preferAgent, source: result.source || 'agent' });
             const updatedManifest = se.loadSpec(params.uuid);
@@ -5582,7 +5834,11 @@ async function handle(req, res, route, query, body) {
       const { content } = body;
       if (!content) return err(res, 400, 'content required');
       try {
-        const chunk = se.completeChunk(params.uuid, params.chunkUuid, content);
+        // §0.39.291 — the queued (callback) path is a file chunk's reply too: the code inside the fence
+        const pre = (se.loadSpecMeta(params.uuid).chunks || []).find(c => c.uuid === params.chunkUuid);
+        const fileOut = _fileContentFromReply(pre, content);
+        if (!fileOut.ok) { se.failChunk(params.uuid, params.chunkUuid, fileOut.error); return err(res, 422, fileOut.error); }
+        const chunk = se.completeChunk(params.uuid, params.chunkUuid, fileOut.content);
         const manifest = se.loadSpec(params.uuid);
         // §0.39.266 (C2) — a queued (browser-agent) build lands here; it is a WARP build like any other.
         _storeBuilt(manifest, manifest.chunks.find(c => c.uuid === params.chunkUuid) || chunk, chunk.content || content, { agent: body.agent || null, source: 'callback' });
@@ -5959,7 +6215,7 @@ function _nexusSelfSync({ only = null, force = false } = {}) {
       });
       _nexusSelfLast = { at: Date.now(), ok: r.ok, snapshot: r.snapshot, ms: r.ms, changed: [...r.systems.filter(x => x.status !== 'unchanged').map(x => `${x.system}:${x.status}`), ...(r.restored || []).map(x => `${x.name}:restored`)], understanding: r.understanding };
       // §0.39.266 — any sync over 1 s says where the time went, changed or not
-      if (r.ms > 1000 && r.timing) console.log(`[idearium/nexus-self] sync took ${r.ms}ms — ${Object.entries(r.timing).filter(([, v]) => v >= 50).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}ms`).join(' · ')}${r.stats0 ? ` · tree ${r.stats0.files} files, ${r.stats0.hashed} re-hashed` : ''}`);
+      if (r.ms > 1000 && r.timing) console.log(`[idearium/nexus-self] sync took ${r.ms}ms — ${Object.entries(r.timing).filter(([, v]) => v >= 50).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}ms`).join(' · ')}${r.stats0 ? ` · tree ${r.stats0.files} files, ${r.stats0.hashed} re-hashed` : ''}${r.stats0 && r.stats0.changedCount && r.stats0.changedCount <= 20 ? ` · changed: ${r.stats0.changed.join(', ')}` : r.stats0 && r.stats0.changedCount ? ` · ${r.stats0.changedCount} changed (first: ${r.stats0.changed.slice(0, 5).join(', ')})` : ''}`);
       _nexusSelfLast.timing = r.timing || null;
       if (_nexusSelfLast.changed.length) console.log(`[idearium/nexus-self] synced in ${r.ms}ms — ${_nexusSelfLast.changed.join(', ')}${r.understanding && r.understanding.improved && r.understanding.improved.length ? ` · understanding improved: ${r.understanding.improved.join(', ')}` : ''}${r.understanding && r.understanding.regressed && r.understanding.regressed.length ? ` · regressed: ${r.understanding.regressed.join(', ')}` : ''}`);
       return r;
@@ -6067,7 +6323,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html')) {
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html')) {   // §0.39.290 IL1 the spec library
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');
@@ -6127,7 +6383,7 @@ export function startAPI() {
     const query = parseQuery(req.url);
     let body = {};
     // §0.39.283 N30 — a dropped zip streams straight to disk; it is not a JSON body
-    if (['POST','PATCH','PUT','DELETE'].includes(req.method) && route.action !== 'history.import.upload') {
+    if (['POST','PATCH','PUT','DELETE'].includes(req.method) && route.action !== 'history.import.upload' && route.action !== 'spec-library.import') {
       try { body = await readBody(req); }
       catch (e) { return err(res, 400, 'body parse failed', e.message); }
     }
