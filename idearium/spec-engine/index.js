@@ -946,9 +946,14 @@ export function setChunkAgent(specUuid, chunkUuid, agent) {
   const manifest = loadSpec(specUuid);
   const chunk = manifest.chunks.find(c => c.uuid === chunkUuid);
   if (!chunk) throw new Error(`chunk ${chunkUuid} not found in spec ${specUuid}`);
-  if (chunk.status !== CHUNK_STATES.PENDING) {
-    throw new Error(`cannot reassign agent on a '${chunk.status}' chunk — only PENDING chunks can be reassigned before dispatch`);
+  // §0.39.285 (nexus-14 fork D2) — a FAILED/ESCALATED chunk may be reassigned too: that IS the retry on a backend that
+  // answers (James: the dead build kept retrying chatgpt, which returned empty, every 10 min). It goes back to PENDING
+  // with a fresh attempt count; the failure is kept as priorFailure.
+  const _retry = chunk.status === CHUNK_STATES.FAILED || chunk.status === CHUNK_STATES.ESCALATED;
+  if (chunk.status !== CHUNK_STATES.PENDING && !_retry) {
+    throw new Error(`cannot reassign agent on a '${chunk.status}' chunk — only PENDING or FAILED chunks can be reassigned`);
   }
+  if (_retry) { chunk.priorFailure = chunk.failureMode || null; chunk.status = CHUNK_STATES.PENDING; chunk.attempts = 0; chunk.failureMode = null; }
   // §0.39.267 — a hand-picked agent is pinned: it wins over the repo's Agent-tab switch at build time
   // (idearium/api speceng.build). Names are checked against lib/agent-providers.js, the one list.
   let norm = agent;

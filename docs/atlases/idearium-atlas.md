@@ -502,6 +502,10 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Actions per card:** **Apply** / **Reject** (proposed), **Revert** (applied), **Promote** (staged).
 - **The tools strip:** the tool scope, the tools the agent is given, and every call it made, ✓ or ✗ with the error. Phase and plan runs now keep their tool calls.
 
+**The code build in the Plan** (0.39.285). A code spec builds one chunk per file. The Plan panel shows it: files done/total, each file's state and layer, the failure, and **build the rest / retry** (POST /api/spec-engine/specs/:uuid/build). Codegen opens the panel. In the Files tab, a file the build has not written says "not built yet — its chunk is &lt;state&gt;".
+- **A FAILED chunk can be given to another agent** (the chunk's agent select): it returns to pending with attempts 0, the failure kept as priorFailure.
+- **Version history per file** (GET /api/repos/:uuid/file/versions?path=, /file/version?path=&commitId=; `idearium/ui/js/file-versions.js`): the Manage menu and the open file's **history** button list each Versionium commit that wrote the file; **restore** writes it back through POST /api/repos/:uuid/file.
+
 **Navigation.**
 - **Create and Build are back on the main bar**, not the repo's tab row. With a repo open, they act on it.
 - A sliding ink marks the active tab, dropdowns animate, and views fade in.

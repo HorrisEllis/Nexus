@@ -172,3 +172,11 @@ spec:
       files: [lib/version.js, package.json, CHANGELOG-0.39.284.md, docs/atlases/*, docs/2026-09-29-handoff.md]
       does: "versions, changelog, atlases, the handoff, loom wires, the full run"
       proof: "full run: 0 unregistered failures"
+
+## ADDENDUM 2026-10-01 — 0.39.285: a promoted spec's code build, seen and unstuck
+# James: "its not opening. i just added a new idea and promoted to spec. it needs to show the plan when building." The log:
+# "src-kernel-state-js failed: exceeded outer wall-clock attempt cap". A code spec (filetree) builds one chunk per file through
+# idearium/spec-engine/chunk-dispatch.js, not the phasemap's phases. Every chunk's reply was judged truncated by
+# lib/seam/detector.js (code ends in } ; ] or a fence, not punctuation), so each was retried until the cap. Fixed; the cap
+# error names the last check. The Plan panel now shows that build (per file, build the rest / retry) and codegen opens it;
+# an unbuilt file in the Files tab says its chunk's state instead of opening blank.

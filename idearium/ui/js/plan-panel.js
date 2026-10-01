@@ -184,7 +184,7 @@ function _planCodeBuild() {
   const busy = live.some(c => ['building', 'dispatched', 'generating'].includes(c.status));
   const rows = live.map(c => {
     const name = (c.file && c.file.path) || c.title || c.sectionId;
-    const err = c.error || c.lastError || c.failReason || (c.dispatch && c.dispatch.error) || '';
+    const err = c.failureMode || c.error || c.lastError || c.failReason || (c.dispatch && c.dispatch.error) || '';
     return `<div class="pp-task ${c.status === 'complete' ? 'done' : ''} ${['building', 'dispatched', 'generating'].includes(c.status) ? 'cur' : ''}"><div class="pp-row">
       <span class="pp-mark" style="${c.status === 'failed' || c.status === 'stalled' ? 'color:var(--coral)' : ''}">${_PP_CHUNK_MARK[c.status] || '○'}</span>
       <span class="pp-name">${escapeHtml(name)}</span>${c.file && c.file.layer ? `<span class="pp-layer">${escapeHtml(c.file.layer)}</span>` : ''}

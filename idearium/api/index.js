@@ -1446,6 +1446,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','chunk',':chunkUuid'], 'repo.chunk.show'],
     ['POST',   ['api','repos',    ':uuid','file'],         'repo.file.write'],
     ['DELETE', ['api','repos',    ':uuid','file'],         'repo.file.delete'],
+    // §0.39.285 (nexus-14 fork D0) — per-file versions (versionium files layer) for the Files tab's Manage menu
+    ['GET',    ['api','repos',    ':uuid','file','versions'], 'repo.file.versions'],
+    ['GET',    ['api','repos',    ':uuid','file','version'],  'repo.file.version'],
     ['GET',    ['api','repos',    ':uuid','export'],       'repo.export'],
     // §QUERY-SURFACE 2026-09-17 — reads of import-pipeline.js's own
     // atlas.json/indexes output, added alongside repo.chunk.show rather
@@ -3070,6 +3073,26 @@ async function handle(req, res, route, query, body) {
       os.emit('idearium.repo.file.delete', { repoUuid: params.uuid, path: result.path });
       _deviationAfter(params.uuid, 'files');
       return ok(res, result);
+    }
+
+    // §0.39.285 (nexus-14 fork D0) — James: "per file versioning, add it to the manage button menu." Every repo snapshot already records
+    // each file (versionium/lib/files.js); these read one path's history and one version's bytes. Restore = the UI
+    // writes the old content back through repo.file.write (one write path, so it is itself versioned next snapshot).
+    case 'repo.file.versions': case 'repo.file.version': {
+      if (!getRepoLayer().get(params.uuid)) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!query.path) return err(res, 400, 'path required (?path=...)');
+      const q = new URLSearchParams({ repository: params.uuid, path: query.path });
+      if (action === 'repo.file.versions') {
+        q.set('limit', String(Math.min(parseInt(query.limit, 10) || 100, 500)));
+        const r = await _versionium('GET', `/api/versionium/files/versions?${q}`);
+        if (!r.ok) return err(res, r.status === 400 ? 400 : 502, r.error);
+        return ok(res, { repoUuid: params.uuid, path: query.path, versions: r.data.versions || r.data.list || [] });
+      }
+      if (!query.commitId) return err(res, 400, 'commitId required');
+      q.set('commitId', query.commitId);
+      const r = await _versionium('GET', `/api/versionium/files/content?${q}`);
+      if (!r.ok) return err(res, r.status === 404 || r.status === 400 ? 404 : 502, r.error);
+      return ok(res, { repoUuid: params.uuid, path: query.path, commitId: query.commitId, sha256: r.data.sha256, bytes: r.data.bytes, content: Buffer.from(r.data.content_b64, 'base64').toString('utf8') });
     }
 
     // §EXPORT 2026-07-18 — "the export, needs to be the .spec file

@@ -5241,7 +5241,7 @@ async function openApiRepoFile(repoUuid, filePath) {
           const ch = (m.chunks || []).find(c => c.file && c.file.path === filePath);
           if (ch && ch.status !== 'complete') {
             _showIdeEditor(false);
-            document.getElementById('ide-code').textContent = `// not built yet — its chunk is ${ch.status}${ch.error ? ` (${ch.error})` : ''}.\n// The Plan panel shows the build; "build the rest / retry" runs it again.`;
+            document.getElementById('ide-code').textContent = `// not built yet — its chunk is ${ch.status}${(ch.failureMode || ch.error) ? ` (${ch.failureMode || ch.error})` : ''}.\n// The Plan panel shows the build; "build the rest / retry" runs it again.`;
             if (typeof openPlanPanel === 'function') openPlanPanel();
             return;
           }
