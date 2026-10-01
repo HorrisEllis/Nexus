@@ -63,6 +63,11 @@ async function loadPlanPanel() {
     ]);
     if (PLANP.uuid !== repo.uuid) return;
     PLANP.data = plan; PLANP.runs = runs.runs || [];
+    // §0.39.284 — James: "i just added a new idea and promoted to spec. it needs to show the plan when building." A
+    // promoted spec builds as spec-engine chunks (one per file), not phasemap phases — the panel shows that build too.
+    PLANP.code = null;
+    const specUuid = repo.specUuid || repo.promotedFromSpec || null;
+    if (specUuid) { try { const r = await api(`/api/spec-engine/specs/${specUuid}`, {}, 20000); PLANP.code = r.manifest || r.spec || r; } catch (_) {} }
   } catch (e) { body.innerHTML = `<div class="pp-empty">could not read the plan: ${escapeHtml(e.message)}</div>`; return; }
   _planPaint();
 }
@@ -104,6 +109,7 @@ function _planPaint() {
   const other = (PLANP.runs || []).filter(r => r.phase === 'PLAN' || String(r.map || '').startsWith('file:')).slice(0, 12);
   const activity = (PLANP.runs || []).slice(0, 25);
   body.innerHTML = `
+    ${_planCodeBuild()}
     ${sm.total ? `<div class="pp-progress"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
     <div class="pp-sec">tasks</div>
     ${steps.length ? steps.map(task).join('') : '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>'}
@@ -128,7 +134,7 @@ async function planBuild(map, phase) {
 let _planT = null;
 function planPanelOnEvent(ev) {
   const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
-  if (!/^repo\.(phase\.run|file\.manage|deviation|roadmap\.updated|inject\.|spec\.planned)/.test(t)) return;
+  if (!/^(repo\.(phase\.run|file\.manage|deviation|roadmap\.updated|inject\.|spec\.planned)|spec-engine\.|spec\.chunk|chunk\.)/.test(t)) return;
   const el = document.getElementById('plan-panel'); if (!el || !el.classList.contains('open')) return;
   const u = ev.payload && ev.payload.repoUuid; if (u && PLANP.uuid && u !== PLANP.uuid) return;
   clearTimeout(_planT); _planT = setTimeout(loadPlanPanel, 500);
@@ -165,4 +171,33 @@ async function buildStartGo(specPath) {
   if (!p.exists) return specPlanAsk();
   if (p.next) return specBuildPhase(null);
   toast(`${specPath}: every phase is done`, 'ok');
+}
+
+
+// §0.39.284 — the spec's own build (spec-engine chunks: one per file for a code spec), as tasks with their state
+const _PP_CHUNK_MARK = { complete: '✓', building: '◌', dispatched: '◌', generating: '◌', failed: '!', stalled: '!', pending: '○', removed: '–' };
+function _planCodeBuild() {
+  const m = PLANP.code; if (!m || !Array.isArray(m.chunks) || !m.chunks.length) return '';
+  const live = m.chunks.filter(c => c.status !== 'removed');
+  const done = live.filter(c => c.status === 'complete').length;
+  const bad = live.filter(c => c.status === 'failed' || c.status === 'stalled');
+  const busy = live.some(c => ['building', 'dispatched', 'generating'].includes(c.status));
+  const rows = live.map(c => {
+    const name = (c.file && c.file.path) || c.title || c.sectionId;
+    const err = c.failureMode || c.error || c.lastError || c.failReason || (c.dispatch && c.dispatch.error) || '';
+    return `<div class="pp-task ${c.status === 'complete' ? 'done' : ''} ${['building', 'dispatched', 'generating'].includes(c.status) ? 'cur' : ''}"><div class="pp-row">
+      <span class="pp-mark" style="${c.status === 'failed' || c.status === 'stalled' ? 'color:var(--coral)' : ''}">${_PP_CHUNK_MARK[c.status] || '○'}</span>
+      <span class="pp-name">${escapeHtml(name)}</span>${c.file && c.file.layer ? `<span class="pp-layer">${escapeHtml(c.file.layer)}</span>` : ''}
+      <span class="pp-led-s pp-${escapeHtml(c.status === 'complete' ? 'replied' : c.status === 'failed' || c.status === 'stalled' ? 'failed' : c.status === 'pending' ? 'pending' : 'building')}">${escapeHtml(c.status)}</span></div>
+      ${err ? `<div class="pp-detail" style="color:var(--coral)">${escapeHtml(String(err).slice(0, 300))}</div>` : ''}</div>`;
+  }).join('');
+  return `<div class="pp-sec">building ${escapeHtml(m.name || 'the spec')} — ${done}/${live.length} ${m.fileTree ? 'files' : 'sections'}${bad.length ? ` · <span style="color:var(--coral)">${bad.length} stopped</span>` : ''}</div>
+    <div class="pp-progress"><div style="width:${live.length ? Math.round(done / live.length * 100) : 0}%"></div></div>
+    ${done < live.length ? `<button class="pp-go" ${busy ? 'disabled' : ''} onclick="planCodeBuild('${escapeHtml(m.uuid)}')">${busy ? '◌ building…' : bad.length ? '▶ retry the stopped and build the rest' : '▶ build the rest'}</button>` : ''}
+    ${rows}`;
+}
+async function planCodeBuild(specUuid) {
+  try { await api(`/api/spec-engine/specs/${specUuid}/build`, { method: 'POST', body: '{}' }, 60000); toast('building — each file lands here as it completes', 'ok'); }
+  catch (e) { toast(`not started: ${e.message}`, 'err'); }
+  setTimeout(loadPlanPanel, 1500);
 }

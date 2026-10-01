@@ -139,6 +139,32 @@ spec:
         test-idearium-theme 15/15; the coding-flow probe 15/15 (default ink #080814; Graphite applies, saves, and the
         idearium page follows it after a reload).
 
+    W7_next_mapped_2026_09_30:
+      layer: ui
+      status: OPEN
+      depends_on: [W5_theme_and_css]
+      files: [architect/src/ui/spec-builder.html, idearium/ui/js/app.js, lib/component-registry.js, loom/, clear-glass/src/]
+      does: >-
+        James, 2026-09-30 (at 98% of the weekly budget — mapped, not built): (1) the architect spec builder onto
+        css/nexus-theme.css (tests/known-gaps.yaml architect-spec-builder-theme); (2) "the architect tab should be the
+        component registry and loom style map for the wiring, building a idea, into a spec is supposed to create a
+        component registry, as the architecture doc, identicle to what nexus and loom has, a full map for wiring, ids,
+        types, relation, consumers, orphans, node types, data dir" — reuse loom/scanners/source-map.js (scanTree, idFor),
+        loom's registry schema (component/hook/wire), lib/component-registry.js, loom/scanners/dangling-report.js
+        (orphans) and wiring-gaps.js over the repo's OWN tree, persisted as the repo's .architecture node; (3) "can we
+        have the plan, be phases" — the Plan panel's steps are already the phasemap's phases; make its header name the
+        map and its phases' layers as groups; (4) Clear Glass: consolidate "Accounts & sign-in", "Provider tabs" and
+        "Agent mesh" into one Providers page, with a small live guardian widget per provider (its idearium agents, jobs
+        running and queued, economy limits, login state).
+      proof: "each item its own test + probe when built"
+      built: >-
+        Item 2 BUILT 2026-09-30: idearium/repo/architecture.js over the repo's lib/code-intel index — loom's registry
+        shape (components with loom's id rule, export/import hooks, wires dependency → consumer), consumers and requires
+        per component, external packages, orphans, bottom-up breaches (§3.1), data dirs, node types; GET|POST
+        /api/repos/:uuid/architecture (POST writes ARCHITECTURE.json into the repo, with provenance); the Architect tab
+        shows it first (stats, the wiring map in layer columns, the registry table, the lists), the spec blueprint
+        below. test-repo-architecture 8/8; the coding-flow probe 16/16. Items 1, 3, 4 stay open.
+
     W6_release:
       layer: ui
       status: OPEN
@@ -146,3 +172,11 @@ spec:
       files: [lib/version.js, package.json, CHANGELOG-0.39.284.md, docs/atlases/*, docs/2026-09-29-handoff.md]
       does: "versions, changelog, atlases, the handoff, loom wires, the full run"
       proof: "full run: 0 unregistered failures"
+
+## ADDENDUM 2026-10-01 — 0.39.285: a promoted spec's code build, seen and unstuck
+# James: "its not opening. i just added a new idea and promoted to spec. it needs to show the plan when building." The log:
+# "src-kernel-state-js failed: exceeded outer wall-clock attempt cap". A code spec (filetree) builds one chunk per file through
+# idearium/spec-engine/chunk-dispatch.js, not the phasemap's phases. Every chunk's reply was judged truncated by
+# lib/seam/detector.js (code ends in } ; ] or a fence, not punctuation), so each was retried until the cap. Fixed; the cap
+# error names the last check. The Plan panel now shows that build (per file, build the rest / retry) and codegen opens it;
+# an unbuilt file in the Files tab says its chunk's state instead of opening blank.

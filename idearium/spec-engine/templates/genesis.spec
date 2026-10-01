@@ -1,10 +1,13 @@
-// GENESIS CANONICAL SPEC v1.0.0
+// GENESIS CANONICAL SPEC v1.1.0
 // UUID: genesis-devkit-v1-0000-2026-0710-jamesbrooks-001
 // This file IS the schema-engine's definition of a valid sovereign system.
 // Edit this file → every new compartment scaffolded from it inherits the change.
 // Status: proposed. Foundation domains freeze at v1.0.0 per COS-5 pattern.
 
-version 1.0.0
+version 1.1.0
+// 1.1.0 (2026-10-01, NEXUS 0.39.286 — docs/2026-10-01-routing-registry-genesis-phasemap.spec): Domain 2c registry-as-doorway
+// (the spec template's 11th block, nodes in Guardian's layout), Domain 11 routing (fallback policy), two files
+// (registry/node-registry.js, spine/route-policy.js). genesis is now the template a new spec starts with.
 
 // ── Spine declaration ─────────────────────────────────────────────────────────
 // WARP (warp-devkit-v1-0000-2026-0701-jamesbrooks-001) is not a dependency
@@ -65,6 +68,8 @@ axiom HOT_SWAPPABLE            // any isolate module may be replaced at runtime 
 axiom CONFIG_OUTSIDE_CODE      // anything adjustable lives in config, never hardcoded
 axiom LEDGER_IS_TRUTH          // every runtime writes its event stream to an append-only ledger
 axiom GATE_BEFORE_CROSS        // no compartment reaches another without passing its gate
+axiom REGISTRY_IS_THE_DOORWAY   // every crossing between modules is a declared node in the registry; modules are isolated and know only the registry
+axiom ALL_DATA_ARE_NODES       // the registry, its contract and its config persist as nodes/<type>/<id>.<type> in one envelope — Guardian's layout
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Domain 0 — Schema Baseline (the expectation every other domain is graded against)
@@ -218,6 +223,38 @@ axiom KERNEL_NEVER_CHUNKED     // I6 — kernel/spine/registry/gates (phase 0) a
 // states: QUEUED -> MANIFESTED -> WIRED -> KERNEL_OK -> CHUNKED -> ASSEMBLED -> INTEGRATED | FAILED -> RETRYING
 
 // ══════════════════════════════════════════════════════════════════════════════
+// Domain 2c — Registry as the doorway (the spec's 11th block; nodes in Guardian's layout)
+// ══════════════════════════════════════════════════════════════════════════════
+// James, 2026-10-01: "add the components registry as an 11th chunk … where its all wired in, event driven
+// interaction contract, after the file list and tree, then the registry can map the relation to each component and
+// chunk, and also is its self the doorway, and the rest is isolated modular, interacting through the interaction
+// contract/registry … routes, cli, nodes and dir … the ui can also float on top … the nodes based data structure
+// exactly like guardian."
+//
+// What Domain 2b's P1 MANIFEST produces, made physical. The spec template (idearium/spec-engine/blocks.yaml) carries it
+// as its 11th block, `registry`, built after `build_order` (the file list and tree) and waiting on it. Its output is
+// not prose: it is the node set below, one file per fact, in lib/node-export.js's envelope
+// { envelope, uuid, type, id, context, intent, summary, system, tags, fingerprint, payload } — the same layout
+// Guardian keeps its .hat/.agent/.job nodes in (data/nodes/<type>/<id>.<type>), so one reader serves both.
+domain "registry"
+doorway         = the_registry_itself_the_only_thing_a_module_or_the_ui_reads_to_find_another
+node_dir        = nodes_slash_type_slash_id_dot_type_one_file_per_fact
+component_node  = one_per_file_id_by_loom_rule_path_to_dotted_id_with_chunk_type_layer_file
+hook_node       = one_per_crossing_point_export_import_emit_on_route_cli
+wire_node       = one_per_relation_from_hook_to_hook_requires_or_event
+event_node      = one_per_event_emitted_by_consumed_by_payload
+command_node    = one_per_http_route_and_per_cli_verb_with_the_component_that_serves_it
+contract_node   = the_interaction_contract_rules_crossings_breaches_orphans_unhandled_events
+system_node     = entry_points_ports_data_dirs_node_types_counts
+archive         = a_node_no_longer_produced_moves_to_nodes_slash_archive_never_deleted
+// Rules:
+//   - a module never imports across a seam; it calls a route, emits an event, or uses a hook the registry declares.
+//   - the UI floats on top: it reads the registry and calls routes and events; it imports no module.
+//   - an orphan component or an event with no consumer is a gap in the contract node, not a silent leftover.
+//   - the registry is regenerated from the code (idearium/repo/architecture.js toNodes, POST /api/repos/:uuid/architecture);
+//     an unchanged node is left alone (fingerprint), so its history is real change, not churn.
+
+// ══════════════════════════════════════════════════════════════════════════════
 // Domain 3 — Seam (structural boundary only — deliberately dumb)
 // ══════════════════════════════════════════════════════════════════════════════
 // Hierarchy, corrected: a seam does not carry ports, direction, or method.
@@ -364,6 +401,23 @@ fidelity_score = 0_to_1_behavioral_match_to_the_nodes_own_declared_contract
 // same four-axis pattern warp already uses for gate fitness.
 
 // ══════════════════════════════════════════════════════════════════════════════
+// Domain 11 — Routing (which agent builds a chunk, and where it goes when that fails)
+// ══════════════════════════════════════════════════════════════════════════════
+// James, 2026-10-01: "can we have full options for fallback logic, routing. what could improve stability with the
+// pipeline?" The policy is config (CONFIG_OUTSIDE_CODE), not a literal: NEXUS keeps it as idearium's routing.* keys and
+// lib/pipeline-routing.js; a genesis system keeps it in config/genesis.config.json and spine/route-policy.js.
+domain "routing"
+route           = ordered_providers_one_chunk_will_try_each_with_its_reason
+mode            = fixed_or_chain_or_local_first_or_economy
+chain           = the_global_fallback_order_after_the_chosen_agent_and_the_blocks_own_fallback
+failure_class   = empty_truncated_refused_timeout_provider_down_rate_limit_login_unknown
+fallback_on     = the_failure_classes_that_move_to_the_next_provider_login_never
+breaker         = per_provider_n_failures_in_a_row_open_it_for_a_cooldown_an_open_provider_is_skipped_and_said
+hop             = one_providers_verified_attempts_recorded_on_the_chunk_provider_outcome_class_ms
+axiom NO_SILENT_SKIP            // a provider left out of a route (unknown, breaker open) is listed with the reason
+axiom ROUTE_IS_PROVENANCE       // every hop a chunk took is kept on the chunk: who failed first, why, who built it
+
+// ══════════════════════════════════════════════════════════════════════════════
 // GENESIS FILE TREE — one catalog entry per file. Each file is a chunk:
 // minimal code to execute its one stated intent. uuid + depends[] are literal:
 //   depends = uuids of files this file calls or needs first (directional —
@@ -428,6 +482,13 @@ catalog GENESIS_FILE_TREE {
       uuid    = ge2001-scfid-4000-8000-000000000021
       intent  = warp_scorer_plugin_for_pulse_fidelity
       summary = "Registered via Stream.hook('scorer', ...); computes health_score and fidelity_score using warp's four-axis pattern."
+      depends = [ "ge2000" ]
+    }
+
+    file "spine/route-policy.js" {
+      uuid    = ge2003-rtpol-4000-8000-000000000023
+      intent  = which_provider_builds_a_chunk_and_where_it_falls_back
+      summary = "Domain 11: plan(chosen, block, policy) -> ordered route with reasons; classify(failure) -> class; breaker per provider; reads config/genesis.config.json's routing keys. Same shape as NEXUS lib/pipeline-routing.js."
       depends = [ "ge2000" ]
     }
 
@@ -496,6 +557,14 @@ catalog GENESIS_FILE_TREE {
       intent  = static_no_llm_gate_that_a_manifest_must_clear_before_any_component_is_chunked
       summary = "P2 WIRE-CHECK: ONE_PRODUCER_PER_SIGNAL (a signature with 2+ producers is a hard error, not a merge conflict found later), NO_UNDECLARED_RESIDUE (every emit has a consumer or is marked residue:true), producer<->consumer schema compatibility, depends[] acyclic. FAIL returns the violation list to registry/manifest-registry.js's own generation job for retry — never surfaces as a runtime bug the way 0.39.244's three seam bugs did."
       depends = [ "ge5002" ]
+    }
+
+    file "registry/node-registry.js" {
+      uuid    = ge5005-nreg0-4000-8000-000000000055
+      intent  = the_registry_as_nodes_the_doorway_every_module_and_the_ui_reads
+      summary = "Domain 2c: writes component/hook/wire/event/command/contract/system nodes to nodes/<type>/<id>.<type> in the node-export envelope (Guardian's layout), leaves an unchanged node alone by fingerprint, moves a node no longer produced to nodes/_archive/. Generated from manifest-registry.js; the UI and every module read it, never each other."
+      depends = [ "ge5002" ]
+      related = [ "ge5001", "ge5000" ]
     }
 
     file "registry/component-router.js" {

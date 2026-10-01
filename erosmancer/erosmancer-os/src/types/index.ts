@@ -198,6 +198,7 @@ export interface OSConfig {
     persistPath?: string;
     maxEvents: number;
     flushIntervalMs: number;
+    maxFileMB?: number;            // §0.39.285 rotate the JSONL past this size (default 25)
   };
 }
 

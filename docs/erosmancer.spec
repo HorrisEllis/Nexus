@@ -54,3 +54,10 @@ spec:
     - "Not yet integrated into NEXUS boot sequence"
     - "Planned: register as guardian NCP provider type 'cdp'"
     - "Planned: CLI command via component registry: erosmancer.run <task>"
+
+## ADDENDUM 2026-10-01 — 0.39.285: telemetry is written once and bounded
+# James: "the data folder is 10GB … data\erosmancer\telemetry.jsonl is huge" (8.6 GB). Telemetry.flush() appended the whole
+# in-memory ring buffer every flushIntervalMs without marking what it wrote. Now a separate pending list holds only unwritten
+# events; debug is not persisted (EROS_PERSIST_LEVEL, default info — the CDP chatter); the JSONL rotates past
+# EROS_TELEMETRY_MAX_MB (config telemetry.maxFileMB, default 25) to telemetry.1.jsonl, one kept. getEvents() is unchanged
+# (the ring buffer). Test: tests/modules/test-eros-telemetry-bounded.test.js.

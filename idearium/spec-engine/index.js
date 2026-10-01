@@ -228,7 +228,9 @@ function _loadBlocks() {
   for (const b of doc.blocks) {
     if (!b.id || !b.title) throw new Error(`[${MODULE_ID}] blocks.yaml has a block missing id/title: ${JSON.stringify(b)}`);
   }
-  return doc.blocks.map(b => ({ id: b.id, title: b.title, desc: b.desc || '', agent: b.agent || null }));
+  // §0.39.286 RG1 — `fallback:` per block: that block's own fallback chain, tried before the global routing.chain
+  // (lib/pipeline-routing.js plan). `dependsOn:` per block: the blocks whose chunks must be complete first.
+  return doc.blocks.map(b => ({ id: b.id, title: b.title, desc: b.desc || '', agent: b.agent || null, ...(Array.isArray(b.fallback) ? { fallback: b.fallback } : {}), ...(Array.isArray(b.dependsOn) ? { dependsOn: b.dependsOn } : {}) }));
 }
 export const SPEC_SECTIONS = _loadBlocks();
 
@@ -472,7 +474,7 @@ function _buildManifest({ name, type = 'component', description = '', agent = nu
       // a caller set real edges per section when building a spec whose
       // sections genuinely need ordering (e.g. building something as
       // interconnected as nexus itself).
-      dependsOn:   (dependsOn && dependsOn[section.id]) || [],
+      dependsOn:   (dependsOn && dependsOn[section.id]) || section.dependsOn || [],   // §0.39.286 a block's own dependsOn (blocks.yaml) is the default
       // §BUILT 2026-09-03 — per-block routing. Most specific wins:
       // an explicit override for THIS section, then this section's own
       // blocks.yaml default, then a spec-wide forced agent, then ollama.
@@ -946,9 +948,14 @@ export function setChunkAgent(specUuid, chunkUuid, agent) {
   const manifest = loadSpec(specUuid);
   const chunk = manifest.chunks.find(c => c.uuid === chunkUuid);
   if (!chunk) throw new Error(`chunk ${chunkUuid} not found in spec ${specUuid}`);
-  if (chunk.status !== CHUNK_STATES.PENDING) {
-    throw new Error(`cannot reassign agent on a '${chunk.status}' chunk — only PENDING chunks can be reassigned before dispatch`);
+  // §0.39.285 (nexus-14 fork D2) — a FAILED/ESCALATED chunk may be reassigned too: that IS the retry on a backend that
+  // answers (James: the dead build kept retrying chatgpt, which returned empty, every 10 min). It goes back to PENDING
+  // with a fresh attempt count; the failure is kept as priorFailure.
+  const _retry = chunk.status === CHUNK_STATES.FAILED || chunk.status === CHUNK_STATES.ESCALATED;
+  if (chunk.status !== CHUNK_STATES.PENDING && !_retry) {
+    throw new Error(`cannot reassign agent on a '${chunk.status}' chunk — only PENDING or FAILED chunks can be reassigned`);
   }
+  if (_retry) { chunk.priorFailure = chunk.failureMode || null; chunk.status = CHUNK_STATES.PENDING; chunk.attempts = 0; chunk.failureMode = null; }
   // §0.39.267 — a hand-picked agent is pinned: it wins over the repo's Agent-tab switch at build time
   // (idearium/api speceng.build). Names are checked against lib/agent-providers.js, the one list.
   let norm = agent;
@@ -1119,6 +1126,20 @@ export function completeChunk(specUuid, chunkUuid, content, { preserveWhitespace
     });
   }).catch(e => console.warn(`[${MODULE_ID}] chunk-progress SSE emit failed (non-fatal): ${e.message}`));
   return chunk;
+}
+
+// §0.39.286 RG3 — the route a chunk's build took (lib/pipeline-routing.js): every provider tried, its outcome, class,
+// time — provenance of who failed first and who built it. Appended, newest last, the last 30 kept.
+export function recordChunkRoute(specUuid, chunkUuid, hops = []) {
+  if (!Array.isArray(hops) || !hops.length) return null;
+  const manifest = loadSpec(specUuid);
+  const chunk = manifest.chunks.find(c => c.uuid === chunkUuid);
+  if (!chunk) throw new Error(`chunk ${chunkUuid} not found`);
+  const at = Date.now();
+  chunk.route = [...(chunk.route || []), ...hops.map(h => ({ ...h, at }))].slice(-30);
+  chunk.updatedAt = at;
+  saveSpec(manifest);
+  return chunk.route;
 }
 
 // ── Fail a chunk ──────────────────────────────────────────────────────────────
@@ -1414,7 +1435,7 @@ export default {
   listTemplates, getTemplate, readSeed,
   findByDedupKey, findPriorSection, importSpec,
   createSpec, createFileTreeSpec, loadSpec, loadSpecMeta, saveSpec, listSpecs,
-  nextPendingChunk, markChunkBuilding, completeChunk, failChunk, setChunkAgent, recordDispatchJob, setWarpPrimitives,
+  nextPendingChunk, markChunkBuilding, completeChunk, failChunk, setChunkAgent, recordDispatchJob, recordChunkRoute, setWarpPrimitives,
   recoverOrphanedChunks,
   buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec, purgeSpec,   // purgeSpec: 0.39.266 (D2)
   computeRootHash, findByRootHash, ingestFilesAsSpec, addChunk, removeChunk,

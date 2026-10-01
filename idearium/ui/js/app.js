@@ -1304,6 +1304,8 @@ async function generateCode(specUuid) {
   const code = r.manifest;
   const n = (code.chunks || []).length, pre = (code.chunks || []).filter(c => c.status === 'complete').length;
   toast(r.existing ? 'opening the code that was already generated' : `${n} file(s) planned${r.plan && r.plan.planSource ? ` (${r.plan.planSource})` : ''}${pre ? ` · ${pre} from templates` : ''} — building them now`, 'ok');
+  // §0.39.284 — show the build as it happens: the Plan panel lists each file and its state
+  setTimeout(() => { if (typeof openPlanPanel === 'function' && CURRENT_API_REPO) openPlanPanel(); }, 1200);
   await loadSpecs();
   await loadApiRepos();
   selectSpec(code.uuid);
@@ -1388,8 +1390,8 @@ async function openNewSpecModal({ name = '', description = '', ideaUuid = null }
   // a file tree), COS blueprints (several roles), spec-document templates.
   const row = t => `
     <label class="ns-tpl-row" data-src="${escapeHtml(t.source || 'spec')}" style="display:flex;align-items:flex-start;gap:8px;padding:4px 2px;cursor:pointer;font-size:11px;color:var(--text2)">
-      <input type="checkbox" class="ns-tpl-check" value="${escapeHtml(t.id)}" onchange="onNewSpecTemplateChange()" style="margin-top:2px">
-      <span><b style="color:var(--text)">${escapeHtml(t.label||t.id)}</b>${t.hasSeed ? ' <span style="color:var(--mint)">· deterministic</span>' : ''}${typeof t.fileCount === 'number' ? ` <span style="color:var(--text3)">· ${t.fileCount} file${t.fileCount === 1 ? '' : 's'}</span>` : ''}<br>
+      <input type="checkbox" class="ns-tpl-check" value="${escapeHtml(t.id)}" onchange="onNewSpecTemplateChange()" style="margin-top:2px" ${t.id === 'genesis' ? 'checked' : ''}>
+      <span><b style="color:var(--text)">${escapeHtml(t.label||t.id)}</b>${t.id === 'genesis' ? ' <span style="color:var(--nx-ok, var(--mint))">· default</span>' : ''}${t.hasSeed ? ' <span style="color:var(--mint)">· deterministic</span>' : ''}${typeof t.fileCount === 'number' ? ` <span style="color:var(--text3)">· ${t.fileCount} file${t.fileCount === 1 ? '' : 's'}</span>` : ''}<br>
       <span style="color:var(--text3)">${escapeHtml(t.description||'')}</span></span>
     </label>`;
   const groups = [
@@ -1732,7 +1734,8 @@ function createSpecForIdea(ideaUuid) {
 // spec system whose sections are auto-stubs, which is why every node
 // used to read "1 chars". The only new thing here is the repo filter.
 async function renderRepoArchitect(repo) {
-  const wrap = document.getElementById('repo-subtab-architect');
+  if (repo) renderRepoRegistry(repo);   // §0.39.284 W7 — the repo's component registry + wiring map, above the blueprint
+  const wrap = document.getElementById('repo-arch-blueprint') || document.getElementById('repo-subtab-architect');
   if (!wrap || !repo) return;
   const forUuid = repo.uuid;
 
@@ -5228,6 +5231,23 @@ async function openApiRepoFile(repoUuid, filePath) {
     _showIdeEditor(true);
     const ta = document.getElementById('ide-editor');
     ta.value = r.content;
+    // 0.39.284 — an empty file a code build has not written yet: say so, with its chunk's state, instead of a blank editor
+    if (!r.content) {
+      const specUuid = CURRENT_API_REPO && (CURRENT_API_REPO.specUuid || CURRENT_API_REPO.promotedFromSpec);
+      if (specUuid) {
+        try {
+          const s = await api(`/api/spec-engine/specs/${specUuid}`, {}, 15000);
+          const m = s.manifest || s.spec || s;
+          const ch = (m.chunks || []).find(c => c.file && c.file.path === filePath);
+          if (ch && ch.status !== 'complete') {
+            _showIdeEditor(false);
+            document.getElementById('ide-code').textContent = `// not built yet — its chunk is ${ch.status}${(ch.failureMode || ch.error) ? ` (${ch.failureMode || ch.error})` : ''}.\n// The Plan panel shows the build; "build the rest / retry" runs it again.`;
+            if (typeof openPlanPanel === 'function') openPlanPanel();
+            return;
+          }
+        } catch (_) { /* the editor stays empty */ }
+      }
+    }
     ta.oncancel = null;
     ta.oninput = () => { API_FILE_DIRTY = true; const d = document.getElementById('ide-dirty'); if (d) d.style.display = ''; };
   } catch (e) {
@@ -5667,3 +5687,84 @@ window.addEventListener('message', async (ev) => {
     }
   } catch (e) { toast(`could not create the ${d.kind || 'organism'} idea: ${e.message}`, 'err'); }
 });
+
+
+// ════════════════════════════════════════════════════
+// §0.39.284 W7 — THE REPO'S COMPONENT REGISTRY (Architect tab). James: "the architect tab should be the component
+// registry and loom style map for the wiring … ids, types, relation, consumers, orphans, node types, data dir, full
+// architecture map". GET /api/repos/:uuid/architecture (idearium/repo/architecture.js over lib/code-intel) — loom's
+// shape: components, export/import hooks, wires. The map: one column per layer, bottom-up, a line per wire.
+// ════════════════════════════════════════════════════
+const ARCHREG = { uuid: null, data: null, q: '', sel: null };
+async function renderRepoRegistry(repo) {
+  const el = document.getElementById('repo-arch-registry'); if (!el) return;
+  if (ARCHREG.uuid !== repo.uuid) Object.assign(ARCHREG, { uuid: repo.uuid, data: null, q: '', sel: null });
+  el.innerHTML = '<div class="ar-wrap"><div class="ar-title">Component registry</div><div class="detail-empty">reading the wiring…</div></div>';
+  try { ARCHREG.data = await api(`/api/repos/${repo.uuid}/architecture`, {}, 60000); }
+  catch (e) {
+    if (CURRENT_API_REPO?.uuid !== repo.uuid) return;
+    el.innerHTML = `<div class="ar-wrap"><div class="ar-head"><span class="ar-title">Component registry</span><span class="ar-grow"></span><button class="action-btn" onclick="archReindex()">index the code</button></div>
+      <div class="detail-empty">${escapeHtml(/no chunk cards|NO_INDEX|not been indexed/i.test(e.message) ? 'this repo\'s code is not indexed yet — index it, and its components, wires, consumers and orphans appear here.' : e.message)}</div></div>`;
+    return;
+  }
+  if (CURRENT_API_REPO?.uuid !== repo.uuid) return;
+  _archPaint();
+}
+function _archPaint() {
+  const el = document.getElementById('repo-arch-registry'); const a = ARCHREG.data; if (!el || !a) return;
+  const st = a.stats || {};
+  const q = ARCHREG.q.toLowerCase();
+  const comps = (a.components || []).filter(c => !q || `${c.id} ${c.file} ${c.layer} ${c.type} ${(c.exports || []).join(' ')}`.toLowerCase().includes(q));
+  const orph = new Set(a.orphans || []);
+  el.innerHTML = `<div class="ar-wrap">
+    <div class="ar-head"><span class="ar-title">Component registry</span>
+      <span class="ar-chip"><b>${st.components}</b> components</span><span class="ar-chip"><b>${st.wires}</b> wires</span><span class="ar-chip"><b>${st.hooks}</b> hooks</span>
+      <span class="ar-chip"><b>${st.externals}</b> packages</span><span class="ar-chip ${st.orphans ? 'bad' : ''}"><b>${st.orphans}</b> orphans</span><span class="ar-chip"><b>${st.routes || 0}</b> routes</span><span class="ar-chip"><b>${st.events || 0}</b> events</span>
+      <span class="ar-chip ${st.breaches ? 'bad' : ''}"><b>${st.breaches}</b> bottom-up breaches</span><span class="ar-chip"><b>${st.lines}</b> lines</span>
+      <span class="ar-grow"></span>
+      <input class="field-input" style="width:180px" placeholder="filter id, file, layer, export…" value="${escapeHtml(ARCHREG.q)}" oninput="ARCHREG.q=this.value;_archPaint()">
+      <button class="action-btn" onclick="archReindex()" title="re-read the code (lib/code-intel)">↻ index</button>
+      <button class="action-btn" onclick="archWrite()" title="write this map into the repo: ARCHITECTURE.json and the registry as nodes (nodes/<type>/<id>.<type>, Guardian's layout) — versioned; nodes no longer produced move to nodes/_archive/">write the registry</button></div>
+    <div class="ar-map">${_archSvg(a, comps)}</div>
+    <div class="ar-tblwrap"><table class="ar-tbl"><thead><tr><th>id</th><th>layer</th><th>type</th><th>lines</th><th>consumers</th><th>requires</th><th>exports</th></tr></thead><tbody>
+      ${comps.map(c => `<tr class="${ARCHREG.sel === c.file ? 'hl' : ''}" onclick="ARCHREG.sel='${escapeHtml(c.file)}';_archPaint()"><td title="${escapeHtml(c.file)}">${escapeHtml(c.id)}${orph.has(c.file) ? ' <span style="color:var(--coral)">orphan</span>' : ''}</td><td>${escapeHtml(c.layer)}</td><td>${escapeHtml(c.type)}</td><td>${c.lines}</td>
+        <td title="${escapeHtml(c.consumers.join('\n'))}">${c.consumers.length}</td><td title="${escapeHtml(c.deps.join('\n'))}">${c.deps.length}</td><td>${escapeHtml((c.exports || []).slice(0, 6).join(', '))}${(c.exports || []).length > 6 ? ' …' : ''}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="ar-grid">
+      <div class="ar-box"><h4>orphans — nothing uses them, they use nothing</h4>${(a.orphans || []).map(escapeHtml).join('<br>') || 'none'}</div>
+      <div class="ar-box"><h4>bottom-up breaches (§3.1)</h4>${(a.breaches || []).map(b => `${escapeHtml(b.consumer)} → ${escapeHtml(b.dependency)}`).join('<br>') || 'none'}</div>
+      <div class="ar-box"><h4>packages (external)</h4>${(a.externals || []).slice(0, 30).map(e => `${escapeHtml(e.name)} <span style="opacity:.6">· ${e.usedBy.length}</span>`).join('<br>') || 'none'}</div>
+      <div class="ar-box"><h4>routes · CLI (the doorway in)</h4>${(a.routes || []).slice(0, 40).map(r => `${escapeHtml(r.method)} ${escapeHtml(r.path)} <span style="opacity:.6">· ${escapeHtml(r.file)}</span>`).join('<br>') || 'no routes'}<br>${(a.cli || []).slice(0, 30).map(c => `$ ${escapeHtml(c.verb)} <span style="opacity:.6">· ${escapeHtml(c.file)}</span>`).join('<br>')}</div>
+      <div class="ar-box"><h4>events — emitted → handled</h4>${(a.events || []).slice(0, 40).map(e => `${escapeHtml(e.name)} <span style="opacity:.6">${e.emittedBy.length} → ${e.consumedBy.length}</span>${e.consumedBy.length ? '' : ' <span style="color:var(--nx-warn)">unhandled</span>'}`).join('<br>') || 'no events'}</div>
+      <div class="ar-box"><h4>data dirs · node types</h4>${(a.dataDirs || []).map(escapeHtml).join('<br>') || 'no data dir'}<br><br>${Object.entries(a.nodeTypes || {}).map(([k, v]) => `.${escapeHtml(k)} × ${v}`).join('<br>') || 'no node files'}</div>
+      ${ARCHREG.sel ? (() => { const c = (a.components || []).find(x => x.file === ARCHREG.sel); return c ? `<div class="ar-box"><h4>${escapeHtml(c.file)}</h4>id ${escapeHtml(c.id)}<br>consumers:<br>${c.consumers.map(escapeHtml).join('<br>') || '—'}<br>requires:<br>${c.deps.map(escapeHtml).join('<br>') || '—'}</div>` : ''; })() : ''}
+    </div></div>`;
+}
+function _archSvg(a, comps) {
+  const order = (a.layerOrder || []).filter(l => comps.some(c => c.layer === l));
+  const shown = new Set(comps.slice(0, 180).map(c => c.file));
+  const colW = 210, rowH = 26, pad = 28;
+  const pos = new Map(); let maxRows = 0;
+  order.forEach((l, i) => { const list = comps.filter(c => c.layer === l && shown.has(c.file)); maxRows = Math.max(maxRows, list.length); list.forEach((c, j) => pos.set(c.file, { x: pad + i * colW, y: pad + 18 + j * rowH })); });
+  const W = pad * 2 + order.length * colW, H = pad * 2 + 18 + maxRows * rowH;
+  const breach = new Set((a.breaches || []).map(b => `${b.dependency}->${b.consumer}`));
+  const orph = new Set(a.orphans || []);
+  const edges = (a.wires || []).filter(w => pos.has(w.from) && pos.has(w.to)).map(w => { const p = pos.get(w.from), q = pos.get(w.to); const cls = `ar-edge ${breach.has(`${w.from}->${w.to}`) ? 'breach' : ''}`;
+    if (p.x === q.x) { const x = p.x + 170, y1 = p.y + 9, y2 = q.y + 9, bend = x + 18 + Math.min(30, Math.abs(y2 - y1) / 4); return `<path class="${cls}" d="M${x},${y1} C${bend},${y1} ${bend},${y2} ${x},${y2}" marker-end="url(#ar-arrow)"/>`; }   // same layer: an arc on the right
+    const x1 = p.x + 170, y1 = p.y + 9, x2 = q.x, y2 = q.y + 9, mx = (x1 + x2) / 2;
+    return `<path class="${cls}" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" marker-end="url(#ar-arrow)"/>`; }).join('');
+  const nodes = [...pos.entries()].map(([f, p]) => `<g class="ar-node ${orph.has(f) ? 'orphan' : ''}" onclick="ARCHREG.sel='${escapeHtml(f)}';_archPaint()"><title>${escapeHtml(f)}</title><rect x="${p.x}" y="${p.y}" width="170" height="18"/><text x="${p.x + 6}" y="${p.y + 12.5}">${escapeHtml(f.split('/').pop().slice(0, 26))}</text></g>`).join('');
+  const heads = order.map((l, i) => `<text class="ar-lh" x="${pad + i * colW}" y="${pad}">${escapeHtml(l)}</text>`).join('');
+  const defs = '<defs><marker id="ar-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--sky)" fill-opacity=".6"/></marker></defs>';
+  return `<svg width="${W + 60}" height="${H}" xmlns="http://www.w3.org/2000/svg">${defs}${heads}${edges}${nodes}</svg>`;
+}
+async function archReindex() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { await api(`/api/repos/${repo.uuid}/chunk`, { method: 'POST', body: '{}' }, 300000); toast('indexed — reading the wiring', 'ok'); renderRepoRegistry(repo); }
+  catch (e) { toast(`index failed: ${e.message}`, 'err'); }
+}
+async function archWrite() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { const r = await api(`/api/repos/${repo.uuid}/architecture`, { method: 'POST', body: '{}' }, 60000); toast(`registry written — ${r.stats.components} components, ${r.stats.wires} wires · nodes: ${r.nodes ? `${r.nodes.written} written, ${r.nodes.unchanged} unchanged, ${r.nodes.archived} archived` : '—'}`, 'ok'); }
+  catch (e) { toast(`not written: ${e.message}`, 'err'); }
+}

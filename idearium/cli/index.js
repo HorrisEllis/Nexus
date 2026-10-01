@@ -39,6 +39,9 @@
  *   idearium repo plan <repo> <spec path> [--derive] [--replan] [--dry]   (0.39.284 W2)
  *   idearium repo phases <repo> <spec path>
  *   idearium repo build <repo> <spec path> [--phase <id>]
+ *   idearium routing [show]                       (0.39.286 RG2) the routing policy, breakers, the route per block
+ *   idearium routing plan [--block id] [--agent a]  the route one chunk would take
+ *   idearium routing set <key> <value>            mode|chain|fallback_on|max_hops|attempts_per_hop|breaker_threshold|breaker_cooldown_ms|skip_open
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -96,6 +99,13 @@ function _resolveSpecUuid(prefix) {
 // only). Not abstracted further than this — a single small helper, not a
 // second API client.
 const IDEARIUM_PORT = parseInt(process.env.IDEARIUM_PORT || '4800');
+async function _routingLocal() {
+  const { createRequire } = await import('module');
+  const PR = createRequire(import.meta.url)('../../lib/pipeline-routing.js');
+  const cfg = await import('../lib/config.js');
+  return { PR, policy: PR.policyFrom((cfg.getConfig() || {}).routing || {}), blocks: se.SPEC_SECTIONS };
+}
+
 function _localApi(method, path, body = null) {
   return new Promise((resolve, reject) => {
     const payload = body ? JSON.stringify(body) : null;
@@ -654,6 +664,50 @@ const COMMANDS = {
     } catch (e) { die(`build failed (is idearium running on :${IDEARIUM_PORT}?): ${e.message}`); }
   },
 
+  // ── idearium routing (0.39.286 RG2) ────────────────────────────────────────
+  // The policy is read straight from idearium's config and lib/pipeline-routing.js (no server needed); the breakers live
+  // in the running server, so they are read from it when it answers.
+  async 'routing'(os, args) { return COMMANDS['routing.show'](os, args); },
+  async 'routing.show'(os, { flags }) {
+    const { policy, PR, blocks } = await _routingLocal();
+    if (flags.json) { console.log(JSON.stringify({ policy, blocks: blocks.map(b => ({ id: b.id, ...PR.plan({ block: b, policy }) })) }, null, 2)); return; }
+    header(`routing — ${policy.mode} · up to ${policy.maxHops} hop(s) · ${policy.attemptsPerHop} attempt(s) per hop`);
+    console.log(`  chain        ${policy.chain.join(' → ')}`);
+    console.log(`  fallback on  ${policy.fallbackOn.join(', ')}  ${dim('(login never — it needs you)')}`);
+    console.log(`  breaker      opens after ${policy.breakerThreshold} failure(s) in a row, for ${Math.round(policy.breakerCooldownMs / 1000)} s; open providers ${policy.skipOpen ? 'skipped' : 'still tried'}`);
+    try {
+      const r = await _localApi('GET', '/api/routing');
+      const br = ((r.data || r).breakers || []).filter(b => b.fails || b.open);
+      console.log(`  breakers     ${br.length ? br.map(b => `${b.provider}${b.open ? coral(' OPEN') : ''} (${b.fails} fail, last ${b.lastClass})`).join(' · ') : mint('all closed')}`);
+    } catch (_) { console.log(`  breakers     ${gray('idearium is not running — breakers live in the server')}`); }
+    console.log('');
+    for (const b of blocks) {
+      const pl = PR.plan({ block: b, policy });
+      console.log(`  ${dim(b.id.padEnd(14))} ${pl.route.map(r => bold(r.provider)).join(gray(' → '))}${pl.skipped.length ? gray(`   skipped: ${pl.skipped.map(x => x.provider).join(', ')}`) : ''}`);
+    }
+    console.log(`\n  ${dim('idearium routing set mode economy · idearium routing set chain ollama,gemini,claude')}\n`);
+  },
+  async 'routing.plan'(os, { flags }) {
+    const { policy, PR, blocks } = await _routingLocal();
+    const block = flags.block ? blocks.find(b => b.id === flags.block) : null;
+    if (flags.block && !block) die(`no block '${flags.block}' — one of: ${blocks.map(b => b.id).join(', ')}`);
+    const pl = PR.plan({ preferAgent: flags.agent || null, block, policy });
+    header(`route${block ? ` for ${block.id}` : ''} (${pl.mode})`);
+    pl.route.forEach((r, i) => console.log(`  ${i + 1}. ${bold(r.provider)}  ${dim(r.why)}`));
+    for (const x of pl.skipped) console.log(`  ${gray('–')} ${x.provider}  ${gray(x.why)}`);
+    if (pl.beyond.length) console.log(`  ${gray(`beyond max_hops: ${pl.beyond.join(', ')}`)}`);
+    console.log('');
+  },
+  async 'routing.set'(os, { positional }) {
+    const [key, ...v] = positional;
+    if (!key || !v.length) die('usage: idearium routing set <key> <value>');
+    const cfg = await import('../lib/config.js');
+    const raw = v.join(' ');
+    const value = /^(true|false)$/.test(raw) ? raw === 'true' : (/^\d+$/.test(raw) ? Number(raw) : raw);
+    cfg.setConfig(`routing.${key}`, value, { actor: 'cli' });
+    console.log(`${mint('✓')} routing.${key} = ${JSON.stringify(value)}`);
+  },
+
   // ── idearium gap ───────────────────────────────────────────────────────────
 
   async 'gap.list'(os, { flags }) {
@@ -821,6 +875,7 @@ async function main() {
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
     console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);
+    console.log(`  ${sky('routing')} [show] | plan [--block id] [--agent a] | set <key> <value>`);
     console.log(`  ${sky('push')}   [--message "..."] [--branch main]`);
     console.log(`  ${sky('log')}    [--n 20]`);
     console.log(`  ${sky('status')}`);

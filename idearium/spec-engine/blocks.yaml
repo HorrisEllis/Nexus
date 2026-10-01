@@ -62,3 +62,25 @@ blocks:
     title: "Tests & Verification"
     desc: "How each piece is proven (§1.1), test cases, invariants"
     agent: deepseek
+  # §0.39.286 RC1 (docs/2026-10-01-routing-registry-genesis-phasemap.spec) — James: "add the components registry as an
+  # 11th chunk … where its all wired in, event driven interaction contract, after the file list and tree, then the
+  # registry can map the relation to each component and chunk, and also is its self the doorway, and the rest is
+  # isolated modular, interacting through the interaction contract/registry … routes, cli, nodes and dir, everything
+  # loom and the component registry have … the ui can also float on top … the nodes based data structure exactly like
+  # guardian." Built after build_order (it reads the file list and tree), so it waits on that chunk (dependsOn).
+  # `fallback:` is this block's own fallback chain (lib/pipeline-routing.js), tried before routing.chain.
+  - id: registry
+    title: "Component Registry & Interaction Contract"
+    desc: >-
+      The doorway every module goes through, written as nodes in Guardian's layout (nodes/<type>/<id>.<type>, the
+      lib/node-export.js envelope: envelope, uuid, type, id, context, intent, summary, system, tags, payload).
+      From build_order's file list and tree: one .component per file (id by loom's rule — path → dotted id; its
+      chunk, type, layer, file); .hook per crossing point (export/import, event emit/handle, route, cli); .wire per
+      relation (from_hook_id → to_hook_id, consumer ← dependency, relation); .event per event (emitted by, consumed
+      by, payload); .command per HTTP route and CLI command (method, path or verb, the component that serves it);
+      the node types and data dirs it uses; orphans; one .contract — the interaction contract: modules never import
+      across a boundary, every crossing goes through a declared hook, event or route, so each module stays isolated
+      and replaceable; one .system — the entry, ports, counts. The UI is a consumer of this registry only.
+    agent: claude
+    fallback: [ollama, gemini]
+    dependsOn: [build_order]

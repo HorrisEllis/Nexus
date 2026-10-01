@@ -292,6 +292,9 @@ export async function plan(deps, uuid, { map = null } = {}) {
 
 // ── BS8 ──────────────────────────────────────────────────────────────────────
 export const MANAGE_ACTIONS = {
+  // §0.39.284 — James: "hook the agents into the worksurface, to edit or modify small amounts of code at a time". From a
+  // work-surface card: the lines picked and one instruction; the smallest change, everything else left as it is.
+  edit:     'Make exactly the change asked for below, in the lines named and nowhere else — the smallest edit that does it (code_edit, not a rewrite). Every other line stays byte for byte.',
   expand:   'Expand it: add what the file is missing for its purpose (read its callers and spec first), keeping its style.',
   iterate:  'Iterate on it: the next improvement it most needs — correctness first, then clarity — and say why that one.',
   refactor: 'Refactor it: same behaviour, better structure. Keep every export and caller working; name what moved.',

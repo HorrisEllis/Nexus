@@ -99,7 +99,7 @@ const SPEC = ['spec:', '  meta:', '    name: kernel', '  primitives:', '    Port
       subtab: CURRENT_REPO_SUBTAB, start: !!document.querySelector('#repo-build-start .bs-card'),
       cards: [...document.querySelectorAll('#pp-ws .ws-card')].map(c => ({ name: c.querySelector('.ws-name').textContent, st: c.querySelector('[class*="ws-st-"]').textContent,
         plus: c.querySelector('.ws-head .ws-plus').textContent, minus: c.querySelector('.ws-head .ws-minus').textContent, adds: c.querySelectorAll('.ws-add').length, dels: c.querySelectorAll('.ws-del').length,
-        acts: [...c.querySelectorAll('.ws-act')].map(a => a.textContent) })),
+        acts: [...c.querySelectorAll('.ws-head .ws-act')].map(a => a.textContent) })),
       tools: (document.querySelector('#pp-ws .ws-tools-head') || {}).textContent || '',
       sum: (document.querySelector('#pp-ws .ws-sum') || {}).textContent || '',
     }));
@@ -119,6 +119,17 @@ const SPEC = ['spec:', '  meta:', '    name: kernel', '  primitives:', '    Port
     const applied = ((file.data || file).injects || []).filter(x => x.path === 'src/graph.js' && x.status === 'applied').length;
     P.case('W3: Apply on the card writes the file (the inject is applied) and the card turns applied', applied === 1, { applied });
     await shot('5-applied.png');
+    // ── W7 the Architect tab: the repo's component registry + wiring map ──
+    await pg.evaluate(() => { document.getElementById('plan-panel').classList.remove('open'); setRepoSubtab('architect'); });
+    await pg.waitForSelector('#repo-arch-registry .ar-title', { timeout: 15000 });
+    await pg.evaluate(() => archReindex());
+    await pg.waitForSelector('#repo-arch-registry .ar-node', { timeout: 60000 });
+    await pg.waitForTimeout(400);
+    const ar = await pg.evaluate(() => ({ nodes: document.querySelectorAll('#repo-arch-registry .ar-node').length, edges: document.querySelectorAll('#repo-arch-registry .ar-edge').length,
+      rows: document.querySelectorAll('#repo-arch-registry .ar-tbl tbody tr').length, chips: document.querySelector('#repo-arch-registry .ar-head').textContent.replace(/\s+/g, ' ') }));
+    P.case('W7: the Architect tab shows the repo\'s component registry — a node per file, the wire graph.js ← state.js, the table', ar.nodes >= 3 && ar.edges >= 1 && ar.rows >= 3, ar);
+    if (SHOTS) await pg.screenshot({ path: path.join(SHOTS, '8-architect.png') });
+
     // ── W5 the look: idearium in the main UI's palette; the settings console's Appearance switches it live ──
     const tok = await pg.evaluate(() => { const cs = getComputedStyle(document.documentElement); return { theme: document.documentElement.dataset.theme, ink: cs.getPropertyValue('--nx-ink').trim(), bg: getComputedStyle(document.body).backgroundColor }; });
     P.case('W5: idearium paints in the main UI\'s palette by default (ink #080814)', tok.theme === 'nexus' && tok.ink === '#080814' && tok.bg === 'rgb(8, 8, 20)', tok);

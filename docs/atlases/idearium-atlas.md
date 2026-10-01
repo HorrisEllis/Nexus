@@ -482,33 +482,52 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 3. **Plan** a spec, in any of these places:
    - **Spec tab:** "▶ Build this spec" asks the agent; "⚡ plan from the spec now" plans at once, without the agent.
    - **An empty Phases tab:** one row per spec.
-   - **CLI:** `idearium repo plan <repo> <spec> [--derive]`.
+   - **CLI:** idearium repo plan &lt;repo&gt; &lt;spec&gt; [--derive] (idearium/cli/index.js).
 4. **Build** the next phase:
    - Spec tab: "▶ Build next".
    - Phases tab: ▶.
-   - CLI: `idearium repo build <repo> <spec>`.
+   - CLI: idearium repo build &lt;repo&gt; &lt;spec&gt;.
 5. **Watch the work surface** under the plan: every file the agent wrote, as a diff.
 
 **The plan always lands** (`idearium/repo/spec-plan.js`, `idearium/api/build-surface.js`).
-- **The order it tries:** the agent's `<spec>-phasemap.spec`; else a map the agent wrote in its reply text; else a map **derived from the spec's own sections**.
+- **The order it tries:** the agent's &lt;spec&gt;-phasemap.spec; else a map the agent wrote in its reply text; else a map **derived from the spec's own sections**.
   - A derived map has one phase per section, with small sections grouped.
   - Each phase's layer is read from the section's name and text, bottom-up, with dependencies chained.
-  - Its `meta` says `planned_by`, `reason` and `planned_at`.
-- **An invalid map the agent wrote** is kept as `<map>.agent-draft.txt`; it is never overwritten.
-- **`POST /api/repos/:uuid/spec/plan {derive:true}`** plans at once. `idearium repo plan --dry --file <spec>` previews a spec file without writing.
+  - Its meta says planned_by, reason and planned_at.
+- **An invalid map the agent wrote** is kept as &lt;map&gt;.agent-draft.txt; it is never overwritten.
+- **POST /api/repos/:uuid/spec/plan {derive:true}** plans at once. idearium repo plan --dry --file &lt;spec&gt; previews a spec file without writing.
 
-**The work surface** (`GET /api/repos/:uuid/worksurface`, `idearium/repo/work-surface.js`, `ui/js/work-surface.js`). It is a projection over the `.inject` nodes and the run rows:
-- **One card per file.** Each card shows the file's newest state, `+added −removed`, the diff in green and red, who wrote it, and the run that made it.
+**The work surface** (GET /api/repos/:uuid/worksurface, `idearium/repo/work-surface.js`, `idearium/ui/js/work-surface.js`). It is a projection over the .inject nodes (`lib/repo-inject.js`) and the run rows:
+- **One card per file.** Each card shows the file's newest state, +added −removed, the diff in green and red, who wrote it, and the run that made it.
 - **Actions per card:** **Apply** / **Reject** (proposed), **Revert** (applied), **Promote** (staged).
 - **The tools strip:** the tool scope, the tools the agent is given, and every call it made, ✓ or ✗ with the error. Phase and plan runs now keep their tool calls.
+
+**Routing & fallback** (0.39.286, `lib/pipeline-routing.js`). Every spec chunk is built along a route:
+- **Order:** the chosen agent, then the block's own fallback list (in `idearium/spec-engine/blocks.yaml`), then the global chain.
+- **Modes:** fixed, chain, local-first, economy.
+- **Failures:** each failed hop is classed (empty, truncated, refused, timeout, provider-down, rate-limit, login, unknown) and moves on only if the fallback-on setting names its class. Login never moves on.
+- **Breaker:** a provider failing several times in a row is skipped for a cooldown.
+- **Record:** the hops are kept on the chunk.
+- **Where to see and set it:** the routing API (show, plan per block, reset breakers), the idearium CLI's routing command, and Settings → **Routing & fallback**. Its config keys are listed in `idearium/lib/config-core.cjs`.
+
+**The registry block** (0.39.286). A new spec has 11 chunks; the 11th, **registry**, follows build_order and waits on it. In a repo, the Architect tab's **write the registry** writes the architecture doc and the registry as nodes in Guardian's layout:
+- **What:** one node file per fact under the repo's nodes folder, in the envelope of `lib/node-export.js`.
+- **Node types:** component, hook, wire, event, command (routes and CLI), contract (the doorway), system.
+- **Rewrites:** an unchanged node is not rewritten; a node no longer produced moves to the archive folder.
+- **Built by:** `idearium/repo/architecture.js`.
+- **Default template:** genesis (`idearium/spec-engine/templates/genesis.spec`) is the default template of a system spec.
+
+**The code build in the Plan** (0.39.285). A code spec builds one chunk per file. The Plan panel shows it: files done/total, each file's state and layer, the failure, and **build the rest / retry** (POST /api/spec-engine/specs/:uuid/build). Codegen opens the panel. In the Files tab, a file the build has not written says "not built yet — its chunk is &lt;state&gt;".
+- **A FAILED chunk can be given to another agent** (the chunk's agent select): it returns to pending with attempts 0, the failure kept as priorFailure.
+- **Version history per file** (GET /api/repos/:uuid/file/versions?path=, /file/version?path=&commitId=; `idearium/ui/js/file-versions.js`): the Manage menu and the open file's **history** button list each Versionium commit that wrote the file; **restore** writes it back through POST /api/repos/:uuid/file.
 
 **Navigation.**
 - **Create and Build are back on the main bar**, not the repo's tab row. With a repo open, they act on it.
 - A sliding ink marks the active tab, dropdowns animate, and views fade in.
 
-**Speed.** Making a code repo no longer freezes idearium. The branch of the original used to run git synchronously, which held a 91 MB repo's request for 3½ minutes and showed idearium OFFLINE. It now runs async (`cos/workspace branchWorkspaceAsync`).
+**Speed.** Making a code repo no longer freezes idearium. The branch of the original used to run git synchronously, which held a 91 MB repo's request for 3½ minutes and showed idearium OFFLINE. It now runs async (branchWorkspaceAsync in `cos/workspace/index.js`).
 
-**One look** (`ui/css/nexus-theme.css`, `ui/js/theme.js`).
+**One look** (`idearium/ui/css/nexus-theme.css`, `idearium/ui/js/theme.js`).
 - **Palettes:**
   - **NEXUS** (the default) is the main UI's palette, token for token (`ui/themes/nexus-dark.css`).
   - **Midnight** is idearium's look before this release.
@@ -517,6 +536,8 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Motion:** full or reduced.
 - **Where to set them:**
   - Settings console → **Appearance**, which applies at once in every idearium window.
-  - Config `ui.theme`, `ui.accent` and `ui.motion` through `POST /api/config`.
+  - Config ui.theme, ui.accent and ui.motion through POST /api/config (`idearium/lib/config-core.cjs`).
 
-**Tests:** `test-plan-lands`, `test-work-surface`, `test-idearium-theme`, `test-cos-workspace` (WS-05/06); probe `tests/probe/idearium-coding-flow-chromium.js` (the real page on a real idearium).
+**Tests:** `tests/modules/test-plan-lands.test.js`, `tests/modules/test-work-surface.test.js`, `tests/modules/test-idearium-theme.test.js`, `tests/modules/test-cos-workspace.test.js` (WS-05/06); probe `tests/probe/idearium-coding-flow-chromium.js` (the real page on a real idearium).
+
+**The Architect tab is the repo's component registry** (`idearium/repo/architecture.js`, 0.39.284). It is read from the repo's code index (`lib/code-intel/index.js`) and shaped like loom's registry: one component per file with loom's id rule, export/import hooks, and wires from dependency to consumer. It also lists consumers and requires, external packages, orphans, bottom-up breaches, data dirs and node types. "write ARCHITECTURE.json" saves it into the repo as the architecture doc. API: GET|POST /api/repos/:uuid/architecture. Test: `tests/modules/test-repo-architecture.test.js`.

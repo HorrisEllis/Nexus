@@ -28,10 +28,10 @@ t('MP-01 parser reads catalog blocks, quoted summaries with // inside, and comme
   assert.equal(e.length, 1); assert.equal(e[0].fields.summary, 'see http://x // not a comment'); assert.deepEqual(e[0].fields.depends, []);
 });
 
-t('MP-02 genesis.spec is clean: 39 files, no violations, 7 layers', () => {
+t('MP-02 genesis.spec is clean: 41 files (0.39.286: + registry/node-registry.js, spine/route-policy.js), no violations, 7 layers', () => {
   const r = generate(fs.readFileSync(GENESIS, 'utf8'), { source: 'genesis.spec' });
   assert.equal(r.ok, true, JSON.stringify(r.violations)); assert.equal(r.violations.length, 0);
-  assert.equal(r.manifest.count, 39); assert.equal(r.manifest.layers.length, 7);
+  assert.equal(r.manifest.count, 41); assert.equal(r.manifest.layers.length, 7);
 });
 
 t('MP-03 genesis: config builds before the files that read it (boot, heartbeat)', () => {
@@ -120,7 +120,8 @@ t('MP-16 generate writes manifest.json + component-registry.json', () => {
   const dir = fs.mkdtempSync('/tmp/mp-gen-');
   execFileSync('node', [path.join(ROOT, 'idearium/spec-engine/manifest/cli.js'), 'generate', GENESIS, '--out', dir]);
   const reg = JSON.parse(fs.readFileSync(path.join(dir, 'component-registry.json'), 'utf8'));
-  assert.equal(reg.count, 39); assert.equal(reg.components.ge1000.file, 'kernel/boot.js');
+  assert.equal(reg.count, 41); assert.equal(reg.components.ge1000.file, 'kernel/boot.js');
+  assert.equal(reg.components.ge5005.file, 'registry/node-registry.js'); assert.equal(reg.components.ge2003.file, 'spine/route-policy.js');
   assert.ok(reg.components.ge1000.depends.includes('geB000'));
 });
 

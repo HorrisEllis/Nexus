@@ -44,6 +44,12 @@ const SUITES = [
   'test-plan-lands.test.js',   // 0.39.284 W2 — the plan always lands: the agent's map, its reply's, or derived from the spec's sections; CLI repo plan/phases/build
   'test-work-surface.test.js',   // 0.39.284 W3 — the work surface: changed files as diffs (from .inject nodes), the run that made each, the tools given and used
   'test-idearium-theme.test.js',   // 0.39.284 W5 — one look: idearium and the settings console on the main UI's palette (css/nexus-theme.css), config ui.*
+  'test-repo-architecture.test.js',   // 0.39.284 W7 — the Architect tab: the repo's component registry + wiring map in loom's shape (components, hooks, wires, consumers, orphans, breaches, data dirs, node types)
+  'test-detector-code-endings.test.js', // 0.39.284 — the seam detector accepts a code chunk that ends in } ; ] or a closing fence (the outer wall-clock cap root cause)
+  'test-eros-telemetry-bounded.test.js', // 0.39.285 — ErosmancerOS telemetry: each event written once, debug not persisted, rotates at a cap (data/erosmancer/telemetry.jsonl reached 8.6 GB)
+  'test-file-versions-and-reassign.test.js', // 0.39.285 — from the nexus-14 fork: per-file version history (Files tab) and a FAILED chunk reassignable to another agent
+  'test-pipeline-routing.test.js', // 0.39.286 RG — routing and fallback: modes, chains, failure classes, breaker, the route walked and kept on the chunk, /api/routing, the settings page
+  'test-genesis-and-architecture-spec.test.js', // 0.39.286 GN1/AR1 — genesis 1.1.0 (registry doorway, routing) the default system template; the architecture spec cut to what exists
   'test-cos-mount-idempotent.test.js',   // 0.39.282 N28 — one COS host per process; an identical remount is a no-op (idearium OFFLINE every 10 min: 34 s → 2 ms)
   'test-eros-workbench.test.js',         // 0.39.281 — EC10: Settings → ErosmancerOS workbench (tabs, nodes, console, replay)
   'clear-glass-agent-surface.test.js',   // 0.39.272
