@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
     owner:    idearium · lib · cortex.self-heal · guardian · loom · docs
-    status:   "MAPPED 2026-10-01 — PF1–PF5 built (0.39.288); CT1 built (0.39.289); 1.1.0 adds James's later messages of the day; everything else open"
+    status:   "MAPPED 2026-10-01 — PF1–PF5 built (0.39.288); CT1 built (0.39.289); 1.1.0 adds James's later messages of the day; 1.2.0 records his answers to the open decisions + UI10; everything else open"
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §17.5 every output has provenance, §10.1 one write authority per data type.
     origin: >
@@ -59,6 +59,12 @@ spec:
       free-form JSON file (N24). A JSON file kept for an outside format says why.
     surface: "API first, then the CLI (idearium/cli), then the UI — the UI only reads what the API serves."
     registry: "every new module lands in loom/maps with its real require/consumer wires; atlas + SPEC-REGISTRY updated."
+    gates: >-
+      James, 2026-10-01: "i really ylike gates every step, with verification when needed, negative and shadow space
+      reasoning." Every step a phase adds passes a step gate (lib/step-gate.js — rule nodes, a refusal or an empty
+      output is blocked, never 'done'), is verified where it can be (a test, a parse, a probe), and declares what it
+      expects so the absence is a gap (lib/shadow.js — negative and shadow space: what a step did NOT produce is
+      recorded and becomes a liminal item). No phase writes around a gate.
 
   found:
     - >-
@@ -451,6 +457,15 @@ spec:
         the toolbar's empty space, -webkit-app-region: drag; buttons and the URL field no-drag), and the URL bar flexes
         with the window (flex: 1 1 auto, a min and max width) instead of a fixed width.
       proof: "chromium probe at 3 window widths: the URL field's width follows; the drag region is present and buttons stay clickable"
+    UI10_debug_and_intelligence_one_tab:
+      layer: interface
+      status: OPEN
+      files: [idearium/ui/js/app.js]
+      does: >-
+        James (verbatim): "also what about consolidating the debug and intelligence tabs?" One tab: what the repo IS
+        (intelligence — the code-intel index, symbols, used-from, graphs) and what is WRONG with it (debug — failures,
+        the fault log from DT2/DT3, diagnose runs) side by side, one search over both; the tab bar loses one entry.
+      proof: "chromium probe: one tab renders both; every former action still reaches its route"
     FT1_file_tools_merge_patch_drop:
       layer: library
       status: OPEN
@@ -488,17 +503,30 @@ spec:
         envirements." Run copies the repo into an isolated environment by versionium pull (no shared folder), opens a
         shell (in-page terminal / SSH) there, and runs. Environment choices: the COS VM, a container, a plain sandbox
         dir, a remote host over SSH; per-language images (Node, Python, Android SDK, .NET …); push the result back as a
-        proposal (FT1).
+        proposal (FT1). Where it lives (James, 2026-10-01): "id say in the cli and git tab, if thats the same though i
+        feel the sync and ci tab would be good, especially to test." — the Sync & CI tab: run, shell and the
+        environment picker beside the CI runs, so a run is also a test; SSH host keys in the Clear Glass vault.
       proof: "Run on a fixture: the copy is pulled into a sandbox, the command's output streams, the tree is untouched"
 
-  decisions_waiting_on_james:
-    - "CG1 — whether a provider job may pick an account by itself, or only one James bound to it."
-    - "EN1 — remote SSH hosts: which ones, and where their keys live (proposed: the Clear Glass vault, never in the repo)."
-    - "AG1 — which install/account the coding-agent CLI runs on, and whether it may write without the CI1 gate (proposed: never)."
+  decisions_answered_by_james_2026_10_01:
     - >-
-      RAID default in idearium/spec-engine/chunk-dispatch.js (its require never ran in ESM; builds always pass an
-      agent). Proposed: delete the dead branch and say so in the routing spec, rather than turn RAID on silently.
+      AG1 + CI1 — James: "yeah, never bypass." The coding-agent provider never writes past the CI1 gate; every write is
+      a proposal through the step gates.
+    - >-
+      RAID — James: "raid is going to be the final middle line, but not until both end points are done." The dead RAID
+      default in chunk-dispatch stays off (documented, not turned on); RAID joins the route as the middle line once both
+      ends — the dispatch side (routing, gates, continuation) and the result side (verification, the work surface,
+      CI1) — are built. Mapped here as a later phase, not before.
+    - >-
+      CG1 — James: "it can pick its own, especially for fallback rounting, but prefereble" (the message ends there). Read
+      as: a provider job may pick an account itself — in particular to fall back to another account of the same site —
+      with a preferred account first when one is bound. To confirm the rest of the sentence when CG1 is built.
+    - >-
+      EN1 — James: "id say in the cli and git tab, if thats the same though i feel the sync and ci tab would be good,
+      especially to test." Run, shell and environments live in the Sync & CI tab; SSH keys in the Clear Glass vault.
+  decisions_waiting_on_james:
     - "PF6 — the first-sync delay (proposed: after the first repo list, or 60 s, whichever comes first)."
+    - "CG1 — the end of \"but prefereble …\" (preferable to use a bound account first? assumed)."
 
 ## ADDENDUM 2026-10-01 — PF1–PF5 built (0.39.288)
 # Measured on the real tree (sandbox store): core update with an unchanged file set — spec 4.3 s → 0.21 s, longest
@@ -510,3 +538,9 @@ spec:
 # CT1: Ollama streamed with an idle timeout (10-minute cap), thinking-only replies retried with think:false, a cut reply
 # finished by the same agent (lib/reply-continuation.js) in the bridge and in chunk dispatch. Mapped, not built: BK1,
 # BK2, UI6–UI9, DT4b, CX1, DI1, CG1, CG2, FT1, TP1, EN1. The rule to quote James is in docs/CLAUDE.md.
+
+## ADDENDUM 2026-10-01 — 1.2.0, James's answers
+# AG1/CI1 never bypass the gate · RAID the final middle line once both ends are built · CG1 an account may be picked by
+# the job, especially for fallback routing · EN1 in the Sync & CI tab · a rule for every phase: gates every step,
+# verification when needed, negative and shadow space (lib/step-gate.js, lib/shadow.js) · UI10 Debug + Intelligence
+# in one tab.
