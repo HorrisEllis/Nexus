@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.2.0
+    version:  1.3.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -466,6 +466,33 @@ spec:
         (intelligence — the code-intel index, symbols, used-from, graphs) and what is WRONG with it (debug — failures,
         the fault log from DT2/DT3, diagnose runs) side by side, one search over both; the tab bar loses one entry.
       proof: "chromium probe: one tab renders both; every former action still reaches its route"
+    GL1_gate_verify_fix_loop:
+      layer: library
+      status: OPEN
+      depends_on: [DT2_failure_mode_field, CI1_compounding_iterate]
+      files: [lib/step-gate.js, lib/shadow.js, lib/seam/queue.js, idearium/spec-engine/chunk-dispatch.js, lib/reply-continuation.js]
+      does: >-
+        James (verbatim): "gate, verify, check, if failed, send back and fix it, then back through." One loop for every
+        agent step: gate (step-gate rules) → verify (test / parse / probe, where one exists) → check (the shadow: what
+        was expected and is missing) → on a failure, the SAME agent gets its output back with the exact failure (the
+        failing check's message, the missing item, the gate rule) and fixes it → back through the gate. Bounded rounds;
+        each round recorded with its failure class (DT2); after the bound, the route's next provider (or a person —
+        BK1). Pieces exist: the seam retry ladder already re-prompts on a failed detection, step gates block, the shadow
+        names absences, continuation finishes cuts; this joins them into one loop with the failure fed back verbatim.
+      proof: "a stub agent whose first output fails a parse check: it receives the parse error, its second output passes, both rounds recorded"
+    UM1_nexus_understands_james:
+      layer: library
+      status: OPEN
+      depends_on: [DT1_persistence_census, CX1_context_cascade]
+      files: [lib/agent-memory.js, clear-glass/src/downloads/chat-ledger.js, lib/node-schemas/]
+      does: >-
+        James (verbatim): "I at some point want nexus to understand me the way chatgpt. like my patterns, observations,
+        everything thats useful, and then agents can querythat data also." A person model, his own: observations about
+        how James works and what he wants (preferences, recurring asks, rules he has set, words he uses, decisions he
+        made and why), each a node with its source quote and date, learned from his messages, chats (the chat ledger)
+        and decisions — never guessed without a source. Agents query it through CX1 (memory step); James can read,
+        correct and delete any of it. Local only — it never leaves the machine.
+      proof: "three of his messages → observation nodes, each citing its quote; an agent query returns the matching one"
     FT1_file_tools_merge_patch_drop:
       layer: library
       status: OPEN
@@ -518,15 +545,16 @@ spec:
       ends — the dispatch side (routing, gates, continuation) and the result side (verification, the work surface,
       CI1) — are built. Mapped here as a later phase, not before.
     - >-
-      CG1 — James: "it can pick its own, especially for fallback rounting, but prefereble" (the message ends there). Read
-      as: a provider job may pick an account itself — in particular to fall back to another account of the same site —
-      with a preferred account first when one is bound. To confirm the rest of the sentence when CG1 is built.
+      CG1 — James: "it can pick its own, especially for fallback rounting, but preferebly the same account per hat, or
+      even url. chatgpt can stretch infinitly if you branch a chat to another chat, I just want consistence, but nexus
+      is for that." A job may pick an account itself (fallback routing especially), but sticks to one account per hat,
+      or per URL: the hat's bound account first, the same account for the same conversation URL every time; another
+      account only when that one is down or limited — and the switch is recorded on the job.
     - >-
       EN1 — James: "id say in the cli and git tab, if thats the same though i feel the sync and ci tab would be good,
       especially to test." Run, shell and environments live in the Sync & CI tab; SSH keys in the Clear Glass vault.
   decisions_waiting_on_james:
     - "PF6 — the first-sync delay (proposed: after the first repo list, or 60 s, whichever comes first)."
-    - "CG1 — the end of \"but prefereble …\" (preferable to use a bound account first? assumed)."
 
 ## ADDENDUM 2026-10-01 — PF1–PF5 built (0.39.288)
 # Measured on the real tree (sandbox store): core update with an unchanged file set — spec 4.3 s → 0.21 s, longest
@@ -544,3 +572,8 @@ spec:
 # the job, especially for fallback routing · EN1 in the Sync & CI tab · a rule for every phase: gates every step,
 # verification when needed, negative and shadow space (lib/step-gate.js, lib/shadow.js) · UI10 Debug + Intelligence
 # in one tab.
+
+## ADDENDUM 2026-10-01 — 1.3.0
+# CG1 answered: an account per hat, or per URL — consistency first, another only on fallback, recorded. GL1 the
+# gate → verify → check → fix → back-through loop. UM1 Nexus understands James (observations with their source quotes,
+# queryable by agents, his to correct).
