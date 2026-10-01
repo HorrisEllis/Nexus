@@ -1201,7 +1201,9 @@ const ROUTE_CAP = {
   'repo.architecture': CAPS.READ_IDEAS,
   'repo.architecture.write': CAPS.WRITE_IDEAS,
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
-  'history.import.upload': CAPS.ADMIN,    // writes a dropped zip into the data root's history-import inbox
+  'history.import.upload': CAPS.ADMIN,
+  'spec-library.import':  CAPS.WRITE_IDEAS,   // §0.39.290 IL1
+  'spec-library.list':    CAPS.READ_IDEAS,    // writes a dropped zip into the data root's history-import inbox
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
   'cos.install.status': CAPS.READ_IDEAS,
   'cos.install':        CAPS.ADMIN,       // installs software on the host (winget / brew / apt), only on a click
@@ -1627,6 +1629,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','history','import'],                       'history.import.status'],
     ['POST',   ['api','history','import'],                       'history.import.start'],
     ['PUT',    ['api','history','import','upload'],              'history.import.upload'],
+    // §0.39.290 IL1 — James's spec library: PUT the zip's raw bytes (?name=&dryRun=1); each unique document an idea + spec
+    ['PUT',    ['api','spec-library','import'],                  'spec-library.import'],
+    ['GET',    ['api','spec-library'],                           'spec-library.list'],
     ['POST',   ['api','cos','testenv','setup'],                  'cos.testenv.setup'],
     ['GET',    ['api','cos','install'],                          'cos.install.status'],   // §0.39.265
     ['POST',   ['api','cos','install'],                          'cos.install'],
@@ -3705,6 +3710,27 @@ async function handle(req, res, route, query, body) {
       const st = HJ.start({ paths: Array.isArray(body.paths) ? body.paths : [], folder: body.folder || null, dryRun: !!body.dryRun, rebuild: !!body.rebuild, recursive: !!body.recursive });
       os.emit('idearium.history.import', { state: st.state, dryRun: !!body.dryRun, inputs: st.inputs || 0 });
       return st.state === 'failed' ? err(res, 400, (st.result && st.result.error) || 'could not start', st) : ok(res, st);
+    }
+    // §0.39.290 IL1 — "need a way to import these and convert them." (lib/spec-library.js + idearium/lib/spec-library-import.js)
+    case 'spec-library.import': {
+      const chunks = []; let size = 0;
+      try {
+        for await (const c of req) { size += c.length; if (size > 512 * 1024 * 1024) return err(res, 413, 'zip over 512 MB'); chunks.push(c); }
+      } catch (e) { return err(res, 400, `upload failed: ${e.message}`); }
+      if (!size) return err(res, 400, 'send the zip as the request body (PUT, raw bytes)');
+      const { importLibrary } = await import('../lib/spec-library-import.js');
+      const se = getSpecEngine();
+      const r = await importLibrary({ buf: Buffer.concat(chunks), name: query.name || 'specs.zip', dryRun: query.dryRun === '1' || query.dryRun === 'true', se, os });
+      if (!r.ok) return err(res, 400, r.error);
+      os.emit('idearium.spec-library.imported', { dryRun: r.dryRun, ...(r.summary || {}), unique: r.stats.unique });
+      // the full rows are large; the listing route serves them — the import answers with the counts and what failed
+      return ok(res, { dryRun: r.dryRun, upload: r.upload, stats: r.stats, summary: r.summary, skipped: r.skipped, merged: r.merged, failed: r.failed,
+        added: r.added.map(x => ({ title: x.title, family: x.family, kind: x.kind, dialect: x.dialect, sections: x.sections, ideaUuid: x.ideaUuid, specUuid: x.specUuid, path: x.paths[0] })) });
+    }
+    case 'spec-library.list': {
+      const { listLibrary } = await import('../lib/spec-library-import.js');
+      const rows = listLibrary({ family: query.family || null, kind: query.kind || null });
+      return ok(res, { count: rows.length, library: rows.map(({ files, ...r }) => ({ ...r, fileCount: files ? files.length : null })) });
     }
     case 'history.import.upload': {
       const HJ = _require('../../lib/history-import-job.js');
@@ -6073,7 +6099,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html')) {
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html')) {   // §0.39.290 IL1 the spec library
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');
@@ -6133,7 +6159,7 @@ export function startAPI() {
     const query = parseQuery(req.url);
     let body = {};
     // §0.39.283 N30 — a dropped zip streams straight to disk; it is not a JSON body
-    if (['POST','PATCH','PUT','DELETE'].includes(req.method) && route.action !== 'history.import.upload') {
+    if (['POST','PATCH','PUT','DELETE'].includes(req.method) && route.action !== 'history.import.upload' && route.action !== 'spec-library.import') {
       try { body = await readBody(req); }
       catch (e) { return err(res, 400, 'body parse failed', e.message); }
     }

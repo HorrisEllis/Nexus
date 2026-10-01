@@ -43,6 +43,8 @@
  *   idearium routing plan [--block id] [--agent a]  the route one chunk would take
  *   idearium routing set <key> <value>            mode|chain|ollama_models|learn_min_records|fallback_on|max_hops|attempts_per_hop|breaker_threshold|breaker_cooldown_ms|skip_open
  *   idearium routing learned [--type build:api]   (0.39.287) what each provider:model has done per chunk type
+ *   idearium spec-library import <zip> [--dry-run] (0.39.290 IL1) a zip of specs → ideas + specs (duplicates folded, programs refused)
+ *   idearium spec-library [--family product]      what the library holds
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -105,6 +107,20 @@ async function _routingLocal() {
   const PR = createRequire(import.meta.url)('../../lib/pipeline-routing.js');
   const cfg = await import('../lib/config.js');
   return { PR, policy: PR.policyFrom((cfg.getConfig() || {}).routing || {}), blocks: se.SPEC_SECTIONS };
+}
+
+// §0.39.290 — a raw upload (a zip) to the running idearium; long timeout (a big library converts for a while)
+function _localUpload(path, buf) {
+  return new Promise((resolve, reject) => {
+    const req = http.request({ hostname: '127.0.0.1', port: IDEARIUM_PORT, path, method: 'PUT',
+      headers: { 'Content-Type': 'application/zip', 'Content-Length': buf.length }, timeout: 600000 }, (res) => {
+      let data = ''; res.on('data', d => data += d);
+      res.on('end', () => { try { const p = JSON.parse(data); res.statusCode >= 400 ? reject(new Error(p.error || `HTTP ${res.statusCode}`)) : resolve(p); } catch (e) { reject(new Error(`unparseable response: ${e.message}`)); } });
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+    req.end(buf);
+  });
 }
 
 function _localApi(method, path, body = null) {
@@ -719,6 +735,54 @@ const COMMANDS = {
     const value = /^(true|false)$/.test(raw) ? raw === 'true' : (/^\d+$/.test(raw) ? Number(raw) : raw);
     cfg.setConfig(`routing.${key}`, value, { actor: 'cli' });
     console.log(`${mint('✓')} routing.${key} = ${JSON.stringify(value)}`);
+  },
+
+  // ── idearium spec-library (0.39.290 IL1) ─────────────────────────────────────
+  // James: "need a way to import these and convert them." Through the running idearium when it is up (one writer of
+  // the ideas); without it, the same import runs here.
+  async 'spec-library'(os, args) {
+    if ((args.positional || [])[0] === 'import') return COMMANDS['spec-library.import'](os, { ...args, positional: args.positional.slice(1) });
+    return COMMANDS['spec-library.list'](os, args);
+  },
+  async 'spec-library.import'(os, { positional, flags }) {
+    const file = positional[0];
+    if (!file) die('usage: idearium spec-library import <zip> [--dry-run]');
+    const fsm = await import('fs'); const pathm = await import('path');
+    if (!fsm.existsSync(file)) die(`not found: ${file}`);
+    const buf = fsm.readFileSync(file);
+    const dry = !!(flags['dry-run'] || flags.dryRun);
+    let r;
+    try { r = await _localUpload(`/api/spec-library/import?name=${encodeURIComponent(pathm.basename(file))}${dry ? '&dryRun=1' : ''}`, buf); }
+    catch (e) {
+      if (!/ECONNREFUSED|timeout/.test(e.message)) die(e.message);
+      console.log(gray('  idearium is not running — importing here'));
+      const { importLibrary } = await import('../lib/spec-library-import.js');
+      const se = await import('../spec-engine/index.js');
+      r = await importLibrary({ buf, name: pathm.basename(file), dryRun: dry, se, os });
+      if (!r.ok) die(r.error);
+      r.added = r.added.map(x => ({ title: x.title, family: x.family, kind: x.kind, dialect: x.dialect, sections: x.sections }));
+    }
+    header(`spec library — ${dry ? 'dry run' : 'imported'} · ${r.stats.files} files read · ${r.stats.unique} unique · ${r.stats.duplicates} duplicates folded`);
+    const by = {}; for (const a of r.added) (by[a.family] = by[a.family] || []).push(a);
+    for (const [fam, list] of Object.entries(by)) {
+      console.log(`  ${bold(fam)} ${dim(`(${list.length})`)}`);
+      for (const a of list.slice(0, 40)) console.log(`    ${a.kind.padEnd(8)} ${String(a.title).slice(0, 70).padEnd(70)} ${dim(a.dialect + (a.sections ? ` · ${a.sections} sections` : ''))}`);
+      if (list.length > 40) console.log(dim(`    … ${list.length - 40} more`));
+    }
+    for (const s of r.skipped || []) console.log(`  ${coral('skipped')} ${s.path} ${dim('— ' + s.why)}`);
+    for (const f of r.failed || []) console.log(`  ${coral('failed')}  ${f.title} ${dim('— ' + f.error)}`);
+    if ((r.merged || []).length) console.log(dim(`  ${r.merged.length} already in the library gained new paths`));
+    if (!r.added.length && !dry) console.log(gray('  nothing new — every document is already in the library'));
+    console.log('');
+  },
+  async 'spec-library.list'(os, { flags }) {
+    const { listLibrary } = await import('../lib/spec-library-import.js');
+    const rows = listLibrary({ family: flags.family || null, kind: flags.kind || null });
+    if (!rows.length) { console.log(gray('\n  the spec library is empty — idearium spec-library import <zip>\n')); return; }
+    header(`spec library — ${rows.length} document(s)`);
+    for (const r of rows.sort((a, b) => (a.family + a.title).localeCompare(b.family + b.title)))
+      console.log(`  ${r.family.padEnd(9)} ${r.kind.padEnd(8)} ${String(r.title).slice(0, 64).padEnd(64)} ${dim(r.specUuid ? `${r.sections} sections` : r.kind)}`);
+    console.log('');
   },
 
   // ── idearium gap ───────────────────────────────────────────────────────────

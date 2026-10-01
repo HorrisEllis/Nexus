@@ -1,0 +1,161 @@
+<!doctype html>
+<!--
+  idearium/ui/spec-library.html — James's spec library: drop a zip of specs, see what is in it, import it (0.39.290,
+  IL1 of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec). James: "my goal is to build these, eventually.
+  im, the idea guy" · "lets fucking do it. need a way to import these and convert them."
+
+  Drop → a dry run (PUT /api/spec-library/import?dryRun=1): unique documents, duplicates folded, programs refused,
+  each with its family and how it will be split. "Import" → the same call for real: each spec, Word document and
+  project becomes an idea with its spec (sections by the document's own headings); the zip is kept whole. Below, the
+  library (GET /api/spec-library) by family. Nothing leaves this machine.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec library</title>
+<style>
+  :root { color-scheme: dark; --bg:#07090e; --bg1:#0b0f18; --bg2:#0f1520; --b0:rgba(56,189,248,.06); --b1:rgba(56,189,248,.14); --b2:rgba(56,189,248,.28);
+    --sky:#38bdf8; --sky2:#7dd3fc; --mint:#34d399; --amber:#fbbf24; --coral:#f87171; --violet:#a78bfa; --text:#c4d4ee; --text2:#607898; --text3:#334560;
+    --mono:'IBM Plex Mono', ui-monospace, monospace; --sans:'IBM Plex Sans', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 13px/1.5 var(--sans); }
+  body { padding-top: var(--chrome-h, 0px); }
+  main { max-width: 1100px; margin: 0 auto; padding: 26px 24px 40px; display: flex; flex-direction: column; gap: 18px; }
+  .kicker { font: 600 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--sky); }
+  h1 { margin: 6px 0 4px; font: 600 20px/1.2 var(--sans); }
+  .lead { color: var(--text2); margin: 0; max-width: 780px; }
+  .card { border: 1px solid var(--b1); border-radius: 14px; background: linear-gradient(180deg, var(--bg2), var(--bg1)); padding: 18px; }
+  #drop { border: 1.5px dashed var(--b2); border-radius: 14px; padding: 34px 20px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s; background: rgba(56,189,248,.02); }
+  #drop.over { border-color: var(--sky); background: rgba(56,189,248,.08); }
+  #drop .big { font: 600 15px/1.3 var(--sans); } #drop .small { color: var(--text2); margin-top: 6px; font-size: 12px; }
+  #drop .icon { font-size: 30px; color: var(--sky2); margin-bottom: 8px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  button { padding: 9px 15px; border-radius: 9px; border: 1px solid var(--b1); background: rgba(255,255,255,.02); color: var(--text); font: 600 11.5px/1 var(--mono); cursor: pointer; }
+  button:hover { border-color: var(--b2); } button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: linear-gradient(180deg, #38bdf8, #0ea5e9); border-color: transparent; color: #04111c; }
+  .h { font: 600 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text2); margin: 0 0 10px; display: flex; gap: 10px; align-items: center; cursor: pointer; user-select: none; }
+  .h .n { color: var(--text3); letter-spacing: 0; text-transform: none; font-weight: 400; }
+  .h .chev { transition: transform .15s; } .fam.closed .h .chev { transform: rotate(-90deg); } .fam.closed table { display: none; }
+  table { width: 100%; border-collapse: collapse; font: 12px var(--mono); }
+  th { text-align: left; font-weight: 600; color: var(--text3); padding: 6px 8px; border-bottom: 1px solid var(--b1); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--b0); vertical-align: top; } td.t { color: var(--text); font-family: var(--sans); } td.d { color: var(--text2); white-space: nowrap; }
+  .tag { font: 600 10px/1 var(--mono); padding: 3px 7px; border-radius: 6px; background: rgba(255,255,255,.04); color: var(--text2); }
+  .tag.product { color: var(--mint); background: rgba(52,211,153,.08); } .tag.nexus { color: var(--sky2); background: rgba(56,189,248,.08); }
+  .tag.personal { color: var(--violet); background: rgba(167,139,250,.08); } .tag.diagram { color: var(--amber); background: rgba(251,191,36,.08); }
+  .counts { display: flex; gap: 10px; flex-wrap: wrap; } .count { border: 1px solid var(--b1); border-radius: 10px; padding: 8px 12px; min-width: 110px; }
+  .count b { display: block; font: 600 18px/1.2 var(--sans); } .count span { color: var(--text2); font-size: 11px; }
+  .muted { color: var(--text3); } .err { color: var(--coral); } .ok { color: var(--mint); }
+  .scroll { max-height: 560px; overflow: auto; } .hidden { display: none; }
+  input[type=search] { flex: 1; min-width: 220px; padding: 8px 11px; border-radius: 9px; border: 1px solid var(--b1); background: var(--bg); color: var(--text); font: 12px var(--mono); }
+  * { scrollbar-width: thin; scrollbar-color: var(--b2) transparent; }
+</style>
+</head>
+<body>
+<script src="js/window-chrome.js" data-kind="spec-library" data-title="Spec library"></script>
+<main>
+  <div>
+    <div class="kicker">Idearium · spec library</div>
+    <h1>Your specs, as ideas</h1>
+    <p class="lead">Drop a zip of specs. Each unique document becomes an idea with its spec, split into sections by its own headings. Duplicates are folded, zips inside are opened, programs are refused, and the zip is kept whole. It all stays on this machine.</p>
+  </div>
+
+  <div class="card">
+    <div id="drop" tabindex="0">
+      <div class="icon">⬇</div>
+      <div class="big">Drop a zip of specs here</div>
+      <div class="small">or click to choose one · .md · .spec · .docx · .pdf · diagrams · project folders</div>
+      <input type="file" id="file" accept=".zip,application/zip" class="hidden">
+    </div>
+    <div class="row" style="margin-top:12px">
+      <span id="chosen" class="muted">nothing chosen</span>
+      <span style="flex:1"></span>
+      <button id="importBtn" class="primary" disabled>Import</button>
+    </div>
+    <div id="status" class="muted" style="margin-top:10px"></div>
+  </div>
+
+  <div id="preview" class="card hidden">
+    <div class="counts" id="counts"></div>
+    <div id="skipped" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="margin-bottom:12px">
+      <div class="kicker" style="flex:none">The library</div>
+      <input type="search" id="q" placeholder="filter by title…">
+    </div>
+    <div id="lib"><div class="muted">loading…</div></div>
+  </div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ORDER = ['product', 'nexus', 'personal', 'diagram'];
+let FILE = null, LIB = [];
+
+async function put(dry) {
+  const r = await fetch(`/api/spec-library/import?name=${encodeURIComponent(FILE.name)}${dry ? '&dryRun=1' : ''}`, { method: 'PUT', body: FILE, headers: { 'Content-Type': 'application/zip' } });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
+  return j.data || j;
+}
+
+function counts(d) {
+  const s = d.stats || {}, sum = d.summary || {};
+  const fam = (s.byFamily || {});
+  const boxes = [
+    [s.files, 'files read'], [s.unique, 'unique documents'], [s.duplicates, 'duplicates folded'],
+    ...ORDER.filter(f => fam[f]).map(f => [fam[f], f]),
+    ...(d.dryRun ? [] : [[sum.ideas, 'ideas made'], [sum.specs, 'specs made'], [sum.merged, 'already here']]),
+  ];
+  $('counts').innerHTML = boxes.map(([n, l]) => `<div class="count"><b>${n == null ? '—' : n}</b><span>${esc(l)}</span></div>`).join('');
+  $('skipped').innerHTML = (d.skipped || []).map(x => `<div class="muted">skipped · ${esc(x.path)} — ${esc(x.why)}</div>`).join('')
+    + (d.failed || []).map(x => `<div class="err">failed · ${esc(x.title)} — ${esc(x.error)}</div>`).join('');
+  $('preview').classList.remove('hidden');
+}
+
+async function choose(f) {
+  if (!f) return;
+  if (!/\.zip$/i.test(f.name)) { $('status').innerHTML = `<span class="err">a .zip, please — ${esc(f.name)} is not one</span>`; return; }
+  FILE = f; $('chosen').textContent = `${f.name} · ${(f.size / 1048576).toFixed(1)} MB`;
+  $('status').textContent = 'reading it (nothing is imported yet)…'; $('importBtn').disabled = true;
+  try { const d = await put(true); counts(d); $('status').textContent = `${d.stats.unique} unique documents — Import makes them ideas and specs.`; $('importBtn').disabled = false; }
+  catch (e) { $('status').innerHTML = `<span class="err">could not read it: ${esc(e.message)}</span>`; }
+}
+
+$('drop').onclick = () => $('file').click();
+$('drop').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('file').click(); } };
+$('file').onchange = () => choose($('file').files[0]);
+['dragenter', 'dragover'].forEach(t => $('drop').addEventListener(t, (e) => { e.preventDefault(); $('drop').classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => $('drop').addEventListener(t, (e) => { e.preventDefault(); $('drop').classList.remove('over'); }));
+$('drop').addEventListener('drop', (e) => choose(e.dataTransfer.files[0]));
+$('importBtn').onclick = async () => {
+  $('importBtn').disabled = true; $('status').textContent = 'importing…';
+  try { const d = await put(false); counts(d); $('status').innerHTML = `<span class="ok">imported — ${d.summary.ideas} ideas, ${d.summary.specs} specs${d.summary.merged ? `, ${d.summary.merged} already in the library` : ''}.</span>`; load(); }
+  catch (e) { $('status').innerHTML = `<span class="err">import failed: ${esc(e.message)}</span>`; $('importBtn').disabled = false; }
+};
+
+function render() {
+  const q = $('q').value.trim().toLowerCase();
+  const rows = LIB.filter(r => !q || String(r.title).toLowerCase().includes(q));
+  if (!LIB.length) { $('lib').innerHTML = '<div class="muted">The library is empty. Drop a zip above.</div>'; return; }
+  const by = {}; for (const r of rows) (by[r.family] = by[r.family] || []).push(r);
+  $('lib').innerHTML = ORDER.filter(f => by[f]).map(f => `<div class="fam" data-f="${f}">
+    <div class="h"><span class="chev">▾</span><span class="tag ${f}">${f}</span><span class="n">${by[f].length}</span></div>
+    <div class="scroll"><table><tr><th>title</th><th>kind</th><th>version</th><th>sections</th><th>found at</th></tr>
+    ${by[f].sort((a, b) => String(a.title).localeCompare(String(b.title))).map(r => `<tr><td class="t">${esc(r.title)}${r.summary ? `<div class="muted" style="font-size:11px">${esc(String(r.summary).slice(0, 140))}</div>` : ''}</td>
+      <td class="d">${esc(r.kind)}</td><td class="d">${esc(r.version || '')}</td><td class="d">${r.specUuid ? `${r.sections} · ${esc(r.dialect)}` : '<span class="muted">kept</span>'}</td>
+      <td class="d" title="${esc((r.paths || []).join('\n'))}">${esc(String((r.paths || [])[0] || '').split('!/').pop().slice(-48))}${(r.paths || []).length > 1 ? ` <span class="muted">+${r.paths.length - 1}</span>` : ''}</td></tr>`).join('')}
+    </table></div></div>`).join('');
+  for (const h of document.querySelectorAll('.fam .h')) h.onclick = () => h.parentElement.classList.toggle('closed');
+}
+async function load() {
+  try { const r = await fetch('/api/spec-library'); const j = await r.json(); LIB = (j.data || j).library || []; render(); }
+  catch (e) { $('lib').innerHTML = `<div class="err">could not read the library: ${esc(e.message)}</div>`; }
+}
+$('q').oninput = render;
+load();
+</script>
+</body>
+</html>

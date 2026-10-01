@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.4.0
+    version:  1.5.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -495,7 +495,7 @@ spec:
       proof: "three of his messages → observation nodes, each citing its quote; an agent query returns the matching one"
     IL1_spec_library_as_ideas:
       layer: library
-      status: OPEN
+      status: DONE (0.39.290)
       depends_on: [FT1_file_tools_merge_patch_drop, DI1_chunking_for_data_ingestion]
       files: [idearium/api/index.js, lib/zip-ingest.js, idearium/spec-engine/index.js]
       does: >-
@@ -506,6 +506,38 @@ spec:
         repo systems it already overlaps. Stored on this machine only (data/, never committed): a personal or IP
         document is never pushed anywhere. An executable inside the zip is listed, never imported.
       proof: "the zip → N ideas with no duplicates; a .docx's text is searchable; the .exe is listed and skipped"
+      built: >-
+        0.39.290 — lib/spec-library.js (scan: duplicates folded with every path, zips in zips, programs refused, a
+        project folder one unit, family by the document's own name; convert: Markdown ##/# headings, BLOCK banners,
+        plain); idearium/lib/spec-library-import.js (ideas + specs, the zip and originals kept, the
+        idearium_spec_library table, idempotent); PUT /api/spec-library/import, GET /api/spec-library; `idearium
+        spec-library import <zip>`; ui/spec-library.html (Welcome → Import specs). importSpec now completes in memory
+        and saves once (the library: >110 s for 87 documents → 8.6 s for all 150); the chunker keeps two sections with
+        the same heading. James's real zip: 468 files read, 150 unique, 186 duplicates folded, 0 fidelity failures.
+        tests/modules/test-spec-library.test.js 8/8.
+    SW1_spec_workshop:
+      layer: interface
+      status: OPEN
+      depends_on: [IL1_spec_library_as_ideas, CX1_context_cascade, UM1_nexus_understands_james]
+      files: [architect/src/ui/spec-builder.html, idearium/lib/idea-workbench.js, idearium/ui/js/app.js, lib/spec-library.js]
+      does: >-
+        James (verbatim): "Maybe we have a spec workshop, for building and editing, specs. using the spec builder. ai
+        assited or manual, The spacial void. adjustable, levels of ambitoiun higher is more outside the box. the user
+        is the idea generator, you can help improve creatitive with open loops, outside the box questions, what ifs,
+        d20 cross domain dice for ideation. A random invention to reverse causal chain like for example: a workbench
+        that automatically clears off, and sets up the placement for your tools. like shit like that, or inspiration
+        from nexus, like inspire myself using what ive built." One workshop over the spec library: open any spec (or a
+        blank one) in the spec builder (architect's, rethemed — W7 item 1), edit by hand or with an agent section by
+        section (the GL1 loop), on the spatial canvas ("the spacial void" — RHEON VOID v2 in his library is the design
+        source). An AMBITION dial (1 grounded … 5 outside the box) sets how far the agent's suggestions reach. James
+        stays the idea generator; the agent only feeds him: open loops (what this spec leaves unanswered), outside-the-
+        box questions, what-ifs, a d20 cross-domain roll (pick a random domain — biology, music, logistics, games … —
+        and map one of its mechanisms onto the spec), a reverse causal chain (start from an invented end-state — "a
+        workbench that clears itself and lays out your tools" — and walk back to what would have to exist), and
+        inspiration from his own work (a random spec, idea or Nexus component from the library and the repo, CX1).
+        Each prompt lands as a lane entry on the idea (the workbench lanes: brainstorm · problem · expand · improve),
+        never written into the spec without him taking it.
+      proof: "a spec opens in the workshop; ambition 1 vs 5 changes the prompt sent; a d20 roll names a domain and maps one mechanism; a taken suggestion lands as a lane entry"
     FT1_file_tools_merge_patch_drop:
       layer: library
       status: OPEN
@@ -594,3 +626,9 @@ spec:
 ## ADDENDUM 2026-10-01 — 1.4.0
 # IL1: James's spec library becomes ideas in Idearium (local, deduplicated, by family). Catalogue written for him; the
 # nearest product to done is ModuleForge (cli/decompose.js + the component registry already do its core).
+
+## ADDENDUM 2026-10-01 — 1.5.0
+# IL1 built (0.39.290): James's spec library imports — 150 unique documents from his real zip, as ideas with specs.
+# SW1 the spec workshop mapped in his words (spec builder, ambition dial, open loops, what-ifs, d20 cross-domain dice,
+# reverse causal chain, inspiration from his own work). Found: tests/modules/spec-import.test.mjs fails on the base
+# too (expects the pre-2026-09 intent→purpose renaming); it is in neither run-all nor known-gaps — left as found.

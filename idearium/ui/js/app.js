@@ -3685,6 +3685,14 @@ function openArchiveImport() {
   if (!w) toast('the archive import window was blocked — allow pop-ups for idearium', 'err');
   return w;
 }
+// §0.39.290 IL1 — James: "my goal is to build these, eventually. im, the idea guy" · "need a way to import these and
+// convert them." The spec library (ui/spec-library.html): a zip of specs → ideas with their specs.
+function openSpecLibrary() {
+  if (!API_BASE) { toast('idearium is offline — the spec library is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/spec-library.html`, 'idearium-spec-library', 'width=1180,height=900');
+  if (!w) toast('the spec library window was blocked — allow pop-ups for idearium', 'err');
+  return w;
+}
 /** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
 const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;
 

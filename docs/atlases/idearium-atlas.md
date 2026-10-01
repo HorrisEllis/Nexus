@@ -511,6 +511,14 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied â€
 - **Record:** the hops are kept on the chunk.
 - **Where to see and set it:** the routing API (show, plan per block, reset breakers), the idearium CLI's routing command, and Settings â†’ **Routing & fallback**. Its config keys are listed in `idearium/lib/config-core.cjs`.
 
+**The spec library** (0.39.290). This is the Welcome screen's **Import specs** (`idearium/ui/spec-library.html`), or the idearium CLI's spec-library import command.
+- **What it does:** drop a zip of specs and each unique document becomes an idea, linked to a spec split by the document's own headings.
+- **What it handles:** duplicates are folded, zips inside are opened, programs are refused, and a project folder stays one unit.
+- **Groups:** nexus, product, personal or diagram, decided by each document's own name.
+- **What's kept:** the zip and every original file. Importing again only adds what's new.
+- **Code:** `lib/spec-library.js` (scanning and converting) and `idearium/lib/spec-library-import.js` (ideas, specs, the library index).
+- **Test:** `tests/modules/test-spec-library.test.js`.
+
 **Cut replies are finished** (0.39.289, `lib/reply-continuation.js`). When a reply stops part-way, the agent is shown the end of what it wrote and continues from there, and the two parts are stitched together:
 - **When it counts as cut:** Ollama stopped at its token limit, a code block was opened and never closed, or the reply ends mid-statement.
 - **Where it runs:** in the Ollama bridge (`ollama/lib/ollama-client.js`), and in spec chunk dispatch before the detector judges the reply.

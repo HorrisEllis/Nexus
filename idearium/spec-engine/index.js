@@ -1774,9 +1774,9 @@ function _ingestBegin({ name, files = [], author = 'ingest' } = {}) {
   return { manifest, specDir, now0: Date.now() };
 }
 
-function _ingestFileInto(manifest, specDir, f, i) {
+function _ingestFileInto(manifest, specDir, f, i, { preserveWhitespace = false, agent = 'ingest', agentModel = 'ingest:drop' } = {}) {
   const chunk = manifest.chunks[i];
-  chunk.agent = 'ingest'; chunk.agentModel = 'ingest:drop';
+  chunk.agent = agent; chunk.agentModel = agentModel;
   chunk.attempts = (chunk.attempts || 0) + 1;
   // §REALPATH 2026-09-15 — James: "idearium needs to import the files to the
   // repo, not just chunk." repo/index.js and materialize() prefer realPath
@@ -1796,7 +1796,7 @@ function _ingestFileInto(manifest, specDir, f, i) {
     return;
   }
 
-  const finalContent = f.content.trim();
+  const finalContent = preserveWhitespace ? f.content : f.content.trim();
   const filePath = path.join(specDir, `${String(chunk.chunkIdx).padStart(2,'0')}-${chunk.sectionId}-${chunk.uuid.slice(0,8)}.md`);
   const fileContent = [
     `---`,
@@ -1833,7 +1833,7 @@ function _ingestFileInto(manifest, specDir, f, i) {
   chunk.jobId = null; chunk.dispatchDir = null;
 }
 
-function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunks = null } = {}) {
+function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunks = null, label = 'ingested' } = {}) {
   manifest.doneChunks   = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
   manifest.failedChunks = manifest.chunks.filter(c => c.status === CHUNK_STATES.FAILED || c.status === CHUNK_STATES.ESCALATED).length;
   manifest.progress     = manifest.totalChunks ? Math.round((manifest.doneChunks / manifest.totalChunks) * 100) : 0;
@@ -1854,7 +1854,7 @@ function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunk
   else chunkNodes.writeManifestChunkNodes(manifest, { repoUuid });
   console.log(onlyChunks
     ? `[${MODULE_ID}] ✓ updated ${onlyChunks.length} of ${manifest.totalChunks} chunk(s) of "${manifest.name}" in place in ${Date.now() - now0}ms`
-    : `[${MODULE_ID}] ✓ ingested ${manifest.doneChunks}/${manifest.totalChunks} file(s) into "${manifest.name}" in ${Date.now() - now0}ms`);
+    : `[${MODULE_ID}] ✓ ${label} ${manifest.doneChunks}/${manifest.totalChunks} ${label === 'ingested' ? 'file(s)' : 'block(s)'} into "${manifest.name}" in ${Date.now() - now0}ms`);
   // One progress event, not one per file: the loop above is synchronous, so
   // per-file events would only have queued up and flushed together anyway.
   import('../index.js').then(({ getIdeaOS }) => {
@@ -1922,7 +1922,9 @@ const { chunkDocument, structuralProfile, slug: _slug, SPLIT_THRESHOLD_CHARS } =
 // zero-token, since the content is already authored, but not a shortcut
 // around the contract: every chunk is still written to disk and verified
 // like any agent-built one, just instantly instead of after a dispatch.
-export function importSpec({ name, specText, author = 'import' }) {
+// §0.39.290 IL1 — bannerRe: where this document's sections start, when it is not in the `# BLOCK N —` dialect
+// (lib/spec-library.js convert(): Markdown ## or # headings). The text itself is never rewritten.
+export function importSpec({ name, specText, author = 'import', bannerRe = null, type = 'system', description = 'imported from .spec' }) {
   if (!specText || !specText.trim()) throw new Error('importSpec: specText required');
   const specName = name || (specText.match(/name:\s*(\S+)/)?.[1]) || `imported-${Date.now()}`;
 
@@ -1930,7 +1932,7 @@ export function importSpec({ name, specText, author = 'import' }) {
   // the byte-fidelity self-check all now live in lib/chunker/index.js
   // (chunkDocument). This is the same logic that used to be inline here —
   // moved, not reimplemented, so idearium isn't the only caller of it.
-  const { queue, byteFidelity, blocksFound } = chunkDocument(specText);
+  const { queue, byteFidelity, blocksFound } = chunkDocument(specText, bannerRe ? { bannerRe } : {});
   const roundtrip = byteFidelity.verified;
   if (!roundtrip) {
     console.warn(`[idearium.spec-engine] importSpec: byte-fidelity check FAILED for "${specName}" — ` +
@@ -1939,36 +1941,32 @@ export function importSpec({ name, specText, author = 'import' }) {
   }
 
   const sections = queue.map(q => ({ id: q.id, title: q.title, desc: q.desc }));
-  const manifest = _buildManifest({ name: specName, type: 'system', description: 'imported from .spec', author, sections });
+  const manifest = _buildManifest({ name: specName, type, description, author, sections });
 
+  // §0.39.290 — every block is completed IN MEMORY and the manifest saved once (the ingest's own path:
+  // _ingestFileInto/_ingestFinish). It was markChunkBuilding + completeChunk + loadSpec + saveSpec per block: a
+  // 112-section spec rewrote its whole manifest ~300 times — James's spec library (150 documents) took minutes and
+  // held the loop. Same chunk files (same front matter, the same "imported block" tag), same fields, one save.
+  manifest.ingesting = true;
+  saveSpec(manifest);
+  const specDir = path.join(SPECS_ROOT, manifest.uuid);
+  const now0 = Date.now();
   const filled = [];
   for (const q of queue) {
-    const chunk = manifest.chunks.find(c => c.sectionId === q.id);
-    if (!chunk) continue; // sections[] and queue[] are built 1:1 — should never miss
-    markChunkBuilding(manifest.uuid, chunk.uuid, { agent: 'import', model: 'import:.spec' });
+    const i = manifest.chunks.findIndex(c => c.sectionId === q.id);
+    if (i < 0) continue; // sections[] and queue[] are built 1:1 — should never miss
     const tag = q.sourceKey ? `imported: ${q.sourceBlock} → ${q.sourceKey}` : `imported block: ${q.sourceBlock}`;
-    completeChunk(manifest.uuid, chunk.uuid, `<!-- ${tag} -->\n\n${q.content}`, { preserveWhitespace: true });
-    const fresh = loadSpec(manifest.uuid);
-    const fc = fresh.chunks.find(c => c.uuid === chunk.uuid);
-    if (fc) {
-      fc.agent = 'import';
-      fc.agentModel = 'import:.spec';
-      // §COGNITIVE SEAM 2026-07-14 — "complexity is a shape, not a scalar."
-      // Real counts (deps/hookEvents/failureModes/invariantRefs) from the
-      // chunk's own content, kept as a vector, not collapsed to one score —
-      // enforcement (small, high invariant fan-out) vs kernel (large, spread
-      // across categories) need different handling, not the same number.
-      fc.structuralProfile = structuralProfile(q.content);
-    }
-    saveSpec(fresh);
+    const chunk = manifest.chunks[i];
+    // an imported block is a section of the document, not a file of a repo: no path, so realPath stays null
+    _ingestFileInto(manifest, specDir, { path: '', content: `<!-- ${tag} -->\n\n${q.content}` }, i, { preserveWhitespace: true, agent: 'import', agentModel: 'import:.spec' });
+    // §COGNITIVE SEAM 2026-07-14 — "complexity is a shape, not a scalar." (structuralProfile, unchanged)
+    chunk.structuralProfile = structuralProfile(q.content);
     filled.push(q.id);
   }
-
-  const out = loadSpec(manifest.uuid);
-  out.importedBlocks = queue.map(q => q.sourceBlock).filter((v, i, a) => a.indexOf(v) === i);
-  out.importedUnmatched = [];   // every block now produces at least one chunk — nothing to lose
-  out.byteFidelity = byteFidelity;
-  saveSpec(out);
+  manifest.importedBlocks = queue.map(q => q.sourceBlock).filter((v, i, a) => a.indexOf(v) === i);
+  manifest.importedUnmatched = [];   // every block now produces at least one chunk — nothing to lose
+  manifest.byteFidelity = byteFidelity;
+  const out = _ingestFinish(manifest, { now0, label: 'imported' });
   return { manifest: out, blocksFound, sectionsFilled: filled, unmatched: [], byteFidelity: out.byteFidelity };
 }
 
