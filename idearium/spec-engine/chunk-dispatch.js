@@ -36,6 +36,8 @@
  */
 import http from 'http';
 import { QueueCompartment, STATE } from '../../lib/seam/queue.js';
+import { createRequire } from 'module';
+const _req = createRequire(import.meta.url);   // §0.39.286 — this file is ESM: a bare require() is undefined here
 
 const GUARDIAN_PORT = parseInt(process.env.GUARDIAN_PORT || '7820');
 
@@ -148,8 +150,13 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
     busEmit:      opts.busEmit || (() => {}),
   });
 
-  const maxWallClockAttempts = 6; // strategy ladder + watchdog ceilings already bound this internally; this is an outer safety cap, not the real limit
+  const maxWallClockAttempts = opts.attemptsPerHop || 6; // §0.39.286 routing.attempts_per_hop · strategy ladder + watchdog ceilings already bound this internally; this is an outer safety cap, not the real limit
   let attempts = 0;
+  // §0.39.286 RG3 — the provider's own last error survives to the caller (it was replaced by "exceeded outer wall-clock
+  // attempt cap", so nothing downstream could tell a dead provider from a slow one), and a login or a limit ends this
+  // provider's attempts at once: retrying the same provider cannot fix either (guardian/lib/job-retry.js: needs-you).
+  let lastErr = null;
+  const _final = (msg) => { try { const c = _req('../../lib/pipeline-routing.js').classify({ error: msg }); return c === 'login' || c === 'rate-limit'; } catch (_) { return false; } };
 
   while (attempts < maxWallClockAttempts) {
     attempts++;
@@ -166,8 +173,9 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
       // content-quality failure Detector should judge. Treat as a
       // connectivity retry, same distinction QueueCompartment's own
       // watchdogRetry() draws for stalls vs. content failures.
+      lastErr = e.message;
       const { escalated } = comp.watchdogRetry(e.message);
-      if (escalated) return { ok: false, escalated: true, detection: null, attempts, error: e.message };
+      if (escalated || _final(e.message)) return { ok: false, escalated: true, detection: null, attempts, error: e.message };
       continue;
     }
 
@@ -198,8 +206,9 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
       }
       const polled = await _pollGuardianJob(dispatchResult.jobId);
       if (!polled.ok) {
+        lastErr = polled.error;
         const { escalated } = comp.watchdogRetry(polled.error);
-        if (escalated) return { ok: false, escalated: true, detection: null, attempts, error: polled.error };
+        if (escalated || _final(polled.error)) return { ok: false, escalated: true, detection: null, attempts, error: polled.error };
         continue;
       }
       dispatchResult = { ok: true, text: polled.text, agent: dispatchResult.agent };
@@ -207,8 +216,9 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
     }
 
     if (!dispatchResult.ok || !dispatchResult.text) {
-      const { escalated } = comp.watchdogRetry(dispatchResult.error || 'no text in response');
-      if (escalated) return { ok: false, escalated: true, detection: null, attempts, error: dispatchResult.error };
+      lastErr = dispatchResult.error || 'no text in response (empty reply)';
+      const { escalated } = comp.watchdogRetry(lastErr);
+      if (escalated || _final(lastErr)) return { ok: false, escalated: true, detection: null, attempts, error: dispatchResult.error || lastErr };
       continue;
     }
 
@@ -239,7 +249,7 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
   }
 
   // §0.39.284 — say WHY every attempt was refused (the detector's own summary), not only that the cap was reached
-  return { ok: false, escalated: true, detection: comp.detection, attempts, error: `exceeded outer wall-clock attempt cap${comp.detection && comp.detection.summary ? ` — last check: ${comp.detection.summary}` : ''}` };
+  return { ok: false, escalated: true, detection: comp.detection, attempts, error: `exceeded outer wall-clock attempt cap${comp.detection && comp.detection.summary ? ` — last check: ${comp.detection.summary}` : ''}${lastErr ? ` — last error: ${lastErr}` : ''}` };
 }
 
 // §BUILT 2026-09-03 — James: "set default to chatgpt, fallback gemini."
@@ -255,6 +265,7 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
 // content — real provenance, not "chatgpt" left standing for a chunk
 // gemini actually wrote.
 export async function dispatchChunkWithVerification(chunkPrompt, chunk, dispatchFn, opts = {}) {
+  if (Array.isArray(opts.route) && opts.route.length) return _walkRoute(chunkPrompt, chunk, dispatchFn, opts);
   const primary = await _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts);
   if (primary.ok || !opts.fallbackAgent || opts.fallbackAgent === opts.preferAgent) return primary;
 
@@ -265,6 +276,39 @@ export async function dispatchChunkWithVerification(chunkPrompt, chunk, dispatch
   // but both are real and neither is hidden — primaryError is carried
   // alongside so nothing about the first attempt is lost.
   return { ...fallbackResult, primaryAgent: opts.preferAgent, primaryError: primary.error };
+}
+
+// §0.39.286 RG3 (docs/2026-10-01-routing-registry-genesis-phasemap.spec) — James: "full options for fallback logic,
+// routing". opts.route is lib/pipeline-routing.js plan()'s ordered route. Each hop is the same verified ladder against
+// one provider; a failed hop is classified, fed to that provider's breaker, and the walk moves on only if the class is
+// in the policy's fallback_on (login never moves on: it needs a person). Every hop is returned (route) so the chunk
+// keeps who failed, why and for how long, and who built it.
+async function _walkRoute(chunkPrompt, chunk, dispatchFn, opts) {
+  const PR = _req('../../lib/pipeline-routing.js');
+  const policy = opts.policy || PR.DEFAULTS;
+  const hops = [];
+  let last = null;
+  for (let i = 0; i < opts.route.length; i++) {
+    const provider = typeof opts.route[i] === 'string' ? opts.route[i] : opts.route[i].provider;
+    const t0 = Date.now();
+    const r = await _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, { ...opts, preferAgent: provider, fallbackAgent: null, route: null, attemptsPerHop: policy.attemptsPerHop });
+    const ms = Date.now() - t0;
+    if (r.queued) { hops.push({ provider, outcome: 'queued', ms, jobId: r.jobId || null }); return { ...r, route: hops }; }
+    if (r.ok) {
+      PR.breaker.success(provider);
+      hops.push({ provider, outcome: 'ok', ms, attempts: r.attempts });
+      return { ...r, agent: r.agent || provider, route: hops, primaryAgent: hops.length > 1 ? hops[0].provider : undefined, primaryError: hops.length > 1 ? hops[0].error : undefined };
+    }
+    const cls = PR.classify(r);
+    PR.breaker.failure(provider, cls, policy);
+    const go = i < opts.route.length - 1 && PR.shouldFallback(cls, policy);
+    hops.push({ provider, outcome: 'failed', class: cls, error: r.error || (r.detection && r.detection.summary) || null, ms, attempts: r.attempts, next: go ? 'fallback' : 'stop' });
+    last = r;
+    if (go) console.warn(`[chunk-dispatch] ${provider} failed '${chunk.sectionId || chunk.title}' (${cls}) — next: ${typeof opts.route[i + 1] === 'string' ? opts.route[i + 1] : opts.route[i + 1].provider}`);
+    if (!go) break;
+  }
+  const why = hops.map(h => `${h.provider}: ${h.class}`).join(' → ');
+  return { ...(last || { ok: false, escalated: true }), ok: false, escalated: true, route: hops, error: `every route hop failed (${why})${last && last.error ? ` — last: ${last.error}` : ''}` };
 }
 
 // §BROKEN IMPORT FIXED 2026-07-09 — warp-build-dispatch.js does

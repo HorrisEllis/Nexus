@@ -12,6 +12,12 @@
  *   AR-05 a bottom-up breach (a lower layer requiring a higher one) is named
  *   AR-06 POST writes ARCHITECTURE.json into the repo (the architecture doc)
  *   AR-07 the Architect tab renders it (registry table + wiring map)
+ *   0.39.286 RC1/RC2 (docs/2026-10-01-routing-registry-genesis-phasemap.spec):
+ *   AR-08 routes, CLI commands and events read from the code; an event wires its emitter to its consumer
+ *   AR-09 POST writes the registry as Guardian's nodes: nodes/<type>/<id>.<type>, lib/node-export.js envelopes —
+ *         component · hook · wire · event · command · contract (the doorway) · system
+ *   AR-10 a second write leaves unchanged nodes alone; a removed file's nodes move to nodes/_archive/ (§0.3)
+ *   AR-11 the spec template has an 11th block, registry, after build_order and waiting on it
  */
 require('../../lib/test-sandbox.js').ensure();
 const fs = require('fs');
@@ -35,6 +41,10 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
       { path: 'src/leftover.js', content: "'use strict';\nfunction nobodyCalls() { return 1; }\nmodule.exports = { nobodyCalls };\n" },
       { path: 'src/config.js', content: `'use strict';\nconst { route } = ${R}('./api/routes.js');\nmodule.exports = { route, port: 8080 };\n` },
       { path: 'data/seed.json', content: '{"a":1}\n' },
+      { path: 'src/api/server.js', content: `'use strict';\nconst { route } = ${R}('./routes.js');\nconst bus = ${R}('../bus.js');\napp.get('/api/nodes', (q, s) => s.json(route(q)));\napp.post('/api/nodes', (q, s) => { bus.emit('node.added', q.body); s.end(); });\nmodule.exports = {};\n` },
+      { path: 'src/bus.js', content: "'use strict';\nconst handlers = {};\nfunction emit(n, p) { (handlers[n] || []).forEach(f => f(p)); }\nmodule.exports = { emit, on: (n, f) => (handlers[n] = handlers[n] || []).push(f) };\n" },
+      { path: 'src/jobs/indexer.js', content: `'use strict';\nconst bus = ${R}('../bus.js');\nbus.on('node.added', (n) => n);\nmodule.exports = {};\n` },
+      { path: 'src/cli/main.js', content: "'use strict';\nswitch (process.argv[2]) {\n  case 'add': break;\n  case 'list': break;\n}\n" },
       { path: 'specs/kernel.spec', content: 'spec:\n  meta:\n    name: kernel\n' },
     ];
     let made = null;
@@ -56,15 +66,53 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
       JSON.stringify((a.components || []).map(c => [c.file, c.id, c.layer, c.type])));
     const w = (a.wires || []).map(x => `${x.from}->${x.to}`);
     check('AR-02 wires follow the real imports, dependency → consumer, with export/import hooks (loom\'s registry shape)', w.includes('src/types.js->src/graph.js') && w.includes('src/graph.js->src/api/routes.js')
-      && (a.hooks || []).some(h => h.id === `${C['src/graph.js'].id}.export`) && (a.wires || []).every(x => /\.export$/.test(x.from_hook_id) && /\.import$/.test(x.to_hook_id)), JSON.stringify(w));
+      && (a.hooks || []).some(h => h.id === `${C['src/graph.js'].id}.export`) && (a.wires || []).filter(x => x.relation === 'requires').every(x => /\.export$/.test(x.from_hook_id) && /\.import$/.test(x.to_hook_id))
+      && (a.wires || []).filter(x => x.relation === 'event').every(x => /\.emit$/.test(x.from_hook_id) && /\.on$/.test(x.to_hook_id)), JSON.stringify(w));
     check('AR-03 consumers and deps per component; external packages named with who uses them', C['src/graph.js'].consumers.includes('src/api/routes.js') && C['src/graph.js'].deps.includes('src/types.js')
       && (a.externals || []).some(e => e.name === 'express' && e.usedBy.includes('src/api/routes.js')) && (a.externals || []).some(e => e.name === 'events'), JSON.stringify(a.externals));
-    check('AR-04 orphans: code nothing uses and that uses nothing (config and entry points are not); the data dir; node types', (a.orphans || []).join() === 'src/leftover.js'
+    check('AR-04 orphans: code nothing uses and that uses nothing (config, entry points and anything with a route, command or event are not); the data dir; node types', (a.orphans || []).join() === 'src/leftover.js'
       && (a.dataDirs || []).includes('data') && a.nodeTypes && a.nodeTypes.spec === 1, JSON.stringify({ orphans: a.orphans, data: a.dataDirs, nt: a.nodeTypes }));
     check('AR-05 a bottom-up breach is named: config (foundation) requires the api layer (§3.1)', (a.breaches || []).some(b => b.consumer === 'src/config.js' && b.dependency === 'src/api/routes.js'), JSON.stringify(a.breaches));
+    const idForLeft = C['src/leftover.js'] && C['src/leftover.js'].id;
     const wr = await api._route('POST', `/api/repos/${u}/architecture`, {});
     const doc = L.readTextFile(u, 'ARCHITECTURE.json');
     check('AR-06 POST writes ARCHITECTURE.json into the repo — the architecture doc, with its provenance', wr.status === 200 && doc && /"schema": "nexus.architecture\/1"/.test(doc.content) && /"generatedBy": "idearium\/repo\/architecture.js"/.test(doc.content), JSON.stringify(wr.json).slice(0, 200));
+    const ev = (a.events || []).find(e => e.name === 'node.added');
+    check('AR-08 routes, CLI commands and events read from the code; the event wires its emitter to its consumer',
+      (a.routes || []).some(r => r.method === 'GET' && r.path === '/api/nodes' && r.file === 'src/api/server.js') && (a.routes || []).some(r => r.method === 'POST')
+      && (a.cli || []).map(c => c.verb).sort().join() === 'add,list' && ev && ev.emittedBy.includes('src/api/server.js') && ev.consumedBy.includes('src/jobs/indexer.js')
+      && (a.wires || []).some(x => x.relation === 'event' && x.from === 'src/api/server.js' && x.to === 'src/jobs/indexer.js'),
+      JSON.stringify({ routes: a.routes, cli: a.cli, events: a.events }).slice(0, 400));
+    const nd = wr.json.data || wr.json;
+    const NE = require(path.join(ROOT, 'lib/node-export.js'));
+    const rd = (p) => { const r = L.readTextFile(u, p); return r && !r.error ? r.content : null; };
+    const contract = rd(`nodes/contract/${a.namespace}.interaction-contract.contract`);
+    const comp = rd(`nodes/component/${C['src/graph.js'].id}.component`);
+    const sys = rd(`nodes/system/${a.namespace}.system`);
+    const parsed = comp ? NE.fromYaml(comp) : null;
+    const types = new Set(JSON.parse(doc.content).nodeFiles.map(f => f.split('/')[1]));
+    check('AR-09 POST writes the registry as Guardian\'s nodes (nodes/<type>/<id>.<type>, the node-export envelope): component, hook, wire, event, command, contract, system',
+      nd.nodes && nd.nodes.written > 10 && !nd.nodes.failed.length && parsed && NE.validate(parsed).ok !== false && parsed.type === 'component' && parsed.payload.consumers.includes('src/api/routes.js')
+      && /doorway/.test(contract || '') && sys && ['component', 'hook', 'wire', 'event', 'command', 'contract', 'system'].every(t => types.has(t)),
+      JSON.stringify({ nodes: nd.nodes, types: [...types], c: (comp || '').slice(0, 120) }));
+    const wr2 = await api._route('POST', `/api/repos/${u}/architecture`, {});
+    const n2 = (wr2.json.data || wr2.json).nodes;
+    L.deleteTextFile(u, 'src/leftover.js');
+    await api._route('POST', `/api/repos/${u}/chunk`, {});
+    let wr3 = null;
+    for (let i = 0; i < 20; i++) { wr3 = await api._route('POST', `/api/repos/${u}/architecture`, {}); const x = wr3.json.data || wr3.json; if (x.nodes && x.nodes.archived) break; await new Promise(r => setTimeout(r, 300)); }
+    const n3 = (wr3.json.data || wr3.json).nodes;
+    const leftId = idForLeft;
+    check('AR-10 a second write leaves unchanged nodes alone; a removed file\'s nodes move to nodes/_archive/, never deleted',
+      n2 && n2.written === 0 && n2.unchanged === nd.nodes.total && n3 && n3.archived >= 1 && !rd(`nodes/component/${leftId}.component`) && !!rd(`nodes/_archive/component/${leftId}.component`),
+      JSON.stringify({ n2, n3 }));
+    const se = await import(path.join(ROOT, 'idearium/spec-engine/index.js'));
+    const blocks = se.SPEC_SECTIONS.map(b => b.id);
+    const sp = se.createSpec({ name: `arch-reg-${Date.now()}`, description: 'x' });
+    const man = se.loadSpec(sp.uuid || sp.specUuid || (sp.manifest && sp.manifest.uuid));
+    const rc = man.chunks.find(c => c.sectionId === 'registry');
+    check('AR-11 the template\'s 11th block is registry, after build_order, and its chunk waits on build_order', blocks.length === 11 && blocks[10] === 'registry'
+      && blocks.indexOf('build_order') < 10 && rc && rc.dependsOn.join() === 'build_order' && man.chunks.length === 11, JSON.stringify({ blocks, dep: rc && rc.dependsOn }));
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
     check('AR-07 the Architect tab renders the registry and the wiring map first', /async function renderRepoRegistry\(repo\)/.test(app) && /\/api\/repos\/\$\{repo\.uuid\}\/architecture/.test(app)
       && /id="repo-arch-registry"/.test(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8')));

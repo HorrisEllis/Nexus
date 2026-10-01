@@ -90,9 +90,12 @@ async function main() {
     await new Promise(r => setTimeout(r, 1500));
     check('real: stopping Clear Glass stops it — the port is free again', !(await _health(port)).up);
     try { br.kill('SIGKILL'); } catch (_) {}
+    // Chromium's helper processes can still be writing the profile just after the kill: wait for the exit first
+    await new Promise(r => { if (br.exitCode !== null || br.signalCode) return r(); br.once('exit', r); setTimeout(r, 3000); });
   }
 
-  fs.rmSync(tmp, { recursive: true, force: true });
+  // a temp dir that will not delete is not a test failure (0.39.286: ENOTEMPTY on chrome/Default crashed a passing run)
+  try { fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch (e) { console.log(`  (temp dir left: ${e.message})`); }
   console.log(`\n  ${pass} passed, ${fail} failed${skipped ? `, ${skipped} skipped (reasons above)` : ''}\n`);
   process.exitCode = fail === 0 ? 0 : 1;
   setTimeout(() => process.exit(process.exitCode), 200);

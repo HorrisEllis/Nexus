@@ -161,6 +161,7 @@ function renderNav() {
   const tagsOf = (r) => [r.nexusSelf ? '<span class="tag warn">nexus</span>' : '', r.branchOf ? '<span class="tag acc">branch</span>' : '', r.provider ? `<span class="tag">${esc(r.provider)}</span>` : ''].join('');
   $('nav').innerHTML = `<div class="navgroup">Idearium</div>` + item(CUR.kind === 'global', 'data-global="1"', 'Global configuration', `<span class="tag">${(CONSOLE.config.keys || []).length}</span>`)
     + item(CUR.kind === 'economy', 'data-economy="1"', 'Provider economy', '<span class="tag acc">limits · learning</span>')
+    + item(CUR.kind === 'routing', 'data-routing="1"', 'Routing & fallback', '<span class="tag acc">pipeline</span>')
     + item(CUR.kind === 'appearance', 'data-appearance="1"', 'Appearance', `<span class="tag">${esc((window.IdeariumTheme && IdeariumTheme.current().theme) || 'nexus')}</span>`)
     + `<div class="navgroup">Repos · compartments (${originals.length})</div>` + (originals.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') || '<div class="kv">none match</div>')
     + (branches.length ? `<div class="navgroup">Branches (${branches.length})</div>` + branches.map(r => item(CUR.uuid === r.uuid, `data-repo="${esc(r.uuid)}"`, r.name, tagsOf(r))).join('') : '');
@@ -168,6 +169,7 @@ function renderNav() {
   const g = $('nav').querySelector('[data-global]'); if (g) g.onclick = () => go('global');
   const ec = $('nav').querySelector('[data-economy]'); if (ec) ec.onclick = () => go('economy');
   const ap = $('nav').querySelector('[data-appearance]'); if (ap) ap.onclick = () => go('appearance');
+  const rt = $('nav').querySelector('[data-routing]'); if (rt) rt.onclick = () => go('routing');
 }
 $('q').oninput = () => { renderNav(); if (CUR.kind === 'global') render(); };
 
@@ -209,6 +211,7 @@ function readCtl(el, k) {
 function render() {
   if (CUR.kind === 'economy') return renderEconomy();
   if (CUR.kind === 'appearance') return renderAppearance();
+  if (CUR.kind === 'routing') return renderRouting();
   if (CUR.kind === 'global' || !DETAIL) return renderGlobal();
   return renderRepo();
 }
@@ -276,6 +279,44 @@ function renderAppearance() {
   for (const b of $('body').querySelectorAll('[data-theme-pick]')) b.onclick = () => apSet('theme', b.dataset.themePick);
   for (const b of $('body').querySelectorAll('[data-accent-pick]')) b.onclick = () => apSet('accent', b.dataset.accentPick);
   $('ap-motion').onchange = (e) => apSet('motion', e.target.checked ? 'full' : 'reduced');
+}
+
+// ── §0.39.286 RG4 — Routing & fallback (docs/2026-10-01-routing-registry-genesis-phasemap.spec) ──
+// James: "can we have full options for fallback logic, routing. what could improve stability with the pipeline?"
+// Read from GET /api/routing (the policy, each provider's breaker, the route every block would take); every change is
+// POST /api/config routing.<key> — the same keys `idearium routing set` writes.
+const RT_MODES = { fixed: 'the chosen agent only — no fallback', chain: 'the chosen agent, the block\'s own fallback, then the chain', 'local-first': 'ollama first, then the chosen agent and the chain', economy: 'ordered by what has worked (the provider economy\'s learned router)' };
+const RT_CLASS = { empty: 'nothing came back', truncated: 'cut off', refused: 'the provider declined', timeout: 'too slow', 'provider-down': 'not reachable', 'rate-limit': 'limit or quota', unknown: 'anything else', login: 'needs you to sign in — never falls through' };
+async function rtSet(key, value) {
+  try { await post('/api/config', { key: `routing.${key}`, value, actor: 'settings-console' }); toast(`routing.${key} saved`, 'ok'); renderRouting(); }
+  catch (e) { toast(`not saved: ${e.message}`, 'bad'); }
+}
+async function renderRouting() {
+  $('title').textContent = 'Routing & fallback';
+  $('sub').innerHTML = 'Which agent builds each spec chunk, and where it goes when that fails. Saved as <span class="tag">routing.*</span> in idearium\'s config (also <code>POST /api/config</code>, <code>idearium routing</code>).';
+  $('tabs').innerHTML = '';
+  let d;
+  try { d = await api('/api/routing'); d = d.data || d; } catch (e) { $('body').innerHTML = `<div class="empty">Could not read the routing: ${esc(e.message)}</div>`; return; }
+  const p = d.policy;
+  const row = (k, desc, ctl) => `<div class="row"><div><div class="k">routing.${k}</div><div class="d">${desc}</div></div><div class="ctl">${ctl}</div><div class="ctl"></div></div>`;
+  const num = (k, v, min, max) => `<input type="number" data-rt="${k}" value="${esc(v)}" min="${min}" max="${max}">`;
+  const br = (d.breakers || []);
+  $('body').innerHTML = `<div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
+    <div class="card"><h3><span class="grow">Fallback chain</span></h3>${row('chain', 'tried in this order after the chosen agent (and the block\'s own <code>fallback:</code> in blocks.yaml)', `<input type="text" data-rt="chain" value="${esc(p.chain.join(','))}">`)}</div>
+    <div class="card"><h3><span class="grow">Fall back when</span></h3><div class="ap-chips">${(d.classes || []).map(c => `<button class="ap-chip ${p.fallbackOn.includes(c) ? 'on' : ''}" ${c === 'login' ? 'disabled' : `data-rt-class="${c}"`} title="${esc(RT_CLASS[c] || '')}">${esc(c)}</button>`).join('')}</div><div class="kv">a class not chosen stops the walk on that provider; login always stops — it needs you.</div></div>
+    <div class="card"><h3><span class="grow">Limits and breaker</span></h3>
+      ${row('max_hops', 'providers tried per chunk', num('max_hops', p.maxHops, 1, 10))}
+      ${row('attempts_per_hop', 'verified attempts against one provider before moving on', num('attempts_per_hop', p.attemptsPerHop, 1, 20))}
+      ${row('breaker_threshold', 'failures in a row that open a provider\'s breaker', num('breaker_threshold', p.breakerThreshold, 1, 50))}
+      ${row('breaker_cooldown_ms', 'how long an open provider is skipped', num('breaker_cooldown_ms', p.breakerCooldownMs, 1000, 86400000))}
+      ${row('skip_open', 'skip providers whose breaker is open', `<label class="switch"><input type="checkbox" data-rt="skip_open" ${p.skipOpen ? 'checked' : ''}><span></span></label>`)}
+      <div class="kv">breakers: ${br.length ? br.map(b => `<span class="tag ${b.open ? 'warn' : ''}">${esc(b.provider)} ${b.open ? 'open' : `${b.fails} fail`}</span>`).join(' ') : '<span class="tag ok">all closed</span>'} <button class="ap-chip" id="rt-reset">reset breakers</button></div></div>
+    <div class="card"><h3><span class="grow">The route per block</span><span class="tag">${(d.blocks || []).length} blocks</span></h3>
+      ${(d.blocks || []).map(b => `<div class="row"><div><div class="k">${esc(b.id)}</div><div class="d">${esc(b.title)}</div></div><div class="ctl">${b.route.map(r => `<span class="tag" title="${esc(r.why)}">${esc(r.provider)}</span>`).join(' → ')}${b.skipped.length ? ` <span class="kv">skipped ${b.skipped.map(x => esc(x.provider)).join(', ')}</span>` : ''}</div><div class="ctl"></div></div>`).join('')}</div>`;
+  for (const b of $('body').querySelectorAll('[data-rt-mode]')) b.onclick = () => rtSet('mode', b.dataset.rtMode);
+  for (const b of $('body').querySelectorAll('[data-rt-class]')) b.onclick = () => { const c = b.dataset.rtClass; const on = new Set(p.fallbackOn); on.has(c) ? on.delete(c) : on.add(c); rtSet('fallback_on', [...on].join(',')); };
+  for (const el of $('body').querySelectorAll('[data-rt]')) el.onchange = () => rtSet(el.dataset.rt, el.type === 'checkbox' ? el.checked : el.type === 'number' ? Number(el.value) : el.value);
+  $('rt-reset').onclick = async () => { try { await post('/api/routing/breaker/reset', {}); toast('breakers reset', 'ok'); renderRouting(); } catch (e) { toast(e.message, 'bad'); } };
 }
 
 // ── §0.39.281 EC8 — the provider economy (docs/2026-09-29-provider-economy-phasemap.spec) ──

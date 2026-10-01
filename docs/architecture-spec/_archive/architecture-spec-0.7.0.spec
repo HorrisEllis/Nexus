@@ -1,8 +1,12 @@
+# ARCHIVED 2026-10-01 (NEXUS 0.39.286) — architecture-spec 0.7.0, kept whole (§0.3). Superseded by
+# docs/architecture-spec/architecture-spec.spec 0.8.0, which keeps only what exists in NEXUS. What 0.8.0 moved out lives
+# here: the eleven architecture-spec.* events (never emitted), the six unbuilt target routes, three proposed axioms with
+# no enforcement, gap AS4 (BPM scoring — no such scorer), and the wrong module paths (schema/, compiler/).
 spec:
   meta:
     name:        architecture-spec
-    version:     0.8.0
-    extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.1.0 — the default template of a system spec since 0.39.286
+    version:     0.7.0
+    extends:     genesis-devkit-v1-0000-2026-0701-jamesbrooks-001  # status: proposed in that file — this spec is the argument for promoting it to active, not a replacement for it
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
     uuid:        TBD — assign on first real implementation, convention nexus-architecture-spec-v1-0000-<date>-jamesbrooks-001
@@ -87,11 +91,15 @@ spec:
     axioms:
       - AX-001  validate all inputs at boundary (shared, applies unchanged)
       - AX-002  no silent failures — bus event on error (shared, applies unchanged)
-      - AX-004  self-describing — a repo's registry is served at GET /api/repos/:uuid/architecture and written as nodes/
+      - AX-004  self-describing — served at /contract equivalent (GET /<system>/lattice)
       - AX-010  sovereign transport — no cross-system require() into another system's data/ or ledger/
       - SMALLEST_UNIT  one component = one file = one intent, nothing bundled into a single file (genesis.spec, restated here as load-bearing, not just inherited)
       - SPEC_IS_LIVING_MODEL  a .spec is edited as the real system changes, in place, with version_history as the audit trail — not a one-time snapshot (already the real behavior of clear-glass.spec, warp.spec, etc.; stated explicitly here so it's a rule, not an inferred convention)
       - "HARDLINE_AS_LITTLE_AS_POSSIBLE  code contains the smallest possible set of deterministic, unchanging lines — anything that can plausibly change (a value, a route, a rule, a threshold) is a node, not a literal in a file. This is CONFIG_OUTSIDE_CODE (genesis.spec) generalized past config: not just adjustable settings, ANY dynamic or changeable fact belongs in a node so it can be declared, watched, indexed, and ledgered like every other node — never buried in source where changing it means editing and redeploying code instead of dropping or editing a node file."
+      - "proposed, no AX code assigned yet:"
+      - "orphan-free — no node may reach status: verified while any hook's wire target fails to resolve"
+      - "no stub in production — zero nodes at status: stub in a production build"
+      - "lattice regeneration-stability — recompiled lattice must exactly match lattice.json on disk, or the build fails"
     constants:
       NODE_STATUSES:       "[stub, wired, verified]"
       HOOK_DIRECTIONS:     "[in, out, bidirectional]"
@@ -100,13 +108,21 @@ spec:
       NODE_KINDS:          "[component, hook, wire, bundle, config] — the real set watcher.js/api.js watch and index; config added this pass"
 
   events:
-    # 0.8.0 — the eleven architecture-spec.* events 0.7.0 listed are emitted by nothing in NEXUS (checked: no code under
-    # architecture-spec/ or elsewhere emits them). Moved to docs/architecture-spec/_archive/architecture-spec-0.7.0.spec.
-    # The events that DO exist for this pattern are idearium's: idearium.repo.architecture.written (POST
-    # /api/repos/:uuid/architecture), and the registry's own event nodes (nodes/event/*.event) for a repo's events.
     emits:
-      - "idearium.repo.architecture.written"   # idearium/api/index.js — after ARCHITECTURE.json and nodes/ are written
+      - "architecture-spec.node.declared"
+      - "architecture-spec.node.wired"
+      - "architecture-spec.node.verified"
+      - "architecture-spec.bundle.updated"
+      - "architecture-spec.lattice.compiled"
+      - "architecture-spec.orphan.detected"
+      - "architecture-spec.build.blocked"
+      - "architecture-spec.ledger.entry.appended"
+      - "architecture-spec.route.compiled"
+      - "architecture-spec.sovereignty.violation.detected"
+      - "architecture-spec.config.changed"
     handles: []
+    # No upstream event dependencies at draft stage — this system produces
+    # the pattern other systems consume, it does not yet consume anything.
 
   routes:
     # Real and tested — the registry-api module, run this pass with an
@@ -124,17 +140,13 @@ spec:
       path: /config/:id
       body:    "{id, value} — a ConfigNode"
       returns: "{ok, id} — a real, watched file write; picked up by the same watch path every other node kind uses, no separate hot-reload code. Real, tested: written by a simulated agent-style POST, read back correctly."
-    # 0.8.0 — the six "target surface, not yet built" routes (/<system>/lattice, api-routes, bundles, friction, tension,
-    # gaps) were never built; moved to the archive. The routes that serve this pattern in NEXUS today:
-    - method: GET
-      path: /api/repos/:uuid/architecture        # idearium — a repo's registry: components, hooks, wires, routes, CLI, events, orphans, breaches, data dirs
-      returns: "idearium/repo/architecture.js architecture() over the repo's code index"
-    - method: POST
-      path: /api/repos/:uuid/architecture        # idearium — writes ARCHITECTURE.json and the registry as nodes (nodes/<type>/<id>.<type>)
-      returns: "{ stats, nodes: { written, unchanged, archived, failed, total } }"
-    - method: GET
-      path: /api/nodes/:type                     # orchestrator — every system's nodes of one type (lib/system-nodes.js)
-      returns: "one node type across every system, ?system=&q=&limit=&full=1"
+    # Target surface, not yet built:
+    #   GET /<system>/lattice       — compiled lattice, read-only
+    #   GET /<system>/api-routes    — compiled http-hook subset
+    #   GET /<system>/bundles       — compiled NodeBundle index
+    #   GET /<system>/friction      — FrictionScore, computed live
+    #   GET /<system>/tension       — TensionScore, computed live
+    #   GET /<system>/gaps         — this .spec file's own gaps.entries, as data
 
   handshake:
     components_count: 0
@@ -149,21 +161,21 @@ spec:
 
   modules:
     - id: capability-node-schema
-      path: architecture-spec/registry/{component,hook,wire,bundle,config}.js   # 0.8.0: the real paths (0.7.0 said schema/)
+      path: architecture-spec/schema/{component,hook,wire,bundle,config}.js  # config.js added this pass
       description: >
         The declared unit — Component / Hook / Wire / NodeBundle /
         Config files. Restates loom/schema/*.js unchanged for the first
         three; bundle and config are this spec's own additions,
         reference-only and deliberately-untyped respectively.
     - id: lattice-compiler
-      path: architecture-spec/registry/lattice.js   # built — compileLattice() (0.7.0 said compiler/lattice.js, not built)
+      path: architecture-spec/compiler/lattice.js  # proposed, not yet built
       description: >
         Reads every Component/Hook/Wire file, resolves every wire's two
         hook ends against real node ids across any lattice level,
         produces CompiledLattice. Direct generalization of
         loom/schema/registry.js's graph() method.
     - id: registry-watcher
-      path: architecture-spec/registry/watcher.js   # built — createWatcher(), NODE_TYPES [component, hook, wire, bundle, config]
+      path: architecture-spec/registry/watcher.js  # proposed, not yet built
       description: >
         Generalization of guardian/lib/node-registry.js out of guardian
         and into this spec's own registry/ domain (matching genesis.spec's
@@ -242,44 +254,6 @@ spec:
         was reachable this session to confirm the POST /api/memory/write
         leg actually lands.
 
-    # 0.8.0 — real files under architecture-spec/registry/ that 0.7.0 did not list:
-    - id: phases
-      path: architecture-spec/registry/phases.js
-      description: "PHASE_SCHEMA, PHASE_STATUSES, checkPhase, summarize, oneLine — a phase as a node (decompose.js's output)."
-    - id: edit-atlas
-      path: architecture-spec/registry/edit-atlas.js
-      description: "findSection, editSection — edits one section of an atlas in place."
-    - id: nexus-atlas-aggregate
-      path: architecture-spec/registry/nexus-atlas-aggregate.js
-      description: "aggregate — the per-system atlases into one NEXUS view."
-
-  # ── 0.8.0 — the registry as the doorway (docs/2026-10-01-routing-registry-genesis-phasemap.spec RC1/RC2) ─────────────
-  # James: "add the components registry as an 11th chunk … after the file list and tree … is its self the doorway, and the
-  # rest is isolated modular, interacting through the interaction contract/registry … routes, cli, nodes and dir …
-  # the nodes based data structure exactly like guardian."
-  registry_block:
-    template:  idearium/spec-engine/blocks.yaml — block 11, `registry`, dependsOn [build_order], fallback [ollama, gemini]
-    produces:  nodes/<type>/<id>.<type> — lib/node-export.js envelope (Guardian's layout)
-    node_types: [component, hook, wire, event, command, contract, system]   # all in lib/node-export.js KNOWN_TYPES
-    generator: idearium/repo/architecture.js — architecture(intel, { readFile }) + toNodes(); POST /api/repos/:uuid/architecture
-    archive:   a node no longer produced moves to nodes/_archive/<type>/; an unchanged node is not rewritten (fingerprint)
-    rules:
-      - a module reaches another only through a declared hook — an import wire, an event, a route or a CLI command
-      - lower layers never require higher ones (breaches are listed on the contract node)
-      - the UI reads the registry and calls routes and events; it imports no module
-      - an orphan, or an event with no consumer, is a gap on the contract node
-    test:      tests/modules/test-repo-architecture.test.js AR-08…AR-11
-
-  # ── 0.8.0 — routing (docs/2026-10-01-routing-registry-genesis-phasemap.spec RG1–RG4) ──────────────────────────────────
-  routing:
-    module:    lib/pipeline-routing.js — policyFrom, plan, classify, shouldFallback, breaker
-    config:    idearium routing.* — mode (fixed | chain | local-first | economy), chain, fallback_on, max_hops,
-               attempts_per_hop, breaker_threshold, breaker_cooldown_ms, skip_open
-    surfaces:  GET /api/routing · GET /api/routing/plan?block=&agent= · POST /api/routing/breaker/reset · `idearium routing`
-               · the settings console's Routing & fallback page
-    provenance: "every hop kept on the chunk (chunk.route — provider, outcome, class, ms) — spec-engine recordChunkRoute"
-    test:      tests/modules/test-pipeline-routing.test.js
-
   history:
     - date: 2026-09-22
       summary: >
@@ -299,16 +273,18 @@ spec:
         convention.
 
   gaps:
-    as_of: 2026-10-01
+    as_of: 2026-09-22
     entries:
       - id: AS1
         type: implementation
-        summary: >-
-          CLOSED 2026-10-01 — the code exists: architecture-spec/registry/ holds the schemas, lattice.js, watcher.js,
-          friction.js, decompose.js, api.js, create-atlas.js, phases.js, edit-atlas.js, nexus-atlas-aggregate.js. What
-          stays open is the 0.39.271 note: only Guardian's own watcher runs; no system boots this watcher.
+        summary: >
+          No compiler or watcher code exists yet under this spec's own
+          path — capability-node-schema, lattice-compiler, and
+          registry-watcher are all specced, none built. registry-watcher
+          in particular describes generalizing REAL, already-running
+          code (guardian/lib/node-registry.js), not inventing new
+          behavior — the implementation risk is extraction, not design.
         opened: 2026-09-22
-        closed: 2026-10-01
       - id: AS2
         type: coverage
         summary: >
@@ -317,24 +293,25 @@ spec:
         opened: 2026-09-22
       - id: AS3
         type: integration
-        summary: >-
-          CLOSED 2026-10-01 — genesis is in idearium's template menu (templates.js id 'genesis') and is now the default:
-          checked in the New spec form, and the template a `type: system` spec starts from when none is named.
+        summary: >
+          genesis.spec is status: proposed, not active, and does not
+          appear reachable from idearium's promote-to-spec template
+          menu (listCosTemplates() covers COS archetypes/blueprints
+          only) — this spec does not resolve that promotion decision,
+          it only depends on the outcome.
         opened: 2026-09-22
-        closed: 2026-10-01
-      # AS4 ("BPM for health scoring") moved to the archive: no BPM-based scorer exists anywhere in NEXUS.
+      - id: AS4
+        type: open_question
+        summary: >
+          "BPM for health scoring like the intelligence system" —
+          checked intelligence/*.js for a BPM-based formula, found
+          none. genesis.spec's pulse/fidelity-score.js uses a generic
+          four-axis scorer, not BPM specifically. Left unresolved
+          rather than invented — needs the real source named before
+          this spec's pulse/health-score constants are written.
+        opened: 2026-09-22
 
   version_history:
-    - version: 0.8.0
-      date: 2026-10-01
-      summary: >-
-        Cut to what exists in NEXUS (James: "remove anything from the architecture spec thats absent from nexus").
-        Module paths corrected (registry/, not schema/ or compiler/); lattice.js and watcher.js marked built; three
-        unlisted real modules added. Moved to docs/architecture-spec/_archive/architecture-spec-0.7.0.spec, kept whole:
-        the eleven architecture-spec.* events (nothing emits them), the six unbuilt target routes, the three proposed
-        axioms with no enforcement, gap AS4 (BPM — no such scorer). Added: the registry block (the spec template's 11th,
-        nodes in Guardian's layout) and routing. AS1 and AS3 closed. extends now names genesis's real uuid.
-      versioniumCommitId: null
     - version: 0.1.0
       date: 2026-09-22
       summary: >-

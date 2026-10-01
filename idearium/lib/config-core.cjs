@@ -182,6 +182,19 @@ const SCHEMA = {
     motion: { default: 'full', enum: ['full', 'reduced'], copilot_writable: true, type: 'string' },
   },
 
+  // §0.39.286 RG2 (docs/2026-10-01-routing-registry-genesis-phasemap.spec) — James: "full options for fallback logic,
+  // routing". Read by lib/pipeline-routing.js policyFrom(); used by every spec chunk build (speceng.build).
+  routing: {
+    mode:                { default: 'chain', enum: ['fixed', 'chain', 'local-first', 'economy'], copilot_writable: true, type: 'string' },
+    chain:               { default: 'ollama,gemini,chatgpt,claude,deepseek', copilot_writable: true, type: 'string' },
+    fallback_on:         { default: 'empty,truncated,refused,timeout,provider-down,rate-limit,unknown', copilot_writable: true, type: 'string' },
+    max_hops:            { default: 3, min: 1, max: 10, copilot_writable: true, type: 'number' },
+    attempts_per_hop:    { default: 6, min: 1, max: 20, copilot_writable: true, type: 'number' },
+    breaker_threshold:   { default: 3, min: 1, max: 50, copilot_writable: true, type: 'number' },
+    breaker_cooldown_ms: { default: 600000, min: 1000, max: 86400000, copilot_writable: true, type: 'number' },
+    skip_open:           { default: true, copilot_writable: true, type: 'boolean' },
+  },
+
   cicd: {
     push_enabled: { default: false, copilot_writable: true,  type: 'boolean' },
     pull_enabled: { default: false, copilot_writable: true,  type: 'boolean' },

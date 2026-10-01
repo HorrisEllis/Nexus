@@ -1033,6 +1033,14 @@ async function _ollamaModels() {
   } catch (e) { return { ok: false, error: `ollama bridge unreachable: ${e.message}`, models: [], active: null }; }
 }
 
+// §0.39.286 RG2 — the routing.* config as a lib/pipeline-routing policy (defaults when the config cannot be read)
+function _routingPolicy(overrides = {}) {
+  const PR = _require('../../lib/pipeline-routing.js');
+  let cfg = {};
+  try { cfg = (getIdeariumConfig() || {}).routing || {}; } catch (_) { /* defaults */ }
+  return PR.policyFrom(cfg, overrides);
+}
+
 async function _versionium(method, urlPath, body, timeout) {
   try {
     const opts = timeout ? { timeout } : undefined;
@@ -1245,7 +1253,10 @@ const ROUTE_CAP = {
   'speceng.setWarpPrimitives': CAPS.WRITE_IDEAS,
   'cli.exec':         CAPS.ADMIN,
   'config.get':       CAPS.READ_IDEAS,
+  'routing.show':     CAPS.READ_IDEAS,
+  'routing.plan':     CAPS.READ_IDEAS,
   'config.set':       CAPS.WRITE_IDEAS,
+  'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
   'settings.console': CAPS.READ_IDEAS,
   'settings.console.repo': CAPS.READ_IDEAS,
@@ -1276,6 +1287,10 @@ function matchRoute(method, url) {
     // idearium/lib/config.js. GET has no body; POST takes {key, value,
     // actor?} — actor defaults to 'user' inside config.js itself.
     ['GET',    ['api','config'],          'config.get'],
+    // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
+    ['GET',    ['api','routing'],         'routing.show'],
+    ['GET',    ['api','routing','plan'],  'routing.plan'],
+    ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
     // §0.39.279 — the settings console (ui/settings.html): every idearium, compartment and agent setting in one read.
     // Writes go to the routes that already own each setting (config, agent/settings, agent/blocks, desktop).
     ['POST',   ['api','config','reset'],              'config.reset'],
@@ -1816,6 +1831,25 @@ async function handle(req, res, route, query, body) {
         const event = setIdeariumConfig(key, value, { actor: actor || 'user' });
         return ok(res, { event, config: getIdeariumConfig() });
       } catch (e) { return err(res, 400, e.message); }
+    }
+
+    // §0.39.286 RG2 — what the build pipeline will do: the policy, each provider's breaker, the route per block
+    case 'routing.show': case 'routing.plan': {
+      const PR = _require('../../lib/pipeline-routing.js');
+      const policy = _routingPolicy();
+      const se = await import('../spec-engine/index.js');
+      if (action === 'routing.plan') {
+        const block = query.block ? se.SPEC_SECTIONS.find(b => b.id === query.block) : null;
+        if (query.block && !block) return err(res, 404, `no block '${query.block}' — one of: ${se.SPEC_SECTIONS.map(b => b.id).join(', ')}`);
+        return ok(res, { policy, ...PR.plan({ preferAgent: query.agent || null, block, policy }) });
+      }
+      return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(),
+        blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
+    }
+    case 'routing.breaker.reset': {
+      const PR = _require('../../lib/pipeline-routing.js');
+      PR.breaker.reset((body && body.provider) || null);
+      return ok(res, { reset: (body && body.provider) || 'all', breakers: PR.breaker.all() });
     }
 
     case 'stats.get':
@@ -3949,14 +3983,45 @@ async function handle(req, res, route, query, body) {
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
       const AR = await import('../repo/architecture.js');
       const intel = _require('../../lib/code-intel/index.js').load(_repoDiskDir(params.uuid));
-      const a = AR.architecture(intel, { repoName: repo.name });
+      const layer = getRepoLayer();
+      // §0.39.286 RC2 — each module's text, so its routes, CLI commands and events are read too
+      const readFile = (p) => { const r = layer.readTextFile(params.uuid, p); return r && !r.error && typeof r.content === 'string' && r.content.length < 400000 ? r.content : null; };
+      const a = AR.architecture(intel, { repoName: repo.name, readFile });
       if (a.error) return err(res, 409, a.error, { code: 'NO_INDEX' });
       if (route.action === 'repo.architecture.write') {
-        const doc = { schema: 'nexus.architecture/1', repo: { uuid: repo.uuid, name: repo.name }, generatedAt: new Date().toISOString(), generatedBy: 'idearium/repo/architecture.js', ...a };
-        const w = getRepoLayer().writeTextFile(params.uuid, 'ARCHITECTURE.json', JSON.stringify(doc, null, 1) + '\n');
+        // §0.39.286 RC2 — the registry as Guardian's nodes: nodes/<type>/<id>.<type> (lib/node-export.js envelope), an
+        // unchanged node left alone (fingerprint), a node no longer produced MOVED to nodes/_archive/ (§0.3)
+        const NE = _require('../../lib/node-export.js');
+        const crypto = _require('crypto');
+        const nodes = AR.toNodes(a, { repoName: repo.name, wrap: NE.wrap, hash: (t) => crypto.createHash('sha256').update(t).digest('hex').slice(0, 32) });
+        let prior = [];
+        try { const pj = layer.readTextFile(params.uuid, 'ARCHITECTURE.json'); if (pj && !pj.error) prior = JSON.parse(pj.content).nodeFiles || []; } catch (_) { prior = []; }
+        const counts = { written: 0, unchanged: 0, archived: 0, failed: [] };
+        for (const n of nodes) {
+          const cur = layer.readTextFile(params.uuid, n.path);
+          if (cur && !cur.error && typeof cur.content === 'string') {
+            const m = cur.content.match(/^fingerprint:\s*(\S+)/m);
+            if (m && m[1] === n.envelope.fingerprint) { counts.unchanged++; continue; }
+            const fs0 = cur.content.match(/^firstSeenAt:\s*(\d+)/m); if (fs0) n.envelope.firstSeenAt = Number(fs0[1]);
+          }
+          const w = layer.writeTextFile(params.uuid, n.path, NE.toYaml(n.envelope), { defer: true });
+          if (w && w.error) counts.failed.push(`${n.path}: ${w.error}`); else counts.written++;
+        }
+        const now = new Set(nodes.map(n => n.path));
+        for (const old of prior) {
+          if (now.has(old)) continue;
+          const cur = layer.readTextFile(params.uuid, old);
+          if (!cur || cur.error) continue;
+          const to = old.replace(/^nodes\//, 'nodes/_archive/');
+          const w = layer.writeTextFile(params.uuid, to, cur.content, { defer: true });
+          if (w && !w.error) { layer.deleteTextFile(params.uuid, old, { defer: true }); counts.archived++; }
+        }
+        const doc = { schema: 'nexus.architecture/1', repo: { uuid: repo.uuid, name: repo.name }, generatedAt: new Date().toISOString(), generatedBy: 'idearium/repo/architecture.js', ...a, nodeFiles: [...now].sort() };
+        const w = layer.writeTextFile(params.uuid, 'ARCHITECTURE.json', JSON.stringify(doc, null, 1) + '\n');
         if (!w || w.error) return err(res, 500, `could not write ARCHITECTURE.json: ${(w && w.error) || 'unknown'}`);
-        getIdeaOS().emit('idearium.repo.architecture.written', { repoUuid: params.uuid, ...a.stats });
-        return ok(res, { repoUuid: params.uuid, written: 'ARCHITECTURE.json', stats: a.stats });
+        try { layer.refresh(params.uuid); } catch (_) { /* the writes stand */ }
+        getIdeaOS().emit('idearium.repo.architecture.written', { repoUuid: params.uuid, ...a.stats, nodes: counts });
+        return ok(res, { repoUuid: params.uuid, written: 'ARCHITECTURE.json', stats: a.stats, nodes: { ...counts, total: nodes.length, dir: 'nodes/' } });
       }
       return ok(res, { repoUuid: params.uuid, ...a });
     }
@@ -5111,7 +5176,11 @@ async function handle(req, res, route, query, body) {
         // through the same WARP dispatch the build uses. Document-section
         // specs are unchanged when neither is asked for.
         const FTP = _require('../../lib/file-tree-plan.js');
-        const allIds = Array.isArray(templateIds) ? templateIds : (templateId ? [templateId] : []);
+        // §0.39.286 GN1 — genesis is the default template of a system spec: a `type: 'system'` spec that names no template
+        // starts from genesis (its registry/doorway and routing domains with it). Any other spec is as before; naming a
+        // template, or templateIds: [], still wins.
+        const _named = Array.isArray(templateIds) ? templateIds : (templateId ? [templateId] : null);
+        const allIds = _named !== null ? _named : (type === 'system' ? ['genesis'] : []);
         // §BUILT 2026-09-21 — isFileTreeTemplate covers both real catalogs
         // (COS archetypes/blueprints and eravos mods); an id from either
         // takes the file-tree path below, same as a COS-only id always did.
@@ -5345,7 +5414,15 @@ async function handle(req, res, route, query, body) {
         // switch, then the chunk's creation-time agent, the spec's, and chatgpt.
         const who = _buildIdentity(params.uuid);
         const preferAgent   = body.agent || (chunk.agentPinned ? chunk.agent : null) || who.provider || chunk.agent || manifest.agent || 'chatgpt';
-        const fallbackAgent = body.fallbackAgent || (preferAgent === 'chatgpt' ? 'gemini' : null);
+        // §0.39.286 RG3 — the route, not one hard-coded hop: lib/pipeline-routing.js plan() over the routing.* config —
+        // the chosen agent, this block's own fallback, the global chain (or local-first / economy / fixed), providers
+        // whose breaker is open skipped. A call may still name its own: body.route (a list) or body.fallbackAgent.
+        const routingPolicy = _routingPolicy(body.routing || {});
+        const routePlan = Array.isArray(body.route) && body.route.length
+          ? { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [] }
+          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, policy: routingPolicy });
+        if (body.fallbackAgent && !routePlan.route.some(r => r.provider === body.fallbackAgent)) routePlan.route.splice(1, 0, { provider: body.fallbackAgent, why: 'given by the call' });
+        const fallbackAgent = null;   // the route carries the fallbacks now (0.39.286); kept so nothing below changes shape
 
         se.markChunkBuilding(params.uuid, chunk.uuid, { agent: preferAgent });
 
@@ -5424,6 +5501,7 @@ async function handle(req, res, route, query, body) {
           {
             preferAgent,
             fallbackAgent,
+            route: routePlan.route.map(r => r.provider), policy: routingPolicy,   // §0.39.286 RG3
             // §BUILT 2026-09-03 — fires the instant a queued job is
             // confirmed on guardian's side, before the (up to 5-minute)
             // poll for a browser-automated NCP provider — see
@@ -5437,6 +5515,7 @@ async function handle(req, res, route, query, body) {
             },
           }
         ).then(async result => {
+          try { if (result && result.route && se.recordChunkRoute) se.recordChunkRoute(params.uuid, chunk.uuid, result.route); } catch (_) { /* provenance is best-effort; the build outcome stands */ }
           // §RAID-SOURCE 2026-08-29 — report idearium's own real,
           // already-decided outcome back to RAID's queue, whichever
           // branch below actually runs. Best-effort — a failure here
@@ -5490,6 +5569,7 @@ async function handle(req, res, route, query, body) {
         return ok(res, {
           chunkUuid: chunk.uuid, sectionId: chunk.sectionId, sectionTitle: chunk.sectionTitle,
           agent: preferAgent, status: 'building',
+          route: routePlan.route, routeSkipped: routePlan.skipped, routeMode: routePlan.mode,   // §0.39.286 — what it will try, in order, and why
           hat: who.hat ? who.hat.name : null, hatSource: who.hatSource, repoUuid: who.repoUuid,   // §0.39.267 — who's wearing what, visible
           agentId: who.agentId, memory: memoryInfo,                                                // §0.39.269 — and what it remembered
         });

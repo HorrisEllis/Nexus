@@ -502,6 +502,21 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Actions per card:** **Apply** / **Reject** (proposed), **Revert** (applied), **Promote** (staged).
 - **The tools strip:** the tool scope, the tools the agent is given, and every call it made, ✓ or ✗ with the error. Phase and plan runs now keep their tool calls.
 
+**Routing & fallback** (0.39.286, `lib/pipeline-routing.js`). Every spec chunk is built along a route:
+- **Order:** the chosen agent, then the block's own fallback list (in `idearium/spec-engine/blocks.yaml`), then the global chain.
+- **Modes:** fixed, chain, local-first, economy.
+- **Failures:** each failed hop is classed (empty, truncated, refused, timeout, provider-down, rate-limit, login, unknown) and moves on only if the fallback-on setting names its class. Login never moves on.
+- **Breaker:** a provider failing several times in a row is skipped for a cooldown.
+- **Record:** the hops are kept on the chunk.
+- **Where to see and set it:** the routing API (show, plan per block, reset breakers), the idearium CLI's routing command, and Settings → **Routing & fallback**. Its config keys are listed in `idearium/lib/config-core.cjs`.
+
+**The registry block** (0.39.286). A new spec has 11 chunks; the 11th, **registry**, follows build_order and waits on it. In a repo, the Architect tab's **write the registry** writes the architecture doc and the registry as nodes in Guardian's layout:
+- **What:** one node file per fact under the repo's nodes folder, in the envelope of `lib/node-export.js`.
+- **Node types:** component, hook, wire, event, command (routes and CLI), contract (the doorway), system.
+- **Rewrites:** an unchanged node is not rewritten; a node no longer produced moves to the archive folder.
+- **Built by:** `idearium/repo/architecture.js`.
+- **Default template:** genesis (`idearium/spec-engine/templates/genesis.spec`) is the default template of a system spec.
+
 **The code build in the Plan** (0.39.285). A code spec builds one chunk per file. The Plan panel shows it: files done/total, each file's state and layer, the failure, and **build the rest / retry** (POST /api/spec-engine/specs/:uuid/build). Codegen opens the panel. In the Files tab, a file the build has not written says "not built yet — its chunk is &lt;state&gt;".
 - **A FAILED chunk can be given to another agent** (the chunk's agent select): it returns to pending with attempts 0, the failure kept as priorFailure.
 - **Version history per file** (GET /api/repos/:uuid/file/versions?path=, /file/version?path=&commitId=; `idearium/ui/js/file-versions.js`): the Manage menu and the open file's **history** button list each Versionium commit that wrote the file; **restore** writes it back through POST /api/repos/:uuid/file.

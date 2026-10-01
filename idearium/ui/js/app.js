@@ -1390,8 +1390,8 @@ async function openNewSpecModal({ name = '', description = '', ideaUuid = null }
   // a file tree), COS blueprints (several roles), spec-document templates.
   const row = t => `
     <label class="ns-tpl-row" data-src="${escapeHtml(t.source || 'spec')}" style="display:flex;align-items:flex-start;gap:8px;padding:4px 2px;cursor:pointer;font-size:11px;color:var(--text2)">
-      <input type="checkbox" class="ns-tpl-check" value="${escapeHtml(t.id)}" onchange="onNewSpecTemplateChange()" style="margin-top:2px">
-      <span><b style="color:var(--text)">${escapeHtml(t.label||t.id)}</b>${t.hasSeed ? ' <span style="color:var(--mint)">· deterministic</span>' : ''}${typeof t.fileCount === 'number' ? ` <span style="color:var(--text3)">· ${t.fileCount} file${t.fileCount === 1 ? '' : 's'}</span>` : ''}<br>
+      <input type="checkbox" class="ns-tpl-check" value="${escapeHtml(t.id)}" onchange="onNewSpecTemplateChange()" style="margin-top:2px" ${t.id === 'genesis' ? 'checked' : ''}>
+      <span><b style="color:var(--text)">${escapeHtml(t.label||t.id)}</b>${t.id === 'genesis' ? ' <span style="color:var(--nx-ok, var(--mint))">· default</span>' : ''}${t.hasSeed ? ' <span style="color:var(--mint)">· deterministic</span>' : ''}${typeof t.fileCount === 'number' ? ` <span style="color:var(--text3)">· ${t.fileCount} file${t.fileCount === 1 ? '' : 's'}</span>` : ''}<br>
       <span style="color:var(--text3)">${escapeHtml(t.description||'')}</span></span>
     </label>`;
   const groups = [
@@ -5719,12 +5719,12 @@ function _archPaint() {
   el.innerHTML = `<div class="ar-wrap">
     <div class="ar-head"><span class="ar-title">Component registry</span>
       <span class="ar-chip"><b>${st.components}</b> components</span><span class="ar-chip"><b>${st.wires}</b> wires</span><span class="ar-chip"><b>${st.hooks}</b> hooks</span>
-      <span class="ar-chip"><b>${st.externals}</b> packages</span><span class="ar-chip ${st.orphans ? 'bad' : ''}"><b>${st.orphans}</b> orphans</span>
+      <span class="ar-chip"><b>${st.externals}</b> packages</span><span class="ar-chip ${st.orphans ? 'bad' : ''}"><b>${st.orphans}</b> orphans</span><span class="ar-chip"><b>${st.routes || 0}</b> routes</span><span class="ar-chip"><b>${st.events || 0}</b> events</span>
       <span class="ar-chip ${st.breaches ? 'bad' : ''}"><b>${st.breaches}</b> bottom-up breaches</span><span class="ar-chip"><b>${st.lines}</b> lines</span>
       <span class="ar-grow"></span>
       <input class="field-input" style="width:180px" placeholder="filter id, file, layer, export…" value="${escapeHtml(ARCHREG.q)}" oninput="ARCHREG.q=this.value;_archPaint()">
       <button class="action-btn" onclick="archReindex()" title="re-read the code (lib/code-intel)">↻ index</button>
-      <button class="action-btn" onclick="archWrite()" title="write this map into the repo as ARCHITECTURE.json — the architecture doc, versioned">write ARCHITECTURE.json</button></div>
+      <button class="action-btn" onclick="archWrite()" title="write this map into the repo: ARCHITECTURE.json and the registry as nodes (nodes/<type>/<id>.<type>, Guardian's layout) — versioned; nodes no longer produced move to nodes/_archive/">write the registry</button></div>
     <div class="ar-map">${_archSvg(a, comps)}</div>
     <div class="ar-tblwrap"><table class="ar-tbl"><thead><tr><th>id</th><th>layer</th><th>type</th><th>lines</th><th>consumers</th><th>requires</th><th>exports</th></tr></thead><tbody>
       ${comps.map(c => `<tr class="${ARCHREG.sel === c.file ? 'hl' : ''}" onclick="ARCHREG.sel='${escapeHtml(c.file)}';_archPaint()"><td title="${escapeHtml(c.file)}">${escapeHtml(c.id)}${orph.has(c.file) ? ' <span style="color:var(--coral)">orphan</span>' : ''}</td><td>${escapeHtml(c.layer)}</td><td>${escapeHtml(c.type)}</td><td>${c.lines}</td>
@@ -5734,6 +5734,8 @@ function _archPaint() {
       <div class="ar-box"><h4>orphans — nothing uses them, they use nothing</h4>${(a.orphans || []).map(escapeHtml).join('<br>') || 'none'}</div>
       <div class="ar-box"><h4>bottom-up breaches (§3.1)</h4>${(a.breaches || []).map(b => `${escapeHtml(b.consumer)} → ${escapeHtml(b.dependency)}`).join('<br>') || 'none'}</div>
       <div class="ar-box"><h4>packages (external)</h4>${(a.externals || []).slice(0, 30).map(e => `${escapeHtml(e.name)} <span style="opacity:.6">· ${e.usedBy.length}</span>`).join('<br>') || 'none'}</div>
+      <div class="ar-box"><h4>routes · CLI (the doorway in)</h4>${(a.routes || []).slice(0, 40).map(r => `${escapeHtml(r.method)} ${escapeHtml(r.path)} <span style="opacity:.6">· ${escapeHtml(r.file)}</span>`).join('<br>') || 'no routes'}<br>${(a.cli || []).slice(0, 30).map(c => `$ ${escapeHtml(c.verb)} <span style="opacity:.6">· ${escapeHtml(c.file)}</span>`).join('<br>')}</div>
+      <div class="ar-box"><h4>events — emitted → handled</h4>${(a.events || []).slice(0, 40).map(e => `${escapeHtml(e.name)} <span style="opacity:.6">${e.emittedBy.length} → ${e.consumedBy.length}</span>${e.consumedBy.length ? '' : ' <span style="color:var(--nx-warn)">unhandled</span>'}`).join('<br>') || 'no events'}</div>
       <div class="ar-box"><h4>data dirs · node types</h4>${(a.dataDirs || []).map(escapeHtml).join('<br>') || 'no data dir'}<br><br>${Object.entries(a.nodeTypes || {}).map(([k, v]) => `.${escapeHtml(k)} × ${v}`).join('<br>') || 'no node files'}</div>
       ${ARCHREG.sel ? (() => { const c = (a.components || []).find(x => x.file === ARCHREG.sel); return c ? `<div class="ar-box"><h4>${escapeHtml(c.file)}</h4>id ${escapeHtml(c.id)}<br>consumers:<br>${c.consumers.map(escapeHtml).join('<br>') || '—'}<br>requires:<br>${c.deps.map(escapeHtml).join('<br>') || '—'}</div>` : ''; })() : ''}
     </div></div>`;
@@ -5763,6 +5765,6 @@ async function archReindex() {
 }
 async function archWrite() {
   const repo = CURRENT_API_REPO; if (!repo) return;
-  try { const r = await api(`/api/repos/${repo.uuid}/architecture`, { method: 'POST', body: '{}' }, 60000); toast(`ARCHITECTURE.json written — ${r.stats.components} components, ${r.stats.wires} wires`, 'ok'); }
+  try { const r = await api(`/api/repos/${repo.uuid}/architecture`, { method: 'POST', body: '{}' }, 60000); toast(`registry written — ${r.stats.components} components, ${r.stats.wires} wires · nodes: ${r.nodes ? `${r.nodes.written} written, ${r.nodes.unchanged} unchanged, ${r.nodes.archived} archived` : '—'}`, 'ok'); }
   catch (e) { toast(`not written: ${e.message}`, 'err'); }
 }
