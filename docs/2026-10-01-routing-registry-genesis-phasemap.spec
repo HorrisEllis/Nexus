@@ -179,3 +179,11 @@ spec:
 #          default template of a system spec and checked in the New spec form. AR1 architecture-spec 0.8.0, 0.7.0 archived
 #          whole. tests/modules/test-genesis-and-architecture-spec.test.js 5/5.
 # Loom     one-idearium-map: api → lib/pipeline-routing.js, chunk-dispatch → lib/pipeline-routing.js (both land on bootstrap).
+
+## ADDENDUM 2026-10-01 — RG5 learned routing (0.39.287)
+# James: "smart fallback for ollama and guardian, learn which models are best for what chunks."
+# RG5_learned: lib/pipeline-routing.js mode 'learned' (default) — provider:model candidates (Ollama per model), jobTypeOf()
+# (build:<block> | build:file.<ext>), recordHop() into lib/economy/ledger.js from chunk-dispatch's walk (cache hits
+# skipped), the route ordered by Beta-posterior success per chunk type once learn_min_records exist (deterministic;
+# untried 0.5), learned() + GET /api/routing/learned + `idearium routing learned` + the settings table.
+# The hop's model rides to the agent (dispatchOpts.model wins over the hat's). tests: test-pipeline-routing PR-31…34, PR-26.

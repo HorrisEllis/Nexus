@@ -1255,6 +1255,7 @@ const ROUTE_CAP = {
   'config.get':       CAPS.READ_IDEAS,
   'routing.show':     CAPS.READ_IDEAS,
   'routing.plan':     CAPS.READ_IDEAS,
+  'routing.learned':  CAPS.READ_IDEAS,
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -1290,6 +1291,7 @@ function matchRoute(method, url) {
     // §0.39.286 RG2 — the pipeline's routing and fallback policy (lib/pipeline-routing.js); set it through POST /api/config routing.*
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
+    ['GET',    ['api','routing','learned'], 'routing.learned'],   // §0.39.287 what each model/provider has done per chunk type
     ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
     // §0.39.279 — the settings console (ui/settings.html): every idearium, compartment and agent setting in one read.
     // Writes go to the routes that already own each setting (config, agent/settings, agent/blocks, desktop).
@@ -1845,6 +1847,10 @@ async function handle(req, res, route, query, body) {
       }
       return ok(res, { policy, modes: PR.MODES, classes: PR.CLASSES, breakers: PR.breaker.all(),
         blocks: se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title, agent: b.agent, fallback: b.fallback || [], ...PR.plan({ block: b, policy }) })) });
+    }
+    case 'routing.learned': {
+      const PR = _require('../../lib/pipeline-routing.js');
+      return ok(res, { policy: _routingPolicy(), learned: PR.learned({ jobType: query.jobType || null }) });
     }
     case 'routing.breaker.reset': {
       const PR = _require('../../lib/pipeline-routing.js');
@@ -5420,7 +5426,7 @@ async function handle(req, res, route, query, body) {
         const routingPolicy = _routingPolicy(body.routing || {});
         const routePlan = Array.isArray(body.route) && body.route.length
           ? { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [] }
-          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, policy: routingPolicy });
+          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, chunk, policy: routingPolicy });
         if (body.fallbackAgent && !routePlan.route.some(r => r.provider === body.fallbackAgent)) routePlan.route.splice(1, 0, { provider: body.fallbackAgent, why: 'given by the call' });
         const fallbackAgent = null;   // the route carries the fallbacks now (0.39.286); kept so nothing below changes shape
 
@@ -5494,8 +5500,8 @@ async function handle(req, res, route, query, body) {
         } catch (e) { memoryInfo = { error: e.message }; }
         const route = { hat: who.hat, model: who.model, memory, agentId: who.agentId, compartmentId: who.compartmentId, repoUuid: who.repoUuid, fileName: chunk.realPath || null };
         const dispatchFn = warpFn
-          ? (prompt, dispatchOpts) => warpFn(prompt, { ...dispatchOpts, chunkTitle: chunk.title || chunk.sectionId, expectCode, ...route })
-          : (prompt, dispatchOpts) => as.buildChunkWithAgent(prompt, { ...dispatchOpts, ...route });
+          ? (prompt, dispatchOpts) => warpFn(prompt, { ...dispatchOpts, chunkTitle: chunk.title || chunk.sectionId, expectCode, ...route, ...(dispatchOpts && dispatchOpts.model ? { model: dispatchOpts.model } : {}) })
+          : (prompt, dispatchOpts) => as.buildChunkWithAgent(prompt, { ...dispatchOpts, ...route, ...(dispatchOpts && dispatchOpts.model ? { model: dispatchOpts.model } : {}) });   // §0.39.287 a hop's model (ollama:<model>) wins over the hat's
 
         dispatchChunkWithVerification(chunkPrompt, chunk, dispatchFn,
           {

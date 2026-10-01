@@ -41,7 +41,8 @@
  *   idearium repo build <repo> <spec path> [--phase <id>]
  *   idearium routing [show]                       (0.39.286 RG2) the routing policy, breakers, the route per block
  *   idearium routing plan [--block id] [--agent a]  the route one chunk would take
- *   idearium routing set <key> <value>            mode|chain|fallback_on|max_hops|attempts_per_hop|breaker_threshold|breaker_cooldown_ms|skip_open
+ *   idearium routing set <key> <value>            mode|chain|ollama_models|learn_min_records|fallback_on|max_hops|attempts_per_hop|breaker_threshold|breaker_cooldown_ms|skip_open
+ *   idearium routing learned [--type build:api]   (0.39.287) what each provider:model has done per chunk type
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -698,6 +699,18 @@ const COMMANDS = {
     if (pl.beyond.length) console.log(`  ${gray(`beyond max_hops: ${pl.beyond.join(', ')}`)}`);
     console.log('');
   },
+  async 'routing.learned'(os, { flags }) {
+    const { PR } = await _routingLocal();
+    const L = PR.learned({ jobType: flags.type || null });
+    const keys = Object.keys(L).sort();
+    if (!keys.length) { console.log(gray('\n  nothing learned yet — every chunk build records its outcome; learned mode uses them from routing.learn_min_records on\n')); return; }
+    header('learned — per chunk type, best first');
+    for (const k of keys) {
+      console.log(`  ${bold(k)}`);
+      for (const r of L[k]) console.log(`    ${(r.success >= 0.5 ? mint : coral)(`${Math.round(r.success * 100)}%`.padStart(4))}  ${r.provider.padEnd(34)} ${dim(`${r.ok} ok · ${r.failed} failed${r.medianMs ? ` · ${Math.round(r.medianMs / 1000)}s` : ''}`)}`);
+    }
+    console.log('');
+  },
   async 'routing.set'(os, { positional }) {
     const [key, ...v] = positional;
     if (!key || !v.length) die('usage: idearium routing set <key> <value>');
@@ -875,7 +888,7 @@ async function main() {
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
     console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);
-    console.log(`  ${sky('routing')} [show] | plan [--block id] [--agent a] | set <key> <value>`);
+    console.log(`  ${sky('routing')} [show] | plan [--block id] [--agent a] | learned | set <key> <value>`);
     console.log(`  ${sky('push')}   [--message "..."] [--branch main]`);
     console.log(`  ${sky('log')}    [--n 20]`);
     console.log(`  ${sky('status')}`);

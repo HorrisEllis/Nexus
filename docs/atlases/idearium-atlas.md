@@ -504,7 +504,8 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied â€
 
 **Routing & fallback** (0.39.286, `lib/pipeline-routing.js`). Every spec chunk is built along a route:
 - **Order:** the chosen agent, then the block's own fallback list (in `idearium/spec-engine/blocks.yaml`), then the global chain.
-- **Modes:** fixed, chain, local-first, economy.
+- **Modes:** learned (the default since 0.39.287), fixed, chain, local-first, economy.
+- **Learned:** each Ollama model listed in the config is its own candidate. Every hop is recorded per chunk type (a spec block, or a file extension). Once there is enough evidence, the route puts the provider or model that works for that kind of chunk first. Untried ones sit in the middle, and ones that keep failing (or truncating) sink. See it with the idearium CLI's routing learned command or the settings page.
 - **Failures:** each failed hop is classed (empty, truncated, refused, timeout, provider-down, rate-limit, login, unknown) and moves on only if the fallback-on setting names its class. Login never moves on.
 - **Breaker:** a provider failing several times in a row is skipped for a cooldown.
 - **Record:** the hops are kept on the chunk.

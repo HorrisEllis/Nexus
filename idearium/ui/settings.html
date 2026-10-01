@@ -285,7 +285,7 @@ function renderAppearance() {
 // James: "can we have full options for fallback logic, routing. what could improve stability with the pipeline?"
 // Read from GET /api/routing (the policy, each provider's breaker, the route every block would take); every change is
 // POST /api/config routing.<key> — the same keys `idearium routing set` writes.
-const RT_MODES = { fixed: 'the chosen agent only — no fallback', chain: 'the chosen agent, the block\'s own fallback, then the chain', 'local-first': 'ollama first, then the chosen agent and the chain', economy: 'ordered by what has worked (the provider economy\'s learned router)' };
+const RT_MODES = { learned: 'learns which agent and Ollama model work best for each kind of chunk (chain order until it has evidence)', fixed: 'the chosen agent only — no fallback', chain: 'the chosen agent, the block\'s own fallback, then the chain', 'local-first': 'ollama first, then the chosen agent and the chain', economy: 'ordered by what has worked (the provider economy\'s learned router)' };
 const RT_CLASS = { empty: 'nothing came back', truncated: 'cut off', refused: 'the provider declined', timeout: 'too slow', 'provider-down': 'not reachable', 'rate-limit': 'limit or quota', unknown: 'anything else', login: 'needs you to sign in — never falls through' };
 async function rtSet(key, value) {
   try { await post('/api/config', { key: `routing.${key}`, value, actor: 'settings-console' }); toast(`routing.${key} saved`, 'ok'); renderRouting(); }
@@ -303,6 +303,8 @@ async function renderRouting() {
   const br = (d.breakers || []);
   $('body').innerHTML = `<div class="card"><h3><span class="grow">Mode</span><span class="tag">${esc(p.mode)}</span></h3><div class="ap-chips">${Object.entries(RT_MODES).map(([m, t]) => `<button class="ap-chip ${p.mode === m ? 'on' : ''}" data-rt-mode="${m}" title="${esc(t)}">${esc(m)}</button>`).join('')}</div><div class="kv">${esc(RT_MODES[p.mode])}</div></div>
     <div class="card"><h3><span class="grow">Fallback chain</span></h3>${row('chain', 'tried in this order after the chosen agent (and the block\'s own <code>fallback:</code> in blocks.yaml)', `<input type="text" data-rt="chain" value="${esc(p.chain.join(','))}">`)}</div>
+    <div class="card"><h3><span class="grow">Ollama models</span></h3>${row('ollama_models', 'each listed model is its own candidate, learned separately (e.g. qwen2.5-coder:3b,qwen2.5-coder:7b); empty = the hat\'s model', `<input type="text" data-rt="ollama_models" value="${esc((p.ollamaModels || []).join(','))}">`)}${row('learn_min_records', 'outcomes needed for a chunk type before learned mode reorders it', `<input type="number" data-rt="learn_min_records" value="${esc(p.learnMinRecords)}" min="1" max="1000">`)}
+      <div id="rt-learned" class="kv">loading what has been learned…</div></div>
     <div class="card"><h3><span class="grow">Fall back when</span></h3><div class="ap-chips">${(d.classes || []).map(c => `<button class="ap-chip ${p.fallbackOn.includes(c) ? 'on' : ''}" ${c === 'login' ? 'disabled' : `data-rt-class="${c}"`} title="${esc(RT_CLASS[c] || '')}">${esc(c)}</button>`).join('')}</div><div class="kv">a class not chosen stops the walk on that provider; login always stops — it needs you.</div></div>
     <div class="card"><h3><span class="grow">Limits and breaker</span></h3>
       ${row('max_hops', 'providers tried per chunk', num('max_hops', p.maxHops, 1, 10))}
@@ -316,6 +318,8 @@ async function renderRouting() {
   for (const b of $('body').querySelectorAll('[data-rt-mode]')) b.onclick = () => rtSet('mode', b.dataset.rtMode);
   for (const b of $('body').querySelectorAll('[data-rt-class]')) b.onclick = () => { const c = b.dataset.rtClass; const on = new Set(p.fallbackOn); on.has(c) ? on.delete(c) : on.add(c); rtSet('fallback_on', [...on].join(',')); };
   for (const el of $('body').querySelectorAll('[data-rt]')) el.onchange = () => rtSet(el.dataset.rt, el.type === 'checkbox' ? el.checked : el.type === 'number' ? Number(el.value) : el.value);
+  api('/api/routing/learned').then(r => { const L = (r.data || r).learned || {}; const ks = Object.keys(L).sort();
+    $('rt-learned').innerHTML = ks.length ? ks.map(k => `<div><b>${esc(k)}</b> ${L[k].slice(0, 5).map(x => `<span class="tag ${x.success >= 0.5 ? 'ok' : 'warn'}" title="${x.ok} ok · ${x.failed} failed">${esc(x.provider)} ${Math.round(x.success * 100)}%</span>`).join(' ')}</div>`).join('') : 'nothing learned yet — every chunk build records its outcome'; }).catch(() => { $('rt-learned').textContent = ''; });
   $('rt-reset').onclick = async () => { try { await post('/api/routing/breaker/reset', {}); toast('breakers reset', 'ok'); renderRouting(); } catch (e) { toast(e.message, 'bad'); } };
 }
 
