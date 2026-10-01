@@ -1106,6 +1106,11 @@ export function completeChunk(specUuid, chunkUuid, content, { preserveWhitespace
   // lie about its own state.
   chunk.jobId       = null;
   chunk.dispatchDir = null;
+  // §0.39.291 PV2 — a repaired file's repair moves to its history: what failed, in which round, what replaced it
+  if (chunk.repair) {
+    chunk.repairHistory = [...(chunk.repairHistory || []), { ...chunk.repair, previous: undefined, previousChars: String(chunk.repair.previous || '').length, fixedAt: Date.now(), byteSize: chunk.byteSize }].slice(-20);
+    delete chunk.repair;
+  }
 
   // Update spec progress
   manifest.doneChunks  = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
@@ -1413,6 +1418,61 @@ function _buildManifestEntryPrompt(manifest, chunk, systemContext = '') {
 }
 
 export function buildChunkPrompt(manifest, chunk, systemContext = '') {
+  const base = _buildChunkPromptBase(manifest, chunk, systemContext);
+  return chunk.repair ? `${base}\n\n${repairBlock(chunk)}` : base;
+}
+
+/**
+ * repairBlock(chunk) — §0.39.291 PV2. James: "gate, verify, check, if failed, send back and fix it, then back
+ * through." A file that failed verification goes back to its agent WITH the failure: the exact errors (the line, the
+ * test's actual/expected, what the test asks) and the file as it is now. Before this, a retried chunk kept its failure
+ * as priorFailure and nothing ever showed it to the agent — it rewrote the file blind.
+ */
+export function repairBlock(chunk) {
+  const r = chunk.repair || {};
+  const prev = String(r.previous || '');
+  return [
+    `THIS FILE FAILED VERIFICATION${r.round ? ` (round ${r.round})` : ''} — fix it.`,
+    `Change what the failures below name and keep everything that works. Write the whole file again, complete.`,
+    `If a test describes behaviour this file does not have, make the file do what the test asks.`,
+    ``,
+    `THE FAILURES:`,
+    String(r.failures || '(none recorded)').slice(0, 8000),
+    prev ? `\nTHE FILE AS IT IS NOW (${chunk.realPath || chunk.sectionId}):\n\`\`\`\n${prev.slice(0, 20000)}${prev.length > 20000 ? '\n… (truncated)' : ''}\n\`\`\`` : '',
+  ].filter(x => x !== '').join('\n');
+}
+
+/**
+ * markForRepair(specUuid, items) — items: [{ realPath, failures (text), round }]. Each file's chunk goes back to
+ * pending with `repair` set; one save. -> { marked: [realPath], unknown: [realPath] }. A file the spec does not build
+ * (a test the agent did not write, a file by hand) is returned in `unknown` — never silently dropped.
+ */
+export function markForRepair(specUuid, items = []) {
+  const manifest = loadSpec(specUuid);
+  const byPath = new Map(manifest.chunks.filter(c => c.realPath).map(c => [c.realPath, c]));
+  const marked = [], unknown = [];
+  for (const it of items) {
+    const c = byPath.get(it.realPath);
+    if (!c) { unknown.push(it.realPath); continue; }
+    c.repair = { round: it.round || 1, failures: String(it.failures || ''), previous: String(c.content || ''), at: Date.now() };
+    c.priorFailure = String(it.failures || '').split('\n')[0].slice(0, 300) || c.failureMode || null;
+    c.status = CHUNK_STATES.PENDING;
+    c.attempts = 0;
+    c.failureMode = null;
+    c.jobId = null; c.dispatchDir = null;
+    c.updatedAt = Date.now();
+    marked.push(it.realPath);
+  }
+  if (marked.length) {
+    manifest.doneChunks = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
+    manifest.progress = manifest.totalChunks ? Math.round((manifest.doneChunks / manifest.totalChunks) * 100) : 0;
+    if (manifest.status === 'complete') manifest.status = 'building';
+    saveSpec(manifest);
+  }
+  return { marked, unknown };
+}
+
+function _buildChunkPromptBase(manifest, chunk, systemContext = '') {
   if (chunk.manifestEntry) return _buildManifestEntryPrompt(manifest, chunk, systemContext);
   if (chunk.file && chunk.realPath) return _buildFilePrompt(manifest, chunk, systemContext);
   const completedChunks = manifest.chunks
@@ -1462,7 +1522,8 @@ export default {
   recoverOrphanedChunks,
   buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec, purgeSpec,   // purgeSpec: 0.39.266 (D2)
   computeRootHash, findByRootHash, ingestFilesAsSpec, addChunk, removeChunk,
-  ingestFilesAsSpecAsync, updateIngestedSpecAsync,   // 0.39.288 PF2/PF5 — nexus-self reaches them through this default export
+  ingestFilesAsSpecAsync, updateIngestedSpecAsync,
+  markForRepair, repairBlock,   // 0.39.291 PV2   // 0.39.288 PF2/PF5 — nexus-self reaches them through this default export
   reconstructSpecText,
   SPEC_SECTIONS, CHUNK_STATES, WARP_PRIMITIVES: [...WARP_PRIMITIVES],
   MODULE_ID, VERSION, COMP_ID,

@@ -73,6 +73,10 @@ const CONSUMERS = [
   [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/pipeline-routing.js'), 'idearium/spec-engine/chunk-dispatch.js _walkRoute + _dispatchChunkOnce (_req) — classify, breaker, shouldFallback'],
   // §0.39.288 PF2/PF5 — nexus-self is handed the engine and the repo layer (injected, never imported), so the scanner sees neither edge
   ['nexus.idearium.repo.nexus-self', I('idearium/spec-engine/index.js'), 'idearium/repo/nexus-self.js syncSystem — updateIngestedSpecAsync, ingestFilesAsSpecAsync on the injected engine'],
+  // §0.39.291 PV1–PV3 — verify + prove: the API reaches the verifier by _require; agent-suite reaches the hardened Ollama
+  // client by _require (createRequire) — edges the scanner cannot see
+  ['nexus.idearium.api', I('lib/build-verify.js'), 'idearium/api/index.js repo.verify / repo.prove (_verifyRepo, _proveLoop) — verify + repairText'],
+  [I('idearium/agent-suite/index.js'), I('ollama/lib/ollama-client.js'), 'idearium/agent-suite/index.js generateWithOllama — callOllamaRaw (streamed, idle timeout, think:false, continuation)'],
   // §0.39.290 IL1 — the spec library: the API and the CLI reach the importer by await import(); it reaches the scanner by createRequire
   ['nexus.idearium.api', I('idearium/lib/spec-library-import.js'), 'idearium/api/index.js spec-library.import / spec-library.list (await import)'],
   [I('idearium/cli/index.js'), I('idearium/lib/spec-library-import.js'), 'idearium/cli/index.js spec-library.import (no server) / spec-library.list (await import)'],

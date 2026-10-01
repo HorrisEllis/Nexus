@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.5.0
+    version:  1.7.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -468,7 +468,7 @@ spec:
       proof: "chromium probe: one tab renders both; every former action still reaches its route"
     GL1_gate_verify_fix_loop:
       layer: library
-      status: OPEN
+      status: "DONE (0.39.291) — as PV1–PV4"
       depends_on: [DT2_failure_mode_field, CI1_compounding_iterate]
       files: [lib/step-gate.js, lib/shadow.js, lib/seam/queue.js, idearium/spec-engine/chunk-dispatch.js, lib/reply-continuation.js]
       does: >-
@@ -480,6 +480,55 @@ spec:
         BK1). Pieces exist: the seam retry ladder already re-prompts on a failed detection, step gates block, the shadow
         names absences, continuation finishes cuts; this joins them into one loop with the failure fed back verbatim.
       proof: "a stub agent whose first output fails a parse check: it receives the parse error, its second output passes, both rounds recorded"
+    # ── 1.6.0 — PROVE: the end-to-end proof that Idearium builds working software ───────────────────────────────────
+    # James, 2026-10-01 (after an outside audit said generated code is unproven): "Conrinue it first. Make sure it's
+    # enterprise grade. Let's finish what idearium needs, then I'll record it". The one claim the product rests on —
+    # idea → spec → code that RUNS — gets a loop that proves it or names exactly where it fails. GL1 built here.
+    PV1_verify:
+      layer: library
+      status: DONE (0.39.291)
+      files: [lib/build-verify.js, lib/cos-run.js, cos/runtime/run.js, lib/cos-debug-report.js, lib/step-gate.js]
+      does: >-
+        verify(repo) — every file parses (JS through COS's syntax check, JSON/YAML parsed, Python compiled when python3
+        is there), every import resolves (COS's dependency check: a relative import of a file that does not exist, a
+        package nobody declared), then the project's own tests run in an isolated COS branch (its test script, else
+        every test file). Each failure is attributed to ONE file with the exact error, the line and an excerpt (the COS
+        debug report's first in-repo frame). The verdict is graded and never inflated: failed · parses (clean, but no
+        tests ran — NOT proven, and it says why) · proven (tests ran and passed).
+      proof: "fixtures: a syntax error → failed on that file; a missing relative import → failed on the importer; a failing test → attributed to the source frame; passing tests → proven; no tests → parses, not proven"
+    PV2_repair_feedback:
+      layer: library
+      status: DONE (0.39.291)
+      depends_on: [PV1_verify]
+      files: [idearium/spec-engine/index.js, idearium/api/index.js]
+      does: >-
+        markForRepair(spec, failures) puts each failing file's chunk back to pending with `repair` = the round, the
+        exact failures and the current content. The file prompt then carries them ("this file failed verification —
+        fix what the failure names, keep what works"). A chunk under repair skips every reuse shortcut (the component
+        store, a prior section) — a repair must never be handed the same broken file back. When it completes, the
+        repair moves to the chunk's repairHistory (provenance: what failed, which round, what replaced it). This closes
+        the gap where priorFailure was stored and never shown to the agent.
+      proof: "a marked chunk: pending, its prompt names the exact error and shows the current file; the reuse path is skipped; completion records the repair in history"
+    PV3_prove_loop:
+      layer: api
+      status: DONE (0.39.291)
+      depends_on: [PV2_repair_feedback]
+      files: [idearium/api/index.js]
+      does: >-
+        A background proof run per repo: build every pending file (the same speceng.build path — routing, gates,
+        continuation, provenance), materialize, verify, repair what failed, again — up to N rounds (default 3). Stops
+        at proven, at the bound (verdict and the remaining failures stated), or when the build itself stalls (the
+        stalled chunks named). Every round is a row (idearium_proof_runs): files built, verdict, failures, durations.
+        POST /api/repos/:uuid/verify (one verification) · POST /api/repos/:uuid/prove (start) · GET
+        /api/repos/:uuid/prove (status, every round) · events idearium.repo.prove.round / .done.
+      proof: "a stub agent: round 1 writes a broken file, verify fails it, round 2 receives the exact error and fixes it, the run ends proven with two rounds recorded"
+    PV4_cli_and_ui:
+      layer: ui
+      status: DONE (0.39.291)
+      depends_on: [PV3_prove_loop]
+      files: [idearium/cli/index.js, idearium/ui/js/plan-panel.js]
+      does: "`idearium verify <repo>` · `idearium prove <repo> [--rounds N]` (follows the run); the Plan panel: Verify and Build & prove, with each round's verdict and failures."
+      proof: "static checks: the commands and the buttons reach the routes"
     UM1_nexus_understands_james:
       layer: library
       status: OPEN
@@ -632,3 +681,16 @@ spec:
 # SW1 the spec workshop mapped in his words (spec builder, ambition dial, open loops, what-ifs, d20 cross-domain dice,
 # reverse causal chain, inspiration from his own work). Found: tests/modules/spec-import.test.mjs fails on the base
 # too (expects the pre-2026-09 intent→purpose renaming); it is in neither run-all nor known-gaps — left as found.
+
+## ADDENDUM 2026-10-01 — 1.7.0, PV1–PV4 built (0.39.291): Idearium proves its own code
+# tests/modules/test-prove-loop.test.js drives the REAL server, a real code spec + repo + COS compartment, and a model
+# (a fake Ollama) that writes lib/sum.js wrong (a - b): round 1 builds 3 files, verify runs the test in COS and fails it,
+# the failure is attributed to lib/sum.js (not the test) and sent back with actual -1 / expected 5 and what the test
+# asks; round 2 rebuilds that one file and is PROVEN. Stable over 3 runs. The loop found three bugs that broke real
+# builds, fixed: (1) the seam detector judged a FILE's length against its prompt (40%, ≥ 200 chars) — every short file
+# failed every agent and the build stalled; a file chunk is now judged as a file (empty or cut, nothing else);
+# (2) a direct Ollama build saved files WITH their markdown fence (package.json began "```json") — a file chunk is now
+# the code inside the fence, on both completion paths; an unclosed fence is never written; (3) idearium's own Ollama
+# path (agent-suite generateWithOllama) still had the 120 s total timeout, the 2048-token cap and the thinking-only
+# empty reply — it now uses the hardened client. Also: priorFailure was stored and never shown to the agent (fixed:
+# the repair block); a failed version is never reused (component-store markFailed). 127 affected suites: 0 new failures.

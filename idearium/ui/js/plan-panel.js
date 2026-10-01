@@ -68,6 +68,12 @@ async function loadPlanPanel() {
     PLANP.code = null;
     const specUuid = repo.specUuid || repo.promotedFromSpec || null;
     if (specUuid) { try { const r = await api(`/api/spec-engine/specs/${specUuid}`, {}, 20000); PLANP.code = r.manifest || r.spec || r; } catch (_) {} }
+    // §0.39.291 PV4 — the proof run (build → verify → repair) of this repo, when its spec builds files
+    PLANP.proof = null;
+    if (PLANP.code && (PLANP.code.fileTree || (PLANP.code.chunks || []).some(c => c.realPath))) {
+      try { PLANP.proof = await api(`/api/repos/${repo.uuid}/prove`, {}, 15000); } catch (_) {}
+      if (PLANP.proof && PLANP.proof.run && PLANP.proof.run.state === 'running' && !_planProofT) _planProofPoll();   // opened mid-run: follow it
+    }
   } catch (e) { body.innerHTML = `<div class="pp-empty">could not read the plan: ${escapeHtml(e.message)}</div>`; return; }
   _planPaint();
 }
@@ -110,6 +116,7 @@ function _planPaint() {
   const activity = (PLANP.runs || []).slice(0, 25);
   body.innerHTML = `
     ${_planCodeBuild()}
+    ${_planProof()}
     ${sm.total ? `<div class="pp-progress"><div style="width:${Math.round((sm.progress || 0) * 100)}%"></div></div>` : ''}
     <div class="pp-sec">tasks</div>
     ${steps.length ? steps.map(task).join('') : '<div class="pp-empty">no phases yet — plan a spec (Spec tab → ▶ Build this spec)</div>'}
@@ -134,7 +141,7 @@ async function planBuild(map, phase) {
 let _planT = null;
 function planPanelOnEvent(ev) {
   const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
-  if (!/^(repo\.(phase\.run|file\.manage|deviation|roadmap\.updated|inject\.|spec\.planned)|spec-engine\.|spec\.chunk|chunk\.)/.test(t)) return;
+  if (!/^(repo\.(phase\.run|file\.manage|deviation|roadmap\.updated|inject\.|spec\.planned|prove\.|verify)|spec-engine\.|spec\.chunk|chunk\.)/.test(t)) return;
   const el = document.getElementById('plan-panel'); if (!el || !el.classList.contains('open')) return;
   const u = ev.payload && ev.payload.repoUuid; if (u && PLANP.uuid && u !== PLANP.uuid) return;
   clearTimeout(_planT); _planT = setTimeout(loadPlanPanel, 500);
@@ -196,6 +203,61 @@ function _planCodeBuild() {
     ${done < live.length ? `<button class="pp-go" ${busy ? 'disabled' : ''} onclick="planCodeBuild('${escapeHtml(m.uuid)}')">${busy ? '◌ building…' : bad.length ? '▶ retry the stopped and build the rest' : '▶ build the rest'}</button>` : ''}
     ${rows}`;
 }
+// §0.39.291 PV4 — James: "gate, verify, check, if failed, send back and fix it, then back through." Does the code work:
+// Verify once, or Build & prove (build every file, verify in COS, send each failure back with its exact error, again).
+const _PP_VERDICT = { proven: ['proven', 'var(--mint, #34d399)'], parses: ['parses — not proven', 'var(--amber, #fbbf24)'], failed: ['failed', 'var(--coral, #f87171)'], stalled: ['stalled', 'var(--coral, #f87171)'] };
+function _ppVerdict(v) { const x = _PP_VERDICT[v]; return x ? `<span style="color:${x[1]};font-weight:600">${escapeHtml(x[0])}</span>` : '<span style="opacity:.6">…</span>'; }
+function _planProof() {
+  const m = PLANP.code; if (!m || !(m.fileTree || (m.chunks || []).some(c => c.realPath))) return '';
+  const run = PLANP.proof && PLANP.proof.run;
+  const running = run && run.state === 'running';
+  const rounds = run ? (run.rounds || []).map(rr => `<div class="pp-task ${rr.verdict === 'proven' ? 'done' : ''}"><div class="pp-row">
+      <span class="pp-mark">${rr.round}</span><span class="pp-name">round ${rr.round} · ${rr.built} built${rr.reused ? ` · ${rr.reused} reused` : ''}${rr.current ? ` · building ${escapeHtml(rr.current)}` : ''}</span>
+      <span class="pp-led-s">${_ppVerdict(rr.verdict)}</span></div>
+      ${(rr.failures || []).slice(0, 8).map(f => `<div class="pp-detail" style="color:var(--coral)">${escapeHtml(f.kind)} · ${escapeHtml(f.file || '(project)')}${f.line ? `:${f.line}` : ''} — ${escapeHtml(String(f.error).slice(0, 220))}</div>`).join('')}
+      ${(rr.repaired || []).length ? `<div class="pp-detail">sent back with the failure: ${escapeHtml(rr.repaired.join(', '))}</div>` : ''}
+      ${(rr.notBuiltBySpec || []).length ? `<div class="pp-detail" style="color:var(--coral)">not built by this spec (cannot be sent back): ${escapeHtml(rr.notBuiltBySpec.join(', '))}</div>` : ''}
+      ${rr.stalled ? `<div class="pp-detail" style="color:var(--coral)">${escapeHtml(rr.stalled)}</div>` : ''}</div>`).join('') : '';
+  return `<div class="pp-sec">does it work${run ? ` — ${_ppVerdict(run.verdict || (running ? null : run.state))}` : ''}</div>
+    ${run && run.why ? `<div class="pp-detail">${escapeHtml(run.why)}</div>` : ''}
+    <div class="pp-row" style="gap:8px;flex-wrap:wrap;margin:6px 0">
+      <button class="pp-go" ${running ? 'disabled' : ''} onclick="planVerify()" title="parses · imports resolve · the project's own tests in an isolated COS branch">✓ verify</button>
+      <button class="pp-go" ${running ? 'disabled' : ''} onclick="planProve()" title="build every file, verify, send each failing file back with its exact error, again — up to 3 rounds">▶ build &amp; prove</button>
+      ${running ? `<button class="pp-go" onclick="planProveCancel()">■ stop</button>` : ''}
+    </div>
+    ${rounds}`;
+}
+async function planVerify() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  toast('verifying — the files, their imports, then the tests in COS…', 'ok');
+  try {
+    const v = await api(`/api/repos/${repo.uuid}/verify`, { method: 'POST', body: '{}' }, 600000);
+    PLANP.proof = { run: { state: 'done', verdict: v.verdict, why: `verify — ${v.why}`, rounds: [{ round: 1, built: 0, reused: 0, verdict: v.verdict, failures: v.failures }] } };
+    _planPaint();
+    toast(`${v.verdict}: ${v.why}`, v.verdict === 'failed' ? 'err' : 'ok');
+  } catch (e) { toast(`not verified: ${e.message}`, 'err'); }
+}
+async function planProve() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { const r = await api(`/api/repos/${repo.uuid}/prove`, { method: 'POST', body: JSON.stringify({ rounds: 3 }) }, 30000); toast(r.alreadyRunning ? 'a proof run is already working — following it' : 'proving — build, verify, repair; each round lands here', 'ok'); }
+  catch (e) { toast(`not started: ${e.message}`, 'err'); }
+  _planProofPoll();
+}
+async function planProveCancel() {
+  const repo = CURRENT_API_REPO; if (!repo) return;
+  try { await api(`/api/repos/${repo.uuid}/prove/cancel`, { method: 'POST', body: '{}' }, 15000); toast('stopping after the current file', 'ok'); } catch (e) { toast(e.message, 'err'); }
+}
+let _planProofT = null;
+function _planProofPoll() {
+  clearTimeout(_planProofT);
+  _planProofT = setTimeout(async () => {
+    await loadPlanPanel();
+    const run = PLANP.proof && PLANP.proof.run;
+    _planProofT = null;
+    if (run && run.state === 'running') _planProofPoll();
+  }, 2500);
+}
+
 async function planCodeBuild(specUuid) {
   try { await api(`/api/spec-engine/specs/${specUuid}/build`, { method: 'POST', body: '{}' }, 60000); toast('building — each file lands here as it completes', 'ok'); }
   catch (e) { toast(`not started: ${e.message}`, 'err'); }

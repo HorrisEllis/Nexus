@@ -148,6 +148,7 @@ async function _dispatchChunkOnce(chunkPrompt, chunk, dispatchFn, opts = {}) {
     total:        opts.total || 1,
     jaa,
     busEmit:      opts.busEmit || (() => {}),
+    kind:         chunk.realPath ? 'file' : null,   // §0.39.291 — a file chunk is judged as a file (lib/seam/detector.js)
   });
 
   const maxWallClockAttempts = opts.attemptsPerHop || 6; // §0.39.286 routing.attempts_per_hop · strategy ladder + watchdog ceilings already bound this internally; this is an outer safety cap, not the real limit

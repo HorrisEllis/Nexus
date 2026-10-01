@@ -77,8 +77,8 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
 function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {}) {
   const OA = require('../../lib/ollama-activity.js');
   const want = maxTokens || config.DEFAULT_MAX_TOKENS;
-  const ctx = OA.withNumCtx({ num_predict: want, temperature: 0.2 }, String(prompt || '').length, want);
-  const body = JSON.stringify({ model, prompt, stream: true, options: ctx.options, ...(extra.think === false ? { think: false } : {}) });
+  const ctx = OA.withNumCtx({ num_predict: want, temperature: extra.temperature != null ? extra.temperature : 0.2 }, String(prompt || '').length + String(extra.system || '').length, want);
+  const body = JSON.stringify({ model, prompt, stream: true, options: ctx.options, ...(extra.system ? { system: extra.system } : {}), ...(extra.think === false ? { think: false } : {}) });
   const t0 = Date.now();
   const done = (ok, error) => OA.record({ caller, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
   return new Promise((resolve, reject) => {
@@ -137,14 +137,17 @@ function _ollamaCut(text, { doneReason } = {}) {
   return { cut: false, reason: null };
 }
 
-async function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'ollama-bridge.job') {
-  let first = await _generateOnce(model, prompt, maxTokens, timeoutMs, caller);
+// opts (0.39.291): { system, temperature } — so idearium's chunk builds (idearium/agent-suite generateWithOllama) use this
+// one hardened path too: streamed, idle timeout, thinking-only retry, a cut reply continued
+async function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'ollama-bridge.job', opts = {}) {
+  const base = { ...(opts.system ? { system: opts.system } : {}), ...(opts.temperature != null ? { temperature: opts.temperature } : {}) };
+  let first = await _generateOnce(model, prompt, maxTokens, timeoutMs, caller, base);
   if (!first.text.trim() && first.thinking.trim()) {
     console.warn(`[ollama-bridge] ${model}: ${first.thinking.length} chars of thinking and no answer (${first.doneReason || 'done'}) — asking again with think:false`);
-    first = await _generateOnce(model, prompt, maxTokens, timeoutMs, `${caller} (think:false)`, { think: false });
+    first = await _generateOnce(model, prompt, maxTokens, timeoutMs, `${caller} (think:false)`, { ...base, think: false });
   }
   const RC = require('../../lib/reply-continuation.js');
-  const out = await RC.complete((p) => _generateOnce(model, p, maxTokens, timeoutMs, `${caller} (continue)`), prompt,
+  const out = await RC.complete((p) => _generateOnce(model, p, maxTokens, timeoutMs, `${caller} (continue)`, base), prompt,
     { first, maxRounds: config.CONTINUE_MAX_ROUNDS, isCut: _ollamaCut });
   if (out.rounds) console.log(`[ollama-bridge] ${model}: reply continued ${out.rounds}× (${out.reasons.join('; ')})${out.cut ? ' — STILL CUT after the last round' : ''}`);
   return out.text;

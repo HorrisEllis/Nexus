@@ -43,6 +43,8 @@
  *   idearium routing plan [--block id] [--agent a]  the route one chunk would take
  *   idearium routing set <key> <value>            mode|chain|ollama_models|learn_min_records|fallback_on|max_hops|attempts_per_hop|breaker_threshold|breaker_cooldown_ms|skip_open
  *   idearium routing learned [--type build:api]   (0.39.287) what each provider:model has done per chunk type
+ *   idearium verify <repo>                        (0.39.291 PV1) do the repo's files work? parses · resolves · its own tests in COS
+ *   idearium prove <repo> [--rounds 3] [--cancel] (0.39.291 PV3) build → verify → send failures back → again, until proven
  *   idearium spec-library import <zip> [--dry-run] (0.39.290 IL1) a zip of specs → ideas + specs (duplicates folded, programs refused)
  *   idearium spec-library [--family product]      what the library holds
  *   idearium push [--message "..."] [--branch main]
@@ -123,13 +125,27 @@ function _localUpload(path, buf) {
   });
 }
 
-function _localApi(method, path, body = null) {
+function _verdictTag(v) { return v === 'proven' ? mint('PROVEN') : v === 'parses' ? amber('PARSES — not proven') : v === 'stalled' ? coral('STALLED') : v ? coral(String(v).toUpperCase()) : gray('…'); }
+function _printVerify(repo, r) {
+  header(`verify ${repo.name} — ${r.files} file(s) · ${Math.round((r.ms || 0) / 100) / 10} s`);
+  const c = r.checks || {};
+  const line = (k, x) => console.log(`  ${k.padEnd(9)} ${!x ? gray('—') : x.ran === false ? gray(`not run — ${x.why}`) : x.failed ? coral(`${x.failed} failed`) : mint('ok')}${x && x.ran !== false && x.checked != null ? dim(` (${x.checked} checked)`) : ''}`);
+  line('syntax', c.syntax); line('data', c.data); line('python', c.python);
+  console.log(`  ${'imports'.padEnd(9)} ${!c.deps ? gray('—') : c.deps.ran === false ? gray(`not run — ${c.deps.why}`) : (c.deps.missing || c.deps.brokenRelative) ? coral(`${c.deps.brokenRelative} broken · ${c.deps.missing} missing`) : mint('ok')}`);
+  console.log(`  ${'tests'.padEnd(9)} ${!c.tests ? gray('—') : c.tests.ran === false ? gray(`not run — ${c.tests.why}`) : c.tests.failed ? coral(`${c.tests.failed} of ${c.tests.runs} failed`) : mint(`${c.tests.passed} passed`)}`);
+  for (const f of (r.failures || []).slice(0, 20)) console.log(`    ${coral(f.kind.padEnd(10))} ${f.file || '(project)'}${f.line ? `:${f.line}` : ''}  ${gray(String(f.error).slice(0, 120))}`);
+  console.log(`
+  ${_verdictTag(r.verdict)}  ${r.why}
+`);
+}
+
+function _localApi(method, path, body = null, timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
     const payload = body ? JSON.stringify(body) : null;
     const req = http.request({
       hostname: '127.0.0.1', port: IDEARIUM_PORT, path, method,
       headers: { 'Content-Type': 'application/json', ...(payload ? { 'Content-Length': Buffer.byteLength(payload) } : {}) },
-      timeout: 10000,
+      timeout: timeoutMs,
     }, (res) => {
       let data = ''; res.on('data', d => data += d);
       res.on('end', () => {
@@ -735,6 +751,48 @@ const COMMANDS = {
     const value = /^(true|false)$/.test(raw) ? raw === 'true' : (/^\d+$/.test(raw) ? Number(raw) : raw);
     cfg.setConfig(`routing.${key}`, value, { actor: 'cli' });
     console.log(`${mint('✓')} routing.${key} = ${JSON.stringify(value)}`);
+  },
+
+  // ── idearium verify / prove (0.39.291 PV1–PV4) ─────────────────────────────────
+  // James: "Conrinue it first. Make sure it's enterprise grade." Through the running idearium (the builds need its agents).
+  async 'verify'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium verify <repo>');
+    const repo = _findRepo(positional[0]);
+    // its tests run inside this call — a long wait
+    let r; try { r = await _localApi('POST', `/api/repos/${repo.uuid}/verify`, {}, 600000); } catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (verification runs in its COS)' : ''}`); }
+    _printVerify(repo, r);
+    process.exitCode = r.verdict === 'failed' ? 1 : 0;
+  },
+  async 'prove'(os, { positional, flags }) {
+    if (!positional[0]) die('usage: idearium prove <repo> [--rounds 3] [--cancel]');
+    const repo = _findRepo(positional[0]);
+    try {
+      if (flags.cancel) { const c = await _localApi('POST', `/api/repos/${repo.uuid}/prove/cancel`, {}); console.log(`${mint('✓')} cancelling ${c.run.uuid}`); return; }
+      const s = await _localApi('POST', `/api/repos/${repo.uuid}/prove`, { rounds: flags.rounds ? Number(flags.rounds) : 3 });
+      header(`prove ${repo.name} — ${s.alreadyRunning ? 'following the run already working' : `up to ${s.run.maxRounds} round(s)`}`);
+      let shown = 0, last = '';
+      for (;;) {
+        await new Promise(r => setTimeout(r, 2000));
+        const g = await _localApi('GET', `/api/repos/${repo.uuid}/prove`);
+        const run = g.run; if (!run) die('the run disappeared');
+        for (; shown < run.rounds.length; shown++) {
+          const rr = run.rounds[shown];
+          if (rr.verdict === null && run.state === 'running') break;   // not finished yet
+          console.log(`  round ${rr.round}  ${_verdictTag(rr.verdict)}  ${dim(`${rr.built} built · ${rr.reused} reused${rr.repaired && rr.repaired.length ? ` · sent back: ${rr.repaired.join(', ')}` : ''}`)}`);
+          for (const f of (rr.failures || []).slice(0, 8)) console.log(`    ${coral(f.kind.padEnd(10))} ${f.file || '(project)'}${f.line ? `:${f.line}` : ''}  ${gray(String(f.error).slice(0, 110))}`);
+        }
+        const cur = run.rounds[run.rounds.length - 1];
+        const now = run.state === 'running' && cur ? `  round ${cur.round} — ${cur.current ? `building ${cur.current}` : 'verifying'} (${cur.built} built)` : '';
+        if (now && now !== last) { console.log(gray(now)); last = now; }
+        if (run.state !== 'running') {
+          console.log(`
+  ${_verdictTag(run.verdict)}  ${run.why}
+`);
+          process.exitCode = run.verdict === 'proven' ? 0 : 1;
+          return;
+        }
+      }
+    } catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the build uses its agents)' : ''}`); }
   },
 
   // ── idearium spec-library (0.39.290 IL1) ─────────────────────────────────────

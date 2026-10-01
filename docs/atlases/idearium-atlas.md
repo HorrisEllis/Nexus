@@ -511,6 +511,16 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **Record:** the hops are kept on the chunk.
 - **Where to see and set it:** the routing API (show, plan per block, reset breakers), the idearium CLI's routing command, and Settings → **Routing & fallback**. Its config keys are listed in `idearium/lib/config-core.cjs`.
 
+**Does it work: verify and prove** (0.39.291, `lib/build-verify.js`). Open the Plan panel's **does it work** section.
+- **✓ verify** checks every file parses and every import resolves, then runs the project's own tests in an isolated COS branch.
+  - **Verdicts:** failed · parses (not proven, and it says why) · proven.
+  - **Failures:** each lands on one file with the exact error. A failing test is traced to the code it loads, with actual/expected and what the test asks.
+- **▶ build & prove** builds every file one at a time, verifies, and sends each failing file back to its agent with the failure, for up to 3 rounds.
+  - **During a repair,** reuse is skipped, and a failed version is never reused.
+  - **Every round is recorded.**
+- **The same from the CLI:** the idearium CLI's verify and prove commands.
+- **Tests:** `tests/modules/test-build-verify.test.js` and `tests/modules/test-prove-loop.test.js` (the real server with a model that writes a bug and fixes it).
+
 **The spec library** (0.39.290). This is the Welcome screen's **Import specs** (`idearium/ui/spec-library.html`), or the idearium CLI's spec-library import command.
 - **What it does:** drop a zip of specs and each unique document becomes an idea, linked to a spec split by the document's own headings.
 - **What it handles:** duplicates are folded, zips inside are opened, programs are refused, and a project folder stays one unit.
