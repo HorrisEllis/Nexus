@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.4
+    version:  1.7.5
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -1162,3 +1162,19 @@ spec:
 # read before cos's taxonomy is written, so there is one truth, not two.
 # Proof: tests/modules/test-event-contracts.test.js 7/7 (EC-05b: an emit added without a declaration fails, with its
 # file:line); in the real tree, an emit appended to emerge/emerge-kernel.js failed `nexus contracts check` (exit 1).
+
+## ADDENDUM 2026-10-02 — 1.7.5, the reader reads SISO
+# The first reader saw only literal names, so it missed how the SISO systems emit: `stream.emit(new Event('x', …))`
+# (258 sites), through a constant `new Event(HOST.COMPARTMENT_CREATED, …)` (99) and `{ type: 'x' }` (16). It now reads
+# all three, resolving constants through the string tables in the system's OWN source (cos/foundation/event-contracts.js
+# for COS). It also stopped counting calls quoted in strings or comments: loom's only "emit" was a hook's NAME
+# ("os.emit('idearium.repo.file.write')"), and cortex, cos and guardian each had a commented-out one.
+# Emitted, now read: emerge 3 → 56, cos 55 → 143, clear-glass 141 → 241, intelligence 24 → 37, idearium 116 → 130.
+# The baseline was re-recorded to match (444 → 707). No code changed between the two readings: this is drift that was
+# already there and is now seen, not new drift excused (E18 holds — the ratchet runs from here).
+# Found, a defect: cos/playgrounds/kernel.js:67 emits VAULT.INJECTED; COS's VAULT table has no INJECTED key, so every
+# vault-injection event is emitted as `undefined`. A constant whose table exists but lacks the key is now MISSING and
+# fails (held in the baseline until COS's own change fixes it — cos/foundation/event-contracts.js says "IMMUTABLE after
+# v1.0.0 (COS-5)", so the new key is James's to accept). A constant no table resolves is UNREAD, listed, not failed.
+# Loom emits nothing, so it gets no taxonomy (ET1 refuses an empty one). WARP still reads 0; it waits on 1.5.0.
+# Proof: tests/modules/test-event-contracts.test.js 8/8 (EC-01b: SISO, constants, missing, quoted).

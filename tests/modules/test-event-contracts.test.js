@@ -5,6 +5,9 @@
  *
  *   EC-01  the reader: literal emits as a method or a bare helper, `?.(`, a ternary's two branches, the payload's
  *          top-level keys; a stream's own 'error' / 'data' is not a system event; ET1's key rule
+ *   EC-01b SISO events (new Event, E, { type }) and constants read through the system's own tables; a table that lacks
+ *          the key is MISSING (the emit sends undefined) and fails; one no table resolves is unread, said; quoted and
+ *          commented calls are not emits
  *   EC-02  a template emit is unresolved unless its site names what it emits (`// emits: a, b`) — then those are checked
  *   EC-03  a system: undeclared, unused (said, not failed) and a collision (two names, one key — always a failure)
  *   EC-04  the ratchet: new drift fails, a baseline entry declared since fails until dropped, the baseline excuses nothing else
@@ -47,6 +50,27 @@ test('EC-01', 'the reader: methods, bare helpers, ?.(, ternaries, payload keys; 
   assert.strictEqual(C.keyOf('idearium.spec-engine.created'), 'IDEARIUM_SPEC_ENGINE_CREATED');
 });
 
+test('EC-01b', 'SISO events and constants: new Event(…), E(…), { type }, a table in the system\'s own source', () => {
+  const consts = C.constantTables(["const HOST = Object.freeze({ COMPARTMENT_CREATED: 'host:compartment:created' });\nconst VAULT = Object.freeze({ SET: 'vault:secret:set' });"]);
+  const src = [
+    "stream.emit(new Event(HOST.COMPARTMENT_CREATED, { id, name }));",
+    "stream.emit(new Event('compiler.check', { file }));",
+    "s.emit(E('field.settled'));",
+    "bus.emit({ type: 'z.done', data });",
+    "bus.emit(VAULT.INJECTED, { key });",
+    "bus.emit(ELSEWHERE.THING, {});",
+    "bus.emit(type, payload);",
+    "decl('hook', { name: \"os.emit('quoted.not.real')\" }); // bus.emit('commented.out')",
+  ].join('\n');
+  const e = C.extractEmits(src, consts);
+  assert.deepStrictEqual(e.filter(x => x.event).map(x => x.event), ['host:compartment:created', 'compiler.check', 'field.settled', 'z.done']);
+  assert.deepStrictEqual(e.find(x => x.event === 'host:compartment:created').payload, ['id', 'name']);
+  assert.deepStrictEqual(e.filter(x => x.unread).map(x => [x.constant, x.missing]), [['VAULT.INJECTED', true], ['ELSEWHERE.THING', false]]);
+  const r = C.checkSources({ system: 's', sources: [{ file: 'k.js', text: "const VAULT = Object.freeze({ SET: 'vault:secret:set' });\nbus.emit(VAULT.INJECTED, {});" }], taxonomy: T({}) });
+  assert.deepStrictEqual(r.missing, [{ constant: 'VAULT.INJECTED', site: 'k.js:2' }]);
+  assert.strictEqual(r.ok, false, 'a missing key sends undefined: a failure');
+});
+
 test('EC-02', 'a template emit is unresolved until its site names its events', () => {
   const bare = C.extractEmits('os.emit(`idearium.cos.remote.${op}`, { id });');
   assert.strictEqual(bare.length, 1); assert.ok(bare[0].unresolved);
@@ -81,6 +105,8 @@ test('EC-04', 'the ratchet: new drift fails, a declared baseline entry fails unt
   assert.strictEqual(shrank.ok, false); assert.deepStrictEqual(shrank.cleared, ['a.x']);
   assert.strictEqual(C.againstBaseline(rep([], ['t.${x}']), { unresolved: ['t.${x}'] }).ok, true);
   assert.strictEqual(C.againstBaseline({ ...rep([]), collisions: [{ key: 'K' }] }, {}).ok, false, 'the baseline never excuses a collision');
+  assert.strictEqual(C.againstBaseline({ ...rep([]), missing: [{ constant: 'V.X' }] }, { missing: ['V.X'] }).ok, true);
+  assert.deepStrictEqual(C.againstBaseline({ ...rep([]), missing: [{ constant: 'V.Y' }] }, { missing: [] }).added, ['missing:V.Y']);
 });
 
 test('EC-05', 'every system held to the contract: nothing beyond its baseline, no collision, ET1 shape', () => {

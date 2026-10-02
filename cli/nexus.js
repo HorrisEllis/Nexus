@@ -414,16 +414,17 @@ Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
     const rows = []; let bad = 0;
     for (const s of systems) {
       const r = EC.checkSystem(ROOT, s), b = EC.againstBaseline(r, base.systems[s]);
-      rows.push({ system: s, taxonomy: r.taxonomyFile, emitted: r.emitted.length, undeclared: r.undeclared.length, unresolved: r.unresolved.length, unused: r.unused, added: b.added, cleared: b.cleared, collisions: r.collisions, ok: b.ok });
+      rows.push({ system: s, taxonomy: r.taxonomyFile, emitted: r.emitted.length, undeclared: r.undeclared.length, unresolved: r.unresolved.length, missing: r.missing, unread: r.unread, unused: r.unused, added: b.added, cleared: b.cleared, collisions: r.collisions, ok: b.ok });
       if (!b.ok) bad++;
       if (JSON_) continue;
       const mark = b.ok ? `${C.green}✓${C.reset}` : `${C.red}✗${C.reset}`;
-      const left = r.undeclared.length + r.unresolved.length;
+      const left = r.undeclared.length + r.unresolved.length + (r.missing || []).length;
       console.log(`  ${mark} ${C.bold}${s.padEnd(13)}${C.reset} ${String(r.emitted.length).padStart(3)} emitted · ${left ? `${C.yellow}${left} not yet declared${C.reset}` : `${C.green}all declared${C.reset}`}${r.taxonomyFile ? '' : ` · ${C.muted}no taxonomy yet${C.reset}`}${r.unused.length ? ` · ${C.muted}${r.unused.length} declared, not seen emitted${C.reset}` : ''}`);
       for (const e of b.added) console.log(`      ${C.red}new, undeclared:${C.reset} ${e}  ${C.muted}${((r.undeclared.find(x => x.event === e) || {}).sites || []).join(', ')}${C.reset}`);
       for (const e of b.cleared) console.log(`      ${C.yellow}declared now — drop from ${EC.BASELINE_FILE}:${C.reset} ${e}`);
       for (const c of r.collisions) console.log(`      ${C.red}collision:${C.reset} ${c.events.join(' and ')} are both ${c.key}`);
-      if (args.includes('--all')) for (const u of r.undeclared) console.log(`      ${C.muted}${u.event}  ${u.sites.join(', ')}${C.reset}`);
+      for (const c of r.missing || []) console.log(`      ${C.red}emits undefined:${C.reset} ${c.constant} — that table has no such key  ${C.muted}${c.site}${C.reset}`);
+      if (args.includes('--all')) { for (const u of r.undeclared) console.log(`      ${C.muted}${u.event}  ${u.sites.join(', ')}${C.reset}`); }
     }
     if (JSON_) out({ ok: !bad, systems: rows });
     else console.log(bad ? `\n  ${C.red}${bad} system(s) drifted${C.reset}\n` : `\n  ${C.green}no new drift${C.reset}\n`);
