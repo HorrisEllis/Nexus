@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     workshop-codex-rewind
-    version:  1.4.0
+    version:  1.6.0
     date:     2026-10-02
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -124,7 +124,7 @@ spec:
 
     AR2_architect_in_the_workshop:
       layer: service
-      status: OPEN
+      status: BUILT 0.39.298 (on loom + the component store; CX0 grows the store later)
       depends_on: [SW1_spec_workshop, CX0_codex_component_store]
       files: [idearium/lib/architect.js, architect/service.js]
       does: >-
@@ -133,6 +133,71 @@ spec:
         and CODEX — what already exists is shown and reused; what is new is marked new. Layers bottom-up; a dependency
         on something that does not exist is a gap, said.
       proof: "a spec naming an existing component reuses it; a dependency on nothing is a gap; layers come out bottom-up"
+      design_2026_10_02: >-
+        Built on what exists today, before CX0: the registry is loom (loom/data/registry.json — 2,275 components with
+        dotted ids, 1,840 hooks, 8,751 wires), the store is lib/component-store.js (list/manifest/find; empty in this
+        checkout, so loom carries the reuse until CODEX fills it). CX0 grows the store later; the station does not change.
+        Engine idearium/lib/architect.js (pure, like void.js and workshop.js; the API owns the store and the repo write):
+          index    makeIndex({ registry, stored }) — one search over both; loom ids as loom:<id>, store ids as
+                   store:<id>@<version>; tests are not components (nexus.tests.* left out)
+          match    exact id or name → reuse; else token overlap ≥ 0.67 of the component's own words → reuse suggested;
+                   James overrides per component: decision auto | reuse (a named ref) | new
+          analyse  dependencies resolve to a component of this architecture, else an existing one in the index, else a
+                   GAP said with both names; a cycle is a gap (collision is a hard error); levels bottom-up (level 0
+                   needs nothing local); a lower declared layer (data < engine < service < interface) depending on a
+                   higher one is a gap (§3.1)
+          agent    the agent PROPOSES components (YAML); nothing enters the architecture without accept — the workshop's rule
+        Session in the JAA table idearium_architectures, one per spec (a second open of the same spec returns it).
+        Saved as spec/<name>.architecture.yaml beside spec/<name>.spec; reopening reads it back.
+        Surfaces: /api/architect/* (list, create, registry search, show, update, draft, proposal, save), CLI
+        `idearium architect`, its own page ui/architect.html in the Void's look; the workshop's ARCHITECT station opens it.
+
+    AR3_one_architect_canvas:
+      layer: interface
+      status: BUILT 0.39.299
+      depends_on: [AR2_architect_in_the_workshop]
+      files: [idearium/ui/js/arch-canvas.js, idearium/ui/css/arch-canvas.css]
+      does: >-
+        James, 2026-10-02: "no. look at architect in idearium. rebuild it, fully. enterprise grade, beautiful style and
+        consistent, open ui." · "one is for the idearium pipeline and the other is for the repos." · (with
+        MASTERMIND-v0_1_49) "look at this canvas. its huge. you can strip it. its a copy". ONE canvas for both Architects
+        (§16.5 one canvas, one truth — the 2026-09-19 D1 fork closed): stripped from MASTERMIND's nexus-canvas.js (2,263
+        lines, of a 16,001-line engine) to what a map needs — the world transform (zoom toward the cursor, drag empty
+        space to pan, pinch), glass cards with a coloured edge and a clipped corner, bezier wires with travelling
+        particles and frustum culling, the dot grid, the minimap (click to go), box select, drag, a link handle, the
+        floating toolbar, the adaptive render loop, dot mode at low zoom. Stripped: the vault, JAA, auth, tags, fractal,
+        themes, lattice, Electron. Added: layer bands bottom-up and a pure layered layout (testable in node), focus
+        (the selected component's needs and consumers lit, the rest dimmed). Its own scoped Void tokens, so it can live
+        inside idearium's chrome without leaking.
+      proof: "the layout puts every dependency in a lower band and orders a band to cut crossings; the page and the repo tab both mount it"
+
+    AR4_pipeline_architect_on_the_canvas:
+      layer: interface
+      status: BUILT 0.39.299
+      depends_on: [AR3_one_architect_canvas]
+      files: [idearium/ui/architect.html, idearium/lib/architect.js, idearium/ui/index.html]
+      does: >-
+        The pipeline's Architect (Build › Architect) becomes the canvas, full-bleed and open: the spec's components as
+        blocks in bands, REUSE / NEW / GAP on each, drag a block to place it (kept), drag its handle onto another to make
+        a dependency, gaps drawn on the map. Drawers slide over the canvas (the spec and its gaps; the inspector and the
+        agent); a floating toolbar (add, link, lay out, fit, ask the agent, save). The Build tab loads it from idearium
+        itself (the old iframe pointed at ../architect/arch-builder.html, unserved when idearium runs alone);
+        architect/src/ui/arch-builder.html stays the architect system's own (§5.9), no longer idearium's surface.
+      proof: "Chromium: lay out → accept → drag a handle to link → the gap closes → save; Build › Architect shows it"
+
+    AR5_repo_architect_on_the_canvas:
+      layer: interface
+      status: BUILT 0.39.299
+      depends_on: [AR3_one_architect_canvas]
+      files: [idearium/ui/js/app.js, idearium/ui/index.html]
+      does: >-
+        The repo's Architect subtab: the registry (GET /api/repos/:uuid/architecture, unchanged) drawn on the same
+        canvas — one band per layer, bottom-up; a component per file (type, lines, consumers); wires as flowing edges,
+        bottom-up breaches red, orphans marked. Select one → its consumers and requires lit, the inspector lists its
+        exports, routes, CLI and events, each a jump. Views beside the map: LISTS (orphans, breaches, packages, routes
+        and CLI, events, data dirs and node types) and BLUEPRINT (the spec's chunks). Replaces the column SVG, the table
+        dump and the text boxes.
+      proof: "Chromium on an indexed repo: a node per file, wires drawn, select → inspector, LISTS and BLUEPRINT"
 
     PL1_one_entry_point:
       layer: service
@@ -222,3 +287,17 @@ spec:
 # Proof: tests/modules/test-spec-workshop.test.js 8/8 (WS-07 the page, WS-08 the dial in his words + limits);
 # Chromium against the real server: from a Void idea → write → draft with the agent → replace (the in-page dialog)
 # → a new section → save into a new repo; no console errors, no native dialog; wide and narrow.
+
+## ADDENDUM 2026-10-02 — 1.5.0, AR2 built (0.39.298)
+# Sequencing, said: AR2 depends on CX0 and CX0 is not built. Architect is built on what exists — loom's registry and the
+# component store — with CX0 left to grow that store; the station's interface does not change when it does. The design
+# is under AR2.design_2026_10_02. The station is its own page (1.2.0), opened from the workshop's ARCHITECT station.
+
+## ADDENDUM 2026-10-02 — 1.6.0, the Architect rebuilt on one canvas (0.39.299)
+# James: "no. look at architect in idearium. rebuild it, fully. enterprise grade, beautiful style and consistent, open
+# ui." The no is recorded: 0.39.298 built a new page beside idearium's Architect instead of rebuilding the Architect
+# idearium has — two of them, the pipeline's block canvas (Build › Architect, an iframe of arch-builder.html with no
+# data) and the repo's tab (the registry as a column SVG, a table and text boxes). Both are rebuilt on one canvas,
+# stripped from the MASTERMIND copy he gave. The questions put to him (look, canvas, "open", the repo map) were
+# dismissed in favour of the canvas; the defaults taken: the Void look for both (scoped), the canvas data-backed,
+# "open" read as a full-bleed canvas with drawers over it, the repo map as an interactive graph.

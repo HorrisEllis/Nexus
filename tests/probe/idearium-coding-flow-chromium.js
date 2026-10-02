@@ -121,13 +121,16 @@ const SPEC = ['spec:', '  meta:', '    name: kernel', '  primitives:', '    Port
     await shot('5-applied.png');
     // ── W7 the Architect tab: the repo's component registry + wiring map ──
     await pg.evaluate(() => { document.getElementById('plan-panel').classList.remove('open'); setRepoSubtab('architect'); });
-    await pg.waitForSelector('#repo-arch-registry .ar-title', { timeout: 15000 });
+    // §0.39.299 AR5 — the registry on the one canvas (js/arch-canvas.js): a card per file, the wires drawn on its canvas
+    await pg.waitForSelector('#repo-arch-registry .ax .ra-map', { timeout: 15000 });
     await pg.evaluate(() => archReindex());
-    await pg.waitForSelector('#repo-arch-registry .ar-node', { timeout: 60000 });
+    await pg.waitForSelector('#repo-arch-registry .ac-node', { timeout: 60000 });
     await pg.waitForTimeout(400);
-    const ar = await pg.evaluate(() => ({ nodes: document.querySelectorAll('#repo-arch-registry .ar-node').length, edges: document.querySelectorAll('#repo-arch-registry .ar-edge').length,
-      rows: document.querySelectorAll('#repo-arch-registry .ar-tbl tbody tr').length, chips: document.querySelector('#repo-arch-registry .ar-head').textContent.replace(/\s+/g, ' ') }));
-    P.case('W7: the Architect tab shows the repo\'s component registry — a node per file, the wire graph.js ← state.js, the table', ar.nodes >= 3 && ar.edges >= 1 && ar.rows >= 3, ar);
+    const ar = await pg.evaluate(() => ({ nodes: document.querySelectorAll('#repo-arch-registry .ac-node').length, wires: (ARCHREG.data.wires || []).length,
+      graph: !!document.querySelector('#repo-arch-registry .ac-node[data-id="src/graph.js"]'), chips: document.getElementById('ra-stats').textContent.replace(/\s+/g, ' ') }));
+    await pg.click('#repo-arch-registry .ac-node[data-id="src/graph.js"] .ac-title');
+    await pg.waitForFunction(() => /graph\.js/i.test(document.getElementById('ra-side-title').textContent) && !document.getElementById('ra-side').classList.contains('shut'), null, { timeout: 5000 });
+    P.case('W7/AR5: the Architect tab draws the repo\'s registry on the canvas — a card per file, the wire graph.js ← state.js, select → the inspector', ar.nodes >= 3 && ar.wires >= 1 && ar.graph, ar);
     if (SHOTS) await pg.screenshot({ path: path.join(SHOTS, '8-architect.png') });
 
     // ── W5 the look: idearium in the main UI's palette; the settings console's Appearance switches it live ──

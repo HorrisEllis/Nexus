@@ -233,9 +233,11 @@ function reachDial(el, guide, value, onPick) {
   el.querySelectorAll('button').forEach(b => b.onclick = () => onPick(+b.dataset.n));
 }
 function stations() {
-  const s = [['IDEA', W && W.source && W.source.kind === 'idea' ? 'done' : ''], ['SPEC', 'now'], ['ARCHITECT', ''], ['BLUEPRINT', ''], ['REPO', W && W.repoUuid ? 'done link' : ''], ['COS', '']];
-  $('stations').innerHTML = s.map(([n, c], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}" ${n === 'REPO' && W && W.repoUuid ? 'id="stRepo" tabindex="0" title="OPEN THE REPO IN IDEARIUM — ITS SPEC TAB"' : ['ARCHITECT', 'BLUEPRINT', 'COS'].includes(n) ? 'title="NEXT IN THE PIPELINE — MAPPED, COMING"' : ''}>${n}</span>`).join('');
+  const s = [['IDEA', W && W.source && W.source.kind === 'idea' ? 'done' : ''], ['SPEC', 'now'], ['ARCHITECT', W ? 'link' : ''], ['BLUEPRINT', ''], ['REPO', W && W.repoUuid ? 'done link' : ''], ['COS', '']];
+  $('stations').innerHTML = s.map(([n, c], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}" ${n === 'REPO' && W && W.repoUuid ? 'id="stRepo" tabindex="0" title="OPEN THE REPO IN IDEARIUM — ITS SPEC TAB"' : n === 'ARCHITECT' && W ? 'id="stArch" tabindex="0" title="NEXT: LAY THIS SPEC OUT AS COMPONENTS"' : ['ARCHITECT', 'BLUEPRINT', 'COS'].includes(n) ? 'title="NEXT IN THE PIPELINE — MAPPED, COMING"' : ''}>${n}</span>`).join('');
   const r = $('stRepo'); if (r) { r.onclick = openRepo; r.onkeydown = (e) => { if (e.key === 'Enter') openRepo(); }; }
+  // §0.39.298 AR2 — the next station: the architect, on this spec (what is written so far is kept first)
+  const a = $('stArch'); if (a) { const go = () => flush().then(() => { location.href = `architect.html?from=workshop:${encodeURIComponent(W.uuid)}`; }); a.onclick = go; a.onkeydown = (e) => { if (e.key === 'Enter') go(); }; }
 }
 
 // ── start ──────────────────────────────────────────────────────────────────────────────────────────────────────────

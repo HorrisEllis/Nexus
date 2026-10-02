@@ -493,18 +493,17 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .ph-chip{font-family:var(--mono);font-size:10px;border:1px solid var(--b1);border-radius:10px;padding:2px 8px;color:var(--text2)}
 .ph-chip b{font-weight:600;margin-left:3px}
 .ph-via{font-family:var(--mono);font-size:9.5px;color:var(--text3);margin-left:auto}
-.ar-wrap{padding:14px 18px}.ar-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.ar-title{font:600 13px var(--sans);color:var(--text)}.ar-chip{font:10px var(--mono);border:1px solid var(--b1);border-radius:10px;padding:1px 8px;color:var(--text2)}
-.ar-chip b{color:var(--text)}.ar-chip.bad{border-color:rgba(255,51,85,.4);color:var(--coral)}.ar-grow{flex:1}
-.ar-map{border:1px solid var(--b1);border-radius:10px;background:var(--bg1);overflow:auto;max-height:520px;margin-bottom:12px}
-.ar-map svg{display:block}.ar-node rect{fill:var(--bg2);stroke:var(--b2);rx:6}.ar-node text{fill:var(--text);font:10px var(--mono)}
-.ar-node.orphan rect{stroke:var(--coral);stroke-dasharray:3 2}.ar-node:hover rect{stroke:var(--sky)}.ar-node{cursor:pointer}
-.ar-edge{fill:none;stroke:var(--sky);stroke-opacity:.35}.ar-edge.breach{stroke:var(--coral);stroke-opacity:.8}.ar-lh{fill:var(--text3);font:9.5px var(--mono);text-transform:uppercase;letter-spacing:.08em}
-.ar-tbl{width:100%;border-collapse:collapse;font:10.5px var(--mono)}.ar-tbl th{text-align:left;color:var(--text3);font-weight:500;padding:4px 6px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg1)}
-.ar-tbl td{padding:3px 6px;border-bottom:1px solid var(--b0);color:var(--text2);vertical-align:top}.ar-tbl td:first-child{color:var(--text)}.ar-tbl tr.hl td{background:var(--b0)}
-.ar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:12px}
-.ar-box{border:1px solid var(--b1);border-radius:8px;padding:8px 10px;font:10.5px var(--mono);color:var(--text2)}.ar-box h4{margin:0 0 6px;font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
-.ar-tblwrap{max-height:360px;overflow:auto;border:1px solid var(--b1);border-radius:8px}
+/* §0.39.299 AR5 — the repo's Architect is the one canvas (css/arch-canvas.css, js/arch-canvas.js): full height, open */
+.repo-detail-body #repo-subtab-architect.repo-subtab-panel{padding:0;overflow:hidden;position:relative}   /* above the panels' generic 18px padding */
+#repo-arch-registry{flex:1;position:relative;min-height:520px}
+#repo-arch-registry > .ax{position:absolute;inset:0}
+.ra-map{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(0,80,140,.14),transparent 60%),rgba(3,5,8,.82)}
+.ra-top{position:absolute;left:14px;top:12px;right:430px;z-index:8;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.ra-top > *{pointer-events:auto}.ra-top .ax-field{max-width:320px;padding:7px 10px}
+.ra-state{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);z-index:9;text-align:center;max-width:520px}
+.ra-state b{display:block;font:400 24px/1.2 var(--ax-display);letter-spacing:.3em;color:rgba(0,212,255,.6);margin-bottom:10px}
+.ra-state p{font:400 11px/1.7 var(--ax-mono);letter-spacing:.1em;color:var(--ax-text2);margin:0 0 14px}
+#repo-arch-registry .ax-drawer.r.shut + .ra-top, #repo-arch-registry.side-shut .ra-top{right:14px}
 .ph-plan-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--b1)}
 .ph-plan-name{flex:1;font-family:var(--mono);font-size:11px;color:var(--text)}.ph-plan-name small{display:block;color:var(--text3);font-size:9.5px}
 .ls-waiting{color:var(--amber);animation:lsPulse 1.6s ease-in-out infinite}@keyframes lsPulse{50%{opacity:.55}}
@@ -960,7 +959,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
         <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
         <div class="tab-sub-sep"></div>
         <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
-        <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect — block canvas</button>
+        <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect</button>
         <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
       </div>
     </div>
@@ -1016,8 +1015,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
           <div class="pillar nest-only" onclick="setView('architect-build')">
             <div class="pillar-step">05 · ARCHITECT</div>
             <div class="pillar-icon">⌘</div>
-            <div class="pillar-name">Architect — block canvas</div>
-            <div class="pillar-desc">Assemble architecture as blocks. The read-only blueprint of a compiled spec now lives on that repo's own Architect subtab.</div>
+            <div class="pillar-name">Architect</div>
+            <div class="pillar-desc">Lay the spec out as components on the canvas, bottom-up — what exists is reused, what is new is marked, a gap is said. Each repo's own wiring is on its Architect tab.</div>
           </div>
         </div>
         <div class="welcome-foot" id="welcome-foot">awaiting connection to nexus idearium service · :4800</div>
@@ -1109,7 +1108,10 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
          from the "Architect" blueprint viewer under Build, which reads
          compiled-spec output; this is the architect system's own real UI) ══════════ -->
     <section class="view" id="view-architect-build">
-      <iframe class="system-frame" id="architect-frame" src="about:blank" data-src="../architect/arch-builder.html" title="Architect Build"></iframe>
+      <!-- §0.39.299 AR4 — James: "look at architect in idearium. rebuild it, fully … open ui". The pipeline's Architect is
+           idearium's own page now (ui/architect.html on the one canvas, js/arch-canvas.js), not architect/'s arch-builder
+           (no data, and unserved when idearium runs alone). arch-builder.html stays the architect system's own (§5.9). -->
+      <iframe class="system-frame" id="architect-frame" src="about:blank" data-src="architect.html" title="The Architect"></iframe>
     </section>
 
     <!-- ══════════ REPOSITORY LIBRARY / FILE BROWSER / IDE ══════════ -->
@@ -1212,9 +1214,9 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
           <div class="repo-subtab-panel" id="repo-subtab-code"></div>
           <div class="repo-subtab-panel" id="repo-subtab-architect">
             <!-- §0.39.284 W7 — James: "the architect tab should be the component registry and loom style map for the wiring".
-                 The repo's own registry (GET /api/repos/:uuid/architecture) first; the spec's blueprint below it. -->
+                 §0.39.299 AR5 — "rebuild it, fully … open ui": the registry (GET /api/repos/:uuid/architecture) on the one
+                 canvas (js/arch-canvas.js), full height; the inspector, the lists and the spec's blueprint in a drawer. -->
             <div id="repo-arch-registry"></div>
-            <div id="repo-arch-blueprint"><div class="detail-empty">← select a repo</div></div>
           </div>
 
           <!-- SPEC — this repo's spec-engine spec, as a working surface: chunk
@@ -2414,6 +2416,8 @@ async function saveToIdearium(){
 <link rel="stylesheet" href="css/agent-blocks.css">
 <link rel="stylesheet" href="css/file-manage.css">
 <link rel="stylesheet" href="css/work-surface.css">
+<link rel="stylesheet" href="css/arch-canvas.css">   <!-- §0.39.299 AR5 — the Architect's canvas, scoped (.ax / .ac) -->
+<script src="js/arch-canvas.js"></script>   <!-- §0.39.299 AR3 — the one canvas both Architects use -->
 <script src="js/app.js"></script>
 <script src="js/compartment.js"></script>
 <script src="js/agent-blocks.js"></script>
