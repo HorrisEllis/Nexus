@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.5.0
+    version:  1.6.0
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -834,10 +834,57 @@ spec:
         result. Builds on raid-simulation-engine.spec's scoring of simulated events.
       proof: "for a fixture strategy that hit a known mode before, the simulation predicts that mode before the attempt, with its confidence; its predictions are scored against what then happens"
 
+    RD1_raid_complete_or_build:
+      layer: service
+      systems: [copilot, cortex, idearium, cos]
+      value: { score: 5, cost: M, for: [compounding], why: "the self-building front door: every request is either done or becomes a capability that is built, proven and registered" }
+      status: OPEN
+      depends_on: [PR1_proof_run_the_delivery_checker, LB1_the_end_state_lab]
+      files: [copilot/capability-extend.js, cortex/core/raid/index.js, idearium/repo/proof-run.js]
+      does: >-
+        James: "Copilot uses raid to either complete the request or have the capability built using idearium. … Nodes
+        expand." RAID decides per request: COMPLETE it with what exists, or BUILD the missing capability — the gap
+        capability-extend files becomes an end state (PR1 conditions written from the request), Idearium builds it, the
+        lab (LB1) iterates until the conditions pass, and the new capability is registered as nodes (registry, routes,
+        CLI, loom — E12) so the next request finds it. A request is answered when its end state is proven, never before.
+      proof: "a request no tool serves today: a gap, an end state, a lab run, a registered capability, then the same request completed by it"
+
+    DA1_domain_agnostic_end_states:
+      layer: library
+      systems: [idearium, intelligence, clear-glass]
+      value: { score: 5, cost: M, for: [compounding], why: "the same loop for research, problem solving and code" }
+      status: OPEN
+      depends_on: [PR1_proof_run_the_delivery_checker]
+      files: [idearium/repo/proof-run.js]
+      does: >-
+        James: "This is non linear and domain agnostic. Research. Problem solving. Coding." Condition kinds beyond code,
+        each checked by a machine, never by the model's own say-so: CLAIM (a finding must cite sources, read through
+        Clear Glass, each quote found at its source), DATA (a result must reproduce from recorded inputs and seed),
+        CONSISTENCY (no contradiction with settled facts in the relational field, MR6), REVIEW (James's own yes,
+        recorded). A research or problem-solving end state is a list of these; the lab iterates on them as on code.
+      honest_limit: "What a machine cannot check stays a REVIEW condition for James; the loop never marks it met itself."
+      proof: "a fixture research end state: a claim without a source is unmet, a quote not found at its source is unmet, a reproducible result is met"
+
+    GL1_the_graphs_as_a_model:
+      layer: library
+      systems: [intelligence, cortex, idearium]
+      value: { score: 4, cost: L, for: [compounding, ownership], why: "the graphs predict the next step — a learned model of his own beside the LLMs" }
+      status: OPEN
+      depends_on: [RF1_relational_field, MR7_recipes, FM1_mining_failure_modes]
+      does: >-
+        James: "This is also technically an llm. The graphs." The relational field, its recipes and its mined failure
+        modes predict, from a state, which next step usually reaches the end state and which usually fails, with
+        confidence from counts (the pattern engine's Markov recall, MR7, FM1). One more proposer beside the LLMs —
+        local, cheap, his — and scored against what then happens, so its weight is earned, not assumed.
+      proof: "after fixture runs, the graph model predicts the next successful step better than chance, its score shown"
+
   # ── Wiring — E12: each phase into each system it touches. A phase is DONE only when its row is true. ────────────
   # nodes use the lib/node-export.js envelope and Guardian's nodes/<type>/<id>.<type> layout; routes carry CAPS and get a
   # .command node; every CLI verb gets a .command node; loom: the map named, real wires, bootstrapped from empty.
   wiring:
+    RD1: { systems: [copilot, cortex, idearium, cos], events: "cortex: RAID_DECIDED_BUILD, CAPABILITY_REGISTERED", contract: "copilot, cortex", routes: "/api/capabilities/build", cli: "copilot build-capability <request>", loom: "copilot-capability-map.js", settings: none }
+    DA1: { systems: [idearium, intelligence, clear-glass], events: "idearium: IDEARIUM_PROOF_RUN_SETTLED (kinds widen)", contract: "idearium", routes: "deliver/check, new kinds", cli: "idearium deliver check", loom: "one-idearium-map.js", settings: none }
+    GL1: { systems: [intelligence, cortex, idearium], events: "intelligence: GRAPH_MODEL_PREDICTED, GRAPH_MODEL_SCORED", contract: "intelligence", routes: "/api/intelligence/graph-model/predict", cli: "intelligence predict", loom: "observability-map.js", settings: none }
     PR1: { systems: [idearium], events: "idearium: PROOF_RUN_STARTED, PROOF_RUN_SETTLED", contract: "idearium", nodes: "nexstore type proof_run; .command per route", routes: "POST /api/repos/:uuid/deliver/check, GET /api/repos/:uuid/deliver/check, POST /api/repos/:uuid/deliver/conditions", cli: "idearium deliver check|conditions <repo>", loom: "one-idearium-map.js", settings: none }
     PR2: { systems: [clear-glass, idearium], events: "clear-glass: DRIVER_SCREENSHOT_TAKEN", contract: "clear-glass", routes: "POST /cli/driver/screenshot", cli: "none", loom: "copilot-capability-map.js", settings: none }
     LB1: { systems: [cos, idearium, guardian, intelligence], events: "cos: LAB_ATTEMPT, LAB_STRATEGY_CHANGED, LAB_MET, LAB_HALTED", contract: "cos, idearium", routes: "/api/lab/runs, /api/lab/runs/:id/{attempt,halt}", cli: "cos lab run|status|halt", loom: "cos-testenv-map.js + one-idearium-map.js", settings: "ST1 BUILD TEAMS (lab budgets)" }
@@ -899,7 +946,7 @@ spec:
     - "FV1: which gig types first, for the kits?"
     - "EC6: which local models to read tokenizers from first (the ones Ollama runs here)?"
 
-  build_order: [EM0, EV0, GA1, IN1, UI0, PR1, PR2, EM1, EC6, MR1, SH1, EM2, CF1, MR9, RF1, MR6, ST1, AC1, IN2, CB1, MR7, MR8, MR3, FM1, CB3, WS6, LB1, MS1, MR5, LN1, OT1, MR11, CB2, RC1, BT1, FV1, MR2, MR4, MR10, CB4]
+  build_order: [EM0, EV0, GA1, IN1, UI0, PR1, PR2, DA1, EM1, EC6, MR1, SH1, EM2, CF1, MR9, RF1, MR6, ST1, AC1, IN2, CB1, MR7, MR8, MR3, FM1, CB3, WS6, LB1, RD1, MS1, GL1, MR5, LN1, OT1, MR11, CB2, RC1, BT1, FV1, MR2, MR4, MR10, CB4]
   # Value-first (E17), computed, not hand-picked: a phase is ready when everything it depends on is built; of the ready
   # ones, the next is the one with the highest value per cost — where a prerequisite takes on the value of the best phase
   # it unlocks (so EM2, slow on its own, is pulled forward by SH1's and CB1's value), ties by score. The groundwork and
@@ -977,3 +1024,11 @@ spec:
 # report written beside it was lost between calls — it now goes through the repo layer (writer/reader passed in).
 # idearium's event taxonomy begun as idearium/event-taxonomy.cjs (idearium/ is "type": "module"); EV0 declares the
 # rest. Proof: tests/modules/test-proof-run.test.js 7/7; end to end through the real idearium server.
+
+## ADDENDUM 2026-10-02 — 1.6.0
+# James: "This system is meant to build its own capability. Nodes expand. Copilot uses raid to either complete the
+# request or have the capability built using idearium … This is non linear and domain agnostic. Research. Problem
+# solving. Coding. … This is also technically an llm. The graphs." Added RD1 (RAID: complete or build — the
+# self-building front door), DA1 (end states for research and problem solving: claims checked against sources,
+# reproducible results, no contradiction with settled facts, James's review where a machine cannot check), GL1 (the
+# graphs as a predictive model of his own, scored against outcomes).
