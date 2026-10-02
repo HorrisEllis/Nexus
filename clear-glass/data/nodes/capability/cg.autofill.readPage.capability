@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-capability-cg.autofill.readPage
+type: capability
+id: cg.autofill.readPage
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790936717987
+source: clear-glass/registry-components.js:cg.autofill.readPage
+occurrences: 1
+firstSeenAt: 1790936559950
+lastSeenAt: 1790936717987
+fingerprint: e8ef7149298ba2c727f9b5e2
+payload:
+  intent: []
+  grammar:
+    - autofill readPage
+  tags:
+    - cg
+    - autofill
+    - freelance
+  id: cg.autofill.readPage
+  namespace: cg
+  name: autofill.readPage
+  version: 3.23.0
+  route:
+    method: IPC
+    path: autofill:readPage
+  description: The text and url of the page open in a tab (the job post the proposal answers)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

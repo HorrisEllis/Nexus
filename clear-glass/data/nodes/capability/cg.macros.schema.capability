@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786730
+exported_at: 1790936718008
 source: clear-glass/registry-components.js:cg.macros.schema
 occurrences: 1
 firstSeenAt: 1790684786730
-lastSeenAt: 1790684786730
-fingerprint: 26064c40feeece78fa764b09
+lastSeenAt: 1790936718008
+fingerprint: 016eed41690b9acd49777768
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.macros.schema
   namespace: cg
   name: macros.schema
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: macros:schema

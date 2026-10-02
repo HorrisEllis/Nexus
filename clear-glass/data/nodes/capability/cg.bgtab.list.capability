@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786696
+exported_at: 1790936717978
 source: clear-glass/registry-components.js:cg.bgtab.list
 occurrences: 1
 firstSeenAt: 1789250730174
-lastSeenAt: 1790684786696
-fingerprint: f1ac8bae1bd76ee5a32d1efc
+lastSeenAt: 1790936717978
+fingerprint: 1818699c41d8d21dc117edbd
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.bgtab.list
   namespace: cg
   name: bgtab.list
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: bgtab:list

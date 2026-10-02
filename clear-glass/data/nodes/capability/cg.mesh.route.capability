@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786643
+exported_at: 1790936717920
 source: clear-glass/registry-components.js:cg.mesh.route
 occurrences: 1
 firstSeenAt: 1789250730160
-lastSeenAt: 1790684786643
-fingerprint: d9a431e4b7c261b8a91bf894
+lastSeenAt: 1790936717920
+fingerprint: b9bb4de1697f80e976e506b3
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.mesh.route
   namespace: cg
   name: mesh.route
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

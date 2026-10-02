@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786651
+exported_at: 1790936717929
 source: clear-glass/registry-components.js:cg.diag.nexus
 occurrences: 1
 firstSeenAt: 1789250730163
-lastSeenAt: 1790684786651
-fingerprint: b2457d9272360cd6c9db1cb9
+lastSeenAt: 1790936717929
+fingerprint: 243533ca1142fe2ac95fc4d0
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.diag.nexus
   namespace: cg
   name: diag.nexus
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786633
+exported_at: 1790936717910
 source: clear-glass/registry-components.js:cg.context.switch
 occurrences: 1
 firstSeenAt: 1789250730159
-lastSeenAt: 1790684786633
-fingerprint: 0af209ade65c14997aeb8a6c
+lastSeenAt: 1790936717910
+fingerprint: 728bc57982bbc6b1ca346979
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.context.switch
   namespace: cg
   name: context.switch
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

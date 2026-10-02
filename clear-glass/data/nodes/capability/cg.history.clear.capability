@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786677
+exported_at: 1790936717956
 source: clear-glass/registry-components.js:cg.history.clear
 occurrences: 1
 firstSeenAt: 1789250730169
-lastSeenAt: 1790684786677
-fingerprint: 6fd717b9a8e271f8c3f64a91
+lastSeenAt: 1790936717956
+fingerprint: f551e9b26e1f1dcf15580648
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.history.clear
   namespace: cg
   name: history.clear
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: history:clear

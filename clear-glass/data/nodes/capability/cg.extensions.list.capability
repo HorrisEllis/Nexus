@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786678
+exported_at: 1790936717957
 source: clear-glass/registry-components.js:cg.extensions.list
 occurrences: 1
 firstSeenAt: 1789250730169
-lastSeenAt: 1790684786678
-fingerprint: 2114b52553b470468ded0677
+lastSeenAt: 1790936717957
+fingerprint: ce77cc1dbaa08fa55849dcb9
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.extensions.list
   namespace: cg
   name: extensions.list
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: extensions:list

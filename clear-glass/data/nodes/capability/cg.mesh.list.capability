@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786645
+exported_at: 1790936717922
 source: clear-glass/registry-components.js:cg.mesh.list
 occurrences: 1
 firstSeenAt: 1789250730161
-lastSeenAt: 1790684786645
-fingerprint: 7efae2e1150e0496a1fffb4e
+lastSeenAt: 1790936717922
+fingerprint: 7c7988b8dc4ae0b0ad18482d
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.mesh.list
   namespace: cg
   name: mesh.list
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /agents

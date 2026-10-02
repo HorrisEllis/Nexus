@@ -419,6 +419,20 @@ class IpcBridge {
       try { res.json(await _autofillDetect(this.dom, this.autofillStore, { agentId: req.body?.agentId || 'default', profileId: req.body?.profileId })); }
       catch (e) { res.status(500).json({ error: e.message }); }
     });
+    // §0.39.301 — the gig writer's second door (src/autofill/gig.js), same functions the autofill:gig* IPC uses.
+    this.app.post('/cli/autofill/gig', async (req, res) => {
+      const r = await this._gigDraft(req.body || {});
+      res.status(r.ok ? 200 : (r.error === 'autofill unavailable' || r.error === 'co-pilot is not connected' ? 503 : 400)).json(r);
+    });
+    this.app.post('/cli/autofill/gig/detect', async (req, res) => {
+      if (!this.dom) return res.status(503).json({ error: 'dom bridge unavailable' });
+      try { res.json(await require('../autofill/gig.js').detectGig(this.dom, req.body?.gig, { agentId: req.body?.agentId || 'default' })); }
+      catch (e) { res.status(400).json({ error: e.message }); }
+    });
+    this.app.post('/cli/autofill/gig/fill', async (req, res) => {
+      const r = await this._gigFill({ gig: req.body?.gig, agentId: req.body?.agentId || 'default', minConfidence: req.body?.minConfidence || 'medium' });
+      res.status(r.error ? (r.error === 'dom bridge unavailable' ? 503 : 400) : 200).json(r);
+    });
     this.app.post('/cli/autofill/fill', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       try {
@@ -1283,6 +1297,15 @@ class IpcBridge {
         return text ? { ok: true, text } : { ok: false, error: 'co-pilot returned no text' };
       } catch (err) { return { ok: false, error: err.message }; }
     });
+    // §0.39.301 — James: "I just want it to write gigs for me. Not automate talking or posting." A Fiverr gig drafted
+    // from a profile + one line of what it offers (src/autofill/gig.js), then — only when asked — typed into the gig
+    // editor open in a tab. Nothing is saved or published; he does that on Fiverr.
+    ipcMain.handle('autofill:gig', async (e, payload = {}) => this._gigDraft(payload));
+    ipcMain.handle('autofill:gig:detect', async (e, { gig, agentId = 'default' } = {}) => {
+      if (!this.dom) return { error: 'dom bridge unavailable' };
+      return require('../autofill/gig.js').detectGig(this.dom, gig, { agentId });
+    });
+    ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
     // The text of a tab's page (the job post), for the proposal drafter.
     ipcMain.handle('autofill:readPage', async (e, { agentId = 'default' } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver unavailable' };
@@ -1609,6 +1632,37 @@ class IpcBridge {
   // every caller, by design. Added a real, opt-in captureBody param
   // rather than changing the default for existing callers that
   // correctly never needed the body.
+  // §0.39.301 — the gig writer, shared by its IPC and REST doors (src/autofill/gig.js). Draft: the co-pilot writes the
+  // gig as JSON from the profile's facts and James's one line; parseGig holds it to Fiverr's limits and says every cut.
+  async _gigDraft({ profileId, offer, extra, agentId = 'default' } = {}) {
+    if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+    if (!this.copilot) return { ok: false, error: 'co-pilot is not connected' };
+    const profile = this.autofillStore.getProfile(profileId);
+    if (!profile) return { ok: false, error: `no autofill profile "${profileId}"` };
+    const G = require('../autofill/gig.js');
+    const b = G.buildGigPrompt({ profile, offer, extra });
+    if (b.error) return { ok: false, error: b.error };
+    let reply;
+    try { reply = await this.copilot.send({ message: b.prompt, agentId }); }
+    catch (err) { return { ok: false, error: err.message }; }
+    const text = String((reply && (reply.text || reply.reply || reply.message)) || '').trim();
+    if (!text) return { ok: false, error: 'co-pilot returned no text' };
+    const r = G.parseGig(text);
+    if (!r.ok) return r;
+    this.postEvent('autofill.gig.drafted', { profileId, title: r.gig.title, tags: r.gig.tags.length, packages: Object.keys(r.gig.packages).length, warnings: r.warnings.length, ts: Date.now() });
+    return { ok: true, gig: r.gig, warnings: r.warnings, parts: G.gigParts(r.gig), text: G.gigText(r.gig) };
+  }
+  // Fill: types the matched parts into the gig editor open in a tab. Never saves, never publishes.
+  async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
+    if (!this.dom) return { error: 'dom bridge unavailable' };
+    if (!gig || !gig.title) return { error: 'write the gig first' };
+    let r;
+    try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
+    catch (err) { return { error: err.message }; }
+    if (!r.error) this.postEvent('autofill.gig.filled', { agentId, filled: r.filled.length, skipped: r.skipped.length, failed: r.failed.length, leftToCopy: r.leftToCopy.length, ts: Date.now() });
+    return r;
+  }
+
   async _postToApiChannel(url, payload, captureBody = false) {
     const parsed = new (require('url').URL)(url);
     if (!['http:', 'https:'].includes(parsed.protocol)) {

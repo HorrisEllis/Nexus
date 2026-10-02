@@ -378,3 +378,14 @@ James: *"Can we enforce have the jobs types using ErosmancerOS"* and *"What abou
 Everything goes through Clear Glass's `/eros/*` wire. The console sends no behaviour profile of its own. ErosmancerOS 0.3.0 now lists its replay frames (`GET /api/replay/frames` returns `frames` beside the snapshot).
 
 Tests: `tests/modules/test-economy.test.js` EC9-01, `tests/modules/test-eros-workbench.test.js`.
+
+## Fiverr gigs, written for you and filled into the editor (3.23.0, v0.39.301)
+James: "I just want it to write gigs for me. Not automate talking or posting. Just write the gigs for me." · "No. I want ClearGlass to use autofill."
+
+**Settings › Autofill & answers › Fiverr gigs.**
+1. Pick your profile and say in one line what the gig offers (e.g. "simple websites for small businesses").
+2. **Write the gig.** The co-pilot writes the title, tags, description, three packages (basic, standard, premium), FAQ and the questions buyers answer before work starts — only from what your profile says, never invented experience. Fiverr's limits are held, and anything cut is shown in yellow.
+3. Edit any part in place. Each part has **Copy**, and **Copy everything** takes the whole gig.
+4. **Fill the gig editor in a tab** (optional): open the step of Fiverr's gig editor you want, preview what goes where, then fill. It only types into boxes. It never saves, posts or publishes — you check the page and save it on Fiverr yourself. Fiverr's dropdowns and its description box may be its own widgets; those parts stay one click away to copy.
+
+Code: `clear-glass/src/autofill/gig.js` (pure: prompt, parse and limits, parts, field matching, fill), called from `clear-glass/src/ipc/bridge.js` (IPC `autofill:gig`, `autofill:gig:detect`, `autofill:gig:fill`; REST `POST /cli/autofill/gig`, `/gig/detect`, `/gig/fill`) and the panel in `clear-glass/renderer/settings/sections/autofill.js`. Events `autofill.gig.drafted` and `autofill.gig.filled` are in `clear-glass/src/event-taxonomy.js`. Test: `tests/modules/clear-glass-gig.test.js`.

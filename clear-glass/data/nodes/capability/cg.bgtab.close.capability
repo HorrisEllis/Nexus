@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786695
+exported_at: 1790936717977
 source: clear-glass/registry-components.js:cg.bgtab.close
 occurrences: 1
 firstSeenAt: 1789250730174
-lastSeenAt: 1790684786695
-fingerprint: 392a662e6089ec5aebbdd593
+lastSeenAt: 1790936717977
+fingerprint: e0353c4320885f76088cd398
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.bgtab.close
   namespace: cg
   name: bgtab.close
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: bgtab:close

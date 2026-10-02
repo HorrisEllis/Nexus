@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786636
+exported_at: 1790936717914
 source: clear-glass/registry-components.js:cg.cookie.save
 occurrences: 1
 firstSeenAt: 1789250730159
-lastSeenAt: 1790684786636
-fingerprint: 67ffc03edd9562be90a2fc2d
+lastSeenAt: 1790936717914
+fingerprint: 99b7263a4836ebd23b3311c0
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.cookie.save
   namespace: cg
   name: cookie.save
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

@@ -92,7 +92,11 @@ const FILES = [
   ['lib/clear-glass-stream-bridge.js', 'nexus.lib.clear-glass-stream-bridge', []],
   ['clear-glass/src/autofill/store.js', 'nexus.clear-glass.src.autofill.store', []],
   ['clear-glass/src/autofill/matcher.js', 'nexus.clear-glass.src.autofill.matcher',
-    ['nexus.clear-glass.src.autofill.store']],
+    ['nexus.clear-glass.src.autofill.store', 'nexus.clear-glass.src.autofill.proposal']],   // require (fillTemplate, profileVars)
+  // §0.39.301 — the proposal writer (0.39.265, never mapped) and the Fiverr gig writer; both pure, required by
+  // clear-glass/src/ipc/bridge.js's autofill:proposal / autofill:gig* handlers.
+  ['clear-glass/src/autofill/proposal.js', 'nexus.clear-glass.src.autofill.proposal', []],
+  ['clear-glass/src/autofill/gig.js', 'nexus.clear-glass.src.autofill.gig', []],
   ['lib/extract-code.js', 'nexus.lib.extract-code', []],
   ['idearium/spec-engine/index.js', 'nexus.idearium.spec-engine', []],
   ['idearium/spec-engine/compiler-t0.js', 'nexus.idearium.spec-engine.compiler-t0',

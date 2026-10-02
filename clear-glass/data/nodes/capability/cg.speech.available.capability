@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786687
+exported_at: 1790936717972
 source: clear-glass/registry-components.js:cg.speech.available
 occurrences: 1
 firstSeenAt: 1789250730173
-lastSeenAt: 1790684786687
-fingerprint: 29d15eb83c896841c6b64c42
+lastSeenAt: 1790936717972
+fingerprint: 019ea73a8f0ad3d038e782ff
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.speech.available
   namespace: cg
   name: speech.available
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: speech:available

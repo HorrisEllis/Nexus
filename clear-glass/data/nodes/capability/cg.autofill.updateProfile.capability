@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786700
+exported_at: 1790936717982
 source: clear-glass/registry-components.js:cg.autofill.updateProfile
 occurrences: 1
 firstSeenAt: 1790684786700
-lastSeenAt: 1790684786700
-fingerprint: 27ac2e076cd3e9ed372950b5
+lastSeenAt: 1790936717982
+fingerprint: fe671af6ff7be033628be758
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.autofill.updateProfile
   namespace: cg
   name: autofill.updateProfile
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: autofill:profile:update

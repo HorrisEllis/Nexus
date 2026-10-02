@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786662
+exported_at: 1790936717937
 source: clear-glass/registry-components.js:cg.wire.behavior
 occurrences: 1
 firstSeenAt: 1789250730165
-lastSeenAt: 1790684786662
-fingerprint: 8655f237b14e697f2ef0108d
+lastSeenAt: 1790936717937
+fingerprint: adeb8eaa29a8171edbaf7f97
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.wire.behavior
   namespace: cg
   name: wire.behavior
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /hook/behavior

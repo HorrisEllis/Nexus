@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786725
+exported_at: 1790936718006
 source: clear-glass/registry-components.js:cg.vault.status
 occurrences: 1
 firstSeenAt: 1790684786725
-lastSeenAt: 1790684786725
-fingerprint: aa30659c2797bbfefde6fd16
+lastSeenAt: 1790936718006
+fingerprint: 8f535d00c00eae6491ccf705
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.vault.status
   namespace: cg
   name: vault.status
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: vault:status

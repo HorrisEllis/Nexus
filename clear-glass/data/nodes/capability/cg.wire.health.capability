@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786658
+exported_at: 1790936717932
 source: clear-glass/registry-components.js:cg.wire.health
 occurrences: 1
 firstSeenAt: 1789250730164
-lastSeenAt: 1790684786658
-fingerprint: 49cf02798b088dcaebd8720a
+lastSeenAt: 1790936717932
+fingerprint: ce9b23dee44e6ca5ce5370e9
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.wire.health
   namespace: cg
   name: wire.health
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /wire/health

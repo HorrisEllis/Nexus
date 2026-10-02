@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786641
+exported_at: 1790936717918
 source: clear-glass/registry-components.js:cg.mesh.spawn
 occurrences: 1
 firstSeenAt: 1789250730160
-lastSeenAt: 1790684786641
-fingerprint: 9a9954df70c08c049acec8ae
+lastSeenAt: 1790936717918
+fingerprint: 1f7d2d8293e38bdc5466879d
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.mesh.spawn
   namespace: cg
   name: mesh.spawn
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

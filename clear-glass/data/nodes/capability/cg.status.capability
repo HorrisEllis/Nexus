@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786620
+exported_at: 1790936717895
 source: clear-glass/registry-components.js:cg.status
 occurrences: 1
 firstSeenAt: 1789250730157
-lastSeenAt: 1790684786620
-fingerprint: bef8ae4d67b88da5099d1f07
+lastSeenAt: 1790936717895
+fingerprint: b9c36403fbd7c31f4807bd0c
 payload:
   intent: []
   grammar:
@@ -24,7 +24,7 @@ payload:
   id: cg.status
   namespace: cg
   name: status
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /status

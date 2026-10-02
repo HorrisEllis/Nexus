@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786731
+exported_at: 1790936718011
 source: clear-glass/registry-components.js:cg.mesh.jobIntake
 occurrences: 1
 firstSeenAt: 1790684786731
-lastSeenAt: 1790684786731
-fingerprint: df08b9f7f73b0b9b98e1ff18
+lastSeenAt: 1790936718011
+fingerprint: 0cb3c4601f8e4d8876f1e7de
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.mesh.jobIntake
   namespace: cg
   name: mesh.jobIntake
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /agent-mesh/intake

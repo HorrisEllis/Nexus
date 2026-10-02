@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786708
+exported_at: 1790936717995
 source: clear-glass/registry-components.js:cg.screenQa.deriveQuestion
 occurrences: 1
 firstSeenAt: 1790684786708
-lastSeenAt: 1790684786708
-fingerprint: 7e53e95a5c5fbb30e9663576
+lastSeenAt: 1790936717995
+fingerprint: 3e2efb79d6ec88c5e5cc0fdf
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.screenQa.deriveQuestion
   namespace: cg
   name: screenQa.deriveQuestion
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: screen-qa:derive-question

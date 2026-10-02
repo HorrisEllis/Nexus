@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - system
-exported_at: 1790684786846
+exported_at: 1790936560004
 source: nexus.lib.system-nodes
 occurrences: 1
 firstSeenAt: 1789250730175
-lastSeenAt: 1790684786846
-fingerprint: 5cd4ad6c463d04171d1809b8
+lastSeenAt: 1790936560004
+fingerprint: c33f36f497f3abf0aab517a7
 payload:
   id: clear-glass
   kernel: clear-glass
@@ -26,8 +26,8 @@ payload:
     Sovereign NEXUS browser. SISO-native →E→E→. Electron + Chromium + Firefox fingerprint + TLS JA4
     + ErosmancerOS wire.
   hasCapabilities: true
-  capabilities: 104
-  commands: 86
+  capabilities: 109
+  commands: 91
   declaredNotServed: []
   servedNotDeclared: 0
   sources:

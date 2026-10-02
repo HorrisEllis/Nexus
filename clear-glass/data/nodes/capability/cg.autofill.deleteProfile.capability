@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786700
+exported_at: 1790936717982
 source: clear-glass/registry-components.js:cg.autofill.deleteProfile
 occurrences: 1
 firstSeenAt: 1790684786700
-lastSeenAt: 1790684786700
-fingerprint: 9477a0e77719f646db9491f4
+lastSeenAt: 1790936717982
+fingerprint: 2e16de011c85ae3725dadc7b
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.autofill.deleteProfile
   namespace: cg
   name: autofill.deleteProfile
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: autofill:profile:delete

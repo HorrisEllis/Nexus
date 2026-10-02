@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786676
+exported_at: 1790936717955
 source: clear-glass/registry-components.js:cg.history.delete
 occurrences: 1
 firstSeenAt: 1789250730169
-lastSeenAt: 1790684786676
-fingerprint: eb9b9db9b7228a58e83cceb4
+lastSeenAt: 1790936717955
+fingerprint: 474b7331ccf47d30500f75be
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.history.delete
   namespace: cg
   name: history.delete
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: history:delete

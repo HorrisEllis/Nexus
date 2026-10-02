@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-capability-cg.autofill.proposal
+type: capability
+id: cg.autofill.proposal
+context: clear-glass/registry-components.js — declared capability
+intent: null
+summary: null
+system: null
+tags:
+  - clear-glass
+  - capability
+exported_at: 1790936717985
+source: clear-glass/registry-components.js:cg.autofill.proposal
+occurrences: 1
+firstSeenAt: 1790936559949
+lastSeenAt: 1790936717985
+fingerprint: eac85820c8c6fc1653bdb9e4
+payload:
+  intent: []
+  grammar:
+    - autofill proposal
+  tags:
+    - cg
+    - autofill
+    - freelance
+  id: cg.autofill.proposal
+  namespace: cg
+  name: autofill.proposal
+  version: 3.23.0
+  route:
+    method: IPC
+    path: autofill:proposal
+  description: >-
+    Draft an Upwork proposal, a Fiverr offer or a cover letter from a profile (a draft only, never
+    sent)
+  params: []
+  permissions:
+    - system
+  hooks: {}
+  tier: T2
+  typecode: null

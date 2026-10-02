@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786701
+exported_at: 1790936717984
 source: clear-glass/registry-components.js:cg.autofill.detect
 occurrences: 1
 firstSeenAt: 1790684786701
-lastSeenAt: 1790684786701
-fingerprint: e7c209f82eb31df5f00135c5
+lastSeenAt: 1790936717984
+fingerprint: 791e0fda5b9d0aba95af2bf6
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.autofill.detect
   namespace: cg
   name: autofill.detect
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: autofill:detect

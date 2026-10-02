@@ -2,7 +2,7 @@
 /**
  * clear-glass/registry-components.js — Clear Glass System Contract
  * UUID: cg-registry-v1-0000-0000-000000000001
- * Version: 3.22.0
+ * Version: 3.23.0
  *
  * Served at GET /contract from the IPC server (:7702).
  * Verified by orchestrator contract-handshake on boot.
@@ -17,7 +17,7 @@ const NS = 'cg';
 // drift lib/version.js's services['clear-glass'], main/index.js's
 // CG_VERSION, and clear-glass.spec's meta.version all had — found while
 // updating those three, checked here too rather than assumed synced.
-const V  = '3.22.0';   // §0.39.281 synced (had stayed at 3.17.0)
+const V  = '3.23.0';   // §0.39.301 the Fiverr gig writer (§0.39.281 synced it; it had stayed at 3.17.0)
 
 function _c(id, method, path, desc, opts = {}) {
   return {
@@ -177,6 +177,13 @@ const components = [
   _c('autofill.deleteProfile','IPC', 'autofill:profile:delete', 'Delete a real autofill profile',                                 { tags: ['autofill'] }),
   _c('autofill.detect',       'IPC', 'autofill:detect',         'Detect real form fields an autofill profile would confidently fill', { tags: ['autofill'] }),
   _c('autofill.fill',         'IPC', 'autofill:fill',           'Fill real form fields from an autofill profile',                 { tags: ['autofill'] }),
+  // §0.39.301 — two shipped doors that were never registered (0.39.265's proposal writer and its page reader), and
+  // the gig writer (src/autofill/gig.js). Each copied from src/ipc/bridge.js's ipcMain.handle() calls.
+  _c('autofill.proposal',     'IPC', 'autofill:proposal',       'Draft an Upwork proposal, a Fiverr offer or a cover letter from a profile (a draft only, never sent)', { tags: ['autofill', 'freelance'] }),
+  _c('autofill.readPage',     'IPC', 'autofill:readPage',       'The text and url of the page open in a tab (the job post the proposal answers)', { tags: ['autofill', 'freelance'] }),
+  _c('autofill.gig',          'IPC', 'autofill:gig',            'Write a Fiverr gig from a profile and one line of what it offers — title, tags, description, three packages, FAQ, buyer questions, held to Fiverr\'s limits', { tags: ['autofill', 'freelance', 'gig'] }),
+  _c('autofill.gigDetect',    'IPC', 'autofill:gig:detect',     'Preview which field of the gig editor open in a tab takes which part of the gig (nothing typed)', { tags: ['autofill', 'freelance', 'gig'] }),
+  _c('autofill.gigFill',      'IPC', 'autofill:gig:fill',       'Type the gig into the gig editor open in a tab — never saves or publishes', { tags: ['autofill', 'freelance', 'gig'] }),
 
   // ── Screen Q&A — real, detect an open-ended on-screen question, answer
   //    it through the real copilot bridge, inject the chosen answer ────────
@@ -245,6 +252,8 @@ module.exports = {
       'nexus.status',
       'selectors.assigned',        // v0.39.251 — SSE, a picked selector recorded by guardian
       'selectors.assign.failed',   // v0.39.251 — SSE, refused here or by guardian (the reason travels with it)
+      'autofill.gig.drafted',      // v0.39.301 — a Fiverr gig was written (title, counts, how many warnings)
+      'autofill.gig.filled',       // v0.39.301 — a gig was typed into the editor in a tab (filled / skipped / failed / left to copy)
     ],
     handles: [
       'orchestrator.shutdown',

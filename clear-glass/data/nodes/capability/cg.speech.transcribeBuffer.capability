@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786688
+exported_at: 1790936717973
 source: clear-glass/registry-components.js:cg.speech.transcribeBuffer
 occurrences: 1
 firstSeenAt: 1789250730173
-lastSeenAt: 1790684786688
-fingerprint: b55666ecc52681d46f3c6563
+lastSeenAt: 1790936717973
+fingerprint: 2492ceeb44cdd8aadb4ea512
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.speech.transcribeBuffer
   namespace: cg
   name: speech.transcribeBuffer
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: speech:transcribeBuffer

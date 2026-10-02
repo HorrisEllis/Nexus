@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786734
+exported_at: 1790936718016
 source: clear-glass/registry-components.js:cg.selectors.assign
 occurrences: 1
 firstSeenAt: 1790684786734
-lastSeenAt: 1790684786734
-fingerprint: 9848a7ad81a6eaa32b5a2739
+lastSeenAt: 1790936718016
+fingerprint: b9ab6cd9daa3ab2df7ebadaf
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.selectors.assign
   namespace: cg
   name: selectors.assign
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: selectors:assign

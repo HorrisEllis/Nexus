@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786627
+exported_at: 1790936717905
 source: clear-glass/registry-components.js:cg.dom.mutate
 occurrences: 1
 firstSeenAt: 1789250730157
-lastSeenAt: 1790684786627
-fingerprint: 6b73b65c27d7da311438486f
+lastSeenAt: 1790936717905
+fingerprint: fda565b6bdd8ed17d16b40d4
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.dom.mutate
   namespace: cg
   name: dom.mutate
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786669
+exported_at: 1790936717943
 source: clear-glass/registry-components.js:cg.downloads.registerListener
 occurrences: 1
 firstSeenAt: 1789250730166
-lastSeenAt: 1790684786669
-fingerprint: f1911214e85c27ce98b8a87c
+lastSeenAt: 1790936717943
+fingerprint: 44307398a4b378ef77312cc8
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.downloads.registerListener
   namespace: cg
   name: downloads.registerListener
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: downloads:registerListener

@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786639
+exported_at: 1790936717915
 source: clear-glass/registry-components.js:cg.cookie.restore
 occurrences: 1
 firstSeenAt: 1789250730160
-lastSeenAt: 1790684786639
-fingerprint: 82a15145d3ee3f20f27e7272
+lastSeenAt: 1790936717915
+fingerprint: e832dde54f86ea8f0df4dd63
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.cookie.restore
   namespace: cg
   name: cookie.restore
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

@@ -192,6 +192,7 @@ const SUITES = [
   'copilot-provider-toggle.test.js',
   'clear-glass-hostile-html.test.js',
   'clear-glass-autofill.test.js',
+  'clear-glass-gig.test.js',          // 0.39.301 the Fiverr gig writer
   'clear-glass-library-ui.test.js',
   'clear-glass-screen-qa.test.js',
   'clear-glass-screen-qa-ui.test.js',

@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786730
+exported_at: 1790936718009
 source: clear-glass/registry-components.js:cg.mesh.jobSend
 occurrences: 1
 firstSeenAt: 1790684786730
-lastSeenAt: 1790684786730
-fingerprint: 6d34a91286e4a87465c964e5
+lastSeenAt: 1790936718009
+fingerprint: 568cabbd8cfd53952414866c
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.mesh.jobSend
   namespace: cg
   name: mesh.jobSend
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /agent-mesh/send

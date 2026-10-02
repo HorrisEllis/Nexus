@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786733
+exported_at: 1790936718014
 source: clear-glass/registry-components.js:cg.window.closeLibrary
 occurrences: 1
 firstSeenAt: 1790684786733
-lastSeenAt: 1790684786733
-fingerprint: cfc7036f4802bac6878d8e7a
+lastSeenAt: 1790936718014
+fingerprint: 7ae0103375753966e8b4fd99
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.window.closeLibrary
   namespace: cg
   name: window.closeLibrary
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: window:closeLibrary

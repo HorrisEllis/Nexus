@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786711
+exported_at: 1790936717998
 source: clear-glass/registry-components.js:cg.accounts.resolve
 occurrences: 1
 firstSeenAt: 1790684786711
-lastSeenAt: 1790684786711
-fingerprint: b12cfc1626a77dd41cc84966
+lastSeenAt: 1790936717998
+fingerprint: 50f63fb3f8fefc841ed2996e
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.accounts.resolve
   namespace: cg
   name: accounts.resolve
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: accounts:resolve

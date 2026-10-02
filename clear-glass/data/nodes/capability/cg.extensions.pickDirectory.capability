@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786680
+exported_at: 1790936717962
 source: clear-glass/registry-components.js:cg.extensions.pickDirectory
 occurrences: 1
 firstSeenAt: 1789250730171
-lastSeenAt: 1790684786680
-fingerprint: 0c87c9b401ae358d10cec33a
+lastSeenAt: 1790936717962
+fingerprint: 9576492c56201e894b304a76
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.extensions.pickDirectory
   namespace: cg
   name: extensions.pickDirectory
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: extensions:pickDirectory

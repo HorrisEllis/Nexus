@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786703
+exported_at: 1790936717990
 source: clear-glass/registry-components.js:cg.screenQa.detect
 occurrences: 1
 firstSeenAt: 1790684786703
-lastSeenAt: 1790684786703
-fingerprint: 7355bea8595bbf37dd8d66af
+lastSeenAt: 1790936717990
+fingerprint: 34c4b11009c42db779e99499
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.screenQa.detect
   namespace: cg
   name: screenQa.detect
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: screen-qa:detect

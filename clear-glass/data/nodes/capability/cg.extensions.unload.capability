@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786679
+exported_at: 1790936717960
 source: clear-glass/registry-components.js:cg.extensions.unload
 occurrences: 1
 firstSeenAt: 1789250730170
-lastSeenAt: 1790684786679
-fingerprint: a052a7b785177f526bcb74ce
+lastSeenAt: 1790936717960
+fingerprint: 09e7a27c0291e2588611c43e
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.extensions.unload
   namespace: cg
   name: extensions.unload
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: extensions:unload

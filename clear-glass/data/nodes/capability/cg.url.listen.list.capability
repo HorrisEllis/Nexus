@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786649
+exported_at: 1790936717926
 source: clear-glass/registry-components.js:cg.url.listen.list
 occurrences: 1
 firstSeenAt: 1789250730163
-lastSeenAt: 1790684786649
-fingerprint: 43cdec1f08aa7a54b49592b2
+lastSeenAt: 1790936717926
+fingerprint: 4bda7f0c7294785992a04374
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.url.listen.list
   namespace: cg
   name: url.listen.list
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /listeners

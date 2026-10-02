@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786683
+exported_at: 1790936717966
 source: clear-glass/registry-components.js:cg.rewind.snapshot
 occurrences: 1
 firstSeenAt: 1789250730172
-lastSeenAt: 1790684786683
-fingerprint: 7edc6bfe4d83cb705e30de15
+lastSeenAt: 1790936717966
+fingerprint: 89033c17c6dd0ba520bcf80d
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.rewind.snapshot
   namespace: cg
   name: rewind.snapshot
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: rewind:snapshot
