@@ -338,3 +338,23 @@ export function feedbackMessage(run) {
     ...unmet.map(r => `- ${r.says}\n  what happened: ${r.evidence}\n  likely cause: ${r.cause}${r.output ? `\n  output (end): ${String(r.output).trim().slice(-600)}` : ''}`),
   ].join('\n');
 }
+
+/**
+ * derivedConditionsFromPhase(mapText, phaseKey) → { conditions, source } — when a phase declares no `conditions:`, its
+ * declared `files:` still give a machine-checkable end state: each file exists, and each JavaScript file is real,
+ * parseable JS (`node --check`). Derived from what the phase itself states — never from its prose.
+ */
+export function derivedConditionsFromPhase(mapText, phaseKey) {
+  let doc = null;
+  try { doc = require('js-yaml').load(String(mapText || '').split(/\n## ADDENDUM/)[0]); } catch (_) { return { conditions: [], source: 'the map does not parse as YAML' }; }
+  const phases = doc && doc.spec && doc.spec.phases || doc && doc.phases || {};
+  const p = phases[phaseKey] || Object.entries(phases).find(([k]) => k.split('_')[0] === String(phaseKey).split('_')[0])?.[1];
+  const files = [...new Set((p && Array.isArray(p.files) ? p.files : []).map(f => String(f).split(/[\s(]/)[0]).filter(f => /[\w-]\.[\w]+$/.test(f) && !f.endsWith('/')))];
+  if (!files.length) return { conditions: [], source: `phase ${phaseKey} declares no conditions and no files` };
+  const conditions = [];
+  for (const f of files) {
+    conditions.push({ says: `${f} exists`, check: { kind: 'file', path: f } });
+    if (/\.(c|m)?js$/.test(f)) conditions.push({ says: `${f} is valid JavaScript`, check: { kind: 'command', run: `node --check "${f.replace(/"/g, '')}"`, timeoutMs: 30000 } });
+  }
+  return { conditions, source: `derived from phase ${phaseKey}'s files (it declares no conditions)` };
+}

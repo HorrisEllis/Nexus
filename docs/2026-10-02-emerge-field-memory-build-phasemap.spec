@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.1
+    version:  1.7.2
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -1121,3 +1121,9 @@ spec:
 # conditions → no-proof, said. So a phase is only proven when it declares checkable conditions — the next step for the
 # maps themselves is to give their phases `conditions:` (GG1 can generate the wiring ones). Proof:
 # tests/modules/test-phase-proof.test.js 6/6 through the real repo layer with a stand-in agent.
+
+## ADDENDUM 2026-10-02 — 1.7.2 (0.39.304)
+# James: "get ollama solid. i need this done." No phase in the maps declares conditions, so PH1 read no-proof for all
+# of them and Ollama got no feedback. A phase without conditions is now proven from its declared files: each exists,
+# each JS file passes node --check — broken JS is unmet and its error is the next attempt's feedback. Proof:
+# tests/modules/test-phase-proof.test.js 7/7 (PP-07).
