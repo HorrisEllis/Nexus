@@ -146,6 +146,11 @@ async function _wsApi(method, path, body = null, timeoutMs = 30000) {
   try { const r = await _localApi(method, path, body, timeoutMs); return r.data || r; }
   catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the workshop is served by it)' : ''}`); }
 }
+function _deliverPrint(run) {
+  console.log(`\n  ${run.verdict === 'ready' ? bold('READY') : bold('NOT READY')} — ${run.met} of ${run.total} condition(s) met`);
+  for (const r of run.results) console.log(`  ${r.met ? '✓' : '✗'} ${r.says}\n      ${r.met ? r.evidence : `${r.evidence}\n      likely cause: ${r.cause}`}`);
+  if (run.files) console.log(`\n  report: ${run.files.report}   run: ${run.files.run}`);
+}
 function _arPrint(a, an) {
   const L = ['FOUNDATION', 'LIBRARY', 'SERVICE', 'INTERFACE'];
   header(`${a.title} — architecture ${a.uuid}`);
@@ -878,6 +883,33 @@ const COMMANDS = {
     console.log(`  saved to ${bold(r.path)} in repo ${bold(r.repoUuid)}`);
   },
 
+  // ── idearium deliver (0.39.302 PR1) ─────────────────────────────────────────────────────────────────
+  // James: "Yes, then I can use idearium to build anything needed." Are the end-state conditions met? Through the
+  // running idearium. conditions: a JSON file of [{ says, check }]; --start "<command>" --url <base> for page checks.
+  async 'deliver'(os, args) { return COMMANDS['deliver.last'](os, args); },
+  async 'deliver.check'(os, { positional, flags }) {
+    if (!positional[0] || !positional[1]) die('usage: idearium deliver check <repo-uuid> <conditions.json> [--start "npm start" --url http://127.0.0.1:3000/]');
+    let conditions;
+    const fsm = await import('fs');
+    try { conditions = JSON.parse(fsm.readFileSync(positional[1], 'utf8')); } catch (e) { die(`could not read ${positional[1]}: ${e.message}`); }
+    const start = flags.start ? { command: String(flags.start), url: String(flags.url || ''), readyMs: flags.wait ? Number(flags.wait) * 1000 : undefined } : null;
+    if (start && !start.url) die('--start needs --url (where the app answers)');
+    const r = await _wsApi('POST', `/api/repos/${encodeURIComponent(positional[0])}/deliver/check`, { conditions, start }, 600000);
+    _deliverPrint(r.run);
+  },
+  async 'deliver.last'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium deliver last <repo-uuid>');
+    const r = await _wsApi('GET', `/api/repos/${encodeURIComponent(positional[0])}/deliver/check`);
+    if (!r.run) { console.log(`  ${r.note}`); return; }
+    _deliverPrint(r.run);
+  },
+  async 'deliver.conditions'(os, { positional }) {
+    if (!positional[0] || !positional[1]) die('usage: idearium deliver conditions <repo-uuid> "<the acceptance brief>"');
+    const r = await _wsApi('POST', `/api/repos/${encodeURIComponent(positional[0])}/deliver/conditions`, { brief: positional.slice(1).join(' ') }, 360000);
+    console.log(`  ${bold(r.proposed.length)} proposed — nothing has run. Save them to a file, edit, then: idearium deliver check ${positional[0]} <file>\n`);
+    console.log(JSON.stringify(r.proposed, null, 2));
+  },
+
   // ── idearium void (0.39.295) ──────────────────────────────────────────────────────
   // James: "Just have the spacial void, with a slider …" · "the ideas come from me though not agents". Through the
   // running idearium. --creativity / --stability 0..4 (normal…outlier / stable…unstable).
@@ -1213,6 +1245,7 @@ async function main() {
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
     console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
     console.log(`  ${sky('architect')} [list] | new --from workshop:<id>|repo:<uuid> | show <id> | propose <id> | accept <id> <proposal|all> | add <id> "<name>" | reuse <id> <comp> <match|none> | save <id>`);
+    console.log(`  ${sky('deliver')} last <repo> | check <repo> <conditions.json> [--start "<cmd>" --url <base> --wait <s>] | conditions <repo> "<brief>"   ${dim('— are the end-state conditions met? writes proof/PROOF-REPORT.md')}`);
     console.log(`  ${sky('void')}   [list] | add "<idea>" [--creativity 0-4 --stability 0-4] | echo <idea> [--kind d20|reverse|ground] | collide <a> <b> | take <echo> "<words>"`);
     console.log(`  ${sky('workshop')} list | new --from idea:<uuid>|library:<title>|repo:<uuid>|blank | show <id> | write <id> <section> <text> | ambition <id> <1-5> | feed <id> <kind> | accept <id> <proposal> | dismiss | save <id>`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);

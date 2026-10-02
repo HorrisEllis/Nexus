@@ -1537,6 +1537,8 @@ const ROUTE_CAP = {
   'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
   'repo.spec.plan.get': CAPS.READ_IDEAS, 'repo.spec.plan': CAPS.WRITE_IDEAS, 'repo.spec.build': CAPS.WRITE_IDEAS,
   'repo.plan': CAPS.READ_IDEAS, 'repo.file.manage': CAPS.WRITE_IDEAS,
+  // §0.39.302 PR1 — the delivery checker. A check RUNS the repo's own commands and app, so it is ADMIN, as environment setup is.
+  'repo.deliver.check': CAPS.ADMIN, 'repo.deliver.last': CAPS.READ_IDEAS, 'repo.deliver.conditions': CAPS.WRITE_IDEAS,
 };
 
 // Key-based auth removed — Idearium is internal-only, reached solely
@@ -1752,6 +1754,10 @@ function matchRoute(method, url) {
     // §runtime-proof 2026-09-21 — which chunks ran under a PASSING test (V8 coverage, tied to chunk hash)
     ['POST',   ['api','repos',    ':uuid','proof'],         'repo.proof.run'],
     ['GET',    ['api','repos',    ':uuid','proof'],         'repo.proof.get'],
+    // §0.39.302 PR1 — the delivery checker (idearium/repo/proof-run.js)
+    ['POST',   ['api','repos',    ':uuid','deliver','check'],      'repo.deliver.check'],
+    ['GET',    ['api','repos',    ':uuid','deliver','check'],      'repo.deliver.last'],
+    ['POST',   ['api','repos',    ':uuid','deliver','conditions'], 'repo.deliver.conditions'],
     ['GET',    ['api','repos',    ':uuid','chunks',':chunkId'], 'repo.chunks.get'],
     ['GET',    ['api','repos',    ':uuid','symbols'],       'repo.symbols'],
     // §24-26 graph (MCO1) — idearium/spec/idearium.repo-graph.spec
@@ -3643,6 +3649,46 @@ async function handle(req, res, route, query, body) {
     }
 
     // ?state=passed|failed|none|no_tests|unsupported|test  ?file=  ?chunk=  — each chunk carries `stale`.
+    // §0.39.302 PR1 — James: "Yes, then I can use idearium to build anything needed" · "shadow space reasoning for the
+    // debugging". Are the end-state conditions met? Run them (shadow declared first), write proof/PROOF-REPORT.md.
+    // body: { conditions: [{ says, check }], start?: { command, url, readyMs? } }
+    case 'repo.deliver.check': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const PR = await import('../repo/proof-run.js');
+      // the report and the run go through the repo layer: a repo's working folder is re-materialised from its store
+      const writer = (rel, text) => getRepoLayer().writeFile(params.uuid, rel, text, { preserveWhitespace: true });
+      const r = await PR.runProof({ repoDir: dir, conditions: body.conditions, start: body.start || null, subject: repo.name || repo.uuid, writer });
+      if (!r.ok) return err(res, 400, r.error);
+      try { getIdeaOS().emit('idearium.proof-run.settled', { repoUuid: params.uuid, verdict: r.run.verdict, met: r.run.met, total: r.run.total, modes: r.run.modes, report: r.run.files ? r.run.files.report : null }); } catch (_) {}
+      return ok(res, { repoUuid: params.uuid, run: r.run });
+    }
+    case 'repo.deliver.last': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const PR = await import('../repo/proof-run.js');
+      const run = await PR.readLastProof(dir, { reader: (rel) => { const f = getRepoLayer().readFile(params.uuid, rel); return f && !f.error ? (f.content ?? f.text ?? null) : null; } });
+      return ok(res, { repoUuid: params.uuid, run, note: run ? undefined : 'no delivery check has run for this repo (POST /api/repos/:uuid/deliver/check)' });
+    }
+    // The agent PROPOSES conditions from a brief; nothing is run, James accepts them. body: { brief }
+    case 'repo.deliver.conditions': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body.brief || String(body.brief).trim().length < 10) return err(res, 400, 'give the acceptance brief (what was promised)');
+      const dir = _repoDiskDir(params.uuid);
+      let files = []; try { const idx = JSON.parse(fs.readFileSync(path.join(dir, 'indexes', 'files.json'), 'utf8')); files = idx.map(f => f.path); } catch (_) {}
+      const PR = await import('../repo/proof-run.js');
+      const a = await _agentAsk(PR.proposeConditionsPrompt(body.brief, { files }), { channel: 'idearium-deliver', sessionId: `deliver-${params.uuid}` });
+      if (!a || !a.ok) return err(res, 502, `the agent did not answer: ${(a && a.error) || 'no reply'}`);
+      const p = PR.parseProposedConditions(a.text);
+      if (!p.ok) return err(res, 422, p.error);
+      return ok(res, { repoUuid: params.uuid, proposed: p.conditions, errors: p.errors, by: a.by || null, note: 'proposals only — nothing has run; accept them by sending them to deliver/check' });
+    }
+
     case 'repo.proof.get': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);

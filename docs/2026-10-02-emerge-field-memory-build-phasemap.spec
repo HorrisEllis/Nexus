@@ -759,9 +759,9 @@ spec:
       layer: service
       systems: [idearium]
       value: { score: 5, cost: M, for: [income, safety, foundation], why: "James cannot read code: every delivery and every lab run must prove itself in plain words; the core every loop below uses" }
-      status: OPEN — building (0.39.302)
+      status: DONE (0.39.302) — built ahead of EM0 on James's priority; screenshots are PR2
       depends_on: [EM0_ground]
-      files: [idearium/repo/proof-run.js, idearium/api/index.js, idearium/cli/index.js, lib/shadow.js]
+      files: [idearium/repo/proof-run.js, idearium/event-taxonomy.cjs, idearium/api/index.js, idearium/cli/index.js, lib/shadow.js]
       does: >-
         "Yes" — the delivery checker. END-STATE CONDITIONS, each one an acceptance line in plain words with a check: a file
         exists (and contains), a command succeeds (and prints), the tests pass, the app starts and a page answers with the
@@ -969,3 +969,11 @@ spec:
 # conditions can check), FM1 (failure modes mined into .failure_mode nodes, clustered, turned into default checks),
 # MS1 (simulating a strategy against mined modes before spending attempts). PR1 is built now, ahead of EM0's merge, on
 # James's priority; it touches idearium/api/index.js in one separate block to keep the later merge small.
+
+## ADDENDUM 2026-10-02 — 1.5.1, PR1 built (0.39.302)
+# The delivery checker: conditions (file, command, tests, page with the app started and always stopped), the shadow
+# declared first so every unmet promise comes back absent with its cause, failure modes, and a plain-language proof
+# report written into the repo. Found while building: a repo's working folder is re-materialised from its store, so a
+# report written beside it was lost between calls — it now goes through the repo layer (writer/reader passed in).
+# idearium's event taxonomy begun as idearium/event-taxonomy.cjs (idearium/ is "type": "module"); EV0 declares the
+# rest. Proof: tests/modules/test-proof-run.test.js 7/7; end to end through the real idearium server.

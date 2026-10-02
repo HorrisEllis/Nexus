@@ -193,6 +193,7 @@ const SUITES = [
   'clear-glass-hostile-html.test.js',
   'clear-glass-autofill.test.js',
   'clear-glass-gig.test.js',          // 0.39.301 the Fiverr gig writer
+  'test-proof-run.test.js',           // 0.39.302 PR1 the delivery checker
   'clear-glass-library-ui.test.js',
   'clear-glass-screen-qa.test.js',
   'clear-glass-screen-qa-ui.test.js',
