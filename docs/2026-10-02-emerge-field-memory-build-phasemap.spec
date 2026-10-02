@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.2.0
+    version:  1.3.0
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -41,7 +41,9 @@ spec:
       mapped to each system, relevant nodes, routes and cli nodes are added, maps ar eupdated, and settings are
       expanded if applicaple." · "i want to get you to work from inside nexus. that would ne extremelty high
       leverage. then you could use introspect, okay yeah, we need that, then you could do way more than this. also
-      hooking the multiple accounts into the agents/providers and settings in idearium."
+      hooking the multiple accounts into the agents/providers and settings in idearium." · "okay but all the other
+      phases. make sure the yget added to nexus. make sure every system stays relative and adds routes, commands, all
+      relative node types, and uses the event contract."
       The ideas, the direction and the calls are James's. This map lays them out bottom-up against what exists.
 
   # ── What exists — read, not assumed ───────────────────────────────────────────────────────────────────────────
@@ -140,6 +142,16 @@ spec:
       guardian/lib/cg-account-authority.js asks Clear Glass; loom/maps/accounts-authority-map.js wires it. Idearium is
       account-blind: lib/economy learns limits, latency and success per PROVIDER, the router picks a provider, the repo
       agent routes per provider; settings.html has no accounts section.
+    self_model_and_contracts: >-
+      loom/scanners/phasemap-map.js reads every docs/*phasemap*.spec into loom — all 33 phases of this map parse, with
+      their depends_on. But it GUESSES each phase's systems by matching prose against a fixed list (cortex, guardian,
+      orchestrator, loom, copilot, clear-glass, idearium, emerge, architect, raid, intelligence, agent, chunk, replay…):
+      cos, warp, emergence, economy and nexstore are not on it, so their phases are invisible per system, and prose
+      words ("replay", "chunk", "architect") add false tags. The event contract: lib/event-taxonomy-pattern.js (ET1 —
+      each system's own event-taxonomy.js, { EVENT_NAME: { description, payloadShape, severity } }, no cross-system
+      requires); only guardian, orchestrator, versionium and clear-glass have one — idearium, cortex, intelligence, loom,
+      copilot, cos, emerge and warp do not. Routes: each system's own <system>/interaction-contract.json (15 exist;
+      contracts/nexus-interaction-contract.js is deprecated in their favour); cos, warp and emerge have none.
     spec_and_build: >-
       idearium/spec-engine/blocks.yaml — 11 blocks, a default agent each; block `events` ("bus events emitted, bus
       events consumed, payload shapes") is read by nothing after it is written. 10 templates in idearium/spec-engine/
@@ -161,6 +173,9 @@ spec:
     E10: "Zero dependencies in EMERGE and WARP. NEXUS imports them; they never import NEXUS."
     E12: "Mapped into every system it touches, as it is built — not after: its node records (lib/node-export.js envelope; Guardian's nodes/<type>/<id>.<type> layout; a nexstore type), its routes (with their CAPS) and their .command nodes, its CLI verbs, its loom map with real wires (bootstrapped from empty, rejections at baseline), its settings section where a person would change it, its atlas section. A phase is not DONE until its row in `wiring` below is true."
     E13: "Guardian is the source of truth for the Clear Glass agents. Clear Glass reads providers, userscripts, hats and agent definitions from Guardian; any local copy is a cache carrying Guardian's hash, and a mismatch is a gap — never a silent second truth."
+    E14: "The event contract. Every event a phase emits is declared first in its system's own event-taxonomy.js in the ET1 shape (lib/event-taxonomy-pattern.js) — a dotted name, its SCREAMING_SNAKE key, description, payloadShape, severity; every route it adds is in that system's interaction-contract.json; every CLI verb and route has its .command node. An undeclared emit or an uncontracted route fails the phase."
+    E15: "Isolation. Each system stays its own: no require() across systems except through a declared hook and wire in loom; systems meet through routes, declared events and the component registry — nothing else. A phase that touches several systems is built as one change per system, each wired on its own."
+    E16: "Declared, not guessed. Every phase names its systems explicitly (`systems:`); loom's phasemap scanner reads that line first and guesses from prose only where none is given, marking the guess."
     E11: "Nothing lost (§0.3). SISO and siso_ref stay, attributed; WARP 1.x gates run through an adapter until moved; divergent copies are surfaced, not merged silently."
 
   # ── Phases — bottom-up ─────────────────────────────────────────────────────────────────────────────────────────
@@ -168,6 +183,7 @@ spec:
 
     EM0_ground:
       layer: foundation
+      systems: [loom, emerge, emergence, warp]
       status: OPEN — needs James's yes on the branch
       files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
       does: >-
@@ -179,8 +195,26 @@ spec:
         Emerge specs and the two RFR2 trees, line by line, for James to decide — nothing merged silently.
       proof: "the branch equals main + this map; the registry offers nexus.lib.component-store; emergence's 157 and warp's 43 tests pass inside Nexus; the divergence report lists every differing definition"
 
+    EV0_contracts_for_every_system:
+      layer: foundation
+      systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
+      status: OPEN
+      depends_on: [EM0_ground]
+      files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
+      does: >-
+        E14–E16 made real before any phase uses them. (1) An event-taxonomy.js in the ET1 shape for each system that has
+        none and that this map touches — written from the events each system ALREADY emits (read from its bus.emit /
+        broadcast calls, not invented), so nothing it does today is undeclared. (2) interaction-contract.json for cos,
+        warp and emerge, projected from their real route tables, as idearium's was (contract.live). (3) A check, per
+        system: every emitted event string is in its taxonomy, every served route in its contract — a test, so drift
+        fails the suite instead of piling up. (4) loom's phasemap scanner reads a phase's `systems:` line first (E16), its
+        system list grows to cos, warp, emergence, economy and nexstore, and a prose guess is marked as one. Every later
+        phase adds its own events and routes to these files as it is built.
+      proof: "the check passes for every system with a contract; an emit added without a taxonomy entry fails it; loom lists this map's phases under cos and warp; no phase of this map is tagged 'general'"
+
     EM1_emerge_core:
       layer: foundation
+      systems: [emerge]
       status: OPEN
       depends_on: [EM0_ground]
       files: [emerge/core/field.js, emerge/core/constraint.js, emerge/core/transition.js, emerge/core/observation.js, emerge/core/lens.js, emerge/core/gap.js, emerge/core/history.js, emerge/core/level.js, emerge/core/budget.js, emerge/core/seed.js, emerge/core/index.js, emerge/spec/emerge-core.spec]
@@ -195,6 +229,7 @@ spec:
 
     EM2_warp_his_own:
       layer: foundation
+      systems: [warp, cos, loom]
       status: OPEN
       depends_on: [EM1_emerge_core]
       files: [warp/core/Link.js, warp/core/Expectation.js, warp/core/Engine.js, warp/core/Ledger.js, warp/core/Axiom.js, warp/adapters/siso-gates.js, warp/spec/warp.spec, warp/MANIFEST.json]
@@ -214,6 +249,7 @@ spec:
 
     CF1_cfr_improved_with_rfr2:
       layer: foundation
+      systems: [intelligence, guardian, cortex, orchestrator, idearium]
       status: OPEN
       depends_on: [EM1_emerge_core, EM2_warp_his_own]
       files: [intelligence/cfr/graph.js, intelligence/cfr/ledger.js, intelligence/cfr/field.js, intelligence/cfr/sigma.js, intelligence/cfr/delta.js, intelligence/cfr/contract-verifier.js, intelligence/rfr2/]
@@ -234,6 +270,7 @@ spec:
 
     RF1_relational_field:
       layer: foundation
+      systems: [nexstore, idearium, intelligence, emerge]
       status: OPEN
       depends_on: [EM1_emerge_core, CF1_cfr_improved_with_rfr2]
       files: [lib/nexstore/, emerge/core/relation.js, idearium/repo/graph.js, intelligence/cfr/graph.js]
@@ -250,6 +287,7 @@ spec:
 
     OT1_one_write_path:
       layer: library
+      systems: [cortex, guardian, idearium, nexstore]
       status: OPEN
       depends_on: [RF1_relational_field]
       files: [lib/context-atlas.js, cortex/memory/jaa-db.js, emerge/core/transition.js, docs/nexstore-writers.yaml]
@@ -262,6 +300,7 @@ spec:
 
     MR1_recall_triad_and_context_table:
       layer: library
+      systems: [idearium, copilot, cortex]
       status: OPEN
       depends_on: [OT1_one_write_path]
       files: [lib/repo-context.js, lib/vector-memory.js, lib/recall-triad.js, lib/context-table.js]
@@ -276,6 +315,7 @@ spec:
 
     MR2_vector_space_for_the_field:
       layer: library
+      systems: [cortex, intelligence]
       status: OPEN
       depends_on: [MR1_recall_triad_and_context_table, CF1_cfr_improved_with_rfr2]
       files: [lib/vector-memory.js, intelligence/cfr/]
@@ -287,6 +327,7 @@ spec:
 
     MR3_gap_driven_search:
       layer: library
+      systems: [intelligence, cortex]
       status: OPEN
       depends_on: [MR1_recall_triad_and_context_table]
       files: [lib/gap-search.js, emergence/vendor/rfr2/liminal/negative-space.js, emergence/vendor/rfr2/liminal/relational-gaps.js]
@@ -299,6 +340,7 @@ spec:
 
     MR4_field_memory:
       layer: library
+      systems: [cortex]
       status: OPEN
       depends_on: [OT1_one_write_path, CF1_cfr_improved_with_rfr2]
       files: [cortex/memory/relevance.js, cortex/memory/decay.js, cortex/memory/tiers.js]
@@ -310,6 +352,7 @@ spec:
 
     MR5_fractal_levels_with_the_field:
       layer: library
+      systems: [idearium]
       status: OPEN
       depends_on: [RF1_relational_field]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec FG1, FG2, FG3, FG4]
@@ -322,6 +365,7 @@ spec:
 
     MR6_contradictions_held:
       layer: library
+      systems: [cortex, idearium]
       status: OPEN
       depends_on: [RF1_relational_field, MR1_recall_triad_and_context_table]
       does: >-
@@ -332,6 +376,7 @@ spec:
 
     MR7_recipes:
       layer: service
+      systems: [cortex, emergence]
       status: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic]
       files: [lib/case-library.js, emergence/components/pattern-engine/, lib/repo-hat-memory.js, meta/crystal-lattice.js]
@@ -343,6 +388,7 @@ spec:
 
     MR8_crystallization:
       layer: service
+      systems: [warp, emerge]
       status: OPEN
       depends_on: [MR7_recipes, EM2_warp_his_own]
       files: [warp/dispatch/population.js, emerge/core/constraint.js]
@@ -355,6 +401,7 @@ spec:
 
     MR9_liminal_on_the_agents:
       layer: service
+      systems: [intelligence, guardian]
       status: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2]
       files: [emergence/vendor/rfr2/liminal/, lib/agent-memory.js]
@@ -367,6 +414,7 @@ spec:
 
     MR10_the_field_between_james_and_the_agents:
       layer: service
+      systems: [intelligence, guardian]
       status: OPEN
       depends_on: [MR9_liminal_on_the_agents]
       files: [emergence/vendor/rfr2/field/relational.js, lib/repo-hat-memory.js]
@@ -378,6 +426,7 @@ spec:
 
     MR11_rewind_the_mind:
       layer: service
+      systems: [intelligence, cos]
       status: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, OT1_one_write_path]
       reuses: [docs/2026-10-02-workshop-codex-rewind-phasemap.spec RW1]
@@ -388,6 +437,7 @@ spec:
 
     CB1_cfr_build_logic:
       layer: service
+      systems: [idearium, warp, intelligence]
       status: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2, MR1_recall_triad_and_context_table]
       files: [idearium/spec-engine/warp-build-dispatch.js, idearium/spec-engine/chunk-dispatch.js, lib/pipeline-routing.js]
@@ -401,6 +451,7 @@ spec:
 
     CB2_analysis_then_synthesis:
       layer: service
+      systems: [idearium]
       status: OPEN
       depends_on: [MR1_recall_triad_and_context_table, MR5_fractal_levels_with_the_field, CB1_cfr_build_logic]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec FG5]
@@ -414,6 +465,7 @@ spec:
 
     CB3_the_causal_spec_block:
       layer: service
+      systems: [idearium, emerge]
       status: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
       files: [idearium/spec-engine/blocks.yaml, emerge/compiler/index.js, emerge/compiler/emit.js, intelligence/cfr/contract-verifier.js]
@@ -427,6 +479,7 @@ spec:
 
     CB4_the_emergence_loop_builds:
       layer: service
+      systems: [emergence, idearium]
       status: OPEN
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR2_vector_space_for_the_field]
       files: [emergence/loop.js]
@@ -439,6 +492,7 @@ spec:
 
     WS6_workshop_parts_and_modes:
       layer: interface
+      systems: [idearium]
       status: OPEN
       depends_on: [CB3_the_causal_spec_block]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec WS5]
@@ -456,6 +510,7 @@ spec:
 
     RC1_the_repo_main_chat:
       layer: interface
+      systems: [idearium, guardian]
       status: OPEN
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search]
       files: [idearium/api/index.js, idearium/ui/js/app.js]
@@ -469,6 +524,7 @@ spec:
 
     LN1_lenses_on_the_canvas:
       layer: interface
+      systems: [idearium]
       status: OPEN
       depends_on: [RF1_relational_field, MR5_fractal_levels_with_the_field]
       files: [idearium/ui/js/arch-canvas.js, idearium/ui/architect.html]
@@ -479,6 +535,7 @@ spec:
 
     EC6_economy_and_the_tokenizer:
       layer: library
+      systems: [economy]
       status: OPEN
       depends_on: [EM1_emerge_core]
       files: [lib/economy/tokens.js, lib/economy/tokenizer/gguf.js, lib/economy/tokenizer/bpe.js, lib/economy/router.js, lib/economy/ledger.js]
@@ -495,6 +552,7 @@ spec:
 
     SH1_shadow_space:
       layer: library
+      systems: [cos, intelligence, idearium]
       status: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
       files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
@@ -510,6 +568,7 @@ spec:
 
     GA1_guardian_source_of_truth:
       layer: foundation
+      systems: [guardian, clear-glass]
       status: OPEN
       depends_on: [EM0_ground]
       files: [clear-glass/src/providers/registry.js, clear-glass/src/userscripts/manager.js, guardian/spec/guardian.spec, docs/guardian.spec, guardian/userscripts.yaml, guardian/data/nodes/, guardian/routes/, lib/hat-forge.js]
@@ -523,6 +582,7 @@ spec:
 
     BT1_build_teams:
       layer: service
+      systems: [cos, idearium, guardian]
       status: OPEN
       depends_on: [GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space]
       files: [cos/, lib/tool-forge.js, lib/hat-forge.js, lib/contract-queue.js, idearium/api/index.js]
@@ -537,6 +597,7 @@ spec:
 
     FV1_client_jobs:
       layer: service
+      systems: [idearium, cos, economy, guardian]
       status: OPEN
       depends_on: [BT1_build_teams, RC1_the_repo_main_chat, EC6_economy_and_the_tokenizer, MR8_crystallization]
       files: [idearium/lib/jobs.js, idearium/ui/jobs.html, cos/workspace/, cos/vault/]
@@ -557,6 +618,7 @@ spec:
 
     ST1_settings:
       layer: interface
+      systems: [idearium, guardian, clear-glass]
       status: OPEN
       depends_on: [EM1_emerge_core]
       files: [idearium/ui/settings.html, idearium/api/index.js]
@@ -571,6 +633,7 @@ spec:
 
     IN1_nexus_as_claude_codes_toolbox:
       layer: service
+      systems: [orchestrator, copilot, loom]
       status: OPEN
       depends_on: [EM0_ground, GA1_guardian_source_of_truth]
       files: [.mcp.json, orchestrator/lib/mcp-server.js, orchestrator/lib/mcp-stdio.js, lib/introspect.js, lib/reflection.js]
@@ -588,6 +651,7 @@ spec:
 
     IN2_claude_code_inside_nexus:
       layer: service
+      systems: [guardian, economy, idearium, cos]
       status: OPEN
       depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
       files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
@@ -602,6 +666,7 @@ spec:
 
     AC1_accounts_into_agents:
       layer: library
+      systems: [clear-glass, guardian, economy, idearium]
       status: OPEN
       depends_on: [GA1_guardian_source_of_truth, EC6_economy_and_the_tokenizer]
       files: [guardian/lib/cg-account-authority.js, lib/economy/policy.js, lib/economy/ledger.js, lib/economy/router.js, lib/economy/gate.js, lib/repo-agent.js, idearium/ui/settings.html]
@@ -620,39 +685,40 @@ spec:
   # nodes use the lib/node-export.js envelope and Guardian's nodes/<type>/<id>.<type> layout; routes carry CAPS and get a
   # .command node; every CLI verb gets a .command node; loom: the map named, real wires, bootstrapped from empty.
   wiring:
-    EM0: { systems: [loom, emerge, warp], loom: "registry.json regenerated; emergence-map.js (new) for the upload's components", settings: none }
-    EM1: { systems: [emerge], nodes: "emerge.core.* .component + .hook per primitive; nexstore types field, constraint, transition, observation, gap, history", cli: "emerge core check|replay --seed", loom: "emerge-map.js (new)", settings: "ST1 EMERGE" }
-    EM2: { systems: [warp, cos, loom], nodes: "warp.core.link|expectation|engine|ledger .component; warp.adapters.siso-gates", cli: "warp test|adapter list", loom: "warp-map.js (updated: WARP 2 + adapter wires to cos gates and loom's driver)", settings: none }
-    CF1: { systems: [intelligence, guardian, cortex, orchestrator, idearium], nodes: "intelligence.cfr.* updated; .event per CFR event type", routes: "/cfr/health, /cfr/trace, /cfr/rewind (new), /cfr/field (new)", cli: "cfr trace|rewind|field", loom: "observability-map.js (updated)", settings: "ST1 EMERGE (field thresholds)" }
-    RF1: { systems: [lib/nexstore, idearium, intelligence], nodes: "nexstore types node, relation(structural|causal|provenance|semantic|contradiction)", routes: "/api/field/node, /api/field/relations, /api/field/lens/:name", cli: "field show|lens|relate", loom: "emerge-map.js + idearium-codebase-map.js (graph → lens wires)", settings: none }
-    OT1: { systems: [cortex, guardian, idearium, lib], nodes: "a .wire per migrated writer → field", routes: "/api/field/observe", cli: "field observe|writers", loom: "agent-memory-map.js, chat-ledger-map.js (updated)", settings: none }
-    MR1: { systems: [lib, idearium, copilot], nodes: "lib.recall-triad, lib.context-table .component; nexstore type context_table", routes: "/api/recall, /api/context-table/:id", cli: "recall <question> [--budget]", loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH" }
-    MR2: { systems: [lib, intelligence], loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH" }
-    MR3: { systems: [lib, intelligence], routes: "/api/gaps/search", cli: "gaps search", loom: "observability-map.js", settings: none }
-    MR4: { systems: [cortex], loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH (sweeps)" }
-    MR5: { systems: [idearium, lib], reuses: "FG1–FG4's own wiring", settings: none }
-    MR6: { systems: [lib, idearium], routes: "/api/contradictions, /api/contradictions/:id/settle", cli: "contradictions list|settle", settings: "ST1 MEMORY & SEARCH" }
-    MR7: { systems: [lib, cortex], routes: "/api/recipes", cli: "recipes list|show", loom: "agent-memory-map.js", settings: none }
-    MR8: { systems: [warp, emerge, lib], routes: "/api/crystals", cli: "crystals list|reopen", settings: "ST1 EMERGE (N)" }
-    MR9: { systems: [guardian, lib], nodes: ".capability liminal.audit", loom: "copilot-capability-map.js", settings: none }
-    MR10: { systems: [lib, guardian], settings: "ST1 MEMORY & SEARCH (on/off — James's call)" }
-    MR11: { systems: [intelligence, cos], routes: "/cfr/rewind", cli: "rewind field|mind", settings: none }
-    CB1: { systems: [idearium, warp, intelligence], routes: "/api/repos/:uuid/build (logic: linear|causal)", cli: "idearium build --logic causal", loom: "build-surface-map.js", settings: "ST1 EMERGE (default logic)" }
-    CB2: { systems: [idearium, lib], loom: "build-surface-map.js", settings: none }
-    CB3: { systems: [idearium, emerge], nodes: "block causal in blocks.yaml; .event per declared event in generated repos", cli: "emerge compile --t1", loom: "one-idearium-map.js", settings: none }
-    CB4: { systems: [emergence, idearium], loom: "emergence-map.js", settings: none }
-    WS6: { systems: [idearium], routes: "/api/workshop/* (mode, parts)", cli: "idearium workshop --mode manual|assisted|stretched", loom: "one-idearium-map.js", settings: none }
-    RC1: { systems: [idearium, guardian], routes: "/api/repos/:uuid/agent/{contract,map,run,report}", cli: "idearium repo chat <uuid>", loom: "one-idearium-map.js", settings: none }
-    LN1: { systems: [idearium], loom: "ui-map.js", settings: none }
-    EC6: { systems: [lib/economy], nodes: ".component lib.economy.tokenizer.gguf|bpe", routes: "/api/economy/tokens (method named)", cli: "economy tokens <text> --provider", loom: "economy-map.js", settings: "ST1 ECONOMY" }
-    SH1: { systems: [lib, cos, intelligence], routes: "/api/shadow/:step", cli: "shadow show|settle", loom: "observability-map.js + cos-testenv-map.js", settings: "ST1 SHADOW" }
-    GA1: { systems: [guardian, clear-glass], nodes: "every provider, userscript and hat a Guardian node", routes: "guardian /api/providers (hash-stamped), /api/agents", cli: "guardian agents list|verify", loom: "accounts-authority-map.js + copilot-capability-map.js", settings: "Guardian owns them; Clear Glass shows read-only" }
-    BT1: { systems: [cos, idearium, guardian, lib], nodes: ".capability per COS tool; hats per role", routes: "/api/teams, cos /api/tools", cli: "cos tools list|run, idearium teams", loom: "cos-testenv-map.js + one-idearium-map.js", settings: "ST1 BUILD TEAMS" }
-    FV1: { systems: [idearium, cos, lib/economy, guardian], nodes: "nexstore types job, contract, delivery, proof_report", routes: "/api/jobs, /api/jobs/:id/{contract,quote,build,deliver,revise}", cli: "idearium jobs new|quote|build|deliver|revise", loom: "one-idearium-map.js + cos-testenv-map.js", settings: "ST1 CLIENT JOBS" }
-    IN1: { systems: [orchestrator, copilot, loom, intelligence, idearium], nodes: "one .capability + .command per MCP tool (orchestrator.mcp.<tool>)", routes: "MCP over stdio; each tool onto its existing route", cli: "nexus mcp list|call <tool>", loom: "copilot-capability-map.js (MCP tool → module wires)", settings: "ST1 AGENTS & ACCOUNTS (which tools Claude Code may call)" }
-    IN2: { systems: [guardian, lib/economy, idearium, cos], nodes: "guardian provider node claude-code; .capability provider.claude-code.run", routes: "/api/repos/:uuid/agent/run (provider claude-code)", cli: "idearium repo run <uuid> --provider claude-code", loom: "economy-map.js + one-idearium-map.js", settings: "ST1 AGENTS & ACCOUNTS" }
-    AC1: { systems: [clear-glass, guardian, lib/economy, idearium], nodes: "guardian account nodes (from Clear Glass's authority); nexstore type account_usage", routes: "guardian /api/accounts, idearium /api/settings/accounts", cli: "guardian accounts list, idearium settings set accounts.default.<jobType>", loom: "accounts-authority-map.js + economy-map.js", settings: "ST1 AGENTS & ACCOUNTS" }
-    ST1: { systems: [idearium, guardian, clear-glass], routes: "/api/settings/<section>", cli: "idearium settings get|set <section>.<key>", settings: "is the settings phase" }
+    EV0: { events: "none new: declares what each system already emits", contract: "event-taxonomy.js x8; interaction-contract.json for cos, warp, emerge", systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp], nodes: ".component per taxonomy and contract file", cli: "nexus contracts check [--system <s>]", loom: "observability-map.js (the check's wires)", settings: none }
+    EM0: { events: "loom: LOOM_REGISTRY_REGENERATED", contract: "loom", systems: [loom, emerge, warp], loom: "registry.json regenerated; emergence-map.js (new) for the upload's components", settings: none }
+    EM1: { events: "emerge: EMERGE_OBSERVATION_PROPOSED, EMERGE_TRANSITION_COMMITTED, EMERGE_OBSERVATION_REJECTED, EMERGE_GAP_OPENED", contract: "emerge", systems: [emerge], nodes: "emerge.core.* .component + .hook per primitive; nexstore types field, constraint, transition, observation, gap, history", cli: "emerge core check|replay --seed", loom: "emerge-map.js (new)", settings: "ST1 EMERGE" }
+    EM2: { events: "warp: WARP_LINK_RECORDED, WARP_EXPECTATION_DECLARED, WARP_EXPECTATION_MET, WARP_EXPECTATION_BROKEN", contract: "warp", systems: [warp, cos, loom], nodes: "warp.core.link|expectation|engine|ledger .component; warp.adapters.siso-gates", cli: "warp test|adapter list", loom: "warp-map.js (updated: WARP 2 + adapter wires to cos gates and loom's driver)", settings: none }
+    CF1: { events: "intelligence: CFR_EDGE_RECORDED, CFR_REGIME_CHANGED, CFR_REWOUND, CFR_CONTRACT_VIOLATED", contract: "intelligence", systems: [intelligence, guardian, cortex, orchestrator, idearium], nodes: "intelligence.cfr.* updated; .event per CFR event type", routes: "/cfr/health, /cfr/trace, /cfr/rewind (new), /cfr/field (new)", cli: "cfr trace|rewind|field", loom: "observability-map.js (updated)", settings: "ST1 EMERGE (field thresholds)" }
+    RF1: { events: "emerge: FIELD_NODE_WRITTEN, FIELD_RELATION_WRITTEN, FIELD_CONTRADICTION_LINKED", contract: "idearium, intelligence", systems: [lib/nexstore, idearium, intelligence], nodes: "nexstore types node, relation(structural|causal|provenance|semantic|contradiction)", routes: "/api/field/node, /api/field/relations, /api/field/lens/:name", cli: "field show|lens|relate", loom: "emerge-map.js + idearium-codebase-map.js (graph → lens wires)", settings: none }
+    OT1: { events: "cortex: MEMORY_OBSERVED, MEMORY_COMMITTED, MEMORY_REJECTED", contract: "cortex, guardian", systems: [cortex, guardian, idearium, lib], nodes: "a .wire per migrated writer → field", routes: "/api/field/observe", cli: "field observe|writers", loom: "agent-memory-map.js, chat-ledger-map.js (updated)", settings: none }
+    MR1: { events: "idearium: RECALL_REQUESTED, CONTEXT_TABLE_BUILT", contract: "idearium, copilot", systems: [lib, idearium, copilot], nodes: "lib.recall-triad, lib.context-table .component; nexstore type context_table", routes: "/api/recall, /api/context-table/:id", cli: "recall <question> [--budget]", loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH" }
+    MR2: { events: "intelligence: ATTRACTOR_PLACED, CONVERGENCE_MEASURED", contract: "intelligence", systems: [lib, intelligence], loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH" }
+    MR3: { events: "intelligence: GAP_SEARCH_RUN, GAP_CLOSED, GAP_NARROWED", contract: "intelligence", systems: [lib, intelligence], routes: "/api/gaps/search", cli: "gaps search", loom: "observability-map.js", settings: none }
+    MR4: { events: "cortex: MEMORY_PROMOTED, MEMORY_DECAYED", contract: "cortex", systems: [cortex], loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH (sweeps)" }
+    MR5: { events: "idearium: LEVEL_SUMMARY_STALE, LEVEL_SUMMARY_REBUILT", contract: "idearium", systems: [idearium, lib], reuses: "FG1–FG4's own wiring", settings: none }
+    MR6: { events: "cortex: CONTRADICTION_FOUND, CONTRADICTION_SETTLED", contract: "cortex, idearium", systems: [lib, idearium], routes: "/api/contradictions, /api/contradictions/:id/settle", cli: "contradictions list|settle", settings: "ST1 MEMORY & SEARCH" }
+    MR7: { events: "cortex: RECIPE_RECORDED, ANTI_RECIPE_RECORDED", contract: "cortex", systems: [lib, cortex], routes: "/api/recipes", cli: "recipes list|show", loom: "agent-memory-map.js", settings: none }
+    MR8: { events: "warp: CRYSTAL_PROMOTED, CRYSTAL_REOPENED", contract: "warp", systems: [warp, emerge, lib], routes: "/api/crystals", cli: "crystals list|reopen", settings: "ST1 EMERGE (N)" }
+    MR9: { events: "intelligence: LIMINAL_FLAG_RAISED", contract: "intelligence", systems: [guardian, lib], nodes: ".capability liminal.audit", loom: "copilot-capability-map.js", settings: none }
+    MR10: { events: "intelligence: RELATION_RUPTURE, RELATION_REPAIR", contract: "intelligence", systems: [lib, guardian], settings: "ST1 MEMORY & SEARCH (on/off — James's call)" }
+    MR11: { events: "intelligence: MIND_REWOUND", contract: "intelligence, cos", systems: [intelligence, cos], routes: "/cfr/rewind", cli: "rewind field|mind", settings: none }
+    CB1: { events: "idearium: BUILD_STEP_LINKED, BUILD_REGIME_CHANGED, BUILD_HALTED", contract: "idearium", systems: [idearium, warp, intelligence], routes: "/api/repos/:uuid/build (logic: linear|causal)", cli: "idearium build --logic causal", loom: "build-surface-map.js", settings: "ST1 EMERGE (default logic)" }
+    CB2: { events: "idearium: SOURCE_ANALYSED, SYNTHESIS_WRITTEN", contract: "idearium", systems: [idearium, lib], loom: "build-surface-map.js", settings: none }
+    CB3: { events: "idearium: CAUSAL_BLOCK_COMPILED", contract: "idearium, emerge", systems: [idearium, emerge], nodes: "block causal in blocks.yaml; .event per declared event in generated repos", cli: "emerge compile --t1", loom: "one-idearium-map.js", settings: none }
+    CB4: { events: "emergence: LOOP_TICKED, END_STATE_REACHED", contract: "idearium", systems: [emergence, idearium], loom: "emergence-map.js", settings: none }
+    WS6: { events: "idearium: WORKSHOP_MODE_CHANGED, WORKSHOP_PART_ACCEPTED", contract: "idearium", systems: [idearium], routes: "/api/workshop/* (mode, parts)", cli: "idearium workshop --mode manual|assisted|stretched", loom: "one-idearium-map.js", settings: none }
+    RC1: { events: "idearium: CHAT_CONTRACT_PROPOSED, CHAT_CONTRACT_ACCEPTED, CHAT_REPORT_WRITTEN", contract: "idearium", systems: [idearium, guardian], routes: "/api/repos/:uuid/agent/{contract,map,run,report}", cli: "idearium repo chat <uuid>", loom: "one-idearium-map.js", settings: none }
+    LN1: { events: "none (a lens reads, never emits)", contract: "idearium", systems: [idearium], loom: "ui-map.js", settings: none }
+    EC6: { events: "economy, in orchestrator's taxonomy until lib/economy has its own: TOKENS_COUNTED, BUDGET_EXCEEDED, TOKENS_SAVED", contract: "idearium", systems: [lib/economy], nodes: ".component lib.economy.tokenizer.gguf|bpe", routes: "/api/economy/tokens (method named)", cli: "economy tokens <text> --provider", loom: "economy-map.js", settings: "ST1 ECONOMY" }
+    SH1: { events: "idearium: SHADOW_DECLARED, SHADOW_SETTLED, SHADOW_COMMITTED", contract: "idearium, cos", systems: [lib, cos, intelligence], routes: "/api/shadow/:step", cli: "shadow show|settle", loom: "observability-map.js + cos-testenv-map.js", settings: "ST1 SHADOW" }
+    GA1: { events: "guardian: AGENT_FACTS_CHANGED; clear-glass: AGENT_CACHE_STALE", contract: "guardian, clear-glass", systems: [guardian, clear-glass], nodes: "every provider, userscript and hat a Guardian node", routes: "guardian /api/providers (hash-stamped), /api/agents", cli: "guardian agents list|verify", loom: "accounts-authority-map.js + copilot-capability-map.js", settings: "Guardian owns them; Clear Glass shows read-only" }
+    BT1: { events: "cos: TOOL_RUN; idearium: TEAM_HANDOFF", contract: "cos, idearium", systems: [cos, idearium, guardian, lib], nodes: ".capability per COS tool; hats per role", routes: "/api/teams, cos /api/tools", cli: "cos tools list|run, idearium teams", loom: "cos-testenv-map.js + one-idearium-map.js", settings: "ST1 BUILD TEAMS" }
+    FV1: { events: "idearium: JOB_CONTRACTED, JOB_QUOTED, JOB_DELIVERED, JOB_REVISED", contract: "idearium, cos", systems: [idearium, cos, lib/economy, guardian], nodes: "nexstore types job, contract, delivery, proof_report", routes: "/api/jobs, /api/jobs/:id/{contract,quote,build,deliver,revise}", cli: "idearium jobs new|quote|build|deliver|revise", loom: "one-idearium-map.js + cos-testenv-map.js", settings: "ST1 CLIENT JOBS" }
+    IN1: { events: "orchestrator: MCP_TOOL_CALLED, MCP_TOOL_UNAVAILABLE", contract: "orchestrator", systems: [orchestrator, copilot, loom, intelligence, idearium], nodes: "one .capability + .command per MCP tool (orchestrator.mcp.<tool>)", routes: "MCP over stdio; each tool onto its existing route", cli: "nexus mcp list|call <tool>", loom: "copilot-capability-map.js (MCP tool → module wires)", settings: "ST1 AGENTS & ACCOUNTS (which tools Claude Code may call)" }
+    IN2: { events: "guardian: PROVIDER_RUN_STARTED, PROVIDER_RUN_SETTLED", contract: "guardian, idearium", systems: [guardian, lib/economy, idearium, cos], nodes: "guardian provider node claude-code; .capability provider.claude-code.run", routes: "/api/repos/:uuid/agent/run (provider claude-code)", cli: "idearium repo run <uuid> --provider claude-code", loom: "economy-map.js + one-idearium-map.js", settings: "ST1 AGENTS & ACCOUNTS" }
+    AC1: { events: "guardian: ACCOUNT_PUBLISHED; idearium: ACCOUNT_DEFAULT_SET", contract: "guardian, idearium, clear-glass", systems: [clear-glass, guardian, lib/economy, idearium], nodes: "guardian account nodes (from Clear Glass's authority); nexstore type account_usage", routes: "guardian /api/accounts, idearium /api/settings/accounts", cli: "guardian accounts list, idearium settings set accounts.default.<jobType>", loom: "accounts-authority-map.js + economy-map.js", settings: "ST1 AGENTS & ACCOUNTS" }
+    ST1: { events: "idearium: SETTING_CHANGED", contract: "idearium, guardian", systems: [idearium, guardian, clear-glass], routes: "/api/settings/<section>", cli: "idearium settings get|set <section>.<key>", settings: "is the settings phase" }
 
   # ── Carried forward, so nothing from this conversation is forgotten ───────────────────────────────────────────
   carried_forward:
@@ -674,7 +740,7 @@ spec:
     - "FV1: which gig types first, for the kits?"
     - "EC6: which local models to read tokenizers from first (the ones Ollama runs here)?"
 
-  build_order: [EM0, GA1, IN1, EM1, ST1, EC6, AC1, EM2, CF1, SH1, IN2, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, BT1, MR2, MR6, MR4, MR7, MR8, FV1, MR9, MR10, MR11, CB4, LN1]
+  build_order: [EM0, EV0, GA1, IN1, EM1, ST1, EC6, AC1, EM2, CF1, SH1, IN2, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, BT1, MR2, MR6, MR4, MR7, MR8, FV1, MR9, MR10, MR11, CB4, LN1]
   # Why this order: the deterministic core and his own engine first (EM1, EM2); CFR on RFR2's discipline and the one
   # field on top (CF1, RF1); one write path (OT1); then the recall triad, which improves every agent the day it lands,
   # and the levels it packs to (MR1, MR5); the build logic, synthesis and the causal block (CB1–CB3); the workshop, gap
@@ -713,3 +779,13 @@ spec:
 # output an Observation), AC1 (provider × account as the unit: per-account limits and spend, defaults per job, an
 # AGENTS & ACCOUNTS settings section; no automatic account switching to get around a limit). Found while mapping: Clear
 # Glass owns accounts and Guardian already asks it, but Idearium and the economy are account-blind.
+
+## ADDENDUM 2026-10-02 — 1.3.0
+# James: "okay but all the other phases. make sure the yget added to nexus. make sure every system stays relative and
+# adds routes, commands, all relative node types, and uses the event contract." Found: loom's phasemap scanner already
+# reads all phases of this map, but tags systems by guessing from prose against a list without cos, warp, emergence,
+# economy or nexstore; only 4 systems have an ET1 event taxonomy; cos, warp and emerge have no interaction contract.
+# Added E14 (the event contract), E15 (isolation: systems meet only through routes, declared events and the
+# registry), E16 (systems declared, not guessed); an explicit `systems:` on every phase; EV0 (taxonomies and contracts
+# for every system this map touches, written from what each already emits, plus a drift check, plus the scanner
+# reading `systems:`), placed right after EM0; and `events` + `contract` on every wiring row.
