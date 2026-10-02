@@ -1,0 +1,183 @@
+'use strict';
+// cos/event-taxonomy.js — every event COS emits, in the ET1 shape (lib/event-taxonomy-pattern.js).
+// component_id: cos.event-taxonomy
+// Map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec (EV0, invariant E14)
+//
+// ONE TRUTH for the names (James, 2026-10-02: "read names from it"): COS's kernel event names live in
+// ./foundation/event-contracts.js ("IMMUTABLE after v1.0.0 (COS-5)"). This file never retypes them — every such entry
+// is written as EC.<TABLE>.<KEY> and only adds what that file does not carry: the description, the payload's fields
+// (read at the emit sites by lib/event-contract-check.js) and the severity. A name that file loses throws here, at load.
+// Events COS emits as literals that event-contracts.js does not name (the CLI's host:x:verb requests, comp:process:*,
+// ci:*, the compartment kernel, the LLM lab) are declared here alone. Names event-contracts.js holds that nothing
+// emits stay declared there only. `nexus contracts check --system=cos` holds this file to the code.
+
+const EC = require('./foundation/event-contracts.js');
+const keyOf = (name) => String(name).toUpperCase().replace(/[.:\-]/g, '_');
+const e = (description, payloadShape, severity) => ({ description, payloadShape, severity });
+
+const ENTRIES = [
+  // ── host — compartment lifecycle, the map, hooks (the CLI's request host:x:verb, the gate's result x:verbed) ────
+  ["host:compartment:create", e("A compartment was asked to be created (CLI \u2192 CreateCompartmentGate).", ["name", "purpose", "runtimeId", "networkIsolated", "parentId", "store", "sysmap"], 'info')],
+  [EC.HOST.COMPARTMENT_CREATED, e("A compartment was created: its id, slug and runtime.", ["compartmentId", "name", "slug", "runtimeId", "compartment"], 'notable')],
+  ["host:compartment:start", e("A compartment was asked to start (CLI or a watchdog action).", ["name", "store", "sysmap"], 'info')],
+  [EC.HOST.COMPARTMENT_STARTED, e("A compartment started.", ["compartmentId", "name", "state", "compartment"], 'info')],
+  ["host:compartment:stop", e("A compartment was asked to stop (CLI or a watchdog action).", ["name", "store", "sysmap"], 'info')],
+  [EC.HOST.COMPARTMENT_STOPPED, e("A compartment stopped.", ["compartmentId", "name", "state", "compartment"], 'info')],
+  ["host:compartment:destroy", e("A compartment was asked to be destroyed (wiped when asked).", ["name", "force", "wipe", "store", "sysmap"], 'info')],
+  [EC.HOST.COMPARTMENT_DESTROYED, e("A compartment was destroyed.", ["compartmentId", "name", "wiped"], 'notable')],
+  ["host:compartment:advance-work-phase", e("A compartment was asked to move to its next work phase.", ["name", "nextPhase", "store", "sysmap"], 'info')],
+  [EC.HOST.COMPARTMENT_WORK_PHASE_ADVANCED, e("A compartment moved to its next work phase.", ["compartmentId", "name", "workPhase", "compartment"], 'info')],
+  [EC.HOST.COMPARTMENT_ERROR, e("A compartment operation failed, and why.", ["operation", "reason"], 'failure')],
+  [EC.HOST.COMPARTMENT_STATUS, e("A compartment's status was read.", ["compartmentId", "name", "state"], 'info')],
+  [EC.HOST.COMPARTMENTS_LISTED, e("The compartments were listed.", ["count"], 'info')],
+  [EC.HOST.SNAPSHOT_RESTORED, e("A compartment was restored to a snapshot.", ["compartmentId", "snapId", "triggerEvent"], 'notable')],
+  [EC.HOST.MAP_UPDATED, e("The system map changed (a new version).", ["source", "version", "generatedAt"], 'info')],
+  [EC.HOST.MAP_RENDERED, e("The system map was rendered.", ["generatedAt"], 'info')],
+  [EC.HOST.MAP_EXPORTED, e("The system map was exported.", ["generatedAt"], 'info')],
+  [EC.HOST.MAP_WATCHING, e("The system map is being watched for changes.", [], 'info')],
+  [EC.HOST.SCHEMA_VALIDATED, e("A compartment schema was validated.", [], 'info')],
+  [EC.HOST.EVENTS_STREAMING, e("The live event stream was opened.", ["startedAt"], 'info')],
+  [EC.HOST.HOOKS_LISTED, e("The hooks were listed.", ["count"], 'info')],
+  [EC.HOST.HOOK_SHOWN, e("A hook was shown.", ["hookId", "name"], 'info')],
+  [EC.HOST.HOOK_FIRED, e("A hook was fired by hand for an event type.", ["hookId", "name", "eventType"], 'info')],
+  ["host:archetype:assign", e("An archetype was asked to be assigned to a compartment.", ["compartmentName", "archetypeIdOrName", "store", "sysmap", "forced"], 'info')],
+  ["host:archetype:detect", e("An archetype was asked to be detected from a folder.", ["root"], 'info')],
+  ["host:archetype:import", e("An archetype was asked to be imported.", ["raw", "sysmap"], 'info')],
+  ["host:blueprint:create", e("A blueprint was asked to be instantiated.", ["blueprintIdOrName", "instanceName", "host", "sysmap"], 'info')],
+  ["host:blueprint:destroy", e("A blueprint instance was asked to be destroyed.", ["instanceId", "host", "sysmap"], 'info')],
+  ["host:blueprint:import", e("A blueprint was asked to be imported.", ["raw", "sysmap"], 'info')],
+  ["host:playgrounds:create", e("A playground was asked to be created.", ["playground", "sysmap"], 'info')],
+  ["host:playgrounds:destroy", e("A playground was asked to be destroyed.", ["playgroundId", "host", "sysmap"], 'info')],
+  ["host:playgrounds:promote", e("A playground compartment was asked to be promoted.", ["compartmentId", "host"], 'info')],
+  ["host:playgrounds:status", e("A playground's status was asked for.", ["playgroundId", "host", "sysmap"], 'info')],
+  ["host:plugin:install", e("A plugin was asked to be installed from a folder.", ["sourceDir", "host", "sysmap"], 'info')],
+  ["host:plugin:enable", e("A plugin was asked to be enabled.", ["idOrName", "host", "sysmap"], 'info')],
+  ["host:plugin:disable", e("A plugin was asked to be disabled.", ["idOrName", "host", "sysmap"], 'info')],
+  ["host:plugin:remove", e("A plugin was asked to be removed.", ["idOrName", "host", "sysmap"], 'info')],
+  ["host:vault:set", e("A secret was asked to be set.", ["host", "compartmentName", "key", "scope", "blueprintId"], 'info')],
+  ["host:vault:get", e("A secret was asked for (revealed only when asked).", ["host", "compartmentName", "key", "reveal"], 'info')],
+  ["host:vault:delete", e("A secret was asked to be deleted.", ["host", "compartmentName", "key"], 'info')],
+  ["host:vault:grant", e("One compartment was asked to be granted another's secret.", ["host", "fromCompartmentName", "toCompartmentName", "key"], 'info')],
+  ["host:vault:revoke", e("A secret grant was asked to be revoked.", ["host", "fromCompartmentName", "toCompartmentName", "key"], 'info')],
+  ["host:vault:export", e("The vault was asked to be exported.", ["host"], 'info')],
+  ["host:vault:import", e("The vault was asked to be imported.", ["host"], 'info')],
+  // ── comp — processes, files and snapshots inside compartments ───────────────────────────────────────────────────
+  ["comp:process:spawn", e("A process was asked to be spawned in a compartment, with its runtime, entry and env.", ["compartmentId", "name", "runtimeId", "entryFile", "entryArgs", "cwd", "env", "bus", "store", "sysmap"], 'info')],
+  [EC.COMP.PROCESS_STARTED, e("A compartment's process started: pid, binary and args.", ["compartmentId", "name", "runtimeId", "pid", "bin", "args", "startedAt"], 'info')],
+  [EC.COMP.PROCESS_STDOUT, e("A line on a compartment process's stdout.", ["compartmentId", "name", "line", "ts"], 'info')],
+  [EC.COMP.PROCESS_STDERR, e("A line on a compartment process's stderr.", ["compartmentId", "name", "line", "ts"], 'info')],
+  ["comp:process:stdin", e("Text was sent to a compartment process's stdin.", ["compartmentId", "name", "text"], 'info')],
+  ["comp:process:kill", e("A compartment's process was asked to be killed.", ["compartmentId", "name"], 'info')],
+  [EC.COMP.PROCESS_ERROR, e("A compartment's process failed, and why.", ["compartmentId", "name", "reason"], 'failure')],
+  [EC.COMP.SPAWN_FAILED, e("A process could not be spawned in a compartment: the reason and the runtime.", ["compartmentId", "name", "reason", "runtimeId", "detail", "bin", "code"], 'failure')],
+  [EC.COMP.COMMAND_RUN, e("A command was run in a compartment.", ["compartmentId", "name", "command"], 'info')],
+  [EC.COMP.FILE_WRITTEN, e("A file inside a compartment was written.", ["compartmentId", "path", "sizeBytes", "error", "watchEvent"], 'info')],
+  [EC.COMP.FS_TREE, e("A compartment's file tree was read.", ["compartmentId", "path", "tree"], 'info')],
+  [EC.COMP.SNAPSHOT_TAKEN, e("A compartment snapshot was taken, and what triggered it.", ["compartmentId", "snapId", "sizeBytes", "triggerEvent", "path"], 'info')],
+  [EC.NEXUS.SNAPSHOT_WRITTEN, e("A compartment snapshot was written for Nexus to read.", ["compartmentId", "snapId", "path"], 'info')],
+  // ── the playground — sandboxed runs and compares ────────────────────────────────────────────────────────────────
+  [EC.PLAYGROUND.SANDBOX_STARTED, e("A sandboxed run started on a branch.", ["compartmentId", "branchId", "runId", "bin", "args", "cwd", "ts"], 'info')],
+  [EC.PLAYGROUND.SANDBOX_STDOUT, e("A line on a sandboxed run's stdout.", ["compartmentId", "branchId", "runId", "line"], 'info')],
+  [EC.PLAYGROUND.SANDBOX_STDERR, e("A line on a sandboxed run's stderr.", ["compartmentId", "branchId", "runId", "line"], 'info')],
+  [EC.PLAYGROUND.SANDBOX_OUTPUT_LIMIT, e("A sandboxed run hit its output limit and was cut.", ["compartmentId", "branchId", "runId", "maxOutputBytes"], 'warning')],
+  [EC.PLAYGROUND.SANDBOX_TIMEOUT, e("A sandboxed run timed out.", ["compartmentId", "branchId", "runId", "timeoutMs"], 'warning')],
+  [EC.PLAYGROUND.SANDBOX_EXITED, e("A sandboxed run exited.", ["compartmentId"], 'info')],
+  [EC.PLAYGROUND.SANDBOX_ERROR, e("A sandboxed run failed.", ["compartmentId"], 'failure')],
+  [EC.PLAYGROUND.COMPARE_STARTED, e("A comparison of two branches started.", ["compartmentId", "reportId", "branchA", "branchB"], 'info')],
+  [EC.PLAYGROUND.COMPARE_DONE, e("A comparison of two branches finished, with its verdict.", ["compartmentId", "reportId", "verdict"], 'notable')],
+  // ── the watchdog ────────────────────────────────────────────────────────────────────────────────────────────────
+  [EC.WATCHDOG.ANOMALY_DETECTED, e("The watchdog saw an anomaly in a compartment and what it will do about it.", ["compartmentId", "name", "anomalyType", "reason", "onAnomaly", "snapId"], 'warning')],
+  [EC.WATCHDOG.CPU_EXCEEDED, e("A compartment went over its CPU limit.", ["compartmentId", "name", "cpuPct", "limitPct"], 'warning')],
+  [EC.WATCHDOG.MEMORY_EXCEEDED, e("A compartment went over its memory limit.", ["compartmentId", "name", "rssMB", "limitMB"], 'warning')],
+  [EC.WATCHDOG.PROCESS_STALLED, e("A compartment's process went silent past its limit.", ["compartmentId", "name", "silentForMs"], 'warning')],
+  [EC.WATCHDOG.PROCESS_CRASH_LOOP, e("A compartment's process keeps crashing and restarting.", ["compartmentId", "name", "restartCount"], 'failure')],
+  [EC.WATCHDOG.FS_UNAUTHORIZED, e("A process wrote outside what its compartment allows.", ["compartmentId", "path", "pid"], 'failure')],
+  ["watchdog:snapshot:failed", e("The watchdog could not take a snapshot before acting.", ["compartmentId", "reason"], 'warning')],
+  // ── archetypes, blueprints, playgrounds, plugins ────────────────────────────────────────────────────────────────
+  [EC.ARCHETYPE.ASSIGNED, e("An archetype was assigned to a compartment.", ["compartmentId", "compartmentName", "archetypeId", "archetypeName", "confidence", "compartment"], 'info')],
+  [EC.ARCHETYPE.CREATED, e("An archetype was created.", ["archetypeId", "name", "archetype"], 'info')],
+  [EC.ARCHETYPE.DETECTED, e("Archetypes were detected for a folder, best first.", ["root", "top", "results"], 'info')],
+  [EC.ARCHETYPE.LISTED, e("The archetypes were listed.", ["count"], 'info')],
+  [EC.ARCHETYPE.SHOWN, e("An archetype was shown.", ["archetypeId", "name"], 'info')],
+  [EC.ARCHETYPE.ERROR, e("An archetype operation failed, and why.", ["operation", "reason"], 'failure')],
+  [EC.BLUEPRINT.CREATED, e("A blueprint was instantiated into compartments.", ["blueprintInstanceId", "blueprintId", "blueprintName", "instanceName", "instance", "compartmentCount", "pipeCount"], 'notable')],
+  [EC.BLUEPRINT.DESTROYED, e("A blueprint instance and its compartments were destroyed.", ["blueprintInstanceId", "instanceName", "destroyedCompartments", "errors"], 'notable')],
+  [EC.BLUEPRINT.IMPORTED, e("A blueprint was imported.", ["blueprintId", "name", "blueprint"], 'info')],
+  [EC.BLUEPRINT.LISTED, e("The blueprints were listed.", ["count"], 'info')],
+  [EC.BLUEPRINT.SHOWN, e("A blueprint was shown.", ["blueprintId", "name"], 'info')],
+  [EC.BLUEPRINT.STATUS, e("A blueprint instance's status was read.", ["blueprintInstanceId"], 'info')],
+  [EC.BLUEPRINT.ERROR, e("A blueprint operation failed, and why.", ["operation", "reason"], 'failure')],
+  [EC.PLAYGROUNDS.CREATED, e("A playground of compartments was created.", ["playgroundId", "name", "mode", "compartmentCount", "playground"], 'info')],
+  [EC.PLAYGROUNDS.DESTROYED, e("A playground and its compartments were destroyed.", ["playgroundId", "name", "destroyedCompartments", "errors"], 'info')],
+  [EC.PLAYGROUNDS.PROMOTED, e("A playground compartment was promoted to a real one.", ["compartmentId", "name"], 'notable')],
+  [EC.PLAYGROUNDS.LISTED, e("The playgrounds were listed.", ["count"], 'info')],
+  [EC.PLAYGROUNDS.SHOWN, e("A playground was shown.", [], 'info')],
+  [EC.PLAYGROUNDS.ERROR, e("A playground operation failed, and why.", ["operation", "reason"], 'failure')],
+  [EC.PLUGIN.INSTALLED, e("A plugin was installed with what it contributes.", ["pluginId", "name", "state", "contributions", "record"], 'notable')],
+  [EC.PLUGIN.ENABLED, e("A plugin was enabled.", ["pluginId", "name"], 'info')],
+  [EC.PLUGIN.DISABLED, e("A plugin was disabled.", ["pluginId", "name"], 'info')],
+  [EC.PLUGIN.REMOVED, e("A plugin was removed.", ["pluginId"], 'info')],
+  [EC.PLUGIN.LISTED, e("The plugins were listed.", ["count"], 'info')],
+  [EC.PLUGIN.SHOWN, e("A plugin was shown.", ["pluginId", "name"], 'info')],
+  [EC.PLUGIN.ERROR, e("A plugin operation failed, and why.", ["operation", "reason", "record"], 'failure')],
+  // ── the vault and its daemon ────────────────────────────────────────────────────────────────────────────────────
+  [EC.VAULT.SET, e("A secret was set.", ["vaultEntryId", "key", "compartmentId"], 'notable')],
+  [EC.VAULT.ACCESSED, e("A secret was read by a compartment.", ["compartmentName", "key", "accessType"], 'info')],
+  [EC.VAULT.REVEALED, e("A secret's value was revealed to the person who asked.", ["compartmentName", "key", "requestedBy"], 'notable')],
+  [EC.VAULT.DELETED, e("A secret was deleted.", ["compartmentName", "key", "vaultEntryId"], 'notable')],
+  [EC.VAULT.INJECTED, e("A secret was injected into a starting compartment's environment.", ["compartmentId", "key"], 'info')],
+  [EC.VAULT.ERROR, e("A vault operation failed, and why.", ["operation", "reason"], 'failure')],
+  [EC.VAULT.ACCESS_DENIED, e("A compartment was refused a secret, and why.", ["compartmentName", "key", "reason"], 'warning')],
+  [EC.VAULT.GRANT_ADDED, e("One compartment was granted another's secret.", ["fromCompartmentName", "toCompartmentName", "key"], 'notable')],
+  [EC.VAULT.GRANT_REVOKED, e("A secret grant was revoked.", ["fromCompartmentName", "toCompartmentName", "key"], 'notable')],
+  [EC.VAULT.LISTED, e("A compartment's secrets were listed (names, not values).", ["compartmentName", "count"], 'info')],
+  [EC.VAULT.EXPORTED, e("The vault was exported (encrypted when asked).", ["entryCount", "encrypted"], 'notable')],
+  [EC.VAULT.IMPORTED, e("A vault export was imported.", ["entryCount"], 'notable')],
+  [EC.VAULT.AUDIT_SHOWN, e("The vault's audit trail was shown.", ["count"], 'info')],
+  [EC.VAULTD.STARTED, e("The vault daemon started.", [], 'info')],
+  [EC.VAULTD.STOPPED, e("The vault daemon stopped.", [], 'info')],
+  [EC.VAULTD.STATUS, e("The vault daemon's status was read.", [], 'info')],
+  [EC.VAULTD.BACKED_UP, e("The vault daemon's store was backed up.", [], 'info')],
+  [EC.VAULTD.RESTORED, e("The vault daemon's store was restored from a backup.", [], 'notable')],
+  [EC.VAULTD.ERROR, e("A vault daemon operation failed, and why.", ["operation", "reason"], 'failure')],
+  // ── CI (cos/ci — relayed by idearium as idearium.ci.*) ──────────────────────────────────────────────────────────
+  ["ci:run:started", e("A CI run started in a compartment.", ["runId", "compartmentId", "stageCount"], 'info')],
+  ["ci:stage:started", e("A CI stage started.", ["runId", "compartmentId", "stage", "kind"], 'info')],
+  ["ci:stage:passed", e("A CI stage passed.", ["runId", "compartmentId", "stage", "status", "exitCode", "durationMs"], 'info')],
+  ["ci:stage:failed", e("A CI stage failed.", ["runId", "compartmentId", "stage", "status", "exitCode", "durationMs", "error"], 'failure')],
+  ["ci:run:finished", e("A CI run finished, with its status and duration.", ["runId", "compartmentId", "status", "durationMs"], 'notable')],
+  ["ci:vault:unavailable", e("CI ran without the vault: secrets for the run could not be read.", ["compartmentId", "error"], 'warning')],
+  // ── the compartment kernel (kernel.js, manager.js) ──────────────────────────────────────────────────────────────
+  ["compartment.manager.ready", e("The compartment manager is ready.", ["source"], 'info')],
+  ["compartment.born", e("A kernel compartment was born with its axioms.", ["compartmentId", "name", "axioms", "state"], 'info')],
+  ["compartment.create.failed", e("A kernel compartment could not be created.", ["reason", "requestedId"], 'failure')],
+  ["compartment.gate.started", e("A compartment's gate started.", ["compartmentId", "gateId"], 'info')],
+  ["compartment.gate.passed", e("A compartment's gate passed (on which attempt).", ["compartmentId", "gateId", "attempt"], 'info')],
+  ["compartment.gate.failed", e("A compartment's gate failed, and why.", ["compartmentId", "gateId", "reason"], 'warning')],
+  ["compartment.gate.error", e("A compartment's gate threw.", ["compartmentId", "gateId", "error"], 'failure')],
+  ["compartment.integrated", e("A compartment passed all its gates and was integrated.", ["compartmentId", "gatesPassed"], 'notable')],
+  ["compartment.recycled", e("A compartment failed a gate and was recycled.", ["compartmentId", "failedGate", "reason", "axioms"], 'warning')],
+  ["compartment.axiom.violated", e("A compartment violated one of its axioms.", ["compartmentId", "axiomId", "context", "state"], 'failure')],
+  ["compartment.synthesis.done", e("A compartment's synthesis finished.", ["compartmentId", "intent", "resultType"], 'info')],
+  ["compartment.bus.connected", e("A compartment was connected to a bus.", ["compartmentId", "busId"], 'info')],
+  ["compartment.status", e("The compartments' and buses' status was read.", ["status", "all", "buses"], 'info')],
+  ["bus.create.failed", e("A bus between two compartment endpoints could not be created.", ["reason", "endpointAId", "endpointBId"], 'failure')],
+  // ── the LLM lab (playground/llm-lab.js) ─────────────────────────────────────────────────────────────────────────
+  ["lab.session.created", e("A lab session was created with its configuration.", ["id", "config"], 'info')],
+  ["lab.session.started", e("A lab session started.", ["id", "config"], 'info')],
+  ["lab.result", e("One prompt's result in a lab session: response, time, and whether it refused, truncated or passed SEAM.", ["sessionId", "prompt", "response", "ms", "jobId", "ok", "error", "responseLen", "hasCode", "isRefusal", "isTruncated", "seamPass", "ts"], 'info')],
+  ["lab.h2h.compared", e("Two providers' replies to one prompt compared: each one's score, the winner and by how much.", ["sessionId", "round", "winner", "delta"], 'info')],
+  ["lab.stress.limit_hit", e("A stress run hit a limit: a refusal, a truncation or the context.", ["sessionId", "round", "hitRefusal", "hitTruncate", "hitContext", "promptLen"], 'warning')],
+  ["lab.info", e("A lab session logged a step (a loop condition met, a branch taken).", ["sessionId", "msg"], 'info')],
+  ["lab.warn", e("A lab session logged a warning (a stress limit hit, an unknown condition op).", ["sessionId", "msg"], 'warning')],
+  ["lab.error", e("A lab session failed.", ["sessionId", "msg"], 'failure')],
+  ["lab.session.complete", e("A lab session finished, with its results.", ["id", "status", "results"], 'notable')],
+];
+
+const out = {};
+for (const [name, entry] of ENTRIES) {
+  if (typeof name !== 'string') throw new Error('[cos/event-taxonomy] an event-contracts.js name is missing — a constant here resolves to nothing');
+  if (out[keyOf(name)]) throw new Error(`[cos/event-taxonomy] ${name} is declared twice`);
+  out[keyOf(name)] = Object.freeze(entry);
+}
+module.exports = Object.freeze(out);

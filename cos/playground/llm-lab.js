@@ -361,6 +361,7 @@ class LabSession {
 
   _log(level, msg) {
     console.log(`[lab/${this.id.slice(0,8)}] [${level}] ${msg}`);
+    // emits: lab.info, lab.warn, lab.error — the levels _log is called with
     this._emit(`lab.${level}`, { sessionId:this.id, msg });
   }
 }
