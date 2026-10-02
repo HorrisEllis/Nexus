@@ -138,25 +138,7 @@
       "missing": []
     },
     "cortex": {
-      "undeclared": [
-        "cortex.gap.found",
-        "cortex.orion.classified",
-        "cortex.raid.decided",
-        "cortex.self-heal.deep_scan_findings",
-        "cortex.self-heal.emergency_gc",
-        "cortex.self-heal.failure_mode",
-        "cortex.self-heal.fix_proposed",
-        "cortex.self-heal.fix_staged",
-        "cortex.self-heal.remediation_requested",
-        "cortex.self-heal.skipped",
-        "escalation.failure_mode",
-        "escalation.friction.increased",
-        "raid.route.decided",
-        "raid.route.failed",
-        "raid.route.fulfilled",
-        "raid.route.no_route",
-        "raid.route.request"
-      ],
+      "undeclared": [],
       "unresolved": [],
       "missing": []
     },
