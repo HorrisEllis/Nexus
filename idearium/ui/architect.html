@@ -1,13 +1,14 @@
 <!doctype html>
 <!--
-  idearium/ui/architect.html — THE ARCHITECT (0.39.298 AR2). Map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec (AR2)
-  James: "build the spec workshop, with architect for archiecture using the component registry, components store with
-  dependancies … idea -> spec workshop -> architect -> destroy and rebuild blueprint -> Idearium repo -> Cos?" ·
-  "all of it needs to be isolated, in its own pages" · "no lowercase. and make sure its enterprise grade".
-  The third station of the pipeline: the spec laid out as components, in levels bottom-up. Each is matched against what
-  already exists (loom's registry and the component store): REUSE in green, NEW in cyan, a GAP in red, said in words.
-  The agent's proposals in magenta, never added without his yes. Save writes spec/<name>.architecture.yaml beside the
-  spec. Its own page, in the Void's look (css/void-theme.css, js/void-sky.js), capitals everywhere.
+  idearium/ui/architect.html — THE ARCHITECT, the pipeline's (0.39.299 AR4; first built 0.39.298 AR2).
+  Map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec (AR2, AR3, AR4)
+  James: "no. look at architect in idearium. rebuild it, fully. enterprise grade, beautiful style and consistent, open
+  ui." · "one is for the idearium pipeline and the other is for the repos." · (MASTERMIND) "look at this canvas … strip it".
+  The canvas, full-bleed and open (js/arch-canvas.js, the one both Architects use): the spec's components as blocks in
+  bands bottom-up (data → engine → service → interface), REUSE / NEW / GAP on each, matched against loom's registry and
+  the component store. Drag a block to place it (kept); drag its handle onto what it needs to make the dependency.
+  Drawers slide over the map: THE SPEC (its sections, the gaps, history) and the INSPECTOR / AGENT. A floating
+  toolbar. Saved beside the spec as spec/<name>.architecture.yaml. The Build tab's Architect is this page.
   /api/architect (idearium/lib/architect.js). ?id=<architecture> opens one; ?from=workshop:<id>|repo:<uuid> starts one.
 -->
 <html lang="en">
@@ -17,178 +18,166 @@
 <title>THE ARCHITECT</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/void-theme.css">
+<link rel="stylesheet" href="css/arch-canvas.css">
 <style>
-  .head { top: calc(var(--chrome-h, 0px) + 16px); }
-  .head .title { font-size: 34px; letter-spacing: .36em; padding-left: .36em; }
-  .head .sub { margin-top: 8px; }
-  .stations { display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 14px; pointer-events: auto; flex-wrap: wrap; }
-  .st { font: 400 13px/1 var(--display); letter-spacing: .2em; padding: 6px 10px; border: 1px solid transparent; border-radius: 2px; color: var(--text3); }
-  .st.done { color: rgba(0,255,136,.7); } .st.now { color: var(--c); border-color: rgba(0,212,255,.35); box-shadow: 0 0 18px rgba(0,212,255,.12); }
+  /* the top bar: the station's name, the pipeline, the save — slim, so the map has the room */
+  .bar { position: fixed; left: 0; right: 0; top: var(--chrome-h, 0px); height: 56px; z-index: 6; display: flex; align-items: center; gap: 14px; padding: 0 16px;
+    background: linear-gradient(180deg, rgba(3,5,8,.92), rgba(3,5,8,.55)); border-bottom: 1px solid rgba(26,42,64,.6); }
+  .brand { font: 400 22px/1 var(--display); letter-spacing: .34em; color: rgba(0,212,255,.75); text-shadow: 0 0 40px rgba(0,212,255,.25); white-space: nowrap; animation: breathe 5s ease-in-out infinite; }
+  .brand small { display: block; font: 400 9px/1 var(--mono); letter-spacing: .22em; color: var(--text2); margin-top: 5px; text-shadow: none; }
+  .stations { display: flex; gap: 4px; align-items: center; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .st { font: 400 12px/1 var(--display); letter-spacing: .2em; padding: 6px 9px; border: 1px solid transparent; color: var(--text3); }
+  .st.done { color: rgba(0,255,136,.7); } .st.now { color: var(--c); border-color: rgba(0,212,255,.35); box-shadow: 0 0 16px rgba(0,212,255,.12); }
   .st.link { cursor: pointer; } .st.link:hover { border-color: var(--line3); }
-  .arrow { color: var(--text3); font: 400 11px/1 var(--mono); }
-  .corner { position: fixed; top: calc(var(--chrome-h, 0px) + 16px); z-index: 6; display: flex; gap: 6px; align-items: center; }
-  .corner.l { left: 18px; } .corner.r { right: 18px; }
-  .saved { font: 400 10px/1.3 var(--mono); letter-spacing: .1em; color: var(--text2); max-width: 300px; text-align: right; }
+  .arrow { color: var(--text3); font: 400 10px/1 var(--mono); }
+  .right { display: flex; gap: 8px; align-items: center; }
+  .saved { font: 400 10px/1.3 var(--mono); letter-spacing: .1em; color: var(--text2); max-width: 280px; text-align: right; }
   .saved.dirty { color: var(--y); }
-  #toasts { top: auto; bottom: 18px; left: 50%; transform: translateX(-50%); align-items: center; }
+  #toasts { top: auto; bottom: 86px; left: 50%; transform: translateX(-50%); align-items: center; z-index: 30; }
 
-  .stage { position: fixed; left: 0; right: 0; bottom: 0; top: calc(var(--chrome-h, 0px) + 150px); z-index: 2; }
-  .panel { background: rgba(5,8,15,.86); border: 1px solid var(--line2); border-radius: 2px; backdrop-filter: blur(6px); }
-  .lbl { font: 400 12px/1 var(--display); letter-spacing: .24em; color: var(--text2); display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
-  .lbl .n { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text3); }
-  .lbl .end { margin-left: auto; display: flex; gap: 5px; }
-  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .field { flex: 1; min-width: 160px; background: rgba(11,17,32,.8); border: 1px solid var(--line2); border-radius: 2px; color: var(--c); font: 400 12.5px/1.3 var(--mono); padding: 9px 11px; outline: none; width: 100%; }
-  .field:focus { border-color: rgba(0,212,255,.4); }
-  textarea.field { resize: vertical; min-height: 74px; line-height: 1.6; }
-  .k { font: 400 10px/1 var(--mono); letter-spacing: .14em; color: var(--text2); margin: 12px 0 6px; }
+  .stage { position: fixed; left: 0; right: 0; bottom: 0; top: calc(var(--chrome-h, 0px) + 56px); z-index: 2; }
+  #work, #map { position: absolute; inset: 0; }
+  #map.ac { background: radial-gradient(ellipse at 50% 115%, rgba(0,80,140,.12), transparent 60%); }   /* the star field shows through */
+
+  /* the overlay at the top-left of the map: the numbers and the legend */
+  .hud { position: absolute; left: 16px; top: 14px; z-index: 8; display: flex; flex-direction: column; gap: 8px; pointer-events: none; transition: left .3s cubic-bezier(.16,1,.3,1); }
+  .hud .ax-stats { pointer-events: auto; }
+  .stage.spec-open .hud { left: 392px; }
+  .empty-map { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); z-index: 8; text-align: center; max-width: 520px; }
+  .empty-map b { display: block; font: 400 26px/1.2 var(--display); letter-spacing: .3em; color: rgba(0,212,255,.6); margin-bottom: 10px; }
+  .empty-map p { font: 400 11px/1.7 var(--mono); letter-spacing: .1em; color: var(--text2); margin: 0 0 16px; }
+
+  /* the spec drawer */
+  .sec { border-bottom: 1px solid var(--line); padding: 8px 0; }
+  .sec summary { cursor: pointer; font: 400 14px/1.3 var(--display); letter-spacing: .12em; color: var(--text); list-style: none; }
+  .sec summary::-webkit-details-marker { display: none; }
+  .sec summary::before { content: '▸ '; color: var(--text3); } .sec[open] summary::before { content: '▾ '; }
+  .sec .b { white-space: pre-wrap; font: 400 11.5px/1.6 var(--mono); color: var(--text2); margin-top: 6px; }
+  .hist { font: 400 10px/1.7 var(--mono); letter-spacing: .04em; color: var(--text2); }
+
+  /* the inspector */
+  .cand { border: 1px solid var(--line); padding: 7px 9px; margin-bottom: 5px; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; }
+  .cand.on { border-color: rgba(0,255,136,.45); background: rgba(0,255,136,.04); }
+  .cand .r { font: 400 11px/1.3 var(--mono); color: var(--text); word-break: break-all; }
+  .cand .w { font: 400 9.5px/1.3 var(--mono); letter-spacing: .08em; color: var(--text2); grid-column: 1; }
+  .cand .ax-btn { grid-row: span 2; }
+  .prop { border: 1px solid rgba(204,68,255,.18); background: rgba(204,68,255,.03); padding: 10px 12px; margin-bottom: 8px; animation: rise .3s ease; }
+  .prop.seen { animation: none; } .prop.accepted { border-color: rgba(0,255,136,.2); opacity: .7; } .prop.dismissed { opacity: .4; }
+  .prop .k2 { font: 400 10px/1.3 var(--mono); letter-spacing: .12em; color: rgba(204,68,255,.8); display: flex; gap: 10px; flex-wrap: wrap; }
+  .prop .t { font: 400 16px/1.2 var(--display); letter-spacing: .12em; color: rgba(225,190,255,.95); margin: 6px 0 3px; }
+  .prop .x { font: 400 12px/1.55 var(--body); color: rgba(220,180,255,.85); margin-bottom: 4px; }
+  .prop .d { font: 400 10px/1.4 var(--mono); color: var(--text2); margin-bottom: 8px; }
+  .toggle { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text2); display: flex; gap: 6px; align-items: center; cursor: pointer; margin-left: auto; }
 
   /* start */
-  .start { max-width: 1060px; margin: 0 auto; padding: 0 18px 24px; height: 100%; overflow: auto; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-content: start; }
-  .start .panel { padding: 16px; }
+  .start { position: absolute; inset: 0; overflow: auto; padding: 40px 18px; display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 440px); gap: 16px; justify-content: center; align-content: start; z-index: 5; }
+  .panel { background: rgba(5,8,15,.88); border: 1px solid var(--line2); backdrop-filter: blur(6px); padding: 16px; }
+  .lbl { font: 400 12px/1 var(--display); letter-spacing: .24em; color: var(--text2); display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
+  .lbl .n { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text3); }
   .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-  .filter { width: 100%; background: rgba(11,17,32,.8); border: 1px solid var(--line2); border-radius: 2px; color: var(--c); font: 400 12px/1 var(--mono); padding: 9px 11px; outline: none; margin-bottom: 8px; }
-  .pick { max-height: 340px; overflow: auto; border: 1px solid var(--line); border-radius: 2px; }
+  .filter { width: 100%; background: rgba(11,17,32,.8); border: 1px solid var(--line2); color: var(--c); font: 400 12px/1 var(--mono); padding: 9px 11px; outline: none; margin-bottom: 8px; }
+  .pick { max-height: 360px; overflow: auto; border: 1px solid var(--line); }
   .it { padding: 9px 11px; border-bottom: 1px solid var(--line); cursor: pointer; display: flex; gap: 10px; align-items: baseline; font: 400 12px/1.5 var(--mono); color: var(--text); }
   .it:hover { background: rgba(0,212,255,.04); } .it.on { background: rgba(0,212,255,.09); color: var(--c); }
   .it .m { margin-left: auto; font-size: 10px; letter-spacing: .08em; color: var(--text2); white-space: nowrap; }
-  .ar { padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; margin-bottom: 6px; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; }
+  .ar { padding: 10px 12px; border: 1px solid var(--line); margin-bottom: 6px; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; }
   .ar:hover { border-color: var(--line3); background: rgba(0,212,255,.03); }
   .ar .t { font: 400 15px/1.2 var(--display); letter-spacing: .14em; color: var(--c); }
   .ar .m { font: 400 10px/1.4 var(--mono); letter-spacing: .08em; color: var(--text2); }
   .ar .r { grid-row: span 2; align-self: center; font: 400 10px/1.4 var(--mono); color: var(--text2); text-align: right; }
 
-  /* the architect */
-  .work { height: 100%; padding: 0 18px 18px; display: grid; grid-template-columns: 270px minmax(0, 1fr) 380px; gap: 12px; }
-  .col { min-height: 0; overflow: auto; padding: 14px; }
-  .sec { border-bottom: 1px solid var(--line); padding: 7px 0; }
-  .sec summary { cursor: pointer; font: 400 13px/1.3 var(--display); letter-spacing: .12em; color: var(--text); list-style: none; }
-  .sec summary::-webkit-details-marker { display: none; }
-  .sec summary::before { content: '▸ '; color: var(--text3); } .sec[open] summary::before { content: '▾ '; }
-  .sec .b { white-space: pre-wrap; font: 400 11.5px/1.6 var(--mono); color: var(--text2); margin-top: 6px; }
-  .gap { border-left: 2px solid rgba(255,45,85,.6); padding: 6px 9px; margin-bottom: 6px; font: 400 11px/1.5 var(--mono); color: #ff8aa2; background: rgba(255,45,85,.04); cursor: pointer; }
-  .gap:hover { background: rgba(255,45,85,.08); }
-  .hist { font: 400 10px/1.6 var(--mono); letter-spacing: .04em; color: var(--text2); }
-  .ok { font: 400 11px/1.5 var(--mono); color: rgba(0,255,136,.7); }
-
-  .stats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-  .stat { font: 400 10px/1 var(--mono); letter-spacing: .12em; padding: 6px 9px; border: 1px solid var(--line); border-radius: 2px; color: var(--text2); }
-  .stat b { font-weight: 500; color: var(--text); margin-right: 4px; }
-  .stat.reuse b { color: var(--g); } .stat.new b { color: var(--c); } .stat.gaps b { color: var(--r); }
-  .map { display: flex; flex-direction: column; gap: 10px; }
-  .level { border: 1px solid var(--line); border-radius: 2px; padding: 10px; background: rgba(3,5,8,.35); }
-  .level.cycle { border-color: rgba(255,45,85,.35); }
-  .level .lv { font: 400 11px/1 var(--display); letter-spacing: .24em; color: var(--text3); margin-bottom: 8px; display: flex; gap: 8px; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
-  .card { border: 1px solid var(--line2); border-radius: 2px; padding: 9px 10px; cursor: pointer; background: rgba(11,17,32,.6); transition: border-color .2s, box-shadow .2s; }
-  .card:hover { border-color: var(--line3); }
-  .card.reuse { border-left: 3px solid rgba(0,255,136,.6); } .card.new { border-left: 3px solid rgba(0,212,255,.6); }
-  .card.hasgap { box-shadow: inset 0 0 0 1px rgba(255,45,85,.45); }
-  .card.on { border-color: rgba(0,212,255,.6); box-shadow: 0 0 18px rgba(0,212,255,.15); }
-  .card.dep { border-color: rgba(255,204,0,.5); } .card.needs { border-color: rgba(204,68,255,.5); }
-  .card .t { font: 400 15px/1.15 var(--display); letter-spacing: .12em; color: var(--text); }
-  .card .m { font: 400 9.5px/1.4 var(--mono); letter-spacing: .1em; color: var(--text2); margin-top: 3px; }
-  .card .s { font: 400 9.5px/1.3 var(--mono); letter-spacing: .1em; margin-top: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .card.reuse .s { color: rgba(0,255,136,.8); } .card.new .s { color: rgba(0,212,255,.75); }
-  .card .g { color: var(--r); margin-left: 6px; }
-  .card .d { font: 400 9.5px/1.4 var(--mono); color: var(--text3); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .legend { font: 400 10px/1.5 var(--mono); letter-spacing: .08em; color: var(--text3); margin-top: 10px; }
-  .legend span { margin-right: 12px; } .legend .y { color: rgba(255,204,0,.75); } .legend .p { color: rgba(204,68,255,.8); }
-
-  .ptabs { display: flex; gap: 6px; margin-bottom: 12px; }
-  .chips { display: flex; gap: 4px; flex-wrap: wrap; }
-  .cand { border: 1px solid var(--line); border-radius: 2px; padding: 7px 9px; margin-bottom: 5px; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; }
-  .cand.on { border-color: rgba(0,255,136,.45); background: rgba(0,255,136,.04); }
-  .cand .r { font: 400 11px/1.3 var(--mono); color: var(--text); word-break: break-all; }
-  .cand .w { font: 400 9.5px/1.3 var(--mono); letter-spacing: .08em; color: var(--text2); grid-column: 1; }
-  .cand .btn { grid-row: span 2; }
-  .prop { border: 1px solid rgba(204,68,255,.16); background: rgba(204,68,255,.03); border-radius: 2px; padding: 10px 12px; margin-bottom: 8px; animation: rise .3s ease; }
-  .prop.seen { animation: none; } .prop.accepted { border-color: rgba(0,255,136,.2); opacity: .7; } .prop.dismissed { opacity: .4; }
-  .prop .k2 { font: 400 10px/1.3 var(--mono); letter-spacing: .12em; color: rgba(204,68,255,.75); display: flex; gap: 10px; flex-wrap: wrap; }
-  .prop .t { font: 400 15px/1.2 var(--display); letter-spacing: .12em; color: rgba(220,180,255,.95); margin: 6px 0 3px; }
-  .prop .x { font: 400 12px/1.55 var(--body); color: rgba(220,180,255,.85); margin-bottom: 4px; }
-  .prop .d { font: 400 10px/1.4 var(--mono); color: var(--text2); margin-bottom: 8px; }
-  .prop .a { display: flex; gap: 5px; flex-wrap: wrap; }
-  .toggle { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text2); display: flex; gap: 6px; align-items: center; cursor: pointer; margin-left: auto; }
-
-  .dlg-back { position: fixed; inset: 0; background: rgba(3,5,8,.72); z-index: 20; display: flex; align-items: center; justify-content: center; }
-  .dlg { width: min(460px, calc(100% - 32px)); padding: 18px; }
+  .dlg-back { position: fixed; inset: 0; background: rgba(3,5,8,.72); z-index: 40; display: flex; align-items: center; justify-content: center; }
+  .dlg { width: min(460px, calc(100% - 32px)); padding: 18px; background: rgba(5,8,15,.97); border: 1px solid var(--line2); }
   .dlg .q { font: 400 16px/1.3 var(--display); letter-spacing: .18em; color: var(--c); margin-bottom: 12px; }
   .dlg .note { font: 400 11px/1.5 var(--mono); color: var(--text2); margin-bottom: 12px; letter-spacing: .04em; }
-
-  @media (max-width: 1100px) {
-    html, body { height: auto; overflow: auto; }
-    .stage { position: static; padding-top: 230px; }
-    .head { position: absolute; top: calc(var(--chrome-h, 0px) + 64px); }
-    .saved { max-width: 46vw; }
-    .work, .start { grid-template-columns: 1fr; height: auto; }
-    .col { overflow: visible; }
-  }
-  @media (max-width: 700px) { .saved { display: none; } }   /* the toasts say what was saved; the corner is the back button's */
+  @media (max-width: 1000px) { .start { grid-template-columns: 1fr; } .stations { display: none; } .stage.spec-open .hud { left: 16px; } .saved { display: none; } }
 </style>
 </head>
 <body>
 <script src="js/window-chrome.js" data-kind="architect" data-title="THE ARCHITECT"></script>
 <canvas id="sky" aria-hidden="true"></canvas>
 <script src="js/void-sky.js"></script>
+<script src="js/arch-canvas.js"></script>
 
-<div class="head">
-  <div class="title">THE ARCHITECT</div>
-  <div class="sub">LAY THE SPEC OUT AS COMPONENTS — REUSE WHAT EXISTS</div>
-  <div class="stations" id="stations" aria-label="the pipeline"></div>
-</div>
-<div class="corner l"><button class="btn small ghost hidden" id="backBtn" title="EVERY ARCHITECTURE">← ALL ARCHITECTURES</button></div>
-<div class="corner r"><span class="saved" id="saved"></span><button class="btn small g hidden" id="saveBtn" title="WRITE THE ARCHITECTURE BESIDE THE SPEC, AS SPEC/….ARCHITECTURE.YAML IN ITS REPO (CTRL+S)">SAVE BESIDE THE SPEC</button></div>
+<header class="bar">
+  <div class="brand">THE ARCHITECT<small id="barSub">LAY THE SPEC OUT AS COMPONENTS — REUSE WHAT EXISTS</small></div>
+  <nav class="stations" id="stations" aria-label="the pipeline"></nav>
+  <div class="right">
+    <span class="saved" id="saved"></span>
+    <button class="ax-btn small ghost hidden" id="backBtn" title="EVERY ARCHITECTURE">ALL</button>
+    <button class="ax-btn small g hidden" id="saveBtn" title="WRITE THE ARCHITECTURE BESIDE THE SPEC, AS SPEC/….ARCHITECTURE.YAML IN ITS REPO (CTRL+S)">SAVE BESIDE THE SPEC</button>
+  </div>
+</header>
 
 <div class="state hidden" id="state" role="status" aria-live="polite"></div>
 
-<main class="stage">
+<main class="stage ax" id="stage">
   <section class="start hidden" id="start" aria-label="start an architecture">
     <div class="panel">
       <div class="lbl">LAY OUT A SPEC</div>
       <div class="tabs" id="fromTabs" role="tablist"></div>
       <div id="fromPane"></div>
-      <div class="row" style="margin-top:10px;justify-content:flex-end">
-        <button class="btn" id="createBtn" disabled title="OPEN THE ARCHITECT ON THIS SPEC">OPEN</button>
-      </div>
+      <div class="ax-row" style="margin-top:10px;justify-content:flex-end"><button class="ax-btn" id="createBtn" disabled title="OPEN THE ARCHITECT ON THIS SPEC">OPEN</button></div>
     </div>
     <div class="panel">
       <div class="lbl">YOUR ARCHITECTURES <span class="n" id="arCount"></span></div>
-      <div id="arList" class="empty">READING…</div>
+      <div id="arList" class="ax-empty">READING…</div>
     </div>
   </section>
 
-  <section class="work hidden" id="work" aria-label="the architecture">
-    <div class="col panel">
-      <div class="lbl">THE SPEC <span class="n" id="secCount"></span><span class="end"><button class="btn small ghost" id="reread" title="READ THE SPEC AGAIN FROM THE WORKSHOP OR THE REPO">REREAD</button></span></div>
-      <div id="secList"></div>
-      <div class="lbl" style="margin-top:18px">GAPS <span class="n" id="gapCount"></span></div>
-      <div id="gapList"></div>
-      <div id="removedBox" style="margin-top:16px"></div>
-      <div class="lbl" style="margin-top:18px">HISTORY</div>
-      <div class="hist" id="hist"></div>
+  <section id="work" class="hidden" aria-label="the architecture">
+    <div id="map" aria-label="the map — drag to pan, wheel to zoom, f to fit"></div>
+    <div class="hud">
+      <div class="ax-stats" id="stats"></div>
+      <div class="ax-legend"><span class="g">GREEN REUSE</span> · CYAN NEW · <span class="r">RED A GAP</span> · <span class="y">YELLOW WHAT IT NEEDS</span> · <span class="p">MAGENTA WHAT NEEDS IT</span></div>
     </div>
-    <div class="col panel">
-      <div class="lbl">THE MAP — BOTTOM-UP<span class="end"><button class="btn small" id="addComp" title="ADD A COMPONENT BY HAND">+ COMPONENT</button></span></div>
-      <div class="stats" id="stats"></div>
-      <div class="map" id="map"></div>
-      <div class="legend"><span>GREEN REUSE · CYAN NEW · RED EDGE A GAP</span><span class="y">YELLOW: WHAT THE SELECTED ONE NEEDS</span><span class="p">MAGENTA: WHAT NEEDS IT</span></div>
-    </div>
-    <div class="col panel">
-      <div class="ptabs" role="tablist">
-        <button class="chip on" id="tabComp" role="tab" aria-selected="true" title="THE SELECTED COMPONENT">COMPONENT</button>
-        <button class="chip" id="tabAgent" role="tab" aria-selected="false" title="THE AGENT'S PROPOSALS">AGENT <span id="propBadge"></span></button>
+    <div class="empty-map hidden" id="emptyMap"><b>NOTHING LAID OUT YET</b><p>ASK THE AGENT TO LAY THE SPEC OUT AS COMPONENTS — ONLY WHAT YOU ACCEPT GOES ON THE MAP — OR ADD ONE BY HAND.</p>
+      <div class="ax-row" style="justify-content:center"><button class="ax-btn m" data-act="draft" title="THE AGENT PROPOSES COMPONENTS">⌬ LAY OUT THE SPEC</button><button class="ax-btn" data-act="add" title="ADD A COMPONENT BY HAND">+ COMPONENT</button></div></div>
+
+    <aside class="ax-drawer l shut" id="specDrawer" aria-label="the spec">
+      <div class="ax-dhead"><span class="ax-dtitle">THE SPEC <span class="n" id="secCount" style="color:var(--text3);font-size:11px"></span></span>
+        <button class="ax-btn small ghost" id="reread" title="READ THE SPEC AGAIN FROM THE WORKSHOP OR THE REPO">REREAD</button><button class="ax-x" data-close="spec" title="CLOSE">✕</button></div>
+      <div class="ax-dbody">
+        <div id="secList"></div>
+        <div class="ax-k">GAPS <span class="n" id="gapCount"></span></div>
+        <div id="gapList"></div>
+        <div id="removedBox"></div>
+        <div class="ax-k">HISTORY</div>
+        <div class="hist" id="hist"></div>
       </div>
-      <div id="compPane"></div>
-      <div id="agentPane" class="hidden">
-        <div class="row"><button class="btn m" id="draftBtn" title="THE AGENT READS THE SPEC AND PROPOSES COMPONENTS — NOTHING IS ADDED WITHOUT YOUR YES">⌬ LAY OUT THE SPEC</button></div>
-        <div id="thinking" class="thinking hidden" role="status" aria-live="polite" style="margin-top:10px">THE AGENT IS WORKING <span id="meter" class="meter"></span></div>
-        <div class="lbl" style="margin-top:14px">PROPOSALS <span class="n" id="propCount"></span>
-          <label class="toggle"><input type="checkbox" id="showDone"> DECIDED</label></div>
-        <div class="row hidden" id="allRow" style="margin-bottom:10px"><button class="btn small g" id="acceptAll" title="ACCEPT EVERY OPEN PROPOSAL">ACCEPT ALL</button><button class="btn small ghost" id="dismissAll" title="SET EVERY OPEN PROPOSAL ASIDE">DISMISS ALL</button></div>
-        <div id="props"></div>
+    </aside>
+
+    <aside class="ax-drawer r shut" id="sideDrawer" aria-label="inspector and agent">
+      <div class="ax-dhead"><span class="ax-dtitle" id="sideTitle">INSPECTOR</span><button class="ax-x" data-close="side" title="CLOSE">✕</button></div>
+      <div class="ax-tabs" role="tablist">
+        <button class="ax-tab on" id="tabComp" role="tab" aria-selected="true" title="THE SELECTED COMPONENT">COMPONENT</button>
+        <button class="ax-tab" id="tabAgent" role="tab" aria-selected="false" title="THE AGENT'S PROPOSALS">AGENT <span id="propBadge"></span></button>
       </div>
-    </div>
+      <div class="ax-dbody">
+        <div id="compPane"></div>
+        <div id="agentPane" class="hidden">
+          <div class="ax-row"><button class="ax-btn m" id="draftBtn" title="THE AGENT READS THE SPEC AND PROPOSES COMPONENTS — NOTHING IS ADDED WITHOUT YOUR YES">⌬ LAY OUT THE SPEC</button></div>
+          <div id="thinking" class="thinking hidden" role="status" aria-live="polite" style="margin-top:10px">THE AGENT IS WORKING <span id="meter" class="meter"></span></div>
+          <div class="ax-k" style="margin-top:16px">PROPOSALS <span class="n" id="propCount"></span><label class="toggle"><input type="checkbox" id="showDone"> DECIDED</label></div>
+          <div class="ax-row hidden" id="allRow" style="margin-bottom:10px"><button class="ax-btn small g" id="acceptAll" title="ACCEPT EVERY OPEN PROPOSAL">ACCEPT ALL</button><button class="ax-btn small ghost" id="dismissAll" title="SET EVERY OPEN PROPOSAL ASIDE">DISMISS ALL</button></div>
+          <div id="props"></div>
+        </div>
+      </div>
+    </aside>
+
+    <nav class="ax-toolbar" id="toolbar" aria-label="tools">
+      <button class="ax-tool" data-act="spec" title="THE SPEC, ITS GAPS AND HISTORY"><b>☰</b>SPEC</button>
+      <button class="ax-tool" data-act="add" title="ADD A COMPONENT BY HAND"><b>＋</b>ADD</button>
+      <span class="ax-sep"></span>
+      <button class="ax-tool" data-act="layout" title="LAY THE MAP OUT AGAIN — BOTTOM-UP, FEWEST CROSSINGS (YOUR PLACEMENTS ARE CLEARED)"><b>⊞</b>ARRANGE</button>
+      <button class="ax-tool" data-act="fit" title="FIT THE WHOLE MAP (F)"><b>⤢</b>FIT</button>
+      <button class="ax-tool" data-act="out" title="ZOOM OUT (−)"><b>−</b>OUT</button>
+      <button class="ax-tool" data-act="in" title="ZOOM IN (+)"><b>+</b>IN</button>
+      <span class="ax-sep"></span>
+      <button class="ax-tool m" data-act="agent" title="THE AGENT — LAY THE SPEC OUT, ITS PROPOSALS"><b>⌬</b>AGENT</button>
+      <button class="ax-tool" data-act="inspect" title="THE SELECTED COMPONENT"><b>◈</b>INSPECT</button>
+      <button class="ax-tool g" data-act="save" title="SAVE BESIDE THE SPEC (CTRL+S)"><b>⇩</b>SAVE</button>
+    </nav>
   </section>
 </main>
 
@@ -200,8 +189,9 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&
 const U = (s) => String(s == null ? '' : s).toUpperCase();
 const Q = new URLSearchParams(location.search);
 const TIERS = ['component', 'mod'], LAYERS = ['data', 'engine', 'service', 'interface'];
+const BAND = { data: '#00ff88', engine: '#00d4ff', service: '#ffcc00', interface: '#cc44ff' };
 const AGENT_MS = 330000;
-let V = null, SEL = null, FROM = 'workshop', PICK = null, SRC = null, BUSY = false, TAB = 'comp', FOUND = [];
+let V = null, SEL = null, FROM = 'workshop', PICK = null, SRC = null, BUSY = false, TAB = 'comp', FOUND = [], CANVAS = null, SHAPE = null;
 const SEEN = new Set();
 
 function toast(t, bad) { const d = document.createElement('div'); d.className = 'toast' + (bad ? ' bad' : ''); d.textContent = t; $('toasts').appendChild(d); while ($('toasts').children.length > 4) $('toasts').firstChild.remove(); setTimeout(() => d.remove(), bad ? 7000 : 3200); }
@@ -224,8 +214,8 @@ function setState(kind, msg) {
 }
 function dialog({ q, note = '', value = null, ok = 'OK' }) {
   return new Promise((done) => {
-    const back = document.createElement('div'); back.className = 'dlg-back';
-    back.innerHTML = `<div class="dlg panel" role="dialog" aria-modal="true" aria-label="${esc(q)}"><div class="q">${esc(q)}</div>${note ? `<div class="note">${esc(note)}</div>` : ''}${value !== null ? `<input class="field" style="margin-bottom:12px" maxlength="120" value="${esc(value)}">` : ''}<div class="row" style="justify-content:flex-end"><button class="btn small ghost" data-no>CANCEL</button><button class="btn small" data-ok>${esc(ok)}</button></div></div>`;
+    const back = document.createElement('div'); back.className = 'dlg-back ax';
+    back.innerHTML = `<div class="dlg" role="dialog" aria-modal="true" aria-label="${esc(q)}"><div class="q">${esc(q)}</div>${note ? `<div class="note">${esc(note)}</div>` : ''}${value !== null ? `<input class="ax-field" style="margin-bottom:12px" maxlength="120" value="${esc(value)}">` : ''}<div class="ax-row" style="justify-content:flex-end"><button class="ax-btn small ghost" data-no>CANCEL</button><button class="ax-btn small" data-ok>${esc(ok)}</button></div></div>`;
     document.body.appendChild(back);
     const input = back.querySelector('input'); (input || back.querySelector('[data-ok]')).focus(); if (input) input.select();
     const end = (v) => { back.remove(); done(v); };
@@ -242,21 +232,23 @@ function stations() {
   const bind = (id, fn) => { const el = $(id); if (el) { el.onclick = fn; el.onkeydown = (e) => { if (e.key === 'Enter') fn(); }; } };
   bind('stSpec', () => { location.href = `workshop.html?id=${encodeURIComponent(a.workshopUuid)}`; });
   bind('stRepo', () => {
-    if (window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'nexus:repo.open', repoUuid: a.repoUuid, label: a.title, subtab: 'spec' }, '*'); toast('OPENED IN IDEARIUM'); }
+    const target = window.opener && !window.opener.closed ? window.opener : window.parent !== window ? window.parent : null;
+    if (target) { target.postMessage({ type: 'nexus:repo.open', repoUuid: a.repoUuid, label: a.title, subtab: 'architect' }, '*'); toast('OPENED IN IDEARIUM'); }
     else toast(`ITS REPO: ${a.repoUuid}`);
   });
 }
 
 // ── start ──────────────────────────────────────────────────────────────────────────────────────────────────────────
 async function showStart() {
-  V = null; SEL = null; history.replaceState(null, '', location.pathname); document.title = 'THE ARCHITECT';
+  V = null; SEL = null; SHAPE = null; history.replaceState(null, '', location.pathname); document.title = 'THE ARCHITECT';
   $('start').classList.remove('hidden'); $('work').classList.add('hidden'); $('saveBtn').classList.add('hidden'); $('backBtn').classList.add('hidden'); $('saved').textContent = '';
+  $('barSub').textContent = 'LAY THE SPEC OUT AS COMPONENTS — REUSE WHAT EXISTS';
   stations();
   try {
     const d = await api('/api/architect'); $('arCount').textContent = d.count || '';
     $('arList').className = '';
     $('arList').innerHTML = d.architectures.length ? d.architectures.map(a => `<div class="ar" tabindex="0" data-id="${esc(a.uuid)}"><span class="t">${esc(a.title)}</span><span class="r">${a.open ? `${a.open} OPEN<br>` : ''}${new Date(a.updatedAt).toLocaleDateString()}</span><span class="m">${a.components} COMPONENTS · ${a.savedAt ? esc(U(a.archPath)) : 'NOT SAVED YET'}</span></div>`).join('')
-      : '<div class="empty">NONE YET — OPEN ONE FROM A SPEC IN THE WORKSHOP</div>';
+      : '<div class="ax-empty">NONE YET — OPEN ONE FROM A SPEC IN THE WORKSHOP</div>';
     $('arList').querySelectorAll('.ar').forEach(el => { el.onclick = () => open(el.dataset.id); el.onkeydown = (e) => { if (e.key === 'Enter') open(el.dataset.id); }; });
     setState(null);
   } catch (e) { setState('bad', e.message); return; }
@@ -268,15 +260,15 @@ async function showStart() {
 }
 function fromTabs() {
   const tabs = [['workshop', `A WORKSHOP'S SPEC (${SRC.workshops.length})`], ['repo', `A REPO'S SPEC (${SRC.repos.reduce((n, r) => n + r.specFiles.length, 0)})`]];
-  $('fromTabs').innerHTML = tabs.map(([k, l]) => `<button class="chip ${FROM === k ? 'on' : ''}" role="tab" aria-selected="${FROM === k}" data-k="${k}">${l}</button>`).join('');
-  $('fromTabs').querySelectorAll('.chip').forEach(b => b.onclick = () => { FROM = b.dataset.k; PICK = null; fromTabs(); });
+  $('fromTabs').innerHTML = tabs.map(([k, l]) => `<button class="ax-chip ${FROM === k ? 'on' : ''}" role="tab" aria-selected="${FROM === k}" data-k="${k}">${l}</button>`).join('');
+  $('fromTabs').querySelectorAll('.ax-chip').forEach(b => b.onclick = () => { FROM = b.dataset.k; PICK = null; fromTabs(); });
   const items = FROM === 'workshop' ? SRC.workshops.map(w => ({ id: w.uuid, t: w.title, m: `${w.sections} SECTIONS · ${w.specPath ? U(w.specPath) : 'NOT IN A REPO YET'}` }))
     : SRC.repos.flatMap(r => r.specFiles.map(f => ({ id: `${r.uuid}|${f}`, t: r.name, m: U(f) })));
   $('fromPane').innerHTML = `<input class="filter" id="pickQ" placeholder="FILTER…" aria-label="filter"><div class="pick" id="pickList" role="listbox"></div>`;
   const paint = () => {
     const q = $('pickQ').value.toLowerCase();
     $('pickList').innerHTML = items.filter(x => !q || String(x.t).toLowerCase().includes(q)).slice(0, 400).map(x => `<div class="it ${PICK === x.id ? 'on' : ''}" role="option" aria-selected="${PICK === x.id}" tabindex="0" data-id="${esc(x.id)}"><span>${esc(x.t)}</span><span class="m">${esc(x.m)}</span></div>`).join('')
-      || `<div class="it empty">${FROM === 'workshop' ? 'NO WORKSHOPS YET — SHAPE A SPEC IN THE WORKSHOP FIRST' : 'NO REPO HAS A SPEC/<NAME>.SPEC YET'}</div>`;
+      || `<div class="it ax-empty">${FROM === 'workshop' ? 'NO WORKSHOPS YET — SHAPE A SPEC IN THE WORKSHOP FIRST' : 'NO REPO HAS A SPEC FILE YET'}</div>`;
     $('pickList').querySelectorAll('.it[data-id]').forEach(it => { const pick = () => { PICK = it.dataset.id; paint(); $('createBtn').disabled = false; }; it.onclick = pick; it.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } }; });
   };
   paint(); $('pickQ').oninput = paint;
@@ -289,20 +281,63 @@ $('createBtn').onclick = async () => {
   catch (e) { toast(`NOT OPENED: ${e.message}`, true); $('createBtn').disabled = false; }
 };
 
-// ── the architect ──────────────────────────────────────────────────────────────────────────────────────────────────
+// ── the map ────────────────────────────────────────────────────────────────────────────────────────────────────────
+function ensureCanvas() {
+  if (CANVAS) return CANVAS;
+  CANVAS = ArchCanvas.mount($('map'), {
+    linkable: true, nodeW: 236,
+    inset: () => ({ t: 74, b: 96, l: $('specDrawer').classList.contains('shut') ? 24 : 400, r: $('sideDrawer').classList.contains('shut') ? 24 : 420 }),
+    onSelect: (ids) => { SEL = ids.length === 1 ? ids[0] : null; FOUND = []; if (SEL) { TAB = 'comp'; drawer('side', true); } paintSide(); },
+    onMove: (moves) => { api(`/api/architect/${V.architecture.uuid}`, { components: moves }).then(d => { V = d; savedNote(); }).catch(e => toast(`PLACE NOT KEPT: ${e.message}`, true)); },
+    onLink: (from, to) => link(from, to),
+    onOpen: (id) => CANVAS.center(id),
+    onDelete: (ids) => removeMany(ids),
+  });
+  return CANVAS;
+}
+function graph() {
+  const an = V.analysis;
+  const nodes = an.components.map(c => ({
+    id: c.id, band: c.layer, label: c.name, color: c.status === 'reuse' ? '#00ff88' : '#00d4ff', cls: `${c.gaps ? 'has-gap' : ''}`,
+    x: Number.isFinite(c.x) ? c.x : undefined, y: Number.isFinite(c.y) ? c.y : undefined, pinned: Number.isFinite(c.x) && Number.isFinite(c.y),
+    html: ArchCanvas.card({ title: c.name, badge: c.status === 'reuse' ? 'REUSE' : 'NEW', sub: `${U(c.tier)} · ${c.level == null ? 'IN A CYCLE' : `LEVEL ${c.level}`}`,
+      lines: [c.purpose ? U(c.purpose) : '', c.status === 'reuse' ? `↺ ${U(c.match.id)}` : ''].filter(Boolean),
+      chips: [...(c.gaps ? [{ t: `${c.gaps} GAP${c.gaps === 1 ? '' : 'S'}`, cls: 'gap' }] : []), ...c.external.slice(0, 2).map(x => ({ t: `NEEDS ${U(x.ref.replace(/^(loom|store):/, ''))}`, cls: 'reuse' })),
+        ...(c.seams.length ? [{ t: `${c.seams.length} SEAM${c.seams.length === 1 ? '' : 'S'}` }] : [])] }),
+  }));
+  const layerGap = new Set(an.gaps.filter(g => g.kind === 'layer').map(g => `${g.component}>${g.dep}`));
+  const cyc = new Set(an.gaps.filter(g => g.kind === 'cycle').flatMap(g => g.path.slice(0, -1).map((x, i) => `${x}>${g.path[i + 1]}`)));
+  const edges = an.components.flatMap(c => c.deps.map(d => ({ from: c.id, to: d, kind: layerGap.has(`${c.id}>${d}`) ? 'breach' : cyc.has(`${c.id}>${d}`) ? 'gap' : 'dep' })));
+  const bands = LAYERS.map(l => ({ key: l, label: U(l), color: BAND[l] }));
+  return { nodes, edges, bands };
+}
+function paintMap() {
+  const an = V.analysis;
+  $('emptyMap').classList.toggle('hidden', !!an.components.length);
+  const cv = ensureCanvas();
+  const first = SHAPE === null;
+  cv.setGraph(graph(), { keepView: !first });
+  SHAPE = an.components.length;
+  if (SEL) cv.select(SEL);
+  const st = an.stats;
+  $('stats').innerHTML = `<span class="ax-stat"><b>${st.components}</b>COMPONENTS</span><span class="ax-stat g"><b>${st.reuse}</b>REUSE</span><span class="ax-stat c"><b>${st.new}</b>NEW</span><span class="ax-stat r"><b>${st.gaps}</b>GAP${st.gaps === 1 ? '' : 'S'}</span><span class="ax-stat"><b>${st.levels}</b>LEVELS</span><span class="ax-stat" title="WHAT IT IS MATCHED AGAINST: LOOM'S REGISTRY AND THE COMPONENT STORE"><b>${(V.index && V.index.registry) || 0}</b>IN LOOM · <b style="margin-left:5px">${(V.index && V.index.store) || 0}</b>IN THE STORE</span>`;
+}
+
+// ── open / show ────────────────────────────────────────────────────────────────────────────────────────────────────
 async function open(id) {
   setState('loading');
   try { show(await api(`/api/architect/${encodeURIComponent(id)}`)); }
   catch (e) { setState(null); toast(`NOT OPENED: ${e.message}`, true); showStart(); }
 }
 function show(d) {
+  const grew = V && d.analysis.components.length > V.analysis.components.length && V.analysis.components.length === 0;
   V = d; setState(null);
   history.replaceState(null, '', `?id=${encodeURIComponent(V.architecture.uuid)}`);
   $('start').classList.add('hidden'); $('work').classList.remove('hidden'); $('saveBtn').classList.remove('hidden'); $('backBtn').classList.remove('hidden');
   if (SEL && !V.analysis.components.find(c => c.id === SEL)) SEL = null;
-  if (!SEL && V.analysis.components[0]) SEL = V.analysis.components[0].id;
   if (V.index && V.index.error) toast(V.index.error, true);
   paint();
+  if (grew) setTimeout(() => CANVAS.fit(), 60);   // the first components on an empty map: show them all
 }
 function comp(id) { return V.analysis.components.find(c => c.id === id) || null; }
 function savedNote() {
@@ -311,67 +346,60 @@ function savedNote() {
   $('saved').classList.toggle('dirty', dirty);
 }
 function paint() {
-  const a = V.architecture, an = V.analysis;
+  const a = V.architecture;
   document.title = `${U(a.title)} — THE ARCHITECT`;
-  stations(); savedNote();
-  // the spec
+  $('barSub').textContent = U(a.title);
+  stations(); savedNote(); paintMap(); paintSpec(); paintSide();
+}
+function paintSpec() {
+  const a = V.architecture, an = V.analysis;
   $('secCount').textContent = a.sections.length;
-  $('secList').innerHTML = a.sections.length ? a.sections.map(s => `<details class="sec"><summary>${esc(s.title)}</summary><div class="b">${esc(s.body || '(EMPTY)')}</div></details>`).join('') : '<div class="empty">THE SPEC HAS NO SECTIONS</div>';
-  // gaps
+  $('secList').innerHTML = a.sections.length ? a.sections.map(s => `<details class="sec"><summary>${esc(s.title)}</summary><div class="b">${esc(s.body || '(EMPTY)')}</div></details>`).join('') : '<div class="ax-empty">THE SPEC HAS NO SECTIONS</div>';
   $('gapCount').textContent = an.gaps.length || '';
-  $('gapList').innerHTML = an.gaps.length ? an.gaps.map(g => `<div class="gap" tabindex="0" data-c="${esc(g.component)}" title="SELECT THE COMPONENT">${esc(U(g.say))}</div>`).join('') : `<div class="ok">${an.components.length ? 'NO GAPS — EVERY DEPENDENCY RESOLVES' : 'ADD COMPONENTS, OR ASK THE AGENT TO LAY THE SPEC OUT'}</div>`;
-  $('gapList').querySelectorAll('.gap').forEach(el => { const go = () => { SEL = el.dataset.c; TAB = 'comp'; paint(); }; el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
-  $('removedBox').innerHTML = a.removed && a.removed.length ? `<div class="lbl">REMOVED <span class="n">${a.removed.length}</span></div>${a.removed.map(c => `<div class="row" style="margin-bottom:4px"><span class="empty" style="flex:1">${esc(U(c.name))}</span><button class="btn small ghost" data-r="${esc(c.id)}" title="BRING IT BACK">RESTORE</button></div>`).join('')}` : '';
+  $('gapList').innerHTML = an.gaps.length ? an.gaps.map(g => `<div class="ax-item bad" tabindex="0" data-c="${esc(g.component)}" title="SHOW IT ON THE MAP">${esc(U(g.say))}</div>`).join('') : `<div class="ax-item ok">${an.components.length ? 'NO GAPS — EVERY DEPENDENCY RESOLVES' : 'NOTHING LAID OUT YET'}</div>`;
+  $('gapList').querySelectorAll('[data-c]').forEach(el => { const go = () => { SEL = el.dataset.c; CANVAS.select(SEL); CANVAS.center(SEL); TAB = 'comp'; drawer('side', true); paintSide(); }; el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
+  $('removedBox').innerHTML = a.removed && a.removed.length ? `<div class="ax-k">REMOVED <span class="n">${a.removed.length}</span></div>${a.removed.map(c => `<div class="ax-row" style="margin-bottom:4px"><span class="ax-empty" style="flex:1">${esc(U(c.name))}</span><button class="ax-btn small ghost" data-r="${esc(c.id)}" title="BRING IT BACK">RESTORE</button></div>`).join('')}` : '';
   $('removedBox').querySelectorAll('[data-r]').forEach(b => b.onclick = () => update({ components: [{ restore: b.dataset.r }] }));
-  $('hist').innerHTML = (a.history || []).slice(-14).reverse().map(h => `<div>${new Date(h.at).toLocaleTimeString()} · ${esc(U(h.what))}</div>`).join('');
-  // stats + the map
-  const st = an.stats;
-  $('stats').innerHTML = `<span class="stat"><b>${st.components}</b>COMPONENTS</span><span class="stat reuse"><b>${st.reuse}</b>REUSE</span><span class="stat new"><b>${st.new}</b>NEW</span><span class="stat gaps"><b>${st.gaps}</b>GAP${st.gaps === 1 ? '' : 'S'}</span><span class="stat"><b>${st.levels}</b>LEVELS</span><span class="stat" title="WHAT IT IS MATCHED AGAINST: LOOM'S REGISTRY AND THE COMPONENT STORE"><b>${(V.index && V.index.registry) || 0}</b>IN LOOM · <b style="margin-left:4px">${(V.index && V.index.store) || 0}</b>IN THE STORE</span>`;
-  paintMap();
-  // the right column
+  $('hist').innerHTML = (a.history || []).slice(-16).reverse().map(h => `<div>${new Date(h.at).toLocaleTimeString()} · ${esc(U(h.what))}</div>`).join('');
+}
+function paintSide() {
+  if (!V) return;
   $('tabComp').classList.toggle('on', TAB === 'comp'); $('tabAgent').classList.toggle('on', TAB === 'agent');
   $('tabComp').setAttribute('aria-selected', TAB === 'comp'); $('tabAgent').setAttribute('aria-selected', TAB === 'agent');
   $('compPane').classList.toggle('hidden', TAB !== 'comp'); $('agentPane').classList.toggle('hidden', TAB !== 'agent');
-  const open = a.proposals.filter(p => p.status === 'open').length;
+  $('sideTitle').textContent = TAB === 'agent' ? 'THE AGENT' : (comp(SEL) ? U(comp(SEL).name) : 'INSPECTOR');
+  const open = V.architecture.proposals.filter(p => p.status === 'open').length;
   $('propBadge').textContent = open ? `(${open})` : '';
   paintComp(); paintProposals();
 }
-function paintMap() {
-  const an = V.analysis, sel = comp(SEL);
-  const needs = new Set(sel ? sel.deps : []), neededBy = new Set(sel ? an.components.filter(c => c.deps.includes(sel.id)).map(c => c.id) : []);
-  const card = (c) => `<div class="card ${c.status} ${c.gaps ? 'hasgap' : ''} ${c.id === SEL ? 'on' : ''} ${needs.has(c.id) ? 'dep' : ''} ${neededBy.has(c.id) ? 'needs' : ''}" tabindex="0" role="button" data-id="${esc(c.id)}" aria-pressed="${c.id === SEL}">
-      <div class="t">${esc(c.name)}</div><div class="m">${U(c.layer)} · ${U(c.tier)}</div>
-      <div class="s">${c.status === 'reuse' ? `REUSE ${esc(U(c.match.id))}` : 'NEW'}${c.gaps ? `<span class="g">${c.gaps} GAP${c.gaps === 1 ? '' : 'S'}</span>` : ''}</div>
-      ${c.deps.length || c.external.length ? `<div class="d">← ${esc(U(c.deps.concat(c.external.map(x => x.ref)).join(', ')))}</div>` : ''}</div>`;
-  const rows = an.levels.map((ids, i) => ({ i, ids })).reverse();   // bottom-up: level 0 is drawn last, at the bottom
-  const unplaced = an.components.filter(c => c.level == null);
-  $('map').innerHTML = !an.components.length ? '<div class="empty">NO COMPONENTS YET. ASK THE AGENT TO LAY THE SPEC OUT (THE AGENT TAB), OR ADD ONE BY HAND.</div>'
-    : (unplaced.length ? `<div class="level cycle"><div class="lv">UNPLACED <span class="n">IN A CYCLE — ONE OF THEM HAS TO GIVE</span></div><div class="cards">${unplaced.map(card).join('')}</div></div>` : '')
-      + rows.map(r => `<div class="level"><div class="lv">LEVEL ${r.i} <span class="n">${r.i === 0 ? 'NEEDS NOTHING OF THIS ARCHITECTURE' : `NEEDS LEVEL ${r.i - 1} AND BELOW`}</span></div><div class="cards">${r.ids.map(id => card(comp(id))).join('')}</div></div>`).join('');
-  $('map').querySelectorAll('.card').forEach(el => { const go = () => { SEL = el.dataset.id; TAB = 'comp'; FOUND = []; paint(); }; el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } }; });
-}
 function paintComp() {
   const c = comp(SEL);
-  if (!c) { $('compPane').innerHTML = '<div class="empty">SELECT A COMPONENT ON THE MAP</div>'; return; }
-  const chip = (group, v, cur) => `<button class="chip ${v === cur ? 'on' : ''}" data-g="${group}" data-v="${v}" aria-pressed="${v === cur}">${U(v)}</button>`;
+  if (!c) { $('compPane').innerHTML = '<div class="ax-empty">SELECT A COMPONENT ON THE MAP. DRAG A CARD TO PLACE IT; DRAG ITS YELLOW HANDLE ONTO WHAT IT NEEDS.</div>'; return; }
+  const chip = (group, v, cur) => `<button class="ax-chip ${v === cur ? 'on' : ''}" data-g="${group}" data-v="${v}" aria-pressed="${v === cur}">${U(v)}</button>`;
   const using = c.status === 'reuse' && c.match ? c.match.ref : null;
-  const cand = (x) => `<div class="cand ${x.ref === using ? 'on' : ''}"><span class="r">${esc(x.ref)}</span>${x.ref === using ? '<span class="btn small g" style="cursor:default">IN USE</span>' : `<button class="btn small g" data-use="${esc(x.ref)}" title="REUSE THIS ONE">USE</button>`}<span class="w">${esc(U(x.why))}${x.score != null ? ` · ${Math.round(x.score * 100)}%` : ''}</span></div>`;
+  const cand = (x) => `<div class="cand ${x.ref === using ? 'on' : ''}"><span class="r">${esc(U(x.ref))}</span>${x.ref === using ? '<span class="ax-btn small g" style="cursor:default">IN USE</span>' : `<button class="ax-btn small g" data-use="${esc(x.ref)}" title="REUSE THIS ONE">USE</button>`}<span class="w">${esc(U(x.why))}${x.score != null ? ` · ${Math.round(x.score * 100)}%` : ''}</span></div>`;
+  const mine = V.analysis.gaps.filter(g => g.component === c.id || (g.path && g.path.includes(c.id)));
+  const needs = c.deps.map(d => comp(d)).filter(Boolean), usedBy = V.analysis.components.filter(x => x.deps.includes(c.id));
   $('compPane').innerHTML = `
-    <div class="k">NAME</div><input class="field" id="cName" maxlength="120" value="${esc(c.name)}" aria-label="name">
-    <div class="k">ID <span style="color:var(--text3)">— DEPENDENCIES NAME IT</span></div><div class="empty">${esc(U(c.id))}</div>
-    <div class="k">LAYER</div><div class="chips">${LAYERS.map(v => chip('layer', v, c.layer)).join('')}</div>
-    <div class="k">TIER</div><div class="chips">${TIERS.map(v => chip('tier', v, c.tier)).join('')}</div>
-    <div class="k">PURPOSE</div><textarea class="field" id="cPurpose" maxlength="2000" aria-label="purpose" placeholder="WHAT IT DOES, IN ONE SENTENCE">${esc(c.purpose)}</textarea>
-    <div class="k">DEPENDS ON <span style="color:var(--text3)">— IDS HERE, OR LOOM:/STORE: REFS, COMMA-SEPARATED</span></div><input class="field" id="cDeps" value="${esc((c.dependsOn || []).join(', '))}" aria-label="depends on">
-    <div class="k">SEAMS <span style="color:var(--text3)">— EVENTS, ROUTES, CALLS</span></div><input class="field" id="cSeams" value="${esc((c.seams || []).join(', '))}" aria-label="seams">
-    <div class="k">DECISION</div><div class="chips">${['auto', 'new'].map(v => chip('decision', v, c.decision)).join('')}${c.decision === 'reuse' ? chip('decision', 'reuse', 'reuse') : ''}</div>
-    <div class="k">${c.status === 'reuse' ? `REUSES ${esc(U(c.match.id))}` : 'NEW — NOTHING CHOSEN TO REUSE'}</div>
+    ${mine.length ? mine.map(g => `<div class="ax-item bad">${esc(U(g.say))}</div>`).join('') : ''}
+    <div class="ax-k">NAME</div><input class="ax-field" id="cName" maxlength="120" value="${esc(c.name)}" aria-label="name">
+    <div class="ax-k">LAYER</div><div class="ax-chips">${LAYERS.map(v => chip('layer', v, c.layer)).join('')}</div>
+    <div class="ax-k">TIER</div><div class="ax-chips">${TIERS.map(v => chip('tier', v, c.tier)).join('')}</div>
+    <div class="ax-k">PURPOSE</div><textarea class="ax-field" id="cPurpose" maxlength="2000" aria-label="purpose" placeholder="WHAT IT DOES, IN ONE SENTENCE">${esc(c.purpose)}</textarea>
+    <div class="ax-k">NEEDS <span class="n">— OR DRAG ITS HANDLE ON THE MAP</span></div>
+    ${needs.map(n => `<div class="ax-item" data-go="${esc(n.id)}" tabindex="0">${esc(U(n.name))}<span class="m">${U(n.layer)} · <a href="#" data-unlink="${esc(n.id)}" style="color:var(--ax-r)">REMOVE</a></span></div>`).join('')}
+    ${c.external.map(x => `<div class="ax-item ok">${esc(U(x.ref))}<span class="m">EXISTS ALREADY — ${x.kind === 'store' ? 'THE COMPONENT STORE' : 'LOOM'}</span></div>`).join('')}
+    <input class="ax-field" id="cDeps" value="${esc((c.dependsOn || []).join(', '))}" aria-label="depends on" placeholder="IDS HERE, OR LOOM:/STORE: REFS, COMMA-SEPARATED">
+    <div class="ax-k">NEEDED BY</div>${usedBy.length ? usedBy.map(n => `<div class="ax-item" data-go="${esc(n.id)}" tabindex="0">${esc(U(n.name))}<span class="m">${U(n.layer)}</span></div>`).join('') : '<div class="ax-empty">NOTHING YET</div>'}
+    <div class="ax-k">SEAMS <span class="n">— EVENTS, ROUTES, CALLS</span></div><input class="ax-field" id="cSeams" value="${esc((c.seams || []).join(', '))}" aria-label="seams">
+    <div class="ax-k">DECISION</div><div class="ax-chips">${['auto', 'new'].map(v => chip('decision', v, c.decision)).join('')}${c.decision === 'reuse' ? chip('decision', 'reuse', 'reuse') : ''}</div>
+    <div class="ax-k">${c.status === 'reuse' ? `REUSES ${esc(U(c.match.id))}` : 'NEW — NOTHING CHOSEN TO REUSE'}</div>
     ${c.match && !c.candidates.find(x => x.ref === c.match.ref) ? cand(c.match) : ''}
-    ${c.candidates.length ? c.candidates.map(cand).join('') : '<div class="empty">NOTHING LIKE IT IN LOOM OR THE STORE</div>'}
-    <div class="k">FIND WHAT EXISTS</div>
-    <div class="row"><input class="field" id="findQ" placeholder="WORDS — E.G. LEDGER STORE" aria-label="find"><button class="btn small" id="findBtn" title="SEARCH LOOM'S REGISTRY AND THE COMPONENT STORE">FIND</button></div>
+    ${c.candidates.length ? c.candidates.map(cand).join('') : '<div class="ax-empty">NOTHING LIKE IT IN LOOM OR THE STORE</div>'}
+    <div class="ax-k">FIND WHAT EXISTS</div>
+    <div class="ax-row"><input class="ax-field" id="findQ" style="flex:1" placeholder="WORDS — E.G. LEDGER STORE" aria-label="find"><button class="ax-btn small" id="findBtn" title="SEARCH LOOM'S REGISTRY AND THE COMPONENT STORE">FIND</button></div>
     <div id="found" style="margin-top:6px">${FOUND.map(cand).join('')}</div>
-    <div class="row" style="margin-top:16px;justify-content:space-between"><span class="empty">BY ${esc(U(c.by))}</span><button class="btn small ghost" id="rmComp" title="REMOVE IT — IT IS KEPT AND CAN BE RESTORED">REMOVE</button></div>`;
+    <div class="ax-row" style="margin-top:16px;justify-content:space-between"><span class="ax-empty">BY ${esc(U(c.by))}${Number.isFinite(c.x) ? ' · PLACED BY HAND' : ''}</span><button class="ax-btn small ghost" id="rmComp" title="REMOVE IT — IT IS KEPT AND CAN BE RESTORED">REMOVE</button></div>`;
   const P = $('compPane');
   const edit = (patch) => update({ components: [{ id: c.id, ...patch }] });
   $('cName').onchange = () => { const v = $('cName').value.trim(); if (v && v !== c.name) edit({ name: v }); };
@@ -380,14 +408,16 @@ function paintComp() {
   $('cSeams').onchange = () => edit({ seams: $('cSeams').value });
   P.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { if (b.dataset.v !== c[b.dataset.g]) edit({ [b.dataset.g]: b.dataset.v }); });
   P.querySelectorAll('[data-use]').forEach(b => b.onclick = () => edit({ decision: 'reuse', use: b.dataset.use }));
+  P.querySelectorAll('[data-unlink]').forEach(a => a.onclick = (e) => { e.preventDefault(); e.stopPropagation(); edit({ dependsOn: c.dependsOn.filter(d => d !== a.dataset.unlink) }); });
+  P.querySelectorAll('[data-go]').forEach(el => { const go = () => { SEL = el.dataset.go; CANVAS.select(SEL); CANVAS.center(SEL); FOUND = []; paintSide(); }; el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
   const find = async () => {
     const q = $('findQ').value.trim(); if (!q) return;
-    try { const d = await api(`/api/architect/registry?q=${encodeURIComponent(q)}`); FOUND = d.results; $('found').innerHTML = FOUND.length ? FOUND.map(cand).join('') : '<div class="empty">NOTHING FOUND</div>';
+    try { const d = await api(`/api/architect/registry?q=${encodeURIComponent(q)}`); FOUND = d.results; $('found').innerHTML = FOUND.length ? FOUND.map(cand).join('') : '<div class="ax-empty">NOTHING FOUND</div>';
       $('found').querySelectorAll('[data-use]').forEach(b => b.onclick = () => edit({ decision: 'reuse', use: b.dataset.use })); }
     catch (e) { toast(`NOT SEARCHED: ${e.message}`, true); }
   };
   $('findBtn').onclick = find; $('findQ').onkeydown = (e) => { if (e.key === 'Enter') find(); };
-  $('rmComp').onclick = async () => { if (await dialog({ q: `REMOVE ${U(c.name)}?`, note: 'IT IS KEPT UNDER REMOVED AND CAN BE RESTORED. WHAT DEPENDS ON IT WILL SHOW A GAP.', ok: 'REMOVE' })) { SEL = null; update({ components: [{ id: c.id, remove: true }] }); } };
+  $('rmComp').onclick = () => removeMany([c.id]);
 }
 function paintProposals() {
   const a = V.architecture, showDone = $('showDone').checked;
@@ -398,46 +428,90 @@ function paintProposals() {
       <div class="k2"><span>${U(c.layer)} · ${U(c.tier)}</span>${c.use ? `<span>REUSE ${esc(U(c.use))}</span>` : ''}${p.status !== 'open' ? `<span style="color:var(--text2)">${U(p.status)}</span>` : ''}</div>
       <div class="t">${esc(c.name)}</div>${c.purpose ? `<div class="x">${esc(c.purpose)}</div>` : ''}
       ${c.dependsOn.length || c.seams.length ? `<div class="d">${c.dependsOn.length ? `NEEDS ${esc(U(c.dependsOn.join(', ')))}` : ''}${c.dependsOn.length && c.seams.length ? ' · ' : ''}${c.seams.length ? `SEAMS ${esc(U(c.seams.join(', ')))}` : ''}</div>` : ''}
-      <div class="a">${p.status === 'open' ? `<button class="btn small" data-p="${p.uuid}" data-a="accept" title="ADD IT TO THE ARCHITECTURE">ACCEPT</button><button class="btn small ghost" data-p="${p.uuid}" data-a="dismiss" title="SET IT ASIDE">DISMISS</button>`
-        : `<button class="btn small ghost" data-p="${p.uuid}" data-a="reopen" title="OPEN IT AGAIN">REOPEN</button>`}</div></div>`; }).join('')
-    : `<div class="empty">${a.proposals.length ? 'NOTHING OPEN — TICK DECIDED TO SEE THE REST' : 'ASK THE AGENT TO LAY THE SPEC OUT. ITS COMPONENTS LAND HERE, AND ONLY WHAT YOU ACCEPT GOES INTO THE ARCHITECTURE.'}</div>`;
+      <div class="ax-row">${p.status === 'open' ? `<button class="ax-btn small" data-p="${p.uuid}" data-a="accept" title="PUT IT ON THE MAP">ACCEPT</button><button class="ax-btn small ghost" data-p="${p.uuid}" data-a="dismiss" title="SET IT ASIDE">DISMISS</button>`
+        : `<button class="ax-btn small ghost" data-p="${p.uuid}" data-a="reopen" title="OPEN IT AGAIN">REOPEN</button>`}</div></div>`; }).join('')
+    : `<div class="ax-empty">${a.proposals.length ? 'NOTHING OPEN — TICK DECIDED TO SEE THE REST' : 'ASK THE AGENT TO LAY THE SPEC OUT. ITS COMPONENTS LAND HERE, AND ONLY WHAT YOU ACCEPT GOES ON THE MAP.'}</div>`;
   list.forEach(p => SEEN.add(p.uuid));
   $('props').querySelectorAll('[data-p]').forEach(b => b.onclick = () => decide(b.dataset.p, b.dataset.a));
   $('draftBtn').disabled = BUSY;
 }
 $('showDone').onchange = paintProposals;
-$('tabComp').onclick = () => { TAB = 'comp'; paint(); };
-$('tabAgent').onclick = () => { TAB = 'agent'; paint(); };
+$('tabComp').onclick = () => { TAB = 'comp'; paintSide(); };
+$('tabAgent').onclick = () => { TAB = 'agent'; paintSide(); };
 
-async function update(body) {
-  try { show(await api(`/api/architect/${V.architecture.uuid}`, body)); return true; }
+// ── drawers and tools ──────────────────────────────────────────────────────────────────────────────────────────────
+function drawer(which, open) {
+  const el = which === 'spec' ? $('specDrawer') : $('sideDrawer');
+  const was = !el.classList.contains('shut'), on = open == null ? !was : open;
+  if (on && matchMedia('(max-width: 900px)').matches) { const other = which === 'spec' ? 'side' : 'spec'; if (!(other === 'spec' ? $('specDrawer') : $('sideDrawer')).classList.contains('shut')) drawer(other, false); }   // narrow: one at a time
+  el.classList.toggle('shut', !on);
+  if (which === 'spec') $('stage').classList.toggle('spec-open', on);
+  if (CANVAS && was !== on) setTimeout(() => CANVAS.fit(), 320);   // the map makes room for the drawer
+  document.querySelectorAll(`.ax-tool[data-act="${which === 'spec' ? 'spec' : TAB === 'agent' ? 'agent' : 'inspect'}"]`).forEach(b => b.classList.toggle('on', on));
+}
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => drawer(b.dataset.close, false));
+// a window narrowed with both drawers open keeps the inspector, so the map is never under two
+matchMedia('(max-width: 900px)').addEventListener('change', (m) => { if (m.matches && !$('specDrawer').classList.contains('shut') && !$('sideDrawer').classList.contains('shut')) drawer('spec', false); });
+async function act(a) {
+  if (!V) return;
+  if (a === 'spec') return drawer('spec');
+  if (a === 'add') return addComponent();
+  if (a === 'layout') { if (!V.analysis.components.length) return; const pinned = V.analysis.components.filter(c => Number.isFinite(c.x)); if (pinned.length) await update({ components: pinned.map(c => ({ id: c.id, x: null, y: null })) }, true); CANVAS.layout({ all: true }); toast('LAID OUT BOTTOM-UP — FEWEST CROSSINGS'); return; }
+  if (a === 'fit') return CANVAS && CANVAS.fit();
+  if (a === 'in') return CANVAS && CANVAS.zoomBy(1.18);
+  if (a === 'out') return CANVAS && CANVAS.zoomBy(1 / 1.18);
+  if (a === 'agent') { TAB = 'agent'; drawer('side', true); return paintSide(); }
+  if (a === 'inspect') { TAB = 'comp'; drawer('side'); return paintSide(); }
+  if (a === 'draft') { TAB = 'agent'; drawer('side', true); paintSide(); return draft(); }
+  if (a === 'save') return save();
+}
+document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => act(b.dataset.act));
+
+async function update(body, quiet) {
+  try { const d = await api(`/api/architect/${V.architecture.uuid}`, body); if (quiet) { V = d; savedNote(); } else show(d); return true; }
   catch (e) { toast(`NOT KEPT: ${e.message}`, true); return false; }
 }
-$('addComp').onclick = async () => {
-  const name = await dialog({ q: 'NEW COMPONENT', note: 'ITS LAYER, PURPOSE AND DEPENDENCIES ARE SET NEXT, IN THE COMPONENT PANEL.', value: '', ok: 'ADD' });
+async function addComponent() {
+  const name = await dialog({ q: 'NEW COMPONENT', note: 'ITS LAYER, PURPOSE AND WHAT IT NEEDS ARE SET IN THE INSPECTOR. ON THE MAP, DRAG ITS HANDLE ONTO WHAT IT NEEDS.', value: '', ok: 'ADD' });
   if (!name) return;
   const before = new Set(V.analysis.components.map(c => c.id));
-  if (await update({ components: [{ add: true, name }] })) { const n = V.analysis.components.find(c => !before.has(c.id)); if (n) { SEL = n.id; TAB = 'comp'; paint(); } }
-};
-$('reread').onclick = async () => { if (await update({ refresh: true })) toast('THE SPEC WAS READ AGAIN'); };
+  if (await update({ components: [{ add: true, name, layer: comp(SEL) ? comp(SEL).layer : 'engine' }] })) {
+    const n = V.analysis.components.find(c => !before.has(c.id));
+    if (n) { SEL = n.id; CANVAS.select(SEL); setTimeout(() => CANVAS.center(SEL), 60); TAB = 'comp'; drawer('side', true); paintSide(); }
+  }
+}
+async function link(from, to) {
+  const c = comp(from), t = comp(to); if (!c || !t) return;
+  if (c.dependsOn.includes(to)) { toast(`${U(c.name)} ALREADY NEEDS ${U(t.name)}`); return; }
+  if (await update({ components: [{ id: from, dependsOn: c.dependsOn.concat(to) }] })) {
+    const gap = V.analysis.gaps.find(g => g.component === from && (g.dep === to || (g.path && g.path.includes(to))));
+    toast(gap ? U(gap.say) : `${U(c.name)} NOW NEEDS ${U(t.name)}`, !!gap);
+  }
+}
+async function removeMany(ids) {
+  const names = ids.map(id => (comp(id) || {}).name).filter(Boolean);
+  if (!names.length) return;
+  if (!(await dialog({ q: names.length === 1 ? `REMOVE ${U(names[0])}?` : `REMOVE ${names.length} COMPONENTS?`, note: 'KEPT UNDER REMOVED IN THE SPEC DRAWER AND CAN BE RESTORED. WHAT NEEDS THEM WILL SHOW A GAP.', ok: 'REMOVE' }))) return;
+  SEL = null; update({ components: ids.map(id => ({ id, remove: true })) });
+}
 let _meterT = null;
 function setThinking(on) { BUSY = on; $('thinking').classList.toggle('hidden', !on); $('draftBtn').disabled = on;
   clearInterval(_meterT); $('meter').textContent = ''; if (on) { const t0 = Date.now(); _meterT = setInterval(() => { $('meter').textContent = `${Math.round((Date.now() - t0) / 1000)}S`; }, 1000); } }
-$('draftBtn').onclick = async () => {
+async function draft() {
   if (BUSY || !V) return; setThinking(true);
-  try { const d = await api(`/api/architect/${V.architecture.uuid}/draft`, {}, AGENT_MS); show(d); toast(`${d.added.length} COMPONENT${d.added.length === 1 ? '' : 'S'} PROPOSED`); }
-  catch (e) { toast(e.message, true); } finally { setThinking(false); if (V) paint(); }
-};
+  try { const d = await api(`/api/architect/${V.architecture.uuid}/draft`, {}, AGENT_MS); show(d); toast(`${d.added.length} COMPONENT${d.added.length === 1 ? '' : 'S'} PROPOSED — ACCEPT WHAT YOU WANT ON THE MAP`); }
+  catch (e) { toast(e.message, true); } finally { setThinking(false); if (V) paintSide(); }
+}
+$('draftBtn').onclick = draft;
 async function decide(pid, action) {
   try { const d = await api(`/api/architect/${V.architecture.uuid}/proposal/${pid}`, { action }); if (d.component) SEL = d.component.id; show(d); }
   catch (e) { toast(e.message, true); }
 }
-$('acceptAll').onclick = async () => { const n = V.architecture.proposals.filter(p => p.status === 'open').length; if (await dialog({ q: `ACCEPT ALL ${n}?`, note: 'EACH BECOMES A COMPONENT OF THE ARCHITECTURE. YOU CAN STILL EDIT OR REMOVE ANY OF THEM.', ok: 'ACCEPT ALL' })) decide('all', 'accept'); };
+$('acceptAll').onclick = async () => { const n = V.architecture.proposals.filter(p => p.status === 'open').length; if (await dialog({ q: `ACCEPT ALL ${n}?`, note: 'EACH GOES ON THE MAP AS A COMPONENT. YOU CAN STILL EDIT, MOVE OR REMOVE ANY OF THEM.', ok: 'ACCEPT ALL' })) decide('all', 'accept'); };
 $('dismissAll').onclick = () => decide('all', 'dismiss');
 async function save() {
   if (!V) return; $('saveBtn').disabled = true;
   const notYet = 'SAVE THE SPEC FROM THE WORKSHOP FIRST — THE ARCHITECTURE IS SAVED BESIDE IT';
-  // the workshop may have saved the spec since this opened: read it again before asking to save beside it
   if (!V.architecture.repoUuid) { await update({ refresh: true }); if (!V.architecture.repoUuid) { toast(notYet, true); $('saveBtn').disabled = false; return; } }
   try { const d = await api(`/api/architect/${V.architecture.uuid}/save`, {}, 60000); show(d);
     toast(`SAVED TO ${U(d.archPath)} — ${d.analysis.stats.reuse} REUSED, ${d.analysis.stats.new} NEW${d.analysis.stats.gaps ? `, ${d.analysis.stats.gaps} GAP${d.analysis.stats.gaps === 1 ? '' : 'S'} SAID IN THE FILE` : ''}`); }
@@ -445,8 +519,11 @@ async function save() {
   finally { $('saveBtn').disabled = false; }
 }
 $('saveBtn').onclick = save;
-document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && V) { e.preventDefault(); save(); } });
-$('backBtn').onclick = () => { SRC = null; showStart(); };
+$('reread').onclick = async () => { if (await update({ refresh: true })) toast('THE SPEC WAS READ AGAIN'); };
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && V) { e.preventDefault(); save(); }
+});
+$('backBtn').onclick = () => { SRC = null; drawer('spec', false); drawer('side', false); showStart(); };
 
 async function boot() {
   setState('loading');

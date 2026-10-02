@@ -157,8 +157,10 @@ export function normComponent(raw = {}, taken = []) {
   if (ids.has(id)) { let i = 2; while (ids.has(`${id}-${i}`)) i++; id = `${id}-${i}`; }
   const decision = DECISIONS.includes(raw.decision) ? raw.decision : 'auto';
   const use = raw.use || (raw.reuse && typeof raw.reuse === 'string' ? raw.reuse : null);
+  const at = Array.isArray(raw.at) ? { x: raw.at[0], y: raw.at[1] } : raw;
+  const placed = at.x != null && at.y != null && Number.isFinite(+at.x) && Number.isFinite(+at.y) ? { x: Math.round(+at.x), y: Math.round(+at.y) } : {};
   return { component: { id, name, tier, layer, purpose, dependsOn: _list(raw.dependsOn || raw.depends_on || raw.depends), seams: _list(raw.seams),
-    decision: use && decision === 'auto' ? 'reuse' : decision, use: use || null, by: raw.by || 'james', updatedAt: Date.now() } };
+    decision: use && decision === 'auto' ? 'reuse' : decision, use: use || null, by: raw.by || 'james', updatedAt: Date.now(), ...placed } };
 }
 
 /** makeSession({ title, sections, workshopUuid, repoUuid, specPath, components }) -> { session } | { error } */
@@ -214,6 +216,15 @@ export function editComponent(session, e = {}) {
     return { session, removed: gone };
   }
   const c = session.components[i];
+  // §0.39.299 AR4 — placed on the canvas: a move is only a move (who wrote it does not change); null x/y unpins
+  const keys = Object.keys(e).filter(k => e[k] !== undefined && k !== 'id');
+  if (keys.length && keys.every(k => k === 'x' || k === 'y')) {
+    if (e.x == null || e.y == null) { delete c.x; delete c.y; }
+    else if (Number.isFinite(+e.x) && Number.isFinite(+e.y)) { c.x = Math.round(+e.x); c.y = Math.round(+e.y); }
+    else return { error: 'a position is two numbers' };
+    session.updatedAt = Date.now();
+    return { session, component: c, moved: true };
+  }
   const input = { ...c, ...Object.fromEntries(Object.entries(e).filter(([k, v]) => v !== undefined && k !== 'id')), id: c.id };
   if (e.decision === 'auto' || e.decision === 'new') { input.use = null; input.reuse = null; }
   const merged = normComponent(input, []);
@@ -315,7 +326,8 @@ export function archText(session, a, yaml) {
     levels: a.levels.map((ids, i) => ({ level: i, components: ids })),
     components: a.components.map(c => ({ id: c.id, name: c.name, tier: c.tier, layer: c.layer, purpose: c.purpose || '',
       depends_on: c.dependsOn || [], seams: c.seams || [], status: c.status, decision: c.decision,
-      ...(c.match ? { reuse: c.match.ref } : {}), ...(c.decision === 'reuse' && c.use ? { use: c.use } : {}) })),
+      ...(c.match ? { reuse: c.match.ref } : {}), ...(c.decision === 'reuse' && c.use ? { use: c.use } : {}),
+      ...(Number.isFinite(c.x) && Number.isFinite(c.y) ? { at: [c.x, c.y] } : {}) })),
     gaps: a.gaps.map(g => g.say),
   };
   return `# ${session.title} — architecture, laid out by the Architect (idearium)\n` + yaml.dump(doc, { lineWidth: -1, noRefs: true });
@@ -326,7 +338,7 @@ export function fromArchText(text, yaml) {
   let doc; try { doc = yaml.load(String(text || '')); } catch (_) { return []; }
   const list = doc && Array.isArray(doc.components) ? doc.components : [];
   return list.filter(c => c && (c.name || c.id)).map(c => ({ id: c.id, name: c.name || c.id, tier: c.tier, layer: c.layer, purpose: c.purpose,
-    dependsOn: c.depends_on || [], seams: c.seams || [], decision: c.decision || 'auto', use: c.use || null }));
+    dependsOn: c.depends_on || [], seams: c.seams || [], decision: c.decision || 'auto', use: c.use || null, ...(Array.isArray(c.at) ? { at: c.at } : {}) }));
 }
 
 // ── the agent proposes ────────────────────────────────────────────────────────────────────────────────────────────

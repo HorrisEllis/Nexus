@@ -16,6 +16,9 @@
 //   AR-06  the real router: a workshop → its architecture (one per spec) → save refused until the spec is in a repo →
 //          saved beside it; registry search; draft with a stand-in; a repo's saved architecture read back
 //   AR-07  the surfaces: routes + caps, the page served in the Void's look, the CLI, the workshop's ARCHITECT station
+//   AR-08  0.39.299 AR3–AR5 — the one canvas (stripped from MASTERMIND): bands bottom-up, every dependency drawn lower,
+//          the sweep cuts crossings, a pinned card keeps its place, a wide band wraps; a placed component keeps its place
+//          (a move changes nothing else, null unpins, the file keeps it); both Architects mount it; the Build tab is idearium's
 require('../../lib/test-sandbox.js').ensure();
 
 const assert = require('assert');
@@ -253,6 +256,59 @@ async function main() {
     assert.match(wpage, /architect\.html\?from=workshop:/, 'the workshop\'s ARCHITECT station opens the architect');
     const cli = fs.readFileSync(path.join(ROOT, 'idearium/cli/index.js'), 'utf8');
     for (const c of ['list', 'new', 'show', 'add', 'draft', 'accept', 'dismiss', 'save']) assert.match(cli, new RegExp(`async 'architect\\.${c}'`));
+  });
+
+  await test('AR-08', 'the one canvas: layout bottom-up, crossings cut, places kept; both Architects on it', () => {
+    require(path.join(ROOT, 'idearium/ui/js/arch-canvas.js'));
+    const C = globalThis.ArchCanvas;
+    const bands = [{ key: 'data' }, { key: 'engine' }, { key: 'service' }];
+    const nodes = [{ id: 'a', band: 'data' }, { id: 'b', band: 'data' }, { id: 'c', band: 'engine' }, { id: 'd', band: 'engine' }, { id: 'e', band: 'service' }];
+    const edges = [{ from: 'c', to: 'b' }, { from: 'd', to: 'a' }, { from: 'e', to: 'c' }, { from: 'e', to: 'd' }];
+    const L = C.layout(nodes, edges, bands);
+    assert.deepStrictEqual(L.bands.map(b => b.key), ['data', 'engine', 'service']);
+    assert.ok(L.bands[0].y > L.bands[1].y && L.bands[1].y > L.bands[2].y, 'bands stack bottom-up: data lowest');
+    for (const e of edges) assert.ok(L.pos[e.from].y < L.pos[e.to].y, `${e.from} sits above what it needs (${e.to})`);
+    const naive = { a: { x: 0, y: 2 }, b: { x: 1, y: 2 }, c: { x: 0, y: 1 }, d: { x: 1, y: 1 }, e: { x: 0, y: 0 } };   // by name: c above a, d above b — the wires cross
+    assert.ok(C.crossings(naive, edges) > 0 && C.crossings(L.pos, edges) === 0, `the sweep cuts the crossings (${C.crossings(naive, edges)} → ${C.crossings(L.pos, edges)})`);
+    const P = C.layout([...nodes.slice(0, 4), { id: 'e', band: 'service', x: 999, y: -50, pinned: true }], edges, bands);
+    assert.deepStrictEqual(P.pos.e, { x: 999, y: -50 }, 'a card placed by hand keeps its place');
+    const many = Array.from({ length: 20 }, (_, i) => ({ id: `n${i}`, band: 'data' }));
+    const W = C.layout(many, [], bands.slice(0, 1), { maxPerRow: 7 });
+    assert.strictEqual(new Set(Object.values(W.pos).map(p => p.y)).size, 3, 'a wide band wraps into rows');
+    assert.match(C.card({ title: 'Bed <store>', badge: 'NEW', chips: [{ t: '1 GAP', cls: 'gap' }] }), /Bed &lt;store&gt;.*ac-chip gap/s, 'the card escapes');
+    // places: a move is only a move; null unpins; the file keeps it
+    const { session: s } = AR.makeSession({ title: 'Placed', specPath: 'spec/placed.spec' });
+    add(s, { name: 'Bed store', layer: 'data' });
+    const before = s.components[0].by;
+    s.components[0].by = 'agent, accepted by james';
+    const hist = s.history.length;
+    assert.ok(AR.editComponent(s, { id: 'bed-store', x: 120.4, y: 300 }).moved);
+    assert.deepStrictEqual([s.components[0].x, s.components[0].y, s.components[0].by], [120, 300, 'agent, accepted by james'], 'who wrote it does not change');
+    assert.strictEqual(s.history.length, hist, 'a move is not history');
+    assert.ok(AR.editComponent(s, { id: 'bed-store', x: 'left', y: 3 }).error);
+    const back = AR.fromArchText(AR.archText(s, AR.analyse(s, build()), yaml), yaml);
+    assert.deepStrictEqual(back[0].at, [120, 300], 'the file keeps the place');
+    assert.strictEqual(AR.makeSession({ title: 'x', components: back }).session.components[0].x, 120);
+    AR.editComponent(s, { id: 'bed-store', x: null, y: null });
+    assert.ok(!('x' in s.components[0]), 'null unpins'); void before;
+    // the surfaces
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/architect.html'), 'utf8');
+    assert.match(page, /src="js\/arch-canvas\.js"/); assert.match(page, /href="css\/arch-canvas\.css"/); assert.match(page, /ArchCanvas\.mount\(\$\('map'\), \{\s*linkable: true/);
+    assert.match(page, /onLink: \(from, to\) => link\(from, to\)/, 'a handle dropped on a card is a dependency');
+    const idx = fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8');
+    assert.match(idx, /id="architect-frame"[^>]*data-src="architect\.html"/, 'Build › Architect is idearium\'s own page');
+    assert.ok(!/data-src="\.\.\/architect\/arch-builder\.html"/.test(idx), 'not the data-less arch-builder');
+    assert.match(idx, /<script src="js\/arch-canvas\.js"><\/script>/); assert.match(idx, /href="css\/arch-canvas\.css"/);
+    const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
+    assert.match(app, /ARCHREG\.canvas = ArchCanvas\.mount\(document\.getElementById\('ra-map'\)/, 'the repo tab mounts the same canvas');
+    assert.ok(!/function _archSvg\(/.test(app), 'the column SVG is gone');
+    const canvas = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/arch-canvas.js'), 'utf8');
+    assert.match(canvas, /Stripped from MASTERMIND's nexus-canvas\.js/);
+    const css = fs.readFileSync(path.join(ROOT, 'idearium/ui/css/arch-canvas.css'), 'utf8');
+    assert.ok(!/^\s*(html|body)\b/m.test(css), 'scoped: nothing page-wide, so the repo tab cannot leak into idearium');
+    for (const f of [page, idx]) { const tips = [...f.matchAll(/class="ax[^"]*"[^>]*title="([^"$]*)"/g)].map(m => m[1]).filter(t => /[a-z]/.test(t)); assert.deepStrictEqual(tips, [], 'no lowercase tooltip on the canvas shell'); }
+    const tipsApp = [...app.slice(app.indexOf('const ARCHREG')).slice(0, 20000).matchAll(/title="([^"$]*)"/g)].map(m => m[1]).filter(t => /[a-z]/.test(t));
+    assert.deepStrictEqual(tipsApp, [], 'no lowercase tooltip in the repo tab');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);
