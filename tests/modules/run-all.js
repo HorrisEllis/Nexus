@@ -194,6 +194,7 @@ const SUITES = [
   'clear-glass-autofill.test.js',
   'clear-glass-gig.test.js',          // 0.39.301 the Fiverr gig writer
   'test-proof-run.test.js',           // 0.39.302 PR1 the delivery checker
+  'test-phase-proof.test.js',         // 0.39.303 PH1 phase runs end in proof
   'clear-glass-library-ui.test.js',
   'clear-glass-screen-qa.test.js',
   'clear-glass-screen-qa-ui.test.js',

@@ -13,6 +13,17 @@ module.exports = Object.freeze({
     payloadShape: ['repoUuid', 'verdict', 'met', 'total', 'modes', 'report'],
     severity: 'info',
   },
+  // ── idearium/api/index.js _provePhase — a phase run ends in a proof run (0.39.303 PH1) ─────────────────────
+  IDEARIUM_PHASE_PROVEN: {
+    description: 'A phase run met every condition its map declares for it; the proof report is in the target repo.',
+    payloadShape: ['runId', 'buildRunId', 'repoUuid', 'targetRepo', 'map', 'phase', 'attempt', 'met', 'total', 'report'],
+    severity: 'info',
+  },
+  IDEARIUM_PHASE_ATTEMPT_UNMET: {
+    description: 'A phase attempt left conditions unmet; their evidence and causes go back to the agent as the next attempt, or the run ends unproven.',
+    payloadShape: ['runId', 'buildRunId', 'repoUuid', 'targetRepo', 'map', 'phase', 'attempt', 'met', 'total', 'modes'],
+    severity: 'notable',
+  },
 });
 
 // Validated against the shared ET1 shape on load, as clear-glass's is — a malformed entry fails loudly here.

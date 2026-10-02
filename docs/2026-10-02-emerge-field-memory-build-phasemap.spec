@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.0
+    version:  1.7.1
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -884,7 +884,7 @@ spec:
       layer: service
       systems: [idearium]
       value: { score: 5, cost: S, for: [compounding], why: "the engine: Ollama builds Nexus piece by piece and nothing enters without passing its own proof" }
-      status: OPEN — next to build
+      status: DONE (0.39.303)
       depends_on: [PR1_proof_run_the_delivery_checker]
       files: [idearium/api/index.js, idearium/repo/proof-run.js, lib/chunk-build-orchestrator.js, lib/repo-agent.js]
       does: >-
@@ -1113,3 +1113,11 @@ spec:
 # wiring from a phase's row, tests from conditions, composition, crystals), CL1 (the Component Lab), CX0 carried here,
 # E18 (the judge never edits the judge) and E19 (per-project graphs in Idearium, learned memory in cortex, dynamics in
 # intelligence).
+
+## ADDENDUM 2026-10-02 — 1.7.1, PH1 built (0.39.303)
+# A phase run's chain is now draft → review (when drafted locally) → PROOF: the phase's own conditions (its map's
+# `conditions:`), run by the delivery checker. Met → proven. Unmet → feedback (each unmet promise, what happened, its
+# likely cause) to the same agent in a fresh chat, bounded by repos.proof_attempts (default 2), then unproven. No
+# conditions → no-proof, said. So a phase is only proven when it declares checkable conditions — the next step for the
+# maps themselves is to give their phases `conditions:` (GG1 can generate the wiring ones). Proof:
+# tests/modules/test-phase-proof.test.js 6/6 through the real repo layer with a stand-in agent.

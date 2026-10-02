@@ -313,3 +313,28 @@ export async function readLastProof(repoDir, { reader = null } = {}) {
     return text ? JSON.parse(text) : null;
   } catch (_) { return null; }
 }
+
+/**
+ * conditionsFromPhase(mapText, phaseKey) → { conditions, source } — PH1: a phase states its own end state in its map as
+ * `conditions:` (the same { says, check } shape). A map that does not parse as YAML, or a phase without conditions,
+ * gives none — and the caller says so; nothing is invented from the phase's prose.
+ */
+export function conditionsFromPhase(mapText, phaseKey) {
+  let doc = null;
+  try { doc = require('js-yaml').load(String(mapText || '').split(/\n## ADDENDUM/)[0]); } catch (e) { return { conditions: [], source: `the map does not parse as YAML (${e.message.split('\n')[0]})` }; }
+  const phases = doc && doc.spec && doc.spec.phases || doc && doc.phases || {};
+  const p = phases[phaseKey] || Object.entries(phases).find(([k]) => k.split('_')[0] === String(phaseKey).split('_')[0])?.[1];
+  if (!p) return { conditions: [], source: `phase ${phaseKey} not found in the map` };
+  if (!Array.isArray(p.conditions) || !p.conditions.length) return { conditions: [], source: `phase ${phaseKey} declares no conditions` };
+  return { conditions: p.conditions, source: `phase ${phaseKey}'s conditions` };
+}
+
+/** feedbackMessage(run) → the next attempt's feedback: every unmet promise with what happened and its likely cause */
+export function feedbackMessage(run) {
+  const unmet = (run && run.results || []).filter(r => !r.met);
+  if (!unmet.length) return '';
+  return [
+    `THE PROOF RUN CHECKED YOUR LAST ATTEMPT: ${run.met} of ${run.total} conditions met. These are NOT met yet — fix exactly these, change nothing that already passes:`,
+    ...unmet.map(r => `- ${r.says}\n  what happened: ${r.evidence}\n  likely cause: ${r.cause}${r.output ? `\n  output (end): ${String(r.output).trim().slice(-600)}` : ''}`),
+  ].join('\n');
+}
