@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -39,7 +39,9 @@ spec:
       and scalable. like cos i want to be a tool box for this also. like i feel like cos and idearium are our
       buildteams" · "guardian is the source of truth for the clearglass agents. make sure each addition is correctly
       mapped to each system, relevant nodes, routes and cli nodes are added, maps ar eupdated, and settings are
-      expanded if applicaple."
+      expanded if applicaple." · "i want to get you to work from inside nexus. that would ne extremelty high
+      leverage. then you could use introspect, okay yeah, we need that, then you could do way more than this. also
+      hooking the multiple accounts into the agents/providers and settings in idearium."
       The ideas, the direction and the calls are James's. This map lays them out bottom-up against what exists.
 
   # ── What exists — read, not assumed ───────────────────────────────────────────────────────────────────────────
@@ -125,6 +127,19 @@ spec:
       desktops). Idearium: the pipeline, the repo agent, spec-engine, emerge's compiler. lib/contract-queue.js,
       lib/hat-forge.js (hats: agent + persona + tool scope + allowed intents), lib/tool-forge.js. Nothing yet takes a
       client's job from brief to delivered, proven, isolated work.
+    claude_code_and_nexus: >-
+      orchestrator/lib/mcp-stdio.js runs Nexus's MCP server over stdio "so Claude Code can connect"; orchestrator/lib/
+      mcp-server.js exposes 17 tools (nexus_status, nexus_gaps, nexus_cfr, nexus_rca, nexus_read_spec, nexus_build,
+      nexus_copilot…) — no introspect, no loom, no recall. No .mcp.json in the repo, so no Claude Code session opened
+      on it loads them (.claude/ holds only settings.local.json). lib/introspect.js (the co-pilot examines its own last
+      answer, on lib/reflection.js) is reached only through copilot's /api/introspect. idearium/repo/work-surface.js is
+      the work surface James asked to be "identicle" to Claude Code's.
+    accounts: >-
+      Clear Glass owns accounts: clear-glass/src/accounts/login-portal.js (a sign-in per account, an accountId each,
+      cookies in the sealed vault), GET :7702/accounts/resolve, cg.accounts.* capability and command nodes;
+      guardian/lib/cg-account-authority.js asks Clear Glass; loom/maps/accounts-authority-map.js wires it. Idearium is
+      account-blind: lib/economy learns limits, latency and success per PROVIDER, the router picks a provider, the repo
+      agent routes per provider; settings.html has no accounts section.
     spec_and_build: >-
       idearium/spec-engine/blocks.yaml — 11 blocks, a default agent each; block `events` ("bus events emitted, bus
       events consumed, payload shapes") is read by nothing after it is written. 10 templates in idearium/spec-engine/
@@ -549,10 +564,57 @@ spec:
         "settings are expanded if applicaple". Idearium's settings gain, each section only once its phase exists:
         EMERGE (the seed policy; the default build logic LINEAR | CAUSAL; crystallization's N; budgets), MEMORY & SEARCH
         (the recall lanes and their weights; field-memory sweeps; contradictions shown; MR10 on/off), ECONOMY (tokenizer
-        method per provider; per-job budgets), SHADOW (shadow layer on/off per repo), BUILD TEAMS (hats per role; COS
+        method per provider; per-job budgets), SHADOW (shadow layer on/off per repo), AGENTS & ACCOUNTS (AC1, IN1, IN2), BUILD TEAMS (hats per role; COS
         toolbox), CLIENT JOBS (kits; isolation; delivery checklist). Guardian's settings own the agent facts (GA1);
         Clear Glass shows them read-only with a link to Guardian. Every setting has its route and CLI verb (E12).
       proof: "every setting round-trips through UI, route and CLI; a setting for an unbuilt phase does not appear"
+
+    IN1_nexus_as_claude_codes_toolbox:
+      layer: service
+      status: OPEN
+      depends_on: [EM0_ground, GA1_guardian_source_of_truth]
+      files: [.mcp.json, orchestrator/lib/mcp-server.js, orchestrator/lib/mcp-stdio.js, lib/introspect.js, lib/reflection.js]
+      does: >-
+        "i want to get you to work from inside nexus … then you could use introspect". Claude Code → Nexus. A .mcp.json
+        at the repo root registers Nexus's MCP server, so every Claude Code session opened on this repo loads Nexus's
+        tools (a cloud session asks to approve project servers first). The server gains what a builder needs, each a thin
+        call onto what exists: introspect + reflection (examine the last answer, score the decision), loom (find a
+        component, its hooks and wires, the impact of changing it), the recall triad and context table (MR1, once built),
+        gaps and gap search, CFR trace and rewind, the field and its lenses, settings get, jobs. Every tool degrades
+        honestly when its service is down ("cfr not reachable on :<port>"), never a fake answer. The session's own work
+        is recorded into Nexus as Observations with cause — Claude Code becomes one more agent in the field, audited by
+        the same constraints.
+      proof: "a Claude Code session opened on the repo lists the Nexus tools; introspect on a fixture answer returns its reflection score; loom lookup of lib/component-store.js returns its real wires; with services stopped each tool says which one is down"
+
+    IN2_claude_code_inside_nexus:
+      layer: service
+      status: OPEN
+      depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
+      files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
+      does: >-
+        Nexus → Claude Code. A provider 'claude-code' — headless Claude Code (or the Agent SDK) on James's own machine,
+        under his own signed-in account — registered in Guardian as a provider node (E13), priced by the economy (EC6),
+        chosen by the router like any other. The repo agent and the build teams (BT1) hand it a repo, its CLAUDE.md, the
+        contract and the context table; it works in the shadow layer (SH1), and what it returns is an Observation that
+        must pass the constraints before it reaches the real tree (E1). The work surface shows its session live. Big,
+        cross-file work goes here; small pieces stay on local models.
+      proof: "a fixture contract dispatched to claude-code returns changes in the shadow layer only; failing changes never reach the tree; its cost lands in the economy ledger under the account that ran it"
+
+    AC1_accounts_into_agents:
+      layer: library
+      status: OPEN
+      depends_on: [GA1_guardian_source_of_truth, EC6_economy_and_the_tokenizer]
+      files: [guardian/lib/cg-account-authority.js, lib/economy/policy.js, lib/economy/ledger.js, lib/economy/router.js, lib/economy/gate.js, lib/repo-agent.js, idearium/ui/settings.html]
+      does: >-
+        "hooking the multiple accounts into the agents/providers and settings in idearium". The unit becomes PROVIDER ×
+        ACCOUNT. Clear Glass keeps owning sign-in and the vaults; Guardian publishes each account as a node (E13). The
+        economy learns limits, latency and success per account; the router chooses a provider and an account; the gate
+        holds each account to its own limits. Defaults per job type, per repo, per client job (FV1 — a client's work can
+        run on the account James picks for it). Idearium's settings gain AGENTS & ACCOUNTS: the accounts read from
+        Guardian, read-only there, with their learned limits and spend, and the defaults editable. The gate never
+        switches accounts to get around a provider's limit on its own — a fallback account is only ever James's
+        explicit setting, and providers' terms on multiple accounts are his to follow.
+      proof: "two accounts on one provider learn separate limits; a job pinned to an account runs only on it; the settings section lists Guardian's accounts and edits a default through route and CLI"
 
   # ── Wiring — E12: each phase into each system it touches. A phase is DONE only when its row is true. ────────────
   # nodes use the lib/node-export.js envelope and Guardian's nodes/<type>/<id>.<type> layout; routes carry CAPS and get a
@@ -587,6 +649,9 @@ spec:
     GA1: { systems: [guardian, clear-glass], nodes: "every provider, userscript and hat a Guardian node", routes: "guardian /api/providers (hash-stamped), /api/agents", cli: "guardian agents list|verify", loom: "accounts-authority-map.js + copilot-capability-map.js", settings: "Guardian owns them; Clear Glass shows read-only" }
     BT1: { systems: [cos, idearium, guardian, lib], nodes: ".capability per COS tool; hats per role", routes: "/api/teams, cos /api/tools", cli: "cos tools list|run, idearium teams", loom: "cos-testenv-map.js + one-idearium-map.js", settings: "ST1 BUILD TEAMS" }
     FV1: { systems: [idearium, cos, lib/economy, guardian], nodes: "nexstore types job, contract, delivery, proof_report", routes: "/api/jobs, /api/jobs/:id/{contract,quote,build,deliver,revise}", cli: "idearium jobs new|quote|build|deliver|revise", loom: "one-idearium-map.js + cos-testenv-map.js", settings: "ST1 CLIENT JOBS" }
+    IN1: { systems: [orchestrator, copilot, loom, intelligence, idearium], nodes: "one .capability + .command per MCP tool (orchestrator.mcp.<tool>)", routes: "MCP over stdio; each tool onto its existing route", cli: "nexus mcp list|call <tool>", loom: "copilot-capability-map.js (MCP tool → module wires)", settings: "ST1 AGENTS & ACCOUNTS (which tools Claude Code may call)" }
+    IN2: { systems: [guardian, lib/economy, idearium, cos], nodes: "guardian provider node claude-code; .capability provider.claude-code.run", routes: "/api/repos/:uuid/agent/run (provider claude-code)", cli: "idearium repo run <uuid> --provider claude-code", loom: "economy-map.js + one-idearium-map.js", settings: "ST1 AGENTS & ACCOUNTS" }
+    AC1: { systems: [clear-glass, guardian, lib/economy, idearium], nodes: "guardian account nodes (from Clear Glass's authority); nexstore type account_usage", routes: "guardian /api/accounts, idearium /api/settings/accounts", cli: "guardian accounts list, idearium settings set accounts.default.<jobType>", loom: "accounts-authority-map.js + economy-map.js", settings: "ST1 AGENTS & ACCOUNTS" }
     ST1: { systems: [idearium, guardian, clear-glass], routes: "/api/settings/<section>", cli: "idearium settings get|set <section>.<key>", settings: "is the settings phase" }
 
   # ── Carried forward, so nothing from this conversation is forgotten ───────────────────────────────────────────
@@ -609,13 +674,15 @@ spec:
     - "FV1: which gig types first, for the kits?"
     - "EC6: which local models to read tokenizers from first (the ones Ollama runs here)?"
 
-  build_order: [EM0, GA1, EM1, ST1, EC6, EM2, CF1, SH1, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, BT1, MR2, MR6, MR4, MR7, MR8, FV1, MR9, MR10, MR11, CB4, LN1]
+  build_order: [EM0, GA1, IN1, EM1, ST1, EC6, AC1, EM2, CF1, SH1, IN2, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, BT1, MR2, MR6, MR4, MR7, MR8, FV1, MR9, MR10, MR11, CB4, LN1]
   # Why this order: the deterministic core and his own engine first (EM1, EM2); CFR on RFR2's discipline and the one
   # field on top (CF1, RF1); one write path (OT1); then the recall triad, which improves every agent the day it lands,
   # and the levels it packs to (MR1, MR5); the build logic, synthesis and the causal block (CB1–CB3); the workshop, gap
   # search and the repo chat that use them (WS6, MR3, RC1); then everything that compounds (MR2–MR11, CB4) and the
   # canvas that shows it (LN1). Guardian becomes the agents' one truth early (GA1) because every later phase dispatches
-  # through it; settings (ST1) start with EMERGE and grow one section per phase; the tokenizer (EC6) makes BUDGET real
+  # through it; IN1 right after it, because Claude Code working from inside Nexus speeds every phase that follows;
+  # accounts (AC1) once the tokenizer prices per account; Claude Code as a provider (IN2) once the shadow layer can hold
+  # its work; settings (ST1) start with EMERGE and grow one section per phase; the tokenizer (EC6) makes BUDGET real
   # before anything is priced; shadow space (SH1) before any model writes code; the build teams (BT1) and client jobs
   # (FV1) once the chat, the build logic and crystallization exist to make them cheap and safe.
 
@@ -637,3 +704,12 @@ spec:
 # built: nodes, routes + .command nodes, CLI, loom with real wires, settings, atlas) and E13 (Guardian's truth), and a
 # wiring row per phase. Found while mapping: clear-glass/src/providers/registry.js "mirrors guardian.spec
 # ncp_providers exactly" by hand; guardian.spec exists twice (docs/ and guardian/spec/).
+
+## ADDENDUM 2026-10-02 — 1.2.0
+# James: "i want to get you to work from inside nexus … then you could use introspect" · "also hooking the multiple
+# accounts into the agents/providers and settings in idearium." Added IN1 (Claude Code → Nexus: a root .mcp.json loads
+# Nexus's MCP server — which exists, 17 tools, but nothing registered it — extended with introspect, loom, recall,
+# gaps, CFR, field), IN2 (Nexus → Claude Code: a provider on James's own account, working in the shadow layer, its
+# output an Observation), AC1 (provider × account as the unit: per-account limits and spend, defaults per job, an
+# AGENTS & ACCOUNTS settings section; no automatic account switching to get around a limit). Found while mapping: Clear
+# Glass owns accounts and Guardian already asks it, but Idearium and the economy are account-blind.
