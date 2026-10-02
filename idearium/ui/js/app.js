@@ -4026,7 +4026,7 @@ async function _installPoll() {
 //                     each ticked from provision.js's own progress lines
 //   5 done            the run menu reloads with "Run all tests in a VM" available
 let _vmSetupTimer = null;
-const _vmWiz = { open: false, st: null, node: 'lts', extras: [] };
+const _vmWiz = { open: false, st: null, node: 'lts', extras: ['desktop'] };   // §0.39.293 DK1 — the repo desktop needs it: on by default
 const _VM_DISMISS_KEY = 'idearium.vmSetup.notNow';
 function _vmNotNow() { try { return localStorage.getItem(_VM_DISMISS_KEY) === '1'; } catch (_) { return false; } }
 function _vmSetNotNow(v) { try { v ? localStorage.setItem(_VM_DISMISS_KEY, '1') : localStorage.removeItem(_VM_DISMISS_KEY); } catch (_) {} }
@@ -4106,6 +4106,7 @@ function _vmWizardHtml() {
   const s3 = running || done ? `Node ${escapeHtml(_vmWiz.node)}${_vmWiz.extras.length ? ' + ' + escapeHtml(_vmWiz.extras.join(', ')) : ''}, Python 3, git, build tools`
     : `Always included: Python 3, git, build tools, the QEMU guest agent. Node version:
       <select onchange="_vmWiz.node=this.value">${['lts', '22', '20'].map(v => `<option value="${v}" ${_vmWiz.node === v ? 'selected' : ''}>${v === 'lts' ? 'latest LTS' : 'Node ' + v}</option>`).join('')}</select>
+      <div style="margin-top:3px"><label><input type="checkbox" class="vm-setup-extra" value="desktop" ${_vmWiz.extras.includes('desktop') ? 'checked' : ''} onchange="_vmWiz.extras=[...document.querySelectorAll('.vm-setup-extra:checked')].map(e=>e.value)"> <b>desktop</b> — xfce, a browser and an editor; the repo's <b>Desktop</b> button needs it (login from Settings → Desktop, default nexus / nexus)</label></div>
       <div style="margin-top:3px">Extra languages for repos that need them: ${['go', 'ruby', 'php', 'rust'].map(x => `<label style="margin-right:8px"><input type="checkbox" class="vm-setup-extra" value="${x}" ${_vmWiz.extras.includes(x) ? 'checked' : ''} onchange="_vmWiz.extras=[...document.querySelectorAll('.vm-setup-extra:checked')].map(e=>e.value)"> ${x}</label>`).join('')}</div>
       <div style="opacity:.7;margin-top:3px">Needs ~350 MB download and ~3 GB of disk${host.home ? ` in <code>${escapeHtml(host.home)}</code>` : ''}. You can run the setup again later to add languages.</div>`;
   h += step(3, running || done ? 'ok' : qemuOk ? 'now' : 'todo', 'Choose what goes in the VM', s3);
@@ -4143,8 +4144,7 @@ async function _vmSetupPoll(once) {
   else if (was === 'running' && st.state === 'done') toast('the test VM is ready', 'ok');
 }
 async function _vmSetupStart() {
-  const extras = [...document.querySelectorAll('.vm-setup-extra:checked')].map(x => x.value);
-  if (extras.length) _vmWiz.extras = extras;
+  if (document.querySelector('.vm-setup-extra')) _vmWiz.extras = [...document.querySelectorAll('.vm-setup-extra:checked')].map(x => x.value);
   try { await api('/api/cos/testenv/setup', { method: 'POST', body: JSON.stringify({ installQemu: false, extras: _vmWiz.extras, node: _vmWiz.node }) }, 20000); }
   catch (e) { toast(`VM setup did not start: ${e.message}`, 'err'); return; }
   _vmWiz.open = true;

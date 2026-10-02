@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.8.0
+    version:  1.8.1
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -290,6 +290,25 @@ spec:
         Routing treats it as one more provider (fallback chain, breaker, learned scores).
       proof: "a stub CLI: a phase job runs in the workspace, its diff goes through the gate, the hop is on the chunk"
 
+    DK1_desktop_image_and_login:
+      layer: library
+      status: DONE (0.39.293)
+      depends_on: []
+      files: [cos/testenv/setup-job.js, cos/workspace/index.js, idearium/ui/js/app.js, idearium/api/index.js]
+      does: >-
+        James (verbatim), 2026-10-02: "i mean that i cant login to my desktop envirement in idearium with the default
+        credientials, not sure if its a upstream problem". Read, not assumed: not upstream. setup-job.js let only
+        go|ruby|php|rust through and the wizard never offered the desktop, so the image idearium builds had no xfce and
+        no desktop account — the desktop booted to a text console; nexus/nexus had no account to log in to; the
+        guest-agent password set failed into "(not applied)". And a rebuilt base left every repo's desktop.qcow2
+        overlaid on bytes it was not made from (a corrupt disk).
+      proof: "the setup passes --with desktop; a start on an image without it is refused with the fix and boots nothing; an overlay made over an older base is archived and remade; a branch never overlays a stale original"
+      built: >-
+        0.39.293 — setup-job.js allows desktop; the wizard's desktop box, ticked by default; startDesktop reads the base
+        manifest's extras (NO_DESKTOP_IN_IMAGE → 409 with the fix), stamps each overlay (desktop.json: the base's
+        createdAt + user-data hash), archives a stale one as desktop.stale-<time>.qcow2 (§0.3), and branches from an
+        original only when it was made over the same base. test-cos-workspace 17/17 (WS-15),
+        test-cos-testenv-any-repo 63/63.
     CP1_copilot_drives_idearium_and_talks_to_its_agents:
       layer: interface
       status: OPEN — mapped 2026-10-02
@@ -689,6 +708,10 @@ spec:
 
   decisions_answered_by_james_2026_10_01:
     - >-
+      CO1 — "then we need to clear out the original cos." answered 2026-10-02: "i mean that i cant login to my desktop
+      envirement in idearium with the default credientials, not sure if its a upstream problem" — nothing to clear;
+      it is DK1 (built, 0.39.293).
+    - >-
       AG1 + CI1 — James: "yeah, never bypass." The coding-agent provider never writes past the CI1 gate; every write is
       a proposal through the step gates.
     - >-
@@ -707,11 +730,7 @@ spec:
       especially to test." Run, shell and environments live in the Sync & CI tab; SSH keys in the Clear Glass vault.
   decisions_waiting_on_james:
     - "PF6 — the first-sync delay (proposed: after the first repo list, or 60 s, whichever comes first)."
-    - >-
-      CO1 — James, 2026-10-02: "then we need to clear out the original cos." Not acted on: which COS is meant is his
-      call (the COS compartments the older repos made, the COS test VM image, the COS branches proof runs leave, or the
-      original cos/ module beside lib/cos-*). Whatever it is, it is archived (§0.3), never deleted, and the archive is
-      listed back to him first.
+
 
 ## ADDENDUM 2026-10-01 — PF1–PF5 built (0.39.288)
 # Measured on the real tree (sandbox store): core update with an unchanged file set — spec 4.3 s → 0.21 s, longest
@@ -764,3 +783,8 @@ spec:
 # to-repo, the library page's → pipeline. CP1: James — "i want copilot to be able to help with idearium. communicate
 # with the agents," mapped from what copilot reaches today and what it does not. CO1: "then we need to clear out the
 # original cos." waits on James saying which COS; archive, never delete.
+
+## ADDENDUM 2026-10-02 — 1.8.1, DK1 built (0.39.293)
+# James: "i mean that i cant login to my desktop envirement in idearium with the default credientials, not sure if its
+# a upstream problem". Not upstream — idearium's VM setup dropped the desktop option. Fixed, the image is checked before
+# a desktop boots, and overlays are tied to their base (stale ones archived). CO1 answered: it was this.

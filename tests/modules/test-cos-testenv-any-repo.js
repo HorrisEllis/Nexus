@@ -192,13 +192,13 @@ async function main() {
   const SJ = require(path.join(ROOT, 'cos', 'testenv', 'setup-job.js'));
   const fakeProv = path.join(tmp, 'fake-provision.js');
   fs.writeFileSync(fakeProv, `const a=process.argv.slice(2);console.log(JSON.stringify({msg:'args '+a.join(' ')}));console.log(JSON.stringify({msg:'working'}));console.log(JSON.stringify({result:{ok:true,image:'/x/base.qcow2'}}));`);
-  const s1 = SJ.start({ installQemu: true, extras: ['go', 'evil;rm'], node: '22', _script: fakeProv });
+  const s1 = SJ.start({ installQemu: true, extras: ['go', 'desktop', 'evil;rm'], node: '22', _script: fakeProv });
   check('setup job: starts in the background', s1.state === 'running');
   check('setup job: a second start while running returns the running job', SJ.start({ _script: fakeProv }).startedAt === s1.startedAt);
   for (let i = 0; i < 50 && SJ.status().state === 'running'; i++) await new Promise(r => setTimeout(r, 100));
   const s2 = SJ.status();
   check('setup job: finishes with the result, and the log carries each progress line', s2.state === 'done' && s2.result.ok && s2.log.some(e => e.msg === 'working'));
-  check('setup job: only known options reach provision.js (no injected extras)', s2.log.some(e => /args --json --install-qemu --with go --node 22$/.test(e.msg)), JSON.stringify(s2.log[0]));
+  check('setup job: only known options reach provision.js (no injected extras; 0.39.293 DK1 desktop is one of them)', s2.log.some(e => /args --json --install-qemu --with go,desktop --node 22$/.test(e.msg)), JSON.stringify(s2.log[0]));
 
   // ── Idearium API wiring ──
   const API = fs.readFileSync(path.join(ROOT, 'idearium', 'api', 'index.js'), 'utf8');

@@ -33,7 +33,7 @@ const path = require('path');
 const { execFileSync, execFile } = require('child_process');
 
 const MODULE_ID = 'nexus.cos.workspace';
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';   // 0.39.293 DK1 — refuses an image without the desktop; overlays stamped with their base, stale ones archived
 const BRANCH_PREFIX = 'nexus/';
 
 // §0.39.280 BS14 — James's log: "git worktree failed: warning: in the working copy of 'atlas.json', LF will be replaced by
@@ -231,6 +231,32 @@ const DESKTOP_DIR = '.cos-desktop';
 
 function desktopDisk(stateRoot) { return path.join(stateRoot, DESKTOP_DIR, 'desktop.qcow2'); }
 
+// §0.39.293 DK1 — which base image an overlay was made over. Rebuilding the base (provision.js keeps the old one as
+// base.prev.qcow2) left every repo's desktop.qcow2 pointing at a DIFFERENT image under the same path: an overlay over
+// bytes it was not made from is a corrupt disk. Each overlay now carries a stamp (desktop.json) naming its base.
+function _baseIdentity(base, manifest) {
+  if (manifest && (manifest.createdAt || manifest.userDataSha256)) return `manifest:${manifest.createdAt || ''}:${manifest.userDataSha256 || ''}`;
+  try { const st = fs.statSync(base); return `file:${path.resolve(base)}:${st.size}:${Math.floor(st.mtimeMs)}`; } catch (_) { return null; }
+}
+function _stampPath(disk) { return path.join(path.dirname(disk), path.basename(disk, '.qcow2') + '.json'); }
+function _writeOverlayStamp(disk, stamp) { try { fs.writeFileSync(_stampPath(disk), JSON.stringify(stamp, null, 2)); } catch (_) {} }
+/** an overlay is current when its stamp names this base; a disk from before the stamps counts as current only when
+ *  it is newer than the base's manifest (it was made over this base) */
+function _overlayCurrent(disk, baseId) {
+  if (!baseId) return true;   // nothing to compare against: leave it as it is
+  try { const st = JSON.parse(fs.readFileSync(_stampPath(disk), 'utf8')); return st.baseId === baseId; } catch (_) {}
+  const created = baseId.startsWith('manifest:') ? Date.parse(baseId.slice(9, baseId.lastIndexOf(':'))) : NaN;
+  try { return Number.isFinite(created) ? fs.statSync(disk).mtimeMs >= created : true; } catch (_) { return true; }
+}
+/** §0.3 — a stale overlay is kept beside, renamed with the time, never deleted */
+function _archiveOverlay(disk) {
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const to = path.join(path.dirname(disk), `desktop.stale-${stamp}.qcow2`);
+  try { fs.renameSync(disk, to); } catch (e) { return { error: e.message }; }
+  try { if (fs.existsSync(_stampPath(disk))) fs.renameSync(_stampPath(disk), to.replace(/\.qcow2$/, '.json')); } catch (_) {}
+  return { to };
+}
+
 /**
  * startDesktop({ compartmentId, name, workDir, stateRoot, originStateRoot, baseImage, ramMB, cpus, network })
  *   -> { ok, state: 'booting'|'running', compartmentId, disk, backing, ports, reused } | { ok:false, error }
@@ -247,14 +273,27 @@ function startDesktop({ compartmentId, name = 'repo', workDir, stateRoot, origin
   const spawn = _spawn || require('child_process').spawn;
   const root = stateRoot || workDir;
   if (!root) return { ok: false, error: 'stateRoot (or workDir) required' };
-  let base = baseImage;
-  if (!base) { try { const b = (_host || require('../testenv/host.js')).base(); base = b.image; } catch (_) {} }
+  let base = baseImage, manifest = null;
+  if (!base) { try { const b = (_host || require('../testenv/host.js')).base(); base = b.image; manifest = b.manifest || null; } catch (_) {} }
+  // §0.39.293 DK1 — James: "i cant login to my desktop envirement in idearium with the default credientials". An
+  // image built without the desktop has no xfce and no desktop account: the VM booted to a text console where the
+  // login the viewer showed could not work. Said here, with the fix, instead of booting a VM nobody can use.
+  if (manifest && Array.isArray(manifest.extras) && !manifest.extras.includes('desktop')) {
+    return { ok: false, code: 'NO_DESKTOP_IN_IMAGE', error: `the VM image was built without the desktop (it has: ${manifest.extras.join(', ') || 'no extras'}) — `
+      + `there is no desktop or desktop account in it. Rebuild it with the desktop: the run menu → set up the test VM (desktop is ticked), or: node cos/testenv/provision.js --with desktop` };
+  }
+  const baseId = _baseIdentity(base, manifest);
   const originDisk = originStateRoot ? desktopDisk(originStateRoot) : null;
-  const backing = originDisk && fs.existsSync(originDisk) ? originDisk : base;
+  // an overlay only means anything over the exact image it was made from: an origin disk made over an older base is
+  // not branched from (the base is used instead), and this repo's own stale disk is archived and made again (§0.3)
+  const originOk = originDisk && fs.existsSync(originDisk) && _overlayCurrent(originDisk, baseId);
+  const backing = originOk ? originDisk : base;
   if (!backing) return { ok: false, error: 'no base image — make one with: node cos/testenv/provision.js --with desktop' };
   const disk = desktopDisk(root);
+  const archived = fs.existsSync(disk) && !_overlayCurrent(disk, baseId) ? _archiveOverlay(disk) : null;
   const bd = branchDisk({ backing, dest: disk, runImg: _runImg });
   if (!bd.ok) return bd;
+  if (!bd.reused) _writeOverlayStamp(disk, { baseId, backing: path.resolve(backing), madeAt: new Date().toISOString() });
   const stateDir = path.dirname(disk);
   const share = process.platform === 'linux' && workDir ? '9p' : 'disk';
   let shareDisk = null;
@@ -330,7 +369,7 @@ function startDesktop({ compartmentId, name = 'repo', workDir, stateRoot, origin
       try { agent.close(); } catch (_) {}
     }).catch((e) => { sess.repoIn = 'failed'; sess.repoError = e.message; });
   }
-  return { ok: true, reused: false, ...desktopStatus(compartmentId) };
+  return { ok: true, reused: false, ...desktopStatus(compartmentId), ...(archived ? { staleDiskArchived: archived.to || null, staleDiskError: archived.error || null } : {}) };
 }
 
 /** desktopStatus(compartmentId) -> { state: 'none'|'booting'|'running'|'stopped', ports, disk, branchedFrom, repoIn, … } */

@@ -3398,7 +3398,7 @@ async function handle(req, res, route, query, body) {
         ...(() => { const v = (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } };   // settings console → desktop.*
           return { ramMB: body.ramMB || v('desktop.ram_mb'), cpus: body.cpus || v('desktop.cpus'), network: body.network || v('desktop.network'),
             login: { user: v('desktop.user') || 'nexus', password: v('desktop.password') || 'nexus' } }; })() });   // §0.39.282 N20
-      if (!r.ok) return err(res, 502, r.error || 'desktop failed', r);
+      if (!r.ok) return err(res, r.code === 'NO_DESKTOP_IN_IMAGE' ? 409 : 502, r.error || 'desktop failed', r);   // §0.39.293 DK1
       const p = r.ports || {};
       return ok(res, { ...r, repoUuid: repo.uuid, branchOf: repo.branchOf || null, branch: repo.branch || null,
         viewer: p.wsPort ? `/desktop.html?port=${p.wsPort}&title=${encodeURIComponent(repo.name)}&repo=${encodeURIComponent(repo.uuid)}` : null });

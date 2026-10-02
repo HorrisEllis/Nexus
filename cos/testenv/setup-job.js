@@ -39,7 +39,9 @@ function start({ installQemu = false, extras = [], node = null, login = null, _s
   if (job.state === 'running') return status();
   const args = [_script, '--json'];
   if (installQemu) args.push('--install-qemu');
-  const ex = (extras || []).filter(e => /^(go|ruby|php|rust)$/.test(e));
+  // §0.39.293 DK1 — 'desktop' was filtered out here, so an image built from idearium's setup never had xfce or the
+  // desktop account: the repo desktop booted to a text console where nexus/nexus could not log in (no such user).
+  const ex = (extras || []).filter(e => /^(go|ruby|php|rust|desktop)$/.test(e));
   if (ex.length) args.push('--with', ex.join(','));
   if (node && /^(lts|\d{2})$/.test(String(node))) args.push('--node', String(node));
   job = { state: 'running', startedAt: Date.now(), endedAt: null, log: [], result: null, pid: null, args: args.slice(1) };
