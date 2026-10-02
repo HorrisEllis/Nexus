@@ -34,7 +34,10 @@ const SYSTEMS = ['cortex', 'guardian', 'bridge', 'orchestrator', 'loom', 'copilo
   'gemini', 'agent', 'tablet', 'diagnostic', 'chunk', 'replay', 'snapshot',
   // §0.39.261 — three supervised kernels loom never tagged, so their phases
   // were invisible per system (each Nexus self-repo's Phasemap tab was empty).
-  'eravos', 'versionium', 'ollama'];
+  'eravos', 'versionium', 'ollama',
+  // §EV0 (4) 2026-10-02 — systems the EMERGE map's phases name that the guess never knew (map: "cos, warp, emergence,
+  // economy and nexstore are not on it, so their phases are invisible per system")
+  'cos', 'warp', 'emergence', 'economy', 'nexstore'];
 
 // §FIXED 2026-09-20 (MCO-E) — was /[A-Z]{1,3}\d+_.../, which cannot match a
 // hyphenated id like `MCO-A_schemas`, so the overhaul phasemaps' own phases
@@ -79,6 +82,17 @@ function _tagSystem(text) {
   const low = text.toLowerCase().replace(/-/g, '');
   const hits = SYSTEMS.filter(s => low.includes(s.replace(/-/g, '')));
   return hits.length ? hits : ['general'];
+}
+
+/**
+ * _systemsOf(fields, body) → { systems, systemsFrom } — §EV0 (4), invariant E16 ("Declared, not guessed"): a phase's
+ * own `systems:` line is read first and taken as written; only a phase without one is guessed from its prose, and the
+ * guess is marked as one (systemsFrom: 'guessed'), so a reader can tell what the map said from what loom inferred.
+ */
+function _systemsOf(fields, body) {
+  const declared = _list(fields && fields.systems).map(x => x.toLowerCase());
+  if (declared.length) return { systems: [...new Set(declared)], systemsFrom: 'declared' };
+  return { systems: _tagSystem(body), systemsFrom: 'guessed' };
 }
 
 /**
@@ -193,11 +207,12 @@ function parsePhasemapText(text, name) {
       // §0.39.271 P1 — the fields a phases manager shows. Read at the phase's own
       // field indent only (a nested `closes:` inside a `does:` block is not the phase's).
       const f = _fields(phaseLines.slice(1), _indent(lines[i]) + 2);
+      const sys = _systemsOf(f, body);
       out.push({
         id, map: name,
         title: id.replace(/_/g, ' '),
         status,
-        systems: _tagSystem(body),
+        systems: sys.systems, systemsFrom: sys.systemsFrom,
         dependsOn: dep.trim().replace(/[\[\]]/g, '') || null,
         // location, for callers that EDIT a phase (idearium/repo/roadmap.js):
         // header line, the `status:` key's line (-1 if it has none) and the
@@ -258,7 +273,7 @@ function parsePhasemapText(text, name) {
       id, map: name,
       title: f.name ? `${id} ${String(f.name).replace(/\s+/g, ' ').trim()}` : id,
       status,
-      systems: _tagSystem(phaseLines.join(' ')),
+      ...(() => { const sys = _systemsOf(f, phaseLines.join(' ')); return { systems: sys.systems, systemsFrom: sys.systemsFrom }; })(),
       dependsOn: deps.length ? deps.join(', ') : null,
       line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
       name: f.name || null, closes: _list(f.closes), files: _list(f.files), form: 'list',
@@ -318,7 +333,7 @@ function loadAll() {
     let text;
     try { text = fs.readFileSync(file, 'utf8'); } catch (_) { continue; }
     for (const p of parsePhasemapText(text, name)) {
-      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, dependsOn: p.dependsOn });
+      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn });
     }
   }
   // group by system (LP2 — split by system).
