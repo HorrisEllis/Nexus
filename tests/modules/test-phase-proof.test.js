@@ -111,6 +111,29 @@ const MAP = `spec:
     const r = await api._provePhase({ target, base: { ...base('phrun-pp5'), phase: 'P2_bare' }, commitId: 'c4', mapText: MAP, phase: 'P2_bare', message: 'x', dispatch: {} });
     assert.strictEqual(r.state, 'no-proof'); assert.strictEqual(calls, 0, 'nothing re-run without a judge');
   });
+  await test('PP-07', 'no conditions but files → derived: each file exists and each JS file really parses', async () => {
+    const map = MAP.replace('      proof: "prose only"\n', '      proof: "prose only"\n      files: [lib/planner.js (the planner), docs/plan.md]\n');
+    const d = PR.derivedConditionsFromPhase(map, 'P2_bare');
+    assert.deepStrictEqual(d.conditions.map(c => c.says), ['lib/planner.js exists', 'lib/planner.js is valid JavaScript', 'docs/plan.md exists']);
+    assert.match(d.source, /derived from phase P2_bare's files/);
+    const seen = [];
+    RA.dispatch = async ({ message }) => {
+      seen.push(message);
+      const L = api.getRepoLayer();
+      if (seen.length === 1) L.writeFile(repoUuid, 'lib/planner.js', 'module.exports = { plan( ) { return [ }\n', { preserveWhitespace: true });   // broken JS
+      else L.writeFile(repoUuid, 'lib/planner.js', 'module.exports = { plan() { return []; } };\n', { preserveWhitespace: true });
+      L.writeFile(repoUuid, 'docs/plan.md', '# plan\n', { preserveWhitespace: true });
+      return { ok: true };
+    };
+    process.env.IDEARIUM_TEST_ATTEMPTS = '';
+    const r1 = await api._provePhase({ target, base: { ...base('phrun-pp7'), phase: 'P2_bare' }, commitId: 'c5', mapText: map, phase: 'P2_bare', message: 'build the planner', dispatch: {} });
+    assert.strictEqual(r1.state, 'unproven', 'attempt 1 wrote nothing, attempt 2 wrote broken JS');
+    assert.match(seen[0], /lib\/planner\.js exists/);
+    const bad = r1.run.results.find(x => x.says === 'lib/planner.js is valid JavaScript');
+    assert.strictEqual(bad.mode, 'command_failed', 'a file only counts once it is real JavaScript');
+    const r2 = await api._provePhase({ target, base: { ...base('phrun-pp7b'), phase: 'P2_bare' }, commitId: 'c6', mapText: map, phase: 'P2_bare', message: 'build the planner', dispatch: {} });
+    assert.strictEqual(r2.state, 'proven', JSON.stringify(r2.run && r2.run.results.filter(x => !x.met)));
+  });
   RA.dispatch = realDispatch;
 
   await test('PP-06', 'wired: the build chain ends in the proof; its events are declared', async () => {

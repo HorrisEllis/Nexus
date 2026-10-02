@@ -687,7 +687,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
 // (default 2), then 'unproven' with what is still missing. No conditions declared → 'no-proof', said, never assumed.
 async function _provePhase({ target, base, commitId, mapText, phase, message, dispatch }) {
   const PR = await import('../repo/proof-run.js');
-  const { conditions, source } = PR.conditionsFromPhase(mapText, phase);
+  let { conditions, source } = PR.conditionsFromPhase(mapText, phase);
+  // no declared conditions → the phase's own files: each exists, each JS file parses (never invented from prose)
+  if (!conditions.length) { const d = PR.derivedConditionsFromPhase(mapText, phase); if (d.conditions.length) ({ conditions, source } = d); else source = d.source; }
   const pbase = { ...base, runId: `${base.runId}-proof`, buildRunId: base.runId };
   if (!conditions.length) {
     appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-no-proof`, ...pbase, state: 'no-proof', snapshot: commitId, error: `not proven: ${source} — add conditions: [{ says, check }] to the phase`, ts: Date.now() });
