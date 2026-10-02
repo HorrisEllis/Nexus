@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.7.1
+    version:  1.8.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -289,6 +289,27 @@ spec:
         process on the person's own install and account — openly an automated agent, never presented as a person.
         Routing treats it as one more provider (fallback chain, breaker, learned scores).
       proof: "a stub CLI: a phase job runs in the workspace, its diff goes through the gate, the hop is on the chunk"
+
+    CP1_copilot_drives_idearium_and_talks_to_its_agents:
+      layer: interface
+      status: OPEN — mapped 2026-10-02
+      depends_on: [IL2_library_spec_into_the_pipeline, PV4_cli_and_ui, CX1_context_cascade]
+      files: [lib/agent-tools/index.js, lib/agent-tools/tools/idearium/, lib/agent-tools/tool-guide.js, clear-glass/src/copilot/verbs.js, copilot/server.js, idearium/api/index.js, lib/repo-agent.js]
+      does: >-
+        James (verbatim), 2026-10-02: "i want copilot to be able to help with idearium. communicate with the agents,"
+        What copilot reaches today (read, not assumed): the codebase tools over /api/repos/:uuid/code/* (code.js), a
+        repo's chunk nodes (repo-chunks.js), run_closed_loop (idea → spec → build → repo through idearium's HTTP API),
+        call_system, and one verb (import my archives → the archive drop box). What it cannot: the spec library, the
+        pipeline (to-repo, plan, phases, build), the proof (verify / prove), and the agents themselves. Built API first
+        (§ CLI and API first): idearium tools over the routes that already exist — library list / import / to-repo,
+        repo plan / phases / build, verify, prove (start, status, cancel), the blocked items (BK1) — each a registered
+        agent tool with its guide line; then "communicate with the agents": copilot sends a message to a repo's agent
+        (the same /api/repos/:uuid/agent path the Agent tab uses, openly from copilot, its reply back in copilot's
+        pane) and reads a running job's state (guardian jobs, the proof run). Every write goes through the same gates
+        a person's click does (James: "yeah, never bypass"); copilot is named as the caller on every job it starts.
+        The verbs file learns the plain phrasings ("send RHEON STUDIO to the pipeline", "prove it", "ask the repo's
+        agent why it failed") the way it learned "import my archives".
+      proof: "copilot, asked in words, sends a library spec to the pipeline, starts a prove run and reports its verdict, and relays one question to a repo agent and its answer — each a job named as copilot's, none past a gate"
 
     # ── layer 4 — interface ────────────────────────────────────────────────────────────────────────────────────────
     UI1_history_and_save_in_manage:
@@ -579,6 +600,28 @@ spec:
         and saves once (the library: >110 s for 87 documents → 8.6 s for all 150); the chunker keeps two sections with
         the same heading. James's real zip: 468 files read, 150 unique, 186 duplicates folded, 0 fidelity failures.
         tests/modules/test-spec-library.test.js 8/8.
+    IL2_library_spec_into_the_pipeline:
+      layer: library
+      status: DONE (0.39.292)
+      depends_on: [IL1_spec_library_as_ideas]
+      files: [idearium/lib/spec-library-import.js, idearium/api/index.js, idearium/cli/index.js, idearium/ui/spec-library.html, idearium/ui/js/app.js]
+      does: >-
+        James (verbatim), 2026-10-02: "how can i import into the pipeline. the specs also need to convert into actual
+        spec files. also cant import into the pipeline, since you merged." An imported document was an idea with a
+        spec, and the pipeline (Phases, Generate code, Build & prove) works on repos — nothing made the one into the
+        other. A library document goes into the pipeline: its spec becomes a repo through the same promotion every spec
+        takes, and the document is written into it as a real .spec file (spec/<slug>.spec: meta + every section) with
+        the original text beside it (spec/original/<name>). The library's idea is the repo's idea; asking twice opens
+        the same repo.
+      proof: "a library document → a repo whose files include spec/<slug>.spec (YAML that loads, every section) and the original byte for byte; asking again makes nothing new"
+      built: >-
+        0.39.292 — toPipeline / findRow / specFileText in idearium/lib/spec-library-import.js (promotion and the
+        repo's writeFile handed in: the API passes _promoteSpecToRepo and RepoLayer.writeFile); POST
+        /api/spec-library/:key/to-repo (a sha, a sha prefix or a title; 'manual' promotion by default — the document is
+        a design, Generate code is the pipeline's step; mode 'emerge' adds the guardian extract + compile); `idearium
+        spec-library to-repo <title|sha> [--emerge]`; the library page's "→ pipeline" / "open repo" per row, and the
+        main window opens the repo (a message accepted only from the library window it opened).
+        tests/modules/test-spec-library.test.js 10/10 (SL-09 against the real RepoLayer).
     SW1_spec_workshop:
       layer: interface
       status: OPEN
@@ -664,6 +707,11 @@ spec:
       especially to test." Run, shell and environments live in the Sync & CI tab; SSH keys in the Clear Glass vault.
   decisions_waiting_on_james:
     - "PF6 — the first-sync delay (proposed: after the first repo list, or 60 s, whichever comes first)."
+    - >-
+      CO1 — James, 2026-10-02: "then we need to clear out the original cos." Not acted on: which COS is meant is his
+      call (the COS compartments the older repos made, the COS test VM image, the COS branches proof runs leave, or the
+      original cos/ module beside lib/cos-*). Whatever it is, it is archived (§0.3), never deleted, and the archive is
+      listed back to him first.
 
 ## ADDENDUM 2026-10-01 — PF1–PF5 built (0.39.288)
 # Measured on the real tree (sandbox store): core update with an unchanged file set — spec 4.3 s → 0.21 s, longest
@@ -709,3 +757,10 @@ spec:
 # path (agent-suite generateWithOllama) still had the 120 s total timeout, the 2048-token cap and the thinking-only
 # empty reply — it now uses the hardened client. Also: priorFailure was stored and never shown to the agent (fixed:
 # the repair block); a failed version is never reused (component-store markFailed). 127 affected suites: 0 new failures.
+
+## ADDENDUM 2026-10-02 — 1.8.0, IL2 built (0.39.292); CP1 and CO1 mapped
+# IL2: James — "how can i import into the pipeline. the specs also need to convert into actual spec files." A library
+# document becomes a repo with spec/<slug>.spec and its original in it; POST /api/spec-library/:key/to-repo, the CLI's
+# to-repo, the library page's → pipeline. CP1: James — "i want copilot to be able to help with idearium. communicate
+# with the agents," mapped from what copilot reaches today and what it does not. CO1: "then we need to clear out the
+# original cos." waits on James saying which COS; archive, never delete.

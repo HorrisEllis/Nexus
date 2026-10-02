@@ -529,6 +529,12 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied â€
 - **Code:** `lib/spec-library.js` (scanning and converting) and `idearium/lib/spec-library-import.js` (ideas, specs, the library index).
 - **Test:** `tests/modules/test-spec-library.test.js`.
 
+**A library spec into the pipeline** (0.39.292). James: "how can i import into the pipeline. the specs also need to convert into actual spec files."
+- **Where:** each row of the spec library has **â†’ pipeline** (then **open repo**); the idearium CLI's spec-library to-repo command; the API route POST /api/spec-library/:key/to-repo (a sha, a sha prefix or a title).
+- **What it does:** the document's spec becomes a repo through the same promotion every spec takes, and the document is written into it as a real .spec file (meta and every section, as YAML) under the repo's spec folder, with the original text beside it.
+- **One idea:** the library's idea becomes the repo's idea. Asking again opens the same repo.
+- **Code:** `idearium/lib/spec-library-import.js` (toPipeline, findRow, specFileText). The route hands in the promotion and the repo layer's file write.
+
 **Cut replies are finished** (0.39.289, `lib/reply-continuation.js`). When a reply stops part-way, the agent is shown the end of what it wrote and continues from there, and the two parts are stitched together:
 - **When it counts as cut:** Ollama stopped at its token limit, a code block was opened and never closed, or the reply ends mid-statement.
 - **Where it runs:** in the Ollama bridge (`ollama/lib/ollama-client.js`), and in spec chunk dispatch before the detector judges the reply.

@@ -33,6 +33,7 @@
   .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   button { padding: 9px 15px; border-radius: 9px; border: 1px solid var(--b1); background: rgba(255,255,255,.02); color: var(--text); font: 600 11.5px/1 var(--mono); cursor: pointer; }
   button:hover { border-color: var(--b2); } button:disabled { opacity: .45; cursor: default; }
+  button.pipe { padding: 5px 9px; font-size: 10.5px; white-space: nowrap; }
   button.primary { background: linear-gradient(180deg, #38bdf8, #0ea5e9); border-color: transparent; color: #04111c; }
   .h { font: 600 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text2); margin: 0 0 10px; display: flex; gap: 10px; align-items: center; cursor: pointer; user-select: none; }
   .h .n { color: var(--text3); letter-spacing: 0; text-transform: none; font-weight: 400; }
@@ -143,12 +144,32 @@ function render() {
   const by = {}; for (const r of rows) (by[r.family] = by[r.family] || []).push(r);
   $('lib').innerHTML = ORDER.filter(f => by[f]).map(f => `<div class="fam" data-f="${f}">
     <div class="h"><span class="chev">▾</span><span class="tag ${f}">${f}</span><span class="n">${by[f].length}</span></div>
-    <div class="scroll"><table><tr><th>title</th><th>kind</th><th>version</th><th>sections</th><th>found at</th></tr>
+    <div class="scroll"><table><tr><th>title</th><th>kind</th><th>version</th><th>sections</th><th>found at</th><th>pipeline</th></tr>
     ${by[f].sort((a, b) => String(a.title).localeCompare(String(b.title))).map(r => `<tr><td class="t">${esc(r.title)}${r.summary ? `<div class="muted" style="font-size:11px">${esc(String(r.summary).slice(0, 140))}</div>` : ''}</td>
       <td class="d">${esc(r.kind)}</td><td class="d">${esc(r.version || '')}</td><td class="d">${r.specUuid ? `${r.sections} · ${esc(r.dialect)}` : '<span class="muted">kept</span>'}</td>
-      <td class="d" title="${esc((r.paths || []).join('\n'))}">${esc(String((r.paths || [])[0] || '').split('!/').pop().slice(-48))}${(r.paths || []).length > 1 ? ` <span class="muted">+${r.paths.length - 1}</span>` : ''}</td></tr>`).join('')}
+      <td class="d" title="${esc((r.paths || []).join('\n'))}">${esc(String((r.paths || [])[0] || '').split('!/').pop().slice(-48))}${(r.paths || []).length > 1 ? ` <span class="muted">+${r.paths.length - 1}</span>` : ''}</td>
+      <td class="d">${r.specUuid ? `<button class="pipe" data-sha="${esc(r.sha)}" title="${r.repoUuid ? 'open its repo' : 'make it a repo with spec/' + esc(slug(r.title)) + '.spec — then Phases, Generate code, Build &amp; prove'}">${r.repoUuid ? 'open repo' : '→ pipeline'}</button>` : ''}</td></tr>`).join('')}
     </table></div></div>`).join('');
   for (const h of document.querySelectorAll('.fam .h')) h.onclick = () => h.parentElement.classList.toggle('closed');
+  for (const b of document.querySelectorAll('button.pipe')) b.onclick = () => toPipeline(b);
+}
+// §0.39.292 IL2 — James: "how can i import into the pipeline. the specs also need to convert into actual spec files."
+// POST /api/spec-library/:sha/to-repo makes the spec a repo with spec/<slug>.spec in it; the main window opens it.
+function slug(t) { return String(t || 'spec').toLowerCase().replace(/\.[a-z0-9]+$/, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 64) || 'spec'; }
+async function toPipeline(b) {
+  const sha = b.dataset.sha; const row = LIB.find(r => r.sha === sha);
+  b.disabled = true; b.textContent = row && row.repoUuid ? 'opening…' : 'making the repo…';
+  try {
+    const r = await fetch(`/api/spec-library/${encodeURIComponent(sha)}/to-repo`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
+    const d = j.data || j;
+    if (row) { row.repoUuid = d.repoUuid; row.specFile = d.specFile; }
+    const opened = window.opener && !window.opener.closed;
+    if (opened) window.opener.postMessage({ type: 'nexus:repo.open', repoUuid: d.repoUuid, label: d.title }, '*');
+    $('status').innerHTML = `<span class="ok">${esc(d.title)} — ${d.existing ? 'already a repo' : `a repo now, with ${esc(d.specFile)}`}${opened ? ' · opened in Idearium' : ` · ${esc(d.repoUuid)}`}</span>`;
+    render();
+  } catch (e) { b.disabled = false; b.textContent = '→ pipeline'; $('status').innerHTML = `<span class="err">could not send it to the pipeline: ${esc(e.message)}</span>`; }
 }
 async function load() {
   try { const r = await fetch('/api/spec-library'); const j = await r.json(); LIB = (j.data || j).library || []; render(); }

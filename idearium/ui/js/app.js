@@ -3687,12 +3687,26 @@ function openArchiveImport() {
 }
 // §0.39.290 IL1 — James: "my goal is to build these, eventually. im, the idea guy" · "need a way to import these and
 // convert them." The spec library (ui/spec-library.html): a zip of specs → ideas with their specs.
+let _specLibraryWin = null;
 function openSpecLibrary() {
   if (!API_BASE) { toast('idearium is offline — the spec library is served by it', 'err'); return null; }
   const w = window.open(`${API_BASE}/spec-library.html`, 'idearium-spec-library', 'width=1180,height=900');
   if (!w) toast('the spec library window was blocked — allow pop-ups for idearium', 'err');
+  _specLibraryWin = w || _specLibraryWin;
   return w;
 }
+// §0.39.292 IL2 — the library's "→ pipeline" made a repo; open it here (only from the spec library window this opened)
+window.addEventListener('message', async (ev) => {
+  const d = ev.data;
+  if (!d || d.type !== 'nexus:repo.open') return;
+  if (!_specLibraryWin || ev.source !== _specLibraryWin) { console.warn('[idearium] repo.open ignored: not from the spec library window'); return; }
+  if (!/^[\w-]{4,80}$/.test(String(d.repoUuid || ''))) return;
+  await loadApiRepos();
+  const repo = API_REPOS.find(r => r.uuid === d.repoUuid);
+  if (!repo) { toast(`the new repo is not listed yet: ${d.repoUuid}`, 'err'); return; }
+  openRepoFor(repo.ideaUuid, repo.specUuid, repo.name);
+  toast(`${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
+});
 /** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
 const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;
 
