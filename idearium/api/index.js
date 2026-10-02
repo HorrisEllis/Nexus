@@ -5327,6 +5327,7 @@ async function handle(req, res, route, query, body) {
         only: Array.isArray(body.only) && body.only.length ? body.only : null,
         // Every stage event becomes a real idearium event, so the UI and
         // the event log see CI progress the same way they see everything else.
+        // emits: idearium.ci.vault.unavailable, idearium.ci.run.started, idearium.ci.stage.started, idearium.ci.stage.passed, idearium.ci.stage.failed, idearium.ci.run.finished
         onEvent: (type, payload) => { try { os.emit(`idearium.${type.replace(/:/g, '.')}`, payload); } catch (_) {} },
       });
       if (!result.ok) return err(res, 400, result.error);
@@ -5531,6 +5532,7 @@ async function handle(req, res, route, query, body) {
         const pm = CR.partsOf(bridge.getCompartment(comp.id)).find(p => p.part === 'project');
         if (pm) repoSync = _applyChangedFilesToRepo(repoRow.uuid, pm.dir, r.changed.project);
       }
+      // emits: idearium.cos.remote.push, idearium.cos.remote.pull
       if (op !== 'status') os.emit(`idearium.cos.remote.${op}`, { compartmentId: comp.id, remote: remote.name, state: r.state, repoUuid: repoRow ? repoRow.uuid : null });
       return ok(res, { compartmentId: comp.id, remote: remote.name, repoUuid: repoRow ? repoRow.uuid : null, ...r, repoSync });
     }
