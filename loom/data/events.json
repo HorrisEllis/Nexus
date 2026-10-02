@@ -1,5 +1,5 @@
 {
- "generatedAt": 1790969952602,
+ "generatedAt": 1790971908389,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -402,6 +402,12 @@
     "provider.host.started",
     "provider.host.stopped",
     "provider.host.wake-intro"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.providers.registry": {
+   "emits": [
+    "agent.cache.stale"
    ],
    "listens": []
   },
@@ -3759,6 +3765,12 @@
   "provider.host.wake-intro": {
    "emitters": [
     "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "agent.cache.stale": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.registry"
    ],
    "listeners": []
   },

@@ -1320,6 +1320,13 @@ async function bootstrap() {
   // §0.39.265 — the Provider tabs page's "Start … with Clear Glass" toggles
   // (NexusOptions.autoStartOnBoot) decide now; CG_AUTOBOOT_PROVIDERS still wins
   // when set. Defaults: ChatGPT + DeepSeek (providers/registry.js DEFAULT_AUTOSTART).
+  // §GA1 2026-10-02 — the agent facts are Guardian's (E13): refresh the cache from GET :7820/api/providers before any
+  // tab opens. Guardian down → the stamped cache runs, said; a cache edited by hand is a gap ('agent.cache.stale').
+  try {
+    const rr = await require('../providers/registry').refresh({ emit: (type, data) => _postEvent(type, data) });
+    console.log(rr.ok ? `[ClearGlass] agent facts from guardian — ${rr.changed ? `cache updated (${rr.count} providers)` : 'cache current'} · ${String(rr.hash).slice(0, 12)}`
+      : `[ClearGlass] agent facts: ${rr.error} — running on the ${rr.from} cache ${String(rr.hash).slice(0, 12)}`);
+  } catch (e) { console.warn(`[ClearGlass] agent facts refresh failed: ${e.message}`); }
   const autoBootSetting = require('../providers/registry').autoBootList(process.env.CG_AUTOBOOT_PROVIDERS, nexusOptions.get().autoStartOnBoot);
   if (autoBootSetting === 'none' || autoBootSetting === '') {
     console.log('[ClearGlass] NCP auto-boot: skipped (lazy-only — providers start on first real use). Set CG_AUTOBOOT_PROVIDERS to pre-warm specific providers.');

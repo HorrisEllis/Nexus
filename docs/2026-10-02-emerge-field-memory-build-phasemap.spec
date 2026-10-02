@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.11
+    version:  1.7.12
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -639,7 +639,7 @@ spec:
       layer: foundation
       systems: [guardian, clear-glass]
       value: { score: 4, cost: S, for: [safety, quality], why: "one truth for the agents; removes a drift risk already found" }
-      status: OPEN
+      status: "DONE (1.7.12) — provider nodes in Guardian, GET /api/providers stamped; Clear Glass a stamped cache; one guardian.spec"
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [clear-glass/src/providers/registry.js, clear-glass/src/userscripts/manager.js, guardian/spec/guardian.spec, docs/guardian.spec, guardian/userscripts.yaml, guardian/data/nodes/, guardian/routes/, lib/hat-forge.js]
       does: >-
@@ -1271,3 +1271,26 @@ spec:
 # Proof: test-loom-phasemap 7/7 (T-006 declared wins / guess marked; T-007 EV0 under cos and warp, none general),
 # test-synthesis-declared-value 3/3, moce-roadmap 43/43 (one parser: systemsFrom carried by both paths),
 # synthesis-zoom-versionium 6/6, loom-phasemap-status 12/12, phase-proof 7/7.
+
+## ADDENDUM 2026-10-02 — 1.7.12, GA1 built: Guardian states the Clear Glass agents
+# Four places kept the agent facts and disagreed: clear-glass/src/providers/registry.js (the only one with deepseek),
+# guardian's /providers (hard-coded, no deepseek), docs/guardian.spec and guardian/spec/guardian.spec (no deepseek).
+# Now the facts are Guardian's provider NODES — a new node type (lib/node-schemas/schema.provider, KNOWN_TYPES, Guardian's
+# watched types): guardian/data/nodes/provider/{chatgpt,claude,deepseek,gemini,perplexity}.provider, built from Clear
+# Glass's table (the most complete) with guardian.spec's versions and strengths. guardian/lib/agent-facts.js reads them;
+# GET :7820/api/providers serves them with their hash; /providers reads them (deepseek appears). One hash, one place:
+# lib/agent-facts-hash.js, used by both sides (facts only — envelope timestamps are not hashed).
+# Clear Glass's registry is a CACHE now (<data>/clear-glass/providers-cache.json), stamped, refreshed from Guardian at
+# boot before any tab opens; a cache whose content no longer matches its stamp is a gap (verify(), 'agent.cache.stale' —
+# declared, AGENT_CACHE_STALE); Guardian down → the stamped cache runs, said; no cache yet → its old table as a stamped
+# SEED, said. Its exports are unchanged, and NCP_PROVIDERS stays one live object, so host.js, selector-assign.js, the
+# options store and main/index.js need no change. Tab autostart: the person's toggle, then Guardian's autostart fact.
+# The two guardian.spec copies made one: docs/guardian.spec was 13 versions stale and wholly contained in the real one
+# (diffed) — it is a pointer now; SPEC-REGISTRY says so; AMC-006 reads the provider nodes instead of it.
+# Not built (said): AGENT_FACTS_CHANGED as its own event (Guardian's node registry already emits guardian.node.changed for
+# a provider node), `guardian agents list|verify` CLI, a settings section; userscripts and hats are not yet nodes here —
+# providers only.
+# Proof: tests/modules/test-agent-facts.test.js 5/5 — the map's three: a provider added in Guardian alone appears in
+# Clear Glass after its refresh (in the live table other modules imported); a hand-edited cache is a gap on the next
+# boot and the next refresh replaces it; Guardian down → the stamped cache runs, said. Plus agent-mesh coverage 7/7,
+# nexus-options-autoboot 18/18, clear-glass phase2, and 17 other suites over the registry, nodes and schemas.
