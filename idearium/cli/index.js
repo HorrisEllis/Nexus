@@ -146,6 +146,14 @@ async function _wsApi(method, path, body = null, timeoutMs = 30000) {
   try { const r = await _localApi(method, path, body, timeoutMs); return r.data || r; }
   catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the workshop is served by it)' : ''}`); }
 }
+/** an idea by its uuid or the first 8 characters of it, as `idearium void` prints them */
+async function _voidId(key) {
+  if (!key) die('name the idea (its id, or the first 8 characters of it)');
+  const r = await _wsApi('GET', '/api/void');
+  const hit = r.ideas.filter(i => i.uuid === key || i.uuid.startsWith(key));
+  if (hit.length !== 1) die(hit.length ? `${hit.length} ideas start with ${key}` : `no idea ${key}`);
+  return hit[0].uuid;
+}
 function _wsPrint(w, full = false) {
   header(`${w.title} — workshop ${w.uuid}`);
   console.log(`  from ${w.source.kind}${w.source.title ? ': ' + w.source.title : ''} · ambition ${w.ambition} · ${w.specPath ? 'saved to ' + w.specPath : 'not saved to a repo yet'}`);
@@ -810,6 +818,47 @@ const COMMANDS = {
     } catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the build uses its agents)' : ''}`); }
   },
 
+  // ── idearium void (0.39.295) ──────────────────────────────────────────────────────
+  // James: "Just have the spacial void, with a slider …" · "the ideas come from me though not agents". Through the
+  // running idearium. --creativity / --stability 0..4 (normal…outlier / stable…unstable).
+  async 'void'(os, args) { return COMMANDS['void.list'](os, args); },
+  async 'void.list'(os, { flags }) {
+    const r = await _wsApi('GET', '/api/void');
+    const C = r.creativity, S = r.stability;
+    header(`the void — ${r.ideas.length} idea(s)${r.sparks.length ? `, ${r.sparks.length} spark(s)` : ''}`);
+    const rows = r.ideas.slice().sort((a, b) => b.glow - a.glow).slice(0, flags.all ? 1000 : 40);
+    for (const i of rows) {
+      const v = i.void, born = v && v.born ? `${C[v.born.creativity]} · ${S[v.born.stability]}` : 'before the void';
+      console.log(`  ${'●'.padStart(1)} ${dim(i.uuid.slice(0, 8))}  ${String(i.text).split('\n')[0].slice(0, 60).padEnd(60)} ${dim(`${born}${i.echoes ? ` · ${i.echoes} echo` : ''}${i.drift > .4 ? ' · fading' : ''}`)}`);
+    }
+    if (r.ideas.length > rows.length) console.log(dim(`  … ${r.ideas.length - rows.length} more (--all)`));
+    console.log('');
+  },
+  async 'void.add'(os, { positional, flags }) {
+    const text = positional.join(' ').trim(); if (!text) die('usage: idearium void add "<your idea>" [--creativity 0-4] [--stability 0-4]');
+    const r = await _wsApi('POST', '/api/void/idea', { text, creativity: Number(flags.creativity || 0), stability: Number(flags.stability ?? flags.creativity ?? 0) });
+    console.log(`  into the void: ${bold(r.idea.uuid)}`);
+  },
+  async 'void.echo'(os, { positional, flags }) {
+    const id = await _voidId(positional[0]); const kind = flags.kind || 'echo';
+    console.log(gray(`  the void is answering — ${kind}…`));
+    const body = { kind }; if (flags.creativity != null) body.creativity = Number(flags.creativity); if (flags.stability != null) body.stability = Number(flags.stability);
+    const r = await _wsApi('POST', `/api/void/idea/${id}/echo`, body, 330000);
+    console.log(`  ${bold(r.echo.voice)}${r.echo.domain ? dim(`  rolled ${r.echo.roll}: ${r.echo.domain}`) : ''}  ${dim(r.echo.uuid)}`);
+    for (const l of r.echo.lines) console.log(`    ${l}`);
+    console.log(dim(`\n  keep a part, in your words: idearium void take ${r.echo.uuid} "<your words>"\n`));
+  },
+  async 'void.collide'(os, { positional }) {
+    const a = await _voidId(positional[0]), b = await _voidId(positional[1]);
+    const r = await _wsApi('POST', '/api/void/collide', { a, b }, 330000);
+    for (const l of r.echo.lines) console.log(`    ${l}`);
+  },
+  async 'void.take'(os, { positional }) {
+    const [echo, ...words] = positional; if (!echo || !words.length) die('usage: idearium void take <echo> "<what you keep, in your words>"');
+    const r = await _wsApi('POST', `/api/void/echo/${encodeURIComponent(echo)}`, { action: 'take', words: words.join(' ') });
+    console.log(`  kept. your idea now:\n${String(r.idea.text).split('\n').map(l => '    ' + l).join('\n')}`);
+  },
+
   // ── idearium workshop (0.39.294 SW1) ─────────────────────────────────────────────
   // James: "need the spec workshop … the workshop and maybe it hooks into the spec field". Through the running idearium
   // (one writer of the sessions and the repos); the agent only proposes — accept puts a proposal into the spec.
@@ -1103,6 +1152,7 @@ async function main() {
     console.log(`  ${sky('speceng')} list | show <uuid> | build <uuid> | chunk-agent <spec> <chunk> <agent>`);
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
     console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
+    console.log(`  ${sky('void')}   [list] | add "<idea>" [--creativity 0-4 --stability 0-4] | echo <idea> [--kind d20|reverse|ground] | collide <a> <b> | take <echo> "<words>"`);
     console.log(`  ${sky('workshop')} list | new --from idea:<uuid>|library:<title>|repo:<uuid>|blank | show <id> | write <id> <section> <text> | ambition <id> <1-5> | feed <id> <kind> | accept <id> <proposal> | dismiss | save <id>`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);
     console.log(`  ${sky('routing')} [show] | plan [--block id] [--agent a] | learned | set <key> <value>`);

@@ -53,8 +53,10 @@ const BOUNDARY_EXPORTS = [
   I('lib/pipeline-routing.js'),
   // §0.39.290 IL1 — reached only by await import() / createRequire
   I('idearium/lib/spec-library-import.js'),   // lib/spec-library.js gets its export hook from the scanner (a literal require)
-  // §0.39.294 SW1 — the spec workshop, reached only by await import() from idearium/api
-  I('idearium/lib/workshop.js'),
+  // §0.39.294 SW1 — the spec workshop: no longer here (0.39.295) — idearium/lib/void.js imports it with a literal import,
+  // so the scanner gives it its export hook; declaring it here too was a duplicate (loom.unique-id)
+  // §0.39.295 — the spatial void, reached only by await import() from idearium/api
+  I('idearium/lib/void.js'),
 ];
 
 // Consumers that are HAND-MAPPED elsewhere (the scanner skips them): [consumer id, dependency id, where].
@@ -87,6 +89,8 @@ const CONSUMERS = [
   // through lib/repo-agent.js's default provider) and saves through the library's pipeline for a library document
   ['nexus.idearium.api', I('idearium/lib/workshop.js'), 'idearium/api/index.js workshop.* (_workshop: await import, setAsk)'],
   ['nexus.idearium.api', I('lib/repo-agent.js'), 'idearium/api/index.js _workshop ask — defaultProvider / routeFor / COPILOT_URL (_require)'],
+  // §0.39.295 — the spatial void: the API owns the ideas, the echoes table and the agent (_agentAsk); void.js shapes it
+  ['nexus.idearium.api', I('idearium/lib/void.js'), 'idearium/api/index.js void.* (await import) — echoPrompt, makeEcho, take, shapeVoid, glow'],
   // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)
   [I('ollama/lib/ollama-client.js'), I('lib/reply-continuation.js'), 'ollama/lib/ollama-client.js callOllamaRaw — a reply stopped at num_predict (or in an open fence) is continued and stitched (require inside the function)'],
   [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/reply-continuation.js'), 'idearium/spec-engine/chunk-dispatch.js _dispatchChunkOnce — looksCut/complete before the detector judges'],

@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     workshop-codex-rewind
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-02
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -186,3 +186,12 @@ spec:
 # James: "the workshop and maybe it hooks into the spec field". The order is his: the workshop first, then what it hands
 # to (Architect, CODEX, the blueprint, the one entry point); the rewind and the popout after. SW1 is the workshop with the
 # Spec tab as its home: it reads and writes the repo's spec/<name>.spec. The old builders stay until UI12 retires them.
+
+## ADDENDUM 2026-10-02 — 1.2.0, after James saw the workshop
+# James: "I hate that ui you made. The spacial void is its own page. all of it needs to be isolated, in its own pages. i
+# was describing the pipeline when i told you that, from idearium." Recorded: each station of the pipeline is its own
+# page. The idea station is the Spatial Void (docs/2026-10-02-spatial-void-phasemap.spec, 0.39.295), which replaces
+# Ideas and Brainstorm; the idea-generation feeds belong to it (d20, reverse chain, open questions — as echoes of HIS
+# idea: "the ideas come from me though not agents"). The workshop's engine stays (sections, accept-or-dismiss, save into
+# the repo's spec); its page is to be rebuilt as its own page in the Void's style, about shaping an idea into a spec's
+# sections — SW2, next after the Void.

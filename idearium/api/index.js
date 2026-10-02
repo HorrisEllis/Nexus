@@ -1041,23 +1041,29 @@ async function _workshop() {
   if (_wsMod) return _wsMod;
   const WS = await import('../lib/workshop.js');
   // the agent: copilot's /api/prompt, the same route and default provider a repo agent uses (lib/repo-agent.js)
-  WS.setAsk(async (prompt, { sessionUuid } = {}) => {
-    const RA = _require('../../lib/repo-agent.js');
-    const provider = RA.defaultProvider();
-    const { backend, agent } = RA.routeFor(provider);
-    const payload = { prompt, channel: 'idearium-workshop', sessionId: `workshop-${sessionUuid || 'x'}`, ...(backend ? { backend } : {}), ...(agent ? { agent } : {}) };
-    if (backend === 'guardian') payload.timeoutMs = 300000;
-    const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
-    const j = r.json || {};
-    if (r.status >= 400 || j.ok === false || typeof j.text !== 'string') return { ok: false, error: j.error || (r.status ? `copilot answered ${r.status}` : 'no answer') };
-    return { ok: true, text: j.text, by: provider };
-  });
+  WS.setAsk((prompt, { sessionUuid } = {}) => _agentAsk(prompt, { channel: 'idearium-workshop', sessionId: `workshop-${sessionUuid || 'x'}` }));
   _wsMod = WS;
   return WS;
 }
 /** the spec engine loads lazily (getSpecEngine); the workshop waits for it briefly rather than failing on a fresh start */
 async function _specEngineReady(ms = 5000) {
   for (const until = Date.now() + ms; ; ) { const se = getSpecEngine(); if (se || Date.now() > until) return se; await new Promise(r => setTimeout(r, 100)); }
+}
+/** §0.39.294/0.39.295 — one way idearium's own pages ask an agent: copilot's /api/prompt with the person's default
+ *  provider (lib/repo-agent.js defaultProvider / routeFor), the same route a repo agent uses. Tests swap it (_setAgentAsk). */
+let _agentAskOverride = null;
+export function _setAgentAsk(fn) { _agentAskOverride = typeof fn === 'function' ? fn : null; }
+async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium' } = {}) {
+  if (_agentAskOverride) { try { return await _agentAskOverride(prompt, { channel, sessionId }); } catch (e) { return { ok: false, error: e.message }; } }
+  const RA = _require('../../lib/repo-agent.js');
+  const provider = RA.defaultProvider();
+  const { backend, agent } = RA.routeFor(provider);
+  const payload = { prompt, channel, sessionId, ...(backend ? { backend } : {}), ...(agent ? { agent } : {}) };
+  if (backend === 'guardian') payload.timeoutMs = 300000;
+  const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
+  const j = r.json || {};
+  if (r.status >= 400 || j.ok === false || typeof j.text !== 'string') return { ok: false, error: j.error || (r.status ? `copilot answered ${r.status}` : 'no answer') };
+  return { ok: true, text: j.text, by: provider };
 }
 function _workshopGet(WS, id) { return loadTable(WS.TABLE).find(r => r.uuid === id) || null; }
 /** a repo's spec files: *.spec under spec/ or specs/ (or at its root), phasemaps left out — the Spec tab's set */
@@ -1419,6 +1425,15 @@ const ROUTE_CAP = {
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
   'spec-library.import':  CAPS.WRITE_IDEAS,   // §0.39.290 IL1
+  'void.field':       CAPS.READ_IDEAS,   // §0.39.295 the spatial void
+  'void.idea.show':   CAPS.READ_IDEAS,
+  'void.idea.create': CAPS.WRITE_IDEAS,
+  'void.idea.update': CAPS.WRITE_IDEAS,
+  'void.echo':        CAPS.WRITE_IDEAS,   // asks the agent; stores an echo beside the idea, never in it
+  'void.spec':        CAPS.WRITE_IDEAS,
+  'void.collide':     CAPS.WRITE_IDEAS,
+  'void.echo.decide': CAPS.WRITE_IDEAS,
+  'void.spark.idea':  CAPS.WRITE_IDEAS,
   'workshop.list':    CAPS.READ_IDEAS,   // §0.39.294 SW1
   'workshop.sources': CAPS.READ_IDEAS,
   'workshop.show':    CAPS.READ_IDEAS,
@@ -1862,6 +1877,16 @@ function matchRoute(method, url) {
     // §0.39.290 IL1 — James's spec library: PUT the zip's raw bytes (?name=&dryRun=1); each unique document an idea + spec
     ['PUT',    ['api','spec-library','import'],                  'spec-library.import'],
     ['GET',    ['api','spec-library'],                           'spec-library.list'],
+    // §0.39.295 — the spatial void (idearium/lib/void.js, ui/void.html): James's ideas, the two dials, the echoes
+    ['GET',    ['api','void'],                                   'void.field'],
+    ['POST',   ['api','void','idea'],                            'void.idea.create'],
+    ['GET',    ['api','void','idea',':uuid'],                    'void.idea.show'],
+    ['POST',   ['api','void','idea',':uuid'],                    'void.idea.update'],
+    ['POST',   ['api','void','idea',':uuid','echo'],             'void.echo'],
+    ['POST',   ['api','void','idea',':uuid','spec'],             'void.spec'],
+    ['POST',   ['api','void','collide'],                         'void.collide'],
+    ['POST',   ['api','void','echo',':id'],                      'void.echo.decide'],
+    ['POST',   ['api','void','spark',':uuid','idea'],            'void.spark.idea'],
     // §0.39.294 SW1 — the spec workshop (idearium/lib/workshop.js): a spec made by hand or with the agent, saved into
     // the repo's spec folder (the Spec tab's living model)
     ['GET',    ['api','workshop'],                               'workshop.list'],
@@ -3974,6 +3999,100 @@ async function handle(req, res, route, query, body) {
       const rows = listLibrary({ family: query.family || null, kind: query.kind || null });
       return ok(res, { count: rows.length, library: rows.map(({ files, ...r }) => ({ ...r, fileCount: files ? files.length : null })) });
     }
+    // ── §0.39.295 — the spatial void ───────────────────────────────────────────────────────────────────────────────
+    // James: "Just have the spacial void, with a slider … normal, creative, outside the box, novel, outlier … stable,
+    // shaky, risky, dangerous, unstable. with those linked togethe" · "the ideas come from me though not agents".
+    case 'void.field': {
+      const V = await import('../lib/void.js');
+      const now = Date.now();
+      const echoes = loadTable(V.ECHO_TABLE);
+      const openBy = new Map(); for (const e of echoes) if (e.status === 'open') openBy.set(e.ideaUuid, (openBy.get(e.ideaUuid) || 0) + 1);
+      const ideas = (os.db.ideas || []).filter(i => i.phase !== 'archived').map(i => {
+        const place = i.void && i.void.x != null ? { x: i.void.x, y: i.void.y } : V.placeFor(i.uuid);
+        return { uuid: i.uuid, text: i.text, phase: i.phase, tags: i.tags || [], source: i.source || null, linkedSpec: i.linkedSpec || null,
+          createdAt: i.createdAt, updatedAt: i.updatedAt, void: i.void || null, x: place.x, y: place.y, ...V.glow(i, now), echoes: openBy.get(i.uuid) || 0 };
+      });
+      const sparks = loadTable('idearium_brainstorms').filter(b => !b.promoted).map(b => ({ uuid: b.uuid, text: b.text, ts: b.ts, ...V.placeFor(b.uuid) }));
+      return ok(res, { ideas, sparks, creativity: V.CREATIVITY, stability: V.STABILITY });
+    }
+    case 'void.idea.show': {
+      const V = await import('../lib/void.js');
+      const idea = os.idea(params.uuid); if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      const echoes = loadTable(V.ECHO_TABLE).filter(e => e.ideaUuid === idea.uuid || e.otherUuid === idea.uuid).sort((a, b) => b.at - a.at);
+      return ok(res, { idea, echoes, voice: idea.void ? V.voiceOf(idea.void.creativity, idea.void.stability).name : null });
+    }
+    case 'void.idea.create': {
+      const V = await import('../lib/void.js');
+      const text = String(body.text || '').trim();
+      if (text.length < 3) return err(res, 400, 'say the idea — at least a few words');
+      const state = V.shapeVoid(null, { creativity: body.creativity, stability: body.stability, held: body.held, x: body.x, y: body.y });
+      os.emit('idearium.idea.create', { text, tags: ['void'], source: 'void', void: state });
+      const idea = [...os.db.ideas].reverse().find(i => i.source === 'void' && i.text === text);
+      if (!idea) return err(res, 500, 'the idea was not created');
+      os.emit('idearium.void.idea', { uuid: idea.uuid, creativity: state.creativity, stability: state.stability, tension: state.tension });
+      return ok(res, { idea });
+    }
+    case 'void.idea.update': {
+      const V = await import('../lib/void.js');
+      const idea = os.idea(params.uuid); if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      const fields = {};
+      const textChanged = typeof body.text === 'string' && body.text.trim() && body.text.trim() !== idea.text;
+      if (textChanged) fields.text = body.text.trim();
+      fields.void = V.shapeVoid(idea.void, { creativity: body.creativity, stability: body.stability, held: body.held, x: body.x, y: body.y, work: textChanged, touch: body.touch !== false });
+      os.emit('idearium.idea.update', { uuid: idea.uuid, fields, causedBy: 'void' });
+      return ok(res, { idea: os.idea(idea.uuid) });
+    }
+    case 'void.echo':
+    case 'void.spec':
+    case 'void.collide': {
+      const V = await import('../lib/void.js');
+      const idea = os.idea(action === 'void.collide' ? body.a : params.uuid);
+      if (!idea) return err(res, 404, `idea not found: ${action === 'void.collide' ? body.a : params.uuid}`);
+      const other = action === 'void.collide' ? os.idea(body.b) : null;
+      if (action === 'void.collide' && (!other || other.uuid === idea.uuid)) return err(res, 400, 'a collision needs two different ideas');
+      const kind = action === 'void.spec' ? 'ground' : action === 'void.collide' ? 'collide' : (body.kind || 'echo');
+      const dial = (k) => body[k] !== undefined ? body[k] : (idea.void ? idea.void[k] : 0);
+      const { listLibrary } = await import('../lib/spec-library-import.js');
+      const context = { repos: getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => r.name), library: listLibrary().map(r => r.title) };
+      const p = V.echoPrompt({ idea, creativity: dial('creativity'), stability: dial('stability'), kind, other, context });
+      if (p.error) return err(res, 400, p.error);
+      const r = await _agentAsk(p.prompt, { channel: 'idearium-void', sessionId: `void-${idea.uuid}` });
+      if (!r.ok) return err(res, 502, `the void did not answer: ${r.error}`);
+      const echo = V.makeEcho({ idea, kind, voice: p.voice, meta: p.meta, text: r.text, by: r.by || null });
+      if (!echo.lines.length) return err(res, 502, 'the agent answered with nothing usable');
+      appendRow(V.ECHO_TABLE, echo);
+      // asking about an idea is attention, not work: it touches the idea (it stops drifting) but does not brighten it
+      os.emit('idearium.idea.update', { uuid: idea.uuid, fields: { void: V.shapeVoid(idea.void, {}) }, causedBy: 'void' });
+      os.emit('idearium.void.echo', { uuid: idea.uuid, kind, voice: p.voice, ...(echo.domain ? { domain: echo.domain } : {}) });
+      return ok(res, { echo, ...(action === 'void.spec' ? { next: `/workshop.html?from=${encodeURIComponent('idea:' + idea.uuid)}` } : {}) });
+    }
+    case 'void.echo.decide': {
+      const V = await import('../lib/void.js');
+      const rows = loadTable(V.ECHO_TABLE);
+      const e = rows.find(x => x.uuid === params.id); if (!e) return err(res, 404, `echo not found: ${params.id}`);
+      if (body.action === 'set-aside' || body.action === 'reopen') {
+        e.status = body.action === 'set-aside' ? 'set-aside' : 'open'; syncTable(V.ECHO_TABLE, [e]);
+        return ok(res, { echo: e });
+      }
+      if (body.action !== 'take') return err(res, 400, 'action must be take, set-aside or reopen');
+      const idea = os.idea(body.ideaUuid || e.ideaUuid); if (!idea) return err(res, 404, 'its idea is gone');
+      const t = V.take(idea, e, { words: body.words });
+      if (t.error) return err(res, 400, t.error);
+      os.emit('idearium.idea.update', { uuid: idea.uuid, fields: { text: t.text, void: V.shapeVoid(idea.void, { work: true }) }, causedBy: 'void.take' });
+      e.taken = [...(e.taken || []), { words: String(body.words).trim(), at: Date.now(), into: idea.uuid }]; e.status = 'taken';
+      syncTable(V.ECHO_TABLE, [e]);
+      return ok(res, { echo: e, idea: os.idea(idea.uuid) });
+    }
+    case 'void.spark.idea': {
+      // a brainstorm spark becomes an idea through brainstorm.promote (one path), then takes its place and dials
+      const V = await import('../lib/void.js');
+      const r = await _callRoute('brainstorm.promote', { uuid: params.uuid }, typeof body.text === 'string' ? { text: body.text } : {});
+      if (!r.ok || !r.idea) return err(res, r.status && r.status !== 200 ? r.status : 400, r.error || 'the spark was not made an idea');
+      const place = V.placeFor(params.uuid);
+      os.emit('idearium.idea.update', { uuid: r.idea.uuid, fields: { void: V.shapeVoid(null, { creativity: body.creativity, stability: body.stability, x: body.x ?? place.x, y: body.y ?? place.y }) }, causedBy: 'void.spark' });
+      return ok(res, { idea: os.idea(r.idea.uuid) });
+    }
+
     // ── §0.39.294 SW1 — the spec workshop ─────────────────────────────────────────────────────────────────────────
     // James: "need the spec workshop, completely destroy the spec builder, and build the spec workshop" · "the workshop
     // and maybe it hooks into the spec field". Sessions in the JAA table idearium_workshops; the agent only proposes.
@@ -6545,9 +6664,23 @@ export function startAPI() {
       return;
     }
 
+    // §0.39.295 V1 — the void's fonts (SIL OFL, idearium/ui/fonts): binary, so not the utf8 branch above; woff2 + licenses
+    if (req.method === 'GET' && /^\/fonts\/[a-z0-9-]+\.(woff2|txt)$/.test(cleanUrl)) {
+      try {
+        const { readFileSync, existsSync } = await import('fs');
+        const { join, dirname } = await import('path');
+        const { fileURLToPath } = await import('url');
+        const file = join(dirname(fileURLToPath(import.meta.url)), '..', 'ui', cleanUrl.slice(1));
+        if (!existsSync(file)) { res.writeHead(404); res.end('not found'); return; }
+        res.writeHead(200, { 'Content-Type': cleanUrl.endsWith('.woff2') ? 'font/woff2' : 'text/plain; charset=utf-8', 'Cache-Control': 'max-age=86400' });
+        res.end(readFileSync(file));
+      } catch (e) { try { res.writeHead(500); res.end('internal error'); } catch (_) {} }
+      return;
+    }
+
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html')) {   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html')) {   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');

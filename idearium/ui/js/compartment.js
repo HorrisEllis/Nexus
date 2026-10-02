@@ -396,9 +396,10 @@ function renderTabTree() {
     if (cur && cur.nexusSelf && cur.nexusSelf.role === 'system') for (const r of (typeof API_REPOS !== 'undefined' ? API_REPOS : [])) if (r.nexusSelf && r.nexusSelf.role === 'parent') TT_COLLAPSED.delete(`repo:${r.uuid}`);
   }
   const workBranches = (r) => r.uuid !== openUuid ? '' : `<div class="tt-sep">work in this repo</div>` +
-    branch(`create:${r.uuid}`, '✎', 'Create',
-      leaf('✎', 'Brainstorm', "setView('brainstorm')", `<span class="tt-n">${(typeof BRAINSTORMS !== 'undefined' ? BRAINSTORMS : []).filter(b => !b.promoted).length || ''}</span>`) +
-      branch('ideas', '◇', 'Ideas', ideas.slice(0, 200).map(i => leaf('◇', _wbShort(i.text, 40), `setView('ideas');selectIdea('${i.uuid}')`)).join('') || '<div class="tt-empty">none</div>', "setView('ideas')")) +
+    // §0.39.295 — Ideas and Brainstorm are the Void now (its own page); their ideas and sparks live there
+    branch(`create:${r.uuid}`, '∞', 'Create',
+      leaf('∞', 'The Void', 'openVoid()', `<span class="tt-n">${ideas.length || ''}</span>`) +
+      leaf('✎', 'Spec workshop', 'openWorkshop()')) +
     branch(`build:${r.uuid}`, '▦', 'Build',
       leaf('◈', 'Eravos — organism canvas', "setView('eravos')") +
       leaf('⌘', 'Architect — block canvas', "setView('architect-build')") +

@@ -539,6 +539,16 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **One idea:** the library's idea becomes the repo's idea. Asking again opens the same repo.
 - **Code:** `idearium/lib/spec-library-import.js` (toPipeline, findRow, specFileText). The route hands in the promotion and the repo layer's file write.
 
+**The Spatial Void** (0.39.295, `idearium/ui/void.html`, `idearium/lib/void.js`). James: "Just have the spacial void, with a slider … with those linked togethe" · "the ideas come from me though not agents".
+- **Where:** Create → **The Void**, Welcome → **Enter the Void**, or the idearium CLI's void commands. It replaces Ideas and Brainstorm; every idea and every brainstorm spark is in it.
+- **Speak your vision** (Ctrl+Enter): it becomes an idea, at the dials, a point of light in the field.
+- **The dials:** creativity normal · creative · outside the box · novel · outlier; stability stable · shaky · risky · dangerous · unstable, from the other side. Linked, one carries the other. Unlink them (⌖) and each moves alone; the line joining them strains with the tension.
+- **The void answers your idea; it never writes one.** ECHO answers at the dials: creativity sets how far it pushes, stability how hard it checks. D20 rolls a field and maps its mechanism; REVERSE walks your idea's furthest form back to now. The voices are the old Nexus engines: EROSMANCER, HOSTILE TRUTH, DELTA RISK, UNIFIED where the dials meet.
+- **TAKE** a line: you say what you keep, in your words, and only that goes into your idea.
+- **The field:** worked ideas glow brighter; untouched ones fade and drift outward. Wild ideas (born wild, held steady) are magenta; unsteady ones orange. Drag to place; drag one onto another to collide them.
+- **→ SPEC** grounds the idea (stable, whatever the dials say), then opens the spec workshop.
+- **Fonts:** Bebas Neue, DM Mono and Space Grotesk ship in idearium/ui/fonts (SIL Open Font License), so it works offline.
+
 **The spec workshop** (0.39.294, `idearium/ui/workshop.html`, `idearium/lib/workshop.js`). James: "need the spec workshop … the workshop and maybe it hooks into the spec field".
 - **Where:** Welcome → **Spec workshop**; an idea's **✎ spec workshop**; a repo's Spec tab → **open in the spec workshop**; the spec library's **✎ workshop** on a row; the idearium CLI's workshop commands.
 - **Start from:** an idea, a document in the spec library, a repo's spec file, or nothing.
