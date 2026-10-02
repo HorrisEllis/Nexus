@@ -15,6 +15,8 @@
  *          layer and reports them as injects; then PH1's proof loop drives it — the readme it misses on attempt 1 is
  *          fed back, attempt 2 writes it, the phase reads proven
  *   CC-05  wired: the provider in the Agent tab's switch; loom
+ *   CC-06  the economy (§IN2b): every run is one ledger row (reported tokens, dollars, outcome); switched off → refused,
+ *          nothing run; the person's fallback provider is followed and said; a failed run is a row too
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -49,7 +51,7 @@ let input = ''; process.stdin.on('data', d => input += d); process.stdin.on('end
     fs.unlinkSync('gone.txt');
   }
   if (mode === 'readme' && /NOT met yet/.test(input)) fs.writeFileSync('README.md', '# Orbit Garden\\nPlans beds by sunlight.\\n');
-  process.stdout.write(JSON.stringify({ type: 'result', subtype: 'success', is_error: false, result: 'done: ' + mode, session_id: 'sess-1', total_cost_usd: 0.0123, num_turns: 4 }));
+  process.stdout.write(JSON.stringify({ type: 'result', subtype: 'success', is_error: false, result: 'done: ' + mode, session_id: 'sess-1', total_cost_usd: 0.0123, num_turns: 4, usage: { input_tokens: 100, cache_read_input_tokens: 20, cache_creation_input_tokens: 5, output_tokens: 30 } }));
 });
 `);
 fs.chmodSync(standin, 0o755);
@@ -127,6 +129,9 @@ function fixtureRepo() {
   const repoUuid = (await R('POST', `/api/workshop/${w.uuid}/save`, {})).json.repoUuid;
   const layer = api.getRepoLayer();
   const diskDir = () => { const r = layer.get(repoUuid); return r.materializeDir || layer.materialize(repoUuid).dir; };
+  const Store = require(path.join(ROOT, 'lib/economy/store.js'));
+  const Ledger = require(path.join(ROOT, 'lib/economy/ledger.js'));
+  Store.save({ providers: { 'claude-code': { limits: { minGapMs: 0 } } } }, null, { by: 'test' });   // back-to-back runs in CC-04
 
   await test('CC-04', "Idearium's 'claude-code' provider: changes through the repo layer as injects; PH1 drives it to proven", async () => {
     const set = await R('POST', `/api/repos/${repoUuid}/agent/settings`, { provider: 'claude-code' });
@@ -157,6 +162,36 @@ function fixtureRepo() {
     assert.strictEqual(p.attempt, 2);
     assert.match(readLog().pop().input, /THE PROOF RUN CHECKED YOUR LAST ATTEMPT: 0 of 1 conditions met/, 'Claude Code was given the unmet promise');
     assert.match(layer.readFile(repoUuid, 'README.md').content, /Orbit Garden/);
+  });
+
+  await test('CC-06', 'the economy: every run is a ledger row with its reported tokens and dollars; a refusal is said, nothing run; a fallback is the person\'s', async () => {
+    const rows = Ledger.records({ provider: 'claude-code' });
+    assert.ok(rows.length >= 2, `CC-04's runs are in the ledger (${rows.length})`);
+    const last = rows[rows.length - 1];
+    assert.deepStrictEqual([last.outcome, last.tokensIn, last.tokensOut, last.tokenMethod, last.usd, last.jobType], ['ok', 125, 30, 'reported', 0.0123, 'build'], JSON.stringify(last));
+    const repo = layer.get(repoUuid);
+    // switched off in the economy → refused with the reason, the stand-in never runs
+    Store.save({ providers: { 'claude-code': { enabled: false, onLimit: 'stop' } } }, null, { by: 'test' });
+    const before = readLog().length, rowsBefore = Ledger.records({ provider: 'claude-code' }).length;
+    const off = await RA.dispatch({ repo, repoDir: diskDir(), message: 'anything', layer, session: 'cc6' });
+    assert.strictEqual(off.ok, false); assert.match(off.error, /the economy says stop: claude-code is switched off in the economy/);
+    assert.strictEqual(readLog().length, before, 'claude was not run');
+    assert.strictEqual(Ledger.records({ provider: 'claude-code' }).length, rowsBefore, 'a refusal is not a run');
+    // the person's fallback: off, onLimit fallback:ollama → the dispatch goes to ollama (copilot down here), said
+    Store.save({ providers: { 'claude-code': { enabled: false, onLimit: 'fallback:ollama' } } }, null, { by: 'test' });
+    const fb = await RA.dispatch({ repo, repoDir: diskDir(), message: 'anything', layer, session: 'cc6b', timeoutMs: 2000 });
+    assert.deepStrictEqual([fb.economy.from, fb.economy.fallback], ['claude-code', 'ollama']);
+    assert.strictEqual(readLog().length, before, 'claude was not run for the fallback either');
+    // a failed run is a row too
+    Store.save({ providers: { 'claude-code': { enabled: true, onLimit: 'wait' } } }, null, { by: 'test' });
+    process.env.STANDIN_MODE = 'error';
+    const bad = await RA.dispatch({ repo, repoDir: diskDir(), message: 'anything', layer, session: 'cc6c' });
+    assert.strictEqual(bad.ok, false);
+    const lastBad = Ledger.records({ provider: 'claude-code' }).pop();
+    assert.deepStrictEqual([lastBad.outcome, lastBad.jobType], ['failed', 'chat']); assert.match(lastBad.reason, /error_max_turns/);
+    const P = require(path.join(ROOT, 'lib/agent-providers.js'));
+    assert.ok(P.headless().includes('claude-code') && !P.all().includes('claude-code'), 'kept out of all(): its callers would route it to a guardian tab');
+    assert.ok(Store.load().providers['claude-code'], 'an economy entry of its own');
   });
 
   await test('CC-05', "wired: the Agent tab's switch, loom", async () => {

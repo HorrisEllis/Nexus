@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.8
+    version:  1.7.9
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -727,7 +727,7 @@ spec:
       layer: service
       systems: [guardian, economy, idearium, cos]
       value: { score: 5, cost: M, for: [income, daily-use], why: "the strongest coder available, working inside his pipeline on his account" }
-      status: PARTIAL (1.7.8) — IN2a built: the 'claude-code' backend in Idearium (headless, in a copy, back through the repo layer); GA1/AC1/SH1 parts open
+      status: PARTIAL (1.7.9) — IN2a built (the 'claude-code' backend in Idearium); IN2b built (under the economy: gate + ledger); GA1/AC1/SH1 parts open
       depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
       files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
       does: >-
@@ -1220,3 +1220,18 @@ spec:
 # Proof: tests/modules/test-claude-code-backend.test.js 5/5 with a stand-in `claude` — CC-04: the provider set through
 # the real API, a dispatch's edits / additions / deletion written through the real repo layer as injects, then PH1's loop
 # drives it: attempt 1 left no readme, the unmet promise went to Claude Code, attempt 2 wrote it, the phase read proven.
+
+## ADDENDUM 2026-10-02 — 1.7.9, IN2b: Claude Code under the economy
+# IN2's proof names it: "its cost lands in the economy ledger". Now every claude-code run, ok or failed, is one row in
+# lib/economy/ledger.js — the tokens Claude Code itself reports (tokenMethod 'reported', not estimated), its dollars
+# (total_cost_usd → a new optional `usd` on the row), time and outcome; jobType build for a phase run, else chat. And the
+# economy decides first, as guardian's dispatcher does for its agents: switched off, a quiet hour or a limit is said and
+# nothing runs; the person's onLimit fallback is followed and named on the reply; a short wait (≤ 2 min — the default
+# 15 s gap before a PH1 retry) is waited out, since Idearium has no queue; a longer one is refused with its reason.
+# claude-code has its own economy entry (tier subscription — his account; every limit editable). lib/agent-providers.js
+# gains headless() — the one list stays one file — kept OUT of all(): the spec engine, warp-cascade and the agent suite
+# treat every name in all() but copilot/ollama as a guardian browser agent and would route claude-code to a tab.
+# Still open: per-ACCOUNT spend (AC1 — the row is per provider), Guardian as its registry (GA1), SH1, the live session.
+# Proof: tests/modules/test-claude-code-backend.test.js 6/6 (CC-06: ledger rows with reported tokens and dollars; off →
+# refused, claude not run, no row; fallback:ollama followed and said; a failed run is a 'failed' row); economy 11/11,
+# economy-guardian 5/5, pipeline-routing 19/19, warp-cascade fallback 7/7, repo-agent-provider 65/65.
