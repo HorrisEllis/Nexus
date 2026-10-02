@@ -18,8 +18,9 @@ spec:
     decisions:   # asked, answered
       rewording:  local model (Ollama through copilot's lifeline), with a built-in JS rewriter as the fallback
       eros:       fallback typist — the userscript stays primary; Eros types when the tab could not take the job
-      installs:   everything a run option needs (QEMU, Python, Ruby, PHP, Go, Git): winget on Windows, brew on
-                  macOS, apt with sudo -n on Linux or the exact command when a password is needed
+      installs: >-
+        everything a run option needs (QEMU, Python, Ruby, PHP, Go, Git): winget on Windows, brew on
+        macOS, apt with sudo -n on Linux or the exact command when a password is needed
 
   # ── What exists (read, not recalled — §8.6) ───────────────────────────────
   exists:

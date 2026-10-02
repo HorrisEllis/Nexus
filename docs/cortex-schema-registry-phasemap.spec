@@ -2,10 +2,12 @@ spec:
   meta:
     name:        cortex-schema-registry
     version:     0.1.0-phasemap
-    status:      PHASEMAP 2026-07-30. Schemas-per-system as an expectation +
-                 integrity layer, living IN cortex as editable rows. FLUID, not
-                 rigid: describes, observes, records drift — never blocks.
-                 Governed by AXIOMS-v3.1. §8.6 read first; §3.3 map before build.
+    status: >-
+      PHASEMAP 2026-07-30. Schemas-per-system as an expectation +
+      integrity layer, living IN cortex as editable rows. FLUID, not
+      rigid: >-
+      describes, observes, records drift — never blocks.
+      Governed by AXIOMS-v3.1. §8.6 read first; §3.3 map before build.
     uuid:        nexus-cortex-schema-registry-v0-0000-2026-0730-001
 
   the_principle_james_named:

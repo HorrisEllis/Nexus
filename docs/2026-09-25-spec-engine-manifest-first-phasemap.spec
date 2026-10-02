@@ -52,13 +52,16 @@ spec:
   pipeline:
     - P0 SPEC       → spec text in
     - P1 MANIFEST   → LLM generates file tree + manifest entries + registry (one job, whole-spec context)
-    - P2 WIRE-CHECK → static, no LLM: I3, I4, schema compatibility producer↔consumer, depends acyclic
-                      FAIL → back to P1 with the violation list (retry protocol: creation ctx + failure report)
+    - >-
+        P2 WIRE-CHECK → static, no LLM: I3, I4, schema compatibility producer↔consumer, depends acyclic
+        FAIL → back to P1 with the violation list (retry protocol: creation ctx + failure report)
     - P3 KERNEL     → phase 0 built and tested first (bus, registry loader, router, persistence)
     - P4 CHUNKS     → one chunk per component, parallel; context per I5; SEAM contract tests per entry
     - P5 ASSEMBLE   → registry loads components by id; router wires signatures; no imports
-    - P6 INTEGRATE  → real events across real boundaries, driven from manifest emits/consumes; no stubs at seams
-    states: QUEUED → MANIFESTED → WIRED → KERNEL_OK → CHUNKED → ASSEMBLED → INTEGRATED | FAILED → RETRYING
+    - >-
+        P6 INTEGRATE  → real events across real boundaries, driven from manifest emits/consumes; no stubs at seams
+    - states: >-
+        QUEUED → MANIFESTED → WIRED → KERNEL_OK → CHUNKED → ASSEMBLED → INTEGRATED | FAILED → RETRYING
 
   # ── Components to build (each its own chunk) ──────────────────────────────
   components:
@@ -93,14 +96,14 @@ spec:
       - component-registry.js generated from manifest-registry.js but did not depend on it
       - kernel/boot.js and pulse/heartbeat.js read config without depending on it
       - hand-written boot order had config/ last
-      fixed in genesis.spec: ref split into depends (directional) / related; boot order now generated (7 layers)
+      - fixed in genesis.spec: ref split into depends (directional) / related; boot order now generated (7 layers)
 
   # ── P1 split (agreed 2026-09-25) — whole-spec context used exactly once ──
   p1_split:
     - P1a FILE LIST  → one LLM job: path, uuid, one-sentence intent, depends   (only step that sees the whole spec)
     - P1b REGISTRY   → code, no LLM: resolve, reject cycles, registry, layers, build order      [BUILT]
     - P1c INTERFACES → one small LLM job per file: own intent + depends' intents → consumes/emits/exposes + schemas
-    then P2 WIRE-CHECK on the interfaces                                                          [BUILT]
+    - then P2 WIRE-CHECK on the interfaces                                                          [BUILT]
 
   # ── Raised by James 2026-09-25, not built ────────────────────────────────
   next:

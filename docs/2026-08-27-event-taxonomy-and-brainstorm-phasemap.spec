@@ -2,18 +2,19 @@ spec:
   meta:
     name:    2026-08-27-event-taxonomy-and-brainstorm
     version: 0.1.0-phasemap
-    status:  PHASEMAP 2026-08-27. Two things captured here: (1) a real,
-             scoped plan for a per-system event taxonomy, sequenced from
-             the ACTUAL current fragmentation (guardian: 6 bus events, all
-             under one ncp.* prefix, confirmed by grep; clear-glass: 36
-             files independently calling emit/broadcast/SSE with no shared
-             registry, confirmed by grep; no cross-system vocabulary
-             anywhere) — not a hypothetical gap. (2) the rest of James's
-             2026-08-27 architecture brainstorm, phasemapped rather than
-             left to evaporate in a chat. Where an idea in the brainstorm
-             already has a real phase ID elsewhere in loom (checked via
-             loom/scanners/phasemap-map.js's real loadAll(), not assumed),
-             it is CROSS-REFERENCED below, never duplicated as a new phase.
+    status: >-
+      PHASEMAP 2026-08-27. Two things captured here: (1) a real,
+      scoped plan for a per-system event taxonomy, sequenced from
+      the ACTUAL current fragmentation (guardian: 6 bus events, all
+      under one ncp.* prefix, confirmed by grep; clear-glass: 36
+      files independently calling emit/broadcast/SSE with no shared
+      registry, confirmed by grep; no cross-system vocabulary
+      anywhere) — not a hypothetical gap. (2) the rest of James's
+      2026-08-27 architecture brainstorm, phasemapped rather than
+      left to evaporate in a chat. Where an idea in the brainstorm
+      already has a real phase ID elsewhere in loom (checked via
+      loom/scanners/phasemap-map.js's real loadAll(), not assumed),
+      it is CROSS-REFERENCED below, never duplicated as a new phase.
     uuid:    nexus-2026-0827-event-taxonomy-brainstorm-phasemap-v1-0000-001
     intent: >
       James: "yes but it needs to be in each respectable system. I want

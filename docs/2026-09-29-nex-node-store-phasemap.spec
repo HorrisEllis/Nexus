@@ -66,7 +66,7 @@ spec:
   phases:
     N0_census:
       layer: foundation
-      status: OPEN
+      status: "DONE 0.39.300 — lib/nexstore/census.js; docs/nexstore-type-catalogue.yaml (286 shapes, all seven kinds, 0 unclassified, 2 undeclared node types named: capability-seam, command-seam); tests/modules/test-nexstore-census.test.js 3/3. Ranked first by intelligence's gap synthesis (it unblocks N2–N13)." 
       depends_on: []
       files:
         - "lib/nexstore/census.js"
@@ -82,7 +82,7 @@ spec:
 
     N1_record_and_log:
       layer: foundation
-      status: OPEN
+      status: "DONE 0.39.300 — lib/nexstore/record.js (frame: u32 length, u32 crc32, JSON body; seq/prev/hash/op/type/id/change/causedBy/by/at, sha256 over the canonical body; no write without a cause field) and lib/nexstore/log.js (append + fsync before return, segments with a cap, chain verified on open, torn tail cut and kept under torn/, corruption elsewhere refused, one writer by LOCK with stale takeover said); tests/modules/test-nexstore-log.test.js 5/5 — 25 SIGKILLs at random points, thousands of acks, every one present on reopen. Second by leverage in the synthesis."
       depends_on: []
       files:
         - "lib/nexstore/record.js"
@@ -94,7 +94,7 @@ spec:
 
     N2_types_and_gates:
       layer: foundation
-      status: OPEN
+      status: "DONE 0.39.300 — lib/nexstore/types.js: the registry read from docs/nexstore-type-catalogue.yaml (N0) with lib/node-schemas joined by name (required fields, field types); the gate per type is a list of warp/core Axiom (kind ops, ledger append-only, ids, edge ends, required, types, references that must exist, a type's own axioms; soft ones report); guard(log) writes a refused record's refusal, never the record. A ring without a declared capacity is said. tests/modules/test-nexstore-types.test.js 4/4."
       depends_on: [N0]
       files:
         - "lib/nexstore/types.js"

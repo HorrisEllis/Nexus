@@ -51,17 +51,19 @@ spec:
     - M7 copilot's chat offers 3 of ~16 Clear Glass tools; tool-guide lacks notes for most tools.
     - M8 no pipeline for finding, scoring, tracking and applying to jobs/gigs/leads (autofill + proposal are per page).
     - M9 an Idearium agent cannot search across memory systems and graphs in one place.
-    - M10 copilot learns nothing from what it does in the browser: a selector that failed fails again next time; a
-      flow that worked is not kept; outcomes of applications do not change what gets shortlisted; James's edits to
-      drafts do not change the next draft.
+    - >-
+        M10 copilot learns nothing from what it does in the browser: a selector that failed fails again next time; a
+        flow that worked is not kept; outcomes of applications do not change what gets shortlisted; James's edits to
+        drafts do not change the next draft.
 
   invariants:
     I1: one implementation, second door — every HTTP route calls the same handler the IPC channel / gate calls.
     I2: nothing reveals a secret — no route returns a decrypted password; saving credentials stays James's (denied).
     I3: approval of an application is James's (by:'user'); an agent submits only under his policy (+ ToS ack).
     I4: nothing is sent to a model that James cannot edit (templates, prompt blocks); placeholders are data.
-    I5: learning is evidence: every learned item names the observation(s) it came from, is listed, and can be
-        forgotten; a learned rule never overrides James's explicit settings.
+    I5: >-
+      learning is evidence: every learned item names the observation(s) it came from, is listed, and can be
+      forgotten; a learned rule never overrides James's explicit settings.
     I6: failures are data (§1.2) — a failed action, a refused channel, a healed selector are ledgered with reasons.
 
   phases:
@@ -74,16 +76,17 @@ spec:
          files: [copilot/lib/copilot-context.js, copilot/lib/nexus-awareness.js, copilot/server.js, lib/agent-tools/tool-guide.js, lib/agent-tools/tool-catalog.js, lib/hat-seed.js]}
     B1: {title: opportunity pipeline reusing Clear Glass autofill identity + proposal guides, closes: [M8],
          files: [lib/opportunity/*, lib/agent-tools/tools/opportunity/opportunity.js, cli/opportunity.js, copilot/routes/opportunity.js, clear-glass/src/toolbar/commands.js, clear-glass/renderer/browser.js]}
-    C1: {title: context atlas (agent memory + JAA + graphs + prose) — its own {atlas}/{directory} blocks beside {memory}, closes: [M9],
+    C1: {title: "context atlas (agent memory + JAA + graphs + prose) — its own {atlas}/{directory} blocks beside {memory}", closes: [M9],
          files: [lib/context-atlas.js, lib/agent-tools/tools/query/context-atlas.js, lib/repo-prompt-blocks.js, lib/repo-agent.js, idearium/api/index.js, idearium/ui/js/app.js]}
     L1: {title: site memory — every browser action outcome per host; hints returned with read(), closes: [M10], files: [lib/cg-learning.js]}
     L2: {title: self-healing selectors — a missing element is re-found by its label/text, retried once, the mapping learned, closes: [M10]}
     L3: {title: learned flows — a sequence that worked on a host is kept; promote to a Clear Glass macro on James's word, closes: [M10]}
     L4: {title: outcome learning — responses/interviews/rejections move source and keyword weights (bounded, explained), closes: [M10]}
-    L5: {title: voice learning — James's edited drafts become {examples} in the drafting templates, closes: [M10]}
+    L5: {title: "voice learning — James's edited drafts become {examples} in the drafting templates", closes: [M10]}
     X1: {title: axioms pass — loom map with wires, spec addenda, SPEC-REGISTRY, version 0.39.272, run-all, tests, nexus.zip}
 
   open_items:
     - The job APIs cannot be reached from the build environment; normalizers are fixture-tested.
-    - No live Electron window in the build environment: driver actions and CDP upload are tested through the routes
-      with a driver stand-in, the reader in jsdom.
+    - >-
+        No live Electron window in the build environment: driver actions and CDP upload are tested through the routes
+        with a driver stand-in, the reader in jsdom.

@@ -171,8 +171,8 @@
       <span class="ax-sep"></span>
       <button class="ax-tool" data-act="layout" title="LAY THE MAP OUT AGAIN — BOTTOM-UP, FEWEST CROSSINGS (YOUR PLACEMENTS ARE CLEARED)"><b>⊞</b>ARRANGE</button>
       <button class="ax-tool" data-act="fit" title="FIT THE WHOLE MAP (F)"><b>⤢</b>FIT</button>
-      <button class="ax-tool" data-act="out" title="ZOOM OUT (−)"><b>−</b>OUT</button>
-      <button class="ax-tool" data-act="in" title="ZOOM IN (+)"><b>+</b>IN</button>
+      <button class="ax-tool" data-act="out" title="ONE INCREMENT OUT (−)"><b>−</b>OUT</button>
+      <button class="ax-tool" data-act="in" title="ONE INCREMENT IN (+)"><b>+</b>IN</button>
       <span class="ax-sep"></span>
       <button class="ax-tool m" data-act="agent" title="THE AGENT — LAY THE SPEC OUT, ITS PROPOSALS"><b>⌬</b>AGENT</button>
       <button class="ax-tool" data-act="inspect" title="THE SELECTED COMPONENT"><b>◈</b>INSPECT</button>
@@ -227,9 +227,10 @@ function dialog({ q, note = '', value = null, ok = 'OK' }) {
 }
 function stations() {
   const a = V && V.architecture;
-  const s = [['IDEA', ''], ['SPEC', a && a.workshopUuid ? 'done link' : a ? 'done' : ''], ['ARCHITECT', 'now'], ['BLUEPRINT', ''], ['REPO', a && a.repoUuid ? 'done link' : ''], ['COS', '']];
-  $('stations').innerHTML = s.map(([n, c], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}" ${n === 'SPEC' && a && a.workshopUuid ? 'id="stSpec" tabindex="0" title="BACK TO THE SPEC WORKSHOP"' : n === 'REPO' && a && a.repoUuid ? 'id="stRepo" tabindex="0" title="OPEN THE REPO IN IDEARIUM"' : ['BLUEPRINT', 'COS'].includes(n) ? 'title="NEXT IN THE PIPELINE — MAPPED, COMING"' : ''}>${n}</span>`).join('');
+  const s = [['IDEA', 'link'], ['SPEC', a && a.workshopUuid ? 'done link' : a ? 'done' : ''], ['ARCHITECT', 'now'], ['BLUEPRINT', ''], ['REPO', a && a.repoUuid ? 'done link' : ''], ['COS', '']];
+  $('stations').innerHTML = s.map(([n, c], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}" ${n === 'IDEA' ? 'id="stIdea" tabindex="0" title="THE VOID — WHERE THE IDEAS ARE"' : n === 'SPEC' && a && a.workshopUuid ? 'id="stSpec" tabindex="0" title="BACK TO THE SPEC WORKSHOP"' : n === 'REPO' && a && a.repoUuid ? 'id="stRepo" tabindex="0" title="OPEN THE REPO IN IDEARIUM"' : ['BLUEPRINT', 'COS'].includes(n) ? 'title="NEXT IN THE PIPELINE — MAPPED, COMING"' : ''}>${n}</span>`).join('');
   const bind = (id, fn) => { const el = $(id); if (el) { el.onclick = fn; el.onkeydown = (e) => { if (e.key === 'Enter') fn(); }; } };
+  bind('stIdea', () => { location.href = 'void.html'; });   // §0.39.300 WS3 — every station reaches the others
   bind('stSpec', () => { location.href = `workshop.html?id=${encodeURIComponent(a.workshopUuid)}`; });
   bind('stRepo', () => {
     const target = window.opener && !window.opener.closed ? window.opener : window.parent !== window ? window.parent : null;
@@ -458,8 +459,8 @@ async function act(a) {
   if (a === 'add') return addComponent();
   if (a === 'layout') { if (!V.analysis.components.length) return; const pinned = V.analysis.components.filter(c => Number.isFinite(c.x)); if (pinned.length) await update({ components: pinned.map(c => ({ id: c.id, x: null, y: null })) }, true); CANVAS.layout({ all: true }); toast('LAID OUT BOTTOM-UP — FEWEST CROSSINGS'); return; }
   if (a === 'fit') return CANVAS && CANVAS.fit();
-  if (a === 'in') return CANVAS && CANVAS.zoomBy(1.18);
-  if (a === 'out') return CANVAS && CANVAS.zoomBy(1 / 1.18);
+  if (a === 'in') return CANVAS && CANVAS.step(1);     // §0.39.300 AZ1 — the zoom moves in increments
+  if (a === 'out') return CANVAS && CANVAS.step(-1);
   if (a === 'agent') { TAB = 'agent'; drawer('side', true); return paintSide(); }
   if (a === 'inspect') { TAB = 'comp'; drawer('side'); return paintSide(); }
   if (a === 'draft') { TAB = 'agent'; drawer('side', true); paintSide(); return draft(); }
