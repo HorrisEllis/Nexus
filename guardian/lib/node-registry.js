@@ -10,7 +10,8 @@ let NODES_DIR = DEFAULT_NODES_DIR;
 // §0.39.271 X2 — 'hat' added: Guardian hosts the agent types (NODE-TAXONOMY.md rows 1 and 5);
 // lib/system-nodes.js writes guardian/data/nodes/{hat,agent} from every forged hat. capability
 // and system are Guardian's own generated nodes (lib/system-nodes.js), indexed here too.
-const GUARDIAN_NODE_TYPES = Object.freeze(['tool', 'agent', 'hat', 'command', 'capability', 'system', 'event', 'intent', 'response']);
+// §GA1 2026-10-02 — 'provider': the browser agents Clear Glass runs, Guardian's to state (map invariant E13)
+const GUARDIAN_NODE_TYPES = Object.freeze(['tool', 'agent', 'hat', 'command', 'capability', 'system', 'event', 'intent', 'response', 'provider']);
 const LEDGER_FILE = '_ledger.jsonl';
 
 let _bus = null;

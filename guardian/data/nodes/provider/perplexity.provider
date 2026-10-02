@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-provider-perplexity
+type: provider
+id: perplexity
+context: 'guardian — a browser agent Clear Glass runs (GA1, E13): Guardian states it, Clear Glass caches it'
+intent: null
+summary: null
+system: guardian
+tags:
+  - guardian
+  - provider
+exported_at: 1790971626620
+source: guardian.lib.agent-facts
+occurrences: 1
+firstSeenAt: 1790971626620
+lastSeenAt: 1790971626620
+fingerprint: null
+payload:
+  id: perplexity
+  name: Perplexity
+  url: https://www.perplexity.ai
+  hosts:
+    - www.perplexity.ai
+    - perplexity.ai
+  userscriptFile: userscript-perplexity.js
+  color: '#20b2aa'
+  autostart: false
+  version: 1.0.0
+  strengths:
+    - real_world_facts
+    - citations
+    - web_search
+    - research
+    - grounded

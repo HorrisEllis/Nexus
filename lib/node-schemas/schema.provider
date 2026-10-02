@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-schema-provider
+type: schema
+id: provider
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1790971626609
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1790971626609
+lastSeenAt: 1790971626609
+fingerprint: null
+payload:
+  status: REAL
+  source: >-
+    guardian/lib/agent-facts.js — GA1 (docs/2026-10-02-emerge-field-memory-build-phasemap.spec,
+    E13): the browser agents Clear Glass runs, stated by Guardian
+  fields:
+    id:
+      type: string
+      required: true
+      description: the provider id (claude, chatgpt, …) — the name every router uses
+    name:
+      type: string
+      required: true
+      description: shown to a person
+    url:
+      type: string
+      required: true
+      description: the page its tab opens
+    hosts:
+      type: array
+      required: true
+      description: hostnames that count as this provider
+    userscriptFile:
+      type: string
+      required: true
+      description: guardian/userscript-<id>.js — the NCP userscript that drives the tab
+    color:
+      type: string
+      description: its colour in Clear Glass
+    autostart:
+      type: boolean
+      description: its tab opens when Clear Glass starts
+    version:
+      type: string
+      description: the userscript version guardian.spec names
+    strengths:
+      type: array
+      description: what RAID routes to it for
