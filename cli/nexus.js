@@ -212,6 +212,7 @@ ${C.bold}Unified commands:${C.reset}
   nexus push "message"          snapshot + versionium commit
   nexus snr                     system SNR
   nexus contracts check [--system=<s>] [--all]   every emitted event declared (EV0)
+  nexus mcp list | call <tool> [--args=<json>]    the tools Claude Code sees (.mcp.json)
 
   nexus tag <entityId> --tags=t1,t2
   nexus tags <entityId>
@@ -403,6 +404,26 @@ Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
   // `nexus contracts check [--system=<s>] [--all]` — the systems in contracts/event-contract-baseline.json, read from
   // their source. Fails (exit 1) on new drift, on a baseline entry declared since, or on a collision; --all lists
   // every undeclared event, not only the new ones.
+  // ── MCP — §IN1: the tools Claude Code sees (orchestrator/lib/mcp-server.js, registered in .mcp.json) ──
+  // `nexus mcp list` · `nexus mcp call <tool> [--args='{"query":"lib/x.js"}']` — the same handlers, in-process
+  async mcp() {
+    const sub = args[1] || 'list';
+    const { TOOLS } = require('../orchestrator/lib/mcp-server.js');
+    if (sub === 'list') {
+      if (JSON_) return out(TOOLS.map(t => ({ name: t.name, description: t.description })));
+      hdr(`Nexus MCP — ${TOOLS.length} tools (Claude Code loads them from .mcp.json)`);
+      for (const t of TOOLS) console.log(`  ${C.bold}${t.name.padEnd(26)}${C.reset} ${C.muted}${String(t.description).slice(0, 96)}${C.reset}`);
+      return;
+    }
+    if (sub !== 'call' || !args[2]) return fail('Usage: nexus mcp list | nexus mcp call <tool> [--args=<json>]');
+    const tool = TOOLS.find(t => t.name === args[2]);
+    if (!tool) return fail(`no tool ${args[2]} — nexus mcp list`);
+    let a = {}; const raw = flag('args');
+    if (raw) { try { a = JSON.parse(raw); } catch (e) { return fail(`--args is not JSON: ${e.message}`); } }
+    try { console.log(String(await tool.handler(a))); }
+    catch (e) { fail(`${args[2]}: ${e.message}`); process.exitCode = 1; }
+  },
+
   async contracts() {
     const sub = args[1] || 'check';
     if (sub !== 'check') return fail('Usage: nexus contracts check [--system=<s>] [--all]');

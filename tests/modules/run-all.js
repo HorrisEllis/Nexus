@@ -197,6 +197,7 @@ const SUITES = [
   'test-phase-proof.test.js',         // 0.39.303 PH1 phase runs end in proof
   'test-event-contracts.test.js',     // EV0 (3) every emitted event declared; the drift baseline only shrinks
   'test-claude-code-backend.test.js', // IN2a Claude Code as an Idearium agent backend (a stand-in claude)
+  'test-nexus-mcp.test.js',           // IN1 Nexus as Claude Code's toolbox (.mcp.json, honest degradation)
   'clear-glass-library-ui.test.js',
   'clear-glass-screen-qa.test.js',
   'clear-glass-screen-qa-ui.test.js',

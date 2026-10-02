@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.9
+    version:  1.7.10
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -708,7 +708,7 @@ spec:
       layer: service
       systems: [orchestrator, copilot, loom]
       value: { score: 5, cost: S, for: [compounding, daily-use], why: "Claude Code sees Nexus from inside; every later phase gets built faster and better" }
-      status: OPEN
+      status: PARTIAL (1.7.10) — .mcp.json, honest degradation, loom impact / contracts / proof / introspect tools, on every claude-code run; recall (MR1), CFR trace, field, settings and the session's Observations open
       depends_on: [EM0_ground, GA1_guardian_source_of_truth, EV0_contracts_for_every_system]
       files: [.mcp.json, orchestrator/lib/mcp-server.js, orchestrator/lib/mcp-stdio.js, lib/introspect.js, lib/reflection.js]
       does: >-
@@ -1235,3 +1235,23 @@ spec:
 # Proof: tests/modules/test-claude-code-backend.test.js 6/6 (CC-06: ledger rows with reported tokens and dollars; off →
 # refused, claude not run, no row; fallback:ollama followed and said; a failed run is a 'failed' row); economy 11/11,
 # economy-guardian 5/5, pipeline-routing 19/19, warp-cascade fallback 7/7, repo-agent-provider 65/65.
+
+## ADDENDUM 2026-10-02 — 1.7.10, IN1: Nexus as Claude Code's toolbox
+# Built ahead of GA1 (its listed dependency): GA1 is Guardian as the truth for Guardian's agents; nothing in IN1 reads it.
+# .mcp.json at the repo root registers orchestrator/lib/mcp-stdio.js as server "nexus": a Claude Code session opened on
+# the repo loads it (the real `claude mcp list` finds it, pending the person's one-time approval). Idearium's claude-code
+# backend (IN2a) passes the same server to every headless run by absolute path (--mcp-config, mcp__nexus allowed; off
+# with NEXUS_CLAUDE_CODE_MCP=0), so Claude Code building inside Idearium can look before it writes.
+# New tools, each a thin call onto what exists: nexus_loom_impact (a component's real wiring — depends on, used by: the
+# impact of changing it; reads loom's registry from disk, so it answers with every service down; nexus_loom_query keeps
+# the list-by-name role), nexus_contracts_check (EV0's check), nexus_proof_check (idearium's delivery checker),
+# nexus_introspect (copilot's examination of an answer). CLI: `nexus mcp list | call <tool> [--args=<json>]`.
+# Found, a defect fixed: the server's _get turned an unreachable service into null and the tools read null as an empty
+# result — nexus_gaps with guardian down said "No open gaps ✓", nexus_jobs "No jobs found", seven tools in all. Now an
+# unreachable service or an HTTP error THROWS with the service and port; a 404 stays "nothing there".
+# Said, not fixed: the server's HTTP mode defaults to :7821, guardian's WS port — latent (nothing starts it; stdio needs
+# no port). Not built: MCP_TOOL_CALLED / MCP_TOOL_UNAVAILABLE events (nothing emitted, so nothing to declare yet), recall
+# (waits on MR1), CFR trace and rewind, the field and its lenses, settings get, the session's work as Observations.
+# Proof: tests/modules/test-nexus-mcp.test.js 5/5 — the real stdio server spoken to as Claude Code speaks: loom impact on
+# lib/component-store.js returns its real wires (idearium.api among its users); every service down → errors naming the
+# service, never an empty answer; .mcp.json valid; every claude-code run carries the server.

@@ -29,14 +29,38 @@ const CX_URL     = process.env.CORTEX_URL    || 'http://127.0.0.1:3748';
 const INTEL_URL  = process.env.INTELLIGENCE_URL || 'http://127.0.0.1:3753';
 const OR_URL     = process.env.ORCH_URL      || 'http://127.0.0.1:9000';
 const IDR_URL    = process.env.IDEARIUM_URL  || 'http://127.0.0.1:4800';
+const CP_URL     = process.env.COPILOT_URL   || 'http://127.0.0.1:3750';   // §IN1 — introspect
+
+// §IN1 — loom's registry, read from the repo (cached by mtime): nexus_loom answers with every service down
+let _loomCache = null, _loomKey = null;
+function _loomRegistry() {
+  const fs = require('fs'), path = require('path');
+  const f = process.env.NEXUS_LOOM_REGISTRY || path.resolve(__dirname, '..', '..', 'loom', 'data', 'registry.json');
+  let st; try { st = fs.statSync(f); } catch (_) { throw new Error(`loom's registry is not at ${f} — run node loom/bootstrap.js`); }
+  const key = `${f}|${st.mtimeMs}`;
+  if (_loomCache && _loomKey === key) return _loomCache;
+  _loomCache = JSON.parse(fs.readFileSync(f, 'utf8')); _loomKey = key;
+  return _loomCache;
+}
 
 // ── HTTP helper ────────────────────────────────────────────────────────────────
 
+// §IN1 2026-10-02 — honest degradation (map invariant: "every tool degrades honestly when its service is down, never a
+// fake answer"). This used to return null for a refused connection, and the tools read null as an empty result:
+// nexus_gaps with guardian down said "No open gaps ✓". Now a service that cannot be reached, or answers with an error,
+// THROWS with its name and port — the tool call fails with that reason. A 404 is still null: "nothing there" is real.
+function _service(url) {
+  const port = (() => { try { return new URL(url).port; } catch (_) { return ''; } })();
+  const name = { 7820: 'guardian', 3748: 'cortex', 3753: 'intelligence', 9000: 'orchestrator', 4800: 'idearium', 3750: 'copilot' }[port] || 'the service';
+  return `${name} :${port}`;
+}
 async function _get(url, ms = 3000) {
-  try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(ms) });
-    return r.ok ? r.json() : null;
-  } catch(_) { return null; }
+  let r;
+  try { r = await fetch(url, { signal: AbortSignal.timeout(ms) }); }
+  catch (e) { throw new Error(`${_service(url)} not reachable — ${e.name === 'TimeoutError' ? `no answer in ${ms}ms` : (e.cause && e.cause.code) || e.message} (nothing was read; this is not an empty result)`); }
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(`${_service(url)} answered HTTP ${r.status} for ${new URL(url).pathname}`);
+  return r.json();
 }
 
 async function _post(url, body, ms = 30000) {
@@ -488,6 +512,86 @@ const TOOLS = [
       const ideas = d2?.ideas || d2?.rows || [];
       if (ideas.length) return `Found in Idearium:\n` + ideas.map(i=>`  ${i.title||i.body?.slice(0,80)}`).join('\n');
       return `Spec "${spec_name}" not found in Idearium. Check docs/ directory in the repo.`;
+    },
+  },
+
+  // ── §IN1 2026-10-02 — what a builder needs (docs/2026-10-02-emerge-field-memory-build-phasemap.spec IN1) ─────────
+  // James: "i want to get you to work from inside nexus … then you could use introspect". Each a thin call onto what
+  // exists; loom and the contract check read the repo itself, so they answer with every service down. nexus_loom_impact
+  // adds the WIRING (depends on / used by) that the tokensave tool nexus_loom_query, a list by namespace or name, does not.
+  {
+    name: 'nexus_loom_impact',
+    description: 'Find a NEXUS component in loom\'s registry (by id or file path, e.g. "lib/component-store.js") and see its real wiring: what it depends on, and what depends on it — the impact of changing it. Read before changing or building, to reuse what exists. (To list many components by namespace or name, use nexus_loom_query.)',
+    inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'a component id or a path fragment' }, limit: { type: 'number', default: 5 } }, required: ['query'] },
+    handler: async ({ query, limit = 5 }) => {
+      const reg = _loomRegistry();
+      const q = String(query || '').trim().toLowerCase();
+      if (!q) throw new Error('query is required');
+      const asId = 'nexus.' + q.replace(/\.(c|m)?js$/, '').replace(/[\/\\]/g, '.');
+      const all = Object.values(reg.component);
+      const exact = all.filter(c => c.id.toLowerCase() === q || c.id.toLowerCase() === asId || String(c.name || '').toLowerCase() === q);
+      const hits = (exact.length ? exact : all.filter(c => c.id.toLowerCase().includes(q) || String(c.name || '').toLowerCase().includes(q))).slice(0, Math.max(1, Math.min(20, limit)));
+      if (!hits.length) return `No loom component matches "${query}". Loom has ${all.length} components; it may be new (build it) or named differently (try a shorter fragment).`;
+      const compOfHook = (h) => (reg.hook[h] && reg.hook[h].component_id) || String(h).replace(/\.(export|import|[^.]+)$/, '');
+      const wires = Object.values(reg.wire);
+      return hits.map(c => {
+        const uses = [...new Set(wires.filter(w => compOfHook(w.to_hook_id) === c.id).map(w => compOfHook(w.from_hook_id)))].sort();
+        const usedBy = [...new Set(wires.filter(w => compOfHook(w.from_hook_id) === c.id).map(w => compOfHook(w.to_hook_id)))].sort();
+        const hooks = Object.values(reg.hook).filter(h => h.component_id === c.id).map(h => h.id.slice(c.id.length + 1));
+        return [`${c.id}${c.name && c.name !== c.id ? `  (${c.name})` : ''}`,
+          `  hooks: ${hooks.join(', ') || 'none'}`,
+          `  depends on (${uses.length}): ${uses.slice(0, 25).join(', ') || 'nothing in loom'}${uses.length > 25 ? ', …' : ''}`,
+          `  used by (${usedBy.length}) — the impact of changing it: ${usedBy.slice(0, 25).join(', ') || 'nothing in loom'}${usedBy.length > 25 ? ', …' : ''}`].join('\n');
+      }).join('\n\n') + (exact.length ? '' : `\n\n(${hits.length} partial match${hits.length === 1 ? '' : 'es'} for "${query}")`);
+    },
+  },
+
+  {
+    name: 'nexus_introspect',
+    description: 'Have the co-pilot examine an answer: its verdict on whether the response actually addressed the prompt, with the real signals behind it (lib/introspect.js through copilot :3750).',
+    inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, response: { type: 'string' }, userSaidWrong: { type: 'boolean', default: false } }, required: ['prompt', 'response'] },
+    handler: async ({ prompt, response, userSaidWrong = false }) => {
+      const r = await _post(`${CP_URL}/api/introspect`, { prompt, response, userSaidWrong }, 30000);
+      if (!r || r.ok === false) throw new Error(`${_service(CP_URL)} — introspect failed: ${(r && r.error) || 'no answer'}`);
+      const { ok, ...rest } = r;
+      return `Introspection:\n${JSON.stringify(rest, null, 2).slice(0, 6000)}`;
+    },
+  },
+
+  {
+    name: 'nexus_contracts_check',
+    description: 'Check that every event a NEXUS system emits is declared in its own event-taxonomy (EV0). Run it after adding an emit: new undeclared events are listed with file:line. Reads the repo; no service needed.',
+    inputSchema: { type: 'object', properties: { system: { type: 'string', description: 'one system (e.g. idearium); omit for all held to the contract' } } },
+    handler: async ({ system = null }) => {
+      const EC = require('../../lib/event-contract-check.js');
+      const root = require('path').resolve(__dirname, '..', '..');
+      const base = EC.loadBaseline(root);
+      const systems = system ? [system] : Object.keys(base.systems);
+      if (system && !base.systems[system]) throw new Error(`${system} is not held to the contract — the systems are: ${Object.keys(base.systems).join(', ')}`);
+      const lines = []; let bad = 0;
+      for (const s of systems) {
+        const r = EC.checkSystem(root, s), b = EC.againstBaseline(r, base.systems[s]);
+        if (!b.ok) bad++;
+        lines.push(`${b.ok ? '✓' : '✗'} ${s}: ${r.emitted.length} emitted, ${r.undeclared.length + r.unresolved.length} not yet declared`);
+        for (const e of b.added) lines.push(`    new, undeclared: ${e}  ${((r.undeclared.find(x => x.event === e) || {}).sites || []).join(', ')} — declare it in ${r.taxonomyFile || `${s}/event-taxonomy.js`}`);
+        for (const e of b.cleared) lines.push(`    declared now — drop from ${EC.BASELINE_FILE}: ${e}`);
+        for (const c of r.missing || []) lines.push(`    emits undefined: ${c.constant} (${c.site})`);
+      }
+      return `${lines.join('\n')}\n\n${bad ? `${bad} system(s) drifted` : 'no new drift'}`;
+    },
+  },
+
+  {
+    name: 'nexus_proof_check',
+    description: 'Run a repo\'s end-state conditions through Idearium\'s delivery checker (idearium :4800) and get the verdict in plain words: which promises are met, which are not, and the likely cause. conditions: [{ says, check: { kind: file|contains|command|output|tests|page, … } }].',
+    inputSchema: { type: 'object', properties: { repoUuid: { type: 'string' }, conditions: { type: 'array', items: { type: 'object' } } }, required: ['repoUuid', 'conditions'] },
+    handler: async ({ repoUuid, conditions }) => {
+      const r = await _post(`${IDR_URL}/api/repos/${encodeURIComponent(repoUuid)}/deliver/check`, { conditions }, 600000);
+      if (!r || r.ok === false) throw new Error(`${_service(IDR_URL)} — the proof run did not run: ${(r && r.error) || 'no answer'}`);
+      const run = r.run || r;
+      return [`${run.verdict === 'ready' ? 'READY' : 'NOT READY'} — ${run.met} of ${run.total} condition(s) met`,
+        ...(run.results || []).map(x => `  ${x.met ? '✓' : '✗'} ${x.says}\n      ${x.evidence || ''}${x.met ? '' : `\n      likely cause: ${x.cause || '?'}`}`),
+        run.files && run.files.report ? `report: ${run.files.report}` : ''].filter(Boolean).join('\n');
     },
   },
 ];
