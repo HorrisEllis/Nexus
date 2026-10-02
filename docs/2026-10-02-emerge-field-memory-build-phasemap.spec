@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -34,7 +34,12 @@ spec:
       relational field" · "no im saying all of it. combine anything thats complimentory or compounds cfr. how would
       that hook into the graphs, agent memory, search, vector, like invent or create anything you think wld compound
       the agents graphs, and all the memory systems.," · "map it all. improve cfr with rfr2, and still i want to make
-      warp mine, also. anything else im forgetting from ths conversation."
+      warp mine, also. anything else im forgetting from ths conversation." · "economy, tokenizer? shadow space?" ·
+      "also i want idearium to be able to code anything i need for fiverr. make it high leverage, enterprise grade,
+      and scalable. like cos i want to be a tool box for this also. like i feel like cos and idearium are our
+      buildteams" · "guardian is the source of truth for the clearglass agents. make sure each addition is correctly
+      mapped to each system, relevant nodes, routes and cli nodes are added, maps ar eupdated, and settings are
+      expanded if applicaple."
       The ideas, the direction and the calls are James's. This map lays them out bottom-up against what exists.
 
   # ── What exists — read, not assumed ───────────────────────────────────────────────────────────────────────────
@@ -97,6 +102,29 @@ spec:
     search: >-
       lib/repo-context.js — deterministic keyword/symbol/path scoring under a character budget; finds what the question
       NAMES. vector-memory finds what is SIMILAR. Nothing finds what is CONNECTED or what is MISSING.
+    economy: >-
+      lib/economy (0.39.281 EC0–EC11): tokens.js estimates (method 'estimate-v1' — "no vendor tokenizer is bundled")
+      and LEARNS each provider's safe input limit from real outcomes; router.js is Thompson sampling over a Beta
+      posterior per (jobType, provider), weighted by cost tier and latency; gate.js allow|wait|stop|fallback; policy,
+      ledger, store. loom/maps/economy-map.js wires it. No exact token count exists anywhere for any model.
+    shadow_space: >-
+      lib/shadow.js (0.39.282, N22): before a step runs it DECLARES what must exist afterwards (files, events, fields);
+      on settle the difference — negative space — becomes gaps (lib/gap-field.js, absent.<step>.<kind>) and
+      liminal-space items (intelligence/liminal-space). The Emergence upload's liminal/shadow.js reads shadow in text.
+      cockpit/cockpit.spec names a shadow_layer: a mutable overlay on a .nex sandbox. Three meanings of one idea — the
+      space of what should be, beside what is.
+    guardian_and_clear_glass: >-
+      Guardian keeps the agents' facts: docs/guardian.spec and guardian/spec/guardian.spec (ncp_providers),
+      guardian/userscripts.yaml (read by clear-glass/src/userscripts/manager.js), guardian/data/nodes/<type>/ (system,
+      command, capability, component, response — the lib/node-export.js envelope), guardian/commands/*.command
+      (get-providers among them). Clear Glass keeps a second copy: clear-glass/src/providers/registry.js "mirrors
+      guardian.spec ncp_providers exactly" — by hand, so it can drift.
+    build_teams: >-
+      COS: archetype, blueprint, ci, cli, compartment, foundation, host, nodes (create, branch, compare, destroy,
+      events, hooks…), playground(s), testenv (VM setup, detect, provision), vault/vaultd, watchdog, workspace (repo
+      desktops). Idearium: the pipeline, the repo agent, spec-engine, emerge's compiler. lib/contract-queue.js,
+      lib/hat-forge.js (hats: agent + persona + tool scope + allowed intents), lib/tool-forge.js. Nothing yet takes a
+      client's job from brief to delivered, proven, isolated work.
     spec_and_build: >-
       idearium/spec-engine/blocks.yaml — 11 blocks, a default agent each; block `events` ("bus events emitted, bus
       events consumed, payload shapes") is read by nothing after it is written. 10 templates in idearium/spec-engine/
@@ -116,6 +144,8 @@ spec:
     E8: "LEVEL, BUDGET, CONFIDENCE on everything: every node at a level with a rolled-up summary; every transition with its cost; every observation with its confidence and source. Budgets resolved at run time from the agent (nexstore I9), never constants."
     E9: "§UNFLATTEN. Competing structures are kept, linked by `contradicts`, until a constraint or James settles them."
     E10: "Zero dependencies in EMERGE and WARP. NEXUS imports them; they never import NEXUS."
+    E12: "Mapped into every system it touches, as it is built — not after: its node records (lib/node-export.js envelope; Guardian's nodes/<type>/<id>.<type> layout; a nexstore type), its routes (with their CAPS) and their .command nodes, its CLI verbs, its loom map with real wires (bootstrapped from empty, rejections at baseline), its settings section where a person would change it, its atlas section. A phase is not DONE until its row in `wiring` below is true."
+    E13: "Guardian is the source of truth for the Clear Glass agents. Clear Glass reads providers, userscripts, hats and agent definitions from Guardian; any local copy is a cache carrying Guardian's hash, and a mismatch is a gap — never a silent second truth."
     E11: "Nothing lost (§0.3). SISO and siso_ref stay, attributed; WARP 1.x gates run through an adapter until moved; divergent copies are surfaced, not merged silently."
 
   # ── Phases — bottom-up ─────────────────────────────────────────────────────────────────────────────────────────
@@ -432,6 +462,133 @@ spec:
         crossed links, zoom through every LEVEL; a context-table viewer for any build. The Void's look, capitals.
       proof: "driven in Chromium: zoom from system to chunk, a turbulent leaf visible from the top, a build's context table opens from its node"
 
+    EC6_economy_and_the_tokenizer:
+      layer: library
+      status: OPEN
+      depends_on: [EM1_emerge_core]
+      files: [lib/economy/tokens.js, lib/economy/tokenizer/gguf.js, lib/economy/tokenizer/bpe.js, lib/economy/router.js, lib/economy/ledger.js]
+      does: >-
+        "economy, tokenizer?" BUDGET (EM1) made exact where it can be and honest where it cannot. LOCAL models: the
+        exact tokenizer read from the model's own GGUF file (its tokenizer.ggml.tokens / merges metadata) by a
+        zero-dependency reader — real counts, method 'gguf-exact'. Remote providers: the estimate stays, calibrated by
+        each provider's learned ratio of estimate to its own reported usage where a reply carries it — method
+        'estimate-calibrated', with its error band. Every count names its method. The economy then prices the whole
+        build: each WARP 2 link carries its cost; the CAUSAL build (CB1) gives small pieces to local models through the
+        existing Thompson router; crystallization (MR8) is booked as tokens saved; a job's quote is the sum of its
+        pieces' budgets (FV1).
+      proof: "a local model's count equals its own tokenizer's on a fixture; a remote estimate states its error band; a build's ledger sums to its pieces; a crystal hit books its saving"
+
+    SH1_shadow_space:
+      layer: library
+      status: OPEN
+      depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
+      files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
+      does: >-
+        "shadow space?" One idea, three uses joined. (1) The SHADOW is the expectation: WARP 2's expectations ARE
+        lib/shadow.js's declarations — before a step runs it declares what must exist after; negative space on settle
+        is the gap. One mechanism, not two. (2) The SHADOW SPACE is where the probabilistic shell acts: a generated
+        change runs first in a shadow layer — a COS overlay on the repo's workspace (cockpit's shadow_layer) — and only
+        what passes the constraints and its shadow is committed into the real tree. Models never write the real tree
+        directly. (3) The shadow READ: the liminal shadow detector on agent replies and briefs (MR9) — what is implied
+        and unsaid. Shadow and negative space become a region of the relational field, drawn on the canvas (LN1).
+      proof: "a step's declared shadow is its WARP 2 expectation (one record, not two); a generated change that fails its tests never reaches the real tree; the absent file of a step is a gap with the step as cause"
+
+    GA1_guardian_source_of_truth:
+      layer: foundation
+      status: OPEN
+      depends_on: [EM0_ground]
+      files: [clear-glass/src/providers/registry.js, clear-glass/src/userscripts/manager.js, guardian/spec/guardian.spec, docs/guardian.spec, guardian/userscripts.yaml, guardian/data/nodes/, guardian/routes/, lib/hat-forge.js]
+      does: >-
+        E13. Clear Glass stops keeping its own agent facts. Providers, userscripts, hats and agent definitions come
+        from Guardian (its nodes and a route — get-providers.command already exists); clear-glass/src/providers/
+        registry.js becomes a cache stamped with Guardian's hash, read at boot, refreshed on Guardian's change event,
+        and a mismatch raises a gap. The two guardian.spec copies (docs/ and guardian/spec/) surfaced and made one.
+        Every agent Clear Glass runs is a Guardian node first.
+      proof: "adding a provider in Guardian alone makes it appear in Clear Glass; editing Clear Glass's cache by hand raises a gap on the next boot; with Guardian down, Clear Glass runs on the stamped cache and says so"
+
+    BT1_build_teams:
+      layer: service
+      status: OPEN
+      depends_on: [GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space]
+      files: [cos/, lib/tool-forge.js, lib/hat-forge.js, lib/contract-queue.js, idearium/api/index.js]
+      does: >-
+        "i feel like cos and idearium are our buildteams". Two teams, one contract queue. IDEARIUM is the design-and-
+        build team: spec, architect, decompose, code. COS is the toolbox and the floor: the environments (testenv VMs,
+        playgrounds), the workspace and its shadow layer (SH1), CI, the vault for secrets, the watchdog. COS's tools
+        become nodes agents can call (tool-forge), each with its CLI verb. Roles are hats (hat-forge) dispatched through
+        Guardian (GA1): architect, builder, tester, reviewer. A piece of work moves between the teams as a WARP 2 link
+        in lib/contract-queue.js, so every hand-off is traceable.
+      proof: "one fixture job: Idearium builds, COS tests it in a VM, the reviewer hat checks it, every hand-off a link in the queue with its cause"
+
+    FV1_client_jobs:
+      layer: service
+      status: OPEN
+      depends_on: [BT1_build_teams, RC1_the_repo_main_chat, EC6_economy_and_the_tokenizer, MR8_crystallization]
+      files: [idearium/lib/jobs.js, idearium/ui/jobs.html, cos/workspace/, cos/vault/]
+      does: >-
+        "i want idearium to be able to code anything i need for fiverr. make it high leverage, enterprise grade, and
+        scalable." A client job, brief to delivery. INTAKE: James pastes the brief; it becomes a CONTRACT (scope,
+        acceptance, what is out of scope) for his yes — the brief is the client's idea, the contract is his call.
+        QUOTE: the economy's budget for the decomposed job (EC6) — tokens, time, risk — before he accepts the gig.
+        BUILD: the pipeline in CAUSAL mode, in its own isolated compartment and COS workspace per client (no file,
+        memory or secret crosses between clients; secrets in the vault). PROVE: tests, a dependency licence check, a
+        security scan, a reproducible seeded build, and a proof report that cites each acceptance line's evidence.
+        DELIVER: a clean repo or zip, README, and the report. REVISIONS: each a new contract on the same history.
+        KITS: per gig type (web app, API, scraper, bot, automation, data pipeline, browser extension), from templates
+        and crystallized recipes, so repeat work gets cheaper. SCALE: jobs in parallel through the contract queue, each
+        with its own budget and its own regime. Nothing here touches the Fiverr site or account — intake and delivery
+        are by James's hand; Fiverr's own rules on AI-assisted work are his to follow.
+      proof: "two fixture jobs in parallel: neither can read the other's files, memory or secrets; each delivers a repo whose proof report cites a passing test for every acceptance line; the second job of a kit costs fewer tokens than the first"
+
+    ST1_settings:
+      layer: interface
+      status: OPEN
+      depends_on: [EM1_emerge_core]
+      files: [idearium/ui/settings.html, idearium/api/index.js]
+      does: >-
+        "settings are expanded if applicaple". Idearium's settings gain, each section only once its phase exists:
+        EMERGE (the seed policy; the default build logic LINEAR | CAUSAL; crystallization's N; budgets), MEMORY & SEARCH
+        (the recall lanes and their weights; field-memory sweeps; contradictions shown; MR10 on/off), ECONOMY (tokenizer
+        method per provider; per-job budgets), SHADOW (shadow layer on/off per repo), BUILD TEAMS (hats per role; COS
+        toolbox), CLIENT JOBS (kits; isolation; delivery checklist). Guardian's settings own the agent facts (GA1);
+        Clear Glass shows them read-only with a link to Guardian. Every setting has its route and CLI verb (E12).
+      proof: "every setting round-trips through UI, route and CLI; a setting for an unbuilt phase does not appear"
+
+  # ── Wiring — E12: each phase into each system it touches. A phase is DONE only when its row is true. ────────────
+  # nodes use the lib/node-export.js envelope and Guardian's nodes/<type>/<id>.<type> layout; routes carry CAPS and get a
+  # .command node; every CLI verb gets a .command node; loom: the map named, real wires, bootstrapped from empty.
+  wiring:
+    EM0: { systems: [loom, emerge, warp], loom: "registry.json regenerated; emergence-map.js (new) for the upload's components", settings: none }
+    EM1: { systems: [emerge], nodes: "emerge.core.* .component + .hook per primitive; nexstore types field, constraint, transition, observation, gap, history", cli: "emerge core check|replay --seed", loom: "emerge-map.js (new)", settings: "ST1 EMERGE" }
+    EM2: { systems: [warp, cos, loom], nodes: "warp.core.link|expectation|engine|ledger .component; warp.adapters.siso-gates", cli: "warp test|adapter list", loom: "warp-map.js (updated: WARP 2 + adapter wires to cos gates and loom's driver)", settings: none }
+    CF1: { systems: [intelligence, guardian, cortex, orchestrator, idearium], nodes: "intelligence.cfr.* updated; .event per CFR event type", routes: "/cfr/health, /cfr/trace, /cfr/rewind (new), /cfr/field (new)", cli: "cfr trace|rewind|field", loom: "observability-map.js (updated)", settings: "ST1 EMERGE (field thresholds)" }
+    RF1: { systems: [lib/nexstore, idearium, intelligence], nodes: "nexstore types node, relation(structural|causal|provenance|semantic|contradiction)", routes: "/api/field/node, /api/field/relations, /api/field/lens/:name", cli: "field show|lens|relate", loom: "emerge-map.js + idearium-codebase-map.js (graph → lens wires)", settings: none }
+    OT1: { systems: [cortex, guardian, idearium, lib], nodes: "a .wire per migrated writer → field", routes: "/api/field/observe", cli: "field observe|writers", loom: "agent-memory-map.js, chat-ledger-map.js (updated)", settings: none }
+    MR1: { systems: [lib, idearium, copilot], nodes: "lib.recall-triad, lib.context-table .component; nexstore type context_table", routes: "/api/recall, /api/context-table/:id", cli: "recall <question> [--budget]", loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH" }
+    MR2: { systems: [lib, intelligence], loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH" }
+    MR3: { systems: [lib, intelligence], routes: "/api/gaps/search", cli: "gaps search", loom: "observability-map.js", settings: none }
+    MR4: { systems: [cortex], loom: "agent-memory-map.js", settings: "ST1 MEMORY & SEARCH (sweeps)" }
+    MR5: { systems: [idearium, lib], reuses: "FG1–FG4's own wiring", settings: none }
+    MR6: { systems: [lib, idearium], routes: "/api/contradictions, /api/contradictions/:id/settle", cli: "contradictions list|settle", settings: "ST1 MEMORY & SEARCH" }
+    MR7: { systems: [lib, cortex], routes: "/api/recipes", cli: "recipes list|show", loom: "agent-memory-map.js", settings: none }
+    MR8: { systems: [warp, emerge, lib], routes: "/api/crystals", cli: "crystals list|reopen", settings: "ST1 EMERGE (N)" }
+    MR9: { systems: [guardian, lib], nodes: ".capability liminal.audit", loom: "copilot-capability-map.js", settings: none }
+    MR10: { systems: [lib, guardian], settings: "ST1 MEMORY & SEARCH (on/off — James's call)" }
+    MR11: { systems: [intelligence, cos], routes: "/cfr/rewind", cli: "rewind field|mind", settings: none }
+    CB1: { systems: [idearium, warp, intelligence], routes: "/api/repos/:uuid/build (logic: linear|causal)", cli: "idearium build --logic causal", loom: "build-surface-map.js", settings: "ST1 EMERGE (default logic)" }
+    CB2: { systems: [idearium, lib], loom: "build-surface-map.js", settings: none }
+    CB3: { systems: [idearium, emerge], nodes: "block causal in blocks.yaml; .event per declared event in generated repos", cli: "emerge compile --t1", loom: "one-idearium-map.js", settings: none }
+    CB4: { systems: [emergence, idearium], loom: "emergence-map.js", settings: none }
+    WS6: { systems: [idearium], routes: "/api/workshop/* (mode, parts)", cli: "idearium workshop --mode manual|assisted|stretched", loom: "one-idearium-map.js", settings: none }
+    RC1: { systems: [idearium, guardian], routes: "/api/repos/:uuid/agent/{contract,map,run,report}", cli: "idearium repo chat <uuid>", loom: "one-idearium-map.js", settings: none }
+    LN1: { systems: [idearium], loom: "ui-map.js", settings: none }
+    EC6: { systems: [lib/economy], nodes: ".component lib.economy.tokenizer.gguf|bpe", routes: "/api/economy/tokens (method named)", cli: "economy tokens <text> --provider", loom: "economy-map.js", settings: "ST1 ECONOMY" }
+    SH1: { systems: [lib, cos, intelligence], routes: "/api/shadow/:step", cli: "shadow show|settle", loom: "observability-map.js + cos-testenv-map.js", settings: "ST1 SHADOW" }
+    GA1: { systems: [guardian, clear-glass], nodes: "every provider, userscript and hat a Guardian node", routes: "guardian /api/providers (hash-stamped), /api/agents", cli: "guardian agents list|verify", loom: "accounts-authority-map.js + copilot-capability-map.js", settings: "Guardian owns them; Clear Glass shows read-only" }
+    BT1: { systems: [cos, idearium, guardian, lib], nodes: ".capability per COS tool; hats per role", routes: "/api/teams, cos /api/tools", cli: "cos tools list|run, idearium teams", loom: "cos-testenv-map.js + one-idearium-map.js", settings: "ST1 BUILD TEAMS" }
+    FV1: { systems: [idearium, cos, lib/economy, guardian], nodes: "nexstore types job, contract, delivery, proof_report", routes: "/api/jobs, /api/jobs/:id/{contract,quote,build,deliver,revise}", cli: "idearium jobs new|quote|build|deliver|revise", loom: "one-idearium-map.js + cos-testenv-map.js", settings: "ST1 CLIENT JOBS" }
+    ST1: { systems: [idearium, guardian, clear-glass], routes: "/api/settings/<section>", cli: "idearium settings get|set <section>.<key>", settings: "is the settings phase" }
+
   # ── Carried forward, so nothing from this conversation is forgotten ───────────────────────────────────────────
   carried_forward:
     - "Earlier maps, still open: CX0 CODEX (the component store grown — MR8 feeds it), BP1 destroy-and-rebuild blueprint, PL1 one entry point, UI12 retire the old spec builders (archived, not deleted), RW1 rewind engine (MR11 pairs with it), DP1 the desktop popout's options + the Setup Desktop button opening Settings, GD1 guardian supervisor, NX1."
@@ -449,16 +606,34 @@ spec:
     - "Does Rheon Kernel v2.1.0 exist beyond its definition in the Architect spec? If so, EM1 builds from it."
     - "The three Emerge specs and two RFR2 trees: which definitions win where they differ (EM0's report lists each)."
     - "MR10: on by default, or off until he switches it on?"
+    - "FV1: which gig types first, for the kits?"
+    - "EC6: which local models to read tokenizers from first (the ones Ollama runs here)?"
 
-  build_order: [EM0, EM1, EM2, CF1, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, MR2, MR6, MR4, MR7, MR8, MR9, MR10, MR11, CB4, LN1]
+  build_order: [EM0, GA1, EM1, ST1, EC6, EM2, CF1, SH1, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, BT1, MR2, MR6, MR4, MR7, MR8, FV1, MR9, MR10, MR11, CB4, LN1]
   # Why this order: the deterministic core and his own engine first (EM1, EM2); CFR on RFR2's discipline and the one
   # field on top (CF1, RF1); one write path (OT1); then the recall triad, which improves every agent the day it lands,
   # and the levels it packs to (MR1, MR5); the build logic, synthesis and the causal block (CB1–CB3); the workshop, gap
   # search and the repo chat that use them (WS6, MR3, RC1); then everything that compounds (MR2–MR11, CB4) and the
-  # canvas that shows it (LN1).
+  # canvas that shows it (LN1). Guardian becomes the agents' one truth early (GA1) because every later phase dispatches
+  # through it; settings (ST1) start with EMERGE and grow one section per phase; the tokenizer (EC6) makes BUDGET real
+  # before anything is priced; shadow space (SH1) before any model writes code; the build teams (BT1) and client jobs
+  # (FV1) once the chat, the build logic and crystallization exist to make them cheap and safe.
 
 ## ADDENDUM 2026-10-02 — 1.0.0
 # Mapped from the conversation of 2026-10-02, before any building. Written against main 0.39.300 and the Emergence
 # upload, with every cited path checked against main. Two findings recorded while mapping: WARP's Event/Gate/Stream
 # are SISO's shape (its own file says so), and Stream.emit holds each produced event's parent without recording it;
 # CFR's causal graph infers 'temporal' edges between any two entries within 2s, which RFR2's rule C-1 forbids.
+
+## ADDENDUM 2026-10-02 — 1.1.0
+# James: "economy, tokenizer? shadow space?" · "i want idearium to be able to code anything i need for fiverr" ·
+# "cos and idearium are our buildteams" · "guardian is the source of truth for the clearglass agents. make sure each
+# addition is correctly mapped to each system…". Added EC6 (exact local tokenizers from the model's own GGUF; remote
+# estimates calibrated, method always named; the economy prices the build), SH1 (lib/shadow.js's declared shadow IS
+# WARP 2's expectation; models act in a COS shadow layer and only what passes reaches the real tree), GA1 (Guardian the
+# agents' one truth; Clear Glass's hand-kept mirror becomes a hash-stamped cache), BT1 (the two build teams on one
+# contract queue), FV1 (client jobs: contract, quote, isolated build, proof report, delivery, revisions, kits — never
+# touching the Fiverr site), ST1 (settings, one section per built phase). Invariants E12 (mapped into every system as
+# built: nodes, routes + .command nodes, CLI, loom with real wires, settings, atlas) and E13 (Guardian's truth), and a
+# wiring row per phase. Found while mapping: clear-glass/src/providers/registry.js "mirrors guardian.spec
+# ncp_providers exactly" by hand; guardian.spec exists twice (docs/ and guardian/spec/).
