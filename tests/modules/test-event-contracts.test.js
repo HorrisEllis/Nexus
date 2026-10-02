@@ -65,6 +65,7 @@ test('EC-01b', 'SISO events and constants: new Event(…), E(…), { type }, a t
   const e = C.extractEmits(src, consts);
   assert.deepStrictEqual(e.filter(x => x.event).map(x => x.event), ['host:compartment:created', 'compiler.check', 'field.settled', 'z.done']);
   assert.deepStrictEqual(e.find(x => x.event === 'host:compartment:created').payload, ['id', 'name']);
+  assert.deepStrictEqual(C.extractEmits("k.emit({ type: 'compartment.born', data: { id, purpose } });")[0].payload, ['id', 'purpose'], '{ type, data } — the data\'s keys');
   assert.deepStrictEqual(e.filter(x => x.unread).map(x => [x.constant, x.missing]), [['VAULT.INJECTED', true], ['ELSEWHERE.THING', false]]);
   const r = C.checkSources({ system: 's', sources: [{ file: 'k.js', text: "const VAULT = Object.freeze({ SET: 'vault:secret:set' });\nbus.emit(VAULT.INJECTED, {});" }], taxonomy: T({}) });
   assert.deepStrictEqual(r.missing, [{ constant: 'VAULT.INJECTED', site: 'k.js:2' }]);
@@ -76,6 +77,8 @@ test('EC-02', 'a template emit is unresolved until its site names its events', (
   assert.strictEqual(bare.length, 1); assert.ok(bare[0].unresolved);
   const named = C.extractEmits('// emits: idearium.cos.remote.push, idearium.cos.remote.pull\nos.emit(`idearium.cos.remote.${op}`, { id });');
   assert.deepStrictEqual(named.map(x => x.event), ['idearium.cos.remote.push', 'idearium.cos.remote.pull']);
+  const withProse = C.extractEmits('// emits: lab.info, lab.warn, lab.error — the levels _log is called with\nthis._emit(`lab.${level}`, {});');
+  assert.deepStrictEqual(withProse.map(x => x.event), ['lab.info', 'lab.warn', 'lab.error'], 'prose after the names is not a name');
   const sameLine = C.extractEmits('os.emit(`x.${t}`, p); // emits: x.a, x.b');
   assert.deepStrictEqual(sameLine.map(x => x.event), ['x.a', 'x.b']);
   const r = C.checkSources({ system: 's', sources: [{ file: 'f.js', text: 'os.emit(`x.${t}`, p);' }], taxonomy: T({}) });

@@ -1,5 +1,5 @@
 {
- "generatedAt": 1790954678402,
+ "generatedAt": 1790965364042,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -1854,6 +1854,9 @@
    "emits": [
     "a.thing.done",
     "ci:run:started",
+    "commented.out",
+    "compiler.check",
+    "quoted.not.real",
     "s.a-b",
     "s.a.b",
     "s.one",
@@ -6891,6 +6894,24 @@
    ]
   },
   "a.thing.done": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "commented.out": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "compiler.check": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "quoted.not.real": {
    "emitters": [
     "nexus.tests.modules.test-event-contracts.test"
    ],

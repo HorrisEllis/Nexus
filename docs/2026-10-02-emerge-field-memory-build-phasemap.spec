@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.5
+    version:  1.7.9
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: PARTIAL (1.7.4) — (3) the check built, events only; (1)(2)(4)(5) open
+      status: PARTIAL (1.7.7) — (1) done for every system but warp (waits on 1.5.0); (3) built; (2)(4)(5) open
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
@@ -727,7 +727,7 @@ spec:
       layer: service
       systems: [guardian, economy, idearium, cos]
       value: { score: 5, cost: M, for: [income, daily-use], why: "the strongest coder available, working inside his pipeline on his account" }
-      status: OPEN
+      status: PARTIAL (1.7.9) — IN2a built (the 'claude-code' backend in Idearium); IN2b built (under the economy: gate + ledger); GA1/AC1/SH1 parts open
       depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
       files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
       does: >-
@@ -1178,3 +1178,60 @@ spec:
 # v1.0.0 (COS-5)", so the new key is James's to accept). A constant no table resolves is UNREAD, listed, not failed.
 # Loom emits nothing, so it gets no taxonomy (ET1 refuses an empty one). WARP still reads 0; it waits on 1.5.0.
 # Proof: tests/modules/test-event-contracts.test.js 8/8 (EC-01b: SISO, constants, missing, quoted).
+
+## ADDENDUM 2026-10-02 — 1.7.6, EV0 (1): five systems fully declared
+# Each written from the code, one change per system (E15), its baseline entry emptied: emerge 56 events, copilot 12,
+# cortex 17, intelligence 37, idearium 138 (135 added; its two template emits now name what they send in an
+# `// emits:` comment — CI's six ci:* relayed as idearium.ci.*, and cos.remote push|pull). Versionium, outside EV0's
+# list, had one undeclared (versionium.branched) — added. Loom emits nothing, so it has no taxonomy (ET1 refuses an
+# empty one). Declared-but-unseen, said: emerge spec.load (entered via driveAsync), intelligence contract.ok (via
+# _emitPositive), versionium autocommit.triggered — real emits the reader does not see, kept declared.
+# Open, said: COS (145 undeclared + VAULT.INJECTED missing) — COS already names its kernel events in
+# cos/foundation/event-contracts.js ("IMMUTABLE after v1.0.0 (COS-5)"), so its ET1 taxonomy must not be a second list
+# of the same names; how the two relate is James's call. Guardian (60), orchestrator (18) and clear-glass (232) are not
+# in EV0's list; the ratchet already holds them — nothing new can drift there.
+# Found along the way, said: emerge's own suites fail 7 tests identically with and without these changes.
+
+## ADDENDUM 2026-10-02 — 1.7.7, EV0 (1): COS, one truth for its names
+# James: "Read names from it" · "Add the key". cos/event-taxonomy.js never retypes a name cos/foundation/event-contracts.js
+# holds — 88 entries are EC.<TABLE>.<KEY>, adding only description, payload and severity; a lost name throws at load.
+# The 59 events COS emits as literals that file does not name are declared in the taxonomy alone. VAULT.INJECTED
+# ('vault:secret:injected') added to event-contracts.js as a §BUGFIX amendment: every vault injection had gone out as
+# `undefined`. 147 COS events, all declared. EV0 (1) now stands for idearium, cortex, intelligence, copilot, emerge,
+# cos (loom emits none); warp waits on 1.5.0. Guardian (60), orchestrator (18) and clear-glass (232), outside EV0's
+# list, stay held by the ratchet. Said: cos/test/test.js fails 1 of 157 with and without these changes.
+
+## ADDENDUM 2026-10-02 — 1.7.8, IN2a: Claude Code as an Idearium agent backend
+# James: "i feel like claude needs a code mode for using claude code. i cant have an agent use this window" · "okay but
+# im using idearium". Built ahead of GA1 / AC1 / SH1, on his word, as the slice of IN2 that needs none of them:
+# lib/claude-code-backend.js runs headless Claude Code (`claude -p --output-format json --permission-mode acceptEdits`,
+# read/edit tools only — no Bash; running the code is the proof's job) on the machine Idearium runs on, under the account
+# that machine's `claude` is signed into. lib/repo-agent.js has a 'claude-code' provider beside ollama / copilot /
+# guardian: the Agent tab's switch has a fourth position, and phase runs, the repo chat and PH1's retries all reach it
+# through the same dispatch, with the repo's composed prompt (hat, context, blocks).
+# It never touches the repo folder: it works in a COPY; the copy is snapshotted when made and diffed against that
+# snapshot when Claude Code finishes; every changed file goes back through the repo layer (the one write path) and is
+# reported as the reply's injects, so a phase run's shadow and PH1's proof read it like any agent's code.
+# Found while building, a defect it would have had: diffing against the live repo folder picked up Idearium's own
+# re-materialised files (proof.json, verification.lazy.json) as if Claude Code had written them — one was written back.
+# Now the diff is against the copy's own snapshot. Still open (IN2 proper): Guardian as the provider's registry (GA1),
+# its spend in the economy ledger per account (EC6/AC1 — the cost is on each result, not yet in the ledger), the shadow
+# layer (SH1) in place of the copy, and the work surface showing the session live.
+# Proof: tests/modules/test-claude-code-backend.test.js 5/5 with a stand-in `claude` — CC-04: the provider set through
+# the real API, a dispatch's edits / additions / deletion written through the real repo layer as injects, then PH1's loop
+# drives it: attempt 1 left no readme, the unmet promise went to Claude Code, attempt 2 wrote it, the phase read proven.
+
+## ADDENDUM 2026-10-02 — 1.7.9, IN2b: Claude Code under the economy
+# IN2's proof names it: "its cost lands in the economy ledger". Now every claude-code run, ok or failed, is one row in
+# lib/economy/ledger.js — the tokens Claude Code itself reports (tokenMethod 'reported', not estimated), its dollars
+# (total_cost_usd → a new optional `usd` on the row), time and outcome; jobType build for a phase run, else chat. And the
+# economy decides first, as guardian's dispatcher does for its agents: switched off, a quiet hour or a limit is said and
+# nothing runs; the person's onLimit fallback is followed and named on the reply; a short wait (≤ 2 min — the default
+# 15 s gap before a PH1 retry) is waited out, since Idearium has no queue; a longer one is refused with its reason.
+# claude-code has its own economy entry (tier subscription — his account; every limit editable). lib/agent-providers.js
+# gains headless() — the one list stays one file — kept OUT of all(): the spec engine, warp-cascade and the agent suite
+# treat every name in all() but copilot/ollama as a guardian browser agent and would route claude-code to a tab.
+# Still open: per-ACCOUNT spend (AC1 — the row is per provider), Guardian as its registry (GA1), SH1, the live session.
+# Proof: tests/modules/test-claude-code-backend.test.js 6/6 (CC-06: ledger rows with reported tokens and dollars; off →
+# refused, claude not run, no row; fallback:ollama followed and said; a failed run is a 'failed' row); economy 11/11,
+# economy-guardian 5/5, pipeline-routing 19/19, warp-cascade fallback 7/7, repo-agent-provider 65/65.

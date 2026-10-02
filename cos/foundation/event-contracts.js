@@ -281,6 +281,10 @@ const VAULT = Object.freeze({
   EXPORTED:       'vault:secrets:exported',
   IMPORTED:       'vault:secrets:imported',
   ERROR:          'vault:secret:error',
+  // §BUGFIX 2026-10-02 (EV0, lib/event-contract-check.js): playgrounds/kernel.js has emitted VAULT.INJECTED — one per
+  // secret injected into a starting compartment's env — since before this checkout, and the key never existed here, so
+  // every one went out as `undefined`. Same failure class as the VAULT / PLUGIN fixes below. James accepted the key.
+  INJECTED:       'vault:secret:injected',
 });
 
 // ─── Plugin Events ────────────────────────────────────────────────────────────

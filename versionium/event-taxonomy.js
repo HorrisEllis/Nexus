@@ -31,6 +31,12 @@ module.exports = Object.freeze({
     payloadShape: ['commitId'],
     severity: 'info',
   },
+  // §EV0 2026-10-02 — found by lib/event-contract-check.js: routes/versionium.js emits it, it was never declared
+  VERSIONIUM_BRANCHED: {
+    description: 'A new branch was created (POST /api/versionium/branches), forked from main or a named branch or commit.',
+    payloadShape: ['branch', 'forkedFrom'],
+    severity: 'info',
+  },
   VERSIONIUM_AUTOCOMMIT_TRIGGERED: {
     description: 'Cortex\'s live field entropy crossed SIGMA_THRESH and the cooldown had elapsed — a real, automatic commit was made.',
     payloadShape: ['sigma', 'regime'],
