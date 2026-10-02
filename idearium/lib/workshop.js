@@ -25,12 +25,13 @@
 export const TABLE = 'idearium_workshops';
 export const MODULE_ID = 'nexus-idearium-workshop-v1-0000-2026-1002-jamesbrooks-001';
 
+// §0.39.297 SW2 — the dial speaks James's words (the Void's creativity scale), not labels this file invented
 export const AMBITION = Object.freeze({
-  1: { label: 'grounded', guide: 'Stay inside what this spec already says and what already exists. Propose only what could be built next, plainly.' },
-  2: { label: 'practical', guide: 'Small, safe extensions of what is here. Each one buildable without new infrastructure.' },
-  3: { label: 'stretch', guide: 'Push one step past the obvious. New capabilities are fine if the path to them is clear.' },
-  4: { label: 'bold', guide: 'Rethink parts of it. Borrow from other fields. Say what would make this remarkable, not just complete.' },
-  5: { label: 'outside the box', guide: 'Reach across domains and past what exists today. Unexpected is the point — but say each idea so a builder could start on it.' },
+  1: { label: 'normal', guide: 'Stay inside what this spec already says and what already exists. Propose only what could be built next, plainly.' },
+  2: { label: 'creative', guide: 'Small, considered extensions of what is here, each buildable without new infrastructure.' },
+  3: { label: 'outside the box', guide: 'Push past the obvious. New capabilities are fine if the path to them is clear.' },
+  4: { label: 'novel', guide: 'Rethink parts of it. Borrow from other fields. Say what would make this remarkable, not just complete.' },
+  5: { label: 'outlier', guide: 'Reach across domains and past what exists today. Unexpected is the point — but say each proposal so a builder could start on it.' },
 });
 
 export const FEEDS = Object.freeze({
@@ -150,8 +151,14 @@ export function specText(session, yaml) {
 
 function _touch(session, what) { session.updatedAt = Date.now(); if (what) session.history.push({ at: session.updatedAt, what }); if (session.history.length > 200) session.history.splice(0, session.history.length - 200); return session; }
 
+/** limits (0.39.297 SW2): a section is a section, not a book; titles are names */
+export const MAX_SECTION = 20000;
+export const MAX_TITLE = 160;
+
 /** editSection(session, { id, title?, body?, add?, remove? }) — James's own writing; removal archives (§0.3) */
 export function editSection(session, { id = null, title = null, body = null, add = false, remove = false, after = null } = {}) {
+  if (body != null && String(body).length > MAX_SECTION) return { error: `the section is ${String(body).length} characters — the limit is ${MAX_SECTION}` };
+  if (title != null && String(title).trim().length > MAX_TITLE) return { error: `the title is ${String(title).trim().length} characters — the limit is ${MAX_TITLE}` };
   if (add) {
     const t = String(title || 'New section').trim();
     const s = { id: sectionId(t, session.sections), title: t, body: String(body || ''), updatedAt: Date.now(), by: 'james' };

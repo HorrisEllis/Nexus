@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     workshop-codex-rewind
-    version:  1.2.0
+    version:  1.4.0
     date:     2026-10-02
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -104,6 +104,24 @@ spec:
         registered anywhere — found, not used). tests/modules/test-spec-workshop.test.js 7/7; driven in Chromium against
         the real server (blank → dial → d20 + questions → accept → save), no console errors.
 
+    SW2_workshop_page_in_the_voids_style:
+      layer: interface
+      status: DONE (0.39.297)
+      depends_on: [SW1_spec_workshop]
+      files: [idearium/ui/workshop.html, idearium/ui/css/void-theme.css, idearium/ui/js/void-sky.js, idearium/ui/void.html, idearium/lib/workshop.js, idearium/api/index.js]
+      does: >-
+        James: "I hate that ui you made. The spacial void is its own page. all of it needs to be isolated, in its own
+        pages." · "alright but no lowercase. and make sure its enterprise grade". The spec workshop's page, rebuilt as
+        its own page in the Void's style: THE SPEC WORKSHOP over the star field, the pipeline's stations across the top
+        (IDEA → SPEC → ARCHITECT → BLUEPRINT → REPO → COS), the sections (his words, cyan), the agent's proposals
+        (magenta, accept or dismiss — never written without his yes), save into the repo's spec. Capitals everywhere.
+        One look, shared: the Void's tokens, fonts, buttons and star field move into ui/css/void-theme.css and
+        ui/js/void-sky.js, used by both pages. The dial speaks his words — normal, creative, outside the box, novel,
+        outlier — instead of the labels the first workshop invented. The idea-generation feeds (d20, reverse chain,
+        what-ifs, inspiration) belong to the Void; the workshop keeps the spec-shaping ones: draft the section, open
+        loops, questions. The enterprise bar the Void set: limits, deadlines and timers, states, contrast, keyboard.
+      proof: "the page driven in Chromium against the real server: start from a Void idea, edit, draft with the agent, accept, save — capitals, no console errors; both pages load the shared theme"
+
     AR2_architect_in_the_workshop:
       layer: service
       status: OPEN
@@ -176,7 +194,7 @@ spec:
         checkout pulled in by versionium), so a whole NEXUS can be snapshotted, rewound and branched like a repo
         desktop. Mapped, not built: it needs RW1's rewind and GD1's supervision first.
 
-  build_order: [SW1, AR2, CX0, BP1, PL1, UI12, RW1, DP1, GD1, NX1]   # James, 2026-10-02: "the workshop" first
+  build_order: [SW1, SW2, AR2, CX0, BP1, PL1, UI12, RW1, DP1, GD1, NX1]   # James, 2026-10-02: "the workshop" first
 
 ## ADDENDUM 2026-10-02 — 1.0.0
 # Mapped from James's message and two screenshots. "completely destroy the spec builder" is carried out as retire +
@@ -195,3 +213,12 @@ spec:
 # idea: "the ideas come from me though not agents"). The workshop's engine stays (sections, accept-or-dismiss, save into
 # the repo's spec); its page is to be rebuilt as its own page in the Void's style, about shaping an idea into a spec's
 # sections — SW2, next after the Void.
+
+## ADDENDUM 2026-10-02 — 1.4.0, SW2 built (0.39.297)
+# The workshop is its own page in the Void's look; the look is one shared file pair (css/void-theme.css,
+# js/void-sky.js), so the stations cannot drift apart. Found while building: the first extraction of the shared CSS
+# filtered lines by content and also removed every "  }" from the Void's script — caught by checking the extracted
+# file with node --check before anything ran; the page was restored from git and the extraction redone by position.
+# Proof: tests/modules/test-spec-workshop.test.js 8/8 (WS-07 the page, WS-08 the dial in his words + limits);
+# Chromium against the real server: from a Void idea → write → draft with the agent → replace (the in-page dialog)
+# → a new section → save into a new repo; no console errors, no native dialog; wide and narrow.

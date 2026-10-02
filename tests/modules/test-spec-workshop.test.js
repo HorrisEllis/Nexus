@@ -13,7 +13,9 @@
 //   WS-05  the real router: sources, create from an idea, feed (a stand-in agent), decide, save → a NEW repo with
 //          spec/<slug>.spec; reopen from that repo reads the same sections back (the Spec field)
 //   WS-06  from the spec library: save goes into the document's repo (the 0.39.292 pipeline), the library row knows it
-//   WS-07  the surfaces: routes + caps, the page served, the CLI, Welcome / idea / Spec tab / library entry points
+//   WS-07  the surfaces: routes + caps, the page served, the CLI, Welcome / idea / Spec tab / library entry points; the
+//          page (0.39.297 SW2): the Void's shared look, capitals (no lowercase tooltip, no browser prompt), the spec-shaping asks only
+//   WS-08  0.39.297 SW2 — the dial in his words; section ≤ 20000 / title ≤ 160; an idea's Void dials at the start
 require('../../lib/test-sandbox.js').ensure();
 
 const assert = require('assert');
@@ -62,7 +64,7 @@ async function main() {
     assert.match(d.prompt, /rolled 7: cooking/); assert.match(d.prompt, /mise en place/); assert.strictEqual(d.meta.domain, 'cooking');
     assert.match(d.prompt, /James is the idea generator; you only propose/);
     const low = WS.feedPrompt(s, 'what-ifs').prompt; s.ambition = 5; const high = WS.feedPrompt(s, 'what-ifs').prompt;
-    assert.match(low, /Ambition 1 of 5 \(grounded\)/); assert.match(high, /Ambition 5 of 5 \(outside the box\)/); assert.notStrictEqual(low, high);
+    assert.match(low, /Ambition 1 of 5 \(normal\)/); assert.match(high, /Ambition 5 of 5 \(outlier\)/); assert.notStrictEqual(low, high);
     assert.match(WS.feedPrompt(s, 'reverse-chain').prompt, /workbench that automatically clears off/);
     assert.match(WS.feedPrompt(s, 'inspiration', { inspiration: [{ title: 'RHEON STUDIO', summary: 'templates' }] }).prompt, /RHEON STUDIO/);
     assert.ok(WS.feedPrompt(s, 'section').error, 'drafting needs a section');
@@ -199,15 +201,45 @@ async function main() {
     }
     assert.match(A, /cleanUrl === '\/workshop\.html'/);
     assert.match(A, /channel: 'idearium-workshop'/, 'the same copilot route the repo agents use');
+    // 0.39.297 SW2 — its own page in the Void's look (James: "I hate that ui you made … all of it needs to be isolated,
+    // in its own pages" · "no lowercase. and make sure its enterprise grade")
     const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/workshop.html'), 'utf8');
-    assert.match(page, /js\/window-chrome\.js/); assert.match(page, /--sky:#38bdf8/, 'idearium\'s own tokens');
-    for (const k of ['open-loops', 'questions', 'what-ifs', 'd20', 'reverse-chain', 'inspiration']) assert.ok(page.includes(`['${k}'`), k);
+    assert.match(page, /js\/window-chrome\.js/); assert.match(page, /href="css\/void-theme\.css"/, 'the Void\'s look, shared'); assert.match(page, /src="js\/void-sky\.js"/);
+    assert.match(page, /<title>THE SPEC WORKSHOP<\/title>/); assert.match(page, /data-title="THE SPEC WORKSHOP"/);
+    for (const k of ['section', 'open-loops', 'questions']) assert.ok(page.includes(`data-k="${k}"`), k);
+    for (const k of ['d20', 'reverse-chain', 'what-ifs', 'inspiration']) assert.ok(!page.includes(`data-k="${k}"`), `${k} belongs to the Void`);
+    const tips = [...page.matchAll(/title="([^"$]*)"/g)].map(m => m[1]).filter(t => /[a-z]/.test(t));
+    assert.deepStrictEqual(tips, [], 'no lowercase tooltip');
+    const code = page.replace(/<!--[\s\S]*?-->/g, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '');
+    assert.ok(!/\bprompt\(|\bconfirm\(/.test(code), 'no browser prompt()/confirm() — they speak lowercase');
+    for (const st of ['OPENING THE WORKSHOP', 'THE WORKSHOP IS UNREACHABLE']) assert.ok(page.includes(st), st);
+    assert.match(page, /const AGENT_MS = 330000/); assert.match(page, /maxlength="20000"/);
+    assert.match(page, /\['NORMAL'.*\['CREATIVE'.*\['OUTSIDE THE BOX'.*\['NOVEL'.*\['OUTLIER'/s, 'the dial in his words');
+    const theme = fs.readFileSync(path.join(ROOT, 'idearium/ui/css/void-theme.css'), 'utf8');
+    assert.match(theme, /html \{ text-transform: uppercase; \}/); assert.match(theme, /url\(\.\.\/fonts\/bebas-neue-400\.woff2\)/);
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
     assert.match(app, /function openWorkshop\(/); assert.match(app, /openWorkshop\('repo:\$\{repo\.uuid\}'\)/, 'the Spec tab'); assert.match(app, /openWorkshop\('idea:\$\{idea\.uuid\}'\)/, 'an idea');
     assert.match(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8'), /onclick="openWorkshop\(\)"[^>]*>Spec workshop</);
     assert.match(fs.readFileSync(path.join(ROOT, 'idearium/ui/spec-library.html'), 'utf8'), /nexus:workshop\.open/);
     const cli = fs.readFileSync(path.join(ROOT, 'idearium/cli/index.js'), 'utf8');
     for (const c of ['list', 'new', 'show', 'write', 'ambition', 'feed', 'accept', 'dismiss', 'save']) assert.match(cli, new RegExp(`async 'workshop\\.${c}'`));
+  });
+
+  await test('WS-08', '0.39.297 SW2 — the dial in his words, the limits, the Void\'s dials at the start', async () => {
+    assert.deepStrictEqual([1, 2, 3, 4, 5].map(n => WS.AMBITION[n].label), ['normal', 'creative', 'outside the box', 'novel', 'outlier']);
+    const { session: s } = WS.makeSession({ title: 'Limits' });
+    assert.match(WS.editSection(s, { id: 'purpose', body: 'z'.repeat(20001) }).error, /limit is 20000/);
+    assert.match(WS.editSection(s, { id: 'purpose', title: 't'.repeat(161) }).error, /limit is 160/);
+    assert.ok(!WS.editSection(s, { id: 'purpose', body: 'fine' }).error);
+    const c = await R('POST', '/api/workshop', { from: { kind: 'blank' }, title: 'Limits' });
+    const long = await R('POST', `/api/workshop/${c.json.workshop.uuid}`, { title: 'q'.repeat(161) });
+    assert.strictEqual(long.status, 400);
+    const big = await R('POST', `/api/workshop/${c.json.workshop.uuid}`, { sections: [{ id: 'purpose', body: 'z'.repeat(20001) }] });
+    assert.strictEqual(big.status, 400);
+    const v = await R('POST', '/api/void/idea', { text: 'An idea from the void for the workshop', creativity: 4, stability: 1 });
+    const src = await R('GET', '/api/workshop/sources');
+    const it = src.json.ideas.find(i => i.uuid === v.json.idea.uuid);
+    assert.deepStrictEqual(it && it.void, { creativity: 4, stability: 1, tension: 3 }, 'the Void\'s dials come with the idea');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

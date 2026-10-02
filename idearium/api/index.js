@@ -4106,7 +4106,8 @@ async function handle(req, res, route, query, body) {
     case 'workshop.sources': {
       // what a workshop can start from: an idea, a library document, a repo's spec file — or nothing
       const { listLibrary } = await import('../lib/spec-library-import.js');
-      const ideas = (os.db.ideas || []).filter(i => i.phase !== 'archived').slice(-300).reverse().map(i => ({ uuid: i.uuid, text: String(i.text || '').slice(0, 160), phase: i.phase }));
+      const ideas = (os.db.ideas || []).filter(i => i.phase !== 'archived').slice(-300).reverse().map(i => ({ uuid: i.uuid, text: String(i.text || '').slice(0, 160), phase: i.phase,
+        ...(i.void ? { void: { creativity: i.void.creativity, stability: i.void.stability, tension: i.void.tension } } : {}) }));   // 0.39.297 — the Void's dials, shown where the workshop starts
       const library = listLibrary().filter(r => r.specUuid).map(r => ({ sha: r.sha, title: r.title, family: r.family, sections: r.sections, repoUuid: r.repoUuid || null }));
       await _specEngineReady();
       const repos = getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => ({ uuid: r.uuid, name: r.name, specFiles: _workshopSpecFiles(r) }));
@@ -4163,7 +4164,10 @@ async function handle(req, res, route, query, body) {
     case 'workshop.update': {
       const WS = await _workshop();
       const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
-      if (body.title != null && String(body.title).trim()) { w.title = String(body.title).trim().slice(0, 160); w.updatedAt = Date.now(); }
+      if (body.title != null && String(body.title).trim()) {
+        if (String(body.title).trim().length > WS.MAX_TITLE) return err(res, 400, `the title is ${String(body.title).trim().length} characters — the limit is ${WS.MAX_TITLE}`);
+        w.title = String(body.title).trim(); w.updatedAt = Date.now();
+      }
       if (body.ambition != null) { const a = WS.clampAmbition(body.ambition); if (a !== w.ambition) { w.ambition = a; w.updatedAt = Date.now(); w.history.push({ at: w.updatedAt, what: `ambition ${a} — ${WS.AMBITION[a].label}` }); } }
       for (const e of Array.isArray(body.sections) ? body.sections : (body.section ? [body.section] : [])) {
         const r = e.restore ? WS.restoreSection(w, e.restore) : WS.editSection(w, e);

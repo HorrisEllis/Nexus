@@ -156,8 +156,8 @@ async function main() {
     const A = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     assert.match(A, /\/\^\\\/fonts\\\/\[a-z0-9-\]\+\\\.\(woff2\|txt\)\$\//, 'fonts served, binary'); assert.match(A, /'font\/woff2'/);
     assert.match(A, /cleanUrl === '\/void\.html'/);
-    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/void.html'), 'utf8');
-    assert.match(page, /url\(fonts\/bebas-neue-400\.woff2\)/); assert.ok(!/fonts\.googleapis/.test(page), 'nothing from the network');
+    const page = ['idearium/ui/void.html', 'idearium/ui/css/void-theme.css', 'idearium/ui/js/void-sky.js'].map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');   // 0.39.297: the look is shared
+    assert.match(page, /url\(\.\.\/fonts\/bebas-neue-400\.woff2\)/); assert.match(page, /href="css\/void-theme\.css"/); assert.match(page, /src="js\/void-sky\.js"/); assert.ok(!/fonts\.googleapis/.test(page), 'nothing from the network');
     assert.match(page, /const CREATIVITY = \['normal', 'creative', 'outside the box', 'novel', 'outlier'\]/);
     assert.match(page, /const STABILITY = \['stable', 'shaky', 'risky', 'dangerous', 'unstable'\]/);
     assert.match(page, /--void:#030508/); assert.match(page, /THE VOID/); assert.match(page, /js\/window-chrome\.js/);
@@ -178,7 +178,7 @@ async function main() {
     assert.match(V.take({ uuid: 'i', text: 'x'.repeat(3999) }, { ideaUuid: 'i' }, { words: 'more words here' }).error, /would pass 4000/);
     const big = await R('POST', '/api/void/idea', { text: 'y'.repeat(4001) });
     assert.strictEqual(big.status, 400); assert.match(big.json.error, /limit is 4000/);
-    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/void.html'), 'utf8');
+    const page = ['idearium/ui/void.html', 'idearium/ui/css/void-theme.css', 'idearium/ui/js/void-sky.js'].map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');   // 0.39.297: the look is shared
     assert.match(page, /html \{ text-transform: uppercase; \}/, 'everything shown in capitals');
     assert.match(page, /input, textarea, button, select \{ text-transform: uppercase; \}/);
     assert.match(page, /<title>THE VOID<\/title>/); assert.match(page, /data-title="THE VOID"/);

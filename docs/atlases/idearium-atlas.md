@@ -551,6 +551,8 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **No lowercase** (0.39.296, James: "alright but no lowercase"): everything in the Void is shown in capitals, tooltips and the window title too. What you type is stored exactly as typed.
 - **Limits and states** (0.39.296): an idea is at most 4000 characters, a kept part 1000, and going over is refused with the count. The field says when it is entering, empty, or unreachable (with TRY AGAIN). An agent answer shows a running timer.
 
+**The spec workshop, its own page** (0.39.297). James: "all of it needs to be isolated, in its own pages" · "no lowercase". The workshop is the pipeline's second station, in the Void's look and in capitals: THE SPEC WORKSHOP, the stations IDEA → SPEC → ARCHITECT → BLUEPRINT → REPO → COS, your sections in cyan, the agent's proposals in magenta. Its dial is REACH, in your words: normal, creative, outside the box, novel, outlier. It asks the agent for three things only: a draft of the open section, open loops, and questions. The idea-generation feeds live in the Void. Both pages share one look: `idearium/ui/css/void-theme.css` and `idearium/ui/js/void-sky.js`.
+
 **The spec workshop** (0.39.294, `idearium/ui/workshop.html`, `idearium/lib/workshop.js`). James: "need the spec workshop … the workshop and maybe it hooks into the spec field".
 - **Where:** Welcome → **Spec workshop**; an idea's **✎ spec workshop**; a repo's Spec tab → **open in the spec workshop**; the spec library's **✎ workshop** on a row; the idearium CLI's workshop commands.
 - **Start from:** an idea, a document in the spec library, a repo's spec file, or nothing.
