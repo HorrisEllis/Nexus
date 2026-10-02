@@ -1,5 +1,5 @@
 {
- "generatedAt": 1790953504115,
+ "generatedAt": 1790954678402,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -1849,6 +1849,19 @@
     "escalation.failure_mode",
     "escalation.friction.increased"
    ]
+  },
+  "nexus.tests.modules.test-event-contracts.test": {
+   "emits": [
+    "a.thing.done",
+    "ci:run:started",
+    "s.a-b",
+    "s.a.b",
+    "s.one",
+    "s.two",
+    "sys.added.today",
+    "sys.known"
+   ],
+   "listens": []
   },
   "nexus.tests.modules.test-gap-finder": {
    "emits": [
@@ -4037,7 +4050,8 @@
   },
   "ci:run:started": {
    "emitters": [
-    "nexus.cos.ci"
+    "nexus.cos.ci",
+    "nexus.tests.modules.test-event-contracts.test"
    ],
    "listeners": []
   },
@@ -6875,6 +6889,48 @@
    "listeners": [
     "nexus.tests.modules.test-escalation"
    ]
+  },
+  "a.thing.done": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "s.a-b": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "s.a.b": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "s.one": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "s.two": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "sys.added.today": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
+  },
+  "sys.known": {
+   "emitters": [
+    "nexus.tests.modules.test-event-contracts.test"
+   ],
+   "listeners": []
   },
   "guardian.job.dispatched": {
    "emitters": [

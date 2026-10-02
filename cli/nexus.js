@@ -211,6 +211,7 @@ ${C.bold}Unified commands:${C.reset}
   nexus ideas                   list ideas
   nexus push "message"          snapshot + versionium commit
   nexus snr                     system SNR
+  nexus contracts check [--system=<s>] [--all]   every emitted event declared (EV0)
 
   nexus tag <entityId> --tags=t1,t2
   nexus tags <entityId>
@@ -398,6 +399,37 @@ Flags: ${C.muted}--json${C.reset} (raw JSON output on any command)
   },
 
   // ── SNR ────────────────────────────────────────────────────────────────────
+  // ── CONTRACTS — EV0 (3): every emitted event declared in its system's own taxonomy ──
+  // `nexus contracts check [--system=<s>] [--all]` — the systems in contracts/event-contract-baseline.json, read from
+  // their source. Fails (exit 1) on new drift, on a baseline entry declared since, or on a collision; --all lists
+  // every undeclared event, not only the new ones.
+  async contracts() {
+    const sub = args[1] || 'check';
+    if (sub !== 'check') return fail('Usage: nexus contracts check [--system=<s>] [--all]');
+    const EC = require('../lib/event-contract-check.js');
+    const base = EC.loadBaseline(ROOT);
+    const only = flag('system');
+    const systems = only ? [only] : Object.keys(base.systems);
+    if (only && !base.systems[only]) return fail(`${only} is not held to the contract — the systems are: ${Object.keys(base.systems).join(', ')}`);
+    const rows = []; let bad = 0;
+    for (const s of systems) {
+      const r = EC.checkSystem(ROOT, s), b = EC.againstBaseline(r, base.systems[s]);
+      rows.push({ system: s, taxonomy: r.taxonomyFile, emitted: r.emitted.length, undeclared: r.undeclared.length, unresolved: r.unresolved.length, unused: r.unused, added: b.added, cleared: b.cleared, collisions: r.collisions, ok: b.ok });
+      if (!b.ok) bad++;
+      if (JSON_) continue;
+      const mark = b.ok ? `${C.green}✓${C.reset}` : `${C.red}✗${C.reset}`;
+      const left = r.undeclared.length + r.unresolved.length;
+      console.log(`  ${mark} ${C.bold}${s.padEnd(13)}${C.reset} ${String(r.emitted.length).padStart(3)} emitted · ${left ? `${C.yellow}${left} not yet declared${C.reset}` : `${C.green}all declared${C.reset}`}${r.taxonomyFile ? '' : ` · ${C.muted}no taxonomy yet${C.reset}`}${r.unused.length ? ` · ${C.muted}${r.unused.length} declared, not seen emitted${C.reset}` : ''}`);
+      for (const e of b.added) console.log(`      ${C.red}new, undeclared:${C.reset} ${e}  ${C.muted}${((r.undeclared.find(x => x.event === e) || {}).sites || []).join(', ')}${C.reset}`);
+      for (const e of b.cleared) console.log(`      ${C.yellow}declared now — drop from ${EC.BASELINE_FILE}:${C.reset} ${e}`);
+      for (const c of r.collisions) console.log(`      ${C.red}collision:${C.reset} ${c.events.join(' and ')} are both ${c.key}`);
+      if (args.includes('--all')) for (const u of r.undeclared) console.log(`      ${C.muted}${u.event}  ${u.sites.join(', ')}${C.reset}`);
+    }
+    if (JSON_) out({ ok: !bad, systems: rows });
+    else console.log(bad ? `\n  ${C.red}${bad} system(s) drifted${C.reset}\n` : `\n  ${C.green}no new drift${C.reset}\n`);
+    if (bad) process.exitCode = 1;
+  },
+
   async snr() {
     const d = await GET('idearium', '/api/snr');
     if (d.error) return fail(d.error);

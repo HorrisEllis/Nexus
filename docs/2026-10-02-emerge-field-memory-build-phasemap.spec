@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.3
+    version:  1.7.4
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: OPEN
+      status: PARTIAL (1.7.4) — (3) the check built, events only; (1)(2)(4)(5) open
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
@@ -1143,3 +1143,22 @@ spec:
 # Proof: test-architect 8/8, atlas-refs 51/51, dangling-hooks 19/19, component-registry 18/18, registration-shape 8/8,
 # hook-ownership 8/8, version-sync 30/30, loom-phasemap 5/5 + status 12/12, synthesis-zoom-versionium 6/6,
 # loom component-detail 5/5, doc-generator 4/4.
+
+## ADDENDUM 2026-10-02 — 1.7.4, EV0 (3) the event contract check
+# Built first, because the taxonomies must be written FROM the code (EV0: "not invented") and something has to read it.
+# lib/event-contract-check.js reads a system's own source for every emit of a literal dotted name — a method or a bare
+# helper (emit, _emit, emitEvent, _emitEvent, busEmit, postEvent, broadcast, publish; `?.(` too), a ternary's two
+# branches, the payload's top-level keys, file:line — and says what its taxonomy lacks. A template emit is UNRESOLVED
+# unless its site names its events (`// emits: a, b`). An emit through a constant (`emit(EVENTS.X)`) is not read: it
+# shows as a declared-but-unseen key, said, never failed. Two names on one key is a collision, always a failure.
+# Found, said: the systems that HAVE a taxonomy drift as much as those without — guardian 60 undeclared of 75 emitted,
+# orchestrator 18 of 19, clear-glass 131 of 141, versionium 1 of 5. 444 in all across the 12 systems held to it.
+# So the check holds a RATCHET: contracts/event-contract-baseline.json is today's drift per system; new drift fails,
+# a baseline entry declared since fails until it is dropped (the file stays exact), nothing writes it (E18). Drift
+# stops piling up today; each system's taxonomy then empties its own entry, one change per system (E15).
+# Surfaces: `nexus contracts check [--system=<s>] [--all] [--json]` (exit 1 on drift); loom has the check as a
+# component wired to that CLI (tree scan — a hand-map row would collide). WARP: 0 literal emits read; its taxonomy waits
+# on WARP 1.5.0 (EM0 (3)), which replaces warp/. COS already has cos/foundation/event-contracts.js (35 importers) —
+# read before cos's taxonomy is written, so there is one truth, not two.
+# Proof: tests/modules/test-event-contracts.test.js 7/7 (EC-05b: an emit added without a declaration fails, with its
+# file:line); in the real tree, an emit appended to emerge/emerge-kernel.js failed `nexus contracts check` (exit 1).
