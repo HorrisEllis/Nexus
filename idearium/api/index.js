@@ -2783,19 +2783,20 @@ async function handle(req, res, route, query, body) {
 
     case 'snapshot.show': {
       const snap = await os.snapshot(params.uuid);
+      if (snap && snap.error) return err(res, 502, snap.error);   // §0.39.300 VX1 — versionium unreachable, said as such
       if (!snap) return err(res, 404, `snapshot not found: ${params.uuid}`);
       return ok(res, { snapshot: snap });
     }
 
     case 'snapshot.diff': {
       const diff = await os.diffSnapshots(params.a, params.b);
-      if (diff?.error) return err(res, 404, diff.error);
+      if (diff?.error) return err(res, diff.status === 404 ? 404 : 502, diff.error);   // §0.39.300 VX1 — versionium down is a 502, a missing commit a 404
       return ok(res, { diff });
     }
 
     case 'snapshot.restore': {
       const result = await os.restoreSnapshot(params.uuid, { author: 'api' });
-      if (result?.error) return err(res, 400, result.error);
+      if (result?.error) return err(res, result.status === 404 ? 404 : result.status ? 502 : 400, result.error);   // §0.39.300 VX1
       return ok(res, { restored: result.commitId, stashCommitId: result.stashCommitId, ideas: result.ideas, specs: result.specs, gaps: result.gaps });
     }
 
@@ -4405,6 +4406,14 @@ async function handle(req, res, route, query, body) {
       a.history.push({ at: a.savedAt, what: `saved to ${a.archPath} — ${view.analysis.stats.reuse} reused, ${view.analysis.stats.new} new, ${view.analysis.stats.gaps} gap(s)` });
       syncTable(AR.TABLE, [a]);
       os.emit('idearium.architect.saved', { uuid: a.uuid, repoUuid: a.repoUuid, archPath: a.archPath, components: view.analysis.stats.components, reuse: view.analysis.stats.reuse, new: view.analysis.stats.new, gaps: view.analysis.stats.gaps });
+      // §0.39.300 SY2 — the architect's gaps join intelligence's synthesis (every architecture's, as one push — a push
+      // replaces the architect's last set). Fire and forget: intelligence down is said in the log, never fails the save.
+      try {
+        const all = loadTable(AR.TABLE).flatMap(x => AR.analyse(x, _architectIndex(AR)).gaps.map((g, i) => ({ id: `${x.uuid}:${g.kind}:${g.component}:${g.dep || i}`, kind: `architect-${g.kind}`,
+          title: g.say, detail: `${x.title} — ${x.archPath || 'not saved yet'}`, refs: x.repoUuid && x.archPath ? [x.archPath] : [], layer: 'engine' })));
+        _nexusClient.post('intelligence', '/api/intelligence/synthesis/ingest', { system: 'architect', gaps: all }, { timeout: 4000 })
+          .catch(e => console.warn(`[idearium] the architect's gaps did not reach intelligence's synthesis (non-fatal): ${e.message}`));
+      } catch (e) { console.warn(`[idearium] the architect's gaps were not gathered for the synthesis: ${e.message}`); }
       return ok(res, { repoUuid: a.repoUuid, archPath: a.archPath, created: !!wr.created, ...view });
     }
     // §0.39.292 IL2 — James: "how can i import into the pipeline. the specs also need to convert into actual spec files."

@@ -1,0 +1,384 @@
+# docs/nexstore-writers.yaml — every writer that persists data: its node type, or the reason it is not one (DT1).
+# A writer not listed here fails tests/modules/test-nexstore-writers.test.js. Add one with a reason, or a type:
+#   "<file> · <call> · <target>": { reason: "…" }   or   { type: <catalogue type> }
+# node lib/nexstore/writers.js --write adds new writers as OWED (then give each its reason).
+register:
+  name: nexstore writers
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec (DT1)
+  generatedBy: lib/nexstore/writers.js
+  stats:
+    writers: 209
+    files: 135
+    typed: 27
+    reason: 33
+    owed: 149
+rules:
+  - match: '^(guardian/jaa-store\.js|idearium/lib/db\.js|lib/nexstore/(log|record)\.js) · '
+    reason: the store engine itself — it writes for every table or type; the type is its caller's, and the caller is censused
+  - match: ^idearium/index\.js · syncTable · TABLES\[key\]
+    reason: syncs idearium's declared TABLES map — each table in it is typed by name (idearium.<table> in the catalogue)
+  - match: '^lib/cortex-write\.js · '
+    reason: the write-through adapter (cortex first, data/<system>/<table>.jsonl as the offline buffer) — the table is its caller's
+  - match: '^lib/ledger-writer\.js · '
+    reason: the unified ledger write surface — it writes for every ledger type its callers name
+  - match: ^(cli|cos/cli|scripts)/
+    reason: a command-line tool writing an output its user asked for (a report, an export, a config the user runs it to write) — outside the store
+  - match: ^loom/templates/
+    reason: scaffolding a new system's files (package.json, configs, code) — code being generated, not data being kept
+writers:
+  architect/service.js · appendFileSync · fp:
+    reason: OWED — a node type or a stated reason
+  architecture-spec/registry/api.js · writeFileSync · path.join(configDir, `${parts[1]}.json`):
+    reason: OWED — a node type or a stated reason
+  architecture-spec/registry/decompose.js · writeFileSync · filePath:
+    reason: OWED — a node type or a stated reason
+  architecture-spec/registry/watcher.js · appendFileSync · _ledgerPath(nodesDir, type):
+    reason: OWED — a node type or a stated reason
+  auth/client.js · writeFileSync · SESSION_FILE:
+    reason: OWED — a node type or a stated reason
+  auth/index.js · writeFileSync · path.join(SESSIONS_DIR, `${sessionId}.json`):
+    reason: OWED — a node type or a stated reason
+  auth/index.js · writeFileSync · path.join(CLIENTS_DIR, `${uuid}.pub`):
+    reason: OWED — a node type or a stated reason
+  auth/index.js · appendFileSync · path.join(AUTH_DIR, 'auth.log'):
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/diagnostic/engine.js · writeFileSync · file:
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/diagnostic/error-capture.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/downloads/chat-ledger.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/ipc/bridge.js · writeFileSync · path.join(dir, 'command-index.json'):
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/jobs/intake.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/mesh/automation-engine.js · writeFileSync · path.join(WORKFLOWS_DIR, `${wf.id}.workflow.json`):
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/mesh/automation-engine.js · appendFileSync · fp:
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/mesh/automation-engine.js · writeFileSync · fp:
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/mesh/route-graph.js · writeFileSync · path.join(ROUTES_DIR, `${route.id}.route.json`):
+    reason: OWED — a node type or a stated reason
+  clear-glass/src/rewind/engine.js · writeFileSync · fp:
+    reason: OWED — a node type or a stated reason
+  copilot/axiom-manager.js · writeFileSync · RUNTIME_FILE:
+    reason: OWED — a node type or a stated reason
+  copilot/module-builder.js · writeFileSync · path.join(buildDir, 'architecture.json'):
+    reason: OWED — a node type or a stated reason
+  copilot/module-builder.js · writeFileSync · path.join(buildDir, 'replace-target.json'):
+    reason: OWED — a node type or a stated reason
+  cortex/boot.js · writeFileSync · store:
+    reason: OWED — a node type or a stated reason
+  cos/ci/index.js · writeFileSync · configPath(rootDir):
+    reason: OWED — a node type or a stated reason
+  cos/ci/index.js · writeFileSync · path.join(dir, `${run.runId}.json`):
+    reason: OWED — a node type or a stated reason
+  cos/foundation/snapshot.js · writeFileSync · snapPath:
+    reason: OWED — a node type or a stated reason
+  cos/host/gates/compartment.js · writeFileSync · paths.manifest:
+    reason: OWED — a node type or a stated reason
+  cos/host/gates/compartment.js · writeFileSync · compartmentPaths(parent.id).manifest:
+    reason: OWED — a node type or a stated reason
+  cos/host/state-store.js · writeFileSync · this._tmp:
+    reason: OWED — a node type or a stated reason
+  cos/host/system-map.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  cos/playground/branch.js · writeFileSync · branchManifestPath(compartmentId, branchId):
+    reason: OWED — a node type or a stated reason
+  cos/playground/branch.js · writeFileSync · mPath:
+    reason: OWED — a node type or a stated reason
+  cos/playground/compare.js · writeFileSync · path.join(cmpDir, `${reportId}.json`):
+    reason: OWED — a node type or a stated reason
+  cos/runtime/preload.cjs · appendFileSync · MAP_FILE:
+    reason: OWED — a node type or a stated reason
+  cos/testenv/host.js · writeFileSync · p + '.tmp':
+    reason: OWED — a node type or a stated reason
+  cos/vault/audit-log.js · appendFileSync · auditLogFile:
+    reason: OWED — a node type or a stated reason
+  cos/vault/store.js · writeFileSync · storeFile:
+    reason: OWED — a node type or a stated reason
+  cos/vaultd/daemon.js · writeFileSync · pidFile:
+    reason: OWED — a node type or a stated reason
+  cos/workspace/index.js · writeFileSync · _stampPath(disk):
+    reason: OWED — a node type or a stated reason
+  diagnostic/nexus-diagnostic.js · appendFileSync · _remediationLog:
+    reason: OWED — a node type or a stated reason
+  emerge/cortex-query/writeback.js · appendFileSync · logPath:
+    reason: OWED — a node type or a stated reason
+  emerge/emerge-kernel.js · writeFileSync · outPath:
+    reason: OWED — a node type or a stated reason
+  guardian/dropzone.js · writeFileSync · CONFIG_PATH:
+    reason: the drop zone's settings file (dropzone.config.json), edited from its settings — configuration, not kept data
+  guardian/lib/agent-registry.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  guardian/lib/jobs.js · writeFileSync · path.join(JOBS_DIR, `${job.id}.job`):
+    type: node.job
+  guardian/lib/ncp-handler.js · writeFileSync · require('path').join(outDir, '_introspect.json'):
+    reason: OWED — a node type or a stated reason
+  guardian/lib/node-registry.js · appendFileSync · _ledgerPath(type):
+    reason: the per-type ledger beside guardian's nodes/<type>/ — typed by the node type it logs (node.<type> in the catalogue)
+  guardian/lib/response-sink.js · writeFileSync · DOWNLOADS_PENDING:
+    reason: OWED — a node type or a stated reason
+  guardian/server.js · appendFileSync · rp.join(dir,'events.ndjson'):
+    reason: OWED — a node type or a stated reason
+  guardian/server.js · writeFileSync · require('path').join(_ledgerCfrDir, f):
+    reason: OWED — a node type or a stated reason
+  guardian/server.js · writeFileSync · storeFile(name):
+    reason: OWED — a node type or a stated reason
+  idearium/api/index.js · writeFileSync · pathMod.join(specDir, 'manifest.json'):
+    reason: OWED — a node type or a stated reason
+  idearium/lib/event-ledger.cjs · writeFileSync · STATS_FILE:
+    reason: OWED — a node type or a stated reason
+  idearium/repo/graph.js · writeFileSync · p:
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · out:
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · path.join(chunkDir, fileName):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · path.join(repoDir, 'atlas.json'):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · path.join(chunkDir, 'index.json'):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · path.join(repoDir, 'verification.json'):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · path.join(idxDir, 'files.json'):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · path.join(idxDir, 'symbols.json'):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/import-pipeline.js · writeFileSync · path.join(idxDir, 'chunks.json'):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/nexus-self.js · appendFileSync · _understandingFile():
+    reason: OWED — a node type or a stated reason
+  idearium/repo/nexus-self.js · writeFileSync · path.join(store.storeRoot(), 'system-graph.json'):
+    reason: OWED — a node type or a stated reason
+  idearium/repo/runtime-proof.js · writeFileSync · path.join(repoDir, PROOF_FILE):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/source-files.js · writeFileSync · path.join(repoDir, SOURCE_MANIFEST_FILE):
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/spec-graph.js · writeFileSync · p:
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/repo/verify-lazy.js · writeFileSync · outPath:
+    reason: >-
+      a projection of one imported repo (indexes, chunks, atlas, graphs, verification, proof) — derived from the repo and rebuilt by re-importing or re-running
+      it (§10.2); the repo is the source
+  idearium/spec-engine/index.js · writeFileSync · manifestPath:
+    reason: OWED — a node type or a stated reason
+  idearium/spec-engine/index.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  idearium/spec-engine/index.js · writeFileSync · path.join(specDir, 'manifest.json'):
+    reason: OWED — a node type or a stated reason
+  idearium/spec-engine/manifest/commands.js · writeFileSync · path.join(dir, 'manifest.json'):
+    reason: OWED — a node type or a stated reason
+  idearium/spec-engine/manifest/commands.js · writeFileSync · path.join(dir, 'component-registry.json'):
+    reason: OWED — a node type or a stated reason
+  intelligence/alk/index.js · appendFileSync · DECISIONS_FILE:
+    reason: OWED — a node type or a stated reason
+  intelligence/baseline.js · writeFileSync · invFile:
+    reason: OWED — a node type or a stated reason
+  intelligence/baseline.js · appendFileSync · filepath:
+    reason: OWED — a node type or a stated reason
+  intelligence/baseline.js · appendFileSync · f:
+    reason: OWED — a node type or a stated reason
+  intelligence/baseline.js · writeFileSync · f:
+    reason: OWED — a node type or a stated reason
+  intelligence/bda/ledger.js · appendFileSync · ledgerPath:
+    reason: OWED — a node type or a stated reason
+  intelligence/cfr/ledger.js · writeFileSync · STATS_FILE:
+    reason: OWED — a node type or a stated reason
+  intelligence/cfr/ledger.js · writeFileSync · CFR_FILE:
+    reason: OWED — a node type or a stated reason
+  intelligence/framework-builder.js · writeFileSync · tagsPath:
+    reason: OWED — a node type or a stated reason
+  intelligence/synthesis/index.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  intelligence/synthesis/index.js · _writeAtomic · path.join(dataDir(dir), 'ingested.json'):
+    reason: OWED — a node type or a stated reason
+  intelligence/synthesis/index.js · _writeAtomic · path.join(d, name):
+    reason: OWED — a node type or a stated reason
+  intelligence/synthesis/index.js · _writeAtomic · path.join(d, 'latest.json'):
+    reason: OWED — a node type or a stated reason
+  lib/agent-system/submit.js · writeFileSync · filepath:
+    reason: OWED — a node type or a stated reason
+  lib/blueprint-index.js · writeFileSync · OUT_PATH:
+    reason: OWED — a node type or a stated reason
+  lib/blueprint.js · writeFileSync · BLUEPRINT_JSON:
+    reason: OWED — a node type or a stated reason
+  lib/chat-logger.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  lib/cli-map.js · writeFileSync · CLI_MAP_PATH:
+    reason: OWED — a node type or a stated reason
+  lib/code-intel/index.js · writeFileSync · path.join(idx, 'cards.json'):
+    reason: OWED — a node type or a stated reason
+  lib/code-intel/index.js · writeFileSync · path.join(idx, 'search.json'):
+    reason: OWED — a node type or a stated reason
+  lib/component-ledger.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  lib/component-store.js · _writeAtomic · _indexPath():
+    reason: OWED — a node type or a stated reason
+  lib/component-store.js · _writeAtomic · _manifestPath(id, v):
+    reason: OWED — a node type or a stated reason
+  lib/component-store.js · _writeAtomic · _manifestPath(id, version):
+    reason: OWED — a node type or a stated reason
+  lib/consent.js · writeFileSync · FILE:
+    reason: OWED — a node type or a stated reason
+  lib/contract-queue.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  lib/contract-registry-writer.js · appendFileSync · PROPOSALS_LOG:
+    reason: OWED — a node type or a stated reason
+  lib/contract-registry-writer.js · appendFileSync · APPLIED_LOG:
+    reason: OWED — a node type or a stated reason
+  lib/cos-bridge.js · writeFileSync · manifestPath:
+    reason: OWED — a node type or a stated reason
+  lib/cos-remote.js · writeFileSync · p + '.tmp':
+    reason: OWED — a node type or a stated reason
+  lib/economy/ledger.js · appendFileSync · _file(at):
+    reason: OWED — a node type or a stated reason
+  lib/economy/store.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  lib/error-log.js · appendFileSync · LOG_PATH:
+    reason: OWED — a node type or a stated reason
+  lib/ess.js · appendFileSync · this._bindingLogPath:
+    reason: OWED — a node type or a stated reason
+  lib/ess.js · writeFileSync · this._hashStorePath:
+    reason: OWED — a node type or a stated reason
+  lib/execution-pipeline.js · writeFileSync · GOLDEN_FILE:
+    reason: OWED — a node type or a stated reason
+  lib/ico.js · writeFileSync · path.join(dir, key):
+    reason: OWED — a node type or a stated reason
+  lib/ico.js · appendFileSync · path.join(dir, 'events.ndjson'):
+    reason: OWED — a node type or a stated reason
+  lib/ico.js · writeFileSync · f:
+    reason: OWED — a node type or a stated reason
+  lib/ico.js · appendFileSync · path.join(dir, `${id}.ndjson`):
+    reason: OWED — a node type or a stated reason
+  lib/ico.js · appendFileSync · path.join(dir, 'conversation.jsonl'):
+    reason: OWED — a node type or a stated reason
+  lib/ico.js · writeFileSync · path.join(dir, `${hash}.json`):
+    reason: OWED — a node type or a stated reason
+  lib/ico.js · writeFileSync · outFile:
+    reason: OWED — a node type or a stated reason
+  lib/intake.js · writeFileSync · path.join(dropDir, 'intake-contract.json'):
+    reason: OWED — a node type or a stated reason
+  lib/intake.js · writeFileSync · path.join(dir, 'intake-contract.json'):
+    reason: OWED — a node type or a stated reason
+  lib/local-vector-index.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  lib/nexstore/census.js · writeFileSync · path.join(__dirname, '..', '..', 'docs', 'nexstore-type-catalogue.yaml'):
+    reason: OWED — a node type or a stated reason
+  lib/nexstore/writers.js · writeFileSync · path.join(ROOT, REGISTER):
+    reason: OWED — a node type or a stated reason
+  lib/nexus-client.js · appendFileSync · BUFFER_FILE:
+    reason: OWED — a node type or a stated reason
+  lib/nexus-self/apply.js · writeFileSync · recPath:
+    reason: OWED — a node type or a stated reason
+  lib/nexus-self/branch.js · writeFileSync · path.join(_branchDir(compartment.id, br.id), SIDE):
+    reason: OWED — a node type or a stated reason
+  lib/nexus-self/store.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  lib/node-ledger.js · writeFileSync · INDEX_FILE:
+    reason: OWED — a node type or a stated reason
+  lib/ollama-activity.js · appendFileSync · f:
+    reason: OWED — a node type or a stated reason
+  lib/project-container.js · writeFileSync · p:
+    reason: OWED — a node type or a stated reason
+  lib/queue.js · writeFileSync · path.join(this.queueDir, `${uuid}.json`):
+    reason: OWED — a node type or a stated reason
+  lib/queue.js · writeFileSync · outPath:
+    reason: OWED — a node type or a stated reason
+  lib/queue.js · appendFileSync · path.join(this.failuresDir, `${uuid}.ndjson`):
+    reason: OWED — a node type or a stated reason
+  lib/queue.js · appendFileSync · path.join(dir, 'conversation.jsonl'):
+    reason: OWED — a node type or a stated reason
+  lib/queue.js · writeFileSync · f:
+    reason: OWED — a node type or a stated reason
+  lib/semantic-variant.js · appendFileSync · this._file(key):
+    reason: OWED — a node type or a stated reason
+  lib/semantic-variant.js · writeFileSync · this._file(key):
+    reason: OWED — a node type or a stated reason
+  lib/uid/migrate.js · writeFileSync · LEDGER_PATH:
+    reason: OWED — a node type or a stated reason
+  lib/version.js · writeFile · opts:
+    reason: OWED — a node type or a stated reason
+  loom/bootstrap.js · writeFileSync · require('path').join(__dirname, 'data', 'events.json'):
+    reason: OWED — a node type or a stated reason
+  loom/contracts/index.js · writeFileSync · this.file:
+    reason: OWED — a node type or a stated reason
+  loom/ingest/revisions.js · writeFileSync · this.file:
+    reason: OWED — a node type or a stated reason
+  loom/schema/registry.js · writeFileSync · this.file:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/canvas-persistence.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/canvas-persistence.js · writeFileSync · P.deltas:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/ddns.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/dns-server.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/dns-server.js · writeFileSync · this.configFile + '.tmp':
+    reason: OWED — a node type or a stated reason
+  mesh/lib/firewall.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/firewall.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/host-rotation.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/key-manager.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/mesh-snr-filter.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/mesh-snr-filter.js · appendFileSync · this.logFile:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/port-registry.js · writeFileSync · tmp:
+    reason: OWED — a node type or a stated reason
+  mesh/lib/reverse-proxy.js · appendFileSync · this.logFile:
+    reason: OWED — a node type or a stated reason
+  orchestrator/lib/changelog.js · writeFileSync · SNAPSHOT_PATH:
+    reason: OWED — a node type or a stated reason
+  orchestrator/orchestrator.js · writeFileSync · statePath:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-electron/main.js · writeFileSync · CONFIG_PATH:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-os-core/bridge-IME/index.js · writeFileSync · tmpPath:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-os-core/bridge-data/index.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-os-core/bridge-identity/index.js · writeFileSync · publicFile:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-os-core/bridge-identity/index.js · writeFileSync · lineageFile:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-os-core/bridge-identity/keystore/index.js · writeFileSync · this._path:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-os-core/bridge-sngate/index.js · writeFileSync · persistPath:
+    reason: OWED — a node type or a stated reason
+  remote-desktop/bridge-os-core/bridge-sngate/index.js · appendFileSync · file:
+    reason: OWED — a node type or a stated reason
+  versionium/lib/snapshot.js · writeFileSync · snapPath:
+    reason: OWED — a node type or a stated reason
+  warp/plugins/crystallizer-flatfile.js · writeFileSync · this._path:
+    reason: OWED — a node type or a stated reason

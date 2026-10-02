@@ -2,12 +2,13 @@ spec:
   meta:
     name:        nexus-repo-compartment-and-rich-dispatch
     version:     0.1.0-phasemap
-    status:      PHASEMAP 2026-09-22. James: "it would be great to be able
-                 to manage, expand, do what i am doing right now, but using
-                 the agent cli to use clearglass to route a job to this
-                 chat and use you to expand from within nexus" / "we need
-                 to make compartments in idearium for nexus, and add
-                 support for nested compartments, like increments of zoom."
+    status: >-
+      PHASEMAP 2026-09-22. James: "it would be great to be able
+      to manage, expand, do what i am doing right now, but using
+      the agent cli to use clearglass to route a job to this
+      chat and use you to expand from within nexus" / "we need
+      to make compartments in idearium for nexus, and add
+      support for nested compartments, like increments of zoom."
     uuid:        nexus-repo-compartment-rich-dispatch-v0-0000-2026-0922-001
 
   diagnosis_verified_2026_09_22:

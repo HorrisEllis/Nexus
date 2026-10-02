@@ -2,12 +2,13 @@ spec:
   meta:
     name:        rich-addressable-editable-atlas
     version:     0.1.0-phasemap
-    status:      PHASEMAP 2026-09-22. James: "all of this needs to have the
-                 context, not a list, but all mapped and listed, and
-                 referenced with ids, nodes, all you can map... rich full
-                 context and history for each atlas with links embedded
-                 for everything addressed or referenced. also be able to
-                 edit the atlas with a editor."
+    status: >-
+      PHASEMAP 2026-09-22. James: "all of this needs to have the
+      context, not a list, but all mapped and listed, and
+      referenced with ids, nodes, all you can map... rich full
+      context and history for each atlas with links embedded
+      for everything addressed or referenced. also be able to
+      edit the atlas with a editor."
     uuid:        nexus-rich-atlas-v0-0000-2026-0922-001
 
   phases:
@@ -19,11 +20,13 @@ spec:
         markdown link resolvable in any IDE/file browser.
       reuse: "atlas-template.md's existing id-addressing rule, extended to file:line links."
       gate: "a reader can click any reference in the atlas and land on the exact real line it describes, not just the right file."
-      status: DONE this pass — proven against clear-glass's real
-              registry-components.js: 79 components, individually
-              addressed, file:line linked, replacing a stale 11-family/
-              67-component summary. Not yet done for any other system's
-              atlas.
+      status: >-
+        DONE this pass — proven against clear-glass's real
+        registry-components.js: >-
+        79 components, individually
+        addressed, file:line linked, replacing a stale 11-family/
+        67-component summary. Not yet done for any other system's
+        atlas.
 
     AT2_atlas_editor:
       does: >-

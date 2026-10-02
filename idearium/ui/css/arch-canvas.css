@@ -79,6 +79,40 @@
 .ac.ac-far .ac-frame { padding: 14px 14px 12px; }
 .ac.ac-far .ac-band-label { font-size: 30px; }
 
+/* ── systems (0.39.300 AZ1): "each system is a node, which zooming in has the components as nodes" ───────────────────
+   SYSTEMS: each system a card — its name large, what it holds, what it needs; its components hidden.
+   COMPONENTS: each system a region, its components inside as titles. DETAIL: full cards, the region a quiet frame. */
+.ac-groups { position: absolute; left: 0; top: 0; z-index: 1; }
+.ac-group { position: absolute; border: 1px solid color-mix(in srgb, var(--ac-band, #00d4ff) 30%, transparent);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--ac-band, #00d4ff) 6%, rgba(5,9,16,.55)), rgba(3,5,8,.35));
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%); transition: opacity .25s, border-color .25s, background .25s; outline: none; }
+.ac-group::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--ac-band, #00d4ff); opacity: .7; }
+.ac-group.cyclic { border-style: dashed; }
+.ac-ghead { position: absolute; left: 0; right: 0; top: 0; height: 52px; display: flex; align-items: baseline; gap: 14px; padding: 14px 18px; cursor: pointer; }
+.ac-gname { font: 400 26px/1 var(--ax-display); letter-spacing: .22em; color: color-mix(in srgb, var(--ac-band, #00d4ff) 70%, #e6f3ff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-gmeta { font: 400 11px/1 var(--ax-mono); letter-spacing: .14em; color: var(--ax-text2); white-space: nowrap; }
+.ac-gcard { display: none; }
+.ac-group:focus-visible { border-color: var(--ax-c); }
+.ac-group.ac-sel { border-color: color-mix(in srgb, var(--ac-band, #00d4ff) 80%, #fff); box-shadow: 0 0 60px color-mix(in srgb, var(--ac-band, #00d4ff) 22%, transparent); }
+.ac-group.ac-need { border-color: rgba(255,204,0,.75); } .ac-group.ac-use { border-color: rgba(204,68,255,.8); }
+.ac-group.ac-dim { opacity: .18; }
+/* SYSTEMS: the system is the node */
+.ac.ac-lvl-systems .ac-node { display: none; }
+.ac.ac-lvl-systems .ac-group { cursor: pointer; background: linear-gradient(150deg, color-mix(in srgb, var(--ac-band, #00d4ff) 14%, rgba(8,14,24,.96)), rgba(4,8,14,.97)); }
+.ac.ac-lvl-systems .ac-ghead { display: none; }
+.ac.ac-lvl-systems .ac-gcard { display: flex; flex-direction: column; justify-content: flex-start; gap: calc(var(--gs, 30px) * .4); position: absolute; inset: 0; overflow: hidden; padding: calc(var(--gs, 30px) * .9) calc(var(--gs, 30px) * 1.2); }
+.ac-gstat, .ac-ghint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-gtitle { font: 400 var(--gt, 92px)/1 var(--ax-display); letter-spacing: .12em; flex: none; margin-bottom: calc(var(--gs, 30px) * .25); color: #e9f5ff; text-shadow: 0 0 60px color-mix(in srgb, var(--ac-band, #00d4ff) 45%, transparent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-gstat { font: 400 var(--gs, 30px)/1.25 var(--ax-mono); letter-spacing: .08em; color: var(--ax-text); }
+.ac-gstat b { font-weight: 500; color: color-mix(in srgb, var(--ac-band, #00d4ff) 75%, #fff); }
+.ac-gstat.bad b { color: var(--ax-r); }
+.ac-ghint { font: 400 calc(var(--gs, 30px) * .72)/1 var(--ax-mono); letter-spacing: .16em; color: var(--ax-text3); }
+/* COMPONENTS: the system a region with a big name; DETAIL: a quiet frame */
+.ac.ac-lvl-components.ac-grouped .ac-gname { font-size: 46px; }
+.ac.ac-lvl-components.ac-grouped .ac-gmeta { font-size: 18px; }
+.ac.ac-lvl-components.ac-grouped .ac-ghead { height: 64px; padding: 12px 18px; }
+.ac.ac-lvl-detail .ac-group { background: rgba(3,5,8,.25); }
+
 /* the link handle: drag it onto what this component needs */
 .ac-handle { position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%;
   background: var(--ax-void); border: 1px solid var(--ax-y); cursor: crosshair; opacity: 0; transition: opacity .15s, transform .15s; z-index: 2; }

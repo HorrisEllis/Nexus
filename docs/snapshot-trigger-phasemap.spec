@@ -2,10 +2,11 @@ spec:
   meta:
     name:        snapshot-trigger-and-diagnostic
     version:     0.1.0-phasemap
-    status:      PHASEMAP 2026-07-30. James: "the replay engine and snapshot
-                 system — it's working, but I don't know what's triggering the
-                 snapshots. It's supposed to be event-driven but it's not doing it
-                 very often. That needs to be part of the diagnostic system."
+    status: >-
+      PHASEMAP 2026-07-30. James: "the replay engine and snapshot
+      system — it's working, but I don't know what's triggering the
+      snapshots. It's supposed to be event-driven but it's not doing it
+      very often. That needs to be part of the diagnostic system."
     uuid:        nexus-snapshot-trigger-v0-0000-2026-0730-001
 
   diagnosis_verified_2026_07_30:

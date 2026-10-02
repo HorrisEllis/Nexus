@@ -91,6 +91,13 @@ function register() {
   r.write(body); r.end();
 }
 
+// §0.39.300 VX1 — a taken port is a sentence, not a raw EADDRINUSE stack
+server.on('error', (e) => {
+  if (e.code === 'EADDRINUSE') console.error(`[versionium] port ${PORT} is already in use — another versionium is probably running (GET http://127.0.0.1:${PORT}/health); set VERSIONIUM_PORT to run a second one`);
+  else console.error(`[versionium] the server could not start: ${e.message}`);
+  process.exit(1);
+});
+
 server.listen(PORT, () => {
   console.log(`[versionium] :${PORT} — sovereign causal version control active`);
   setTimeout(register, 1000);
@@ -139,13 +146,18 @@ server.listen(PORT, () => {
   // null entropy, engine.js's own real "no trigger fires without one"
   // logic (its _tick's own comment) already handles that without a
   // fabricated default.
+  // §0.39.300 VX1 — an outage is said twice, not every tick: once when the field goes away (with why), once when it comes
+  // back (with how long). Before, a down orchestrator printed the same warning every POLL_MS (3 s), forever.
+  let fieldDownSince = null;
   engine.setDeps({
     fieldReader: async () => {
       try {
         const nx = require('../lib/nexus-client.js');
-        return await nx.get('orchestrator', '/cfr/field', { timeout: 3000 });
+        const f = await nx.get('orchestrator', '/cfr/field', { timeout: 3000 });
+        if (fieldDownSince) { console.log(`[versionium] orchestrator /cfr/field is back after ${Math.round((Date.now() - fieldDownSince) / 1000)}s — the sigma auto-commit trigger is live again`); fieldDownSince = null; }
+        return f;
       } catch (e) {
-        console.warn(`[versionium] orchestrator /cfr/field unreachable (non-fatal): ${e.message}`);
+        if (!fieldDownSince) { fieldDownSince = Date.now(); console.warn(`[versionium] orchestrator /cfr/field unreachable (non-fatal — no sigma auto-commit until it is back; said once): ${e.message}`); }
         return null;
       }
     },

@@ -1933,7 +1933,7 @@ function toggleCompartment(key) {
 // them under that repo instead of listing them at the top level.
 function _syncNestScope() {
   document.body.classList.toggle('in-repo', !!REPO_DETAIL_OPEN);
-  const nestViews = ['brainstorm', 'ideas', 'eravos', 'architect-build', 'spec-wizard'];
+  const nestViews = ['brainstorm', 'ideas', 'eravos', 'spec-wizard'];   // §0.39.300 WS3 — the pipeline's Architect is not a repo's: it opens with no repo open
   if (!REPO_DETAIL_OPEN && nestViews.includes(((document.querySelector('.view.active') || {}).id || '').replace(/^view-/, ''))) setView('repo');
   if (typeof renderTabTree === 'function') renderTabTree();
 }
@@ -3667,6 +3667,33 @@ function openVoid() {
   _voidWin = w || _voidWin;
   return w;
 }
+// §0.39.300 WS3 — the pipeline's third station as its own page, like the Void and the workshop (the Build tab frames the same page)
+let _architectWin = null;
+// §0.39.300 UI1 — James: "make idearium full screen". The whole page, browser chrome gone; SHIFT+F toggles it (F alone is the canvas's FIT), Esc leaves it
+// (the browser's own). Where the host refuses (an embed without allowfullscreen) it is said, not silent.
+function toggleFullscreen() {
+  const d = document;
+  if (d.fullscreenElement) { d.exitFullscreen().catch(() => {}); return; }
+  const el = d.documentElement;
+  (el.requestFullscreen ? el.requestFullscreen() : Promise.reject(new Error('not supported')))
+    .catch(e => { if (typeof toast === 'function') toast(`FULL SCREEN REFUSED — ${e.message}`, 'warn'); });
+}
+document.addEventListener('fullscreenchange', () => {
+  const b = document.getElementById('tab-fullscreen');
+  if (b) { b.classList.toggle('active', !!document.fullscreenElement); b.title = document.fullscreenElement ? 'LEAVE FULL SCREEN (SHIFT+F · ESC)' : 'FULL SCREEN (SHIFT+F)'; }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'F' && e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && !e.target.isContentEditable) toggleFullscreen();
+});
+document.addEventListener('click', () => document.querySelectorAll('.welcome-more.open').forEach(m => m.classList.remove('open')));
+
+function openArchitect(from = null) {
+  if (!API_BASE) { toast('idearium is offline — the architect is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/architect.html${from ? `?from=${encodeURIComponent(from)}` : ''}`, 'idearium-architect', 'width=1520,height=960');
+  if (!w) toast('the architect window was blocked — allow pop-ups for idearium', 'err');
+  _architectWin = w || _architectWin;
+  return w;
+}
 function openWorkshop(from = null, id = null) {
   if (!API_BASE) { toast('idearium is offline — the spec workshop is served by it', 'err'); return null; }
   const q = id ? `?id=${encodeURIComponent(id)}` : from ? `?from=${encodeURIComponent(from)}` : '';
@@ -3681,7 +3708,7 @@ window.addEventListener('message', async (ev) => {
   const d = ev.data;
   if (!d || !/^nexus:(repo\.open|workshop\.open)$/.test(String(d.type))) return;
   const archFrame = document.getElementById('architect-frame');   // §0.39.299 AR4 — the Build tab's Architect is idearium's own page
-  const mine = [_specLibraryWin, _workshopWin, _voidWin, archFrame && archFrame.contentWindow].filter(Boolean);
+  const mine = [_specLibraryWin, _workshopWin, _voidWin, _architectWin, archFrame && archFrame.contentWindow].filter(Boolean);
   if (!mine.includes(ev.source)) { console.warn(`[idearium] ${d.type} ignored: not from a window idearium opened`); return; }
   if (d.type === 'nexus:workshop.open') {
     if (/^(idea|library|repo):[\w.-]{4,80}$/.test(String(d.from || ''))) openWorkshop(d.from);
@@ -5705,9 +5732,21 @@ window.addEventListener('message', async (ev) => {
 // architecture map". GET /api/repos/:uuid/architecture (idearium/repo/architecture.js over lib/code-intel) — loom's
 // shape: components, export/import hooks, wires. The map: one column per layer, bottom-up, a line per wire.
 // ════════════════════════════════════════════════════
-const ARCHREG = { uuid: null, data: null, q: '', sel: null, tab: 'inspect', canvas: null, repo: null, bp: null };
+const ARCHREG = { uuid: null, data: null, q: '', sel: null, group: null, tab: 'inspect', canvas: null, repo: null, bp: null, sysOf: null, sysStats: {} };
 const ARCH_BANDS = { foundation: '#00ff88', library: '#00d4ff', api: '#ffcc00', cli: '#ff6b35', automation: '#cc44ff', ui: '#ff66aa', test: '#5f7f9b' };
-const ARCH_MAX = 600;   // more cards than this and the map stops being a map: the filter narrows it, and the map says so
+const ARCH_MAX = 2500;  // §0.39.300 AZ1 — the systems level carries the overview, so the map holds far more; past this the filter narrows it, and the map says so
+const ARCH_SYS_COLORS = ['#00d4ff', '#00ff88', '#ffcc00', '#cc44ff', '#ff6b35', '#ff66aa', '#4fc3ff', '#9dff6b', '#ffd86b', '#b98cff'];
+/** _archSystemOf(files) → (file) → system: a repo's systems are its top-level folders — one folder deeper when one folder holds most of it */
+function _archSystemOf(files) {
+  const top = (f) => f.includes('/') ? f.split('/')[0] : '(root)';
+  const counts = {}; for (const f of files) counts[top(f)] = (counts[top(f)] || 0) + 1;
+  const big = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  if (big && big[0] !== '(root)' && big[1] / files.length >= 0.8) {
+    const deep = (f) => { const p = f.split('/'); return p[0] === big[0] && p.length > 2 ? `${p[0]}/${p[1]}` : top(f); };
+    return deep;
+  }
+  return top;
+}
 async function renderRepoRegistry(repo) {
   const el = document.getElementById('repo-arch-registry'); if (!el) return;
   if (ARCHREG.uuid !== repo.uuid) { if (ARCHREG.canvas) ARCHREG.canvas.destroy(); Object.assign(ARCHREG, { uuid: repo.uuid, data: null, q: '', sel: null, tab: 'inspect', canvas: null, bp: null }); }
@@ -5732,13 +5771,15 @@ async function renderRepoRegistry(repo) {
     </aside>
     <nav class="ax-toolbar" aria-label="tools">
       <button class="ax-tool" onclick="archTool('fit')" title="FIT THE WHOLE MAP (F)"><b>⤢</b>FIT</button>
-      <button class="ax-tool" onclick="archTool('out')" title="ZOOM OUT (−)"><b>−</b>OUT</button>
-      <button class="ax-tool" onclick="archTool('in')" title="ZOOM IN (+)"><b>+</b>IN</button>
+      <button class="ax-tool" onclick="archTool('out')" title="ONE INCREMENT OUT (−)"><b>−</b>OUT</button>
+      <button class="ax-tool" onclick="archTool('in')" title="ONE INCREMENT IN (+)"><b>+</b>IN</button>
+      <span class="ax-sep"></span>
+      <button class="ax-tool" data-ralvl="systems" onclick="archTool('lvl-systems')" title="EACH SYSTEM ONE NODE — THE WIRES BETWEEN SYSTEMS SUMMED (1)"><b>◇</b>SYSTEMS</button>
+      <button class="ax-tool" data-ralvl="components" onclick="archTool('lvl-components')" title="EACH SYSTEM A REGION, ITS COMPONENTS INSIDE (2)"><b>◈</b>COMPONENTS</button>
+      <button class="ax-tool" data-ralvl="detail" onclick="archTool('lvl-detail')" title="FULL CARDS (3)"><b>▣</b>DETAIL</button>
       <button class="ax-tool" onclick="archTool('arrange')" title="LAY THE MAP OUT AGAIN — BOTTOM-UP, FEWEST CROSSINGS"><b>⊞</b>ARRANGE</button>
       <span class="ax-sep"></span>
-      <button class="ax-tool" data-ratool="inspect" onclick="archTool('inspect')" title="THE SELECTED COMPONENT"><b>◈</b>INSPECT</button>
-      <button class="ax-tool" data-ratool="lists" onclick="archTool('lists')" title="ORPHANS, BREACHES, PACKAGES, ROUTES AND CLI, EVENTS, DATA"><b>☰</b>LISTS</button>
-      <button class="ax-tool" data-ratool="blueprint" onclick="archTool('blueprint')" title="THE REPO'S SPEC, CHUNK BY CHUNK"><b>▤</b>BLUEPRINT</button>
+      <button class="ax-tool" data-ratool="inspect" onclick="archTool('inspect')" title="THE INSPECTOR — THE SELECTED SYSTEM OR COMPONENT; THE LISTS AND THE BLUEPRINT ARE ITS TABS"><b>◈</b>PANEL</button>
       <span class="ax-sep"></span>
       <button class="ax-tool" onclick="archReindex()" title="READ THE CODE AGAIN (LIB/CODE-INTEL)"><b>↻</b>INDEX</button>
       <button class="ax-tool g" onclick="archWrite()" title="WRITE THIS MAP INTO THE REPO: ARCHITECTURE.JSON AND THE REGISTRY AS NODES (NODES/TYPE/ID.TYPE, GUARDIAN'S LAYOUT) — VERSIONED; NODES NO LONGER PRODUCED MOVE TO NODES/_ARCHIVE/"><b>⇩</b>WRITE</button>
@@ -5771,7 +5812,11 @@ function _archPaint() {
   if (!ARCHREG.canvas) ARCHREG.canvas = ArchCanvas.mount(document.getElementById('ra-map'), {
     nodeW: 210, layout: { maxPerRow: 9, nodeH: 84, gapY: 26, gapX: 26 },
     inset: () => ({ t: 130, b: 96, l: 24, r: document.getElementById('ra-side').classList.contains('shut') ? 24 : 420 }),
-    onSelect: (ids) => { ARCHREG.sel = ids.length === 1 ? ids[0] : null; if (ARCHREG.sel) { ARCHREG.tab = 'inspect'; archDrawer(true); } else _archSide(); },
+    onSelect: (ids) => { ARCHREG.sel = ids.length === 1 ? ids[0] : null; if (ARCHREG.sel) { ARCHREG.group = null; ARCHREG.tab = 'inspect'; archDrawer(true); } else _archSide(); },
+    onSelectGroup: (key) => { ARCHREG.group = key; if (key) { ARCHREG.sel = null; ARCHREG.tab = 'inspect'; archDrawer(true); } else _archSide(); },
+    onLevel: (lv) => document.querySelectorAll('[data-ralvl]').forEach(b => b.classList.toggle('on', b.dataset.ralvl === lv)),
+    groupHtml: (b, w) => { const st = ARCHREG.sysStats[b.key] || {}; const bad = [st.breaches ? `<b>${st.breaches}</b> BREACH${st.breaches === 1 ? '' : 'ES'}` : '', st.orphans ? `<b>${st.orphans}</b> ORPHAN${st.orphans === 1 ? '' : 'S'}` : ''].filter(Boolean).join(' · ');
+      return `<div class="ac-gstat"><b>${b.count}</b> FILES · <b>${(st.lines || 0).toLocaleString()}</b> LINES</div><div class="ac-gstat">NEEDS <b>${w.needs.length}</b> · NEEDED BY <b>${w.usedBy.length}</b></div>${bad ? `<div class="ac-gstat bad">${bad}</div>` : ''}`; },
     onOpen: (id) => ARCHREG.canvas.center(id),
   });
   _archGraph(true);
@@ -5799,7 +5844,14 @@ function _archGraph(fit) {
     .map(w => w.relation === 'event' ? { from: w.to, to: w.from, kind: 'event' } : { from: w.to, to: w.from, kind: breach.has(`${w.to}>${w.from}`) ? 'breach' : 'dep' });
   const seen = new Set(), uniq = edges.filter(e => { const k = `${e.from}>${e.to}>${e.kind}`; if (seen.has(k)) return false; seen.add(k); return true; });
   const bands = (a.layerOrder || []).filter(l => comps.some(c => c.layer === l)).map(l => ({ key: l, label: l.toUpperCase(), color: ARCH_BANDS[l] }));
-  ARCHREG.canvas.setGraph({ nodes, edges: uniq, bands }, { keepView: !fit });
+  // §0.39.300 AZ1 — the systems: each component's system, each system's numbers (for its card at the SYSTEMS level)
+  const sysOf = _archSystemOf((a.components || []).map(c => c.file));
+  const keys = [...new Set(comps.map(c => sysOf(c.file)))].sort();
+  ARCHREG.sysOf = sysOf; ARCHREG.sysStats = {};
+  for (const c of comps) { const k = sysOf(c.file), st = ARCHREG.sysStats[k] || (ARCHREG.sysStats[k] = { lines: 0, orphans: 0, breaches: 0, files: [] }); st.lines += c.lines || 0; st.files.push(c.file); if (orph.has(c.file)) st.orphans++; if (c.deps.some(d => breach.has(`${c.file}>${d}`))) st.breaches++; }
+  const groups = keys.map((k, i) => ({ key: k, label: k.toUpperCase(), color: ARCH_SYS_COLORS[i % ARCH_SYS_COLORS.length] }));
+  nodes.forEach(n => { n.group = sysOf(n.id); });
+  ARCHREG.canvas.setGraph({ nodes, edges: uniq, bands, groups }, { keepView: !fit });
   if (ARCHREG.sel && shown.has(ARCHREG.sel)) ARCHREG.canvas.select(ARCHREG.sel);
   document.getElementById('ra-shown').textContent = total > comps.length ? `SHOWING ${comps.length} OF ${total} — FILTER TO NARROW` : ARCHREG.q ? `${total} MATCH` : '';
 }
@@ -5814,11 +5866,12 @@ function archDrawer(open) {
 function archTool(t) {
   const cv = ARCHREG.canvas;
   if (t === 'fit') return cv && cv.fit();
-  if (t === 'in') return cv && cv.zoomBy(1.18);
-  if (t === 'out') return cv && cv.zoomBy(1 / 1.18);
+  if (t === 'in') return cv && cv.step(1);
+  if (t === 'out') return cv && cv.step(-1);
+  if (t.startsWith('lvl-')) return cv && cv.goLevel(t.slice(4));
   if (t === 'arrange') return cv && cv.layout({ all: true });
   const d = document.getElementById('ra-side');
-  if (!d.classList.contains('shut') && ARCHREG.tab === t) return archDrawer(false);
+  if (!d.classList.contains('shut') && (ARCHREG.tab === t || t === 'inspect')) return archDrawer(false);
   ARCHREG.tab = t; archDrawer(true);
 }
 function _archJump(file) { ARCHREG.sel = file; ARCHREG.tab = 'inspect'; if (ARCHREG.canvas) { if (!_archShown().comps.find(c => c.file === file)) { ARCHREG.q = ''; document.getElementById('ra-q').value = ''; _archGraph(false); } ARCHREG.canvas.select(file); ARCHREG.canvas.center(file); } _archSide(); }
@@ -5844,6 +5897,21 @@ function _archSide() {
       + sec('ROUTES · CLI — THE DOORWAYS IN', (a.routes || []).length + (a.cli || []).length, [...(a.routes || []).slice(0, 80).map(r => it(r.file, `${escapeHtml(r.method)} ${escapeHtml(r.path)}`)), ...(a.cli || []).slice(0, 60).map(c => it(c.file, `$ ${escapeHtml(c.verb)}`))].join('') || '<div class="ax-empty">NO ROUTES OR COMMANDS</div>')
       + sec('EVENTS — EMITTED → HANDLED', (a.events || []).length, (a.events || []).slice(0, 80).map(e => `<div class="ax-item ${e.consumedBy.length ? '' : 'warn'}">${escapeHtml(e.name)}<span class="m">${e.emittedBy.length} EMIT → ${e.consumedBy.length} HANDLE${e.consumedBy.length ? '' : ' — UNHANDLED'}</span></div>`).join('') || '<div class="ax-empty">NO EVENTS</div>')
       + sec('DATA DIRS · NODE TYPES', (a.dataDirs || []).length, `${(a.dataDirs || []).map(d => `<div class="ax-item">${escapeHtml(d)}</div>`).join('') || '<div class="ax-empty">NO DATA DIR</div>'}${Object.entries(a.nodeTypes || {}).map(([k, v]) => `<div class="ax-item">.${escapeHtml(k)}<span class="m">× ${v}</span></div>`).join('')}`);
+  } else if (ARCHREG.group && !ARCHREG.sel) {
+    // §0.39.300 AZ1 — a system: what it holds, what it needs, what needs it (summed wires), its breaches and orphans
+    const k = ARCHREG.group, st = ARCHREG.sysStats[k] || { files: [], lines: 0 };
+    const w = ARCHREG.canvas ? ARCHREG.canvas.systemWires() : [];
+    const needs = w.filter(e => e.from === k).sort((x, y) => y.count - x.count), users = w.filter(e => e.to === k).sort((x, y) => y.count - x.count);
+    const box = ARCHREG.canvas ? ARCHREG.canvas.groups().find(b => b.key === k) : null;
+    title.textContent = k.toUpperCase();
+    const sys = (e, key) => `<div class="ax-item" tabindex="0" data-sys="${escapeHtml(e[key])}">${escapeHtml(e[key].toUpperCase())}<span class="m">${e.count} WIRE${e.count === 1 ? '' : 'S'}</span></div>`;
+    body.innerHTML = `<div class="ax-stats"><span class="ax-stat c"><b>${st.files.length}</b>COMPONENTS</span><span class="ax-stat"><b>${(st.lines || 0).toLocaleString()}</b>LINES</span>${box ? `<span class="ax-stat"><b>${box.level}</b>LEVEL</span>` : ''}${st.breaches ? `<span class="ax-stat r"><b>${st.breaches}</b>BREACHES</span>` : ''}${st.orphans ? `<span class="ax-stat r"><b>${st.orphans}</b>ORPHANS</span>` : ''}</div>
+      ${box && box.cyclic ? '<div class="ax-item warn">IN A CYCLE — IT NEEDS SYSTEMS THAT NEED IT; THEY SHARE ONE LEVEL</div>' : ''}
+      <div class="ax-row" style="margin:12px 0 4px"><button class="ax-btn small" onclick="ARCHREG.canvas.openGroup('${escapeHtml(k).replace(/'/g, "\\'")}')" title="ZOOM INTO THE SYSTEM — ITS COMPONENTS">OPEN THE SYSTEM</button></div>
+      <div class="ax-k">NEEDS <span class="n">${needs.length} SYSTEMS</span></div>${needs.map(e => sys(e, 'to')).join('') || '<div class="ax-empty">NOTHING OUTSIDE ITSELF</div>'}
+      <div class="ax-k">NEEDED BY <span class="n">${users.length} SYSTEMS</span></div>${users.map(e => sys(e, 'from')).join('') || '<div class="ax-empty">NOTHING</div>'}
+      <div class="ax-k">COMPONENTS <span class="n">${st.files.length}</span></div>${st.files.slice(0, 200).map(f => it(f)).join('')}`;
+    body.querySelectorAll('[data-sys]').forEach(x => { const go = () => { ARCHREG.group = x.dataset.sys; ARCHREG.canvas.selectGroup(x.dataset.sys); _archSide(); }; x.onclick = go; x.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
   } else {
     const c = (a.components || []).find(x => x.file === ARCHREG.sel);
     title.textContent = c ? c.file.split('/').pop().toUpperCase() : 'INSPECTOR';

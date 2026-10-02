@@ -25,7 +25,8 @@ spec:
       the RAID engine's signal-to-noise. RAID is the governing layer; everything
       goes through it to move to another system."
 
-  MAJOR_8.6_FINDING:   # most of this ALREADY EXISTS — verified 2026-08-08
+  MAJOR_8.6_FINDING: >-
+    # most of this ALREADY EXISTS — verified 2026-08-08
     - "cortex/core/raid/snr-filter.js — the SNR + FIDELITY gate already exists, wired into RAID _decide() as a pre-gate. Spec: docs/raid-snr-filter.spec. 'fidelity is how much context resolves the task.' THE SPINE EXISTS."
     - "lib/agent-router.js — per-agent token configs ALREADY THERE: chatgpt {maxTokens:900,chunk:true}, claude {maxTokens:200000}, gemini {1M/65k}, + intent→agent routing (perplexity=research, chatgpt=general...). The 900-token chunking reason is even documented."
     - "lib/account-registry.js — multi-account slots per provider, app-password-style login ('login to multiple accounts in ClearGlass like an app password' — James's exact ask, BUILT). Stored as editable cortex rows."

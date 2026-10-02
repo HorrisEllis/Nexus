@@ -45,7 +45,8 @@ spec:
     I2: tests never run with network; dependency install is the only online phase, and the cut is
         verified from inside the guest before any test starts (§4.3).
     I3: every "unavailable" names the missing piece AND the fix (§1.2).
-    I4: nothing about the VM is committed or stored in the tree: images live in the user cache dir.
+    I4: >-
+      nothing about the VM is committed or stored in the tree: images live in the user cache dir.
     I5: every atlas reference resolves to a file, dir, system or doc in the snapshot, or is plain text —
         checked by a test over the real tree, never by eye (§1.1).
 

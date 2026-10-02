@@ -24,7 +24,8 @@ spec:
       cortex. all decoupled and uses the interaction contracts and apis to interact
       with each other. each system in their own folder. need to clear some clutter."
 
-  MAJOR_8.6_FINDING:   # the pattern exists in FRAGMENTS — standardize, don't invent
+  MAJOR_8.6_FINDING: >-
+    # the pattern exists in FRAGMENTS — standardize, don't invent
     - "contracts/SYSTEM-CONTRACTS.js — SYSTEM_HANDSHAKE + /bridge/handshake + per-system interaction contracts ALREADY EXIST."
     - "guardian/ — has guardian.config.json + interaction-contract.json (the target pattern, in ONE system)."
     - "bridge/ — has its own ledger. cortex/idearium/architect — have interaction-contract."

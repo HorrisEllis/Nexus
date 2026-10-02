@@ -130,6 +130,10 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .tab-sub{transition:background .12s,color .12s,padding-left .12s}.tab-sub:hover{padding-left:14px}
 .tab-sub-lead{align-items:flex-start}.tab-sub-lead small{display:block;font-size:9.5px;color:var(--text3);margin-top:2px;white-space:normal;line-height:1.3}
 .tab-sub-lead .tab-icon{color:var(--sky)}.tab-sub-sep{height:1px;background:var(--b1);margin:4px 6px}
+/* §0.39.300 WS3 — the pipeline's stations in Create ▾: a head, and each station with its step under its name */
+.tab-sub-head{font:600 9px var(--mono);letter-spacing:.16em;color:var(--text3);padding:6px 10px 4px}
+.tab-sub small{display:block;font-size:9.5px;color:var(--text3);margin-top:2px;white-space:normal;line-height:1.3}
+.tab-sub > span:not(.tab-icon){display:block}
 .bs-flash{animation:bsFlash 1.4s ease}@keyframes bsFlash{0%,60%{box-shadow:0 0 0 2px rgba(56,189,248,.55)}100%{box-shadow:none}}
 .view.active{animation:viewIn .26s cubic-bezier(.2,.8,.2,1)}
 .repo-subtab-panel.active{animation:viewIn .22s cubic-bezier(.2,.8,.2,1)}
@@ -169,6 +173,19 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
    nested view, 5 standalone) across the width and the text scales with the window, so the flow arrows
    no longer land on a fixed third column — they are dropped rather than pointing at nothing. */
 .pillars .pillar.flow::after{display:none}
+/* §0.39.300 UI1 — one bar, full screen, a calmer welcome */
+.tab-logo{display:flex;align-items:center;padding:0 16px 0 10px;margin-right:6px;border-right:1px solid var(--b1)}
+.tab-icon-btn{padding:0 11px}
+.tab-icon-btn .tab-icon{margin:0;font-size:14px}
+.tab-right{margin-left:8px;padding-left:10px;border-left:1px solid var(--b1)}
+.tabbar .tb-stat{align-self:center;margin:0 6px}
+.welcome-more{position:relative}
+.welcome-menu{display:none;position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);min-width:320px;background:rgba(11,15,24,.97);border:1px solid var(--b2);border-radius:8px;padding:6px;z-index:40;box-shadow:0 18px 50px rgba(0,0,0,.55)}
+.welcome-more.open .welcome-menu{display:flex;flex-direction:column}
+.welcome-menu button{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:9px 12px;border-radius:5px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--text)}
+.welcome-menu button small{font-family:var(--sans);font-size:11px;letter-spacing:0;color:var(--text3)}
+.welcome-menu button:hover{background:rgba(56,189,248,.08);color:var(--sky)}
+:fullscreen .tabbar{background:rgba(7,10,16,.92)}
 .welcome-foot{margin-top:30px;font-family:var(--mono);font-size:clamp(9px,.7vw,12px);color:var(--text3);letter-spacing:.08em}
 
 /* ════════════════════════════════════════════════════
@@ -890,21 +907,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
   <canvas id="star-canvas"></canvas>
 </div>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="logo" onclick="setView('welcome')">IDEA<span>RIUM</span></div>
-  <div class="tb-sep"></div>
-  <!-- §0.39.264 — James: "this in idearium needs to only show in nested compartments/repos." The counters,
-       Create and Build show only inside a repo (body.in-repo, set by app.js _syncNestScope). -->
-  <div class="tb-stat nest-only">ideas <span class="v sky" id="stat-ideas">—</span></div>
-  <div class="tb-stat nest-only">specs <span class="v" id="stat-specs">—</span></div>
-  <div class="tb-right">
-    <!-- §0.39.279 — the settings console: every idearium, compartment and agent setting in one window -->
-    <button class="tb-conn" style="cursor:pointer" title="Settings console — idearium, every repo's agent, prompt, hat, compartment and desktop" onclick="openSettingsConsole(typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO ? CURRENT_API_REPO.uuid : null)">⚙ settings</button>
-    <div class="tb-conn offline" id="conn-indicator" onclick="nexusConnect(true)"><span class="dot"></span><span id="conn-label">connecting…</span></div>
-  </div>
-</div>
-
+<!-- §0.39.300 UI1 — James: "make idearium full screen. its cluttered also". The top bar is gone: its logo, counters,
+     settings and connection now sit in the tab bar — one bar, ~40px back for the work. -->
 <!-- OFFLINE BANNER -->
 <div class="offline-banner" id="offline-banner">
   <span>NEXUS unreachable — start the Idearium service: <code>node service/idearium-service.js</code> (port 4800), or via orchestrator on :9000.</span>
@@ -914,6 +918,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
 <!-- APP SHELL -->
 <div class="app-shell">
   <nav class="tabbar" id="tabbar">
+    <div class="logo tab-logo" onclick="setView('welcome')" title="IDEARIUM — HOME">IDEA<span>RIUM</span></div>
     <button class="tab-btn active" data-view="welcome" onclick="setView('welcome')"><span class="tab-icon">⌂</span>Welcome</button>
 
 
@@ -949,23 +954,37 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
            sparks live in the Void. -->
       <button class="tab-btn tab-group-btn" data-views="" onclick="toggleTabGroup(event,this)"><span class="tab-icon">∞</span>Create<span class="tab-caret">▾</span></button>
       <div class="tab-dropdown">
-        <button class="tab-sub" onclick="openVoid()" title="your ideas, the two dials, the echoes — its own page"><span class="tab-icon">∞</span>The Void</button>
-        <button class="tab-sub" onclick="openWorkshop()"><span class="tab-icon">✎</span>Spec workshop</button>
+        <!-- §0.39.300 WS3 — James: "find spec workshop … make sure it all interconnects". The pipeline's stations, in order,
+             each its own page: idea → spec → architect (→ blueprint → repo → COS as they are built). -->
+        <div class="tab-sub-head">THE PIPELINE</div>
+        <button class="tab-sub" onclick="openVoid()" title="01 · IDEA — your ideas, the two dials, the echoes — its own page"><span class="tab-icon">∞</span><span>The Void<small>01 · idea — yours, the agent only echoes</small></span></button>
+        <button class="tab-sub" onclick="openWorkshop()" title="02 · SPEC — shape the idea into a spec's sections, saved into the repo's spec"><span class="tab-icon">✎</span><span>Spec workshop<small>02 · spec — sections, by hand or with the agent</small></span></button>
+        <button class="tab-sub" onclick="openArchitect()" title="03 · ARCHITECT — lay the spec out as components on the canvas, reuse what exists"><span class="tab-icon">⌘</span><span>Architect<small>03 · architect — components, bottom-up, reuse what exists</small></span></button>
       </div>
     </div>
     <div class="tab-group" data-group="build">
-      <button class="tab-btn tab-group-btn" data-views="eravos,architect-build,spec-wizard" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
+      <button class="tab-btn tab-group-btn" data-views="eravos,architect-build" onclick="toggleTabGroup(event,this)"><span class="tab-icon">▦</span>Build<span class="tab-caret">▾</span></button>
       <div class="tab-dropdown tab-dropdown-deep">
         <button class="tab-sub tab-sub-lead" onclick="openBuildFlow()"><span class="tab-icon">▶</span><span>Build this repo<small>plan the spec → its phases → the agent codes them, one at a time</small></span></button>
         <div class="tab-sub-sep"></div>
         <button class="tab-sub" data-view="eravos" onclick="setView('eravos')"><span class="tab-icon">◈</span>Eravos — organism canvas</button>
         <button class="tab-sub" data-view="architect-build" onclick="setView('architect-build')"><span class="tab-icon">⌘</span>Architect</button>
-        <button class="tab-sub" data-view="spec-wizard" onclick="setView('spec-wizard')"><span class="tab-icon">▤</span>Spec Builder</button>
+        <!-- §0.39.300 WS3 — the retired Spec Builder (spec-wizard) left Build ▾ (UI12: retired from every surface; its view
+             stays below, §0.3). The spec is made in the workshop. -->
+        <button class="tab-sub" onclick="openWorkshop()"><span class="tab-icon">✎</span>Spec workshop</button>
       </div>
     </div>
 
     <div class="tab-spacer"></div>
-    <button class="tab-btn" id="tab-tree-toggle" title="expand every tab into a full navigator tree" onclick="toggleTabTree()"><span class="tab-icon">⊞</span>Expand all</button>
+    <div class="tb-stat nest-only">ideas <span class="v sky" id="stat-ideas">—</span></div>
+    <div class="tb-stat nest-only">specs <span class="v" id="stat-specs">—</span></div>
+    <button class="tab-btn tab-icon-btn" id="tab-tree-toggle" title="EXPAND ALL — every tab as one navigator tree" onclick="toggleTabTree()"><span class="tab-icon">⊞</span></button>
+    <button class="tab-btn tab-icon-btn" id="tab-fullscreen" title="FULL SCREEN (SHIFT+F)" onclick="toggleFullscreen()"><span class="tab-icon">⛶</span></button>
+  <div class="tb-right tab-right">
+      <!-- §0.39.279 — the settings console: every idearium, compartment and agent setting in one window -->
+      <button class="tb-conn" style="cursor:pointer" title="Settings console — idearium, every repo's agent, prompt, hat, compartment and desktop" onclick="openSettingsConsole(typeof CURRENT_API_REPO !== 'undefined' && CURRENT_API_REPO ? CURRENT_API_REPO.uuid : null)">⚙ settings</button>
+      <div class="tb-conn offline" id="conn-indicator" onclick="nexusConnect(true)"><span class="dot"></span><span id="conn-label">connecting…</span></div>
+    </div>
   </nav>
   <aside class="tab-tree" id="tab-tree"></aside>
 
@@ -978,14 +997,22 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
         <div class="welcome-mark">NEXUS · IDEA OS · LAYER 9</div>
         <div class="welcome-title">IDEA<span>RIUM</span></div>
         <div class="welcome-sub">Your ideas live in the Void. From there: the spec, the architect, the repo, the machine it runs on.</div>
+        <!-- §0.39.300 UI1 — seven buttons became three: the pipeline's first two stations, and BRING IN for everything that
+             starts from something you already have (each action unchanged, one click deeper). -->
         <div class="welcome-actions">
-          <button class="welcome-action-btn secondary" onclick="openUploadProjectModal()">Import project</button>
-          <button class="welcome-action-btn secondary" onclick="openSpecLibrary()" title="drop a zip of specs — each becomes an idea with its spec">Import specs</button>
-          <button class="welcome-action-btn secondary" onclick="openGitCloneModal()">Clone from git</button>
-          <button class="welcome-action-btn secondary" onclick="openCosRemoteBrowse()">Compartments · push / pull</button>
-          <button class="welcome-action-btn secondary" onclick="newSpecPrompt()">Quick new project</button>
-          <button class="welcome-action-btn secondary" onclick="openWorkshop()" title="idea → spec workshop → architect → blueprint → repo → COS: make the spec, by hand or with the agent">Spec workshop</button>
-          <button class="welcome-action-btn primary" onclick="openVoid()" title="the spatial void — your ideas, the two dials, the echoes">Enter the Void</button>
+          <button class="welcome-action-btn primary" onclick="openVoid()" title="THE SPATIAL VOID — your ideas, the two dials, the echoes">ENTER THE VOID</button>
+          <button class="welcome-action-btn secondary" onclick="openWorkshop()" title="IDEA → SPEC WORKSHOP → ARCHITECT — make the spec, by hand or with the agent">SPEC WORKSHOP</button>
+          <div class="welcome-more">
+            <button class="welcome-action-btn secondary" onclick="this.parentElement.classList.toggle('open');event.stopPropagation()">BRING IN ▾</button>
+            <div class="welcome-menu" onclick="this.parentElement.classList.remove('open')">
+              <button onclick="openUploadProjectModal()">IMPORT PROJECT<small>a folder or a zip becomes a repo</small></button>
+              <button onclick="openSpecLibrary()">IMPORT SPECS<small>a zip of specs — each becomes an idea with its spec</small></button>
+              <button onclick="openGitCloneModal()">CLONE FROM GIT<small>any git url, into its own repo</small></button>
+              <button onclick="openCosRemoteBrowse()">COMPARTMENTS · PUSH / PULL<small>repos on another COS</small></button>
+              <button onclick="newSpecPrompt()">QUICK NEW PROJECT<small>a name, an empty repo</small></button>
+              <button onclick="openModal()">LOG AN IDEA<small>a tracked node — phase, tension, causal ancestry</small></button>
+            </div>
+          </div>
         </div>
         <div class="pillars">
           <div class="pillar flow" onclick="openVoid()">
@@ -994,7 +1021,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <div class="pillar-name">The Spatial Void</div>
             <div class="pillar-desc">Speak your vision. Set creativity and stability; the void answers your idea — it never writes it.</div>
           </div>
-          <div class="pillar flow" onclick="openModal()">
+          <div class="pillar flow hidden-pillar" style="display:none" onclick="openModal()">
             <div class="pillar-step">02 · LOG</div>
             <div class="pillar-icon">◇</div>
             <div class="pillar-name">Log an Idea</div>
@@ -1006,20 +1033,20 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <div class="pillar-name">Ideas → Repository</div>
             <div class="pillar-desc">Open an idea or spec and click "open repository" to see its linked repo — repos aren't a separate destination anymore.</div>
           </div>
-          <div class="pillar flow" onclick="openSpecChoice()">
-            <div class="pillar-step">04 · SPEC</div>
-            <div class="pillar-icon">▦</div>
-            <div class="pillar-name">Spec &amp; Library Builder</div>
-            <div class="pillar-desc">SEAM-chunked sections, compiled with confidence scoring and gap analysis.</div>
+          <div class="pillar flow" onclick="openWorkshop()">
+            <div class="pillar-step">02 · SPEC</div>
+            <div class="pillar-icon">✎</div>
+            <div class="pillar-name">Spec workshop</div>
+            <div class="pillar-desc">Shape the idea into a spec's sections, by hand or with the agent — saved into the repo's spec. Its ARCHITECT station opens the next step.</div>
           </div>
-          <div class="pillar nest-only" onclick="setView('architect-build')">
-            <div class="pillar-step">05 · ARCHITECT</div>
+          <div class="pillar flow" onclick="openArchitect()">
+            <div class="pillar-step">03 · ARCHITECT</div>
             <div class="pillar-icon">⌘</div>
             <div class="pillar-name">Architect</div>
             <div class="pillar-desc">Lay the spec out as components on the canvas, bottom-up — what exists is reused, what is new is marked, a gap is said. Each repo's own wiring is on its Architect tab.</div>
           </div>
         </div>
-        <div class="welcome-foot" id="welcome-foot">awaiting connection to nexus idearium service · :4800</div>
+        <div class="welcome-foot" id="welcome-foot" hidden>awaiting connection to nexus idearium service · :4800</div>
       </div>
     </section>
 
@@ -2403,7 +2430,7 @@ async function saveToIdearium(){
     <div class="modal-title">Build a Spec</div>
     <div class="modal-actions" style="flex-direction:column;gap:8px;align-items:stretch">
       <button class="modal-btn confirm" onclick="closeSpecChoice(); newSpecPrompt()">quick — pick templates; creates the spec as a repo in its own compartment</button>
-      <button class="modal-btn confirm" onclick="closeSpecChoice(); setView('spec-wizard')">full wizard — meta, axioms, deps, modules, events, schemas, enforcement, seams</button>
+      <button class="modal-btn confirm" onclick="closeSpecChoice(); openWorkshop()">the spec workshop — shape it section by section, by hand or with the agent (§0.39.300: replaces the retired full wizard)</button>
       <button class="modal-btn" onclick="closeSpecChoice()">cancel</button>
     </div>
   </div>
