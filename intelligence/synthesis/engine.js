@@ -113,6 +113,10 @@ const KIND_WEIGHT = {
 /** effort — a rough size, so the fill order is leverage per unit of work, not leverage alone */
 const EFFORT = { 'unreadable-map': 1, dangling: 1, marker: 1.5, stated: 3, 'known-stale-ui': 2, 'known-spec-drift': 3, 'known-regression': 3, 'known-unbuilt': 5,
   'known-missing-module': 6, 'known-missing-archive': 2, unwired: 5, phase: 8 };
+// §EV0 (5) — invariant E17: a phase's declared cost IS its effort (S 2, M 4, L 8, XL 16); its declared score (1–5, value
+// to James) is one more NAMED part of leverage — "declared +N" — added to the structural parts, never replacing them.
+const COST_EFFORT = { S: 2, M: 4, L: 8, XL: 16 };
+const DECLARED_WEIGHT = 0.5;
 const LAYER_EFFORT = { practice: 0.6, interface: 0.8, service: 1, engine: 1.2, library: 1.2, foundation: 1.4, data: 1.4, later: 2 };
 const LAYER_WEIGHT = { foundation: 1, data: 1, engine: 0.7, library: 0.7, service: 0.5, interface: 0.3, ui: 0.3, practice: 0.4, later: -0.6 };
 const NOT_HERE = /needs-live-service|needs-live-data|decision/;
@@ -127,6 +131,8 @@ function leverage(face, { unblocks = 0, sources = 1, central = 0, members = 1 } 
   const parts = {
     hides: +(1.4 * Math.log2(1 + hides)).toFixed(2), unblocks: +(3 * Math.log2(1 + unblocks)).toFixed(2), corroboration: +(1.5 * (sources - 1) + 0.25 * Math.min(4, members - 1)).toFixed(2),
     centrality: +(2.5 * central).toFixed(2), kind: +kind.toFixed(2), layer: +(Math.max(0, layer) * 0.8 + Math.min(0, layer)).toFixed(2), concrete };
+  const declared = face.members.reduce((m, g) => Math.max(m, (g.meta && g.meta.value && g.meta.value.score) || 0), 0);
+  if (declared) parts.declared = +(DECLARED_WEIGHT * declared).toFixed(2);   // §EV0 (5) — absent when nothing is declared
   const score = +Object.values(parts).reduce((a, b) => a + b, 0).toFixed(2);
   return { score, parts };
 }
@@ -151,7 +157,8 @@ function synthesize({ raw = [], maps = [], usedBy = {}, now = Date.now(), top = 
     const central = centrality(refs, usedBy, maxUsed);
     const lev = leverage({ members }, { unblocks: unblockSet.size, sources, central, members: members.length });
     const closable = !members.some(g => NOT_HERE.test(g.kind)) && !/^later/i.test(String(face.meta.layer || ''));
-    const effort = +(Math.min(...members.map(g => EFFORT[g.kind] ?? 4)) * (LAYER_EFFORT[String(face.meta.layer || '').toLowerCase()] || 1)).toFixed(2);
+    const declaredCost = face.meta && face.meta.value && COST_EFFORT[face.meta.value.cost];
+    const effort = declaredCost || +(Math.min(...members.map(g => EFFORT[g.kind] ?? 4)) * (LAYER_EFFORT[String(face.meta.layer || '').toLowerCase()] || 1)).toFixed(2);   // §EV0 (5) a declared cost wins
     return {
       id: face.id, title: face.title, detail: face.detail, kind: face.kind, source: face.source, sources: [...new Set(members.map(g => g.source))],
       members: members.map(g => ({ id: g.id, source: g.source, kind: g.kind, title: g.title })), refs: refs.slice(0, 30),
@@ -184,4 +191,4 @@ function synthesize({ raw = [], maps = [], usedBy = {}, now = Date.now(), top = 
   return { gaps: out, themes: [...themes.values()].sort((a, b) => b.leverage - a.leverage), plan, fill, stats };
 }
 
-module.exports = { words, jaccard, systemOf, normalise, chain, cluster, centrality, leverage, synthesize, KIND_WEIGHT, LAYER_WEIGHT, EFFORT };
+module.exports = { words, jaccard, systemOf, normalise, chain, cluster, centrality, leverage, synthesize, KIND_WEIGHT, LAYER_WEIGHT, EFFORT, COST_EFFORT, DECLARED_WEIGHT };

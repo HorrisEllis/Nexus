@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.10
+    version:  1.7.11
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: PARTIAL (1.7.7) — (1) done for every system but warp (waits on 1.5.0); (3) built; (2)(4)(5) open
+      status: "PARTIAL (1.7.11) — (1) done but warp, (3) the check, (4) declared systems, (5) declared value; (2) route contracts for cos, warp, emerge open"
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
@@ -727,7 +727,7 @@ spec:
       layer: service
       systems: [guardian, economy, idearium, cos]
       value: { score: 5, cost: M, for: [income, daily-use], why: "the strongest coder available, working inside his pipeline on his account" }
-      status: PARTIAL (1.7.9) — IN2a built (the 'claude-code' backend in Idearium); IN2b built (under the economy: gate + ledger); GA1/AC1/SH1 parts open
+      status: "PARTIAL (1.7.9) — IN2a built (the 'claude-code' backend in Idearium); IN2b built (under the economy: gate + ledger); GA1/AC1/SH1 parts open"
       depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
       files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
       does: >-
@@ -1255,3 +1255,19 @@ spec:
 # Proof: tests/modules/test-nexus-mcp.test.js 5/5 — the real stdio server spoken to as Claude Code speaks: loom impact on
 # lib/component-store.js returns its real wires (idearium.api among its users); every service down → errors naming the
 # service, never an empty answer; .mcp.json valid; every claude-code run carries the server.
+
+## ADDENDUM 2026-10-02 — 1.7.11, EV0 (4) declared systems, (5) declared value
+# (4) E16 "Declared, not guessed": loom/scanners/phasemap-map.js reads a phase's own `systems:` line first and takes it as
+# written (systemsFrom: 'declared'); only a phase without one is guessed from its prose (systemsFrom: 'guessed'). The
+# guess learns cos, warp, emergence, economy, nexstore. Across every phasemap: 'general' 73 → 47 phases, 23 → 28 systems;
+# this map's 47 phases all declared — EV0 now sits under cos and warp, the map's own proof.
+# (5) E17: intelligence/synthesis reads a phase's `value:` (YAML or its one-line text form; a score outside 1–5 or a cost
+# outside S|M|L|XL is no value). The score is one more NAMED part of leverage — "declared +N" (0.5 × score) — added to
+# the structural parts, never replacing them; a declared cost is the effort (S 2, M 4, L 8, XL 16). The fill order for
+# this map now leads GA1 (S), EC6 (S), EV0, EM0, SH1, MR1.
+# Found, a defect of mine fixed: IN2's status line (1.7.9) held an unquoted ": " ("the economy: gate"), so this whole map
+# stopped parsing as YAML — synthesis listed it as unreadable (and ranked fixing that first), and PH1's
+# conditionsFromPhase would have read no conditions from it. Quoted; a test now fails if the map ever stops parsing.
+# Proof: test-loom-phasemap 7/7 (T-006 declared wins / guess marked; T-007 EV0 under cos and warp, none general),
+# test-synthesis-declared-value 3/3, moce-roadmap 43/43 (one parser: systemsFrom carried by both paths),
+# synthesis-zoom-versionium 6/6, loom-phasemap-status 12/12, phase-proof 7/7.
