@@ -2254,9 +2254,21 @@ function handleExtendedRoutes(req, res, url, method) {
     return true;
   }
 
+  // §GA1 2026-10-02 — the agent facts, from Guardian's provider nodes (guardian/lib/agent-facts.js), stamped with their
+  // hash: what Clear Glass caches (map invariant E13 — Guardian is the source of truth for the Clear Glass agents).
+  if (method==='GET' && url.pathname==='/api/providers') {
+    try { pRes(res, 200, { ok:true, ...require('./lib/agent-facts.js').facts() }); }
+    catch (e) { pRes(res, 500, { ok:false, error: e.message }); }
+    return true;
+  }
+
   if (method==='GET' && url.pathname==='/providers') {
     const connected = ncp.getProviders();
-    const out = { claude:'null', chatgpt:'null', gemini:'null', perplexity:'null', ollama:'null' };
+    // §GA1 — the browser agents are Guardian's provider nodes (this list was hard-coded and had no deepseek); ollama is local
+    const out = {}; let ids = [];
+    try { ids = require('./lib/agent-facts.js').list().map(p => p.id); } catch (_) {}
+    for (const id of (ids.length ? ids : ['claude', 'chatgpt', 'gemini', 'perplexity'])) out[id] = 'null';
+    out.ollama = 'null';
     for (const [p] of Object.entries(out)) {
       if (ncp.isConnected(p)) out[p] = 'connected';
     }

@@ -92,4 +92,10 @@ module.exports = Object.freeze({
   // ── plugins/* — deliberately empty. See the real, honest gap noted
   //    above this export — nothing here yet because nothing real exists
   //    to document.
+  // §GA1 2026-10-02 — clear-glass/src/providers/registry.js: the agent-facts cache no longer matches its stamp
+  AGENT_CACHE_STALE: {
+    description: 'Clear Glass\'s cache of Guardian\'s agent facts was edited outside Guardian: its content no longer matches the hash it was stamped with — a gap until the next refresh from Guardian replaces it.',
+    payloadShape: ['reason', 'hash', 'file'],
+    severity: 'warning',
+  },
 });

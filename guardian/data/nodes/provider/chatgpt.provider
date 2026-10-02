@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-provider-chatgpt
+type: provider
+id: chatgpt
+context: 'guardian — a browser agent Clear Glass runs (GA1, E13): Guardian states it, Clear Glass caches it'
+intent: null
+summary: null
+system: guardian
+tags:
+  - guardian
+  - provider
+exported_at: 1790971626619
+source: guardian.lib.agent-facts
+occurrences: 1
+firstSeenAt: 1790971626619
+lastSeenAt: 1790971626619
+fingerprint: null
+payload:
+  id: chatgpt
+  name: ChatGPT
+  url: https://chatgpt.com
+  hosts:
+    - chatgpt.com
+    - chat.openai.com
+  userscriptFile: userscript-chatgpt.js
+  color: '#19c37d'
+  autostart: true
+  version: 9.1.0
+  strengths:
+    - token_efficiency
+    - grounded
+    - hostile_testing
+    - structured_output

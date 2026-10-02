@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-provider-claude
+type: provider
+id: claude
+context: 'guardian — a browser agent Clear Glass runs (GA1, E13): Guardian states it, Clear Glass caches it'
+intent: null
+summary: null
+system: guardian
+tags:
+  - guardian
+  - provider
+exported_at: 1790971626616
+source: guardian.lib.agent-facts
+occurrences: 1
+firstSeenAt: 1790971626616
+lastSeenAt: 1790971626616
+fingerprint: null
+payload:
+  id: claude
+  name: Claude
+  url: https://claude.ai
+  hosts:
+    - claude.ai
+  userscriptFile: userscript-claude.js
+  color: '#cc785c'
+  autostart: false
+  version: 10.1.0
+  strengths:
+    - complex_reasoning
+    - code_quality
+    - nuance
+    - long_context

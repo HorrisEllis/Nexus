@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-provider-deepseek
+type: provider
+id: deepseek
+context: 'guardian — a browser agent Clear Glass runs (GA1, E13): Guardian states it, Clear Glass caches it'
+intent: null
+summary: null
+system: guardian
+tags:
+  - guardian
+  - provider
+exported_at: 1790971626621
+source: guardian.lib.agent-facts
+occurrences: 1
+firstSeenAt: 1790971626621
+lastSeenAt: 1790971626621
+fingerprint: null
+payload:
+  id: deepseek
+  name: DeepSeek
+  url: https://chat.deepseek.com
+  hosts:
+    - chat.deepseek.com
+  userscriptFile: userscript-deepseek.js
+  color: '#4d6bfe'
+  autostart: true

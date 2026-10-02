@@ -136,11 +136,12 @@ async function run() {
     });
   });
 
-  await test('AMC-006', "docs/guardian.spec and guardian/userscripts.yaml both independently confirm gemini/perplexity are real, non-deprecated providers — the factual basis for this whole fix, not just this file's own claim", async () => {
-    const spec = _realReadFile('docs/guardian.spec');
+  // §GA1 2026-10-02 — docs/guardian.spec was a stale copy (now a pointer); Guardian's provider nodes are the agent facts
+  await test('AMC-006', "Guardian's provider nodes and guardian/userscripts.yaml both independently confirm gemini/perplexity are real, non-deprecated providers — the factual basis for this whole fix, not just this file's own claim", async () => {
+    const facts = require(path.join(__dirname, '..', '..', 'guardian', 'lib', 'agent-facts.js')).list().map(p => p.id);
     const registry = _realReadFile('guardian/userscripts.yaml');
     for (const provider of ['gemini', 'perplexity']) {
-      if (!spec.includes(`id: ${provider}`)) throw new Error(`docs/guardian.spec no longer lists ${provider} as a real provider`);
+      if (!facts.includes(provider)) throw new Error(`Guardian's provider nodes no longer list ${provider}`);
       if (!registry.includes(`${provider}:\n`)) throw new Error(`guardian/userscripts.yaml no longer registers ${provider}`);
     }
   });
