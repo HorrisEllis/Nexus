@@ -38,7 +38,7 @@
 // §0.39.263 — the idearium that served this page comes first: an idearium on
 // another port (IDEARIUM_PORT) used to render a UI that talked to :4800 instead.
 // 0.39.263 — served standalone (idearium's own port, not under the orchestrator's /ui/),
-// the Eravos and Architect canvases cannot resolve ../<system>/ against this server: use the orchestrator's.
+// the Eravos canvas cannot resolve ../<system>/ against this server: use the orchestrator's (the Architect is idearium's own, 0.39.299).
 // §0.39.271 — the two frames start at about:blank (data-src holds the relative path):
 // loading ../eravos/ before this ran was a 404 on :4800 on every page load.
 (() => {
@@ -48,7 +48,8 @@
     const orch = `${location.protocol}//${location.hostname}:9000/ui`;
     const set = () => {
       const e = document.getElementById('eravos-frame'); if (e) e.src = underUi ? e.dataset.src : `${orch}/eravos/`;
-      const a = document.getElementById('architect-frame'); if (a) a.src = underUi ? a.dataset.src : `${orch}/architect/arch-builder.html`;
+      // §0.39.299 AR4 — the Architect is idearium's own page (architect.html), served wherever idearium is: no orchestrator needed
+      const a = document.getElementById('architect-frame'); if (a) a.src = a.dataset.src;
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', set); else set();
   } catch (_) {}
@@ -495,7 +496,7 @@ function setView(v) {
 // §0.39.271 N1 — Create/Build open from the repo's own tab row; their views keep the
 // repo in view with one bar that leads back, so leaving the repo row never looks like
 // a second Idearium. The top bar stays Welcome + Repos.
-const NEST_VIEW_LABEL = { brainstorm: 'Create › Brainstorm', ideas: 'Create › Ideas', eravos: 'Build › Eravos — organism canvas', 'architect-build': 'Build › Architect — block canvas', 'spec-wizard': 'Build › Spec Builder' };
+const NEST_VIEW_LABEL = { brainstorm: 'Create › Brainstorm', ideas: 'Create › Ideas', eravos: 'Build › Eravos — organism canvas', 'architect-build': 'Build › Architect', 'spec-wizard': 'Build › Spec Builder' };
 function _syncNestCtx(v) {
   const bar = document.getElementById('nest-ctx');
   if (!bar) return;
@@ -1735,68 +1736,23 @@ function createSpecForIdea(ideaUuid) {
 // spec system whose sections are auto-stubs, which is why every node
 // used to read "1 chars". The only new thing here is the repo filter.
 async function renderRepoArchitect(repo) {
-  if (repo) renderRepoRegistry(repo);   // §0.39.284 W7 — the repo's component registry + wiring map, above the blueprint
-  const wrap = document.getElementById('repo-arch-blueprint') || document.getElementById('repo-subtab-architect');
-  if (!wrap || !repo) return;
-  const forUuid = repo.uuid;
-
-  // The repo -> spec link, in the same precedence RepoLayer._enrich() and
-  // openRepoFor() already use. A repo with neither is not an error: it is
-  // a repo that was never promoted from a spec (a raw import, say), and
-  // it says so rather than showing another repo's blueprint.
+  // §0.39.299 AR5 — one surface: the registry on the canvas; the spec's blueprint is the drawer's BLUEPRINT view
+  if (repo) renderRepoRegistry(repo);
+}
+/** _archBlueprintHtml(repo) — the repo's own spec-engine spec, chunk by chunk (the §DATA-SOURCE FIX 2026-07-18 source) */
+async function _archBlueprintHtml(repo) {
   const specUuid = repo.specUuid || repo.promotedFromSpec || null;
-  if (!specUuid) {
-    wrap.innerHTML = `<div class="detail-empty">this repo has no spec-engine spec attached — nothing to draw a blueprint from.<br><br>a blueprint comes from a compiled spec; repos imported from a zip or dropped as files have none unless one is promoted onto them.</div>`;
-    return;
-  }
-
-  wrap.innerHTML = `<div class="detail-empty">loading blueprint…</div>`;
+  if (!specUuid) return '<div class="ax-empty">THIS REPO HAS NO SPEC-ENGINE SPEC ATTACHED — NOTHING TO DRAW A BLUEPRINT FROM. A REPO IMPORTED FROM A ZIP OR DROPPED AS FILES HAS NONE UNLESS ONE IS PROMOTED ONTO IT.</div>';
   let spec;
-  try {
-    const r = await api(`/api/spec-engine/specs/${specUuid}`);
-    spec = r.manifest || r.spec || r;
-  } catch (e) {
-    if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'architect') return;
-    wrap.innerHTML = `<div class="detail-empty">could not load this repo's spec (${escapeHtml(specUuid.slice(0,8))}): ${escapeHtml(e.message)}</div>`;
-    return;
-  }
-  // The repo may have been switched (or the tab changed) while that
-  // request was in flight — same guard renderRepoPhasemap() uses.
-  if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'architect') return;
-
-  if (!spec || !spec.uuid) {
-    wrap.innerHTML = `<div class="detail-empty">spec ${escapeHtml(specUuid.slice(0,8))} is linked to this repo but no longer exists in spec-engine.</div>`;
-    return;
-  }
-
+  try { const r = await api(`/api/spec-engine/specs/${specUuid}`); spec = r.manifest || r.spec || r; }
+  catch (e) { return `<div class="ax-item bad">COULD NOT LOAD THIS REPO'S SPEC (${escapeHtml(specUuid.slice(0, 8))}): ${escapeHtml(e.message)}</div>`; }
+  if (!spec || !spec.uuid) return `<div class="ax-item bad">SPEC ${escapeHtml(specUuid.slice(0, 8))} IS LINKED TO THIS REPO BUT NO LONGER EXISTS IN SPEC-ENGINE.</div>`;
   const chunks = spec.chunks || [];
-  if (!chunks.length) {
-    wrap.innerHTML = `<div class="detail-empty">spec "${escapeHtml(spec.name || specUuid)}" has no chunks yet — build it from this repo's Spec tab and its blueprint appears here.</div>`;
-    return;
-  }
-
-  const done = chunks.filter(c => c.status === 'complete').length;
-  const totalBytes = chunks.reduce((n, c) => n + (c.byteSize || 0), 0);
-  const children = chunks.map(c => {
-    const complete = c.status === 'complete';
-    const label = complete ? `${(c.byteSize || 0).toLocaleString()}b` : c.status;
-    return `
-      <div class="bp-node">
-        <span class="bp-dot ${complete ? '' : 'gray'}"></span>
-        <span class="bp-label">${escapeHtml((c.sectionTitle || c.sectionId || '').replace(/_/g,' '))}</span>
-        <span class="bp-meta">${escapeHtml(label)}</span>
-      </div>`;
-  }).join('');
-
-  wrap.innerHTML = `
-    <div class="blueprint-tree">
-      <div class="bp-node">
-        <span class="bp-dot"></span>
-        <span class="bp-label" style="font-size:13px;color:var(--sky)">${escapeHtml(spec.name || specUuid)}</span>
-        <span class="bp-meta">${escapeHtml(spec.status || 'unknown')} \u00b7 v${escapeHtml(spec.version || '1.0.0')} \u00b7 ${done}/${chunks.length} chunks \u00b7 ${totalBytes.toLocaleString()}b total</span>
-      </div>
-      <div class="bp-children">${children}</div>
-    </div>`;
+  if (!chunks.length) return `<div class="ax-empty">"${escapeHtml(spec.name || specUuid)}" HAS NO CHUNKS YET — BUILD IT FROM THE SPEC TAB AND ITS BLUEPRINT APPEARS HERE.</div>`;
+  const done = chunks.filter(c => c.status === 'complete').length, bytes = chunks.reduce((n, c) => n + (c.byteSize || 0), 0);
+  return `<div class="ax-stats" style="margin-bottom:10px"><span class="ax-stat c"><b>${done}/${chunks.length}</b>CHUNKS</span><span class="ax-stat"><b>${bytes.toLocaleString()}</b>BYTES</span><span class="ax-stat"><b>V${escapeHtml(spec.version || '1.0.0')}</b>${escapeHtml(spec.status || '')}</span></div>
+    <div class="ax-k">${escapeHtml(spec.name || specUuid)}</div>`
+    + chunks.map(c => { const ok = c.status === 'complete'; return `<div class="ax-item ${ok ? 'ok' : 'warn'}">${escapeHtml((c.sectionTitle || c.sectionId || '').replace(/_/g, ' '))}<span class="m">${ok ? `${(c.byteSize || 0).toLocaleString()} BYTES` : escapeHtml(c.status || '')}${c.realPath && c.realPath !== (c.sectionTitle || c.sectionId) ? ` · ${escapeHtml(c.realPath)}` : ''}</span></div>`; }).join('');
 }
 
 // ════════════════════════════════════════════════════
@@ -1977,7 +1933,7 @@ function toggleCompartment(key) {
 // them under that repo instead of listing them at the top level.
 function _syncNestScope() {
   document.body.classList.toggle('in-repo', !!REPO_DETAIL_OPEN);
-  const nestViews = ['brainstorm', 'ideas', 'eravos', 'architect-build', 'spec-wizard'];
+  const nestViews = ['brainstorm', 'ideas', 'eravos', 'spec-wizard'];   // §0.39.300 WS3 — the pipeline's Architect is not a repo's: it opens with no repo open
   if (!REPO_DETAIL_OPEN && nestViews.includes(((document.querySelector('.view.active') || {}).id || '').replace(/^view-/, ''))) setView('repo');
   if (typeof renderTabTree === 'function') renderTabTree();
 }
@@ -3702,21 +3658,40 @@ function openSpecLibrary() {
 // §0.39.294 SW1 — the spec workshop (ui/workshop.html). James: "need the spec workshop, completely destroy the spec
 // builder, and build the spec workshop" · "the workshop and maybe it hooks into the spec field". from: 'idea:<uuid>' |
 // 'library:<sha>' | 'repo:<uuid>' starts one there; a workshop id opens it; nothing opens the start screen.
-let _workshopWin = null, _voidWin = null, _architectWin = null;
-// §0.39.298 AR2 — the Architect (ui/architect.html), its own page
-function openArchitect(from = null) {
-  if (!API_BASE) { toast('idearium is offline — the architect is served by it', 'err'); return null; }
-  const w = window.open(`${API_BASE}/architect.html${from ? `?from=${encodeURIComponent(from)}` : ''}`, 'idearium-architect', 'width=1480,height=940');
-  if (!w) toast('the architect window was blocked — allow pop-ups for idearium', 'err');
-  _architectWin = w || _architectWin;
-  return w;
-}
+let _workshopWin = null, _voidWin = null;
 // §0.39.295 — the spatial void (ui/void.html), its own page. James: "The spacial void is its own page."
 function openVoid() {
   if (!API_BASE) { toast('idearium is offline — the void is served by it', 'err'); return null; }
   const w = window.open(`${API_BASE}/void.html`, 'idearium-void', 'width=1480,height=940');
   if (!w) toast('the void window was blocked — allow pop-ups for idearium', 'err');
   _voidWin = w || _voidWin;
+  return w;
+}
+// §0.39.300 WS3 — the pipeline's third station as its own page, like the Void and the workshop (the Build tab frames the same page)
+let _architectWin = null;
+// §0.39.300 UI1 — James: "make idearium full screen". The whole page, browser chrome gone; SHIFT+F toggles it (F alone is the canvas's FIT), Esc leaves it
+// (the browser's own). Where the host refuses (an embed without allowfullscreen) it is said, not silent.
+function toggleFullscreen() {
+  const d = document;
+  if (d.fullscreenElement) { d.exitFullscreen().catch(() => {}); return; }
+  const el = d.documentElement;
+  (el.requestFullscreen ? el.requestFullscreen() : Promise.reject(new Error('not supported')))
+    .catch(e => { if (typeof toast === 'function') toast(`FULL SCREEN REFUSED — ${e.message}`, 'warn'); });
+}
+document.addEventListener('fullscreenchange', () => {
+  const b = document.getElementById('tab-fullscreen');
+  if (b) { b.classList.toggle('active', !!document.fullscreenElement); b.title = document.fullscreenElement ? 'LEAVE FULL SCREEN (SHIFT+F · ESC)' : 'FULL SCREEN (SHIFT+F)'; }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'F' && e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && !e.target.isContentEditable) toggleFullscreen();
+});
+document.addEventListener('click', () => document.querySelectorAll('.welcome-more.open').forEach(m => m.classList.remove('open')));
+
+function openArchitect(from = null) {
+  if (!API_BASE) { toast('idearium is offline — the architect is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/architect.html${from ? `?from=${encodeURIComponent(from)}` : ''}`, 'idearium-architect', 'width=1520,height=960');
+  if (!w) toast('the architect window was blocked — allow pop-ups for idearium', 'err');
+  _architectWin = w || _architectWin;
   return w;
 }
 function openWorkshop(from = null, id = null) {
@@ -3732,7 +3707,8 @@ function openWorkshop(from = null, id = null) {
 window.addEventListener('message', async (ev) => {
   const d = ev.data;
   if (!d || !/^nexus:(repo\.open|workshop\.open)$/.test(String(d.type))) return;
-  const mine = [_specLibraryWin, _workshopWin, _voidWin, _architectWin].filter(Boolean);
+  const archFrame = document.getElementById('architect-frame');   // §0.39.299 AR4 — the Build tab's Architect is idearium's own page
+  const mine = [_specLibraryWin, _workshopWin, _voidWin, _architectWin, archFrame && archFrame.contentWindow].filter(Boolean);
   if (!mine.includes(ev.source)) { console.warn(`[idearium] ${d.type} ignored: not from a window idearium opened`); return; }
   if (d.type === 'nexus:workshop.open') {
     if (/^(idea|library|repo):[\w.-]{4,80}$/.test(String(d.from || ''))) openWorkshop(d.from);
@@ -3743,8 +3719,8 @@ window.addEventListener('message', async (ev) => {
   const repo = API_REPOS.find(r => r.uuid === d.repoUuid);
   if (!repo) { toast(`the repo is not listed yet: ${d.repoUuid}`, 'err'); return; }
   openRepoFor(repo.ideaUuid, repo.specUuid, repo.name);
-  if (d.subtab === 'spec' && typeof setRepoSubtab === 'function') setRepoSubtab('spec');
-  toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
+  if ((d.subtab === 'spec' || d.subtab === 'architect') && typeof setRepoSubtab === 'function') setRepoSubtab(d.subtab);
+  toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : d.subtab === 'architect' ? `${repo.name}: its architecture` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
 });
 /** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
 const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;
@@ -5756,68 +5732,206 @@ window.addEventListener('message', async (ev) => {
 // architecture map". GET /api/repos/:uuid/architecture (idearium/repo/architecture.js over lib/code-intel) — loom's
 // shape: components, export/import hooks, wires. The map: one column per layer, bottom-up, a line per wire.
 // ════════════════════════════════════════════════════
-const ARCHREG = { uuid: null, data: null, q: '', sel: null };
+const ARCHREG = { uuid: null, data: null, q: '', sel: null, group: null, tab: 'inspect', canvas: null, repo: null, bp: null, sysOf: null, sysStats: {} };
+const ARCH_BANDS = { foundation: '#00ff88', library: '#00d4ff', api: '#ffcc00', cli: '#ff6b35', automation: '#cc44ff', ui: '#ff66aa', test: '#5f7f9b' };
+const ARCH_MAX = 2500;  // §0.39.300 AZ1 — the systems level carries the overview, so the map holds far more; past this the filter narrows it, and the map says so
+const ARCH_SYS_COLORS = ['#00d4ff', '#00ff88', '#ffcc00', '#cc44ff', '#ff6b35', '#ff66aa', '#4fc3ff', '#9dff6b', '#ffd86b', '#b98cff'];
+/** _archSystemOf(files) → (file) → system: a repo's systems are its top-level folders — one folder deeper when one folder holds most of it */
+function _archSystemOf(files) {
+  const top = (f) => f.includes('/') ? f.split('/')[0] : '(root)';
+  const counts = {}; for (const f of files) counts[top(f)] = (counts[top(f)] || 0) + 1;
+  const big = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  if (big && big[0] !== '(root)' && big[1] / files.length >= 0.8) {
+    const deep = (f) => { const p = f.split('/'); return p[0] === big[0] && p.length > 2 ? `${p[0]}/${p[1]}` : top(f); };
+    return deep;
+  }
+  return top;
+}
 async function renderRepoRegistry(repo) {
   const el = document.getElementById('repo-arch-registry'); if (!el) return;
-  if (ARCHREG.uuid !== repo.uuid) Object.assign(ARCHREG, { uuid: repo.uuid, data: null, q: '', sel: null });
-  el.innerHTML = '<div class="ar-wrap"><div class="ar-title">Component registry</div><div class="detail-empty">reading the wiring…</div></div>';
+  if (ARCHREG.uuid !== repo.uuid) { if (ARCHREG.canvas) ARCHREG.canvas.destroy(); Object.assign(ARCHREG, { uuid: repo.uuid, data: null, q: '', sel: null, tab: 'inspect', canvas: null, bp: null }); }
+  ARCHREG.repo = repo;
+  if (ARCHREG.canvas) { ARCHREG.canvas.destroy(); ARCHREG.canvas = null; }
+  el.innerHTML = `<div class="ax">
+    <div class="ra-map" id="ra-map" aria-label="the wiring map — drag to pan, wheel to zoom, f to fit"></div>
+    <div class="ra-state" id="ra-state"><b>READING THE WIRING</b><p>THE REPO'S COMPONENTS, WIRES, CONSUMERS AND ORPHANS, FROM ITS CODE.</p></div>
+    <div class="ra-top hidden" id="ra-top">
+      <div class="ax-stats" id="ra-stats"></div>
+      <div class="ax-row"><input class="ax-field" id="ra-q" placeholder="FILTER — ID, FILE, LAYER, EXPORT" aria-label="filter" value="${escapeHtml(ARCHREG.q)}"><span class="ax-legend" id="ra-shown"></span></div>
+      <div class="ax-legend">CYAN REQUIRES · <span class="p">MAGENTA DASHED EVENTS</span> · <span class="r">RED A BOTTOM-UP BREACH</span> · DASHED EDGE AN ORPHAN · SELECT ONE: <span class="y">WHAT IT NEEDS</span> · <span class="p">WHAT NEEDS IT</span></div>
+    </div>
+    <aside class="ax-drawer r shut" id="ra-side" aria-label="inspector, lists and blueprint">
+      <div class="ax-dhead"><span class="ax-dtitle" id="ra-side-title">INSPECTOR</span><button class="ax-x" onclick="archDrawer(false)" title="CLOSE">✕</button></div>
+      <div class="ax-tabs" role="tablist">
+        <button class="ax-tab" data-ratab="inspect" role="tab" title="THE SELECTED COMPONENT">INSPECTOR</button>
+        <button class="ax-tab" data-ratab="lists" role="tab" title="ORPHANS, BREACHES, PACKAGES, ROUTES AND CLI, EVENTS, DATA">LISTS</button>
+        <button class="ax-tab" data-ratab="blueprint" role="tab" title="THE REPO'S SPEC, CHUNK BY CHUNK">BLUEPRINT</button>
+      </div>
+      <div class="ax-dbody" id="ra-body"></div>
+    </aside>
+    <nav class="ax-toolbar" aria-label="tools">
+      <button class="ax-tool" onclick="archTool('fit')" title="FIT THE WHOLE MAP (F)"><b>⤢</b>FIT</button>
+      <button class="ax-tool" onclick="archTool('out')" title="ONE INCREMENT OUT (−)"><b>−</b>OUT</button>
+      <button class="ax-tool" onclick="archTool('in')" title="ONE INCREMENT IN (+)"><b>+</b>IN</button>
+      <span class="ax-sep"></span>
+      <button class="ax-tool" data-ralvl="systems" onclick="archTool('lvl-systems')" title="EACH SYSTEM ONE NODE — THE WIRES BETWEEN SYSTEMS SUMMED (1)"><b>◇</b>SYSTEMS</button>
+      <button class="ax-tool" data-ralvl="components" onclick="archTool('lvl-components')" title="EACH SYSTEM A REGION, ITS COMPONENTS INSIDE (2)"><b>◈</b>COMPONENTS</button>
+      <button class="ax-tool" data-ralvl="detail" onclick="archTool('lvl-detail')" title="FULL CARDS (3)"><b>▣</b>DETAIL</button>
+      <button class="ax-tool" onclick="archTool('arrange')" title="LAY THE MAP OUT AGAIN — BOTTOM-UP, FEWEST CROSSINGS"><b>⊞</b>ARRANGE</button>
+      <span class="ax-sep"></span>
+      <button class="ax-tool" data-ratool="inspect" onclick="archTool('inspect')" title="THE INSPECTOR — THE SELECTED SYSTEM OR COMPONENT; THE LISTS AND THE BLUEPRINT ARE ITS TABS"><b>◈</b>PANEL</button>
+      <span class="ax-sep"></span>
+      <button class="ax-tool" onclick="archReindex()" title="READ THE CODE AGAIN (LIB/CODE-INTEL)"><b>↻</b>INDEX</button>
+      <button class="ax-tool g" onclick="archWrite()" title="WRITE THIS MAP INTO THE REPO: ARCHITECTURE.JSON AND THE REGISTRY AS NODES (NODES/TYPE/ID.TYPE, GUARDIAN'S LAYOUT) — VERSIONED; NODES NO LONGER PRODUCED MOVE TO NODES/_ARCHIVE/"><b>⇩</b>WRITE</button>
+    </nav>
+  </div>`;
+  el.querySelectorAll('[data-ratab]').forEach(b => b.onclick = () => { ARCHREG.tab = b.dataset.ratab; archDrawer(true); });
+  let qt = null;
+  document.getElementById('ra-q').oninput = (e) => { clearTimeout(qt); qt = setTimeout(() => { ARCHREG.q = e.target.value; _archGraph(true); }, 220); };
   try { ARCHREG.data = await api(`/api/repos/${repo.uuid}/architecture`, {}, 60000); }
   catch (e) {
     if (CURRENT_API_REPO?.uuid !== repo.uuid) return;
-    el.innerHTML = `<div class="ar-wrap"><div class="ar-head"><span class="ar-title">Component registry</span><span class="ar-grow"></span><button class="action-btn" onclick="archReindex()">index the code</button></div>
-      <div class="detail-empty">${escapeHtml(/no chunk cards|NO_INDEX|not been indexed/i.test(e.message) ? 'this repo\'s code is not indexed yet — index it, and its components, wires, consumers and orphans appear here.' : e.message)}</div></div>`;
+    const noIndex = /no chunk cards|NO_INDEX|not been indexed/i.test(e.message);
+    document.getElementById('ra-state').innerHTML = noIndex
+      ? `<b>NOT INDEXED YET</b><p>INDEX THE CODE, AND ITS COMPONENTS, WIRES, CONSUMERS AND ORPHANS APPEAR HERE ON THE MAP.</p><button class="ax-btn" onclick="archReindex()">↻ INDEX THE CODE</button>`
+      : `<b>THE WIRING DID NOT LOAD</b><p>${escapeHtml(String(e.message).toUpperCase())}</p><button class="ax-btn" onclick="renderRepoRegistry(ARCHREG.repo)">TRY AGAIN</button>`;
     return;
   }
   if (CURRENT_API_REPO?.uuid !== repo.uuid) return;
   _archPaint();
 }
 function _archPaint() {
-  const el = document.getElementById('repo-arch-registry'); const a = ARCHREG.data; if (!el || !a) return;
+  const a = ARCHREG.data, el = document.getElementById('repo-arch-registry'); if (!el || !a) return;
   const st = a.stats || {};
-  const q = ARCHREG.q.toLowerCase();
-  const comps = (a.components || []).filter(c => !q || `${c.id} ${c.file} ${c.layer} ${c.type} ${(c.exports || []).join(' ')}`.toLowerCase().includes(q));
-  const orph = new Set(a.orphans || []);
-  el.innerHTML = `<div class="ar-wrap">
-    <div class="ar-head"><span class="ar-title">Component registry</span>
-      <span class="ar-chip"><b>${st.components}</b> components</span><span class="ar-chip"><b>${st.wires}</b> wires</span><span class="ar-chip"><b>${st.hooks}</b> hooks</span>
-      <span class="ar-chip"><b>${st.externals}</b> packages</span><span class="ar-chip ${st.orphans ? 'bad' : ''}"><b>${st.orphans}</b> orphans</span><span class="ar-chip"><b>${st.routes || 0}</b> routes</span><span class="ar-chip"><b>${st.events || 0}</b> events</span>
-      <span class="ar-chip ${st.breaches ? 'bad' : ''}"><b>${st.breaches}</b> bottom-up breaches</span><span class="ar-chip"><b>${st.lines}</b> lines</span>
-      <span class="ar-grow"></span>
-      <input class="field-input" style="width:180px" placeholder="filter id, file, layer, export…" value="${escapeHtml(ARCHREG.q)}" oninput="ARCHREG.q=this.value;_archPaint()">
-      <button class="action-btn" onclick="archReindex()" title="re-read the code (lib/code-intel)">↻ index</button>
-      <button class="action-btn" onclick="archWrite()" title="write this map into the repo: ARCHITECTURE.json and the registry as nodes (nodes/<type>/<id>.<type>, Guardian's layout) — versioned; nodes no longer produced move to nodes/_archive/">write the registry</button></div>
-    <div class="ar-map">${_archSvg(a, comps)}</div>
-    <div class="ar-tblwrap"><table class="ar-tbl"><thead><tr><th>id</th><th>layer</th><th>type</th><th>lines</th><th>consumers</th><th>requires</th><th>exports</th></tr></thead><tbody>
-      ${comps.map(c => `<tr class="${ARCHREG.sel === c.file ? 'hl' : ''}" onclick="ARCHREG.sel='${escapeHtml(c.file)}';_archPaint()"><td title="${escapeHtml(c.file)}">${escapeHtml(c.id)}${orph.has(c.file) ? ' <span style="color:var(--coral)">orphan</span>' : ''}</td><td>${escapeHtml(c.layer)}</td><td>${escapeHtml(c.type)}</td><td>${c.lines}</td>
-        <td title="${escapeHtml(c.consumers.join('\n'))}">${c.consumers.length}</td><td title="${escapeHtml(c.deps.join('\n'))}">${c.deps.length}</td><td>${escapeHtml((c.exports || []).slice(0, 6).join(', '))}${(c.exports || []).length > 6 ? ' …' : ''}</td></tr>`).join('')}
-    </tbody></table></div>
-    <div class="ar-grid">
-      <div class="ar-box"><h4>orphans — nothing uses them, they use nothing</h4>${(a.orphans || []).map(escapeHtml).join('<br>') || 'none'}</div>
-      <div class="ar-box"><h4>bottom-up breaches (§3.1)</h4>${(a.breaches || []).map(b => `${escapeHtml(b.consumer)} → ${escapeHtml(b.dependency)}`).join('<br>') || 'none'}</div>
-      <div class="ar-box"><h4>packages (external)</h4>${(a.externals || []).slice(0, 30).map(e => `${escapeHtml(e.name)} <span style="opacity:.6">· ${e.usedBy.length}</span>`).join('<br>') || 'none'}</div>
-      <div class="ar-box"><h4>routes · CLI (the doorway in)</h4>${(a.routes || []).slice(0, 40).map(r => `${escapeHtml(r.method)} ${escapeHtml(r.path)} <span style="opacity:.6">· ${escapeHtml(r.file)}</span>`).join('<br>') || 'no routes'}<br>${(a.cli || []).slice(0, 30).map(c => `$ ${escapeHtml(c.verb)} <span style="opacity:.6">· ${escapeHtml(c.file)}</span>`).join('<br>')}</div>
-      <div class="ar-box"><h4>events — emitted → handled</h4>${(a.events || []).slice(0, 40).map(e => `${escapeHtml(e.name)} <span style="opacity:.6">${e.emittedBy.length} → ${e.consumedBy.length}</span>${e.consumedBy.length ? '' : ' <span style="color:var(--nx-warn)">unhandled</span>'}`).join('<br>') || 'no events'}</div>
-      <div class="ar-box"><h4>data dirs · node types</h4>${(a.dataDirs || []).map(escapeHtml).join('<br>') || 'no data dir'}<br><br>${Object.entries(a.nodeTypes || {}).map(([k, v]) => `.${escapeHtml(k)} × ${v}`).join('<br>') || 'no node files'}</div>
-      ${ARCHREG.sel ? (() => { const c = (a.components || []).find(x => x.file === ARCHREG.sel); return c ? `<div class="ar-box"><h4>${escapeHtml(c.file)}</h4>id ${escapeHtml(c.id)}<br>consumers:<br>${c.consumers.map(escapeHtml).join('<br>') || '—'}<br>requires:<br>${c.deps.map(escapeHtml).join('<br>') || '—'}</div>` : ''; })() : ''}
-    </div></div>`;
+  document.getElementById('ra-state').classList.toggle('hidden', !!(a.components || []).length);
+  if (!(a.components || []).length) document.getElementById('ra-state').innerHTML = '<b>NO COMPONENTS</b><p>THE INDEX FOUND NO SOURCE FILES IN THIS REPO.</p>';
+  document.getElementById('ra-top').classList.remove('hidden');
+  document.getElementById('ra-stats').innerHTML = [[st.components, 'COMPONENTS', 'c'], [st.wires, 'WIRES'], [st.hooks, 'HOOKS'], [st.externals, 'PACKAGES'], [st.orphans, 'ORPHANS', st.orphans ? 'r' : ''],
+    [st.breaches, 'BREACHES', st.breaches ? 'r' : ''], [st.routes || 0, 'ROUTES'], [st.cli || 0, 'CLI'], [st.events || 0, 'EVENTS'], [st.lines, 'LINES']]
+    .map(([n, l, c]) => `<span class="ax-stat ${c || ''}"><b>${(n || 0).toLocaleString()}</b>${l}</span>`).join('');
+  if (!ARCHREG.canvas) ARCHREG.canvas = ArchCanvas.mount(document.getElementById('ra-map'), {
+    nodeW: 210, layout: { maxPerRow: 9, nodeH: 84, gapY: 26, gapX: 26 },
+    inset: () => ({ t: 130, b: 96, l: 24, r: document.getElementById('ra-side').classList.contains('shut') ? 24 : 420 }),
+    onSelect: (ids) => { ARCHREG.sel = ids.length === 1 ? ids[0] : null; if (ARCHREG.sel) { ARCHREG.group = null; ARCHREG.tab = 'inspect'; archDrawer(true); } else _archSide(); },
+    onSelectGroup: (key) => { ARCHREG.group = key; if (key) { ARCHREG.sel = null; ARCHREG.tab = 'inspect'; archDrawer(true); } else _archSide(); },
+    onLevel: (lv) => document.querySelectorAll('[data-ralvl]').forEach(b => b.classList.toggle('on', b.dataset.ralvl === lv)),
+    groupHtml: (b, w) => { const st = ARCHREG.sysStats[b.key] || {}; const bad = [st.breaches ? `<b>${st.breaches}</b> BREACH${st.breaches === 1 ? '' : 'ES'}` : '', st.orphans ? `<b>${st.orphans}</b> ORPHAN${st.orphans === 1 ? '' : 'S'}` : ''].filter(Boolean).join(' · ');
+      return `<div class="ac-gstat"><b>${b.count}</b> FILES · <b>${(st.lines || 0).toLocaleString()}</b> LINES</div><div class="ac-gstat">NEEDS <b>${w.needs.length}</b> · NEEDED BY <b>${w.usedBy.length}</b></div>${bad ? `<div class="ac-gstat bad">${bad}</div>` : ''}`; },
+    onOpen: (id) => ARCHREG.canvas.center(id),
+  });
+  _archGraph(true);
+  _archSide();
 }
-function _archSvg(a, comps) {
-  const order = (a.layerOrder || []).filter(l => comps.some(c => c.layer === l));
-  const shown = new Set(comps.slice(0, 180).map(c => c.file));
-  const colW = 210, rowH = 26, pad = 28;
-  const pos = new Map(); let maxRows = 0;
-  order.forEach((l, i) => { const list = comps.filter(c => c.layer === l && shown.has(c.file)); maxRows = Math.max(maxRows, list.length); list.forEach((c, j) => pos.set(c.file, { x: pad + i * colW, y: pad + 18 + j * rowH })); });
-  const W = pad * 2 + order.length * colW, H = pad * 2 + 18 + maxRows * rowH;
-  const breach = new Set((a.breaches || []).map(b => `${b.dependency}->${b.consumer}`));
-  const orph = new Set(a.orphans || []);
-  const edges = (a.wires || []).filter(w => pos.has(w.from) && pos.has(w.to)).map(w => { const p = pos.get(w.from), q = pos.get(w.to); const cls = `ar-edge ${breach.has(`${w.from}->${w.to}`) ? 'breach' : ''}`;
-    if (p.x === q.x) { const x = p.x + 170, y1 = p.y + 9, y2 = q.y + 9, bend = x + 18 + Math.min(30, Math.abs(y2 - y1) / 4); return `<path class="${cls}" d="M${x},${y1} C${bend},${y1} ${bend},${y2} ${x},${y2}" marker-end="url(#ar-arrow)"/>`; }   // same layer: an arc on the right
-    const x1 = p.x + 170, y1 = p.y + 9, x2 = q.x, y2 = q.y + 9, mx = (x1 + x2) / 2;
-    return `<path class="${cls}" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" marker-end="url(#ar-arrow)"/>`; }).join('');
-  const nodes = [...pos.entries()].map(([f, p]) => `<g class="ar-node ${orph.has(f) ? 'orphan' : ''}" onclick="ARCHREG.sel='${escapeHtml(f)}';_archPaint()"><title>${escapeHtml(f)}</title><rect x="${p.x}" y="${p.y}" width="170" height="18"/><text x="${p.x + 6}" y="${p.y + 12.5}">${escapeHtml(f.split('/').pop().slice(0, 26))}</text></g>`).join('');
-  const heads = order.map((l, i) => `<text class="ar-lh" x="${pad + i * colW}" y="${pad}">${escapeHtml(l)}</text>`).join('');
-  const defs = '<defs><marker id="ar-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--sky)" fill-opacity=".6"/></marker></defs>';
-  return `<svg width="${W + 60}" height="${H}" xmlns="http://www.w3.org/2000/svg">${defs}${heads}${edges}${nodes}</svg>`;
+function _archShown() {
+  const a = ARCHREG.data, q = ARCHREG.q.trim().toLowerCase();
+  const comps = (a.components || []).filter(c => !q || `${c.id} ${c.file} ${c.layer} ${c.type} ${(c.exports || []).join(' ')}`.toLowerCase().includes(q));
+  return { comps: comps.slice(0, ARCH_MAX), total: comps.length };
+}
+function _archGraph(fit) {
+  const a = ARCHREG.data; if (!a || !ARCHREG.canvas) return;
+  const { comps, total } = _archShown();
+  const shown = new Set(comps.map(c => c.file)), orph = new Set(a.orphans || []);
+  const breach = new Set((a.breaches || []).map(b => `${b.consumer}>${b.dependency}`));
+  const evOf = (f) => (a.events || []).filter(e => e.emittedBy.includes(f) || e.consumedBy.includes(f)).length;
+  const routesOf = (f) => (a.routes || []).filter(r => r.file === f).length + (a.cli || []).filter(c => c.file === f).length;
+  const nodes = comps.map(c => ({ id: c.file, band: c.layer, label: c.file, color: ARCH_BANDS[c.layer] || '#00d4ff', cls: orph.has(c.file) ? 'is-orphan' : '',
+    html: ArchCanvas.card({ title: c.file.split('/').pop(), badge: (c.type || '').toUpperCase(), sub: c.file.toUpperCase(),
+      chips: [{ t: `${c.lines} LINES` }, { t: `${c.consumers.length} USE IT`, cls: c.consumers.length ? 'reuse' : '' }, { t: `${c.deps.length} NEEDS` },
+        ...(routesOf(c.file) ? [{ t: `${routesOf(c.file)} DOORS`, cls: 'warn' }] : []), ...(evOf(c.file) ? [{ t: `${evOf(c.file)} EVENTS` }] : []),
+        ...(orph.has(c.file) ? [{ t: 'ORPHAN', cls: 'bad' }] : []), ...(c.deps.some(d => breach.has(`${c.file}>${d}`)) ? [{ t: 'BREACH', cls: 'bad' }] : [])] }) }));
+  // a wire runs dependency → consumer; on the canvas an edge reads "from NEEDS to"
+  const edges = (a.wires || []).filter(w => shown.has(w.from) && shown.has(w.to) && w.from !== w.to)
+    .map(w => w.relation === 'event' ? { from: w.to, to: w.from, kind: 'event' } : { from: w.to, to: w.from, kind: breach.has(`${w.to}>${w.from}`) ? 'breach' : 'dep' });
+  const seen = new Set(), uniq = edges.filter(e => { const k = `${e.from}>${e.to}>${e.kind}`; if (seen.has(k)) return false; seen.add(k); return true; });
+  const bands = (a.layerOrder || []).filter(l => comps.some(c => c.layer === l)).map(l => ({ key: l, label: l.toUpperCase(), color: ARCH_BANDS[l] }));
+  // §0.39.300 AZ1 — the systems: each component's system, each system's numbers (for its card at the SYSTEMS level)
+  const sysOf = _archSystemOf((a.components || []).map(c => c.file));
+  const keys = [...new Set(comps.map(c => sysOf(c.file)))].sort();
+  ARCHREG.sysOf = sysOf; ARCHREG.sysStats = {};
+  for (const c of comps) { const k = sysOf(c.file), st = ARCHREG.sysStats[k] || (ARCHREG.sysStats[k] = { lines: 0, orphans: 0, breaches: 0, files: [] }); st.lines += c.lines || 0; st.files.push(c.file); if (orph.has(c.file)) st.orphans++; if (c.deps.some(d => breach.has(`${c.file}>${d}`))) st.breaches++; }
+  const groups = keys.map((k, i) => ({ key: k, label: k.toUpperCase(), color: ARCH_SYS_COLORS[i % ARCH_SYS_COLORS.length] }));
+  nodes.forEach(n => { n.group = sysOf(n.id); });
+  ARCHREG.canvas.setGraph({ nodes, edges: uniq, bands, groups }, { keepView: !fit });
+  if (ARCHREG.sel && shown.has(ARCHREG.sel)) ARCHREG.canvas.select(ARCHREG.sel);
+  document.getElementById('ra-shown').textContent = total > comps.length ? `SHOWING ${comps.length} OF ${total} — FILTER TO NARROW` : ARCHREG.q ? `${total} MATCH` : '';
+}
+function archDrawer(open) {
+  const d = document.getElementById('ra-side'); if (!d) return;
+  const was = !d.classList.contains('shut');
+  d.classList.toggle('shut', !open);
+  document.getElementById('repo-arch-registry').classList.toggle('side-shut', !open);
+  _archSide();
+  if (ARCHREG.canvas && was !== open) setTimeout(() => ARCHREG.canvas.fit(), 320);
+}
+function archTool(t) {
+  const cv = ARCHREG.canvas;
+  if (t === 'fit') return cv && cv.fit();
+  if (t === 'in') return cv && cv.step(1);
+  if (t === 'out') return cv && cv.step(-1);
+  if (t.startsWith('lvl-')) return cv && cv.goLevel(t.slice(4));
+  if (t === 'arrange') return cv && cv.layout({ all: true });
+  const d = document.getElementById('ra-side');
+  if (!d.classList.contains('shut') && (ARCHREG.tab === t || t === 'inspect')) return archDrawer(false);
+  ARCHREG.tab = t; archDrawer(true);
+}
+function _archJump(file) { ARCHREG.sel = file; ARCHREG.tab = 'inspect'; if (ARCHREG.canvas) { if (!_archShown().comps.find(c => c.file === file)) { ARCHREG.q = ''; document.getElementById('ra-q').value = ''; _archGraph(false); } ARCHREG.canvas.select(file); ARCHREG.canvas.center(file); } _archSide(); }
+function _archSide() {
+  const a = ARCHREG.data, body = document.getElementById('ra-body'); if (!body || !a) return;
+  document.querySelectorAll('[data-ratab]').forEach(b => { b.classList.toggle('on', b.dataset.ratab === ARCHREG.tab); b.setAttribute('aria-selected', b.dataset.ratab === ARCHREG.tab); });
+  const open = !document.getElementById('ra-side').classList.contains('shut');
+  document.querySelectorAll('[data-ratool]').forEach(b => b.classList.toggle('on', open && b.dataset.ratool === ARCHREG.tab));
+  const it = (file, extra = '', cls = '') => `<div class="ax-item ${cls}" tabindex="0" data-jump="${escapeHtml(file)}">${escapeHtml(file)}${extra ? `<span class="m">${extra}</span>` : ''}</div>`;
+  const title = document.getElementById('ra-side-title');
+  if (ARCHREG.tab === 'blueprint') {
+    title.textContent = 'BLUEPRINT';
+    if (ARCHREG.bp) body.innerHTML = ARCHREG.bp;
+    else { body.innerHTML = '<div class="ax-empty">READING THE SPEC…</div>'; const forUuid = ARCHREG.uuid; _archBlueprintHtml(ARCHREG.repo).then(h => { if (ARCHREG.uuid !== forUuid) return; ARCHREG.bp = h; if (ARCHREG.tab === 'blueprint') body.innerHTML = h; }); }
+    return;
+  }
+  if (ARCHREG.tab === 'lists') {
+    title.textContent = 'THE LISTS';
+    const sec = (name, n, html) => `<div class="ax-k">${name} <span class="n">${n}</span></div>${html}`;
+    body.innerHTML = sec('ORPHANS — NOTHING USES THEM, THEY USE NOTHING', (a.orphans || []).length, (a.orphans || []).map(f => it(f, '', 'warn')).join('') || '<div class="ax-item ok">NONE</div>')
+      + sec('BOTTOM-UP BREACHES (§3.1)', (a.breaches || []).length, (a.breaches || []).map(b => it(b.consumer, `NEEDS ${escapeHtml(b.dependency)} — A HIGHER LAYER`, 'bad')).join('') || '<div class="ax-item ok">NONE</div>')
+      + sec('PACKAGES (EXTERNAL)', (a.externals || []).length, (a.externals || []).slice(0, 60).map(e => `<div class="ax-item">${escapeHtml(e.name)}<span class="m">USED BY ${e.usedBy.length}</span></div>`).join('') || '<div class="ax-empty">NONE</div>')
+      + sec('ROUTES · CLI — THE DOORWAYS IN', (a.routes || []).length + (a.cli || []).length, [...(a.routes || []).slice(0, 80).map(r => it(r.file, `${escapeHtml(r.method)} ${escapeHtml(r.path)}`)), ...(a.cli || []).slice(0, 60).map(c => it(c.file, `$ ${escapeHtml(c.verb)}`))].join('') || '<div class="ax-empty">NO ROUTES OR COMMANDS</div>')
+      + sec('EVENTS — EMITTED → HANDLED', (a.events || []).length, (a.events || []).slice(0, 80).map(e => `<div class="ax-item ${e.consumedBy.length ? '' : 'warn'}">${escapeHtml(e.name)}<span class="m">${e.emittedBy.length} EMIT → ${e.consumedBy.length} HANDLE${e.consumedBy.length ? '' : ' — UNHANDLED'}</span></div>`).join('') || '<div class="ax-empty">NO EVENTS</div>')
+      + sec('DATA DIRS · NODE TYPES', (a.dataDirs || []).length, `${(a.dataDirs || []).map(d => `<div class="ax-item">${escapeHtml(d)}</div>`).join('') || '<div class="ax-empty">NO DATA DIR</div>'}${Object.entries(a.nodeTypes || {}).map(([k, v]) => `<div class="ax-item">.${escapeHtml(k)}<span class="m">× ${v}</span></div>`).join('')}`);
+  } else if (ARCHREG.group && !ARCHREG.sel) {
+    // §0.39.300 AZ1 — a system: what it holds, what it needs, what needs it (summed wires), its breaches and orphans
+    const k = ARCHREG.group, st = ARCHREG.sysStats[k] || { files: [], lines: 0 };
+    const w = ARCHREG.canvas ? ARCHREG.canvas.systemWires() : [];
+    const needs = w.filter(e => e.from === k).sort((x, y) => y.count - x.count), users = w.filter(e => e.to === k).sort((x, y) => y.count - x.count);
+    const box = ARCHREG.canvas ? ARCHREG.canvas.groups().find(b => b.key === k) : null;
+    title.textContent = k.toUpperCase();
+    const sys = (e, key) => `<div class="ax-item" tabindex="0" data-sys="${escapeHtml(e[key])}">${escapeHtml(e[key].toUpperCase())}<span class="m">${e.count} WIRE${e.count === 1 ? '' : 'S'}</span></div>`;
+    body.innerHTML = `<div class="ax-stats"><span class="ax-stat c"><b>${st.files.length}</b>COMPONENTS</span><span class="ax-stat"><b>${(st.lines || 0).toLocaleString()}</b>LINES</span>${box ? `<span class="ax-stat"><b>${box.level}</b>LEVEL</span>` : ''}${st.breaches ? `<span class="ax-stat r"><b>${st.breaches}</b>BREACHES</span>` : ''}${st.orphans ? `<span class="ax-stat r"><b>${st.orphans}</b>ORPHANS</span>` : ''}</div>
+      ${box && box.cyclic ? '<div class="ax-item warn">IN A CYCLE — IT NEEDS SYSTEMS THAT NEED IT; THEY SHARE ONE LEVEL</div>' : ''}
+      <div class="ax-row" style="margin:12px 0 4px"><button class="ax-btn small" onclick="ARCHREG.canvas.openGroup('${escapeHtml(k).replace(/'/g, "\\'")}')" title="ZOOM INTO THE SYSTEM — ITS COMPONENTS">OPEN THE SYSTEM</button></div>
+      <div class="ax-k">NEEDS <span class="n">${needs.length} SYSTEMS</span></div>${needs.map(e => sys(e, 'to')).join('') || '<div class="ax-empty">NOTHING OUTSIDE ITSELF</div>'}
+      <div class="ax-k">NEEDED BY <span class="n">${users.length} SYSTEMS</span></div>${users.map(e => sys(e, 'from')).join('') || '<div class="ax-empty">NOTHING</div>'}
+      <div class="ax-k">COMPONENTS <span class="n">${st.files.length}</span></div>${st.files.slice(0, 200).map(f => it(f)).join('')}`;
+    body.querySelectorAll('[data-sys]').forEach(x => { const go = () => { ARCHREG.group = x.dataset.sys; ARCHREG.canvas.selectGroup(x.dataset.sys); _archSide(); }; x.onclick = go; x.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
+  } else {
+    const c = (a.components || []).find(x => x.file === ARCHREG.sel);
+    title.textContent = c ? c.file.split('/').pop().toUpperCase() : 'INSPECTOR';
+    if (!c) body.innerHTML = '<div class="ax-empty">SELECT A COMPONENT ON THE MAP — WHAT IT NEEDS LIGHTS YELLOW, WHAT NEEDS IT MAGENTA, EVERYTHING ELSE DIMS. THE LISTS AND THE BLUEPRINT ARE THE TABS ABOVE.</div>';
+    else {
+      const orph = (a.orphans || []).includes(c.file), br = (a.breaches || []).filter(b => b.consumer === c.file);
+      const routes = (a.routes || []).filter(r => r.file === c.file), cli = (a.cli || []).filter(x => x.file === c.file);
+      const evs = (a.events || []).filter(e => e.emittedBy.includes(c.file) || e.consumedBy.includes(c.file));
+      body.innerHTML = `${orph ? '<div class="ax-item warn">AN ORPHAN — NOTHING USES IT, IT USES NOTHING</div>' : ''}${br.map(b => `<div class="ax-item bad">NEEDS ${escapeHtml(b.dependency)}, A HIGHER LAYER — A BOTTOM-UP BREACH</div>`).join('')}
+        <div class="ax-stats"><span class="ax-stat c"><b>${escapeHtml(c.layer.toUpperCase())}</b>LAYER</span><span class="ax-stat"><b>${escapeHtml((c.type || '').toUpperCase())}</b>TYPE</span><span class="ax-stat"><b>${c.lines}</b>LINES</span></div>
+        <div class="ax-k">ID</div><div class="ax-item">${escapeHtml(c.id)}<span class="m">${escapeHtml(c.file)}${c.language ? ` · ${escapeHtml(c.language)}` : ''}</span></div>
+        <div class="ax-k">EXPORTS <span class="n">${(c.exports || []).length}</span></div><div class="ax-chips">${(c.exports || []).map(x => `<span class="ax-chip">${escapeHtml(x)}</span>`).join('') || '<span class="ax-empty">NONE</span>'}</div>
+        <div class="ax-k">NEEDS <span class="n">${c.deps.length}</span></div>${c.deps.map(f => it(f)).join('') || '<div class="ax-empty">NOTHING IN THIS REPO</div>'}
+        <div class="ax-k">NEEDED BY <span class="n">${c.consumers.length}</span></div>${c.consumers.map(f => it(f)).join('') || '<div class="ax-empty">NOTHING</div>'}
+        ${routes.length || cli.length ? `<div class="ax-k">DOORWAYS <span class="n">${routes.length + cli.length}</span></div>${routes.map(r => `<div class="ax-item">${escapeHtml(r.method)} ${escapeHtml(r.path)}</div>`).join('')}${cli.map(x => `<div class="ax-item">$ ${escapeHtml(x.verb)}</div>`).join('')}` : ''}
+        ${evs.length ? `<div class="ax-k">EVENTS <span class="n">${evs.length}</span></div>${evs.map(e => `<div class="ax-item ${e.consumedBy.length ? '' : 'warn'}">${escapeHtml(e.name)}<span class="m">${e.emittedBy.includes(c.file) ? 'EMITS' : ''}${e.emittedBy.includes(c.file) && e.consumedBy.includes(c.file) ? ' · ' : ''}${e.consumedBy.includes(c.file) ? 'HANDLES' : ''}${e.consumedBy.length ? '' : ' — NOTHING HANDLES IT'}</span></div>`).join('')}` : ''}
+        <div class="ax-row" style="margin-top:14px"><button class="ax-btn small" onclick="openApiRepoFile(ARCHREG.uuid, '${escapeHtml(c.file).replace(/'/g, "\\'")}')" title="OPEN THE FILE IN THE FILES TAB">OPEN THE FILE</button></div>`;
+    }
+  }
+  body.querySelectorAll('[data-jump]').forEach(x => { x.onclick = () => _archJump(x.dataset.jump); x.onkeydown = (e) => { if (e.key === 'Enter') _archJump(x.dataset.jump); }; });
 }
 async function archReindex() {
   const repo = CURRENT_API_REPO; if (!repo) return;

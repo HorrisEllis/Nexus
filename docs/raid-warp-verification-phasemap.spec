@@ -3,9 +3,10 @@ spec:
     name:        raid-warp-verification-spine
     version:     0.2.0-phasemap
     supersedes:  raid-verification-spine v0.1.0 (folds in AXIOMS-v3.1, WARP logic, drift accounting)
-    status:      ALL 11 PHASES COMPLETE 2026-07-30 (Part I verify spine P1-P7 + Part II bridge P8-P11). PHASEMAP. Governed by AXIOMS-v3.1 (all 87 parsed).
-                 New code uses WARP logic (warp/core: weighted Axiom → Gate →
-                 Stream → StreamLog). Drift accounted for at every phase.
+    status: >-
+      ALL 11 PHASES COMPLETE 2026-07-30 (Part I verify spine P1-P7 + Part II bridge P8-P11). PHASEMAP. Governed by AXIOMS-v3.1 (all 87 parsed).
+      New code uses WARP logic (warp/core: weighted Axiom → Gate →
+      Stream → StreamLog). Drift accounted for at every phase.
     uuid:        nexus-raid-warp-verification-v0-0000-2026-0730-001
     axioms_read: "AXIOMS-v3.1, 2026-07-06 — Groups 0-17, 87 laws, parsed in full."
     related_phasemaps: >

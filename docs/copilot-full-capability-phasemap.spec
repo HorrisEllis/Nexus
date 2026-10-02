@@ -2,12 +2,13 @@ spec:
   meta:
     name:        copilot-full-capability
     version:     0.1.0-phasemap
-    status:      ALL 11 PHASES DONE 2026-08-12 (same session, ninth and final pass).
-                 written per §8.5 (map before build), §3.1 (build order:
-                 substrate before logic before surface), §16.5 (wrap what's built, don't
-                 duplicate). Continues docs/copilot-omniscience-phasemap.spec (P1-P7, ALL
-                 DONE) and the schedule_task/register_trigger/nexus_heal/loom_scan session
-                 (2026-08-12, also done). This phasemap covers what those did NOT reach.
+    status: >-
+      ALL 11 PHASES DONE 2026-08-12 (same session, ninth and final pass).
+      written per §8.5 (map before build), §3.1 (build order:
+      substrate before logic before surface), §16.5 (wrap what's built, don't
+      duplicate). Continues docs/copilot-omniscience-phasemap.spec (P1-P7, ALL
+      DONE) and the schedule_task/register_trigger/nexus_heal/loom_scan session
+      (2026-08-12, also done). This phasemap covers what those did NOT reach.
     uuid:        nexus-copilot-full-capability-v0-0000-2026-0812-001
 
   goal: >

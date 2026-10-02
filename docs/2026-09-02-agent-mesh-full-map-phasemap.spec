@@ -58,11 +58,12 @@ spec:
         session, ALSO wired into guardian's browser-agent dispatch (see
         done_this_session above) — previously copilot-internal only.
     routing_and_accounts:
-      - lib/agent-router.js (CA5) — real intent→agent STRENGTH map
-        (perplexity: research, claude: large codebases, chatgpt: general
-        + 900-token chunking awareness, gemini: coding + adversarial),
-        both auto-classified and user-directed-override, every route
-        recorded {intent, agent, why}.
+      - >-
+          lib/agent-router.js (CA5) — real intent→agent STRENGTH map
+          (perplexity: research, claude: large codebases, chatgpt: general
+          + 900-token chunking awareness, gemini: coding + adversarial),
+          both auto-classified and user-directed-override, every route
+          recorded {intent, agent, why}.
       - lib/account-registry.js (CA7) — real multi-account-per-provider
         registry, editable cortex rows, stores a credential REFERENCE not
         a raw secret (real OS/Electron credential store resolves it).
@@ -78,12 +79,13 @@ spec:
         what that ask names, confirmed by reading forge-tool.js's own
         ACTIONS.schema directly, not assumed from the filename.
     two_way_chat_and_coordination:
-      - lib/agent-tools/tools/coordination/agent-chat.js — real,
-        hop-capped, ONE-addressee agent messaging, dispatches through
-        copilot/tool-runtime.js's runViaAgent — the SAME full tool loop
-        copilot itself runs on, not a narrower fallback set. Writes to
-        guardian_chat_log (confirmed: that table had zero writers before
-        this tool existed).
+      - >-
+          lib/agent-tools/tools/coordination/agent-chat.js — real,
+          hop-capped, ONE-addressee agent messaging, dispatches through
+          copilot/tool-runtime.js's runViaAgent — the SAME full tool loop
+          copilot itself runs on, not a narrower fallback set. Writes to
+          guardian_chat_log (confirmed: that table had zero writers before
+          this tool existed).
       - lib/agent-tools/tools/coordination/agent-council.js,
         roundtable.js, parallel-dispatch.js — real multi-agent fan-out
         siblings (same question to multiple members, independently).
@@ -93,10 +95,11 @@ spec:
         providers), deliberately separate from query_recall's pinned
         single-store scoring engine rather than bolted on unsafely.
     wake_word:
-      - guardian/userscript-nexus-wake.js — ALREADY cross-provider (its
-        own header: "Loaded by each provider userscript... so the
-        behaviour is defined once rather than four times"). "Hey nexus"
-        works in claude/chatgpt/gemini/perplexity today. NOT a gap.
+      - >-
+          guardian/userscript-nexus-wake.js — ALREADY cross-provider (its
+          own header: "Loaded by each provider userscript... so the
+          behaviour is defined once rather than four times"). "Hey nexus"
+          works in claude/chatgpt/gemini/perplexity today. NOT a gap.
     artifacts:
       - guardian/artifact-upload.js — real, working auto-upload for
         generated code blocks (a real 2026-07-05 bugfix replaced a
@@ -107,11 +110,12 @@ spec:
         armed for claude/chatgpt/gemini/perplexity → guardian
         :7820/api/intake").
     context_query_tools:
-      - lib/agent-tools/tools/query/query-intelligence.js,
-        query-recall.js — real tools an agent can call ON DEMAND for
-        exactly the information the old context blob used to force-feed
-        every message. These are WHY the ack-injection fix is safe: no
-        capability was removed, just the forced delivery.
+      - >-
+          lib/agent-tools/tools/query/query-intelligence.js,
+          query-recall.js — real tools an agent can call ON DEMAND for
+          exactly the information the old context blob used to force-feed
+          every message. These are WHY the ack-injection fix is safe: no
+          capability was removed, just the forced delivery.
 
   # ────────────────────────────────────────────────────────────────────
   # REAL GAPS — checked directly, genuinely missing or disconnected.

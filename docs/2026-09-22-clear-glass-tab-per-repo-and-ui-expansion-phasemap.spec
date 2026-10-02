@@ -2,11 +2,12 @@ spec:
   meta:
     name:        clear-glass-tab-per-repo-and-ui-expansion
     version:     0.1.0-phasemap
-    status:      PHASEMAP 2026-09-22. James: "What if each container gets a
-                 dedicated tab, for each repo. Make sure it's all wired in
-                 correctly end to end." / "clearglasses ui needs to be built
-                 more, almost none of it is here in the index.html file. have
-                 been told its been build three times now."
+    status: >-
+      PHASEMAP 2026-09-22. James: "What if each container gets a
+      dedicated tab, for each repo. Make sure it's all wired in
+      correctly end to end." / "clearglasses ui needs to be built
+      more, almost none of it is here in the index.html file. have
+      been told its been build three times now."
     uuid:        nexus-cg-tabperrepo-ui-v0-0000-2026-0922-001
 
   diagnosis_verified_2026_09_22:

@@ -258,11 +258,15 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     '/api/intelligence/rfr2/stats', '/api/intelligence/rfr2/query',
     '/api/intelligence/rfr2/trace', '/api/intelligence/rfr2/descendants',
     '/api/intelligence/rfr2/children',
+    // §0.39.300 SY2 — gap synthesis (intelligence/synthesis): Nexus's own gaps, read as one set, ranked by leverage
+    '/api/intelligence/synthesis', '/api/intelligence/synthesis/run', '/api/intelligence/synthesis/ingest',
+    '/api/intelligence/synthesis/history', '/api/intelligence/synthesis/fill', '/api/intelligence/synthesis/themes',
   ]);
   const liminal = require('./liminal-space');
   const nexusBus = require('../nexus/nexus-bus');
   const owns = (method, pathname) => {
     if (pathname === '/api/liminal-space/status' || pathname === '/api/liminal-space/list') return method === 'GET';
+    if (pathname.startsWith('/api/intelligence/synthesis/gap/')) return method === 'GET';
     if (pathname === '/api/intelligence/bus') return method === 'POST';
     return OWNED.has(pathname);
   };
@@ -272,6 +276,38 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
   async function handle(method, pathname, sp, body, json) {
     body = body || {};
     sp = sp || new URLSearchParams();
+
+    // ── §0.39.300 SY2 — gap synthesis ──────────────────────────────────────────────────────────────────────────────
+    // James: "synthesize as much gaps as possible, and fill the highest amount of leverage first … add that to the
+    // intelligence system. like synthesis needs to be expanded, immensly". Read-only over the tree; runs are kept.
+    if (pathname.startsWith('/api/intelligence/synthesis')) {
+      const SY = require('./synthesis');
+      const gapRows = () => { try { return db.query('gaps', { status: 'open' }, { orderBy: 'ts', order: 'DESC', limit: 300 }); } catch (_) { return null; } };
+      const fresh = (r) => r && Date.now() - (r.stats && r.stats.at || 0) < 10 * 60 * 1000;
+      const current = () => { const l = SY.latest(); return fresh(l) ? l : SY.run({ gapRows: gapRows() }); };
+      if (pathname === '/api/intelligence/synthesis/run') {
+        if (method !== 'POST') return json(405, { ok: false, error: 'POST to run the synthesis' });
+        const r = SY.run({ gapRows: gapRows(), top: Math.min(100, Number(body.top) || 25) });
+        return json(200, { ok: true, stats: r.stats, plan: r.plan, fill: r.fill, themes: r.themes.slice(0, 20), kept: r.kept });
+      }
+      if (pathname === '/api/intelligence/synthesis/ingest') {
+        if (method !== 'POST') return json(405, { ok: false, error: 'POST { system, gaps: [...] }' });
+        const r = SY.ingest(body.system, body.gaps);
+        return r.error ? json(400, { ok: false, error: r.error }) : json(200, { ok: true, ...r, next: 'the next run reads them — POST /api/intelligence/synthesis/run' });
+      }
+      if (pathname === '/api/intelligence/synthesis/history') return json(200, { ok: true, runs: SY.history() });
+      const r = current();
+      if (pathname === '/api/intelligence/synthesis/fill') return json(200, { ok: true, at: r.stats.at, fill: r.fill });
+      if (pathname === '/api/intelligence/synthesis/themes') return json(200, { ok: true, at: r.stats.at, themes: r.themes });
+      if (pathname.startsWith('/api/intelligence/synthesis/gap/')) {
+        const id = decodeURIComponent(pathname.slice('/api/intelligence/synthesis/gap/'.length));
+        const g = r.gaps.find(x => x.id === id || x.members.some(m => m.id === id));
+        return g ? json(200, { ok: true, gap: g }) : json(404, { ok: false, error: `no gap ${id} in the run of ${new Date(r.stats.at).toISOString()}` });
+      }
+      const limit = Math.min(600, Number(sp.get('limit')) || 50), q = String(sp.get('q') || '').toLowerCase(), system = sp.get('system');
+      const gaps = r.gaps.filter(g => (!q || `${g.id} ${g.title} ${g.detail}`.toLowerCase().includes(q)) && (!system || g.systems.includes(system)));
+      return json(200, { ok: true, at: r.stats.at, stats: r.stats, count: gaps.length, gaps: gaps.slice(0, limit), plan: r.plan, fill: r.fill, themes: r.themes.slice(0, 20), maps: r.maps });
+    }
 
     if (pathname === '/api/intelligence/context') {
       const intent   = sp.get('intent')   || '';

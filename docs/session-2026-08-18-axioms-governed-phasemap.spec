@@ -4,7 +4,8 @@ nexus:
     version:     1.0.0-phasemap
     status:      ACTIVE — living record, extend in place, no new fragments
     created:     2026-08-18
-    checkout:    "current-expanded" (nexus_-_current.zip lineage, 340+ real commits at time of writing)
+    checkout: >-
+      "current-expanded" (nexus_-_current.zip lineage, 340+ real commits at time of writing)
     governing_law: docs/AXIOMS-v3.1.md — read in full before this phase of work began; every item below cites the specific §.
 
   # ── real, done, verified this session in this checkout ───────────────────

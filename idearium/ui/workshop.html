@@ -5,7 +5,7 @@
   was describing the pipeline when i told you that, from idearium." · "alright but no lowercase. and make sure its
   enterprise grade".
   The second station of the pipeline: an idea from the Void (or a library document, a repo's spec, or nothing) shaped
-  into a spec's sections. Its own page, in the Void's look (css/void-theme.css, js/void-sky.js), capitals everywhere.
+  into a spec's sections. Its own page, in the Void's palette (css/void-theme.css) without its sky — a work surface (0.39.300 WS4), capitals everywhere.
   His words in cyan; the agent's proposals in magenta, never written into the spec without his yes. Save writes the
   repo's spec/<name>.spec — the Spec tab's living model. /api/workshop (idearium/lib/workshop.js).
   ?id=<workshop> opens one; ?from=idea:<uuid>|library:<sha>|repo:<uuid> starts one.
@@ -18,28 +18,31 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="css/void-theme.css">
 <style>
-  .head { top: calc(var(--chrome-h, 0px) + 16px); }
-  .head .title { font-size: 34px; letter-spacing: .36em; padding-left: .36em; }
-  .head .sub { margin-top: 8px; }
-  .stations { display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 14px; pointer-events: auto; flex-wrap: wrap; }
-  .st { font: 400 13px/1 var(--display); letter-spacing: .2em; padding: 6px 10px; border: 1px solid transparent; border-radius: 2px; color: var(--text3); }
-  .st.done { color: rgba(0,255,136,.7); } .st.now { color: var(--c); border-color: rgba(0,212,255,.35); box-shadow: 0 0 18px rgba(0,212,255,.12); }
-  .st.link { cursor: pointer; } .st.link:hover { border-color: var(--line3); }
+  /* §0.39.300 WS4 — James: "make this enterprise, remove the noise, this is for speccing remove everything else · idea ->
+     spec -> architecture -> idearium". One bar: the station, the steps, the save. No sky, no hero title. */
+  #sky { display: none; }
+  .bar { position: fixed; top: var(--chrome-h, 0px); left: 0; right: 0; height: 52px; z-index: 6; display: flex; align-items: center; gap: 18px; padding: 0 18px; background: rgba(5,8,15,.96); border-bottom: 1px solid var(--line2); }
+  .bar .name { font: 400 17px/1 var(--display); letter-spacing: .26em; color: var(--c); white-space: nowrap; }
+  .bar .sep { width: 1px; height: 22px; background: var(--line2); }
+  .stations { display: flex; gap: 4px; align-items: center; }
+  .st { font: 400 13px/1 var(--display); letter-spacing: .2em; padding: 7px 11px; border: 1px solid transparent; border-radius: 2px; color: var(--text3); }
+  .st .i { font: 400 10px/1 var(--mono); letter-spacing: .06em; margin-right: 7px; opacity: .7; }
+  .st.done { color: rgba(0,255,136,.75); } .st.now { color: var(--c); border-color: rgba(0,212,255,.4); background: rgba(0,212,255,.06); }
+  .st.link { cursor: pointer; color: var(--text2); } .st.link:hover { border-color: var(--line3); color: var(--text); }
   .arrow { color: var(--text3); font: 400 11px/1 var(--mono); }
-  .corner { position: fixed; top: calc(var(--chrome-h, 0px) + 16px); z-index: 6; display: flex; gap: 6px; align-items: center; }
-  .corner.l { left: 18px; } .corner.r { right: 18px; }
-  .saved { font: 400 10px/1.3 var(--mono); letter-spacing: .1em; color: var(--text2); max-width: 300px; text-align: right; }
+  .bar .end { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .saved { font: 400 10px/1.3 var(--mono); letter-spacing: .1em; color: var(--text2); max-width: 320px; text-align: right; }
   .saved.dirty { color: var(--y); }
   /* toasts sit clear of the work: bottom centre (the Void keeps them top-left, over empty space) */
   #toasts { top: auto; bottom: 18px; left: 50%; transform: translateX(-50%); align-items: center; }
 
-  .stage { position: fixed; left: 0; right: 0; bottom: 0; top: calc(var(--chrome-h, 0px) + 150px); z-index: 2; }
-  .panel { background: rgba(5,8,15,.86); border: 1px solid var(--line2); border-radius: 2px; backdrop-filter: blur(6px); }
+  .stage { position: fixed; left: 0; right: 0; bottom: 0; top: calc(var(--chrome-h, 0px) + 52px); z-index: 2; padding-top: 16px; }
+  .panel { background: #070b14; border: 1px solid var(--line2); border-radius: 2px; }
   .lbl { font: 400 12px/1 var(--display); letter-spacing: .24em; color: var(--text2); display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
   .lbl .n { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text3); }
 
   /* start */
-  .start { max-width: 1060px; margin: 0 auto; padding: 0 18px 24px; height: 100%; overflow: auto; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-content: start; }
+  .start { max-width: 1280px; margin: 0 auto; padding: 0 18px 24px; height: 100%; overflow: auto; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; align-content: start; }
   .start .panel { padding: 16px; }
   .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
   .filter { width: 100%; background: rgba(11,17,32,.8); border: 1px solid var(--line2); border-radius: 2px; color: var(--c); font: 400 12px/1 var(--mono); padding: 9px 11px; outline: none; margin-bottom: 8px; }
@@ -99,27 +102,26 @@
 
   @media (max-width: 1100px) {
     html, body { height: auto; overflow: auto; }
-    .stage { position: static; padding-top: 230px; }
-    .head { top: calc(var(--chrome-h, 0px) + 64px); }
-    .saved { max-width: 46vw; }
+    .stage { position: static; padding-top: 16px; }
+    .bar { position: relative; top: 0; height: auto; min-height: 52px; flex-wrap: wrap; padding: 8px 14px; gap: 10px; }
+    .bar .sep { display: none; } .saved { max-width: 46vw; }
     .work, .start { grid-template-columns: 1fr; height: auto; }
     .col { overflow: visible; } .body { min-height: 260px; }
-    .head { position: absolute; }
   }
 </style>
 </head>
 <body>
 <script src="js/window-chrome.js" data-kind="workshop" data-title="THE SPEC WORKSHOP"></script>
-<canvas id="sky" aria-hidden="true"></canvas>
-<script src="js/void-sky.js"></script>
-
-<div class="head">
-  <div class="title">THE SPEC WORKSHOP</div>
-  <div class="sub">SHAPE THE IDEA INTO A SPEC</div>
-  <div class="stations" id="stations" aria-label="the pipeline"></div>
-</div>
-<div class="corner l"><button class="btn small ghost" id="backBtn" title="EVERY WORKSHOP">← ALL WORKSHOPS</button></div>
-<div class="corner r"><span class="saved" id="saved"></span><button class="btn small g hidden" id="saveBtn" title="WRITE THIS SPEC INTO ITS REPO'S SPEC FOLDER — THE SPEC TAB'S LIVING MODEL (CTRL+S)">SAVE TO THE REPO'S SPEC</button></div>
+<header class="bar">
+  <div class="name">SPEC WORKSHOP</div>
+  <div class="sep"></div>
+  <nav class="stations" id="stations" aria-label="the pipeline"></nav>
+  <div class="end">
+    <span class="saved" id="saved"></span>
+    <button class="btn small ghost hidden" id="backBtn" title="EVERY WORKSHOP">← ALL WORKSHOPS</button>
+    <button class="btn small g hidden" id="saveBtn" title="WRITE THIS SPEC INTO ITS REPO'S SPEC FOLDER — THE SPEC TAB'S LIVING MODEL (CTRL+S)">SAVE TO THE REPO'S SPEC</button>
+  </div>
+</header>
 
 <div class="state hidden" id="state" role="status" aria-live="polite"></div>
 
@@ -233,11 +235,21 @@ function reachDial(el, guide, value, onPick) {
   el.querySelectorAll('button').forEach(b => b.onclick = () => onPick(+b.dataset.n));
 }
 function stations() {
-  const s = [['IDEA', W && W.source && W.source.kind === 'idea' ? 'done' : ''], ['SPEC', 'now'], ['ARCHITECT', W ? 'link' : ''], ['BLUEPRINT', ''], ['REPO', W && W.repoUuid ? 'done link' : ''], ['COS', '']];
-  $('stations').innerHTML = s.map(([n, c], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}" ${n === 'REPO' && W && W.repoUuid ? 'id="stRepo" tabindex="0" title="OPEN THE REPO IN IDEARIUM — ITS SPEC TAB"' : n === 'ARCHITECT' && W ? 'id="stArch" tabindex="0" title="ON TO THE ARCHITECT — THIS SPEC AS COMPONENTS"' : ['ARCHITECT', 'BLUEPRINT', 'COS'].includes(n) ? 'title="NEXT IN THE PIPELINE — MAPPED, COMING"' : ''}>${n}</span>`).join('');
-  const r = $('stRepo'); if (r) { r.onclick = openRepo; r.onkeydown = (e) => { if (e.key === 'Enter') openRepo(); }; }
-  // §0.39.298 AR2 — on to the next station, its own page
-  const ar = $('stArch'); if (ar) { const go = async () => { await flush(); location.href = `/architect.html?from=${encodeURIComponent('workshop:' + W.uuid)}`; }; ar.onclick = go; ar.onkeydown = (e) => { if (e.key === 'Enter') go(); }; }
+  // §0.39.300 WS4 — the pipeline in the bar, compact (James: "IDEA → SPEC → ARCHITECT → BLUEPRINT → REPO → COS — that is fine")
+  const s = [
+    ['IDEA', 'stIdea', (W && W.source && W.source.kind === 'idea' ? 'done ' : '') + 'link', 'THE VOID — WHERE THE IDEAS ARE'],
+    ['SPEC', null, 'now', null],
+    ['ARCHITECT', W ? 'stArch' : null, W ? 'link' : '', W ? 'NEXT: LAY THIS SPEC OUT AS COMPONENTS' : 'OPENS ONCE THE SPEC IS STARTED'],
+    ['BLUEPRINT', null, '', 'NEXT IN THE PIPELINE — MAPPED, COMING'],
+    ['REPO', W && W.repoUuid ? 'stRepo' : null, W && W.repoUuid ? 'done link' : '', W && W.repoUuid ? 'OPEN THE REPO IN IDEARIUM — ITS SPEC TAB' : 'THE REPO THIS SPEC IS SAVED INTO'],
+    ['COS', null, '', 'NEXT IN THE PIPELINE — MAPPED, COMING'],
+  ];
+  $('stations').innerHTML = s.map(([n, id, c, tip], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}"${id ? ` id="${id}" tabindex="0"` : ''}${tip ? ` title="${tip}"` : ''}><span class="i">0${i + 1}</span>${n}</span>`).join('');
+  const bind = (id, go) => { const el = $(id); if (el) { el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter') go(); }; } };
+  bind('stIdea', () => flush().then(() => { location.href = 'void.html'; }));   // §0.39.300 WS3
+  // §0.39.298 AR2 — the next station: the architect, on this spec (what is written so far is kept first)
+  bind('stArch', () => flush().then(() => { location.href = `architect.html?from=workshop:${encodeURIComponent(W.uuid)}`; }));
+  bind('stRepo', openRepo);
 }
 
 // ── start ──────────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,197 @@
+/*
+ * idearium/ui/css/arch-canvas.css — THE ARCHITECT'S CANVAS and its shell, one look for both Architects (0.39.299 AR3).
+ * Map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec (AR3, AR4, AR5)
+ * James: "rebuild it, fully. enterprise grade, beautiful style and consistent, open ui."
+ *
+ * Scoped under .ax (the shell) and .ac (the canvas): the Void's palette and type (css/void-theme.css — the pipeline's
+ * look) without its page-wide rules, so the repo tab can wear it inside idearium's chrome and nothing leaks out.
+ * The card is MASTERMIND's .node-frame (glass, a coloured left edge, the clipped top-right corner), in the Void's colours.
+ */
+@font-face { font-family: 'Bebas Neue'; src: url(../fonts/bebas-neue-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url(../fonts/dm-mono-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url(../fonts/dm-mono-500.woff2) format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url(../fonts/space-grotesk-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url(../fonts/space-grotesk-600.woff2) format('woff2'); font-weight: 600; font-display: swap; }
+
+.ax, .ac {
+  --ax-void:#030508; --ax-bg:#05080f; --ax-bg1:#080d17; --ax-bg2:#0b1120;
+  --ax-line:#1a2a40; --ax-line2:#1e3050; --ax-line3:#2a4060;
+  --ax-c:#00d4ff; --ax-g:#00ff88; --ax-r:#ff2d55; --ax-y:#ffcc00; --ax-o:#ff6b35; --ax-m:#cc44ff;
+  --ax-text:#b8cfe0; --ax-text2:#5f7f9b; --ax-text3:#34506a;
+  --ax-mono:'DM Mono', ui-monospace, monospace; --ax-display:'Bebas Neue', Impact, sans-serif; --ax-body:'Space Grotesk', system-ui, sans-serif;
+  text-transform: uppercase;   /* James: "no lowercase" — shown in capitals, stored as typed */
+}
+.ax { position: relative; color: var(--ax-text); font: 12px/1.5 var(--ax-mono); }
+.ax input, .ax textarea, .ax button, .ax select { text-transform: uppercase; font: inherit; color: inherit; }
+.ax ::placeholder { text-transform: uppercase; }
+.ax .hidden, .ac .hidden { display: none !important; }
+
+/* ── the canvas ─────────────────────────────────────────────────────────────────────────────────────────────────── */
+.ac { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 120%, rgba(0,80,140,.10), transparent 60%), var(--ax-void); outline: none; cursor: default; user-select: none; touch-action: none; }
+.ac.ac-panning { cursor: grabbing; }
+.ac-bg, .ac-wires { position: absolute; inset: 0; pointer-events: none; }
+.ac-bg { z-index: 0; } .ac-wires { z-index: 2; }
+.ac-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; z-index: 3; }
+.ac-bands { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; }
+.ac-band { position: absolute; left: 0; border-top: 1px solid color-mix(in srgb, var(--ac-band, #00d4ff) 14%, transparent); border-bottom: 1px solid rgba(0,212,255,.03);
+  background: color-mix(in srgb, var(--ac-band, #00d4ff) 3.5%, transparent); }
+.ac-band.alt { background: color-mix(in srgb, var(--ac-band, #00d4ff) 2%, transparent); }
+.ac-band-label { position: absolute; left: 14px; top: 10px; font: 400 15px/1 var(--ax-display); letter-spacing: .32em; color: color-mix(in srgb, var(--ac-band, #00d4ff) 55%, #5f7f9b); }
+.ac-band-label b { font: 400 10px/1 var(--ax-mono); letter-spacing: .1em; margin-left: 10px; color: var(--ax-text3); }
+
+/* the card — MASTERMIND's glass frame */
+.ac-node { position: absolute; z-index: 10; cursor: grab; filter: drop-shadow(0 6px 22px rgba(0,0,0,.55)); transition: opacity .2s, filter .2s; outline: none; }
+.ac-node:active { cursor: grabbing; }
+.ac-frame { position: relative; overflow: hidden; padding: 10px 12px 9px;
+  background: linear-gradient(140deg, rgba(10,20,34,.94), rgba(4,9,16,.97));
+  border-left: 2px solid var(--ac-color); border-top: 1px solid rgba(255,255,255,.05);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%); backdrop-filter: blur(12px); }
+.ac-frame::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--ac-color) 12%, transparent), transparent 58%); }
+.ac-frame::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--ac-color), transparent); opacity: .5; }
+.ac-head { display: flex; align-items: baseline; gap: 8px; }
+.ac-title { flex: 1; min-width: 0; font: 400 16px/1.1 var(--ax-display); letter-spacing: .1em; color: #e6f3ff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-badge { font: 400 9px/1 var(--ax-mono); letter-spacing: .14em; padding: 3px 5px; color: var(--ac-color); border: 1px solid color-mix(in srgb, var(--ac-color) 40%, transparent); white-space: nowrap; }
+.ac-sub { font: 400 10px/1.4 var(--ax-mono); letter-spacing: .08em; color: var(--ax-text2); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-lines { margin-top: 6px; font: 400 10.5px/1.5 var(--ax-mono); color: var(--ax-text); }
+.ac-lines div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 7px; }
+.ac-chip { font: 400 9px/1 var(--ax-mono); letter-spacing: .12em; padding: 3px 5px; border: 1px solid var(--ax-line2); color: var(--ax-text2); }
+.ac-chip.reuse { color: var(--ax-g); border-color: rgba(0,255,136,.35); } .ac-chip.new { color: var(--ax-c); border-color: rgba(0,212,255,.35); }
+.ac-chip.gap, .ac-chip.bad { color: #ff7d97; border-color: rgba(255,45,85,.45); } .ac-chip.warn { color: var(--ax-y); border-color: rgba(255,204,0,.35); }
+.ac-node.has-gap .ac-frame { box-shadow: inset 0 0 0 1px rgba(255,45,85,.5); }
+.ac-node.is-orphan .ac-frame { border-left-style: dashed; }
+
+/* states: selected, what it needs (yellow), what needs it (magenta), the rest dimmed */
+.ac-node.ac-sel { z-index: 30; filter: drop-shadow(0 6px 22px rgba(0,0,0,.55)) drop-shadow(0 0 14px color-mix(in srgb, var(--ac-color) 45%, transparent)); }
+.ac-node.ac-sel .ac-frame { border-left-width: 3px; background: linear-gradient(140deg, rgba(14,28,46,.97), rgba(6,12,22,.98)); }
+.ac-node.ac-need .ac-frame { box-shadow: inset 0 0 0 1px rgba(255,204,0,.55); }
+.ac-node.ac-use .ac-frame { box-shadow: inset 0 0 0 1px rgba(204,68,255,.6); }
+.ac.ac-focus .ac-node:not(.ac-lit) { opacity: .16; filter: none; }
+.ac-node.ac-target .ac-frame { box-shadow: inset 0 0 0 2px var(--ax-y); }
+.ac-node:focus-visible .ac-frame { box-shadow: inset 0 0 0 1px var(--ax-c); }
+@keyframes ac-in { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+.ac-node { animation: ac-in .28s ease both; }
+
+/* far out: the cards fold to their titles (MASTERMIND's dot mode, made legible) */
+.ac.ac-far .ac-sub, .ac.ac-far .ac-lines, .ac.ac-far .ac-chips, .ac.ac-far .ac-badge { display: none; }
+.ac.ac-far .ac-title { font-size: 30px; letter-spacing: .06em; }
+.ac.ac-far .ac-frame { padding: 14px 14px 12px; }
+.ac.ac-far .ac-band-label { font-size: 30px; }
+
+/* ── systems (0.39.300 AZ1): "each system is a node, which zooming in has the components as nodes" ───────────────────
+   SYSTEMS: each system a card — its name large, what it holds, what it needs; its components hidden.
+   COMPONENTS: each system a region, its components inside as titles. DETAIL: full cards, the region a quiet frame. */
+.ac-groups { position: absolute; left: 0; top: 0; z-index: 1; }
+.ac-group { position: absolute; border: 1px solid color-mix(in srgb, var(--ac-band, #00d4ff) 30%, transparent);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--ac-band, #00d4ff) 6%, rgba(5,9,16,.55)), rgba(3,5,8,.35));
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%); transition: opacity .25s, border-color .25s, background .25s; outline: none; }
+.ac-group::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--ac-band, #00d4ff); opacity: .7; }
+.ac-group.cyclic { border-style: dashed; }
+.ac-ghead { position: absolute; left: 0; right: 0; top: 0; height: 52px; display: flex; align-items: baseline; gap: 14px; padding: 14px 18px; cursor: pointer; }
+.ac-gname { font: 400 26px/1 var(--ax-display); letter-spacing: .22em; color: color-mix(in srgb, var(--ac-band, #00d4ff) 70%, #e6f3ff); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-gmeta { font: 400 11px/1 var(--ax-mono); letter-spacing: .14em; color: var(--ax-text2); white-space: nowrap; }
+.ac-gcard { display: none; }
+.ac-group:focus-visible { border-color: var(--ax-c); }
+.ac-group.ac-sel { border-color: color-mix(in srgb, var(--ac-band, #00d4ff) 80%, #fff); box-shadow: 0 0 60px color-mix(in srgb, var(--ac-band, #00d4ff) 22%, transparent); }
+.ac-group.ac-need { border-color: rgba(255,204,0,.75); } .ac-group.ac-use { border-color: rgba(204,68,255,.8); }
+.ac-group.ac-dim { opacity: .18; }
+/* SYSTEMS: the system is the node */
+.ac.ac-lvl-systems .ac-node { display: none; }
+.ac.ac-lvl-systems .ac-group { cursor: pointer; background: linear-gradient(150deg, color-mix(in srgb, var(--ac-band, #00d4ff) 14%, rgba(8,14,24,.96)), rgba(4,8,14,.97)); }
+.ac.ac-lvl-systems .ac-ghead { display: none; }
+.ac.ac-lvl-systems .ac-gcard { display: flex; flex-direction: column; justify-content: flex-start; gap: calc(var(--gs, 30px) * .4); position: absolute; inset: 0; overflow: hidden; padding: calc(var(--gs, 30px) * .9) calc(var(--gs, 30px) * 1.2); }
+.ac-gstat, .ac-ghint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-gtitle { font: 400 var(--gt, 92px)/1 var(--ax-display); letter-spacing: .12em; flex: none; margin-bottom: calc(var(--gs, 30px) * .25); color: #e9f5ff; text-shadow: 0 0 60px color-mix(in srgb, var(--ac-band, #00d4ff) 45%, transparent); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ac-gstat { font: 400 var(--gs, 30px)/1.25 var(--ax-mono); letter-spacing: .08em; color: var(--ax-text); }
+.ac-gstat b { font-weight: 500; color: color-mix(in srgb, var(--ac-band, #00d4ff) 75%, #fff); }
+.ac-gstat.bad b { color: var(--ax-r); }
+.ac-ghint { font: 400 calc(var(--gs, 30px) * .72)/1 var(--ax-mono); letter-spacing: .16em; color: var(--ax-text3); }
+/* COMPONENTS: the system a region with a big name; DETAIL: a quiet frame */
+.ac.ac-lvl-components.ac-grouped .ac-gname { font-size: 46px; }
+.ac.ac-lvl-components.ac-grouped .ac-gmeta { font-size: 18px; }
+.ac.ac-lvl-components.ac-grouped .ac-ghead { height: 64px; padding: 12px 18px; }
+.ac.ac-lvl-detail .ac-group { background: rgba(3,5,8,.25); }
+
+/* the link handle: drag it onto what this component needs */
+.ac-handle { position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%;
+  background: var(--ax-void); border: 1px solid var(--ax-y); cursor: crosshair; opacity: 0; transition: opacity .15s, transform .15s; z-index: 2; }
+.ac-node:hover .ac-handle, .ac-node.ac-sel .ac-handle { opacity: 1; }
+.ac-handle:hover { transform: scale(1.35); background: rgba(255,204,0,.25); }
+.ac.ac-linking { cursor: crosshair; }
+.ac-link-hint { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); z-index: 8; font: 400 11px/1 var(--ax-mono); letter-spacing: .18em;
+  color: var(--ax-y); padding: 8px 12px; border: 1px solid rgba(255,204,0,.35); background: rgba(3,5,8,.92); display: none; pointer-events: none; }
+.ac.ac-linking .ac-link-hint { display: block; }
+
+.ac-selbox { position: absolute; z-index: 9; display: none; border: 1px dashed rgba(0,212,255,.55); background: rgba(0,212,255,.04); pointer-events: none; }
+.ac-mini { position: absolute; right: 14px; bottom: 14px; width: 190px; height: 120px; z-index: 7; border: 1px solid var(--ax-line2); background: rgba(3,5,8,.92); cursor: pointer; }
+.ac-mini canvas { width: 100%; height: 100%; display: block; }
+.ac-zoom { position: absolute; right: 14px; bottom: 140px; z-index: 7; font: 400 10px/1 var(--ax-mono); letter-spacing: .14em; color: var(--ax-text2); }
+
+/* ── the shell: floating toolbar, drawers, buttons ──────────────────────────────────────────────────────────────── */
+.ax-toolbar { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 12; display: flex; gap: 2px; align-items: stretch;
+  padding: 4px; background: rgba(3,5,8,.94); border: 1px solid var(--ax-line2); box-shadow: 0 10px 40px rgba(0,0,0,.7); max-width: calc(100% - 240px); flex-wrap: wrap; justify-content: center; }
+.ax-tool { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 58px; padding: 6px 9px; border: 1px solid transparent; background: transparent;
+  color: var(--ax-text2); cursor: pointer; font: 400 9px/1 var(--ax-mono); letter-spacing: .12em; transition: color .15s, border-color .15s, background .15s; }
+.ax-tool b { font: 400 15px/1 var(--ax-display); letter-spacing: 0; }
+.ax-tool:hover:not(:disabled) { color: #e6f3ff; border-color: var(--ax-line2); background: rgba(0,212,255,.05); }
+.ax-tool.on { color: var(--ax-c); border-color: rgba(0,212,255,.45); background: rgba(0,212,255,.07); }
+.ax-tool.m { color: rgba(204,68,255,.8); } .ax-tool.m:hover:not(:disabled) { color: var(--ax-m); border-color: rgba(204,68,255,.35); background: rgba(204,68,255,.06); }
+.ax-tool.g { color: rgba(0,255,136,.75); } .ax-tool.g:hover:not(:disabled) { color: var(--ax-g); border-color: rgba(0,255,136,.3); }
+.ax-tool:disabled { opacity: .3; cursor: default; }
+.ax-sep { width: 1px; background: var(--ax-line); margin: 3px 2px; }
+
+.ax-drawer { position: absolute; top: 14px; bottom: 14px; z-index: 11; width: 360px; display: flex; flex-direction: column;
+  background: rgba(4,7,13,.95); border: 1px solid var(--ax-line2); box-shadow: 0 10px 50px rgba(0,0,0,.6); backdrop-filter: blur(10px);
+  transition: transform .3s cubic-bezier(.16,1,.3,1), opacity .3s; }
+.ax-drawer.l { left: 14px; } .ax-drawer.r { right: 14px; width: 390px; }
+.ax-drawer.l.shut { transform: translateX(calc(-100% - 20px)); opacity: 0; pointer-events: none; }
+.ax-drawer.r.shut { transform: translateX(calc(100% + 20px)); opacity: 0; pointer-events: none; }
+.ax-dhead { display: flex; align-items: center; gap: 6px; padding: 12px 14px 10px; border-bottom: 1px solid var(--ax-line); }
+.ax-dtitle { font: 400 15px/1 var(--ax-display); letter-spacing: .26em; color: var(--ax-c); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ax-dbody { flex: 1; overflow: auto; padding: 12px 14px 16px; }
+.ax-x { background: none; border: 1px solid transparent; color: var(--ax-text2); cursor: pointer; padding: 3px 7px; font: 400 12px/1 var(--ax-mono); }
+.ax-x:hover { color: var(--ax-r); border-color: rgba(255,45,85,.3); }
+.ax-tabs { display: flex; border-bottom: 1px solid var(--ax-line); }
+.ax-tab { flex: 1; padding: 9px 4px; background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer;
+  font: 400 12px/1 var(--ax-display); letter-spacing: .2em; color: var(--ax-text2); }
+.ax-tab:hover { color: var(--ax-text); } .ax-tab.on { color: var(--ax-c); border-bottom-color: var(--ax-c); }
+.ax-k { font: 400 10px/1 var(--ax-mono); letter-spacing: .16em; color: var(--ax-text2); margin: 14px 0 6px; display: flex; gap: 8px; align-items: center; }
+.ax-k:first-child { margin-top: 2px; } .ax-k .n { color: var(--ax-text3); }
+.ax-field { width: 100%; background: rgba(11,17,32,.85); border: 1px solid var(--ax-line2); color: var(--ax-c); padding: 9px 11px; outline: none; font: 400 12px/1.4 var(--ax-mono); }
+.ax-field:focus { border-color: rgba(0,212,255,.45); }
+textarea.ax-field { resize: vertical; min-height: 70px; line-height: 1.6; }
+.ax-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ax-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.ax-chip { padding: 6px 9px; border: 1px solid var(--ax-line2); background: rgba(3,5,8,.6); color: var(--ax-text2); cursor: pointer; font: 400 10px/1 var(--ax-mono); letter-spacing: .12em; }
+.ax-chip:hover { color: var(--ax-text); border-color: var(--ax-line3); }
+.ax-chip.on { color: var(--ax-c); border-color: rgba(0,212,255,.5); background: rgba(0,212,255,.07); }
+.ax-btn { padding: 8px 14px; border: 1px solid rgba(0,212,255,.25); background: rgba(0,212,255,.05); color: rgba(0,212,255,.8); cursor: pointer;
+  font: 400 13px/1 var(--ax-display); letter-spacing: .18em; transition: background .2s, color .2s, box-shadow .2s; }
+.ax-btn:hover:not(:disabled) { background: rgba(0,212,255,.12); color: var(--ax-c); box-shadow: 0 0 16px rgba(0,212,255,.12); }
+.ax-btn.small { padding: 5px 10px; font-size: 11px; letter-spacing: .14em; }
+.ax-btn.g { border-color: rgba(0,255,136,.25); color: rgba(0,255,136,.75); background: rgba(0,255,136,.03); }
+.ax-btn.m { border-color: rgba(204,68,255,.3); color: rgba(204,68,255,.8); background: rgba(204,68,255,.04); }
+.ax-btn.ghost { border-color: var(--ax-line2); color: var(--ax-text2); background: none; }
+.ax-btn:disabled { opacity: .35; cursor: default; }
+.ax-empty { color: var(--ax-text2); font: 400 11px/1.6 var(--ax-mono); }
+.ax-item { padding: 8px 10px; border: 1px solid var(--ax-line); margin-bottom: 5px; cursor: pointer; font: 400 11px/1.45 var(--ax-mono); color: var(--ax-text); word-break: break-word; }
+.ax-item:hover { border-color: var(--ax-line3); background: rgba(0,212,255,.03); }
+.ax-item .m { display: block; color: var(--ax-text2); font-size: 10px; letter-spacing: .06em; margin-top: 2px; }
+.ax-item.bad { border-left: 2px solid rgba(255,45,85,.7); color: #ff8fa5; } .ax-item.warn { border-left: 2px solid rgba(255,204,0,.6); }
+.ax-item.ok { border-left: 2px solid rgba(0,255,136,.5); }
+.ax-stats { display: flex; gap: 5px; flex-wrap: wrap; }
+.ax-stat { padding: 6px 9px; border: 1px solid var(--ax-line); font: 400 10px/1 var(--ax-mono); letter-spacing: .12em; color: var(--ax-text2); background: rgba(3,5,8,.7); }
+.ax-stat b { font-weight: 500; color: #e6f3ff; margin-right: 5px; }
+.ax-stat.g b { color: var(--ax-g); } .ax-stat.c b { color: var(--ax-c); } .ax-stat.r b { color: var(--ax-r); } .ax-stat.y b { color: var(--ax-y); }
+.ax-legend { font: 400 10px/1.5 var(--ax-mono); letter-spacing: .08em; color: var(--ax-text3); }
+.ax-legend .y { color: rgba(255,204,0,.8); } .ax-legend .p { color: rgba(204,68,255,.85); } .ax-legend .r { color: rgba(255,45,85,.85); } .ax-legend .g { color: rgba(0,255,136,.8); }
+.ax-btn:focus-visible, .ax-tool:focus-visible, .ax-chip:focus-visible, .ax-tab:focus-visible, .ax-item:focus-visible, .ax-x:focus-visible { outline: 1px solid var(--ax-c); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ac-node { animation: none; } .ax-drawer { transition: none; } }
+@media (max-width: 900px) {
+  /* narrow: one drawer at a time (the page shuts the other), over the map and clear of the toolbar; the toolbar one scrolling row */
+  .ax-drawer, .ax-drawer.r { width: auto; left: 10px; right: 10px; top: 10px; bottom: 84px; }
+  .ax-toolbar { max-width: calc(100% - 20px); bottom: 10px; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
+  .ax-tool { min-width: 50px; padding: 6px 7px; flex: none; }
+  .ac-mini { display: none; } .ac-zoom { bottom: 84px; right: 14px; }
+}

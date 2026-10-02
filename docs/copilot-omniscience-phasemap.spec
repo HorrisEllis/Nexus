@@ -2,10 +2,11 @@ spec:
   meta:
     name:        copilot-omniscience
     version:     0.1.0-phasemap
-    status:      ALL 7 PHASES DONE 2026-07-30. PHASEMAP — dependency-ordered, bottom-up. Each phase is a
-                 shippable chunk gated on real data. Written 2026-07-30 per §8.5
-                 (map before build) and §3.1 (build order: substrate before
-                 logic before surface). Axioms are law throughout.
+    status: >-
+      ALL 7 PHASES DONE 2026-07-30. PHASEMAP — dependency-ordered, bottom-up. Each phase is a
+      shippable chunk gated on real data. Written 2026-07-30 per §8.5
+      (map before build) and §3.1 (build order: substrate before
+      logic before surface). Axioms are law throughout.
     uuid:        nexus-copilot-omniscience-v0-0000-2026-0730-001
 
   goal: >
