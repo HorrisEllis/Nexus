@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.4.0
+    version:  1.5.0
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -44,7 +44,13 @@ spec:
       hooking the multiple accounts into the agents/providers and settings in idearium." · "okay but all the other
       phases. make sure the yget added to nexus. make sure every system stays relative and adds routes, commands, all
       relative node types, and uses the event contract." · "with these added, can you add a value to the system then
-      maybe add all of them to the phasemap?"
+      maybe add all of them to the phasemap?" · "Yes, then I can use idearium to build anything needed. I mean look at
+      docs. Also what about shadow space reasoning for the debugging? That's what needs to be prioritized. Idearium. And
+      clearglass. This system is meant to build its own capability. Nodes expand. Copilot uses raid to either complete
+      the request or have the capability built using idearium. Use cos end state to have agents in a lab to solve
+      problems, code. Anything the end states conditions are. Could keep filling the agent with feedback until it solves
+      it. … Change your strategies until you can. Iterate the method if you can't find the solution. Mine failure modes.
+      Mental simulations."
       The ideas, the direction and the calls are James's. This map lays them out bottom-up against what exists.
 
   # ── What exists — read, not assumed ───────────────────────────────────────────────────────────────────────────
@@ -158,6 +164,14 @@ spec:
       structure — unblocks, corroboration, centrality, kind, layer, how concrete — and orders the fill by leverage per
       unit of EFFORT (a phase costs 8 × its layer's factor). Every part is named. What structure cannot see is value to
       James: income, daily use, ownership, safety. Nothing in any phasemap declares it, and synthesis reads no such field.
+    the_lab_loop_pieces: >-
+      copilot/capability-extend.js — "no is not an answer": a request nothing can fulfil becomes a filed capability gap
+      routed toward the builders. cos/playground/llm-lab.js — controlled agent experiments with conditions, triggers,
+      feedback loops, if/then chains, results in JAA. cortex/self-heal/failure-mode-forensics.js — a failure becomes a
+      .failure_mode node with its causal chain (RFR2) and a .debug_macro that replays it. lib/shadow.js — declare what a
+      step must leave behind, settle, absences become gaps. idearium/repo/runtime-proof.js — which code ran under a
+      passing test. docs/raid-simulation-engine.spec — scoring a simulated event before it is run. What none of them has:
+      one check of whether a set of END-STATE CONDITIONS is met, in plain words, with evidence. Every loop above needs it.
     spec_and_build: >-
       idearium/spec-engine/blocks.yaml — 11 blocks, a default agent each; block `events` ("bus events emitted, bus
       events consumed, payload shapes") is read by nothing after it is written. 10 templates in idearium/spec-engine/
@@ -741,10 +755,94 @@ spec:
         explicit setting, and providers' terms on multiple accounts are his to follow.
       proof: "two accounts on one provider learn separate limits; a job pinned to an account runs only on it; the settings section lists Guardian's accounts and edits a default through route and CLI"
 
+    PR1_proof_run_the_delivery_checker:
+      layer: service
+      systems: [idearium]
+      value: { score: 5, cost: M, for: [income, safety, foundation], why: "James cannot read code: every delivery and every lab run must prove itself in plain words; the core every loop below uses" }
+      status: OPEN — building (0.39.302)
+      depends_on: [EM0_ground]
+      files: [idearium/repo/proof-run.js, idearium/api/index.js, idearium/cli/index.js, lib/shadow.js]
+      does: >-
+        "Yes" — the delivery checker. END-STATE CONDITIONS, each one an acceptance line in plain words with a check: a file
+        exists (and contains), a command succeeds (and prints), the tests pass, the app starts and a page answers with the
+        right status and content. Shadow-space first (lib/shadow.js): before running, it DECLARES everything the
+        conditions expect; after, whatever is absent is the bug — a gap with its cause, not a guess. A failure is
+        classified (missing file, command failed, timed out, page down, content missing). The result is a proof report
+        in plain language — "7 of 8 met, not ready: the contact page answers 404" — written into the repo as
+        proof/PROOF-REPORT.md for the client, and the run kept as history. The agent may PROPOSE conditions from a brief
+        (Observations); James accepts them. Runs repo code exactly as runtime-proof and L6 do (cwd = the repo, limits).
+      proof: "a fixture repo: met and unmet conditions of every kind reported with evidence; an absent file is a shadow gap; a server is started, checked and always stopped; the report reads in plain words"
+
+    PR2_screenshots_through_clear_glass:
+      layer: service
+      systems: [clear-glass, idearium]
+      value: { score: 4, cost: S, for: [income, quality], why: "the client sees it working; strongest evidence a non-coder can hand over" }
+      status: OPEN
+      depends_on: [PR1_proof_run_the_delivery_checker, GA1_guardian_source_of_truth]
+      files: [clear-glass/src/ipc/bridge.js, clear-glass/src/driver/index.js, idearium/repo/proof-run.js]
+      does: >-
+        A small Clear Glass door (POST /cli/driver/screenshot: open a url in a background tab, wait, capture, close) so
+        each page condition in a proof run carries a screenshot. Clear Glass not running → said in the report, never a
+        silent missing image.
+      proof: "with Clear Glass up, a page condition's evidence includes its screenshot; with it down, the report says so"
+
+    LB1_the_end_state_lab:
+      layer: service
+      systems: [cos, idearium, guardian, intelligence]
+      value: { score: 5, cost: L, for: [compounding, income], why: "agents iterate in a sandbox until the end-state conditions are met — the self-building engine" }
+      status: OPEN
+      depends_on: [PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic]
+      files: [cos/playground/llm-lab.js, cos/playground/sandbox.js, idearium/repo/proof-run.js, copilot/capability-extend.js]
+      does: >-
+        "Use cos end state to have agents in a lab to solve problems … keep filling the agent with feedback until it
+        solves it … change your strategies until you can." A lab run: an END STATE (PR1 conditions), a COS sandbox
+        branch of the repo (the shadow layer), an agent. Loop: attempt → proof run → the unmet conditions and their
+        failure modes fed back → attempt again. STRATEGY changes when the same conditions keep failing (CFR's regime:
+        resonant = stop repeating, change approach; turbulent = decompose smaller; another provider or account; a
+        recipe from MR7), and the change itself is recorded with its reason. Bounded: a budget of attempts, tokens and
+        time (EC6) James sets, and a halt that reports what was tried and why it stopped. Met → the change is offered to
+        the real tree with its proof report; never merged on its own. Copilot's capability gaps (capability-extend)
+        can open a lab run, so "I can't" becomes "being built, here is the proof when it is".
+      honest_limit: "It can only solve what its conditions can CHECK. A goal whose success cannot be tested by a machine (\"cure cancer\") cannot be met by this loop; its useful part is the checkable sub-problems inside it."
+      proof: "a fixture end state the first attempt fails: feedback carries the failures, the strategy changes after repeats, the run meets the conditions or halts within budget with its record"
+
+    FM1_mining_failure_modes:
+      layer: library
+      systems: [cortex, intelligence, idearium]
+      value: { score: 4, cost: M, for: [compounding, quality], why: "every failure teaches the next attempt; patterns become anti-recipes and fixes" }
+      status: OPEN
+      depends_on: [PR1_proof_run_the_delivery_checker, CF1_cfr_improved_with_rfr2]
+      files: [cortex/self-heal/failure-mode-forensics.js, cortex/self-heal/fault-taxonomy.js, idearium/repo/proof-run.js]
+      does: >-
+        "Mine failure modes." Every unmet condition of every proof and lab run becomes a .failure_mode node through
+        failure-mode-forensics (causal chain, sigma/delta, a .debug_macro that replays it); recurring modes are clustered
+        and ranked by how often and how costly; the top ones become anti-recipes (MR7) and checks added to future end
+        states by default ("this kind of project usually breaks here — check it").
+      proof: "three fixture runs failing the same way produce one clustered mode with its count, its replay macro, and a default check proposed for the next end state"
+
+    MS1_mental_simulation:
+      layer: library
+      systems: [intelligence, cortex]
+      value: { score: 3, cost: M, for: [quality, compounding], why: "try a strategy in imagination before spending real attempts" }
+      status: OPEN
+      depends_on: [FM1_mining_failure_modes, LB1_the_end_state_lab]
+      files: [docs/raid-simulation-engine.spec, intelligence/cfr/]
+      does: >-
+        "Mental simulations." Before a lab attempt, the planned strategy is run against the mined failure modes and
+        recipes (no code executed): which known modes is it likely to hit, which conditions will it probably miss, what
+        does it cost. A probabilistic Lens with its confidence, used to choose the next strategy, never to claim a
+        result. Builds on raid-simulation-engine.spec's scoring of simulated events.
+      proof: "for a fixture strategy that hit a known mode before, the simulation predicts that mode before the attempt, with its confidence; its predictions are scored against what then happens"
+
   # ── Wiring — E12: each phase into each system it touches. A phase is DONE only when its row is true. ────────────
   # nodes use the lib/node-export.js envelope and Guardian's nodes/<type>/<id>.<type> layout; routes carry CAPS and get a
   # .command node; every CLI verb gets a .command node; loom: the map named, real wires, bootstrapped from empty.
   wiring:
+    PR1: { systems: [idearium], events: "idearium: PROOF_RUN_STARTED, PROOF_RUN_SETTLED", contract: "idearium", nodes: "nexstore type proof_run; .command per route", routes: "POST /api/repos/:uuid/deliver/check, GET /api/repos/:uuid/deliver/check, POST /api/repos/:uuid/deliver/conditions", cli: "idearium deliver check|conditions <repo>", loom: "one-idearium-map.js", settings: none }
+    PR2: { systems: [clear-glass, idearium], events: "clear-glass: DRIVER_SCREENSHOT_TAKEN", contract: "clear-glass", routes: "POST /cli/driver/screenshot", cli: "none", loom: "copilot-capability-map.js", settings: none }
+    LB1: { systems: [cos, idearium, guardian, intelligence], events: "cos: LAB_ATTEMPT, LAB_STRATEGY_CHANGED, LAB_MET, LAB_HALTED", contract: "cos, idearium", routes: "/api/lab/runs, /api/lab/runs/:id/{attempt,halt}", cli: "cos lab run|status|halt", loom: "cos-testenv-map.js + one-idearium-map.js", settings: "ST1 BUILD TEAMS (lab budgets)" }
+    FM1: { systems: [cortex, intelligence, idearium], events: "cortex: FAILURE_MODE_MINED", contract: "cortex", nodes: ".failure_mode, .debug_macro (existing types)", routes: "/api/failure-modes, /api/failure-modes/top", cli: "cortex failure-modes top", loom: "observability-map.js", settings: none }
+    MS1: { systems: [intelligence, cortex], events: "intelligence: SIMULATION_RUN", contract: "intelligence", routes: "/api/intelligence/simulate", cli: "intelligence simulate <strategy>", loom: "observability-map.js", settings: none }
     UI0: { systems: [idearium], events: "none", contract: "none (pages only)", nodes: "none new", cli: "none", loom: "ui-map.js (the pages' shared theme wires)", settings: none }
     EV0: { events: "none new: declares what each system already emits", contract: "event-taxonomy.js x8; interaction-contract.json for cos, warp, emerge", systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp], nodes: ".component per taxonomy and contract file", cli: "nexus contracts check [--system <s>]", loom: "observability-map.js (the check's wires)", settings: none }
     EM0: { events: "loom: LOOM_REGISTRY_REGENERATED", contract: "loom", systems: [loom, emerge, warp], loom: "registry.json regenerated; emergence-map.js (new) for the upload's components", settings: none }
@@ -801,7 +899,7 @@ spec:
     - "FV1: which gig types first, for the kits?"
     - "EC6: which local models to read tokenizers from first (the ones Ollama runs here)?"
 
-  build_order: [EM0, EV0, GA1, IN1, UI0, EM1, EC6, SH1, MR1, EM2, CF1, MR9, RF1, MR6, ST1, AC1, IN2, CB1, MR7, MR8, MR3, CB3, WS6, MR5, LN1, OT1, MR11, CB2, RC1, BT1, FV1, MR2, MR4, MR10, CB4]
+  build_order: [EM0, EV0, GA1, IN1, UI0, PR1, PR2, EM1, EC6, MR1, SH1, EM2, CF1, MR9, RF1, MR6, ST1, AC1, IN2, CB1, MR7, MR8, MR3, FM1, CB3, WS6, LB1, MS1, MR5, LN1, OT1, MR11, CB2, RC1, BT1, FV1, MR2, MR4, MR10, CB4]
   # Value-first (E17), computed, not hand-picked: a phase is ready when everything it depends on is built; of the ready
   # ones, the next is the one with the highest value per cost — where a prerequisite takes on the value of the best phase
   # it unlocks (so EM2, slow on its own, is pulled forward by SH1's and CB1's value), ties by score. The groundwork and
@@ -859,3 +957,15 @@ spec:
 # MR1 now start on what exists and are upgraded when WARP 2 and the field land (EM2 adopts SH1's shadows); EV0 before
 # every phase that emits; ST1 before AC1's settings section. The build order is now value-first, computed from the
 # values and the dependencies; the bottom-up order is kept beside it.
+
+## ADDENDUM 2026-10-02 — 1.5.0
+# James: "Yes, then I can use idearium to build anything needed" · "what about shadow space reasoning for the
+# debugging?" · "Use cos end state to have agents in a lab … keep filling the agent with feedback until it solves it …
+# change your strategies … Mine failure modes. Mental simulations." · Idearium and Clear Glass first. Found: the lab's
+# pieces already exist (capability-extend, llm-lab, failure-mode-forensics, shadow, runtime-proof, the RAID simulation
+# spec); none checks whether END-STATE CONDITIONS are met in plain words. Added PR1 (the proof run / delivery checker —
+# shadow-space first, plain-language report into the repo), PR2 (screenshots through Clear Glass), LB1 (the end-state
+# lab: attempt → proof → feedback → strategy change, bounded, never merging on its own; honest limit: only what its
+# conditions can check), FM1 (failure modes mined into .failure_mode nodes, clustered, turned into default checks),
+# MS1 (simulating a strategy against mined modes before spending attempts). PR1 is built now, ahead of EM0's merge, on
+# James's priority; it touches idearium/api/index.js in one separate block to keep the later merge small.
