@@ -49,6 +49,7 @@
  *   idearium spec-library [--family product]      what the library holds
  *   idearium spec-library to-repo <title|sha>     (0.39.292 IL2) a library spec → a repo in the pipeline, with spec/<slug>.spec
  *   idearium workshop [new|show|write|ambition|feed|accept|dismiss|save]   (0.39.294 SW1) the spec workshop
+ *   idearium architect [new|show|add|draft|accept|dismiss|save]              (0.39.298 AR2) the spec laid out as components
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -160,6 +161,21 @@ function _wsPrint(w, full = false) {
   for (const s of w.sections) console.log(`  ${bold(s.id.padEnd(22))} ${String(s.title).slice(0, 40).padEnd(40)} ${dim(`${String(s.body || '').length} chars`)}${full && s.body ? '\n' + String(s.body).split('\n').map(l => '      ' + l).join('\n') : ''}`);
   const open = w.proposals.filter(p => p.status === 'open');
   if (open.length) { console.log(`\n  open proposals (${open.length})`); for (const p of open.slice(-12)) console.log(`  ${dim(p.uuid)}  ${p.kind.padEnd(13)} ${String(p.text).split('\n')[0].slice(0, 90)}`); }
+  console.log('');
+}
+/** §0.39.298 AR2 — an architecture as the CLI prints it: levels bottom-up, reuse / new, the gaps said */
+function _arPrint(v) {
+  const a = v.architecture, an = v.analysis;
+  header(`${a.title} — architecture ${a.uuid}`);
+  console.log(`  ${an.stats.components} components · ${an.stats.reuse} reused · ${an.stats.new} new · ${an.stats.gaps} gap(s) · ${a.archPath && a.savedAt ? 'saved to ' + a.archPath : 'not saved yet'}`);
+  const byId = new Map(an.components.map(c => [c.id, c]));
+  const line = (c) => `  ${bold(c.id.padEnd(24))} ${c.layer.padEnd(9)} ${(c.status === 'reuse' ? 'REUSE ' + c.match.ref : 'NEW').padEnd(52)} ${dim((c.deps.concat(c.external.map(x => x.ref))).join(', '))}`;
+  an.levels.forEach((ids, i) => { console.log(dim(`\n  level ${i}`)); for (const id of ids) console.log(line(byId.get(id))); });
+  const unplaced = an.components.filter(c => c.level == null);
+  if (unplaced.length) { console.log(dim('\n  unplaced (in a cycle)')); for (const c of unplaced) console.log(line(c)); }
+  if (an.gaps.length) { console.log(`\n  gaps (${an.gaps.length})`); for (const g of an.gaps) console.log(`  ${C.coral}✗${C.reset} ${g.say}`); }
+  const open = a.proposals.filter(p => p.status === 'open');
+  if (open.length) { console.log(`\n  open proposals (${open.length})`); for (const p of open.slice(-20)) console.log(`  ${dim(p.uuid)}  ${p.component.id.padEnd(24)} ${p.component.layer.padEnd(9)} ${String(p.component.purpose || '').slice(0, 70)}`); }
   console.log('');
 }
 function _localApi(method, path, body = null, timeoutMs = 10000) {
@@ -919,6 +935,67 @@ const COMMANDS = {
     if (!positional[0]) die('usage: idearium workshop save <id>');
     const r = await _wsApi('POST', `/api/workshop/${encodeURIComponent(positional[0])}/save`, {}, 120000);
     console.log(`  saved to ${bold(r.specPath)} in repo ${bold(r.repoUuid)}${r.madeRepo ? dim(` (${r.madeRepo === 'new' ? 'a new repo' : 'its library document\'s repo'})`) : ''}`);
+  },
+
+  // ── idearium architect (0.39.298 AR2) ───────────────────────────────────────────
+  // James: "with architect for archiecture using the component registry, components store with dependancies". Through
+  // the running idearium; the agent only proposes — accept puts a proposal into the architecture.
+  async 'architect'(os, args) {
+    const [sub, ...rest] = args.positional || [];
+    const go = (name) => COMMANDS[`architect.${name}`](os, { ...args, positional: rest });
+    if (!sub || sub === 'list') return go('list');
+    if (['new', 'show', 'add', 'draft', 'accept', 'dismiss', 'save', 'find'].includes(sub)) return go(sub);
+    die('usage: idearium architect [list | new --from workshop:<id> | repo:<uuid> | show <id> | add <id> <name> [--layer --tier --depends a,b --reuse loom:<id>] | find <words> | draft <id> | accept <id> <proposal|all> | dismiss <id> <proposal|all> | save <id>]');
+  },
+  async 'architect.list'() {
+    const r = await _wsApi('GET', '/api/architect');
+    if (!r.architectures.length) { console.log(gray('\n  no architectures yet — idearium architect new --from workshop:<id> | repo:<uuid>\n')); return; }
+    header(`architect — ${r.count} architecture(s)`);
+    for (const a of r.architectures) console.log(`  ${bold(a.uuid)}  ${String(a.title).slice(0, 40).padEnd(40)} ${dim(`${a.components} components · ${a.open} open · ${a.savedAt ? 'saved ' + a.archPath : 'not saved'}`)}`);
+    console.log('');
+  },
+  async 'architect.new'(os, { flags }) {
+    const m = String(flags.from || '').match(/^(workshop|repo):(.+)$/);
+    if (!m) die('usage: idearium architect new --from workshop:<id> | repo:<uuid> [--path spec/<name>.spec]');
+    const r = await _wsApi('POST', '/api/architect', { from: { kind: m[1], id: m[2], ...(flags.path ? { path: String(flags.path) } : {}) } });
+    if (r.existing) console.log(dim('  this spec already has an architecture — opened it'));
+    _arPrint(r);
+  },
+  async 'architect.show'(os, { positional }) { if (!positional[0]) die('usage: idearium architect show <id>'); _arPrint(await _wsApi('GET', `/api/architect/${encodeURIComponent(positional[0])}`)); },
+  async 'architect.add'(os, { positional, flags }) {
+    const [id, ...name] = positional;
+    if (!id || !name.length) die('usage: idearium architect add <id> <name…> [--layer data|engine|service|interface] [--tier component|mod] [--depends a,b] [--purpose "…"] [--reuse loom:<id>]');
+    const c = { add: true, name: name.join(' '), layer: flags.layer, tier: flags.tier, purpose: flags.purpose, dependsOn: flags.depends ? String(flags.depends) : [], ...(flags.reuse ? { decision: 'reuse', use: String(flags.reuse) } : {}) };
+    _arPrint(await _wsApi('POST', `/api/architect/${encodeURIComponent(id)}`, { components: [c] }));
+  },
+  async 'architect.find'(os, { positional }) {
+    if (!positional.length) die('usage: idearium architect find <words…>');
+    const r = await _wsApi('GET', `/api/architect/registry?q=${encodeURIComponent(positional.join(' '))}&limit=20`);
+    header(`what exists — "${r.q}" (${r.index.registry} in loom, ${r.index.store} in the store)`);
+    for (const x of r.results) console.log(`  ${bold(x.ref.padEnd(60))} ${dim(x.why)}`);
+    console.log('');
+  },
+  async 'architect.draft'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium architect draft <id>');
+    const r = await _wsApi('POST', `/api/architect/${encodeURIComponent(positional[0])}/draft`, {}, 330000);
+    console.log(`  the agent proposed ${bold(r.added.length)} component(s)`);
+    _arPrint(r);
+    console.log(dim(`  accept: idearium architect accept ${positional[0]} <proposal | all>\n`));
+  },
+  async 'architect.accept'(os, { positional }) {
+    const [id, pid] = positional; if (!id || !pid) die('usage: idearium architect accept <id> <proposal | all>');
+    const r = await _wsApi('POST', `/api/architect/${encodeURIComponent(id)}/proposal/${encodeURIComponent(pid)}`, { action: 'accept' });
+    console.log(r.component ? `  accepted ${bold(r.component.name)}` : `  accepted ${bold(r.decided)} proposal(s)`);
+  },
+  async 'architect.dismiss'(os, { positional }) {
+    const [id, pid] = positional; if (!id || !pid) die('usage: idearium architect dismiss <id> <proposal | all>');
+    await _wsApi('POST', `/api/architect/${encodeURIComponent(id)}/proposal/${encodeURIComponent(pid)}`, { action: 'dismiss' });
+    console.log('  dismissed');
+  },
+  async 'architect.save'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium architect save <id>');
+    const r = await _wsApi('POST', `/api/architect/${encodeURIComponent(positional[0])}/save`, {}, 60000);
+    console.log(`  saved to ${bold(r.archPath)} in repo ${bold(r.repoUuid)} — ${r.analysis.stats.reuse} reused, ${r.analysis.stats.new} new, ${r.analysis.stats.gaps} gap(s)`);
   },
 
   // ── idearium spec-library (0.39.290 IL1) ─────────────────────────────────────

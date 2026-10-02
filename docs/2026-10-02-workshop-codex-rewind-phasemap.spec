@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     workshop-codex-rewind
-    version:  1.4.0
+    version:  1.5.0
     date:     2026-10-02
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -124,7 +124,7 @@ spec:
 
     AR2_architect_in_the_workshop:
       layer: service
-      status: OPEN
+      status: BUILT 0.39.298 (on loom + the component store; CX0 grows the store later)
       depends_on: [SW1_spec_workshop, CX0_codex_component_store]
       files: [idearium/lib/architect.js, architect/service.js]
       does: >-
@@ -133,6 +133,24 @@ spec:
         and CODEX — what already exists is shown and reused; what is new is marked new. Layers bottom-up; a dependency
         on something that does not exist is a gap, said.
       proof: "a spec naming an existing component reuses it; a dependency on nothing is a gap; layers come out bottom-up"
+      design_2026_10_02: >-
+        Built on what exists today, before CX0: the registry is loom (loom/data/registry.json — 2,275 components with
+        dotted ids, 1,840 hooks, 8,751 wires), the store is lib/component-store.js (list/manifest/find; empty in this
+        checkout, so loom carries the reuse until CODEX fills it). CX0 grows the store later; the station does not change.
+        Engine idearium/lib/architect.js (pure, like void.js and workshop.js; the API owns the store and the repo write):
+          index    makeIndex({ registry, stored }) — one search over both; loom ids as loom:<id>, store ids as
+                   store:<id>@<version>; tests are not components (nexus.tests.* left out)
+          match    exact id or name → reuse; else token overlap ≥ 0.67 of the component's own words → reuse suggested;
+                   James overrides per component: decision auto | reuse (a named ref) | new
+          analyse  dependencies resolve to a component of this architecture, else an existing one in the index, else a
+                   GAP said with both names; a cycle is a gap (collision is a hard error); levels bottom-up (level 0
+                   needs nothing local); a lower declared layer (data < engine < service < interface) depending on a
+                   higher one is a gap (§3.1)
+          agent    the agent PROPOSES components (YAML); nothing enters the architecture without accept — the workshop's rule
+        Session in the JAA table idearium_architectures, one per spec (a second open of the same spec returns it).
+        Saved as spec/<name>.architecture.yaml beside spec/<name>.spec; reopening reads it back.
+        Surfaces: /api/architect/* (list, create, registry search, show, update, draft, proposal, save), CLI
+        `idearium architect`, its own page ui/architect.html in the Void's look; the workshop's ARCHITECT station opens it.
 
     PL1_one_entry_point:
       layer: service
@@ -222,3 +240,8 @@ spec:
 # Proof: tests/modules/test-spec-workshop.test.js 8/8 (WS-07 the page, WS-08 the dial in his words + limits);
 # Chromium against the real server: from a Void idea → write → draft with the agent → replace (the in-page dialog)
 # → a new section → save into a new repo; no console errors, no native dialog; wide and narrow.
+
+## ADDENDUM 2026-10-02 — 1.5.0, AR2 built (0.39.298)
+# Sequencing, said: AR2 depends on CX0 and CX0 is not built. Architect is built on what exists — loom's registry and the
+# component store — with CX0 left to grow that store; the station's interface does not change when it does. The design
+# is under AR2.design_2026_10_02. The station is its own page (1.2.0), opened from the workshop's ARCHITECT station.
