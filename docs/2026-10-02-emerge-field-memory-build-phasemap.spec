@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.6
+    version:  1.7.7
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: PARTIAL (1.7.6) — (3) built; (1) done for idearium, cortex, intelligence, copilot, emerge (loom emits none); cos waits on James (one truth with cos/foundation/event-contracts.js), warp on 1.5.0; (2)(4)(5) open
+      status: PARTIAL (1.7.7) — (1) done for every system but warp (waits on 1.5.0); (3) built; (2)(4)(5) open
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
@@ -1191,3 +1191,12 @@ spec:
 # of the same names; how the two relate is James's call. Guardian (60), orchestrator (18) and clear-glass (232) are not
 # in EV0's list; the ratchet already holds them — nothing new can drift there.
 # Found along the way, said: emerge's own suites fail 7 tests identically with and without these changes.
+
+## ADDENDUM 2026-10-02 — 1.7.7, EV0 (1): COS, one truth for its names
+# James: "Read names from it" · "Add the key". cos/event-taxonomy.js never retypes a name cos/foundation/event-contracts.js
+# holds — 88 entries are EC.<TABLE>.<KEY>, adding only description, payload and severity; a lost name throws at load.
+# The 59 events COS emits as literals that file does not name are declared in the taxonomy alone. VAULT.INJECTED
+# ('vault:secret:injected') added to event-contracts.js as a §BUGFIX amendment: every vault injection had gone out as
+# `undefined`. 147 COS events, all declared. EV0 (1) now stands for idearium, cortex, intelligence, copilot, emerge,
+# cos (loom emits none); warp waits on 1.5.0. Guardian (60), orchestrator (18) and clear-glass (232), outside EV0's
+# list, stay held by the ratchet. Said: cos/test/test.js fails 1 of 157 with and without these changes.
