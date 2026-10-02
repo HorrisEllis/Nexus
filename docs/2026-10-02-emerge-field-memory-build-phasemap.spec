@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.5
+    version:  1.7.6
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: PARTIAL (1.7.4) — (3) the check built, events only; (1)(2)(4)(5) open
+      status: PARTIAL (1.7.6) — (3) built; (1) done for idearium, cortex, intelligence, copilot, emerge (loom emits none); cos waits on James (one truth with cos/foundation/event-contracts.js), warp on 1.5.0; (2)(4)(5) open
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
@@ -1178,3 +1178,16 @@ spec:
 # v1.0.0 (COS-5)", so the new key is James's to accept). A constant no table resolves is UNREAD, listed, not failed.
 # Loom emits nothing, so it gets no taxonomy (ET1 refuses an empty one). WARP still reads 0; it waits on 1.5.0.
 # Proof: tests/modules/test-event-contracts.test.js 8/8 (EC-01b: SISO, constants, missing, quoted).
+
+## ADDENDUM 2026-10-02 — 1.7.6, EV0 (1): five systems fully declared
+# Each written from the code, one change per system (E15), its baseline entry emptied: emerge 56 events, copilot 12,
+# cortex 17, intelligence 37, idearium 138 (135 added; its two template emits now name what they send in an
+# `// emits:` comment — CI's six ci:* relayed as idearium.ci.*, and cos.remote push|pull). Versionium, outside EV0's
+# list, had one undeclared (versionium.branched) — added. Loom emits nothing, so it has no taxonomy (ET1 refuses an
+# empty one). Declared-but-unseen, said: emerge spec.load (entered via driveAsync), intelligence contract.ok (via
+# _emitPositive), versionium autocommit.triggered — real emits the reader does not see, kept declared.
+# Open, said: COS (145 undeclared + VAULT.INJECTED missing) — COS already names its kernel events in
+# cos/foundation/event-contracts.js ("IMMUTABLE after v1.0.0 (COS-5)"), so its ET1 taxonomy must not be a second list
+# of the same names; how the two relate is James's call. Guardian (60), orchestrator (18) and clear-glass (232) are not
+# in EV0's list; the ratchet already holds them — nothing new can drift there.
+# Found along the way, said: emerge's own suites fail 7 tests identically with and without these changes.
