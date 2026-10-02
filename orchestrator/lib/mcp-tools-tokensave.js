@@ -202,7 +202,7 @@ const TOOLS = [
   // ── Loom registry query ──────────────────────────────────────────────────
   {
     name: 'nexus_loom_query',
-    description: 'Query loom\'s component registry (loom/data/registry.json — currently ~1840 components) by namespace or name substring, instead of loading the whole registry file. Returns matching components only.',
+    description: 'Query loom\'s component registry (loom/data/registry.json — currently ~1840 components) by namespace or name substring, instead of loading the whole registry file. Returns matching components only. For one component\'s wiring and the impact of changing it, use nexus_loom_impact.',
     inputSchema: {
       type: 'object',
       properties: {

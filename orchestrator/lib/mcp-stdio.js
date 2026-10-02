@@ -7,16 +7,10 @@
  * Runs the MCP server over stdio so Claude Code can connect
  * without Claude Desktop or any config file.
  *
- * Usage (in Claude Code's MCP config or directly):
- *   node nexus-v0_9_9-complete/lib/mcp-stdio.js
- *
- * Or add to .claude/mcp.json in your project:
- *   {
- *     "nexus": {
- *       "command": "node",
- *       "args": ["lib/mcp-stdio.js"]
- *     }
- *   }
+ * §IN1 2026-10-02 — registered for Claude Code in .mcp.json at the repo root (server "nexus"): a session opened on
+ * this repo loads it (Claude Code asks once to approve a project server). Idearium's claude-code backend passes the
+ * same server to its headless runs with an absolute path (lib/claude-code-backend.js mcpConfig()).
+ *   node orchestrator/lib/mcp-stdio.js
  *
  * §1.2 Nothing silently fails — all errors logged to stderr
  */

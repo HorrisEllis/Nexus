@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "nexus": {
+      "command": "node",
+      "args": ["orchestrator/lib/mcp-stdio.js"]
+    }
+  }
+}
