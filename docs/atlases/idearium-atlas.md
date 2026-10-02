@@ -539,6 +539,15 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **One idea:** the library's idea becomes the repo's idea. Asking again opens the same repo.
 - **Code:** `idearium/lib/spec-library-import.js` (toPipeline, findRow, specFileText). The route hands in the promotion and the repo layer's file write.
 
+**The spec workshop** (0.39.294, `idearium/ui/workshop.html`, `idearium/lib/workshop.js`). James: "need the spec workshop … the workshop and maybe it hooks into the spec field".
+- **Where:** Welcome → **Spec workshop**; an idea's **✎ spec workshop**; a repo's Spec tab → **open in the spec workshop**; the spec library's **✎ workshop** on a row; the idearium CLI's workshop commands.
+- **Start from:** an idea, a document in the spec library, a repo's spec file, or nothing.
+- **Write it yourself, or ask the agent:** open loops, outside-the-box questions, what ifs, the d20 roll (one of twenty fields, and one of its mechanisms mapped onto the spec), a reverse causal chain (an invented end-state walked back to what exists), inspiration from your own library and repos, or a draft of the open section.
+- **The ambition dial:** 1 grounded, 2 practical, 3 stretch, 4 bold, 5 outside the box. It changes what the agent is asked to reach for.
+- **The agent only proposes.** Proposals sit apart from the spec; one goes in only when you accept it: into the open section, as a new section, or replacing a section's text (the old text is kept). A removed section is kept and can be restored.
+- **Saving (Ctrl+S)** writes the spec into its repo's spec folder, where the Spec tab shows it. With no repo yet, it makes one: a library document's own repo, else a new repo for the idea.
+- **The agent it asks:** your default provider, through copilot, the same way a repo's agent is asked.
+
 **Cut replies are finished** (0.39.289, `lib/reply-continuation.js`). When a reply stops part-way, the agent is shown the end of what it wrote and continues from there, and the two parts are stitched together:
 - **When it counts as cut:** Ollama stopped at its token limit, a code block was opened and never closed, or the reply ends mid-statement.
 - **Where it runs:** in the Ollama bridge (`ollama/lib/ollama-client.js`), and in spec chunk dispatch before the detector judges the reply.

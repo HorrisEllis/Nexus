@@ -981,7 +981,8 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
           <button class="welcome-action-btn secondary" onclick="openSpecLibrary()" title="drop a zip of specs — each becomes an idea with its spec">Import specs</button>
           <button class="welcome-action-btn secondary" onclick="openGitCloneModal()">Clone from git</button>
           <button class="welcome-action-btn secondary" onclick="openCosRemoteBrowse()">Compartments · push / pull</button>
-          <button class="welcome-action-btn primary" onclick="newSpecPrompt()">Start new project</button>
+          <button class="welcome-action-btn secondary" onclick="newSpecPrompt()">Quick new project</button>
+          <button class="welcome-action-btn primary" onclick="openWorkshop()" title="idea → spec workshop → architect → blueprint → repo → COS: make the spec, by hand or with the agent">Spec workshop</button>
         </div>
         <div class="pillars">
           <div class="pillar flow nest-only" onclick="setView('brainstorm')">
@@ -1224,6 +1225,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
                js/living-spec.js); the spec-engine chunk builder that was this tab is kept below it
                as the build manifest. -->
           <div class="repo-subtab-panel" id="repo-subtab-spec">
+            <div id="repo-spec-workshop"></div>
             <div id="repo-living-spec"></div>
             <details class="ds" id="repo-build-manifest">
               <summary class="ds-label" style="cursor:pointer">build manifest — the spec-engine chunks this repo is built from</summary>

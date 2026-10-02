@@ -148,10 +148,15 @@ function render() {
     ${by[f].sort((a, b) => String(a.title).localeCompare(String(b.title))).map(r => `<tr><td class="t">${esc(r.title)}${r.summary ? `<div class="muted" style="font-size:11px">${esc(String(r.summary).slice(0, 140))}</div>` : ''}</td>
       <td class="d">${esc(r.kind)}</td><td class="d">${esc(r.version || '')}</td><td class="d">${r.specUuid ? `${r.sections} · ${esc(r.dialect)}` : '<span class="muted">kept</span>'}</td>
       <td class="d" title="${esc((r.paths || []).join('\n'))}">${esc(String((r.paths || [])[0] || '').split('!/').pop().slice(-48))}${(r.paths || []).length > 1 ? ` <span class="muted">+${r.paths.length - 1}</span>` : ''}</td>
-      <td class="d">${r.specUuid ? `<button class="pipe" data-sha="${esc(r.sha)}" title="${r.repoUuid ? 'open its repo' : 'make it a repo with spec/' + esc(slug(r.title)) + '.spec — then Phases, Generate code, Build &amp; prove'}">${r.repoUuid ? 'open repo' : '→ pipeline'}</button>` : ''}</td></tr>`).join('')}
+      <td class="d">${r.specUuid ? `<button class="pipe ws" data-sha="${esc(r.sha)}" title="work this spec in the spec workshop">✎ workshop</button> ` : ''}${r.specUuid ? `<button class="pipe" data-sha="${esc(r.sha)}" title="${r.repoUuid ? 'open its repo' : 'make it a repo with spec/' + esc(slug(r.title)) + '.spec — then Phases, Generate code, Build &amp; prove'}">${r.repoUuid ? 'open repo' : '→ pipeline'}</button>` : ''}</td></tr>`).join('')}
     </table></div></div>`).join('');
   for (const h of document.querySelectorAll('.fam .h')) h.onclick = () => h.parentElement.classList.toggle('closed');
-  for (const b of document.querySelectorAll('button.pipe')) b.onclick = () => toPipeline(b);
+  for (const b of document.querySelectorAll('button.pipe:not(.ws)')) b.onclick = () => toPipeline(b);
+  // §0.39.294 SW1 — into the spec workshop, opened by the idearium window (it owns the workshop window)
+  for (const b of document.querySelectorAll('button.pipe.ws')) b.onclick = () => {
+    if (window.opener && !window.opener.closed) window.opener.postMessage({ type: 'nexus:workshop.open', from: `library:${b.dataset.sha}` }, '*');
+    else window.open(`/workshop.html?from=${encodeURIComponent('library:' + b.dataset.sha)}`, 'idearium-workshop');
+  };
 }
 // §0.39.292 IL2 — James: "how can i import into the pipeline. the specs also need to convert into actual spec files."
 // POST /api/spec-library/:sha/to-repo makes the spec a repo with spec/<slug>.spec in it; the main window opens it.

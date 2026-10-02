@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.8.1
+    version:  1.9.0
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -643,7 +643,7 @@ spec:
         tests/modules/test-spec-library.test.js 10/10 (SL-09 against the real RepoLayer).
     SW1_spec_workshop:
       layer: interface
-      status: OPEN
+      status: DONE (0.39.294) — built under docs/2026-10-02-workshop-codex-rewind-phasemap.spec (SW1)
       depends_on: [IL1_spec_library_as_ideas, CX1_context_cascade, UM1_nexus_understands_james]
       files: [architect/src/ui/spec-builder.html, idearium/lib/idea-workbench.js, idearium/ui/js/app.js, lib/spec-library.js]
       does: >-
@@ -788,3 +788,6 @@ spec:
 # James: "i mean that i cant login to my desktop envirement in idearium with the default credientials, not sure if its
 # a upstream problem". Not upstream — idearium's VM setup dropped the desktop option. Fixed, the image is checked before
 # a desktop boots, and overlays are tied to their base (stale ones archived). CO1 answered: it was this.
+
+## ADDENDUM 2026-10-02 — 1.9.0, SW1 built (0.39.294)
+# The spec workshop is built — its own map now carries it and what follows it (docs/2026-10-02-workshop-codex-rewind-phasemap.spec).

@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     workshop-codex-rewind
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-02
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
     owner:    idearium · cos · guardian · architect · lib · docs
-    status:   "MAPPED 2026-10-02 — build order bottom-up below; DP1 + RW1 first (the popout and the rewind)"
+    status:   "MAPPED 2026-10-02; SW1 built (0.39.294) — James chose the order: \"the workshop and maybe it hooks into the spec field\""
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §10.3 one source of truth, §10.1 one write authority per data type.
     origin: >
@@ -83,7 +83,7 @@ spec:
 
     SW1_spec_workshop:
       layer: service
-      status: OPEN (the master phasemap's SW1, built here)
+      status: DONE (0.39.294) — the old builders retire with UI12, once the workshop has carried real specs
       depends_on: []
       files: [idearium/lib/workshop.js, idearium/ui/workshop.html, idearium/api/index.js, idearium/cli/index.js]
       does: >-
@@ -94,6 +94,15 @@ spec:
         generator: the agent only proposes, every proposal is accepted or dismissed by him. Starts from an idea, a
         library document, a repo's spec, or blank. Ends by handing the spec to Architect.
       proof: "a session from an idea → sections; a d20 roll names a domain and maps one mechanism; ambition 1 vs 5 changes the prompt; a proposal is never written without accept"
+      built: >-
+        0.39.294 — idearium/lib/workshop.js (sessions, the dial, the six feeds + a section draft, the d20's twenty
+        fields, propose-then-accept: append / replace keeping the old / new section, removed sections kept), the routes
+        /api/workshop/*, `idearium workshop …`, ui/workshop.html in idearium's look. The hook into the spec field
+        (James: "the workshop and maybe it hooks into the spec field"): a workshop reads a repo's spec/*.spec and saves
+        back there; with no repo it makes one (a library document's own repo, else a new repo for its idea). The agent:
+        copilot's /api/prompt with the repos' default provider (the idea workbench's copilot-adapter has no backend
+        registered anywhere — found, not used). tests/modules/test-spec-workshop.test.js 7/7; driven in Chromium against
+        the real server (blank → dial → d20 + questions → accept → save), no console errors.
 
     AR2_architect_in_the_workshop:
       layer: service
@@ -167,8 +176,13 @@ spec:
         checkout pulled in by versionium), so a whole NEXUS can be snapshotted, rewound and branched like a repo
         desktop. Mapped, not built: it needs RW1's rewind and GD1's supervision first.
 
-  build_order: [RW1, DP1, CX0, SW1, AR2, BP1, PL1, GD1, UI12, NX1]
+  build_order: [SW1, AR2, CX0, BP1, PL1, UI12, RW1, DP1, GD1, NX1]   # James, 2026-10-02: "the workshop" first
 
 ## ADDENDUM 2026-10-02 — 1.0.0
 # Mapped from James's message and two screenshots. "completely destroy the spec builder" is carried out as retire +
 # archive (§0.3 nothing lost): the old builders leave every surface; their files are kept under archive/.
+
+## ADDENDUM 2026-10-02 — 1.1.0, SW1 built (0.39.294)
+# James: "the workshop and maybe it hooks into the spec field". The order is his: the workshop first, then what it hands
+# to (Architect, CODEX, the blueprint, the one entry point); the rewind and the popout after. SW1 is the workshop with the
+# Spec tab as its home: it reads and writes the repo's spec/<name>.spec. The old builders stay until UI12 retires them.

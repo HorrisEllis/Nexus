@@ -53,6 +53,8 @@ const BOUNDARY_EXPORTS = [
   I('lib/pipeline-routing.js'),
   // §0.39.290 IL1 — reached only by await import() / createRequire
   I('idearium/lib/spec-library-import.js'),   // lib/spec-library.js gets its export hook from the scanner (a literal require)
+  // §0.39.294 SW1 — the spec workshop, reached only by await import() from idearium/api
+  I('idearium/lib/workshop.js'),
 ];
 
 // Consumers that are HAND-MAPPED elsewhere (the scanner skips them): [consumer id, dependency id, where].
@@ -81,6 +83,10 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('idearium/lib/spec-library-import.js'), 'idearium/api/index.js spec-library.import / spec-library.list / spec-library.to-repo (await import; to-repo hands in _promoteSpecToRepo + RepoLayer.writeFile)'],
   [I('idearium/cli/index.js'), I('idearium/lib/spec-library-import.js'), 'idearium/cli/index.js spec-library.import (no server) / spec-library.list (await import)'],
   [I('idearium/lib/spec-library-import.js'), I('lib/spec-library.js'), 'idearium/lib/spec-library-import.js importLibrary — scan + convert (createRequire)'],
+  // §0.39.294 SW1 — the spec workshop: the API owns its store and repos, hands it the agent (setAsk → copilot /api/prompt
+  // through lib/repo-agent.js's default provider) and saves through the library's pipeline for a library document
+  ['nexus.idearium.api', I('idearium/lib/workshop.js'), 'idearium/api/index.js workshop.* (_workshop: await import, setAsk)'],
+  ['nexus.idearium.api', I('lib/repo-agent.js'), 'idearium/api/index.js _workshop ask — defaultProvider / routeFor / COPILOT_URL (_require)'],
   // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)
   [I('ollama/lib/ollama-client.js'), I('lib/reply-continuation.js'), 'ollama/lib/ollama-client.js callOllamaRaw — a reply stopped at num_predict (or in an open fence) is continued and stitched (require inside the function)'],
   [I('idearium/spec-engine/chunk-dispatch.js'), I('lib/reply-continuation.js'), 'idearium/spec-engine/chunk-dispatch.js _dispatchChunkOnce — looksCut/complete before the detector judges'],

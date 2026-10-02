@@ -1,0 +1,353 @@
+<!doctype html>
+<!--
+  idearium/ui/workshop.html — the spec workshop (0.39.294 SW1). Map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  James: "need the spec workshop, completely destroy the spec builder, and build the spec workshop" · "the workshop and
+  maybe it hooks into the spec field" · "ai assited or manual … adjustable, levels of ambitoiun higher is more outside the
+  box. the user is the idea generator … open loops, outside the box questions, what ifs, d20 cross domain dice … reverse
+  causal chain … inspiration from nexus".
+  /api/workshop (idearium/lib/workshop.js). ?id=<workshop> opens one; ?from=idea:<uuid>|library:<sha>|repo:<uuid> starts one.
+  The agent only proposes; a proposal reaches the spec when James accepts it. Save writes the repo's spec/<name>.spec.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec workshop</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: dark; --bg:#07090e; --bg1:#0b0f18; --bg2:#0f1520; --b0:rgba(56,189,248,.06); --b1:rgba(56,189,248,.14); --b2:rgba(56,189,248,.28);
+    --sky:#38bdf8; --sky2:#7dd3fc; --mint:#34d399; --amber:#fbbf24; --coral:#f87171; --violet:#a78bfa; --text:#c4d4ee; --text2:#607898; --text3:#334560;
+    --mono:'IBM Plex Mono', ui-monospace, monospace; --sans:'IBM Plex Sans', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 13px/1.5 var(--sans); }
+  body { padding-top: var(--chrome-h, 0px); display: flex; flex-direction: column; }
+  * { scrollbar-width: thin; scrollbar-color: var(--b2) transparent; }
+  .kicker { font: 600 10px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--sky); }
+  .muted { color: var(--text3); } .dim { color: var(--text2); } .err { color: var(--coral); } .ok { color: var(--mint); } .hidden { display: none !important; }
+  button { padding: 8px 13px; border-radius: 9px; border: 1px solid var(--b1); background: rgba(255,255,255,.02); color: var(--text); font: 600 11px/1 var(--mono); cursor: pointer; white-space: nowrap; }
+  button:hover:not(:disabled) { border-color: var(--b2); } button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: linear-gradient(180deg, #38bdf8, #0ea5e9); border-color: transparent; color: #04111c; }
+  button.small { padding: 5px 9px; font-size: 10.5px; } button.ghost { border-color: transparent; background: none; color: var(--text2); }
+  input, textarea, select { background: var(--bg); color: var(--text); border: 1px solid var(--b1); border-radius: 9px; font: 12.5px/1.5 var(--sans); padding: 8px 11px; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--b2); }
+
+  /* top bar: title + the pipeline's stations */
+  .top { display: flex; align-items: center; gap: 14px; padding: 12px 18px; border-bottom: 1px solid var(--b1); background: linear-gradient(180deg, var(--bg2), var(--bg1)); flex-wrap: wrap; }
+  .top .title { font: 600 16px/1.2 var(--sans); background: none; border: 1px solid transparent; padding: 4px 6px; min-width: 220px; flex: 1; max-width: 520px; }
+  .top .title:hover { border-color: var(--b1); }
+  .stations { display: flex; align-items: center; gap: 4px; font: 600 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+  .st { padding: 6px 9px; border-radius: 7px; color: var(--text3); border: 1px solid transparent; }
+  .st.done { color: var(--mint); } .st.now { color: var(--sky2); border-color: var(--b2); background: rgba(56,189,248,.06); }
+  .st.link { cursor: pointer; } .st.link:hover { border-color: var(--b1); }
+  .arrow { color: var(--text3); }
+  .spacer { flex: 1; }
+
+  /* start screen */
+  .start { max-width: 1100px; width: 100%; margin: 0 auto; padding: 26px 24px 40px; display: flex; flex-direction: column; gap: 18px; overflow: auto; }
+  .start h1 { margin: 6px 0 4px; font: 600 20px/1.2 var(--sans); }
+  .lead { color: var(--text2); margin: 0; max-width: 820px; }
+  .card { border: 1px solid var(--b1); border-radius: 14px; background: linear-gradient(180deg, var(--bg2), var(--bg1)); padding: 18px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tab { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--b1); cursor: pointer; font: 600 11px/1 var(--mono); color: var(--text2); background: none; }
+  .tab.on { color: var(--sky2); border-color: var(--b2); background: rgba(56,189,248,.06); }
+  .pick { max-height: 300px; overflow: auto; border: 1px solid var(--b0); border-radius: 10px; }
+  .pick .it { padding: 8px 11px; border-bottom: 1px solid var(--b0); cursor: pointer; display: flex; gap: 10px; align-items: baseline; }
+  .pick .it:hover { background: rgba(56,189,248,.04); } .pick .it.on { background: rgba(56,189,248,.09); }
+  .pick .it .t { flex: 1; } .pick .it .m { font: 11px var(--mono); color: var(--text3); white-space: nowrap; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  table { width: 100%; border-collapse: collapse; font: 12px var(--mono); }
+  th { text-align: left; font-weight: 600; color: var(--text3); padding: 6px 8px; border-bottom: 1px solid var(--b1); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--b0); } td.t { font-family: var(--sans); color: var(--text); } tr.go { cursor: pointer; } tr.go:hover td { background: rgba(56,189,248,.04); }
+
+  /* the dial */
+  .dial { display: flex; gap: 4px; }
+  .dial button { flex: 1; padding: 7px 4px; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .dial button b { font: 600 13px/1 var(--sans); }
+  .dial button.on { border-color: var(--sky); background: rgba(56,189,248,.1); color: var(--sky2); }
+  .dial-guide { color: var(--text2); font-size: 11.5px; margin-top: 6px; min-height: 34px; }
+
+  /* the workshop */
+  .work { flex: 1; display: grid; grid-template-columns: 250px minmax(0, 1fr) 360px; min-height: 0; }
+  .col { min-height: 0; overflow: auto; padding: 14px; }
+  .col + .col { border-left: 1px solid var(--b1); }
+  .h { font: 600 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text2); margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+  .h .n { color: var(--text3); letter-spacing: 0; text-transform: none; font-weight: 400; }
+  .sec { padding: 8px 10px; border-radius: 9px; cursor: pointer; border: 1px solid transparent; margin-bottom: 3px; display: flex; gap: 8px; align-items: baseline; }
+  .sec:hover { background: rgba(56,189,248,.04); } .sec.on { border-color: var(--b2); background: rgba(56,189,248,.07); }
+  .sec .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sec .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); flex: none; transform: translateY(-1px); }
+  .sec .dot.full { background: var(--mint); }
+  .editor { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+  .editor .st-title { font: 600 15px/1.3 var(--sans); }
+  .editor textarea { flex: 1; min-height: 260px; resize: none; font: 13px/1.65 var(--sans); padding: 14px 16px; }
+  .saved { font: 11px var(--mono); color: var(--text3); }
+  .feeds { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+  .feeds button { text-align: left; padding: 9px 10px; font-size: 10.5px; }
+  .feeds button .i { color: var(--sky2); margin-right: 6px; }
+  .prop { border: 1px solid var(--b1); border-radius: 11px; padding: 10px 11px; margin-bottom: 8px; background: rgba(255,255,255,.01); }
+  .prop.accepted { border-color: rgba(52,211,153,.3); opacity: .7; } .prop.dismissed { opacity: .45; }
+  .prop .k { font: 600 9.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--violet); display: flex; gap: 8px; }
+  .prop .k .s { color: var(--text3); letter-spacing: 0; text-transform: none; font-weight: 400; }
+  .prop .x { margin: 7px 0 8px; white-space: pre-wrap; }
+  .prop .a { display: flex; gap: 5px; flex-wrap: wrap; }
+  .busy { color: var(--amber); font: 11px var(--mono); }
+  #toasts { position: fixed; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; z-index: 50; pointer-events: none; }
+  .toast { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--b2); background: var(--bg2); max-width: 520px; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  .toast.err { border-color: var(--coral); }
+  .hist { font: 11px/1.5 var(--mono); color: var(--text3); }
+  @media (max-width: 1080px) { html, body { height: auto; } .work { grid-template-columns: 1fr; flex: none; } .col { overflow: visible; } .col + .col { border-left: none; border-top: 1px solid var(--b1); } .editor textarea { min-height: 220px; } }
+</style>
+</head>
+<body>
+<script src="js/window-chrome.js" data-kind="workshop" data-title="Spec workshop"></script>
+
+<div class="top">
+  <span class="kicker">Spec workshop</span>
+  <input class="title hidden" id="title" aria-label="spec title" maxlength="160">
+  <div class="stations" id="stations"></div>
+  <span class="spacer"></span>
+  <span class="saved" id="savedNote"></span>
+  <button id="saveBtn" class="primary hidden" title="Write this spec into its repo's spec folder (Ctrl+S) — the Spec tab's living model">Save to the repo's spec</button>
+  <button id="homeBtn" class="hidden" title="every workshop">All workshops</button>
+</div>
+
+<!-- start: resume one, or begin from an idea, a library document, a repo's spec, or nothing -->
+<div class="start hidden" id="start">
+  <div>
+    <div class="kicker">Idearium · idea → spec workshop → architect → blueprint → repo → COS</div>
+    <h1>Make a spec</h1>
+    <p class="lead">You are the idea generator. Write the spec yourself, or turn the dial and ask the agent for open loops, questions, what-ifs, a d20 roll from another field, a reverse causal chain, or inspiration from what you have built. The agent only proposes; nothing goes into the spec until you accept it. Saving writes the spec into its repo, where the Spec tab shows it.</p>
+  </div>
+  <div class="card">
+    <div class="h">Start from</div>
+    <div class="tabs" id="fromTabs"></div>
+    <div id="fromPane"></div>
+    <div style="margin-top:14px">
+      <div class="h">Ambition</div>
+      <div class="dial" id="newDial"></div>
+      <div class="dial-guide" id="newDialGuide"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <input id="newTitle" placeholder="title (optional — taken from what you start from)" style="flex:1;min-width:240px">
+      <button class="primary" id="createBtn" disabled>Open the workshop</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="h">Your workshops <span class="n" id="wsCount"></span></div>
+    <div id="wsList" class="muted">loading…</div>
+  </div>
+</div>
+
+<!-- the workshop -->
+<div class="work hidden" id="work">
+  <div class="col">
+    <div class="h">Sections <span class="n" id="secCount"></span></div>
+    <div id="secList"></div>
+    <div class="row" style="margin-top:8px"><button class="small" id="addSec">+ section</button></div>
+    <div id="removedBox" style="margin-top:16px"></div>
+    <div style="margin-top:18px"><div class="h">History</div><div class="hist" id="hist"></div></div>
+  </div>
+  <div class="col">
+    <div class="editor">
+      <div class="row">
+        <input class="st-title" id="secTitle" style="flex:1" aria-label="section title">
+        <button class="small" id="draftBtn" title="ask the agent to draft this section — it comes back as a proposal">✎ draft with the agent</button>
+        <button class="small ghost" id="rmSec" title="remove this section (kept, restorable)">remove</button>
+      </div>
+      <textarea id="secBody" placeholder="write this section — or ask the agent for a draft, and accept what you want of it"></textarea>
+      <div class="saved" id="secSaved"></div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="h">Ambition</div>
+    <div class="dial" id="dial"></div>
+    <div class="dial-guide" id="dialGuide"></div>
+    <div class="h" style="margin-top:14px">Ask the agent <span class="n" id="busy"></span></div>
+    <div class="feeds" id="feeds"></div>
+    <div class="h">Proposals <span class="n" id="propCount"></span><span class="spacer"></span><label class="n"><input type="checkbox" id="showDone"> decided</label></div>
+    <div id="props"></div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const Q = new URLSearchParams(location.search);
+const AMB = { 1: ['grounded', 'Stay inside what this spec already says and what already exists.'], 2: ['practical', 'Small, safe extensions of what is here.'],
+  3: ['stretch', 'One step past the obvious, with a clear path.'], 4: ['bold', 'Rethink parts of it; borrow from other fields.'], 5: ['outside the box', 'Across domains and past what exists today.'] };
+const FEEDS = [['open-loops', '◌', 'Open loops'], ['questions', '?', 'Questions'], ['what-ifs', '⤳', 'What ifs'], ['d20', '⬡', 'd20 roll'], ['reverse-chain', '↶', 'Reverse chain'], ['inspiration', '✦', 'Inspiration']];
+const KIND = { 'open-loops': 'open loop', questions: 'question', 'what-ifs': 'what if', d20: 'd20', 'reverse-chain': 'reverse chain', inspiration: 'inspiration', section: 'draft' };
+let W = null, SEL = null, SRC = null, FROM = 'idea', PICK = null, NEW_AMB = 3, BUSY = false, saveTimer = null;
+
+function toast(t, bad) {
+  let box = $('toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; box.setAttribute('role', 'status'); document.body.appendChild(box); }
+  const d = document.createElement('div'); d.className = 'toast' + (bad ? ' err' : ''); d.textContent = t; box.appendChild(d);
+  while (box.children.length > 4) box.firstChild.remove();
+  setTimeout(() => d.remove(), bad ? 7000 : 3200);
+}
+async function api(path, opts = {}) {
+  const r = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
+  return j.data || j;
+}
+function post(path, body) { return api(path, { method: 'POST', body: JSON.stringify(body || {}) }); }
+
+function stations() {
+  const repo = W && W.repoUuid;
+  const st = [['Idea', W && W.source && W.source.kind === 'idea' ? 'done' : ''], ['Workshop', 'now'], ['Architect', ''], ['Blueprint', ''], ['Repo', repo ? 'done link' : ''], ['COS', '']];
+  $('stations').innerHTML = W ? st.map(([n, c], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}" ${n === 'Repo' && repo ? 'id="stRepo" title="open the repo in idearium"' : (['Architect', 'Blueprint', 'COS'].includes(n) ? 'title="next in the pipeline — mapped (AR2, BP1, PL1), coming"' : '')}>${n}</span>`).join('') : '';
+  if ($('stRepo')) $('stRepo').onclick = openRepo;
+}
+function dial(el, guideEl, value, onPick) {
+  el.innerHTML = [1, 2, 3, 4, 5].map(n => `<button class="${n === value ? 'on' : ''}" data-n="${n}" title="${esc(AMB[n][1])}"><b>${n}</b>${esc(AMB[n][0])}</button>`).join('');
+  guideEl.textContent = `${value} — ${AMB[value][0]}: ${AMB[value][1]}`;
+  for (const b of el.querySelectorAll('button')) b.onclick = () => onPick(Number(b.dataset.n));
+}
+
+// ── start ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+async function showStart() {
+  W = null; history.replaceState(null, '', location.pathname); document.title = 'Spec workshop';
+  $('start').classList.remove('hidden'); $('work').classList.add('hidden'); ['title', 'saveBtn', 'homeBtn'].forEach(x => $(x).classList.add('hidden')); $('savedNote').textContent = ''; stations();
+  dial($('newDial'), $('newDialGuide'), NEW_AMB, (n) => { NEW_AMB = n; showStartDial(); });
+  try { const d = await api('/api/workshop'); $('wsCount').textContent = d.count || '';
+    $('wsList').innerHTML = d.workshops.length ? `<table><tr><th>title</th><th>from</th><th>sections</th><th>open proposals</th><th>saved to</th><th>updated</th></tr>${d.workshops.map(w => `<tr class="go" data-id="${esc(w.uuid)}"><td class="t">${esc(w.title)}</td><td>${esc(w.source && w.source.kind)}</td><td>${w.sections}</td><td>${w.open}</td><td>${w.specPath ? esc(w.specPath) : '<span class="muted">not yet</span>'}</td><td class="dim">${new Date(w.updatedAt).toLocaleString()}</td></tr>`).join('')}</table>` : '<span class="muted">none yet — start one above</span>';
+    for (const tr of $('wsList').querySelectorAll('tr.go')) tr.onclick = () => open(tr.dataset.id);
+  } catch (e) { $('wsList').innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+  if (!SRC) try { SRC = await api('/api/workshop/sources'); } catch (e) { SRC = { ideas: [], library: [], repos: [], error: e.message }; }
+  fromTabs();
+}
+function showStartDial() { dial($('newDial'), $('newDialGuide'), NEW_AMB, (n) => { NEW_AMB = n; showStartDial(); }); }
+function fromTabs() {
+  const tabs = [['idea', `An idea (${SRC.ideas.length})`], ['library', `Your spec library (${SRC.library.length})`], ['repo', `A repo's spec (${SRC.repos.length})`], ['blank', 'Nothing — blank']];
+  $('fromTabs').innerHTML = tabs.map(([k, l]) => `<button class="tab ${FROM === k ? 'on' : ''}" data-k="${k}">${esc(l)}</button>`).join('');
+  for (const b of $('fromTabs').querySelectorAll('.tab')) b.onclick = () => { FROM = b.dataset.k; PICK = null; fromTabs(); };
+  const items = FROM === 'idea' ? SRC.ideas.map(i => ({ id: i.uuid, t: i.text, m: i.phase }))
+    : FROM === 'library' ? SRC.library.map(r => ({ id: r.sha, t: r.title, m: `${r.family} · ${r.sections} sections${r.repoUuid ? ' · has a repo' : ''}` }))
+    : FROM === 'repo' ? SRC.repos.map(r => ({ id: r.uuid, t: r.name, m: r.specFiles.length ? r.specFiles.join(', ') : 'no .spec yet — starts empty' })) : [];
+  $('fromPane').innerHTML = FROM === 'blank' ? '<div class="dim">A blank spec with one section, Purpose. Give it a title below.</div>'
+    : `<input id="pickQ" placeholder="filter…" style="width:100%;margin-bottom:8px"><div class="pick" id="pickList"></div>`;
+  const paint = () => { const q = ($('pickQ') && $('pickQ').value.toLowerCase()) || '';
+    $('pickList').innerHTML = items.filter(x => !q || String(x.t).toLowerCase().includes(q)).slice(0, 300).map(x => `<div class="it ${PICK === x.id ? 'on' : ''}" data-id="${esc(x.id)}"><span class="t">${esc(x.t)}</span><span class="m">${esc(x.m || '')}</span></div>`).join('') || '<div class="it muted">nothing here</div>';
+    for (const it of $('pickList').querySelectorAll('.it[data-id]')) it.onclick = () => { PICK = it.dataset.id; paint(); $('createBtn').disabled = false; }; };
+  if (FROM !== 'blank') { paint(); $('pickQ').oninput = paint; }
+  $('createBtn').disabled = FROM !== 'blank' && !PICK;
+}
+$('createBtn').onclick = async () => {
+  $('createBtn').disabled = true;
+  try { const d = await post('/api/workshop', { from: FROM === 'blank' ? { kind: 'blank' } : { kind: FROM, id: PICK }, title: $('newTitle').value.trim() || (FROM === 'blank' ? 'Untitled spec' : null), ambition: NEW_AMB });
+    open(d.workshop.uuid, d.workshop); }
+  catch (e) { toast(`could not open it: ${e.message}`, true); $('createBtn').disabled = false; }
+};
+
+// ── the workshop ───────────────────────────────────────────────────────────────────────────────────────────────────
+async function open(id, data) {
+  try { W = data || (await api(`/api/workshop/${encodeURIComponent(id)}`)).workshop; }
+  catch (e) { toast(`could not open the workshop: ${e.message}`, true); return showStart(); }
+  history.replaceState(null, '', `?id=${encodeURIComponent(W.uuid)}`);
+  $('start').classList.add('hidden'); $('work').classList.remove('hidden'); ['title', 'saveBtn', 'homeBtn'].forEach(x => $(x).classList.remove('hidden'));
+  if (!SEL || !W.sections.find(s => s.id === SEL)) SEL = (W.sections[0] || {}).id || null;
+  paint();
+}
+function paint() {
+  document.title = `${W.title} — spec workshop`;
+  $('title').value = W.title; stations();
+  $('savedNote').textContent = W.savedAt ? `saved to ${W.specPath} · ${new Date(W.savedAt).toLocaleTimeString()}${W.updatedAt > W.savedAt + 1500 ? ' · changed since' : ''}` : 'not saved to a repo yet';
+  $('secCount').textContent = W.sections.length;
+  $('secList').innerHTML = W.sections.map(s => `<div class="sec ${s.id === SEL ? 'on' : ''}" data-id="${esc(s.id)}"><span class="dot ${String(s.body || '').trim() ? 'full' : ''}"></span><span class="t">${esc(s.title)}</span></div>`).join('');
+  for (const d of $('secList').querySelectorAll('.sec')) d.onclick = () => { flushSection(); SEL = d.dataset.id; paint(); };
+  $('removedBox').innerHTML = W.removed && W.removed.length ? `<div class="h">Removed <span class="n">${W.removed.length}</span></div>${W.removed.map(s => `<div class="sec"><span class="t muted">${esc(s.title)}</span><button class="small ghost" data-r="${esc(s.id)}">restore</button></div>`).join('')}` : '';
+  for (const b of $('removedBox').querySelectorAll('button[data-r]')) b.onclick = () => update({ sections: [{ restore: b.dataset.r }] });
+  const s = W.sections.find(x => x.id === SEL);
+  $('secTitle').value = s ? s.title : ''; $('secBody').value = s ? s.body : ''; $('secTitle').disabled = $('secBody').disabled = !s;
+  $('secSaved').textContent = s ? `${s.by ? `by ${s.by} · ` : ''}${new Date(s.updatedAt).toLocaleString()}` : '';
+  $('hist').innerHTML = (W.history || []).slice(-12).reverse().map(h => `<div>${new Date(h.at).toLocaleTimeString()} · ${esc(h.what)}</div>`).join('');
+  dial($('dial'), $('dialGuide'), W.ambition, (n) => update({ ambition: n }));
+  $('feeds').innerHTML = FEEDS.map(([k, i, l]) => `<button data-k="${k}" ${BUSY ? 'disabled' : ''}><span class="i">${i}</span>${esc(l)}</button>`).join('');
+  for (const b of $('feeds').querySelectorAll('button')) b.onclick = () => feed(b.dataset.k);
+  $('draftBtn').disabled = BUSY || !s;
+  paintProposals();
+}
+function paintProposals() {
+  const showDone = $('showDone').checked;
+  const list = W.proposals.slice().reverse().filter(p => showDone || p.status === 'open');
+  $('propCount').textContent = `${W.proposals.filter(p => p.status === 'open').length} open`;
+  const sec = W.sections.find(x => x.id === SEL);
+  $('props').innerHTML = list.length ? list.map(p => `<div class="prop ${p.status}">
+      <div class="k">${esc(KIND[p.kind] || p.kind)}${p.domain ? ` <span class="s">rolled ${p.roll}: ${esc(p.domain)}</span>` : ''}<span class="s">ambition ${p.ambition}</span>${p.status !== 'open' ? `<span class="s">${esc(p.status)}${p.into ? ` → ${esc((W.sections.find(x => x.id === p.into) || {}).title || p.into)}` : ''}</span>` : ''}</div>
+      <div class="x">${esc(p.text)}</div>
+      <div class="a">${p.status === 'open' ? `
+        ${sec ? `<button class="small" data-p="${p.uuid}" data-a="append" title="add it to the end of “${esc(sec.title)}”">into ${esc(sec.title.slice(0, 22))}</button>` : ''}
+        ${p.kind === 'section' && sec ? `<button class="small" data-p="${p.uuid}" data-a="replace" title="replace the section's text (the old text is kept)">replace</button>` : ''}
+        <button class="small" data-p="${p.uuid}" data-a="new">as new section</button>
+        <button class="small ghost" data-p="${p.uuid}" data-a="dismiss">dismiss</button>` : `<button class="small ghost" data-p="${p.uuid}" data-a="reopen">reopen</button>`}</div></div>`).join('')
+    : `<div class="muted">${W.proposals.length ? 'nothing open — tick “decided” to see the rest' : 'ask the agent above — its proposals land here, and only what you accept goes into the spec'}</div>`;
+  for (const b of $('props').querySelectorAll('button[data-p]')) b.onclick = () => decide(b.dataset.p, b.dataset.a);
+}
+$('showDone').onchange = paintProposals;
+
+async function update(body) {
+  try { W = (await post(`/api/workshop/${W.uuid}`, body)).workshop; if (!W.sections.find(s => s.id === SEL)) SEL = (W.sections[W.sections.length - 1] || {}).id; paint(); }
+  catch (e) { toast(`not saved: ${e.message}`, true); }
+}
+function flushSection() {
+  if (!W || !SEL) return; clearTimeout(saveTimer);
+  const s = W.sections.find(x => x.id === SEL); if (!s) return;
+  const title = $('secTitle').value, body = $('secBody').value;
+  if (title === s.title && body === s.body) return;
+  s.title = title; s.body = body;
+  post(`/api/workshop/${W.uuid}`, { sections: [{ id: SEL, title, body }] }).then(d => { W = d.workshop; $('secSaved').textContent = `saved · ${new Date().toLocaleTimeString()}`; $('savedNote').textContent = W.savedAt ? `saved to ${W.specPath} · changed since` : 'not saved to a repo yet'; })
+    .catch(e => toast(`section not saved: ${e.message}`, true));
+}
+$('secBody').oninput = $('secTitle').oninput = () => { $('secSaved').textContent = 'editing…'; clearTimeout(saveTimer); saveTimer = setTimeout(flushSection, 900); };
+$('secTitle').onblur = $('secBody').onblur = () => { flushSection(); const el = $('secList').querySelector('.sec.on .t'); if (el) el.textContent = $('secTitle').value; };
+$('title').onchange = () => update({ title: $('title').value });
+$('addSec').onclick = () => { flushSection(); const t = prompt('Section title'); if (t && t.trim()) update({ sections: [{ add: true, title: t.trim(), after: SEL }] }).then(() => { SEL = W.sections[W.sections.findIndex(s => s.id === SEL) + 1]?.id || SEL; paint(); }); };
+$('rmSec').onclick = () => { if (SEL && confirm('Remove this section? It is kept under “Removed” and can be restored.')) update({ sections: [{ id: SEL, remove: true }] }); };
+$('draftBtn').onclick = () => feed('section');
+
+async function feed(kind) {
+  flushSection(); BUSY = true; paint();
+  $('busy').innerHTML = `<span class="busy">asking the agent — ${esc(KIND[kind] || kind)}…</span>`;
+  try { const d = await post(`/api/workshop/${W.uuid}/feed`, { kind, sectionId: SEL }); W = d.workshop;
+    toast(`${d.added.length} proposal(s)${d.meta && d.meta.domain ? ` — the d20 rolled ${d.meta.roll}: ${d.meta.domain}` : ''}`); }
+  catch (e) { toast(e.message, true); }
+  finally { BUSY = false; $('busy').textContent = ''; paint(); }
+}
+async function decide(pid, a) {
+  flushSection();
+  const body = a === 'dismiss' || a === 'reopen' ? { action: a } : { action: 'accept', mode: a, sectionId: SEL };
+  if (a === 'new') { const p = W.proposals.find(x => x.uuid === pid); const t = prompt('Title for the new section', p && p.kind === 'section' ? 'Section' : (KIND[p.kind] || 'Section')); if (!t) return; body.title = t; }
+  try { const d = await post(`/api/workshop/${W.uuid}/proposal/${pid}`, body); W = d.workshop; if (d.section) SEL = d.section.id; paint(); }
+  catch (e) { toast(e.message, true); }
+}
+async function save() {
+  flushSection(); $('saveBtn').disabled = true;
+  try { const d = await post(`/api/workshop/${W.uuid}/save`, {}); W = d.workshop; paint();
+    toast(`saved to ${d.specPath}${d.madeRepo === 'new' ? ' — in a new repo' : d.madeRepo ? ' — in its library document\'s repo' : ''}`); }
+  catch (e) { toast(`not saved: ${e.message}`, true); }
+  finally { $('saveBtn').disabled = false; }
+}
+$('saveBtn').onclick = save;
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && W) { e.preventDefault(); save(); } });
+function openRepo() {
+  if (!W || !W.repoUuid) return;
+  if (window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'nexus:repo.open', repoUuid: W.repoUuid, label: W.title, subtab: 'spec' }, '*'); toast('opened in idearium — the Spec tab'); }
+  else toast(`its repo: ${W.repoUuid}`);
+}
+$('homeBtn').onclick = () => { flushSection(); SRC = null; showStart(); };
+window.addEventListener('beforeunload', flushSection);
+
+(async () => {
+  if (Q.get('id')) return open(Q.get('id'));
+  const f = Q.get('from');
+  if (f && /^(idea|library|repo):.+/.test(f)) {
+    const [kind, ...rest] = f.split(':');
+    try { const d = await post('/api/workshop', { from: { kind, id: rest.join(':') }, ambition: 3 }); return open(d.workshop.uuid, d.workshop); }
+    catch (e) { toast(`could not start from that ${kind}: ${e.message}`, true); }
+  }
+  showStart();
+})();
+</script>
+</body>
+</html>
