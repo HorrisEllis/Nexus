@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.7
+    version:  1.7.8
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -727,7 +727,7 @@ spec:
       layer: service
       systems: [guardian, economy, idearium, cos]
       value: { score: 5, cost: M, for: [income, daily-use], why: "the strongest coder available, working inside his pipeline on his account" }
-      status: OPEN
+      status: PARTIAL (1.7.8) — IN2a built: the 'claude-code' backend in Idearium (headless, in a copy, back through the repo layer); GA1/AC1/SH1 parts open
       depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
       files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
       does: >-
@@ -1200,3 +1200,23 @@ spec:
 # `undefined`. 147 COS events, all declared. EV0 (1) now stands for idearium, cortex, intelligence, copilot, emerge,
 # cos (loom emits none); warp waits on 1.5.0. Guardian (60), orchestrator (18) and clear-glass (232), outside EV0's
 # list, stay held by the ratchet. Said: cos/test/test.js fails 1 of 157 with and without these changes.
+
+## ADDENDUM 2026-10-02 — 1.7.8, IN2a: Claude Code as an Idearium agent backend
+# James: "i feel like claude needs a code mode for using claude code. i cant have an agent use this window" · "okay but
+# im using idearium". Built ahead of GA1 / AC1 / SH1, on his word, as the slice of IN2 that needs none of them:
+# lib/claude-code-backend.js runs headless Claude Code (`claude -p --output-format json --permission-mode acceptEdits`,
+# read/edit tools only — no Bash; running the code is the proof's job) on the machine Idearium runs on, under the account
+# that machine's `claude` is signed into. lib/repo-agent.js has a 'claude-code' provider beside ollama / copilot /
+# guardian: the Agent tab's switch has a fourth position, and phase runs, the repo chat and PH1's retries all reach it
+# through the same dispatch, with the repo's composed prompt (hat, context, blocks).
+# It never touches the repo folder: it works in a COPY; the copy is snapshotted when made and diffed against that
+# snapshot when Claude Code finishes; every changed file goes back through the repo layer (the one write path) and is
+# reported as the reply's injects, so a phase run's shadow and PH1's proof read it like any agent's code.
+# Found while building, a defect it would have had: diffing against the live repo folder picked up Idearium's own
+# re-materialised files (proof.json, verification.lazy.json) as if Claude Code had written them — one was written back.
+# Now the diff is against the copy's own snapshot. Still open (IN2 proper): Guardian as the provider's registry (GA1),
+# its spend in the economy ledger per account (EC6/AC1 — the cost is on each result, not yet in the ledger), the shadow
+# layer (SH1) in place of the copy, and the work surface showing the session live.
+# Proof: tests/modules/test-claude-code-backend.test.js 5/5 with a stand-in `claude` — CC-04: the provider set through
+# the real API, a dispatch's edits / additions / deletion written through the real repo layer as injects, then PH1's loop
+# drives it: attempt 1 left no readme, the unmet promise went to Claude Code, attempt 2 wrote it, the phase read proven.

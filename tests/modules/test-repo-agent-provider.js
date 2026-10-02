@@ -158,9 +158,10 @@ async function main() {
   // now a switch (guardian on/off) + a guardian-agent dropdown.
   // §THREE-WAY 0.39.253 — the guardian on/off checkbox is gone; the three-way switch replaces it everywhere.
   check('no checkbox decides the backend any more', !APP.includes('id="agent-use-guardian"') && !APP.includes('agentSetUseGuardian'));
-  check('the three-way switch: ollama · copilot · guardian, each sending only what it owns',
-    /btn\('ollama',[\s\S]{0,80}btn\('copilot',[\s\S]{0,80}btn\('guardian',/.test(APP)
-    && /backend === 'ollama' \? \{ provider: 'ollama' \} : backend === 'copilot' \? \{ provider: 'auto' \} : \{ useGuardian: true \}/.test(APP));
+  // §IN2a 2026-10-02 — a fourth position, claude-code (headless Claude Code, lib/claude-code-backend.js)
+  check('the switch: ollama · copilot · guardian · claude-code, each sending only what it owns',
+    /btn\('ollama',[\s\S]{0,80}btn\('copilot',[\s\S]{0,80}btn\('guardian',[\s\S]{0,80}btn\('claude-code',/.test(APP)
+    && /backend === 'ollama' \? \{ provider: 'ollama' \} : backend === 'copilot' \? \{ provider: 'auto' \} : backend === 'claude-code' \? \{ provider: 'claude-code' \} : \{ useGuardian: true \}/.test(APP));
   check('the Agent tab CLI and Settings → Agents both render the same control', (APP.match(/_agentBackendHtml\(/g) || []).length >= 3);
   check('guardian shows its agents; ollama shows the installed models; copilot shows no dropdown',
     APP.includes('onchange="agentSetGuardianAgent(this.value)"') && APP.includes('onchange="agentSetOllamaModel(this.value)"') && APP.includes("copilot picks who answers; what is sent is still only these settings"));   // 0.39.258 wording

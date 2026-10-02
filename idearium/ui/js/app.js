@@ -4726,7 +4726,7 @@ async function _ollamaModelList(force = false) {
 function _agentBackendOf(cfg) {
   if (cfg && cfg.backend) return cfg.backend;
   const p = cfg && cfg.provider;
-  return p === 'ollama' ? 'ollama' : (!p || p === 'auto') ? 'copilot' : 'guardian';
+  return p === 'ollama' ? 'ollama' : p === 'claude-code' ? 'claude-code' : (!p || p === 'auto') ? 'copilot' : 'guardian';
 }
 function _agentBackendHtml(cfg, models) {
   const b = _agentBackendOf(cfg || {});
@@ -4750,11 +4750,15 @@ function _agentBackendHtml(cfg, models) {
     } else {
       drop = `<span class="ag-note ag-warn" title="${escapeHtml((models && models.error) || '')}">ollama models unavailable — ${escapeHtml((models && models.error) || 'not loaded')}</span>`;
     }
+  } else if (b === 'claude-code') {
+    // §IN2a — headless Claude Code on this machine; it edits a copy of the repo and its changes come back through the repo layer
+    drop = `<span class="ag-note">Claude Code on this machine, under the account its <code>claude</code> is signed into — it works in a copy; what it changes is written back here</span>`;
   } else {
     drop = `<span class="ag-note">copilot picks who answers; what is sent is still only these settings</span>`;
   }
   return `<span class="ag-backend"><span class="ag-toggle" title="which backend wears this repo's hat">` +
     btn('ollama', 'a local Ollama model') + btn('copilot', "copilot's own default provider") + btn('guardian', "a guardian agent, through its own tab") +
+    btn('claude-code', 'Claude Code, headless on this machine — reads and edits the repo itself') +
     `</span>${drop}</span>`;
 }
 function _agentControlsRerender() {   // both places the backend control shows: the Agent tab and Settings → Agents
@@ -4766,7 +4770,7 @@ async function agentSetBackend(backend) {
   if (!CURRENT_API_REPO) return;
   // guardian keeps this compartment's guardian agent (or the stated default) — the server resolves it, so switching
   // away and back never silently loses the choice.
-  const body = backend === 'ollama' ? { provider: 'ollama' } : backend === 'copilot' ? { provider: 'auto' } : { useGuardian: true };
+  const body = backend === 'ollama' ? { provider: 'ollama' } : backend === 'copilot' ? { provider: 'auto' } : backend === 'claude-code' ? { provider: 'claude-code' } : { useGuardian: true };
   try { const r = await api(`/api/repos/${CURRENT_API_REPO.uuid}/agent/settings`, { method: 'POST', body: JSON.stringify(body) });
     toast(backend === 'copilot' ? 'copilot wears this repo\'s hat' : backend === 'ollama' ? 'ollama wears this repo\'s hat' : `${r.provider} wears this repo's hat`, 'ok'); }
   catch (e) { toast(`backend failed: ${e.message}`, 'err'); }

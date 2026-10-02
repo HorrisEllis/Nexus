@@ -196,6 +196,7 @@ const SUITES = [
   'test-proof-run.test.js',           // 0.39.302 PR1 the delivery checker
   'test-phase-proof.test.js',         // 0.39.303 PH1 phase runs end in proof
   'test-event-contracts.test.js',     // EV0 (3) every emitted event declared; the drift baseline only shrinks
+  'test-claude-code-backend.test.js', // IN2a Claude Code as an Idearium agent backend (a stand-in claude)
   'clear-glass-library-ui.test.js',
   'clear-glass-screen-qa.test.js',
   'clear-glass-screen-qa-ui.test.js',
