@@ -209,20 +209,7 @@
       "missing": []
     },
     "copilot": {
-      "undeclared": [
-        "copilot.build.complete",
-        "copilot.build.started",
-        "copilot.channel.changed",
-        "copilot.context.assembled",
-        "copilot.error.detected",
-        "copilot.fulfillment.attempt",
-        "copilot.lifeline.escalated",
-        "copilot.mastermind.enriched",
-        "copilot.prompt.received",
-        "copilot.retry.introspected",
-        "copilot.stream.event",
-        "emerge.contract.dispatched"
-      ],
+      "undeclared": [],
       "unresolved": [],
       "missing": []
     },
