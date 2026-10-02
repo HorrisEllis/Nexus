@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786733
+exported_at: 1790936718014
 source: clear-glass/registry-components.js:cg.downloads.openFile
 occurrences: 1
 firstSeenAt: 1790684786733
-lastSeenAt: 1790684786733
-fingerprint: ffc69d76cf8449bd04bb324b
+lastSeenAt: 1790936718014
+fingerprint: d76d448b9d38e0bf7f10b15f
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.downloads.openFile
   namespace: cg
   name: downloads.openFile
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: downloads:openFile

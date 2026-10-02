@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786671
+exported_at: 1790936717947
 source: clear-glass/registry-components.js:cg.siteSettings.get
 occurrences: 1
 firstSeenAt: 1789250730167
-lastSeenAt: 1790684786671
-fingerprint: 2e28c4de1ff7c3607bf86fac
+lastSeenAt: 1790936717947
+fingerprint: e37a1c832f94e7701f9783d4
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.siteSettings.get
   namespace: cg
   name: siteSettings.get
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: site-settings:get

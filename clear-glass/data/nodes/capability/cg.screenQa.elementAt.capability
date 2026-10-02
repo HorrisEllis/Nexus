@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786706
+exported_at: 1790936717994
 source: clear-glass/registry-components.js:cg.screenQa.elementAt
 occurrences: 1
 firstSeenAt: 1790684786706
-lastSeenAt: 1790684786706
-fingerprint: 1e10481d4e1b3fdd995d716c
+lastSeenAt: 1790936717994
+fingerprint: 8c34f2a74871ef47bfa55a2a
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.screenQa.elementAt
   namespace: cg
   name: screenQa.elementAt
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: screen-qa:element-at

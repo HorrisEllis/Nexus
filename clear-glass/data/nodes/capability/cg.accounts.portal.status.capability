@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786717
+exported_at: 1790936718002
 source: clear-glass/registry-components.js:cg.accounts.portal.status
 occurrences: 1
 firstSeenAt: 1790684786717
-lastSeenAt: 1790684786717
-fingerprint: 39fd24ccfc1ecdcfbe48325e
+lastSeenAt: 1790936718002
+fingerprint: d548527512c60ce35e45db99
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.accounts.portal.status
   namespace: cg
   name: accounts.portal.status
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: accounts:portal:status

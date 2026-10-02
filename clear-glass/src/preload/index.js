@@ -319,6 +319,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     // §0.39.265 — cover letters / Upwork & Fiverr proposals (src/autofill/proposal.js)
     proposal: (payload)   => ipcRenderer.invoke('autofill:proposal', payload),
     readPage: (agentId)   => ipcRenderer.invoke('autofill:readPage', { agentId }),
+    // §0.39.301 — write a Fiverr gig, then (only when asked) type it into the gig editor (src/autofill/gig.js)
+    gig:       (payload)                     => ipcRenderer.invoke('autofill:gig', payload),
+    gigDetect: (gig, agentId)                => ipcRenderer.invoke('autofill:gig:detect', { gig, agentId }),
+    gigFill:   (gig, agentId, minConfidence) => ipcRenderer.invoke('autofill:gig:fill', { gig, agentId, minConfidence }),
   },
 
   // §BUILT 2026-09-21 — James: "clearglass needs to help me with job

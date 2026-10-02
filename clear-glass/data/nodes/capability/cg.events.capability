@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786622
+exported_at: 1790936717899
 source: clear-glass/registry-components.js:cg.events
 occurrences: 1
 firstSeenAt: 1789250730157
-lastSeenAt: 1790684786622
-fingerprint: e2b3a39c28686bda1aa1a952
+lastSeenAt: 1790936717899
+fingerprint: e484ba1b53de363f6fdeb7a8
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.events
   namespace: cg
   name: events
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /events

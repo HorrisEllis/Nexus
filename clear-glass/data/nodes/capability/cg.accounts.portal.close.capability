@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786720
+exported_at: 1790936718003
 source: clear-glass/registry-components.js:cg.accounts.portal.close
 occurrences: 1
 firstSeenAt: 1790684786720
-lastSeenAt: 1790684786720
-fingerprint: 245e45be2759da965b75e894
+lastSeenAt: 1790936718003
+fingerprint: 3ee59d3470f07b640b7e07b0
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.accounts.portal.close
   namespace: cg
   name: accounts.portal.close
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: accounts:portal:close

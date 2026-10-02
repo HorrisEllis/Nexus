@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786712
+exported_at: 1790936717999
 source: clear-glass/registry-components.js:cg.accounts.portal.providers
 occurrences: 1
 firstSeenAt: 1790684786712
-lastSeenAt: 1790684786712
-fingerprint: b463ef7b405a10b88f0bc99c
+lastSeenAt: 1790936717999
+fingerprint: 3155640076bdfab96dd6db7e
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.accounts.portal.providers
   namespace: cg
   name: accounts.portal.providers
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: accounts:portal:providers

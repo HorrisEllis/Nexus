@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786634
+exported_at: 1790936717912
 source: clear-glass/registry-components.js:cg.context.list
 occurrences: 1
 firstSeenAt: 1789250730159
-lastSeenAt: 1790684786634
-fingerprint: 601c4f6e6c54066e836a172a
+lastSeenAt: 1790936717912
+fingerprint: 67f07e091818c0a52353eebf
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.context.list
   namespace: cg
   name: context.list
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /contexts

@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786621
+exported_at: 1790936717897
 source: clear-glass/registry-components.js:cg.contract
 occurrences: 1
 firstSeenAt: 1789250730157
-lastSeenAt: 1790684786621
-fingerprint: 790c60b372e67511c6f57185
+lastSeenAt: 1790936717897
+fingerprint: cc168413f84eb879027aff97
 payload:
   intent: []
   grammar:
@@ -24,7 +24,7 @@ payload:
   id: cg.contract
   namespace: cg
   name: contract
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /contract

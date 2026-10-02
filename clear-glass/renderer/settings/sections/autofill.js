@@ -151,6 +151,111 @@
       h('div', { class: 'af-acts' }, go, copyBtn), meta, draft] });
   }
 
+  // ── Fiverr gigs — §0.39.301 ────────────────────────────────────────────
+  // James: "I just want it to write gigs for me. Not automate talking or posting." A gig written from a profile and
+  // one line of what it offers (src/autofill/gig.js, through the co-pilot), every part editable and copyable, and —
+  // only when asked — typed into Fiverr's gig editor in a tab. Nothing is saved or published: that stays his click.
+  const GIG_LIMIT = { title: 80, tags: 200, description: 1200, name: 35, 'package-description': 100, question: 150, answer: 300, requirement: 200 };
+  function _limitFor(key) {
+    if (key === 'title') return GIG_LIMIT.title;
+    if (key === 'description') return GIG_LIMIT.description;
+    if (/\.name$/.test(key)) return GIG_LIMIT.name;
+    if (/^(basic|standard|premium)\.description$/.test(key)) return GIG_LIMIT['package-description'];
+    if (/\.question$/.test(key)) return GIG_LIMIT.question;
+    if (/\.answer$/.test(key)) return GIG_LIMIT.answer;
+    if (/^requirement\./.test(key)) return GIG_LIMIT.requirement;
+    return 0;
+  }
+  // write an edited part back into the gig the fill uses, so what is typed is what he edited
+  function _setPart(gig, key, text) {
+    const v = String(text);
+    if (key === 'title') gig.title = /^i will\b/i.test(v) ? v : `I will ${v}`;
+    else if (key === 'tags') gig.tags = v.split(',').map(t => t.trim()).filter(Boolean);
+    else if (key === 'description') gig.description = v;
+    else if (key === 'category') gig.category = v;
+    else {
+      const m = /^(basic|standard|premium)\.(name|description)$/.exec(key);
+      const f = /^faq\.(\d+)\.(question|answer)$/.exec(key);
+      const q = /^requirement\.(\d+)$/.exec(key);
+      if (m && gig.packages[m[1]]) gig.packages[m[1]][m[2]] = v;
+      else if (f && gig.faq[+f[1]]) gig.faq[+f[1]][f[2]] = v;
+      else if (q) gig.requirements[+q[1]] = v;
+    }
+  }
+  function gigPane(profiles) {
+    if (!profiles.length) return pane({ title: 'Fiverr gigs', body: h('p', { class: 'blurb', text: 'Create a profile first — the gig is written only from what it says about you.' }) });
+    const prof = select(profiles.map(p => ({ value: p.id, label: p.label })), profiles[0].id);
+    const offer = h('input', { type: 'text', placeholder: 'What this gig offers, in your words — e.g. simple websites for small businesses' });
+    const extra = h('input', { type: 'text', placeholder: 'Optional: keep the basic package under $40; mention 3-day delivery' });
+    const meta = h('div', { class: 'blurb' });
+    const warn = h('div', { class: 'af-gig-warn' });
+    const parts = h('div', { class: 'af-gig-parts' });
+    let gig = null;
+    const copy = (text, what) => navigator.clipboard.writeText(text).then(() => toast(`${what} copied`));
+    const render = (r) => {
+      gig = r.gig;
+      warn.replaceChildren(...(r.warnings || []).map(w => h('div', { text: `⚠ ${w}` })));
+      parts.replaceChildren(...r.parts.map(p => {
+        const lim = _limitFor(p.key);
+        const ta = h('textarea', { rows: p.key === 'description' ? 8 : Math.min(4, Math.max(1, Math.ceil(p.text.length / 90))), value: p.text });
+        const n = h('div', { class: 'n' });
+        const count = () => { n.textContent = lim ? `${ta.value.length} / ${lim}` : ''; n.classList.toggle('over', !!lim && ta.value.length > lim); };
+        ta.addEventListener('input', () => { _setPart(gig, p.key, ta.value); count(); });
+        count();
+        return h('div', { class: 'af-gig-part' }, h('span', { class: 'lbl', text: p.label }), ta, btn('Copy', () => copy(ta.value, p.label), 'sm'), n);
+      }));
+      meta.textContent = 'Read every part before you use it. Nothing has been typed anywhere.';
+    };
+    const write = btn('Write the gig', (e) => busy(e.currentTarget, async () => {
+      if (offer.value.trim().length < 8) throw new Error('Say in a line what this gig offers.');
+      parts.replaceChildren(); warn.replaceChildren(); meta.textContent = 'Writing…';
+      const r = await call(() => cg.autofill.gig({ profileId: prof.value, offer: offer.value.trim(), extra: extra.value.trim() }), 'write gig');
+      if (!r.ok) { meta.textContent = ''; throw new Error(r.error); }
+      render(r);
+    }), 'primary');
+    const copyAll = btn('Copy everything', () => {
+      if (!gig) return toast('Write the gig first', 'warn');
+      const all = [...parts.querySelectorAll('.af-gig-part')].map(el => `${el.querySelector('.lbl').textContent.toUpperCase()}\n${el.querySelector('textarea').value}`).join('\n\n');
+      copy(all, 'The gig');
+    }, 'sm');
+    const fill = btn('Fill the gig editor in a tab', () => gigFillFlow(() => gig).catch(e => toast(e.message, 'bad')), 'sm');
+    return pane({ title: 'Fiverr gigs', sub: 'Written only from your profile and your one line. It types into the gig editor only when you ask, and never saves or publishes.', body: [
+      h('div', { class: 'grid' }, field('Profile', prof), field('What the gig offers', offer)),
+      field('Anything to add', extra),
+      h('div', { class: 'af-acts' }, write, copyAll, fill), meta, warn, parts] });
+  }
+  async function gigFillFlow(getGig) {
+    const gig = getGig();
+    if (!gig) throw new Error('Write the gig first.');
+    const agents = await agentOptions();
+    if (!agents.length) throw new Error('Open Fiverr’s gig editor in a tab first (Selling › Gigs › Create a new gig).');
+    const target = select(agents);
+    const conf = select([{ value: 'medium', label: 'Medium and up' }, { value: 'low', label: 'Low and up' }], 'medium');
+    const out = h('div', { class: 'af-out', 'aria-live': 'polite' });
+    const line = (text, kind = '') => h('div', { class: `af-line ${kind}`.trim(), text });
+    const left = (keys) => keys && keys.length ? [line(`Still to copy by hand (${keys.length}): ${keys.join(', ')} — Fiverr’s dropdowns and some boxes are its own widgets`)] : [];
+    const preview = btn('Preview', (e) => busy(e.currentTarget, async () => {
+      out.replaceChildren(line('Looking at the page…'));
+      const r = await call(() => cg.autofill.gigDetect(gig, target.value), 'preview');
+      if (r.error) throw new Error(r.error);
+      out.replaceChildren(...(r.matches.length
+        ? [line(`${r.matches.length} of ${r.totalFields} field${r.totalFields === 1 ? '' : 's'} on this page take a part of the gig:`), ...r.matches.map(m => line(`${m.key} — ${m.confidence} — by ${m.source}`, `c-${m.confidence}`))]
+        : [line(`No field on this page matches a part of the gig (${r.totalFields} fields). Fiverr’s editor has several steps — open the step you want filled.`)]), ...left(r.leftToCopy));
+    }), 'sm');
+    const doFill = btn('Fill', (e) => busy(e.currentTarget, async () => {
+      out.replaceChildren(line('Filling…'));
+      const r = await call(() => cg.autofill.gigFill(gig, target.value, conf.value), 'fill');
+      if (r.error) throw new Error(r.error);
+      const lines = [line(`Filled ${r.filled.length} field(s). Nothing is saved or published — check the page, then save it yourself.`, 'ok')];
+      if (r.skipped.length) lines.push(line(`Left ${r.skipped.length} below “${conf.value}” confidence for you`));
+      r.failed.forEach(x => lines.push(line(`${x.key}: ${x.error}`, 'bad')));
+      out.replaceChildren(...lines, ...left(r.leftToCopy));
+    }), 'sm primary');
+    await modal({ title: 'Fill Fiverr’s gig editor', wide: true, body: [
+      h('p', { class: 'blurb', text: 'Fiverr’s editor is in steps (Overview, Pricing, Description & FAQ, Requirements). Open a step in the tab, fill it here, check it, save it on Fiverr, then do the next step.' }),
+      h('div', { class: 'grid' }, field('Tab', target), field('Fill fields matched with', conf)), h('div', { class: 'af-acts' }, preview, doFill), out] });
+  }
+
   section({
     id: 'autofill', group: 'Browser', icon: '\u270E', label: 'Autofill & answers',
     keywords: 'autofill profile job application screen question answer ctrl shift a resume cover letter address phone email fill form detect upwork fiverr freelance proposal gig salary',
@@ -174,6 +279,7 @@
           btn('Delete', async () => { if (await confirmDo(`Delete “${p.label}”?`, 'Forms can no longer be filled from it.', 'Delete')) { await busy(null, () => call(() => cg.autofill.deleteProfile(p.id), 'delete')); rerender(); } }, 'sm danger')))
           : empty('No profiles yet.', btn('Create one', () => profileEditor(null, rerender), 'sm')) }),
         proposalPane(profiles),
+        gigPane(profiles),
         pane({ title: 'Answering questions on screen', body: [
           h('div', { class: 'row', style: { padding: '0 0 12px', borderTop: 0 } }, h('div', { class: 'what' }, h('div', { class: 't', text: 'Enabled' }), h('div', { class: 'd', text: 'Every answer is shown to you first \u2014 nothing is typed into a page on its own.' })),
             toggle(s.screenQaEnabled !== false, (on) => save({ screenQaEnabled: on }))),

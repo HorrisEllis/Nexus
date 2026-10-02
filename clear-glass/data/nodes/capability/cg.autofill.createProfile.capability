@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786699
+exported_at: 1790936717981
 source: clear-glass/registry-components.js:cg.autofill.createProfile
 occurrences: 1
 firstSeenAt: 1790684786699
-lastSeenAt: 1790684786699
-fingerprint: 3b2f9e3ee5ae90f6ec6c3c29
+lastSeenAt: 1790936717981
+fingerprint: 98d76874bad959e90e1f8cd3
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.autofill.createProfile
   namespace: cg
   name: autofill.createProfile
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: autofill:profile:create

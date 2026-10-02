@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786731
+exported_at: 1790936718010
 source: clear-glass/registry-components.js:cg.mesh.jobStatus
 occurrences: 1
 firstSeenAt: 1790684786731
-lastSeenAt: 1790684786731
-fingerprint: 2d4f75b13ea76a54fb0408ea
+lastSeenAt: 1790936718010
+fingerprint: ee2c01d406874777fe6f40a7
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.mesh.jobStatus
   namespace: cg
   name: mesh.jobStatus
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /agent-mesh/job?jobId={jobId}

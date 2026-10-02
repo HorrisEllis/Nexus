@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786733
+exported_at: 1790936718015
 source: clear-glass/registry-components.js:cg.selectors.providerFor
 occurrences: 1
 firstSeenAt: 1790684786733
-lastSeenAt: 1790684786733
-fingerprint: 38d6505f8d849d12d80c008a
+lastSeenAt: 1790936718015
+fingerprint: 553ce4134f9f96dc3053679e
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.selectors.providerFor
   namespace: cg
   name: selectors.providerFor
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: selectors:provider-for-url

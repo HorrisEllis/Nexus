@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786689
+exported_at: 1790936717975
 source: clear-glass/registry-components.js:cg.macros.get
 occurrences: 1
 firstSeenAt: 1789250730174
-lastSeenAt: 1790684786689
-fingerprint: 0a0b81073b7f20502c357105
+lastSeenAt: 1790936717975
+fingerprint: 92f22a93ad92878b49df8195
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.macros.get
   namespace: cg
   name: macros.get
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: macros:get

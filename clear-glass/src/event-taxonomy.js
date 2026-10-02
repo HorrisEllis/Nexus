@@ -77,6 +77,18 @@ module.exports = Object.freeze({
     severity: 'failure',
   },
 
+  // ── ipc/bridge.js — the Fiverr gig writer (0.39.301, src/autofill/gig.js) ────
+  AUTOFILL_GIG_DRAFTED: {
+    description: 'A Fiverr gig was written from an autofill profile and one line of what it offers; nothing was typed or sent anywhere.',
+    payloadShape: ['profileId', 'title', 'tags', 'packages', 'warnings', 'ts'],
+    severity: 'info',
+  },
+  AUTOFILL_GIG_FILLED: {
+    description: 'A written gig was typed into the gig editor open in a tab — never saved or published; what the page did not offer as a field is left to copy.',
+    payloadShape: ['agentId', 'filled', 'skipped', 'failed', 'leftToCopy', 'ts'],
+    severity: 'info',
+  },
+
   // ── plugins/* — deliberately empty. See the real, honest gap noted
   //    above this export — nothing here yet because nothing real exists
   //    to document.

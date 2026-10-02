@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786661
+exported_at: 1790936717936
 source: clear-glass/registry-components.js:cg.wire.hostile
 occurrences: 1
 firstSeenAt: 1789250730165
-lastSeenAt: 1790684786661
-fingerprint: 54c7c830d7464114f00c1345
+lastSeenAt: 1790936717936
+fingerprint: 13b321032bb967e5b7664d16
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.wire.hostile
   namespace: cg
   name: wire.hostile
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /hook/hostile

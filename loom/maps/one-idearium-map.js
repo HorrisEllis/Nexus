@@ -57,10 +57,15 @@ const BOUNDARY_EXPORTS = [
   // so the scanner gives it its export hook; declaring it here too was a duplicate (loom.unique-id)
   // §0.39.295 — the spatial void, reached only by await import() from idearium/api
   I('idearium/lib/void.js'),
+  // §0.39.298 AR2 — the Architect, reached only by await import() from idearium/api
+  I('idearium/lib/architect.js'),
+  // §0.39.302 PR1 — the delivery checker, reached only by await import() from idearium/api
+  I('idearium/repo/proof-run.js'),
 ];
 
 // Consumers that are HAND-MAPPED elsewhere (the scanner skips them): [consumer id, dependency id, where].
 const CONSUMERS = [
+  ['nexus.idearium.api', I('idearium/repo/proof-run.js'),  'idearium/api/index.js repo.deliver.* — the delivery checker (await import)'],
   ['nexus.idearium.api', I('idearium/repo/phases.js'),      'idearium/api/index.js repo.phases.* (await import)'],
   ['nexus.idearium.api', I('idearium/repo/living-spec.js'), 'idearium/api/index.js repo.living-spec (await import)'],
   ['nexus.idearium.api', I('lib/cos-debug-report.js'),      'idearium/api/index.js repo.run — failures keep their compact debug report'],

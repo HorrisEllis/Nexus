@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786659
+exported_at: 1790936717934
 source: clear-glass/registry-components.js:cg.wire.eros.proxy
 occurrences: 1
 firstSeenAt: 1789250730164
-lastSeenAt: 1790684786659
-fingerprint: 7dc04d0efafbacabb61623ad
+lastSeenAt: 1790936717934
+fingerprint: 302ca557158a91a81e672481
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.wire.eros.proxy
   namespace: cg
   name: wire.eros.proxy
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /eros/*

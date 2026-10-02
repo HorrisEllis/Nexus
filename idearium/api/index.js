@@ -666,7 +666,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       try { const tb = _toolsBrief(r); if (tb) row.tools = tb; } catch (_) {}
       appendRow('idearium_phase_runs', row);
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: row.state, snapshot: commitId });
-      _reviewDraft({ r, state, absent, target, base, commitId, req, note, message }).catch(e => console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`));
+      _reviewDraft({ r, state, absent, target, base, commitId, req, note, message })
+        .catch(e => { console.warn(`[idearium] draft review for ${runId} failed: ${e.message}`); return null; })
+        // §0.39.303 PH1 — then the judge: the phase's own conditions, run; unmet ones feed the next attempt
+        .then(() => (['replied', 'incomplete'].includes(state) ? _provePhase({ target, base, commitId, mapText, phase, message, dispatch: { backend, agent, provider } }) : null))
+        .catch(e => console.warn(`[idearium] proof of ${runId} failed: ${e.message}`));
     })
     .catch((e) => {
       if (shadow) SH.drop(shadow);
@@ -675,6 +679,61 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     });
   return { ok: true, data: { runId, state: 'building', snapshot: commitId, targetRepo: target.uuid, targetName: target.name, statusNote, title: req.title, promptChars: message.length,
     ...(shadow ? { shadow: { id: shadow.id, expects: shadow.expects } } : {}) } };
+}
+
+// §0.39.303 PH1 — James: "It can build it. Piece by piece look at idearium." A phase run ends in a proof run of the
+// phase's own conditions (its map's `conditions:`, idearium/repo/proof-run.js). Met → 'proven'. Unmet → the unmet
+// promises, their evidence and causes go back to the same agent as the next attempt, up to repos.proof_attempts
+// (default 2), then 'unproven' with what is still missing. No conditions declared → 'no-proof', said, never assumed.
+async function _provePhase({ target, base, commitId, mapText, phase, message, dispatch }) {
+  const PR = await import('../repo/proof-run.js');
+  const { conditions, source } = PR.conditionsFromPhase(mapText, phase);
+  const pbase = { ...base, runId: `${base.runId}-proof`, buildRunId: base.runId };
+  if (!conditions.length) {
+    appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-no-proof`, ...pbase, state: 'no-proof', snapshot: commitId, error: `not proven: ${source} — add conditions: [{ says, check }] to the phase`, ts: Date.now() });
+    getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'no-proof' });
+    return { state: 'no-proof' };
+  }
+  let max = 2; try { const v = Number(getIdeariumValue('repos.proof_attempts')); if (v >= 1 && v <= 10) max = Math.floor(v); } catch (_) {}
+  const RA = _require('../../lib/repo-agent.js');
+  const writer = (rel, text) => getRepoLayer().writeFile(target.uuid, rel, text, { preserveWhitespace: true });
+  let run = null;
+  for (let attempt = 1; attempt <= max; attempt++) {
+    if (attempt > 1) {
+      // the next attempt: the same agent, a fresh chat, the phase's request plus exactly what was not met
+      const fb = PR.feedbackMessage(run);
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-retry-${attempt}`, ...pbase, state: 'retrying', attempt, snapshot: commitId, error: `${run.total - run.met} condition(s) unmet — attempt ${attempt} of ${max}`, ts: Date.now() });
+      getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: attempt - 1, met: run.met, total: run.total, modes: run.modes });
+      let rr; try { rr = await RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message: `${message}
+
+${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }); }
+      catch (e) { rr = { ok: false, error: e.message }; }
+      if (!rr || !rr.ok) {
+        appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `attempt ${attempt} failed before it could be checked: ${String((rr && rr.error) || 'no reply').slice(0, 300)}`, proof: run && { met: run.met, total: run.total, modes: run.modes }, ts: Date.now() });
+        getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
+        return { state: 'unproven', run };
+      }
+    }
+    const dir = _repoDiskDir(target.uuid);
+    const r = dir ? await PR.runProof({ repoDir: dir, conditions, subject: `${target.name || target.uuid} — ${base.title || phase}`, writer }) : { ok: false, error: 'could not resolve the repo directory' };
+    if (!r.ok) {
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt, snapshot: commitId, error: `the proof could not run: ${r.error}`, ts: Date.now() });
+      getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
+      return { state: 'unproven' };
+    }
+    run = r.run;
+    if (run.verdict === 'ready') {
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
+      getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
+      getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
+      return { state: 'proven', attempt, run };
+    }
+  }
+  const still = run.results.filter(x => !x.met).map(x => x.says);
+  appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-unproven`, ...pbase, state: 'unproven', attempt: max, snapshot: commitId, error: `after ${max} attempt(s), still not met: ${still.join(' · ').slice(0, 400)}`, proof: { met: run.met, total: run.total, modes: run.modes, report: run.files && run.files.report }, ts: Date.now() });
+  getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: max, met: run.met, total: run.total, modes: run.modes });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'unproven' });
+  return { state: 'unproven', run };
 }
 
 // §0.39.282 N23 — Ollama drafted the phase: a guardian agent reviews the draft (lib/draft-review.js) in one plain
@@ -1552,6 +1611,8 @@ const ROUTE_CAP = {
   'repo.environment.get': CAPS.READ_IDEAS, 'repo.environment.set': CAPS.WRITE_IDEAS, 'repo.environment.setup': CAPS.ADMIN,
   'repo.spec.plan.get': CAPS.READ_IDEAS, 'repo.spec.plan': CAPS.WRITE_IDEAS, 'repo.spec.build': CAPS.WRITE_IDEAS,
   'repo.plan': CAPS.READ_IDEAS, 'repo.file.manage': CAPS.WRITE_IDEAS,
+  // §0.39.302 PR1 — the delivery checker. A check RUNS the repo's own commands and app, so it is ADMIN, as environment setup is.
+  'repo.deliver.check': CAPS.ADMIN, 'repo.deliver.last': CAPS.READ_IDEAS, 'repo.deliver.conditions': CAPS.WRITE_IDEAS,
 };
 
 // Key-based auth removed — Idearium is internal-only, reached solely
@@ -1767,6 +1828,10 @@ function matchRoute(method, url) {
     // §runtime-proof 2026-09-21 — which chunks ran under a PASSING test (V8 coverage, tied to chunk hash)
     ['POST',   ['api','repos',    ':uuid','proof'],         'repo.proof.run'],
     ['GET',    ['api','repos',    ':uuid','proof'],         'repo.proof.get'],
+    // §0.39.302 PR1 — the delivery checker (idearium/repo/proof-run.js)
+    ['POST',   ['api','repos',    ':uuid','deliver','check'],      'repo.deliver.check'],
+    ['GET',    ['api','repos',    ':uuid','deliver','check'],      'repo.deliver.last'],
+    ['POST',   ['api','repos',    ':uuid','deliver','conditions'], 'repo.deliver.conditions'],
     ['GET',    ['api','repos',    ':uuid','chunks',':chunkId'], 'repo.chunks.get'],
     ['GET',    ['api','repos',    ':uuid','symbols'],       'repo.symbols'],
     // §24-26 graph (MCO1) — idearium/spec/idearium.repo-graph.spec
@@ -3659,6 +3724,46 @@ async function handle(req, res, route, query, body) {
     }
 
     // ?state=passed|failed|none|no_tests|unsupported|test  ?file=  ?chunk=  — each chunk carries `stale`.
+    // §0.39.302 PR1 — James: "Yes, then I can use idearium to build anything needed" · "shadow space reasoning for the
+    // debugging". Are the end-state conditions met? Run them (shadow declared first), write proof/PROOF-REPORT.md.
+    // body: { conditions: [{ says, check }], start?: { command, url, readyMs? } }
+    case 'repo.deliver.check': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const PR = await import('../repo/proof-run.js');
+      // the report and the run go through the repo layer: a repo's working folder is re-materialised from its store
+      const writer = (rel, text) => getRepoLayer().writeFile(params.uuid, rel, text, { preserveWhitespace: true });
+      const r = await PR.runProof({ repoDir: dir, conditions: body.conditions, start: body.start || null, subject: repo.name || repo.uuid, writer });
+      if (!r.ok) return err(res, 400, r.error);
+      try { getIdeaOS().emit('idearium.proof-run.settled', { repoUuid: params.uuid, verdict: r.run.verdict, met: r.run.met, total: r.run.total, modes: r.run.modes, report: r.run.files ? r.run.files.report : null }); } catch (_) {}
+      return ok(res, { repoUuid: params.uuid, run: r.run });
+    }
+    case 'repo.deliver.last': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const dir = _repoDiskDir(params.uuid);
+      if (!dir) return err(res, 500, 'could not resolve repo directory');
+      const PR = await import('../repo/proof-run.js');
+      const run = await PR.readLastProof(dir, { reader: (rel) => { const f = getRepoLayer().readFile(params.uuid, rel); return f && !f.error ? (f.content ?? f.text ?? null) : null; } });
+      return ok(res, { repoUuid: params.uuid, run, note: run ? undefined : 'no delivery check has run for this repo (POST /api/repos/:uuid/deliver/check)' });
+    }
+    // The agent PROPOSES conditions from a brief; nothing is run, James accepts them. body: { brief }
+    case 'repo.deliver.conditions': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body.brief || String(body.brief).trim().length < 10) return err(res, 400, 'give the acceptance brief (what was promised)');
+      const dir = _repoDiskDir(params.uuid);
+      let files = []; try { const idx = JSON.parse(fs.readFileSync(path.join(dir, 'indexes', 'files.json'), 'utf8')); files = idx.map(f => f.path); } catch (_) {}
+      const PR = await import('../repo/proof-run.js');
+      const a = await _agentAsk(PR.proposeConditionsPrompt(body.brief, { files }), { channel: 'idearium-deliver', sessionId: `deliver-${params.uuid}` });
+      if (!a || !a.ok) return err(res, 502, `the agent did not answer: ${(a && a.error) || 'no reply'}`);
+      const p = PR.parseProposedConditions(a.text);
+      if (!p.ok) return err(res, 422, p.error);
+      return ok(res, { repoUuid: params.uuid, proposed: p.conditions, errors: p.errors, by: a.by || null, note: 'proposals only — nothing has run; accept them by sending them to deliver/check' });
+    }
+
     case 'repo.proof.get': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -6758,7 +6863,7 @@ function _nexusSelfSync({ only = null, force = false } = {}) {
   return _nexusSelfSyncing;
 }
 
-export { _startBuildQueuePoller, _buildingSpecs, _reconcileSpecRepos, getRepoLayer, _ollamaModels, _nexusSelfSync, _buildIdentity }; // getRepoLayer: the real layer, exported so tests exercise the production write path, not a fake
+export { _startBuildQueuePoller, _buildingSpecs, _reconcileSpecRepos, getRepoLayer, _ollamaModels, _nexusSelfSync, _buildIdentity, _provePhase }; // getRepoLayer: the real layer, exported so tests exercise the production write path, not a fake
 
 /**
  * _route(method, url, body) — §0.39.279, for tests: one request through the REAL router and handler (matchRoute +

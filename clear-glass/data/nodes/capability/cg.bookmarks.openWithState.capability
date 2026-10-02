@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786682
+exported_at: 1790936717964
 source: clear-glass/registry-components.js:cg.bookmarks.openWithState
 occurrences: 1
 firstSeenAt: 1789250730172
-lastSeenAt: 1790684786682
-fingerprint: 8ec0e241b2e5a91d83226ad0
+lastSeenAt: 1790936717964
+fingerprint: c9caa4f1a5d5e1129c5cb549
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.bookmarks.openWithState
   namespace: cg
   name: bookmarks.openWithState
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: bookmarks:openWithState

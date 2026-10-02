@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786673
+exported_at: 1790936717950
 source: clear-glass/registry-components.js:cg.siteSettings.deleteKey
 occurrences: 1
 firstSeenAt: 1789250730168
-lastSeenAt: 1790684786673
-fingerprint: 292693c39a71190456896463
+lastSeenAt: 1790936717950
+fingerprint: e056c5d854ab518e5a87dd0a
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.siteSettings.deleteKey
   namespace: cg
   name: siteSettings.deleteKey
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: site-settings:deleteKey

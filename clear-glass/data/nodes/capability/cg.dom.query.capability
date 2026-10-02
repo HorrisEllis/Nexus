@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786626
+exported_at: 1790936717903
 source: clear-glass/registry-components.js:cg.dom.query
 occurrences: 1
 firstSeenAt: 1789250730157
-lastSeenAt: 1790684786626
-fingerprint: 484b678a7121fc8ec12c1414
+lastSeenAt: 1790936717903
+fingerprint: be0913794fbd8fd96278e625
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.dom.query
   namespace: cg
   name: dom.query
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

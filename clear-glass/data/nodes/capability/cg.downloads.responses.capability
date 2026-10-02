@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786731
+exported_at: 1790936718011
 source: clear-glass/registry-components.js:cg.downloads.responses
 occurrences: 1
 firstSeenAt: 1790684786731
-lastSeenAt: 1790684786731
-fingerprint: 78629e71438ca3f6d78f2159
+lastSeenAt: 1790936718011
+fingerprint: 04975605e06df06316cfb016
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.downloads.responses
   namespace: cg
   name: downloads.responses
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /cli/downloads/responses

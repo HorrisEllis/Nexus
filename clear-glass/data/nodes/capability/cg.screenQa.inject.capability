@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786705
+exported_at: 1790936717993
 source: clear-glass/registry-components.js:cg.screenQa.inject
 occurrences: 1
 firstSeenAt: 1790684786705
-lastSeenAt: 1790684786705
-fingerprint: 60f968346d7ae2a9f2f342ab
+lastSeenAt: 1790936717993
+fingerprint: d6b96f7938fcaae94768d6e9
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.screenQa.inject
   namespace: cg
   name: screenQa.inject
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: screen-qa:inject

@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786630
+exported_at: 1790936717908
 source: clear-glass/registry-components.js:cg.dom.tokens
 occurrences: 1
 firstSeenAt: 1789250730158
-lastSeenAt: 1790684786630
-fingerprint: 9c6c2791d1f451478e2ce661
+lastSeenAt: 1790936717908
+fingerprint: 3241b354e5d74318b18f0c12
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.dom.tokens
   namespace: cg
   name: dom.tokens
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

@@ -612,3 +612,18 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 **Tests:** `tests/modules/test-plan-lands.test.js`, `tests/modules/test-work-surface.test.js`, `tests/modules/test-idearium-theme.test.js`, `tests/modules/test-cos-workspace.test.js` (WS-05/06); probe `tests/probe/idearium-coding-flow-chromium.js` (the real page on a real idearium).
 
 **The Architect tab is the repo's component registry** (`idearium/repo/architecture.js`, 0.39.284). It is read from the repo's code index (`lib/code-intel/index.js`) and shaped like loom's registry: one component per file with loom's id rule, export/import hooks, and wires from dependency to consumer. It also lists consumers and requires, external packages, orphans, bottom-up breaches, data dirs and node types. "write ARCHITECTURE.json" saves it into the repo as the architecture doc. API: GET|POST /api/repos/:uuid/architecture. Test: `tests/modules/test-repo-architecture.test.js`.
+
+**The delivery checker** (0.39.302). James: "Yes, then I can use idearium to build anything needed" · "what about shadow space reasoning for the debugging?" Before work goes to a client, Idearium checks that it does what was promised.
+- **Each promise is a condition:** plain words plus a check (a file, a command, the tests, or a page of the app, which is started and then stopped).
+- **The shadow:** the whole end state is declared before anything runs, so anything missing afterwards is the bug, with its cause.
+- **The report:** a proof report in plain words (READY or NOT READY, what's missing and why, the evidence) is written into the repo as proof/PROOF-REPORT.md (in the client's repo, not this one).
+- **The agent only proposes:** it can suggest conditions from a brief; nothing runs until you send them.
+
+The code is `idearium/repo/proof-run.js`. The API is /api/repos/:uuid/deliver/check and /api/repos/:uuid/deliver/conditions in `idearium/api/index.js`. The CLI is idearium deliver … in `idearium/cli/index.js`. The event is declared in `idearium/event-taxonomy.cjs`, and the test is `tests/modules/test-proof-run.test.js`.
+
+**Phase runs end in proof** (0.39.303). James: "It can build it. Piece by piece look at idearium." When a phase is built (drafted, then reviewed), Idearium now runs the phase's own conditions (from its map) , using the delivery checker.
+- **All met:** the run reads proven.
+- **Any unmet:** the unmet promises, what happened and why go back to the same agent as its next attempt, up to two attempts by default. Then the run reads unproven, naming what's still missing.
+- **No conditions:** the run reads no-proof, and says so.
+
+The code is the proof step in `idearium/api/index.js`, using `idearium/repo/proof-run.js`. The test is `tests/modules/test-phase-proof.test.js`.

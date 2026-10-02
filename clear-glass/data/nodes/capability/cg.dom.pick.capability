@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786629
+exported_at: 1790936717906
 source: clear-glass/registry-components.js:cg.dom.pick
 occurrences: 1
 firstSeenAt: 1789250730158
-lastSeenAt: 1790684786629
-fingerprint: 55e15a93ffca9faa873615a6
+lastSeenAt: 1790936717906
+fingerprint: f42ef004b8c35d574563b5b8
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.dom.pick
   namespace: cg
   name: dom.pick
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: POST
     path: /cmd

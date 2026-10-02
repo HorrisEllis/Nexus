@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        clear-glass
-    version:     3.22.0   # 0.39.281 MINOR — browser steps with ErosmancerOS input; the ErosmancerOS workbench. Previous: 3.21.0 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
+    version:     3.23.0   # 0.39.301 MINOR — the Fiverr gig writer (src/autofill/gig.js); was 3.22.0, 0.39.281 MINOR — browser steps with ErosmancerOS input; the ErosmancerOS workbench. Previous: 3.21.0 0.39.280 MINOR — compartment windows, co-pilot verbs. 3.18.0–3.20.0 were in lib/version.js and the addenda only — synced here (§5.4). Previous 3.17.0:
     foundation:  nexus-system-foundation@1.1.0
     port:        7702
     uuid:        nexus-clear-glass-v1-0000-2026-0901-jamesbrooks-001
@@ -58,7 +58,7 @@ spec:
       returns: "Full clear-glass component registry — 79 real components as of 2026-09-22 (was 67 at 2026-09-01)"
 
   handshake:
-    components_count: 104   # 0.39.251 — +2 (selectors.providerFor, selectors.assign). §2026-09-22 — was 67 (stale since 2026-09-01); autofill's 7 real
+    components_count: 109   # 0.39.301 — +5 (autofill.proposal, autofill.readPage — shipped 0.39.265, never registered — and autofill.gig, .gigDetect, .gigFill). 0.39.251 — +2 (selectors.providerFor, selectors.assign). §2026-09-22 — was 67 (stale since 2026-09-01); autofill's 7 real
                             # IPC methods (shipped 2026-09-19, never registered) and screen-qa's
                             # 5 (this session) both landed in registry-components.js with zero
                             # entries here — checked directly against the live registry export,
@@ -668,3 +668,17 @@ spec:
   # with a delay). erosmancer-os 0.3.0: ScriptReplayQueue.list(); GET /api/replay/frames adds frames beside the snapshot.
   # Version points synced: CG_VERSION (was 3.18.0), registry-components V and interaction-contract version (were
   # 3.17.0). Proven by tests/modules/test-economy.test.js EC9-01 and tests/modules/test-eros-workbench.test.js.
+
+  # ## ADDENDUM 2026-10-02 (0.39.301) — the Fiverr gig writer (src/autofill/gig.js)
+  # James: "I just want it to write gigs for me. Not automate talking or posting. Just write the gigs for me." · "No. I
+  # want ClearGlass to use autofill." Autofill gains a gig writer: from a profile and one line of what the gig offers,
+  # the co-pilot writes the gig as JSON (title, category, tags, description, three packages, FAQ, buyer questions);
+  # parseGig holds it to Fiverr's limits (title 80, description 1200, 5 tags of 20, package name 35 / description 100,
+  # price at least 5) and reports every cut. Each part is editable and copyable in Settings › Autofill › Fiverr gigs;
+  # only when asked is it typed into Fiverr's gig editor in a tab (preview first; value mutations only; placeholder-only
+  # matches left for him; dropdowns and rich-text boxes left to copy). It never saves, posts or publishes. Doors:
+  # autofill:gig, :gig:detect, :gig:fill (IPC) and POST /cli/autofill/gig, /gig/detect, /gig/fill. Events
+  # autofill.gig.drafted / .filled in the ET1 taxonomy. Also registered at last: autofill:proposal and autofill:readPage
+  # (shipped 0.39.265, never in the registry). Nodes regenerated — they were stale at 3.17.0. 3.23.0.
+  # Proven by tests/modules/clear-glass-gig.test.js (7/7). Not proven here: Fiverr's live editor — it is checked by the
+  # preview against the real page on James's machine; anything it cannot match stays one click away to copy.

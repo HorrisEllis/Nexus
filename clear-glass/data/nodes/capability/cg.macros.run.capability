@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786690
+exported_at: 1790936717976
 source: clear-glass/registry-components.js:cg.macros.run
 occurrences: 1
 firstSeenAt: 1789250730174
-lastSeenAt: 1790684786690
-fingerprint: 783c4bd41064a08c8844803e
+lastSeenAt: 1790936717976
+fingerprint: abb7feb5748b4c68b1012167
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.macros.run
   namespace: cg
   name: macros.run
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: macros:run

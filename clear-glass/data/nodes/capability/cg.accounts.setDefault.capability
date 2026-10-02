@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786709
+exported_at: 1790936717996
 source: clear-glass/registry-components.js:cg.accounts.setDefault
 occurrences: 1
 firstSeenAt: 1790684786709
-lastSeenAt: 1790684786709
-fingerprint: accbf8620c7dcbf6cae688b6
+lastSeenAt: 1790936717996
+fingerprint: aa7a8dcc95219027710a1ec0
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.accounts.setDefault
   namespace: cg
   name: accounts.setDefault
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: accounts:setDefault

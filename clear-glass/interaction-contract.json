@@ -1,8 +1,8 @@
 {
   "id": "clear-glass-v1",
-  "version": "3.22.0",
+  "version": "3.23.0",
   "namespace": "clear-glass",
-  "_built_2026_09_20": "Built for MCO7f/P2 — derived directly from clear-glass/registry-components.js (module.exports.components), never hand-authored. Port ambiguity RESOLVED (was left open in an earlier pass of this same file): clear-glass/src/main/index.js:1513-1514 confirms directly — the orchestrator contract-handshake polls /contract on SSE_PORT (7701), not IPC_PORT (7702, what registry-components.js itself declares as 'port') or WIRE_PORT (7704, what compartment.json declares). sse:7701 is the real handshake port; the other three are real but serve other purposes. §NOTE: this static file mirrors clear-glass/registry-components.js at the time it was built — the LIVE /contract endpoint (clear-glass/src/main/index.js:1519,1577) serves that module directly, always fresh. This file will drift if registry-components.js changes and this file is not regenerated; it is documentation, not the source of truth.",
+  "_built_2026_09_20": "Built for MCO7f/P2 \u2014 derived directly from clear-glass/registry-components.js (module.exports.components), never hand-authored. Port ambiguity RESOLVED (was left open in an earlier pass of this same file): clear-glass/src/main/index.js:1513-1514 confirms directly \u2014 the orchestrator contract-handshake polls /contract on SSE_PORT (7701), not IPC_PORT (7702, what registry-components.js itself declares as 'port') or WIRE_PORT (7704, what compartment.json declares). sse:7701 is the real handshake port; the other three are real but serve other purposes. \u00a7NOTE: this static file mirrors clear-glass/registry-components.js at the time it was built \u2014 the LIVE /contract endpoint (clear-glass/src/main/index.js:1519,1577) serves that module directly, always fresh. This file will drift if registry-components.js changes and this file is not regenerated; it is documentation, not the source of truth.",
   "ports": {
     "sse": 7701,
     "ipc": 7702,
@@ -10,7 +10,7 @@
     "wire": 7704
   },
   "uuid": "clear-glass-contract-v1-0000-4000-0000-000000000001",
-  "role": "Sovereign NEXUS browser — Electron + Chromium + Firefox fingerprint + TLS JA4 + ErosmancerOS wire",
+  "role": "Sovereign NEXUS browser \u2014 Electron + Chromium + Firefox fingerprint + TLS JA4 + ErosmancerOS wire",
   "health": {
     "method": "GET",
     "path": "/health"
@@ -385,6 +385,31 @@
       "method": "IPC",
       "path": "autofill:fill",
       "_componentId": "cg.autofill.fill"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:proposal",
+      "_componentId": "cg.autofill.proposal"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:readPage",
+      "_componentId": "cg.autofill.readPage"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:gig",
+      "_componentId": "cg.autofill.gig"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:gig:detect",
+      "_componentId": "cg.autofill.gigDetect"
+    },
+    {
+      "method": "IPC",
+      "path": "autofill:gig:fill",
+      "_componentId": "cg.autofill.gigFill"
     },
     {
       "method": "IPC",

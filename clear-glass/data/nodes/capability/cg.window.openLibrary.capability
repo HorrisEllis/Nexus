@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786732
+exported_at: 1790936718013
 source: clear-glass/registry-components.js:cg.window.openLibrary
 occurrences: 1
 firstSeenAt: 1790684786732
-lastSeenAt: 1790684786732
-fingerprint: d077f11c2420d3b75130b71a
+lastSeenAt: 1790936718013
+fingerprint: eb438f958d98c4c69c5757df
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.window.openLibrary
   namespace: cg
   name: window.openLibrary
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: window:openLibrary

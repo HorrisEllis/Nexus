@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786714
+exported_at: 1790936718001
 source: clear-glass/registry-components.js:cg.accounts.portal.capture
 occurrences: 1
 firstSeenAt: 1790684786714
-lastSeenAt: 1790684786714
-fingerprint: f98bd25affdf0fc2fb3e323b
+lastSeenAt: 1790936718001
+fingerprint: 5c58094fe23f2a34e695bef0
 payload:
   intent: []
   grammar:
@@ -27,7 +27,7 @@ payload:
   id: cg.accounts.portal.capture
   namespace: cg
   name: accounts.portal.capture
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: accounts:portal:capture

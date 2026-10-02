@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786728
+exported_at: 1790936718007
 source: clear-glass/registry-components.js:cg.macros.delete
 occurrences: 1
 firstSeenAt: 1790684786728
-lastSeenAt: 1790684786728
-fingerprint: d3e072a8e2ad738f8b10b2f4
+lastSeenAt: 1790936718007
+fingerprint: 709ccc147e25c943062aaf7d
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.macros.delete
   namespace: cg
   name: macros.delete
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: macros:delete

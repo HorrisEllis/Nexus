@@ -6,7 +6,7 @@ spec:
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
     owner:    idearium · cos · guardian · architect · lib · docs
-    status:   "MAPPED 2026-10-02; SW1 built (0.39.294) — James chose the order: \"the workshop and maybe it hooks into the spec field\""
+    status:   "MAPPED 2026-10-02; SW1 built (0.39.294), SW2 (0.39.297), AR2 (0.39.298) — James chose the order: \"the workshop and maybe it hooks into the spec field\""
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §10.3 one source of truth, §10.1 one write authority per data type.
     origin: >
@@ -126,7 +126,7 @@ spec:
       layer: service
       status: BUILT 0.39.298 (on loom + the component store; CX0 grows the store later)
       depends_on: [SW1_spec_workshop, CX0_codex_component_store]
-      files: [idearium/lib/architect.js, architect/service.js]
+      files: [idearium/lib/architect.js, idearium/ui/architect.html, idearium/api/index.js, idearium/cli/index.js, idearium/ui/workshop.html, loom/maps/one-idearium-map.js, loom/data/registry.json]
       does: >-
         "with architect for archiecture using the component registry". The workshop's Architect step lays the spec out
         as components (tier, layer, purpose, dependencies, seams), each matched against the component registry (loom)
@@ -301,3 +301,12 @@ spec:
 # stripped from the MASTERMIND copy he gave. The questions put to him (look, canvas, "open", the repo map) were
 # dismissed in favour of the canvas; the defaults taken: the Void look for both (scoped), the canvas data-backed,
 # "open" read as a full-bleed canvas with drawers over it, the repo map as an interactive graph.
+# Kept from the parallel 0.39.298 build (merged 0.39.303; its Architect superseded by 0.39.299's):
+# Found while building: loom/data/registry.json had not been regenerated since 0.39.262 — each release restored the
+# old file and nothing rebuilds it at boot, so the component store itself was missing from loom's registry and
+# "reuse before build" could not find it. Regenerated from an empty registry: 2740 components, 2793 hooks, 3022 wires
+# (the old file's 8751 wires were 1838 distinct edges; the 127 of those not in the fresh one are stale — 91 with
+# endpoints that no longer exist, 36 no longer in the code). The design's "2275 components" is that stale count.
+# Rejections at the baseline: 10 unique-id, 109 wire-endpoints-exist, none from the maps touched here.
+# Found in the browser: the wires' svg kept its wide size after a resize and held the page wide — it is collapsed
+# before measuring now.

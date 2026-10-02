@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786618
+exported_at: 1790936717889
 source: clear-glass/registry-components.js:cg.health
 occurrences: 1
 firstSeenAt: 1789250730156
-lastSeenAt: 1790684786618
-fingerprint: a3e7306ab995982cf2cbce60
+lastSeenAt: 1790936717889
+fingerprint: 32bdda80f0c92a489f93d73d
 payload:
   intent: []
   grammar:
@@ -24,7 +24,7 @@ payload:
   id: cg.health
   namespace: cg
   name: health
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: GET
     path: /health

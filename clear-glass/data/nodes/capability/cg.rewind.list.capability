@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786683
+exported_at: 1790936717965
 source: clear-glass/registry-components.js:cg.rewind.list
 occurrences: 1
 firstSeenAt: 1789250730172
-lastSeenAt: 1790684786683
-fingerprint: e65c84f17d6105c6f4ac106b
+lastSeenAt: 1790936717965
+fingerprint: a907a8d547a195d0f3e4b338
 payload:
   intent: []
   grammar:
@@ -25,7 +25,7 @@ payload:
   id: cg.rewind.list
   namespace: cg
   name: rewind.list
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: rewind:list

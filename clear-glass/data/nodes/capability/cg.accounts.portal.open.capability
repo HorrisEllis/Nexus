@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786713
+exported_at: 1790936718000
 source: clear-glass/registry-components.js:cg.accounts.portal.open
 occurrences: 1
 firstSeenAt: 1790684786713
-lastSeenAt: 1790684786713
-fingerprint: 19be65244f06459026204584
+lastSeenAt: 1790936718000
+fingerprint: ced85483a7e37b7c9ab87a51
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.accounts.portal.open
   namespace: cg
   name: accounts.portal.open
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: accounts:portal:open

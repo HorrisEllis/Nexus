@@ -1,0 +1,7189 @@
+{
+ "generatedAt": 1790937475960,
+ "byFile": {
+  "nexus.architect.src.spec.Blueprint": {
+   "emits": [
+    "architect.blueprint.built",
+    "architect.snr.checked",
+    "architect.snr.flagged",
+    "architect.snr.rewrite-required"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.plugins.captcha-pause": {
+   "emits": [
+    "dom.query",
+    "driver.exec"
+   ],
+   "listens": [
+    "dom.query.result"
+   ]
+  },
+  "nexus.clear-glass.plugins.guardian-listeners": {
+   "emits": [
+    "driver.exec"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.plugins.passwords": {
+   "emits": [
+    "driver.exec",
+    "passwords.get",
+    "passwords.save"
+   ],
+   "listens": [
+    "driver.result",
+    "passwords.result"
+   ]
+  },
+  "nexus.clear-glass.plugins.permissions": {
+   "emits": [
+    "driver.exec",
+    "site-settings.get"
+   ],
+   "listens": [
+    "site-settings.result"
+   ]
+  },
+  "nexus.clear-glass.plugins.zoom": {
+   "emits": [
+    "driver.exec"
+   ],
+   "listens": [
+    "driver.error",
+    "driver.result"
+   ]
+  },
+  "nexus.clear-glass.renderer.browser": {
+   "emits": [],
+   "listens": [
+    "cg:navigate"
+   ]
+  },
+  "nexus.clear-glass.seam.watchdog-gates": {
+   "emits": [
+    "driver.retry",
+    "mesh.route",
+    "watchdog.driver.error",
+    "watchdog.gap.open",
+    "watchdog.mesh.demote",
+    "watchdog.nexus.offline",
+    "watchdog.nexus.reconnected",
+    "watchdog.rate-limit.handled",
+    "watchdog.seam.stall",
+    "watchdog.tokens.found",
+    "watchdog.url.relayed"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.bookmarks.browser": {
+   "emits": [],
+   "listens": [
+    "cg:navigate"
+   ]
+  },
+  "nexus.clear-glass.src.contexts.manager": {
+   "emits": [
+    "context.created",
+    "context.destroyed",
+    "context.fp.switched",
+    "context.network.error",
+    "context.rate-limited",
+    "context.switched",
+    "cookie.event"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.copilot.bridge": {
+   "emits": [
+    "copilot.response",
+    "copilot.stream.connected",
+    "copilot.thinking",
+    "copilot.tool.error",
+    "copilot.tool.result",
+    "copilot.tool.start"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.diagnostic.engine": {
+   "emits": [
+    "diag.run.complete",
+    "diag.run.start",
+    "diag.screenshot.saved",
+    "diag.step.fail",
+    "diag.step.result"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.diagnostic.process-metrics": {
+   "emits": [
+    "process.metrics",
+    "process.metrics.error"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.dom.archaeology": {
+   "emits": [
+    "dom.injected",
+    "dom.mutated",
+    "dom.pick.registered",
+    "dom.picked",
+    "dom.tokens.scanned"
+   ],
+   "listens": [
+    "dom:event",
+    "dom:pick-result"
+   ]
+  },
+  "nexus.clear-glass.src.downloads.adapter": {
+   "emits": [
+    "downloads.completed"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.driver": {
+   "emits": [
+    "driver.error",
+    "driver.network.blocked",
+    "driver.network.intercepted",
+    "driver.recording",
+    "driver.result",
+    "driver.screenshot",
+    "driver.start",
+    "field.map",
+    "field.spotlight",
+    "nav.loaded",
+    "nav.started"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.driver.url-listener": {
+   "emits": [
+    "url.listener.added",
+    "url.listener.removed",
+    "url.match",
+    "url.request.headers",
+    "url.response"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.gates": {
+   "emits": [
+    "account.created",
+    "account.deleted",
+    "account.error",
+    "account.get.result",
+    "account.list.result",
+    "account.provider.find.result",
+    "account.provider.get.result",
+    "account.provider.linked",
+    "account.provider.unlinked",
+    "account.provider.verified",
+    "account.updated",
+    "autofill.detect.result",
+    "autofill.error",
+    "autofill.fill.result",
+    "autofill.profile.created",
+    "autofill.profile.deleted",
+    "autofill.profile.get.result",
+    "autofill.profile.list.result",
+    "autofill.profile.updated",
+    "bookmarks.added",
+    "bookmarks.check.result",
+    "bookmarks.error",
+    "bookmarks.listed",
+    "bookmarks.opened",
+    "bookmarks.removed",
+    "bookmarks.visited",
+    "context.created",
+    "context.error",
+    "context.fp.switched",
+    "context.switched",
+    "cookie.error",
+    "cookie.health.result",
+    "cookie.restored",
+    "cookie.saved",
+    "cookie.snapshotted",
+    "copilot.cleared",
+    "copilot.error",
+    "copilot.response",
+    "diag.complete",
+    "diag.error",
+    "dom.error",
+    "dom.mutate.result",
+    "dom.pick.registered",
+    "dom.query.result",
+    "dom.tokens.result",
+    "driver.error",
+    "driver.result",
+    "history.cleared",
+    "history.deleted",
+    "history.error",
+    "history.list.result",
+    "history.recorded",
+    "mesh.agent.spawned",
+    "mesh.error",
+    "mesh.list.agents.result",
+    "mesh.list.meshView.result",
+    "mesh.list.nodes.result",
+    "mesh.queued",
+    "mesh.task.complete",
+    "mesh.workflow.created",
+    "mesh.workflow.get.result",
+    "mesh.workflow.list.result",
+    "mesh.workflow.removed",
+    "mesh.workflow.run.result",
+    "mesh.workflow.step.added",
+    "mesh.workflow.step.moved",
+    "mesh.workflow.step.removed",
+    "mesh.workflow.step.updated",
+    "mesh.workflow.updated",
+    "nav.loading",
+    "options.error",
+    "options.result",
+    "passwords.deleted",
+    "passwords.error",
+    "passwords.list.result",
+    "passwords.result",
+    "passwords.saved",
+    "provider.error",
+    "provider.listed",
+    "provider.navigated",
+    "provider.shown",
+    "provider.started",
+    "provider.stopped",
+    "rewind.cleared",
+    "rewind.error",
+    "rewind.listed",
+    "rewind.restored",
+    "rewind.snapshotted",
+    "seam.error",
+    "seam.registered",
+    "site-settings.cleared",
+    "site-settings.clearedAll",
+    "site-settings.deleteKey.result",
+    "site-settings.error",
+    "site-settings.list.result",
+    "site-settings.result",
+    "site-settings.set.result",
+    "speech.available.result",
+    "speech.error",
+    "speech.result",
+    "status.response",
+    "url.listener.added",
+    "url.listener.removed",
+    "userscript.created",
+    "userscript.deleted",
+    "userscript.error",
+    "userscript.injected",
+    "userscript.listed",
+    "userscript.toggled"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.ipc.bridge": {
+   "emits": [
+    "guardian.listener.copilot-answer",
+    "guardian.listener.copilot-panel",
+    "guardian.listener.direct-file-write",
+    "guardian.listener.ollama-answer",
+    "guardian.listener.route.error",
+    "window.hide",
+    "window.minimize",
+    "window.open"
+   ],
+   "listens": [
+    "dom:event"
+   ]
+  },
+  "nexus.clear-glass.src.main": {
+   "emits": [
+    "app.start",
+    "bgtab.closed",
+    "bgtab.opened",
+    "context.fp.switch",
+    "diag.nexus",
+    "download.done",
+    "library.opened",
+    "lifecycle.ready",
+    "lifecycle.shutdown",
+    "nexus.status",
+    "page.visited",
+    "userscript.auto-injected",
+    "window.maximized",
+    "window.opened"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.main.index.pre-userscripts": {
+   "emits": [
+    "context.fp.switch",
+    "diag.nexus",
+    "lifecycle.ready",
+    "lifecycle.shutdown",
+    "nexus.status",
+    "window.opened"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.mesh.agent-mesh": {
+   "emits": [
+    "mesh.agent.spawned",
+    "mesh.constraints.unavailable",
+    "mesh.guardian.dispatch",
+    "mesh.job.progress",
+    "mesh.node.status_changed",
+    "mesh.nodes.snapshot",
+    "mesh.queue.add",
+    "mesh.queue.complete",
+    "mesh.queue.diagnostic.fallback",
+    "mesh.queue.diagnostic.respawn",
+    "mesh.queue.diagnostic.snapshot",
+    "mesh.queue.error",
+    "mesh.queue.escalated",
+    "mesh.queue.escalation_report_failed",
+    "mesh.queue.processing",
+    "mesh.queue.requeued",
+    "mesh.queue.retry",
+    "mesh.raid.decision",
+    "mesh.raid.unavailable",
+    "mesh.spawn.window_error",
+    "mesh.task.start",
+    "mesh.vault.restore",
+    "mesh.vault.restore.error"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.network.install": {
+   "emits": [
+    "network.ready"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.plugins.host": {
+   "emits": [
+    "plugin:error",
+    "plugins:killswitch.fullstop",
+    "userscript.create",
+    "userscript.toggle"
+   ],
+   "listens": [
+    "userscript.created",
+    "userscript.error"
+   ]
+  },
+  "nexus.clear-glass.src.plugins.permission-adapter": {
+   "emits": [],
+   "listens": [
+    "permission:decision"
+   ]
+  },
+  "nexus.clear-glass.src.plugins.webrequest-adapter": {
+   "emits": [],
+   "listens": [
+    "webrequest:decision"
+   ]
+  },
+  "nexus.clear-glass.src.preload": {
+   "emits": [],
+   "listens": [
+    "shortcut:action"
+   ]
+  },
+  "nexus.clear-glass.src.providers.host": {
+   "emits": [
+    "provider.host.all-booted",
+    "provider.host.closed_unexpectedly",
+    "provider.host.crashed",
+    "provider.host.injected",
+    "provider.host.navigate",
+    "provider.host.navigate-failed",
+    "provider.host.navigated",
+    "provider.host.started",
+    "provider.host.stopped",
+    "provider.host.wake-intro"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.rewind.engine": {
+   "emits": [
+    "rewind.restored",
+    "rewind.restoring",
+    "rewind.snapshot"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.seam": {
+   "emits": [
+    "hook.result"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.src.tls.proxy": {
+   "emits": [
+    "tls.error",
+    "tls.tunnel"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.test.bus.test": {
+   "emits": [
+    "bus.test",
+    "chain.1",
+    "chain.2",
+    "logged.event",
+    "pub.event",
+    "recv.test",
+    "step.1",
+    "step.2",
+    "test.sig",
+    "unsub.test"
+   ],
+   "listens": [
+    "bus.test",
+    "pub.event",
+    "unsub.test"
+   ]
+  },
+  "nexus.clear-glass.test.downloads-intake-bridge.test": {
+   "emits": [
+    "downloads.completed"
+   ],
+   "listens": []
+  },
+  "nexus.clear-glass.test.phase2.test": {
+   "emits": [
+    "bookmarks.add",
+    "bookmarks.list",
+    "provider.list",
+    "provider.stop",
+    "rewind.list"
+   ],
+   "listens": [
+    "bookmarks.added",
+    "bookmarks.listed",
+    "provider.listed",
+    "provider.stopped",
+    "rewind.listed"
+   ]
+  },
+  "nexus.clear-glass.test.watchdog.test": {
+   "emits": [
+    "context.rate-limited",
+    "cookie.health.result",
+    "diag.complete",
+    "dom.tokens.result",
+    "driver.error",
+    "mesh.error",
+    "nexus.status"
+   ],
+   "listens": [
+    "driver.retry",
+    "mesh.route",
+    "watchdog.driver.error",
+    "watchdog.gap.open",
+    "watchdog.mesh.demote",
+    "watchdog.nexus.offline",
+    "watchdog.nexus.reconnected",
+    "watchdog.rate-limit.handled",
+    "watchdog.tokens.found"
+   ]
+  },
+  "nexus.cockpit.cli": {
+   "emits": [
+    "cli.exec.done"
+   ],
+   "listens": []
+  },
+  "nexus.cockpit.pipeline": {
+   "emits": [
+    "forge.gap.opened",
+    "forge.notify",
+    "pipeline.deleted",
+    "pipeline.run.complete",
+    "pipeline.run.error",
+    "pipeline.run.started",
+    "pipeline.saved",
+    "pipeline.step.done",
+    "pipeline.step.started",
+    "webhook.registered"
+   ],
+   "listens": []
+  },
+  "nexus.copilot.lib.expectation-watcher": {
+   "emits": [
+    "copilot.error.detected"
+   ],
+   "listens": []
+  },
+  "nexus.cortex.core.raid.router": {
+   "emits": [
+    "raid.route.decided",
+    "raid.route.no_route",
+    "raid.route.request"
+   ],
+   "listens": [
+    "raid.route.request"
+   ]
+  },
+  "nexus.cortex.orion": {
+   "emits": [
+    "cortex.orion.classified"
+   ],
+   "listens": [
+    "anomaly.detected",
+    "sigma.event.halt_risk",
+    "sigma.event.warning"
+   ]
+  },
+  "nexus.cos.blueprint": {
+   "emits": [
+    "host:archetype:assign"
+   ],
+   "listens": [
+    "archetype:assigned"
+   ]
+  },
+  "nexus.cos.ci": {
+   "emits": [
+    "ci:run:finished",
+    "ci:run:started",
+    "ci:stage:failed",
+    "ci:stage:started",
+    "ci:vault:unavailable"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.advance-work-phase": {
+   "emits": [
+    "host:compartment:advance-work-phase"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.archetype": {
+   "emits": [
+    "host:archetype:assign",
+    "host:archetype:detect",
+    "host:archetype:import"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.blueprint": {
+   "emits": [
+    "host:blueprint:create",
+    "host:blueprint:destroy",
+    "host:blueprint:import"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.create": {
+   "emits": [
+    "host:compartment:create"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.destroy": {
+   "emits": [
+    "host:compartment:destroy"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.playground": {
+   "emits": [
+    "host:playgrounds:create",
+    "host:playgrounds:destroy",
+    "host:playgrounds:promote",
+    "host:playgrounds:status"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.plugin": {
+   "emits": [
+    "host:plugin:disable",
+    "host:plugin:enable",
+    "host:plugin:install",
+    "host:plugin:remove"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.run": {
+   "emits": [
+    "comp:process:stdin"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.start": {
+   "emits": [
+    "host:compartment:start"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.stop": {
+   "emits": [
+    "host:compartment:stop"
+   ],
+   "listens": []
+  },
+  "nexus.cos.cli.commands.vault": {
+   "emits": [
+    "host:vault:delete",
+    "host:vault:export",
+    "host:vault:get",
+    "host:vault:grant",
+    "host:vault:import",
+    "host:vault:revoke",
+    "host:vault:set"
+   ],
+   "listens": []
+  },
+  "nexus.cos.foundation.file-browser": {
+   "emits": [
+    "comp:file:written"
+   ],
+   "listens": []
+  },
+  "nexus.cos.foundation.snapshot": {
+   "emits": [
+    "host:snapshot:restored",
+    "nexus:snapshot:written"
+   ],
+   "listens": []
+  },
+  "nexus.cos.host": {
+   "emits": [
+    "comp:process:kill",
+    "comp:process:spawn"
+   ],
+   "listens": []
+  },
+  "nexus.cos.host.system-map": {
+   "emits": [
+    "host:map:updated"
+   ],
+   "listens": []
+  },
+  "nexus.cos.manager": {
+   "emits": [],
+   "listens": [
+    "compartment.bus.create",
+    "compartment.create.request",
+    "compartment.gate.run",
+    "compartment.status.request"
+   ]
+  },
+  "nexus.cos.playground.compare": {
+   "emits": [
+    "comp:compare:done",
+    "comp:compare:started"
+   ],
+   "listens": []
+  },
+  "nexus.cos.playground.llm-lab": {
+   "emits": [
+    "lab.session.created"
+   ],
+   "listens": []
+  },
+  "nexus.cos.playground.sandbox": {
+   "emits": [
+    "comp:sandbox:error",
+    "comp:sandbox:exited",
+    "comp:sandbox:output-limit",
+    "comp:sandbox:started",
+    "comp:sandbox:stderr",
+    "comp:sandbox:stdout",
+    "comp:sandbox:timeout"
+   ],
+   "listens": []
+  },
+  "nexus.cos.playgrounds.kernel": {
+   "emits": [
+    "comp:process:kill",
+    "comp:process:spawn"
+   ],
+   "listens": []
+  },
+  "nexus.cos.test.test": {
+   "emits": [
+    "comp:process:spawn",
+    "comp:spawn:failed",
+    "comp:x:y",
+    "host:a:b",
+    "host:a:one",
+    "host:a:three",
+    "host:a:two",
+    "host:c:d",
+    "host:test:done",
+    "host:test:one",
+    "host:test:ping",
+    "host:test:three",
+    "host:test:two",
+    "test:double:run",
+    "test:sink:go"
+   ],
+   "listens": [
+    "comp:process:stdout",
+    "comp:spawn:failed",
+    "host:compartment:destroyed",
+    "host:map:updated",
+    "host:test:fired",
+    "host:test:ping"
+   ]
+  },
+  "nexus.cos.watchdog.actions": {
+   "emits": [
+    "comp:process:kill",
+    "host:compartment:start",
+    "host:compartment:stop",
+    "watchdog:snapshot:failed"
+   ],
+   "listens": []
+  },
+  "nexus.diagnostic.nexus-heal-loop": {
+   "emits": [
+    "heal-loop.error",
+    "heal-loop.result",
+    "heal-loop.skipped"
+   ],
+   "listens": [
+    "nexus-bus.system.booted"
+   ]
+  },
+  "nexus.emerge.emerge-kernel": {
+   "emits": [
+    "kernel.booted",
+    "signal.noise",
+    "signal.passed"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.bridge.nexus-bridge": {
+   "emits": [
+    "kernel:notify"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.catalog.catalog": {
+   "emits": [
+    "catalog:removed"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.kernel.intake": {
+   "emits": [
+    "intake:file"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.kernel.kernel": {
+   "emits": [
+    "kernel:audio-ready",
+    "kernel:bpm-change",
+    "kernel:fault",
+    "kernel:ledger-entry",
+    "kernel:mod-mounted",
+    "kernel:mod-unmounted",
+    "kernel:pack-installed",
+    "kernel:wire-registered",
+    "kernel:wire-removed"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.acid-synth.acid-synth.engine": {
+   "emits": [
+    "audio:signal",
+    "org:state_sync",
+    "org:triggered"
+   ],
+   "listens": [
+    "pad:trigger"
+   ]
+  },
+  "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine": {
+   "emits": [
+    "bass-drop:stage",
+    "org:stage-active",
+    "org:state-sync",
+    "org:vocal-loaded"
+   ],
+   "listens": [
+    "intake:file",
+    "kernel:bpm-change"
+   ]
+  },
+  "nexus.eravos.ui.mods.channel.channel.engine": {
+   "emits": [
+    "org:meter",
+    "org:state_sync"
+   ],
+   "listens": [
+    "audio:signal"
+   ]
+  },
+  "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine": {
+   "emits": [
+    "contrast:analysis",
+    "org:analysis-ready",
+    "org:bpm-detected",
+    "org:mode-changed",
+    "org:slot-loaded"
+   ],
+   "listens": [
+    "intake:file"
+   ]
+  },
+  "nexus.eravos.ui.mods.edm-lab.edm-lab.engine": {
+   "emits": [
+    "edm:drop-fired",
+    "edm:rhythm-step",
+    "org:density-reset",
+    "org:drop-fired",
+    "org:state-sync"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.lfo.lfo.engine": {
+   "emits": [
+    "mod:signal",
+    "org:lfo_tick",
+    "org:state_sync"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.macro-automation.macro-automation.engine": {
+   "emits": [
+    "org:error",
+    "org:state_sync",
+    "org:step"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.master-fx.master-fx.engine": {
+   "emits": [
+    "org:state_sync"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.nexus-shared.nexus-node-core": {
+   "emits": [
+    "org:state_sync"
+   ],
+   "listens": [
+    "transport:play",
+    "transport:record-start",
+    "transport:record-stop",
+    "transport:stop"
+   ]
+  },
+  "nexus.eravos.ui.mods.pads.pads.engine": {
+   "emits": [
+    "org:pad_lit",
+    "org:state_sync",
+    "pad:bank-change",
+    "pad:trigger"
+   ],
+   "listens": [
+    "midi:note",
+    "seq:fire"
+   ]
+  },
+  "nexus.eravos.ui.mods.photo-editor.photo-editor.engine": {
+   "emits": [
+    "org:exported",
+    "org:image_loaded",
+    "org:state_sync",
+    "photo:exported"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.reese-bass.reese-bass.engine": {
+   "emits": [
+    "org:state_sync"
+   ],
+   "listens": [
+    "pad:trigger"
+   ]
+  },
+  "nexus.eravos.ui.mods.sample-player.sample-player.engine": {
+   "emits": [
+    "org:playhead_update",
+    "org:state_sync",
+    "org:waveform_ready"
+   ],
+   "listens": [
+    "intake:file"
+   ]
+  },
+  "nexus.eravos.ui.mods.sequencer.sequencer.engine": {
+   "emits": [
+    "org:grid_sync",
+    "org:state_sync",
+    "org:step_cursor",
+    "org:step_set",
+    "seq:fire",
+    "seq:play",
+    "seq:stop"
+   ],
+   "listens": [
+    "kernel:bpm-change",
+    "pad:bank-change",
+    "pad:trigger",
+    "seq:play",
+    "seq:stop"
+   ]
+  },
+  "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine": {
+   "emits": [
+    "org:connected",
+    "org:disconnected",
+    "org:error",
+    "org:rx",
+    "org:state_sync",
+    "org:tx",
+    "serial:rx"
+   ],
+   "listens": [
+    "mod:xy",
+    "pad:trigger"
+   ]
+  },
+  "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine": {
+   "emits": [
+    "org:pumped",
+    "org:state_sync"
+   ],
+   "listens": [
+    "pad:trigger"
+   ]
+  },
+  "nexus.eravos.ui.mods.supersaw.supersaw.engine": {
+   "emits": [
+    "audio:signal",
+    "org:state_sync",
+    "org:triggered"
+   ],
+   "listens": [
+    "midi:note",
+    "pad:trigger"
+   ]
+  },
+  "nexus.eravos.ui.mods.timeline.timeline.engine": {
+   "emits": [
+    "intake:file",
+    "org:asset_loaded",
+    "org:clip_added",
+    "org:clip_removed",
+    "org:clip_sync",
+    "org:playhead_update",
+    "org:state_sync",
+    "seq:play",
+    "seq:stop"
+   ],
+   "listens": [
+    "intake:file",
+    "seq:play",
+    "seq:stop",
+    "transport:play",
+    "transport:recorded"
+   ]
+  },
+  "nexus.eravos.ui.mods.video-editor.video-editor.engine": {
+   "emits": [
+    "org:exported",
+    "org:state_sync",
+    "org:video_loaded",
+    "video:exported"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.webhook-automation.webhook-automation.engine": {
+   "emits": [
+    "org:log",
+    "org:state_sync"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.mods.wobble-bass.wobble-bass.engine": {
+   "emits": [
+    "org:state_sync"
+   ],
+   "listens": [
+    "pad:trigger"
+   ]
+  },
+  "nexus.eravos.ui.mods.xy-pad.xy-pad.engine": {
+   "emits": [
+    "mod:xy",
+    "org:state_sync",
+    "org:xy_update"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.pack.pack-loader": {
+   "emits": [
+    "kernel:fault",
+    "kernel:pack-installed"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.runtime.canvas-wm": {
+   "emits": [
+    "canvas:window-closed"
+   ],
+   "listens": []
+  },
+  "nexus.eravos.ui.runtime.master-transport": {
+   "emits": [
+    "kernel:bpm-change",
+    "kernel:notify",
+    "seq:play",
+    "seq:stop",
+    "transport:play",
+    "transport:record-start",
+    "transport:record-stop",
+    "transport:recorded",
+    "transport:stop"
+   ],
+   "listens": [
+    "ui:transport-bpm",
+    "ui:transport-play",
+    "ui:transport-record",
+    "ui:transport-stop"
+   ]
+  },
+  "nexus.eravos.ui.runtime.mod-factory": {
+   "emits": [
+    "canvas:mod-spawned",
+    "intake:file",
+    "mod:xy"
+   ],
+   "listens": [
+    "kernel:bpm-change",
+    "org:analysis-ready",
+    "org:asset_loaded",
+    "org:bpm-detected",
+    "org:clip_sync",
+    "org:connected",
+    "org:density-reset",
+    "org:disconnected",
+    "org:drop-fired",
+    "org:error",
+    "org:grid_sync",
+    "org:log",
+    "org:pad_lit",
+    "org:playhead_update",
+    "org:rx",
+    "org:slot-loaded",
+    "org:stage-active",
+    "org:state-sync",
+    "org:state_sync",
+    "org:step_cursor",
+    "org:step_set",
+    "org:tx",
+    "org:vocal-loaded",
+    "org:waveform_ready",
+    "ui:config_change"
+   ]
+  },
+  "nexus.eravos.ui.runtime.wire-system": {
+   "emits": [
+    "kernel:notify"
+   ],
+   "listens": []
+  },
+  "nexus.guardian.lib.chat-sync": {
+   "emits": [],
+   "listens": [
+    "guardian.ncp.sync_result"
+   ]
+  },
+  "nexus.guardian.lib.chat-transcripts": {
+   "emits": [
+    "guardian.chat.transcript.recorded",
+    "guardian.job.completed_from_transcript"
+   ],
+   "listens": [
+    "guardian.job.progress",
+    "guardian.ncp.sync_result",
+    "guardian.ncp.transcript"
+   ]
+  },
+  "nexus.guardian.lib.code-artifact": {
+   "emits": [
+    "guardian.blocks.captured",
+    "guardian.response.captured"
+   ],
+   "listens": []
+  },
+  "nexus.guardian.lib.gate-trail": {
+   "emits": [
+    "guardian.job.gate"
+   ],
+   "listens": []
+  },
+  "nexus.guardian.lib.job-retry": {
+   "emits": [
+    "guardian.job.progress"
+   ],
+   "listens": []
+  },
+  "nexus.guardian.lib.node-registry": {
+   "emits": [
+    "guardian.node.removed"
+   ],
+   "listens": []
+  },
+  "nexus.guardian.lib.response-sink": {
+   "emits": [
+    "guardian.job.chunk",
+    "guardian.job.complete",
+    "guardian.job.error"
+   ],
+   "listens": []
+  },
+  "nexus.guardian.lib.wake-loop": {
+   "emits": [
+    "guardian.wake.detected",
+    "guardian.wake.failed",
+    "guardian.wake.refused",
+    "guardian.wake.replied"
+   ],
+   "listens": []
+  },
+  "nexus.hooks.guardian.hooks": {
+   "emits": [
+    "guardian.dom_map.received"
+   ],
+   "listens": []
+  },
+  "nexus.idearium.cli": {
+   "emits": [
+    "idearium.gap.ignore",
+    "idearium.gap.open",
+    "idearium.gap.resolve",
+    "idearium.idea.archive",
+    "idearium.idea.create",
+    "idearium.idea.link",
+    "idearium.idea.phase",
+    "idearium.idea.tension",
+    "idearium.spec.check",
+    "idearium.spec.create"
+   ],
+   "listens": []
+  },
+  "nexus.idearium": {
+   "emits": [
+    "idearium.error",
+    "idearium.gap.ignored",
+    "idearium.gap.opened",
+    "idearium.gap.resolved",
+    "idearium.idea.archived",
+    "idearium.idea.created",
+    "idearium.idea.linked",
+    "idearium.idea.phase.changed",
+    "idearium.idea.tensioned",
+    "idearium.idea.updated",
+    "idearium.spec.archived",
+    "idearium.spec.checked",
+    "idearium.spec.created",
+    "idearium.spec.updated"
+   ],
+   "listens": []
+  },
+  "nexus.idearium.lib.cortex-listeners": {
+   "emits": [],
+   "listens": [
+    "idearium.spec-engine.chunk.complete",
+    "idearium.spec.build.completed"
+   ]
+  },
+  "nexus.idearium.lib.spec-library-import": {
+   "emits": [
+    "idearium.idea.create",
+    "idearium.idea.update"
+   ],
+   "listens": []
+  },
+  "nexus.idearium.test.e2e-pipeline.test": {
+   "emits": [
+    "idearium.idea.create",
+    "idearium.spec.create"
+   ],
+   "listens": []
+  },
+  "nexus.intelligence.telemetry-codec.adapter": {
+   "emits": [
+    "tc.coherence.update",
+    "tc.metric.oscillation",
+    "tc.metric.raw",
+    "tc.metric.slope",
+    "tc.metric.stability"
+   ],
+   "listens": []
+  },
+  "nexus.intelligence.telemetry-codec.drift-engine": {
+   "emits": [
+    "tc.drift.calibrated",
+    "tc.drift.cluster",
+    "tc.drift.signal"
+   ],
+   "listens": [
+    "tc.latent.update",
+    "tc.metric.raw",
+    "tc.service.start"
+   ]
+  },
+  "nexus.intelligence.telemetry-codec.latent-model": {
+   "emits": [
+    "tc.latent.shift",
+    "tc.latent.update"
+   ],
+   "listens": [
+    "tc.coherence.update",
+    "tc.metric.oscillation",
+    "tc.metric.raw",
+    "tc.metric.slope",
+    "tc.metric.stability",
+    "tc.topology.composite"
+   ]
+  },
+  "nexus.intelligence.telemetry-codec.runtime": {
+   "emits": [],
+   "listens": [
+    "tc.drift.calibrated",
+    "tc.drift.cluster",
+    "tc.drift.signal",
+    "tc.latent.shift",
+    "tc.latent.update",
+    "tc.topology.composite",
+    "tc.topology.transition"
+   ]
+  },
+  "nexus.intelligence.telemetry-codec.topology": {
+   "emits": [
+    "tc.topology.composite",
+    "tc.topology.pulse",
+    "tc.topology.transition"
+   ],
+   "listens": [
+    "tc.coherence.update",
+    "tc.metric.raw",
+    "tc.metric.slope",
+    "tc.metric.stability",
+    "tc.upstream.health"
+   ]
+  },
+  "nexus.lib.agent-tools.tool-call-listener": {
+   "emits": [],
+   "listens": [
+    "guardian.tool.called"
+   ]
+  },
+  "nexus.lib.agent-tools.tools.sandbox.cos-archetype": {
+   "emits": [
+    "host:archetype:import"
+   ],
+   "listens": []
+  },
+  "nexus.lib.blueprint-index": {
+   "emits": [
+    "nexus.blueprint.index.built",
+    "nexus.blueprint.index.error"
+   ],
+   "listens": []
+  },
+  "nexus.lib.blueprint": {
+   "emits": [
+    "blueprint.loaded"
+   ],
+   "listens": []
+  },
+  "nexus.lib.compartment-engine": {
+   "emits": [
+    "compartment.spawned"
+   ],
+   "listens": []
+  },
+  "nexus.lib.component-registry": {
+   "emits": [
+    "component.deprecated",
+    "component.hard_deleted",
+    "component.updated",
+    "registry.grammar.rebuilt"
+   ],
+   "listens": []
+  },
+  "nexus.lib.config-governance": {
+   "emits": [
+    "anomaly.detected"
+   ],
+   "listens": []
+  },
+  "nexus.lib.constitutional-ai": {
+   "emits": [
+    "constitution.decision"
+   ],
+   "listens": []
+  },
+  "nexus.lib.contract-registry-writer": {
+   "emits": [
+    "contract-registry.axiom.changed",
+    "contract-registry.violation.flagged"
+   ],
+   "listens": []
+  },
+  "nexus.lib.ess": {
+   "emits": [
+    "ess:bind",
+    "ess:noise_alert",
+    "ess:resolve",
+    "ess:unbind",
+    "ess:unresolve",
+    "ess:write"
+   ],
+   "listens": []
+  },
+  "nexus.lib.heartbeat": {
+   "emits": [
+    "heartbeat:dead",
+    "heartbeat:degraded",
+    "heartbeat:pulse"
+   ],
+   "listens": []
+  },
+  "nexus.lib.hook-registry": {
+   "emits": [
+    "architect.hook.deprecated",
+    "architect.hook.registered",
+    "architect.hook.removed",
+    "architect.hook.unwired",
+    "architect.hook.updated",
+    "architect.hook.wired"
+   ],
+   "listens": []
+  },
+  "nexus.lib.ico": {
+   "emits": [
+    "ico:axiom:registered",
+    "ico:axiom:violation",
+    "ico:crystal:formed",
+    "ico:drop",
+    "ico:failure",
+    "ico:input:processed",
+    "ico:input:replay",
+    "ico:invariant:del",
+    "ico:invariant:set",
+    "ico:ledger:fork",
+    "ico:output",
+    "ico:pipe:error",
+    "ico:plugin:registered",
+    "ico:snr:health",
+    "ico:snr:noise",
+    "ico:snr:score"
+   ],
+   "listens": []
+  },
+  "nexus.lib.shadow": {
+   "emits": [
+    "shadow.declared",
+    "shadow.settled"
+   ],
+   "listens": []
+  },
+  "nexus.loom.seed.2026-07-11-session-wires": {
+   "emits": [
+    "idearium.repo.file.write"
+   ],
+   "listens": []
+  },
+  "nexus.mesh.install": {
+   "emits": [
+    "mesh.ready"
+   ],
+   "listens": []
+  },
+  "nexus.mesh.lib.ddns": {
+   "emits": [
+    "net.ddns.entry_added",
+    "net.ddns.ip_detected",
+    "net.ddns.started",
+    "net.ddns.updated",
+    "net.dns.add_record",
+    "system.error"
+   ],
+   "listens": [
+    "net.ddns.add_entry",
+    "net.ddns.force_check"
+   ]
+  },
+  "nexus.mesh.lib.dns-server": {
+   "emits": [
+    "net.ddns.updated",
+    "net.dns.block",
+    "net.dns.blocklist_imported",
+    "net.dns.domain_blocked",
+    "net.dns.record_added",
+    "net.dns.started",
+    "net.dns.stopped",
+    "system.error"
+   ],
+   "listens": [
+    "net.ddns.update",
+    "net.dns.add_record",
+    "net.dns.allow_domain",
+    "net.dns.block_domain"
+   ]
+  },
+  "nexus.mesh.lib.firewall": {
+   "emits": [
+    "net.fw.block",
+    "net.fw.json_imported",
+    "net.fw.logged",
+    "net.fw.os_sync",
+    "net.fw.rule_added",
+    "net.fw.rule_removed",
+    "system.error"
+   ],
+   "listens": [
+    "net.fw.add_rule",
+    "net.fw.import_json",
+    "net.fw.remove_rule",
+    "net.fw.set_vars"
+   ]
+  },
+  "nexus.mesh.lib.reverse-proxy": {
+   "emits": [
+    "net.proxy.route_added",
+    "net.proxy.route_removed",
+    "net.proxy.started",
+    "system.error"
+   ],
+   "listens": [
+    "net.proxy.add_route",
+    "net.proxy.remove_route"
+   ]
+  },
+  "nexus.nexus.nexus-bus": {
+   "emits": [],
+   "listens": [
+    "architect.snr.flagged"
+   ]
+  },
+  "nexus.nexus.nexus-cfr-influence": {
+   "emits": [
+    "cfr.influence.applied",
+    "cfr.influence.diagnostic_requested",
+    "cfr.influence.guardian_throttled",
+    "cfr.influence.guardian_unthrottled",
+    "cfr.influence.snr_floor_cleared",
+    "cfr.influence.snr_floor_raised",
+    "cfr.influence.versionium_accelerated",
+    "nexus.cfr.chaos_threshold"
+   ],
+   "listens": []
+  },
+  "nexus.orchestrator.lib.autonomous-loop": {
+   "emits": [
+    "autonomous-loop.complete",
+    "autonomous-loop.error",
+    "autonomous-loop.started",
+    "autonomous-loop.step"
+   ],
+   "listens": []
+  },
+  "nexus.orchestrator.lib.hot-loader": {
+   "emits": [
+    "hot-loader.complete",
+    "hot-loader.failed",
+    "hot-loader.integrated",
+    "hot-loader.proving",
+    "hot-loader.quarantine",
+    "hot-loader.rolled_back"
+   ],
+   "listens": []
+  },
+  "nexus.orchestrator.lib.request-handler": {
+   "emits": [
+    "request.received"
+   ],
+   "listens": []
+  },
+  "nexus.orchestrator.lib.sigma-writer": {
+   "emits": [
+    "sigma.composite.halt_risk",
+    "sigma.composite.warning",
+    "sigma.event.halt_risk",
+    "sigma.event.warning"
+   ],
+   "listens": []
+  },
+  "nexus.orchestrator.lib.spec-drift": {
+   "emits": [
+    "cortex.gap.found",
+    "cortex.gap.resolved"
+   ],
+   "listens": []
+  },
+  "nexus.orchestrator.lib.ui-registry": {
+   "emits": [
+    "ui.deregistered",
+    "ui.disconnected",
+    "ui.reconnected",
+    "ui.registered"
+   ],
+   "listens": []
+  },
+  "nexus.orchestrator.lib.versionium-auto-commit": {
+   "emits": [],
+   "listens": [
+    "sigma.composite.halt_risk",
+    "sigma.composite.warning"
+   ]
+  },
+  "nexus.orchestrator.orchestrator": {
+   "emits": [
+    "pulse.missed"
+   ],
+   "listens": [
+    "copilot.error.detected",
+    "cortex.gap.found",
+    "nexus.resource.pressure"
+   ]
+  },
+  "nexus.remote-desktop.bridge-electron.main": {
+   "emits": [],
+   "listens": [
+    "input:rate_limited",
+    "input:rejected"
+   ]
+  },
+  "nexus.remote-desktop.bridge-os-core.bridge-core.bus": {
+   "emits": [
+    "bus:meta:observer_error"
+   ],
+   "listens": []
+  },
+  "nexus.remote-desktop.bridge-os-core.bridge-core.registry": {
+   "emits": [
+    "node:evicted",
+    "node:registered",
+    "node:revived",
+    "node:state:dead",
+    "node:state:degraded",
+    "node:updated"
+   ],
+   "listens": []
+  },
+  "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep": {
+   "emits": [
+    "bus:all.a",
+    "bus:all.b",
+    "bus:basic",
+    "bus:enrich",
+    "bus:err.safe",
+    "bus:multi",
+    "bus:mutate",
+    "bus:off",
+    "bus:once",
+    "bus:seq",
+    "bus:sig.check",
+    "bus:ts",
+    "bus:unsub",
+    "bus:wild.1",
+    "bus:wild.2",
+    "capture.test",
+    "count.gate",
+    "err.gate",
+    "listener.ev",
+    "log.ev",
+    "log.off",
+    "log.pending.miss",
+    "multi.a",
+    "multi.b",
+    "no.gate",
+    "no.gate.here",
+    "off.ev",
+    "ok.test",
+    "q.a",
+    "q.b",
+    "qst.hit",
+    "qst.miss",
+    "result.test",
+    "setlevel.test",
+    "sub.event"
+   ],
+   "listens": [
+    "bus:basic",
+    "bus:enrich",
+    "bus:err.safe",
+    "bus:multi",
+    "bus:mutate",
+    "bus:off",
+    "bus:once",
+    "bus:seq",
+    "bus:sig.check",
+    "bus:ts",
+    "bus:unsub"
+   ]
+  },
+  "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core": {
+   "emits": [
+    "count.test",
+    "enrich:test",
+    "err:test",
+    "error.event",
+    "event.a",
+    "event.b",
+    "listener.test",
+    "log.ok",
+    "log.pending.unregistered",
+    "log.test",
+    "once:test",
+    "query.a",
+    "query.b",
+    "sub.event",
+    "test.event",
+    "test:event",
+    "unsub:test"
+   ],
+   "listens": [
+    "enrich:test",
+    "err:test",
+    "once:test",
+    "test:event",
+    "unsub:test"
+   ]
+  },
+  "nexus.remote-desktop.bridge-os-core.bridge-heartbeat": {
+   "emits": [
+    "heartbeat:pulse",
+    "node:dead",
+    "node:degraded"
+   ],
+   "listens": []
+  },
+  "nexus.remote-desktop.input-injector": {
+   "emits": [
+    "input:coalesced",
+    "input:injected",
+    "input:rate_limited",
+    "input:rejected",
+    "lock:changed"
+   ],
+   "listens": []
+  },
+  "nexus.remote-desktop.session-token": {
+   "emits": [
+    "authority:ready",
+    "token:expired",
+    "token:issued",
+    "token:rejected",
+    "token:revoked",
+    "token:verified"
+   ],
+   "listens": []
+  },
+  "nexus.remote-desktop.tests.test-input-injector": {
+   "emits": [],
+   "listens": [
+    "input:injected",
+    "input:rate_limited",
+    "input:rejected"
+   ]
+  },
+  "nexus.tests.brutal.test": {
+   "emits": [],
+   "listens": [
+    "ess:unresolve"
+   ]
+  },
+  "nexus.tests.dispatcher-ping-gate.test": {
+   "emits": [
+    "guardian.ncp.pong"
+   ],
+   "listens": []
+  },
+  "nexus.tests.full.test": {
+   "emits": [],
+   "listens": [
+    "ess:unresolve",
+    "ico:crystal:formed",
+    "ico:drop",
+    "ico:failure",
+    "ico:ledger:fork",
+    "ico:pipe:error"
+   ]
+  },
+  "nexus.tests.hooks-side-effect-parser.test": {
+   "emits": [
+    "guardian.dom_map.received"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.automation-v2.test": {
+   "emits": [
+    "page.visited",
+    "workflow.finished"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.autonomous-loop.test": {
+   "emits": [],
+   "listens": [
+    "test:build"
+   ]
+  },
+  "nexus.tests.modules.expectation-watcher.test": {
+   "emits": [
+    "u2.done",
+    "u2.trigger",
+    "unit.trigger"
+   ],
+   "listens": [
+    "copilot.error.detected"
+   ]
+  },
+  "nexus.tests.modules.guardian-picker-answer-roundtrip.test": {
+   "emits": [
+    "guardian.listener.copilot-answer",
+    "guardian.listener.ollama-answer"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.idearium-brainstorm-assist.test": {
+   "emits": [
+    "idearium.idea.create"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.idearium-phase-compartment.test": {
+   "emits": [
+    "idearium.idea.create",
+    "idearium.idea.phase",
+    "idearium.idea.update"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.test-back-and-forth.test": {
+   "emits": [
+    "guardian.job.complete",
+    "guardian.job.error",
+    "guardian.job.progress",
+    "guardian.provider.disconnected"
+   ],
+   "listens": [
+    "guardian.job.complete",
+    "guardian.job.error",
+    "guardian.job.progress",
+    "guardian.job.timeout"
+   ]
+  },
+  "nexus.tests.modules.test-bus-subscriptions": {
+   "emits": [],
+   "listens": [
+    "real.evt"
+   ]
+  },
+  "nexus.tests.modules.test-cg-shortcuts.test": {
+   "emits": [],
+   "listens": [
+    "shortcut:action"
+   ]
+  },
+  "nexus.tests.modules.test-chat-sync-agent-routing.test": {
+   "emits": [
+    "guardian.ncp.sync_result"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.test-chat-transcripts.test": {
+   "emits": [
+    "guardian.job.progress"
+   ],
+   "listens": [
+    "guardian.chat.transcript.recorded",
+    "guardian.job.complete",
+    "guardian.job.error"
+   ]
+  },
+  "nexus.tests.modules.test-config-governance": {
+   "emits": [],
+   "listens": [
+    "anomaly.detected",
+    "escalation.friction.increased"
+   ]
+  },
+  "nexus.tests.modules.test-consumer-registry": {
+   "emits": [],
+   "listens": [
+    "gap.found",
+    "job.done"
+   ]
+  },
+  "nexus.tests.modules.test-cookie-vault-ipc-roundtrip": {
+   "emits": [],
+   "listens": [
+    "dom:pick-result",
+    "nexus:cookie-request"
+   ]
+  },
+  "nexus.tests.modules.test-economy-guardian.test": {
+   "emits": [
+    "guardian.job.complete",
+    "guardian.job.error",
+    "guardian.job.timeout",
+    "guardian.provider.login_required"
+   ],
+   "listens": [
+    "guardian.economy.fallback",
+    "guardian.economy.wait",
+    "guardian.job.error"
+   ]
+  },
+  "nexus.tests.modules.test-escalation": {
+   "emits": [
+    "anomaly.detected",
+    "nexus.resource.pressure"
+   ],
+   "listens": [
+    "escalation.failure_mode",
+    "escalation.friction.increased"
+   ]
+  },
+  "nexus.tests.modules.test-gap-finder": {
+   "emits": [
+    "anomaly.detected",
+    "sigma.event.halt_risk",
+    "sigma.event.warning"
+   ],
+   "listens": [
+    "cortex.gap.found"
+   ]
+  },
+  "nexus.tests.modules.test-guardian-mesh-client": {
+   "emits": [
+    "guardian.job.chunk",
+    "guardian.ncp.pong"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.test-guardian-retry-novelty-installs": {
+   "emits": [
+    "guardian.job.complete",
+    "guardian.job.error"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.test-ico-ledger-writethrough": {
+   "emits": [],
+   "listens": [
+    "ico:ledger:fork"
+   ]
+  },
+  "nexus.tests.modules.test-live-stream-and-gates.test": {
+   "emits": [
+    "guardian.job.dispatched",
+    "guardian.job.progress"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.test-manifest-phase1.test": {
+   "emits": [],
+   "listens": [
+    "guardian:job:complete"
+   ]
+  },
+  "nexus.tests.modules.test-orion": {
+   "emits": [
+    "anomaly.detected",
+    "sigma.event.halt_risk",
+    "sigma.event.warning"
+   ],
+   "listens": [
+    "cortex.orion.classified"
+   ]
+  },
+  "nexus.tests.modules.test-raid-orion-wiring": {
+   "emits": [
+    "cortex.orion.classified"
+   ],
+   "listens": [
+    "cortex.raid.decided"
+   ]
+  },
+  "nexus.tests.modules.test-raid-router": {
+   "emits": [
+    "raid.route.request"
+   ],
+   "listens": [
+    "raid.route.decided",
+    "raid.route.fulfilled",
+    "raid.route.no_route",
+    "raid.route.request"
+   ]
+  },
+  "nexus.tests.modules.test-registry-harness.test": {
+   "emits": [
+    "in.a.comment",
+    "repo.saved",
+    "sql.parse",
+    "store.flushed"
+   ],
+   "listens": [
+    "guardian.job.complete",
+    "sql.plan",
+    "store.flushed"
+   ]
+  },
+  "nexus.tests.modules.test-self-build-loop": {
+   "emits": [
+    "pipeline.promoted"
+   ],
+   "listens": [
+    "nexus.self-build.housekeeping-complete"
+   ]
+  },
+  "nexus.tests.modules.test-self-heal": {
+   "emits": [],
+   "listens": [
+    "cortex.self-heal.deep_scan_findings",
+    "cortex.self-heal.failure_mode",
+    "cortex.self-heal.fix_proposed",
+    "cortex.self-heal.fix_staged",
+    "cortex.self-heal.remediation_requested",
+    "cortex.self-heal.skipped"
+   ]
+  },
+  "nexus.tests.modules.test-shadow.test": {
+   "emits": [
+    "test.shadow.done"
+   ],
+   "listens": [
+    "shadow.declared",
+    "shadow.settled"
+   ]
+  },
+  "nexus.tests.modules.test-spec-workshop.test": {
+   "emits": [
+    "idearium.idea.create"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.test-step-gate.test": {
+   "emits": [],
+   "listens": [
+    "step.blocked",
+    "step.passed"
+   ]
+  },
+  "nexus.tests.modules.tool-call-listener.test": {
+   "emits": [
+    "guardian.tool.called"
+   ],
+   "listens": []
+  },
+  "nexus.tests.modules.ui-self-diagnosis.test": {
+   "emits": [
+    "nav.changed",
+    "ui.interaction.error",
+    "ui.interaction.gated"
+   ],
+   "listens": [
+    "copilot.error.detected"
+   ]
+  },
+  "nexus.tests.nexus-full-audit": {
+   "emits": [],
+   "listens": [
+    "anomaly.detected"
+   ]
+  },
+  "nexus.ui.eravos.bridge.nexus-bridge": {
+   "emits": [
+    "kernel:notify"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.catalog.catalog": {
+   "emits": [
+    "catalog:removed"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.kernel.intake": {
+   "emits": [
+    "intake:file"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.kernel.kernel": {
+   "emits": [
+    "kernel:audio-ready",
+    "kernel:bpm-change",
+    "kernel:fault",
+    "kernel:ledger-entry",
+    "kernel:organism-mounted",
+    "kernel:organism-unmounted",
+    "kernel:pack-installed",
+    "kernel:wire-registered",
+    "kernel:wire-removed"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine": {
+   "emits": [
+    "audio:signal",
+    "org:state_sync",
+    "org:triggered"
+   ],
+   "listens": [
+    "pad:trigger"
+   ]
+  },
+  "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine": {
+   "emits": [
+    "bass-drop:stage",
+    "org:stage-active",
+    "org:state-sync",
+    "org:vocal-loaded"
+   ],
+   "listens": [
+    "intake:file",
+    "kernel:bpm-change"
+   ]
+  },
+  "nexus.ui.eravos.organisms.channel.channel.engine": {
+   "emits": [
+    "org:meter",
+    "org:state_sync"
+   ],
+   "listens": [
+    "audio:signal"
+   ]
+  },
+  "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine": {
+   "emits": [
+    "contrast:analysis",
+    "org:analysis-ready",
+    "org:bpm-detected",
+    "org:mode-changed",
+    "org:slot-loaded"
+   ],
+   "listens": [
+    "intake:file"
+   ]
+  },
+  "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine": {
+   "emits": [
+    "edm:drop-fired",
+    "edm:rhythm-step",
+    "org:density-reset",
+    "org:drop-fired",
+    "org:state-sync"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.organisms.lfo.lfo.engine": {
+   "emits": [
+    "mod:signal",
+    "org:lfo_tick",
+    "org:state_sync"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core": {
+   "emits": [
+    "org:state_sync"
+   ],
+   "listens": [
+    "transport:play",
+    "transport:record-start",
+    "transport:record-stop",
+    "transport:stop"
+   ]
+  },
+  "nexus.ui.eravos.organisms.pads.pads.engine": {
+   "emits": [
+    "org:pad_lit",
+    "org:state_sync",
+    "pad:bank-change",
+    "pad:trigger"
+   ],
+   "listens": [
+    "midi:note",
+    "seq:fire"
+   ]
+  },
+  "nexus.ui.eravos.organisms.reese-bass.reese-bass.engine": {
+   "emits": [
+    "org:state_sync"
+   ],
+   "listens": [
+    "pad:trigger"
+   ]
+  },
+  "nexus.ui.eravos.organisms.sample-player.sample-player.engine": {
+   "emits": [
+    "org:playhead_update",
+    "org:state_sync",
+    "org:waveform_ready"
+   ],
+   "listens": [
+    "intake:file"
+   ]
+  },
+  "nexus.ui.eravos.organisms.sequencer.sequencer.engine": {
+   "emits": [
+    "org:grid_sync",
+    "org:state_sync",
+    "org:step_cursor",
+    "org:step_set",
+    "seq:fire",
+    "seq:play",
+    "seq:stop"
+   ],
+   "listens": [
+    "kernel:bpm-change",
+    "pad:bank-change",
+    "pad:trigger",
+    "seq:play",
+    "seq:stop"
+   ]
+  },
+  "nexus.ui.eravos.organisms.timeline.timeline.engine": {
+   "emits": [
+    "intake:file",
+    "org:asset_loaded",
+    "org:clip_added",
+    "org:clip_removed",
+    "org:clip_sync",
+    "org:playhead_update",
+    "org:state_sync",
+    "seq:play",
+    "seq:stop"
+   ],
+   "listens": [
+    "intake:file",
+    "seq:play",
+    "seq:stop",
+    "transport:play",
+    "transport:recorded"
+   ]
+  },
+  "nexus.ui.eravos.organisms.wobble-bass.wobble-bass.engine": {
+   "emits": [
+    "org:state_sync"
+   ],
+   "listens": [
+    "pad:trigger"
+   ]
+  },
+  "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine": {
+   "emits": [
+    "mod:xy",
+    "org:state_sync",
+    "org:xy_update"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.pack.pack-loader": {
+   "emits": [
+    "kernel:fault",
+    "kernel:pack-installed"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.runtime.canvas-intelligence": {
+   "emits": [],
+   "listens": [
+    "org:state_sync"
+   ]
+  },
+  "nexus.ui.eravos.runtime.canvas-wm": {
+   "emits": [
+    "canvas:window-closed"
+   ],
+   "listens": []
+  },
+  "nexus.ui.eravos.runtime.master-transport": {
+   "emits": [
+    "kernel:bpm-change",
+    "kernel:notify",
+    "seq:play",
+    "seq:stop",
+    "transport:play",
+    "transport:record-start",
+    "transport:record-stop",
+    "transport:recorded",
+    "transport:stop"
+   ],
+   "listens": [
+    "ui:transport-bpm",
+    "ui:transport-play",
+    "ui:transport-record",
+    "ui:transport-stop"
+   ]
+  },
+  "nexus.ui.eravos.runtime.organism-factory": {
+   "emits": [
+    "canvas:organism-spawned",
+    "catalog:organism-registered",
+    "intake:file",
+    "mod:xy"
+   ],
+   "listens": [
+    "kernel:bpm-change",
+    "org:analysis-ready",
+    "org:asset_loaded",
+    "org:bpm-detected",
+    "org:clip_sync",
+    "org:density-reset",
+    "org:drop-fired",
+    "org:grid_sync",
+    "org:pad_lit",
+    "org:playhead_update",
+    "org:slot-loaded",
+    "org:stage-active",
+    "org:state-sync",
+    "org:state_sync",
+    "org:step_cursor",
+    "org:step_set",
+    "org:vocal-loaded",
+    "org:waveform_ready",
+    "pad:trigger",
+    "ui:config_change"
+   ]
+  },
+  "nexus.ui.eravos.runtime.wire-system": {
+   "emits": [
+    "kernel:notify"
+   ],
+   "listens": []
+  },
+  "nexus.ui.store": {
+   "emits": [
+    "artifacts.changed",
+    "config.changed",
+    "cortex.memory.updated",
+    "entropy.changed",
+    "eventlog.bulk",
+    "eventlog.push",
+    "gaps.changed",
+    "health.changed",
+    "ideas.changed",
+    "jobs.changed",
+    "providers.changed",
+    "pulse.missed",
+    "pulse.received",
+    "seam.changed",
+    "specs.changed",
+    "sse.cortex.error",
+    "sse.cortex.open",
+    "sse.event",
+    "sse.guardian.error",
+    "sse.guardian.open",
+    "sse.orchestrator.error",
+    "sse.orchestrator.open"
+   ],
+   "listens": []
+  },
+  "nexus.ui.tv-shell.warp-ui.nexus-shell": {
+   "emits": [
+    "nexus.contract.loaded",
+    "nexus.ledger.entry",
+    "nexus.system.poll"
+   ],
+   "listens": []
+  },
+  "nexus.ui.ui-pulse": {
+   "emits": [
+    "health.changed"
+   ],
+   "listens": []
+  }
+ },
+ "byEvent": {
+  "architect.blueprint.built": {
+   "emitters": [
+    "nexus.architect.src.spec.Blueprint"
+   ],
+   "listeners": []
+  },
+  "architect.snr.checked": {
+   "emitters": [
+    "nexus.architect.src.spec.Blueprint"
+   ],
+   "listeners": []
+  },
+  "architect.snr.flagged": {
+   "emitters": [
+    "nexus.architect.src.spec.Blueprint"
+   ],
+   "listeners": [
+    "nexus.nexus.nexus-bus"
+   ]
+  },
+  "architect.snr.rewrite-required": {
+   "emitters": [
+    "nexus.architect.src.spec.Blueprint"
+   ],
+   "listeners": []
+  },
+  "dom.query": {
+   "emitters": [
+    "nexus.clear-glass.plugins.captcha-pause"
+   ],
+   "listeners": []
+  },
+  "driver.exec": {
+   "emitters": [
+    "nexus.clear-glass.plugins.captcha-pause",
+    "nexus.clear-glass.plugins.guardian-listeners",
+    "nexus.clear-glass.plugins.passwords",
+    "nexus.clear-glass.plugins.permissions",
+    "nexus.clear-glass.plugins.zoom"
+   ],
+   "listeners": []
+  },
+  "dom.query.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.plugins.captcha-pause"
+   ]
+  },
+  "passwords.get": {
+   "emitters": [
+    "nexus.clear-glass.plugins.passwords"
+   ],
+   "listeners": []
+  },
+  "passwords.save": {
+   "emitters": [
+    "nexus.clear-glass.plugins.passwords"
+   ],
+   "listeners": []
+  },
+  "driver.result": {
+   "emitters": [
+    "nexus.clear-glass.src.driver",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.plugins.passwords",
+    "nexus.clear-glass.plugins.zoom"
+   ]
+  },
+  "passwords.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.plugins.passwords"
+   ]
+  },
+  "site-settings.get": {
+   "emitters": [
+    "nexus.clear-glass.plugins.permissions"
+   ],
+   "listeners": []
+  },
+  "site-settings.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.plugins.permissions"
+   ]
+  },
+  "driver.error": {
+   "emitters": [
+    "nexus.clear-glass.src.driver",
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.test.watchdog.test"
+   ],
+   "listeners": [
+    "nexus.clear-glass.plugins.zoom"
+   ]
+  },
+  "cg:navigate": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.renderer.browser",
+    "nexus.clear-glass.src.bookmarks.browser"
+   ]
+  },
+  "driver.retry": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "mesh.route": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.driver.error": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.gap.open": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.mesh.demote": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.nexus.offline": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.nexus.reconnected": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.rate-limit.handled": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.seam.stall": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": []
+  },
+  "watchdog.tokens.found": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.watchdog.test"
+   ]
+  },
+  "watchdog.url.relayed": {
+   "emitters": [
+    "nexus.clear-glass.seam.watchdog-gates"
+   ],
+   "listeners": []
+  },
+  "context.created": {
+   "emitters": [
+    "nexus.clear-glass.src.contexts.manager",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "context.destroyed": {
+   "emitters": [
+    "nexus.clear-glass.src.contexts.manager"
+   ],
+   "listeners": []
+  },
+  "context.fp.switched": {
+   "emitters": [
+    "nexus.clear-glass.src.contexts.manager",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "context.network.error": {
+   "emitters": [
+    "nexus.clear-glass.src.contexts.manager"
+   ],
+   "listeners": []
+  },
+  "context.rate-limited": {
+   "emitters": [
+    "nexus.clear-glass.src.contexts.manager",
+    "nexus.clear-glass.test.watchdog.test"
+   ],
+   "listeners": []
+  },
+  "context.switched": {
+   "emitters": [
+    "nexus.clear-glass.src.contexts.manager",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "cookie.event": {
+   "emitters": [
+    "nexus.clear-glass.src.contexts.manager"
+   ],
+   "listeners": []
+  },
+  "copilot.response": {
+   "emitters": [
+    "nexus.clear-glass.src.copilot.bridge",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "copilot.stream.connected": {
+   "emitters": [
+    "nexus.clear-glass.src.copilot.bridge"
+   ],
+   "listeners": []
+  },
+  "copilot.thinking": {
+   "emitters": [
+    "nexus.clear-glass.src.copilot.bridge"
+   ],
+   "listeners": []
+  },
+  "copilot.tool.error": {
+   "emitters": [
+    "nexus.clear-glass.src.copilot.bridge"
+   ],
+   "listeners": []
+  },
+  "copilot.tool.result": {
+   "emitters": [
+    "nexus.clear-glass.src.copilot.bridge"
+   ],
+   "listeners": []
+  },
+  "copilot.tool.start": {
+   "emitters": [
+    "nexus.clear-glass.src.copilot.bridge"
+   ],
+   "listeners": []
+  },
+  "diag.run.complete": {
+   "emitters": [
+    "nexus.clear-glass.src.diagnostic.engine"
+   ],
+   "listeners": []
+  },
+  "diag.run.start": {
+   "emitters": [
+    "nexus.clear-glass.src.diagnostic.engine"
+   ],
+   "listeners": []
+  },
+  "diag.screenshot.saved": {
+   "emitters": [
+    "nexus.clear-glass.src.diagnostic.engine"
+   ],
+   "listeners": []
+  },
+  "diag.step.fail": {
+   "emitters": [
+    "nexus.clear-glass.src.diagnostic.engine"
+   ],
+   "listeners": []
+  },
+  "diag.step.result": {
+   "emitters": [
+    "nexus.clear-glass.src.diagnostic.engine"
+   ],
+   "listeners": []
+  },
+  "process.metrics": {
+   "emitters": [
+    "nexus.clear-glass.src.diagnostic.process-metrics"
+   ],
+   "listeners": []
+  },
+  "process.metrics.error": {
+   "emitters": [
+    "nexus.clear-glass.src.diagnostic.process-metrics"
+   ],
+   "listeners": []
+  },
+  "dom.injected": {
+   "emitters": [
+    "nexus.clear-glass.src.dom.archaeology"
+   ],
+   "listeners": []
+  },
+  "dom.mutated": {
+   "emitters": [
+    "nexus.clear-glass.src.dom.archaeology"
+   ],
+   "listeners": []
+  },
+  "dom.pick.registered": {
+   "emitters": [
+    "nexus.clear-glass.src.dom.archaeology",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "dom.picked": {
+   "emitters": [
+    "nexus.clear-glass.src.dom.archaeology"
+   ],
+   "listeners": []
+  },
+  "dom.tokens.scanned": {
+   "emitters": [
+    "nexus.clear-glass.src.dom.archaeology"
+   ],
+   "listeners": []
+  },
+  "dom:event": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.dom.archaeology",
+    "nexus.clear-glass.src.ipc.bridge"
+   ]
+  },
+  "dom:pick-result": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.dom.archaeology",
+    "nexus.tests.modules.test-cookie-vault-ipc-roundtrip"
+   ]
+  },
+  "downloads.completed": {
+   "emitters": [
+    "nexus.clear-glass.src.downloads.adapter",
+    "nexus.clear-glass.test.downloads-intake-bridge.test"
+   ],
+   "listeners": []
+  },
+  "driver.network.blocked": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "driver.network.intercepted": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "driver.recording": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "driver.screenshot": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "driver.start": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "field.map": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "field.spotlight": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "nav.loaded": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "nav.started": {
+   "emitters": [
+    "nexus.clear-glass.src.driver"
+   ],
+   "listeners": []
+  },
+  "url.listener.added": {
+   "emitters": [
+    "nexus.clear-glass.src.driver.url-listener",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "url.listener.removed": {
+   "emitters": [
+    "nexus.clear-glass.src.driver.url-listener",
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "url.match": {
+   "emitters": [
+    "nexus.clear-glass.src.driver.url-listener"
+   ],
+   "listeners": []
+  },
+  "url.request.headers": {
+   "emitters": [
+    "nexus.clear-glass.src.driver.url-listener"
+   ],
+   "listeners": []
+  },
+  "url.response": {
+   "emitters": [
+    "nexus.clear-glass.src.driver.url-listener"
+   ],
+   "listeners": []
+  },
+  "account.created": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.deleted": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.get.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.list.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.provider.find.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.provider.get.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.provider.linked": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.provider.unlinked": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.provider.verified": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "account.updated": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.detect.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.fill.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.profile.created": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.profile.deleted": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.profile.get.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.profile.list.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "autofill.profile.updated": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "bookmarks.added": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.phase2.test"
+   ]
+  },
+  "bookmarks.check.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "bookmarks.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "bookmarks.listed": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.phase2.test"
+   ]
+  },
+  "bookmarks.opened": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "bookmarks.removed": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "bookmarks.visited": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "context.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "cookie.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "cookie.health.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.test.watchdog.test"
+   ],
+   "listeners": []
+  },
+  "cookie.restored": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "cookie.saved": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "cookie.snapshotted": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "copilot.cleared": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "copilot.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "diag.complete": {
+   "emitters": [
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.test.watchdog.test"
+   ],
+   "listeners": []
+  },
+  "diag.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "dom.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "dom.mutate.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "dom.tokens.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.test.watchdog.test"
+   ],
+   "listeners": []
+  },
+  "history.cleared": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "history.deleted": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "history.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "history.list.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "history.recorded": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.agent.spawned": {
+   "emitters": [
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.test.watchdog.test"
+   ],
+   "listeners": []
+  },
+  "mesh.list.agents.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.list.meshView.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.list.nodes.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.queued": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.task.complete": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.created": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.get.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.list.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.removed": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.run.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.step.added": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.step.moved": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.step.removed": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.step.updated": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "mesh.workflow.updated": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "nav.loading": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "options.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "options.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "passwords.deleted": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "passwords.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "passwords.list.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "passwords.saved": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "provider.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "provider.listed": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.phase2.test"
+   ]
+  },
+  "provider.navigated": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "provider.shown": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "provider.started": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "provider.stopped": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.phase2.test"
+   ]
+  },
+  "rewind.cleared": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "rewind.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "rewind.listed": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.phase2.test"
+   ]
+  },
+  "rewind.restored": {
+   "emitters": [
+    "nexus.clear-glass.src.gates",
+    "nexus.clear-glass.src.rewind.engine"
+   ],
+   "listeners": []
+  },
+  "rewind.snapshotted": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "seam.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "seam.registered": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "site-settings.cleared": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "site-settings.clearedAll": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "site-settings.deleteKey.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "site-settings.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "site-settings.list.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "site-settings.set.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "speech.available.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "speech.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "speech.result": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "status.response": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "userscript.created": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.src.plugins.host"
+   ]
+  },
+  "userscript.deleted": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "userscript.error": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": [
+    "nexus.clear-glass.src.plugins.host"
+   ]
+  },
+  "userscript.injected": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "userscript.listed": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "userscript.toggled": {
+   "emitters": [
+    "nexus.clear-glass.src.gates"
+   ],
+   "listeners": []
+  },
+  "guardian.listener.copilot-answer": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge",
+    "nexus.tests.modules.guardian-picker-answer-roundtrip.test"
+   ],
+   "listeners": []
+  },
+  "guardian.listener.copilot-panel": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
+  "guardian.listener.direct-file-write": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
+  "guardian.listener.ollama-answer": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge",
+    "nexus.tests.modules.guardian-picker-answer-roundtrip.test"
+   ],
+   "listeners": []
+  },
+  "guardian.listener.route.error": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
+  "window.hide": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
+  "window.minimize": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
+  "window.open": {
+   "emitters": [
+    "nexus.clear-glass.src.ipc.bridge"
+   ],
+   "listeners": []
+  },
+  "app.start": {
+   "emitters": [
+    "nexus.clear-glass.src.main"
+   ],
+   "listeners": []
+  },
+  "bgtab.closed": {
+   "emitters": [
+    "nexus.clear-glass.src.main"
+   ],
+   "listeners": []
+  },
+  "bgtab.opened": {
+   "emitters": [
+    "nexus.clear-glass.src.main"
+   ],
+   "listeners": []
+  },
+  "context.fp.switch": {
+   "emitters": [
+    "nexus.clear-glass.src.main",
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "diag.nexus": {
+   "emitters": [
+    "nexus.clear-glass.src.main",
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "download.done": {
+   "emitters": [
+    "nexus.clear-glass.src.main"
+   ],
+   "listeners": []
+  },
+  "library.opened": {
+   "emitters": [
+    "nexus.clear-glass.src.main"
+   ],
+   "listeners": []
+  },
+  "lifecycle.ready": {
+   "emitters": [
+    "nexus.clear-glass.src.main",
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "lifecycle.shutdown": {
+   "emitters": [
+    "nexus.clear-glass.src.main",
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "nexus.status": {
+   "emitters": [
+    "nexus.clear-glass.src.main",
+    "nexus.clear-glass.src.main.index.pre-userscripts",
+    "nexus.clear-glass.test.watchdog.test"
+   ],
+   "listeners": []
+  },
+  "page.visited": {
+   "emitters": [
+    "nexus.clear-glass.src.main",
+    "nexus.tests.modules.automation-v2.test"
+   ],
+   "listeners": []
+  },
+  "userscript.auto-injected": {
+   "emitters": [
+    "nexus.clear-glass.src.main"
+   ],
+   "listeners": []
+  },
+  "window.maximized": {
+   "emitters": [
+    "nexus.clear-glass.src.main"
+   ],
+   "listeners": []
+  },
+  "window.opened": {
+   "emitters": [
+    "nexus.clear-glass.src.main",
+    "nexus.clear-glass.src.main.index.pre-userscripts"
+   ],
+   "listeners": []
+  },
+  "mesh.constraints.unavailable": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.guardian.dispatch": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.job.progress": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.node.status_changed": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.nodes.snapshot": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.add": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.complete": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.diagnostic.fallback": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.diagnostic.respawn": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.diagnostic.snapshot": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.error": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.escalated": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.escalation_report_failed": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.processing": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.requeued": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.queue.retry": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.raid.decision": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.raid.unavailable": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.spawn.window_error": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.task.start": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.vault.restore": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "mesh.vault.restore.error": {
+   "emitters": [
+    "nexus.clear-glass.src.mesh.agent-mesh"
+   ],
+   "listeners": []
+  },
+  "network.ready": {
+   "emitters": [
+    "nexus.clear-glass.src.network.install"
+   ],
+   "listeners": []
+  },
+  "plugin:error": {
+   "emitters": [
+    "nexus.clear-glass.src.plugins.host"
+   ],
+   "listeners": []
+  },
+  "plugins:killswitch.fullstop": {
+   "emitters": [
+    "nexus.clear-glass.src.plugins.host"
+   ],
+   "listeners": []
+  },
+  "userscript.create": {
+   "emitters": [
+    "nexus.clear-glass.src.plugins.host"
+   ],
+   "listeners": []
+  },
+  "userscript.toggle": {
+   "emitters": [
+    "nexus.clear-glass.src.plugins.host"
+   ],
+   "listeners": []
+  },
+  "permission:decision": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.plugins.permission-adapter"
+   ]
+  },
+  "webrequest:decision": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.plugins.webrequest-adapter"
+   ]
+  },
+  "shortcut:action": {
+   "emitters": [],
+   "listeners": [
+    "nexus.clear-glass.src.preload",
+    "nexus.tests.modules.test-cg-shortcuts.test"
+   ]
+  },
+  "provider.host.all-booted": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.closed_unexpectedly": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.crashed": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.injected": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.navigate": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.navigate-failed": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.navigated": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.started": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.stopped": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "provider.host.wake-intro": {
+   "emitters": [
+    "nexus.clear-glass.src.providers.host"
+   ],
+   "listeners": []
+  },
+  "rewind.restoring": {
+   "emitters": [
+    "nexus.clear-glass.src.rewind.engine"
+   ],
+   "listeners": []
+  },
+  "rewind.snapshot": {
+   "emitters": [
+    "nexus.clear-glass.src.rewind.engine"
+   ],
+   "listeners": []
+  },
+  "hook.result": {
+   "emitters": [
+    "nexus.clear-glass.src.seam"
+   ],
+   "listeners": []
+  },
+  "tls.error": {
+   "emitters": [
+    "nexus.clear-glass.src.tls.proxy"
+   ],
+   "listeners": []
+  },
+  "tls.tunnel": {
+   "emitters": [
+    "nexus.clear-glass.src.tls.proxy"
+   ],
+   "listeners": []
+  },
+  "bus.test": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.bus.test"
+   ]
+  },
+  "chain.1": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": []
+  },
+  "chain.2": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": []
+  },
+  "logged.event": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": []
+  },
+  "pub.event": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.bus.test"
+   ]
+  },
+  "recv.test": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": []
+  },
+  "step.1": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": []
+  },
+  "step.2": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": []
+  },
+  "test.sig": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": []
+  },
+  "unsub.test": {
+   "emitters": [
+    "nexus.clear-glass.test.bus.test"
+   ],
+   "listeners": [
+    "nexus.clear-glass.test.bus.test"
+   ]
+  },
+  "bookmarks.add": {
+   "emitters": [
+    "nexus.clear-glass.test.phase2.test"
+   ],
+   "listeners": []
+  },
+  "bookmarks.list": {
+   "emitters": [
+    "nexus.clear-glass.test.phase2.test"
+   ],
+   "listeners": []
+  },
+  "provider.list": {
+   "emitters": [
+    "nexus.clear-glass.test.phase2.test"
+   ],
+   "listeners": []
+  },
+  "provider.stop": {
+   "emitters": [
+    "nexus.clear-glass.test.phase2.test"
+   ],
+   "listeners": []
+  },
+  "rewind.list": {
+   "emitters": [
+    "nexus.clear-glass.test.phase2.test"
+   ],
+   "listeners": []
+  },
+  "cli.exec.done": {
+   "emitters": [
+    "nexus.cockpit.cli"
+   ],
+   "listeners": []
+  },
+  "forge.gap.opened": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "forge.notify": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "pipeline.deleted": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "pipeline.run.complete": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "pipeline.run.error": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "pipeline.run.started": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "pipeline.saved": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "pipeline.step.done": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "pipeline.step.started": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "webhook.registered": {
+   "emitters": [
+    "nexus.cockpit.pipeline"
+   ],
+   "listeners": []
+  },
+  "copilot.error.detected": {
+   "emitters": [
+    "nexus.copilot.lib.expectation-watcher"
+   ],
+   "listeners": [
+    "nexus.orchestrator.orchestrator",
+    "nexus.tests.modules.expectation-watcher.test",
+    "nexus.tests.modules.ui-self-diagnosis.test"
+   ]
+  },
+  "raid.route.decided": {
+   "emitters": [
+    "nexus.cortex.core.raid.router"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-raid-router"
+   ]
+  },
+  "raid.route.no_route": {
+   "emitters": [
+    "nexus.cortex.core.raid.router"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-raid-router"
+   ]
+  },
+  "raid.route.request": {
+   "emitters": [
+    "nexus.cortex.core.raid.router",
+    "nexus.tests.modules.test-raid-router"
+   ],
+   "listeners": [
+    "nexus.cortex.core.raid.router",
+    "nexus.tests.modules.test-raid-router"
+   ]
+  },
+  "cortex.orion.classified": {
+   "emitters": [
+    "nexus.cortex.orion",
+    "nexus.tests.modules.test-raid-orion-wiring"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-orion"
+   ]
+  },
+  "anomaly.detected": {
+   "emitters": [
+    "nexus.lib.config-governance",
+    "nexus.tests.modules.test-escalation",
+    "nexus.tests.modules.test-gap-finder",
+    "nexus.tests.modules.test-orion"
+   ],
+   "listeners": [
+    "nexus.cortex.orion",
+    "nexus.tests.modules.test-config-governance",
+    "nexus.tests.nexus-full-audit"
+   ]
+  },
+  "sigma.event.halt_risk": {
+   "emitters": [
+    "nexus.orchestrator.lib.sigma-writer",
+    "nexus.tests.modules.test-gap-finder",
+    "nexus.tests.modules.test-orion"
+   ],
+   "listeners": [
+    "nexus.cortex.orion"
+   ]
+  },
+  "sigma.event.warning": {
+   "emitters": [
+    "nexus.orchestrator.lib.sigma-writer",
+    "nexus.tests.modules.test-gap-finder",
+    "nexus.tests.modules.test-orion"
+   ],
+   "listeners": [
+    "nexus.cortex.orion"
+   ]
+  },
+  "host:archetype:assign": {
+   "emitters": [
+    "nexus.cos.blueprint",
+    "nexus.cos.cli.commands.archetype"
+   ],
+   "listeners": []
+  },
+  "archetype:assigned": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.blueprint"
+   ]
+  },
+  "ci:run:finished": {
+   "emitters": [
+    "nexus.cos.ci"
+   ],
+   "listeners": []
+  },
+  "ci:run:started": {
+   "emitters": [
+    "nexus.cos.ci"
+   ],
+   "listeners": []
+  },
+  "ci:stage:failed": {
+   "emitters": [
+    "nexus.cos.ci"
+   ],
+   "listeners": []
+  },
+  "ci:stage:started": {
+   "emitters": [
+    "nexus.cos.ci"
+   ],
+   "listeners": []
+  },
+  "ci:vault:unavailable": {
+   "emitters": [
+    "nexus.cos.ci"
+   ],
+   "listeners": []
+  },
+  "host:compartment:advance-work-phase": {
+   "emitters": [
+    "nexus.cos.cli.commands.advance-work-phase"
+   ],
+   "listeners": []
+  },
+  "host:archetype:detect": {
+   "emitters": [
+    "nexus.cos.cli.commands.archetype"
+   ],
+   "listeners": []
+  },
+  "host:archetype:import": {
+   "emitters": [
+    "nexus.cos.cli.commands.archetype",
+    "nexus.lib.agent-tools.tools.sandbox.cos-archetype"
+   ],
+   "listeners": []
+  },
+  "host:blueprint:create": {
+   "emitters": [
+    "nexus.cos.cli.commands.blueprint"
+   ],
+   "listeners": []
+  },
+  "host:blueprint:destroy": {
+   "emitters": [
+    "nexus.cos.cli.commands.blueprint"
+   ],
+   "listeners": []
+  },
+  "host:blueprint:import": {
+   "emitters": [
+    "nexus.cos.cli.commands.blueprint"
+   ],
+   "listeners": []
+  },
+  "host:compartment:create": {
+   "emitters": [
+    "nexus.cos.cli.commands.create"
+   ],
+   "listeners": []
+  },
+  "host:compartment:destroy": {
+   "emitters": [
+    "nexus.cos.cli.commands.destroy"
+   ],
+   "listeners": []
+  },
+  "host:playgrounds:create": {
+   "emitters": [
+    "nexus.cos.cli.commands.playground"
+   ],
+   "listeners": []
+  },
+  "host:playgrounds:destroy": {
+   "emitters": [
+    "nexus.cos.cli.commands.playground"
+   ],
+   "listeners": []
+  },
+  "host:playgrounds:promote": {
+   "emitters": [
+    "nexus.cos.cli.commands.playground"
+   ],
+   "listeners": []
+  },
+  "host:playgrounds:status": {
+   "emitters": [
+    "nexus.cos.cli.commands.playground"
+   ],
+   "listeners": []
+  },
+  "host:plugin:disable": {
+   "emitters": [
+    "nexus.cos.cli.commands.plugin"
+   ],
+   "listeners": []
+  },
+  "host:plugin:enable": {
+   "emitters": [
+    "nexus.cos.cli.commands.plugin"
+   ],
+   "listeners": []
+  },
+  "host:plugin:install": {
+   "emitters": [
+    "nexus.cos.cli.commands.plugin"
+   ],
+   "listeners": []
+  },
+  "host:plugin:remove": {
+   "emitters": [
+    "nexus.cos.cli.commands.plugin"
+   ],
+   "listeners": []
+  },
+  "comp:process:stdin": {
+   "emitters": [
+    "nexus.cos.cli.commands.run"
+   ],
+   "listeners": []
+  },
+  "host:compartment:start": {
+   "emitters": [
+    "nexus.cos.cli.commands.start",
+    "nexus.cos.watchdog.actions"
+   ],
+   "listeners": []
+  },
+  "host:compartment:stop": {
+   "emitters": [
+    "nexus.cos.cli.commands.stop",
+    "nexus.cos.watchdog.actions"
+   ],
+   "listeners": []
+  },
+  "host:vault:delete": {
+   "emitters": [
+    "nexus.cos.cli.commands.vault"
+   ],
+   "listeners": []
+  },
+  "host:vault:export": {
+   "emitters": [
+    "nexus.cos.cli.commands.vault"
+   ],
+   "listeners": []
+  },
+  "host:vault:get": {
+   "emitters": [
+    "nexus.cos.cli.commands.vault"
+   ],
+   "listeners": []
+  },
+  "host:vault:grant": {
+   "emitters": [
+    "nexus.cos.cli.commands.vault"
+   ],
+   "listeners": []
+  },
+  "host:vault:import": {
+   "emitters": [
+    "nexus.cos.cli.commands.vault"
+   ],
+   "listeners": []
+  },
+  "host:vault:revoke": {
+   "emitters": [
+    "nexus.cos.cli.commands.vault"
+   ],
+   "listeners": []
+  },
+  "host:vault:set": {
+   "emitters": [
+    "nexus.cos.cli.commands.vault"
+   ],
+   "listeners": []
+  },
+  "comp:file:written": {
+   "emitters": [
+    "nexus.cos.foundation.file-browser"
+   ],
+   "listeners": []
+  },
+  "host:snapshot:restored": {
+   "emitters": [
+    "nexus.cos.foundation.snapshot"
+   ],
+   "listeners": []
+  },
+  "nexus:snapshot:written": {
+   "emitters": [
+    "nexus.cos.foundation.snapshot"
+   ],
+   "listeners": []
+  },
+  "comp:process:kill": {
+   "emitters": [
+    "nexus.cos.host",
+    "nexus.cos.playgrounds.kernel",
+    "nexus.cos.watchdog.actions"
+   ],
+   "listeners": []
+  },
+  "comp:process:spawn": {
+   "emitters": [
+    "nexus.cos.host",
+    "nexus.cos.playgrounds.kernel",
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:map:updated": {
+   "emitters": [
+    "nexus.cos.host.system-map"
+   ],
+   "listeners": [
+    "nexus.cos.test.test"
+   ]
+  },
+  "compartment.bus.create": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.manager"
+   ]
+  },
+  "compartment.create.request": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.manager"
+   ]
+  },
+  "compartment.gate.run": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.manager"
+   ]
+  },
+  "compartment.status.request": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.manager"
+   ]
+  },
+  "comp:compare:done": {
+   "emitters": [
+    "nexus.cos.playground.compare"
+   ],
+   "listeners": []
+  },
+  "comp:compare:started": {
+   "emitters": [
+    "nexus.cos.playground.compare"
+   ],
+   "listeners": []
+  },
+  "lab.session.created": {
+   "emitters": [
+    "nexus.cos.playground.llm-lab"
+   ],
+   "listeners": []
+  },
+  "comp:sandbox:error": {
+   "emitters": [
+    "nexus.cos.playground.sandbox"
+   ],
+   "listeners": []
+  },
+  "comp:sandbox:exited": {
+   "emitters": [
+    "nexus.cos.playground.sandbox"
+   ],
+   "listeners": []
+  },
+  "comp:sandbox:output-limit": {
+   "emitters": [
+    "nexus.cos.playground.sandbox"
+   ],
+   "listeners": []
+  },
+  "comp:sandbox:started": {
+   "emitters": [
+    "nexus.cos.playground.sandbox"
+   ],
+   "listeners": []
+  },
+  "comp:sandbox:stderr": {
+   "emitters": [
+    "nexus.cos.playground.sandbox"
+   ],
+   "listeners": []
+  },
+  "comp:sandbox:stdout": {
+   "emitters": [
+    "nexus.cos.playground.sandbox"
+   ],
+   "listeners": []
+  },
+  "comp:sandbox:timeout": {
+   "emitters": [
+    "nexus.cos.playground.sandbox"
+   ],
+   "listeners": []
+  },
+  "comp:spawn:failed": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": [
+    "nexus.cos.test.test"
+   ]
+  },
+  "comp:x:y": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:a:b": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:a:one": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:a:three": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:a:two": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:c:d": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:test:done": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:test:one": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:test:ping": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": [
+    "nexus.cos.test.test"
+   ]
+  },
+  "host:test:three": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "host:test:two": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "test:double:run": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "test:sink:go": {
+   "emitters": [
+    "nexus.cos.test.test"
+   ],
+   "listeners": []
+  },
+  "comp:process:stdout": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.test.test"
+   ]
+  },
+  "host:compartment:destroyed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.test.test"
+   ]
+  },
+  "host:test:fired": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.test.test"
+   ]
+  },
+  "watchdog:snapshot:failed": {
+   "emitters": [
+    "nexus.cos.watchdog.actions"
+   ],
+   "listeners": []
+  },
+  "heal-loop.error": {
+   "emitters": [
+    "nexus.diagnostic.nexus-heal-loop"
+   ],
+   "listeners": []
+  },
+  "heal-loop.result": {
+   "emitters": [
+    "nexus.diagnostic.nexus-heal-loop"
+   ],
+   "listeners": []
+  },
+  "heal-loop.skipped": {
+   "emitters": [
+    "nexus.diagnostic.nexus-heal-loop"
+   ],
+   "listeners": []
+  },
+  "nexus-bus.system.booted": {
+   "emitters": [],
+   "listeners": [
+    "nexus.diagnostic.nexus-heal-loop"
+   ]
+  },
+  "kernel.booted": {
+   "emitters": [
+    "nexus.emerge.emerge-kernel"
+   ],
+   "listeners": []
+  },
+  "signal.noise": {
+   "emitters": [
+    "nexus.emerge.emerge-kernel"
+   ],
+   "listeners": []
+  },
+  "signal.passed": {
+   "emitters": [
+    "nexus.emerge.emerge-kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:notify": {
+   "emitters": [
+    "nexus.eravos.ui.bridge.nexus-bridge",
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.eravos.ui.runtime.wire-system",
+    "nexus.ui.eravos.bridge.nexus-bridge",
+    "nexus.ui.eravos.runtime.master-transport",
+    "nexus.ui.eravos.runtime.wire-system"
+   ],
+   "listeners": []
+  },
+  "catalog:removed": {
+   "emitters": [
+    "nexus.eravos.ui.catalog.catalog",
+    "nexus.ui.eravos.catalog.catalog"
+   ],
+   "listeners": []
+  },
+  "intake:file": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.intake",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.kernel.intake",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
+    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine",
+    "nexus.ui.eravos.organisms.sample-player.sample-player.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ]
+  },
+  "kernel:audio-ready": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel",
+    "nexus.ui.eravos.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:bpm-change": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel",
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.kernel.kernel",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "kernel:fault": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel",
+    "nexus.eravos.ui.pack.pack-loader",
+    "nexus.ui.eravos.kernel.kernel",
+    "nexus.ui.eravos.pack.pack-loader"
+   ],
+   "listeners": []
+  },
+  "kernel:ledger-entry": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel",
+    "nexus.ui.eravos.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:mod-mounted": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:mod-unmounted": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:pack-installed": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel",
+    "nexus.eravos.ui.pack.pack-loader",
+    "nexus.ui.eravos.kernel.kernel",
+    "nexus.ui.eravos.pack.pack-loader"
+   ],
+   "listeners": []
+  },
+  "kernel:wire-registered": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel",
+    "nexus.ui.eravos.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:wire-removed": {
+   "emitters": [
+    "nexus.eravos.ui.kernel.kernel",
+    "nexus.ui.eravos.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "audio:signal": {
+   "emitters": [
+    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
+    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
+    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.channel.channel.engine",
+    "nexus.ui.eravos.organisms.channel.channel.engine"
+   ]
+  },
+  "org:state_sync": {
+   "emitters": [
+    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
+    "nexus.eravos.ui.mods.channel.channel.engine",
+    "nexus.eravos.ui.mods.lfo.lfo.engine",
+    "nexus.eravos.ui.mods.macro-automation.macro-automation.engine",
+    "nexus.eravos.ui.mods.master-fx.master-fx.engine",
+    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
+    "nexus.eravos.ui.mods.pads.pads.engine",
+    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine",
+    "nexus.eravos.ui.mods.reese-bass.reese-bass.engine",
+    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine",
+    "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine",
+    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.eravos.ui.mods.video-editor.video-editor.engine",
+    "nexus.eravos.ui.mods.webhook-automation.webhook-automation.engine",
+    "nexus.eravos.ui.mods.wobble-bass.wobble-bass.engine",
+    "nexus.eravos.ui.mods.xy-pad.xy-pad.engine",
+    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine",
+    "nexus.ui.eravos.organisms.channel.channel.engine",
+    "nexus.ui.eravos.organisms.lfo.lfo.engine",
+    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core",
+    "nexus.ui.eravos.organisms.pads.pads.engine",
+    "nexus.ui.eravos.organisms.reese-bass.reese-bass.engine",
+    "nexus.ui.eravos.organisms.sample-player.sample-player.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.wobble-bass.wobble-bass.engine",
+    "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.canvas-intelligence",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:triggered": {
+   "emitters": [
+    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
+    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
+    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine"
+   ],
+   "listeners": []
+  },
+  "pad:trigger": {
+   "emitters": [
+    "nexus.eravos.ui.mods.pads.pads.engine",
+    "nexus.ui.eravos.organisms.pads.pads.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.acid-synth.acid-synth.engine",
+    "nexus.eravos.ui.mods.reese-bass.reese-bass.engine",
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine",
+    "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine",
+    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
+    "nexus.eravos.ui.mods.wobble-bass.wobble-bass.engine",
+    "nexus.ui.eravos.organisms.acid-synth.acid-synth.engine",
+    "nexus.ui.eravos.organisms.reese-bass.reese-bass.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.wobble-bass.wobble-bass.engine",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "bass-drop:stage": {
+   "emitters": [
+    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine"
+   ],
+   "listeners": []
+  },
+  "org:stage-active": {
+   "emitters": [
+    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:state-sync": {
+   "emitters": [
+    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
+    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:vocal-loaded": {
+   "emitters": [
+    "nexus.eravos.ui.mods.bass-drop-builder.bass-drop-builder.engine",
+    "nexus.ui.eravos.organisms.bass-drop-builder.bass-drop-builder.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:meter": {
+   "emitters": [
+    "nexus.eravos.ui.mods.channel.channel.engine",
+    "nexus.ui.eravos.organisms.channel.channel.engine"
+   ],
+   "listeners": []
+  },
+  "contrast:analysis": {
+   "emitters": [
+    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
+    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
+   ],
+   "listeners": []
+  },
+  "org:analysis-ready": {
+   "emitters": [
+    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
+    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:bpm-detected": {
+   "emitters": [
+    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
+    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:mode-changed": {
+   "emitters": [
+    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
+    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
+   ],
+   "listeners": []
+  },
+  "org:slot-loaded": {
+   "emitters": [
+    "nexus.eravos.ui.mods.contrast-analyser.contrast-analyser.engine",
+    "nexus.ui.eravos.organisms.contrast-analyser.contrast-analyser.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "edm:drop-fired": {
+   "emitters": [
+    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
+    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
+   ],
+   "listeners": []
+  },
+  "edm:rhythm-step": {
+   "emitters": [
+    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
+    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
+   ],
+   "listeners": []
+  },
+  "org:density-reset": {
+   "emitters": [
+    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
+    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:drop-fired": {
+   "emitters": [
+    "nexus.eravos.ui.mods.edm-lab.edm-lab.engine",
+    "nexus.ui.eravos.organisms.edm-lab.edm-lab.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "mod:signal": {
+   "emitters": [
+    "nexus.eravos.ui.mods.lfo.lfo.engine",
+    "nexus.ui.eravos.organisms.lfo.lfo.engine"
+   ],
+   "listeners": []
+  },
+  "org:lfo_tick": {
+   "emitters": [
+    "nexus.eravos.ui.mods.lfo.lfo.engine",
+    "nexus.ui.eravos.organisms.lfo.lfo.engine"
+   ],
+   "listeners": []
+  },
+  "org:error": {
+   "emitters": [
+    "nexus.eravos.ui.mods.macro-automation.macro-automation.engine",
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory"
+   ]
+  },
+  "org:step": {
+   "emitters": [
+    "nexus.eravos.ui.mods.macro-automation.macro-automation.engine"
+   ],
+   "listeners": []
+  },
+  "transport:play": {
+   "emitters": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ]
+  },
+  "transport:record-start": {
+   "emitters": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
+    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core"
+   ]
+  },
+  "transport:record-stop": {
+   "emitters": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
+    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core"
+   ]
+  },
+  "transport:stop": {
+   "emitters": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.nexus-shared.nexus-node-core",
+    "nexus.ui.eravos.organisms.nexus-shared.nexus-node-core"
+   ]
+  },
+  "org:pad_lit": {
+   "emitters": [
+    "nexus.eravos.ui.mods.pads.pads.engine",
+    "nexus.ui.eravos.organisms.pads.pads.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "pad:bank-change": {
+   "emitters": [
+    "nexus.eravos.ui.mods.pads.pads.engine",
+    "nexus.ui.eravos.organisms.pads.pads.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
+   ]
+  },
+  "midi:note": {
+   "emitters": [],
+   "listeners": [
+    "nexus.eravos.ui.mods.pads.pads.engine",
+    "nexus.eravos.ui.mods.supersaw.supersaw.engine",
+    "nexus.ui.eravos.organisms.pads.pads.engine"
+   ]
+  },
+  "seq:fire": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.pads.pads.engine",
+    "nexus.ui.eravos.organisms.pads.pads.engine"
+   ]
+  },
+  "org:exported": {
+   "emitters": [
+    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine",
+    "nexus.eravos.ui.mods.video-editor.video-editor.engine"
+   ],
+   "listeners": []
+  },
+  "org:image_loaded": {
+   "emitters": [
+    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine"
+   ],
+   "listeners": []
+  },
+  "photo:exported": {
+   "emitters": [
+    "nexus.eravos.ui.mods.photo-editor.photo-editor.engine"
+   ],
+   "listeners": []
+  },
+  "org:playhead_update": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.sample-player.sample-player.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:waveform_ready": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sample-player.sample-player.engine",
+    "nexus.ui.eravos.organisms.sample-player.sample-player.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:grid_sync": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:step_cursor": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:step_set": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "seq:play": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ]
+  },
+  "seq:stop": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.sequencer.sequencer.engine",
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.sequencer.sequencer.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ]
+  },
+  "org:connected": {
+   "emitters": [
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory"
+   ]
+  },
+  "org:disconnected": {
+   "emitters": [
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory"
+   ]
+  },
+  "org:rx": {
+   "emitters": [
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory"
+   ]
+  },
+  "org:tx": {
+   "emitters": [
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory"
+   ]
+  },
+  "serial:rx": {
+   "emitters": [
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
+   ],
+   "listeners": []
+  },
+  "mod:xy": {
+   "emitters": [
+    "nexus.eravos.ui.mods.xy-pad.xy-pad.engine",
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.serial-bridge.serial-bridge.engine"
+   ]
+  },
+  "org:pumped": {
+   "emitters": [
+    "nexus.eravos.ui.mods.sidechain-compressor.sidechain-compressor.engine"
+   ],
+   "listeners": []
+  },
+  "org:asset_loaded": {
+   "emitters": [
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "org:clip_added": {
+   "emitters": [
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ],
+   "listeners": []
+  },
+  "org:clip_removed": {
+   "emitters": [
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ],
+   "listeners": []
+  },
+  "org:clip_sync": {
+   "emitters": [
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "transport:recorded": {
+   "emitters": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.mods.timeline.timeline.engine",
+    "nexus.ui.eravos.organisms.timeline.timeline.engine"
+   ]
+  },
+  "org:video_loaded": {
+   "emitters": [
+    "nexus.eravos.ui.mods.video-editor.video-editor.engine"
+   ],
+   "listeners": []
+  },
+  "video:exported": {
+   "emitters": [
+    "nexus.eravos.ui.mods.video-editor.video-editor.engine"
+   ],
+   "listeners": []
+  },
+  "org:log": {
+   "emitters": [
+    "nexus.eravos.ui.mods.webhook-automation.webhook-automation.engine"
+   ],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory"
+   ]
+  },
+  "org:xy_update": {
+   "emitters": [
+    "nexus.eravos.ui.mods.xy-pad.xy-pad.engine",
+    "nexus.ui.eravos.organisms.xy-pad.xy-pad.engine"
+   ],
+   "listeners": []
+  },
+  "canvas:window-closed": {
+   "emitters": [
+    "nexus.eravos.ui.runtime.canvas-wm",
+    "nexus.ui.eravos.runtime.canvas-wm"
+   ],
+   "listeners": []
+  },
+  "ui:transport-bpm": {
+   "emitters": [],
+   "listeners": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ]
+  },
+  "ui:transport-play": {
+   "emitters": [],
+   "listeners": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ]
+  },
+  "ui:transport-record": {
+   "emitters": [],
+   "listeners": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ]
+  },
+  "ui:transport-stop": {
+   "emitters": [],
+   "listeners": [
+    "nexus.eravos.ui.runtime.master-transport",
+    "nexus.ui.eravos.runtime.master-transport"
+   ]
+  },
+  "canvas:mod-spawned": {
+   "emitters": [
+    "nexus.eravos.ui.runtime.mod-factory"
+   ],
+   "listeners": []
+  },
+  "ui:config_change": {
+   "emitters": [],
+   "listeners": [
+    "nexus.eravos.ui.runtime.mod-factory",
+    "nexus.ui.eravos.runtime.organism-factory"
+   ]
+  },
+  "guardian.ncp.sync_result": {
+   "emitters": [
+    "nexus.tests.modules.test-chat-sync-agent-routing.test"
+   ],
+   "listeners": [
+    "nexus.guardian.lib.chat-sync",
+    "nexus.guardian.lib.chat-transcripts"
+   ]
+  },
+  "guardian.chat.transcript.recorded": {
+   "emitters": [
+    "nexus.guardian.lib.chat-transcripts"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-chat-transcripts.test"
+   ]
+  },
+  "guardian.job.completed_from_transcript": {
+   "emitters": [
+    "nexus.guardian.lib.chat-transcripts"
+   ],
+   "listeners": []
+  },
+  "guardian.job.progress": {
+   "emitters": [
+    "nexus.guardian.lib.job-retry",
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-chat-transcripts.test",
+    "nexus.tests.modules.test-live-stream-and-gates.test"
+   ],
+   "listeners": [
+    "nexus.guardian.lib.chat-transcripts",
+    "nexus.tests.modules.test-back-and-forth.test"
+   ]
+  },
+  "guardian.ncp.transcript": {
+   "emitters": [],
+   "listeners": [
+    "nexus.guardian.lib.chat-transcripts"
+   ]
+  },
+  "guardian.blocks.captured": {
+   "emitters": [
+    "nexus.guardian.lib.code-artifact"
+   ],
+   "listeners": []
+  },
+  "guardian.response.captured": {
+   "emitters": [
+    "nexus.guardian.lib.code-artifact"
+   ],
+   "listeners": []
+  },
+  "guardian.job.gate": {
+   "emitters": [
+    "nexus.guardian.lib.gate-trail"
+   ],
+   "listeners": []
+  },
+  "guardian.node.removed": {
+   "emitters": [
+    "nexus.guardian.lib.node-registry"
+   ],
+   "listeners": []
+  },
+  "guardian.job.chunk": {
+   "emitters": [
+    "nexus.guardian.lib.response-sink",
+    "nexus.tests.modules.test-guardian-mesh-client"
+   ],
+   "listeners": []
+  },
+  "guardian.job.complete": {
+   "emitters": [
+    "nexus.guardian.lib.response-sink",
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-economy-guardian.test",
+    "nexus.tests.modules.test-guardian-retry-novelty-installs"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-chat-transcripts.test",
+    "nexus.tests.modules.test-registry-harness.test"
+   ]
+  },
+  "guardian.job.error": {
+   "emitters": [
+    "nexus.guardian.lib.response-sink",
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-economy-guardian.test",
+    "nexus.tests.modules.test-guardian-retry-novelty-installs"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-back-and-forth.test",
+    "nexus.tests.modules.test-chat-transcripts.test",
+    "nexus.tests.modules.test-economy-guardian.test"
+   ]
+  },
+  "guardian.wake.detected": {
+   "emitters": [
+    "nexus.guardian.lib.wake-loop"
+   ],
+   "listeners": []
+  },
+  "guardian.wake.failed": {
+   "emitters": [
+    "nexus.guardian.lib.wake-loop"
+   ],
+   "listeners": []
+  },
+  "guardian.wake.refused": {
+   "emitters": [
+    "nexus.guardian.lib.wake-loop"
+   ],
+   "listeners": []
+  },
+  "guardian.wake.replied": {
+   "emitters": [
+    "nexus.guardian.lib.wake-loop"
+   ],
+   "listeners": []
+  },
+  "guardian.dom_map.received": {
+   "emitters": [
+    "nexus.hooks.guardian.hooks",
+    "nexus.tests.hooks-side-effect-parser.test"
+   ],
+   "listeners": []
+  },
+  "idearium.gap.ignore": {
+   "emitters": [
+    "nexus.idearium.cli"
+   ],
+   "listeners": []
+  },
+  "idearium.gap.open": {
+   "emitters": [
+    "nexus.idearium.cli"
+   ],
+   "listeners": []
+  },
+  "idearium.gap.resolve": {
+   "emitters": [
+    "nexus.idearium.cli"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.archive": {
+   "emitters": [
+    "nexus.idearium.cli"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.create": {
+   "emitters": [
+    "nexus.idearium.cli",
+    "nexus.idearium.lib.spec-library-import",
+    "nexus.idearium.test.e2e-pipeline.test",
+    "nexus.tests.modules.idearium-brainstorm-assist.test",
+    "nexus.tests.modules.idearium-phase-compartment.test",
+    "nexus.tests.modules.test-spec-workshop.test"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.link": {
+   "emitters": [
+    "nexus.idearium.cli"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.phase": {
+   "emitters": [
+    "nexus.idearium.cli",
+    "nexus.tests.modules.idearium-phase-compartment.test"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.tension": {
+   "emitters": [
+    "nexus.idearium.cli"
+   ],
+   "listeners": []
+  },
+  "idearium.spec.check": {
+   "emitters": [
+    "nexus.idearium.cli"
+   ],
+   "listeners": []
+  },
+  "idearium.spec.create": {
+   "emitters": [
+    "nexus.idearium.cli",
+    "nexus.idearium.test.e2e-pipeline.test"
+   ],
+   "listeners": []
+  },
+  "idearium.error": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.gap.ignored": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.gap.opened": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.gap.resolved": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.archived": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.created": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.linked": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.phase.changed": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.tensioned": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.idea.updated": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.spec.archived": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.spec.checked": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.spec.created": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.spec.updated": {
+   "emitters": [
+    "nexus.idearium"
+   ],
+   "listeners": []
+  },
+  "idearium.spec-engine.chunk.complete": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.lib.cortex-listeners"
+   ]
+  },
+  "idearium.spec.build.completed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.idearium.lib.cortex-listeners"
+   ]
+  },
+  "idearium.idea.update": {
+   "emitters": [
+    "nexus.idearium.lib.spec-library-import",
+    "nexus.tests.modules.idearium-phase-compartment.test"
+   ],
+   "listeners": []
+  },
+  "tc.coherence.update": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.adapter"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.latent-model",
+    "nexus.intelligence.telemetry-codec.topology"
+   ]
+  },
+  "tc.metric.oscillation": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.adapter"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.latent-model"
+   ]
+  },
+  "tc.metric.raw": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.adapter"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.drift-engine",
+    "nexus.intelligence.telemetry-codec.latent-model",
+    "nexus.intelligence.telemetry-codec.topology"
+   ]
+  },
+  "tc.metric.slope": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.adapter"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.latent-model",
+    "nexus.intelligence.telemetry-codec.topology"
+   ]
+  },
+  "tc.metric.stability": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.adapter"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.latent-model",
+    "nexus.intelligence.telemetry-codec.topology"
+   ]
+  },
+  "tc.drift.calibrated": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.drift-engine"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.runtime"
+   ]
+  },
+  "tc.drift.cluster": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.drift-engine"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.runtime"
+   ]
+  },
+  "tc.drift.signal": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.drift-engine"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.runtime"
+   ]
+  },
+  "tc.latent.update": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.latent-model"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.drift-engine",
+    "nexus.intelligence.telemetry-codec.runtime"
+   ]
+  },
+  "tc.service.start": {
+   "emitters": [],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.drift-engine"
+   ]
+  },
+  "tc.latent.shift": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.latent-model"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.runtime"
+   ]
+  },
+  "tc.topology.composite": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.topology"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.latent-model",
+    "nexus.intelligence.telemetry-codec.runtime"
+   ]
+  },
+  "tc.topology.transition": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.topology"
+   ],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.runtime"
+   ]
+  },
+  "tc.topology.pulse": {
+   "emitters": [
+    "nexus.intelligence.telemetry-codec.topology"
+   ],
+   "listeners": []
+  },
+  "tc.upstream.health": {
+   "emitters": [],
+   "listeners": [
+    "nexus.intelligence.telemetry-codec.topology"
+   ]
+  },
+  "guardian.tool.called": {
+   "emitters": [
+    "nexus.tests.modules.tool-call-listener.test"
+   ],
+   "listeners": [
+    "nexus.lib.agent-tools.tool-call-listener"
+   ]
+  },
+  "nexus.blueprint.index.built": {
+   "emitters": [
+    "nexus.lib.blueprint-index"
+   ],
+   "listeners": []
+  },
+  "nexus.blueprint.index.error": {
+   "emitters": [
+    "nexus.lib.blueprint-index"
+   ],
+   "listeners": []
+  },
+  "blueprint.loaded": {
+   "emitters": [
+    "nexus.lib.blueprint"
+   ],
+   "listeners": []
+  },
+  "compartment.spawned": {
+   "emitters": [
+    "nexus.lib.compartment-engine"
+   ],
+   "listeners": []
+  },
+  "component.deprecated": {
+   "emitters": [
+    "nexus.lib.component-registry"
+   ],
+   "listeners": []
+  },
+  "component.hard_deleted": {
+   "emitters": [
+    "nexus.lib.component-registry"
+   ],
+   "listeners": []
+  },
+  "component.updated": {
+   "emitters": [
+    "nexus.lib.component-registry"
+   ],
+   "listeners": []
+  },
+  "registry.grammar.rebuilt": {
+   "emitters": [
+    "nexus.lib.component-registry"
+   ],
+   "listeners": []
+  },
+  "constitution.decision": {
+   "emitters": [
+    "nexus.lib.constitutional-ai"
+   ],
+   "listeners": []
+  },
+  "contract-registry.axiom.changed": {
+   "emitters": [
+    "nexus.lib.contract-registry-writer"
+   ],
+   "listeners": []
+  },
+  "contract-registry.violation.flagged": {
+   "emitters": [
+    "nexus.lib.contract-registry-writer"
+   ],
+   "listeners": []
+  },
+  "ess:bind": {
+   "emitters": [
+    "nexus.lib.ess"
+   ],
+   "listeners": []
+  },
+  "ess:noise_alert": {
+   "emitters": [
+    "nexus.lib.ess"
+   ],
+   "listeners": []
+  },
+  "ess:resolve": {
+   "emitters": [
+    "nexus.lib.ess"
+   ],
+   "listeners": []
+  },
+  "ess:unbind": {
+   "emitters": [
+    "nexus.lib.ess"
+   ],
+   "listeners": []
+  },
+  "ess:unresolve": {
+   "emitters": [
+    "nexus.lib.ess"
+   ],
+   "listeners": [
+    "nexus.tests.brutal.test",
+    "nexus.tests.full.test"
+   ]
+  },
+  "ess:write": {
+   "emitters": [
+    "nexus.lib.ess"
+   ],
+   "listeners": []
+  },
+  "heartbeat:dead": {
+   "emitters": [
+    "nexus.lib.heartbeat"
+   ],
+   "listeners": []
+  },
+  "heartbeat:degraded": {
+   "emitters": [
+    "nexus.lib.heartbeat"
+   ],
+   "listeners": []
+  },
+  "heartbeat:pulse": {
+   "emitters": [
+    "nexus.lib.heartbeat",
+    "nexus.remote-desktop.bridge-os-core.bridge-heartbeat"
+   ],
+   "listeners": []
+  },
+  "architect.hook.deprecated": {
+   "emitters": [
+    "nexus.lib.hook-registry"
+   ],
+   "listeners": []
+  },
+  "architect.hook.registered": {
+   "emitters": [
+    "nexus.lib.hook-registry"
+   ],
+   "listeners": []
+  },
+  "architect.hook.removed": {
+   "emitters": [
+    "nexus.lib.hook-registry"
+   ],
+   "listeners": []
+  },
+  "architect.hook.unwired": {
+   "emitters": [
+    "nexus.lib.hook-registry"
+   ],
+   "listeners": []
+  },
+  "architect.hook.updated": {
+   "emitters": [
+    "nexus.lib.hook-registry"
+   ],
+   "listeners": []
+  },
+  "architect.hook.wired": {
+   "emitters": [
+    "nexus.lib.hook-registry"
+   ],
+   "listeners": []
+  },
+  "ico:axiom:registered": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:axiom:violation": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:crystal:formed": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": [
+    "nexus.tests.full.test"
+   ]
+  },
+  "ico:drop": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": [
+    "nexus.tests.full.test"
+   ]
+  },
+  "ico:failure": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": [
+    "nexus.tests.full.test"
+   ]
+  },
+  "ico:input:processed": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:input:replay": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:invariant:del": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:invariant:set": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:ledger:fork": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": [
+    "nexus.tests.full.test",
+    "nexus.tests.modules.test-ico-ledger-writethrough"
+   ]
+  },
+  "ico:output": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:pipe:error": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": [
+    "nexus.tests.full.test"
+   ]
+  },
+  "ico:plugin:registered": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:snr:health": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:snr:noise": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "ico:snr:score": {
+   "emitters": [
+    "nexus.lib.ico"
+   ],
+   "listeners": []
+  },
+  "shadow.declared": {
+   "emitters": [
+    "nexus.lib.shadow"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-shadow.test"
+   ]
+  },
+  "shadow.settled": {
+   "emitters": [
+    "nexus.lib.shadow"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-shadow.test"
+   ]
+  },
+  "idearium.repo.file.write": {
+   "emitters": [
+    "nexus.loom.seed.2026-07-11-session-wires"
+   ],
+   "listeners": []
+  },
+  "mesh.ready": {
+   "emitters": [
+    "nexus.mesh.install"
+   ],
+   "listeners": []
+  },
+  "net.ddns.entry_added": {
+   "emitters": [
+    "nexus.mesh.lib.ddns"
+   ],
+   "listeners": []
+  },
+  "net.ddns.ip_detected": {
+   "emitters": [
+    "nexus.mesh.lib.ddns"
+   ],
+   "listeners": []
+  },
+  "net.ddns.started": {
+   "emitters": [
+    "nexus.mesh.lib.ddns"
+   ],
+   "listeners": []
+  },
+  "net.ddns.updated": {
+   "emitters": [
+    "nexus.mesh.lib.ddns",
+    "nexus.mesh.lib.dns-server"
+   ],
+   "listeners": []
+  },
+  "net.dns.add_record": {
+   "emitters": [
+    "nexus.mesh.lib.ddns"
+   ],
+   "listeners": [
+    "nexus.mesh.lib.dns-server"
+   ]
+  },
+  "system.error": {
+   "emitters": [
+    "nexus.mesh.lib.ddns",
+    "nexus.mesh.lib.dns-server",
+    "nexus.mesh.lib.firewall",
+    "nexus.mesh.lib.reverse-proxy"
+   ],
+   "listeners": []
+  },
+  "net.ddns.add_entry": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.ddns"
+   ]
+  },
+  "net.ddns.force_check": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.ddns"
+   ]
+  },
+  "net.dns.block": {
+   "emitters": [
+    "nexus.mesh.lib.dns-server"
+   ],
+   "listeners": []
+  },
+  "net.dns.blocklist_imported": {
+   "emitters": [
+    "nexus.mesh.lib.dns-server"
+   ],
+   "listeners": []
+  },
+  "net.dns.domain_blocked": {
+   "emitters": [
+    "nexus.mesh.lib.dns-server"
+   ],
+   "listeners": []
+  },
+  "net.dns.record_added": {
+   "emitters": [
+    "nexus.mesh.lib.dns-server"
+   ],
+   "listeners": []
+  },
+  "net.dns.started": {
+   "emitters": [
+    "nexus.mesh.lib.dns-server"
+   ],
+   "listeners": []
+  },
+  "net.dns.stopped": {
+   "emitters": [
+    "nexus.mesh.lib.dns-server"
+   ],
+   "listeners": []
+  },
+  "net.ddns.update": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.dns-server"
+   ]
+  },
+  "net.dns.allow_domain": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.dns-server"
+   ]
+  },
+  "net.dns.block_domain": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.dns-server"
+   ]
+  },
+  "net.fw.block": {
+   "emitters": [
+    "nexus.mesh.lib.firewall"
+   ],
+   "listeners": []
+  },
+  "net.fw.json_imported": {
+   "emitters": [
+    "nexus.mesh.lib.firewall"
+   ],
+   "listeners": []
+  },
+  "net.fw.logged": {
+   "emitters": [
+    "nexus.mesh.lib.firewall"
+   ],
+   "listeners": []
+  },
+  "net.fw.os_sync": {
+   "emitters": [
+    "nexus.mesh.lib.firewall"
+   ],
+   "listeners": []
+  },
+  "net.fw.rule_added": {
+   "emitters": [
+    "nexus.mesh.lib.firewall"
+   ],
+   "listeners": []
+  },
+  "net.fw.rule_removed": {
+   "emitters": [
+    "nexus.mesh.lib.firewall"
+   ],
+   "listeners": []
+  },
+  "net.fw.add_rule": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.firewall"
+   ]
+  },
+  "net.fw.import_json": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.firewall"
+   ]
+  },
+  "net.fw.remove_rule": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.firewall"
+   ]
+  },
+  "net.fw.set_vars": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.firewall"
+   ]
+  },
+  "net.proxy.route_added": {
+   "emitters": [
+    "nexus.mesh.lib.reverse-proxy"
+   ],
+   "listeners": []
+  },
+  "net.proxy.route_removed": {
+   "emitters": [
+    "nexus.mesh.lib.reverse-proxy"
+   ],
+   "listeners": []
+  },
+  "net.proxy.started": {
+   "emitters": [
+    "nexus.mesh.lib.reverse-proxy"
+   ],
+   "listeners": []
+  },
+  "net.proxy.add_route": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.reverse-proxy"
+   ]
+  },
+  "net.proxy.remove_route": {
+   "emitters": [],
+   "listeners": [
+    "nexus.mesh.lib.reverse-proxy"
+   ]
+  },
+  "cfr.influence.applied": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "cfr.influence.diagnostic_requested": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "cfr.influence.guardian_throttled": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "cfr.influence.guardian_unthrottled": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "cfr.influence.snr_floor_cleared": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "cfr.influence.snr_floor_raised": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "cfr.influence.versionium_accelerated": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "nexus.cfr.chaos_threshold": {
+   "emitters": [
+    "nexus.nexus.nexus-cfr-influence"
+   ],
+   "listeners": []
+  },
+  "autonomous-loop.complete": {
+   "emitters": [
+    "nexus.orchestrator.lib.autonomous-loop"
+   ],
+   "listeners": []
+  },
+  "autonomous-loop.error": {
+   "emitters": [
+    "nexus.orchestrator.lib.autonomous-loop"
+   ],
+   "listeners": []
+  },
+  "autonomous-loop.started": {
+   "emitters": [
+    "nexus.orchestrator.lib.autonomous-loop"
+   ],
+   "listeners": []
+  },
+  "autonomous-loop.step": {
+   "emitters": [
+    "nexus.orchestrator.lib.autonomous-loop"
+   ],
+   "listeners": []
+  },
+  "hot-loader.complete": {
+   "emitters": [
+    "nexus.orchestrator.lib.hot-loader"
+   ],
+   "listeners": []
+  },
+  "hot-loader.failed": {
+   "emitters": [
+    "nexus.orchestrator.lib.hot-loader"
+   ],
+   "listeners": []
+  },
+  "hot-loader.integrated": {
+   "emitters": [
+    "nexus.orchestrator.lib.hot-loader"
+   ],
+   "listeners": []
+  },
+  "hot-loader.proving": {
+   "emitters": [
+    "nexus.orchestrator.lib.hot-loader"
+   ],
+   "listeners": []
+  },
+  "hot-loader.quarantine": {
+   "emitters": [
+    "nexus.orchestrator.lib.hot-loader"
+   ],
+   "listeners": []
+  },
+  "hot-loader.rolled_back": {
+   "emitters": [
+    "nexus.orchestrator.lib.hot-loader"
+   ],
+   "listeners": []
+  },
+  "request.received": {
+   "emitters": [
+    "nexus.orchestrator.lib.request-handler"
+   ],
+   "listeners": []
+  },
+  "sigma.composite.halt_risk": {
+   "emitters": [
+    "nexus.orchestrator.lib.sigma-writer"
+   ],
+   "listeners": [
+    "nexus.orchestrator.lib.versionium-auto-commit"
+   ]
+  },
+  "sigma.composite.warning": {
+   "emitters": [
+    "nexus.orchestrator.lib.sigma-writer"
+   ],
+   "listeners": [
+    "nexus.orchestrator.lib.versionium-auto-commit"
+   ]
+  },
+  "cortex.gap.found": {
+   "emitters": [
+    "nexus.orchestrator.lib.spec-drift"
+   ],
+   "listeners": [
+    "nexus.orchestrator.orchestrator",
+    "nexus.tests.modules.test-gap-finder"
+   ]
+  },
+  "cortex.gap.resolved": {
+   "emitters": [
+    "nexus.orchestrator.lib.spec-drift"
+   ],
+   "listeners": []
+  },
+  "ui.deregistered": {
+   "emitters": [
+    "nexus.orchestrator.lib.ui-registry"
+   ],
+   "listeners": []
+  },
+  "ui.disconnected": {
+   "emitters": [
+    "nexus.orchestrator.lib.ui-registry"
+   ],
+   "listeners": []
+  },
+  "ui.reconnected": {
+   "emitters": [
+    "nexus.orchestrator.lib.ui-registry"
+   ],
+   "listeners": []
+  },
+  "ui.registered": {
+   "emitters": [
+    "nexus.orchestrator.lib.ui-registry"
+   ],
+   "listeners": []
+  },
+  "pulse.missed": {
+   "emitters": [
+    "nexus.orchestrator.orchestrator",
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "nexus.resource.pressure": {
+   "emitters": [
+    "nexus.tests.modules.test-escalation"
+   ],
+   "listeners": [
+    "nexus.orchestrator.orchestrator"
+   ]
+  },
+  "input:rate_limited": {
+   "emitters": [
+    "nexus.remote-desktop.input-injector"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-electron.main",
+    "nexus.remote-desktop.tests.test-input-injector"
+   ]
+  },
+  "input:rejected": {
+   "emitters": [
+    "nexus.remote-desktop.input-injector"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-electron.main",
+    "nexus.remote-desktop.tests.test-input-injector"
+   ]
+  },
+  "bus:meta:observer_error": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.bus"
+   ],
+   "listeners": []
+  },
+  "node:evicted": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.registry"
+   ],
+   "listeners": []
+  },
+  "node:registered": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.registry"
+   ],
+   "listeners": []
+  },
+  "node:revived": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.registry"
+   ],
+   "listeners": []
+  },
+  "node:state:dead": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.registry"
+   ],
+   "listeners": []
+  },
+  "node:state:degraded": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.registry"
+   ],
+   "listeners": []
+  },
+  "node:updated": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.registry"
+   ],
+   "listeners": []
+  },
+  "bus:all.a": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "bus:all.b": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "bus:basic": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:enrich": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:err.safe": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:multi": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:mutate": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:off": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:once": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:seq": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:sig.check": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:ts": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:unsub": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ]
+  },
+  "bus:wild.1": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "bus:wild.2": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "capture.test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "count.gate": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "err.gate": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "listener.ev": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "log.ev": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "log.off": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "log.pending.miss": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "multi.a": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "multi.b": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "no.gate": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "no.gate.here": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "off.ev": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "ok.test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "q.a": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "q.b": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "qst.hit": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "qst.miss": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "result.test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "setlevel.test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep"
+   ],
+   "listeners": []
+  },
+  "sub.event": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core-deep",
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "count.test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "enrich:test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ]
+  },
+  "err:test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ]
+  },
+  "error.event": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "event.a": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "event.b": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "listener.test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "log.ok": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "log.pending.unregistered": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "log.test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "once:test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ]
+  },
+  "query.a": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "query.b": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "test.event": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": []
+  },
+  "test:event": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ]
+  },
+  "unsub:test": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.bridge-os-core.bridge-core.tests.test-core"
+   ]
+  },
+  "node:dead": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-heartbeat"
+   ],
+   "listeners": []
+  },
+  "node:degraded": {
+   "emitters": [
+    "nexus.remote-desktop.bridge-os-core.bridge-heartbeat"
+   ],
+   "listeners": []
+  },
+  "input:coalesced": {
+   "emitters": [
+    "nexus.remote-desktop.input-injector"
+   ],
+   "listeners": []
+  },
+  "input:injected": {
+   "emitters": [
+    "nexus.remote-desktop.input-injector"
+   ],
+   "listeners": [
+    "nexus.remote-desktop.tests.test-input-injector"
+   ]
+  },
+  "lock:changed": {
+   "emitters": [
+    "nexus.remote-desktop.input-injector"
+   ],
+   "listeners": []
+  },
+  "authority:ready": {
+   "emitters": [
+    "nexus.remote-desktop.session-token"
+   ],
+   "listeners": []
+  },
+  "token:expired": {
+   "emitters": [
+    "nexus.remote-desktop.session-token"
+   ],
+   "listeners": []
+  },
+  "token:issued": {
+   "emitters": [
+    "nexus.remote-desktop.session-token"
+   ],
+   "listeners": []
+  },
+  "token:rejected": {
+   "emitters": [
+    "nexus.remote-desktop.session-token"
+   ],
+   "listeners": []
+  },
+  "token:revoked": {
+   "emitters": [
+    "nexus.remote-desktop.session-token"
+   ],
+   "listeners": []
+  },
+  "token:verified": {
+   "emitters": [
+    "nexus.remote-desktop.session-token"
+   ],
+   "listeners": []
+  },
+  "guardian.ncp.pong": {
+   "emitters": [
+    "nexus.tests.dispatcher-ping-gate.test",
+    "nexus.tests.modules.test-guardian-mesh-client"
+   ],
+   "listeners": []
+  },
+  "workflow.finished": {
+   "emitters": [
+    "nexus.tests.modules.automation-v2.test"
+   ],
+   "listeners": []
+  },
+  "test:build": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.autonomous-loop.test"
+   ]
+  },
+  "u2.done": {
+   "emitters": [
+    "nexus.tests.modules.expectation-watcher.test"
+   ],
+   "listeners": []
+  },
+  "u2.trigger": {
+   "emitters": [
+    "nexus.tests.modules.expectation-watcher.test"
+   ],
+   "listeners": []
+  },
+  "unit.trigger": {
+   "emitters": [
+    "nexus.tests.modules.expectation-watcher.test"
+   ],
+   "listeners": []
+  },
+  "guardian.provider.disconnected": {
+   "emitters": [
+    "nexus.tests.modules.test-back-and-forth.test"
+   ],
+   "listeners": []
+  },
+  "guardian.job.timeout": {
+   "emitters": [
+    "nexus.tests.modules.test-economy-guardian.test"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-back-and-forth.test"
+   ]
+  },
+  "real.evt": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-bus-subscriptions"
+   ]
+  },
+  "escalation.friction.increased": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-config-governance",
+    "nexus.tests.modules.test-escalation"
+   ]
+  },
+  "gap.found": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-consumer-registry"
+   ]
+  },
+  "job.done": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-consumer-registry"
+   ]
+  },
+  "nexus:cookie-request": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-cookie-vault-ipc-roundtrip"
+   ]
+  },
+  "guardian.provider.login_required": {
+   "emitters": [
+    "nexus.tests.modules.test-economy-guardian.test"
+   ],
+   "listeners": []
+  },
+  "guardian.economy.fallback": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-economy-guardian.test"
+   ]
+  },
+  "guardian.economy.wait": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-economy-guardian.test"
+   ]
+  },
+  "escalation.failure_mode": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-escalation"
+   ]
+  },
+  "guardian.job.dispatched": {
+   "emitters": [
+    "nexus.tests.modules.test-live-stream-and-gates.test"
+   ],
+   "listeners": []
+  },
+  "guardian:job:complete": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-manifest-phase1.test"
+   ]
+  },
+  "cortex.raid.decided": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-raid-orion-wiring"
+   ]
+  },
+  "raid.route.fulfilled": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-raid-router"
+   ]
+  },
+  "in.a.comment": {
+   "emitters": [
+    "nexus.tests.modules.test-registry-harness.test"
+   ],
+   "listeners": []
+  },
+  "repo.saved": {
+   "emitters": [
+    "nexus.tests.modules.test-registry-harness.test"
+   ],
+   "listeners": []
+  },
+  "sql.parse": {
+   "emitters": [
+    "nexus.tests.modules.test-registry-harness.test"
+   ],
+   "listeners": []
+  },
+  "store.flushed": {
+   "emitters": [
+    "nexus.tests.modules.test-registry-harness.test"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-registry-harness.test"
+   ]
+  },
+  "sql.plan": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-registry-harness.test"
+   ]
+  },
+  "pipeline.promoted": {
+   "emitters": [
+    "nexus.tests.modules.test-self-build-loop"
+   ],
+   "listeners": []
+  },
+  "nexus.self-build.housekeeping-complete": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-self-build-loop"
+   ]
+  },
+  "cortex.self-heal.deep_scan_findings": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-self-heal"
+   ]
+  },
+  "cortex.self-heal.failure_mode": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-self-heal"
+   ]
+  },
+  "cortex.self-heal.fix_proposed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-self-heal"
+   ]
+  },
+  "cortex.self-heal.fix_staged": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-self-heal"
+   ]
+  },
+  "cortex.self-heal.remediation_requested": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-self-heal"
+   ]
+  },
+  "cortex.self-heal.skipped": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-self-heal"
+   ]
+  },
+  "test.shadow.done": {
+   "emitters": [
+    "nexus.tests.modules.test-shadow.test"
+   ],
+   "listeners": []
+  },
+  "step.blocked": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-step-gate.test"
+   ]
+  },
+  "step.passed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.tests.modules.test-step-gate.test"
+   ]
+  },
+  "nav.changed": {
+   "emitters": [
+    "nexus.tests.modules.ui-self-diagnosis.test"
+   ],
+   "listeners": []
+  },
+  "ui.interaction.error": {
+   "emitters": [
+    "nexus.tests.modules.ui-self-diagnosis.test"
+   ],
+   "listeners": []
+  },
+  "ui.interaction.gated": {
+   "emitters": [
+    "nexus.tests.modules.ui-self-diagnosis.test"
+   ],
+   "listeners": []
+  },
+  "kernel:organism-mounted": {
+   "emitters": [
+    "nexus.ui.eravos.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "kernel:organism-unmounted": {
+   "emitters": [
+    "nexus.ui.eravos.kernel.kernel"
+   ],
+   "listeners": []
+  },
+  "canvas:organism-spawned": {
+   "emitters": [
+    "nexus.ui.eravos.runtime.organism-factory"
+   ],
+   "listeners": []
+  },
+  "catalog:organism-registered": {
+   "emitters": [
+    "nexus.ui.eravos.runtime.organism-factory"
+   ],
+   "listeners": []
+  },
+  "artifacts.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "config.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "cortex.memory.updated": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "entropy.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "eventlog.bulk": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "eventlog.push": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "gaps.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "health.changed": {
+   "emitters": [
+    "nexus.ui.store",
+    "nexus.ui.ui-pulse"
+   ],
+   "listeners": []
+  },
+  "ideas.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "jobs.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "providers.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "pulse.received": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "seam.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "specs.changed": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "sse.cortex.error": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "sse.cortex.open": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "sse.event": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "sse.guardian.error": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "sse.guardian.open": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "sse.orchestrator.error": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "sse.orchestrator.open": {
+   "emitters": [
+    "nexus.ui.store"
+   ],
+   "listeners": []
+  },
+  "nexus.contract.loaded": {
+   "emitters": [
+    "nexus.ui.tv-shell.warp-ui.nexus-shell"
+   ],
+   "listeners": []
+  },
+  "nexus.ledger.entry": {
+   "emitters": [
+    "nexus.ui.tv-shell.warp-ui.nexus-shell"
+   ],
+   "listeners": []
+  },
+  "nexus.system.poll": {
+   "emitters": [
+    "nexus.ui.tv-shell.warp-ui.nexus-shell"
+   ],
+   "listeners": []
+  }
+ }
+}

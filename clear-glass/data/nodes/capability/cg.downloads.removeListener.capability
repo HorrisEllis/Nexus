@@ -9,12 +9,12 @@ system: null
 tags:
   - clear-glass
   - capability
-exported_at: 1790684786670
+exported_at: 1790936717945
 source: clear-glass/registry-components.js:cg.downloads.removeListener
 occurrences: 1
 firstSeenAt: 1789250730167
-lastSeenAt: 1790684786670
-fingerprint: b2679519e402b976d5fdcade
+lastSeenAt: 1790936717945
+fingerprint: edf7595339d3005c9bd63cc4
 payload:
   intent: []
   grammar:
@@ -26,7 +26,7 @@ payload:
   id: cg.downloads.removeListener
   namespace: cg
   name: downloads.removeListener
-  version: 3.17.0
+  version: 3.23.0
   route:
     method: IPC
     path: downloads:removeListener
