@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.1
+    version:  1.7.5
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -208,7 +208,7 @@ spec:
       layer: foundation
       systems: [loom, emerge, emergence, warp]
       value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
-      status: OPEN — needs James's yes on the branch
+      status: PARTIAL (1.7.3) — (1) and (2) done; (3) and (4) wait on emergence-6.zip, not in this checkout
       files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
       does: >-
         (1) This branch brought in line with main 0.39.300 (a merge, main's tree wins; this branch's 0.39.298
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: OPEN
+      status: PARTIAL (1.7.4) — (3) the check built, events only; (1)(2)(4)(5) open
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
@@ -1121,3 +1121,60 @@ spec:
 # conditions → no-proof, said. So a phase is only proven when it declares checkable conditions — the next step for the
 # maps themselves is to give their phases `conditions:` (GG1 can generate the wiring ones). Proof:
 # tests/modules/test-phase-proof.test.js 6/6 through the real repo layer with a stand-in agent.
+
+## ADDENDUM 2026-10-02 — 1.7.2 (0.39.304)
+# James: "get ollama solid. i need this done." No phase in the maps declares conditions, so PH1 read no-proof for all
+# of them and Ollama got no feedback. A phase without conditions is now proven from its declared files: each exists,
+# each JS file passes node --check — broken JS is unmet and its error is the next attempt's feedback. Proof:
+# tests/modules/test-phase-proof.test.js 7/7 (PP-07).
+
+## ADDENDUM 2026-10-02 — 1.7.3, EM0 (1) and (2) done
+# James: "do it." (1) The branch is in line with main: main merged it as PR #23 (main's 0.39.299 Architect kept, this
+# branch's 0.39.298 one dropped, 0.39.301–0.39.303 added), and 0.39.304 is on the branch above it.
+# (2) loom/data/registry.json regenerated from empty on that tree: 2751 → 2769 components, 2804 → 2818 hooks, 3021 →
+# 3032 distinct edges; nothing removed. Added: main's ui/js/arch-canvas.js, intelligence/synthesis (engine, sources),
+# lib/nexstore (census, log, record, types, writers), their tests, the two 0.39.300 phasemaps. Found: the merge had
+# dropped the hand-mapped edges idearium/api → idearium/lib/architect.js and → lib/component-store.js (the row named the
+# dropped Architect's functions); restored with main's (makeSession, makeIndex, analyse, draft, decide, archText).
+# Baseline, said: bootstrap still exits 1 on 111 unresolved declarations — the same 111 as before the merge (diffed),
+# real missing endpoints (agent-tools and clear-glass .export hooks), not ordering. loom/test/schema.test.js 43/44
+# fails the same with or without this change (StreamLog .declare entry: undefined.endsWith).
+# (3) and (4) are not done: emergence-6.zip (Emergence 0.1.0 + WARP 1.5.0) is not in this checkout — re-upload needed.
+# Proof: test-architect 8/8, atlas-refs 51/51, dangling-hooks 19/19, component-registry 18/18, registration-shape 8/8,
+# hook-ownership 8/8, version-sync 30/30, loom-phasemap 5/5 + status 12/12, synthesis-zoom-versionium 6/6,
+# loom component-detail 5/5, doc-generator 4/4.
+
+## ADDENDUM 2026-10-02 — 1.7.4, EV0 (3) the event contract check
+# Built first, because the taxonomies must be written FROM the code (EV0: "not invented") and something has to read it.
+# lib/event-contract-check.js reads a system's own source for every emit of a literal dotted name — a method or a bare
+# helper (emit, _emit, emitEvent, _emitEvent, busEmit, postEvent, broadcast, publish; `?.(` too), a ternary's two
+# branches, the payload's top-level keys, file:line — and says what its taxonomy lacks. A template emit is UNRESOLVED
+# unless its site names its events (`// emits: a, b`). An emit through a constant (`emit(EVENTS.X)`) is not read: it
+# shows as a declared-but-unseen key, said, never failed. Two names on one key is a collision, always a failure.
+# Found, said: the systems that HAVE a taxonomy drift as much as those without — guardian 60 undeclared of 75 emitted,
+# orchestrator 18 of 19, clear-glass 131 of 141, versionium 1 of 5. 444 in all across the 12 systems held to it.
+# So the check holds a RATCHET: contracts/event-contract-baseline.json is today's drift per system; new drift fails,
+# a baseline entry declared since fails until it is dropped (the file stays exact), nothing writes it (E18). Drift
+# stops piling up today; each system's taxonomy then empties its own entry, one change per system (E15).
+# Surfaces: `nexus contracts check [--system=<s>] [--all] [--json]` (exit 1 on drift); loom has the check as a
+# component wired to that CLI (tree scan — a hand-map row would collide). WARP: 0 literal emits read; its taxonomy waits
+# on WARP 1.5.0 (EM0 (3)), which replaces warp/. COS already has cos/foundation/event-contracts.js (35 importers) —
+# read before cos's taxonomy is written, so there is one truth, not two.
+# Proof: tests/modules/test-event-contracts.test.js 7/7 (EC-05b: an emit added without a declaration fails, with its
+# file:line); in the real tree, an emit appended to emerge/emerge-kernel.js failed `nexus contracts check` (exit 1).
+
+## ADDENDUM 2026-10-02 — 1.7.5, the reader reads SISO
+# The first reader saw only literal names, so it missed how the SISO systems emit: `stream.emit(new Event('x', …))`
+# (258 sites), through a constant `new Event(HOST.COMPARTMENT_CREATED, …)` (99) and `{ type: 'x' }` (16). It now reads
+# all three, resolving constants through the string tables in the system's OWN source (cos/foundation/event-contracts.js
+# for COS). It also stopped counting calls quoted in strings or comments: loom's only "emit" was a hook's NAME
+# ("os.emit('idearium.repo.file.write')"), and cortex, cos and guardian each had a commented-out one.
+# Emitted, now read: emerge 3 → 56, cos 55 → 143, clear-glass 141 → 241, intelligence 24 → 37, idearium 116 → 130.
+# The baseline was re-recorded to match (444 → 707). No code changed between the two readings: this is drift that was
+# already there and is now seen, not new drift excused (E18 holds — the ratchet runs from here).
+# Found, a defect: cos/playgrounds/kernel.js:67 emits VAULT.INJECTED; COS's VAULT table has no INJECTED key, so every
+# vault-injection event is emitted as `undefined`. A constant whose table exists but lacks the key is now MISSING and
+# fails (held in the baseline until COS's own change fixes it — cos/foundation/event-contracts.js says "IMMUTABLE after
+# v1.0.0 (COS-5)", so the new key is James's to accept). A constant no table resolves is UNREAD, listed, not failed.
+# Loom emits nothing, so it gets no taxonomy (ET1 refuses an empty one). WARP still reads 0; it waits on 1.5.0.
+# Proof: tests/modules/test-event-contracts.test.js 8/8 (EC-01b: SISO, constants, missing, quoted).

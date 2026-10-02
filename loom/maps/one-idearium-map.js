@@ -92,6 +92,10 @@ const CONSUMERS = [
   [I('idearium/lib/spec-library-import.js'), I('lib/spec-library.js'), 'idearium/lib/spec-library-import.js importLibrary — scan + convert (createRequire)'],
   // §0.39.294 SW1 — the spec workshop: the API owns its store and repos, hands it the agent (setAsk → copilot /api/prompt
   // through lib/repo-agent.js's default provider) and saves through the library's pipeline for a library document
+  // §0.39.298 AR2 / §0.39.299 — the Architect: the API owns its store and the agent; reuse candidates come from loom's
+  // registry (read as a file) and the component store (_require — an edge the scanner cannot see)
+  ['nexus.idearium.api', I('idearium/lib/architect.js'), 'idearium/api/index.js architect.* (_architect: await import, setAsk) — makeSession, makeIndex, analyse, editComponent, draft, decide, archText, fromArchText'],
+  ['nexus.idearium.api', I('lib/component-store.js'), 'idearium/api/index.js _architectIndex + the build path — storeDir / find / put / markFailed (_require)'],
   ['nexus.idearium.api', I('idearium/lib/workshop.js'), 'idearium/api/index.js workshop.* (_workshop: await import, setAsk)'],
   ['nexus.idearium.api', I('lib/repo-agent.js'), 'idearium/api/index.js _workshop ask — defaultProvider / routeFor / COPILOT_URL (_require)'],
   // §0.39.295 — the spatial void: the API owns the ideas, the echoes table and the agent (_agentAsk); void.js shapes it
