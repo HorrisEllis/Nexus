@@ -4023,8 +4023,8 @@ async function handle(req, res, route, query, body) {
     }
     case 'void.idea.create': {
       const V = await import('../lib/void.js');
-      const text = String(body.text || '').trim();
-      if (text.length < 3) return err(res, 400, 'say the idea — at least a few words');
+      const ct = V.checkText(body.text, V.MAX_IDEA, 'the idea'); if (ct.error) return err(res, 400, ct.error);
+      const text = ct.text;
       const state = V.shapeVoid(null, { creativity: body.creativity, stability: body.stability, held: body.held, x: body.x, y: body.y });
       os.emit('idearium.idea.create', { text, tags: ['void'], source: 'void', void: state });
       const idea = [...os.db.ideas].reverse().find(i => i.source === 'void' && i.text === text);
@@ -4036,6 +4036,7 @@ async function handle(req, res, route, query, body) {
       const V = await import('../lib/void.js');
       const idea = os.idea(params.uuid); if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
       const fields = {};
+      if (typeof body.text === 'string' && body.text.trim()) { const ct = V.checkText(body.text, V.MAX_IDEA, 'the idea'); if (ct.error) return err(res, 400, ct.error); }
       const textChanged = typeof body.text === 'string' && body.text.trim() && body.text.trim() !== idea.text;
       if (textChanged) fields.text = body.text.trim();
       fields.void = V.shapeVoid(idea.void, { creativity: body.creativity, stability: body.stability, held: body.held, x: body.x, y: body.y, work: textChanged, touch: body.touch !== false });
@@ -4086,7 +4087,8 @@ async function handle(req, res, route, query, body) {
     case 'void.spark.idea': {
       // a brainstorm spark becomes an idea through brainstorm.promote (one path), then takes its place and dials
       const V = await import('../lib/void.js');
-      const r = await _callRoute('brainstorm.promote', { uuid: params.uuid }, typeof body.text === 'string' ? { text: body.text } : {});
+      if (typeof body.text === 'string' && body.text.trim()) { const ct = V.checkText(body.text, V.MAX_IDEA, 'the idea'); if (ct.error) return err(res, 400, ct.error); }
+      const r = await _callRoute('brainstorm.promote', { uuid: params.uuid }, typeof body.text === 'string' && body.text.trim() ? { text: body.text } : {});
       if (!r.ok || !r.idea) return err(res, r.status && r.status !== 200 ? r.status : 400, r.error || 'the spark was not made an idea');
       const place = V.placeFor(params.uuid);
       os.emit('idearium.idea.update', { uuid: r.idea.uuid, fields: { void: V.shapeVoid(null, { creativity: body.creativity, stability: body.stability, x: body.x ?? place.x, y: body.y ?? place.y }) }, causedBy: 'void.spark' });

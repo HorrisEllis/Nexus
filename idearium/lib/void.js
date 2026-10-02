@@ -27,6 +27,17 @@ export const ECHO_TABLE = 'idearium_void_echoes';
 export const CREATIVITY = Object.freeze(['normal', 'creative', 'outside the box', 'novel', 'outlier']);
 export const STABILITY = Object.freeze(['stable', 'shaky', 'risky', 'dangerous', 'unstable']);
 export const ECHO_KINDS = Object.freeze(['echo', 'd20', 'reverse', 'ground', 'collide']);
+/** limits: an idea is a thought, not a document (the spec library holds documents); a kept part is a line or two */
+export const MAX_IDEA = 4000;
+export const MAX_WORDS = 1000;
+/** checkText(text, max, what) -> { text } | { error } — trimmed, non-empty, within its limit */
+export function checkText(text, max, what = 'text') {
+  if (typeof text !== 'string') return { error: `${what} must be text` };
+  const t = text.trim();
+  if (t.length < 3) return { error: `${what} needs at least a few words` };
+  if (t.length > max) return { error: `${what} is ${t.length} characters — the limit is ${max}` };
+  return { text: t };
+}
 
 const lvl = (n) => { const v = Math.round(Number(n)); return Number.isFinite(v) ? Math.min(4, Math.max(0, v)) : 0; };
 const unit = (n, d) => { const v = Number(n); return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : d; };
@@ -93,11 +104,11 @@ export function shapeVoid(prev = null, patch = {}) {
   return v;
 }
 
-/** placeFor(uuid) — a stable spot in the field for an idea that has none (spread by its id, never the centre) */
+/** placeFor(uuid) — a stable spot for an idea that has none: spread over the whole field by its id (two independent
+ *  hashes, so a hundred unplaced ideas fill the space instead of crowding one ring) */
 export function placeFor(uuid) {
-  let h = 2166136261; for (const ch of String(uuid)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
-  const a = (h % 3600) / 3600 * Math.PI * 2, r = 0.18 + ((h >>> 12) % 1000) / 1000 * 0.24;
-  return { x: 0.5 + Math.cos(a) * r, y: 0.5 + Math.sin(a) * r * 0.82 };
+  const hash = (seed) => { let h = seed >>> 0; for (const ch of String(uuid)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995) >>> 0; return (h ^ (h >>> 15)) >>> 0; };
+  return { x: 0.06 + (hash(2166136261) % 10000) / 10000 * 0.88, y: 0.05 + (hash(0x9e3779b9) % 10000) / 10000 * 0.9 };
 }
 
 /**
@@ -186,9 +197,11 @@ export function makeEcho({ idea, kind, voice, meta = {}, text, by = null }) {
 export function take(idea, echo, { words } = {}) {
   const w = String(words || '').trim();
   if (!w) return { error: 'say what you keep from it, in your words' };
+  if (w.length > MAX_WORDS) return { error: `what you keep is ${w.length} characters — the limit is ${MAX_WORDS}` };
+  if (String(idea.text || '').length + w.length + 1 > MAX_IDEA) return { error: `the idea would pass ${MAX_IDEA} characters — say it shorter, or take it to the spec workshop` };
   if (echo.ideaUuid !== idea.uuid && echo.otherUuid !== idea.uuid) return { error: 'that echo belongs to another idea' };
   return { text: `${String(idea.text || '').replace(/\s+$/, '')}\n${w}` };
 }
 
-export default { CREATIVITY, STABILITY, ECHO_KINDS, ECHO_TABLE, link, tension, tensionLabel, voiceOf, shapeVoid, placeFor, glow,
+export default { CREATIVITY, STABILITY, ECHO_KINDS, ECHO_TABLE, MAX_IDEA, MAX_WORDS, checkText, link, tension, tensionLabel, voiceOf, shapeVoid, placeFor, glow,
   echoPrompt, echoLines, makeEcho, take, CREATIVE_VOICE, STABLE_VOICE };

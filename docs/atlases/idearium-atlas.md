@@ -548,6 +548,8 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **The field:** worked ideas glow brighter; untouched ones fade and drift outward. Wild ideas (born wild, held steady) are magenta; unsteady ones orange. Drag to place; drag one onto another to collide them.
 - **→ SPEC** grounds the idea (stable, whatever the dials say), then opens the spec workshop.
 - **Fonts:** Bebas Neue, DM Mono and Space Grotesk ship in idearium/ui/fonts (SIL Open Font License), so it works offline.
+- **No lowercase** (0.39.296, James: "alright but no lowercase"): everything in the Void is shown in capitals, tooltips and the window title too. What you type is stored exactly as typed.
+- **Limits and states** (0.39.296): an idea is at most 4000 characters, a kept part 1000, and going over is refused with the count. The field says when it is entering, empty, or unreachable (with TRY AGAIN). An agent answer shows a running timer.
 
 **The spec workshop** (0.39.294, `idearium/ui/workshop.html`, `idearium/lib/workshop.js`). James: "need the spec workshop … the workshop and maybe it hooks into the spec field".
 - **Where:** Welcome → **Spec workshop**; an idea's **✎ spec workshop**; a repo's Spec tab → **open in the spec workshop**; the spec library's **✎ workshop** on a row; the idearium CLI's workshop commands.

@@ -12,6 +12,8 @@
 //   VD-05  the router, a stand-in agent: an idea into the void → the field → an echo beside it (the idea unchanged) →
 //          take → set aside → collide → → spec (grounded) → a spark made an idea; a failed agent stores nothing
 //   VD-06  the page and the shell: fonts local (OFL) and served, the page served, the dials in order, Create → The Void
+//   VD-07  0.39.296, James: "alright but no lowercase. and make sure its enterprise grade" — the limits, capitals
+//          everywhere (tooltips and the window title too), the entering / empty / unreachable states, every call's deadline
 require('../../lib/test-sandbox.js').ensure();
 
 const assert = require('assert');
@@ -167,6 +169,24 @@ async function main() {
     const cli = fs.readFileSync(path.join(ROOT, 'idearium/cli/index.js'), 'utf8');
     for (const c of ['list', 'add', 'echo', 'collide', 'take']) assert.match(cli, new RegExp(`async 'void\\.${c}'`));
     assert.match(fs.readFileSync(path.join(ROOT, 'idearium/index.js'), 'utf8'), /'linkedSpec','void'\]/, 'ideas carry the void');
+  });
+
+  await test('VD-07', '0.39.296 — "no lowercase" and the enterprise pass: limits, capitals, states, deadlines', async () => {
+    assert.ok(V.checkText('x'.repeat(4001), V.MAX_IDEA, 'the idea').error.includes('4001 characters'));
+    assert.ok(V.checkText('  ', V.MAX_IDEA).error); assert.ok(V.checkText(42, V.MAX_IDEA).error);
+    assert.strictEqual(V.checkText('  a garden  ', V.MAX_IDEA).text, 'a garden');
+    assert.match(V.take({ uuid: 'i', text: 'x'.repeat(3999) }, { ideaUuid: 'i' }, { words: 'more words here' }).error, /would pass 4000/);
+    const big = await R('POST', '/api/void/idea', { text: 'y'.repeat(4001) });
+    assert.strictEqual(big.status, 400); assert.match(big.json.error, /limit is 4000/);
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/void.html'), 'utf8');
+    assert.match(page, /html \{ text-transform: uppercase; \}/, 'everything shown in capitals');
+    assert.match(page, /input, textarea, button, select \{ text-transform: uppercase; \}/);
+    assert.match(page, /<title>THE VOID<\/title>/); assert.match(page, /data-title="THE VOID"/);
+    const lowerTips = [...page.matchAll(/title="([^"$]*)"/g)].map(m => m[1]).filter(t => /[a-z]/.test(t));
+    assert.deepStrictEqual(lowerTips, [], 'no tooltip in lowercase (CSS does not reach the browser\'s tooltips)');
+    for (const st of ['ENTERING THE VOID', 'THE VOID IS EMPTY', 'THE VOID IS UNREACHABLE']) assert.ok(page.includes(st), st);
+    assert.match(page, /const AGENT_MS = 330000/); assert.match(page, /new AbortController\(\)/);
+    assert.match(page, /maxlength="4000"/);
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

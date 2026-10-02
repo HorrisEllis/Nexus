@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     spatial-void
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-02
     release:  0.39.295
     uuid:     nexus-spatial-void-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -91,3 +91,11 @@ spec:
 # idea vanished when opened; renamed. Proof: tests/modules/test-spatial-void.test.js 6/6; Chromium against the real server
 # with a stand-in agent — seven ideas and a spark in the field, the dials linked then unlinked to tension +3, an idea
 # spoken, ECHO and D20 answered, a line kept in his words; no console errors; wide and narrow.
+
+## ADDENDUM 2026-10-02 — 1.1.0, "no lowercase" and the enterprise pass (0.39.296)
+# James: "alright but no lowercase. and make sure its enterprise grade". Capitals everywhere (CSS for the page, inputs and
+# placeholders; tooltips and the window title uppercased at the source, which CSS cannot reach) — his text is stored as
+# typed. Limits (idea 4000, kept part 1000), deadlines on every call and a timer on agent calls, the field's states
+# (entering, empty, unreachable + try again; a lost server said while the field stays), contrast on everything read,
+# names that never overprint, unplaced ideas spread over the whole field. Measured: 150 ideas load + paint 77–85 ms,
+# repaint 10–12 ms; no console errors. tests/modules/test-spatial-void.test.js 7/7 (VD-07).

@@ -13,7 +13,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Void</title>
+<title>THE VOID</title>
 <link rel="icon" href="data:,">
 <style>
   @font-face { font-family: 'Bebas Neue'; src: url(fonts/bebas-neue-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
@@ -32,6 +32,10 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--void); color: var(--text); font: 13px/1.6 var(--body); overflow: hidden; }
+  /* James: "no lowercase". Everything in the void is shown in capitals — the text itself is stored exactly as typed */
+  html { text-transform: uppercase; }
+  input, textarea, button, select { text-transform: uppercase; }
+  ::placeholder { text-transform: uppercase; }
   body { padding-top: var(--chrome-h, 0px); }
   button { font: inherit; color: inherit; }
   ::selection { background: rgba(0,212,255,.25); }
@@ -45,7 +49,7 @@
   .head { position: fixed; top: calc(var(--chrome-h, 0px) + 22px); left: 0; right: 0; text-align: center; pointer-events: none; z-index: 3; }
   .title { font: 400 46px/1 var(--display); letter-spacing: .42em; padding-left: .42em; color: rgba(0,212,255,.62); text-shadow: 0 0 60px rgba(0,212,255,.22); animation: breathe 5s ease-in-out infinite; }
   @keyframes breathe { 0%, 100% { opacity: .6 } 50% { opacity: 1 } }
-  .sub { font: 400 10.5px/1 var(--mono); letter-spacing: .26em; color: rgba(184,207,224,.3); margin-top: 10px; }
+  .sub { font: 400 10.5px/1 var(--mono); letter-spacing: .26em; color: rgba(184,207,224,.42); margin-top: 10px; }
 
   /* the edges */
   .btn { font: 400 13px/1 var(--display); letter-spacing: .18em; background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.2); border-radius: 2px; color: rgba(0,212,255,.65); padding: 8px 18px; cursor: pointer; transition: background .25s, color .25s, border-color .25s, box-shadow .25s; }
@@ -60,9 +64,9 @@
   .ghost { background: none; border: 1px solid var(--line); color: var(--text3); }
   .corner { position: fixed; top: calc(var(--chrome-h, 0px) + 16px); z-index: 6; display: flex; gap: 6px; }
   .corner.l { left: 18px; } .corner.r { right: 18px; }
-  .chip { font: 400 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 6px 9px; border: 1px solid var(--line); border-radius: 2px; color: var(--text3); background: rgba(3,5,8,.6); cursor: pointer; }
+  .chip { font: 400 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 6px 9px; border: 1px solid var(--line); border-radius: 2px; color: var(--text2); background: rgba(3,5,8,.6); cursor: pointer; }
   .chip.on { color: var(--c); border-color: rgba(0,212,255,.4); }
-  .count { font: 400 10px/1 var(--mono); letter-spacing: .14em; color: var(--text3); padding: 7px 4px; }
+  .count { font: 400 10px/1 var(--mono); letter-spacing: .14em; color: var(--text2); padding: 7px 4px; }
 
   /* the ideas — points of light */
   .mote { position: absolute; transform: translate(-50%, -50%); cursor: grab; z-index: 2; touch-action: none; }
@@ -82,7 +86,7 @@
   .mote.wild .halo { border-color: rgba(204,68,255,calc(var(--a) * .26)); } .mote.unsteady .halo { border-color: rgba(255,107,53,calc(var(--a) * .24)); } .mote.spark .halo { display: none; }
   @keyframes halo { 0%, 100% { transform: translate(-50%, -50%) scale(.85); opacity: .5 } 50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1 } }
   body.focused .speak, body.focused .dials { left: calc((100% - 450px) / 2); }
-  #field { transition: right .35s cubic-bezier(.2,.8,.2,1); } body.focused #field { right: 450px; }
+  #field { transition: right .35s cubic-bezier(.2,.8,.2,1); } #field.settling .label { transition: none; } body.focused #field { right: 450px; }
   .mote.edge-l .label { left: 0; transform: none; } .mote.edge-r .label { left: auto; right: 0; transform: none; }
   @media (max-width: 860px) { body.focused .speak, body.focused .dials { left: 50%; } body.focused #field { right: 0; } }
   .mote.dragging { cursor: grabbing; z-index: 5; }
@@ -109,7 +113,7 @@
   .rail.c .fill { left: 0; background: linear-gradient(90deg, rgba(0,212,255,.25), rgba(204,68,255,.9)); }
   .rail.s .fill { right: 0; background: linear-gradient(270deg, rgba(255,204,0,.25), rgba(255,45,85,.9)); }
   .rail .tick { position: absolute; top: 7px; width: 1px; height: 10px; background: var(--line3); }
-  .rail .lab { position: absolute; top: 21px; transform: translateX(-50%); font: 400 9.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text3); white-space: nowrap; cursor: pointer; }
+  .rail .lab { position: absolute; top: 21px; transform: translateX(-50%); font: 400 9.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text2); white-space: nowrap; cursor: pointer; }
   .rail .lab.on { color: var(--text); }
   .rail .lab:first-of-type { transform: none; } .rail .lab.end { transform: translateX(-100%); }
   .rail .knob { position: absolute; top: 4px; width: 16px; height: 16px; margin-left: -8px; border-radius: 2px; transform: rotate(45deg); border: 1px solid; background: var(--bg); transition: left .35s cubic-bezier(.2,.8,.2,1); }
@@ -153,7 +157,16 @@
   .keep textarea { width: 100%; background: transparent; border: none; outline: none; color: var(--c); font: 400 12.5px/1.6 var(--mono); resize: vertical; min-height: 54px; }
   .keep .hint { font: 400 10px/1.4 var(--mono); color: var(--text2); margin-bottom: 6px; letter-spacing: .04em; }
   .thinking { font: 400 11px/1 var(--mono); letter-spacing: .14em; color: rgba(204,68,255,.7); text-transform: uppercase; animation: breathe 1.6s ease-in-out infinite; }
-  .empty { color: var(--text3); font: 400 11px/1.6 var(--mono); }
+  .empty { color: var(--text2); font: 400 11px/1.6 var(--mono); }
+  .chip:focus-visible, .btn:focus-visible, .hold:focus-visible, .mote:focus-visible, .x:focus-visible { outline: 1px solid var(--c); outline-offset: 3px; }
+  .chip { user-select: none; }
+  /* the field's own states: entering, empty, unreachable */
+  .state { position: fixed; left: 50%; top: 44%; transform: translate(-50%, -50%); z-index: 3; text-align: center; font: 400 11px/1.8 var(--mono); letter-spacing: .2em; color: var(--text2); pointer-events: none; }
+  .state b { display: block; font: 400 22px/1.2 var(--display); letter-spacing: .3em; color: rgba(0,212,255,.55); margin-bottom: 6px; }
+  .state.bad b { color: rgba(255,45,85,.7); } .state .btn { pointer-events: auto; margin-top: 12px; }
+  .meter { font: 400 10px/1 var(--mono); letter-spacing: .12em; color: var(--text2); margin-left: 8px; }
+  .limit { font: 400 9.5px/1 var(--mono); letter-spacing: .1em; color: var(--text3); text-align: right; margin-top: 4px; }
+  .limit.near { color: var(--y); } .limit.over { color: var(--r); }
 
   #toasts { position: fixed; left: 18px; top: calc(var(--chrome-h, 0px) + 62px); display: flex; flex-direction: column; gap: 6px; z-index: 9; pointer-events: none; max-width: min(420px, calc(100% - 36px)); }
   .toast { font: 400 11px/1.5 var(--mono); padding: 9px 12px; border: 1px solid rgba(0,212,255,.3); background: rgba(5,8,15,.95); border-radius: 2px; color: var(--c); animation: rise .3s ease; }
@@ -172,57 +185,59 @@
 </style>
 </head>
 <body>
-<script src="js/window-chrome.js" data-kind="void" data-title="The Void"></script>
+<script src="js/window-chrome.js" data-kind="void" data-title="THE VOID"></script>
 <canvas id="sky" aria-hidden="true"></canvas>
 <div id="field" aria-label="your ideas"></div>
 
 <div class="head"><div class="title">THE VOID</div><div class="sub">SPEAK YOUR VISION INTO EXISTENCE</div></div>
+<div class="state" id="state" role="status" aria-live="polite"><b>ENTERING THE VOID</b>READING YOUR IDEAS…</div>
 
 <div class="corner l">
-  <button class="btn small ghost" id="returnBtn" title="close the void">← RETURN</button>
+  <button class="btn small ghost" id="returnBtn" title="CLOSE THE VOID">← RETURN</button>
   <span class="count" id="count"></span>
 </div>
 <div class="corner r" id="filters" role="group" aria-label="show">
   <span class="chip on keep-sm" data-f="all">all</span>
-  <span class="chip" data-f="wild" title="born wild, held steady — creativity well above stability">wild · steady</span>
-  <span class="chip" data-f="unsteady" title="born on unsteady ground — stability well above creativity">unsteady</span>
-  <span class="chip" data-f="fading" title="ideas you have not touched in a while">fading</span>
-  <span class="chip" data-f="sparks" title="brainstorm sparks not yet made ideas">sparks</span>
+  <span class="chip" data-f="wild" title="BORN WILD, HELD STEADY — CREATIVITY WELL ABOVE STABILITY">wild · steady</span>
+  <span class="chip" data-f="unsteady" title="BORN ON UNSTEADY GROUND — STABILITY WELL ABOVE CREATIVITY">unsteady</span>
+  <span class="chip" data-f="fading" title="IDEAS YOU HAVE NOT TOUCHED IN A WHILE">fading</span>
+  <span class="chip" data-f="sparks" title="BRAINSTORM SPARKS NOT YET MADE IDEAS">sparks</span>
 </div>
 
 <div class="speak">
-  <textarea id="speak" rows="2" placeholder="What's your vision? What are you trying to build? What problem haunts you?" aria-label="a new idea"></textarea>
-  <div class="row"><button class="btn" id="transmit" title="your idea, into the void (Ctrl+Enter)">TRANSMIT</button></div>
+  <textarea id="speak" rows="2" maxlength="4000" placeholder="What's your vision? What are you trying to build? What problem haunts you?" aria-label="a new idea"></textarea>
+  <div class="row"><button class="btn" id="transmit" title="YOUR IDEA, INTO THE VOID (CTRL+ENTER)">TRANSMIT</button></div>
 </div>
 
 <div class="dials" aria-label="the dials">
   <div class="dial-row">
     <span class="dial-name c">CREATIVITY</span>
     <div class="rail c" id="railC" tabindex="0" role="slider" aria-label="creativity" aria-valuemin="0" aria-valuemax="4"></div>
-    <button class="hold" id="holdC" title="hold: unlink the dials — each moves alone, and the gap between them is the tension" aria-pressed="false">⌖</button>
+    <button class="hold" id="holdC" title="HOLD: UNLINK THE DIALS — EACH MOVES ALONE, AND THE GAP BETWEEN THEM IS THE TENSION" aria-pressed="false">⌖</button>
   </div>
   <div class="linkage"><svg id="tensionSvg" preserveAspectRatio="none"></svg></div>
   <div class="dial-row">
     <span class="dial-name s">STABILITY</span>
     <div class="rail s" id="railS" tabindex="0" role="slider" aria-label="stability" aria-valuemin="0" aria-valuemax="4"></div>
-    <button class="hold" id="holdS" title="hold: unlink the dials — each moves alone, and the gap between them is the tension" aria-pressed="false">⌖</button>
+    <button class="hold" id="holdS" title="HOLD: UNLINK THE DIALS — EACH MOVES ALONE, AND THE GAP BETWEEN THEM IS THE TENSION" aria-pressed="false">⌖</button>
   </div>
   <div class="dial-foot"><span class="voice" id="voice"></span><span class="tension" id="tension"></span></div>
 </div>
 
 <aside class="focus" id="focus" aria-label="the idea">
-  <div class="fh"><span class="k" id="fKind">YOUR IDEA</span><button class="x" id="fClose" title="Esc">CLOSE</button></div>
+  <div class="fh"><span class="k" id="fKind">YOUR IDEA</span><button class="x" id="fClose" title="ESC">CLOSE</button></div>
   <div class="fb">
-    <textarea class="mine" id="mine" aria-label="your idea, in your words"></textarea>
+    <textarea class="mine" id="mine" maxlength="4000" aria-label="your idea, in your words"></textarea>
+    <div class="limit" id="mineLimit"></div>
     <div class="born" id="born"></div>
     <div class="acts" id="acts">
-      <button class="btn small m" data-k="echo" title="the void answers your idea at the dials">ECHO</button>
-      <button class="btn small m" data-k="d20" title="EROSMANCER rolls a field and maps its mechanism onto your idea">⬡ D20</button>
-      <button class="btn small m" data-k="reverse" title="EROSMANCER: your idea at its furthest, walked back to now">↶ REVERSE</button>
-      <button class="btn small g" data-k="spec" title="ground it, then on to the spec workshop">→ SPEC</button>
+      <button class="btn small m" data-k="echo" title="THE VOID ANSWERS YOUR IDEA AT THE DIALS">ECHO</button>
+      <button class="btn small m" data-k="d20" title="EROSMANCER ROLLS A FIELD AND MAPS ITS MECHANISM ONTO YOUR IDEA">⬡ D20</button>
+      <button class="btn small m" data-k="reverse" title="EROSMANCER: YOUR IDEA AT ITS FURTHEST, WALKED BACK TO NOW">↶ REVERSE</button>
+      <button class="btn small g" data-k="spec" title="GROUND IT, THEN ON TO THE SPEC WORKSHOP">→ SPEC</button>
     </div>
-    <div id="sparkActs" class="acts hidden"><button class="btn small" id="makeIdea" title="make this brainstorm spark an idea, at the dials">MAKE IT AN IDEA</button></div>
-    <div id="thinking" class="thinking hidden">the void is answering…</div>
+    <div id="sparkActs" class="acts hidden"><button class="btn small" id="makeIdea" title="MAKE THIS BRAINSTORM SPARK AN IDEA, AT THE DIALS">MAKE IT AN IDEA</button></div>
+    <div id="thinking" class="thinking hidden" role="status" aria-live="polite">THE VOID IS ANSWERING <span id="meter" class="meter"></span></div>
     <div class="lbl" id="echoLbl">ECHOES</div>
     <div id="echoes"></div>
   </div>
@@ -242,12 +257,18 @@ try { Object.assign(D, JSON.parse(localStorage.getItem('void.dials') || '{}')); 
 let IDEAS = [], SPARKS = [], FOCUS = null, FILTER = 'all', BUSY = false;
 
 function toast(t, bad) { const d = document.createElement('div'); d.className = 'toast' + (bad ? ' bad' : ''); d.textContent = t; $('toasts').appendChild(d); while ($('toasts').children.length > 4) $('toasts').firstChild.remove(); setTimeout(() => d.remove(), bad ? 7000 : 3200); }
-async function api(path, body) {
-  const r = await fetch(path, body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+// every call has a deadline (an agent answer may take minutes; nothing else should); a dead idearium is said, plainly
+async function api(path, body, ms = body === undefined ? 20000 : 30000) {
+  const ac = new AbortController(); const t = setTimeout(() => ac.abort(), ms);
+  let r;
+  try { r = await fetch(path, { signal: ac.signal, ...(body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }); }
+  catch (e) { throw new Error(e.name === 'AbortError' ? `NO ANSWER IN ${Math.round(ms / 1000)}S` : 'IDEARIUM IS NOT ANSWERING — IS IT RUNNING?'); }
+  finally { clearTimeout(t); }
   const j = await r.json().catch(() => ({}));
   if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
   return j;
 }
+const AGENT_MS = 330000;   // the server waits up to 310 s for the agent (copilot → the provider); this waits a little longer
 
 // ── the sky: stars that breathe, a wash that leaves them trails ─────────────────────────────────────────────────────
 (function sky() {
@@ -336,7 +357,8 @@ addEventListener('resize', drawTension);
 // ── the field ───────────────────────────────────────────────────────────────────────────────────────────────────────
 function placed(x, y, drift) {
   // untouched ideas drift toward the edge, away from where you left them
-  const k = 1 + (drift || 0) * .45; return { x: Math.max(.03, Math.min(.97, .5 + (x - .5) * k)), y: Math.max(.12, Math.min(.66, .14 + (y * .52) + ((y - .5) * .52) * (k - 1))) };
+  // the band between the title and the speak box (.15 – .58 of the field); drift pushes outward within it
+  const k = 1 + (drift || 0) * .45; return { x: Math.max(.03, Math.min(.97, .5 + (x - .5) * k)), y: Math.max(.15, Math.min(.58, .15 + (y * .43) + ((y - .5) * .43) * (k - 1))) };
 }
 function kindOf(i) { const t = i.void && i.void.born ? i.void.born.tension : 0; return t >= 2 ? 'wild' : t <= -2 ? 'unsteady' : ''; }
 function visible(i, spark) {
@@ -349,7 +371,7 @@ function visible(i, spark) {
   return true;
 }
 function paintField(bornUuid) {
-  const f = $('field'); f.innerHTML = '';
+  const f = $('field'); f.innerHTML = ''; f.classList.add('settling');   // no fades while names are being placed
   const all = [...IDEAS.map(i => ({ ...i, spark: false })), ...SPARKS.map(s => ({ ...s, spark: true, glow: .3, drift: 0 }))];
   // the brightest ideas carry their names; the rest show theirs on hover (a field of 100 labels is noise)
   const labelled = new Set(IDEAS.slice().sort((a, b) => b.glow - a.glow).slice(0, 18).map(i => i.uuid));
@@ -366,6 +388,14 @@ function paintField(bornUuid) {
     el.innerHTML = `<div class="halo"></div><div class="core"></div><div class="label">${esc(String(i.text).split('\n')[0].slice(0, 60))}${i.echoes ? ` · ${i.echoes}` : ''}</div>`;
     f.appendChild(el); motion(el, i);
   }
+  // names never overprint: brightest first, a name that would touch one already shown waits for hover
+  const shown = [];
+  for (const el of [...f.querySelectorAll('.mote.bright, .mote.sel')].sort((a, b) => (b.classList.contains('sel') - a.classList.contains('sel')) || (parseFloat(b.style.getPropertyValue('--a')) - parseFloat(a.style.getPropertyValue('--a'))))) {
+    const r = el.querySelector('.label').getBoundingClientRect(); const pad = 4;
+    if (shown.some(q => r.left < q.right + pad && r.right > q.left - pad && r.top < q.bottom + pad && r.bottom > q.top - pad)) { el.classList.remove('bright'); continue; }
+    shown.push(r);
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => f.classList.remove('settling')));
   $('count').textContent = `${IDEAS.length} IDEAS${SPARKS.length ? ` · ${SPARKS.length} SPARKS` : ''}`;
 }
 function motion(el, item) {
@@ -387,7 +417,7 @@ function motion(el, item) {
       if (!moved) return focusOn(item);
       const b = $('field').getBoundingClientRect();
       if (target && !item.spark) return askCollide(item, IDEAS.find(i => i.uuid === target.dataset.uuid), e.clientX, e.clientY);
-      const x = (e.clientX - b.left) / b.width, y = Math.max(0, Math.min(1, ((e.clientY - b.top) / b.height - .14) / .52));
+      const x = (e.clientX - b.left) / b.width, y = Math.max(0, Math.min(1, ((e.clientY - b.top) / b.height - .15) / .43));
       if (item.spark) { item.x = x; item.y = y; return paintField(); }
       try { await api(`/api/void/idea/${item.uuid}`, { x, y }); item.x = x; item.y = y; item.drift = 0; }
       catch (err) { toast(`not moved: ${err.message}`, true); }
@@ -405,7 +435,7 @@ function askCollide(a, b, cx, cy) {
   $('noCollide').onclick = () => { box.remove(); paintField(); };
   $('doCollide').onclick = async () => {
     box.remove(); paintField(); focusOn(a); setThinking(true);
-    try { const r = await api('/api/void/collide', { a: a.uuid, b: b.uuid, creativity: D.creativity, stability: D.stability }); FOCUS_ECHOES.unshift(r.echo); paintEchoes(); toast('collided — how they fit and clash, below'); }
+    try { const r = await api('/api/void/collide', { a: a.uuid, b: b.uuid, creativity: D.creativity, stability: D.stability }, AGENT_MS); FOCUS_ECHOES.unshift(r.echo); paintEchoes(); toast('collided — how they fit and clash, below'); }
     catch (e) { toast(e.message, true); } finally { setThinking(false); }
   };
 }
@@ -416,7 +446,7 @@ let FOCUS_ECHOES = []; const SEEN = new Set();   // echoes already shown don't r
 async function focusOn(item) {
   FOCUS = item; paintField();
   $('focus').classList.add('open'); document.body.classList.add('focused'); setTimeout(drawTension, 380); $('fKind').textContent = item.spark ? 'A SPARK' : 'YOUR IDEA';
-  $('mine').value = item.text; $('mine').readOnly = false;
+  $('mine').value = item.text; $('mine').readOnly = false; paintLimit();
   $('acts').classList.toggle('hidden', !!item.spark); $('sparkActs').classList.toggle('hidden', !item.spark);
   $('echoLbl').classList.toggle('hidden', !!item.spark);
   const b = item.void && item.void.born;
@@ -439,17 +469,24 @@ async function saveMine() {
   catch (e) { toast(`not kept: ${e.message}`, true); }
 }
 $('mine').addEventListener('blur', saveMine);
+function paintLimit() { const n = $('mine').value.length, el = $('mineLimit'); el.textContent = n > 3000 ? `${n} / 4000` : ''; el.className = 'limit' + (n >= 4000 ? ' over' : n > 3600 ? ' near' : ''); }
+$('mine').addEventListener('input', paintLimit);
 async function syncFocusDials() {
   if (!FOCUS || FOCUS.spark) return;
   try { const r = await api(`/api/void/idea/${FOCUS.uuid}`, { creativity: D.creativity, stability: D.stability, held: D.held, touch: false }); const i = IDEAS.find(x => x.uuid === FOCUS.uuid); if (i) i.void = r.idea.void; }
   catch (_) { /* the dials still apply to the next echo; said on the next save */ }
 }
-function setThinking(on) { BUSY = on; $('thinking').classList.toggle('hidden', !on); document.querySelectorAll('#acts button').forEach(b => b.disabled = on); }
+let _meterT = null;
+function setThinking(on) {
+  BUSY = on; $('thinking').classList.toggle('hidden', !on); document.querySelectorAll('#acts button').forEach(b => b.disabled = on);
+  clearInterval(_meterT); $('meter').textContent = '';
+  if (on) { const t0 = Date.now(); _meterT = setInterval(() => { $('meter').textContent = `${Math.round((Date.now() - t0) / 1000)}S`; }, 1000); }
+}
 function paintEchoes() {
   if (!FOCUS || FOCUS.spark) { $('echoes').innerHTML = ''; return; }
   $('echoes').innerHTML = FOCUS_ECHOES.length ? FOCUS_ECHOES.map(e => `<div class="echo ${e.status} ${SEEN.has(e.uuid) ? 'seen' : ''}" data-id="${esc(e.uuid)}">
       <div class="eh"><span>${esc(e.voice || e.kind)}</span><span class="d">${esc(CREATIVITY[e.creativity] || '')} · ${esc(STABILITY[e.stability] || '')}</span>${e.domain ? `<span class="d">rolled ${e.roll}: ${esc(e.domain)}</span>` : ''}${e.otherUuid ? `<span class="d">collided</span>` : ''}${e.status !== 'open' ? `<span class="d">${esc(e.status)}</span>` : ''}</div>
-      ${e.lines.map((l, n) => `<div class="ln"><span class="t">${esc(l)}</span>${e.status !== 'set-aside' ? `<button class="btn small" data-take="${n}" title="keep this — in your own words">TAKE</button>` : ''}</div>`).join('')}
+      ${e.lines.map((l, n) => `<div class="ln"><span class="t">${esc(l)}</span>${e.status !== 'set-aside' ? `<button class="btn small" data-take="${n}" title="KEEP THIS — IN YOUR OWN WORDS">TAKE</button>` : ''}</div>`).join('')}
       ${(e.taken || []).map(t => `<div class="took">kept: ${esc(t.words)}</div>`).join('')}
       <div class="acts" style="margin-top:6px">${e.status === 'set-aside' ? `<button class="btn small ghost" data-re="1">BRING BACK</button>` : `<button class="btn small ghost" data-aside="1">SET ASIDE</button>`}</div>
     </div>`).join('') : `<div class="empty">Nothing yet. ECHO asks the void to answer your idea at the dials — questions, angles, checks. It never writes your idea; what you keep, you keep in your words.</div>`;
@@ -481,12 +518,12 @@ document.querySelectorAll('#acts button').forEach(b => b.onclick = async () => {
   const k = b.dataset.k;
   try {
     if (k === 'spec') {
-      const r = await api(`/api/void/idea/${FOCUS.uuid}/spec`, {});
+      const r = await api(`/api/void/idea/${FOCUS.uuid}/spec`, {}, AGENT_MS);
       FOCUS_ECHOES.unshift(r.echo); paintEchoes();
       toast('grounded — opening the spec workshop');
       setTimeout(() => { if (window.opener && !window.opener.closed) window.opener.postMessage({ type: 'nexus:workshop.open', from: `idea:${FOCUS.uuid}` }, '*'); else window.open(r.next, 'idearium-workshop'); }, 700);
     } else {
-      const r = await api(`/api/void/idea/${FOCUS.uuid}/echo`, { kind: k, creativity: D.creativity, stability: D.stability });
+      const r = await api(`/api/void/idea/${FOCUS.uuid}/echo`, { kind: k, creativity: D.creativity, stability: D.stability }, AGENT_MS);
       FOCUS_ECHOES.unshift(r.echo); paintEchoes();
       const i = IDEAS.find(x => x.uuid === FOCUS.uuid); if (i) { i.echoes = (i.echoes || 0) + 1; i.drift = 0; }
       if (r.echo.domain) toast(`the d20 rolled ${r.echo.roll}: ${r.echo.domain}`);
@@ -511,11 +548,23 @@ async function transmit() {
 }
 $('transmit').onclick = transmit;
 $('speak').addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); transmit(); } });
+addEventListener('keydown', (e) => { if (e.key === '/' && document.activeElement && !/TEXTAREA|INPUT/.test(document.activeElement.tagName)) { e.preventDefault(); $('speak').focus(); } });
+addEventListener('beforeunload', () => { saveMine(); });
 $('returnBtn').onclick = () => { saveMine(); if (window.opener) window.close(); else history.back(); };
 
+function setState(kind, msg) {
+  const el = $('state');
+  if (!kind) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden'); el.classList.toggle('bad', kind === 'bad');
+  el.innerHTML = kind === 'bad' ? `<b>THE VOID IS UNREACHABLE</b>${esc(msg)}<br><button class="btn small" id="retry">TRY AGAIN</button>`
+    : kind === 'empty' ? `<b>THE VOID IS EMPTY</b>SPEAK YOUR FIRST VISION BELOW` : `<b>ENTERING THE VOID</b>READING YOUR IDEAS…`;
+  const r = $('retry'); if (r) r.onclick = () => { setState('loading'); load(); };
+}
 async function load(bornUuid) {
-  try { const r = await api('/api/void'); IDEAS = r.ideas; SPARKS = r.sparks; paintField(bornUuid); }
-  catch (e) { toast(`the void could not load: ${e.message}`, true); }
+  try {
+    const r = await api('/api/void'); IDEAS = r.ideas; SPARKS = r.sparks; paintField(bornUuid);
+    setState(IDEAS.length || SPARKS.length ? null : 'empty');
+  } catch (e) { if (!IDEAS.length) setState('bad', e.message); else toast(`THE FIELD DID NOT REFRESH: ${e.message}`, true); }
 }
 paintDials(); load();
 </script>
