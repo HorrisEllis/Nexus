@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.6.0
+    version:  1.7.0
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -197,6 +197,8 @@ spec:
     E15: "Isolation. Each system stays its own: no require() across systems except through a declared hook and wire in loom; systems meet through routes, declared events and the component registry — nothing else. A phase that touches several systems is built as one change per system, each wired on its own."
     E16: "Declared, not guessed. Every phase names its systems explicitly (`systems:`); loom's phasemap scanner reads that line first and guesses from prose only where none is given, marking the guess."
     E17: "Every phase declares its VALUE: a score 1–5 (to James), a cost S|M|L|XL, what kind of value (income, daily-use, quality, safety, ownership, compounding, foundation) and why in one line. Synthesis reads it as one more named part of leverage and its cost as the effort — added to the structural score, never replacing it, so the rank stays explainable and arguable. James can change any value; a changed value is a change to the map, with its reason."
+    E18: "The judge never edits the judge. The deterministic core, James's laws (AXIOMS, E1–E18), the checkers and the proof rules are read-only to Nexus itself: it may PROPOSE a change to them, only James accepts. Everything else it may build, through the shadow layer, with rewind behind it."
+    E19: "Where the graphs live. Per-project graphs (code, spec, execution, manifest, containment) live in IDEARIUM, beside the repos they describe, and code generated from graphs is written by Idearium into repos. What Nexus has LEARNED across projects (recipes, failure modes, crystals, the component library, the graph model) is memory and lives in CORTEX. The dynamics over both (CFR, RFR2, the causal graph, the field) live in INTELLIGENCE. Idearium reads cortex's library; nothing keeps a second copy."
     E11: "Nothing lost (§0.3). SISO and siso_ref stay, attributed; WARP 1.x gates run through an adapter until moved; divergent copies are surfaced, not merged silently."
 
   # ── Phases — bottom-up ─────────────────────────────────────────────────────────────────────────────────────────
@@ -878,10 +880,77 @@ spec:
         local, cheap, his — and scored against what then happens, so its weight is earned, not assumed.
       proof: "after fixture runs, the graph model predicts the next successful step better than chance, its score shown"
 
+    PH1_phase_runs_end_in_proof:
+      layer: service
+      systems: [idearium]
+      value: { score: 5, cost: S, for: [compounding], why: "the engine: Ollama builds Nexus piece by piece and nothing enters without passing its own proof" }
+      status: OPEN — next to build
+      depends_on: [PR1_proof_run_the_delivery_checker]
+      files: [idearium/api/index.js, idearium/repo/proof-run.js, lib/chunk-build-orchestrator.js, lib/repo-agent.js]
+      does: >-
+        James: "It can build it. Piece by piece look at idearium." What exists, read: specs cut into blocks and chunks,
+        each routed to an agent (blocks.yaml — four blocks default to ollama; chunk-dispatch falls back to ollama);
+        chunk-build-orchestrator tries every agent before giving up; the repo agent runs on ollama with repo-context
+        feeding a small model only what matches; repo.phase.run builds a phase and has another agent review it; Nexus
+        is itself an Idearium repo (nexus-self) behind an apply gate with a snapshot. Missing: a judge that RUNS the work.
+        Each phase run now ends with a proof run of that phase's own proof lines as conditions. Met → accepted. Unmet →
+        the unmet conditions, their modes and causes go back to the same agent as the next attempt's feedback; repeated
+        failure → the orchestrator's next agent. The first real run of the lab loop, on Nexus itself.
+      proof: "a fixture phase whose first attempt misses a condition: the run is not accepted, the feedback carries the unmet condition, the second attempt is judged again"
+
+    GG1_graphs_generate_code:
+      layer: service
+      systems: [idearium, emerge]
+      value: { score: 5, cost: M, for: [compounding, income], why: "a growing share of every build written by the graphs with no LLM; the model writes only what is new" }
+      status: OPEN
+      depends_on: [PH1_phase_runs_end_in_proof, EV0_contracts_for_every_system]
+      files: [emerge/compiler/index.js, emerge/compiler/emit.js, idearium/repo/graph.js, idearium/lib/wiring-gen.js]
+      does: >-
+        James: "I'm saying to generate code." What already runs with no LLM: emerge's T0 (structure) and T1 (typed
+        interfaces, gate stubs, wiring, test skeletons) from a spec. Added: the WIRING of a phase generated from its wiring
+        row (routes in the table with CAPS, CLI verbs, registry entries, nodes, loom map lines, event-taxonomy entries,
+        contract routes) — mechanical, and a large share of every build; tests generated from end-state conditions;
+        composition of known components from the library by their recorded dependencies; and any crystal (MR8) produced
+        as a template. Each generation is judged by a proof run like any agent's work. What the graphs cannot write — new
+        logic — goes to the model (emerge T2/T3), one node, inside a budget.
+      proof: "a phase's wiring generated from its row with zero model calls, passing the version-sync, registry and loom checks; a component composed from the library passing its conditions"
+
+    CL1_the_component_lab:
+      layer: service
+      systems: [idearium, cortex, cos]
+      value: { score: 5, cost: M, for: [compounding, income], why: "Ollama builds components one at a time, the graphs keep them; the library grows and each new system is more assembly, less model" }
+      status: OPEN
+      depends_on: [PH1_phase_runs_end_in_proof, GG1_graphs_generate_code, CX0_codex_component_store]
+      files: [lib/component-store.js, idearium/repo/proof-run.js, cos/playground/sandbox.js]
+      does: >-
+        James: "What if I add a workshop or component lab for oLlama building components." A component is named in
+        plain words with its inputs, outputs and promises (end-state conditions). The graphs generate everything mechanical
+        (GG1); Ollama fills only the logic, in pieces sized for a 7B model with only the context it needs (MR1, MR5); the
+        proof run judges; unmet promises go back as feedback, strategy or agent changes when stuck (LB1). Passed →
+        into the component store (cortex, E19) with its proof, tiered draft → proven → crystal (reused and passed again N
+        times). Next time it is found by what it does and composed, not rebuilt. James reads proof reports, never code.
+      proof: "a fixture component built by a small model through the lab, stored with its proof, then composed into a second fixture system without a model call"
+
+    CX0_codex_component_store:
+      layer: library
+      systems: [cortex, idearium]
+      value: { score: 4, cost: M, for: [compounding], why: "the library the lab fills and the Architect and the graphs draw from" }
+      status: OPEN — carried from docs/2026-10-02-workshop-codex-rewind-phasemap.spec CX0
+      depends_on: [EM0_ground]
+      files: [lib/component-store.js]
+      does: >-
+        The component store grown into CODEX, as mapped in the workshop-codex-rewind map (tiers, promotion, seams,
+        similarity), living in cortex (E19) and read by Idearium's Architect and GG1. Each entry carries its proof run.
+      proof: "the workshop-codex-rewind map's own CX0 proof, plus: every stored component carries the proof run that admitted it"
+
   # ── Wiring — E12: each phase into each system it touches. A phase is DONE only when its row is true. ────────────
   # nodes use the lib/node-export.js envelope and Guardian's nodes/<type>/<id>.<type> layout; routes carry CAPS and get a
   # .command node; every CLI verb gets a .command node; loom: the map named, real wires, bootstrapped from empty.
   wiring:
+    PH1: { systems: [idearium], events: "idearium: IDEARIUM_PHASE_PROVEN, IDEARIUM_PHASE_ATTEMPT_UNMET", contract: "idearium", routes: "repo.phase.run (ends in a proof run)", cli: "idearium phase run <repo> <phase>", loom: "one-idearium-map.js", settings: none }
+    GG1: { systems: [idearium, emerge], events: "idearium: CODE_GENERATED_FROM_GRAPH", contract: "idearium", routes: "/api/repos/:uuid/generate/wiring", cli: "idearium generate wiring <repo> <phase>", loom: "one-idearium-map.js", settings: none }
+    CL1: { systems: [idearium, cortex, cos], events: "cortex: COMPONENT_ADMITTED, COMPONENT_CRYSTALLIZED", contract: "idearium, cortex", routes: "/api/lab/components, /api/lab/components/:id/attempt", cli: "idearium lab component new|status", loom: "one-idearium-map.js", settings: "ST1 BUILD TEAMS (lab budgets, model per tier)" }
+    CX0: { systems: [cortex, idearium], events: "cortex: COMPONENT_STORED", contract: "cortex", routes: "/api/components (existing store routes)", cli: "nexus components find|show", loom: "one-idearium-map.js", settings: none }
     RD1: { systems: [copilot, cortex, idearium, cos], events: "cortex: RAID_DECIDED_BUILD, CAPABILITY_REGISTERED", contract: "copilot, cortex", routes: "/api/capabilities/build", cli: "copilot build-capability <request>", loom: "copilot-capability-map.js", settings: none }
     DA1: { systems: [idearium, intelligence, clear-glass], events: "idearium: IDEARIUM_PROOF_RUN_SETTLED (kinds widen)", contract: "idearium", routes: "deliver/check, new kinds", cli: "idearium deliver check", loom: "one-idearium-map.js", settings: none }
     GL1: { systems: [intelligence, cortex, idearium], events: "intelligence: GRAPH_MODEL_PREDICTED, GRAPH_MODEL_SCORED", contract: "intelligence", routes: "/api/intelligence/graph-model/predict", cli: "intelligence predict", loom: "observability-map.js", settings: none }
@@ -946,7 +1015,7 @@ spec:
     - "FV1: which gig types first, for the kits?"
     - "EC6: which local models to read tokenizers from first (the ones Ollama runs here)?"
 
-  build_order: [EM0, EV0, GA1, IN1, UI0, PR1, PR2, DA1, EM1, EC6, MR1, SH1, EM2, CF1, MR9, RF1, MR6, ST1, AC1, IN2, CB1, MR7, MR8, MR3, FM1, CB3, WS6, LB1, RD1, MS1, GL1, MR5, LN1, OT1, MR11, CB2, RC1, BT1, FV1, MR2, MR4, MR10, CB4]
+  build_order: [EM0, EV0, GA1, IN1, UI0, PR1, PH1, PR2, DA1, EM1, EC6, MR1, SH1, EM2, CF1, MR9, RF1, MR6, ST1, AC1, IN2, CB1, MR7, MR8, MR3, FM1, CB3, WS6, LB1, RD1, CX0, GG1, CL1, MS1, GL1, MR5, LN1, OT1, MR11, CB2, RC1, BT1, FV1, MR2, MR4, MR10, CB4]
   # Value-first (E17), computed, not hand-picked: a phase is ready when everything it depends on is built; of the ready
   # ones, the next is the one with the highest value per cost — where a prerequisite takes on the value of the best phase
   # it unlocks (so EM2, slow on its own, is pulled forward by SH1's and CB1's value), ties by score. The groundwork and
@@ -1032,3 +1101,15 @@ spec:
 # self-building front door), DA1 (end states for research and problem solving: claims checked against sources,
 # reproducible results, no contradiction with settled facts, James's review where a machine cannot check), GL1 (the
 # graphs as a predictive model of his own, scored against outcomes).
+
+## ADDENDUM 2026-10-02 — 1.7.0
+# James: "It can build it. Piece by piece look at idearium." · "I'm saying to generate code." · "What if I add a
+# workshop or component lab for oLlama building components." · "Should the graphs be in idearium or cortex? Look at the
+# phases, in idearium." Read: Idearium already builds piece by piece with ollama in the loop (blocks → chunks → agents,
+# the orchestrator's agent switching, the repo agent on ollama with repo-context, phase runs with a reviewer,
+# nexus-self behind an apply gate); emerge's T0/T1 already generate code with no model. Idearium's per-system phase view
+# selects phases by loom's prose-guessed tags — so until EV0 these phases sit under the wrong systems there and cos/warp
+# ones not at all. Added PH1 (phase runs end in a proof run — the engine, next to build), GG1 (the graphs generate code:
+# wiring from a phase's row, tests from conditions, composition, crystals), CL1 (the Component Lab), CX0 carried here,
+# E18 (the judge never edits the judge) and E19 (per-project graphs in Idearium, learned memory in cortex, dynamics in
+# intelligence).
