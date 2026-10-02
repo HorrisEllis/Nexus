@@ -1372,6 +1372,7 @@ const ROUTE_CAP = {
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
   'spec-library.import':  CAPS.WRITE_IDEAS,   // §0.39.290 IL1
+  'spec-library.to-repo': CAPS.WRITE_IDEAS,  // §0.39.292 IL2 — makes a repo and writes its .spec file
   'spec-library.list':    CAPS.READ_IDEAS,    // writes a dropped zip into the data root's history-import inbox
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
   'cos.install.status': CAPS.READ_IDEAS,
@@ -1806,6 +1807,8 @@ function matchRoute(method, url) {
     // §0.39.290 IL1 — James's spec library: PUT the zip's raw bytes (?name=&dryRun=1); each unique document an idea + spec
     ['PUT',    ['api','spec-library','import'],                  'spec-library.import'],
     ['GET',    ['api','spec-library'],                           'spec-library.list'],
+    // §0.39.292 IL2 — a library document into the pipeline: its spec becomes a repo with a real spec/<slug>.spec in it
+    ['POST',   ['api','spec-library',':key','to-repo'],          'spec-library.to-repo'],
     ['POST',   ['api','cos','testenv','setup'],                  'cos.testenv.setup'],
     ['GET',    ['api','cos','install'],                          'cos.install.status'],   // §0.39.265
     ['POST',   ['api','cos','install'],                          'cos.install'],
@@ -3395,7 +3398,7 @@ async function handle(req, res, route, query, body) {
         ...(() => { const v = (k) => { try { return getIdeariumValue(k); } catch (_) { return undefined; } };   // settings console → desktop.*
           return { ramMB: body.ramMB || v('desktop.ram_mb'), cpus: body.cpus || v('desktop.cpus'), network: body.network || v('desktop.network'),
             login: { user: v('desktop.user') || 'nexus', password: v('desktop.password') || 'nexus' } }; })() });   // §0.39.282 N20
-      if (!r.ok) return err(res, 502, r.error || 'desktop failed', r);
+      if (!r.ok) return err(res, r.code === 'NO_DESKTOP_IN_IMAGE' ? 409 : 502, r.error || 'desktop failed', r);   // §0.39.293 DK1
       const p = r.ports || {};
       return ok(res, { ...r, repoUuid: repo.uuid, branchOf: repo.branchOf || null, branch: repo.branch || null,
         viewer: p.wsPort ? `/desktop.html?port=${p.wsPort}&title=${encodeURIComponent(repo.name)}&repo=${encodeURIComponent(repo.uuid)}` : null });
@@ -3905,6 +3908,25 @@ async function handle(req, res, route, query, body) {
       const { listLibrary } = await import('../lib/spec-library-import.js');
       const rows = listLibrary({ family: query.family || null, kind: query.kind || null });
       return ok(res, { count: rows.length, library: rows.map(({ files, ...r }) => ({ ...r, fileCount: files ? files.length : null })) });
+    }
+    // §0.39.292 IL2 — James: "how can i import into the pipeline. the specs also need to convert into actual spec files."
+    // The same promotion every spec takes (_promoteSpecToRepo), then the document as spec/<slug>.spec in the repo.
+    // 'manual' by default: the document is a design, not code — Generate code is the pipeline's step, not this one's;
+    // body.mode 'emerge' asks for the guardian extract + compile as well.
+    case 'spec-library.to-repo': {
+      const { toPipeline } = await import('../lib/spec-library-import.js');
+      const se = getSpecEngine();
+      const mode = body.mode === 'emerge' ? 'emerge' : 'manual';
+      let key = params.key; try { key = decodeURIComponent(params.key); } catch {}
+      const r = await toPipeline({
+        key, se, yaml: _require('js-yaml'),
+        promote: (specUuid) => _promoteSpecToRepo(os, se, specUuid, mode),
+        writeFile: (repoUuid, rel, text) => getRepoLayer().writeFile(repoUuid, rel, text, { preserveWhitespace: true }),
+        repoExists: (repoUuid) => !!getRepoLayer().get(repoUuid),
+      });
+      if (!r.ok) return err(res, r.repoUuid ? 500 : 400, r.error, r);
+      os.emit('idearium.spec-library.to-repo', { title: r.title, repoUuid: r.repoUuid, specFile: r.specFile, existing: r.existing });
+      return ok(res, r);
     }
     case 'history.import.upload': {
       const HJ = _require('../../lib/history-import-job.js');

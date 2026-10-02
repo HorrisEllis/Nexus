@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     idearium-agent-ready-master
-    version:  1.7.0
+    version:  1.8.1
     date:     2026-10-01
     release:  0.39.287 (base) → 0.39.288 (PF1–PF5 built) → each later phase its own patch
     uuid:     nexus-idearium-agent-ready-master-phasemap-v1-0000-2026-1001-jamesbrooks-001
@@ -290,6 +290,46 @@ spec:
         Routing treats it as one more provider (fallback chain, breaker, learned scores).
       proof: "a stub CLI: a phase job runs in the workspace, its diff goes through the gate, the hop is on the chunk"
 
+    DK1_desktop_image_and_login:
+      layer: library
+      status: DONE (0.39.293)
+      depends_on: []
+      files: [cos/testenv/setup-job.js, cos/workspace/index.js, idearium/ui/js/app.js, idearium/api/index.js]
+      does: >-
+        James (verbatim), 2026-10-02: "i mean that i cant login to my desktop envirement in idearium with the default
+        credientials, not sure if its a upstream problem". Read, not assumed: not upstream. setup-job.js let only
+        go|ruby|php|rust through and the wizard never offered the desktop, so the image idearium builds had no xfce and
+        no desktop account — the desktop booted to a text console; nexus/nexus had no account to log in to; the
+        guest-agent password set failed into "(not applied)". And a rebuilt base left every repo's desktop.qcow2
+        overlaid on bytes it was not made from (a corrupt disk).
+      proof: "the setup passes --with desktop; a start on an image without it is refused with the fix and boots nothing; an overlay made over an older base is archived and remade; a branch never overlays a stale original"
+      built: >-
+        0.39.293 — setup-job.js allows desktop; the wizard's desktop box, ticked by default; startDesktop reads the base
+        manifest's extras (NO_DESKTOP_IN_IMAGE → 409 with the fix), stamps each overlay (desktop.json: the base's
+        createdAt + user-data hash), archives a stale one as desktop.stale-<time>.qcow2 (§0.3), and branches from an
+        original only when it was made over the same base. test-cos-workspace 17/17 (WS-15),
+        test-cos-testenv-any-repo 63/63.
+    CP1_copilot_drives_idearium_and_talks_to_its_agents:
+      layer: interface
+      status: OPEN — mapped 2026-10-02
+      depends_on: [IL2_library_spec_into_the_pipeline, PV4_cli_and_ui, CX1_context_cascade]
+      files: [lib/agent-tools/index.js, lib/agent-tools/tools/idearium/, lib/agent-tools/tool-guide.js, clear-glass/src/copilot/verbs.js, copilot/server.js, idearium/api/index.js, lib/repo-agent.js]
+      does: >-
+        James (verbatim), 2026-10-02: "i want copilot to be able to help with idearium. communicate with the agents,"
+        What copilot reaches today (read, not assumed): the codebase tools over /api/repos/:uuid/code/* (code.js), a
+        repo's chunk nodes (repo-chunks.js), run_closed_loop (idea → spec → build → repo through idearium's HTTP API),
+        call_system, and one verb (import my archives → the archive drop box). What it cannot: the spec library, the
+        pipeline (to-repo, plan, phases, build), the proof (verify / prove), and the agents themselves. Built API first
+        (§ CLI and API first): idearium tools over the routes that already exist — library list / import / to-repo,
+        repo plan / phases / build, verify, prove (start, status, cancel), the blocked items (BK1) — each a registered
+        agent tool with its guide line; then "communicate with the agents": copilot sends a message to a repo's agent
+        (the same /api/repos/:uuid/agent path the Agent tab uses, openly from copilot, its reply back in copilot's
+        pane) and reads a running job's state (guardian jobs, the proof run). Every write goes through the same gates
+        a person's click does (James: "yeah, never bypass"); copilot is named as the caller on every job it starts.
+        The verbs file learns the plain phrasings ("send RHEON STUDIO to the pipeline", "prove it", "ask the repo's
+        agent why it failed") the way it learned "import my archives".
+      proof: "copilot, asked in words, sends a library spec to the pipeline, starts a prove run and reports its verdict, and relays one question to a repo agent and its answer — each a job named as copilot's, none past a gate"
+
     # ── layer 4 — interface ────────────────────────────────────────────────────────────────────────────────────────
     UI1_history_and_save_in_manage:
       layer: interface
@@ -404,6 +444,21 @@ spec:
         cramped, and overwhelming." Code shows the code (editor, symbols, used-from); search by meaning moves to Files
         with the tree; tools fold into one menu.
       proof: "static check: search lives in Files; the Code tab renders editor + symbols only"
+    UI11_nav_and_look_restored:
+      layer: interface
+      status: OPEN
+      depends_on: [UI8_code_tab_is_code]
+      files: [idearium/ui/index.html, idearium/ui/css/, idearium/ui/js/app.js]
+      does: >-
+        James, 2026-10-01 (screenshots of the Code tab and the Build menu): "code tab isn't different... also it looks bad,
+        the top nav bar. idearium used to look a lot nicer." Two problems:
+          - Rows: the top bar stacks four rows (brand · Welcome/Repos/Create/Build · REPOSITORY with All repos and
+            Run/Branch/Diagnose · the 13 repo tabs), and the Build dropdown opens over the repo tabs.
+          - Look: thin, low-contrast type on the starfield.
+        Compare against the 0.39.27x look James liked (git history of idearium/ui/css) and restore it. Fold the repo bar
+        into the tab row. Group the 13 tabs (UI6 Idea+Phases, UI10 Debug+Intelligence cut two). Give the dropdowns a solid
+        panel. UI8 lands first.
+      proof: "chromium screenshots before/after at 1920 and 1280; the tab row fits one line; the dropdown never covers a tab it is not about"
     UI9_plan_and_work_surface_panels:
       layer: interface
       status: OPEN
@@ -564,6 +619,28 @@ spec:
         and saves once (the library: >110 s for 87 documents → 8.6 s for all 150); the chunker keeps two sections with
         the same heading. James's real zip: 468 files read, 150 unique, 186 duplicates folded, 0 fidelity failures.
         tests/modules/test-spec-library.test.js 8/8.
+    IL2_library_spec_into_the_pipeline:
+      layer: library
+      status: DONE (0.39.292)
+      depends_on: [IL1_spec_library_as_ideas]
+      files: [idearium/lib/spec-library-import.js, idearium/api/index.js, idearium/cli/index.js, idearium/ui/spec-library.html, idearium/ui/js/app.js]
+      does: >-
+        James (verbatim), 2026-10-02: "how can i import into the pipeline. the specs also need to convert into actual
+        spec files. also cant import into the pipeline, since you merged." An imported document was an idea with a
+        spec, and the pipeline (Phases, Generate code, Build & prove) works on repos — nothing made the one into the
+        other. A library document goes into the pipeline: its spec becomes a repo through the same promotion every spec
+        takes, and the document is written into it as a real .spec file (spec/<slug>.spec: meta + every section) with
+        the original text beside it (spec/original/<name>). The library's idea is the repo's idea; asking twice opens
+        the same repo.
+      proof: "a library document → a repo whose files include spec/<slug>.spec (YAML that loads, every section) and the original byte for byte; asking again makes nothing new"
+      built: >-
+        0.39.292 — toPipeline / findRow / specFileText in idearium/lib/spec-library-import.js (promotion and the
+        repo's writeFile handed in: the API passes _promoteSpecToRepo and RepoLayer.writeFile); POST
+        /api/spec-library/:key/to-repo (a sha, a sha prefix or a title; 'manual' promotion by default — the document is
+        a design, Generate code is the pipeline's step; mode 'emerge' adds the guardian extract + compile); `idearium
+        spec-library to-repo <title|sha> [--emerge]`; the library page's "→ pipeline" / "open repo" per row, and the
+        main window opens the repo (a message accepted only from the library window it opened).
+        tests/modules/test-spec-library.test.js 10/10 (SL-09 against the real RepoLayer).
     SW1_spec_workshop:
       layer: interface
       status: OPEN
@@ -631,6 +708,10 @@ spec:
 
   decisions_answered_by_james_2026_10_01:
     - >-
+      CO1 — "then we need to clear out the original cos." answered 2026-10-02: "i mean that i cant login to my desktop
+      envirement in idearium with the default credientials, not sure if its a upstream problem" — nothing to clear;
+      it is DK1 (built, 0.39.293).
+    - >-
       AG1 + CI1 — James: "yeah, never bypass." The coding-agent provider never writes past the CI1 gate; every write is
       a proposal through the step gates.
     - >-
@@ -649,6 +730,7 @@ spec:
       especially to test." Run, shell and environments live in the Sync & CI tab; SSH keys in the Clear Glass vault.
   decisions_waiting_on_james:
     - "PF6 — the first-sync delay (proposed: after the first repo list, or 60 s, whichever comes first)."
+
 
 ## ADDENDUM 2026-10-01 — PF1–PF5 built (0.39.288)
 # Measured on the real tree (sandbox store): core update with an unchanged file set — spec 4.3 s → 0.21 s, longest
@@ -694,3 +776,15 @@ spec:
 # path (agent-suite generateWithOllama) still had the 120 s total timeout, the 2048-token cap and the thinking-only
 # empty reply — it now uses the hardened client. Also: priorFailure was stored and never shown to the agent (fixed:
 # the repair block); a failed version is never reused (component-store markFailed). 127 affected suites: 0 new failures.
+
+## ADDENDUM 2026-10-02 — 1.8.0, IL2 built (0.39.292); CP1 and CO1 mapped
+# IL2: James — "how can i import into the pipeline. the specs also need to convert into actual spec files." A library
+# document becomes a repo with spec/<slug>.spec and its original in it; POST /api/spec-library/:key/to-repo, the CLI's
+# to-repo, the library page's → pipeline. CP1: James — "i want copilot to be able to help with idearium. communicate
+# with the agents," mapped from what copilot reaches today and what it does not. CO1: "then we need to clear out the
+# original cos." waits on James saying which COS; archive, never delete.
+
+## ADDENDUM 2026-10-02 — 1.8.1, DK1 built (0.39.293)
+# James: "i mean that i cant login to my desktop envirement in idearium with the default credientials, not sure if its
+# a upstream problem". Not upstream — idearium's VM setup dropped the desktop option. Fixed, the image is checked before
+# a desktop boots, and overlays are tied to their base (stale ones archived). CO1 answered: it was this.

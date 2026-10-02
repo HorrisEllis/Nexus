@@ -78,7 +78,7 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('lib/build-verify.js'), 'idearium/api/index.js repo.verify / repo.prove (_verifyRepo, _proveLoop) — verify + repairText'],
   [I('idearium/agent-suite/index.js'), I('ollama/lib/ollama-client.js'), 'idearium/agent-suite/index.js generateWithOllama — callOllamaRaw (streamed, idle timeout, think:false, continuation)'],
   // §0.39.290 IL1 — the spec library: the API and the CLI reach the importer by await import(); it reaches the scanner by createRequire
-  ['nexus.idearium.api', I('idearium/lib/spec-library-import.js'), 'idearium/api/index.js spec-library.import / spec-library.list (await import)'],
+  ['nexus.idearium.api', I('idearium/lib/spec-library-import.js'), 'idearium/api/index.js spec-library.import / spec-library.list / spec-library.to-repo (await import; to-repo hands in _promoteSpecToRepo + RepoLayer.writeFile)'],
   [I('idearium/cli/index.js'), I('idearium/lib/spec-library-import.js'), 'idearium/cli/index.js spec-library.import (no server) / spec-library.list (await import)'],
   [I('idearium/lib/spec-library-import.js'), I('lib/spec-library.js'), 'idearium/lib/spec-library-import.js importLibrary — scan + convert (createRequire)'],
   // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)

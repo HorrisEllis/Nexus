@@ -470,6 +470,10 @@ James: *"the desktop environment needs to either ask, or give me the login. or u
 
 **Desktop login: user nexus, password nexus.** This is the generic default for every repo desktop VM. Change it in Settings → Global → desktop.user and desktop.password. `cos/testenv/provision.js` run with the desktop option sets it with chpasswd and adds the account to sudo. It also works through the environment variables COS_DESKTOP_USER and COS_DESKTOP_PASSWORD, which is how idearium's "Set up the test VM" passes the settings. Every desktop boot applies the setting again through the guest agent (its guest-set-user-password command, `cos/compartment/guest-agent.js`), so an image made before 0.39.282 gets it too, even though its account had no password. The viewer (`idearium/ui/desktop.html`) shows the login; clicking it copies the password. It also says whether the setting took. An invalid login name is refused before it reaches any shell (`cos/workspace/index.js`).
 
+**If nexus / nexus does not log in** (0.39.293). James: *"i mean that i cant login to my desktop envirement in idearium with the default credientials, not sure if its a upstream problem"*. It was not upstream. Idearium's "Set up the test VM" dropped the desktop option, so the image it built had no desktop and no desktop account. The repo desktop then booted to a text console where the login could not work.
+- **Now:** the setup offers the desktop, ticked by default. Starting a desktop on an image without one is refused, with the fix: rebuild the VM with the desktop ticked, or run `cos/testenv/provision.js` with the desktop option.
+- **After a rebuild:** each repo's desktop disk is tied to the image it was made over (a stamp file beside it). A disk made over the old image is renamed with "stale" and the time in its name and kept, never deleted, and a fresh one is made. A branch whose original's disk is stale starts from the image instead.
+
 **Who answers a repo that chose no provider**: Settings → Global → repos.default_provider, which is ollama by default (`lib/repo-agent.js`). Clearing it restores the old fallback: guardian's first provider.
 
 ## Getting it to code a project: plan, phases, the work surface, one look (v0.39.284)
@@ -528,6 +532,12 @@ James, with screenshots of an empty Phases tab, three plan runs that "replied �
 - **What's kept:** the zip and every original file. Importing again only adds what's new.
 - **Code:** `lib/spec-library.js` (scanning and converting) and `idearium/lib/spec-library-import.js` (ideas, specs, the library index).
 - **Test:** `tests/modules/test-spec-library.test.js`.
+
+**A library spec into the pipeline** (0.39.292). James: "how can i import into the pipeline. the specs also need to convert into actual spec files."
+- **Where:** each row of the spec library has **→ pipeline** (then **open repo**); the idearium CLI's spec-library to-repo command; the API route POST /api/spec-library/:key/to-repo (a sha, a sha prefix or a title).
+- **What it does:** the document's spec becomes a repo through the same promotion every spec takes, and the document is written into it as a real .spec file (meta and every section, as YAML) under the repo's spec folder, with the original text beside it.
+- **One idea:** the library's idea becomes the repo's idea. Asking again opens the same repo.
+- **Code:** `idearium/lib/spec-library-import.js` (toPipeline, findRow, specFileText). The route hands in the promotion and the repo layer's file write.
 
 **Cut replies are finished** (0.39.289, `lib/reply-continuation.js`). When a reply stops part-way, the agent is shown the end of what it wrote and continues from there, and the two parts are stitched together:
 - **When it counts as cut:** Ollama stopped at its token limit, a code block was opened and never closed, or the reply ends mid-statement.

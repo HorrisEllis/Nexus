@@ -12,6 +12,11 @@
 //   SL-07  importLibrary: ideas + specs linked, the zip kept, originals kept, the library table; importing again adds
 //          nothing and merges new paths
 //   SL-08  the surfaces: PUT /api/spec-library/import, GET /api/spec-library, the page served, the CLI, the Welcome button
+//   SL-09  0.39.292 IL2 — James: "how can i import into the pipeline. the specs also need to convert into actual spec
+//          files." toPipeline: the spec becomes a repo (the real RepoLayer), spec/<slug>.spec (YAML: meta + every
+//          section, the import tag stripped) and spec/original/<name> are real files in it, the library's idea is the
+//          repo's idea, the row remembers the repo, asking again opens the same one; a diagram is refused; lookups
+//   SL-10  the surfaces: POST /api/spec-library/:key/to-repo, the CLI to-repo, the page's → pipeline, the main window
 require('../../lib/test-sandbox.js').ensure();
 
 const assert = require('assert');
@@ -153,6 +158,72 @@ async function main() {
     assert.match(cli, /async 'spec-library\.import'/); assert.match(cli, /async 'spec-library\.list'/);
     assert.match(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8'), /onclick="openSpecLibrary\(\)"/);
     assert.match(fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8'), /function openSpecLibrary\(\)/);
+  });
+
+  await test('SL-09', 'toPipeline: a repo with a real .spec file, the same idea, idempotent', async () => {
+    const LI = await import(pathToFileURL(path.join(ROOT, 'idearium/lib/spec-library-import.js')).href);
+    const { RepoLayer } = await import(pathToFileURL(path.join(ROOT, 'idearium/repo/index.js')).href);
+    const { getIdeaOS } = await import(pathToFileURL(path.join(ROOT, 'idearium/core/index.js')).href);
+    const yaml = require('js-yaml');
+    const os = getIdeaOS();
+    const layer = new RepoLayer({ ideaOS: os, specEngine: se });
+    let promoted = 0;
+    // what _promoteSpecToRepo does in 'manual' mode: the repo layer's ingest of the existing spec, its idea carried
+    const promote = (specUuid) => { promoted++; const m = se.loadSpec(specUuid);
+      const r = layer.ingest({ name: m.name, specUuid, source: 'promote:manual', ideaUuid: m.ideaUuid || null, promotedFromSpec: specUuid });
+      return r.error ? { error: r.error } : { repoUuid: r.repo.uuid }; };
+    const writeFile = (u, rel, text) => layer.writeFile(u, rel, text, { preserveWhitespace: true });
+    const repoExists = (u) => !!layer.get(u);
+
+    assert.match(LI.findRow('').error, /name a document/);
+    assert.match(LI.findRow('no such thing at all').error, /no document/);
+    const studioRow = LI.findRow('rheon studio').row;
+    assert.ok(studioRow && studioRow.title === 'RHEON STUDIO', 'title, any case');
+    assert.strictEqual(LI.findRow(studioRow.sha.slice(0, 10)).row.sha, studioRow.sha, 'a sha prefix');
+    assert.strictEqual(LI.slugOf('RHEON STUDIO'), 'rheon-studio');
+
+    const out = await LI.toPipeline({ key: 'RHEON STUDIO', se, promote, writeFile, repoExists, yaml });
+    assert.ok(out.ok, JSON.stringify(out));
+    assert.strictEqual(out.specFile, 'spec/rheon-studio.spec');
+    assert.strictEqual(out.original, 'spec/original/RHEON-STUDIO-SPEC.md');
+    const repo = layer.get(out.repoUuid);
+    assert.ok(repo, 'a real repo');
+    assert.strictEqual(repo.ideaUuid, studioRow.ideaUuid, "the library's idea is the repo's idea — no second 'Repo: …' idea");
+    const m = se.loadSpec(studioRow.specUuid);
+    const specChunk = m.chunks.find(c => c.realPath === 'spec/rheon-studio.spec' && c.status === 'complete');
+    assert.ok(specChunk, 'spec/rheon-studio.spec is a real file of the repo');
+    const doc = yaml.load(specChunk.content);
+    assert.strictEqual(doc.spec.name, 'RHEON STUDIO'); assert.strictEqual(doc.spec.sha, studioRow.sha); assert.strictEqual(doc.spec.family, 'product');
+    assert.strictEqual(doc.sections.length, 3, JSON.stringify(doc.sections.map(x => x.id)));
+    assert.ok(doc.sections.every(x => !/^<!-- imported/.test(x.body)), 'the import tag is not part of the document');
+    assert.ok(doc.sections.some(x => /Local first\./.test(x.body)));
+    const orig = m.chunks.find(c => c.realPath === 'spec/original/RHEON-STUDIO-SPEC.md');
+    assert.strictEqual(orig.content, MD, 'the original, byte for byte');
+    const row = LI.listLibrary().find(x => x.sha === studioRow.sha);
+    assert.strictEqual(row.repoUuid, out.repoUuid); assert.strictEqual(row.specFile, 'spec/rheon-studio.spec');
+
+    const again = await LI.toPipeline({ key: studioRow.sha, se, promote, writeFile, repoExists, yaml });
+    assert.ok(again.ok && again.existing && again.repoUuid === out.repoUuid); assert.strictEqual(promoted, 1, 'asking again opens the same repo');
+
+    const svg = LI.listLibrary().find(x => x.kind === 'diagram');
+    const no = await LI.toPipeline({ key: svg.sha, se, promote, writeFile, repoExists, yaml });
+    assert.ok(!no.ok && /kept in the library/.test(no.error));
+    const failing = await LI.toPipeline({ key: 'TRUST MESH', se, promote: () => ({ error: 'boom' }), writeFile, repoExists, yaml });
+    assert.ok(!failing.ok && failing.error === 'boom', 'a failed promotion is said, not swallowed');
+    assert.ok(!LI.listLibrary().find(x => x.title === 'TRUST MESH').repoUuid);
+  });
+
+  await test('SL-10', 'the surfaces: route, CLI, page button, main window', () => {
+    const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    assert.match(api, /\['POST',\s*\['api','spec-library',':key','to-repo'\],\s*'spec-library\.to-repo'\]/);
+    assert.match(api, /'spec-library\.to-repo':\s*CAPS\.WRITE_IDEAS/);
+    assert.match(api, /promote: \(specUuid\) => _promoteSpecToRepo\(os, se, specUuid, mode\)/, 'the same promotion every spec takes');
+    const cli = fs.readFileSync(path.join(ROOT, 'idearium/cli/index.js'), 'utf8');
+    assert.match(cli, /async 'spec-library\.to-repo'/); assert.match(cli, /\/api\/spec-library\/\$\{encodeURIComponent\(key\)\}\/to-repo/);
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/spec-library.html'), 'utf8');
+    assert.match(page, /class="pipe"/); assert.match(page, /type: 'nexus:repo\.open'/);
+    const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
+    assert.match(app, /d\.type !== 'nexus:repo\.open'/); assert.match(app, /ev\.source !== _specLibraryWin/, 'only from the window idearium opened');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

@@ -190,6 +190,58 @@ const git = (cwd, ...a) => execFileSync('git', a, { cwd, encoding: 'utf8', stdio
     assert.strictEqual(W.desktopStatus('never').state, 'none');
   });
 
+  await t('WS-15', "0.39.293 DK1 — James: \"i cant login to my desktop envirement in idearium with the default credientials\": an image without the desktop is refused with the fix; an overlay is tied to its base; a stale one is archived, never deleted", async () => {
+    const F = fakes();
+    const img = path.join(tmp, 'dk-base.qcow2'); fs.writeFileSync(img, 'base');
+    const host = (m) => ({ base: () => ({ image: img, manifest: m }) });
+    const runImg = (a) => fs.writeFileSync(a[a.length - 1], 'ov');
+    // 1. the image the setup used to build: no desktop in it → said, with the fix; no VM booted
+    const no = W.startDesktop({ compartmentId: 'c-dk0', stateRoot: path.join(tmp, 'c-dk0'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: runImg,
+      _host: host({ createdAt: '2026-10-01T10:00:00.000Z', userDataSha256: 'a', extras: ['go'] }) });
+    assert.ok(!no.ok && no.code === 'NO_DESKTOP_IN_IMAGE', JSON.stringify(no));
+    assert.match(no.error, /without the desktop[\s\S]*--with desktop/);
+    assert.ok(!fs.existsSync(W.desktopDisk(path.join(tmp, 'c-dk0'))), 'no disk made for a VM nobody can use');
+    // 2. a desktop image: the overlay is made and stamped with the base it was made over
+    const m1 = { createdAt: '2026-10-01T10:00:00.000Z', userDataSha256: 'a', extras: ['desktop'] };
+    const r1 = W.startDesktop({ compartmentId: 'c-dk1', stateRoot: path.join(tmp, 'c-dk1'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: runImg, _host: host(m1) });
+    assert.ok(r1.ok, JSON.stringify(r1));
+    const disk = W.desktopDisk(path.join(tmp, 'c-dk1'));
+    const stampFile = disk.replace(/\.qcow2$/, '.json');
+    assert.match(JSON.parse(fs.readFileSync(stampFile, 'utf8')).baseId, /^manifest:2026-10-01T10:00:00\.000Z:a$/);
+    W.stopDesktop('c-dk1');
+    // 3. same base again → the same disk, nothing archived
+    fs.writeFileSync(disk, 'ov-with-work');
+    const r2 = W.startDesktop({ compartmentId: 'c-dk1', stateRoot: path.join(tmp, 'c-dk1'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: runImg, _host: host(m1) });
+    assert.ok(r2.ok && !r2.staleDiskArchived); assert.strictEqual(fs.readFileSync(disk, 'utf8'), 'ov-with-work');
+    W.stopDesktop('c-dk1');
+    // 4. the base rebuilt → the old overlay is kept beside (renamed), a fresh one made over the new base
+    const m2 = { createdAt: '2026-10-02T09:00:00.000Z', userDataSha256: 'b', extras: ['desktop'] };
+    const r3 = W.startDesktop({ compartmentId: 'c-dk1', stateRoot: path.join(tmp, 'c-dk1'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: runImg, _host: host(m2) });
+    assert.ok(r3.ok && r3.staleDiskArchived, JSON.stringify(r3));
+    assert.strictEqual(fs.readFileSync(r3.staleDiskArchived, 'utf8'), 'ov-with-work', 'the stale disk is archived, not deleted (§0.3)');
+    assert.strictEqual(fs.readFileSync(disk, 'utf8'), 'ov');
+    assert.match(JSON.parse(fs.readFileSync(stampFile, 'utf8')).baseId, /:b$/);
+    W.stopDesktop('c-dk1');
+    // 5. a branch whose original's disk was made over the OLD base branches from the base, not from it
+    const r4 = W.startDesktop({ compartmentId: 'c-dk2', stateRoot: path.join(tmp, 'c-dk2'), originStateRoot: path.join(tmp, 'c-dk0x'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: runImg, _host: host(m2) });
+    assert.ok(r4.ok && r4.branchedFrom === 'base');
+    fs.mkdirSync(path.dirname(W.desktopDisk(path.join(tmp, 'c-dk3o'))), { recursive: true });
+    fs.writeFileSync(W.desktopDisk(path.join(tmp, 'c-dk3o')), 'origin');
+    fs.writeFileSync(W.desktopDisk(path.join(tmp, 'c-dk3o')).replace(/\.qcow2$/, '.json'), JSON.stringify({ baseId: 'manifest:2026-10-01T10:00:00.000Z:a' }));
+    const r5 = W.startDesktop({ compartmentId: 'c-dk3', stateRoot: path.join(tmp, 'c-dk3'), originStateRoot: path.join(tmp, 'c-dk3o'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: runImg, _host: host(m2) });
+    assert.ok(r5.ok && r5.branchedFrom === 'base', 'an original made over another base is not branched from');
+    fs.writeFileSync(W.desktopDisk(path.join(tmp, 'c-dk3o')).replace(/\.qcow2$/, '.json'), JSON.stringify({ baseId: 'manifest:2026-10-02T09:00:00.000Z:b' }));
+    W.stopDesktop('c-dk3'); fs.renameSync(W.desktopDisk(path.join(tmp, 'c-dk3')), W.desktopDisk(path.join(tmp, 'c-dk3')) + '.moved');
+    fs.rmSync(W.desktopDisk(path.join(tmp, 'c-dk3')).replace(/\.qcow2$/, '.json'), { force: true });
+    const r6 = W.startDesktop({ compartmentId: 'c-dk3', stateRoot: path.join(tmp, 'c-dk3'), originStateRoot: path.join(tmp, 'c-dk3o'), _qemu: F.q, _spawn: F.spawn, _ga: F.ga, _runImg: runImg, _host: host(m2) });
+    assert.ok(r6.ok && r6.branchedFrom === 'original', 'an original made over this base is');
+    W.stopDesktop('c-dk3'); W.stopDesktop('c-dk2');
+    // 6. the setup job lets the desktop through; the wizard offers it, on by default
+    assert.match(fs.readFileSync(path.join(ROOT, 'cos/testenv/setup-job.js'), 'utf8'), /\(go\|ruby\|php\|rust\|desktop\)/);
+    const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
+    assert.match(app, /extras: \['desktop'\] \}/); assert.match(app, /class="vm-setup-extra" value="desktop"/);
+  });
+
   await t('WS-13', '0.39.280: a VM that dies at once on whpx is retried once in software (tcg) and said; a second death is reported with QEMU\'s words', async () => {
     const F = fakes();
     F.q.buildQemuArgs = (cfg) => ({ args: ['-accel', String(cfg.accelerator)], qga: { transport: 'tcp', port: 1 }, vncDisplayNum: 9, accel: cfg.accelerator || 'whpx', cfg });

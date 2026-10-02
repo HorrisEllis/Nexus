@@ -47,6 +47,7 @@
  *   idearium prove <repo> [--rounds 3] [--cancel] (0.39.291 PV3) build → verify → send failures back → again, until proven
  *   idearium spec-library import <zip> [--dry-run] (0.39.290 IL1) a zip of specs → ideas + specs (duplicates folded, programs refused)
  *   idearium spec-library [--family product]      what the library holds
+ *   idearium spec-library to-repo <title|sha>     (0.39.292 IL2) a library spec → a repo in the pipeline, with spec/<slug>.spec
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -800,6 +801,7 @@ const COMMANDS = {
   // the ideas); without it, the same import runs here.
   async 'spec-library'(os, args) {
     if ((args.positional || [])[0] === 'import') return COMMANDS['spec-library.import'](os, { ...args, positional: args.positional.slice(1) });
+    if ((args.positional || [])[0] === 'to-repo') return COMMANDS['spec-library.to-repo'](os, { ...args, positional: args.positional.slice(1) });
     return COMMANDS['spec-library.list'](os, args);
   },
   async 'spec-library.import'(os, { positional, flags }) {
@@ -833,13 +835,29 @@ const COMMANDS = {
     if (!r.added.length && !dry) console.log(gray('  nothing new — every document is already in the library'));
     console.log('');
   },
+  // §0.39.292 IL2 — James: "how can i import into the pipeline. the specs also need to convert into actual spec files."
+  // Through the running idearium only: the repo layer and the ideas have one writer.
+  async 'spec-library.to-repo'(os, { positional, flags }) {
+    const key = positional.join(' ').trim();
+    if (!key) die('usage: idearium spec-library to-repo <title|sha> [--emerge]');
+    let res;
+    try { res = await _localApi('POST', `/api/spec-library/${encodeURIComponent(key)}/to-repo`, { mode: flags.emerge ? 'emerge' : 'manual' }, flags.emerge ? 600000 : 60000); }
+    catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the repo is made by it)' : ''}`); }
+    const r = res.data || res;
+    header(`${r.title} → ${r.existing ? 'already in the pipeline' : 'in the pipeline'}`);
+    console.log(`  repo      ${bold(r.repoUuid)}`);
+    if (r.specFile) console.log(`  spec file ${r.specFile}`);
+    if (r.original) console.log(`  original  ${r.original}`);
+    console.log(dim(`  next: idearium prove ${r.repoUuid}  ·  or open it in Idearium › Build`));
+    console.log('');
+  },
   async 'spec-library.list'(os, { flags }) {
     const { listLibrary } = await import('../lib/spec-library-import.js');
     const rows = listLibrary({ family: flags.family || null, kind: flags.kind || null });
     if (!rows.length) { console.log(gray('\n  the spec library is empty — idearium spec-library import <zip>\n')); return; }
     header(`spec library — ${rows.length} document(s)`);
     for (const r of rows.sort((a, b) => (a.family + a.title).localeCompare(b.family + b.title)))
-      console.log(`  ${r.family.padEnd(9)} ${r.kind.padEnd(8)} ${String(r.title).slice(0, 64).padEnd(64)} ${dim(r.specUuid ? `${r.sections} sections` : r.kind)}`);
+      console.log(`  ${r.family.padEnd(9)} ${r.kind.padEnd(8)} ${String(r.title).slice(0, 64).padEnd(64)} ${dim(r.specUuid ? `${r.sections} sections` : r.kind)}${r.repoUuid ? ' ' + dim('→ ' + r.repoUuid) : ''}`);
     console.log('');
   },
 
