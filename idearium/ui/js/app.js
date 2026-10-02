@@ -3702,7 +3702,15 @@ function openSpecLibrary() {
 // §0.39.294 SW1 — the spec workshop (ui/workshop.html). James: "need the spec workshop, completely destroy the spec
 // builder, and build the spec workshop" · "the workshop and maybe it hooks into the spec field". from: 'idea:<uuid>' |
 // 'library:<sha>' | 'repo:<uuid>' starts one there; a workshop id opens it; nothing opens the start screen.
-let _workshopWin = null, _voidWin = null;
+let _workshopWin = null, _voidWin = null, _architectWin = null;
+// §0.39.298 AR2 — the Architect (ui/architect.html), its own page
+function openArchitect(from = null) {
+  if (!API_BASE) { toast('idearium is offline — the architect is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/architect.html${from ? `?from=${encodeURIComponent(from)}` : ''}`, 'idearium-architect', 'width=1480,height=940');
+  if (!w) toast('the architect window was blocked — allow pop-ups for idearium', 'err');
+  _architectWin = w || _architectWin;
+  return w;
+}
 // §0.39.295 — the spatial void (ui/void.html), its own page. James: "The spacial void is its own page."
 function openVoid() {
   if (!API_BASE) { toast('idearium is offline — the void is served by it', 'err'); return null; }
@@ -3724,7 +3732,7 @@ function openWorkshop(from = null, id = null) {
 window.addEventListener('message', async (ev) => {
   const d = ev.data;
   if (!d || !/^nexus:(repo\.open|workshop\.open)$/.test(String(d.type))) return;
-  const mine = [_specLibraryWin, _workshopWin, _voidWin].filter(Boolean);
+  const mine = [_specLibraryWin, _workshopWin, _voidWin, _architectWin].filter(Boolean);
   if (!mine.includes(ev.source)) { console.warn(`[idearium] ${d.type} ignored: not from a window idearium opened`); return; }
   if (d.type === 'nexus:workshop.open') {
     if (/^(idea|library|repo):[\w.-]{4,80}$/.test(String(d.from || ''))) openWorkshop(d.from);

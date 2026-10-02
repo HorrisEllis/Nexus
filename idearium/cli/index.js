@@ -146,6 +146,21 @@ async function _wsApi(method, path, body = null, timeoutMs = 30000) {
   try { const r = await _localApi(method, path, body, timeoutMs); return r.data || r; }
   catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the workshop is served by it)' : ''}`); }
 }
+function _arPrint(a, an) {
+  const L = ['FOUNDATION', 'LIBRARY', 'SERVICE', 'INTERFACE'];
+  header(`${a.title} — architecture ${a.uuid}`);
+  console.log(`  ${an.counts.components} components · ${an.counts.reuse} reused · ${an.counts.new} new · ${an.gaps.length} gaps · ${an.cycles.length} cycles · ${an.violations.length} layer warnings`);
+  for (let i = 3; i >= 0; i--) {
+    const cs = a.components.filter(c => c.layer === i); if (!cs.length) continue;
+    console.log(`\n  ${bold(L[i])}`);
+    for (const c of cs) console.log(`    ${c.id.padEnd(26)} ${c.reuse ? sky('reuses ' + c.reuse.id) : 'new'}${c.dependsOn.length ? dim(`  needs ${c.dependsOn.join(', ')}`) : ''}`);
+  }
+  for (const g of an.gaps) console.log(`  ${coral('gap')}   ${g.component} needs ${g.needs} — nothing here is it`);
+  for (const cy of an.cycles) console.log(`  ${coral('cycle')} ${cy.join(' → ')}`);
+  const open = a.proposals.filter(p => p.status === 'open');
+  if (open.length) console.log(dim(`\n  ${open.length} proposal(s) open — idearium architect accept ${a.uuid} all`));
+  console.log('');
+}
 /** an idea by its uuid or the first 8 characters of it, as `idearium void` prints them */
 async function _voidId(key) {
   if (!key) die('name the idea (its id, or the first 8 characters of it)');
@@ -818,6 +833,51 @@ const COMMANDS = {
     } catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the build uses its agents)' : ''}`); }
   },
 
+  // ── idearium architect (0.39.298 AR2) ─────────────────────────────────────────────
+  // James: "with architect for archiecture using the component registry, components store with dependancies".
+  async 'architect'(os, args) { return COMMANDS['architect.list'](os, args); },
+  async 'architect.list'() {
+    const r = await _wsApi('GET', '/api/architect');
+    if (!r.architectures.length) { console.log(gray('\n  no architectures yet — idearium architect new --from workshop:<id> | repo:<uuid>\n')); return; }
+    header(`the architect — ${r.count} architecture(s)`);
+    for (const a of r.architectures) console.log(`  ${bold(a.uuid)}  ${String(a.title).slice(0, 44).padEnd(44)} ${dim(`${a.components} components · ${a.reuse} reused${a.gaps ? ` · ${a.gaps} gaps` : ''}${a.open ? ` · ${a.open} proposed` : ''} · ${a.savedAt ? 'saved' : 'not saved'}`)}`);
+    console.log('');
+  },
+  async 'architect.new'(os, { flags }) {
+    const m = /^(workshop|repo):(.+)$/.exec(String(flags.from || ''));
+    if (!m) die('usage: idearium architect new --from workshop:<id> | repo:<uuid>');
+    const r = await _wsApi('POST', '/api/architect', { from: { kind: m[1], id: m[2] } });
+    _arPrint(r.architecture, r.analysis);
+  },
+  async 'architect.show'(os, { positional }) { if (!positional[0]) die('usage: idearium architect show <id>'); const r = await _wsApi('GET', `/api/architect/${encodeURIComponent(positional[0])}`); _arPrint(r.architecture, r.analysis); },
+  async 'architect.propose'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium architect propose <id>');
+    console.log(gray('  the agent is laying the spec out…'));
+    const r = await _wsApi('POST', `/api/architect/${encodeURIComponent(positional[0])}/propose`, {}, 330000);
+    for (const p of r.added) console.log(`  ${dim(p.uuid)}  ${['FOUNDATION', 'LIBRARY', 'SERVICE', 'INTERFACE'][p.layer].padEnd(10)} ${bold(p.name)}${p.dependsOn.length ? dim(`  needs ${p.dependsOn.join(', ')}`) : ''}`);
+    console.log(dim(`\n  accept: idearium architect accept ${positional[0]} <proposal | all>\n`));
+  },
+  async 'architect.accept'(os, { positional }) {
+    const [id, pid] = positional; if (!id || !pid) die('usage: idearium architect accept <id> <proposal | all>');
+    const r = await _wsApi('POST', `/api/architect/${encodeURIComponent(id)}/proposal/${encodeURIComponent(pid)}`, { action: 'accept' });
+    console.log(`  accepted ${r.decided.length}`); _arPrint(r.architecture, r.analysis);
+  },
+  async 'architect.add'(os, { positional, flags }) {
+    const [id, ...name] = positional; if (!id || !name.length) die('usage: idearium architect add <id> "<name>" [--layer foundation|library|service|interface] [--purpose "…"] [--needs a,b]');
+    const r = await _wsApi('POST', `/api/architect/${encodeURIComponent(id)}`, { component: { add: true, name: name.join(' '), layer: flags.layer || 'library', purpose: flags.purpose || '', dependsOn: flags.needs ? String(flags.needs).split(',') : [] } });
+    const c = r.component; console.log(`  added ${bold(c.id)}${c.matches.length ? dim(`  · could reuse: ${c.matches.map(m => m.id).join(', ')}`) : ''}`);
+  },
+  async 'architect.reuse'(os, { positional }) {
+    const [id, comp, match] = positional; if (!id || !comp) die('usage: idearium architect reuse <id> <component> <match id | none>');
+    await _wsApi('POST', `/api/architect/${encodeURIComponent(id)}`, { component: { id: comp, reuse: !match || match === 'none' ? null : match } });
+    console.log(`  ${comp} ${!match || match === 'none' ? 'is new' : `reuses ${match}`}`);
+  },
+  async 'architect.save'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium architect save <id>');
+    const r = await _wsApi('POST', `/api/architect/${encodeURIComponent(positional[0])}/save`, {}, 60000);
+    console.log(`  saved to ${bold(r.path)} in repo ${bold(r.repoUuid)}`);
+  },
+
   // ── idearium void (0.39.295) ──────────────────────────────────────────────────────
   // James: "Just have the spacial void, with a slider …" · "the ideas come from me though not agents". Through the
   // running idearium. --creativity / --stability 0..4 (normal…outlier / stable…unstable).
@@ -1152,6 +1212,7 @@ async function main() {
     console.log(`  ${sky('speceng')} list | show <uuid> | build <uuid> | chunk-agent <spec> <chunk> <agent>`);
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
     console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
+    console.log(`  ${sky('architect')} [list] | new --from workshop:<id>|repo:<uuid> | show <id> | propose <id> | accept <id> <proposal|all> | add <id> "<name>" | reuse <id> <comp> <match|none> | save <id>`);
     console.log(`  ${sky('void')}   [list] | add "<idea>" [--creativity 0-4 --stability 0-4] | echo <idea> [--kind d20|reverse|ground] | collide <a> <b> | take <echo> "<words>"`);
     console.log(`  ${sky('workshop')} list | new --from idea:<uuid>|library:<title>|repo:<uuid>|blank | show <id> | write <id> <section> <text> | ambition <id> <1-5> | feed <id> <kind> | accept <id> <proposal> | dismiss | save <id>`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);

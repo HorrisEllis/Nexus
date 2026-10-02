@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     workshop-codex-rewind
-    version:  1.4.0
+    version:  1.5.0
     date:     2026-10-02
     release:  0.39.294 (DP1 + RW1) → each later phase its own patch
     uuid:     nexus-workshop-codex-rewind-phasemap-v1-0000-2026-1002-jamesbrooks-001
     owner:    idearium · cos · guardian · architect · lib · docs
-    status:   "MAPPED 2026-10-02; SW1 built (0.39.294) — James chose the order: \"the workshop and maybe it hooks into the spec field\""
+    status:   "MAPPED 2026-10-02; SW1 built (0.39.294), SW2 (0.39.297), AR2 (0.39.298) — James chose the order: \"the workshop and maybe it hooks into the spec field\""
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §10.3 one source of truth, §10.1 one write authority per data type.
     origin: >
@@ -124,15 +124,31 @@ spec:
 
     AR2_architect_in_the_workshop:
       layer: service
-      status: OPEN
+      status: DONE (0.39.298) — on loom's registry + the component store as they are; CX0 grows the store later
       depends_on: [SW1_spec_workshop, CX0_codex_component_store]
-      files: [idearium/lib/architect.js, architect/service.js]
+      files: [idearium/lib/architect.js, idearium/ui/architect.html, idearium/api/index.js, idearium/cli/index.js, idearium/ui/workshop.html, loom/maps/one-idearium-map.js, loom/data/registry.json]
       does: >-
         "with architect for archiecture using the component registry". The workshop's Architect step lays the spec out
         as components (tier, layer, purpose, dependencies, seams), each matched against the component registry (loom)
         and CODEX — what already exists is shown and reused; what is new is marked new. Layers bottom-up; a dependency
         on something that does not exist is a gap, said.
       proof: "a spec naming an existing component reuses it; a dependency on nothing is a gap; layers come out bottom-up"
+      design: >-
+        Its own page (ui/architect.html, the Void's look, capitals) — the pipeline's third station. Starts from a
+        workshop session (its sections) or a repo's spec file. The agent proposes components in a fixed line form
+        (COMPONENT | LAYER | PURPOSE | DEPENDS) and James accepts each, or all — the proposal is never the architecture
+        until he says so; he can add, edit and remove by hand. Four layers bottom-up: FOUNDATION, LIBRARY, SERVICE,
+        INTERFACE. Every component is matched against loom's registry (2275 components) and the component store
+        (find) — candidates with their score; REUSE marks one as what this component IS, NEW is the default.
+        analyze(): the build order bottom-up, gaps (a dependency on nothing), cycles, and layer violations (a lower
+        layer depending on a higher one) — each said, never hidden. Saved into the repo beside the spec as
+        spec/<name>.architecture.yaml; table idearium_architectures. /api/architect/*, `idearium architect …`.
+        The workshop's ARCHITECT station opens it.
+      built: >-
+        As designed. architect/service.js (the old Architect agent) was not touched — the station is idearium's, and
+        the old one stays where it is (§0.3). Reuse candidates come from loom/data/registry.json (cached by its mtime)
+        and lib/component-store.js find(). The yaml carries build_order, layers, components with reuse {source, id},
+        gaps, cycles, violations. tests/modules/test-architect.test.js 8/8; driven in Chromium against the real server.
 
     PL1_one_entry_point:
       layer: service
@@ -222,3 +238,21 @@ spec:
 # Proof: tests/modules/test-spec-workshop.test.js 8/8 (WS-07 the page, WS-08 the dial in his words + limits);
 # Chromium against the real server: from a Void idea → write → draft with the agent → replace (the in-page dialog)
 # → a new section → save into a new repo; no console errors, no native dialog; wide and narrow.
+
+## ADDENDUM 2026-10-02 — 1.5.0, AR2 built (0.39.298)
+# The Architect is its own page in the Void's look, the pipeline's third station: the spec's sections in, the agent's
+# proposed components (accept one, or all), four bands bottom-up with wires, a gap drawn red where something is needed
+# and nothing is it, reuse candidates from loom and the component store, saved beside the spec as
+# spec/<name>.architecture.yaml.
+# Found while building: loom/data/registry.json had not been regenerated since 0.39.262 — each release restored the
+# old file and nothing rebuilds it at boot, so the component store itself was missing from loom's registry and
+# "reuse before build" could not find it. Regenerated from an empty registry: 2740 components, 2793 hooks, 3022 wires
+# (the old file's 8751 wires were 1838 distinct edges; the 127 of those not in the fresh one are stale — 91 with
+# endpoints that no longer exist, 36 no longer in the code). The design's "2275 components" is that stale count.
+# Rejections at the baseline: 10 unique-id, 109 wire-endpoints-exist, none from the maps touched here.
+# Found in the browser: the wires' svg kept its wide size after a resize and held the page wide — it is collapsed
+# before measuring now.
+# Proof: tests/modules/test-architect.test.js 8/8 (AR-07: the real registry offers nexus.lib.component-store for
+# "Component Store"; saved yaml's build_order component-store → weather-feed → bed-planner → garden-page);
+# Chromium: workshop spec → propose → accept all → the gap shown → reuse the component store → save; no console
+# errors, no native dialog, no lowercase on the page; wide and narrow, no horizontal overflow.

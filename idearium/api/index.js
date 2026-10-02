@@ -1045,6 +1045,25 @@ async function _workshop() {
   _wsMod = WS;
   return WS;
 }
+// §0.39.298 AR2 — the Architect's store row, and what a component can reuse: loom's registry (read once, again only when
+// the file changes) and the component store's own search
+function _archGet(A, id) { return loadTable(A.TABLE).find(r => r.uuid === id) || null; }
+let _loomCache = { mtime: 0, list: [] };
+function _archReuseSources() {
+  let registry = _loomCache.list;
+  try {
+    const f = path.join(path.dirname(_fileURLToPath(import.meta.url)), '..', '..', 'loom', 'data', 'registry.json');
+    const st = fs.statSync(f);
+    if (st.mtimeMs !== _loomCache.mtime) {
+      const r = JSON.parse(fs.readFileSync(f, 'utf8'));
+      _loomCache = { mtime: st.mtimeMs, list: Object.values(r.component || {}).map(c => ({ id: c.id, name: c.name, namespace: c.namespace })) };
+      registry = _loomCache.list;
+    }
+  } catch (_) { /* no registry on this machine: reuse falls back to the store alone */ }
+  let store = null;
+  try { const CS = _require('../../lib/component-store.js'); store = (q) => CS.find(q, { limit: 3 }); } catch (_) {}
+  return { registry, store };
+}
 /** the spec engine loads lazily (getSpecEngine); the workshop waits for it briefly rather than failing on a fresh start */
 async function _specEngineReady(ms = 5000) {
   for (const until = Date.now() + ms; ; ) { const se = getSpecEngine(); if (se || Date.now() > until) return se; await new Promise(r => setTimeout(r, 100)); }
@@ -1425,6 +1444,15 @@ const ROUTE_CAP = {
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
   'spec-library.import':  CAPS.WRITE_IDEAS,   // §0.39.290 IL1
+  'architect.list':    CAPS.READ_IDEAS,   // §0.39.298 AR2 the Architect
+  'architect.sources': CAPS.READ_IDEAS,
+  'architect.show':    CAPS.READ_IDEAS,
+  'architect.create':  CAPS.WRITE_IDEAS,
+  'architect.update':  CAPS.WRITE_IDEAS,
+  'architect.propose': CAPS.WRITE_IDEAS,   // asks the agent; proposals only — accept makes a component
+  'architect.decide':  CAPS.WRITE_IDEAS,
+  'architect.match':   CAPS.WRITE_IDEAS,
+  'architect.save':    CAPS.WRITE_IDEAS,   // writes spec/<name>.architecture.yaml into the repo
   'void.field':       CAPS.READ_IDEAS,   // §0.39.295 the spatial void
   'void.idea.show':   CAPS.READ_IDEAS,
   'void.idea.create': CAPS.WRITE_IDEAS,
@@ -1877,6 +1905,16 @@ function matchRoute(method, url) {
     // §0.39.290 IL1 — James's spec library: PUT the zip's raw bytes (?name=&dryRun=1); each unique document an idea + spec
     ['PUT',    ['api','spec-library','import'],                  'spec-library.import'],
     ['GET',    ['api','spec-library'],                           'spec-library.list'],
+    // §0.39.298 AR2 — the Architect (idearium/lib/architect.js, ui/architect.html): the spec as components, bottom-up
+    ['GET',    ['api','architect'],                              'architect.list'],
+    ['POST',   ['api','architect'],                              'architect.create'],
+    ['GET',    ['api','architect','sources'],                    'architect.sources'],
+    ['GET',    ['api','architect',':id'],                        'architect.show'],
+    ['POST',   ['api','architect',':id'],                        'architect.update'],
+    ['POST',   ['api','architect',':id','propose'],              'architect.propose'],
+    ['POST',   ['api','architect',':id','proposal',':pid'],      'architect.decide'],
+    ['POST',   ['api','architect',':id','match'],                'architect.match'],
+    ['POST',   ['api','architect',':id','save'],                 'architect.save'],
     // §0.39.295 — the spatial void (idearium/lib/void.js, ui/void.html): James's ideas, the two dials, the echoes
     ['GET',    ['api','void'],                                   'void.field'],
     ['POST',   ['api','void','idea'],                            'void.idea.create'],
@@ -3999,6 +4037,120 @@ async function handle(req, res, route, query, body) {
       const rows = listLibrary({ family: query.family || null, kind: query.kind || null });
       return ok(res, { count: rows.length, library: rows.map(({ files, ...r }) => ({ ...r, fileCount: files ? files.length : null })) });
     }
+    // ── §0.39.298 AR2 — the Architect ─────────────────────────────────────────────────────────────────────────────
+    // James: "with architect for archiecture using the component registry, components store with dependancies".
+    case 'architect.list': {
+      const A = await import('../lib/architect.js');
+      const rows = loadTable(A.TABLE).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      return ok(res, { count: rows.length, architectures: rows.map(A.summary) });
+    }
+    case 'architect.sources': {
+      const WS = await _workshop();
+      await _specEngineReady();
+      const workshops = loadTable(WS.TABLE).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)).map(w => ({ uuid: w.uuid, title: w.title, sections: w.sections.length, repoUuid: w.repoUuid || null, specPath: w.specPath || null }));
+      const repos = getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => ({ uuid: r.uuid, name: r.name, specFiles: _workshopSpecFiles(r) })).filter(r => r.specFiles.length);
+      return ok(res, { workshops, repos });
+    }
+    case 'architect.create': {
+      const A = await import('../lib/architect.js');
+      const from = body.from || {};
+      let made;
+      if (from.kind === 'workshop') {
+        const WS = await _workshop();
+        const w = _workshopGet(WS, from.id); if (!w) return err(res, 404, `workshop not found: ${from.id}`);
+        made = A.makeArchitecture({ title: body.title || w.title, source: { kind: 'workshop', id: w.uuid, title: w.title }, sections: w.sections, repoUuid: w.repoUuid || null, workshopUuid: w.uuid, specPath: w.specPath || null });
+      } else if (from.kind === 'repo') {
+        await _specEngineReady();
+        const repo = getRepoLayer().get(from.id); if (!repo) return err(res, 404, `repo not found: ${from.id}`);
+        if (repo.nexusSelf) return err(res, 400, 'a Nexus system has its own registry (loom) — the architect is for the specs you make');
+        const specPath = from.path || _workshopSpecFiles(repo)[0];
+        if (!specPath) return err(res, 400, 'this repo has no spec yet — make one in the spec workshop first');
+        const f = getRepoLayer().readFile(repo.uuid, specPath); if (f.error) return err(res, 404, f.error);
+        const WS = await _workshop();
+        made = A.makeArchitecture({ title: body.title || repo.name, source: { kind: 'repo', id: repo.uuid, title: repo.name, path: specPath }, sections: WS.sectionsFromSpecText(f.content, _require('js-yaml')), repoUuid: repo.uuid, specPath });
+      } else return err(res, 400, 'from.kind must be workshop or repo');
+      if (made.error) return err(res, 400, made.error);
+      appendRow(A.TABLE, made.arch);
+      os.emit('idearium.architect.created', { uuid: made.arch.uuid, source: made.arch.source.kind });
+      return ok(res, { architecture: made.arch, analysis: A.analyze(made.arch) });
+    }
+    case 'architect.show': {
+      const A = await import('../lib/architect.js');
+      const a = _archGet(A, params.id); if (!a) return err(res, 404, `architecture not found: ${params.id}`);
+      return ok(res, { architecture: a, analysis: A.analyze(a), layers: A.LAYERS });
+    }
+    case 'architect.update': {
+      const A = await import('../lib/architect.js');
+      const a = _archGet(A, params.id); if (!a) return err(res, 404, `architecture not found: ${params.id}`);
+      if (body.title != null && String(body.title).trim()) {
+        if (String(body.title).trim().length > 160) return err(res, 400, `the title is ${String(body.title).trim().length} characters — the limit is 160`);
+        a.title = String(body.title).trim(); a.updatedAt = Date.now();
+      }
+      let touched = null;
+      if (body.component) {
+        const r = A.editComponent(a, body.component);
+        if (r.error) return err(res, 400, r.error);
+        touched = r.component || null;
+        // a new or renamed component gets its reuse candidates now
+        if (touched && (body.component.add || body.component.name != null)) touched.matches = A.matchesFor(touched, _archReuseSources());
+      }
+      syncTable(A.TABLE, [a]);
+      return ok(res, { architecture: a, analysis: A.analyze(a), component: touched });
+    }
+    case 'architect.match': {
+      const A = await import('../lib/architect.js');
+      const a = _archGet(A, params.id); if (!a) return err(res, 404, `architecture not found: ${params.id}`);
+      const src = _archReuseSources();
+      for (const c of a.components) c.matches = A.matchesFor(c, src);
+      a.updatedAt = Date.now(); syncTable(A.TABLE, [a]);
+      return ok(res, { architecture: a, analysis: A.analyze(a), registry: src.registry.length });
+    }
+    case 'architect.propose': {
+      const A = await import('../lib/architect.js');
+      const a = _archGet(A, params.id); if (!a) return err(res, 404, `architecture not found: ${params.id}`);
+      if (!a.sections.length) return err(res, 400, 'the spec has no sections to lay out');
+      const r = await _agentAsk(A.proposePrompt(a), { channel: 'idearium-architect', sessionId: `architect-${a.uuid}` });
+      if (!r.ok) return err(res, 502, `the agent did not answer: ${r.error}`);
+      const comps = A.parseComponents(r.text);
+      if (!comps.length) return err(res, 502, 'the agent answered without a single COMPONENT line', { raw: String(r.text || '').slice(0, 400) });
+      const out = A.addProposals(a, comps, { by: r.by || null });
+      syncTable(A.TABLE, [a]);
+      os.emit('idearium.architect.proposed', { uuid: a.uuid, proposals: out.added.length });
+      return ok(res, { added: out.added, architecture: a, analysis: A.analyze(a) });
+    }
+    case 'architect.decide': {
+      const A = await import('../lib/architect.js');
+      const a = _archGet(A, params.id); if (!a) return err(res, 404, `architecture not found: ${params.id}`);
+      const ids = params.pid === 'all' ? a.proposals.filter(p => p.status === 'open').map(p => p.uuid) : [params.pid];
+      const done = [];
+      for (const pid of ids) {
+        const r = A.decide(a, pid, body || {});
+        if (r.error) { if (params.pid !== 'all') return err(res, 400, r.error); continue; }
+        if (r.component) r.component.matches = A.matchesFor(r.component, _archReuseSources());
+        done.push(r.proposal.uuid);
+      }
+      syncTable(A.TABLE, [a]);
+      return ok(res, { decided: done, architecture: a, analysis: A.analyze(a) });
+    }
+    case 'architect.save': {
+      const A = await import('../lib/architect.js');
+      const a = _archGet(A, params.id); if (!a) return err(res, 404, `architecture not found: ${params.id}`);
+      if (!a.components.length) return err(res, 400, 'nothing to save — the architecture has no components');
+      if (!(await _specEngineReady())) return err(res, 503, 'the spec engine is still loading — try again in a moment');
+      let repoUuid = a.repoUuid;
+      if (!repoUuid && a.workshopUuid) { const WS = await _workshop(); const w = _workshopGet(WS, a.workshopUuid); if (w && w.repoUuid) { repoUuid = w.repoUuid; a.specPath = a.specPath || w.specPath; } }
+      if (!repoUuid || !getRepoLayer().get(repoUuid)) return err(res, 409, 'its spec is not in a repo yet — save the spec in the spec workshop first, then the architecture goes beside it');
+      const { slugOf } = await import('../lib/spec-library-import.js');
+      const path_ = a.specPath ? a.specPath.replace(/\.spec$/, '.architecture.yaml') : `spec/${slugOf(a.title)}.architecture.yaml`;
+      const wr = getRepoLayer().writeFile(repoUuid, path_, A.archText(a, _require('js-yaml')), { preserveWhitespace: true });
+      if (wr.error) return err(res, 502, `not written: ${wr.error}`);
+      a.repoUuid = repoUuid; a.savedPath = path_; a.savedAt = Date.now(); a.updatedAt = a.savedAt;
+      a.history.push({ at: a.savedAt, what: `saved to ${path_}` });
+      syncTable(A.TABLE, [a]);
+      os.emit('idearium.architect.saved', { uuid: a.uuid, repoUuid, path: path_ });
+      return ok(res, { repoUuid, path: path_, architecture: a, analysis: A.analyze(a) });
+    }
+
     // ── §0.39.295 — the spatial void ───────────────────────────────────────────────────────────────────────────────
     // James: "Just have the spacial void, with a slider … normal, creative, outside the box, novel, outlier … stable,
     // shaky, risky, dangerous, unstable. with those linked togethe" · "the ideas come from me though not agents".
@@ -6686,7 +6838,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html')) {   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html')) {   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');

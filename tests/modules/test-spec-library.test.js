@@ -223,7 +223,7 @@ async function main() {
     const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/spec-library.html'), 'utf8');
     assert.match(page, /class="pipe"/); assert.match(page, /type: 'nexus:repo\.open'/);
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
-    assert.match(app, /nexus:\(repo\\\.open\|workshop\\\.open\)/); assert.match(app, /const mine = \[_specLibraryWin, _workshopWin, _voidWin\]/); assert.match(app, /!mine\.includes\(ev\.source\)/, 'only from a window idearium opened');
+    assert.match(app, /nexus:\(repo\\\.open\|workshop\\\.open\)/); assert.match(app, /const mine = \[_specLibraryWin, _workshopWin, _voidWin, _architectWin\]/); assert.match(app, /!mine\.includes\(ev\.source\)/, 'only from a window idearium opened');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

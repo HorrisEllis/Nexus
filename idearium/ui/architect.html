@@ -1,0 +1,341 @@
+<!doctype html>
+<!--
+  idearium/ui/architect.html — THE ARCHITECT (0.39.298 AR2). Map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec (AR2)
+  James: "with architect for archiecture using the component registry, components store with dependancies" · "all of
+  it needs to be isolated, in its own pages" · "no lowercase. and make sure its enterprise grade".
+  The third station: the spec laid out as components in four layers, bottom-up (FOUNDATION, LIBRARY, SERVICE,
+  INTERFACE). Every component is matched against loom's registry and the component store — REUSE or NEW. The agent
+  proposes; nothing is the architecture until James accepts it. Gaps, cycles and layer violations are said. Saved
+  beside the spec as spec/<name>.architecture.yaml. /api/architect (idearium/lib/architect.js).
+  ?id=<architecture> opens one; ?from=workshop:<id>|repo:<uuid> starts one.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE ARCHITECT</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/void-theme.css">
+<style>
+  .head { top: calc(var(--chrome-h, 0px) + 16px); }
+  .head .title { font-size: 34px; letter-spacing: .36em; padding-left: .36em; }
+  .head .sub { margin-top: 8px; }
+  .stations { display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 14px; pointer-events: auto; flex-wrap: wrap; }
+  .st { font: 400 13px/1 var(--display); letter-spacing: .2em; padding: 6px 10px; border: 1px solid transparent; border-radius: 2px; color: var(--text3); }
+  .st.done { color: rgba(0,255,136,.7); } .st.now { color: var(--c); border-color: rgba(0,212,255,.35); box-shadow: 0 0 18px rgba(0,212,255,.12); }
+  .st.link { cursor: pointer; } .st.link:hover { border-color: var(--line3); }
+  .arrow { color: var(--text3); font: 400 11px/1 var(--mono); }
+  .corner { position: fixed; top: calc(var(--chrome-h, 0px) + 16px); z-index: 6; display: flex; gap: 6px; align-items: center; }
+  .corner.l { left: 18px; } .corner.r { right: 18px; }
+  .saved { font: 400 10px/1.3 var(--mono); letter-spacing: .1em; color: var(--text2); max-width: 300px; text-align: right; }
+  .saved.dirty { color: var(--y); }
+  #toasts { top: auto; bottom: 18px; left: 50%; transform: translateX(-50%); align-items: center; }
+
+  .stage { position: fixed; left: 0; right: 0; bottom: 0; top: calc(var(--chrome-h, 0px) + 150px); z-index: 2; }
+  .panel { background: rgba(5,8,15,.86); border: 1px solid var(--line2); border-radius: 2px; backdrop-filter: blur(6px); }
+  .lbl { font: 400 12px/1 var(--display); letter-spacing: .24em; color: var(--text2); display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
+  .lbl .n { font: 400 10px/1 var(--mono); letter-spacing: .1em; color: var(--text3); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .field, .ta, select.field { width: 100%; background: rgba(11,17,32,.8); border: 1px solid var(--line2); border-radius: 2px; color: var(--c); font: 400 12px/1.5 var(--mono); padding: 8px 10px; outline: none; }
+  .field:focus, .ta:focus { border-color: rgba(0,212,255,.4); }
+  .ta { resize: vertical; min-height: 70px; }
+
+  /* start */
+  .start { max-width: 1000px; margin: 0 auto; padding: 0 18px 24px; height: 100%; overflow: auto; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-content: start; }
+  .start .panel { padding: 16px; }
+  .pick { max-height: 320px; overflow: auto; border: 1px solid var(--line); border-radius: 2px; }
+  .it { padding: 9px 11px; border-bottom: 1px solid var(--line); cursor: pointer; display: flex; gap: 10px; align-items: baseline; font: 400 12px/1.5 var(--mono); color: var(--text); }
+  .it:hover { background: rgba(0,212,255,.04); } .it.on { background: rgba(0,212,255,.09); color: var(--c); }
+  .it .m { margin-left: auto; font-size: 10px; letter-spacing: .08em; color: var(--text2); white-space: nowrap; }
+  .ar { padding: 10px 12px; border: 1px solid var(--line); border-radius: 2px; margin-bottom: 6px; cursor: pointer; }
+  .ar:hover { border-color: var(--line3); background: rgba(0,212,255,.03); }
+  .ar .t { font: 400 15px/1.2 var(--display); letter-spacing: .14em; color: var(--c); }
+  .ar .m { font: 400 10px/1.5 var(--mono); letter-spacing: .08em; color: var(--text2); }
+
+  /* the architect */
+  .work { height: 100%; padding: 0 18px 18px; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 12px; }
+  .mapcol { display: flex; flex-direction: column; min-height: 0; padding: 12px; }
+  .stats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .stat { font: 400 10px/1 var(--mono); letter-spacing: .1em; padding: 6px 9px; border: 1px solid var(--line); border-radius: 2px; color: var(--text2); }
+  .stat b { color: var(--text); font-weight: 400; margin-right: 4px; }
+  .stat.reuse b { color: var(--g); } .stat.new b { color: var(--c); } .stat.bad { border-color: rgba(255,45,85,.4); } .stat.bad b { color: var(--r); } .stat.warn b { color: var(--y); }
+  .map { position: relative; flex: 1; min-height: 0; overflow: auto; }
+  .band { position: relative; display: grid; grid-template-columns: 120px 1fr; border-top: 1px solid var(--line); min-height: 104px; }
+  .band:last-child { border-bottom: 1px solid var(--line); }
+  .band .bn { padding: 12px 10px; font: 400 13px/1.1 var(--display); letter-spacing: .2em; color: var(--text2); border-right: 1px solid var(--line); }
+  .band .bn small { display: block; margin-top: 6px; font: 400 9px/1.4 var(--mono); letter-spacing: .04em; color: var(--text3); text-transform: uppercase; }
+  .band .cards { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px; align-content: flex-start; position: relative; z-index: 1; }
+  .card { width: 200px; padding: 9px 10px; border: 1px solid rgba(0,212,255,.3); background: rgba(0,212,255,.04); border-radius: 2px; cursor: pointer; transition: box-shadow .2s, border-color .2s; }
+  .card:hover, .card.sel { box-shadow: 0 0 18px rgba(0,212,255,.18); border-color: var(--c); }
+  .card.reuse { border-color: rgba(0,255,136,.4); background: rgba(0,255,136,.04); } .card.reuse.sel, .card.reuse:hover { border-color: var(--g); box-shadow: 0 0 18px rgba(0,255,136,.18); }
+  .card.gap { border: 1px dashed rgba(255,45,85,.6); background: rgba(255,45,85,.04); cursor: default; }
+  .card .cn { font: 400 14px/1.15 var(--display); letter-spacing: .1em; color: var(--c); }
+  .card.reuse .cn { color: var(--g); } .card.gap .cn { color: var(--r); }
+  .card .cp { font: 400 10px/1.45 var(--mono); color: var(--text2); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card .ct { font: 400 9px/1 var(--mono); letter-spacing: .1em; margin-top: 6px; color: var(--text3); }
+  .card.reuse .ct { color: rgba(0,255,136,.7); }
+  #wires { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 2; overflow: visible; }
+  .side { min-height: 0; overflow: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .cand { display: flex; gap: 8px; align-items: center; padding: 7px 8px; border: 1px solid var(--line); border-radius: 2px; margin-bottom: 5px; font: 400 10.5px/1.35 var(--mono); }
+  .cand .w { flex: 1; min-width: 0; } .cand .w b { display: block; color: var(--text); font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cand .w span { color: var(--text2); font-size: 9.5px; }
+  .cand.on { border-color: rgba(0,255,136,.5); } .cand .sc { color: var(--text2); font-size: 10px; }
+  .deps { display: flex; gap: 5px; flex-wrap: wrap; }
+  .dep { font: 400 10px/1 var(--mono); letter-spacing: .06em; padding: 5px 7px; border: 1px solid var(--line2); border-radius: 2px; color: var(--text2); cursor: pointer; }
+  .dep.on { color: var(--c); border-color: rgba(0,212,255,.45); }
+  .prop { border: 1px solid rgba(204,68,255,.16); background: rgba(204,68,255,.03); border-radius: 2px; padding: 9px 11px; margin-bottom: 7px; }
+  .prop.seen { animation: none; } .prop .k { font: 400 10px/1.3 var(--mono); letter-spacing: .1em; color: rgba(204,68,255,.75); display: flex; gap: 8px; flex-wrap: wrap; }
+  .prop .x { margin: 5px 0 7px; font: 400 12px/1.5 var(--body); color: rgba(220,180,255,.9); }
+  .prop .x b { font: 400 13px/1.2 var(--display); letter-spacing: .1em; color: var(--m); display: block; margin-bottom: 2px; }
+  .issue { font: 400 10.5px/1.5 var(--mono); color: var(--text2); padding: 4px 0; }
+  .issue.bad { color: #ff8aa2; } .issue.warn { color: var(--y); }
+  .dlg-back { position: fixed; inset: 0; background: rgba(3,5,8,.72); z-index: 20; display: flex; align-items: center; justify-content: center; }
+  .dlg { width: min(460px, calc(100% - 32px)); padding: 18px; }
+  .dlg .q { font: 400 16px/1.3 var(--display); letter-spacing: .18em; color: var(--c); margin-bottom: 12px; }
+
+  @media (max-width: 1100px) {
+    html, body { height: auto; overflow: auto; }
+    .stage { position: static; padding-top: 230px; } .head { top: calc(var(--chrome-h, 0px) + 64px); position: absolute; }
+    .work, .start { grid-template-columns: 1fr; height: auto; } .map { overflow: visible; } .side { overflow: visible; }
+    .saved { max-width: 46vw; }
+  }
+</style>
+</head>
+<body>
+<script src="js/window-chrome.js" data-kind="architect" data-title="THE ARCHITECT"></script>
+<canvas id="sky" aria-hidden="true"></canvas>
+<script src="js/void-sky.js"></script>
+
+<div class="head">
+  <div class="title">THE ARCHITECT</div>
+  <div class="sub">THE SPEC AS COMPONENTS — REUSE BEFORE BUILD</div>
+  <div class="stations" id="stations" aria-label="the pipeline"></div>
+</div>
+<div class="corner l"><button class="btn small ghost hidden" id="backBtn" title="EVERY ARCHITECTURE">← ALL ARCHITECTURES</button></div>
+<div class="corner r"><span class="saved" id="saved"></span><button class="btn small g hidden" id="saveBtn" title="WRITE THE ARCHITECTURE BESIDE THE SPEC IN ITS REPO (CTRL+S)">SAVE BESIDE THE SPEC</button></div>
+<div class="state hidden" id="state" role="status" aria-live="polite"></div>
+
+<main class="stage">
+  <section class="start hidden" id="start" aria-label="start an architecture">
+    <div class="panel">
+      <div class="lbl">START FROM</div>
+      <div class="row" id="fromTabs" role="tablist" style="margin-bottom:10px"></div>
+      <div class="pick" id="pickList" role="listbox"></div>
+      <div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn" id="createBtn" disabled title="OPEN THE ARCHITECT ON IT">OPEN</button></div>
+    </div>
+    <div class="panel">
+      <div class="lbl">YOUR ARCHITECTURES <span class="n" id="arCount"></span></div>
+      <div id="arList" class="empty">READING…</div>
+    </div>
+  </section>
+
+  <section class="work hidden" id="work" aria-label="the architecture">
+    <div class="panel mapcol">
+      <div class="stats" id="stats"></div>
+      <div class="map" id="map"><svg id="wires"></svg><div id="bands"></div></div>
+    </div>
+    <div class="panel side" id="side"></div>
+  </section>
+</main>
+<div id="toasts" role="status"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const Q = new URLSearchParams(location.search);
+const LAYERS = ['FOUNDATION', 'LIBRARY', 'SERVICE', 'INTERFACE'];
+const LAYER_DOES = ['DATA, STORAGE, THE PRIMITIVES', 'THE LOGIC — RULES, ENGINES', 'WHAT RUNS — SERVERS, JOBS, ROUTES', 'WHAT A PERSON TOUCHES — PAGES, CLI, API'];
+const AGENT_MS = 330000;
+let A = null, AN = null, SEL = null, SRC = null, FROM = 'workshop', PICK = null, BUSY = false;
+const SEEN = new Set();
+
+function toast(t, bad) { const d = document.createElement('div'); d.className = 'toast' + (bad ? ' bad' : ''); d.textContent = t; $('toasts').appendChild(d); while ($('toasts').children.length > 4) $('toasts').firstChild.remove(); setTimeout(() => d.remove(), bad ? 7000 : 3200); }
+async function api(path, body, ms = body === undefined ? 20000 : 30000) {
+  const ac = new AbortController(); const t = setTimeout(() => ac.abort(), ms);
+  let r;
+  try { r = await fetch(path, { signal: ac.signal, ...(body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }); }
+  catch (e) { throw new Error(e.name === 'AbortError' ? `NO ANSWER IN ${Math.round(ms / 1000)}S` : 'IDEARIUM IS NOT ANSWERING — IS IT RUNNING?'); }
+  finally { clearTimeout(t); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
+  return j;
+}
+function setState(kind, msg) {
+  const el = $('state');
+  if (!kind) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden'); el.classList.toggle('bad', kind === 'bad');
+  el.innerHTML = kind === 'bad' ? `<b>THE ARCHITECT IS UNREACHABLE</b>${esc(msg)}<br><button class="btn small" id="retry">TRY AGAIN</button>` : `<b>OPENING THE ARCHITECT</b>${esc(msg || 'READING…')}`;
+  const r = $('retry'); if (r) r.onclick = () => boot();
+}
+function dialog({ q, value = null, ok = 'OK', note = '' }) {
+  return new Promise((done) => {
+    const back = document.createElement('div'); back.className = 'dlg-back';
+    back.innerHTML = `<div class="dlg panel" role="dialog" aria-modal="true" aria-label="${esc(q)}"><div class="q">${esc(q)}</div>${note ? `<div class="issue">${esc(note)}</div>` : ''}${value !== null ? `<input class="field" style="margin-bottom:12px" maxlength="80" value="${esc(value)}">` : ''}<div class="row" style="justify-content:flex-end"><button class="btn small ghost" data-no>CANCEL</button><button class="btn small" data-ok>${esc(ok)}</button></div></div>`;
+    document.body.appendChild(back);
+    const input = back.querySelector('input'); (input || back.querySelector('[data-ok]')).focus();
+    const end = (v) => { back.remove(); done(v); };
+    back.querySelector('[data-no]').onclick = () => end(null);
+    back.querySelector('[data-ok]').onclick = () => end(input ? (input.value.trim() || null) : true);
+    back.addEventListener('keydown', (e) => { if (e.key === 'Escape') end(null); if (e.key === 'Enter' && input) end(input.value.trim() || null); });
+  });
+}
+function stations() {
+  const s = [['IDEA', 'done'], ['SPEC', A && A.workshopUuid ? 'done link' : 'done'], ['ARCHITECT', 'now'], ['BLUEPRINT', ''], ['REPO', A && A.repoUuid ? 'done' : ''], ['COS', '']];
+  $('stations').innerHTML = s.map(([n, c], i) => `${i ? '<span class="arrow">→</span>' : ''}<span class="st ${c}" ${n === 'SPEC' && c.includes('link') ? 'id="stSpec" tabindex="0" title="BACK TO THIS SPEC IN THE SPEC WORKSHOP"' : ['BLUEPRINT', 'COS'].includes(n) ? 'title="NEXT IN THE PIPELINE — MAPPED, COMING"' : ''}>${n}</span>`).join('');
+  const sp = $('stSpec'); if (sp) sp.onclick = () => { location.href = `/workshop.html?id=${encodeURIComponent(A.workshopUuid)}`; };
+}
+
+// ── start ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+async function showStart() {
+  A = null; history.replaceState(null, '', location.pathname); document.title = 'THE ARCHITECT';
+  $('start').classList.remove('hidden'); $('work').classList.add('hidden'); $('saveBtn').classList.add('hidden'); $('backBtn').classList.add('hidden'); $('saved').textContent = '';
+  stations();
+  try {
+    const d = await api('/api/architect'); $('arCount').textContent = d.count || ''; $('arList').className = '';
+    $('arList').innerHTML = d.architectures.length ? d.architectures.map(a => `<div class="ar" tabindex="0" data-id="${esc(a.uuid)}"><div class="t">${esc(a.title)}</div><div class="m">${a.components} COMPONENTS · ${a.reuse} REUSED${a.gaps ? ` · ${a.gaps} GAPS` : ''}${a.open ? ` · ${a.open} PROPOSED` : ''} · ${a.savedAt ? 'SAVED' : 'NOT SAVED'}</div></div>`).join('')
+      : '<div class="empty">NONE YET — START ONE FROM A SPEC</div>';
+    $('arList').querySelectorAll('.ar').forEach(el => { el.onclick = () => open(el.dataset.id); el.onkeydown = (e) => { if (e.key === 'Enter') open(el.dataset.id); }; });
+    SRC = await api('/api/architect/sources'); setState(null);
+  } catch (e) { setState('bad', e.message); return; }
+  paintFrom();
+}
+function paintFrom() {
+  $('fromTabs').innerHTML = [['workshop', `A SPEC IN THE WORKSHOP (${SRC.workshops.length})`], ['repo', `A REPO'S SPEC (${SRC.repos.length})`]].map(([k, l]) => `<button class="chip ${FROM === k ? 'on' : ''}" role="tab" aria-selected="${FROM === k}" data-k="${k}">${l}</button>`).join('');
+  $('fromTabs').querySelectorAll('.chip').forEach(b => b.onclick = () => { FROM = b.dataset.k; PICK = null; paintFrom(); });
+  const items = FROM === 'workshop' ? SRC.workshops.map(w => ({ id: w.uuid, t: w.title, m: `${w.sections} SECTION${w.sections === 1 ? '' : 'S'}${w.specPath ? ' · ' + w.specPath : ''}` })) : SRC.repos.map(r => ({ id: r.uuid, t: r.name, m: r.specFiles.join(', ') }));
+  $('pickList').innerHTML = items.map(x => `<div class="it ${PICK === x.id ? 'on' : ''}" role="option" tabindex="0" aria-selected="${PICK === x.id}" data-id="${esc(x.id)}"><span>${esc(x.t)}</span><span class="m">${esc(x.m)}</span></div>`).join('') || `<div class="it empty">${FROM === 'workshop' ? 'NO SPECS IN THE WORKSHOP YET' : 'NO REPO HAS A SPEC YET'}</div>`;
+  $('pickList').querySelectorAll('.it[data-id]').forEach(it => { const pick = () => { PICK = it.dataset.id; paintFrom(); $('createBtn').disabled = false; }; it.onclick = pick; it.onkeydown = (e) => { if (e.key === 'Enter') pick(); }; });
+  $('createBtn').disabled = !PICK;
+}
+$('createBtn').onclick = async () => {
+  $('createBtn').disabled = true;
+  try { const d = await api('/api/architect', { from: { kind: FROM, id: PICK } }); open(d.architecture.uuid, d); }
+  catch (e) { toast(`NOT OPENED: ${e.message}`, true); $('createBtn').disabled = false; }
+};
+
+// ── the architect ──────────────────────────────────────────────────────────────────────────────────────────────────
+async function open(id, data) {
+  setState('loading');
+  try { const d = data || await api(`/api/architect/${encodeURIComponent(id)}`); A = d.architecture; AN = d.analysis; }
+  catch (e) { setState(null); toast(`NOT OPENED: ${e.message}`, true); return showStart(); }
+  setState(null); history.replaceState(null, '', `?id=${encodeURIComponent(A.uuid)}`);
+  $('start').classList.add('hidden'); $('work').classList.remove('hidden'); $('saveBtn').classList.remove('hidden'); $('backBtn').classList.remove('hidden');
+  A.proposals.forEach(p => SEEN.add(p.uuid));
+  paint();
+}
+function take(d) { A = d.architecture; AN = d.analysis; paint(); }
+function paint() {
+  document.title = `${A.title.toUpperCase()} — THE ARCHITECT`; stations();
+  const dirty = !A.savedAt || A.updatedAt > A.savedAt + 1500;
+  $('saved').textContent = A.savedAt ? `SAVED TO ${A.savedPath || ''} · ${new Date(A.savedAt).toLocaleTimeString()}${dirty ? ' · CHANGED SINCE' : ''}` : 'NOT SAVED YET'; $('saved').classList.toggle('dirty', dirty);
+  const c = AN.counts;
+  $('stats').innerHTML = `<span class="stat"><b>${c.components}</b>COMPONENTS</span><span class="stat reuse"><b>${c.reuse}</b>REUSED</span><span class="stat new"><b>${c.new}</b>NEW</span>`
+    + `<span class="stat ${AN.gaps.length ? 'bad' : ''}"><b>${AN.gaps.length}</b>GAPS</span><span class="stat ${AN.cycles.length ? 'bad' : ''}"><b>${AN.cycles.length}</b>CYCLES</span><span class="stat ${AN.violations.length ? 'warn' : ''}"><b>${AN.violations.length}</b>LAYER WARNINGS</span>`;
+  // the bands, top to bottom: INTERFACE … FOUNDATION (bottom-up reads from the floor)
+  const gapsBy = new Map(); for (const g of AN.gaps) { if (!gapsBy.has(g.needs)) gapsBy.set(g.needs, []); gapsBy.get(g.needs).push(g.component); }
+  $('bands').innerHTML = [3, 2, 1, 0].map(L => {
+    const cards = A.components.filter(x => x.layer === L).sort((a, b) => AN.order.indexOf(a.id) - AN.order.indexOf(b.id));
+    const gapCards = L === 0 ? [...gapsBy.keys()].map(n => `<div class="card gap" data-gap="${esc(n)}" title="NEEDED BY ${esc(gapsBy.get(n).join(', ')).toUpperCase()} — NOT IN THIS ARCHITECTURE"><div class="cn">${esc(n)}</div><div class="cp">NEEDED, AND NOTHING HERE IS IT</div><div class="ct">GAP</div></div>`).join('') : '';
+    return `<div class="band" data-layer="${L}"><div class="bn">${LAYERS[L]}<small>${LAYER_DOES[L]}</small></div><div class="cards">${cards.map(x => `<div class="card ${x.reuse ? 'reuse' : ''} ${SEL === x.id ? 'sel' : ''}" tabindex="0" data-id="${esc(x.id)}"><div class="cn">${esc(x.name)}</div><div class="cp">${esc(x.purpose || '')}</div><div class="ct">${x.reuse ? `REUSES ${esc(x.reuse.id)}` : `NEW${x.matches && x.matches.length ? ` · ${x.matches.length} MATCH${x.matches.length === 1 ? '' : 'ES'}` : ''}`}</div></div>`).join('')}${gapCards}${!cards.length && !gapCards ? '<span class="empty" style="padding:6px">—</span>' : ''}</div></div>`;
+  }).join('');
+  $('bands').querySelectorAll('.card[data-id]').forEach(el => { const go = () => { SEL = el.dataset.id; paint(); }; el.onclick = go; el.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
+  requestAnimationFrame(wires);
+  paintSide();
+}
+function wires() {
+  // a line from each component to what it needs: cyan between components, red to a gap
+  const map = $('map'), svg = $('wires'), box = map.getBoundingClientRect();
+  svg.setAttribute('width', 0); svg.setAttribute('height', 0);   // its last size would hold the map wide after a resize
+  svg.setAttribute('width', map.scrollWidth); svg.setAttribute('height', map.scrollHeight);
+  const at = (el) => { const r = el.getBoundingClientRect(); return { x: r.left - box.left + map.scrollLeft + r.width / 2, top: r.top - box.top + map.scrollTop, bottom: r.bottom - box.top + map.scrollTop }; };
+  let out = '';
+  for (const c of A.components) {
+    const from = map.querySelector(`.card[data-id="${CSS.escape(c.id)}"]`); if (!from) continue;
+    for (const d of c.dependsOn) {
+      const to = map.querySelector(`.card[data-id="${CSS.escape(d)}"]`) || map.querySelector(`.card[data-gap="${CSS.escape(d)}"]`); if (!to) continue;
+      const a = at(from), b = at(to), up = b.top < a.top;
+      const y1 = up ? a.top : a.bottom, y2 = up ? b.bottom : b.top, mid = (y1 + y2) / 2;
+      const gap = to.classList.contains('gap'), hot = SEL && (SEL === c.id || SEL === d);
+      out += `<path d="M ${a.x} ${y1} C ${a.x} ${mid}, ${b.x} ${mid}, ${b.x} ${y2}" fill="none" stroke="${gap ? 'rgba(255,45,85,.7)' : hot ? 'rgba(0,212,255,.85)' : 'rgba(0,212,255,.28)'}" stroke-width="${hot ? 1.6 : 1}" ${gap ? 'stroke-dasharray="4 3"' : ''}/>`;
+    }
+  }
+  svg.innerHTML = out;
+}
+addEventListener('resize', () => A && wires());
+$('map').addEventListener('scroll', () => A && wires());
+
+function paintSide() {
+  const c = A.components.find(x => x.id === SEL);
+  const issues = [...AN.gaps.map(g => `<div class="issue bad">GAP · ${esc(g.component)} NEEDS ${esc(g.needs)} — NOTHING HERE IS IT</div>`),
+    ...AN.cycles.map(cy => `<div class="issue bad">CYCLE · ${cy.map(esc).join(' → ')}</div>`),
+    ...AN.violations.map(v => `<div class="issue warn">LAYER · ${esc(v.component)} (${esc(v.layer)}) NEEDS ${esc(v.needs)} (${esc(v.needsLayer)}) — A LOWER LAYER LEANING ON A HIGHER ONE</div>`)].join('');
+  const props = A.proposals.filter(p => p.status === 'open');
+  $('side').innerHTML = `
+    ${c ? `<div><div class="lbl">COMPONENT</div>
+      <input class="field" id="cName" maxlength="80" value="${esc(c.name)}" aria-label="name">
+      <div class="row" style="margin-top:6px"><select class="field" id="cLayer" aria-label="layer">${LAYERS.map((l, i) => `<option value="${i}" ${c.layer === i ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <textarea class="ta" id="cPurpose" maxlength="1000" style="margin-top:6px" aria-label="purpose" placeholder="WHAT IT DOES">${esc(c.purpose || '')}</textarea>
+      <div class="lbl" style="margin-top:10px">NEEDS</div>
+      <div class="deps">${A.components.filter(x => x.id !== c.id).map(x => `<span class="dep ${c.dependsOn.includes(x.id) ? 'on' : ''}" tabindex="0" data-dep="${esc(x.id)}">${esc(x.name)}</span>`).join('') || '<span class="empty">NOTHING ELSE YET</span>'}${c.dependsOn.filter(d => !A.components.find(x => x.id === d)).map(d => `<span class="dep on" style="border-color:rgba(255,45,85,.5);color:#ff8aa2" data-dep="${esc(d)}" title="A GAP — CLICK TO DROP IT">${esc(d)} ✕</span>`).join('')}</div>
+      <div class="lbl" style="margin-top:12px">REUSE BEFORE BUILD <span class="n">LOOM + THE COMPONENT STORE</span></div>
+      ${(c.matches || []).length ? c.matches.map(m => `<div class="cand ${c.reuse && c.reuse.id === m.id ? 'on' : ''}"><div class="w"><b>${esc(m.name)}</b><span>${esc(m.source === 'store' ? 'COMPONENT STORE' : 'LOOM')} · ${esc(m.id)}</span></div><span class="sc">${Math.round(m.score * 100)}%</span>${c.reuse && c.reuse.id === m.id ? `<button class="btn small ghost" data-new="1" title="IT IS NEW AFTER ALL">UNDO</button>` : `<button class="btn small g" data-reuse="${esc(m.id)}" title="THIS COMPONENT IS THAT ONE — REUSE IT">REUSE</button>`}</div>`).join('') : '<div class="empty">NOTHING THAT EXISTS LOOKS LIKE IT — IT IS NEW</div>'}
+      <div class="row" style="margin-top:12px"><button class="btn small ghost" id="cRemove" title="REMOVE — IT IS KEPT AND CAN BE RESTORED">REMOVE</button><span style="flex:1"></span><button class="btn small" id="cDone" title="BACK TO THE WHOLE ARCHITECTURE">DONE</button></div></div>`
+    : `<div><div class="lbl">ASK THE AGENT</div>
+      <button class="btn small m" id="propose" style="width:100%" title="THE AGENT LAYS THE SPEC OUT AS COMPONENTS — PROPOSALS ONLY, YOU ACCEPT">◈ PROPOSE THE COMPONENTS</button>
+      <div id="thinking" class="thinking hidden" role="status" style="margin-top:8px">THE AGENT IS LAYING IT OUT <span id="meter" class="meter"></span></div></div>
+      <div><div class="lbl">PROPOSALS <span class="n">${props.length} OPEN</span>${props.length > 1 ? `<span style="flex:1"></span><button class="btn small" id="acceptAll" title="ACCEPT EVERY OPEN PROPOSAL">ACCEPT ALL</button>` : ''}</div>
+      ${props.map(p => `<div class="prop ${SEEN.has(p.uuid) ? 'seen' : ''}"><div class="k"><span>${LAYERS[p.layer]}</span>${p.dependsOn.length ? `<span>NEEDS ${esc(p.dependsOn.join(', '))}</span>` : ''}</div><div class="x"><b>${esc(p.name)}</b>${esc(p.purpose || '')}</div><div class="row"><button class="btn small" data-p="${p.uuid}" data-a="accept">ACCEPT</button><button class="btn small ghost" data-p="${p.uuid}" data-a="dismiss">DISMISS</button></div></div>`).join('') || '<div class="empty">ASK THE AGENT TO LAY THE SPEC OUT, OR ADD COMPONENTS YOURSELF.</div>'}</div>
+      <div><button class="btn small" id="addComp" title="ADD A COMPONENT YOURSELF">+ COMPONENT</button> <button class="btn small ghost" id="rematch" title="LOOK AGAIN IN LOOM AND THE COMPONENT STORE">↻ MATCH AGAIN</button></div>
+      ${A.removed && A.removed.length ? `<div><div class="lbl">REMOVED <span class="n">${A.removed.length}</span></div>${A.removed.map(r => `<div class="row" style="margin-bottom:4px"><span class="issue" style="flex:1">${esc(r.name)}</span><button class="btn small ghost" data-restore="${esc(r.id)}">RESTORE</button></div>`).join('')}</div>` : ''}
+      <div><div class="lbl">WHAT IT SAYS</div>${issues || '<div class="issue">NO GAPS, NO CYCLES, EVERY LAYER LEANS DOWN.</div>'}</div>
+      <div><div class="lbl">THE SPEC</div>${A.sections.map(s => `<details><summary class="issue" style="cursor:pointer;color:var(--text)">${esc(s.title)}</summary><div class="issue" style="white-space:pre-wrap">${esc(String(s.body || '').slice(0, 2000))}</div></details>`).join('')}</div>`}`;
+  props.forEach(p => SEEN.add(p.uuid));
+  if (c) {
+    const save = (patch) => api(`/api/architect/${A.uuid}`, { component: { id: c.id, ...patch } }).then(take).catch(e => toast(e.message, true));
+    $('cName').onchange = () => save({ name: $('cName').value }); $('cLayer').onchange = () => save({ layer: +$('cLayer').value }); $('cPurpose').onchange = () => save({ purpose: $('cPurpose').value });
+    $('side').querySelectorAll('[data-dep]').forEach(d => { const t = () => { const id = d.dataset.dep; const deps = c.dependsOn.includes(id) ? c.dependsOn.filter(x => x !== id) : [...c.dependsOn, id]; save({ dependsOn: deps }); }; d.onclick = t; d.onkeydown = (e) => { if (e.key === 'Enter') t(); }; });
+    $('side').querySelectorAll('[data-reuse]').forEach(b => b.onclick = () => save({ reuse: b.dataset.reuse }));
+    $('side').querySelectorAll('[data-new]').forEach(b => b.onclick = () => save({ reuse: null }));
+    $('cRemove').onclick = async () => { if (await dialog({ q: `REMOVE ${c.name.toUpperCase()}?`, note: 'IT IS KEPT UNDER REMOVED AND CAN BE RESTORED.', ok: 'REMOVE' })) { SEL = null; save({ remove: true }); } };
+    $('cDone').onclick = () => { SEL = null; paint(); };
+  } else {
+    $('propose').onclick = propose;
+    const all = $('acceptAll'); if (all) all.onclick = () => api(`/api/architect/${A.uuid}/proposal/all`, { action: 'accept' }).then(d => { take(d); toast(`${d.decided.length} ACCEPTED`); }).catch(e => toast(e.message, true));
+    $('side').querySelectorAll('[data-p]').forEach(b => b.onclick = () => api(`/api/architect/${A.uuid}/proposal/${b.dataset.p}`, { action: b.dataset.a }).then(take).catch(e => toast(e.message, true)));
+    $('addComp').onclick = async () => { const n = await dialog({ q: 'NEW COMPONENT', value: '', ok: 'ADD' }); if (!n) return; try { const d = await api(`/api/architect/${A.uuid}`, { component: { add: true, name: n, layer: 1 } }); SEL = d.component.id; take(d); } catch (e) { toast(e.message, true); } };
+    $('rematch').onclick = () => api(`/api/architect/${A.uuid}/match`, {}).then(d => { take(d); toast(`MATCHED AGAINST ${d.registry} REGISTERED COMPONENTS`); }).catch(e => toast(e.message, true));
+    $('side').querySelectorAll('[data-restore]').forEach(b => b.onclick = () => api(`/api/architect/${A.uuid}`, { component: { restore: b.dataset.restore } }).then(take).catch(e => toast(e.message, true)));
+  }
+}
+let _meterT = null;
+async function propose() {
+  if (BUSY) return; BUSY = true; $('propose').disabled = true; $('thinking').classList.remove('hidden');
+  const t0 = Date.now(); _meterT = setInterval(() => { const m = $('meter'); if (m) m.textContent = `${Math.round((Date.now() - t0) / 1000)}S`; }, 1000);
+  try { const d = await api(`/api/architect/${A.uuid}/propose`, {}, AGENT_MS); take(d); toast(`${d.added.length} COMPONENT${d.added.length === 1 ? '' : 'S'} PROPOSED`); }
+  catch (e) { toast(e.message, true); paint(); }
+  finally { BUSY = false; clearInterval(_meterT); }
+}
+async function save() {
+  if (!A) return; $('saveBtn').disabled = true;
+  try { const d = await api(`/api/architect/${A.uuid}/save`, {}, 60000); take(d); toast(`SAVED TO ${d.path}`); }
+  catch (e) { toast(`NOT SAVED: ${e.message}`, true); } finally { $('saveBtn').disabled = false; }
+}
+$('saveBtn').onclick = save;
+$('backBtn').onclick = () => { SEL = null; showStart(); };
+document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && A) { e.preventDefault(); save(); } if (e.key === 'Escape' && SEL && !document.querySelector('.dlg-back')) { SEL = null; paint(); } });
+
+async function boot() {
+  setState('loading');
+  if (Q.get('id')) return open(Q.get('id'));
+  const f = Q.get('from');
+  if (f && /^(workshop|repo):.+/.test(f)) {
+    const [kind, ...rest] = f.split(':');
+    try { const d = await api('/api/architect', { from: { kind, id: rest.join(':') } }); return open(d.architecture.uuid, d); }
+    catch (e) { toast(`COULD NOT START FROM THAT ${kind.toUpperCase()}: ${e.message}`, true); }
+  }
+  showStart();
+}
+boot();
+</script>
+</body>
+</html>
