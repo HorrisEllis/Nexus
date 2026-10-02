@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.3.0
+    version:  1.4.0
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -43,7 +43,8 @@ spec:
       leverage. then you could use introspect, okay yeah, we need that, then you could do way more than this. also
       hooking the multiple accounts into the agents/providers and settings in idearium." · "okay but all the other
       phases. make sure the yget added to nexus. make sure every system stays relative and adds routes, commands, all
-      relative node types, and uses the event contract."
+      relative node types, and uses the event contract." · "with these added, can you add a value to the system then
+      maybe add all of them to the phasemap?"
       The ideas, the direction and the calls are James's. This map lays them out bottom-up against what exists.
 
   # ── What exists — read, not assumed ───────────────────────────────────────────────────────────────────────────
@@ -152,6 +153,11 @@ spec:
       requires); only guardian, orchestrator, versionium and clear-glass have one — idearium, cortex, intelligence, loom,
       copilot, cos, emerge and warp do not. Routes: each system's own <system>/interaction-contract.json (15 exist;
       contracts/nexus-interaction-contract.js is deprecated in their favour); cos, warp and emerge have none.
+    leverage_today: >-
+      Main's intelligence/synthesis (0.39.300 SY1/SY2) already ranks every open phase and gap by LEVERAGE, read from
+      structure — unblocks, corroboration, centrality, kind, layer, how concrete — and orders the fill by leverage per
+      unit of EFFORT (a phase costs 8 × its layer's factor). Every part is named. What structure cannot see is value to
+      James: income, daily use, ownership, safety. Nothing in any phasemap declares it, and synthesis reads no such field.
     spec_and_build: >-
       idearium/spec-engine/blocks.yaml — 11 blocks, a default agent each; block `events` ("bus events emitted, bus
       events consumed, payload shapes") is read by nothing after it is written. 10 templates in idearium/spec-engine/
@@ -176,6 +182,7 @@ spec:
     E14: "The event contract. Every event a phase emits is declared first in its system's own event-taxonomy.js in the ET1 shape (lib/event-taxonomy-pattern.js) — a dotted name, its SCREAMING_SNAKE key, description, payloadShape, severity; every route it adds is in that system's interaction-contract.json; every CLI verb and route has its .command node. An undeclared emit or an uncontracted route fails the phase."
     E15: "Isolation. Each system stays its own: no require() across systems except through a declared hook and wire in loom; systems meet through routes, declared events and the component registry — nothing else. A phase that touches several systems is built as one change per system, each wired on its own."
     E16: "Declared, not guessed. Every phase names its systems explicitly (`systems:`); loom's phasemap scanner reads that line first and guesses from prose only where none is given, marking the guess."
+    E17: "Every phase declares its VALUE: a score 1–5 (to James), a cost S|M|L|XL, what kind of value (income, daily-use, quality, safety, ownership, compounding, foundation) and why in one line. Synthesis reads it as one more named part of leverage and its cost as the effort — added to the structural score, never replacing it, so the rank stays explainable and arguable. James can change any value; a changed value is a change to the map, with its reason."
     E11: "Nothing lost (§0.3). SISO and siso_ref stay, attributed; WARP 1.x gates run through an adapter until moved; divergent copies are surfaced, not merged silently."
 
   # ── Phases — bottom-up ─────────────────────────────────────────────────────────────────────────────────────────
@@ -184,6 +191,7 @@ spec:
     EM0_ground:
       layer: foundation
       systems: [loom, emerge, emergence, warp]
+      value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
       status: OPEN — needs James's yes on the branch
       files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
       does: >-
@@ -198,6 +206,7 @@ spec:
     EV0_contracts_for_every_system:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
+      value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
       status: OPEN
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
@@ -208,15 +217,33 @@ spec:
         warp and emerge, projected from their real route tables, as idearium's was (contract.live). (3) A check, per
         system: every emitted event string is in its taxonomy, every served route in its contract — a test, so drift
         fails the suite instead of piling up. (4) loom's phasemap scanner reads a phase's `systems:` line first (E16), its
-        system list grows to cos, warp, emergence, economy and nexstore, and a prose guess is marked as one. Every later
-        phase adds its own events and routes to these files as it is built.
+        system list grows to cos, warp, emergence, economy and nexstore, and a prose guess is marked as one. (5) E17:
+        intelligence/synthesis reads a phase's `value:` — the score added as one more named part of leverage ("declared
+        +N"), the cost as its effort (S 2, M 4, L 8, XL 16) — so the fill order Nexus computes for itself includes what
+        James values, and says so. Every later phase adds its own events and routes to these files as it is built.
       proof: "the check passes for every system with a contract; an emit added without a taxonomy entry fails it; loom lists this map's phases under cos and warp; no phase of this map is tagged 'general'"
+
+    UI0_the_stations_agree:
+      layer: interface
+      systems: [idearium]
+      value: { score: 4, cost: S, for: [daily-use, quality], why: "what James sees every day; four small, visible fixes" }
+      status: OPEN
+      depends_on: [EM0_ground]
+      files: [idearium/ui/architect.html, idearium/ui/workshop.html, idearium/ui/spec-library.html, idearium/ui/settings.html, idearium/ui/index.html, idearium/ui/css/void-theme.css]
+      does: >-
+        Found in the screenshots of main, 2026-10-02: on the Architect the ENGINE band's label is drawn over the LAY OUT
+        THE SPEC button; REACH is still in the workshop (James: "reach sectoin needs to be removed" — the part WS6 owns is
+        the parts and modes; this phase only takes REACH out); the Spec Library and Settings are the old style in lowercase;
+        the home page is partly lowercase ("Welcome", "settings", the cards). James: "no lowercase. and make sure its
+        enterprise grade". Each page onto the shared void-theme.css, capitals, the overlap fixed — no new features.
+      proof: "driven in Chromium against the real server, wide and narrow: no overlapping text, no visible lowercase on any station, REACH absent, no console errors"
 
     EM1_emerge_core:
       layer: foundation
       systems: [emerge]
+      value: { score: 3, cost: L, for: [ownership, foundation], why: "his constraint field as code; the deterministic core every other phase leans on" }
       status: OPEN
-      depends_on: [EM0_ground]
+      depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [emerge/core/field.js, emerge/core/constraint.js, emerge/core/transition.js, emerge/core/observation.js, emerge/core/lens.js, emerge/core/gap.js, emerge/core/history.js, emerge/core/level.js, emerge/core/budget.js, emerge/core/seed.js, emerge/core/index.js, emerge/spec/emerge-core.spec]
       does: >-
         EMERGE's core: James's Rheon primitives as code — the constraint field the Architect spec calls layer 0, built
@@ -230,8 +257,9 @@ spec:
     EM2_warp_his_own:
       layer: foundation
       systems: [warp, cos, loom]
+      value: { score: 3, cost: XL, for: [ownership], why: "an engine that is his, not SISO; high to him, slow to pay back" }
       status: OPEN
-      depends_on: [EM1_emerge_core]
+      depends_on: [EM1_emerge_core, SH1_shadow_space]
       files: [warp/core/Link.js, warp/core/Expectation.js, warp/core/Engine.js, warp/core/Ledger.js, warp/core/Axiom.js, warp/adapters/siso-gates.js, warp/spec/warp.spec, warp/MANIFEST.json]
       does: >-
         "okay but siso is taken. by someone. its identicle. i need my own" · "still i want to make warp mine". WARP 2,
@@ -250,6 +278,7 @@ spec:
     CF1_cfr_improved_with_rfr2:
       layer: foundation
       systems: [intelligence, guardian, cortex, orchestrator, idearium]
+      value: { score: 4, cost: L, for: [quality, compounding], why: "causes stop being guessed; every failure traces to its real source" }
       status: OPEN
       depends_on: [EM1_emerge_core, EM2_warp_his_own]
       files: [intelligence/cfr/graph.js, intelligence/cfr/ledger.js, intelligence/cfr/field.js, intelligence/cfr/sigma.js, intelligence/cfr/delta.js, intelligence/cfr/contract-verifier.js, intelligence/rfr2/]
@@ -271,6 +300,7 @@ spec:
     RF1_relational_field:
       layer: foundation
       systems: [nexstore, idearium, intelligence, emerge]
+      value: { score: 3, cost: XL, for: [foundation, compounding], why: "one field instead of seven graphs; right, but the largest migration" }
       status: OPEN
       depends_on: [EM1_emerge_core, CF1_cfr_improved_with_rfr2]
       files: [lib/nexstore/, emerge/core/relation.js, idearium/repo/graph.js, intelligence/cfr/graph.js]
@@ -288,6 +318,7 @@ spec:
     OT1_one_write_path:
       layer: library
       systems: [cortex, guardian, idearium, nexstore]
+      value: { score: 3, cost: XL, for: [foundation], why: "every memory write checked; long payback" }
       status: OPEN
       depends_on: [RF1_relational_field]
       files: [lib/context-atlas.js, cortex/memory/jaa-db.js, emerge/core/transition.js, docs/nexstore-writers.yaml]
@@ -301,8 +332,9 @@ spec:
     MR1_recall_triad_and_context_table:
       layer: library
       systems: [idearium, copilot, cortex]
+      value: { score: 5, cost: M, for: [daily-use, quality], why: "every agent gets better context the day it lands" }
       status: OPEN
-      depends_on: [OT1_one_write_path]
+      depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [lib/repo-context.js, lib/vector-memory.js, lib/recall-triad.js, lib/context-table.js]
       does: >-
         "make sure its all like builds table of relevant context". Three lanes: LEXICAL (repo-context — what is
@@ -311,11 +343,13 @@ spec:
         why. Lanes that agree raise confidence; a single-lane hit is marked weak. Constraints filter
         deterministically; the table is packed to the agent's budget (E8) with the cut said, and kept with whatever it
         built — what the agent knew, why, and what it left out.
+      note: "Built first on what exists (value-first, E17): lexical = lib/repo-context.js, vector = lib/vector-memory.js, relational = a walk of the CODE graph and loom's wires. When RF1 and OT1 land, the relational lane reads the one field instead — same table, better lane."
       proof: "a fixture question: a chunk found by all three lanes outranks one found by one; the table persists beside the build and replays; nothing over budget is silently dropped"
 
     MR2_vector_space_for_the_field:
       layer: library
       systems: [cortex, intelligence]
+      value: { score: 2, cost: M, for: [quality], why: "makes convergence mean something; useful, not urgent" }
       status: OPEN
       depends_on: [MR1_recall_triad_and_context_table, CF1_cfr_improved_with_rfr2]
       files: [lib/vector-memory.js, intelligence/cfr/]
@@ -328,6 +362,7 @@ spec:
     MR3_gap_driven_search:
       layer: library
       systems: [intelligence, cortex]
+      value: { score: 4, cost: M, for: [compounding], why: "search for what is missing, highest pressure first" }
       status: OPEN
       depends_on: [MR1_recall_triad_and_context_table]
       files: [lib/gap-search.js, emergence/vendor/rfr2/liminal/negative-space.js, emergence/vendor/rfr2/liminal/relational-gaps.js]
@@ -341,6 +376,7 @@ spec:
     MR4_field_memory:
       layer: library
       systems: [cortex]
+      value: { score: 2, cost: M, for: [quality], why: "memory kept by importance; better, not urgent" }
       status: OPEN
       depends_on: [OT1_one_write_path, CF1_cfr_improved_with_rfr2]
       files: [cortex/memory/relevance.js, cortex/memory/decay.js, cortex/memory/tiers.js]
@@ -353,6 +389,7 @@ spec:
     MR5_fractal_levels_with_the_field:
       layer: library
       systems: [idearium]
+      value: { score: 3, cost: L, for: [compounding], why: "any size of model can work at the right level; reuses main FG1–FG4" }
       status: OPEN
       depends_on: [RF1_relational_field]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec FG1, FG2, FG3, FG4]
@@ -366,6 +403,7 @@ spec:
     MR6_contradictions_held:
       layer: library
       systems: [cortex, idearium]
+      value: { score: 3, cost: S, for: [quality], why: "disagreements shown to him, not averaged away" }
       status: OPEN
       depends_on: [RF1_relational_field, MR1_recall_triad_and_context_table]
       does: >-
@@ -377,6 +415,7 @@ spec:
     MR7_recipes:
       layer: service
       systems: [cortex, emergence]
+      value: { score: 4, cost: M, for: [compounding], why: "every success becomes a recipe for the next one" }
       status: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic]
       files: [lib/case-library.js, emergence/components/pattern-engine/, lib/repo-hat-memory.js, meta/crystal-lattice.js]
@@ -389,6 +428,7 @@ spec:
     MR8_crystallization:
       layer: service
       systems: [warp, emerge]
+      value: { score: 5, cost: M, for: [compounding, income], why: "discoveries paid for once; Nexus gets cheaper as it learns" }
       status: OPEN
       depends_on: [MR7_recipes, EM2_warp_his_own]
       files: [warp/dispatch/population.js, emerge/core/constraint.js]
@@ -402,6 +442,7 @@ spec:
     MR9_liminal_on_the_agents:
       layer: service
       systems: [intelligence, guardian]
+      value: { score: 3, cost: S, for: [quality, safety], why: "agent replies checked for unsupported claims and reversals" }
       status: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2]
       files: [emergence/vendor/rfr2/liminal/, lib/agent-memory.js]
@@ -415,6 +456,7 @@ spec:
     MR10_the_field_between_james_and_the_agents:
       layer: service
       systems: [intelligence, guardian]
+      value: { score: 2, cost: M, for: [quality], why: "agents learn how he means things; interesting, last" }
       status: OPEN
       depends_on: [MR9_liminal_on_the_agents]
       files: [emergence/vendor/rfr2/field/relational.js, lib/repo-hat-memory.js]
@@ -427,6 +469,7 @@ spec:
     MR11_rewind_the_mind:
       layer: service
       systems: [intelligence, cos]
+      value: { score: 3, cost: M, for: [safety], why: "rewind memory with the machine; pairs with RW1" }
       status: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, OT1_one_write_path]
       reuses: [docs/2026-10-02-workshop-codex-rewind-phasemap.spec RW1]
@@ -438,6 +481,7 @@ spec:
     CB1_cfr_build_logic:
       layer: service
       systems: [idearium, warp, intelligence]
+      value: { score: 4, cost: L, for: [quality], why: "the build steers itself and halts with a cause instead of looping" }
       status: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2, MR1_recall_triad_and_context_table]
       files: [idearium/spec-engine/warp-build-dispatch.js, idearium/spec-engine/chunk-dispatch.js, lib/pipeline-routing.js]
@@ -452,6 +496,7 @@ spec:
     CB2_analysis_then_synthesis:
       layer: service
       systems: [idearium]
+      value: { score: 4, cost: L, for: [quality], why: "code built from synthesis with provenance, small enough for local models" }
       status: OPEN
       depends_on: [MR1_recall_triad_and_context_table, MR5_fractal_levels_with_the_field, CB1_cfr_build_logic]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec FG5]
@@ -466,6 +511,7 @@ spec:
     CB3_the_causal_spec_block:
       layer: service
       systems: [idearium, emerge]
+      value: { score: 3, cost: M, for: [quality], why: "the spec becomes a contract the running system is checked against" }
       status: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
       files: [idearium/spec-engine/blocks.yaml, emerge/compiler/index.js, emerge/compiler/emit.js, intelligence/cfr/contract-verifier.js]
@@ -480,6 +526,7 @@ spec:
     CB4_the_emergence_loop_builds:
       layer: service
       systems: [emergence, idearium]
+      value: { score: 2, cost: M, for: [compounding], why: "Emergence aimed at building; mostly covered by CB1 + CB2" }
       status: OPEN
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR2_vector_space_for_the_field]
       files: [emergence/loop.js]
@@ -493,6 +540,7 @@ spec:
     WS6_workshop_parts_and_modes:
       layer: interface
       systems: [idearium]
+      value: { score: 4, cost: M, for: [daily-use], why: "the workshop he asked for: parts, modes, his ideas only" }
       status: OPEN
       depends_on: [CB3_the_causal_spec_block]
       reuses: [docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec WS5]
@@ -511,6 +559,7 @@ spec:
     RC1_the_repo_main_chat:
       layer: interface
       systems: [idearium, guardian]
+      value: { score: 5, cost: L, for: [daily-use, income], why: "the loop of this conversation, inside every repo" }
       status: OPEN
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search]
       files: [idearium/api/index.js, idearium/ui/js/app.js]
@@ -525,6 +574,7 @@ spec:
     LN1_lenses_on_the_canvas:
       layer: interface
       systems: [idearium]
+      value: { score: 3, cost: M, for: [daily-use], why: "the field visible on the Architect canvas" }
       status: OPEN
       depends_on: [RF1_relational_field, MR5_fractal_levels_with_the_field]
       files: [idearium/ui/js/arch-canvas.js, idearium/ui/architect.html]
@@ -536,8 +586,9 @@ spec:
     EC6_economy_and_the_tokenizer:
       layer: library
       systems: [economy]
+      value: { score: 4, cost: S, for: [income, quality], why: "exact local counts; quotes and budgets become real numbers" }
       status: OPEN
-      depends_on: [EM1_emerge_core]
+      depends_on: [EM1_emerge_core, EV0_contracts_for_every_system]
       files: [lib/economy/tokens.js, lib/economy/tokenizer/gguf.js, lib/economy/tokenizer/bpe.js, lib/economy/router.js, lib/economy/ledger.js]
       does: >-
         "economy, tokenizer?" BUDGET (EM1) made exact where it can be and honest where it cannot. LOCAL models: the
@@ -553,8 +604,9 @@ spec:
     SH1_shadow_space:
       layer: library
       systems: [cos, intelligence, idearium]
+      value: { score: 5, cost: M, for: [safety], why: "models never write the real tree; the precondition for any client work" }
       status: OPEN
-      depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
+      depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
       does: >-
         "shadow space?" One idea, three uses joined. (1) The SHADOW is the expectation: WARP 2's expectations ARE
@@ -564,13 +616,15 @@ spec:
         what passes the constraints and its shadow is committed into the real tree. Models never write the real tree
         directly. (3) The shadow READ: the liminal shadow detector on agent replies and briefs (MR9) — what is implied
         and unsaid. Shadow and negative space become a region of the relational field, drawn on the canvas (LN1).
-      proof: "a step's declared shadow is its WARP 2 expectation (one record, not two); a generated change that fails its tests never reaches the real tree; the absent file of a step is a gap with the step as cause"
+      note: "Built first on lib/shadow.js and COS's workspace as they are (value-first, E17); EM2 then makes WARP 2's expectations BE these shadows — one mechanism, adopted, not a second one."
+      proof: "a step's declared shadow is its WARP 2 expectation once EM2 lands (one record, not two); a generated change that fails its tests never reaches the real tree; the absent file of a step is a gap with the step as cause"
 
     GA1_guardian_source_of_truth:
       layer: foundation
       systems: [guardian, clear-glass]
+      value: { score: 4, cost: S, for: [safety, quality], why: "one truth for the agents; removes a drift risk already found" }
       status: OPEN
-      depends_on: [EM0_ground]
+      depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [clear-glass/src/providers/registry.js, clear-glass/src/userscripts/manager.js, guardian/spec/guardian.spec, docs/guardian.spec, guardian/userscripts.yaml, guardian/data/nodes/, guardian/routes/, lib/hat-forge.js]
       does: >-
         E13. Clear Glass stops keeping its own agent facts. Providers, userscripts, hats and agent definitions come
@@ -583,6 +637,7 @@ spec:
     BT1_build_teams:
       layer: service
       systems: [cos, idearium, guardian]
+      value: { score: 4, cost: L, for: [income], why: "COS and Idearium working one queue, every hand-off traced" }
       status: OPEN
       depends_on: [GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space]
       files: [cos/, lib/tool-forge.js, lib/hat-forge.js, lib/contract-queue.js, idearium/api/index.js]
@@ -598,6 +653,7 @@ spec:
     FV1_client_jobs:
       layer: service
       systems: [idearium, cos, economy, guardian]
+      value: { score: 5, cost: L, for: [income], why: "brief to proven delivery: the direct path to earning" }
       status: OPEN
       depends_on: [BT1_build_teams, RC1_the_repo_main_chat, EC6_economy_and_the_tokenizer, MR8_crystallization]
       files: [idearium/lib/jobs.js, idearium/ui/jobs.html, cos/workspace/, cos/vault/]
@@ -619,8 +675,9 @@ spec:
     ST1_settings:
       layer: interface
       systems: [idearium, guardian, clear-glass]
+      value: { score: 3, cost: M, for: [daily-use], why: "every new behaviour can be seen and changed without code" }
       status: OPEN
-      depends_on: [EM1_emerge_core]
+      depends_on: [EM1_emerge_core, EV0_contracts_for_every_system]
       files: [idearium/ui/settings.html, idearium/api/index.js]
       does: >-
         "settings are expanded if applicaple". Idearium's settings gain, each section only once its phase exists:
@@ -634,8 +691,9 @@ spec:
     IN1_nexus_as_claude_codes_toolbox:
       layer: service
       systems: [orchestrator, copilot, loom]
+      value: { score: 5, cost: S, for: [compounding, daily-use], why: "Claude Code sees Nexus from inside; every later phase gets built faster and better" }
       status: OPEN
-      depends_on: [EM0_ground, GA1_guardian_source_of_truth]
+      depends_on: [EM0_ground, GA1_guardian_source_of_truth, EV0_contracts_for_every_system]
       files: [.mcp.json, orchestrator/lib/mcp-server.js, orchestrator/lib/mcp-stdio.js, lib/introspect.js, lib/reflection.js]
       does: >-
         "i want to get you to work from inside nexus … then you could use introspect". Claude Code → Nexus. A .mcp.json
@@ -652,6 +710,7 @@ spec:
     IN2_claude_code_inside_nexus:
       layer: service
       systems: [guardian, economy, idearium, cos]
+      value: { score: 5, cost: M, for: [income, daily-use], why: "the strongest coder available, working inside his pipeline on his account" }
       status: OPEN
       depends_on: [GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space]
       files: [lib/providers/claude-code.js, lib/economy/policy.js, lib/repo-agent.js, idearium/repo/work-surface.js]
@@ -667,8 +726,9 @@ spec:
     AC1_accounts_into_agents:
       layer: library
       systems: [clear-glass, guardian, economy, idearium]
+      value: { score: 4, cost: M, for: [daily-use, income], why: "every account he has gets used, priced and learned separately" }
       status: OPEN
-      depends_on: [GA1_guardian_source_of_truth, EC6_economy_and_the_tokenizer]
+      depends_on: [GA1_guardian_source_of_truth, EC6_economy_and_the_tokenizer, ST1_settings]
       files: [guardian/lib/cg-account-authority.js, lib/economy/policy.js, lib/economy/ledger.js, lib/economy/router.js, lib/economy/gate.js, lib/repo-agent.js, idearium/ui/settings.html]
       does: >-
         "hooking the multiple accounts into the agents/providers and settings in idearium". The unit becomes PROVIDER ×
@@ -685,6 +745,7 @@ spec:
   # nodes use the lib/node-export.js envelope and Guardian's nodes/<type>/<id>.<type> layout; routes carry CAPS and get a
   # .command node; every CLI verb gets a .command node; loom: the map named, real wires, bootstrapped from empty.
   wiring:
+    UI0: { systems: [idearium], events: "none", contract: "none (pages only)", nodes: "none new", cli: "none", loom: "ui-map.js (the pages' shared theme wires)", settings: none }
     EV0: { events: "none new: declares what each system already emits", contract: "event-taxonomy.js x8; interaction-contract.json for cos, warp, emerge", systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp], nodes: ".component per taxonomy and contract file", cli: "nexus contracts check [--system <s>]", loom: "observability-map.js (the check's wires)", settings: none }
     EM0: { events: "loom: LOOM_REGISTRY_REGENERATED", contract: "loom", systems: [loom, emerge, warp], loom: "registry.json regenerated; emergence-map.js (new) for the upload's components", settings: none }
     EM1: { events: "emerge: EMERGE_OBSERVATION_PROPOSED, EMERGE_TRANSITION_COMMITTED, EMERGE_OBSERVATION_REJECTED, EMERGE_GAP_OPENED", contract: "emerge", systems: [emerge], nodes: "emerge.core.* .component + .hook per primitive; nexstore types field, constraint, transition, observation, gap, history", cli: "emerge core check|replay --seed", loom: "emerge-map.js (new)", settings: "ST1 EMERGE" }
@@ -740,17 +801,16 @@ spec:
     - "FV1: which gig types first, for the kits?"
     - "EC6: which local models to read tokenizers from first (the ones Ollama runs here)?"
 
-  build_order: [EM0, EV0, GA1, IN1, EM1, ST1, EC6, AC1, EM2, CF1, SH1, IN2, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, BT1, MR2, MR6, MR4, MR7, MR8, FV1, MR9, MR10, MR11, CB4, LN1]
-  # Why this order: the deterministic core and his own engine first (EM1, EM2); CFR on RFR2's discipline and the one
-  # field on top (CF1, RF1); one write path (OT1); then the recall triad, which improves every agent the day it lands,
-  # and the levels it packs to (MR1, MR5); the build logic, synthesis and the causal block (CB1–CB3); the workshop, gap
-  # search and the repo chat that use them (WS6, MR3, RC1); then everything that compounds (MR2–MR11, CB4) and the
-  # canvas that shows it (LN1). Guardian becomes the agents' one truth early (GA1) because every later phase dispatches
-  # through it; IN1 right after it, because Claude Code working from inside Nexus speeds every phase that follows;
-  # accounts (AC1) once the tokenizer prices per account; Claude Code as a provider (IN2) once the shadow layer can hold
-  # its work; settings (ST1) start with EMERGE and grow one section per phase; the tokenizer (EC6) makes BUDGET real
-  # before anything is priced; shadow space (SH1) before any model writes code; the build teams (BT1) and client jobs
-  # (FV1) once the chat, the build logic and crystallization exist to make them cheap and safe.
+  build_order: [EM0, EV0, GA1, IN1, UI0, EM1, EC6, SH1, MR1, EM2, CF1, MR9, RF1, MR6, ST1, AC1, IN2, CB1, MR7, MR8, MR3, CB3, WS6, MR5, LN1, OT1, MR11, CB2, RC1, BT1, FV1, MR2, MR4, MR10, CB4]
+  # Value-first (E17), computed, not hand-picked: a phase is ready when everything it depends on is built; of the ready
+  # ones, the next is the one with the highest value per cost — where a prerequisite takes on the value of the best phase
+  # it unlocks (so EM2, slow on its own, is pulled forward by SH1's and CB1's value), ties by score. The groundwork and
+  # the contracts come first because every later phase depends on them (EM0, EV0); then the agents' one truth and
+  # Claude Code inside Nexus (GA1, IN1), which speed everything after; then what James sees daily (UI0); then the core
+  # and the highest-value services. Low-value phases (MR2, MR4, MR10, CB4) fall to the end on their own. Change any
+  # phase's value and the order is recomputed the same way.
+  build_order_bottom_up: [EM0, EV0, UI0, GA1, IN1, EM1, ST1, EC6, AC1, EM2, CF1, SH1, IN2, RF1, OT1, MR1, MR5, CB1, CB2, CB3, WS6, MR3, RC1, BT1, MR2, MR6, MR4, MR7, MR8, FV1, MR9, MR10, MR11, CB4, LN1]   # the 1.3.0 order, kept (§0.3)
+
 
 ## ADDENDUM 2026-10-02 — 1.0.0
 # Mapped from the conversation of 2026-10-02, before any building. Written against main 0.39.300 and the Emergence
@@ -789,3 +849,13 @@ spec:
 # registry), E16 (systems declared, not guessed); an explicit `systems:` on every phase; EV0 (taxonomies and contracts
 # for every system this map touches, written from what each already emits, plus a drift check, plus the scanner
 # reading `systems:`), placed right after EM0; and `events` + `contract` on every wiring row.
+
+## ADDENDUM 2026-10-02 — 1.4.0
+# James: "with these added, can you add a value to the system then maybe add all of them to the phasemap?" Found: main's
+# intelligence/synthesis already ranks open phases by structural leverage per unit of effort (unblocks, corroboration,
+# centrality, kind, layer), but no phasemap declares value to James and synthesis reads none. Added E17 (every phase
+# declares value: score 1–5, cost S|M|L|XL, kind, why; synthesis adds it as a named part of leverage and uses the cost
+# as effort — EV0 item 5); a value on all 35 phases; UI0 (the four UI faults found in the screenshots of main); SH1 and
+# MR1 now start on what exists and are upgraded when WARP 2 and the field land (EM2 adopts SH1's shadows); EV0 before
+# every phase that emits; ST1 before AC1's settings section. The build order is now value-first, computed from the
+# values and the dependencies; the bottom-up order is kept beside it.
