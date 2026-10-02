@@ -36,7 +36,25 @@ function statusOf(raw) {
   return 'unknown';
 }
 
-/** phasesFromYaml(doc) → [{ key, status, deps, does, files, proof, layer }] — phases as a map or a list */
+/**
+ * valueOf(v) → { score, cost, for, why } | null — §EV0 (5), invariant E17: a phase's declared VALUE to James. Read from
+ * the YAML object or from its one-line text form (`value: { score: 4, cost: M, for: [a, b], why: "…" }`). A score
+ * outside 1–5 or a cost outside S|M|L|XL is not a value — null, never a guess.
+ */
+function valueOf(v) {
+  if (v == null || v === '') return null;
+  let score, cost, fr = [], why = null;
+  if (typeof v === 'object') { score = Number(v.score); cost = String(v.cost || '').toUpperCase(); fr = Array.isArray(v.for) ? v.for.map(String) : _list(v.for); why = v.why ? String(v.why) : null; }
+  else {
+    const t = String(v);
+    score = Number((t.match(/score:\s*(\d+)/) || [])[1]); cost = String((t.match(/cost:\s*(XL|S|M|L)\b/i) || [])[1] || '').toUpperCase();
+    fr = _list((t.match(/for:\s*\[([^\]]*)\]/) || [])[1] || ''); why = (t.match(/why:\s*"([^"]*)"/) || [])[1] || null;
+  }
+  if (!(score >= 1 && score <= 5) || !['S', 'M', 'L', 'XL'].includes(cost)) return null;
+  return { score: Math.round(score), cost, for: fr, why };
+}
+
+/** phasesFromYaml(doc) → [{ key, status, deps, does, files, proof, layer, value }] — phases as a map or a list */
 function phasesFromYaml(doc) {
   const root = doc && (doc.spec || doc);
   const ph = root && (root.phases || (root.spec && root.spec.phases));
@@ -45,6 +63,7 @@ function phasesFromYaml(doc) {
   return list.filter(p => p.key).map(p => ({
     key: p.key, status: _first(p.status != null ? p.status : ''), gate: _first(p.gate), deps: _list(p.depends_on || p.dependsOn || p.depends),
     does: _first(p.does || p.goal || p.what || p.summary).slice(0, 600), files: _list(p.files), proof: _first(p.proof || p.gate).slice(0, 300), layer: p.layer ? String(p.layer) : null,
+    value: valueOf(p.value),   // §EV0 (5)
   }));
 }
 
@@ -67,7 +86,7 @@ function phasesFromText(text) {
     const key = l.match(/^\s*([A-Za-z0-9][\w.-]*)\s*:\s*(?:#\s*(.*))?$/) || l.match(/^\s*-\s+id:\s*["']?([\w.-]+)["']?\s*(?:#\s*(.*))?$/);
     if (key && (keyIndent == null ? ind > base : ind === keyIndent)) {
       keyIndent = ind;
-      cur = { key: key[1], status: key[2] ? key[2].replace(/^[←<\-\s]+/, '') : '', deps: [], does: '', files: [], proof: '', layer: null };
+      cur = { key: key[1], status: key[2] ? key[2].replace(/^[←<\-\s]+/, '') : '', deps: [], does: '', files: [], proof: '', layer: null, value: null };
       out.push(cur); continue;
     }
     if (!cur) continue;
@@ -79,6 +98,7 @@ function phasesFromText(text) {
     else if ((v = field(l, 'files')) != null) cur.files = _list(v);
     else if ((v = field(l, 'proof')) != null) cur.proof = v.replace(/^["']|["']$/g, '').slice(0, 300);
     else if ((v = field(l, 'layer')) != null) cur.layer = v;
+    else if ((v = field(l, 'value')) != null && !cur.value) cur.value = valueOf(v);   // §EV0 (5)
   }
   return out;
 }
@@ -146,7 +166,7 @@ function phasemaps({ root, yaml }) {
     for (const p of open) gaps.push({
       id: `phase:${f.replace(/\.spec$/, '')}#${p.key}`, source: 'phasemap', kind: 'phase', title: p.key.replace(/_/g, ' '),
       detail: p.does || p.status, refs: [rel, ...p.files.filter(x => /[./]/.test(x))], dependsOn: p.deps,
-      meta: { map: rel, key: p.key, status: p.status.slice(0, 200), proof: p.proof, layer: p.layer, owner },
+      meta: { map: rel, key: p.key, status: p.status.slice(0, 200), proof: p.proof, layer: p.layer, owner, ...(p.value ? { value: p.value } : {}) },
     });
     // the gaps a map states outright (missing:, honest_gaps:, open_questions: …) — gaps too, whatever the map's shape
     const stated = doc ? statedFromYaml(doc) : statedFromText(text);
@@ -234,4 +254,4 @@ function gapTable(rows) {
   }));
 }
 
-module.exports = { statusOf, phasesFromYaml, phasesFromText, statedFromYaml, statedFromText, ownerOf, phasemaps, knownGaps, markers, registry, gapTable, OPEN_RE, DONE_RE };
+module.exports = { valueOf, statusOf, phasesFromYaml, phasesFromText, statedFromYaml, statedFromText, ownerOf, phasemaps, knownGaps, markers, registry, gapTable, OPEN_RE, DONE_RE };
