@@ -1,0 +1,72 @@
+/*
+ * idearium/ui/css/void-theme.css — the Void's look, shared by every page of the pipeline (0.39.297 SW2).
+ * Map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec (SW2) · docs/2026-10-02-spatial-void-phasemap.spec
+ * James: "keep the style, thats what i want most" · "no lowercase" · "make sure its enterprise grade".
+ * Rebuilt from Nexus v0.54's void (read, not copied): the near-black field, Bebas Neue titles wide-tracked and
+ * breathing, DM Mono for working text, Space Grotesk for body, the v4 palette, 2px corners. Capitals everywhere —
+ * what he types is stored as typed. Fonts: idearium/ui/fonts (SIL OFL). The star field is js/void-sky.js.
+ */
+@font-face { font-family: 'Bebas Neue'; src: url(../fonts/bebas-neue-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url(../fonts/dm-mono-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'DM Mono'; src: url(../fonts/dm-mono-500.woff2) format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url(../fonts/space-grotesk-400.woff2) format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Space Grotesk'; src: url(../fonts/space-grotesk-600.woff2) format('woff2'); font-weight: 600; font-display: swap; }
+:root {
+  color-scheme: dark;
+  --void:#030508; --bg:#05080f; --bg1:#080d17; --bg2:#0b1120; --bg3:#0e1628;
+  --line:#1a2a40; --line2:#1e3050; --line3:#2a4060;
+  --c:#00d4ff; --c2:#0097bb; --g:#00ff88; --r:#ff2d55; --y:#ffcc00; --o:#ff6b35; --m:#cc44ff;
+  --text:#b8cfe0; --text2:#5a7a96; --text3:#2e4a60;
+  --mono:'DM Mono', ui-monospace, monospace; --display:'Bebas Neue', Impact, sans-serif; --body:'Space Grotesk', system-ui, sans-serif;
+  --tc:0;   /* tension, 0..1 — set by the dials */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--void); color: var(--text); font: 13px/1.6 var(--body); overflow: hidden; }
+/* James: "no lowercase". Everything in the pipeline's pages is shown in capitals — the text itself is stored exactly as typed */
+html { text-transform: uppercase; }
+input, textarea, button, select { text-transform: uppercase; }
+::placeholder { text-transform: uppercase; }
+body { padding-top: var(--chrome-h, 0px); }
+button { font: inherit; color: inherit; }
+::selection { background: rgba(0,212,255,.25); }
+* { scrollbar-width: thin; scrollbar-color: var(--line3) transparent; }
+.hidden { display: none !important; }
+
+#sky { position: fixed; inset: var(--chrome-h, 0px) 0 0 0; width: 100%; height: calc(100% - var(--chrome-h, 0px)); display: block; }
+
+/* the title — wide-tracked, breathing */
+.head { position: fixed; top: calc(var(--chrome-h, 0px) + 22px); left: 0; right: 0; text-align: center; pointer-events: none; z-index: 3; }
+.title { font: 400 46px/1 var(--display); letter-spacing: .42em; padding-left: .42em; color: rgba(0,212,255,.62); text-shadow: 0 0 60px rgba(0,212,255,.22); animation: breathe 5s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { opacity: .6 } 50% { opacity: 1 } }
+.sub { font: 400 10.5px/1 var(--mono); letter-spacing: .26em; color: rgba(184,207,224,.42); margin-top: 10px; }
+
+/* the edges */
+.btn { font: 400 13px/1 var(--display); letter-spacing: .18em; background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.2); border-radius: 2px; color: rgba(0,212,255,.65); padding: 8px 18px; cursor: pointer; transition: background .25s, color .25s, border-color .25s, box-shadow .25s; }
+.btn:hover:not(:disabled) { background: rgba(0,212,255,.11); color: var(--c); box-shadow: 0 0 18px rgba(0,212,255,.12); }
+.btn:disabled { opacity: .35; cursor: default; }
+.btn.m { border-color: rgba(204,68,255,.25); color: rgba(204,68,255,.7); background: rgba(204,68,255,.04); }
+.btn.m:hover:not(:disabled) { background: rgba(204,68,255,.1); color: var(--m); box-shadow: 0 0 18px rgba(204,68,255,.14); }
+.btn.g { border-color: rgba(0,255,136,.22); color: rgba(0,255,136,.65); background: rgba(0,255,136,.03); }
+.btn.g:hover:not(:disabled) { background: rgba(0,255,136,.08); color: var(--g); }
+.btn.y { border-color: rgba(255,204,0,.25); color: rgba(255,204,0,.7); background: rgba(255,204,0,.03); }
+.btn.small { font-size: 11px; padding: 5px 11px; letter-spacing: .14em; }
+.ghost { background: none; border: 1px solid var(--line); color: var(--text3); }
+.chip { font: 400 10px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 6px 9px; border: 1px solid var(--line); border-radius: 2px; color: var(--text2); background: rgba(3,5,8,.6); cursor: pointer; }
+.chip.on { color: var(--c); border-color: rgba(0,212,255,.4); }
+@keyframes rise { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+.thinking { font: 400 11px/1 var(--mono); letter-spacing: .14em; color: rgba(204,68,255,.7); text-transform: uppercase; animation: breathe 1.6s ease-in-out infinite; }
+.empty { color: var(--text2); font: 400 11px/1.6 var(--mono); }
+.chip:focus-visible, .btn:focus-visible, .hold:focus-visible, .mote:focus-visible, .x:focus-visible { outline: 1px solid var(--c); outline-offset: 3px; }
+.chip { user-select: none; }
+/* the field's own states: entering, empty, unreachable */
+.state { position: fixed; left: 50%; top: 44%; transform: translate(-50%, -50%); z-index: 3; text-align: center; font: 400 11px/1.8 var(--mono); letter-spacing: .2em; color: var(--text2); pointer-events: none; }
+.state b { display: block; font: 400 22px/1.2 var(--display); letter-spacing: .3em; color: rgba(0,212,255,.55); margin-bottom: 6px; }
+.state.bad b { color: rgba(255,45,85,.7); } .state .btn { pointer-events: auto; margin-top: 12px; }
+.meter { font: 400 10px/1 var(--mono); letter-spacing: .12em; color: var(--text2); margin-left: 8px; }
+.limit { font: 400 9.5px/1 var(--mono); letter-spacing: .1em; color: var(--text3); text-align: right; margin-top: 4px; }
+.limit.near { color: var(--y); } .limit.over { color: var(--r); }
+#toasts { position: fixed; left: 18px; top: calc(var(--chrome-h, 0px) + 62px); display: flex; flex-direction: column; gap: 6px; z-index: 9; pointer-events: none; max-width: min(420px, calc(100% - 36px)); }
+.toast { font: 400 11px/1.5 var(--mono); padding: 9px 12px; border: 1px solid rgba(0,212,255,.3); background: rgba(5,8,15,.95); border-radius: 2px; color: var(--c); animation: rise .3s ease; }
+.toast.bad { border-color: rgba(255,45,85,.45); color: #ff8aa2; }
+.btn:focus-visible, .chip:focus-visible, .x:focus-visible, [tabindex]:focus-visible { outline: 1px solid var(--c); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .title, .thinking { animation: none; } }

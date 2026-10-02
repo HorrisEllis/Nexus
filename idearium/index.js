@@ -93,7 +93,7 @@ function _latticeLink(a, b, w = 0.7, t = 'associated') {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-export const VERSION   = '4.21.1';   // 0.39.293 synced (desktop image + login) · 0.39.292 synced (library spec → pipeline) · 0.39.291 synced (verify + prove) · 0.39.290 synced (the spec library) · 0.39.288 synced (in-place nexus-self spec update) · 0.39.287 synced (learned routing) · 0.39.286 synced (routing, registry block) · 0.39.285 synced (file versions, chunk reassign) · 0.39.284 synced (work surface, plan fallbacks, archive import, ui.* config). 0.39.283 synced (draft review, shadow, Manage workbench). 0.39.282 synced (default_provider, desktop login, blocked jobs). §0.39.281 synced — had stayed at 4.7.0 while package.json moved to 4.11.0.   // §5.4 fix 2026-08-08 — was 3.0.0, drifted from canonical lib/version.js's services.idearium (3.2.0)
+export const VERSION   = '4.23.2';   // 0.39.297 synced (the workshop's own page) · 0.39.296 synced (the void hardened) · 0.39.295 synced (the spatial void) · 0.39.294 synced (the spec workshop) · 0.39.293 synced (desktop image + login) · 0.39.292 synced (library spec → pipeline) · 0.39.291 synced (verify + prove) · 0.39.290 synced (the spec library) · 0.39.288 synced (in-place nexus-self spec update) · 0.39.287 synced (learned routing) · 0.39.286 synced (routing, registry block) · 0.39.285 synced (file versions, chunk reassign) · 0.39.284 synced (work surface, plan fallbacks, archive import, ui.* config). 0.39.283 synced (draft review, shadow, Manage workbench). 0.39.282 synced (default_provider, desktop login, blocked jobs). §0.39.281 synced — had stayed at 4.7.0 while package.json moved to 4.11.0.   // §5.4 fix 2026-08-08 — was 3.0.0, drifted from canonical lib/version.js's services.idearium (3.2.0)
                                      // §2026-09-22 — real bump: eravos mods in the New Spec picker + Brainstorm AI assistance. See idearium.spec's meta.version comment.
                                      // §5.4 fix 2026-09-13 — same drift recurred: idearium/package.json had moved
                                      // on to 4.1.0 through the 2026-09-03 "idearium 3.3.0" session and beyond,
@@ -624,7 +624,7 @@ export class IdeaOS {
 class IdeaCreateGate extends Gate {
   constructor(os) { super('idearium.idea.create'); this.os = os; }
   transform(event, stream) {
-    const { text, tags = [], compartment = null, source = 'cli', causedBy = null } = event.data;
+    const { text, tags = [], compartment = null, source = 'cli', causedBy = null, void: voidState = null } = event.data;
     if (!text || text.trim().length < 3) {
       stream.emit(new Event('idearium.error', { op: 'idea.create', reason: 'text must be ≥3 chars' }));
       return;
@@ -640,6 +640,8 @@ class IdeaCreateGate extends Gate {
       compartment, archiveReason: null, archivedAt: null,
       causedBy, source, createdAt: Date.now(), updatedAt: Date.now(),
     };
+    // §0.39.295 V3 — an idea born in the spatial void keeps the dials it was born at (idearium/lib/void.js shapes it)
+    if (voidState && typeof voidState === 'object') idea.void = voidState;
     this.os.db.ideas.push(idea);
     saveDB(this.os.db, ['ideas']);
     _latticeAdd(uuid, text, tags);
@@ -654,7 +656,7 @@ class IdeaUpdateGate extends Gate {
     const { uuid, fields, causedBy = null } = event.data;
     const idea = this.os.db.ideas.find(i=>i.uuid===uuid);
     if (!idea) { stream.emit(new Event('idearium.error', { op:'idea.update', reason:`uuid not found: ${uuid}` })); return; }
-    const allowed = ['text','tags','compartment','resonanceWith','tensionWith','stability','linkedSpec'];
+    const allowed = ['text','tags','compartment','resonanceWith','tensionWith','stability','linkedSpec','void'];   // §0.39.295 V3 void: the spatial void's dials + place
     for (const k of allowed) { if (fields[k] !== undefined) idea[k] = fields[k]; }
     idea.updatedAt = Date.now();
     idea.causedBy  = causedBy;

@@ -1,0 +1,490 @@
+<!doctype html>
+<!--
+  idearium/ui/void.html — THE SPATIAL VOID (0.39.295). Map: docs/2026-10-02-spatial-void-phasemap.spec
+  James: "take the spacial void ad completely rebuild it for the new nexus, non of it will connect to the new one. keep
+  the style, thats what i want most. like steal everything you can from it. no boilerplate, or copy paste." · "Just
+  have the spacial void, with a slider that moves from: normal, creative, outside the box, novel, outlier. then moves
+  another switch from the opposit side: stable, shaky, risky, dangerous, unstable. with those linked togethe" · "the
+  ideas come from me though not agents".
+  Rebuilt, not copied, from Nexus v0.54's void: the star field, THE VOID in Bebas Neue, the v4 palette, his words in
+  cyan and the agent's in magenta, 2px corners. Its own page; /api/void (idearium/lib/void.js). The agent only echoes.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE VOID</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/void-theme.css">
+<style>
+  #field { position: fixed; inset: var(--chrome-h, 0px) 0 0 0; }
+  .corner { position: fixed; top: calc(var(--chrome-h, 0px) + 16px); z-index: 6; display: flex; gap: 6px; }
+  .corner.l { left: 18px; } .corner.r { right: 18px; }
+  .count { font: 400 10px/1 var(--mono); letter-spacing: .14em; color: var(--text2); padding: 7px 4px; }
+
+  /* the ideas — points of light */
+  .mote { position: absolute; transform: translate(-50%, -50%); cursor: grab; z-index: 2; touch-action: none; }
+  .mote .core { width: var(--s); height: var(--s); border-radius: 50%; background: radial-gradient(circle, rgba(220,250,255,var(--a)) 0%, rgba(0,212,255,calc(var(--a) * .8)) 38%, rgba(0,212,255,0) 72%);
+    box-shadow: 0 0 calc(var(--s) * 1.2) rgba(0,212,255,calc(var(--a) * .45)); transition: transform .3s, box-shadow .3s; }
+  .mote.wild .core { background: radial-gradient(circle, rgba(250,230,255,var(--a)) 0%, rgba(204,68,255,calc(var(--a) * .85)) 38%, rgba(204,68,255,0) 72%); box-shadow: 0 0 calc(var(--s) * 1.2) rgba(204,68,255,calc(var(--a) * .5)); }
+  .mote.unsteady .core { background: radial-gradient(circle, rgba(255,240,230,var(--a)) 0%, rgba(255,107,53,calc(var(--a) * .85)) 38%, rgba(255,107,53,0) 72%); box-shadow: 0 0 calc(var(--s) * 1.2) rgba(255,107,53,calc(var(--a) * .45)); }
+  .mote.spark .core { background: none; border: 1px dashed rgba(0,212,255,.35); box-shadow: none; }
+  .mote:hover .core, .mote.sel .core { transform: scale(1.35); }
+  .mote.sel .core { box-shadow: 0 0 28px rgba(0,212,255,.6), 0 0 0 1px rgba(0,212,255,.5); }
+  .mote.target .core { transform: scale(1.8); box-shadow: 0 0 34px rgba(204,68,255,.7); }
+  .mote .label { position: absolute; top: calc(var(--s) / 2 + 8px); left: 50%; transform: translateX(-50%); white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis;
+    font: 400 10.5px/1.3 var(--mono); letter-spacing: .04em; color: rgba(184,207,224,calc(var(--a) * .85)); pointer-events: none; opacity: 0; transition: opacity .25s; }
+  .mote.bright .label { opacity: .62; }
+  .mote:hover .label, .mote.sel .label { opacity: 1; color: var(--text); }
+  .mote .halo { position: absolute; left: 50%; top: 50%; width: calc(var(--s) * 2.6); height: calc(var(--s) * 2.6); transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(0,212,255,calc(var(--a) * .22)); pointer-events: none; animation: halo 6s ease-in-out infinite; animation-delay: var(--d, 0s); }
+  .mote.wild .halo { border-color: rgba(204,68,255,calc(var(--a) * .26)); } .mote.unsteady .halo { border-color: rgba(255,107,53,calc(var(--a) * .24)); } .mote.spark .halo { display: none; }
+  @keyframes halo { 0%, 100% { transform: translate(-50%, -50%) scale(.85); opacity: .5 } 50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1 } }
+  body.focused .speak, body.focused .dials { left: calc((100% - 450px) / 2); }
+  #field { transition: right .35s cubic-bezier(.2,.8,.2,1); } #field.settling .label { transition: none; } body.focused #field { right: 450px; }
+  .mote.edge-l .label { left: 0; transform: none; } .mote.edge-r .label { left: auto; right: 0; transform: none; }
+  @media (max-width: 860px) { body.focused .speak, body.focused .dials { left: 50%; } body.focused #field { right: 0; } }
+  .mote.dragging { cursor: grabbing; z-index: 5; }
+  .mote.dim { opacity: .14; pointer-events: none; }
+  @keyframes born { from { transform: translate(-50%, -50%) scale(0); opacity: 0 } 60% { transform: translate(-50%, -50%) scale(1.6); opacity: 1 } to { transform: translate(-50%, -50%) scale(1) } }
+  .mote.born { animation: born .9s cubic-bezier(.2,.8,.2,1); }
+
+  /* speak your vision */
+  .speak { transition: left .35s cubic-bezier(.2,.8,.2,1); position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(196px + env(safe-area-inset-bottom)); width: min(620px, calc(100% - 32px)); z-index: 4; }
+  .speak textarea { width: 100%; background: rgba(11,17,32,.82); border: 1px solid rgba(0,212,255,.15); border-radius: 2px; padding: 13px 16px; font: 400 13px/1.6 var(--mono); color: var(--c); outline: none; resize: none; min-height: 52px; max-height: 160px; transition: border-color .3s, box-shadow .3s; }
+  .speak textarea:focus { border-color: rgba(0,212,255,.4); box-shadow: 0 0 30px rgba(0,212,255,.08); }
+  .speak textarea::placeholder { color: rgba(0,212,255,.22); }
+  .speak .row { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+
+  /* the instrument: two dials, linked, and the tension between them */
+  .dials { transition: left .35s cubic-bezier(.2,.8,.2,1); position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom)); width: min(760px, calc(100% - 32px)); z-index: 4;
+    background: rgba(5,8,15,.78); border: 1px solid var(--line2); border-radius: 2px; padding: 12px 18px 12px; backdrop-filter: blur(6px); }
+  .dial-row { display: grid; grid-template-columns: 96px 1fr 30px; align-items: center; gap: 10px; }
+  .dial-name { font: 400 14px/1 var(--display); letter-spacing: .2em; }
+  .dial-name.c { color: rgba(0,212,255,.75); } .dial-name.s { color: rgba(255,204,0,.75); }
+  .rail { position: relative; height: 34px; cursor: pointer; touch-action: none; }
+  .rail .track { position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: var(--line2); }
+  .rail .fill { position: absolute; top: 11px; height: 2px; }
+  .rail.c .fill { left: 0; background: linear-gradient(90deg, rgba(0,212,255,.25), rgba(204,68,255,.9)); }
+  .rail.s .fill { right: 0; background: linear-gradient(270deg, rgba(255,204,0,.25), rgba(255,45,85,.9)); }
+  .rail .tick { position: absolute; top: 7px; width: 1px; height: 10px; background: var(--line3); }
+  .rail .lab { position: absolute; top: 21px; transform: translateX(-50%); font: 400 9.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text2); white-space: nowrap; cursor: pointer; }
+  .rail .lab.on { color: var(--text); }
+  .rail .lab:first-of-type { transform: none; } .rail .lab.end { transform: translateX(-100%); }
+  .rail .knob { position: absolute; top: 4px; width: 16px; height: 16px; margin-left: -8px; border-radius: 2px; transform: rotate(45deg); border: 1px solid; background: var(--bg); transition: left .35s cubic-bezier(.2,.8,.2,1); }
+  .rail.c .knob { border-color: var(--c); box-shadow: 0 0 14px rgba(0,212,255,.5); } .rail.s .knob { border-color: var(--y); box-shadow: 0 0 14px rgba(255,204,0,.45); }
+  .rail:focus-visible { outline: 1px solid var(--c); outline-offset: 3px; }
+  .hold { width: 28px; height: 24px; border: 1px solid var(--line); border-radius: 2px; background: none; color: var(--text3); cursor: pointer; font-size: 12px; }
+  .hold.on { color: var(--y); border-color: rgba(255,204,0,.5); box-shadow: 0 0 10px rgba(255,204,0,.15); }
+  #tensionSvg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .linkage { position: relative; height: 22px; }
+  .dial-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-top: 4px; font: 400 10px/1.4 var(--mono); letter-spacing: .08em; }
+  .voice { color: rgba(204,68,255,.7); text-transform: uppercase; letter-spacing: .14em; }
+  .tension { color: var(--text3); text-transform: uppercase; } .tension.pull { color: rgba(255,107,53,.8); } .tension.snap { color: var(--r); }
+
+  /* the focused idea */
+  .focus { position: fixed; top: calc(var(--chrome-h, 0px) + 64px); right: 18px; bottom: 18px; width: min(430px, calc(100% - 36px)); z-index: 7; display: flex; flex-direction: column;
+    background: rgba(5,8,15,.92); border: 1px solid var(--line2); border-radius: 2px; box-shadow: 0 0 60px rgba(0,0,0,.6); backdrop-filter: blur(8px); transform: translateX(110%); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+  .focus.open { transform: none; }
+  .focus .fh { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .focus .fh .k { font: 400 13px/1 var(--display); letter-spacing: .22em; color: rgba(0,212,255,.7); flex: 1; }
+  .focus .x { background: none; border: 1px solid var(--line); color: var(--text3); border-radius: 2px; cursor: pointer; padding: 3px 9px; font: 400 11px var(--mono); }
+  .focus .x:hover { color: var(--r); border-color: var(--r); }
+  .focus .fb { flex: 1; overflow: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .mine { width: 100%; background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.16); border-radius: 2px; color: var(--c); font: 400 13px/1.65 var(--mono); padding: 12px 14px; resize: vertical; min-height: 110px; outline: none; }
+  .mine:focus { border-color: rgba(0,212,255,.42); }
+  .born { display: flex; gap: 6px; flex-wrap: wrap; font: 400 9.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  .born span { padding: 5px 7px; border: 1px solid var(--line); border-radius: 2px; color: var(--text2); }
+  .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+  .lbl { font: 400 11px/1 var(--display); letter-spacing: .24em; color: var(--text3); }
+  .echo { border: 1px solid rgba(204,68,255,.14); background: rgba(204,68,255,.03); border-radius: 2px; padding: 10px 12px; animation: rise .35s ease; }
+  .echo.seen { animation: none; }
+  .echo.taken { border-color: rgba(0,255,136,.18); } .echo.set-aside { opacity: .4; }
+  .echo .eh { display: flex; gap: 8px; align-items: baseline; font: 400 9.5px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: rgba(204,68,255,.6); margin-bottom: 6px; flex-wrap: wrap; }
+  .echo .eh .d { color: var(--text3); }
+  .echo .ln { display: flex; gap: 8px; align-items: flex-start; padding: 3px 0; color: rgba(214,170,255,.85); font: 400 12px/1.6 var(--body); }
+  .echo .ln .t { flex: 1; } .echo .ln button { opacity: 0; transition: opacity .2s; }
+  .echo .ln:hover button { opacity: 1; }
+  .echo .ln button:focus-visible { opacity: 1; }
+  .echo .took { margin-top: 6px; font: 400 10.5px/1.5 var(--mono); color: rgba(0,255,136,.6); }
+  .keep { border: 1px solid rgba(0,212,255,.3); border-radius: 2px; padding: 10px; background: rgba(0,212,255,.04); }
+  .keep textarea { width: 100%; background: transparent; border: none; outline: none; color: var(--c); font: 400 12.5px/1.6 var(--mono); resize: vertical; min-height: 54px; }
+  .keep .hint { font: 400 10px/1.4 var(--mono); color: var(--text2); margin-bottom: 6px; letter-spacing: .04em; }
+
+  .ask { position: fixed; z-index: 8; background: rgba(5,8,15,.96); border: 1px solid rgba(204,68,255,.4); border-radius: 2px; padding: 10px 12px; display: flex; gap: 8px; align-items: center; font: 400 11px/1.4 var(--mono); color: var(--text); box-shadow: 0 0 30px rgba(204,68,255,.15); }
+
+  @media (max-width: 860px) {
+    .title { font-size: 32px; } .sub { font-size: 9px; letter-spacing: .18em; }
+    .focus { top: auto; left: 10px; right: 10px; width: auto; height: 62%; transform: translateY(110%); }
+    .focus.open { transform: none; }
+    .dial-row { grid-template-columns: 74px 1fr 28px; } .rail .lab { font-size: 8px; letter-spacing: 0; }
+    .speak { bottom: 206px; }
+    .corner.r .chip:not(.keep-sm) { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .title, .thinking { animation: none; } .mote.born { animation: none; } .knob { transition: none; } }
+</style>
+</head>
+<body>
+<script src="js/window-chrome.js" data-kind="void" data-title="THE VOID"></script>
+<canvas id="sky" aria-hidden="true"></canvas>
+<script src="js/void-sky.js"></script>
+<div id="field" aria-label="your ideas"></div>
+
+<div class="head"><div class="title">THE VOID</div><div class="sub">SPEAK YOUR VISION INTO EXISTENCE</div></div>
+<div class="state" id="state" role="status" aria-live="polite"><b>ENTERING THE VOID</b>READING YOUR IDEAS…</div>
+
+<div class="corner l">
+  <button class="btn small ghost" id="returnBtn" title="CLOSE THE VOID">← RETURN</button>
+  <span class="count" id="count"></span>
+</div>
+<div class="corner r" id="filters" role="group" aria-label="show">
+  <span class="chip on keep-sm" data-f="all">all</span>
+  <span class="chip" data-f="wild" title="BORN WILD, HELD STEADY — CREATIVITY WELL ABOVE STABILITY">wild · steady</span>
+  <span class="chip" data-f="unsteady" title="BORN ON UNSTEADY GROUND — STABILITY WELL ABOVE CREATIVITY">unsteady</span>
+  <span class="chip" data-f="fading" title="IDEAS YOU HAVE NOT TOUCHED IN A WHILE">fading</span>
+  <span class="chip" data-f="sparks" title="BRAINSTORM SPARKS NOT YET MADE IDEAS">sparks</span>
+</div>
+
+<div class="speak">
+  <textarea id="speak" rows="2" maxlength="4000" placeholder="What's your vision? What are you trying to build? What problem haunts you?" aria-label="a new idea"></textarea>
+  <div class="row"><button class="btn" id="transmit" title="YOUR IDEA, INTO THE VOID (CTRL+ENTER)">TRANSMIT</button></div>
+</div>
+
+<div class="dials" aria-label="the dials">
+  <div class="dial-row">
+    <span class="dial-name c">CREATIVITY</span>
+    <div class="rail c" id="railC" tabindex="0" role="slider" aria-label="creativity" aria-valuemin="0" aria-valuemax="4"></div>
+    <button class="hold" id="holdC" title="HOLD: UNLINK THE DIALS — EACH MOVES ALONE, AND THE GAP BETWEEN THEM IS THE TENSION" aria-pressed="false">⌖</button>
+  </div>
+  <div class="linkage"><svg id="tensionSvg" preserveAspectRatio="none"></svg></div>
+  <div class="dial-row">
+    <span class="dial-name s">STABILITY</span>
+    <div class="rail s" id="railS" tabindex="0" role="slider" aria-label="stability" aria-valuemin="0" aria-valuemax="4"></div>
+    <button class="hold" id="holdS" title="HOLD: UNLINK THE DIALS — EACH MOVES ALONE, AND THE GAP BETWEEN THEM IS THE TENSION" aria-pressed="false">⌖</button>
+  </div>
+  <div class="dial-foot"><span class="voice" id="voice"></span><span class="tension" id="tension"></span></div>
+</div>
+
+<aside class="focus" id="focus" aria-label="the idea">
+  <div class="fh"><span class="k" id="fKind">YOUR IDEA</span><button class="x" id="fClose" title="ESC">CLOSE</button></div>
+  <div class="fb">
+    <textarea class="mine" id="mine" maxlength="4000" aria-label="your idea, in your words"></textarea>
+    <div class="limit" id="mineLimit"></div>
+    <div class="born" id="born"></div>
+    <div class="acts" id="acts">
+      <button class="btn small m" data-k="echo" title="THE VOID ANSWERS YOUR IDEA AT THE DIALS">ECHO</button>
+      <button class="btn small m" data-k="d20" title="EROSMANCER ROLLS A FIELD AND MAPS ITS MECHANISM ONTO YOUR IDEA">⬡ D20</button>
+      <button class="btn small m" data-k="reverse" title="EROSMANCER: YOUR IDEA AT ITS FURTHEST, WALKED BACK TO NOW">↶ REVERSE</button>
+      <button class="btn small g" data-k="spec" title="GROUND IT, THEN ON TO THE SPEC WORKSHOP">→ SPEC</button>
+    </div>
+    <div id="sparkActs" class="acts hidden"><button class="btn small" id="makeIdea" title="MAKE THIS BRAINSTORM SPARK AN IDEA, AT THE DIALS">MAKE IT AN IDEA</button></div>
+    <div id="thinking" class="thinking hidden" role="status" aria-live="polite">THE VOID IS ANSWERING <span id="meter" class="meter"></span></div>
+    <div class="lbl" id="echoLbl">ECHOES</div>
+    <div id="echoes"></div>
+  </div>
+</aside>
+
+<div id="toasts" role="status"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const CREATIVITY = ['normal', 'creative', 'outside the box', 'novel', 'outlier'];
+const STABILITY = ['stable', 'shaky', 'risky', 'dangerous', 'unstable'];
+const VOICE_C = ['CLARITY', 'ANGLES', 'INVERSION', 'EROSMANCER', 'EROSMANCER'];
+const VOICE_S = ['GROUND', 'GROUND', 'HOSTILE TRUTH', 'DELTA RISK', 'UNCHECKED'];
+const D = { creativity: 0, stability: 0, held: null };
+try { Object.assign(D, JSON.parse(localStorage.getItem('void.dials') || '{}')); } catch (_) {}
+let IDEAS = [], SPARKS = [], FOCUS = null, FILTER = 'all', BUSY = false;
+
+function toast(t, bad) { const d = document.createElement('div'); d.className = 'toast' + (bad ? ' bad' : ''); d.textContent = t; $('toasts').appendChild(d); while ($('toasts').children.length > 4) $('toasts').firstChild.remove(); setTimeout(() => d.remove(), bad ? 7000 : 3200); }
+// every call has a deadline (an agent answer may take minutes; nothing else should); a dead idearium is said, plainly
+async function api(path, body, ms = body === undefined ? 20000 : 30000) {
+  const ac = new AbortController(); const t = setTimeout(() => ac.abort(), ms);
+  let r;
+  try { r = await fetch(path, { signal: ac.signal, ...(body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }); }
+  catch (e) { throw new Error(e.name === 'AbortError' ? `NO ANSWER IN ${Math.round(ms / 1000)}S` : 'IDEARIUM IS NOT ANSWERING — IS IT RUNNING?'); }
+  finally { clearTimeout(t); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`);
+  return j;
+}
+const AGENT_MS = 330000;   // the server waits up to 310 s for the agent (copilot → the provider); this waits a little longer
+
+// the sky: js/void-sky.js (shared with every page of the pipeline)
+
+// ── the dials ───────────────────────────────────────────────────────────────────────────────────────────────────────
+function buildRail(el, labels, mirrored) {
+  el.innerHTML = '<div class="track"></div><div class="fill"></div>' + labels.map((l, i) => {
+    const pos = mirrored ? 100 - i * 25 : i * 25;
+    return `<span class="tick" style="left:${pos}%"></span><span class="lab ${(mirrored ? i === 0 : i === 4) ? 'end' : ''}" data-i="${i}" style="left:${pos}%">${l}</span>`;
+  }).join('') + '<div class="knob"></div>';
+  // the first label in DOM order sits at the left edge for creativity; for stability the left edge is 'unstable' (i=4)
+  if (mirrored) { const four = el.querySelector('.lab[data-i="4"]'); four.style.transform = 'none'; const zero = el.querySelector('.lab[data-i="0"]'); zero.classList.add('end'); }
+}
+buildRail($('railC'), CREATIVITY, false);
+buildRail($('railS'), STABILITY, true);
+function setDial(dial, to) {
+  to = Math.max(0, Math.min(4, Math.round(to)));
+  // linked: one carries the other; held (either dial): the slack — each moves alone, the gap is the tension
+  D[dial] = to; if (!D.held) D[dial === 'creativity' ? 'stability' : 'creativity'] = to;
+  paintDials(); saveDials();
+}
+function saveDials() { try { localStorage.setItem('void.dials', JSON.stringify(D)); } catch (_) {} }
+function knobX(rail, i, mirrored) { const w = rail.clientWidth; return (mirrored ? 1 - i / 4 : i / 4) * w; }
+function paintDials() {
+  const c = D.creativity, s = D.stability, t = c - s;
+  const rc = $('railC'), rs = $('railS');
+  rc.querySelector('.knob').style.left = `${c * 25}%`; rc.querySelector('.fill').style.width = `${c * 25}%`;
+  rs.querySelector('.knob').style.left = `${100 - s * 25}%`; rs.querySelector('.fill').style.width = `${s * 25}%`;
+  rc.setAttribute('aria-valuenow', c); rc.setAttribute('aria-valuetext', CREATIVITY[c]); rs.setAttribute('aria-valuenow', s); rs.setAttribute('aria-valuetext', STABILITY[s]);
+  rc.querySelectorAll('.lab').forEach(l => l.classList.toggle('on', +l.dataset.i === c)); rs.querySelectorAll('.lab').forEach(l => l.classList.toggle('on', +l.dataset.i === s));
+  for (const h of [$('holdC'), $('holdS')]) { h.classList.toggle('on', !!D.held); h.setAttribute('aria-pressed', String(!!D.held)); h.textContent = D.held ? '⊘' : '⌖'; }
+  $('voice').textContent = c === s ? `UNIFIED · ${VOICE_C[c]} + ${VOICE_S[s]}` : `${VOICE_C[c]} + ${VOICE_S[s]}`;
+  const a = Math.abs(t);
+  $('tension').textContent = t === 0 ? (D.held ? 'unlinked · no tension yet' : 'linked') : `${D.held ? 'unlinked · ' : ''}tension ${t > 0 ? '+' : '−'}${a} · ${t > 0 ? 'wild, held steady' : 'plain, unsteady ground'}`;
+  $('tension').className = 'tension' + (a >= 3 ? ' snap' : a >= 1 ? ' pull' : '');
+  document.documentElement.style.setProperty('--tc', (a / 4).toFixed(2));
+  drawTension();
+}
+function drawTension() {
+  // the linkage: a line from the creativity knob down to the stability knob — calm when linked, strained when apart
+  const svg = $('tensionSvg'), box = svg.getBoundingClientRect(), W = box.width, H = box.height || 22;
+  const x1 = knobX($('railC'), D.creativity, false) + ($('railC').getBoundingClientRect().left - box.left);
+  const x2 = knobX($('railS'), D.stability, true) + ($('railS').getBoundingClientRect().left - box.left);
+  const t = Math.abs(D.creativity - D.stability), mid = (x1 + x2) / 2, sag = t === 0 ? 0 : (D.creativity > D.stability ? -1 : 1) * t * 2.2;
+  const col = t === 0 ? 'rgba(0,212,255,.55)' : t >= 3 ? 'rgba(255,45,85,.9)' : 'rgba(255,107,53,.8)';
+  svg.setAttribute('viewBox', `0 0 ${Math.max(1, W)} ${H}`);
+  svg.innerHTML = `<path d="M ${x1} -8 Q ${mid + sag * 6} ${H / 2} ${x2} ${H + 8}" fill="none" stroke="${col}" stroke-width="${1 + t * .6}" stroke-dasharray="${t >= 3 ? '3 3' : 'none'}" ${t ? `style="filter:drop-shadow(0 0 ${2 + t * 2}px ${col})"` : ''}/>`;
+}
+function railDrag(rail, dial, mirrored) {
+  const at = (ev) => { const b = rail.getBoundingClientRect(); let f = (ev.clientX - b.left) / b.width; if (mirrored) f = 1 - f; return Math.round(Math.max(0, Math.min(1, f)) * 4); };
+  rail.addEventListener('pointerdown', (ev) => { rail.setPointerCapture(ev.pointerId); setDial(dial, at(ev));
+    const mv = (e) => setDial(dial, at(e)); const up = () => { rail.removeEventListener('pointermove', mv); rail.removeEventListener('pointerup', up); syncFocusDials(); };
+    rail.addEventListener('pointermove', mv); rail.addEventListener('pointerup', up); });
+  rail.addEventListener('keydown', (ev) => {
+    const step = { ArrowRight: mirrored ? -1 : 1, ArrowLeft: mirrored ? 1 : -1, ArrowUp: 1, ArrowDown: -1, Home: -9, End: 9 }[ev.key];
+    if (step == null) return; ev.preventDefault(); setDial(dial, D[dial] + step); syncFocusDials();
+  });
+}
+railDrag($('railC'), 'creativity', false); railDrag($('railS'), 'stability', true);
+// one link between the dials — either hold button lets them go their own ways, or links them again
+$('holdC').onclick = () => { D.held = D.held ? null : 'creativity'; paintDials(); saveDials(); syncFocusDials(); };
+$('holdS').onclick = () => { D.held = D.held ? null : 'stability'; paintDials(); saveDials(); syncFocusDials(); };
+addEventListener('resize', drawTension);
+
+// ── the field ───────────────────────────────────────────────────────────────────────────────────────────────────────
+function placed(x, y, drift) {
+  // untouched ideas drift toward the edge, away from where you left them
+  // the band between the title and the speak box (.15 – .58 of the field); drift pushes outward within it
+  const k = 1 + (drift || 0) * .45; return { x: Math.max(.03, Math.min(.97, .5 + (x - .5) * k)), y: Math.max(.15, Math.min(.58, .15 + (y * .43) + ((y - .5) * .43) * (k - 1))) };
+}
+function kindOf(i) { const t = i.void && i.void.born ? i.void.born.tension : 0; return t >= 2 ? 'wild' : t <= -2 ? 'unsteady' : ''; }
+function visible(i, spark) {
+  if (FILTER === 'all') return true;
+  if (FILTER === 'sparks') return spark;
+  if (spark) return false;
+  if (FILTER === 'wild') return kindOf(i) === 'wild';
+  if (FILTER === 'unsteady') return kindOf(i) === 'unsteady';
+  if (FILTER === 'fading') return i.drift > .4;
+  return true;
+}
+function paintField(bornUuid) {
+  const f = $('field'); f.innerHTML = ''; f.classList.add('settling');   // no fades while names are being placed
+  const all = [...IDEAS.map(i => ({ ...i, spark: false })), ...SPARKS.map(s => ({ ...s, spark: true, glow: .3, drift: 0 }))];
+  // the brightest ideas carry their names; the rest show theirs on hover (a field of 100 labels is noise)
+  const labelled = new Set(IDEAS.slice().sort((a, b) => b.glow - a.glow).slice(0, 18).map(i => i.uuid));
+  for (const i of all) {
+    const p = placed(i.x, i.y, i.drift);
+    const el = document.createElement('div');
+    const size = i.spark ? 10 : Math.round(12 + i.glow * 20);
+    el.className = `mote ${i.spark ? 'spark' : kindOf(i)} ${!i.spark && labelled.has(i.uuid) ? 'bright' : ''} ${FOCUS && FOCUS.uuid === i.uuid ? 'sel' : ''} ${visible(i, i.spark) ? '' : 'dim'} ${bornUuid === i.uuid ? 'born' : ''}`;
+    el.style.left = `${p.x * 100}%`; el.style.top = `${p.y * 100}%`; el.style.setProperty('--s', `${size}px`); el.style.setProperty('--a', (i.spark ? .55 : .5 + i.glow * .5).toFixed(2));
+    el.style.setProperty('--d', `${(i.uuid.charCodeAt(2) % 60) / 10}s`);
+    if (p.x < .12) el.classList.add('edge-l'); else if (p.x > .88) el.classList.add('edge-r');
+    el.dataset.uuid = i.uuid; el.dataset.spark = i.spark ? '1' : '';
+    el.setAttribute('tabindex', '0'); el.setAttribute('role', 'button'); el.setAttribute('aria-label', (i.spark ? 'spark: ' : 'idea: ') + i.text);
+    el.innerHTML = `<div class="halo"></div><div class="core"></div><div class="label">${esc(String(i.text).split('\n')[0].slice(0, 60))}${i.echoes ? ` · ${i.echoes}` : ''}</div>`;
+    f.appendChild(el); motion(el, i);
+  }
+  // names never overprint: brightest first, a name that would touch one already shown waits for hover
+  const shown = [];
+  for (const el of [...f.querySelectorAll('.mote.bright, .mote.sel')].sort((a, b) => (b.classList.contains('sel') - a.classList.contains('sel')) || (parseFloat(b.style.getPropertyValue('--a')) - parseFloat(a.style.getPropertyValue('--a'))))) {
+    const r = el.querySelector('.label').getBoundingClientRect(); const pad = 4;
+    if (shown.some(q => r.left < q.right + pad && r.right > q.left - pad && r.top < q.bottom + pad && r.bottom > q.top - pad)) { el.classList.remove('bright'); continue; }
+    shown.push(r);
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => f.classList.remove('settling')));
+  $('count').textContent = `${IDEAS.length} IDEAS${SPARKS.length ? ` · ${SPARKS.length} SPARKS` : ''}`;
+}
+function motion(el, item) {
+  // click focuses; drag places; drop onto another idea collides them
+  let sx = 0, sy = 0, moved = false, target = null;
+  el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focusOn(item); } });
+  el.addEventListener('pointerdown', (ev) => {
+    if (ev.button !== 0) return; sx = ev.clientX; sy = ev.clientY; moved = false; el.setPointerCapture(ev.pointerId);
+    const mv = (e) => {
+      if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) < 5) return;
+      moved = true; el.classList.add('dragging');
+      const b = $('field').getBoundingClientRect(); el.style.left = `${e.clientX - b.left}px`; el.style.top = `${e.clientY - b.top}px`;
+      const hit = document.elementsFromPoint(e.clientX, e.clientY).map(n => n.closest && n.closest('.mote')).find(n => n && n !== el && !n.dataset.spark);
+      if (target && target !== hit) target.classList.remove('target'); target = hit || null; if (target) target.classList.add('target');
+    };
+    const up = async (e) => {
+      el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.classList.remove('dragging');
+      if (target) target.classList.remove('target');
+      if (!moved) return focusOn(item);
+      const b = $('field').getBoundingClientRect();
+      if (target && !item.spark) return askCollide(item, IDEAS.find(i => i.uuid === target.dataset.uuid), e.clientX, e.clientY);
+      const x = (e.clientX - b.left) / b.width, y = Math.max(0, Math.min(1, ((e.clientY - b.top) / b.height - .15) / .43));
+      if (item.spark) { item.x = x; item.y = y; return paintField(); }
+      try { await api(`/api/void/idea/${item.uuid}`, { x, y }); item.x = x; item.y = y; item.drift = 0; }
+      catch (err) { toast(`not moved: ${err.message}`, true); }
+      paintField();
+    };
+    el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up);
+  });
+}
+function askCollide(a, b, cx, cy) {
+  if (!a || !b) return paintField();
+  document.querySelectorAll('.ask').forEach(n => n.remove());
+  const box = document.createElement('div'); box.className = 'ask'; box.style.left = `${Math.min(cx, innerWidth - 320)}px`; box.style.top = `${Math.max(60, cy - 60)}px`;
+  box.innerHTML = `<span>collide these two?</span><button class="btn small m" id="doCollide">COLLIDE</button><button class="btn small ghost" id="noCollide">NO</button>`;
+  document.body.appendChild(box);
+  $('noCollide').onclick = () => { box.remove(); paintField(); };
+  $('doCollide').onclick = async () => {
+    box.remove(); paintField(); focusOn(a); setThinking(true);
+    try { const r = await api('/api/void/collide', { a: a.uuid, b: b.uuid, creativity: D.creativity, stability: D.stability }, AGENT_MS); FOCUS_ECHOES.unshift(r.echo); paintEchoes(); toast('collided — how they fit and clash, below'); }
+    catch (e) { toast(e.message, true); } finally { setThinking(false); }
+  };
+}
+document.querySelectorAll('#filters .chip').forEach(c => c.onclick = () => { FILTER = c.dataset.f; document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === c)); paintField(); });
+
+// ── the focused idea ────────────────────────────────────────────────────────────────────────────────────────────────
+let FOCUS_ECHOES = []; const SEEN = new Set();   // echoes already shown don't re-animate on a repaint
+async function focusOn(item) {
+  FOCUS = item; paintField();
+  $('focus').classList.add('open'); document.body.classList.add('focused'); setTimeout(drawTension, 380); $('fKind').textContent = item.spark ? 'A SPARK' : 'YOUR IDEA';
+  $('mine').value = item.text; $('mine').readOnly = false; paintLimit();
+  $('acts').classList.toggle('hidden', !!item.spark); $('sparkActs').classList.toggle('hidden', !item.spark);
+  $('echoLbl').classList.toggle('hidden', !!item.spark);
+  const b = item.void && item.void.born;
+  $('born').innerHTML = item.spark ? '<span>from brainstorm</span>' : b ? `<span>born ${esc(CREATIVITY[b.creativity])}</span><span>${esc(STABILITY[b.stability])}</span><span>tension ${b.tension > 0 ? '+' : ''}${b.tension}</span>${item.void.worked ? `<span>worked ${item.void.worked}×</span>` : ''}` : '<span>from before the void</span>';
+  FOCUS_ECHOES = []; paintEchoes();
+  if (!item.spark) {
+    // its own dials come back with it (unless one is held)
+    if (item.void) { D.creativity = item.void.creativity; D.stability = item.void.stability; paintDials(); }
+    try { const r = await api(`/api/void/idea/${item.uuid}`); if (FOCUS && FOCUS.uuid === item.uuid) { FOCUS_ECHOES = r.echoes; paintEchoes(); } }
+    catch (e) { $('echoes').innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+  }
+}
+function closeFocus() { saveMine(); FOCUS = null; $('focus').classList.remove('open'); document.body.classList.remove('focused'); paintField(); setTimeout(drawTension, 380); }
+$('fClose').onclick = closeFocus;
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && FOCUS) closeFocus(); });
+async function saveMine() {
+  if (!FOCUS || FOCUS.spark) return;
+  const t = $('mine').value.trim(); if (!t || t === FOCUS.text) return;
+  try { const r = await api(`/api/void/idea/${FOCUS.uuid}`, { text: t }); const i = IDEAS.find(x => x.uuid === FOCUS.uuid); if (i) { i.text = r.idea.text; i.void = r.idea.void; } FOCUS.text = r.idea.text; toast('kept — in your words'); }
+  catch (e) { toast(`not kept: ${e.message}`, true); }
+}
+$('mine').addEventListener('blur', saveMine);
+function paintLimit() { const n = $('mine').value.length, el = $('mineLimit'); el.textContent = n > 3000 ? `${n} / 4000` : ''; el.className = 'limit' + (n >= 4000 ? ' over' : n > 3600 ? ' near' : ''); }
+$('mine').addEventListener('input', paintLimit);
+async function syncFocusDials() {
+  if (!FOCUS || FOCUS.spark) return;
+  try { const r = await api(`/api/void/idea/${FOCUS.uuid}`, { creativity: D.creativity, stability: D.stability, held: D.held, touch: false }); const i = IDEAS.find(x => x.uuid === FOCUS.uuid); if (i) i.void = r.idea.void; }
+  catch (_) { /* the dials still apply to the next echo; said on the next save */ }
+}
+let _meterT = null;
+function setThinking(on) {
+  BUSY = on; $('thinking').classList.toggle('hidden', !on); document.querySelectorAll('#acts button').forEach(b => b.disabled = on);
+  clearInterval(_meterT); $('meter').textContent = '';
+  if (on) { const t0 = Date.now(); _meterT = setInterval(() => { $('meter').textContent = `${Math.round((Date.now() - t0) / 1000)}S`; }, 1000); }
+}
+function paintEchoes() {
+  if (!FOCUS || FOCUS.spark) { $('echoes').innerHTML = ''; return; }
+  $('echoes').innerHTML = FOCUS_ECHOES.length ? FOCUS_ECHOES.map(e => `<div class="echo ${e.status} ${SEEN.has(e.uuid) ? 'seen' : ''}" data-id="${esc(e.uuid)}">
+      <div class="eh"><span>${esc(e.voice || e.kind)}</span><span class="d">${esc(CREATIVITY[e.creativity] || '')} · ${esc(STABILITY[e.stability] || '')}</span>${e.domain ? `<span class="d">rolled ${e.roll}: ${esc(e.domain)}</span>` : ''}${e.otherUuid ? `<span class="d">collided</span>` : ''}${e.status !== 'open' ? `<span class="d">${esc(e.status)}</span>` : ''}</div>
+      ${e.lines.map((l, n) => `<div class="ln"><span class="t">${esc(l)}</span>${e.status !== 'set-aside' ? `<button class="btn small" data-take="${n}" title="KEEP THIS — IN YOUR OWN WORDS">TAKE</button>` : ''}</div>`).join('')}
+      ${(e.taken || []).map(t => `<div class="took">kept: ${esc(t.words)}</div>`).join('')}
+      <div class="acts" style="margin-top:6px">${e.status === 'set-aside' ? `<button class="btn small ghost" data-re="1">BRING BACK</button>` : `<button class="btn small ghost" data-aside="1">SET ASIDE</button>`}</div>
+    </div>`).join('') : `<div class="empty">Nothing yet. ECHO asks the void to answer your idea at the dials — questions, angles, checks. It never writes your idea; what you keep, you keep in your words.</div>`;
+  FOCUS_ECHOES.forEach(e => SEEN.add(e.uuid));
+  $('echoes').querySelectorAll('.echo').forEach(card => {
+    const e = FOCUS_ECHOES.find(x => x.uuid === card.dataset.id);
+    card.querySelectorAll('[data-take]').forEach(b => b.onclick = () => openKeep(card, e, e.lines[+b.dataset.take]));
+    const aside = card.querySelector('[data-aside]'); if (aside) aside.onclick = () => decideEcho(e, 'set-aside');
+    const re = card.querySelector('[data-re]'); if (re) re.onclick = () => decideEcho(e, 'reopen');
+  });
+}
+function openKeep(card, echo, line) {
+  card.querySelectorAll('.keep').forEach(k => k.remove());
+  const k = document.createElement('div'); k.className = 'keep';
+  k.innerHTML = `<div class="hint">say what you keep from it, in your words — this goes into your idea</div><textarea>${esc(line)}</textarea><div class="acts"><button class="btn small" data-ok>KEEP</button><button class="btn small ghost" data-no>CANCEL</button></div>`;
+  card.appendChild(k); const ta = k.querySelector('textarea'); ta.focus(); ta.select();
+  k.querySelector('[data-no]').onclick = () => k.remove();
+  k.querySelector('[data-ok]').onclick = async () => {
+    try { const r = await api(`/api/void/echo/${echo.uuid}`, { action: 'take', words: ta.value, ideaUuid: FOCUS.uuid });
+      Object.assign(echo, r.echo); FOCUS.text = r.idea.text; $('mine').value = r.idea.text;
+      const i = IDEAS.find(x => x.uuid === FOCUS.uuid); if (i) { i.text = r.idea.text; i.void = r.idea.void; i.glow = Math.min(1, (i.glow || .3) + .08); }
+      paintEchoes(); paintField(); toast('kept, in your words'); }
+    catch (e) { toast(e.message, true); }
+  };
+}
+async function decideEcho(e, action) { try { Object.assign(e, (await api(`/api/void/echo/${e.uuid}`, { action })).echo); paintEchoes(); } catch (err) { toast(err.message, true); } }
+document.querySelectorAll('#acts button').forEach(b => b.onclick = async () => {
+  if (!FOCUS || BUSY) return; await saveMine(); setThinking(true);
+  const k = b.dataset.k;
+  try {
+    if (k === 'spec') {
+      const r = await api(`/api/void/idea/${FOCUS.uuid}/spec`, {}, AGENT_MS);
+      FOCUS_ECHOES.unshift(r.echo); paintEchoes();
+      toast('grounded — opening the spec workshop');
+      setTimeout(() => { if (window.opener && !window.opener.closed) window.opener.postMessage({ type: 'nexus:workshop.open', from: `idea:${FOCUS.uuid}` }, '*'); else window.open(r.next, 'idearium-workshop'); }, 700);
+    } else {
+      const r = await api(`/api/void/idea/${FOCUS.uuid}/echo`, { kind: k, creativity: D.creativity, stability: D.stability }, AGENT_MS);
+      FOCUS_ECHOES.unshift(r.echo); paintEchoes();
+      const i = IDEAS.find(x => x.uuid === FOCUS.uuid); if (i) { i.echoes = (i.echoes || 0) + 1; i.drift = 0; }
+      if (r.echo.domain) toast(`the d20 rolled ${r.echo.roll}: ${r.echo.domain}`);
+    }
+  } catch (e) { toast(e.message, true); } finally { setThinking(false); }
+});
+$('makeIdea').onclick = async () => {
+  if (!FOCUS || !FOCUS.spark) return;
+  try { const r = await api(`/api/void/spark/${FOCUS.uuid}/idea`, { text: $('mine').value.trim(), creativity: D.creativity, stability: D.stability, x: FOCUS.x, y: FOCUS.y });
+    toast('the spark is an idea'); await load(r.idea.uuid); const i = IDEAS.find(x => x.uuid === r.idea.uuid); if (i) focusOn(i); }
+  catch (e) { toast(e.message, true); }
+};
+
+// ── speak ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+async function transmit() {
+  const t = $('speak').value.trim(); if (!t) return;
+  $('transmit').disabled = true;
+  const a = Math.random() * 6.283, r = .08 + Math.random() * .2;
+  try { const res = await api('/api/void/idea', { text: t, creativity: D.creativity, stability: D.stability, held: D.held, x: .5 + Math.cos(a) * r, y: .5 + Math.sin(a) * r * .9 });
+    $('speak').value = ''; await load(res.idea.uuid); toast(`into the void — ${CREATIVITY[D.creativity]}, ${STABILITY[D.stability]}`); }
+  catch (e) { toast(e.message, true); } finally { $('transmit').disabled = false; }
+}
+$('transmit').onclick = transmit;
+$('speak').addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); transmit(); } });
+addEventListener('keydown', (e) => { if (e.key === '/' && document.activeElement && !/TEXTAREA|INPUT/.test(document.activeElement.tagName)) { e.preventDefault(); $('speak').focus(); } });
+addEventListener('beforeunload', () => { saveMine(); });
+$('returnBtn').onclick = () => { saveMine(); if (window.opener) window.close(); else history.back(); };
+
+function setState(kind, msg) {
+  const el = $('state');
+  if (!kind) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden'); el.classList.toggle('bad', kind === 'bad');
+  el.innerHTML = kind === 'bad' ? `<b>THE VOID IS UNREACHABLE</b>${esc(msg)}<br><button class="btn small" id="retry">TRY AGAIN</button>`
+    : kind === 'empty' ? `<b>THE VOID IS EMPTY</b>SPEAK YOUR FIRST VISION BELOW` : `<b>ENTERING THE VOID</b>READING YOUR IDEAS…`;
+  const r = $('retry'); if (r) r.onclick = () => { setState('loading'); load(); };
+}
+async function load(bornUuid) {
+  try {
+    const r = await api('/api/void'); IDEAS = r.ideas; SPARKS = r.sparks; paintField(bornUuid);
+    setState(IDEAS.length || SPARKS.length ? null : 'empty');
+  } catch (e) { if (!IDEAS.length) setState('bad', e.message); else toast(`THE FIELD DID NOT REFRESH: ${e.message}`, true); }
+}
+paintDials(); load();
+</script>
+</body>
+</html>

@@ -48,6 +48,7 @@
  *   idearium spec-library import <zip> [--dry-run] (0.39.290 IL1) a zip of specs → ideas + specs (duplicates folded, programs refused)
  *   idearium spec-library [--family product]      what the library holds
  *   idearium spec-library to-repo <title|sha>     (0.39.292 IL2) a library spec → a repo in the pipeline, with spec/<slug>.spec
+ *   idearium workshop [new|show|write|ambition|feed|accept|dismiss|save]   (0.39.294 SW1) the spec workshop
  *   idearium push [--message "..."] [--branch main]
  *   idearium log [--n 20]
  *   idearium status
@@ -140,6 +141,27 @@ function _printVerify(repo, r) {
 `);
 }
 
+/** §0.39.294 SW1 — the workshop through the running idearium; a stopped idearium is said, with what to do */
+async function _wsApi(method, path, body = null, timeoutMs = 30000) {
+  try { const r = await _localApi(method, path, body, timeoutMs); return r.data || r; }
+  catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the workshop is served by it)' : ''}`); }
+}
+/** an idea by its uuid or the first 8 characters of it, as `idearium void` prints them */
+async function _voidId(key) {
+  if (!key) die('name the idea (its id, or the first 8 characters of it)');
+  const r = await _wsApi('GET', '/api/void');
+  const hit = r.ideas.filter(i => i.uuid === key || i.uuid.startsWith(key));
+  if (hit.length !== 1) die(hit.length ? `${hit.length} ideas start with ${key}` : `no idea ${key}`);
+  return hit[0].uuid;
+}
+function _wsPrint(w, full = false) {
+  header(`${w.title} — workshop ${w.uuid}`);
+  console.log(`  from ${w.source.kind}${w.source.title ? ': ' + w.source.title : ''} · ambition ${w.ambition} · ${w.specPath ? 'saved to ' + w.specPath : 'not saved to a repo yet'}`);
+  for (const s of w.sections) console.log(`  ${bold(s.id.padEnd(22))} ${String(s.title).slice(0, 40).padEnd(40)} ${dim(`${String(s.body || '').length} chars`)}${full && s.body ? '\n' + String(s.body).split('\n').map(l => '      ' + l).join('\n') : ''}`);
+  const open = w.proposals.filter(p => p.status === 'open');
+  if (open.length) { console.log(`\n  open proposals (${open.length})`); for (const p of open.slice(-12)) console.log(`  ${dim(p.uuid)}  ${p.kind.padEnd(13)} ${String(p.text).split('\n')[0].slice(0, 90)}`); }
+  console.log('');
+}
 function _localApi(method, path, body = null, timeoutMs = 10000) {
   return new Promise((resolve, reject) => {
     const payload = body ? JSON.stringify(body) : null;
@@ -796,6 +818,109 @@ const COMMANDS = {
     } catch (e) { die(`${e.message}${/ECONNREFUSED/.test(e.message) ? ' — start idearium first (the build uses its agents)' : ''}`); }
   },
 
+  // ── idearium void (0.39.295) ──────────────────────────────────────────────────────
+  // James: "Just have the spacial void, with a slider …" · "the ideas come from me though not agents". Through the
+  // running idearium. --creativity / --stability 0..4 (normal…outlier / stable…unstable).
+  async 'void'(os, args) { return COMMANDS['void.list'](os, args); },
+  async 'void.list'(os, { flags }) {
+    const r = await _wsApi('GET', '/api/void');
+    const C = r.creativity, S = r.stability;
+    header(`the void — ${r.ideas.length} idea(s)${r.sparks.length ? `, ${r.sparks.length} spark(s)` : ''}`);
+    const rows = r.ideas.slice().sort((a, b) => b.glow - a.glow).slice(0, flags.all ? 1000 : 40);
+    for (const i of rows) {
+      const v = i.void, born = v && v.born ? `${C[v.born.creativity]} · ${S[v.born.stability]}` : 'before the void';
+      console.log(`  ${'●'.padStart(1)} ${dim(i.uuid.slice(0, 8))}  ${String(i.text).split('\n')[0].slice(0, 60).padEnd(60)} ${dim(`${born}${i.echoes ? ` · ${i.echoes} echo` : ''}${i.drift > .4 ? ' · fading' : ''}`)}`);
+    }
+    if (r.ideas.length > rows.length) console.log(dim(`  … ${r.ideas.length - rows.length} more (--all)`));
+    console.log('');
+  },
+  async 'void.add'(os, { positional, flags }) {
+    const text = positional.join(' ').trim(); if (!text) die('usage: idearium void add "<your idea>" [--creativity 0-4] [--stability 0-4]');
+    const r = await _wsApi('POST', '/api/void/idea', { text, creativity: Number(flags.creativity || 0), stability: Number(flags.stability ?? flags.creativity ?? 0) });
+    console.log(`  into the void: ${bold(r.idea.uuid)}`);
+  },
+  async 'void.echo'(os, { positional, flags }) {
+    const id = await _voidId(positional[0]); const kind = flags.kind || 'echo';
+    console.log(gray(`  the void is answering — ${kind}…`));
+    const body = { kind }; if (flags.creativity != null) body.creativity = Number(flags.creativity); if (flags.stability != null) body.stability = Number(flags.stability);
+    const r = await _wsApi('POST', `/api/void/idea/${id}/echo`, body, 330000);
+    console.log(`  ${bold(r.echo.voice)}${r.echo.domain ? dim(`  rolled ${r.echo.roll}: ${r.echo.domain}`) : ''}  ${dim(r.echo.uuid)}`);
+    for (const l of r.echo.lines) console.log(`    ${l}`);
+    console.log(dim(`\n  keep a part, in your words: idearium void take ${r.echo.uuid} "<your words>"\n`));
+  },
+  async 'void.collide'(os, { positional }) {
+    const a = await _voidId(positional[0]), b = await _voidId(positional[1]);
+    const r = await _wsApi('POST', '/api/void/collide', { a, b }, 330000);
+    for (const l of r.echo.lines) console.log(`    ${l}`);
+  },
+  async 'void.take'(os, { positional }) {
+    const [echo, ...words] = positional; if (!echo || !words.length) die('usage: idearium void take <echo> "<what you keep, in your words>"');
+    const r = await _wsApi('POST', `/api/void/echo/${encodeURIComponent(echo)}`, { action: 'take', words: words.join(' ') });
+    console.log(`  kept. your idea now:\n${String(r.idea.text).split('\n').map(l => '    ' + l).join('\n')}`);
+  },
+
+  // ── idearium workshop (0.39.294 SW1) ─────────────────────────────────────────────
+  // James: "need the spec workshop … the workshop and maybe it hooks into the spec field". Through the running idearium
+  // (one writer of the sessions and the repos); the agent only proposes — accept puts a proposal into the spec.
+  async 'workshop'(os, args) {
+    const [sub, ...rest] = args.positional || [];
+    const go = (name) => COMMANDS[`workshop.${name}`](os, { ...args, positional: rest });
+    if (!sub || sub === 'list') return go('list');
+    if (['new', 'show', 'feed', 'accept', 'dismiss', 'save', 'ambition', 'write'].includes(sub)) return go(sub);
+    die('usage: idearium workshop [list | new | show <id> | write <id> <section> <text> | ambition <id> <1-5> | feed <id> <kind> | accept <id> <proposal> | dismiss <id> <proposal> | save <id>]');
+  },
+  async 'workshop.list'() {
+    const r = await _wsApi('GET', '/api/workshop');
+    if (!r.workshops.length) { console.log(gray('\n  no workshops yet — idearium workshop new --from idea:<uuid> | library:<title> | repo:<uuid> | blank --title "…"\n')); return; }
+    header(`spec workshop — ${r.count} session(s)`);
+    for (const w of r.workshops) console.log(`  ${bold(w.uuid)}  ${String(w.title).slice(0, 48).padEnd(48)} ${dim(`${w.source.kind} · ${w.sections} sections · ${w.open} open · ${w.specPath ? 'saved ' + w.specPath : 'not saved'}`)}`);
+    console.log('');
+  },
+  async 'workshop.new'(os, { flags }) {
+    const f = String(flags.from || 'blank');
+    const m = /^(idea|library|repo):(.+)$/.exec(f);
+    if (!m && f !== 'blank') die('--from idea:<uuid> | library:<title or sha> | repo:<uuid> | blank');
+    const r = await _wsApi('POST', '/api/workshop', { from: m ? { kind: m[1], id: m[2] } : { kind: 'blank' }, title: flags.title || (m ? null : 'Untitled spec'), ambition: flags.ambition ? Number(flags.ambition) : 3 });
+    _wsPrint(r.workshop);
+  },
+  async 'workshop.show'(os, { positional }) { if (!positional[0]) die('usage: idearium workshop show <id>'); _wsPrint((await _wsApi('GET', `/api/workshop/${encodeURIComponent(positional[0])}`)).workshop, true); },
+  async 'workshop.write'(os, { positional, flags }) {
+    const [id, section, ...text] = positional;
+    if (!id || !section) die('usage: idearium workshop write <id> <section id | new> <text…> [--title "…"]');
+    const body = section === 'new' ? { sections: [{ add: true, title: flags.title || 'New section', body: text.join(' ') }] } : { sections: [{ id: section, body: text.join(' '), ...(flags.title ? { title: flags.title } : {}) }] };
+    _wsPrint((await _wsApi('POST', `/api/workshop/${encodeURIComponent(id)}`, body)).workshop);
+  },
+  async 'workshop.ambition'(os, { positional }) {
+    if (!positional[0] || !positional[1]) die('usage: idearium workshop ambition <id> <1-5>');
+    const w = (await _wsApi('POST', `/api/workshop/${encodeURIComponent(positional[0])}`, { ambition: Number(positional[1]) })).workshop;
+    console.log(`  ambition ${w.ambition}`);
+  },
+  async 'workshop.feed'(os, { positional, flags }) {
+    const [id, kind] = positional;
+    if (!id || !kind) die('usage: idearium workshop feed <id> <open-loops | questions | what-ifs | d20 | reverse-chain | inspiration | section> [--section <id>]');
+    console.log(gray(`  asking the agent — ${kind}…`));
+    const r = await _wsApi('POST', `/api/workshop/${encodeURIComponent(id)}/feed`, { kind, sectionId: flags.section || null }, 330000);
+    if (r.meta && r.meta.domain) console.log(`  d20 rolled ${bold(r.meta.roll)}: ${r.meta.domain} — ${dim(r.meta.mechanism)}`);
+    for (const p of r.added) console.log(`  ${bold(p.uuid)}  ${p.text.split('\n').join('\n' + ' '.repeat(26))}`);
+    console.log(dim(`\n  accept one: idearium workshop accept ${id} <proposal> [--into <section> | --new "<title>" | --replace]\n`));
+  },
+  async 'workshop.accept'(os, { positional, flags }) {
+    const [id, pid] = positional; if (!id || !pid) die('usage: idearium workshop accept <id> <proposal> [--into <section> | --new "<title>" | --replace]');
+    const body = flags.new ? { action: 'accept', mode: 'new', title: String(flags.new) } : { action: 'accept', mode: flags.replace ? 'replace' : 'append', sectionId: flags.into || null };
+    const r = await _wsApi('POST', `/api/workshop/${encodeURIComponent(id)}/proposal/${encodeURIComponent(pid)}`, body);
+    console.log(`  accepted into ${bold(r.section.title)}`);
+  },
+  async 'workshop.dismiss'(os, { positional }) {
+    const [id, pid] = positional; if (!id || !pid) die('usage: idearium workshop dismiss <id> <proposal>');
+    await _wsApi('POST', `/api/workshop/${encodeURIComponent(id)}/proposal/${encodeURIComponent(pid)}`, { action: 'dismiss' });
+    console.log('  dismissed');
+  },
+  async 'workshop.save'(os, { positional }) {
+    if (!positional[0]) die('usage: idearium workshop save <id>');
+    const r = await _wsApi('POST', `/api/workshop/${encodeURIComponent(positional[0])}/save`, {}, 120000);
+    console.log(`  saved to ${bold(r.specPath)} in repo ${bold(r.repoUuid)}${r.madeRepo ? dim(` (${r.madeRepo === 'new' ? 'a new repo' : 'its library document\'s repo'})`) : ''}`);
+  },
+
   // ── idearium spec-library (0.39.290 IL1) ─────────────────────────────────────
   // James: "need a way to import these and convert them." Through the running idearium when it is up (one writer of
   // the ideas); without it, the same import runs here.
@@ -1027,6 +1152,8 @@ async function main() {
     console.log(`  ${sky('speceng')} list | show <uuid> | build <uuid> | chunk-agent <spec> <chunk> <agent>`);
     console.log(`  ${sky('manifest')} check <file> [--warnings] | generate <file> [--out dir] | context <file> <id>`);
     console.log(`  ${sky('repo')}   list [--all] | show <uuid> | archive <uuid> | plan <repo> <spec> [--derive|--dry] | phases <repo> <spec> | build <repo> <spec> [--phase id]`);
+    console.log(`  ${sky('void')}   [list] | add "<idea>" [--creativity 0-4 --stability 0-4] | echo <idea> [--kind d20|reverse|ground] | collide <a> <b> | take <echo> "<words>"`);
+    console.log(`  ${sky('workshop')} list | new --from idea:<uuid>|library:<title>|repo:<uuid>|blank | show <id> | write <id> <section> <text> | ambition <id> <1-5> | feed <id> <kind> | accept <id> <proposal> | dismiss | save <id>`);
     console.log(`  ${sky('gap')}    list | show | open | resolve | ignore`);
     console.log(`  ${sky('routing')} [show] | plan [--block id] [--agent a] | learned | set <key> <value>`);
     console.log(`  ${sky('push')}   [--message "..."] [--branch main]`);

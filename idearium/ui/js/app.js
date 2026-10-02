@@ -708,9 +708,10 @@ function renderDetail(idea) {
   `;
 
   if (linkedSpec) {
-    html += `<div class="ds"><div class="ds-label">linked spec</div><div class="link-item" style="cursor:pointer" onclick="openSpecRepo('${linkedSpec.uuid}')"><span class="link-type resonance">spec</span><span>${escapeHtml(linkedSpec.name)}</span><span class="ic-uuid" style="margin-left:auto">${linkedSpec.phase}</span></div></div>`;
+    html += `<div class="ds"><div class="ds-label">linked spec</div><div class="link-item" style="cursor:pointer" onclick="openSpecRepo('${linkedSpec.uuid}')"><span class="link-type resonance">spec</span><span>${escapeHtml(linkedSpec.name)}</span><span class="ic-uuid" style="margin-left:auto">${linkedSpec.phase}</span></div>
+      <div class="action-row"><button class="action-btn" onclick="openWorkshop('idea:${idea.uuid}')" title="work this idea's spec in the spec workshop">✎ spec workshop</button></div></div>`;
   } else {
-    html += `<div class="ds"><div class="ds-label">spec</div><button class="action-btn primary" onclick="createSpecForIdea('${idea.uuid}')">+ create spec from this idea</button></div>`;
+    html += `<div class="ds"><div class="ds-label">spec</div><div class="action-row"><button class="action-btn primary" onclick="openWorkshop('idea:${idea.uuid}')" title="make this idea's spec in the spec workshop — by hand or with the agent">✎ spec workshop</button><button class="action-btn" onclick="createSpecForIdea('${idea.uuid}')">+ quick spec</button></div></div>`;
   }
 
   // §0.39.263 — an idea is worked here until it is a spec; then its repo's Idea tab holds the lanes
@@ -2083,6 +2084,9 @@ function renderRepoSpec(repo) {
   const empty = document.getElementById('repo-spec-empty');
   const mount = document.getElementById('spec-builder');
   if (!empty || !mount || !repo) return;
+  // §0.39.294 SW1 — the Spec field's way into the spec workshop (it reads this repo's spec/*.spec and saves back here)
+  const wsBar = document.getElementById('repo-spec-workshop');
+  if (wsBar) wsBar.innerHTML = repo.nexusSelf ? '' : `<div class="action-row" style="margin:0 0 10px"><button class="action-btn primary" onclick="openWorkshop('repo:${repo.uuid}')" title="open this repo's spec in the spec workshop — write it by hand or with the agent; saving writes it back here">✎ open in the spec workshop</button></div>`;
   // §0.39.271 S2 — the living spec first (js/living-spec.js); what follows is the build manifest.
   if (typeof renderLivingSpec === 'function') renderLivingSpec(repo);
   const manifest = document.getElementById('repo-build-manifest');
@@ -3695,17 +3699,44 @@ function openSpecLibrary() {
   _specLibraryWin = w || _specLibraryWin;
   return w;
 }
-// §0.39.292 IL2 — the library's "→ pipeline" made a repo; open it here (only from the spec library window this opened)
+// §0.39.294 SW1 — the spec workshop (ui/workshop.html). James: "need the spec workshop, completely destroy the spec
+// builder, and build the spec workshop" · "the workshop and maybe it hooks into the spec field". from: 'idea:<uuid>' |
+// 'library:<sha>' | 'repo:<uuid>' starts one there; a workshop id opens it; nothing opens the start screen.
+let _workshopWin = null, _voidWin = null;
+// §0.39.295 — the spatial void (ui/void.html), its own page. James: "The spacial void is its own page."
+function openVoid() {
+  if (!API_BASE) { toast('idearium is offline — the void is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/void.html`, 'idearium-void', 'width=1480,height=940');
+  if (!w) toast('the void window was blocked — allow pop-ups for idearium', 'err');
+  _voidWin = w || _voidWin;
+  return w;
+}
+function openWorkshop(from = null, id = null) {
+  if (!API_BASE) { toast('idearium is offline — the spec workshop is served by it', 'err'); return null; }
+  const q = id ? `?id=${encodeURIComponent(id)}` : from ? `?from=${encodeURIComponent(from)}` : '';
+  const w = window.open(`${API_BASE}/workshop.html${q}`, 'idearium-workshop', 'width=1440,height=920');
+  if (!w) toast('the spec workshop window was blocked — allow pop-ups for idearium', 'err');
+  _workshopWin = w || _workshopWin;
+  return w;
+}
+// §0.39.292 IL2 / §0.39.294 SW1 — a window idearium opened (the spec library, the workshop) asks it to open a repo or the
+// workshop; a message from any other window is ignored
 window.addEventListener('message', async (ev) => {
   const d = ev.data;
-  if (!d || d.type !== 'nexus:repo.open') return;
-  if (!_specLibraryWin || ev.source !== _specLibraryWin) { console.warn('[idearium] repo.open ignored: not from the spec library window'); return; }
+  if (!d || !/^nexus:(repo\.open|workshop\.open)$/.test(String(d.type))) return;
+  const mine = [_specLibraryWin, _workshopWin, _voidWin].filter(Boolean);
+  if (!mine.includes(ev.source)) { console.warn(`[idearium] ${d.type} ignored: not from a window idearium opened`); return; }
+  if (d.type === 'nexus:workshop.open') {
+    if (/^(idea|library|repo):[\w.-]{4,80}$/.test(String(d.from || ''))) openWorkshop(d.from);
+    return;
+  }
   if (!/^[\w-]{4,80}$/.test(String(d.repoUuid || ''))) return;
   await loadApiRepos();
   const repo = API_REPOS.find(r => r.uuid === d.repoUuid);
-  if (!repo) { toast(`the new repo is not listed yet: ${d.repoUuid}`, 'err'); return; }
+  if (!repo) { toast(`the repo is not listed yet: ${d.repoUuid}`, 'err'); return; }
   openRepoFor(repo.ideaUuid, repo.specUuid, repo.name);
-  toast(`${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
+  if (d.subtab === 'spec' && typeof setRepoSubtab === 'function') setRepoSubtab('spec');
+  toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
 });
 /** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
 const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;

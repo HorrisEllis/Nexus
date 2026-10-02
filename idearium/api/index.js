@@ -1035,6 +1035,59 @@ function _applyChangedFilesToRepo(repoUuid, dir, changed) {
   return { applied, removed, binary, failed };
 }
 
+// §0.39.294 SW1 — the spec workshop's helpers (idearium/lib/workshop.js holds the model; these hold the store and repos)
+let _wsMod = null;
+async function _workshop() {
+  if (_wsMod) return _wsMod;
+  const WS = await import('../lib/workshop.js');
+  // the agent: copilot's /api/prompt, the same route and default provider a repo agent uses (lib/repo-agent.js)
+  WS.setAsk((prompt, { sessionUuid } = {}) => _agentAsk(prompt, { channel: 'idearium-workshop', sessionId: `workshop-${sessionUuid || 'x'}` }));
+  _wsMod = WS;
+  return WS;
+}
+/** the spec engine loads lazily (getSpecEngine); the workshop waits for it briefly rather than failing on a fresh start */
+async function _specEngineReady(ms = 5000) {
+  for (const until = Date.now() + ms; ; ) { const se = getSpecEngine(); if (se || Date.now() > until) return se; await new Promise(r => setTimeout(r, 100)); }
+}
+/** §0.39.294/0.39.295 — one way idearium's own pages ask an agent: copilot's /api/prompt with the person's default
+ *  provider (lib/repo-agent.js defaultProvider / routeFor), the same route a repo agent uses. Tests swap it (_setAgentAsk). */
+let _agentAskOverride = null;
+export function _setAgentAsk(fn) { _agentAskOverride = typeof fn === 'function' ? fn : null; }
+async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium' } = {}) {
+  if (_agentAskOverride) { try { return await _agentAskOverride(prompt, { channel, sessionId }); } catch (e) { return { ok: false, error: e.message }; } }
+  const RA = _require('../../lib/repo-agent.js');
+  const provider = RA.defaultProvider();
+  const { backend, agent } = RA.routeFor(provider);
+  const payload = { prompt, channel, sessionId, ...(backend ? { backend } : {}), ...(agent ? { agent } : {}) };
+  if (backend === 'guardian') payload.timeoutMs = 300000;
+  const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
+  const j = r.json || {};
+  if (r.status >= 400 || j.ok === false || typeof j.text !== 'string') return { ok: false, error: j.error || (r.status ? `copilot answered ${r.status}` : 'no answer') };
+  return { ok: true, text: j.text, by: provider };
+}
+function _workshopGet(WS, id) { return loadTable(WS.TABLE).find(r => r.uuid === id) || null; }
+/** a repo's spec files: *.spec under spec/ or specs/ (or at its root), phasemaps left out — the Spec tab's set */
+function _workshopSpecFiles(repo) {
+  try {
+    const m = getSpecEngine().loadSpec(repo.specUuid || repo.promotedFromSpec);
+    return m.chunks.filter(c => c.status !== 'removed' && c.realPath && /^(?:(?:spec|specs)\/[^/]+|[^/]+)\.spec$/.test(c.realPath) && !/phase-?map/i.test(c.realPath)).map(c => c.realPath);
+  } catch (_) { return []; }
+}
+function _postJson(url, payload, timeoutMs) {
+  return new Promise((resolve) => {
+    let u; try { u = new URL(url); } catch (e) { return resolve({ status: 0, json: { error: `bad url: ${e.message}` } }); }
+    const data = JSON.stringify(payload);
+    const rq = http.request({ hostname: u.hostname, port: u.port, path: u.pathname, method: 'POST', timeout: timeoutMs,
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } }, (rs) => {
+      let b = ''; rs.on('data', c => b += c);
+      rs.on('end', () => { let j = null; try { j = JSON.parse(b); } catch (_) {} resolve({ status: rs.statusCode, json: j || { error: `unparseable answer (${b.slice(0, 120)})` } }); });
+    });
+    rq.on('error', (e) => resolve({ status: 0, json: { error: `copilot unreachable — ${e.message}` } }));
+    rq.on('timeout', () => { rq.destroy(); resolve({ status: 0, json: { error: 'the agent did not answer in time' } }); });
+    rq.write(data); rq.end();
+  });
+}
+
 async function _promoteSpecToRepo(ideaOS, se, specUuid, mode = 'emerge') {
   let manifest;
   try { manifest = se.loadSpec(specUuid); }
@@ -1372,6 +1425,23 @@ const ROUTE_CAP = {
   'history.import.start':  CAPS.ADMIN,    // writes commits and refs into the NEXUS checkout (never its current branch)
   'history.import.upload': CAPS.ADMIN,
   'spec-library.import':  CAPS.WRITE_IDEAS,   // §0.39.290 IL1
+  'void.field':       CAPS.READ_IDEAS,   // §0.39.295 the spatial void
+  'void.idea.show':   CAPS.READ_IDEAS,
+  'void.idea.create': CAPS.WRITE_IDEAS,
+  'void.idea.update': CAPS.WRITE_IDEAS,
+  'void.echo':        CAPS.WRITE_IDEAS,   // asks the agent; stores an echo beside the idea, never in it
+  'void.spec':        CAPS.WRITE_IDEAS,
+  'void.collide':     CAPS.WRITE_IDEAS,
+  'void.echo.decide': CAPS.WRITE_IDEAS,
+  'void.spark.idea':  CAPS.WRITE_IDEAS,
+  'workshop.list':    CAPS.READ_IDEAS,   // §0.39.294 SW1
+  'workshop.sources': CAPS.READ_IDEAS,
+  'workshop.show':    CAPS.READ_IDEAS,
+  'workshop.create':  CAPS.WRITE_IDEAS,
+  'workshop.update':  CAPS.WRITE_IDEAS,
+  'workshop.feed':    CAPS.WRITE_IDEAS,   // asks the agent; stores proposals, never section text
+  'workshop.decide':  CAPS.WRITE_IDEAS,
+  'workshop.save':    CAPS.WRITE_IDEAS,   // writes spec/<name>.spec into a repo (makes the repo when there is none)
   'spec-library.to-repo': CAPS.WRITE_IDEAS,  // §0.39.292 IL2 — makes a repo and writes its .spec file
   'spec-library.list':    CAPS.READ_IDEAS,    // writes a dropped zip into the data root's history-import inbox
   'cos.testenv.setup':  CAPS.ADMIN,       // installs software (QEMU via winget) and writes a VM image
@@ -1807,6 +1877,26 @@ function matchRoute(method, url) {
     // §0.39.290 IL1 — James's spec library: PUT the zip's raw bytes (?name=&dryRun=1); each unique document an idea + spec
     ['PUT',    ['api','spec-library','import'],                  'spec-library.import'],
     ['GET',    ['api','spec-library'],                           'spec-library.list'],
+    // §0.39.295 — the spatial void (idearium/lib/void.js, ui/void.html): James's ideas, the two dials, the echoes
+    ['GET',    ['api','void'],                                   'void.field'],
+    ['POST',   ['api','void','idea'],                            'void.idea.create'],
+    ['GET',    ['api','void','idea',':uuid'],                    'void.idea.show'],
+    ['POST',   ['api','void','idea',':uuid'],                    'void.idea.update'],
+    ['POST',   ['api','void','idea',':uuid','echo'],             'void.echo'],
+    ['POST',   ['api','void','idea',':uuid','spec'],             'void.spec'],
+    ['POST',   ['api','void','collide'],                         'void.collide'],
+    ['POST',   ['api','void','echo',':id'],                      'void.echo.decide'],
+    ['POST',   ['api','void','spark',':uuid','idea'],            'void.spark.idea'],
+    // §0.39.294 SW1 — the spec workshop (idearium/lib/workshop.js): a spec made by hand or with the agent, saved into
+    // the repo's spec folder (the Spec tab's living model)
+    ['GET',    ['api','workshop'],                               'workshop.list'],
+    ['POST',   ['api','workshop'],                               'workshop.create'],
+    ['GET',    ['api','workshop','sources'],                     'workshop.sources'],
+    ['GET',    ['api','workshop',':id'],                         'workshop.show'],
+    ['POST',   ['api','workshop',':id'],                         'workshop.update'],
+    ['POST',   ['api','workshop',':id','feed'],                  'workshop.feed'],
+    ['POST',   ['api','workshop',':id','proposal',':pid'],       'workshop.decide'],
+    ['POST',   ['api','workshop',':id','save'],                  'workshop.save'],
     // §0.39.292 IL2 — a library document into the pipeline: its spec becomes a repo with a real spec/<slug>.spec in it
     ['POST',   ['api','spec-library',':key','to-repo'],          'spec-library.to-repo'],
     ['POST',   ['api','cos','testenv','setup'],                  'cos.testenv.setup'],
@@ -3908,6 +3998,243 @@ async function handle(req, res, route, query, body) {
       const { listLibrary } = await import('../lib/spec-library-import.js');
       const rows = listLibrary({ family: query.family || null, kind: query.kind || null });
       return ok(res, { count: rows.length, library: rows.map(({ files, ...r }) => ({ ...r, fileCount: files ? files.length : null })) });
+    }
+    // ── §0.39.295 — the spatial void ───────────────────────────────────────────────────────────────────────────────
+    // James: "Just have the spacial void, with a slider … normal, creative, outside the box, novel, outlier … stable,
+    // shaky, risky, dangerous, unstable. with those linked togethe" · "the ideas come from me though not agents".
+    case 'void.field': {
+      const V = await import('../lib/void.js');
+      const now = Date.now();
+      const echoes = loadTable(V.ECHO_TABLE);
+      const openBy = new Map(); for (const e of echoes) if (e.status === 'open') openBy.set(e.ideaUuid, (openBy.get(e.ideaUuid) || 0) + 1);
+      const ideas = (os.db.ideas || []).filter(i => i.phase !== 'archived').map(i => {
+        const place = i.void && i.void.x != null ? { x: i.void.x, y: i.void.y } : V.placeFor(i.uuid);
+        return { uuid: i.uuid, text: i.text, phase: i.phase, tags: i.tags || [], source: i.source || null, linkedSpec: i.linkedSpec || null,
+          createdAt: i.createdAt, updatedAt: i.updatedAt, void: i.void || null, x: place.x, y: place.y, ...V.glow(i, now), echoes: openBy.get(i.uuid) || 0 };
+      });
+      const sparks = loadTable('idearium_brainstorms').filter(b => !b.promoted).map(b => ({ uuid: b.uuid, text: b.text, ts: b.ts, ...V.placeFor(b.uuid) }));
+      return ok(res, { ideas, sparks, creativity: V.CREATIVITY, stability: V.STABILITY });
+    }
+    case 'void.idea.show': {
+      const V = await import('../lib/void.js');
+      const idea = os.idea(params.uuid); if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      const echoes = loadTable(V.ECHO_TABLE).filter(e => e.ideaUuid === idea.uuid || e.otherUuid === idea.uuid).sort((a, b) => b.at - a.at);
+      return ok(res, { idea, echoes, voice: idea.void ? V.voiceOf(idea.void.creativity, idea.void.stability).name : null });
+    }
+    case 'void.idea.create': {
+      const V = await import('../lib/void.js');
+      const ct = V.checkText(body.text, V.MAX_IDEA, 'the idea'); if (ct.error) return err(res, 400, ct.error);
+      const text = ct.text;
+      const state = V.shapeVoid(null, { creativity: body.creativity, stability: body.stability, held: body.held, x: body.x, y: body.y });
+      os.emit('idearium.idea.create', { text, tags: ['void'], source: 'void', void: state });
+      const idea = [...os.db.ideas].reverse().find(i => i.source === 'void' && i.text === text);
+      if (!idea) return err(res, 500, 'the idea was not created');
+      os.emit('idearium.void.idea', { uuid: idea.uuid, creativity: state.creativity, stability: state.stability, tension: state.tension });
+      return ok(res, { idea });
+    }
+    case 'void.idea.update': {
+      const V = await import('../lib/void.js');
+      const idea = os.idea(params.uuid); if (!idea) return err(res, 404, `idea not found: ${params.uuid}`);
+      const fields = {};
+      if (typeof body.text === 'string' && body.text.trim()) { const ct = V.checkText(body.text, V.MAX_IDEA, 'the idea'); if (ct.error) return err(res, 400, ct.error); }
+      const textChanged = typeof body.text === 'string' && body.text.trim() && body.text.trim() !== idea.text;
+      if (textChanged) fields.text = body.text.trim();
+      fields.void = V.shapeVoid(idea.void, { creativity: body.creativity, stability: body.stability, held: body.held, x: body.x, y: body.y, work: textChanged, touch: body.touch !== false });
+      os.emit('idearium.idea.update', { uuid: idea.uuid, fields, causedBy: 'void' });
+      return ok(res, { idea: os.idea(idea.uuid) });
+    }
+    case 'void.echo':
+    case 'void.spec':
+    case 'void.collide': {
+      const V = await import('../lib/void.js');
+      const idea = os.idea(action === 'void.collide' ? body.a : params.uuid);
+      if (!idea) return err(res, 404, `idea not found: ${action === 'void.collide' ? body.a : params.uuid}`);
+      const other = action === 'void.collide' ? os.idea(body.b) : null;
+      if (action === 'void.collide' && (!other || other.uuid === idea.uuid)) return err(res, 400, 'a collision needs two different ideas');
+      const kind = action === 'void.spec' ? 'ground' : action === 'void.collide' ? 'collide' : (body.kind || 'echo');
+      const dial = (k) => body[k] !== undefined ? body[k] : (idea.void ? idea.void[k] : 0);
+      const { listLibrary } = await import('../lib/spec-library-import.js');
+      const context = { repos: getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => r.name), library: listLibrary().map(r => r.title) };
+      const p = V.echoPrompt({ idea, creativity: dial('creativity'), stability: dial('stability'), kind, other, context });
+      if (p.error) return err(res, 400, p.error);
+      const r = await _agentAsk(p.prompt, { channel: 'idearium-void', sessionId: `void-${idea.uuid}` });
+      if (!r.ok) return err(res, 502, `the void did not answer: ${r.error}`);
+      const echo = V.makeEcho({ idea, kind, voice: p.voice, meta: p.meta, text: r.text, by: r.by || null });
+      if (!echo.lines.length) return err(res, 502, 'the agent answered with nothing usable');
+      appendRow(V.ECHO_TABLE, echo);
+      // asking about an idea is attention, not work: it touches the idea (it stops drifting) but does not brighten it
+      os.emit('idearium.idea.update', { uuid: idea.uuid, fields: { void: V.shapeVoid(idea.void, {}) }, causedBy: 'void' });
+      os.emit('idearium.void.echo', { uuid: idea.uuid, kind, voice: p.voice, ...(echo.domain ? { domain: echo.domain } : {}) });
+      return ok(res, { echo, ...(action === 'void.spec' ? { next: `/workshop.html?from=${encodeURIComponent('idea:' + idea.uuid)}` } : {}) });
+    }
+    case 'void.echo.decide': {
+      const V = await import('../lib/void.js');
+      const rows = loadTable(V.ECHO_TABLE);
+      const e = rows.find(x => x.uuid === params.id); if (!e) return err(res, 404, `echo not found: ${params.id}`);
+      if (body.action === 'set-aside' || body.action === 'reopen') {
+        e.status = body.action === 'set-aside' ? 'set-aside' : 'open'; syncTable(V.ECHO_TABLE, [e]);
+        return ok(res, { echo: e });
+      }
+      if (body.action !== 'take') return err(res, 400, 'action must be take, set-aside or reopen');
+      const idea = os.idea(body.ideaUuid || e.ideaUuid); if (!idea) return err(res, 404, 'its idea is gone');
+      const t = V.take(idea, e, { words: body.words });
+      if (t.error) return err(res, 400, t.error);
+      os.emit('idearium.idea.update', { uuid: idea.uuid, fields: { text: t.text, void: V.shapeVoid(idea.void, { work: true }) }, causedBy: 'void.take' });
+      e.taken = [...(e.taken || []), { words: String(body.words).trim(), at: Date.now(), into: idea.uuid }]; e.status = 'taken';
+      syncTable(V.ECHO_TABLE, [e]);
+      return ok(res, { echo: e, idea: os.idea(idea.uuid) });
+    }
+    case 'void.spark.idea': {
+      // a brainstorm spark becomes an idea through brainstorm.promote (one path), then takes its place and dials
+      const V = await import('../lib/void.js');
+      if (typeof body.text === 'string' && body.text.trim()) { const ct = V.checkText(body.text, V.MAX_IDEA, 'the idea'); if (ct.error) return err(res, 400, ct.error); }
+      const r = await _callRoute('brainstorm.promote', { uuid: params.uuid }, typeof body.text === 'string' && body.text.trim() ? { text: body.text } : {});
+      if (!r.ok || !r.idea) return err(res, r.status && r.status !== 200 ? r.status : 400, r.error || 'the spark was not made an idea');
+      const place = V.placeFor(params.uuid);
+      os.emit('idearium.idea.update', { uuid: r.idea.uuid, fields: { void: V.shapeVoid(null, { creativity: body.creativity, stability: body.stability, x: body.x ?? place.x, y: body.y ?? place.y }) }, causedBy: 'void.spark' });
+      return ok(res, { idea: os.idea(r.idea.uuid) });
+    }
+
+    // ── §0.39.294 SW1 — the spec workshop ─────────────────────────────────────────────────────────────────────────
+    // James: "need the spec workshop, completely destroy the spec builder, and build the spec workshop" · "the workshop
+    // and maybe it hooks into the spec field". Sessions in the JAA table idearium_workshops; the agent only proposes.
+    case 'workshop.list': {
+      const WS = await _workshop();
+      const rows = loadTable(WS.TABLE).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      return ok(res, { count: rows.length, workshops: rows.map(WS.summary) });
+    }
+    case 'workshop.sources': {
+      // what a workshop can start from: an idea, a library document, a repo's spec file — or nothing
+      const { listLibrary } = await import('../lib/spec-library-import.js');
+      const ideas = (os.db.ideas || []).filter(i => i.phase !== 'archived').slice(-300).reverse().map(i => ({ uuid: i.uuid, text: String(i.text || '').slice(0, 160), phase: i.phase,
+        ...(i.void ? { void: { creativity: i.void.creativity, stability: i.void.stability, tension: i.void.tension } } : {}) }));   // 0.39.297 — the Void's dials, shown where the workshop starts
+      const library = listLibrary().filter(r => r.specUuid).map(r => ({ sha: r.sha, title: r.title, family: r.family, sections: r.sections, repoUuid: r.repoUuid || null }));
+      await _specEngineReady();
+      const repos = getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => ({ uuid: r.uuid, name: r.name, specFiles: _workshopSpecFiles(r) }));
+      return ok(res, { ideas, library, repos });
+    }
+    case 'workshop.create': {
+      const WS = await _workshop();
+      const se = await _specEngineReady();
+      if (!se) return err(res, 503, 'the spec engine is still loading — try again in a moment');
+      const from = body.from || { kind: 'blank' };
+      let title = body.title || null, sections = [], source = { kind: 'blank' }, repoUuid = null, specPath = null, ideaUuid = null;
+      if (from.kind === 'idea') {
+        const idea = os.idea(from.id);
+        if (!idea) return err(res, 404, `idea not found: ${from.id}`);
+        ideaUuid = idea.uuid; source = { kind: 'idea', id: idea.uuid, title: String(idea.text).slice(0, 80) };
+        title = title || String(idea.text).split(/[.\n—-]/)[0].trim().slice(0, 80) || 'Untitled';
+        sections = [{ id: 'idea', title: 'The idea', body: idea.text, by: 'idea' }, { id: 'purpose', title: 'Purpose', body: '' }];
+      } else if (from.kind === 'library') {
+        const { findRow } = await import('../lib/spec-library-import.js');
+        const f = findRow(from.id); if (f.error) return err(res, 404, f.error);
+        if (!f.row.specUuid) return err(res, 400, `"${f.row.title}" has no spec to open`);
+        let m; try { m = se.loadSpec(f.row.specUuid); } catch (e) { return err(res, 404, `its spec is missing: ${e.message}`); }
+        source = { kind: 'library', id: f.row.sha, title: f.row.title }; title = title || f.row.title;
+        // the import keeps a section's id as its title; the document's own heading (its first line) reads better
+        const heading = (c) => { const t = String(c.content || '').replace(/^<!--[^>]*-->\s*/, '').match(/^#{1,6}\s+(.+)$/m); return t && t[1].trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') === c.sectionId ? t[1].trim() : null; };
+        sections = m.chunks.filter(c => c.status !== 'removed' && !c.realPath).map(c => ({ id: c.sectionId, title: (c.sectionTitle && c.sectionTitle !== c.sectionId ? c.sectionTitle : heading(c)) || c.sectionId, body: c.content || '' }));
+        ideaUuid = f.row.ideaUuid || null;
+        if (f.row.repoUuid && getRepoLayer().get(f.row.repoUuid)) { repoUuid = f.row.repoUuid; specPath = f.row.specFile || null; }
+      } else if (from.kind === 'repo') {
+        const repo = getRepoLayer().get(from.id);
+        if (!repo) return err(res, 404, `repo not found: ${from.id}`);
+        if (repo.nexusSelf) return err(res, 400, 'a Nexus system\'s specs change through its own apply gate, not the workshop');
+        const files = _workshopSpecFiles(repo);
+        specPath = from.path || files[0] || null;
+        repoUuid = repo.uuid; ideaUuid = repo.ideaUuid || null; title = title || repo.name;
+        source = { kind: 'repo', id: repo.uuid, title: repo.name, path: specPath };
+        if (specPath) {
+          const f = getRepoLayer().readFile(repo.uuid, specPath);
+          if (f.error) return err(res, 404, f.error);
+          sections = WS.sectionsFromSpecText(f.content, _require('js-yaml'));
+        }
+      } else if (from.kind !== 'blank') return err(res, 400, `from.kind must be idea, library, repo or blank`);
+      const made = WS.makeSession({ title: title || 'Untitled spec', source, sections, ambition: body.ambition, repoUuid, specPath, ideaUuid });
+      if (made.error) return err(res, 400, made.error);
+      appendRow(WS.TABLE, made.session);
+      os.emit('idearium.workshop.created', { uuid: made.session.uuid, source: source.kind, title: made.session.title });
+      return ok(res, { workshop: made.session });
+    }
+    case 'workshop.show': {
+      const WS = await _workshop();
+      const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
+      return ok(res, { workshop: w, ambition: WS.AMBITION, feeds: WS.FEEDS });
+    }
+    case 'workshop.update': {
+      const WS = await _workshop();
+      const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
+      if (body.title != null && String(body.title).trim()) {
+        if (String(body.title).trim().length > WS.MAX_TITLE) return err(res, 400, `the title is ${String(body.title).trim().length} characters — the limit is ${WS.MAX_TITLE}`);
+        w.title = String(body.title).trim(); w.updatedAt = Date.now();
+      }
+      if (body.ambition != null) { const a = WS.clampAmbition(body.ambition); if (a !== w.ambition) { w.ambition = a; w.updatedAt = Date.now(); w.history.push({ at: w.updatedAt, what: `ambition ${a} — ${WS.AMBITION[a].label}` }); } }
+      for (const e of Array.isArray(body.sections) ? body.sections : (body.section ? [body.section] : [])) {
+        const r = e.restore ? WS.restoreSection(w, e.restore) : WS.editSection(w, e);
+        if (r.error) return err(res, 400, r.error);
+      }
+      syncTable(WS.TABLE, [w]);
+      return ok(res, { workshop: w });
+    }
+    case 'workshop.feed': {
+      const WS = await _workshop();
+      const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
+      let inspiration = [];
+      if (body.kind === 'inspiration') {
+        const { listLibrary } = await import('../lib/spec-library-import.js');
+        inspiration = [...listLibrary().map(r => ({ title: r.title, summary: r.summary, kind: r.family })),
+          ...getRepoLayer().list().filter(r => r.status !== 'archived' && !r.nexusSelf).map(r => ({ title: r.name, kind: 'repo' }))]
+          .filter(x => x.title && x.title !== w.title);
+      }
+      const r = await WS.feed(w, body.kind, { sectionId: body.sectionId || null, inspiration });
+      if (r.error) { syncTable(WS.TABLE, [w]); return err(res, r.meta ? 502 : 400, r.error, { meta: r.meta || null, raw: r.raw || null }); }
+      syncTable(WS.TABLE, [w]);
+      os.emit('idearium.workshop.feed', { uuid: w.uuid, kind: body.kind, proposals: r.added.length, ...(r.meta && r.meta.domain ? { domain: r.meta.domain } : {}) });
+      return ok(res, { added: r.added, meta: r.meta, workshop: w });
+    }
+    case 'workshop.decide': {
+      const WS = await _workshop();
+      const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
+      const r = WS.decide(w, params.pid, body || {});
+      if (r.error) return err(res, 400, r.error);
+      syncTable(WS.TABLE, [w]);
+      return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w });
+    }
+    case 'workshop.save': {
+      // the hook into the Spec field: the session becomes the repo's spec/<name>.spec — the Spec tab's living model.
+      // A session with no repo gets one (from its library document's pipeline, else a new repo for its idea).
+      const WS = await _workshop();
+      const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
+      if (!(await _specEngineReady())) return err(res, 503, 'the spec engine is still loading — try again in a moment');
+      const RL = getRepoLayer();
+      const yaml = _require('js-yaml');
+      const LI = await import('../lib/spec-library-import.js');
+      let made = null;
+      if (!w.repoUuid || !RL.get(w.repoUuid)) {
+        if (w.source && w.source.kind === 'library') {
+          const se = await _specEngineReady();
+          if (!se) return err(res, 503, 'the spec engine is still loading — try again in a moment');
+          const p = await LI.toPipeline({ key: w.source.id, se, yaml, promote: (specUuid) => _promoteSpecToRepo(os, se, specUuid, 'manual'),
+            writeFile: (u, rel, text) => RL.writeFile(u, rel, text, { preserveWhitespace: true }), repoExists: (u) => !!RL.get(u) });
+          if (!p.ok) return err(res, 502, `could not make its repo: ${p.error}`);
+          w.repoUuid = p.repoUuid; w.specPath = w.specPath || p.specFile; made = 'library';
+        } else {
+          const r = RL.ingest({ name: w.title, bare: true, source: 'workshop', ideaUuid: w.ideaUuid || null,
+            compartmentId: _ensureCompartment(`idearium-repo-${String(w.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24)}`, w.title) });
+          if (r.error) return err(res, 502, `could not make its repo: ${r.error}`);
+          w.repoUuid = r.repo.uuid; made = 'new';
+        }
+      }
+      const repo = RL.get(w.repoUuid);
+      if (repo && repo.nexusSelf) return err(res, 400, 'a Nexus system\'s specs change through its own apply gate, not the workshop');
+      w.specPath = w.specPath || `spec/${LI.slugOf(w.title)}.spec`;
+      const wr = RL.writeFile(w.repoUuid, w.specPath, WS.specText(w, yaml), { preserveWhitespace: true });
+      if (wr.error) return err(res, 502, `the spec was not written: ${wr.error}`, { repoUuid: w.repoUuid });
+      w.savedAt = Date.now(); w.updatedAt = w.savedAt;
+      w.history.push({ at: w.savedAt, what: `saved to ${w.specPath}${made ? ` (${made === 'new' ? 'a new repo' : 'its library document\'s repo'})` : ''}` });
+      syncTable(WS.TABLE, [w]);
+      os.emit('idearium.workshop.saved', { uuid: w.uuid, repoUuid: w.repoUuid, specPath: w.specPath, madeRepo: made });
+      return ok(res, { repoUuid: w.repoUuid, specPath: w.specPath, madeRepo: made, created: !!wr.created, workshop: w });
     }
     // §0.39.292 IL2 — James: "how can i import into the pipeline. the specs also need to convert into actual spec files."
     // The same promotion every spec takes (_promoteSpecToRepo), then the document as spec/<slug>.spec in the repo.
@@ -6343,9 +6670,23 @@ export function startAPI() {
       return;
     }
 
+    // §0.39.295 V1 — the void's fonts (SIL OFL, idearium/ui/fonts): binary, so not the utf8 branch above; woff2 + licenses
+    if (req.method === 'GET' && /^\/fonts\/[a-z0-9-]+\.(woff2|txt)$/.test(cleanUrl)) {
+      try {
+        const { readFileSync, existsSync } = await import('fs');
+        const { join, dirname } = await import('path');
+        const { fileURLToPath } = await import('url');
+        const file = join(dirname(fileURLToPath(import.meta.url)), '..', 'ui', cleanUrl.slice(1));
+        if (!existsSync(file)) { res.writeHead(404); res.end('not found'); return; }
+        res.writeHead(200, { 'Content-Type': cleanUrl.endsWith('.woff2') ? 'font/woff2' : 'text/plain; charset=utf-8', 'Cache-Control': 'max-age=86400' });
+        res.end(readFileSync(file));
+      } catch (e) { try { res.writeHead(500); res.end('internal error'); } catch (_) {} }
+      return;
+    }
+
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html')) {   // §0.39.290 IL1 the spec library
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html')) {   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');

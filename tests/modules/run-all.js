@@ -355,6 +355,8 @@ const SUITES = [
   'test-cos-remote-api.test.js',  // 0.39.265 — the same through a real idearium API: a repo's compartment pushed, pulled elsewhere, edits back into the repo, clone
   'test-build-verify.test.js',  // 0.39.291 PV1–PV2 — verify (graded, attributed), the repair block, markForRepair, markFailed, the file-kind detector, fence → code
   'test-prove-loop.test.js',  // 0.39.291 PV3 — the real server + COS + a model that writes a bug: round 1 fails, the failure goes back, round 2 is proven
+  'test-spatial-void.test.js',   // 0.39.295 — the spatial void: the linked dials, the voices, echoes never in the idea, take in his words, the router
+  'test-spec-workshop.test.js',  // 0.39.294 SW1 — the spec workshop: the dial, the feeds, the d20, propose-then-accept, saved into the repo's spec (the router, a stand-in agent)
   'test-spec-library.test.js',  // 0.39.290 IL1 — a zip of specs → ideas + specs (duplicates folded, zips in zips, programs refused, by family); importSpec in memory
   'test-reply-continuation.test.js',  // 0.39.289 — a cut reply is finished (tail shown back, stitched); Ollama streamed with an idle timeout; thinking-only → think:false
   'test-nexus-self-incremental.test.js',  // 0.39.288 PF1–PF5 — nexus-self updates a spec in place (one changed file ≠ 2,000 rewritten), yielding ingest, changed paths logged, manifest meta sidecar for cold reads
