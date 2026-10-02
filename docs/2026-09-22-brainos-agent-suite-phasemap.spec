@@ -2,11 +2,12 @@ spec:
   meta:
     name:        brainos-agent-suite
     version:     0.1.0-phasemap
-    status:      PHASEMAP 2026-09-22. James: "brainos was supposed to have a
-                 full, huge agent suite for the entire agent system. copilot,
-                 ollama, guardian, hats, tools, all of it, .injection nodes
-                 for editing whats injected to each agent. module manager,
-                 reader... have been told its been build three times now."
+    status: >-
+      PHASEMAP 2026-09-22. James: "brainos was supposed to have a
+      full, huge agent suite for the entire agent system. copilot,
+      ollama, guardian, hats, tools, all of it, .injection nodes
+      for editing whats injected to each agent. module manager,
+      reader... have been told its been build three times now."
     uuid:        nexus-brainos-agentsuite-v0-0000-2026-0922-001
 
   diagnosis_verified_2026_09_22:

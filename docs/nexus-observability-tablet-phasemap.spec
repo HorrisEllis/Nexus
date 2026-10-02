@@ -2,13 +2,14 @@ spec:
   meta:
     name:        nexus-observability-and-tablet
     version:     0.2.0-phasemap
-    status:      PHASEMAP 2026-07-30. James vision (v0.2 adds OB10 sigma-roles + OB11 edge-cases): per-system tablet modules
-                 (info/events/snapshots/diagnostics) with escalation to co-pilot;
-                 continuous injection into ollama's stream; live diagnostics ("how
-                 is nexus" → real data); component registry mapped onto CFR + ALK-GL
-                 for movement; bottleneck detection via sigma/delta; a real 3D map
-                 (no mocks); gap detection for diagnostics; intelligence-driven
-                 optimization; pattern leverage ratio. Governed by AXIOMS-v3.1.
+    status: >-
+      PHASEMAP 2026-07-30. James vision (v0.2 adds OB10 sigma-roles + OB11 edge-cases): per-system tablet modules
+      (info/events/snapshots/diagnostics) with escalation to co-pilot;
+      continuous injection into ollama's stream; live diagnostics ("how
+      is nexus" → real data); component registry mapped onto CFR + ALK-GL
+      for movement; bottleneck detection via sigma/delta; a real 3D map
+      (no mocks); gap detection for diagnostics; intelligence-driven
+      optimization; pattern leverage ratio. Governed by AXIOMS-v3.1.
     uuid:        nexus-observability-tablet-v0-0000-2026-0730-001
 
   substrate_verified_2026_07_30:

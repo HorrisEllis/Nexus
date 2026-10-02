@@ -1,56 +1,65 @@
 # 0.39.298 — 2026-10-02
 
-James: "need the spec workshop, completely destroy the spec builder, and build the spec workshop, with architect for archiecture using the component registry, components store with dependancies"
-James: "idea -> spec workshop -> architect -> destroy and rebuild blueprint -> Idearium repo -> Cos?"
-James: "ccontinue"
+James: "build the spec workshop, with architect for archiecture using the component registry, components store with dependancies, you know, like maybe its time to start codex. need a better entery point, and i figure we can start with, idea -> spec workshop -> architect -> destroy and rebuild blueprint -> Idearium repo -> Cos?"
 
-## The Architect, the pipeline's third station
-The Architect is its own page in the Void's look, all capitals. It takes a spec and lays it out as components.
+## ARCHITECT, the third station
+The spec, laid out as components. Each component has:
+- a tier (CODEX's component or mod);
+- a layer (data → engine → service → interface);
+- a purpose;
+- its dependencies;
+- its seams.
 
-- **Start from** a spec in the workshop, or a repo's spec file. The spec's sections come along and stay readable in the side panel.
-- **The agent proposes, you decide.** PROPOSE THE COMPONENTS asks the agent for the spec laid out as components: a name, a layer, a purpose, and what each one needs. Each proposal waits for your ACCEPT or DISMISS, or ACCEPT ALL. Nothing becomes the architecture without your yes.
-- **Your own hand:** add a component, rename it, move it to another layer, change what it needs, or remove it. Removed components are kept and can be restored.
-- **Four bands, bottom-up:**
-  - INTERFACE: what a person touches;
-  - SERVICE: what runs;
-  - LIBRARY: the logic;
-  - FOUNDATION: data and storage.
+Components sit in levels, built from the bottom up: level 0 needs nothing from this architecture.
 
-  Wires run from each component to what it needs.
-- **Reuse before build.** Every component is matched against loom's component registry and the component store, with a score for each candidate. REUSE marks a candidate as what this component *is*; NEW is the default. Reused components glow green.
-- **What it says, never hidden:**
-  - a **gap**, when something is needed and nothing here is it, drawn red and dashed in its band;
-  - **cycles**;
-  - **layer warnings**, when a lower layer depends on a higher one;
-  - **the build order**, bottom-up.
-- **Save (Ctrl+S)** writes `spec/<name>.architecture.yaml` beside the spec in its repo. The file holds the build order, the layers, each component with its reuse, and the gaps, cycles and warnings.
-- **One path through the stations:** the workshop's ARCHITECT station opens this page, and this page's SPEC station goes back to the workshop. The Create menu has THE ARCHITECT.
-- **API and CLI, first:**
-  - `/api/architect/*`: list, sources, create, show, update, propose, accept or dismiss (one, or `all`), match, save;
-  - `idearium architect list|new|show|propose|accept|add|reuse|save`.
+- **Reuse before build.** Every component is matched against loom's registry and the component store, searched as one index:
+  - green REUSE when something already exists, cyan NEW when nothing does;
+  - you can override any match: AUTO, NEW, or USE a specific match (from the candidates, or from FIND WHAT EXISTS).
+- **Gaps are said, in words:**
+  - a dependency on something that exists nowhere, with both names;
+  - a cycle, with its path;
+  - a lower layer leaning on a higher one.
+- **The agent only proposes.** LAY OUT THE SPEC asks the agent for components as YAML, offering the existing components that fit the spec's words. Nothing joins the architecture until you accept it, one at a time or all at once.
+- **One architecture per spec.** Opening the same spec again returns its architecture, with the spec reread.
+- **Saved beside the spec** as `spec/<name>.architecture.yaml`. Gaps are written into the file too. Opening a repo's spec later reads its saved architecture back, decisions included.
+- **Its own page**, `idearium/ui/architect.html`, in the Void's look and in capitals. The workshop's ARCHITECT station opens it on the current spec; SPEC leads back.
 
-## Found while building: loom's registry was months stale
-The Architect's reuse check couldn't find the component store in loom's registry, although the store exists and is wired in the maps. The cause: `loom/data/registry.json` had not been regenerated since 0.39.262. Each release restored the old file, and nothing rebuilds it at boot.
+## Sequencing, said
+AR2 depends on CX0 (CODEX), which isn't built yet. Architect is built on what exists today: loom's registry and `lib/component-store.js`. CX0 grows that store later without changing the station.
 
-It is now regenerated from an empty registry, with these results:
-- **2740 components, 2793 hooks, 3022 wires.** The old file had 2275 components and 8751 wires.
-- **The old wires were mostly duplicates.** Those 8751 were only 1838 distinct edges.
-- **The 127 old edges missing from the new file are stale.** 91 point at things that no longer exist, and 36 are no longer in the code.
-- **Rejections are unchanged from before:** 10 duplicate ids and 109 missing endpoints, none from the maps touched here.
+## Surfaces
+- Engine: `idearium/lib/architect.js` (pure, like the Void and the workshop; the API owns the store and the repo write).
+- Routes:
+  - `GET|POST /api/architect`;
+  - `GET /api/architect/registry?q=`;
+  - `GET|POST /api/architect/:id`;
+  - `POST …/draft`;
+  - `POST …/proposal/:pid` (`all` for every open proposal);
+  - `POST …/save`.
+- CLI: `idearium architect [list | new | show | add | find | draft | accept | dismiss | save]`.
 
-The Architect is wired into loom: the API calls `idearium/lib/architect.js` and `lib/component-store.js`.
-
-## Enterprise grade, as the Void and the workshop
-- **Limits:** 200 components, a name at most 80 characters, a purpose at most 1000. Going over is refused, with the reason.
-- **Every call has a deadline**, and agent calls show a running timer.
-- **States:** opening, empty, and unreachable with TRY AGAIN.
-- **No browser dialogs; capitals everywhere.**
-
-Found in the browser: the wires' layer kept its wide size after the window narrowed, which held the page wide. It is now collapsed before it is measured.
+## Found while building
+- **Loom's registry is behind the code.** `lib/component-store.js` (0.39.266) isn't in `loom/data/registry.json`, so Architect calls a "component store" component new. Architect reads the registry correctly; the registry itself needs a fresh scan.
+- **Loom also tracks spec documents** (179 entries in namespace `spec`). They aren't built code, so they're left out of the reuse index, along with tests.
+- **The component store in this checkout is empty**, so for now reuse comes from loom alone.
+- **A Chromium drive server leaked into the real data files.** It ran the real `startAPI()` under a `*.test.mjs` entry, and the event log, the ollama activity log, the economy usage log and the warp crystals wrote outside the test sandbox. The test suites don't start those writers and stay clean. The leaked files were reverted. This sandbox gap was already there before this release.
 
 ## Proof
-- `tests/modules/test-architect.test.js` passes 8/8. The run went through the router with a stand-in agent: workshop → architect → propose → accept all → the gap → reuse the component store (offered by loom's real registry) → close the gap → save. The saved file's build order is component-store → weather-feed → bed-planner → garden-page.
+- `tests/modules/test-architect.test.js`: 7/7:
+  - matching against loom's real registry (the store wins a tie);
+  - the four gap kinds;
+  - levels and layers bottom-up;
+  - your decisions;
+  - the agent only proposing;
+  - the file round trip;
+  - the real router, from a workshop through save and readback;
+  - the surfaces.
+- `test-spec-workshop` 8/8, `test-spatial-void` 7/7.
 - **Chromium against the real server, with a stand-in agent:**
-  - workshop spec → propose → accept all → the gap shown → reuse the component store → save;
-  - no console errors, no browser dialogs, no lowercase text on the page;
-  - wide and narrow, with no sideways overflow.
+  - workshop → ARCHITECT station → lay out the spec → accept all → 4 levels, 1 gap said;
+  - force NEW, then reuse through FIND;
+  - adding the missing component closes the gap;
+  - save refused until the spec is in a repo, then saved beside it;
+  - keyboard selection;
+  - no console errors, no native dialogs, no lowercase tooltips;
+  - wide and narrow (no horizontal overflow).

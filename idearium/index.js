@@ -35,6 +35,14 @@ const _require = createRequire(import.meta.url);
 // versionium-commit.js already uses. lib/nexus-client.js is CommonJS
 // (module.exports = { ... }); this file is loaded as ESM, hence _require.
 const nx = _require('../lib/nexus-client.js');
+// §0.39.300 VX1 — versionium's calls as the contract the five snapshot methods below were written against: a failure
+// comes back as { error, status }, never a throw. lib/nexus-client throws on an unreachable system and on every non-2xx,
+// so with versionium down GET /api/snapshots was an unhandled 500 on every page load and a missing commit a 500, not a 404.
+const _vxErr = (e) => { const m = /-> HTTP (\d{3})/.exec(e.message); return { error: e.message, status: m ? +m[1] : 502 }; };
+const vx = {
+  get: (p, o) => nx.get('versionium', p, o).catch(_vxErr),
+  post: (p, b, o) => nx.post('versionium', p, b, o).catch(_vxErr),
+};
 
 // §WIRED 2026-07-18 — "resonance-weighted idea/spec/gap graph" (meta/spatial/
 // lattice.js's own header) existed, fully built, and was never called from
@@ -93,7 +101,7 @@ function _latticeLink(a, b, w = 0.7, t = 'associated') {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-export const VERSION   = '4.26.1';   // 0.39.303 synced (phase runs end in proof) · 0.39.302 synced (the delivery checker) · 0.39.298 synced (the Architect) · 0.39.297 synced (the workshop's own page) · 0.39.296 synced (the void hardened) · 0.39.295 synced (the spatial void) · 0.39.294 synced (the spec workshop) · 0.39.293 synced (desktop image + login) · 0.39.292 synced (library spec → pipeline) · 0.39.291 synced (verify + prove) · 0.39.290 synced (the spec library) · 0.39.288 synced (in-place nexus-self spec update) · 0.39.287 synced (learned routing) · 0.39.286 synced (routing, registry block) · 0.39.285 synced (file versions, chunk reassign) · 0.39.284 synced (work surface, plan fallbacks, archive import, ui.* config). 0.39.283 synced (draft review, shadow, Manage workbench). 0.39.282 synced (default_provider, desktop login, blocked jobs). §0.39.281 synced — had stayed at 4.7.0 while package.json moved to 4.11.0.   // §5.4 fix 2026-08-08 — was 3.0.0, drifted from canonical lib/version.js's services.idearium (3.2.0)
+export const VERSION   = '4.26.1';   // 0.39.304 synced (phases proven from their files) · 0.39.303 synced (phase runs end in proof) · 0.39.302 synced (the delivery checker) · 0.39.300 synced (versionium stated, one bar, the workshop's bar) · 0.39.299 synced (the architect on one canvas) · 0.39.298 synced (the architect) · 0.39.297 synced (the workshop's own page) · 0.39.296 synced (the void hardened) · 0.39.295 synced (the spatial void) · 0.39.294 synced (the spec workshop) · 0.39.293 synced (desktop image + login) · 0.39.292 synced (library spec → pipeline) · 0.39.291 synced (verify + prove) · 0.39.290 synced (the spec library) · 0.39.288 synced (in-place nexus-self spec update) · 0.39.287 synced (learned routing) · 0.39.286 synced (routing, registry block) · 0.39.285 synced (file versions, chunk reassign) · 0.39.284 synced (work surface, plan fallbacks, archive import, ui.* config). 0.39.283 synced (draft review, shadow, Manage workbench). 0.39.282 synced (default_provider, desktop login, blocked jobs). §0.39.281 synced — had stayed at 4.7.0 while package.json moved to 4.11.0.   // §5.4 fix 2026-08-08 — was 3.0.0, drifted from canonical lib/version.js's services.idearium (3.2.0)
                                      // §2026-09-22 — real bump: eravos mods in the New Spec picker + Brainstorm AI assistance. See idearium.spec's meta.version comment.
                                      // §5.4 fix 2026-09-13 — same drift recurred: idearium/package.json had moved
                                      // on to 4.1.0 through the 2026-09-03 "idearium 3.3.0" session and beyond,
@@ -399,8 +407,8 @@ export class IdeaOS {
     // stated instruction, not a guessed port — nx.get() already resolves
     // 'versionium' via that same real config.
     // §0.39.271 V1 — ?n= returns the NEWEST n (without it: the first 200 in store order).
-    const rows = await nx.get('versionium', `/api/versionium/history?system=idearium&n=${Math.max(1, Math.min(1000, n || 20))}`);
-    if (rows?.error) return { error: rows.error };
+    const rows = await vx.get(`/api/versionium/history?system=idearium&n=${Math.max(1, Math.min(1000, n || 20))}`);
+    if (rows?.error) return { error: rows.error, status: rows.status || 502 };
     // Same enrichment as commitSnapshot() above, derived from each row's
     // stored `state` instead of live db — historical commits, not "now".
     // A commit made without state (pre-merge, or a non-idearium commit
@@ -427,8 +435,8 @@ export class IdeaOS {
   async snapshot(commitId) {
     // §FIX 2026-09-03 — same real 410 as snapshots() above; see that
     // method's comment for the full finding.
-    const rows = await nx.get('versionium', `/api/versionium/history?system=idearium&n=1000`);
-    if (rows?.error) return null;
+    const rows = await vx.get(`/api/versionium/history?system=idearium&n=1000`);
+    if (rows?.error) return { error: rows.error, status: rows.status || 502 };   // §0.39.300 VX1 — versionium down is not "not found"
     return (rows.commits || []).find(s => s.commitId === commitId || s.uuid === commitId) || null;
   }
   eventLog(n=100){ return this.db.events.slice(-n); }
@@ -478,10 +486,10 @@ export class IdeaOS {
   // history metadata.
   async diffSnapshots(commitIdA, commitIdB) {
     const [ra, rb] = await Promise.all([
-      nx.get('versionium', `/api/versionium/state/${encodeURIComponent(commitIdA)}`),
-      nx.get('versionium', `/api/versionium/state/${encodeURIComponent(commitIdB)}`),
+      vx.get(`/api/versionium/state/${encodeURIComponent(commitIdA)}`),
+      vx.get(`/api/versionium/state/${encodeURIComponent(commitIdB)}`),
     ]);
-    if (ra?.error || rb?.error) return { error: ra?.error || rb?.error };
+    if (ra?.error || rb?.error) return { error: ra?.error || rb?.error, status: (ra?.error ? ra.status : rb.status) || 502 };
     const a = ra.state, b = rb.state;
     return {
       a: commitIdA, b: commitIdB,
@@ -513,10 +521,10 @@ export class IdeaOS {
     // snapshots() and snapshot() below were repointed at 'versionium'
     // (§FIX 2026-09-03), the commit half never was. Found while wiring repo
     // snapshots onto the same commit path.
-    const result = await nx.post('versionium', '/api/versionium/commit', {
+    const result = await vx.post('/api/versionium/commit', {
       message, branch, causedBy, system: 'idearium', state,
     });
-    if (result?.error) return { error: result.error };
+    if (result?.error) return { error: result.error, status: result.status || 502 };
     // Enrich cortex's raw commit row with the display aggregates idearium's
     // CLI/UI already expect (ideasCount/gapCount/specCount/snr/phaseMap) —
     // computed locally at commit time, cheap, no extra round trip. cortex's
@@ -543,8 +551,8 @@ export class IdeaOS {
   async restoreSnapshot(commitId, { author = 'cli' } = {}) {
     // §FIXED 2026-09-20 (MCO3) — same 410 as commitSnapshot() above: this
     // read went to 'cortex', so restore could never fetch a state at all.
-    const stateResult = await nx.get('versionium', `/api/versionium/state/${encodeURIComponent(commitId)}`);
-    if (stateResult?.error) return { error: stateResult.error };
+    const stateResult = await vx.get(`/api/versionium/state/${encodeURIComponent(commitId)}`);
+    if (stateResult?.error) return { error: stateResult.error, status: stateResult.status || 502 };
 
     // §GUARD 2026-09-20 (MCO3) — a repo snapshot (idearium/repo/snapshot.js)
     // carries no ideas/specs/gaps/links. Restoring one here would set all

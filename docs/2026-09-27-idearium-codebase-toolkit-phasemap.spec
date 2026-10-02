@@ -32,16 +32,18 @@ spec:
   measured:  # tools/measure on idearium/{repo,api,spec-engine} + lib/ (376 files, 3584 chunks) with the 0.39.272 chunker
     - 1054 of 3584 chunks begin at a NESTED symbol (the symbol regexes are `^\s*…`), i.e. cut the enclosing function
       mid-body — the "never cuts mid-body" claim in import-pipeline's header does not hold.
-    - 984 chunks END in a comment line: the doc comment of the next symbol is cut away from it and glued to the
-      previous chunk, so a chunk's own purpose is in the wrong chunk.
+    - >-
+        984 chunks END in a comment line: the doc comment of the next symbol is cut away from it and glued to the
+        previous chunk, so a chunk's own purpose is in the wrong chunk.
     - chunk size: median 12 lines, p90 48, max 1253; 13 chunks >200 lines, 2 >500 (a switch-handler file is one chunk).
     - .jsx/.tsx are detected as their own languages but have no symbol patterns and no brace check; Go, Rust, Java,
       C#, Kotlin, Swift, PHP, Ruby, C/C++ chunk as one whole file with no symbols; markdown is one chunk per file.
     - chunk ids are sha(repo:file:INDEX): adding one function renumbers every later chunk id in the file.
   missing:
     - M1 chunk boundaries are not structural (nested cuts, orphaned docs, unbounded size, few languages, unstable ids).
-    - M2 a chunk carries no understanding of itself: no kind, qualified name, signature, doc, summary, parent,
-      neighbours, what it uses, what uses it, whether it is exported, which tests touch it.
+    - >-
+        M2 a chunk carries no understanding of itself: no kind, qualified name, signature, doc, summary, parent,
+        neighbours, what it uses, what uses it, whether it is exported, which tests touch it.
     - M3 search is token overlap on symbol names and paths only — the body of the code is not searchable; no ranking,
       no snippet, no exact/regex grep over the repo.
     - M4 agents can only write WHOLE files (loom.write / repo file POST). No exact-replace edit, no line-range or

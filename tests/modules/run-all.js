@@ -358,9 +358,14 @@ const SUITES = [
   'test-cos-remote-api.test.js',  // 0.39.265 — the same through a real idearium API: a repo's compartment pushed, pulled elsewhere, edits back into the repo, clone
   'test-build-verify.test.js',  // 0.39.291 PV1–PV2 — verify (graded, attributed), the repair block, markForRepair, markFailed, the file-kind detector, fence → code
   'test-prove-loop.test.js',  // 0.39.291 PV3 — the real server + COS + a model that writes a bug: round 1 fails, the failure goes back, round 2 is proven
-  'test-architect.test.js',      // 0.39.298 AR2 — the Architect: layers, propose-then-accept, analyze (order, gaps, cycles, layers), reuse from loom + the store, save beside the spec
   'test-spatial-void.test.js',   // 0.39.295 — the spatial void: the linked dials, the voices, echoes never in the idea, take in his words, the router
   'test-spec-workshop.test.js',  // 0.39.294 SW1 — the spec workshop: the dial, the feeds, the d20, propose-then-accept, saved into the repo's spec (the router, a stand-in agent)
+  'test-architect.test.js',      // 0.39.298 AR2 — ARCHITECT: loom + the store as one index, reuse / new, the gaps said, levels bottom-up, propose-then-accept, saved beside the spec (the router, a stand-in agent)
+  'test-synthesis-zoom-versionium.test.js',  // 0.39.300 VX1/WS3/AZ1/SY1/SY2 — versionium down is a stated 502/404; the pipeline together; systems → components zoom; intelligence's gap synthesis ranked by leverage
+  'test-nexstore-census.test.js',  // 0.39.300 N0 — every data shape in the tree classified into the seven kinds; the type catalogue
+  'test-nexstore-log.test.js',     // 0.39.300 N1 — the record frame and the log: 25 SIGKILLs mid-append, every ack survives, the chain verifies, the torn tail reported
+  'test-nexstore-types.test.js',   // 0.39.300 N2 — the type registry and the gate per type (warp Axiom): missing field, ledger patch, dangling reference refused and logged
+  'test-nexstore-writers.test.js', // 0.39.300 DT1 — every writer that persists data has a type, a reason, or is listed owed; a new writer fails
   'test-spec-library.test.js',  // 0.39.290 IL1 — a zip of specs → ideas + specs (duplicates folded, zips in zips, programs refused, by family); importSpec in memory
   'test-reply-continuation.test.js',  // 0.39.289 — a cut reply is finished (tail shown back, stitched); Ollama streamed with an idle timeout; thinking-only → think:false
   'test-nexus-self-incremental.test.js',  // 0.39.288 PF1–PF5 — nexus-self updates a spec in place (one changed file ≠ 2,000 rewritten), yielding ingest, changed paths logged, manifest meta sidecar for cold reads

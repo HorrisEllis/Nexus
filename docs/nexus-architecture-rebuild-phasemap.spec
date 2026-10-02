@@ -2,10 +2,12 @@ spec:
   meta:
     name:        nexus-architecture-rebuild
     version:     0.1.0-phasemap
-    status:      DRAFT 2026-08-13 — written per §8.5 (map before build), bottom-up per direct
-                 instruction: fix the data/supervision layer before any UI touches it.
-                 P1/P2 done same session, live-traced from real Windows boot logs, not
-                 assumed from reading code alone.
+    status: >-
+      DRAFT 2026-08-13 — written per §8.5 (map before build), bottom-up per direct
+      instruction: >-
+      fix the data/supervision layer before any UI touches it.
+      P1/P2 done same session, live-traced from real Windows boot logs, not
+      assumed from reading code alone.
     uuid:        nexus-architecture-rebuild-v0-0000-2026-0813-001
 
   goal: >

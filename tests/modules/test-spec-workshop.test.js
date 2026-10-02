@@ -204,7 +204,7 @@ async function main() {
     // 0.39.297 SW2 — its own page in the Void's look (James: "I hate that ui you made … all of it needs to be isolated,
     // in its own pages" · "no lowercase. and make sure its enterprise grade")
     const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/workshop.html'), 'utf8');
-    assert.match(page, /js\/window-chrome\.js/); assert.match(page, /href="css\/void-theme\.css"/, 'the Void\'s look, shared'); assert.match(page, /src="js\/void-sky\.js"/);
+    assert.match(page, /js\/window-chrome\.js/); assert.match(page, /href="css\/void-theme\.css"/, 'the Void\'s palette, shared'); assert.ok(!/void-sky\.js|id="sky"/.test(page), '0.39.300 WS4: a work surface — no sky, no hero');
     assert.match(page, /<title>THE SPEC WORKSHOP<\/title>/); assert.match(page, /data-title="THE SPEC WORKSHOP"/);
     for (const k of ['section', 'open-loops', 'questions']) assert.ok(page.includes(`data-k="${k}"`), k);
     for (const k of ['d20', 'reverse-chain', 'what-ifs', 'inspiration']) assert.ok(!page.includes(`data-k="${k}"`), `${k} belongs to the Void`);
@@ -219,7 +219,7 @@ async function main() {
     assert.match(theme, /html \{ text-transform: uppercase; \}/); assert.match(theme, /url\(\.\.\/fonts\/bebas-neue-400\.woff2\)/);
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');
     assert.match(app, /function openWorkshop\(/); assert.match(app, /openWorkshop\('repo:\$\{repo\.uuid\}'\)/, 'the Spec tab'); assert.match(app, /openWorkshop\('idea:\$\{idea\.uuid\}'\)/, 'an idea');
-    assert.match(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8'), /onclick="openWorkshop\(\)"[^>]*>Spec workshop</);
+    assert.match(fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8'), /onclick="openWorkshop\(\)"[^>]*>SPEC WORKSHOP</, '0.39.300 UI1: the welcome action, in capitals');
     assert.match(fs.readFileSync(path.join(ROOT, 'idearium/ui/spec-library.html'), 'utf8'), /nexus:workshop\.open/);
     const cli = fs.readFileSync(path.join(ROOT, 'idearium/cli/index.js'), 'utf8');
     for (const c of ['list', 'new', 'show', 'write', 'ambition', 'feed', 'accept', 'dismiss', 'save']) assert.match(cli, new RegExp(`async 'workshop\\.${c}'`));

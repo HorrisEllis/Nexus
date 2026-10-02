@@ -188,7 +188,7 @@ spec:
     # ── layer 1 — data: node types and databases ──────────────────────────────────────────────────────────────────
     DT1_persistence_census:
       layer: foundation
-      status: OPEN
+      status: "PARTIAL 0.39.300 — the census and its gate are built: lib/nexstore/writers.js finds every writer that persists data (209 in 135 files: fs writes with data in reach, atomic helpers, syncTable/appendRow, names resolved through constants, imports and row literals); docs/nexstore-writers.yaml holds each one's type or reason; tests/modules/test-nexstore-writers.test.js 3/3 fails on any new writer and on owed growing. Every idearium table writer is typed (the tables written only in code now reach N0's catalogue, with their fields); guardian's jobs are node.job. Still owed: 149 writers listed OWED in the register — each needs its type or reason (the not-done part of this phase)."
       depends_on: [M0_map]
       files: [lib/node-schemas/, tests/modules/ (a census test)]
       does: >-
