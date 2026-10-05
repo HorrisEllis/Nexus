@@ -98,6 +98,11 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('lib/component-store.js'), 'idearium/api/index.js _architectIndex + the build path — storeDir / find / put / markFailed (_require)'],
   ['nexus.idearium.api', I('idearium/lib/workshop.js'), 'idearium/api/index.js workshop.* (_workshop: await import, setAsk)'],
   ['nexus.idearium.api', I('lib/repo-agent.js'), 'idearium/api/index.js _workshop ask — defaultProvider / routeFor / COPILOT_URL (_require)'],
+  // §0.39.305 SB1–SB3 (docs/2026-10-05-build-from-the-spec-phasemap.spec) — his words reach the spec on every workshop
+  // save (the engine is handed over by _specEngineReady, an edge the scanner cannot see); the section prompt reads the
+  // earlier sections through the spec digest by _require (createRequire) — also unseen
+  ['nexus.idearium.api', I('idearium/spec-engine/index.js'), 'idearium/api/index.js workshop.save — setAuthorWords(repo.specUuid, sections) on the ready engine'],
+  [I('idearium/spec-engine/index.js'), I('lib/spec-digest.js'), 'idearium/spec-engine/index.js _buildChunkPromptBase — the earlier sections as bounded excerpts, meta and his own left out (_require)'],
   // §0.39.295 — the spatial void: the API owns the ideas, the echoes table and the agent (_agentAsk); void.js shapes it
   ['nexus.idearium.api', I('idearium/lib/void.js'), 'idearium/api/index.js void.* (await import) — echoPrompt, makeEcho, take, shapeVoid, glow'],
   // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)

@@ -129,7 +129,9 @@ async function run() {
   const doc = se.createSpec({ name: 'doc-spec', type: 'system' });
   check('document-section specs are unchanged', doc.type === 'system' && doc.chunks.some(c => c.sectionId === 'axioms') && !doc.chunks.some(c => c.file));
   const docPrompt = se.buildChunkPrompt(doc, doc.chunks[1]);
-  check('document chunks keep their original prompt', docPrompt.includes('section of a NEXUS component spec'));
+  // §0.39.305 SB3 — the document prompt was rewritten domain-agnostic on purpose (it was "section of a NEXUS component
+  // spec"); what this guards is unchanged: a document section gets the document prompt, never the file prompt.
+  check('document chunks keep the document prompt', docPrompt.includes('one section of the specification for') && !/write the complete file/i.test(docPrompt));
 
   // ── failures say why ──
   const { createWarpDispatch } = require(path.join(ROOT, 'lib', 'seam', 'adapters', 'warp-cascade.js'));

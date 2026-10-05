@@ -194,6 +194,15 @@ async function main() {
     check('repos.default_provider is a real config key the settings console lists', core.resolve('repos.default_provider').def.type === 'string');
     check('idearium registers the source at boot', /setDefaultProviderSource\(\(\) => \{ try \{ return getIdeariumValue\('repos\.default_provider'\)/.test(fs.readFileSync(path.join(__dirname, '../../idearium/api/index.js'), 'utf8')));
   }
+  { // §0.39.307 — James: "i cant click guardian on the agent tab." With ollama as the global default, the guardian click
+    // resolved to ollama and the switch snapped back.
+    RA.setDefaultProviderSource(() => 'ollama');
+    RA.setProvider(U, 'ollama');
+    const r = await api._route('POST', `/api/repos/${U}/agent/settings`, { useGuardian: true });
+    check('clicking guardian with ollama as the default picks a guardian agent, not ollama', r.status === 200 && RA.isGuardianProvider(r.json.provider), JSON.stringify(r.json).slice(0, 200));
+    check('…and the switch reads guardian after it', RA.settingsView(U).backend === 'guardian');
+    RA.setDefaultProviderSource(null);
+  }
   check('the CLI has /provider, documented in /help', APP.includes("case 'provider':") && /'\s*\/provider \[name\]/.test(APP));   // 0.39.257 — /help regrouped
 
   fs.rmSync(process.env.NEXUS_INJECT_DIR, { recursive: true, force: true });
