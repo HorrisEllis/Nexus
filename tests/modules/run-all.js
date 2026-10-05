@@ -196,6 +196,7 @@ const SUITES = [
   'test-proof-run.test.js',           // 0.39.302 PR1 the delivery checker
   'test-phase-proof.test.js',         // 0.39.303 PH1 phase runs end in proof
   'test-build-from-the-spec.test.js', // 0.39.305 SB1–SB3 templates frame every spec, his words seed it, the prompt is domain agnostic
+  'test-registry-drives-build.test.js', // 0.39.309 SB12 the registry block is the component list, the dependency order and the file checklist
   'test-event-contracts.test.js',     // EV0 (3) every emitted event declared; the drift baseline only shrinks
   'test-claude-code-backend.test.js', // IN2a Claude Code as an Idearium agent backend (a stand-in claude)
   'test-nexus-mcp.test.js',           // IN1 Nexus as Claude Code's toolbox (.mcp.json, honest degradation)

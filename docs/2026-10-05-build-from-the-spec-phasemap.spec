@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; SB1–SB3 built (0.39.305), the author-reuse fix (0.39.306); SB4–SB14 open. 1.1.0: the whole pipeline, idea → .spec → blocks → registry → components, reuse first"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), the author-reuse fix (0.39.306), sections judged as sections + the guardian click (0.39.307), the hat with the repo (0.39.308), SB12 the registry drives the build (0.39.309). Open: SB4–SB11, SB13–SB15. 1.2.0: SB12 done, overlaps with older maps named on each phase, SB15 added"
     axioms:   docs/AXIOMS-v3.1.md — §17.4 every build is reproducible (from an empty machine, the repo + its specs
               recreate the system), §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost, §1.2 nothing
               silently fails, §5.6 structural self-similarity, §16.4 simple things stay simple.
@@ -100,6 +100,13 @@ spec:
       → ideas → specs → repos, 0.39.290/292), the component store (reuse before any token, 0.39.266), the build
       queue poller, phase runs that end in proof (PH1), lib/spec-digest.js (a finished spec condensed to a budget).
       Nothing yet proves the round trip: a Nexus system's spec, through the pipeline, into code its own tests pass.
+
+  found_1_2_0:
+    - >-
+      While wiring SB12 (0.39.309): materialize() writes every UNBUILT chunk to disk as an EMPTY file, an empty .js
+      parses, and an empty test file "passes" — so build-verify can read a repo with no code in it as proven. The
+      registry checklist now counts an empty promised file as missing. Repos without a registry still have the hole:
+      SB15.
 
   phases:
     SB0_map:
@@ -219,6 +226,7 @@ spec:
     SB8_promote_with_full_block_options:
       layer: api
       status: OPEN
+      overlaps: "TP1_promote_to_spec_templates (docs/2026-10-01-idearium-agent-ready-master-phasemap.spec) — one piece of work; build it once, close both"
       depends_on: [SB2_his_words_seed_the_spec, SB9_the_spec_is_a_spec_file, SB10_reuse_first_keyed_on_the_contract, SB11_each_block_chunked]
       files: [idearium/api/index.js, idearium/spec-engine/index.js, idearium/spec-engine/blocks.yaml, idearium/cli/index.js, idearium/ui/workshop.html]
       does: >-
@@ -235,6 +243,7 @@ spec:
     SB9_the_spec_is_a_spec_file:
       layer: library
       status: OPEN
+      overlaps: "none found"
       depends_on: [SB1_templates_are_the_default_frame]
       files: [idearium/spec-engine/index.js, idearium/lib/spec-library-import.js, idearium/lib/workshop.js, idearium/repo/index.js]
       does: >-
@@ -250,6 +259,7 @@ spec:
     SB10_reuse_first_keyed_on_the_contract:
       layer: library
       status: OPEN
+      overlaps: "none found — but the findPriorSection fix touches every map that builds specs"
       depends_on: [SB9_the_spec_is_a_spec_file]
       files: [idearium/spec-engine/index.js, idearium/api/index.js, lib/component-store.js, lib/economy/]
       does: >-
@@ -266,6 +276,7 @@ spec:
     SB11_each_block_chunked:
       layer: library
       status: OPEN
+      overlaps: "FG2_token_budget_chunking (docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec) — FG2 is the mechanism, SB11 its use on spec blocks"
       depends_on: [SB10_reuse_first_keyed_on_the_contract]
       files: [idearium/spec-engine/index.js, lib/chunker/index.js]
       does: >-
@@ -279,7 +290,8 @@ spec:
 
     SB12_the_registry_is_the_component_list:
       layer: library
-      status: "PARTIAL — lib/registry-plan.js (parse, check, plan, checklist) and per-file dependsOn in createFileTreeSpec built; not yet wired into codegen or verify; overlaps DT4/DT4b in the agent-ready master map"
+      status: "DONE (0.39.309) — the registry section asks for a yaml components list (lib/registry-plan.js REGISTRY_FORMAT); speceng.codegen plans the files FROM it (one per component, each waiting on the files its wires name) and keeps it on the code spec; verify checks the built repo against it (a missing, empty or unparsable promised file fails and goes back to be built); no usable registry → the agent plans, and the reason is in the answer. Not done here: the node-for-node drift against the code projection (DT4)."
+      overlaps: "DT4_registry_block_to_nodes (agent-ready master) — SB12 parses the block and checks the files; DT4's node envelopes and node-for-node drift remain DT4's"
       depends_on: [SB11_each_block_chunked]
       files: [idearium/spec-engine/index.js, lib/file-tree-plan.js, idearium/repo/architecture.js, lib/node-export.js, idearium/repo/proof-run.js]
       does: >-
@@ -298,6 +310,7 @@ spec:
     SB13_each_component_chunked:
       layer: api
       status: OPEN
+      overlaps: "FG4_context_for_any_agent + FG5_recursive_build (fractal-graph map) — the mechanism; SB13 is their use per component"
       depends_on: [SB12_the_registry_is_the_component_list]
       files: [idearium/api/index.js, idearium/spec-engine/index.js, lib/code-intel/]
       does: >-
@@ -312,6 +325,7 @@ spec:
     SB14_reuse_compounds:
       layer: automation
       status: OPEN
+      overlaps: "CX0_codex_component_store (docs/2026-10-02-workshop-codex-rewind-phasemap.spec, carried into the emerge map) — CX0 grows the store, SB14 feeds it"
       depends_on: [SB13_each_component_chunked, SB6_hundreds_of_specs]
       files: [lib/component-store.js, idearium/lib/architect.js, idearium/repo/proof-run.js]
       does: >-
@@ -323,3 +337,18 @@ spec:
       proof: "a second spec with a matching component builds it from the store at 0 tokens"
       conditions:
         - { says: "a second spec with a matching component builds it from the store at 0 tokens", check: { kind: tests, run: "node tests/modules/test-reuse-compounds.test.js" } }
+
+    SB15_empty_is_not_built:
+      layer: library
+      status: OPEN
+      overlaps: "none — found 2026-10-05 while wiring SB12"
+      depends_on: [SB12_the_registry_is_the_component_list]
+      files: [lib/build-verify.js, idearium/repo/index.js]
+      does: >-
+        An unbuilt chunk is written to disk as an empty file, and verify counts an empty .js as parsing and an empty test
+        as passing, so a repo with no code can read proven. Verify counts an empty (whitespace-only) source or test
+        file as not built — a failure that goes back to its agent — for every repo, not only those with a registry; and
+        "proven" needs at least one test that ran an assertion.
+      proof: "a repo whose files are all empty reads failed, naming each file as not built"
+      conditions:
+        - { says: "a repo whose files are all empty reads failed, naming each file as not built", check: { kind: tests, run: "node tests/modules/test-empty-is-not-built.test.js" } }

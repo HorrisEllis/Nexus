@@ -103,6 +103,12 @@ const CONSUMERS = [
   // earlier sections through the spec digest by _require (createRequire) — also unseen
   ['nexus.idearium.api', I('idearium/spec-engine/index.js'), 'idearium/api/index.js workshop.save — setAuthorWords(repo.specUuid, sections) on the ready engine'],
   [I('idearium/spec-engine/index.js'), I('lib/spec-digest.js'), 'idearium/spec-engine/index.js _buildChunkPromptBase — the earlier sections as bounded excerpts, meta and his own left out (_require)'],
+  // §0.39.308 — the hat is created with the repo: the repo layer forges it at ingest (createRequire — unseen by the scanner)
+  [I('idearium/repo/index.js'), I('lib/repo-hat.js'), 'idearium/repo/index.js RepoLayer.ingest — ensureRepoHat when the repo has a compartment (createRequire)'],
+  // §0.39.309 SB12 — the registry block drives the build: the section prompt asks for its components list, codegen plans
+  // from it, verify checks the built repo against it (all by _require)
+  [I('idearium/spec-engine/index.js'), I('lib/registry-plan.js'), 'idearium/spec-engine/index.js _buildChunkPromptBase — REGISTRY_FORMAT on the registry section (_require)'],
+  ['nexus.idearium.api', I('lib/registry-plan.js'), 'idearium/api/index.js speceng.codegen (parseRegistry, toPlan) + _verifyRepo (checklist) — _require'],
   // §0.39.295 — the spatial void: the API owns the ideas, the echoes table and the agent (_agentAsk); void.js shapes it
   ['nexus.idearium.api', I('idearium/lib/void.js'), 'idearium/api/index.js void.* (await import) — echoPrompt, makeEcho, take, shapeVoid, glow'],
   // §0.39.289 CT1 — a cut reply is finished: chunk-dispatch reaches the continuation through createRequire (_req)

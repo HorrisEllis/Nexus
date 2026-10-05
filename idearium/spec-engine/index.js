@@ -728,7 +728,7 @@ export function createFileTreeSpec({ name, description = '', plan, agent = null,
   // The plan is data on the manifest (and a .filetree node, written by the
   // caller) — never a markdown file in the project.
   manifest.fileTree = { planSource: plan.planSource || null, template: plan.template || null, templateId, layers: Object.fromEntries(order.map(l => [l, (byLayer[l] || []).length])),
-    files: files.map(f => ({ path: f.path, layer: f.layer, purpose: f.purpose || null, source: f.source || null })), rejected: (plan.rejected || []).length };
+    files: files.map(f => ({ path: f.path, layer: f.layer, purpose: f.purpose || null, source: f.source || null, ...(Array.isArray(f.dependsOn) ? { dependsOn: [...f.dependsOn] } : {}) })), rejected: (plan.rejected || []).length };
   saveSpec(manifest);
   for (const c of manifest.chunks) {
     const f = fileBySid.get(c.sectionId);
@@ -1597,6 +1597,8 @@ function _buildChunkPromptBase(manifest, chunk, systemContext = '') {
     frame ? `THE SHAPE THIS SECTION FOLLOWS (the "${frame.templateId}" template — keep its structure, and replace its guidance with what is true for "${manifest.name}"):\n${frame.text}\n` : '',
     `YOUR TASK:`,
     `Write the "${chunk.sectionTitle}" section. ${chunk.sectionDesc || ''}`.trim(),
+    // §0.39.309 SB12 — the registry section ends in the components list the build reads (lib/registry-plan.js)
+    chunk.sectionId === 'registry' ? `\n${_require('../../lib/registry-plan.js').REGISTRY_FORMAT}` : '',
     ``,
     `Rules:`,
     `- Be specific to "${manifest.name}": its own domain, its own data, its own users. Not generic, and not about the system that is building it.`,

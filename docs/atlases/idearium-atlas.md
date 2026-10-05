@@ -627,3 +627,15 @@ The code is `idearium/repo/proof-run.js`. The API is /api/repos/:uuid/deliver/ch
 - **No conditions:** the run reads no-proof, and says so.
 
 The code is the proof step in `idearium/api/index.js`, using `idearium/repo/proof-run.js`. The test is `tests/modules/test-phase-proof.test.js`.
+
+## Building from the spec (v0.39.305–0.39.309)
+James: *"like it needs to use the templates as default."* · *"the agents hat should be created with the repo."* · *"Using the register as a dependancy and file check list."* Map: `docs/2026-10-05-build-from-the-spec-phasemap.spec`.
+
+- **Templates frame every spec.** Every new spec is framed by the standing templates: axioms, architecture, schemas and checklists, set in Settings as specs.default_templates. Each section's agent is given its template as the shape to fill for that one project; the text is not copied in (`idearium/spec-engine/index.js`).
+- **His words are the spec's.** The workshop's sections become the spec's on every save: the purpose comes from his idea and purpose. Every section's agent sees them, and they're never reused for another spec.
+- **A neutral section prompt.** It gives his words, the frame and short excerpts of what's already written. It contains no internal IDs and never pastes earlier sections in full.
+- **Sections judged as sections.** A spec section is judged on its own length, not against its prompt's (`lib/seam/detector.js`).
+- **The hat comes with the repo.** A repo made with a compartment gets its agent's hat when it's created (`lib/repo-hat.js`, called from `idearium/repo/index.js`).
+- **The registry drives the build.** The registry section ends in a YAML components list. "Generate code" plans one file per component from it, each waiting only on the files it depends on. Verify checks the built repo against it: a promised file that's missing, empty or doesn't parse fails and goes back to be built (`lib/registry-plan.js`). With no usable registry, the agent plans the files and the reason is given.
+
+Tests: `tests/modules/test-build-from-the-spec.test.js`, `tests/modules/test-registry-drives-build.test.js`.
