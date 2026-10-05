@@ -81,8 +81,9 @@ async function main() {
 
   await test('CP-101', 'defaults render persona, protocols, context and the question — and nothing unnamed', () => {
     const r = PB.render({ persona: 'PERSONA', blocks: PB.DEFAULT_BLOCKS, message: 'hello', context: { kind: 'map', block: '- 77 files' }, backend: 'guardian' });
-    // 0.39.266 context-map off by default, 0.39.265 voice; 0.39.279 memory/atlas/directory off → context-tools, wake
-    assert.deepStrictEqual(r.used, ['persona', 'learn', 'inject', 'tool-syntax', 'tool-guide', 'context-tools', 'wake', 'voice', 'question']);
+    // 0.39.266 context-map off by default, 0.39.265 voice; 0.39.279 memory/atlas/directory off → context-tools, wake;
+    // 0.39.326 (SB34) context of every kind reaches the model through context-card — a map context included
+    assert.deepStrictEqual(r.used, ['persona', 'learn', 'inject', 'tool-syntax', 'tool-guide', 'context-card', 'context-tools', 'wake', 'voice', 'question']);
     // every line of the output is either a block's own text or placeholder data
     const allowed = new Set([...PB.DEFAULT_BLOCKS.flatMap(b => b.text.split('\n')), 'PERSONA', '- 77 files', 'hello', '']);
     for (const line of r.text.split('\n')) assert.ok(allowed.has(line), `unexplained line: ${JSON.stringify(line)}`);

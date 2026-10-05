@@ -659,7 +659,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const shadow = expectFiles.length ? SH.declare({ step: 'phase.build', expects: { files: expectFiles }, subject: { repoUuid: target.uuid, map, phase, runId }, causedBy: `idearium.phases.build:${runId}` }) : null;
   // §0.39.282 N23 — each phase is its own chunk in its own FRESH chat (session = runId), so a small local model gets its
   // whole window for this phase, not the running history of every phase before it.
-  Promise.resolve().then(() => RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message, backend, agent, provider, layer: getRepoLayer(), session: runId }))
+  Promise.resolve().then(async () => RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message, backend, agent, provider, layer: getRepoLayer(), session: runId }))
     .then((r) => {
       const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
       // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
@@ -717,7 +717,7 @@ async function _provePhase({ target, base, commitId, mapText, phase, message, di
       const fb = PR.feedbackMessage(run);
       appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-retry-${attempt}`, ...pbase, state: 'retrying', attempt, snapshot: commitId, error: `${run.total - run.met} condition(s) unmet — attempt ${attempt} of ${max}`, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.attempt.unmet', { ...pbase, attempt: attempt - 1, met: run.met, total: run.total, modes: run.modes });
-      let rr; try { rr = await RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message: `${message}
+      let rr; try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: `${message}
 
 ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}` }); }
       catch (e) { rr = { ok: false, error: e.message }; }
@@ -775,7 +775,7 @@ async function _reviewDraft({ r, state, absent, target, base, commitId, req, not
   const SH = _require('../../lib/shadow.js');
   const shadow = SH.declare({ step: 'phase.review', expects: { files: [...new Set([...files.map(f => f.path), ...(absent || [])])] }, subject: { repoUuid: target.uuid, map: base.map, phase: base.phase, runId: reviewRunId }, causedBy: `idearium.phases.build:${base.runId}` });
   let rr;
-  try { rr = await RA.dispatch({ repo: target, repoDir: _repoDiskDir(target.uuid), message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }); }
+  try { rr = await RA.dispatch({ repo: target, repoDir: await _agentDir(target.uuid), message: text, provider: reviewer, layer: getRepoLayer(), session: reviewRunId }); }
   catch (e) { rr = { ok: false, error: e.message }; }
   let rstate = rr && rr.ok ? (rr.injects && rr.injects.blocked ? 'blocked' : 'reviewed') : 'failed';
   let rabsent = null;
@@ -1009,6 +1009,60 @@ function _repoDiskDir(repoUuid) {
   if (repo.materializeDir) return repo.materializeDir;
   const mat = getRepoLayer().materialize(repoUuid);
   return mat.error ? null : mat.dir;
+}
+
+// §0.39.335 SB35 — James: "why are the agents still not using the context. fix it. actualy fix it." The retrieval
+// (lib/repo-agent.js contextFor) was right and read an index that was not there: his question reached core's agent
+// while nexus-self was still writing its sources, and a repo row that lost materializeDir points at
+// data/projects/<uuid> while its index is in nexus-self/repos/<uuid>. Before every agent send:
+//   1. a nexus-self sync running for this repo is waited for (bounded);
+//   2. the directory used is the one that HOLDS indexes/cards.json, of every place this repo's files can be;
+//   3. none does but the sources are on disk → the import pipeline runs there (the same runImportPipeline as
+//      POST /reindex) and the persona is re-grounded on it. Concurrent sends share the one run.
+// -> { dir, indexed, waited, built, error? }. Never throws; a failure is stated (§1.2), the send still goes.
+const _indexing = new Map();
+const _hasIndex = (d) => { try { return !!d && fs.statSync(path.join(d, 'indexes', 'cards.json')).size > 0; } catch (_) { return false; } };
+const _hasSources = (d) => { if (!d) return false; try { return fs.existsSync(path.join(d, '.idearium-sources.json')) || fs.readdirSync(d).some(f => !f.startsWith('.') && !['indexes', 'chunks', 'atlas.json'].includes(f)); } catch (_) { return false; } };
+async function _ensureIndexed(repoUuid, { waitMs = parseInt(process.env.IDEARIUM_AGENT_INDEX_WAIT_MS || '120000', 10) } = {}) {
+  const L = getRepoLayer();
+  const repo = L.get(repoUuid);
+  if (!repo) return { dir: null, indexed: false, error: 'repo not found' };
+  const out = { dir: null, indexed: false, waited: 0, built: false };
+  try {
+    const NS = await import('../repo/nexus-self.js');
+    const p = typeof NS.syncing === 'function' ? NS.syncing(repoUuid) : null;
+    if (p) { const t = Date.now(); await Promise.race([p, new Promise(r => setTimeout(r, waitMs))]); out.waited = Date.now() - t; }
+  } catch (_) { /* no nexus-self — nothing to wait for */ }
+  if (_indexing.has(repoUuid)) { const t = Date.now(); await _indexing.get(repoUuid); out.waited += Date.now() - t; }
+  const r = L.get(repoUuid) || repo;
+  let selfDir = null;
+  try { selfDir = path.join(_require('../../lib/nexus-self/store.js').storeRoot(), 'repos', repoUuid); } catch (_) { selfDir = null; }
+  const candidates = [...new Set([r.materializeDir, selfDir, path.join(L.dataDir, 'projects', repoUuid)].filter(Boolean))];
+  const found = candidates.find(_hasIndex);
+  if (found) return { ...out, dir: found, indexed: true };
+  const src = candidates.find(_hasSources) || _repoDiskDir(repoUuid);
+  if (!src) return { ...out, error: 'no directory holds this repo\'s files' };
+  const run = (async () => {
+    await new Promise(res => setImmediate(res));
+    const pipeline = runImportPipeline(r, src);
+    try { const RH = _require('../../lib/repo-hat.js'); if (RH.getRepoHat(repoUuid)) RH.refreshRepoHatPersona({ repo: r, repoDir: src }); } catch (e) { console.warn(`[api] SB35 persona refresh after indexing ${repoUuid}: ${e.message}`); }
+    return pipeline;
+  })();
+  _indexing.set(repoUuid, run);
+  try {
+    const pipeline = await run;
+    console.log(`[api] SB35 ${r.name || repoUuid}: had no index when its agent was asked — pipeline ran in ${src} → ${pipeline && pipeline.state}`);
+    return { ...out, dir: src, indexed: _hasIndex(src), built: true, pipeline: pipeline && pipeline.state };
+  } catch (e) {
+    console.warn(`[api] SB35 ${r.name || repoUuid}: indexing for the agent failed — ${e.message}`);
+    return { ...out, dir: src, error: `indexing failed: ${e.message}` };
+  } finally { _indexing.delete(repoUuid); }
+}
+// the directory an agent of this repo reads its context from, its index made sure of first (SB35)
+async function _agentDir(repoUuid) {
+  const e = await _ensureIndexed(repoUuid);
+  if (e.error) console.warn(`[api] SB35 ${repoUuid}: ${e.error} — the agent is sent what the repo has`);
+  return e.dir || _repoDiskDir(repoUuid);
 }
 
 // §CHECKLIST 2026-09-20 — James: "when creating a project, we need to
@@ -5046,7 +5100,7 @@ async function handle(req, res, route, query, body) {
           const provider = RA.getProvider(params.uuid);
           const backend = RA.routeFor(provider).backend;
           let context = { kind: null, block: '' };
-          const repoDir = repo.materializeDir || path.join(layer.dataDir, 'projects', params.uuid);   // same derivation as the atlas routes
+          const repoDir = await _agentDir(params.uuid);   // §SB35 — the directory the dispatch reads, its index made sure of
           // §0.39.266 — the same context the dispatch uses (harness scope: the registry card, not code)
           try { const c = RA.contextFor({ repo, repoDir, message, bare: true }); context = { kind: c.kind || null, block: c.block }; } catch (_) { /* preview without context, said below */ }
           // 0.39.272 — {memory}, {atlas}, {directory}: the same recall and atlas search the dispatch runs, so the preview is
@@ -5133,7 +5187,7 @@ async function handle(req, res, route, query, body) {
       if (!body.message || !String(body.message).trim()) return err(res, 400, 'message is required');
       const RA = _require('../../lib/repo-agent.js');
       const r = await RA.dispatch({
-        repo, repoDir: _repoDiskDir(params.uuid),
+        repo, repoDir: await _agentDir(params.uuid),   // §SB35 — never an unindexed tree
         message: body.message,
         backend: body.backend || null,
         agent: body.agent || null,
@@ -5166,7 +5220,7 @@ async function handle(req, res, route, query, body) {
       if (!body.message || !String(body.message).trim()) return err(res, 400, 'message is required');
       const RA = _require('../../lib/repo-agent.js');
       const r = await RA.adoptLate({
-        repo, repoDir: _repoDiskDir(params.uuid), layer: getRepoLayer(),
+        repo, repoDir: await _agentDir(params.uuid), layer: getRepoLayer(),
         responseId: String(body.responseId), message: body.message,
         since: Number(body.since) || 0, noContext: body.noContext === true,
       });
@@ -6443,7 +6497,7 @@ async function handle(req, res, route, query, body) {
           try {
             const L = getRepoLayer();
             repo = who.repoUuid ? L.get(who.repoUuid) : null;
-            repoDir = repo ? (repo.materializeDir || path.join(L.dataDir, 'projects', repo.uuid)) : null;   // same derivation as the Agent tab
+            repoDir = repo ? await _agentDir(repo.uuid) : null;   // §SB35 — the same directory the Agent tab reads, indexed
           } catch (e) { console.warn(`[idearium/api] speceng.build: repo ${who.repoUuid} unreadable (${e.message}) — building without its repo context`); }
           const query = [chunk.realPath, (chunk.file && chunk.file.purpose) || chunk.title || chunk.sectionId, chunk.sectionDesc].filter(Boolean).join(' ');
           const data = { memory: '', build: '', atlas: '', code: '' };

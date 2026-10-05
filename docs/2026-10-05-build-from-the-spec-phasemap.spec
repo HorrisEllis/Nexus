@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.14.0
+    version:  1.15.0   # 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -939,3 +939,33 @@ spec:
       proof: "a question naming no file gets the chunk whose code answers it, with its card and code; the memory search runs with its block off; an unmatched question gets the overview"
       conditions:
         - { says: "context from the code tab, the graphs and memory", check: { kind: tests, run: "node tests/modules/test-agent-context-always.test.js" } }
+
+    SB35_the_index_is_there_when_the_agent_asks:
+      layer: api
+      status: "DONE (0.39.335) — mapped from his boot log before code. guardian/jaa-store.js maxWait (5 s); nexus-self flushTables() per system, name fallback, syncing(uuid); idearium/api _ensureIndexed + _agentDir at all seven agent entry points. test-agent-index-ready 4/4; IA-01 and IA-02 fail on the code before it."
+      james: '"why are the agents still not using the context. fix it. actualy fix it. do not hand it back until you. wasting my fucking tokens"'
+      found: >-
+        SB32–SB34 made the retrieval right, but it reads an index that was not there. His log of 12:23–12:26: (a) idearium
+        never flushed on Ctrl+C (every other service printed "[jaa] SIGINT received — flushing"; idearium was inside the
+        nexus-self sync). guardian/jaa-store.js debounces a table's flush by 1.5 s and RESTARTS the timer on every
+        write; the sync writes idearium_repos about every second for its whole run, so the table is never flushed while a
+        sync runs — a stop mid-sync loses every repo row it wrote. (b) Next boot: "Loaded 4 rows — idearium_repos"; every
+        system found no repo marked nexusSelf and logged "created" again; core was re-ingested from nothing. (c) His
+        question reached the agent at ~12:26:07, while core's 2,235 sources were being written (12:26:08) and before its
+        pipeline (READY 12:26:25): contextFor found no indexes/cards.json and sent "context: none — no index to read",
+        telling a 3b model to run the pipeline itself. (d) A repo row that lost materializeDir resolves to
+        data/projects/<uuid> (the log wrote architect, diagnostic, eravos, intelligence there) while its index may sit in
+        nexus-self/repos/<uuid>.
+      depends_on: [SB34_context_is_the_code_tab_the_graphs_and_memory]
+      files: [guardian/jaa-store.js, idearium/lib/db.js, idearium/repo/nexus-self.js, idearium/api/index.js, lib/repo-agent.js]
+      does: >-
+        (1) The store flushes a table at most 5 s after it first became dirty, however often it is written (maxWait);
+        the debounce still coalesces bursts. (2) nexus-self flushes the repo rows after each system and finds its repo
+        by name when the nexusSelf mark was lost, so a stopped sync is never a full re-ingest. (3) One
+        _ensureIndexed(repoUuid) before every agent send: waits for the nexus-self sync of that repo when one is running,
+        takes the directory that actually holds indexes/cards.json, and when none does but the sources are on disk runs
+        the import pipeline there (the same runImportPipeline as POST /reindex) and re-grounds the persona; concurrent
+        sends share one run. The agent is never told to index its own repo.
+      proof: "a table written every 200 ms is on disk within 5 s; a repo row stripped of its nexusSelf mark is updated, not created; an agent send on a repo with sources and no index gets the code search's chunks in its prompt; a send during the sync waits for it"
+      conditions:
+        - { says: "the index is there when the agent asks", check: { kind: tests, run: "node tests/modules/test-agent-index-ready.test.js" } }

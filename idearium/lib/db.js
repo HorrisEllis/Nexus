@@ -142,6 +142,15 @@ export function syncTable(table, rows, idField = 'uuid', { allowDelete = false }
 }
 
 /**
+ * §0.39.335 SB35 — write every dirty table to disk now, not after the debounce. For a long run that must not be
+ * lost if the process is stopped part-way (the nexus-self sync calls it after each system). Returns true when the
+ * store could flush.
+ */
+export function flushTables() {
+  try { return jaaDB.flush(); } catch (e) { console.error(`[idearium/db] §1.2 flush failed: ${e.message}`); return false; }
+}
+
+/**
  * Explicit single-row delete — the only way a row leaves a syncTable-
  * managed table now that syncTable itself never deletes on absence. Same
  * shape as appendRow(): a real single-row jaaDB.delete(), not a side

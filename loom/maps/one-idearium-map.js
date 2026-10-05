@@ -70,6 +70,8 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('idearium/repo/living-spec.js'), 'idearium/api/index.js repo.living-spec (await import)'],
   ['nexus.idearium.api', I('lib/cos-debug-report.js'),      'idearium/api/index.js repo.run — failures keep their compact debug report'],
   ['nexus.idearium.api', I('lib/nexus-self/apply.js'),      'idearium/api/index.js _phaseWrite — a nexus phase edit goes through the apply gate'],
+  // §0.39.335 SB35 — before every agent send: wait for the repo's running sync, read the directory that holds the index
+  ['nexus.idearium.api', I('idearium/repo/nexus-self.js'), 'idearium/api/index.js _ensureIndexed — syncing(uuid) (await import); runImportPipeline when no index'],
   // §0.39.283 N30 — the archive drop box: idearium runs the import as a background job, the job spawns the CLI
   ['nexus.idearium.api', I('lib/history-import-job.js'),    'idearium/api/index.js history.import.* — start/status/upload behind /archive-import.html'],
   [I('lib/history-import-job.js'), I('cli/import-history.js'), 'lib/history-import-job.js start() — spawn(node cli/import-history.js --jsonl --list), a real edge the scanner cannot see'],
