@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.15
+    version:  1.7.16
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -258,7 +258,7 @@ spec:
       layer: foundation
       systems: [emerge]
       value: { score: 3, cost: L, for: [ownership, foundation], why: "his constraint field as code; the deterministic core every other phase leans on" }
-      status: OPEN
+      status: DONE (1.7.16, 0.39.321) — emerge/core/ (field, constraint, transition, observation, lens, gap, history, level, budget, seed, index) and emerge/spec/emerge-core.spec; tests/modules/test-emerge-core.test.js 6/6 is the proof. Ids are drawn from the seed and the history holds logical ticks only, so one seed replays byte-identical. Soft and probabilistic constraints permit a violation at its cost; every other type refuses.
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [emerge/core/field.js, emerge/core/constraint.js, emerge/core/transition.js, emerge/core/observation.js, emerge/core/lens.js, emerge/core/gap.js, emerge/core/history.js, emerge/core/level.js, emerge/core/budget.js, emerge/core/seed.js, emerge/core/index.js, emerge/spec/emerge-core.spec]
       does: >-
