@@ -6,7 +6,7 @@ spec:
     release:  0.39.345 (base)
     uuid:     nexus-code-tab-and-one-router-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the Code tab, every model call) · copilot (who answers) · lib/pipeline-routing (the policy, the breakers) · ollama
-    status:   "MAPPED 2026-10-05; CT1 done (0.39.347)"
+    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348)"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -72,7 +72,7 @@ spec:
 
     CT2_it_learns_and_switches:
       layer: library
-      status: OPEN
+      status: "DONE (0.39.348) — the switch on a cut/empty/timeout answer came with CT1 (switchedFrom, every hop sent back). CT2 adds the verifiers' word: lib/pipeline-routing VERDICTS (test-failed · dismissed · constraint) are recorded for that kind of job and never open a breaker; model-door outcome({verdict:true}) skips the breaker; idearium sends them — the prove loop's failing file → test-failed for the model that built it (the last ok hop of the chunk's route), a proven build → ok for each, a workshop draft dismissed → dismissed, accepted → ok. NOT YET: constraint verdicts (no station checks Emerge constraints until RS4); the seam detector's word. test-model-door 8/8 (MD-07, MD-08)."
       james: '"and learn from it. failure modes, dynamically switch models, if its not equipped for the task"'
       depends_on: [CT1_one_door_for_models]
       files: [lib/pipeline-routing.js, lib/economy/router.js, copilot/server.js]

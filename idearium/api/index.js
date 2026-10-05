@@ -975,6 +975,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
       rr.endedAt = Date.now();
       run.state = 'done'; run.verdict = v.verdict;
       run.why = v.verdict === 'proven' ? `proven in ${round} round(s) — ${v.why}` : `every file parses and resolves (round ${round}), not proven: ${v.checks.tests ? v.checks.tests.why : 'no tests'}`;
+      // §CT2 — proven: every model that built a file of it did the job
+      if (v.verdict === 'proven') { try { const PRx = _require('../../lib/pipeline-routing.js'); const m2 = se.loadSpec(run.specUuid); for (const c of (m2.chunks || [])) { const by = _builtBy(c); if (by && c.realPath) _verdict(by, PRx.jobTypeOf(c), true); } } catch (_) {} }
       return;
     }
     if (round === run.maxRounds) {
@@ -986,6 +988,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
     // 3 — send each failing file back with its exact failures; the version that failed is never reused
     const manifest = se.loadSpec(run.specUuid);
     const items = Object.entries(v.byFile).filter(([f]) => f !== '(project)').map(([f, list]) => ({ realPath: f, failures: BV.repairText(list), round: round + 1 }));
+    // §CT2 — whoever built a failing file was not up to it: the verdict goes to the door before the file goes back
+    try { const PRx = _require('../../lib/pipeline-routing.js'); for (const it of items) { const c = manifest.chunks.find(x => x.realPath === it.realPath); const by = _builtBy(c); if (by) _verdict(by, PRx.jobTypeOf(c), false, 'test-failed', String(it.failures || '').slice(0, 300)); } } catch (_) {}
     const mr = se.markForRepair(run.specUuid, items);
     rr.repaired = mr.marked; rr.notBuiltBySpec = mr.unknown;
     try {
@@ -1198,6 +1202,7 @@ async function _specEngineReady(ms = 5000) {
 let _agentAskOverride = null;
 export function _setAgentAsk(fn) { _agentAskOverride = typeof fn === 'function' ? fn : null; }
 export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
+export function _verdictForTest(chunk, kind, ok, cls, why) { const by = _builtBy(chunk); _verdict(by, kind, ok, cls, why); return by; }   // §CT2
 async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium', kind = null } = {}) {
   if (_agentAskOverride) { try { return await _agentAskOverride(prompt, { channel, sessionId }); } catch (e) { return { ok: false, error: e.message }; } }
   // §CT1 0.39.346 — James: "it should use copilot regardless, have copilot figure it, and learn from it". The pages
@@ -1235,6 +1240,14 @@ async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium',
   const last = tried[tried.length - 1];
   return { ok: false, error: `no model answered (${tried.map(t => `${t.provider}${t.class ? `: ${t.class}` : ''}`).join(' → ')})`, route: tried, ...(routeNote ? { note: routeNote } : {}), lastClass: last && last.class };
 }
+/** §CT2 0.39.348 — a later verdict on a model's work (its test failed or passed, its draft dismissed or accepted) goes to
+ *  copilot's door, so the learned order learns what a model is up to, not only when it crashes. Fire and forget. */
+function _verdict(provider, kind, ok, cls = null, why = null) {
+  if (!provider || !kind) return;
+  try { const RAx = _require('../../lib/repo-agent.js'); _postJson(`${RAx.COPILOT_URL}/api/route/outcome`, { provider, kind, ok: !!ok, class: ok ? null : cls, error: why, verdict: true, policy: _routingPolicy() }, 5000).catch(() => {}); } catch (_) {}
+}
+/** _builtBy(chunk) — the provider (with its model) whose answer built this chunk: the last ok hop of its route */
+function _builtBy(c) { if (!c) return null; const ok = (c.route || []).filter(h => h.outcome === 'ok').pop(); return (ok && ok.provider) || null; }
 function _workshopGet(WS, id) { return loadTable(WS.TABLE).find(r => r.uuid === id) || null; }
 
 // §0.39.298 AR2 — ARCHITECT's helpers (idearium/lib/architect.js holds the model; these hold loom, the store and repos)
@@ -4468,6 +4481,8 @@ async function handle(req, res, route, query, body) {
       const r = WS.decide(w, params.pid, body || {});
       if (r.error) return err(res, 400, r.error);
       syncTable(WS.TABLE, [w]);
+      // §CT2 — his accept or dismiss is the verdict on the model that drafted it
+      if (r.proposal && r.proposal.by && ['accepted', 'dismissed'].includes(r.proposal.status)) _verdict(r.proposal.by, 'page:workshop', r.proposal.status === 'accepted', 'dismissed', r.proposal.status === 'dismissed' ? 'dismissed by James' : null);
       return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w });
     }
     case 'workshop.save': {

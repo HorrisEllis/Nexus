@@ -12,6 +12,9 @@
  *   MD-05  the spec build's route walk reports each hop to the door (opts.report) and keeps no second breaker
  *   MD-06  the repo agent in the copilot position takes its provider and model from the door, switches on a cut answer,
  *          and reports each outcome
+ *   MD-07  §CT2 a verdict (test-failed, dismissed) teaches the learned order and never opens a breaker; after enough
+ *          verdicts that kind of job goes to the model that passed first
+ *   MD-08  §CT2 idearium sends the verdict for the model that built a chunk (the last ok hop of its route), marked verdict
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -142,6 +145,44 @@ const policy = PR.policyFrom({ mode: 'learned', chain: 'ollama,gemini', ollama_m
     assert.strictEqual(r.switchedFrom[0].provider, 'ollama:small:3b'); assert.strictEqual(r.switchedFrom[0].class, 'truncated');
     assert.strictEqual(r.viaCopilot.provider, 'ollama:big:7b');
     assert.deepStrictEqual(outcomes.map(o => [o.provider, o.ok, o.kind]), [['ollama:small:3b', false, 'agent:chat'], ['ollama:big:7b', true, 'agent:chat']]);
+  });
+
+  await test('MD-07', 'a verdict teaches the learned order and never opens a breaker', () => {
+    PR.breaker.reset();
+    const p = 'ollama:weak:1b';
+    for (let i = 0; i < 4; i++) {
+      const o = MD.outcome({ provider: p, kind: 'build:core', ok: false, class: 'test-failed', verdict: true, policy });
+      assert.strictEqual(o.breaker.open, false, 'its test failed: the provider is up, no breaker');
+    }
+    assert.ok(PR.VERDICTS.includes('test-failed') && PR.VERDICTS.includes('dismissed'));
+    const recs = [];
+    for (let i = 0; i < 4; i++) recs.push({ jobType: 'build:core', provider: p, outcome: 'failed', class: 'test-failed', at: Date.now() });
+    for (let i = 0; i < 4; i++) recs.push({ jobType: 'build:core', provider: 'ollama:big:7b', outcome: 'ok', at: Date.now() });
+    const pol = PR.policyFrom({ mode: 'learned', chain: 'ollama', ollama_models: 'weak:1b,big:7b', learn_min_records: 4 });
+    const r = MD.route({ kind: 'build:core', preferAgent: 'ollama', policy: pol, records: recs }, { resolve });
+    assert.strictEqual(r.route[0].provider, 'ollama:big:7b', JSON.stringify(r.route));
+  });
+
+  await test('MD-08', 'idearium sends the verdict for the model that built the chunk', async () => {
+    const outcomes = [];
+    const srv = http.createServer((q, s) => {
+      let b = ''; q.on('data', d => b += d); q.on('end', () => {
+        if (q.url === '/api/route/outcome') outcomes.push(JSON.parse(b || '{}'));
+        s.setHeader('content-type', 'application/json'); s.end('{"ok":true}');
+      });
+    });
+    await new Promise(r => srv.listen(0, '127.0.0.1', r));
+    delete require.cache[require.resolve(path.join(ROOT, 'lib/repo-agent.js'))];
+    process.env.COPILOT_URL = `http://127.0.0.1:${srv.address().port}`;
+    const api = await import(path.join(ROOT, 'idearium/api/index.js'));
+    const chunk = { realPath: 'src/a.js', route: [{ provider: 'ollama:small:3b', outcome: 'failed' }, { provider: 'ollama:big:7b', outcome: 'ok' }] };
+    const by = api._verdictForTest(chunk, 'build:core', false, 'test-failed', '1 failing');
+    assert.strictEqual(api._verdictForTest({ route: [] }, 'build:core', true), null, 'nothing built it: no verdict');
+    await new Promise(r => setTimeout(r, 150));
+    srv.close();
+    assert.strictEqual(by, 'ollama:big:7b');
+    assert.strictEqual(outcomes.length, 1, JSON.stringify(outcomes));
+    assert.deepStrictEqual([outcomes[0].provider, outcomes[0].ok, outcomes[0].class, outcomes[0].verdict, outcomes[0].kind], ['ollama:big:7b', false, 'test-failed', true, 'build:core']);
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);
