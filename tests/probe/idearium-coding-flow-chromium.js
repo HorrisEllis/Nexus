@@ -107,7 +107,7 @@ const SPEC = ['spec:', '  meta:', '    name: kernel', '  primitives:', '    Port
     P.case('W4: Build this repo → the repo\'s Home (Start building) with the Plan panel open', ws.subtab === 'home' && ws.start, { subtab: ws.subtab, start: ws.start });
     P.case('W3: the work surface under the plan — a card per changed file, +/− counts, green and red lines', ws.cards.length === 2 && byName['state.js'] && byName['graph.js']
       && byName['state.js'].plus === '+3' && byName['state.js'].minus === '−0' && byName['state.js'].adds === 3 && byName['graph.js'].adds === 6, { cards: ws.cards });
-    P.case('W3: the applied change offers Revert; the waiting one Apply and Reject; the header counts them', byName['state.js'].acts.join() === 'Revert' && byName['graph.js'].acts.join() === 'Apply,Reject'
+    P.case('W3: the applied change offers Revert; the waiting one Apply and Reject; the header counts them', byName['state.js'].acts.filter(a => a !== 'open in Code').join() === 'Revert' && byName['graph.js'].acts.filter(a => a !== 'open in Code').join() === 'Apply,Reject'   /* §CT5 0.39.351 — each card also opens its file in the Code tab */
       && /2 files/.test(ws.sum) && /1 waiting/.test(ws.sum), { acts: ws.cards.map(c => c.acts), sum: ws.sum });
     P.case('W3: the tools strip names the scope and how many tools the agent is given', /scope/.test(ws.tools) && /\d+ given/.test(ws.tools), { tools: ws.tools });
     await pg.evaluate(() => { document.getElementById('plan-panel').classList.add('wide'); WSURF.showTools = true; wsPaint(); });

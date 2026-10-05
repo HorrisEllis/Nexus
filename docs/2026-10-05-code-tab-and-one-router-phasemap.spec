@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     code-tab-and-one-router
-    version:  1.0.0
+    version:  1.1.0
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-code-tab-and-one-router-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the Code tab, every model call) · copilot (who answers) · lib/pipeline-routing (the policy, the breakers) · ollama
-    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349); CT4 done (0.39.350) — all four phases built"
+    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349); CT4 done (0.39.350); CT5 done (0.39.351) — all five phases built"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -18,7 +18,8 @@ spec:
       use copilot regardless, have copilot figure it, and learn from it. failure modes, dynamically switch models, if its
       not equipped for the task, which i feel like raid is wired to do, agent switching and routing?"
       Earlier, on the same surface: "the code tab the agent tab, work surface, like full activity, enterprise grade?" ·
-      "its just the code tab is meaningless. what about uncommited changes?"
+      "its just the code tab is meaningless. what about uncommited changes?" · 1.1.0, on the built Code tab: "i like it but,
+      can we have this hooked into the plan and work surface panel"
 
   found:
     - >-
@@ -110,3 +111,30 @@ spec:
         A check in Settings: every installed Ollama model asked a one-line question through copilot, each caller's route
         shown (which model it would use, whether it answered). What is not wired says so.
       proof: "with a stand-in bridge: every model listed and answered; a missing bridge is said, not a blank"
+
+    CT5_hooked_into_the_plan:
+      layer: ui
+      status: "DONE (0.39.351) — code-surface.js: csLoadPlan (the plan and runs as the Plan panel reads them), the plan strip (current step, its gates by plan-panel's _gateBar, the runs on the open file — each opens openPlanPanel({focus})), csChange (POST …/manage action edit: file, picked lines, his words, the card's chunk as related, the picked hop's backend/agent/model — build-surface.js manage now passes them to dispatch), codeSurfaceOnEvent (app.js calls it beside planPanelOnEvent). work-surface.js: 'open in Code' on every card (wsOpenInCode). plan-panel.js: a run's ledger files open in the Code tab. test-code-tab 13/13 (CT-03 the router, CT-20…23 in Clear Glass); the coding-flow probe's W3 counts the new button."
+      james: '"i like it but, can we have this hooked into the plan and work surface panel"'
+      depends_on: [CT3_the_code_tab_is_the_work_surface]
+      files: [idearium/ui/js/code-surface.js, idearium/ui/js/plan-panel.js, idearium/ui/js/work-surface.js, idearium/ui/js/app.js, idearium/api/build-surface.js]
+      found:
+        - "the docked agent's send is a chat (POST …/agent/prompt): no snapshot, no run, nothing on the Plan; a change it writes appears only as a proposal"
+        - "the Code tab does not follow the live events the Plan panel does (app.js → planPanelOnEvent only): a phase that lands a change leaves it stale"
+        - "a work-surface card in the Plan panel cannot open its file in the Code tab; the Code tab shows nothing of the plan"
+        - "Manage (POST …/manage) is already a run on the Plan: a Versionium snapshot first, the shadow expecting the file back, the run's ledger, the change as a work-surface card — it takes provider, not a picked model"
+      pushback:
+        - >-
+          Not a second copy of the Plan inside the Code tab — two of the same panel drift. The Plan panel stays the one
+          plan; the Code tab follows it (the current step and the runs on the open file, each opening the panel on itself)
+          and both repaint from the same events and the same work-surface state.
+        - >-
+          Not every ask a run: a question about the code needs no snapshot. The docked agent keeps "ask" (an answer) and
+          gains "change it" (a Manage edit of the open file, the picked lines — a run on the Plan).
+      does: >-
+        "change it" in the docked agent is a Manage edit (the open file, the picked lines, his words, the picked model):
+        a snapshot, a run on the Plan, the Plan panel opened on that run, its change a diff card in both places. The Code
+        tab repaints on the Plan's events (runs, manages, injects). Above the activity strip: the plan's current step
+        with its gates, and the runs on the open file — each opens the Plan panel focused on it. A work-surface card, in
+        the Plan panel or the Code tab, opens its file in the Code tab.
+      proof: "driven in Clear Glass: change it → POST …/manage action edit with the lines and model, the Plan panel opens focused on the run; an event repaints the Code tab; a card's 'open in Code' switches tab with that file open"

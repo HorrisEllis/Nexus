@@ -60,3 +60,11 @@
 .cs-call{font:10px/1.7 var(--mono);color:var(--text2);cursor:default}.cs-call.bad{color:var(--coral)}.cs-call[onclick]{cursor:pointer}
 @media (max-width:1180px){.cs-grid{grid-template-columns:200px minmax(0,1fr)}.cs-right{grid-column:1 / -1;max-height:none}}
 @media (max-width:760px){.cs-grid{grid-template-columns:1fr}.cs-left{max-height:240px;min-height:0}}
+/* §0.39.351 CT5 — hooked into the Plan: the plan strip, "change it", a card's "open in Code" */
+.cs-plan{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 10px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:var(--nx-void,var(--bg1));font:10.5px var(--mono)}
+.cs-cur{color:var(--sky);cursor:pointer}.cs-cur:hover{text-decoration:underline}
+.cs-run{border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:0 7px;font-size:9.5px;cursor:pointer}.cs-run:hover{border-color:rgba(255,255,255,.3)}
+.cs-sends{display:flex;gap:6px;justify-content:flex-end;margin:6px 10px 10px}.cs-sends .cs-send{margin:0}
+.cs-send-change{background:none;border:1px solid var(--mint);color:var(--mint)}
+.ws-act-code{color:var(--sky2)}
+.pp-file{color:var(--sky2);text-decoration:none}.pp-file:hover{text-decoration:underline}

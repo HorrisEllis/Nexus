@@ -16,17 +16,23 @@
 //           copilot's door would choose (GET …/agent/route), changeable to any other hop, the ask sent with the open
 //           file and lines as its context (POST …/agent/prompt); its reply says which model answered
 //   bottom  activity, one strip that folds: the agent's tool calls and the changes
+//
+// §CT5 0.39.351 — James: "i like it but, can we have this hooked into the plan and work surface panel". The Plan panel
+// (plan-panel.js) stays the one plan; the Code tab follows it: the plan's current step and the runs on the open file sit
+// above activity, each opening the Plan panel on itself; "change it" in the docked agent is a Manage edit — a snapshot, a
+// run on the Plan, the panel opened on it, its change a card here and there; the Code tab repaints on the Plan's events
+// (codeSurfaceOnEvent, from app.js); a work-surface card opens its file here (wsOpenInCode, work-surface.js).
 // ════════════════════════════════════════════════════════════════════════════
 
 const CS = { uuid: null, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
   card: null, hits: null, more: null, q: '', mode: 'search', changedOnly: false, collapsed: new Set(), sel: null,
-  agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' }, activity: false, loadingChanges: false };
+  agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' }, activity: false, loadingChanges: false, plan: null };
 
 function _csq(s) { return escapeHtml(String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'")); }
 
 function _csReset(repo) {
   Object.assign(CS, { uuid: repo.uuid, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
-    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' } });
+    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), plan: null, agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' } });
 }
 
 async function renderRepoCode(repo) {
@@ -41,6 +47,7 @@ async function renderRepoCode(repo) {
     csLoadChanges(repo).then(() => here() && csPaint());
     if (typeof loadFileStates === 'function') loadFileStates(repo, { force: true }).then(() => here() && csPaint());
     csLoadRoute(repo).then(() => here() && csPaint());
+    csLoadPlan(repo).then(() => here() && csPaint());
     return;
   }
   csPaint();
@@ -62,12 +69,48 @@ async function csLoadRoute(repo) {
   catch (e) { Object.assign(CS.agent, { route: [], error: e.message, pinned: null }); }
 }
 
+// §CT5 — the plan as the Plan panel reads it (GET …/plan, …/phases/runs): its summary, the current step, every run
+async function csLoadPlan(repo) {
+  repo = repo || CURRENT_API_REPO; if (!repo) return;
+  try {
+    const [plan, runs] = await Promise.all([api(`/api/repos/${repo.uuid}/plan`, {}, 30000), api(`/api/repos/${repo.uuid}/phases/runs`, {}, 30000).catch(() => ({ runs: [] }))]);
+    // a run is several rows (building, then replied / failed …): the newest row of each is its state
+    const last = new Map();
+    for (const r of runs.runs || []) { const k = r.runId || r.uuid; const o = last.get(k); if (!o || (r.ts || 0) >= (o.ts || 0)) last.set(k, r); }
+    CS.plan = { summary: plan.summary || {}, current: (plan.steps || []).find(x => x.current) || null, runs: [...last.values()].sort((a, b) => (b.ts || 0) - (a.ts || 0)), error: null };
+  } catch (e) { CS.plan = { summary: {}, current: null, runs: [], error: e.message }; }
+}
+/** §CT5 — the Plan's live events (a run, a manage, an inject …) repaint the Code tab too; one read per burst */
+let _csEvT = null;
+function codeSurfaceOnEvent(ev) {
+  const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
+  if (!/^(repo\.(phase\.run|file\.manage|inject\.|deviation|prove\.|verify)|repo\.file|spec\.chunk|chunk\.)/.test(t)) return;
+  const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
+  const u = ev.payload && ev.payload.repoUuid; if (u && u !== repo.uuid) return;
+  clearTimeout(_csEvT); _csEvT = setTimeout(csAfterChange, 500);
+}
+function _csRunsOnOpen() {
+  if (!CS.plan || !CS.open) return [];
+  return CS.plan.runs.filter(r => r.map === `file:${CS.open}` || ((r.injects && r.injects.injected) || []).includes(CS.open)).slice(0, 6);
+}
+function _csPlanStrip() {
+  const p = CS.plan; if (!p) return '';
+  if (p.error) return `<div class="cs-plan"><span class="cs-dim">plan: ${escapeHtml(p.error)}</span></div>`;
+  const sm = p.summary, cur = p.current;
+  const runs = _csRunsOnOpen();
+  const gates = cur && typeof _gateBar === 'function' && cur.gates ? _gateBar(cur) : '';
+  return `<div class="cs-plan"><button class="cs-chip-btn" onclick="openPlanPanel()" title="the Plan panel: every step, its gates and ledger, and the work surface">plan ▸</button>
+      <span class="cs-dim">${sm.total ? `${sm.complete || 0}/${sm.total} done${sm.building ? ` · ${sm.building} building` : ''}${sm.failed ? ` · <span class="cs-bad">${sm.failed} stopped</span>` : ''}` : 'no phases planned'}</span>
+      ${cur ? `<span class="cs-cur" onclick="openPlanPanel(${cur.run && cur.run.runId ? `{ focus: '${_csq(cur.run.runId)}' }` : ''})">◌ ${escapeHtml(cur.title || cur.key)}</span>${gates}` : ''}
+      ${runs.length ? `<span class="cs-grow"></span><span class="cs-dim">on this file:</span>${runs.map(r => `<span class="cs-run pp-${escapeHtml(r.state)}" onclick="openPlanPanel({ focus: '${_csq(r.runId || '')}' })" title="${escapeHtml(r.title || '')}${r.error ? ` — ${escapeHtml(r.error)}` : ''}">${escapeHtml(String(r.phase || '').toLowerCase())} · ${escapeHtml(r.state)}</span>`).join('')}` : ''}</div>`;
+}
+
 /** called by work-surface.js after Apply / Reject / Revert / Promote, and when a card is opened or closed */
 async function csAfterChange() {
   const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
   await csLoadChanges(repo);
   if (typeof loadFileStates === 'function') await loadFileStates(repo, { force: true });
-  if (CS.open) await csReadOpen(repo);
+  await Promise.all([CS.open ? csReadOpen(repo) : null, csLoadPlan(repo)]);
   csPaint();
 }
 function csRepaint() { if (CURRENT_REPO_SUBTAB === 'code' && CURRENT_API_REPO && CS.uuid === CURRENT_API_REPO.uuid) csPaint(); }
@@ -206,8 +249,9 @@ function _csAgentHtml() {
     <label class="cs-pickrow">model <select id="cs-pick" onchange="CS.agent.pick=this.value">${opts}</select></label>
     <div class="cs-talk" id="cs-talk">${a.lines.map(l => `<div class="cs-msg cs-m-${l.role}"><div class="cs-msg-text">${escapeHtml(l.text)}</div>${l.meta ? `<div class="cs-dim">${escapeHtml(l.meta)}</div>` : ''}</div>`).join('') || '<div class="cs-empty">ask about the open file or the picked lines — its changes land in the diffs, waiting for Apply</div>'}</div>
     <div class="cs-ctx">${ctx ? `context: <b>${escapeHtml(ctx)}</b>${CS.card && CS.card.card ? ` · ${escapeHtml(CS.card.card.qualifiedName || CS.card.card.name || '')}` : ''}` : 'no file open — the agent gets the repo'}</div>
-    <textarea id="cs-ask" class="cs-ask" rows="3" placeholder="what to do — Ctrl+Enter sends" oninput="CS.agent.draft=this.value" onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))csAsk()">${escapeHtml(a.draft)}</textarea>
-    <button class="cs-send" ${a.busy ? 'disabled' : ''} onclick="csAsk()">${a.busy ? 'working…' : 'send'}</button>`;
+    <textarea id="cs-ask" class="cs-ask" rows="3" placeholder="what to do — Ctrl+Enter asks" oninput="CS.agent.draft=this.value" onkeydown="if(event.key==='Enter'&&(event.ctrlKey||event.metaKey))csAsk()">${escapeHtml(a.draft)}</textarea>
+    <div class="cs-sends"><button class="cs-send cs-send-ask" ${a.busy ? 'disabled' : ''} onclick="csAsk()" title="an answer — nothing is written, nothing is snapshotted">${a.busy ? 'working…' : 'ask'}</button>
+      <button class="cs-send cs-send-change" ${a.busy || !CS.open ? 'disabled' : ''} onclick="csChange()" title="${CS.open ? 'a run on the Plan: a snapshot first, then the agent edits this file (the picked lines); its change lands as a diff here and in the Plan panel' : 'open a file to change it'}">change it</button></div>`;
 }
 async function csAsk() {
   const repo = CURRENT_API_REPO; if (!repo || CS.agent.busy) return;
@@ -229,6 +273,29 @@ async function csAsk() {
     r.modelUsed && !(v && v.model) ? r.modelUsed : null, (r.switchedFrom || []).length ? `switched from ${r.switchedFrom.map(s => `${s.provider} (${s.class})`).join(', ')}` : null,
     r.elapsedMs ? `${Math.round(r.elapsedMs / 100) / 10}s` : null].filter(Boolean).join(' · ') || null;
   await csAfterChange();
+  csPaint();
+}
+
+/** §CT5 — "change it": a Manage edit of the open file (the picked lines), a run on the Plan; the panel opens on it */
+async function csChange() {
+  const repo = CURRENT_API_REPO; if (!repo || CS.agent.busy || !CS.open) return;
+  const text = (CS.agent.draft || '').trim(); if (!text) { toast('say what to change', 'err'); return; }
+  const h = CS.agent.pick !== '' && CS.agent.route ? CS.agent.route[+CS.agent.pick] : null;
+  const body = { path: CS.open, action: 'edit', note: text,
+    ...(CS.sel ? { from: CS.sel.from, to: CS.sel.to || CS.sel.from } : {}),
+    ...(CS.card && CS.card.card && CS.card.card.file === CS.open ? { refs: [{ file: CS.card.card.file, line: parseInt(String(CS.card.card.lines), 10), name: CS.card.card.qualifiedName || CS.card.card.name }] } : {}),
+    ...(h ? { backend: h.backend, agent: h.agent || null, model: h.model || null } : {}) };
+  CS.agent.lines.push({ role: 'you', text: `change ${CS.open}${CS.sel ? ` lines ${CS.sel.from}–${CS.sel.to || CS.sel.from}` : ''}: ${text}` });
+  CS.agent.draft = ''; CS.agent.busy = true; csPaint();
+  let r;
+  try { r = await api(`/api/repos/${repo.uuid}/manage`, { method: 'POST', body: JSON.stringify(body) }, 120000); }
+  catch (e) { r = { ok: false, error: (e.data && e.data.error) || e.message }; }
+  CS.agent.busy = false;
+  if (r && r.runId) {
+    CS.agent.lines.push({ role: 'agent', text: `a run on the Plan: ${r.title}`, meta: `snapshot ${String(r.snapshot || '—').slice(0, 12)} · ${h ? `picked ${_csHopLabel(h)}` : 'copilot decides'} · its change lands as a diff, waiting for Apply` });
+    if (typeof openPlanPanel === 'function') openPlanPanel({ focus: r.runId });
+    await csLoadPlan(repo);
+  } else CS.agent.lines.push({ role: 'failed', text: `not started: ${(r && r.error) || 'no answer'}` });
   csPaint();
 }
 
@@ -273,6 +340,7 @@ function csPaint() {
       <div class="cs-mid">${middle}</div>
       <div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>
     </div>
+    ${_csPlanStrip()}
     <div class="cs-activity">${_csActivity()}</div></div>`;
   const code = document.getElementById('cs-code'); if (code && scroll) code.scrollTop = scroll;
   const t2 = document.getElementById('cs-talk'); if (t2) t2.scrollTop = talk ? t2.scrollHeight : t2.scrollHeight;

@@ -40,14 +40,14 @@ const FILES = [
   ]],
   ['idearium/ui/js/file-manage.js', I('idearium/ui/js/file-manage.js'), [I('idearium/api/index.js')]],        // HTTP files/state, manage, code/search
   ['idearium/ui/js/repo-environment.js', I('idearium/ui/js/repo-environment.js'), [I('idearium/api/index.js')]], // HTTP environment[/setup]
-  ['idearium/ui/js/plan-panel.js', I('idearium/ui/js/plan-panel.js'), [I('idearium/api/index.js')]],          // HTTP plan, phases/runs, spec/plan
+  ['idearium/ui/js/plan-panel.js', I('idearium/ui/js/plan-panel.js'), [I('idearium/api/index.js'), I('idearium/ui/js/work-surface.js')]],   // + §CT5 wsLoad/wsPaint, wsOpenInCode          // HTTP plan, phases/runs, spec/plan
   ['idearium/ui/js/window-chrome.js', I('idearium/ui/js/window-chrome.js'), [I('clear-glass/src/preload/compartment-window.js')]],   // window.nexusWindow
   // §0.39.349 CT3 — the Code tab as the work surface: HTTP code/*, worksurface, files/state, agent/route, agent/prompt;
   // file-manage.js's file states (loadFileStates, fileStateMark, pendingOnlyFiles); work-surface.js's cards (_wsCard, WSURF)
   // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
   ['lib/ollama-check.js', I('lib/ollama-check.js'), []],
   ['idearium/ui/js/ollama-check.js', I('idearium/ui/js/ollama-check.js'), [I('idearium/api/index.js')]],
-  ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js')]],
+  ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
 ];
 
 // Consumers the scanner sees as files but not these edges: [consumer id, dependency id, where].
@@ -60,6 +60,7 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('idearium/api/build-surface.js'), '11 build-surface routes, _deviationAfter'],
   [I('idearium/ui/js/living-spec.js'), I('idearium/api/index.js'), 'HTTP spec/plan, spec/build, deviation'],
   [I('idearium/api/index.js'), I('lib/ollama-check.js'), '§CT4 ollama.check, ollama.check.ask (_require)'],
+  [I('idearium/ui/js/app.js'), I('idearium/ui/js/code-surface.js'), '§CT5 the SSE handler → codeSurfaceOnEvent; renderRepoCode for the Code subtab'],
 ];
 
 function mapBuildSurface(driver) {
