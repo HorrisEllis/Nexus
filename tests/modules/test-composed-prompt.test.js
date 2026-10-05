@@ -98,7 +98,10 @@ async function main() {
     const r = PB.render({ persona: 'P', blocks, message: 'q', backend: 'ollama' });
     assert.ok(!r.text.includes('@learn'));
     assert.ok(r.text.includes('MY INJECT RULE'));
-    assert.ok(!r.text.includes('```tool'), 'tool-syntax is guardian-only');
+    // 0.39.336 SB36 — tool-syntax is for every tool-loop backend: Ollama's loop runs as a plain generate (no native tools
+    // reach the bridge), so the written ```tool block is its only way to call a tool
+    assert.ok(r.text.includes('```tool'), 'ollama is told how to call a tool');
+    assert.ok(!PB.render({ persona: 'P', blocks, message: 'q', backend: null }).text.includes('```tool'), 'no tool loop, no call syntax');
   });
 
   await test('CP-103', 'the question is always sent, even with its block off', () => {
@@ -212,7 +215,7 @@ async function main() {
     const b = bodies[0];
     assert.strictEqual(b.backend, 'ollama', 'must name the backend (the plain path injects)');
     assert.ok(b.tools && b.tools.composed === true, 'must be composed');
-    assert.ok(!b.prompt.includes('```tool'), 'ollama gets no fenced-call syntax');
+    assert.ok(b.prompt.includes('```tool'), 'ollama is told how to call a tool (0.39.336 SB36: it has no native tools)');
     assert.deepStrictEqual(out.viaCopilot && out.viaCopilot.backend, 'ollama');
   });
 

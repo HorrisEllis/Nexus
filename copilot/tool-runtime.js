@@ -124,7 +124,14 @@ function makeOllamaCallModel(dispatch, pollJob, opts = {}) {
     const final = await pollJob(jobRef);
     // Normalize: a job result may carry toolCalls (ollama tool_calls) or just text.
     const toolCalls = _extractToolCalls(final);
-    return { text: final.text || final.result || '', toolCalls: toolCalls && toolCalls.length ? toolCalls : null };
+    const text = final.text || final.result || '';
+    if (toolCalls && toolCalls.length) return { text, toolCalls };
+    // §0.39.336 SB36 — the bridge runs a tool-loop job as a plain generate (no native tools reach /api/chat), so a call
+    // is what the model WRITES: the same ```tool block (or bare {"name": …} of a known tool) the browser agents write,
+    // read by the same parser. Before this an Ollama agent had no way to call any tool.
+    const known = (toolSchemas || []).map(t => t && t.function && t.function.name).filter(Boolean);
+    const found = _findToolCalls(text, known.length ? known : null);
+    return { text: found.calls.length ? found.text : text, toolCalls: found.calls.length ? found.calls : null };
   };
 }
 

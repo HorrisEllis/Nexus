@@ -4805,7 +4805,10 @@ async function handle(req, res, route, query, body) {
     case 'repo.code': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
-      const dir = repo.nexusSelf ? (repo.materializeDir || _repoDiskDir(params.uuid)) : _repoDiskDir(params.uuid);
+      // §0.39.336 SB36 — the agents' code tools read here: a read takes the directory that holds the index (built if the
+      // sources have none), the same one the agent's context came from (_agentDir, SB35); a write keeps the layer's own dir
+      const dir = req.method === 'GET' ? await _agentDir(params.uuid)
+        : repo.nexusSelf ? (repo.materializeDir || _repoDiskDir(params.uuid)) : _repoDiskDir(params.uuid);
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const { handleCode } = await import('../repo/code-api.js');
       const r = await handleCode({ method: req.method, op: params.op, layer: getRepoLayer(), repo, uuid: params.uuid, dir, query, body: body || {},

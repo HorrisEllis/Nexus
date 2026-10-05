@@ -1,7 +1,7 @@
 spec:
   meta:
     name:        copilot
-    version:     3.7.1   # 0.39.282 PATCH — a self-reported failure floors confidence; duplicate component id context.get → context.session; module-builder resolves on the full token intersection. Previous 3.7.0: 0.39.258 MINOR — body.tools.composed, raw Ollama prompt, GET /api/prompt/resolve. Previous 3.6.0: 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
+    version:     3.7.2   # 0.39.336 PATCH — an Ollama tool-loop reply's written tool call is read (_findToolCalls), as a browser agent's. Previous 3.7.1: 0.39.282 PATCH — a self-reported failure floors confidence; duplicate component id context.get → context.session; module-builder resolves on the full token intersection. Previous 3.7.0: 0.39.258 MINOR — body.tools.composed, raw Ollama prompt, GET /api/prompt/resolve. Previous 3.6.0: 0.39.257 MINOR — /api/prompt body.tools runs the real tool loop (scope enforced, identity, repoDir) for ollama and browser agents; GET /api/tools/list, POST /api/tools/run; a failed round ends a tool loop as a failure with its jobId. Previous 3.5.2: 0.39.253 PATCH — /api/prompt passes body.model to Ollama (was dropped). Previous 3.5.1: 0.39.244 PATCH — _tryGuardian says why it failed (error, jobId) instead of null; no shared-tab pre-check for a repo (agentId) job
     foundation:  nexus-system-foundation@1.0.0
     port:        3750
     uuid:        nexus-copilot-v2-0000-2026-0627-jamesbrooks-001
@@ -357,3 +357,10 @@ spec:
 # says it failed ("could not determine", "unable to find") floors confidence the way an empty one does, so it
 # escalates; the second context.get (GET /api/context/:id) is context.session; module-builder _resolveExistingTarget
 # resolves when exactly one id is in every token's candidate set.
+
+# ── ADDENDUM 2026-10-05 (0.39.336) — copilot 3.7.2 · build-from-the-spec phasemap SB36 ──
+# tool-runtime.js makeOllamaCallModel: _dispatchToOllama posts a tool-loop round to the bridge's /api/jobs without the
+# tool schemas (a plain generate), so a native tool call never came back and an Ollama agent could call no tool. A call
+# the model WRITES is now read with _findToolCalls — the parser runViaAgent already used for browser agents (a ```tool
+# block, or a known tool's bare {"name": …} object) — and the call is stripped from the text. A native tool_calls
+# answer still wins when one comes. The schemas are not forwarded: 126 tools are ~138K characters of JSON.

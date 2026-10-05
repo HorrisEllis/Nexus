@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.15.0   # 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.16.0   # 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -969,3 +969,31 @@ spec:
       proof: "a table written every 200 ms is on disk within 5 s; a repo row stripped of its nexusSelf mark is updated, not created; an agent send on a repo with sources and no index gets the code search's chunks in its prompt; a send during the sync waits for it"
       conditions:
         - { says: "the index is there when the agent asks", check: { kind: tests, run: "node tests/modules/test-agent-index-ready.test.js" } }
+
+    SB36_every_agent_can_use_the_tools:
+      layer: api
+      status: "DONE (0.39.336) — built before it was mapped (drift, recorded here): the cause was traced live from his two screenshots and fixed in the same pass. tool-syntax when 'tools' (guardian and ollama), its words say where the tools run; copilot makeOllamaCallModel reads a written call with _findToolCalls; repo.code reads use _agentDir; PREVIOUS_DEFAULTS upgrade a stored old default. test-agent-tools-every-backend 4/4 (AT-01, AT-02 fail on the code before)."
+      james: '"like its not working. the tool. the agents job is to find context. ollama, copilot, guardian agents need to be able to use the agent tools." · "like they need the tools, all of them."'
+      found: >-
+        His screenshots: the Ollama agent (qwen2.5-coder 3b) answered from nothing and its "reindex" went into @learn and an
+        empty code block — it never called a tool; the guardian agent (ChatGPT) said the idearium.* tools "are not actually
+        exposed in this session. I checked the available tool registry". In the code: copilot's tool loop for Ollama posts
+        to the bridge's /api/jobs without the tool schemas (his log: "tool-loop · generate"), so no native tool call can
+        come back; the prompt's call syntax (tool-syntax) was sent to guardian only; makeOllamaCallModel read only native
+        tool_calls, never a written one. Native schemas would not have helped a 3b model either: 126 tools, 138,542
+        characters of JSON against num_ctx 6144. For a browser agent the loop worked (it reads the rendered ```tool block),
+        but the block said "You have real tools available" — a model with its own function tools looks there first.
+        The code tools themselves read /api/repos/:uuid/code/*, which resolved its directory the old way (SB35's bug).
+      depends_on: [SB35_the_index_is_there_when_the_agent_asks]
+      files: [lib/repo-prompt-blocks.js, copilot/tool-runtime.js, idearium/api/index.js]
+      does: >-
+        One call protocol for every backend that runs the tool loop — ollama, guardian, and the copilot position (it
+        resolves to one of them); claude-code keeps its own tools. The tool-syntax block (editable, default) says: find the
+        context first; the tools run in Nexus, not in your built-in tool list, never call them unavailable; write a call as
+        a ```tool block; Nexus sends back the result. Copilot reads a written call out of an Ollama reply with the same
+        parser as a browser reply (the fenced block, or a known tool's bare {"name": …}). The code tools' reads take the
+        directory that holds the index, built on demand. A row that stored an earlier default text follows the new
+        default; a text James wrote stays. The first message stays under 3,000 characters (RH-006).
+      proof: "every tool-loop prompt says where the tools run and how to call one; an Ollama reply that writes a call runs the real code search on the real server and the next round carries its result; a browser reply's rendered call runs the same way; the code tools read an index made on demand"
+      conditions:
+        - { says: "every agent can use the tools", check: { kind: tests, run: "node tests/modules/test-agent-tools-every-backend.test.js" } }
