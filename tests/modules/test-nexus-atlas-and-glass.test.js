@@ -176,6 +176,26 @@ async function main() {
     }
   });
 
+  // §0.39.313 — James: "No playwright. That's literally what clearglass was born from." AXIOMS §4.1 now says it; this
+  // holds it structurally (§16.3): nothing in tests/, scripts/ or any system's code loads Playwright, by require or import.
+  await test('CG-001b', 'no test, probe, script or system loads Playwright (AXIOMS §4.1: UI is tested in Clear Glass)', () => {
+    const hits = [];
+    const SKIP = new Set(['node_modules', '.git', 'data', '_archive']);
+    const walk = (dir) => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (SKIP.has(e.name)) continue;
+        const p = path.join(dir, e.name);
+        if (e.isDirectory()) { walk(p); continue; }
+        if (!/\.(c|m)?js$/.test(e.name)) continue;
+        const src = fs.readFileSync(p, 'utf8');
+        if (/(require\(\s*['"`](@playwright\/test|playwright(-core)?)['"`]\s*\)|from\s+['"`](@playwright\/test|playwright(-core)?)['"`]|import\(\s*['"`](@playwright\/test|playwright(-core)?)['"`])/.test(src)) hits.push(path.relative(ROOT, p));
+      }
+    };
+    walk(ROOT);
+    assert.deepStrictEqual(hits, [], `loads Playwright: ${hits.join(', ')}`);
+    assert.ok(/UI is tested in Clear Glass/.test(fs.readFileSync(path.join(ROOT, 'docs/AXIOMS-v3.1.md'), 'utf8')), 'the law says Clear Glass');
+  });
+
   const glass = require('../../clear-glass/src/driver/glass.js');
   await test('CG-002', "a real page in Clear Glass's engine: click (a wrapped inline element too), fill, :has-text, text=, events, screenshot", async () => {
     const eng = glass.engine();

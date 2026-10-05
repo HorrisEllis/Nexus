@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     cli-data-code
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-05
     release:  0.39.310 (base) → 0.39.311
     uuid:     nexus-cli-data-code-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.ui · idearium.api · cli · cortex · every system's own store
-    status:   "MAPPED 2026-10-05; nothing built here yet. 0.39.311 moved the Settings test onto Clear Glass's driver. 1.1.0 (0.39.312): HG1–HG7 (defects found on the way), the session inventory, systems: and value: on every phase"
+    status:   "MAPPED 2026-10-05; nothing built here yet. 0.39.311 moved the Settings test onto Clear Glass's driver. 1.1.0 (0.39.312): HG1–HG7 (defects found on the way), the session inventory, systems: and value: on every phase. 1.2.0 (0.39.313): HG7 and HG8 done"
     axioms:   docs/AXIOMS-v3.1.md — §3.3 map before build, §8.6 reuse before build, §5.9 every system is sovereign,
               §10.1 one write authority per data type, §10.2 projections are derived, §10.3 competing truths are a
               failure, §9.1 RAID is the write authority for cross-system requests, §4.3 security, §0.3 nothing lost.
@@ -220,12 +220,25 @@ spec:
       layer: foundation
       systems: [clear-glass, docs]
       value: { score: 3, cost: S, for: [ownership], why: "the law says Playwright; James and the code say Clear Glass" }
-      status: OPEN — James's word (Q1)
+      status: 'DONE (0.39.313) — James: "Yes. No playwright. That''s literally what clearglass was born from."'
       depends_on: []
       files: [docs/AXIOMS-v3.1.md]
       does: "AXIOMS §4.1 \"UI is tested via Playwright\" → \"UI is tested in Clear Glass (clear-glass/src/driver/glass.js)\". A law changes only on his word; proposed, not edited."
       proof: "§4.1 names Clear Glass, with a dated addendum quoting him"
 
+
+    HG8_raid_phases_belong_to_cortex:
+      layer: foundation
+      systems: [cortex, loom]
+      value: { score: 2, cost: S, for: [quality], why: "a RAID phase showed on the intelligence repo's tabs while RAID's code is cortex's" }
+      status: 'DONE (0.39.313) — James: "Yes."'
+      depends_on: []
+      files: [lib/nexus-self/systems.js]
+      does: >-
+        lib/nexus-self/systems.js mapped loom's `raid` tag to the intelligence repo, but RAID's code is
+        cortex/core/raid/ (§5.2: "Every system connects to RAID (cortex/core/raid/router.js)"), so a RAID phase (CL2,
+        VP2) showed on intelligence's Phasemap and Phases tabs. The tag moves to cortex.
+      proof: "systemForLoomTag('raid') is cortex; CL2 shows on the cortex repo's Phasemap tab"
 
   # ── Session inventory, 2026-10-05 — every request, where it is mapped (James: "make sure this is all mapped.") ──
   session_inventory:
@@ -250,6 +263,8 @@ spec:
     - { said: "Each system needs to be in charge of its own data. … Cortex is the book keeper, with the associative lattice.", where: "DS1, DS2 (children of sovereign-node P5)" }
     - { said: "the code tab in idearium should probably be for new code in the repo … code generation, and uncommited change, the work surface", where: "CT1, CT2" }
     - { said: "make sure this is all mapped.", where: "this inventory; HG1–HG6 (defects found on the way); every phase declares systems: and value:" }
+    - { said: "Im saying im the phasemaps in the nexus repo.", where: "checked: every phase is on the Nexus repo's Phasemap tab (loom, live) and its Phases tab (the head snapshot) — no change needed; found HG8" }
+    - { said: "Yes. No playwright. That's literally what clearglass was born from.", where: "HG7 (AXIOMS §4.1 amended), HG8 (raid → cortex) — done" }
 
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."

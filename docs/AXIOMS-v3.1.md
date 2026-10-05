@@ -27,6 +27,15 @@ historical record, not edited further.*
 > per quick-reference line, verified by script (100/100 matched both
 > directions), not by eye.
 
+> **§ADDENDUM 2026-10-05** — James: "No playwright. ClearGlass only." · "Yes. No
+> playwright. That's literally what clearglass was born from." §4.1 read "UI is
+> tested via Playwright." since v3.0; it now reads "UI is tested in Clear Glass
+> (`clear-glass/src/driver/glass.js`), never Playwright." — the law caught up
+> with the system: Clear Glass's driver was written to replace Playwright
+> (0.39.263) and no test or probe has used Playwright since. Changed on his word
+> only (docs/2026-10-05-cli-data-code-phasemap.spec HG7). Nothing else in this
+> file changed.
+
 ---
 
 ## Preamble
@@ -128,7 +137,7 @@ Capability is built from the inside outward: raw code → library → API → CL
 ### § Group 4 — Quality
 
 **§4.1 A System That Cannot Be Tested Cannot Be Trusted**
-Every system includes diagnostic hooks, testability surfaces, and automated test coverage. UI is tested via Playwright. Logic is tested via unit tests against real data. Integration is tested via cross-domain verification. A feature with no test path is not done.
+Every system includes diagnostic hooks, testability surfaces, and automated test coverage. UI is tested in Clear Glass (`clear-glass/src/driver/glass.js`), never Playwright. Logic is tested via unit tests against real data. Integration is tested via cross-domain verification. A feature with no test path is not done.
 *↳ QA runs six lenses on every root cause analysis. All six. Not optional.*
 
 **§4.2 Fix Bugs Pre-Emptively**

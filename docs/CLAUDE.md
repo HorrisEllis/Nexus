@@ -43,6 +43,9 @@ They are law here. AXIOMS-v3.1 governs; this is the operational distillation.
   truth; package.json follows it).
 - **Tests:** register in `tests/modules/run-all.js`; silence `[jaa]`-style logs
   or the runner miscounts. Suite must stay green.
+- **UI is tested in Clear Glass, never Playwright** (AXIOMS §4.1, 2026-10-05). James: "No playwright. That's
+  literally what clearglass was born from." Drive pages with `clear-glass/src/driver/glass.js`; CG-001b fails any
+  file that loads Playwright.
 
 ## James's voice (2026-10-01)
 
