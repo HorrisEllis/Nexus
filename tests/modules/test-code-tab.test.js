@@ -16,6 +16,16 @@
  *          CT-14 the docked agent names the model copilot chose; another hop picked is sent with its backend and model,
  *                the open file and picked lines as context; the reply says which model answered
  *          CT-15 activity folds open; nothing threw
+ *   CT-03  §CT5 POST …/manage with a picked hop: its backend and model reach copilot (an explain, which takes no snapshot)
+ *   CT-2x  §CT5 hooked into the Plan (the REAL plan-panel.js too):
+ *          CT-20 the plan strip: the current step with its gates, the runs on the open file; a run opens the Plan panel on itself
+ *          CT-21 "change it" is a Manage edit (file, picked lines, his words, the picked model); the Plan panel opens on the run
+ *          CT-22 a Plan event repaints the Code tab (a new change shows without a click)
+ *          CT-23 a work-surface card in the Plan panel opens its file in the Code tab; so does a file in a run's ledger
+ *   CT-3x  §CT7 / §CT8 0.39.352:
+ *          CT-30 the Plan shows current work: complete steps fold into one line with their count; show / hide toggles them
+ *          CT-31 the agent working, live: a call blinks while it runs (in activity and on its file in the tree), ✓ when it
+ *                ends, without a reload; the agent box keeps what was typed
  * No engine on the machine: the browser part is SKIPPED, said, never passed.
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -45,7 +55,10 @@ function harness() {
   const CALLS = [];
   const REPO = { uuid: 'r1', name: 'daw', compartmentId: 'c1', files: [{ path: 'src/a.js' }, { path: 'src/b.js' }, { path: 'README.md' }] };
   let CURRENT_API_REPO = REPO, CURRENT_REPO_SUBTAB = 'code';
-  let APPLIED = false;
+  let APPLIED = false, EXTRA = false;
+  function setRepoSubtab(n) { CURRENT_REPO_SUBTAB = n; if (n === 'code') renderRepoCode(CURRENT_API_REPO); }
+  const RUNS = [{ runId: 'phase-1', phase: 'KE0_core', map: 'docs/k-phasemap.spec', state: 'building', ts: 1 }, { runId: 'phase-1', phase: 'KE0_core', map: 'docs/k-phasemap.spec', state: 'replied', ts: 2, injects: { injected: ['src/a.js'] } },
+    { runId: 'manage-x', phase: 'DEBUG', map: 'file:src/a.js', state: 'failed', title: 'debug src/a.js', error: 'no reply', ts: 3 }, { runId: 'other', phase: 'X', map: 'file:src/b.js', state: 'replied', ts: 4 }];
   function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
   function toast() {} function renderApiRepoPanel() {}
   const DIFF = '--- a/src/a.js\\n+++ b/src/a.js\\n@@ -1,3 +1,3 @@\\n function a() {\\n-  return 2;\\n+  return 3;\\n }';
@@ -53,7 +66,11 @@ function harness() {
     CALLS.push({ p, method: (opts && opts.method) || 'GET', body: opts && opts.body ? JSON.parse(opts.body) : null });
     if (p.endsWith('/files/state')) return APPLIED ? { states: { 'src/new.js': { state: 'pending', pending: ['i2'] } }, counts: { pending: 1 } }
       : { states: { 'src/a.js': { state: 'modified' }, 'src/new.js': { state: 'pending', pending: ['i2'] } }, counts: { modified: 1, pending: 1 } };
-    if (p.endsWith('/worksurface')) return { files: [
+    if (p.endsWith('/plan')) return { summary: { total: 3, complete: 1, building: 1 }, steps: [{ key: 'KE0_core', map: 'docs/k-phasemap.spec', title: 'KE0 core', status: 'complete', gates: [{ gate: 'mapped', passed: true }], ledger: [{ ts: 2, state: 'replied', injected: ['src/a.js'] }] },
+      { key: 'KE1_io', map: 'docs/k-phasemap.spec', title: 'KE1 io', current: true, gate: 'replied', run: { runId: 'phase-2' }, gates: [{ gate: 'mapped', passed: true }, { gate: 'snapshot', passed: true }, { gate: 'replied', passed: false }], ledger: [] }] };
+    if (p.endsWith('/phases/runs')) return { runs: RUNS };
+    if (p.endsWith('/manage')) return { runId: 'manage-new', title: 'edit src/a.js lines 2–2 (of 5)', state: 'building', snapshot: 'abc123def456789' };
+    if (p.endsWith('/worksurface')) return { files: [...(EXTRA ? [{ id: 'i9', path: 'src/b.js', op: 'write', status: 'proposed', added: 2, removed: 0, diff: '@@ -1,0 +1,2 @@\\n+a\\n+b', actions: ['apply', 'reject'] }] : []),
         { id: 'i1', path: 'src/a.js', op: 'write', status: APPLIED ? 'applied' : 'proposed', added: 1, removed: 1, diff: DIFF, actions: APPLIED ? ['revert'] : ['apply', 'reject'], by: 'ollama:big:7b' },
         { id: 'i2', path: 'src/new.js', op: 'write', creates: true, status: 'proposed', added: 1, removed: 0, diff: '@@ -0,0 +1,1 @@\\n+export const n = 1;', actions: ['apply', 'reject'] }],
       totals: { files: 2, added: 2, removed: 1, pending: APPLIED ? 1 : 2 }, tools: { scope: 'harness', listed: ['idearium.code_read.tool'], calls: [{ name: 'idearium.code_read.tool', ok: true, args: '{"path":"src/a.js"}' }, { name: 'idearium.code_write.tool', ok: false, error: 'outside the repo' }] } };
@@ -70,6 +87,7 @@ function harness() {
 <script src="${src('file-manage.js')}"></script>
 <script src="${src('work-surface.js')}"></script>
 <script src="${src('code-surface.js')}"></script>
+<script src="${src('plan-panel.js')}"></script>
 </body></html>`);
   return path.join(dir, 'index.html');
 }
@@ -120,6 +138,15 @@ function harness() {
   await test('CT-02', 'POST …/agent/prompt with a picked hop: its backend and model reach copilot as sent', async () => {
     const r = await quiet(() => api._route('POST', `/api/repos/${u}/agent/prompt`, { message: 'hello', backend: 'ollama', model: 'big:7b', noContext: true }));
     assert.strictEqual(r.json.ok, true, JSON.stringify(r.json).slice(0, 400));
+    const last = prompts[prompts.length - 1];
+    assert.deepStrictEqual([last.backend, last.model], ['ollama', 'big:7b']);
+  });
+  await test('CT-03', '§CT5 POST …/manage with a picked hop: its backend and model reach copilot', async () => {
+    const n = prompts.length;
+    const r = await quiet(() => api._route('POST', `/api/repos/${u}/manage`, { path: 'src/a.js', action: 'explain', backend: 'ollama', model: 'big:7b', note: 'what is it' }));
+    assert.strictEqual(r.status, 200, JSON.stringify(r.json).slice(0, 300));
+    assert.ok(/^manage-/.test(r.json.runId));
+    for (let i = 0; i < 50 && prompts.length === n; i++) await new Promise(x => setTimeout(x, 100));
     const last = prompts[prompts.length - 1];
     assert.deepStrictEqual([last.backend, last.model], ['ollama', 'big:7b']);
   });
@@ -203,6 +230,93 @@ function harness() {
       await page.click('.cs-act-head');
       const t = await page.textContent('.cs-act-body');
       assert.ok(/idearium\.code_read\.tool/.test(t) && /outside the repo/.test(t), t);
+      assert.deepStrictEqual(errors, []);
+    });
+
+    // ── §CT5 hooked into the Plan ──
+    await test('CT-20', 'the plan strip: the current step with its gates, the runs on the open file; a run opens the Plan on itself', async () => {
+      await page.waitForSelector('.cs-plan .cs-cur');
+      const strip = await page.textContent('.cs-plan');
+      assert.ok(/1\/3 done · 1 building/.test(strip) && /KE1 io/.test(strip), strip);
+      assert.strictEqual(await page.$$eval('.cs-plan .pp-g', e => e.length), 3, 'the step\'s gates, as in the Plan panel');
+      assert.deepStrictEqual(await page.$$eval('.cs-plan .cs-run', e => e.map(x => x.textContent)), ['debug · failed', 'ke0_core · replied'], 'the runs on src/a.js, not on b.js');
+      await page.click('.cs-plan .cs-run');
+      await page.waitForSelector('#plan-panel.open');
+      assert.strictEqual(await page.evaluate(() => PLANP.uuid), 'r1');
+    });
+
+    await test('CT-21', '"change it" is a Manage edit — file, lines, words, model — and the Plan opens on the run', async () => {
+      await page.evaluate(() => closePlanPanel());
+      await page.click('#cs-code .cs-ln[data-ln="3"] .cs-g');   // line 2 is still picked from CT-14: a click on another line picks that one
+      await page.selectOption('#cs-pick', '0');
+      await page.fill('#cs-ask', 'return 4');
+      await page.evaluate(() => document.getElementById('cs-ask').dispatchEvent(new Event('input')));
+      await page.click('.cs-send-change');
+      await page.waitForFunction(() => /a run on the Plan/.test(document.querySelector('#cs-talk').textContent));
+      const sent = await page.evaluate(() => CALLS.filter(c => /\/manage$/.test(c.p)).pop().body);
+      assert.deepStrictEqual([sent.path, sent.action, sent.from, sent.to, sent.note, sent.backend, sent.model], ['src/a.js', 'edit', 3, 3, 'return 4', 'ollama', 'big:7b']);
+      assert.strictEqual(sent.refs[0].name, 'a', 'the chunk on its card goes as related code');
+      assert.ok(await page.evaluate(() => document.getElementById('plan-panel').classList.contains('open')));
+      assert.ok(await page.evaluate(() => CALLS.some(c => /\/plan$/.test(c.p))), 'the panel read the plan');
+      assert.ok(/snapshot abc123def456/.test(await page.textContent('#cs-talk')));
+    });
+
+    await test('CT-22', 'a Plan event repaints the Code tab: a new change shows without a click', async () => {
+      await page.evaluate(() => { closePlanPanel(); CS.open = null; csPaint(); EXTRA = true; codeSurfaceOnEvent({ type: 'idearium.repo.inject.proposed', payload: { repoUuid: 'r1' } }); });
+      await page.waitForSelector('.cs-mid .ws-card[data-path="src/b.js"]', { timeout: 4000 });
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/b.js"] .cs-diffdot', e => e.length), 1);
+      await page.evaluate(() => { EXTRA = false; codeSurfaceOnEvent({ type: 'idearium.repo.phase.run', payload: { repoUuid: 'other-repo' } }); });
+      await page.waitForTimeout(700);
+      assert.strictEqual(await page.$$eval('.cs-mid .ws-card[data-path="src/b.js"]', e => e.length), 1, 'another repo\'s event is not this one\'s');
+    });
+
+    await test('CT-23', 'a card in the Plan panel opens its file in the Code tab; so does a file in a run\'s ledger', async () => {
+      await page.evaluate(() => { EXTRA = true; CURRENT_REPO_SUBTAB = 'files'; openPlanPanel(); });
+      await page.waitForSelector('#pp-ws .ws-card[data-path="src/b.js"] .ws-act-code');
+      await page.click('#pp-ws .ws-card[data-path="src/b.js"] .ws-act-code');
+      await page.waitForFunction(() => CURRENT_REPO_SUBTAB === 'code' && CS.open === 'src/b.js');
+      await page.evaluate(() => { PLANP.showDone = true; PLANP.open.add('docs/k-phasemap.spec::KE0_core'); _planPaint(); });   // KE0 is complete: shown (CT7 folds it by default)
+      await page.click('#pp-body .pp-file');
+      await page.waitForFunction(() => CS.open === 'src/a.js');
+      assert.deepStrictEqual(errors, []);
+    });
+
+    await test('CT-30', 'the Plan shows current work: complete steps fold into one line; show / hide toggles them', async () => {
+      await page.evaluate(() => { try { localStorage.removeItem('idearium.plan.showDone'); } catch (_) {} PLANP.showDone = false; PLANP.open = new Set(); openPlanPanel(); });
+      await page.waitForSelector('#pp-body .pp-donefold');
+      assert.deepStrictEqual(await page.$$eval('#pp-body .pp-task .pp-name', e => e.map(x => x.textContent)), ['KE1 io'], 'only what is not complete');
+      assert.ok(/✓ 1 step complete — show/.test(await page.textContent('#pp-body .pp-donefold')));
+      await page.click('#pp-body .pp-donefold');
+      assert.deepStrictEqual(await page.$$eval('#pp-body .pp-task .pp-name', e => e.map(x => x.textContent)), ['KE1 io', 'KE0 core']);
+      assert.ok(/— hide/.test(await page.textContent('#pp-body .pp-donefold')));
+      await page.click('#pp-body .pp-donefold');
+      assert.strictEqual(await page.$$eval('#pp-body .pp-task', e => e.length), 1);
+      await page.evaluate(() => closePlanPanel());
+    });
+
+    await test('CT-31', 'the agent working, live: blinking while a call runs, ✓ when it ends, no reload; the agent box keeps its text', async () => {
+      await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'code'; csPaint(); });
+      await page.fill('#cs-ask', 'half typed');
+      await page.evaluate(() => document.getElementById('cs-ask').dispatchEvent(new Event('input')));
+      const n0 = await page.evaluate(() => CALLS.length);
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'running', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
+      await page.waitForSelector('.cs-act-head .cs-now .cs-livedot');
+      assert.ok(/code_read/.test(await page.textContent('.cs-act-head .cs-now')));
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/b.js"] .cs-livedot', e => e.length), 1, 'the file it is on blinks');
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/a.js"] .cs-livedot', e => e.length), 0);
+      const anim = await page.$eval('.cs-act-head .cs-livedot', e => getComputedStyle(e).animationName);
+      assert.strictEqual(anim, 'cs-blink');
+      assert.strictEqual(await page.evaluate(() => document.getElementById('cs-ask').value), 'half typed', 'the agent box was not repainted');
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'ok', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
+      await page.waitForFunction(() => !document.querySelector('.cs-act-head .cs-now'));
+      assert.strictEqual(await page.$$eval('.cs-file .cs-livedot', e => e.length), 0);
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_edit.tool', state: 'failed', args: '{"changes":[]}', error: 'edits is required', iteration: 2, at: Date.now() } }));
+      await page.evaluate(() => { CS.activity = true; _csPaintLive(); });   // (CT-15 left it open or closed; open it)
+      const body = await page.textContent('.cs-act-body');
+      assert.ok(/LIVE|live/.test(body) && /✗ idearium\.code_edit\.tool/.test(body) && /✓ idearium\.code_read\.tool/.test(body), body);
+      assert.strictEqual(await page.evaluate(() => CALLS.length), n0, 'live calls arrive by event: nothing was fetched');
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'other', name: 'x', state: 'running', at: Date.now() } }));
+      assert.strictEqual(await page.evaluate(() => CS.live.length), 2, 'another repo\'s calls are not this one\'s');
       assert.deepStrictEqual(errors, []);
     });
   } finally { await browser.close(); }

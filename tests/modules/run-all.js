@@ -323,7 +323,9 @@ const SUITES = [
   'test-health-authority.js',
   'test-pulse-watch.test.js',
   'test-setup-job-settles.test.js',
-  'test-code-tab.test.js',   // 0.39.349 CT3 — the Code tab is the work surface (Clear Glass)
+  'test-escalation-ladder.test.js',   // 0.39.352 CT6/CT8 — the escalation ladder, the tool-error stop, live tool calls
+  'test-ollama-check.test.js',   // 0.39.350 CT4 — Settings → Models: every Ollama model asked through copilot, every caller's route
+  'test-code-tab.test.js',   // 0.39.349 CT3 — the Code tab is the work surface; 0.39.351 CT5 — hooked into the Plan (Clear Glass)
   'test-model-door.test.js',   // 0.39.346 CT1 — copilot is the one door for which model; the pages ask through it, it learns and switches   // 0.39.344 — the setup job settles on its result, not on its process exiting   // 0.39.342 PR1/PR3 — systems known from their first beat; a missed heartbeat is negative space (WARP 2 expectations)
   'test-intelligence-causal.js',
   'test-sentinel-cli.js',

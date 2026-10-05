@@ -701,6 +701,9 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 .pp-led{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05)}.pp-led-t{color:var(--text3);font-size:9.5px;margin-right:6px}
 .pp-led-s{font-size:9.5px;padding:0 5px;border-radius:3px;border:1px solid rgba(255,255,255,.12);margin-right:6px}
 .pp-building{color:var(--sky)}.pp-replied{color:var(--mint)}.pp-failed,.pp-refused{color:var(--coral)}
+/* §0.39.352 CT6/CT7 — a climb up the escalation ladder; complete work folded into one line */
+.pp-escalating,.pp-retrying{color:var(--amber)}
+.pp-donefold{display:block;width:100%;text-align:left;margin:6px 0;padding:4px 8px;background:none;border:1px dashed rgba(255,255,255,.12);border-radius:6px;color:var(--text3);font:10px var(--mono);cursor:pointer}.pp-donefold:hover{color:var(--mint);border-color:rgba(52,211,153,.4)}
 .pp-led-d{color:var(--text2)}.pp-reply pre{white-space:pre-wrap;max-height:220px;overflow:auto;font-size:10px;color:var(--text2);background:rgba(0,0,0,.25);padding:6px;border-radius:4px}
 .pp-led-empty,.pp-empty{color:var(--text3);font-size:10.5px;padding:6px 0}.pp-act{font-size:10.5px;color:var(--text2);padding:3px 0}
 .bs-card{border:1px solid rgba(56,189,248,.28);background:linear-gradient(180deg,rgba(56,189,248,.07),rgba(56,189,248,.02));border-radius:12px;padding:14px 16px;margin:0 0 12px}
@@ -2461,6 +2464,7 @@ async function saveToIdearium(){
 <link rel="stylesheet" href="css/file-manage.css">
 <link rel="stylesheet" href="css/work-surface.css">
 <link rel="stylesheet" href="css/code-surface.css">
+<link rel="stylesheet" href="css/ollama-check.css">
 <link rel="stylesheet" href="css/arch-canvas.css">   <!-- §0.39.299 AR5 — the Architect's canvas, scoped (.ax / .ac) -->
 <link rel="stylesheet" href="css/desktop-setup.css">   <!-- §0.39.340 DK2 — the desktop setup popup, scoped (.dsu-*) -->
 <script src="js/arch-canvas.js"></script>   <!-- §0.39.299 AR3 — the one canvas both Architects use -->
@@ -2473,6 +2477,7 @@ async function saveToIdearium(){
 <script src="js/file-manage.js"></script>
 <script src="js/repo-environment.js"></script>
 <script src="js/repo-settings.js"></script>
+<script src="js/ollama-check.js"></script>   <!-- §0.39.350 CT4 — Settings → Models -->
 <script src="js/desktop-setup.js"></script>   <!-- §0.39.340 DK2 — openDesktopSetup(repo) -->
 <script src="js/plan-panel.js"></script>
 <script src="js/work-surface.js"></script>

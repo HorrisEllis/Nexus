@@ -24,7 +24,8 @@ async function handle(req, res, { method, pathname }) {
             const t = JSON.parse(d);
             json(res, 200, { ok: true, models: (t.models || []).map(m => m.name), active: state.defaultModel });
           } catch (_) {
-            json(res, 200, { ok: true, models: [state.defaultModel], active: state.defaultModel });
+            // §CT4 0.39.350 — not a guessed list: [defaultModel] here claimed a model was installed when Ollama never said so
+            json(res, 200, { ok: false, models: [], active: state.defaultModel, error: 'Ollama answered /api/tags with something that is not JSON' });
           }
         });
       }

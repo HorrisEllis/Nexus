@@ -542,6 +542,26 @@
       "_action": "repo.agent.route"
     },
     {
+      "method": "POST",
+      "path": "/api/repos/:uuid/agent/tool-event",
+      "_action": "repo.agent.tool.event"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repos/:uuid/agent/tool-events",
+      "_action": "repo.agent.tool.events"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ollama/check",
+      "_action": "ollama.check"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ollama/check/ask",
+      "_action": "ollama.check.ask"
+    },
+    {
       "method": "GET",
       "path": "/api/repos/:uuid/agent/history",
       "_action": "repo.agent.history"

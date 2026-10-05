@@ -90,7 +90,7 @@ async function main() {
       const groups = await page.$$eval('.rs-group', els => els.map(e => e.textContent));
       assert.deepStrictEqual(groups, ['Repository', 'Agent', 'Environment']);
       const items = await page.$$eval('.rs-item[data-rs]', els => els.map(e => e.dataset.rs));
-      assert.deepStrictEqual(items, ['general', 'repository', 'agent', 'prompt', 'hat', 'environment', 'desktop']);
+      assert.deepStrictEqual(items, ['general', 'repository', 'agent', 'prompt', 'hat', 'models', 'environment', 'desktop']   /* §CT4 0.39.350 models */);
       assert.strictEqual(await page.$$eval('.rs-pane', e => e.length), 1);
       assert.strictEqual(await page.textContent('.rs-head h3'), 'General');
       assert.strictEqual(await page.$$eval('.rs-item.on', e => e.length), 1);

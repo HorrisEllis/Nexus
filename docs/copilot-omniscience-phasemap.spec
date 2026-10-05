@@ -145,3 +145,8 @@ spec:
         sandbox has no reachable NCP/browser process. That's the one
         remaining gate, same honest_risks caveat as every other phase:
         James-verified on the real boot.
+#
+# ADDENDUM 2026-10-05 (0.39.352, CT6/CT8 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "i want to see the agents activity in the code tab, in real time. like maybe have a little dot blinking next to it"
+# runToolLoop opts: maxToolErrors (failed calls in a row end the run: failed + toolErrors) and onToolCall (each call as it
+# starts and ends). copilot /api/prompt body.tools.maxToolErrors and body.tools.progressUrl (tool-runtime toolEventSink:
+# loopback only, fire and forget) carry them; a stopped loop answers 502 with toolErrors:true.

@@ -210,6 +210,7 @@ function refreshOnEvent(ev) {
   const t = ev.type.startsWith('idearium.') ? ev.type.slice('idearium.'.length) : ev.type;
   if (typeof fileStatesOnEvent === 'function') fileStatesOnEvent(ev);   // §0.39.280 BS8
   if (typeof planPanelOnEvent === 'function') planPanelOnEvent(ev);     // §0.39.280 BS11
+  if (typeof codeSurfaceOnEvent === 'function') codeSurfaceOnEvent(ev); // §0.39.351 CT5 — the Code tab follows the Plan
   if (t.startsWith('idea.'))   { loadIdeas(); }
   if (t.startsWith('workbench.') && typeof loadCompartment === 'function') { loadCompartment(); }
   if (t.startsWith('gap.'))    { loadGaps(); }

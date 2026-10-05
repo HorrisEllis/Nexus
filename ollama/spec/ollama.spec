@@ -271,3 +271,8 @@ spec:
   # download manager under its agent (lib/agent-memory.js record → response-sink + chat index + chat-logger), not
   # awaited. Not recorded: intent adversarial-probe, intent tool-loop (the caller records the final answer), record:false.
   # dispatch.js exports _remember for tests.
+  #
+  # ADDENDUM 2026-10-05 (0.39.350, CT4 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "make sure ollama is all wired into idearium."
+  # GET /api/models no longer answers ok:true with [defaultModel] when Ollama's /api/tags reply is not JSON: that claimed a
+  # model was installed when Ollama never said so. It answers ok:false, models [], with the reason. idearium's Settings →
+  # Models check (lib/ollama-check.js) reads this list and passes the reason on.

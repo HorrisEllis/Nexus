@@ -250,9 +250,9 @@ function makeRepo() {
     const s = fs.readFileSync(path.join(ROOT, 'copilot/server.js'), 'utf8');
     assert.ok(/if \(body\.tools && typeof body\.tools === 'object'\)/.test(s));
     // 0.39.258 — composed callers get no identity; composed + resultTemplate travel to the loop
-    assert.ok(/toolRuntime\.runViaAgent\(agent, dispatchToAgent, prompt, \{ toolScope: scope, identity: composed \? null : identity, context, maxIterations, composed, resultTemplate \}\)/.test(s));
+    assert.ok(/toolRuntime\.runViaAgent\(agent, dispatchToAgent, prompt, \{ toolScope: scope, identity: composed \? null : identity, context, maxIterations, composed, resultTemplate(, maxToolErrors, onToolCall)? \}\)/.test(s));   // §CT6/CT8 0.39.352 — the cap and the live reporter ride along
     assert.ok(/toolRuntime\.run\(\{ userPrompt: prompt, identity: composed \? null : identity, context, toolScope: scope, maxIterations, composed, resultTemplate,/.test(s));
-    assert.ok(/if \(loop\.failed\) \{ json\(res, 502, \{ ok: false, error: loop\.error, jobId: loop\.jobId/.test(s), 'a failed round must keep its jobId (the late watch needs it)');
+    assert.ok(/if \(loop\.failed\) \{ json\(res, 502, \{ ok: false, error: loop\.error, (\.\.\.\(loop\.toolErrors \? \{ toolErrors: true \} : \{\}\), )?jobId: loop\.jobId/.test(s), 'a failed round must keep its jobId (the late watch needs it)');
     assert.ok(/p === '\/api\/tools\/list'/.test(s) && /p === '\/api\/tools\/run'/.test(s));
     assert.ok(/is outside this caller's tool scope — not run/.test(s));
   });
