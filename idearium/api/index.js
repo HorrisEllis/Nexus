@@ -1296,6 +1296,11 @@ async function _architect() {
   _arMod = AR;
   return AR;
 }
+// §0.39.354 WS7 — the spec template's blocks as the workshop's parts (lib/workshop.js partsOf), from the spec engine
+async function _workshopParts(WS, w) {
+  try { const se = await _specEngineReady(); return se ? WS.partsOf(w, se.SPEC_SECTIONS.map(b => ({ id: b.id, title: b.title }))) : []; }
+  catch (e) { console.warn(`[idearium/api] workshop parts unreadable: ${e.message}`); return []; }
+}
 /** loom's registry + the component store as one index, rebuilt only when either file changes (the registry is 6 MB) */
 let _arIdx = null, _arIdxKey = null;
 function _architectIndex(AR) {
@@ -4511,7 +4516,7 @@ async function handle(req, res, route, query, body) {
     case 'workshop.show': {
       const WS = await _workshop();
       const w = _workshopGet(WS, params.id); if (!w) return err(res, 404, `workshop not found: ${params.id}`);
-      return ok(res, { workshop: w, ambition: WS.AMBITION, feeds: WS.FEEDS });
+      return ok(res, { workshop: w, ambition: WS.AMBITION, feeds: WS.FEEDS, parts: await _workshopParts(WS, w), modes: WS.MODES });   // §0.39.354 WS7 — parts and modes
     }
     case 'workshop.update': {
       const WS = await _workshop();
@@ -4521,12 +4526,13 @@ async function handle(req, res, route, query, body) {
         w.title = String(body.title).trim(); w.updatedAt = Date.now();
       }
       if (body.ambition != null) { const a = WS.clampAmbition(body.ambition); if (a !== w.ambition) { w.ambition = a; w.updatedAt = Date.now(); w.history.push({ at: w.updatedAt, what: `ambition ${a} — ${WS.AMBITION[a].label}` }); } }
+      if (body.mode != null) { const m = WS.setMode(w, body.mode); if (m.error) return err(res, 400, m.error); }   // §0.39.354 WS7 / WS6
       for (const e of Array.isArray(body.sections) ? body.sections : (body.section ? [body.section] : [])) {
         const r = e.restore ? WS.restoreSection(w, e.restore) : WS.editSection(w, e);
         if (r.error) return err(res, 400, r.error);
       }
       syncTable(WS.TABLE, [w]);
-      return ok(res, { workshop: w });
+      return ok(res, { workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.feed': {
       const WS = await _workshop();
@@ -4542,7 +4548,7 @@ async function handle(req, res, route, query, body) {
       if (r.error) { syncTable(WS.TABLE, [w]); return err(res, r.meta ? 502 : 400, r.error, { meta: r.meta || null, raw: r.raw || null }); }
       syncTable(WS.TABLE, [w]);
       os.emit('idearium.workshop.feed', { uuid: w.uuid, kind: body.kind, proposals: r.added.length, ...(r.meta && r.meta.domain ? { domain: r.meta.domain } : {}) });
-      return ok(res, { added: r.added, meta: r.meta, workshop: w });
+      return ok(res, { added: r.added, meta: r.meta, workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.decide': {
       const WS = await _workshop();
@@ -4552,7 +4558,7 @@ async function handle(req, res, route, query, body) {
       syncTable(WS.TABLE, [w]);
       // §CT2 — his accept or dismiss is the verdict on the model that drafted it
       if (r.proposal && r.proposal.by && ['accepted', 'dismissed'].includes(r.proposal.status)) _verdict(r.proposal.by, 'page:workshop', r.proposal.status === 'accepted', 'dismissed', r.proposal.status === 'dismissed' ? 'dismissed by James' : null);
-      return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w });
+      return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w, parts: await _workshopParts(WS, w) });
     }
     case 'workshop.save': {
       // the hook into the Spec field: the session becomes the repo's spec/<name>.spec — the Spec tab's living model.

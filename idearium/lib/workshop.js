@@ -44,6 +44,53 @@ export const FEEDS = Object.freeze({
   'section':       { label: 'Draft this section', icon: '✎', ask: null },
 });
 export const FEED_IDS = Object.freeze(Object.keys(FEEDS));
+
+// §0.39.354 WS7 / WS6 — James: "the spec builder, is supposed to be a huge workshop for building specs" · WS6: the blocks
+// become PARTS in three tiers — MINIMUM (what can be built from with no model), MODS (added when needed), COMPONENTS
+// (the registry). The blocks themselves are the spec engine's (spec-engine/blocks.yaml SPEC_SECTIONS); only the tier is
+// said here.
+export const PART_TIERS = Object.freeze({
+  meta: 'minimum', purpose: 'minimum', schema: 'minimum', api: 'minimum', build_order: 'minimum',
+  axioms: 'mods', events: 'mods', integration: 'mods', failure_modes: 'mods', tests: 'mods',
+  registry: 'components',
+});
+export const TIER_ORDER = Object.freeze(['minimum', 'mods', 'components']);
+// §WS6 — MANUAL: he writes, the agent only checks what is missing; ASSISTED: proposals per part; STRETCHED: his idea
+// carried through every part. In every mode nothing enters the spec without his yes.
+export const MODES = Object.freeze(['manual', 'assisted', 'stretched']);
+export const MODE_GUIDE = Object.freeze({
+  manual: 'Mode MANUAL: James writes this spec himself. Do not write it for him: point only at what is missing, unclear or contradictory.',
+  assisted: 'Mode ASSISTED: propose for the part in front of him, plainly, so he can take it or leave it.',
+  stretched: 'Mode STRETCHED: carry his idea all the way through this part. Say what the idea becomes here, fully, not only what is missing.',
+});
+
+const _norm = (t) => String(t || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim();
+/** partOf(section, block) — does this section fill this block: its part, its id, or its title (the block's or its id) */
+function _fills(s, b) {
+  if (s.part) return s.part === b.id;
+  const id = _norm(s.id).replace(/ /g, '_'), t = _norm(s.title), bt = _norm(b.title), bid = b.id.replace(/_/g, ' ');
+  return id === b.id || t === bt || t === bid || (bt && t.startsWith(bt.split(' ')[0]) && bt.split(' ')[0].length > 4 && t.split(' ')[0] === bt.split(' ')[0]);
+}
+/**
+ * partsOf(session, blocks) -> [{ id, title, tier, sectionId, filled, words }] in tier order, then the blocks' order.
+ * blocks: the spec engine's SPEC_SECTIONS ({ id, title }). A block with no tier here is a mod (never hidden).
+ */
+export function partsOf(session, blocks = []) {
+  const out = (blocks || []).map((b, i) => {
+    const sec = (session.sections || []).find(x => _fills(x, b)) || null;
+    const words = sec ? String(sec.body || '').trim().split(/\s+/).filter(Boolean).length : 0;
+    return { id: b.id, title: b.title, tier: PART_TIERS[b.id] || 'mods', sectionId: sec ? sec.id : null, filled: words > 0, words, _i: i };
+  });
+  out.sort((x, y) => TIER_ORDER.indexOf(x.tier) - TIER_ORDER.indexOf(y.tier) || x._i - y._i);
+  return out.map(({ _i, ...p }) => p);
+}
+/** setMode(session, mode) */
+export function setMode(session, mode) {
+  const m = String(mode || '').toLowerCase();
+  if (!MODES.includes(m)) return { error: `mode must be one of ${MODES.join(', ')}` };
+  if (session.mode !== m) { session.mode = m; session.updatedAt = Date.now(); session.history.push({ at: session.updatedAt, what: `mode ${m}` }); }
+  return { session };
+}
 export const PROPOSAL_STATUS = Object.freeze(['open', 'accepted', 'dismissed']);
 
 // the d20: twenty fields, each with one mechanism worth stealing (James: "d20 cross domain dice for ideation")
@@ -103,7 +150,7 @@ export function makeSession({ title, source = { kind: 'blank' }, sections = [], 
   if (!secs.length) secs.push({ id: 'purpose', title: 'Purpose', body: '', updatedAt: now, by: 'james' });
   return {
     session: {
-      uuid: _id('ws'), title: t, source, ambition: clampAmbition(ambition), sections: secs, removed: [], proposals: [],
+      uuid: _id('ws'), title: t, source, ambition: clampAmbition(ambition), mode: 'assisted', sections: secs, removed: [], proposals: [],
       repoUuid, specPath, ideaUuid, station: 'workshop', savedAt: null, createdAt: now, updatedAt: now,
       history: [{ at: now, what: `opened from ${source.kind}${source.title ? `: ${source.title}` : ''}` }],
     },
@@ -156,12 +203,12 @@ export const MAX_SECTION = 20000;
 export const MAX_TITLE = 160;
 
 /** editSection(session, { id, title?, body?, add?, remove? }) — James's own writing; removal archives (§0.3) */
-export function editSection(session, { id = null, title = null, body = null, add = false, remove = false, after = null } = {}) {
+export function editSection(session, { id = null, title = null, body = null, add = false, remove = false, after = null, part = null, move = null } = {}) {
   if (body != null && String(body).length > MAX_SECTION) return { error: `the section is ${String(body).length} characters — the limit is ${MAX_SECTION}` };
   if (title != null && String(title).trim().length > MAX_TITLE) return { error: `the title is ${String(title).trim().length} characters — the limit is ${MAX_TITLE}` };
   if (add) {
     const t = String(title || 'New section').trim();
-    const s = { id: sectionId(t, session.sections), title: t, body: String(body || ''), updatedAt: Date.now(), by: 'james' };
+    const s = { id: sectionId(t, session.sections), title: t, body: String(body || ''), updatedAt: Date.now(), by: 'james', ...(part ? { part: String(part) } : {}) };
     const at = after ? session.sections.findIndex(x => x.id === after) : -1;
     if (at >= 0) session.sections.splice(at + 1, 0, s); else session.sections.push(s);
     _touch(session, `added section ${s.title}`);
@@ -169,6 +216,13 @@ export function editSection(session, { id = null, title = null, body = null, add
   }
   const i = session.sections.findIndex(s => s.id === id);
   if (i < 0) return { error: `no section ${id}` };
+  // §0.39.354 WS7 — a document writer moves its sections: 'up', 'down', or a position (0-based)
+  if (move != null) {
+    const to = move === 'up' ? i - 1 : move === 'down' ? i + 1 : Number(move);
+    if (!Number.isInteger(to) || to < 0 || to >= session.sections.length) return { error: `cannot move ${session.sections[i].title} ${move}` };
+    if (to !== i) { const [m] = session.sections.splice(i, 1); session.sections.splice(to, 0, m); _touch(session, `moved ${m.title} to ${to + 1}`); }
+    return { session, section: session.sections[to] };
+  }
   if (remove) {
     const [gone] = session.sections.splice(i, 1);
     session.removed.push({ ...gone, removedAt: Date.now() });
@@ -215,6 +269,7 @@ export function feedPrompt(session, kind, { sectionId: sid = null, roll = null, 
     `You are helping James make a spec in his spec workshop. James is the idea generator; you only propose. He accepts or dismisses each line.`,
     `Ambition ${session.ambition} of 5 (${amb.label}): ${amb.guide}`,
     `Answer with one proposal per line. No preamble, no numbering, no closing remarks.`,
+    ...(MODE_GUIDE[session.mode] ? [MODE_GUIDE[session.mode]] : []),   // §0.39.354 WS7 / WS6
   ].join('\n');
   const spec = _specDigest(session, { focus: sid });
   let ask, meta = {};
@@ -289,7 +344,7 @@ export function decide(session, puid, { action, sectionId: sid = null, mode = 'a
 
 /** summary(session) — the listing row */
 export function summary(s) {
-  return { uuid: s.uuid, title: s.title, source: s.source, ambition: s.ambition, sections: s.sections.length,
+  return { uuid: s.uuid, title: s.title, source: s.source, ambition: s.ambition, mode: s.mode || 'assisted', sections: s.sections.length,
     open: s.proposals.filter(p => p.status === 'open').length, repoUuid: s.repoUuid, specPath: s.specPath, savedAt: s.savedAt, updatedAt: s.updatedAt };
 }
 

@@ -203,8 +203,10 @@ async function main() {
     assert.match(A, /channel: 'idearium-workshop'/, 'the same copilot route the repo agents use');
     // 0.39.297 SW2 — its own page in the Void's look (James: "I hate that ui you made … all of it needs to be isolated,
     // in its own pages" · "no lowercase. and make sure its enterprise grade")
-    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/workshop.html'), 'utf8');
-    assert.match(page, /js\/window-chrome\.js/); assert.match(page, /href="css\/void-theme\.css"/, 'the Void\'s palette, shared'); assert.ok(!/void-sky\.js|id="sky"/.test(page), '0.39.300 WS4: a work surface — no sky, no hero');
+    // 0.39.354 WS7 supersedes WS4's "no sky" (James: "emerge. like we talked about. animated, alive, like void"): the page is
+    // workshop.html + js/workshop.js; the sky is back. WS6: REACH left the workshop. The full checks: test-workshop-full.
+    const page = fs.readFileSync(path.join(ROOT, 'idearium/ui/workshop.html'), 'utf8') + fs.readFileSync(path.join(ROOT, 'idearium/ui/js/workshop.js'), 'utf8');
+    assert.match(page, /js\/window-chrome\.js/); assert.match(page, /href="css\/void-theme\.css"/, 'the Void\'s palette, shared'); assert.match(page, /js\/void-sky\.js/, '0.39.354 WS7: in the Void\'s sky');
     assert.match(page, /<title>THE SPEC WORKSHOP<\/title>/); assert.match(page, /data-title="THE SPEC WORKSHOP"/);
     for (const k of ['section', 'open-loops', 'questions']) assert.ok(page.includes(`data-k="${k}"`), k);
     for (const k of ['d20', 'reverse-chain', 'what-ifs', 'inspiration']) assert.ok(!page.includes(`data-k="${k}"`), `${k} belongs to the Void`);
@@ -214,7 +216,7 @@ async function main() {
     assert.ok(!/\bprompt\(|\bconfirm\(/.test(code), 'no browser prompt()/confirm() — they speak lowercase');
     for (const st of ['OPENING THE WORKSHOP', 'THE WORKSHOP IS UNREACHABLE']) assert.ok(page.includes(st), st);
     assert.match(page, /const AGENT_MS = 330000/); assert.match(page, /maxlength="20000"/);
-    assert.match(page, /\['NORMAL'.*\['CREATIVE'.*\['OUTSIDE THE BOX'.*\['NOVEL'.*\['OUTLIER'/s, 'the dial in his words');
+    assert.ok(!/id="reach"|id="newReach"/.test(page), 'WS6: REACH left the workshop');
     const theme = fs.readFileSync(path.join(ROOT, 'idearium/ui/css/void-theme.css'), 'utf8');
     assert.match(theme, /html \{ text-transform: uppercase; \}/); assert.match(theme, /url\(\.\.\/fonts\/bebas-neue-400\.woff2\)/);
     const app = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/app.js'), 'utf8');

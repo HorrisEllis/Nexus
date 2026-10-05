@@ -3662,8 +3662,9 @@ window.addEventListener('message', async (ev) => {
   const repo = API_REPOS.find(r => r.uuid === d.repoUuid);
   if (!repo) { toast(`the repo is not listed yet: ${d.repoUuid}`, 'err'); return; }
   openRepoFor(repo.ideaUuid, repo.specUuid, repo.name);
-  if ((d.subtab === 'spec' || d.subtab === 'architect') && typeof setRepoSubtab === 'function') setRepoSubtab(d.subtab);
-  toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : d.subtab === 'architect' ? `${repo.name}: its architecture` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
+  // §0.39.354 WS7 — the workshop's pipeline opens the repo on its Phases (what it just planned and started building)
+  if ((d.subtab === 'spec' || d.subtab === 'architect' || d.subtab === 'phases') && typeof setRepoSubtab === 'function') setRepoSubtab(d.subtab);
+  toast(d.subtab === 'spec' ? `${repo.name}: its spec, from the workshop` : d.subtab === 'architect' ? `${repo.name}: its architecture` : d.subtab === 'phases' ? `${repo.name}: its phases, from the workshop's pipeline` : `${repo.name}: in the pipeline — Phases, Generate code, Build & prove`, 'ok');
 });
 /** "import my archives", "load the nexus zips", "restore my archive zips" — the drop box, not a question for the model */
 const ARCHIVE_IMPORT_INTENT = /\b(import|bring in|load|restore)\b[^.\n]{0,40}\b(archives?|zips?|nexus history)\b/i;
