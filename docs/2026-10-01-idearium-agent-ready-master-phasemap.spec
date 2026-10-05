@@ -354,7 +354,7 @@ spec:
         container) — only against a fake vmrun until it runs on his machine.
     DK4_the_screen_through_remote_desktop:
       layer: library
-      status: OPEN — mapped 2026-10-05; not built — needs James's call (below)
+      status: "PINNED — James, 2026-10-05: \"Put a pin in the Remote Desktop.\" Mapped, not built; the decision below stays open."
       depends_on: [DK2_desktop_setup_popup]
       files: [remote-desktop/, idearium/ui/desktop.html, cos/testenv/provision.js]
       james: '"when clicking on setup desktop, i want to have a popup with the progress. like show me what its doing. like when you run setup in the run menu in idearium. like I want a setup screen, asking for the username and password. and i want options for the vm, like vmware. like compartment destkop. also the vnc, what about replacing it with the remote desktop project in the remote desktop."'
