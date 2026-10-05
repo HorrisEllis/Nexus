@@ -416,3 +416,8 @@ spec:
 # / rewind over QMP; OS1 compartments as operating systems (debian, android via Android-x86 + adb, bring-your-own ISO);
 # OS2 images downloaded, verified and kept current; AP1–AP3 a native Android build, test and release compartment; EL1
 # an Electron compiler. Every phase there is systems: [cos].
+
+# ── ADDENDUM 2026-10-05 (0.39.341) — COS is its own system ──
+# James: "cos needs to be a nested compartment" · asked where: "Its own system (16th)". lib/nexus-self/systems.js lists cos
+# (dirs [cos], no process); in Idearium it is the nested repo nexus/cos in its own compartment under nexus. Its atlas is
+# docs/atlases/cos-atlas.md. The glue that reaches COS stays core's: lib/cos-bridge.js, lib/cos-run.js, lib/repo-run.js.

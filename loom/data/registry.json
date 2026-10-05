@@ -28338,13 +28338,25 @@
       "id": "spec.docs.2026-10-05-cli-data-code-phasemap",
       "namespace": "spec",
       "name": "docs/2026-10-05-cli-data-code-phasemap.spec",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "uuid": "nexus-loom-spec-spec.docs.2026-10-05-cli-data-code-phasemap-v1-0000-2026-0804-001",
       "spec_uuid": "nexus-cli-data-code-phasemap-v1-0000-2026-1005-jamesbrooks-001",
       "route_count": 0,
       "tracked_in_spec_registry": true,
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791204197922
+      "registeredAt": 1791214591492
+    },
+    "spec.docs.2026-10-05-cos-machines-phasemap": {
+      "id": "spec.docs.2026-10-05-cos-machines-phasemap",
+      "namespace": "spec",
+      "name": "docs/2026-10-05-cos-machines-phasemap.spec",
+      "version": "1.0.1",
+      "uuid": "nexus-loom-spec-spec.docs.2026-10-05-cos-machines-phasemap-v1-0000-2026-0804-001",
+      "spec_uuid": "nexus-cos-machines-phasemap-v1-0000-2026-1005-jamesbrooks-001",
+      "route_count": 0,
+      "tracked_in_spec_registry": true,
+      "schemaVersion": "1.2.0",
+      "registeredAt": 1791214591515
     },
     "spec.docs.2026-10-05-fiverr-guide-phasemap": {
       "id": "spec.docs.2026-10-05-fiverr-guide-phasemap",
@@ -86468,7 +86480,7 @@
       "intent": "component-id",
       "uuid": "nexus-loom-cap-wire-7-v1-0000-2026-0804-001",
       "schemaVersion": "1.2.0",
-      "registeredAt": 1791213156419
+      "registeredAt": 1791214588394
     },
     "capability.wire.8.copilot.person_model.node.stated--cortex.memory.insert.in": {
       "id": "capability.wire.8.copilot.person_model.node.stated--cortex.memory.insert.in",

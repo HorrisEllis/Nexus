@@ -5,7 +5,7 @@ spec:
     date:     2026-10-05
     release:  0.39.340 (base) → each phase its own patch
     uuid:     nexus-cos-machines-phasemap-v1-0000-2026-1005-jamesbrooks-001
-    owner:    "cos — a COS phasemap (James: like that needs to be add to the cos phasemaps). It continues docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec and is listed in cos/spec/cos.spec. Every phase is tagged systems [cos]; cos/ is core's directory, so loom files them under core."
+    owner:    "cos — a COS phasemap (James: like that needs to be add to the cos phasemaps). It continues docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec and is listed in cos/spec/cos.spec. Every phase is tagged systems [cos]; since 0.39.341 (SY2) cos is its own system, so they are COS's."
     status:   "MAPPED 2026-10-05 — nothing built. Order below is bottom-up; James has not yet said which goes first (VM1 vs the CP1 / PI1 he was offered)."
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §4.1 UI tested in Clear Glass.
