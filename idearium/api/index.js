@@ -1195,17 +1195,43 @@ async function _specEngineReady(ms = 5000) {
  *  provider (lib/repo-agent.js defaultProvider / routeFor), the same route a repo agent uses. Tests swap it (_setAgentAsk). */
 let _agentAskOverride = null;
 export function _setAgentAsk(fn) { _agentAskOverride = typeof fn === 'function' ? fn : null; }
-async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium' } = {}) {
+export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
+async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium', kind = null } = {}) {
   if (_agentAskOverride) { try { return await _agentAskOverride(prompt, { channel, sessionId }); } catch (e) { return { ok: false, error: e.message }; } }
+  // §CT1 0.39.346 — James: "it should use copilot regardless, have copilot figure it, and learn from it". The pages
+  // (workshop, architect, void, deliver) ask copilot's door which model answers this kind of job (POST /api/route,
+  // lib/pipeline-routing's learned policy); each hop's outcome goes back (POST /api/route/outcome) so it learns; a hop
+  // that fails in a class the policy falls back on moves to the next model. Before, they followed the global default
+  // provider and never passed a model — an Ollama page got the bridge's default model, or no Ollama at all.
   const RA = _require('../../lib/repo-agent.js');
-  const provider = RA.defaultProvider();
-  const { backend, agent } = RA.routeFor(provider);
-  const payload = { prompt, channel, sessionId, ...(backend ? { backend } : {}), ...(agent ? { agent } : {}) };
-  if (backend === 'guardian') payload.timeoutMs = 300000;
-  const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
-  const j = r.json || {};
-  if (r.status >= 400 || j.ok === false || typeof j.text !== 'string') return { ok: false, error: j.error || (r.status ? `copilot answered ${r.status}` : 'no answer') };
-  return { ok: true, text: j.text, by: provider };
+  const PR = _require('../../lib/pipeline-routing.js');
+  const jobType = kind || `page:${String(channel).replace(/^idearium-/, '')}`;
+  const policy = _routingPolicy();
+  let route = null, routeNote = null;
+  const rr = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind: jobType, preferAgent: RA.defaultProvider(), policy }, 5000);
+  if (rr.status === 200 && rr.json && rr.json.ok && Array.isArray(rr.json.route) && rr.json.route.length) route = rr.json.route;
+  else {
+    const prov = RA.defaultProvider(), r = RA.routeFor(prov);
+    route = [{ provider: prov, backend: r.backend, agent: r.agent || null, model: null, why: 'the default provider' }];
+    routeNote = `copilot could not route (${(rr.json && rr.json.error) || `status ${rr.status}`}) — sent to the default provider`;
+  }
+  const tried = [];
+  for (const h of route) {
+    const payload = { prompt, channel, sessionId, ...(h.backend ? { backend: h.backend } : {}), ...(h.agent ? { agent: h.agent } : {}), ...(h.model ? { model: h.model } : {}) };
+    if (h.backend === 'guardian') payload.timeoutMs = 300000;
+    const t0 = Date.now();
+    const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
+    const j = r.json || {};
+    const ok = !(r.status >= 400 || r.status === 0 || j.ok === false || typeof j.text !== 'string' || !j.text.trim());
+    const error = ok ? null : (j.error || (r.status ? `copilot answered ${r.status}` : 'no answer'));
+    const cls = ok ? null : PR.classify({ ok: false, error, text: j.text });
+    tried.push({ provider: h.provider, model: h.model || null, ok, class: cls, ms: Date.now() - t0 });
+    _postJson(`${RA.COPILOT_URL}/api/route/outcome`, { provider: h.provider, kind: jobType, ok, class: cls, ms: Date.now() - t0, error, policy }, 5000).catch(() => {});
+    if (ok) return { ok: true, text: j.text, by: h.provider, model: h.model || null, route: tried, why: h.why, ...(routeNote ? { note: routeNote } : {}) };
+    if (!PR.shouldFallback(cls, policy)) break;
+  }
+  const last = tried[tried.length - 1];
+  return { ok: false, error: `no model answered (${tried.map(t => `${t.provider}${t.class ? `: ${t.class}` : ''}`).join(' → ')})`, route: tried, ...(routeNote ? { note: routeNote } : {}), lastClass: last && last.class };
 }
 function _workshopGet(WS, id) { return loadTable(WS.TABLE).find(r => r.uuid === id) || null; }
 
