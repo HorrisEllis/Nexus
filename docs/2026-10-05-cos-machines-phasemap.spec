@@ -1,11 +1,11 @@
 spec:
   meta:
     name:     cos-machines
-    version:  1.0.0
+    version:  1.0.1   # 1.0.1: a COS phasemap — each phase systems: [cos]; linked from the COS testenv map and cos.spec
     date:     2026-10-05
     release:  0.39.340 (base) → each phase its own patch
     uuid:     nexus-cos-machines-phasemap-v1-0000-2026-1005-jamesbrooks-001
-    owner:    cos (compartment, workspace, testenv) · clear-glass (downloads, read-only) · idearium (the setup popup, the plan panel)
+    owner:    "cos — a COS phasemap (James: like that needs to be add to the cos phasemaps). It continues docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec and is listed in cos/spec/cos.spec. Every phase is tagged systems [cos]; cos/ is core's directory, so loom files them under core."
     status:   "MAPPED 2026-10-05 — nothing built. Order below is bottom-up; James has not yet said which goes first (VM1 vs the CP1 / PI1 he was offered)."
     axioms:   docs/AXIOMS-v3.1.md — §3.1 bottom-up, §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost,
               §1.2 nothing silently fails, §4.1 UI tested in Clear Glass.
@@ -41,6 +41,7 @@ spec:
   phases:
     VM1_control_like_vmware:
       layer: library
+      systems: [cos]
       status: OPEN
       depends_on: []
       files: [cos/compartment/qemu-runtime.js, cos/workspace/index.js, cos/cli/commands/vm.js, idearium/api/index.js]
@@ -57,6 +58,7 @@ spec:
       proof: "a running VM pauses and resumes; a live snapshot restored puts back a file written after it AND the process that was running; an agent run leaves a checkpoint its rewind restores"
     OS1_compartments_as_operating_systems:
       layer: library
+      systems: [cos]
       status: OPEN
       depends_on: [VM1_control_like_vmware]
       files: [cos/testenv/provision.js, cos/compartment/qemu-runtime.js, cos/compartment/guest-agent.js]
@@ -73,6 +75,7 @@ spec:
       proof: "an android compartment boots to its home screen in the desktop window; adb installs an APK and starts it; pause and a snapshot work on it as on Debian"
     OS2_images_downloaded_and_kept_current:
       layer: library
+      systems: [cos]
       status: OPEN
       depends_on: [OS1_compartments_as_operating_systems]
       files: [cos/testenv/provision.js, cos/testenv/installer.js, clear-glass/src/driver/glass.js]
@@ -90,6 +93,7 @@ spec:
       proof: "a newer release is found, downloaded, verified and kept beside the old; a bad checksum is refused and said; a compartment on the old base keeps booting"
     AP1_android_build_compartment:
       layer: library
+      systems: [cos]
       status: OPEN
       depends_on: [OS2_images_downloaded_and_kept_current]
       files: [cos/testenv/provision.js, cos/testenv/environment.js, lib/cos-run.js]
@@ -106,6 +110,7 @@ spec:
       proof: "a new Android project from the TP1 template builds a debug APK in the compartment; a second build reuses the caches"
     AP2_test_on_the_android_compartment:
       layer: library
+      systems: [cos]
       status: OPEN
       depends_on: [AP1_android_build_compartment, OS1_compartments_as_operating_systems]
       files: [lib/cos-run.js, idearium/repo/proof-run.js]
@@ -116,6 +121,7 @@ spec:
       proof: "an instrumented test that fails is attributed to its file and sent back; repaired, it passes on the device"
     AP3_release_like_an_enterprise:
       layer: library
+      systems: [cos]
       status: OPEN
       depends_on: [AP2_test_on_the_android_compartment]
       files: [cos/testenv/environment.js, lib/cos-run.js]
@@ -129,6 +135,7 @@ spec:
       proof: "a release build produces a signed AAB and APK whose signature verifies (apksigner); the keystore never appears in the build log or the repo"
     EL1_electron_compiler:
       layer: library
+      systems: [cos]
       status: OPEN
       depends_on: [OS1_compartments_as_operating_systems]
       files: [cos/testenv/provision.js, lib/cos-run.js]
