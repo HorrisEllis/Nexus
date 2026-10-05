@@ -707,7 +707,11 @@ export function createFileTreeSpec({ name, description = '', plan, agent = null,
   const byLayer = {};
   for (const sct of sections) (byLayer[sct._file.layer] = byLayer[sct._file.layer] || []).push(sct.id);
   const dependsOn = {};
+  // §0.39.308 SB12 — a file planned from the registry carries its own dependsOn (the files it needs, by its wires): it
+  // waits on exactly those, not on every file of the layer below. Files without one keep the layer rule.
+  const sidByPath = new Map(sections.map(x => [x._file.path, x.id]));
   for (const sct of sections) {
+    if (Array.isArray(sct._file.dependsOn)) { dependsOn[sct.id] = sct._file.dependsOn.map(p => sidByPath.get(p)).filter(Boolean); continue; }
     const li = order.indexOf(sct._file.layer);
     if (li <= 0) continue;
     for (let j = li - 1; j >= 0; j--) { if (byLayer[order[j]] && byLayer[order[j]].length) { dependsOn[sct.id] = [...byLayer[order[j]]]; break; } }

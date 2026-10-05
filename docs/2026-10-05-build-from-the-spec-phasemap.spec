@@ -279,7 +279,7 @@ spec:
 
     SB12_the_registry_is_the_component_list:
       layer: library
-      status: OPEN
+      status: "PARTIAL — lib/registry-plan.js (parse, check, plan, checklist) and per-file dependsOn in createFileTreeSpec built; not yet wired into codegen or verify; overlaps DT4/DT4b in the agent-ready master map"
       depends_on: [SB11_each_block_chunked]
       files: [idearium/spec-engine/index.js, lib/file-tree-plan.js, idearium/repo/architecture.js, lib/node-export.js, idearium/repo/proof-run.js]
       does: >-
