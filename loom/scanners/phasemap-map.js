@@ -28,16 +28,22 @@ const ROOT = path.resolve(__dirname, '../..');
 // no real caller is affected.
 const DOCS = process.env.NEXUS_PHASEMAP_DIR || path.join(ROOT, 'docs');
 
-// Systems phases get tagged to (matched against phase text, case-insensitive).
-const SYSTEMS = ['cortex', 'guardian', 'bridge', 'orchestrator', 'loom', 'copilot',
-  'clear-glass', 'idearium', 'emerge', 'architect', 'raid', 'intelligence',
-  'gemini', 'agent', 'tablet', 'diagnostic', 'chunk', 'replay', 'snapshot',
-  // §0.39.261 — three supervised kernels loom never tagged, so their phases
-  // were invisible per system (each Nexus self-repo's Phasemap tab was empty).
-  'eravos', 'versionium', 'ollama',
-  // §EV0 (4) 2026-10-02 — systems the EMERGE map's phases name that the guess never knew (map: "cos, warp, emergence,
-  // economy and nexstore are not on it, so their phases are invisible per system")
-  'cos', 'warp', 'emergence', 'economy', 'nexstore'];
+// §0.39.314 SY1 — James: "There is only 15 systems. Not 27. Any system that's in idearium is a system, nothing more."
+// This file kept its own 27-entry SYSTEMS list (agent, chunk, raid, gemini, tablet, bridge, cos, warp, emergence,
+// economy, nexstore, …: tags, not systems). The one list is Idearium's, lib/nexus-self/systems.js; every tag a phase
+// carries — declared or guessed — resolves to one of its 15 through systemFor(): a system's name is itself, a known
+// alias goes to its owner, any other tag to the system that owns that directory (lib, cos, warp, docs → core). The tag
+// as written is kept on the phase (`tags`). Superseded: EV0 (4)'s list growth (2026-10-02, emerge map addendum).
+const NS = require('../../lib/nexus-self/systems.js');
+// The words that name a system in prose: each system's name, its loom aliases, its directories. 'core' and
+// 'components' are left out of the GUESS — the words are everywhere in prose; core is the fallback, components is
+// declared only. 'general' (core's old catch-all tag) is not a word to look for.
+const TERMS = (() => {
+  const out = new Set();
+  for (const s of NS.SYSTEMS) for (const t of [s.name, ...(s.loom || []), ...(s.dirs || [])]) if (t && !['core', 'components', 'general'].includes(t)) out.add(t);
+  return [...out];
+})();
+const SYSTEMS = NS.names();   // the 15, exported for readers that list them
 
 // §FIXED 2026-09-20 (MCO-E) — was /[A-Z]{1,3}\d+_.../, which cannot match a
 // hyphenated id like `MCO-A_schemas`, so the overhaul phasemaps' own phases
@@ -80,8 +86,8 @@ function _tagSystem(text) {
   // Strip hyphens from both sides of the match so "co-pilot" and "copilot"
   // (and any other system name someone hyphenates in prose) match the same.
   const low = text.toLowerCase().replace(/-/g, '');
-  const hits = SYSTEMS.filter(s => low.includes(s.replace(/-/g, '')));
-  return hits.length ? hits : ['general'];
+  const hits = TERMS.filter(t => low.includes(t.replace(/-/g, '')));
+  return hits.length ? [...new Set(hits.map(NS.systemFor))] : ['core'];   // §0.39.314 SY1 — one of the 15; nothing named → core
 }
 
 /**
@@ -91,8 +97,10 @@ function _tagSystem(text) {
  */
 function _systemsOf(fields, body) {
   const declared = _list(fields && fields.systems).map(x => x.toLowerCase());
-  if (declared.length) return { systems: [...new Set(declared)], systemsFrom: 'declared' };
-  return { systems: _tagSystem(body), systemsFrom: 'guessed' };
+  // §0.39.314 SY1 — declared tags resolve to the 15; the tags as written are kept for provenance
+  if (declared.length) return { systems: [...new Set(declared.map(NS.systemFor))], tags: [...new Set(declared)], systemsFrom: 'declared' };
+  const guessed = _tagSystem(body);
+  return { systems: guessed, tags: guessed, systemsFrom: 'guessed' };
 }
 
 /**
@@ -212,7 +220,7 @@ function parsePhasemapText(text, name) {
         id, map: name,
         title: id.replace(/_/g, ' '),
         status,
-        systems: sys.systems, systemsFrom: sys.systemsFrom,
+        systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom,
         dependsOn: dep.trim().replace(/[\[\]]/g, '') || null,
         // location, for callers that EDIT a phase (idearium/repo/roadmap.js):
         // header line, the `status:` key's line (-1 if it has none) and the
@@ -273,7 +281,7 @@ function parsePhasemapText(text, name) {
       id, map: name,
       title: f.name ? `${id} ${String(f.name).replace(/\s+/g, ' ').trim()}` : id,
       status,
-      ...(() => { const sys = _systemsOf(f, phaseLines.join(' ')); return { systems: sys.systems, systemsFrom: sys.systemsFrom }; })(),
+      ...(() => { const sys = _systemsOf(f, phaseLines.join(' ')); return { systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom }; })(),
       dependsOn: deps.length ? deps.join(', ') : null,
       line: i, statusLine: sIdx === -1 ? -1 : i + sIdx, bodyEnd,
       name: f.name || null, closes: _list(f.closes), files: _list(f.files), form: 'list',
@@ -333,7 +341,7 @@ function loadAll() {
     let text;
     try { text = fs.readFileSync(file, 'utf8'); } catch (_) { continue; }
     for (const p of parsePhasemapText(text, name)) {
-      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn });
+      phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn });
     }
   }
   // group by system (LP2 — split by system).
@@ -347,9 +355,13 @@ function loadAll() {
  */
 function forSystem(system) {
   const all = loadAll();
-  const list = all.bySystem[system] || all.bySystem[system.toLowerCase()] || [];
+  // §0.39.314 SY1 — a tag is answered for its system (forSystem('raid') is cortex's roadmap); a name that is neither a
+  // system nor a tag of one answers empty rather than core's, so a typo never reads as a roadmap
+  const known = NS.names().includes(String(system).toLowerCase()) || NS.SYSTEMS.some(s => (s.loom || []).includes(String(system).toLowerCase()));
+  const sys = known ? NS.systemFor(system) : String(system);
+  const list = all.bySystem[sys] || [];
   return {
-    system,
+    system: sys, asked: system,
     total: list.length,
     done: list.filter(p => p.status === 'done').length,
     pending: list.filter(p => p.status === 'pending').length,

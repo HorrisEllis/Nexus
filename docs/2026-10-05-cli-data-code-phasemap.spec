@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     cli-data-code
-    version:  1.2.0
+    version:  1.3.0
     date:     2026-10-05
     release:  0.39.310 (base) → 0.39.311
     uuid:     nexus-cli-data-code-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.ui · idearium.api · cli · cortex · every system's own store
-    status:   "MAPPED 2026-10-05; nothing built here yet. 0.39.311 moved the Settings test onto Clear Glass's driver. 1.1.0 (0.39.312): HG1–HG7 (defects found on the way), the session inventory, systems: and value: on every phase. 1.2.0 (0.39.313): HG7 and HG8 done"
+    status:   "MAPPED 2026-10-05; nothing built here yet. 0.39.311 moved the Settings test onto Clear Glass's driver. 1.1.0 (0.39.312): HG1–HG7 (defects found on the way), the session inventory, systems: and value: on every phase. 1.2.0 (0.39.313): HG7 and HG8 done. 1.3.0 (0.39.314): SY1 the 15 systems, HG9; every declared system is one of the 15"
     axioms:   docs/AXIOMS-v3.1.md — §3.3 map before build, §8.6 reuse before build, §5.9 every system is sovereign,
               §10.1 one write authority per data type, §10.2 projections are derived, §10.3 competing truths are a
               failure, §9.1 RAID is the write authority for cross-system requests, §4.3 security, §0.3 nothing lost.
@@ -72,7 +72,7 @@ spec:
   phases:
     CL1_commands_declared_by_their_system:
       layer: foundation
-      systems: [lib, cli, guardian, idearium, cos, copilot, cortex, ollama]
+      systems: [core, guardian, idearium, copilot, cortex, ollama-bridge]
       value: { score: 4, cost: M, for: [foundation, daily-use], why: "a verb exists once, owned by its system; terminal and Agent tab cannot drift" }
       status: OPEN
       depends_on: []
@@ -84,7 +84,7 @@ spec:
       proof: "every verb cli/nexus.js and the Agent tab list comes from a .command node; one with no route is reported"
     CL2_the_agent_tab_is_the_endpoint:
       layer: ui
-      systems: [idearium, raid]
+      systems: [idearium, cortex]
       value: { score: 4, cost: M, for: [daily-use, safety], why: "every command from one place, through RAID, never a shell" }
       status: OPEN
       depends_on: [CL1_commands_declared_by_their_system]
@@ -96,7 +96,7 @@ spec:
       proof: "a verb from each system runs from the Agent tab; a writing verb asks; nothing spawns a shell; each call is in the ledger"
     DS1_cortex_the_catalog:
       layer: foundation
-      systems: [cortex, intelligence, lib]
+      systems: [cortex, intelligence, core]
       value: { score: 5, cost: M, for: [foundation, safety], why: "nothing can move home safely until every table has a named owner" }
       status: OPEN
       depends_on: []
@@ -120,7 +120,7 @@ spec:
       proof: "after a move, no module reads the old path (the shim's warnings are zero over a full test run), the catalog points at the new home"
     CT1_one_pending_change_path:
       layer: service
-      systems: [idearium, lib]
+      systems: [idearium, core]
       value: { score: 5, cost: M, for: [quality, safety], why: "one truth for code not yet in the repo; no change shown pending and applied at once" }
       status: OPEN
       depends_on: []
@@ -147,7 +147,7 @@ spec:
     # ── Found during this session, pre-existing, not caused by it — mapped so none is lost (§1.2, §4.2) ─────────
     HG1_components_store_map_parses:
       layer: foundation
-      systems: [idearium, loom, docs]
+      systems: [idearium, loom, core]
       value: { score: 2, cost: S, for: [quality], why: "a phasemap that does not parse is invisible to every tool that reads maps" }
       status: OPEN
       depends_on: []
@@ -170,7 +170,7 @@ spec:
       proof: "a from-scratch bootstrap reports 0 rejections"
     HG3_bv09_the_detector_and_files:
       layer: library
-      systems: [lib, idearium]
+      systems: [core, idearium]
       value: { score: 3, cost: S, for: [quality], why: "a failing test that everyone learns to ignore hides the next real failure" }
       status: OPEN
       depends_on: []
@@ -181,7 +181,7 @@ spec:
         - { says: "test-build-verify passes", check: { kind: tests, run: "node tests/modules/test-build-verify.test.js" } }
     HG4_scripts_inside_the_sandbox:
       layer: foundation
-      systems: [cortex, idearium, lib, scripts]
+      systems: [cortex, idearium, core]
       value: { score: 3, cost: S, for: [safety], why: "a benchmark or probe script wrote a spec into data/cortex twice this session" }
       status: OPEN
       depends_on: []
@@ -218,7 +218,7 @@ spec:
       proof: "every phase whose status says it is built reads done"
     HG7_the_law_and_clear_glass:
       layer: foundation
-      systems: [clear-glass, docs]
+      systems: [clear-glass, core]
       value: { score: 3, cost: S, for: [ownership], why: "the law says Playwright; James and the code say Clear Glass" }
       status: 'DONE (0.39.313) — James: "Yes. No playwright. That''s literally what clearglass was born from."'
       depends_on: []
@@ -239,6 +239,40 @@ spec:
         cortex/core/raid/ (§5.2: "Every system connects to RAID (cortex/core/raid/router.js)"), so a RAID phase (CL2,
         VP2) showed on intelligence's Phasemap and Phases tabs. The tag moves to cortex.
       proof: "systemForLoomTag('raid') is cortex; CL2 shows on the cortex repo's Phasemap tab"
+
+    HG9_persist_history_diff:
+      layer: foundation
+      systems: [loom]
+      value: { score: 2, cost: S, for: [quality], why: "loom's phase history must catch a real status change, or the roadmap's past is wrong" }
+      status: OPEN
+      depends_on: []
+      files: [loom/scanners/phasemap-map.js, loom/test/phasemap-map.test.js]
+      does: >-
+        loom/test/phasemap-map.test.js "persistHistory() correctly diffs against a seeded prior state" fails on 0.39.313
+        (HEAD, before SY1) and on older bases — pre-existing, found while running every phasemap consumer for SY1.
+        Root-cause: the test's seeding or persistHistory's diff, said which.
+      proof: "loom/test/phasemap-map.test.js passes 13/13"
+
+    SY1_fifteen_systems:
+      layer: foundation
+      systems: [loom, idearium, core]
+      value: { score: 4, cost: S, for: [quality, foundation], why: "one list of systems; a phase belongs to a system Idearium has, never to a tag" }
+      status: 'DONE (0.39.314) — James: "There is only 15 systems. Not 27. Any system that''s in idearium is a system, nothing more."'
+      depends_on: []
+      files: [lib/nexus-self/systems.js, loom/scanners/phasemap-map.js, tests/modules/test-loom-phasemap.js]
+      does: >-
+        lib/nexus-self/systems.js is the one list: orchestrator, cortex, guardian, idearium, architect, diagnostic, eravos,
+        intelligence, ollama-bridge, versionium, copilot, loom, clear-glass, components, core. loom's phasemap scanner
+        kept its own 27-entry SYSTEMS list (agent, chunk, raid, gemini, tablet, bridge, cos, warp, emergence, economy,
+        nexstore, …). Now every tag — declared or guessed — resolves to one of the 15 through systems.js: a system's
+        name is itself; a known alias goes to its owner (raid, chunk, replay, snapshot → cortex; agent → guardian; gemini
+        → copilot); any other tag goes to the system that owns that directory (lib, cos, warp, emerge, docs, scripts,
+        cli → core). The tag as written is kept on the phase (`tags`) for provenance. forSystem() accepts a tag and
+        answers for its system; bySystem has at most 15 keys. Supersedes the emerge map's EV0 (4) list growth
+        (addendum there).
+      proof: "every phase's systems are among the 15; bySystem has no other key; forSystem('raid') answers for cortex"
+      conditions:
+        - { says: "every phase's systems are among the 15", check: { kind: tests, run: "node tests/modules/test-loom-phasemap.js" } }
 
   # ── Session inventory, 2026-10-05 — every request, where it is mapped (James: "make sure this is all mapped.") ──
   session_inventory:
@@ -265,6 +299,8 @@ spec:
     - { said: "make sure this is all mapped.", where: "this inventory; HG1–HG6 (defects found on the way); every phase declares systems: and value:" }
     - { said: "Im saying im the phasemaps in the nexus repo.", where: "checked: every phase is on the Nexus repo's Phasemap tab (loom, live) and its Phases tab (the head snapshot) — no change needed; found HG8" }
     - { said: "Yes. No playwright. That's literally what clearglass was born from.", where: "HG7 (AXIOMS §4.1 amended), HG8 (raid → cortex) — done" }
+    - { said: "I feel like we don't need loom for phasemaps … what if we hook the node anchor into clear driver … Guardian just works beautifully now.", where: "answered; three phases offered (ClearDriver reads a Guardian anchor, the parser moves to Idearium, the five _nexusAnchor copies) — not mapped until he says" }
+    - { said: "There is only 15 systems. Not 27. Any system that's in idearium is a system, nothing more.", where: "SY1 — done" }
 
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."

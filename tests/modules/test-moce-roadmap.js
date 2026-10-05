@@ -59,7 +59,7 @@ function docsDir(files) {
   await t('parsePhasemapText gives exactly what loadAll gives for the same file (one parser, not two)', () => {
     const d = docsDir({ 'x-phasemap.spec': real });
     const viaLoadAll = loomReads(d);
-    const viaParse = loom.parsePhasemapText(real, 'x-phasemap').map(p => ({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn }));   // §EV0 (4) systemsFrom
+    const viaParse = loom.parsePhasemapText(real, 'x-phasemap').map(p => ({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn }));   // §EV0 (4) systemsFrom · §0.39.314 SY1 tags
     assert.deepStrictEqual(viaLoadAll, viaParse);
   });
   await t('a hyphenated id (MCO-A_schemas) is a phase; a bare `MCO-A:` dictionary key is not', () => {

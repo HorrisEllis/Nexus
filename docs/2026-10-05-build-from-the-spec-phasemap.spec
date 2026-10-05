@@ -333,7 +333,7 @@ spec:
     # deviate They are law" · "They need context. All of it. From the hat/repo"
     BC1_build_context:
       layer: library
-      systems: [idearium, lib, loom]
+      systems: [idearium, core, loom]
       value: { score: 4, cost: M, for: [compounding, quality], why: "a build agent sees what its file relates to; fewer tokens, every lower file seen" }
       status: DONE (0.39.308) — built before it was mapped; the drift is recorded below
       depends_on: []
@@ -359,7 +359,7 @@ spec:
 
     BC2_the_build_agent_gets_all_of_the_hat_and_repo_context:
       layer: api
-      systems: [idearium, lib, loom]
+      systems: [idearium, core, loom]
       value: { score: 5, cost: M, for: [quality, ownership], why: "all of the hat/repo context reaches the builder, and only through blocks he can edit" }
       status: DONE (0.39.309)
       depends_on: [BC1_build_context]
@@ -384,7 +384,7 @@ spec:
 
     BC3_what_a_build_was_sent_as_a_node:
       layer: library
-      systems: [idearium, lib, copilot]
+      systems: [idearium, core, copilot]
       value: { score: 3, cost: S, for: [ownership, safety], why: "every dispatch can be replayed and explained from a node, not only from a response field" }
       status: OPEN — James's call (which node type)
       depends_on: [BC2_the_build_agent_gets_all_of_the_hat_and_repo_context]
@@ -400,7 +400,7 @@ spec:
 
     BC4_relational_context_wired_or_archived:
       layer: library
-      systems: [lib, loom]
+      systems: [core, loom]
       value: { score: 2, cost: S, for: [quality], why: "a module with no caller is debt; one upstream walk, not two" }
       status: OPEN
       depends_on: [BC1_build_context]

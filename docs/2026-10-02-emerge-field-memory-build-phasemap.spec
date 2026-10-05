@@ -238,6 +238,12 @@ spec:
         +N"), the cost as its effort (S 2, M 4, L 8, XL 16) — so the fill order Nexus computes for itself includes what
         James values, and says so. Every later phase adds its own events and routes to these files as it is built.
       proof: "the check passes for every system with a contract; an emit added without a taxonomy entry fails it; loom lists this map's phases under cos and warp; no phase of this map is tagged 'general'"
+      addendum_2026_10_05: >-
+        (4)'s list growth is superseded. James, 2026-10-05: "There is only 15 systems. Not 27. Any system that's in
+        idearium is a system, nothing more." loom's scanner no longer keeps its own system list: every tag resolves to
+        one of lib/nexus-self/systems.js's 15 (cos, warp, emergence, economy, nexstore → core, the system that owns
+        those directories). This map's phases now list under core where they said cos or warp; their `systems:` lines
+        are left as written (kept as `tags`). docs/2026-10-05-cli-data-code-phasemap.spec SY1.
 
     UI0_the_stations_agree:
       layer: interface

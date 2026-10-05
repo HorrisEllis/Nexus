@@ -79,7 +79,7 @@ spec:
 
     VP1_confidence_from_evidence:
       layer: library
-      systems: [lib, idearium, clear-glass]
+      systems: [core, idearium, clear-glass]
       value: { score: 5, cost: M, for: [quality, safety, foundation], why: "every later step trusts this number; it must be evidence, not wording" }
       status: OPEN
       depends_on: [VP0_map_and_atlas]
@@ -94,7 +94,7 @@ spec:
 
     VP2_adversarial_review:
       layer: service
-      systems: [copilot, lib, raid]
+      systems: [copilot, core, cortex]
       value: { score: 4, cost: M, for: [quality, safety], why: "another agent breaks it before he relies on it; only reproduced findings count" }
       status: OPEN
       depends_on: [VP1_confidence_from_evidence]
@@ -108,7 +108,7 @@ spec:
 
     VP3_the_repo_model_of_the_user:
       layer: service
-      systems: [copilot, intelligence, lib, idearium]
+      systems: [copilot, intelligence, core, idearium]
       value: { score: 4, cost: L, for: [daily-use, quality], why: "agents stop guessing what he meant; one model, a lens per repo" }
       status: OPEN
       depends_on: [VP0_map_and_atlas]
@@ -125,7 +125,7 @@ spec:
 
     VP4_the_primitive_field:
       layer: library
-      systems: [lib, idearium, loom]
+      systems: [core, idearium, loom]
       value: { score: 5, cost: L, for: [compounding, foundation], why: "proven parts are reused; every build after it costs less" }
       status: OPEN
       depends_on: [VP1_confidence_from_evidence, VP2_adversarial_review]
@@ -143,7 +143,7 @@ spec:
 
     VP5_provenance:
       layer: library
-      systems: [lib, idearium]
+      systems: [core, idearium]
       value: { score: 4, cost: M, for: [ownership, safety], why: "every primitive can say where it came from and what proved it" }
       status: OPEN
       depends_on: [VP4_the_primitive_field]
@@ -157,7 +157,7 @@ spec:
 
     VP6_debug_and_intelligence_in_the_desktop:
       layer: runtime
-      systems: [cos, idearium, intelligence, lib]
+      systems: [core, idearium, intelligence]
       value: { score: 3, cost: L, for: [quality, daily-use], why: "a failure in the VM is a gap with its cause, beside the screen he is looking at" }
       status: OPEN
       depends_on: [VP1_confidence_from_evidence]
