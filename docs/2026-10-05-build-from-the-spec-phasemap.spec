@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.3.0
+    version:  1.4.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21"
     axioms:   docs/AXIOMS-v3.1.md — §17.4 every build is reproducible (from an empty machine, the repo + its specs
               recreate the system), §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost, §1.2 nothing
               silently fails, §5.6 structural self-similarity, §16.4 simple things stay simple.
@@ -110,6 +110,21 @@ spec:
     component registry event interaction contract, with the heartbeat and pulse system, node based data structure using
     jaa tables as a node index." · "like can you make sure this is all added to the system template. like look at the
     architecture spec. this needs to be mapped first"
+
+  origin_1_4_0: >
+    James, 2026-10-05: "like each system is responsible for its data, schemas, contracts, configurations, heartbeat and
+    pulse, each node has a schema, every deterministic replicatable espect of each system can be expanded with the system."
+
+  found_1_4_0:
+    - >-
+      Each node has a schema — almost: lib/node-schemas.js holds 63; of the 14 node types in use in data folders, 2 have
+      none (capability-seam and command-seam, both in clear-glass). But all 63 live in ONE shared file in lib/, while
+      most systems also keep their own schemas/ folder — two owners for one fact, against "each system is responsible
+      for its … schemas".
+    - >-
+      Deterministic expansion has a start: loom/templates/system-scaffold.js generates a new system's skeleton (its
+      event-taxonomy.js among it), and lib/atlas-generate.js the atlases. Nothing yet regenerates a system's own
+      derived parts (contract, taxonomy, CLI grammar, node index, atlas) from its nodes when the system grows.
 
   found_1_3_0:
     - >-
@@ -446,3 +461,37 @@ spec:
       proof: "a system's atlas lists each component with its routes, commands, events and node types; an emitted event the taxonomy lacks is named"
       conditions:
         - { says: "a system's atlas lists each component with its routes, commands, events and node types; an emitted event the taxonomy lacks is named", check: { kind: tests, run: "node tests/modules/test-atlas-per-component.test.js" } }
+
+    SB20_each_system_owns_its_own:
+      layer: foundation
+      status: OPEN
+      overlaps: "SB17 (the template states it); DT6_node_store (agent-ready master)"
+      depends_on: [SB17_the_system_template_is_complete]
+      files: [lib/node-schemas.js, guardian/schemas/, clear-glass/schemas/, lib/node-index.js, lib/nexus-self/systems.js]
+      does: >-
+        "each system is responsible for its data, schemas, contracts, configurations, heartbeat and pulse, each node has
+        a schema." Each system holds, in its own folder, the schema of every node type it owns, its interaction contract,
+        its config, its node index (its own JAA tables) and its heartbeat. lib/node-schemas.js stops being the owner and
+        becomes the reader: it gathers each system's schemas from that system, and two systems claiming one type is an
+        error, said. Every node type in use has a schema (capability-seam and command-seam get theirs); a node type with
+        no schema, or a schema no system owns, is a gap in that system's contract node.
+      proof: "every node type in use has exactly one schema, owned by one system, in that system's folder"
+      conditions:
+        - { says: "every node type in use has exactly one schema, owned by one system, in that system's folder", check: { kind: tests, run: "node tests/modules/test-system-ownership.test.js" } }
+
+    SB21_deterministic_parts_grow_with_the_system:
+      layer: automation
+      status: OPEN
+      overlaps: "loom/templates/system-scaffold.js (makes a new system's skeleton once); lib/atlas-generate.js (atlases)"
+      depends_on: [SB20_each_system_owns_its_own, SB19_atlases_per_component]
+      files: [loom/templates/system-scaffold.js, lib/atlas-generate.js, lib/node-index.js]
+      does: >-
+        "every deterministic replicatable espect of each system can be expanded with the system." Everything that can be
+        derived from a system's own nodes is generated, never hand-kept: its interaction contract from its
+        registry-components, its event taxonomy from what it emits, its CLI grammar from its components, its node index
+        tables from its node types, its atlas from all of these. Adding a component, a node type or an event regenerates
+        them in one command, and a check fails when a derived part is behind its source. Hand-written code is kept to
+        what is not deterministic (the architecture spec's HARDLINE_AS_LITTLE_AS_POSSIBLE).
+      proof: "adding a component to a fixture system regenerates its contract, taxonomy, grammar, index and atlas; a stale one fails the check"
+      conditions:
+        - { says: "adding a component to a fixture system regenerates its contract, taxonomy, grammar, index and atlas; a stale one fails the check", check: { kind: tests, run: "node tests/modules/test-deterministic-expansion.test.js" } }
