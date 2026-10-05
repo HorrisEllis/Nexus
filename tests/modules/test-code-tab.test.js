@@ -26,6 +26,8 @@
  *          CT-30 the Plan shows current work: complete steps fold into one line with their count; show / hide toggles them
  *          CT-31 the agent working, live: a call blinks while it runs (in activity and on its file in the tree), ✓ when it
  *                ends, without a reload; the agent box keeps what was typed
+ *   CT-40  §CT9 0.39.353 the Plan's pull tab: on the right edge while the panel is closed, with its count; a click opens
+ *          the panel and hides it; off the repo view there is none
  * No engine on the machine: the browser part is SKIPPED, said, never passed.
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -47,9 +49,11 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
 
 function harness() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ct3-ui-'));
-  const css = ['work-surface.css', 'code-surface.css'].map(f => fs.readFileSync(path.join(UI, 'css', f), 'utf8')).join('\n');
+  const css = ['work-surface.css', 'code-surface.css'].map(f => fs.readFileSync(path.join(UI, 'css', f), 'utf8')).join('\n')
+    + (fs.readFileSync(path.join(UI, 'index.html'), 'utf8').match(/#plan-panel\{[^\n]*\n#plan-panel\.open[\s\S]*?#plan-tab \.pp-tab-dot\{[^\n]*\n/) || [''])[0];   // §CT9 — the page's own Plan styles
   const src = (f) => pathToFileURL(path.join(UI, 'js', f)).href;
   fs.writeFileSync(path.join(dir, 'index.html'), `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
+<button class="repo-subtab-btn" id="sub-code">Code</button>
 <div id="repo-subtab-code" style="height:800px"></div>
 <script>
   const CALLS = [];
@@ -317,6 +321,26 @@ function harness() {
       assert.strictEqual(await page.evaluate(() => CALLS.length), n0, 'live calls arrive by event: nothing was fetched');
       await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'other', name: 'x', state: 'running', at: Date.now() } }));
       assert.strictEqual(await page.evaluate(() => CS.live.length), 2, 'another repo\'s calls are not this one\'s');
+      assert.deepStrictEqual(errors, []);
+    });
+
+    await test('CT-40', 'the Plan\'s pull tab: on the right edge when closed, with its count; a click opens the panel; none off the repo view', async () => {
+      await page.evaluate(() => { openPlanPanel(); });
+      await page.waitForFunction(() => PLANP.data);
+      assert.ok(await page.evaluate(() => { const t = document.getElementById('plan-tab'); return !t || t.hidden; }), 'no tab while the panel is open');
+      await page.evaluate(() => closePlanPanel());
+      const tab = await page.evaluate(() => { const t = document.getElementById('plan-tab'); const r = t.getBoundingClientRect(); return { hidden: t.hidden, right: Math.round(r.right), w: document.documentElement.clientWidth, mid: Math.round(r.top + r.height / 2), h: innerHeight, text: t.textContent, dot: !!t.querySelector('.pp-tab-dot') }; });
+      assert.strictEqual(tab.hidden, false);
+      assert.strictEqual(tab.right, tab.w, `flush with the right edge (${tab.right} of ${tab.w})`);
+      assert.ok(Math.abs(tab.mid - tab.h / 2) < 3, 'middle height');
+      assert.ok(/Plan/.test(tab.text) && /1\/3/.test(tab.text) && tab.dot, JSON.stringify(tab));
+      await page.click('#plan-tab');
+      await page.waitForSelector('#plan-panel.open');
+      assert.ok(await page.evaluate(() => document.getElementById('plan-tab').hidden), 'opening hides it');
+      await page.evaluate(() => { closePlanPanel(); document.getElementById('sub-code').style.display = 'none'; planTabSync(); });
+      assert.ok(await page.evaluate(() => document.getElementById('plan-tab').hidden), 'off the repo view: no tab');
+      await page.evaluate(() => { document.getElementById('sub-code').style.display = ''; planTabSync(); });
+      assert.strictEqual(await page.evaluate(() => document.getElementById('plan-tab').hidden), false);
       assert.deepStrictEqual(errors, []);
     });
   } finally { await browser.close(); }

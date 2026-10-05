@@ -389,3 +389,7 @@ spec:
 # ADDENDUM 2026-10-05 (0.39.352, CT7 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "the plan needs to only show current work." ·
 # "completely either need to clear or need a clear complete button." BS11's Plan panel folds complete steps and complete
 # sections into one line with their count (show / hide, remembered); nothing is deleted.
+#
+# ADDENDUM 2026-10-05 (0.39.353, CT9 of docs/2026-10-05-code-tab-and-one-router-phasemap.spec) — James: "need a little pull tab on the very right for when i close the plan."
+# BS11's panel, closed, leaves a pull tab on the right edge (planTabSync); a click opens it. The current gate's pulse
+# (animation: pulse) named keyframes that never existed — they are defined now, so it pulses as BS11 said.

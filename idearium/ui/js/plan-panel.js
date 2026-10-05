@@ -53,9 +53,29 @@ function openPlanPanel({ map = undefined, focus = null } = {}) {
   if (map !== undefined) PLANP.map = map;
   if (focus) PLANP.focus = focus;
   _planEl().classList.add('open');
+  planTabSync();
   loadPlanPanel();
 }
-function closePlanPanel() { const el = document.getElementById('plan-panel'); if (el) el.classList.remove('open'); }
+function closePlanPanel() { const el = document.getElementById('plan-panel'); if (el) el.classList.remove('open'); planTabSync(); }
+
+// §CT9 0.39.353 — James: "need a little pull tab on the very right for when i close the plan." While a repo is open and the
+// panel is closed: a tab on the right edge — "Plan", the done count, a blinking dot while a step builds; a click opens it.
+// It follows the repo view (app.js setView / setRepoSubtab call planTabSync): gone on the repos grid and other pages.
+function planTabSync() {
+  let t = document.getElementById('plan-tab');
+  const panel = document.getElementById('plan-panel');
+  const inRepo = typeof CURRENT_API_REPO !== 'undefined' && !!CURRENT_API_REPO && [...document.querySelectorAll('.repo-subtab-btn')].some(b => b.offsetParent !== null);
+  const show = inRepo && !(panel && panel.classList.contains('open'));
+  if (!show) { if (t) t.hidden = true; return; }
+  if (!t) {
+    t = document.createElement('button'); t.id = 'plan-tab'; t.type = 'button'; t.title = 'open the Plan';
+    t.onclick = () => openPlanPanel();
+    document.body.appendChild(t);
+  }
+  const sm = PLANP.data && PLANP.uuid === CURRENT_API_REPO.uuid ? (PLANP.data.summary || {}) : null;
+  t.innerHTML = `${sm && sm.building ? '<span class="pp-tab-dot"></span>' : ''}<span class="pp-tab-label">Plan</span>${sm && sm.total ? `<span class="pp-tab-n">${sm.complete || 0}/${sm.total}</span>` : ''}`;
+  t.hidden = false;
+}
 function togglePlanPanel() { const el = document.getElementById('plan-panel'); if (el && el.classList.contains('open')) closePlanPanel(); else openPlanPanel(); }
 
 async function loadPlanPanel() {
@@ -136,6 +156,7 @@ function _planPaint() {
     <details class="pp-actwrap"><summary class="pp-sec">activity · ${activity.length}</summary>${activity.map(r => `<div class="pp-act"><span class="pp-led-t">${new Date(r.ts).toLocaleString()}</span> <span class="pp-led-s pp-${escapeHtml(r.state)}">${escapeHtml(r.state)}</span> ${escapeHtml(r.phase || '')} <span style="opacity:.6">${escapeHtml(String(r.map || '').split('/').pop())}</span></div>`).join('')}</details>
     <div id="pp-ws" class="pp-ws"></div>`;
   PLANP.focus = null;
+  planTabSync();   // §CT9 — the tab's count follows the plan
   // §0.39.284 W3 — the work surface, below the plan: every file the agent changed, as diffs, and its tools
   if (typeof wsLoad === 'function') { const w = document.getElementById('pp-ws'); if (WSURF.data && WSURF.uuid === PLANP.uuid) wsPaint(w); wsLoad(w); }
 }

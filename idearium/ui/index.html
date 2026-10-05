@@ -684,6 +684,14 @@ button.tb-conn:hover{border-color:var(--b2);color:var(--text)}
 /* §0.39.280 BS11 — the plan panel and the build-start card */
 #plan-panel{position:fixed;top:90px;right:18px;width:420px;height:min(78vh,760px);min-width:300px;min-height:220px;resize:both;overflow:hidden;z-index:250;display:none;flex-direction:column;background:var(--nx-card);border:1px solid var(--nx-rim);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.55);font-family:var(--mono)}
 #plan-panel.open{display:flex}#plan-panel.wide{width:min(900px,92vw)}
+/* §0.39.353 — the pulse .pp-g.cur (the current gate, BS11) always named and nothing defined; defined, it pulses */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* §0.39.353 CT9 — the Plan's pull tab on the right edge while the panel is closed */
+#plan-tab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:249;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 5px 10px 6px;background:var(--nx-card,var(--bg2));border:1px solid var(--nx-rim,rgba(255,255,255,.12));border-right:0;border-radius:8px 0 0 8px;color:var(--text2);font:600 10px var(--mono);letter-spacing:.08em;cursor:pointer;box-shadow:-6px 0 18px rgba(0,0,0,.35);transition:padding-right .15s,color .15s}
+#plan-tab:hover{color:var(--text);padding-right:9px}#plan-tab[hidden]{display:none}
+#plan-tab .pp-tab-label{writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;color:var(--text)}
+#plan-tab .pp-tab-n{writing-mode:vertical-rl;transform:rotate(180deg);color:var(--text3);font-weight:400}
+#plan-tab .pp-tab-dot{width:6px;height:6px;border-radius:50%;background:var(--sky);animation:pulse 1.2s ease-in-out infinite}
 .pp-head{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);cursor:move;user-select:none}
 .pp-title{font:600 13px system-ui,sans-serif;color:var(--nx-bright)}.pp-sub{font-size:10px;color:var(--text3)}.pp-grow{flex:1}
 .pp-map{max-width:150px;background:var(--nx-card2);color:var(--text2);border:1px solid rgba(255,255,255,.1);border-radius:6px;font:10px var(--mono);padding:2px 4px}

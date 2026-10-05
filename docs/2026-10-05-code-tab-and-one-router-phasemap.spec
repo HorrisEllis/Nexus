@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     code-tab-and-one-router
-    version:  1.2.0
+    version:  1.3.0
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-code-tab-and-one-router-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the Code tab, every model call) · copilot (who answers) · lib/pipeline-routing (the policy, the breakers) · ollama
-    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349); CT4 done (0.39.350); CT5 done (0.39.351); CT6–CT8 done (0.39.352) — all eight phases built"
+    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349); CT4 done (0.39.350); CT5 done (0.39.351); CT6–CT8 done (0.39.352); CT9 done (0.39.353) — all nine phases built"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -23,7 +23,8 @@ spec:
       "the plan needs to only show current work. needs escalating retry logic and fallback routing. like if the 3b fails,
       switch to the 7b, then the 16b deepseek, then the agents. have all of this configurable." · "completely either need
       to clear or need a clear complete button. like i want to see the agents activity in the code tab, in real time. like
-      maybe have a little dot blinking next to it"
+      maybe have a little dot blinking next to it" · 1.3.0: "need a little pull tab on the very right for when i close the
+      plan."
 
   found:
     - >-
@@ -199,3 +200,17 @@ spec:
         Code tab's activity shows them live: a blinking dot on the call running, ✓ or ✗ when it ends, and a blinking dot
         beside the file it is reading or editing in the tree.
       proof: "with a stand-in loop: a call shows blinking while it runs and ✓ / ✗ after, without a reload; the file it names blinks in the tree"
+
+    CT9_the_plan_pull_tab:
+      layer: ui
+      status: "DONE (0.39.353) — plan-panel.js planTabSync: #plan-tab on the right edge, middle height, while a repo is open and the panel closed (PLAN, the done count, a blinking dot while building); a click opens the panel; open / close / setView / setRepoSubtab keep it right. Found on the way: @keyframes pulse was never defined, so the current gate never pulsed — defined. test-code-tab CT-40 in Clear Glass."
+      james: '"need a little pull tab on the very right for when i close the plan."'
+      depends_on: [CT7_the_plan_shows_current_work]
+      files: [idearium/ui/js/plan-panel.js, idearium/ui/js/app.js, idearium/ui/index.html]
+      found:
+        - "closing the Plan panel (✕) leaves no way back but a button somewhere else (the Code tab's plan ▸, the Home tab's start card)"
+      does: >-
+        While a repo is open and the Plan panel is closed, a small tab sits on the very right edge of the window, middle
+        height: "Plan" written down it, the done count, a blinking dot while a step is building. A click opens the panel;
+        opening hides the tab, closing shows it. It follows the repo view: gone on the repos grid and the other pages.
+      proof: "driven in Clear Glass: close the panel → the tab at the right edge; click it → the panel, the tab gone; leave the repo → no tab"
