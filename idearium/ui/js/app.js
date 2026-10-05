@@ -485,6 +485,7 @@ function setView(v) {
     g.classList.remove('open');
   });
   _dismissTabGroups();
+  if (typeof planTabSync === 'function') setTimeout(planTabSync, 0);   // §0.39.353 CT9 — no Plan tab off the repo view
   // Clicking the Repos tab itself always lands on the landing grid, even if
   // a repo was left open last visit — openRepoFor() (idea/spec → repo) is
   // the only path that should skip straight to detail mode.
@@ -2008,6 +2009,7 @@ function setRepoSubtab(name) {
   document.querySelectorAll('.repo-subtab-btn').forEach(b => b.classList.toggle('active', b.dataset.subtab === name));
   document.querySelectorAll('.repo-subtab-panel').forEach(p => p.classList.toggle('active', p.id === `repo-subtab-${name}`));
   renderCurrentRepoSubtab();
+  if (typeof planTabSync === 'function') planTabSync();   // §0.39.353 CT9 — the Plan's pull tab follows the repo view
 }
 
 function renderCurrentRepoSubtab() {
