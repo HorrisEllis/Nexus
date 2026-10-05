@@ -609,7 +609,18 @@ export class RepoLayer {
     // thing; the physical projection is additive.
     const matResult = this.materialize(repoUuid);
     if (matResult.error) console.warn(`[idearium/repo] initial materialize for ${repoUuid} failed, repo still created: ${matResult.error}`);
-    return { repo, ideaUuid, specUuid: manifest.uuid };
+    // §0.39.308 — James: "the agents hat should be created with the repo." It was forged on first use of the Agent tab
+    // (lib/repo-agent.js), so a new repo had no agent until someone talked to it. A repo with a compartment gets its hat
+    // here; one without keeps the existing rule (no hat — an agent scoped to nothing). A failed forge never fails the repo.
+    let hat = null;
+    if (repo.compartmentId) {
+      try {
+        const r = createRequire(import.meta.url)('../../lib/repo-hat.js').ensureRepoHat({ repo, repoDir: matResult.error ? null : matResult.dir });
+        hat = r.ok ? { ok: true, name: r.hat && r.hat.name, created: !!r.created } : { ok: false, errors: r.errors };
+        if (!r.ok) console.warn(`[idearium/repo] hat for ${repoUuid} not forged (repo still created): ${(r.errors || []).join('; ')}`);
+      } catch (e) { hat = { ok: false, errors: [e.message] }; console.warn(`[idearium/repo] hat for ${repoUuid} not forged (repo still created): ${e.message}`); }
+    }
+    return { repo, ideaUuid, specUuid: manifest.uuid, hat };
   }
 
   // ── fork — genuinely free when nothing has changed yet: the new repo
