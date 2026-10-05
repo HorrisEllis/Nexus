@@ -1,177 +1,66 @@
-# SYSTEM SPEC TEMPLATE — the shape every Nexus system is written in.
-# 0.39.312 — rewritten in James's structure. James: "why not identity context file_structure modules -> components
-# summary, with routes and commands, anything else relevant. then everything relevant to the modules, is listed each
-# module and component. not in seperate sections" · "each system is responsible for its data, schemas, contracts,
-# configurations, heartbeat and pulse, each node has a schema" · "each component has to have at least one capability,
-# with at least one command, and events, each a node each."
-# Map: docs/2026-10-05-build-from-the-spec-phasemap.spec SB17. The previous template is kept whole in
-# _archive/architecture-spec.template.pre-0.39.312.yaml; every field it had has a place below.
+# SYSTEM TEMPLATE — every Nexus system is built in this shape.
 #
-# Its architecture is genesis (idearium/spec-engine/templates/genesis.spec 1.3.0, Domain 0a says which part of genesis each
-# section is); docs/architecture-spec/architecture-spec.spec is the seam between genesis, loom's schema and guardian's nodes.
-#
-# How to read it: every value is its TYPE, not example content — a real spec replaces each <type> with real data.
-# Only what belongs to the whole system sits above `modules`. Everything about a module or a component is listed ON
-# that module or component. The cross-cutting lists (every event, every node type, the taxonomy, the contract) are
-# never written by hand: `generated` names them, and they are produced from the components (SB21).
+# James, 2026-10-05:
+#   "each component only needs to connect to the registry. that cuts down immensly on context. i am trying to make this
+#    need as little tokens as possible. scales as it builds, and as simple as possible."
+#   "systems are dynamic and expand using the nodes. which have schemas per node type."
+#   "each component has to have at least one capability, with at least one command, and events, each a node each."
+#   "each system is responsible for its data, schemas, contracts, configurations, heartbeat and pulse"
+#   "then bundle each capability node, in relation to any other relevant node."
+#   "hardcoded has to earn its place."
 
-identity:
-  name: <string>
-  james: <string>                     # what it is and why, in James's own words — the idea is his
-  version: <string>
-  date: <date>
-  uuid: <string>                      # or "TBD — assign on first real implementation"
-  status: "<enum: draft|proposed|active|deprecated>"
-  extends: <string>                   # the template it is built on — genesis-devkit-v1-0000-2026-0710-jamesbrooks-001, or "none"
-  entry: <string>                     # the file that starts it, or "none" (a library)
-  ports: <map<string,int>>            # named ports it serves; empty map if none
-  boot_phase: <int>                   # autopilot's phase, or "not started by autopilot"
-  data_folder: <string>               # <system>/data — everything it keeps lives here, nowhere else
-  owns:                               # each system is responsible for its own (James)
-    data: <list<string>>              # its node types (detailed per module below)
-    schemas: <string>                 # where its node schemas live — in its own folder
-    contract: <string>                # its interaction contract file (derived from its components)
-    config: <string>                  # its config file
-  heartbeat:
-    interval: <string>                # a config key, never a literal
-    route: <string>                   # where liveness is read, e.g. GET /health
-    snapshot: <list<string>>          # what each pulse carries — always including each node type's count
-  written_from: <list<string>>        # the real sources this spec was grounded in, or "written from scratch" said plainly
+tree: |
+  <system>/
+  ├── server.js                    the API server — serves the route nodes
+  ├── cli.js                       the CLI — runs the command nodes
+  ├── config.js
+  ├── <system>.config.json         configuration — includes the Versionium API slot
+  ├── compartment.json
+  ├── registry-components.js       the component registry — the spine
+  ├── interaction-contract.json    the event-driven interaction contract
+  ├── event-taxonomy.js
+  ├── jaa-store.js                 the JAA database — the index for each node type
+  ├── contracts/                   contracts — handshake verification, gated
+  ├── schemas/
+  │   ├── index.js
+  │   └── schema.<type>            a schema for each node type
+  ├── data/
+  │   ├── nodes/
+  │   │   ├── bundle/<capability-id>.bundle   one per capability — references its related nodes, never copies
+  │   │   ├── component/<id>.component
+  │   │   ├── capability/<id>.capability     at least one per component
+  │   │   ├── command/<id>.command           at least one per capability
+  │   │   ├── event/<id>.event               the events for that command
+  │   │   ├── route/<id>.route               routes for data types, nodes, hooks, commands, toasts
+  │   │   ├── hook/<id>.hook                 end points
+  │   │   ├── wire/<id>.wire                 wires between hooks — the interaction space
+  │   │   ├── toast/<id>.toast               notifications
+  │   │   └── <type>/<id>.<type>             every other node type — drop in, the listener integrates it
+  │   ├── node-index/              the JAA index of the nodes
+  │   ├── ledger/<session>/        event ledger — per session, timestamped
+  │   └── baseline/                deltas and sigmas measure against this
+  ├── input/
+  ├── output/
+  ├── lib/                         the code the nodes point at — heartbeat and pulse, the listener, gates,
+  │                                handshake, hashes and snapshots
+  ├── spec/
+  │   ├── <system>.spec
+  │   └── <system>.node-taxonomy.md
+  └── ui/                          floats on top — each element gated by a listener on its command
 
-context:
-  purpose: <string>
-  data_structure: <string>            # how its data persists and moves: nodes, one file per fact, JAA tables as the index
-  governing_principles: <list<string>>
-  living_model: <bool>                # true: this spec is edited in place as the system changes
-  dynamic_over_hardline: <bool>       # true: changeable values live in nodes and config, not literals in code
-  axioms:
-    - name: <string>
-      statement: <string>
-      rationale: <string>
-  spine:                              # the one mechanism every signal routes through, if there is one
-    exists: <bool>
-    primitives: <list<string>>
-    rule: <string>                    # e.g. "consumers import the spine, the spine never imports a consumer"
-  sovereignty:                        # system to system: what crosses, what never does
-    - other_system: <string>          # or "any"
-      may_read: <list<string>>
-      may_never_write: <list<string>>
-      enforced_by: <string>           # what actually makes it true, not just stated policy
-  config_layers:
-    - layer: <string>
-      scope: <string>
-      overrides: <string>
-  pulse:                              # what it tells peers and how its health is scored
-    announces: <list<string>>
-    health_score: { computed_from: <list<string>>, formula: <string> }
-    fidelity_score: { computed_from: <list<string>>, formula: <string> }
-  hook_kinds:                         # the kinds of crossing point components may declare
-    open_set: <bool>                  # true: a new kind may be registered without editing a list
-    seed_values: <list<string>>
-  diagnostics:                        # system-wide strain, from its own registry (component-level ones sit on the component)
-    - metric: <string>
-      computed_from: <list<string>>
-      formula: <string>
-      exposed_at: <string>
-  glossary:                           # easily-confused terms this spec relies on keeping apart
-    - term: <string>
-      definition: <string>
-      distinguished_from: <string>
-  phases:                             # the system's build lifecycle; each exit gate is real proof
-    source: <string>                  # the phasemap it came from, or "hand-maintained"
-    entries:
-      - phase: <string>
-        intent: <string>
-        entry_condition: <string>
-        exit_gate: <string>
-        produces: <list<string>>
-  component_status:                   # the states every component moves through
-    - status: <string>
-      meaning: <string>
-      entry_condition: <string>
-      exit_condition: <string>
-
-file_structure:
-  tree: <block_string>                # the literal directory tree
-
-modules:
-  - name: <string>
-    path: <string>
-    summary: <string>
-    status: <string>                  # one of context.component_status
-    config: <list<string>>            # the config keys this module reads
-    seams:                            # where it can be cut
-      - id: <string>
-        location: <string>            # the file, block or node path where the cut lives
-        between: <list<string>>
-        cut_type: "<enum: isolation|boundary>"
-        isolation: <string>           # only for isolation — what is not shared
-    data:                             # the node types this module owns — each with its schema and its index
-      - node_type: <string>
-        folder: <string>              # data/nodes/<type>/ — one file per fact: <id>.<type>
-        kind_status: "<enum: REAL|OPEN|DEFERRED>"   # is this node type proven, proposed, or shelved
-        grounding: <string>           # the real file that proves it, or why it is OPEN
-        store: "<enum: authored|derived|runtime>"
-        mutability: "<enum: editable|compiled|append_only>"
-        source_of_truth_for: <string>
-        schema:
-          required_keys: <list<string>>
-          types: <map<string,string>>
-          optional: <map<string,string>>
-        jaa_table: <string>           # nodes_<type> — the index, rebuildable from the files
-        ledger_table: <string>        # nodes_<type>_ledger — append-only, every add/change/delete
-        integrity: "<enum: unchained|hash_chained>"
-        bundle_with: <list<string>>   # node types that travel with it, if any (reference only, never merged)
-    components:
-      - id: <string>                  # loom's rule: <system>.<path as dots>
-        name: <string>
-        file: <string>
-        layer: "<enum: kernel|engine|runtime|test>"
-        summary: <string>
-        status: <string>              # one of context.component_status
-        depends_on: <list<string>>    # component ids or files, same or lower layer only
-        capabilities:                 # at least one — each a .capability node
-          - id: <string>
-            summary: <string>
-        commands:                     # at least one — each a .command node, invoking a capability above
-          - id: <string>
-            capability: <string>
-            cli: <string>             # the CLI verb, or "none"
-            grammar: <list<string>>
-        routes:                       # each an api route of a command, or "none"
-          - method: <string>
-            path: <string>
-            command: <string>
-            summary: <string>
-        events:                       # each a .event node
-          emits:
-            - name: <string>
-              meaning: <string>
-              payload: <map<string,string>>
-          hears:
-            - name: <string>
-              from: <string>          # the component or system that emits it
-        nodes:                        # node types it reads and writes (their schemas are on the module's data)
-          reads: <list<string>>
-          writes: <list<string>>
-        schema:                       # the shape of this component's own input/output, if it has one
-          required_keys: <list<string>>
-          types: <map<string,string>>
-          optional: <map<string,string>>
-        config: <list<string>>
-        gates:                        # only on validation-bearing components
-          - condition: <string>
-            blocks: <string>
-        diagnostics:                  # how it measures its own strain, if it does
-          - metric: <string>
-            computed_from: <list<string>>
-            formula: <string>
-            exposed_at: <string>
-        tests: <list<string>>
-
-generated:                            # never written by hand — produced from the modules above (SB21); a hand edit is lost
-  contract: <string>                  # interaction-contract.json — every route, command and event, by component
-  event_taxonomy: <string>            # every event emitted and heard, by component, with its payload
-  node_index: <string>                # every node type, its schema, its JAA table and ledger table
-  registry: <string>                  # registry-components.js — the doorway every module and the UI reads
-  atlas: <string>                     # docs/atlases/<system>-atlas.md, its generated half
+rules:
+  - "every component connects only to the registry — never to another component"
+  - "the registry is asked for the entries a component needs, never handed over whole"
+  - "every component, hook and wire has a type, an id and a uuid"
+  - "each component has at least one capability; each capability at least one command; each command its events — each a node"
+  - "every node type has its own folder, its own schema and its own JAA index"
+  - "routes, hooks, wires, toasts and contracts are nodes"
+  - "each capability has a bundle: references to every node related to it, written by the listener, never copies"
+  - "a node dropped into its folder is checked against its schema and the handshake before it is live"
+  - "each system owns its own nodes, data, schemas, contracts, configuration, heartbeat and pulse, and announces itself to the other systems"
+  - "systems and components are isolated: they interact only through the interaction contract — handshake verified, gated"
+  - "the UI floats on top of the interaction contract and is disposable; each element is gated by a listener on its command"
+  - "every event is logged in the ledger, per session, timestamped; deltas and sigmas measure deviation from the baseline"
+  - "every file has a timestamp and a hash; a modified file is backed up by a Versionium snapshot"
+  - "changes start at the registry and reach only what is wired to them; the registry owns the interface, the code owns the implementation"
+  - "hardcoded has to earn its place"

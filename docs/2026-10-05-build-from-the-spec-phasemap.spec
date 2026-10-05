@@ -528,7 +528,7 @@ spec:
     SB17_the_system_template_is_complete:
       james: '"like can you make sure this is all added to the system template. like look at the architecture spec. this needs to be mapped first" · "why not identity context file_structure modules -> components summary, with routes and commands, anything else relevant. then everything relevant to the modules, is listed each module and component. not in seperate sections"'
       layer: foundation
-      status: "DONE (0.39.313) — the template in his structure (0.39.312); genesis 1.3.0 is its architecture (Domain 0a), with capability nodes and his axioms; architecture-spec.spec 0.9.0 agrees"
+      status: "DONE (0.39.314) — rewritten from his description only: his words, the tree, the rules (0.39.312 and earlier archived). Genesis's file list and Domain 0a still name the old sections — SB28"
       overlaps: "architecture-spec.spec's own gaps; TP1 (promote with templates)"
       depends_on: [SB16_genesis_nodes_domain]
       files: [idearium/spec-engine/templates/architecture-spec.template.yaml, docs/architecture-spec/architecture-spec.spec, idearium/spec-engine/templates/genesis.spec]
