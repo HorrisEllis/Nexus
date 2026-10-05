@@ -44,6 +44,9 @@ const FILES = [
   ['idearium/ui/js/window-chrome.js', I('idearium/ui/js/window-chrome.js'), [I('clear-glass/src/preload/compartment-window.js')]],   // window.nexusWindow
   // §0.39.349 CT3 — the Code tab as the work surface: HTTP code/*, worksurface, files/state, agent/route, agent/prompt;
   // file-manage.js's file states (loadFileStates, fileStateMark, pendingOnlyFiles); work-surface.js's cards (_wsCard, WSURF)
+  // §0.39.350 CT4 — Settings → Models: HTTP ollama/check, ollama/check/ask; idearium/api runs lib/ollama-check.js
+  ['lib/ollama-check.js', I('lib/ollama-check.js'), []],
+  ['idearium/ui/js/ollama-check.js', I('idearium/ui/js/ollama-check.js'), [I('idearium/api/index.js')]],
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js')]],
 ];
 
@@ -56,6 +59,7 @@ const CONSUMERS = [
   [I('guardian/userscript-chat-stream.js'), I('guardian/server.js'), 'watchLogin → HTTP POST :7820/api/provider/login'],
   [I('idearium/api/index.js'), I('idearium/api/build-surface.js'), '11 build-surface routes, _deviationAfter'],
   [I('idearium/ui/js/living-spec.js'), I('idearium/api/index.js'), 'HTTP spec/plan, spec/build, deviation'],
+  [I('idearium/api/index.js'), I('lib/ollama-check.js'), '§CT4 ollama.check, ollama.check.ask (_require)'],
 ];
 
 function mapBuildSurface(driver) {

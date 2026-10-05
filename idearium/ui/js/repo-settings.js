@@ -18,7 +18,7 @@
 
 const RS_CATEGORIES = [
   { group: 'Repository', items: [['general', 'General'], ['repository', 'Files & danger zone']] },
-  { group: 'Agent', items: [['agent', 'Agent'], ['prompt', 'Prompt'], ['hat', 'Hat & tools']] },
+  { group: 'Agent', items: [['agent', 'Agent'], ['prompt', 'Prompt'], ['hat', 'Hat & tools'], ['models', 'Models']] },   // §CT4 0.39.350 models: the Ollama check
   { group: 'Environment', items: [['environment', 'Environment'], ['desktop', 'Desktop']] },
 ];
 const RS_IDS = RS_CATEGORIES.flatMap(g => g.items.map(i => i[0]));
@@ -111,6 +111,13 @@ function _rsPaint(repo) {
   if (id === 'hat') {
     pane.innerHTML = head('Hat & tools', 'The persona this repo\'s agent wears and the tools it carries.')
       + _rsConsoleView(repo, 'hat', 'hat and tools');
+    return;
+  }
+  if (id === 'models') {   // §CT4 0.39.350 — James: "make sure ollama is all wired into idearium." (ollama-check.js)
+    pane.innerHTML = head('Models', 'Whether Ollama is wired in: every installed model asked through copilot, and the route every caller gets.')
+      + '<div id="ollama-check"></div>';
+    if (typeof renderOllamaCheck === 'function') renderOllamaCheck(document.getElementById('ollama-check'));
+    else document.getElementById('ollama-check').innerHTML = '<div class="ds-mono">the Ollama check did not load (js/ollama-check.js)</div>';
     return;
   }
   if (id === 'environment') {

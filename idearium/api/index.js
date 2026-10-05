@@ -1468,7 +1468,7 @@ async function readBody(req) {
 async function _ollamaModels() {
   try {
     const d = await _nexusClient.get('ollama', '/api/models', { timeout: 4000 });
-    if (!d || d.ok === false || !Array.isArray(d.models)) return { ok: false, error: 'Ollama did not answer (the bridge reached it and got nothing)', models: [], active: d && d.active || null };
+    if (!d || d.ok === false || !Array.isArray(d.models)) return { ok: false, error: (d && d.error) || 'Ollama did not answer (the bridge reached it and got nothing)', models: [], active: d && d.active || null };
     return { ok: true, models: d.models, active: d.active || null };
   } catch (e) { return { ok: false, error: `ollama bridge unreachable: ${e.message}`, models: [], active: null }; }
 }
@@ -1724,6 +1724,8 @@ const ROUTE_CAP = {
   'routing.show':     CAPS.READ_IDEAS,
   'routing.plan':     CAPS.READ_IDEAS,
   'routing.learned':  CAPS.READ_IDEAS,
+  'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
+  'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'config.set':       CAPS.WRITE_IDEAS,
   'routing.breaker.reset': CAPS.WRITE_IDEAS,
   'config.reset':     CAPS.WRITE_IDEAS,
@@ -1762,6 +1764,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','routing'],         'routing.show'],
     ['GET',    ['api','routing','plan'],  'routing.plan'],
     ['GET',    ['api','routing','learned'], 'routing.learned'],   // §0.39.287 what each model/provider has done per chunk type
+    ['GET',    ['api','ollama','check'], 'ollama.check'],          // §CT4 0.39.350 — installed models, each caller's route
+    ['POST',   ['api','ollama','check','ask'], 'ollama.check.ask'], // §CT4 — one model asked a one-line question through copilot
     ['POST',   ['api','routing','breaker','reset'], 'routing.breaker.reset'],
     // §0.39.279 — the settings console (ui/settings.html): every idearium, compartment and agent setting in one read.
     // Writes go to the routes that already own each setting (config, agent/settings, agent/blocks, desktop).
@@ -2366,6 +2370,27 @@ async function handle(req, res, route, query, body) {
     case 'routing.learned': {
       const PR = _require('../../lib/pipeline-routing.js');
       return ok(res, { policy: _routingPolicy(), learned: PR.learned({ jobType: query.jobType || null }) });
+    }
+    // §CT4 0.39.350 — James: "make sure ollama is all wired into idearium." (lib/ollama-check.js) The bridge's list of
+    // installed models, and every caller's route as copilot's door gives it; a missing bridge or copilot is said.
+    case 'ollama.check': {
+      const OC = _require('../../lib/ollama-check.js');
+      const RA = _require('../../lib/repo-agent.js');
+      const policy = _routingPolicy();
+      const m = await _ollamaModels();
+      const route = async (kind, preferAgent) => {
+        const r = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind, preferAgent, policy }, 5000);
+        return r.status === 200 && r.json && r.json.ok ? r.json : { ok: false, error: (r.json && r.json.error) || (r.status ? `copilot answered ${r.status}` : `copilot unreachable at ${RA.COPILOT_URL}`) };
+      };
+      const callers = await OC.routes({ route, installed: m.ok ? m.models : null, defaultProvider: RA.defaultProvider() });
+      return ok(res, { bridge: { ok: m.ok, error: m.error || null, active: m.active || null }, models: m.models || [], callers, probe: OC.PROBE,
+        copilot: callers.every(c => !c.ok) ? { ok: false, error: callers[0] && callers[0].error } : { ok: true, url: RA.COPILOT_URL } });
+    }
+    case 'ollama.check.ask': {
+      if (!body || !body.model) return err(res, 400, 'model is required');
+      const OC = _require('../../lib/ollama-check.js');
+      const RA = _require('../../lib/repo-agent.js');
+      return ok(res, await OC.ask({ model: String(body.model), post: (payload) => _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 130000) }));
     }
     case 'routing.breaker.reset': {
       const PR = _require('../../lib/pipeline-routing.js');

@@ -543,6 +543,16 @@
     },
     {
       "method": "GET",
+      "path": "/api/ollama/check",
+      "_action": "ollama.check"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ollama/check/ask",
+      "_action": "ollama.check.ask"
+    },
+    {
+      "method": "GET",
       "path": "/api/repos/:uuid/agent/history",
       "_action": "repo.agent.history"
     },

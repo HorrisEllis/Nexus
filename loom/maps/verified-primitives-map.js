@@ -12,6 +12,7 @@
  *   idearium/ui/js/repo-settings.js → idearium/ui/js/repo-environment.js   renderRepoEnvironment (the Environment category)
  *   idearium/ui/js/repo-settings.js → idearium/api/index.js            HTTP settings.html?tab=…&single=1 (one console view)
  *   idearium/ui/js/app.js → idearium/ui/js/repo-settings.js            renderRepoSettings (the repo's Settings subtab)
+ *   idearium/ui/js/repo-settings.js → idearium/ui/js/ollama-check.js   renderOllamaCheck (the Models category, CT4)
  *   idearium/ui/js/desktop-setup.js → app.js (page globals) · idearium/api (HTTP); repo-environment.js and repo-settings.js open it (DK2)
  */
 const { idFor } = require('../scanners/source-map');
@@ -37,6 +38,7 @@ const CONSUMERS = [
   [I('idearium/ui/js/app.js'), I('idearium/ui/js/repo-settings.js'), 'renderRepoSubtab → renderRepoSettings(CURRENT_API_REPO)'],
   [I('idearium/ui/js/repo-environment.js'), I('idearium/ui/js/desktop-setup.js'), 'envSetup → openDesktopSetup(repo) (§0.39.340 DK2)'],
   [I('idearium/ui/js/repo-settings.js'), I('idearium/ui/js/desktop-setup.js'), 'the Desktop category\'s ⚙ set up desktop → openDesktopSetup (§0.39.340 DK2)'],
+  [I('idearium/ui/js/repo-settings.js'), I('idearium/ui/js/ollama-check.js'), 'the Models category → renderOllamaCheck (§0.39.350 CT4)'],
 ];
 
 // idearium's page scripts are scanned components with no static require edges, so the scanner gives app.js and

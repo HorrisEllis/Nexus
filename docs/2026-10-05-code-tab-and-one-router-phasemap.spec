@@ -6,7 +6,7 @@ spec:
     release:  0.39.345 (base)
     uuid:     nexus-code-tab-and-one-router-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the Code tab, every model call) · copilot (who answers) · lib/pipeline-routing (the policy, the breakers) · ollama
-    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349)"
+    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349); CT4 done (0.39.350) — all four phases built"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -102,7 +102,7 @@ spec:
 
     CT4_ollama_checked_on_his_machine:
       layer: ui
-      status: OPEN
+      status: "DONE (0.39.350) — Settings → Models (idearium/ui/js/ollama-check.js over lib/ollama-check.js; GET /api/ollama/check, POST /api/ollama/check/ask). The bridge and copilot's door: reached or not, and why. Every installed model asked 'Reply with the single word: ready' through copilot's /api/prompt (backend ollama, the model named), one at a time, each answer with its time or its failure. Every caller (void, workshop, architect, deliver, the repo agent in the copilot position and on Ollama with no model, a spec section, a code file) with the route the door gives it: who answers first, its Ollama hops, a model not installed, Ollama not in the route, no route at all. A probe does not teach the door. Found on the way: the bridge's GET /api/models answered ok with [defaultModel] when Ollama's list could not be parsed — fixed to say so. test-ollama-check 8/8 (three in Clear Glass). On his machine, his real models are the proof: open Settings → Models, ask every model."
       james: '"make sure ollama is all wired into idearium."'
       depends_on: [CT1_one_door_for_models]
       files: [idearium/api/index.js, idearium/ui/js/repo-settings.js]
