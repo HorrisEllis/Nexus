@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.17
+    version:  1.7.18
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -274,7 +274,7 @@ spec:
       layer: foundation
       systems: [warp, cos, loom]
       value: { score: 3, cost: XL, for: [ownership], why: "an engine that is his, not SISO; high to him, slow to pay back" }
-      status: OPEN
+      status: "PARTIAL (1.7.18, 0.39.323, WARP 2.0.0) — Link, Expectation, Ledger, Engine in warp/core; warp/adapters/siso-gates.js and emerge-field.js; tests/modules/test-warp2.test.js 6/6. Proof: every link has causedBy or root:true — met; an unmet expectation is a gap naming both ends — met; 1.x tests pass unchanged and a 1.x Stream records through the adapter — met, but Nexus's consumers still run on 1.x directly, not yet through it; no file in warp/core carries SISO's shape — NOT met: 1.x's Event/Gate/Stream/StreamLog stay in core/ until the consumers move. Emerge's constraints come in through an adapter, not warp/core, because warp/core imports nothing outside warp/ (MANIFEST)."
       depends_on: [EM1_emerge_core, SH1_shadow_space]
       james: '"maybe fork it, for me." · "and had it back." · "okay but keep updating it. i dont need it until its been converted to cfr"'
       handback: the forked warp/ (1.5.0 at 0.39.318) is kept updated here and zipped back to James only once it has been converted to CFR — not before.

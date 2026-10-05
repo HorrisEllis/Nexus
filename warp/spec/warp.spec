@@ -455,3 +455,12 @@ v1_4_addendum:
           test/digest-regression.test.js (4), and
           test/v1.1.0-additions.test.js (6) suites all still pass
           unmodified against this addendum: 43/43 green."
+
+## ADDENDUM 2026-10-05 — 2.0.0, WARP 2 (EM2, docs/2026-10-02-emerge-field-memory-build-phasemap.spec)
+# James: "still i want to make warp mine" · "no. i want warp 2"
+# The atom is the LINK (cause → effect, with its field values), not the message. Every link has causedBy or is a
+# root marked as one. EXPECTATIONS are declared first and held open; the residue of a run is open expectations and
+# gaps naming both ends. Every link passes WARP's Axioms, then the constraints (Emerge's, through
+# adapters/emerge-field.js), before it is in the causal ledger. 1.x runs unchanged beside it; adapters/siso-gates.js
+# records a 1.x Stream as links. Open: 1.x's SISO-shaped files are still in core/, and consumers move one by one.
+# Proof: tests/modules/test-warp2.test.js 6/6; 1.x 43/43 unchanged.

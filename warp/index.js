@@ -28,6 +28,12 @@ module.exports = {
   fuseChain: core.fuseChain,
   canFuse: core.canFuse,
 
+  // WARP 2 (EM2) — cause → effect links, expectations, the causal ledger, the engine
+  createLink: core.createLink,
+  createExpectation: core.createExpectation,
+  Ledger: core.Ledger,
+  Engine: core.Engine,
+
   // dispatch
   unifiedDispatch: dispatch.unifiedDispatch,
 

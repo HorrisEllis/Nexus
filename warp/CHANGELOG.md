@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.0.0
+
+James: "still i want to make warp mine" · "no. i want warp 2"
+
+- WARP 2, written fresh beside 1.x:
+  - `core/Link.js`: the atom is a link, cause → effect, carrying its field values. Nothing exists without its cause, except a root, which says it is one and why.
+  - `core/Expectation.js`: declared before anything happens ("this must cause that within N ticks"). Held open until fulfilled, through any number of middle links, or broken. A broken one is a gap naming both ends.
+  - `core/Ledger.js`: causal, append-only, hash-chained. Each link's parent is recorded the moment it is known. `chain(id)` walks to the root.
+  - `core/Engine.js`: `emit(type, data, { causedBy } | { root })`, `on`, `expect`, `advance`, `residue()`. Every link passes the Axioms (1.x Axiom objects as they are), then the constraints, before it is real. A handler's emits are caused by the link it was handed.
+- `adapters/siso-gates.js`: a 1.x Stream runs unchanged and is recorded in a WARP 2 ledger.
+  - An event emitted inside a gate is caused by that gate's input.
+  - An event from outside any gate, or one produced after an async transform resolves, is a root marked "cause unknown (WARP 1.x)", never an invented cause.
+- `adapters/emerge-field.js`: Emerge's constraints as the engine's `admit()`. A link is rejected with the constraint's id, or becomes a gap.
+- `core/` still imports nothing outside `warp/`. The adapters are where WARP meets anything else.
+- Not yet: 1.x's Event/Gate/Stream/StreamLog are still in `core/`, and Nexus's consumers still run on 1.x directly. They move one by one.
+
 ## 1.5.0
 
 - Added `firstSuccessPromotionPolicy` — a third pluggable `PopulationStore` promotion policy ("compounding"): crystallizes into the exact cache after 1 success above the fitness floor, instead of the default 3 retentions. Same shape as the existing `defaultPromotionPolicy`/`reuseCountPromotionPolicy`, opt-in, no change to existing callers.

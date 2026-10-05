@@ -1,5 +1,5 @@
 {
- "generatedAt": 1791189003880,
+ "generatedAt": 1791189508794,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -2119,6 +2119,18 @@
    "listens": [
     "step.blocked",
     "step.passed"
+   ]
+  },
+  "nexus.tests.modules.test-warp2.test": {
+   "emits": [
+    "order.billed",
+    "order.packed",
+    "order.placed",
+    "order.shipped"
+   ],
+   "listens": [
+    "order.packed",
+    "order.placed"
    ]
   },
   "nexus.tests.modules.tool-call-listener.test": {
@@ -7450,6 +7462,34 @@
    "listeners": [
     "nexus.tests.modules.test-step-gate.test"
    ]
+  },
+  "order.billed": {
+   "emitters": [
+    "nexus.tests.modules.test-warp2.test"
+   ],
+   "listeners": []
+  },
+  "order.packed": {
+   "emitters": [
+    "nexus.tests.modules.test-warp2.test"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-warp2.test"
+   ]
+  },
+  "order.placed": {
+   "emitters": [
+    "nexus.tests.modules.test-warp2.test"
+   ],
+   "listeners": [
+    "nexus.tests.modules.test-warp2.test"
+   ]
+  },
+  "order.shipped": {
+   "emitters": [
+    "nexus.tests.modules.test-warp2.test"
+   ],
+   "listeners": []
   },
   "nav.changed": {
    "emitters": [
