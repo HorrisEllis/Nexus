@@ -124,6 +124,22 @@ async function main() {
     assert.ok(prompt.length < 12000 && later.length < 12000, `bounded (${prompt.length}, ${later.length})`);
   });
 
+  await test('BS-05', '0.39.307 a spec section is judged as a section: its length is its own, markdown endings are endings', () => {
+    const D = require(path.join(ROOT, 'lib/seam/detector.js')); const Det = D.Detector || D;
+    const bigPrompt = 'x'.repeat(30000);   // what section 7–8's prompt was when every earlier section was pasted in
+    const answer = '## Failure Modes\n\n- **Pattern not saved** — the save fails loudly and the pattern stays in memory.\n' +
+      '- **Audio device missing** — playback is refused with the device named.\n- **Sample too large** — rejected with its size';
+    const asSection = Det.truncation(answer, Det.profile(bigPrompt, { kind: 'section' }));
+    assert.strictEqual(asSection.truncated, false, JSON.stringify(asSection));
+    const old = Det.truncation(answer, Det.profile(bigPrompt, {}));
+    assert.strictEqual(old.truncated, true, 'other callers keep their rules');
+    assert.strictEqual(Det.truncation('- one item, cut', Det.profile(bigPrompt, { kind: 'section' })).reason, 'empty_or_tiny', 'tiny is still tiny');
+    const cut = Det.truncation('## Failure Modes\n\nWhen the pattern store is unreachable the save is refused and the pattern stays in memory until it', Det.profile(bigPrompt, { kind: 'section' }));
+    assert.strictEqual(cut.truncated, true, 'prose cut mid-sentence is still cut');
+    const sig = Det.sigma(answer, Det.profile(bigPrompt, { kind: 'section' }));
+    assert.ok(!sig.signals.some(x => x.type === 'too_short'), 'not too short against its prompt');
+  });
+
   // ── the real router ──
   process.env.NEXUS_VERSIONIUM_URL = 'http://127.0.0.1:9';
   const api = await imp('idearium/api/index.js');

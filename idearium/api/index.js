@@ -5067,8 +5067,14 @@ async function handle(req, res, route, query, body) {
             if (!useGuardian) { target = 'ollama'; }
             else if (body.guardianAgent) { target = body.guardianAgent; }
             else {
-              const cur = RA.getProvider(params.uuid);
-              target = RA.isGuardianProvider(cur) ? cur : RA.defaultProvider();
+              // §0.39.307 — James: "i cant click guardian on the agent tab." With no guardian agent chosen yet this fell
+              // to RA.defaultProvider(), which is ollama since 0.39.282 — so the click saved ollama and the switch snapped
+              // back. Guardian means a guardian agent: the current one, else the default if it is one, else chatgpt or
+              // the first guardian agent; none at all is said, never turned into another backend.
+              const cur = RA.getProvider(params.uuid), def = RA.defaultProvider();
+              const gp = RA.guardianProviders();
+              target = RA.isGuardianProvider(cur) ? cur : RA.isGuardianProvider(def) ? def : (gp.includes('chatgpt') ? 'chatgpt' : gp[0]);
+              if (!target) return err(res, 409, 'no guardian agents found — guardian lists its agents from the userscripts in guardian/ (lib/agent-providers.js); none answered');
             }
             const r = RA.setProvider(params.uuid, target); if (!r.ok) return done(r); out.provider = r.provider;
           }
