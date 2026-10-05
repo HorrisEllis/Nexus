@@ -161,6 +161,11 @@ async function main() {
     assert.strictEqual(chunkOf(spec, 'purpose').agent, 'author');
     assert.match(chunkOf(spec, 'purpose').content, /edm song for my girl/);
     assert.deepStrictEqual(spec.templateFrames, ['axioms', 'architecture', 'schemas', 'checklists'], 'and framed by the templates');
+    // 0.39.308 — James: "the agents hat should be created with the repo."
+    const RH = require(path.join(ROOT, 'lib/repo-hat.js'));
+    assert.ok(RH.getRepoHat(repo.uuid), 'the new repo has its hat the moment it exists — no Agent-tab visit needed');
+    const bare = await quiet(() => api.getRepoLayer().ingest({ name: 'no compartment here', bare: true, source: 'test' }));
+    assert.ok(!bare.error && bare.hat === null && !RH.getRepoHat(bare.repo.uuid), 'a repo with no compartment still gets none');
     // his next words reach it too
     await R('POST', `/api/workshop/${w.uuid}`, { sections: [{ id: 'purpose', body: 'an edm song, and the daw to make it in' }] });
     const sv2 = await R('POST', `/api/workshop/${w.uuid}/save`, {});

@@ -1,177 +1,94 @@
-# ARCHITECTURE SPEC — SYSTEM SPEC TEMPLATE
-# Deterministic schema every system spec is synthesized into. This is
-# build logic, not a compiler: the first-principles, systems-thinking
-# sequence by which a system comes to exist and prove itself — what
-# phase it's in, what state each component is in, what must be true to
-# advance either. Each field's value below is its primitive type, not
-# example content — a real spec replaces every <type> with actual data
-# of that type. This file describes no project. It is a shell: copy it,
-# fill every bracket, delete nothing structural.
+# SYSTEM TEMPLATE — every Nexus system is built in this shape.
+#
+# James, 2026-10-05:
+#   "each component only needs to connect to the registry. that cuts down immensly on context. i am trying to make this
+#    need as little tokens as possible. scales as it builds, and as simple as possible."
+#   "systems are dynamic and expand using the nodes. which have schemas per node type."
+#   "each component has to have at least one capability, with at least one command, and events, each a node each."
+#   "each system is responsible for its data, schemas, contracts, configurations, heartbeat and pulse"
+#   "then bundle each capability node, in relation to any other relevant node."
+#   "hardcoded has to earn its place."
+#   "Maybe add, if applicant, data dir with the directory for the data, consumers, intent, data type/system like node,
+#    vector, database or table, etc." · "maybe create a template or schema from that."
 
-meta:
-  version: <string>
-  foundation: <string>               # a versioned dependency this spec builds on, or "none"
-  ports: <map<string,int>>           # named ports this system exposes, e.g. {api: <int>}; empty map if none yet
-  uuid: <string>                     # or "TBD — assign on first real implementation"
-  status: "<enum: draft|proposed|active|deprecated>"
-  written_from: <list<string>>       # real files/sources this spec was grounded in, or "written from scratch — no prior source" stated honestly
+tree: |
+  <system>/
+  ├── server.js                    the API server — serves the route nodes
+  ├── cli.js                       the CLI — runs the command nodes
+  ├── config.js
+  ├── <system>.config.json         configuration — includes the Versionium API slot
+  ├── compartment.json
+  ├── registry-components.js       the component registry — the spine
+  ├── interaction-contract.json    the event-driven interaction contract
+  ├── event-taxonomy.js
+  ├── jaa-store.js                 the JAA database — the index for each node type
+  ├── contracts/                   contracts — handshake verification, gated
+  ├── schemas/
+  │   ├── index.js
+  │   └── schema.<type>            a schema for each node type
+  ├── data/
+  │   ├── nodes/
+  │   │   ├── bundle/<capability-id>.bundle   one per capability — references its related nodes, never copies
+  │   │   ├── component/<id>.component
+  │   │   ├── capability/<id>.capability     at least one per component
+  │   │   ├── command/<id>.command           at least one per capability
+  │   │   ├── event/<id>.event               the events for that command
+  │   │   ├── route/<id>.route               routes for data types, nodes, hooks, commands, toasts
+  │   │   ├── hook/<id>.hook                 end points
+  │   │   ├── wire/<id>.wire                 wires between hooks — the interaction space
+  │   │   ├── toast/<id>.toast               notifications
+  │   │   └── <type>/<id>.<type>             every other node type — drop in, the listener integrates it
+  │   ├── node-index/              the JAA index of the nodes
+  │   ├── ledger/<session>/        event ledger — per session, timestamped
+  │   └── baseline/                deltas and sigmas measure against this
+  ├── input/
+  ├── output/
+  ├── lib/                         the code the nodes point at — heartbeat and pulse, the listener, gates,
+  │                                handshake, hashes and snapshots
+  ├── spec/
+  │   ├── <system>.spec
+  │   └── <system>.node-taxonomy.md
+  └── ui/                          floats on top — each element gated by a listener on its command
 
-spec_name: <string>
-date: <date>
+registry: |
+  // registry-components.js — the spine. Every component connects only to this.
+  // Each id points at a node in its own folder; the node schemas are in templates/system/schemas/.
+  module.exports = {
+    system: '<system>',
+    components: [
+      {
+        type:   'component',
+        id:     '<system>.<component>',
+        uuid:   '<uuid>',
+        file:   'lib/<component>.js',
+        intent: '<what it is for, one line>',
+        version: '<semver>',
+        status: 'built | stub | unproven | open',
+        capabilities: ['<capability-id>'],      // at least one
+        hooks:        ['<hook-id>'],            // its end points
+        consumers:    ['<component-id>'],       // who uses it — read from the wires into its hooks
+        data: {                                 // if applicable
+          dir:   'data/<dir>',
+          store: 'node | vector | database | table | file',
+          types: ['<node-type>'],               // what it keeps — each with its schema
+        },
+      },
+    ],
+  };
 
-context:
-  purpose: <string>
-  data_structure: <string>
-  governing_principles: <list<string>>
-  living_model: <bool>              # true if this spec is edited in place as the real system changes, false if it is a fixed one-time snapshot
-  dynamic_over_hardline: <bool>     # true if the system pushes changeable values into nodes rather than literals in code — a deliberate stance to declare either way, not a default
-
-spine:
-  # Optional. The one universal mechanism every signal in the system
-  # routes through, if there is one — the point of a spine is that
-  # nothing gets a second, parallel dispatch path. Omit if the system
-  # has no such single point (several independent mechanisms is a
-  # legitimate answer too, but state that explicitly rather than
-  # leaving it unaddressed).
-  exists: <bool>
-  primitives: <list<string>>         # the small fixed set everything binds to, if exists is true
-  rule: <string>                     # the one-way dependency rule, e.g. "consumers import the spine, the spine never imports a consumer"
-
-config_layers:
-  # How adjustable values actually override each other, if
-  # dynamic_over_hardline is true. Omit if not applicable.
-  - layer: <string>
-    scope: <string>                  # what this layer's values apply to — system-wide, per-component, per-instance
-    overrides: <string>              # which layer(s) this one takes precedence over, and under what condition
-
-axioms:
-  - name: <string>                   # short identifier, e.g. an existing convention's own axiom code if one applies
-    statement: <string>
-    rationale: <string>              # why this axiom exists, not just what it says
-
-boundaries:
-  # Documentation clarity only — pairs of easily-conflated CONCEPTS this
-  # spec depends on a reader keeping separate. Not architecture; see
-  # `seams` below for structural isolation between real system units.
-  - term: <string>
-    definition: <string>
-    distinguished_from: <string>     # the other term it's easy to mistake this for, and why they differ
-
-seams:
-  # A seam is a declared CUT POINT — anywhere something can be chunked:
-  # between modules, between blocks in a spec file, between nodes. Think
-  # "cut here" — a dotted scissors line, not necessarily total isolation.
-  # `isolation` is the strongest kind of seam (nothing shared across it)
-  # and is the special case, not the definition — most seams just mark a
-  # valid split point a decomposition tool can act on.
-  - id: <string>                     # a seam is itself addressable
-    location: <string>               # file/block/node path where this cut lives
-    between: <list<string>>          # the two (or more) things this cut separates
-    cut_type: "<enum: isolation|boundary>"  # isolation = nothing shared across it; boundary = a valid split point only
-    isolation: <string>              # only when cut_type is isolation — what's not shared
-
-sovereignty:
-  # What crosses a system boundary, and what never does. Distinct from
-  # `seams` (isolation between units inside one system) — this is
-  # system-to-system.
-  - other_system: <string>            # or "any" if the rule is universal
-    may_read: <list<string>>
-    may_never_write: <list<string>>
-    enforced_by: <string>             # what actually makes this true, not just stated policy
-
-phases:
-  # The build's own lifecycle — first-principles, ordered, and each
-  # phase's exit condition is what actually licenses moving to the next
-  # one. This is systems thinking made explicit, not a status label.
-  source: <string>                   # "hand-maintained", or the real phasemap doc / decomposition tool run this table came from — same provenance discipline as version_history's own source field
-  entries:
-    - phase: <string>
-      intent: <string>                 # what this phase is for, in the system's own reasoning
-      entry_condition: <string>        # what must already be true to begin this phase
-      exit_gate: <string>              # what must be true to leave it — the actual proof, not a checkbox
-      produces: <list<string>>         # artifacts, decisions, or states this phase is responsible for creating
-
-component_status:
-  # The state machine every individual component in the system moves
-  # through, independent of which build phase the system as a whole is
-  # in — a system can be mid-phase while its components sit at mixed
-  # statuses.
-  - status: <string>
-    meaning: <string>
-    entry_condition: <string>        # what makes a component enter this status
-    exit_condition: <string>         # what's required to leave it, and what status it becomes
-
-file_structure:
-  tree: <block_string>               # literal directory tree, as a YAML block scalar
-  modules:
-    - name: <string>
-      summary: <string>
-  node_kinds:
-    # status here grades the KIND itself (is this concept proven to be
-    # real, still proposed, or explicitly shelved) — a different axis
-    # from component_status above, which tracks one component INSTANCE's
-    # lifecycle. A kind can be REAL while individual instances of it sit
-    # at any component_status.
-    - kind: <string>
-      status: "<enum: REAL|OPEN|DEFERRED>"
-      grounding: <string>            # real file/source this kind is proven by, or why it's OPEN
-  hook_kinds:
-    open_set: <bool>                 # true if new kinds may be registered without editing an enum
-    seed_values: <list<string>>
-  event_kinds:
-    - kind: <string>
-      meaning: <string>
-
-memory_architecture:
-  - store: <string>
-    type: "<enum: authored|derived|runtime>"
-    location: <string>
-    mutability: "<enum: editable|compiled|append_only>"
-    source_of_truth_for: <string>
-    integrity: "<enum: unchained|hash_chained>"  # hash_chained if each entry commits to a hash of the previous one (tamper-evident); most real ledgers in this pattern are
-
-pulse:
-  # Optional. Liveness and reachability — distinct from self_diagnostics
-  # below, which measures structural strain, not whether the system is
-  # alive. Omit if this system has no peers to announce itself to.
-  heartbeat_interval: <string>       # or "not applicable"
-  announces: <list<string>>          # what this system tells a peer about itself on connect — identity, capabilities, nothing more than that
-  health_score:
-    computed_from: <list<string>>
-    formula: <string>
-
-self_diagnostics:
-  # Optional. How this system measures its own structural strain, live,
-  # from its own registry state — not a proxied or borrowed number.
-  # Omit this whole key if the system has no self-scoring need.
-  # NAMING NOTE: "friction" is used for at least two unrelated real
-  # meanings across known conventions — UX/attention drift in one, and
-  # structural registry strain (dangling hooks, open gaps) in another.
-  # If this system borrows the term, state which meaning explicitly in
-  # `formula` rather than assuming the reader knows which one.
-  - metric: <string>
-    computed_from: <list<string>>     # which real, in-system sources feed this number (e.g. dangling/orphan hooks, open gaps, a ledger window) — never an external or assumed input
-    formula: <string>                 # stated plainly enough to re-derive, not just named
-    exposed_at: <string>              # where this is readable — a route, a file, a query — or "not yet exposed"
-
-node_bundles:
-  # Reference-only groupings of related node kinds that travel together.
-  # A bundle is an index entry, never a merged file — members stay
-  # independent. Omit this whole key if the system has no bundling need.
-  - bundle_kind: <string>
-    member_kinds: <list<string>>
-    rationale: <string>
-
-modules:
-  - name: <string>
-    summary: <string>
-    components:
-      - name: <string>
-        schema:
-          required_keys: <list<string>>
-          types: <map<string,string>>
-          optional: <map<string,string>>        # omit key entirely if none
-        api_routes: "<list<{method,path,description}> | none>"
-        commands: <list<string>>
-        events: <list<string>>
-        gates: "<list<{condition,blocks}>>"      # only on validation-bearing components
+rules:
+  - "every component connects only to the registry — never to another component"
+  - "the registry is asked for the entries a component needs, never handed over whole"
+  - "every component, hook and wire has a type, an id and a uuid"
+  - "each component has at least one capability; each capability at least one command; each command its events — each a node"
+  - "every node type has its own folder, its own schema and its own JAA index"
+  - "routes, hooks, wires, toasts and contracts are nodes"
+  - "each capability has a bundle: references to every node related to it, written by the listener, never copies"
+  - "a node dropped into its folder is checked against its schema and the handshake before it is live"
+  - "each system owns its own nodes, data, schemas, contracts, configuration, heartbeat and pulse, and announces itself to the other systems"
+  - "systems and components are isolated: they interact only through the interaction contract — handshake verified, gated"
+  - "the UI floats on top of the interaction contract and is disposable; each element is gated by a listener on its command"
+  - "every event is logged in the ledger, per session, timestamped; deltas and sigmas measure deviation from the baseline"
+  - "every file has a timestamp and a hash; a modified file is backed up by a Versionium snapshot"
+  - "changes start at the registry and reach only what is wired to them; the registry owns the interface, the code owns the implementation"
+  - "hardcoded has to earn its place"

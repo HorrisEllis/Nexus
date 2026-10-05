@@ -1,25 +1,30 @@
 # 0.39.314 — 2026-10-05
 
-James: "There is only 15 systems. Not 27. Any system that’s in idearium is a system, nothing more."
+James: "dont add noise. only what we talked about. then show me."
+James: "each component only needs to connect to the registry. that cuts down immensly on context. i am trying to make this need as little tokens as possible. scales as it builds, and as simple as possible."
+James: "include a contract folder. also routes would be nodes right?"
+James: "then bundle each capability node, in relation to any other relevant node."
 
-## One list of systems (SY1)
-Idearium's 15 are the systems: orchestrator, cortex, guardian, idearium, architect, diagnostic, eravos, intelligence, ollama-bridge, versionium, copilot, loom, clear-glass, components, core (`lib/nexus-self/systems.js`).
+## The system template, from his description only
+`idearium/spec-engine/templates/architecture-spec.template.yaml` now holds three things:
+1. **His words,** verbatim.
+2. **The tree.** It follows Guardian's shape, plus what he added: a `contracts/` folder; routes, hooks, wires, toasts and contracts as nodes; and a bundle node per capability that references its related nodes rather than copying them.
+3. **Fifteen rules** from what he said:
+   - every component connects only to the registry;
+   - at least one capability per component, at least one command per capability, and that command's events, each a node;
+   - every node type has its own folder, schema and JAA index;
+   - each system owns its own data and pulse, and announces itself;
+   - everything is isolated behind a handshake-verified interaction contract;
+   - the UI floats on top;
+   - events go in a ledger per session, with deltas and sigmas;
+   - files carry hashes and get Versionium snapshots;
+   - changes start at the registry;
+   - hardcoded has to earn its place.
 
-Loom's phasemap scanner kept its own list of 27 "systems". Those were tags: agent, chunk, raid, gemini, tablet, bridge, cos, warp, emergence, economy, nexstore and others. Now:
-- **`systemFor(tag)`** in `lib/nexus-self/systems.js` resolves any tag to one of the 15:
-  - a system's own name is itself (before, ollama-bridge, components and core fell to core);
-  - a known alias goes to its owner: raid, chunk, replay and snapshot to cortex; agent to guardian; gemini to copilot;
-  - any other tag goes to the system that owns that directory: lib, cos, warp, emerge and docs to core.
-- **The scanner** guesses from words drawn from `systems.js`, with no list of its own. Declared and guessed tags both resolve to the 15, and the tags as written are kept as `tags`. A phase that names nothing is core's (it used to be "general", which isn't a system).
-- **`forSystem('raid')`** answers for cortex. A name that's neither a system nor a tag answers empty, so a typo never reads as core's roadmap.
-- **The result:** 959 phases. `bySystem` has 14 keys and none outside the 15 (components has no phases yet).
-- **Declarations:** the 2026-10-05 maps now declare only the 15. Older maps keep their lines as written, read through `systemFor`.
-- **Superseded:** the emerge map's EV0 (4), which grew the list on 2026-10-02. An addendum there says so.
+The 0.39.312 version is archived whole.
+
+## Open
+Genesis's file list and its shape section still describe the old template. That's SB28.
 
 ## Proof
-- `test-loom-phasemap` 7/7. T-006 and T-007 were rewritten to the rule: every phase's systems are among the 15, `bySystem` has no other key, EV0 is core's with cos and warp kept as tags, and `forSystem('raid')` is cortex.
-- `test-moce-roadmap` 43/43. The one-parser check now carries `tags`.
-- phasemap status 12/12, phases-nodes 21/21, nexus-self-and-cos-run 30/30, diagnosis-facts 10/10.
-
-## Found
-`loom/test/phasemap-map.test.js`'s persistHistory check fails on 0.39.313 too, before this change. It's mapped as HG9.
+`tests/modules/test-system-template.test.js` passes **4/4**: only his words, the tree and the rules; the tree's paths, including the new ones; the rules; both archives intact.

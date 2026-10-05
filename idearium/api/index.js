@@ -855,7 +855,23 @@ async function _verifyRepo(repo) {
   const BV = _require('../../lib/build-verify.js');
   const mat = getRepoLayer().materialize(repo.uuid);   // the files as the spec has them now — never a stale copy
   const dir = mat && !mat.error ? mat.dir : _repoDiskDir(repo.uuid);
-  return BV.verify({ repo, repoDir: dir, compartment: _compartmentOf(repo) });
+  const v = await BV.verify({ repo, repoDir: dir, compartment: _compartmentOf(repo) });
+  // §0.39.309 SB12 — a code repo built from its registry is also checked against it: every promised file exists and
+  // parses. A missing file is a failure the prove loop sends back to be built, like any other.
+  try {
+    const se = getSpecEngine();
+    const m = se && repo.specUuid ? se.loadSpec(repo.specUuid) : null;
+    if (m && Array.isArray(m.registry) && m.registry.length) {
+      const cl = _require('../../lib/registry-plan.js').checklist(m.registry, dir);
+      v.checks.registry = { ran: true, components: cl.components, present: cl.present, missing: cl.missing.length, unparsed: cl.unparsed.length, extra: cl.extra };
+      const seen = new Set(v.failures.map(f => `${f.file}|${f.kind}`));
+      const add = (f) => { v.failures.push(f); (v.byFile[f.file] = v.byFile[f.file] || []).push(f); };   // byFile is what the prove loop sends back
+      for (const f of cl.missing) add({ file: f, kind: 'registry', error: 'the registry promises this file and it does not exist — build it' });
+      for (const u of cl.unparsed) if (!seen.has(`${u.file}|syntax`)) add({ file: u.file, kind: 'registry', error: `does not parse: ${u.error}` });
+      if (!cl.ok && v.verdict !== 'failed') { v.verdict = 'failed'; v.why = `the registry promises ${cl.missing.length + cl.unparsed.length} file(s) that are missing or do not parse`; }
+    }
+  } catch (e) { v.checks.registry = { ran: false, why: e.message }; }
+  return v;
 }
 function _recordVerify(repo, v, how, extra = {}) {
   try {
@@ -5856,7 +5872,10 @@ async function handle(req, res, route, query, body) {
       const dir = _repoDiskDir(params.uuid);
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const pipeline = runImportPipeline(repo, dir);
-      return ok(res, { pipeline });
+      // §SB33 — the agent's persona re-grounded on the index it just got (a stale "not indexed" is a lie on every send)
+      let persona = null;
+      try { const RH = _require('../../lib/repo-hat.js'); if (RH.getRepoHat(repo.uuid)) persona = RH.refreshRepoHatPersona({ repo, repoDir: dir }).ok; } catch (e) { persona = `not refreshed: ${e.message}`; }
+      return ok(res, { pipeline, persona });
     }
 
     // ── Projects: flat zip shelf (§PROJECTS 2026-07-19) ────────────────────────
@@ -5997,14 +6016,25 @@ async function handle(req, res, route, query, body) {
         if (!r || !r.ok) throw new Error((r && r.error) || 'plan dispatch failed');
         return r.text;
       } : null;
+      // §0.39.309 SB12 (docs/2026-10-05-build-from-the-spec-phasemap.spec) — James: "Using the register as a dependancy
+      // and file check list." A spec whose registry section carries a valid components list is built FROM it: one file
+      // per component, each waiting on the files its wires name. No usable registry → the agent plans as before, and the
+      // reason is in the answer (registry.problems), never silently.
+      const RP = _require('../../lib/registry-plan.js');
+      const regChunk = (doc.chunks || []).find(c => c.sectionId === 'registry' && c.status === 'complete');
+      const registry = regChunk ? RP.parseRegistry(regChunk.content) : { components: [], problems: ['the spec has no registry section'] };
       let planned;
-      try { planned = await FTP.plan({ name: doc.name, description, ask }); }
-      catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
-      if (!planned.ok) return err(res, 422, (planned.errors || ['the files could not be planned']).join('; '), { agentError: planned.agentError || null });
+      if (registry.components.length && !body.freePlan) planned = RP.toPlan(registry.components);
+      else {
+        try { planned = await FTP.plan({ name: doc.name, description, ask }); }
+        catch (e) { return err(res, 502, `planning the files failed: ${e.message}`); }
+      }
+      if (!planned.ok) return err(res, 422, (planned.errors || ['the files could not be planned']).join('; '), { agentError: planned.agentError || null, registry: { used: false, problems: registry.problems } });
       let manifest;
       try {
         manifest = se.createFileTreeSpec({ name: `${doc.name} · code`, description, plan: planned, agent: body.agent || null, ideaUuid: doc.ideaUuid || null });
         manifest.codeFor = doc.uuid;
+        if (planned.planSource === 'registry') manifest.registry = registry.components;   // the checklist verify reads
         se.saveSpec(manifest);
         const freshDoc = se.loadSpec(doc.uuid);
         freshDoc.codeSpecUuid = manifest.uuid;
@@ -6054,7 +6084,8 @@ async function handle(req, res, route, query, body) {
       console.log(`[speceng.codegen] "${doc.name}" → ${planned.files.length} file(s) planned (${planned.planSource}) · code spec ${manifest.uuid.slice(0, 8)}`);
       return ok(res, { manifest: se.loadSpec(manifest.uuid), repoUuid,
         branch: branchInfo ? (branchInfo.ok ? { of: branchInfo.originUuid, branch: branchInfo.branch, dir: branchInfo.dir } : { made: false, reason: branchInfo.error }) : null,
-        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers } });
+        plan: { planSource: planned.planSource, files: planned.files.length, rejected: planned.rejected.length, agentError: planned.agentError || null, layers: manifest.fileTree && manifest.fileTree.layers },
+        registry: { used: planned.planSource === 'registry', components: registry.components.length, problems: registry.problems } });
     }
 
     case 'speceng.create': {

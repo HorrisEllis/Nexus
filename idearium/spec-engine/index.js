@@ -707,7 +707,11 @@ export function createFileTreeSpec({ name, description = '', plan, agent = null,
   const byLayer = {};
   for (const sct of sections) (byLayer[sct._file.layer] = byLayer[sct._file.layer] || []).push(sct.id);
   const dependsOn = {};
+  // §0.39.308 SB12 — a file planned from the registry carries its own dependsOn (the files it needs, by its wires): it
+  // waits on exactly those, not on every file of the layer below. Files without one keep the layer rule.
+  const sidByPath = new Map(sections.map(x => [x._file.path, x.id]));
   for (const sct of sections) {
+    if (Array.isArray(sct._file.dependsOn)) { dependsOn[sct.id] = sct._file.dependsOn.map(p => sidByPath.get(p)).filter(Boolean); continue; }
     const li = order.indexOf(sct._file.layer);
     if (li <= 0) continue;
     for (let j = li - 1; j >= 0; j--) { if (byLayer[order[j]] && byLayer[order[j]].length) { dependsOn[sct.id] = [...byLayer[order[j]]]; break; } }
@@ -724,7 +728,7 @@ export function createFileTreeSpec({ name, description = '', plan, agent = null,
   // The plan is data on the manifest (and a .filetree node, written by the
   // caller) — never a markdown file in the project.
   manifest.fileTree = { planSource: plan.planSource || null, template: plan.template || null, templateId, layers: Object.fromEntries(order.map(l => [l, (byLayer[l] || []).length])),
-    files: files.map(f => ({ path: f.path, layer: f.layer, purpose: f.purpose || null, source: f.source || null })), rejected: (plan.rejected || []).length };
+    files: files.map(f => ({ path: f.path, layer: f.layer, purpose: f.purpose || null, source: f.source || null, ...(Array.isArray(f.dependsOn) ? { dependsOn: [...f.dependsOn] } : {}) })), rejected: (plan.rejected || []).length };
   saveSpec(manifest);
   for (const c of manifest.chunks) {
     const f = fileBySid.get(c.sectionId);
@@ -1601,6 +1605,8 @@ function _buildChunkPromptBase(manifest, chunk, systemContext = '') {
     frame ? `THE SHAPE THIS SECTION FOLLOWS (the "${frame.templateId}" template — keep its structure, and replace its guidance with what is true for "${manifest.name}"):\n${frame.text}\n` : '',
     `YOUR TASK:`,
     `Write the "${chunk.sectionTitle}" section. ${chunk.sectionDesc || ''}`.trim(),
+    // §0.39.309 SB12 — the registry section ends in the components list the build reads (lib/registry-plan.js)
+    chunk.sectionId === 'registry' ? `\n${_require('../../lib/registry-plan.js').REGISTRY_FORMAT}` : '',
     ``,
     `Rules:`,
     `- Be specific to "${manifest.name}": its own domain, its own data, its own users. Not generic, and not about the system that is building it.`,

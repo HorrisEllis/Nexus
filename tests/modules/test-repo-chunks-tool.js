@@ -40,7 +40,7 @@ async function t(name, fn) {
   await t('it is named by the dotted convention and asks for repoUuid and action', () => {
     assert.strictEqual(tool.name, 'idearium.repo_chunks.tool');
     assert.deepStrictEqual(tool.parameters.required, ['repoUuid', 'action']);
-    assert.deepStrictEqual(tool.parameters.properties.action.enum, ['search', 'list', 'get', 'proof']);
+    assert.deepStrictEqual(tool.parameters.properties.action.enum, ['search', 'list', 'get', 'proof', 'reindex']);   // §SB33 0.39.325 — the agent runs the pipeline
   });
   await t('search sends GET /api/repos/:uuid/search?q= with the query encoded, and returns the body', async () => {
     const r = await exec({ repoUuid: 'r1', action: 'search', query: 'poll & write' });
@@ -102,7 +102,9 @@ async function t(name, fn) {
     const yes = RH.buildPersona({ repoName: 'p', repoUuid: 'repo-uuid-1', compartmentId: 'cos.x', index: idx });
     assert.ok(yes.includes('idearium.repo_chunks.tool') && yes.includes('repoUuid="repo-uuid-1"'), yes);
     const no = RH.buildPersona({ repoName: 'p', repoUuid: 'repo-uuid-1', compartmentId: 'cos.x', index: { indexed: false, languages: [], kinds: [] } });
-    assert.ok(!no.includes('repo_chunks'), 'told an unindexed repo\'s agent to query chunks that do not exist');
+    // §SB33 0.39.325 — the one thing an unindexed agent is told to do with the tool is run the pipeline, never to query chunks
+    assert.ok(!/repo_chunks\.tool[^\n]*"action":"(search|list|get|proof)"/.test(no) && !/code_search|code_chunk/.test(no), 'told an unindexed repo\'s agent to query chunks that do not exist');
+    assert.ok(no.includes('"action":"reindex"'), 'an unindexed agent runs the pipeline itself');
   });
 
   server.close();

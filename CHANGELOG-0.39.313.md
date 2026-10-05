@@ -1,30 +1,34 @@
 # 0.39.313 — 2026-10-05
 
-James: "Im saying im the phasemaps in the nexus repo."
-James: "Yes. No playwright. That’s literally what clearglass was born from."
+James: "yes add it the spec for genesis. like genesis is the exact architecture for a new system template. like look at the directory. loom, like it needs to build a new system. and click into it. like look at the atlas template"
 
-## The phasemaps in the Nexus repo
-Both of the Nexus repo's own views now carry every phase from 2026-10-05:
-- **Phasemap tab:** reads loom live.
-- **Phases tab:** reads the repo's head snapshot. Proven on a fresh, sandboxed snapshot of this tree with the tab's own reader: the parent shows all 78 maps, and each system repo shows the maps whose phases are its own.
+## Genesis is the template's architecture (genesis 1.3.0)
+- **Domain 0a "shape":** for each section of the system template, it names which part of genesis that section is.
 
-On a running Nexus, the Phases tab picks the new maps up at the next sync (boot or the sync button).
+  | Template section | Genesis part |
+  |---|---|
+  | identity | identity, the system node, its data folder, config, heartbeat |
+  | context | axioms, spine, sovereignty, config layers, pulse, phases |
+  | file structure | the manifest |
+  | modules | compartments with their seams, config and node types |
+  | components | component nodes with capability, command and event nodes |
+  | generated | contract, taxonomy, node index, registry, atlas, never written by hand |
 
-## RAID's phases are cortex's (HG8)
-`lib/nexus-self/systems.js` mapped loom's `raid` tag to the intelligence repo. RAID's code is `cortex/core/raid/` (AXIOMS §5.2), so RAID phases showed on the wrong repo. The tag moves to cortex: **CL2** (the Agent tab through RAID) and **VP2** (adversarial review through RAID) now show on cortex. Intelligence keeps its own tag.
+  A template section with no domain, or a domain with no section, is a gap.
+- **`capability_node`** is added to the registry domain. Each command now invokes one of its component's capabilities.
+- **His rules as axioms:**
+  - `COMPONENT_SHAPE`: every component has at least one capability, at least one command, and its events, each a node.
+  - `SYSTEM_OWNS_ITS_OWN`: a system holds its own data, schemas, contract, config, heartbeat and pulse, in its own folder.
 
-## The law: Clear Glass, never Playwright (HG7)
-AXIOMS §4.1 read "UI is tested via Playwright." It now reads:
+## The three agree (SB17 done)
+- **The system template** names genesis as its architecture.
+- **`docs/architecture-spec/architecture-spec.spec` 0.9.0** extends genesis 1.3.0 and defers to it for pulse, the taxonomy, the component shape and ownership.
 
-> UI is tested in Clear Glass (`clear-glass/src/driver/glass.js`), never Playwright.
-
-It changed on James's word only. A dated addendum at the top of the file quotes him and keeps the old text. `docs/CLAUDE.md` carries the rule under Tests.
-
-To hold it structurally, a new test **CG-001b** (in `test-nexus-atlas-and-glass`) fails if any file in the tree loads Playwright by `require`, `import` or `import()`. It was shown failing on a planted file, which it named, and passing once the file was moved out. What's left in the code is only "not Playwright" notes, plus keyword lists that recognise other people's projects (job skills, archetype detection).
+## Mapped (build-from-the-spec 1.8.0)
+- **SB24, Loom builds a new system you click into.** `loom/templates/system-scaffold.js` can already build a system, but nothing calls it, and its output isn't shaped like genesis.
+- **SB25, the atlas template in his structure.** It's already close: each module lists its commands with the node each acts on. It still uses separate sections and has no capabilities or node types per component.
 
 ## Proof
-- test-nexus-atlas-and-glass 10/10, including CG-001b.
-- test-nexus-self-and-cos-run 30/30, test-nexus-atlas-refs 51/51, version-sync 30/30, component-store 8/8.
-- loom-phasemap 7/7, phasemap status 12/12, phases-nodes 21/21.
-- test-repo-settings-ui 7/7, on Clear Glass.
-- `phasesFor('cortex')` now lists CL2, VP2 and HG8.
+- **Genesis wiring check:** clean, 42 files, 7 layers.
+- **`test-genesis-and-architecture-spec`:** passes **5/5**. GA-04 now checks the shape domain, capability nodes and both axioms. GA-01 now accepts the architecture spec at 0.9.
+- **Unchanged:** `test-manifest-phase1` 16/16, `test-system-template` 5/5, `test-build-from-the-spec` 5/5, `test-nexus-atlas-refs` 51/51.
