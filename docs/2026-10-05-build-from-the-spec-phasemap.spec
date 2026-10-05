@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; SB1–SB3 built (0.39.305), the author-reuse fix (0.39.306); SB4–SB14 open. 1.1.0: the whole pipeline, idea → .spec → blocks → registry → components, reuse first"
+    status:   "MAPPED 2026-10-05; SB1–SB3 built (0.39.305), the author-reuse fix (0.39.306); SB4–SB14 open. 1.1.0: the whole pipeline, idea → .spec → blocks → registry → components, reuse first. 1.2.0: BC1 (0.39.308, built BEFORE it was mapped — drift, recorded below) and BC2 (0.39.309) — the build agent gets all of the hat/repo context, through the editable prompt blocks"
     axioms:   docs/AXIOMS-v3.1.md — §17.4 every build is reproducible (from an empty machine, the repo + its specs
               recreate the system), §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost, §1.2 nothing
               silently fails, §5.6 structural self-similarity, §16.4 simple things stay simple.
@@ -323,3 +323,56 @@ spec:
       proof: "a second spec with a matching component builds it from the store at 0 tokens"
       conditions:
         - { says: "a second spec with a matching component builds it from the store at 0 tokens", check: { kind: tests, run: "node tests/modules/test-reuse-compounds.test.js" } }
+
+    # ── 1.2.0 (2026-10-05) ────────────────────────────────────────────────────────────────────────────────────────
+    # James: "Should be more than that. Like using the traversal of chunks, primitives, like the relationship between
+    # words when generating code. The boundaries. Learning to code from that" · "And the agents use it for context
+    # right?" · "Yes. We need the agents to use it. Also what about the .node types. Also combining primitives or
+    # invariants to build higher leverage code for less tokens." · "Parse rhe axioms in the docs folder. Do not
+    # deviate They are law" · "They need context. All of it. From the hat/repo"
+    BC1_build_context:
+      layer: library
+      status: BUILT (0.39.308) — DRIFT
+      depends_on: []
+      files: [lib/build-context.js, idearium/spec-engine/index.js, idearium/api/index.js, tests/modules/test-build-context.test.js]
+      does: >-
+        Each file chunk's build agent is told its relations, deterministically and in one budget: BUILDS ON (its
+        dependencies' interfaces and glyphs, through every layer), USED BY, RELATIONS (its registry card when the file
+        exists), PROVEN PRIMITIVES (other projects' stored components by interface), INVARIANTS (the spec's
+        MUST/NEVER sentences naming its subject). The file prompt sends the 3 lower files it is most about in full and
+        every other one by interface.
+      drift: >-
+        Audited against docs/AXIOMS-v3.1.md and docs/CLAUDE.md on James's word ("They are law"). 0.39.308 broke:
+        §3.3/rule 1 (built before this map); rule 3/§5.1 (not in loom, no UUID); §8.5 (no spec); rule 4/§12.5 (no
+        addendum); E14 (the chunk.complete event gained buildContext undeclared); the Leverage Principles and §16.6
+        (C-D6 changed without his yes); §17.11 (the size claim's benchmark was a scratch script, the unfavourable case
+        unreported); the test sandbox and §12.1 (no hostile inputs); §1.2 (a failed pack was recorded but not said);
+        and a benchmark run wrote a throwaway spec into data/cortex (removed). Each is closed in BC2. Its block was
+        also injected outside the editable prompt blocks — James's 0.39.258 rule ("not to inject anything into it that
+        i cant edit in the agent settings") — closed in BC2.
+      proof: "the build context is packed and the file prompt splits full / by interface"
+      conditions:
+        - { says: "the build context is packed and the file prompt splits full / by interface", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }
+
+    BC2_the_build_agent_gets_all_of_the_hat_and_repo_context:
+      layer: api
+      status: BUILT (0.39.309)
+      depends_on: [BC1_build_context]
+      files: [lib/repo-prompt-blocks.js, idearium/api/index.js, lib/build-context.js, idearium/event-taxonomy.cjs,
+              loom/maps/build-context-map.js, loom/bootstrap.js, docs/build-context.spec, scripts/bench-file-prompt.js]
+      does: >-
+        "They need context. All of it. From the hat/repo." A file chunk's build agent wears the repo's hat (its
+        persona: the atlas facts and what it has learned, his corrections first — as before) and gets every context
+        source the Agent tab has, through the repo's prompt blocks: four BUILD blocks (when: build), ON by default
+        because a build agent has no tool loop to fetch them with — build-memory (its own past work and this
+        project's same-layer files: agent-memory recall), build-context (lib/build-context.js), build-atlas (everything
+        else NEXUS remembers that matches the file: context-atlas), build-code (this repo's own code that matches the
+        file: repo-context, with glyphs); the file's registry card is build-context's RELATIONS. Each is editable
+        and switchable in Settings → Agents like every other block; nothing reaches the prompt that he cannot edit.
+        C-D6 for build prompts: settled by James ("All of it") — proven primitives by interface, never bytes, never a
+        failed version.
+      proof: "a file build's prompt carries the hat and every enabled build block, and a disabled block sends nothing"
+      conditions:
+        - { says: "a file build's prompt carries every enabled build block, a disabled one sends nothing", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }
+        - { says: "the real server's model receives it", check: { kind: tests, run: "node tests/modules/test-prove-loop.test.js" } }
+        - { says: "build-context is in loom with its real wires", check: { kind: tests, run: "node tests/modules/test-build-context.test.js" } }

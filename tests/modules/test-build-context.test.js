@@ -1,9 +1,13 @@
 'use strict';
+// §0.39.309 — James: "Parse rhe axioms in the docs folder. Do not deviate They are law" · "They need context. All of it.
+// From the hat/repo". Adds: the four editable build blocks (renderBuild — enabled only, empty sends nothing, never in a
+// chat prompt), the build persona as the edited persona block, hostile inputs (§12.1), the loom map's real wires (rule 3).
 // §0.39.308 — James: "We need the agents to use it. Also what about the .node types. Also combining primitives or
 // invariants to build higher leverage code for less tokens." Pins lib/build-context.js: a file's build agent is told
 // the interfaces (never the code) of what it builds on, who will use it, its registry relations when it exists,
 // proven primitives from OTHER projects (never a failed one, never its own project), the spec's invariants that name
 // its subject — within one budget, with what was left out said; and the chunk build sends it.
+require('../../lib/test-sandbox.js').ensure();   // a test process never writes real data
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -123,11 +127,45 @@ test('BC-007', 'never throws; nothing to say → empty text', () => {
   assert.strictEqual(r.text, '');
 });
 
-test('BC-008', 'the chunk build sends it: idearium\'s build dispatch packs a file chunk\'s context into its memory channel', () => {
+test('BC-008', 'the chunk build sends it through the editable build blocks, beside the prompt, and says what was sent', () => {
   const src = fs.readFileSync(path.join(__dirname, '../../idearium/api/index.js'), 'utf8');
-  assert.ok(/require\('\.\.\/\.\.\/lib\/build-context\.js'\)\.pack\(\{ manifest, chunk, repo, repoDir, buildsOn: !chunk\.file \}\)/.test(src));
-  assert.ok(src.includes('memory = [buildCtx.text, memory]'), 'the pack rides in the memory channel, beside the prompt');
-  assert.ok(src.includes('buildContext: buildCtx ?'), 'the completion event says what it was told');
+  const build = src.slice(src.indexOf("case 'speceng.build':"), src.indexOf("case 'speceng.chunk.complete':"));
+  assert.ok(/require\('\.\.\/\.\.\/lib\/build-context\.js'\)\.pack\(\{ manifest, chunk, repo, repoDir, buildsOn: !chunk\.file \}\)/.test(build));
+  assert.ok(build.includes("PB.enabledBuild(PB.getBlocks(who.repoUuid || null))"), 'only enabled build blocks are searched');
+  for (const id of ['build-context', 'build-memory', 'build-atlas', 'build-code']) assert.ok(build.includes(`on.has('${id}')`), `${id} is gated on its block`);
+  assert.ok(build.includes('PB.renderBuild(PB.getBlocks(who.repoUuid || null), data)'), 'what is sent is the rendered blocks');
+  assert.ok(!/memory = \[buildCtx\.text/.test(build), 'nothing is prepended around the blocks');
+  assert.ok(/console\.warn\(`\[idearium\/api\] speceng\.build .*context source\(s\) failed/.test(build), '§1.2 a failed source is said');
+  assert.ok(build.includes('buildContext: memoryInfo ?'), 'the completion event says what was sent');
+  const tax = require('../../idearium/event-taxonomy.cjs');
+  const ev = Object.values(tax.EVENTS || tax).find(e => e && Array.isArray(e.payloadShape) && e.payloadShape.includes('detectionComposite'));
+  assert.ok(ev && ev.payloadShape.includes('buildContext'), 'E14: the event declares buildContext');
+});
+
+test('BC-012', 'the build blocks: on by default, editable, only the enabled ones with data are sent, never in a chat prompt', () => {
+  const PB = require('../../lib/repo-prompt-blocks.js');
+  const ids = ['build-memory', 'build-context', 'build-atlas', 'build-code'];
+  for (const id of ids) { const b = PB.DEFAULT_BLOCKS.find(x => x.id === id); assert.ok(b && b.enabled && b.when === 'build', id); }
+  const all = PB.renderBuild(PB.DEFAULT_BLOCKS, { memory: 'MEM', build: 'REL', atlas: 'ATL', code: 'CODE' });
+  assert.deepStrictEqual(all.used, ids);
+  assert.ok(all.text.includes('MEM') && all.text.includes('REL') && all.text.includes('ATL') && all.text.includes('CODE'));
+  const off = PB.DEFAULT_BLOCKS.map(b => (b.id === 'build-atlas' ? { ...b, enabled: false } : b));
+  const r = PB.renderBuild(off, { memory: 'MEM', build: 'REL', atlas: 'ATL', code: '' });
+  assert.ok(!r.text.includes('ATL'), 'a block switched off sends nothing');
+  assert.ok(!r.text.includes('Code already in this repo'), 'a block with no data sends nothing, not an empty heading');
+  assert.ok(!PB.enabledBuild(off).has('build-atlas') && PB.enabledBuild(off).has('build-code'));
+  const edited = PB.DEFAULT_BLOCKS.map(b => (b.id === 'build-context' ? { ...b, text: 'MY OWN WORDS\n{build}' } : b));
+  assert.ok(PB.renderBuild(edited, { build: 'REL' }).text.startsWith('MY OWN WORDS\nREL'), 'sent exactly as edited');
+  const chat = PB.render({ persona: 'P', message: 'hi', backend: 'ollama', memory: 'MEM', atlas: 'ATL' });
+  for (const id of ids) assert.ok(!chat.used.includes(id), `${id} never in a chat prompt`);
+  for (const id of ids) assert.ok(PB.IDS.includes(id) && (PB.PLACEHOLDERS[id] || []).length === 1, `${id} is editable with its placeholder`);
+});
+
+test('BC-013', 'the build persona is the repo\'s persona block as edited — off sends none', () => {
+  const src = fs.readFileSync(path.join(__dirname, '../../idearium/api/index.js'), 'utf8');
+  const fn = src.slice(src.indexOf('function _personaAsEdited'), src.indexOf('function _buildIdentity'));
+  assert.ok(/if \(!b\.enabled\) return '';/.test(fn) && /split\('\{persona\}'\)\.join\(generated\)/.test(fn), fn);
+  assert.ok(/personaPrompt: _personaAsEdited\(repo,/.test(src), '_buildIdentity wears it');
 });
 
 test('BC-009', 'BUILDS ON walks dependsOn all the way down (a layer names only the nearest one below)', () => {
@@ -170,6 +208,63 @@ test('BC-011', 'the file prompt: the most relevant files in full, EVERY other lo
   const rest = prompt.slice(prompt.indexOf('THE OTHER FILES BELOW'));
   assert.strictEqual((rest.match(/^- src\/kernel\/part\d+\.js/gm) || []).length, 15, 'every other kernel file by interface (16 helpers − 1 shown in full)');
   assert.ok(!/BODY-src\/kernel\/part/.test(rest), 'no code in the interface list');
+});
+
+test('BC-014', '§12.1 hostile inputs: a dependsOn cycle, null and unicode content, a corrupt graph.json, a corrupt store index, a huge file', () => {
+  const m = manifest();
+  m.chunks[0].dependsOn = ['transport']; m.chunks[3].dependsOn = ['state'];          // state ↔ transport
+  const cyc = BC.pack({ manifest: m, chunk: m.chunks[3], stored: false });
+  assert.ok(cyc.text.includes('src/kernel/state.js'), 'the closure stops at the repeat and still answers');
+  const m2 = manifest();
+  m2.chunks[0].content = null; m2.chunks[1].content = 'module.exports = { tempo: "♩ = 120 — 速度" };\n';
+  const u = BC.pack({ manifest: m2, chunk: m2.chunks[3], stored: false });
+  assert.ok(!u.text.includes('src/kernel/state.js (kernel)'), 'a null-content dependency is not described as built');
+  assert.ok(u.text.includes('src/kernel/clock.js'), 'unicode content is read');
+  const bad = tmp('bc-bad-');
+  fs.mkdirSync(path.join(bad, 'src/engine'), { recursive: true });
+  fs.writeFileSync(path.join(bad, 'src/engine/transport.js'), 'module.exports = {};');
+  fs.writeFileSync(path.join(bad, 'graph.json'), '{ not json');
+  const g = BC.pack({ manifest: manifest(), chunk: manifest().chunks[3], repo: { uuid: 'bad' }, repoDir: bad, stored: false });
+  assert.strictEqual(typeof g.sources.relations, 'string', 'a corrupt graph is named, not thrown');
+  const prevIdx = path.join(_store, 'index.json'), keep = fs.existsSync(prevIdx) ? fs.readFileSync(prevIdx, 'utf8') : null;
+  fs.writeFileSync(prevIdx, '{ corrupt');
+  const c = BC.pack({ manifest: manifest(), chunk: manifest().chunks[3] });
+  assert.ok(typeof c.sources.primitives === 'string' || typeof c.sources.primitives === 'number', JSON.stringify(c.sources));
+  if (keep !== null) fs.writeFileSync(prevIdx, keep);
+  const m3 = manifest();
+  m3.chunks[0].content = '/** big */\nmodule.exports = { ' + Array.from({ length: 4000 }, (_, i) => `f${i}() {}`).join(', ') + ' };\n';
+  const h = BC.pack({ manifest: m3, chunk: m3.chunks[3], budget: 1200, stored: false });
+  assert.ok(h.chars <= 1200 + 260, `${h.chars}`);
+  assert.ok(BC.interfaceOf(m3.chunks[0]).length < 2000, 'a huge file\'s interface stays small (14 exports, a clipped glyph)');
+});
+
+test('BC-015', 'loom: build-context is mapped with its real require edges and its consumers (CLAUDE.md rule 3), bootstrap runs it', () => {
+  const ROOT = path.join(__dirname, '..', '..');
+  const { idFor } = require(path.join(ROOT, 'loom/scanners/source-map'));
+  const { mapBuildContext, FILES, CONSUMERS, BOUNDARY_IMPORTS } = require(path.join(ROOT, 'loom/maps/build-context-map.js'));
+  const src = fs.readFileSync(path.join(ROOT, 'lib/build-context.js'), 'utf8');
+  for (const dep of ['lib/chunk-glyph.js', 'lib/registry-harness.js', 'lib/component-store.js']) {
+    assert.ok(new RegExp(`require\\('\\./${path.basename(dep, '.js')}\\.js'\\)`).test(src), `build-context really requires ${dep}`);
+    assert.ok(FILES[0][2].includes(idFor(dep)), `${dep} is a wire`);
+  }
+  for (const [consumer, dep, where] of CONSUMERS) {
+    const file = where.split(' ')[0];
+    const base = path.basename(Object.entries({ [idFor('lib/build-context.js')]: 'lib/build-context.js', [idFor('lib/repo-prompt-blocks.js')]: 'lib/repo-prompt-blocks.js', [idFor('lib/context-atlas.js')]: 'lib/context-atlas.js', [idFor('lib/repo-context.js')]: 'lib/repo-context.js' }).find(([id]) => id === dep)[1], '.js');
+    assert.ok(new RegExp(`require\\('[^']*${base}(\\.js)?'\\)`).test(fs.readFileSync(path.join(ROOT, file), 'utf8')), `${file} requires ${base} (${consumer})`);
+  }
+  assert.deepStrictEqual(BOUNDARY_IMPORTS, ['nexus.idearium.spec-engine']);
+  const decl = { component: [], hook: [], wire: [] };
+  const out = mapBuildContext({ declare: (k, o) => { decl[k].push(o); return { ok: true }; } });
+  assert.strictEqual(out.failures.length, 0);
+  assert.strictEqual(decl.component.length, 1);
+  assert.strictEqual(decl.wire.length, CONSUMERS.length + FILES[0][2].length);
+  assert.ok(decl.component.every(c => /^nexus-loom-map-.*-v1-0000-2026-1005-001$/.test(c.uuid)), 'every component has a UUID (§5.1)');
+  const BOOT = fs.readFileSync(path.join(ROOT, 'loom/bootstrap.js'), 'utf8');
+  assert.ok(/mapBuildContext\(driver\)/.test(BOOT) && /maps\/build-context-map'\)\.FILES/.test(BOOT));
+  const reg = require(path.join(ROOT, 'loom/data/registry.json'));
+  const wires = new Set(Object.values(reg.wire).map(w => `${w.from_hook_id} -> ${w.to_hook_id}`));
+  for (const [consumer, dep] of CONSUMERS) assert.ok(wires.has(`${dep}.export -> ${consumer}.import`), `registry carries ${dep} → ${consumer}`);
+  assert.ok(/UUID: nexus-lib-build-context-v1-/.test(src), 'the module has its UUID (§5.1)');
 });
 
 (async () => {

@@ -385,6 +385,15 @@ function _codeRepoRetired(repo) {
   return out;
 }
 
+// §0.39.309 — the repo's 'persona' block, exactly as edited, around the hat's generated persona (lib/repo-prompt-blocks.js)
+function _personaAsEdited(repo, generated) {
+  try {
+    const b = _require('../../lib/repo-prompt-blocks.js').getBlocks(repo ? repo.uuid : null).find(x => x.id === 'persona');
+    if (!b) return generated;
+    if (!b.enabled) return '';
+    return b.text.split('{persona}').join(generated).trim();
+  } catch (e) { console.warn(`[idearium/api] persona block unreadable (${e.message}) — the hat's persona as generated`); return generated; }
+}
 function _buildIdentity(specUuid) {
   let repo = null;
   try { const L = getRepoLayer(); repo = ((L.repos && L.repos.repos) || []).find(x => x.specUuid === specUuid && x.status !== 'archived') || null; } catch (_) {}
@@ -416,7 +425,9 @@ function _buildIdentity(specUuid) {
     repoUuid: repo ? repo.uuid : null,
     agentId,                                              // §0.39.269 — who remembers this build (lib/agent-memory.js)
     compartmentId: repo ? (repo.compartmentId || null) : null,
-    hat: hat ? { name: hat.name, uuid: hat.uuid || null, personaPrompt: (repo ? _require('../../lib/repo-hat.js').wearable(hat, repo) : hat).personaPrompt || '' } : null,
+    // §0.39.309 — the persona a build wears is the repo's 'persona' block as he edited it (Settings → Agents), {persona}
+    // filled with the hat's generated persona (atlas facts + what it learned) — off = no persona. His 0.39.258 rule.
+    hat: hat ? { name: hat.name, uuid: hat.uuid || null, personaPrompt: _personaAsEdited(repo, (repo ? _require('../../lib/repo-hat.js').wearable(hat, repo) : hat).personaPrompt || '') } : null,
     hatSource,
     // §0.39.280 BS13 — no repo (and no original) → null on purpose: the chunk's own agent, then the manifest's, then
     // chatgpt decide (chunk build, preferAgent chain) — a default here would outrank a per-chunk choice (H-010).
@@ -6387,31 +6398,64 @@ async function handle(req, res, route, query, body) {
         // §0.39.269 — memory: what this agent built before (the download manager) and the files already finished in
         // this spec (their exports/requires, so the new file wires to them instead of reinventing them). Beside the
         // prompt, not in it: WARP's cache key stays the chunk's own contract.
-        // §0.39.308 — James: "We need the agents to use it." A file chunk also carries its BUILD CONTEXT
-        // (lib/build-context.js): the interfaces and glyphs of what it builds on, who will use it, its registry
-        // relations when it already exists, proven primitives from other projects, the spec's invariants. Same channel.
+        // §0.39.309 — James: "They need context. All of it. From the hat/repo." A file build wears the repo's hat (as
+        // before) and gets every context source the Agent tab has, through the repo's editable BUILD blocks
+        // (lib/repo-prompt-blocks.js when: build — his 0.39.258 rule: nothing he cannot edit): build-memory (its past
+        // work + this project's files beside it), build-context (lib/build-context.js: relations, users, primitives,
+        // invariants), build-atlas (everything else NEXUS remembers that matches), build-code (this repo's own code that
+        // matches). A block switched off costs no search. Beside the prompt: WARP's cache key stays the contract.
         let memory = '', memoryInfo = null, buildCtx = null;
-        if (chunk.realPath) {
+        {
+          const PB = _require('../../lib/repo-prompt-blocks.js');
+          const on = PB.enabledBuild(PB.getBlocks(who.repoUuid || null));
+          let repo = null, repoDir = null;
           try {
             const L = getRepoLayer();
-            const repo = who.repoUuid ? L.get(who.repoUuid) : null;
-            const repoDir = repo ? (repo.materializeDir || path.join(L.dataDir, 'projects', repo.uuid)) : null;   // same derivation as the Agent tab
-            // buildsOn:false — the file prompt itself carries every lower file (the most relevant in full, the rest by interface)
-            buildCtx = _require('../../lib/build-context.js').pack({ manifest, chunk, repo, repoDir, buildsOn: !chunk.file });
-          } catch (e) { buildCtx = { text: '', chars: 0, sections: {}, sources: { error: e.message }, left: [] }; }
+            repo = who.repoUuid ? L.get(who.repoUuid) : null;
+            repoDir = repo ? (repo.materializeDir || path.join(L.dataDir, 'projects', repo.uuid)) : null;   // same derivation as the Agent tab
+          } catch (e) { console.warn(`[idearium/api] speceng.build: repo ${who.repoUuid} unreadable (${e.message}) — building without its repo context`); }
+          const query = [chunk.realPath, (chunk.file && chunk.file.purpose) || chunk.title || chunk.sectionId, chunk.sectionDesc].filter(Boolean).join(' ');
+          const data = { memory: '', build: '', atlas: '', code: '' };
+          const sources = {}, failed = [];
+          if (on.has('build-context') && chunk.realPath) {
+            try {
+              // buildsOn:false for a file chunk — its prompt already carries every lower file (the most relevant in full, the rest by interface)
+              buildCtx = _require('../../lib/build-context.js').pack({ manifest, chunk, repo, repoDir, buildsOn: !chunk.file });
+              data.build = buildCtx.text; sources.build = buildCtx.sources;
+              for (const [k, v] of Object.entries(buildCtx.sources || {})) if (typeof v === 'string' && /^failed/.test(v)) failed.push(`build-context.${k}: ${v}`);
+            } catch (e) { failed.push(`build-context: ${e.message}`); }
+          }
+          if (on.has('build-memory')) {
+            try {
+              // a file the prompt already carries (every layer below this one) is not listed again as a sibling
+              const LAYER = { kernel: 0, engine: 1, runtime: 2, test: 3 };
+              const below = (c) => !!(chunk.file && c.file && (LAYER[c.file.layer] ?? 9) < (LAYER[chunk.file.layer] ?? 2));
+              const siblings = (manifest.chunks || []).filter(c => c.uuid !== chunk.uuid && c.status === 'complete' && c.realPath && typeof c.content === 'string' && c.content.trim() && !below(c))
+                .map(c => ({ path: c.realPath, content: c.content }));
+              const m = await _require('../../lib/agent-memory.js').recall({ agentId: who.agentId, siblings, query });
+              data.memory = m.text; sources.memory = m.sources;
+            } catch (e) { failed.push(`build-memory: ${e.message}`); }
+          }
+          if (on.has('build-atlas')) {
+            try {
+              const a = await _require('../../lib/context-atlas.js').block(query, { repoDir, repoUuid: who.repoUuid || null, excludeAgent: who.agentId || null, budget: 2400 });
+              data.atlas = a.text; sources.atlas = { hits: a.hits, reason: a.reason || null };
+            } catch (e) { failed.push(`build-atlas: ${e.message}`); }
+          }
+          if (on.has('build-code') && repoDir && fs.existsSync(repoDir)) {
+            try {
+              const c = _require('../../lib/repo-context.js').retrieve({ repoDir, message: query, bare: true });
+              if (c.kind === 'code' && c.block) data.code = c.block;
+              sources.code = { kind: c.kind || null, chars: c.chars || 0, reason: c.reason || null };
+            } catch (e) { failed.push(`build-code: ${e.message}`); }
+          }
+          // §1.2 — a source that failed is said, once, with its reason; the rest still go
+          if (failed.length) console.warn(`[idearium/api] speceng.build ${chunk.realPath || chunk.sectionId}: context source(s) failed — ${failed.join(' | ')}`);
+          const r = PB.renderBuild(PB.getBlocks(who.repoUuid || null), data);
+          memory = r.text;
+          memoryInfo = { chars: r.text.length, used: r.used, sources, failed,
+            buildContext: buildCtx ? { chars: buildCtx.chars, sections: buildCtx.sections, left: buildCtx.left.length } : null };
         }
-        try {
-          // a file the prompt already carries (every layer below this one) is not listed again as a sibling
-          const LAYER = { kernel: 0, engine: 1, runtime: 2, test: 3 };
-          const below = (c) => !!(chunk.file && c.file && (LAYER[c.file.layer] ?? 9) < (LAYER[chunk.file.layer] ?? 2));
-          const siblings = (manifest.chunks || []).filter(c => c.uuid !== chunk.uuid && c.status === 'complete' && c.realPath && typeof c.content === 'string' && c.content.trim() && !below(c))
-            .map(c => ({ path: c.realPath, content: c.content }));
-          const m = await _require('../../lib/agent-memory.js').recall({ agentId: who.agentId, siblings,
-            query: [chunk.realPath, chunk.title || chunk.sectionId, chunk.sectionDesc].filter(Boolean).join(' ') });
-          memory = m.text; memoryInfo = { chars: m.chars, sources: m.sources };
-        } catch (e) { memoryInfo = { error: e.message }; }
-        if (buildCtx && buildCtx.text) memory = [buildCtx.text, memory].filter(Boolean).join('\n\n');
-        if (memoryInfo && buildCtx) memoryInfo.buildContext = { chars: buildCtx.chars, sections: buildCtx.sections, sources: buildCtx.sources, left: buildCtx.left.length };
         const route = { hat: who.hat, model: who.model, memory, agentId: who.agentId, compartmentId: who.compartmentId, repoUuid: who.repoUuid, fileName: chunk.realPath || null };
         const dispatchFn = warpFn
           ? (prompt, dispatchOpts) => warpFn(prompt, { ...dispatchOpts, chunkTitle: chunk.title || chunk.sectionId, expectCode, ...route, ...(dispatchOpts && dispatchOpts.model ? { model: dispatchOpts.model } : {}) })
@@ -6478,7 +6522,7 @@ async function handle(req, res, route, query, body) {
               cost: result.cost ?? null,
               component: stored ? `${stored.id}@${stored.version}` : null,
               verifiedAttempts: result.attempts, detectionComposite: result.detection?.composite,
-              buildContext: buildCtx ? { chars: buildCtx.chars, sections: buildCtx.sections } : null,   // §0.39.308 — what it was told about its relations
+              buildContext: memoryInfo ? { chars: memoryInfo.chars, used: memoryInfo.used, sections: buildCtx ? buildCtx.sections : null } : null,   // §0.39.309 — what the build agent was sent, by block
             });
           } else if (result.queued) {
             // ChatGPT/Claude — chunk will complete via guardian job callback

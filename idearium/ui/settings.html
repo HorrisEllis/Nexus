@@ -448,7 +448,7 @@ function viewPrompt(d) {
   const b = d.blocks;
   if (!b) return '<div class="empty">The prompt blocks could not be read.</div>';
   if (d.repo.settingsFrom) return '<div class="empty">This branch uses the original repo\'s prompt blocks — open the original to edit them.</div>';
-  const when = { always: 'every backend', tools: 'Ollama + Guardian (tool loop)', guardian: 'Guardian browser agents' };
+  const when = { always: 'every backend', tools: 'Ollama + Guardian (tool loop)', guardian: 'Guardian browser agents', build: 'file builds (spec chunks)' };
   return `<div class="card"><h3><span class="grow">Prompt blocks · v${esc(b.version)}</span><button class="btn" id="p-reset">Reset all to default</button></h3>
     <div class="note">Everything the agent is sent besides its persona, in order. Only necessities are on by default (0.39.279): context is fetched with tools, not pasted.</div>
     ${b.list.map(x => `<div class="block${x.enabled ? '' : ' off'}" data-b="${esc(x.id)}"><div class="bh">
