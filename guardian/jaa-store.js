@@ -56,6 +56,8 @@ const DEFAULT_SETTINGS = {
 // store, etc. — each just calls _registerStore(this) from its constructor).
 // Idempotent: a second construction in the same process adds to the Set, not a
 // second listener.
+// §0.39.335 SB35 — the longest a dirty table waits for its flush, however often it is written.
+const JAA_FLUSH_MAX_WAIT_MS = parseInt(process.env.JAA_FLUSH_MAX_WAIT_MS || '5000', 10);
 const _liveStores = new Set();
 let _exitHandlerInstalled = false;
 
@@ -103,6 +105,7 @@ class JaaStore {
     this._tables  = new Map();  // table name → Map<id, row>
     this._dirty   = new Set();  // tables needing flush
     this._timers  = new Map();  // table → setTimeout handle
+    this._dirtySince = new Map(); // table → when it first became dirty since its last flush (§0.39.335 maxWait)
     this._pendingDeletes = new Map(); // table → Set<id> deleted by this process since its last flush
     // §0.39.266 — table → Set<id> this process inserted/updated since its last flush. Only these are
     // this process's to write back; a clean row that is gone from disk was deleted by another process
@@ -529,18 +532,25 @@ class JaaStore {
     }
   }
 
-  _schedule(table, delay = 1500) {
+  // §0.39.335 SB35 — the debounce restarted on every write, so a table written more often than every 1.5 s (idearium's
+  // repo rows through a whole nexus-self sync) was never flushed while the writes went on; a stop mid-run lost them
+  // all. The debounce still coalesces a burst, but a table is flushed at most maxWait after it FIRST became dirty.
+  _schedule(table, delay = 1500, maxWait = JAA_FLUSH_MAX_WAIT_MS) {
+    const now = Date.now();
+    if (!this._dirty.has(table) || !this._dirtySince.has(table)) this._dirtySince.set(table, now);
     this._dirty.add(table);
     if (this._timers.has(table)) clearTimeout(this._timers.get(table));
+    const wait = Math.max(0, Math.min(delay, this._dirtySince.get(table) + maxWait - now));
     this._timers.set(table, setTimeout(() => {
       this._flush(table);
       this._timers.delete(table);
-    }, delay));
+    }, wait));
   }
 
   _flush(table) {
     if (!this._dirty.has(table)) return;
     this._dirty.delete(table);
+    this._dirtySince.delete(table);
     const tbl  = this._tables.get(table);
     if (!tbl) return;
 

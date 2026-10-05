@@ -1391,17 +1391,24 @@ function _buildFilePrompt(manifest, chunk, systemContext = '') {
   const mine = order[chunk.file.layer] ?? 2;
   const tree = (manifest.fileTree && manifest.fileTree.files) || [];
   const planText = tree.map(f => `- ${f.path} [${f.layer}]${f.purpose ? ` — ${f.purpose}` : ''}`).join('\n');
-  const below = manifest.chunks
-    .filter(c => c.file && c.status === CHUNK_STATES.COMPLETE && c.uuid !== chunk.uuid && (order[c.file.layer] ?? 9) < mine)
-    .slice(0, 12);
-  let budget = 24000;
-  const shown = [];
+  // §0.39.308 — James: "combining primitives or invariants to build higher leverage code for less tokens." Was: the
+  // first 12 lower files in manifest order, each in full (up to 24000 chars), the 13th onward not at all. Now: the
+  // files this one is most about (lib/build-context.js rankFiles — the ones its path or purpose names first) in full,
+  // at most FULL of them; EVERY other lower file by its interface (exports + glyph, ~12-40x smaller than its code).
+  const BC = _require('../../lib/build-context.js');
+  const FULL = Math.max(0, parseInt(process.env.IDEARIUM_FILE_PROMPT_FULL_FILES || '3', 10));
+  const below = BC.rankFiles(chunk, manifest.chunks
+    .filter(c => c.file && c.status === CHUNK_STATES.COMPLETE && c.uuid !== chunk.uuid && (order[c.file.layer] ?? 9) < mine));
+  let budget = 12000;
+  const shown = [], byInterface = [];
   for (const c of below) {
     const body = String(c.content || '');
-    if (!budget) break;
-    const take = body.slice(0, Math.min(budget, 4000));
-    budget -= take.length;
-    shown.push(`--- ${c.realPath} [${c.file.layer}]${take.length < body.length ? ' (truncated)' : ''}\n${take}`);
+    if (shown.length < FULL && budget > 0) {
+      const take = body.slice(0, Math.min(budget, 4000));
+      budget -= take.length;
+      shown.push(`--- ${c.realPath} [${c.file.layer}]${take.length < body.length ? ' (truncated)' : ''}\n${take}`);
+    } else if (byInterface.join('\n').length < 6000) byInterface.push(BC.interfaceOf(c));
+    else byInterface.push(`- ${c.realPath} (${c.file.layer})`);
   }
   return [
     `Write the complete file \`${chunk.realPath}\` for the project "${manifest.name}".`,
@@ -1415,6 +1422,7 @@ function _buildFilePrompt(manifest, chunk, systemContext = '') {
     systemContext ? `SYSTEM STATE:\n${systemContext}\n` : '',
     planText ? `THE FILE TREE:\n${planText.slice(0, 6000)}\n` : '',
     shown.length ? `FILES ALREADY BUILT BELOW THIS LAYER:\n${shown.join('\n\n')}\n` : '',
+    byInterface.length ? `THE OTHER FILES BELOW THIS LAYER — by interface (import these exports; do not redefine them):\n${byInterface.join('\n')}\n` : '',
     `Output ONLY the file's full content in one fenced code block. Real, working code — no placeholders, no TODO stubs, no "rest of implementation" comments.`,
   ].filter(Boolean).join('\n');
 }

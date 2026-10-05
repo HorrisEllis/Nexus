@@ -208,7 +208,7 @@ spec:
       layer: foundation
       systems: [loom, emerge, emergence, warp]
       value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
-      status: DONE (1.7.14, 0.39.319) — (1) and (2) at 1.7.3. (3) emergence/ in beside emerge/; warp/ forked to 1.5.0 at 0.39.318 (additive). Emergence's tests read StreamLog's gateClaimed/eventType, which Nexus's StreamLog had renamed to claimed/type; both names now kept. Emergence 155/155 (the upload itself runs 155, not the 157 written above), WARP 43/43, WARP consumers green; tests/modules/test-emergence-and-warp-suites.test.js. warp/test/dispatch.test.js needs siso_ref/, absent — failed before the fork too. (4) docs/emerge-copies-divergence.md. Not yet: emergence in loom (EV0 adds it to loom's systems).
+      status: "DONE (1.7.14, 0.39.319) — (1) and (2) at 1.7.3. (3) emergence/ in beside emerge/; warp/ forked to 1.5.0 at 0.39.318 (additive). Emergence's tests read StreamLog's gateClaimed/eventType, which Nexus's StreamLog had renamed to claimed/type; both names now kept. Emergence 155/155 (the upload itself runs 155, not the 157 written above), WARP 43/43, WARP consumers green; tests/modules/test-emergence-and-warp-suites.test.js. warp/test/dispatch.test.js needs siso_ref/, absent — failed before the fork too. (4) docs/emerge-copies-divergence.md. Not yet: emergence in loom (EV0 adds it to loom's systems)."
       files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
       does: >-
         (1) This branch brought in line with main 0.39.300 (a merge, main's tree wins; this branch's 0.39.298
@@ -238,6 +238,12 @@ spec:
         +N"), the cost as its effort (S 2, M 4, L 8, XL 16) — so the fill order Nexus computes for itself includes what
         James values, and says so. Every later phase adds its own events and routes to these files as it is built.
       proof: "the check passes for every system with a contract; an emit added without a taxonomy entry fails it; loom lists this map's phases under cos and warp; no phase of this map is tagged 'general'"
+      addendum_2026_10_05: >-
+        (4)'s list growth is superseded. James, 2026-10-05: "There is only 15 systems. Not 27. Any system that's in
+        idearium is a system, nothing more." loom's scanner no longer keeps its own system list: every tag resolves to
+        one of lib/nexus-self/systems.js's 15 (cos, warp, emergence, economy, nexstore → core, the system that owns
+        those directories). This map's phases now list under core where they said cos or warp; their `systems:` lines
+        are left as written (kept as `tags`). docs/2026-10-05-cli-data-code-phasemap.spec SY1.
 
     UI0_the_stations_agree:
       layer: interface
@@ -689,6 +695,54 @@ spec:
         with its own budget and its own regime. Nothing here touches the Fiverr site or account — intake and delivery
         are by James's hand; Fiverr's own rules on AI-assisted work are his to follow.
       proof: "two fixture jobs in parallel: neither can read the other's files, memory or secrets; each delivers a repo whose proof report cites a passing test for every acceptance line; the second job of a kit costs fewer tokens than the first"
+
+    FV0_fulfil_a_taken_order:
+      layer: service
+      systems: [idearium, cos, clear-glass]
+      value: { score: 5, cost: M, for: [income], why: "a Fiverr order he has taken goes to a proven delivery with what is built today" }
+      status: OPEN
+      depends_on: [PR1_proof_run_the_delivery_checker, PH1_phase_runs_end_in_proof]
+      files: [idearium/lib/orders.js, idearium/api/index.js, idearium/ui/js/orders.js, idearium/repo/proof-run.js]
+      does: >-
+        James, 2026-10-05: "I want idearoum to be able to fulfill fiverr orders." · "No automatically but from taking
+        orders." The first slice of FV1, on what is built: the trigger is James TAKING an order — nothing watches Fiverr,
+        accepts an order or starts on its own. (1) ORDER IN: he hands Idearium the taken order (pastes the buyer's
+        requirements; or, on his click, Clear Glass reads the order page — autofill readPage). (2) CONTRACT: scope,
+        acceptance lines, out of scope — drafted, his yes before anything is built. (3) REPO: the contract becomes a spec
+        and a repo in its own COS compartment (no file crosses between orders). (4) PROOF: each acceptance line is a
+        delivery condition (PR1's checker); the build runs with the build context (BC1/BC2) and the proof loop (PH1:
+        build, verify, the failure back to its agent) until every line has evidence or the attempts run out. (5)
+        DELIVERY: a zip, a README and the proof report (READY / NOT READY, evidence per line) — NOT READY is never
+        packaged as a delivery. He reviews it and delivers on Fiverr himself; talking to the buyer stays his. (6)
+        REVISION: a new contract on the same repo and history. Code gigs first (websites, scripts, scrapers, APIs,
+        bots) — where a check can prove the work. Left to FV1: quotes (EC6), kits (MR8), parallel teams (BT1).
+      input_2026_10_05: >-
+        James: "Yes like the end state for the repo. Maybe I ask customers the conditions for an acceptable output." ·
+        "I feel like copilot needs to be the agents for the repos. Then he uses all the context, and possibly, lifeline
+        to figure out how to fulfill the contract. Runs it in the cos envirenment." (A) THE BUYER'S CONDITIONS ARE THE
+        END STATE: the gig's buyer requirements (src/autofill/gig.js already writes them) carry one question — what must
+        the finished work do to be accepted — and each answer becomes a delivery condition (PR1's shape: a promise and a
+        check). Loose words ("looks nice") are made checkable or marked unchecked (a question back, or a check he does
+        by hand) — never silently dropped; he confirms the list, ideally with the buyer, before the build. (B) COPILOT
+        IS THE REPO'S AGENT: one agent per repo wearing the repo's hat with every build block (BC2), copilot choosing
+        who answers. Lifeline's escalation is OFF for repo jobs today (copilot/server.js — it would inject context he
+        cannot edit, his 0.39.258 rule) and judges a reply by its wording. For orders it escalates on the PROOF instead:
+        a condition fails in COS → back to the same agent with the failure (PH1) → still failing after its attempts →
+        lifeline hands the same composed contract and the exact failure to the next agent (ollama → guardian's), in a
+        fresh COS branch, every hop recorded (§9.4), nothing unedited injected. copilot/module-builder.js's lifeline
+        chain (map → spec → qc-architecture → qc-adversarial → fix) is the pattern to reuse; VP2 is its adversarial half.
+      input_2026_10_05_b: >-
+        James: "Okay I'm just saying it figures it out through the context and agent tools." So (B) is not a fixed
+        escalation chain: copilot, as the repo's agent, decides HOW — with its context (the build blocks) and the agent
+        tools it already has (lib/agent-tools tool-catalog groups: Code, Files, Debugging & intelligence, COS, Build &
+        run, Versions, Other agents — agent-chat, agent-council, roundtable, parallel-dispatch, lifeline —, Browser &
+        Clear Glass, Memory, Jobs & gigs; and governance/ask-james.js, his "either figures it out or asks me or uses
+        lifeline contract"). Only two things are fixed: the GOAL (the contract's conditions — the repo's end state) and
+        the STOP (every condition met in COS → package; the order's budget out → NOT READY and ask_james). The gap found:
+        no agent tool checks the conditions — the delivery checker is an API route only (/api/repos/:uuid/deliver/check).
+        FV0 adds it as a tool (idearium deliver_check: run the order's conditions in COS, return met / unmet with why),
+        so copilot can tell when it is done.
+      proof: "a fixture order: contract drafted and held for a yes; after yes, a repo in its own compartment; every acceptance line a condition; the package holds the code, README and a READY report citing a passing check per line; a fixture order that cannot pass produces NOT READY and no package; nothing runs before the order is handed over"
 
     ST1_settings:
       layer: interface

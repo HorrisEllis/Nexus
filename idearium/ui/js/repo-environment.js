@@ -7,18 +7,19 @@
 // to make sure its downloaded and configured, it needs to make a envirement reletive to the codebase, like install all
 // the needed dependancies, have a full list of additional options for the envirement."
 //
-// Two sections of the repo's Settings tab (renderRepoSettings, app.js):
+// The Settings tab's Environment category (renderRepoSettings, repo-settings.js — 0.39.310: the option list behind a
+// button; the "All settings" iframe below is gone, see repo-settings.js). Was two sections of the tab:
 //   Environment   GET /api/repos/:uuid/environment — downloaded / configured / VM, each with its reason; the install
 //                 plan the codebase needs (cos/testenv/detect.js); every option (cos/testenv/environment.js OPTIONS),
 //                 editable, saved on the repo (POST …/environment); Set up environment (POST …/environment/setup).
 //   All settings  the settings console's repo view (settings.html?repo=<uuid>&embed=1), in place.
 // ════════════════════════════════════════════════════════════════════════════
 
-const REPOENV = { uuid: null, data: null, edits: {} };
+const REPOENV = { uuid: null, data: null, edits: {}, showOptions: false };   // §0.39.310 VP7 — the option list behind a button
 
 async function renderRepoEnvironment(repo) {
   const el = document.getElementById('repo-env-section'); if (!el || !repo) return;
-  if (REPOENV.uuid !== repo.uuid) Object.assign(REPOENV, { uuid: repo.uuid, data: null, edits: {} });
+  if (REPOENV.uuid !== repo.uuid) Object.assign(REPOENV, { uuid: repo.uuid, data: null, edits: {}, showOptions: false });
   el.innerHTML = `<div class="ds"><div class="ds-label">environment</div><div class="ds-mono">checking — downloaded, configured, the VM…</div></div>`;
   let d;
   try { d = await api(`/api/repos/${repo.uuid}/environment`, {}, 60000); }
@@ -64,7 +65,8 @@ test     ${(pl.suite || []).map(i => escapeHtml(i.command)).join(' ; ') || `${pl
         ${d.setup ? `<span class="ds-mono" style="opacity:.7">setup job: ${escapeHtml(d.setup.state)}${d.setup.last && d.setup.last.length ? ` — ${escapeHtml(String((d.setup.last[d.setup.last.length - 1] || {}).text || d.setup.last[d.setup.last.length - 1] || '').slice(0, 90))}` : ''}</span>` : ''}
       </div></div>
     <div class="ds"><div class="ds-label">environment options — ${(d.catalogue || []).length}${dirty ? ` · <span style="color:var(--amber)">${dirty} unsaved</span>` : ''}</div>
-      ${Object.entries(groups).map(([g, list]) => `<div class="env-group"><div class="env-gname">${escapeHtml(g)}</div>${list.map(o => `<div class="env-row"><div><div class="env-k">${escapeHtml(o.key)}</div><div class="env-d">${escapeHtml(o.does)}</div></div><div class="env-c">${ctl(o)}</div></div>`).join('')}</div>`).join('')}
+      <div class="action-row"><button class="action-btn" onclick="REPOENV.showOptions=!REPOENV.showOptions;_envPaint()">${REPOENV.showOptions || dirty ? 'hide options' : `show options (${(d.catalogue || []).length})`}</button></div>
+      ${!(REPOENV.showOptions || dirty) ? '' : Object.entries(groups).map(([g, list]) => `<div class="env-group"><div class="env-gname">${escapeHtml(g)}</div>${list.map(o => `<div class="env-row"><div><div class="env-k">${escapeHtml(o.key)}</div><div class="env-d">${escapeHtml(o.does)}</div></div><div class="env-c">${ctl(o)}</div></div>`).join('')}</div>`).join('')}
       <div class="action-row"><button class="action-btn primary" ${dirty ? '' : 'disabled'} onclick="envSave()">save options</button>${dirty ? '<button class="action-btn" onclick="REPOENV.edits={};_envPaint()">discard</button>' : ''}</div></div>`;
 }
 
@@ -93,9 +95,5 @@ async function envSetup() {
   } catch (e) { toast(`setup not started: ${e.message}`, 'err'); }
 }
 
-/** the settings console's repo view, in place (settings.html?embed=1) */
-function repoSettingsConsoleEmbed(repo) {
-  if (!API_BASE || !repo) return '';
-  return `<div class="ds"><div class="ds-label">all settings — agent · prompt · hat · compartment &amp; desktop <a href="#" style="float:right;color:var(--sky2);text-decoration:none" onclick="openSettingsConsole('${repo.uuid}');return false">open in its own window ↗</a></div>
-    <iframe class="repo-settings-embed" src="${API_BASE}/settings.html?repo=${encodeURIComponent(repo.uuid)}&embed=1" title="settings for ${escapeHtml(repo.name || repo.uuid)}"></iframe></div>`;
-}
+// §0.39.310 VP7 — repoSettingsConsoleEmbed (the whole console in an iframe) is gone: repo-settings.js shows one console
+// view, only when its button is clicked.
