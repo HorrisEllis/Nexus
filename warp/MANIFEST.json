@@ -1,6 +1,6 @@
 {
   "name": "warp",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Pure functional event-driven devkit. Event -> Gate -> Stream -> StreamLog, plus Axiom as an enforced primitive and a unified dispatch (exact-cache / pre-generation-filter / population / cascade / axiom-gate / score-retain / escalate). v1.4 adds: canonicalization pipeline, fuzzy pre-generation reuse (opt-in), population lifecycle control (decay/pruning/dedup), two-stage generation, gate fusion, axiom cost weighting, and a structural delta cache. Zero dependencies, zero coupling to any consuming project.",
   "license": "MIT",
   "author": "James Brooks",

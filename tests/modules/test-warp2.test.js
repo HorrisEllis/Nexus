@@ -9,6 +9,7 @@
  *   W2-04  WARP's Axiom stays: a 1.x hard Axiom rejects a link
  *   W2-05  1.x through the adapter: the same results as without it, and every event is a link (parent known, or an unknown-cause root)
  *   W2-06  warp/core's WARP 2 files carry no SISO shape and import nothing outside warp/; the ledger verifies
+ *   W2-07  an expectation declared with its emit is in place before the handlers run (found by the benchmark, 0.39.324)
  */
 const assert = require('assert');
 const fs = require('fs');
@@ -96,6 +97,15 @@ test('W2-06', 'WARP 2\'s core files: no SISO shape, nothing from outside warp/, 
   }
   const e = new W.Engine(); e.emit('a', {}, { root: true }); e.expect({ cause: 'a', effect: 'b', within: 1 }); e.advance(3);
   assert.deepStrictEqual(e.ledger.verify(), { ok: true, brokenAt: null });
+});
+
+test('W2-07', 'emit(..., { expect }) — declared before the handlers run', () => {
+  const e = new W.Engine();
+  e.on('order.placed', (l, c) => { if (l.data.i !== 2) c.emit('order.billed', {}); });
+  for (let i = 0; i < 4; i++) e.emit('order.placed', { i }, { root: true, expect: [{ effect: 'order.billed', within: 1 }] });
+  const gaps = e.advance(2);
+  assert.strictEqual(gaps.length, 1, 'only the order never billed');
+  assert.strictEqual(e.ledger.link(gaps[0].cause).data.i, 2);
 });
 
 console.log(`\n  ${passed} passed, ${failed} failed`);

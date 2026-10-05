@@ -1,6 +1,6 @@
 {
   "name": "@jamesbrooks/warp",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Pure functional event-driven devkit. Event -> Gate -> Stream -> StreamLog, plus Axiom as an enforced primitive and a unified dispatch (exact-cache / pre-generation-filter / population / cascade / axiom-gate / score-retain / escalate). Zero dependencies, zero coupling to any consuming project.",
   "main": "index.js",
   "license": "MIT",
