@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.13
+    version:  1.7.14
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -208,7 +208,7 @@ spec:
       layer: foundation
       systems: [loom, emerge, emergence, warp]
       value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
-      status: PARTIAL (1.7.3) — (1) and (2) done; (3) and (4) wait on emergence-6.zip, not in this checkout
+      status: DONE (1.7.14, 0.39.319) — (1) and (2) at 1.7.3. (3) emergence/ in beside emerge/; warp/ forked to 1.5.0 at 0.39.318 (additive). Emergence's tests read StreamLog's gateClaimed/eventType, which Nexus's StreamLog had renamed to claimed/type; both names now kept. Emergence 155/155 (the upload itself runs 155, not the 157 written above), WARP 43/43, WARP consumers green; tests/modules/test-emergence-and-warp-suites.test.js. warp/test/dispatch.test.js needs siso_ref/, absent — failed before the fork too. (4) docs/emerge-copies-divergence.md. Not yet: emergence in loom (EV0 adds it to loom's systems).
       files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
       does: >-
         (1) This branch brought in line with main 0.39.300 (a merge, main's tree wins; this branch's 0.39.298

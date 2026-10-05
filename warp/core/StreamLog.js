@@ -74,8 +74,8 @@ class StreamLog {
     const seq = this._seq++;
     const stored = {
       ...rest,
-      ...(eventType !== undefined ? { type: eventType } : {}),
-      ...(gateClaimed !== undefined ? { claimed: gateClaimed } : {}),
+      ...(eventType !== undefined ? { type: eventType, eventType } : {}),   // eventType kept too: WARP 1.5.0 callers (emergence/) read it
+      ...(gateClaimed !== undefined ? { claimed: gateClaimed, gateClaimed } : {}),
       seq,
       loggedAt: Date.now(),
     };
