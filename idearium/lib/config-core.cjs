@@ -170,7 +170,9 @@ const SCHEMA = {
     // through the guest agent every time a desktop boots (so images made before this get it too), shown in the viewer.
     // A local, throwaway VM login — generic by design (idearium/docs atlas lists it); change it here.
     user:     { default: 'nexus', copilot_writable: false, type: 'string' },
-    password: { default: 'nexus', copilot_writable: false, type: 'string' },
+    // secret: never written to a log or an event (James, 0.39.343: '[idearium/config] desktop.password -> "nexus"' —
+    // "should that be hashed?"). Stored plain on purpose for now: the viewer shows it so he can sign in to the VM.
+    password: { default: 'nexus', copilot_writable: false, type: 'string', secret: true },
   },
 
   // §0.39.284 W5 — James: "can you make all the css in idearium consistent with the main ui" · "rebuild the themes for
