@@ -31,7 +31,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       if (b) for (const x of b[2].split(',')) paths.push(`${b[1]}${x}${b[3]}`); else paths.push(m.path);
     }
     const missing = paths.filter(p => !fs.existsSync(path.join(ROOT, p)));
-    check('GA-01 every module path the architecture spec names exists', /^0\.(8|9)\.\d+$/.test(spec.meta.version) /* 0.39.313 SB17: 0.9.0 agrees with genesis 1.3.0 and the system template */ && paths.length >= 14 && !missing.length, JSON.stringify(missing));
+    check('GA-01 every module path the architecture spec names exists', /^0\.(8|9|10)\.\d+$/.test(spec.meta.version) /* 0.39.313 SB17: 0.9.0 agrees with genesis 1.3.0; 0.39.316: 0.10.0 points at James's template */ && paths.length >= 14 && !missing.length, JSON.stringify(missing));
     const idx = read('idearium/api/index.js');
     const orch = read('orchestrator/orchestrator.js');
     const emitted = (spec.events.emits || []).every(e => idx.includes(`'${e}'`));
@@ -43,6 +43,11 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     });
     check('GA-02 every event it emits is emitted by real code; every route it names is served', emitted && served, JSON.stringify({ emitted, served, routes: spec.routes.map(r => r.path) }));
     const arch = read('docs/architecture-spec/_archive/architecture-spec-0.7.0.spec');
+    // 0.39.316 — 0.10.0 points at James's template and its schemas, and states his axioms
+    check('GA-06 0.10.0: the spec points at the template and its schemas (never copies them) and states his axioms', spec.meta.template === 'idearium/spec-engine/templates/architecture-spec.template.yaml'
+      && fs.existsSync(path.join(ROOT, spec.meta.template)) && fs.existsSync(path.join(ROOT, spec.meta.schemas)) && /each component only needs to connect to the registry/.test(spec.meta.james)
+      && ['SKELETON_FIRST', 'REGISTRY_IS_THE_SPINE', 'COMPONENT_SHAPE', 'ATLAS_IS_DETAILED'].every(a => spec.core.axioms.some(x => String(x).startsWith(a)))
+      && !/├── server\.js/.test(read('docs/architecture-spec/architecture-spec.spec')), 'template pointer, schemas, his words, axioms');
     check('GA-03 what 0.8.0 moved out is kept whole in the archive', /^# ARCHIVED 2026-10-01/.test(arch) && /architecture-spec\.sovereignty\.violation\.detected/.test(arch) && /id: AS4/.test(arch) && /compiler\/lattice\.js/.test(arch)
       && !/architecture-spec\.node\.declared/.test(read('docs/architecture-spec/architecture-spec.spec')));
     const g = read('idearium/spec-engine/templates/genesis.spec');

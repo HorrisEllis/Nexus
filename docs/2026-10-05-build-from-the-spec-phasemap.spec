@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.10.0
+    version:  1.11.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27. 1.10.0: genesis in the shape Nexus systems really have; the build flow in his order, in a compartment until committed — SB28, SB29"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27. 1.10.0: genesis in the shape Nexus systems really have; the build flow in his order, in a compartment until committed — SB28, SB29. 1.11.0: the template is a skeleton, the spec a living model, the atlas detailed — SB30; SB25 widened"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -148,6 +148,11 @@ spec:
     needs to map, phase, check for snapshot if none exist, create one, then populate the plan section and begin, then
     add precommited changes to the files tab, greyed out. dont create an entirely new repo, just compartment until the
     changes are commited. what do you think"
+
+  origin_1_11_0: >
+    James, 2026-10-05: "Like I want this to be a skeleton, only using the minimal code. Then expands from there. Using
+    the .spec as a living model. Then an atlas in the atlas template but not a list, each detailed, and referenced. All
+    expanded. Okay now update the architecture spec."
 
   found_1_10_0:
     - >-
@@ -675,7 +680,7 @@ spec:
     SB25_atlas_template_in_his_structure:
       layer: library
       status: OPEN
-      james: '"like look at the atlas template"'
+      james: '"like look at the atlas template" · "Then an atlas in the atlas template but not a list, each detailed, and referenced. All expanded."'
       overlaps: "SB19 (atlases per component); lib/atlas-generate.js; architecture-spec/registry/create-atlas.js (unwired)"
       depends_on: [SB17_the_system_template_is_complete]
       files: [idearium/spec-engine/templates/atlas-template.md, architecture-spec/registry/create-atlas.js, lib/atlas-generate.js]
@@ -761,3 +766,20 @@ spec:
       proof: "a phase run on a fixture repo snapshots, fills the plan, writes into its compartment only, shows each file greyed until commit, and makes no second repo"
       conditions:
         - { says: "a phase run on a fixture repo snapshots, fills the plan, writes into its compartment only, shows each file greyed until commit, and makes no second repo", check: { kind: tests, run: "node tests/modules/test-build-flow-order.test.js" } }
+
+    SB30_the_template_is_a_skeleton:
+      layer: foundation
+      status: OPEN
+      james: '"Like I want this to be a skeleton, only using the minimal code. Then expands from there. Using the .spec as a living model."'
+      overlaps: "the architecture spec's HARDLINE_AS_LITTLE_AS_POSSIBLE and SPEC_IS_LIVING_MODEL; SB21 (derived parts grow with the system); SB24 (loom builds a new system)"
+      depends_on: [SB17_the_system_template_is_complete]
+      files: [idearium/spec-engine/templates/architecture-spec.template.yaml, idearium/spec-engine/templates/system/schemas/, docs/architecture-spec/architecture-spec.spec]
+      does: >-
+        The coder's reading: what the template builds first is a skeleton — the tree, the registry, the schemas, and only
+        the minimal code that makes them live (server.js serving the route nodes, cli.js running the command nodes, the
+        listener, the JAA index, the heartbeat) — and the system expands from there by adding nodes, not by rewiring code.
+        Its .spec is the living model, edited in place as it grows, with its version history; its atlas is written in the
+        atlas template, each part detailed and referenced, never a bare list (SB25).
+      proof: "a skeleton built from the template boots, serves its route nodes, runs its command nodes, and gains a capability by adding nodes alone"
+      conditions:
+        - { says: "a skeleton built from the template boots, serves its route nodes, runs its command nodes, and gains a capability by adding nodes alone", check: { kind: tests, run: "node tests/modules/test-system-skeleton.test.js" } }
