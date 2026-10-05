@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.12
+    version:  1.7.13
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -276,6 +276,8 @@ spec:
       value: { score: 3, cost: XL, for: [ownership], why: "an engine that is his, not SISO; high to him, slow to pay back" }
       status: OPEN
       depends_on: [EM1_emerge_core, SH1_shadow_space]
+      james: '"maybe fork it, for me." · "and had it back." · "okay but keep updating it. i dont need it until its been converted to cfr"'
+      handback: the forked warp/ (1.5.0 at 0.39.318) is kept updated here and zipped back to James only once it has been converted to CFR — not before.
       files: [warp/core/Link.js, warp/core/Expectation.js, warp/core/Engine.js, warp/core/Ledger.js, warp/core/Axiom.js, warp/adapters/siso-gates.js, warp/spec/warp.spec, warp/MANIFEST.json]
       does: >-
         "okay but siso is taken. by someone. its identicle. i need my own" · "still i want to make warp mine". WARP 2,
