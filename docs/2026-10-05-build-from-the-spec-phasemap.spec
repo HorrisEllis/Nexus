@@ -1,12 +1,16 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.4.0
+    version:  1.5.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22"
+    voice: >
+      The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
+      `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
+      so. `found:` blocks are what the coder read in the code, as evidence for his calls, not decisions.
     axioms:   docs/AXIOMS-v3.1.md — §17.4 every build is reproducible (from an empty machine, the repo + its specs
               recreate the system), §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost, §1.2 nothing
               silently fails, §5.6 structural self-similarity, §16.4 simple things stay simple.
@@ -115,6 +119,18 @@ spec:
     James, 2026-10-05: "like each system is responsible for its data, schemas, contracts, configurations, heartbeat and
     pulse, each node has a schema, every deterministic replicatable espect of each system can be expanded with the system."
 
+  origin_1_5_0: >
+    James, 2026-10-05: "like does it reflect the systems in nexus? like each component has to have at least one
+    capability, with at least one command, and events, each a node each. like i want this in my words. i don't want
+    anyone to think your doing all the thinking for me"
+
+  found_1_5_0:
+    - >-
+      Measured against his rule, 517 components in 13 systems' registry-components: every one has a route (a command) ✓;
+      a capability node per component is written by lib/system-nodes.js, but it restates the component, and idearium's
+      119 have none written; only 22 of 517 declare any events, and there are NO event nodes in any system. orchestrator,
+      diagnostic and cos have no component registry at all.
+
   found_1_4_0:
     - >-
       Each node has a schema — almost: lib/node-schemas.js holds 63; of the 14 node types in use in data folders, 2 have
@@ -153,6 +169,7 @@ spec:
 
   phases:
     SB0_map:
+      james: '"I just need to get this all mapped."'
       layer: foundation
       status: DONE
       depends_on: []
@@ -163,6 +180,7 @@ spec:
         - { says: "the map exists", check: { kind: file, path: docs/2026-10-05-build-from-the-spec-phasemap.spec } }
 
     SB1_templates_are_the_default_frame:
+      james: '"like it needs to use the templates as default."'
       layer: library
       status: DONE (0.39.305)
       depends_on: [SB0_map]
@@ -180,6 +198,7 @@ spec:
         - { says: "the frames are proven by their test", check: { kind: tests, run: "node tests/modules/test-build-from-the-spec.test.js" } }
 
     SB2_his_words_seed_the_spec:
+      james: '"Like idearium is for my ideas." · "here is an example of an idea i was trying to get built."'
       layer: api
       status: DONE (0.39.305)
       depends_on: [SB1_templates_are_the_default_frame]
@@ -196,6 +215,7 @@ spec:
         - { says: "his words are proven by their test", check: { kind: tests, run: "node tests/modules/test-build-from-the-spec.test.js" } }
 
     SB3_the_section_prompt_is_domain_agnostic:
+      james: '"domain agnostic. data agnostic."'
       layer: library
       status: DONE (0.39.305)
       depends_on: [SB1_templates_are_the_default_frame]
@@ -210,6 +230,7 @@ spec:
         - { says: "the DAW case reads clean", check: { kind: tests, run: "node tests/modules/test-build-from-the-spec.test.js" } }
 
     SB4_template_fidelity:
+      james: '"like nexus needs to be able to build itself from the spec." · "guardian is the closest the system."'
       layer: library
       status: OPEN
       depends_on: [SB17_the_system_template_is_complete]
@@ -227,6 +248,7 @@ spec:
         - { says: "a fidelity report names every kernel's differences", check: { kind: tests, run: "node tests/modules/test-template-fidelity.test.js" } }
 
     SB5_nexus_rebuilds_a_system_from_its_spec:
+      james: '"nexus needs to be able to build itself from within also."'
       layer: automation
       status: OPEN
       depends_on: [SB4_template_fidelity]
@@ -242,6 +264,7 @@ spec:
         - { says: "a fixture system's spec rebuilds into code its own tests pass", check: { kind: tests, run: "node tests/modules/test-self-rebuild.test.js" } }
 
     SB6_hundreds_of_specs:
+      james: '"i havce hundreds of specs i want built. that why i had the resuable architecture"'
       layer: automation
       status: OPEN
       depends_on: [SB3_the_section_prompt_is_domain_agnostic, SB5_nexus_rebuilds_a_system_from_its_spec]
@@ -256,6 +279,7 @@ spec:
         - { says: "a queue of fixture specs builds, resumes after a stop, and reuses a stored component", check: { kind: tests, run: "node tests/modules/test-spec-queue.test.js" } }
 
     SB7_domain_file_tree_templates:
+      james: 'none — this phase is the coder''s suggestion (Eravos mods offered for a music idea), not James''s. His to keep or cut.'
       layer: library
       status: OPEN
       depends_on: [SB1_templates_are_the_default_frame]
@@ -269,6 +293,7 @@ spec:
         - { says: "a music idea is offered the eravos mods", check: { kind: tests, run: "node tests/modules/test-domain-templates.test.js" } }
 
     SB8_promote_with_full_block_options:
+      james: '"Promote into a spec with full options for each block and a custom setting to write in."'
       layer: api
       status: OPEN
       overlaps: "TP1_promote_to_spec_templates (docs/2026-10-01-idearium-agent-ready-master-phasemap.spec) — one piece of work; build it once, close both"
@@ -286,6 +311,7 @@ spec:
         - { says: "each block's options are set at promotion and honoured by the build", check: { kind: tests, run: "node tests/modules/test-block-options.test.js" } }
 
     SB9_the_spec_is_a_spec_file:
+      james: '"Like it needs to build .spec files."'
       layer: library
       status: OPEN
       overlaps: "none found"
@@ -302,6 +328,7 @@ spec:
         - { says: "a built spec round-trips: .spec → importSpec → the same blocks", check: { kind: tests, run: "node tests/modules/test-spec-file.test.js" } }
 
     SB10_reuse_first_keyed_on_the_contract:
+      james: '"Like it needs to reuse as much as possible by default. To save tokens. Like nexus gets more effectient."'
       layer: library
       status: OPEN
       overlaps: "none found — but the findPriorSection fix touches every map that builds specs"
@@ -319,6 +346,7 @@ spec:
         - { says: "another project's section is never reused; the same contract is, with tokens-saved recorded", check: { kind: tests, run: "node tests/modules/test-reuse-contract.test.js" } }
 
     SB11_each_block_chunked:
+      james: '"Each block is then chunked,"'
       layer: library
       status: OPEN
       overlaps: "FG2_token_budget_chunking (docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec) — FG2 is the mechanism, SB11 its use on spec blocks"
@@ -334,6 +362,7 @@ spec:
         - { says: "a block over budget is built as sub-chunks and joined", check: { kind: tests, run: "node tests/modules/test-block-chunking.test.js" } }
 
     SB12_the_registry_is_the_component_list:
+      james: '"Using the register as a dependancy and file check list."'
       layer: library
       status: "DONE (0.39.309) — the registry section asks for a yaml components list (lib/registry-plan.js REGISTRY_FORMAT); speceng.codegen plans the files FROM it (one per component, each waiting on the files its wires name) and keeps it on the code spec; verify checks the built repo against it (a missing, empty or unparsable promised file fails and goes back to be built); no usable registry → the agent plans, and the reason is in the answer. Not done here: the node-for-node drift against the code projection (DT4)."
       overlaps: "DT4_registry_block_to_nodes (agent-ready master) — SB12 parses the block and checks the files; DT4's node envelopes and node-for-node drift remain DT4's"
@@ -353,6 +382,7 @@ spec:
         - { says: "a registry yields the file tree, the dependency order and a checklist that fails on a missing file", check: { kind: tests, run: "node tests/modules/test-registry-drives-build.test.js" } }
 
     SB13_each_component_chunked:
+      james: '"then each component is chunked."'
       layer: api
       status: OPEN
       overlaps: "FG4_context_for_any_agent + FG5_recursive_build (fractal-graph map) — the mechanism; SB13 is their use per component"
@@ -368,6 +398,7 @@ spec:
         - { says: "a component is built from its contract and its dependencies' interfaces only, in pieces when large", check: { kind: tests, run: "node tests/modules/test-component-chunking.test.js" } }
 
     SB14_reuse_compounds:
+      james: '"it needs to reuse as much as possible by default … Like nexus gets more effectient."'
       layer: automation
       status: OPEN
       overlaps: "CX0_codex_component_store (docs/2026-10-02-workshop-codex-rewind-phasemap.spec, carried into the emerge map) — CX0 grows the store, SB14 feeds it"
@@ -384,6 +415,7 @@ spec:
         - { says: "a second spec with a matching component builds it from the store at 0 tokens", check: { kind: tests, run: "node tests/modules/test-reuse-compounds.test.js" } }
 
     SB15_empty_is_not_built:
+      james: 'none — a bug the coder found while wiring SB12; recorded so it is not lost.'
       layer: library
       status: OPEN
       overlaps: "none — found 2026-10-05 while wiring SB12"
@@ -399,6 +431,7 @@ spec:
         - { says: "a repo whose files are all empty reads failed, naming each file as not built", check: { kind: tests, run: "node tests/modules/test-empty-is-not-built.test.js" } }
 
     SB16_genesis_nodes_domain:
+      james: '"like with the genasis spec, needs to have the component registry event interaction contract, with the heartbeat and pulse system, node based data structure using jaa tables as a node index."'
       layer: foundation
       status: "BUILT-BEFORE-MAPPED (0.39.311) — written before this map; recorded here, committed with it"
       overlaps: "the architecture spec's registry-watcher module (same model, now in genesis too)"
@@ -416,6 +449,7 @@ spec:
         - { says: "genesis 1.2.0 has domain nodes, the node-index file and the axiom; the manifest wiring check stays clean", check: { kind: tests, run: "node tests/modules/test-genesis-and-architecture-spec.test.js" } }
 
     SB17_the_system_template_is_complete:
+      james: '"like can you make sure this is all added to the system template. like look at the architecture spec. this needs to be mapped first"'
       layer: foundation
       status: OPEN
       overlaps: "architecture-spec.spec's own gaps; TP1 (promote with templates)"
@@ -433,6 +467,7 @@ spec:
         - { says: "the system spec template has registry, taxonomy, nodes and pulse sections and parses", check: { kind: tests, run: "node tests/modules/test-system-template.test.js" } }
 
     SB18_the_system_template_is_used:
+      james: '"like it needs to use the templates as default." · "like can you make sure this is all added to the system template."'
       layer: library
       status: OPEN
       overlaps: "SB1 (the frames mechanism, reused); GN1 (genesis the default of a system spec)"
@@ -448,6 +483,7 @@ spec:
         - { says: "a type system spec's registry, schema, events and integration blocks carry the template's sections as frames", check: { kind: tests, run: "node tests/modules/test-system-template.test.js" } }
 
     SB19_atlases_per_component:
+      james: '"like the atlas'' are supposed to list the commands and routes in relation to the component or module, like its all supposed to be very specific and etailed. nodes schemas, taxonomy."'
       layer: library
       status: OPEN
       overlaps: "lib/atlas-generate.js (0.39.266, first run 0.39.310)"
@@ -463,6 +499,7 @@ spec:
         - { says: "a system's atlas lists each component with its routes, commands, events and node types; an emitted event the taxonomy lacks is named", check: { kind: tests, run: "node tests/modules/test-atlas-per-component.test.js" } }
 
     SB20_each_system_owns_its_own:
+      james: '"like each system is responsible for its data, schemas, contracts, configurations, heartbeat and pulse, each node has a schema,"'
       layer: foundation
       status: OPEN
       overlaps: "SB17 (the template states it); DT6_node_store (agent-ready master)"
@@ -480,6 +517,7 @@ spec:
         - { says: "every node type in use has exactly one schema, owned by one system, in that system's folder", check: { kind: tests, run: "node tests/modules/test-system-ownership.test.js" } }
 
     SB21_deterministic_parts_grow_with_the_system:
+      james: '"every deterministic replicatable espect of each system can be expanded with the system."'
       layer: automation
       status: OPEN
       overlaps: "loom/templates/system-scaffold.js (makes a new system's skeleton once); lib/atlas-generate.js (atlases)"
@@ -495,3 +533,20 @@ spec:
       proof: "adding a component to a fixture system regenerates its contract, taxonomy, grammar, index and atlas; a stale one fails the check"
       conditions:
         - { says: "adding a component to a fixture system regenerates its contract, taxonomy, grammar, index and atlas; a stale one fails the check", check: { kind: tests, run: "node tests/modules/test-deterministic-expansion.test.js" } }
+
+    SB22_every_component_capability_command_events_as_nodes:
+      layer: foundation
+      status: OPEN
+      james: '"like each component has to have at least one capability, with at least one command, and events, each a node each."'
+      overlaps: "lib/system-nodes.js (capability + command nodes, 0.39.271); SB20, SB21"
+      depends_on: [SB20_each_system_owns_its_own]
+      files: [lib/system-nodes.js, lib/node-schemas.js, loom/data/events.json]
+      does: >-
+        The coder's reading: every component, in every system, declares at least one capability, at least one command
+        that exercises it, and the events it emits and hears — and each of those is a node of its own (.capability,
+        .command, .event) in its system's data folder, with its schema, indexed in that system's JAA tables. A component
+        missing any of the three is named as a gap in its system's contract node, not passed. orchestrator, diagnostic and
+        cos get component registries so they can be measured at all.
+      proof: "every component in every system has ≥1 capability, ≥1 command and its events as nodes; one missing any is named"
+      conditions:
+        - { says: "every component in every system has ≥1 capability, ≥1 command and its events as nodes; one missing any is named", check: { kind: tests, run: "node tests/modules/test-component-shape.test.js" } }
