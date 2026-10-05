@@ -18,7 +18,13 @@
  */
 const path = require('path');
 
-const PAGES = { '/desktop.html': 'desktop', '/settings.html': 'settings' };
+// §0.39.345 — James: "can you make the windows borderless like comportmant desktop for cos." Every idearium page that
+// pops out and already draws its own title bar (ui/js/window-chrome.js: drag, minimize, maximize, close) opens
+// frameless; until now only the desktop and the settings console did, so the workshop showed Windows' frame and menu.
+const PAGES = { '/desktop.html': 'desktop', '/settings.html': 'settings', '/workshop.html': 'workshop', '/void.html': 'void',
+  '/architect.html': 'architect', '/spec-library.html': 'spec-library' };
+const TITLES = { desktop: 'Repo desktop', settings: 'Settings console', workshop: 'The spec workshop', void: 'The void',
+  architect: 'The architect', 'spec-library': 'Spec library' };
 const BG = '#0a0b10';
 
 /** Which compartment page a URL is ('desktop' | 'settings'), or null. Only http(s) on a loopback host. */
@@ -48,7 +54,7 @@ function windowOptions(kind, features, preloadPath) {
     minWidth: 480, minHeight: 320,
     frame: false, resizable: true, movable: true, hasShadow: true,
     backgroundColor: BG, autoHideMenuBar: true, show: true,
-    title: kind === 'desktop' ? 'Repo desktop' : 'Settings console',
+    title: TITLES[kind] || 'Idearium',
     webPreferences: { preload: preloadPath, contextIsolation: true, nodeIntegration: false, sandbox: true },
   };
   if (Number.isFinite(f.left)) o.x = f.left;
@@ -87,4 +93,4 @@ function registerIpc(ipcMain, BrowserWindow) {
   });
 }
 
-module.exports = { isCompartmentPage, parseFeatures, windowOptions, attach, registerIpc, PAGES };
+module.exports = { isCompartmentPage, parseFeatures, windowOptions, attach, registerIpc, PAGES, TITLES };

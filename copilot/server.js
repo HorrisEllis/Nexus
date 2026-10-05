@@ -2296,6 +2296,22 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // §CT1 0.39.346 — James: "i feel like it should use copilot regardless, have copilot figure it, and learn from it.
+  // failure modes, dynamically switch models, if its not equipped for the task". The one door for "which model":
+  // POST /api/route { kind, preferAgent, policy } → the route to try, in order — each hop a provider, its backend, its
+  // agent and its model — from lib/pipeline-routing.js (the build's policy: learned per kind of job, breakers, the
+  // chain), not a fourth router. POST /api/route/outcome { provider, kind, ok, class, ms, error } → recorded in the
+  // economy ledger (what the learned mode learns from) and the breaker. The caller still sends its own prompt (0.39.258).
+  if (method === 'POST' && p === '/api/route') {
+    try { json(res, 200, require('../lib/model-door.js').route(await readBody(req), { defaultProvider: config.DEFAULT_PROVIDER, resolve: resolveDefaultBackend })); }
+    catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+  if (method === 'POST' && p === '/api/route/outcome') {
+    try { const r = require('../lib/model-door.js').outcome(await readBody(req)); json(res, r.ok ? 200 : 400, r); }
+    catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
   if (method === 'GET' && p === '/api/prompt/resolve') {
     json(res, 200, { ok: true, ...resolveDefaultBackend(config.DEFAULT_PROVIDER) });
     return;

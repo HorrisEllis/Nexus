@@ -18,7 +18,7 @@ const page = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</st
 <script>
 const API_BASE = '';
 let CURRENT_API_REPO = { uuid: '${U}', name: 'lock', files: [{ path: 'src/a.js', bytes: 10 }, { path: 'src/b.js', bytes: 5 }] };
-let ACTIVE_API_FILE = 'src/a.js', CURRENT_REPO_SUBTAB = 'spec', _codeState = { uuid: '${U}', q: 'lock', hits: [{ file: 'src/c.js', line: 3, name: 'useLock' }] };
+let ACTIVE_API_FILE = 'src/a.js', CURRENT_REPO_SUBTAB = 'spec', CS = { uuid: '${U}', q: 'lock', hits: [{ file: 'src/c.js', line: 3, name: 'useLock' }] };
 window.__toasts = [];
 function toast(m, t) { window.__toasts.push([m, t]); }
 async function api(p, o = {}) { const r = await fetch(p, { headers: { 'Content-Type': 'application/json' }, ...o }); const d = await r.json(); if (!r.ok || d.ok === false) throw new Error(d.error || 'failed'); return d; }

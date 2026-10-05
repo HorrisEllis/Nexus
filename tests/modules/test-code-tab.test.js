@@ -1,0 +1,211 @@
+'use strict';
+/**
+ * tests/modules/test-code-tab.test.js — CT3 (docs/2026-10-05-code-tab-and-one-router-phasemap.spec), 0.39.349.
+ * James: "the code tab the agent tab, work surface, like full activity, enterprise grade?" · "its just the code tab is
+ *        meaningless. what about uncommited changes?"
+ *
+ *   CT-01  GET /api/repos/:uuid/agent/route (idearium's real router): the hops copilot's door would choose for this
+ *          repo's agent, each with its backend and model; a provider set in Settings is said as pinned
+ *   CT-02  POST …/agent/prompt with a picked hop: its backend and model reach copilot as sent
+ *   CT-1x  the tab, driven in Clear Glass (the REAL file-manage.js, work-surface.js and code-surface.js against a stubbed
+ *          api() that answers like idearium's routes):
+ *          CT-10 the files: uncommitted greyed / marked as in the Files tab, a waiting diff dotted; "changed only" filters
+ *          CT-11 no file open: every change the agent made, as diff cards with Apply / Reject
+ *          CT-12 a file open: its lines, its chunks marked where they start, its diff above; a chunk → its card
+ *          CT-13 Apply writes it (POST …/injects/:id/apply) and the tree follows
+ *          CT-14 the docked agent names the model copilot chose; another hop picked is sent with its backend and model,
+ *                the open file and picked lines as context; the reply says which model answered
+ *          CT-15 activity folds open; nothing threw
+ * No engine on the machine: the browser part is SKIPPED, said, never passed.
+ */
+require('../../lib/test-sandbox.js').ensure();
+const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const http = require('http');
+const path = require('path');
+const { pathToFileURL } = require('url');
+const ROOT = path.join(__dirname, '../..');
+const UI = path.join(ROOT, 'idearium', 'ui');
+
+let passed = 0, failed = 0, skipped = 0;
+async function test(id, desc, fn) {
+  try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; }
+  catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.stack ? e.stack.split('\n').slice(0, 4).join('\n    ') : e.message}`); failed++; }
+}
+const quiet = async (fn) => { const l = console.log, w = console.warn; console.log = () => {}; console.warn = () => {}; try { return await fn(); } finally { console.log = l; console.warn = w; } };
+
+function harness() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ct3-ui-'));
+  const css = ['work-surface.css', 'code-surface.css'].map(f => fs.readFileSync(path.join(UI, 'css', f), 'utf8')).join('\n');
+  const src = (f) => pathToFileURL(path.join(UI, 'js', f)).href;
+  fs.writeFileSync(path.join(dir, 'index.html'), `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>
+<div id="repo-subtab-code" style="height:800px"></div>
+<script>
+  const CALLS = [];
+  const REPO = { uuid: 'r1', name: 'daw', compartmentId: 'c1', files: [{ path: 'src/a.js' }, { path: 'src/b.js' }, { path: 'README.md' }] };
+  let CURRENT_API_REPO = REPO, CURRENT_REPO_SUBTAB = 'code';
+  let APPLIED = false;
+  function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
+  function toast() {} function renderApiRepoPanel() {}
+  const DIFF = '--- a/src/a.js\\n+++ b/src/a.js\\n@@ -1,3 +1,3 @@\\n function a() {\\n-  return 2;\\n+  return 3;\\n }';
+  async function api(p, opts) {
+    CALLS.push({ p, method: (opts && opts.method) || 'GET', body: opts && opts.body ? JSON.parse(opts.body) : null });
+    if (p.endsWith('/files/state')) return APPLIED ? { states: { 'src/new.js': { state: 'pending', pending: ['i2'] } }, counts: { pending: 1 } }
+      : { states: { 'src/a.js': { state: 'modified' }, 'src/new.js': { state: 'pending', pending: ['i2'] } }, counts: { modified: 1, pending: 1 } };
+    if (p.endsWith('/worksurface')) return { files: [
+        { id: 'i1', path: 'src/a.js', op: 'write', status: APPLIED ? 'applied' : 'proposed', added: 1, removed: 1, diff: DIFF, actions: APPLIED ? ['revert'] : ['apply', 'reject'], by: 'ollama:big:7b' },
+        { id: 'i2', path: 'src/new.js', op: 'write', creates: true, status: 'proposed', added: 1, removed: 0, diff: '@@ -0,0 +1,1 @@\\n+export const n = 1;', actions: ['apply', 'reject'] }],
+      totals: { files: 2, added: 2, removed: 1, pending: APPLIED ? 1 : 2 }, tools: { scope: 'harness', listed: ['idearium.code_read.tool'], calls: [{ name: 'idearium.code_read.tool', ok: true, args: '{"path":"src/a.js"}' }, { name: 'idearium.code_write.tool', ok: false, error: 'outside the repo' }] } };
+    if (p.includes('/code/overview')) return { files: 3, chunks: 4, lines: 20, languages: ['js'], repo: { writeMode: 'propose', pendingProposals: APPLIED ? 1 : 2 } };
+    if (p.endsWith('/agent/route')) return { ok: true, route: [{ provider: 'ollama:big:7b', backend: 'ollama', agent: null, model: 'big:7b', why: 'learned for agent:chat: 9/10 ok' }, { provider: 'gemini', backend: 'guardian', agent: 'gemini', model: null, why: 'chain' }], pinned: null };
+    if (p.includes('/file?path=src%2Fa.js')) return { content: 'function a() {\\n  return 2;\\n}\\nmodule.exports = a;\\n' };
+    if (p.includes('/code/outline')) return { file: 'src/a.js', chunks: [{ id: 'c-a', lines: '1-3', kind: 'function', name: 'a', summary: 'returns two' }] };
+    if (p.includes('/code/chunk')) return { card: { id: 'c-a', kind: 'function', name: 'a', file: 'src/a.js', lines: '1-3', summary: 'returns two', uses: [], usedBy: [{ chunkId: 'c-x', name: 'main', basis: 'require' }], tests: ['tests/a.test.js'] }, around: {} };
+    if (/\\/injects\\/i1\\/apply$/.test(p)) { APPLIED = true; return { ok: true }; }
+    if (p.endsWith('/agent/prompt')) return { ok: true, text: 'changed it', viaCopilot: null, providerUsed: 'gemini', elapsedMs: 1200 };
+    return {};
+  }
+</script>
+<script src="${src('file-manage.js')}"></script>
+<script src="${src('work-surface.js')}"></script>
+<script src="${src('code-surface.js')}"></script>
+</body></html>`);
+  return path.join(dir, 'index.html');
+}
+
+(async () => {
+  // ── CT-01 / CT-02 the routes, through idearium's real router, against a stand-in copilot ──
+  const MD = require(path.join(ROOT, 'lib/model-door.js'));
+  const PR = require(path.join(ROOT, 'lib/pipeline-routing.js'));
+  const resolve = (p) => (p === 'ollama' ? { backend: 'ollama', agent: null } : { backend: 'guardian', agent: p });
+  const policy = PR.policyFrom({ mode: 'learned', chain: 'ollama,gemini', ollama_models: 'small:3b,big:7b', learn_min_records: 1000 });
+  const prompts = [];
+  const srv = http.createServer((q, s) => {
+    let b = ''; q.on('data', d => b += d); q.on('end', () => {
+      const body = b ? JSON.parse(b) : {};
+      s.setHeader('content-type', 'application/json');
+      if (q.url === '/api/route') return s.end(JSON.stringify(MD.route({ ...body, policy, records: [] }, { resolve })));
+      if (q.url === '/api/route/outcome') return s.end('{"ok":true}');
+      if (q.url === '/api/prompt') { prompts.push(body); return s.end(JSON.stringify({ ok: true, text: `answer from ${body.model || body.agent}` })); }
+      s.statusCode = 404; s.end('{}');
+    });
+  });
+  await new Promise(r => srv.listen(0, '127.0.0.1', r));
+  process.env.COPILOT_URL = `http://127.0.0.1:${srv.address().port}`;
+  process.env.NEXUS_VERSIONIUM_URL = 'http://127.0.0.1:9';
+  const api = await quiet(() => import(path.join(ROOT, 'idearium/api/index.js')));
+  const RA = require(path.join(ROOT, 'lib/repo-agent.js'));
+  const L = api.getRepoLayer();
+  let made = null;
+  for (let i = 0; i < 20; i++) {
+    made = await quiet(async () => L.ingest({ name: `ct3-${Date.now()}`, source: 'test', compartmentId: 'c-ct3', files: [{ path: 'src/a.js', content: 'module.exports = 1;\n' }] }));
+    if (!(made && made.error && /no spec-engine/.test(made.error))) break;
+    await new Promise(x => setTimeout(x, 250));
+  }
+  const u = made.repo.uuid;
+
+  await test('CT-01', 'GET …/agent/route: the hops copilot\'s door would choose, each with backend and model; a set provider is pinned', async () => {
+    RA.setProvider(u, 'auto');
+    const r = await api._route('GET', `/api/repos/${u}/agent/route`);
+    assert.strictEqual(r.status, 200, JSON.stringify(r.json));
+    assert.deepStrictEqual(r.json.route.map(h => [h.provider, h.backend, h.model]), [['ollama:small:3b', 'ollama', 'small:3b'], ['ollama:big:7b', 'ollama', 'big:7b'], ['gemini', 'guardian', null]]);
+    assert.strictEqual(r.json.pinned, null);
+    RA.setProvider(u, 'ollama');
+    assert.strictEqual((await api._route('GET', `/api/repos/${u}/agent/route`)).json.pinned, 'ollama');
+    RA.setProvider(u, 'auto');
+    assert.strictEqual((await api._route('GET', '/api/repos/nope-ct3/agent/route')).status, 404);
+  });
+
+  await test('CT-02', 'POST …/agent/prompt with a picked hop: its backend and model reach copilot as sent', async () => {
+    const r = await quiet(() => api._route('POST', `/api/repos/${u}/agent/prompt`, { message: 'hello', backend: 'ollama', model: 'big:7b', noContext: true }));
+    assert.strictEqual(r.json.ok, true, JSON.stringify(r.json).slice(0, 400));
+    const last = prompts[prompts.length - 1];
+    assert.deepStrictEqual([last.backend, last.model], ['ollama', 'big:7b']);
+  });
+  srv.close();
+
+  // ── CT-1x the tab in Clear Glass ──
+  const glass = require('../../clear-glass/src/driver/glass.js');
+  const eng = glass.engine();
+  if (!eng) { console.log('  - CT-10…CT-15 SKIPPED: Clear Glass has no engine here (no Electron binary, no Chromium) — the browser checks did not run'); skipped += 6; return done(); }
+  let browser;
+  try { browser = await glass.chromium.launch(); }
+  catch (e) { console.log(`  - CT-10…CT-15 SKIPPED: Clear Glass's engine (${eng.kind}) could not start (${e.message.split('\n')[0]})`); skipped += 6; return done(); }
+  console.log(`  · driven by Clear Glass (clear-glass/src/driver/glass.js), engine: ${eng.kind}`);
+  try {
+    const page = await browser.newPage();
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    await page.goto(pathToFileURL(harness()).href);
+    await page.evaluate(() => renderRepoCode(REPO));
+    await page.waitForSelector('.cs-file[data-path="src/a.js"] .fs-tag');
+    await page.waitForSelector('.cs-who b');
+
+    await test('CT-10', 'the files: uncommitted marked, proposal-only greyed, a waiting diff dotted; "changed only" filters', async () => {
+      const rows = await page.$$eval('.cs-file', els => els.map(e => [e.dataset.path, e.className.includes('fs-row-modified'), e.className.includes('fs-row-pending'), !!e.querySelector('.cs-diffdot')]));
+      const by = Object.fromEntries(rows.map(r => [r[0], r.slice(1)]));
+      assert.deepStrictEqual(by['src/a.js'], [true, false, true], JSON.stringify(rows));
+      assert.deepStrictEqual(by['src/new.js'], [false, true, true]);
+      assert.deepStrictEqual(by['src/b.js'], [false, false, false]);
+      const op = await page.$eval('.cs-file[data-path="src/new.js"]', e => getComputedStyle(e).opacity);
+      assert.ok(+op < 0.6, `greyed (opacity ${op})`);
+      await page.click('button:has-text("changed only")');
+      assert.deepStrictEqual(await page.$$eval('.cs-file', els => els.map(e => e.dataset.path).sort()), ['src/a.js', 'src/new.js']);
+      await page.click('button:has-text("changed only")');
+    });
+
+    await test('CT-11', 'no file open: the agent\'s changes as diff cards with Apply / Reject', async () => {
+      assert.ok(/the agent's changes/.test(await page.textContent('.cs-mid')));
+      assert.deepStrictEqual(await page.$$eval('.cs-mid .ws-card', els => els.map(e => e.dataset.path)), ['src/a.js', 'src/new.js']);
+      assert.strictEqual(await page.$$eval('.cs-mid .ws-head .ws-act-apply', e => e.length), 2);
+      assert.strictEqual(await page.$$eval('.cs-mid .ws-head .ws-act-reject', e => e.length), 2);
+    });
+
+    await test('CT-12', 'a file open: its lines, its chunk marked where it starts, its diff above; the chunk → its card', async () => {
+      await page.click('.cs-file[data-path="src/a.js"]');
+      await page.waitForSelector('#cs-code .cs-ln');
+      assert.strictEqual(await page.$$eval('#cs-code .cs-ln', e => e.length), 5);
+      assert.ok(/function\s*a\s*1-3/.test(await page.textContent('#cs-code .cs-chunk')));
+      assert.deepStrictEqual(await page.$$eval('.cs-mid .ws-card', els => els.map(e => e.dataset.path)), ['src/a.js'], 'only this file\'s diff');
+      assert.ok(await page.$$eval('.cs-mid .ws-add', e => e.length) >= 1);
+      await page.click('#cs-code .cs-chunk');
+      await page.waitForSelector('.cs-card .cs-dl');
+      const card = await page.textContent('.cs-card');
+      assert.ok(/returns two/.test(card) && /main/.test(card) && /tests\/a\.test\.js/.test(card), card);
+      assert.strictEqual(await page.$$eval('#cs-code .cs-ln.pick', e => e.length), 3, 'the chunk\'s lines are marked');
+    });
+
+    await test('CT-13', 'Apply writes it and the tree follows', async () => {
+      await page.click('.cs-mid .ws-head .ws-act-apply');
+      await page.waitForFunction(() => !document.querySelector('.cs-file[data-path="src/a.js"]').className.includes('fs-row-modified'));
+      assert.ok(await page.evaluate(() => CALLS.some(c => c.method === 'POST' && /\/injects\/i1\/apply$/.test(c.p))));
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/a.js"] .cs-diffdot', e => e.length), 0);
+      assert.ok(/applied/.test(await page.textContent('.cs-mid .ws-card')));
+    });
+
+    await test('CT-14', 'the docked agent: copilot\'s model named; another hop picked goes with its backend and model, and the file as context', async () => {
+      assert.strictEqual(await page.textContent('.cs-who b'), 'ollama:big:7b');
+      assert.ok(/learned for agent:chat/.test(await page.textContent('.cs-who')));
+      await page.click('#cs-code .cs-ln[data-ln="2"] .cs-g');
+      await page.selectOption('#cs-pick', '1');
+      await page.fill('#cs-ask', 'make it return 4');
+      await page.evaluate(() => document.getElementById('cs-ask').dispatchEvent(new Event('input')));
+      await page.click('.cs-send');
+      await page.waitForFunction(() => /changed it/.test(document.querySelector('#cs-talk').textContent));
+      const sent = await page.evaluate(() => CALLS.filter(c => /\/agent\/prompt$/.test(c.p)).pop().body);
+      assert.deepStrictEqual([sent.backend, sent.agent, sent.model], ['guardian', 'gemini', null]);
+      assert.ok(/^\[Code tab — about src\/a\.js lines 2-2 \(chunk a\)\]\nmake it return 4$/.test(sent.message), sent.message);
+      assert.ok(/picked gemini/.test(await page.textContent('#cs-talk')), 'the reply says which model answered');
+    });
+
+    await test('CT-15', 'activity folds open with the tool calls; nothing threw', async () => {
+      await page.click('.cs-act-head');
+      const t = await page.textContent('.cs-act-body');
+      assert.ok(/idearium\.code_read\.tool/.test(t) && /outside the repo/.test(t), t);
+      assert.deepStrictEqual(errors, []);
+    });
+  } finally { await browser.close(); }
+  done();
+})();
+function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ? `, ${skipped} skipped` : ''}`); process.exit(failed ? 1 : 0); }

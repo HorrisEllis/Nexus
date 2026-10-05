@@ -1213,7 +1213,7 @@ body.tab-tree-open #tab-tree-toggle{color:var(--sky)}
             <button class="repo-subtab-btn active" data-subtab="home" onclick="setRepoSubtab('home')">Home</button>
             <button class="repo-subtab-btn" data-subtab="idea" onclick="setRepoSubtab('idea')">Idea</button>
             <button class="repo-subtab-btn" data-subtab="files" onclick="setRepoSubtab('files')">Files</button>
-            <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="search the code by meaning, read any chunk's card (0.39.273)">Code</button>
+            <button class="repo-subtab-btn" data-subtab="code" onclick="setRepoSubtab('code')" title="the work surface: the files (uncommitted greyed), the code with its chunk cards, the agent's changes as diffs, the agent docked (0.39.349)">Code</button>
             <button class="repo-subtab-btn" data-subtab="architect" onclick="setRepoSubtab('architect')">Architect</button>
             <button class="repo-subtab-btn" data-subtab="spec" onclick="setRepoSubtab('spec')">Spec</button>
             <!-- §0.39.271 P4 — James: "i want the roadmap and phases combined into a fully enterprise
@@ -2460,6 +2460,7 @@ async function saveToIdearium(){
 <link rel="stylesheet" href="css/agent-blocks.css">
 <link rel="stylesheet" href="css/file-manage.css">
 <link rel="stylesheet" href="css/work-surface.css">
+<link rel="stylesheet" href="css/code-surface.css">
 <link rel="stylesheet" href="css/arch-canvas.css">   <!-- §0.39.299 AR5 — the Architect's canvas, scoped (.ax / .ac) -->
 <link rel="stylesheet" href="css/desktop-setup.css">   <!-- §0.39.340 DK2 — the desktop setup popup, scoped (.dsu-*) -->
 <script src="js/arch-canvas.js"></script>   <!-- §0.39.299 AR3 — the one canvas both Architects use -->
@@ -2475,6 +2476,7 @@ async function saveToIdearium(){
 <script src="js/desktop-setup.js"></script>   <!-- §0.39.340 DK2 — openDesktopSetup(repo) -->
 <script src="js/plan-panel.js"></script>
 <script src="js/work-surface.js"></script>
+<script src="js/code-surface.js"></script>   <!-- §0.39.349 CT3 — the Code tab is the work surface -->
 <script src="js/file-versions.js"></script>
 </body>
 </html>

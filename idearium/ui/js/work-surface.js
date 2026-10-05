@@ -94,6 +94,7 @@ function wsPaint(el) {
 function wsToggle(p, wasOpen) {
   if (wasOpen) { WSURF.open.delete(p); WSURF.open.add(`!${p}`); } else { WSURF.open.add(p); WSURF.open.delete(`!${p}`); }
   wsPaint();
+  if (typeof csRepaint === 'function') csRepaint();   // §CT3 — the same cards in the Code tab
 }
 
 async function wsAct(id, action) {
@@ -104,6 +105,7 @@ async function wsAct(id, action) {
     toast(`${action}: done`, 'ok');
   } catch (e) { toast(`${action} failed: ${e.message}`, 'err'); }
   wsLoad(document.getElementById('pp-ws'));
+  if (typeof csAfterChange === 'function') csAfterChange();   // §CT3 — the Code tab's tree, diffs and file follow
 }
 
 // §0.39.284 — James: "hook the agents into the worksurface, to edit or modify small amounts of code at a time". Click a

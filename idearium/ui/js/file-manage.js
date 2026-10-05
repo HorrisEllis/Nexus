@@ -87,7 +87,7 @@ function openManagePanel() {
   const sel = _editorSelectionLines();
   MANAGE.scope = sel ? 'lines' : 'file';
   // the Code tab's last search comes along: hits in other files are the context most worth a look
-  MANAGE.hits = (typeof _codeState !== 'undefined' && _codeState.uuid === repo.uuid && Array.isArray(_codeState.hits)) ? _codeState.hits.slice(0, 20) : [];
+  MANAGE.hits = (typeof CS !== 'undefined' && CS.uuid === repo.uuid && Array.isArray(CS.hits)) ? CS.hits.slice(0, 20) : []   // §CT3 — the Code tab's search (code-surface.js);
   MANAGE.picked = new Set(MANAGE.hits.map((h, i) => (h.file !== ACTIVE_API_FILE && i < 5 ? i : -1)).filter(i => i >= 0));
   let ov = document.getElementById('manage-modal');
   if (!ov) { ov = document.createElement('div'); ov.id = 'manage-modal'; ov.className = 'modal-overlay mg-overlay'; ov.onclick = (e) => { if (e.target === ov) closeManagePanel(); }; document.body.appendChild(ov); }
@@ -131,7 +131,7 @@ function openManagePanel() {
         </div>
         <div class="mg-row2">
           <div class="mg-section"><h4>Related code <span class="mg-hint">the agent reads these with its tools</span></h4>
-            <div class="mg-search"><input id="mg-q" placeholder="search this repo by meaning" value="${esc((typeof _codeState !== 'undefined' && _codeState.q) || '')}" onkeydown="if(event.key==='Enter'){event.preventDefault();manageSearch()}"><button class="mg-btn" onclick="manageSearch()">Search</button></div>
+            <div class="mg-search"><input id="mg-q" placeholder="search this repo by meaning" value="${esc((typeof CS !== 'undefined' && CS.q) || '')}" onkeydown="if(event.key==='Enter'){event.preventDefault();manageSearch()}"><button class="mg-btn" onclick="manageSearch()">Search</button></div>
             <div id="mg-hits" class="mg-hits manage-hits"></div>
           </div>
           <div class="mg-section"><h4>Who does it</h4>

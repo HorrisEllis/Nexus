@@ -26,6 +26,8 @@ const _require = createRequire(import.meta.url);
 // §0.39.282 — a repo with no provider of its own answers with the person's global choice (config repos.default_provider;
 // James: "was supposed to be ollama, set in the settings"). lib/repo-agent.js reads it on every call.
 try { _require('../../lib/repo-agent.js').setDefaultProviderSource(() => { try { return getIdeariumValue('repos.default_provider'); } catch (_) { return ''; } }); } catch (_) {}
+// §CT1 0.39.347 — the repo agent asks copilot's door with idearium's routing policy (routing.* config)
+try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingPolicy()); } catch (_) {}
 
 // §AX-010 2026-07-10 — idearium hardcoded 127.0.0.1:9000 in four places
 // (ledger x2, register, heartbeat). Resolve the orchestrator from
@@ -973,6 +975,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
       rr.endedAt = Date.now();
       run.state = 'done'; run.verdict = v.verdict;
       run.why = v.verdict === 'proven' ? `proven in ${round} round(s) — ${v.why}` : `every file parses and resolves (round ${round}), not proven: ${v.checks.tests ? v.checks.tests.why : 'no tests'}`;
+      // §CT2 — proven: every model that built a file of it did the job
+      if (v.verdict === 'proven') { try { const PRx = _require('../../lib/pipeline-routing.js'); const m2 = se.loadSpec(run.specUuid); for (const c of (m2.chunks || [])) { const by = _builtBy(c); if (by && c.realPath) _verdict(by, PRx.jobTypeOf(c), true); } } catch (_) {} }
       return;
     }
     if (round === run.maxRounds) {
@@ -984,6 +988,8 @@ async function _proveLoop(run, { maxBuildsPerRound }) {
     // 3 — send each failing file back with its exact failures; the version that failed is never reused
     const manifest = se.loadSpec(run.specUuid);
     const items = Object.entries(v.byFile).filter(([f]) => f !== '(project)').map(([f, list]) => ({ realPath: f, failures: BV.repairText(list), round: round + 1 }));
+    // §CT2 — whoever built a failing file was not up to it: the verdict goes to the door before the file goes back
+    try { const PRx = _require('../../lib/pipeline-routing.js'); for (const it of items) { const c = manifest.chunks.find(x => x.realPath === it.realPath); const by = _builtBy(c); if (by) _verdict(by, PRx.jobTypeOf(c), false, 'test-failed', String(it.failures || '').slice(0, 300)); } } catch (_) {}
     const mr = se.markForRepair(run.specUuid, items);
     rr.repaired = mr.marked; rr.notBuiltBySpec = mr.unknown;
     try {
@@ -1195,18 +1201,53 @@ async function _specEngineReady(ms = 5000) {
  *  provider (lib/repo-agent.js defaultProvider / routeFor), the same route a repo agent uses. Tests swap it (_setAgentAsk). */
 let _agentAskOverride = null;
 export function _setAgentAsk(fn) { _agentAskOverride = typeof fn === 'function' ? fn : null; }
-async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium' } = {}) {
+export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
+export function _verdictForTest(chunk, kind, ok, cls, why) { const by = _builtBy(chunk); _verdict(by, kind, ok, cls, why); return by; }   // §CT2
+async function _agentAsk(prompt, { channel = 'idearium', sessionId = 'idearium', kind = null } = {}) {
   if (_agentAskOverride) { try { return await _agentAskOverride(prompt, { channel, sessionId }); } catch (e) { return { ok: false, error: e.message }; } }
+  // §CT1 0.39.346 — James: "it should use copilot regardless, have copilot figure it, and learn from it". The pages
+  // (workshop, architect, void, deliver) ask copilot's door which model answers this kind of job (POST /api/route,
+  // lib/pipeline-routing's learned policy); each hop's outcome goes back (POST /api/route/outcome) so it learns; a hop
+  // that fails in a class the policy falls back on moves to the next model. Before, they followed the global default
+  // provider and never passed a model — an Ollama page got the bridge's default model, or no Ollama at all.
   const RA = _require('../../lib/repo-agent.js');
-  const provider = RA.defaultProvider();
-  const { backend, agent } = RA.routeFor(provider);
-  const payload = { prompt, channel, sessionId, ...(backend ? { backend } : {}), ...(agent ? { agent } : {}) };
-  if (backend === 'guardian') payload.timeoutMs = 300000;
-  const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
-  const j = r.json || {};
-  if (r.status >= 400 || j.ok === false || typeof j.text !== 'string') return { ok: false, error: j.error || (r.status ? `copilot answered ${r.status}` : 'no answer') };
-  return { ok: true, text: j.text, by: provider };
+  const PR = _require('../../lib/pipeline-routing.js');
+  const jobType = kind || `page:${String(channel).replace(/^idearium-/, '')}`;
+  const policy = _routingPolicy();
+  let route = null, routeNote = null;
+  const rr = await _postJson(`${RA.COPILOT_URL}/api/route`, { kind: jobType, preferAgent: RA.defaultProvider(), policy }, 5000);
+  if (rr.status === 200 && rr.json && rr.json.ok && Array.isArray(rr.json.route) && rr.json.route.length) route = rr.json.route;
+  else {
+    const prov = RA.defaultProvider(), r = RA.routeFor(prov);
+    route = [{ provider: prov, backend: r.backend, agent: r.agent || null, model: null, why: 'the default provider' }];
+    routeNote = `copilot could not route (${(rr.json && rr.json.error) || `status ${rr.status}`}) — sent to the default provider`;
+  }
+  const tried = [];
+  for (const h of route) {
+    const payload = { prompt, channel, sessionId, ...(h.backend ? { backend: h.backend } : {}), ...(h.agent ? { agent: h.agent } : {}), ...(h.model ? { model: h.model } : {}) };
+    if (h.backend === 'guardian') payload.timeoutMs = 300000;
+    const t0 = Date.now();
+    const r = await _postJson(`${RA.COPILOT_URL}/api/prompt`, payload, 310000);
+    const j = r.json || {};
+    const ok = !(r.status >= 400 || r.status === 0 || j.ok === false || typeof j.text !== 'string' || !j.text.trim());
+    const error = ok ? null : (j.error || (r.status ? `copilot answered ${r.status}` : 'no answer'));
+    const cls = ok ? null : PR.classify({ ok: false, error, text: j.text });
+    tried.push({ provider: h.provider, model: h.model || null, ok, class: cls, ms: Date.now() - t0 });
+    _postJson(`${RA.COPILOT_URL}/api/route/outcome`, { provider: h.provider, kind: jobType, ok, class: cls, ms: Date.now() - t0, error, policy }, 5000).catch(() => {});
+    if (ok) return { ok: true, text: j.text, by: h.provider, model: h.model || null, route: tried, why: h.why, ...(routeNote ? { note: routeNote } : {}) };
+    if (!PR.shouldFallback(cls, policy)) break;
+  }
+  const last = tried[tried.length - 1];
+  return { ok: false, error: `no model answered (${tried.map(t => `${t.provider}${t.class ? `: ${t.class}` : ''}`).join(' → ')})`, route: tried, ...(routeNote ? { note: routeNote } : {}), lastClass: last && last.class };
 }
+/** §CT2 0.39.348 — a later verdict on a model's work (its test failed or passed, its draft dismissed or accepted) goes to
+ *  copilot's door, so the learned order learns what a model is up to, not only when it crashes. Fire and forget. */
+function _verdict(provider, kind, ok, cls = null, why = null) {
+  if (!provider || !kind) return;
+  try { const RAx = _require('../../lib/repo-agent.js'); _postJson(`${RAx.COPILOT_URL}/api/route/outcome`, { provider, kind, ok: !!ok, class: ok ? null : cls, error: why, verdict: true, policy: _routingPolicy() }, 5000).catch(() => {}); } catch (_) {}
+}
+/** _builtBy(chunk) — the provider (with its model) whose answer built this chunk: the last ok hop of its route */
+function _builtBy(c) { if (!c) return null; const ok = (c.route || []).filter(h => h.outcome === 'ok').pop(); return (ok && ok.provider) || null; }
 function _workshopGet(WS, id) { return loadTable(WS.TABLE).find(r => r.uuid === id) || null; }
 
 // §0.39.298 AR2 — ARCHITECT's helpers (idearium/lib/architect.js holds the model; these hold loom, the store and repos)
@@ -1988,6 +2029,7 @@ function matchRoute(method, url) {
     // See that file's header for the capability-vs-behaviour limit.
     ['GET',    ['api','repos',    ':uuid','agent'],           'repo.agent.status'],
     ['POST',   ['api','repos',    ':uuid','agent','prompt'],  'repo.agent.prompt'],
+    ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
     ['GET',    ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.find'],
     ['POST',   ['api','repos',    ':uuid','agent','late'],    'repo.agent.late.adopt'],
     ['GET',    ['api','repos',    ':uuid','agent','history'], 'repo.agent.history'],
@@ -4440,6 +4482,8 @@ async function handle(req, res, route, query, body) {
       const r = WS.decide(w, params.pid, body || {});
       if (r.error) return err(res, 400, r.error);
       syncTable(WS.TABLE, [w]);
+      // §CT2 — his accept or dismiss is the verdict on the model that drafted it
+      if (r.proposal && r.proposal.by && ['accepted', 'dismissed'].includes(r.proposal.status)) _verdict(r.proposal.by, 'page:workshop', r.proposal.status === 'accepted', 'dismissed', r.proposal.status === 'dismissed' ? 'dismissed by James' : null);
       return ok(res, { proposal: r.proposal, section: r.section || null, workshop: w });
     }
     case 'workshop.save': {
@@ -5196,6 +5240,7 @@ async function handle(req, res, route, query, body) {
         backend: body.backend || null,
         agent: body.agent || null,
         provider: body.provider || null,   // §PROVIDER — else this compartment's stored choice
+        model: body.model || null,   // §CT3 0.39.349 — a hop he picked in the Code tab (backend, agent and model together)
         noContext: body.noContext === true,
         layer: getRepoLayer(),   // §INJECT — addressed code blocks land in this repo through the one real write path
       });
@@ -5203,6 +5248,18 @@ async function handle(req, res, route, query, body) {
       // error — 200 with ok:false so the CLI can print it in the transcript
       // instead of api() throwing and losing the text.
       return ok(res, r);
+    }
+
+    // §CT3 0.39.349 — James: "the code tab the agent tab, work surface". The docked agent shows the model copilot's door
+    // would choose for this repo's agent (or that Settings pins a provider, so the door is not asked), and the other hops.
+    case 'repo.agent.route': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const RA = _require('../../lib/repo-agent.js');
+      const kind = query.kind === 'agent:build' ? 'agent:build' : 'agent:chat';
+      const pinned = RA.getProvider(params.uuid);
+      const d = await RA.doorRoute(kind, null);
+      return ok(res, { ok: !!d.route, kind, route: d.route || [], error: d.route ? null : (d.error || 'copilot gave no route'), pinned: pinned && pinned !== 'auto' ? pinned : null });
     }
 
     // §LATE 0.39.241 — the Agent tab asks for a reply copilot's wait missed.
@@ -6421,9 +6478,18 @@ async function handle(req, res, route, query, body) {
         // the chosen agent, this block's own fallback, the global chain (or local-first / economy / fixed), providers
         // whose breaker is open skipped. A call may still name its own: body.route (a list) or body.fallbackAgent.
         const routingPolicy = _routingPolicy(body.routing || {});
-        const routePlan = Array.isArray(body.route) && body.route.length
-          ? { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [] }
-          : _require('../../lib/pipeline-routing.js').plan({ preferAgent, block: (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null, chunk, policy: routingPolicy });
+        // §CT1 0.39.347 — the route from copilot's door (one place decides, its breakers, what it has learned); the local
+        // plan only when copilot cannot be reached, and then it says so (routeVia)
+        const _blk = (se.SPEC_SECTIONS || []).find(b => b.id === chunk.sectionId) || null;
+        const _PR = _require('../../lib/pipeline-routing.js');
+        let routePlan;
+        if (Array.isArray(body.route) && body.route.length) routePlan = { mode: 'given', route: body.route.map(p => ({ provider: p, why: 'given by the call' })), skipped: [], routeVia: 'the call' };
+        else {
+          const RAx = _require('../../lib/repo-agent.js');
+          const d = await _postJson(`${RAx.COPILOT_URL}/api/route`, { kind: _PR.jobTypeOf(chunk), preferAgent, block: _blk ? { id: _blk.id, agent: _blk.agent, fallback: _blk.fallback || [] } : null, policy: routingPolicy }, 5000);
+          if (d.status === 200 && d.json && d.json.ok && Array.isArray(d.json.route) && d.json.route.length) routePlan = { mode: d.json.mode, route: d.json.route.map(h => ({ provider: h.provider, why: h.why })), skipped: d.json.skipped || [], routeVia: 'copilot' };
+          else routePlan = { ..._PR.plan({ preferAgent, block: _blk, chunk, policy: routingPolicy }), routeVia: `local — copilot could not route (${(d.json && d.json.error) || `status ${d.status}`})` };
+        }
         if (body.fallbackAgent && !routePlan.route.some(r => r.provider === body.fallbackAgent)) routePlan.route.splice(1, 0, { provider: body.fallbackAgent, why: 'given by the call' });
         const fallbackAgent = null;   // the route carries the fallbacks now (0.39.286); kept so nothing below changes shape
 
@@ -6555,6 +6621,8 @@ async function handle(req, res, route, query, body) {
             preferAgent,
             fallbackAgent,
             route: routePlan.route.map(r => r.provider), policy: routingPolicy,   // §0.39.286 RG3
+            // §CT1 0.39.347 — each hop's outcome goes to copilot's door (its breakers, its learning), not a second set here
+            ...(routePlan.routeVia === 'copilot' ? { report: (h) => { const RAx = _require('../../lib/repo-agent.js'); _postJson(`${RAx.COPILOT_URL}/api/route/outcome`, { provider: h.provider, kind: h.jobType, ok: h.ok, class: h.class || null, ms: h.ms, error: h.error || null, policy: routingPolicy }, 5000).catch(() => {}); } } : {}),
             // §BUILT 2026-09-03 — fires the instant a queued job is
             // confirmed on guardian's side, before the (up to 5-minute)
             // poll for a browser-automated NCP provider — see
@@ -6626,7 +6694,7 @@ async function handle(req, res, route, query, body) {
         return ok(res, {
           chunkUuid: chunk.uuid, sectionId: chunk.sectionId, sectionTitle: chunk.sectionTitle,
           agent: preferAgent, status: 'building',
-          route: routePlan.route, routeSkipped: routePlan.skipped, routeMode: routePlan.mode,   // §0.39.286 — what it will try, in order, and why
+          route: routePlan.route, routeSkipped: routePlan.skipped, routeMode: routePlan.mode, routeVia: routePlan.routeVia || null,   // §0.39.286 — what it will try, in order, and why; §CT1 — who decided
           hat: who.hat ? who.hat.name : null, hatSource: who.hatSource, repoUuid: who.repoUuid,   // §0.39.267 — who's wearing what, visible
           agentId: who.agentId, memory: memoryInfo,                                                // §0.39.269 — and what it remembered
         });
