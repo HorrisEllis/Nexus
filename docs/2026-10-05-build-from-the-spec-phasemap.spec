@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.6.0
+    version:  1.7.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -127,6 +127,11 @@ spec:
   origin_1_6_0: >
     James, 2026-10-05: "okay but i want that to be the default. then each new system can slot into nexus automatically.
     right?"
+
+  origin_1_7_0: >
+    James, 2026-10-05, shown the template: "why not identity context file_structure modules -> components summary, with
+    routes and commands, anything else relevant. then everything relevant to the modules, is listed each module and
+    component. not in seperate sections"
 
   found_1_6_0:
     - >-
@@ -461,19 +466,23 @@ spec:
         - { says: "genesis 1.2.0 has domain nodes, the node-index file and the axiom; the manifest wiring check stays clean", check: { kind: tests, run: "node tests/modules/test-genesis-and-architecture-spec.test.js" } }
 
     SB17_the_system_template_is_complete:
-      james: '"like can you make sure this is all added to the system template. like look at the architecture spec. this needs to be mapped first"'
+      james: '"like can you make sure this is all added to the system template. like look at the architecture spec. this needs to be mapped first" · "why not identity context file_structure modules -> components summary, with routes and commands, anything else relevant. then everything relevant to the modules, is listed each module and component. not in seperate sections"'
       layer: foundation
-      status: OPEN
+      status: "PARTIAL (0.39.312) — the template is rewritten in his structure; architecture-spec.spec and genesis still to be made to agree with it"
       overlaps: "architecture-spec.spec's own gaps; TP1 (promote with templates)"
       depends_on: [SB16_genesis_nodes_domain]
       files: [idearium/spec-engine/templates/architecture-spec.template.yaml, docs/architecture-spec/architecture-spec.spec, idearium/spec-engine/templates/genesis.spec]
       does: >-
-        One complete shape of a sovereign system, in the three places that describe it, saying the same thing. The
-        system spec template gains what it lacks: a registry section (the event-driven interaction contract — each
-        component with its routes, CLI commands, events emitted and heard, the nodes it reads and writes), an event
-        taxonomy section, a nodes section (types, schemas, the JAA node index and its ledger, the data folder), and a full
-        pulse section (heartbeat interval, the health snapshot, the node counts). architecture-spec.spec gains pulse and
-        the taxonomy, and extends genesis 1.2.0. Every field stays a type, not example content (the template's own rule).
+        His structure: identity → context → file_structure → modules → components. Everything about a module or a
+        component is listed ON it, not in separate sections: per component its summary, capability, commands, routes,
+        events emitted and heard, the nodes it reads and writes, its schema, config, gates, status and tests; per module
+        its node types (each with its schema, JAA index table and ledger table), its config, its seams. Only what belongs
+        to the whole system stays above the modules: identity (incl. what it owns, its data folder, its heartbeat) and
+        context (purpose, axioms, spine, sovereignty, config layers, pulse, the build phases). The cross-cutting lists —
+        every event, every node type, the taxonomy, the contract — are generated from the components (SB21), never written
+        a second time. The coder's one addition, his to keep or cut: a `generated:` block naming those derived lists, so
+        nobody hand-edits them. The old template is archived whole. Then architecture-spec.spec and genesis are made to
+        agree with it.
       proof: "the system spec template has registry, taxonomy, nodes and pulse sections and parses; architecture-spec.spec names genesis 1.2.0, pulse and the taxonomy"
       conditions:
         - { says: "the system spec template has registry, taxonomy, nodes and pulse sections and parses", check: { kind: tests, run: "node tests/modules/test-system-template.test.js" } }
