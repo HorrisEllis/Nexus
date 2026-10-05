@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.2.0
+    version:  1.3.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), the author-reuse fix (0.39.306), sections judged as sections + the guardian click (0.39.307), the hat with the repo (0.39.308), SB12 the registry drives the build (0.39.309). Open: SB4–SB11, SB13–SB15. 1.2.0: SB12 done, overlaps with older maps named on each phase, SB15 added"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened"
     axioms:   docs/AXIOMS-v3.1.md — §17.4 every build is reproducible (from an empty machine, the repo + its specs
               recreate the system), §3.3 map before build, §8.6 reuse before build, §0.3 nothing lost, §1.2 nothing
               silently fails, §5.6 structural self-similarity, §16.4 simple things stay simple.
@@ -101,6 +101,34 @@ spec:
       queue poller, phase runs that end in proof (PH1), lib/spec-digest.js (a finished spec condensed to a budget).
       Nothing yet proves the round trip: a Nexus system's spec, through the pipeline, into code its own tests pass.
 
+  origin_1_3_0: >
+    James, 2026-10-05: "every system is supposed to be sovereign. the components registry is a an event driven
+    interaction contract. nodes for data to persist or move through the system. isolated from each other but using the
+    interactoin contract as a component registry, would map it entirely. like the atlas' are supposed to list the
+    commands and routes in relation to the component or module, like its all supposed to be very specific and etailed.
+    nodes schemas, taxonomy. guardian is the closest the system." · "like with the genasis spec, needs to have the
+    component registry event interaction contract, with the heartbeat and pulse system, node based data structure using
+    jaa tables as a node index." · "like can you make sure this is all added to the system template. like look at the
+    architecture spec. this needs to be mapped first"
+
+  found_1_3_0:
+    - >-
+      Three descriptions of a sovereign system, none complete: genesis.spec (the default template of a system spec,
+      GN1) has the interaction contract (Domain 2), the registry as doorway (2c) and pulse/heartbeat (10), but never named
+      JAA or a node index until 1.2.0. docs/architecture-spec/architecture-spec.spec has the JAA-per-type index, watcher
+      and ledger (registry-watcher), but not pulse or the event taxonomy. idearium/spec-engine/templates/
+      architecture-spec.template.yaml — "SYSTEM SPEC TEMPLATE", the shape every system spec is meant to be written into —
+      has no interaction contract, no event taxonomy, no CLI, no JAA, one line each for heartbeat and pulse, and is read
+      by NO code. templates.js's 'system' id seeds nothing.
+    - >-
+      Measured against Guardian (registry components, interaction-contract.json, event taxonomy, schemas, data/nodes,
+      a CLI, routes in the atlas): no system has all seven. orchestrator and diagnostic have no registry-components;
+      architect, diagnostic, eravos, ollama, loom and clear-glass have no event taxonomy; eravos and cos no interaction
+      contract; most have no CLI. Before 0.39.310 the atlases named almost none of their routes (Idearium 10 of 255).
+    - >-
+      Order broken, said: Domain 2d was written into genesis.spec (uncommitted) before this map. James: "this needs to be
+      mapped first." It is recorded as SB16, built-before-mapped, and committed with this map.
+
   found_1_2_0:
     - >-
       While wiring SB12 (0.39.309): materialize() writes every UNBUILT chunk to disk as an EMPTY file, an empty .js
@@ -169,14 +197,16 @@ spec:
     SB4_template_fidelity:
       layer: library
       status: OPEN
-      depends_on: [SB1_templates_are_the_default_frame]
-      files: [idearium/spec-engine/templates/genesis.spec, architecture-spec/registry/, lib/nexus-self/systems.js]
+      depends_on: [SB17_the_system_template_is_complete]
+      files: [idearium/spec-engine/templates/genesis.spec, idearium/spec-engine/templates/architecture-spec.template.yaml, architecture-spec/registry/, lib/nexus-self/systems.js]
       does: >-
-        The reusable architecture checked against what Nexus really is: for each kernel, what genesis and the frames
-        say a sovereign system has (server, CLI, API, event taxonomy, registry components, interaction contract, spec,
-        tests, data root) against what the kernel's folder holds. Each difference is named as template-wrong or
-        system-drifted, never averaged into a score. architecture-spec/registry/ (unwired today — 10 files, see the
-        2026-10-05 wiring inventory) is the natural home.
+        The reusable architecture checked against what Nexus really is, element by element, with Guardian as the
+        reference: for each system — registry-components (the event interaction contract: every component with its
+        routes, CLI commands, events emitted and heard), interaction-contract.json, an event taxonomy matching what is
+        really emitted, node types with schemas and a JAA node index in its own data folder, heartbeat/pulse, a CLI, a
+        spec, tests, and the generated atlas. Each difference is named as template-wrong or system-drifted, never averaged
+        into a score. architecture-spec/registry/ (unwired today — 10 files) is the natural home. Widened in 1.3.0 from
+        "server, CLI, API, …" to this list (SB17 makes it the template).
       proof: "a fidelity report names every kernel's differences"
       conditions:
         - { says: "a fidelity report names every kernel's differences", check: { kind: tests, run: "node tests/modules/test-template-fidelity.test.js" } }
@@ -352,3 +382,67 @@ spec:
       proof: "a repo whose files are all empty reads failed, naming each file as not built"
       conditions:
         - { says: "a repo whose files are all empty reads failed, naming each file as not built", check: { kind: tests, run: "node tests/modules/test-empty-is-not-built.test.js" } }
+
+    SB16_genesis_nodes_domain:
+      layer: foundation
+      status: "BUILT-BEFORE-MAPPED (0.39.311) — written before this map; recorded here, committed with it"
+      overlaps: "the architecture spec's registry-watcher module (same model, now in genesis too)"
+      depends_on: [SB0_map]
+      files: [idearium/spec-engine/templates/genesis.spec]
+      does: >-
+        genesis 1.2.0, Domain 2d "nodes", written from Guardian's real model: one file per fact (data/nodes/<type>/
+        <id>.<type>, the node-export envelope) is the canonical record; one JAA table per node type (nodes_<type>) is its
+        index and nodes_<type>_ledger its append-only history, in the system's own data folder; a schema per type
+        (lib/node-schemas.js), the types named in NODE-TAXONOMY.md; a watcher per type folder; data moves between systems
+        as nodes through the interaction contract. Plus: file registry/node-index.js, bind node.change → Event, axiom
+        NODE_INDEX_IS_JAA, root NodeIndex, and the pulse snapshot carries each type's count.
+      proof: "genesis 1.2.0 has domain nodes, the node-index file and the axiom; the manifest wiring check stays clean"
+      conditions:
+        - { says: "genesis 1.2.0 has domain nodes, the node-index file and the axiom; the manifest wiring check stays clean", check: { kind: tests, run: "node tests/modules/test-genesis-and-architecture-spec.test.js" } }
+
+    SB17_the_system_template_is_complete:
+      layer: foundation
+      status: OPEN
+      overlaps: "architecture-spec.spec's own gaps; TP1 (promote with templates)"
+      depends_on: [SB16_genesis_nodes_domain]
+      files: [idearium/spec-engine/templates/architecture-spec.template.yaml, docs/architecture-spec/architecture-spec.spec, idearium/spec-engine/templates/genesis.spec]
+      does: >-
+        One complete shape of a sovereign system, in the three places that describe it, saying the same thing. The
+        system spec template gains what it lacks: a registry section (the event-driven interaction contract — each
+        component with its routes, CLI commands, events emitted and heard, the nodes it reads and writes), an event
+        taxonomy section, a nodes section (types, schemas, the JAA node index and its ledger, the data folder), and a full
+        pulse section (heartbeat interval, the health snapshot, the node counts). architecture-spec.spec gains pulse and
+        the taxonomy, and extends genesis 1.2.0. Every field stays a type, not example content (the template's own rule).
+      proof: "the system spec template has registry, taxonomy, nodes and pulse sections and parses; architecture-spec.spec names genesis 1.2.0, pulse and the taxonomy"
+      conditions:
+        - { says: "the system spec template has registry, taxonomy, nodes and pulse sections and parses", check: { kind: tests, run: "node tests/modules/test-system-template.test.js" } }
+
+    SB18_the_system_template_is_used:
+      layer: library
+      status: OPEN
+      overlaps: "SB1 (the frames mechanism, reused); GN1 (genesis the default of a system spec)"
+      depends_on: [SB17_the_system_template_is_complete, SB1_templates_are_the_default_frame]
+      files: [idearium/spec-engine/templates.js, idearium/spec-engine/index.js, idearium/spec-engine/blocks.yaml]
+      does: >-
+        A system spec is built against the template instead of the template sitting unread: the 'system' template id
+        frames each block from architecture-spec.template.yaml's matching section (registry → block 11, nodes → schema,
+        taxonomy → events, pulse → integration), through SB1's frames — the agent fills the shape for that system. genesis
+        stays the default seed of a system spec.
+      proof: "a type system spec's registry, schema, events and integration blocks carry the template's sections as frames"
+      conditions:
+        - { says: "a type system spec's registry, schema, events and integration blocks carry the template's sections as frames", check: { kind: tests, run: "node tests/modules/test-system-template.test.js" } }
+
+    SB19_atlases_per_component:
+      layer: library
+      status: OPEN
+      overlaps: "lib/atlas-generate.js (0.39.266, first run 0.39.310)"
+      depends_on: [SB17_the_system_template_is_complete]
+      files: [lib/atlas-generate.js, lib/registry-harness.js]
+      does: >-
+        "the atlas' are supposed to list the commands and routes in relation to the component or module." The generated
+        half of every atlas goes per component: each component with its routes (and the file that serves each), its CLI
+        commands (its grammar), the events it emits and hears, the node types it reads and writes, and their schemas;
+        then the system's event taxonomy against what is really emitted, and its node types with their JAA index tables.
+      proof: "a system's atlas lists each component with its routes, commands, events and node types; an emitted event the taxonomy lacks is named"
+      conditions:
+        - { says: "a system's atlas lists each component with its routes, commands, events and node types; an emitted event the taxonomy lacks is named", check: { kind: tests, run: "node tests/modules/test-atlas-per-component.test.js" } }

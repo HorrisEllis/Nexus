@@ -8,7 +8,7 @@
  *   GA-01 every module path docs/architecture-spec/architecture-spec.spec names exists
  *   GA-02 every event it says it emits is emitted by real code; every route it names is served
  *   GA-03 what 0.8.0 moved out is kept whole in the archive (§0.3)
- *   GA-04 genesis 1.1.0: the registry (doorway) and routing domains, its two new files, wiring still clean
+ *   GA-04 genesis 1.2.0: the registry (doorway), routing and nodes (JAA as the node index) domains, their files, wiring still clean
  *   GA-05 genesis is the default: a system spec with no template starts from it; the New spec form checks it
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -48,7 +48,9 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const g = read('idearium/spec-engine/templates/genesis.spec');
     const { dispatch } = await import(path.join(ROOT, 'idearium/spec-engine/manifest/commands.js'));
     const mc = dispatch(['check', path.join(ROOT, 'idearium/spec-engine/templates/genesis.spec')], {});
-    check('GA-04 genesis 1.1.0: registry (the doorway, nodes) and routing domains, its two new files, the wiring still clean', /^version 1\.1\.0$/m.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
+    // §0.39.311 SB16 — genesis 1.2.0 adds Domain 2d (nodes, JAA tables as the node index); 1.1.0's checks all still hold
+    check('GA-04 genesis 1.2.0: registry (the doorway, nodes), routing and nodes (JAA as the node index) domains, their files, the wiring still clean', /^version 1\.2\.0$/m.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
+      && /^domain "nodes"$/m.test(g) && /file "registry\/node-index\.js"/.test(g) && /axiom NODE_INDEX_IS_JAA/.test(g) && /bind node\.change\s+-> Event/.test(g)
       && /file "registry\/node-registry\.js"/.test(g) && /file "spine\/route-policy\.js"/.test(g) && /axiom REGISTRY_IS_THE_DOORWAY/.test(g) && !mc.code && /wiring is clean/.test((mc.out || []).join(' ')), JSON.stringify(mc.out));
     process.env.NEXUS_VERSIONIUM_URL = 'http://127.0.0.1:9';
     const api = await import(path.join(ROOT, 'idearium', 'api', 'index.js'));
