@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.9.0
+    version:  1.10.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27. 1.10.0: genesis in the shape Nexus systems really have; the build flow in his order, in a compartment until committed — SB28, SB29"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -142,6 +142,30 @@ spec:
     James, 2026-10-05: "like i was thinking that expanding and repo needs to either update or build and specs, then add
     phases to the phasemap. map any existing phases from the code into the phases tab. same with the specs. need to know
     the progress of projects i import."
+
+  origin_1_10_0: >
+    James, 2026-10-05, shown the files genesis would build: "compartments? no system in nexus looks like this" · "like
+    needs to map, phase, check for snapshot if none exist, create one, then populate the plan section and begin, then
+    add precommited changes to the files tab, greyed out. dont create an entirely new repo, just compartment until the
+    changes are commited. what do you think"
+
+  found_1_10_0:
+    - >-
+      Genesis's 42 files (compartments/<name>/{api,cli,sse,hooks,seam,…}, kernel/, lattice/, nerve/, spine/, ui/tv-shell/)
+      are a design never built: no Nexus system looks like it. The real systems share one shape — versionium the cleanest:
+      server.js, config.js, compartment.json, registry-components.js, interaction-contract.json, event-taxonomy.js, lib/,
+      routes/ (or commands/, cli.js), schemas/, spec/, data/ (guardian, loom, ollama the same, with more in lib/). Genesis
+      also builds no tests, no spec folder, no atlas, no registry-components.js, no event taxonomy and no data/ or
+      schemas/ — against its own axioms.
+    - >-
+      Most of his flow exists in pieces: a phase run already refuses to start without a Versionium snapshot (the
+      one-idearium map's I2); the Plan panel; the Files tab already shows a proposal-only file greyed (file-state P); a
+      staging branch in Versionium holds work before it is applied (S1). What breaks his rule: "Generate code"
+      (speceng.codegen) makes a SECOND repo for the code — a branch repo or a copy — instead of working in the repo's own
+      compartment; and codegen and phase output does not show greyed in Files the way injects do.
+    - >-
+      The coder's one difference, his to decide: a snapshot before EVERY run, not only when none exists — otherwise this
+      run has no point to roll back to.
 
   found_1_9_0:
     - >-
@@ -702,3 +726,38 @@ spec:
       proof: "adding a component to a fixture repo adds it to the spec with an addendum and appends a phase with conditions; review mode waits for his yes"
       conditions:
         - { says: "adding a component to a fixture repo adds it to the spec with an addendum and appends a phase with conditions; review mode waits for his yes", check: { kind: tests, run: "node tests/modules/test-expand-updates-spec.test.js" } }
+
+    SB28_genesis_in_the_shape_nexus_systems_have:
+      layer: foundation
+      status: OPEN
+      james: '"compartments? no system in nexus looks like this"'
+      overlaps: "SB17 (genesis is the template's architecture — this makes its FILE LIST match), SB23 (the system declaration)"
+      depends_on: [SB17_the_system_template_is_complete]
+      files: [idearium/spec-engine/templates/genesis.spec, idearium/spec-engine/templates/architecture-spec.template.yaml]
+      does: >-
+        The coder's reading: genesis's manifest declares the files a real Nexus system has, versionium's shape:
+        server.js, config.js, compartment.json, registry-components.js, interaction-contract.json, event-taxonomy.js, lib/
+        (its modules and components), routes/ and a CLI, schemas/ (a schema per node type it owns), spec/ (its living
+        spec), data/ (its nodes and JAA tables, created at run time), tests, and its atlas — each with uuid, layer and
+        depends, so the wiring check still runs. The compartments/kernel/lattice/nerve/tv-shell design is archived whole,
+        not deleted; anything in it a real system needs (the heartbeat, the node index, the gate) keeps its place.
+      proof: "genesis's manifest lists versionium's shape, the wiring check stays clean, and the old design is in the archive"
+      conditions:
+        - { says: "genesis's manifest lists versionium's shape, the wiring check stays clean, and the old design is in the archive", check: { kind: tests, run: "node tests/modules/test-genesis-and-architecture-spec.test.js" } }
+
+    SB29_the_build_flow_in_his_order:
+      layer: api
+      status: OPEN
+      james: '"like needs to map, phase, check for snapshot if none exist, create one, then populate the plan section and begin, then add precommited changes to the files tab, greyed out. dont create an entirely new repo, just compartment until the changes are commited."'
+      overlaps: "the one-idearium map's I2 (snapshot before a phase run); the coding-flow map's W2/W3 (plan lands, work surface); staging S1; file-state P (greyed proposals); speceng.codegen (makes a second repo — to change)"
+      depends_on: [SB27_expanding_a_repo_keeps_its_spec_and_phases_current, SB12_the_registry_is_the_component_list]
+      files: [idearium/api/index.js, idearium/api/build-surface.js, idearium/repo/file-state.js, idearium/repo/build-plan.js, lib/cos-bridge.js]
+      does: >-
+        His order, one flow: map → phases → a Versionium snapshot (the coder's suggestion: before every run, his call) →
+        the Plan panel filled → building begins. Everything built lands in the repo's OWN compartment (a COS branch of it),
+        never a new repo — codegen included, replacing the second "code repo" — and shows in the Files tab greyed, as
+        pre-committed, with its diff. Commit (all, or file by file) promotes it into the repo; discard drops it; the
+        snapshot stays the way back.
+      proof: "a phase run on a fixture repo snapshots, fills the plan, writes into its compartment only, shows each file greyed until commit, and makes no second repo"
+      conditions:
+        - { says: "a phase run on a fixture repo snapshots, fills the plan, writes into its compartment only, shows each file greyed until commit, and makes no second repo", check: { kind: tests, run: "node tests/modules/test-build-flow-order.test.js" } }
