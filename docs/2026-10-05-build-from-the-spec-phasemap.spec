@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.18.0   # 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
+    version:  1.19.0   # 1.19.0: SB39 one agnostic context tool; the checklist builds the working set (0.39.339) · 1.18.0: SB38 prerequisites, the questions first (0.39.338) · 1.17.0: SB37 the working set (0.39.337) · 1.16.0: SB36 every agent can use the tools (0.39.336) · 1.15.0: SB35 the index is there when the agent asks (0.39.335) · BC1–BC4 merged in from the branch
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -1050,3 +1050,27 @@ spec:
       proof: "an explain question gets its chunk, uses and users checked off from the index; a change question that does not say what it should do asks for it; an item found only in an earlier conversation is checked off from there; what is not found is asked, never guessed, and recorded as a gap"
       conditions:
         - { says: "the questions first", check: { kind: tests, run: "node tests/modules/test-context-prereqs.test.js" } }
+
+    SB39_the_checklist_builds_the_working_set:
+      layer: library
+      status: "DONE (0.39.339) — mapped before code, then cut (his \"no noise\"): the DOM and debug domains were mapped as SB40/SB41 and removed again before any code; registerDomain() takes them when he wants them. test-checklist-workset 6/6."
+      james: '"do it. we could use that for more than coding. coudl use it for debugging, dom in clearglass, or any data fed into a pipeline" · "im saying for anything it wants to learn. agnostic tool for context" · "don''t just agree. im not looking to add noise. can i build from inside nexus now?"'
+      found: >-
+        SB38's checklist and SB37's working set ran side by side: the checklist went into the first message, the working set
+        started empty and knew nothing of what the question needed. lib/context-prereqs.js was written for code only.
+      depends_on: [SB38_prerequisites_the_questions_first]
+      files: [lib/context-prereqs.js, lib/agent-tools/tools/query/learn.js, lib/agent-tools/index.js, lib/agent-tools/tool-guide.js, lib/agent-tools/tool-catalog.js, copilot/lib/workset.js, copilot/tool-runtime.js, copilot/server.js, lib/repo-agent.js, lib/repo-prompt-blocks.js]
+      does: >-
+        (1) One agnostic engine: a DOMAIN gives the intents, the checklist and where an item is found; the engine does the
+        rest the same for all — the domain's source, then past conversations, then ask James — and records the gaps. Domains:
+        code (SB38), data (a record fed into a pipeline; its needs are fields with a path and a question), topic (anything
+        else — what it is, where it lives, what it connects to, what was said before — from every store Nexus keeps, through
+        context-atlas, and the code index when there is a repo). learn() picks the domain from what it is given.
+        (2) nexus.learn.tool: any agent's handle on it — the checklist, the context found for each item, the questions.
+        The context-tools block names it in one line. (3) The checklist is the Ollama working set's index: found items seed
+        it, a code read ticks a missing target, the synthesis opens with the checklist — complete, or what is left to ask;
+        the first round's prompt already carries the checklist, so the seeded set is sent only once a real read is in it.
+      proof: "the working set opens with the checklist and the found context; a code read ticks the target; a pipeline record's missing field is asked; learn() finds a topic in Nexus's own specs; nexus.learn.tool answers; a new domain runs through the same engine"
+      conditions:
+        - { says: "the checklist builds the working set; the engine takes any domain", check: { kind: tests, run: "node tests/modules/test-checklist-workset.test.js" } }
+

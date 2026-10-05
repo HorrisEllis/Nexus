@@ -24,7 +24,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const MODULE_ID = 'copilot.lib.workset';
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';   // 1.1.0 (0.39.339 SB39): seeded from the checklist; a code read ticks it; the synthesis opens with its state
 const DEFAULT_BUDGET = parseInt(process.env.COPILOT_WORKSET_BUDGET || '6000', 10);   // chars of synthesis per round
 const LINES_PER_READ = 14;
 const LINE_MAX = 220;
@@ -113,11 +113,28 @@ function distill(tool, args, result, terms) {
 }
 
 /** create({ question, id? }) → a working set, written to its JSON file */
-function create({ question = '', id = null, meta = null } = {}) {
+function create({ question = '', id = null, meta = null, checklist = null } = {}) {
   const ws = { id: id || `ws-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`, version: VERSION, question: String(question || '').slice(0, 4000),
-    terms: termsOf(question), meta: meta || null, createdAt: Date.now(), reads: [], answer: null, answeredAt: null };
+    terms: termsOf(question), meta: meta || null, createdAt: Date.now(), reads: [], answer: null, answeredAt: null, checklist: null };
+  // §0.39.339 SB39 — the checklist is the working set's index (lib/context-prereqs.js): its items, and every one already
+  // found goes in as the first reads — the context itself, not a pointer to it
+  if (Array.isArray(checklist) && checklist.length) {
+    ws.checklist = checklist.map(i => ({ id: String(i.id), need: String(i.need || i.id), status: i.status || 'missing', source: i.source || null, ask: i.ask || null }));
+    for (const i of checklist) {
+      if (i.status === 'missing' || !i.content) continue;
+      ws.reads.push({ n: ws.reads.length + 1, tool: 'checklist', args: { need: i.need }, at: Date.now(), raw: i.content,
+        signal: String(i.content).split('\n').filter(l => l.trim()).slice(0, LINES_PER_READ).map(l => _clip(l)), ids: i.ids || [], files: [], score: 100 });
+    }
+  }
   _save(ws);
   return ws;
+}
+
+// a read that brings back code ticks the checklist's still-missing "what is it about" item (the code tools return ids)
+const TICKED_BY_A_CODE_READ = new Set(['target', 'similar', 'where', 'what']);
+function _tick(ws, read) {
+  if (!ws.checklist || !read.ids || !read.ids.length) return;
+  for (const i of ws.checklist) if (i.status === 'missing' && TICKED_BY_A_CODE_READ.has(i.id)) { i.status = 'found'; i.source = `read ${read.n}`; }
 }
 
 function file(ws) { return path.join(dir(), `${ws.id}.json`); }
@@ -133,6 +150,7 @@ function add(ws, tool, args, result) {
   try { raw = typeof result === 'string' ? result : JSON.parse(JSON.stringify(result)); } catch (_) { raw = String(result); }
   const read = { n: ws.reads.length + 1, tool, args: args || {}, at: Date.now(), raw, ...d };
   ws.reads.push(read);
+  _tick(ws, read);
   _save(ws);
   return read;
 }
@@ -143,6 +161,21 @@ function add(ws, tool, args, result) {
  */
 function synthesize(ws, { budget = DEFAULT_BUDGET } = {}) {
   if (!ws.reads.length) return '';
+  const head = _checklistLines(ws);
+  const body = _synth(ws, Math.max(500, budget - head.length));
+  return head ? `${head}\n\n${body}` : body;
+}
+
+/** the checklist's state, for the top of the synthesis: each item, then complete or what is left to ask */
+function _checklistLines(ws) {
+  if (!ws.checklist) return '';
+  const mark = { found: '✓', remembered: '↺', missing: '✗' };
+  const left = ws.checklist.filter(i => i.status === 'missing');
+  return [...ws.checklist.map(i => `${mark[i.status] || '·'} ${i.need}${i.source ? ` (${i.source})` : ''}`),
+    left.length ? `still missing — ask James: ${left.map(i => i.ask || i.need).join(' · ')}` : 'checklist complete'].join('\n');
+}
+
+function _synth(ws, budget) {
   const seen = new Set();
   const order = ws.reads.slice().sort((a, b) => b.score - a.score || b.n - a.n);
   const parts = []; let used = 0, cut = 0;

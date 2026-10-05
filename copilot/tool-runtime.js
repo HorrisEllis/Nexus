@@ -115,12 +115,13 @@ function makeOllamaCallModel(dispatch, pollJob, opts = {}) {
     // the context; the latest user/tool content is the live prompt.
     const system = opts.composed ? '' : (messages.find(m => m.role === 'system')?.content || '');
     const firstUser = String((messages.find(m => m.role === 'user') || {}).content || '');
-    if (WS && !ws) ws = WS.create({ question: opts.question || firstUser.slice(-600), meta: { agentId: opts.agentId || null, sessionId: opts.sessionId || null } });
+    if (WS && !ws) ws = WS.create({ question: opts.question || firstUser.slice(-600), checklist: opts.checklist || null, meta: { agentId: opts.agentId || null, sessionId: opts.sessionId || null } });
     if (WS) _feed(messages);
     // 0.39.258 composed: ollama keeps no conversation, so every turn is re-sent — but unlabeled, as composed, with
-    // tool results framed by the caller's 'tool-result' template. §SB37: with a working set, the synthesis instead.
+    // tool results framed by the caller's 'tool-result' template. §SB37: with a working set, the synthesis instead —
+    // §SB39: only once a real read is in it (the seeded checklist is already in the first message; never sent twice).
     const convo = WS
-      ? [firstUser, ws.reads.length ? opts.worksetTemplate.split('{reads}').join(String(ws.reads.length)).split('{workset}').join(WS.synthesize(ws, { budget: opts.worksetBudget || undefined })) : ''].filter(Boolean).join('\n\n')
+      ? [firstUser, ws.reads.some(r => r.tool !== 'checklist') ? opts.worksetTemplate.split('{reads}').join(String(ws.reads.length)).split('{workset}').join(WS.synthesize(ws, { budget: opts.worksetBudget || undefined })) : ''].filter(Boolean).join('\n\n')
       : opts.composed
       ? messages.filter(m => m.role !== 'system').map(m => m.role === 'tool' ? formatToolResult(opts.resultTemplate, m.name, m.content) : String(m.content || '')).filter(Boolean).join('\n\n')
       : messages
@@ -592,6 +593,7 @@ async function run(o = {}) {
   const callModel = makeOllamaCallModel(o.dispatch, o.pollJob, { ...(o.modelOpts || {}), toolScope: o.toolScope || undefined,
     composed: !!o.composed, resultTemplate: o.resultTemplate || null,
     worksetTemplate: o.worksetTemplate || null, worksetBudget: o.worksetBudget || null, question: o.question || null,   // §0.39.337 SB37
+    checklist: o.checklist || null,   // §0.39.339 SB39 — the checklist seeds the working set
     agentId: o.context && o.context.agentId || null, sessionId: o.sessionId || null });
   if (o.composed) {
     // 0.39.258 — as runViaAgent: the caller's prompt is the whole prompt.

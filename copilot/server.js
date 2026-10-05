@@ -2520,6 +2520,7 @@ const server = http.createServer(async (req, res) => {
             const worksetTemplate = composed && typeof T.worksetTemplate === 'string' ? T.worksetTemplate : null;
             loop = await toolRuntime.run({ userPrompt: prompt, identity: composed ? null : identity, context, toolScope: scope, maxIterations, composed, resultTemplate,
               worksetTemplate, question: typeof T.question === 'string' ? T.question : null, sessionId,
+              checklist: Array.isArray(T.checklist) ? T.checklist.slice(0, 20) : null,   // §0.39.339 SB39
               dispatch: (convo, sysContext, o) => _dispatchToOllama(convo, sysContext, { ...o, intent: 'tool-loop', requestId, sessionId, model: olModel, raw: composed }),
               pollJob: _pollOllamaJobHeadless });
           }
