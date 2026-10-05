@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-system-template-schema-component
+type: schema
+id: component
+context: >-
+  idearium/spec-engine/templates/system/schemas — the system template's own schemas; a new system copies them
+  into its schemas/ folder and owns them from then on.
+intent: >-
+  James, 2026-10-05: "each component only needs to connect to the registry." · "each component has to have at least one capability, with at least one command, and events, each a node each." · "Maybe add, if applicant, data dir with the directory for the data, consumers, intent, data type/system like node, vector, database or table" · "maybe create a template or schema from that."
+summary: "a component — the unit of code; connects only to the registry"
+system: template
+tags: [system-template]
+source: idearium/spec-engine/templates/system
+payload:
+  status: REAL
+  fields:
+    type:
+      type: string
+      required: true
+      description: "always \"component\""
+    id:
+      type: string
+      required: true
+      description: "<system>.<component>"
+    uuid:
+      type: string
+      required: true
+      description: ""
+    file:
+      type: string
+      required: true
+      description: "its file, e.g. lib/<component>.js"
+    intent:
+      type: string
+      required: true
+      description: "what it is for, one line"
+    version:
+      type: string
+      required: true
+      description: "additive vs breaking: only the consumers a breaking change reaches are re-checked"
+    status:
+      type: string
+      required: true
+      description: "built | stub | unproven | open"
+    capabilities:
+      type: array
+      required: true
+      description: "capability ids — at least one"
+    hooks:
+      type: array
+      required: true
+      description: "hook ids — its end points"
+    consumers:
+      type: array
+      required: false
+      description: "component ids that use it — read from the wires into its hooks"
+    data:
+      type: object
+      required: false
+      description: "if applicable: { dir, store: node|vector|database|table|file, types: [node types] }"

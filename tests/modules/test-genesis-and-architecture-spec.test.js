@@ -8,7 +8,7 @@
  *   GA-01 every module path docs/architecture-spec/architecture-spec.spec names exists
  *   GA-02 every event it says it emits is emitted by real code; every route it names is served
  *   GA-03 what 0.8.0 moved out is kept whole in the archive (§0.3)
- *   GA-04 genesis 1.1.0: the registry (doorway) and routing domains, its two new files, wiring still clean
+ *   GA-04 genesis 1.2.0: the registry (doorway), routing and nodes (JAA as the node index) domains, their files, wiring still clean
  *   GA-05 genesis is the default: a system spec with no template starts from it; the New spec form checks it
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -31,7 +31,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       if (b) for (const x of b[2].split(',')) paths.push(`${b[1]}${x}${b[3]}`); else paths.push(m.path);
     }
     const missing = paths.filter(p => !fs.existsSync(path.join(ROOT, p)));
-    check('GA-01 every module path the architecture spec names exists', /^0\.8\.\d+$/.test(spec.meta.version) && paths.length >= 14 && !missing.length, JSON.stringify(missing));
+    check('GA-01 every module path the architecture spec names exists', /^0\.(8|9|10)\.\d+$/.test(spec.meta.version) /* 0.39.313 SB17: 0.9.0 agrees with genesis 1.3.0; 0.39.316: 0.10.0 points at James's template */ && paths.length >= 14 && !missing.length, JSON.stringify(missing));
     const idx = read('idearium/api/index.js');
     const orch = read('orchestrator/orchestrator.js');
     const emitted = (spec.events.emits || []).every(e => idx.includes(`'${e}'`));
@@ -43,12 +43,18 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     });
     check('GA-02 every event it emits is emitted by real code; every route it names is served', emitted && served, JSON.stringify({ emitted, served, routes: spec.routes.map(r => r.path) }));
     const arch = read('docs/architecture-spec/_archive/architecture-spec-0.7.0.spec');
+    // 0.39.316 — 0.10.0 points at James's template and its schemas, and states his axioms
+    check('GA-06 0.10.0: the spec points at the template and its schemas (never copies them) and carries his words', spec.meta.template === 'idearium/spec-engine/templates/architecture-spec.template.yaml'
+      && fs.existsSync(path.join(ROOT, spec.meta.template)) && fs.existsSync(path.join(ROOT, spec.meta.schemas)) && /each component only needs to connect to the registry/.test(spec.meta.james)
+      && !/├── server\.js/.test(read('docs/architecture-spec/architecture-spec.spec')), 'template pointer, schemas, his words');
     check('GA-03 what 0.8.0 moved out is kept whole in the archive', /^# ARCHIVED 2026-10-01/.test(arch) && /architecture-spec\.sovereignty\.violation\.detected/.test(arch) && /id: AS4/.test(arch) && /compiler\/lattice\.js/.test(arch)
       && !/architecture-spec\.node\.declared/.test(read('docs/architecture-spec/architecture-spec.spec')));
     const g = read('idearium/spec-engine/templates/genesis.spec');
     const { dispatch } = await import(path.join(ROOT, 'idearium/spec-engine/manifest/commands.js'));
     const mc = dispatch(['check', path.join(ROOT, 'idearium/spec-engine/templates/genesis.spec')], {});
-    check('GA-04 genesis 1.1.0: registry (the doorway, nodes) and routing domains, its two new files, the wiring still clean', /^version 1\.1\.0$/m.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
+    // §0.39.311 SB16 — genesis 1.2.0 adds Domain 2d (nodes, JAA tables as the node index); 1.1.0's checks all still hold
+    check('GA-04 genesis 1.3.0: shape (the template\'s architecture), registry (the doorway, nodes, capability nodes), routing and nodes (JAA as the node index) domains, his axioms, the wiring still clean', /^version 1\.3\.0$/m.test(g) && /^domain "shape"$/m.test(g) && /^capability_node /m.test(g) && /axiom COMPONENT_SHAPE/.test(g) && /axiom SYSTEM_OWNS_ITS_OWN/.test(g) && /^domain "registry"$/m.test(g) && /^domain "routing"$/m.test(g)
+      && /^domain "nodes"$/m.test(g) && /file "registry\/node-index\.js"/.test(g) && /axiom NODE_INDEX_IS_JAA/.test(g) && /bind node\.change\s+-> Event/.test(g)
       && /file "registry\/node-registry\.js"/.test(g) && /file "spine\/route-policy\.js"/.test(g) && /axiom REGISTRY_IS_THE_DOORWAY/.test(g) && !mc.code && /wiring is clean/.test((mc.out || []).join(' ')), JSON.stringify(mc.out));
     process.env.NEXUS_VERSIONIUM_URL = 'http://127.0.0.1:9';
     const api = await import(path.join(ROOT, 'idearium', 'api', 'index.js'));

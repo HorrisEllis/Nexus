@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.12
+    version:  1.7.18
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -208,7 +208,7 @@ spec:
       layer: foundation
       systems: [loom, emerge, emergence, warp]
       value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
-      status: PARTIAL (1.7.3) — (1) and (2) done; (3) and (4) wait on emergence-6.zip, not in this checkout
+      status: DONE (1.7.14, 0.39.319) — (1) and (2) at 1.7.3. (3) emergence/ in beside emerge/; warp/ forked to 1.5.0 at 0.39.318 (additive). Emergence's tests read StreamLog's gateClaimed/eventType, which Nexus's StreamLog had renamed to claimed/type; both names now kept. Emergence 155/155 (the upload itself runs 155, not the 157 written above), WARP 43/43, WARP consumers green; tests/modules/test-emergence-and-warp-suites.test.js. warp/test/dispatch.test.js needs siso_ref/, absent — failed before the fork too. (4) docs/emerge-copies-divergence.md. Not yet: emergence in loom (EV0 adds it to loom's systems).
       files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
       does: >-
         (1) This branch brought in line with main 0.39.300 (a merge, main's tree wins; this branch's 0.39.298
@@ -223,7 +223,7 @@ spec:
       layer: foundation
       systems: [idearium, cortex, intelligence, loom, copilot, cos, emerge, warp]
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
-      status: "PARTIAL (1.7.11) — (1) done but warp, (3) the check, (4) declared systems, (5) declared value; (2) route contracts for cos, warp, emerge open"
+      status: "DONE (1.7.15, 0.39.320) — (1) warp has no taxonomy: it emits no event of its own (its Streams carry their callers' events) and ET1 refuses an empty one; said in warp/interaction-contract.json. (2) cos, emerge and warp interaction-contract.json, projected from their servers (cos: vaultd only; warp: none). (3) lib/route-contract-check.js — served and declared must match — in `nexus contracts check` and loom. Found, not fixed: emerge-ide's POST /api/codegen is unreachable (the POST block answers first; `method` undefined), marked reachable:false. Emergence now in loom (70 components, 0 edges lost) and the atlas."
       depends_on: [EM0_ground]
       files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
@@ -258,7 +258,7 @@ spec:
       layer: foundation
       systems: [emerge]
       value: { score: 3, cost: L, for: [ownership, foundation], why: "his constraint field as code; the deterministic core every other phase leans on" }
-      status: OPEN
+      status: DONE (1.7.16, 0.39.321) — emerge/core/ (field, constraint, transition, observation, lens, gap, history, level, budget, seed, index) and emerge/spec/emerge-core.spec; tests/modules/test-emerge-core.test.js 6/6 is the proof. Ids are drawn from the seed and the history holds logical ticks only, so one seed replays byte-identical. Soft and probabilistic constraints permit a violation at its cost; every other type refuses.
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [emerge/core/field.js, emerge/core/constraint.js, emerge/core/transition.js, emerge/core/observation.js, emerge/core/lens.js, emerge/core/gap.js, emerge/core/history.js, emerge/core/level.js, emerge/core/budget.js, emerge/core/seed.js, emerge/core/index.js, emerge/spec/emerge-core.spec]
       does: >-
@@ -274,8 +274,10 @@ spec:
       layer: foundation
       systems: [warp, cos, loom]
       value: { score: 3, cost: XL, for: [ownership], why: "an engine that is his, not SISO; high to him, slow to pay back" }
-      status: OPEN
+      status: "PARTIAL (1.7.18, 0.39.323, WARP 2.0.0) — Link, Expectation, Ledger, Engine in warp/core; warp/adapters/siso-gates.js and emerge-field.js; tests/modules/test-warp2.test.js 6/6. Proof: every link has causedBy or root:true — met; an unmet expectation is a gap naming both ends — met; 1.x tests pass unchanged and a 1.x Stream records through the adapter — met, but Nexus's consumers still run on 1.x directly, not yet through it; no file in warp/core carries SISO's shape — NOT met: 1.x's Event/Gate/Stream/StreamLog stay in core/ until the consumers move. Emerge's constraints come in through an adapter, not warp/core, because warp/core imports nothing outside warp/ (MANIFEST)."
       depends_on: [EM1_emerge_core, SH1_shadow_space]
+      james: '"maybe fork it, for me." · "and had it back." · "okay but keep updating it. i dont need it until its been converted to cfr"'
+      handback: the forked warp/ (1.5.0 at 0.39.318) is kept updated here and zipped back to James only once it has been converted to CFR — not before.
       files: [warp/core/Link.js, warp/core/Expectation.js, warp/core/Engine.js, warp/core/Ledger.js, warp/core/Axiom.js, warp/adapters/siso-gates.js, warp/spec/warp.spec, warp/MANIFEST.json]
       does: >-
         "okay but siso is taken. by someone. its identicle. i need my own" · "still i want to make warp mine". WARP 2,
@@ -621,7 +623,7 @@ spec:
       layer: library
       systems: [cos, intelligence, idearium]
       value: { score: 5, cost: M, for: [safety], why: "models never write the real tree; the precondition for any client work" }
-      status: OPEN
+      status: "PARTIAL (1.7.17, 0.39.322) — (2) done: lib/shadow-space.js — a change acts in a COS workspace branch with its shadow declared; commit() runs the test inside the space itself, settles the shadow, and merges fast-forward only on both passing; otherwise the space is discarded and the real tree untouched; an absent file is a gap with the step as cause. Found and fixed: self_repair's promote trusted a testResult the caller handed in — now only its own test()'s pass opens it. (1) one record with WARP 2's expectation is EM2's; (3) the shadow read is MR9's. Not yet: idearium's codegen writing through a shadow space."
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
       does: >-

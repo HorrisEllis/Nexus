@@ -37,6 +37,20 @@ function reuseCountPromotionPolicy(variant) {
   return variant.hits >= 2 && successRate >= 0.7;
 }
 
+// "Compounding" policy — the missing third option `warp-compounding.test.js`
+// was written against before it existed. A single success above the fitness
+// floor crystallizes immediately, instead of waiting for DEFAULT_PROMOTE_
+// THRESHOLD (3) retentions. Same shape as the two policies above — pass it
+// explicitly, nothing changes for existing callers:
+//   new PopulationStore({ promotionPolicy: firstSuccessPromotionPolicy })
+// Real cost: a bad-but-above-floor first attempt crystallizes without the
+// benefit of 2 more retentions' evidence that defaultPromotionPolicy gets.
+// That trade is the point of opting in, not a bug — same floor
+// (DEFAULT_FITNESS_MIN) still applies, so nothing below 0.7 ever freezes.
+function firstSuccessPromotionPolicy(variant) {
+  return variant.hits >= 1 && variant.fitness >= DEFAULT_FITNESS_MIN;
+}
+
 class PopulationStore {
   constructor({
     promotionPolicy = defaultPromotionPolicy,
@@ -176,6 +190,6 @@ class PopulationStore {
 
 module.exports = {
   PopulationStore, DEFAULT_PROMOTE_THRESHOLD, DEFAULT_FITNESS_MIN,
-  defaultPromotionPolicy, reuseCountPromotionPolicy,
+  defaultPromotionPolicy, reuseCountPromotionPolicy, firstSuccessPromotionPolicy,
 };
 

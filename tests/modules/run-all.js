@@ -196,6 +196,8 @@ const SUITES = [
   'test-proof-run.test.js',           // 0.39.302 PR1 the delivery checker
   'test-phase-proof.test.js',         // 0.39.303 PH1 phase runs end in proof
   'test-build-from-the-spec.test.js', // 0.39.305 SB1–SB3 templates frame every spec, his words seed it, the prompt is domain agnostic
+  'test-registry-drives-build.test.js', // 0.39.309 SB12 the registry block is the component list, the dependency order and the file checklist
+  'test-system-template.test.js',    // 0.39.312 SB17 the system template in his structure: identity → context → file_structure → modules → components
   'test-event-contracts.test.js',     // EV0 (3) every emitted event declared; the drift baseline only shrinks
   'test-claude-code-backend.test.js', // IN2a Claude Code as an Idearium agent backend (a stand-in claude)
   'test-nexus-mcp.test.js',           // IN1 Nexus as Claude Code's toolbox (.mcp.json, honest degradation)
@@ -370,6 +372,11 @@ const SUITES = [
   'test-synthesis-zoom-versionium.test.js',  // 0.39.300 VX1/WS3/AZ1/SY1/SY2 — versionium down is a stated 502/404; the pipeline together; systems → components zoom; intelligence's gap synthesis ranked by leverage
   'test-nexstore-census.test.js',  // 0.39.300 N0 — every data shape in the tree classified into the seven kinds; the type catalogue
   'test-nexstore-log.test.js',     // 0.39.300 N1 — the record frame and the log: 25 SIGKILLs mid-append, every ack survives, the chain verifies, the torn tail reported
+  'test-warp2.test.js',   // 0.39.323 EM2 — WARP 2: links with causes, expectations as gaps, constraints first, 1.x through the adapter
+  'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
+  'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
+  'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more
+  'test-emergence-and-warp-suites.test.js',   // 0.39.319 EM0 (3) — Emergence's and WARP's own suites inside Nexus
   'test-nexstore-types.test.js',   // 0.39.300 N2 — the type registry and the gate per type (warp Axiom): missing field, ledger patch, dangling reference refused and logged
   'test-nexstore-writers.test.js', // 0.39.300 DT1 — every writer that persists data has a type, a reason, or is listed owed; a new writer fails
   'test-spec-library.test.js',  // 0.39.290 IL1 — a zip of specs → ideas + specs (duplicates folded, zips in zips, programs refused, by family); importSpec in memory

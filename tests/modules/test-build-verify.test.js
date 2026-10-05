@@ -129,7 +129,8 @@ async function main() {
     assert.strictEqual(Detector.evaluate(small, prompt, Detector.profile(prompt)).passed, false, 'as prose it was "too short" (the old behaviour, for documents)');
     assert.strictEqual(Detector.truncation('```js\nconst a = 1;\n', Detector.profile(prompt, { kind: 'file' })).reason, 'code_fence_not_closed');
     assert.strictEqual(Detector.truncation('   ', Detector.profile(prompt, { kind: 'file' })).reason, 'empty');
-    assert.match(fs.readFileSync(path.join(ROOT, 'idearium/spec-engine/chunk-dispatch.js'), 'utf8'), /kind:\s*chunk\.realPath \? 'file' : null/);
+    // §0.39.307 — a document section is now judged as a 'section' (it was null); a file chunk is still a 'file'
+    assert.match(fs.readFileSync(path.join(ROOT, 'idearium/spec-engine/chunk-dispatch.js'), 'utf8'), /kind:\s*chunk\.realPath \? 'file' : \(chunk\.sectionId \? 'section' : null\)/);
   });
 
   await test('BV-10', 'the build path: fence → code on both paths; repairs skip reuse; Ollama via the hardened client; flush', () => {

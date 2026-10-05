@@ -1,0 +1,126 @@
+{
+  "name": "emergence",
+  "version": "0.1.0",
+  "description": "A systems-thinking substrate where observation creates structure that feeds back into observation. Execution: WARP (external foundation, sibling of this project -- see 'shared' below). Description: Emerge. Law: AXIOMS v3.1.",
+  "spec": "emergence.spec",
+  "language_spec": "emerge-language.spec",
+  "law": "AXIOMS v3.1 (external \u2014 held, not vendored, per the person's instruction not to duplicate it into every project)",
+  "components": {
+    "feedback-loop-buffer": {
+      "status": "implemented",
+      "root": "Signal",
+      "implements": [
+        "feedback",
+        "loop"
+      ]
+    },
+    "rfr2-observer": {
+      "status": "implemented",
+      "root": "Lens",
+      "wraps": "vendor/rfr2/field/relational.js",
+      "new_glue": "sentiment-scorer.js (domain-agnostic lexicon, not vendored) + all 9 real Liminal signals wired via its own real bus: oscillatory, relationalGaps, reversal, negativeSpace, shadow, assumption, structural, existential, contrastive. assumption has a real, documented lower-confidence calibration (fires on ordinary declarative text).; PLUS a 10th signal, affectiveField, from a completely different lineage (vendor/resonance-v5.1/relational-physics.js) -- self-contained emotion-field computation with 2 real syntax-error bugs found and fixed in the source (never previously executed). Unlike the other 9, this signal never returns null and has a documented narrow-vocabulary blind spot.",
+      "known_gap": "rupture_severity pinned \u2014 needs genuine multimodal input, not text-fakeable"
+    },
+    "cfr-creator": {
+      "status": "implemented",
+      "root": "Gate",
+      "wraps": "vendor/rfr2/cfr-kernel/physics.js",
+      "rebuilt": "creates toward an explicit target (end-state|idea|person) using real attractor gravity + cluster convergence, not a made-up stress formula"
+    },
+    "associative-lattice": {
+      "status": "implemented",
+      "root": "Record",
+      "wraps": "vendor/rfr2/lattice/lattice.js",
+      "persisted_by": "vendor/jaa/FileStore.js + FileRefs.js",
+      "rebuilt": "resonance = Jaccard similarity of shared invariants; durable, fully rehydrates, and now sigma-baseline snapshotted (bounded restart cost, per Emerge's own sigma = divergence_from_baseline)"
+    },
+    "causal-graph": {
+      "status": "implemented",
+      "root": "Record",
+      "wraps": "vendor/rfr2/causality/index.js",
+      "persisted_by": "vendor/jaa/FileStore.js + FileRefs.js",
+      "rebuilt": "causal vs observational determined by real elapsed simulation time; durable, fully rehydrates, sigma-baseline snapshotted, and now exposes traceToRoot() for reverse causal condition mapping"
+    },
+    "event-ledger": {
+      "status": "implemented",
+      "root": "Record",
+      "wraps": "vendor/rfr2/ledger/index.js",
+      "persisted_by": "vendor/jaa/FileStore.js + FileRefs.js",
+      "rebuilt": "real cross-restart durability via ported Jaa persistence, hash-chained, queryable via history()"
+    },
+    "jaa-persistence": {
+      "status": "implemented",
+      "root": "Record",
+      "ported_from": "Jaa.zip src/Persistence/*.php",
+      "location": "vendor/jaa/",
+      "scope_note": "persistence layer only -- the SQL engine (~30 Gate files) was deliberately not ported, out of scope"
+    },
+    "idea-store": {
+      "status": "implemented",
+      "root": "Record",
+      "refactored_from": "build-tools/rheon-idea-os/storage/IdeaStore.js -- real API kept faithful, rebuilt onto Jaa content-addressed persistence AND real WARP dispatch (Gate + Axiom + Stream + StreamLog) instead of plain function calls -- was the one component inconsistent with the rest of the project's actual architecture"
+    },
+    "pattern-engine": {
+      "status": "implemented",
+      "root": "Record",
+      "built_for": "a direct request for \"a pattern engine, with pattern memory\" -- split into three possible meanings (prediction, recall, rule generation) before building, since they carry different risk. Rule generation is forge's territory, not touched without sign-off.",
+      "found_in": "scanners/crystalball-test-suite.html PredictiveEngine -- real Markov transition-frequency tracking, the basis for prediction here. AssociationEngine (same file) not used -- overlaps with associative-lattice.",
+      "capabilities": [
+        "real exact-match recall against persisted pattern memory",
+        "real transition-frequency prediction, honestly null until a transition repeats"
+      ],
+      "persistence": "different pattern than the append-only chains elsewhere -- one current-state blob via Jaa, write-through per observation (aggregate mutable state, not an immutable sequence)"
+    }
+  },
+  "loop": "loop.js -- tick(text, target?) where target is OPTIONAL now: omitted, it reuses the previous tick's target (real feedback). loop.history(n) walks the real Jaa-backed chains. loop.sigma() shows current divergence-since-baseline per component. loop.traceEndState(nodeId) is end-state-first reverse causal condition mapping -- walks backward through only real causal edges to find what conditions preceded reaching a node, auto-surfaced in tick()'s return value the moment real convergence happens. 15 tests in test/loop.test.js. All five core streams plus idea-store now have real StreamLogs (previously only feedback-loop-buffer did) -- loop.logs() and GET /logs expose real dispatch history. 16 tests in test/loop.test.js.",
+  "shared": {
+    "warp": "../warp -- the FOUNDATION, a true sibling of this project, not vendored inside it. Full original package (core/, dispatch/, plugins/, its own 43-test suite). An earlier pass had only vendored core/ as an internal subfolder, silently dropping dispatch/, plugins/, and WARP's own tests -- restored and repositioned correctly here."
+  },
+  "author": "James Brooks",
+  "contracts": {
+    "LLM_CONTRACT": {
+      "status": "draft",
+      "location": "contracts/LLM_CONTRACT.js",
+      "note": "new content -- no LLM contract existed anywhere checked (ollama.js references a missing kernel.schema.js, rheon-idea-os has 4 seams but none for LLM). Follows rheon-idea-os's real seam-contract format; two isolation rules carried verbatim from ollama.js's own stated laws."
+    }
+  },
+  "discoveries": {
+    "rheon-idea-os": "build-tools/rheon-idea-os -- a real, tested (34 tests) sibling system sharing WARP's Event->Gate->Stream->StreamLog architecture and Jaa's exact content-addressed-storage design. Not yet integrated -- flagged for a deliberate decision."
+  },
+  "server": "server.js -- zero-dependency HTTP+SSE interface to the main loop. Architecture adapted from rheon-idea-os's real server pattern (route -> tick -> broadcast -> ledger) but rebuilt without express (external dep) to match the zero-runtime-deps discipline everywhere else in this project. Routes: POST /tick, GET /history, GET /sigma, POST /trace, GET /events (SSE), POST /ideas, GET /ideas, POST /ideas/link, GET /ideas/graph. 11 tests in test/server.test.js, including a real SSE broadcast test.",
+  "schemas": {
+    "location": "schemas/",
+    "note": "6 draft-07 JSON Schema files describing real data shapes (target, observation, created, idea, idea-edge, ledger-record, tick-result). Not validated with an external JSON-Schema library (zero-runtime-deps) -- instead schemas/test/schemas.test.js checks required fields against live output from the real code. This is the test that caught the tick()-drops-signals bug (see bug_fixes)."
+  },
+  "bug_fixes": [
+    {
+      "bug": "loop.js tick() silently dropped health + all 9 Liminal signals, surfacing only the bare RelationalModule summary",
+      "found_by": "schemas/test/schemas.test.js -- writing a real schema against actual captured output, not assumed shape",
+      "impact": "every caller of tick() (CLI, HTTP server, direct API use) never saw gaslighting/oscillatory/reversal/etc detection despite it being fully built and tested at the component level",
+      "fixed_in": [
+        "loop.js",
+        "cli.js (same bug one layer up -- formatResult() never displayed the signals even before the loop.js fix)"
+      ],
+      "regression_test": "test/loop.test.js -- BUG REGRESSION test; test/server.test.js -- HTTP-level signal test"
+    },
+    {
+      "bug": "vendor/resonance-v5.1/relational-physics.js had two genuine syntax errors (missing JSDoc comment opener; unclosed JSDoc comment silently swallowing two constant declarations) -- the file could not even load",
+      "found_by": "attempting to actually run the file for the first time, per this project standing rule: nothing is trusted until proven by running it",
+      "impact": "the file had apparently never been executed by anyone before this integration -- both were basic syntax errors a single test run would have caught immediately",
+      "fixed_in": [
+        "vendor/resonance-v5.1/relational-physics.js -- minimal fix, comment syntax only, no logic changed"
+      ],
+      "regression_test": "components/rfr2-observer/test/affective-field.test.js"
+    }
+  ],
+  "known_calibration_limitations": [
+    {
+      "signal": "assumption",
+      "issue": "fires on ordinary unhedged declarative sentences -- hardcoded threshold, not configurable"
+    },
+    {
+      "signal": "affectiveField",
+      "issue": "never returns null (no abstention mechanism); also only responds to a narrow set of certainty/hedge/causal/intimacy/empathy/intensity marker words, not common emotion vocabulary"
+    }
+  ]
+}

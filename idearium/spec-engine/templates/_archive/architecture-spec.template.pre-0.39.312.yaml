@@ -1,0 +1,180 @@
+# ARCHIVED 2026-10-05 (0.39.312) — superseded by idearium/spec-engine/templates/architecture-spec.template.yaml, rewritten in
+# James's structure (identity → context → file_structure → modules → components, everything listed on the module and
+# component it belongs to). Kept whole, §0.3. Every field it had has a place in the new one.
+# ARCHITECTURE SPEC — SYSTEM SPEC TEMPLATE
+# Deterministic schema every system spec is synthesized into. This is
+# build logic, not a compiler: the first-principles, systems-thinking
+# sequence by which a system comes to exist and prove itself — what
+# phase it's in, what state each component is in, what must be true to
+# advance either. Each field's value below is its primitive type, not
+# example content — a real spec replaces every <type> with actual data
+# of that type. This file describes no project. It is a shell: copy it,
+# fill every bracket, delete nothing structural.
+
+meta:
+  version: <string>
+  foundation: <string>               # a versioned dependency this spec builds on, or "none"
+  ports: <map<string,int>>           # named ports this system exposes, e.g. {api: <int>}; empty map if none yet
+  uuid: <string>                     # or "TBD — assign on first real implementation"
+  status: "<enum: draft|proposed|active|deprecated>"
+  written_from: <list<string>>       # real files/sources this spec was grounded in, or "written from scratch — no prior source" stated honestly
+
+spec_name: <string>
+date: <date>
+
+context:
+  purpose: <string>
+  data_structure: <string>
+  governing_principles: <list<string>>
+  living_model: <bool>              # true if this spec is edited in place as the real system changes, false if it is a fixed one-time snapshot
+  dynamic_over_hardline: <bool>     # true if the system pushes changeable values into nodes rather than literals in code — a deliberate stance to declare either way, not a default
+
+spine:
+  # Optional. The one universal mechanism every signal in the system
+  # routes through, if there is one — the point of a spine is that
+  # nothing gets a second, parallel dispatch path. Omit if the system
+  # has no such single point (several independent mechanisms is a
+  # legitimate answer too, but state that explicitly rather than
+  # leaving it unaddressed).
+  exists: <bool>
+  primitives: <list<string>>         # the small fixed set everything binds to, if exists is true
+  rule: <string>                     # the one-way dependency rule, e.g. "consumers import the spine, the spine never imports a consumer"
+
+config_layers:
+  # How adjustable values actually override each other, if
+  # dynamic_over_hardline is true. Omit if not applicable.
+  - layer: <string>
+    scope: <string>                  # what this layer's values apply to — system-wide, per-component, per-instance
+    overrides: <string>              # which layer(s) this one takes precedence over, and under what condition
+
+axioms:
+  - name: <string>                   # short identifier, e.g. an existing convention's own axiom code if one applies
+    statement: <string>
+    rationale: <string>              # why this axiom exists, not just what it says
+
+boundaries:
+  # Documentation clarity only — pairs of easily-conflated CONCEPTS this
+  # spec depends on a reader keeping separate. Not architecture; see
+  # `seams` below for structural isolation between real system units.
+  - term: <string>
+    definition: <string>
+    distinguished_from: <string>     # the other term it's easy to mistake this for, and why they differ
+
+seams:
+  # A seam is a declared CUT POINT — anywhere something can be chunked:
+  # between modules, between blocks in a spec file, between nodes. Think
+  # "cut here" — a dotted scissors line, not necessarily total isolation.
+  # `isolation` is the strongest kind of seam (nothing shared across it)
+  # and is the special case, not the definition — most seams just mark a
+  # valid split point a decomposition tool can act on.
+  - id: <string>                     # a seam is itself addressable
+    location: <string>               # file/block/node path where this cut lives
+    between: <list<string>>          # the two (or more) things this cut separates
+    cut_type: "<enum: isolation|boundary>"  # isolation = nothing shared across it; boundary = a valid split point only
+    isolation: <string>              # only when cut_type is isolation — what's not shared
+
+sovereignty:
+  # What crosses a system boundary, and what never does. Distinct from
+  # `seams` (isolation between units inside one system) — this is
+  # system-to-system.
+  - other_system: <string>            # or "any" if the rule is universal
+    may_read: <list<string>>
+    may_never_write: <list<string>>
+    enforced_by: <string>             # what actually makes this true, not just stated policy
+
+phases:
+  # The build's own lifecycle — first-principles, ordered, and each
+  # phase's exit condition is what actually licenses moving to the next
+  # one. This is systems thinking made explicit, not a status label.
+  source: <string>                   # "hand-maintained", or the real phasemap doc / decomposition tool run this table came from — same provenance discipline as version_history's own source field
+  entries:
+    - phase: <string>
+      intent: <string>                 # what this phase is for, in the system's own reasoning
+      entry_condition: <string>        # what must already be true to begin this phase
+      exit_gate: <string>              # what must be true to leave it — the actual proof, not a checkbox
+      produces: <list<string>>         # artifacts, decisions, or states this phase is responsible for creating
+
+component_status:
+  # The state machine every individual component in the system moves
+  # through, independent of which build phase the system as a whole is
+  # in — a system can be mid-phase while its components sit at mixed
+  # statuses.
+  - status: <string>
+    meaning: <string>
+    entry_condition: <string>        # what makes a component enter this status
+    exit_condition: <string>         # what's required to leave it, and what status it becomes
+
+file_structure:
+  tree: <block_string>               # literal directory tree, as a YAML block scalar
+  modules:
+    - name: <string>
+      summary: <string>
+  node_kinds:
+    # status here grades the KIND itself (is this concept proven to be
+    # real, still proposed, or explicitly shelved) — a different axis
+    # from component_status above, which tracks one component INSTANCE's
+    # lifecycle. A kind can be REAL while individual instances of it sit
+    # at any component_status.
+    - kind: <string>
+      status: "<enum: REAL|OPEN|DEFERRED>"
+      grounding: <string>            # real file/source this kind is proven by, or why it's OPEN
+  hook_kinds:
+    open_set: <bool>                 # true if new kinds may be registered without editing an enum
+    seed_values: <list<string>>
+  event_kinds:
+    - kind: <string>
+      meaning: <string>
+
+memory_architecture:
+  - store: <string>
+    type: "<enum: authored|derived|runtime>"
+    location: <string>
+    mutability: "<enum: editable|compiled|append_only>"
+    source_of_truth_for: <string>
+    integrity: "<enum: unchained|hash_chained>"  # hash_chained if each entry commits to a hash of the previous one (tamper-evident); most real ledgers in this pattern are
+
+pulse:
+  # Optional. Liveness and reachability — distinct from self_diagnostics
+  # below, which measures structural strain, not whether the system is
+  # alive. Omit if this system has no peers to announce itself to.
+  heartbeat_interval: <string>       # or "not applicable"
+  announces: <list<string>>          # what this system tells a peer about itself on connect — identity, capabilities, nothing more than that
+  health_score:
+    computed_from: <list<string>>
+    formula: <string>
+
+self_diagnostics:
+  # Optional. How this system measures its own structural strain, live,
+  # from its own registry state — not a proxied or borrowed number.
+  # Omit this whole key if the system has no self-scoring need.
+  # NAMING NOTE: "friction" is used for at least two unrelated real
+  # meanings across known conventions — UX/attention drift in one, and
+  # structural registry strain (dangling hooks, open gaps) in another.
+  # If this system borrows the term, state which meaning explicitly in
+  # `formula` rather than assuming the reader knows which one.
+  - metric: <string>
+    computed_from: <list<string>>     # which real, in-system sources feed this number (e.g. dangling/orphan hooks, open gaps, a ledger window) — never an external or assumed input
+    formula: <string>                 # stated plainly enough to re-derive, not just named
+    exposed_at: <string>              # where this is readable — a route, a file, a query — or "not yet exposed"
+
+node_bundles:
+  # Reference-only groupings of related node kinds that travel together.
+  # A bundle is an index entry, never a merged file — members stay
+  # independent. Omit this whole key if the system has no bundling need.
+  - bundle_kind: <string>
+    member_kinds: <list<string>>
+    rationale: <string>
+
+modules:
+  - name: <string>
+    summary: <string>
+    components:
+      - name: <string>
+        schema:
+          required_keys: <list<string>>
+          types: <map<string,string>>
+          optional: <map<string,string>>        # omit key entirely if none
+        api_routes: "<list<{method,path,description}> | none>"
+        commands: <list<string>>
+        events: <list<string>>
+        gates: "<list<{condition,blocks}>>"      # only on validation-bearing components

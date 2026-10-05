@@ -1,10 +1,21 @@
-// GENESIS CANONICAL SPEC v1.1.0
+// GENESIS CANONICAL SPEC v1.3.0
 // UUID: genesis-devkit-v1-0000-2026-0710-jamesbrooks-001
 // This file IS the schema-engine's definition of a valid sovereign system.
 // Edit this file → every new compartment scaffolded from it inherits the change.
 // Status: proposed. Foundation domains freeze at v1.0.0 per COS-5 pattern.
 
-version 1.1.0
+version 1.3.0
+// 1.3.0 (2026-10-05, NEXUS 0.39.313): genesis is the architecture of the system template, section by section (Domain 0a
+// "shape"); every component carries at least one capability and one command, and its events, each a node (capability_node
+// added to Domain 2c); a system owns its own data, schemas, contract, config, heartbeat and pulse. James: "yes add it the
+// spec for genesis. like genesis is the exact architecture for a new system template." · "each component has to have at
+// least one capability, with at least one command, and events, each a node each." · "each system is responsible for its
+// data, schemas, contracts, configurations, heartbeat and pulse".
+// 1.2.0 (2026-10-05, NEXUS 0.39.311): Domain 2d nodes — the node-based data structure with JAA tables as the node index
+// (Guardian's real model: lib/node-index.js, guardian/lib/node-registry.js), one file (registry/node-index.js), the
+// node.change binding, axiom NODE_INDEX_IS_JAA; the pulse carries the index's counts. James: "like with the genasis spec,
+// needs to have the component registry event interaction contract, with the heartbeat and pulse system, node based data
+// structure using jaa tables as a node index."
 // 1.1.0 (2026-10-01, NEXUS 0.39.286 — docs/2026-10-01-routing-registry-genesis-phasemap.spec): Domain 2c registry-as-doorway
 // (the spec template's 11th block, nodes in Guardian's layout), Domain 11 routing (fallback policy), two files
 // (registry/node-registry.js, spine/route-policy.js). genesis is now the template a new spec starts with.
@@ -38,6 +49,7 @@ bind schema.baseline      -> Axiom             // every baseline expectation is 
 bind pulse.heartbeat      -> Event             // every pulse is an Event; scored by a Stream.hook('scorer', ...)
 bind nerve.listener       -> Event             // every micro-listener hit emits an Event, never a direct call
 bind lattice.associate    -> Event             // edge creation/strengthening is itself a logged Event
+bind node.change          -> Event             // every node add/change/delete is an Event; the JAA index and its ledger table are its subscribers
 bind tv_ui.spotlight      -> Stream (read-only subscriber) // never emits, only observes the stream
 
 // ── Root types ────────────────────────────────────────────────────────────────
@@ -53,6 +65,7 @@ root Seam
 root Gate
 root Ledger
 root Node
+root NodeIndex
 root Config
 
 // ── Axioms ────────────────────────────────────────────────────────────────────
@@ -69,7 +82,31 @@ axiom CONFIG_OUTSIDE_CODE      // anything adjustable lives in config, never har
 axiom LEDGER_IS_TRUTH          // every runtime writes its event stream to an append-only ledger
 axiom GATE_BEFORE_CROSS        // no compartment reaches another without passing its gate
 axiom REGISTRY_IS_THE_DOORWAY   // every crossing between modules is a declared node in the registry; modules are isolated and know only the registry
+axiom COMPONENT_SHAPE           // every component has at least one capability, at least one command invoking it, and its events — each a node (James)
+axiom SYSTEM_OWNS_ITS_OWN       // a system holds its own data, schemas, contract, config, heartbeat and pulse, in its own folder; no other system keeps them for it (James)
+axiom NODE_INDEX_IS_JAA       // the node file is canonical; each node type's JAA table (nodes_<type>) is its index and nodes_<type>_ledger its append-only history, in the system's own data folder
 axiom ALL_DATA_ARE_NODES       // the registry, its contract and its config persist as nodes/<type>/<id>.<type> in one envelope — Guardian's layout
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Domain 0a — Shape (genesis is the architecture of the system template)
+// ══════════════════════════════════════════════════════════════════════════════
+// James, 2026-10-05: "yes add it the spec for genesis. like genesis is the exact architecture for a new system
+// template." The system template (idearium/spec-engine/templates/architecture-spec.template.yaml, in his structure:
+// identity → context → file_structure → modules → components) is what a new system's spec is written in; this domain
+// says which part of genesis each section IS, so a spec in that template is a genesis system, nothing left over.
+domain "shape"
+template          = idearium_spec_engine_templates_architecture_spec_template_yaml
+identity          = domain_identity_plus_the_system_node_2c_plus_its_data_folder_2d_plus_its_config_6_plus_its_heartbeat_10
+context           = domain_schema_axioms_0_plus_the_spine_plus_sovereignty_3_plus_config_layers_6_plus_pulse_10_plus_phases
+file_structure    = the_manifest_2b_every_file_declared_with_its_uuid_layer_and_depends
+modules           = compartments_each_with_its_seam_3_its_config_6_and_the_node_types_it_owns_2d
+components        = component_nodes_2c_each_with_capability_nodes_command_nodes_and_event_nodes_and_the_node_types_it_reads_and_writes
+generated         = the_contract_the_event_taxonomy_the_node_index_the_registry_and_the_atlas_derived_from_the_components_never_hand_written_2b
+ownership         = a_system_holds_its_data_schemas_contract_config_heartbeat_and_pulse_in_its_own_folder
+// Rules:
+//   - a section of the template with no domain here is a gap in genesis; a domain no section names is a gap in the template.
+//   - a component without a capability, a command or its events is refused by the registry (2c), said, not passed.
+//   - what `generated` names is regenerated from the components when they change; a hand edit to it is lost.
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Domain 0 — Schema Baseline (the expectation every other domain is graded against)
@@ -243,7 +280,8 @@ component_node  = one_per_file_id_by_loom_rule_path_to_dotted_id_with_chunk_type
 hook_node       = one_per_crossing_point_export_import_emit_on_route_cli
 wire_node       = one_per_relation_from_hook_to_hook_requires_or_event
 event_node      = one_per_event_emitted_by_consumed_by_payload
-command_node    = one_per_http_route_and_per_cli_verb_with_the_component_that_serves_it
+capability_node = one_per_capability_of_a_component_at_least_one_per_component_what_it_can_do
+command_node    = one_per_http_route_and_per_cli_verb_with_the_component_that_serves_it_invoking_one_of_its_capabilities
 contract_node   = the_interaction_contract_rules_crossings_breaches_orphans_unhandled_events
 system_node     = entry_points_ports_data_dirs_node_types_counts
 archive         = a_node_no_longer_produced_moves_to_nodes_slash_archive_never_deleted
@@ -253,6 +291,35 @@ archive         = a_node_no_longer_produced_moves_to_nodes_slash_archive_never_d
 //   - an orphan component or an event with no consumer is a gap in the contract node, not a silent leftover.
 //   - the registry is regenerated from the code (idearium/repo/architecture.js toNodes, POST /api/repos/:uuid/architecture);
 //     an unchanged node is left alone (fingerprint), so its history is real change, not churn.
+
+// ══════════════════════════════════════════════════════════════════════════════
+// Domain 2d — Nodes (the data structure: one file per fact, JAA tables as the node index)
+// ══════════════════════════════════════════════════════════════════════════════
+// James, 2026-10-05: "every system is supposed to be sovereign. the components registry is a an event driven
+// interaction contract. nodes for data to persist or move through the system. isolated from each other" · "node based
+// data structure using jaa tables as a node index." · "guardian is the closest".
+//
+// Written from Guardian's real model, not invented: guardian/lib/node-registry.js (a watcher per node type over
+// data/nodes/<type>/, a _ledger.jsonl per folder) and lib/node-index.js (one JAA table per type, nodes_<type>, upserted;
+// nodes_<type>_ledger appended, never updated; a delete is a new row with _deleted, never a mutation), with each node's
+// shape in lib/node-schemas.js and the types named in NODE-TAXONOMY.md. Domain 2c's registry is a set of these nodes;
+// so is every piece of data a system keeps or passes on.
+domain "nodes"
+node_file      = data_slash_nodes_slash_type_slash_id_dot_type_one_file_per_fact_the_canonical_record
+envelope       = lib_node_export_envelope_uuid_type_id_context_intent_summary_system_tags_fingerprint_payload
+node_schema    = one_schema_per_node_type_checked_before_a_node_is_written_lib_node_schemas
+taxonomy       = every_node_type_named_once_with_the_system_that_owns_it_node_taxonomy_md
+node_index     = one_jaa_table_per_node_type_nodes_type_upserted_by_id_queryable_survives_restart
+node_ledger    = nodes_type_ledger_jaa_table_append_only_every_add_change_delete
+soft_delete    = a_removed_node_is_a_new_row_marked_deleted_never_a_mutation_the_file_moves_to_nodes_archive
+watcher        = per_type_folder_watcher_file_change_to_index_and_ledger_and_a_node_change_event
+sovereign_store = each_system_indexes_its_own_nodes_in_its_own_data_folder_never_another_systems
+moves          = data_moves_between_systems_as_nodes_through_the_interaction_contract_never_by_reaching_into_another_store
+// Rules:
+//   - the file is the truth; the JAA table is an index of it and can be rebuilt from the files alone.
+//   - a node that fails its schema is refused with the reason, never written half-valid.
+//   - a node type no taxonomy names is a gap in the contract node (Domain 2c), not a silent new kind of data.
+//   - the pulse (Domain 10) carries each node type's count, so an index falling behind its files shows as drift.
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Domain 3 — Seam (structural boundary only — deliberately dumb)
@@ -567,6 +634,14 @@ catalog GENESIS_FILE_TREE {
       related = [ "ge5001", "ge5000" ]
     }
 
+    file "registry/node-index.js" {
+      uuid    = ge5006-nidx0-4000-8000-000000000056
+      intent  = jaa_tables_as_the_node_index_one_per_node_type_with_its_ledger
+      summary = "Domain 2d: indexes every node node-registry.js writes into a JAA table per type (nodes_<type>, upserted by id) and appends each add/change/delete to nodes_<type>_ledger; a delete is a soft-delete row. Rebuildable from the node files alone; queried by modules and the UI instead of reading another system's files. Lives in this system's own data folder."
+      depends = [ "ge5005", "ge3000" ]
+      related = [ "ge5002" ]
+    }
+
     file "registry/component-router.js" {
       uuid    = ge5004-crtr0-4000-8000-000000000054
       intent  = route_every_cli_verb_and_every_cross_component_signal_by_id_never_by_import
@@ -729,7 +804,7 @@ catalog GENESIS_FILE_TREE {
     file "pulse/heartbeat.js" {
       uuid    = geA000-hbeat-4000-8000-000000000120
       intent  = emit_periodic_liveness_pulse_per_runtime
-      summary = "Every pulse is a warp Event scored by spine/scorer-fidelity.js; interval is a config.json key, never hardcoded."
+      summary = "Every pulse is a warp Event scored by spine/scorer-fidelity.js; interval is a config.json key, never hardcoded. Its snapshot carries each node type's count from registry/node-index.js (Domain 2d), so an index behind its files shows as drift."
       depends = [ "ge2000", "ge2001", "geB000" ]
     }
 

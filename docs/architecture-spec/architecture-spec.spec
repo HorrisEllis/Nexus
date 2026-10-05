@@ -1,12 +1,19 @@
 spec:
   meta:
     name:        architecture-spec
-    version:     0.8.1
-    extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.1.0 — the default template of a system spec since 0.39.286
+    version:     0.10.0
+    extends:     genesis-devkit-v1-0000-2026-0710-jamesbrooks-001  # idearium/spec-engine/templates/genesis.spec v1.3.0 — the default template of a system spec since 0.39.286; since 1.3.0 the architecture of the system template, section by section (Domain 0a)
     foundation:  TBD — no runtime exists yet, unassigned until first real implementation
     port:        TBD — no runtime process exists yet
     uuid:        TBD — assign on first real implementation, convention nexus-architecture-spec-v1-0000-<date>-jamesbrooks-001
     status:      draft
+    james: >
+      "each component only needs to connect to the registry. that cuts down immensly on context. i am trying to make
+      this need as little tokens as possible. scales as it builds, and as simple as possible." · "Like I want this to be
+      a skeleton, only using the minimal code. Then expands from there. Using the .spec as a living model. Then an atlas
+      in the atlas template but not a list, each detailed, and referenced. All expanded."
+    template:    idearium/spec-engine/templates/architecture-spec.template.yaml   # the tree, the registry and the rules — one home; this spec points at it, never copies it
+    schemas:     idearium/spec-engine/templates/system/schemas/                    # schema.<type> for component, capability, command, event, route, hook, wire, bundle — a new system copies and owns them
     purpose: >
       The formalized architecture of NEXUS itself, stated once so every
       new sovereign system can be scaffolded from the same real thing
@@ -93,11 +100,11 @@ spec:
       - SPEC_IS_LIVING_MODEL  a .spec is edited as the real system changes, in place, with version_history as the audit trail — not a one-time snapshot (already the real behavior of clear-glass.spec, warp.spec, etc.; stated explicitly here so it's a rule, not an inferred convention)
       - "HARDLINE_AS_LITTLE_AS_POSSIBLE  code contains the smallest possible set of deterministic, unchanging lines — anything that can plausibly change (a value, a route, a rule, a threshold) is a node, not a literal in a file. This is CONFIG_OUTSIDE_CODE (genesis.spec) generalized past config: not just adjustable settings, ANY dynamic or changeable fact belongs in a node so it can be declared, watched, indexed, and ledgered like every other node — never buried in source where changing it means editing and redeploying code instead of dropping or editing a node file."
     constants:
-      NODE_STATUSES:       "[stub, wired, verified]"
+      NODE_STATUSES:       "[open, stub, unproven, built] — the template's component status (0.10.0); was [stub, wired, verified], read by no code"
       HOOK_DIRECTIONS:     "[in, out, bidirectional]"
       KNOWN_HOOK_TYPES:    "[api, event_bus, callto, direct, webserver, cli, ...] — open seed list, register don't edit, not limited to this set"
       LATTICE_LEVELS:      "[data, network, software, application] — genesis.spec's four levels; a hook/wire may cross any two directly, no enforced hierarchy"
-      NODE_KINDS:          "[component, hook, wire, bundle, config] — the real set watcher.js/api.js watch and index; config added this pass"
+      NODE_KINDS:          "[component, capability, command, event, route, hook, wire, bundle, toast, contract, config] — the template's node types, each its own folder, schema and JAA index (0.10.0); watcher.js/api.js watch component, hook, wire, bundle, config today"
 
   events:
     # 0.8.0 — the eleven architecture-spec.* events 0.7.0 listed are emitted by nothing in NEXUS (checked: no code under
@@ -337,6 +344,17 @@ spec:
         opened: 2026-10-01
 
   version_history:
+    - version: 0.10.0
+      date: 2026-10-05
+      summary: >-
+        James's system template (0.39.314–0.39.316): the spec points at the template (tree, registry, rules) and its
+        schemas instead of restating them; NODE_STATUSES are the template's (open, stub, unproven, built); NODE_KINDS
+        gain capability, command, event, route, toast and contract. His words in meta.james. (Four axioms added in
+        0.39.316 were the coder's framing of his explanation, not his — removed in 0.39.317.)
+    - version: 0.9.0
+      date: 2026-10-05
+      summary: >-
+        extends genesis 1.3.0; defers pulse, the taxonomy, the component shape and ownership to it (0.39.313).
     - version: 0.8.1
       date: 2026-10-01
       summary: >-
@@ -446,3 +464,19 @@ spec:
 # source goes, and readable at the orchestrator's GET /api/nodes/:type (the route this spec plans at /nodes/:type).
 # Guardian hosts .hat and .agent and boots its per-type registry (watcher + ledger + JAA index). AS1 (a registry
 # watcher for every system) stays open: only Guardian's watcher runs.
+
+# ── ADDENDUM 2026-10-05 (0.39.313) — docs/2026-10-05-build-from-the-spec-phasemap.spec SB17 ──
+# James: "like can you make sure this is all added to the system template. like look at the architecture spec." · "why not
+#   identity context file_structure modules -> components summary, with routes and commands, anything else relevant. then
+#   everything relevant to the modules, is listed each module and component. not in seperate sections" · "yes add it the
+#   spec for genesis. like genesis is the exact architecture for a new system template."
+# 0.9.0: this spec, the system template (idearium/spec-engine/templates/architecture-spec.template.yaml, rewritten in his
+#   structure in 0.39.312) and genesis.spec 1.3.0 now say the same thing. genesis is the architecture (Domain 0a maps each
+#   template section to its domains); the template is the shape a system's spec is written in; this spec is the seam
+#   between genesis, loom's schema and guardian's node registry, as before. What this spec lacked and now defers to them:
+#   pulse and the heartbeat (genesis Domain 10; the template's identity.heartbeat, whose snapshot carries each node type's
+#   count), the event taxonomy (derived from the components — the template's generated.event_taxonomy), each component's
+#   capabilities, commands and events as nodes (genesis axiom COMPONENT_SHAPE, capability_node in Domain 2c), and a system
+#   owning its own data, schemas, contract, config, heartbeat and pulse (axiom SYSTEM_OWNS_ITS_OWN). The JAA node index it
+#   already described (registry-watcher) is genesis Domain 2d.
+

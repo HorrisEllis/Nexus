@@ -221,7 +221,7 @@ spec:
       proof: "routes over seeded fault_log rows; a build prompt for a jobType with a known refusal names it"
     DT4_registry_block_to_nodes:
       layer: library
-      status: OPEN
+      status: "PARTIAL (0.39.309, via SB12 in docs/2026-10-05-build-from-the-spec-phasemap.spec) — the block is parsed (lib/registry-plan.js) and the built files are checked against it; node envelopes and node-for-node drift against the code projection still open"
       depends_on: [DT1_persistence_census]
       files: [idearium/spec-engine/index.js, idearium/repo/architecture.js]
       does: >-

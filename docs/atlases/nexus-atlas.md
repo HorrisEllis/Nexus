@@ -91,6 +91,7 @@ nexus/
   mesh/                  core — networking daemons ported from BrainOS
   remote-desktop/        core — remote desktop host, viewer, bridge-os-core
   emerge/                core — the .eg DSL runtime and spec compiler
+  emergence/             core — James's Emergence: observation that feeds back into observation, on WARP
   erosmancer/            core — ErosmancerOS, CDP browser automation
   cockpit/               core — the forge IDE spec and its core
   nexus-healer/          core — healer proposals, scaffolded system
