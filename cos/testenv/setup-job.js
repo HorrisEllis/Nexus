@@ -35,7 +35,7 @@ function hostInfo() {
   return out;
 }
 
-function start({ installQemu = false, extras = [], node = null, login = null, _spawn = spawn, _script = PROVISION } = {}) {
+function start({ installQemu = false, extras = [], node = null, login = null, _spawn = spawn, _script = PROVISION, _lingerMs = 20000 } = {}) {
   if (job.state === 'running') return status();
   const args = [_script, '--json'];
   if (installQemu) args.push('--install-qemu');
@@ -53,6 +53,21 @@ function start({ installQemu = false, extras = [], node = null, login = null, _s
   try { child = _spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, env }); }
   catch (e) { me.state = 'failed'; me.endedAt = Date.now(); me.result = { ok: false, error: `could not start the setup: ${e.message}` }; return status(); }
   me.pid = child.pid || null;
+  // §0.39.344 — James: "okay its stuck." The setup said "ready" and wrote its result, but its process did not exit (on
+  // his machine something kept it alive), and the job only settled on exit — so it read "running" forever. The result
+  // line is the answer: the job settles on it. A process still alive 20 s after its result is stopped, and that is said.
+  let settled = false;
+  function _settle() {
+    if (settled) return; settled = true;
+    me.endedAt = Date.now();
+    me.state = me.result && me.result.ok ? 'done' : 'failed';
+    const t = setTimeout(() => {
+      if (child.exitCode !== null || child.signalCode) return;
+      push({ at: Date.now(), msg: 'the setup reported its result but its process did not exit — stopped it' });
+      try { child.kill(); } catch (_) {}
+    }, _lingerMs);
+    if (t.unref) t.unref();
+  }
   let buf = '';
   child.stdout.on('data', (d) => {
     buf += d; let i;
@@ -60,15 +75,15 @@ function start({ installQemu = false, extras = [], node = null, login = null, _s
       const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
       if (!line) continue;
       let m; try { m = JSON.parse(line); } catch (_) { push({ at: Date.now(), msg: line }); continue; }
-      if (m.result) me.result = m.result; else push(m);
+      if (m.result) { me.result = m.result; _settle(); } else push(m);
     }
   });
   child.stderr.on('data', (d) => { for (const l of String(d).split('\n').map(x => x.trim()).filter(Boolean)) push({ at: Date.now(), msg: l, stderr: true }); });
   child.on('error', (e) => { me.state = 'failed'; me.endedAt = Date.now(); me.result = me.result || { ok: false, error: e.message }; });
   child.on('exit', (code) => {
-    me.endedAt = Date.now();
+    if (settled) return;   // already settled on its result line
     if (!me.result) me.result = { ok: code === 0, error: code === 0 ? null : `setup exited ${code}` };
-    me.state = me.result.ok ? 'done' : 'failed';
+    _settle();
   });
   return status();
 }

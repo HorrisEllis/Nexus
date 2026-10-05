@@ -395,6 +395,9 @@ async function main() {
   else if (r.ok) console.log(`\nThe test VM is ready. Idearium's COS run menu now offers "Run all tests in a VM".\n  image:    ${r.image}\n  manifest: ${r.manifestPath}`);
   else { console.error(`\nSetup failed: ${r.error}`); if (r.consoleTail) console.error(`\nlast console lines:\n${r.consoleTail}`); }
   process.exitCode = r.ok ? 0 : 1;
+  // §0.39.344 — the result is written; exit once stdout has flushed. Something left open (a socket, a child's pipe) kept
+  // this process alive after "ready" on his machine, and the setup job waited on it forever.
+  process.stdout.write('', () => process.exit(process.exitCode));
 }
 
 if (require.main === module) main().catch(e => { console.error(`[cos-testenv] crashed: ${e.stack || e.message}`); process.exit(1); });
