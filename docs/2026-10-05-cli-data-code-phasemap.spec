@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     cli-data-code
-    version:  1.3.0
+    version:  1.4.0   # 1.4.0: SY2 cos is its own system (0.39.341) · was 1.3.0
     date:     2026-10-05
     release:  0.39.310 (base) → 0.39.311
     uuid:     nexus-cli-data-code-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -273,6 +273,23 @@ spec:
       proof: "every phase's systems are among the 15; bySystem has no other key; forSystem('raid') answers for cortex"
       conditions:
         - { says: "every phase's systems are among the 15", check: { kind: tests, run: "node tests/modules/test-loom-phasemap.js" } }
+    SY2_cos_its_own_system:
+      layer: foundation
+      systems: [cos, core, loom, idearium]
+      value: { score: 4, cost: S, for: [foundation], why: "COS gets its own nested compartment, repo and Phases tab — the COS machines map lands on COS, not core" }
+      status: "DONE (0.39.341) — mapped before code. systems.js: cos (dirs [cos], loom [cos], no process); T-006/T-007 updated on his answer; cos-atlas.md made from core-atlas's cos/ section (moved, core keeps a pointer); nexus-atlas: a cos section, 16 systems. test-loom-phasemap 7/7, test-nexus-atlas-refs 53/53."
+      james: '"cos needs to be a nested compartment" · asked where (its own system, or inside core): "Its own system (16th)"'
+      depends_on: [SY1_fifteen_systems]
+      files: [lib/nexus-self/systems.js, tests/modules/test-loom-phasemap.js, docs/2026-10-05-cos-machines-phasemap.spec]
+      does: >-
+        cos joins lib/nexus-self/systems.js as the 16th system, the way components did in 0.39.266: dirs [cos], loom tags
+        [cos], no process (entry and port null). ownerOf(cos/…) is cos, so core no longer holds cos/; the next nexus-self
+        sync makes nexus/cos with its nested compartment nexus-self-cos under the nexus parent, and core's repo re-syncs
+        without cos/. Phases tagged cos — the COS machines map (VM1–EL1), EV0's cos part — are COS's. SY1's "only the 15"
+        is now "only the systems in systems.js" (16), on James's answer.
+      proof: "ownerOf('cos/…') is cos; forSystem('cos') answers COS's phases (the COS machines map); core holds no cos/ file; a sync makes the nexus/cos repo nested under nexus"
+      conditions:
+        - { says: "cos is its own system", check: { kind: tests, run: "node tests/modules/test-loom-phasemap.js" } }
 
   # ── Session inventory, 2026-10-05 — every request, where it is mapped (James: "make sure this is all mapped.") ──
   session_inventory:

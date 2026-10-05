@@ -122,7 +122,7 @@ function _rsPaint(repo) {
   if (id === 'desktop') {
     pane.innerHTML = head('Desktop', 'The compartment\'s VM, opened as a desktop in a Clear Glass window.')
       + `<div class="ds"><div class="action-row">
-        ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button>` : '<span class="ds-mono">no compartment attached — no desktop</span>'}
+        ${repo.compartmentId ? `<button class="action-btn primary" onclick="openRepoDesktop('${repo.uuid}')" title="Boot this repo's VM and open it as a desktop (Clear Glass window)">▣ open desktop</button> <button class="action-btn" onclick="openDesktopSetup(CURRENT_API_REPO)" title="§0.39.340 DK2 — the account, the VM's memory and CPUs, and the setup's progress">⚙ set up desktop</button>` : '<span class="ds-mono">no compartment attached — no desktop</span>'}
       </div></div>
       <div class="ds"><div class="ds-label">desktop settings</div><div class="rs-note">The VM's state, ports, branch and stop — hidden until you ask.</div>
         ${_rsRevealButton('show desktop settings', 'rs-desktop-settings', 'env', 'desktop settings')}</div>`;

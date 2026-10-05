@@ -60,7 +60,7 @@ ${_envMark(vm.available === false ? false : vm.missing && vm.missing.length ? fa
 install  ${(pl.install || []).map(i => `${escapeHtml(i.command)}   <span style="opacity:.55"># ${escapeHtml(i.why)}</span>`).join('\n         ') || '—'}
 test     ${(pl.suite || []).map(i => escapeHtml(i.command)).join(' ; ') || `${pl.testFiles || 0} test file(s)`}${(pl.gaps || []).length ? `\ngaps     ${pl.gaps.map(escapeHtml).join('; ')}` : ''}</div>
       <div class="action-row">
-        <button class="action-btn primary" onclick="envSetup()" title="set up the VM with what this codebase needs (the extras above), then its dependencies install in it">⚙ set up environment</button>
+        <button class="action-btn primary" onclick="envSetup()" title="set up the VM: the desktop account, memory and CPUs, what this codebase needs — with its progress">⚙ set up environment</button>
         <button class="action-btn" onclick="renderRepoEnvironment(CURRENT_API_REPO)">↻ check again</button>
         ${d.setup ? `<span class="ds-mono" style="opacity:.7">setup job: ${escapeHtml(d.setup.state)}${d.setup.last && d.setup.last.length ? ` — ${escapeHtml(String((d.setup.last[d.setup.last.length - 1] || {}).text || d.setup.last[d.setup.last.length - 1] || '').slice(0, 90))}` : ''}</span>` : ''}
       </div></div>
@@ -88,6 +88,8 @@ async function envSave() {
 }
 async function envSetup() {
   const repo = CURRENT_API_REPO; if (!repo) return;
+  // §0.39.340 DK2 — the setup popup: the account, the VM, the setup's own progress (js/desktop-setup.js)
+  if (typeof openDesktopSetup === 'function') { await openDesktopSetup(repo); return; }
   try {
     const r = await api(`/api/repos/${repo.uuid}/environment/setup`, { method: 'POST', body: '{}' }, 30000);
     toast(`environment setup ${r.job.state}${r.extras.length ? ` · extras ${r.extras.join(', ')}` : ''} — 10–40 minutes the first time`, 'ok');
