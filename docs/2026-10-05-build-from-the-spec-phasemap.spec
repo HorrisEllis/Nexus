@@ -750,7 +750,7 @@ spec:
       status: OPEN
       james: '"like needs to map, phase, check for snapshot if none exist, create one, then populate the plan section and begin, then add precommited changes to the files tab, greyed out. dont create an entirely new repo, just compartment until the changes are commited."'
       overlaps: "the one-idearium map's I2 (snapshot before a phase run); the coding-flow map's W2/W3 (plan lands, work surface); staging S1; file-state P (greyed proposals); speceng.codegen (makes a second repo — to change)"
-      depends_on: [SB27_expanding_a_repo_keeps_its_spec_and_phases_current, SB12_the_registry_is_the_component_list]
+      depends_on: [SB26_an_imported_project_shows_its_progress, SB12_the_registry_is_the_component_list]
       files: [idearium/api/index.js, idearium/api/build-surface.js, idearium/repo/file-state.js, idearium/repo/build-plan.js, lib/cos-bridge.js]
       does: >-
         His order, one flow: map → phases → a Versionium snapshot (the coder's suggestion: before every run, his call) →
