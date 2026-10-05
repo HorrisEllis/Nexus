@@ -306,6 +306,7 @@ spec:
     - { said: "No automatically but from taking orders.", where: "FV0 — the trigger is his taking an order; nothing watches Fiverr or starts on its own" }
     - { said: "Yes like the end state for the repo. Maybe I ask customers the conditions for an acceptable output.", where: "FV0 input (A)" }
     - { said: "I feel like copilot needs to be the agents for the repos … lifeline to figure out how to fulfill the contract. Runs it in the cos envirenment.", where: "FV0 input (B)" }
+    - { said: "Okay I'm just saying it figures it out through the context and agent tools.", where: "FV0 input_b — copilot decides how; the goal and the stop are fixed; deliver_check becomes a tool" }
 
   open_questions:
     - "Q1: amend docs/AXIOMS-v3.1.md §4.1 from 'UI is tested via Playwright' to 'UI is tested in Clear Glass (clear-glass/src/driver/glass.js)'? A law changes only on your word."

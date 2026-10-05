@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.14   # 1.7.14: FV0 + the buyer's conditions as the end state, copilot as the repo agent escalating on proof · 1.7.13 (2026-10-05): FV0 fulfil a taken order — FV1's first slice on what is built
+    version:  1.7.15   # 1.7.15: FV0 — copilot decides how with its tools; the goal and the stop are fixed; deliver_check as a tool · 1.7.14: FV0 + the buyer's conditions as the end state, copilot as the repo agent escalating on proof · 1.7.13 (2026-10-05): FV0 fulfil a taken order — FV1's first slice on what is built
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -729,6 +729,17 @@ spec:
         lifeline hands the same composed contract and the exact failure to the next agent (ollama → guardian's), in a
         fresh COS branch, every hop recorded (§9.4), nothing unedited injected. copilot/module-builder.js's lifeline
         chain (map → spec → qc-architecture → qc-adversarial → fix) is the pattern to reuse; VP2 is its adversarial half.
+      input_2026_10_05_b: >-
+        James: "Okay I'm just saying it figures it out through the context and agent tools." So (B) is not a fixed
+        escalation chain: copilot, as the repo's agent, decides HOW — with its context (the build blocks) and the agent
+        tools it already has (lib/agent-tools tool-catalog groups: Code, Files, Debugging & intelligence, COS, Build &
+        run, Versions, Other agents — agent-chat, agent-council, roundtable, parallel-dispatch, lifeline —, Browser &
+        Clear Glass, Memory, Jobs & gigs; and governance/ask-james.js, his "either figures it out or asks me or uses
+        lifeline contract"). Only two things are fixed: the GOAL (the contract's conditions — the repo's end state) and
+        the STOP (every condition met in COS → package; the order's budget out → NOT READY and ask_james). The gap found:
+        no agent tool checks the conditions — the delivery checker is an API route only (/api/repos/:uuid/deliver/check).
+        FV0 adds it as a tool (idearium deliver_check: run the order's conditions in COS, return met / unmet with why),
+        so copilot can tell when it is done.
       proof: "a fixture order: contract drafted and held for a yes; after yes, a repo in its own compartment; every acceptance line a condition; the package holds the code, README and a READY report citing a passing check per line; a fixture order that cannot pass produces NOT READY and no package; nothing runs before the order is handed over"
 
     ST1_settings:
