@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     code-tab-and-one-router
-    version:  1.1.0
+    version:  1.2.0
     date:     2026-10-05
     release:  0.39.345 (base)
     uuid:     nexus-code-tab-and-one-router-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium (the Code tab, every model call) · copilot (who answers) · lib/pipeline-routing (the policy, the breakers) · ollama
-    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349); CT4 done (0.39.350); CT5 done (0.39.351) — all five phases built"
+    status:   "MAPPED 2026-10-05; CT1 done (0.39.347); CT2 done (0.39.348); CT3 done (0.39.349); CT4 done (0.39.350); CT5 done (0.39.351); CT6–CT8 done (0.39.352) — all eight phases built"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim. `does:` is the coder's
       reading, his to correct. `pushback:` is where the coder thinks the plan as said has a hole — his to decide.
@@ -19,7 +19,11 @@ spec:
       not equipped for the task, which i feel like raid is wired to do, agent switching and routing?"
       Earlier, on the same surface: "the code tab the agent tab, work surface, like full activity, enterprise grade?" ·
       "its just the code tab is meaningless. what about uncommited changes?" · 1.1.0, on the built Code tab: "i like it but,
-      can we have this hooked into the plan and work surface panel"
+      can we have this hooked into the plan and work surface panel" · 1.2.0, after building a phase from the backlog map:
+      "the plan needs to only show current work. needs escalating retry logic and fallback routing. like if the 3b fails,
+      switch to the 7b, then the 16b deepseek, then the agents. have all of this configurable." · "completely either need
+      to clear or need a clear complete button. like i want to see the agents activity in the code tab, in real time. like
+      maybe have a little dot blinking next to it"
 
   found:
     - >-
@@ -138,3 +142,60 @@ spec:
         with its gates, and the runs on the open file — each opens the Plan panel focused on it. A work-surface card, in
         the Plan panel or the Code tab, opens its file in the Code tab.
       proof: "driven in Clear Glass: change it → POST …/manage action edit with the lines and model, the Plan panel opens focused on the run; an event repaints the Code tab; a card's 'open in Code' switches tab with that file open"
+
+    CT6_the_escalation_ladder:
+      layer: library
+      status: "DONE (0.39.352) — lib/pipeline-routing: sizeOf, ladder (written or derived), shouldEscalate, climb({ rungs, policy, attempt, onOutcome }), the tool-errors class (never a breaker), routing.escalate · escalation · escalate_on · retries_per_rung · max_tool_errors (config-core, Settings → Routing → Escalation ladder, GET /api/routing gives the ladder as it reads). lib/agent-tools runToolLoop: maxToolErrors stops an attempt (toolErrors); copilot and the repo agent carry the cap and hand toolErrors back. idearium _phaseBuild climbs through climb() when the call names no agent: each attempt its own fresh chat and row (rung, attempt, provider), each climb a row from → to with why, the last says every rung was tried. code_check reads path as paths; code_edit names the key it does not read. test-escalation-ladder 9/9. Not yet: 'unproven' (the proof's own retries) does not climb; an incomplete or failed attempt's partial proposals stay on the work surface for him to reject."
+      james: '"needs escalating retry logic and fallback routing. like if the 3b fails, switch to the 7b, then the 16b deepseek, then the agents. have all of this configurable."'
+      depends_on: [CT2_it_learns_and_switches]
+      files: [lib/pipeline-routing.js, lib/agent-tools/index.js, copilot/tool-runtime.js, copilot/server.js, lib/repo-agent.js, idearium/api/index.js, idearium/lib/config-core.cjs]
+      found:
+        - "a phase build dispatches once: the repo's provider (or the door's first hop), no ladder; the proof retries the SAME agent on unmet conditions; an Ollama draft is reviewed by a guardian agent — none of it climbs to a stronger model"
+        - "his run of BL30: the small model called code_edit eleven times with an invented argument shape (changes:[[716,761],…] for edits:[{old,new}]) and code_check with path for paths — every call failed and the loop kept going to its iteration cap"
+        - "routing.* (config-core) already holds the chain, the Ollama models, fallback_on, attempts and breakers — the ladder belongs beside them"
+      pushback:
+        - >-
+          "Bigger is better" is a default, not a law: the ladder is derived from routing.ollama_models ordered by the size
+          in each model's name (3b < 7b < 16b), then the chain's agents — and routing.escalation, if he writes one, is the
+          ladder exactly as written.
+        - >-
+          Escalating needs a sign the model is not up to it, not only a crash: failed, blocked, incomplete (the file never
+          came back) — and tool-errors: N failed tool calls in a row end the attempt (routing.max_tool_errors, default 3),
+          so a model looping on a tool it cannot drive stops at 3, not 11. A tool-errors end never opens a breaker.
+        - >-
+          code_check given `path` where it takes `paths` is unambiguous and is accepted; code_edit given `changes` in an
+          invented shape is not guessed at — that is what the ladder is for.
+      does: >-
+        A phase build climbs a ladder: routing.escalation (or derived: the Ollama models smallest first, then the chain's
+        agents). Each rung gets routing.retries_per_rung attempts; an outcome in routing.escalate_on (default failed,
+        blocked, incomplete, tool-errors) moves to the next rung in a fresh chat, the row on the Plan saying from what, to
+        what, and why. Every rung's outcome teaches the door. routing.escalate turns it off. All in Settings → routing.
+      proof: "a stand-in 3b that fails its tools three times is stopped and the phase moves to the 7b, then to an agent when the 7b fails; the Plan's ledger names each climb; with routing.escalation written, that order is used"
+
+    CT7_the_plan_shows_current_work:
+      layer: ui
+      status: "DONE (0.39.352) — plan-panel.js: tasks show what is not complete; complete steps and complete sections fold into '✓ N … complete — show' (hidden, never deleted; remembered in this browser); the ledger names each rung and a stop on tool errors. test-code-tab CT-30; the build-surface probe's BS9→BS11 counts the fold."
+      james: '"the plan needs to only show current work." · "completely either need to clear or need a clear complete button."'
+      depends_on: [CT5_hooked_into_the_plan]
+      files: [idearium/ui/js/plan-panel.js]
+      pushback:
+        - "Hidden, not deleted (§0.3): complete steps and sections fold into one line with a count; one click shows them again."
+      does: >-
+        The Plan panel shows what is building, next, stopped or waiting; complete steps and complete sections fold into
+        "N complete — show"; a code build whose every section is complete is one line. The choice is remembered.
+      proof: "driven in Clear Glass: a plan with 30 complete and 2 open steps shows the 2 and '30 complete'; show / hide toggles them"
+
+    CT8_live_agent_activity:
+      layer: ui
+      status: "DONE (0.39.352) — runToolLoop onToolCall (running, then ok / failed); copilot tool-runtime toolEventSink posts each to the caller's progressUrl, loopback only; the repo agent sends idearium's (setToolEventSink at listen); idearium POST /api/repos/:uuid/agent/tool-event broadcasts idearium.repo.agent.tool and keeps the last 80 per repo (GET …/tool-events). The Code tab: the call running in the activity header with a blinking dot, the file it names blinking in the tree, live calls ✓ / ✗ in activity — only the tree and the strip repaint. test-escalation-ladder EL-03…06, test-code-tab CT-31."
+      james: '"i want to see the agents activity in the code tab, in real time. like maybe have a little dot blinking next to it"'
+      depends_on: [CT5_hooked_into_the_plan]
+      files: [lib/agent-tools/index.js, copilot/server.js, lib/repo-agent.js, idearium/api/index.js, idearium/ui/js/code-surface.js]
+      found:
+        - "the tool calls reach idearium only when the whole run returns (toolCallLog on the reply, kept on the run row) — nothing while it works"
+      does: >-
+        Each tool call is reported as it starts and as it ends: the loop calls onToolCall, copilot posts it to the
+        caller's sink (loopback only), idearium emits idearium.repo.agent.tool and keeps the last calls per repo. The
+        Code tab's activity shows them live: a blinking dot on the call running, ✓ or ✗ when it ends, and a blinking dot
+        beside the file it is reading or editing in the tree.
+      proof: "with a stand-in loop: a call shows blinking while it runs and ✓ / ✗ after, without a reload; the file it names blinks in the tree"

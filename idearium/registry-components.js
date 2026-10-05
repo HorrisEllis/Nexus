@@ -115,6 +115,8 @@ const COMPONENTS = [
   _comp('repo.agent.status',        'GET',   '/api/repos/:uuid/agent',              "This compartment's agent: hat, index state, learned count, session", { tags: ['agent'] }),
   _comp('repo.agent.prompt',        'POST',  '/api/repos/:uuid/agent/prompt',       "Dispatch one message as this compartment's agent, wearing its repo hat", { tags: ['agent'] }),
   _comp('repo.agent.route',         'GET',   '/api/repos/:uuid/agent/route',        "Which model copilot's door would choose for this repo's agent, and the other hops (CT3)", { tags: ['agent'] }),
+  _comp('repo.agent.tool.event',    'POST',  '/api/repos/:uuid/agent/tool-event',   "copilot reports one of this repo agent's tool calls as it starts and ends (CT8)", { tags: ['agent'] }),
+  _comp('repo.agent.tool.events',   'GET',   '/api/repos/:uuid/agent/tool-events',  "This repo agent's last tool calls, as reported live (CT8)", { tags: ['agent'] }),
   _comp('ollama.check',             'GET',   '/api/ollama/check',                   "Installed Ollama models and how every idearium caller would route through copilot's door (CT4)", { tags: ['agent', 'ollama'] }),
   _comp('ollama.check.ask',         'POST',  '/api/ollama/check/ask',               'Ask one Ollama model a one-line question through copilot (CT4)', { tags: ['agent', 'ollama'] }),
   // §LATE 0.39.241 — a reply that arrived after copilot stopped waiting, read back from Clear Glass's Responses index.

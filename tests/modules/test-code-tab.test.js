@@ -22,6 +22,10 @@
  *          CT-21 "change it" is a Manage edit (file, picked lines, his words, the picked model); the Plan panel opens on the run
  *          CT-22 a Plan event repaints the Code tab (a new change shows without a click)
  *          CT-23 a work-surface card in the Plan panel opens its file in the Code tab; so does a file in a run's ledger
+ *   CT-3x  §CT7 / §CT8 0.39.352:
+ *          CT-30 the Plan shows current work: complete steps fold into one line with their count; show / hide toggles them
+ *          CT-31 the agent working, live: a call blinks while it runs (in activity and on its file in the tree), ✓ when it
+ *                ends, without a reload; the agent box keeps what was typed
  * No engine on the machine: the browser part is SKIPPED, said, never passed.
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -271,9 +275,48 @@ function harness() {
       await page.waitForSelector('#pp-ws .ws-card[data-path="src/b.js"] .ws-act-code');
       await page.click('#pp-ws .ws-card[data-path="src/b.js"] .ws-act-code');
       await page.waitForFunction(() => CURRENT_REPO_SUBTAB === 'code' && CS.open === 'src/b.js');
-      await page.evaluate(() => { PLANP.open.add('docs/k-phasemap.spec::KE0_core'); _planPaint(); });
+      await page.evaluate(() => { PLANP.showDone = true; PLANP.open.add('docs/k-phasemap.spec::KE0_core'); _planPaint(); });   // KE0 is complete: shown (CT7 folds it by default)
       await page.click('#pp-body .pp-file');
       await page.waitForFunction(() => CS.open === 'src/a.js');
+      assert.deepStrictEqual(errors, []);
+    });
+
+    await test('CT-30', 'the Plan shows current work: complete steps fold into one line; show / hide toggles them', async () => {
+      await page.evaluate(() => { try { localStorage.removeItem('idearium.plan.showDone'); } catch (_) {} PLANP.showDone = false; PLANP.open = new Set(); openPlanPanel(); });
+      await page.waitForSelector('#pp-body .pp-donefold');
+      assert.deepStrictEqual(await page.$$eval('#pp-body .pp-task .pp-name', e => e.map(x => x.textContent)), ['KE1 io'], 'only what is not complete');
+      assert.ok(/✓ 1 step complete — show/.test(await page.textContent('#pp-body .pp-donefold')));
+      await page.click('#pp-body .pp-donefold');
+      assert.deepStrictEqual(await page.$$eval('#pp-body .pp-task .pp-name', e => e.map(x => x.textContent)), ['KE1 io', 'KE0 core']);
+      assert.ok(/— hide/.test(await page.textContent('#pp-body .pp-donefold')));
+      await page.click('#pp-body .pp-donefold');
+      assert.strictEqual(await page.$$eval('#pp-body .pp-task', e => e.length), 1);
+      await page.evaluate(() => closePlanPanel());
+    });
+
+    await test('CT-31', 'the agent working, live: blinking while a call runs, ✓ when it ends, no reload; the agent box keeps its text', async () => {
+      await page.evaluate(() => { CURRENT_REPO_SUBTAB = 'code'; csPaint(); });
+      await page.fill('#cs-ask', 'half typed');
+      await page.evaluate(() => document.getElementById('cs-ask').dispatchEvent(new Event('input')));
+      const n0 = await page.evaluate(() => CALLS.length);
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'running', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
+      await page.waitForSelector('.cs-act-head .cs-now .cs-livedot');
+      assert.ok(/code_read/.test(await page.textContent('.cs-act-head .cs-now')));
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/b.js"] .cs-livedot', e => e.length), 1, 'the file it is on blinks');
+      assert.strictEqual(await page.$$eval('.cs-file[data-path="src/a.js"] .cs-livedot', e => e.length), 0);
+      const anim = await page.$eval('.cs-act-head .cs-livedot', e => getComputedStyle(e).animationName);
+      assert.strictEqual(anim, 'cs-blink');
+      assert.strictEqual(await page.evaluate(() => document.getElementById('cs-ask').value), 'half typed', 'the agent box was not repainted');
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_read.tool', state: 'ok', args: '{"path":"src/b.js"}', iteration: 1, at: Date.now() } }));
+      await page.waitForFunction(() => !document.querySelector('.cs-act-head .cs-now'));
+      assert.strictEqual(await page.$$eval('.cs-file .cs-livedot', e => e.length), 0);
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'r1', session: 'phrun-2', name: 'idearium.code_edit.tool', state: 'failed', args: '{"changes":[]}', error: 'edits is required', iteration: 2, at: Date.now() } }));
+      await page.evaluate(() => { CS.activity = true; _csPaintLive(); });   // (CT-15 left it open or closed; open it)
+      const body = await page.textContent('.cs-act-body');
+      assert.ok(/LIVE|live/.test(body) && /✗ idearium\.code_edit\.tool/.test(body) && /✓ idearium\.code_read\.tool/.test(body), body);
+      assert.strictEqual(await page.evaluate(() => CALLS.length), n0, 'live calls arrive by event: nothing was fetched');
+      await page.evaluate(() => codeSurfaceOnEvent({ type: 'idearium.repo.agent.tool', payload: { repoUuid: 'other', name: 'x', state: 'running', at: Date.now() } }));
+      assert.strictEqual(await page.evaluate(() => CS.live.length), 2, 'another repo\'s calls are not this one\'s');
       assert.deepStrictEqual(errors, []);
     });
   } finally { await browser.close(); }

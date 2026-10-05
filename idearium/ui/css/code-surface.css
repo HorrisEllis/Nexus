@@ -68,3 +68,9 @@
 .cs-send-change{background:none;border:1px solid var(--mint);color:var(--mint)}
 .ws-act-code{color:var(--sky2)}
 .pp-file{color:var(--sky2);text-decoration:none}.pp-file:hover{text-decoration:underline}
+/* §0.39.352 CT8 — the agent working, live: a blinking dot on the call running and on the file it is on */
+@keyframes cs-blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(56,189,248,.6)}50%{opacity:.25;box-shadow:0 0 0 3px rgba(56,189,248,0)}}
+.cs-livedot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sky);margin:0 3px;animation:cs-blink 1s ease-in-out infinite;vertical-align:middle;flex:none}
+.cs-now{display:inline-flex;align-items:center;gap:4px;color:var(--text);max-width:55%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cs-call.running{color:var(--text)}
+.cs-act-sec{font:600 9px var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:6px 0 2px}

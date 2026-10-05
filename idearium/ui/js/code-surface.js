@@ -22,17 +22,22 @@
 // above activity, each opening the Plan panel on itself; "change it" in the docked agent is a Manage edit — a snapshot, a
 // run on the Plan, the panel opened on it, its change a card here and there; the Code tab repaints on the Plan's events
 // (codeSurfaceOnEvent, from app.js); a work-surface card opens its file here (wsOpenInCode, work-surface.js).
+//
+// §CT8 0.39.352 — James: "i want to see the agents activity in the code tab, in real time. like maybe have a little dot
+// blinking next to it". Each tool call the agent makes arrives as it starts and ends (idearium.repo.agent.tool, from
+// copilot's loop; GET …/agent/tool-events for a page opened mid-run): a blinking dot on the call that is running and on
+// the file it is reading or editing in the tree, ✓ / ✗ when it ends. Only the tree and the activity strip repaint.
 // ════════════════════════════════════════════════════════════════════════════
 
 const CS = { uuid: null, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
   card: null, hits: null, more: null, q: '', mode: 'search', changedOnly: false, collapsed: new Set(), sel: null,
-  agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' }, activity: false, loadingChanges: false, plan: null };
+  agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' }, activity: false, loadingChanges: false, plan: null, live: [] };
 
 function _csq(s) { return escapeHtml(String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'")); }
 
 function _csReset(repo) {
   Object.assign(CS, { uuid: repo.uuid, overview: null, overviewError: null, open: null, text: null, textError: null, outline: null, outlineError: null,
-    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), plan: null, agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' } });
+    card: null, hits: null, more: null, q: '', sel: null, collapsed: new Set(), plan: null, live: [], agent: { route: null, error: null, pinned: null, pick: '', lines: [], busy: false, draft: '' } });
 }
 
 async function renderRepoCode(repo) {
@@ -48,6 +53,7 @@ async function renderRepoCode(repo) {
     if (typeof loadFileStates === 'function') loadFileStates(repo, { force: true }).then(() => here() && csPaint());
     csLoadRoute(repo).then(() => here() && csPaint());
     csLoadPlan(repo).then(() => here() && csPaint());
+    api(`/api/repos/${repo.uuid}/agent/tool-events`, {}, 10000).then(r => { for (const e of r.events || []) csOnTool(e, { paint: false }); }, () => {}).finally(() => here() && csPaint());
     return;
   }
   csPaint();
@@ -84,11 +90,35 @@ async function csLoadPlan(repo) {
 let _csEvT = null;
 function codeSurfaceOnEvent(ev) {
   const t = ev && ev.type ? ev.type.replace(/^idearium\./, '') : '';
+  if (t === 'repo.agent.tool') { const p = ev.payload || {}; if (CS.uuid && p.repoUuid === CS.uuid) csOnTool(p); return; }   // §CT8 — live, no reload
   if (!/^(repo\.(phase\.run|file\.manage|inject\.|deviation|prove\.|verify)|repo\.file|spec\.chunk|chunk\.)/.test(t)) return;
   const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
   const u = ev.payload && ev.payload.repoUuid; if (u && u !== repo.uuid) return;
   clearTimeout(_csEvT); _csEvT = setTimeout(csAfterChange, 500);
 }
+// §CT8 — one tool call, live: a 'running' entry, then its end replaces it (same session, iteration and name)
+const CS_LIVE_STALE_MS = 10 * 60 * 1000;   // a call with no end after this long is not shown as running
+function csOnTool(e, { paint = true } = {}) {
+  if (!e || !e.name) return;
+  const k = (x) => `${x.session || ''}|${x.iteration || ''}|${x.name}`;
+  if (e.state !== 'running') {
+    const i = CS.live.findIndex(x => x.state === 'running' && k(x) === k(e));
+    if (i >= 0) { CS.live[i] = { ...CS.live[i], ...e }; } else CS.live.push(e);
+  } else CS.live.push(e);
+  if (CS.live.length > 80) CS.live.splice(0, CS.live.length - 80);
+  if (paint) _csPaintLive();
+}
+function _csRunning() { const now = Date.now(); return CS.live.filter(x => x.state === 'running' && now - (x.at || 0) < CS_LIVE_STALE_MS); }
+/** the file a call is about, from its arguments (path, paths[0], file) */
+function _csFileOf(c) { try { const a = typeof c.args === 'string' ? JSON.parse(c.args) : (c.args || {}); return a.path || (Array.isArray(a.paths) && a.paths[0]) || a.file || null; } catch (_) { const m = String(c.args || '').match(/"path"\s*:\s*"([^"]+)"/); return m ? m[1] : null; } }
+function _csLiveFiles() { return new Set(_csRunning().map(_csFileOf).filter(Boolean)); }
+function _csPaintLive() {
+  const repo = CURRENT_API_REPO; if (!repo || CS.uuid !== repo.uuid || CURRENT_REPO_SUBTAB !== 'code') return;
+  const act = document.getElementById('cs-activity'); if (act) act.innerHTML = _csActivity();
+  const left = document.getElementById('cs-left');
+  if (left) { const t = left.querySelector('.cs-tree'); const sc = t ? t.scrollTop : 0; left.innerHTML = _csTree(repo); const t2 = left.querySelector('.cs-tree'); if (t2) t2.scrollTop = sc; }
+}
+
 function _csRunsOnOpen() {
   if (!CS.plan || !CS.open) return [];
   return CS.plan.runs.filter(r => r.map === `file:${CS.open}` || ((r.injects && r.injects.injected) || []).includes(CS.open)).slice(0, 6);
@@ -123,6 +153,7 @@ function _csTree(repo) {
   const changed = new Set(_csChanges().filter(f => f.status === 'proposed' || f.status === 'staged').map(f => f.path));
   const all = [...(repo.files || []), ...(typeof pendingOnlyFiles === 'function' ? pendingOnlyFiles(repo) : [])];
   const stateOf = (p) => (typeof fileStateOf === 'function' ? fileStateOf(p) : null);
+  const liveFiles = _csLiveFiles();
   const isChanged = (p) => { const s = stateOf(p); return changed.has(p) || (s && (s.state !== 'committed' || s.pending || s.staged)); };
   const files = CS.changedOnly ? all.filter(f => isChanged(f.path)) : all;
   const root = {};
@@ -139,7 +170,8 @@ function _csTree(repo) {
     }
     const fsm = typeof fileStateMark === 'function' ? fileStateMark(e.__path) : { cls: '', mark: '' };
     const diff = changed.has(e.__path) ? '<span class="cs-diffdot" title="the agent changed this file — its diff is waiting">●</span>' : '';
-    return `<div class="cs-node cs-file${CS.open === e.__path ? ' on' : ''}${fsm.cls}${e.__pendingOnly ? ' cs-pending' : ''}" data-path="${escapeHtml(e.__path)}" onclick="csOpen('${_csq(e.__path)}')">${pad}<span class="cs-fname">${escapeHtml(name)}</span>${diff}${fsm.mark}</div>`;
+    const live = liveFiles.has(e.__path) ? '<span class="cs-livedot" title="the agent is working on this file now"></span>' : '';
+    return `<div class="cs-node cs-file${CS.open === e.__path ? ' on' : ''}${fsm.cls}${e.__pendingOnly ? ' cs-pending' : ''}" data-path="${escapeHtml(e.__path)}" onclick="csOpen('${_csq(e.__path)}')">${pad}<span class="cs-fname">${escapeHtml(name)}</span>${live}${diff}${fsm.mark}</div>`;
   }).join('');
   const summary = typeof fileStatesSummary === 'function' ? fileStatesSummary() : '';
   return `<div class="cs-pane-head"><span>files</span><span class="cs-grow"></span>
@@ -304,10 +336,16 @@ function _csActivity() {
   const d = typeof WSURF !== 'undefined' && WSURF.uuid === CS.uuid ? WSURF.data : null;
   const calls = (d && d.tools && d.tools.calls) || [], ch = _csChanges(), t = (d && d.totals) || {};
   const bad = calls.filter(c => !c.ok).length;
+  const running = _csRunning(); const now = running[running.length - 1];
+  const liveBad = CS.live.filter(x => x.state === 'failed').length;
+  const mark = (x) => (x.state === 'running' && running.includes(x) ? '<span class="cs-livedot"></span>' : x.state === 'failed' || x.ok === false ? '✗' : '✓');
+  const row = (x, live) => `<div class="cs-call${x.state === 'failed' || x.ok === false ? ' bad' : ''}${live && x.state === 'running' ? ' running' : ''}">${mark(x)} <b>${escapeHtml(x.name)}</b> <span class="cs-dim">${escapeHtml(x.args || '')}</span>${x.error ? ` — ${escapeHtml(x.error)}` : ''} <i>${escapeHtml(x.session || x.phase || '')}</i></div>`;
   return `<div class="cs-act-head" onclick="CS.activity=!CS.activity;csPaint()"><span>${CS.activity ? '▾' : '▸'} activity</span>
-      <span class="cs-dim">${ch.length} change${ch.length === 1 ? '' : 's'}${t.pending ? ` · <span class="cs-warn">${t.pending} waiting</span>` : ''} · ${calls.length} tool call${calls.length === 1 ? '' : 's'}${bad ? ` · <span class="cs-bad">${bad} failed</span>` : ''}${d && d.tools ? ` · scope ${escapeHtml(d.tools.scope || '?')}` : ''}</span></div>
-    ${CS.activity ? `<div class="cs-act-body">${calls.slice(0, 60).map(c => `<div class="cs-call${c.ok ? '' : ' bad'}">${c.ok ? '✓' : '✗'} <b>${escapeHtml(c.name)}</b> <span class="cs-dim">${escapeHtml(c.args || '')}</span>${c.error ? ` — ${escapeHtml(c.error)}` : ''} <i>${escapeHtml(c.phase || '')}</i></div>`).join('') || '<div class="cs-empty">no tool calls recorded yet</div>'}
-      ${ch.map(f => `<div class="cs-call" onclick="csOpen('${_csq(f.path)}')">${escapeHtml(f.status)} <b>${escapeHtml(f.path)}</b> <span class="ws-plus">+${f.added}</span> <span class="ws-minus">−${f.removed}</span>${f.by ? ` <span class="cs-dim">${escapeHtml(f.by)}</span>` : ''}</div>`).join('')}</div>` : ''}`;
+      ${now ? `<span class="cs-now"><span class="cs-livedot"></span> <b>${escapeHtml(now.name.replace(/\.tool$/, ''))}</b> <span class="cs-dim">${escapeHtml(String(now.args || '').slice(0, 90))}</span></span>` : ''}
+      <span class="cs-dim">${CS.live.length ? `${CS.live.length} live call${CS.live.length === 1 ? '' : 's'}${liveBad ? ` · <span class="cs-bad">${liveBad} failed</span>` : ''} · ` : ''}${ch.length} change${ch.length === 1 ? '' : 's'}${t.pending ? ` · <span class="cs-warn">${t.pending} waiting</span>` : ''} · ${calls.length} tool call${calls.length === 1 ? '' : 's'} on runs${bad ? ` · <span class="cs-bad">${bad} failed</span>` : ''}${d && d.tools ? ` · scope ${escapeHtml(d.tools.scope || '?')}` : ''}</span></div>
+    ${CS.activity ? `<div class="cs-act-body">${CS.live.length ? `<div class="cs-act-sec">live</div>${CS.live.slice().reverse().slice(0, 60).map(x => row(x, true)).join('')}` : ''}
+      <div class="cs-act-sec">on the last runs</div>${calls.slice(0, 60).map(c => row(c, false)).join('') || '<div class="cs-empty">no tool calls recorded yet</div>'}
+      ${ch.length ? `<div class="cs-act-sec">changes</div>` : ''}${ch.map(f => `<div class="cs-call" onclick="csOpen('${_csq(f.path)}')">${escapeHtml(f.status)} <b>${escapeHtml(f.path)}</b> <span class="ws-plus">+${f.added}</span> <span class="ws-minus">−${f.removed}</span>${f.by ? ` <span class="cs-dim">${escapeHtml(f.by)}</span>` : ''}</div>`).join('')}</div>` : ''}`;
 }
 
 // ── paint ────────────────────────────────────────────────────────────────────────────────────────────
@@ -336,12 +374,12 @@ function csPaint() {
       <select id="cs-mode" class="field-input cs-mode"><option value="search"${CS.mode === 'search' ? ' selected' : ''}>by meaning</option><option value="grep"${CS.mode === 'grep' ? ' selected' : ''}>exact text</option></select>
       <button class="action-btn" onclick="csSearch()">search</button></div>
     <div class="cs-grid">
-      <div class="cs-left">${_csTree(repo)}</div>
+      <div class="cs-left" id="cs-left">${_csTree(repo)}</div>
       <div class="cs-mid">${middle}</div>
       <div class="cs-right"><div class="cs-card">${_csCardHtml()}</div><div class="cs-agent">${_csAgentHtml()}</div></div>
     </div>
     ${_csPlanStrip()}
-    <div class="cs-activity">${_csActivity()}</div></div>`;
+    <div class="cs-activity" id="cs-activity">${_csActivity()}</div></div>`;
   const code = document.getElementById('cs-code'); if (code && scroll) code.scrollTop = scroll;
   const t2 = document.getElementById('cs-talk'); if (t2) t2.scrollTop = talk ? t2.scrollHeight : t2.scrollHeight;
 }
