@@ -1,12 +1,12 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.11.0
+    version:  1.12.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
     owner:    idearium.spec-engine · idearium.repo · idearium.api · idearium.config
-    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27. 1.10.0: genesis in the shape Nexus systems really have; the build flow in his order, in a compartment until committed — SB28, SB29. 1.11.0: the template is a skeleton, the spec a living model, the atlas detailed — SB30; SB25 widened"
+    status:   "MAPPED 2026-10-05; built: SB1–SB3 (0.39.305), fixes (0.39.306–0.39.307), the hat with the repo (0.39.308), SB12 (0.39.309), generated atlases (0.39.310); SB16 built before it was mapped (0.39.311, recorded). 1.3.0: the system template — SB16–SB19, SB4 widened. 1.4.0: ownership and deterministic expansion — SB20, SB21. 1.5.0: every phase opens with his words (james:), the coder's own phases said so; SB22. 1.6.0: the shape is the default and a new system slots in — SB22 widened, SB23. 1.7.0: the system template in his structure — SB17 rewritten. 1.8.0: genesis is the template's architecture, loom builds a new system you click into, the atlas template in his structure — SB24, SB25. 1.9.0: an imported project shows its progress; expanding a repo keeps its spec and phases current — SB26, SB27. 1.10.0: genesis in the shape Nexus systems really have; the build flow in his order, in a compartment until committed — SB28, SB29. 1.11.0: the template is a skeleton, the spec a living model, the atlas detailed — SB30; SB25 widened. 1.12.0: every new repo is the skeleton, the idea slots in — SB31"
     voice: >
       The ideas, the direction and the calls are James's. Each phase's `james:` is his, verbatim — spelling and all.
       `does:` is the coder's reading of it, his to correct. A phase whose `james:` says none came from the coder, and says
@@ -153,6 +153,15 @@ spec:
     James, 2026-10-05: "Like I want this to be a skeleton, only using the minimal code. Then expands from there. Using
     the .spec as a living model. Then an atlas in the atlas template but not a list, each detailed, and referenced. All
     expanded. Okay now update the architecture spec."
+
+  origin_1_12_0: >
+    James, 2026-10-05: "This should be what each new repo builds and slots the idea into like a slot. Agnostic."
+
+  found_1_12_0:
+    - >-
+      Today a new repo starts as a bare spec (workshop, Create repo) or a file tree the agent plans freehand (codegen),
+      or one from a COS archetype or an Eravos mod — never the system template. The skeleton would make every repo the
+      same shape whatever the idea, and leave the agents only the components' own files to write.
 
   found_1_10_0:
     - >-
@@ -783,3 +792,22 @@ spec:
       proof: "a skeleton built from the template boots, serves its route nodes, runs its command nodes, and gains a capability by adding nodes alone"
       conditions:
         - { says: "a skeleton built from the template boots, serves its route nodes, runs its command nodes, and gains a capability by adding nodes alone", check: { kind: tests, run: "node tests/modules/test-system-skeleton.test.js" } }
+
+    SB31_every_new_repo_is_the_skeleton_the_idea_slots_in:
+      layer: api
+      status: OPEN
+      james: '"This should be what each new repo builds and slots the idea into like a slot. Agnostic."'
+      overlaps: "SB18 (the template used), SB30 (the skeleton), SB24 (loom builds a system), SB29 (the build flow), SB12 (the registry drives the build)"
+      depends_on: [SB30_the_template_is_a_skeleton, SB12_the_registry_is_the_component_list]
+      files: [idearium/repo/index.js, idearium/api/index.js, lib/file-tree-plan.js, lib/registry-plan.js, idearium/spec-engine/templates/architecture-spec.template.yaml]
+      does: >-
+        The coder's reading: every new repo — from the workshop, Create repo, an idea, the spec library — is built as the
+        skeleton first, written without a model; the idea fills its slots: its components, their capabilities, commands
+        and events, its node types and their schemas, all in the registry. Agents then write only each component's own
+        file, one at a time, from its registry entry — the skeleton is never a model's job. Agnostic: the skeleton is the
+        same for every idea, whatever its domain. Parts that do not apply (a server for a library, a UI for a CLI tool)
+        are left out, said in the spec, and added when the idea needs them; the registry, nodes, schemas, spec, atlas and
+        ledger are always there.
+      proof: "two unrelated fixture ideas each get the same skeleton, written without a model, with only their own registry, nodes and component files different"
+      conditions:
+        - { says: "two unrelated fixture ideas each get the same skeleton, written without a model, with only their own registry, nodes and component files different", check: { kind: tests, run: "node tests/modules/test-repo-is-the-skeleton.test.js" } }
