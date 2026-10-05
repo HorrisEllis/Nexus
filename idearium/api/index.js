@@ -5861,7 +5861,10 @@ async function handle(req, res, route, query, body) {
       const dir = _repoDiskDir(params.uuid);
       if (!dir) return err(res, 500, 'could not resolve repo directory');
       const pipeline = runImportPipeline(repo, dir);
-      return ok(res, { pipeline });
+      // §SB33 — the agent's persona re-grounded on the index it just got (a stale "not indexed" is a lie on every send)
+      let persona = null;
+      try { const RH = _require('../../lib/repo-hat.js'); if (RH.getRepoHat(repo.uuid)) persona = RH.refreshRepoHatPersona({ repo, repoDir: dir }).ok; } catch (e) { persona = `not refreshed: ${e.message}`; }
+      return ok(res, { pipeline, persona });
     }
 
     // ── Projects: flat zip shelf (§PROJECTS 2026-07-19) ────────────────────────

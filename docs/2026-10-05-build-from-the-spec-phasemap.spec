@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     build-from-the-spec
-    version:  1.12.0
+    version:  1.13.0
     date:     2026-10-05
     release:  0.39.304 (base) → 0.39.305
     uuid:     nexus-build-from-the-spec-phasemap-v1-0000-2026-1005-jamesbrooks-001
@@ -804,3 +804,32 @@ spec:
       proof: "two unrelated fixture ideas each get the skeleton, with their own idea slotted in"
       conditions:
         - { says: "two unrelated fixture ideas each get the skeleton, with their own idea slotted in", check: { kind: tests, run: "node tests/modules/test-repo-is-the-skeleton.test.js" } }
+
+
+    SB32_context_is_never_optional:
+      layer: api
+      status: "DONE (1.13.0, 0.39.325) — lib/repo-agent.js: _grounded() re-grounds the persona on the live index every send; contextFor: named file → its card; else a search of the question's words (a system's atlas first, its opening carried) → cards; else the project's map. test-agent-context-always 4/4."
+      james: '"agents always need context, not optional." · "like context isnt optional its vital"'
+      found: "his screenshot 2026-10-05: the agent tab says 2133 files · 17332 chunks indexed, the agent answers 'has not been indexed yet' — its persona is the copy written when the hat was forged and was never re-grounded; and a question naming no file got 'context: none'"
+      depends_on: [SB3_the_section_prompt_is_domain_agnostic]
+      files: [lib/repo-agent.js, lib/repo-hat.js]
+      does: >-
+        Every send carries context. The persona's index facts are re-grounded on the live index each send. A question
+        that names no file gets the cards of the files a search of its words finds; when nothing matches, the project's
+        map (files, chunks, top folders) — never nothing.
+      proof: "a hat forged before indexing answers with the live index after it; 'tell me about idearium' carries idearium's cards; a question matching nothing carries the map"
+      conditions:
+        - { says: "context on every send", check: { kind: tests, run: "node tests/modules/test-agent-context-always.test.js" } }
+
+    SB33_the_agent_runs_the_pipeline:
+      layer: api
+      status: "DONE (1.13.0, 0.39.325) — idearium.repo_chunks.tool action:"reindex" → POST /api/repos/:uuid/reindex; the route refreshes the persona after the pipeline; an unindexed persona tells the agent to run it. test-agent-context-always CA-04, test-repo-chunks-tool 11/11."
+      james: '"also running the pipeline the agent should be able to do."'
+      depends_on: [SB32_context_is_never_optional]
+      files: [lib/agent-tools/tools/idearium/repo-chunks.js, lib/repo-hat.js, idearium/api/index.js]
+      does: >-
+        The agent runs its project's import pipeline itself (idearium.repo_chunks.tool action:"reindex" → POST
+        /api/repos/:uuid/reindex) instead of asking for it; the persona refreshes when the pipeline finishes.
+      proof: "the tool's reindex action posts to the route; an unindexed persona tells the agent to run it, not to ask"
+      conditions:
+        - { says: "the agent can run the pipeline", check: { kind: tests, run: "node tests/modules/test-agent-context-always.test.js" } }
