@@ -1,7 +1,7 @@
 spec:
   meta:
     name:     emerge-field-memory-build
-    version:  1.7.16
+    version:  1.7.17
     date:     2026-10-02
     release:  mapped, nothing built — each phase its own patch once built
     uuid:     nexus-emerge-field-memory-build-phasemap-v1-0000-2026-1002-jamesbrooks-001
@@ -623,7 +623,7 @@ spec:
       layer: library
       systems: [cos, intelligence, idearium]
       value: { score: 5, cost: M, for: [safety], why: "models never write the real tree; the precondition for any client work" }
-      status: OPEN
+      status: "PARTIAL (1.7.17, 0.39.322) — (2) done: lib/shadow-space.js — a change acts in a COS workspace branch with its shadow declared; commit() runs the test inside the space itself, settles the shadow, and merges fast-forward only on both passing; otherwise the space is discarded and the real tree untouched; an absent file is a gap with the step as cause. Found and fixed: self_repair's promote trusted a testResult the caller handed in — now only its own test()'s pass opens it. (1) one record with WARP 2's expectation is EM2's; (3) the shadow read is MR9's. Not yet: idearium's codegen writing through a shadow space."
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
       files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
       does: >-

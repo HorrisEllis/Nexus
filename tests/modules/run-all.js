@@ -372,6 +372,7 @@ const SUITES = [
   'test-synthesis-zoom-versionium.test.js',  // 0.39.300 VX1/WS3/AZ1/SY1/SY2 — versionium down is a stated 502/404; the pipeline together; systems → components zoom; intelligence's gap synthesis ranked by leverage
   'test-nexstore-census.test.js',  // 0.39.300 N0 — every data shape in the tree classified into the seven kinds; the type catalogue
   'test-nexstore-log.test.js',     // 0.39.300 N1 — the record frame and the log: 25 SIGKILLs mid-append, every ack survives, the chain verifies, the torn tail reported
+  'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
   'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more
   'test-emergence-and-warp-suites.test.js',   // 0.39.319 EM0 (3) — Emergence's and WARP's own suites inside Nexus
